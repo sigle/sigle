@@ -21,7 +21,6 @@ const Illu = styled.img`
   max-width: 100%;
 `;
 
-// TODO nice Login page
 export const Login = () => {
   const { height } = useWindowSize();
 

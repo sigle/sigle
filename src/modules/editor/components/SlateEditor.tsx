@@ -66,8 +66,6 @@ const StyledEditor = styled(Editor)`
 
 // See https://github.com/ianstormtaylor/slate/blob/master/examples/rich-text/index.js
 
-// https://www.toulouse-tourisme.com/sites/www.toulouse-tourisme.com/files/styles/incontournable_hp/public/thumbnails/image/incontournables_0.jpg
-
 // TODO add links
 // TODO handle cmd+b to set the text to bold for example
 
