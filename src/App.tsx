@@ -1,6 +1,7 @@
 import React, { Suspense } from 'react';
 import { Router, Switch, Route } from 'react-router';
 import { ToastContainer } from 'react-toastify';
+import { createGlobalStyle } from 'styled-components/macro';
 import { LoggedIn, Protected } from './modules/layout';
 import { history } from './utils';
 import { PublicStory } from './modules/publicStory';
@@ -16,10 +17,17 @@ const Editor = React.lazy(() => import('./modules/editor/Editor'));
 // TODO nice 404 page
 const NoMatch = () => <div>404 page not found</div>;
 
+const GlobalStyle = createGlobalStyle`
+  .reactToastify.Toastify__toast--success {
+    background-color: #4db6a1;
+  }
+`;
+
 const App = () => {
   return (
     <React.Fragment>
-      <ToastContainer autoClose={3000} />
+      <GlobalStyle />
+      <ToastContainer autoClose={3000} toastClassName="reactToastify" />
       <Router history={history}>
         <Switch>
           <Route
