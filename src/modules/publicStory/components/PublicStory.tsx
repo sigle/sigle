@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import * as blockstack from 'blockstack';
+import { Helmet } from 'react-helmet';
 import { RouteComponentProps } from 'react-router';
 import styled from 'styled-components/macro';
 import tw from 'tailwind.macro';
@@ -152,6 +153,9 @@ export const PublicStory = ({ match }: Props) => {
 
   return (
     <Container>
+      <Helmet>
+        <title>{file.title}</title>
+      </Helmet>
       <Title>{file.title}</Title>
       <Content
         dangerouslySetInnerHTML={{
