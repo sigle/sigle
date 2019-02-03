@@ -91,8 +91,10 @@ export const Content = styled.div`
   }
 
   blockquote {
-    ${tw`mb-4 bg-grey-lighter py-4 px-4`};
-    border-left: 10px solid #ccc;
+    ${tw`mb-4 py-4 px-4 italic text-sm`};
+    border-left: 3px solid #ccc;
+    font-family: 'Libre Baskerville', serif;
+    letter-spacing: 0.01rem;
   }
 
   li + li {

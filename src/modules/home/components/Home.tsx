@@ -16,7 +16,6 @@ export const PageTitleContainer = styled.div`
 
 export const PageTitle = styled.div`
   ${tw`text-3xl`};
-
   font-family: 'Libre Baskerville', serif;
 `;
 
