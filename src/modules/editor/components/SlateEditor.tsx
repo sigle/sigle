@@ -27,6 +27,7 @@ import {
 } from '../../../utils';
 import { Story } from '../../../types';
 import { Link } from 'react-router-dom';
+import { config } from '../../../config';
 
 const StyledLink = styled(Link)`
   ${tw`no-underline text-black mb-4`};
@@ -92,16 +93,24 @@ const schema = {
 // TODO warn user if he try to leave the page with unsaved changes
 
 interface Props {
+  width: number;
   story: Story;
   loadingDelete: boolean;
   onDelete: () => void;
 }
 
-export const SlateEditor = ({ story, loadingDelete, onDelete }: Props) => {
+export const SlateEditor = ({
+  width,
+  story,
+  loadingDelete,
+  onDelete,
+}: Props) => {
   const editorRef = useRef<any>(null);
   const [loadingSave, setLoadingSave] = useState(false);
   const [title, setTitle] = useState(story.title);
   const [value, setValue] = useState(Value.fromJSON(story.content));
+
+  const showEditor = width >= config.breakpoints.md;
 
   const handleTextChange = ({ value }: any) => {
     setValue(value);
@@ -305,37 +314,41 @@ export const SlateEditor = ({ story, loadingDelete, onDelete }: Props) => {
         </div>
       </PageTitleContainer>
 
-      <div>
-        <Input
-          value={title}
-          onChange={(e: any) => setTitle(e.target.value)}
-          placeholder="Title"
-        />
+      {!showEditor && <div>The editor is not available on mobile.</div>}
 
-        <SlateContainer>
-          <SlateToolbar>
-            {renderMarkButton('bold', MdFormatBold)}
-            {renderMarkButton('italic', MdFormatItalic)}
-            {renderMarkButton('underlined', MdFormatUnderlined)}
-            {renderBlockButton('block-quote', MdFormatQuote)}
-            {renderBlockButton('numbered-list', MdFormatListNumbered)}
-            {renderBlockButton('bulleted-list', MdFormatListBulleted)}
-            <SlateToolbarButton onMouseDown={onClickImage}>
-              <MdImage color={'#b8c2cc'} size={18} />
-            </SlateToolbarButton>
-          </SlateToolbar>
-
-          <StyledEditor
-            ref={editorRef}
-            value={value}
-            onChange={handleTextChange}
-            schema={schema}
-            placeholder="Text"
-            renderNode={renderNode}
-            renderMark={renderMark}
+      {showEditor && (
+        <div>
+          <Input
+            value={title}
+            onChange={(e: any) => setTitle(e.target.value)}
+            placeholder="Title"
           />
-        </SlateContainer>
-      </div>
+
+          <SlateContainer>
+            <SlateToolbar>
+              {renderMarkButton('bold', MdFormatBold)}
+              {renderMarkButton('italic', MdFormatItalic)}
+              {renderMarkButton('underlined', MdFormatUnderlined)}
+              {renderBlockButton('block-quote', MdFormatQuote)}
+              {renderBlockButton('numbered-list', MdFormatListNumbered)}
+              {renderBlockButton('bulleted-list', MdFormatListBulleted)}
+              <SlateToolbarButton onMouseDown={onClickImage}>
+                <MdImage color={'#b8c2cc'} size={18} />
+              </SlateToolbarButton>
+            </SlateToolbar>
+
+            <StyledEditor
+              ref={editorRef}
+              value={value}
+              onChange={handleTextChange}
+              schema={schema}
+              placeholder="Text"
+              renderNode={renderNode}
+              renderMark={renderMark}
+            />
+          </SlateContainer>
+        </div>
+      )}
     </PageContainer>
   );
 };

@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useWindowSize } from 'the-platform';
 import { SlateEditor as Component } from '../components/SlateEditor';
 import { Story } from '../../../types';
 import {
@@ -13,6 +14,7 @@ interface Props {
 }
 
 export const SlateEditor = ({ story }: Props) => {
+  const { width } = useWindowSize();
   const [loadingDelete, setLoadingDelete] = useState(false);
 
   const handleDelete = async () => {
@@ -43,6 +45,7 @@ export const SlateEditor = ({ story }: Props) => {
 
   return (
     <Component
+      width={width}
       story={story}
       loadingDelete={loadingDelete}
       onDelete={handleDelete}
