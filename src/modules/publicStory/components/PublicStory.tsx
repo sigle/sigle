@@ -83,6 +83,10 @@ export const Content = styled.div`
     min-height: 1rem;
   }
 
+  a {
+    ${tw`text-pink`};
+  }
+
   img {
     ${tw`mb-4`};
     display: block;
