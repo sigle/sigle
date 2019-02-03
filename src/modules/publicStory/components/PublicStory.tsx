@@ -6,6 +6,7 @@ import tw from 'tailwind.macro';
 import { Value } from 'slate';
 import Html from 'slate-html-serializer';
 import dompurify from 'dompurify';
+import { toast } from 'react-toastify';
 import { Story } from '../../../types';
 import { Container } from '../../../components';
 
@@ -116,7 +117,7 @@ export const PublicStory = ({ match }: Props) => {
         return;
       }
       console.error(error);
-      alert(error.message);
+      toast.error(error.message);
       setLoading(false);
     }
   };

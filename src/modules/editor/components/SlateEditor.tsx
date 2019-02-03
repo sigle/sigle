@@ -1,6 +1,7 @@
 import React, { useState, useRef } from 'react';
 import styled from 'styled-components/macro';
 import tw from 'tailwind.macro';
+import { toast } from 'react-toastify';
 import { Editor } from 'slate-react';
 import { Block, Value } from 'slate';
 import {
@@ -279,10 +280,10 @@ export const SlateEditor = ({
       await saveStoryFile(updatedStory);
       file.stories[index] = subsetStory;
       await saveStoriesFile(file);
+      toast.success('Story saved');
     } catch (error) {
-      // TODO nice error
       console.error(error);
-      alert(error.message);
+      toast.error(error.message);
     }
     setLoadingSave(false);
   };

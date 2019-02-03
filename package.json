@@ -44,6 +44,7 @@
     "react-dom": "16.8.0-alpha.0",
     "react-icons": "3.3.0",
     "react-router-dom": "4.3.1",
+    "react-toastify": "4.5.2",
     "slate": "0.44.10",
     "slate-html-serializer": "0.7.34",
     "slate-plain-serializer": "0.6.34",

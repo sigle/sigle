@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useWindowSize } from 'the-platform';
+import { toast } from 'react-toastify';
 import { SlateEditor as Component } from '../components/SlateEditor';
 import { Story } from '../../../types';
 import {
@@ -36,9 +37,8 @@ export const SlateEditor = ({ story }: Props) => {
 
       history.push(`/`);
     } catch (error) {
-      // TODO nice error
       console.error(error);
-      alert(error.message);
+      toast.error(error.message);
       setLoadingDelete(false);
     }
   };

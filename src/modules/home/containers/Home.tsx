@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { toast } from 'react-toastify';
 import { Home as Component } from '../components/Home';
 import {
   createNewEmptyStory,
@@ -36,7 +37,7 @@ export const Home = () => {
       const publicStories = file.stories.filter(s => s.type === 'public');
       setPublicStories(publicStories);
     } catch (error) {
-      alert(error.message);
+      toast.error(error.message);
     }
   };
 
@@ -66,7 +67,7 @@ export const Home = () => {
         history.push(`/stories/${story.id}`);
       }
     } catch (error) {
-      alert(error.message);
+      toast.error(error.message);
       setLoadingCreate(false);
     }
   };

@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { RouteComponentProps } from 'react-router';
 import * as blockstack from 'blockstack';
+import { toast } from 'react-toastify';
 import { StoryFile } from '../../../types';
 import { Container } from '../../../components';
 import { PublicStoryItem } from './PublicStoryItem';
@@ -35,7 +36,7 @@ export const PublicHome = ({ match }: Props) => {
         return;
       }
       console.error(error);
-      alert(error.message);
+      toast.error(error.message);
       setLoading(false);
     }
   };
