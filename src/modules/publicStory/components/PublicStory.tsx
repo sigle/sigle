@@ -66,11 +66,11 @@ const rules = [
 const html = new Html({ rules });
 
 const Title = styled.div`
-  ${tw`text-2xl mt-16 font-bold`};
+  ${tw`text-4xl mt-16 font-bold`};
 `;
 
 export const Content = styled.div`
-  ${tw`text-base mt-8 mb-16`};
+  ${tw`text-base mt-8 mb-16 leading-tight`};
 
   p,
   ol,
@@ -94,9 +94,12 @@ export const Content = styled.div`
     ${tw`mt-2`};
   }
 
-  h1,
+  h1 {
+    ${tw`mt-6 mb-4 text-3xl`};
+  }
+
   h2 {
-    ${tw`mt-6 mb-4`};
+    ${tw`mt-6 mb-4 text-2xl`};
   }
 `;
 
