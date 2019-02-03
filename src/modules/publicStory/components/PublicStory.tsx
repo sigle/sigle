@@ -81,20 +81,26 @@ const Title = styled.div`
 const Content = styled.div`
   ${tw`text-base mt-8 mb-16`};
 
-  p {
-    ${tw`mb-2`};
+  p,
+  ol,
+  ul {
+    ${tw`mb-4`};
   }
 
   img {
-    ${tw`mb-2`};
+    ${tw`mb-4`};
     display: block;
     max-width: 100%;
     max-height: 20em;
   }
 
   blockquote {
-    ${tw`bg-grey-lighter py-4 px-4 mb-2`};
+    ${tw`mb-4 bg-grey-lighter py-4 px-4`};
     border-left: 10px solid #ccc;
+  }
+
+  li + li {
+    ${tw`mt-2`};
   }
 `;
 
