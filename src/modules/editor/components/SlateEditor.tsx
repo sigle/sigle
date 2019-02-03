@@ -29,6 +29,7 @@ import {
 import { Story } from '../../../types';
 import { Link } from 'react-router-dom';
 import { config } from '../../../config';
+import { Content } from '../../publicStory/components/PublicStory';
 
 const StyledLink = styled(Link)`
   ${tw`no-underline text-black mb-4`};
@@ -60,13 +61,12 @@ const SlateToolbarButton = styled.button`
   ${tw`py-2 px-2 outline-none flex`};
 `;
 
+const StyledContent = styled(Content)`
+  margin: 0;
+`;
+
 const StyledEditor = styled(Editor)`
   ${tw`py-4`};
-
-  blockquote {
-    ${tw`bg-grey-lighter py-4 px-4 mb-2`};
-    border-left: 10px solid #ccc;
-  }
 `;
 
 // See https://github.com/ianstormtaylor/slate/blob/master/examples/rich-text/index.js
@@ -203,6 +203,8 @@ export const SlateEditor = ({
     const { attributes, children, node, isFocused } = props;
 
     switch (node.type) {
+      case 'paragraph':
+        return <p {...attributes}>{children}</p>;
       case 'block-quote':
         return <blockquote {...attributes}>{children}</blockquote>;
       case 'heading-one':
@@ -229,8 +231,6 @@ export const SlateEditor = ({
     switch (mark.type) {
       case 'bold':
         return <strong {...attributes}>{children}</strong>;
-      case 'code':
-        return <code {...attributes}>{children}</code>;
       case 'italic':
         return <em {...attributes}>{children}</em>;
       case 'underlined':
@@ -342,15 +342,17 @@ export const SlateEditor = ({
               </SlateToolbarButton>
             </SlateToolbar>
 
-            <StyledEditor
-              ref={editorRef}
-              value={value}
-              onChange={handleTextChange}
-              schema={schema}
-              placeholder="Text"
-              renderNode={renderNode}
-              renderMark={renderMark}
-            />
+            <StyledContent>
+              <StyledEditor
+                ref={editorRef}
+                value={value}
+                onChange={handleTextChange}
+                schema={schema}
+                placeholder="Text"
+                renderNode={renderNode}
+                renderMark={renderMark}
+              />
+            </StyledContent>
           </SlateContainer>
         </div>
       )}

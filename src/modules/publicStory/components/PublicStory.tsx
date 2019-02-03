@@ -15,12 +15,6 @@ const rules = [
     serialize(obj: any, children: any) {
       if (obj.object == 'block') {
         switch (obj.type) {
-          case 'code':
-            return (
-              <pre>
-                <code>{children}</code>
-              </pre>
-            );
           case 'paragraph':
             return <p className={obj.data.get('className')}>{children}</p>;
           case 'block-quote':
@@ -78,7 +72,7 @@ const Title = styled.div`
   ${tw`text-2xl mt-16 font-bold`};
 `;
 
-const Content = styled.div`
+export const Content = styled.div`
   ${tw`text-base mt-8 mb-16`};
 
   p,
