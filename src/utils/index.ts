@@ -143,7 +143,7 @@ export const createNewEmptyStory = (): Story => {
 const CONTENT_SUBSET_SIZE = 200;
 
 export const convertStoryToSubsetStory = (story: Story): SubsetStory => {
-  const plainContent: string = Plain.serialize(Value.fromJSON(story.content));
+  const plainContent = Plain.serialize(Value.fromJSON(story.content));
 
   return {
     id: story.id,
