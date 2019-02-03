@@ -14,6 +14,8 @@ import {
   MdArrowBack,
   MdImage,
   MdLink,
+  MdLooksTwo,
+  MdLooksOne,
 } from 'react-icons/md';
 import {
   PageContainer,
@@ -286,6 +288,8 @@ export const SlateEditor = ({
         return <h1 {...attributes}>{children}</h1>;
       case 'heading-two':
         return <h2 {...attributes}>{children}</h2>;
+      case 'heading-three':
+        return <h3 {...attributes}>{children}</h3>;
       case 'list-item':
         return <li {...attributes}>{children}</li>;
       case 'numbered-list':
@@ -418,6 +422,8 @@ export const SlateEditor = ({
               {renderMarkButton('italic', MdFormatItalic)}
               {renderMarkButton('underlined', MdFormatUnderlined)}
               {renderBlockButton('block-quote', MdFormatQuote)}
+              {renderBlockButton('heading-one', MdLooksOne)}
+              {renderBlockButton('heading-two', MdLooksTwo)}
               {renderBlockButton('numbered-list', MdFormatListNumbered)}
               {renderBlockButton('bulleted-list', MdFormatListBulleted)}
               <SlateToolbarButton onMouseDown={onClickLink}>

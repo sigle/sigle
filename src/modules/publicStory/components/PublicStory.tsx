@@ -28,6 +28,10 @@ const rules = [
             return <ol>{children}</ol>;
           case 'bulleted-list':
             return <ul>{children}</ul>;
+          case 'heading-one':
+            return <h1>{children}</h1>;
+          case 'heading-two':
+            return <h2>{children}</h2>;
         }
       }
     },
@@ -88,6 +92,11 @@ export const Content = styled.div`
 
   li + li {
     ${tw`mt-2`};
+  }
+
+  h1,
+  h2 {
+    ${tw`mt-6 mb-4`};
   }
 `;
 
