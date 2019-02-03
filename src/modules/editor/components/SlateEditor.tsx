@@ -51,7 +51,8 @@ const SlateContainer = styled.div`
 `;
 
 const SlateToolbar = styled.div`
-  ${tw`py-4 border-b border-solid border-grey-light flex`};
+  ${tw`py-4 border-b border-solid border-grey-light flex z-10 bg-white sticky`};
+  top: 0;
 `;
 
 const SlateToolbarButton = styled.button`
