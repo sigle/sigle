@@ -62,6 +62,11 @@ const SlateToolbarButton = styled.button`
 
 const StyledEditor = styled(Editor)`
   ${tw`py-4`};
+
+  blockquote {
+    ${tw`bg-grey-lighter py-4 px-4 mb-2`};
+    border-left: 10px solid #ccc;
+  }
 `;
 
 // See https://github.com/ianstormtaylor/slate/blob/master/examples/rich-text/index.js

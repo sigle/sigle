@@ -23,7 +23,7 @@ const rules = [
             );
           case 'paragraph':
             return <p className={obj.data.get('className')}>{children}</p>;
-          case 'quote':
+          case 'block-quote':
             return <blockquote>{children}</blockquote>;
           case 'image':
             const src = obj.data.get('src');
@@ -90,6 +90,11 @@ const Content = styled.div`
     display: block;
     max-width: 100%;
     max-height: 20em;
+  }
+
+  blockquote {
+    ${tw`bg-grey-lighter py-4 px-4 mb-2`};
+    border-left: 10px solid #ccc;
   }
 `;
 
