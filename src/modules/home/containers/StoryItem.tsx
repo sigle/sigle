@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { toast } from 'react-toastify';
 import { StoryItem as Component } from '../components/StoryItem';
 import { SubsetStory } from '../../../types';
 import { publishStory, unPublishStory } from '../../../utils';
@@ -18,10 +19,10 @@ export const StoryItem = ({ story, type, onPublish, onUnPublish }: Props) => {
     try {
       await publishStory(story.id);
       onPublish(story.id);
+      toast.success('Story published');
     } catch (error) {
-      // TODO nice error
       console.error(error);
-      alert(error.message);
+      toast.error(error.message);
     }
     setLoading(false);
   };
@@ -31,10 +32,10 @@ export const StoryItem = ({ story, type, onPublish, onUnPublish }: Props) => {
     try {
       await unPublishStory(story.id);
       onUnPublish(story.id);
+      toast.success('Story unpublished');
     } catch (error) {
-      // TODO nice error
       console.error(error);
-      alert(error.message);
+      toast.error(error.message);
     }
     setLoading(false);
   };

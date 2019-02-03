@@ -2,8 +2,9 @@
 
 declare module 'blockstack';
 declare module 'the-platform';
+// TODO find a way to type it
 declare module 'styled-components/macro';
-declare module 'tailwind.macro';
-declare module 'slate-plain-serializer';
-declare module 'slate-html-serializer';
-declare module 'dompurify';
+declare module 'tailwind.macro' {
+  function tailwindMacro(param: TemplateStringsArray);
+  export = tailwindMacro;
+}

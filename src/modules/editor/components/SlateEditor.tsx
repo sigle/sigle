@@ -1,6 +1,7 @@
 import React, { useState, useRef } from 'react';
 import styled from 'styled-components/macro';
 import tw from 'tailwind.macro';
+import { toast } from 'react-toastify';
 import { Editor } from 'slate-react';
 import { Block, Value } from 'slate';
 import {
@@ -12,6 +13,7 @@ import {
   MdFormatListBulleted,
   MdArrowBack,
   MdImage,
+  MdLink,
 } from 'react-icons/md';
 import {
   PageContainer,
@@ -27,6 +29,8 @@ import {
 } from '../../../utils';
 import { Story } from '../../../types';
 import { Link } from 'react-router-dom';
+import { config } from '../../../config';
+import { Content } from '../../publicStory/components/PublicStory';
 
 const StyledLink = styled(Link)`
   ${tw`no-underline text-black mb-4`};
@@ -50,11 +54,16 @@ const SlateContainer = styled.div`
 `;
 
 const SlateToolbar = styled.div`
-  ${tw`py-4 border-b border-solid border-grey-light flex`};
+  ${tw`py-4 border-b border-solid border-grey-light flex z-10 bg-white sticky`};
+  top: 0;
 `;
 
 const SlateToolbarButton = styled.button`
   ${tw`py-2 px-2 outline-none flex`};
+`;
+
+const StyledContent = styled(Content)`
+  margin: 0;
 `;
 
 const StyledEditor = styled(Editor)`
@@ -62,8 +71,6 @@ const StyledEditor = styled(Editor)`
 `;
 
 // See https://github.com/ianstormtaylor/slate/blob/master/examples/rich-text/index.js
-
-// https://www.toulouse-tourisme.com/sites/www.toulouse-tourisme.com/files/styles/incontournable_hp/public/thumbnails/image/incontournables_0.jpg
 
 // TODO add links
 // TODO handle cmd+b to set the text to bold for example
@@ -92,16 +99,24 @@ const schema = {
 // TODO warn user if he try to leave the page with unsaved changes
 
 interface Props {
+  width: number;
   story: Story;
   loadingDelete: boolean;
   onDelete: () => void;
 }
 
-export const SlateEditor = ({ story, loadingDelete, onDelete }: Props) => {
+export const SlateEditor = ({
+  width,
+  story,
+  loadingDelete,
+  onDelete,
+}: Props) => {
   const editorRef = useRef<any>(null);
   const [loadingSave, setLoadingSave] = useState(false);
   const [title, setTitle] = useState(story.title);
   const [value, setValue] = useState(Value.fromJSON(story.content));
+
+  const showEditor = width >= config.breakpoints.md;
 
   const handleTextChange = ({ value }: any) => {
     setValue(value);
@@ -118,11 +133,60 @@ export const SlateEditor = ({ story, loadingDelete, onDelete }: Props) => {
     });
   };
 
+  const wrapLink = (editor: any, href: string) => {
+    editor.wrapInline({
+      type: 'link',
+      data: { href },
+    });
+
+    editor.moveToEnd();
+  };
+
+  const unwrapLink = (editor: any) => {
+    editor.unwrapInline('link');
+  };
+
   const onClickImage = (event: any) => {
     event.preventDefault();
     const src = window.prompt('Enter the URL of the image:');
     if (!src) return;
     editorRef.current.command(insertImage, src);
+  };
+
+  const onClickLink = (event: any) => {
+    event.preventDefault();
+
+    const editor = editorRef.current;
+    const { value } = editor;
+
+    if (hasLinks()) {
+      editor.command(unwrapLink);
+    } else if (value.selection.isExpanded) {
+      const href = window.prompt('Enter the URL of the link:');
+
+      if (href === null) {
+        return;
+      }
+
+      editor.command(wrapLink, href);
+    } else {
+      const href = window.prompt('Enter the URL of the link:');
+
+      if (href === null) {
+        return;
+      }
+
+      const text = window.prompt('Enter the text for the link:');
+
+      if (text === null) {
+        return;
+      }
+
+      editor
+        .insertText(text)
+        .moveFocusBackward(text.length)
+        .command(wrapLink, href);
+    }
   };
 
   const onClickMark = (event: any, type: string) => {
@@ -177,6 +241,27 @@ export const SlateEditor = ({ story, loadingDelete, onDelete }: Props) => {
     }
   };
 
+  const onKeyDown = (event: any, editor: any, next: any) => {
+    // We want all our commands to start with the user pressing ctrl
+    if (!event.ctrlKey) {
+      return next();
+    }
+
+    let mark: string;
+    if (event.key === 'b') {
+      mark = 'bold';
+    } else if (event.key === 'i') {
+      mark = 'italic';
+    } else if (event.key === 'u') {
+      mark = 'underlined';
+    } else {
+      return next();
+    }
+
+    event.preventDefault();
+    editor.toggleMark(mark);
+  };
+
   const hasMark = (type: string) => {
     return value.activeMarks.some((mark: any) => mark.type == type);
   };
@@ -185,14 +270,18 @@ export const SlateEditor = ({ story, loadingDelete, onDelete }: Props) => {
     return value.blocks.some((node: any) => node.type == type);
   };
 
+  const hasLinks = () => {
+    return value.inlines.some(inline => !!(inline && inline.type == 'link'));
+  };
+
   const renderNode = (props: any, _: any, next: any) => {
     const { attributes, children, node, isFocused } = props;
 
     switch (node.type) {
+      case 'paragraph':
+        return <p {...attributes}>{children}</p>;
       case 'block-quote':
         return <blockquote {...attributes}>{children}</blockquote>;
-      case 'bulleted-list':
-        return <ul {...attributes}>{children}</ul>;
       case 'heading-one':
         return <h1 {...attributes}>{children}</h1>;
       case 'heading-two':
@@ -201,9 +290,19 @@ export const SlateEditor = ({ story, loadingDelete, onDelete }: Props) => {
         return <li {...attributes}>{children}</li>;
       case 'numbered-list':
         return <ol {...attributes}>{children}</ol>;
+      case 'bulleted-list':
+        return <ul {...attributes}>{children}</ul>;
       case 'image':
         const src = node.data.get('src');
         return <Image src={src} selected={isFocused} {...attributes} />;
+      case 'link': {
+        const href = node.data.get('href');
+        return (
+          <a {...attributes} href={href}>
+            {children}
+          </a>
+        );
+      }
       default:
         return next();
     }
@@ -215,8 +314,6 @@ export const SlateEditor = ({ story, loadingDelete, onDelete }: Props) => {
     switch (mark.type) {
       case 'bold':
         return <strong {...attributes}>{children}</strong>;
-      case 'code':
-        return <code {...attributes}>{children}</code>;
       case 'italic':
         return <em {...attributes}>{children}</em>;
       case 'underlined':
@@ -269,10 +366,10 @@ export const SlateEditor = ({ story, loadingDelete, onDelete }: Props) => {
       await saveStoryFile(updatedStory);
       file.stories[index] = subsetStory;
       await saveStoriesFile(file);
+      toast.success('Story saved');
     } catch (error) {
-      // TODO nice error
       console.error(error);
-      alert(error.message);
+      toast.error(error.message);
     }
     setLoadingSave(false);
   };
@@ -305,37 +402,47 @@ export const SlateEditor = ({ story, loadingDelete, onDelete }: Props) => {
         </div>
       </PageTitleContainer>
 
-      <div>
-        <Input
-          value={title}
-          onChange={(e: any) => setTitle(e.target.value)}
-          placeholder="Title"
-        />
+      {!showEditor && <div>The editor is not available on mobile.</div>}
 
-        <SlateContainer>
-          <SlateToolbar>
-            {renderMarkButton('bold', MdFormatBold)}
-            {renderMarkButton('italic', MdFormatItalic)}
-            {renderMarkButton('underlined', MdFormatUnderlined)}
-            {renderBlockButton('block-quote', MdFormatQuote)}
-            {renderBlockButton('numbered-list', MdFormatListNumbered)}
-            {renderBlockButton('bulleted-list', MdFormatListBulleted)}
-            <SlateToolbarButton onMouseDown={onClickImage}>
-              <MdImage color={'#b8c2cc'} size={18} />
-            </SlateToolbarButton>
-          </SlateToolbar>
-
-          <StyledEditor
-            ref={editorRef}
-            value={value}
-            onChange={handleTextChange}
-            schema={schema}
-            placeholder="Text"
-            renderNode={renderNode}
-            renderMark={renderMark}
+      {showEditor && (
+        <div>
+          <Input
+            value={title}
+            onChange={(e: any) => setTitle(e.target.value)}
+            placeholder="Title"
           />
-        </SlateContainer>
-      </div>
+
+          <SlateContainer>
+            <SlateToolbar>
+              {renderMarkButton('bold', MdFormatBold)}
+              {renderMarkButton('italic', MdFormatItalic)}
+              {renderMarkButton('underlined', MdFormatUnderlined)}
+              {renderBlockButton('block-quote', MdFormatQuote)}
+              {renderBlockButton('numbered-list', MdFormatListNumbered)}
+              {renderBlockButton('bulleted-list', MdFormatListBulleted)}
+              <SlateToolbarButton onMouseDown={onClickLink}>
+                <MdLink color={'#b8c2cc'} size={18} />
+              </SlateToolbarButton>
+              <SlateToolbarButton onMouseDown={onClickImage}>
+                <MdImage color={'#b8c2cc'} size={18} />
+              </SlateToolbarButton>
+            </SlateToolbar>
+
+            <StyledContent>
+              <StyledEditor
+                ref={editorRef}
+                value={value}
+                onChange={handleTextChange}
+                onKeyDown={onKeyDown}
+                schema={schema}
+                placeholder="Text"
+                renderNode={renderNode}
+                renderMark={renderMark}
+              />
+            </StyledContent>
+          </SlateContainer>
+        </div>
+      )}
     </PageContainer>
   );
 };

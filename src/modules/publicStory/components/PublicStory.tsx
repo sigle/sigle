@@ -6,6 +6,7 @@ import tw from 'tailwind.macro';
 import { Value } from 'slate';
 import Html from 'slate-html-serializer';
 import dompurify from 'dompurify';
+import { toast } from 'react-toastify';
 import { Story } from '../../../types';
 import { Container } from '../../../components';
 
@@ -14,19 +15,19 @@ const rules = [
     serialize(obj: any, children: any) {
       if (obj.object == 'block') {
         switch (obj.type) {
-          case 'code':
-            return (
-              <pre>
-                <code>{children}</code>
-              </pre>
-            );
           case 'paragraph':
             return <p className={obj.data.get('className')}>{children}</p>;
-          case 'quote':
+          case 'block-quote':
             return <blockquote>{children}</blockquote>;
           case 'image':
             const src = obj.data.get('src');
             return <img src={src} />;
+          case 'list-item':
+            return <li>{children}</li>;
+          case 'numbered-list':
+            return <ol>{children}</ol>;
+          case 'bulleted-list':
+            return <ul>{children}</ul>;
         }
       }
     },
@@ -47,18 +48,11 @@ const rules = [
   },
   {
     serialize(obj: any, children: any) {
-      if (obj.type === 'image') {
-        console.log(obj.type, obj.data.get('src'), obj.toString());
-      }
-
-      if (obj.object == 'mark') {
+      if (obj.object == 'inline') {
         switch (obj.type) {
-          case 'bold':
-            return <strong>{children}</strong>;
-          case 'italic':
-            return <em>{children}</em>;
-          case 'underlined':
-            return <u>{children}</u>;
+          case 'link':
+            const href = obj.data.get('href');
+            return <a href={href}>{children}</a>;
         }
       }
     },
@@ -71,18 +65,29 @@ const Title = styled.div`
   ${tw`text-2xl mt-16 font-bold`};
 `;
 
-const Content = styled.div`
+export const Content = styled.div`
   ${tw`text-base mt-8 mb-16`};
 
-  p {
-    ${tw`mb-2`};
+  p,
+  ol,
+  ul {
+    ${tw`mb-4`};
   }
 
   img {
-    ${tw`mb-2`};
+    ${tw`mb-4`};
     display: block;
     max-width: 100%;
     max-height: 20em;
+  }
+
+  blockquote {
+    ${tw`mb-4 bg-grey-lighter py-4 px-4`};
+    border-left: 10px solid #ccc;
+  }
+
+  li + li {
+    ${tw`mt-2`};
   }
 `;
 
@@ -116,7 +121,7 @@ export const PublicStory = ({ match }: Props) => {
         return;
       }
       console.error(error);
-      alert(error.message);
+      toast.error(error.message);
       setLoading(false);
     }
   };

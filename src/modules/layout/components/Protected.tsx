@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { toast } from 'react-toastify';
 import * as blockstack from 'blockstack';
 import { Login } from './Login';
 
@@ -20,7 +21,7 @@ export const Protected = ({ children }: Props) => {
         })
         .catch((error: any) => {
           setLoggingIn(false);
-          alert(error.message);
+          toast.error(error.message);
         });
     }
   }, [false]);

@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import { Editor as Component } from '../components/Editor';
+import { toast } from 'react-toastify';
 import { RouteComponentProps } from 'react-router';
+import { Editor as Component } from '../components/Editor';
 import { Story } from '../../../types';
 import { getStoryFile } from '../../../utils';
 
@@ -16,8 +17,7 @@ export const Editor = ({ match }: Props) => {
       const file = await getStoryFile(storyId);
       setStory(file);
     } catch (error) {
-      // TODO display nice error
-      alert(error.message);
+      toast.error(error.message);
     }
     setLoading(false);
   };
