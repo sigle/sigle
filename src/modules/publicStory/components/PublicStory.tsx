@@ -48,18 +48,11 @@ const rules = [
   },
   {
     serialize(obj: any, children: any) {
-      if (obj.type === 'image') {
-        console.log(obj.type, obj.data.get('src'), obj.toString());
-      }
-
-      if (obj.object == 'mark') {
+      if (obj.object == 'inline') {
         switch (obj.type) {
-          case 'bold':
-            return <strong>{children}</strong>;
-          case 'italic':
-            return <em>{children}</em>;
-          case 'underlined':
-            return <u>{children}</u>;
+          case 'link':
+            const href = obj.data.get('href');
+            return <a href={href}>{children}</a>;
         }
       }
     },

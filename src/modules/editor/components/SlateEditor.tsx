@@ -13,6 +13,7 @@ import {
   MdFormatListBulleted,
   MdArrowBack,
   MdImage,
+  MdLink,
 } from 'react-icons/md';
 import {
   PageContainer,
@@ -132,11 +133,60 @@ export const SlateEditor = ({
     });
   };
 
+  const wrapLink = (editor: any, href: string) => {
+    editor.wrapInline({
+      type: 'link',
+      data: { href },
+    });
+
+    editor.moveToEnd();
+  };
+
+  const unwrapLink = (editor: any) => {
+    editor.unwrapInline('link');
+  };
+
   const onClickImage = (event: any) => {
     event.preventDefault();
     const src = window.prompt('Enter the URL of the image:');
     if (!src) return;
     editorRef.current.command(insertImage, src);
+  };
+
+  const onClickLink = (event: any) => {
+    event.preventDefault();
+
+    const editor = editorRef.current;
+    const { value } = editor;
+
+    if (hasLinks()) {
+      editor.command(unwrapLink);
+    } else if (value.selection.isExpanded) {
+      const href = window.prompt('Enter the URL of the link:');
+
+      if (href === null) {
+        return;
+      }
+
+      editor.command(wrapLink, href);
+    } else {
+      const href = window.prompt('Enter the URL of the link:');
+
+      if (href === null) {
+        return;
+      }
+
+      const text = window.prompt('Enter the text for the link:');
+
+      if (text === null) {
+        return;
+      }
+
+      editor
+        .insertText(text)
+        .moveFocusBackward(text.length)
+        .command(wrapLink, href);
+    }
   };
 
   const onClickMark = (event: any, type: string) => {
@@ -199,6 +249,10 @@ export const SlateEditor = ({
     return value.blocks.some((node: any) => node.type == type);
   };
 
+  const hasLinks = () => {
+    return value.inlines.some(inline => !!(inline && inline.type == 'link'));
+  };
+
   const renderNode = (props: any, _: any, next: any) => {
     const { attributes, children, node, isFocused } = props;
 
@@ -220,6 +274,14 @@ export const SlateEditor = ({
       case 'image':
         const src = node.data.get('src');
         return <Image src={src} selected={isFocused} {...attributes} />;
+      case 'link': {
+        const href = node.data.get('href');
+        return (
+          <a {...attributes} href={href}>
+            {children}
+          </a>
+        );
+      }
       default:
         return next();
     }
@@ -339,6 +401,9 @@ export const SlateEditor = ({
               {renderBlockButton('bulleted-list', MdFormatListBulleted)}
               <SlateToolbarButton onMouseDown={onClickImage}>
                 <MdImage color={'#b8c2cc'} size={18} />
+              </SlateToolbarButton>
+              <SlateToolbarButton onMouseDown={onClickLink}>
+                <MdLink color={'#b8c2cc'} size={18} />
               </SlateToolbarButton>
             </SlateToolbar>
 
