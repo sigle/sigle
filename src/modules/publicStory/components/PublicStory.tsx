@@ -79,6 +79,10 @@ export const Content = styled.div`
     ${tw`mb-4`};
   }
 
+  p {
+    min-height: 1rem;
+  }
+
   img {
     ${tw`mb-4`};
     display: block;
