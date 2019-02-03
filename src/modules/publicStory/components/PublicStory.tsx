@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import * as blockstack from 'blockstack';
+import { Helmet } from 'react-helmet';
 import { RouteComponentProps } from 'react-router';
 import styled from 'styled-components/macro';
 import tw from 'tailwind.macro';
@@ -66,16 +67,20 @@ const rules = [
 const html = new Html({ rules });
 
 const Title = styled.div`
-  ${tw`text-2xl mt-16 font-bold`};
+  ${tw`text-4xl mt-16 font-bold`};
 `;
 
 export const Content = styled.div`
-  ${tw`text-base mt-8 mb-16`};
+  ${tw`text-base mt-8 mb-16 leading-tight`};
 
   p,
   ol,
   ul {
     ${tw`mb-4`};
+  }
+
+  p {
+    min-height: 1rem;
   }
 
   img {
@@ -94,9 +99,12 @@ export const Content = styled.div`
     ${tw`mt-2`};
   }
 
-  h1,
+  h1 {
+    ${tw`mt-6 mb-4 text-3xl`};
+  }
+
   h2 {
-    ${tw`mt-6 mb-4`};
+    ${tw`mt-6 mb-4 text-2xl`};
   }
 `;
 
@@ -149,6 +157,9 @@ export const PublicStory = ({ match }: Props) => {
 
   return (
     <Container>
+      <Helmet>
+        <title>{file.title}</title>
+      </Helmet>
       <Title>{file.title}</Title>
       <Content
         dangerouslySetInnerHTML={{
