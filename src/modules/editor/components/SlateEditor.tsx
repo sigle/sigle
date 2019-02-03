@@ -399,11 +399,11 @@ export const SlateEditor = ({
               {renderBlockButton('block-quote', MdFormatQuote)}
               {renderBlockButton('numbered-list', MdFormatListNumbered)}
               {renderBlockButton('bulleted-list', MdFormatListBulleted)}
-              <SlateToolbarButton onMouseDown={onClickImage}>
-                <MdImage color={'#b8c2cc'} size={18} />
-              </SlateToolbarButton>
               <SlateToolbarButton onMouseDown={onClickLink}>
                 <MdLink color={'#b8c2cc'} size={18} />
+              </SlateToolbarButton>
+              <SlateToolbarButton onMouseDown={onClickImage}>
+                <MdImage color={'#b8c2cc'} size={18} />
               </SlateToolbarButton>
             </SlateToolbar>
 
