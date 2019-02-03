@@ -27,7 +27,7 @@ const rules = [
           case 'numbered-list':
             return <ol>{children}</ol>;
           case 'bulleted-list':
-            return <ol>{children}</ol>;
+            return <ul>{children}</ul>;
         }
       }
     },
