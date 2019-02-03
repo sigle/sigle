@@ -28,6 +28,12 @@ const rules = [
           case 'image':
             const src = obj.data.get('src');
             return <img src={src} />;
+          case 'list-item':
+            return <li>{children}</li>;
+          case 'numbered-list':
+            return <ol>{children}</ol>;
+          case 'bulleted-list':
+            return <ol>{children}</ol>;
         }
       }
     },

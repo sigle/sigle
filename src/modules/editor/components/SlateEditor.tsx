@@ -200,8 +200,6 @@ export const SlateEditor = ({
     switch (node.type) {
       case 'block-quote':
         return <blockquote {...attributes}>{children}</blockquote>;
-      case 'bulleted-list':
-        return <ul {...attributes}>{children}</ul>;
       case 'heading-one':
         return <h1 {...attributes}>{children}</h1>;
       case 'heading-two':
@@ -210,6 +208,8 @@ export const SlateEditor = ({
         return <li {...attributes}>{children}</li>;
       case 'numbered-list':
         return <ol {...attributes}>{children}</ol>;
+      case 'bulleted-list':
+        return <ul {...attributes}>{children}</ul>;
       case 'image':
         const src = node.data.get('src');
         return <Image src={src} selected={isFocused} {...attributes} />;
