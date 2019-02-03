@@ -241,6 +241,27 @@ export const SlateEditor = ({
     }
   };
 
+  const onKeyDown = (event: any, editor: any, next: any) => {
+    // We want all our commands to start with the user pressing ctrl
+    if (!event.ctrlKey) {
+      return next();
+    }
+
+    let mark: string;
+    if (event.key === 'b') {
+      mark = 'bold';
+    } else if (event.key === 'i') {
+      mark = 'italic';
+    } else if (event.key === 'u') {
+      mark = 'underlined';
+    } else {
+      return next();
+    }
+
+    event.preventDefault();
+    editor.toggleMark(mark);
+  };
+
   const hasMark = (type: string) => {
     return value.activeMarks.some((mark: any) => mark.type == type);
   };
@@ -412,6 +433,7 @@ export const SlateEditor = ({
                 ref={editorRef}
                 value={value}
                 onChange={handleTextChange}
+                onKeyDown={onKeyDown}
                 schema={schema}
                 placeholder="Text"
                 renderNode={renderNode}
