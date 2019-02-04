@@ -6,7 +6,7 @@ import jungle from '../../../img/jungle.png';
 import { Button, Container } from '../../../components';
 
 const NotFoundContainer = styled(Container)`
-  ${tw`mt-8 flex flex-col items-center md:flex-row`};
+  ${tw`mt-8 flex flex-col items-center text-center md:flex-row md:text-left`};
 `;
 
 const NotFoundTextContainer = styled(Container)`

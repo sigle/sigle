@@ -36,7 +36,7 @@ import { Content } from '../../publicStory/components/PublicStory';
 import work from '../../../img/work.png';
 
 const MobileEditor = styled.div`
-  ${tw`flex flex-col items-center`};
+  ${tw`flex flex-col items-center text-center`};
 
   h3 {
     ${tw`mb-4 text-4xl font-normal`};
