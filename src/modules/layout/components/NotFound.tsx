@@ -4,6 +4,7 @@ import tw from 'tailwind.macro';
 import { Link } from 'react-router-dom';
 import jungle from '../../../img/jungle.png';
 import { Button, Container } from '../../../components';
+import { config } from '../../../config';
 
 const NotFoundContainer = styled(Container)`
   ${tw`mt-8 mb-8 flex flex-col items-center text-center md:flex-row md:text-left`};
@@ -24,13 +25,17 @@ const NotFoundSubTitle = styled.div`
 `;
 
 const NotFoundText = styled.div`
-  ${tw`mb-8 text-base`};
+  ${tw`mb-4 text-base`};
 `;
 
 const NotFoundIllu = styled.img`
   ${tw`mt-4 mb-4`};
   width: 300px;
   max-width: 100%;
+
+  @media (min-width: ${config.breakpoints.md}px) {
+    width: 520px;
+  }
 `;
 
 interface Props {
