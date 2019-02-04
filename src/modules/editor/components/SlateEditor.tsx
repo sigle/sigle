@@ -17,6 +17,7 @@ import {
   MdLooksTwo,
   MdLooksOne,
 } from 'react-icons/md';
+import { Link } from 'react-router-dom';
 import {
   PageContainer,
   PageTitleContainer,
@@ -30,9 +31,28 @@ import {
   saveStoriesFile,
 } from '../../../utils';
 import { Story } from '../../../types';
-import { Link } from 'react-router-dom';
 import { config } from '../../../config';
 import { Content } from '../../publicStory/components/PublicStory';
+import work from '../../../img/work.png';
+
+const MobileEditor = styled.div`
+  ${tw`flex flex-col items-center text-center`};
+
+  h3 {
+    ${tw`mb-4 text-4xl font-normal`};
+    font-family: 'Libre Baskerville', serif;
+  }
+
+  p {
+    ${tw`mt-2`};
+  }
+`;
+
+const MobileEditorIllu = styled.img`
+  ${tw`mt-4 mb-4`};
+  width: 300px;
+  max-width: 100%;
+`;
 
 const StyledLink = styled(Link)`
   ${tw`no-underline text-black mb-4`};
@@ -406,7 +426,14 @@ export const SlateEditor = ({
         </div>
       </PageTitleContainer>
 
-      {!showEditor && <div>The editor is not available on mobile.</div>}
+      {!showEditor && (
+        <MobileEditor>
+          <MobileEditorIllu src={work} alt="One" />
+          <h3>Oh oh!</h3>
+          <p>The editor is not available on mobile.</p>
+          <p>Be patient, we’re working hard to make it work!</p>
+        </MobileEditor>
+      )}
 
       {showEditor && (
         <div>
