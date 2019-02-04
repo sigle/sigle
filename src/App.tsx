@@ -8,14 +8,12 @@ import { PublicStory } from './modules/publicStory';
 import { PublicHome } from './modules/publicHome';
 
 import 'react-toastify/dist/ReactToastify.css';
+import { NotFound } from './modules/layout/components/NotFound';
 
 // @ts-ignore
 const Home = React.lazy(() => import('./modules/home/Home'));
 // @ts-ignore
 const Editor = React.lazy(() => import('./modules/editor/Editor'));
-
-// TODO nice 404 page
-const NoMatch = () => <div>404 page not found</div>;
 
 const GlobalStyle = createGlobalStyle`
   .reactToastify.Toastify__toast--success {
@@ -61,7 +59,7 @@ const App = () => {
           <Route path="/:username" exact component={PublicHome} />
           <Route path="/:username/:storyId" exact component={PublicStory} />
 
-          <Route component={NoMatch} />
+          <Route render={() => <NotFound error="Page not found" />} />
         </Switch>
       </Router>
     </React.Fragment>

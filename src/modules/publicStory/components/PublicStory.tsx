@@ -10,6 +10,7 @@ import dompurify from 'dompurify';
 import { toast } from 'react-toastify';
 import { Story } from '../../../types';
 import { Container } from '../../../components';
+import { NotFound } from '../../layout/components/NotFound';
 
 const rules = [
   {
@@ -158,7 +159,7 @@ export const PublicStory = ({ match }: Props) => {
   }
 
   if (!file) {
-    return <Container>File not found</Container>;
+    return <NotFound error="File not found" />;
   }
 
   return (

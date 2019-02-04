@@ -5,6 +5,7 @@ import { toast } from 'react-toastify';
 import { StoryFile } from '../../../types';
 import { Container } from '../../../components';
 import { PublicStoryItem } from './PublicStoryItem';
+import { NotFound } from '../../layout/components/NotFound';
 
 type Props = RouteComponentProps<{ username: string }>;
 
@@ -50,7 +51,7 @@ export const PublicHome = ({ match }: Props) => {
   }
 
   if (!file) {
-    return <Container>File not found</Container>;
+    return <NotFound error="File not found" />;
   }
 
   return (
