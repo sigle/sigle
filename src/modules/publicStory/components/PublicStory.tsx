@@ -92,7 +92,7 @@ export const Content = styled.div`
     ${tw`mb-4`};
     display: block;
     max-width: 100%;
-    max-height: 20em;
+    max-height: 30em;
   }
 
   blockquote {
