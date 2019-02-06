@@ -84,7 +84,7 @@ export const Home = ({
       {showIllu && (
         <IlluContainer>
           <Illu src={three} alt="Three" />
-          <p>Shout the "new story" button to start.</p>
+          <p>Shoot the "new story" button to start.</p>
         </IlluContainer>
       )}
 
