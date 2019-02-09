@@ -69,6 +69,7 @@ export const StorySettings = ({
         </CloseButton>
       </TitleContainer>
 
+      <p>Cover image:</p>
       {!story.coverImage && (
         <ImageEmpty onClick={onUploadImage}>Upload story image</ImageEmpty>
       )}
