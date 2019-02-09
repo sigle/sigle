@@ -8,7 +8,7 @@ import { Story } from '../../../types';
 const containerSize = 450;
 
 const Container = styled.div<{ open: boolean }>`
-  ${tw`absolute pin-r pin-t pin-b bg-grey-lightest z-10 px-8 pb-8`};
+  ${tw`fixed pin-r pin-t pin-b bg-grey-lightest z-10 px-8 pb-8`};
   width: ${containerSize}px;
   max-width: 100%;
   transition: transform 0.3s ease;
@@ -43,6 +43,10 @@ const Image = styled.img`
   max-width: 100%;
 `;
 
+const Label = styled.div`
+  ${tw`mb-2`};
+`;
+
 interface Props {
   story: Story;
   open: boolean;
@@ -69,7 +73,7 @@ export const StorySettings = ({
         </CloseButton>
       </TitleContainer>
 
-      <p>Cover image:</p>
+      <Label>Cover image:</Label>
       {!story.coverImage && (
         <ImageEmpty onClick={onUploadImage}>Upload story image</ImageEmpty>
       )}

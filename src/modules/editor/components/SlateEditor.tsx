@@ -138,7 +138,7 @@ export const SlateEditor = ({
   onChangeStoryField,
 }: Props) => {
   const editorRef = useRef<any>(null);
-  const [settingsOpen, setSettingsOpen] = useState(true);
+  const [settingsOpen, setSettingsOpen] = useState(false);
   const [loadingSave, setLoadingSave] = useState(false);
   const [value, setValue] = useState(Value.fromJSON(story.content));
 
