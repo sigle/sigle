@@ -5,12 +5,14 @@ import { MdClose } from 'react-icons/md';
 import { ButtonOutline } from '../../../components';
 import { Story } from '../../../types';
 
+const containerSize = 450;
+
 const Container = styled.div<{ open: boolean }>`
   ${tw`absolute pin-r pin-t pin-b bg-grey-lightest z-10 px-8 pb-8`};
-  width: 500px;
+  width: ${containerSize}px;
   max-width: 100%;
   transition: transform 0.3s ease;
-  transform: translate3d(500px, 0, 0);
+  transform: translate3d(${containerSize}px, 0, 0);
 
   ${props =>
     props.open &&
@@ -29,7 +31,7 @@ const Title = styled.div`
 `;
 
 const CloseButton = styled.div`
-  ${tw`p-2 flex items-center cursor-pointer`};
+  ${tw`p-2 -mr-2 flex items-center cursor-pointer`};
 `;
 
 interface Props {
