@@ -60,7 +60,6 @@ export const StorySettings = ({
   onDelete,
   onUploadImage,
 }: Props) => {
-  console.log(story);
   return (
     <Container open={open}>
       <TitleContainer>
