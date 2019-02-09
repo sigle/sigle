@@ -71,6 +71,12 @@ const Title = styled.div`
   ${tw`text-4xl mt-16 font-bold`};
 `;
 
+const CoverImage = styled.img`
+  ${tw`mt-8`};
+  display: block;
+  max-width: 100%;
+`;
+
 export const Content = styled.div`
   ${tw`text-base mt-8 mb-16 leading-tight`};
 
@@ -168,6 +174,7 @@ export const PublicStory = ({ match }: Props) => {
         <title>{file.title}</title>
       </Helmet>
       <Title>{file.title}</Title>
+      {file.coverImage && <CoverImage src={file.coverImage} />}
       <Content
         dangerouslySetInnerHTML={{
           __html: dompurify.sanitize(
