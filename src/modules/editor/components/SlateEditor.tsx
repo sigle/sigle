@@ -3,6 +3,7 @@ import styled from 'styled-components/macro';
 import tw from 'tailwind.macro';
 import { toast } from 'react-toastify';
 import { Editor } from 'slate-react';
+import SoftBreak from 'slate-soft-break';
 import { Block, Value } from 'slate';
 import {
   MdFormatBold,
@@ -117,6 +118,8 @@ const schema = {
     },
   },
 };
+
+const slatePlugins = [SoftBreak({ shift: true })];
 
 // TODO warn user if he try to leave the page with unsaved changes
 
@@ -464,6 +467,7 @@ export const SlateEditor = ({
             <StyledContent>
               <StyledEditor
                 ref={editorRef}
+                plugins={slatePlugins}
                 value={value}
                 onChange={handleTextChange}
                 onKeyDown={onKeyDown}
