@@ -23,7 +23,7 @@ export interface Story {
   /**
    * Image used to display the cards
    */
-  image?: string;
+  coverImage?: string;
   /**
    * Type of the story
    * private: encrypted
@@ -38,7 +38,7 @@ export interface SubsetStory {
   id: string;
   title: string;
   content: string;
-  image?: string;
+  coverImage?: string;
   type: 'private' | 'public';
   createdAt: number;
   updatedAt: number;

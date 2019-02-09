@@ -27,7 +27,7 @@ export const StorySettings = ({
   const handleUploadImage = () => {
     const src = window.prompt('Enter the URL of the image:');
     if (!src) return;
-    onChangeStoryField('image', src);
+    onChangeStoryField('coverImage', src);
   };
 
   const handleDelete = async () => {

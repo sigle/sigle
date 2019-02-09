@@ -70,10 +70,10 @@ export const StorySettings = ({
         </CloseButton>
       </TitleContainer>
 
-      {!story.image && (
+      {!story.coverImage && (
         <ImageEmpty onClick={onUploadImage}>Upload story image</ImageEmpty>
       )}
-      {story.image && <Image src={story.image} />}
+      {story.coverImage && <Image src={story.coverImage} />}
 
       {loadingDelete && <ButtonOutline disabled>Deleting ...</ButtonOutline>}
       {!loadingDelete && (

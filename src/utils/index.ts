@@ -152,7 +152,7 @@ export const convertStoryToSubsetStory = (story: Story): SubsetStory => {
       plainContent.length > CONTENT_SUBSET_SIZE
         ? plainContent.substring(0, CONTENT_SUBSET_SIZE) + '...'
         : plainContent,
-    image: story.image,
+    coverImage: story.coverImage,
     type: story.type,
     createdAt: story.createdAt,
     updatedAt: story.updatedAt,
