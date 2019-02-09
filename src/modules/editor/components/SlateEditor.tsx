@@ -35,7 +35,7 @@ import { Story } from '../../../types';
 import { config } from '../../../config';
 import { Content } from '../../publicStory/components/PublicStory';
 import work from '../../../img/work.png';
-import { StorySettings } from './StorySettings';
+import { StorySettings } from '../containers/StorySettings';
 
 const MobileEditor = styled.div`
   ${tw`flex flex-col items-center text-center`};
@@ -127,16 +127,9 @@ const slatePlugins = [SoftBreak({ shift: true })];
 interface Props {
   width: number;
   story: Story;
-  loadingDelete: boolean;
-  onDelete: () => void;
 }
 
-export const SlateEditor = ({
-  width,
-  story,
-  loadingDelete,
-  onDelete,
-}: Props) => {
+export const SlateEditor = ({ width, story }: Props) => {
   const editorRef = useRef<any>(null);
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [loadingSave, setLoadingSave] = useState(false);
@@ -484,10 +477,9 @@ export const SlateEditor = ({
             </StyledContent>
           </SlateContainer>
           <StorySettings
+            story={story}
             open={settingsOpen}
             onClose={handleCloseSettings}
-            loadingDelete={loadingDelete}
-            onDelete={onDelete}
           />
         </div>
       )}

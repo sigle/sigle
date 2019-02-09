@@ -3,6 +3,7 @@ import styled, { css } from 'styled-components/macro';
 import tw from 'tailwind.macro';
 import { MdClose } from 'react-icons/md';
 import { ButtonOutline } from '../../../components';
+import { Story } from '../../../types';
 
 const Container = styled.div`
   ${tw`absolute pin-r pin-t pin-b bg-grey-lightest z-10 px-8 pb-8`};
@@ -32,6 +33,7 @@ const CloseButton = styled.div`
 `;
 
 interface Props {
+  story: Story;
   open: boolean;
   onClose: () => void;
   loadingDelete: boolean;
