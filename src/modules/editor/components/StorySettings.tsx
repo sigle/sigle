@@ -34,20 +34,33 @@ const CloseButton = styled.div`
   ${tw`p-2 -mr-2 flex items-center cursor-pointer`};
 `;
 
+const ImageEmpty = styled.div`
+  ${tw`flex items-center justify-center bg-white py-16 mb-4 cursor-pointer`};
+`;
+
+const Image = styled.img`
+  ${tw`mb-4`};
+  max-width: 100%;
+`;
+
 interface Props {
   story: Story;
   open: boolean;
   onClose: () => void;
   loadingDelete: boolean;
   onDelete: () => void;
+  onUploadImage: () => void;
 }
 
 export const StorySettings = ({
   open,
   onClose,
+  story,
   loadingDelete,
   onDelete,
+  onUploadImage,
 }: Props) => {
+  console.log(story);
   return (
     <Container open={open}>
       <TitleContainer>
@@ -56,6 +69,11 @@ export const StorySettings = ({
           <MdClose />
         </CloseButton>
       </TitleContainer>
+
+      {!story.image && (
+        <ImageEmpty onClick={onUploadImage}>Upload story image</ImageEmpty>
+      )}
+      {story.image && <Image src={story.image} />}
 
       {loadingDelete && <ButtonOutline disabled>Deleting ...</ButtonOutline>}
       {!loadingDelete && (

@@ -127,13 +127,19 @@ const slatePlugins = [SoftBreak({ shift: true })];
 interface Props {
   width: number;
   story: Story;
+  onChangeTitle: (title: string) => void;
+  onChangeStoryField: (field: string, value: any) => void;
 }
 
-export const SlateEditor = ({ width, story }: Props) => {
+export const SlateEditor = ({
+  width,
+  story,
+  onChangeTitle,
+  onChangeStoryField,
+}: Props) => {
   const editorRef = useRef<any>(null);
-  const [settingsOpen, setSettingsOpen] = useState(false);
+  const [settingsOpen, setSettingsOpen] = useState(true);
   const [loadingSave, setLoadingSave] = useState(false);
-  const [title, setTitle] = useState(story.title);
   const [value, setValue] = useState(Value.fromJSON(story.content));
 
   const showEditor = width >= config.breakpoints.md;
@@ -375,7 +381,6 @@ export const SlateEditor = ({ width, story }: Props) => {
       const content = value.toJSON();
       const updatedStory: Story = {
         ...story,
-        title,
         content,
         updatedAt: Date.now(),
       };
@@ -439,8 +444,8 @@ export const SlateEditor = ({ width, story }: Props) => {
       {showEditor && (
         <div>
           <Input
-            value={title}
-            onChange={(e: any) => setTitle(e.target.value)}
+            value={story.title}
+            onChange={(e: any) => onChangeTitle(e.target.value)}
             placeholder="Title"
           />
 
@@ -480,6 +485,7 @@ export const SlateEditor = ({ width, story }: Props) => {
             story={story}
             open={settingsOpen}
             onClose={handleCloseSettings}
+            onChangeStoryField={onChangeStoryField}
           />
         </div>
       )}

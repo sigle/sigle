@@ -13,10 +13,22 @@ interface Props {
   story: Story;
   open: boolean;
   onClose: () => void;
+  onChangeStoryField: (field: string, value: any) => void;
 }
 
-export const StorySettings = ({ story, open, onClose }: Props) => {
+export const StorySettings = ({
+  story,
+  open,
+  onClose,
+  onChangeStoryField,
+}: Props) => {
   const [loadingDelete, setLoadingDelete] = useState(false);
+
+  const handleUploadImage = () => {
+    const src = window.prompt('Enter the URL of the image:');
+    if (!src) return;
+    onChangeStoryField('image', src);
+  };
 
   const handleDelete = async () => {
     try {
@@ -50,6 +62,7 @@ export const StorySettings = ({ story, open, onClose }: Props) => {
       onClose={onClose}
       loadingDelete={loadingDelete}
       onDelete={handleDelete}
+      onUploadImage={handleUploadImage}
     />
   );
 };
