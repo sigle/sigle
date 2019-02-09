@@ -50,6 +50,7 @@
     "slate-html-serializer": "0.7.34",
     "slate-plain-serializer": "0.6.34",
     "slate-react": "0.21.16",
+    "slate-soft-break": "0.9.0",
     "styled-components": "4.1.3",
     "the-platform": "0.9.3",
     "typeface-libre-baskerville": "0.0.54",
