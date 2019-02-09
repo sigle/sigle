@@ -39,7 +39,7 @@ const ImageEmpty = styled.div`
 `;
 
 const Image = styled.img`
-  ${tw`mb-4`};
+  ${tw`mb-4 cursor-pointer`};
   max-width: 100%;
 `;
 
@@ -72,7 +72,9 @@ export const StorySettings = ({
       {!story.coverImage && (
         <ImageEmpty onClick={onUploadImage}>Upload story image</ImageEmpty>
       )}
-      {story.coverImage && <Image src={story.coverImage} />}
+      {story.coverImage && (
+        <Image src={story.coverImage} onClick={onUploadImage} />
+      )}
 
       {loadingDelete && <ButtonOutline disabled>Deleting ...</ButtonOutline>}
       {!loadingDelete && (
