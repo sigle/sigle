@@ -35,6 +35,7 @@ import { Story } from '../../../types';
 import { config } from '../../../config';
 import { Content } from '../../publicStory/components/PublicStory';
 import work from '../../../img/work.png';
+import { StorySettings } from './StorySettings';
 
 const MobileEditor = styled.div`
   ${tw`flex flex-col items-center text-center`};
@@ -137,6 +138,7 @@ export const SlateEditor = ({
   onDelete,
 }: Props) => {
   const editorRef = useRef<any>(null);
+  const [settingsOpen, setSettingsOpen] = useState(false);
   const [loadingSave, setLoadingSave] = useState(false);
   const [title, setTitle] = useState(story.title);
   const [value, setValue] = useState(Value.fromJSON(story.content));
@@ -401,6 +403,14 @@ export const SlateEditor = ({
     setLoadingSave(false);
   };
 
+  const handleOpenSettings = () => {
+    setSettingsOpen(true);
+  };
+
+  const handleCloseSettings = () => {
+    setSettingsOpen(false);
+  };
+
   return (
     <PageContainer>
       <StyledLink to="/">
@@ -420,12 +430,7 @@ export const SlateEditor = ({
               Save
             </ButtonOutline>
           )}
-          {loadingDelete && (
-            <ButtonOutline disabled>Deleting ...</ButtonOutline>
-          )}
-          {!loadingDelete && (
-            <ButtonOutline onClick={onDelete}>Delete</ButtonOutline>
-          )}
+          <ButtonOutline onClick={handleOpenSettings}>Settings</ButtonOutline>
         </div>
       </PageTitleContainer>
 
@@ -478,6 +483,12 @@ export const SlateEditor = ({
               />
             </StyledContent>
           </SlateContainer>
+          <StorySettings
+            open={settingsOpen}
+            onClose={handleCloseSettings}
+            loadingDelete={loadingDelete}
+            onDelete={onDelete}
+          />
         </div>
       )}
     </PageContainer>
