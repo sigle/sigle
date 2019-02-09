@@ -14,7 +14,7 @@ const StoryTitleContainer = styled.div`
   ${tw`flex justify-between`};
 `;
 
-const StoryTitle = styled.div`
+const StoryTitle = styled.div<{ to: string }>`
   ${tw`text-2xl font-bold no-underline text-black`};
 `;
 

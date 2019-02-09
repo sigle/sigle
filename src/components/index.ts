@@ -24,11 +24,11 @@ export const Tab = styled.div`
   }
 `;
 
-export const Button = styled.button`
+export const Button = styled.button<{ to?: string }>`
   ${tw`bg-pink text-white py-2 px-8 rounded-full no-underline`};
 `;
 
-export const ButtonOutline = styled.button`
+export const ButtonOutline = styled.button<{ to?: string }>`
   ${tw`py-1 px-2 rounded-lg text-sm text-pink border border-solid border-pink no-underline`};
 
   &:hover {

@@ -9,7 +9,7 @@ const StoryContainer = styled.div`
   ${tw`py-8 border-b border-solid border-grey-light`};
 `;
 
-const StoryTitle = styled.div`
+const StoryTitle = styled.div<{ to?: string }>`
   ${tw`text-2xl font-bold no-underline text-black`};
 `;
 

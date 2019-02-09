@@ -5,14 +5,14 @@ import { MdClose } from 'react-icons/md';
 import { ButtonOutline } from '../../../components';
 import { Story } from '../../../types';
 
-const Container = styled.div`
+const Container = styled.div<{ open: boolean }>`
   ${tw`absolute pin-r pin-t pin-b bg-grey-lightest z-10 px-8 pb-8`};
   width: 500px;
   max-width: 100%;
   transition: transform 0.3s ease;
   transform: translate3d(500px, 0, 0);
 
-  ${(props: any) =>
+  ${props =>
     props.open &&
     css`
       transform: translateZ(0);
