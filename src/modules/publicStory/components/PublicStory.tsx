@@ -67,6 +67,10 @@ const rules = [
 
 const html = new Html({ rules });
 
+const StyledContainer = styled(Container)`
+  max-width: 850px;
+`;
+
 const Title = styled.div`
   ${tw`text-4xl mt-16 font-bold`};
 `;
@@ -169,7 +173,7 @@ export const PublicStory = ({ match }: Props) => {
   }
 
   return (
-    <Container>
+    <StyledContainer>
       <Helmet>
         <title>{file.title}</title>
       </Helmet>
@@ -182,6 +186,6 @@ export const PublicStory = ({ match }: Props) => {
           ),
         }}
       />
-    </Container>
+    </StyledContainer>
   );
 };
