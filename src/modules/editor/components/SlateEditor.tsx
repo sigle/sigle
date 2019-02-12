@@ -20,7 +20,11 @@ import {
   MdSettings,
 } from 'react-icons/md';
 import { Link } from 'react-router-dom';
-import { PageContainer, PageTitle } from '../../home/components/Home';
+import {
+  PageContainer,
+  PageTitleContainer,
+  PageTitle,
+} from '../../home/components/Home';
 import { ButtonOutline } from '../../../components';
 import {
   saveStoryFile,
@@ -424,7 +428,9 @@ export const SlateEditor = ({
         <MdArrowBack /> Back to my stories
       </StyledLink>
 
-      <PageTitle>Editor</PageTitle>
+      <PageTitleContainer>
+        <PageTitle>Editor</PageTitle>
+      </PageTitleContainer>
 
       {!showEditor && (
         <MobileEditor>
