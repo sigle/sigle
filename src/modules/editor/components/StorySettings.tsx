@@ -1,8 +1,7 @@
 import React from 'react';
 import styled, { css } from 'styled-components/macro';
 import tw from 'tailwind.macro';
-import { MdClose, MdAddToPhotos } from 'react-icons/md';
-import { ButtonOutline } from '../../../components';
+import { MdClose, MdAddToPhotos, MdDelete } from 'react-icons/md';
 import { Story } from '../../../types';
 
 const containerSize = 450;
@@ -55,6 +54,17 @@ const Label = styled.div`
   ${tw`mb-2`};
 `;
 
+const ButtonLink = styled.button`
+  ${tw`flex items-center text-pink text-sm`};
+  &:focus {
+    outline: 0;
+  }
+
+  span {
+    ${tw`ml-1`};
+  }
+`;
+
 interface Props {
   story: Story;
   open: boolean;
@@ -94,9 +104,16 @@ export const StorySettings = ({
         <Image src={story.coverImage} onClick={onUploadImage} />
       )}
 
-      {loadingDelete && <ButtonOutline disabled>Deleting ...</ButtonOutline>}
-      {!loadingDelete && (
-        <ButtonOutline onClick={onDelete}>Delete</ButtonOutline>
+      {loadingDelete ? (
+        <ButtonLink disabled>
+          <MdDelete />
+          <span>Deleting ...</span>
+        </ButtonLink>
+      ) : (
+        <ButtonLink onClick={onDelete}>
+          <MdDelete />
+          <span>Delete this story</span>
+        </ButtonLink>
       )}
     </Container>
   );
