@@ -1,7 +1,7 @@
 import React from 'react';
 import styled, { css } from 'styled-components/macro';
 import tw from 'tailwind.macro';
-import { MdClose } from 'react-icons/md';
+import { MdClose, MdAddToPhotos } from 'react-icons/md';
 import { ButtonOutline } from '../../../components';
 import { Story } from '../../../types';
 
@@ -35,7 +35,15 @@ const CloseButton = styled.div`
 `;
 
 const ImageEmpty = styled.div`
-  ${tw`flex items-center justify-center bg-white py-16 mb-4 cursor-pointer`};
+  ${tw`flex items-center justify-center bg-white py-16 mb-4 cursor-pointer rounded-lg relative border border-solid border-grey`};
+
+  span {
+    ${tw`py-1 px-2 rounded-lg text-sm border border-solid border-grey text-grey`};
+  }
+`;
+
+const ImageEmptyIcon = styled.div`
+  ${tw`absolute pin-b pin-r p-2 flex items-center text-grey`};
 `;
 
 const Image = styled.img`
@@ -75,7 +83,12 @@ export const StorySettings = ({
 
       <Label>Cover image:</Label>
       {!story.coverImage && (
-        <ImageEmpty onClick={onUploadImage}>Upload story image</ImageEmpty>
+        <ImageEmpty onClick={onUploadImage}>
+          <span>Upload story image</span>
+          <ImageEmptyIcon>
+            <MdAddToPhotos />
+          </ImageEmptyIcon>
+        </ImageEmpty>
       )}
       {story.coverImage && (
         <Image src={story.coverImage} onClick={onUploadImage} />
