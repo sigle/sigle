@@ -51,11 +51,18 @@ const Image = styled.img`
 `;
 
 const Label = styled.div`
-  ${tw`mb-2`};
+  ${tw`mb-2 text-sm`};
 `;
 
+// const Input = styled.input`
+//   ${tw`mb-2 pb-1 bg-transparent border-b border-solid border-black w-full text-sm`};
+//   &:focus {
+//     outline: 0;
+//   }
+// `;
+
 const ButtonLink = styled.button`
-  ${tw`flex items-center text-pink text-sm`};
+  ${tw`flex items-center text-pink text-sm mt-2`};
   &:focus {
     outline: 0;
   }
@@ -72,6 +79,7 @@ interface Props {
   loadingDelete: boolean;
   onDelete: () => void;
   onUploadImage: () => void;
+  nodeRef: React.RefObject<HTMLDivElement>;
 }
 
 export const StorySettings = ({
@@ -81,9 +89,10 @@ export const StorySettings = ({
   loadingDelete,
   onDelete,
   onUploadImage,
+  nodeRef,
 }: Props) => {
   return (
-    <Container open={open}>
+    <Container open={open} ref={nodeRef}>
       <TitleContainer>
         <Title>Settings</Title>
         <CloseButton onClick={onClose}>
@@ -103,6 +112,12 @@ export const StorySettings = ({
       {story.coverImage && (
         <Image src={story.coverImage} onClick={onUploadImage} />
       )}
+
+      {/* <Label>Story URL:</Label>
+      <Input type="text" value={story.id} />
+
+      <Label>Excerpt:</Label>
+      <Input type="text" value={story.content} /> */}
 
       {loadingDelete ? (
         <ButtonLink disabled>

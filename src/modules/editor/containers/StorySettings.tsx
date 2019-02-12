@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { toast } from 'react-toastify';
 import { StorySettings as Component } from '../components/StorySettings';
 import { Story } from '../../../types';
@@ -22,6 +22,7 @@ export const StorySettings = ({
   onClose,
   onChangeStoryField,
 }: Props) => {
+  const nodeRef = React.createRef<HTMLDivElement>();
   const [loadingDelete, setLoadingDelete] = useState(false);
 
   const handleUploadImage = () => {
@@ -55,6 +56,24 @@ export const StorySettings = ({
     }
   };
 
+  /**
+   * Handle click outside the settings
+   */
+  const handleClick = (e: any) => {
+    if (nodeRef.current && !nodeRef.current.contains(e.target)) {
+      onClose();
+    }
+  };
+
+  useEffect(() => {
+    if (open) {
+      document.addEventListener('mousedown', handleClick);
+    }
+    return () => {
+      document.removeEventListener('mousedown', handleClick);
+    };
+  }, [open]);
+
   return (
     <Component
       story={story}
@@ -63,6 +82,7 @@ export const StorySettings = ({
       loadingDelete={loadingDelete}
       onDelete={handleDelete}
       onUploadImage={handleUploadImage}
+      nodeRef={nodeRef}
     />
   );
 };
