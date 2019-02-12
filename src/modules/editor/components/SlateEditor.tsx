@@ -277,8 +277,8 @@ export const SlateEditor = ({
   };
 
   const onKeyDown = (event: any, editor: any, next: any) => {
-    // We want all our commands to start with the user pressing ctrl
-    if (!event.ctrlKey) {
+    // We want all our commands to start with the user pressing ctrl or cmd for mac users
+    if (!event.ctrlKey && !event.metaKey) {
       return next();
     }
 
