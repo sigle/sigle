@@ -17,13 +17,10 @@ import {
   MdLink,
   MdLooksTwo,
   MdLooksOne,
+  MdSettings,
 } from 'react-icons/md';
 import { Link } from 'react-router-dom';
-import {
-  PageContainer,
-  PageTitleContainer,
-  PageTitle,
-} from '../../home/components/Home';
+import { PageContainer, PageTitle } from '../../home/components/Home';
 import { ButtonOutline } from '../../../components';
 import {
   saveStoryFile,
@@ -78,12 +75,24 @@ const SlateContainer = styled.div`
 `;
 
 const SlateToolbar = styled.div`
-  ${tw`py-4 border-b border-solid border-grey-light flex z-10 bg-white sticky`};
+  ${tw`py-4 border-b border-solid border-grey-light flex z-10 bg-white sticky flex justify-between`};
   top: 0;
+`;
+
+const SlateToolbarButtonContainer = styled.div`
+  ${tw`flex`};
 `;
 
 const SlateToolbarButton = styled.button`
   ${tw`py-2 px-2 outline-none flex`};
+`;
+
+const SlateToolbarActionContainer = styled.div`
+  ${tw`flex items-center`};
+`;
+
+const SlateToolbarActionIcon = styled.div`
+  ${tw`p-2 -mr-2 flex items-center cursor-pointer text-pink`};
 `;
 
 const StyledContent = styled(Content)`
@@ -415,22 +424,7 @@ export const SlateEditor = ({
         <MdArrowBack /> Back to my stories
       </StyledLink>
 
-      <PageTitleContainer>
-        <PageTitle>Editor</PageTitle>
-        <div>
-          {loadingSave && (
-            <ButtonOutline style={{ marginRight: 6 }} disabled>
-              Saving ...
-            </ButtonOutline>
-          )}
-          {!loadingSave && (
-            <ButtonOutline style={{ marginRight: 6 }} onClick={handleSave}>
-              Save
-            </ButtonOutline>
-          )}
-          <ButtonOutline onClick={handleOpenSettings}>Settings</ButtonOutline>
-        </div>
-      </PageTitleContainer>
+      <PageTitle>Editor</PageTitle>
 
       {!showEditor && (
         <MobileEditor>
@@ -451,20 +445,40 @@ export const SlateEditor = ({
 
           <SlateContainer>
             <SlateToolbar>
-              {renderMarkButton('bold', MdFormatBold)}
-              {renderMarkButton('italic', MdFormatItalic)}
-              {renderMarkButton('underlined', MdFormatUnderlined)}
-              {renderBlockButton('block-quote', MdFormatQuote)}
-              {renderBlockButton('heading-one', MdLooksOne)}
-              {renderBlockButton('heading-two', MdLooksTwo)}
-              {renderBlockButton('numbered-list', MdFormatListNumbered)}
-              {renderBlockButton('bulleted-list', MdFormatListBulleted)}
-              <SlateToolbarButton onMouseDown={onClickLink}>
-                <MdLink color={'#b8c2cc'} size={18} />
-              </SlateToolbarButton>
-              <SlateToolbarButton onMouseDown={onClickImage}>
-                <MdImage color={'#b8c2cc'} size={18} />
-              </SlateToolbarButton>
+              <SlateToolbarButtonContainer>
+                {renderMarkButton('bold', MdFormatBold)}
+                {renderMarkButton('italic', MdFormatItalic)}
+                {renderMarkButton('underlined', MdFormatUnderlined)}
+                {renderBlockButton('block-quote', MdFormatQuote)}
+                {renderBlockButton('heading-one', MdLooksOne)}
+                {renderBlockButton('heading-two', MdLooksTwo)}
+                {renderBlockButton('numbered-list', MdFormatListNumbered)}
+                {renderBlockButton('bulleted-list', MdFormatListBulleted)}
+                <SlateToolbarButton onMouseDown={onClickLink}>
+                  <MdLink color={'#b8c2cc'} size={18} />
+                </SlateToolbarButton>
+                <SlateToolbarButton onMouseDown={onClickImage}>
+                  <MdImage color={'#b8c2cc'} size={18} />
+                </SlateToolbarButton>
+              </SlateToolbarButtonContainer>
+              <SlateToolbarActionContainer>
+                {loadingSave && (
+                  <ButtonOutline style={{ marginRight: 6 }} disabled>
+                    Saving ...
+                  </ButtonOutline>
+                )}
+                {!loadingSave && (
+                  <ButtonOutline
+                    style={{ marginRight: 6 }}
+                    onClick={handleSave}
+                  >
+                    Save
+                  </ButtonOutline>
+                )}
+                <SlateToolbarActionIcon onClick={handleOpenSettings}>
+                  <MdSettings size={22} />
+                </SlateToolbarActionIcon>
+              </SlateToolbarActionContainer>
             </SlateToolbar>
 
             <StyledContent>
