@@ -1,18 +1,40 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import styled from 'styled-components/macro';
+import styled, { css } from 'styled-components/macro';
 import tw from 'tailwind.macro';
 import { format } from 'date-fns';
 import { SubsetStory } from '../../../types';
+import { config } from '../../../config';
 
 const StoryContainer = styled.div`
   ${tw`py-8 border-b border-solid border-grey-light`};
+
+  @media (min-width: ${config.breakpoints.md}px) {
+    ${tw`flex`};
+  }
+`;
+
+const StoryContainerImage = styled.div`
+  ${tw`mb-4`};
+
+  @media (min-width: ${config.breakpoints.md}px) {
+    ${tw`w-1/3`};
+  }
 `;
 
 const StoryImage = styled.img`
-  ${tw`mb-4`};
   display: block;
   max-width: 100%;
+`;
+
+const StoryContainerContent = styled.div<{ hasCover: boolean }>`
+  ${props =>
+    props.hasCover &&
+    css`
+      @media (min-width: ${config.breakpoints.md}px) {
+        ${tw`w-2/3 pl-4`};
+      }
+    `}
 `;
 
 const StoryTitle = styled.div<{ to?: string }>`
@@ -35,11 +57,17 @@ interface Props {
 
 export const PublicStoryItem = ({ username, story }: Props) => (
   <StoryContainer>
-    {story.coverImage && <StoryImage src={story.coverImage} />}
-    <StoryTitle as={Link} to={`/${username}/${story.id}`}>
-      {story.title}
-    </StoryTitle>
-    <StoryDate>{format(story.createdAt, 'DD MMMM YYYY')}</StoryDate>
-    <StoryText>{story.content}</StoryText>
+    {story.coverImage && (
+      <StoryContainerImage>
+        <StoryImage src={story.coverImage} />
+      </StoryContainerImage>
+    )}
+    <StoryContainerContent hasCover={!!story.coverImage}>
+      <StoryTitle as={Link} to={`/${username}/${story.id}`}>
+        {story.title}
+      </StoryTitle>
+      <StoryDate>{format(story.createdAt, 'DD MMMM YYYY')}</StoryDate>
+      <StoryText>{story.content}</StoryText>
+    </StoryContainerContent>
   </StoryContainer>
 );
