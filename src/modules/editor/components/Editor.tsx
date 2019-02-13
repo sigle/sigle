@@ -6,9 +6,10 @@ import { PageContainer } from '../../home/components/Home';
 interface Props {
   loading: boolean;
   story: Story | null;
+  onChangeStoryField: (field: string, value: any) => void;
 }
 
-export const Editor = ({ loading, story }: Props) => {
+export const Editor = ({ loading, story, onChangeStoryField }: Props) => {
   // TODO nice loading
   if (loading) {
     return <PageContainer>Loading ...</PageContainer>;
@@ -19,5 +20,5 @@ export const Editor = ({ loading, story }: Props) => {
     return <PageContainer>404 Story not found</PageContainer>;
   }
 
-  return <SlateEditor story={story} />;
+  return <SlateEditor story={story} onChangeStoryField={onChangeStoryField} />;
 };

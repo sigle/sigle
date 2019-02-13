@@ -2,12 +2,24 @@ import React, { useEffect, useState } from 'react';
 import { RouteComponentProps } from 'react-router';
 import * as blockstack from 'blockstack';
 import { toast } from 'react-toastify';
+import styled from 'styled-components/macro';
+import tw from 'tailwind.macro';
 import { StoryFile } from '../../../types';
 import { Container } from '../../../components';
 import { PublicStoryItem } from './PublicStoryItem';
 import { NotFound } from '../../layout/components/NotFound';
+import {
+  Header,
+  HeaderContainer,
+  HeaderTitle,
+  HeaderLink,
+} from '../../publicStory/components/PublicStory';
 
 type Props = RouteComponentProps<{ username: string }>;
+
+const StyledContainer = styled(Container)`
+  ${tw`mt-4`};
+`;
 
 export const PublicHome = ({ match }: Props) => {
   const [loading, setLoading] = useState(true);
@@ -55,14 +67,22 @@ export const PublicHome = ({ match }: Props) => {
   }
 
   return (
-    <Container>
-      {file.stories.map(story => (
-        <PublicStoryItem
-          key={story.id}
-          username={match.params.username}
-          story={story}
-        />
-      ))}
-    </Container>
+    <React.Fragment>
+      <Header>
+        <HeaderContainer>
+          <HeaderTitle>{match.params.username}</HeaderTitle>
+          <HeaderLink to={`/${match.params.username}`}>Stories</HeaderLink>
+        </HeaderContainer>
+      </Header>
+      <StyledContainer>
+        {file.stories.map(story => (
+          <PublicStoryItem
+            key={story.id}
+            username={match.params.username}
+            story={story}
+          />
+        ))}
+      </StyledContainer>
+    </React.Fragment>
   );
 };

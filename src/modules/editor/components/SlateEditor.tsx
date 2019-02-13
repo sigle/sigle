@@ -16,7 +16,9 @@ import {
   MdImage,
   MdLink,
   MdLooksTwo,
+  MdLooks3,
   MdLooksOne,
+  MdSettings,
 } from 'react-icons/md';
 import { Link } from 'react-router-dom';
 import {
@@ -35,6 +37,7 @@ import { Story } from '../../../types';
 import { config } from '../../../config';
 import { Content } from '../../publicStory/components/PublicStory';
 import work from '../../../img/work.png';
+import { StorySettings } from '../containers/StorySettings';
 
 const MobileEditor = styled.div`
   ${tw`flex flex-col items-center text-center`};
@@ -77,12 +80,24 @@ const SlateContainer = styled.div`
 `;
 
 const SlateToolbar = styled.div`
-  ${tw`py-4 border-b border-solid border-grey-light flex z-10 bg-white sticky`};
+  ${tw`py-4 border-b border-solid border-grey flex z-10 bg-white sticky flex justify-between`};
   top: 0;
+`;
+
+const SlateToolbarButtonContainer = styled.div`
+  ${tw`flex`};
 `;
 
 const SlateToolbarButton = styled.button`
   ${tw`py-2 px-2 outline-none flex`};
+`;
+
+const SlateToolbarActionContainer = styled.div`
+  ${tw`flex items-center`};
+`;
+
+const SlateToolbarActionIcon = styled.div`
+  ${tw`p-2 -mr-2 flex items-center cursor-pointer text-pink`};
 `;
 
 const StyledContent = styled(Content)`
@@ -126,19 +141,19 @@ const slatePlugins = [SoftBreak({ shift: true })];
 interface Props {
   width: number;
   story: Story;
-  loadingDelete: boolean;
-  onDelete: () => void;
+  onChangeTitle: (title: string) => void;
+  onChangeStoryField: (field: string, value: any) => void;
 }
 
 export const SlateEditor = ({
   width,
   story,
-  loadingDelete,
-  onDelete,
+  onChangeTitle,
+  onChangeStoryField,
 }: Props) => {
   const editorRef = useRef<any>(null);
+  const [settingsOpen, setSettingsOpen] = useState(false);
   const [loadingSave, setLoadingSave] = useState(false);
-  const [title, setTitle] = useState(story.title);
   const [value, setValue] = useState(Value.fromJSON(story.content));
 
   const showEditor = width >= config.breakpoints.md;
@@ -267,8 +282,8 @@ export const SlateEditor = ({
   };
 
   const onKeyDown = (event: any, editor: any, next: any) => {
-    // We want all our commands to start with the user pressing ctrl
-    if (!event.ctrlKey) {
+    // We want all our commands to start with the user pressing ctrl or cmd for mac users
+    if (!event.ctrlKey && !event.metaKey) {
       return next();
     }
 
@@ -357,7 +372,7 @@ export const SlateEditor = ({
       <SlateToolbarButton
         onMouseDown={(event: any) => onClickMark(event, type)}
       >
-        <Icon color={isActive ? '#000000' : '#b8c2cc'} size={18} />
+        <Icon color={isActive ? '#000000' : '#bbbaba'} size={18} />
       </SlateToolbarButton>
     );
   };
@@ -369,7 +384,7 @@ export const SlateEditor = ({
       <SlateToolbarButton
         onMouseDown={(event: any) => onClickBlock(event, type)}
       >
-        <Icon color={isActive ? '#000000' : '#b8c2cc'} size={18} />
+        <Icon color={isActive ? '#000000' : '#bbbaba'} size={18} />
       </SlateToolbarButton>
     );
   };
@@ -380,7 +395,6 @@ export const SlateEditor = ({
       const content = value.toJSON();
       const updatedStory: Story = {
         ...story,
-        title,
         content,
         updatedAt: Date.now(),
       };
@@ -401,6 +415,14 @@ export const SlateEditor = ({
     setLoadingSave(false);
   };
 
+  const handleOpenSettings = () => {
+    setSettingsOpen(true);
+  };
+
+  const handleCloseSettings = () => {
+    setSettingsOpen(false);
+  };
+
   return (
     <PageContainer>
       <StyledLink to="/">
@@ -409,24 +431,6 @@ export const SlateEditor = ({
 
       <PageTitleContainer>
         <PageTitle>Editor</PageTitle>
-        <div>
-          {loadingSave && (
-            <ButtonOutline style={{ marginRight: 6 }} disabled>
-              Saving ...
-            </ButtonOutline>
-          )}
-          {!loadingSave && (
-            <ButtonOutline style={{ marginRight: 6 }} onClick={handleSave}>
-              Save
-            </ButtonOutline>
-          )}
-          {loadingDelete && (
-            <ButtonOutline disabled>Deleting ...</ButtonOutline>
-          )}
-          {!loadingDelete && (
-            <ButtonOutline onClick={onDelete}>Delete</ButtonOutline>
-          )}
-        </div>
       </PageTitleContainer>
 
       {!showEditor && (
@@ -441,27 +445,48 @@ export const SlateEditor = ({
       {showEditor && (
         <div>
           <Input
-            value={title}
-            onChange={(e: any) => setTitle(e.target.value)}
+            value={story.title}
+            onChange={(e: any) => onChangeTitle(e.target.value)}
             placeholder="Title"
           />
 
           <SlateContainer>
             <SlateToolbar>
-              {renderMarkButton('bold', MdFormatBold)}
-              {renderMarkButton('italic', MdFormatItalic)}
-              {renderMarkButton('underlined', MdFormatUnderlined)}
-              {renderBlockButton('block-quote', MdFormatQuote)}
-              {renderBlockButton('heading-one', MdLooksOne)}
-              {renderBlockButton('heading-two', MdLooksTwo)}
-              {renderBlockButton('numbered-list', MdFormatListNumbered)}
-              {renderBlockButton('bulleted-list', MdFormatListBulleted)}
-              <SlateToolbarButton onMouseDown={onClickLink}>
-                <MdLink color={'#b8c2cc'} size={18} />
-              </SlateToolbarButton>
-              <SlateToolbarButton onMouseDown={onClickImage}>
-                <MdImage color={'#b8c2cc'} size={18} />
-              </SlateToolbarButton>
+              <SlateToolbarButtonContainer>
+                {renderMarkButton('bold', MdFormatBold)}
+                {renderMarkButton('italic', MdFormatItalic)}
+                {renderMarkButton('underlined', MdFormatUnderlined)}
+                {renderBlockButton('block-quote', MdFormatQuote)}
+                {renderBlockButton('heading-one', MdLooksOne)}
+                {renderBlockButton('heading-two', MdLooksTwo)}
+                {renderBlockButton('heading-three', MdLooks3)}
+                {renderBlockButton('numbered-list', MdFormatListNumbered)}
+                {renderBlockButton('bulleted-list', MdFormatListBulleted)}
+                <SlateToolbarButton onMouseDown={onClickLink}>
+                  <MdLink color={'#b8c2cc'} size={18} />
+                </SlateToolbarButton>
+                <SlateToolbarButton onMouseDown={onClickImage}>
+                  <MdImage color={'#b8c2cc'} size={18} />
+                </SlateToolbarButton>
+              </SlateToolbarButtonContainer>
+              <SlateToolbarActionContainer>
+                {loadingSave && (
+                  <ButtonOutline style={{ marginRight: 6 }} disabled>
+                    Saving ...
+                  </ButtonOutline>
+                )}
+                {!loadingSave && (
+                  <ButtonOutline
+                    style={{ marginRight: 6 }}
+                    onClick={handleSave}
+                  >
+                    Save
+                  </ButtonOutline>
+                )}
+                <SlateToolbarActionIcon onClick={handleOpenSettings}>
+                  <MdSettings size={22} />
+                </SlateToolbarActionIcon>
+              </SlateToolbarActionContainer>
             </SlateToolbar>
 
             <StyledContent>
@@ -478,6 +503,12 @@ export const SlateEditor = ({
               />
             </StyledContent>
           </SlateContainer>
+          <StorySettings
+            story={story}
+            open={settingsOpen}
+            onClose={handleCloseSettings}
+            onChangeStoryField={onChangeStoryField}
+          />
         </div>
       )}
     </PageContainer>

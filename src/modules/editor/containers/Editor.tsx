@@ -22,9 +22,26 @@ export const Editor = ({ match }: Props) => {
     setLoading(false);
   };
 
+  const handleChangeStoryField = (field: string, value: any) => {
+    if (!story) {
+      return;
+    }
+
+    setStory({
+      ...story,
+      [field]: value,
+    });
+  };
+
   useEffect(() => {
     loadStoryFile();
   }, [false]);
 
-  return <Component loading={loading} story={story} />;
+  return (
+    <Component
+      loading={loading}
+      story={story}
+      onChangeStoryField={handleChangeStoryField}
+    />
+  );
 };

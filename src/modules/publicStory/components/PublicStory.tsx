@@ -8,9 +8,11 @@ import { Value } from 'slate';
 import Html from 'slate-html-serializer';
 import dompurify from 'dompurify';
 import { toast } from 'react-toastify';
+import { format } from 'date-fns';
 import { Story } from '../../../types';
 import { Container } from '../../../components';
 import { NotFound } from '../../layout/components/NotFound';
+import { Link } from 'react-router-dom';
 
 const rules = [
   {
@@ -34,6 +36,8 @@ const rules = [
             return <h1>{children}</h1>;
           case 'heading-two':
             return <h2>{children}</h2>;
+          case 'heading-three':
+            return <h3>{children}</h3>;
         }
       }
     },
@@ -67,8 +71,41 @@ const rules = [
 
 const html = new Html({ rules });
 
+export const Header = styled.div`
+  ${tw`bg-black py-4 text-white`};
+`;
+
+export const HeaderContainer = styled.div`
+  ${tw`mx-auto px-4 flex`};
+  width: 100%;
+  max-width: 1000px;
+`;
+
+export const HeaderTitle = styled.div`
+  ${tw`font-bold`};
+`;
+
+export const HeaderLink = styled(Link)`
+  ${tw`text-white no-underline ml-8`};
+`;
+
+const StyledContainer = styled(Container)`
+  max-width: 850px;
+`;
+
 const Title = styled.div`
-  ${tw`text-4xl mt-16 font-bold`};
+  ${tw`text-4xl mt-16 font-bold text-center`};
+  font-family: 'Libre Baskerville', serif;
+`;
+
+const StoryDate = styled.div`
+  ${tw`text-sm mt-4 text-center text-pink`};
+`;
+
+const CoverImage = styled.img`
+  ${tw`mt-8`};
+  display: block;
+  max-width: 100%;
 `;
 
 export const Content = styled.div`
@@ -92,7 +129,7 @@ export const Content = styled.div`
     ${tw`mb-4`};
     display: block;
     max-width: 100%;
-    max-height: 30em;
+    max-height: 100em;
   }
 
   blockquote {
@@ -107,11 +144,18 @@ export const Content = styled.div`
   }
 
   h1 {
-    ${tw`mt-6 mb-4 text-3xl`};
+    ${tw`mt-6 mb-4 text-4xl`};
+    font-family: 'Libre Baskerville', serif;
   }
 
   h2 {
+    ${tw`mt-6 mb-4 text-3xl`};
+    font-family: 'Libre Baskerville', serif;
+  }
+
+  h3 {
     ${tw`mt-6 mb-4 text-2xl`};
+    font-family: 'Libre Baskerville', serif;
   }
 `;
 
@@ -163,18 +207,28 @@ export const PublicStory = ({ match }: Props) => {
   }
 
   return (
-    <Container>
-      <Helmet>
-        <title>{file.title}</title>
-      </Helmet>
-      <Title>{file.title}</Title>
-      <Content
-        dangerouslySetInnerHTML={{
-          __html: dompurify.sanitize(
-            html.serialize(Value.fromJSON(file.content))
-          ),
-        }}
-      />
-    </Container>
+    <React.Fragment>
+      <Header>
+        <HeaderContainer>
+          <HeaderTitle>{match.params.username}</HeaderTitle>
+          <HeaderLink to={`/${match.params.username}`}>Stories</HeaderLink>
+        </HeaderContainer>
+      </Header>
+      <StyledContainer>
+        <Helmet>
+          <title>{file.title}</title>
+        </Helmet>
+        <Title>{file.title}</Title>
+        <StoryDate>{format(file.createdAt, 'DD MMMM YYYY')}</StoryDate>
+        {file.coverImage && <CoverImage src={file.coverImage} />}
+        <Content
+          dangerouslySetInnerHTML={{
+            __html: dompurify.sanitize(
+              html.serialize(Value.fromJSON(file.content))
+            ),
+          }}
+        />
+      </StyledContainer>
+    </React.Fragment>
   );
 };
