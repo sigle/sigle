@@ -2095,10 +2095,10 @@ bitcoinjs-lib@^4:
     varuint-bitcoin "^1.0.4"
     wif "^2.0.1"
 
-blockstack@18.2.1:
-  version "18.2.1"
-  resolved "https://registry.yarnpkg.com/blockstack/-/blockstack-18.2.1.tgz#e369a189107f585093ce852a9a9e3514076d5cc5"
-  integrity sha512-hcJdNhltNSRZg6iouSauWOzKpVnfC1NFIMBhC9sZjaIFCPIojDrgvRcgoh3AEy8LMkj1krr26AKAOhnRcQJmng==
+blockstack@18.3.0:
+  version "18.3.0"
+  resolved "https://registry.yarnpkg.com/blockstack/-/blockstack-18.3.0.tgz#f0b3ad8506a66d014a62af3262ea63ddfacef3c2"
+  integrity sha512-mOS2l5nPph4XhOxcR6Hlv9mULzwRI3T5stA2qtCc6uXPnVc6aUshtQtj9+fBpbS5sn4c5zr+1gEMEtvW/laVqA==
   dependencies:
     ajv "^4.11.5"
     babel-runtime "^6.26.0"
@@ -2108,7 +2108,6 @@ blockstack@18.2.1:
     bitcoinjs-lib "^4"
     cheerio "^0.22.0"
     cross-fetch "^2.2.2"
-    custom-protocol-detection-blockstack "1.1.4"
     ecurve "^1.0.6"
     elliptic "^6.4.0"
     es6-promise "^4.2.4"
@@ -3255,11 +3254,6 @@ csstype@^2.2.0:
   version "2.6.1"
   resolved "https://registry.yarnpkg.com/csstype/-/csstype-2.6.1.tgz#4cfbf637a577497036ebcd7e32647ef19a0b8076"
   integrity sha512-wv7IRqCGsL7WGKB8gPvrl+++HlFM9kxAM6jL1EXNPNTshEJYilMkbfS2SnuHha77uosp/YVK0wAp2jmlBzn1tg==
-
-custom-protocol-detection-blockstack@1.1.4:
-  version "1.1.4"
-  resolved "https://registry.yarnpkg.com/custom-protocol-detection-blockstack/-/custom-protocol-detection-blockstack-1.1.4.tgz#44ae959f3f6f5280cb663ab9502ca4cf15df1091"
-  integrity sha512-SkLAAGFaYzYqqxuDpPva33ZiH9hsMtd77MoFA1spfIcPHdGgNa7MW211eX04DVy914/emR+S6dc0RqkuXB372g==
 
 cyclist@~0.2.2:
   version "0.2.2"
