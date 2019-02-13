@@ -11,14 +11,15 @@ const StoryContainer = styled.div`
 
 const StoryTitle = styled.div<{ to?: string }>`
   ${tw`text-2xl font-bold no-underline text-black`};
+  font-family: 'Libre Baskerville', serif;
 `;
 
 const StoryDate = styled.div`
-  ${tw`text-sm italic text-grey-dark`};
+  ${tw`mt-1 text-sm text-grey-dark`};
 `;
 
 const StoryText = styled.div`
-  ${tw`mt-4 text-grey-dark`};
+  ${tw`mt-4 text-grey-darker`};
 `;
 
 interface Props {
@@ -31,7 +32,7 @@ export const PublicStoryItem = ({ username, story }: Props) => (
     <StoryTitle as={Link} to={`/${username}/${story.id}`}>
       {story.title}
     </StoryTitle>
-    <StoryDate>{format(story.createdAt, 'HH:mm DD MMMM YYYY')}</StoryDate>
+    <StoryDate>{format(story.createdAt, 'DD MMMM YYYY')}</StoryDate>
     <StoryText>{story.content}</StoryText>
   </StoryContainer>
 );

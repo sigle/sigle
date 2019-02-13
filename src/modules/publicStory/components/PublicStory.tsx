@@ -71,21 +71,21 @@ const rules = [
 
 const html = new Html({ rules });
 
-const Header = styled.div`
+export const Header = styled.div`
   ${tw`bg-black py-4 text-white`};
 `;
 
-const HeaderContainer = styled.div`
+export const HeaderContainer = styled.div`
   ${tw`mx-auto px-4 flex`};
   width: 100%;
   max-width: 1000px;
 `;
 
-const HeaderTitle = styled.div`
+export const HeaderTitle = styled.div`
   ${tw`font-bold`};
 `;
 
-const HeaderLink = styled(Link)`
+export const HeaderLink = styled(Link)`
   ${tw`text-white no-underline ml-8`};
 `;
 

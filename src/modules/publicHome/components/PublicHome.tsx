@@ -6,6 +6,12 @@ import { StoryFile } from '../../../types';
 import { Container } from '../../../components';
 import { PublicStoryItem } from './PublicStoryItem';
 import { NotFound } from '../../layout/components/NotFound';
+import {
+  Header,
+  HeaderContainer,
+  HeaderTitle,
+  HeaderLink,
+} from '../../publicStory/components/PublicStory';
 
 type Props = RouteComponentProps<{ username: string }>;
 
@@ -55,14 +61,22 @@ export const PublicHome = ({ match }: Props) => {
   }
 
   return (
-    <Container>
-      {file.stories.map(story => (
-        <PublicStoryItem
-          key={story.id}
-          username={match.params.username}
-          story={story}
-        />
-      ))}
-    </Container>
+    <React.Fragment>
+      <Header>
+        <HeaderContainer>
+          <HeaderTitle>{match.params.username}</HeaderTitle>
+          <HeaderLink to={`/${match.params.username}`}>Stories</HeaderLink>
+        </HeaderContainer>
+      </Header>
+      <Container>
+        {file.stories.map(story => (
+          <PublicStoryItem
+            key={story.id}
+            username={match.params.username}
+            story={story}
+          />
+        ))}
+      </Container>
+    </React.Fragment>
   );
 };
