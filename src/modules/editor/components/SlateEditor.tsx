@@ -80,7 +80,7 @@ const SlateContainer = styled.div`
 `;
 
 const SlateToolbar = styled.div`
-  ${tw`py-4 border-b border-solid border-grey-light flex z-10 bg-white sticky flex justify-between`};
+  ${tw`py-4 border-b border-solid border-grey flex z-10 bg-white sticky flex justify-between`};
   top: 0;
 `;
 
@@ -372,7 +372,7 @@ export const SlateEditor = ({
       <SlateToolbarButton
         onMouseDown={(event: any) => onClickMark(event, type)}
       >
-        <Icon color={isActive ? '#000000' : '#b8c2cc'} size={18} />
+        <Icon color={isActive ? '#000000' : '#bbbaba'} size={18} />
       </SlateToolbarButton>
     );
   };
@@ -384,7 +384,7 @@ export const SlateEditor = ({
       <SlateToolbarButton
         onMouseDown={(event: any) => onClickBlock(event, type)}
       >
-        <Icon color={isActive ? '#000000' : '#b8c2cc'} size={18} />
+        <Icon color={isActive ? '#000000' : '#bbbaba'} size={18} />
       </SlateToolbarButton>
     );
   };

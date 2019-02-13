@@ -75,6 +75,7 @@ const StyledContainer = styled(Container)`
 
 const Title = styled.div`
   ${tw`text-4xl mt-16 font-bold`};
+  font-family: 'Libre Baskerville', serif;
 `;
 
 const CoverImage = styled.img`

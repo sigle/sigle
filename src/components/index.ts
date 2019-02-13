@@ -10,7 +10,7 @@ export const Container = styled.div`
 `;
 
 export const Tabs = styled.div`
-  ${tw`flex border-b border-solid border-grey-light`};
+  ${tw`flex border-b border-solid border-grey`};
 `;
 
 export const Tab = styled.div`

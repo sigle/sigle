@@ -7,7 +7,7 @@ import { Story } from '../../../types';
 const containerSize = 450;
 
 const Container = styled.div<{ open: boolean }>`
-  ${tw`fixed pin-r pin-t pin-b bg-grey-lightest z-10 px-8 pb-8`};
+  ${tw`fixed pin-r pin-t pin-b bg-grey-light z-10 px-8 pb-8`};
   width: ${containerSize}px;
   max-width: 100%;
   transition: transform 0.3s ease;
