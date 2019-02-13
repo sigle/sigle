@@ -37,12 +37,12 @@ const ImageEmpty = styled.div`
   ${tw`flex items-center justify-center bg-white py-16 mb-4 cursor-pointer rounded-lg relative border border-solid border-grey`};
 
   span {
-    ${tw`py-1 px-2 rounded-lg text-sm border border-solid border-grey text-grey`};
+    ${tw`py-1 px-2 rounded-lg text-sm border border-solid border-grey-dark text-grey-dark`};
   }
 `;
 
 const ImageEmptyIcon = styled.div`
-  ${tw`absolute pin-b pin-r p-2 flex items-center text-grey`};
+  ${tw`absolute pin-b pin-r p-2 flex items-center text-grey-dark`};
 `;
 
 const Image = styled.img`
