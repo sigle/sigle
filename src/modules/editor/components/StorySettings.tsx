@@ -1,7 +1,7 @@
 import React from 'react';
 import styled, { css } from 'styled-components/macro';
 import tw from 'tailwind.macro';
-import { MdClose, MdAddToPhotos, MdDelete } from 'react-icons/md';
+import { MdClose, MdAddAPhoto, MdDelete } from 'react-icons/md';
 import { Story } from '../../../types';
 
 const containerSize = 450;
@@ -105,7 +105,7 @@ export const StorySettings = ({
         <ImageEmpty onClick={onUploadImage}>
           <span>Upload story image</span>
           <ImageEmptyIcon>
-            <MdAddToPhotos />
+            <MdAddAPhoto />
           </ImageEmptyIcon>
         </ImageEmpty>
       )}
