@@ -18,7 +18,7 @@ const StoryContainerImage = styled.div`
   ${tw`mb-4`};
 
   @media (min-width: ${config.breakpoints.md}px) {
-    ${tw`w-1/3`};
+    ${tw`w-1/3 mb-0`};
   }
 `;
 
