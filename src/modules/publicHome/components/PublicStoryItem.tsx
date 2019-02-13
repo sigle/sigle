@@ -9,6 +9,12 @@ const StoryContainer = styled.div`
   ${tw`py-8 border-b border-solid border-grey-light`};
 `;
 
+const StoryImage = styled.img`
+  ${tw`mb-4`};
+  display: block;
+  max-width: 100%;
+`;
+
 const StoryTitle = styled.div<{ to?: string }>`
   ${tw`text-2xl font-bold no-underline text-black`};
   font-family: 'Libre Baskerville', serif;
@@ -19,7 +25,7 @@ const StoryDate = styled.div`
 `;
 
 const StoryText = styled.div`
-  ${tw`mt-4 text-grey-darker`};
+  ${tw`mt-4 text-grey-darker leading-tight`};
 `;
 
 interface Props {
@@ -29,6 +35,7 @@ interface Props {
 
 export const PublicStoryItem = ({ username, story }: Props) => (
   <StoryContainer>
+    {story.coverImage && <StoryImage src={story.coverImage} />}
     <StoryTitle as={Link} to={`/${username}/${story.id}`}>
       {story.title}
     </StoryTitle>
