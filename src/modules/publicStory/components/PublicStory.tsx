@@ -120,14 +120,17 @@ export const Content = styled.div`
 
   h1 {
     ${tw`mt-6 mb-4 text-4xl`};
+    font-family: 'Libre Baskerville', serif;
   }
 
   h2 {
     ${tw`mt-6 mb-4 text-3xl`};
+    font-family: 'Libre Baskerville', serif;
   }
 
   h3 {
     ${tw`mt-6 mb-4 text-2xl`};
+    font-family: 'Libre Baskerville', serif;
   }
 `;
 
