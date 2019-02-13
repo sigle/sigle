@@ -50,6 +50,14 @@ const StoryText = styled.div`
   ${tw`mt-4 text-grey-darker leading-tight`};
 `;
 
+const StoryButton = styled(Link)`
+  ${tw`inline-block mt-8 py-1 px-2 rounded-lg text-sm text-black border border-solid border-black no-underline`};
+
+  &:hover {
+    ${tw`bg-black text-white`};
+  }
+`;
+
 interface Props {
   username: string;
   story: SubsetStory;
@@ -68,6 +76,7 @@ export const PublicStoryItem = ({ username, story }: Props) => (
       </StoryTitle>
       <StoryDate>{format(story.createdAt, 'DD MMMM YYYY')}</StoryDate>
       <StoryText>{story.content}</StoryText>
+      <StoryButton to={`/${username}/${story.id}`}>Read more</StoryButton>
     </StoryContainerContent>
   </StoryContainer>
 );
