@@ -34,6 +34,8 @@ const rules = [
             return <h1>{children}</h1>;
           case 'heading-two':
             return <h2>{children}</h2>;
+          case 'heading-three':
+            return <h3>{children}</h3>;
         }
       }
     },
@@ -117,10 +119,14 @@ export const Content = styled.div`
   }
 
   h1 {
-    ${tw`mt-6 mb-4 text-3xl`};
+    ${tw`mt-6 mb-4 text-4xl`};
   }
 
   h2 {
+    ${tw`mt-6 mb-4 text-3xl`};
+  }
+
+  h3 {
     ${tw`mt-6 mb-4 text-2xl`};
   }
 `;

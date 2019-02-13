@@ -16,6 +16,7 @@ import {
   MdImage,
   MdLink,
   MdLooksTwo,
+  MdLooks3,
   MdLooksOne,
   MdSettings,
 } from 'react-icons/md';
@@ -458,6 +459,7 @@ export const SlateEditor = ({
                 {renderBlockButton('block-quote', MdFormatQuote)}
                 {renderBlockButton('heading-one', MdLooksOne)}
                 {renderBlockButton('heading-two', MdLooksTwo)}
+                {renderBlockButton('heading-three', MdLooks3)}
                 {renderBlockButton('numbered-list', MdFormatListNumbered)}
                 {renderBlockButton('bulleted-list', MdFormatListBulleted)}
                 <SlateToolbarButton onMouseDown={onClickLink}>
