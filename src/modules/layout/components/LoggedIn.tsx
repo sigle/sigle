@@ -3,6 +3,7 @@ import { createGlobalStyle } from 'styled-components/macro';
 import { userSession } from '../../../utils/blockstack';
 import { AppBar } from './AppBar';
 import { BlockstackUser } from '../../../types';
+import { Footer } from './Footer';
 
 const GlobalStyle = createGlobalStyle`
   body {
@@ -55,6 +56,7 @@ export const LoggedIn = ({ children }: Props) => {
       <AppBar user={user} />
 
       {children}
+      <Footer />
     </React.Fragment>
   );
 };

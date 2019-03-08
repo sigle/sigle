@@ -61,6 +61,9 @@ export const StoryItem = ({
     <StoryContainer>
       <StoryTitleContainer>
         <StoryTitleContainerLeft>
+          <StoryTitle as={Link} to={`/stories/${story.id}`}>
+            {story.title}
+          </StoryTitle>
           <Tippy
             content={
               type === 'public'
@@ -74,16 +77,13 @@ export const StoryItem = ({
             <StoryTitleIcon>
               {type === 'public' ? (
                 <Link to={`/${user.username}/${story.id}`} target="_blank">
-                  <IoIosEye size={22} style={{ marginRight: 6 }} />
+                  <IoIosEye size={22} style={{ marginLeft: 6 }} />
                 </Link>
               ) : (
-                <IoIosEye size={22} style={{ marginRight: 6 }} />
+                <IoIosEye size={22} style={{ marginLeft: 6 }} />
               )}
             </StoryTitleIcon>
           </Tippy>
-          <StoryTitle as={Link} to={`/stories/${story.id}`}>
-            {story.title}
-          </StoryTitle>
         </StoryTitleContainerLeft>
 
         <div>
