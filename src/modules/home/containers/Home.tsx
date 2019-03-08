@@ -9,13 +9,15 @@ import {
   getStoriesFile,
   saveStoriesFile,
 } from '../../../utils';
-import { StoryFile, SubsetStory } from '../../../types';
+import { userSession } from '../../../utils/blockstack';
+import { StoryFile, SubsetStory, BlockstackUser } from '../../../types';
 
 type Tab = 'published' | 'drafts';
 
 export const Home = () => {
   const [loadingCreate, setLoadingCreate] = useState(false);
   const [selectedTab, setSelectedTab] = useState<Tab>('drafts');
+  const [user, setUser] = useState<BlockstackUser | null>(null);
   const [storiesFile, setStoriesFile] = useState<StoryFile | null>(null);
   const [privateStories, setPrivateStories] = useState<SubsetStory[] | null>(
     null
@@ -26,6 +28,16 @@ export const Home = () => {
 
   const handleSelectTab = (tab: Tab) => {
     setSelectedTab(tab);
+  };
+
+  const loadUserData = async () => {
+    try {
+      const user: BlockstackUser = await userSession.loadUserData();
+      setUser(user);
+    } catch (error) {
+      console.error(error);
+      toast.error(error.message);
+    }
   };
 
   const loadStoryFile = async () => {
@@ -50,6 +62,7 @@ export const Home = () => {
   };
 
   useEffect(() => {
+    loadUserData();
     loadStoryFile();
   }, [false]);
 
@@ -72,10 +85,15 @@ export const Home = () => {
     }
   };
 
+  if (!user) {
+    return null;
+  }
+
   return (
     <Component
       selectedTab={selectedTab}
       onSelectTab={handleSelectTab}
+      user={user}
       loadingCreate={loadingCreate}
       onCreateNewPrivateStory={handleCreateNewPrivateStory}
       privateStories={privateStories}
