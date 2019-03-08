@@ -21,6 +21,10 @@ const StyledContainer = styled(Container)`
   ${tw`mt-4`};
 `;
 
+const NoStories = styled.p`
+  ${tw`mt-8 text-center`};
+`;
+
 export const PublicHome = ({ match }: Props) => {
   const [loading, setLoading] = useState(true);
   const [file, setFile] = useState<StoryFile | null>(null);
@@ -28,17 +32,19 @@ export const PublicHome = ({ match }: Props) => {
   const getUserFile = async () => {
     setLoading(true);
     try {
-      let fileUrl = await blockstack.getUserAppFileUrl(
-        'publicStories',
-        match.params.username,
-        window.location.origin
-      );
-      if (fileUrl) {
-        fileUrl = `${fileUrl}.json`;
-        const data = await fetch(fileUrl);
+      const userProfile = await blockstack.lookupProfile(match.params.username);
+      const bucketUrl =
+        userProfile &&
+        userProfile.apps &&
+        userProfile.apps[window.location.origin];
+      if (bucketUrl) {
+        const data = await fetch(`${bucketUrl}publicStories.json`);
         if (data.status === 200) {
           const json = await data.json();
           setFile(json);
+        } else if (data.status === 404) {
+          // If file is not found we set an empty array to show an empty list
+          setFile({ stories: [] });
         }
       }
       setLoading(false);
@@ -75,6 +81,7 @@ export const PublicHome = ({ match }: Props) => {
         </HeaderContainer>
       </Header>
       <StyledContainer>
+        {file.stories.length === 0 && <NoStories>No stories yet</NoStories>}
         {file.stories.map(story => (
           <PublicStoryItem
             key={story.id}
