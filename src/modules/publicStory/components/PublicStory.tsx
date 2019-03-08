@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import * as blockstack from 'blockstack';
 import { Helmet } from 'react-helmet';
 import { RouteComponentProps } from 'react-router';
-import styled from 'styled-components/macro';
+import styled, { css } from 'styled-components/macro';
 import tw from 'tailwind.macro';
 import { Value } from 'slate';
 import Html from 'slate-html-serializer';
@@ -89,8 +89,16 @@ export const HeaderLink = styled(Link)`
   ${tw`text-white no-underline ml-8`};
 `;
 
-const StyledContainer = styled(Container)`
+const StyledContainer = styled(Container)<{ hasCover: boolean }>`
   max-width: 850px;
+
+  ${props =>
+    !props.hasCover &&
+    css`
+      .sigle-content {
+        ${tw`mt-16`};
+      }
+    `}
 `;
 
 const Title = styled.div`
@@ -214,14 +222,19 @@ export const PublicStory = ({ match }: Props) => {
           <HeaderLink to={`/${match.params.username}`}>Stories</HeaderLink>
         </HeaderContainer>
       </Header>
-      <StyledContainer>
+      <StyledContainer hasCover={!!file.coverImage}>
         <Helmet>
           <title>{file.title}</title>
         </Helmet>
-        <Title>{file.title}</Title>
-        <StoryDate>{format(file.createdAt, 'DD MMMM YYYY')}</StoryDate>
-        {file.coverImage && <CoverImage src={file.coverImage} />}
+        <Title className="sigle-title">{file.title}</Title>
+        <StoryDate className="sigle-date">
+          {format(file.createdAt, 'DD MMMM YYYY')}
+        </StoryDate>
+        {file.coverImage && (
+          <CoverImage className="sigle-cover" src={file.coverImage} />
+        )}
         <Content
+          className="sigle-content"
           dangerouslySetInnerHTML={{
             __html: dompurify.sanitize(
               html.serialize(Value.fromJSON(file.content))
