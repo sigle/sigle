@@ -1,9 +1,9 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import * as blockstack from 'blockstack';
 import styled from 'styled-components/macro';
 import tw from 'tailwind.macro';
 import { IoIosEye } from 'react-icons/io';
+import { userSession } from '../../../utils/blockstack';
 import { Container } from '../../../components';
 import { BlockstackUser } from '../../../types';
 
@@ -33,7 +33,8 @@ interface Props {
 
 export const AppBar = ({ user }: Props) => {
   const handleLogout = () => {
-    blockstack.signUserOut(window.location.origin);
+    userSession.signUserOut();
+    window.location.replace(window.location.origin);
   };
 
   return (

@@ -1,8 +1,8 @@
-import * as blockstack from 'blockstack';
 import nanoid from 'nanoid';
 import { createBrowserHistory } from 'history';
 import { Value } from 'slate';
 import Plain from 'slate-plain-serializer';
+import { userSession } from './blockstack';
 import { StoryFile, Story, SubsetStory } from '../types';
 
 export const history = createBrowserHistory();
@@ -11,7 +11,7 @@ const storiesFileName = 'stories.json';
 const publicStoriesFileName = 'publicStories.json';
 
 export const getStoriesFile = async (): Promise<StoryFile> => {
-  let file = await blockstack.getFile(storiesFileName);
+  let file = await userSession.getFile(storiesFileName);
   if (file) {
     file = JSON.parse(file);
   }
@@ -25,11 +25,11 @@ export const getStoriesFile = async (): Promise<StoryFile> => {
 };
 
 export const saveStoriesFile = async (file: StoryFile): Promise<void> => {
-  await blockstack.putFile(storiesFileName, JSON.stringify(file));
+  await userSession.putFile(storiesFileName, JSON.stringify(file));
   const publickStoriesFile = {
     stories: file.stories.filter(s => s.type === 'public'),
   };
-  await blockstack.putFile(
+  await userSession.putFile(
     publicStoriesFileName,
     JSON.stringify(publickStoriesFile),
     {
@@ -39,7 +39,7 @@ export const saveStoriesFile = async (file: StoryFile): Promise<void> => {
 };
 
 export const getStoryFile = async (storyId: string): Promise<Story | null> => {
-  const originalFile = await blockstack.getFile(`${storyId}.json`, {
+  const originalFile = await userSession.getFile(`${storyId}.json`, {
     decrypt: false,
   });
   let file;
@@ -47,19 +47,19 @@ export const getStoryFile = async (storyId: string): Promise<Story | null> => {
     file = JSON.parse(originalFile);
   }
   if (file.mac) {
-    file = JSON.parse(blockstack.decryptContent(originalFile));
+    file = JSON.parse(userSession.decryptContent(originalFile));
   }
   return file;
 };
 
 export const saveStoryFile = async (file: Story): Promise<void> => {
-  await blockstack.putFile(`${file.id}.json`, JSON.stringify(file), {
+  await userSession.putFile(`${file.id}.json`, JSON.stringify(file), {
     encrypt: file.type === 'private',
   });
 };
 
 export const deleteStoryFile = async (file: Story): Promise<void> => {
-  await blockstack.putFile(`${file.id}.json`, JSON.stringify(null));
+  await userSession.putFile(`${file.id}.json`, JSON.stringify(null));
 };
 
 export const publishStory = async (storyId: string): Promise<void> => {

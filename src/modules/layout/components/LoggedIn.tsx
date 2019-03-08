@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import * as blockstack from 'blockstack';
 import { createGlobalStyle } from 'styled-components/macro';
+import { userSession } from '../../../utils/blockstack';
 import { AppBar } from './AppBar';
 import { BlockstackUser } from '../../../types';
 
@@ -21,7 +21,7 @@ export const LoggedIn = ({ children }: Props) => {
 
   const loadUserData = async () => {
     try {
-      const user: BlockstackUser = await blockstack.loadUserData();
+      const user: BlockstackUser = await userSession.loadUserData();
       setUser(user);
     } catch (error) {
       console.error(error);

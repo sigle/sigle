@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
-import * as blockstack from 'blockstack';
+import { userSession } from '../../../utils/blockstack';
 import { Login } from './Login';
 
 interface Props {
@@ -8,18 +8,18 @@ interface Props {
 }
 
 export const Protected = ({ children }: Props) => {
-  const [loggedIn, setLoggedIn] = useState(!!blockstack.isUserSignedIn());
-  const [loggingIn, setLoggingIn] = useState(!!blockstack.isSignInPending());
+  const [loggedIn, setLoggedIn] = useState(!!userSession.isUserSignedIn());
+  const [loggingIn, setLoggingIn] = useState(!!userSession.isSignInPending());
 
   useEffect(() => {
-    if (blockstack.isSignInPending()) {
-      blockstack
+    if (userSession.isSignInPending()) {
+      userSession
         .handlePendingSignIn()
         .then(() => {
           setLoggingIn(false);
           setLoggedIn(true);
         })
-        .catch((error: any) => {
+        .catch((error: Error) => {
           setLoggingIn(false);
           toast.error(error.message);
         });

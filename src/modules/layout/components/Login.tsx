@@ -1,8 +1,8 @@
 import React from 'react';
-import * as blockstack from 'blockstack';
 import { useWindowSize } from 'the-platform';
 import styled from 'styled-components/macro';
 import tw from 'tailwind.macro';
+import { userSession } from '../../../utils/blockstack';
 import logo from '../../../img/logo.svg';
 import one from '../../../img/one.png';
 import { Button } from '../../../components';
@@ -25,11 +25,7 @@ export const Login = () => {
   const { height } = useWindowSize();
 
   const handleLogin = () => {
-    const origin = window.location.origin;
-    blockstack.redirectToSignIn(origin, `${origin}/manifest.json`, [
-      'store_write',
-      'publish_data',
-    ]);
+    userSession.redirectToSignIn();
   };
 
   return (
