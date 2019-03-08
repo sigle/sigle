@@ -2,9 +2,11 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components/macro';
 import tw from 'tailwind.macro';
+import Tippy from '@tippy.js/react';
+import { IoIosEye } from 'react-icons/io';
 import { format } from 'date-fns';
 import { ButtonOutline } from '../../../components';
-import { SubsetStory } from '../../../types';
+import { SubsetStory, BlockstackUser } from '../../../types';
 
 const StoryContainer = styled.div`
   ${tw`py-8 border-b border-solid border-grey-light`};
@@ -14,8 +16,20 @@ const StoryTitleContainer = styled.div`
   ${tw`flex justify-between`};
 `;
 
+const StoryTitleContainerLeft = styled.div`
+  ${tw`flex`};
+`;
+
+const StoryTitleIcon = styled.div`
+  ${tw`flex items-center text-grey-dark`};
+
+  a {
+    ${tw`flex text-black`};
+  }
+`;
+
 const StoryTitle = styled.div<{ to: string }>`
-  ${tw`text-2xl font-bold no-underline text-black`};
+  ${tw`flex text-2xl font-bold no-underline text-black`};
 `;
 
 const StoryDate = styled.div`
@@ -27,6 +41,7 @@ const StoryText = styled.div`
 `;
 
 interface Props {
+  user: BlockstackUser;
   story: SubsetStory;
   type: 'public' | 'private';
   loading: boolean;
@@ -35,6 +50,7 @@ interface Props {
 }
 
 export const StoryItem = ({
+  user,
   story,
   type,
   loading,
@@ -44,9 +60,32 @@ export const StoryItem = ({
   return (
     <StoryContainer>
       <StoryTitleContainer>
-        <StoryTitle as={Link} to={`/stories/${story.id}`}>
-          {story.title}
-        </StoryTitle>
+        <StoryTitleContainerLeft>
+          <Tippy
+            content={
+              type === 'public'
+                ? 'View my story'
+                : 'You need to publish your article to view it'
+            }
+            arrow={true}
+            arrowType="round"
+            theme="light-border"
+          >
+            <StoryTitleIcon>
+              {type === 'public' ? (
+                <Link to={`/${user.username}/${story.id}`} target="_blank">
+                  <IoIosEye size={22} style={{ marginRight: 6 }} />
+                </Link>
+              ) : (
+                <IoIosEye size={22} style={{ marginRight: 6 }} />
+              )}
+            </StoryTitleIcon>
+          </Tippy>
+          <StoryTitle as={Link} to={`/stories/${story.id}`}>
+            {story.title}
+          </StoryTitle>
+        </StoryTitleContainerLeft>
+
         <div>
           {loading && (
             <ButtonOutline style={{ marginRight: 8 }} disabled={true}>

@@ -1,17 +1,24 @@
 import React, { useState } from 'react';
 import { toast } from 'react-toastify';
 import { StoryItem as Component } from '../components/StoryItem';
-import { SubsetStory } from '../../../types';
+import { SubsetStory, BlockstackUser } from '../../../types';
 import { publishStory, unPublishStory } from '../../../utils';
 
 interface Props {
+  user: BlockstackUser;
   story: SubsetStory;
   type: 'public' | 'private';
   onPublish: (storyId: string) => void;
   onUnPublish: (storyId: string) => void;
 }
 
-export const StoryItem = ({ story, type, onPublish, onUnPublish }: Props) => {
+export const StoryItem = ({
+  user,
+  story,
+  type,
+  onPublish,
+  onUnPublish,
+}: Props) => {
   const [loading, setLoading] = useState(false);
 
   const handlePublish = async () => {
@@ -42,6 +49,7 @@ export const StoryItem = ({ story, type, onPublish, onUnPublish }: Props) => {
 
   return (
     <Component
+      user={user}
       story={story}
       type={type}
       loading={loading}

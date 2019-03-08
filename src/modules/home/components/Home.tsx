@@ -3,7 +3,7 @@ import styled from 'styled-components/macro';
 import tw from 'tailwind.macro';
 import { Container, Button, Tabs, Tab } from '../../../components';
 import { StoryItem } from '../';
-import { SubsetStory } from '../../../types';
+import { SubsetStory, BlockstackUser } from '../../../types';
 import three from '../../../img/three.png';
 
 export const PageContainer = styled(Container)`
@@ -32,6 +32,7 @@ const Illu = styled.img`
 interface Props {
   selectedTab: 'published' | 'drafts';
   onSelectTab: (tab: 'published' | 'drafts') => void;
+  user: BlockstackUser;
   loadingCreate: boolean;
   onCreateNewPrivateStory: () => void;
   privateStories: SubsetStory[] | null;
@@ -43,6 +44,7 @@ interface Props {
 export const Home = ({
   selectedTab,
   onSelectTab,
+  user,
   loadingCreate,
   onCreateNewPrivateStory,
   privateStories,
@@ -93,6 +95,7 @@ export const Home = ({
         privateStories.map(story => (
           <StoryItem
             key={story.id}
+            user={user}
             story={story}
             type="private"
             onPublish={onPublish}
@@ -105,6 +108,7 @@ export const Home = ({
         publicStories.map(story => (
           <StoryItem
             key={story.id}
+            user={user}
             story={story}
             type="public"
             onPublish={onPublish}
