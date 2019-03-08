@@ -2,6 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components/macro';
 import tw from 'tailwind.macro';
+import Tippy from '@tippy.js/react';
 import { IoIosEye } from 'react-icons/io';
 import { userSession } from '../../../utils/blockstack';
 import { Container } from '../../../components';
@@ -43,9 +44,16 @@ export const AppBar = ({ user }: Props) => {
         <Logo src="/img/logo.svg" alt="logo" />
       </Link>
       <RightContainer>
-        <Name href={`/${user.username}`} target="_blank">
-          <IoIosEye size={22} style={{ marginRight: 6 }} /> {user.username}
-        </Name>
+        <Tippy
+          content={user.username}
+          arrow={true}
+          arrowType="round"
+          theme="light-border"
+        >
+          <Name href={`/${user.username}`} target="_blank">
+            <IoIosEye size={22} style={{ marginRight: 6 }} /> Visit my blog
+          </Name>
+        </Tippy>
         <Logout onClick={handleLogout}>Logout</Logout>
       </RightContainer>
     </StyledContainer>
