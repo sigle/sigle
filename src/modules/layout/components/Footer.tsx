@@ -3,8 +3,8 @@ import styled from 'styled-components/macro';
 import tw from 'tailwind.macro';
 import { Container } from '../../../components';
 
-const StyledContainer = styled.div`
-  ${tw`mt-8 py-8 bg-grey-light text-right`};
+const StyledContainer = styled(Container)`
+  ${tw`mt-8 py-8 text-right border-t border-solid border-grey-light`};
 
   a {
     ${tw`mr-4`};
@@ -15,7 +15,7 @@ const StyledContainer = styled.div`
 `;
 
 const StyledLink = styled.a`
-  ${tw`text-black no-underline`};
+  ${tw`text-sm text-black no-underline`};
   :hover {
     ${tw`underline`};
   }
@@ -24,20 +24,18 @@ const StyledLink = styled.a`
 export const Footer = () => {
   return (
     <StyledContainer>
-      <Container>
-        <StyledLink
-          href="https://app.sigle.io/sigleapp.id.blockstack"
-          target="_blank"
-        >
-          Starter guide
-        </StyledLink>
-        <StyledLink href="https://twitter.com/sigleapp" target="_blank">
-          Twitter
-        </StyledLink>
-        <StyledLink href="https://github.com/pradel/sigle" target="_blank">
-          GitHub
-        </StyledLink>
-      </Container>
+      <StyledLink
+        href="https://app.sigle.io/sigleapp.id.blockstack"
+        target="_blank"
+      >
+        Starter guide
+      </StyledLink>
+      <StyledLink href="https://twitter.com/sigleapp" target="_blank">
+        Twitter
+      </StyledLink>
+      <StyledLink href="https://github.com/pradel/sigle" target="_blank">
+        GitHub
+      </StyledLink>
     </StyledContainer>
   );
 };
