@@ -2101,10 +2101,10 @@ bitcoinjs-lib@^4:
     varuint-bitcoin "^1.0.4"
     wif "^2.0.1"
 
-blockstack@18.3.0:
-  version "18.3.0"
-  resolved "https://registry.yarnpkg.com/blockstack/-/blockstack-18.3.0.tgz#f0b3ad8506a66d014a62af3262ea63ddfacef3c2"
-  integrity sha512-mOS2l5nPph4XhOxcR6Hlv9mULzwRI3T5stA2qtCc6uXPnVc6aUshtQtj9+fBpbS5sn4c5zr+1gEMEtvW/laVqA==
+blockstack@19.0.0:
+  version "19.0.0"
+  resolved "https://registry.yarnpkg.com/blockstack/-/blockstack-19.0.0.tgz#a14f02a4a61dd6549b276246706e6ef30fdc05c3"
+  integrity sha512-saVzJYjm60EH6+cOHbegIE+kjMcni1AtPfn8Cnl+1MCOukG08lx/Jem+c7uHHPeYwoOkX9fGuho1rpdZ/uuJzw==
   dependencies:
     ajv "^4.11.5"
     babel-runtime "^6.26.0"
