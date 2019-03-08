@@ -5,6 +5,7 @@ import * as serviceWorker from './serviceWorker';
 import './generated/tailwind.css';
 import 'typeface-roboto';
 import 'typeface-libre-baskerville';
+import 'tippy.js/themes/light-border.css';
 
 ReactDOM.render(<App />, document.getElementById('root'));
 

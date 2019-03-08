@@ -933,6 +933,14 @@
     "@svgr/plugin-svgo" "^4.0.3"
     loader-utils "^1.1.0"
 
+"@tippy.js/react@2.1.1":
+  version "2.1.1"
+  resolved "https://registry.yarnpkg.com/@tippy.js/react/-/react-2.1.1.tgz#3d106963ec81d55098b6ac6f85c9f7b1a76b9fc0"
+  integrity sha512-rIM5nHuaTek5uEDDD+AjkUEtVCiU6m6Boc5F9bFMiUMp8zEaodZUG7kn/xCD3jR5SfFius3gCdYq0VOZpyypQQ==
+  dependencies:
+    prop-types "^15.6.2"
+    tippy.js "^4.0.3"
+
 "@types/dompurify@0.0.32":
   version "0.0.32"
   resolved "https://registry.yarnpkg.com/@types/dompurify/-/dompurify-0.0.32.tgz#ccc4148d7f2e0598006611e82e840806fab4b268"
@@ -7979,6 +7987,11 @@ pnp-webpack-plugin@1.2.1:
   dependencies:
     ts-pnp "^1.0.0"
 
+popper.js@^1.14.7:
+  version "1.14.7"
+  resolved "https://registry.yarnpkg.com/popper.js/-/popper.js-1.14.7.tgz#e31ec06cfac6a97a53280c3e55e4e0c860e7738e"
+  integrity sha512-4q1hNvoUre/8srWsH7hnoSJ5xVmIL4qgz+s4qf2TnJIMyZFUFMGH+9vE7mXynAlHSZ/NdTmmow86muD0myUkVQ==
+
 portfinder@^1.0.9:
   version "1.0.20"
   resolved "https://registry.yarnpkg.com/portfinder/-/portfinder-1.0.20.tgz#bea68632e54b2e13ab7b0c4775e9b41bf270e44a"
@@ -10626,6 +10639,13 @@ tiny-warning@^0.0.3:
   version "0.0.3"
   resolved "https://registry.yarnpkg.com/tiny-warning/-/tiny-warning-0.0.3.tgz#1807eb4c5f81784a6354d58ea1d5024f18c6c81f"
   integrity sha512-r0SSA5Y5IWERF9Xh++tFPx0jITBgGggOsRLDWWew6YRw/C2dr4uNO1fw1vanrBmHsICmPyMLNBZboTlxUmUuaA==
+
+tippy.js@^4.0.3:
+  version "4.0.4"
+  resolved "https://registry.yarnpkg.com/tippy.js/-/tippy.js-4.0.4.tgz#1cfd83fc6cfd1c459bb7e08b5ad9bc97008f61bb"
+  integrity sha512-VXwJ2PXUvSTqV0RA5n5jzAdXsXnhMNX/aBYhC2j2YLg1/gekFWqVffbUQMVvwrqT4zmpm4Bp7tO8MVkvaaZ5Pg==
+  dependencies:
+    popper.js "^1.14.7"
 
 tmp@^0.0.33:
   version "0.0.33"
