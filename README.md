@@ -5,7 +5,7 @@
 </p>
 
 <p align="center">
-  A new amazing way to create decentralized blogs
+  A beautiful decentralized & open source blog maker
 </p>
 
 <p align="center">
