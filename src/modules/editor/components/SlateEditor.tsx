@@ -36,6 +36,7 @@ import {
 import { Story } from '../../../types';
 import { Content } from '../../publicStory/components/PublicStory';
 import { StorySettings } from '../containers/StorySettings';
+import { config } from '../../../config';
 
 const StyledLinkContainer = styled.div`
   ${tw`mb-4`};
@@ -64,6 +65,10 @@ const SlateContainer = styled.div`
 const SlateToolbar = styled.div`
   ${tw`py-4 border-b border-solid border-grey flex z-10 bg-white sticky flex justify-between max-w-full overflow-auto`};
   top: 0;
+
+  @media (min-width: ${config.breakpoints.md}px) {
+    ${tw`overflow-visible`};
+  }
 `;
 
 const SlateToolbarButtonContainer = styled.div`
