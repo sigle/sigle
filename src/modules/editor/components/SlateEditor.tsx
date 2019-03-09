@@ -37,9 +37,12 @@ import { Story } from '../../../types';
 import { Content } from '../../publicStory/components/PublicStory';
 import { StorySettings } from '../containers/StorySettings';
 
+const StyledLinkContainer = styled.div`
+  ${tw`mb-4`};
+`;
+
 const StyledLink = styled(Link)`
-  ${tw`no-underline text-black mb-4`};
-  display: block;
+  ${tw`no-underline text-black`};
 `;
 
 const Input = styled.input`
@@ -401,10 +404,11 @@ export const SlateEditor = ({
 
   return (
     <PageContainer>
-      <StyledLink to="/">
-        <MdArrowBack /> Back to my stories
-      </StyledLink>
-
+      <StyledLinkContainer>
+        <StyledLink to="/">
+          <MdArrowBack /> Back to my stories
+        </StyledLink>
+      </StyledLinkContainer>
       <PageTitleContainer>
         <PageTitle>Editor</PageTitle>
       </PageTitleContainer>
