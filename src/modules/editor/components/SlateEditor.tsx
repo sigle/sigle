@@ -85,6 +85,7 @@ const StyledContent = styled(Content)`
 
 const StyledEditor = styled(Editor)`
   ${tw`py-4`};
+  min-height: 150px;
 `;
 
 // See https://github.com/ianstormtaylor/slate/blob/master/examples/rich-text/index.js
