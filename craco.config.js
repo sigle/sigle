@@ -1,18 +1,10 @@
 const path = require('path');
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer')
   .BundleAnalyzerPlugin;
+const CracoBlockstackPlugin = require('craco-blockstack');
 
 module.exports = {
-  devServer: devServerConfig => {
-    /**
-     * Needed to allow blockstack to read the manifest.json file when we login the user
-     */
-    devServerConfig.headers = {
-      'Access-Control-Allow-Origin': '*',
-      'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, PATCH, OPTIONS',
-    };
-    return devServerConfig;
-  },
+  plugins: [{ plugin: CracoBlockstackPlugin }],
   webpack: {
     configure: webpackConfig => {
       if (process.env.ANALYZE) {
