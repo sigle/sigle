@@ -9,6 +9,11 @@
 </p>
 
 <p align="center">
+  <img src="https://raw.githubusercontent.com/pradel/sigle/master/assets/screens.png">
+</p>
+
+<p align="center">
+  <img src="https://badgen.net/travis/pradel/sigle" alt="License">
   <img src="https://badgen.net/badge/license/MIT/blue" alt="License">
 </p>
 
