@@ -777,10 +777,10 @@
     lodash "^4.17.10"
     to-fast-properties "^2.0.0"
 
-"@craco/craco@3.5.0":
-  version "3.5.0"
-  resolved "https://registry.yarnpkg.com/@craco/craco/-/craco-3.5.0.tgz#698e9f808e4fc5723345a38d8b505a465d885234"
-  integrity sha512-peQtKgJawPGq5D8qqW2oxkSzCp1wwWL7H8G98Run3UxF5fVJjJLIcnxoRKvXFmrMQYuKBOOsO54ApEeJdTzC0Q==
+"@craco/craco@3.6.0":
+  version "3.6.0"
+  resolved "https://registry.yarnpkg.com/@craco/craco/-/craco-3.6.0.tgz#4b4ce7dacda8ac64731c18b1542f70127cd3eb8e"
+  integrity sha512-01hBd0kefkDmfOsiXq5lAnSISVPgLqT1Qrr8Y062XRboeIlz9GQvOjJxhIxoqgVFYdeKURW6xza2qOEj5Til4w==
   dependencies:
     cross-spawn "6.0.5"
     lodash.mergewith "4.6.1"
@@ -2948,6 +2948,11 @@ cosmiconfig@^5.0.0, cosmiconfig@^5.0.2, cosmiconfig@^5.0.5, cosmiconfig@^5.0.7:
     is-directory "^0.3.1"
     js-yaml "^3.9.0"
     parse-json "^4.0.0"
+
+craco-blockstack@1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/craco-blockstack/-/craco-blockstack-1.0.0.tgz#17d24d67fc58761c746c4dac08cacda231298409"
+  integrity sha512-eXfHlTFeAoMBaw+gPg4pM8mvM/SpeDbMaVypaM56n11or17H6UvEKr8ChtiKPA1Jc6DIrMS/BZBv1XogqFMPhA==
 
 create-ecdh@^4.0.0:
   version "4.0.3"
