@@ -1,10 +1,10 @@
 const path = require('path');
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer')
   .BundleAnalyzerPlugin;
-const CracoBlockstackPlugin = require('craco-blockstack');
+const cracoBlockstackPlugin = require('craco-blockstack');
 
 module.exports = {
-  plugins: [{ plugin: CracoBlockstackPlugin }],
+  plugins: [{ plugin: cracoBlockstackPlugin }],
   webpack: {
     configure: webpackConfig => {
       if (process.env.ANALYZE) {
