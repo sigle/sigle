@@ -2949,10 +2949,10 @@ cosmiconfig@^5.0.0, cosmiconfig@^5.0.2, cosmiconfig@^5.0.5, cosmiconfig@^5.0.7:
     js-yaml "^3.9.0"
     parse-json "^4.0.0"
 
-craco-blockstack@1.0.0:
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/craco-blockstack/-/craco-blockstack-1.0.0.tgz#17d24d67fc58761c746c4dac08cacda231298409"
-  integrity sha512-eXfHlTFeAoMBaw+gPg4pM8mvM/SpeDbMaVypaM56n11or17H6UvEKr8ChtiKPA1Jc6DIrMS/BZBv1XogqFMPhA==
+craco-blockstack@1.0.1:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/craco-blockstack/-/craco-blockstack-1.0.1.tgz#630eb79a3552c4d35fffdfabefb707fddf26e38d"
+  integrity sha512-L50CNywvUL/c/zQNG2k4v16i+lvyi0oH4B2vgW/kn3GZIcghDvosHKOvLRboDpfkyGvJGbWV+rQcVF0BL0GdcQ==
 
 create-ecdh@^4.0.0:
   version "4.0.3"
