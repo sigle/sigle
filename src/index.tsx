@@ -1,3 +1,4 @@
+import { init } from '@sentry/browser';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import App from './App';
@@ -6,6 +7,16 @@ import './generated/tailwind.css';
 import 'typeface-roboto';
 import 'typeface-libre-baskerville';
 import 'tippy.js/themes/light-border.css';
+
+/**
+ * Sentry should only be active in production
+ */
+if (process.env.NODE_ENV === 'production') {
+  init({
+    dsn: 'https://82a06f89d9474f40abd8f2058bbf9c1e@sentry.io/1419975',
+    environment: process.env.NODE_ENV,
+  });
+}
 
 ReactDOM.render(<App />, document.getElementById('root'));
 
