@@ -11,8 +11,10 @@
     "analyze": "BUNDLE_ANALYZE=both next build",
     "analyze:server": "BUNDLE_ANALYZE=server next build",
     "analyze:browser": "BUNDLE_ANALYZE=browser next build",
-    "prettier": "prettier --write '**/*.{js,ts,tsx,md}'",
-    "test:prettier": "prettier --list-different '**/*.{js,ts,tsx,md}'"
+    "test": "yarn test:lint && yarn test:prettier",
+    "test:lint": "eslint {pages,server}/**",
+    "test:prettier": "prettier --list-different '**/*.{js,ts,tsx,md}'",
+    "prettier": "prettier --write '**/*.{js,ts,tsx,md}'"
   },
   "prettier": {
     "singleQuote": true,
@@ -82,9 +84,15 @@
     "@types/slate-plain-serializer": "0.6.1",
     "@types/slate-react": "0.21.0",
     "@types/styled-components": "4.1.12",
+    "@typescript-eslint/eslint-plugin": "1.5.0",
+    "@typescript-eslint/parser": "1.5.0",
     "@zeit/next-bundle-analyzer": "0.1.2",
     "@zeit/next-typescript": "1.1.1",
     "craco-blockstack": "1.0.2",
+    "eslint": "5.15.3",
+    "eslint-config-prettier": "4.1.0",
+    "eslint-plugin-prettier": "3.0.1",
+    "eslint-plugin-react": "7.12.4",
     "husky": "1.3.1",
     "lint-staged": "8.1.5",
     "next-compose-plugins": "2.1.1",
