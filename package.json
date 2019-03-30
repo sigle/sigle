@@ -92,6 +92,7 @@
     "@typescript-eslint/parser": "1.5.0",
     "@zeit/next-bundle-analyzer": "0.1.2",
     "@zeit/next-typescript": "1.1.1",
+    "babel-plugin-styled-components": "1.10.0",
     "craco-blockstack": "1.0.2",
     "eslint": "5.16.0",
     "eslint-config-prettier": "4.1.0",
