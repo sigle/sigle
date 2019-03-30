@@ -4,6 +4,7 @@ import bodyParser from 'body-parser';
 import helmet from 'helmet';
 import next from 'next';
 import { setup } from 'radiks-server';
+import { config } from './config';
 
 const port = process.env.PORT ? parseInt(process.env.PORT, 10) : 3000;
 const dev = process.env.NODE_ENV !== 'production';
@@ -19,7 +20,9 @@ nextApp.prepare().then(async () => {
   expressApp.use(bodyParser.urlencoded({ extended: true }));
   expressApp.use(bodyParser.json());
 
-  const RadiksController = await setup();
+  const RadiksController = await setup({
+    mongoDBUrl: config.mongoDBUrl,
+  });
   expressApp.use('/radiks', RadiksController);
 
   expressApp.get('/manifest.json', (_, res) => {

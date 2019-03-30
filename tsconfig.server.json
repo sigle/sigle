@@ -8,6 +8,6 @@
     "outDir": ".next/server",
     "isolatedModules": false
   },
-  "include": ["server/**/*.ts"],
+  "include": ["server/**/*"],
   "exclude": [".next"]
 }
