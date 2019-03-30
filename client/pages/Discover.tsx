@@ -34,39 +34,51 @@ const story = {
 };
 
 const Story = () => (
-  <Box
-    py={3}
-    css={{
-      borderBottom: 'solid 1px #e8e8e8',
-    }}
-  >
-    <Heading fontSize={3}>{story.title}</Heading>
-    <Text
+  <Flex>
+    <Box
+      width={1 / 4}
+      my={3}
+      mr={3}
       css={{
-        color: '#494949',
+        backgroundImage: 'url(https://source.unsplash.com/random/1024x768)',
+        backgroundSize: 'cover',
       }}
-      mt={1}
-    >
-      January 26, 2017
-    </Text>
-    <Text mt={2}>{story.content}</Text>
-    <Text
+    />
+    <Box
+      width={3 / 4}
+      py={3}
       css={{
-        color: '#494949',
+        borderBottom: 'solid 1px #e8e8e8',
       }}
-      fontSize={1}
-      mt={2}
     >
-      Travel, lifestyle
-    </Text>
-    <Flex>
-      <Button variant="outline" mt={1}>
-        Read more
-      </Button>
-      <Box mx="auto" />
-      <Text>John Doe</Text>
-    </Flex>
-  </Box>
+      <Heading fontSize={3}>{story.title}</Heading>
+      <Text
+        css={{
+          color: '#494949',
+        }}
+        mt={1}
+      >
+        January 26, 2017
+      </Text>
+      <Text mt={2}>{story.content}</Text>
+      <Text
+        css={{
+          color: '#494949',
+        }}
+        fontSize={1}
+        mt={2}
+      >
+        Travel, lifestyle
+      </Text>
+      <Flex>
+        <Button variant="outline" mt={1}>
+          Read more
+        </Button>
+        <Box mx="auto" />
+        <Text>John Doe</Text>
+      </Flex>
+    </Box>
+  </Flex>
 );
 
 export const Discover = () => {
