@@ -7,7 +7,7 @@
     "start": "node .next/server",
     "build": "yarn build:server && yarn build:client",
     "build:server": "NODE_ENV=production tsc --project tsconfig.server.json",
-    "build:client": "tsc && NODE_ENV=production next build",
+    "build:client": "tsc --noEmit && NODE_ENV=production next build",
     "analyze": "BUNDLE_ANALYZE=both next build",
     "analyze:server": "BUNDLE_ANALYZE=server next build",
     "analyze:browser": "BUNDLE_ANALYZE=browser next build",

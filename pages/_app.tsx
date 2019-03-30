@@ -1,8 +1,14 @@
 import React from 'react';
 import App, { Container } from 'next/app';
-import { ThemeProvider } from 'styled-components';
+import { ThemeProvider, createGlobalStyle } from 'styled-components';
 import { Reset } from 'styled-reset';
 import { theme } from '../client/theme';
+
+const GlobalStyle = createGlobalStyle`
+  body {
+    font-family: 'Roboto', sans-serif;
+  }
+`;
 
 class MyApp extends App {
   static async getInitialProps({ Component, ctx }: any) {
@@ -22,7 +28,10 @@ class MyApp extends App {
       <Container>
         <Reset />
         <ThemeProvider theme={theme}>
-          <Component {...pageProps} />
+          <React.Fragment>
+            <GlobalStyle />
+            <Component {...pageProps} />
+          </React.Fragment>
         </ThemeProvider>
       </Container>
     );
