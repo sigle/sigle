@@ -1,6 +1,7 @@
 import React from 'react';
 import App, { Container } from 'next/app';
 import { ThemeProvider } from 'styled-components';
+import { Reset } from 'styled-reset';
 import { theme } from '../client/theme';
 
 class MyApp extends App {
@@ -19,6 +20,7 @@ class MyApp extends App {
 
     return (
       <Container>
+        <Reset />
         <ThemeProvider theme={theme}>
           <Component {...pageProps} />
         </ThemeProvider>

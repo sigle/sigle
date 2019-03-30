@@ -1,17 +1,19 @@
 import React from 'react';
-import { Button as RebassButton } from 'rebass';
+import {
+  Button as RebassButton,
+  ButtonProps as RebassButtonProps,
+} from 'rebass';
 
-interface Props {
+interface ButtonProps extends RebassButtonProps {
   variant?: 'primary' | 'outline';
-  children: React.ReactNode;
 }
 
-export const Button = (props: Props) => (
+export const Button = (props: ButtonProps) => (
   <RebassButton
     css={{
       cursor: 'pointer',
     }}
+    variant="default"
     {...props}
-    variant={props.variant || 'default'}
   />
 );

@@ -5,6 +5,10 @@ const colors = {
 };
 
 export const theme = {
+  fonts: {
+    roboto: "'Roboto', sans-serif",
+    baskerville: "'Libre Baskerville', serif",
+  },
   buttons: {
     default: {
       color: colors.black,
