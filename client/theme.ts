@@ -21,7 +21,8 @@ export const theme = {
     outline: {
       color: colors.black,
       backgroundColor: 'transparent',
-      boxShadow: 'inset 0 0 0 2px',
+      boxShadow: 'inset 0 0 0 1px',
+      fontWeight: 400,
     },
   },
 };

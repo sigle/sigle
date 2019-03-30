@@ -5,15 +5,18 @@ import { Button, Container, Heading, Link, Text } from '../components';
 const Header = () => (
   <Container>
     <Flex py={3} color="black" alignItems="center">
-      <img
-        src="/static/images/logo.png"
-        alt="Sigle logo"
-        css={{
-          height: 30,
-        }}
-      />
+      <Link href="/">
+        <img
+          src="/static/images/logo.png"
+          alt="Sigle logo"
+          css={{
+            height: 30,
+          }}
+        />
+      </Link>
+
       <Box mx="auto" />
-      <Link href="/a" py={2} px={3} color="black">
+      <Link href="/discover" py={2} px={3} color="black">
         Discover
       </Link>
       <Link href="/b" py={2} px={3} color="black">
@@ -34,7 +37,11 @@ const story = {
 };
 
 const Story = () => (
-  <Flex>
+  <Flex
+    css={{
+      borderBottom: 'solid 1px #e8e8e8',
+    }}
+  >
     <Box
       width={1 / 4}
       my={3}
@@ -44,13 +51,7 @@ const Story = () => (
         backgroundSize: 'cover',
       }}
     />
-    <Box
-      width={3 / 4}
-      py={3}
-      css={{
-        borderBottom: 'solid 1px #e8e8e8',
-      }}
-    >
+    <Box width={3 / 4} py={3}>
       <Heading fontSize={3}>{story.title}</Heading>
       <Text
         css={{
@@ -70,8 +71,15 @@ const Story = () => (
       >
         Travel, lifestyle
       </Text>
-      <Flex>
-        <Button variant="outline" mt={1}>
+      <Flex mt={2}>
+        <Button
+          variant="outline"
+          fontSize={1}
+          borderRadius={10}
+          css={{
+            padding: '6px 10px',
+          }}
+        >
           Read more
         </Button>
         <Box mx="auto" />
@@ -88,6 +96,10 @@ export const Discover = () => {
       <Container py={4}>
         <Heading>Discover the latest stories</Heading>
         <Box mt={3}>
+          <Story />
+          <Story />
+          <Story />
+          <Story />
           <Story />
           <Story />
         </Box>
