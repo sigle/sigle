@@ -1,37 +1,50 @@
+import { join } from 'path';
 import express from 'express';
 import bodyParser from 'body-parser';
 import helmet from 'helmet';
 import next from 'next';
+import { setup } from 'radiks-server';
 
 const port = process.env.PORT ? parseInt(process.env.PORT, 10) : 3000;
 const dev = process.env.NODE_ENV !== 'production';
 const nextApp = next({ dev });
 const handle = nextApp.getRequestHandler();
 
-nextApp.prepare().then(() => {
-  const app = express();
+// TODO setup sentry on production
 
-  app.use(helmet());
-  app.use(bodyParser.urlencoded({ extended: true }));
-  app.use(bodyParser.json());
+nextApp.prepare().then(async () => {
+  const expressApp = express();
 
-  app.get('/a', (req, res) => {
+  expressApp.use(helmet());
+  expressApp.use(bodyParser.urlencoded({ extended: true }));
+  expressApp.use(bodyParser.json());
+
+  const RadiksController = await setup();
+  expressApp.use('/radiks', RadiksController);
+
+  expressApp.get('/manifest.json', (_, res) => {
+    res.header('Access-Control-Allow-Origin', '*');
+    res.header('Access-Control-Allow-Headers', '*');
+    res.sendFile(join(__dirname, '..', 'static', 'manifest.json'));
+  });
+
+  expressApp.get('/a', (req, res) => {
     return nextApp.render(req, res, '/a', req.query);
   });
 
-  app.get('/b', (req, res) => {
+  expressApp.get('/b', (req, res) => {
     return nextApp.render(req, res, '/b', req.query);
   });
 
-  app.get('/posts/:id', (req, res) => {
+  expressApp.get('/posts/:id', (req, res) => {
     return nextApp.render(req, res, '/posts', { id: req.params.id });
   });
 
-  app.get('*', (req, res) => {
+  expressApp.get('*', (req, res) => {
     return handle(req, res);
   });
 
-  app.listen(port, (err?: Error) => {
+  expressApp.listen(port, (err?: Error) => {
     if (err) throw err;
     console.log(`> Ready on http://localhost:${port}`);
   });
