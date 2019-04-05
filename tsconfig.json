@@ -21,6 +21,6 @@
     "isolatedModules": true,
     "sourceMap": true
   },
-  "include": ["pages/**/*"],
+  "include": ["pages/**/*", "client/**/*"],
   "exclude": [".next", "server/**/*.*"]
 }
