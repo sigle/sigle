@@ -2,7 +2,7 @@ import React from 'react';
 import Link from 'next/link';
 import styled from 'styled-components';
 import { Box, Heading } from 'rebass';
-import { Button } from '../components/Button';
+import { Button, StyledButton } from '../components/Button';
 import tw from 'tailwind.macro';
 
 let Test = tw.div`bg-blue-500 text-white p-2`;
@@ -35,6 +35,12 @@ export const Home = () => (
       <Button>Rebass</Button>
       <Button variant="primary">Rebass</Button>
       <Button variant="outline">Rebass</Button>
+    </Box>
+    <Box>
+      <Heading>Hello</Heading>
+      <StyledButton>Rebass</StyledButton>
+      <StyledButton variant="primary">Rebass</StyledButton>
+      <StyledButton variant="outline">Rebass</StyledButton>
     </Box>
   </React.Fragment>
 );
