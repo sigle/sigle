@@ -41,6 +41,8 @@
     "not op_mini all"
   ],
   "dependencies": {
+    "@emotion/core": "^10.0.10",
+    "@emotion/styled": "^10.0.10",
     "@sentry/browser": "4.6.6",
     "@tippy.js/react": "2.1.2",
     "blockstack": "19.0.1",
@@ -94,7 +96,9 @@
     "@typescript-eslint/eslint-plugin": "1.5.0",
     "@typescript-eslint/parser": "1.5.0",
     "@zeit/next-bundle-analyzer": "0.1.2",
+    "@zeit/next-css": "1.0.1",
     "@zeit/next-typescript": "1.1.1",
+    "babel-plugin-macros": "2.5.1",
     "babel-plugin-styled-components": "1.10.0",
     "craco-blockstack": "1.0.2",
     "eslint": "5.16.0",
@@ -107,8 +111,8 @@
     "nodemon": "1.18.10",
     "prettier": "1.16.4",
     "react-scripts": "2.1.8",
-    "tailwind.macro": "0.5.10",
-    "tailwindcss": "0.7.4",
+    "tailwind.macro": "1.0.0-alpha.2",
+    "tailwindcss": "1.0.0-beta.4",
     "ts-node": "8.0.3",
     "typescript": "3.4.1",
     "webpack-bundle-analyzer": "3.1.0"

@@ -1,8 +1,9 @@
 import React from 'react';
 import App, { Container } from 'next/app';
 import { ThemeProvider, createGlobalStyle } from 'styled-components';
-import { Reset } from 'styled-reset';
 import { theme } from '../client/theme';
+// TODO see how to inject it with styled-components
+import '../client/generated/tailwind.css';
 
 const GlobalStyle = createGlobalStyle`
   body {
@@ -26,7 +27,6 @@ class MyApp extends App {
 
     return (
       <Container>
-        <Reset />
         <ThemeProvider theme={theme}>
           <React.Fragment>
             <GlobalStyle />

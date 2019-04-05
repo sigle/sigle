@@ -3,6 +3,9 @@ import Link from 'next/link';
 import styled from 'styled-components';
 import { Box, Heading } from 'rebass';
 import { Button } from '../client/components/Button';
+import tw from 'tailwind.macro';
+
+let Test = tw.div`bg-blue-500 text-white p-2`;
 
 const Title = styled.h1`
   color: red;
@@ -11,6 +14,7 @@ const Title = styled.h1`
 
 export default () => (
   <React.Fragment>
+    <Test>Yo</Test>
     <ul>
       <li>
         <Link href="/a" as="/a">
