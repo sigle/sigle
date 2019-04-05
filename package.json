@@ -41,8 +41,6 @@
     "not op_mini all"
   ],
   "dependencies": {
-    "@emotion/core": "^10.0.10",
-    "@emotion/styled": "^10.0.10",
     "@sentry/browser": "4.6.6",
     "@tippy.js/react": "2.1.2",
     "blockstack": "19.0.1",
