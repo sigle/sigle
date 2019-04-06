@@ -4,6 +4,11 @@ module.exports = {
   ...defaultConfig,
   theme: {
     ...defaultConfig.theme,
+    fontFamily: {
+      ...defaultConfig.theme.fontFamily,
+      roboto: "'Roboto', sans-serif",
+      baskerville: "'Libre Baskerville', serif",
+    },
     colors: {
       ...defaultConfig.theme.colors,
       primary: {

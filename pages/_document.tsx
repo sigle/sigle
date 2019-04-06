@@ -115,7 +115,7 @@ export default class MyDocument extends Document {
           <meta name="msapplication-TileImage" content="/ms-icon-144x144.png" />
           <meta name="theme-color" content="#ffffff" />
           <link
-            href="https://fonts.googleapis.com/css?family=Libre+Baskerville:400,700|Roboto:300,400,700"
+            href="https://fonts.googleapis.com/css?family=Libre+Baskerville:400,700|Roboto:300,300i,400,500,700"
             rel="stylesheet"
           />
           <link rel="manifest" href="http://localhost:3000/manifest.json" />

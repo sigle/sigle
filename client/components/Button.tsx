@@ -7,13 +7,13 @@ interface ButtonProps {
 }
 
 export const Button = styled.button<ButtonProps>`
-  ${tw`font-bold py-2 px-4 rounded text-black`};
+  ${tw`font-bold py-2 px-4 rounded text-black lg:text-sm`};
 
   ${props =>
     props.color &&
     props.color === 'black' &&
     css`
-      ${tw`bg-black hover:bg-gray-800 text-white`};
+      ${tw`bg-black text-white`};
     `}
 
   ${props =>
