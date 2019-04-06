@@ -1,15 +1,9 @@
-import React from 'react';
-import { Box, BoxProps } from 'rebass';
+import styled from 'styled-components';
+import tw from 'tailwind.macro';
 
-interface ContainerProps extends BoxProps {}
+// TODO see why container is not working
 
-export const Container = (props: ContainerProps) => (
-  <Box
-    {...props}
-    px={2}
-    mx="auto"
-    css={{
-      maxWidth: '1024px',
-    }}
-  />
-);
+export const Container = styled.div<{}>`
+  ${tw`container mx-auto px-4`};
+  max-width: 1024px;
+`;
