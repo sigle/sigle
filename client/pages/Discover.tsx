@@ -13,7 +13,6 @@ const story = {
 
 const StoryContainer = styled.div`
   ${tw`w-full lg:flex py-4 border-b border-grey`};
-
   &:last-child {
     border: none;
   }

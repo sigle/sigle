@@ -2,6 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 import tw from 'tailwind.macro';
 import { Container } from '../../../components';
+import { config } from '../../../config';
 
 const FooterSection = styled.section`
   ${tw`bg-black text-white py-10`};
@@ -65,7 +66,7 @@ export const Footer = () => (
         <FooterSocial>
           <div>
             <FooterSocialLink
-              href="https://github.com/pradel/sigle"
+              href={config.githubUrl}
               target="_blank"
               rel="nofollow"
             >
@@ -74,7 +75,7 @@ export const Footer = () => (
           </div>
           <div>
             <FooterSocialLink
-              href="https://twitter.com/sigleapp"
+              href={config.twitterUrl}
               target="_blank"
               rel="nofollow"
             >
