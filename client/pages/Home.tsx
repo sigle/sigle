@@ -65,7 +65,6 @@ const HeroContainer = styled(ImageColumnContainer)`
   }
 
   .button {
-    ${tw`uppercase`};
     border-radius: 2rem;
   }
 
@@ -139,7 +138,7 @@ const SectionReady = styled.section`
   }
 
   .button {
-    ${tw`mb-2 uppercase`};
+    ${tw`mb-2`};
     border-radius: 2rem;
   }
 
