@@ -3,24 +3,34 @@ const withTypescript = require('@zeit/next-typescript');
 const withCSS = require('@zeit/next-css');
 const withBundleAnalyzer = require('@zeit/next-bundle-analyzer');
 
-module.exports = withPlugins([
-  [withTypescript],
-  [withCSS],
+module.exports = withPlugins(
   [
-    withBundleAnalyzer,
-    {
-      analyzeServer: ['server', 'both'].includes(process.env.BUNDLE_ANALYZE),
-      analyzeBrowser: ['browser', 'both'].includes(process.env.BUNDLE_ANALYZE),
-      bundleAnalyzerConfig: {
-        server: {
-          analyzerMode: 'static',
-          reportFilename: '../bundles/server.html',
-        },
-        browser: {
-          analyzerMode: 'static',
-          reportFilename: '../bundles/client.html',
+    [withTypescript],
+    [withCSS],
+    [
+      withBundleAnalyzer,
+      {
+        analyzeServer: ['server', 'both'].includes(process.env.BUNDLE_ANALYZE),
+        analyzeBrowser: ['browser', 'both'].includes(
+          process.env.BUNDLE_ANALYZE
+        ),
+        bundleAnalyzerConfig: {
+          server: {
+            analyzerMode: 'static',
+            reportFilename: '../bundles/server.html',
+          },
+          browser: {
+            analyzerMode: 'static',
+            reportFilename: '../bundles/client.html',
+          },
         },
       },
-    },
+    ],
   ],
-]);
+  {
+    env: {
+      // TODO take from env
+      API_URL: 'http://localhost:3000',
+    },
+  }
+);

@@ -53,6 +53,7 @@
     "immutable": "4.0.0-rc.12",
     "nanoid": "2.0.1",
     "next": "8.0.3",
+    "radiks": "0.2.0",
     "radiks-server": "^0.1.9",
     "react": "16.8.6",
     "react-dom": "16.8.6",

@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import styled from 'styled-components';
 import tw from 'tailwind.macro';
 import { MdSort } from 'react-icons/md';
+import { getConfig } from 'radiks';
 import { Container, Button, Link } from '../../../components';
 import { MobileMenu } from './MobileMenu';
 
@@ -32,6 +33,11 @@ const HeaderButton = styled(Button)`
 export const Header = () => {
   const [menuOpen, setMenuOpen] = useState<boolean>(false);
 
+  const handleLogin = () => {
+    const { userSession } = getConfig();
+    userSession.redirectToSignIn();
+  };
+
   return (
     <Container>
       <MobileMenu open={menuOpen} onClose={() => setMenuOpen(false)} />
@@ -47,7 +53,9 @@ export const Header = () => {
         <HeaderLink href="/discover">Discover</HeaderLink>
         <HeaderLink href="/b">How to use?</HeaderLink>
         <HeaderLink href="/c">Contact</HeaderLink>
-        <HeaderButton color="black">Sign in</HeaderButton>
+        <HeaderButton color="black" onClick={handleLogin}>
+          Sign in
+        </HeaderButton>
       </HeaderContainer>
     </Container>
   );
