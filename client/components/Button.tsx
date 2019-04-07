@@ -7,7 +7,8 @@ interface ButtonProps {
 }
 
 export const Button = styled.button<ButtonProps>`
-  ${tw`font-bold py-2 px-4 rounded text-black lg:text-sm`};
+  ${tw`font-bold py-2 px-4 text-black lg:text-sm`};
+  border-radius: 0.6rem;
 
   ${props =>
     props.color &&

@@ -64,10 +64,6 @@ const HeroContainer = styled(ImageColumnContainer)`
     ${tw`mb-2`};
   }
 
-  .button {
-    border-radius: 2rem;
-  }
-
   img {
     width: 460px;
   }
@@ -139,7 +135,6 @@ const SectionReady = styled.section`
 
   .button {
     ${tw`mb-2`};
-    border-radius: 2rem;
   }
 
   a {
