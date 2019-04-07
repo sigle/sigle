@@ -52,7 +52,6 @@ export const Header = () => {
 
         <HeaderLink href="/discover">Discover</HeaderLink>
         <HeaderLink href="/b">How to use?</HeaderLink>
-        <HeaderLink href="/c">Contact</HeaderLink>
         <HeaderButton color="black" onClick={handleLogin}>
           Sign in
         </HeaderButton>
