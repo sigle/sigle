@@ -31,13 +31,37 @@ const HeaderButton = styled(Button)`
   ${tw`ml-3`};
 `;
 
+const HeaderUser = styled.div`
+  ${tw`relative cursor-pointer`};
+`;
+
+const HeaderUserPhoto = styled.img`
+  ${tw`w-8 h-8 rounded-full mr-2`};
+`;
+
+const HeaderDropdown = styled.div`
+  ${tw`origin-top-right absolute right-0 mt-2 w-32 bg-white rounded-lg border shadow-md py-2`};
+  transform-origin: top right;
+
+  a {
+    ${tw`block px-4 py-2 hover:bg-black hover:text-white lg:text-sm`};
+  }
+`;
+
 export const Header = () => {
   const [menuOpen, setMenuOpen] = useState<boolean>(false);
+  const [menuUserOpen, setMenuUserOpen] = useState<boolean>(false);
   const [user] = useContext(UserContext);
 
   const handleLogin = () => {
     const { userSession } = getConfig();
     userSession.redirectToSignIn();
+  };
+
+  const handleLogout = () => {
+    const { userSession } = getConfig();
+    userSession.signUserOut();
+    // TODO reload the page
   };
 
   return (
@@ -59,7 +83,27 @@ export const Header = () => {
             Sign in
           </HeaderButton>
         )}
-        {user && <div>TODO user picture</div>}
+
+        {user && (
+          <HeaderUser onClick={() => setMenuUserOpen(!menuUserOpen)}>
+            <HeaderUserPhoto src="https://source.unsplash.com/random/100x100" />
+            {menuUserOpen && (
+              <HeaderDropdown>
+                <ul>
+                  <li>
+                    <Link href="/">My stories</Link>
+                  </li>
+                  <li>
+                    <Link href="/settings">Settings</Link>
+                  </li>
+                  <li>
+                    <a onClick={handleLogout}>Sign out</a>
+                  </li>
+                </ul>
+              </HeaderDropdown>
+            )}
+          </HeaderUser>
+        )}
       </HeaderContainer>
     </Container>
   );

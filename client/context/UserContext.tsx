@@ -16,8 +16,10 @@ export const UserContextProvider = ({ children }: Props) => {
       await userSession.handlePendingSignIn();
       await User.createWithCurrentUser();
     }
-    const user = await userSession.loadUserData();
-    setUser(user);
+    if (userSession.isUserSignedIn()) {
+      const user = await userSession.loadUserData();
+      setUser(user);
+    }
   };
 
   useEffect(() => {
