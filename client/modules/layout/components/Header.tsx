@@ -36,7 +36,7 @@ const HeaderUser = styled.div`
 `;
 
 const HeaderUserPhoto = styled.img`
-  ${tw`w-8 h-8 rounded-full mr-2`};
+  ${tw`w-8 h-8 rounded-full`};
 `;
 
 const HeaderDropdown = styled.div`
@@ -66,7 +66,11 @@ export const Header = () => {
 
   return (
     <Container>
-      <MobileMenu open={menuOpen} onClose={() => setMenuOpen(false)} />
+      <MobileMenu
+        open={menuOpen}
+        onClose={() => setMenuOpen(false)}
+        user={user}
+      />
       <HeaderContainer>
         <HeaderIcon size={30} onClick={() => setMenuOpen(true)} />
 
@@ -91,7 +95,7 @@ export const Header = () => {
               <HeaderDropdown>
                 <ul>
                   <li>
-                    <Link href="/">My stories</Link>
+                    <Link href="/me">My stories</Link>
                   </li>
                   <li>
                     <Link href="/settings">Settings</Link>

@@ -1,6 +1,7 @@
 import React, { createRef, useEffect } from 'react';
 import styled, { css } from 'styled-components/macro';
 import tw from 'tailwind.macro';
+import { Link } from '../../../components';
 
 const containerSize = 220;
 
@@ -9,6 +10,7 @@ const Backdrop = styled.div<{ open: boolean }>`
   background-color: rgba(0, 0, 0, 0.5);
   transition: opacity 0.3s ease;
   opacity: 0;
+  z-index: 1;
 
   ${props =>
     props.open &&
@@ -48,16 +50,18 @@ const MobileMenuListItem = styled.li`
   }
 `;
 
-const MobileMenuLink = styled.a`
+const MobileMenuLink = styled(Link)`
   ${tw`text-center block py-3`};
 `;
 
 interface MobileMenuProps {
   open: boolean;
+  // TODO type
+  user: any;
   onClose: () => void;
 }
 
-export const MobileMenu = ({ open, onClose }: MobileMenuProps) => {
+export const MobileMenu = ({ open, user, onClose }: MobileMenuProps) => {
   const nodeRef = createRef<HTMLDivElement>();
 
   /**
@@ -84,27 +88,31 @@ export const MobileMenu = ({ open, onClose }: MobileMenuProps) => {
       <Container ref={nodeRef} open={open}>
         <MobileMenuLogo src="/static/images/logo.png" alt="Sigle logo" />
 
-        {/* <MobileMenuImage
-        alt="Profile image of TODO"
-        src="https://source.unsplash.com/random/100x100"
-      /> */}
+        {user && (
+          <MobileMenuImage
+            alt="Profile image of TODO"
+            src="https://source.unsplash.com/random/100x100"
+          />
+        )}
 
         <ul>
           <MobileMenuListItem>
-            <MobileMenuLink href="#">Discover</MobileMenuLink>
+            <MobileMenuLink href="/discover">Discover</MobileMenuLink>
           </MobileMenuListItem>
-          {/* <MobileMenuListItem>
-          <MobileMenuLink href="#">My stories</MobileMenuLink>
-        </MobileMenuListItem> */}
+          {user && (
+            <MobileMenuListItem>
+              <MobileMenuLink href="/me">My stories</MobileMenuLink>
+            </MobileMenuListItem>
+          )}
           <MobileMenuListItem>
             <MobileMenuLink href="#">How to use?</MobileMenuLink>
           </MobileMenuListItem>
-          <MobileMenuListItem>
-            <MobileMenuLink href="#">Contact</MobileMenuLink>
-          </MobileMenuListItem>
-          <MobileMenuListItem>
-            <MobileMenuLink href="#">Sign in</MobileMenuLink>
-          </MobileMenuListItem>
+          {!user && (
+            // TODO redirect to login
+            <MobileMenuListItem>
+              <MobileMenuLink href="#">Sign in</MobileMenuLink>
+            </MobileMenuListItem>
+          )}
         </ul>
       </Container>
     </React.Fragment>
