@@ -20,7 +20,7 @@ const StoryContainer = styled.div`
 
 const StoryCover = styled.div`
   ${tw`h-48 lg:h-auto lg:w-64 flex-none bg-cover bg-center overflow-hidden mb-4 lg:mb-0 lg:mr-4`};
-  background-image: url('https://source.unsplash.com/random/1024x768');
+  background-image: url('https://source.unsplash.com/random/256x183');
 `;
 
 const StoryContent = styled.div`
