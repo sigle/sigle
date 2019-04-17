@@ -1,12 +1,13 @@
 import React from 'react';
 import App, { Container } from 'next/app';
 import { UserSession, AppConfig } from 'blockstack';
-import { configure, getConfig, User } from 'radiks';
+import { configure } from 'radiks';
 import { ThemeProvider, createGlobalStyle } from 'styled-components';
 import { theme } from '../client/theme';
 import { config } from '../client/config';
 // TODO see how to inject it with styled-components
 import '../client/generated/tailwind.css';
+import { UserContextProvider } from '../client/context/UserContext';
 
 const GlobalStyle = createGlobalStyle`
   body {
@@ -41,27 +42,19 @@ class MyApp extends App {
     });
   }
 
-  async componentDidMount() {
-    const { userSession } = getConfig();
-    if (userSession.isSignInPending()) {
-      await userSession.handlePendingSignIn();
-      await User.createWithCurrentUser();
-    }
-    const user = await userSession.loadUserData();
-    console.log(user);
-  }
-
   render() {
     const { Component, pageProps } = this.props;
 
     return (
       <Container>
-        <ThemeProvider theme={theme}>
-          <React.Fragment>
-            <GlobalStyle />
-            <Component {...pageProps} />
-          </React.Fragment>
-        </ThemeProvider>
+        <UserContextProvider>
+          <ThemeProvider theme={theme}>
+            <React.Fragment>
+              <GlobalStyle />
+              <Component {...pageProps} />
+            </React.Fragment>
+          </ThemeProvider>
+        </UserContextProvider>
       </Container>
     );
   }

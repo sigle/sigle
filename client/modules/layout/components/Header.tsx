@@ -1,10 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import styled from 'styled-components';
 import tw from 'tailwind.macro';
 import { MdSort } from 'react-icons/md';
 import { getConfig } from 'radiks';
 import { Container, Button, Link } from '../../../components';
 import { MobileMenu } from './MobileMenu';
+import { UserContext } from '../../../context/UserContext';
 
 const HeaderContainer = styled.div`
   ${tw`py-3 flex items-center`};
@@ -32,6 +33,7 @@ const HeaderButton = styled(Button)`
 
 export const Header = () => {
   const [menuOpen, setMenuOpen] = useState<boolean>(false);
+  const [user] = useContext(UserContext);
 
   const handleLogin = () => {
     const { userSession } = getConfig();
@@ -52,9 +54,12 @@ export const Header = () => {
 
         <HeaderLink href="/discover">Discover</HeaderLink>
         <HeaderLink href="/b">How to use?</HeaderLink>
-        <HeaderButton color="black" onClick={handleLogin}>
-          Sign in
-        </HeaderButton>
+        {!user && (
+          <HeaderButton color="black" onClick={handleLogin}>
+            Sign in
+          </HeaderButton>
+        )}
+        {user && <div>TODO user picture</div>}
       </HeaderContainer>
     </Container>
   );
