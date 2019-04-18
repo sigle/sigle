@@ -19,14 +19,14 @@ const MeMenu = styled.ul`
 `;
 
 const MeProfile = styled.div`
-  ${tw`w-full lg:w-3/4 bg-grey-light py-6 px-6`};
+  ${tw`w-full lg:w-3/4 bg-grey-light py-6 px-6 lg:flex lg:items-center`};
 
   img {
-    ${tw`w-20 h-20 rounded-full mb-2`};
+    ${tw`w-32 h-32 rounded-full mb-2 lg:mb-0 lg:mr-4`};
   }
 
   h2 {
-    ${tw`text-xl`};
+    ${tw`text-2xl font-bold`};
   }
 
   p {
@@ -54,11 +54,13 @@ export const Me = () => (
 
         <MeProfile>
           <img src="https://source.unsplash.com/random/100x100" alt="TODO" />
-          <h2>John Doe</h2>
-          <p>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam quis
-            accumsan arcu.
-          </p>
+          <div>
+            <h2>John Doe</h2>
+            <p>
+              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam quis
+              accumsan arcu.
+            </p>
+          </div>
         </MeProfile>
       </MeContainer>
     </Container>
