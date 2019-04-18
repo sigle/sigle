@@ -9,5 +9,5 @@
     "isolatedModules": false
   },
   "include": ["server/**/*"],
-  "exclude": [".next"]
+  "exclude": ["node_modules", ".next"]
 }

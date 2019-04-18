@@ -13,7 +13,10 @@ module.exports = {
       jsx: true,
     },
   },
-  rules: {},
+  rules: {
+    '@typescript-eslint/explicit-function-return-type': 'off',
+    '@typescript-eslint/explicit-member-accessibility': 'off',
+  },
   settings: {
     react: {
       version: 'detect',

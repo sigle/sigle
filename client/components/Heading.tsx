@@ -1,3 +1,4 @@
+import React from 'react';
 import {
   Heading as RebassHeading,
   HeadingProps as RebassHeadingProps,

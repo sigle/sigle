@@ -247,8 +247,8 @@ export const Home = () => (
           </h4>
           <div className="divider" />
           <p className="text">
-            Don't want to give all your data away? Don't want to risk losing all
-            your work?
+            Don{`'`}t want to give all your data away? Don{`'`}t want to risk
+            losing all your work?
             <br />
             No worries, we have a solution for you.
             <br />
@@ -315,6 +315,7 @@ export const Home = () => (
                 <a
                   href="https://github.com/blockstack/gaia/blob/master/hub/README.md"
                   target="_blank"
+                  rel="noopener noreferrer"
                 >
                   Click here
                 </a>{' '}
@@ -329,7 +330,7 @@ export const Home = () => (
     <SectionReady>
       <Container>
         <h3 className="title">Ready to get started?</h3>
-        <p className="easy">Take it easy, it's free.</p>
+        <p className="easy">Take it easy, it{`'`}s free.</p>
         <Button color="black" className="button">
           Try it now
         </Button>

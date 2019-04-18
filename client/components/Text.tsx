@@ -1,3 +1,4 @@
+import React from 'react';
 import { Text as RebassText, TextProps as RebassTextProps } from 'rebass';
 
 interface TextProps extends RebassTextProps {

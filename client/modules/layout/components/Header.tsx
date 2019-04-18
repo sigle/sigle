@@ -51,7 +51,7 @@ const HeaderDropdown = styled.div`
 export const Header = () => {
   const [menuOpen, setMenuOpen] = useState<boolean>(false);
   const [menuUserOpen, setMenuUserOpen] = useState<boolean>(false);
-  const [user] = useContext(UserContext);
+  const { user } = useContext(UserContext);
 
   const handleLogin = () => {
     const { userSession } = getConfig();
