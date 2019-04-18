@@ -4,6 +4,7 @@ import tw from 'tailwind.macro';
 import { Container, Link } from '../components';
 import { Header } from '../modules/layout/components/Header';
 import { Footer } from '../modules/layout/components/Footer';
+import { StoryItem } from '../modules/stories/components/StoryItem';
 
 const MeContainer = styled.div`
   ${tw`flex flex-wrap`};
@@ -92,7 +93,13 @@ export const Me = () => (
             <div>Published (5)</div>
           </MeTabs>
 
-          <MeList>dsq</MeList>
+          <MeList>
+            <StoryItem />
+            <StoryItem />
+            <StoryItem />
+            <StoryItem />
+            <StoryItem />
+          </MeList>
         </MeRight>
       </MeContainer>
     </Container>

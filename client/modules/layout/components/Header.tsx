@@ -31,6 +31,10 @@ const HeaderButton = styled(Button)`
   ${tw`ml-3`};
 `;
 
+const HeaderButtonNewStory = styled(Button)`
+  ${tw`ml-3 mr-4`};
+`;
+
 const HeaderUser = styled.div`
   ${tw`relative cursor-pointer`};
 `;
@@ -86,6 +90,10 @@ export const Header = () => {
           <HeaderButton color="black" onClick={handleLogin}>
             Sign in
           </HeaderButton>
+        )}
+
+        {user && (
+          <HeaderButtonNewStory color="primary">New story</HeaderButtonNewStory>
         )}
 
         {user && (

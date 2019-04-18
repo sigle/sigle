@@ -163,7 +163,7 @@ export const Home = () => (
                 <br />
                 Sign in and start writting
               </p>
-              <Button color="primary" className="button">
+              <Button color="primary" size="large" className="button">
                 Try it now
               </Button>
             </div>
@@ -331,7 +331,7 @@ export const Home = () => (
       <Container>
         <h3 className="title">Ready to get started?</h3>
         <p className="easy">Take it easy, it{`'`}s free.</p>
-        <Button color="black" className="button">
+        <Button color="black" size="large" className="button">
           Try it now
         </Button>
         <p className="lost">
