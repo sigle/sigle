@@ -5,9 +5,13 @@ import { Container, Link } from '../components';
 import { Header } from '../modules/layout/components/Header';
 import { Footer } from '../modules/layout/components/Footer';
 
+const MeContainer = styled.div`
+  ${tw`flex flex-wrap`};
+`;
+
 // TODO active style
 const MeMenu = styled.ul`
-  ${tw`flex justify-around`};
+  ${tw`w-full lg:w-1/4 flex justify-around lg:flex-col py-6`};
 
   a {
     ${tw`py-2 px-2 block`};
@@ -15,6 +19,8 @@ const MeMenu = styled.ul`
 `;
 
 const MeProfile = styled.div`
+  ${tw`w-full lg:w-3/4 bg-grey-light py-6 px-6`};
+
   img {
     ${tw`w-20 h-20 rounded-full mb-2`};
   }
@@ -33,26 +39,28 @@ export const Me = () => (
   <React.Fragment>
     <Header />
     <Container>
-      <MeMenu>
-        <li>
-          <Link href="/me">My stories</Link>
-        </li>
-        <li>
-          <Link href="/me/stats">Stats</Link>
-        </li>
-        <li>
-          <Link href="/me/settings">Settings</Link>
-        </li>
-      </MeMenu>
+      <MeContainer>
+        <MeMenu>
+          <li>
+            <Link href="/me">My stories</Link>
+          </li>
+          <li>
+            <Link href="/me/stats">Stats</Link>
+          </li>
+          <li>
+            <Link href="/me/settings">Settings</Link>
+          </li>
+        </MeMenu>
 
-      <MeProfile>
-        <img src="https://source.unsplash.com/random/100x100" alt="TODO" />
-        <h2>John Doe</h2>
-        <p>
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam quis
-          accumsan arcu.
-        </p>
-      </MeProfile>
+        <MeProfile>
+          <img src="https://source.unsplash.com/random/100x100" alt="TODO" />
+          <h2>John Doe</h2>
+          <p>
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam quis
+            accumsan arcu.
+          </p>
+        </MeProfile>
+      </MeContainer>
     </Container>
     <Footer />
   </React.Fragment>
