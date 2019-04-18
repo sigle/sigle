@@ -18,8 +18,12 @@ const MeMenu = styled.ul`
   }
 `;
 
+const MeRight = styled.div`
+  ${tw`w-full lg:w-3/4 bg-grey-light py-6 px-6`};
+`;
+
 const MeProfile = styled.div`
-  ${tw`w-full lg:w-3/4 bg-grey-light py-6 px-6 lg:flex lg:items-center`};
+  ${tw`lg:flex lg:items-center mb-8`};
 
   img {
     ${tw`w-32 h-32 rounded-full mb-2 lg:mb-0 lg:mr-4`};
@@ -32,6 +36,25 @@ const MeProfile = styled.div`
   p {
     ${tw`lg:text-sm`};
   }
+`;
+
+const MeTabs = styled.div`
+  ${tw`flex mb-8`};
+
+  div {
+    ${tw`cursor-pointer pb-1`};
+  }
+  div:first-child {
+    ${tw`mr-8`};
+  }
+
+  .active {
+    ${tw`border-b border-solid border-black font-medium`};
+  }
+`;
+
+const MeList = styled.div`
+  ${tw`border-t border-solid border-grey`};
 `;
 
 // TODO protect this page, user needs to be connected
@@ -52,16 +75,25 @@ export const Me = () => (
           </li>
         </MeMenu>
 
-        <MeProfile>
-          <img src="https://source.unsplash.com/random/100x100" alt="TODO" />
-          <div>
-            <h2>John Doe</h2>
-            <p>
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam quis
-              accumsan arcu.
-            </p>
-          </div>
-        </MeProfile>
+        <MeRight>
+          <MeProfile>
+            <img src="https://source.unsplash.com/random/100x100" alt="TODO" />
+            <div>
+              <h2>John Doe</h2>
+              <p>
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam
+                quis accumsan arcu.
+              </p>
+            </div>
+          </MeProfile>
+
+          <MeTabs>
+            <div className="active">Draft (2)</div>
+            <div>Published (5)</div>
+          </MeTabs>
+
+          <MeList>dsq</MeList>
+        </MeRight>
       </MeContainer>
     </Container>
     <Footer />
