@@ -1,6 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import tw from 'tailwind.macro';
+import { config } from '../config';
 import { Container, Link } from '../components';
 import { Header } from '../modules/layout/components/Header';
 import { Footer } from '../modules/layout/components/Footer';
@@ -11,16 +12,32 @@ const MeContainer = styled.div`
 `;
 
 // TODO active style
-const MeMenu = styled.ul`
-  ${tw`w-full lg:w-1/4 flex justify-around lg:flex-col py-6`};
+const MeMenu = styled.div`
+  ${tw`w-full py-6`};
+
+  @media (min-width: ${config.breakpoints.md}px) {
+    width: 200px;
+  }
+
+  ul {
+    ${tw`flex justify-around lg:flex-col`};
+  }
 
   a {
-    ${tw`py-2 px-2 block`};
+    ${tw`py-2 block`};
+  }
+
+  .active span {
+    ${tw`border-b border-solid border-black font-medium py-1`};
   }
 `;
 
 const MeRight = styled.div`
   ${tw`w-full lg:w-3/4 bg-grey-light py-6 px-6`};
+
+  @media (min-width: ${config.breakpoints.md}px) {
+    width: calc(100% - 200px);
+  }
 `;
 
 const MeProfile = styled.div`
@@ -65,15 +82,23 @@ export const Me = () => (
     <Container>
       <MeContainer>
         <MeMenu>
-          <li>
-            <Link href="/me">My stories</Link>
-          </li>
-          <li>
-            <Link href="/me/stats">Stats</Link>
-          </li>
-          <li>
-            <Link href="/me/settings">Settings</Link>
-          </li>
+          <ul>
+            <li>
+              <Link href="/me" className="active">
+                <span>My stories</span>
+              </Link>
+            </li>
+            <li>
+              <Link href="/me/stats">
+                <span>Stats</span>
+              </Link>
+            </li>
+            <li>
+              <Link href="/me/settings">
+                <span>Settings</span>
+              </Link>
+            </li>
+          </ul>
         </MeMenu>
 
         <MeRight>

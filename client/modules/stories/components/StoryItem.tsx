@@ -41,7 +41,7 @@ export const StoryItem = () => (
     <div className="top-container">
       <div className="left">
         <div className="title">
-          Title <MdRemoveRedEye size={24} className="icon" />
+          Title <MdRemoveRedEye size={22} className="icon" />
         </div>
         <div className="date">January 26, 2017</div>
       </div>
