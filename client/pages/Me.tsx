@@ -7,7 +7,7 @@ import { Header } from '../modules/layout/components/Header';
 import { Footer } from '../modules/layout/components/Footer';
 import { StoryItem } from '../modules/stories/components/StoryItem';
 
-const MeContainer = styled.div`
+export const MeContainer = styled.div`
   ${tw`flex flex-wrap`};
 `;
 
@@ -32,7 +32,7 @@ const MeMenu = styled.div`
   }
 `;
 
-const MeRight = styled.div`
+export const MeRight = styled.div`
   ${tw`w-full lg:w-3/4 bg-grey-light py-6 px-6`};
 
   @media (min-width: ${config.breakpoints.md}px) {
@@ -75,32 +75,35 @@ const MeList = styled.div`
   ${tw`border-t border-solid border-grey`};
 `;
 
+export const MeLeft = () => (
+  <MeMenu>
+    <ul>
+      <li>
+        <Link href="/me" className="active">
+          <span>My stories</span>
+        </Link>
+      </li>
+      <li>
+        <Link href="/me/stats">
+          <span>Stats</span>
+        </Link>
+      </li>
+      <li>
+        <Link href="/me/settings">
+          <span>Settings</span>
+        </Link>
+      </li>
+    </ul>
+  </MeMenu>
+);
+
 // TODO protect this page, user needs to be connected
 export const Me = () => (
   <React.Fragment>
     <Header />
     <Container>
       <MeContainer>
-        <MeMenu>
-          <ul>
-            <li>
-              <Link href="/me" className="active">
-                <span>My stories</span>
-              </Link>
-            </li>
-            <li>
-              <Link href="/me/stats">
-                <span>Stats</span>
-              </Link>
-            </li>
-            <li>
-              <Link href="/me/settings">
-                <span>Settings</span>
-              </Link>
-            </li>
-          </ul>
-        </MeMenu>
-
+        <MeLeft />
         <MeRight>
           <MeProfile>
             <img src="https://source.unsplash.com/random/100x100" alt="TODO" />

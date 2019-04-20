@@ -31,8 +31,8 @@ nextApp.prepare().then(async () => {
     res.sendFile(join(__dirname, '..', 'static', 'manifest.json'));
   });
 
-  expressApp.get('/a', (req, res) => {
-    return nextApp.render(req, res, '/a', req.query);
+  expressApp.get('/me/stories/new', (req, res) => {
+    return nextApp.render(req, res, '/editor', req.query);
   });
 
   expressApp.get('/b', (req, res) => {

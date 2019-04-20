@@ -17,3 +17,5 @@ declare module 'tailwind.macro' {
 
 // TODO remove once pr with types is merged
 declare module 'radiks';
+
+declare module 'slate-soft-break';
