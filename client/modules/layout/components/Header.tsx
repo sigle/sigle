@@ -1,11 +1,13 @@
 import React, { useState, useContext } from 'react';
 import styled from 'styled-components';
 import tw from 'tailwind.macro';
+import Router from 'next/router';
 import { MdSort } from 'react-icons/md';
 import { getConfig } from 'radiks';
 import { Container, Button, Link } from '../../../components';
 import { MobileMenu } from './MobileMenu';
 import { UserContext } from '../../../context/UserContext';
+import { PrivateStory } from '../../../models';
 
 const HeaderContainer = styled.div`
   ${tw`py-3 flex items-center`};
@@ -68,6 +70,15 @@ export const Header = () => {
     // TODO reload the page
   };
 
+  const handleNewStory = async () => {
+    const privateStory = new PrivateStory({
+      title: '',
+      content: '',
+    });
+    await privateStory.save();
+    Router.push(`/me/stories/${privateStory._id}`);
+  };
+
   return (
     <Container>
       <MobileMenu
@@ -93,7 +104,9 @@ export const Header = () => {
         )}
 
         {user && (
-          <HeaderButtonNewStory color="primary">New story</HeaderButtonNewStory>
+          <HeaderButtonNewStory color="primary" onClick={handleNewStory}>
+            New story
+          </HeaderButtonNewStory>
         )}
 
         {user && (

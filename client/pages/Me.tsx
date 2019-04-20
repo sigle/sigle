@@ -20,7 +20,8 @@ const MeMenu = styled.div`
   }
 
   ul {
-    ${tw`flex justify-around lg:flex-col`};
+    ${tw`flex justify-around lg:flex-col sticky`};
+    top: 0;
   }
 
   a {

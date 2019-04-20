@@ -346,8 +346,6 @@ export const SlateEditor = () => {
     );
   };
 
-  console.log(value);
-
   return (
     <React.Fragment>
       <SlateEditorToolbar>
