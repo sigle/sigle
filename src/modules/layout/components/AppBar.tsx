@@ -13,7 +13,7 @@ const StyledContainer = styled(Container)`
 `;
 
 const Logo = styled.img`
-  height: 45px;
+  height: 40px;
 `;
 
 const RightContainer = styled.div`
@@ -41,7 +41,7 @@ export const AppBar = ({ user }: Props) => {
   return (
     <StyledContainer>
       <Link to="/">
-        <Logo src="/img/logo.svg" alt="logo" />
+        <Logo src="/img/logo.png" alt="logo" />
       </Link>
       <RightContainer>
         <Tippy
