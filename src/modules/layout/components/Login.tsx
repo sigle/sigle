@@ -3,7 +3,7 @@ import { useWindowSize } from 'the-platform';
 import styled from 'styled-components/macro';
 import tw from 'tailwind.macro';
 import { userSession } from '../../../utils/blockstack';
-import logo from '../../../img/logo.svg';
+import logo from '../../../img/logo.png';
 import one from '../../../img/one.png';
 import { Button } from '../../../components';
 
