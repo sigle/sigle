@@ -12,11 +12,11 @@ const Container = styled.div`
 `;
 
 const Logo = styled.img`
-  width: 80px;
+  width: 100px;
 `;
 
 const Illu = styled.img`
-  ${tw`mt-4 mb-4`};
+  ${tw`mt-6 mb-4`};
   width: 300px;
   max-width: 100%;
 `;
