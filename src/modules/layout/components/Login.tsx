@@ -3,7 +3,7 @@ import { useWindowSize } from 'the-platform';
 import styled from 'styled-components/macro';
 import tw from 'tailwind.macro';
 import { userSession } from '../../../utils/blockstack';
-import logo from '../../../img/logo.svg';
+import logo from '../../../img/logo.png';
 import one from '../../../img/one.png';
 import { Button } from '../../../components';
 
@@ -12,11 +12,11 @@ const Container = styled.div`
 `;
 
 const Logo = styled.img`
-  width: 80px;
+  width: 100px;
 `;
 
 const Illu = styled.img`
-  ${tw`mt-4 mb-4`};
+  ${tw`mt-6 mb-4`};
   width: 300px;
   max-width: 100%;
 `;
