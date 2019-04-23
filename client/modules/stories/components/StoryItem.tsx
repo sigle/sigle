@@ -2,7 +2,8 @@ import React from 'react';
 import styled from 'styled-components';
 import tw from 'tailwind.macro';
 import { MdSettings, MdRemoveRedEye } from 'react-icons/md';
-import { Button } from '../../../components';
+import { format } from 'date-fns';
+import { Button, Link } from '../../../components';
 
 const StoryItemContainer = styled.div`
   ${tw`py-4 border-b border-solid border-grey`};
@@ -36,26 +37,37 @@ const StoryItemContainer = styled.div`
   }
 `;
 
-export const StoryItem = () => (
+interface Props {
+  story: any;
+}
+
+export const StoryItem = ({ story }: Props) => (
   <StoryItemContainer>
     <div className="top-container">
       <div className="left">
         <div className="title">
-          Title <MdRemoveRedEye size={22} className="icon" />
+          {story.attrs.title} <MdRemoveRedEye size={22} className="icon" />
         </div>
-        <div className="date">January 26, 2017</div>
+        <div className="date">
+          {format(story.attrs.createdAt, 'HH:mm DD MMMM YYYY')}
+        </div>
       </div>
       <div className="right">
-        <Button color="primary" className="edit">
+        <Button
+          color="primary"
+          className="edit"
+          as={Link}
+          href={`me/stories/${story.attrs._id}`}
+        >
           Edit
         </Button>
         <MdSettings size={24} />
       </div>
     </div>
     <div className="text">
-      Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam quis accumsan
-      arcu. Sed diam tellus, sollicitudin quis leo consequat, efficitur mattis
-      ex. Sed sit amet volutpat ipsum, ut consequat mauris.
+      TODO Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam quis
+      accumsan arcu. Sed diam tellus, sollicitudin quis leo consequat, efficitur
+      mattis ex. Sed sit amet volutpat ipsum, ut consequat mauris.
     </div>
   </StoryItemContainer>
 );

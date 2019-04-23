@@ -36,8 +36,6 @@ export const SigleEditor = ({ storyId }: Props) => {
   const [state, dispatch] = useReducer(reducer, initialState);
   const timeoutId = useRef<number | undefined>(undefined);
 
-  console.log(state);
-
   const fetchStory = async () => {
     const privateStory = await PrivateStory.findById(storyId);
     setStory(privateStory);
