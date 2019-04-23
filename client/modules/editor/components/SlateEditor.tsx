@@ -41,6 +41,10 @@ const SlateToolbarActionContainer = styled.div`
   ${tw`flex items-center`};
 `;
 
+const SlateToolbarActionMessage = styled.div`
+  ${tw`text-grey-dark lg:text-sm`};
+`;
+
 const StyledEditor = styled(Editor)`
   ${tw`py-4`};
   min-height: 150px;
@@ -340,7 +344,7 @@ export const SlateEditor = ({ story, state, onChangeContent }: Props) => {
 
     return (
       <SlateEditorToolbarButton onMouseDown={event => onClickMark(event, type)}>
-        <Icon color={isActive ? '#000000' : '#bbbaba'} size={18} />
+        <Icon color={isActive ? '#000000' : '#cccccc'} size={18} />
       </SlateEditorToolbarButton>
     );
   };
@@ -352,7 +356,7 @@ export const SlateEditor = ({ story, state, onChangeContent }: Props) => {
       <SlateEditorToolbarButton
         onMouseDown={event => onClickBlock(event, type)}
       >
-        <Icon color={isActive ? '#000000' : '#bbbaba'} size={18} />
+        <Icon color={isActive ? '#000000' : '#cccccc'} size={18} />
       </SlateEditorToolbarButton>
     );
   };
@@ -378,8 +382,12 @@ export const SlateEditor = ({ story, state, onChangeContent }: Props) => {
           </SlateEditorToolbarButton>
         </SlateEditorToolbarButtonContainer>
         <SlateToolbarActionContainer>
-          {state.status === 'fetching' && <div>Saving ...</div>}
-          {state.status === 'success' && <div>Saved</div>}
+          {state.status === 'fetching' && (
+            <SlateToolbarActionMessage>Saving ...</SlateToolbarActionMessage>
+          )}
+          {state.status === 'success' && (
+            <SlateToolbarActionMessage>Saved</SlateToolbarActionMessage>
+          )}
         </SlateToolbarActionContainer>
       </SlateEditorToolbar>
 
