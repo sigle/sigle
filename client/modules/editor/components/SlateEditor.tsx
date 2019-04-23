@@ -11,7 +11,6 @@ import {
   MdFormatQuote,
   MdFormatListNumbered,
   MdFormatListBulleted,
-  MdArrowBack,
   MdImage,
   MdLink,
   MdLooksTwo,
@@ -36,6 +35,10 @@ const SlateEditorToolbarButtonContainer = styled.div`
 
 const SlateEditorToolbarButton = styled.button`
   ${tw`py-2 px-2 outline-none flex`};
+`;
+
+const SlateToolbarActionContainer = styled.div`
+  ${tw`flex items-center`};
 `;
 
 const StyledEditor = styled(Editor)`
@@ -92,16 +95,24 @@ const emptyNode = {
 
 const slatePlugins = [SoftBreak({ shift: true })];
 
-export const SlateEditor = () => {
-  const editorRef = useRef<any>(null);
-  const [value, setValue] = useState(Value.fromJSON(emptyNode));
+interface Props {
+  story: any;
+  state: any;
+  onChangeContent: any;
+}
 
-  if (!process.browser) {
-    return null;
-  }
+export const SlateEditor = ({ story, state, onChangeContent }: Props) => {
+  const editorRef = useRef<any>(null);
+  const [value, setValue] = useState(
+    story.attrs.content
+      ? // TODO error catching of JSON.parse and fromJSON
+        Value.fromJSON(JSON.parse(story.attrs.content))
+      : Value.fromJSON(emptyNode)
+  );
 
   const handleTextChange = ({ value }: { value: Value }) => {
     setValue(value);
+    onChangeContent(value);
   };
 
   const insertImage = (editor: Editor, src: string, target: any) => {
@@ -366,6 +377,10 @@ export const SlateEditor = () => {
             <MdImage color={'#b8c2cc'} size={18} />
           </SlateEditorToolbarButton>
         </SlateEditorToolbarButtonContainer>
+        <SlateToolbarActionContainer>
+          {state.status === 'fetching' && <div>Saving ...</div>}
+          {state.status === 'success' && <div>Saved</div>}
+        </SlateToolbarActionContainer>
       </SlateEditorToolbar>
 
       <StyledEditor

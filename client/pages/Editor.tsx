@@ -1,33 +1,15 @@
-import React, { useState } from 'react';
-import styled from 'styled-components';
-import tw from 'tailwind.macro';
+import React from 'react';
 import { Container } from '../components';
 import { Header } from '../modules/layout/components/Header';
 import { Footer } from '../modules/layout/components/Footer';
 import { MeContainer, MeLeft, MeRight } from './Me';
-import { SlateEditor } from '../modules/editor/components/SlateEditor';
-import { PrivateStory } from '../models';
-
-const EditorTitle = styled.div`
-  ${tw`text-2xl font-bold mb-4`};
-`;
-
-const Input = styled.input`
-  ${tw`outline-none w-full text-xl bg-transparent mb-4`};
-`;
+import { SigleEditor } from '../modules/editor/containers/SigleEditor';
 
 interface Props {
-  // TODO
-  storyAttrs: any;
+  storyId: string;
 }
 
 export const Editor = (props: Props) => {
-  const [title, setTitle] = useState('');
-
-  const story = new PrivateStory(props.storyAttrs);
-
-  console.log(story, props);
-
   return (
     <React.Fragment>
       <Header />
@@ -36,13 +18,7 @@ export const Editor = (props: Props) => {
           <MeLeft />
 
           <MeRight>
-            <EditorTitle>Editor</EditorTitle>
-            <Input
-              value={title}
-              onChange={e => setTitle(e.target.value)}
-              placeholder="Title"
-            />
-            <SlateEditor />
+            <SigleEditor storyId={props.storyId} />
           </MeRight>
         </MeContainer>
       </Container>
@@ -51,10 +27,7 @@ export const Editor = (props: Props) => {
   );
 };
 
-Editor.getInitialProps = async ({ query }) => {
+Editor.getInitialProps = ({ query }) => {
   const storyId = query.storyId;
-  const story = await PrivateStory.findById(storyId, { decrypt: false });
-  // TODO why story is a real object with a wrong id?
-  console.log(story);
-  return { storyAttrs: story.attrs };
+  return { storyId };
 };
