@@ -14,7 +14,7 @@ node_js:
   - '10'
 
 install:
-  - yarn install --pure-lockfile
+  - yarn install --frozen-lockfile
 
 script:
   # Build the client
