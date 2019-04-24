@@ -41,7 +41,7 @@
     "not op_mini all"
   ],
   "dependencies": {
-    "@sentry/browser": "5.1.0",
+    "@sentry/browser": "5.1.1",
     "@tippy.js/react": "2.1.2",
     "blockstack": "19.1.0",
     "body-parser": "1.18.3",
@@ -80,8 +80,8 @@
     "@types/helmet": "0.0.43",
     "@types/jest": "24.0.11",
     "@types/nanoid": "1.2.1",
-    "@types/next": "8.0.3",
-    "@types/node": "11.13.5",
+    "@types/next": "8.0.4",
+    "@types/node": "11.13.7",
     "@types/react": "16.8.13",
     "@types/react-dom": "16.8.4",
     "@types/react-helmet": "5.0.8",
@@ -92,8 +92,8 @@
     "@types/slate-plain-serializer": "0.6.1",
     "@types/slate-react": "0.21.0",
     "@types/styled-components": "4.1.14",
-    "@typescript-eslint/eslint-plugin": "1.6.0",
-    "@typescript-eslint/parser": "1.6.0",
+    "@typescript-eslint/eslint-plugin": "1.7.0",
+    "@typescript-eslint/parser": "1.7.0",
     "@zeit/next-bundle-analyzer": "0.1.2",
     "@zeit/next-css": "1.0.1",
     "@zeit/next-typescript": "1.1.1",
@@ -113,7 +113,7 @@
     "tailwind.macro": "1.0.0-alpha.2",
     "tailwindcss": "1.0.0-beta.4",
     "ts-node": "8.1.0",
-    "typescript": "3.4.4",
+    "typescript": "3.4.5",
     "webpack-bundle-analyzer": "3.3.2"
   }
 }
