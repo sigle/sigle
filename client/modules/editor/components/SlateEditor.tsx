@@ -64,7 +64,12 @@ const schema = {
       switch (code) {
         case 'last_child_type_invalid': {
           const paragraph = Block.create('paragraph');
-          return editor.insertNodeByKey(node.key, node.nodes.size, paragraph);
+          return editor.insertNodeByKey(
+            node.key,
+            node.nodes.size,
+            // TODO fix type
+            paragraph as any
+          );
         }
       }
     },
@@ -111,7 +116,8 @@ export const SlateEditor = ({ story, state, onChangeContent }: Props) => {
     story.attrs.content
       ? // TODO error catching of JSON.parse and fromJSON
         Value.fromJSON(JSON.parse(story.attrs.content))
-      : Value.fromJSON(emptyNode)
+      : // TODO fix type
+        Value.fromJSON(emptyNode as any)
   );
 
   const handleTextChange = ({ value }: { value: Value }) => {
@@ -394,10 +400,11 @@ export const SlateEditor = ({ story, state, onChangeContent }: Props) => {
       <StyledEditor
         ref={editorRef}
         plugins={slatePlugins}
-        value={value}
-        onChange={handleTextChange}
-        onKeyDown={onKeyDown}
-        schema={schema}
+        // TODO fix types
+        value={value as any}
+        onChange={handleTextChange as any}
+        onKeyDown={onKeyDown as any}
+        schema={schema as any}
         placeholder="Text"
         renderNode={renderNode}
         renderMark={renderMark}

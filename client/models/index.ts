@@ -1,6 +1,6 @@
 import { Model } from 'radiks';
 
-export class PrivateStory extends Model {
+class PrivateStoryModel extends Model {
   static className = 'PrivateStory';
 
   static schema = {
@@ -8,3 +8,5 @@ export class PrivateStory extends Model {
     content: String,
   };
 }
+
+export const PrivateStory = PrivateStoryModel as any;

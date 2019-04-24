@@ -27,7 +27,7 @@ export const Editor = (props: Props) => {
   );
 };
 
-Editor.getInitialProps = ({ query }) => {
+Editor.getInitialProps = ({ query }: any) => {
   const storyId = query.storyId;
   return { storyId };
 };

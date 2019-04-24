@@ -106,7 +106,7 @@ const PrivateStoryList = () => {
 
   return (
     <MeList>
-      {stories.map(story => (
+      {stories.map((story: any) => (
         <StoryItem key={story.attrs._id} story={story} />
       ))}
     </MeList>

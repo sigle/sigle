@@ -53,6 +53,8 @@ export const StoryItem = ({ story }: Props) => (
         </div>
       </div>
       <div className="right">
+        {/*
+        // @ts-ignore */}
         <Button
           color="primary"
           className="edit"
