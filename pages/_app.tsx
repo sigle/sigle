@@ -1,6 +1,6 @@
 import React from 'react';
 import App, { Container } from 'next/app';
-import { UserSession, AppConfig } from 'blockstack';
+import { UserSession, AppConfig, config as blockstackConfig } from 'blockstack';
 import { configure } from 'radiks';
 import { ThemeProvider, createGlobalStyle } from 'styled-components';
 import { theme } from '../client/theme';
@@ -8,6 +8,8 @@ import { config } from '../client/config';
 // TODO see how to inject it with styled-components
 import '../client/generated/tailwind.css';
 import { UserContextProvider } from '../client/context/UserContext';
+
+blockstackConfig.logLevel = 'info';
 
 const GlobalStyle = createGlobalStyle`
   body {
