@@ -28,7 +28,11 @@ nextApp.prepare().then(async () => {
   expressApp.get('/manifest.json', (_, res) => {
     res.header('Access-Control-Allow-Origin', '*');
     res.header('Access-Control-Allow-Headers', '*');
-    res.sendFile(join(__dirname, '..', 'static', 'manifest.json'));
+    const manifestPath = dev
+      ? join(__dirname, '..', 'static', 'manifest.json')
+      : // In production the static folder is one level lower
+        join(__dirname, '..', '..', 'static', 'manifest.json');
+    res.sendFile(manifestPath);
   });
 
   expressApp.get('/me/stories/:id', (req, res) => {
