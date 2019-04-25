@@ -29,8 +29,7 @@ module.exports = withPlugins(
   ],
   {
     env: {
-      // TODO take from env
-      API_URL: 'http://localhost:3000',
+      APP_URL: process.env.APP_URL || 'http://localhost:3000',
     },
   }
 );

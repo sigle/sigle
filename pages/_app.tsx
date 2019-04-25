@@ -18,7 +18,7 @@ const GlobalStyle = createGlobalStyle`
 const makeUserSession = () => {
   const appConfig = new AppConfig(
     ['store_write', 'publish_data'],
-    config.apiUrl
+    config.appUrl
   );
   return new UserSession({ appConfig });
 };
@@ -37,7 +37,7 @@ class MyApp extends App {
   componentWillMount() {
     const userSession = makeUserSession();
     configure({
-      apiServer: config.apiUrl,
+      apiServer: config.appUrl,
       userSession,
     });
   }

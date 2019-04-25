@@ -7,6 +7,7 @@ import Document, {
   NextScript,
 } from 'next/document';
 import { ServerStyleSheet } from 'styled-components';
+import { config } from '../client/config';
 
 export default class MyDocument extends Document {
   static async getInitialProps(ctx: NextDocumentContext) {
@@ -66,7 +67,7 @@ export default class MyDocument extends Document {
             href="https://fonts.googleapis.com/css?family=Libre+Baskerville:400,700|Roboto:300,300i,400,500,700"
             rel="stylesheet"
           />
-          <link rel="manifest" href="http://localhost:3000/manifest.json" />
+          <link rel="manifest" href={`${config.appUrl}/manifest.json`} />
         </Head>
         <body>
           <Main />
