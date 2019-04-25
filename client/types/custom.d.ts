@@ -2,7 +2,7 @@ declare namespace NodeJS {
   export interface ProcessEnv {
     NODE_ENV: 'production' | 'development' | 'test';
     APP_URL: string;
-    SENTRY_DSN: string;
+    SENTRY_DSN_CLIENT?: string;
   }
 
   export interface Process {

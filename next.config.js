@@ -29,9 +29,8 @@ module.exports = withPlugins(
   ],
   {
     env: {
-      NODE_ENV: process.env.NODE_ENV,
       APP_URL: process.env.APP_URL || 'http://localhost:3000',
-      SENTRY_DSN: 'https://82a06f89d9474f40abd8f2058bbf9c1e@sentry.io/1419975',
+      SENTRY_DSN: process.env.SENTRY_DSN_CLIENT,
     },
   }
 );

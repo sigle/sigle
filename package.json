@@ -42,6 +42,7 @@
   ],
   "dependencies": {
     "@sentry/browser": "5.1.1",
+    "@sentry/node": "5.1.0",
     "@tippy.js/react": "2.1.2",
     "blockstack": "19.1.0",
     "body-parser": "1.18.3",

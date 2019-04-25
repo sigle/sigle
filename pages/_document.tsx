@@ -10,7 +10,7 @@ import { ServerStyleSheet } from 'styled-components';
 import { init } from '@sentry/browser';
 import { config } from '../client/config';
 
-if (config.env === 'production') {
+if (config.env === 'production' && config.sentryDsn) {
   init({
     dsn: config.sentryDsn,
     environment: config.env,

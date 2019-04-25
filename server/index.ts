@@ -1,3 +1,4 @@
+import { init } from '@sentry/browser';
 import { join } from 'path';
 import express from 'express';
 import bodyParser from 'body-parser';
@@ -5,6 +6,13 @@ import helmet from 'helmet';
 import next from 'next';
 import { setup } from 'radiks-server';
 import { config } from './config';
+
+if (process.env.NODE_ENV === 'production' && process.env.SENTRY_DSN_SERVER) {
+  init({
+    dsn: process.env.SENTRY_DSN_SERVER,
+    environment: process.env.NODE_ENV,
+  });
+}
 
 const port = process.env.PORT ? parseInt(process.env.PORT, 10) : 3000;
 const dev = process.env.NODE_ENV !== 'production';
