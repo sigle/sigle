@@ -57,7 +57,7 @@ const HeaderDropdown = styled.div`
 export const Header = () => {
   const [menuOpen, setMenuOpen] = useState<boolean>(false);
   const [menuUserOpen, setMenuUserOpen] = useState<boolean>(false);
-  const { user } = useContext(UserContext);
+  const { user, loading } = useContext(UserContext);
 
   const handleLogin = () => {
     const { userSession } = getConfig();
@@ -67,7 +67,7 @@ export const Header = () => {
   const handleLogout = () => {
     const { userSession } = getConfig();
     userSession.signUserOut();
-    // TODO reload the page
+    window.location.reload();
   };
 
   const handleNewStory = async () => {
@@ -97,19 +97,22 @@ export const Header = () => {
 
         <HeaderLink href="/discover">Discover</HeaderLink>
         <HeaderLink href="/b">How to use?</HeaderLink>
-        {!user && (
+        {/* TODO nice loading */}
+        {loading && <div>Loading ...</div>}
+
+        {!loading && !user && (
           <HeaderButton color="black" onClick={handleLogin}>
             Sign in
           </HeaderButton>
         )}
 
-        {user && (
+        {!loading && user && (
           <HeaderButtonNewStory color="primary" onClick={handleNewStory}>
             New story
           </HeaderButtonNewStory>
         )}
 
-        {user && (
+        {!loading && user && (
           <HeaderUser onClick={() => setMenuUserOpen(!menuUserOpen)}>
             <HeaderUserPhoto src="https://source.unsplash.com/random/100x100" />
             {menuUserOpen && (

@@ -2,13 +2,17 @@ import React, { createContext, useState, useEffect } from 'react';
 import { getConfig, User as RadiksUser } from 'radiks';
 import { User } from '../types';
 
-export const UserContext = createContext<{ user?: User }>({});
+export const UserContext = createContext<{ user?: User; loading?: boolean }>(
+  {}
+);
 
 interface Props {
   children: React.ReactNode;
 }
 
 export const UserContextProvider = ({ children }: Props) => {
+  // TODO useReducer
+  const [loading, setLoading] = useState<boolean>(true);
   const [user, setUser] = useState<User | undefined>(undefined);
 
   const fetchUser = async () => {
@@ -21,6 +25,7 @@ export const UserContextProvider = ({ children }: Props) => {
       const user = await userSession.loadUserData();
       setUser(user);
     }
+    setLoading(false);
   };
 
   useEffect(() => {
@@ -28,7 +33,7 @@ export const UserContextProvider = ({ children }: Props) => {
   }, []);
 
   return (
-    <UserContext.Provider value={{ user, setUser }}>
+    <UserContext.Provider value={{ user, loading, setUser }}>
       {children}
     </UserContext.Provider>
   );
