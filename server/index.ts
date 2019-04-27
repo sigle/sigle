@@ -47,14 +47,6 @@ nextApp.prepare().then(async () => {
     return nextApp.render(req, res, '/editor', { storyId: req.params.id });
   });
 
-  expressApp.get('/b', (req, res) => {
-    return nextApp.render(req, res, '/b', req.query);
-  });
-
-  expressApp.get('/posts/:id', (req, res) => {
-    return nextApp.render(req, res, '/posts', { id: req.params.id });
-  });
-
   expressApp.get('*', (req, res) => {
     return handle(req, res);
   });
