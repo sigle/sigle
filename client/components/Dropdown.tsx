@@ -14,9 +14,17 @@ const DropdownContainer = styled.div`
 
 interface DropdownProps {
   children: React.ReactNode;
+  open: boolean;
+  onClose: () => void;
 }
 
-export const Dropdown = ({ children }: DropdownProps) => {
+export const Dropdown = ({ children, open }: DropdownProps) => {
+  // TODO listen to clicks outside to close it
+
+  if (!open) {
+    return null;
+  }
+
   return (
     <DropdownContainer>
       <ul>{children}</ul>

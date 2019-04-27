@@ -112,19 +112,20 @@ export const Header = () => {
         {!loading && user && (
           <HeaderUser onClick={() => setMenuUserOpen(!menuUserOpen)}>
             <HeaderUserPhoto src="https://source.unsplash.com/random/100x100" />
-            {menuUserOpen && (
-              <Dropdown>
-                <DropdownItem>
-                  <Link href="/me">My stories</Link>
-                </DropdownItem>
-                <DropdownItem>
-                  <Link href="/settings">Settings</Link>
-                </DropdownItem>
-                <DropdownItem>
-                  <a onClick={handleLogout}>Sign out</a>
-                </DropdownItem>
-              </Dropdown>
-            )}
+            <Dropdown
+              open={menuUserOpen}
+              onClose={() => setMenuUserOpen(false)}
+            >
+              <DropdownItem>
+                <Link href="/me">My stories</Link>
+              </DropdownItem>
+              <DropdownItem>
+                <Link href="/settings">Settings</Link>
+              </DropdownItem>
+              <DropdownItem>
+                <a onClick={handleLogout}>Sign out</a>
+              </DropdownItem>
+            </Dropdown>
           </HeaderUser>
         )}
       </HeaderContainer>
