@@ -1,3 +1,5 @@
+import { theme, colors } from './theme';
+
 export const config = {
   env: process.env.NODE_ENV,
   appUrl: process.env.APP_URL,
@@ -11,4 +13,6 @@ export const config = {
     lg: 1024,
     xl: 1280,
   },
+  theme,
+  colors,
 };

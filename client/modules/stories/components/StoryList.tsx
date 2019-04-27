@@ -16,9 +16,34 @@ export const StoryList = () => {
   const fetchStories = async () => {
     // TODO sort by created at and updated at
     const privateStories = await PrivateStory.fetchOwnList();
-    console.log(privateStories);
     setStories(privateStories);
     setLoading(false);
+  };
+
+  const deleteStory = async (storyId: string) => {
+    if (!stories) return;
+
+    // TODO nice confirm
+    const result = confirm('Do you really want to delete this story?');
+    if (!result) {
+      return;
+    }
+
+    try {
+      const index = stories.findIndex(
+        (story: any) => story.attrs._id === storyId
+      );
+      if (index === -1) {
+        throw new Error('Story not found in list');
+      }
+      const story = stories[index];
+      await story.destroy();
+
+      stories.splice(index, 1);
+      setStories([...stories]);
+    } catch (error) {
+      // TODO notify user with error message
+    }
   };
 
   useEffect(() => {
@@ -38,7 +63,7 @@ export const StoryList = () => {
   return (
     <StoryListContainer>
       {stories.map((story: any) => (
-        <StoryItem key={story.attrs._id} story={story} />
+        <StoryItem key={story.attrs._id} story={story} onDelete={deleteStory} />
       ))}
     </StoryListContainer>
   );
