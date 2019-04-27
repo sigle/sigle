@@ -1,12 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import styled from 'styled-components';
 import tw from 'tailwind.macro';
 import { config } from '../config';
 import { Container, Link } from '../components';
 import { Header } from '../modules/layout/components/Header';
 import { Footer } from '../modules/layout/components/Footer';
-import { StoryItem } from '../modules/stories/components/StoryItem';
-import { PrivateStory } from '../models';
+import { StoryList } from '../modules/stories/components/StoryList';
 
 export const MeContainer = styled.div`
   ${tw`flex flex-wrap`};
@@ -73,46 +72,6 @@ const MeTabs = styled.div`
   }
 `;
 
-const MeList = styled.div`
-  ${tw`border-t border-solid border-grey`};
-`;
-
-const PrivateStoryList = () => {
-  // TODO error state
-  const [loading, setLoading] = useState<boolean>(true);
-  const [stories, setStories] = useState<any | undefined>();
-
-  const fetchStories = async () => {
-    // TODO sort by created at and updated at
-    const privateStories = await PrivateStory.fetchOwnList();
-    console.log(privateStories);
-    setStories(privateStories);
-    setLoading(false);
-  };
-
-  useEffect(() => {
-    fetchStories();
-  }, []);
-
-  if (loading) {
-    // TODO nice loading
-    return <div>Loading ...</div>;
-  }
-
-  if (stories.length === 0) {
-    // TODO empty list state
-    return <div>No stories found</div>;
-  }
-
-  return (
-    <MeList>
-      {stories.map((story: any) => (
-        <StoryItem key={story.attrs._id} story={story} />
-      ))}
-    </MeList>
-  );
-};
-
 export const MeLeft = () => (
   <MeMenu>
     <ul>
@@ -159,7 +118,7 @@ export const Me = () => (
             <div>Published (5)</div>
           </MeTabs>
 
-          <PrivateStoryList />
+          <StoryList />
         </MeRight>
       </MeContainer>
     </Container>
