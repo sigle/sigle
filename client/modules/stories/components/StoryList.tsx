@@ -46,6 +46,10 @@ export const StoryList = () => {
     }
   };
 
+  const publishStory = () => {
+    alert('TODO');
+  };
+
   useEffect(() => {
     fetchStories();
   }, []);
@@ -63,7 +67,12 @@ export const StoryList = () => {
   return (
     <StoryListContainer>
       {stories.map((story: any) => (
-        <StoryItem key={story.attrs._id} story={story} onDelete={deleteStory} />
+        <StoryItem
+          key={story.attrs._id}
+          story={story}
+          onDelete={deleteStory}
+          onPublish={publishStory}
+        />
       ))}
     </StoryListContainer>
   );

@@ -58,9 +58,10 @@ const StoryItemText = styled.div`
 interface Props {
   story: any;
   onDelete: (id: string) => void;
+  onPublish: (id: string) => void;
 }
 
-export const StoryItem = ({ story, onDelete }: Props) => {
+export const StoryItem = ({ story, onDelete, onPublish }: Props) => {
   const [menuOpen, setMenuOpen] = useState<boolean>(false);
 
   return (
@@ -102,7 +103,7 @@ export const StoryItem = ({ story, onDelete }: Props) => {
             <MdSettings size={24} />
             <Dropdown open={menuOpen} onClose={() => setMenuOpen(false)}>
               <DropdownItem>
-                <Link href="/me">Publish</Link>
+                <a onClick={() => onPublish(story.attrs._id)}>Publish</a>
               </DropdownItem>
               <DropdownItem>
                 <SettingsDelete onClick={() => onDelete(story.attrs._id)}>
