@@ -31,6 +31,7 @@ const HeaderSeparator = styled.img`
   ${tw`mx-auto`};
 `;
 
+// TODO nice underline with more space
 const HeaderLink = styled(Link)`
   ${tw`py-3 px-3 block lg:text-sm hover:underline hidden lg:block`};
 `;
