@@ -50,6 +50,38 @@ const StyledEditor = styled(Editor)`
   min-height: 150px;
 `;
 
+const EditorStyle = styled.div`
+  ${tw`text-base leading-tight`};
+
+  p,
+  ol,
+  ul {
+    ${tw`mb-4`};
+  }
+
+  li + li {
+    ${tw`mt-2`};
+  }
+
+  blockquote {
+    ${tw`mb-4 py-4 px-4 italic text-sm`};
+    border-left: 3px solid #ccc;
+    letter-spacing: 0.01rem;
+  }
+
+  h1 {
+    ${tw`mt-6 mb-4 text-4xl`};
+  }
+
+  h2 {
+    ${tw`mt-6 mb-4 text-3xl`};
+  }
+
+  h3 {
+    ${tw`mt-6 mb-4 text-2xl`};
+  }
+`;
+
 // See https://github.com/ianstormtaylor/slate/blob/master/examples/rich-text/index.js
 
 // TODO add links
@@ -397,18 +429,20 @@ export const SlateEditor = ({ story, state, onChangeContent }: Props) => {
         </SlateToolbarActionContainer>
       </SlateEditorToolbar>
 
-      <StyledEditor
-        ref={editorRef}
-        plugins={slatePlugins}
-        // TODO fix types
-        value={value as any}
-        onChange={handleTextChange as any}
-        onKeyDown={onKeyDown as any}
-        schema={schema as any}
-        placeholder="Text"
-        renderNode={renderNode}
-        renderMark={renderMark}
-      />
+      <EditorStyle>
+        <StyledEditor
+          ref={editorRef}
+          plugins={slatePlugins}
+          // TODO fix types
+          value={value as any}
+          onChange={handleTextChange as any}
+          onKeyDown={onKeyDown as any}
+          schema={schema as any}
+          placeholder="Text"
+          renderNode={renderNode}
+          renderMark={renderMark}
+        />
+      </EditorStyle>
     </React.Fragment>
   );
 };
