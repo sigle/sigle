@@ -11,7 +11,6 @@ export const MeContainer = styled.div`
   ${tw`flex flex-wrap`};
 `;
 
-// TODO active style
 const MeMenu = styled.div`
   ${tw`w-full py-6`};
 
