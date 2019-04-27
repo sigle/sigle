@@ -4,7 +4,13 @@ import tw from 'tailwind.macro';
 import Router from 'next/router';
 import { MdSort } from 'react-icons/md';
 import { getConfig } from 'radiks';
-import { Container, Button, Link } from '../../../components';
+import {
+  Container,
+  Button,
+  Link,
+  Dropdown,
+  DropdownItem,
+} from '../../../components';
 import { MobileMenu } from './MobileMenu';
 import { UserContext } from '../../../context/UserContext';
 import { PrivateStory } from '../../../models';
@@ -43,15 +49,6 @@ const HeaderUser = styled.div`
 
 const HeaderUserPhoto = styled.img`
   ${tw`w-8 h-8 rounded-full`};
-`;
-
-const HeaderDropdown = styled.div`
-  ${tw`origin-top-right absolute right-0 mt-2 w-32 bg-white rounded-lg border shadow-md py-2`};
-  transform-origin: top right;
-
-  a {
-    ${tw`block px-4 py-2 hover:bg-black hover:text-white lg:text-sm`};
-  }
 `;
 
 export const Header = () => {
@@ -116,19 +113,17 @@ export const Header = () => {
           <HeaderUser onClick={() => setMenuUserOpen(!menuUserOpen)}>
             <HeaderUserPhoto src="https://source.unsplash.com/random/100x100" />
             {menuUserOpen && (
-              <HeaderDropdown>
-                <ul>
-                  <li>
-                    <Link href="/me">My stories</Link>
-                  </li>
-                  <li>
-                    <Link href="/settings">Settings</Link>
-                  </li>
-                  <li>
-                    <a onClick={handleLogout}>Sign out</a>
-                  </li>
-                </ul>
-              </HeaderDropdown>
+              <Dropdown>
+                <DropdownItem>
+                  <Link href="/me">My stories</Link>
+                </DropdownItem>
+                <DropdownItem>
+                  <Link href="/settings">Settings</Link>
+                </DropdownItem>
+                <DropdownItem>
+                  <a onClick={handleLogout}>Sign out</a>
+                </DropdownItem>
+              </Dropdown>
             )}
           </HeaderUser>
         )}
