@@ -1505,10 +1505,18 @@
     "@types/slate" "*"
     immutable "^3.8.2"
 
-"@types/slate@*", "@types/slate@0.44.3":
+"@types/slate@*":
   version "0.44.3"
   resolved "https://registry.yarnpkg.com/@types/slate/-/slate-0.44.3.tgz#8a4f538494e4325311ed73eba29aefc64c108969"
   integrity sha512-x5cITjHQuZ6cn/tpcMf/LIPZxnlnylgY0xBa21H+2mckH8m1bKef84pO4P+uJakKo9YfBCwwSskZnK931vJCTA==
+  dependencies:
+    "@types/react" "*"
+    immutable "^3.8.2"
+
+"@types/slate@0.44.5":
+  version "0.44.5"
+  resolved "https://registry.yarnpkg.com/@types/slate/-/slate-0.44.5.tgz#716bd875f0496552e5d018be336c03341933e651"
+  integrity sha512-eq78bFPREHt5Dc3yVFuTdEZl9bTgdL5y42j4Ep+JqgsCFSqEPG8xF9hvTh9lwim4KoysoFgso1lpASHDPhbLNQ==
   dependencies:
     "@types/react" "*"
     immutable "^3.8.2"
