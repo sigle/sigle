@@ -90,7 +90,7 @@ export const StoryItem = ({ story, onDelete, onPublish }: Props) => {
         </div>
         <div className="right">
           {/*
-        // @ts-ignore */}
+          // @ts-ignore */}
           <Button
             color="primary"
             className="edit"
