@@ -1093,70 +1093,70 @@
   dependencies:
     any-observable "^0.3.0"
 
-"@sentry/browser@5.1.2":
-  version "5.1.2"
-  resolved "https://registry.yarnpkg.com/@sentry/browser/-/browser-5.1.2.tgz#9f1022c9f6390855a7b642b0c8445065f58c7ba2"
-  integrity sha512-Dxa90/Nfgr1sjdabSvnvJlRoLweuV/kv2iWJc1CO252FNncLxZCSSdl0mgltOiKmsxj+hS5oECHgXmqMnl8LCQ==
+"@sentry/browser@5.2.0":
+  version "5.2.0"
+  resolved "https://registry.yarnpkg.com/@sentry/browser/-/browser-5.2.0.tgz#400da9ccc3afe0c351e28978de7d6e1b8f8c1612"
+  integrity sha512-RIp+NZAP0CTDZbIsG8k5zGbimlMtTNRagub9dnQm6R0HmSL5+zxNoE7DH4MV3Xv5rFr8P0LCZyMTxwCgU1Y/3Q==
   dependencies:
-    "@sentry/core" "5.1.2"
-    "@sentry/types" "5.1.0"
-    "@sentry/utils" "5.1.2"
+    "@sentry/core" "5.2.0"
+    "@sentry/types" "5.2.0"
+    "@sentry/utils" "5.2.0"
     tslib "^1.9.3"
 
-"@sentry/core@5.1.2":
-  version "5.1.2"
-  resolved "https://registry.yarnpkg.com/@sentry/core/-/core-5.1.2.tgz#e03eb85baf959c8458662942d5acfacb2e7b4c99"
-  integrity sha512-JA4iUJuL+6SqzbIpibqVRYqhlclDnoS6sb4wu5jBHubPSFkQZauvJial85mCugWjgaIa8+8aY+PLjT1lIsz0fA==
+"@sentry/core@5.2.0":
+  version "5.2.0"
+  resolved "https://registry.yarnpkg.com/@sentry/core/-/core-5.2.0.tgz#06e932fd338a25d2e13de7671f277f059b461705"
+  integrity sha512-s6rnJpJZMDIutcj2EIxyzJBjuYn3omVSjL2F8vOfw2oMZgTGJzQdz7a43iYokX/zFgzEDqz5zWGrhJ1wX/I8/w==
   dependencies:
-    "@sentry/hub" "5.1.2"
-    "@sentry/minimal" "5.1.2"
-    "@sentry/types" "5.1.0"
-    "@sentry/utils" "5.1.2"
+    "@sentry/hub" "5.2.0"
+    "@sentry/minimal" "5.2.0"
+    "@sentry/types" "5.2.0"
+    "@sentry/utils" "5.2.0"
     tslib "^1.9.3"
 
-"@sentry/hub@5.1.2":
-  version "5.1.2"
-  resolved "https://registry.yarnpkg.com/@sentry/hub/-/hub-5.1.2.tgz#ffdb47cd35fbf8ace66d5c251754bea8ee5f901d"
-  integrity sha512-5UNyxpvb1Bl+iZ6MBZazoKZ8jkAX88/Z7smlK+nvVxSKvKbmAptIEHYm9xeRkBNg7mj4OFoQvcUgbapwAbbcZw==
+"@sentry/hub@5.2.0":
+  version "5.2.0"
+  resolved "https://registry.yarnpkg.com/@sentry/hub/-/hub-5.2.0.tgz#4fde4b8b97aec3d6375d000f1151600c42cd2d72"
+  integrity sha512-vMHDHmhKWGMsPqQUaN6f+9p4XuGrLBTB30dV8ZFOXkVbQOSG20rjI9nMaSoDkELCmFFCIu9cL+mvuxLcA7TRug==
   dependencies:
-    "@sentry/types" "5.1.0"
-    "@sentry/utils" "5.1.2"
+    "@sentry/types" "5.2.0"
+    "@sentry/utils" "5.2.0"
     tslib "^1.9.3"
 
-"@sentry/minimal@5.1.2":
-  version "5.1.2"
-  resolved "https://registry.yarnpkg.com/@sentry/minimal/-/minimal-5.1.2.tgz#b2bf9c864f65f8c93fc7203e41e19208ce065411"
-  integrity sha512-StDUZA/OiXCjcRif6D51+iY97Tkqnyy+RHv5Udi+l4eKhMBpZ7nagMOXADA7eQ+XvWj/4mGbeVORPoOi/LGqTA==
+"@sentry/minimal@5.2.0":
+  version "5.2.0"
+  resolved "https://registry.yarnpkg.com/@sentry/minimal/-/minimal-5.2.0.tgz#6aad5f63cebceef51ee2b3b0010aee1e810a82b0"
+  integrity sha512-bMoT/+nctMSLo/qNOroTUILojIq/9FhGyW4tvTeHjDCYQorsg+FQqNLEpXo19IHi488Oy51qtBcBeldpxzN4bQ==
   dependencies:
-    "@sentry/hub" "5.1.2"
-    "@sentry/types" "5.1.0"
+    "@sentry/hub" "5.2.0"
+    "@sentry/types" "5.2.0"
     tslib "^1.9.3"
 
-"@sentry/node@5.1.2":
-  version "5.1.2"
-  resolved "https://registry.yarnpkg.com/@sentry/node/-/node-5.1.2.tgz#e79bf297f9fe61ddb74c0b61a3d60b116765f3a7"
-  integrity sha512-m6OT5QhSTt/l1+I00JVMdTB4MUtndB+I544W9dx94yS9NvUtfaH5SP+a26pD9ylVsbFqtmsygXXj15ofZ+HCPg==
+"@sentry/node@5.2.0":
+  version "5.2.0"
+  resolved "https://registry.yarnpkg.com/@sentry/node/-/node-5.2.0.tgz#f4fa9ca924385f8c4564ffc5bc387fc305e029b8"
+  integrity sha512-pEXRGwwtnr33wGmbrKjvcwrfMWvE5vj9wqQ1nsrPSuGeMgkj9tOpxilfFVUq+hnz9am1L0C2/p17mn1d3tO/nw==
   dependencies:
-    "@sentry/core" "5.1.2"
-    "@sentry/hub" "5.1.2"
-    "@sentry/types" "5.1.0"
-    "@sentry/utils" "5.1.2"
+    "@sentry/core" "5.2.0"
+    "@sentry/hub" "5.2.0"
+    "@sentry/types" "5.2.0"
+    "@sentry/utils" "5.2.0"
     cookie "0.3.1"
     https-proxy-agent "2.2.1"
     lru_map "0.3.3"
     tslib "^1.9.3"
 
-"@sentry/types@5.1.0":
-  version "5.1.0"
-  resolved "https://registry.yarnpkg.com/@sentry/types/-/types-5.1.0.tgz#2acda336c73c996b42ca03887679599c78751f10"
-  integrity sha512-Uo5Fla1RjCfmliQWsV4ehZ1Q4z4taMC66ZGrqrUWx7FyQsaps+TJfQE5QiTIs+jWD6CbgVRf/N+pNMmpIK8JVA==
+"@sentry/types@5.2.0":
+  version "5.2.0"
+  resolved "https://registry.yarnpkg.com/@sentry/types/-/types-5.2.0.tgz#e42f2ad95c1c10f50656e6b668ff8c8aa06b99d5"
+  integrity sha512-QzMVYgONsScAiEGY5XRtSeMwH8464oRdaxCMTtXBuYfF9muvxHqQyF094GVRiconpgKelok5ke9HwrbNUEiE7w==
 
-"@sentry/utils@5.1.2":
-  version "5.1.2"
-  resolved "https://registry.yarnpkg.com/@sentry/utils/-/utils-5.1.2.tgz#f2b0ba7b97d01baafc705eed8f2b31005cb01e36"
-  integrity sha512-0KYr75d7SR28lx+s2ZbLBjdgKwVeJLxoX8l6fBxYGXkDiMaWfi4f6JOf4Wd96Mh4ZvdzVLLhOGkGak/HYKa7Yw==
+"@sentry/utils@5.2.0":
+  version "5.2.0"
+  resolved "https://registry.yarnpkg.com/@sentry/utils/-/utils-5.2.0.tgz#1b97fbe9a9bf2f9a355670da6531dcac79d9e748"
+  integrity sha512-/0gWzWSot22P/Zkfz2lxXvuOiHAtM4uwkADlt1yN3mMPTaHD8feV9MTwjg+Z3KxKSZ005riJFncCO+PZQaydSQ==
   dependencies:
-    "@sentry/types" "5.1.0"
+    "@sentry/types" "5.2.0"
     tslib "^1.9.3"
 
 "@svgr/babel-plugin-add-jsx-attribute@^4.2.0":
@@ -1264,13 +1264,13 @@
     "@svgr/plugin-svgo" "^4.0.3"
     loader-utils "^1.1.0"
 
-"@tippy.js/react@2.1.2":
-  version "2.1.2"
-  resolved "https://registry.yarnpkg.com/@tippy.js/react/-/react-2.1.2.tgz#2f51a206d3b90ee2423574bf256c76e1cf2b3e53"
-  integrity sha512-5napcBju8l285PiNoNHlVj0rqVHevlwBV2ndXAzbvzUfFgtb3NxoMWUWT9vCBwx6hzK3ljAw8qqTtmkImYvVEg==
+"@tippy.js/react@2.2.0":
+  version "2.2.0"
+  resolved "https://registry.yarnpkg.com/@tippy.js/react/-/react-2.2.0.tgz#6b3af3b7f34bc436abf38fa374eadf60f3f7ca62"
+  integrity sha512-+IXvYRhroKB/3op1rR2EUZegEDQ0mH/jMxmDS7sD8RJzcj2wPoQQqy0cmua53qurlEEEaGk6/KAIw17XYJCUZQ==
   dependencies:
     prop-types "^15.6.2"
-    tippy.js "^4.2.1"
+    tippy.js "^4.3.0"
 
 "@types/anymatch@*":
   version "1.3.1"
@@ -11716,10 +11716,10 @@ slash@^2.0.0:
   resolved "https://registry.yarnpkg.com/slash/-/slash-2.0.0.tgz#de552851a1759df3a8f206535442f5ec4ddeab44"
   integrity sha512-ZYKh3Wh2z1PpEXWr0MpSBZ0V6mZHAQfYevttO11c51CaWjGTaadiKZ+wVt1PbMlDV5qhMFslpZCemhwOK7C89A==
 
-slate-base64-serializer@^0.2.102:
-  version "0.2.102"
-  resolved "https://registry.yarnpkg.com/slate-base64-serializer/-/slate-base64-serializer-0.2.102.tgz#05cdb9149172944b55c8d0a0d14b4499a1c3b5a2"
-  integrity sha512-44BI/jEbSMDNjEpOd92dVtpKyoFEaQtS3YgDoD30gHsvJvuzdRd/EQjp01BAUhDLLgDINi9qIHZS3AkpqKOtow==
+slate-base64-serializer@^0.2.104:
+  version "0.2.104"
+  resolved "https://registry.yarnpkg.com/slate-base64-serializer/-/slate-base64-serializer-0.2.104.tgz#30e5616cb049a8109e07e0fa6e7bd3c37d2bd21c"
+  integrity sha512-S3JlYXT0fQ+i1f+hwqY3VCH0vLLVJGNDvbqMRhH33R8x8yUYAzgyHszwORHVxYKrIGafO4yonMWBjwBXyAUIzA==
   dependencies:
     isomorphic-base64 "^1.0.2"
 
@@ -11738,32 +11738,32 @@ slate-hotkeys@^0.2.9:
     is-hotkey "0.1.4"
     slate-dev-environment "^0.2.2"
 
-slate-html-serializer@0.8.1:
-  version "0.8.1"
-  resolved "https://registry.yarnpkg.com/slate-html-serializer/-/slate-html-serializer-0.8.1.tgz#43d45edbfe8eb9e0e6fb57182f8e900da0fff185"
-  integrity sha512-D6X9RZTWrNwiCGFOJ+Kb4+TLdwP23p1I1U0/1SVi+7w+CUSUhsvlTbG0LGAIuIgXqXbT9TgLLDQ8cB3X1qQjpg==
+slate-html-serializer@0.8.3:
+  version "0.8.3"
+  resolved "https://registry.yarnpkg.com/slate-html-serializer/-/slate-html-serializer-0.8.3.tgz#55148e668c0b07688c865b90ac01c0716ef62908"
+  integrity sha512-qk7LVfX5vKWPli7SWFQJzGQNjN0cwOHaKVkaXfx7C0CdoWHmO+96hKd0bl/KlheezCd1fcdhtdNbF9PyzQDYRA==
   dependencies:
     type-of "^2.0.1"
 
-slate-plain-serializer@0.7.1, slate-plain-serializer@^0.7.1:
-  version "0.7.1"
-  resolved "https://registry.yarnpkg.com/slate-plain-serializer/-/slate-plain-serializer-0.7.1.tgz#09713f33e2a3b6994a7b890df6df659658968502"
-  integrity sha512-hyMGiRTFXMUD8/PocKgXLRd/hA4SCNn3SaLOziF5iEgTrj4l/xvqaA08wv493GsSUfZWB6n2BstRkg9Ln/uJ4A==
+slate-plain-serializer@0.7.3, slate-plain-serializer@^0.7.3:
+  version "0.7.3"
+  resolved "https://registry.yarnpkg.com/slate-plain-serializer/-/slate-plain-serializer-0.7.3.tgz#f85ce39534eab4f739a20e3d351c09a25770b242"
+  integrity sha512-BcWsNxIsYoWIx/xc4EqIJZTzAhLFpkaafBDKGGHpfNQrgNVjAiP6vM90r3bpJrLdxepYB86OZTH1lqPiZ962rw==
 
-slate-prop-types@^0.5.32:
-  version "0.5.32"
-  resolved "https://registry.yarnpkg.com/slate-prop-types/-/slate-prop-types-0.5.32.tgz#96ab5a90ebc0a94e60dfc47890d55b94ec80e69b"
-  integrity sha512-eAh9QHEG4i0IjGCnncfmYdArHHbb2lDJxXIJWSypvtnPTNRxEYT5QQE+d/BxjES4xHve9DDJMPV2JenFQ7X42g==
+slate-prop-types@^0.5.34:
+  version "0.5.34"
+  resolved "https://registry.yarnpkg.com/slate-prop-types/-/slate-prop-types-0.5.34.tgz#11789c9559922e73e506b122b265d5e49b7ef52d"
+  integrity sha512-/sg/grElOM63gnVoqthd7adatFgWmAXenmtYPgQLVxoorVat6F05/xzKwLVqtmMCXU/SCisuf8EFTyBJCbVQRw==
 
-slate-react-placeholder@^0.1.20:
-  version "0.1.20"
-  resolved "https://registry.yarnpkg.com/slate-react-placeholder/-/slate-react-placeholder-0.1.20.tgz#1a504727257cd50d9a4da4eb1fe47bdf024eefbf"
-  integrity sha512-A4xq1kS3V3YetFbLE/1dv+/SDVjx9zsZZepJqjcmkGK+evHU2yNkWjZXCg8MLMRtZJpGtYT/BE3+kHbkgT5Q4A==
+slate-react-placeholder@^0.2.1:
+  version "0.2.1"
+  resolved "https://registry.yarnpkg.com/slate-react-placeholder/-/slate-react-placeholder-0.2.1.tgz#2dc006c294928e5ca2a7d0455ccd6ff86d24cb0f"
+  integrity sha512-HkFTjyqM2hDxn/d13cP4kDFBdwNh/KyWa9ORJcSgG8qnbP8fK0OaxmW+7c9kpOkpy1kdZ6kvsDy1EYsjtFlL7w==
 
-slate-react@0.21.24:
-  version "0.21.24"
-  resolved "https://registry.yarnpkg.com/slate-react/-/slate-react-0.21.24.tgz#58754895ea987695bab380718559f3d6a043e0b1"
-  integrity sha512-fY1xUPCpsbTPGtiU0hc85JEzR5cf66Bqh5DLlDIfld/DljCKJoIVYR+EkFW5NuvvZPHhRjz4Ywz6IA/Krcjtug==
+slate-react@0.22.1:
+  version "0.22.1"
+  resolved "https://registry.yarnpkg.com/slate-react/-/slate-react-0.22.1.tgz#a76750b1f2a85ee982615639b91d3007c6f33607"
+  integrity sha512-ANTlZl1OO7HLum0YNZfFJCMxaAoIkTnxOA5wqNFSVZItcjBTtjhIufpyswZ805HGnpuZX0gPqLr804T7J6jnZg==
   dependencies:
     debug "^3.1.0"
     get-window "^1.1.1"
@@ -11773,12 +11773,12 @@ slate-react@0.21.24:
     prop-types "^15.5.8"
     react-immutable-proptypes "^2.1.0"
     selection-is-backward "^1.0.0"
-    slate-base64-serializer "^0.2.102"
+    slate-base64-serializer "^0.2.104"
     slate-dev-environment "^0.2.2"
     slate-hotkeys "^0.2.9"
-    slate-plain-serializer "^0.7.1"
-    slate-prop-types "^0.5.32"
-    slate-react-placeholder "^0.1.20"
+    slate-plain-serializer "^0.7.3"
+    slate-prop-types "^0.5.34"
+    slate-react-placeholder "^0.2.1"
     tiny-invariant "^1.0.1"
     tiny-warning "^0.0.3"
 
@@ -11787,10 +11787,10 @@ slate-soft-break@0.9.0:
   resolved "https://registry.yarnpkg.com/slate-soft-break/-/slate-soft-break-0.9.0.tgz#7fb2a22eb8600717ee299f7866469cb9c705a53d"
   integrity sha512-iTy2bl/G+tphN10YQBOPDRxDqgM46ZH1UUz0ublmL6PLtwJ3jJK1n08w37YxnY/ge4aW31UN386KV6qvFx6Hsw==
 
-slate@0.46.1:
-  version "0.46.1"
-  resolved "https://registry.yarnpkg.com/slate/-/slate-0.46.1.tgz#339f33d63422672235d57419c88b2f6c7e3efa14"
-  integrity sha512-tO1HYydPbyZ/Lhqmm4T1CbcCS4VvBV2hShELpa8R03S23Uk7XIVj7tfLKrDAhwM3R5T7HM3xT4L6nk0pOyjVrw==
+slate@0.47.1:
+  version "0.47.1"
+  resolved "https://registry.yarnpkg.com/slate/-/slate-0.47.1.tgz#a59f849ed3173f5c0657c84fa21924b564a2b051"
+  integrity sha512-Iqq0ub4mtvp5EKdFH50BBeHI+0iyNI1EOiNAur+XEPx7L/z7c3eLKBuPJZQHUGtOBiDWlZnJ4YCBjpPOHTNskA==
   dependencies:
     debug "^3.1.0"
     direction "^0.1.5"
@@ -12597,10 +12597,10 @@ tiny-warning@^1.0.0:
   resolved "https://registry.yarnpkg.com/tiny-warning/-/tiny-warning-1.0.2.tgz#1dfae771ee1a04396bdfde27a3adcebc6b648b28"
   integrity sha512-rru86D9CpQRLvsFG5XFdy0KdLAvjdQDyZCsRcuu60WtzFylDM3eAWSxEVz5kzL2Gp544XiUvPbVKtOA/txLi9Q==
 
-tippy.js@^4.2.1:
-  version "4.3.0"
-  resolved "https://registry.yarnpkg.com/tippy.js/-/tippy.js-4.3.0.tgz#5f661fed7fa30c90609eb87f6657005dd041ede3"
-  integrity sha512-SjctzIfkx3+waue+Ew58MMTuzYD4SK9wJOnCEdrCmwZiKJ7chZSxOguFmBm11tmTlZuGbxncUC/5Qu6GqzD2qQ==
+tippy.js@^4.3.0:
+  version "4.3.1"
+  resolved "https://registry.yarnpkg.com/tippy.js/-/tippy.js-4.3.1.tgz#ea38fa7e1a2e3448ac35faa5115ccbb8414f50aa"
+  integrity sha512-H09joePakSu6eDSL1wj5LjEWwvpEELyJQlgsts4wVH7223t4DlyzGCaZNDO8/MQAnSuic4JhKpXtgzSYGlobvg==
   dependencies:
     popper.js "^1.14.7"
 
