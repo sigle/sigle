@@ -82,6 +82,7 @@ export const Header = () => {
       <MobileMenu
         open={menuOpen}
         onClose={() => setMenuOpen(false)}
+        onLogin={handleLogin}
         user={user}
       />
       <HeaderContainer>

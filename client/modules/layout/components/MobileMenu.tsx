@@ -59,9 +59,15 @@ interface MobileMenuProps {
   // TODO type
   user: any;
   onClose: () => void;
+  onLogin: () => void;
 }
 
-export const MobileMenu = ({ open, user, onClose }: MobileMenuProps) => {
+export const MobileMenu = ({
+  open,
+  user,
+  onClose,
+  onLogin,
+}: MobileMenuProps) => {
   const nodeRef = createRef<HTMLDivElement>();
 
   /**
@@ -108,9 +114,10 @@ export const MobileMenu = ({ open, user, onClose }: MobileMenuProps) => {
             <MobileMenuLink href="#">How to use?</MobileMenuLink>
           </MobileMenuListItem>
           {!user && (
-            // TODO redirect to login
             <MobileMenuListItem>
-              <MobileMenuLink href="#">Sign in</MobileMenuLink>
+              <MobileMenuLink href="" onClick={onLogin}>
+                Sign in
+              </MobileMenuLink>
             </MobileMenuListItem>
           )}
         </ul>
