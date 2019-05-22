@@ -6,6 +6,7 @@ import helmet from 'helmet';
 import next from 'next';
 import { setup } from 'radiks-server';
 import { config } from './config';
+import { apiRouter } from './api';
 
 if (process.env.NODE_ENV === 'production' && process.env.SENTRY_DSN_SERVER) {
   init({
@@ -32,6 +33,9 @@ nextApp.prepare().then(async () => {
     mongoDBUrl: config.mongoDBUrl,
   });
   expressApp.use('/radiks', RadiksController);
+
+  // Connect the api router to express
+  expressApp.use('/api', apiRouter);
 
   expressApp.get('/manifest.json', (_, res) => {
     res.header('Access-Control-Allow-Origin', '*');
