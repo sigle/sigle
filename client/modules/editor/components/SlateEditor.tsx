@@ -122,11 +122,7 @@ const emptyNode = {
         nodes: [
           {
             object: 'text',
-            leaves: [
-              {
-                text: '',
-              },
-            ],
+            text: '',
           },
         ],
       },
