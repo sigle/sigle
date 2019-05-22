@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import tw from 'tailwind.macro';
 
 const DropdownContainer = styled.div`
-  ${tw`origin-top-right absolute right-0 mt-2 w-32 bg-white rounded-lg border shadow-md py-2`};
+  ${tw`absolute right-0 mt-2 w-32 bg-white rounded-lg border shadow-md py-2`};
   transform-origin: top right;
   z-index: 1;
 

@@ -36,7 +36,7 @@ const ImageColumnContainer = styled.div<{ inverse?: boolean }>`
   }
 
   .figure-container {
-    ${tw`flex item-center justify-center`};
+    ${tw`flex items-center justify-center`};
   }
 
   img {
