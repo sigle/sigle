@@ -41,6 +41,9 @@ export const StoryList = () => {
 
       stories.splice(index, 1);
       setStories([...stories]);
+
+      // TODO nice notify
+      alert('Story deleted successfully');
     } catch (error) {
       // TODO notify user with error message
     }
