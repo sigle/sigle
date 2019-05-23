@@ -235,7 +235,7 @@ export const SlateEditor = ({ story, state, onChangeContent }: Props) => {
     const { document } = value;
 
     // Handle everything but list buttons.
-    if (type != 'bulleted-list' && type != 'numbered-list') {
+    if (type !== 'bulleted-list' && type !== 'numbered-list') {
       const isActive = hasBlock(type);
       const isList = hasBlock('list-item');
 
@@ -253,7 +253,7 @@ export const SlateEditor = ({ story, state, onChangeContent }: Props) => {
       const isType = value.blocks.some((block: any) => {
         return !!document.getClosest(
           block.key,
-          (parent: any) => parent.type == type
+          (parent: any) => parent.type === type
         );
       });
 
@@ -265,7 +265,7 @@ export const SlateEditor = ({ story, state, onChangeContent }: Props) => {
       } else if (isList) {
         editor
           .unwrapBlock(
-            type == 'bulleted-list' ? 'numbered-list' : 'bulleted-list'
+            type === 'bulleted-list' ? 'numbered-list' : 'bulleted-list'
           )
           .wrapBlock(type);
       } else {
@@ -302,14 +302,14 @@ export const SlateEditor = ({ story, state, onChangeContent }: Props) => {
    * Check if the current selection has a mark with `type` in it.
    */
   const hasMark = (type: string) => {
-    return value.activeMarks.some((mark: any) => mark.type == type);
+    return value.activeMarks.some(mark => !!mark && mark.type === type);
   };
 
   /**
    * Check if the any of the currently selected blocks are of `type`.
    */
   const hasBlock = (type: string) => {
-    return value.blocks.some((node: any) => node.type == type);
+    return value.blocks.some(node => !!node && node.type === type);
   };
 
   const hasLinks = () => {
@@ -317,10 +317,50 @@ export const SlateEditor = ({ story, state, onChangeContent }: Props) => {
   };
 
   /**
-   * Render a Slate node.
+   * Render a mark-toggling toolbar button.
    */
-  const renderNode = (props: any, _: any, next: any) => {
+  const renderMarkButton = (type: string, Icon: any) => {
+    const isActive = hasMark(type);
+
+    return (
+      <SlateEditorToolbarButton onMouseDown={event => onClickMark(event, type)}>
+        <Icon color={isActive ? '#000000' : '#cccccc'} size={18} />
+      </SlateEditorToolbarButton>
+    );
+  };
+
+  /**
+   * Render a block-toggling toolbar button.
+   */
+  const renderBlockButton = (type: string, Icon: any) => {
+    let isActive = hasBlock(type);
+
+    if (['numbered-list', 'bulleted-list'].includes(type)) {
+      const { document, blocks } = value;
+
+      if (blocks.size > 0) {
+        const parent = document.getParent(blocks.first().key);
+        isActive =
+          hasBlock('list-item') && !!parent && (parent as any).type === type;
+      }
+    }
+
+    return (
+      <SlateEditorToolbarButton
+        onMouseDown={event => onClickBlock(event, type)}
+      >
+        <Icon color={isActive ? '#000000' : '#cccccc'} size={18} />
+      </SlateEditorToolbarButton>
+    );
+  };
+
+  /**
+   * Render a Slate block.
+   */
+  const renderBlock = (props: any, _: any, next: any) => {
     const { attributes, children, node, isFocused } = props;
+
+    console.log(node.type);
 
     switch (node.type) {
       case 'paragraph':
@@ -333,12 +373,12 @@ export const SlateEditor = ({ story, state, onChangeContent }: Props) => {
         return <h2 {...attributes}>{children}</h2>;
       case 'heading-three':
         return <h3 {...attributes}>{children}</h3>;
-      case 'list-item':
-        return <li {...attributes}>{children}</li>;
       case 'numbered-list':
         return <ol {...attributes}>{children}</ol>;
       case 'bulleted-list':
         return <ul {...attributes}>{children}</ul>;
+      case 'list-item':
+        return <li {...attributes}>{children}</li>;
       // case 'image':
       //   const src = node.data.get('src');
       //   return <Image src={src} selected={isFocused} {...attributes} />;
@@ -373,28 +413,6 @@ export const SlateEditor = ({ story, state, onChangeContent }: Props) => {
     }
   };
 
-  const renderMarkButton = (type: string, Icon: any) => {
-    const isActive = hasMark(type);
-
-    return (
-      <SlateEditorToolbarButton onMouseDown={event => onClickMark(event, type)}>
-        <Icon color={isActive ? '#000000' : '#cccccc'} size={18} />
-      </SlateEditorToolbarButton>
-    );
-  };
-
-  const renderBlockButton = (type: string, Icon: any) => {
-    const isActive = hasBlock(type);
-
-    return (
-      <SlateEditorToolbarButton
-        onMouseDown={event => onClickBlock(event, type)}
-      >
-        <Icon color={isActive ? '#000000' : '#cccccc'} size={18} />
-      </SlateEditorToolbarButton>
-    );
-  };
-
   return (
     <React.Fragment>
       <SlateEditorToolbar>
@@ -426,6 +444,8 @@ export const SlateEditor = ({ story, state, onChangeContent }: Props) => {
       </SlateEditorToolbar>
 
       <EditorStyle>
+        {/*
+          // @ts-ignore */}
         <StyledEditor
           ref={editorRef}
           plugins={slatePlugins}
@@ -435,7 +455,7 @@ export const SlateEditor = ({ story, state, onChangeContent }: Props) => {
           onKeyDown={onKeyDown as any}
           schema={schema as any}
           placeholder="Text"
-          renderNode={renderNode}
+          renderBlock={renderBlock}
           renderMark={renderMark}
         />
       </EditorStyle>
