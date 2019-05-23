@@ -153,6 +153,24 @@ export const SlateEditor = ({ story, state, onChangeContent }: Props) => {
     onChangeContent(value);
   };
 
+  /**
+   * Check if the current selection has a mark with `type` in it.
+   */
+  const hasMark = (type: string) => {
+    return value.activeMarks.some(mark => !!mark && mark.type === type);
+  };
+
+  /**
+   * Check if the any of the currently selected blocks are of `type`.
+   */
+  const hasBlock = (type: string) => {
+    return value.blocks.some(node => !!node && node.type === type);
+  };
+
+  const hasLinks = () => {
+    return value.inlines.some(inline => !!(inline && inline.type == 'link'));
+  };
+
   const insertImage = (editor: Editor, src: string, target: any) => {
     if (target) {
       editor.select(target);
@@ -296,24 +314,6 @@ export const SlateEditor = ({ story, state, onChangeContent }: Props) => {
 
     event.preventDefault();
     editor.toggleMark(mark);
-  };
-
-  /**
-   * Check if the current selection has a mark with `type` in it.
-   */
-  const hasMark = (type: string) => {
-    return value.activeMarks.some(mark => !!mark && mark.type === type);
-  };
-
-  /**
-   * Check if the any of the currently selected blocks are of `type`.
-   */
-  const hasBlock = (type: string) => {
-    return value.blocks.some(node => !!node && node.type === type);
-  };
-
-  const hasLinks = () => {
-    return value.inlines.some(inline => !!(inline && inline.type == 'link'));
   };
 
   /**
