@@ -1,8 +1,25 @@
 import React, { useState, useEffect } from 'react';
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 import tw from 'tailwind.macro';
-import { PrivateStory } from '../../../models';
+import { PrivateStory, PublicStory } from '../../../models';
 import { StoryItem } from './StoryItem';
+
+const Tabs = styled.div`
+  ${tw`flex mb-8`};
+`;
+
+const Tab = styled.div<{ active: boolean }>`
+  ${tw`cursor-pointer pb-1`};
+  &:first-child {
+    ${tw`mr-8`};
+  }
+
+  ${props =>
+    props.active &&
+    css`
+      ${tw`border-b border-solid border-black font-medium`};
+    `}
+`;
 
 const StoryListContainer = styled.div`
   ${tw`border-t border-solid border-grey`};
@@ -10,6 +27,7 @@ const StoryListContainer = styled.div`
 
 export const StoryList = () => {
   // TODO error state
+  const [tab, setTab] = useState(0);
   const [loading, setLoading] = useState<boolean>(true);
   const [stories, setStories] = useState<any | undefined>();
 
@@ -46,6 +64,7 @@ export const StoryList = () => {
       alert('Story deleted successfully');
     } catch (error) {
       // TODO notify user with error message
+      alert(error.message);
     }
   };
 
@@ -68,15 +87,26 @@ export const StoryList = () => {
   }
 
   return (
-    <StoryListContainer>
-      {stories.map((story: any) => (
-        <StoryItem
-          key={story.attrs._id}
-          story={story}
-          onDelete={deleteStory}
-          onPublish={publishStory}
-        />
-      ))}
-    </StoryListContainer>
+    <React.Fragment>
+      <Tabs>
+        <Tab active={tab === 0} onClick={() => setTab(0)}>
+          Draft ({loading ? '...' : stories.length})
+        </Tab>
+        <Tab active={tab === 1} onClick={() => setTab(1)}>
+          Published (5)
+        </Tab>
+      </Tabs>
+
+      <StoryListContainer>
+        {stories.map((story: any) => (
+          <StoryItem
+            key={story.attrs._id}
+            story={story}
+            onDelete={deleteStory}
+            onPublish={publishStory}
+          />
+        ))}
+      </StoryListContainer>
+    </React.Fragment>
   );
 };

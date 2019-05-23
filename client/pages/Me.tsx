@@ -56,21 +56,6 @@ const MeProfile = styled.div`
   }
 `;
 
-const MeTabs = styled.div`
-  ${tw`flex mb-8`};
-
-  div {
-    ${tw`cursor-pointer pb-1`};
-  }
-  div:first-child {
-    ${tw`mr-8`};
-  }
-
-  .active {
-    ${tw`border-b border-solid border-black font-medium`};
-  }
-`;
-
 export const MeLeft = () => (
   <MeMenu>
     <ul>
@@ -111,11 +96,6 @@ export const Me = () => (
               </p>
             </div>
           </MeProfile>
-
-          <MeTabs>
-            <div className="active">Draft (2)</div>
-            <div>Published (5)</div>
-          </MeTabs>
 
           <StoryList />
         </MeRight>
