@@ -360,8 +360,6 @@ export const SlateEditor = ({ story, state, onChangeContent }: Props) => {
   const renderBlock = (props: any, _: any, next: any) => {
     const { attributes, children, node, isFocused } = props;
 
-    console.log(node.type);
-
     switch (node.type) {
       case 'paragraph':
         return <p {...attributes}>{children}</p>;
