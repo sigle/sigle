@@ -46,17 +46,12 @@ const HeaderButtonNewStory = styled(Button)`
   ${tw`ml-3 mr-4`};
 `;
 
-const HeaderUser = styled.div`
-  ${tw`relative cursor-pointer`};
-`;
-
 const HeaderUserPhoto = styled.img`
   ${tw`w-8 h-8 rounded-full`};
 `;
 
 export const Header = () => {
   const [menuOpen, setMenuOpen] = useState<boolean>(false);
-  const [menuUserOpen, setMenuUserOpen] = useState<boolean>(false);
   const { user, loading } = useContext(UserContext);
 
   const handleLogin = () => {

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import styled from 'styled-components';
 import tw from 'tailwind.macro';
 import { MdSettings, MdRemoveRedEye } from 'react-icons/md';
@@ -13,7 +13,6 @@ import {
   MenuButton,
   MenuItem,
 } from '../../../components';
-import { config } from '../../../config';
 
 const StoryItemContainer = styled.div`
   ${tw`py-4 border-b border-solid border-grey`};
@@ -43,18 +42,6 @@ const StoryItemContainer = styled.div`
   }
 `;
 
-const SettingsContainer = styled.div`
-  ${tw`relative cursor-pointer`};
-`;
-
-const SettingsDelete = styled.a`
-  ${tw`text-primary`};
-
-  &:hover {
-    background-color: ${config.colors.primary} !important;
-  }
-`;
-
 const StoryItemDate = styled.div`
   ${tw`text-grey-darker text-sm`};
 `;
@@ -70,8 +57,6 @@ interface Props {
 }
 
 export const StoryItem = ({ story, onDelete, onPublish }: Props) => {
-  const [menuOpen, setMenuOpen] = useState<boolean>(false);
-
   return (
     <StoryItemContainer>
       <div className="top-container">
