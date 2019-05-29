@@ -8,8 +8,10 @@ import {
   Container,
   Button,
   Link,
-  Dropdown,
-  DropdownItem,
+  Menu,
+  MenuList,
+  MenuButton,
+  MenuItem,
 } from '../../../components';
 import { MobileMenu } from './MobileMenu';
 import { UserContext } from '../../../context/UserContext';
@@ -112,23 +114,20 @@ export const Header = () => {
         )}
 
         {!loading && user && (
-          <HeaderUser onClick={() => setMenuUserOpen(!menuUserOpen)}>
-            <HeaderUserPhoto src="https://source.unsplash.com/random/100x100" />
-            <Dropdown
-              open={menuUserOpen}
-              onClose={() => setMenuUserOpen(false)}
-            >
-              <DropdownItem>
-                <Link href="/me">My stories</Link>
-              </DropdownItem>
-              <DropdownItem>
-                <Link href="/settings">Settings</Link>
-              </DropdownItem>
-              <DropdownItem>
-                <a onClick={handleLogout}>Sign out</a>
-              </DropdownItem>
-            </Dropdown>
-          </HeaderUser>
+          <Menu>
+            <MenuButton>
+              <HeaderUserPhoto src="https://source.unsplash.com/random/100x100" />
+            </MenuButton>
+            <MenuList>
+              <MenuItem onSelect={() => Router.push('/me')}>
+                My stories
+              </MenuItem>
+              <MenuItem onSelect={() => Router.push('/settings')}>
+                Settings
+              </MenuItem>
+              <MenuItem onSelect={handleLogout}>Sign out</MenuItem>
+            </MenuList>
+          </Menu>
         )}
       </HeaderContainer>
     </Container>

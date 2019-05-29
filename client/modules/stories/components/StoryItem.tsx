@@ -4,7 +4,15 @@ import tw from 'tailwind.macro';
 import { MdSettings, MdRemoveRedEye } from 'react-icons/md';
 import { format } from 'date-fns';
 import Tippy from '@tippy.js/react';
-import { Button, Link, Dropdown, DropdownItem } from '../../../components';
+import '@reach/menu-button/styles.css';
+import {
+  Button,
+  Link,
+  Menu,
+  MenuList,
+  MenuButton,
+  MenuItem,
+} from '../../../components';
 import { config } from '../../../config';
 
 const StoryItemContainer = styled.div`
@@ -99,19 +107,22 @@ export const StoryItem = ({ story, onDelete, onPublish }: Props) => {
           >
             Edit
           </Button>
-          <SettingsContainer onClick={() => setMenuOpen(!menuOpen)}>
-            <MdSettings size={24} />
-            <Dropdown open={menuOpen} onClose={() => setMenuOpen(false)}>
-              <DropdownItem>
-                <a onClick={() => onPublish(story.attrs._id)}>Publish</a>
-              </DropdownItem>
-              <DropdownItem>
-                <SettingsDelete onClick={() => onDelete(story.attrs._id)}>
-                  Delete
-                </SettingsDelete>
-              </DropdownItem>
-            </Dropdown>
-          </SettingsContainer>
+          <Menu>
+            <MenuButton>
+              <MdSettings size={24} />
+            </MenuButton>
+            <MenuList>
+              <MenuItem onSelect={() => onPublish(story.attrs._id)}>
+                Publish
+              </MenuItem>
+              <MenuItem
+                onSelect={() => onDelete(story.attrs._id)}
+                className="primary"
+              >
+                Delete
+              </MenuItem>
+            </MenuList>
+          </Menu>
         </div>
       </div>
       <StoryItemText>

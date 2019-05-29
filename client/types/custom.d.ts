@@ -21,3 +21,6 @@ declare module 'tailwind.macro' {
 declare module 'radiks';
 
 declare module 'slate-soft-break';
+
+// Remove once https://github.com/reach/reach-ui/pull/150 is merged
+declare module '@reach/menu-button';
