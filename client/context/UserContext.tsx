@@ -2,9 +2,11 @@ import React, { createContext, useState, useEffect } from 'react';
 import { getConfig, User as RadiksUser } from 'radiks';
 import { User } from '../types';
 
-export const UserContext = createContext<{ user?: User; loading?: boolean }>(
-  {}
-);
+export const UserContext = createContext<{
+  user?: User;
+  loading?: boolean;
+  setUser?: React.Dispatch<React.SetStateAction<User | undefined>>;
+}>({});
 
 interface Props {
   children: React.ReactNode;
