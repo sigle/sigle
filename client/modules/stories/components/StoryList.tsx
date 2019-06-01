@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useReducer } from 'react';
 import styled, { css } from 'styled-components';
 import tw from 'tailwind.macro';
 import { PrivateStory, PublicStory } from '../../../models';
@@ -25,28 +25,76 @@ const StoryListContainer = styled.div`
   ${tw`border-t border-solid border-grey`};
 `;
 
+type Action =
+  | { type: 'fetching' }
+  | { type: 'success'; privateStories: any; publicStories: any }
+  | { type: 'error' };
+
+interface State {
+  status?: 'fetching' | 'success' | 'error';
+  error?: string;
+  privateStories?: any;
+  publicStories?: any;
+}
+
+const initialState: State = {
+  status: undefined,
+  error: undefined,
+  privateStories: undefined,
+  publicStories: undefined,
+};
+
+const reducer = (state: State, action: Action): State => {
+  switch (action.type) {
+    case 'fetching':
+      return { ...initialState, status: 'fetching' };
+    case 'success':
+      return {
+        ...state,
+        status: 'success',
+        privateStories: action.privateStories,
+        publicStories: action.publicStories,
+      };
+    case 'error':
+      return { ...state, status: 'error' };
+    default:
+      throw new Error();
+  }
+};
+
 export const StoryList = () => {
   // TODO error state
-  const [tab, setTab] = useState(0);
-  const [loading, setLoading] = useState<boolean>(true);
-  const [stories, setStories] = useState<any | undefined>();
+  const [tab, setTab] = useState<'private' | 'public'>('private');
+  const [state, dispatch] = useReducer(reducer, initialState);
 
   const fetchStories = async () => {
-    // TODO sort by created at and updated at
-    const privateStories = await PrivateStory.fetchOwnList();
-    setStories(privateStories);
-    setLoading(false);
+    dispatch({ type: 'fetching' });
+    try {
+      const privateStories = await PrivateStory.fetchOwnList({
+        sort: '-createdAt',
+      });
+      const publicStories = await PublicStory.fetchOwnList({
+        sort: '-createdAt',
+      });
+      dispatch({ type: 'success', privateStories, publicStories });
+    } catch (error) {
+      dispatch({ type: 'error' });
+      // TODO show error message
+    }
   };
 
   const deleteStory = async (storyId: string) => {
-    if (!stories) return;
+    const stories =
+      tab === 'private' ? state.privateStories : state.publicStories;
+    if (!stories) {
+      return;
+    }
 
     // TODO nice confirm
     const result = confirm('Do you really want to delete this story?');
     if (!result) {
       return;
     }
-
     try {
       const index = stories.findIndex(
         (story: any) => story.attrs._id === storyId
@@ -56,10 +104,12 @@ export const StoryList = () => {
       }
       const story = stories[index];
       await story.destroy();
-
       stories.splice(index, 1);
-      setStories([...stories]);
-
+      dispatch({
+        type: 'success',
+        privateStories: tab === 'private' ? stories : state.privateStories,
+        publicStories: tab === 'public' ? stories : state.publicStories,
+      });
       // TODO nice notify
       alert('Story deleted successfully');
     } catch (error) {
@@ -76,36 +126,57 @@ export const StoryList = () => {
     fetchStories();
   }, []);
 
-  if (loading) {
-    // TODO nice loading
-    return <div>Loading ...</div>;
-  }
-
-  if (stories.length === 0) {
-    // TODO empty list state
-    return <div>No stories found</div>;
-  }
-
   return (
     <React.Fragment>
       <Tabs>
-        <Tab active={tab === 0} onClick={() => setTab(0)}>
-          Draft ({loading ? '...' : stories.length})
+        <Tab active={tab === 'private'} onClick={() => setTab('private')}>
+          Draft (
+          {state.status === 'fetching'
+            ? '...'
+            : state.privateStories && state.privateStories.length}
+          )
         </Tab>
-        <Tab active={tab === 1} onClick={() => setTab(1)}>
-          Published (5)
+        <Tab active={tab === 'public'} onClick={() => setTab('public')}>
+          Published (
+          {state.status === 'fetching'
+            ? '...'
+            : state.publicStories && state.publicStories.length}
+          )
         </Tab>
       </Tabs>
 
       <StoryListContainer>
-        {stories.map((story: any) => (
-          <StoryItem
-            key={story.attrs._id}
-            story={story}
-            onDelete={deleteStory}
-            onPublish={publishStory}
-          />
-        ))}
+        {/* TODO nice illustration */}
+        {tab === 'private' &&
+          state.privateStories &&
+          state.privateStories.length === 0 && <p>No private stories found</p>}
+
+        {tab === 'private' &&
+          state.privateStories &&
+          state.privateStories.map((story: any) => (
+            <StoryItem
+              key={story.attrs._id}
+              story={story}
+              onDelete={deleteStory}
+              onPublish={publishStory}
+            />
+          ))}
+
+        {/* TODO nice illustration */}
+        {tab === 'public' &&
+          state.publicStories &&
+          state.publicStories.length === 0 && <p>No public stories found</p>}
+
+        {tab === 'public' &&
+          state.publicStories &&
+          state.publicStories.map((story: any) => (
+            <StoryItem
+              key={story.attrs._id}
+              story={story}
+              onDelete={deleteStory}
+              onPublish={publishStory}
+            />
+          ))}
       </StoryListContainer>
     </React.Fragment>
   );

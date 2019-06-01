@@ -1,7 +1,7 @@
 import { Model } from 'radiks';
 
 class PublicStoryModel extends Model {
-  static className = 'PrivateStory';
+  static className = 'PublicStory';
 
   static schema = {
     title: {
