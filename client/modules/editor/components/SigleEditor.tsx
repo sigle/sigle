@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import styled from 'styled-components';
 import tw from 'tailwind.macro';
 import { SlateEditor } from './SlateEditor';
+import { SigleEditorOptions } from './SigleEditorOptions';
 
 const EditorTitle = styled.div`
   ${tw`text-2xl font-bold mb-4`};
@@ -16,6 +17,8 @@ interface Props {
   state: any;
   onChangeTitle: any;
   onChangeContent: any;
+  optionsOpen: boolean;
+  onChangeOptionsOpen: (open: boolean) => void;
 }
 
 export const SigleEditor = ({
@@ -23,6 +26,8 @@ export const SigleEditor = ({
   state,
   onChangeTitle,
   onChangeContent,
+  optionsOpen,
+  onChangeOptionsOpen,
 }: Props) => {
   console.log(story);
   const [title, setTitle] = useState(story.attrs.title);
@@ -42,6 +47,11 @@ export const SigleEditor = ({
         story={story}
         state={state}
         onChangeContent={onChangeContent}
+        onOpenOptions={() => onChangeOptionsOpen(true)}
+      />
+      <SigleEditorOptions
+        optionsOpen={optionsOpen}
+        onChangeOptionsOpen={onChangeOptionsOpen}
       />
     </React.Fragment>
   );

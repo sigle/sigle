@@ -41,6 +41,10 @@ const SlateToolbarActionContainer = styled.div`
   ${tw`flex items-center`};
 `;
 
+const SlateToolbarActionIcon = styled.div`
+  ${tw`p-2 -mr-2 flex items-center cursor-pointer text-primary`};
+`;
+
 const SlateToolbarActionMessage = styled.div`
   ${tw`text-grey-dark lg:text-sm`};
 `;
@@ -136,9 +140,15 @@ interface Props {
   story: any;
   state: any;
   onChangeContent: any;
+  onOpenOptions: () => void;
 }
 
-export const SlateEditor = ({ story, state, onChangeContent }: Props) => {
+export const SlateEditor = ({
+  story,
+  state,
+  onChangeContent,
+  onOpenOptions,
+}: Props) => {
   const editorRef = useRef<any>(null);
   const [value, setValue] = useState(
     story.attrs.content
@@ -438,12 +448,13 @@ export const SlateEditor = ({ story, state, onChangeContent }: Props) => {
           {state.status === 'success' && (
             <SlateToolbarActionMessage>Saved</SlateToolbarActionMessage>
           )}
+          <SlateToolbarActionIcon onClick={onOpenOptions}>
+            <MdSettings size={22} />
+          </SlateToolbarActionIcon>
         </SlateToolbarActionContainer>
       </SlateEditorToolbar>
 
       <EditorStyle>
-        {/*
-          // @ts-ignore */}
         <StyledEditor
           ref={editorRef}
           plugins={slatePlugins}

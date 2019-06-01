@@ -41,6 +41,7 @@
     "not op_mini all"
   ],
   "dependencies": {
+    "@reach/dialog": "0.2.8",
     "@reach/menu-button": "0.1.17",
     "@sentry/browser": "5.4.0",
     "@sentry/node": "5.4.0",
