@@ -12,6 +12,10 @@ class PrivateStoryModel extends Model {
       type: String,
       decrypted: false,
     },
+    excerpt: {
+      type: String,
+      decrypted: false,
+    },
   };
 }
 

@@ -50,6 +50,7 @@ export const SigleEditor = ({
         onOpenOptions={() => onChangeOptionsOpen(true)}
       />
       <SigleEditorOptions
+        story={story}
         optionsOpen={optionsOpen}
         onChangeOptionsOpen={onChangeOptionsOpen}
       />
