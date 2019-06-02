@@ -24,3 +24,5 @@ declare module 'slate-soft-break';
 
 // Remove once https://github.com/reach/reach-ui/pull/150 is merged
 declare module '@reach/menu-button';
+declare module '@reach/dialog';
+declare module '@reach/tabs';
