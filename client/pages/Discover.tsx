@@ -55,7 +55,7 @@ const StoryProfileName = styled.div`
   ${tw`text-sm`};
 `;
 
-const Story = () => (
+export const Story = () => (
   <StoryContainer>
     <StoryCover />
     <StoryContent>
