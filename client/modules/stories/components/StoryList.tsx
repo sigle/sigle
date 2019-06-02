@@ -25,6 +25,15 @@ const StoryListContainer = styled.div`
   ${tw`border-t border-solid border-grey`};
 `;
 
+export const EmptyListContainer = styled.div`
+  ${tw`flex flex-col items-center justify-center mt-8`};
+`;
+
+const EmptyListImage = styled.img`
+  ${tw`mb-4`};
+  width: 250px;
+`;
+
 type Action =
   | { type: 'fetching' }
   | { type: 'success'; privateStories: any; publicStories: any }
@@ -150,7 +159,12 @@ export const StoryList = () => {
         {/* TODO nice illustration */}
         {tab === 'private' &&
           state.privateStories &&
-          state.privateStories.length === 0 && <p>No private stories found</p>}
+          state.privateStories.length === 0 && (
+            <EmptyListContainer>
+              <EmptyListImage src="/static/images/three.png" alt="Empty list" />
+              <p>Shoot the "new story" button to start.</p>
+            </EmptyListContainer>
+          )}
 
         {tab === 'private' &&
           state.privateStories &&
@@ -166,7 +180,12 @@ export const StoryList = () => {
         {/* TODO nice illustration */}
         {tab === 'public' &&
           state.publicStories &&
-          state.publicStories.length === 0 && <p>No public stories found</p>}
+          state.publicStories.length === 0 && (
+            <EmptyListContainer>
+              <EmptyListImage src="/static/images/three.png" alt="Empty list" />
+              <p>Shoot the "new story" button to start.</p>
+            </EmptyListContainer>
+          )}
 
         {tab === 'public' &&
           state.publicStories &&
