@@ -40,20 +40,8 @@ export const MeRight = styled.div`
   }
 `;
 
-const MeProfile = styled.div`
-  ${tw`lg:flex lg:items-center mb-8`};
-
-  img {
-    ${tw`w-32 h-32 rounded-full mb-2 lg:mb-0 lg:mr-4`};
-  }
-
-  h2 {
-    ${tw`text-2xl font-bold`};
-  }
-
-  p {
-    ${tw`lg:text-sm`};
-  }
+const Title = styled.h2`
+  ${tw`text-2xl font-bold mb-4`};
 `;
 
 export const MeLeft = () => (
@@ -86,16 +74,7 @@ export const Me = () => (
       <MeContainer>
         <MeLeft />
         <MeRight>
-          <MeProfile>
-            <img src="https://source.unsplash.com/random/100x100" alt="TODO" />
-            <div>
-              <h2>John Doe</h2>
-              <p>
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam
-                quis accumsan arcu.
-              </p>
-            </div>
-          </MeProfile>
+          <Title>My Stories</Title>
 
           <StoryList />
         </MeRight>

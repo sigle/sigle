@@ -110,9 +110,9 @@ export const MobileMenu = ({
               <MobileMenuLink href="/me">My stories</MobileMenuLink>
             </MobileMenuListItem>
           )}
-          <MobileMenuListItem>
+          {/* <MobileMenuListItem>
             <MobileMenuLink href="#">How to use?</MobileMenuLink>
-          </MobileMenuListItem>
+          </MobileMenuListItem> */}
           {!user && (
             <MobileMenuListItem>
               <MobileMenuLink href="" onClick={onLogin}>

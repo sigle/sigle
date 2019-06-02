@@ -51,6 +51,10 @@ nextApp.prepare().then(async () => {
     return nextApp.render(req, res, '/editor', { storyId: req.params.id });
   });
 
+  expressApp.get('/me/settings', (req, res) => {
+    return nextApp.render(req, res, '/settings');
+  });
+
   expressApp.get('*', (req, res) => {
     return handle(req, res);
   });

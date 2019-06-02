@@ -12,24 +12,28 @@ export const Button = styled.button<ButtonProps>`
   border-radius: 0.6rem;
 
   ${props =>
-    props.color &&
     props.color === 'black' &&
     css`
       ${tw`bg-black text-white`};
     `}
 
   ${props =>
-    props.color &&
     props.color === 'primary' &&
     css`
       ${tw`bg-primary text-white`};
     `}
 
   ${props =>
-    props.variant &&
     props.variant === 'outline' &&
     css`
       ${tw`bg-transparent font-medium border border-black`};
+    `}
+
+  ${props =>
+    props.variant === 'outline' &&
+    props.color === 'primary' &&
+    css`
+      ${tw`bg-transparent border-primary text-primary`};
     `}
 
   ${props =>

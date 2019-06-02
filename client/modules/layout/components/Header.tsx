@@ -92,7 +92,8 @@ export const Header = () => {
         <HeaderSeparator />
 
         <HeaderLink href="/discover">Discover</HeaderLink>
-        <HeaderLink href="/b">How to use?</HeaderLink>
+        {/* TODO how to use */}
+        {/* <HeaderLink href="/b">How to use?</HeaderLink> */}
         {/* TODO nice loading */}
         {loading && <div>Loading ...</div>}
 
@@ -117,7 +118,7 @@ export const Header = () => {
               <MenuItem onSelect={() => Router.push('/me')}>
                 My stories
               </MenuItem>
-              <MenuItem onSelect={() => Router.push('/settings')}>
+              <MenuItem onSelect={() => Router.push('/me/settings')}>
                 Settings
               </MenuItem>
               <MenuItem onSelect={handleLogout}>Sign out</MenuItem>

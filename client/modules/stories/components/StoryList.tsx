@@ -128,6 +128,7 @@ export const StoryList = () => {
 
   return (
     <React.Fragment>
+      {/* TODO use @reach/tabs https://ui.reach.tech/tabs */}
       <Tabs>
         <Tab active={tab === 'private'} onClick={() => setTab('private')}>
           Draft (
