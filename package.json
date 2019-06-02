@@ -43,6 +43,7 @@
   "dependencies": {
     "@reach/dialog": "0.2.8",
     "@reach/menu-button": "0.1.17",
+    "@reach/tabs": "0.1.5",
     "@sentry/browser": "5.4.0",
     "@sentry/node": "5.4.0",
     "@tippy.js/react": "2.2.0",

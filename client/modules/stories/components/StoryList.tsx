@@ -1,25 +1,9 @@
 import React, { useState, useEffect, useReducer } from 'react';
-import styled, { css } from 'styled-components';
+import styled from 'styled-components';
 import tw from 'tailwind.macro';
+import { Tabs, Tab, TabList, TabPanels, TabPanel } from '../../../components';
 import { PrivateStory, PublicStory } from '../../../models';
 import { StoryItem } from './StoryItem';
-
-const Tabs = styled.div`
-  ${tw`flex mb-8`};
-`;
-
-const Tab = styled.div<{ active: boolean }>`
-  ${tw`cursor-pointer pb-1`};
-  &:first-child {
-    ${tw`mr-8`};
-  }
-
-  ${props =>
-    props.active &&
-    css`
-      ${tw`border-b border-solid border-black font-medium`};
-    `}
-`;
 
 const StoryListContainer = styled.div`
   ${tw`border-t border-solid border-grey`};
@@ -137,67 +121,85 @@ export const StoryList = () => {
 
   return (
     <React.Fragment>
-      {/* TODO use @reach/tabs https://ui.reach.tech/tabs */}
-      <Tabs>
-        <Tab active={tab === 'private'} onClick={() => setTab('private')}>
-          Draft (
-          {state.status === 'fetching'
-            ? '...'
-            : state.privateStories && state.privateStories.length}
-          )
-        </Tab>
-        <Tab active={tab === 'public'} onClick={() => setTab('public')}>
-          Published (
-          {state.status === 'fetching'
-            ? '...'
-            : state.publicStories && state.publicStories.length}
-          )
-        </Tab>
+      <Tabs
+        index={tab === 'private' ? 0 : 1}
+        onChange={(index: number) => setTab(index === 0 ? 'private' : 'public')}
+      >
+        <TabList>
+          <Tab>
+            Draft (
+            {state.status === 'fetching'
+              ? '...'
+              : state.privateStories && state.privateStories.length}
+            )
+          </Tab>
+          <Tab>
+            Published (
+            {state.status === 'fetching'
+              ? '...'
+              : state.publicStories && state.publicStories.length}
+            )
+          </Tab>
+        </TabList>
+
+        <TabPanels>
+          <TabPanel>
+            <StoryListContainer>
+              {/* TODO nice illustration */}
+              {tab === 'private' &&
+                state.privateStories &&
+                state.privateStories.length === 0 && (
+                  <EmptyListContainer>
+                    <EmptyListImage
+                      src="/static/images/three.png"
+                      alt="Empty list"
+                    />
+                    <p>Shoot the "new story" button to start.</p>
+                  </EmptyListContainer>
+                )}
+
+              {tab === 'private' &&
+                state.privateStories &&
+                state.privateStories.map((story: any) => (
+                  <StoryItem
+                    key={story.attrs._id}
+                    story={story}
+                    onDelete={deleteStory}
+                    onPublish={publishStory}
+                  />
+                ))}
+            </StoryListContainer>
+          </TabPanel>
+
+          <TabPanel>
+            <StoryListContainer>
+              {/* TODO nice illustration */}
+              {tab === 'public' &&
+                state.publicStories &&
+                state.publicStories.length === 0 && (
+                  <EmptyListContainer>
+                    <EmptyListImage
+                      src="/static/images/three.png"
+                      alt="Empty list"
+                    />
+                    <p>Shoot the "new story" button to start.</p>
+                  </EmptyListContainer>
+                )}
+
+              {tab === 'public' &&
+                state.publicStories &&
+                state.publicStories.map((story: any) => (
+                  <StoryItem
+                    key={story.attrs._id}
+                    story={story}
+                    onDelete={deleteStory}
+                    onPublish={publishStory}
+                  />
+                ))}
+            </StoryListContainer>
+          </TabPanel>
+        </TabPanels>
       </Tabs>
-
-      <StoryListContainer>
-        {/* TODO nice illustration */}
-        {tab === 'private' &&
-          state.privateStories &&
-          state.privateStories.length === 0 && (
-            <EmptyListContainer>
-              <EmptyListImage src="/static/images/three.png" alt="Empty list" />
-              <p>Shoot the "new story" button to start.</p>
-            </EmptyListContainer>
-          )}
-
-        {tab === 'private' &&
-          state.privateStories &&
-          state.privateStories.map((story: any) => (
-            <StoryItem
-              key={story.attrs._id}
-              story={story}
-              onDelete={deleteStory}
-              onPublish={publishStory}
-            />
-          ))}
-
-        {/* TODO nice illustration */}
-        {tab === 'public' &&
-          state.publicStories &&
-          state.publicStories.length === 0 && (
-            <EmptyListContainer>
-              <EmptyListImage src="/static/images/three.png" alt="Empty list" />
-              <p>Shoot the "new story" button to start.</p>
-            </EmptyListContainer>
-          )}
-
-        {tab === 'public' &&
-          state.publicStories &&
-          state.publicStories.map((story: any) => (
-            <StoryItem
-              key={story.attrs._id}
-              story={story}
-              onDelete={deleteStory}
-              onPublish={publishStory}
-            />
-          ))}
-      </StoryListContainer>
     </React.Fragment>
   );
 };

@@ -1,18 +1,20 @@
 import React from 'react';
 import styled from 'styled-components';
 import tw from 'tailwind.macro';
-import { config } from '../config';
-import { Container, Tabs, Tab } from '../components';
+import {
+  Container,
+  Tabs,
+  Tab,
+  TabList,
+  TabPanels,
+  TabPanel,
+} from '../components';
 import { Header } from '../modules/layout/components/Header';
 import { Footer } from '../modules/layout/components/Footer';
 import { Story } from './Discover';
 
 const ProfileContainer = styled(Container)`
   ${tw`py-6`};
-`;
-
-const StyledTabs = styled(Tabs)`
-  ${tw`mb-8`};
 `;
 
 const ProfileImage = styled.img`
@@ -51,16 +53,21 @@ export const Profile = () => {
           </div>
         </ProfileHeader>
 
-        <StyledTabs>
-          <Tab active>Published articles (5)</Tab>
-        </StyledTabs>
-
-        <Story />
-        <Story />
-        <Story />
-        <Story />
-        <Story />
-        <Story />
+        <Tabs>
+          <TabList>
+            <Tab>Published articles (5)</Tab>
+          </TabList>
+          <TabPanels>
+            <TabPanel>
+              <Story />
+              <Story />
+              <Story />
+              <Story />
+              <Story />
+              <Story />
+            </TabPanel>
+          </TabPanels>
+        </Tabs>
       </ProfileContainer>
       <Footer />
     </React.Fragment>

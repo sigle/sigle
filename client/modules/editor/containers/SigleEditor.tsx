@@ -32,7 +32,7 @@ const reducer = (state: State, action: Action): State => {
 export const SigleEditor = ({ storyId }: Props) => {
   // TODO error state
   const [loading, setLoading] = useState<boolean>(true);
-  const [optionsOpen, setOptionsOpen] = useState<boolean>(true);
+  const [optionsOpen, setOptionsOpen] = useState<boolean>(false);
   const [story, setStory] = useState<any | undefined>();
   const [state, dispatch] = useReducer(reducer, initialState);
   const timeoutId = useRef<number | undefined>(undefined);

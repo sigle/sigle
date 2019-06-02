@@ -1,19 +1,19 @@
-import styled, { css } from 'styled-components';
+import styled from 'styled-components';
 import tw from 'tailwind.macro';
+import '@reach/tabs/styles.css';
+import { Tabs, TabList, Tab, TabPanels, TabPanel } from '@reach/tabs';
 
-export const Tabs = styled.div`
-  ${tw`flex`};
-`;
-
-export const Tab = styled.div<{ active: boolean }>`
-  ${tw`cursor-pointer pb-1`};
-  &:first-child {
-    ${tw`mr-8`};
+const StyledTabs = styled(Tabs)`
+  [data-reach-tab-list] {
+    ${tw`bg-transparent mb-8`};
   }
 
-  ${props =>
-    props.active &&
-    css`
-      ${tw`border-b border-solid border-black font-medium`};
-    `}
+  [data-reach-tab] {
+    ${tw`font-medium`};
+  }
+  [data-reach-tab][data-selected] {
+    ${tw`border-0 border-b border-solid border-black`};
+  }
 `;
+
+export { StyledTabs as Tabs, Tab, TabList, TabPanels, TabPanel };
