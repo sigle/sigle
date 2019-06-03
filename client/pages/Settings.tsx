@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import styled, { css } from 'styled-components';
 import tw from 'tailwind.macro';
 import { MdLock } from 'react-icons/md';
@@ -7,6 +7,8 @@ import { UserContext } from '../context/UserContext';
 import { Container, Link, Button } from '../components';
 import { Header } from '../modules/layout/components/Header';
 import { Footer } from '../modules/layout/components/Footer';
+import { SigleUser } from '../models';
+import { User } from '../types';
 
 export const MeContainer = styled.div`
   ${tw`flex flex-wrap`};
@@ -126,6 +128,34 @@ export const MeLeft = () => (
 // TODO protect this page, user needs to be connected
 export const Settings = () => {
   const { user, loading } = useContext(UserContext);
+  const [saveLoading, setSaveLoading] = useState<boolean>(false);
+  const [sigleUser, setSigleUser] = useState<any>();
+  // TODO change this really ugly hack
+  const [fakeSigleUser, setFakeSigleUser] = useState<any>();
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setSaveLoading(true);
+    console.log(sigleUser);
+    // TODO try catch
+    await sigleUser.save();
+    setSaveLoading(false);
+  };
+
+  const fetchUser = async (blockstackUser: User) => {
+    // TODO try catch
+    // TODO continue to show loading while fetching this
+    const sigleUserResponse = new SigleUser({ _id: blockstackUser.username });
+    await sigleUserResponse.fetch();
+    console.log(sigleUserResponse);
+    setSigleUser(sigleUserResponse);
+  };
+
+  useEffect(() => {
+    if (!loading && user) {
+      fetchUser(user);
+    }
+  }, [loading]);
 
   if (loading) {
     // TODO nice loading
@@ -133,6 +163,11 @@ export const Settings = () => {
   }
 
   if (!user) {
+    // TODO protect page
+    return null;
+  }
+
+  if (!sigleUser) {
     // TODO protect page
     return null;
   }
@@ -150,7 +185,7 @@ export const Settings = () => {
                 alt="TODO"
               />
               <div>
-                <h2>John Doe</h2>
+                <h2>{sigleUser.attrs.name || sigleUser.attrs.username}</h2>
                 <p>
                   Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam
                   quis accumsan arcu.
@@ -158,14 +193,22 @@ export const Settings = () => {
               </div>
             </MeProfile>
 
-            <form>
+            <form onSubmit={handleSubmit}>
               <FormRow>
                 <FormRowCol>
-                  <FormLabel>Pseudonym</FormLabel>
+                  <FormLabel>Name</FormLabel>
                   <FormInput
-                    id="pseudonym"
+                    id="name"
                     type="text"
                     placeholder="Julia Doe"
+                    value={sigleUser.attrs.name}
+                    onChange={e => {
+                      const update = {
+                        name: e.target.value,
+                      };
+                      sigleUser.update(update);
+                      setFakeSigleUser(update);
+                    }}
                   />
                 </FormRowCol>
                 <FormRowCol center={true}>
@@ -186,7 +229,7 @@ export const Settings = () => {
                     Profile URL <FormLabelIcon size={18} />
                   </FormLabel>
                   <FormInput
-                    id="pseudonym"
+                    id="profile-url"
                     type="text"
                     value={`${process.env.APP_URL}/@${user.username}`}
                     disabled
@@ -245,7 +288,9 @@ export const Settings = () => {
 
               <FormRow>
                 <FormRowCol>
-                  <Button color="primary">Save</Button>
+                  <Button color="primary" disabled={saveLoading}>
+                    {saveLoading ? 'Saving...' : 'Save'}
+                  </Button>
                 </FormRowCol>
               </FormRow>
             </form>
