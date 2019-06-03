@@ -237,8 +237,6 @@ export const Settings = () => {
                     You will access your profile page by following this URL.
                     <br />
                     This URL is linked to your Blockstack id.
-                    <br />
-                    To change it, you'll have to create a new profile.
                   </FormText>
                 </FormRowCol>
               </FormRow>
