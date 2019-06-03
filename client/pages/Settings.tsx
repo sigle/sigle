@@ -136,7 +136,6 @@ export const Settings = () => {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setSaveLoading(true);
-    console.log(sigleUser);
     // TODO try catch
     await sigleUser.save();
     setSaveLoading(false);
@@ -186,10 +185,7 @@ export const Settings = () => {
               />
               <div>
                 <h2>{sigleUser.attrs.name || sigleUser.attrs.username}</h2>
-                <p>
-                  Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam
-                  quis accumsan arcu.
-                </p>
+                <p>{sigleUser.attrs.description}</p>
               </div>
             </MeProfile>
 
@@ -201,6 +197,7 @@ export const Settings = () => {
                     id="name"
                     type="text"
                     placeholder="Julia Doe"
+                    // TODO max length validation
                     value={sigleUser.attrs.name}
                     onChange={e => {
                       const update = {
@@ -276,6 +273,14 @@ export const Settings = () => {
                     id="description"
                     placeholder="Tell us about yourself"
                     maxLength={200}
+                    value={sigleUser.attrs.description}
+                    onChange={e => {
+                      const update = {
+                        description: e.target.value,
+                      };
+                      sigleUser.update(update);
+                      setFakeSigleUser(update);
+                    }}
                   />
                 </FormRowCol>
                 <FormRowCol center={true}>

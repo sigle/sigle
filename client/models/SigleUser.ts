@@ -7,6 +7,10 @@ class SigleUserModel extends User {
       type: String,
       decrypted: true,
     },
+    description: {
+      type: String,
+      decrypted: true,
+    },
   };
 }
 
