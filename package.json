@@ -61,6 +61,7 @@
     "radiks-server": "^0.1.11",
     "react": "16.8.6",
     "react-dom": "16.8.6",
+    "react-dropzone": "10.1.5",
     "react-helmet": "5.2.1",
     "react-icons": "3.7.0",
     "react-router-dom": "5.0.0",

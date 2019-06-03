@@ -1,7 +1,9 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState, useCallback } from 'react';
 import styled, { css } from 'styled-components';
 import tw from 'tailwind.macro';
 import { MdLock } from 'react-icons/md';
+import { useDropzone } from 'react-dropzone';
+import { getConfig } from 'radiks';
 import { config } from '../config';
 import { UserContext } from '../context/UserContext';
 import { Container, Link, Button } from '../components';
@@ -133,12 +135,45 @@ export const Settings = () => {
   // TODO change this really ugly hack
   const [fakeSigleUser, setFakeSigleUser] = useState<any>();
 
+  // Part to handle the file upload
+  const [file, setFile] = useState();
+  const onDrop = useCallback(acceptedFiles => {
+    const file = acceptedFiles[0];
+    if (file) {
+      setFile(
+        Object.assign(file, {
+          // Create a preview so we can display it
+          preview: URL.createObjectURL(file),
+        })
+      );
+    }
+  }, []);
+  const { getRootProps, getInputProps } = useDropzone({
+    onDrop,
+    accept: 'image/jpeg, image/png',
+    multiple: false,
+  });
+
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setSaveLoading(true);
     // TODO try catch
     await sigleUser.save();
+
+    // TODO upload image if any
+    // TODO need to crop the image
+    if (file) {
+      const { userSession } = getConfig();
+      const now = new Date().getTime();
+      const name = `photos/${sigleUser.attrs.username}/${now}-${file.name}`;
+      const url = await userSession.putFile(name, file, {
+        encrypt: false,
+        contentType: file.type,
+      });
+      // TODO do something with the file url
+    }
     setSaveLoading(false);
+    setFile(undefined);
   };
 
   const fetchUser = async (blockstackUser: User) => {
@@ -171,6 +206,10 @@ export const Settings = () => {
     return null;
   }
 
+  const userImage = file
+    ? file.preview
+    : 'https://source.unsplash.com/random/100x100';
+
   return (
     <React.Fragment>
       <Header />
@@ -179,10 +218,7 @@ export const Settings = () => {
           <MeLeft />
           <MeRight>
             <MeProfile>
-              <img
-                src="https://source.unsplash.com/random/100x100"
-                alt="TODO"
-              />
+              <img src={userImage} alt="TODO" />
               <div>
                 <h2>{sigleUser.attrs.name || sigleUser.attrs.username}</h2>
                 <p>{sigleUser.attrs.description}</p>
@@ -244,12 +280,9 @@ export const Settings = () => {
               <FormRow>
                 <FormRowCol>
                   <FormLabel>Profile picture</FormLabel>
-
-                  <div>
-                    <FormImage
-                      src="https://source.unsplash.com/random/100x100"
-                      alt="TODO"
-                    />
+                  <div {...getRootProps()}>
+                    <FormImage src={userImage} alt="Profile picture" />
+                    <input {...getInputProps()} />
                     <Button variant="outline" color="primary">
                       Change
                     </Button>
@@ -257,9 +290,9 @@ export const Settings = () => {
                 </FormRowCol>
                 <FormRowCol center={true}>
                   <FormText>
-                    This picture will be resized to 45px by 45px.
+                    This picture will be resized to 200px by 200px.
                     <br />
-                    Supported image types are JPEG, PNG, GIF, and ICO.
+                    Supported image types are JPEG, and PNG.
                   </FormText>
                 </FormRowCol>
               </FormRow>
