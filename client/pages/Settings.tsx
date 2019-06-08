@@ -11,6 +11,7 @@ import { Header } from '../modules/layout/components/Header';
 import { Footer } from '../modules/layout/components/Footer';
 import { SigleUser } from '../models';
 import { User } from '../types';
+import { defaultUserImage } from '../utils';
 
 const MeProfile = styled.div`
   ${tw`lg:flex lg:items-center mb-8`};
@@ -103,20 +104,21 @@ export const Settings = () => {
     e.preventDefault();
     setSaveLoading(true);
     // TODO try catch
-    await sigleUser.save();
-
-    // TODO upload image if any
     // TODO need to crop the image
     if (file) {
       const { userSession } = getConfig();
       const now = new Date().getTime();
       const name = `photos/${sigleUser.attrs.username}/${now}-${file.name}`;
-      const url = await userSession.putFile(name, file, {
+      const imageUrl = await userSession.putFile(name, file, {
         encrypt: false,
         contentType: file.type,
       });
-      // TODO do something with the file url
+      sigleUser.update({
+        imageUrl,
+      });
     }
+
+    await sigleUser.save();
     setSaveLoading(false);
     setFile(undefined);
   };
@@ -153,7 +155,9 @@ export const Settings = () => {
 
   const userImage = file
     ? file.preview
-    : 'https://source.unsplash.com/random/100x100';
+    : sigleUser.attrs.imageUrl
+    ? sigleUser.attrs.imageUrl
+    : defaultUserImage(sigleUser.attrs.username, 130);
 
   return (
     <React.Fragment>
@@ -161,7 +165,7 @@ export const Settings = () => {
       <Container>
         <MeContainer>
           <MeProfile>
-            <img src={userImage} alt="TODO" />
+            <img src={userImage} alt={sigleUser.attrs.username} />
             <div>
               <h2>{sigleUser.attrs.name || sigleUser.attrs.username}</h2>
               <p>{sigleUser.attrs.description}</p>

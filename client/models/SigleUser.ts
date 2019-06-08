@@ -11,6 +11,10 @@ class SigleUserModel extends User {
       type: String,
       decrypted: true,
     },
+    imageUrl: {
+      type: String,
+      decrypted: true,
+    },
   };
 }
 
