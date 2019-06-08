@@ -55,6 +55,10 @@ nextApp.prepare().then(async () => {
     return nextApp.render(req, res, '/settings');
   });
 
+  expressApp.get('/me/stats', (req, res) => {
+    return nextApp.render(req, res, '/stats');
+  });
+
   expressApp.get('*', (req, res) => {
     return handle(req, res);
   });

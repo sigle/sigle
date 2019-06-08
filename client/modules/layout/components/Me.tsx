@@ -42,6 +42,7 @@ interface Props extends WithRouterProps {
   children: React.ReactNode;
 }
 
+// TODO protect this page, user needs to be connected
 export const Me = withRouter(({ children, router }: Props) => {
   const route = router!.pathname;
 
