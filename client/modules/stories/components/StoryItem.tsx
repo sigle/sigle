@@ -110,11 +110,7 @@ export const StoryItem = ({ story, onDelete, onPublish }: Props) => {
           </Menu>
         </div>
       </div>
-      <StoryItemText>
-        TODO Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam quis
-        accumsan arcu. Sed diam tellus, sollicitudin quis leo consequat,
-        efficitur mattis ex. Sed sit amet volutpat ipsum, ut consequat mauris.
-      </StoryItemText>
+      <StoryItemText>{story.attrs.excerpt}</StoryItemText>
     </StoryItemContainer>
   );
 };

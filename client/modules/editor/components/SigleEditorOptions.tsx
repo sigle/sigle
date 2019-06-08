@@ -1,9 +1,10 @@
-import React from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 import tw from 'tailwind.macro';
 import '@reach/dialog/styles.css';
 import { DialogOverlay, DialogContent } from '@reach/dialog';
 import { MdClose, MdAddAPhoto } from 'react-icons/md';
+import { Button } from '../../../components';
 
 const StyledDialogOverlay = styled(DialogOverlay)`
   z-index: 11;
@@ -45,6 +46,10 @@ const FormHelper = styled.p`
   ${tw`text-sm text-grey-darker`};
 `;
 
+const FormButton = styled(Button)`
+  ${tw`mt-4`};
+`;
+
 const ImageEmpty = styled.div`
   ${tw`flex items-center justify-center bg-grey py-16 mb-4 cursor-pointer rounded-lg relative border border-solid border-grey`};
 
@@ -80,49 +85,80 @@ export const SigleEditorOptions = ({
   story,
   optionsOpen,
   onChangeOptionsOpen,
-}: Props) => (
-  <StyledDialogOverlay
-    isOpen={optionsOpen}
-    onDismiss={() => onChangeOptionsOpen(false)}
-  >
-    <StyledDialogContent>
-      <TitleContainer>
-        <Title>Settings</Title>
-        <CloseButton onClick={() => onChangeOptionsOpen(false)}>
-          <MdClose />
-        </CloseButton>
-      </TitleContainer>
+}: Props) => {
+  const [saveLoading, setSaveLoading] = useState<boolean>(false);
+  // TODO change this really ugly hack
+  const [fakeStory, setFakeStory] = useState<any>();
 
-      <FormRow>
-        <ImageEmpty>
-          <span>Upload cover image</span>
-          <ImageEmptyIcon>
-            <MdAddAPhoto />
-          </ImageEmptyIcon>
-        </ImageEmpty>
-      </FormRow>
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setSaveLoading(true);
+    // TODO try catch
+    await story.save();
+    setSaveLoading(false);
+  };
+  return (
+    <StyledDialogOverlay
+      isOpen={optionsOpen}
+      onDismiss={() => onChangeOptionsOpen(false)}
+    >
+      <StyledDialogContent>
+        <TitleContainer>
+          <Title>Settings</Title>
+          <CloseButton onClick={() => onChangeOptionsOpen(false)}>
+            <MdClose />
+          </CloseButton>
+        </TitleContainer>
 
-      <FormRow>
-        <FormLabel>Excerpt</FormLabel>
-        <FormTextarea value={story.excerpt} rows={3} />
-      </FormRow>
+        <form onSubmit={handleSubmit}>
+          <FormRow>
+            <ImageEmpty>
+              <span>Upload cover image</span>
+              <ImageEmptyIcon>
+                <MdAddAPhoto />
+              </ImageEmptyIcon>
+            </ImageEmpty>
+          </FormRow>
 
-      <FormRow>
-        <FormLabel>Meta title</FormLabel>
-        <FormInput />
-        <FormHelper>Recommended: 70 characters.</FormHelper>
-      </FormRow>
+          <FormRow>
+            <FormLabel>Excerpt</FormLabel>
+            <FormTextarea
+              value={story.attrs.excerpt}
+              rows={3}
+              onChange={e => {
+                const update = {
+                  excerpt: e.target.value,
+                };
+                story.update(update);
+                setFakeStory(update);
+              }}
+            />
+          </FormRow>
 
-      <FormRow>
-        <FormLabel>Meta description</FormLabel>
-        <FormTextarea value={story.excerpt} rows={3} />
-        <FormHelper>Recommended: 156 characters.</FormHelper>
-      </FormRow>
+          <FormRow>
+            <FormLabel>Meta title</FormLabel>
+            <FormInput />
+            <FormHelper>Recommended: 70 characters.</FormHelper>
+          </FormRow>
 
-      <FormRow>
-        <MetaTitlePreview>Meta title</MetaTitlePreview>
-        <MetaDescriptionPreview>https://sigle.io/toto</MetaDescriptionPreview>
-      </FormRow>
-    </StyledDialogContent>
-  </StyledDialogOverlay>
-);
+          <FormRow>
+            <FormLabel>Meta description</FormLabel>
+            <FormTextarea rows={3} />
+            <FormHelper>Recommended: 156 characters.</FormHelper>
+          </FormRow>
+
+          <FormRow>
+            <MetaTitlePreview></MetaTitlePreview>
+            <MetaDescriptionPreview>
+              https://sigle.io/toto
+            </MetaDescriptionPreview>
+          </FormRow>
+
+          <FormButton color="primary" disabled={saveLoading}>
+            {saveLoading ? 'Saving...' : 'Save'}
+          </FormButton>
+        </form>
+      </StyledDialogContent>
+    </StyledDialogOverlay>
+  );
+};
