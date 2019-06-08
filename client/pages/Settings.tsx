@@ -119,6 +119,8 @@ export const Settings = () => {
     }
 
     await sigleUser.save();
+
+    // TODO if new picture delete the old one ?
     setSaveLoading(false);
     setFile(undefined);
   };
