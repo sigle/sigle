@@ -58,6 +58,7 @@ interface MobileMenuProps {
   open: boolean;
   // TODO type
   user: any;
+  userImage?: string;
   onClose: () => void;
   onLogin: () => void;
 }
@@ -65,6 +66,7 @@ interface MobileMenuProps {
 export const MobileMenu = ({
   open,
   user,
+  userImage,
   onClose,
   onLogin,
 }: MobileMenuProps) => {
@@ -94,12 +96,7 @@ export const MobileMenu = ({
       <Container ref={nodeRef} open={open}>
         <MobileMenuLogo src="/static/images/logo.png" alt="Sigle logo" />
 
-        {user && (
-          <MobileMenuImage
-            alt="Profile image of TODO"
-            src="https://source.unsplash.com/random/100x100"
-          />
-        )}
+        {user && <MobileMenuImage alt={user.username} src={userImage} />}
 
         <ul>
           <MobileMenuListItem>

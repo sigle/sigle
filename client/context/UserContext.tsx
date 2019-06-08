@@ -1,9 +1,11 @@
 import React, { createContext, useState, useEffect } from 'react';
 import { getConfig, User as RadiksUser } from 'radiks';
 import { User } from '../types';
+import { SigleUser } from '../models';
 
 export const UserContext = createContext<{
   user?: User;
+  sigleUser?: any;
   loading?: boolean;
   setUser?: React.Dispatch<React.SetStateAction<User | undefined>>;
 }>({});
@@ -16,6 +18,7 @@ export const UserContextProvider = ({ children }: Props) => {
   // TODO useReducer
   const [loading, setLoading] = useState<boolean>(true);
   const [user, setUser] = useState<User | undefined>(undefined);
+  const [sigleUser, setSigleUser] = useState<any>(undefined);
 
   const fetchUser = async () => {
     const { userSession } = getConfig();
@@ -25,7 +28,10 @@ export const UserContextProvider = ({ children }: Props) => {
     }
     if (userSession.isUserSignedIn()) {
       const user = await userSession.loadUserData();
+      const sigleUserResponse = new SigleUser({ _id: user.username });
+      await sigleUserResponse.fetch();
       setUser(user);
+      setSigleUser(sigleUserResponse);
     }
     setLoading(false);
   };
@@ -35,7 +41,7 @@ export const UserContextProvider = ({ children }: Props) => {
   }, []);
 
   return (
-    <UserContext.Provider value={{ user, loading, setUser }}>
+    <UserContext.Provider value={{ user, sigleUser, loading, setUser }}>
       {children}
     </UserContext.Provider>
   );

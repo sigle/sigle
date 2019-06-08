@@ -16,6 +16,7 @@ import {
 import { MobileMenu } from './MobileMenu';
 import { UserContext } from '../../../context/UserContext';
 import { PrivateStory } from '../../../models';
+import { defaultUserImage } from '../../../utils';
 
 const HeaderContainer = styled.div`
   ${tw`py-3 flex items-center`};
@@ -52,7 +53,7 @@ const HeaderUserPhoto = styled.img`
 
 export const Header = () => {
   const [menuOpen, setMenuOpen] = useState<boolean>(false);
-  const { user, loading } = useContext(UserContext);
+  const { user, sigleUser, loading } = useContext(UserContext);
 
   const handleLogin = () => {
     const { userSession } = getConfig();
@@ -74,6 +75,12 @@ export const Header = () => {
     Router.push(`/me/stories/${privateStory._id}`);
   };
 
+  const userImage = sigleUser
+    ? sigleUser.attrs.imageUrl
+      ? sigleUser.attrs.imageUrl
+      : defaultUserImage(sigleUser.attrs.username, 32)
+    : null;
+
   return (
     <Container>
       <MobileMenu
@@ -81,6 +88,7 @@ export const Header = () => {
         onClose={() => setMenuOpen(false)}
         onLogin={handleLogin}
         user={user}
+        userImage={userImage}
       />
       <HeaderContainer>
         <HeaderIcon size={30} onClick={() => setMenuOpen(true)} />
@@ -112,7 +120,7 @@ export const Header = () => {
         {!loading && user && (
           <Menu>
             <MenuButton>
-              <HeaderUserPhoto src="https://source.unsplash.com/random/100x100" />
+              <HeaderUserPhoto src={userImage} alt={user.username} />
             </MenuButton>
             <MenuList>
               <MenuItem onSelect={() => Router.push('/me')}>
