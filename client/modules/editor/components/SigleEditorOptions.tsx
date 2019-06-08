@@ -68,11 +68,18 @@ const MetaTitlePreview = styled.div`
   color: #1a0dab;
 `;
 
-const MetaDescriptionPreview = styled.div`
+const MetaUrlPreview = styled.div`
   font-size: 14px;
   padding-top: 1px;
   line-height: 1.43;
   color: #006621;
+`;
+
+const MetaDescriptionPreview = styled.div`
+  font-size: 14px;
+  line-height: 1.54;
+  word-wrap: break-word;
+  color: #545454;
 `;
 
 interface Props {
@@ -123,7 +130,7 @@ export const SigleEditorOptions = ({
           <FormRow>
             <FormLabel>Excerpt</FormLabel>
             <FormTextarea
-              value={story.attrs.excerpt}
+              value={story.attrs.excerpt || ''}
               rows={3}
               onChange={e => {
                 const update = {
@@ -137,20 +144,42 @@ export const SigleEditorOptions = ({
 
           <FormRow>
             <FormLabel>Meta title</FormLabel>
-            <FormInput />
+            <FormInput
+              value={story.attrs.metaTitle || ''}
+              onChange={e => {
+                const update = {
+                  metaTitle: e.target.value,
+                };
+                story.update(update);
+                setFakeStory(update);
+              }}
+            />
             <FormHelper>Recommended: 70 characters.</FormHelper>
           </FormRow>
 
           <FormRow>
             <FormLabel>Meta description</FormLabel>
-            <FormTextarea rows={3} />
+            <FormTextarea
+              rows={3}
+              value={story.attrs.metaDescription || ''}
+              onChange={e => {
+                const update = {
+                  metaDescription: e.target.value,
+                };
+                story.update(update);
+                setFakeStory(update);
+              }}
+            />
             <FormHelper>Recommended: 156 characters.</FormHelper>
           </FormRow>
 
           <FormRow>
-            <MetaTitlePreview></MetaTitlePreview>
+            <MetaTitlePreview>
+              {story.attrs.metaTitle || story.attrs.title}
+            </MetaTitlePreview>
+            <MetaUrlPreview>https://sigle.io/toto</MetaUrlPreview>
             <MetaDescriptionPreview>
-              https://sigle.io/toto
+              {story.attrs.metaDescription || story.attrs.excerpt}
             </MetaDescriptionPreview>
           </FormRow>
 
