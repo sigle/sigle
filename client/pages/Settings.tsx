@@ -130,7 +130,6 @@ export const Settings = () => {
     // TODO continue to show loading while fetching this
     const sigleUserResponse = new SigleUser({ _id: blockstackUser.username });
     await sigleUserResponse.fetch();
-    console.log(sigleUserResponse);
     setSigleUser(sigleUserResponse);
   };
 
