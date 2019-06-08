@@ -88,6 +88,7 @@ interface Props {
   onChangeOptionsOpen: (open: boolean) => void;
 }
 
+// TODO if close the modal with changes unsaved warm the user
 export const SigleEditorOptions = ({
   story,
   optionsOpen,
