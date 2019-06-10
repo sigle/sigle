@@ -24,7 +24,7 @@ export const Editor = (props: Props) => {
     <React.Fragment>
       <Header />
       <Container>
-        <StyledLink href="/">
+        <StyledLink href="/me">
           <StyledArrowBack /> Back to my stories
         </StyledLink>
         <SigleEditor storyId={props.storyId} />
