@@ -16,6 +16,14 @@ class PublicStoryModel extends Model {
       type: String,
       decrypted: true,
     },
+    metaTitle: {
+      type: String,
+      decrypted: true,
+    },
+    metaDescription: {
+      type: String,
+      decrypted: true,
+    },
   };
 }
 
