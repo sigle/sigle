@@ -4,9 +4,16 @@ import tw from 'tailwind.macro';
 import { Button, Container } from '../components';
 import { Header } from '../modules/layout/components/Header';
 import { Footer } from '../modules/layout/components/Footer';
+import { config } from '../config';
 
 const Hero = styled.div`
-  background-color: #fcf8f3;
+  ${tw`bg-grey-light`};
+
+  @media (min-width: ${config.breakpoints.lg}px) {
+    background-image url("/static/images/logo_landing.png");
+    background-size: contain;
+    background-repeat: no-repeat;
+  }
 `;
 
 const ImageColumnContainer = styled.div<{ inverse?: boolean }>`
@@ -106,8 +113,7 @@ const FeaturesContainer = styled.div`
 const SectionScreens = styled.section``;
 
 const SectionEnjoy = styled.section`
-  ${tw`pt-16 pb-16`};
-  background-color: #fcf8f3;
+  ${tw`pt-16 pb-16 bg-grey-light`};
 
   img {
     width: 320px;
