@@ -36,8 +36,9 @@ const MobileMenuLink = styled(Link)`
 
 interface MobileMenuProps {
   open: boolean;
-  // TODO type
-  user: any;
+  user?: {
+    username: string;
+  };
   userImage?: string;
   onClose: () => void;
   onLogin: () => void;

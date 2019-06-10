@@ -1,9 +1,10 @@
 import React, { useRef, useState } from 'react';
 import styled from 'styled-components';
 import tw from 'tailwind.macro';
-import { Editor } from 'slate-react';
+import { Editor, RenderBlockProps, RenderMarkProps } from 'slate-react';
 import SoftBreak from 'slate-soft-break';
 import { Block, Value } from 'slate';
+import { IconType } from 'react-icons';
 import {
   MdFormatBold,
   MdFormatItalic,
@@ -205,7 +206,9 @@ export const SlateEditor = ({
     editor.unwrapInline('link');
   };
 
-  const onClickImage = (event: any) => {
+  const onClickImage = (
+    event: React.MouseEvent<HTMLButtonElement, MouseEvent>
+  ) => {
     event.preventDefault();
     const src = window.prompt('Enter the URL of the image:');
     if (!src) {
@@ -214,7 +217,9 @@ export const SlateEditor = ({
     editorRef.current.command(insertImage, src);
   };
 
-  const onClickLink = (event: any) => {
+  const onClickLink = (
+    event: React.MouseEvent<HTMLButtonElement, MouseEvent>
+  ) => {
     event.preventDefault();
 
     const editor = editorRef.current;
@@ -250,12 +255,18 @@ export const SlateEditor = ({
     }
   };
 
-  const onClickMark = (event: any, type: string) => {
+  const onClickMark = (
+    event: React.MouseEvent<HTMLButtonElement, MouseEvent>,
+    type: string
+  ) => {
     event.preventDefault();
     editorRef.current.toggleMark(type);
   };
 
-  const onClickBlock = (event: any, type: string) => {
+  const onClickBlock = (
+    event: React.MouseEvent<HTMLButtonElement, MouseEvent>,
+    type: string
+  ) => {
     event.preventDefault();
 
     const editor = editorRef.current;
@@ -329,7 +340,7 @@ export const SlateEditor = ({
   /**
    * Render a mark-toggling toolbar button.
    */
-  const renderMarkButton = (type: string, Icon: any) => {
+  const renderMarkButton = (type: string, Icon: IconType) => {
     const isActive = hasMark(type);
 
     return (
@@ -342,7 +353,7 @@ export const SlateEditor = ({
   /**
    * Render a block-toggling toolbar button.
    */
-  const renderBlockButton = (type: string, Icon: any) => {
+  const renderBlockButton = (type: string, Icon: IconType) => {
     let isActive = hasBlock(type);
 
     if (['numbered-list', 'bulleted-list'].includes(type)) {
@@ -367,7 +378,7 @@ export const SlateEditor = ({
   /**
    * Render a Slate block.
    */
-  const renderBlock = (props: any, _: any, next: any) => {
+  const renderBlock = (props: RenderBlockProps, _: any, next: () => any) => {
     const { attributes, children, node, isFocused } = props;
 
     switch (node.type) {
@@ -406,7 +417,7 @@ export const SlateEditor = ({
   /**
    * Render a Slate mark.
    */
-  const renderMark = (props: any, _: any, next: any) => {
+  const renderMark = (props: RenderMarkProps, _: any, next: () => any) => {
     const { children, mark, attributes } = props;
 
     switch (mark.type) {

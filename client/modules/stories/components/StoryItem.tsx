@@ -51,7 +51,14 @@ const StoryItemText = styled.div`
 `;
 
 interface Props {
-  story: any;
+  story: {
+    attrs: {
+      _id: string;
+      title?: string;
+      excerpt?: string;
+      createdAt: string;
+    };
+  };
   onDelete: (id: string) => void;
   onPublish: (id: string) => void;
 }
