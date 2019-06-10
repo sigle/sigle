@@ -5,6 +5,7 @@ import { Button, Container } from '../components';
 import { Header } from '../modules/layout/components/Header';
 import { Footer } from '../modules/layout/components/Footer';
 import { config } from '../config';
+import { SignInDialog } from '../modules/dialog/SignInDialog';
 
 const Hero = styled.div`
   ${tw`bg-grey-light`};
@@ -152,6 +153,8 @@ export const Home = () => (
   <React.Fragment>
     <Hero>
       <Header />
+
+      <SignInDialog />
       <Container>
         <HeroContainer inverse>
           <figure className="block">
