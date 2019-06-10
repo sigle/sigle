@@ -21,7 +21,7 @@ import {
 import { config } from '../../../config';
 
 const SlateEditorToolbar = styled.div`
-  ${tw`py-4 border-b border-solid border-grey flex z-10 bg-grey-light sticky flex justify-between max-w-full overflow-auto`};
+  ${tw`py-4 border-b border-solid border-grey flex z-10 bg-white sticky flex justify-between max-w-full overflow-auto`};
   top: 0;
 
   @media (min-width: ${config.breakpoints.md}px) {
