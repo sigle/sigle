@@ -1,37 +1,17 @@
 import React, { createRef, useEffect } from 'react';
 import styled, { css } from 'styled-components/macro';
 import tw from 'tailwind.macro';
+import '@reach/dialog/styles.css';
+import { DialogOverlay, DialogContent } from '@reach/dialog';
 import { Link } from '../../../components';
 
-const containerSize = 220;
-
-const Backdrop = styled.div<{ open: boolean }>`
-  ${tw`fixed left-0 top-0 bottom-0 right-0 invisible`};
-  background-color: rgba(0, 0, 0, 0.5);
-  transition: opacity 0.3s ease;
-  opacity: 0;
-  z-index: 1;
-
-  ${props =>
-    props.open &&
-    css`
-      ${tw`visible`};
-      opacity: 1;
-    `}
+const StyledDialogOverlay = styled(DialogOverlay)`
+  z-index: 11;
 `;
 
-const Container = styled.div<{ open: boolean }>`
-  ${tw`fixed left-0 top-0 bottom-0 bg-grey-light z-10 py-4`};
-  width: ${containerSize}px;
-  max-width: 100%;
-  transition: transform 0.3s ease;
-  transform: translate3d(-${containerSize}px, 0, 0);
-
-  ${props =>
-    props.open &&
-    css`
-      transform: translateZ(0);
-    `}
+const StyledDialogContent = styled(DialogContent)`
+  ${tw`absolute top-0 left-0 bottom-0 w-full m-0 px-0 py-4 bg-white overflow-auto`};
+  width: 220px;
 `;
 
 const MobileMenuLogo = styled.img`
@@ -63,6 +43,7 @@ interface MobileMenuProps {
   onLogin: () => void;
 }
 
+// TODO animation when open / close the menu
 export const MobileMenu = ({
   open,
   user,
@@ -70,30 +51,9 @@ export const MobileMenu = ({
   onClose,
   onLogin,
 }: MobileMenuProps) => {
-  const nodeRef = createRef<HTMLDivElement>();
-
-  /**
-   * Handle click outside menu
-   */
-  const handleClick = (e: any) => {
-    if (nodeRef.current && !nodeRef.current.contains(e.target)) {
-      onClose();
-    }
-  };
-
-  useEffect(() => {
-    if (open) {
-      document.addEventListener('mousedown', handleClick);
-    }
-    return () => {
-      document.removeEventListener('mousedown', handleClick);
-    };
-  }, [open]);
-
   return (
-    <React.Fragment>
-      <Backdrop open={open} />
-      <Container ref={nodeRef} open={open}>
+    <StyledDialogOverlay isOpen={open} onDismiss={onClose}>
+      <StyledDialogContent>
         <MobileMenuLogo src="/static/images/logo.png" alt="Sigle logo" />
 
         {user && <MobileMenuImage alt={user.username} src={userImage} />}
@@ -107,9 +67,6 @@ export const MobileMenu = ({
               <MobileMenuLink href="/me">My stories</MobileMenuLink>
             </MobileMenuListItem>
           )}
-          {/* <MobileMenuListItem>
-            <MobileMenuLink href="#">How to use?</MobileMenuLink>
-          </MobileMenuListItem> */}
           {!user && (
             <MobileMenuListItem>
               <MobileMenuLink href="" onClick={onLogin}>
@@ -118,7 +75,7 @@ export const MobileMenu = ({
             </MobileMenuListItem>
           )}
         </ul>
-      </Container>
-    </React.Fragment>
+      </StyledDialogContent>
+    </StyledDialogOverlay>
   );
 };
