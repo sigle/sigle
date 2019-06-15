@@ -41,14 +41,19 @@ const Link = styled.a`
   ${tw`text-primary`};
 `;
 
-export const SignInDialog = () => {
+interface Props {
+  open: boolean;
+  onClose: () => void;
+}
+
+export const SignInDialog = ({ open, onClose }: Props) => {
   const handleLogin = () => {
     const { userSession } = getConfig();
     userSession.redirectToSignIn();
   };
 
   return (
-    <DialogOverlay isOpen={true} onDismiss={() => null}>
+    <DialogOverlay isOpen={open} onDismiss={onClose}>
       <StyledDialogContent>
         <Column>
           <Title>Hello!</Title>

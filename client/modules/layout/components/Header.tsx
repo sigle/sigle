@@ -17,6 +17,7 @@ import { MobileMenu } from './MobileMenu';
 import { UserContext } from '../../../context/UserContext';
 import { PrivateStory } from '../../../models';
 import { defaultUserImage } from '../../../utils';
+import { SignInDialog } from '../../dialog/SignInDialog';
 
 const HeaderContainer = styled.div`
   ${tw`py-3 flex items-center`};
@@ -53,12 +54,8 @@ const HeaderUserPhoto = styled.img`
 
 export const Header = () => {
   const [menuOpen, setMenuOpen] = useState<boolean>(false);
+  const [loginOpen, setLoginOpen] = useState<boolean>(false);
   const { user, sigleUser, loading } = useContext(UserContext);
-
-  const handleLogin = () => {
-    const { userSession } = getConfig();
-    userSession.redirectToSignIn();
-  };
 
   const handleLogout = () => {
     const { userSession } = getConfig();
@@ -86,11 +83,13 @@ export const Header = () => {
       <MobileMenu
         open={menuOpen}
         onClose={() => setMenuOpen(false)}
-        onLogin={handleLogin}
+        onLogin={() => setLoginOpen(true)}
         user={user}
         userImage={userImage}
       />
       <HeaderContainer>
+        <SignInDialog open={loginOpen} onClose={() => setLoginOpen(false)} />
+
         <HeaderIcon size={30} onClick={() => setMenuOpen(true)} />
 
         <Link href="/">
@@ -106,7 +105,7 @@ export const Header = () => {
         {loading && <div>Loading ...</div>}
 
         {!loading && !user && (
-          <HeaderButton color="black" onClick={handleLogin}>
+          <HeaderButton color="black" onClick={() => setLoginOpen(true)}>
             Sign in
           </HeaderButton>
         )}
