@@ -33,7 +33,6 @@ const ProfileHeader = styled.div`
   ${tw`lg:flex lg:items-center mb-8`};
 `;
 
-// TODO protect this page, user needs to be connected
 export const Profile = () => {
   return (
     <React.Fragment>
@@ -72,4 +71,9 @@ export const Profile = () => {
       <Footer />
     </React.Fragment>
   );
+};
+
+Profile.getInitialProps = ({ query }: any) => {
+  const username = query.username;
+  return { username };
 };

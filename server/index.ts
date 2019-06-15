@@ -59,6 +59,10 @@ nextApp.prepare().then(async () => {
     return nextApp.render(req, res, '/stats');
   });
 
+  expressApp.get('/@*', (req, res) => {
+    return nextApp.render(req, res, '/profile', { username: req.params['0'] });
+  });
+
   expressApp.get('*', (req, res) => {
     return handle(req, res);
   });

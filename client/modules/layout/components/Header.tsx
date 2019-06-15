@@ -125,6 +125,9 @@ export const Header = () => {
               <MenuItem onSelect={() => Router.push('/me')}>
                 My stories
               </MenuItem>
+              <MenuItem onSelect={() => Router.push(`/@${user.username}`)}>
+                My profile
+              </MenuItem>
               <MenuItem onSelect={() => Router.push('/me/settings')}>
                 Settings
               </MenuItem>
