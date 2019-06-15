@@ -10645,6 +10645,11 @@ react-app-polyfill@^0.2.2:
     raf "3.4.1"
     whatwg-fetch "3.0.0"
 
+react-blockstack-button@0.1.0:
+  version "0.1.0"
+  resolved "https://registry.yarnpkg.com/react-blockstack-button/-/react-blockstack-button-0.1.0.tgz#e8995b4e4f821e6fbc1d1c9b316cda4ef065347b"
+  integrity sha512-Ez+R36CWqF4gS4GfXrUi8A0D8q8TC7dJh5G1Gb8T8nNMF41Rai4Q8rgyjyDu090/s7KShSfTW5vdVFvP7eBVMw==
+
 react-cache@^2.0.0-alpha.0:
   version "2.0.0-alpha.1"
   resolved "https://registry.yarnpkg.com/react-cache/-/react-cache-2.0.0-alpha.1.tgz#4c119188248bc988a61268458bc18bd845f2ec19"

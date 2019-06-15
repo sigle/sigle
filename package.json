@@ -60,6 +60,7 @@
     "radiks": "0.2.1",
     "radiks-server": "0.1.12",
     "react": "16.8.6",
+    "react-blockstack-button": "0.1.0",
     "react-dom": "16.8.6",
     "react-dropzone": "10.1.5",
     "react-helmet": "5.2.1",

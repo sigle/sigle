@@ -4,6 +4,7 @@ import tw from 'tailwind.macro';
 import '@reach/dialog/styles.css';
 import { DialogOverlay, DialogContent } from '@reach/dialog';
 import { getConfig } from 'radiks';
+import { BlockstackButton } from 'react-blockstack-button';
 import { config } from '../../config';
 
 const StyledDialogContent = styled(DialogContent)`
@@ -40,10 +41,6 @@ const Link = styled.a`
   ${tw`text-primary`};
 `;
 
-const Login = styled.button`
-  ${tw``};
-`;
-
 export const SignInDialog = () => {
   const handleLogin = () => {
     const { userSession } = getConfig();
@@ -69,7 +66,7 @@ export const SignInDialog = () => {
           </Text>
           <Text>Creating a Blockstack ID is easy, free, and secure.</Text>
           <Text>Welcome to the family :)</Text>
-          <Login onClick={handleLogin}>Login with blockstack</Login>
+          <BlockstackButton onClick={handleLogin} />
         </Column>
         <ColumnRight>
           <img src="/static/images/login.png" alt="login" />
