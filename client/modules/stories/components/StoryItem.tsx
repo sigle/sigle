@@ -56,14 +56,21 @@ interface Props {
       _id: string;
       title?: string;
       excerpt?: string;
-      createdAt: string;
+      createdAt?: string;
+      radiksType?: 'PrivateStory' | 'PublicStory';
     };
   };
   onDelete: (id: string) => void;
   onPublish: (id: string) => void;
+  onUnPublish: (id: string) => void;
 }
 
-export const StoryItem = ({ story, onDelete, onPublish }: Props) => {
+export const StoryItem = ({
+  story,
+  onDelete,
+  onPublish,
+  onUnPublish,
+}: Props) => {
   return (
     <StoryItemContainer>
       <div className="top-container">
@@ -72,21 +79,38 @@ export const StoryItem = ({ story, onDelete, onPublish }: Props) => {
             <Link className="title" href={`me/stories/${story.attrs._id}`}>
               {story.attrs.title}
             </Link>
-            <Tippy
-              content={'You need to publish your article to view it'}
-              arrow={true}
-              arrowType="round"
-              theme="light-border"
-            >
-              <div className="icon-container">
-                <MdRemoveRedEye size={22} />
-              </div>
-            </Tippy>
+            {story.attrs.radiksType === 'PrivateStory' && (
+              <Tippy
+                content={'You need to publish your article to view it'}
+                arrow={true}
+                arrowType="round"
+                theme="light-border"
+              >
+                <div className="icon-container">
+                  <MdRemoveRedEye size={22} />
+                </div>
+              </Tippy>
+            )}
+            {story.attrs.radiksType === 'PublicStory' && (
+              <Tippy
+                content={'View my story'}
+                arrow={true}
+                arrowType="round"
+                theme="light-border"
+              >
+                <div>
+                  {/* TODO should be clickable and open the story in a new tab */}
+                  <MdRemoveRedEye size={22} />
+                </div>
+              </Tippy>
+            )}
           </div>
 
-          <StoryItemDate>
-            {format(story.attrs.createdAt, 'HH:mm DD MMMM YYYY')}
-          </StoryItemDate>
+          {story.attrs.createdAt && (
+            <StoryItemDate>
+              {format(story.attrs.createdAt, 'HH:mm DD MMMM YYYY')}
+            </StoryItemDate>
+          )}
         </div>
         <div className="right">
           {/*
@@ -104,9 +128,15 @@ export const StoryItem = ({ story, onDelete, onPublish }: Props) => {
               <MdSettings size={24} />
             </MenuButton>
             <MenuList>
-              <MenuItem onSelect={() => onPublish(story.attrs._id)}>
-                Publish
-              </MenuItem>
+              {story.attrs.radiksType === 'PrivateStory' ? (
+                <MenuItem onSelect={() => onPublish(story.attrs._id)}>
+                  Publish
+                </MenuItem>
+              ) : (
+                <MenuItem onSelect={() => onUnPublish(story.attrs._id)}>
+                  Unpublish
+                </MenuItem>
+              )}
               <MenuItem
                 onSelect={() => onDelete(story.attrs._id)}
                 className="primary"

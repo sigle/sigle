@@ -111,8 +111,61 @@ export const StoryList = () => {
     }
   };
 
-  const publishStory = () => {
-    alert('TODO');
+  const publishStory = async (storyId: string) => {
+    try {
+      const index = state.privateStories.findIndex(
+        (story: any) => story.attrs._id === storyId
+      );
+      if (index === -1) {
+        throw new Error('Story not found in list');
+      }
+      const story = state.privateStories[index];
+      console.log(story.attrs);
+      const publicStory = new PublicStory({ ...story.attrs });
+      await publicStory.save();
+      // Remove the item from the local private list
+      state.privateStories.splice(index, 1);
+      // Add the item to the local public list
+      state.publicStories.unshift(publicStory);
+      dispatch({
+        type: 'success',
+        privateStories: state.privateStories,
+        publicStories: state.publicStories,
+      });
+
+      // TODO notify user
+    } catch (error) {
+      // TODO notify user with error message
+      alert(error.message);
+    }
+  };
+
+  const unPublishStory = async (storyId: string) => {
+    try {
+      const index = state.publicStories.findIndex(
+        (story: any) => story.attrs._id === storyId
+      );
+      if (index === -1) {
+        throw new Error('Story not found in list');
+      }
+      const story = state.publicStories[index];
+      const privateStory = new PrivateStory({ ...story.attrs });
+      await privateStory.save();
+      // Remove the item from the local public list
+      state.publicStories.splice(index, 1);
+      // Add the item to the local private list
+      state.privateStories.unshift(privateStory);
+      dispatch({
+        type: 'success',
+        privateStories: state.privateStories,
+        publicStories: state.publicStories,
+      });
+
+      // TODO notify user
+    } catch (error) {
+      // TODO notify user with error message
+      alert(error.message);
+    }
   };
 
   useEffect(() => {
@@ -166,6 +219,7 @@ export const StoryList = () => {
                     story={story}
                     onDelete={deleteStory}
                     onPublish={publishStory}
+                    onUnPublish={unPublishStory}
                   />
                 ))}
             </StoryListContainer>
@@ -194,6 +248,7 @@ export const StoryList = () => {
                     story={story}
                     onDelete={deleteStory}
                     onPublish={publishStory}
+                    onUnPublish={unPublishStory}
                   />
                 ))}
             </StoryListContainer>
