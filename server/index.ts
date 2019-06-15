@@ -5,8 +5,11 @@ import bodyParser from 'body-parser';
 import helmet from 'helmet';
 import next from 'next';
 import { setup } from 'radiks-server';
+import graphqlHTTP from 'express-graphql';
+import { MongoClient } from 'mongodb';
 import { config } from './config';
 import { apiRouter } from './api';
+import { schema } from './graphql/schema';
 
 if (process.env.NODE_ENV === 'production' && process.env.SENTRY_DSN_SERVER) {
   init({
@@ -23,6 +26,10 @@ const handle = nextApp.getRequestHandler();
 // TODO setup sentry on production
 
 nextApp.prepare().then(async () => {
+  const mongoClient = new MongoClient(config.mongoDBUrl);
+  await mongoClient.connect();
+  const db = mongoClient.db();
+
   const expressApp = express();
 
   expressApp.use(helmet());
@@ -33,6 +40,17 @@ nextApp.prepare().then(async () => {
     mongoDBUrl: config.mongoDBUrl,
   });
   expressApp.use('/radiks', RadiksController);
+
+  // Link the graphql server
+  expressApp.use(
+    '/graphql',
+    graphqlHTTP({
+      schema,
+      // TODO disable graphiql in production
+      graphiql: true,
+      context: { db },
+    })
+  );
 
   // Connect the api router to express
   expressApp.use('/api', apiRouter);
