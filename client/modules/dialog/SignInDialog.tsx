@@ -5,6 +5,7 @@ import '@reach/dialog/styles.css';
 import { DialogOverlay, DialogContent } from '@reach/dialog';
 import { getConfig } from 'radiks';
 import { BlockstackButton } from 'react-blockstack-button';
+import { MdClose } from 'react-icons/md';
 import { config } from '../../config';
 
 const StyledDialogContent = styled(DialogContent)`
@@ -29,8 +30,16 @@ const ColumnRight = styled(Column)`
   align-self: center;
 `;
 
+const TitleContainer = styled.div`
+  ${tw`pb-4 flex justify-between items-center`};
+`;
+
 const Title = styled.h3`
-  ${tw`text-3xl font-baskerville mb-4 font-bold`};
+  ${tw`text-3xl font-baskerville font-bold`};
+`;
+
+const CloseButton = styled.div`
+  ${tw`p-2 -mr-2 flex items-center cursor-pointer`};
 `;
 
 const Text = styled.p`
@@ -56,7 +65,12 @@ export const SignInDialog = ({ open, onClose }: Props) => {
     <DialogOverlay isOpen={open} onDismiss={onClose}>
       <StyledDialogContent>
         <Column>
-          <Title>Hello!</Title>
+          <TitleContainer>
+            <Title>Hello!</Title>
+            <CloseButton onClick={onClose}>
+              <MdClose />
+            </CloseButton>
+          </TitleContainer>
           <Text>
             Because Sigle is working on the decentralized internet thanks to the
             blockchain technology, you’ll be redicrected to{' '}
