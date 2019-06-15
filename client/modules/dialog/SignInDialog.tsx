@@ -70,7 +70,7 @@ export const SignInDialog = ({ open, onClose }: Props) => {
             you to take back control of your identity and data.
           </Text>
           <Text>Creating a Blockstack ID is easy, free, and secure.</Text>
-          <Text>Welcome to the family :)</Text>
+          <Text>Welcome to the family 🙂</Text>
           <BlockstackButton onClick={handleLogin} />
         </Column>
         <ColumnRight>
