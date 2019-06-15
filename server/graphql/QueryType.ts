@@ -1,10 +1,14 @@
-import { GraphQLObjectType, GraphQLString, GraphQLNonNull } from 'graphql';
+import {
+  GraphQLObjectType,
+  GraphQLString,
+  GraphQLNonNull,
+  GraphQLInt,
+} from 'graphql';
 import { globalIdField, fromGlobalId } from 'graphql-relay';
 import { Db } from 'mongodb';
 // @ts-ignore
 import { COLLECTION } from 'radiks-server/app/lib/constants';
 
-// TODO description of the fields
 const UserType = new GraphQLObjectType({
   name: 'User',
   description: 'User data',
@@ -13,18 +17,34 @@ const UserType = new GraphQLObjectType({
     _id: {
       type: GraphQLString,
       resolve: user => user._id,
+      description: "The user's mongodb id",
     },
     username: {
       type: GraphQLString,
       resolve: user => user.username,
+      description: "The user's public description",
     },
     name: {
       type: GraphQLString,
       resolve: user => user.name,
+      description: "The user's public name",
     },
     description: {
       type: GraphQLString,
       resolve: user => user.description,
+      description: "The user's public description",
+    },
+    imageUrl: {
+      type: GraphQLString,
+      args: {
+        size: {
+          type: GraphQLInt,
+        },
+      },
+      // TODO resolver avatar if not set
+      // TODO is proxy
+      resolve: user => user.imageUrl,
+      description: 'A url pointing to the user image',
     },
   }),
 });
