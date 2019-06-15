@@ -45,14 +45,11 @@ export const QueryType = new GraphQLObjectType({
       resolve: async (_, args, context) => {
         const { db }: { db: Db } = context;
         const { username } = args;
-        // TODO fetch the user and return it
-        console.log(args, context, COLLECTION);
         const radiksData = db.collection(COLLECTION);
         const user = await radiksData.findOne({
           radiksType: 'BlockstackUser',
           _id: username,
         });
-        console.log(user);
         return user;
       },
     },
