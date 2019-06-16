@@ -60,7 +60,7 @@ export const Profile = ({ username }: Props) => {
           variables={{ username }}
           render={({ error, props }) => {
             if (error) {
-              return <div>Error!</div>;
+              return <div>Error! {error.message}</div>;
             }
             if (!props) {
               return <div>Loading...</div>;
