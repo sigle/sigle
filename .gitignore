@@ -2,3 +2,6 @@ node_modules
 .next
 bundles
 *.log
+schema.graphql
+# Relay modern
+__generated__/

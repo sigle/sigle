@@ -46,8 +46,7 @@ nextApp.prepare().then(async () => {
     '/graphql',
     graphqlHTTP({
       schema,
-      // TODO disable graphiql in production
-      graphiql: true,
+      graphiql: process.env.NODE_ENV !== 'production',
       context: { db },
     })
   );

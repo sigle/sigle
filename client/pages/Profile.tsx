@@ -1,6 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import tw from 'tailwind.macro';
+import { graphql, QueryRenderer } from 'react-relay';
 import {
   Container,
   Tabs,
@@ -12,6 +13,7 @@ import {
 import { Header } from '../modules/layout/components/Header';
 import { Footer } from '../modules/layout/components/Footer';
 import { Story } from './Discover';
+import { environment } from '../utils/relay';
 
 const ProfileContainer = styled(Container)`
   ${tw`py-6`};
@@ -33,40 +35,73 @@ const ProfileHeader = styled.div`
   ${tw`lg:flex lg:items-center mb-8`};
 `;
 
-export const Profile = () => {
+interface Props {
+  username: string;
+}
+
+export const Profile = ({ username }: Props) => {
   return (
     <React.Fragment>
       <Header />
       <ProfileContainer>
-        <ProfileHeader>
-          <ProfileImage
-            src="https://source.unsplash.com/random/100x100"
-            alt="TODO"
-          />
-          <div>
-            <ProfileName>John Doe</ProfileName>
-            <ProfileDescription>
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam quis
-              accumsan arcu.
-            </ProfileDescription>
-          </div>
-        </ProfileHeader>
+        <QueryRenderer
+          environment={environment}
+          query={graphql`
+            query ProfileUserQuery($username: String!) {
+              user(username: $username) {
+                id
+                username
+                name
+                description
+                imageUrl(size: 128)
+              }
+            }
+          `}
+          variables={{ username }}
+          render={({ error, props }) => {
+            if (error) {
+              return <div>Error!</div>;
+            }
+            if (!props) {
+              return <div>Loading...</div>;
+            }
+            return (
+              <React.Fragment>
+                <ProfileHeader>
+                  <ProfileImage
+                    src={props.user.imageUrl}
+                    alt={`Profile image of ${props.user.name ||
+                      props.user.username}`}
+                  />
+                  <div>
+                    <ProfileName>
+                      {props.user.name || props.user.username}
+                    </ProfileName>
+                    <ProfileDescription>
+                      {props.user.description}
+                    </ProfileDescription>
+                  </div>
+                </ProfileHeader>
 
-        <Tabs>
-          <TabList>
-            <Tab>Published articles (5)</Tab>
-          </TabList>
-          <TabPanels>
-            <TabPanel>
-              <Story />
-              <Story />
-              <Story />
-              <Story />
-              <Story />
-              <Story />
-            </TabPanel>
-          </TabPanels>
-        </Tabs>
+                <Tabs>
+                  <TabList>
+                    <Tab>Published articles (5)</Tab>
+                  </TabList>
+                  <TabPanels>
+                    <TabPanel>
+                      <Story />
+                      <Story />
+                      <Story />
+                      <Story />
+                      <Story />
+                      <Story />
+                    </TabPanel>
+                  </TabPanels>
+                </Tabs>
+              </React.Fragment>
+            );
+          }}
+        />
       </ProfileContainer>
       <Footer />
     </React.Fragment>
