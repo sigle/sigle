@@ -7,6 +7,7 @@ declare namespace NodeJS {
 
   export interface Process {
     env: ProcessEnv;
+    browser: boolean;
   }
 }
 

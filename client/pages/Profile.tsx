@@ -13,7 +13,8 @@ import {
 import { Header } from '../modules/layout/components/Header';
 import { Footer } from '../modules/layout/components/Footer';
 import { Story } from './Discover';
-import { environment } from '../utils/relay';
+import { withData } from '../lib/withData';
+import { ProfileUserQueryResponse } from './__generated__/ProfileUserQuery.graphql';
 
 const ProfileContainer = styled(Container)`
   ${tw`py-6`};
@@ -35,80 +36,73 @@ const ProfileHeader = styled.div`
   ${tw`lg:flex lg:items-center mb-8`};
 `;
 
-interface Props {
+interface Props extends ProfileUserQueryResponse {
   username: string;
 }
 
-export const Profile = ({ username }: Props) => {
+const ProfileComponent = ({ user }: Props) => {
+  if (!user) {
+    // TODO nice 404 page
+    return null;
+  }
+
   return (
     <React.Fragment>
       <Header />
       <ProfileContainer>
-        <QueryRenderer
-          environment={environment}
-          query={graphql`
-            query ProfileUserQuery($username: String!) {
-              user(username: $username) {
-                id
-                username
-                name
-                description
-                imageUrl(size: 128)
-              }
-            }
-          `}
-          variables={{ username }}
-          render={({ error, props }) => {
-            if (error) {
-              return <div>Error! {error.message}</div>;
-            }
-            if (!props) {
-              return <div>Loading...</div>;
-            }
-            return (
-              <React.Fragment>
-                <ProfileHeader>
-                  <ProfileImage
-                    src={props.user.imageUrl}
-                    alt={`Profile image of ${props.user.name ||
-                      props.user.username}`}
-                  />
-                  <div>
-                    <ProfileName>
-                      {props.user.name || props.user.username}
-                    </ProfileName>
-                    <ProfileDescription>
-                      {props.user.description}
-                    </ProfileDescription>
-                  </div>
-                </ProfileHeader>
+        <React.Fragment>
+          <ProfileHeader>
+            <ProfileImage
+              src={user.imageUrl!}
+              alt={`Profile image of ${user.name || user.username}`}
+            />
+            <div>
+              <ProfileName>{user.name || user.username}</ProfileName>
+              <ProfileDescription>{user.description}</ProfileDescription>
+            </div>
+          </ProfileHeader>
 
-                <Tabs>
-                  <TabList>
-                    <Tab>Published articles (5)</Tab>
-                  </TabList>
-                  <TabPanels>
-                    <TabPanel>
-                      <Story />
-                      <Story />
-                      <Story />
-                      <Story />
-                      <Story />
-                      <Story />
-                    </TabPanel>
-                  </TabPanels>
-                </Tabs>
-              </React.Fragment>
-            );
-          }}
-        />
+          <Tabs>
+            <TabList>
+              <Tab>Published articles (5)</Tab>
+            </TabList>
+            <TabPanels>
+              <TabPanel>
+                <Story />
+                <Story />
+                <Story />
+                <Story />
+                <Story />
+                <Story />
+              </TabPanel>
+            </TabPanels>
+          </Tabs>
+        </React.Fragment>
       </ProfileContainer>
       <Footer />
     </React.Fragment>
   );
 };
 
-Profile.getInitialProps = ({ query }: any) => {
-  const username = query.username;
-  return { username };
+ProfileComponent.getInitialProps = ({
+  query,
+}: {
+  query: { username: string };
+}) => {
+  const { username } = query;
+  return { relayVariables: { username } };
 };
+
+export const Profile = withData(ProfileComponent, {
+  query: graphql`
+    query ProfileUserQuery($username: String!) {
+      user(username: $username) {
+        id
+        username
+        name
+        description
+        imageUrl(size: 128)
+      }
+    }
+  `,
+});
