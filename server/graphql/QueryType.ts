@@ -41,9 +41,18 @@ const UserType = new GraphQLObjectType({
           type: GraphQLInt,
         },
       },
-      // TODO resolver avatar if not set
-      // TODO is proxy
-      resolve: user => user.imageUrl,
+      // TODO resolve proxy size
+      resolve: (user, args) => {
+        let { size } = args;
+        // Size default to 64
+        if (!size) {
+          size = 64;
+        }
+        const { username } = user;
+        return user.imageUrl
+          ? user.imageUrl
+          : `https://ui-avatars.com/api/?color=ffffff&background=000000&size=${size}&name=${username}`;
+      },
       description: 'A url pointing to the user image',
     },
   }),
