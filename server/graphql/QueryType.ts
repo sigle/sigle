@@ -4,16 +4,16 @@ import {
   GraphQLNonNull,
   GraphQLInt,
 } from 'graphql';
-import { globalIdField, fromGlobalId } from 'graphql-relay';
-import { Db } from 'mongodb';
-// @ts-ignore
-import { COLLECTION } from 'radiks-server/app/lib/constants';
+import { globalIdField } from 'graphql-relay';
+import { GraphqlContext } from '../types';
+import { config } from '../config';
+import { nodeField, nodeInterface } from './nodeInterface';
 
 const UserType = new GraphQLObjectType({
   name: 'User',
   description: 'User data',
   fields: () => ({
-    id: globalIdField('User'),
+    id: globalIdField('User', user => user._id),
     _id: {
       type: GraphQLString,
       resolve: user => user._id,
@@ -56,14 +56,15 @@ const UserType = new GraphQLObjectType({
       description: 'A url pointing to the user image',
     },
   }),
+  interfaces: () => [nodeInterface],
 });
 
 // TODO setup auto type generation
-export const QueryType = new GraphQLObjectType({
+export const QueryType = new GraphQLObjectType<any, GraphqlContext>({
   name: 'Query',
   description: 'The root of all... queries',
   fields: () => ({
-    // TODO relay global node query
+    node: nodeField,
     user: {
       type: UserType,
       args: {
@@ -72,9 +73,9 @@ export const QueryType = new GraphQLObjectType({
         },
       },
       resolve: async (_, args, context) => {
-        const { db }: { db: Db } = context;
+        const { db } = context;
         const { username } = args;
-        const radiksData = db.collection(COLLECTION);
+        const radiksData = db.collection(config.radiksCollectionName);
         const user = await radiksData.findOne({
           radiksType: 'BlockstackUser',
           _id: username,

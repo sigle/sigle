@@ -26,7 +26,9 @@ const handle = nextApp.getRequestHandler();
 // TODO setup sentry on production
 
 nextApp.prepare().then(async () => {
-  const mongoClient = new MongoClient(config.mongoDBUrl);
+  const mongoClient = new MongoClient(config.mongoDBUrl, {
+    useNewUrlParser: true,
+  });
   await mongoClient.connect();
   const db = mongoClient.db();
 
