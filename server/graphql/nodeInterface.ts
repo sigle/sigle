@@ -4,6 +4,7 @@ import { config } from '../config';
 
 const mapGraphqlTypeToMongoCollection: { [key: string]: string } = {
   User: 'BlockstackUser',
+  PublicStory: 'PublicStory',
 };
 
 const { nodeInterface, nodeField } = nodeDefinitions<GraphqlContext>(
@@ -23,6 +24,9 @@ const { nodeInterface, nodeField } = nodeDefinitions<GraphqlContext>(
   obj => {
     if (obj.publicKey) {
       return 'User';
+    }
+    if (obj.title) {
+      return 'PublicStory';
     }
     return null;
   }

@@ -10,6 +10,7 @@ export const QueryType = new GraphQLObjectType<any, GraphqlContext>({
   description: 'The root of all... queries',
   fields: () => ({
     node: nodeField,
+
     user: {
       type: UserType,
       args: {
