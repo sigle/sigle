@@ -1,6 +1,8 @@
-import { GraphQLObjectType, GraphQLString } from 'graphql';
+import { GraphQLObjectType, GraphQLString, GraphQLNonNull } from 'graphql';
 import { globalIdField } from 'graphql-relay';
 import { nodeInterface } from './nodeInterface';
+import { UserType } from './UserType';
+import { UserModel } from '../models';
 
 export const PublicStoryType = new GraphQLObjectType({
   name: 'PublicStory',
@@ -36,6 +38,18 @@ export const PublicStoryType = new GraphQLObjectType({
       type: GraphQLString,
       resolve: story => story.metaDescription,
       description: "The story's public metaDescription",
+    },
+    user: {
+      type: GraphQLNonNull(UserType),
+      resolve: story => {
+        // TODO see how to link the story to the user
+        // TODO use dataloader to batch the calls
+        return UserModel.findOne({
+          radiksType: 'BlockstackUser',
+          _id: 'leopradel.id.blockstack',
+        });
+      },
+      description: "The story's author",
     },
   }),
   interfaces: () => [nodeInterface],

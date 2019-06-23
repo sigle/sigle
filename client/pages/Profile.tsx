@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import tw from 'tailwind.macro';
-import { graphql, QueryRenderer } from 'react-relay';
+import { graphql } from 'react-relay';
 import {
   Container,
   Tabs,
@@ -12,9 +12,9 @@ import {
 } from '../components';
 import { Header } from '../modules/layout/components/Header';
 import { Footer } from '../modules/layout/components/Footer';
-import { Story } from './Discover';
 import { withData } from '../lib/withData';
 import { ProfileUserQueryResponse } from './__generated__/ProfileUserQuery.graphql';
+import { PublicStoryItem } from '../modules/publicStories/components/PublicStoryItem';
 
 const ProfileContainer = styled(Container)`
   ${tw`py-6`};
@@ -40,7 +40,7 @@ interface Props extends ProfileUserQueryResponse {
   username: string;
 }
 
-const ProfileComponent = ({ user }: Props) => {
+const ProfileComponent = ({ user, publicStories }: Props) => {
   if (!user) {
     // TODO nice 404 page
     return null;
@@ -64,16 +64,13 @@ const ProfileComponent = ({ user }: Props) => {
 
           <Tabs>
             <TabList>
-              <Tab>Published articles (5)</Tab>
+              <Tab>Published articles ({publicStories!.totalCount})</Tab>
             </TabList>
             <TabPanels>
               <TabPanel>
-                <Story />
-                <Story />
-                <Story />
-                <Story />
-                <Story />
-                <Story />
+                {publicStories!.edges!.map(data => (
+                  <PublicStoryItem key={data!.node!.id} story={data!.node!} />
+                ))}
               </TabPanel>
             </TabPanels>
           </Tabs>
@@ -102,6 +99,15 @@ export const Profile = withData(ProfileComponent, {
         name
         description
         imageUrl(size: 128)
+      }
+      publicStories {
+        totalCount
+        edges {
+          node {
+            id
+            ...PublicStoryItem_story
+          }
+        }
       }
     }
   `,
