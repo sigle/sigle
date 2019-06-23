@@ -38,6 +38,7 @@ export const SigleEditor = ({ storyId }: Props) => {
   const timeoutId = useRef<number | undefined>(undefined);
 
   const fetchStory = async () => {
+    // TODO this can be either a private or a public story
     const privateStory = await PrivateStory.findById(storyId);
     setStory(privateStory);
     setLoading(false);
