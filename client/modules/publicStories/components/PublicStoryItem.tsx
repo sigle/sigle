@@ -60,9 +60,11 @@ export const PublicStoryItemComponent = ({ story }: Props) => {
       <StoryCover />
       <StoryContent>
         <StoryTitle>{story.title}</StoryTitle>
+        {/* TODO display real date */}
         <StoryDate>January 26, 2017</StoryDate>
         <StoryText>{story.excerpt}</StoryText>
-        <StoryTags>Travel, lifestyle</StoryTags>
+        {/* TODO display the story tags */}
+        {/* <StoryTags>Travel, lifestyle</StoryTags> */}
         <StoryProfile>
           {story.user.imageUrl && (
             <StoryProfileImage
