@@ -3,11 +3,11 @@ import {
   Network,
   RecordSource,
   Store,
-  RequestNode,
+  RequestParameters,
   Variables,
 } from 'relay-runtime';
 
-function fetchQuery(operation: RequestNode, variables: Variables) {
+function fetchQuery(operation: RequestParameters, variables: Variables) {
   return fetch('/graphql', {
     method: 'POST',
     headers: {

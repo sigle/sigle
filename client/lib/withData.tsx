@@ -24,6 +24,7 @@ export const withData = (ComposedComponent: any, options: any = {}) => {
         queryRecords = environment
           .getStore()
           .getSource()
+          // @ts-ignore
           .toJSON();
       }
 

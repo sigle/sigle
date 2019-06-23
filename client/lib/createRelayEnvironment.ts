@@ -3,14 +3,14 @@ import {
   Network,
   RecordSource,
   Store,
-  RequestNode,
+  RequestParameters,
   Variables,
 } from 'relay-runtime';
 import fetch from 'isomorphic-unfetch';
 
 let relayEnvironment: Environment;
 
-const fetchQuery = (operation: RequestNode, variables: Variables) =>
+const fetchQuery = (operation: RequestParameters, variables: Variables) =>
   fetch('http://localhost:3000/graphql', {
     method: 'POST',
     headers: {
