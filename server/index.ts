@@ -7,6 +7,7 @@ import next from 'next';
 import { setup } from 'radiks-server';
 import graphqlHTTP from 'express-graphql';
 import { MongoClient } from 'mongodb';
+import mongoose from 'mongoose';
 import { config } from './config';
 import { apiRouter } from './api';
 import { schema } from './graphql/schema';
@@ -26,11 +27,15 @@ const handle = nextApp.getRequestHandler();
 // TODO setup sentry on production
 
 nextApp.prepare().then(async () => {
+  // First connect to mongo
   const mongoClient = new MongoClient(config.mongoDBUrl, {
     useNewUrlParser: true,
   });
   await mongoClient.connect();
   const db = mongoClient.db();
+  await mongoose.connect(config.mongoDBUrl, {
+    useNewUrlParser: true,
+  });
 
   const expressApp = express();
 

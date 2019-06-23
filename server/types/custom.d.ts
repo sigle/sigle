@@ -10,3 +10,4 @@ declare namespace NodeJS {
 }
 
 declare module 'radiks-server';
+declare module 'mongo-relay-connection';
