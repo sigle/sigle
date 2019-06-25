@@ -2,6 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 import tw from 'tailwind.macro';
 import { graphql } from 'react-relay';
+import Error from 'next/error';
 import {
   Container,
   Tabs,
@@ -43,7 +44,7 @@ interface Props extends ProfileUserQueryResponse {
 const ProfileComponent = ({ user, publicStories }: Props) => {
   if (!user) {
     // TODO nice 404 page
-    return null;
+    return <Error statusCode={404} />;
   }
 
   return (
