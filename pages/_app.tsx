@@ -68,10 +68,7 @@ class MyApp extends App {
           <ThemeProvider theme={theme}>
             <React.Fragment>
               <GlobalStyle />
-              <ToastContainer
-                autoClose={300000}
-                toastClassName="reactToastify"
-              />
+              <ToastContainer autoClose={3000} toastClassName="reactToastify" />
               <Component {...pageProps} />
             </React.Fragment>
           </ThemeProvider>
