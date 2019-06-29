@@ -4,6 +4,7 @@ import tw from 'tailwind.macro';
 import '@reach/dialog/styles.css';
 import { DialogOverlay, DialogContent } from '@reach/dialog';
 import { MdClose, MdAddAPhoto } from 'react-icons/md';
+import { toast } from 'react-toastify';
 import { Button } from '../../../components';
 
 const StyledDialogOverlay = styled(DialogOverlay)`
@@ -101,8 +102,15 @@ export const SigleEditorOptions = ({
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setSaveLoading(true);
-    // TODO try catch
-    await story.save();
+
+    try {
+      await story.save();
+      toast.success('Settings changed successfully');
+    } catch (error) {
+      console.error(error);
+      toast.error(error.message);
+    }
+
     setSaveLoading(false);
   };
   return (

@@ -4,6 +4,7 @@ import tw from 'tailwind.macro';
 import { MdLock } from 'react-icons/md';
 import { useDropzone } from 'react-dropzone';
 import { getConfig } from 'radiks';
+import { toast } from 'react-toastify';
 import { Me as MeContainer } from '../modules/layout/components/Me';
 import { UserContext } from '../context/UserContext';
 import { Container, Button } from '../components';
@@ -103,26 +104,32 @@ export const Settings = () => {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setSaveLoading(true);
-    // TODO try catch
-    // TODO need to crop the image
-    if (file) {
-      const { userSession } = getConfig();
-      const now = new Date().getTime();
-      const name = `photos/${sigleUser.attrs.username}/${now}-${file.name}`;
-      const imageUrl = await userSession.putFile(name, file, {
-        encrypt: false,
-        contentType: file.type,
-      });
-      sigleUser.update({
-        imageUrl,
-      });
+
+    try {
+      // TODO need to crop the image
+      if (file) {
+        const { userSession } = getConfig();
+        const now = new Date().getTime();
+        const name = `photos/${sigleUser.attrs.username}/${now}-${file.name}`;
+        const imageUrl = await userSession.putFile(name, file, {
+          encrypt: false,
+          contentType: file.type,
+        });
+        sigleUser.update({
+          imageUrl,
+        });
+      }
+
+      await sigleUser.save();
+
+      // TODO if new picture delete the old one ?
+      setSaveLoading(false);
+      setFile(undefined);
+      toast.success('Settings changed successfully');
+    } catch (error) {
+      console.error(error);
+      toast.error(error.message);
     }
-
-    await sigleUser.save();
-
-    // TODO if new picture delete the old one ?
-    setSaveLoading(false);
-    setFile(undefined);
   };
 
   const fetchUser = async (blockstackUser: User) => {

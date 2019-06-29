@@ -3,6 +3,8 @@ import App, { Container, NextAppContext } from 'next/app';
 import { UserSession, AppConfig, config as blockstackConfig } from 'blockstack';
 import { configure } from 'radiks';
 import { ThemeProvider, createGlobalStyle } from 'styled-components';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import { theme } from '../client/theme';
 import { config } from '../client/config';
 // TODO see how to inject it with styled-components
@@ -54,6 +56,7 @@ class MyApp extends App {
           <ThemeProvider theme={theme}>
             <React.Fragment>
               <GlobalStyle />
+              <ToastContainer autoClose={3000} toastClassName="reactToastify" />
               <Component {...pageProps} />
             </React.Fragment>
           </ThemeProvider>
