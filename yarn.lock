@@ -3898,7 +3898,7 @@ cosmiconfig@^4.0.0:
     parse-json "^4.0.0"
     require-from-string "^2.0.1"
 
-cosmiconfig@^5.0.0, cosmiconfig@^5.0.5, cosmiconfig@^5.2.0, cosmiconfig@^5.2.1:
+cosmiconfig@^5.0.0, cosmiconfig@^5.0.5, cosmiconfig@^5.2.0:
   version "5.2.1"
   resolved "https://registry.yarnpkg.com/cosmiconfig/-/cosmiconfig-5.2.1.tgz#040f726809c591e77a17c0a3626ca45b4f168b1a"
   integrity sha512-H65gsXo1SKjf8zmrJ67eJk8aIRKV5ff2D4uKZIBZShbhGSpEmsQOPW/SKMKYhSTrqR7ufy6RP69rPogdaPh/kA==
@@ -4863,10 +4863,10 @@ eslint-config-airbnb-base@^13.1.0:
     object.assign "^4.1.0"
     object.entries "^1.0.4"
 
-eslint-config-prettier@5.1.0:
-  version "5.1.0"
-  resolved "https://registry.yarnpkg.com/eslint-config-prettier/-/eslint-config-prettier-5.1.0.tgz#bf29442e7c818236a77acfe2241ec991299f9bf1"
-  integrity sha512-+tpiaLm3wl6fPW5nq0dDyVowQM0FT61lAdWZ+sDWgk6kKzgbOnCDwlcbwI38cyCBhq+Z3ret5Iofp6/gZpO0zw==
+eslint-config-prettier@6.0.0:
+  version "6.0.0"
+  resolved "https://registry.yarnpkg.com/eslint-config-prettier/-/eslint-config-prettier-6.0.0.tgz#f429a53bde9fc7660e6353910fd996d6284d3c25"
+  integrity sha512-vDrcCFE3+2ixNT5H83g28bO/uYAwibJxerXPj+E7op4qzBCsAV36QfvdAyVOoNxKAH2Os/e01T/2x++V0LPukA==
   dependencies:
     get-stdin "^6.0.0"
 
@@ -6151,7 +6151,14 @@ graphql-relay@0.6.0:
   dependencies:
     prettier "^1.16.0"
 
-graphql@14.3.1, graphql@^14.0.2:
+graphql@14.4.1:
+  version "14.4.1"
+  resolved "https://registry.yarnpkg.com/graphql/-/graphql-14.4.1.tgz#7a7818d3f63f66b9528ba5416b6c88460db62280"
+  integrity sha512-g4HUH26CohlMjaHneXMAtvG3QtO6peJIUTFxrPW4g5LNnXkUuFoBI6Bk1c14Q5kW8+FyjM/tTbePTgpiVB/2hQ==
+  dependencies:
+    iterall "^1.2.2"
+
+graphql@^14.0.2:
   version "14.3.1"
   resolved "https://registry.yarnpkg.com/graphql/-/graphql-14.3.1.tgz#b3aa50e61a841ada3c1f9ccda101c483f8e8c807"
   integrity sha512-FZm7kAa3FqKdXy8YSSpAoTtyDFMIYSpCDOr+3EqlI1bxmtHu+Vv/I2vrSeT1sBOEnEniX3uo4wFhFdS/8XN6gA==
@@ -6594,16 +6601,17 @@ https-proxy-agent@2.2.1:
     agent-base "^4.1.0"
     debug "^3.1.0"
 
-husky@2.5.0:
-  version "2.5.0"
-  resolved "https://registry.yarnpkg.com/husky/-/husky-2.5.0.tgz#fe9839e118e5d88e3f1d7121d52564745615815e"
-  integrity sha512-/aQIBaVMuzGi5X5BPliDPbHE+G+HDpWV7Zu28DiiXFMvHQcOeTsEnODWIGKyGBp7GM7rOgkxQdF+6AEo6xNtkw==
+husky@2.7.0:
+  version "2.7.0"
+  resolved "https://registry.yarnpkg.com/husky/-/husky-2.7.0.tgz#c0a9a6a3b51146224e11bba0b46bba546e461d05"
+  integrity sha512-LIi8zzT6PyFpcYKdvWRCn/8X+6SuG2TgYYMrM6ckEYhlp44UcEduVymZGIZNLiwOUjrEud+78w/AsAiqJA/kRg==
   dependencies:
-    cosmiconfig "^5.2.1"
+    cosmiconfig "^5.2.0"
     execa "^1.0.0"
+    find-up "^3.0.0"
     get-stdin "^7.0.0"
     is-ci "^2.0.0"
-    pkg-dir "^4.2.0"
+    pkg-dir "^4.1.0"
     please-upgrade-node "^3.1.1"
     read-pkg "^5.1.1"
     run-node "^1.0.0"
@@ -8826,10 +8834,10 @@ mongoose-legacy-pluralize@1.0.2:
   resolved "https://registry.yarnpkg.com/mongoose-legacy-pluralize/-/mongoose-legacy-pluralize-1.0.2.tgz#3ba9f91fa507b5186d399fb40854bff18fb563e4"
   integrity sha512-Yo/7qQU4/EyIS8YDFSeenIvXxZN+ld7YdV9LqFVQJzTLye8unujAWPZ4NWKfFA+RNjh+wvTWKY9Z3E5XM6ZZiQ==
 
-mongoose@5.6.1:
-  version "5.6.1"
-  resolved "https://registry.yarnpkg.com/mongoose/-/mongoose-5.6.1.tgz#4efc3373b8121fdac4192896e303bb8cc572907b"
-  integrity sha512-/EBoXS+fZv8dYf0VKMXwhTEVYUI+6EbmVhmV2DzO9BGacTSgStQprU09rZYfVxe8EmLhmTrSV5eCIRLBYuXGag==
+mongoose@5.6.2:
+  version "5.6.2"
+  resolved "https://registry.yarnpkg.com/mongoose/-/mongoose-5.6.2.tgz#71afc80bc27462a5fd12644db490c2c5b053646a"
+  integrity sha512-s2FQn/XTlM/yeYxqNPGU8khSA1nPhGiESO7iLdFf8Ntn6lEwgO9KKOIGkRKPk5s+peAOwO34ex6NPX8EWtKgFA==
   dependencies:
     async "2.6.2"
     bson "~1.1.1"
@@ -9894,7 +9902,7 @@ pkg-dir@^3.0.0:
   dependencies:
     find-up "^3.0.0"
 
-pkg-dir@^4.2.0:
+pkg-dir@^4.1.0:
   version "4.2.0"
   resolved "https://registry.yarnpkg.com/pkg-dir/-/pkg-dir-4.2.0.tgz#f099133df7ede422e81d1d8448270eeb3e4261f3"
   integrity sha512-HRDzbaKjC+AOWVXxAU/x54COGeIv9eb+6CkDSQoNTt4XyWoIJvuPsXizxu/Fr23EiekbtZwmh1IcIG/l/a10GQ==
@@ -12854,10 +12862,10 @@ tailwind.macro@1.0.0-alpha.8:
     dset "^2.0.1"
     tailwindcss "^1.0.0-beta.8"
 
-tailwindcss@1.0.3:
-  version "1.0.3"
-  resolved "https://registry.yarnpkg.com/tailwindcss/-/tailwindcss-1.0.3.tgz#12845ec6c9542e97f07ea2bd8af4ba47e8a888d1"
-  integrity sha512-myjuB0hqqLiXQCea0hEeZfrQVxzmkhtgi7HsuwJgXaVPgBp+7r/wywOvkDTUS8sQ1LraF43OLatip0yhfo/FtA==
+tailwindcss@1.0.4:
+  version "1.0.4"
+  resolved "https://registry.yarnpkg.com/tailwindcss/-/tailwindcss-1.0.4.tgz#98f186c8142bfb292bcbfcb53b84df369f11ef91"
+  integrity sha512-+1NNPW+U83k6DV/uUOnsfmX86Cfb8N87fiuN0cX0mEi2sZUpglLzZqlXtP8FD9Hlne5H1UhlS8tajz+F9SSxjA==
   dependencies:
     autoprefixer "^9.4.5"
     bytes "^3.0.0"
