@@ -19,6 +19,11 @@ import { PrivateStory } from '../../../models';
 import { defaultUserImage } from '../../../utils';
 import { SignInDialog } from '../../dialog/SignInDialog';
 
+const HeaderShadow = styled.div`
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.03),
+    0 4px 6px -2px rgba(0, 0, 0, 0.03);
+`;
+
 const HeaderContainer = styled.div`
   ${tw`py-3 flex items-center`};
 `;
@@ -79,63 +84,65 @@ export const Header = () => {
     : null;
 
   return (
-    <Container>
-      <MobileMenu
-        open={menuOpen}
-        onClose={() => setMenuOpen(false)}
-        onLogin={() => setLoginOpen(true)}
-        user={user}
-        userImage={userImage}
-      />
-      <HeaderContainer>
-        <SignInDialog open={loginOpen} onClose={() => setLoginOpen(false)} />
+    <HeaderShadow>
+      <Container>
+        <MobileMenu
+          open={menuOpen}
+          onClose={() => setMenuOpen(false)}
+          onLogin={() => setLoginOpen(true)}
+          user={user}
+          userImage={userImage}
+        />
+        <HeaderContainer>
+          <SignInDialog open={loginOpen} onClose={() => setLoginOpen(false)} />
 
-        <HeaderIcon size={30} onClick={() => setMenuOpen(true)} />
+          <HeaderIcon size={30} onClick={() => setMenuOpen(true)} />
 
-        <Link href="/">
-          <HeaderLogo src="/static/images/logo.png" alt="Sigle logo" />
-        </Link>
+          <Link href="/">
+            <HeaderLogo src="/static/images/logo.png" alt="Sigle logo" />
+          </Link>
 
-        <HeaderSeparator />
+          <HeaderSeparator />
 
-        <HeaderLink href="/discover">Discover</HeaderLink>
-        {/* TODO how to use */}
-        {/* <HeaderLink href="/b">How to use?</HeaderLink> */}
-        {/* TODO nice loading */}
-        {loading && <div>Loading ...</div>}
+          <HeaderLink href="/discover">Discover</HeaderLink>
+          {/* TODO how to use */}
+          {/* <HeaderLink href="/b">How to use?</HeaderLink> */}
+          {/* TODO nice loading */}
+          {loading && <div>Loading ...</div>}
 
-        {!loading && !user && (
-          <HeaderButton color="black" onClick={() => setLoginOpen(true)}>
-            Sign in
-          </HeaderButton>
-        )}
+          {!loading && !user && (
+            <HeaderButton color="black" onClick={() => setLoginOpen(true)}>
+              Sign in
+            </HeaderButton>
+          )}
 
-        {!loading && user && (
-          <HeaderButtonNewStory color="primary" onClick={handleNewStory}>
-            New story
-          </HeaderButtonNewStory>
-        )}
+          {!loading && user && (
+            <HeaderButtonNewStory color="primary" onClick={handleNewStory}>
+              New story
+            </HeaderButtonNewStory>
+          )}
 
-        {!loading && user && (
-          <Menu>
-            <MenuButton>
-              <HeaderUserPhoto src={userImage} alt={user.username} />
-            </MenuButton>
-            <MenuList>
-              <MenuItem onSelect={() => Router.push('/me')}>
-                My stories
-              </MenuItem>
-              <MenuItem onSelect={() => Router.push(`/@${user.username}`)}>
-                My profile
-              </MenuItem>
-              <MenuItem onSelect={() => Router.push('/me/settings')}>
-                Settings
-              </MenuItem>
-              <MenuItem onSelect={handleLogout}>Sign out</MenuItem>
-            </MenuList>
-          </Menu>
-        )}
-      </HeaderContainer>
-    </Container>
+          {!loading && user && (
+            <Menu>
+              <MenuButton>
+                <HeaderUserPhoto src={userImage} alt={user.username} />
+              </MenuButton>
+              <MenuList>
+                <MenuItem onSelect={() => Router.push('/me')}>
+                  My stories
+                </MenuItem>
+                <MenuItem onSelect={() => Router.push(`/@${user.username}`)}>
+                  My profile
+                </MenuItem>
+                <MenuItem onSelect={() => Router.push('/me/settings')}>
+                  Settings
+                </MenuItem>
+                <MenuItem onSelect={handleLogout}>Sign out</MenuItem>
+              </MenuList>
+            </Menu>
+          )}
+        </HeaderContainer>
+      </Container>
+    </HeaderShadow>
   );
 };

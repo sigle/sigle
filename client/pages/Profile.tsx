@@ -4,6 +4,8 @@ import tw from 'tailwind.macro';
 import { graphql } from 'react-relay';
 import Error from 'next/error';
 import {
+  FullHeightContainer,
+  MinHeightContainer,
   Container,
   Tabs,
   Tab,
@@ -53,37 +55,39 @@ const ProfileComponent = ({ user, publicStories }: Props) => {
   }
 
   return (
-    <React.Fragment>
+    <FullHeightContainer>
       <Header />
-      <ProfileContainer>
-        <React.Fragment>
-          <ProfileHeader>
-            <ProfileImage
-              src={user.imageUrl!}
-              alt={`Profile image of ${user.name || user.username}`}
-            />
-            <div>
-              <ProfileName>{user.name || user.username}</ProfileName>
-              <ProfileDescription>{user.description}</ProfileDescription>
-            </div>
-          </ProfileHeader>
+      <MinHeightContainer>
+        <ProfileContainer>
+          <React.Fragment>
+            <ProfileHeader>
+              <ProfileImage
+                src={user.imageUrl!}
+                alt={`Profile image of ${user.name || user.username}`}
+              />
+              <div>
+                <ProfileName>{user.name || user.username}</ProfileName>
+                <ProfileDescription>{user.description}</ProfileDescription>
+              </div>
+            </ProfileHeader>
 
-          <Tabs>
-            <TabList>
-              <Tab>Published articles ({publicStories.totalCount})</Tab>
-            </TabList>
-            <TabPanels>
-              <TabPanel>
-                {publicStories.edges!.map(data => (
-                  <PublicStoryItem key={data!.node!.id} story={data!.node!} />
-                ))}
-              </TabPanel>
-            </TabPanels>
-          </Tabs>
-        </React.Fragment>
-      </ProfileContainer>
-      <Footer />
-    </React.Fragment>
+            <Tabs>
+              <TabList>
+                <Tab>Published articles ({publicStories.totalCount})</Tab>
+              </TabList>
+              <TabPanels>
+                <TabPanel>
+                  {publicStories.edges!.map(data => (
+                    <PublicStoryItem key={data!.node!.id} story={data!.node!} />
+                  ))}
+                </TabPanel>
+              </TabPanels>
+            </Tabs>
+          </React.Fragment>
+        </ProfileContainer>
+        <Footer />
+      </MinHeightContainer>
+    </FullHeightContainer>
   );
 };
 

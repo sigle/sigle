@@ -31,7 +31,7 @@ const MeMenu = styled.div`
 `;
 
 const MeRight = styled.div`
-  ${tw`w-full lg:w-3/4 bg-grey-light py-6 px-6`};
+  ${tw`w-full lg:w-3/4 py-6 px-6`};
 
   @media (min-width: ${config.breakpoints.md}px) {
     width: calc(100% - 200px);
