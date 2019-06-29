@@ -2,7 +2,11 @@ import React from 'react';
 import styled from 'styled-components';
 import tw from 'tailwind.macro';
 import { Me as MeContainer } from '../modules/layout/components/Me';
-import { Container } from '../components';
+import {
+  FullHeightContainer,
+  MinHeightContainer,
+  Container,
+} from '../components';
 import { Header } from '../modules/layout/components/Header';
 import { Footer } from '../modules/layout/components/Footer';
 
@@ -16,16 +20,18 @@ const StatsImage = styled.img`
 `;
 
 export const Stats = () => (
-  <React.Fragment>
+  <FullHeightContainer>
     <Header />
-    <Container>
-      <MeContainer>
-        <Title>My stats</Title>
-        <p>Coming soon...</p>
+    <MinHeightContainer>
+      <Container>
+        <MeContainer>
+          <Title>My stats</Title>
+          <p>Coming soon...</p>
 
-        <StatsImage src="/static/images/data.png" alt="Stats" />
-      </MeContainer>
-    </Container>
-    <Footer />
-  </React.Fragment>
+          <StatsImage src="/static/images/data.png" alt="Stats" />
+        </MeContainer>
+      </Container>
+      <Footer />
+    </MinHeightContainer>
+  </FullHeightContainer>
 );
