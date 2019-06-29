@@ -41,7 +41,7 @@ export const PublicStoryType = new GraphQLObjectType({
     },
     user: {
       type: GraphQLNonNull(UserType),
-      resolve: story => {
+      resolve: () => {
         // TODO see how to link the story to the user
         // TODO use dataloader to batch the calls
         return UserModel.findOne({

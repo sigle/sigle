@@ -140,7 +140,7 @@ const slatePlugins = [SoftBreak({ shift: true })];
 interface Props {
   story: any;
   state: any;
-  onChangeContent: any;
+  onChangeContent: (value: Value) => void;
   onOpenOptions: () => void;
 }
 

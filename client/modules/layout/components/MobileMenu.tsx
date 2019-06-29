@@ -1,5 +1,5 @@
-import React, { createRef, useEffect } from 'react';
-import styled, { css } from 'styled-components/macro';
+import React from 'react';
+import styled from 'styled-components/macro';
 import tw from 'tailwind.macro';
 import '@reach/dialog/styles.css';
 import { DialogOverlay, DialogContent } from '@reach/dialog';

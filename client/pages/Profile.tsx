@@ -47,6 +47,11 @@ const ProfileComponent = ({ user, publicStories }: Props) => {
     return <Error statusCode={404} />;
   }
 
+  if (!publicStories) {
+    // TODO return error 500
+    return null;
+  }
+
   return (
     <React.Fragment>
       <Header />
@@ -65,11 +70,11 @@ const ProfileComponent = ({ user, publicStories }: Props) => {
 
           <Tabs>
             <TabList>
-              <Tab>Published articles ({publicStories!.totalCount})</Tab>
+              <Tab>Published articles ({publicStories.totalCount})</Tab>
             </TabList>
             <TabPanels>
               <TabPanel>
-                {publicStories!.edges!.map(data => (
+                {publicStories.edges!.map(data => (
                   <PublicStoryItem key={data!.node!.id} story={data!.node!} />
                 ))}
               </TabPanel>

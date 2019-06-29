@@ -1,5 +1,5 @@
 import React from 'react';
-import App, { Container } from 'next/app';
+import App, { Container, NextAppContext } from 'next/app';
 import { UserSession, AppConfig, config as blockstackConfig } from 'blockstack';
 import { configure } from 'radiks';
 import { ThemeProvider, createGlobalStyle } from 'styled-components';
@@ -27,7 +27,7 @@ const makeUserSession = () => {
 };
 
 class MyApp extends App {
-  static async getInitialProps({ Component, ctx }: any) {
+  static async getInitialProps({ Component, ctx }: NextAppContext) {
     let pageProps = {};
 
     if (Component.getInitialProps) {

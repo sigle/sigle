@@ -8,7 +8,7 @@ import { PublicStoryType } from './PublicStoryType';
 import { PublicStoryModel } from '../models';
 
 // TODO setup auto type generation
-export const QueryType = new GraphQLObjectType<any, GraphqlContext>({
+export const QueryType = new GraphQLObjectType<{}, GraphqlContext>({
   name: 'Query',
   description: 'The root of all... queries',
   fields: () => ({

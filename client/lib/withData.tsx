@@ -1,3 +1,4 @@
+/* eslint-disable */
 import React from 'react';
 import initEnvironment from './createRelayEnvironment';
 import { fetchQuery, ReactRelayContext } from 'react-relay';

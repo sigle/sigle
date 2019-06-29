@@ -44,7 +44,11 @@ interface Props extends WithRouterProps {
 
 // TODO protect this page, user needs to be connected
 export const Me = withRouter(({ children, router }: Props) => {
-  const route = router!.pathname;
+  if (!router) {
+    return null;
+  }
+
+  const route = router.pathname;
 
   return (
     <MeContainer>
