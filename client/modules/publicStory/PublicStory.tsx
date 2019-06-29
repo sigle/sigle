@@ -199,7 +199,6 @@ export const PublicStory = () => {
 
   const fetchStory = async () => {
     const privateStory = await PrivateStory.findById(storyId);
-    console.log(privateStory.attrs);
     setStory({
       title: privateStory.attrs.title,
       createdAt: privateStory.attrs.createdAt,
