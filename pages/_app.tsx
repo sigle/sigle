@@ -5,6 +5,8 @@ import { configure } from 'radiks';
 import { ThemeProvider, createGlobalStyle } from 'styled-components';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import styled from 'styled-components';
+import tw from 'tailwind.macro';
 import { theme } from '../client/theme';
 import { config } from '../client/config';
 // TODO see how to inject it with styled-components
@@ -16,6 +18,16 @@ blockstackConfig.logLevel = 'info';
 const GlobalStyle = createGlobalStyle`
   body {
     font-family: 'Roboto', sans-serif;
+  }
+
+  .reactToastify {
+    ${tw`rounded-lg`};
+  }
+  .reactToastify.Toastify__toast--success {
+    background-color: #36A993;
+  }
+  .reactToastify.Toastify__toast--error {
+    background-color: ${config.colors.primary};
   }
 `;
 
@@ -56,7 +68,10 @@ class MyApp extends App {
           <ThemeProvider theme={theme}>
             <React.Fragment>
               <GlobalStyle />
-              <ToastContainer autoClose={3000} toastClassName="reactToastify" />
+              <ToastContainer
+                autoClose={300000}
+                toastClassName="reactToastify"
+              />
               <Component {...pageProps} />
             </React.Fragment>
           </ThemeProvider>
