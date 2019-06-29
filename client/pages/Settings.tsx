@@ -139,22 +139,11 @@ export const Settings = () => {
     }
   }, [loading]);
 
-  if (loading) {
-    // TODO nice loading
-    return null;
-  }
+  const isLoading = Boolean(loading || !user || !sigleUser);
 
-  if (!user) {
-    // TODO protect page
-    return null;
-  }
-
-  if (!sigleUser) {
-    // TODO protect page
-    return null;
-  }
-
-  const userImage = file
+  const userImage = isLoading
+    ? null
+    : file
     ? file.preview
     : sigleUser.attrs.imageUrl
     ? sigleUser.attrs.imageUrl
@@ -164,121 +153,129 @@ export const Settings = () => {
     <React.Fragment>
       <Header />
       <Container>
-        <MeContainer>
-          <MeProfile>
-            <img src={userImage} alt={sigleUser.attrs.username} />
-            <div>
-              <h2>{sigleUser.attrs.name || sigleUser.attrs.username}</h2>
-              <p>{sigleUser.attrs.description}</p>
-            </div>
-          </MeProfile>
+        {isLoading && (
+          <MeContainer>
+            <div>Loading ...</div>
+          </MeContainer>
+        )}
 
-          <form onSubmit={handleSubmit}>
-            <FormRow>
-              <FormRowCol>
-                <FormLabel>Name</FormLabel>
-                <FormInput
-                  id="name"
-                  type="text"
-                  placeholder="Julia Doe"
-                  // TODO max length validation
-                  value={sigleUser.attrs.name}
-                  onChange={e => {
-                    const update = {
-                      name: e.target.value,
-                    };
-                    sigleUser.update(update);
-                    setFakeSigleUser(update);
-                  }}
-                />
-              </FormRowCol>
-              <FormRowCol center={true}>
-                <FormText>
-                  Readers will see this name next to your stories.
-                  <br />
-                  You can choose your real name or it can remain secret.
-                  <br />
-                  <br />
-                  Your pick!
-                </FormText>
-              </FormRowCol>
-            </FormRow>
+        {!isLoading && user && sigleUser && (
+          <MeContainer>
+            <MeProfile>
+              <img src={userImage} alt={sigleUser.attrs.username} />
+              <div>
+                <h2>{sigleUser.attrs.name || sigleUser.attrs.username}</h2>
+                <p>{sigleUser.attrs.description}</p>
+              </div>
+            </MeProfile>
 
-            <FormRow>
-              <FormRowCol>
-                <FormLabel>
-                  Profile URL <FormLabelIcon size={18} />
-                </FormLabel>
-                <FormInput
-                  id="profile-url"
-                  type="text"
-                  value={`${process.env.APP_URL}/@${user.username}`}
-                  disabled
-                />
-              </FormRowCol>
-              <FormRowCol center={true}>
-                <FormText>
-                  You will access your profile page by following this URL.
-                  <br />
-                  This URL is linked to your Blockstack id.
-                </FormText>
-              </FormRowCol>
-            </FormRow>
+            <form onSubmit={handleSubmit}>
+              <FormRow>
+                <FormRowCol>
+                  <FormLabel>Name</FormLabel>
+                  <FormInput
+                    id="name"
+                    type="text"
+                    placeholder="Julia Doe"
+                    // TODO max length validation
+                    value={sigleUser.attrs.name}
+                    onChange={e => {
+                      const update = {
+                        name: e.target.value,
+                      };
+                      sigleUser.update(update);
+                      setFakeSigleUser(update);
+                    }}
+                  />
+                </FormRowCol>
+                <FormRowCol center={true}>
+                  <FormText>
+                    Readers will see this name next to your stories.
+                    <br />
+                    You can choose your real name or it can remain secret.
+                    <br />
+                    <br />
+                    Your pick!
+                  </FormText>
+                </FormRowCol>
+              </FormRow>
 
-            <FormRow>
-              <FormRowCol>
-                <FormLabel>Profile picture</FormLabel>
-                <div {...getRootProps()}>
-                  <FormImage src={userImage} alt="Profile picture" />
-                  <input {...getInputProps()} />
-                  <Button variant="outline" color="primary">
-                    Change
+              <FormRow>
+                <FormRowCol>
+                  <FormLabel>
+                    Profile URL <FormLabelIcon size={18} />
+                  </FormLabel>
+                  <FormInput
+                    id="profile-url"
+                    type="text"
+                    value={`${process.env.APP_URL}/@${user.username}`}
+                    disabled
+                  />
+                </FormRowCol>
+                <FormRowCol center={true}>
+                  <FormText>
+                    You will access your profile page by following this URL.
+                    <br />
+                    This URL is linked to your Blockstack id.
+                  </FormText>
+                </FormRowCol>
+              </FormRow>
+
+              <FormRow>
+                <FormRowCol>
+                  <FormLabel>Profile picture</FormLabel>
+                  <div {...getRootProps()}>
+                    <FormImage src={userImage} alt="Profile picture" />
+                    <input {...getInputProps()} />
+                    <Button variant="outline" color="primary">
+                      Change
+                    </Button>
+                  </div>
+                </FormRowCol>
+                <FormRowCol center={true}>
+                  <FormText>
+                    This picture will be resized to 200px by 200px.
+                    <br />
+                    Supported image types are JPEG, and PNG.
+                  </FormText>
+                </FormRowCol>
+              </FormRow>
+
+              <FormRow>
+                <FormRowCol>
+                  <FormLabel>About Yourself</FormLabel>
+                  <FormTextarea
+                    id="description"
+                    placeholder="Tell us about yourself"
+                    maxLength={200}
+                    value={sigleUser.attrs.description}
+                    onChange={e => {
+                      const update = {
+                        description: e.target.value,
+                      };
+                      sigleUser.update(update);
+                      setFakeSigleUser(update);
+                    }}
+                  />
+                </FormRowCol>
+                <FormRowCol center={true}>
+                  <FormText>
+                    This quick description will help people who come to your
+                    profile know who you are, your hobbies and more.
+                  </FormText>
+                </FormRowCol>
+              </FormRow>
+
+              <FormRow>
+                <FormRowCol>
+                  <Button color="primary" disabled={saveLoading}>
+                    {saveLoading ? 'Saving...' : 'Save'}
                   </Button>
-                </div>
-              </FormRowCol>
-              <FormRowCol center={true}>
-                <FormText>
-                  This picture will be resized to 200px by 200px.
-                  <br />
-                  Supported image types are JPEG, and PNG.
-                </FormText>
-              </FormRowCol>
-            </FormRow>
-
-            <FormRow>
-              <FormRowCol>
-                <FormLabel>About Yourself</FormLabel>
-                <FormTextarea
-                  id="description"
-                  placeholder="Tell us about yourself"
-                  maxLength={200}
-                  value={sigleUser.attrs.description}
-                  onChange={e => {
-                    const update = {
-                      description: e.target.value,
-                    };
-                    sigleUser.update(update);
-                    setFakeSigleUser(update);
-                  }}
-                />
-              </FormRowCol>
-              <FormRowCol center={true}>
-                <FormText>
-                  This quick description will help people who come to your
-                  profile know who you are, your hobbies and more.
-                </FormText>
-              </FormRowCol>
-            </FormRow>
-
-            <FormRow>
-              <FormRowCol>
-                <Button color="primary" disabled={saveLoading}>
-                  {saveLoading ? 'Saving...' : 'Save'}
-                </Button>
-              </FormRowCol>
-            </FormRow>
-          </form>
-        </MeContainer>
+                </FormRowCol>
+              </FormRow>
+            </form>
+          </MeContainer>
+        )}
       </Container>
       <Footer />
     </React.Fragment>
