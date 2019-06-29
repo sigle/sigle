@@ -5,6 +5,7 @@ import { format } from 'date-fns';
 import { Value } from 'slate';
 import Html from 'slate-html-serializer';
 import dompurify from 'dompurify';
+import { TiSocialFacebook, TiSocialTwitter } from 'react-icons/ti';
 import { PrivateStory } from '../../models';
 import { defaultUserImage } from '../../utils';
 import { config } from '../../config';
@@ -36,6 +37,7 @@ const StoryProfileImage = styled.img`
 const StoryProfileName = styled.p`
   ${tw`-mb-1`};
 `;
+
 const StoryProfileUsername = styled.p`
   ${tw`text-sm text-grey-darker italic`};
 `;
@@ -55,7 +57,7 @@ const StoryCover = styled.div`
 const StoryCoverImage = styled.img``;
 
 const StoryContent = styled.p`
-  ${tw`mt-8`};
+  ${tw`mt-8 mb-24`};
 
   ${tw`text-base leading-tight`};
 
@@ -86,6 +88,38 @@ const StoryContent = styled.p`
   h3 {
     ${tw`mt-6 mb-4 text-2xl`};
   }
+`;
+
+const StorySocial = styled.div`
+  ${tw`flex justify-end my-4`};
+
+  svg:first-child {
+    ${tw`mr-6`};
+  }
+`;
+
+const StoryAbout = styled.p`
+  ${tw`mt-4 text-grey-darker`};
+`;
+
+const StoryFooter = styled.div`
+  ${tw`flex items-center mt-4`};
+`;
+
+const StoryFooterImage = styled.img`
+  ${tw`w-32 h-32 rounded-full mr-2 lg:mr-4`};
+`;
+
+const StoryFooterName = styled.p`
+  ${tw`-mb-1 text-2xl font-bold`};
+`;
+
+const StoryFooterUsername = styled.p`
+  ${tw`text-sm text-grey-darker italic`};
+`;
+
+const StoryFooterDescription = styled.p`
+  ${tw`lg:text-sm`};
 `;
 
 const rules = [
@@ -179,7 +213,7 @@ export const PublicStory = () => {
       user: {
         username: 'leopradel.id.blockstack',
         name: 'Leo Pradel',
-        imageUrl: defaultUserImage('leopradel.id.blockstack', 48),
+        imageUrl: defaultUserImage('leopradel.id.blockstack', 100),
       },
     });
   };
@@ -217,6 +251,23 @@ export const PublicStory = () => {
           __html: story.content,
         }}
       />
+      <StorySocial>
+        <TiSocialFacebook size={24} />
+        <TiSocialTwitter size={24} />
+      </StorySocial>
+      <StoryDivider />
+      <StoryAbout>About the author</StoryAbout>
+      <StoryFooter>
+        <StoryFooterImage
+          alt={`Profile image of ${story.user.username}`}
+          src={story.user.imageUrl}
+        />
+        <div>
+          <StoryFooterName>{story.user.name}</StoryFooterName>
+          <StoryFooterUsername>{story.user.username}</StoryFooterUsername>
+          <StoryFooterDescription>Lorem ipsum</StoryFooterDescription>
+        </div>
+      </StoryFooter>
     </StoryContainer>
   );
 };
