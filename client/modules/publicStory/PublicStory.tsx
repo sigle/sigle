@@ -7,9 +7,14 @@ import Html from 'slate-html-serializer';
 import dompurify from 'dompurify';
 import { PrivateStory } from '../../models';
 import { defaultUserImage } from '../../utils';
+import { config } from '../../config';
 
 const StoryContainer = styled.div`
-  ${tw`py-16`};
+  ${tw`py-8`};
+
+  @media (min-width: ${config.breakpoints.sm}px) {
+    ${tw`py-16`};
+  }
 `;
 
 const StoryTitle = styled.h1`
@@ -38,6 +43,16 @@ const StoryProfileUsername = styled.p`
 const StoryDivider = styled.div`
   ${tw`border-b border-grey`};
 `;
+
+const StoryCover = styled.div`
+  ${tw`-ml-4 -mr-4`};
+
+  @media (min-width: ${config.breakpoints.xl}px) {
+    ${tw`-ml-20 -mr-20`};
+  }
+`;
+
+const StoryCoverImage = styled.img``;
 
 const StoryContent = styled.p`
   ${tw`mt-8`};
@@ -136,6 +151,7 @@ interface Story {
   title: string;
   createdAt: string;
   content: string;
+  imageUrl?: string;
   user: {
     username: string;
     name: string;
@@ -158,6 +174,8 @@ export const PublicStory = () => {
           JSON.parse(privateStory.attrs.content)
         ) as any)
       ),
+      imageUrl:
+        'https://images.unsplash.com/photo-1558980664-769d59546b3d?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=2100&q=80',
       user: {
         username: 'leopradel.id.blockstack',
         name: 'Leo Pradel',
@@ -188,7 +206,12 @@ export const PublicStory = () => {
           <StoryProfileUsername>{story.user.username}</StoryProfileUsername>
         </div>
       </StoryProfile>
-      <StoryDivider />
+      {!story.imageUrl && <StoryDivider />}
+      {story.imageUrl && (
+        <StoryCover>
+          <StoryCoverImage src={story.imageUrl} />
+        </StoryCover>
+      )}
       <StoryContent
         dangerouslySetInnerHTML={{
           __html: story.content,
