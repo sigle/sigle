@@ -140,6 +140,7 @@ export const SigleEditorOptions = ({
         const now = new Date().getTime();
         const name = `photos/${story.attrs.username}/${now}-${file.name}`;
         const coverImageUrl = await userSession.putFile(name, file, {
+          // TODO encrypt if it's a draft or show a message to the user explaining the limitation
           encrypt: false,
           contentType: file.type,
         });

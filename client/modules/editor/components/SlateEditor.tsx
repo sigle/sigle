@@ -1,7 +1,12 @@
 import React, { useRef, useState } from 'react';
 import styled from 'styled-components';
 import tw from 'tailwind.macro';
-import { Editor, RenderBlockProps, RenderMarkProps } from 'slate-react';
+import {
+  Editor,
+  RenderBlockProps,
+  RenderMarkProps,
+  getEventTransfer,
+} from 'slate-react';
 import SoftBreak from 'slate-soft-break';
 import { Block, Value } from 'slate';
 import { IconType } from 'react-icons';
@@ -12,13 +17,13 @@ import {
   MdFormatQuote,
   MdFormatListNumbered,
   MdFormatListBulleted,
-  MdImage,
   MdLink,
   MdLooksTwo,
   MdLooks3,
   MdLooksOne,
   MdSettings,
 } from 'react-icons/md';
+import { getConfig } from 'radiks';
 import { config } from '../../../config';
 
 const SlateEditorToolbar = styled.div`
@@ -53,6 +58,12 @@ const SlateToolbarActionMessage = styled.div`
 const StyledEditor = styled(Editor)`
   ${tw`py-4`};
   min-height: 150px;
+`;
+
+const Image = styled.img<{ selected: boolean }>`
+  display: block;
+  max-width: 100%;
+  box-shadow: ${props => (props.selected ? '0 0 0 1px #000000;' : 'none')};
 `;
 
 const EditorStyle = styled.div`
@@ -206,17 +217,6 @@ export const SlateEditor = ({
     editor.unwrapInline('link');
   };
 
-  const onClickImage = (
-    event: React.MouseEvent<HTMLButtonElement, MouseEvent>
-  ) => {
-    event.preventDefault();
-    const src = window.prompt('Enter the URL of the image:');
-    if (!src) {
-      return;
-    }
-    editorRef.current.command(insertImage, src);
-  };
-
   const onClickLink = (
     event: React.MouseEvent<HTMLButtonElement, MouseEvent>
   ) => {
@@ -337,6 +337,40 @@ export const SlateEditor = ({
     editor.toggleMark(mark);
   };
 
+  const onDrop = async (event: any, editor: any, next: () => any) => {
+    const target = editor.findEventRange(event);
+    if (!target && event.type === 'drop') return next();
+
+    const transfer: any = getEventTransfer(event);
+    const { type, files } = transfer;
+
+    if (type === 'files') {
+      for (const file of files) {
+        const reader = new FileReader();
+        const [mime] = file.type.split('/');
+        if (mime !== 'image') continue;
+
+        // TODO find a way to visually show that a file is uploading
+
+        const { userSession } = getConfig();
+        const now = new Date().getTime();
+        const name = `photos/${story.attrs.id}/${now}-${file.name}`;
+        const imageUrl = await userSession.putFile(name, file, {
+          // TODO encrypt if it's a draft or show a message to the user explaining the limitation
+          encrypt: false,
+          contentType: file.type,
+        });
+
+        reader.addEventListener('load', () => {
+          editor.command(insertImage, imageUrl, target);
+        });
+
+        reader.readAsDataURL(file);
+      }
+      return;
+    }
+  };
+
   /**
    * Render a mark-toggling toolbar button.
    */
@@ -398,9 +432,9 @@ export const SlateEditor = ({
         return <ul {...attributes}>{children}</ul>;
       case 'list-item':
         return <li {...attributes}>{children}</li>;
-      // case 'image':
-      //   const src = node.data.get('src');
-      //   return <Image src={src} selected={isFocused} {...attributes} />;
+      case 'image':
+        const src = node.data.get('src');
+        return <Image src={src} selected={isFocused} {...attributes} />;
       case 'link': {
         const href = node.data.get('href');
         return (
@@ -448,9 +482,6 @@ export const SlateEditor = ({
           <SlateEditorToolbarButton onMouseDown={onClickLink}>
             <MdLink color={'#b8c2cc'} size={18} />
           </SlateEditorToolbarButton>
-          <SlateEditorToolbarButton onMouseDown={onClickImage}>
-            <MdImage color={'#b8c2cc'} size={18} />
-          </SlateEditorToolbarButton>
         </SlateEditorToolbarButtonContainer>
         <SlateToolbarActionContainer>
           {state.status === 'fetching' && (
@@ -473,6 +504,7 @@ export const SlateEditor = ({
           value={value as any}
           onChange={handleTextChange as any}
           onKeyDown={onKeyDown as any}
+          onDrop={onDrop}
           schema={schema as any}
           placeholder="Text"
           renderBlock={renderBlock}
