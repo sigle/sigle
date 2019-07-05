@@ -369,6 +369,8 @@ export const SlateEditor = ({
       }
       return;
     }
+
+    next();
   };
 
   /**
