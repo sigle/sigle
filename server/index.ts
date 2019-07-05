@@ -9,7 +9,6 @@ import graphqlHTTP from 'express-graphql';
 import { MongoClient } from 'mongodb';
 import mongoose from 'mongoose';
 import { config } from './config';
-import { apiRouter } from './api';
 import { schema } from './graphql/schema';
 
 if (process.env.NODE_ENV === 'production' && process.env.SENTRY_DSN_SERVER) {
@@ -23,8 +22,6 @@ const port = process.env.PORT ? parseInt(process.env.PORT, 10) : 3000;
 const dev = process.env.NODE_ENV !== 'production';
 const nextApp = next({ dev });
 const handle = nextApp.getRequestHandler();
-
-// TODO setup sentry on production
 
 nextApp.prepare().then(async () => {
   // First connect to mongo
@@ -57,9 +54,6 @@ nextApp.prepare().then(async () => {
       context: { db },
     })
   );
-
-  // Connect the api router to express
-  expressApp.use('/api', apiRouter);
 
   expressApp.get('/manifest.json', (_, res) => {
     res.header('Access-Control-Allow-Origin', '*');
