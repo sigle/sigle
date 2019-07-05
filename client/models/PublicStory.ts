@@ -16,6 +16,10 @@ class PublicStoryModel extends Model {
       type: String,
       decrypted: true,
     },
+    coverImageUrl: {
+      type: String,
+      decrypted: true,
+    },
     metaTitle: {
       type: String,
       decrypted: true,

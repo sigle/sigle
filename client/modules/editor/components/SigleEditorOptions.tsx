@@ -1,10 +1,12 @@
-import React, { useState } from 'react';
-import styled from 'styled-components';
-import tw from 'tailwind.macro';
+import { DialogContent, DialogOverlay } from '@reach/dialog';
 import '@reach/dialog/styles.css';
-import { DialogOverlay, DialogContent } from '@reach/dialog';
-import { MdClose, MdAddAPhoto } from 'react-icons/md';
+import { getConfig } from 'radiks';
+import React, { useCallback, useState } from 'react';
+import { useDropzone } from 'react-dropzone';
+import { MdAddAPhoto, MdClose } from 'react-icons/md';
 import { toast } from 'react-toastify';
+import styled, { css } from 'styled-components';
+import tw from 'tailwind.macro';
 import { Button } from '../../../components';
 
 const StyledDialogOverlay = styled(DialogOverlay)`
@@ -51,8 +53,18 @@ const FormButton = styled(Button)`
   ${tw`mt-4`};
 `;
 
-const ImageEmpty = styled.div`
+const Image = styled.img`
+  ${tw`cursor-pointer`};
+`;
+
+const ImageEmpty = styled.div<{ haveImage: boolean }>`
   ${tw`flex items-center justify-center bg-grey py-16 mb-4 cursor-pointer rounded-lg relative border border-solid border-grey`};
+
+  ${props =>
+    props.haveImage &&
+    css`
+      ${tw`py-0`};
+    `}
 
   span {
     ${tw`py-1 px-2 text-sm text-grey-darker`};
@@ -99,12 +111,47 @@ export const SigleEditorOptions = ({
   // TODO change this really ugly hack
   const [fakeStory, setFakeStory] = useState<any>();
 
+  // Part to handle the file upload
+  const [file, setFile] = useState();
+  const onDrop = useCallback(acceptedFiles => {
+    const file = acceptedFiles[0];
+    if (file) {
+      setFile(
+        Object.assign(file, {
+          // Create a preview so we can display it
+          preview: URL.createObjectURL(file),
+        })
+      );
+    }
+  }, []);
+  const { getRootProps, getInputProps } = useDropzone({
+    onDrop,
+    accept: 'image/jpeg, image/png',
+    multiple: false,
+  });
+
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setSaveLoading(true);
 
     try {
+      if (file) {
+        const { userSession } = getConfig();
+        const now = new Date().getTime();
+        const name = `photos/${story.attrs.username}/${now}-${file.name}`;
+        const coverImageUrl = await userSession.putFile(name, file, {
+          encrypt: false,
+          contentType: file.type,
+        });
+        story.update({
+          coverImageUrl,
+        });
+      }
+
       await story.save();
+
+      // TODO if new picture delete the old one ?
+      setFile(undefined);
       toast.success('Settings changed successfully');
     } catch (error) {
       console.error(error);
@@ -113,6 +160,9 @@ export const SigleEditorOptions = ({
 
     setSaveLoading(false);
   };
+
+  const coverImageUrl = file ? file.preview : story.attrs.coverImageUrl;
+
   return (
     <StyledDialogOverlay
       isOpen={optionsOpen}
@@ -128,8 +178,12 @@ export const SigleEditorOptions = ({
 
         <form onSubmit={handleSubmit}>
           <FormRow>
-            <ImageEmpty>
-              <span>Upload cover image</span>
+            <ImageEmpty {...getRootProps()} haveImage={coverImageUrl}>
+              {coverImageUrl && (
+                <Image src={coverImageUrl} alt={story.attrs.title} />
+              )}
+              {!coverImageUrl && <span>Upload cover image</span>}
+              <input {...getInputProps()} />
               <ImageEmptyIcon>
                 <MdAddAPhoto />
               </ImageEmptyIcon>

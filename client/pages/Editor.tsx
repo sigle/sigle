@@ -2,7 +2,12 @@ import React from 'react';
 import styled from 'styled-components';
 import tw from 'tailwind.macro';
 import { MdArrowBack } from 'react-icons/md';
-import { Container, Link } from '../components';
+import {
+  Container,
+  Link,
+  FullHeightContainer,
+  MinHeightContainer,
+} from '../components';
 import { Header } from '../modules/layout/components/Header';
 import { Footer } from '../modules/layout/components/Footer';
 import { SigleEditor } from '../modules/editor/containers/SigleEditor';
@@ -21,16 +26,18 @@ interface Props {
 
 export const Editor = (props: Props) => {
   return (
-    <React.Fragment>
+    <FullHeightContainer>
       <Header />
-      <Container>
-        <StyledLink href="/me">
-          <StyledArrowBack /> Back to my stories
-        </StyledLink>
-        <SigleEditor storyId={props.storyId} />
-      </Container>
-      <Footer />
-    </React.Fragment>
+      <MinHeightContainer>
+        <Container>
+          <StyledLink href="/me">
+            <StyledArrowBack /> Back to my stories
+          </StyledLink>
+          <SigleEditor storyId={props.storyId} />
+        </Container>
+        <Footer />
+      </MinHeightContainer>
+    </FullHeightContainer>
   );
 };
 
