@@ -31,6 +31,10 @@ const ProfileName = styled.h2`
   ${tw`text-2xl font-bold`};
 `;
 
+const ProfileUsername = styled.p`
+  ${tw`text-sm text-grey-darker`};
+`;
+
 const ProfileDescription = styled.p`
   ${tw`lg:text-sm`};
 `;
@@ -66,7 +70,8 @@ const ProfileComponent = ({ user, publicStories }: Props) => {
                 alt={`Profile image of ${user.name || user.username}`}
               />
               <div>
-                <ProfileName>{user.name || user.username}</ProfileName>
+                <ProfileName>{user.name}</ProfileName>
+                <ProfileUsername>{user.username}</ProfileUsername>
                 <ProfileDescription>{user.description}</ProfileDescription>
               </div>
             </ProfileHeader>
