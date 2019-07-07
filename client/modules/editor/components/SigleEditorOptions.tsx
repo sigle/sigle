@@ -218,7 +218,12 @@ export const SigleEditorOptions = ({
                 setFakeStory(update);
               }}
             />
-            <FormHelper>Recommended: 70 characters.</FormHelper>
+            <FormHelper>
+              Recommended: 70 characters. You have used{' '}
+              {story.attrs.metaTitle ? story.attrs.metaTitle.length : 0}{' '}
+              characters.
+            </FormHelper>
+            <FormHelper></FormHelper>
           </FormRow>
 
           <FormRow>
@@ -234,7 +239,13 @@ export const SigleEditorOptions = ({
                 setFakeStory(update);
               }}
             />
-            <FormHelper>Recommended: 156 characters.</FormHelper>
+            <FormHelper>
+              Recommended: 156 characters. You have used{' '}
+              {story.attrs.metaDescription
+                ? story.attrs.metaDescription.length
+                : 0}{' '}
+              characters.
+            </FormHelper>
           </FormRow>
 
           <FormRow>
