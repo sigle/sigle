@@ -12,7 +12,7 @@ const MeContainer = styled.div`
 const MeMenu = styled.div`
   ${tw`w-full py-6`};
 
-  @media (min-width: ${config.breakpoints.md}px) {
+  @media (min-width: ${config.breakpoints.lg}px) {
     width: 200px;
   }
 
@@ -33,7 +33,7 @@ const MeMenu = styled.div`
 const MeRight = styled.div`
   ${tw`w-full lg:w-3/4 py-6 px-6`};
 
-  @media (min-width: ${config.breakpoints.md}px) {
+  @media (min-width: ${config.breakpoints.lg}px) {
     width: calc(100% - 200px);
   }
 `;
