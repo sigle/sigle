@@ -463,7 +463,7 @@ export const SlateEditor = ({ story, onChangeContent }: Props) => {
 
         const { userSession } = getConfig();
         const now = new Date().getTime();
-        const name = `photos/${story.attrs.id}/${now}-${file.name}`;
+        const name = `photos/${story.attrs._id}/${now}-${file.name}`;
         const imageUrl = await userSession.putFile(name, file, {
           // TODO encrypt if it's a draft or show a message to the user explaining the limitation
           encrypt: false,

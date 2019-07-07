@@ -49,6 +49,7 @@ export const SigleEditorHeader = ({ state, onOpenOptions }: Props) => {
 
           <HeaderSeparator />
 
+          {/* TODO only if story is private */}
           <Button color="primary">Publish now</Button>
 
           <OptionIcon onClick={onOpenOptions}>
