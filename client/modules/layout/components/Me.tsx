@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import tw from 'tailwind.macro';
-import { withRouter, WithRouterProps } from 'next/router';
+import { useRouter } from 'next/router';
 import { config } from '../../../config';
 import { Link } from '../../../components';
 
@@ -38,15 +38,13 @@ const MeRight = styled.div`
   }
 `;
 
-interface Props extends WithRouterProps {
+interface Props {
   children: React.ReactNode;
 }
 
 // TODO protect this page, user needs to be connected
-export const Me = withRouter(({ children, router }: Props) => {
-  if (!router) {
-    return null;
-  }
+export const Me = ({ children }: Props) => {
+  const router = useRouter();
 
   const route = router.pathname;
 
@@ -80,4 +78,4 @@ export const Me = withRouter(({ children, router }: Props) => {
       <MeRight>{children}</MeRight>
     </MeContainer>
   );
-});
+};
