@@ -25,14 +25,18 @@ const MeProfile = styled.div`
   img {
     ${tw`w-32 h-32 rounded-full mb-2 lg:mb-0 lg:mr-4`};
   }
+`;
 
-  h2 {
-    ${tw`text-2xl font-bold`};
-  }
+const MeProfileName = styled.p`
+  ${tw`text-2xl font-bold`};
+`;
 
-  p {
-    ${tw`lg:text-sm`};
-  }
+const MeProfileUsername = styled.p`
+  ${tw`text-sm text-grey-darker`};
+`;
+
+const MeProfileDescription = styled.p`
+  ${tw`lg:text-sm`};
 `;
 
 const FormRow = styled.div`
@@ -177,8 +181,13 @@ export const Settings = () => {
               <MeProfile>
                 <img src={userImage} alt={sigleUser.attrs.username} />
                 <div>
-                  <h2>{sigleUser.attrs.name || sigleUser.attrs.username}</h2>
-                  <p>{sigleUser.attrs.description}</p>
+                  <MeProfileName>{sigleUser.attrs.name}</MeProfileName>
+                  <MeProfileUsername>
+                    {sigleUser.attrs.username}
+                  </MeProfileUsername>
+                  <MeProfileDescription>
+                    {sigleUser.attrs.description}
+                  </MeProfileDescription>
                 </div>
               </MeProfile>
 
