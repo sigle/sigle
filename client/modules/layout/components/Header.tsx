@@ -74,7 +74,7 @@ export const Header = () => {
       content: '',
     });
     await privateStory.save();
-    Router.push(`/me/stories/${privateStory._id}`);
+    Router.push(`/me/stories/drafts/${privateStory._id}`);
   };
 
   const userImage = sigleUser

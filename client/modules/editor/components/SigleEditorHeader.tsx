@@ -29,11 +29,12 @@ const OptionIcon = styled.div`
 `;
 
 interface Props {
+  story: any;
   state: any;
   onOpenOptions: () => void;
 }
 
-export const SigleEditorHeader = ({ state, onOpenOptions }: Props) => {
+export const SigleEditorHeader = ({ story, state, onOpenOptions }: Props) => {
   return (
     <FixedContainer>
       <Container>
@@ -49,8 +50,9 @@ export const SigleEditorHeader = ({ state, onOpenOptions }: Props) => {
 
           <HeaderSeparator />
 
-          {/* TODO only if story is private */}
-          <Button color="primary">Publish now</Button>
+          {story.attrs.radiksType === 'PrivateStory' && (
+            <Button color="primary">Publish now</Button>
+          )}
 
           <OptionIcon onClick={onOpenOptions}>
             <MdSettings size={20} />

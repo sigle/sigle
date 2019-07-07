@@ -71,12 +71,16 @@ export const StoryItem = ({
   onPublish,
   onUnPublish,
 }: Props) => {
+  const storyLink =
+    story.attrs.radiksType === 'PrivateStory'
+      ? `me/stories/drafts/${story.attrs._id}`
+      : `me/stories/${story.attrs._id}`;
   return (
     <StoryItemContainer>
       <div className="top-container">
         <div className="left">
           <div className="title-container">
-            <Link className="title" href={`me/stories/${story.attrs._id}`}>
+            <Link className="title" href={storyLink}>
               {story.attrs.title}
             </Link>
             {story.attrs.radiksType === 'PrivateStory' && (
@@ -115,12 +119,7 @@ export const StoryItem = ({
         <div className="right">
           {/*
           // @ts-ignore */}
-          <Button
-            color="primary"
-            className="edit"
-            as={Link}
-            href={`me/stories/${story.attrs._id}`}
-          >
+          <Button color="primary" className="edit" as={Link} href={storyLink}>
             Edit
           </Button>
           <Menu>

@@ -4,13 +4,14 @@ import { SigleEditor } from '../modules/editor/containers/SigleEditor';
 
 interface Props {
   storyId: string;
+  storyType?: 'private';
 }
 
 export const Editor = (props: Props) => {
   return (
     <FullHeightContainer>
       <MinHeightContainer>
-        <SigleEditor storyId={props.storyId} />
+        <SigleEditor storyId={props.storyId} storyType={props.storyType} />
       </MinHeightContainer>
     </FullHeightContainer>
   );
@@ -18,5 +19,6 @@ export const Editor = (props: Props) => {
 
 Editor.getInitialProps = ({ query }: any) => {
   const storyId = query.storyId;
-  return { storyId };
+  const storyType = query.storyType;
+  return { storyId, storyType };
 };

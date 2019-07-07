@@ -1,10 +1,11 @@
 import React, { useState, useEffect, useReducer, useRef } from 'react';
 import { toast } from 'react-toastify';
-import { PrivateStory } from '../../../models';
+import { PrivateStory, PublicStory } from '../../../models';
 import { SigleEditor as Component } from '../components/SigleEditor';
 
 interface Props {
   storyId: string;
+  storyType?: 'private';
 }
 
 type Action = { type: 'fetching' } | { type: 'success' } | { type: 'error' };
@@ -29,7 +30,7 @@ const reducer = (state: State, action: Action): State => {
   }
 };
 
-export const SigleEditor = ({ storyId }: Props) => {
+export const SigleEditor = ({ storyId, storyType }: Props) => {
   // TODO error state
   const [loading, setLoading] = useState<boolean>(true);
   const [optionsOpen, setOptionsOpen] = useState<boolean>(false);
@@ -38,9 +39,14 @@ export const SigleEditor = ({ storyId }: Props) => {
   const timeoutId = useRef<number | undefined>(undefined);
 
   const fetchStory = async () => {
-    // TODO this can be either a private or a public story
-    const privateStory = await PrivateStory.findById(storyId);
-    setStory(privateStory);
+    // TODO try catch
+    if (storyType === 'private') {
+      const privateStory = await PrivateStory.findById(storyId);
+      setStory(privateStory);
+    } else {
+      const publicStory = await PublicStory.findById(storyId);
+      setStory(publicStory);
+    }
     setLoading(false);
   };
 

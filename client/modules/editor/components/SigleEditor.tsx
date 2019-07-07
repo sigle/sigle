@@ -38,12 +38,12 @@ export const SigleEditor = ({
   optionsOpen,
   onChangeOptionsOpen,
 }: Props) => {
-  console.log(story);
   const [title, setTitle] = useState(story.attrs.title);
 
   return (
     <React.Fragment>
       <SigleEditorHeader
+        story={story}
         state={state}
         onOpenOptions={() => onChangeOptionsOpen(true)}
       />
