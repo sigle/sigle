@@ -2,6 +2,7 @@ import React, { useState, useEffect, useReducer, useRef } from 'react';
 import { toast } from 'react-toastify';
 import { PrivateStory, PublicStory } from '../../../models';
 import { SigleEditor as Component } from '../components/SigleEditor';
+import Router from 'next/router';
 
 interface Props {
   storyId: string;
@@ -50,6 +51,17 @@ export const SigleEditor = ({ storyId, storyType }: Props) => {
     setLoading(false);
   };
 
+  const handlePublishStory = async () => {
+    try {
+      const publicStory = new PublicStory({ ...story.attrs });
+      await publicStory.save();
+      Router.push(`/me/stories/${publicStory.attrs._id}`);
+    } catch (error) {
+      console.error(error);
+      toast.error(error.message);
+    }
+  };
+
   const handleChangeStoryField = ({
     fieldName,
     value,
@@ -81,6 +93,7 @@ export const SigleEditor = ({ storyId, storyType }: Props) => {
         dispatch({ type: 'success' });
       } catch (error) {
         dispatch({ type: 'error' });
+        console.error(error);
         toast.error(error.message);
       }
     }, 1500);
@@ -113,6 +126,7 @@ export const SigleEditor = ({ storyId, storyType }: Props) => {
       story={story}
       state={state}
       onChangeStoryField={handleChangeStoryField}
+      onPublishStory={handlePublishStory}
       optionsOpen={optionsOpen}
       onChangeOptionsOpen={open => setOptionsOpen(open)}
     />

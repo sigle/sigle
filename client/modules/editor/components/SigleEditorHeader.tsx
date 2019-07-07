@@ -32,9 +32,15 @@ interface Props {
   story: any;
   state: any;
   onOpenOptions: () => void;
+  onPublishStory: () => void;
 }
 
-export const SigleEditorHeader = ({ story, state, onOpenOptions }: Props) => {
+export const SigleEditorHeader = ({
+  story,
+  state,
+  onOpenOptions,
+  onPublishStory,
+}: Props) => {
   return (
     <FixedContainer>
       <Container>
@@ -51,7 +57,9 @@ export const SigleEditorHeader = ({ story, state, onOpenOptions }: Props) => {
           <HeaderSeparator />
 
           {story.attrs.radiksType === 'PrivateStory' && (
-            <Button color="primary">Publish now</Button>
+            <Button color="primary" onClick={onPublishStory}>
+              Publish now
+            </Button>
           )}
           {story.attrs.radiksType === 'PublicStory' && (
             <HeaderStatus>Published</HeaderStatus>

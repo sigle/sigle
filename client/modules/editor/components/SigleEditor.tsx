@@ -29,6 +29,7 @@ interface Props {
   onChangeStoryField: any;
   optionsOpen: boolean;
   onChangeOptionsOpen: (open: boolean) => void;
+  onPublishStory: () => void;
 }
 
 export const SigleEditor = ({
@@ -37,6 +38,7 @@ export const SigleEditor = ({
   onChangeStoryField,
   optionsOpen,
   onChangeOptionsOpen,
+  onPublishStory,
 }: Props) => {
   const [title, setTitle] = useState(story.attrs.title);
 
@@ -46,6 +48,7 @@ export const SigleEditor = ({
         story={story}
         state={state}
         onOpenOptions={() => onChangeOptionsOpen(true)}
+        onPublishStory={onPublishStory}
       />
       <StyledContainer>
         <StyledLink href="/me">
