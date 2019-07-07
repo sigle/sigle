@@ -88,6 +88,14 @@ const StoryContent = styled.p`
   h3 {
     ${tw`mt-6 mb-4 text-2xl`};
   }
+
+  img {
+    margin: auto;
+  }
+
+  a {
+    ${tw`underline text-primary`};
+  }
 `;
 
 const StorySocial = styled.div`

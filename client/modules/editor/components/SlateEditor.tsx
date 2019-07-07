@@ -8,6 +8,7 @@ import {
   RenderMarkProps,
   getEventTransfer,
   EditorProps,
+  RenderInlineProps,
 } from 'slate-react';
 import SoftBreak from 'slate-soft-break';
 import { Block, Value } from 'slate';
@@ -81,6 +82,10 @@ const EditorStyle = styled.div`
 
   h3 {
     ${tw`mt-6 mb-4 text-2xl`};
+  }
+
+  a {
+    ${tw`underline text-primary`};
   }
 `;
 
@@ -258,6 +263,73 @@ const BlockButton = ({ editor, type, icon: Icon }: MarkButtonProps) => {
   );
 };
 
+const wrapLink = (editor: Editor, href: string) => {
+  editor.wrapInline({
+    type: 'link',
+    data: { href },
+  });
+
+  editor.moveToEnd();
+};
+
+const unwrapLink = (editor: Editor) => {
+  editor.unwrapInline('link');
+};
+
+// TODO onPaste for links see https://github.com/ianstormtaylor/slate/blob/master/examples/links/index.js
+const onClickLink = (editor: Editor) => {
+  const { value } = editor;
+
+  if (hasLinks(value)) {
+    editor.command(unwrapLink as any);
+  } else if (value.selection.isExpanded) {
+    const href = window.prompt('Enter the URL of the link:');
+
+    if (href === null) {
+      return;
+    }
+
+    editor.command(wrapLink as any, href);
+  } else {
+    const href = window.prompt('Enter the URL of the link:');
+
+    if (href === null) {
+      return;
+    }
+
+    const text = window.prompt('Enter the text for the link:');
+
+    if (text === null) {
+      return;
+    }
+
+    editor
+      .insertText(text)
+      .moveFocusBackward(text.length)
+      .command(wrapLink as any, href);
+  }
+};
+
+interface LinkButtonProps {
+  editor: Editor;
+}
+
+const LinkButton = ({ editor }: LinkButtonProps) => {
+  const { value } = editor;
+  const isActive = hasLinks(value);
+  return (
+    <MenuButton
+      active={isActive}
+      onMouseDown={event => {
+        event.preventDefault();
+        onClickLink(editor);
+      }}
+    >
+      <MdLink size={22} />
+    </MenuButton>
+  );
+};
+
 interface HoverMenuProps {
   editor: Editor;
 }
@@ -287,6 +359,7 @@ const HoverMenu = React.forwardRef<{}, HoverMenuProps>(
           type="bulleted-list"
           icon={MdFormatListBulleted}
         />
+        <LinkButton editor={editor} />
       </Menu>,
       root
     );
@@ -350,57 +423,6 @@ export const SlateEditor = ({ story, onChangeContent }: Props) => {
       type: 'image',
       data: { src },
     });
-  };
-
-  const wrapLink = (editor: Editor, href: string) => {
-    editor.wrapInline({
-      type: 'link',
-      data: { href },
-    });
-
-    editor.moveToEnd();
-  };
-
-  const unwrapLink = (editor: Editor) => {
-    editor.unwrapInline('link');
-  };
-
-  const onClickLink = (
-    event: React.MouseEvent<HTMLButtonElement, MouseEvent>
-  ) => {
-    event.preventDefault();
-
-    const editor = editorRef.current;
-    const { value } = editor;
-
-    if (hasLinks(value)) {
-      editor.command(unwrapLink);
-    } else if (value.selection.isExpanded) {
-      const href = window.prompt('Enter the URL of the link:');
-
-      if (href === null) {
-        return;
-      }
-
-      editor.command(wrapLink, href);
-    } else {
-      const href = window.prompt('Enter the URL of the link:');
-
-      if (href === null) {
-        return;
-      }
-
-      const text = window.prompt('Enter the text for the link:');
-
-      if (text === null) {
-        return;
-      }
-
-      editor
-        .insertText(text)
-        .moveFocusBackward(text.length)
-        .command(wrapLink, href);
-    }
   };
 
   /**
@@ -512,6 +534,24 @@ export const SlateEditor = ({ story, onChangeContent }: Props) => {
   };
 
   /**
+   * Render a mark-toggling toolbar button.
+   */
+  const renderLinkButton = () => {
+    const isActive = hasLinks(value);
+
+    return (
+      <SlateEditorToolbarButton
+        onMouseDown={event => {
+          event.preventDefault();
+          onClickLink(editorRef.current);
+        }}
+      >
+        <MdLink color={isActive ? '#000000' : '#cccccc'} size={18} />
+      </SlateEditorToolbarButton>
+    );
+  };
+
+  /**
    * Render a Slate block.
    */
   const renderBlock = (props: RenderBlockProps, _: any, next: () => any) => {
@@ -569,6 +609,26 @@ export const SlateEditor = ({ story, onChangeContent }: Props) => {
   };
 
   /**
+   * Render a Slate inline.
+   */
+  const renderInline = (props: RenderInlineProps, _: any, next: () => any) => {
+    const { attributes, children, node } = props;
+
+    switch (node.type) {
+      case 'link':
+        const { data } = node;
+        const href = data.get('href');
+        return (
+          <a {...attributes} href={href}>
+            {children}
+          </a>
+        );
+      default:
+        return next();
+    }
+  };
+
+  /**
    * Render the Editor.
    */
   const renderEditor = (
@@ -597,9 +657,7 @@ export const SlateEditor = ({ story, onChangeContent }: Props) => {
           {renderBlockButton('heading-two', MdLooksTwo)}
           {renderBlockButton('numbered-list', MdFormatListNumbered)}
           {renderBlockButton('bulleted-list', MdFormatListBulleted)}
-          <SlateEditorToolbarButton onMouseDown={onClickLink}>
-            <MdLink color={'#b8c2cc'} size={18} />
-          </SlateEditorToolbarButton>
+          {renderLinkButton()}
         </SlateEditorToolbarButtonContainer>
       </SlateEditorToolbar>
 
@@ -616,6 +674,7 @@ export const SlateEditor = ({ story, onChangeContent }: Props) => {
           placeholder="Text"
           renderBlock={renderBlock}
           renderMark={renderMark}
+          renderInline={renderInline}
           renderEditor={renderEditor as any}
         />
       </EditorStyle>
