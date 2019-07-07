@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import styled from 'styled-components';
 import tw from 'tailwind.macro';
 import { MdArrowBack } from 'react-icons/md';
@@ -6,6 +6,7 @@ import { Link, Container } from '../../../components';
 import { SlateEditor } from './SlateEditor';
 import { SigleEditorOptions } from './SigleEditorOptions';
 import { SigleEditorHeader } from './SigleEditorHeader';
+import { SigleEditorTitle } from './SigleEditorTitle';
 
 const StyledContainer = styled(Container)`
   margin-top: 60px;
@@ -19,12 +20,9 @@ const StyledArrowBack = styled(MdArrowBack)`
   ${tw`mr-2`};
 `;
 
-const Input = styled.input`
-  ${tw`outline-none w-full text-2xl font-bold bg-transparent mb-8`};
-`;
-
 interface Props {
-  story: any;
+  loading: boolean;
+  story?: any;
   state: any;
   onChangeStoryField: any;
   optionsOpen: boolean;
@@ -33,6 +31,7 @@ interface Props {
 }
 
 export const SigleEditor = ({
+  loading,
   story,
   state,
   onChangeStoryField,
@@ -40,8 +39,6 @@ export const SigleEditor = ({
   onChangeOptionsOpen,
   onPublishStory,
 }: Props) => {
-  const [title, setTitle] = useState(story.attrs.title);
-
   return (
     <React.Fragment>
       <SigleEditorHeader
@@ -54,25 +51,29 @@ export const SigleEditor = ({
         <StyledLink href="/me">
           <StyledArrowBack /> Back to my stories
         </StyledLink>
-        <Input
-          value={title}
-          onChange={e => {
-            setTitle(e.target.value);
-            onChangeStoryField({ fieldName: 'title', value: e.target.value });
-          }}
-          placeholder="Title"
-        />
-        <SlateEditor
-          story={story}
-          onChangeContent={value => {
-            onChangeStoryField({ fieldName: 'content', value });
-          }}
-        />
-        <SigleEditorOptions
-          story={story}
-          optionsOpen={optionsOpen}
-          onChangeOptionsOpen={onChangeOptionsOpen}
-        />
+        {/* TODO nice loading */}
+        {loading && <div>Loading ...</div>}
+        {/* TODO nice 404 */}
+        {!loading && !story && <div>Story not found</div>}
+        {story && (
+          <React.Fragment>
+            <SigleEditorTitle
+              story={story}
+              onChangeStoryField={onChangeStoryField}
+            />
+            <SlateEditor
+              story={story}
+              onChangeContent={value => {
+                onChangeStoryField({ fieldName: 'content', value });
+              }}
+            />
+            <SigleEditorOptions
+              story={story}
+              optionsOpen={optionsOpen}
+              onChangeOptionsOpen={onChangeOptionsOpen}
+            />
+          </React.Fragment>
+        )}
       </StyledContainer>
     </React.Fragment>
   );

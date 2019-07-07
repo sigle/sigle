@@ -111,18 +111,9 @@ export const SigleEditor = ({ storyId, storyType }: Props) => {
     };
   }, []);
 
-  if (loading) {
-    // TODO nice loading
-    return <div>Loading ...</div>;
-  }
-
-  // TODO see why this never happen
-  if (!story) {
-    // TODO nice 404
-    return <div>Story not found</div>;
-  }
   return (
     <Component
+      loading={loading}
       story={story}
       state={state}
       onChangeStoryField={handleChangeStoryField}

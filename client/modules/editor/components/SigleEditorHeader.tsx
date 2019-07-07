@@ -29,7 +29,7 @@ const OptionIcon = styled.div`
 `;
 
 interface Props {
-  story: any;
+  story?: any;
   state: any;
   onOpenOptions: () => void;
   onPublishStory: () => void;
@@ -56,18 +56,20 @@ export const SigleEditorHeader = ({
 
           <HeaderSeparator />
 
-          {story.attrs.radiksType === 'PrivateStory' && (
+          {story && story.attrs.radiksType === 'PrivateStory' && (
             <Button color="primary" onClick={onPublishStory}>
               Publish now
             </Button>
           )}
-          {story.attrs.radiksType === 'PublicStory' && (
+          {story && story.attrs.radiksType === 'PublicStory' && (
             <HeaderStatus>Published</HeaderStatus>
           )}
 
-          <OptionIcon onClick={onOpenOptions}>
-            <MdSettings size={20} />
-          </OptionIcon>
+          {story && (
+            <OptionIcon onClick={onOpenOptions}>
+              <MdSettings size={20} />
+            </OptionIcon>
+          )}
         </HeaderContainer>
       </Container>
     </FixedContainer>
