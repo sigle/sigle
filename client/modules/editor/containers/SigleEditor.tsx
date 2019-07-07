@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useReducer, useRef } from 'react';
-import { Value } from 'slate';
+import { toast } from 'react-toastify';
 import { PrivateStory } from '../../../models';
 import { SigleEditor as Component } from '../components/SigleEditor';
 
@@ -44,44 +44,38 @@ export const SigleEditor = ({ storyId }: Props) => {
     setLoading(false);
   };
 
-  const handleChangeTitle = (newTitle: string) => {
+  const handleChangeStoryField = ({
+    fieldName,
+    value,
+  }: {
+    fieldName: 'content' | 'title';
+    value: any;
+  }) => {
     if (!story) return;
 
     // We are now fetching, meaning that we will save at some point
     if (state.status !== 'fetching') {
       dispatch({ type: 'fetching' });
     }
-    // We cancel the previous call to the function
-    clearTimeout(timeoutId.current);
-    timeoutId.current = setTimeout(async () => {
-      try {
-        story.update({ title: newTitle });
-        await story.save();
-        dispatch({ type: 'success' });
-      } catch (error) {
-        dispatch({ type: 'error' });
-        // TODO alert with error message
-      }
-    }, 1500);
-  };
 
-  const handleChangeContent = (newContent: Value) => {
-    if (!story) return;
-
-    // We are now fetching, meaning that we will save at some point
-    if (state.status !== 'fetching') {
-      dispatch({ type: 'fetching' });
+    // For all other fields than content we set directly
+    // We don't set content directly for performance reasons
+    if (fieldName !== 'content') {
+      story.update({ [fieldName]: value });
     }
+
     // We cancel the previous call to the function
     clearTimeout(timeoutId.current);
     timeoutId.current = setTimeout(async () => {
       try {
-        story.update({ content: JSON.stringify(newContent.toJSON()) });
+        if (fieldName === 'content') {
+          story.update({ content: JSON.stringify(value.toJSON()) });
+        }
         await story.save();
         dispatch({ type: 'success' });
       } catch (error) {
         dispatch({ type: 'error' });
-        // TODO alert with error message
+        toast.error(error.message);
       }
     }, 1500);
   };
@@ -112,8 +106,7 @@ export const SigleEditor = ({ storyId }: Props) => {
     <Component
       story={story}
       state={state}
-      onChangeTitle={handleChangeTitle}
-      onChangeContent={handleChangeContent}
+      onChangeStoryField={handleChangeStoryField}
       optionsOpen={optionsOpen}
       onChangeOptionsOpen={open => setOptionsOpen(open)}
     />

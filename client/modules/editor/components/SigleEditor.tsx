@@ -26,8 +26,7 @@ const Input = styled.input`
 interface Props {
   story: any;
   state: any;
-  onChangeTitle: any;
-  onChangeContent: any;
+  onChangeStoryField: any;
   optionsOpen: boolean;
   onChangeOptionsOpen: (open: boolean) => void;
 }
@@ -35,8 +34,7 @@ interface Props {
 export const SigleEditor = ({
   story,
   state,
-  onChangeTitle,
-  onChangeContent,
+  onChangeStoryField,
   optionsOpen,
   onChangeOptionsOpen,
 }: Props) => {
@@ -57,11 +55,16 @@ export const SigleEditor = ({
           value={title}
           onChange={e => {
             setTitle(e.target.value);
-            onChangeTitle(e.target.value);
+            onChangeStoryField({ fieldName: 'title', value: e.target.value });
           }}
           placeholder="Title"
         />
-        <SlateEditor story={story} onChangeContent={onChangeContent} />
+        <SlateEditor
+          story={story}
+          onChangeContent={value => {
+            onChangeStoryField({ fieldName: 'content', value });
+          }}
+        />
         <SigleEditorOptions
           story={story}
           optionsOpen={optionsOpen}
