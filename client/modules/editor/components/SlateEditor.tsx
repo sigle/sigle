@@ -1,11 +1,13 @@
 import React, { useRef, useState } from 'react';
-import styled from 'styled-components';
+import ReactDOM from 'react-dom';
+import styled, { css } from 'styled-components';
 import tw from 'tailwind.macro';
 import {
   Editor,
   RenderBlockProps,
   RenderMarkProps,
   getEventTransfer,
+  EditorProps,
 } from 'slate-react';
 import SoftBreak from 'slate-soft-break';
 import { Block, Value } from 'slate';
@@ -21,18 +23,13 @@ import {
   MdLooksTwo,
   MdLooks3,
   MdLooksOne,
-  MdSettings,
 } from 'react-icons/md';
 import { getConfig } from 'radiks';
-import { config } from '../../../config';
+import { hasBlock, hasMark, hasLinks } from './utils';
 
 const SlateEditorToolbar = styled.div`
-  ${tw`py-4 border-b border-solid border-grey flex z-10 bg-white sticky flex justify-between max-w-full overflow-auto`};
-  top: 0;
-
-  @media (min-width: ${config.breakpoints.md}px) {
-    ${tw`overflow-visible`};
-  }
+  ${tw`py-4 border-b border-solid border-grey flex z-10 bg-white sticky flex justify-between max-w-full overflow-auto md:hidden`};
+  top: 60px;
 `;
 
 const SlateEditorToolbarButtonContainer = styled.div`
@@ -41,18 +38,6 @@ const SlateEditorToolbarButtonContainer = styled.div`
 
 const SlateEditorToolbarButton = styled.button`
   ${tw`py-2 px-2 outline-none flex`};
-`;
-
-const SlateToolbarActionContainer = styled.div`
-  ${tw`flex items-center`};
-`;
-
-const SlateToolbarActionIcon = styled.div`
-  ${tw`p-2 -mr-2 flex items-center cursor-pointer text-primary`};
-`;
-
-const SlateToolbarActionMessage = styled.div`
-  ${tw`text-grey-dark lg:text-sm`};
 `;
 
 const StyledEditor = styled(Editor)`
@@ -148,20 +133,171 @@ const emptyNode = {
 
 const slatePlugins = [SoftBreak({ shift: true })];
 
-interface Props {
-  story: any;
-  state: any;
-  onChangeContent: (value: Value) => void;
-  onOpenOptions: () => void;
+const Menu = styled.div`
+  ${tw`flex`};
+  padding: 8px 7px 6px;
+  position: absolute;
+  z-index: 1;
+  top: -10000px;
+  left: -10000px;
+  margin-top: -6px;
+  opacity: 0;
+  background-color: #222;
+  border-radius: 4px;
+  transition: opacity 0.75s;
+`;
+
+const MenuButton = styled.div<{ active: boolean }>`
+  ${tw`text-white px-1 cursor-pointer`};
+  ${props =>
+    props.active &&
+    css`
+      ${tw`text-primary`};
+    `}
+`;
+
+interface MarkButtonProps {
+  editor: Editor;
+  type: string;
+  icon: IconType;
 }
 
-export const SlateEditor = ({
-  story,
-  state,
-  onChangeContent,
-  onOpenOptions,
-}: Props) => {
+const onClickMark = (editor: Editor, type: string) => {
+  editor.toggleMark(type);
+};
+
+const MarkButton = ({ editor, type, icon: Icon }: MarkButtonProps) => {
+  const { value } = editor;
+  const isActive = hasMark(value, type);
+  return (
+    <MenuButton
+      active={isActive}
+      onMouseDown={event => {
+        event.preventDefault();
+        onClickMark(editor, type);
+      }}
+    >
+      <Icon size={22} />
+    </MenuButton>
+  );
+};
+
+const onClickBlock = (editor: Editor, type: string) => {
+  const { value } = editor;
+  const { document } = value;
+
+  // Handle everything but list buttons.
+  if (type !== 'bulleted-list' && type !== 'numbered-list') {
+    const isActive = hasBlock(value, type);
+    const isList = hasBlock(value, 'list-item');
+
+    if (isList) {
+      editor
+        .setBlocks(isActive ? DEFAULT_NODE : type)
+        .unwrapBlock('bulleted-list')
+        .unwrapBlock('numbered-list');
+    } else {
+      editor.setBlocks(isActive ? DEFAULT_NODE : type);
+    }
+  } else {
+    // Handle the extra wrapping required for list buttons.
+    const isList = hasBlock(value, 'list-item');
+    const isType = value.blocks.some((block: any) => {
+      return !!document.getClosest(
+        block.key,
+        (parent: any) => parent.type === type
+      );
+    });
+
+    if (isList && isType) {
+      editor
+        .setBlocks(DEFAULT_NODE)
+        .unwrapBlock('bulleted-list')
+        .unwrapBlock('numbered-list');
+    } else if (isList) {
+      editor
+        .unwrapBlock(
+          type === 'bulleted-list' ? 'numbered-list' : 'bulleted-list'
+        )
+        .wrapBlock(type);
+    } else {
+      editor.setBlocks('list-item').wrapBlock(type);
+    }
+  }
+};
+
+const BlockButton = ({ editor, type, icon: Icon }: MarkButtonProps) => {
+  const { value } = editor;
+  let isActive = hasBlock(value, type);
+
+  if (['numbered-list', 'bulleted-list'].includes(type)) {
+    const { document, blocks } = value;
+
+    if (blocks.size > 0) {
+      const parent = document.getParent(blocks.first().key);
+      isActive =
+        hasBlock(value, 'list-item') &&
+        !!parent &&
+        (parent as any).type === type;
+    }
+  }
+
+  return (
+    <MenuButton
+      active={isActive}
+      onMouseDown={event => {
+        event.preventDefault();
+        onClickBlock(editor, type);
+      }}
+    >
+      <Icon size={22} />
+    </MenuButton>
+  );
+};
+
+interface HoverMenuProps {
+  editor: Editor;
+}
+
+const HoverMenu = React.forwardRef<{}, HoverMenuProps>(
+  ({ editor }, ref: any) => {
+    const root = window.document.getElementById('__next')!;
+    return ReactDOM.createPortal(
+      <Menu ref={ref}>
+        <MarkButton editor={editor} type="bold" icon={MdFormatBold} />
+        <MarkButton editor={editor} type="italic" icon={MdFormatItalic} />
+        <MarkButton
+          editor={editor}
+          type="underlined"
+          icon={MdFormatUnderlined}
+        />
+        <BlockButton editor={editor} type="block-quote" icon={MdFormatQuote} />
+        <BlockButton editor={editor} type="heading-one" icon={MdLooksOne} />
+        <BlockButton editor={editor} type="heading-two" icon={MdLooksTwo} />
+        <BlockButton
+          editor={editor}
+          type="numbered-list"
+          icon={MdFormatListNumbered}
+        />
+        <BlockButton
+          editor={editor}
+          type="bulleted-list"
+          icon={MdFormatListBulleted}
+        />
+      </Menu>,
+      root
+    );
+  }
+);
+
+interface Props {
+  story: any;
+  onChangeContent: (value: Value) => void;
+}
+
+export const SlateEditor = ({ story, onChangeContent }: Props) => {
   const editorRef = useRef<any>(null);
+  const menuRef = useRef<any>(null);
   const [value, setValue] = useState(
     story.attrs.content
       ? // TODO error catching of JSON.parse and fromJSON
@@ -170,27 +306,36 @@ export const SlateEditor = ({
         Value.fromJSON(emptyNode as any)
   );
 
+  /**
+   * Update the menu's absolute position.
+   */
+  const updateMenu = (value: Value) => {
+    const menu = menuRef.current;
+    if (!menu) return;
+
+    const { fragment, selection } = value;
+
+    if (selection.isBlurred || selection.isCollapsed || fragment.text === '') {
+      menu.removeAttribute('style');
+      return;
+    }
+
+    const native = window.getSelection()!;
+    const range = native.getRangeAt(0);
+    const rect = range.getBoundingClientRect();
+    menu.style.opacity = 1;
+    menu.style.top = `${rect.top + window.pageYOffset - menu.offsetHeight}px`;
+
+    menu.style.left = `${rect.left +
+      window.pageXOffset -
+      menu.offsetWidth / 2 +
+      rect.width / 2}px`;
+  };
+
   const handleTextChange = ({ value }: { value: Value }) => {
     setValue(value);
     onChangeContent(value);
-  };
-
-  /**
-   * Check if the current selection has a mark with `type` in it.
-   */
-  const hasMark = (type: string) => {
-    return value.activeMarks.some(mark => !!mark && mark.type === type);
-  };
-
-  /**
-   * Check if the any of the currently selected blocks are of `type`.
-   */
-  const hasBlock = (type: string) => {
-    return value.blocks.some(node => !!node && node.type === type);
-  };
-
-  const hasLinks = () => {
-    return value.inlines.some(inline => !!(inline && inline.type == 'link'));
+    updateMenu(value);
   };
 
   const insertImage = (editor: Editor, src: string, target: any) => {
@@ -225,7 +370,7 @@ export const SlateEditor = ({
     const editor = editorRef.current;
     const { value } = editor;
 
-    if (hasLinks()) {
+    if (hasLinks(value)) {
       editor.command(unwrapLink);
     } else if (value.selection.isExpanded) {
       const href = window.prompt('Enter the URL of the link:');
@@ -252,64 +397,6 @@ export const SlateEditor = ({
         .insertText(text)
         .moveFocusBackward(text.length)
         .command(wrapLink, href);
-    }
-  };
-
-  const onClickMark = (
-    event: React.MouseEvent<HTMLButtonElement, MouseEvent>,
-    type: string
-  ) => {
-    event.preventDefault();
-    editorRef.current.toggleMark(type);
-  };
-
-  const onClickBlock = (
-    event: React.MouseEvent<HTMLButtonElement, MouseEvent>,
-    type: string
-  ) => {
-    event.preventDefault();
-
-    const editor = editorRef.current;
-    const { value } = editor;
-    const { document } = value;
-
-    // Handle everything but list buttons.
-    if (type !== 'bulleted-list' && type !== 'numbered-list') {
-      const isActive = hasBlock(type);
-      const isList = hasBlock('list-item');
-
-      if (isList) {
-        editor
-          .setBlocks(isActive ? DEFAULT_NODE : type)
-          .unwrapBlock('bulleted-list')
-          .unwrapBlock('numbered-list');
-      } else {
-        editor.setBlocks(isActive ? DEFAULT_NODE : type);
-      }
-    } else {
-      // Handle the extra wrapping required for list buttons.
-      const isList = hasBlock('list-item');
-      const isType = value.blocks.some((block: any) => {
-        return !!document.getClosest(
-          block.key,
-          (parent: any) => parent.type === type
-        );
-      });
-
-      if (isList && isType) {
-        editor
-          .setBlocks(DEFAULT_NODE)
-          .unwrapBlock('bulleted-list')
-          .unwrapBlock('numbered-list');
-      } else if (isList) {
-        editor
-          .unwrapBlock(
-            type === 'bulleted-list' ? 'numbered-list' : 'bulleted-list'
-          )
-          .wrapBlock(type);
-      } else {
-        editor.setBlocks('list-item').wrapBlock(type);
-      }
     }
   };
 
@@ -377,10 +464,15 @@ export const SlateEditor = ({
    * Render a mark-toggling toolbar button.
    */
   const renderMarkButton = (type: string, Icon: IconType) => {
-    const isActive = hasMark(type);
+    const isActive = hasMark(value, type);
 
     return (
-      <SlateEditorToolbarButton onMouseDown={event => onClickMark(event, type)}>
+      <SlateEditorToolbarButton
+        onMouseDown={event => {
+          event.preventDefault();
+          onClickMark(editorRef.current, type);
+        }}
+      >
         <Icon color={isActive ? '#000000' : '#cccccc'} size={18} />
       </SlateEditorToolbarButton>
     );
@@ -390,7 +482,7 @@ export const SlateEditor = ({
    * Render a block-toggling toolbar button.
    */
   const renderBlockButton = (type: string, Icon: IconType) => {
-    let isActive = hasBlock(type);
+    let isActive = hasBlock(value, type);
 
     if (['numbered-list', 'bulleted-list'].includes(type)) {
       const { document, blocks } = value;
@@ -398,13 +490,18 @@ export const SlateEditor = ({
       if (blocks.size > 0) {
         const parent = document.getParent(blocks.first().key);
         isActive =
-          hasBlock('list-item') && !!parent && (parent as any).type === type;
+          hasBlock(value, 'list-item') &&
+          !!parent &&
+          (parent as any).type === type;
       }
     }
 
     return (
       <SlateEditorToolbarButton
-        onMouseDown={event => onClickBlock(event, type)}
+        onMouseDown={event => {
+          event.preventDefault();
+          onClickBlock(editorRef.current, type);
+        }}
       >
         <Icon color={isActive ? '#000000' : '#cccccc'} size={18} />
       </SlateEditorToolbarButton>
@@ -468,6 +565,23 @@ export const SlateEditor = ({
     }
   };
 
+  /**
+   * Render the Editor.
+   */
+  const renderEditor = (
+    props: EditorProps,
+    editor: Editor,
+    next: () => any
+  ) => {
+    const children = next();
+    return (
+      <React.Fragment>
+        {children}
+        <HoverMenu ref={menuRef} editor={editor} />
+      </React.Fragment>
+    );
+  };
+
   return (
     <React.Fragment>
       <SlateEditorToolbar>
@@ -485,17 +599,6 @@ export const SlateEditor = ({
             <MdLink color={'#b8c2cc'} size={18} />
           </SlateEditorToolbarButton>
         </SlateEditorToolbarButtonContainer>
-        <SlateToolbarActionContainer>
-          {state.status === 'fetching' && (
-            <SlateToolbarActionMessage>Saving ...</SlateToolbarActionMessage>
-          )}
-          {state.status === 'success' && (
-            <SlateToolbarActionMessage>Saved</SlateToolbarActionMessage>
-          )}
-          <SlateToolbarActionIcon onClick={onOpenOptions}>
-            <MdSettings size={22} />
-          </SlateToolbarActionIcon>
-        </SlateToolbarActionContainer>
       </SlateEditorToolbar>
 
       <EditorStyle>
@@ -511,6 +614,7 @@ export const SlateEditor = ({
           placeholder="Text"
           renderBlock={renderBlock}
           renderMark={renderMark}
+          renderEditor={renderEditor as any}
         />
       </EditorStyle>
     </React.Fragment>
