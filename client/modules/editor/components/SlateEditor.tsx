@@ -48,6 +48,7 @@ const StyledEditor = styled(Editor)`
 const Image = styled.img<{ selected: boolean }>`
   display: block;
   max-width: 100%;
+  margin: auto;
   box-shadow: ${props => (props.selected ? '0 0 0 1px #000000;' : 'none')};
 `;
 
@@ -148,7 +149,9 @@ const Menu = styled.div`
 `;
 
 const MenuButton = styled.div<{ active: boolean }>`
-  ${tw`text-white px-1 cursor-pointer`};
+  ${tw`text-white cursor-pointer`};
+  padding-left: 0.3rem;
+  padding-right: 0.3rem;
   ${props =>
     props.active &&
     css`
@@ -592,7 +595,6 @@ export const SlateEditor = ({ story, onChangeContent }: Props) => {
           {renderBlockButton('block-quote', MdFormatQuote)}
           {renderBlockButton('heading-one', MdLooksOne)}
           {renderBlockButton('heading-two', MdLooksTwo)}
-          {renderBlockButton('heading-three', MdLooks3)}
           {renderBlockButton('numbered-list', MdFormatListNumbered)}
           {renderBlockButton('bulleted-list', MdFormatListBulleted)}
           <SlateEditorToolbarButton onMouseDown={onClickLink}>

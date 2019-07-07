@@ -19,12 +19,8 @@ const StyledArrowBack = styled(MdArrowBack)`
   ${tw`mr-2`};
 `;
 
-const EditorTitle = styled.div`
-  ${tw`text-2xl font-bold mb-4`};
-`;
-
 const Input = styled.input`
-  ${tw`outline-none w-full text-xl bg-transparent mb-4`};
+  ${tw`outline-none w-full text-2xl font-bold bg-transparent mb-8`};
 `;
 
 interface Props {
@@ -57,7 +53,6 @@ export const SigleEditor = ({
         <StyledLink href="/me">
           <StyledArrowBack /> Back to my stories
         </StyledLink>
-        <EditorTitle>Editor</EditorTitle>
         <Input
           value={title}
           onChange={e => {
