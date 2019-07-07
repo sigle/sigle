@@ -6,7 +6,7 @@ import { Value } from 'slate';
 import Html from 'slate-html-serializer';
 import dompurify from 'dompurify';
 import { TiSocialFacebook, TiSocialTwitter } from 'react-icons/ti';
-import { PrivateStory } from '../../models';
+import { PublicStory as PublicStoryModel } from '../../models';
 import { defaultUserImage } from '../../utils';
 import { config } from '../../config';
 
@@ -187,8 +187,6 @@ const rules = [
 
 const html = new Html({ rules });
 
-const storyId = '4e5e23c8e246-41bd-b8e3-b03dea674f35';
-
 interface Story {
   title: string;
   createdAt: string;
@@ -201,28 +199,34 @@ interface Story {
   };
 }
 
-export const PublicStory = () => {
+interface Props {
+  storyId: string;
+}
+
+export const PublicStory = ({ storyId }: Props) => {
   // TODO fetch with graphql and setup SEO
   const [story, setStory] = useState<Story>();
 
   const fetchStory = async () => {
-    const privateStory = await PrivateStory.findById(storyId);
-    setStory({
-      title: privateStory.attrs.title,
-      createdAt: privateStory.attrs.createdAt,
-      content: dompurify.sanitize(
-        html.serialize(Value.fromJSON(
-          JSON.parse(privateStory.attrs.content)
-        ) as any)
-      ),
-      imageUrl:
-        'https://images.unsplash.com/photo-1558980664-769d59546b3d?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=2100&q=80',
-      user: {
-        username: 'leopradel.id.blockstack',
-        name: 'Leo Pradel',
-        imageUrl: defaultUserImage('leopradel.id.blockstack', 100),
-      },
-    });
+    const publicStory = await PublicStoryModel.findById(storyId);
+    if (publicStory) {
+      setStory({
+        title: publicStory.attrs.title,
+        createdAt: publicStory.attrs.createdAt,
+        content: dompurify.sanitize(
+          html.serialize(Value.fromJSON(
+            JSON.parse(publicStory.attrs.content)
+          ) as any)
+        ),
+        imageUrl:
+          'https://images.unsplash.com/photo-1558980664-769d59546b3d?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=2100&q=80',
+        user: {
+          username: 'leopradel.id.blockstack',
+          name: 'Leo Pradel',
+          imageUrl: defaultUserImage('leopradel.id.blockstack', 100),
+        },
+      });
+    }
   };
 
   useEffect(() => {
@@ -230,6 +234,7 @@ export const PublicStory = () => {
   }, []);
 
   if (!story) {
+    // TODO nice 404
     return null;
   }
 

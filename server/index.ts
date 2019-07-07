@@ -89,6 +89,11 @@ nextApp.prepare().then(async () => {
     return nextApp.render(req, res, '/profile', { username });
   });
 
+  expressApp.get('/@:username/:storyId', (req, res) => {
+    const { username, storyId } = req.params;
+    return nextApp.render(req, res, '/story', { username, storyId });
+  });
+
   expressApp.get('*', (req, res) => {
     return handle(req, res);
   });

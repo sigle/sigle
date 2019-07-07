@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import tw from 'tailwind.macro';
 import { graphql, createFragmentContainer } from 'react-relay';
 import { PublicStoryItem_story } from './__generated__/PublicStoryItem_story.graphql';
+import Link from 'next/link';
 
 const StoryContainer = styled.div`
   ${tw`w-full lg:flex py-4 border-b border-grey`};
@@ -54,12 +55,17 @@ interface Props {
 
 export const PublicStoryItemComponent = ({ story }: Props) => {
   const userDisplayName = story.user.name || story.user.username;
+  const storyLink = `/@${story.user.username}/${story._id}`;
 
   return (
     <StoryContainer>
       <StoryCover />
       <StoryContent>
-        <StoryTitle>{story.title}</StoryTitle>
+        <StoryTitle>
+          <Link href={storyLink}>
+            <a>{story.title}</a>
+          </Link>
+        </StoryTitle>
         {/* TODO display real date */}
         <StoryDate>January 26, 2017</StoryDate>
         <StoryText>{story.excerpt}</StoryText>
@@ -85,6 +91,7 @@ export const PublicStoryItem = createFragmentContainer(
     story: graphql`
       fragment PublicStoryItem_story on PublicStory {
         id
+        _id
         title
         excerpt
         user {

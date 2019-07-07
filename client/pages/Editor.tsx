@@ -18,7 +18,6 @@ export const Editor = (props: Props) => {
 };
 
 Editor.getInitialProps = ({ query }: any) => {
-  const storyId = query.storyId;
-  const storyType = query.storyType;
+  const { storyId, storyType } = query;
   return { storyId, storyType };
 };
