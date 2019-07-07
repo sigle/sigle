@@ -91,9 +91,6 @@ const EditorStyle = styled.div`
 
 // See https://github.com/ianstormtaylor/slate/blob/master/examples/rich-text/index.js
 
-// TODO add links
-// TODO handle cmd+b to set the text to bold for example
-
 const DEFAULT_NODE = 'paragraph';
 
 const schema = {
