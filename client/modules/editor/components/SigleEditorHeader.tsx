@@ -53,6 +53,9 @@ export const SigleEditorHeader = ({ story, state, onOpenOptions }: Props) => {
           {story.attrs.radiksType === 'PrivateStory' && (
             <Button color="primary">Publish now</Button>
           )}
+          {story.attrs.radiksType === 'PublicStory' && (
+            <HeaderStatus>Published</HeaderStatus>
+          )}
 
           <OptionIcon onClick={onOpenOptions}>
             <MdSettings size={20} />
