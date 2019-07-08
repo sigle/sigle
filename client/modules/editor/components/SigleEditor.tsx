@@ -8,6 +8,7 @@ import { SigleEditorOptions } from './SigleEditorOptions';
 import { SigleEditorHeader } from './SigleEditorHeader';
 import { SigleEditorTitle } from './SigleEditorTitle';
 import { RadiksPrivateStory, RadiksPublicStory } from '../../../types';
+import { State } from '../containers/SigleEditor';
 
 const StyledContainer = styled(Container)`
   margin-top: 60px;
@@ -24,8 +25,11 @@ const StyledArrowBack = styled(MdArrowBack)`
 interface Props {
   loading: boolean;
   story?: RadiksPrivateStory | RadiksPublicStory;
-  state: any;
-  onChangeStoryField: any;
+  state: State;
+  onChangeStoryField: (data: {
+    fieldName: 'content' | 'title';
+    value: any;
+  }) => void;
   optionsOpen: boolean;
   onChangeOptionsOpen: (open: boolean) => void;
   onPublishStory: () => void;

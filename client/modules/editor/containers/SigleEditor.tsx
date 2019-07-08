@@ -11,7 +11,7 @@ interface Props {
 
 type Action = { type: 'fetching' } | { type: 'success' } | { type: 'error' };
 
-interface State {
+export interface State {
   status?: 'fetching' | 'success' | 'error';
   error?: string;
 }
