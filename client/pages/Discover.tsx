@@ -31,9 +31,11 @@ export const DiscoverComponent = ({ publicStories }: Props) => {
         <DiscoverContainer>
           <DiscoverTitle>Discover the latest stories</DiscoverTitle>
 
-          {publicStories!.edges!.map(data => (
-            <PublicStoryItem key={data!.node!.id} story={data!.node!} />
-          ))}
+          {publicStories &&
+            publicStories.edges &&
+            publicStories.edges.map(data => (
+              <PublicStoryItem key={data!.node!.id} story={data!.node!} />
+            ))}
         </DiscoverContainer>
         <Footer />
       </MinHeightContainer>

@@ -82,9 +82,13 @@ const ProfileComponent = ({ user, publicStories }: Props) => {
               </TabList>
               <TabPanels>
                 <TabPanel>
-                  {publicStories.edges!.map(data => (
-                    <PublicStoryItem key={data!.node!.id} story={data!.node!} />
-                  ))}
+                  {publicStories.edges &&
+                    publicStories.edges.map(data => (
+                      <PublicStoryItem
+                        key={data!.node!.id}
+                        story={data!.node!}
+                      />
+                    ))}
                 </TabPanel>
               </TabPanels>
             </Tabs>
