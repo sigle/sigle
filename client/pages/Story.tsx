@@ -1,4 +1,5 @@
 import React from 'react';
+import { NextPage } from 'next';
 import {
   FullHeightContainer,
   MinHeightContainer,
@@ -13,7 +14,7 @@ interface Props {
   username: string;
 }
 
-export const Story = ({ storyId }: Props) => (
+export const Story: NextPage<Props> = ({ storyId }: Props) => (
   <FullHeightContainer>
     <Header />
     <MinHeightContainer>
@@ -25,7 +26,7 @@ export const Story = ({ storyId }: Props) => (
   </FullHeightContainer>
 );
 
-Story.getInitialProps = ({ query }: any) => {
-  const { storyId, username } = query;
+Story.getInitialProps = async ({ query }) => {
+  const { storyId, username } = query as { storyId: string; username: string };
   return { storyId, username };
 };

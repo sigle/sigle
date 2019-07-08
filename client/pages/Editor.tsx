@@ -1,4 +1,5 @@
 import React from 'react';
+import { NextPage } from 'next';
 import { FullHeightContainer, MinHeightContainer } from '../components';
 import { SigleEditor } from '../modules/editor/containers/SigleEditor';
 
@@ -7,7 +8,7 @@ interface Props {
   storyType?: 'private';
 }
 
-export const Editor = (props: Props) => {
+export const Editor: NextPage<Props> = props => {
   return (
     <FullHeightContainer>
       <MinHeightContainer>
@@ -17,7 +18,10 @@ export const Editor = (props: Props) => {
   );
 };
 
-Editor.getInitialProps = ({ query }: any) => {
-  const { storyId, storyType } = query;
+Editor.getInitialProps = async ({ query }) => {
+  const { storyId, storyType } = query as {
+    storyId: string;
+    storyType?: 'private';
+  };
   return { storyId, storyType };
 };

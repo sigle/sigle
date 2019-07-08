@@ -363,6 +363,8 @@ const HoverMenu = React.forwardRef<{}, HoverMenuProps>(
   }
 );
 
+HoverMenu.displayName = 'HoverMenu';
+
 interface Props {
   story: any;
   onChangeContent: (value: Value) => void;
