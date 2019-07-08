@@ -11,10 +11,11 @@ interface LinkProps
     'href'
   > {
   href: string;
+  as?: string;
 }
 
-export const Link = ({ href, ...props }: LinkProps) => (
-  <NextLink href={href}>
+export const Link = ({ href, as, ...props }: LinkProps) => (
+  <NextLink href={href} as={as}>
     <a {...props} />
   </NextLink>
 );

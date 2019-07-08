@@ -63,7 +63,13 @@ export const PublicStoryItemComponent = ({ story }: Props) => {
       <StoryCover />
       <StoryContent>
         <StoryTitle>
-          <Link href={storyLink}>
+          <Link
+            href={{
+              pathname: '/story',
+              query: { username: story.user.username, storyId: story._id },
+            }}
+            as={storyLink}
+          >
             <a>{story.title}</a>
           </Link>
         </StoryTitle>

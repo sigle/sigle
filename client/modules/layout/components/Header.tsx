@@ -74,7 +74,17 @@ export const Header = () => {
       content: '',
     });
     await privateStory.save();
-    Router.push(`/me/stories/drafts/${privateStory._id}`);
+    Router.push(
+      {
+        pathname: '/editor',
+        query: {
+          storyId: privateStory._id,
+          storyType: 'private',
+        },
+        // Next.js types are wrong for this function
+      } as any,
+      `/me/stories/drafts/${privateStory._id}`
+    );
   };
 
   const userImage = sigleUser
@@ -131,10 +141,25 @@ export const Header = () => {
                 <MenuItem onSelect={() => Router.push('/me')}>
                   My stories
                 </MenuItem>
-                <MenuItem onSelect={() => Router.push(`/@${user.username}`)}>
+                <MenuItem
+                  onSelect={() =>
+                    Router.push(
+                      {
+                        pathname: '/profile',
+                        query: {
+                          username: user.username,
+                        },
+                        // Next.js types are wrong for this function
+                      } as any,
+                      `/@${user.username}`
+                    )
+                  }
+                >
                   My profile
                 </MenuItem>
-                <MenuItem onSelect={() => Router.push('/me/settings')}>
+                <MenuItem
+                  onSelect={() => Router.push('/settings', '/me/settings')}
+                >
                   Settings
                 </MenuItem>
                 <MenuItem onSelect={handleLogout}>Sign out</MenuItem>

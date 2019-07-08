@@ -1,9 +1,9 @@
 import React from 'react';
 import styled from 'styled-components';
 import tw from 'tailwind.macro';
+import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { config } from '../../../config';
-import { Link } from '../../../components';
 
 const MeContainer = styled.div`
   ${tw`flex flex-wrap`};
@@ -53,24 +53,24 @@ export const Me = ({ children }: Props) => {
       <MeMenu>
         <ul>
           <li>
-            <Link href="/me" className={route === '/me' ? 'active' : ''}>
-              <span>My stories</span>
+            <Link href="/me">
+              <a className={route === '/me' ? 'active' : ''}>
+                <span>My stories</span>
+              </a>
             </Link>
           </li>
           <li>
-            <Link
-              href="/me/stats"
-              className={route === '/stats' ? 'active' : ''}
-            >
-              <span>Stats</span>
+            <Link href="/stats" as="/me/stats">
+              <a className={route === '/stats' ? 'active' : ''}>
+                <span>Stats</span>
+              </a>
             </Link>
           </li>
           <li>
-            <Link
-              href="/me/settings"
-              className={route === '/settings' ? 'active' : ''}
-            >
-              <span>Settings</span>
+            <Link href="/settings" as="/me/settings">
+              <a className={route === '/settings' ? 'active' : ''}>
+                <span>Settings</span>
+              </a>
             </Link>
           </li>
         </ul>

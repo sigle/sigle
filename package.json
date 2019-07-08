@@ -32,15 +32,6 @@
       "git add"
     ]
   },
-  "eslintConfig": {
-    "extends": "react-app"
-  },
-  "browserslist": [
-    ">0.2%",
-    "not dead",
-    "not ie <= 11",
-    "not op_mini all"
-  ],
   "dependencies": {
     "@reach/dialog": "0.2.9",
     "@reach/menu-button": "0.1.18",

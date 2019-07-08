@@ -2,12 +2,12 @@ import React from 'react';
 import styled from 'styled-components';
 import tw from 'tailwind.macro';
 import { MdSettings, MdRemoveRedEye } from 'react-icons/md';
+import Link from 'next/link';
 import { format } from 'date-fns';
 import Tippy from '@tippy.js/react';
 import '@reach/menu-button/styles.css';
 import {
   Button,
-  Link,
   Menu,
   MenuList,
   MenuButton,
@@ -71,7 +71,15 @@ export const StoryItem = ({
   onPublish,
   onUnPublish,
 }: Props) => {
-  const storyLink =
+  const storyLinkHref = {
+    pathname: 'editor',
+    query: {
+      storyId: story.attrs._id,
+      storyType:
+        story.attrs.radiksType === 'PrivateStory' ? 'private' : undefined,
+    },
+  };
+  const storyLinkAs =
     story.attrs.radiksType === 'PrivateStory'
       ? `me/stories/drafts/${story.attrs._id}`
       : `me/stories/${story.attrs._id}`;
@@ -80,8 +88,8 @@ export const StoryItem = ({
       <div className="top-container">
         <div className="left">
           <div className="title-container">
-            <Link className="title" href={storyLink}>
-              {story.attrs.title}
+            <Link href={storyLinkHref} as={storyLinkAs}>
+              <a className="title">{story.attrs.title}</a>
             </Link>
             {story.attrs.radiksType === 'PrivateStory' && (
               <Tippy
@@ -117,11 +125,17 @@ export const StoryItem = ({
           )}
         </div>
         <div className="right">
-          {/*
-          // @ts-ignore */}
-          <Button color="primary" className="edit" as={Link} href={storyLink}>
-            Edit
-          </Button>
+          <Link href={storyLinkHref} as={storyLinkAs}>
+            <Button
+              color="primary"
+              className="edit"
+              as="a"
+              style={{ cursor: 'pointer' }}
+            >
+              Edit
+            </Button>
+          </Link>
+
           <Menu>
             <MenuButton>
               <MdSettings size={24} />
