@@ -17,7 +17,7 @@ install:
   - yarn install --frozen-lockfile
 
 script:
-  # Build the client
+  # Build the client and server
   - yarn build
   # Run the tests
   - yarn test

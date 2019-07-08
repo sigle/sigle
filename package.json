@@ -75,12 +75,10 @@
     "slate-soft-break": "0.9.0",
     "styled-components": "4.3.2",
     "styled-reset": "2.0.16",
-    "the-platform": "0.9.3",
     "typeface-libre-baskerville": "0.0.72",
     "typeface-roboto": "0.0.54"
   },
   "devDependencies": {
-    "@craco/craco": "3.6.0",
     "@types/dompurify": "0.0.33",
     "@types/express": "4.17.0",
     "@types/express-graphql": "0.8.0",
@@ -110,7 +108,6 @@
     "babel-plugin-macros": "2.5.1",
     "babel-plugin-relay": "5.0.0",
     "babel-plugin-styled-components": "1.10.6",
-    "craco-blockstack": "1.0.2",
     "eslint": "6.0.1",
     "eslint-config-prettier": "6.0.0",
     "eslint-plugin-prettier": "3.1.0",
@@ -120,7 +117,6 @@
     "next-compose-plugins": "2.2.0",
     "nodemon": "1.19.1",
     "prettier": "1.18.2",
-    "react-scripts": "2.1.8",
     "relay-compiler": "5.0.0",
     "relay-compiler-language-typescript": "4.3.0",
     "tailwind.macro": "1.0.0-alpha.8",
