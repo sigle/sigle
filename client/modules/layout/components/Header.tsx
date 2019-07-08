@@ -155,7 +155,7 @@ export const Header = () => {
                     )
                   }
                 >
-                  My profile
+                  Profile
                 </MenuItem>
                 <MenuItem
                   onSelect={() => Router.push('/settings', '/me/settings')}
