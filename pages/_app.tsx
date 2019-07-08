@@ -1,11 +1,10 @@
 import React from 'react';
-import App, { Container, NextAppContext } from 'next/app';
+import App, { Container, AppContext } from 'next/app';
 import { UserSession, AppConfig, config as blockstackConfig } from 'blockstack';
 import { configure } from 'radiks';
 import { ThemeProvider, createGlobalStyle } from 'styled-components';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import styled from 'styled-components';
 import tw from 'tailwind.macro';
 import { theme } from '../client/theme';
 import { config } from '../client/config';
@@ -41,7 +40,7 @@ const makeUserSession = () => {
 };
 
 class MyApp extends App {
-  static async getInitialProps({ Component, ctx }: NextAppContext) {
+  static async getInitialProps({ Component, ctx }: AppContext) {
     let pageProps = {};
 
     if (Component.getInitialProps) {

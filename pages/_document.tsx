@@ -1,6 +1,6 @@
 import React from 'react';
 import Document, {
-  NextDocumentContext,
+  DocumentContext,
   Html,
   Head,
   Main,
@@ -18,7 +18,7 @@ if (config.env === 'production' && config.sentryDsn) {
 }
 
 export default class MyDocument extends Document {
-  static async getInitialProps(ctx: NextDocumentContext) {
+  static async getInitialProps(ctx: DocumentContext): Promise<any> {
     const sheet = new ServerStyleSheet();
     const originalRenderPage = ctx.renderPage;
 

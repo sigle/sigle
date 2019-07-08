@@ -1,5 +1,5 @@
 import React from 'react';
-import { default as NextLink, LinkProps as NextLinkProps } from 'next/link';
+import { default as NextLink } from 'next/link';
 import { Omit } from '../utils/types';
 
 interface LinkProps
@@ -10,7 +10,7 @@ interface LinkProps
     >,
     'href'
   > {
-  href: NextLinkProps['href'];
+  href: string;
 }
 
 export const Link = ({ href, ...props }: LinkProps) => (

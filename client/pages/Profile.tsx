@@ -50,7 +50,7 @@ interface Props extends ProfileUserQueryResponse {
 const ProfileComponent = ({ user, publicStories }: Props) => {
   if (!user) {
     // TODO nice 404 page
-    return <Error statusCode={404} />;
+    return <Error title="Page not found" statusCode={404} />;
   }
 
   if (!publicStories) {

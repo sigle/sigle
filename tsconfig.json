@@ -7,7 +7,10 @@
     "target": "esnext",
     "module": "esnext",
     "jsx": "preserve",
-    "lib": ["dom", "es2017"],
+    "lib": [
+      "dom",
+      "es2017"
+    ],
     "allowJs": true,
     "skipLibCheck": true,
     "esModuleInterop": true,
@@ -15,8 +18,16 @@
     "moduleResolution": "node",
     "resolveJsonModule": true,
     "isolatedModules": true,
-    "sourceMap": true
+    "sourceMap": true,
+    "forceConsistentCasingInFileNames": true
   },
-  "include": ["pages", "client"],
-  "exclude": ["node_modules", ".next", "server"]
+  "include": [
+    "pages",
+    "client"
+  ],
+  "exclude": [
+    "node_modules",
+    ".next",
+    "server"
+  ]
 }
