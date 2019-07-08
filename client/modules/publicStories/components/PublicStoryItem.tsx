@@ -34,9 +34,9 @@ const StoryText = styled.div`
   ${tw`mb-2 lg:text-sm`};
 `;
 
-const StoryTags = styled.div`
-  ${tw`text-grey-darker font-light text-sm italic`};
-`;
+// const StoryTags = styled.div`
+//   ${tw`text-grey-darker font-light text-sm italic`};
+// `;
 
 const StoryProfile = styled.div`
   ${tw`flex items-center`};

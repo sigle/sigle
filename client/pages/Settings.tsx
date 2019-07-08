@@ -16,7 +16,7 @@ import {
 import { Header } from '../modules/layout/components/Header';
 import { Footer } from '../modules/layout/components/Footer';
 import { SigleUser } from '../models';
-import { User } from '../types';
+import { User, RadiksSigleUser } from '../types';
 import { defaultUserImage } from '../utils';
 import { config } from '../config';
 
@@ -88,9 +88,10 @@ const FormText = styled.p`
 export const Settings = () => {
   const { user, loading } = useContext(UserContext);
   const [saveLoading, setSaveLoading] = useState<boolean>(false);
-  const [sigleUser, setSigleUser] = useState<any>();
+  const [sigleUser, setSigleUser] = useState<RadiksSigleUser | undefined>();
   // TODO change this really ugly hack
-  const [fakeSigleUser, setFakeSigleUser] = useState<any>();
+  // eslint-disable-next-line
+  const [fakeSigleUser, setFakeSigleUser] = useState<any | undefined>();
 
   // Part to handle the file upload
   const [file, setFile] = useState();
@@ -113,6 +114,7 @@ export const Settings = () => {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    if (!sigleUser) return;
     setSaveLoading(true);
 
     try {
@@ -158,13 +160,14 @@ export const Settings = () => {
 
   const isLoading = Boolean(loading || !user || !sigleUser);
 
-  const userImage = isLoading
-    ? null
-    : file
-    ? file.preview
-    : sigleUser.attrs.imageUrl
-    ? sigleUser.attrs.imageUrl
-    : defaultUserImage(sigleUser.attrs.username, 130);
+  const userImage =
+    isLoading || !sigleUser
+      ? null
+      : file
+      ? file.preview
+      : sigleUser.attrs.imageUrl
+      ? sigleUser.attrs.imageUrl
+      : defaultUserImage(sigleUser.attrs.username, 130);
 
   return (
     <FullHeightContainer>

@@ -7,6 +7,7 @@ import { SlateEditor } from './SlateEditor';
 import { SigleEditorOptions } from './SigleEditorOptions';
 import { SigleEditorHeader } from './SigleEditorHeader';
 import { SigleEditorTitle } from './SigleEditorTitle';
+import { RadiksPrivateStory, RadiksPublicStory } from '../../../types';
 
 const StyledContainer = styled(Container)`
   margin-top: 60px;
@@ -22,7 +23,7 @@ const StyledArrowBack = styled(MdArrowBack)`
 
 interface Props {
   loading: boolean;
-  story?: any;
+  story?: RadiksPrivateStory | RadiksPublicStory;
   state: any;
   onChangeStoryField: any;
   optionsOpen: boolean;

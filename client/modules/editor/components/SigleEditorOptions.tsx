@@ -8,6 +8,7 @@ import { toast } from 'react-toastify';
 import styled, { css } from 'styled-components';
 import tw from 'tailwind.macro';
 import { Button } from '../../../components';
+import { RadiksPrivateStory, RadiksPublicStory } from '../../../types';
 
 const StyledDialogOverlay = styled(DialogOverlay)`
   z-index: 11;
@@ -96,7 +97,7 @@ const MetaDescriptionPreview = styled.div`
 `;
 
 interface Props {
-  story: any;
+  story: RadiksPrivateStory | RadiksPublicStory;
   optionsOpen: boolean;
   onChangeOptionsOpen: (open: boolean) => void;
 }
@@ -109,6 +110,7 @@ export const SigleEditorOptions = ({
 }: Props) => {
   const [saveLoading, setSaveLoading] = useState<boolean>(false);
   // TODO change this really ugly hack
+  // eslint-disable-next-line
   const [fakeStory, setFakeStory] = useState<any>();
 
   // Part to handle the file upload
@@ -138,7 +140,7 @@ export const SigleEditorOptions = ({
       if (file) {
         const { userSession } = getConfig();
         const now = new Date().getTime();
-        const name = `photos/${story.attrs.username}/${now}-${file.name}`;
+        const name = `photos/${story.attrs._id}/${now}-${file.name}`;
         const coverImageUrl = await userSession.putFile(name, file, {
           // TODO encrypt if it's a draft or show a message to the user explaining the limitation
           encrypt: false,

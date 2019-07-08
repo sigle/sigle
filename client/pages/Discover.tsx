@@ -17,7 +17,7 @@ const DiscoverTitle = styled.h1`
   ${tw`text-lg mb-4`};
 `;
 
-interface Props extends DiscoverQueryResponse {}
+type Props = DiscoverQueryResponse;
 
 export const DiscoverComponent = ({ publicStories }: Props) => {
   return (

@@ -1,14 +1,21 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import tw from 'tailwind.macro';
+import { RadiksPrivateStory, RadiksPublicStory } from '../../../types';
 
 const Input = styled.input`
   ${tw`outline-none w-full text-2xl font-bold bg-transparent mb-8`};
 `;
 
 interface Props {
-  story: { attrs: { title: string } };
-  onChangeStoryField: any;
+  story: RadiksPrivateStory | RadiksPublicStory;
+  onChangeStoryField: ({
+    fieldName,
+    value,
+  }: {
+    fieldName: 'title';
+    value: string;
+  }) => void;
 }
 
 export const SigleEditorTitle = ({ story, onChangeStoryField }: Props) => {

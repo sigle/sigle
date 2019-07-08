@@ -4,6 +4,7 @@ import tw from 'tailwind.macro';
 import { Tabs, Tab, TabList, TabPanels, TabPanel } from '../../../components';
 import { PrivateStory, PublicStory } from '../../../models';
 import { StoryItem } from './StoryItem';
+import { RadiksPrivateStory, RadiksPublicStory } from 'client/types';
 
 const StoryListContainer = styled.div`
   ${tw`border-t border-solid border-grey`};
@@ -26,8 +27,8 @@ type Action =
 interface State {
   status?: 'fetching' | 'success' | 'error';
   error?: string;
-  privateStories?: any;
-  publicStories?: any;
+  privateStories?: RadiksPrivateStory[];
+  publicStories?: RadiksPublicStory[];
 }
 
 const initialState: State = {
@@ -112,9 +113,12 @@ export const StoryList = () => {
   };
 
   const publishStory = async (storyId: string) => {
+    if (!state.privateStories) return;
+    if (!state.publicStories) return;
+
     try {
       const index = state.privateStories.findIndex(
-        (story: any) => story.attrs._id === storyId
+        story => story.attrs._id === storyId
       );
       if (index === -1) {
         throw new Error('Story not found in list');
@@ -141,6 +145,9 @@ export const StoryList = () => {
   };
 
   const unPublishStory = async (storyId: string) => {
+    if (!state.privateStories) return;
+    if (!state.publicStories) return;
+
     try {
       const index = state.publicStories.findIndex(
         (story: any) => story.attrs._id === storyId

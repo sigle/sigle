@@ -18,4 +18,6 @@ class SigleUserModel extends User {
   };
 }
 
+// TODO remove any
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const SigleUser = SigleUserModel as any;

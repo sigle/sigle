@@ -31,4 +31,6 @@ class PublicStoryModel extends Model {
   };
 }
 
+// TODO remove any
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const PublicStory = PublicStoryModel as any;

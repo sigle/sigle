@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import tw from 'tailwind.macro';
 import { MdSettings } from 'react-icons/md';
 import { Container, Button, Link } from '../../../components';
+import { RadiksPrivateStory, RadiksPublicStory } from 'client/types';
 
 const FixedContainer = styled.div`
   ${tw`fixed w-full bg-white`};
@@ -29,7 +30,7 @@ const OptionIcon = styled.div`
 `;
 
 interface Props {
-  story?: any;
+  story?: RadiksPrivateStory | RadiksPublicStory;
   state: any;
   onOpenOptions: () => void;
   onPublishStory: () => void;

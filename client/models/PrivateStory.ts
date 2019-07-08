@@ -31,4 +31,6 @@ class PrivateStoryModel extends Model {
   };
 }
 
+// TODO remove any
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const PrivateStory = PrivateStoryModel as any;

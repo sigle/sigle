@@ -81,7 +81,7 @@ export const Header = () => {
     ? sigleUser.attrs.imageUrl
       ? sigleUser.attrs.imageUrl
       : defaultUserImage(sigleUser.attrs.username, 32)
-    : null;
+    : undefined;
 
   return (
     <HeaderShadow>
