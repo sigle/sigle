@@ -21,6 +21,7 @@ export const withData = (ComposedComponent: any, options: any = {}) => {
         const variables = composedInitialProps.relayVariables || {};
         // TODO: Consider RelayQueryResponseCache
         // https://github.com/facebook/relay/issues/1687#issuecomment-302931855
+        // @ts-ignore
         queryProps = await fetchQuery(environment, options.query, variables);
         queryRecords = environment
           .getStore()

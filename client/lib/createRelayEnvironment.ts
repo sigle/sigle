@@ -7,11 +7,12 @@ import {
   Variables,
 } from 'relay-runtime';
 import fetch from 'isomorphic-unfetch';
+import { config } from '../config';
 
 let relayEnvironment: Environment;
 
 const fetchQuery = (operation: RequestParameters, variables: Variables) =>
-  fetch('http://localhost:3000/graphql', {
+  fetch(`${config.appUrl}/graphql`, {
     method: 'POST',
     headers: {
       Accept: 'application/json',
@@ -30,7 +31,7 @@ export default function initEnvironment({ records = {} } = {}) {
 
   // Make sure to create a new Relay environment for every server-side request so that data
   // isn't shared between connections (which would be bad)
-  if (!process.browser) {
+  if (typeof window === 'undefined') {
     return new Environment({
       network,
       store,

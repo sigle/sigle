@@ -18,6 +18,7 @@ import { Footer } from '../modules/layout/components/Footer';
 import { SigleUser } from '../models';
 import { User } from '../types';
 import { defaultUserImage } from '../utils';
+import { config } from '../config';
 
 const MeProfile = styled.div`
   ${tw`lg:flex lg:items-center mb-8`};
@@ -230,7 +231,7 @@ export const Settings = () => {
                     <FormInput
                       id="profile-url"
                       type="text"
-                      value={`${process.env.APP_URL}/@${user.username}`}
+                      value={`${config.appUrl}/@${user.username}`}
                       disabled
                     />
                   </FormRowCol>
