@@ -3,7 +3,11 @@ import styled from 'styled-components';
 import tw from 'tailwind.macro';
 import { graphql } from 'react-relay';
 import { withData } from '../lib/withData';
-import { Container } from '../components';
+import {
+  Container,
+  FullHeightContainer,
+  MinHeightContainer,
+} from '../components';
 import { Header } from '../modules/layout/components/Header';
 import { Footer } from '../modules/layout/components/Footer';
 import { DiscoverQueryResponse } from './__generated__/DiscoverQuery.graphql';
@@ -21,17 +25,19 @@ type Props = DiscoverQueryResponse;
 
 export const DiscoverComponent = ({ publicStories }: Props) => {
   return (
-    <React.Fragment>
+    <FullHeightContainer>
       <Header />
-      <DiscoverContainer>
-        <DiscoverTitle>Discover the latest stories</DiscoverTitle>
+      <MinHeightContainer>
+        <DiscoverContainer>
+          <DiscoverTitle>Discover the latest stories</DiscoverTitle>
 
-        {publicStories!.edges!.map(data => (
-          <PublicStoryItem key={data!.node!.id} story={data!.node!} />
-        ))}
-      </DiscoverContainer>
-      <Footer />
-    </React.Fragment>
+          {publicStories!.edges!.map(data => (
+            <PublicStoryItem key={data!.node!.id} story={data!.node!} />
+          ))}
+        </DiscoverContainer>
+        <Footer />
+      </MinHeightContainer>
+    </FullHeightContainer>
   );
 };
 

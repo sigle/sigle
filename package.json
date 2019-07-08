@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "nodemon",
-    "start": "node .next/server",
+    "start": "NODE_ENV=production node .next/server",
     "build": "yarn relay && yarn build:server && yarn build:client",
     "build:server": "NODE_ENV=production tsc --project tsconfig.server.json",
     "build:client": "tsc --noEmit && NODE_ENV=production next build",
