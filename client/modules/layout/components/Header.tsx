@@ -65,7 +65,7 @@ export const Header = () => {
   const handleLogout = () => {
     const { userSession } = getConfig();
     userSession.signUserOut();
-    window.location.reload();
+    window.location.href = '/discover';
   };
 
   const handleNewStory = async () => {
