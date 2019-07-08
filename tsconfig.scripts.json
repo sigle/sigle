@@ -1,0 +1,10 @@
+{
+  "compilerOptions": {
+    "moduleResolution": "node",
+    "target": "es2017",
+    "esModuleInterop": true,
+    "strict": false,
+    "resolveJsonModule": true
+  },
+  "include": ["scripts/**/*", "server/types/**/*"]
+}
