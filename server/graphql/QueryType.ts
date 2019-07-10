@@ -15,7 +15,7 @@ export const QueryType = new GraphQLObjectType<{}, GraphqlContext>({
     node: nodeField,
 
     user: {
-      description: "Fetches and user given it's username",
+      description: "Fetch an user given it's username",
       type: UserType,
       args: {
         username: {
@@ -47,6 +47,30 @@ export const QueryType = new GraphQLObjectType<{}, GraphqlContext>({
           direction: -1,
         };
         return mrResolve(args, PublicStoryModel, query, opts);
+      },
+    },
+
+    publicStory: {
+      description: 'Fetch a public story',
+      type: PublicStoryType,
+      args: {
+        storyId: {
+          type: GraphQLNonNull(GraphQLString),
+        },
+        username: {
+          type: GraphQLNonNull(GraphQLString),
+        },
+      },
+      resolve: async (_, args, context) => {
+        const { db } = context;
+        const { storyId } = args;
+        const radiksData = db.collection(config.radiksCollectionName);
+        const publicStory = await radiksData.findOne({
+          radiksType: 'PublicStory',
+          // TODO also fetch with the username
+          _id: storyId,
+        });
+        return publicStory;
       },
     },
   }),
