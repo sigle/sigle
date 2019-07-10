@@ -263,6 +263,7 @@ export const PublicStory = ({ storyId }: Props) => {
           __html: story.content,
         }}
       />
+      {/* TODO share to social media */}
       <StorySocial>
         <TiSocialFacebook size={24} />
         <TiSocialTwitter size={24} />
