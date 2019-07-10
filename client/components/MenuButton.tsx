@@ -9,7 +9,13 @@ import {
   MenuLink,
 } from '@reach/menu-button';
 
-let StyledMenuList = styled(MenuList)`
+const StyledMenuButton = styled(MenuButton)`
+  :focus {
+    outline: 0;
+  }
+`;
+
+const StyledMenuList = styled(MenuList)`
   ${tw`mt-2 bg-white rounded-lg border shadow-md py-2`};
   min-width: 8rem;
 
@@ -29,4 +35,10 @@ let StyledMenuList = styled(MenuList)`
   }
 `;
 
-export { Menu, StyledMenuList as MenuList, MenuButton, MenuItem, MenuLink };
+export {
+  Menu,
+  StyledMenuList as MenuList,
+  StyledMenuButton as MenuButton,
+  MenuItem,
+  MenuLink,
+};

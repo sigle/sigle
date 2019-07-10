@@ -11,6 +11,11 @@ export const Button = styled.button<ButtonProps>`
   ${tw`font-bold py-1 px-4 text-black lg:text-sm`};
   border-radius: 0.6rem;
 
+  :focus {
+    outline: 0;
+    opacity: 0.7;
+  }
+
   ${props =>
     props.color === 'black' &&
     css`
