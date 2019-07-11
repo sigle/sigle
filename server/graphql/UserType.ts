@@ -1,4 +1,9 @@
-import { GraphQLObjectType, GraphQLString, GraphQLInt } from 'graphql';
+import {
+  GraphQLNonNull,
+  GraphQLObjectType,
+  GraphQLString,
+  GraphQLInt,
+} from 'graphql';
 import { globalIdField } from 'graphql-relay';
 import { nodeInterface } from './nodeInterface';
 
@@ -28,7 +33,7 @@ export const UserType = new GraphQLObjectType({
       description: "The user's public description",
     },
     imageUrl: {
-      type: GraphQLString,
+      type: GraphQLNonNull(GraphQLString),
       args: {
         size: {
           type: GraphQLInt,

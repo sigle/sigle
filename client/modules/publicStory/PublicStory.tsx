@@ -1,14 +1,23 @@
-import React, { useState, useEffect } from 'react';
+import React, { useMemo } from 'react';
 import styled from 'styled-components';
 import tw from 'tailwind.macro';
+import { createFragmentContainer, graphql } from 'react-relay';
 import { format } from 'date-fns';
 import { Value } from 'slate';
 import Html from 'slate-html-serializer';
-import dompurify from 'dompurify';
+import DOMPurify from 'dompurify';
 import { TiSocialFacebook, TiSocialTwitter } from 'react-icons/ti';
-import { PublicStory as PublicStoryModel } from '../../models';
-import { defaultUserImage } from '../../utils';
 import { config } from '../../config';
+import { PublicStory_story } from './__generated__/PublicStory_story.graphql';
+
+let dompurify = DOMPurify();
+
+// During ssr we need jsdom to make dompurify work
+if (typeof window === 'undefined') {
+  const { JSDOM } = require('jsdom');
+  const { window } = new JSDOM('<!DOCTYPE html>');
+  dompurify = DOMPurify(window);
+}
 
 const StoryContainer = styled.div`
   ${tw`py-8`};
@@ -56,7 +65,7 @@ const StoryCover = styled.div`
 
 const StoryCoverImage = styled.img``;
 
-const StoryContent = styled.p`
+const StoryContent = styled.div`
   ${tw`mt-8 mb-24`};
 
   ${tw`text-base leading-tight`};
@@ -200,47 +209,25 @@ interface Story {
 }
 
 interface Props {
-  storyId: string;
+  story: PublicStory_story;
 }
 
-export const PublicStory = ({ storyId }: Props) => {
-  // TODO fetch with graphql and setup SEO
-  const [story, setStory] = useState<Story>();
-
-  const fetchStory = async () => {
-    const publicStory = await PublicStoryModel.findById(storyId);
-    if (publicStory) {
-      setStory({
-        title: publicStory.attrs.title,
-        createdAt: publicStory.attrs.createdAt,
-        content: dompurify.sanitize(
-          html.serialize(Value.fromJSON(
-            JSON.parse(publicStory.attrs.content)
-          ) as any)
-        ),
-        imageUrl:
-          'https://images.unsplash.com/photo-1558980664-769d59546b3d?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=2100&q=80',
-        user: {
-          username: 'leopradel.id.blockstack',
-          name: 'Leo Pradel',
-          imageUrl: defaultUserImage('leopradel.id.blockstack', 100),
-        },
-      });
-    }
-  };
-
-  useEffect(() => {
-    fetchStory();
-  }, []);
-
-  if (!story) {
-    // TODO nice 404
-    return null;
-  }
+// TODO setup SEO
+export const PublicStoryComponent = ({ story }: Props) => {
+  const sanitizedContent = useMemo(() => {
+    return (
+      story.content &&
+      dompurify.sanitize(
+        html.serialize(Value.fromJSON(JSON.parse(story.content)))
+      )
+    );
+  }, [story.content]);
 
   return (
     <StoryContainer>
-      <StoryItemDate>{format(story.createdAt, 'DD MMMM YYYY')}</StoryItemDate>
+      {story.createdAt && (
+        <StoryItemDate>{format(story.createdAt, 'DD MMMM YYYY')}</StoryItemDate>
+      )}
       <StoryTitle>{story.title}</StoryTitle>
       <StoryProfile>
         <StoryProfileImage
@@ -252,17 +239,19 @@ export const PublicStory = ({ storyId }: Props) => {
           <StoryProfileUsername>{story.user.username}</StoryProfileUsername>
         </div>
       </StoryProfile>
-      {!story.imageUrl && <StoryDivider />}
-      {story.imageUrl && (
+      {!story.coverImageUrl && <StoryDivider />}
+      {story.coverImageUrl && (
         <StoryCover>
-          <StoryCoverImage src={story.imageUrl} />
+          <StoryCoverImage src={story.coverImageUrl} />
         </StoryCover>
       )}
-      <StoryContent
-        dangerouslySetInnerHTML={{
-          __html: story.content,
-        }}
-      />
+      {sanitizedContent && (
+        <StoryContent
+          dangerouslySetInnerHTML={{
+            __html: sanitizedContent,
+          }}
+        />
+      )}
       {/* TODO share to social media */}
       <StorySocial>
         <TiSocialFacebook size={24} />
@@ -284,3 +273,22 @@ export const PublicStory = ({ storyId }: Props) => {
     </StoryContainer>
   );
 };
+
+export const PublicStory = createFragmentContainer(PublicStoryComponent, {
+  story: graphql`
+    fragment PublicStory_story on PublicStory {
+      id
+      _id
+      title
+      content
+      coverImageUrl
+      createdAt
+      user {
+        id
+        username
+        name
+        imageUrl(size: 32)
+      }
+    }
+  `,
+});

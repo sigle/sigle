@@ -1,4 +1,9 @@
-import { GraphQLObjectType, GraphQLString, GraphQLNonNull } from 'graphql';
+import {
+  GraphQLObjectType,
+  GraphQLString,
+  GraphQLNonNull,
+  GraphQLInt,
+} from 'graphql';
 import { globalIdField } from 'graphql-relay';
 import { nodeInterface } from './nodeInterface';
 import { UserType } from './UserType';
@@ -24,6 +29,16 @@ export const PublicStoryType = new GraphQLObjectType({
       resolve: story => story.content,
       description: "The story's public content",
     },
+    coverImageUrl: {
+      type: GraphQLString,
+      args: {
+        size: {
+          type: GraphQLInt,
+        },
+      },
+      resolve: story => story.coverImageUrl,
+      description: 'A url pointing to the story cover image',
+    },
     excerpt: {
       type: GraphQLString,
       resolve: story => story.excerpt,
@@ -38,6 +53,11 @@ export const PublicStoryType = new GraphQLObjectType({
       type: GraphQLString,
       resolve: story => story.metaDescription,
       description: "The story's public metaDescription",
+    },
+    createdAt: {
+      type: GraphQLString,
+      resolve: story => story.createdAt,
+      description: "The story's public creation date",
     },
     user: {
       type: GraphQLNonNull(UserType),
