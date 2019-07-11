@@ -30,7 +30,6 @@ const GlobalStyle = createGlobalStyle`
   }
 `;
 
-// TODO set the url of the app to https://app.sigle.io
 const makeUserSession = () => {
   const appConfig = new AppConfig(
     ['store_write', 'publish_data'],
