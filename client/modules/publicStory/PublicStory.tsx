@@ -2,6 +2,7 @@ import React, { useMemo } from 'react';
 import styled from 'styled-components';
 import tw from 'tailwind.macro';
 import { createFragmentContainer, graphql } from 'react-relay';
+import Head from 'next/head';
 import format from 'date-fns/format';
 import { Value } from 'slate';
 import Html from 'slate-html-serializer';
@@ -212,7 +213,6 @@ interface Props {
   story: PublicStory_story;
 }
 
-// TODO setup SEO
 export const PublicStoryComponent = ({ story }: Props) => {
   const sanitizedContent = useMemo(() => {
     return (
@@ -223,8 +223,35 @@ export const PublicStoryComponent = ({ story }: Props) => {
     );
   }, [story.content]);
 
+  const seoUrl = `${config.appUrl}/${story.user.username}/${story._id}`;
+  const seoTitle = `${story.metaTitle || story.title} | ${story.user.name ||
+    story.user.username} | Sigle`;
+  const seoDescription = story.metaDescription || story.excerpt;
+
   return (
     <StoryContainer>
+      <Head>
+        <title>{seoTitle}</title>
+        <meta name="description" content={seoDescription || ''} />
+        <meta property="og:type" content="website" />
+        <meta property="og:site_name" content="Sigle" />
+        <meta property="og:url" content={seoUrl} />
+        <meta property="og:title" content={seoTitle} />
+        <meta property="og:description" content={seoDescription || ''} />
+        <meta
+          property="og:image"
+          content={
+            story.coverImageUrl
+              ? story.coverImageUrl
+              : `${config.appUrl}/static/android-chrome-192x192.png`
+          }
+        />
+        <meta name="twitter:site" content="@sigleapp" />
+        <meta
+          name="twitter:card"
+          content={story.coverImageUrl ? 'summary_large_image' : 'summary'}
+        />
+      </Head>
       {story.createdAt && (
         <StoryItemDate>{format(story.createdAt, 'DD MMMM YYYY')}</StoryItemDate>
       )}
@@ -283,6 +310,9 @@ export const PublicStory = createFragmentContainer(PublicStoryComponent, {
       content
       coverImageUrl
       createdAt
+      metaTitle
+      metaDescription
+      excerpt
       user {
         id
         username
