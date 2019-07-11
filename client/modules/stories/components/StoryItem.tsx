@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import tw from 'tailwind.macro';
 import { MdSettings, MdRemoveRedEye } from 'react-icons/md';
 import Link from 'next/link';
-import { format } from 'date-fns';
+import format from 'date-fns/format';
 import Tippy from '@tippy.js/react';
 import '@reach/menu-button/styles.css';
 import {

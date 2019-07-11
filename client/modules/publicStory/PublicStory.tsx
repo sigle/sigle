@@ -2,7 +2,7 @@ import React, { useMemo } from 'react';
 import styled from 'styled-components';
 import tw from 'tailwind.macro';
 import { createFragmentContainer, graphql } from 'react-relay';
-import { format } from 'date-fns';
+import format from 'date-fns/format';
 import { Value } from 'slate';
 import Html from 'slate-html-serializer';
 import DOMPurify from 'dompurify';
