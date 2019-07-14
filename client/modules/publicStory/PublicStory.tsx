@@ -228,7 +228,9 @@ export const PublicStoryComponent = ({ story }: Props) => {
     story.user.username} | Sigle`;
   const seoDescription = story.metaDescription || story.excerpt;
 
-  const twitterShare = encodeURI(`${seoTitle} ${seoUrl}`);
+  const twitterShare = encodeURI(
+    `${story.metaTitle || story.title} | @sigleapp ${seoUrl}`
+  );
 
   return (
     <StoryContainer>
@@ -281,7 +283,6 @@ export const PublicStoryComponent = ({ story }: Props) => {
           }}
         />
       )}
-      {/* TODO share to social media */}
       <StorySocial>
         <a
           href={`https://www.facebook.com/sharer/sharer.php?u=${seoUrl}`}
