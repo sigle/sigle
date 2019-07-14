@@ -228,6 +228,8 @@ export const PublicStoryComponent = ({ story }: Props) => {
     story.user.username} | Sigle`;
   const seoDescription = story.metaDescription || story.excerpt;
 
+  const twitterShare = encodeURI(`${seoTitle} ${seoUrl}`);
+
   return (
     <StoryContainer>
       <Head>
@@ -281,8 +283,18 @@ export const PublicStoryComponent = ({ story }: Props) => {
       )}
       {/* TODO share to social media */}
       <StorySocial>
-        <TiSocialFacebook size={24} />
-        <TiSocialTwitter size={24} />
+        <a
+          href={`https://www.facebook.com/sharer/sharer.php?u=${seoUrl}`}
+          target="_blank"
+        >
+          <TiSocialFacebook size={24} />
+        </a>
+        <a
+          href={`https://twitter.com/intent/tweet?text=${twitterShare}`}
+          target="_blank"
+        >
+          <TiSocialTwitter size={24} />
+        </a>
       </StorySocial>
       <StoryDivider />
       <StoryAbout>About the author</StoryAbout>
