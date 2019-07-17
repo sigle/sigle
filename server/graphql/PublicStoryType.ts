@@ -43,10 +43,13 @@ export const PublicStoryType = new GraphQLObjectType<PublicStoryDb>({
       },
       resolve: (story, args) => {
         let { width, height } = args;
-        if (config.gumletUrl) {
-          return `${config.gumletUrl}/${story.coverImageUrl}?h=${height}&w=${width}&mode=crop`;
+        const coverImageUrl = story.coverImageUrl
+          ? encodeURI(story.coverImageUrl)
+          : null;
+        if (coverImageUrl && config.gumletUrl) {
+          return `${config.gumletUrl}/${coverImageUrl}?h=${height}&w=${width}&mode=crop`;
         }
-        return story.coverImageUrl;
+        return coverImageUrl;
       },
       description: 'A url pointing to the story cover image',
     },

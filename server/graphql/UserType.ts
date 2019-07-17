@@ -50,15 +50,17 @@ export const UserType = new GraphQLObjectType<UserDb>({
         }
         const { username } = user;
 
+        const imageUrl = user.imageUrl ? encodeURI(user.imageUrl) : null;
+
         // Resolve to a default ui avatar if not set by user
-        if (!user.imageUrl) {
+        if (!imageUrl) {
           return `https://ui-avatars.com/api/?color=ffffff&background=000000&size=${size}&name=${username}`;
         }
         // Profile images are displayed as squares so we set the same width and height
         if (config.gumletUrl) {
-          return `${config.gumletUrl}/${user.imageUrl}?h=${size}&w=${size}&mode=crop`;
+          return `${config.gumletUrl}/${imageUrl}?h=${size}&w=${size}&mode=crop`;
         }
-        return user.imageUrl;
+        return imageUrl;
       },
       description: 'A url pointing to the user image',
     },
