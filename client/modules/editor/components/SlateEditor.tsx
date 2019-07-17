@@ -52,7 +52,17 @@ const Image = styled.img<{ selected: boolean }>`
   box-shadow: ${props => (props.selected ? '0 0 0 1px #000000;' : 'none')};
 `;
 
-const EditorStyle = styled.div`
+const EditorStyle = styled.div<{ isDragging: boolean }>`
+  ${props =>
+    props.isDragging &&
+    css`
+      margin: -2px;
+      border-width: 2px;
+      border-radius: 2px;
+      border-color: #eeeeee;
+      border-style: dashed;
+    `}
+
   ${tw`text-base leading-tight`};
 
   p,
@@ -381,6 +391,7 @@ export const SlateEditor = ({ story, onChangeContent }: Props) => {
       : // TODO fix type
         Value.fromJSON(emptyNode as any)
   );
+  const [isDragging, setIsDragging] = useState<boolean>(false);
 
   /**
    * Update the menu's absolute position.
@@ -453,6 +464,11 @@ export const SlateEditor = ({ story, onChangeContent }: Props) => {
   const onDrop = async (event: any, editor: any, next: () => any) => {
     const target = editor.findEventRange(event);
     if (!target && event.type === 'drop') return next();
+
+    // In order to remove the styles we force isDragging to be false
+    setTimeout(() => {
+      setIsDragging(false);
+    }, 100);
 
     const transfer: any = getEventTransfer(event);
     const { type, files } = transfer;
@@ -662,7 +678,7 @@ export const SlateEditor = ({ story, onChangeContent }: Props) => {
         </SlateEditorToolbarButtonContainer>
       </SlateEditorToolbar>
 
-      <EditorStyle>
+      <EditorStyle isDragging={isDragging}>
         <StyledEditor
           ref={editorRef}
           plugins={slatePlugins}
@@ -677,6 +693,8 @@ export const SlateEditor = ({ story, onChangeContent }: Props) => {
           renderMark={renderMark}
           renderInline={renderInline}
           renderEditor={renderEditor as any}
+          onDragOver={() => !isDragging && setIsDragging(true)}
+          onDragLeave={() => setIsDragging(false)}
         />
       </EditorStyle>
     </React.Fragment>
