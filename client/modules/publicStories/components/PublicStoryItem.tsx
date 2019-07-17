@@ -14,8 +14,8 @@ const StoryContainer = styled.div`
   }
 `;
 
-const StoryCover = styled.div<{ coverImageUrl: string | null }>`
-  ${tw`h-48 lg:h-auto lg:w-64 flex-none bg-cover bg-center overflow-hidden mb-4 lg:mb-0 lg:mr-4`};
+const StoryCover = styled.a<{ coverImageUrl: string | null }>`
+  ${tw`h-48 lg:h-auto lg:w-64 flex-none cursor-pointer bg-cover bg-center overflow-hidden mb-4 lg:mb-0 lg:mr-4`};
   ${props =>
     props.coverImageUrl &&
     css`
@@ -61,20 +61,20 @@ interface Props {
 
 export const PublicStoryItemComponent = ({ story }: Props) => {
   const userDisplayName = story.user.name || story.user.username;
-  const storyLink = `/@${story.user.username}/${story._id}`;
+  const storyLinkHref = {
+    pathname: '/story',
+    query: { username: story.user.username, storyId: story._id },
+  };
+  const storyLinkAs = `/@${story.user.username}/${story._id}`;
 
   return (
     <StoryContainer>
-      <StoryCover coverImageUrl={story.coverImageUrl} />
+      <Link href={storyLinkHref} as={storyLinkAs}>
+        <StoryCover coverImageUrl={story.coverImageUrl} />
+      </Link>
       <StoryContent>
         <StoryTitle>
-          <Link
-            href={{
-              pathname: '/story',
-              query: { username: story.user.username, storyId: story._id },
-            }}
-            as={storyLink}
-          >
+          <Link href={storyLinkHref} as={storyLinkAs}>
             <a>{story.title}</a>
           </Link>
         </StoryTitle>
