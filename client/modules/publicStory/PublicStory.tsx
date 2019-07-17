@@ -257,7 +257,9 @@ export const PublicStoryComponent = ({ story }: Props) => {
         />
       </Head>
       {story.createdAt && (
-        <StoryItemDate>{format(story.createdAt, 'DD MMMM YYYY')}</StoryItemDate>
+        <StoryItemDate>
+          {format(Number(story.createdAt), 'DD MMMM YYYY')}
+        </StoryItemDate>
       )}
       <StoryTitle>{story.title}</StoryTitle>
       <StoryProfile>
