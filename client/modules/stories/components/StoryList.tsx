@@ -214,7 +214,9 @@ export const StoryList = () => {
                       src="/static/images/three.png"
                       alt="Empty list"
                     />
-                    <p>Shoot the "new story" button to start.</p>
+                    <p>
+                      Shoot the {'"'}new story{'"'} button to start.
+                    </p>
                   </EmptyListContainer>
                 )}
 
@@ -243,7 +245,9 @@ export const StoryList = () => {
                       src="/static/images/three.png"
                       alt="Empty list"
                     />
-                    <p>Shoot the "new story" button to start.</p>
+                    <p>
+                      Shoot the {'"'}new story{'"'} button to start.
+                    </p>
                   </EmptyListContainer>
                 )}
 

@@ -4,8 +4,8 @@ import styled, { css } from 'styled-components';
 import tw from 'tailwind.macro';
 import { graphql, createFragmentContainer } from 'react-relay';
 import format from 'date-fns/format';
-import { PublicStoryItem_story } from './__generated__/PublicStoryItem_story.graphql';
 import Link from 'next/link';
+import { PublicStoryItem_story } from './__generated__/PublicStoryItem_story.graphql';
 
 const StoryContainer = styled.div`
   ${tw`w-full lg:flex py-4 border-b border-grey`};

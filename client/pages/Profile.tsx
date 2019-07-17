@@ -66,7 +66,7 @@ const ProfileComponent = ({ user, publicStories }: Props) => {
           <React.Fragment>
             <ProfileHeader>
               <ProfileImage
-                src={user.imageUrl!}
+                src={user.imageUrl}
                 alt={`Profile image of ${user.name || user.username}`}
               />
               <div>
@@ -83,12 +83,16 @@ const ProfileComponent = ({ user, publicStories }: Props) => {
               <TabPanels>
                 <TabPanel>
                   {publicStories.edges &&
-                    publicStories.edges.map(data => (
-                      <PublicStoryItem
-                        key={data!.node!.id}
-                        story={data!.node!}
-                      />
-                    ))}
+                    publicStories.edges.map(
+                      data =>
+                        data &&
+                        data.node && (
+                          <PublicStoryItem
+                            key={data.node.id}
+                            story={data.node}
+                          />
+                        )
+                    )}
                 </TabPanel>
               </TabPanels>
             </Tabs>

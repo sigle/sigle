@@ -22,7 +22,6 @@ import {
   MdFormatListBulleted,
   MdLink,
   MdLooksTwo,
-  MdLooks3,
   MdLooksOne,
 } from 'react-icons/md';
 import { getConfig } from 'radiks';
@@ -333,7 +332,9 @@ interface HoverMenuProps {
 
 const HoverMenu = React.forwardRef<{}, HoverMenuProps>(
   ({ editor }, ref: any) => {
-    const root = window.document.getElementById('__next')!;
+    const root = window.document.getElementById('__next');
+    if (!root) return null;
+
     return ReactDOM.createPortal(
       <Menu ref={ref}>
         <MarkButton editor={editor} type="bold" icon={MdFormatBold} />
@@ -395,7 +396,8 @@ export const SlateEditor = ({ story, onChangeContent }: Props) => {
       return;
     }
 
-    const native = window.getSelection()!;
+    const native = window.getSelection();
+    if (!native) return;
     const range = native.getRangeAt(0);
     const rect = range.getBoundingClientRect();
     menu.style.opacity = 1;

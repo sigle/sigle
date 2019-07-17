@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/camelcase */
 import React, { useMemo } from 'react';
 import styled from 'styled-components';
 import tw from 'tailwind.macro';
@@ -15,6 +16,7 @@ let dompurify = DOMPurify();
 
 // During ssr we need jsdom to make dompurify work
 if (typeof window === 'undefined') {
+  /* eslint-disable @typescript-eslint/no-var-requires */
   const { JSDOM } = require('jsdom');
   const { window } = new JSDOM('<!DOCTYPE html>');
   dompurify = DOMPurify(window);
@@ -289,12 +291,14 @@ export const PublicStoryComponent = ({ story }: Props) => {
         <a
           href={`https://www.facebook.com/sharer/sharer.php?u=${seoUrl}`}
           target="_blank"
+          rel="noopener noreferrer"
         >
           <TiSocialFacebook size={24} />
         </a>
         <a
           href={`https://twitter.com/intent/tweet?text=${twitterShare}`}
           target="_blank"
+          rel="noopener noreferrer"
         >
           <TiSocialTwitter size={24} />
         </a>
