@@ -66,6 +66,11 @@ export const PublicStoryItemComponent = ({ story }: Props) => {
     query: { username: story.user.username, storyId: story._id },
   };
   const storyLinkAs = `/@${story.user.username}/${story._id}`;
+  const userLinkHref = {
+    pathname: '/profile',
+    query: { username: story.user.username },
+  };
+  const userLinkAs = `/@${story.user.username}/`;
 
   return (
     <StoryContainer>
@@ -88,12 +93,20 @@ export const PublicStoryItemComponent = ({ story }: Props) => {
         {/* <StoryTags>Travel, lifestyle</StoryTags> */}
         <StoryProfile>
           {story.user.imageUrl && (
-            <StoryProfileImage
-              alt={`Profile image of ${story.user.username}`}
-              src={story.user.imageUrl}
-            />
+            <Link href={userLinkHref} as={userLinkAs}>
+              <a>
+                <StoryProfileImage
+                  alt={`Profile image of ${story.user.username}`}
+                  src={story.user.imageUrl}
+                />
+              </a>
+            </Link>
           )}
-          <StoryProfileName>{userDisplayName}</StoryProfileName>
+          <Link href={userLinkHref} as={userLinkAs}>
+            <a>
+              <StoryProfileName>{userDisplayName}</StoryProfileName>
+            </a>
+          </Link>
         </StoryProfile>
       </StoryContent>
     </StoryContainer>
