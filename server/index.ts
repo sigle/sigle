@@ -15,9 +15,9 @@ import mongoose from 'mongoose';
 import { config } from './config';
 import { schema } from './graphql/schema';
 
-if (process.env.NODE_ENV === 'production' && process.env.SENTRY_DSN_SERVER) {
+if (process.env.NODE_ENV === 'production' && config.sentryDsn) {
   init({
-    dsn: process.env.SENTRY_DSN_SERVER,
+    dsn: config.sentryDsn,
     environment: process.env.NODE_ENV,
   });
 }
