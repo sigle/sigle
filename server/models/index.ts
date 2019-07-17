@@ -8,6 +8,9 @@ const PublicStorySchema = new Schema(
     excerpt: String,
     metaTitle: String,
     metaDescription: String,
+    coverImageUrl: String,
+    createdAt: Number,
+    updatedAt: Number,
   },
   { autoIndex: false }
 );
@@ -25,6 +28,8 @@ const UserSchema = new Schema(
     name: String,
     description: String,
     imageUrl: String,
+    createdAt: Number,
+    updatedAt: Number,
   },
   { autoIndex: false }
 );

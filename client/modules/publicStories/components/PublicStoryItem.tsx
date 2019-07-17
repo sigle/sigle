@@ -1,8 +1,9 @@
 /* eslint-disable @typescript-eslint/camelcase */
 import React from 'react';
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 import tw from 'tailwind.macro';
 import { graphql, createFragmentContainer } from 'react-relay';
+import format from 'date-fns/format';
 import { PublicStoryItem_story } from './__generated__/PublicStoryItem_story.graphql';
 import Link from 'next/link';
 
@@ -13,9 +14,13 @@ const StoryContainer = styled.div`
   }
 `;
 
-const StoryCover = styled.div`
+const StoryCover = styled.div<{ coverImageUrl: string | null }>`
   ${tw`h-48 lg:h-auto lg:w-64 flex-none bg-cover bg-center overflow-hidden mb-4 lg:mb-0 lg:mr-4`};
-  background-image: url('https://source.unsplash.com/random/256x183');
+  ${props =>
+    props.coverImageUrl &&
+    css`
+      background-image: url('${props.coverImageUrl}');
+    `}
 `;
 
 const StoryContent = styled.div`
@@ -60,7 +65,8 @@ export const PublicStoryItemComponent = ({ story }: Props) => {
 
   return (
     <StoryContainer>
-      <StoryCover />
+      {/* Optimise with cdn based on screen size */}
+      <StoryCover coverImageUrl={story.coverImageUrl} />
       <StoryContent>
         <StoryTitle>
           <Link
@@ -73,8 +79,11 @@ export const PublicStoryItemComponent = ({ story }: Props) => {
             <a>{story.title}</a>
           </Link>
         </StoryTitle>
-        {/* TODO display real date */}
-        <StoryDate>January 26, 2017</StoryDate>
+        <StoryDate>
+          {story.createdAt
+            ? format(Number(story.createdAt), 'DD MMMM YYYY')
+            : 'Invalid date'}
+        </StoryDate>
         <StoryText>{story.excerpt}</StoryText>
         {/* TODO display the story tags */}
         {/* <StoryTags>Travel, lifestyle</StoryTags> */}
@@ -101,6 +110,8 @@ export const PublicStoryItem = createFragmentContainer(
         _id
         title
         excerpt
+        coverImageUrl
+        createdAt
         user {
           id
           username
