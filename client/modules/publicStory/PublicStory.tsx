@@ -323,7 +323,7 @@ export const PublicStory = createFragmentContainer(PublicStoryComponent, {
       _id
       title
       content
-      coverImageUrl
+      coverImageUrl(width: 1200)
       createdAt
       metaTitle
       metaDescription
@@ -332,7 +332,7 @@ export const PublicStory = createFragmentContainer(PublicStoryComponent, {
         id
         username
         name
-        imageUrl(size: 32)
+        imageUrl(size: 128)
       }
     }
   `,
