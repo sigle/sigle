@@ -8,8 +8,9 @@ import { globalIdField } from 'graphql-relay';
 import { nodeInterface } from './nodeInterface';
 import { UserType } from './UserType';
 import { UserModel } from '../models';
+import { PublicStoryDb } from '../types';
 
-export const PublicStoryType = new GraphQLObjectType({
+export const PublicStoryType = new GraphQLObjectType<PublicStoryDb>({
   name: 'PublicStory',
   description: 'Public story data',
   fields: () => ({

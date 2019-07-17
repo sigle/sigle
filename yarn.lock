@@ -1054,6 +1054,13 @@
   resolved "https://registry.yarnpkg.com/@types/dompurify/-/dompurify-0.0.33.tgz#bec490ba5a5b4b31679fb9e5a70e4d2f405516bd"
   integrity sha512-lUN9iC6b4txeaEef2PW7zIdhEKAp0Sw9bymOcXXZ7BaepB0nsDJYcLIrFfgpIkRSoZWBJ8IcYunB2hAXuHL1NA==
 
+"@types/dotenv@6.1.1":
+  version "6.1.1"
+  resolved "https://registry.yarnpkg.com/@types/dotenv/-/dotenv-6.1.1.tgz#f7ce1cc4fe34f0a4373ba99fefa437b0bec54b46"
+  integrity sha512-ftQl3DtBvqHl9L16tpqqzA4YzCSXZfi7g8cQceTz5rOlYtk/IZbFjAv3mLOQlNIgOaylCQWQoBdDQHPgEBJPHg==
+  dependencies:
+    "@types/node" "*"
+
 "@types/eslint-visitor-keys@^1.0.0":
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/@types/eslint-visitor-keys/-/eslint-visitor-keys-1.0.0.tgz#1ee30d79544ca84d68d4b3cdb0af4f205663dd2d"
@@ -3398,6 +3405,11 @@ dot-prop@^4.1.0:
   integrity sha512-tUMXrxlExSW6U2EXiiKGSBVdYgtV8qlHL+C10TsW4PURY/ic+eaysnSkwB4kA/mBlCyy/IKDJ+Lc3wbWeaXtuQ==
   dependencies:
     is-obj "^1.0.0"
+
+dotenv@8.0.0:
+  version "8.0.0"
+  resolved "https://registry.yarnpkg.com/dotenv/-/dotenv-8.0.0.tgz#ed310c165b4e8a97bb745b0a9d99c31bda566440"
+  integrity sha512-30xVGqjLjiUOArT4+M5q9sYdvuR4riM6yK9wMcas9Vbp6zZa+ocC9dp6QoftuhTPhFAiLK/0C5Ni2nou/Bk8lg==
 
 dset@^2.0.1:
   version "2.0.1"

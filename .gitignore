@@ -5,3 +5,4 @@ bundles
 schema.graphql
 # Relay modern
 __generated__/
+.env

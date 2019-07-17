@@ -1,3 +1,7 @@
+import dotenv from 'dotenv';
+
+dotenv.config();
+
 import { init } from '@sentry/browser';
 import { join } from 'path';
 import express from 'express';

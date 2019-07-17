@@ -6,8 +6,11 @@ import {
 } from 'graphql';
 import { globalIdField } from 'graphql-relay';
 import { nodeInterface } from './nodeInterface';
+import { config } from '../config';
+import { UserDb } from '../types';
 
-export const UserType = new GraphQLObjectType({
+// TODO auto generated types
+export const UserType = new GraphQLObjectType<UserDb>({
   name: 'User',
   description: 'User data',
   fields: () => ({
@@ -39,18 +42,23 @@ export const UserType = new GraphQLObjectType({
           type: GraphQLInt,
         },
       },
-      // TODO auto generated types
       resolve: (user, args) => {
-        // TODO resolve proxy size
         let { size } = args;
         // Size default to 64
         if (!size) {
           size = 64;
         }
         const { username } = user;
-        return user.imageUrl
-          ? user.imageUrl
-          : `https://ui-avatars.com/api/?color=ffffff&background=000000&size=${size}&name=${username}`;
+
+        // Resolve to a default ui avatar if not set by user
+        if (!user.imageUrl) {
+          return `https://ui-avatars.com/api/?color=ffffff&background=000000&size=${size}&name=${username}`;
+        }
+        // Profile images are displayed as squares so we set the same width and height
+        if (config.gumletUrl) {
+          return `${config.gumletUrl}/${user.imageUrl}?h=${size}&w=${size}&mode=crop`;
+        }
+        return user.imageUrl;
       },
       description: 'A url pointing to the user image',
     },
