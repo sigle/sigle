@@ -65,7 +65,6 @@ export const PublicStoryItemComponent = ({ story }: Props) => {
 
   return (
     <StoryContainer>
-      {/* Optimise with cdn based on screen size */}
       <StoryCover coverImageUrl={story.coverImageUrl} />
       <StoryContent>
         <StoryTitle>
@@ -110,7 +109,7 @@ export const PublicStoryItem = createFragmentContainer(
         _id
         title
         excerpt
-        coverImageUrl
+        coverImageUrl(width: 1000)
         createdAt
         user {
           id

@@ -9,6 +9,7 @@ import { nodeInterface } from './nodeInterface';
 import { UserType } from './UserType';
 import { UserModel } from '../models';
 import { PublicStoryDb } from '../types';
+import { config } from '../config';
 
 export const PublicStoryType = new GraphQLObjectType<PublicStoryDb>({
   name: 'PublicStory',
@@ -33,11 +34,20 @@ export const PublicStoryType = new GraphQLObjectType<PublicStoryDb>({
     coverImageUrl: {
       type: GraphQLString,
       args: {
-        size: {
+        width: {
+          type: GraphQLInt,
+        },
+        height: {
           type: GraphQLInt,
         },
       },
-      resolve: story => story.coverImageUrl,
+      resolve: (story, args) => {
+        let { width, height } = args;
+        if (config.gumletUrl) {
+          return `${config.gumletUrl}/${story.coverImageUrl}?h=${height}&w=${width}&mode=crop`;
+        }
+        return story.coverImageUrl;
+      },
       description: 'A url pointing to the story cover image',
     },
     excerpt: {
