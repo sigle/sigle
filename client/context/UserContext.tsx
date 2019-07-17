@@ -5,9 +5,12 @@ import { SigleUser } from '../models';
 
 export const UserContext = createContext<{
   user?: User;
-  sigleUser?: RadiksSigleUser;
-  loading?: boolean;
   setUser?: React.Dispatch<React.SetStateAction<User | undefined>>;
+  sigleUser?: RadiksSigleUser;
+  setSigleUser?: React.Dispatch<
+    React.SetStateAction<RadiksSigleUser | undefined>
+  >;
+  loading?: boolean;
 }>({});
 
 interface Props {
@@ -43,7 +46,9 @@ export const UserContextProvider = ({ children }: Props) => {
   }, []);
 
   return (
-    <UserContext.Provider value={{ user, sigleUser, loading, setUser }}>
+    <UserContext.Provider
+      value={{ user, setUser, sigleUser, setSigleUser, loading }}
+    >
       {children}
     </UserContext.Provider>
   );
