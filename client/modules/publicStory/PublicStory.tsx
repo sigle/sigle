@@ -113,6 +113,10 @@ const StoryContent = styled.div`
 const StorySocial = styled.div`
   ${tw`flex justify-end my-4`};
 
+  a:hover {
+    ${tw`text-primary`};
+  }
+
   svg:first-child {
     ${tw`mr-6`};
   }
