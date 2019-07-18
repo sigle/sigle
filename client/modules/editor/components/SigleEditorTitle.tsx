@@ -4,7 +4,7 @@ import tw from 'tailwind.macro';
 import { RadiksPrivateStory, RadiksPublicStory } from '../../../types';
 
 const Input = styled.input`
-  ${tw`outline-none w-full text-2xl font-bold bg-transparent mb-8`};
+  ${tw`outline-none w-full text-2xl font-bold bg-transparent mb-4`};
 `;
 
 interface Props {

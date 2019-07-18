@@ -15,7 +15,7 @@ const StyledContainer = styled(Container)`
 `;
 
 const StyledLink = styled(Link)`
-  ${tw`mt-4 mb-4 text-black inline-flex items-center`};
+  ${tw`mt-4 mb-8 text-black inline-flex items-center`};
 `;
 
 const StyledArrowBack = styled(MdArrowBack)`
