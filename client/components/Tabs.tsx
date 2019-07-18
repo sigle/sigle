@@ -11,6 +11,9 @@ const StyledTabs = styled(Tabs)`
   [data-reach-tab] {
     ${tw`font-medium`};
   }
+  [data-reach-tab]:focus {
+    outline: 0;
+  }
   [data-reach-tab][data-selected] {
     ${tw`border-0 border-b border-solid border-black`};
   }

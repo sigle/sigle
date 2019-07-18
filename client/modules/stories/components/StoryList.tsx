@@ -4,7 +4,19 @@ import tw from 'tailwind.macro';
 import { Tabs, Tab, TabList, TabPanels, TabPanel } from '../../../components';
 import { PrivateStory, PublicStory } from '../../../models';
 import { StoryItem } from './StoryItem';
-import { RadiksPrivateStory, RadiksPublicStory } from 'client/types';
+import { RadiksPrivateStory, RadiksPublicStory } from '../../../types';
+
+const StyledTabs = styled(Tabs)`
+  [data-reach-tab-list] {
+    margin-bottom: 1rem;
+  }
+  [data-reach-tab] {
+    padding: 0.25em 0;
+  }
+  [data-reach-tab]:first-child {
+    ${tw`mr-4`};
+  }
+`;
 
 const StoryListContainer = styled.div`
   ${tw`border-t border-solid border-grey`};
@@ -181,7 +193,7 @@ export const StoryList = () => {
 
   return (
     <React.Fragment>
-      <Tabs
+      <StyledTabs
         index={tab === 'private' ? 0 : 1}
         onChange={(index: number) => setTab(index === 0 ? 'private' : 'public')}
       >
@@ -265,7 +277,7 @@ export const StoryList = () => {
             </StoryListContainer>
           </TabPanel>
         </TabPanels>
-      </Tabs>
+      </StyledTabs>
     </React.Fragment>
   );
 };
