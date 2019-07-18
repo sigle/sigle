@@ -72,7 +72,7 @@ export default class MyDocument extends Document {
           <meta name="msapplication-TileColor" content="#da532c" />
           <meta name="theme-color" content="#ffffff" />
           <link
-            href="https://fonts.googleapis.com/css?family=Libre+Baskerville:400,700|Roboto:300,300i,400,500,700"
+            href="https://fonts.googleapis.com/css?family=Libre+Baskerville:400,700|Roboto:300,300i,400,500,700&display=swap"
             rel="stylesheet"
           />
           <link rel="manifest" href={`${config.appUrl}/manifest.json`} />
