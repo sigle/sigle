@@ -58,7 +58,7 @@ export const UserType = new GraphQLObjectType<UserDb>({
         }
         // Profile images are displayed as squares so we set the same width and height
         if (config.gumletUrl) {
-          return `${config.gumletUrl}/${imageUrl}?h=${size}&w=${size}&mode=crop`;
+          return `${config.gumletUrl}/p/${imageUrl}?h=${size}&w=${size}&mode=crop`;
         }
         return imageUrl;
       },
