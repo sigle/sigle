@@ -19,6 +19,7 @@ const StoryCover = styled.a<{ coverImageUrl: string | null }>`
   ${props =>
     props.coverImageUrl &&
     css`
+      ${tw`block`};
       background-image: url('${props.coverImageUrl}');
     `}
 `;
