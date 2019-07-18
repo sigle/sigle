@@ -225,7 +225,7 @@ export const PublicStoryComponent = ({ story }: Props) => {
     );
   }, [story.content]);
 
-  const seoUrl = `${config.appUrl}/${story.user.username}/${story._id}`;
+  const seoUrl = `${config.appUrl}/@${story.user.username}/${story._id}`;
   const seoTitle = `${story.metaTitle || story.title} | ${story.user.name ||
     story.user.username} | Sigle`;
   const seoDescription = story.metaDescription || story.excerpt;
