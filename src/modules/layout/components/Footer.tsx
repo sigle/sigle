@@ -25,6 +25,13 @@ export const Footer = () => {
   return (
     <StyledContainer>
       <StyledLink
+        href="https://app-center.openintents.org/appco/1092/comment"
+        target="_blank"
+        ref="noopener,noreferrer"
+      >
+        Rate app!
+      </StyledLink>
+      <StyledLink
         href="https://app.sigle.io/sigleapp.id.blockstack"
         target="_blank"
       >
