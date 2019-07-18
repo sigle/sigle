@@ -59,7 +59,7 @@ const EditorStyle = styled.div<{ isDragging: boolean }>`
       margin: -2px;
       border-width: 2px;
       border-radius: 2px;
-      border-color: #eeeeee;
+      ${tw`border-grey-dark`};
       border-style: dashed;
     `}
 
