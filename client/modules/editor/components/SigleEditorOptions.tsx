@@ -61,6 +61,10 @@ const Image = styled.img`
 const ImageEmpty = styled.div<{ haveImage: boolean }>`
   ${tw`flex items-center justify-center bg-grey py-16 mb-4 cursor-pointer rounded-lg relative border border-solid border-grey`};
 
+  &:focus {
+    outline: 0;
+  }
+
   ${props =>
     props.haveImage &&
     css`
