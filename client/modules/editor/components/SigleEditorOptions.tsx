@@ -205,6 +205,7 @@ export const SigleEditorOptions = ({
                 story.update(update);
                 setFakeStory(update);
               }}
+              maxLength={250}
             />
           </FormRow>
 
@@ -219,6 +220,7 @@ export const SigleEditorOptions = ({
                 story.update(update);
                 setFakeStory(update);
               }}
+              maxLength={100}
             />
             <FormHelper>
               Recommended: 70 characters. You have used{' '}
@@ -240,6 +242,7 @@ export const SigleEditorOptions = ({
                 story.update(update);
                 setFakeStory(update);
               }}
+              maxLength={250}
             />
             <FormHelper>
               Recommended: 156 characters. You have used{' '}
