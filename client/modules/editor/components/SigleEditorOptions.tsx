@@ -1,7 +1,7 @@
+import React, { useCallback, useState, useContext } from 'react';
 import { DialogContent, DialogOverlay } from '@reach/dialog';
 import '@reach/dialog/styles.css';
 import { getConfig } from 'radiks';
-import React, { useCallback, useState } from 'react';
 import { useDropzone } from 'react-dropzone';
 import { MdAddAPhoto, MdClose } from 'react-icons/md';
 import { toast } from 'react-toastify';
@@ -9,6 +9,8 @@ import styled, { css } from 'styled-components';
 import tw from 'tailwind.macro';
 import { Button } from '../../../components';
 import { RadiksPrivateStory, RadiksPublicStory } from '../../../types';
+import { config } from '../../../config';
+import { UserContext } from '../../../context/UserContext';
 
 const StyledDialogOverlay = styled(DialogOverlay)`
   z-index: 11;
@@ -87,6 +89,7 @@ const MetaTitlePreview = styled.div`
 `;
 
 const MetaUrlPreview = styled.div`
+  ${tw`truncate`};
   font-size: 14px;
   padding-top: 1px;
   line-height: 1.43;
@@ -112,6 +115,7 @@ export const SigleEditorOptions = ({
   optionsOpen,
   onChangeOptionsOpen,
 }: Props) => {
+  const { user } = useContext(UserContext);
   const [saveLoading, setSaveLoading] = useState<boolean>(false);
   // TODO change this really ugly hack
   // eslint-disable-next-line
@@ -167,6 +171,10 @@ export const SigleEditorOptions = ({
 
     setSaveLoading(false);
   };
+
+  if (!user) {
+    return null;
+  }
 
   const coverImageUrl = file ? file.preview : story.attrs.coverImageUrl;
 
@@ -261,7 +269,7 @@ export const SigleEditorOptions = ({
             <MetaTitlePreview>
               {story.attrs.metaTitle || story.attrs.title}
             </MetaTitlePreview>
-            <MetaUrlPreview>https://sigle.io/toto</MetaUrlPreview>
+            <MetaUrlPreview>{`${config.appUrl}/${user.username}/${story.attrs._id}`}</MetaUrlPreview>
             <MetaDescriptionPreview>
               {story.attrs.metaDescription || story.attrs.excerpt}
             </MetaDescriptionPreview>

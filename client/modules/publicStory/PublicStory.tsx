@@ -66,7 +66,9 @@ const StoryCover = styled.div`
   }
 `;
 
-const StoryCoverImage = styled.img``;
+const StoryCoverImage = styled.img`
+  ${tw`m-auto`};
+`;
 
 const StoryContent = styled.div`
   ${tw`mt-8 mb-24`};
