@@ -80,7 +80,7 @@ export const PublicStoryType = new GraphQLObjectType<PublicStoryDb>({
         // TODO use dataloader to batch the calls
         return UserModel.findOne({
           radiksType: 'BlockstackUser',
-          _id: 'leopradel.id.blockstack',
+          _id: 'sigleapp.id.blockstack',
         });
       },
       description: "The story's author",
