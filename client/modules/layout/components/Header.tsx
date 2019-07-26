@@ -113,7 +113,12 @@ export const Header = () => {
           </Link>
 
           <HeaderSeparator />
-
+          <HeaderLink
+            href="https://app-center.openintents.org/appco/1092/review"
+            rel="noopener noreferrer"
+          >
+            Rate App!
+          </HeaderLink>
           <HeaderLink href="/discover">Discover</HeaderLink>
           {/* TODO how to use */}
           {/* <HeaderLink href="/b">How to use?</HeaderLink> */}

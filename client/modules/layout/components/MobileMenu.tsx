@@ -64,9 +64,19 @@ export const MobileMenu = ({
             <MobileMenuLink href="/discover">Discover</MobileMenuLink>
           </MobileMenuListItem>
           {user && (
-            <MobileMenuListItem>
-              <MobileMenuLink href="/me">My stories</MobileMenuLink>
-            </MobileMenuListItem>
+            <>
+              <MobileMenuListItem>
+                <MobileMenuLink href="/me">My stories</MobileMenuLink>
+              </MobileMenuListItem>
+              <MobileMenuListItem>
+                <MobileMenuLink
+                  href="https://app-center.openintents.org/appco/1092/review"
+                  rel="noopener noreferrer"
+                >
+                  Rate App!
+                </MobileMenuLink>
+              </MobileMenuListItem>
+            </>
           )}
           {!user && (
             <MobileMenuListItem>
