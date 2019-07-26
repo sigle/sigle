@@ -27,7 +27,7 @@ export const Footer = () => {
       <StyledLink
         href="https://app-center.openintents.org/appco/1092/comment"
         target="_blank"
-        ref="noopener,noreferrer"
+        rel="noopener,noreferrer"
       >
         Rate app!
       </StyledLink>
