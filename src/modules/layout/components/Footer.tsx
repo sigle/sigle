@@ -25,7 +25,7 @@ export const Footer = () => {
   return (
     <StyledContainer>
       <StyledLink
-        href="https://app-center.openintents.org/appco/1092/comment"
+        href="https://app-center.openintents.org/appco/1092/review"
         target="_blank"
         rel="noopener,noreferrer"
       >
