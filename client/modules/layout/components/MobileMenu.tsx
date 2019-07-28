@@ -1,9 +1,10 @@
-import React from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components/macro';
 import tw from 'tailwind.macro';
 import '@reach/dialog/styles.css';
 import { DialogOverlay, DialogContent } from '@reach/dialog';
 import Link from 'next/link';
+import { useSpring, animated } from 'react-spring';
 import { getProfileRoute, getSettingsRoute } from '../../../utils/routes';
 
 const StyledDialogOverlay = styled(DialogOverlay)`
@@ -55,12 +56,30 @@ export const MobileMenu = ({
   onLogin,
   onLogout,
 }: MobileMenuProps) => {
+  const [delayedOpen, setDelayedOpen] = useState(open);
+  const overlayStyle = useSpring({
+    opacity: open ? 1 : 0,
+    config: { duration: 200 },
+    onRest: () => setDelayedOpen(open),
+  });
+  const contentStyle = useSpring({
+    transform: open ? 'translate3d(0px,0,0)' : 'translate3d(-80px,0,0)',
+    config: { duration: 180 },
+  });
+
   const profileRoute = user && getProfileRoute({ username: user.username });
   const settingsRoute = getSettingsRoute();
 
+  const AnimatedDialogOverlay = animated(StyledDialogOverlay);
+  const AnimatedDialogContent = animated(StyledDialogContent);
+
   return (
-    <StyledDialogOverlay isOpen={open} onDismiss={onClose}>
-      <StyledDialogContent>
+    <AnimatedDialogOverlay
+      style={overlayStyle}
+      isOpen={open || delayedOpen}
+      onDismiss={onClose}
+    >
+      <AnimatedDialogContent style={contentStyle}>
         <MobileMenuLogo src="/static/images/logo.png" alt="Sigle logo" />
 
         {user && <MobileMenuImage alt={user.username} src={userImage} />}
@@ -116,7 +135,7 @@ export const MobileMenu = ({
             </MobileMenuListItem>
           )}
         </ul>
-      </StyledDialogContent>
-    </StyledDialogOverlay>
+      </AnimatedDialogContent>
+    </AnimatedDialogOverlay>
   );
 };
