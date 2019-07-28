@@ -132,6 +132,10 @@ const StoryFooter = styled.div`
   ${tw`flex items-center mt-4`};
 `;
 
+const StoryFooterImageContainer = styled.a`
+  ${tw`mr-2 lg:mr-4`};
+`;
+
 const StoryFooterImage = styled.img`
   ${tw`w-32 h-32 rounded-full mr-2 lg:mr-4`};
 `;
@@ -327,12 +331,12 @@ export const PublicStoryComponent = ({ story }: Props) => {
       <StoryAbout>About the author</StoryAbout>
       <StoryFooter>
         <Link href={profileRoute.href} as={profileRoute.as}>
-          <a>
+          <StoryFooterImageContainer>
             <StoryFooterImage
               alt={`Profile image of ${story.user.username}`}
               src={story.user.imageUrl}
             />
-          </a>
+          </StoryFooterImageContainer>
         </Link>
         <div>
           <Link href={profileRoute.href} as={profileRoute.as}>
