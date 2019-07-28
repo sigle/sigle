@@ -4,6 +4,7 @@ import tw from 'tailwind.macro';
 import Router from 'next/router';
 import { MdSort } from 'react-icons/md';
 import { getConfig } from 'radiks';
+import { toast } from 'react-toastify';
 import Link from 'next/link';
 import {
   Container,
@@ -65,6 +66,7 @@ const HeaderUserPhoto = styled.img`
 export const Header = () => {
   const [menuOpen, setMenuOpen] = useState<boolean>(false);
   const [loginOpen, setLoginOpen] = useState<boolean>(false);
+  const [createStoryLoading, setCreateStoryLoading] = useState<boolean>(false);
   const { user, sigleUser, loading } = useContext(UserContext);
 
   const handleLogout = () => {
@@ -74,16 +76,23 @@ export const Header = () => {
   };
 
   const handleNewStory = async () => {
-    const privateStory = new PrivateStory({
-      title: '',
-      content: '',
-    });
-    await privateStory.save();
-    const editorRoute = getEditorRoute({
-      storyId: privateStory._id,
-      radiksType: privateStory.attrs.radiksType,
-    });
-    Router.push(editorRoute.href, editorRoute.as);
+    setCreateStoryLoading(true);
+    try {
+      const privateStory = new PrivateStory({
+        title: '',
+        content: '',
+      });
+      await privateStory.save();
+      const editorRoute = getEditorRoute({
+        storyId: privateStory._id,
+        radiksType: privateStory.attrs.radiksType,
+      });
+      Router.push(editorRoute.href, editorRoute.as);
+    } catch (error) {
+      console.error(error);
+      toast.error(error.message);
+      setCreateStoryLoading(false);
+    }
   };
 
   // TODO ask the user via graphql
@@ -134,8 +143,12 @@ export const Header = () => {
           )}
 
           {!loading && user && (
-            <HeaderButtonNewStory color="primary" onClick={handleNewStory}>
-              New story
+            <HeaderButtonNewStory
+              color="primary"
+              onClick={handleNewStory}
+              disabled={createStoryLoading}
+            >
+              {createStoryLoading ? 'Creating...' : 'New story'}
             </HeaderButtonNewStory>
           )}
 
