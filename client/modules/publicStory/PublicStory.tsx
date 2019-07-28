@@ -319,7 +319,9 @@ export const PublicStoryComponent = ({ story }: Props) => {
         <div>
           <StoryFooterName>{story.user.name}</StoryFooterName>
           <StoryFooterUsername>{story.user.username}</StoryFooterUsername>
-          <StoryFooterDescription>Lorem ipsum</StoryFooterDescription>
+          <StoryFooterDescription>
+            {story.user.description}
+          </StoryFooterDescription>
         </div>
       </StoryFooter>
     </StoryContainer>
@@ -342,6 +344,7 @@ export const PublicStory = createFragmentContainer(PublicStoryComponent, {
         id
         username
         name
+        description
         imageUrl(size: 128)
       }
     }
