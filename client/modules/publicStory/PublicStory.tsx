@@ -75,7 +75,7 @@ const StoryCoverImage = styled.img`
 const StoryContent = styled.div`
   ${tw`mt-8 mb-24`};
 
-  ${tw`text-base leading-tight`};
+  ${tw`text-lg leading-relaxed text-grey-darker`};
 
   p,
   ol,
@@ -94,23 +94,19 @@ const StoryContent = styled.div`
   }
 
   h1 {
-    ${tw`mt-6 mb-4 text-4xl`};
-  }
-
-  h2 {
     ${tw`mt-6 mb-4 text-3xl`};
   }
 
-  h3 {
+  h2 {
     ${tw`mt-6 mb-4 text-2xl`};
-  }
-
-  img {
-    margin: auto;
   }
 
   a {
     ${tw`underline text-primary`};
+  }
+
+  img {
+    margin: 2rem auto;
   }
 `;
 
