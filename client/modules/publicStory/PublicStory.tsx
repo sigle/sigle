@@ -13,6 +13,7 @@ import { TiSocialFacebook, TiSocialTwitter } from 'react-icons/ti';
 import { config } from '../../config';
 import { PublicStory_story } from './__generated__/PublicStory_story.graphql';
 import { getProfileRoute } from '../../utils/routes';
+import { Container } from '../../components';
 
 let dompurify = DOMPurify();
 
@@ -24,8 +25,9 @@ if (typeof window === 'undefined') {
   dompurify = DOMPurify(window);
 }
 
-const StoryContainer = styled.div`
+const StoryContainer = styled(Container)`
   ${tw`py-8`};
+  max-width: 768px;
 
   @media (min-width: ${config.breakpoints.sm}px) {
     ${tw`py-16`};
@@ -33,7 +35,7 @@ const StoryContainer = styled.div`
 `;
 
 const StoryTitle = styled.h1`
-  ${tw`text-4xl font-bold mb-4`};
+  ${tw`text-4xl font-bold mb-4 leading-tight`};
 `;
 
 const StoryItemDate = styled.p`

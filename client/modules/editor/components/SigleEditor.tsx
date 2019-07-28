@@ -12,6 +12,7 @@ import { State } from '../containers/SigleEditor';
 
 const StyledContainer = styled(Container)`
   margin-top: 60px;
+  max-width: 768px;
 `;
 
 const StyledLink = styled(Link)`

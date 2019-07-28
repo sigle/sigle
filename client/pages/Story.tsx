@@ -1,10 +1,6 @@
 import React from 'react';
 import { graphql } from 'react-relay';
-import {
-  FullHeightContainer,
-  MinHeightContainer,
-  Container,
-} from '../components';
+import { FullHeightContainer, MinHeightContainer } from '../components';
 import { withData } from '../lib/withData';
 import { Header } from '../modules/layout/components/Header';
 import { Footer } from '../modules/layout/components/Footer';
@@ -17,10 +13,8 @@ export const StoryComponent = ({ publicStory }: Props) => (
   <FullHeightContainer>
     <Header />
     <MinHeightContainer>
-      <Container>
-        {/* TODO 404 not found */}
-        {publicStory && <PublicStory story={publicStory} />}
-      </Container>
+      {/* TODO 404 not found */}
+      {publicStory && <PublicStory story={publicStory} />}
       <Footer />
     </MinHeightContainer>
   </FullHeightContainer>
