@@ -18,7 +18,11 @@ import { UserContext } from '../../../context/UserContext';
 import { PrivateStory } from '../../../models';
 import { defaultUserImage } from '../../../utils';
 import { SignInDialog } from '../../dialog/SignInDialog';
-import { getProfileRoute, getSettingsRoute } from '../../../utils/routes';
+import {
+  getProfileRoute,
+  getSettingsRoute,
+  getEditorRoute,
+} from '../../../utils/routes';
 
 const HeaderShadow = styled.div`
   box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.03),
@@ -75,17 +79,11 @@ export const Header = () => {
       content: '',
     });
     await privateStory.save();
-    Router.push(
-      {
-        pathname: '/editor',
-        query: {
-          storyId: privateStory._id,
-          storyType: 'private',
-        },
-        // Next.js types are wrong for this function
-      } as any,
-      `/me/stories/drafts/${privateStory._id}`
-    );
+    const editorRoute = getEditorRoute({
+      storyId: privateStory._id,
+      radiksType: privateStory.attrs.radiksType,
+    });
+    Router.push(editorRoute.href, editorRoute.as);
   };
 
   // TODO ask the user via graphql

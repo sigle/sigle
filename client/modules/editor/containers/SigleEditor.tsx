@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useReducer, useRef } from 'react';
 import { toast } from 'react-toastify';
+import Router from 'next/router';
 import { PrivateStory, PublicStory } from '../../../models';
 import { SigleEditor as Component } from '../components/SigleEditor';
-import Router from 'next/router';
 
 interface Props {
   storyId: string;
@@ -55,6 +55,7 @@ export const SigleEditor = ({ storyId, storyType }: Props) => {
     try {
       const publicStory = new PublicStory({ ...story.attrs });
       await publicStory.save();
+      // TODO do not reload the page and use `href` and `as`·
       Router.push(`/me/stories/${publicStory.attrs._id}`);
     } catch (error) {
       console.error(error);
