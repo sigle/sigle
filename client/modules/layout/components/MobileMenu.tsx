@@ -128,6 +128,7 @@ export const MobileMenu = ({
                 onClick={e => {
                   e.preventDefault();
                   onLogin();
+                  onClose();
                 }}
               >
                 Sign in
