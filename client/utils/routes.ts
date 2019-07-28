@@ -44,3 +44,8 @@ export const getEditorRoute = ({ storyId, radiksType }: EditorRouteParams) => ({
       ? `/me/stories/drafts/${storyId}`
       : `/me/stories/${storyId}`,
 });
+
+export const getSettingsRoute = () => ({
+  href: '/settings',
+  as: '/me/settings',
+});

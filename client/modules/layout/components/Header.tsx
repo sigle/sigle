@@ -4,10 +4,10 @@ import tw from 'tailwind.macro';
 import Router from 'next/router';
 import { MdSort } from 'react-icons/md';
 import { getConfig } from 'radiks';
+import Link from 'next/link';
 import {
   Container,
   Button,
-  Link,
   Menu,
   MenuList,
   MenuButton,
@@ -18,6 +18,7 @@ import { UserContext } from '../../../context/UserContext';
 import { PrivateStory } from '../../../models';
 import { defaultUserImage } from '../../../utils';
 import { SignInDialog } from '../../dialog/SignInDialog';
+import { getProfileRoute, getSettingsRoute } from '../../../utils/routes';
 
 const HeaderShadow = styled.div`
   box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.03),
@@ -41,8 +42,8 @@ const HeaderSeparator = styled.img`
 `;
 
 // TODO nice underline with more space
-const HeaderLink = styled(Link)`
-  ${tw`py-3 px-3 block lg:text-sm hover:underline hidden lg:block`};
+const HeaderLink = styled.a`
+  ${tw`py-3 px-3 block lg:text-sm hover:underline hidden lg:block cursor-pointer`};
 `;
 
 const HeaderButton = styled(Button)`
@@ -95,6 +96,9 @@ export const Header = () => {
         defaultUserImage(sigleUser.attrs.username, 64)
     : undefined;
 
+  const profileRoute = user && getProfileRoute({ username: user.username });
+  const settingsRoute = getSettingsRoute();
+
   return (
     <HeaderShadow>
       <Container>
@@ -102,6 +106,7 @@ export const Header = () => {
           open={menuOpen}
           onClose={() => setMenuOpen(false)}
           onLogin={() => setLoginOpen(true)}
+          onLogout={handleLogout}
           user={user}
           userImage={userImage}
         />
@@ -116,7 +121,9 @@ export const Header = () => {
 
           <HeaderSeparator />
 
-          <HeaderLink href="/discover">Discover</HeaderLink>
+          <Link href="/discover">
+            <HeaderLink>Discover</HeaderLink>
+          </Link>
           {/* TODO how to use */}
           {/* <HeaderLink href="/b">How to use?</HeaderLink> */}
           {/* TODO nice loading */}
@@ -134,7 +141,7 @@ export const Header = () => {
             </HeaderButtonNewStory>
           )}
 
-          {!loading && user && (
+          {!loading && user && profileRoute && (
             <Menu>
               <MenuButton>
                 <HeaderUserPhoto src={userImage} alt={user.username} />
@@ -145,22 +152,15 @@ export const Header = () => {
                 </MenuItem>
                 <MenuItem
                   onSelect={() =>
-                    Router.push(
-                      {
-                        pathname: '/profile',
-                        query: {
-                          username: user.username,
-                        },
-                        // Next.js types are wrong for this function
-                      } as any,
-                      `/@${user.username}`
-                    )
+                    Router.push(profileRoute.href, profileRoute.as)
                   }
                 >
                   Profile
                 </MenuItem>
                 <MenuItem
-                  onSelect={() => Router.push('/settings', '/me/settings')}
+                  onSelect={() =>
+                    Router.push(settingsRoute.href, settingsRoute.as)
+                  }
                 >
                   Settings
                 </MenuItem>

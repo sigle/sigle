@@ -3,7 +3,8 @@ import styled from 'styled-components/macro';
 import tw from 'tailwind.macro';
 import '@reach/dialog/styles.css';
 import { DialogOverlay, DialogContent } from '@reach/dialog';
-import { Link } from '../../../components';
+import Link from 'next/link';
+import { getProfileRoute, getSettingsRoute } from '../../../utils/routes';
 
 const StyledDialogOverlay = styled(DialogOverlay)`
   z-index: 11;
@@ -30,7 +31,7 @@ const MobileMenuListItem = styled.li`
   }
 `;
 
-const MobileMenuLink = styled(Link)`
+const MobileMenuLink = styled.a`
   ${tw`text-center block py-3`};
 `;
 
@@ -42,6 +43,7 @@ interface MobileMenuProps {
   userImage?: string;
   onClose: () => void;
   onLogin: () => void;
+  onLogout: () => void;
 }
 
 // TODO animation when open / close the menu
@@ -51,7 +53,11 @@ export const MobileMenu = ({
   userImage,
   onClose,
   onLogin,
+  onLogout,
 }: MobileMenuProps) => {
+  const profileRoute = user && getProfileRoute({ username: user.username });
+  const settingsRoute = getSettingsRoute();
+
   return (
     <StyledDialogOverlay isOpen={open} onDismiss={onClose}>
       <StyledDialogContent>
@@ -61,16 +67,50 @@ export const MobileMenu = ({
 
         <ul>
           <MobileMenuListItem>
-            <MobileMenuLink href="/discover">Discover</MobileMenuLink>
+            <Link href="/discover">
+              <MobileMenuLink>Discover</MobileMenuLink>
+            </Link>
           </MobileMenuListItem>
-          {user && (
-            <MobileMenuListItem>
-              <MobileMenuLink href="/me">My stories</MobileMenuLink>
-            </MobileMenuListItem>
+          {user && profileRoute && (
+            <React.Fragment>
+              <MobileMenuListItem>
+                <Link href="/me">
+                  <MobileMenuLink>My stories</MobileMenuLink>
+                </Link>
+              </MobileMenuListItem>
+              <MobileMenuListItem>
+                <Link href={profileRoute.href} as={profileRoute.as}>
+                  <MobileMenuLink>Profile</MobileMenuLink>
+                </Link>
+              </MobileMenuListItem>
+              <MobileMenuListItem>
+                <Link href={settingsRoute.href} as={settingsRoute.as}>
+                  <MobileMenuLink>Settings</MobileMenuLink>
+                </Link>
+              </MobileMenuListItem>
+              <MobileMenuListItem>
+                <MobileMenuLink
+                  href=""
+                  onClick={e => {
+                    e.preventDefault();
+                    onLogout();
+                  }}
+                >
+                  Sign out
+                </MobileMenuLink>
+              </MobileMenuListItem>
+            </React.Fragment>
           )}
+
           {!user && (
             <MobileMenuListItem>
-              <MobileMenuLink href="" onClick={onLogin}>
+              <MobileMenuLink
+                href=""
+                onClick={e => {
+                  e.preventDefault();
+                  onLogin();
+                }}
+              >
                 Sign in
               </MobileMenuLink>
             </MobileMenuListItem>
