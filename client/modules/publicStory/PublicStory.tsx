@@ -4,6 +4,7 @@ import styled from 'styled-components';
 import tw from 'tailwind.macro';
 import { createFragmentContainer, graphql } from 'react-relay';
 import Head from 'next/head';
+import Link from 'next/link';
 import format from 'date-fns/format';
 import { Value } from 'slate';
 import Html from 'slate-html-serializer';
@@ -11,6 +12,7 @@ import DOMPurify from 'dompurify';
 import { TiSocialFacebook, TiSocialTwitter } from 'react-icons/ti';
 import { config } from '../../config';
 import { PublicStory_story } from './__generated__/PublicStory_story.graphql';
+import { getProfileRoute } from '../../utils/routes';
 
 let dompurify = DOMPurify();
 
@@ -240,6 +242,8 @@ export const PublicStoryComponent = ({ story }: Props) => {
     `${story.metaTitle || story.title} | @sigleapp ${seoUrl}`
   );
 
+  const profileRoute = getProfileRoute({ username: story.user.username });
+
   return (
     <StoryContainer>
       <Head>
@@ -271,13 +275,25 @@ export const PublicStoryComponent = ({ story }: Props) => {
       )}
       <StoryTitle>{story.title}</StoryTitle>
       <StoryProfile>
-        <StoryProfileImage
-          alt={`Profile image of ${story.user.username}`}
-          src={story.user.imageUrl}
-        />
+        <Link href={profileRoute.href} as={profileRoute.as}>
+          <a>
+            <StoryProfileImage
+              alt={`Profile image of ${story.user.username}`}
+              src={story.user.imageUrl}
+            />
+          </a>
+        </Link>
         <div>
-          <StoryProfileName>{story.user.name}</StoryProfileName>
-          <StoryProfileUsername>{story.user.username}</StoryProfileUsername>
+          <Link href={profileRoute.href} as={profileRoute.as}>
+            <a>
+              <StoryProfileName>{story.user.name}</StoryProfileName>
+            </a>
+          </Link>
+          <Link href={profileRoute.href} as={profileRoute.as}>
+            <a>
+              <StoryProfileUsername>{story.user.username}</StoryProfileUsername>
+            </a>
+          </Link>
         </div>
       </StoryProfile>
       {!story.coverImageUrl && <StoryDivider />}
@@ -312,13 +328,25 @@ export const PublicStoryComponent = ({ story }: Props) => {
       <StoryDivider />
       <StoryAbout>About the author</StoryAbout>
       <StoryFooter>
-        <StoryFooterImage
-          alt={`Profile image of ${story.user.username}`}
-          src={story.user.imageUrl}
-        />
+        <Link href={profileRoute.href} as={profileRoute.as}>
+          <a>
+            <StoryFooterImage
+              alt={`Profile image of ${story.user.username}`}
+              src={story.user.imageUrl}
+            />
+          </a>
+        </Link>
         <div>
-          <StoryFooterName>{story.user.name}</StoryFooterName>
-          <StoryFooterUsername>{story.user.username}</StoryFooterUsername>
+          <Link href={profileRoute.href} as={profileRoute.as}>
+            <a>
+              <StoryFooterName>{story.user.name}</StoryFooterName>
+            </a>
+          </Link>
+          <Link href={profileRoute.href} as={profileRoute.as}>
+            <a>
+              <StoryFooterUsername>{story.user.username}</StoryFooterUsername>
+            </a>
+          </Link>
           <StoryFooterDescription>
             {story.user.description}
           </StoryFooterDescription>
