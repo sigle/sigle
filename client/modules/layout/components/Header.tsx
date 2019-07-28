@@ -87,10 +87,12 @@ export const Header = () => {
     );
   };
 
+  // TODO ask the user via graphql
   const userImage = sigleUser
     ? sigleUser.attrs.imageUrl
       ? sigleUser.attrs.imageUrl
-      : defaultUserImage(sigleUser.attrs.username, 32)
+      : // 64 here is used for the mobile size
+        defaultUserImage(sigleUser.attrs.username, 64)
     : undefined;
 
   return (
