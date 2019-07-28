@@ -16,12 +16,12 @@ export const UserType = new GraphQLObjectType<UserDb>({
   fields: () => ({
     id: globalIdField('User', user => user._id),
     _id: {
-      type: GraphQLString,
+      type: GraphQLNonNull(GraphQLString),
       resolve: user => user._id,
       description: "The user's mongodb id",
     },
     username: {
-      type: GraphQLString,
+      type: GraphQLNonNull(GraphQLString),
       resolve: user => user.username,
       description: "The user's public description",
     },

@@ -13,6 +13,7 @@ import {
   MenuButton,
   MenuItem,
 } from '../../../components';
+import { getEditorRoute } from '../../../utils/routes';
 
 const StoryItemContainer = styled.div`
   ${tw`py-4 border-b border-solid border-grey`};
@@ -57,7 +58,7 @@ interface Props {
       title?: string;
       excerpt?: string;
       createdAt?: string;
-      radiksType?: 'PrivateStory' | 'PublicStory';
+      radiksType: 'PrivateStory' | 'PublicStory';
     };
   };
   onDelete: (id: string) => void;
@@ -71,24 +72,17 @@ export const StoryItem = ({
   onPublish,
   onUnPublish,
 }: Props) => {
-  const storyLinkHref = {
-    pathname: 'editor',
-    query: {
-      storyId: story.attrs._id,
-      storyType:
-        story.attrs.radiksType === 'PrivateStory' ? 'private' : undefined,
-    },
-  };
-  const storyLinkAs =
-    story.attrs.radiksType === 'PrivateStory'
-      ? `me/stories/drafts/${story.attrs._id}`
-      : `me/stories/${story.attrs._id}`;
+  const editorRoute = getEditorRoute({
+    storyId: story.attrs._id,
+    radiksType: story.attrs.radiksType,
+  });
+
   return (
     <StoryItemContainer>
       <div className="top-container">
         <div className="left">
           <div className="title-container">
-            <Link href={storyLinkHref} as={storyLinkAs}>
+            <Link href={editorRoute.href} as={editorRoute.as}>
               <a className="title">{story.attrs.title}</a>
             </Link>
             {story.attrs.radiksType === 'PrivateStory' && (
@@ -125,7 +119,7 @@ export const StoryItem = ({
           )}
         </div>
         <div className="right">
-          <Link href={storyLinkHref} as={storyLinkAs}>
+          <Link href={editorRoute.href} as={editorRoute.as}>
             <Button
               color="primary"
               className="edit"

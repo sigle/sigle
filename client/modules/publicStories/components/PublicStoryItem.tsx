@@ -6,6 +6,7 @@ import { graphql, createFragmentContainer } from 'react-relay';
 import format from 'date-fns/format';
 import Link from 'next/link';
 import { PublicStoryItem_story } from './__generated__/PublicStoryItem_story.graphql';
+import { getPublicStoryRoute, getProfileRoute } from '../../../utils/routes';
 
 const StoryContainer = styled.div`
   ${tw`w-full lg:flex py-4 border-b border-grey`};
@@ -62,25 +63,20 @@ interface Props {
 
 export const PublicStoryItemComponent = ({ story }: Props) => {
   const userDisplayName = story.user.name || story.user.username;
-  const storyLinkHref = {
-    pathname: '/story',
-    query: { username: story.user.username, storyId: story._id },
-  };
-  const storyLinkAs = `/@${story.user.username}/${story._id}`;
-  const userLinkHref = {
-    pathname: '/profile',
-    query: { username: story.user.username },
-  };
-  const userLinkAs = `/@${story.user.username}/`;
+  const publicStoryRoute = getPublicStoryRoute({
+    username: story.user.username,
+    storyId: story._id,
+  });
+  const profileRoute = getProfileRoute({ username: story.user.username });
 
   return (
     <StoryContainer>
-      <Link href={storyLinkHref} as={storyLinkAs}>
+      <Link href={publicStoryRoute.href} as={publicStoryRoute.as}>
         <StoryCover coverImageUrl={story.coverImageUrl} />
       </Link>
       <StoryContent>
         <StoryTitle>
-          <Link href={storyLinkHref} as={storyLinkAs}>
+          <Link href={publicStoryRoute.href} as={publicStoryRoute.as}>
             <a>{story.title}</a>
           </Link>
         </StoryTitle>
@@ -94,7 +90,7 @@ export const PublicStoryItemComponent = ({ story }: Props) => {
         {/* <StoryTags>Travel, lifestyle</StoryTags> */}
         <StoryProfile>
           {story.user.imageUrl && (
-            <Link href={userLinkHref} as={userLinkAs}>
+            <Link href={profileRoute.href} as={profileRoute.as}>
               <a>
                 <StoryProfileImage
                   alt={`Profile image of ${story.user.username}`}
@@ -103,7 +99,7 @@ export const PublicStoryItemComponent = ({ story }: Props) => {
               </a>
             </Link>
           )}
-          <Link href={userLinkHref} as={userLinkAs}>
+          <Link href={profileRoute.href} as={profileRoute.as}>
             <a>
               <StoryProfileName>{userDisplayName}</StoryProfileName>
             </a>

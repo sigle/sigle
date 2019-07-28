@@ -280,6 +280,7 @@ export const Settings = () => {
                       id="description"
                       placeholder="Tell us about yourself"
                       maxLength={200}
+                      rows={4}
                       value={sigleUser.attrs.description || ''}
                       onChange={e => {
                         const update = {

@@ -17,7 +17,7 @@ export const PublicStoryType = new GraphQLObjectType<PublicStoryDb>({
   fields: () => ({
     id: globalIdField('PublicStory', story => story._id),
     _id: {
-      type: GraphQLString,
+      type: GraphQLNonNull(GraphQLString),
       resolve: story => story._id,
       description: "The story's mongodb id",
     },
