@@ -209,8 +209,8 @@ export const Settings = () => {
                       id="name"
                       type="text"
                       placeholder="Julia Doe"
-                      // TODO max length validation
-                      value={sigleUser.attrs.name}
+                      maxLength={100}
+                      value={sigleUser.attrs.name || ''}
                       onChange={e => {
                         const update = {
                           name: e.target.value,
@@ -280,7 +280,7 @@ export const Settings = () => {
                       id="description"
                       placeholder="Tell us about yourself"
                       maxLength={200}
-                      value={sigleUser.attrs.description}
+                      value={sigleUser.attrs.description || ''}
                       onChange={e => {
                         const update = {
                           description: e.target.value,
