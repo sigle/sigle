@@ -2276,7 +2276,7 @@ bitcoinjs-lib@^5.0.5:
     varuint-bitcoin "^1.0.4"
     wif "^2.0.1"
 
-blockstack@19.2.2, blockstack@^19.2.1:
+blockstack@19.2.2, blockstack@^19.2.2:
   version "19.2.2"
   resolved "https://registry.yarnpkg.com/blockstack/-/blockstack-19.2.2.tgz#7d096f3a42a0a23a4637232900c0fd9b00e560f8"
   integrity sha512-jU2BW+uy6QH3PUpeHA+92AXzgSVMC7pX3YiHU0QCfRnKkd0/y41b3puCHBl1XPHNUVxHyb1Ewof0pv+xAMMcZA==
@@ -7421,13 +7421,13 @@ querystring@0.2.0, querystring@^0.2.0:
   resolved "https://registry.yarnpkg.com/querystring/-/querystring-0.2.0.tgz#b209849203bb25df820da756e747005878521620"
   integrity sha1-sgmEkgO7Jd+CDadW50cAWHhSFiA=
 
-radiks-server@1.0.0-beta.1:
-  version "1.0.0-beta.1"
-  resolved "https://registry.yarnpkg.com/radiks-server/-/radiks-server-1.0.0-beta.1.tgz#690cff0ff6b56f19ad8dd0fb3e82804f416048bf"
-  integrity sha512-Q0yM30IO+CCkz12Ns27k/lwpSZegW9bwgmSPUAupNap6u8evE4RicDrS6qZKEqxIIUnwbNYF7ahfddg8riHiRA==
+radiks-server@1.1.0-beta.3:
+  version "1.1.0-beta.3"
+  resolved "https://registry.yarnpkg.com/radiks-server/-/radiks-server-1.1.0-beta.3.tgz#77c872f472546d4329e89b74c15b7a5e5995a4fc"
+  integrity sha512-qqW0kN9ojW4T5JVbwM6nSG7cVq0q+O7PPhw9fR8Fgqj1UMU7XtP0e/m92SATfoch2tGhqIghtd6o6qI/Q8F2Cg==
   dependencies:
     "@awaitjs/express" "^0.3.0"
-    blockstack "^19.2.1"
+    blockstack "^19.2.2"
     body-parser "^1.19.0"
     elliptic "^6.5.0"
     express "^4.17.1"
@@ -7439,10 +7439,10 @@ radiks-server@1.0.0-beta.1:
     request-promise "^4.2.4"
     wolfy87-eventemitter "^5.2.6"
 
-radiks@0.2.1:
-  version "0.2.1"
-  resolved "https://registry.yarnpkg.com/radiks/-/radiks-0.2.1.tgz#11d03c7d7dc6fb662a812c8b865d59ee551f3693"
-  integrity sha512-OYmfQAZ4dBEh3eDIdZbvlHYz4UpEyUpW5t7FJ5n9uUqddDRo4cs4ENozgKSH6ggFeHBbnKA0E9uCE6uSAIt9xA==
+radiks@0.3.0-beta.1:
+  version "0.3.0-beta.1"
+  resolved "https://registry.yarnpkg.com/radiks/-/radiks-0.3.0-beta.1.tgz#41e1b2d648e7a6f3390dad0102dfc6e557dcf08e"
+  integrity sha512-0Jk/43sRi7dpxjwzPZF1PH+evOAWOfhLxZD5bc3eaMfXVNaA1lieOmfFCMS3UDuBqPg9+LHilCudzSY0dKBdNA==
   dependencies:
     faker "^4.1.0"
     qs "^6.5.2"

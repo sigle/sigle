@@ -3,6 +3,8 @@ import { Model } from 'radiks';
 class PublicStoryModel extends Model {
   static className = 'PublicStory';
 
+  static validateUsername = true;
+
   static schema = {
     title: {
       type: String,
