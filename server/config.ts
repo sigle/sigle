@@ -1,4 +1,4 @@
-import constants from 'radiks-server/lib/lib/constants';
+import constants from 'radiks-server/app/lib/constants';
 
 export const config = {
   mongoDBUrl:

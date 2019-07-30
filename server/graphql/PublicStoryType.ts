@@ -75,12 +75,11 @@ export const PublicStoryType = new GraphQLObjectType<PublicStoryDb>({
     },
     user: {
       type: GraphQLNonNull(UserType),
-      resolve: () => {
-        // TODO see how to link the story to the user
+      resolve: story => {
         // TODO use dataloader to batch the calls
         return UserModel.findOne({
           radiksType: 'BlockstackUser',
-          _id: 'sigleapp.id.blockstack',
+          _id: story.username,
         });
       },
       description: "The story's author",

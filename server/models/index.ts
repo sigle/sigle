@@ -9,6 +9,7 @@ const PublicStorySchema = new Schema(
     metaTitle: String,
     metaDescription: String,
     coverImageUrl: String,
+    username: String,
     createdAt: Number,
     updatedAt: Number,
   },

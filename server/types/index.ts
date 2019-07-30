@@ -22,6 +22,7 @@ export interface PublicStoryDb {
   coverImageUrl?: string;
   metaTitle?: string;
   metaDescription?: string;
+  username?: string;
   createdAt?: number;
   updatedAt?: number;
 }

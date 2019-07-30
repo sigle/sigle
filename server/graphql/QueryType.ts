@@ -63,11 +63,11 @@ export const QueryType = new GraphQLObjectType<{}, GraphqlContext>({
       },
       resolve: async (_, args, context) => {
         const { db } = context;
-        const { storyId } = args;
+        const { storyId, username } = args;
         const radiksData = db.collection(config.radiksCollectionName);
         const publicStory = await radiksData.findOne({
           radiksType: 'PublicStory',
-          // TODO also fetch with the username
+          username,
           _id: storyId,
         });
         return publicStory;

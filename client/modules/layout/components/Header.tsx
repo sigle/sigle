@@ -75,6 +75,12 @@ export const Header = () => {
     window.location.href = '/discover';
   };
 
+  // TODO remove once issue is fixed on blockstack side
+  const handleLogin = () => {
+    const { userSession } = getConfig();
+    userSession.redirectToSignIn();
+  };
+
   const handleNewStory = async () => {
     setCreateStoryLoading(true);
     try {
@@ -137,7 +143,8 @@ export const Header = () => {
           {loading && <div>Loading ...</div>}
 
           {!loading && !user && (
-            <HeaderButton color="black" onClick={() => setLoginOpen(true)}>
+            // <HeaderButton color="black" onClick={() => setLoginOpen(true)}>
+            <HeaderButton color="black" onClick={handleLogin}>
               Sign in
             </HeaderButton>
           )}
