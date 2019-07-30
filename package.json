@@ -63,7 +63,7 @@
     "react": "16.8.6",
     "react-blockstack-button": "0.1.0",
     "react-dom": "16.8.6",
-    "react-dropzone": "10.1.6",
+    "react-dropzone": "10.1.7",
     "react-helmet": "5.2.1",
     "react-icons": "3.7.0",
     "react-relay": "5.0.0",
@@ -86,8 +86,8 @@
     "@types/express-graphql": "0.8.0",
     "@types/graphql-relay": "0.4.9",
     "@types/helmet": "0.0.43",
-    "@types/jest": "24.0.15",
-    "@types/mongodb": "3.1.30",
+    "@types/jest": "24.0.16",
+    "@types/mongodb": "3.1.31",
     "@types/mongoose": "5.5.11",
     "@types/nanoid": "2.0.0",
     "@types/node": "12.6.8",
@@ -114,7 +114,7 @@
     "eslint-config-prettier": "6.0.0",
     "eslint-plugin-prettier": "3.1.0",
     "eslint-plugin-react": "7.14.3",
-    "husky": "3.0.1",
+    "husky": "3.0.2",
     "lint-staged": "9.2.1",
     "next-compose-plugins": "2.2.0",
     "nodemon": "1.19.1",
@@ -125,6 +125,6 @@
     "tailwindcss": "1.0.5",
     "ts-node": "8.3.0",
     "typescript": "3.5.3",
-    "webpack-bundle-analyzer": "3.3.2"
+    "webpack-bundle-analyzer": "3.4.1"
   }
 }
