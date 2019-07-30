@@ -123,7 +123,7 @@ export const Profile = withData(ProfileComponent, {
         description
         imageUrl(size: 128)
       }
-      publicStories {
+      publicStories(username: $username) {
         totalCount
         edges {
           node {

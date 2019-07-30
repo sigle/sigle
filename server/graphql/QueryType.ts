@@ -25,11 +25,13 @@ export const QueryType = new GraphQLObjectType<{}, GraphqlContext>({
       resolve: async (_, args, context) => {
         const { db } = context;
         const { username } = args;
+
         const radiksData = db.collection(config.radiksCollectionName);
         const user = await radiksData.findOne({
           radiksType: 'BlockstackUser',
           _id: username,
         });
+
         return user;
       },
     },
@@ -37,15 +39,27 @@ export const QueryType = new GraphQLObjectType<{}, GraphqlContext>({
     publicStories: {
       description: 'Fetches the list of current public stories',
       type: mrType('PublicStory', PublicStoryType),
-      args: mrArgs,
+      args: {
+        ...mrArgs,
+        username: {
+          type: GraphQLString,
+        },
+      },
       resolve: (_, args) => {
-        const query = {
+        const { username } = args;
+
+        const query: { radiksType: string; username?: string } = {
           radiksType: 'PublicStory',
         };
         const opts = {
           cursorField: 'createdAt',
           direction: -1,
         };
+
+        if (username) {
+          query.username = username;
+        }
+
         return mrResolve(args, PublicStoryModel, query, opts);
       },
     },
@@ -64,12 +78,14 @@ export const QueryType = new GraphQLObjectType<{}, GraphqlContext>({
       resolve: async (_, args, context) => {
         const { db } = context;
         const { storyId, username } = args;
+
         const radiksData = db.collection(config.radiksCollectionName);
         const publicStory = await radiksData.findOne({
           radiksType: 'PublicStory',
           username,
           _id: storyId,
         });
+
         return publicStory;
       },
     },
