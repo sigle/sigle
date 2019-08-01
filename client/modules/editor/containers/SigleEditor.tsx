@@ -117,9 +117,7 @@ export const SigleEditor = ({ storyId, storyType }: Props) => {
     fetchStory();
 
     return () => {
-      if (typeof window !== 'undefined') {
-        window.removeEventListener('beforeunload', handleWindowClose);
-      }
+      clearTimeout(timeoutId.current);
     };
   }, []);
 
