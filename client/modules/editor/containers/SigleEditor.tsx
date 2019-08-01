@@ -100,17 +100,44 @@ export const SigleEditor = ({ storyId, storyType }: Props) => {
     }, 1500);
   };
 
+  const handleWindowClose = (e: BeforeUnloadEvent) => {
+    if (state.status === 'fetching') {
+      e.preventDefault();
+      return (e.returnValue =
+        'You have unsaved changes - are you sure you wish to close?');
+    }
+  };
   /**
-   * When we mount we fetch the story from the server
-   * When we unmount we unset all the timeouts that can be pending
+   * When we mount:
+   * - we fetch the story from the server
+   * When we unmount:
+   * - we unset all the timeouts that can be pending
    */
   useEffect(() => {
     fetchStory();
 
     return () => {
-      clearTimeout(timeoutId.current);
+      if (typeof window !== 'undefined') {
+        window.removeEventListener('beforeunload', handleWindowClose);
+      }
     };
   }, []);
+
+  /**
+   * If we are on the client we show a prompt message when user
+   * try to close the tab while it's not saved yet
+   */
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      window.addEventListener('beforeunload', handleWindowClose);
+    }
+
+    return () => {
+      if (typeof window !== 'undefined') {
+        window.removeEventListener('beforeunload', handleWindowClose);
+      }
+    };
+  }, [handleWindowClose]);
 
   return (
     <Component
