@@ -99,14 +99,6 @@ export const SigleEditor = ({ storyId, storyType }: Props) => {
       }
     }, 1500);
   };
-
-  const handleWindowClose = (e: BeforeUnloadEvent) => {
-    if (state.status === 'fetching') {
-      e.preventDefault();
-      return (e.returnValue =
-        'You have unsaved changes - are you sure you wish to close?');
-    }
-  };
   /**
    * When we mount:
    * - we fetch the story from the server
@@ -120,6 +112,14 @@ export const SigleEditor = ({ storyId, storyType }: Props) => {
       clearTimeout(timeoutId.current);
     };
   }, []);
+
+  const handleWindowClose = (e: BeforeUnloadEvent) => {
+    if (state.status === 'fetching') {
+      e.preventDefault();
+      return (e.returnValue =
+        'You have unsaved changes - are you sure you wish to close?');
+    }
+  };
 
   /**
    * If we are on the client we show a prompt message when user
