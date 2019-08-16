@@ -10,7 +10,7 @@ const mapGraphqlTypeToMongoCollection: { [key: string]: string } = {
 const { nodeInterface, nodeField } = nodeDefinitions<GraphqlContext>(
   (globalId, context) => {
     const { db } = context;
-    var { type, id } = fromGlobalId(globalId);
+    const { type, id } = fromGlobalId(globalId);
     const radiksType = mapGraphqlTypeToMongoCollection[type];
     if (!radiksType) {
       return null;

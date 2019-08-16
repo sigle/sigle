@@ -42,7 +42,7 @@ export const PublicStoryType = new GraphQLObjectType<PublicStoryDb>({
         },
       },
       resolve: (story, args) => {
-        let { width, height } = args;
+        const { width, height } = args;
         const coverImageUrl = story.coverImageUrl
           ? encodeURI(story.coverImageUrl)
           : null;
