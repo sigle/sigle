@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import tw from 'tailwind.macro';
-import { MdSettings, MdAddAPhoto } from 'react-icons/md';
+import { MdSettings } from 'react-icons/md';
 import { Container, Button, Link } from '../../../components';
 import { RadiksPrivateStory, RadiksPublicStory } from 'client/types';
 
@@ -67,18 +67,6 @@ export const SigleEditorHeader = ({
 
           <HeaderSeparator />
 
-          {story && (
-            <AddPhotoButton
-              onClick={() => {
-                // TODO remove this with a real implementation
-                const input = document.createElement('input');
-                input.type = 'file';
-                input.click();
-              }}
-            >
-              <MdAddAPhoto size={18} /> <span>Add photo</span>
-            </AddPhotoButton>
-          )}
           {story && story.attrs.radiksType === 'PrivateStory' && (
             <Button color="primary" onClick={onPublishStory}>
               Publish now

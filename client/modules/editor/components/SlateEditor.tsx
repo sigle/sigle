@@ -1,5 +1,5 @@
 import React, { useRef, useState } from 'react';
-import ReactDOM from 'react-dom';
+import ReactDOM, { findDOMNode } from 'react-dom';
 import styled, { css } from 'styled-components';
 import tw from 'tailwind.macro';
 import {
@@ -23,6 +23,7 @@ import {
   MdLink,
   MdLooksTwo,
   MdLooksOne,
+  MdAddAPhoto,
 } from 'react-icons/md';
 import { getConfig } from 'radiks';
 import { hasBlock, hasMark, hasLinks } from './utils';
@@ -168,6 +169,20 @@ const MenuButton = styled.div<{ active: boolean }>`
     css`
       ${tw`text-primary`};
     `}
+`;
+
+const Sidebar = styled.div`
+  ${tw`flex items-center justify-center cursor-pointer`};
+  border: 1px solid black;
+  position: absolute;
+  z-index: 1;
+  height: 29px;
+  width: 29px;
+  transition: opacity 0.75s;
+  opacity: 0;
+  border-radius: 50%;
+  top: 0;
+  left: -2000px;
 `;
 
 interface MarkButtonProps {
@@ -384,6 +399,8 @@ interface Props {
 export const SlateEditor = ({ story, onChangeContent }: Props) => {
   const editorRef = useRef<any>(null);
   const menuRef = useRef<any>(null);
+  const sidebarRef = useRef<any>(null);
+  const fileUploaderRef = useRef<any>(null);
   const [value, setValue] = useState(
     story.attrs.content
       ? // TODO error catching of JSON.parse and fromJSON
@@ -420,10 +437,38 @@ export const SlateEditor = ({ story, onChangeContent }: Props) => {
       rect.width / 2}px`;
   };
 
+  /**
+   * We display the sidebar only if:
+   * - it's a paragraph
+   * - text is empty
+   */
+  const updateSidebar = (value: Value) => {
+    const sidebar = sidebarRef.current;
+    if (!sidebar) return;
+
+    const { focusBlock } = value;
+    if (
+      !focusBlock ||
+      focusBlock.type !== 'paragraph' ||
+      focusBlock.text !== ''
+    ) {
+      sidebar.removeAttribute('style');
+      return;
+    }
+    const block = document.querySelector(`[data-key='${focusBlock.key}']`);
+    if (block) {
+      const size = block.getBoundingClientRect();
+      sidebar.style.top = `${size.top + window.pageYOffset}px`;
+      sidebar.style.left = `${size.left - 40}px`;
+      sidebar.style.opacity = 1;
+    }
+  };
+
   const handleTextChange = ({ value }: { value: Value }) => {
     setValue(value);
     onChangeContent(value);
     updateMenu(value);
+    updateSidebar(value);
   };
 
   const insertImage = (editor: Editor, src: string, target: any) => {
@@ -435,6 +480,36 @@ export const SlateEditor = ({ story, onChangeContent }: Props) => {
       type: 'image',
       data: { src },
     });
+  };
+
+  const addImageToEditor = async (editor: Editor, files: any, target?: any) => {
+    for (const file of files) {
+      const reader = new FileReader();
+      const [mime] = file.type.split('/');
+      if (mime !== 'image') continue;
+
+      // TODO find a way to visually show that a file is uploading
+
+      const { userSession } = getConfig();
+      const now = new Date().getTime();
+      const name = `photos/${story.attrs._id}/${now}-${file.name}`;
+      const imageUrl = await userSession.putFile(name, file, {
+        // TODO encrypt if it's a draft or show a message to the user explaining the limitation
+        encrypt: false,
+        contentType: file.type,
+      });
+
+      reader.addEventListener('load', () => {
+        editor.command(insertImage, imageUrl, target);
+      });
+
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const onChangeFileUploader = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const files = event.target.files;
+    addImageToEditor(editorRef.current, files);
   };
 
   /**
@@ -461,7 +536,7 @@ export const SlateEditor = ({ story, onChangeContent }: Props) => {
     editor.toggleMark(mark);
   };
 
-  const onDrop = async (event: any, editor: any, next: () => any) => {
+  const onDrop = async (event: any, editor: Editor, next: () => any) => {
     const target = editor.findEventRange(event);
     if (!target && event.type === 'drop') return next();
 
@@ -474,28 +549,7 @@ export const SlateEditor = ({ story, onChangeContent }: Props) => {
     const { type, files } = transfer;
 
     if (type === 'files') {
-      for (const file of files) {
-        const reader = new FileReader();
-        const [mime] = file.type.split('/');
-        if (mime !== 'image') continue;
-
-        // TODO find a way to visually show that a file is uploading
-
-        const { userSession } = getConfig();
-        const now = new Date().getTime();
-        const name = `photos/${story.attrs._id}/${now}-${file.name}`;
-        const imageUrl = await userSession.putFile(name, file, {
-          // TODO encrypt if it's a draft or show a message to the user explaining the limitation
-          encrypt: false,
-          contentType: file.type,
-        });
-
-        reader.addEventListener('load', () => {
-          editor.command(insertImage, imageUrl, target);
-        });
-
-        reader.readAsDataURL(file);
-      }
+      await addImageToEditor(editor, files);
       return;
     }
 
@@ -658,6 +712,18 @@ export const SlateEditor = ({ story, onChangeContent }: Props) => {
       <React.Fragment>
         {children}
         <HoverMenu ref={menuRef} editor={editor} />
+        <Sidebar
+          ref={sidebarRef}
+          onClick={() => fileUploaderRef.current.click()}
+        >
+          <input
+            type="file"
+            onChange={onChangeFileUploader}
+            ref={fileUploaderRef}
+            style={{ display: 'none' }}
+          />
+          <MdAddAPhoto size={18} />
+        </Sidebar>
       </React.Fragment>
     );
   };
@@ -686,7 +752,7 @@ export const SlateEditor = ({ story, onChangeContent }: Props) => {
           value={value as any}
           onChange={handleTextChange as any}
           onKeyDown={onKeyDown as any}
-          onDrop={onDrop}
+          onDrop={onDrop as any}
           schema={schema as any}
           placeholder="Text"
           renderBlock={renderBlock}
