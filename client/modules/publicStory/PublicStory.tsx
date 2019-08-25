@@ -89,6 +89,13 @@ const StoryContent = styled.div`
     ${tw`mt-2`};
   }
 
+  ul {
+    ${tw`list-disc`};
+  }
+  ol {
+    ${tw`list-decimal`};
+  }
+
   blockquote {
     ${tw`mb-4 py-4 px-4 italic text-sm`};
     border-left: 3px solid #ccc;
