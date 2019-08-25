@@ -487,6 +487,12 @@ textarea::-moz-placeholder {
   opacity: 0.5;
 }
 
+input:-ms-input-placeholder,
+textarea:-ms-input-placeholder {
+  color: inherit;
+  opacity: 0.5;
+}
+
 input::-ms-input-placeholder,
 textarea::-ms-input-placeholder {
   color: inherit;
