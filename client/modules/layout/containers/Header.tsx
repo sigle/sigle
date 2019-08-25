@@ -7,6 +7,7 @@ import { PrivateStory } from '../../../models';
 import { getEditorRoute } from '../../../utils/routes';
 import { Header as Component } from '../components/Header';
 
+// TODO This component is mounted and unmounted on every page changes, see why
 export const Header = () => {
   const [menuOpen, setMenuOpen] = useState<boolean>(false);
   const [loginOpen, setLoginOpen] = useState<boolean>(false);
