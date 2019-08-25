@@ -1,5 +1,5 @@
 import React, { useRef, useState } from 'react';
-import ReactDOM, { findDOMNode } from 'react-dom';
+import ReactDOM from 'react-dom';
 import styled, { css } from 'styled-components';
 import tw from 'tailwind.macro';
 import {
