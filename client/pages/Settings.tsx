@@ -86,9 +86,7 @@ const FormText = styled.p`
 
 // TODO protect this page, user needs to be connected
 export const Settings = () => {
-  const { user, loading, setSigleUser: contextSetSigleUser } = useContext(
-    UserContext
-  );
+  const { user, loading } = useContext(UserContext);
   const [saveLoading, setSaveLoading] = useState<boolean>(false);
   const [sigleUser, setSigleUser] = useState<RadiksSigleUser | undefined>();
   // TODO change this really ugly hack
@@ -116,7 +114,7 @@ export const Settings = () => {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (!sigleUser || !contextSetSigleUser) return;
+    if (!sigleUser) return;
     setSaveLoading(true);
 
     try {
@@ -138,8 +136,7 @@ export const Settings = () => {
 
       // TODO if new picture delete the old one ?
 
-      // We update the user context object so other pages are aware of the change
-      contextSetSigleUser(sigleUser);
+      // TODO refetch header graphql query so the header preview is updated
 
       setSaveLoading(false);
       setFile(undefined);

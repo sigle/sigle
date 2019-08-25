@@ -11,7 +11,7 @@ export const Header = () => {
   const [menuOpen, setMenuOpen] = useState<boolean>(false);
   const [loginOpen, setLoginOpen] = useState<boolean>(false);
   const [createStoryLoading, setCreateStoryLoading] = useState<boolean>(false);
-  const { user, sigleUser, loading } = useContext(UserContext);
+  const { user, loading } = useContext(UserContext);
 
   const handleLogout = () => {
     const { userSession } = getConfig();

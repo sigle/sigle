@@ -25,16 +25,6 @@ const HeaderSeparator = styled.img`
   ${tw`mx-auto`};
 `;
 
-const AddPhotoButton = styled.button`
-  ${tw`flex items-center text-sm text-grey-darker p-2`};
-  span {
-    ${tw`ml-2`};
-  }
-  :focus {
-    outline: 0;
-  }
-`;
-
 const OptionIcon = styled.div`
   ${tw`p-2 -mr-2 flex items-center cursor-pointer ml-2 text-grey-darker`};
 `;
