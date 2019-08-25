@@ -59,7 +59,7 @@
     "mongo-relay-connection": "0.2.6",
     "mongodb": "3.3.1",
     "mongoose": "5.6.10",
-    "next": "9.0.4",
+    "next": "9.0.5",
     "radiks": "0.3.0-beta.1",
     "radiks-server": "1.1.0-beta.3",
     "react": "16.9.0",

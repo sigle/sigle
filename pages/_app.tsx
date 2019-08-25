@@ -1,5 +1,5 @@
 import React from 'react';
-import App, { Container, AppContext } from 'next/app';
+import App, { AppContext } from 'next/app';
 import { UserSession, AppConfig, config as blockstackConfig } from 'blockstack';
 import { configure } from 'radiks';
 import { ThemeProvider, createGlobalStyle } from 'styled-components';
@@ -61,17 +61,15 @@ class MyApp extends App {
     const { Component, pageProps } = this.props;
 
     return (
-      <Container>
-        <UserContextProvider>
-          <ThemeProvider theme={theme}>
-            <React.Fragment>
-              <GlobalStyle />
-              <ToastContainer autoClose={3000} toastClassName="reactToastify" />
-              <Component {...pageProps} />
-            </React.Fragment>
-          </ThemeProvider>
-        </UserContextProvider>
-      </Container>
+      <UserContextProvider>
+        <ThemeProvider theme={theme}>
+          <React.Fragment>
+            <GlobalStyle />
+            <ToastContainer autoClose={3000} toastClassName="reactToastify" />
+            <Component {...pageProps} />
+          </React.Fragment>
+        </ThemeProvider>
+      </UserContextProvider>
     );
   }
 }
