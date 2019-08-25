@@ -14,13 +14,8 @@ import {
   MenuItem,
 } from '../../../components';
 import { MobileMenu } from './MobileMenu';
-import { defaultUserImage } from '../../../utils';
 import { SignInDialog } from '../../dialog/SignInDialog';
-import {
-  getProfileRoute,
-  getSettingsRoute,
-  getEditorRoute,
-} from '../../../utils/routes';
+import { getProfileRoute, getSettingsRoute } from '../../../utils/routes';
 import { environment } from '../../../utils/relay';
 import { HeaderUserQuery } from './__generated__/HeaderUserQuery.graphql';
 import { User } from '../../../types';
