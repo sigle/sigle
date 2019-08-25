@@ -1,11 +1,10 @@
-import React, { useState, useContext } from 'react';
+import React from 'react';
 import styled from 'styled-components';
 import tw from 'tailwind.macro';
 import Router from 'next/router';
 import { MdSort } from 'react-icons/md';
-import { getConfig } from 'radiks';
-import { toast } from 'react-toastify';
 import Link from 'next/link';
+import { QueryRenderer, graphql } from 'react-relay';
 import {
   Container,
   Button,
@@ -15,8 +14,6 @@ import {
   MenuItem,
 } from '../../../components';
 import { MobileMenu } from './MobileMenu';
-import { UserContext } from '../../../context/UserContext';
-import { PrivateStory } from '../../../models';
 import { defaultUserImage } from '../../../utils';
 import { SignInDialog } from '../../dialog/SignInDialog';
 import {
@@ -24,6 +21,9 @@ import {
   getSettingsRoute,
   getEditorRoute,
 } from '../../../utils/routes';
+import { environment } from '../../../utils/relay';
+import { HeaderUserQuery } from './__generated__/HeaderUserQuery.graphql';
+import { User } from '../../../types';
 
 const HeaderShadow = styled.div`
   box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.03),
@@ -63,66 +63,37 @@ const HeaderUserPhoto = styled.img`
   ${tw`w-8 h-8 rounded-full`};
 `;
 
-export const Header = () => {
-  const [menuOpen, setMenuOpen] = useState<boolean>(false);
-  const [loginOpen, setLoginOpen] = useState<boolean>(false);
-  const [createStoryLoading, setCreateStoryLoading] = useState<boolean>(false);
-  const { user, sigleUser, loading } = useContext(UserContext);
+interface Props {
+  loading: boolean;
+  user?: User;
+  createStoryLoading: boolean;
+  menuOpen: boolean;
+  setMenuOpen: (value: boolean) => void;
+  loginOpen: boolean;
+  setLoginOpen: (value: boolean) => void;
+  handleLogin: () => void;
+  handleLogout: () => void;
+  handleNewStory: () => void;
+}
 
-  const handleLogout = () => {
-    const { userSession } = getConfig();
-    userSession.signUserOut();
-    window.location.href = '/discover';
-  };
-
-  // TODO remove once issue is fixed on blockstack side
-  const handleLogin = () => {
-    const { userSession } = getConfig();
-    userSession.redirectToSignIn();
-  };
-
-  const handleNewStory = async () => {
-    setCreateStoryLoading(true);
-    try {
-      const privateStory = new PrivateStory({
-        title: '',
-        content: '',
-      });
-      await privateStory.save();
-      const editorRoute = getEditorRoute({
-        storyId: privateStory._id,
-        radiksType: privateStory.attrs.radiksType,
-      });
-      Router.push(editorRoute.href, editorRoute.as);
-    } catch (error) {
-      console.error(error);
-      toast.error(error.message);
-      setCreateStoryLoading(false);
-    }
-  };
-
-  // TODO ask the user via graphql
-  const userImage = sigleUser
-    ? sigleUser.attrs.imageUrl
-      ? sigleUser.attrs.imageUrl
-      : // 64 here is used for the mobile size
-        defaultUserImage(sigleUser.attrs.username, 64)
-    : undefined;
-
+export const Header = ({
+  loading,
+  user,
+  createStoryLoading,
+  menuOpen,
+  setMenuOpen,
+  loginOpen,
+  setLoginOpen,
+  handleLogin,
+  handleLogout,
+  handleNewStory,
+}: Props) => {
   const profileRoute = user && getProfileRoute({ username: user.username });
   const settingsRoute = getSettingsRoute();
 
   return (
     <HeaderShadow>
       <Container>
-        <MobileMenu
-          open={menuOpen}
-          onClose={() => setMenuOpen(false)}
-          onLogin={() => setLoginOpen(true)}
-          onLogout={handleLogout}
-          user={user}
-          userImage={userImage}
-        />
         <HeaderContainer>
           <SignInDialog open={loginOpen} onClose={() => setLoginOpen(false)} />
 
@@ -137,8 +108,7 @@ export const Header = () => {
           <Link href="/discover">
             <HeaderLink>Discover</HeaderLink>
           </Link>
-          {/* TODO how to use */}
-          {/* <HeaderLink href="/b">How to use?</HeaderLink> */}
+
           {/* TODO nice loading */}
           {loading && <div>Loading ...</div>}
 
@@ -159,32 +129,69 @@ export const Header = () => {
             </HeaderButtonNewStory>
           )}
 
-          {!loading && user && profileRoute && (
-            <Menu>
-              <MenuButton>
-                <HeaderUserPhoto src={userImage} alt={user.username} />
-              </MenuButton>
-              <MenuList>
-                <MenuItem onSelect={() => Router.push('/me')}>
-                  My stories
-                </MenuItem>
-                <MenuItem
-                  onSelect={() =>
-                    Router.push(profileRoute.href, profileRoute.as)
+          {user && (
+            <QueryRenderer<HeaderUserQuery>
+              environment={environment}
+              query={graphql`
+                query HeaderUserQuery($username: String!) {
+                  user(username: $username) {
+                    id
+                    # 64 here is used for the mobile size
+                    imageUrl(size: 64)
                   }
-                >
-                  Profile
-                </MenuItem>
-                <MenuItem
-                  onSelect={() =>
-                    Router.push(settingsRoute.href, settingsRoute.as)
-                  }
-                >
-                  Settings
-                </MenuItem>
-                <MenuItem onSelect={handleLogout}>Sign out</MenuItem>
-              </MenuList>
-            </Menu>
+                }
+              `}
+              variables={{
+                username: user.username,
+              }}
+              render={({ props }) => (
+                <React.Fragment>
+                  {props && props.user && profileRoute && (
+                    <Menu>
+                      <MenuButton>
+                        <HeaderUserPhoto
+                          src={props && props.user.imageUrl}
+                          alt={user.username}
+                        />
+                      </MenuButton>
+                      <MenuList>
+                        <MenuItem onSelect={() => Router.push('/me')}>
+                          My stories
+                        </MenuItem>
+                        <MenuItem
+                          onSelect={() =>
+                            Router.push(profileRoute.href, profileRoute.as)
+                          }
+                        >
+                          Profile
+                        </MenuItem>
+                        <MenuItem
+                          onSelect={() =>
+                            Router.push(settingsRoute.href, settingsRoute.as)
+                          }
+                        >
+                          Settings
+                        </MenuItem>
+                        <MenuItem onSelect={handleLogout}>Sign out</MenuItem>
+                      </MenuList>
+                    </Menu>
+                  )}
+
+                  <MobileMenu
+                    open={menuOpen}
+                    onClose={() => setMenuOpen(false)}
+                    onLogin={() => setLoginOpen(true)}
+                    onLogout={handleLogout}
+                    user={user}
+                    userImage={
+                      props && props.user && props.user.imageUrl
+                        ? props.user.imageUrl
+                        : undefined
+                    }
+                  />
+                </React.Fragment>
+              )}
+            />
           )}
         </HeaderContainer>
       </Container>

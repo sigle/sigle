@@ -8,7 +8,7 @@ import {
   FullHeightContainer,
   MinHeightContainer,
 } from '../components';
-import { Header } from '../modules/layout/components/Header';
+import { Header } from '../modules/layout/containers/Header';
 import { Footer } from '../modules/layout/components/Footer';
 import { DiscoverQueryResponse } from './__generated__/DiscoverQuery.graphql';
 import { PublicStoryItem } from '../modules/publicStories/components/PublicStoryItem';

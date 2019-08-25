@@ -7,7 +7,7 @@ import {
   MinHeightContainer,
   Container,
 } from '../components';
-import { Header } from '../modules/layout/components/Header';
+import { Header } from '../modules/layout/containers/Header';
 import { Footer } from '../modules/layout/components/Footer';
 
 const Title = styled.h2`

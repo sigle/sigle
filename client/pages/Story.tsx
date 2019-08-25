@@ -2,7 +2,7 @@ import React from 'react';
 import { graphql } from 'react-relay';
 import { FullHeightContainer, MinHeightContainer } from '../components';
 import { withData } from '../lib/withData';
-import { Header } from '../modules/layout/components/Header';
+import { Header } from '../modules/layout/containers/Header';
 import { Footer } from '../modules/layout/components/Footer';
 import { PublicStory } from '../modules/publicStory/PublicStory';
 import { StoryUserQueryResponse } from './__generated__/StoryUserQuery.graphql';

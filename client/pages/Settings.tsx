@@ -13,7 +13,7 @@ import {
   Container,
   Button,
 } from '../components';
-import { Header } from '../modules/layout/components/Header';
+import { Header } from '../modules/layout/containers/Header';
 import { Footer } from '../modules/layout/components/Footer';
 import { SigleUser } from '../models';
 import { User, RadiksSigleUser } from '../types';
