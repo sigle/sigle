@@ -172,7 +172,8 @@ const rules = [
             return <blockquote>{children}</blockquote>;
           case 'image':
             const src = obj.data.get('src');
-            return <img src={src} />;
+            const optimizedSrc = `https://images.weserv.nl/?url=${src}&w=1200&t=fit`;
+            return <img src={optimizedSrc} />;
           case 'list-item':
             return <li>{children}</li>;
           case 'numbered-list':
