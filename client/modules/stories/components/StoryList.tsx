@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useReducer } from 'react';
 import styled from 'styled-components';
 import tw from 'tailwind.macro';
+import { toast } from 'react-toastify';
 import { Tabs, Tab, TabList, TabPanels, TabPanel } from '../../../components';
 import { PrivateStory, PublicStory } from '../../../models';
 import { StoryItem } from './StoryItem';
@@ -120,11 +121,10 @@ export const StoryList = ({ user }: StoryListProps) => {
         privateStories: tab === 'private' ? stories : state.privateStories,
         publicStories: tab === 'public' ? stories : state.publicStories,
       });
-      // TODO nice notify
-      alert('Story deleted successfully');
+
+      toast.success('Story deleted successfully');
     } catch (error) {
-      // TODO notify user with error message
-      alert(error.message);
+      toast.error(error.message);
     }
   };
 
@@ -153,10 +153,9 @@ export const StoryList = ({ user }: StoryListProps) => {
         publicStories: state.publicStories,
       });
 
-      // TODO notify user
+      toast.success('Story published');
     } catch (error) {
-      // TODO notify user with error message
-      alert(error.message);
+      toast.error(error.message);
     }
   };
 
@@ -184,10 +183,9 @@ export const StoryList = ({ user }: StoryListProps) => {
         publicStories: state.publicStories,
       });
 
-      // TODO notify user
+      toast.success('Story unpublished');
     } catch (error) {
-      // TODO notify user with error message
-      alert(error.message);
+      toast.error(error.message);
     }
   };
 
