@@ -91,9 +91,11 @@ const StoryContent = styled.div`
 
   ul {
     ${tw`list-disc`};
+    list-style-position: inside;
   }
   ol {
     ${tw`list-decimal`};
+    list-style-position: inside;
   }
 
   blockquote {
