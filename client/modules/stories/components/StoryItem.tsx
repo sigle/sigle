@@ -114,7 +114,7 @@ export const StoryItem = ({
 
           {story.attrs.createdAt && (
             <StoryItemDate>
-              {format(story.attrs.createdAt, 'HH:mm DD MMMM YYYY')}
+              {format(Number(story.attrs.createdAt), 'HH:mm dd MMMM yyyy')}
             </StoryItemDate>
           )}
         </div>

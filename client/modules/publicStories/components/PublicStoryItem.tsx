@@ -82,7 +82,7 @@ export const PublicStoryItemComponent = ({ story }: Props) => {
         </StoryTitle>
         <StoryDate>
           {story.createdAt
-            ? format(Number(story.createdAt), 'DD MMMM YYYY')
+            ? format(Number(story.createdAt), 'dd MMMM yyyy')
             : 'Invalid date'}
         </StoryDate>
         <StoryText>{story.excerpt}</StoryText>

@@ -3169,7 +3169,12 @@ data-urls@^1.1.0:
     whatwg-mimetype "^2.2.0"
     whatwg-url "^7.0.0"
 
-date-fns@1.30.1, date-fns@^1.27.2:
+date-fns@2.0.1:
+  version "2.0.1"
+  resolved "https://registry.yarnpkg.com/date-fns/-/date-fns-2.0.1.tgz#c5f30e31d3294918e6b6a82753a4e719120e203d"
+  integrity sha512-C14oTzTZy8DH1Eq8N78owrCWvf3+cnJw88BTK/N3DYWVxDJuJzPaNdplzYxDYuuXXGvqBcO4Vy5SOrwAooXSWw==
+
+date-fns@^1.27.2:
   version "1.30.1"
   resolved "https://registry.yarnpkg.com/date-fns/-/date-fns-1.30.1.tgz#2e71bf0b119153dbb4cc4e88d9ea5acfb50dc05c"
   integrity sha512-hBSVCvSmWC+QypYObzwGOd9wqdDpOt+0wl0KbU+R+uuZBS1jN8VsD1ss3irQDknRj5NvxiTF6oj/nDRnN/UQNw==
@@ -5552,10 +5557,10 @@ jsx-ast-utils@^2.1.0:
     array-includes "^3.0.3"
     object.assign "^4.1.0"
 
-kareem@2.3.0:
-  version "2.3.0"
-  resolved "https://registry.yarnpkg.com/kareem/-/kareem-2.3.0.tgz#ef33c42e9024dce511eeaf440cd684f3af1fc769"
-  integrity sha512-6hHxsp9e6zQU8nXsP+02HGWXwTkOEw6IROhF2ZA28cYbUk4eJ6QbtZvdqZOdD9YPKghG3apk5eOCvs+tLl3lRg==
+kareem@2.3.1:
+  version "2.3.1"
+  resolved "https://registry.yarnpkg.com/kareem/-/kareem-2.3.1.tgz#def12d9c941017fabfb00f873af95e9c99e1be87"
+  integrity sha512-l3hLhffs9zqoDe8zjmb/mAN4B8VT3L56EUvKNqLFVs9YlFA+zx7ke1DO8STAdDyYNkeSo1nKmjuvQeI12So8Xw==
 
 key-encoder@^1.1.7:
   version "1.1.7"
@@ -6194,14 +6199,14 @@ mongoose-legacy-pluralize@1.0.2:
   resolved "https://registry.yarnpkg.com/mongoose-legacy-pluralize/-/mongoose-legacy-pluralize-1.0.2.tgz#3ba9f91fa507b5186d399fb40854bff18fb563e4"
   integrity sha512-Yo/7qQU4/EyIS8YDFSeenIvXxZN+ld7YdV9LqFVQJzTLye8unujAWPZ4NWKfFA+RNjh+wvTWKY9Z3E5XM6ZZiQ==
 
-mongoose@5.6.10:
-  version "5.6.10"
-  resolved "https://registry.yarnpkg.com/mongoose/-/mongoose-5.6.10.tgz#0758b7ae7d6f9654e994cc1aa41efc63e35e131b"
-  integrity sha512-lxWvF4Vl2118K2nZTj+QAEEmNBCbmUAcmF/roe8d+68Np4RXKEQvmpqm1c3aIlE9AVMp//eKB8IfXr38ZHe0Zw==
+mongoose@5.6.11:
+  version "5.6.11"
+  resolved "https://registry.yarnpkg.com/mongoose/-/mongoose-5.6.11.tgz#c63f557b702a02be8e20ec21d8f7776bdb9bd2d8"
+  integrity sha512-+Mxfmu2Jcspmdqk1111BLUj5mzSLHWKVovImkjzO9GMymTwkHshsuSFmUN7ou4dWy2WR8DPSJcwU52HhnnNk8Q==
   dependencies:
     async "2.6.2"
     bson "~1.1.1"
-    kareem "2.3.0"
+    kareem "2.3.1"
     mongodb "3.2.7"
     mongodb-core "3.2.7"
     mongoose-legacy-pluralize "1.0.2"
