@@ -13,7 +13,7 @@ import {
   MenuButton,
   MenuItem,
 } from '../../../components';
-import { getEditorRoute } from '../../../utils/routes';
+import { getEditorRoute, getPublicStoryRoute } from '../../../utils/routes';
 
 const StoryItemContainer = styled.div`
   ${tw`py-4 border-b border-solid border-grey`};
@@ -52,6 +52,7 @@ const StoryItemText = styled.div`
 `;
 
 interface Props {
+  username: string;
   story: {
     attrs: {
       _id: string;
@@ -67,6 +68,7 @@ interface Props {
 }
 
 export const StoryItem = ({
+  username,
   story,
   onDelete,
   onPublish,
@@ -75,6 +77,10 @@ export const StoryItem = ({
   const editorRoute = getEditorRoute({
     storyId: story.attrs._id,
     radiksType: story.attrs.radiksType,
+  });
+  const publicStoryRoute = getPublicStoryRoute({
+    username,
+    storyId: story.attrs._id,
   });
 
   return (
@@ -104,10 +110,9 @@ export const StoryItem = ({
                 arrowType="round"
                 theme="light-border"
               >
-                <div>
-                  {/* TODO should be clickable and open the story in a new tab */}
+                <a href={publicStoryRoute.as} target="_blank">
                   <MdRemoveRedEye size={22} />
-                </div>
+                </a>
               </Tippy>
             )}
           </div>

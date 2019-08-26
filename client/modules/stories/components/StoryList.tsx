@@ -4,7 +4,7 @@ import tw from 'tailwind.macro';
 import { Tabs, Tab, TabList, TabPanels, TabPanel } from '../../../components';
 import { PrivateStory, PublicStory } from '../../../models';
 import { StoryItem } from './StoryItem';
-import { RadiksPrivateStory, RadiksPublicStory } from '../../../types';
+import { RadiksPrivateStory, RadiksPublicStory, User } from '../../../types';
 
 const StyledTabs = styled(Tabs)`
   [data-reach-tab-list] {
@@ -68,7 +68,11 @@ const reducer = (state: State, action: Action): State => {
   }
 };
 
-export const StoryList = () => {
+interface StoryListProps {
+  user: User;
+}
+
+export const StoryList = ({ user }: StoryListProps) => {
   // TODO error state
   const [tab, setTab] = useState<'private' | 'public'>('private');
   const [state, dispatch] = useReducer(reducer, initialState);
@@ -237,6 +241,7 @@ export const StoryList = () => {
                 state.privateStories.map((story: any) => (
                   <StoryItem
                     key={story.attrs._id}
+                    username={user.username}
                     story={story}
                     onDelete={deleteStory}
                     onPublish={publishStory}
@@ -268,6 +273,7 @@ export const StoryList = () => {
                 state.publicStories.map((story: any) => (
                   <StoryItem
                     key={story.attrs._id}
+                    username={user.username}
                     story={story}
                     onDelete={deleteStory}
                     onPublish={publishStory}
