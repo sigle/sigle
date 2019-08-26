@@ -57,10 +57,7 @@ export const UserType = new GraphQLObjectType<UserDb>({
           return `https://ui-avatars.com/api/?color=ffffff&background=000000&size=${size}&name=${username}`;
         }
         // Profile images are displayed as squares so we set the same width and height
-        if (config.gumletUrl) {
-          return `${config.gumletUrl}/p/${imageUrl}?h=${size}&w=${size}&mode=crop`;
-        }
-        return imageUrl;
+        return `https://images.weserv.nl/?url=${imageUrl}&h=${size}&w=${size}&t=fit`;
       },
       description: 'A url pointing to the user image',
     },

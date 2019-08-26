@@ -4,7 +4,6 @@ export const config = {
   env: process.env.NODE_ENV,
   appUrl: process.env.APP_URL,
   sentryDsn: process.env.SENTRY_DSN_CLIENT,
-  gumletUrl: process.env.GUMLET_URL,
   githubUrl: 'https://github.com/pradel/sigle',
   twitterUrl: 'https://twitter.com/sigleapp',
   // This reflect the tailwindcss config

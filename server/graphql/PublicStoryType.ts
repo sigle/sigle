@@ -46,8 +46,8 @@ export const PublicStoryType = new GraphQLObjectType<PublicStoryDb>({
         const coverImageUrl = story.coverImageUrl
           ? encodeURI(story.coverImageUrl)
           : null;
-        if (coverImageUrl && config.gumletUrl) {
-          return `${config.gumletUrl}/p/${coverImageUrl}?h=${height}&w=${width}&mode=crop`;
+        if (coverImageUrl) {
+          return `https://images.weserv.nl/?url=${coverImageUrl}&h=${height}&w=${width}&t=fit`;
         }
         return coverImageUrl;
       },
