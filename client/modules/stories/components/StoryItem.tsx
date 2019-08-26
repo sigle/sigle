@@ -110,7 +110,11 @@ export const StoryItem = ({
                 arrowType="round"
                 theme="light-border"
               >
-                <a href={publicStoryRoute.as} target="_blank">
+                <a
+                  href={publicStoryRoute.as}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
                   <MdRemoveRedEye size={22} />
                 </a>
               </Tippy>
