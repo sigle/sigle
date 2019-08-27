@@ -32,7 +32,7 @@ const ImageColumnContainer = styled.div<{ inverse?: boolean }>`
 
   .article-container {
     ${tw`mx-auto`};
-    max-width: 22.5rem;
+    max-width: 26.5rem;
   }
 
   .title {
@@ -41,6 +41,7 @@ const ImageColumnContainer = styled.div<{ inverse?: boolean }>`
 
   .text {
     ${tw`leading-relaxed`};
+    ${tw`mb-2`};
   }
 
   .figure-container {
@@ -73,7 +74,7 @@ const HeroContainer = styled(ImageColumnContainer)`
   }
 
   img {
-    width: 460px;
+    width: 100%;
   }
 `;
 
@@ -163,7 +164,7 @@ export const Home = () => {
           <HeroContainer inverse>
             <figure className="block">
               <div className="figure-container">
-                <img src="/static/images/work.png" alt="Julia working" />
+                <img src="/static/images/home-demo.png" alt="Julia working" />
               </div>
             </figure>
             <article className="block">
@@ -194,60 +195,26 @@ export const Home = () => {
         <ImageColumnContainer>
           <figure className="block">
             <div className="figure-container">
-              <img src="/static/images/one.png" alt="Julia working" />
+              <img src="/static/images/work.png" alt="Julia working" />
             </div>
           </figure>
           <article className="block">
             <div className="article-container">
               <h2 className="title">
-                Start writing awesome stories about whatever you want
+                A platform for writers who care about their contents
               </h2>
               <p className="text">
-                Our keyword: Simplicity.
-                <br />
-                Use our beautiful and unique editor to let your imagination
-                running! Find all your articles in one minimalistic section,
-                keep them secret or publish them.
+                When you write stories on websites such as Medium, keep in mind
+                they can do whatever they want with your account and content.
               </p>
-            </div>
-          </article>
-        </ImageColumnContainer>
-
-        <ImageColumnContainer inverse>
-          <figure className="block">
-            <div className="figure-container">
-              <img src="/static/images/two.png" alt="Julia working" />
-            </div>
-          </figure>
-          <article className="block">
-            <div className="article-container">
-              <h2 className="title">Editing is as easy as ABC</h2>
               <p className="text">
-                Use our WYSIWYG text editor, save and edit as you wish.
+                <b>Sigle is different because it’s decentralized.</b>
                 <br />
-                You can save your stories in your draft section or you can
-                decide to publish and make them public for the community.
-              </p>
-            </div>
-          </article>
-        </ImageColumnContainer>
-
-        <ImageColumnContainer>
-          <figure className="block">
-            <div className="figure-container">
-              <img src="/static/images/three.png" alt="Julia working" />
-            </div>
-          </figure>
-          <article className="block">
-            <div className="article-container">
-              <h2 className="title">
-                Publish and share it... to the moon and back!
-              </h2>
-              <p className="text">
-                You’re ready to share your article with the world?
+                We can neither ban nor delete your account or stories, or even
+                see your personal information.
                 <br />
-                Sigle allow you to make your stories famous by sharing it
-                directly on the platform. Don’t miss the opportunity!
+                Start your writing career with #cantbeevil apps and don’t be
+                afraid of losing all your work.
               </p>
             </div>
           </article>
@@ -257,57 +224,76 @@ export const Home = () => {
       <Container>
         <FeaturesContainer>
           <div className="block">
-            <img src="/static/images/type.png" alt="Julia working" />
-            <h4 className="title">
-              Your blog…
-              <br />
-              decentralized
-            </h4>
+            <img src="/static/images/eye.png" alt="Julia working" />
+            <h4 className="title">Totally free</h4>
             <div className="divider" />
             <p className="text">
-              Don{`'`}t want to give all your data away? Don{`'`}t want to risk
-              losing all your work?
+              Don’t pay to write.
               <br />
-              No worries, we have a solution for you.
+              Don’t pay to read.
               <br />
-              <b>We created Sigle on blockstack to keep your data safe.</b>
+              Yes, this is totally free.
+              <br />
+              Sigle is a real reading and writing experience.
+              <br />
+              No advertising, no paid plan, no logging in in order to read a
+              story…
+              <br />
+              We just focus on what matters: delivering the best content
+              possible.
             </p>
           </div>
           <div className="block">
             <img src="/static/images/github.png" alt="Julia working" />
-            <h4 className="title">Free and Open Source</h4>
+            <h4 className="title">Open Source</h4>
             <div className="divider" />
             <p className="text">
-              Sigle is an <b>open source project</b> created to respond to a
-              passionate community. The goal is to become one of the biggest
-              blog editor apps on blockstack.
+              Sigle is an open source project created to respond to a passionate
+              community.
               <br />
-              <b>
-                We’re proud to make it happen and we hope you’ll enjoy writing
-                amazing content on it.
-              </b>
+              Our code is totally transparent and you can even submit and code
+              new features that will help us grow.
             </p>
           </div>
           <div className="block">
-            <img src="/static/images/eye.png" alt="Julia working" />
+            <img src="/static/images/type.png" alt="Julia working" />
             <h4 className="title">Simple & easy to use</h4>
             <div className="divider" />
             <p className="text">
-              All your stories are available in two sections: drafts and
-              published.
+              We’re committed to making your experience easy. Writing a story
+              has never been easier than with V2 and we did everything in our
+              power to make Sigle as smooth as possible.
               <br />
-              Keep your pages private and encrypted or make them public. Your
-              pick!
-              <br />
-              <b>Follow us on social media to stay posted!</b>
+              Already on Medium? We are currently creating a tool that will help
+              you migrate all your stories to Sigle.
             </p>
           </div>
         </FeaturesContainer>
       </Container>
 
-      <SectionScreens>
-        <img src="/static/images/screens.png" alt="Screens" />
-      </SectionScreens>
+      <SectionContainer>
+        <ImageColumnContainer inverse>
+          <figure className="block">
+            <div className="figure-container">
+              <img src="/static/images/home-screens.png" alt="Julia working" />
+            </div>
+          </figure>
+          <article className="block">
+            <div className="article-container">
+              <h2 className="title">Draft it, publish it</h2>
+              <p className="text">
+                You don’t have to save your writings manually. Don’t worry, your
+                browser can freeze, we've saved your content for you.
+              </p>
+              <p className="text">
+                All your stories are first saved in the draft section. Because
+                it’s encrypted, only you can see and edit it. Just publish your
+                content when you feel ready to spread the world.
+              </p>
+            </div>
+          </article>
+        </ImageColumnContainer>
+      </SectionContainer>
 
       <SectionEnjoy>
         <Container>
@@ -321,23 +307,21 @@ export const Home = () => {
               <div className="article-container">
                 <h2 className="title">Enjoy the power of decentralized data</h2>
                 <p className="text">
-                  When you use Sigle, you do way more than just writing awesome
-                  stories, you’re also saying a huge « NO » to the big companies
-                  which store your data to use it against you.
+                  <b>You are not a product to us.</b>
                   <br />
-                  Congrats, you’re kind of a rebel now.
+                  We really care about you and your privacy. What’s in your
+                  drafts stays in your drafts and you’re the only one who can
+                  access to it thanks to your blockstack private key.
                 </p>
                 <p className="text">
-                  Your data is safe with Blockstack. But if you don’t want
-                  Blockstack keeping it for you, no problem:{' '}
-                  <a
-                    href="https://github.com/blockstack/gaia/blob/master/hub/README.md"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    Click here
-                  </a>{' '}
-                  to read the tutorial on how to configure your own storage.
+                  We have no information on your personal data, so we can’t sell
+                  it to a third party. That is the power of the blockchain.
+                </p>
+                <p className="text">
+                  <b>
+                    Take your digital rights into your own hands and start
+                    writing on a safe platform.
+                  </b>
                 </p>
               </div>
             </article>
