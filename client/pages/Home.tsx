@@ -124,6 +124,10 @@ const FeaturesContainer = styled.div`
   }
 `;
 
+const FeaturesButton: any = styled(Button)`
+  ${tw`bg-white mt-6 inline-block`};
+`;
+
 const SectionEnjoy = styled.section`
   ${tw`pt-16 pb-16 bg-grey-light`};
 
@@ -276,6 +280,14 @@ export const Home = () => {
                 Our code is totally transparent and you can even submit and code
                 new features that will help us grow.
               </p>
+              <FeaturesButton
+                size="large"
+                as={'a'}
+                href={config.githubUrl}
+                target="_blank"
+              >
+                Go on Github
+              </FeaturesButton>
             </div>
 
             <div className="block">
@@ -365,19 +377,19 @@ export const Home = () => {
           <h3 className="title">Ready to get started?</h3>
           <p className="easy">Take it easy, it{`'`}s free.</p>
           <Button
-            color="black"
+            color="primary"
             size="large"
             className="button"
             onClick={() => setLoginOpen(true)}
           >
             Try it now
           </Button>
-          <p className="lost">
+          {/* <p className="lost">
             A bit lost?{' '}
             <a href="https://app.sigle.io/sigleapp.id.blockstack/L7I4iV6bYQ8WYvuT3RcoM">
               Check out the starter guide.
             </a>
-          </p>
+          </p> */}
         </Container>
       </SectionReady>
 
