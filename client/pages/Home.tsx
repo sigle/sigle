@@ -325,8 +325,9 @@ export const Home = () => {
             <div className="article-container">
               <h2 className="title">Draft it, publish it</h2>
               <p className="text">
-                You don’t have to save your writings manually. Don’t worry, your
-                browser can freeze, we've saved your content for you.
+                You don{"'"}t have to save your writings manually. Don{"'"}t
+                worry, your browser can freeze, we{"'"}ve saved your content for
+                you.
               </p>
               <p className="text">
                 All your stories are first saved in the draft section. Because
