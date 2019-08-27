@@ -6,6 +6,7 @@ export const config = {
   sentryDsn: process.env.SENTRY_DSN_CLIENT,
   githubUrl: 'https://github.com/pradel/sigle',
   twitterUrl: 'https://twitter.com/sigleapp',
+  telegramUrl: 'https://t.me/sigleapp',
   // This reflect the tailwindcss config
   breakpoints: {
     sm: 640,

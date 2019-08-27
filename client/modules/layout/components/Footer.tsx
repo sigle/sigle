@@ -83,6 +83,15 @@ export const Footer = () => (
               Twitter
             </FooterSocialLink>
           </div>
+          <div>
+            <FooterSocialLink
+              href={config.telegramUrl}
+              target="_blank"
+              rel="nofollow"
+            >
+              Telegram
+            </FooterSocialLink>
+          </div>
         </FooterSocial>
       </FooterBottom>
     </Container>
