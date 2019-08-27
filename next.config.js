@@ -2,11 +2,13 @@ const dotenv = require('dotenv');
 const withPlugins = require('next-compose-plugins');
 const withCSS = require('@zeit/next-css');
 const withBundleAnalyzer = require('@zeit/next-bundle-analyzer');
+const withOptimizedImages = require('next-optimized-images');
 
 dotenv.config();
 
 module.exports = withPlugins(
   [
+    [withOptimizedImages, {}],
     [withCSS],
     [
       withBundleAnalyzer,

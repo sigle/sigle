@@ -7,6 +7,10 @@ import { Footer } from '../modules/layout/components/Footer';
 import { config } from '../config';
 import { SignInDialog } from '../modules/dialog/SignInDialog';
 
+const BlackContainer = styled.div`
+  ${tw`bg-black text-white`};
+`;
+
 const Hero = styled.div`
   ${tw`bg-grey-light`};
 
@@ -29,10 +33,15 @@ const ImageColumnContainer = styled.div<{ inverse?: boolean }>`
   .block {
     ${tw`w-full lg:w-1/2`};
   }
+  .block.small {
+    ${tw`w-full lg:w-1/3`};
+  }
+  .block.big {
+    ${tw`w-full lg:w-2/3`};
+  }
 
   .article-container {
     ${tw`mx-auto`};
-    max-width: 26.5rem;
   }
 
   .title {
@@ -40,8 +49,7 @@ const ImageColumnContainer = styled.div<{ inverse?: boolean }>`
   }
 
   .text {
-    ${tw`leading-relaxed`};
-    ${tw`mb-2`};
+    ${tw`leading-relaxed mb-2`};
   }
 
   .figure-container {
@@ -51,6 +59,10 @@ const ImageColumnContainer = styled.div<{ inverse?: boolean }>`
   img {
     width: 400px;
     height: 100%;
+  }
+  img.big {
+    ${tw`lg:pl-4`};
+    width: 100%;
   }
 
   a {
@@ -112,8 +124,6 @@ const FeaturesContainer = styled.div`
   }
 `;
 
-const SectionScreens = styled.section``;
-
 const SectionEnjoy = styled.section`
   ${tw`pt-16 pb-16 bg-grey-light`};
 
@@ -162,12 +172,16 @@ export const Home = () => {
 
         <Container>
           <HeroContainer inverse>
-            <figure className="block">
+            <figure className="block big">
               <div className="figure-container">
-                <img src="/static/images/home-demo.png" alt="Julia working" />
+                <img
+                  className="big"
+                  src="/static/images/home-demo.png"
+                  alt="Julia working"
+                />
               </div>
             </figure>
-            <article className="block">
+            <article className="block small">
               <div className="article-container">
                 <h2 className="title">
                   A decentralized & open source platform for writers
@@ -221,64 +235,81 @@ export const Home = () => {
         </ImageColumnContainer>
       </SectionContainer>
 
-      <Container>
-        <FeaturesContainer>
-          <div className="block">
-            <img src="/static/images/eye.png" alt="Julia working" />
-            <h4 className="title">Totally free</h4>
-            <div className="divider" />
-            <p className="text">
-              Don’t pay to write.
-              <br />
-              Don’t pay to read.
-              <br />
-              Yes, this is totally free.
-              <br />
-              Sigle is a real reading and writing experience.
-              <br />
-              No advertising, no paid plan, no logging in in order to read a
-              story…
-              <br />
-              We just focus on what matters: delivering the best content
-              possible.
-            </p>
-          </div>
-          <div className="block">
-            <img src="/static/images/github.png" alt="Julia working" />
-            <h4 className="title">Open Source</h4>
-            <div className="divider" />
-            <p className="text">
-              Sigle is an open source project created to respond to a passionate
-              community.
-              <br />
-              Our code is totally transparent and you can even submit and code
-              new features that will help us grow.
-            </p>
-          </div>
-          <div className="block">
-            <img src="/static/images/type.png" alt="Julia working" />
-            <h4 className="title">Simple & easy to use</h4>
-            <div className="divider" />
-            <p className="text">
-              We’re committed to making your experience easy. Writing a story
-              has never been easier than with V2 and we did everything in our
-              power to make Sigle as smooth as possible.
-              <br />
-              Already on Medium? We are currently creating a tool that will help
-              you migrate all your stories to Sigle.
-            </p>
-          </div>
-        </FeaturesContainer>
-      </Container>
+      <BlackContainer>
+        <Container>
+          <FeaturesContainer>
+            <div className="block">
+              <img
+                src={require('../images/eye_white.png?size=70')}
+                alt="Julia working"
+              />
+              <h4 className="title">Totally free</h4>
+              <div className="divider" />
+              <p className="text">
+                Don’t pay to write.
+                <br />
+                Don’t pay to read.
+                <br />
+                Yes, this is totally free.
+                <br />
+                Sigle is a real reading and writing experience.
+                <br />
+                No advertising, no paid plan, no logging in in order to read a
+                story…
+                <br />
+                We just focus on what matters: delivering the best content
+                possible.
+              </p>
+            </div>
+
+            <div className="block">
+              <img
+                src={require('../images/github_white.png?size=70')}
+                alt="Julia working"
+              />
+              <h4 className="title">Open Source</h4>
+              <div className="divider" />
+              <p className="text">
+                Sigle is an open source project created to respond to a
+                passionate community.
+                <br />
+                Our code is totally transparent and you can even submit and code
+                new features that will help us grow.
+              </p>
+            </div>
+
+            <div className="block">
+              <img
+                src={require('../images/type_white.png?size=70')}
+                alt="Julia working"
+              />
+              <h4 className="title">Easy to use</h4>
+              <div className="divider" />
+              <p className="text">
+                We’re committed to making your experience easy. Writing a story
+                has never been easier than with V2 and we did everything in our
+                power to make Sigle as smooth as possible.
+                <br />
+                Already on Medium? We are currently creating a tool that will
+                help you migrate all your stories to Sigle.
+              </p>
+            </div>
+          </FeaturesContainer>
+        </Container>
+      </BlackContainer>
 
       <SectionContainer>
         <ImageColumnContainer inverse>
-          <figure className="block">
+          <figure className="block big">
             <div className="figure-container">
-              <img src="/static/images/home-screens.png" alt="Julia working" />
+              <img
+                className="big"
+                src="/static/images/home-screens.png"
+                alt="Julia working"
+              />
             </div>
           </figure>
-          <article className="block">
+          <article className="block small">
             <div className="article-container">
               <h2 className="title">Draft it, publish it</h2>
               <p className="text">
