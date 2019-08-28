@@ -6,13 +6,17 @@ import { ThemeProvider, createGlobalStyle } from 'styled-components';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import tw from 'tailwind.macro';
+import Router from 'next/router';
 import { theme } from '../client/theme';
 import { config } from '../client/config';
 // TODO see how to inject it with styled-components
 import '../client/generated/tailwind.css';
 import { UserContextProvider } from '../client/context/UserContext';
+import { pageview } from '../client/utils/fathom';
 
 blockstackConfig.logLevel = 'info';
+
+Router.events.on('routeChangeComplete', url => pageview());
 
 const GlobalStyle = createGlobalStyle`
   body {

@@ -9,6 +9,7 @@ import Document, {
 import { ServerStyleSheet } from 'styled-components';
 import { init } from '@sentry/browser';
 import { config } from '../client/config';
+import { snippet } from '../client/utils/fathom';
 
 if (config.env === 'production' && config.sentryDsn) {
   init({
@@ -80,6 +81,14 @@ export default class MyDocument extends Document {
         <body>
           <Main />
           <NextScript />
+
+          {config.fathomSiteId && (
+            <script
+              dangerouslySetInnerHTML={{
+                __html: snippet,
+              }}
+            />
+          )}
         </body>
       </Html>
     );

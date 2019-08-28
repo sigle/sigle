@@ -3,7 +3,7 @@ declare namespace NodeJS {
     NODE_ENV: 'production' | 'development' | 'test';
     APP_URL: string;
     SENTRY_DSN_CLIENT?: string;
-    GUMLET_URL?: string;
+    FATHOM_SITE_ID?: string;
   }
 
   export interface Process {
