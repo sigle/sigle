@@ -54,7 +54,7 @@ export const Footer = () => (
       <FooterBottom>
         <FooterCredit>
           <FooterLogo
-            src="/static/images/logo_footer.png"
+            src={require('../../../images/logo_footer.png?size=80')}
             alt="Sigle logo for the footer"
           />
           <div>

@@ -95,7 +95,10 @@ export const Header = ({
           <HeaderIcon size={30} onClick={() => setMenuOpen(true)} />
 
           <Link href="/">
-            <HeaderLogo src="/static/images/logo.png" alt="Sigle logo" />
+            <HeaderLogo
+              src={require('../../../images/logo.png?size=100')}
+              alt="Sigle logo"
+            />
           </Link>
 
           <HeaderSeparator />

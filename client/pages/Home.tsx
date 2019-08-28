@@ -180,7 +180,7 @@ export const Home = () => {
               <div className="figure-container">
                 <img
                   className="big"
-                  src="/static/images/home-demo.png"
+                  src={require('../images/home-demo.png?size=800')}
                   alt="Julia working"
                 />
               </div>
@@ -213,7 +213,10 @@ export const Home = () => {
         <ImageColumnContainer>
           <figure className="block">
             <div className="figure-container">
-              <img src="/static/images/work.png" alt="Julia working" />
+              <img
+                src={require('../images/work.png?size=400')}
+                alt="Julia working"
+              />
             </div>
           </figure>
           <article className="block">
@@ -316,7 +319,7 @@ export const Home = () => {
             <div className="figure-container">
               <img
                 className="big"
-                src="/static/images/home-screens.png"
+                src={require('../images/home-screens.png?size=700')}
                 alt="Julia working"
               />
             </div>
@@ -344,7 +347,10 @@ export const Home = () => {
           <ImageColumnContainer inverse>
             <figure className="block">
               <div className="figure-container">
-                <img src="/static/images/albator.png" alt="Julia Albator" />
+                <img
+                  src={require('../images/albator.png?size=320')}
+                  alt="Julia Albator"
+                />
               </div>
             </figure>
             <article className="block">
