@@ -6,7 +6,6 @@ import {
 } from 'graphql';
 import { globalIdField } from 'graphql-relay';
 import { nodeInterface } from './nodeInterface';
-import { config } from '../config';
 import { UserDb } from '../types';
 
 // TODO auto generated types

@@ -16,7 +16,7 @@ import { pageview } from '../client/utils/fathom';
 
 blockstackConfig.logLevel = 'info';
 
-Router.events.on('routeChangeComplete', url => pageview());
+Router.events.on('routeChangeComplete', () => pageview());
 
 const GlobalStyle = createGlobalStyle`
   body {

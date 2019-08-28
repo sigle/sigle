@@ -9,7 +9,6 @@ import { nodeInterface } from './nodeInterface';
 import { UserType } from './UserType';
 import { UserModel } from '../models';
 import { PublicStoryDb } from '../types';
-import { config } from '../config';
 
 export const PublicStoryType = new GraphQLObjectType<PublicStoryDb>({
   name: 'PublicStory',
