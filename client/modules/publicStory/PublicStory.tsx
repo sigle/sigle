@@ -173,7 +173,16 @@ const rules = [
           case 'image':
             const src = obj.data.get('src');
             const optimizedSrc = `https://images.weserv.nl/?url=${src}&w=1000&t=fit`;
-            return <img src={optimizedSrc} />;
+            return (
+              <picture>
+                <source
+                  srcSet={`${optimizedSrc}&output=webp`}
+                  type="image/webp"
+                />
+                <source srcSet={optimizedSrc} type="image/jpeg" />
+                <img src={optimizedSrc} />
+              </picture>
+            );
           case 'list-item':
             return <li>{children}</li>;
           case 'numbered-list':
@@ -218,18 +227,6 @@ const rules = [
 ];
 
 const html = new Html({ rules });
-
-interface Story {
-  title: string;
-  createdAt: string;
-  content: string;
-  imageUrl?: string;
-  user: {
-    username: string;
-    name: string;
-    imageUrl: string;
-  };
-}
 
 interface Props {
   story: PublicStory_story;
