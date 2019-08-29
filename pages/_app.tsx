@@ -64,7 +64,7 @@ class MyApp extends App {
 
   render() {
     const { Component, pageProps } = this.props;
-    const seoTitle = 'Sigle | Decentralized blog platform';
+    const seoTitle = 'Sigle | Decentralized blogging platform';
     const seoDescription =
       'A secure, decentralized and open source blogging platform on top of blockstack';
 
