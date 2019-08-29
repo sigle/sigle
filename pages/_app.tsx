@@ -79,7 +79,7 @@ class MyApp extends App {
           <meta property="og:description" content={seoDescription} />
           <meta
             property="og:image"
-            content={`${config.appUrl}/images/share.jpg`}
+            content={`${config.appUrl}/static/images/share.jpg`}
           />
           <meta name="twitter:site" content="@sigleapp" />
           <meta name="twitter:card" content="summary_large_image" />
