@@ -7,6 +7,7 @@ import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import tw from 'tailwind.macro';
 import Router from 'next/router';
+import Head from 'next/head';
 import { theme } from '../client/theme';
 import { config } from '../client/config';
 // TODO see how to inject it with styled-components
@@ -63,17 +64,36 @@ class MyApp extends App {
 
   render() {
     const { Component, pageProps } = this.props;
+    const seoTitle = 'Sigle | Decentralized blog platform';
+    const seoDescription =
+      'A secure, decentralized and open source blogging platform on top of blockstack';
 
     return (
-      <UserContextProvider>
-        <ThemeProvider theme={theme}>
-          <React.Fragment>
-            <GlobalStyle />
-            <ToastContainer autoClose={3000} toastClassName="reactToastify" />
-            <Component {...pageProps} />
-          </React.Fragment>
-        </ThemeProvider>
-      </UserContextProvider>
+      <React.Fragment>
+        <Head>
+          <title>{seoTitle}</title>
+          <meta name="description" content={seoDescription} />
+          <meta property="og:type" content="website" />
+          <meta property="og:site_name" content="Sigle" />
+          <meta property="og:title" content={seoTitle} />
+          <meta property="og:description" content={seoDescription} />
+          <meta
+            property="og:image"
+            content={`${config.appUrl}/images/share.jpg`}
+          />
+          <meta name="twitter:site" content="@sigleapp" />
+          <meta name="twitter:card" content="summary_large_image" />
+        </Head>
+        <UserContextProvider>
+          <ThemeProvider theme={theme}>
+            <React.Fragment>
+              <GlobalStyle />
+              <ToastContainer autoClose={3000} toastClassName="reactToastify" />
+              <Component {...pageProps} />
+            </React.Fragment>
+          </ThemeProvider>
+        </UserContextProvider>
+      </React.Fragment>
     );
   }
 }
