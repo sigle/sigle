@@ -88,6 +88,10 @@ const HeroContainer = styled(ImageColumnContainer)`
   img {
     width: 100%;
   }
+
+  a {
+    ${tw`text-sm mt-2`};
+  }
 `;
 
 const SectionContainer = styled(Container)`
@@ -203,6 +207,9 @@ export const Home = () => {
                 >
                   Try it now
                 </Button>
+                <div>
+                  <a href="https://app.sigle.io">Or use the old version</a>
+                </div>
               </div>
             </article>
           </HeroContainer>
