@@ -11,6 +11,7 @@ import {
   RenderInlineProps,
 } from 'slate-react';
 import SoftBreak from 'slate-soft-break';
+import Lists from '@convertkit/slate-lists';
 import { Block, Value } from 'slate';
 import { IconType } from 'react-icons';
 import {
@@ -74,15 +75,6 @@ const EditorStyle = styled.div<{ isDragging: boolean }>`
 
   li + li {
     ${tw`mt-2`};
-  }
-
-  ul {
-    ${tw`list-disc`};
-    list-style-position: inside;
-  }
-  ol {
-    ${tw`list-decimal`};
-    list-style-position: inside;
   }
 
   blockquote {
@@ -153,7 +145,16 @@ const emptyNode = {
   },
 };
 
-const slatePlugins = [SoftBreak({ shift: true })];
+const slatePlugins = [
+  SoftBreak({ shift: true }),
+  Lists({
+    blocks: {
+      ordered_list: 'ordered-list',
+      unordered_list: 'unordered-list',
+      list_item: 'list-item',
+    },
+  }),
+];
 
 const Menu = styled.div`
   ${tw`flex`};
@@ -200,6 +201,29 @@ interface MarkButtonProps {
   icon: IconType;
 }
 
+/**
+ * Utils extracted from @convertkit/slate-lists
+ */
+const isListItem = (block: Block) => block && block.type === 'list-item';
+
+const getListItem = (editor: Editor, block: Block) => {
+  const possibleListItem = editor.value.document.getParent(block.key);
+
+  return isListItem(possibleListItem as Block) ? possibleListItem : null;
+};
+
+const isList = (block: Block) =>
+  block && (block.type === 'unordered-list' || block.type === 'ordered-list');
+
+const getList = (editor: Editor, block: Block) => {
+  const possibleList = editor.value.document.getParent(block.key);
+  return isList(possibleList as Block) ? possibleList : null;
+};
+
+/**
+ * End utils
+ */
+
 const onClickMark = (editor: Editor, type: string) => {
   editor.toggleMark(type);
 };
@@ -222,45 +246,15 @@ const MarkButton = ({ editor, type, icon: Icon }: MarkButtonProps) => {
 
 const onClickBlock = (editor: Editor, type: string) => {
   const { value } = editor;
-  const { document } = value;
 
-  // Handle everything but list buttons.
-  if (type !== 'bulleted-list' && type !== 'numbered-list') {
-    const isActive = hasBlock(value, type);
-    const isList = hasBlock(value, 'list-item');
-
-    if (isList) {
-      editor
-        .setBlocks(isActive ? DEFAULT_NODE : type)
-        .unwrapBlock('bulleted-list')
-        .unwrapBlock('numbered-list');
-    } else {
-      editor.setBlocks(isActive ? DEFAULT_NODE : type);
-    }
+  // Call the commands for the lists
+  if (type === 'ordered-list') {
+    (editor as any).toggleList({ type: 'ordered-list' });
+  } else if (type === 'unordered-list') {
+    (editor as any).toggleList();
   } else {
-    // Handle the extra wrapping required for list buttons.
-    const isList = hasBlock(value, 'list-item');
-    const isType = value.blocks.some((block: any) => {
-      return !!document.getClosest(
-        block.key,
-        (parent: any) => parent.type === type
-      );
-    });
-
-    if (isList && isType) {
-      editor
-        .setBlocks(DEFAULT_NODE)
-        .unwrapBlock('bulleted-list')
-        .unwrapBlock('numbered-list');
-    } else if (isList) {
-      editor
-        .unwrapBlock(
-          type === 'bulleted-list' ? 'numbered-list' : 'bulleted-list'
-        )
-        .wrapBlock(type);
-    } else {
-      editor.setBlocks('list-item').wrapBlock(type);
-    }
+    const isActive = hasBlock(value, type);
+    editor.setBlocks(isActive ? DEFAULT_NODE : type);
   }
 };
 
@@ -268,16 +262,16 @@ const BlockButton = ({ editor, type, icon: Icon }: MarkButtonProps) => {
   const { value } = editor;
   let isActive = hasBlock(value, type);
 
-  if (['numbered-list', 'bulleted-list'].includes(type)) {
-    const { document, blocks } = value;
-
-    if (blocks.size > 0) {
-      const parent = document.getParent(blocks.first().key);
-      isActive =
-        hasBlock(value, 'list-item') &&
-        !!parent &&
-        (parent as any).type === type;
-    }
+  // Handle the isActive state of the lists
+  if (['ordered-list', 'unordered-list'].includes(type)) {
+    const listItem =
+      editor.value.startBlock &&
+      (getListItem(editor, editor.value.startBlock) as Block | undefined);
+    const list = listItem && (getList(editor, listItem) as Block | undefined);
+    isActive =
+      type === 'unordered-list'
+        ? Boolean(list && list.type === 'unordered-list')
+        : Boolean(list && list.type === 'ordered-list');
   }
 
   return (
@@ -383,12 +377,12 @@ const HoverMenu = React.forwardRef<{}, HoverMenuProps>(
         <BlockButton editor={editor} type="heading-two" icon={MdLooksTwo} />
         <BlockButton
           editor={editor}
-          type="numbered-list"
+          type="ordered-list"
           icon={MdFormatListNumbered}
         />
         <BlockButton
           editor={editor}
-          type="bulleted-list"
+          type="unordered-list"
           icon={MdFormatListBulleted}
         />
         <LinkButton editor={editor} />
@@ -648,12 +642,6 @@ export const SlateEditor = ({ story, onChangeContent }: Props) => {
         return <h2 {...attributes}>{children}</h2>;
       case 'heading-three':
         return <h3 {...attributes}>{children}</h3>;
-      case 'numbered-list':
-        return <ol {...attributes}>{children}</ol>;
-      case 'bulleted-list':
-        return <ul {...attributes}>{children}</ul>;
-      case 'list-item':
-        return <li {...attributes}>{children}</li>;
       case 'image':
         const src = node.data.get('src');
         return <Image src={src} selected={isFocused} {...attributes} />;

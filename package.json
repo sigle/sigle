@@ -36,6 +36,7 @@
     "tailwindcss": "1.0.6"
   },
   "dependencies": {
+    "@convertkit/slate-lists": "0.2.4",
     "@reach/dialog": "0.2.9",
     "@reach/menu-button": "0.1.18",
     "@reach/tabs": "0.1.6",
