@@ -174,11 +174,13 @@ const rules = [
                 <img src={optimizedSrc} />
               </picture>
             );
+          case 'list-item-child':
+            return <span>{children}</span>;
           case 'list-item':
             return <li>{children}</li>;
-          case 'numbered-list':
+          case 'ordered-list':
             return <ol>{children}</ol>;
-          case 'bulleted-list':
+          case 'unordered-list':
             return <ul>{children}</ul>;
           case 'heading-one':
             return <h1>{children}</h1>;
