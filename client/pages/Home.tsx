@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import styled, { css } from 'styled-components';
 import tw from 'tailwind.macro';
+import { getConfig } from 'radiks';
 import { Button, Container } from '../components';
 import { Header } from '../modules/layout/containers/Header';
 import { Footer } from '../modules/layout/components/Footer';
@@ -171,6 +172,11 @@ const SectionReady = styled.section`
 export const Home = () => {
   const [loginOpen, setLoginOpen] = useState<boolean>(false);
 
+  const onClickLogin = () => {
+    const { userSession } = getConfig();
+    userSession.redirectToSignIn();
+  };
+
   return (
     <React.Fragment>
       <SignInDialog open={loginOpen} onClose={() => setLoginOpen(false)} />
@@ -203,7 +209,7 @@ export const Home = () => {
                   color="primary"
                   size="large"
                   className="button"
-                  onClick={() => setLoginOpen(true)}
+                  onClick={onClickLogin}
                 >
                   Try it now
                 </Button>
@@ -394,7 +400,7 @@ export const Home = () => {
             color="primary"
             size="large"
             className="button"
-            onClick={() => setLoginOpen(true)}
+            onClick={onClickLogin}
           >
             Try it now
           </Button>
