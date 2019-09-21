@@ -12,9 +12,8 @@
     "analyze": "BUNDLE_ANALYZE=both next build",
     "analyze:server": "BUNDLE_ANALYZE=server next build",
     "analyze:browser": "BUNDLE_ANALYZE=browser next build",
-    "test": "yarn test:lint && yarn test:prettier",
+    "test": "yarn test:lint",
     "test:lint": "eslint '{pages,client,server}/**/*.{js,ts,tsx}'",
-    "test:prettier": "prettier --list-different '**/*.{js,ts,tsx,md}'",
     "prettier": "prettier --write '**/*.{js,ts,tsx,md}'"
   },
   "prettier": {
