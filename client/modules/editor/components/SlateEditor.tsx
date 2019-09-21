@@ -149,9 +149,11 @@ const slatePlugins = [
   SoftBreak({ shift: true }),
   Lists({
     blocks: {
+      /* eslint-disable @typescript-eslint/camelcase */
       ordered_list: 'ordered-list',
       unordered_list: 'unordered-list',
       list_item: 'list-item',
+      /* eslint-enable @typescript-eslint/camelcase */
     },
   }),
 ];
