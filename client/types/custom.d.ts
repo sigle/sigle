@@ -24,8 +24,3 @@ declare module 'radiks';
 
 declare module 'slate-soft-break';
 declare module '@convertkit/slate-lists';
-
-// Remove once https://github.com/reach/reach-ui/pull/150 is merged
-declare module '@reach/menu-button';
-declare module '@reach/dialog';
-declare module '@reach/tabs';
