@@ -61,6 +61,16 @@ nextApp.prepare().then(async () => {
     })
   );
 
+  expressApp.get('/manifest.json', (_, res) => {
+    res.header('Access-Control-Allow-Origin', '*');
+    res.header('Access-Control-Allow-Headers', '*');
+    const manifestPath = dev
+      ? join(__dirname, '..', 'public', 'manifest.json')
+      : // In production the public folder is one level lower
+        join(__dirname, '..', '..', 'public', 'manifest.json');
+    res.sendFile(manifestPath);
+  });
+
   expressApp.get('/me/stories/:id', (req, res) => {
     return nextApp.render(req, res, '/editor', { storyId: req.params.id });
   });
