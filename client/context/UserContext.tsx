@@ -1,5 +1,6 @@
 import React, { createContext, useState, useEffect } from 'react';
 import { getConfig, User as RadiksUser } from 'radiks';
+import { toast } from 'react-toastify';
 import { User } from '../types';
 
 export const UserContext = createContext<{
@@ -19,8 +20,12 @@ export const UserContextProvider = ({ children }: Props) => {
   const fetchUser = async () => {
     const { userSession } = getConfig();
     if (userSession.isSignInPending()) {
-      await userSession.handlePendingSignIn();
-      await RadiksUser.createWithCurrentUser();
+      try {
+        await userSession.handlePendingSignIn();
+        await RadiksUser.createWithCurrentUser();
+      } catch (error) {
+        toast.error(error.message);
+      }
     }
     if (userSession.isUserSignedIn()) {
       const user = await userSession.loadUserData();
