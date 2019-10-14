@@ -36,5 +36,14 @@ module.exports = withPlugins(
       SENTRY_DSN_CLIENT: process.env.SENTRY_DSN_CLIENT,
       FATHOM_SITE_ID: process.env.FATHOM_SITE_ID,
     },
+    webpack: (config, { isServer }) => {
+      // Fixes npm packages that depend on `fs` module (tailwind)
+      if (!isServer) {
+        config.node = {
+          fs: 'empty',
+        };
+      }
+      return config;
+    },
   }
 );

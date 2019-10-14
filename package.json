@@ -31,9 +31,6 @@
       "git add"
     ]
   },
-  "resolutions": {
-    "tailwindcss": "1.0.6"
-  },
   "dependencies": {
     "@convertkit/slate-lists": "0.2.4",
     "@reach/dialog": "0.3.0",
@@ -127,7 +124,7 @@
     "responsive-loader": "1.2.0",
     "sharp": "0.23.0",
     "tailwind.macro": "1.0.0-alpha.10",
-    "tailwindcss": "1.0.6",
+    "tailwindcss": "1.1.2",
     "ts-node": "8.4.1",
     "typescript": "3.5.3",
     "webpack-bundle-analyzer": "3.5.2"

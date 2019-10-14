@@ -31,11 +31,13 @@ nextApp.prepare().then(async () => {
   // First connect to mongo
   const mongoClient = new MongoClient(config.mongoDBUrl, {
     useNewUrlParser: true,
+    useUnifiedTopology: true,
   });
   await mongoClient.connect();
   const db = mongoClient.db();
   await mongoose.connect(config.mongoDBUrl, {
     useNewUrlParser: true,
+    useUnifiedTopology: true,
   });
 
   const expressApp = express();
