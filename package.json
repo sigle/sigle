@@ -52,10 +52,10 @@
     "history": "4.10.1",
     "immutable": "4.0.0-rc.12",
     "isomorphic-unfetch": "3.0.0",
-    "jsdom": "15.1.1",
+    "jsdom": "15.2.0",
     "mongo-relay-connection": "0.2.7",
     "mongodb": "3.3.2",
-    "mongoose": "5.7.4",
+    "mongoose": "5.7.5",
     "next": "9.1.1",
     "radiks": "0.3.0-beta.1",
     "radiks-server": "1.1.0-beta.3",
@@ -73,7 +73,7 @@
     "slate-plain-serializer": "0.7.10",
     "slate-react": "0.22.8",
     "slate-soft-break": "0.9.0",
-    "styled-components": "4.3.2",
+    "styled-components": "4.4.0",
     "typeface-libre-baskerville": "0.0.72",
     "typeface-roboto": "0.0.75"
   },
@@ -122,11 +122,11 @@
     "relay-compiler": "6.0.0",
     "relay-compiler-language-typescript": "8.0.0",
     "responsive-loader": "1.2.0",
-    "sharp": "0.23.0",
+    "sharp": "0.23.1",
     "tailwind.macro": "1.0.0-alpha.10",
     "tailwindcss": "1.1.2",
     "ts-node": "8.4.1",
-    "typescript": "3.5.3",
+    "typescript": "3.6.4",
     "webpack-bundle-analyzer": "3.5.2"
   }
 }
