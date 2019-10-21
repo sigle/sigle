@@ -5,39 +5,20 @@ import { getConfig } from 'radiks';
 import { useDropzone } from 'react-dropzone';
 import { MdAddAPhoto, MdClose } from 'react-icons/md';
 import { toast } from 'react-toastify';
-import styled, { css, keyframes } from 'styled-components';
+import styled, { css } from 'styled-components';
 import tw from 'tailwind.macro';
+import { animated, useTransition } from 'react-spring';
 import { Button } from '../../../components';
 import { RadiksPrivateStory, RadiksPublicStory } from '../../../types';
 import { config } from '../../../config';
 import { UserContext } from '../../../context/UserContext';
 
-const overlayAnimation = keyframes`
-  0% {
-    opacity: 0;
-  }
-  100% {
-    opacity: 1;
-  }
-`;
-
 const StyledDialogOverlay = styled(DialogOverlay)`
   z-index: 11;
-  animation: ${overlayAnimation} 0.2s cubic-bezier(0, 0, 0.2, 1);
-`;
-
-const contentAnimation = keyframes`
-  0% {
-    transform: translateX(100%);
-  }
-  100% {
-    transform: translateX(0);
-  }
 `;
 
 const StyledDialogContent = styled(DialogContent)`
   ${tw`fixed top-0 right-0 bottom-0 w-full overflow-y-auto max-w-md m-0 px-8 py-4 bg-white`};
-  animation: ${contentAnimation} 0.2s cubic-bezier(0, 0, 0.2, 1);
 `;
 
 const TitleContainer = styled.div`
@@ -129,8 +110,11 @@ interface Props {
   onChangeOptionsOpen: (open: boolean) => void;
 }
 
+const AnimatedDialogOverlay = animated(StyledDialogOverlay);
+const AnimatedDialogContent = animated(StyledDialogContent);
+
 // TODO if close the modal with changes unsaved warm the user
-export const SigleEditorOptions = ({
+export const SigleEditorOptions: any = ({
   story,
   optionsOpen,
   onChangeOptionsOpen,
@@ -192,114 +176,131 @@ export const SigleEditorOptions = ({
     setSaveLoading(false);
   };
 
+  const transitions = useTransition(optionsOpen, null, {
+    from: { opacity: 0, transform: 'translateX(100%)' },
+    enter: { opacity: 1, transform: 'translateX(0)' },
+    leave: { opacity: 0, transform: 'translateX(100%)' },
+    config: {
+      duration: 250,
+    },
+  });
+
   if (!user) {
     return null;
   }
 
   const coverImageUrl = file ? file.preview : story.attrs.coverImageUrl;
 
-  return (
-    <StyledDialogOverlay
-      isOpen={optionsOpen}
-      onDismiss={() => onChangeOptionsOpen(false)}
-    >
-      <StyledDialogContent>
-        <TitleContainer>
-          <Title>Settings</Title>
-          <CloseButton onClick={() => onChangeOptionsOpen(false)}>
-            <MdClose />
-          </CloseButton>
-        </TitleContainer>
+  return transitions.map(
+    ({ item, key, props: styles }: any) =>
+      item && (
+        <AnimatedDialogOverlay
+          key={key}
+          onDismiss={() => onChangeOptionsOpen(false)}
+          style={{ opacity: styles.opacity }}
+        >
+          <AnimatedDialogContent
+            style={{
+              transform: styles.transform,
+            }}
+          >
+            <TitleContainer>
+              <Title>Settings</Title>
+              <CloseButton onClick={() => onChangeOptionsOpen(false)}>
+                <MdClose />
+              </CloseButton>
+            </TitleContainer>
 
-        <form onSubmit={handleSubmit}>
-          <FormRow>
-            <ImageEmpty {...getRootProps()} haveImage={coverImageUrl}>
-              {coverImageUrl && (
-                <Image src={coverImageUrl} alt={story.attrs.title} />
-              )}
-              {!coverImageUrl && <span>Upload cover image</span>}
-              <input {...getInputProps()} />
-              <ImageEmptyIcon>
-                <MdAddAPhoto />
-              </ImageEmptyIcon>
-            </ImageEmpty>
-          </FormRow>
+            <form onSubmit={handleSubmit}>
+              <FormRow>
+                <ImageEmpty {...getRootProps()} haveImage={coverImageUrl}>
+                  {coverImageUrl && (
+                    <Image src={coverImageUrl} alt={story.attrs.title} />
+                  )}
+                  {!coverImageUrl && <span>Upload cover image</span>}
+                  <input {...getInputProps()} />
+                  <ImageEmptyIcon>
+                    <MdAddAPhoto />
+                  </ImageEmptyIcon>
+                </ImageEmpty>
+              </FormRow>
 
-          <FormRow>
-            <FormLabel>Excerpt</FormLabel>
-            <FormTextarea
-              value={story.attrs.excerpt || ''}
-              rows={3}
-              onChange={e => {
-                const update = {
-                  excerpt: e.target.value,
-                };
-                story.update(update);
-                setFakeStory(update);
-              }}
-              maxLength={250}
-            />
-          </FormRow>
+              <FormRow>
+                <FormLabel>Excerpt</FormLabel>
+                <FormTextarea
+                  value={story.attrs.excerpt || ''}
+                  rows={3}
+                  onChange={e => {
+                    const update = {
+                      excerpt: e.target.value,
+                    };
+                    story.update(update);
+                    setFakeStory(update);
+                  }}
+                  maxLength={250}
+                />
+              </FormRow>
 
-          <FormRow>
-            <FormLabel>Meta title</FormLabel>
-            <FormInput
-              value={story.attrs.metaTitle || ''}
-              onChange={e => {
-                const update = {
-                  metaTitle: e.target.value,
-                };
-                story.update(update);
-                setFakeStory(update);
-              }}
-              maxLength={100}
-            />
-            <FormHelper>
-              Recommended: 70 characters. You have used{' '}
-              {story.attrs.metaTitle ? story.attrs.metaTitle.length : 0}{' '}
-              characters.
-            </FormHelper>
-            <FormHelper></FormHelper>
-          </FormRow>
+              <FormRow>
+                <FormLabel>Meta title</FormLabel>
+                <FormInput
+                  value={story.attrs.metaTitle || ''}
+                  onChange={e => {
+                    const update = {
+                      metaTitle: e.target.value,
+                    };
+                    story.update(update);
+                    setFakeStory(update);
+                  }}
+                  maxLength={100}
+                />
+                <FormHelper>
+                  Recommended: 70 characters. You have used{' '}
+                  {story.attrs.metaTitle ? story.attrs.metaTitle.length : 0}{' '}
+                  characters.
+                </FormHelper>
+                <FormHelper></FormHelper>
+              </FormRow>
 
-          <FormRow>
-            <FormLabel>Meta description</FormLabel>
-            <FormTextarea
-              rows={3}
-              value={story.attrs.metaDescription || ''}
-              onChange={e => {
-                const update = {
-                  metaDescription: e.target.value,
-                };
-                story.update(update);
-                setFakeStory(update);
-              }}
-              maxLength={250}
-            />
-            <FormHelper>
-              Recommended: 156 characters. You have used{' '}
-              {story.attrs.metaDescription
-                ? story.attrs.metaDescription.length
-                : 0}{' '}
-              characters.
-            </FormHelper>
-          </FormRow>
+              <FormRow>
+                <FormLabel>Meta description</FormLabel>
+                <FormTextarea
+                  rows={3}
+                  value={story.attrs.metaDescription || ''}
+                  onChange={e => {
+                    const update = {
+                      metaDescription: e.target.value,
+                    };
+                    story.update(update);
+                    setFakeStory(update);
+                  }}
+                  maxLength={250}
+                />
+                <FormHelper>
+                  Recommended: 156 characters. You have used{' '}
+                  {story.attrs.metaDescription
+                    ? story.attrs.metaDescription.length
+                    : 0}{' '}
+                  characters.
+                </FormHelper>
+              </FormRow>
 
-          <FormRow>
-            <MetaTitlePreview>
-              {story.attrs.metaTitle || story.attrs.title}
-            </MetaTitlePreview>
-            <MetaUrlPreview>{`${config.appUrl}/${user.username}/${story.attrs._id}`}</MetaUrlPreview>
-            <MetaDescriptionPreview>
-              {story.attrs.metaDescription || story.attrs.excerpt}
-            </MetaDescriptionPreview>
-          </FormRow>
+              <FormRow>
+                <MetaTitlePreview>
+                  {story.attrs.metaTitle || story.attrs.title}
+                </MetaTitlePreview>
+                <MetaUrlPreview>{`${config.appUrl}/${user.username}/${story.attrs._id}`}</MetaUrlPreview>
+                <MetaDescriptionPreview>
+                  {story.attrs.metaDescription || story.attrs.excerpt}
+                </MetaDescriptionPreview>
+              </FormRow>
 
-          <FormButton color="primary" disabled={saveLoading}>
-            {saveLoading ? 'Saving...' : 'Save'}
-          </FormButton>
-        </form>
-      </StyledDialogContent>
-    </StyledDialogOverlay>
+              <FormButton color="primary" disabled={saveLoading}>
+                {saveLoading ? 'Saving...' : 'Save'}
+              </FormButton>
+            </form>
+          </AnimatedDialogContent>
+        </AnimatedDialogOverlay>
+      )
   );
 };
