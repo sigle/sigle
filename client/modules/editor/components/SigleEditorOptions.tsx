@@ -104,17 +104,17 @@ const MetaDescriptionPreview = styled.div`
   color: #545454;
 `;
 
+const AnimatedDialogOverlay = animated(StyledDialogOverlay);
+const AnimatedDialogContent = animated(StyledDialogContent);
+
 interface Props {
   story: RadiksPrivateStory | RadiksPublicStory;
   optionsOpen: boolean;
   onChangeOptionsOpen: (open: boolean) => void;
 }
 
-const AnimatedDialogOverlay = animated(StyledDialogOverlay);
-const AnimatedDialogContent = animated(StyledDialogContent);
-
 // TODO if close the modal with changes unsaved warm the user
-export const SigleEditorOptions: any = ({
+export const SigleEditorOptions = ({
   story,
   optionsOpen,
   onChangeOptionsOpen,
@@ -142,6 +142,15 @@ export const SigleEditorOptions: any = ({
     onDrop,
     accept: 'image/jpeg, image/png',
     multiple: false,
+  });
+
+  const transitions = useTransition(optionsOpen, null, {
+    from: { opacity: 0, transform: 'translateX(100%)' },
+    enter: { opacity: 1, transform: 'translateX(0)' },
+    leave: { opacity: 0, transform: 'translateX(100%)' },
+    config: {
+      duration: 250,
+    },
   });
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -176,15 +185,6 @@ export const SigleEditorOptions: any = ({
     setSaveLoading(false);
   };
 
-  const transitions = useTransition(optionsOpen, null, {
-    from: { opacity: 0, transform: 'translateX(100%)' },
-    enter: { opacity: 1, transform: 'translateX(0)' },
-    leave: { opacity: 0, transform: 'translateX(100%)' },
-    config: {
-      duration: 250,
-    },
-  });
-
   if (!user) {
     return null;
   }
@@ -192,7 +192,7 @@ export const SigleEditorOptions: any = ({
   const coverImageUrl = file ? file.preview : story.attrs.coverImageUrl;
 
   return transitions.map(
-    ({ item, key, props: styles }: any) =>
+    ({ item, key, props: styles }) =>
       item && (
         <AnimatedDialogOverlay
           key={key}
@@ -302,5 +302,5 @@ export const SigleEditorOptions: any = ({
           </AnimatedDialogContent>
         </AnimatedDialogOverlay>
       )
-  );
+  ) as any;
 };

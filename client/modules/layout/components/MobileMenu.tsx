@@ -4,7 +4,7 @@ import tw from 'tailwind.macro';
 import '@reach/dialog/styles.css';
 import { DialogOverlay, DialogContent } from '@reach/dialog';
 import Link from 'next/link';
-import { useSpring, animated } from 'react-spring';
+import { useTransition, animated } from 'react-spring';
 import { getProfileRoute, getSettingsRoute } from '../../../utils/routes';
 
 const StyledDialogOverlay = styled(DialogOverlay)`
@@ -25,6 +25,10 @@ const MobileMenuImage = styled.img`
   ${tw`w-16 h-16 rounded-full mx-auto mb-6`};
 `;
 
+const MobileMenuList = styled.ul`
+  ${tw`list-none p-0`};
+`;
+
 const MobileMenuListItem = styled.li`
   ${tw`border-b border-grey`};
   &:first-child {
@@ -35,6 +39,9 @@ const MobileMenuListItem = styled.li`
 const MobileMenuLink = styled.a`
   ${tw`text-center block py-3`};
 `;
+
+const AnimatedDialogOverlay = animated(StyledDialogOverlay);
+const AnimatedDialogContent = animated(StyledDialogContent);
 
 interface MobileMenuProps {
   open: boolean;
@@ -56,87 +63,89 @@ export const MobileMenu = ({
   onLogin,
   onLogout,
 }: MobileMenuProps) => {
-  const [delayedOpen, setDelayedOpen] = useState(open);
-  const overlayStyle = useSpring({
-    opacity: open ? 1 : 0,
-    config: { duration: 200 },
-    onRest: () => setDelayedOpen(open),
-  });
-  const contentStyle = useSpring({
-    transform: open ? 'translate3d(0px,0,0)' : 'translate3d(-80px,0,0)',
-    config: { duration: 180 },
+  const transitions = useTransition(open, null, {
+    from: { opacity: 0, transform: 'translateX(-100%)' },
+    enter: { opacity: 1, transform: 'translateX(0)' },
+    leave: { opacity: 0, transform: 'translateX(-100%)' },
+    config: {
+      duration: 250,
+    },
   });
 
   const profileRoute = user && getProfileRoute({ username: user.username });
   const settingsRoute = getSettingsRoute();
 
-  const AnimatedDialogOverlay = animated(StyledDialogOverlay);
-  const AnimatedDialogContent = animated(StyledDialogContent);
+  return transitions.map(
+    ({ item, key, props: styles }) =>
+      item && (
+        <AnimatedDialogOverlay
+          key={key}
+          style={{ opacity: styles.opacity }}
+          onDismiss={onClose}
+        >
+          <AnimatedDialogContent
+            style={{
+              transform: styles.transform,
+            }}
+          >
+            <MobileMenuLogo src="/static/images/logo.png" alt="Sigle logo" />
 
-  return (
-    <AnimatedDialogOverlay
-      style={overlayStyle}
-      isOpen={open || delayedOpen}
-      onDismiss={onClose}
-    >
-      <AnimatedDialogContent style={contentStyle}>
-        <MobileMenuLogo src="/static/images/logo.png" alt="Sigle logo" />
+            {user && <MobileMenuImage alt={user.username} src={userImage} />}
 
-        {user && <MobileMenuImage alt={user.username} src={userImage} />}
-
-        <ul>
-          <MobileMenuListItem>
-            <Link href="/discover">
-              <MobileMenuLink>Discover</MobileMenuLink>
-            </Link>
-          </MobileMenuListItem>
-          {user && profileRoute && (
-            <React.Fragment>
+            <MobileMenuList>
               <MobileMenuListItem>
-                <Link href="/me">
-                  <MobileMenuLink>My stories</MobileMenuLink>
+                <Link href="/discover">
+                  <MobileMenuLink>Discover</MobileMenuLink>
                 </Link>
               </MobileMenuListItem>
-              <MobileMenuListItem>
-                <Link href={profileRoute.href} as={profileRoute.as}>
-                  <MobileMenuLink>Profile</MobileMenuLink>
-                </Link>
-              </MobileMenuListItem>
-              <MobileMenuListItem>
-                <Link href={settingsRoute.href} as={settingsRoute.as}>
-                  <MobileMenuLink>Settings</MobileMenuLink>
-                </Link>
-              </MobileMenuListItem>
-              <MobileMenuListItem>
-                <MobileMenuLink
-                  href=""
-                  onClick={e => {
-                    e.preventDefault();
-                    onLogout();
-                  }}
-                >
-                  Sign out
-                </MobileMenuLink>
-              </MobileMenuListItem>
-            </React.Fragment>
-          )}
+              {user && profileRoute && (
+                <React.Fragment>
+                  <MobileMenuListItem>
+                    <Link href="/me">
+                      <MobileMenuLink>My stories</MobileMenuLink>
+                    </Link>
+                  </MobileMenuListItem>
+                  <MobileMenuListItem>
+                    <Link href={profileRoute.href} as={profileRoute.as}>
+                      <MobileMenuLink>Profile</MobileMenuLink>
+                    </Link>
+                  </MobileMenuListItem>
+                  <MobileMenuListItem>
+                    <Link href={settingsRoute.href} as={settingsRoute.as}>
+                      <MobileMenuLink>Settings</MobileMenuLink>
+                    </Link>
+                  </MobileMenuListItem>
+                  <MobileMenuListItem>
+                    <MobileMenuLink
+                      href=""
+                      onClick={e => {
+                        e.preventDefault();
+                        onLogout();
+                      }}
+                    >
+                      Sign out
+                    </MobileMenuLink>
+                  </MobileMenuListItem>
+                </React.Fragment>
+              )}
 
-          {!user && (
-            <MobileMenuListItem>
-              <MobileMenuLink
-                href=""
-                onClick={e => {
-                  e.preventDefault();
-                  onLogin();
-                  onClose();
-                }}
-              >
-                Sign in
-              </MobileMenuLink>
-            </MobileMenuListItem>
-          )}
-        </ul>
-      </AnimatedDialogContent>
-    </AnimatedDialogOverlay>
-  );
+              {!user && (
+                <MobileMenuListItem>
+                  <MobileMenuLink
+                    href=""
+                    onClick={e => {
+                      e.preventDefault();
+                      onLogin();
+                      onClose();
+                    }}
+                  >
+                    Sign in
+                  </MobileMenuLink>
+                </MobileMenuListItem>
+              )}
+            </MobileMenuList>
+          </AnimatedDialogContent>
+        </AnimatedDialogOverlay>
+      )
+  ) as any;
 };
