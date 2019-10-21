@@ -18,7 +18,7 @@ const StyledDialogOverlay = styled(DialogOverlay)`
 `;
 
 const StyledDialogContent = styled(DialogContent)`
-  ${tw`fixed top-0 right-0 bottom-0 w-full overflow-y-auto max-w-md m-0 px-8 py-4 bg-white`};
+  ${tw`fixed top-0 right-0 bottom-0 overflow-y-auto w-full max-w-md m-0 px-8 py-4 bg-white`};
 `;
 
 const TitleContainer = styled.div`
@@ -259,7 +259,6 @@ export const SigleEditorOptions = ({
                   {story.attrs.metaTitle ? story.attrs.metaTitle.length : 0}{' '}
                   characters.
                 </FormHelper>
-                <FormHelper></FormHelper>
               </FormRow>
 
               <FormRow>
