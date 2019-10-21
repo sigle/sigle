@@ -1,4 +1,4 @@
-import styled from 'styled-components';
+import styled, { keyframes } from 'styled-components';
 import tw from 'tailwind.macro';
 import '@reach/menu-button/styles.css';
 import {
@@ -9,6 +9,17 @@ import {
   MenuLink,
 } from '@reach/menu-button';
 
+const menuAnimation = keyframes`
+  0% {
+    transform: scale(.9);
+    opacity: 0;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+`;
+
 const StyledMenuButton = styled(MenuButton)`
   :focus {
     outline: 0;
@@ -18,6 +29,7 @@ const StyledMenuButton = styled(MenuButton)`
 const StyledMenuList = styled(MenuList)`
   ${tw`mt-2 bg-white rounded-lg border shadow-md py-2`};
   min-width: 8rem;
+  animation: ${menuAnimation} 75ms cubic-bezier(0, 0, 0.2, 1);
 
   > [data-reach-menu-item] {
     ${tw`px-4 py-2`};
