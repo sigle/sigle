@@ -5,19 +5,39 @@ import { getConfig } from 'radiks';
 import { useDropzone } from 'react-dropzone';
 import { MdAddAPhoto, MdClose } from 'react-icons/md';
 import { toast } from 'react-toastify';
-import styled, { css } from 'styled-components';
+import styled, { css, keyframes } from 'styled-components';
 import tw from 'tailwind.macro';
 import { Button } from '../../../components';
 import { RadiksPrivateStory, RadiksPublicStory } from '../../../types';
 import { config } from '../../../config';
 import { UserContext } from '../../../context/UserContext';
 
+const overlayAnimation = keyframes`
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+`;
+
 const StyledDialogOverlay = styled(DialogOverlay)`
   z-index: 11;
+  animation: ${overlayAnimation} 0.2s cubic-bezier(0, 0, 0.2, 1);
+`;
+
+const contentAnimation = keyframes`
+  0% {
+    transform: translateX(100%);
+  }
+  100% {
+    transform: translateX(0);
+  }
 `;
 
 const StyledDialogContent = styled(DialogContent)`
-  ${tw`absolute top-0 right-0 bottom-0 w-full max-w-md m-0 px-8 py-4 bg-white overflow-auto`};
+  ${tw`fixed top-0 right-0 bottom-0 w-full overflow-y-auto max-w-md m-0 px-8 py-4 bg-white`};
+  animation: ${contentAnimation} 0.2s cubic-bezier(0, 0, 0.2, 1);
 `;
 
 const TitleContainer = styled.div`
