@@ -33,7 +33,7 @@
   },
   "dependencies": {
     "@convertkit/slate-lists": "0.2.4",
-    "@reach/dialog": "0.3.0",
+    "@reach/dialog": "0.2.9",
     "@reach/menu-button": "0.3.0",
     "@reach/tabs": "0.3.0",
     "@sentry/browser": "5.7.1",
