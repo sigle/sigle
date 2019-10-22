@@ -133,7 +133,7 @@ const StoryFooter = styled.div`
 `;
 
 const StoryFooterImageContainer = styled.a`
-  ${tw`mr-2 lg:mr-4`};
+  ${tw`mr-2 lg:mr-4 cursor-pointer`};
 `;
 
 const StoryFooterImage = styled.img`
