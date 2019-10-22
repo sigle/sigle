@@ -34,6 +34,7 @@ const HeaderIcon = styled(MdSort)`
 `;
 
 const HeaderLogo = styled.img`
+  ${tw`cursor-pointer`};
   height: 30px;
 `;
 

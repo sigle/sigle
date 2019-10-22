@@ -17,7 +17,7 @@ const MeMenu = styled.div`
   }
 
   ul {
-    ${tw`flex justify-around lg:flex-col sticky`};
+    ${tw`flex justify-around lg:flex-col sticky list-none p-0`};
     top: 0;
   }
 
