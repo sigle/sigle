@@ -1,5 +1,5 @@
 import React from 'react';
-import { useWindowSize } from 'the-platform';
+import { useWindowSize } from 'react-use';
 import styled from 'styled-components/macro';
 import tw from 'tailwind.macro';
 import { userSession } from '../../../utils/blockstack';
