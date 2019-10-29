@@ -33,7 +33,7 @@ const StoryTitle = styled.div<{ to: string }>`
 `;
 
 const StoryDate = styled.div`
-  ${tw`text-sm italic text-grey-dark`};
+  ${tw`mt-1 text-sm italic text-grey-dark`};
 `;
 
 const StoryText = styled.div`
