@@ -61,10 +61,10 @@
   },
   "devDependencies": {
     "@craco/craco": "3.6.0",
-    "@types/dompurify": "0.0.32",
-    "@types/jest": "24.0.9",
+    "@types/dompurify": "0.0.33",
+    "@types/jest": "24.0.20",
     "@types/nanoid": "1.2.1",
-    "@types/node": "11.10.5",
+    "@types/node": "12.11.7",
     "@types/react": "16.8.7",
     "@types/react-dom": "16.8.2",
     "@types/react-helmet": "5.0.8",
@@ -81,7 +81,7 @@
     "react-scripts": "2.1.8",
     "tailwind.macro": "0.5.10",
     "tailwindcss": "0.7.4",
-    "typescript": "3.3.3333",
-    "webpack-bundle-analyzer": "3.3.2"
+    "typescript": "3.6.4",
+    "webpack-bundle-analyzer": "3.6.0"
   }
 }
