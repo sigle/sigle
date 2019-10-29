@@ -590,3 +590,7 @@ video {
   max-width: 100%;
   height: auto;
 }
+
+html {
+  line-height: 1.15;
+}
