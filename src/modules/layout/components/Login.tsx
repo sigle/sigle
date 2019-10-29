@@ -111,7 +111,12 @@ export const Login = () => {
               enable you to take back control of your identity and data.
             </Text>
             <Text>Creating a Blockstack ID is easy, free, and secure.</Text>
-            <Text>Welcome to the family 🙂</Text>
+            <Text>
+              Welcome to the family{' '}
+              <span role="img" aria-label="Smile">
+                🙂
+              </span>
+            </Text>
             <div>
               <Button onClick={handleLogin}>Login with blockstack</Button>
             </div>

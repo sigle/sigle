@@ -72,6 +72,7 @@ export const StorySettings = ({
     return () => {
       document.removeEventListener('mousedown', handleClick);
     };
+    // eslint-disable-next-line
   }, [open]);
 
   return (

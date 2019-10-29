@@ -26,6 +26,7 @@ const rules = [
             return <blockquote>{children}</blockquote>;
           case 'image':
             const src = obj.data.get('src');
+            // eslint-disable-next-line
             return <img src={src} />;
           case 'list-item':
             return <li>{children}</li>;
@@ -123,8 +124,7 @@ const CoverImage = styled.img`
 `;
 
 export const Content = styled.div`
-  ${tw`mt-8 mb-16 text-lg`};
-  line-height: 1.625;
+  ${tw`mt-8 mb-16 text-lg leading-relaxed`};
   color: #494949;
 
   p,
@@ -208,6 +208,7 @@ export const PublicStory = ({ match }: Props) => {
 
   useEffect(() => {
     getUserFile();
+    // eslint-disable-next-line
   }, []);
 
   if (loading) {

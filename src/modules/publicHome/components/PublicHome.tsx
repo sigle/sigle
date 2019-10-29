@@ -63,6 +63,7 @@ export const PublicHome = ({ match }: Props) => {
 
   useEffect(() => {
     getUserFile();
+    // eslint-disable-next-line
   }, []);
 
   if (loading) {
