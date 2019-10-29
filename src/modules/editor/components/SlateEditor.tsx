@@ -302,7 +302,7 @@ export const SlateEditor = ({
     return value.inlines.some(inline => !!(inline && inline.type === 'link'));
   };
 
-  const renderNode = (props: any, _: any, next: any) => {
+  const renderBlock = (props: any, _: any, next: any) => {
     const { attributes, children, node, isFocused } = props;
 
     switch (node.type) {
@@ -366,7 +366,20 @@ export const SlateEditor = ({
   };
 
   const renderBlockButton = (type: string, Icon: any) => {
-    const isActive = hasBlock(type);
+    if (!editorRef.current) return;
+
+    const editor = editorRef.current;
+    const { value } = editor;
+    const { document, blocks } = value;
+
+    let isActive = hasBlock(type);
+
+    if (['numbered-list', 'bulleted-list'].includes(type)) {
+      if (blocks.size > 0) {
+        const parent = document.getParent(blocks.first().key);
+        isActive = hasBlock('list-item') && parent && parent.type === type;
+      }
+    }
 
     return (
       <SlateToolbarButton
@@ -474,7 +487,7 @@ export const SlateEditor = ({
               onKeyDown={onKeyDown}
               schema={schema}
               placeholder="Text"
-              renderNode={renderNode}
+              renderBlock={renderBlock}
               renderMark={renderMark}
             />
           </StyledContent>
