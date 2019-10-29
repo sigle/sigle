@@ -3,6 +3,6 @@
   publish = "build"
 
 [build.environment]
-  NODE_VERSION = "10"
-  YARN_VERSION = "1.13.0"
+  NODE_VERSION = "11"
+  YARN_VERSION = "1.19.1"
   YARN_FLAGS = "--pure-lockfile"

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { RouteComponentProps } from 'react-router';
 import * as blockstack from 'blockstack';
 import { toast } from 'react-toastify';
-import styled from 'styled-components/macro';
+import styled from 'styled-components';
 import tw from 'tailwind.macro';
 import { StoryFile } from '../../../types';
 import { Container } from '../../../components';
@@ -63,7 +63,8 @@ export const PublicHome = ({ match }: Props) => {
 
   useEffect(() => {
     getUserFile();
-  }, [false]);
+    // eslint-disable-next-line
+  }, []);
 
   if (loading) {
     return <Container>Loading ...</Container>;

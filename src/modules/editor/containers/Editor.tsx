@@ -35,7 +35,8 @@ export const Editor = ({ match }: Props) => {
 
   useEffect(() => {
     loadStoryFile();
-  }, [false]);
+    // eslint-disable-next-line
+  }, []);
 
   return (
     <Component

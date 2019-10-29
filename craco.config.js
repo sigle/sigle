@@ -12,10 +12,10 @@ module.exports = {
       }
 
       /**
-       * We need to allow cra to accept a file in the root folder
+       * We need to allow cra to accept the tailwind config located in the root folder
        */
       webpackConfig.resolve.plugins[1].appSrcs.push(
-        path.resolve(__dirname, 'tailwind.js')
+        path.resolve(__dirname, 'tailwind.config.js')
       );
 
       return webpackConfig;

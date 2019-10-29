@@ -64,7 +64,7 @@ export const Home = () => {
   useEffect(() => {
     loadUserData();
     loadStoryFile();
-  }, [false]);
+  }, []);
 
   const handleCreateNewPrivateStory = async () => {
     setLoadingCreate(true);

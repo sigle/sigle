@@ -1,5 +1,5 @@
 import React, { useState, useRef } from 'react';
-import styled from 'styled-components/macro';
+import styled from 'styled-components';
 import tw from 'tailwind.macro';
 import { toast } from 'react-toastify';
 import { Editor } from 'slate-react';
@@ -43,7 +43,11 @@ const StyledLinkContainer = styled.div`
 `;
 
 const StyledLink = styled(Link)`
-  ${tw`no-underline text-black`};
+  ${tw`no-underline text-black flex`};
+`;
+
+const StyledMdArrowBack = styled(MdArrowBack)`
+  ${tw`mr-2`};
 `;
 
 const Input = styled.input`
@@ -226,7 +230,7 @@ export const SlateEditor = ({
     const { document } = value;
 
     // Handle everything but list buttons.
-    if (type != 'bulleted-list' && type != 'numbered-list') {
+    if (type !== 'bulleted-list' && type !== 'numbered-list') {
       const isActive = hasBlock(type);
       const isList = hasBlock('list-item');
 
@@ -244,7 +248,7 @@ export const SlateEditor = ({
       const isType = value.blocks.some((block: any) => {
         return !!document.getClosest(
           block.key,
-          (parent: any) => parent.type == type
+          (parent: any) => parent.type === type
         );
       });
 
@@ -256,7 +260,7 @@ export const SlateEditor = ({
       } else if (isList) {
         editor
           .unwrapBlock(
-            type == 'bulleted-list' ? 'numbered-list' : 'bulleted-list'
+            type === 'bulleted-list' ? 'numbered-list' : 'bulleted-list'
           )
           .wrapBlock(type);
       } else {
@@ -287,18 +291,18 @@ export const SlateEditor = ({
   };
 
   const hasMark = (type: string) => {
-    return value.activeMarks.some((mark: any) => mark.type == type);
+    return value.activeMarks.some((mark: any) => mark.type === type);
   };
 
   const hasBlock = (type: string) => {
-    return value.blocks.some((node: any) => node.type == type);
+    return value.blocks.some((node: any) => node.type === type);
   };
 
   const hasLinks = () => {
-    return value.inlines.some(inline => !!(inline && inline.type == 'link'));
+    return value.inlines.some(inline => !!(inline && inline.type === 'link'));
   };
 
-  const renderNode = (props: any, _: any, next: any) => {
+  const renderBlock = (props: any, _: any, next: any) => {
     const { attributes, children, node, isFocused } = props;
 
     switch (node.type) {
@@ -362,7 +366,20 @@ export const SlateEditor = ({
   };
 
   const renderBlockButton = (type: string, Icon: any) => {
-    const isActive = hasBlock(type);
+    let isActive = hasBlock(type);
+
+    if (['numbered-list', 'bulleted-list'].includes(type)) {
+      const editor = editorRef.current;
+      if (editor) {
+        const { value } = editor;
+        const { document, blocks } = value;
+
+        if (blocks.size > 0) {
+          const parent = document.getParent(blocks.first().key);
+          isActive = hasBlock('list-item') && parent && parent.type === type;
+        }
+      }
+    }
 
     return (
       <SlateToolbarButton
@@ -411,7 +428,7 @@ export const SlateEditor = ({
     <PageContainer>
       <StyledLinkContainer>
         <StyledLink to="/">
-          <MdArrowBack /> Back to my stories
+          <StyledMdArrowBack /> Back to my stories
         </StyledLink>
       </StyledLinkContainer>
       <PageTitleContainer>
@@ -470,7 +487,7 @@ export const SlateEditor = ({
               onKeyDown={onKeyDown}
               schema={schema}
               placeholder="Text"
-              renderNode={renderNode}
+              renderBlock={renderBlock}
               renderMark={renderMark}
             />
           </StyledContent>

@@ -1,6 +1,6 @@
 import React from 'react';
-import { useWindowSize } from 'the-platform';
-import styled, { css } from 'styled-components/macro';
+import { useWindowSize } from 'react-use';
+import styled, { css } from 'styled-components';
 import tw from 'tailwind.macro';
 import { userSession } from '../../../utils/blockstack';
 import logo from '../../../img/logo.png';
@@ -111,7 +111,12 @@ export const Login = () => {
               enable you to take back control of your identity and data.
             </Text>
             <Text>Creating a Blockstack ID is easy, free, and secure.</Text>
-            <Text>Welcome to the family 🙂</Text>
+            <Text>
+              Welcome to the family{' '}
+              <span role="img" aria-label="Smile">
+                🙂
+              </span>
+            </Text>
             <div>
               <Button onClick={handleLogin}>Login with blockstack</Button>
             </div>

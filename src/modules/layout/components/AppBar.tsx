@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import styled from 'styled-components/macro';
+import styled from 'styled-components';
 import tw from 'tailwind.macro';
 import Tippy from '@tippy.js/react';
 import { IoIosEye } from 'react-icons/io';
@@ -44,12 +44,7 @@ export const AppBar = ({ user }: Props) => {
         <Logo src="/img/logo.png" alt="logo" />
       </Link>
       <RightContainer>
-        <Tippy
-          content={user.username}
-          arrow={true}
-          arrowType="round"
-          theme="light-border"
-        >
+        <Tippy content={user.username} theme="light-border">
           <Name href={`/${user.username}`} target="_blank">
             <IoIosEye size={22} style={{ marginRight: 6 }} /> Visit my blog
           </Name>

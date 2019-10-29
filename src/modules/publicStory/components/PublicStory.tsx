@@ -2,13 +2,13 @@ import React, { useEffect, useState } from 'react';
 import * as blockstack from 'blockstack';
 import { Helmet } from 'react-helmet';
 import { RouteComponentProps } from 'react-router';
-import styled, { css } from 'styled-components/macro';
+import styled, { css } from 'styled-components';
 import tw from 'tailwind.macro';
 import { Value } from 'slate';
 import Html from 'slate-html-serializer';
 import dompurify from 'dompurify';
 import { toast } from 'react-toastify';
-import { format } from 'date-fns';
+import format from 'date-fns/format';
 import { Story } from '../../../types';
 import { Container } from '../../../components';
 import { NotFound } from '../../layout/components/NotFound';
@@ -18,7 +18,7 @@ import { config } from '../../../config';
 const rules = [
   {
     serialize(obj: any, children: any) {
-      if (obj.object == 'block') {
+      if (obj.object === 'block') {
         switch (obj.type) {
           case 'paragraph':
             return <p className={obj.data.get('className')}>{children}</p>;
@@ -26,6 +26,7 @@ const rules = [
             return <blockquote>{children}</blockquote>;
           case 'image':
             const src = obj.data.get('src');
+            // eslint-disable-next-line
             return <img src={src} />;
           case 'list-item':
             return <li>{children}</li>;
@@ -45,7 +46,7 @@ const rules = [
   },
   {
     serialize(obj: any, children: any) {
-      if (obj.object == 'mark') {
+      if (obj.object === 'mark') {
         switch (obj.type) {
           case 'bold':
             return <strong>{children}</strong>;
@@ -59,7 +60,7 @@ const rules = [
   },
   {
     serialize(obj: any, children: any) {
-      if (obj.object == 'inline') {
+      if (obj.object === 'inline') {
         switch (obj.type) {
           case 'link':
             const href = obj.data.get('href');
@@ -123,8 +124,7 @@ const CoverImage = styled.img`
 `;
 
 export const Content = styled.div`
-  ${tw`mt-8 mb-16 text-lg`};
-  line-height: 1.625;
+  ${tw`mt-8 mb-16 text-lg leading-relaxed`};
   color: #494949;
 
   p,
@@ -208,7 +208,8 @@ export const PublicStory = ({ match }: Props) => {
 
   useEffect(() => {
     getUserFile();
-  }, [false]);
+    // eslint-disable-next-line
+  }, []);
 
   if (loading) {
     return <Container>Loading ...</Container>;
@@ -232,7 +233,7 @@ export const PublicStory = ({ match }: Props) => {
         </Helmet>
         <Title className="sigle-title">{file.title}</Title>
         <StoryDate className="sigle-date">
-          {format(file.createdAt, 'DD MMMM YYYY')}
+          {format(file.createdAt, 'dd MMMM yyyy')}
         </StoryDate>
         {file.coverImage && (
           <Cover>

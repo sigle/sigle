@@ -24,7 +24,7 @@ export const Protected = ({ children }: Props) => {
           toast.error(error.message);
         });
     }
-  }, [false]);
+  }, []);
 
   if (loggingIn) {
     return <div>Loading ...</div>;

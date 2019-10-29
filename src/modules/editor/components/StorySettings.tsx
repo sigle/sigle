@@ -1,5 +1,5 @@
 import React from 'react';
-import styled, { css } from 'styled-components/macro';
+import styled, { css } from 'styled-components';
 import tw from 'tailwind.macro';
 import { MdClose, MdAddAPhoto, MdDelete } from 'react-icons/md';
 import { Story } from '../../../types';
@@ -7,7 +7,7 @@ import { Story } from '../../../types';
 const containerSize = 450;
 
 const Container = styled.div<{ open: boolean }>`
-  ${tw`fixed pin-r pin-t pin-b bg-grey-light z-10 px-8 pb-8`};
+  ${tw`fixed right-0 top-0 bottom-0 bg-grey-light z-10 px-8 pb-8`};
   width: ${containerSize}px;
   max-width: 100%;
   transition: transform 0.3s ease;
@@ -42,7 +42,7 @@ const ImageEmpty = styled.div`
 `;
 
 const ImageEmptyIcon = styled.div`
-  ${tw`absolute pin-b pin-r p-2 flex items-center text-grey-dark`};
+  ${tw`absolute bottom-0 right-0 p-2 flex items-center text-grey-dark`};
 `;
 
 const Image = styled.img`
