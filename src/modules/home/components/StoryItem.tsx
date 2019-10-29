@@ -4,7 +4,7 @@ import styled from 'styled-components/macro';
 import tw from 'tailwind.macro';
 import Tippy from '@tippy.js/react';
 import { IoIosEye } from 'react-icons/io';
-import { format } from 'date-fns';
+import format from 'date-fns/format';
 import { ButtonOutline } from '../../../components';
 import { SubsetStory, BlockstackUser } from '../../../types';
 
@@ -108,7 +108,7 @@ export const StoryItem = ({
         </div>
       </StoryTitleContainer>
 
-      <StoryDate>{format(story.createdAt, 'HH:mm DD MMMM YYYY')}</StoryDate>
+      <StoryDate>{format(story.createdAt, 'HH:mm dd MMMM yyyy')}</StoryDate>
       <StoryText>{story.content}</StoryText>
     </StoryContainer>
   );

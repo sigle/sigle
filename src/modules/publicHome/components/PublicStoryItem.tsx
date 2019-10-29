@@ -2,7 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import styled, { css } from 'styled-components/macro';
 import tw from 'tailwind.macro';
-import { format } from 'date-fns';
+import format from 'date-fns/format';
 import { SubsetStory } from '../../../types';
 import { config } from '../../../config';
 
@@ -74,7 +74,7 @@ export const PublicStoryItem = ({ username, story }: Props) => (
       <StoryTitle as={Link} to={`/${username}/${story.id}`}>
         {story.title}
       </StoryTitle>
-      <StoryDate>{format(story.createdAt, 'DD MMMM YYYY')}</StoryDate>
+      <StoryDate>{format(story.createdAt, 'dd MMMM yyyy')}</StoryDate>
       <StoryText>{story.content}</StoryText>
       <StoryButton to={`/${username}/${story.id}`}>Read more</StoryButton>
     </StoryContainerContent>

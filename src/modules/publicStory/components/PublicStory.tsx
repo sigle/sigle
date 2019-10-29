@@ -8,7 +8,7 @@ import { Value } from 'slate';
 import Html from 'slate-html-serializer';
 import dompurify from 'dompurify';
 import { toast } from 'react-toastify';
-import { format } from 'date-fns';
+import format from 'date-fns/format';
 import { Story } from '../../../types';
 import { Container } from '../../../components';
 import { NotFound } from '../../layout/components/NotFound';
@@ -228,7 +228,7 @@ export const PublicStory = ({ match }: Props) => {
         </Helmet>
         <Title className="sigle-title">{file.title}</Title>
         <StoryDate className="sigle-date">
-          {format(file.createdAt, 'DD MMMM YYYY')}
+          {format(file.createdAt, 'dd MMMM yyyy')}
         </StoryDate>
         {file.coverImage && (
           <CoverImage className="sigle-cover" src={file.coverImage} />
