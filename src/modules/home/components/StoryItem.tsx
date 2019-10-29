@@ -70,8 +70,6 @@ export const StoryItem = ({
                 ? 'View my story'
                 : 'You need to publish your article to view it'
             }
-            arrow={true}
-            arrowType="round"
             theme="light-border"
           >
             <StoryTitleIcon>

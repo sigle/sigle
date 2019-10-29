@@ -36,7 +36,7 @@
   ],
   "dependencies": {
     "@sentry/browser": "5.7.1",
-    "@tippy.js/react": "2.1.1",
+    "@tippy.js/react": "3.1.0",
     "blockstack": "19.3.0",
     "date-fns": "2.6.0",
     "dompurify": "1.0.10",
