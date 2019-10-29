@@ -35,7 +35,7 @@
     "not op_mini all"
   ],
   "dependencies": {
-    "@sentry/browser": "4.6.4",
+    "@sentry/browser": "5.7.1",
     "@tippy.js/react": "2.1.1",
     "blockstack": "19.0.0",
     "date-fns": "1.30.1",
