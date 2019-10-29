@@ -366,18 +366,18 @@ export const SlateEditor = ({
   };
 
   const renderBlockButton = (type: string, Icon: any) => {
-    if (!editorRef.current) return;
-
-    const editor = editorRef.current;
-    const { value } = editor;
-    const { document, blocks } = value;
-
     let isActive = hasBlock(type);
 
     if (['numbered-list', 'bulleted-list'].includes(type)) {
-      if (blocks.size > 0) {
-        const parent = document.getParent(blocks.first().key);
-        isActive = hasBlock('list-item') && parent && parent.type === type;
+      const editor = editorRef.current;
+      if (editor) {
+        const { value } = editor;
+        const { document, blocks } = value;
+
+        if (blocks.size > 0) {
+          const parent = document.getParent(blocks.first().key);
+          isActive = hasBlock('list-item') && parent && parent.type === type;
+        }
       }
     }
 
