@@ -43,7 +43,11 @@ const StyledLinkContainer = styled.div`
 `;
 
 const StyledLink = styled(Link)`
-  ${tw`no-underline text-black`};
+  ${tw`no-underline text-black flex`};
+`;
+
+const StyledMdArrowBack = styled(MdArrowBack)`
+  ${tw`mr-2`};
 `;
 
 const Input = styled.input`
@@ -411,7 +415,7 @@ export const SlateEditor = ({
     <PageContainer>
       <StyledLinkContainer>
         <StyledLink to="/">
-          <MdArrowBack /> Back to my stories
+          <StyledMdArrowBack /> Back to my stories
         </StyledLink>
       </StyledLinkContainer>
       <PageTitleContainer>
