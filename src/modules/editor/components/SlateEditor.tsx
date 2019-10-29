@@ -1,5 +1,5 @@
 import React, { useState, useRef } from 'react';
-import styled from 'styled-components/macro';
+import styled from 'styled-components';
 import tw from 'tailwind.macro';
 import { toast } from 'react-toastify';
 import { Editor } from 'slate-react';
@@ -226,7 +226,7 @@ export const SlateEditor = ({
     const { document } = value;
 
     // Handle everything but list buttons.
-    if (type != 'bulleted-list' && type != 'numbered-list') {
+    if (type !== 'bulleted-list' && type !== 'numbered-list') {
       const isActive = hasBlock(type);
       const isList = hasBlock('list-item');
 
@@ -244,7 +244,7 @@ export const SlateEditor = ({
       const isType = value.blocks.some((block: any) => {
         return !!document.getClosest(
           block.key,
-          (parent: any) => parent.type == type
+          (parent: any) => parent.type === type
         );
       });
 
@@ -256,7 +256,7 @@ export const SlateEditor = ({
       } else if (isList) {
         editor
           .unwrapBlock(
-            type == 'bulleted-list' ? 'numbered-list' : 'bulleted-list'
+            type === 'bulleted-list' ? 'numbered-list' : 'bulleted-list'
           )
           .wrapBlock(type);
       } else {
@@ -287,15 +287,15 @@ export const SlateEditor = ({
   };
 
   const hasMark = (type: string) => {
-    return value.activeMarks.some((mark: any) => mark.type == type);
+    return value.activeMarks.some((mark: any) => mark.type === type);
   };
 
   const hasBlock = (type: string) => {
-    return value.blocks.some((node: any) => node.type == type);
+    return value.blocks.some((node: any) => node.type === type);
   };
 
   const hasLinks = () => {
-    return value.inlines.some(inline => !!(inline && inline.type == 'link'));
+    return value.inlines.some(inline => !!(inline && inline.type === 'link'));
   };
 
   const renderNode = (props: any, _: any, next: any) => {

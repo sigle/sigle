@@ -1,5 +1,5 @@
 import React from 'react';
-import styled from 'styled-components/macro';
+import styled from 'styled-components';
 import tw from 'tailwind.macro';
 import { Link } from 'react-router-dom';
 import jungle from '../../../img/jungle.png';

@@ -1,6 +1,6 @@
 import React from 'react';
 import { useWindowSize } from 'react-use';
-import styled from 'styled-components/macro';
+import styled from 'styled-components';
 import tw from 'tailwind.macro';
 import { userSession } from '../../../utils/blockstack';
 import logo from '../../../img/logo.png';

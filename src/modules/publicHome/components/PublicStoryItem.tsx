@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import styled, { css } from 'styled-components/macro';
+import styled, { css } from 'styled-components';
 import tw from 'tailwind.macro';
 import format from 'date-fns/format';
 import { SubsetStory } from '../../../types';

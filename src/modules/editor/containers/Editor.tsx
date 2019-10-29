@@ -35,7 +35,7 @@ export const Editor = ({ match }: Props) => {
 
   useEffect(() => {
     loadStoryFile();
-  }, [false]);
+  }, []);
 
   return (
     <Component

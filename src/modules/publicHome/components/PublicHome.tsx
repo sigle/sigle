@@ -62,7 +62,7 @@ export const PublicHome = ({ match }: Props) => {
 
   useEffect(() => {
     getUserFile();
-  }, [false]);
+  }, []);
 
   if (loading) {
     return <Container>Loading ...</Container>;

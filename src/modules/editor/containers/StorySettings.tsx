@@ -33,7 +33,7 @@ export const StorySettings = ({
 
   const handleDelete = async () => {
     try {
-      const result = confirm('Do you really want to delete this story?');
+      const result = window.confirm('Do you really want to delete this story?');
       if (!result) {
         return;
       }

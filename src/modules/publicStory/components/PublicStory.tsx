@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import * as blockstack from 'blockstack';
 import { Helmet } from 'react-helmet';
 import { RouteComponentProps } from 'react-router';
-import styled, { css } from 'styled-components/macro';
+import styled, { css } from 'styled-components';
 import tw from 'tailwind.macro';
 import { Value } from 'slate';
 import Html from 'slate-html-serializer';
@@ -17,7 +17,7 @@ import { Link } from 'react-router-dom';
 const rules = [
   {
     serialize(obj: any, children: any) {
-      if (obj.object == 'block') {
+      if (obj.object === 'block') {
         switch (obj.type) {
           case 'paragraph':
             return <p className={obj.data.get('className')}>{children}</p>;
@@ -44,7 +44,7 @@ const rules = [
   },
   {
     serialize(obj: any, children: any) {
-      if (obj.object == 'mark') {
+      if (obj.object === 'mark') {
         switch (obj.type) {
           case 'bold':
             return <strong>{children}</strong>;
@@ -58,7 +58,7 @@ const rules = [
   },
   {
     serialize(obj: any, children: any) {
-      if (obj.object == 'inline') {
+      if (obj.object === 'inline') {
         switch (obj.type) {
           case 'link':
             const href = obj.data.get('href');
@@ -204,7 +204,7 @@ export const PublicStory = ({ match }: Props) => {
 
   useEffect(() => {
     getUserFile();
-  }, [false]);
+  }, []);
 
   if (loading) {
     return <Container>Loading ...</Container>;

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { createGlobalStyle } from 'styled-components/macro';
+import { createGlobalStyle } from 'styled-components';
 import { userSession } from '../../../utils/blockstack';
 import { AppBar } from './AppBar';
 import { BlockstackUser } from '../../../types';
@@ -33,7 +33,7 @@ export const LoggedIn = ({ children }: Props) => {
 
   useEffect(() => {
     loadUserData();
-  }, [false]);
+  }, []);
 
   // TODO style it
   if (loading) {

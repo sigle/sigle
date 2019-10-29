@@ -1,7 +1,7 @@
 import React, { Suspense } from 'react';
 import { Router, Switch, Route } from 'react-router';
 import { ToastContainer } from 'react-toastify';
-import { createGlobalStyle } from 'styled-components/macro';
+import { createGlobalStyle } from 'styled-components';
 import { LoggedIn, Protected } from './modules/layout';
 import { history } from './utils';
 import { PublicStory } from './modules/publicStory';
