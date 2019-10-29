@@ -36,6 +36,9 @@ export const Footer = () => {
       <StyledLink href="https://github.com/pradel/sigle" target="_blank">
         GitHub
       </StyledLink>
+      <StyledLink href="https://t.me/sigleapp" target="_blank">
+        Telegram
+      </StyledLink>
     </StyledContainer>
   );
 };

@@ -13,6 +13,7 @@ import { Story } from '../../../types';
 import { Container } from '../../../components';
 import { NotFound } from '../../layout/components/NotFound';
 import { Link } from 'react-router-dom';
+import { config } from '../../../config';
 
 const rules = [
   {
@@ -78,7 +79,7 @@ export const Header = styled.div`
 export const HeaderContainer = styled.div`
   ${tw`mx-auto px-4 flex`};
   width: 100%;
-  max-width: 1000px;
+  max-width: 768px;
 `;
 
 export const HeaderTitle = styled.div`
@@ -90,7 +91,7 @@ export const HeaderLink = styled(Link)`
 `;
 
 const StyledContainer = styled(Container)<{ hasCover: boolean }>`
-  max-width: 850px;
+  max-width: 768px;
 
   ${props =>
     !props.hasCover &&
@@ -103,21 +104,28 @@ const StyledContainer = styled(Container)<{ hasCover: boolean }>`
 
 const Title = styled.div`
   ${tw`text-4xl mt-16 font-bold text-center`};
-  font-family: 'Libre Baskerville', serif;
 `;
 
 const StoryDate = styled.div`
   ${tw`text-sm mt-4 text-center text-pink`};
 `;
 
+const Cover = styled.div`
+  ${tw`mt-8 -ml-4 -mr-4`};
+
+  @media (min-width: ${config.breakpoints.xl}px) {
+    ${tw`-ml-20 -mr-20`};
+  }
+`;
+
 const CoverImage = styled.img`
-  ${tw`mt-8`};
-  display: block;
-  max-width: 100%;
+  ${tw`m-auto`};
 `;
 
 export const Content = styled.div`
-  ${tw`text-base mt-8 mb-16 leading-tight`};
+  ${tw`mt-8 mb-16 text-lg`};
+  line-height: 1.625;
+  color: #494949;
 
   p,
   ol,
@@ -129,6 +137,28 @@ export const Content = styled.div`
     min-height: 1rem;
   }
 
+  li + li {
+    ${tw`mt-2`};
+  }
+
+  blockquote {
+    ${tw`mb-4 py-4 px-4 italic text-sm`};
+    border-left: 3px solid #ccc;
+    letter-spacing: 0.01rem;
+  }
+
+  h1 {
+    ${tw`mt-6 mb-4 text-4xl`};
+  }
+
+  h2 {
+    ${tw`mt-6 mb-4 text-3xl`};
+  }
+
+  h3 {
+    ${tw`mt-6 mb-4 text-2xl`};
+  }
+
   a {
     ${tw`text-pink`};
   }
@@ -138,32 +168,6 @@ export const Content = styled.div`
     display: block;
     max-width: 100%;
     max-height: 100em;
-  }
-
-  blockquote {
-    ${tw`mb-4 py-4 px-4 italic text-sm`};
-    border-left: 3px solid #ccc;
-    font-family: 'Libre Baskerville', serif;
-    letter-spacing: 0.01rem;
-  }
-
-  li + li {
-    ${tw`mt-2`};
-  }
-
-  h1 {
-    ${tw`mt-6 mb-4 text-4xl`};
-    font-family: 'Libre Baskerville', serif;
-  }
-
-  h2 {
-    ${tw`mt-6 mb-4 text-3xl`};
-    font-family: 'Libre Baskerville', serif;
-  }
-
-  h3 {
-    ${tw`mt-6 mb-4 text-2xl`};
-    font-family: 'Libre Baskerville', serif;
   }
 `;
 
@@ -231,7 +235,9 @@ export const PublicStory = ({ match }: Props) => {
           {format(file.createdAt, 'dd MMMM yyyy')}
         </StoryDate>
         {file.coverImage && (
-          <CoverImage className="sigle-cover" src={file.coverImage} />
+          <Cover>
+            <CoverImage className="sigle-cover" src={file.coverImage} />
+          </Cover>
         )}
         <Content
           className="sigle-content"

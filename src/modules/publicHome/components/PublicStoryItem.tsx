@@ -39,7 +39,6 @@ const StoryContainerContent = styled.div<{ hasCover: boolean }>`
 
 const StoryTitle = styled.div<{ to?: string }>`
   ${tw`text-2xl font-bold no-underline text-black`};
-  font-family: 'Libre Baskerville', serif;
 `;
 
 const StoryDate = styled.div`

@@ -19,6 +19,7 @@ type Props = RouteComponentProps<{ username: string }>;
 
 const StyledContainer = styled(Container)`
   ${tw`mt-4`};
+  max-width: 768px;
 `;
 
 const NoStories = styled.p`
