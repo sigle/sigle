@@ -1,11 +1,8 @@
 import nanoid from 'nanoid';
-import { createBrowserHistory } from 'history';
 import { Value } from 'slate';
 import Plain from 'slate-plain-serializer';
 import { userSession } from './blockstack';
 import { StoryFile, Story, SubsetStory } from '../types';
-
-export const history = createBrowserHistory();
 
 const storiesFileName = 'stories.json';
 const publicStoriesFileName = 'publicStories.json';

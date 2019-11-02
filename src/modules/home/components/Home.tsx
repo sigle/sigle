@@ -4,7 +4,6 @@ import tw from 'tailwind.macro';
 import { Container, Button, Tabs, Tab } from '../../../components';
 import { StoryItem } from '../';
 import { SubsetStory, BlockstackUser } from '../../../types';
-import three from '../../../img/three.png';
 
 export const PageContainer = styled(Container)`
   ${tw`mt-8`};
@@ -85,7 +84,7 @@ export const Home = ({
 
       {showIllu && (
         <IlluContainer>
-          <Illu src={three} alt="Three" />
+          <Illu src="/static/img/three.png" alt="Three" />
           <p>Shoot the "new story" button to start.</p>
         </IlluContainer>
       )}

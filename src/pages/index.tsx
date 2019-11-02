@@ -1,20 +1,16 @@
 import React from 'react';
-import styled from 'styled-components';
 import { Protected } from '../modules/auth/Protected';
 import { LoggedIn } from '../modules/layout/components/LoggedIn';
+import { Home } from '../modules/home';
 
-const Title = styled.h1`
-  font-size: 50px;
-`;
-
-const Home = () => {
+const HomePage = () => {
   return (
     <Protected>
       <LoggedIn>
-        <Title>Welcome to Next.js!</Title>
+        <Home />
       </LoggedIn>
     </Protected>
   );
 };
 
-export default Home;
+export default HomePage;
