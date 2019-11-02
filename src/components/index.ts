@@ -24,8 +24,8 @@ export const Tab = styled.div`
   }
 `;
 
-export const Button = styled.button<{ to?: string }>`
-  ${tw`bg-pink text-white py-2 px-8 rounded-full no-underline`};
+export const Button = styled.button`
+  ${tw`bg-pink text-white py-2 px-8 rounded-full no-underline cursor-pointer`};
 `;
 
 export const ButtonOutline = styled.button<{ to?: string }>`
