@@ -3,6 +3,11 @@ import App from 'next/app';
 import Router from 'next/router';
 import Fathom from 'fathom-client';
 import { createGlobalStyle } from 'styled-components';
+import { ToastContainer } from 'react-toastify';
+// TODO add tippy.js only on the pages that are using it
+import 'tippy.js/dist/tippy.css';
+import 'tippy.js/themes/light-border.css';
+import 'react-toastify/dist/ReactToastify.css';
 import '../generated/tailwind.css';
 import { config } from '../config';
 
@@ -45,6 +50,7 @@ export default class MyApp extends App {
       <React.Fragment>
         <GlobalStyle />
         <FathomTrack />
+        <ToastContainer autoClose={3000} toastClassName="reactToastify" />
         <Component {...pageProps} />
       </React.Fragment>
     );
