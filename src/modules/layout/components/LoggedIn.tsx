@@ -1,15 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import { createGlobalStyle } from 'styled-components';
 import { userSession } from '../../../utils/blockstack';
 import { AppBar } from './AppBar';
 import { BlockstackUser } from '../../../types';
 import { Footer } from './Footer';
-
-const GlobalStyle = createGlobalStyle`
-  body {
-    font-family: 'Roboto', sans-serif;
-  }
-`;
 
 interface Props {
   children: React.ReactChild;
@@ -52,7 +45,6 @@ export const LoggedIn = ({ children }: Props) => {
 
   return (
     <React.Fragment>
-      <GlobalStyle />
       <AppBar user={user} />
 
       {children}

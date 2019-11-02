@@ -37,9 +37,6 @@ export const Protected = ({ children }: Props) => {
     }
   }, []);
 
-  console.log('loggingIn', loggingIn);
-  console.log('loggedIn', loggedIn);
-
   if (loggingIn) {
     // TODO nice loading
     return <div>Loading ...</div>;

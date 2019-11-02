@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import Link from 'next/link';
 import styled from 'styled-components';
 import tw from 'tailwind.macro';
 import Tippy from '@tippy.js/react';
@@ -40,8 +40,10 @@ export const AppBar = ({ user }: Props) => {
 
   return (
     <StyledContainer>
-      <Link to="/">
-        <Logo src="/img/logo.png" alt="logo" />
+      <Link href="/">
+        <a>
+          <Logo src="/img/logo.png" alt="logo" />
+        </a>
       </Link>
       <RightContainer>
         <Tippy content={user.username} theme="light-border">

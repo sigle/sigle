@@ -50,8 +50,8 @@ export default class MyApp extends App {
       <React.Fragment>
         <GlobalStyle />
         <FathomTrack />
-        <ToastContainer autoClose={3000} toastClassName="reactToastify" />
         <Component {...pageProps} />
+        <ToastContainer autoClose={3000} toastClassName="reactToastify" />
       </React.Fragment>
     );
   }
