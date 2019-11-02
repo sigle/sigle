@@ -3449,6 +3449,11 @@ fastq@^1.6.0:
   dependencies:
     reusify "^1.0.0"
 
+fathom-client@1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/fathom-client/-/fathom-client-1.0.0.tgz#de3127a9555081983654375789e665cc2e938c74"
+  integrity sha512-YUJJHGOm9KOIjoZDnQeCCPOKu28t6k+hPD49rGAV1/HTknAIDb8J2u5foPg2JgsWcB4ORvJjN/7xSTUPvRK4/Q==
+
 fbjs@^0.8.5:
   version "0.8.17"
   resolved "https://registry.yarnpkg.com/fbjs/-/fbjs-0.8.17.tgz#c4d598ead6949112653d6588b01a5cdcd9f90fdd"

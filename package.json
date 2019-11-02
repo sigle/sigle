@@ -43,6 +43,7 @@
     "blockstack": "19.3.0",
     "date-fns": "2.6.0",
     "dompurify": "2.0.7",
+    "fathom-client": "1.0.0",
     "history": "4.10.1",
     "immutable": "4.0.0-rc.12",
     "nanoid": "2.1.6",
