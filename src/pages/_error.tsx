@@ -15,12 +15,10 @@ const NotFoundTextContainer = styled(Container)`
 
 const NotFoundTitle = styled.div`
   ${tw`mb-2 text-5xl`};
-  font-family: 'Libre Baskerville', serif;
 `;
 
 const NotFoundSubTitle = styled.div`
   ${tw`mb-8 text-3xl`};
-  font-family: 'Libre Baskerville', serif;
 `;
 
 const NotFoundIllu = styled.img`
