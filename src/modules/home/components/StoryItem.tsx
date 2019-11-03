@@ -29,7 +29,7 @@ const StoryTitleIcon = styled.div`
 `;
 
 const StoryTitle = styled.div`
-  ${tw`flex text-2xl font-bold no-underline text-black`};
+  ${tw`flex text-2xl font-bold no-underline text-black cursor-pointer`};
 `;
 
 const StoryDate = styled.div`
@@ -61,7 +61,7 @@ export const StoryItem = ({
     <StoryContainer>
       <StoryTitleContainer>
         <StoryTitleContainerLeft>
-          <Link href={`/stories/${story.id}`}>
+          <Link href="/stories/[storyId]" as={`/stories/${story.id}`}>
             <StoryTitle as="a">{story.title}</StoryTitle>
           </Link>
           <Tippy
@@ -100,7 +100,7 @@ export const StoryItem = ({
               Unpublish
             </ButtonOutline>
           )}
-          <Link href={`/stories/${story.id}`}>
+          <Link href="/stories/[storyId]" as={`/stories/${story.id}`}>
             <ButtonOutline as="a">Edit</ButtonOutline>
           </Link>
         </div>
