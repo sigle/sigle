@@ -1,13 +1,10 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
-import * as blockstack from 'blockstack';
 import styled, { css } from 'styled-components';
 import tw from 'tailwind.macro';
 import { Value } from 'slate';
 import Html from 'slate-html-serializer';
-import dompurify from 'dompurify';
-import { toast } from 'react-toastify';
 import format from 'date-fns/format';
 import { Story } from '../../../types';
 import { Container } from '../../../components';
@@ -169,57 +166,16 @@ export const Content = styled.div`
   }
 `;
 
-export const PublicStory = () => {
+interface PublicStoryProps {
+  file: Story;
+}
+
+export const PublicStory = ({ file }: PublicStoryProps) => {
   const router = useRouter();
   const { username, storyId } = router.query as {
     username: string;
     storyId: string;
   };
-  const [loading, setLoading] = useState(true);
-  const [file, setFile] = useState<Story | null>(null);
-
-  const getUserFile = async () => {
-    setLoading(true);
-    try {
-      let fileUrl = await blockstack.getUserAppFileUrl(
-        storyId,
-        username,
-        window.location.origin
-      );
-      if (fileUrl) {
-        fileUrl = `${fileUrl}.json`;
-        const data = await fetch(fileUrl);
-        if (data.status === 200) {
-          const json = await data.json();
-          setFile(json);
-        }
-      }
-      setLoading(false);
-    } catch (error) {
-      // If story not found do nothing
-      if (error.message === 'Name not found') {
-        setLoading(false);
-        return;
-      }
-      console.error(error);
-      toast.error(error.message);
-      setLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    getUserFile();
-    // eslint-disable-next-line
-  }, []);
-
-  if (loading) {
-    return <Container>Loading ...</Container>;
-  }
-
-  if (!file) {
-    // TODO
-    return null;
-  }
 
   return (
     <React.Fragment>
@@ -248,9 +204,7 @@ export const PublicStory = () => {
         <Content
           className="sigle-content"
           dangerouslySetInnerHTML={{
-            __html: dompurify.sanitize(
-              html.serialize(Value.fromJSON(file.content))
-            ),
+            __html: html.serialize(Value.fromJSON(file.content)),
           }}
         />
       </StyledContainer>
