@@ -112,26 +112,7 @@ export const createNewEmptyStory = (): Story => {
     id: generateRandomId(),
     type: 'private',
     title: '',
-    content: {
-      document: {
-        nodes: [
-          {
-            object: 'block',
-            type: 'paragraph',
-            nodes: [
-              {
-                object: 'text',
-                leaves: [
-                  {
-                    text: '',
-                  },
-                ],
-              },
-            ],
-          },
-        ],
-      },
-    },
+    content: undefined,
     createdAt: now,
     updatedAt: now,
   };
@@ -140,7 +121,9 @@ export const createNewEmptyStory = (): Story => {
 const CONTENT_SUBSET_SIZE = 300;
 
 export const convertStoryToSubsetStory = (story: Story): SubsetStory => {
-  const plainContent = Plain.serialize(Value.fromJSON(story.content));
+  const plainContent = story.content
+    ? Plain.serialize(Value.fromJSON(story.content))
+    : '';
 
   return {
     id: story.id,

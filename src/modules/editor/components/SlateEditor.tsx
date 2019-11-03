@@ -127,6 +127,23 @@ const schema = {
   },
 };
 
+const emptyNode = {
+  document: {
+    nodes: [
+      {
+        object: 'block',
+        type: 'paragraph',
+        nodes: [
+          {
+            object: 'text',
+            text: '',
+          },
+        ],
+      },
+    ],
+  },
+};
+
 const slatePlugins = [SoftBreak({ shift: true })];
 
 // TODO warn user if he try to leave the page with unsaved changes
@@ -145,7 +162,11 @@ export const SlateEditor = ({
   const editorRef = useRef<any>(null);
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [loadingSave, setLoadingSave] = useState(false);
-  const [value, setValue] = useState(Value.fromJSON(story.content));
+  const [value, setValue] = useState(
+    story.content
+      ? Value.fromJSON(story.content)
+      : Value.fromJSON(emptyNode as any)
+  );
 
   const handleTextChange = ({ value }: any) => {
     setValue(value);
