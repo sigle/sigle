@@ -3,8 +3,8 @@
   "version": "0.0.1",
   "private": true,
   "scripts": {
-    "dev": "next",
-    "start": "next start",
+    "dev": "node server.js",
+    "start": "NODE_ENV=production node server.js",
     "build": "next build",
     "test": "yarn test:lint",
     "analyze": "BUNDLE_ANALYZE=both next build",
