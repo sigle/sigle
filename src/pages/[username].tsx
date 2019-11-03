@@ -1,4 +1,5 @@
 import React from 'react';
+import { NextPage } from 'next';
 import { lookupProfile } from 'blockstack';
 import { PublicHome } from '../modules/publicHome';
 import { config } from '../config';
@@ -10,7 +11,10 @@ interface PublicHomePageProps {
   file: StoryFile;
 }
 
-const PublicHomePage = ({ statusCode, file }: PublicHomePageProps) => {
+const PublicHomePage: NextPage<PublicHomePageProps> = ({
+  statusCode,
+  file,
+}) => {
   if (typeof statusCode === 'number') {
     return <Error statusCode={statusCode} />;
   }
@@ -18,14 +22,8 @@ const PublicHomePage = ({ statusCode, file }: PublicHomePageProps) => {
   return <PublicHome file={file} />;
 };
 
-PublicHomePage.getInitialProps = async ({
-  query,
-  res,
-}: {
-  query: any;
-  res: any;
-}) => {
-  const { username } = query;
+PublicHomePage.getInitialProps = async ({ query, res }) => {
+  const { username } = query as { username: string };
   let file;
   let statusCode: boolean | number = false;
   let userProfile;
@@ -57,7 +55,7 @@ PublicHomePage.getInitialProps = async ({
   }
 
   // If statusCode is not false we set the http response code
-  if (statusCode) {
+  if (statusCode && res) {
     res.statusCode = statusCode;
   }
   return { statusCode, file };

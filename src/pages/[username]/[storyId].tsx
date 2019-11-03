@@ -1,4 +1,5 @@
 import React from 'react';
+import { NextPage } from 'next';
 import { getUserAppFileUrl } from 'blockstack';
 import Error from '../_error';
 import { PublicStory } from '../../modules/publicStory';
@@ -10,7 +11,10 @@ interface PublicStoryPageProps {
   statusCode: number | boolean;
 }
 
-const PublicStoryPage = ({ file, statusCode }: PublicStoryPageProps) => {
+const PublicStoryPage: NextPage<PublicStoryPageProps> = ({
+  file,
+  statusCode,
+}) => {
   if (typeof statusCode === 'number') {
     return <Error statusCode={statusCode} />;
   }
@@ -18,14 +22,8 @@ const PublicStoryPage = ({ file, statusCode }: PublicStoryPageProps) => {
   return <PublicStory file={file} />;
 };
 
-PublicStoryPage.getInitialProps = async ({
-  query,
-  res,
-}: {
-  query: any;
-  res: any;
-}) => {
-  const { username, storyId } = query;
+PublicStoryPage.getInitialProps = async ({ query, res }) => {
+  const { username, storyId } = query as { username: string; storyId: string };
   let file;
   let statusCode: boolean | number = false;
   let fileUrl;
@@ -52,7 +50,7 @@ PublicStoryPage.getInitialProps = async ({
   }
 
   // If statusCode is not false we set the http response code
-  if (statusCode) {
+  if (statusCode && res) {
     res.statusCode = statusCode;
   }
   return { statusCode, file };
