@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import Link from 'next/link';
 import styled, { css } from 'styled-components';
 import tw from 'tailwind.macro';
 import format from 'date-fns/format';
@@ -37,8 +37,8 @@ const StoryContainerContent = styled.div<{ hasCover: boolean }>`
     `}
 `;
 
-const StoryTitle = styled.div<{ to?: string }>`
-  ${tw`text-2xl font-bold no-underline text-black`};
+const StoryTitle = styled.a`
+  ${tw`text-2xl font-bold no-underline text-black cursor-pointer`};
 `;
 
 const StoryDate = styled.div`
@@ -49,8 +49,8 @@ const StoryText = styled.div`
   ${tw`mt-4 text-grey-darker leading-tight`};
 `;
 
-const StoryButton = styled(Link)`
-  ${tw`inline-block mt-8 py-1 px-2 rounded-lg text-sm text-black border border-solid border-black no-underline`};
+const StoryButton = styled.a`
+  ${tw`inline-block mt-8 py-1 px-2 rounded-lg text-sm text-black border border-solid border-black no-underline cursor-pointer`};
 
   &:hover {
     ${tw`bg-black text-white`};
@@ -70,12 +70,14 @@ export const PublicStoryItem = ({ username, story }: Props) => (
       </StoryContainerImage>
     )}
     <StoryContainerContent hasCover={!!story.coverImage}>
-      <StoryTitle as={Link} to={`/${username}/${story.id}`}>
-        {story.title}
-      </StoryTitle>
+      <Link href="/[username]/[storyId]" as={`/${username}/${story.id}`}>
+        <StoryTitle>{story.title}</StoryTitle>
+      </Link>
       <StoryDate>{format(story.createdAt, 'dd MMMM yyyy')}</StoryDate>
       <StoryText>{story.content}</StoryText>
-      <StoryButton to={`/${username}/${story.id}`}>Read more</StoryButton>
+      <Link href="/[username]/[storyId]" as={`/${username}/${story.id}`}>
+        <StoryButton>Read more</StoryButton>
+      </Link>
     </StoryContainerContent>
   </StoryContainer>
 );

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
+import { useRouter } from 'next/router';
+import Link from 'next/link';
 import * as blockstack from 'blockstack';
-import { Helmet } from 'react-helmet';
-import { RouteComponentProps } from 'react-router';
 import styled, { css } from 'styled-components';
 import tw from 'tailwind.macro';
 import { Value } from 'slate';
@@ -11,8 +11,6 @@ import { toast } from 'react-toastify';
 import format from 'date-fns/format';
 import { Story } from '../../../types';
 import { Container } from '../../../components';
-import { NotFound } from '../../layout/components/NotFound';
-import { Link } from 'react-router-dom';
 import { config } from '../../../config';
 
 const rules = [
@@ -87,8 +85,8 @@ export const HeaderTitle = styled.div`
   ${tw`font-bold`};
 `;
 
-export const HeaderLink = styled(Link)`
-  ${tw`text-white no-underline ml-8`};
+export const HeaderLink = styled.a`
+  ${tw`text-white no-underline ml-8 cursor-pointer`};
 `;
 
 const StyledContainer = styled(Container)<{ hasCover: boolean }>`
@@ -171,9 +169,12 @@ export const Content = styled.div`
   }
 `;
 
-type Props = RouteComponentProps<{ username: string; storyId: string }>;
-
-export const PublicStory = ({ match }: Props) => {
+export const PublicStory = () => {
+  const router = useRouter();
+  const { username, storyId } = router.query as {
+    username: string;
+    storyId: string;
+  };
   const [loading, setLoading] = useState(true);
   const [file, setFile] = useState<Story | null>(null);
 
@@ -181,8 +182,8 @@ export const PublicStory = ({ match }: Props) => {
     setLoading(true);
     try {
       let fileUrl = await blockstack.getUserAppFileUrl(
-        match.params.storyId,
-        match.params.username,
+        storyId,
+        username,
         window.location.origin
       );
       if (fileUrl) {
@@ -216,21 +217,25 @@ export const PublicStory = ({ match }: Props) => {
   }
 
   if (!file) {
-    return <NotFound error="File not found" />;
+    // TODO
+    return null;
   }
 
   return (
     <React.Fragment>
       <Header>
         <HeaderContainer>
-          <HeaderTitle>{match.params.username}</HeaderTitle>
-          <HeaderLink to={`/${match.params.username}`}>Stories</HeaderLink>
+          <HeaderTitle>{username}</HeaderTitle>
+          <Link href="/[username]" as={`/${username}`}>
+            <HeaderLink>Stories</HeaderLink>
+          </Link>
         </HeaderContainer>
       </Header>
       <StyledContainer hasCover={!!file.coverImage}>
-        <Helmet>
+        {/* TODO SEO */}
+        {/* <Helmet>
           <title>{file.title}</title>
-        </Helmet>
+        </Helmet> */}
         <Title className="sigle-title">{file.title}</Title>
         <StoryDate className="sigle-date">
           {format(file.createdAt, 'dd MMMM yyyy')}
