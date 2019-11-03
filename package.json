@@ -5,12 +5,12 @@
   "scripts": {
     "dev": "next",
     "build": "next build",
-    "test": "TODO",
+    "test": "yarn test:lint",
     "analyze": "BUNDLE_ANALYZE=both next build",
     "analyze:server": "BUNDLE_ANALYZE=server next build",
     "analyze:browser": "BUNDLE_ANALYZE=browser next build",
     "prettier": "prettier --write '**/*.{js,ts,tsx,md,css}'",
-    "test:prettier": "prettier --list-different '**/*.{js,ts,tsx,md,css}'"
+    "test:lint": "eslint 'src/**/*.{js,ts,tsx}'"
   },
   "prettier": {
     "singleQuote": true,
@@ -72,10 +72,16 @@
     "@types/slate-plain-serializer": "0.6.1",
     "@types/slate-react": "0.22.6",
     "@types/styled-components": "4.1.20",
+    "@typescript-eslint/eslint-plugin": "2.5.0",
+    "@typescript-eslint/parser": "2.5.0",
     "@zeit/next-bundle-analyzer": "0.1.2",
     "@zeit/next-css": "1.0.1",
     "babel-plugin-macros": "2.6.1",
     "babel-plugin-styled-components": "1.10.6",
+    "eslint": "6.5.1",
+    "eslint-config-prettier": "6.4.0",
+    "eslint-plugin-prettier": "3.1.1",
+    "eslint-plugin-react": "7.16.0",
     "dotenv": "8.2.0",
     "husky": "3.0.9",
     "lint-staged": "9.4.2",

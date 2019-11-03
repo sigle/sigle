@@ -190,7 +190,6 @@ export const PublicStory = ({ story }: PublicStoryProps) => {
         openGraph={{
           type: 'website',
           url: seoUrl,
-          site_name: 'Sigle',
           title: seoTitle,
           description: seoDescription,
           images: [

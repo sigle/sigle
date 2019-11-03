@@ -74,7 +74,11 @@ export const StoryItem = ({
           >
             <StoryTitleIcon>
               {type === 'public' ? (
-                <a href={`/${user.username}/${story.id}`} target="_blank">
+                <a
+                  href={`/${user.username}/${story.id}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
                   <IoIosEye size={22} style={{ marginLeft: 6 }} />
                 </a>
               ) : (

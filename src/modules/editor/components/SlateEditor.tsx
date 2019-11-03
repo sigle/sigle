@@ -146,6 +146,18 @@ export const SlateEditor = ({
   const [loadingSave, setLoadingSave] = useState(false);
   const [value, setValue] = useState(Value.fromJSON(story.content));
 
+  const hasMark = (type: string) => {
+    return value.activeMarks.some((mark: any) => mark.type === type);
+  };
+
+  const hasBlock = (type: string) => {
+    return value.blocks.some((node: any) => node.type === type);
+  };
+
+  const hasLinks = () => {
+    return value.inlines.some(inline => !!(inline && inline.type === 'link'));
+  };
+
   const handleTextChange = ({ value }: any) => {
     setValue(value);
   };
@@ -288,18 +300,6 @@ export const SlateEditor = ({
 
     event.preventDefault();
     editor.toggleMark(mark);
-  };
-
-  const hasMark = (type: string) => {
-    return value.activeMarks.some((mark: any) => mark.type === type);
-  };
-
-  const hasBlock = (type: string) => {
-    return value.blocks.some((node: any) => node.type === type);
-  };
-
-  const hasLinks = () => {
-    return value.inlines.some(inline => !!(inline && inline.type === 'link'));
   };
 
   const renderBlock = (props: any, _: any, next: any) => {
