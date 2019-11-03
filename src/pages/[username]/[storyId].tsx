@@ -19,7 +19,7 @@ const PublicStoryPage: NextPage<PublicStoryPageProps> = ({
     return <Error statusCode={statusCode} />;
   }
 
-  return <PublicStory file={file} />;
+  return <PublicStory story={file} />;
 };
 
 PublicStoryPage.getInitialProps = async ({ query, res }) => {

@@ -49,6 +49,7 @@
     "immutable": "4.0.0-rc.12",
     "nanoid": "2.1.6",
     "next": "9.1.2",
+    "next-seo": "2.2.1",
     "react": "16.11.0",
     "react-dom": "16.11.0",
     "react-icons": "3.8.0",

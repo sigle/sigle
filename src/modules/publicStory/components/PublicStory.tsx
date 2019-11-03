@@ -6,6 +6,7 @@ import tw from 'tailwind.macro';
 import { Value } from 'slate';
 import Html from 'slate-html-serializer';
 import format from 'date-fns/format';
+import { NextSeo } from 'next-seo';
 import { Story } from '../../../types';
 import { Container } from '../../../components';
 import { config } from '../../../config';
@@ -167,18 +168,44 @@ export const Content = styled.div`
 `;
 
 interface PublicStoryProps {
-  file: Story;
+  story: Story;
 }
 
-export const PublicStory = ({ file }: PublicStoryProps) => {
+export const PublicStory = ({ story }: PublicStoryProps) => {
   const router = useRouter();
   const { username, storyId } = router.query as {
     username: string;
     storyId: string;
   };
 
+  const seoUrl = `${config.appUrl}/@${username}/${storyId}`;
+  const seoTitle = story.metaTitle || `${story.title} | Sigle`;
+  const seoDescription = story.metaDescription;
+
   return (
     <React.Fragment>
+      <NextSeo
+        title={seoTitle}
+        description={story.metaDescription}
+        openGraph={{
+          type: 'website',
+          url: seoUrl,
+          site_name: 'Sigle',
+          title: seoTitle,
+          description: seoDescription,
+          images: [
+            {
+              url: story.coverImage
+                ? story.coverImage
+                : `${config.appUrl}/static/icon-192x192.png`,
+            },
+          ],
+        }}
+        twitter={{
+          site: '@sigleapp',
+          cardType: story.coverImage ? 'summary_large_image' : 'summary',
+        }}
+      />
       <Header>
         <HeaderContainer>
           <HeaderTitle>{username}</HeaderTitle>
@@ -187,24 +214,20 @@ export const PublicStory = ({ file }: PublicStoryProps) => {
           </Link>
         </HeaderContainer>
       </Header>
-      <StyledContainer hasCover={!!file.coverImage}>
-        {/* TODO SEO */}
-        {/* <Helmet>
-          <title>{file.title}</title>
-        </Helmet> */}
-        <Title className="sigle-title">{file.title}</Title>
+      <StyledContainer hasCover={!!story.coverImage}>
+        <Title className="sigle-title">{story.title}</Title>
         <StoryDate className="sigle-date">
-          {format(file.createdAt, 'dd MMMM yyyy')}
+          {format(story.createdAt, 'dd MMMM yyyy')}
         </StoryDate>
-        {file.coverImage && (
+        {story.coverImage && (
           <Cover>
-            <CoverImage className="sigle-cover" src={file.coverImage} />
+            <CoverImage className="sigle-cover" src={story.coverImage} />
           </Cover>
         )}
         <Content
           className="sigle-content"
           dangerouslySetInnerHTML={{
-            __html: html.serialize(Value.fromJSON(file.content)),
+            __html: html.serialize(Value.fromJSON(story.content)),
           }}
         />
       </StyledContainer>
