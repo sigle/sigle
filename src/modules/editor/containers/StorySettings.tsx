@@ -32,6 +32,14 @@ export const StorySettings = ({
     onChangeStoryField('coverImage', src);
   };
 
+  const handleChangeMetaTitle = (value: string) => {
+    onChangeStoryField('metaTitle', value);
+  };
+
+  const handleChangeMetaDescription = (value: string) => {
+    onChangeStoryField('metaDescription', value);
+  };
+
   const handleDelete = async () => {
     try {
       const result = window.confirm('Do you really want to delete this story?');
@@ -82,6 +90,8 @@ export const StorySettings = ({
       onClose={onClose}
       loadingDelete={loadingDelete}
       onDelete={handleDelete}
+      onChangeMetaTitle={handleChangeMetaTitle}
+      onChangeMetaDescription={handleChangeMetaDescription}
       onUploadImage={handleUploadImage}
       nodeRef={nodeRef}
     />

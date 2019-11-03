@@ -3,6 +3,7 @@ import styled, { css } from 'styled-components';
 import tw from 'tailwind.macro';
 import { MdClose, MdAddAPhoto, MdDelete } from 'react-icons/md';
 import { Story } from '../../../types';
+import { Button } from '../../../components';
 
 const containerSize = 450;
 
@@ -26,7 +27,6 @@ const TitleContainer = styled.div`
 
 const Title = styled.div`
   ${tw`text-2xl`};
-  font-family: 'Libre Baskerville', serif;
 `;
 
 const CloseButton = styled.div`
@@ -46,20 +46,28 @@ const ImageEmptyIcon = styled.div`
 `;
 
 const Image = styled.img`
-  ${tw`mb-4 cursor-pointer`};
-  max-width: 100%;
+  ${tw`cursor-pointer w-full`};
 `;
 
-const Label = styled.div`
-  ${tw`mb-2 text-sm`};
+const FormRow = styled.div`
+  ${tw`py-3`};
 `;
 
-// const Input = styled.input`
-//   ${tw`mb-2 pb-1 bg-transparent border-b border-solid border-black w-full text-sm`};
-//   &:focus {
-//     outline: 0;
-//   }
-// `;
+const FormLabel = styled.label`
+  ${tw`w-full block tracking-wide font-bold text-black mb-2`};
+`;
+
+const FormInput = styled.input`
+  ${tw`appearance-none block w-full bg-white border border-grey rounded py-3 px-3 text-sm leading-tight focus:outline-none`};
+`;
+
+const FormTextarea = styled.textarea`
+  ${tw`appearance-none block w-full bg-white border border-grey rounded py-3 px-3 text-sm leading-tight focus:outline-none`};
+`;
+
+const FormHelper = styled.p`
+  ${tw`text-sm text-grey-darker mt-1`};
+`;
 
 const ButtonLink = styled.button`
   ${tw`flex items-center text-pink text-sm mt-2`};
@@ -78,6 +86,8 @@ interface Props {
   onClose: () => void;
   loadingDelete: boolean;
   onDelete: () => void;
+  onChangeMetaTitle: (value: string) => void;
+  onChangeMetaDescription: (value: string) => void;
   onUploadImage: () => void;
   nodeRef: React.RefObject<HTMLDivElement>;
 }
@@ -88,6 +98,8 @@ export const StorySettings = ({
   story,
   loadingDelete,
   onDelete,
+  onChangeMetaTitle,
+  onChangeMetaDescription,
   onUploadImage,
   nodeRef,
 }: Props) => {
@@ -100,24 +112,50 @@ export const StorySettings = ({
         </CloseButton>
       </TitleContainer>
 
-      <Label>Cover image:</Label>
-      {!story.coverImage && (
-        <ImageEmpty onClick={onUploadImage}>
-          <span>Upload story image</span>
-          <ImageEmptyIcon>
-            <MdAddAPhoto />
-          </ImageEmptyIcon>
-        </ImageEmpty>
-      )}
-      {story.coverImage && (
-        <Image src={story.coverImage} onClick={onUploadImage} />
-      )}
+      <form>
+        <FormRow>
+          <FormLabel>Cover image</FormLabel>
+          {!story.coverImage && (
+            <ImageEmpty onClick={onUploadImage}>
+              <span>Upload cover image</span>
+              <ImageEmptyIcon>
+                <MdAddAPhoto />
+              </ImageEmptyIcon>
+            </ImageEmpty>
+          )}
+          {story.coverImage && (
+            <Image src={story.coverImage} onClick={onUploadImage} />
+          )}
+        </FormRow>
 
-      {/* <Label>Story URL:</Label>
-      <Input type="text" value={story.id} />
+        <FormRow>
+          <FormLabel>Meta title</FormLabel>
+          <FormInput
+            value={story.metaTitle || ''}
+            onChange={e => onChangeMetaTitle(e.target.value)}
+            maxLength={100}
+          />
+          <FormHelper>
+            Recommended: 70 characters. You have used{' '}
+            {story.metaTitle ? story.metaTitle.length : 0} characters.
+          </FormHelper>
+        </FormRow>
 
-      <Label>Excerpt:</Label>
-      <Input type="text" value={story.content} /> */}
+        <FormRow>
+          <FormLabel>Meta description</FormLabel>
+          <FormTextarea
+            rows={3}
+            value={story.metaDescription || ''}
+            onChange={e => onChangeMetaDescription(e.target.value)}
+            maxLength={250}
+          />
+          <FormHelper>
+            Recommended: 156 characters. You have used{' '}
+            {story.metaDescription ? story.metaDescription.length : 0}{' '}
+            characters.
+          </FormHelper>
+        </FormRow>
+      </form>
 
       {loadingDelete ? (
         <ButtonLink disabled>
