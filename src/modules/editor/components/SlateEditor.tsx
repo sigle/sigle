@@ -20,7 +20,7 @@ import {
   MdLooksOne,
   MdSettings,
 } from 'react-icons/md';
-import { Link } from 'react-router-dom';
+import Link from 'next/link';
 import {
   PageContainer,
   PageTitleContainer,
@@ -42,8 +42,8 @@ const StyledLinkContainer = styled.div`
   ${tw`mb-4`};
 `;
 
-const StyledLink = styled(Link)`
-  ${tw`no-underline text-black flex`};
+const StyledLink = styled.a`
+  ${tw`no-underline text-black flex cursor-pointer`};
 `;
 
 const StyledMdArrowBack = styled(MdArrowBack)`
@@ -427,9 +427,11 @@ export const SlateEditor = ({
   return (
     <PageContainer>
       <StyledLinkContainer>
-        <StyledLink to="/">
-          <StyledMdArrowBack /> Back to my stories
-        </StyledLink>
+        <Link href="/">
+          <StyledLink>
+            <StyledMdArrowBack /> Back to my stories
+          </StyledLink>
+        </Link>
       </StyledLinkContainer>
       <PageTitleContainer>
         <PageTitle>Editor</PageTitle>

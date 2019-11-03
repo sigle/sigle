@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { toast } from 'react-toastify';
+import { useRouter } from 'next/router';
 import { StorySettings as Component } from '../components/StorySettings';
 import { Story } from '../../../types';
 import {
   getStoriesFile,
   saveStoriesFile,
   deleteStoryFile,
-  history,
 } from '../../../utils';
 
 interface Props {
@@ -22,6 +22,7 @@ export const StorySettings = ({
   onClose,
   onChangeStoryField,
 }: Props) => {
+  const router = useRouter();
   const nodeRef = React.createRef<HTMLDivElement>();
   const [loadingDelete, setLoadingDelete] = useState(false);
 
@@ -47,8 +48,7 @@ export const StorySettings = ({
       file.stories.splice(index, 1);
       await saveStoriesFile(file);
       await deleteStoryFile(story);
-
-      history.push(`/`);
+      router.push(`/`);
     } catch (error) {
       console.error(error);
       toast.error(error.message);
