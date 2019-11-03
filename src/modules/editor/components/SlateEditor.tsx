@@ -37,6 +37,7 @@ import { Story } from '../../../types';
 import { Content } from '../../publicStory/components/PublicStory';
 import { StorySettings } from '../containers/StorySettings';
 import { config } from '../../../config';
+import { hasMark, hasBlock, hasLinks } from './utils';
 
 const StyledLinkContainer = styled.div`
   ${tw`mb-4`};
@@ -146,18 +147,6 @@ export const SlateEditor = ({
   const [loadingSave, setLoadingSave] = useState(false);
   const [value, setValue] = useState(Value.fromJSON(story.content));
 
-  const hasMark = (type: string) => {
-    return value.activeMarks.some((mark: any) => mark.type === type);
-  };
-
-  const hasBlock = (type: string) => {
-    return value.blocks.some((node: any) => node.type === type);
-  };
-
-  const hasLinks = () => {
-    return value.inlines.some(inline => !!(inline && inline.type === 'link'));
-  };
-
   const handleTextChange = ({ value }: any) => {
     setValue(value);
   };
@@ -199,7 +188,7 @@ export const SlateEditor = ({
     const editor = editorRef.current;
     const { value } = editor;
 
-    if (hasLinks()) {
+    if (hasLinks(value)) {
       editor.command(unwrapLink);
     } else if (value.selection.isExpanded) {
       const href = window.prompt('Enter the URL of the link:');
@@ -243,8 +232,8 @@ export const SlateEditor = ({
 
     // Handle everything but list buttons.
     if (type !== 'bulleted-list' && type !== 'numbered-list') {
-      const isActive = hasBlock(type);
-      const isList = hasBlock('list-item');
+      const isActive = hasBlock(value, type);
+      const isList = hasBlock(value, 'list-item');
 
       if (isList) {
         editor
@@ -256,7 +245,7 @@ export const SlateEditor = ({
       }
     } else {
       // Handle the extra wrapping required for list buttons.
-      const isList = hasBlock('list-item');
+      const isList = hasBlock(value, 'list-item');
       const isType = value.blocks.some((block: any) => {
         return !!document.getClosest(
           block.key,
@@ -354,7 +343,7 @@ export const SlateEditor = ({
   };
 
   const renderMarkButton = (type: string, Icon: any) => {
-    const isActive = hasMark(type);
+    const isActive = hasMark(value, type);
 
     return (
       <SlateToolbarButton
@@ -366,7 +355,7 @@ export const SlateEditor = ({
   };
 
   const renderBlockButton = (type: string, Icon: any) => {
-    let isActive = hasBlock(type);
+    let isActive = hasBlock(value, type);
 
     if (['numbered-list', 'bulleted-list'].includes(type)) {
       const editor = editorRef.current;
@@ -376,7 +365,8 @@ export const SlateEditor = ({
 
         if (blocks.size > 0) {
           const parent = document.getParent(blocks.first().key);
-          isActive = hasBlock('list-item') && parent && parent.type === type;
+          isActive =
+            hasBlock(value, 'list-item') && parent && parent.type === type;
         }
       }
     }
