@@ -78,7 +78,7 @@ export const Home = () => {
         await saveStoriesFile(storiesFile);
         await saveStoryFile(story);
 
-        router.push(`/stories/${story.id}`);
+        router.push('/stories/[storyId]', `/stories/${story.id}`);
       }
     } catch (error) {
       toast.error(error.message);
