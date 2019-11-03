@@ -10,39 +10,47 @@ interface Props {
 
 export const Protected = ({ children }: Props) => {
   const router = useRouter();
-  const [loggedIn, setLoggedIn] = useState(
-    config.isServer ? false : !!userSession.isUserSignedIn()
-  );
-  const [loggingIn, setLoggingIn] = useState(
-    config.isServer ? true : !!userSession.isSignInPending()
-  );
+  const [state, setState] = useState({
+    loggedIn: config.isServer ? false : !!userSession.isUserSignedIn(),
+    loggingIn: config.isServer ? true : !!userSession.isSignInPending(),
+  });
 
   useEffect(() => {
-    if (userSession.isUserSignedIn() && !loggedIn) {
-      setLoggingIn(false);
-      setLoggedIn(true);
+    if (userSession.isUserSignedIn() && !state.loggedIn) {
+      setState({
+        loggedIn: true,
+        loggingIn: false,
+      });
     } else if (userSession.isSignInPending()) {
       userSession
         .handlePendingSignIn()
         .then(() => {
-          setLoggingIn(false);
-          setLoggedIn(true);
+          setState({
+            loggedIn: true,
+            loggingIn: false,
+          });
         })
         .catch((error: Error) => {
-          setLoggingIn(false);
+          setState({
+            loggedIn: false,
+            loggingIn: false,
+          });
           toast.error(error.message);
         });
-    } else if (loggingIn) {
-      setLoggingIn(false);
+    } else if (state.loggingIn) {
+      setState({
+        loggedIn: false,
+        loggingIn: false,
+      });
     }
   }, []);
 
-  if (loggingIn) {
+  if (state.loggingIn) {
     // TODO nice loading
     return <div>Loading ...</div>;
   }
 
-  if (!loggedIn) {
+  if (!state.loggedIn) {
     router.push('/login');
     return null;
   }
