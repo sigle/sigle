@@ -6,6 +6,8 @@ import { createGlobalStyle } from 'styled-components';
 import { DefaultSeo } from 'next-seo';
 import { ToastContainer } from 'react-toastify';
 import { config as blockstackConfig } from 'blockstack';
+import NProgress from 'nprogress';
+import 'nprogress/nprogress.css';
 // TODO add tippy.js only on the pages that are using it
 import 'tippy.js/dist/tippy.css';
 import 'tippy.js/themes/light-border.css';
@@ -46,6 +48,14 @@ const GlobalStyle = createGlobalStyle`
     font-family: 'Roboto', sans-serif;
   }
 `;
+
+/**
+ * Loading bar
+ */
+
+Router.events.on('routeChangeStart', () => NProgress.start());
+Router.events.on('routeChangeComplete', () => NProgress.done());
+Router.events.on('routeChangeError', () => NProgress.done());
 
 export default class MyApp extends App {
   render() {
