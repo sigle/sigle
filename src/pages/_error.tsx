@@ -1,10 +1,9 @@
 import React from 'react';
 import styled from 'styled-components';
 import tw from 'tailwind.macro';
-import { Link } from 'react-router-dom';
-import jungle from '../../../img/jungle.png';
-import { Button, Container } from '../../../components';
-import { config } from '../../../config';
+import Link from 'next/link';
+import { Button, Container } from '../components';
+import { config } from '../config';
 
 const NotFoundContainer = styled(Container)`
   ${tw`mt-8 mb-8 flex flex-col items-center text-center md:flex-row md:text-left`};
@@ -16,16 +15,10 @@ const NotFoundTextContainer = styled(Container)`
 
 const NotFoundTitle = styled.div`
   ${tw`mb-2 text-5xl`};
-  font-family: 'Libre Baskerville', serif;
 `;
 
 const NotFoundSubTitle = styled.div`
   ${tw`mb-8 text-3xl`};
-  font-family: 'Libre Baskerville', serif;
-`;
-
-const NotFoundText = styled.div`
-  ${tw`mb-4 text-base`};
 `;
 
 const NotFoundIllu = styled.img`
@@ -38,24 +31,30 @@ const NotFoundIllu = styled.img`
   }
 `;
 
-interface Props {
-  error: string;
+interface ErrorProps {
+  statusCode: number;
 }
 
-export const NotFound = ({ error }: Props) => {
+const Error = ({ statusCode }: ErrorProps) => {
   return (
     <NotFoundContainer>
-      <NotFoundIllu src={jungle} alt="One" />
+      <NotFoundIllu src="/static/img/jungle.png" alt="One" />
       <NotFoundTextContainer>
-        <NotFoundTitle>404 in sight!</NotFoundTitle>
+        <NotFoundTitle>{statusCode} in sight!</NotFoundTitle>
         <NotFoundSubTitle>
           Looks like you and Julia went too far...
         </NotFoundSubTitle>
-        <NotFoundText>{error}</NotFoundText>
-        <Button as={Link} to="/">
-          Go to the app
-        </Button>
+        <Link href="/">
+          <Button as="a">Go to the app</Button>
+        </Link>
       </NotFoundTextContainer>
     </NotFoundContainer>
   );
 };
+
+Error.getInitialProps = ({ res, err }: any) => {
+  const statusCode = res ? res.statusCode : err ? err.statusCode : 404;
+  return { statusCode };
+};
+
+export default Error;

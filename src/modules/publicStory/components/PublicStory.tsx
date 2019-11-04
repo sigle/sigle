@@ -1,18 +1,14 @@
-import React, { useEffect, useState } from 'react';
-import * as blockstack from 'blockstack';
-import { Helmet } from 'react-helmet';
-import { RouteComponentProps } from 'react-router';
+import React from 'react';
+import { useRouter } from 'next/router';
+import Link from 'next/link';
 import styled, { css } from 'styled-components';
 import tw from 'tailwind.macro';
 import { Value } from 'slate';
 import Html from 'slate-html-serializer';
-import dompurify from 'dompurify';
-import { toast } from 'react-toastify';
 import format from 'date-fns/format';
+import { NextSeo } from 'next-seo';
 import { Story } from '../../../types';
 import { Container } from '../../../components';
-import { NotFound } from '../../layout/components/NotFound';
-import { Link } from 'react-router-dom';
 import { config } from '../../../config';
 
 const rules = [
@@ -87,8 +83,8 @@ export const HeaderTitle = styled.div`
   ${tw`font-bold`};
 `;
 
-export const HeaderLink = styled(Link)`
-  ${tw`text-white no-underline ml-8`};
+export const HeaderLink = styled.a`
+  ${tw`text-white no-underline ml-8 cursor-pointer`};
 `;
 
 const StyledContainer = styled(Container)<{ hasCover: boolean }>`
@@ -171,81 +167,66 @@ export const Content = styled.div`
   }
 `;
 
-type Props = RouteComponentProps<{ username: string; storyId: string }>;
+interface PublicStoryProps {
+  story: Story;
+}
 
-export const PublicStory = ({ match }: Props) => {
-  const [loading, setLoading] = useState(true);
-  const [file, setFile] = useState<Story | null>(null);
-
-  const getUserFile = async () => {
-    setLoading(true);
-    try {
-      let fileUrl = await blockstack.getUserAppFileUrl(
-        match.params.storyId,
-        match.params.username,
-        window.location.origin
-      );
-      if (fileUrl) {
-        fileUrl = `${fileUrl}.json`;
-        const data = await fetch(fileUrl);
-        if (data.status === 200) {
-          const json = await data.json();
-          setFile(json);
-        }
-      }
-      setLoading(false);
-    } catch (error) {
-      // If story not found do nothing
-      if (error.message === 'Name not found') {
-        setLoading(false);
-        return;
-      }
-      console.error(error);
-      toast.error(error.message);
-      setLoading(false);
-    }
+export const PublicStory = ({ story }: PublicStoryProps) => {
+  const router = useRouter();
+  const { username, storyId } = router.query as {
+    username: string;
+    storyId: string;
   };
 
-  useEffect(() => {
-    getUserFile();
-    // eslint-disable-next-line
-  }, []);
-
-  if (loading) {
-    return <Container>Loading ...</Container>;
-  }
-
-  if (!file) {
-    return <NotFound error="File not found" />;
-  }
+  const seoUrl = `${config.appUrl}/${username}/${storyId}`;
+  const seoTitle = story.metaTitle || `${story.title} | Sigle`;
+  const seoDescription = story.metaDescription;
 
   return (
     <React.Fragment>
+      <NextSeo
+        title={seoTitle}
+        description={story.metaDescription}
+        openGraph={{
+          type: 'website',
+          url: seoUrl,
+          title: seoTitle,
+          description: seoDescription,
+          images: [
+            {
+              url: story.coverImage
+                ? story.coverImage
+                : `${config.appUrl}/static/icon-192x192.png`,
+            },
+          ],
+        }}
+        twitter={{
+          site: '@sigleapp',
+          cardType: story.coverImage ? 'summary_large_image' : 'summary',
+        }}
+      />
       <Header>
         <HeaderContainer>
-          <HeaderTitle>{match.params.username}</HeaderTitle>
-          <HeaderLink to={`/${match.params.username}`}>Stories</HeaderLink>
+          <HeaderTitle>{username}</HeaderTitle>
+          <Link href="/[username]" as={`/${username}`}>
+            <HeaderLink>Stories</HeaderLink>
+          </Link>
         </HeaderContainer>
       </Header>
-      <StyledContainer hasCover={!!file.coverImage}>
-        <Helmet>
-          <title>{file.title}</title>
-        </Helmet>
-        <Title className="sigle-title">{file.title}</Title>
+      <StyledContainer hasCover={!!story.coverImage}>
+        <Title className="sigle-title">{story.title}</Title>
         <StoryDate className="sigle-date">
-          {format(file.createdAt, 'dd MMMM yyyy')}
+          {format(story.createdAt, 'dd MMMM yyyy')}
         </StoryDate>
-        {file.coverImage && (
+        {story.coverImage && (
           <Cover>
-            <CoverImage className="sigle-cover" src={file.coverImage} />
+            <CoverImage className="sigle-cover" src={story.coverImage} />
           </Cover>
         )}
         <Content
           className="sigle-content"
           dangerouslySetInnerHTML={{
-            __html: dompurify.sanitize(
-              html.serialize(Value.fromJSON(file.content))
-            ),
+            __html: html.serialize(Value.fromJSON(story.content)),
           }}
         />
       </StyledContainer>

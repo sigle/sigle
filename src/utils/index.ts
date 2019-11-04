@@ -1,11 +1,8 @@
 import nanoid from 'nanoid';
-import { createBrowserHistory } from 'history';
 import { Value } from 'slate';
 import Plain from 'slate-plain-serializer';
 import { userSession } from './blockstack';
 import { StoryFile, Story, SubsetStory } from '../types';
-
-export const history = createBrowserHistory();
 
 const storiesFileName = 'stories.json';
 const publicStoriesFileName = 'publicStories.json';
@@ -115,26 +112,7 @@ export const createNewEmptyStory = (): Story => {
     id: generateRandomId(),
     type: 'private',
     title: '',
-    content: {
-      document: {
-        nodes: [
-          {
-            object: 'block',
-            type: 'paragraph',
-            nodes: [
-              {
-                object: 'text',
-                leaves: [
-                  {
-                    text: '',
-                  },
-                ],
-              },
-            ],
-          },
-        ],
-      },
-    },
+    content: undefined,
     createdAt: now,
     updatedAt: now,
   };
@@ -143,7 +121,9 @@ export const createNewEmptyStory = (): Story => {
 const CONTENT_SUBSET_SIZE = 300;
 
 export const convertStoryToSubsetStory = (story: Story): SubsetStory => {
-  const plainContent = Plain.serialize(Value.fromJSON(story.content));
+  const plainContent = story.content
+    ? Plain.serialize(Value.fromJSON(story.content))
+    : '';
 
   return {
     id: story.id,

@@ -5,16 +5,17 @@ import {
   createNewEmptyStory,
   saveStoryFile,
   convertStoryToSubsetStory,
-  history,
   getStoriesFile,
   saveStoriesFile,
 } from '../../../utils';
 import { userSession } from '../../../utils/blockstack';
 import { StoryFile, SubsetStory, BlockstackUser } from '../../../types';
+import { useRouter } from 'next/router';
 
 type Tab = 'published' | 'drafts';
 
 export const Home = () => {
+  const router = useRouter();
   const [loadingCreate, setLoadingCreate] = useState(false);
   const [selectedTab, setSelectedTab] = useState<Tab>('drafts');
   const [user, setUser] = useState<BlockstackUser | null>(null);
@@ -77,7 +78,7 @@ export const Home = () => {
         await saveStoriesFile(storiesFile);
         await saveStoryFile(story);
 
-        history.push(`/stories/${story.id}`);
+        router.push('/stories/[storyId]', `/stories/${story.id}`);
       }
     } catch (error) {
       toast.error(error.message);

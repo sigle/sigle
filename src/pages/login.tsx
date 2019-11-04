@@ -1,17 +1,13 @@
 import React from 'react';
-import { useWindowSize } from 'react-use';
 import styled, { css } from 'styled-components';
 import tw from 'tailwind.macro';
-import { userSession } from '../../../utils/blockstack';
-import logo from '../../../img/logo.png';
-import logoLogin from '../../../img/logo-login.png';
-import loginImage from '../../../img/login.png';
-import { Button } from '../../../components';
-import { config } from '../../../config';
+import { userSession } from '../utils/blockstack';
+import { config } from '../config';
+import { Button } from '../components';
 
 const BackgroundContainer = styled.div`
-  ${tw`flex`};
-  width: 100%;
+  ${tw`flex w-full h-screen`};
+
   @media (max-width: ${config.breakpoints.md}px) {
     display: none;
   }
@@ -24,13 +20,12 @@ const BackgroundColumn = styled.div<{ right?: boolean }>`
     props.right &&
     css`
       ${tw`bg-white bg-no-repeat bg-contain bg-left`};
-      background-image: url("${logoLogin}");
+      background-image: url('/static/img/logo-login.png');
     `}
 `;
 
 const AbsoluteContainer = styled.div`
-  ${tw`absolute`};
-  width: 100%;
+  ${tw`absolute w-full h-screen`};
   top: 0;
 `;
 
@@ -81,23 +76,21 @@ const Link = styled.a`
   ${tw`text-pink`};
 `;
 
-export const Login = () => {
-  const { height } = useWindowSize();
-
+const Login = () => {
   const handleLogin = () => {
     userSession.redirectToSignIn();
   };
 
   return (
     <React.Fragment>
-      <BackgroundContainer style={{ height }}>
+      <BackgroundContainer>
         <BackgroundColumn />
         <BackgroundColumn right />
       </BackgroundContainer>
-      <AbsoluteContainer style={{ height }}>
+      <AbsoluteContainer>
         <Container>
           <Column left>
-            <Logo src={logo} alt="Logo" />
+            <Logo src="/static/img/logo.png" alt="Logo" />
             <Text>
               Because Sigle is working on the decentralized internet thanks to
               the blockchain technology, you’ll be redicrected to{' '}
@@ -122,10 +115,12 @@ export const Login = () => {
             </div>
           </Column>
           <Column right>
-            <Illu src={loginImage} alt="Login image" />
+            <Illu src="/static/img/login.png" alt="Login image" />
           </Column>
         </Container>
       </AbsoluteContainer>
     </React.Fragment>
   );
 };
+
+export default Login;

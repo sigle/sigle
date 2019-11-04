@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { toast } from 'react-toastify';
+import { useRouter } from 'next/router';
 import { StorySettings as Component } from '../components/StorySettings';
 import { Story } from '../../../types';
 import {
   getStoriesFile,
   saveStoriesFile,
   deleteStoryFile,
-  history,
 } from '../../../utils';
 
 interface Props {
@@ -22,6 +22,7 @@ export const StorySettings = ({
   onClose,
   onChangeStoryField,
 }: Props) => {
+  const router = useRouter();
   const nodeRef = React.createRef<HTMLDivElement>();
   const [loadingDelete, setLoadingDelete] = useState(false);
 
@@ -29,6 +30,14 @@ export const StorySettings = ({
     const src = window.prompt('Enter the URL of the image:');
     if (!src) return;
     onChangeStoryField('coverImage', src);
+  };
+
+  const handleChangeMetaTitle = (value: string) => {
+    onChangeStoryField('metaTitle', value);
+  };
+
+  const handleChangeMetaDescription = (value: string) => {
+    onChangeStoryField('metaDescription', value);
   };
 
   const handleDelete = async () => {
@@ -47,8 +56,7 @@ export const StorySettings = ({
       file.stories.splice(index, 1);
       await saveStoriesFile(file);
       await deleteStoryFile(story);
-
-      history.push(`/`);
+      router.push(`/`);
     } catch (error) {
       console.error(error);
       toast.error(error.message);
@@ -82,6 +90,8 @@ export const StorySettings = ({
       onClose={onClose}
       loadingDelete={loadingDelete}
       onDelete={handleDelete}
+      onChangeMetaTitle={handleChangeMetaTitle}
+      onChangeMetaDescription={handleChangeMetaDescription}
       onUploadImage={handleUploadImage}
       nodeRef={nodeRef}
     />

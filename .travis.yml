@@ -6,9 +6,10 @@ notifications:
 sudo: false
 
 cache:
-  yarn: true
   directories:
+    - $HOME/.cache/yarn
     - node_modules
+    - .next/cache
 
 node_js:
   - '11'
@@ -21,5 +22,3 @@ script:
   - yarn build
   # Run the tests
   - yarn test
-  # Check if the files are formatted
-  - yarn test:prettier

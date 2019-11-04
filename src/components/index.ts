@@ -24,12 +24,12 @@ export const Tab = styled.div`
   }
 `;
 
-export const Button = styled.button<{ to?: string }>`
-  ${tw`bg-pink text-white py-2 px-8 rounded-full no-underline`};
+export const Button = styled.button`
+  ${tw`bg-pink text-white py-2 px-8 rounded-full no-underline cursor-pointer`};
 `;
 
-export const ButtonOutline = styled.button<{ to?: string }>`
-  ${tw`py-1 px-2 rounded-lg text-sm text-pink border border-solid border-pink no-underline`};
+export const ButtonOutline = styled.button`
+  ${tw`py-1 px-2 rounded-lg text-sm text-pink border border-solid border-pink no-underline cursor-pointer`};
 
   &:hover {
     ${tw`bg-pink text-white`};

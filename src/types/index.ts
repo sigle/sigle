@@ -30,6 +30,14 @@ export interface Story {
    * public: unencrypted
    */
   type: 'private' | 'public';
+  /**
+   * Meta title that will be used for SEO
+   */
+  metaTitle?: string;
+  /**
+   * Meta description that will be used for SEO
+   */
+  metaDescription?: string;
   createdAt: number;
   updatedAt: number;
 }

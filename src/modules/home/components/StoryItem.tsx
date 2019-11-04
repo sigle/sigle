@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import Link from 'next/link';
 import styled from 'styled-components';
 import tw from 'tailwind.macro';
 import Tippy from '@tippy.js/react';
@@ -28,8 +28,8 @@ const StoryTitleIcon = styled.div`
   }
 `;
 
-const StoryTitle = styled.div<{ to: string }>`
-  ${tw`flex text-2xl font-bold no-underline text-black`};
+const StoryTitle = styled.div`
+  ${tw`flex text-2xl font-bold no-underline text-black cursor-pointer`};
 `;
 
 const StoryDate = styled.div`
@@ -61,9 +61,9 @@ export const StoryItem = ({
     <StoryContainer>
       <StoryTitleContainer>
         <StoryTitleContainerLeft>
-          <StoryTitle as={Link} to={`/stories/${story.id}`}>
-            {story.title}
-          </StoryTitle>
+          <Link href="/stories/[storyId]" as={`/stories/${story.id}`}>
+            <StoryTitle as="a">{story.title}</StoryTitle>
+          </Link>
           <Tippy
             content={
               type === 'public'
@@ -74,9 +74,13 @@ export const StoryItem = ({
           >
             <StoryTitleIcon>
               {type === 'public' ? (
-                <Link to={`/${user.username}/${story.id}`} target="_blank">
+                <a
+                  href={`/${user.username}/${story.id}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
                   <IoIosEye size={22} style={{ marginLeft: 6 }} />
-                </Link>
+                </a>
               ) : (
                 <IoIosEye size={22} style={{ marginLeft: 6 }} />
               )}
@@ -100,9 +104,9 @@ export const StoryItem = ({
               Unpublish
             </ButtonOutline>
           )}
-          <ButtonOutline as={Link} to={`/stories/${story.id}`}>
-            Edit
-          </ButtonOutline>
+          <Link href="/stories/[storyId]" as={`/stories/${story.id}`}>
+            <ButtonOutline as="a">Edit</ButtonOutline>
+          </Link>
         </div>
       </StoryTitleContainer>
 
