@@ -178,7 +178,7 @@ export const PublicStory = ({ story }: PublicStoryProps) => {
     storyId: string;
   };
 
-  const seoUrl = `${config.appUrl}/@${username}/${storyId}`;
+  const seoUrl = `${config.appUrl}/${username}/${storyId}`;
   const seoTitle = story.metaTitle || `${story.title} | Sigle`;
   const seoDescription = story.metaDescription;
 
