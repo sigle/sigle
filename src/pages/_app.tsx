@@ -50,6 +50,11 @@ const GlobalStyle = createGlobalStyle`
     font-family: 'Roboto', sans-serif;
   }
 
+  /* For the toasts */
+  .reactToastify.Toastify__toast--success {
+    background-color: #4db6a1;
+  }
+
   /* For the nprogress bar */
   #nprogress .bar {
     ${tw`bg-pink`};
