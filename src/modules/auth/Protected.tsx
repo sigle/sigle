@@ -1,8 +1,22 @@
 import React, { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 import { useRouter } from 'next/router';
+import styled from 'styled-components';
+import tw from 'tailwind.macro';
 import { userSession } from '../../utils/blockstack';
 import { config } from '../../config';
+
+const FullScreenLoadingContainer = styled.div`
+  ${tw`w-full h-screen flex flex-col items-center justify-center`};
+
+  img {
+    width: 300px;
+  }
+
+  p {
+    ${tw`mt-4 text-xl`};
+  }
+`;
 
 interface Props {
   children: JSX.Element;
@@ -46,8 +60,12 @@ export const Protected = ({ children }: Props) => {
   }, []);
 
   if (state.loggingIn) {
-    // TODO nice loading
-    return <div>Loading ...</div>;
+    return (
+      <FullScreenLoadingContainer>
+        <img src="/static/img/logo.png" alt="Logo Sigle" />
+        <p>Loading ...</p>
+      </FullScreenLoadingContainer>
+    );
   }
 
   if (!state.loggedIn) {
