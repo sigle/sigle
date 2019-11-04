@@ -2,6 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 import tw from 'tailwind.macro';
 import { Container } from '../../../components';
+import { config } from '../../../config';
 
 const StyledContainer = styled(Container)`
   ${tw`mt-8 py-8 text-right border-t border-solid border-grey-light`};
@@ -30,13 +31,13 @@ export const Footer = () => {
       >
         Starter guide
       </StyledLink>
-      <StyledLink href="https://twitter.com/sigleapp" target="_blank">
+      <StyledLink href={config.twitterUrl} target="_blank">
         Twitter
       </StyledLink>
-      <StyledLink href="https://github.com/pradel/sigle" target="_blank">
+      <StyledLink href={config.githubUrl} target="_blank">
         GitHub
       </StyledLink>
-      <StyledLink href="https://t.me/sigleapp" target="_blank">
+      <StyledLink href={config.telegramUrl} target="_blank">
         Telegram
       </StyledLink>
     </StyledContainer>
