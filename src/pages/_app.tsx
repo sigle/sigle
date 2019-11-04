@@ -3,6 +3,7 @@ import App from 'next/app';
 import Router from 'next/router';
 import Fathom from 'fathom-client';
 import { createGlobalStyle } from 'styled-components';
+import tw from 'tailwind.macro';
 import { DefaultSeo } from 'next-seo';
 import { ToastContainer } from 'react-toastify';
 import { config as blockstackConfig } from 'blockstack';
@@ -14,6 +15,7 @@ import 'tippy.js/themes/light-border.css';
 import 'react-toastify/dist/ReactToastify.css';
 import '../generated/tailwind.css';
 import { config } from '../config';
+import { colors } from '../utils/colors';
 
 blockstackConfig.logLevel = 'info';
 
@@ -46,6 +48,18 @@ Router.events.on('routeChangeComplete', () => {
 const GlobalStyle = createGlobalStyle`
   body {
     font-family: 'Roboto', sans-serif;
+  }
+
+  /* For the nprogress bar */
+  #nprogress .bar {
+    ${tw`bg-pink`};
+  }
+  #nprogress .peg {
+    box-shadow: 0 0 10px ${colors.pink}, 0 0 5px ${colors.pink};
+  }
+  #nprogress .spinner-icon { 
+    border-top-color: ${colors.pink};
+    border-left-color: ${colors.pink};
   }
 `;
 
