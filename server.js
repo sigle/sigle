@@ -1,10 +1,17 @@
 const { createServer } = require('http');
 const { parse } = require('url');
 const next = require('next');
+const Sentry = require('@sentry/node');
 
 const dev = process.env.NODE_ENV !== 'production';
 const app = next({ dev });
 const handle = app.getRequestHandler();
+
+if (process.env.SENTRY_DSN_SERVER) {
+  Sentry.init({
+    dsn: process.env.SENTRY_DSN_SERVER,
+  });
+}
 
 app.prepare().then(() => {
   createServer((req, res) => {
