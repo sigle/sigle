@@ -10,7 +10,7 @@ const FullScreenLoadingContainer = styled.div`
   ${tw`w-full h-screen flex flex-col items-center justify-center`};
 
   img {
-    width: 300px;
+    width: 250px;
   }
 
   p {
