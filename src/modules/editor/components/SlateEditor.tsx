@@ -2,7 +2,12 @@ import React, { useState, useRef } from 'react';
 import styled from 'styled-components';
 import tw from 'tailwind.macro';
 import { toast } from 'react-toastify';
-import { Editor } from 'slate-react';
+import {
+  Editor,
+  RenderBlockProps,
+  RenderInlineProps,
+  RenderMarkProps,
+} from 'slate-react';
 import SoftBreak from 'slate-soft-break';
 import { Block, Value } from 'slate';
 import {
@@ -55,7 +60,7 @@ const Input = styled.input`
   ${tw`outline-none w-full text-2xl`};
 `;
 
-const Image = styled.img`
+const Image = styled.img<{ selected: boolean }>`
   display: block;
   max-width: 100%;
   max-height: 20em;
@@ -311,7 +316,10 @@ export const SlateEditor = ({
     editor.toggleMark(mark);
   };
 
-  const renderBlock = (props: any, _: any, next: any) => {
+  /**
+   * Render a Slate block.
+   */
+  const renderBlock = (props: RenderBlockProps, _: any, next: () => any) => {
     const { attributes, children, node, isFocused } = props;
 
     switch (node.type) {
@@ -334,20 +342,15 @@ export const SlateEditor = ({
       case 'image':
         const src = node.data.get('src');
         return <Image src={src} selected={isFocused} {...attributes} />;
-      case 'link': {
-        const href = node.data.get('href');
-        return (
-          <a {...attributes} href={href}>
-            {children}
-          </a>
-        );
-      }
       default:
         return next();
     }
   };
 
-  const renderMark = (props: any, _: any, next: any) => {
+  /**
+   * Render a Slate mark.
+   */
+  const renderMark = (props: RenderMarkProps, _: any, next: () => any) => {
     const { children, mark, attributes } = props;
 
     switch (mark.type) {
@@ -357,6 +360,26 @@ export const SlateEditor = ({
         return <em {...attributes}>{children}</em>;
       case 'underlined':
         return <u {...attributes}>{children}</u>;
+      default:
+        return next();
+    }
+  };
+
+  /**
+   * Render a Slate inline.
+   */
+  const renderInline = (props: RenderInlineProps, _: any, next: () => any) => {
+    const { attributes, children, node } = props;
+
+    switch (node.type) {
+      case 'link':
+        const { data } = node;
+        const href = data.get('href');
+        return (
+          <a {...attributes} href={href}>
+            {children}
+          </a>
+        );
       default:
         return next();
     }
@@ -501,6 +524,7 @@ export const SlateEditor = ({
               placeholder="Text"
               renderBlock={renderBlock}
               renderMark={renderMark}
+              renderInline={renderInline}
             />
           </StyledContent>
         </SlateContainer>
