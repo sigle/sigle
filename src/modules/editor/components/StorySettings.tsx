@@ -8,7 +8,7 @@ import { Button } from '../../../components';
 const containerSize = 450;
 
 const Container = styled.div<{ open: boolean }>`
-  ${tw`fixed right-0 top-0 bottom-0 bg-grey-light z-10 px-8 pb-8`};
+  ${tw`fixed right-0 top-0 bottom-0 bg-grey-light z-10 px-8 pb-8 overflow-y-auto`};
   width: ${containerSize}px;
   max-width: 100%;
   transition: transform 0.3s ease;
