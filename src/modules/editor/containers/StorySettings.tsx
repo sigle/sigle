@@ -40,6 +40,12 @@ export const StorySettings = ({
     onChangeStoryField('metaDescription', value);
   };
 
+  const handleChangeCreatedAt = (value: string) => {
+    if (value) {
+      onChangeStoryField('createdAt', new Date(value).getTime());
+    }
+  };
+
   const handleDelete = async () => {
     try {
       const result = window.confirm('Do you really want to delete this story?');
@@ -92,6 +98,7 @@ export const StorySettings = ({
       onDelete={handleDelete}
       onChangeMetaTitle={handleChangeMetaTitle}
       onChangeMetaDescription={handleChangeMetaDescription}
+      onChangeCreatedAt={handleChangeCreatedAt}
       onUploadImage={handleUploadImage}
       nodeRef={nodeRef}
     />

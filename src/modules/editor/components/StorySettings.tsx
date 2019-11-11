@@ -2,6 +2,7 @@ import React from 'react';
 import styled, { css } from 'styled-components';
 import tw from 'tailwind.macro';
 import { MdClose, MdAddAPhoto, MdDelete } from 'react-icons/md';
+import format from 'date-fns/format';
 import { Story } from '../../../types';
 import { Button } from '../../../components';
 
@@ -88,6 +89,7 @@ interface Props {
   onDelete: () => void;
   onChangeMetaTitle: (value: string) => void;
   onChangeMetaDescription: (value: string) => void;
+  onChangeCreatedAt: (value: string) => void;
   onUploadImage: () => void;
   nodeRef: React.RefObject<HTMLDivElement>;
 }
@@ -100,6 +102,7 @@ export const StorySettings = ({
   onDelete,
   onChangeMetaTitle,
   onChangeMetaDescription,
+  onChangeCreatedAt,
   onUploadImage,
   nodeRef,
 }: Props) => {
@@ -126,6 +129,15 @@ export const StorySettings = ({
           {story.coverImage && (
             <Image src={story.coverImage} onClick={onUploadImage} />
           )}
+        </FormRow>
+
+        <FormRow>
+          <FormLabel>Created at</FormLabel>
+          <FormInput
+            type="date"
+            value={format(story.createdAt, 'yyyy-MM-dd')}
+            onChange={e => onChangeCreatedAt(e.target.value)}
+          />
         </FormRow>
 
         <FormRow>
