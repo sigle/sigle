@@ -5,6 +5,7 @@ import Fathom from 'fathom-client';
 import { userSession } from '../utils/blockstack';
 import { config } from '../config';
 import { Button } from '../components';
+import { Goals } from '../utils/fathom';
 
 const BackgroundContainer = styled.div`
   ${tw`flex w-full h-screen`};
@@ -79,7 +80,7 @@ const Link = styled.a`
 
 const Login = () => {
   const handleLogin = () => {
-    Fathom.trackGoal('IHBJQCC0', 0);
+    Fathom.trackGoal(Goals.LOGIN, 0);
     userSession.redirectToSignIn();
   };
 
