@@ -4,7 +4,6 @@ import tw from 'tailwind.macro';
 import { MdClose, MdAddAPhoto, MdDelete } from 'react-icons/md';
 import format from 'date-fns/format';
 import { Story } from '../../../types';
-import { Button } from '../../../components';
 
 const containerSize = 450;
 
