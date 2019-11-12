@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { toast } from 'react-toastify';
+import Fathom from 'fathom-client';
 import { Home as Component } from '../components/Home';
 import {
   createNewEmptyStory,
@@ -11,6 +12,7 @@ import {
 import { userSession } from '../../../utils/blockstack';
 import { StoryFile, SubsetStory, BlockstackUser } from '../../../types';
 import { useRouter } from 'next/router';
+import { Goals } from '../../../utils/fathom';
 
 type Tab = 'published' | 'drafts';
 
@@ -78,6 +80,7 @@ export const Home = () => {
         await saveStoriesFile(storiesFile);
         await saveStoryFile(story);
 
+        Fathom.trackGoal(Goals.CREATE_NEW_STORY, 0);
         router.push('/stories/[storyId]', `/stories/${story.id}`);
       }
     } catch (error) {
