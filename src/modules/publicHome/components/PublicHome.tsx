@@ -1,5 +1,4 @@
 import React from 'react';
-import { toast } from 'react-toastify';
 import styled from 'styled-components';
 import tw from 'tailwind.macro';
 import { useRouter } from 'next/router';
