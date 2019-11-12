@@ -438,8 +438,12 @@ export const SlateEditor = ({
       if (index === -1) {
         throw new Error('File not found in list');
       }
+      // First we save the story
       await saveStoryFile(updatedStory);
+      // Then we need to update the subset story on the index
       file.stories[index] = subsetStory;
+      // We sort the files by date in case createdAt was changed
+      file.stories.sort((a, b) => b.createdAt - a.createdAt);
       await saveStoriesFile(file);
       toast.success('Story saved');
     } catch (error) {
