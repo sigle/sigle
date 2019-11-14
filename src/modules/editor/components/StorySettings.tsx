@@ -131,7 +131,7 @@ export const StorySettings = ({
         </FormRow>
 
         <FormRow>
-          <FormLabel>Created at</FormLabel>
+          <FormLabel>Created on</FormLabel>
           <FormInput
             type="date"
             value={format(story.createdAt, 'yyyy-MM-dd')}
