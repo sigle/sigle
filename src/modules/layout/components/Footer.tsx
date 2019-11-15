@@ -1,6 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import tw from 'tailwind.macro';
+import { FaTwitter, FaGithub, FaTelegramPlane } from 'react-icons/fa';
 import { Container } from '../../../components';
 import { config } from '../../../config';
 
@@ -18,9 +19,15 @@ const StyledContainer = styled(Container)`
 const StyledLink = styled.a`
   ${tw`text-sm text-black no-underline`};
   :hover {
-    ${tw`underline`};
+    ${tw`text-pink`};
+  }
+
+  .icon {
+    ${tw`inline-block`};
   }
 `;
+
+const iconSize = 16;
 
 export const Footer = () => {
   return (
@@ -32,13 +39,13 @@ export const Footer = () => {
         Starter guide
       </StyledLink>
       <StyledLink href={config.twitterUrl} target="_blank">
-        Twitter
-      </StyledLink>
-      <StyledLink href={config.githubUrl} target="_blank">
-        GitHub
+        <FaTwitter size={iconSize} className="icon" />
       </StyledLink>
       <StyledLink href={config.telegramUrl} target="_blank">
-        Telegram
+        <FaTelegramPlane size={iconSize} className="icon" />
+      </StyledLink>
+      <StyledLink href={config.githubUrl} target="_blank">
+        <FaGithub size={iconSize} className="icon" />
       </StyledLink>
     </StyledContainer>
   );
