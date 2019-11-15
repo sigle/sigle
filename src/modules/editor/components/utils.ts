@@ -24,7 +24,7 @@ export const hasLinks = (value: Value) => {
 /**
  * A change helper to standardize wrapping links.
  */
-export const wrapLink = (editor: any, href: string) => {
+export const wrapLink = (editor: Editor, href: string) => {
   editor.wrapInline({
     type: 'link',
     data: { href },
@@ -38,4 +38,15 @@ export const wrapLink = (editor: any, href: string) => {
  */
 export const unwrapLink = (editor: Editor) => {
   editor.unwrapInline('link');
+};
+
+export const insertImage = (editor: Editor, src: string, target: any) => {
+  if (target) {
+    editor.select(target);
+  }
+
+  editor.insertBlock({
+    type: 'image',
+    data: { src },
+  });
 };

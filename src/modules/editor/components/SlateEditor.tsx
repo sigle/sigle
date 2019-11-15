@@ -42,7 +42,14 @@ import { Story } from '../../../types';
 import { Content } from '../../publicStory/components/PublicStory';
 import { StorySettings } from '../containers/StorySettings';
 import { config } from '../../../config';
-import { hasMark, hasBlock, hasLinks, wrapLink, unwrapLink } from './utils';
+import {
+  hasMark,
+  hasBlock,
+  hasLinks,
+  wrapLink,
+  unwrapLink,
+  insertImage,
+} from './utils';
 
 const StyledLinkContainer = styled.div`
   ${tw`mb-4`};
@@ -174,17 +181,6 @@ export const SlateEditor = ({
 
   const handleTextChange = ({ value }: any) => {
     setValue(value);
-  };
-
-  const insertImage = (editor: any, src: string, target: any) => {
-    if (target) {
-      editor.select(target);
-    }
-
-    editor.insertBlock({
-      type: 'image',
-      data: { src },
-    });
   };
 
   const onClickImage = (event: any) => {
