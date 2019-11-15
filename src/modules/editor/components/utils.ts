@@ -1,4 +1,4 @@
-import { Value } from 'slate';
+import { Value, Editor } from 'slate';
 
 /**
  * Check if the current selection has a mark with `type` in it.
@@ -19,4 +19,23 @@ export const hasBlock = (value: Value, type: string) => {
  */
 export const hasLinks = (value: Value) => {
   return value.inlines.some(inline => !!(inline && inline.type == 'link'));
+};
+
+/**
+ * A change helper to standardize wrapping links.
+ */
+export const wrapLink = (editor: any, href: string) => {
+  editor.wrapInline({
+    type: 'link',
+    data: { href },
+  });
+
+  editor.moveToEnd();
+};
+
+/**
+ * A change helper to standardize unwrapping links.
+ */
+export const unwrapLink = (editor: Editor) => {
+  editor.unwrapInline('link');
 };
