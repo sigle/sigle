@@ -190,10 +190,12 @@ export const SlateEditor = ({
     editorRef.current.command(insertImage, src);
   };
 
-  const onClickLink = (event: any) => {
-    event.preventDefault();
-
-    const editor = editorRef.current;
+  /**
+   * When clicking a link, if the selection has a link in it, remove the link.
+   * Otherwise, add a new link with an href and text.
+   */
+  // TODO onPaste for links see https://github.com/ianstormtaylor/slate/blob/master/examples/links/index.js
+  const onClickLink = (editor: Editor) => {
     const { value } = editor;
 
     if (hasLinks(value)) {
@@ -368,6 +370,9 @@ export const SlateEditor = ({
     }
   };
 
+  /**
+   * Render a mark-toggling toolbar button.
+   */
   const renderMarkButton = (type: string, Icon: any) => {
     const isActive = hasMark(value, type);
 
@@ -380,6 +385,9 @@ export const SlateEditor = ({
     );
   };
 
+  /**
+   * Render a block-toggling toolbar button.
+   */
   const renderBlockButton = (type: string, Icon: any) => {
     let isActive = hasBlock(value, type);
 
@@ -402,6 +410,24 @@ export const SlateEditor = ({
         onMouseDown={(event: any) => onClickBlock(event, type)}
       >
         <Icon color={isActive ? '#000000' : '#bbbaba'} size={18} />
+      </SlateToolbarButton>
+    );
+  };
+
+  /**
+   * Render a link toolbar button.
+   */
+  const renderLinkButton = () => {
+    const isActive = hasLinks(value);
+
+    return (
+      <SlateToolbarButton
+        onMouseDown={event => {
+          event.preventDefault();
+          onClickLink(editorRef.current);
+        }}
+      >
+        <MdLink color={isActive ? '#000000' : '#bbbaba'} size={18} />
       </SlateToolbarButton>
     );
   };
@@ -476,9 +502,7 @@ export const SlateEditor = ({
               {renderBlockButton('heading-three', MdLooks3)}
               {renderBlockButton('numbered-list', MdFormatListNumbered)}
               {renderBlockButton('bulleted-list', MdFormatListBulleted)}
-              <SlateToolbarButton onMouseDown={onClickLink}>
-                <MdLink color={'#b8c2cc'} size={18} />
-              </SlateToolbarButton>
+              {renderLinkButton()}
               <SlateToolbarButton onMouseDown={onClickImage}>
                 <MdImage color={'#b8c2cc'} size={18} />
               </SlateToolbarButton>
