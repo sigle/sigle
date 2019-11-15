@@ -245,6 +245,40 @@ const onClickLink = (editor: Editor) => {
   }
 };
 
+const onClickImage = (editor: Editor) => {
+  const src = window.prompt('Enter the URL of the image:');
+  if (!src) return;
+  editor.command(insertImage, src);
+};
+
+/**
+ * Handle key press from the user and allow shortcuts.
+ */
+const onKeyDown = (
+  event: React.KeyboardEvent,
+  editor: any,
+  next: () => any
+) => {
+  // We want all our commands to start with the user pressing ctrl or cmd for mac users
+  if (!event.ctrlKey && !event.metaKey) {
+    return next();
+  }
+
+  let mark: string;
+  if (event.key === 'b') {
+    mark = 'bold';
+  } else if (event.key === 'i') {
+    mark = 'italic';
+  } else if (event.key === 'u') {
+    mark = 'underlined';
+  } else {
+    return next();
+  }
+
+  event.preventDefault();
+  editor.toggleMark(mark);
+};
+
 interface Props {
   story: Story;
   onChangeTitle: (title: string) => void;
@@ -265,36 +299,8 @@ export const SlateEditor = ({
       : Value.fromJSON(emptyNode as any)
   );
 
-  const handleTextChange = ({ value }: any) => {
+  const handleTextChange = ({ value }: { value: Value }) => {
     setValue(value);
-  };
-
-  const onClickImage = (event: any) => {
-    event.preventDefault();
-    const src = window.prompt('Enter the URL of the image:');
-    if (!src) return;
-    editorRef.current.command(insertImage, src);
-  };
-
-  const onKeyDown = (event: any, editor: any, next: any) => {
-    // We want all our commands to start with the user pressing ctrl or cmd for mac users
-    if (!event.ctrlKey && !event.metaKey) {
-      return next();
-    }
-
-    let mark: string;
-    if (event.key === 'b') {
-      mark = 'bold';
-    } else if (event.key === 'i') {
-      mark = 'italic';
-    } else if (event.key === 'u') {
-      mark = 'underlined';
-    } else {
-      return next();
-    }
-
-    event.preventDefault();
-    editor.toggleMark(mark);
   };
 
   /**
@@ -505,7 +511,12 @@ export const SlateEditor = ({
               {renderBlockButton('numbered-list', MdFormatListNumbered)}
               {renderBlockButton('bulleted-list', MdFormatListBulleted)}
               {renderLinkButton()}
-              <SlateToolbarButton onMouseDown={onClickImage}>
+              <SlateToolbarButton
+                onMouseDown={event => {
+                  event.preventDefault();
+                  onClickImage(editorRef.current);
+                }}
+              >
                 <MdImage color={'#b8c2cc'} size={18} />
               </SlateToolbarButton>
             </SlateToolbarButtonContainer>
