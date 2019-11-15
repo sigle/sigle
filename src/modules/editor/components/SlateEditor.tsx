@@ -159,6 +159,44 @@ const slatePlugins = [SoftBreak({ shift: true })];
 
 // TODO warn user if he try to leave the page with unsaved changes
 
+/**
+ * When clicking a link, if the selection has a link in it, remove the link.
+ * Otherwise, add a new link with an href and text.
+ */
+// TODO onPaste for links see https://github.com/ianstormtaylor/slate/blob/master/examples/links/index.js
+const onClickLink = (editor: Editor) => {
+  const { value } = editor;
+
+  if (hasLinks(value)) {
+    editor.command(unwrapLink);
+  } else if (value.selection.isExpanded) {
+    const href = window.prompt('Enter the URL of the link:');
+
+    if (href === null) {
+      return;
+    }
+
+    editor.command(wrapLink, href);
+  } else {
+    const href = window.prompt('Enter the URL of the link:');
+
+    if (href === null) {
+      return;
+    }
+
+    const text = window.prompt('Enter the text for the link:');
+
+    if (text === null) {
+      return;
+    }
+
+    editor
+      .insertText(text)
+      .moveFocusBackward(text.length)
+      .command(wrapLink, href);
+  }
+};
+
 interface Props {
   story: Story;
   onChangeTitle: (title: string) => void;
@@ -188,44 +226,6 @@ export const SlateEditor = ({
     const src = window.prompt('Enter the URL of the image:');
     if (!src) return;
     editorRef.current.command(insertImage, src);
-  };
-
-  /**
-   * When clicking a link, if the selection has a link in it, remove the link.
-   * Otherwise, add a new link with an href and text.
-   */
-  // TODO onPaste for links see https://github.com/ianstormtaylor/slate/blob/master/examples/links/index.js
-  const onClickLink = (editor: Editor) => {
-    const { value } = editor;
-
-    if (hasLinks(value)) {
-      editor.command(unwrapLink);
-    } else if (value.selection.isExpanded) {
-      const href = window.prompt('Enter the URL of the link:');
-
-      if (href === null) {
-        return;
-      }
-
-      editor.command(wrapLink, href);
-    } else {
-      const href = window.prompt('Enter the URL of the link:');
-
-      if (href === null) {
-        return;
-      }
-
-      const text = window.prompt('Enter the text for the link:');
-
-      if (text === null) {
-        return;
-      }
-
-      editor
-        .insertText(text)
-        .moveFocusBackward(text.length)
-        .command(wrapLink, href);
-    }
   };
 
   const onClickMark = (event: any, type: string) => {
