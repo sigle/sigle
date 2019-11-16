@@ -7,6 +7,7 @@ import {
   RenderBlockProps,
   RenderInlineProps,
   RenderMarkProps,
+  EditorProps,
 } from 'slate-react';
 import SoftBreak from 'slate-soft-break';
 import { Block, Value } from 'slate';
@@ -50,6 +51,7 @@ import {
   unwrapLink,
   insertImage,
 } from './utils';
+import { SlateEditorSideMenu } from './SlateEditorSideMenu';
 
 const StyledLinkContainer = styled.div`
   ${tw`mb-4`};
@@ -291,6 +293,7 @@ export const SlateEditor = ({
   onChangeStoryField,
 }: Props) => {
   const editorRef = useRef<any>(null);
+  const sideMenuRef = useRef<any>(null);
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [loadingSave, setLoadingSave] = useState(false);
   const [value, setValue] = useState(
@@ -298,10 +301,6 @@ export const SlateEditor = ({
       ? Value.fromJSON(story.content)
       : Value.fromJSON(emptyNode as any)
   );
-
-  const handleTextChange = ({ value }: { value: Value }) => {
-    setValue(value);
-  };
 
   /**
    * Render a Slate block.
@@ -440,6 +439,54 @@ export const SlateEditor = ({
     );
   };
 
+  /**
+   * Render the editor with the side menu
+   */
+  const renderEditor = (props: EditorProps, editor: any, next: () => any) => {
+    const children = next();
+    return (
+      <React.Fragment>
+        {children}
+        <SlateEditorSideMenu
+          ref={sideMenuRef}
+          editor={editor}
+          onClick={() => onClickImage(editor)}
+        />
+      </React.Fragment>
+    );
+  };
+
+  /**
+   * Update the menu's absolute position only if:
+   * - it's a paragraph
+   * - text is empty
+   */
+  const updateSideMenu = (value: Value) => {
+    const sideMenu = sideMenuRef.current;
+    if (!sideMenu) return;
+
+    const { texts, blocks, focusBlock } = value;
+    const topBlock = blocks.get(0);
+    const isAParagraph = topBlock && topBlock.type === 'paragraph';
+    const isEmptyText = texts && texts.get(0) && texts.get(0).text.length === 0;
+    if (isAParagraph && isEmptyText) {
+      const block = document.querySelector(`[data-key='${focusBlock.key}']`);
+      if (block) {
+        const size = block.getBoundingClientRect();
+        sideMenu.style.top = `${size.top + window.pageYOffset}px`;
+        sideMenu.style.left = `${size.left - 40}px`;
+        sideMenu.style.opacity = 1;
+      }
+    } else {
+      sideMenu.removeAttribute('style');
+    }
+  };
+
+  const handleTextChange = ({ value }: { value: Value }) => {
+    setValue(value);
+    updateSideMenu(value);
+  };
+
   const handleSave = async () => {
     setLoadingSave(true);
     try {
@@ -546,6 +593,7 @@ export const SlateEditor = ({
               onKeyDown={onKeyDown}
               schema={schema}
               placeholder="Text"
+              renderEditor={renderEditor}
               renderBlock={renderBlock}
               renderMark={renderMark}
               renderInline={renderInline}
