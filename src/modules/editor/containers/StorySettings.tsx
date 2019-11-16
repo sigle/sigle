@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { toast } from 'react-toastify';
 import { useRouter } from 'next/router';
 import { StorySettings as Component } from '../components/StorySettings';
@@ -23,7 +23,6 @@ export const StorySettings = ({
   onChangeStoryField,
 }: Props) => {
   const router = useRouter();
-  const nodeRef = React.createRef<HTMLDivElement>();
   const [loadingDelete, setLoadingDelete] = useState(false);
 
   const handleUploadImage = () => {
@@ -70,25 +69,6 @@ export const StorySettings = ({
     }
   };
 
-  /**
-   * Handle click outside the settings
-   */
-  const handleClick = (e: any) => {
-    if (nodeRef.current && !nodeRef.current.contains(e.target)) {
-      onClose();
-    }
-  };
-
-  useEffect(() => {
-    if (open) {
-      document.addEventListener('mousedown', handleClick);
-    }
-    return () => {
-      document.removeEventListener('mousedown', handleClick);
-    };
-    // eslint-disable-next-line
-  }, [open]);
-
   return (
     <Component
       story={story}
@@ -100,7 +80,6 @@ export const StorySettings = ({
       onChangeMetaDescription={handleChangeMetaDescription}
       onChangeCreatedAt={handleChangeCreatedAt}
       onUploadImage={handleUploadImage}
-      nodeRef={nodeRef}
     />
   );
 };
