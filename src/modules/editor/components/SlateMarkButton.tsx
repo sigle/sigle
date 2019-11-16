@@ -17,6 +17,8 @@ export const StyledMarButton = styled.div<{
   component: 'hover' | 'toolbar';
   active: boolean;
 }>`
+  ${tw`cursor-pointer`};
+
   ${props =>
     props.component === 'hover' &&
     css`

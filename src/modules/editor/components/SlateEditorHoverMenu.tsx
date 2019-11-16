@@ -13,9 +13,11 @@ import {
   MdLooks3,
   MdFormatListNumbered,
   MdFormatListBulleted,
+  MdLink,
 } from 'react-icons/md';
 import { SlateMarkButton } from './SlateMarkButton';
 import { SlateBlockButton } from './SlateBlockButton';
+import { SlateLinkButton } from './SlateLinkButton';
 
 const HoverMenuContainer = styled.div`
   ${tw`flex`};
@@ -100,6 +102,13 @@ export const SlateEditorHoverMenu = forwardRef(
           component="hover"
           type="bulleted-list"
           icon={MdFormatListBulleted}
+          iconSize={18}
+        />
+        <SlateLinkButton
+          editor={editor}
+          component="hover"
+          type="link"
+          icon={MdLink}
           iconSize={18}
         />
       </HoverMenuContainer>,

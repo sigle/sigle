@@ -55,6 +55,7 @@ import { SlateEditorSideMenu } from './SlateEditorSideMenu';
 import { SlateEditorHoverMenu } from './SlateEditorHoverMenu';
 import { SlateMarkButton } from './SlateMarkButton';
 import { SlateBlockButton } from './SlateBlockButton';
+import { SlateLinkButton } from './SlateLinkButton';
 
 const StyledLinkContainer = styled.div`
   ${tw`mb-4`};
@@ -159,44 +160,6 @@ const emptyNode = {
 const slatePlugins = [SoftBreak({ shift: true })];
 
 // TODO warn user if he try to leave the page with unsaved changes
-
-/**
- * When clicking a link, if the selection has a link in it, remove the link.
- * Otherwise, add a new link with an href and text.
- */
-// TODO onPaste for links see https://github.com/ianstormtaylor/slate/blob/master/examples/links/index.js
-const onClickLink = (editor: Editor) => {
-  const { value } = editor;
-
-  if (hasLinks(value)) {
-    editor.command(unwrapLink);
-  } else if (value.selection.isExpanded) {
-    const href = window.prompt('Enter the URL of the link:');
-
-    if (href === null) {
-      return;
-    }
-
-    editor.command(wrapLink, href);
-  } else {
-    const href = window.prompt('Enter the URL of the link:');
-
-    if (href === null) {
-      return;
-    }
-
-    const text = window.prompt('Enter the text for the link:');
-
-    if (text === null) {
-      return;
-    }
-
-    editor
-      .insertText(text)
-      .moveFocusBackward(text.length)
-      .command(wrapLink, href);
-  }
-};
 
 const onClickImage = (editor: Editor) => {
   const src = window.prompt('Enter the URL of the image:');
@@ -324,28 +287,11 @@ export const SlateEditor = ({
   };
 
   /**
-   * Render a link toolbar button.
-   */
-  const renderLinkButton = () => {
-    const isActive = hasLinks(value);
-
-    return (
-      <SlateToolbarButton
-        onMouseDown={event => {
-          event.preventDefault();
-          onClickLink(editorRef.current);
-        }}
-      >
-        <MdLink color={isActive ? '#000000' : '#bbbaba'} size={18} />
-      </SlateToolbarButton>
-    );
-  };
-
-  /**
    * Render the editor with the side menu
    */
   const renderEditor = (props: EditorProps, editor: any, next: () => any) => {
     const children = next();
+
     return (
       <React.Fragment>
         <SlateToolbar>
@@ -411,6 +357,13 @@ export const SlateEditor = ({
               component="toolbar"
               type="bulleted-list"
               icon={MdFormatListBulleted}
+              iconSize={18}
+            />
+            <SlateLinkButton
+              editor={editor}
+              component="toolbar"
+              type="link"
+              icon={MdLink}
               iconSize={18}
             />
           </SlateToolbarButtonContainer>
@@ -565,7 +518,6 @@ export const SlateEditor = ({
         <SlateContainer>
           <SlateToolbar>
             <SlateToolbarButtonContainer>
-              {renderLinkButton()}
               <SlateToolbarButton
                 onMouseDown={event => {
                   event.preventDefault();
@@ -575,21 +527,6 @@ export const SlateEditor = ({
                 <MdImage color={'#b8c2cc'} size={18} />
               </SlateToolbarButton>
             </SlateToolbarButtonContainer>
-            <SlateToolbarActionContainer>
-              {loadingSave && (
-                <ButtonOutline style={{ marginRight: 6 }} disabled>
-                  Saving ...
-                </ButtonOutline>
-              )}
-              {!loadingSave && (
-                <ButtonOutline style={{ marginRight: 6 }} onClick={handleSave}>
-                  Save
-                </ButtonOutline>
-              )}
-              <SlateToolbarActionIcon onClick={handleOpenSettings}>
-                <MdSettings size={22} />
-              </SlateToolbarActionIcon>
-            </SlateToolbarActionContainer>
           </SlateToolbar>
 
           <StyledContent>
