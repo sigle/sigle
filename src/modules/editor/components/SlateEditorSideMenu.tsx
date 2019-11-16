@@ -79,3 +79,5 @@ export const SlateEditorSideMenu = forwardRef(
     );
   }
 );
+
+SlateEditorSideMenu.displayName = 'SlateEditorSideMenu';

@@ -52,6 +52,7 @@ import {
   insertImage,
 } from './utils';
 import { SlateEditorSideMenu } from './SlateEditorSideMenu';
+import { SlateEditorHoverMenu } from './SlateEditorHoverMenu';
 
 const StyledLinkContainer = styled.div`
   ${tw`mb-4`};
@@ -294,6 +295,7 @@ export const SlateEditor = ({
 }: Props) => {
   const editorRef = useRef<any>(null);
   const sideMenuRef = useRef<any>(null);
+  const hoverMenuRef = useRef<any>(null);
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [loadingSave, setLoadingSave] = useState(false);
   const [value, setValue] = useState(
@@ -452,6 +454,7 @@ export const SlateEditor = ({
           editor={editor}
           onClick={() => onClickImage(editor)}
         />
+        <SlateEditorHoverMenu ref={hoverMenuRef} editor={editor} />
       </React.Fragment>
     );
   };
@@ -482,9 +485,39 @@ export const SlateEditor = ({
     }
   };
 
+  /**
+   * Update the menu's absolute position.
+   */
+  const updateHoverMenu = (value: Value) => {
+    const hoverMenu = hoverMenuRef.current;
+    if (!hoverMenu) return;
+
+    const { fragment, selection } = value;
+
+    if (selection.isBlurred || selection.isCollapsed || fragment.text === '') {
+      hoverMenu.removeAttribute('style');
+      return;
+    }
+
+    const native = window.getSelection();
+    if (!native) return;
+    const range = native.getRangeAt(0);
+    const rect = range.getBoundingClientRect();
+    hoverMenu.style.opacity = 1;
+    hoverMenu.style.top = `${rect.top +
+      window.pageYOffset -
+      hoverMenu.offsetHeight}px`;
+
+    hoverMenu.style.left = `${rect.left +
+      window.pageXOffset -
+      hoverMenu.offsetWidth / 2 +
+      rect.width / 2}px`;
+  };
+
   const handleTextChange = ({ value }: { value: Value }) => {
     setValue(value);
     updateSideMenu(value);
+    updateHoverMenu(value);
   };
 
   const handleSave = async () => {
