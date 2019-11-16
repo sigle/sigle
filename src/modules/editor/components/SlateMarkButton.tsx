@@ -9,17 +9,41 @@ interface MarkButtonProps {
   editor: Editor;
   type: string;
   icon: IconType;
+  iconSize?: number;
+  component: 'hover' | 'toolbar';
 }
 
-const HoverMenuButton = styled.div<{ active: boolean }>`
-  ${tw`text-white cursor-pointer`};
-  padding-left: 0.3rem;
-  padding-right: 0.3rem;
+const StyledMarButton = styled.div<{
+  component: 'hover' | 'toolbar';
+  active: boolean;
+}>`
   ${props =>
+    props.component === 'hover' &&
+    css`
+      ${tw`text-white cursor-pointer`};
+      padding-left: 0.3rem;
+      padding-right: 0.3rem;
+    `}
+
+  ${props =>
+    props.component === 'hover' &&
     props.active &&
     css`
       ${tw`text-pink`};
     `}
+
+  ${props =>
+    props.component === 'toolbar' &&
+    css`
+      ${tw`py-2 px-2 outline-none flex text-grey-dark`};
+    `}
+
+    ${props =>
+      props.component === 'toolbar' &&
+      props.active &&
+      css`
+        ${tw`text-black`};
+      `}
 `;
 
 const onClickMark = (editor: Editor, type: string) => {
@@ -30,19 +54,22 @@ export const SlateMarkButton = ({
   editor,
   type,
   icon: Icon,
+  iconSize = 22,
+  component,
 }: MarkButtonProps) => {
   const { value } = editor;
   const isActive = hasMark(value, type);
 
   return (
-    <HoverMenuButton
+    <StyledMarButton
       active={isActive}
+      component={component}
       onMouseDown={event => {
         event.preventDefault();
         onClickMark(editor, type);
       }}
     >
-      <Icon size={22} />
-    </HoverMenuButton>
+      <Icon size={iconSize} />
+    </StyledMarButton>
   );
 };

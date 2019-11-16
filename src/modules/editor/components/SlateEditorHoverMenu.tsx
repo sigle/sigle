@@ -37,9 +37,20 @@ export const SlateEditorHoverMenu = forwardRef(
 
     return ReactDOM.createPortal(
       <HoverMenuContainer ref={ref}>
-        <SlateMarkButton editor={editor} type="bold" icon={MdFormatBold} />
-        <SlateMarkButton editor={editor} type="italic" icon={MdFormatItalic} />
         <SlateMarkButton
+          component="hover"
+          editor={editor}
+          type="bold"
+          icon={MdFormatBold}
+        />
+        <SlateMarkButton
+          component="hover"
+          editor={editor}
+          type="italic"
+          icon={MdFormatItalic}
+        />
+        <SlateMarkButton
+          component="hover"
           editor={editor}
           type="underlined"
           icon={MdFormatUnderlined}

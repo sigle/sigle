@@ -43,16 +43,10 @@ import { Story } from '../../../types';
 import { Content } from '../../publicStory/components/PublicStory';
 import { StorySettings } from '../containers/StorySettings';
 import { config } from '../../../config';
-import {
-  hasMark,
-  hasBlock,
-  hasLinks,
-  wrapLink,
-  unwrapLink,
-  insertImage,
-} from './utils';
+import { hasBlock, hasLinks, wrapLink, unwrapLink, insertImage } from './utils';
 import { SlateEditorSideMenu } from './SlateEditorSideMenu';
 import { SlateEditorHoverMenu } from './SlateEditorHoverMenu';
+import { SlateMarkButton } from './SlateMarkButton';
 
 const StyledLinkContainer = styled.div`
   ${tw`mb-4`};
@@ -161,10 +155,6 @@ const emptyNode = {
 const slatePlugins = [SoftBreak({ shift: true })];
 
 // TODO warn user if he try to leave the page with unsaved changes
-
-const onClickMark = (editor: Editor, type: string) => {
-  editor.toggleMark(type);
-};
 
 const onClickBlock = (editor: Editor, type: string) => {
   const { value } = editor;
@@ -374,24 +364,6 @@ export const SlateEditor = ({
   };
 
   /**
-   * Render a mark-toggling toolbar button.
-   */
-  const renderMarkButton = (type: string, Icon: any) => {
-    const isActive = hasMark(value, type);
-
-    return (
-      <SlateToolbarButton
-        onMouseDown={event => {
-          event.preventDefault();
-          onClickMark(editorRef.current, type);
-        }}
-      >
-        <Icon color={isActive ? '#000000' : '#bbbaba'} size={18} />
-      </SlateToolbarButton>
-    );
-  };
-
-  /**
    * Render a block-toggling toolbar button.
    */
   const renderBlockButton = (type: string, Icon: any) => {
@@ -448,7 +420,49 @@ export const SlateEditor = ({
     const children = next();
     return (
       <React.Fragment>
+        <SlateToolbar>
+          <SlateToolbarButtonContainer>
+            <SlateMarkButton
+              editor={editor}
+              component="toolbar"
+              type="bold"
+              icon={MdFormatBold}
+              iconSize={18}
+            />
+            <SlateMarkButton
+              editor={editor}
+              component="toolbar"
+              type="italic"
+              icon={MdFormatItalic}
+              iconSize={18}
+            />
+            <SlateMarkButton
+              editor={editor}
+              component="toolbar"
+              type="underlined"
+              icon={MdFormatUnderlined}
+              iconSize={18}
+            />
+          </SlateToolbarButtonContainer>
+          <SlateToolbarActionContainer>
+            {loadingSave && (
+              <ButtonOutline style={{ marginRight: 6 }} disabled>
+                Saving ...
+              </ButtonOutline>
+            )}
+            {!loadingSave && (
+              <ButtonOutline style={{ marginRight: 6 }} onClick={handleSave}>
+                Save
+              </ButtonOutline>
+            )}
+            <SlateToolbarActionIcon onClick={handleOpenSettings}>
+              <MdSettings size={22} />
+            </SlateToolbarActionIcon>
+          </SlateToolbarActionContainer>
+        </SlateToolbar>
+
         {children}
+
         <SlateEditorSideMenu
           ref={sideMenuRef}
           editor={editor}
@@ -581,9 +595,6 @@ export const SlateEditor = ({
         <SlateContainer>
           <SlateToolbar>
             <SlateToolbarButtonContainer>
-              {renderMarkButton('bold', MdFormatBold)}
-              {renderMarkButton('italic', MdFormatItalic)}
-              {renderMarkButton('underlined', MdFormatUnderlined)}
               {renderBlockButton('block-quote', MdFormatQuote)}
               {renderBlockButton('heading-one', MdLooksOne)}
               {renderBlockButton('heading-two', MdLooksTwo)}
