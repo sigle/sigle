@@ -12,12 +12,6 @@ import {
 import SoftBreak from 'slate-soft-break';
 import { Block, Value } from 'slate';
 import {
-  MdFormatBold,
-  MdFormatItalic,
-  MdFormatUnderlined,
-  MdFormatQuote,
-  MdFormatListNumbered,
-  MdFormatListBulleted,
   MdArrowBack,
   MdImage,
   MdLink,
@@ -32,7 +26,6 @@ import {
   PageTitleContainer,
   PageTitle,
 } from '../../home/components/Home';
-import { ButtonOutline } from '../../../components';
 import {
   saveStoryFile,
   convertStoryToSubsetStory,
@@ -42,20 +35,13 @@ import {
 import { Story } from '../../../types';
 import { Content } from '../../publicStory/components/PublicStory';
 import { StorySettings } from '../containers/StorySettings';
-import { config } from '../../../config';
-import {
-  hasBlock,
-  hasLinks,
-  wrapLink,
-  unwrapLink,
-  insertImage,
-  DEFAULT_NODE,
-} from './utils';
+import { insertImage } from './utils';
 import { SlateEditorSideMenu } from './SlateEditorSideMenu';
 import { SlateEditorHoverMenu } from './SlateEditorHoverMenu';
 import { SlateMarkButton } from './SlateMarkButton';
 import { SlateBlockButton } from './SlateBlockButton';
 import { SlateLinkButton } from './SlateLinkButton';
+import { SlateEditorToolbar } from './SlateEditorToolbar';
 
 const StyledLinkContainer = styled.div`
   ${tw`mb-4`};
@@ -83,31 +69,6 @@ const Image = styled.img<{ selected: boolean }>`
 
 const SlateContainer = styled.div`
   ${tw`my-8`};
-`;
-
-const SlateToolbar = styled.div`
-  ${tw`py-4 border-b border-solid border-grey flex z-10 bg-white sticky flex justify-between max-w-full overflow-auto`};
-  top: 0;
-
-  @media (min-width: ${config.breakpoints.md}px) {
-    ${tw`overflow-visible`};
-  }
-`;
-
-const SlateToolbarButtonContainer = styled.div`
-  ${tw`flex`};
-`;
-
-const SlateToolbarButton = styled.button`
-  ${tw`py-2 px-2 outline-none flex`};
-`;
-
-const SlateToolbarActionContainer = styled.div`
-  ${tw`flex items-center`};
-`;
-
-const SlateToolbarActionIcon = styled.div`
-  ${tw`p-2 -mr-2 flex items-center cursor-pointer text-pink`};
 `;
 
 const StyledContent = styled(Content)`
@@ -294,95 +255,13 @@ export const SlateEditor = ({
 
     return (
       <React.Fragment>
-        <SlateToolbar>
-          <SlateToolbarButtonContainer>
-            <SlateMarkButton
-              editor={editor}
-              component="toolbar"
-              type="bold"
-              icon={MdFormatBold}
-              iconSize={18}
-            />
-            <SlateMarkButton
-              editor={editor}
-              component="toolbar"
-              type="italic"
-              icon={MdFormatItalic}
-              iconSize={18}
-            />
-            <SlateMarkButton
-              editor={editor}
-              component="toolbar"
-              type="underlined"
-              icon={MdFormatUnderlined}
-              iconSize={18}
-            />
-            <SlateBlockButton
-              editor={editor}
-              component="toolbar"
-              type="block-quote"
-              icon={MdFormatQuote}
-              iconSize={18}
-            />
-            <SlateBlockButton
-              editor={editor}
-              component="toolbar"
-              type="heading-one"
-              icon={MdLooksOne}
-              iconSize={18}
-            />
-            <SlateBlockButton
-              editor={editor}
-              component="toolbar"
-              type="heading-two"
-              icon={MdLooksTwo}
-              iconSize={18}
-            />
-            <SlateBlockButton
-              editor={editor}
-              component="toolbar"
-              type="heading-three"
-              icon={MdLooks3}
-              iconSize={18}
-            />
-            <SlateBlockButton
-              editor={editor}
-              component="toolbar"
-              type="numbered-list"
-              icon={MdFormatListNumbered}
-              iconSize={18}
-            />
-            <SlateBlockButton
-              editor={editor}
-              component="toolbar"
-              type="bulleted-list"
-              icon={MdFormatListBulleted}
-              iconSize={18}
-            />
-            <SlateLinkButton
-              editor={editor}
-              component="toolbar"
-              type="link"
-              icon={MdLink}
-              iconSize={18}
-            />
-          </SlateToolbarButtonContainer>
-          <SlateToolbarActionContainer>
-            {loadingSave && (
-              <ButtonOutline style={{ marginRight: 6 }} disabled>
-                Saving ...
-              </ButtonOutline>
-            )}
-            {!loadingSave && (
-              <ButtonOutline style={{ marginRight: 6 }} onClick={handleSave}>
-                Save
-              </ButtonOutline>
-            )}
-            <SlateToolbarActionIcon onClick={handleOpenSettings}>
-              <MdSettings size={22} />
-            </SlateToolbarActionIcon>
-          </SlateToolbarActionContainer>
-        </SlateToolbar>
+        <SlateEditorToolbar
+          editor={editor}
+          loadingSave={loadingSave}
+          handleOpenSettings={handleOpenSettings}
+          handleSave={handleSave}
+          onClickImage={onClickImage}
+        />
 
         {children}
 
@@ -516,19 +395,6 @@ export const SlateEditor = ({
         />
 
         <SlateContainer>
-          <SlateToolbar>
-            <SlateToolbarButtonContainer>
-              <SlateToolbarButton
-                onMouseDown={event => {
-                  event.preventDefault();
-                  onClickImage(editorRef.current);
-                }}
-              >
-                <MdImage color={'#b8c2cc'} size={18} />
-              </SlateToolbarButton>
-            </SlateToolbarButtonContainer>
-          </SlateToolbar>
-
           <StyledContent>
             <StyledEditor
               ref={editorRef}
