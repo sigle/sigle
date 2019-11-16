@@ -4,6 +4,7 @@ import ReactDOM from 'react-dom';
 import styled, { css } from 'styled-components';
 import tw from 'tailwind.macro';
 import { MdAdd, MdAddAPhoto } from 'react-icons/md';
+import { onClickImage } from './SlateEditorToolbar';
 
 const SideMenuContainer = styled.div`
   ${tw`flex absolute`};
@@ -47,11 +48,10 @@ const SideMenuActionButton = styled(SideMenuButton)<{ open: boolean }>`
 
 interface SlateEditorSideMenuProps {
   editor: Editor;
-  onClick: () => void;
 }
 
 export const SlateEditorSideMenu = forwardRef(
-  ({ onClick }: SlateEditorSideMenuProps, ref: any) => {
+  ({ editor }: SlateEditorSideMenuProps, ref: any) => {
     const [open, setOpen] = useState(false);
 
     const root = window.document.getElementById('__next');
@@ -70,7 +70,10 @@ export const SlateEditorSideMenu = forwardRef(
         </SideMenuOpenButton>
 
         <SideMenuButtonContainer>
-          <SideMenuActionButton open={open} onClick={onClick}>
+          <SideMenuActionButton
+            open={open}
+            onClick={() => onClickImage(editor)}
+          >
             <MdAddAPhoto size={18} />
           </SideMenuActionButton>
         </SideMenuButtonContainer>

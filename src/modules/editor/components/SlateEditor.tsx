@@ -122,12 +122,6 @@ const slatePlugins = [SoftBreak({ shift: true })];
 
 // TODO warn user if he try to leave the page with unsaved changes
 
-const onClickImage = (editor: Editor) => {
-  const src = window.prompt('Enter the URL of the image:');
-  if (!src) return;
-  editor.command(insertImage, src);
-};
-
 /**
  * Handle key press from the user and allow shortcuts.
  */
@@ -255,21 +249,9 @@ export const SlateEditor = ({
 
     return (
       <React.Fragment>
-        <SlateEditorToolbar
-          editor={editor}
-          loadingSave={loadingSave}
-          handleOpenSettings={handleOpenSettings}
-          handleSave={handleSave}
-          onClickImage={onClickImage}
-        />
-
         {children}
 
-        <SlateEditorSideMenu
-          ref={sideMenuRef}
-          editor={editor}
-          onClick={() => onClickImage(editor)}
-        />
+        <SlateEditorSideMenu ref={sideMenuRef} editor={editor} />
         <SlateEditorHoverMenu ref={hoverMenuRef} editor={editor} />
       </React.Fragment>
     );
@@ -395,6 +377,14 @@ export const SlateEditor = ({
         />
 
         <SlateContainer>
+          <SlateEditorToolbar
+            editor={editorRef.current}
+            value={value}
+            loadingSave={loadingSave}
+            handleOpenSettings={handleOpenSettings}
+            handleSave={handleSave}
+          />
+
           <StyledContent>
             <StyledEditor
               ref={editorRef}

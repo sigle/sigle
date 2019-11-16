@@ -1,13 +1,18 @@
 import React from 'react';
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 import tw from 'tailwind.macro';
+import { Value } from 'slate';
 import { Editor } from 'slate-react';
-import { hasLinks, unwrapLink, wrapLink, insertImage } from './utils';
+import { IconType } from 'react-icons';
 import {
-  MarkButtonProps,
-  StyledMarButton,
-  SlateMarkButton,
-} from './SlateMarkButton';
+  hasLinks,
+  unwrapLink,
+  wrapLink,
+  insertImage,
+  hasMark,
+  hasBlock,
+  DEFAULT_NODE,
+} from './utils';
 import { config } from '../../../config';
 import {
   MdFormatBold,
@@ -23,8 +28,6 @@ import {
   MdSettings,
   MdImage,
 } from 'react-icons/md';
-import { SlateBlockButton } from './SlateBlockButton';
-import { SlateLinkButton } from './SlateLinkButton';
 import { ButtonOutline } from '../../../components';
 
 const SlateToolbar = styled.div`
@@ -40,8 +43,14 @@ const SlateToolbarButtonContainer = styled.div`
   ${tw`flex`};
 `;
 
-const SlateToolbarButton = styled.button`
-  ${tw`py-2 px-2 outline-none flex`};
+const SlateEditorToolbarButton = styled.button<{ active: boolean }>`
+  ${tw`py-2 px-2 outline-none flex text-grey-dark`};
+
+  ${props =>
+    props.active &&
+    css`
+      ${tw`text-black`};
+    `}
 `;
 
 const SlateToolbarActionContainer = styled.div`
@@ -52,102 +61,204 @@ const SlateToolbarActionIcon = styled.div`
   ${tw`p-2 -mr-2 flex items-center cursor-pointer text-pink`};
 `;
 
+export const onClickMark = (editor: Editor, type: string) => {
+  editor.toggleMark(type);
+};
+
+export const onClickBlock = (editor: Editor, type: string) => {
+  const { value } = editor;
+  const { document } = value;
+
+  // Handle everything but list buttons.
+  if (type !== 'bulleted-list' && type !== 'numbered-list') {
+    const isActive = hasBlock(value, type);
+    const isList = hasBlock(value, 'list-item');
+
+    if (isList) {
+      editor
+        .setBlocks(isActive ? DEFAULT_NODE : type)
+        .unwrapBlock('bulleted-list')
+        .unwrapBlock('numbered-list');
+    } else {
+      editor.setBlocks(isActive ? DEFAULT_NODE : type);
+    }
+  } else {
+    // Handle the extra wrapping required for list buttons.
+    const isList = hasBlock(value, 'list-item');
+    const isType = value.blocks.some((block: any) => {
+      return !!document.getClosest(
+        block.key,
+        (parent: any) => parent.type === type
+      );
+    });
+
+    if (isList && isType) {
+      editor
+        .setBlocks(DEFAULT_NODE)
+        .unwrapBlock('bulleted-list')
+        .unwrapBlock('numbered-list');
+    } else if (isList) {
+      editor
+        .unwrapBlock(
+          type === 'bulleted-list' ? 'numbered-list' : 'bulleted-list'
+        )
+        .wrapBlock(type);
+    } else {
+      editor.setBlocks('list-item').wrapBlock(type);
+    }
+  }
+};
+
+/**
+ * When clicking a link, if the selection has a link in it, remove the link.
+ * Otherwise, add a new link with an href and text.
+ */
+// TODO onPaste for links see https://github.com/ianstormtaylor/slate/blob/master/examples/links/index.js
+export const onClickLink = (editor: Editor) => {
+  const { value } = editor;
+
+  if (hasLinks(value)) {
+    editor.command(unwrapLink);
+  } else if (value.selection.isExpanded) {
+    const href = window.prompt('Enter the URL of the link:');
+
+    if (href === null) {
+      return;
+    }
+
+    editor.command(wrapLink, href);
+  } else {
+    const href = window.prompt('Enter the URL of the link:');
+
+    if (href === null) {
+      return;
+    }
+
+    const text = window.prompt('Enter the text for the link:');
+
+    if (text === null) {
+      return;
+    }
+
+    editor
+      .insertText(text)
+      .moveFocusBackward(text.length)
+      .command(wrapLink, href);
+  }
+};
+
+export const onClickImage = (editor: Editor) => {
+  const src = window.prompt('Enter the URL of the image:');
+  if (!src) return;
+  editor.command(insertImage, src);
+};
+
 interface SlateEditorToolbarProps {
   editor: Editor;
+  value: Value;
   loadingSave: boolean;
-  onClickImage: (editor: Editor) => void;
   handleOpenSettings: () => void;
   handleSave: () => void;
 }
 
 export const SlateEditorToolbar = ({
   editor,
+  value,
   loadingSave,
-  onClickImage,
   handleOpenSettings,
   handleSave,
 }: SlateEditorToolbarProps) => {
+  /**
+   * Render a mark-toggling toolbar button.
+   */
+  const renderMarkButton = (type: string, Icon: IconType) => {
+    const isActive = hasMark(value, type);
+
+    return (
+      <SlateEditorToolbarButton
+        active={isActive}
+        onMouseDown={event => {
+          event.preventDefault();
+          onClickMark(editor, type);
+        }}
+      >
+        <Icon size={18} />
+      </SlateEditorToolbarButton>
+    );
+  };
+
+  /**
+   * Render a block-toggling toolbar button.
+   */
+  const renderBlockButton = (type: string, Icon: IconType) => {
+    let isActive = hasBlock(value, type);
+
+    if (['numbered-list', 'bulleted-list'].includes(type)) {
+      const { document, blocks } = value;
+
+      if (blocks.size > 0) {
+        const parent = document.getParent(blocks.first().key);
+        isActive =
+          hasBlock(value, 'list-item') &&
+          !!parent &&
+          (parent as any).type === type;
+      }
+    }
+
+    return (
+      <SlateEditorToolbarButton
+        active={isActive}
+        onMouseDown={event => {
+          event.preventDefault();
+          onClickBlock(editor, type);
+        }}
+      >
+        <Icon color={isActive ? '#000000' : '#cccccc'} size={18} />
+      </SlateEditorToolbarButton>
+    );
+  };
+
+  /**
+   * Render a link toolbar button.
+   */
+  const renderLinkButton = () => {
+    const isActive = hasLinks(value);
+
+    return (
+      <SlateEditorToolbarButton
+        active={isActive}
+        onMouseDown={event => {
+          event.preventDefault();
+          onClickLink(editor);
+        }}
+      >
+        <MdLink size={18} />
+      </SlateEditorToolbarButton>
+    );
+  };
+
   return (
     <SlateToolbar>
       <SlateToolbarButtonContainer>
-        <SlateMarkButton
-          editor={editor}
-          component="toolbar"
-          type="bold"
-          icon={MdFormatBold}
-          iconSize={18}
-        />
-        <SlateMarkButton
-          editor={editor}
-          component="toolbar"
-          type="italic"
-          icon={MdFormatItalic}
-          iconSize={18}
-        />
-        <SlateMarkButton
-          editor={editor}
-          component="toolbar"
-          type="underlined"
-          icon={MdFormatUnderlined}
-          iconSize={18}
-        />
-        <SlateBlockButton
-          editor={editor}
-          component="toolbar"
-          type="block-quote"
-          icon={MdFormatQuote}
-          iconSize={18}
-        />
-        <SlateBlockButton
-          editor={editor}
-          component="toolbar"
-          type="heading-one"
-          icon={MdLooksOne}
-          iconSize={18}
-        />
-        <SlateBlockButton
-          editor={editor}
-          component="toolbar"
-          type="heading-two"
-          icon={MdLooksTwo}
-          iconSize={18}
-        />
-        <SlateBlockButton
-          editor={editor}
-          component="toolbar"
-          type="heading-three"
-          icon={MdLooks3}
-          iconSize={18}
-        />
-        <SlateBlockButton
-          editor={editor}
-          component="toolbar"
-          type="numbered-list"
-          icon={MdFormatListNumbered}
-          iconSize={18}
-        />
-        <SlateBlockButton
-          editor={editor}
-          component="toolbar"
-          type="bulleted-list"
-          icon={MdFormatListBulleted}
-          iconSize={18}
-        />
-        <SlateLinkButton
-          editor={editor}
-          component="toolbar"
-          type="link"
-          icon={MdLink}
-          iconSize={18}
-        />
-        <SlateToolbarButton
+        {renderMarkButton('bold', MdFormatBold)}
+        {renderMarkButton('italic', MdFormatItalic)}
+        {renderMarkButton('underlined', MdFormatUnderlined)}
+        {renderBlockButton('block-quote', MdFormatQuote)}
+        {renderBlockButton('heading-one', MdLooksOne)}
+        {renderBlockButton('heading-two', MdLooksTwo)}
+        {renderBlockButton('heading-three', MdLooks3)}
+        {renderBlockButton('numbered-list', MdFormatListNumbered)}
+        {renderBlockButton('bulleted-list', MdFormatListBulleted)}
+        {renderLinkButton()}
+        <SlateEditorToolbarButton
+          active={false}
           onMouseDown={event => {
             event.preventDefault();
             onClickImage(editor);
           }}
         >
           <MdImage color={'#b8c2cc'} size={18} />
-        </SlateToolbarButton>
+        </SlateEditorToolbarButton>
       </SlateToolbarButtonContainer>
       <SlateToolbarActionContainer>
         {loadingSave && (
