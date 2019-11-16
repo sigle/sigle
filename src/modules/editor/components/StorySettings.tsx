@@ -28,11 +28,17 @@ const CloseButton = styled.div`
   ${tw`p-2 -mr-2 flex items-center cursor-pointer`};
 `;
 
-const ImageEmpty = styled.div`
-  ${tw`flex items-center justify-center bg-white py-16 mb-4 cursor-pointer rounded-lg relative border border-solid border-grey`};
+const ImageEmpty = styled.div<{ haveImage: boolean }>`
+  ${tw`flex items-center justify-center bg-grey py-16 mb-4 cursor-pointer rounded-lg relative border border-solid border-grey`};
+
+  ${props =>
+    props.haveImage &&
+    css`
+      ${tw`py-0`};
+    `}
 
   span {
-    ${tw`py-1 px-2 rounded-lg text-sm border border-solid border-grey-dark text-grey-dark`};
+    ${tw`py-1 px-2 text-sm text-grey-darker`};
   }
 `;
 
@@ -134,17 +140,19 @@ export const StorySettings = ({
             <form>
               <FormRow>
                 <FormLabel>Cover image</FormLabel>
-                {!story.coverImage && (
-                  <ImageEmpty onClick={onUploadImage}>
-                    <span>Upload cover image</span>
-                    <ImageEmptyIcon>
-                      <MdAddAPhoto />
-                    </ImageEmptyIcon>
-                  </ImageEmpty>
-                )}
-                {story.coverImage && (
-                  <Image src={story.coverImage} onClick={onUploadImage} />
-                )}
+
+                <ImageEmpty
+                  onClick={onUploadImage}
+                  haveImage={!!story.coverImage}
+                >
+                  {story.coverImage && (
+                    <Image src={story.coverImage} onClick={onUploadImage} />
+                  )}
+                  {!story.coverImage && <span>Upload cover image</span>}
+                  <ImageEmptyIcon>
+                    <MdAddAPhoto />
+                  </ImageEmptyIcon>
+                </ImageEmpty>
               </FormRow>
 
               <FormRow>
