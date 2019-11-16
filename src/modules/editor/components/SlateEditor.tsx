@@ -511,7 +511,7 @@ export const SlateEditor = ({
       <div>
         <Input
           value={story.title}
-          onChange={(e: any) => onChangeTitle(e.target.value)}
+          onChange={e => onChangeTitle(e.target.value)}
           placeholder="Title"
         />
 
