@@ -11,15 +11,7 @@ import {
 } from 'slate-react';
 import SoftBreak from 'slate-soft-break';
 import { Block, Value } from 'slate';
-import {
-  MdArrowBack,
-  MdImage,
-  MdLink,
-  MdLooksTwo,
-  MdLooks3,
-  MdLooksOne,
-  MdSettings,
-} from 'react-icons/md';
+import { MdArrowBack } from 'react-icons/md';
 import Link from 'next/link';
 import {
   PageContainer,
@@ -35,12 +27,8 @@ import {
 import { Story } from '../../../types';
 import { Content } from '../../publicStory/components/PublicStory';
 import { StorySettings } from '../containers/StorySettings';
-import { insertImage } from './utils';
 import { SlateEditorSideMenu } from './SlateEditorSideMenu';
 import { SlateEditorHoverMenu } from './SlateEditorHoverMenu';
-import { SlateMarkButton } from './SlateMarkButton';
-import { SlateBlockButton } from './SlateBlockButton';
-import { SlateLinkButton } from './SlateLinkButton';
 import { SlateEditorToolbar } from './SlateEditorToolbar';
 
 const StyledLinkContainer = styled.div`

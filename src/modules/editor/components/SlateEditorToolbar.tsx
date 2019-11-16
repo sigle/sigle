@@ -213,7 +213,7 @@ export const SlateEditorToolbar = ({
           onClickBlock(editor, type);
         }}
       >
-        <Icon color={isActive ? '#000000' : '#cccccc'} size={18} />
+        <Icon size={18} />
       </SlateEditorToolbarButton>
     );
   };

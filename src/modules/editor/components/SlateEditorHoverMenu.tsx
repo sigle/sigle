@@ -1,7 +1,8 @@
 import React, { forwardRef } from 'react';
 import { Editor } from 'slate-react';
+import { IconType } from 'react-icons';
 import ReactDOM from 'react-dom';
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 import tw from 'tailwind.macro';
 import {
   MdFormatBold,
@@ -15,9 +16,8 @@ import {
   MdFormatListBulleted,
   MdLink,
 } from 'react-icons/md';
-import { SlateMarkButton } from './SlateMarkButton';
-import { SlateBlockButton } from './SlateBlockButton';
-import { SlateLinkButton } from './SlateLinkButton';
+import { hasLinks, hasBlock, hasMark } from './utils';
+import { onClickLink, onClickBlock, onClickMark } from './SlateEditorToolbar';
 
 const HoverMenuContainer = styled.div`
   ${tw`flex`};
@@ -33,6 +33,18 @@ const HoverMenuContainer = styled.div`
   transition: opacity 0.75s;
 `;
 
+const SlateEditorHoverMenuButton = styled.button<{ active: boolean }>`
+  ${tw`text-white cursor-pointer`};
+  padding-left: 0.3rem;
+  padding-right: 0.3rem;
+
+  ${props =>
+    props.active &&
+    css`
+      ${tw`text-pink`};
+    `}
+`;
+
 interface SlateEditorSideMenuProps {
   editor: Editor;
 }
@@ -42,75 +54,89 @@ export const SlateEditorHoverMenu = forwardRef(
     const root = window.document.getElementById('__next');
     if (!root) return null;
 
+    const { value } = editor;
+
+    /**
+     * Render a mark-toggling toolbar button.
+     */
+    const renderMarkButton = (type: string, Icon: IconType) => {
+      const isActive = hasMark(value, type);
+
+      return (
+        <SlateEditorHoverMenuButton
+          active={isActive}
+          onMouseDown={event => {
+            event.preventDefault();
+            onClickMark(editor, type);
+          }}
+        >
+          <Icon size={18} />
+        </SlateEditorHoverMenuButton>
+      );
+    };
+
+    /**
+     * Render a block-toggling toolbar button.
+     */
+    const renderBlockButton = (type: string, Icon: IconType) => {
+      let isActive = hasBlock(value, type);
+
+      if (['numbered-list', 'bulleted-list'].includes(type)) {
+        const { document, blocks } = value;
+
+        if (blocks.size > 0) {
+          const parent = document.getParent(blocks.first().key);
+          isActive =
+            hasBlock(value, 'list-item') &&
+            !!parent &&
+            (parent as any).type === type;
+        }
+      }
+
+      return (
+        <SlateEditorHoverMenuButton
+          active={isActive}
+          onMouseDown={event => {
+            event.preventDefault();
+            onClickBlock(editor, type);
+          }}
+        >
+          <Icon size={18} />
+        </SlateEditorHoverMenuButton>
+      );
+    };
+
+    /**
+     * Render a link toolbar button.
+     */
+    const renderLinkButton = () => {
+      const isActive = hasLinks(value);
+
+      return (
+        <SlateEditorHoverMenuButton
+          active={isActive}
+          onMouseDown={event => {
+            event.preventDefault();
+            onClickLink(editor);
+          }}
+        >
+          <MdLink size={18} />
+        </SlateEditorHoverMenuButton>
+      );
+    };
+
     return ReactDOM.createPortal(
       <HoverMenuContainer ref={ref}>
-        <SlateMarkButton
-          component="hover"
-          editor={editor}
-          type="bold"
-          icon={MdFormatBold}
-        />
-        <SlateMarkButton
-          component="hover"
-          editor={editor}
-          type="italic"
-          icon={MdFormatItalic}
-        />
-        <SlateMarkButton
-          component="hover"
-          editor={editor}
-          type="underlined"
-          icon={MdFormatUnderlined}
-        />
-        <SlateBlockButton
-          editor={editor}
-          component="hover"
-          type="block-quote"
-          icon={MdFormatQuote}
-          iconSize={18}
-        />
-        <SlateBlockButton
-          editor={editor}
-          component="hover"
-          type="heading-one"
-          icon={MdLooksOne}
-          iconSize={18}
-        />
-        <SlateBlockButton
-          editor={editor}
-          component="hover"
-          type="heading-two"
-          icon={MdLooksTwo}
-          iconSize={18}
-        />
-        <SlateBlockButton
-          editor={editor}
-          component="hover"
-          type="heading-three"
-          icon={MdLooks3}
-          iconSize={18}
-        />
-        <SlateBlockButton
-          editor={editor}
-          component="hover"
-          type="numbered-list"
-          icon={MdFormatListNumbered}
-          iconSize={18}
-        />
-        <SlateBlockButton
-          editor={editor}
-          component="hover"
-          type="bulleted-list"
-          icon={MdFormatListBulleted}
-          iconSize={18}
-        />
-        <SlateLinkButton
-          editor={editor}
-          component="hover"
-          type="link"
-          icon={MdLink}
-          iconSize={18}
-        />
+        {renderMarkButton('bold', MdFormatBold)}
+        {renderMarkButton('italic', MdFormatItalic)}
+        {renderMarkButton('underlined', MdFormatUnderlined)}
+        {renderBlockButton('block-quote', MdFormatQuote)}
+        {renderBlockButton('heading-one', MdLooksOne)}
+        {renderBlockButton('heading-two', MdLooksTwo)}
+        {renderBlockButton('heading-three', MdLooks3)}
+        {renderBlockButton('numbered-list', MdFormatListNumbered)}
+        {renderBlockButton('bulleted-list', MdFormatListBulleted)}
+        {renderLinkButton()}
       </HoverMenuContainer>,
       root
     );
