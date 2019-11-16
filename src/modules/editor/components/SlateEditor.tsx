@@ -43,10 +43,18 @@ import { Story } from '../../../types';
 import { Content } from '../../publicStory/components/PublicStory';
 import { StorySettings } from '../containers/StorySettings';
 import { config } from '../../../config';
-import { hasBlock, hasLinks, wrapLink, unwrapLink, insertImage } from './utils';
+import {
+  hasBlock,
+  hasLinks,
+  wrapLink,
+  unwrapLink,
+  insertImage,
+  DEFAULT_NODE,
+} from './utils';
 import { SlateEditorSideMenu } from './SlateEditorSideMenu';
 import { SlateEditorHoverMenu } from './SlateEditorHoverMenu';
 import { SlateMarkButton } from './SlateMarkButton';
+import { SlateBlockButton } from './SlateBlockButton';
 
 const StyledLinkContainer = styled.div`
   ${tw`mb-4`};
@@ -112,10 +120,6 @@ const StyledEditor = styled(Editor)`
 
 // See https://github.com/ianstormtaylor/slate/blob/master/examples/rich-text/index.js
 
-// TODO add links
-
-const DEFAULT_NODE = 'paragraph';
-
 const schema = {
   document: {
     last: { type: 'paragraph' },
@@ -155,50 +159,6 @@ const emptyNode = {
 const slatePlugins = [SoftBreak({ shift: true })];
 
 // TODO warn user if he try to leave the page with unsaved changes
-
-const onClickBlock = (editor: Editor, type: string) => {
-  const { value } = editor;
-  const { document } = value;
-
-  // Handle everything but list buttons.
-  if (type !== 'bulleted-list' && type !== 'numbered-list') {
-    const isActive = hasBlock(value, type);
-    const isList = hasBlock(value, 'list-item');
-
-    if (isList) {
-      editor
-        .setBlocks(isActive ? DEFAULT_NODE : type)
-        .unwrapBlock('bulleted-list')
-        .unwrapBlock('numbered-list');
-    } else {
-      editor.setBlocks(isActive ? DEFAULT_NODE : type);
-    }
-  } else {
-    // Handle the extra wrapping required for list buttons.
-    const isList = hasBlock(value, 'list-item');
-    const isType = value.blocks.some((block: any) => {
-      return !!document.getClosest(
-        block.key,
-        (parent: any) => parent.type === type
-      );
-    });
-
-    if (isList && isType) {
-      editor
-        .setBlocks(DEFAULT_NODE)
-        .unwrapBlock('bulleted-list')
-        .unwrapBlock('numbered-list');
-    } else if (isList) {
-      editor
-        .unwrapBlock(
-          type === 'bulleted-list' ? 'numbered-list' : 'bulleted-list'
-        )
-        .wrapBlock(type);
-    } else {
-      editor.setBlocks('list-item').wrapBlock(type);
-    }
-  }
-};
 
 /**
  * When clicking a link, if the selection has a link in it, remove the link.
@@ -364,38 +324,6 @@ export const SlateEditor = ({
   };
 
   /**
-   * Render a block-toggling toolbar button.
-   */
-  const renderBlockButton = (type: string, Icon: any) => {
-    let isActive = hasBlock(value, type);
-
-    if (['numbered-list', 'bulleted-list'].includes(type)) {
-      const editor = editorRef.current;
-      if (editor) {
-        const { value } = editor;
-        const { document, blocks } = value;
-
-        if (blocks.size > 0) {
-          const parent = document.getParent(blocks.first().key);
-          isActive =
-            hasBlock(value, 'list-item') && parent && parent.type === type;
-        }
-      }
-    }
-
-    return (
-      <SlateToolbarButton
-        onMouseDown={event => {
-          event.preventDefault();
-          onClickBlock(editorRef.current, type);
-        }}
-      >
-        <Icon color={isActive ? '#000000' : '#bbbaba'} size={18} />
-      </SlateToolbarButton>
-    );
-  };
-
-  /**
    * Render a link toolbar button.
    */
   const renderLinkButton = () => {
@@ -441,6 +369,48 @@ export const SlateEditor = ({
               component="toolbar"
               type="underlined"
               icon={MdFormatUnderlined}
+              iconSize={18}
+            />
+            <SlateBlockButton
+              editor={editor}
+              component="toolbar"
+              type="block-quote"
+              icon={MdFormatQuote}
+              iconSize={18}
+            />
+            <SlateBlockButton
+              editor={editor}
+              component="toolbar"
+              type="heading-one"
+              icon={MdLooksOne}
+              iconSize={18}
+            />
+            <SlateBlockButton
+              editor={editor}
+              component="toolbar"
+              type="heading-two"
+              icon={MdLooksTwo}
+              iconSize={18}
+            />
+            <SlateBlockButton
+              editor={editor}
+              component="toolbar"
+              type="heading-three"
+              icon={MdLooks3}
+              iconSize={18}
+            />
+            <SlateBlockButton
+              editor={editor}
+              component="toolbar"
+              type="numbered-list"
+              icon={MdFormatListNumbered}
+              iconSize={18}
+            />
+            <SlateBlockButton
+              editor={editor}
+              component="toolbar"
+              type="bulleted-list"
+              icon={MdFormatListBulleted}
               iconSize={18}
             />
           </SlateToolbarButtonContainer>
@@ -595,12 +565,6 @@ export const SlateEditor = ({
         <SlateContainer>
           <SlateToolbar>
             <SlateToolbarButtonContainer>
-              {renderBlockButton('block-quote', MdFormatQuote)}
-              {renderBlockButton('heading-one', MdLooksOne)}
-              {renderBlockButton('heading-two', MdLooksTwo)}
-              {renderBlockButton('heading-three', MdLooks3)}
-              {renderBlockButton('numbered-list', MdFormatListNumbered)}
-              {renderBlockButton('bulleted-list', MdFormatListBulleted)}
               {renderLinkButton()}
               <SlateToolbarButton
                 onMouseDown={event => {

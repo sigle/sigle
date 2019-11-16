@@ -5,7 +5,7 @@ import styled, { css } from 'styled-components';
 import tw from 'tailwind.macro';
 import { hasMark } from './utils';
 
-interface MarkButtonProps {
+export interface MarkButtonProps {
   editor: Editor;
   type: string;
   icon: IconType;
@@ -13,7 +13,7 @@ interface MarkButtonProps {
   component: 'hover' | 'toolbar';
 }
 
-const StyledMarButton = styled.div<{
+export const StyledMarButton = styled.div<{
   component: 'hover' | 'toolbar';
   active: boolean;
 }>`

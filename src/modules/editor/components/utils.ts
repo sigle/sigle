@@ -1,5 +1,7 @@
 import { Value, Editor } from 'slate';
 
+export const DEFAULT_NODE = 'paragraph';
+
 /**
  * Check if the current selection has a mark with `type` in it.
  */

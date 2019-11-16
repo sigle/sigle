@@ -1,14 +1,21 @@
-import React, { forwardRef, useState } from 'react';
+import React, { forwardRef } from 'react';
 import { Editor } from 'slate-react';
 import ReactDOM from 'react-dom';
-import styled, { css } from 'styled-components';
+import styled from 'styled-components';
 import tw from 'tailwind.macro';
 import {
   MdFormatBold,
   MdFormatItalic,
   MdFormatUnderlined,
+  MdFormatQuote,
+  MdLooksOne,
+  MdLooksTwo,
+  MdLooks3,
+  MdFormatListNumbered,
+  MdFormatListBulleted,
 } from 'react-icons/md';
 import { SlateMarkButton } from './SlateMarkButton';
+import { SlateBlockButton } from './SlateBlockButton';
 
 const HoverMenuContainer = styled.div`
   ${tw`flex`};
@@ -30,8 +37,6 @@ interface SlateEditorSideMenuProps {
 
 export const SlateEditorHoverMenu = forwardRef(
   ({ editor }: SlateEditorSideMenuProps, ref: any) => {
-    const [open, setOpen] = useState(false);
-
     const root = window.document.getElementById('__next');
     if (!root) return null;
 
@@ -54,6 +59,48 @@ export const SlateEditorHoverMenu = forwardRef(
           editor={editor}
           type="underlined"
           icon={MdFormatUnderlined}
+        />
+        <SlateBlockButton
+          editor={editor}
+          component="hover"
+          type="block-quote"
+          icon={MdFormatQuote}
+          iconSize={18}
+        />
+        <SlateBlockButton
+          editor={editor}
+          component="hover"
+          type="heading-one"
+          icon={MdLooksOne}
+          iconSize={18}
+        />
+        <SlateBlockButton
+          editor={editor}
+          component="hover"
+          type="heading-two"
+          icon={MdLooksTwo}
+          iconSize={18}
+        />
+        <SlateBlockButton
+          editor={editor}
+          component="hover"
+          type="heading-three"
+          icon={MdLooks3}
+          iconSize={18}
+        />
+        <SlateBlockButton
+          editor={editor}
+          component="hover"
+          type="numbered-list"
+          icon={MdFormatListNumbered}
+          iconSize={18}
+        />
+        <SlateBlockButton
+          editor={editor}
+          component="hover"
+          type="bulleted-list"
+          icon={MdFormatListBulleted}
+          iconSize={18}
         />
       </HoverMenuContainer>,
       root
