@@ -2,23 +2,18 @@ import React from 'react';
 import styled, { css } from 'styled-components';
 import tw from 'tailwind.macro';
 import { MdClose, MdAddAPhoto, MdDelete } from 'react-icons/md';
+import { DialogContent, DialogOverlay } from '@reach/dialog';
+import '@reach/dialog/styles.css';
+import { animated, useTransition } from 'react-spring';
 import format from 'date-fns/format';
 import { Story } from '../../../types';
 
-const containerSize = 450;
+const StyledDialogOverlay = styled(DialogOverlay)`
+  z-index: 11;
+`;
 
-const Container = styled.div<{ open: boolean }>`
-  ${tw`fixed right-0 top-0 bottom-0 bg-grey-light z-10 px-8 pb-8 overflow-y-auto`};
-  width: ${containerSize}px;
-  max-width: 100%;
-  transition: transform 0.3s ease;
-  transform: translate3d(${containerSize}px, 0, 0);
-
-  ${props =>
-    props.open &&
-    css`
-      transform: translateZ(0);
-    `}
+const StyledDialogContent = styled(DialogContent)`
+  ${tw`fixed top-0 right-0 bottom-0 overflow-y-auto w-full max-w-md m-0 px-8 py-4 bg-white`};
 `;
 
 const TitleContainer = styled.div`
@@ -90,8 +85,10 @@ interface Props {
   onChangeMetaDescription: (value: string) => void;
   onChangeCreatedAt: (value: string) => void;
   onUploadImage: () => void;
-  nodeRef: React.RefObject<HTMLDivElement>;
 }
+
+const AnimatedDialogOverlay = animated(StyledDialogOverlay);
+const AnimatedDialogContent = animated(StyledDialogContent);
 
 export const StorySettings = ({
   open,
@@ -103,82 +100,104 @@ export const StorySettings = ({
   onChangeMetaDescription,
   onChangeCreatedAt,
   onUploadImage,
-  nodeRef,
 }: Props) => {
-  return (
-    <Container open={open} ref={nodeRef}>
-      <TitleContainer>
-        <Title>Settings</Title>
-        <CloseButton onClick={onClose}>
-          <MdClose />
-        </CloseButton>
-      </TitleContainer>
+  const transitions = useTransition(open, null, {
+    from: { opacity: 0, transform: 'translateX(100%)' },
+    enter: { opacity: 1, transform: 'translateX(0)' },
+    leave: { opacity: 0, transform: 'translateX(100%)' },
+    config: {
+      duration: 250,
+    },
+  });
 
-      <form>
-        <FormRow>
-          <FormLabel>Cover image</FormLabel>
-          {!story.coverImage && (
-            <ImageEmpty onClick={onUploadImage}>
-              <span>Upload cover image</span>
-              <ImageEmptyIcon>
-                <MdAddAPhoto />
-              </ImageEmptyIcon>
-            </ImageEmpty>
-          )}
-          {story.coverImage && (
-            <Image src={story.coverImage} onClick={onUploadImage} />
-          )}
-        </FormRow>
+  return transitions.map(
+    ({ item, key, props: styles }) =>
+      item && (
+        <AnimatedDialogOverlay
+          key={key}
+          onDismiss={onClose}
+          style={{ opacity: styles.opacity }}
+        >
+          <AnimatedDialogContent
+            style={{
+              transform: styles.transform,
+            }}
+            aria-label="Story settings"
+          >
+            <TitleContainer>
+              <Title>Settings</Title>
+              <CloseButton onClick={onClose}>
+                <MdClose />
+              </CloseButton>
+            </TitleContainer>
 
-        <FormRow>
-          <FormLabel>Created on</FormLabel>
-          <FormInput
-            type="date"
-            value={format(story.createdAt, 'yyyy-MM-dd')}
-            onChange={e => onChangeCreatedAt(e.target.value)}
-          />
-        </FormRow>
+            <form>
+              <FormRow>
+                <FormLabel>Cover image</FormLabel>
+                {!story.coverImage && (
+                  <ImageEmpty onClick={onUploadImage}>
+                    <span>Upload cover image</span>
+                    <ImageEmptyIcon>
+                      <MdAddAPhoto />
+                    </ImageEmptyIcon>
+                  </ImageEmpty>
+                )}
+                {story.coverImage && (
+                  <Image src={story.coverImage} onClick={onUploadImage} />
+                )}
+              </FormRow>
 
-        <FormRow>
-          <FormLabel>Meta title</FormLabel>
-          <FormInput
-            value={story.metaTitle || ''}
-            onChange={e => onChangeMetaTitle(e.target.value)}
-            maxLength={100}
-          />
-          <FormHelper>
-            Recommended: 70 characters. You have used{' '}
-            {story.metaTitle ? story.metaTitle.length : 0} characters.
-          </FormHelper>
-        </FormRow>
+              <FormRow>
+                <FormLabel>Created on</FormLabel>
+                <FormInput
+                  type="date"
+                  value={format(story.createdAt, 'yyyy-MM-dd')}
+                  onChange={e => onChangeCreatedAt(e.target.value)}
+                />
+              </FormRow>
 
-        <FormRow>
-          <FormLabel>Meta description</FormLabel>
-          <FormTextarea
-            rows={3}
-            value={story.metaDescription || ''}
-            onChange={e => onChangeMetaDescription(e.target.value)}
-            maxLength={250}
-          />
-          <FormHelper>
-            Recommended: 156 characters. You have used{' '}
-            {story.metaDescription ? story.metaDescription.length : 0}{' '}
-            characters.
-          </FormHelper>
-        </FormRow>
-      </form>
+              <FormRow>
+                <FormLabel>Meta title</FormLabel>
+                <FormInput
+                  value={story.metaTitle || ''}
+                  onChange={e => onChangeMetaTitle(e.target.value)}
+                  maxLength={100}
+                />
+                <FormHelper>
+                  Recommended: 70 characters. You have used{' '}
+                  {story.metaTitle ? story.metaTitle.length : 0} characters.
+                </FormHelper>
+              </FormRow>
 
-      {loadingDelete ? (
-        <ButtonLink disabled>
-          <MdDelete />
-          <span>Deleting ...</span>
-        </ButtonLink>
-      ) : (
-        <ButtonLink onClick={onDelete}>
-          <MdDelete />
-          <span>Delete this story</span>
-        </ButtonLink>
-      )}
-    </Container>
-  );
+              <FormRow>
+                <FormLabel>Meta description</FormLabel>
+                <FormTextarea
+                  rows={3}
+                  value={story.metaDescription || ''}
+                  onChange={e => onChangeMetaDescription(e.target.value)}
+                  maxLength={250}
+                />
+                <FormHelper>
+                  Recommended: 156 characters. You have used{' '}
+                  {story.metaDescription ? story.metaDescription.length : 0}{' '}
+                  characters.
+                </FormHelper>
+              </FormRow>
+            </form>
+
+            {loadingDelete ? (
+              <ButtonLink disabled>
+                <MdDelete />
+                <span>Deleting ...</span>
+              </ButtonLink>
+            ) : (
+              <ButtonLink onClick={onDelete}>
+                <MdDelete />
+                <span>Delete this story</span>
+              </ButtonLink>
+            )}
+          </AnimatedDialogContent>
+        </AnimatedDialogOverlay>
+      )
+  ) as any;
 };

@@ -41,6 +41,7 @@
     "not op_mini all"
   ],
   "dependencies": {
+    "@reach/dialog": "0.6.1",
     "@sentry/browser": "5.8.0",
     "@sentry/node": "5.8.0",
     "@tippy.js/react": "3.1.1",
@@ -56,6 +57,7 @@
     "react": "16.11.0",
     "react-dom": "16.11.0",
     "react-icons": "3.8.0",
+    "react-spring": "8.0.27",
     "react-toastify": "5.4.1",
     "slate": "0.47.8",
     "slate-html-serializer": "0.8.10",
