@@ -1,6 +1,6 @@
 import React from 'react';
 import { Protected } from '../modules/auth/Protected';
-import { LoggedIn } from '../modules/layout';
+import { LoggedIn, Footer } from '../modules/layout';
 import { Home } from '../modules/home';
 
 const HomePage = () => {
@@ -8,6 +8,7 @@ const HomePage = () => {
     <Protected>
       <LoggedIn>
         <Home />
+        <Footer />
       </LoggedIn>
     </Protected>
   );

@@ -6,7 +6,6 @@ import { IoIosEye } from 'react-icons/io';
 import { userSession } from '../../../utils/blockstack';
 import { AppBar, AppBarRightContainer } from './AppBar';
 import { BlockstackUser } from '../../../types';
-import { Footer } from './Footer';
 
 const Name = styled.a`
   ${tw`mr-8 flex items-center cursor-pointer text-black no-underline`};
@@ -17,10 +16,11 @@ const Logout = styled.div`
 `;
 
 interface Props {
-  children: React.ReactChild;
+  showAppBar?: boolean;
+  children: React.ReactNode;
 }
 
-export const LoggedIn = ({ children }: Props) => {
+export const LoggedIn = ({ children, showAppBar = true }: Props) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [user, setUser] = useState<BlockstackUser | null>(null);
@@ -62,19 +62,20 @@ export const LoggedIn = ({ children }: Props) => {
 
   return (
     <React.Fragment>
-      <AppBar>
-        <AppBarRightContainer>
-          <Tippy content={user.username} theme="light-border">
-            <Name href={`/${user.username}`} target="_blank">
-              <IoIosEye size={22} style={{ marginRight: 6 }} /> Visit my blog
-            </Name>
-          </Tippy>
-          <Logout onClick={handleLogout}>Logout</Logout>
-        </AppBarRightContainer>
-      </AppBar>
+      {showAppBar && (
+        <AppBar>
+          <AppBarRightContainer>
+            <Tippy content={user.username} theme="light-border">
+              <Name href={`/${user.username}`} target="_blank">
+                <IoIosEye size={22} style={{ marginRight: 6 }} /> Visit my blog
+              </Name>
+            </Tippy>
+            <Logout onClick={handleLogout}>Logout</Logout>
+          </AppBarRightContainer>
+        </AppBar>
+      )}
 
       {children}
-      <Footer />
     </React.Fragment>
   );
 };

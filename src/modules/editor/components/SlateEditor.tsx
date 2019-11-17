@@ -2,36 +2,17 @@ import React, { useState, useRef } from 'react';
 import styled from 'styled-components';
 import tw from 'tailwind.macro';
 import { toast } from 'react-toastify';
+import Tippy from '@tippy.js/react';
 import {
   Editor,
   RenderBlockProps,
   RenderInlineProps,
   RenderMarkProps,
+  EditorProps,
 } from 'slate-react';
 import SoftBreak from 'slate-soft-break';
 import { Block, Value } from 'slate';
-import {
-  MdFormatBold,
-  MdFormatItalic,
-  MdFormatUnderlined,
-  MdFormatQuote,
-  MdFormatListNumbered,
-  MdFormatListBulleted,
-  MdArrowBack,
-  MdImage,
-  MdLink,
-  MdLooksTwo,
-  MdLooks3,
-  MdLooksOne,
-  MdSettings,
-} from 'react-icons/md';
-import Link from 'next/link';
-import {
-  PageContainer,
-  PageTitleContainer,
-  PageTitle,
-} from '../../home/components/Home';
-import { ButtonOutline } from '../../../components';
+import { MdSettings } from 'react-icons/md';
 import {
   saveStoryFile,
   convertStoryToSubsetStory,
@@ -41,19 +22,27 @@ import {
 import { Story } from '../../../types';
 import { Content } from '../../publicStory/components/PublicStory';
 import { StorySettings } from '../containers/StorySettings';
-import { config } from '../../../config';
-import { hasMark, hasBlock, hasLinks } from './utils';
+import { SlateEditorSideMenu } from './SlateEditorSideMenu';
+import { SlateEditorHoverMenu } from './SlateEditorHoverMenu';
+import { SlateEditorToolbar } from './SlateEditorToolbar';
+import { AppBar, AppBarRightContainer } from '../../layout';
+import { ButtonOutline, Container } from '../../../components';
+import { DEFAULT_NODE, hasBlock } from './utils';
 
-const StyledLinkContainer = styled.div`
-  ${tw`mb-4`};
+const FixedContainer = styled.div`
+  ${tw`fixed w-full bg-white top-0`};
 `;
 
-const StyledLink = styled.a`
-  ${tw`no-underline text-black flex cursor-pointer`};
+const StyledAppBarRightContainer = styled(AppBarRightContainer)`
+  ${tw`hidden md:flex`};
 `;
 
-const StyledMdArrowBack = styled(MdArrowBack)`
-  ${tw`mr-2`};
+const AppBarSettings = styled.div`
+  ${tw`p-2 -mr-2 flex items-center cursor-pointer text-pink`};
+`;
+
+const PageContainer = styled(Container)`
+  ${tw`mt-24`};
 `;
 
 const Input = styled.input`
@@ -72,31 +61,6 @@ const SlateContainer = styled.div`
   ${tw`my-8`};
 `;
 
-const SlateToolbar = styled.div`
-  ${tw`py-4 border-b border-solid border-grey flex z-10 bg-white sticky flex justify-between max-w-full overflow-auto`};
-  top: 0;
-
-  @media (min-width: ${config.breakpoints.md}px) {
-    ${tw`overflow-visible`};
-  }
-`;
-
-const SlateToolbarButtonContainer = styled.div`
-  ${tw`flex`};
-`;
-
-const SlateToolbarButton = styled.button`
-  ${tw`py-2 px-2 outline-none flex`};
-`;
-
-const SlateToolbarActionContainer = styled.div`
-  ${tw`flex items-center`};
-`;
-
-const SlateToolbarActionIcon = styled.div`
-  ${tw`p-2 -mr-2 flex items-center cursor-pointer text-pink`};
-`;
-
 const StyledContent = styled(Content)`
   margin: 0;
 `;
@@ -107,10 +71,6 @@ const StyledEditor = styled(Editor)`
 `;
 
 // See https://github.com/ianstormtaylor/slate/blob/master/examples/rich-text/index.js
-
-// TODO add links
-
-const DEFAULT_NODE = 'paragraph';
 
 const schema = {
   document: {
@@ -152,6 +112,72 @@ const slatePlugins = [SoftBreak({ shift: true })];
 
 // TODO warn user if he try to leave the page with unsaved changes
 
+/**
+ * Handle key press from the user and allow shortcuts.
+ */
+const onKeyDown = (
+  event: React.KeyboardEvent,
+  editor: Editor,
+  next: () => any
+) => {
+  // When the user press enter on a title or quote we reset the style to paragraph
+  if (
+    event.key === 'Enter' &&
+    (hasBlock(editor.value, 'heading-one') ||
+      hasBlock(editor.value, 'heading-two') ||
+      hasBlock(editor.value, 'heading-three') ||
+      hasBlock(editor.value, 'block-quote'))
+  ) {
+    event.preventDefault();
+    editor.splitBlock().setBlocks(DEFAULT_NODE);
+    return;
+  }
+
+  // When the user press enter or backspace on a empty list item
+  // we should remove the list block and set it to paragraph
+  if (
+    ['Enter', 'Backspace'].includes(event.key) &&
+    editor.value.blocks.size > 0
+  ) {
+    const parent = editor.value.document.getParent(
+      editor.value.blocks.first().key
+    );
+    const isEmptyText =
+      editor.value.texts.get(0) && editor.value.texts.get(0).text.length === 0;
+    if (
+      parent &&
+      ['numbered-list', 'bulleted-list'].includes((parent as any).type) &&
+      isEmptyText
+    ) {
+      event.preventDefault();
+      editor
+        .setBlocks(DEFAULT_NODE)
+        .unwrapBlock('bulleted-list')
+        .unwrapBlock('numbered-list');
+      return;
+    }
+  }
+
+  // We want all our commands to start with the user pressing ctrl or cmd for mac users
+  if (!event.ctrlKey && !event.metaKey) {
+    return next();
+  }
+
+  let mark: string;
+  if (event.key === 'b') {
+    mark = 'bold';
+  } else if (event.key === 'i') {
+    mark = 'italic';
+  } else if (event.key === 'u') {
+    mark = 'underlined';
+  } else {
+    return next();
+  }
+
+  event.preventDefault();
+  editor.toggleMark(mark);
+};
+
 interface Props {
   story: Story;
   onChangeTitle: (title: string) => void;
@@ -164,6 +190,8 @@ export const SlateEditor = ({
   onChangeStoryField,
 }: Props) => {
   const editorRef = useRef<any>(null);
+  const sideMenuRef = useRef<any>(null);
+  const hoverMenuRef = useRef<any>(null);
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [loadingSave, setLoadingSave] = useState(false);
   const [value, setValue] = useState(
@@ -171,150 +199,6 @@ export const SlateEditor = ({
       ? Value.fromJSON(story.content)
       : Value.fromJSON(emptyNode as any)
   );
-
-  const handleTextChange = ({ value }: any) => {
-    setValue(value);
-  };
-
-  const insertImage = (editor: any, src: string, target: any) => {
-    if (target) {
-      editor.select(target);
-    }
-
-    editor.insertBlock({
-      type: 'image',
-      data: { src },
-    });
-  };
-
-  const wrapLink = (editor: any, href: string) => {
-    editor.wrapInline({
-      type: 'link',
-      data: { href },
-    });
-
-    editor.moveToEnd();
-  };
-
-  const unwrapLink = (editor: any) => {
-    editor.unwrapInline('link');
-  };
-
-  const onClickImage = (event: any) => {
-    event.preventDefault();
-    const src = window.prompt('Enter the URL of the image:');
-    if (!src) return;
-    editorRef.current.command(insertImage, src);
-  };
-
-  const onClickLink = (event: any) => {
-    event.preventDefault();
-
-    const editor = editorRef.current;
-    const { value } = editor;
-
-    if (hasLinks(value)) {
-      editor.command(unwrapLink);
-    } else if (value.selection.isExpanded) {
-      const href = window.prompt('Enter the URL of the link:');
-
-      if (href === null) {
-        return;
-      }
-
-      editor.command(wrapLink, href);
-    } else {
-      const href = window.prompt('Enter the URL of the link:');
-
-      if (href === null) {
-        return;
-      }
-
-      const text = window.prompt('Enter the text for the link:');
-
-      if (text === null) {
-        return;
-      }
-
-      editor
-        .insertText(text)
-        .moveFocusBackward(text.length)
-        .command(wrapLink, href);
-    }
-  };
-
-  const onClickMark = (event: any, type: string) => {
-    event.preventDefault();
-    editorRef.current.toggleMark(type);
-  };
-
-  const onClickBlock = (event: any, type: string) => {
-    event.preventDefault();
-
-    const editor = editorRef.current;
-    const { value } = editor;
-    const { document } = value;
-
-    // Handle everything but list buttons.
-    if (type !== 'bulleted-list' && type !== 'numbered-list') {
-      const isActive = hasBlock(value, type);
-      const isList = hasBlock(value, 'list-item');
-
-      if (isList) {
-        editor
-          .setBlocks(isActive ? DEFAULT_NODE : type)
-          .unwrapBlock('bulleted-list')
-          .unwrapBlock('numbered-list');
-      } else {
-        editor.setBlocks(isActive ? DEFAULT_NODE : type);
-      }
-    } else {
-      // Handle the extra wrapping required for list buttons.
-      const isList = hasBlock(value, 'list-item');
-      const isType = value.blocks.some((block: any) => {
-        return !!document.getClosest(
-          block.key,
-          (parent: any) => parent.type === type
-        );
-      });
-
-      if (isList && isType) {
-        editor
-          .setBlocks(DEFAULT_NODE)
-          .unwrapBlock('bulleted-list')
-          .unwrapBlock('numbered-list');
-      } else if (isList) {
-        editor
-          .unwrapBlock(
-            type === 'bulleted-list' ? 'numbered-list' : 'bulleted-list'
-          )
-          .wrapBlock(type);
-      } else {
-        editor.setBlocks('list-item').wrapBlock(type);
-      }
-    }
-  };
-
-  const onKeyDown = (event: any, editor: any, next: any) => {
-    // We want all our commands to start with the user pressing ctrl or cmd for mac users
-    if (!event.ctrlKey && !event.metaKey) {
-      return next();
-    }
-
-    let mark: string;
-    if (event.key === 'b') {
-      mark = 'bold';
-    } else if (event.key === 'i') {
-      mark = 'italic';
-    } else if (event.key === 'u') {
-      mark = 'underlined';
-    } else {
-      return next();
-    }
-
-    event.preventDefault();
-    editor.toggleMark(mark);
-  };
 
   /**
    * Render a Slate block.
@@ -385,42 +269,81 @@ export const SlateEditor = ({
     }
   };
 
-  const renderMarkButton = (type: string, Icon: any) => {
-    const isActive = hasMark(value, type);
+  /**
+   * Render the editor with the side menu
+   */
+  const renderEditor = (props: EditorProps, editor: any, next: () => any) => {
+    const children = next();
 
     return (
-      <SlateToolbarButton
-        onMouseDown={(event: any) => onClickMark(event, type)}
-      >
-        <Icon color={isActive ? '#000000' : '#bbbaba'} size={18} />
-      </SlateToolbarButton>
+      <React.Fragment>
+        {children}
+
+        <SlateEditorSideMenu ref={sideMenuRef} editor={editor} />
+        <SlateEditorHoverMenu ref={hoverMenuRef} editor={editor} />
+      </React.Fragment>
     );
   };
 
-  const renderBlockButton = (type: string, Icon: any) => {
-    let isActive = hasBlock(value, type);
+  /**
+   * Update the menu's absolute position only if:
+   * - it's a paragraph
+   * - text is empty
+   */
+  const updateSideMenu = (value: Value) => {
+    const sideMenu = sideMenuRef.current;
+    if (!sideMenu) return;
 
-    if (['numbered-list', 'bulleted-list'].includes(type)) {
-      const editor = editorRef.current;
-      if (editor) {
-        const { value } = editor;
-        const { document, blocks } = value;
-
-        if (blocks.size > 0) {
-          const parent = document.getParent(blocks.first().key);
-          isActive =
-            hasBlock(value, 'list-item') && parent && parent.type === type;
-        }
+    const { texts, blocks, focusBlock } = value;
+    const topBlock = blocks.get(0);
+    const isAParagraph = topBlock && topBlock.type === 'paragraph';
+    const isEmptyText = texts && texts.get(0) && texts.get(0).text.length === 0;
+    if (isAParagraph && isEmptyText) {
+      const block = document.querySelector(`[data-key='${focusBlock.key}']`);
+      if (block) {
+        const size = block.getBoundingClientRect();
+        sideMenu.style.top = `${size.top + window.pageYOffset}px`;
+        sideMenu.style.left = `${size.left - 40}px`;
+        sideMenu.style.opacity = 1;
       }
+    } else {
+      sideMenu.removeAttribute('style');
+    }
+  };
+
+  /**
+   * Update the menu's absolute position.
+   */
+  const updateHoverMenu = (value: Value) => {
+    const hoverMenu = hoverMenuRef.current;
+    if (!hoverMenu) return;
+
+    const { fragment, selection } = value;
+
+    if (selection.isBlurred || selection.isCollapsed || fragment.text === '') {
+      hoverMenu.removeAttribute('style');
+      return;
     }
 
-    return (
-      <SlateToolbarButton
-        onMouseDown={(event: any) => onClickBlock(event, type)}
-      >
-        <Icon color={isActive ? '#000000' : '#bbbaba'} size={18} />
-      </SlateToolbarButton>
-    );
+    const native = window.getSelection();
+    if (!native) return;
+    const range = native.getRangeAt(0);
+    const rect = range.getBoundingClientRect();
+    hoverMenu.style.opacity = 1;
+    hoverMenu.style.top = `${rect.top +
+      window.pageYOffset -
+      hoverMenu.offsetHeight}px`;
+
+    hoverMenu.style.left = `${rect.left +
+      window.pageXOffset -
+      hoverMenu.offsetWidth / 2 +
+      rect.width / 2}px`;
+  };
+
+  const handleTextChange = ({ value }: { value: Value }) => {
+    setValue(value);
+    updateSideMenu(value);
+    updateHoverMenu(value);
   };
 
   const handleSave = async () => {
@@ -462,60 +385,52 @@ export const SlateEditor = ({
   };
 
   return (
-    <PageContainer>
-      <StyledLinkContainer>
-        <Link href="/">
-          <StyledLink>
-            <StyledMdArrowBack /> Back to my stories
-          </StyledLink>
-        </Link>
-      </StyledLinkContainer>
-      <PageTitleContainer>
-        <PageTitle>Editor</PageTitle>
-      </PageTitleContainer>
+    <React.Fragment>
+      <FixedContainer>
+        <AppBar>
+          <StyledAppBarRightContainer>
+            {loadingSave && (
+              <ButtonOutline style={{ marginRight: 6 }} disabled>
+                Saving ...
+              </ButtonOutline>
+            )}
+            {!loadingSave && story.type === 'public' && (
+              <ButtonOutline style={{ marginRight: 6 }} onClick={handleSave}>
+                Save
+              </ButtonOutline>
+            )}
+            {!loadingSave && story.type === 'private' && (
+              <Tippy
+                content="Nobody can see it unless you click on « publish »"
+                theme="light-border"
+              >
+                <ButtonOutline style={{ marginRight: 6 }} onClick={handleSave}>
+                  Save
+                </ButtonOutline>
+              </Tippy>
+            )}
+            <AppBarSettings onClick={handleOpenSettings}>
+              <MdSettings size={22} />
+            </AppBarSettings>
+          </StyledAppBarRightContainer>
+        </AppBar>
+      </FixedContainer>
 
-      <div>
+      <PageContainer>
         <Input
           value={story.title}
-          onChange={(e: any) => onChangeTitle(e.target.value)}
+          onChange={e => onChangeTitle(e.target.value)}
           placeholder="Title"
         />
 
         <SlateContainer>
-          <SlateToolbar>
-            <SlateToolbarButtonContainer>
-              {renderMarkButton('bold', MdFormatBold)}
-              {renderMarkButton('italic', MdFormatItalic)}
-              {renderMarkButton('underlined', MdFormatUnderlined)}
-              {renderBlockButton('block-quote', MdFormatQuote)}
-              {renderBlockButton('heading-one', MdLooksOne)}
-              {renderBlockButton('heading-two', MdLooksTwo)}
-              {renderBlockButton('heading-three', MdLooks3)}
-              {renderBlockButton('numbered-list', MdFormatListNumbered)}
-              {renderBlockButton('bulleted-list', MdFormatListBulleted)}
-              <SlateToolbarButton onMouseDown={onClickLink}>
-                <MdLink color={'#b8c2cc'} size={18} />
-              </SlateToolbarButton>
-              <SlateToolbarButton onMouseDown={onClickImage}>
-                <MdImage color={'#b8c2cc'} size={18} />
-              </SlateToolbarButton>
-            </SlateToolbarButtonContainer>
-            <SlateToolbarActionContainer>
-              {loadingSave && (
-                <ButtonOutline style={{ marginRight: 6 }} disabled>
-                  Saving ...
-                </ButtonOutline>
-              )}
-              {!loadingSave && (
-                <ButtonOutline style={{ marginRight: 6 }} onClick={handleSave}>
-                  Save
-                </ButtonOutline>
-              )}
-              <SlateToolbarActionIcon onClick={handleOpenSettings}>
-                <MdSettings size={22} />
-              </SlateToolbarActionIcon>
-            </SlateToolbarActionContainer>
-          </SlateToolbar>
+          <SlateEditorToolbar
+            editor={editorRef.current}
+            value={value}
+            loadingSave={loadingSave}
+            handleOpenSettings={handleOpenSettings}
+            handleSave={handleSave}
+          />
 
           <StyledContent>
             <StyledEditor
@@ -523,9 +438,10 @@ export const SlateEditor = ({
               plugins={slatePlugins}
               value={value}
               onChange={handleTextChange}
-              onKeyDown={onKeyDown}
+              onKeyDown={onKeyDown as any}
               schema={schema}
-              placeholder="Text"
+              placeholder="Start your story here..."
+              renderEditor={renderEditor}
               renderBlock={renderBlock}
               renderMark={renderMark}
               renderInline={renderInline}
@@ -538,7 +454,7 @@ export const SlateEditor = ({
           onClose={handleCloseSettings}
           onChangeStoryField={onChangeStoryField}
         />
-      </div>
-    </PageContainer>
+      </PageContainer>
+    </React.Fragment>
   );
 };
