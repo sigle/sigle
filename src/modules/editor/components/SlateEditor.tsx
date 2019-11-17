@@ -11,7 +11,7 @@ import {
 } from 'slate-react';
 import SoftBreak from 'slate-soft-break';
 import { Block, Value } from 'slate';
-import { MdArrowBack } from 'react-icons/md';
+import { MdSettings } from 'react-icons/md';
 import { PageContainer } from '../../home/components/Home';
 import {
   saveStoryFile,
@@ -25,6 +25,12 @@ import { StorySettings } from '../containers/StorySettings';
 import { SlateEditorSideMenu } from './SlateEditorSideMenu';
 import { SlateEditorHoverMenu } from './SlateEditorHoverMenu';
 import { SlateEditorToolbar } from './SlateEditorToolbar';
+import { AppBar, AppBarRightContainer } from '../../layout';
+import { ButtonOutline } from '../../../components';
+
+const AppBarSettings = styled.div`
+  ${tw`p-2 -mr-2 flex items-center cursor-pointer text-pink`};
+`;
 
 const Input = styled.input`
   ${tw`outline-none w-full text-2xl`};
@@ -328,44 +334,64 @@ export const SlateEditor = ({
   };
 
   return (
-    <PageContainer>
-      <Input
-        value={story.title}
-        onChange={e => onChangeTitle(e.target.value)}
-        placeholder="Title"
-      />
+    <React.Fragment>
+      <AppBar>
+        <AppBarRightContainer>
+          {loadingSave && (
+            <ButtonOutline style={{ marginRight: 6 }} disabled>
+              Saving ...
+            </ButtonOutline>
+          )}
+          {!loadingSave && (
+            <ButtonOutline style={{ marginRight: 6 }} onClick={handleSave}>
+              Save
+            </ButtonOutline>
+          )}
+          <AppBarSettings onClick={handleOpenSettings}>
+            <MdSettings size={22} />
+          </AppBarSettings>
+        </AppBarRightContainer>
+      </AppBar>
 
-      <SlateContainer>
-        <SlateEditorToolbar
-          editor={editorRef.current}
-          value={value}
-          loadingSave={loadingSave}
-          handleOpenSettings={handleOpenSettings}
-          handleSave={handleSave}
+      <PageContainer>
+        <Input
+          value={story.title}
+          onChange={e => onChangeTitle(e.target.value)}
+          placeholder="Title"
         />
 
-        <StyledContent>
-          <StyledEditor
-            ref={editorRef}
-            plugins={slatePlugins}
+        <SlateContainer>
+          <SlateEditorToolbar
+            editor={editorRef.current}
             value={value}
-            onChange={handleTextChange}
-            onKeyDown={onKeyDown}
-            schema={schema}
-            placeholder="Text"
-            renderEditor={renderEditor}
-            renderBlock={renderBlock}
-            renderMark={renderMark}
-            renderInline={renderInline}
+            loadingSave={loadingSave}
+            handleOpenSettings={handleOpenSettings}
+            handleSave={handleSave}
           />
-        </StyledContent>
-      </SlateContainer>
-      <StorySettings
-        story={story}
-        open={settingsOpen}
-        onClose={handleCloseSettings}
-        onChangeStoryField={onChangeStoryField}
-      />
-    </PageContainer>
+
+          <StyledContent>
+            <StyledEditor
+              ref={editorRef}
+              plugins={slatePlugins}
+              value={value}
+              onChange={handleTextChange}
+              onKeyDown={onKeyDown}
+              schema={schema}
+              placeholder="Text"
+              renderEditor={renderEditor}
+              renderBlock={renderBlock}
+              renderMark={renderMark}
+              renderInline={renderInline}
+            />
+          </StyledContent>
+        </SlateContainer>
+        <StorySettings
+          story={story}
+          open={settingsOpen}
+          onClose={handleCloseSettings}
+          onChangeStoryField={onChangeStoryField}
+        />
+      </PageContainer>
+    </React.Fragment>
   );
 };

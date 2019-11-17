@@ -16,10 +16,11 @@ const Logout = styled.div`
 `;
 
 interface Props {
+  showAppBar?: boolean;
   children: React.ReactNode;
 }
 
-export const LoggedIn = ({ children }: Props) => {
+export const LoggedIn = ({ children, showAppBar = true }: Props) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [user, setUser] = useState<BlockstackUser | null>(null);
@@ -61,16 +62,18 @@ export const LoggedIn = ({ children }: Props) => {
 
   return (
     <React.Fragment>
-      <AppBar>
-        <RightContainer>
-          <Tippy content={user.username} theme="light-border">
-            <Name href={`/${user.username}`} target="_blank">
-              <IoIosEye size={22} style={{ marginRight: 6 }} /> Visit my blog
-            </Name>
-          </Tippy>
-          <Logout onClick={handleLogout}>Logout</Logout>
-        </RightContainer>
-      </AppBar>
+      {showAppBar && (
+        <AppBar>
+          <RightContainer>
+            <Tippy content={user.username} theme="light-border">
+              <Name href={`/${user.username}`} target="_blank">
+                <IoIosEye size={22} style={{ marginRight: 6 }} /> Visit my blog
+              </Name>
+            </Tippy>
+            <Logout onClick={handleLogout}>Logout</Logout>
+          </RightContainer>
+        </AppBar>
+      )}
 
       {children}
     </React.Fragment>
