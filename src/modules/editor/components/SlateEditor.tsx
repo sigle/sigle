@@ -109,7 +109,7 @@ const slatePlugins = [SoftBreak({ shift: true })];
  */
 const onKeyDown = (
   event: React.KeyboardEvent,
-  editor: any,
+  editor: Editor,
   next: () => any
 ) => {
   // When the user press enter on a title or quote we reset the style to paragraph
@@ -123,6 +123,31 @@ const onKeyDown = (
     event.preventDefault();
     editor.splitBlock().setBlocks(DEFAULT_NODE);
     return;
+  }
+
+  // When the user press enter or backspace on a empty list item
+  // we should remove the list block and set it to paragraph
+  if (
+    ['Enter', 'Backspace'].includes(event.key) &&
+    editor.value.blocks.size > 0
+  ) {
+    const parent = editor.value.document.getParent(
+      editor.value.blocks.first().key
+    );
+    const isEmptyText =
+      editor.value.texts.get(0) && editor.value.texts.get(0).text.length === 0;
+    if (
+      parent &&
+      ['numbered-list', 'bulleted-list'].includes((parent as any).type) &&
+      isEmptyText
+    ) {
+      event.preventDefault();
+      editor
+        .setBlocks(DEFAULT_NODE)
+        .unwrapBlock('bulleted-list')
+        .unwrapBlock('numbered-list');
+      return;
+    }
   }
 
   // We want all our commands to start with the user pressing ctrl or cmd for mac users
@@ -393,7 +418,7 @@ export const SlateEditor = ({
               plugins={slatePlugins}
               value={value}
               onChange={handleTextChange}
-              onKeyDown={onKeyDown}
+              onKeyDown={onKeyDown as any}
               schema={schema}
               placeholder="Text"
               renderEditor={renderEditor}
