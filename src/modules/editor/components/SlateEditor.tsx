@@ -27,6 +27,7 @@ import { SlateEditorHoverMenu } from './SlateEditorHoverMenu';
 import { SlateEditorToolbar } from './SlateEditorToolbar';
 import { AppBar, AppBarRightContainer } from '../../layout';
 import { ButtonOutline } from '../../../components';
+import { DEFAULT_NODE, hasBlock } from './utils';
 
 const StyledAppBarRightContainer = styled(AppBarRightContainer)`
   ${tw`hidden md:flex`};
@@ -111,6 +112,19 @@ const onKeyDown = (
   editor: any,
   next: () => any
 ) => {
+  // When the user press enter on a title or quote we reset the style to paragraph
+  if (
+    event.key === 'Enter' &&
+    (hasBlock(editor.value, 'heading-one') ||
+      hasBlock(editor.value, 'heading-two') ||
+      hasBlock(editor.value, 'heading-three') ||
+      hasBlock(editor.value, 'block-quote'))
+  ) {
+    event.preventDefault();
+    editor.splitBlock().setBlocks(DEFAULT_NODE);
+    return;
+  }
+
   // We want all our commands to start with the user pressing ctrl or cmd for mac users
   if (!event.ctrlKey && !event.metaKey) {
     return next();
