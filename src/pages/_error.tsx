@@ -1,4 +1,5 @@
 import React from 'react';
+import { NextPageContext } from 'next';
 import styled from 'styled-components';
 import tw from 'tailwind.macro';
 import Link from 'next/link';
@@ -52,7 +53,7 @@ const Error = ({ statusCode }: ErrorProps) => {
   );
 };
 
-Error.getInitialProps = ({ res, err }: any) => {
+Error.getInitialProps = ({ res, err }: NextPageContext) => {
   const statusCode = res ? res.statusCode : err ? err.statusCode : 404;
   return { statusCode };
 };
