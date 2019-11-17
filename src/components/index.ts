@@ -24,8 +24,13 @@ export const Tab = styled.div`
   }
 `;
 
-export const Button = styled.button`
+export const Button = styled.button<{ href?: string; target?: string }>`
   ${tw`bg-pink text-white py-2 px-8 rounded-full no-underline cursor-pointer`};
+  transition: background-color 0.25s;
+
+  &:hover {
+    background-color: #db3159;
+  }
 `;
 
 export const ButtonOutline = styled.button`

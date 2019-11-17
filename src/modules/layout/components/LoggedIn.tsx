@@ -4,7 +4,7 @@ import tw from 'tailwind.macro';
 import Tippy from '@tippy.js/react';
 import { IoIosEye } from 'react-icons/io';
 import { userSession } from '../../../utils/blockstack';
-import { AppBar, RightContainer } from './AppBar';
+import { AppBar, AppBarRightContainer } from './AppBar';
 import { BlockstackUser } from '../../../types';
 
 const Name = styled.a`
@@ -64,14 +64,14 @@ export const LoggedIn = ({ children, showAppBar = true }: Props) => {
     <React.Fragment>
       {showAppBar && (
         <AppBar>
-          <RightContainer>
+          <AppBarRightContainer>
             <Tippy content={user.username} theme="light-border">
               <Name href={`/${user.username}`} target="_blank">
                 <IoIosEye size={22} style={{ marginRight: 6 }} /> Visit my blog
               </Name>
             </Tippy>
             <Logout onClick={handleLogout}>Logout</Logout>
-          </RightContainer>
+          </AppBarRightContainer>
         </AppBar>
       )}
 

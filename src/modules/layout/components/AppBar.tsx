@@ -12,7 +12,7 @@ const Logo = styled.img`
   height: 40px;
 `;
 
-export const RightContainer = styled.div`
+export const AppBarRightContainer = styled.div`
   ${tw`flex justify-between items-center`};
 `;
 

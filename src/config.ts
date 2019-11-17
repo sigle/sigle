@@ -7,6 +7,9 @@ export const config = {
   githubUrl: 'https://github.com/pradel/sigle',
   twitterUrl: 'https://twitter.com/sigleapp',
   telegramUrl: 'https://t.me/sigleapp',
+  facebookUrl: 'https://www.facebook.com/sigleapp',
+  messengerUrl: 'https://m.me/sigleapp',
+  email: 'sigle@protonmail.com',
   // This reflect the tailwindcss config
   breakpoints: {
     sm: 640,
