@@ -12,7 +12,6 @@ import {
 import SoftBreak from 'slate-soft-break';
 import { Block, Value } from 'slate';
 import { MdSettings } from 'react-icons/md';
-import { PageContainer } from '../../home/components/Home';
 import {
   saveStoryFile,
   convertStoryToSubsetStory,
@@ -26,8 +25,12 @@ import { SlateEditorSideMenu } from './SlateEditorSideMenu';
 import { SlateEditorHoverMenu } from './SlateEditorHoverMenu';
 import { SlateEditorToolbar } from './SlateEditorToolbar';
 import { AppBar, AppBarRightContainer } from '../../layout';
-import { ButtonOutline } from '../../../components';
+import { ButtonOutline, Container } from '../../../components';
 import { DEFAULT_NODE, hasBlock } from './utils';
+
+const FixedContainer = styled.div`
+  ${tw`fixed w-full bg-white top-0`};
+`;
 
 const StyledAppBarRightContainer = styled(AppBarRightContainer)`
   ${tw`hidden md:flex`};
@@ -35,6 +38,10 @@ const StyledAppBarRightContainer = styled(AppBarRightContainer)`
 
 const AppBarSettings = styled.div`
   ${tw`p-2 -mr-2 flex items-center cursor-pointer text-pink`};
+`;
+
+const PageContainer = styled(Container)`
+  ${tw`mt-24`};
 `;
 
 const Input = styled.input`
@@ -378,23 +385,25 @@ export const SlateEditor = ({
 
   return (
     <React.Fragment>
-      <AppBar>
-        <StyledAppBarRightContainer>
-          {loadingSave && (
-            <ButtonOutline style={{ marginRight: 6 }} disabled>
-              Saving ...
-            </ButtonOutline>
-          )}
-          {!loadingSave && (
-            <ButtonOutline style={{ marginRight: 6 }} onClick={handleSave}>
-              Save
-            </ButtonOutline>
-          )}
-          <AppBarSettings onClick={handleOpenSettings}>
-            <MdSettings size={22} />
-          </AppBarSettings>
-        </StyledAppBarRightContainer>
-      </AppBar>
+      <FixedContainer>
+        <AppBar>
+          <StyledAppBarRightContainer>
+            {loadingSave && (
+              <ButtonOutline style={{ marginRight: 6 }} disabled>
+                Saving ...
+              </ButtonOutline>
+            )}
+            {!loadingSave && (
+              <ButtonOutline style={{ marginRight: 6 }} onClick={handleSave}>
+                Save
+              </ButtonOutline>
+            )}
+            <AppBarSettings onClick={handleOpenSettings}>
+              <MdSettings size={22} />
+            </AppBarSettings>
+          </StyledAppBarRightContainer>
+        </AppBar>
+      </FixedContainer>
 
       <PageContainer>
         <Input
@@ -420,7 +429,7 @@ export const SlateEditor = ({
               onChange={handleTextChange}
               onKeyDown={onKeyDown as any}
               schema={schema}
-              placeholder="Text"
+              placeholder="Start your story here..."
               renderEditor={renderEditor}
               renderBlock={renderBlock}
               renderMark={renderMark}
