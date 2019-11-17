@@ -2,6 +2,7 @@ import React, { useState, useRef } from 'react';
 import styled from 'styled-components';
 import tw from 'tailwind.macro';
 import { toast } from 'react-toastify';
+import Tippy from '@tippy.js/react';
 import {
   Editor,
   RenderBlockProps,
@@ -393,10 +394,20 @@ export const SlateEditor = ({
                 Saving ...
               </ButtonOutline>
             )}
-            {!loadingSave && (
+            {!loadingSave && story.type === 'public' && (
               <ButtonOutline style={{ marginRight: 6 }} onClick={handleSave}>
                 Save
               </ButtonOutline>
+            )}
+            {!loadingSave && story.type === 'private' && (
+              <Tippy
+                content="Nobody can see it unless you click on « publish »"
+                theme="light-border"
+              >
+                <ButtonOutline style={{ marginRight: 6 }} onClick={handleSave}>
+                  Save
+                </ButtonOutline>
+              </Tippy>
             )}
             <AppBarSettings onClick={handleOpenSettings}>
               <MdSettings size={22} />
