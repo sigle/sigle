@@ -15,8 +15,14 @@ const SideMenuContainer = styled.div`
   transition: opacity 0.75s;
 `;
 
-const SideMenuButtonContainer = styled.div`
+const SideMenuButtonContainer = styled.div<{ open: boolean }>`
   ${tw`pl-6`};
+  margin-left: -1000px;
+  ${props =>
+    props.open &&
+    css`
+      margin-left: 0;
+    `}
 `;
 
 const SideMenuButton = styled.div`
@@ -69,7 +75,7 @@ export const SlateEditorSideMenu = forwardRef(
           <MdAdd size={20} />
         </SideMenuOpenButton>
 
-        <SideMenuButtonContainer>
+        <SideMenuButtonContainer open={open}>
           <SideMenuActionButton
             open={open}
             onClick={() => onClickImage(editor)}
