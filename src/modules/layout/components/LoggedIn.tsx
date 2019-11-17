@@ -1,11 +1,22 @@
 import React, { useEffect, useState } from 'react';
+import styled from 'styled-components';
+import tw from 'tailwind.macro';
+import Tippy from '@tippy.js/react';
+import { IoIosEye } from 'react-icons/io';
 import { userSession } from '../../../utils/blockstack';
-import { AppBar } from './AppBar';
+import { AppBar, RightContainer } from './AppBar';
 import { BlockstackUser } from '../../../types';
-import { Footer } from './Footer';
+
+const Name = styled.a`
+  ${tw`mr-8 flex items-center cursor-pointer text-black no-underline`};
+`;
+
+const Logout = styled.div`
+  ${tw`font-semibold cursor-pointer`}
+`;
 
 interface Props {
-  children: React.ReactChild;
+  children: React.ReactNode;
 }
 
 export const LoggedIn = ({ children }: Props) => {
@@ -28,6 +39,11 @@ export const LoggedIn = ({ children }: Props) => {
     loadUserData();
   }, []);
 
+  const handleLogout = () => {
+    userSession.signUserOut();
+    window.location.replace(window.location.origin);
+  };
+
   // TODO style it
   if (loading) {
     return <div>Loading ...</div>;
@@ -45,10 +61,18 @@ export const LoggedIn = ({ children }: Props) => {
 
   return (
     <React.Fragment>
-      <AppBar user={user} />
+      <AppBar>
+        <RightContainer>
+          <Tippy content={user.username} theme="light-border">
+            <Name href={`/${user.username}`} target="_blank">
+              <IoIosEye size={22} style={{ marginRight: 6 }} /> Visit my blog
+            </Name>
+          </Tippy>
+          <Logout onClick={handleLogout}>Logout</Logout>
+        </RightContainer>
+      </AppBar>
 
       {children}
-      <Footer />
     </React.Fragment>
   );
 };
