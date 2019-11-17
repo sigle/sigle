@@ -28,6 +28,10 @@ import { SlateEditorToolbar } from './SlateEditorToolbar';
 import { AppBar, AppBarRightContainer } from '../../layout';
 import { ButtonOutline } from '../../../components';
 
+const StyledAppBarRightContainer = styled(AppBarRightContainer)`
+  ${tw`hidden md:flex`};
+`;
+
 const AppBarSettings = styled.div`
   ${tw`p-2 -mr-2 flex items-center cursor-pointer text-pink`};
 `;
@@ -336,7 +340,7 @@ export const SlateEditor = ({
   return (
     <React.Fragment>
       <AppBar>
-        <AppBarRightContainer>
+        <StyledAppBarRightContainer>
           {loadingSave && (
             <ButtonOutline style={{ marginRight: 6 }} disabled>
               Saving ...
@@ -350,7 +354,7 @@ export const SlateEditor = ({
           <AppBarSettings onClick={handleOpenSettings}>
             <MdSettings size={22} />
           </AppBarSettings>
-        </AppBarRightContainer>
+        </StyledAppBarRightContainer>
       </AppBar>
 
       <PageContainer>
