@@ -12,11 +12,11 @@ import { Button } from '../components';
 import { config } from '../config';
 
 const SupportBlock = styled.div`
-  ${tw`flex justify-between py-6 border-b border-solid border-grey`};
+  ${tw`md:flex justify-between py-6 border-b border-solid border-grey`};
 `;
 
 const ButtonContainer = styled.div`
-  ${tw`flex items-center`};
+  ${tw`flex items-center mt-4 md:mt-0`};
 `;
 
 const Title = styled.h1`
