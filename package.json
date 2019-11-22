@@ -56,6 +56,7 @@
     "nprogress": "0.2.0",
     "react": "16.12.0",
     "react-dom": "16.12.0",
+    "react-dropzone": "10.2.0",
     "react-icons": "3.8.0",
     "react-spring": "8.0.27",
     "react-toastify": "5.4.1",

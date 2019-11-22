@@ -6,7 +6,9 @@ import { DialogContent, DialogOverlay } from '@reach/dialog';
 import '@reach/dialog/styles.css';
 import { animated, useTransition } from 'react-spring';
 import format from 'date-fns/format';
+import { DropzoneRootProps, DropzoneInputProps } from 'react-dropzone';
 import { Story } from '../../../types';
+import { Button } from '../../../components';
 
 const StyledDialogOverlay = styled(DialogOverlay)`
   z-index: 11;
@@ -29,7 +31,7 @@ const CloseButton = styled.div`
 `;
 
 const ImageEmpty = styled.div<{ haveImage: boolean }>`
-  ${tw`flex items-center justify-center bg-grey py-16 mb-4 cursor-pointer rounded-lg relative border border-solid border-grey`};
+  ${tw`flex items-center justify-center bg-grey py-16 mb-4 cursor-pointer rounded-lg relative border border-solid border-grey outline-none`};
 
   ${props =>
     props.haveImage &&
@@ -70,6 +72,10 @@ const FormHelper = styled.p`
   ${tw`text-sm text-grey-darker mt-1`};
 `;
 
+const SaveRow = styled.div`
+  ${tw`py-3 flex justify-between`};
+`;
+
 const ButtonLink = styled.button`
   ${tw`flex items-center text-pink text-sm mt-2`};
   &:focus {
@@ -86,11 +92,13 @@ interface Props {
   open: boolean;
   onClose: () => void;
   loadingDelete: boolean;
+  getRootProps(props?: DropzoneRootProps): DropzoneRootProps;
+  getInputProps(props?: DropzoneInputProps): DropzoneInputProps;
+  coverFile?: File;
   onDelete: () => void;
   onChangeMetaTitle: (value: string) => void;
   onChangeMetaDescription: (value: string) => void;
   onChangeCreatedAt: (value: string) => void;
-  onUploadImage: () => void;
 }
 
 const AnimatedDialogOverlay = animated(StyledDialogOverlay);
@@ -101,11 +109,13 @@ export const StorySettings = ({
   onClose,
   story,
   loadingDelete,
+  getRootProps,
+  getInputProps,
+  coverFile,
   onDelete,
   onChangeMetaTitle,
   onChangeMetaDescription,
   onChangeCreatedAt,
-  onUploadImage,
 }: Props) => {
   const transitions = useTransition(open, null, {
     from: { opacity: 0, transform: 'translateX(100%)' },
@@ -115,6 +125,10 @@ export const StorySettings = ({
       duration: 250,
     },
   });
+
+  const coverImageUrl = coverFile
+    ? (coverFile as any).preview
+    : story.coverImage;
 
   return transitions.map(
     ({ item, key, props: styles }) =>
@@ -141,14 +155,10 @@ export const StorySettings = ({
               <FormRow>
                 <FormLabel>Cover image</FormLabel>
 
-                <ImageEmpty
-                  onClick={onUploadImage}
-                  haveImage={!!story.coverImage}
-                >
-                  {story.coverImage && (
-                    <Image src={story.coverImage} onClick={onUploadImage} />
-                  )}
-                  {!story.coverImage && <span>Upload cover image</span>}
+                <ImageEmpty {...getRootProps()} haveImage={coverImageUrl}>
+                  {coverImageUrl && <Image src={coverImageUrl} />}
+                  {!coverImageUrl && <span>Upload cover image</span>}
+                  <input {...getInputProps()} />
                   <ImageEmptyIcon>
                     <MdAddAPhoto />
                   </ImageEmptyIcon>
@@ -191,19 +201,23 @@ export const StorySettings = ({
                   characters.
                 </FormHelper>
               </FormRow>
-            </form>
 
-            {loadingDelete ? (
-              <ButtonLink disabled>
-                <MdDelete />
-                <span>Deleting ...</span>
-              </ButtonLink>
-            ) : (
-              <ButtonLink onClick={onDelete}>
-                <MdDelete />
-                <span>Delete this story</span>
-              </ButtonLink>
-            )}
+              <SaveRow>
+                <Button>Save</Button>
+
+                {loadingDelete ? (
+                  <ButtonLink disabled>
+                    <MdDelete />
+                    <span>Deleting ...</span>
+                  </ButtonLink>
+                ) : (
+                  <ButtonLink onClick={onDelete}>
+                    <MdDelete />
+                    <span>Delete this story</span>
+                  </ButtonLink>
+                )}
+              </SaveRow>
+            </form>
           </AnimatedDialogContent>
         </AnimatedDialogOverlay>
       )
