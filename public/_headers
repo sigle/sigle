@@ -1,3 +1,0 @@
-# We allow blockstack to get our manifest.json file
-/manifest.json
-  Access-Control-Allow-Origin: *
