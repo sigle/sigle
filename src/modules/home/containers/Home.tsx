@@ -52,6 +52,7 @@ export const Home = () => {
       const publicStories = file.stories.filter(s => s.type === 'public');
       setPublicStories(publicStories);
     } catch (error) {
+      console.error(error);
       toast.error(error.message);
     }
   };
@@ -84,6 +85,7 @@ export const Home = () => {
         router.push('/stories/[storyId]', `/stories/${story.id}`);
       }
     } catch (error) {
+      console.error(error);
       toast.error(error.message);
       setLoadingCreate(false);
     }
