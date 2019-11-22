@@ -31,7 +31,7 @@ const CloseButton = styled.div`
 `;
 
 const ImageEmpty = styled.div<{ haveImage: boolean }>`
-  ${tw`flex items-center justify-center bg-grey py-16 mb-4 cursor-pointer rounded-lg relative border border-solid border-grey outline-none`};
+  ${tw`flex items-center justify-center bg-grey py-16 mb-4 cursor-pointer rounded-lg relative border border-solid border-grey focus:outline-none`};
 
   ${props =>
     props.haveImage &&
@@ -95,10 +95,12 @@ interface Props {
   getRootProps(props?: DropzoneRootProps): DropzoneRootProps;
   getInputProps(props?: DropzoneInputProps): DropzoneInputProps;
   coverFile?: File;
-  onDelete: () => void;
+  loadingSave: boolean;
+  onDelete: (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void;
   onChangeMetaTitle: (value: string) => void;
   onChangeMetaDescription: (value: string) => void;
   onChangeCreatedAt: (value: string) => void;
+  onSubmit: (e: React.FormEvent<HTMLFormElement>) => void;
 }
 
 const AnimatedDialogOverlay = animated(StyledDialogOverlay);
@@ -112,10 +114,12 @@ export const StorySettings = ({
   getRootProps,
   getInputProps,
   coverFile,
+  loadingSave,
   onDelete,
   onChangeMetaTitle,
   onChangeMetaDescription,
   onChangeCreatedAt,
+  onSubmit,
 }: Props) => {
   const transitions = useTransition(open, null, {
     from: { opacity: 0, transform: 'translateX(100%)' },
@@ -151,7 +155,7 @@ export const StorySettings = ({
               </CloseButton>
             </TitleContainer>
 
-            <form>
+            <form onSubmit={onSubmit}>
               <FormRow>
                 <FormLabel>Cover image</FormLabel>
 
@@ -203,7 +207,9 @@ export const StorySettings = ({
               </FormRow>
 
               <SaveRow>
-                <Button>Save</Button>
+                <Button disabled={loadingSave} type="submit">
+                  {loadingSave ? 'Saving...' : 'Save'}
+                </Button>
 
                 {loadingDelete ? (
                   <ButtonLink disabled>

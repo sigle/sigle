@@ -9,6 +9,7 @@ import {
   saveStoriesFile,
   deleteStoryFile,
 } from '../../../utils';
+import { userSession } from '../../../utils/blockstack';
 
 interface Props {
   story: Story;
@@ -24,6 +25,7 @@ export const StorySettings = ({
   onChangeStoryField,
 }: Props) => {
   const router = useRouter();
+  const [loadingSave, setLoadingSave] = useState(false);
   const [loadingDelete, setLoadingDelete] = useState(false);
   const [coverFile, setCoverFile] = useState<File | undefined>();
 
@@ -58,7 +60,43 @@ export const StorySettings = ({
     }
   };
 
-  const handleDelete = async () => {
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    console.log('handleSubmit');
+    event.preventDefault();
+    setLoadingSave(true);
+
+    try {
+      if (coverFile) {
+        const now = new Date().getTime();
+        const name = `photos/${story.id}/${now}-${coverFile.name}`;
+        const coverImageUrl = await userSession.putFile(
+          name,
+          coverFile as any,
+          {
+            // TODO encrypt if it's a draft or show a message to the user explaining the limitation
+            encrypt: false,
+            contentType: coverFile.type,
+          }
+        );
+        console.log(coverImageUrl);
+        onChangeStoryField('coverImage', coverImageUrl);
+      }
+
+      // TODO
+
+      toast.success('Settings changed successfully');
+    } catch (error) {
+      console.error(error);
+      toast.error(error.message);
+    }
+
+    setLoadingSave(false);
+  };
+
+  const handleDelete = async (
+    event: React.MouseEvent<HTMLButtonElement, MouseEvent>
+  ) => {
+    event.preventDefault();
     try {
       const result = window.confirm('Do you really want to delete this story?');
       if (!result) {
@@ -91,6 +129,8 @@ export const StorySettings = ({
       getRootProps={getRootProps}
       getInputProps={getInputProps}
       coverFile={coverFile}
+      loadingSave={loadingSave}
+      onSubmit={handleSubmit}
       onDelete={handleDelete}
       onChangeMetaTitle={handleChangeMetaTitle}
       onChangeMetaDescription={handleChangeMetaDescription}
