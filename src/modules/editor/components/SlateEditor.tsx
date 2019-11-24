@@ -9,6 +9,7 @@ import {
   RenderInlineProps,
   RenderMarkProps,
   EditorProps,
+  getEventTransfer,
 } from 'slate-react';
 import SoftBreak from 'slate-soft-break';
 import { Block, Value } from 'slate';
@@ -27,7 +28,9 @@ import { SlateEditorHoverMenu } from './SlateEditorHoverMenu';
 import { SlateEditorToolbar } from './SlateEditorToolbar';
 import { AppBar, AppBarRightContainer } from '../../layout';
 import { ButtonOutline, Container } from '../../../components';
-import { DEFAULT_NODE, hasBlock } from './utils';
+import { DEFAULT_NODE, hasBlock, insertImage } from './utils';
+import { userSession } from '../../../utils/blockstack';
+import { resizeImage } from '../../../utils/image';
 
 const FixedContainer = styled.div`
   ${tw`fixed w-full bg-white top-0`};
@@ -115,7 +118,7 @@ const slatePlugins = [SoftBreak({ shift: true })];
 /**
  * Handle key press from the user and allow shortcuts.
  */
-const onKeyDown = (
+const handleKeyDown = (
   event: React.KeyboardEvent,
   editor: Editor,
   next: () => any
@@ -340,10 +343,58 @@ export const SlateEditor = ({
       rect.width / 2}px`;
   };
 
+  const addImageToEditor = async (
+    editor: Editor,
+    files: File[],
+    target?: any
+  ) => {
+    for (const file of files) {
+      const reader = new FileReader();
+      const [mime] = file.type.split('/');
+      if (mime !== 'image') continue;
+
+      // TODO find a way to visually show that a file is uploading
+
+      const blob = await resizeImage(file, { maxWidth: 2000 });
+      const now = new Date().getTime();
+      const name = `photos/${story.id}/${now}-${file.name}`;
+      const imageUrl = await userSession.putFile(name, blob as any, {
+        // TODO encrypt if it's a draft or show a message to the user explaining the limitation
+        encrypt: false,
+        contentType: file.type,
+      });
+
+      reader.addEventListener('load', () => {
+        editor.command(insertImage, imageUrl, target);
+      });
+
+      reader.readAsDataURL(file);
+    }
+  };
+
   const handleTextChange = ({ value }: { value: Value }) => {
     setValue(value);
     updateSideMenu(value);
     updateHoverMenu(value);
+  };
+
+  const handleDrop = (
+    event: React.DragEvent<Element>,
+    editor: Editor,
+    next: () => any
+  ) => {
+    const target = editor.findEventRange(event);
+    if (!target && event.type === 'drop') return next();
+
+    const transfer: any = getEventTransfer(event);
+    const { type, files } = transfer;
+
+    if (type === 'files') {
+      addImageToEditor(editor, files);
+      return;
+    }
+
+    next();
   };
 
   const handleSave = async (storyParam?: Partial<Story>) => {
@@ -445,7 +496,8 @@ export const SlateEditor = ({
               plugins={slatePlugins}
               value={value}
               onChange={handleTextChange}
-              onKeyDown={onKeyDown as any}
+              onKeyDown={handleKeyDown}
+              onDrop={handleDrop}
               schema={schema}
               placeholder="Start your story here..."
               renderEditor={renderEditor}
