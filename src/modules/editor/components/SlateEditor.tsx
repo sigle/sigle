@@ -282,7 +282,11 @@ export const SlateEditor = ({
       <React.Fragment>
         {children}
 
-        <SlateEditorSideMenu ref={sideMenuRef} editor={editor} />
+        <SlateEditorSideMenu
+          ref={sideMenuRef}
+          editor={editor}
+          addImageToEditor={addImageToEditor}
+        />
         <SlateEditorHoverMenu ref={hoverMenuRef} editor={editor} />
       </React.Fragment>
     );

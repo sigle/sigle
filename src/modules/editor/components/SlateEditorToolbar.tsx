@@ -147,7 +147,7 @@ export const onClickLink = (editor: Editor) => {
   }
 };
 
-export const onClickImage = (editor: Editor) => {
+const onClickImage = (editor: Editor) => {
   const src = window.prompt('Enter the URL of the image:');
   if (!src) return;
   editor.command(insertImage, src);
