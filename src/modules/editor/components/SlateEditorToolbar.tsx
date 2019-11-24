@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import styled, { css } from 'styled-components';
 import tw from 'tailwind.macro';
 import { Value } from 'slate';
@@ -147,16 +147,11 @@ export const onClickLink = (editor: Editor) => {
   }
 };
 
-const onClickImage = (editor: Editor) => {
-  const src = window.prompt('Enter the URL of the image:');
-  if (!src) return;
-  editor.command(insertImage, src);
-};
-
 interface SlateEditorToolbarProps {
   editor: Editor;
   value: Value;
   loadingSave: boolean;
+  addImageToEditor: (editor: Editor, files: File[], target?: any) => void;
   handleOpenSettings: () => void;
   handleSave: () => void;
 }
@@ -167,7 +162,10 @@ export const SlateEditorToolbar = ({
   loadingSave,
   handleOpenSettings,
   handleSave,
+  addImageToEditor,
 }: SlateEditorToolbarProps) => {
+  const fileUploaderRef = useRef<HTMLInputElement>(null);
+
   /**
    * Render a mark-toggling toolbar button.
    */
@@ -254,9 +252,18 @@ export const SlateEditorToolbar = ({
           active={false}
           onMouseDown={event => {
             event.preventDefault();
-            onClickImage(editor);
+            fileUploaderRef.current && fileUploaderRef.current.click();
           }}
         >
+          <input
+            type="file"
+            accept="image/jpeg, image/png"
+            onChange={event =>
+              addImageToEditor(editor, event.target.files as any)
+            }
+            ref={fileUploaderRef}
+            style={{ display: 'none' }}
+          />
           <MdImage color={'#b8c2cc'} size={18} />
         </SlateEditorToolbarButton>
       </SlateToolbarButtonContainer>

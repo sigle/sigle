@@ -492,6 +492,7 @@ export const SlateEditor = ({
             loadingSave={loadingSave}
             handleOpenSettings={handleOpenSettings}
             handleSave={handleSave}
+            addImageToEditor={addImageToEditor}
           />
 
           <StyledContent>
