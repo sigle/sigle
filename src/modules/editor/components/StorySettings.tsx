@@ -94,7 +94,7 @@ interface Props {
   loadingDelete: boolean;
   getRootProps(props?: DropzoneRootProps): DropzoneRootProps;
   getInputProps(props?: DropzoneInputProps): DropzoneInputProps;
-  coverFile?: File;
+  coverFile?: Blob & { preview: string };
   loadingSave: boolean;
   onDelete: (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void;
   onChangeMetaTitle: (value: string) => void;
@@ -130,9 +130,7 @@ export const StorySettings = ({
     },
   });
 
-  const coverImageUrl = coverFile
-    ? (coverFile as any).preview
-    : story.coverImage;
+  const coverImageUrl = coverFile ? coverFile.preview : story.coverImage;
 
   return transitions.map(
     ({ item, key, props: styles }) =>
@@ -161,7 +159,7 @@ export const StorySettings = ({
 
                 <ImageEmpty
                   {...getRootProps({ tabIndex: undefined })}
-                  haveImage={coverImageUrl}
+                  haveImage={!!coverImageUrl}
                 >
                   {coverImageUrl && <Image src={coverImageUrl} />}
                   {!coverImageUrl && <span>Upload cover image</span>}

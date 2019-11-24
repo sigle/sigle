@@ -10,12 +10,14 @@ import {
   deleteStoryFile,
 } from '../../../utils';
 import { userSession } from '../../../utils/blockstack';
+import { resizeImage } from '../../../utils/image';
 
 interface Props {
   story: Story;
   open: boolean;
   onClose: () => void;
   onChangeStoryField: (field: string, value: any) => void;
+  onSave: (storyParam?: Partial<Story>) => Promise<void>;
 }
 
 export const StorySettings = ({
@@ -23,19 +25,22 @@ export const StorySettings = ({
   open,
   onClose,
   onChangeStoryField,
+  onSave,
 }: Props) => {
   const router = useRouter();
   const [loadingSave, setLoadingSave] = useState(false);
   const [loadingDelete, setLoadingDelete] = useState(false);
-  const [coverFile, setCoverFile] = useState<File | undefined>();
+  const [coverFile, setCoverFile] = useState<
+    (Blob & { preview: string; name: string }) | undefined
+  >();
 
-  const onDrop = useCallback((acceptedFiles: File[]) => {
+  const onDrop = useCallback(async (acceptedFiles: File[]) => {
     const file = acceptedFiles[0];
     if (file) {
+      const blob = await resizeImage(file, { maxWidth: 2000 });
       setCoverFile(
-        Object.assign(file, {
-          // Create a preview so we can display it
-          preview: URL.createObjectURL(file),
+        Object.assign(blob as any, {
+          name: file.name,
         })
       );
     }
@@ -61,7 +66,6 @@ export const StorySettings = ({
   };
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-    console.log('handleSubmit');
     event.preventDefault();
     setLoadingSave(true);
 
@@ -78,13 +82,14 @@ export const StorySettings = ({
             contentType: coverFile.type,
           }
         );
-        console.log(coverImageUrl);
         onChangeStoryField('coverImage', coverImageUrl);
+        setCoverFile(undefined);
+        await onSave({ coverImage: coverImageUrl });
+        setLoadingSave(false);
+        return;
       }
 
-      // TODO
-
-      toast.success('Settings changed successfully');
+      await onSave();
     } catch (error) {
       console.error(error);
       toast.error(error.message);

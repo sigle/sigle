@@ -346,12 +346,13 @@ export const SlateEditor = ({
     updateHoverMenu(value);
   };
 
-  const handleSave = async () => {
+  const handleSave = async (storyParam?: Partial<Story>) => {
     setLoadingSave(true);
     try {
       const content = value.toJSON();
       const updatedStory: Story = {
         ...story,
+        ...storyParam,
         content,
         updatedAt: Date.now(),
       };
@@ -395,7 +396,10 @@ export const SlateEditor = ({
               </ButtonOutline>
             )}
             {!loadingSave && story.type === 'public' && (
-              <ButtonOutline style={{ marginRight: 6 }} onClick={handleSave}>
+              <ButtonOutline
+                style={{ marginRight: 6 }}
+                onClick={() => handleSave()}
+              >
                 Save
               </ButtonOutline>
             )}
@@ -404,7 +408,10 @@ export const SlateEditor = ({
                 content="Nobody can see it unless you click on « publish »"
                 theme="light-border"
               >
-                <ButtonOutline style={{ marginRight: 6 }} onClick={handleSave}>
+                <ButtonOutline
+                  style={{ marginRight: 6 }}
+                  onClick={() => handleSave()}
+                >
                   Save
                 </ButtonOutline>
               </Tippy>
@@ -453,6 +460,7 @@ export const SlateEditor = ({
           open={settingsOpen}
           onClose={handleCloseSettings}
           onChangeStoryField={onChangeStoryField}
+          onSave={handleSave}
         />
       </PageContainer>
     </React.Fragment>
