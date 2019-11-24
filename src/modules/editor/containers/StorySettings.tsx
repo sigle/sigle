@@ -37,6 +37,11 @@ export const StorySettings = ({
   const onDrop = useCallback(async (acceptedFiles: File[]) => {
     const file = acceptedFiles[0];
     if (file) {
+      const [mime] = file.type.split('/');
+      if (mime !== 'image') {
+        return;
+      }
+
       const blob = await resizeImage(file, { maxWidth: 2000 });
       setCoverFile(
         Object.assign(blob as any, {
