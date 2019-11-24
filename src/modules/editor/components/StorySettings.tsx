@@ -159,7 +159,10 @@ export const StorySettings = ({
               <FormRow>
                 <FormLabel>Cover image</FormLabel>
 
-                <ImageEmpty {...getRootProps()} haveImage={coverImageUrl}>
+                <ImageEmpty
+                  {...getRootProps({ tabIndex: undefined })}
+                  haveImage={coverImageUrl}
+                >
                   {coverImageUrl && <Image src={coverImageUrl} />}
                   {!coverImageUrl && <span>Upload cover image</span>}
                   <input {...getInputProps()} />
