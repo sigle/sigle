@@ -12,7 +12,7 @@ import {
   getEventTransfer,
 } from 'slate-react';
 import SoftBreak from 'slate-soft-break';
-import { Block, Value } from 'slate';
+import { Block, Value, BlockProperties } from 'slate';
 import { MdSettings } from 'react-icons/md';
 import {
   saveStoryFile,
@@ -248,8 +248,9 @@ export const SlateEditor = ({
         }
 
         editor.setNodeByKey(slateNode.key, {
+          type: 'image',
           data: { src: imageUrl, id },
-        } as any);
+        });
       });
 
       reader.readAsDataURL(file);
