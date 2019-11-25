@@ -13,11 +13,9 @@ export const resizeImage = (
         // image is loaded; sizes are available
         let width = img.width;
         let height = img.height;
-        if (width > height) {
-          if (width > options.maxWidth) {
-            height *= options.maxWidth / width;
-            width = options.maxWidth;
-          }
+        if (width > options.maxWidth) {
+          height *= options.maxWidth / width;
+          width = options.maxWidth;
         }
         canvas.width = width;
         canvas.height = height;

@@ -42,13 +42,17 @@ export const unwrapLink = (editor: Editor) => {
   editor.unwrapInline('link');
 };
 
-export const insertImage = (editor: Editor, src: string, target: any) => {
+export const insertImage = (
+  editor: Editor,
+  data: { src: string; id: string; isUploading?: boolean },
+  target: any
+) => {
   if (target) {
     editor.select(target);
   }
 
   editor.insertBlock({
     type: 'image',
-    data: { src },
+    data: { src: data.src, id: data.id, isUploading: data.isUploading },
   });
 };

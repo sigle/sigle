@@ -1,5 +1,5 @@
 import React, { useState, useRef } from 'react';
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 import tw from 'tailwind.macro';
 import { toast } from 'react-toastify';
 import Tippy from '@tippy.js/react';
@@ -19,6 +19,7 @@ import {
   convertStoryToSubsetStory,
   getStoriesFile,
   saveStoriesFile,
+  generateRandomId,
 } from '../../../utils';
 import { Story } from '../../../types';
 import { Content } from '../../publicStory/components/PublicStory';
@@ -52,12 +53,19 @@ const Input = styled.input`
   ${tw`outline-none w-full text-2xl`};
 `;
 
-const Image = styled.img<{ selected: boolean }>`
-  display: block;
+const Image = styled.img<{ selected: boolean; isUploading?: boolean }>`
+  ${tw`opacity-100 block`};
   max-width: 100%;
   max-height: 20em;
   box-shadow: ${(props: any) =>
     props.selected ? '0 0 0 1px #000000;' : 'none'};
+  transition: opacity 0.75s;
+
+  ${props =>
+    props.isUploading &&
+    css`
+      ${tw`opacity-25`};
+    `}
 `;
 
 const SlateContainer = styled.div`
@@ -203,6 +211,51 @@ export const SlateEditor = ({
       : Value.fromJSON(emptyNode as any)
   );
 
+  const addImageToEditor = (editor: Editor, files: File[], target?: any) => {
+    for (const file of files) {
+      const reader = new FileReader();
+      const [mime] = file.type.split('/');
+      if (mime !== 'image') continue;
+
+      // First show the image as uploading since this can take a while...
+      const preview = URL.createObjectURL(file);
+      const id = generateRandomId();
+      editor.command(
+        insertImage,
+        { src: preview, id, isUploading: true },
+        target
+      );
+
+      reader.addEventListener('load', async () => {
+        // resize the image for faster upload
+        const blob = await resizeImage(file, { maxWidth: 2000 });
+
+        const name = `photos/${story.id}/${id}-${file.name}`;
+        const imageUrl = await userSession.putFile(name, blob as any, {
+          // TODO encrypt if it's a draft or show a message to the user explaining the limitation
+          encrypt: false,
+          contentType: file.type,
+        });
+        const htmlNode = document.getElementById(`image-${id}`);
+        if (!htmlNode) {
+          // TODO handle error
+          return;
+        }
+        const slateNode = editor.findNode(htmlNode);
+        if (!slateNode) {
+          // TODO handle error
+          return;
+        }
+
+        editor.setNodeByKey(slateNode.key, {
+          data: { src: imageUrl, id },
+        } as any);
+      });
+
+      reader.readAsDataURL(file);
+    }
+  };
+
   /**
    * Render a Slate block.
    */
@@ -228,7 +281,17 @@ export const SlateEditor = ({
         return <ul {...attributes}>{children}</ul>;
       case 'image':
         const src = node.data.get('src');
-        return <Image src={src} selected={isFocused} {...attributes} />;
+        const id = node.data.get('id');
+        const isUploading = node.data.get('isUploading');
+        return (
+          <Image
+            {...attributes}
+            src={src}
+            selected={isFocused}
+            isUploading={isUploading}
+            id={`image-${id}`}
+          />
+        );
       default:
         return next();
     }
@@ -345,35 +408,6 @@ export const SlateEditor = ({
       window.pageXOffset -
       hoverMenu.offsetWidth / 2 +
       rect.width / 2}px`;
-  };
-
-  const addImageToEditor = async (
-    editor: Editor,
-    files: File[],
-    target?: any
-  ) => {
-    for (const file of files) {
-      const reader = new FileReader();
-      const [mime] = file.type.split('/');
-      if (mime !== 'image') continue;
-
-      // TODO find a way to visually show that a file is uploading
-
-      const blob = await resizeImage(file, { maxWidth: 2000 });
-      const now = new Date().getTime();
-      const name = `photos/${story.id}/${now}-${file.name}`;
-      const imageUrl = await userSession.putFile(name, blob as any, {
-        // TODO encrypt if it's a draft or show a message to the user explaining the limitation
-        encrypt: false,
-        contentType: file.type,
-      });
-
-      reader.addEventListener('load', () => {
-        editor.command(insertImage, imageUrl, target);
-      });
-
-      reader.readAsDataURL(file);
-    }
   };
 
   const handleTextChange = ({ value }: { value: Value }) => {
