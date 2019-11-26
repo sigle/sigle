@@ -16,6 +16,7 @@ export const Editor = () => {
       const file = await getStoryFile(storyId as string);
       setStory(file);
     } catch (error) {
+      console.error(error);
       toast.error(error.message);
     }
     setLoading(false);

@@ -49,6 +49,7 @@ export const Protected = ({ children }: Props) => {
             loggedIn: false,
             loggingIn: false,
           });
+          console.error(error);
           toast.error(error.message);
         });
     } else if (state.loggingIn) {

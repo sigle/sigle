@@ -1,5 +1,5 @@
 import React, { useState, useRef } from 'react';
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 import tw from 'tailwind.macro';
 import { toast } from 'react-toastify';
 import Tippy from '@tippy.js/react';
@@ -9,15 +9,17 @@ import {
   RenderInlineProps,
   RenderMarkProps,
   EditorProps,
+  getEventTransfer,
 } from 'slate-react';
 import SoftBreak from 'slate-soft-break';
-import { Block, Value } from 'slate';
+import { Block, Value, BlockProperties } from 'slate';
 import { MdSettings } from 'react-icons/md';
 import {
   saveStoryFile,
   convertStoryToSubsetStory,
   getStoriesFile,
   saveStoriesFile,
+  generateRandomId,
 } from '../../../utils';
 import { Story } from '../../../types';
 import { Content } from '../../publicStory/components/PublicStory';
@@ -27,7 +29,9 @@ import { SlateEditorHoverMenu } from './SlateEditorHoverMenu';
 import { SlateEditorToolbar } from './SlateEditorToolbar';
 import { AppBar, AppBarRightContainer } from '../../layout';
 import { ButtonOutline, Container } from '../../../components';
-import { DEFAULT_NODE, hasBlock } from './utils';
+import { DEFAULT_NODE, hasBlock, insertImage } from './utils';
+import { userSession } from '../../../utils/blockstack';
+import { resizeImage } from '../../../utils/image';
 
 const FixedContainer = styled.div`
   ${tw`fixed w-full bg-white top-0`};
@@ -49,12 +53,19 @@ const Input = styled.input`
   ${tw`outline-none w-full text-2xl`};
 `;
 
-const Image = styled.img<{ selected: boolean }>`
-  display: block;
+const Image = styled.img<{ selected: boolean; isUploading?: boolean }>`
+  ${tw`opacity-100 block`};
   max-width: 100%;
   max-height: 20em;
   box-shadow: ${(props: any) =>
     props.selected ? '0 0 0 1px #000000;' : 'none'};
+  transition: opacity 0.75s;
+
+  ${props =>
+    props.isUploading &&
+    css`
+      ${tw`opacity-25`};
+    `}
 `;
 
 const SlateContainer = styled.div`
@@ -115,7 +126,7 @@ const slatePlugins = [SoftBreak({ shift: true })];
 /**
  * Handle key press from the user and allow shortcuts.
  */
-const onKeyDown = (
+const handleKeyDown = (
   event: React.KeyboardEvent,
   editor: Editor,
   next: () => any
@@ -200,6 +211,52 @@ export const SlateEditor = ({
       : Value.fromJSON(emptyNode as any)
   );
 
+  const addImageToEditor = (editor: Editor, files: File[], target?: any) => {
+    for (const file of files) {
+      const reader = new FileReader();
+      const [mime] = file.type.split('/');
+      if (mime !== 'image') continue;
+
+      // First show the image as uploading since this can take a while...
+      const preview = URL.createObjectURL(file);
+      const id = generateRandomId();
+      editor.command(
+        insertImage,
+        { src: preview, id, isUploading: true },
+        target
+      );
+
+      reader.addEventListener('load', async () => {
+        // resize the image for faster upload
+        const blob = await resizeImage(file, { maxWidth: 2000 });
+
+        const name = `photos/${story.id}/${id}-${file.name}`;
+        const imageUrl = await userSession.putFile(name, blob as any, {
+          // TODO encrypt if it's a draft or show a message to the user explaining the limitation
+          encrypt: false,
+          contentType: file.type,
+        });
+        const htmlNode = document.getElementById(`image-${id}`);
+        if (!htmlNode) {
+          // TODO handle error
+          return;
+        }
+        const slateNode = editor.findNode(htmlNode);
+        if (!slateNode) {
+          // TODO handle error
+          return;
+        }
+
+        editor.setNodeByKey(slateNode.key, {
+          type: 'image',
+          data: { src: imageUrl, id },
+        });
+      });
+
+      reader.readAsDataURL(file);
+    }
+  };
+
   /**
    * Render a Slate block.
    */
@@ -225,7 +282,17 @@ export const SlateEditor = ({
         return <ul {...attributes}>{children}</ul>;
       case 'image':
         const src = node.data.get('src');
-        return <Image src={src} selected={isFocused} {...attributes} />;
+        const id = node.data.get('id');
+        const isUploading = node.data.get('isUploading');
+        return (
+          <Image
+            {...attributes}
+            src={src}
+            selected={isFocused}
+            isUploading={isUploading}
+            id={`image-${id}`}
+          />
+        );
       default:
         return next();
     }
@@ -279,7 +346,11 @@ export const SlateEditor = ({
       <React.Fragment>
         {children}
 
-        <SlateEditorSideMenu ref={sideMenuRef} editor={editor} />
+        <SlateEditorSideMenu
+          ref={sideMenuRef}
+          editor={editor}
+          addImageToEditor={addImageToEditor}
+        />
         <SlateEditorHoverMenu ref={hoverMenuRef} editor={editor} />
       </React.Fragment>
     );
@@ -346,12 +417,32 @@ export const SlateEditor = ({
     updateHoverMenu(value);
   };
 
-  const handleSave = async () => {
+  const handleDrop = (
+    event: React.DragEvent<Element>,
+    editor: Editor,
+    next: () => any
+  ) => {
+    const target = editor.findEventRange(event);
+    if (!target && event.type === 'drop') return next();
+
+    const transfer: any = getEventTransfer(event);
+    const { type, files } = transfer;
+
+    if (type === 'files') {
+      addImageToEditor(editor, files);
+      return;
+    }
+
+    next();
+  };
+
+  const handleSave = async (storyParam?: Partial<Story>) => {
     setLoadingSave(true);
     try {
       const content = value.toJSON();
       const updatedStory: Story = {
         ...story,
+        ...storyParam,
         content,
         updatedAt: Date.now(),
       };
@@ -395,7 +486,10 @@ export const SlateEditor = ({
               </ButtonOutline>
             )}
             {!loadingSave && story.type === 'public' && (
-              <ButtonOutline style={{ marginRight: 6 }} onClick={handleSave}>
+              <ButtonOutline
+                style={{ marginRight: 6 }}
+                onClick={() => handleSave()}
+              >
                 Save
               </ButtonOutline>
             )}
@@ -404,7 +498,10 @@ export const SlateEditor = ({
                 content="Nobody can see it unless you click on « publish »"
                 theme="light-border"
               >
-                <ButtonOutline style={{ marginRight: 6 }} onClick={handleSave}>
+                <ButtonOutline
+                  style={{ marginRight: 6 }}
+                  onClick={() => handleSave()}
+                >
                   Save
                 </ButtonOutline>
               </Tippy>
@@ -430,6 +527,7 @@ export const SlateEditor = ({
             loadingSave={loadingSave}
             handleOpenSettings={handleOpenSettings}
             handleSave={handleSave}
+            addImageToEditor={addImageToEditor}
           />
 
           <StyledContent>
@@ -438,7 +536,8 @@ export const SlateEditor = ({
               plugins={slatePlugins}
               value={value}
               onChange={handleTextChange}
-              onKeyDown={onKeyDown as any}
+              onKeyDown={handleKeyDown}
+              onDrop={handleDrop}
               schema={schema}
               placeholder="Start your story here..."
               renderEditor={renderEditor}
@@ -453,6 +552,7 @@ export const SlateEditor = ({
           open={settingsOpen}
           onClose={handleCloseSettings}
           onChangeStoryField={onChangeStoryField}
+          onSave={handleSave}
         />
       </PageContainer>
     </React.Fragment>

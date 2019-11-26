@@ -1,10 +1,9 @@
-import React, { forwardRef, useState } from 'react';
+import React, { forwardRef, useState, useRef } from 'react';
 import { Editor } from 'slate-react';
 import ReactDOM from 'react-dom';
 import styled, { css } from 'styled-components';
 import tw from 'tailwind.macro';
 import { MdAdd, MdAddAPhoto } from 'react-icons/md';
-import { onClickImage } from './SlateEditorToolbar';
 
 const SideMenuContainer = styled.div`
   ${tw`flex absolute`};
@@ -54,11 +53,13 @@ const SideMenuActionButton = styled(SideMenuButton)<{ open: boolean }>`
 
 interface SlateEditorSideMenuProps {
   editor: Editor;
+  addImageToEditor: (editor: Editor, files: File[], target?: any) => void;
 }
 
 export const SlateEditorSideMenu = forwardRef(
-  ({ editor }: SlateEditorSideMenuProps, ref: any) => {
+  ({ editor, addImageToEditor }: SlateEditorSideMenuProps, ref: any) => {
     const [open, setOpen] = useState(false);
+    const fileUploaderRef = useRef<HTMLInputElement>(null);
 
     const root = window.document.getElementById('__next');
     if (!root) return null;
@@ -78,8 +79,19 @@ export const SlateEditorSideMenu = forwardRef(
         <SideMenuButtonContainer open={open}>
           <SideMenuActionButton
             open={open}
-            onClick={() => onClickImage(editor)}
+            onClick={() =>
+              fileUploaderRef.current && fileUploaderRef.current.click()
+            }
           >
+            <input
+              type="file"
+              accept="image/jpeg, image/png"
+              onChange={event =>
+                addImageToEditor(editor, event.target.files as any)
+              }
+              ref={fileUploaderRef}
+              style={{ display: 'none' }}
+            />
             <MdAddAPhoto size={18} />
           </SideMenuActionButton>
         </SideMenuButtonContainer>
