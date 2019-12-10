@@ -17,6 +17,15 @@
   <img src="https://badgen.net/badge/license/MIT/blue" alt="License">
 </p>
 
+## Codebase
+
+Here is a list of the big technologies we use:
+
+- [Blockstack](https://blockstack.org/): Authentication and storage
+- [Next.js](https://nextjs.org/): React Framework
+- [Tailwind](https://tailwindcss.com/): CSS Framework
+- [Slate](https://www.slatejs.org/): Text editor Framework
+
 ## Setup
 
 First you need to clone the repository:
