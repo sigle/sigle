@@ -70,8 +70,14 @@ const FormTextarea = styled.textarea`
   ${tw`appearance-none block w-full bg-white border border-grey rounded py-3 px-3 text-sm leading-tight focus:outline-none`};
 `;
 
-const FormHelper = styled.p`
+const FormHelper = styled.p<{ error?: boolean }>`
   ${tw`text-sm text-grey-darker mt-1`};
+
+  ${props =>
+    props.error &&
+    css`
+      ${tw`text-pink`};
+    `}
 `;
 
 const SaveRow = styled.div`
@@ -189,6 +195,7 @@ export const StorySettings = ({
                   onChange={formik.handleChange}
                   maxLength={100}
                 />
+                <FormHelper error>{formik.errors.slug}</FormHelper>
               </FormRow>
 
               <FormRow>

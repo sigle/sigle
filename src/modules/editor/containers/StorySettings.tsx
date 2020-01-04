@@ -72,8 +72,8 @@ export const StorySettings = ({
     },
     validate: values => {
       const errors: FormikErrors<StorySettingsValues> = {};
-      if (values.slug) {
-        // TODO some validation for slug eg no space and only allowed chars
+      if (values.slug && !values.slug.match(/^[a-z0-9-]+$/)) {
+        errors.slug = 'Slug is containing invalid characters';
       }
       return errors;
     },
