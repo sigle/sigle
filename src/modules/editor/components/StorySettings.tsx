@@ -7,8 +7,10 @@ import '@reach/dialog/styles.css';
 import { animated, useTransition } from 'react-spring';
 import format from 'date-fns/format';
 import { DropzoneRootProps, DropzoneInputProps } from 'react-dropzone';
+import { FormikProps } from 'formik';
 import { Story } from '../../../types';
 import { Button } from '../../../components';
+import { StorySettingsValues } from '../containers/StorySettings';
 
 const StyledDialogOverlay = styled(DialogOverlay)`
   z-index: 11;
@@ -95,13 +97,8 @@ interface Props {
   getRootProps(props?: DropzoneRootProps): DropzoneRootProps;
   getInputProps(props?: DropzoneInputProps): DropzoneInputProps;
   coverFile?: Blob & { preview: string };
-  loadingSave: boolean;
+  formik: FormikProps<StorySettingsValues>;
   onDelete: (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void;
-  onChangeSlug: (value: string) => void;
-  onChangeMetaTitle: (value: string) => void;
-  onChangeMetaDescription: (value: string) => void;
-  onChangeCreatedAt: (value: string) => void;
-  onSubmit: (e: React.FormEvent<HTMLFormElement>) => void;
 }
 
 const AnimatedDialogOverlay = animated(StyledDialogOverlay);
@@ -115,13 +112,8 @@ export const StorySettings = ({
   getRootProps,
   getInputProps,
   coverFile,
-  loadingSave,
+  formik,
   onDelete,
-  onChangeSlug,
-  onChangeMetaTitle,
-  onChangeMetaDescription,
-  onChangeCreatedAt,
-  onSubmit,
 }: Props) => {
   const transitions = useTransition(open, null, {
     from: { opacity: 0, transform: 'translateX(100%)' },
@@ -155,7 +147,7 @@ export const StorySettings = ({
               </CloseButton>
             </TitleContainer>
 
-            <form onSubmit={onSubmit}>
+            <form onSubmit={formik.handleSubmit}>
               <FormRow>
                 <FormLabel>Cover image</FormLabel>
 
@@ -176,16 +168,25 @@ export const StorySettings = ({
                 <FormLabel>Created on</FormLabel>
                 <FormInput
                   type="date"
-                  value={format(story.createdAt, 'yyyy-MM-dd')}
-                  onChange={e => onChangeCreatedAt(e.target.value)}
+                  value={format(formik.values.createdAt, 'yyyy-MM-dd')}
+                  name="createdAt"
+                  onChange={e => {
+                    if (e.target.value) {
+                      formik.setFieldValue(
+                        'createdAt',
+                        new Date(e.target.value).getTime()
+                      );
+                    }
+                  }}
                 />
               </FormRow>
 
               <FormRow>
                 <FormLabel>Slug url</FormLabel>
                 <FormInput
-                  value={story.slug || ''}
-                  onChange={e => onChangeSlug(e.target.value)}
+                  value={formik.values.slug || ''}
+                  name="slug"
+                  onChange={formik.handleChange}
                   maxLength={100}
                 />
               </FormRow>
@@ -193,13 +194,15 @@ export const StorySettings = ({
               <FormRow>
                 <FormLabel>Meta title</FormLabel>
                 <FormInput
-                  value={story.metaTitle || ''}
-                  onChange={e => onChangeMetaTitle(e.target.value)}
+                  value={formik.values.metaTitle || ''}
+                  name="metaTitle"
+                  onChange={formik.handleChange}
                   maxLength={100}
                 />
                 <FormHelper>
                   Recommended: 70 characters. You have used{' '}
-                  {story.metaTitle ? story.metaTitle.length : 0} characters.
+                  {formik.values.metaTitle ? formik.values.metaTitle.length : 0}{' '}
+                  characters.
                 </FormHelper>
               </FormRow>
 
@@ -207,20 +210,23 @@ export const StorySettings = ({
                 <FormLabel>Meta description</FormLabel>
                 <FormTextarea
                   rows={3}
-                  value={story.metaDescription || ''}
-                  onChange={e => onChangeMetaDescription(e.target.value)}
+                  value={formik.values.metaDescription || ''}
+                  name="metaDescription"
+                  onChange={formik.handleChange}
                   maxLength={250}
                 />
                 <FormHelper>
                   Recommended: 156 characters. You have used{' '}
-                  {story.metaDescription ? story.metaDescription.length : 0}{' '}
+                  {formik.values.metaDescription
+                    ? formik.values.metaDescription.length
+                    : 0}{' '}
                   characters.
                 </FormHelper>
               </FormRow>
 
               <SaveRow>
-                <Button disabled={loadingSave} type="submit">
-                  {loadingSave ? 'Saving...' : 'Save'}
+                <Button disabled={formik.isSubmitting} type="submit">
+                  {formik.isSubmitting ? 'Saving...' : 'Save'}
                 </Button>
 
                 {loadingDelete ? (

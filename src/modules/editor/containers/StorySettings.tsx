@@ -2,6 +2,7 @@ import React, { useState, useCallback } from 'react';
 import { toast } from 'react-toastify';
 import { useRouter } from 'next/router';
 import { useDropzone } from 'react-dropzone';
+import { useFormik, FormikErrors } from 'formik';
 import { StorySettings as Component } from '../components/StorySettings';
 import { Story } from '../../../types';
 import {
@@ -11,6 +12,13 @@ import {
 } from '../../../utils';
 import { userSession } from '../../../utils/blockstack';
 import { resizeImage } from '../../../utils/image';
+
+export interface StorySettingsValues {
+  createdAt: number;
+  slug?: string;
+  metaTitle?: string;
+  metaDescription?: string;
+}
 
 interface Props {
   story: Story;
@@ -28,7 +36,6 @@ export const StorySettings = ({
   onSave,
 }: Props) => {
   const router = useRouter();
-  const [loadingSave, setLoadingSave] = useState(false);
   const [loadingDelete, setLoadingDelete] = useState(false);
   const [coverFile, setCoverFile] = useState<
     (Blob & { preview: string; name: string }) | undefined
@@ -56,57 +63,49 @@ export const StorySettings = ({
     multiple: false,
   });
 
-  const handleChangeSlug = (value: string) => {
-    // TODO some validation is needed eg no space and only allowed chars
-    // onChangeStoryField('slug', value);
-  };
-
-  const handleChangeMetaTitle = (value: string) => {
-    onChangeStoryField('metaTitle', value);
-  };
-
-  const handleChangeMetaDescription = (value: string) => {
-    onChangeStoryField('metaDescription', value);
-  };
-
-  const handleChangeCreatedAt = (value: string) => {
-    if (value) {
-      onChangeStoryField('createdAt', new Date(value).getTime());
-    }
-  };
-
-  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    setLoadingSave(true);
-
-    try {
-      if (coverFile) {
-        const now = new Date().getTime();
-        const name = `photos/${story.id}/${now}-${coverFile.name}`;
-        const coverImageUrl = await userSession.putFile(
-          name,
-          coverFile as any,
-          {
+  const formik = useFormik<StorySettingsValues>({
+    initialValues: {
+      createdAt: story.createdAt,
+      slug: story.slug,
+      metaTitle: story.metaTitle,
+      metaDescription: story.metaDescription,
+    },
+    validate: values => {
+      const errors: FormikErrors<StorySettingsValues> = {};
+      if (values.slug) {
+        // TODO some validation for slug eg no space and only allowed chars
+      }
+      return errors;
+    },
+    onSubmit: async (values, { setSubmitting }) => {
+      try {
+        let coverImageUrl = story.coverImage;
+        if (coverFile) {
+          const now = new Date().getTime();
+          const name = `photos/${story.id}/${now}-${coverFile.name}`;
+          coverImageUrl = await userSession.putFile(name, coverFile as any, {
             // TODO encrypt if it's a draft or show a message to the user explaining the limitation
             encrypt: false,
             contentType: coverFile.type,
-          }
-        );
-        onChangeStoryField('coverImage', coverImageUrl);
-        setCoverFile(undefined);
-        await onSave({ coverImage: coverImageUrl });
-        setLoadingSave(false);
-        return;
+          });
+          onChangeStoryField('coverImage', coverImageUrl);
+          setCoverFile(undefined);
+        }
+
+        await onSave({
+          coverImage: coverImageUrl,
+          createdAt: values.createdAt,
+          slug: values.slug,
+          metaTitle: values.metaTitle,
+          metaDescription: values.metaDescription,
+        });
+      } catch (error) {
+        console.error(error);
+        toast.error(error.message);
       }
-
-      await onSave();
-    } catch (error) {
-      console.error(error);
-      toast.error(error.message);
-    }
-
-    setLoadingSave(false);
-  };
+      setSubmitting(false);
+    },
+  });
 
   const handleDelete = async (
     event: React.MouseEvent<HTMLButtonElement, MouseEvent>
@@ -144,13 +143,8 @@ export const StorySettings = ({
       getRootProps={getRootProps}
       getInputProps={getInputProps}
       coverFile={coverFile}
-      loadingSave={loadingSave}
-      onSubmit={handleSubmit}
+      formik={formik}
       onDelete={handleDelete}
-      onChangeSlug={handleChangeSlug}
-      onChangeMetaTitle={handleChangeMetaTitle}
-      onChangeMetaDescription={handleChangeMetaDescription}
-      onChangeCreatedAt={handleChangeCreatedAt}
     />
   );
 };
