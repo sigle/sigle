@@ -13,12 +13,18 @@ export interface Story {
    */
   id: string;
   /**
+   * Slug used to customize urls
+   * Have to be unique
+   */
+  slug?: string;
+  /**
    * Title of the story
    */
   title: string;
   /**
    * JSON representing the slate.js structure of the story
    */
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   content: any;
   /**
    * Image used to display the cards
@@ -44,6 +50,7 @@ export interface Story {
 
 export interface SubsetStory {
   id: string;
+  slug?: string;
   title: string;
   content: string;
   coverImage?: string;
