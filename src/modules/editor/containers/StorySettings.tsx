@@ -56,6 +56,11 @@ export const StorySettings = ({
     multiple: false,
   });
 
+  const handleChangeSlug = (value: string) => {
+    // TODO some validation is needed eg no space and only allowed chars
+    // onChangeStoryField('slug', value);
+  };
+
   const handleChangeMetaTitle = (value: string) => {
     onChangeStoryField('metaTitle', value);
   };
@@ -142,6 +147,7 @@ export const StorySettings = ({
       loadingSave={loadingSave}
       onSubmit={handleSubmit}
       onDelete={handleDelete}
+      onChangeSlug={handleChangeSlug}
       onChangeMetaTitle={handleChangeMetaTitle}
       onChangeMetaDescription={handleChangeMetaDescription}
       onChangeCreatedAt={handleChangeCreatedAt}

@@ -97,6 +97,7 @@ interface Props {
   coverFile?: Blob & { preview: string };
   loadingSave: boolean;
   onDelete: (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void;
+  onChangeSlug: (value: string) => void;
   onChangeMetaTitle: (value: string) => void;
   onChangeMetaDescription: (value: string) => void;
   onChangeCreatedAt: (value: string) => void;
@@ -116,6 +117,7 @@ export const StorySettings = ({
   coverFile,
   loadingSave,
   onDelete,
+  onChangeSlug,
   onChangeMetaTitle,
   onChangeMetaDescription,
   onChangeCreatedAt,
@@ -176,6 +178,15 @@ export const StorySettings = ({
                   type="date"
                   value={format(story.createdAt, 'yyyy-MM-dd')}
                   onChange={e => onChangeCreatedAt(e.target.value)}
+                />
+              </FormRow>
+
+              <FormRow>
+                <FormLabel>Slug url</FormLabel>
+                <FormInput
+                  value={story.slug || ''}
+                  onChange={e => onChangeSlug(e.target.value)}
+                  maxLength={100}
                 />
               </FormRow>
 
