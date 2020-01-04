@@ -26,7 +26,7 @@ Here is a list of the big technologies we use:
 - [Tailwind](https://tailwindcss.com/): CSS Framework
 - [Slate](https://www.slatejs.org/): Text editor Framework
 
-## Setup
+## Local Development
 
 First you need to clone the repository:
 
@@ -40,10 +40,16 @@ Then run the following command to install dependencies:
 yarn install
 ```
 
-Finally to start the server run:
+We use now to handle the development mode so you will need to install their cli:
 
 ```sh
-yarn start
+yarn global add now
+```
+
+Finally to start the project in development/watch mode run:
+
+```sh
+now dev
 ```
 
 You can now open your browser and go to http://localhost:3000 to see the app.

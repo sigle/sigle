@@ -3,8 +3,7 @@
   "version": "0.0.1",
   "private": true,
   "scripts": {
-    "dev": "node server.js",
-    "start": "NODE_ENV=production node server.js",
+    "dev": "now dev",
     "build": "next build",
     "test": "yarn test:lint",
     "analyze": "BUNDLE_ANALYZE=both next build",
@@ -43,7 +42,6 @@
   "dependencies": {
     "@reach/dialog": "0.6.2",
     "@sentry/browser": "5.9.1",
-    "@sentry/node": "5.9.0",
     "@tippy.js/react": "3.1.1",
     "blockstack": "19.3.0",
     "date-fns": "2.8.1",
