@@ -72,6 +72,7 @@ export const StorySettings = ({
     },
     validate: values => {
       const errors: FormikErrors<StorySettingsValues> = {};
+      // TODO slug should be unique
       if (values.slug && !values.slug.match(/^[a-z0-9-]+$/)) {
         errors.slug = 'Slug is containing invalid characters';
       }
