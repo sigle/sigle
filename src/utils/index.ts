@@ -50,13 +50,17 @@ export const getStoryFile = async (storyId: string): Promise<Story | null> => {
 };
 
 export const saveStoryFile = async (file: Story): Promise<void> => {
-  await userSession.putFile(`${file.id}.json`, JSON.stringify(file), {
+  // Take the slug if exist for the url otherwise fallback to id
+  const path = file.slug ? file.slug : file.id;
+  await userSession.putFile(`${path}.json`, JSON.stringify(file), {
     encrypt: file.type === 'private',
   });
 };
 
 export const deleteStoryFile = async (file: Story): Promise<void> => {
-  await userSession.deleteFile(`${file.id}.json`);
+  // Take the slug if exist for the url otherwise fallback to id
+  const path = file.slug ? file.slug : file.id;
+  await userSession.deleteFile(`${path}.json`);
 };
 
 export const publishStory = async (storyId: string): Promise<void> => {

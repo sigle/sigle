@@ -3,6 +3,7 @@ import styled, { css } from 'styled-components';
 import tw from 'tailwind.macro';
 import { toast } from 'react-toastify';
 import Tippy from '@tippy.js/react';
+import { Router, useRouter } from 'next/router';
 import {
   Editor,
   RenderBlockProps,
@@ -20,6 +21,7 @@ import {
   getStoriesFile,
   saveStoriesFile,
   generateRandomId,
+  deleteStoryFile,
 } from '../../../utils';
 import { Story } from '../../../types';
 import { Content } from '../../publicStory/components/PublicStory';
@@ -200,6 +202,7 @@ export const SlateEditor = ({
   onChangeTitle,
   onChangeStoryField,
 }: Props) => {
+  const router = useRouter();
   const editorRef = useRef<any>(null);
   const sideMenuRef = useRef<any>(null);
   const hoverMenuRef = useRef<any>(null);
@@ -459,6 +462,14 @@ export const SlateEditor = ({
       // We sort the files by date in case createdAt was changed
       file.stories.sort((a, b) => b.createdAt - a.createdAt);
       await saveStoriesFile(file);
+      // If slug changed we have to delete the old file path
+      if (story.slug !== updatedStory.slug) {
+        await deleteStoryFile(story);
+        router.push('/stories/[storyId]', `/stories/${updatedStory.slug}`, {
+          shallow: true,
+        });
+        onChangeStoryField('slug', updatedStory.slug);
+      }
       toast.success('Story saved');
     } catch (error) {
       console.error(error);

@@ -24,7 +24,7 @@ export const StoryItem = ({
   const handlePublish = async () => {
     setLoading(true);
     try {
-      await publishStory(story.id);
+      await publishStory(story.slug ? story.slug : story.id);
       onPublish(story.id);
       toast.success('Story published');
     } catch (error) {

@@ -61,7 +61,10 @@ export const StoryItem = ({
     <StoryContainer>
       <StoryTitleContainer>
         <StoryTitleContainerLeft>
-          <Link href="/stories/[storyId]" as={`/stories/${story.id}`}>
+          <Link
+            href="/stories/[storyId]"
+            as={`/stories/${story.slug ? story.slug : story.id}`}
+          >
             <StoryTitle as="a">{story.title}</StoryTitle>
           </Link>
           <Tippy
@@ -75,7 +78,9 @@ export const StoryItem = ({
             <StoryTitleIcon>
               {type === 'public' ? (
                 <a
-                  href={`/${user.username}/${story.id}`}
+                  href={`/${user.username}/${
+                    story.slug ? story.slug : story.id
+                  }`}
                   target="_blank"
                   rel="noopener noreferrer"
                 >
@@ -104,7 +109,10 @@ export const StoryItem = ({
               Unpublish
             </ButtonOutline>
           )}
-          <Link href="/stories/[storyId]" as={`/stories/${story.id}`}>
+          <Link
+            href="/stories/[storyId]"
+            as={`/stories/${story.slug ? story.slug : story.id}`}
+          >
             <ButtonOutline as="a">Edit</ButtonOutline>
           </Link>
         </div>

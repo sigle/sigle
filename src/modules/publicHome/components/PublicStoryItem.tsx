@@ -70,12 +70,18 @@ export const PublicStoryItem = ({ username, story }: Props) => (
       </StoryContainerImage>
     )}
     <StoryContainerContent hasCover={!!story.coverImage}>
-      <Link href="/[username]/[storyId]" as={`/${username}/${story.id}`}>
+      <Link
+        href="/[username]/[storyId]"
+        as={`/${username}/${story.slug ? story.slug : story.id}`}
+      >
         <StoryTitle>{story.title}</StoryTitle>
       </Link>
       <StoryDate>{format(story.createdAt, 'dd MMMM yyyy')}</StoryDate>
       <StoryText>{story.content}</StoryText>
-      <Link href="/[username]/[storyId]" as={`/${username}/${story.id}`}>
+      <Link
+        href="/[username]/[storyId]"
+        as={`/${username}/${story.slug ? story.slug : story.id}`}
+      >
         <StoryButton>Read more</StoryButton>
       </Link>
     </StoryContainerContent>
