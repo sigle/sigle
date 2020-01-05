@@ -127,6 +127,7 @@ export const convertStoryToSubsetStory = (story: Story): SubsetStory => {
 
   return {
     id: story.id,
+    slug: story.slug,
     title: story.title,
     content:
       plainContent.length > CONTENT_SUBSET_SIZE
