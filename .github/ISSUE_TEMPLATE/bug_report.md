@@ -1,0 +1,22 @@
+---
+name: 🐛 Bug report
+about: Report an issue
+title: '🐛 Bug | '
+labels: 'bug'
+
+---
+
+## Description
+<!--
+A clear and concise description of what the bug is.
+-->
+
+<!--
+**Screenshots**
+If applicable, add screenshots to help explain your problem.
+-->
+
+## Device
+ - OS: [e.g. iOS]
+ - Browser [e.g. chrome, safari]
+ - Version [e.g. 22]
