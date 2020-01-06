@@ -6,7 +6,7 @@ labels: 'bug'
 
 ---
 
-**Description:**
+## Description
 <!--
 A clear and concise description of what the bug is.
 -->
@@ -16,7 +16,7 @@ A clear and concise description of what the bug is.
 If applicable, add screenshots to help explain your problem.
 -->
 
-**Device:**
+## Device
  - OS: [e.g. iOS]
  - Browser [e.g. chrome, safari]
  - Version [e.g. 22]
