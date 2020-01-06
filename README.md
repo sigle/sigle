@@ -49,7 +49,7 @@ yarn global add now
 Finally to start the project in development/watch mode run:
 
 ```sh
-now dev
+yarn dev
 ```
 
 You can now open your browser and go to http://localhost:3000 to see the app.
