@@ -35,8 +35,9 @@ module.exports = withPlugins(
       SENTRY_DSN_CLIENT: process.env.SENTRY_DSN_CLIENT,
       FATHOM_SITE_ID: process.env.FATHOM_SITE_ID,
     },
-    webpack: config => {
-      if (process.env.BUNDLE_ANALYZER_TOKEN) {
+    webpack: (config, { isServer }) => {
+      // We want to report only for the client bundle
+      if (process.env.BUNDLE_ANALYZER_TOKEN && !isServer) {
         webpackConfig.plugins.push(
           new BundleAnalyzerPluginReporter({
             token: process.env.BUNDLE_ANALYZER_TOKEN,
