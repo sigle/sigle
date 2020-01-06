@@ -12,10 +12,11 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: 12.x
-      - name: yarn install, build, and test
-        run: |
-          yarn install --frozen-lockfile
-          yarn build
-          yarn test
+      - name: Install Dependencies
+        run: yarn install --frozen-lockfile
+      - name: Build
+        run: yarn build
+      - name: Run tests
+        run: yarn test
         env:
           CI: true
