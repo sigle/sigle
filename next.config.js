@@ -38,7 +38,7 @@ module.exports = withPlugins(
     webpack: (config, { isServer }) => {
       // We want to report only for the client bundle
       if (process.env.BUNDLE_ANALYZER_TOKEN && !isServer) {
-        webpackConfig.plugins.push(
+        config.plugins.push(
           new BundleAnalyzerPluginReporter({
             token: process.env.BUNDLE_ANALYZER_TOKEN,
           })
