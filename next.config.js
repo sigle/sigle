@@ -2,6 +2,7 @@ const dotenv = require('dotenv');
 const withPlugins = require('next-compose-plugins');
 const withCSS = require('@zeit/next-css');
 const withBundleAnalyzer = require('@zeit/next-bundle-analyzer');
+const BundleAnalyzerPluginReporter = require('@bundle-analyzer/webpack-plugin');
 
 dotenv.config();
 
@@ -33,6 +34,17 @@ module.exports = withPlugins(
       APP_URL: process.env.APP_URL || 'http://localhost:3000',
       SENTRY_DSN_CLIENT: process.env.SENTRY_DSN_CLIENT,
       FATHOM_SITE_ID: process.env.FATHOM_SITE_ID,
+    },
+    webpack: (config, { isServer }) => {
+      // We want to report only for the client bundle
+      if (process.env.BUNDLE_ANALYZER_TOKEN && !isServer) {
+        config.plugins.push(
+          new BundleAnalyzerPluginReporter({
+            token: process.env.BUNDLE_ANALYZER_TOKEN,
+          })
+        );
+      }
+      return config;
     },
   }
 );
