@@ -38,10 +38,8 @@ module.exports = withPlugins(
     },
     webpack: (config, { isServer }) => {
       // See https://github.com/blockstack/blockstack.js/pull/683
-      // BIP39 includes ~240KB of non-english json that we don't currently use.
-      config.plugins.push(
-        new webpack.IgnorePlugin(/\.\/wordlists\/(?!english\.json)/)
-      );
+      // Remove the BIP39 wordlist since it's used only by the wallet and it's huge
+      config.plugins.push(new webpack.IgnorePlugin(/\.\/wordlists\//));
 
       // We want to report only for the client bundle
       if (process.env.BUNDLE_ANALYZER_TOKEN && !isServer) {
