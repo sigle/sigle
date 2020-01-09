@@ -13,6 +13,7 @@ import 'nprogress/nprogress.css';
 import 'tippy.js/dist/tippy.css';
 import 'tippy.js/themes/light-border.css';
 import 'react-toastify/dist/ReactToastify.css';
+import '../lib/fonts.css';
 import '../generated/tailwind.css';
 import { config } from '../config';
 import { colors } from '../utils/colors';
@@ -46,84 +47,6 @@ Router.events.on('routeChangeComplete', () => {
  */
 
 const GlobalStyle = createGlobalStyle`
-  /* roboto-300normal - latin */
-  @font-face {
-    font-family: 'Roboto';
-    font-style: normal;
-    font-display: swap;
-    font-weight: 300;
-    src:
-      local('Roboto Light '),
-      local('Roboto-Light'),
-      url('/fonts/roboto-latin-300.woff2') format('woff2'), /* Super Modern Browsers */
-      url('/fonts/roboto-latin-300.woff') format('woff'); /* Modern Browsers */
-  }
-
-  /* roboto-300italic - latin */
-  @font-face {
-    font-family: 'Roboto';
-    font-style: italic;
-    font-display: swap;
-    font-weight: 300;
-    src:
-      local('Roboto Light italic'),
-      local('Roboto-Lightitalic'),
-      url('/fonts/roboto-latin-300italic.woff2') format('woff2'), /* Super Modern Browsers */
-      url('/fonts/roboto-latin-300italic.woff') format('woff'); /* Modern Browsers */
-  }
-
-  /* roboto-400normal - latin */
-  @font-face {
-    font-family: 'Roboto';
-    font-style: normal;
-    font-display: swap;
-    font-weight: 400;
-    src:
-      local('Roboto Regular '),
-      local('Roboto-Regular'),
-      url('/fonts/roboto-latin-400.woff2') format('woff2'), /* Super Modern Browsers */
-      url('/fonts/roboto-latin-400.woff') format('woff'); /* Modern Browsers */
-  }
-
-  /* roboto-500normal - latin */
-  @font-face {
-    font-family: 'Roboto';
-    font-style: normal;
-    font-display: swap;
-    font-weight: 500;
-    src:
-      local('Roboto Medium '),
-      local('Roboto-Medium'),
-      url('/fonts/roboto-latin-500.woff2') format('woff2'), /* Super Modern Browsers */
-      url('/fonts/roboto-latin-500.woff') format('woff'); /* Modern Browsers */
-  }
-
-  /* roboto-700normal - latin */
-  @font-face {
-    font-family: 'Roboto';
-    font-style: normal;
-    font-display: swap;
-    font-weight: 700;
-    src:
-      local('Roboto Bold '),
-      local('Roboto-Bold'),
-      url('/fonts/roboto-latin-700.woff2') format('woff2'), /* Super Modern Browsers */
-      url('/fonts/roboto-latin-700.woff') format('woff'); /* Modern Browsers */
-  }
-
-  /* roboto-700italic - latin */
-  @font-face {
-    font-family: 'Roboto';
-    font-style: italic;
-    font-display: swap;
-    font-weight: 700;
-    src:
-      local('Roboto Bold italic'),
-      local('Roboto-Bolditalic'),
-      url('/fonts/roboto-latin-700italic.woff2') format('woff2'), /* Super Modern Browsers */
-      url('/fonts/roboto-latin-700italic.woff') format('woff'); /* Modern Browsers */
-  }
-
   body {
     font-family: 'Roboto', sans-serif;
   }
