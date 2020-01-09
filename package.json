@@ -3,7 +3,6 @@
   "version": "0.0.1",
   "private": true,
   "scripts": {
-    "dev": "now dev",
     "start": "NODE_ENV=production node server.js",
     "build": "next build",
     "test": "yarn test:lint",
@@ -65,7 +64,8 @@
     "slate-plain-serializer": "0.7.11",
     "slate-react": "0.22.10",
     "slate-soft-break": "0.9.0",
-    "styled-components": "4.4.1"
+    "styled-components": "4.4.1",
+    "typeface-roboto": "0.0.75"
   },
   "devDependencies": {
     "@bundle-analyzer/webpack-plugin": "0.5.1",
