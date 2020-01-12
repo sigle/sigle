@@ -39,7 +39,7 @@ module.exports = withPlugins(
       // In `pages/_app.js`, Sentry is imported from @sentry/node. While
       // @sentry/browser will run in a Node.js environment, @sentry/node will use
       // Node.js-only APIs to catch even more unhandled exceptions.
-      if (!options.isServer) {
+      if (!isServer) {
         config.resolve.alias['@sentry/node'] = '@sentry/browser';
       }
 
