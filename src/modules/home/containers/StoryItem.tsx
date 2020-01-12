@@ -19,6 +19,8 @@ export const StoryItem = ({
   onPublish,
   onUnPublish,
 }: Props) => {
+  // TODO handle delete function
+  // TODO remove the following code
   const [loading, setLoading] = useState(false);
 
   const handlePublish = async () => {
@@ -47,14 +49,5 @@ export const StoryItem = ({
     setLoading(false);
   };
 
-  return (
-    <Component
-      user={user}
-      story={story}
-      type={type}
-      loading={loading}
-      onPublish={handlePublish}
-      onUnPublish={handleUnPublishStory}
-    />
-  );
+  return <Component user={user} story={story} type={type} />;
 };

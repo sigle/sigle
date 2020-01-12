@@ -5,7 +5,6 @@ import tw from 'tailwind.macro';
 import Tippy from '@tippy.js/react';
 import { IoIosEye } from 'react-icons/io';
 import format from 'date-fns/format';
-import { ButtonOutline } from '../../../components';
 import { SubsetStory, BlockstackUser } from '../../../types';
 
 const StoryContainer = styled.div`
@@ -13,10 +12,6 @@ const StoryContainer = styled.div`
 `;
 
 const StoryTitleContainer = styled.div`
-  ${tw`flex justify-between`};
-`;
-
-const StoryTitleContainerLeft = styled.div`
   ${tw`flex`};
 `;
 
@@ -28,15 +23,15 @@ const StoryTitleIcon = styled.div`
   }
 `;
 
-const StoryTitle = styled.div`
+const StoryTitle = styled.h3`
   ${tw`flex text-2xl font-bold no-underline text-black`};
 `;
 
-const StoryDate = styled.div`
+const StoryDate = styled.p`
   ${tw`mt-1 text-sm italic text-grey-dark`};
 `;
 
-const StoryText = styled.div`
+const StoryText = styled.p`
   ${tw`mt-4 text-grey-dark`};
 `;
 
@@ -44,70 +39,39 @@ interface Props {
   user: BlockstackUser;
   story: SubsetStory;
   type: 'public' | 'private';
-  loading: boolean;
-  onPublish: () => void;
-  onUnPublish: () => void;
 }
 
-export const StoryItem = ({
-  user,
-  story,
-  type,
-  loading,
-  onPublish,
-  onUnPublish,
-}: Props) => {
+export const StoryItem = ({ user, story, type }: Props) => {
   return (
     <StoryContainer>
       <StoryTitleContainer>
-        <StoryTitleContainerLeft>
+        <StoryTitle>
           <Link href="/stories/[storyId]" as={`/stories/${story.id}`} passHref>
-            <StoryTitle as="a">{story.title}</StoryTitle>
+            <a>{story.title}</a>
           </Link>
-          <Tippy
-            content={
-              type === 'public'
-                ? 'View my story'
-                : 'You need to publish your article to view it'
-            }
-            theme="light-border"
-          >
-            <StoryTitleIcon>
-              {type === 'public' ? (
-                <a
-                  href={`/${user.username}/${story.id}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  <IoIosEye size={22} style={{ marginLeft: 6 }} />
-                </a>
-              ) : (
+        </StoryTitle>
+        <Tippy
+          content={
+            type === 'public'
+              ? 'View my story'
+              : 'You need to publish your article to view it'
+          }
+          theme="light-border"
+        >
+          <StoryTitleIcon>
+            {type === 'public' ? (
+              <a
+                href={`/${user.username}/${story.id}`}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
                 <IoIosEye size={22} style={{ marginLeft: 6 }} />
-              )}
-            </StoryTitleIcon>
-          </Tippy>
-        </StoryTitleContainerLeft>
-
-        <div>
-          {loading && (
-            <ButtonOutline style={{ marginRight: 8 }} disabled={true}>
-              Loading ...
-            </ButtonOutline>
-          )}
-          {!loading && type === 'private' && (
-            <ButtonOutline style={{ marginRight: 8 }} onClick={onPublish}>
-              Publish
-            </ButtonOutline>
-          )}
-          {!loading && type === 'public' && (
-            <ButtonOutline style={{ marginRight: 8 }} onClick={onUnPublish}>
-              Unpublish
-            </ButtonOutline>
-          )}
-          <Link href="/stories/[storyId]" as={`/stories/${story.id}`}>
-            <ButtonOutline as="a">Edit</ButtonOutline>
-          </Link>
-        </div>
+              </a>
+            ) : (
+              <IoIosEye size={22} style={{ marginLeft: 6 }} />
+            )}
+          </StoryTitleIcon>
+        </Tippy>
       </StoryTitleContainer>
 
       <StoryDate>
