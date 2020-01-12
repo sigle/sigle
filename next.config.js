@@ -36,6 +36,13 @@ module.exports = withPlugins(
       FATHOM_SITE_ID: process.env.FATHOM_SITE_ID,
     },
     webpack: (config, { isServer }) => {
+      // In `pages/_app.js`, Sentry is imported from @sentry/node. While
+      // @sentry/browser will run in a Node.js environment, @sentry/node will use
+      // Node.js-only APIs to catch even more unhandled exceptions.
+      if (!isServer) {
+        config.resolve.alias['@sentry/node'] = '@sentry/browser';
+      }
+
       // We want to report only for the client bundle
       if (process.env.BUNDLE_ANALYZER_TOKEN && !isServer) {
         config.plugins.push(

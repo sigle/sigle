@@ -41,8 +41,8 @@
   ],
   "dependencies": {
     "@reach/dialog": "0.6.2",
-    "@sentry/browser": "5.9.1",
-    "@sentry/node": "5.9.0",
+    "@sentry/browser": "5.11.0",
+    "@sentry/node": "5.11.0",
     "@tippy.js/react": "3.1.1",
     "blockstack": "19.3.0",
     "date-fns": "2.8.1",
