@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { SlateEditor as Component } from '../components/SlateEditor';
 import { Story } from '../../../types';
 
@@ -8,16 +8,37 @@ interface Props {
 }
 
 export const SlateEditor = ({ story, onChangeStoryField }: Props) => {
+  const [showPublishDialog, setShowPublishDialog] = useState(false);
+  const [showUnpublishDialog, setShowUnpublishDialog] = useState(false);
+
   const handleChangeTitle = (title: string) => {
     onChangeStoryField('title', title);
   };
 
   const handlePublish = () => {
-    // TODO show modal with preview
+    setShowPublishDialog(true);
+  };
+
+  const handleCancelPublish = () => {
+    setShowPublishDialog(false);
+  };
+
+  const handleConfirmPublish = () => {
+    // TODO logic
+    setShowPublishDialog(false);
   };
 
   const handleUnpublish = () => {
-    // TODO show confirm modal
+    setShowUnpublishDialog(true);
+  };
+
+  const handleCancelUnpublish = () => {
+    setShowUnpublishDialog(false);
+  };
+
+  const handleConfirmUnpublish = () => {
+    // TODO logic
+    setShowUnpublishDialog(false);
   };
 
   return (
@@ -25,8 +46,14 @@ export const SlateEditor = ({ story, onChangeStoryField }: Props) => {
       story={story}
       onChangeTitle={handleChangeTitle}
       onChangeStoryField={onChangeStoryField}
+      showPublishDialog={showPublishDialog}
       onPublish={handlePublish}
+      onCancelPublish={handleCancelPublish}
+      onConfirmPublish={handleConfirmPublish}
+      showUnpublishDialog={showUnpublishDialog}
       onUnpublish={handleUnpublish}
+      onCancelUnpublish={handleCancelUnpublish}
+      onConfirmUnpublish={handleConfirmUnpublish}
     />
   );
 };

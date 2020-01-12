@@ -40,3 +40,5 @@ export const ButtonOutline = styled.button`
     ${tw`bg-pink text-white`};
   }
 `;
+
+export { FullScreenDialog } from './FullScreenDialog';

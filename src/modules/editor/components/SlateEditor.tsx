@@ -28,7 +28,11 @@ import { SlateEditorSideMenu } from './SlateEditorSideMenu';
 import { SlateEditorHoverMenu } from './SlateEditorHoverMenu';
 import { SlateEditorToolbar } from './SlateEditorToolbar';
 import { AppBar, AppBarRightContainer } from '../../layout';
-import { ButtonOutline, Container } from '../../../components';
+import {
+  ButtonOutline,
+  Container,
+  FullScreenDialog,
+} from '../../../components';
 import { DEFAULT_NODE, hasBlock, insertImage } from './utils';
 import { userSession } from '../../../utils/blockstack';
 import { resizeImage } from '../../../utils/image';
@@ -193,16 +197,28 @@ interface Props {
   story: Story;
   onChangeTitle: (title: string) => void;
   onChangeStoryField: (field: string, value: any) => void;
+  showPublishDialog: boolean;
   onPublish: () => void;
+  onCancelPublish: () => void;
+  onConfirmPublish: () => void;
+  showUnpublishDialog: boolean;
   onUnpublish: () => void;
+  onCancelUnpublish: () => void;
+  onConfirmUnpublish: () => void;
 }
 
 export const SlateEditor = ({
   story,
   onChangeTitle,
   onChangeStoryField,
+  showPublishDialog,
   onPublish,
+  onCancelPublish,
+  onConfirmPublish,
+  showUnpublishDialog,
   onUnpublish,
+  onCancelUnpublish,
+  onConfirmUnpublish,
 }: Props) => {
   const editorRef = useRef<any>(null);
   const sideMenuRef = useRef<any>(null);
@@ -561,12 +577,42 @@ export const SlateEditor = ({
             />
           </StyledContent>
         </SlateContainer>
+
         <StorySettings
           story={story}
           open={settingsOpen}
           onClose={handleCloseSettings}
           onChangeStoryField={onChangeStoryField}
           onSave={handleSave}
+        />
+
+        <FullScreenDialog
+          isOpen={showPublishDialog}
+          onConfirm={onConfirmPublish}
+          onCancel={onCancelPublish}
+          title="Publish my story"
+          description={
+            <React.Fragment>
+              <p>You’re about to publish your story.</p>
+              <p>You and everybody will be able to read it on your blog.</p>
+              <p>Would you like to continue?</p>
+            </React.Fragment>
+          }
+        />
+        <FullScreenDialog
+          isOpen={showUnpublishDialog}
+          onConfirm={onConfirmUnpublish}
+          onCancel={onCancelUnpublish}
+          title="Unpublish my story"
+          description={
+            <React.Fragment>
+              <p>You’re about to unpublish this story.</p>
+              <p>
+                It won’t be visible on your blog anymore but you still can see
+                and edit it in your draft section.
+              </p>
+            </React.Fragment>
+          }
         />
       </PageContainer>
     </React.Fragment>
