@@ -35,8 +35,6 @@ interface Props {
   onCreateNewPrivateStory: () => void;
   privateStories: SubsetStory[] | null;
   publicStories: SubsetStory[] | null;
-  onPublish: () => void;
-  onUnPublish: () => void;
 }
 
 export const Home = ({
@@ -47,8 +45,6 @@ export const Home = ({
   onCreateNewPrivateStory,
   privateStories,
   publicStories,
-  onPublish,
-  onUnPublish,
 }: Props) => {
   const showIllu =
     (selectedTab === 'drafts' &&
@@ -91,27 +87,13 @@ export const Home = ({
       {selectedTab === 'drafts' &&
         privateStories &&
         privateStories.map(story => (
-          <StoryItem
-            key={story.id}
-            user={user}
-            story={story}
-            type="private"
-            onPublish={onPublish}
-            onUnPublish={onUnPublish}
-          />
+          <StoryItem key={story.id} user={user} story={story} type="private" />
         ))}
 
       {selectedTab === 'published' &&
         publicStories &&
         publicStories.map(story => (
-          <StoryItem
-            key={story.id}
-            user={user}
-            story={story}
-            type="public"
-            onPublish={onPublish}
-            onUnPublish={onUnPublish}
-          />
+          <StoryItem key={story.id} user={user} story={story} type="public" />
         ))}
     </PageContainer>
   );

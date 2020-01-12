@@ -34,6 +34,8 @@ interface FullScreenDialogProps {
   description: React.ReactNode;
   confirmTitle?: string;
   cancelTitle?: string;
+  confirmLoading?: boolean;
+  loadingTitle?: string;
   onConfirm: () => void;
   onCancel: () => void;
 }
@@ -44,22 +46,36 @@ export const FullScreenDialog = ({
   description,
   onConfirm,
   onCancel,
+  confirmLoading,
+  loadingTitle = 'Loading ...',
   confirmTitle = 'Confirm',
   cancelTitle = 'Cancel',
 }: FullScreenDialogProps) => {
   return (
     <StyledDialogOverlay isOpen={isOpen} onDismiss={onCancel}>
       <StyledDialogContent aria-label={title}>
-        <Container>
-          <Title>{title}</Title>
-          <Description>{description}</Description>
-          <ButtonsContainer>
-            <ButtonOutline onClick={onCancel}>{cancelTitle}</ButtonOutline>
-            <ButtonOutline style={{ marginLeft: 12 }} onClick={onConfirm}>
-              {confirmTitle}
-            </ButtonOutline>
-          </ButtonsContainer>
-        </Container>
+        {!confirmLoading ? (
+          <Container>
+            <Title>{title}</Title>
+            <Description>{description}</Description>
+            <ButtonsContainer>
+              <ButtonOutline onClick={onCancel} disabled={confirmLoading}>
+                {cancelTitle}
+              </ButtonOutline>
+              <ButtonOutline
+                style={{ marginLeft: 12 }}
+                onClick={onConfirm}
+                disabled={confirmLoading}
+              >
+                {confirmTitle}
+              </ButtonOutline>
+            </ButtonsContainer>
+          </Container>
+        ) : (
+          <Container>
+            <Title>{loadingTitle}</Title>
+          </Container>
+        )}
       </StyledDialogContent>
     </StyledDialogOverlay>
   );

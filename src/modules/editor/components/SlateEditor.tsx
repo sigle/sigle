@@ -198,10 +198,12 @@ interface Props {
   onChangeTitle: (title: string) => void;
   onChangeStoryField: (field: string, value: any) => void;
   showPublishDialog: boolean;
+  publishLoading: boolean;
   onPublish: () => void;
   onCancelPublish: () => void;
   onConfirmPublish: () => void;
   showUnpublishDialog: boolean;
+  unpublishLoading: boolean;
   onUnpublish: () => void;
   onCancelUnpublish: () => void;
   onConfirmUnpublish: () => void;
@@ -212,10 +214,12 @@ export const SlateEditor = ({
   onChangeTitle,
   onChangeStoryField,
   showPublishDialog,
+  publishLoading,
   onPublish,
   onCancelPublish,
   onConfirmPublish,
   showUnpublishDialog,
+  unpublishLoading,
   onUnpublish,
   onCancelUnpublish,
   onConfirmUnpublish,
@@ -588,8 +592,10 @@ export const SlateEditor = ({
 
         <FullScreenDialog
           isOpen={showPublishDialog}
+          confirmLoading={publishLoading}
           onConfirm={onConfirmPublish}
           onCancel={onCancelPublish}
+          loadingTitle="Publishing ..."
           title="Publish my story"
           description={
             <React.Fragment>
@@ -601,8 +607,10 @@ export const SlateEditor = ({
         />
         <FullScreenDialog
           isOpen={showUnpublishDialog}
+          confirmLoading={unpublishLoading}
           onConfirm={onConfirmUnpublish}
           onCancel={onCancelUnpublish}
+          loadingTitle="Unpublishing ..."
           title="Unpublish my story"
           description={
             <React.Fragment>

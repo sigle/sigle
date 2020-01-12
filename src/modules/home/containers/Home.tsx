@@ -57,14 +57,6 @@ export const Home = () => {
     }
   };
 
-  const handlePublish = () => {
-    loadStoryFile();
-  };
-
-  const handleUnPublish = () => {
-    loadStoryFile();
-  };
-
   useEffect(() => {
     loadUserData();
     loadStoryFile();
@@ -104,8 +96,6 @@ export const Home = () => {
       onCreateNewPrivateStory={handleCreateNewPrivateStory}
       privateStories={privateStories}
       publicStories={publicStories}
-      onPublish={handlePublish}
-      onUnPublish={handleUnPublish}
     />
   );
 };
