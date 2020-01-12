@@ -29,7 +29,7 @@ const StoryTitleIcon = styled.div`
 `;
 
 const StoryTitle = styled.div`
-  ${tw`flex text-2xl font-bold no-underline text-black cursor-pointer`};
+  ${tw`flex text-2xl font-bold no-underline text-black`};
 `;
 
 const StoryDate = styled.div`
@@ -61,7 +61,7 @@ export const StoryItem = ({
     <StoryContainer>
       <StoryTitleContainer>
         <StoryTitleContainerLeft>
-          <Link href="/stories/[storyId]" as={`/stories/${story.id}`}>
+          <Link href="/stories/[storyId]" as={`/stories/${story.id}`} passHref>
             <StoryTitle as="a">{story.title}</StoryTitle>
           </Link>
           <Tippy
@@ -110,8 +110,16 @@ export const StoryItem = ({
         </div>
       </StoryTitleContainer>
 
-      <StoryDate>{format(story.createdAt, 'HH:mm dd MMMM yyyy')}</StoryDate>
-      <StoryText>{story.content}</StoryText>
+      <StoryDate>
+        <Link href="/stories/[storyId]" as={`/stories/${story.id}`} passHref>
+          <a>{format(story.createdAt, 'HH:mm dd MMMM yyyy')}</a>
+        </Link>
+      </StoryDate>
+      <StoryText>
+        <Link href="/stories/[storyId]" as={`/stories/${story.id}`} passHref>
+          <a>{story.content}</a>
+        </Link>
+      </StoryText>
     </StoryContainer>
   );
 };
