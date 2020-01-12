@@ -193,12 +193,16 @@ interface Props {
   story: Story;
   onChangeTitle: (title: string) => void;
   onChangeStoryField: (field: string, value: any) => void;
+  onPublish: () => void;
+  onUnpublish: () => void;
 }
 
 export const SlateEditor = ({
   story,
   onChangeTitle,
   onChangeStoryField,
+  onPublish,
+  onUnpublish,
 }: Props) => {
   const editorRef = useRef<any>(null);
   const sideMenuRef = useRef<any>(null);
@@ -467,14 +471,6 @@ export const SlateEditor = ({
     setLoadingSave(false);
   };
 
-  const handlePublish = () => {
-    // TODO show modal with preview
-  };
-
-  const handleUnpublish = () => {
-    // TODO show confirm modal
-  };
-
   const handleOpenSettings = () => {
     setSettingsOpen(true);
   };
@@ -515,18 +511,12 @@ export const SlateEditor = ({
               </Tippy>
             )}
             {story.type === 'private' && (
-              <ButtonOutline
-                style={{ marginRight: 6 }}
-                onClick={() => handlePublish()}
-              >
+              <ButtonOutline style={{ marginRight: 6 }} onClick={onPublish}>
                 Publish
               </ButtonOutline>
             )}
             {story.type === 'public' && (
-              <ButtonOutline
-                style={{ marginRight: 6 }}
-                onClick={() => handleUnpublish()}
-              >
+              <ButtonOutline style={{ marginRight: 6 }} onClick={onUnpublish}>
                 Unpublish
               </ButtonOutline>
             )}

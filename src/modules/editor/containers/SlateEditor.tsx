@@ -12,11 +12,21 @@ export const SlateEditor = ({ story, onChangeStoryField }: Props) => {
     onChangeStoryField('title', title);
   };
 
+  const handlePublish = () => {
+    // TODO show modal with preview
+  };
+
+  const handleUnpublish = () => {
+    // TODO show confirm modal
+  };
+
   return (
     <Component
       story={story}
       onChangeTitle={handleChangeTitle}
       onChangeStoryField={onChangeStoryField}
+      onPublish={handlePublish}
+      onUnpublish={handleUnpublish}
     />
   );
 };
