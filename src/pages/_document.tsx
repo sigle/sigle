@@ -7,15 +7,7 @@ import Document, {
   NextScript,
 } from 'next/document';
 import { ServerStyleSheet } from 'styled-components';
-import { init } from '@sentry/browser';
 import { config } from '../config';
-
-if (config.env === 'production' && config.sentryDsn) {
-  init({
-    dsn: config.sentryDsn,
-    environment: config.env,
-  });
-}
 
 export default class MyDocument extends Document {
   static async getInitialProps(ctx: DocumentContext) {

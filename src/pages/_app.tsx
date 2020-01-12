@@ -7,6 +7,7 @@ import tw from 'tailwind.macro';
 import { DefaultSeo } from 'next-seo';
 import { ToastContainer } from 'react-toastify';
 import { config as blockstackConfig } from 'blockstack';
+import * as Sentry from '@sentry/node';
 import NProgress from 'nprogress';
 import 'nprogress/nprogress.css';
 // TODO add tippy.js only on the pages that are using it
@@ -19,6 +20,13 @@ import { config } from '../config';
 import { colors } from '../utils/colors';
 
 blockstackConfig.logLevel = 'info';
+
+if (config.env === 'production' && config.sentryDsn) {
+  Sentry.init({
+    dsn: config.sentryDsn,
+    environment: config.env,
+  });
+}
 
 /**
  * Fathom
@@ -80,6 +88,10 @@ Router.events.on('routeChangeError', () => NProgress.done());
 export default class MyApp extends App {
   render() {
     const { Component, pageProps } = this.props;
+    // Workaround for https://github.com/zeit/next.js/issues/8592
+    const { err } = this.props as any;
+    const modifiedPageProps = { ...pageProps, err };
+
     const seoTitle = 'Sigle | Decentralized blogging platform';
     const seoDescription =
       'A secure, decentralized and open source blogging platform on top of blockstack';
@@ -101,7 +113,7 @@ export default class MyApp extends App {
         />
         <GlobalStyle />
         <FathomTrack />
-        <Component {...pageProps} />
+        <Component {...modifiedPageProps} />
         <ToastContainer autoClose={3000} toastClassName="reactToastify" />
       </React.Fragment>
     );
