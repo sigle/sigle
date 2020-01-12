@@ -12,7 +12,7 @@ import {
   getEventTransfer,
 } from 'slate-react';
 import SoftBreak from 'slate-soft-break';
-import { Block, Value, BlockProperties } from 'slate';
+import { Block, Value } from 'slate';
 import { MdSettings } from 'react-icons/md';
 import {
   saveStoryFile,
@@ -467,6 +467,14 @@ export const SlateEditor = ({
     setLoadingSave(false);
   };
 
+  const handlePublish = () => {
+    // TODO show modal with preview
+  };
+
+  const handleUnpublish = () => {
+    // TODO show confirm modal
+  };
+
   const handleOpenSettings = () => {
     setSettingsOpen(true);
   };
@@ -499,12 +507,28 @@ export const SlateEditor = ({
                 theme="light-border"
               >
                 <ButtonOutline
-                  style={{ marginRight: 6 }}
+                  style={{ marginRight: 12 }}
                   onClick={() => handleSave()}
                 >
                   Save
                 </ButtonOutline>
               </Tippy>
+            )}
+            {story.type === 'private' && (
+              <ButtonOutline
+                style={{ marginRight: 6 }}
+                onClick={() => handlePublish()}
+              >
+                Publish
+              </ButtonOutline>
+            )}
+            {story.type === 'public' && (
+              <ButtonOutline
+                style={{ marginRight: 6 }}
+                onClick={() => handleUnpublish()}
+              >
+                Unpublish
+              </ButtonOutline>
             )}
             <AppBarSettings onClick={handleOpenSettings}>
               <MdSettings size={22} />
