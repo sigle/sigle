@@ -1,6 +1,5 @@
 const dotenv = require('dotenv');
 const withPlugins = require('next-compose-plugins');
-const withCSS = require('@zeit/next-css');
 const withBundleAnalyzer = require('@zeit/next-bundle-analyzer');
 const BundleAnalyzerPluginReporter = require('@bundle-analyzer/webpack-plugin');
 
@@ -8,7 +7,6 @@ dotenv.config();
 
 module.exports = withPlugins(
   [
-    [withCSS],
     [
       withBundleAnalyzer,
       {
