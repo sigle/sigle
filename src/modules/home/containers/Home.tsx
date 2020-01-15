@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { toast } from 'react-toastify';
-import Fathom from 'fathom-client';
+import * as Fathom from 'fathom-client';
 import { Home as Component } from '../components/Home';
 import {
   createNewEmptyStory,

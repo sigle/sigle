@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import App from 'next/app';
 import Router from 'next/router';
-import Fathom from 'fathom-client';
+import * as Fathom from 'fathom-client';
 import { createGlobalStyle } from 'styled-components';
 import tw from 'tailwind.macro';
 import { DefaultSeo } from 'next-seo';
@@ -14,6 +14,8 @@ import 'nprogress/nprogress.css';
 import 'tippy.js/dist/tippy.css';
 import 'tippy.js/themes/light-border.css';
 import 'react-toastify/dist/ReactToastify.css';
+// reach-ui styles
+import '@reach/dialog/styles.css';
 import '../lib/fonts.css';
 import '../generated/tailwind.css';
 import { config } from '../config';

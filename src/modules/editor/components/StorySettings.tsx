@@ -3,7 +3,6 @@ import styled, { css } from 'styled-components';
 import tw from 'tailwind.macro';
 import { MdClose, MdAddAPhoto, MdDelete } from 'react-icons/md';
 import { DialogContent, DialogOverlay } from '@reach/dialog';
-import '@reach/dialog/styles.css';
 import { animated, useTransition } from 'react-spring';
 import format from 'date-fns/format';
 import { DropzoneRootProps, DropzoneInputProps } from 'react-dropzone';
