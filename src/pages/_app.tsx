@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import App from 'next/app';
 import Router from 'next/router';
-import Fathom from 'fathom-client';
+import * as Fathom from 'fathom-client';
 import { createGlobalStyle } from 'styled-components';
 import tw from 'tailwind.macro';
 import { DefaultSeo } from 'next-seo';

@@ -3,4 +3,4 @@ declare module 'tailwind.macro' {
   export = tailwindMacro;
 }
 declare module 'slate-soft-break';
-declare module 'fathom-client';
+ƒ;

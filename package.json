@@ -46,7 +46,7 @@
     "@tippy.js/react": "3.1.1",
     "blockstack": "19.3.0",
     "date-fns": "2.9.0",
-    "fathom-client": "1.0.0",
+    "fathom-client": "2.0.2",
     "history": "4.10.1",
     "immutable": "4.0.0-rc.12",
     "nanoid": "2.1.9",
