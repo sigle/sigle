@@ -3,4 +3,3 @@ declare module 'tailwind.macro' {
   export = tailwindMacro;
 }
 declare module 'slate-soft-break';
-ƒ;
