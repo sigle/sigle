@@ -83,7 +83,7 @@
     "@typescript-eslint/eslint-plugin": "2.16.0",
     "@typescript-eslint/parser": "2.16.0",
     "@zeit/next-bundle-analyzer": "0.1.2",
-    "babel-plugin-macros": "2.7.1",
+    "babel-plugin-macros": "2.8.0",
     "babel-plugin-styled-components": "1.10.6",
     "dotenv": "8.2.0",
     "eslint": "6.8.0",
