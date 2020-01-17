@@ -21,7 +21,7 @@ const rules = [
           case 'block-quote':
             return <blockquote>{children}</blockquote>;
           case 'image':
-            const src = obj.data.get('src');
+            const src: string = obj.data.get('src');
             // eslint-disable-next-line
             return <img src={src} />;
           case 'list-item':

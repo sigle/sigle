@@ -36,6 +36,7 @@ import {
 import { DEFAULT_NODE, hasBlock, insertImage } from './utils';
 import { userSession } from '../../../utils/blockstack';
 import { resizeImage } from '../../../utils/image';
+import { SlateEditorImage } from './SlateEditorImage';
 
 const FixedContainer = styled.div`
   ${tw`fixed w-full bg-white top-0`};
@@ -305,16 +306,11 @@ export const SlateEditor = ({
       case 'bulleted-list':
         return <ul {...attributes}>{children}</ul>;
       case 'image':
-        const src = node.data.get('src');
-        const id = node.data.get('id');
-        const isUploading = node.data.get('isUploading');
         return (
-          <Image
-            {...attributes}
-            src={src}
-            selected={isFocused}
-            isUploading={isUploading}
-            id={`image-${id}`}
+          <SlateEditorImage
+            node={node}
+            attributes={attributes}
+            isFocused={isFocused}
           />
         );
       default:
