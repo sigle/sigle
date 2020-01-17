@@ -35,6 +35,7 @@ interface Props {
   onCreateNewPrivateStory: () => void;
   privateStories: SubsetStory[] | null;
   publicStories: SubsetStory[] | null;
+  refetchStoriesLists: () => Promise<void>;
 }
 
 export const Home = ({
@@ -45,6 +46,7 @@ export const Home = ({
   onCreateNewPrivateStory,
   privateStories,
   publicStories,
+  refetchStoriesLists,
 }: Props) => {
   const showIllu =
     (selectedTab === 'drafts' &&
@@ -87,13 +89,25 @@ export const Home = ({
       {selectedTab === 'drafts' &&
         privateStories &&
         privateStories.map(story => (
-          <StoryItem key={story.id} user={user} story={story} type="private" />
+          <StoryItem
+            key={story.id}
+            user={user}
+            story={story}
+            type="private"
+            refetchStoriesLists={refetchStoriesLists}
+          />
         ))}
 
       {selectedTab === 'published' &&
         publicStories &&
         publicStories.map(story => (
-          <StoryItem key={story.id} user={user} story={story} type="public" />
+          <StoryItem
+            key={story.id}
+            user={user}
+            story={story}
+            type="public"
+            refetchStoriesLists={refetchStoriesLists}
+          />
         ))}
     </PageContainer>
   );

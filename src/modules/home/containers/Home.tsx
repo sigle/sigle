@@ -96,6 +96,7 @@ export const Home = () => {
       onCreateNewPrivateStory={handleCreateNewPrivateStory}
       privateStories={privateStories}
       publicStories={publicStories}
+      refetchStoriesLists={loadStoryFile}
     />
   );
 };
