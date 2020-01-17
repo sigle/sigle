@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useRouter } from 'next/router';
 import { toast } from 'react-toastify';
+import NProgress from 'nprogress';
 import { StoryItem as Component } from '../components/StoryItem';
 import { SubsetStory, BlockstackUser } from '../../../types';
 import {
@@ -36,7 +37,7 @@ export const StoryItem = ({
 
   const handleConfirmDelete = async () => {
     setDeleteLoading(true);
-
+    NProgress.start();
     try {
       const file = await getStoriesFile();
       const index = file.stories.findIndex(s => s.id === story.id);
@@ -50,6 +51,7 @@ export const StoryItem = ({
     } catch (error) {
       toast.error(error.message);
     }
+    NProgress.done();
     setDeleteLoading(false);
     setShowDeleteDialog(false);
   };
