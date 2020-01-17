@@ -58,21 +58,6 @@ const Input = styled.input`
   ${tw`outline-none w-full text-2xl`};
 `;
 
-const Image = styled.img<{ selected: boolean; isUploading?: boolean }>`
-  ${tw`opacity-100 block`};
-  max-width: 100%;
-  max-height: 20em;
-  box-shadow: ${(props: any) =>
-    props.selected ? '0 0 0 1px #000000;' : 'none'};
-  transition: opacity 0.75s;
-
-  ${props =>
-    props.isUploading &&
-    css`
-      ${tw`opacity-25`};
-    `}
-`;
-
 const SlateContainer = styled.div`
   ${tw`my-8`};
 `;
