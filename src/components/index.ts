@@ -1,4 +1,4 @@
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 import tw from 'tailwind.macro';
 
 // TODO max width media-queries
@@ -39,4 +39,16 @@ export const ButtonOutline = styled.button`
   &:hover {
     ${tw`bg-pink text-white`};
   }
+
+  ${props =>
+    props.disabled &&
+    css`
+      ${tw`border-grey-dark text-grey-dark`};
+
+      &:hover {
+        ${tw`bg-transparent border-grey-dark text-grey-dark`};
+      }
+    `}
 `;
+
+export { FullScreenDialog } from './FullScreenDialog';

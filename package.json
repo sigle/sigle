@@ -41,6 +41,7 @@
   ],
   "dependencies": {
     "@reach/dialog": "0.7.2",
+    "@reach/menu-button": "0.7.2",
     "@sentry/browser": "5.11.1",
     "@sentry/node": "5.11.1",
     "@tippy.js/react": "3.1.1",
@@ -89,13 +90,13 @@
     "eslint": "6.8.0",
     "eslint-config-prettier": "6.9.0",
     "eslint-plugin-prettier": "3.1.2",
-    "eslint-plugin-react": "7.17.0",
+    "eslint-plugin-react": "7.18.0",
     "husky": "4.0.10",
     "lint-staged": "9.5.0",
     "next-compose-plugins": "2.2.0",
     "prettier": "1.19.1",
     "tailwind.macro": "1.0.0-alpha.10",
     "tailwindcss": "1.1.4",
-    "typescript": "3.7.4"
+    "typescript": "3.7.5"
   }
 }

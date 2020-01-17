@@ -12,7 +12,7 @@ import {
   getEventTransfer,
 } from 'slate-react';
 import SoftBreak from 'slate-soft-break';
-import { Block, Value, BlockProperties } from 'slate';
+import { Block, Value } from 'slate';
 import { MdSettings } from 'react-icons/md';
 import {
   saveStoryFile,
@@ -28,7 +28,11 @@ import { SlateEditorSideMenu } from './SlateEditorSideMenu';
 import { SlateEditorHoverMenu } from './SlateEditorHoverMenu';
 import { SlateEditorToolbar } from './SlateEditorToolbar';
 import { AppBar, AppBarRightContainer } from '../../layout';
-import { ButtonOutline, Container } from '../../../components';
+import {
+  ButtonOutline,
+  Container,
+  FullScreenDialog,
+} from '../../../components';
 import { DEFAULT_NODE, hasBlock, insertImage } from './utils';
 import { userSession } from '../../../utils/blockstack';
 import { resizeImage } from '../../../utils/image';
@@ -193,12 +197,32 @@ interface Props {
   story: Story;
   onChangeTitle: (title: string) => void;
   onChangeStoryField: (field: string, value: any) => void;
+  showPublishDialog: boolean;
+  publishLoading: boolean;
+  onPublish: () => void;
+  onCancelPublish: () => void;
+  onConfirmPublish: () => void;
+  showUnpublishDialog: boolean;
+  unpublishLoading: boolean;
+  onUnpublish: () => void;
+  onCancelUnpublish: () => void;
+  onConfirmUnpublish: () => void;
 }
 
 export const SlateEditor = ({
   story,
   onChangeTitle,
   onChangeStoryField,
+  showPublishDialog,
+  publishLoading,
+  onPublish,
+  onCancelPublish,
+  onConfirmPublish,
+  showUnpublishDialog,
+  unpublishLoading,
+  onUnpublish,
+  onCancelUnpublish,
+  onConfirmUnpublish,
 }: Props) => {
   const editorRef = useRef<any>(null);
   const sideMenuRef = useRef<any>(null);
@@ -499,12 +523,22 @@ export const SlateEditor = ({
                 theme="light-border"
               >
                 <ButtonOutline
-                  style={{ marginRight: 6 }}
+                  style={{ marginRight: 12 }}
                   onClick={() => handleSave()}
                 >
                   Save
                 </ButtonOutline>
               </Tippy>
+            )}
+            {story.type === 'private' && (
+              <ButtonOutline style={{ marginRight: 6 }} onClick={onPublish}>
+                Publish
+              </ButtonOutline>
+            )}
+            {story.type === 'public' && (
+              <ButtonOutline style={{ marginRight: 6 }} onClick={onUnpublish}>
+                Unpublish
+              </ButtonOutline>
             )}
             <AppBarSettings onClick={handleOpenSettings}>
               <MdSettings size={22} />
@@ -547,12 +581,46 @@ export const SlateEditor = ({
             />
           </StyledContent>
         </SlateContainer>
+
         <StorySettings
           story={story}
           open={settingsOpen}
           onClose={handleCloseSettings}
           onChangeStoryField={onChangeStoryField}
           onSave={handleSave}
+        />
+
+        <FullScreenDialog
+          isOpen={showPublishDialog}
+          confirmLoading={publishLoading}
+          onConfirm={onConfirmPublish}
+          onCancel={onCancelPublish}
+          loadingTitle="Publishing ..."
+          title="Publish my story"
+          description={
+            <React.Fragment>
+              <p>You’re about to publish your story.</p>
+              <p>You and everybody will be able to read it on your blog.</p>
+              <p>Would you like to continue?</p>
+            </React.Fragment>
+          }
+        />
+        <FullScreenDialog
+          isOpen={showUnpublishDialog}
+          confirmLoading={unpublishLoading}
+          onConfirm={onConfirmUnpublish}
+          onCancel={onCancelUnpublish}
+          loadingTitle="Unpublishing ..."
+          title="Unpublish my story"
+          description={
+            <React.Fragment>
+              <p>You’re about to unpublish this story.</p>
+              <p>
+                It won’t be visible on your blog anymore but you still can see
+                and edit it in your draft section.
+              </p>
+            </React.Fragment>
+          }
         />
       </PageContainer>
     </React.Fragment>

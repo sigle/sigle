@@ -35,8 +35,7 @@ interface Props {
   onCreateNewPrivateStory: () => void;
   privateStories: SubsetStory[] | null;
   publicStories: SubsetStory[] | null;
-  onPublish: () => void;
-  onUnPublish: () => void;
+  refetchStoriesLists: () => Promise<void>;
 }
 
 export const Home = ({
@@ -47,8 +46,7 @@ export const Home = ({
   onCreateNewPrivateStory,
   privateStories,
   publicStories,
-  onPublish,
-  onUnPublish,
+  refetchStoriesLists,
 }: Props) => {
   const showIllu =
     (selectedTab === 'drafts' &&
@@ -96,8 +94,7 @@ export const Home = ({
             user={user}
             story={story}
             type="private"
-            onPublish={onPublish}
-            onUnPublish={onUnPublish}
+            refetchStoriesLists={refetchStoriesLists}
           />
         ))}
 
@@ -109,8 +106,7 @@ export const Home = ({
             user={user}
             story={story}
             type="public"
-            onPublish={onPublish}
-            onUnPublish={onUnPublish}
+            refetchStoriesLists={refetchStoriesLists}
           />
         ))}
     </PageContainer>
