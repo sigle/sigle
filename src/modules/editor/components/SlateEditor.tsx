@@ -271,7 +271,7 @@ export const SlateEditor = ({
    * Render a Slate block.
    */
   const renderBlock = (props: RenderBlockProps, _: any, next: () => any) => {
-    const { attributes, children, node, isFocused } = props;
+    const { attributes, children, node, isFocused, editor } = props;
 
     switch (node.type) {
       case 'paragraph':
@@ -293,6 +293,7 @@ export const SlateEditor = ({
       case 'image':
         return (
           <SlateEditorImage
+            editor={editor}
             node={node}
             attributes={attributes}
             isFocused={isFocused}

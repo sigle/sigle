@@ -2,7 +2,7 @@ import React from 'react';
 import styled, { css } from 'styled-components';
 import tw from 'tailwind.macro';
 import { Block } from 'slate';
-import { RenderAttributes } from 'slate-react';
+import { RenderAttributes, Editor } from 'slate-react';
 
 const Container = styled.div`
   ${tw`mb-4 flex flex-col items-center`};
@@ -31,18 +31,21 @@ const Input = styled.input`
 `;
 
 interface SlateEditorImageProps {
+  editor: Editor;
   node: Block;
   attributes: RenderAttributes;
   isFocused: boolean;
 }
 
 export const SlateEditorImage = ({
+  editor,
   node,
   attributes,
   isFocused,
 }: SlateEditorImageProps) => {
   const src: string = node.data.get('src');
   const id: string = node.data.get('id');
+  const caption: string | undefined = node.data.get('caption');
   const isUploading: boolean = node.data.get('isUploading');
 
   return (
@@ -54,7 +57,16 @@ export const SlateEditorImage = ({
         isUploading={isUploading}
         id={`image-${id}`}
       />
-      <Input placeholder="Enter a caption for this image (optional)" />
+      <Input
+        placeholder="Enter a caption for this image (optional)"
+        value={caption || ''}
+        onChange={event => {
+          editor.setNodeByKey(node.key, {
+            type: 'image',
+            data: { src, id, caption: event.target.value },
+          });
+        }}
+      />
     </Container>
   );
 };
