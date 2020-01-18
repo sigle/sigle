@@ -29,7 +29,7 @@ module.exports = withPlugins(
   ],
   {
     env: {
-      APP_URL: process.env.APP_URL || 'http://localhost:3000',
+      APP_URL: process.env.APP_URL,
       SENTRY_DSN_CLIENT: process.env.SENTRY_DSN_CLIENT,
       FATHOM_SITE_ID: process.env.FATHOM_SITE_ID,
     },
