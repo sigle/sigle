@@ -12,7 +12,7 @@ const Image = styled.img<{ selected: boolean; isUploading?: boolean }>`
   ${tw`opacity-100 block`};
   max-width: 100%;
   max-height: 20em;
-  box-shadow: ${props => (props.selected ? '0 0 0 1px #000000;' : 'none')};
+  box-shadow: ${props => (props.selected ? '0 0 0 3px #ff576a;' : 'none')};
   transition: opacity 0.75s;
 
   ${props =>
