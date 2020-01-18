@@ -22,8 +22,13 @@ const rules = [
             return <blockquote>{children}</blockquote>;
           case 'image':
             const src: string = obj.data.get('src');
-            // eslint-disable-next-line
-            return <img src={src} />;
+            const caption: string | undefined = obj.data.get('caption');
+            return (
+              <figure>
+                <img src={src} />
+                {caption && <figcaption>{caption}</figcaption>}
+              </figure>
+            );
           case 'list-item':
             return <li>{children}</li>;
           case 'numbered-list':
@@ -159,8 +164,15 @@ export const Content = styled.div`
     ${tw`text-pink`};
   }
 
+  figure {
+    ${tw`mb-4 flex flex-col items-center`};
+  }
+
+  figcaption {
+    ${tw`text-grey-darker text-center mt-2 text-sm`};
+  }
+
   img {
-    ${tw`mb-4`};
     display: block;
     max-width: 100%;
     max-height: 100em;

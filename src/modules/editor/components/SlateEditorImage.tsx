@@ -4,7 +4,7 @@ import tw from 'tailwind.macro';
 import { Block } from 'slate';
 import { RenderAttributes, Editor } from 'slate-react';
 
-const Container = styled.div`
+const Container = styled.figure`
   ${tw`mb-4 flex flex-col items-center`};
 `;
 
@@ -14,7 +14,6 @@ const Image = styled.img<{ selected: boolean; isUploading?: boolean }>`
   max-height: 20em;
   box-shadow: ${props => (props.selected ? '0 0 0 1px #000000;' : 'none')};
   transition: opacity 0.75s;
-  margin-bottom: 0 !important;
 
   ${props =>
     props.isUploading &&
@@ -24,9 +23,9 @@ const Image = styled.img<{ selected: boolean; isUploading?: boolean }>`
 `;
 
 const Input = styled.input`
-  ${tw`w-full text-grey-dark outline-none text-center mt-2 text-sm`};
+  ${tw`w-full text-grey-darker outline-none text-center mt-2 text-sm`};
   ::placeholder {
-    ${tw`text-grey-dark`};
+    ${tw`text-grey-darker`};
   }
 `;
 
