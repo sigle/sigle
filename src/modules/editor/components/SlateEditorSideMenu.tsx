@@ -9,7 +9,6 @@ const SideMenuContainer = styled.div`
   ${tw`flex absolute`};
   top: -10000px;
   left: -10000px;
-  z-index: 1;
   opacity: 0;
   transition: opacity 0.75s;
 `;
