@@ -1,11 +1,23 @@
 import React from 'react';
 import { DialogOverlay, DialogContent } from '@reach/dialog';
-import styled from 'styled-components';
+import styled, { keyframes } from 'styled-components';
 import tw from 'tailwind.macro';
 import { ButtonOutline } from '.';
 
+const overlayAnimation = keyframes`
+  0% {
+    transform: scale(.9);
+    opacity: 0;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+`;
+
 const StyledDialogOverlay = styled(DialogOverlay)`
   background: rgba(255, 255, 255, 0.95);
+  animation: ${overlayAnimation} 75ms cubic-bezier(0, 0, 0.2, 1);
 `;
 
 const StyledDialogContent = styled(DialogContent)`
