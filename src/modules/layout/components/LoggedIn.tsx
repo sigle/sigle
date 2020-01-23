@@ -42,6 +42,19 @@ const Name = styled.a`
   ${tw`py-4 flex items-center justify-center bg-black text-white`};
 `;
 
+const Menu = styled.ul`
+  ${tw`mt-8 list-none`}
+`;
+
+const MenuItem = styled.li`
+  a {
+    ${tw`py-4 pl-4 block rounded-l-full`}
+  }
+  a:hover {
+    ${tw`bg-white`}
+  }
+`;
+
 interface Props {
   showAppBar?: boolean;
   children: React.ReactNode;
@@ -99,6 +112,18 @@ export const LoggedIn = ({ children, showAppBar = true }: Props) => {
           Visit my blog
           <MdPanoramaFishEye size={22} style={{ marginLeft: 6 }} />
         </Name>
+        <Menu>
+          <MenuItem>
+            <Link href="/" passHref>
+              <a>Drafts</a>
+            </Link>
+          </MenuItem>
+          <MenuItem>
+            <Link href="/" passHref>
+              <a>Published</a>
+            </Link>
+          </MenuItem>
+        </Menu>
       </Column>
       <Content>{children}</Content>
     </Container>
