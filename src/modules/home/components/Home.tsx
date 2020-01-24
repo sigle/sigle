@@ -49,7 +49,9 @@ export const Home = ({
   return (
     <PageContainer>
       <PageTitleContainer>
-        <PageTitle>My stories</PageTitle>
+        <PageTitle>
+          {selectedTab === 'published' ? 'Published stories' : 'Drafts stories'}
+        </PageTitle>
         {!loadingCreate && (
           <Button onClick={onCreateNewPrivateStory}>New story</Button>
         )}
