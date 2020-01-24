@@ -1,7 +1,14 @@
 import React from 'react';
 import styled from 'styled-components';
 import tw from 'tailwind.macro';
-import { Container, Button, Tabs, Tab } from '../../../components';
+import { MdRemoveRedEye } from 'react-icons/md';
+import {
+  Container,
+  Button,
+  ButtonOutline,
+  Tabs,
+  Tab,
+} from '../../../components';
 import { StoryItem } from '../';
 import { SubsetStory, BlockstackUser } from '../../../types';
 
@@ -10,7 +17,7 @@ export const PageContainer = styled.div`
 `;
 
 export const PageTitleContainer = styled.div`
-  ${tw`mb-8 flex justify-between`};
+  ${tw`mb-2 flex justify-between border-b border-solid border-grey pb-8`};
 `;
 
 export const PageTitle = styled.div`
@@ -19,6 +26,10 @@ export const PageTitle = styled.div`
 
 export const IlluContainer = styled.div`
   ${tw`flex flex-col items-center justify-center mt-8`};
+`;
+
+const VisitButton = styled(ButtonOutline)`
+  ${tw`mr-6 inline-flex`};
 `;
 
 const Illu = styled.img`
@@ -52,10 +63,15 @@ export const Home = ({
         <PageTitle>
           {selectedTab === 'published' ? 'Published stories' : 'Drafts stories'}
         </PageTitle>
-        {!loadingCreate && (
-          <Button onClick={onCreateNewPrivateStory}>New story</Button>
-        )}
-        {loadingCreate && <Button disabled>creating new story ...</Button>}
+        <div>
+          <VisitButton size="large">
+            Visit my blog <MdRemoveRedEye size={18} style={{ marginLeft: 8 }} />
+          </VisitButton>
+          {!loadingCreate && (
+            <Button onClick={onCreateNewPrivateStory}>New story</Button>
+          )}
+          {loadingCreate && <Button disabled>creating new story ...</Button>}
+        </div>
       </PageTitleContainer>
 
       {showIllu && (

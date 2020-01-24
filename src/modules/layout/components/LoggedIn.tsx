@@ -10,8 +10,6 @@ import { BlockstackUser } from '../../../types';
 
 const Container = styled.div`
   ${tw`w-full h-screen flex`}
-  display: grid;
-  grid-template-columns: minmax(252px, calc((100% - 1262px) / 2 + 226px)) 1fr;
 `;
 
 const Sidebar = styled.div`
@@ -23,7 +21,8 @@ const SidebarContent = styled.div`
 `;
 
 const Content = styled.div`
-  ${tw`mx-16`}
+  ${tw`mx-20 w-full`}
+  max-width: 1100px;
 `;
 
 const LogoContainer = styled.a`
