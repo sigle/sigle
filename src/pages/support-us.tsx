@@ -19,6 +19,7 @@ const SupportUsMessage = styled.p`
 const BuymeacoffeeButton = styled.div`
   ${tw`mt-8`};
   .bmc-button {
+    justify-content: center;
     width: 35px;
     padding: 7px 10px 7px 10px !important;
     line-height: 35px !important;
