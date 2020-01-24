@@ -5,7 +5,7 @@ import { Container, Button, Tabs, Tab } from '../../../components';
 import { StoryItem } from '../';
 import { SubsetStory, BlockstackUser } from '../../../types';
 
-export const PageContainer = styled(Container)`
+export const PageContainer = styled.div`
   ${tw`mt-8`};
 `;
 
@@ -29,30 +29,22 @@ const Illu = styled.img`
 
 interface Props {
   selectedTab: 'published' | 'drafts';
-  onSelectTab: (tab: 'published' | 'drafts') => void;
   user: BlockstackUser;
   loadingCreate: boolean;
   onCreateNewPrivateStory: () => void;
-  privateStories: SubsetStory[] | null;
-  publicStories: SubsetStory[] | null;
+  stories: SubsetStory[] | null;
   refetchStoriesLists: () => Promise<void>;
 }
 
 export const Home = ({
   selectedTab,
-  onSelectTab,
   user,
   loadingCreate,
   onCreateNewPrivateStory,
-  privateStories,
-  publicStories,
+  stories,
   refetchStoriesLists,
 }: Props) => {
-  const showIllu =
-    (selectedTab === 'drafts' &&
-      (!privateStories || privateStories.length === 0)) ||
-    (selectedTab === 'published' &&
-      (!publicStories || publicStories.length === 0));
+  const showIllu = !stories || stories.length === 0;
 
   return (
     <PageContainer>
@@ -64,21 +56,6 @@ export const Home = ({
         {loadingCreate && <Button disabled>creating new story ...</Button>}
       </PageTitleContainer>
 
-      <Tabs>
-        <Tab
-          className={selectedTab === 'drafts' ? 'active' : ''}
-          onClick={() => onSelectTab('drafts')}
-        >
-          Drafts ({privateStories ? privateStories.length : '...'})
-        </Tab>
-        <Tab
-          className={selectedTab === 'published' ? 'active' : ''}
-          onClick={() => onSelectTab('published')}
-        >
-          Published ({publicStories ? publicStories.length : '...'})
-        </Tab>
-      </Tabs>
-
       {showIllu && (
         <IlluContainer>
           <Illu src="/static/img/three.png" alt="Three" />
@@ -86,26 +63,13 @@ export const Home = ({
         </IlluContainer>
       )}
 
-      {selectedTab === 'drafts' &&
-        privateStories &&
-        privateStories.map(story => (
+      {stories &&
+        stories.map(story => (
           <StoryItem
             key={story.id}
             user={user}
             story={story}
-            type="private"
-            refetchStoriesLists={refetchStoriesLists}
-          />
-        ))}
-
-      {selectedTab === 'published' &&
-        publicStories &&
-        publicStories.map(story => (
-          <StoryItem
-            key={story.id}
-            user={user}
-            story={story}
-            type="public"
+            type={selectedTab === 'published' ? 'public' : 'private'}
             refetchStoriesLists={refetchStoriesLists}
           />
         ))}

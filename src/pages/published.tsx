@@ -7,7 +7,7 @@ const HomePage = () => {
   return (
     <Protected>
       <LoggedIn>
-        <Home type="drafts" />
+        <Home type="published" />
       </LoggedIn>
     </Protected>
   );

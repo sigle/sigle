@@ -1,21 +1,17 @@
 import React, { useEffect, useState } from 'react';
+import { useRouter } from 'next/router';
 import styled, { css } from 'styled-components';
 import tw from 'tailwind.macro';
 import Link from 'next/link';
-import Tippy from '@tippy.js/react';
 import { MdRemoveRedEye } from 'react-icons/md';
 import { userSession } from '../../../utils/blockstack';
 import { AppBar, AppBarRightContainer } from './AppBar';
 import { BlockstackUser } from '../../../types';
 
-const Logout = styled.div`
-  ${tw`font-semibold cursor-pointer`}
-`;
-
 const Container = styled.div`
   ${tw`w-full h-screen flex`}
   display: grid;
-  grid-template-columns: minmax(252px, calc((100% - 1262px) / 2 + 226px)) 900px 1fr;
+  grid-template-columns: minmax(252px, calc((100% - 1262px) / 2 + 226px)) 1fr;
 `;
 
 const Sidebar = styled.div`
@@ -46,13 +42,20 @@ const Menu = styled.ul`
   ${tw`mt-6 list-none px-3`}
 `;
 
-const MenuItem = styled.li`
+const MenuItem = styled.li<{ active: boolean }>`
   a {
     ${tw`py-2 px-3 block rounded text-grey-darker mt-2`}
   }
   a:hover {
     ${tw`bg-grey`}
   }
+  ${props =>
+    props.active &&
+    css`
+      a {
+        ${tw`bg-grey`}
+      }
+    `}
 `;
 
 const MenuBottom = styled.ul`
@@ -81,6 +84,7 @@ interface Props {
 }
 
 export const LoggedIn = ({ children, showAppBar = true }: Props) => {
+  const router = useRouter();
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [user, setUser] = useState<BlockstackUser | null>(null);
@@ -136,13 +140,13 @@ export const LoggedIn = ({ children, showAppBar = true }: Props) => {
               <MdRemoveRedEye size={18} style={{ marginLeft: 8 }} />
             </Name>
             <Menu>
-              <MenuItem>
+              <MenuItem active={router.route === '/'}>
                 <Link href="/" passHref>
                   <a>Drafts</a>
                 </Link>
               </MenuItem>
-              <MenuItem>
-                <Link href="/" passHref>
+              <MenuItem active={router.route === '/published'}>
+                <Link href="/published" passHref>
                   <a>Published</a>
                 </Link>
               </MenuItem>

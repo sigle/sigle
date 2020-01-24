@@ -14,28 +14,20 @@ import { StoryFile, SubsetStory, BlockstackUser } from '../../../types';
 import { useRouter } from 'next/router';
 import { Goals } from '../../../utils/fathom';
 
-type Tab = 'published' | 'drafts';
+interface HomeProps {
+  type: 'published' | 'drafts';
+}
 
-export const Home = () => {
+export const Home = ({ type }: HomeProps) => {
   const router = useRouter();
   const [loadingCreate, setLoadingCreate] = useState(false);
-  const [selectedTab, setSelectedTab] = useState<Tab>('drafts');
   const [user, setUser] = useState<BlockstackUser | null>(null);
   const [storiesFile, setStoriesFile] = useState<StoryFile | null>(null);
-  const [privateStories, setPrivateStories] = useState<SubsetStory[] | null>(
-    null
-  );
-  const [publicStories, setPublicStories] = useState<SubsetStory[] | null>(
-    null
-  );
+  const [stories, setStories] = useState<SubsetStory[] | null>(null);
 
-  const handleSelectTab = (tab: Tab) => {
-    setSelectedTab(tab);
-  };
-
-  const loadUserData = async () => {
+  const loadUserData = () => {
     try {
-      const user: BlockstackUser = await userSession.loadUserData();
+      const user: BlockstackUser = userSession.loadUserData();
       setUser(user);
     } catch (error) {
       console.error(error);
@@ -47,10 +39,9 @@ export const Home = () => {
     try {
       const file = await getStoriesFile();
       setStoriesFile(file);
-      const privateStories = file.stories.filter(s => s.type === 'private');
-      setPrivateStories(privateStories);
-      const publicStories = file.stories.filter(s => s.type === 'public');
-      setPublicStories(publicStories);
+      const filter = type === 'published' ? 'public' : 'private';
+      const fileStories = file.stories.filter(s => s.type === filter);
+      setStories(fileStories);
     } catch (error) {
       console.error(error);
       toast.error(error.message);
@@ -89,13 +80,11 @@ export const Home = () => {
 
   return (
     <Component
-      selectedTab={selectedTab}
-      onSelectTab={handleSelectTab}
+      selectedTab={type}
       user={user}
       loadingCreate={loadingCreate}
       onCreateNewPrivateStory={handleCreateNewPrivateStory}
-      privateStories={privateStories}
-      publicStories={publicStories}
+      stories={stories}
       refetchStoriesLists={loadStoryFile}
     />
   );
