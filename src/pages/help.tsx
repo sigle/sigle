@@ -11,7 +11,7 @@ import { PageContainer } from '../modules/home/components/Home';
 import { Button } from '../components';
 import { config } from '../config';
 
-const SupportBlock = styled.div`
+const HelpBlock = styled.div`
   ${tw`md:flex justify-between py-6 border-b border-solid border-grey`};
 `;
 
@@ -28,19 +28,19 @@ const Illu = styled.img`
   width: 250px;
 `;
 
-const SupportTitle = styled.h3`
+const HelpTitle = styled.h3`
   ${tw`text-2xl font-bold mb-4`};
 `;
 
-const SupportMessage = styled.p`
+const HelpMessage = styled.p`
   ${tw`leading-normal`};
 `;
 
-const SupportMessageSocial = styled.p`
+const HelpMessageSocial = styled.p`
   ${tw`leading-normal mt-6 flex`};
 `;
 
-const SupportLink = styled.a`
+const HelpLink = styled.a`
   ${tw`text-pink`};
 `;
 
@@ -56,31 +56,31 @@ const StyledLink = styled.a`
   }
 `;
 
-const SupportPage = () => {
+const HelpPage = () => {
   return (
     <React.Fragment>
       <AppBar />
       <PageContainer>
-        <SupportBlock>
+        <HelpBlock>
           <div>
             <Illu src="/static/img/support.png" alt="Three" />
             <Title>How can we help?</Title>
-            <SupportMessage>
+            <HelpMessage>
               Any question or feedback about Sigle? Or you just want to say
               hello 🙋‍♀️?
               <br />
               You're in the good place.
-            </SupportMessage>
+            </HelpMessage>
           </div>
-        </SupportBlock>
+        </HelpBlock>
 
-        <SupportBlock>
+        <HelpBlock>
           <div>
-            <SupportTitle>Found an issue?</SupportTitle>
-            <SupportMessage>
+            <HelpTitle>Found an issue?</HelpTitle>
+            <HelpMessage>
               Use the issue form to tell us what it is, or why you're having
               trouble using Sigle.
-            </SupportMessage>
+            </HelpMessage>
           </div>
           <ButtonContainer>
             <Button
@@ -91,17 +91,15 @@ const SupportPage = () => {
               Fill the issue form
             </Button>
           </ButtonContainer>
-        </SupportBlock>
+        </HelpBlock>
 
-        <SupportBlock>
+        <HelpBlock>
           <div>
-            <SupportTitle>
-              Any personal opinion or feedback to give?
-            </SupportTitle>
-            <SupportMessage>
+            <HelpTitle>Any personal opinion or feedback to give?</HelpTitle>
+            <HelpMessage>
               Use the feedback form to give us your advices or any constructive
               remarks.
-            </SupportMessage>
+            </HelpMessage>
           </div>
           <ButtonContainer>
             <Button
@@ -112,14 +110,14 @@ const SupportPage = () => {
               Fill the feedback form
             </Button>
           </ButtonContainer>
-        </SupportBlock>
+        </HelpBlock>
 
-        <SupportBlock>
+        <HelpBlock>
           <div>
-            <SupportTitle>Looking for a feature?</SupportTitle>
-            <SupportMessage>
+            <HelpTitle>Looking for a feature?</HelpTitle>
+            <HelpMessage>
               We would be more than happy to improve Sigle to fit your needs.
-            </SupportMessage>
+            </HelpMessage>
           </div>
           <ButtonContainer>
             <Button
@@ -130,21 +128,21 @@ const SupportPage = () => {
               Fill the feature form
             </Button>
           </ButtonContainer>
-        </SupportBlock>
+        </HelpBlock>
 
-        <SupportBlock>
+        <HelpBlock>
           <div>
-            <SupportTitle>Just want to say hello?</SupportTitle>
-            <SupportMessage>
+            <HelpTitle>Just want to say hello?</HelpTitle>
+            <HelpMessage>
               You also can get in touch with us by sending an e-mail :{' '}
-              <SupportLink href={`mailto:${config.email}`}>
+              <HelpLink href={`mailto:${config.email}`}>
                 {config.email}
-              </SupportLink>
-            </SupportMessage>
+              </HelpLink>
+            </HelpMessage>
           </div>
-        </SupportBlock>
+        </HelpBlock>
 
-        <SupportMessageSocial>
+        <HelpMessageSocial>
           You can also reach us on Messenger, Telegram and Twitter{' '}
           <StyledLink href={config.messengerUrl} target="_blank">
             <FaFacebookMessenger size={16} className="icon" />
@@ -155,7 +153,7 @@ const SupportPage = () => {
           <StyledLink href={config.twitterUrl} target="_blank">
             <FaTwitter size={16} className="icon" />
           </StyledLink>
-        </SupportMessageSocial>
+        </HelpMessageSocial>
       </PageContainer>
 
       <Footer />
@@ -163,4 +161,4 @@ const SupportPage = () => {
   );
 };
 
-export default SupportPage;
+export default HelpPage;

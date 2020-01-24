@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 import tw from 'tailwind.macro';
 import Link from 'next/link';
 import Tippy from '@tippy.js/react';
-import { MdPanoramaFishEye } from 'react-icons/md';
+import { MdRemoveRedEye } from 'react-icons/md';
 import { userSession } from '../../../utils/blockstack';
 import { AppBar, AppBarRightContainer } from './AppBar';
 import { BlockstackUser } from '../../../types';
@@ -17,17 +17,16 @@ const Container = styled.div`
   ${tw`w-full h-screen flex`}
 `;
 
-const columnWidth = 290;
-
 const Column = styled.div`
-  ${tw`bg-grey`}
+  ${tw`bg-grey-light flex flex-col justify-between w-64`}
   flex: 0 0 auto;
-  min-width: ${columnWidth}px;
   /* padding-left: calc((100% - ${config.breakpoints.lg}px) / 2); */
 `;
 
 const Content = styled.div`
+  ${tw`mx-16`}
   flex: 1 1 auto;
+  max-width: 750px;
 `;
 
 const LogoContainer = styled.a`
@@ -35,24 +34,44 @@ const LogoContainer = styled.a`
 `;
 
 const Logo = styled.img`
-  height: 40px;
+  height: 55px;
 `;
 
 const Name = styled.a`
-  ${tw`py-4 flex items-center justify-center bg-black text-white`};
+  ${tw`py-3 flex items-center justify-center bg-black text-white`};
 `;
 
 const Menu = styled.ul`
-  ${tw`mt-8 list-none`}
+  ${tw`mt-6 list-none px-3`}
 `;
 
 const MenuItem = styled.li`
   a {
-    ${tw`py-4 pl-4 block rounded-l-full`}
+    ${tw`py-2 px-3 block rounded text-grey-darker mt-2`}
   }
   a:hover {
-    ${tw`bg-white`}
+    ${tw`bg-grey`}
   }
+`;
+
+const MenuBottom = styled.ul`
+  ${tw`list-none px-3`}
+`;
+
+const MenuBottomItem = styled.li`
+  a {
+    ${tw`py-2 px-3 block rounded text-sm text-grey-darker font-light`}
+  }
+  a:hover {
+    ${tw`bg-grey`}
+  }
+  .logout {
+    ${tw`mt-2 font-normal`}
+  }
+`;
+
+const SupportButton = styled.a`
+  ${tw`py-2 pr-2 pl-6 mt-4 flex items-center justify-start bg-pink text-white`};
 `;
 
 interface Props {
@@ -103,27 +122,56 @@ export const LoggedIn = ({ children, showAppBar = true }: Props) => {
   return (
     <Container>
       <Column>
-        <Link href="/" passHref>
-          <LogoContainer>
-            <Logo src="/img/logo.png" alt="logo" />
-          </LogoContainer>
-        </Link>
-        <Name href={`/${user.username}`} target="_blank">
-          Visit my blog
-          <MdPanoramaFishEye size={22} style={{ marginLeft: 6 }} />
-        </Name>
-        <Menu>
-          <MenuItem>
-            <Link href="/" passHref>
-              <a>Drafts</a>
-            </Link>
-          </MenuItem>
-          <MenuItem>
-            <Link href="/" passHref>
-              <a>Published</a>
-            </Link>
-          </MenuItem>
-        </Menu>
+        <div>
+          <Link href="/" passHref>
+            <LogoContainer>
+              <Logo src="/img/logo.png" alt="logo" />
+            </LogoContainer>
+          </Link>
+          <Name href={`/${user.username}`} target="_blank">
+            Visit my blog
+            <MdRemoveRedEye size={18} style={{ marginLeft: 8 }} />
+          </Name>
+          <Menu>
+            <MenuItem>
+              <Link href="/" passHref>
+                <a>Drafts</a>
+              </Link>
+            </MenuItem>
+            <MenuItem>
+              <Link href="/" passHref>
+                <a>Published</a>
+              </Link>
+            </MenuItem>
+          </Menu>
+        </div>
+        <div>
+          <MenuBottom>
+            <MenuBottomItem>
+              <Link href="/" passHref>
+                <a>Blog</a>
+              </Link>
+            </MenuBottomItem>
+            <MenuBottomItem>
+              <Link href="/" passHref>
+                <a>Help</a>
+              </Link>
+            </MenuBottomItem>
+            <MenuBottomItem>
+              <Link href="/" passHref>
+                <a>Changelog</a>
+              </Link>
+            </MenuBottomItem>
+            <MenuBottomItem>
+              <Link href="/" passHref>
+                <a className="logout">Logout</a>
+              </Link>
+            </MenuBottomItem>
+          </MenuBottom>
+          <Link href="/support-us" passHref>
+            <SupportButton>Support us</SupportButton>
+          </Link>
+        </div>
       </Column>
       <Content>{children}</Content>
     </Container>
