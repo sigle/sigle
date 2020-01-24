@@ -7,7 +7,6 @@ import { MdRemoveRedEye } from 'react-icons/md';
 import { userSession } from '../../../utils/blockstack';
 import { AppBar, AppBarRightContainer } from './AppBar';
 import { BlockstackUser } from '../../../types';
-import { config } from '../../../config';
 
 const Logout = styled.div`
   ${tw`font-semibold cursor-pointer`}
@@ -15,18 +14,20 @@ const Logout = styled.div`
 
 const Container = styled.div`
   ${tw`w-full h-screen flex`}
+  display: grid;
+  grid-template-columns: minmax(252px, calc((100% - 1262px) / 2 + 226px)) 900px 1fr;
 `;
 
-const Column = styled.div`
-  ${tw`bg-grey-light flex flex-col justify-between w-64`}
-  flex: 0 0 auto;
-  /* padding-left: calc((100% - ${config.breakpoints.lg}px) / 2); */
+const Sidebar = styled.div`
+  ${tw`bg-grey-light flex flex-col items-end`}
+`;
+
+const SidebarContent = styled.div`
+  ${tw`flex flex-col justify-between w-64 h-full`}
 `;
 
 const Content = styled.div`
   ${tw`mx-16`}
-  flex: 1 1 auto;
-  max-width: 750px;
 `;
 
 const LogoContainer = styled.a`
@@ -66,7 +67,7 @@ const MenuBottomItem = styled.li`
     ${tw`bg-grey`}
   }
   .logout {
-    ${tw`mt-2 font-normal`}
+    ${tw`mt-2 font-normal cursor-pointer`}
   }
 `;
 
@@ -84,6 +85,7 @@ export const LoggedIn = ({ children, showAppBar = true }: Props) => {
   const [error, setError] = useState<string | null>(null);
   const [user, setUser] = useState<BlockstackUser | null>(null);
 
+  // TODO move this to some auth context
   const loadUserData = async () => {
     try {
       const user: BlockstackUser = await userSession.loadUserData();
@@ -121,78 +123,59 @@ export const LoggedIn = ({ children, showAppBar = true }: Props) => {
 
   return (
     <Container>
-      <Column>
-        <div>
-          <Link href="/" passHref>
-            <LogoContainer>
-              <Logo src="/img/logo.png" alt="logo" />
-            </LogoContainer>
-          </Link>
-          <Name href={`/${user.username}`} target="_blank">
-            Visit my blog
-            <MdRemoveRedEye size={18} style={{ marginLeft: 8 }} />
-          </Name>
-          <Menu>
-            <MenuItem>
-              <Link href="/" passHref>
-                <a>Drafts</a>
-              </Link>
-            </MenuItem>
-            <MenuItem>
-              <Link href="/" passHref>
-                <a>Published</a>
-              </Link>
-            </MenuItem>
-          </Menu>
-        </div>
-        <div>
-          <MenuBottom>
-            <MenuBottomItem>
-              <Link href="/" passHref>
-                <a>Blog</a>
-              </Link>
-            </MenuBottomItem>
-            <MenuBottomItem>
-              <Link href="/" passHref>
-                <a>Help</a>
-              </Link>
-            </MenuBottomItem>
-            <MenuBottomItem>
-              <Link href="/" passHref>
-                <a>Changelog</a>
-              </Link>
-            </MenuBottomItem>
-            <MenuBottomItem>
-              <Link href="/" passHref>
-                <a className="logout">Logout</a>
-              </Link>
-            </MenuBottomItem>
-          </MenuBottom>
-          <Link href="/support-us" passHref>
-            <SupportButton>Support us</SupportButton>
-          </Link>
-        </div>
-      </Column>
+      <Sidebar>
+        <SidebarContent>
+          <div>
+            <Link href="/" passHref>
+              <LogoContainer>
+                <Logo src="/img/logo.png" alt="logo" />
+              </LogoContainer>
+            </Link>
+            <Name href={`/${user.username}`} target="_blank">
+              Visit my blog
+              <MdRemoveRedEye size={18} style={{ marginLeft: 8 }} />
+            </Name>
+            <Menu>
+              <MenuItem>
+                <Link href="/" passHref>
+                  <a>Drafts</a>
+                </Link>
+              </MenuItem>
+              <MenuItem>
+                <Link href="/" passHref>
+                  <a>Published</a>
+                </Link>
+              </MenuItem>
+            </Menu>
+          </div>
+          <div>
+            <MenuBottom>
+              <MenuBottomItem>
+                <a href="https://app.sigle.io/sigleapp.id.blockstack">Blog</a>
+              </MenuBottomItem>
+              <MenuBottomItem>
+                <Link href="/help" passHref>
+                  <a>Help</a>
+                </Link>
+              </MenuBottomItem>
+              <MenuBottomItem>
+                <a href="https://github.com/pradel/sigle/blob/master/CHANGELOG.md">
+                  Changelog
+                </a>
+              </MenuBottomItem>
+              <MenuBottomItem>
+                <a className="logout" onClick={handleLogout}>
+                  Logout
+                </a>
+              </MenuBottomItem>
+            </MenuBottom>
+            <Link href="/support-us" passHref>
+              <SupportButton>Support us</SupportButton>
+            </Link>
+          </div>
+        </SidebarContent>
+      </Sidebar>
       <Content>{children}</Content>
     </Container>
   );
-
-  // return (
-  //   <React.Fragment>
-  //     {showAppBar && (
-  //       <AppBar>
-  //         <AppBarRightContainer>
-  //           <Tippy content={user.username} theme="light-border">
-  //             <Name href={`/${user.username}`} target="_blank">
-  //               <IoIosEye size={22} style={{ marginRight: 6 }} /> Visit my blog
-  //             </Name>
-  //           </Tippy>
-  //           <Logout onClick={handleLogout}>Logout</Logout>
-  //         </AppBarRightContainer>
-  //       </AppBar>
-  //     )}
-
-  //     {children}
-  //   </React.Fragment>
-  // );
 };
