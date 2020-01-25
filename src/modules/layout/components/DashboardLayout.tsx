@@ -18,8 +18,12 @@ const SidebarContent = styled.div`
   ${tw`flex flex-col justify-between w-64 h-full`}
 `;
 
+const ContentContainer = styled.div`
+  ${tw`w-full px-8 lg:px-20 overflow-auto`}
+`;
+
 const Content = styled.div`
-  ${tw`mx-20 w-full`}
+  ${tw`w-full`}
   max-width: 1100px;
 `;
 
@@ -162,7 +166,9 @@ export const DashboardLayout = ({ children }: Props) => {
           </div>
         </SidebarContent>
       </Sidebar>
-      <Content>{children}</Content>
+      <ContentContainer>
+        <Content>{children}</Content>
+      </ContentContainer>
     </Container>
   );
 };
