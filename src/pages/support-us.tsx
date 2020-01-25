@@ -3,9 +3,11 @@ import styled from 'styled-components';
 import tw from 'tailwind.macro';
 import { Protected } from '../modules/auth/Protected';
 import { DashboardLayout } from '../modules/layout';
+import { DashboardPageContainer } from '../modules/layout/components/DashboardLayout';
+import { DashboardPageTitle } from '../modules/layout/components/DashboardHeader';
 
 const SupportUsTitle = styled.h2`
-  ${tw`text-3xl`};
+  ${tw`text-3xl mt-8`};
 `;
 
 const SupportUsSubtitle = styled.h4`
@@ -53,42 +55,48 @@ const SupportUsPage = () => {
   return (
     <Protected>
       <DashboardLayout>
-        <SupportUsTitle>
-          Hey, you! You rock, I hope you know that.
-        </SupportUsTitle>
-        <SupportUsSubtitle>Thank you for visiting this page!</SupportUsSubtitle>
-        <SupportUsMessage>
-          Sigle is a <b>free</b> and <b>open-source</b> project built on top of
-          Blockstack, but you can help us keep the project alive by buying us
-          coffee! If you want to, you can support us with a one time donation or
-          a monthly subscription. Isn’t that amazing?
-        </SupportUsMessage>
-        <SupportUsMessage>
-          For any monthly subscription (or a 3 coffee donation), don’t forget to
-          give us your address so we can thank you with some cool stickers 🙂
-        </SupportUsMessage>
-        <SupportUsMessage>
-          The money will help us:
-          <br />- Cover the costs (server, domain...)
-          <br />- Pay ourselves for the time we spend working on Sigle
-          <br />- Buy some marketing products (such as stickers etc)
-          <br />- Support our addiction to coffee (and tea, sometimes we prefer
-          tea.)
-        </SupportUsMessage>
-        <div></div>
-        <BuymeacoffeeButton>
-          <a
-            className="bmc-button"
-            target="_blank"
-            href="https://www.buymeacoffee.com/sigle"
-          >
-            <img
-              src="https://cdn.buymeacoffee.com/buttons/bmc-new-btn-logo.svg"
-              alt="Support us"
-            />
-            <span style={{ marginLeft: 15, fontSize: 28 }}>Support us</span>
-          </a>
-        </BuymeacoffeeButton>
+        <DashboardPageContainer>
+          <DashboardPageTitle />
+          <SupportUsTitle>
+            Hey, you! You rock, I hope you know that.
+          </SupportUsTitle>
+          <SupportUsSubtitle>
+            Thank you for visiting this page!
+          </SupportUsSubtitle>
+          <SupportUsMessage>
+            Sigle is a <b>free</b> and <b>open-source</b> project built on top
+            of Blockstack, but you can help us keep the project alive by buying
+            us coffee! If you want to, you can support us with a one time
+            donation or a monthly subscription. Isn’t that amazing?
+          </SupportUsMessage>
+          <SupportUsMessage>
+            For any monthly subscription (or a 3 coffee donation), don’t forget
+            to give us your address so we can thank you with some cool stickers
+            🙂
+          </SupportUsMessage>
+          <SupportUsMessage>
+            The money will help us:
+            <br />- Cover the costs (server, domain...)
+            <br />- Pay ourselves for the time we spend working on Sigle
+            <br />- Buy some marketing products (such as stickers etc)
+            <br />- Support our addiction to coffee (and tea, sometimes we
+            prefer tea.)
+          </SupportUsMessage>
+          <div></div>
+          <BuymeacoffeeButton>
+            <a
+              className="bmc-button"
+              target="_blank"
+              href="https://www.buymeacoffee.com/sigle"
+            >
+              <img
+                src="https://cdn.buymeacoffee.com/buttons/bmc-new-btn-logo.svg"
+                alt="Support us"
+              />
+              <span style={{ marginLeft: 15, fontSize: 28 }}>Support us</span>
+            </a>
+          </BuymeacoffeeButton>
+        </DashboardPageContainer>
       </DashboardLayout>
     </Protected>
   );

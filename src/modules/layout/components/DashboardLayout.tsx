@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { useRouter } from 'next/router';
 import styled, { css } from 'styled-components';
 import tw from 'tailwind.macro';
@@ -79,6 +79,14 @@ const MenuBottomItem = styled.li`
 
 const SupportButton = styled.a`
   ${tw`py-2 pr-2 pl-6 mt-4 flex items-center justify-start bg-pink text-white`};
+`;
+
+/**
+ * Page utilities
+ */
+
+export const DashboardPageContainer = styled.div`
+  ${tw`my-8`};
 `;
 
 interface Props {

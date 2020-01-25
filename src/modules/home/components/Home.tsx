@@ -11,25 +11,11 @@ import {
 } from '../../../components';
 import { StoryItem } from '../';
 import { SubsetStory, BlockstackUser } from '../../../types';
-
-export const PageContainer = styled.div`
-  ${tw`mt-8`};
-`;
-
-export const PageTitleContainer = styled.div`
-  ${tw`mb-2 flex justify-between border-b border-solid border-grey pb-8`};
-`;
-
-export const PageTitle = styled.div`
-  ${tw`text-3xl`};
-`;
+import { DashboardPageContainer } from '../../layout/components/DashboardLayout';
+import { DashboardPageTitle } from '../../layout/components/DashboardHeader';
 
 export const IlluContainer = styled.div`
   ${tw`flex flex-col items-center justify-center mt-8`};
-`;
-
-const VisitButton = styled(ButtonOutline)`
-  ${tw`mr-6 inline-flex`};
 `;
 
 const Illu = styled.img`
@@ -41,8 +27,6 @@ const Illu = styled.img`
 interface Props {
   selectedTab: 'published' | 'drafts';
   user: BlockstackUser;
-  loadingCreate: boolean;
-  onCreateNewPrivateStory: () => void;
   stories: SubsetStory[] | null;
   refetchStoriesLists: () => Promise<void>;
 }
@@ -50,34 +34,18 @@ interface Props {
 export const Home = ({
   selectedTab,
   user,
-  loadingCreate,
-  onCreateNewPrivateStory,
   stories,
   refetchStoriesLists,
 }: Props) => {
   const showIllu = !stories || stories.length === 0;
 
   return (
-    <PageContainer>
-      <PageTitleContainer>
-        <PageTitle>
-          {selectedTab === 'published' ? 'Published stories' : 'Drafts stories'}
-        </PageTitle>
-        <div>
-          <VisitButton
-            size="large"
-            as="a"
-            href={`/${user.username}`}
-            target="_blank"
-          >
-            Visit my blog <MdRemoveRedEye size={18} style={{ marginLeft: 8 }} />
-          </VisitButton>
-          {!loadingCreate && (
-            <Button onClick={onCreateNewPrivateStory}>New story</Button>
-          )}
-          {loadingCreate && <Button disabled>creating new story ...</Button>}
-        </div>
-      </PageTitleContainer>
+    <DashboardPageContainer>
+      <DashboardPageTitle
+        title={
+          selectedTab === 'published' ? 'Published stories' : 'Drafts stories'
+        }
+      />
 
       {showIllu && (
         <IlluContainer>
@@ -96,6 +64,6 @@ export const Home = ({
             refetchStoriesLists={refetchStoriesLists}
           />
         ))}
-    </PageContainer>
+    </DashboardPageContainer>
   );
 };
