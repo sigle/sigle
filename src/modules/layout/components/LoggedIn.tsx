@@ -4,13 +4,6 @@ import styled, { css } from 'styled-components';
 import tw from 'tailwind.macro';
 import Link from 'next/link';
 import { MdKeyboardArrowDown } from 'react-icons/md';
-import {
-  Menu,
-  MenuList,
-  MenuButton,
-  MenuItem,
-  MenuLink,
-} from '@reach/menu-button';
 import { userSession } from '../../../utils/blockstack';
 import { AppBar, AppBarRightContainer } from './AppBar';
 import { BlockstackUser } from '../../../types';
@@ -40,8 +33,13 @@ const Logo = styled.img`
   height: 55px;
 `;
 
-const MenuButtonName = styled(MenuButton)`
+const MenuButtonName = styled.button<{ logout?: boolean }>`
   ${tw`py-3 flex items-center justify-center bg-black text-white w-full`};
+  ${props =>
+    props.logout &&
+    css`
+      ${tw`bg-white text-pink`}
+    `}
 `;
 
 const MenuTop = styled.ul`
@@ -85,15 +83,15 @@ const SupportButton = styled.a`
 `;
 
 interface Props {
-  showAppBar?: boolean;
   children: React.ReactNode;
 }
 
-export const LoggedIn = ({ children, showAppBar = true }: Props) => {
+export const LoggedIn = ({ children }: Props) => {
   const router = useRouter();
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [user, setUser] = useState<BlockstackUser | null>(null);
+  const [isLogoutOpen, setIsLogoutOpen] = useState(false);
 
   // TODO move this to some auth context
   const loadUserData = async () => {
@@ -141,15 +139,15 @@ export const LoggedIn = ({ children, showAppBar = true }: Props) => {
                 <Logo src="/img/logo.png" alt="logo" />
               </LogoContainer>
             </Link>
-            <Menu>
-              <MenuButtonName>
-                {user.username}
-                <MdKeyboardArrowDown size={18} style={{ marginLeft: 8 }} />
+            <MenuButtonName onClick={() => setIsLogoutOpen(!isLogoutOpen)}>
+              {user.username}
+              <MdKeyboardArrowDown size={18} style={{ marginLeft: 8 }} />
+            </MenuButtonName>
+            {isLogoutOpen && (
+              <MenuButtonName logout onClick={handleLogout}>
+                Logout
               </MenuButtonName>
-              <MenuList>
-                <MenuItem onSelect={handleLogout}>Logout</MenuItem>
-              </MenuList>
-            </Menu>
+            )}
             <MenuTop>
               <MenuTopItem active={router.route === '/'}>
                 <Link href="/" passHref>
