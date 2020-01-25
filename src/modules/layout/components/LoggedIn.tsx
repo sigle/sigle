@@ -88,46 +88,14 @@ interface Props {
 
 export const LoggedIn = ({ children }: Props) => {
   const router = useRouter();
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-  const [user, setUser] = useState<BlockstackUser | null>(null);
   const [isLogoutOpen, setIsLogoutOpen] = useState(false);
 
-  // TODO move this to some auth context
-  const loadUserData = async () => {
-    try {
-      const user: BlockstackUser = await userSession.loadUserData();
-      setUser(user);
-    } catch (error) {
-      console.error(error);
-      setError(error.message);
-    }
-    setLoading(false);
-  };
-
-  useEffect(() => {
-    loadUserData();
-  }, []);
+  const user = userSession.loadUserData();
 
   const handleLogout = () => {
     userSession.signUserOut();
     window.location.replace(window.location.origin);
   };
-
-  // TODO style it
-  if (loading) {
-    return <div>Loading ...</div>;
-  }
-
-  // TODO style it
-  if (error) {
-    return <div>{error}</div>;
-  }
-
-  // TODO style it
-  if (!user) {
-    return <div>User not found</div>;
-  }
 
   return (
     <Container>

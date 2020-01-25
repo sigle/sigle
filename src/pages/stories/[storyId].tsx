@@ -6,7 +6,7 @@ import { Editor } from '../../modules/editor';
 const EditorPage = () => {
   return (
     <Protected>
-      <LoggedIn showAppBar={false}>
+      <LoggedIn>
         <Editor />
       </LoggedIn>
     </Protected>
