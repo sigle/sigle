@@ -2,7 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 import tw from 'tailwind.macro';
 import { Protected } from '../modules/auth/Protected';
-import { LoggedIn } from '../modules/layout';
+import { DashboardLayout } from '../modules/layout';
 
 const SupportUsTitle = styled.h2`
   ${tw`text-3xl`};
@@ -52,7 +52,7 @@ const BuymeacoffeeButton = styled.div`
 const SupportUsPage = () => {
   return (
     <Protected>
-      <LoggedIn>
+      <DashboardLayout>
         <SupportUsTitle>
           Hey, you! You rock, I hope you know that.
         </SupportUsTitle>
@@ -89,7 +89,7 @@ const SupportUsPage = () => {
             <span style={{ marginLeft: 15, fontSize: 28 }}>Support us</span>
           </a>
         </BuymeacoffeeButton>
-      </LoggedIn>
+      </DashboardLayout>
     </Protected>
   );
 };

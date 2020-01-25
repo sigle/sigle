@@ -64,7 +64,12 @@ export const Home = ({
           {selectedTab === 'published' ? 'Published stories' : 'Drafts stories'}
         </PageTitle>
         <div>
-          <VisitButton size="large">
+          <VisitButton
+            size="large"
+            as="a"
+            href={`/${user.username}`}
+            target="_blank"
+          >
             Visit my blog <MdRemoveRedEye size={18} style={{ marginLeft: 8 }} />
           </VisitButton>
           {!loadingCreate && (

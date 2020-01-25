@@ -6,7 +6,6 @@ import Link from 'next/link';
 import { MdKeyboardArrowDown } from 'react-icons/md';
 import { userSession } from '../../../utils/blockstack';
 import { AppBar, AppBarRightContainer } from './AppBar';
-import { BlockstackUser } from '../../../types';
 
 const Container = styled.div`
   ${tw`w-full h-screen flex`}
@@ -86,7 +85,7 @@ interface Props {
   children: React.ReactNode;
 }
 
-export const LoggedIn = ({ children }: Props) => {
+export const DashboardLayout = ({ children }: Props) => {
   const router = useRouter();
   const [isLogoutOpen, setIsLogoutOpen] = useState(false);
 
