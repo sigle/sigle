@@ -3,7 +3,14 @@ import { useRouter } from 'next/router';
 import styled, { css } from 'styled-components';
 import tw from 'tailwind.macro';
 import Link from 'next/link';
-import { MdRemoveRedEye } from 'react-icons/md';
+import { MdKeyboardArrowDown } from 'react-icons/md';
+import {
+  Menu,
+  MenuList,
+  MenuButton,
+  MenuItem,
+  MenuLink,
+} from '@reach/menu-button';
 import { userSession } from '../../../utils/blockstack';
 import { AppBar, AppBarRightContainer } from './AppBar';
 import { BlockstackUser } from '../../../types';
@@ -33,15 +40,15 @@ const Logo = styled.img`
   height: 55px;
 `;
 
-const Name = styled.a`
-  ${tw`py-3 flex items-center justify-center bg-black text-white`};
+const MenuButtonName = styled(MenuButton)`
+  ${tw`py-3 flex items-center justify-center bg-black text-white w-full`};
 `;
 
-const Menu = styled.ul`
+const MenuTop = styled.ul`
   ${tw`mt-6 list-none px-3`}
 `;
 
-const MenuItem = styled.li<{ active: boolean }>`
+const MenuTopItem = styled.li<{ active: boolean }>`
   a {
     ${tw`py-2 px-3 block rounded text-grey-darker mt-2`}
   }
@@ -134,22 +141,27 @@ export const LoggedIn = ({ children, showAppBar = true }: Props) => {
                 <Logo src="/img/logo.png" alt="logo" />
               </LogoContainer>
             </Link>
-            <Name href={`/${user.username}`} target="_blank">
-              Visit my blog
-              <MdRemoveRedEye size={18} style={{ marginLeft: 8 }} />
-            </Name>
             <Menu>
-              <MenuItem active={router.route === '/'}>
+              <MenuButtonName>
+                {user.username}
+                <MdKeyboardArrowDown size={18} style={{ marginLeft: 8 }} />
+              </MenuButtonName>
+              <MenuList>
+                <MenuItem onSelect={handleLogout}>Logout</MenuItem>
+              </MenuList>
+            </Menu>
+            <MenuTop>
+              <MenuTopItem active={router.route === '/'}>
                 <Link href="/" passHref>
                   <a>Drafts</a>
                 </Link>
-              </MenuItem>
-              <MenuItem active={router.route === '/published'}>
+              </MenuTopItem>
+              <MenuTopItem active={router.route === '/published'}>
                 <Link href="/published" passHref>
                   <a>Published</a>
                 </Link>
-              </MenuItem>
-            </Menu>
+              </MenuTopItem>
+            </MenuTop>
           </div>
           <div>
             <MenuBottom>
