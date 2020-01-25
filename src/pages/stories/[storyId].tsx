@@ -6,9 +6,7 @@ import { Editor } from '../../modules/editor';
 const EditorPage = () => {
   return (
     <Protected>
-      <DashboardLayout>
-        <Editor />
-      </DashboardLayout>
+      <Editor />
     </Protected>
   );
 };
