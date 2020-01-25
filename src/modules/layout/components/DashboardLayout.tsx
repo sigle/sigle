@@ -5,7 +5,6 @@ import tw from 'tailwind.macro';
 import Link from 'next/link';
 import { MdKeyboardArrowDown } from 'react-icons/md';
 import { userSession } from '../../../utils/blockstack';
-import { AppBar, AppBarRightContainer } from './AppBar';
 
 const Container = styled.div`
   ${tw`w-full h-screen flex`}
