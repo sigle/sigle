@@ -11,7 +11,7 @@ const Container = styled.div`
 `;
 
 const Sidebar = styled.div`
-  ${tw`bg-grey-light flex flex-col items-end`}
+  ${tw`bg-grey-light flex flex-col items-end hidden lg:block`}
 `;
 
 const SidebarContent = styled.div`
