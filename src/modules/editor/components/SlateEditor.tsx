@@ -36,10 +36,7 @@ import {
 import { DEFAULT_NODE, hasBlock, insertImage } from './utils';
 import { userSession } from '../../../utils/blockstack';
 import { resizeImage } from '../../../utils/image';
-
-const FixedContainer = styled.div`
-  ${tw`fixed w-full bg-white top-0`};
-`;
+import { FixedContainer, PageContainer } from './Editor';
 
 const StyledAppBarRightContainer = styled(AppBarRightContainer)`
   ${tw`hidden md:flex`};
@@ -47,10 +44,6 @@ const StyledAppBarRightContainer = styled(AppBarRightContainer)`
 
 const AppBarSettings = styled.div`
   ${tw`p-2 -mr-2 flex items-center cursor-pointer text-pink`};
-`;
-
-const PageContainer = styled(Container)`
-  ${tw`mt-24`};
 `;
 
 const Input = styled.input`
