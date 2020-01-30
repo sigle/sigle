@@ -4,7 +4,6 @@ import { useRouter } from 'next/router';
 import styled from 'styled-components';
 import tw from 'tailwind.macro';
 import { userSession } from '../../utils/blockstack';
-import { config } from '../../config';
 
 const FullScreenLoadingContainer = styled.div`
   ${tw`w-full h-screen flex flex-col items-center justify-center`};
