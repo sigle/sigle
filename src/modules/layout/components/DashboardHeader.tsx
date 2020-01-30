@@ -6,6 +6,7 @@ import { MdRemoveRedEye, MdSort } from 'react-icons/md';
 import * as Fathom from 'fathom-client';
 import { useRouter } from 'next/router';
 import { DialogContent, DialogOverlay } from '@reach/dialog';
+import { animated, useTransition } from 'react-spring';
 import { ButtonOutline, Button } from '../../../components';
 import {
   createNewEmptyStory,
@@ -59,11 +60,23 @@ interface DashboardPageTitleProps {
   title?: string;
 }
 
+const AnimatedDialogOverlay = animated(DialogOverlay);
+const AnimatedDialogContent = animated(StyledDialogContent);
+
 export const DashboardPageTitle = ({ title }: DashboardPageTitleProps) => {
   const router = useRouter();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [loadingCreate, setLoadingCreate] = useState(false);
   const user = userSession.loadUserData();
+
+  const transitions = useTransition(mobileMenuOpen, null, {
+    from: { opacity: 0, transform: 'translateX(-100%)' },
+    enter: { opacity: 1, transform: 'translateX(0)' },
+    leave: { opacity: 0, transform: 'translateX(-100%)' },
+    config: {
+      duration: 150,
+    },
+  });
 
   const handleCreateNewPrivateStory = async () => {
     setLoadingCreate(true);
@@ -89,11 +102,26 @@ export const DashboardPageTitle = ({ title }: DashboardPageTitleProps) => {
 
   return (
     <React.Fragment>
-      <DialogOverlay isOpen={mobileMenuOpen} onDismiss={handleCloseMobileMenu}>
-        <StyledDialogContent aria-label="Mobile menu">
-          <DashboardSidebar />
-        </StyledDialogContent>
-      </DialogOverlay>
+      {transitions.map(
+        ({ item, key, props: styles }) =>
+          item && (
+            <AnimatedDialogOverlay
+              key={key}
+              style={{ opacity: styles.opacity }}
+              onDismiss={handleCloseMobileMenu}
+            >
+              <AnimatedDialogContent
+                style={{
+                  transform: styles.transform,
+                }}
+                aria-label="Mobile menu"
+              >
+                <DashboardSidebar />
+              </AnimatedDialogContent>
+            </AnimatedDialogOverlay>
+          )
+      )}
+
       <PageTitleContainer>
         <PageTitle>{title}</PageTitle>
         <ButtonsContainer>

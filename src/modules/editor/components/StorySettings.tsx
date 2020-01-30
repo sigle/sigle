@@ -131,101 +131,105 @@ export const StorySettings = ({
 
   const coverImageUrl = coverFile ? coverFile.preview : story.coverImage;
 
-  return transitions.map(
-    ({ item, key, props: styles }) =>
-      item && (
-        <AnimatedDialogOverlay
-          key={key}
-          onDismiss={onClose}
-          style={{ opacity: styles.opacity }}
-        >
-          <AnimatedDialogContent
-            style={{
-              transform: styles.transform,
-            }}
-            aria-label="Story settings"
-          >
-            <TitleContainer>
-              <Title>Settings</Title>
-              <CloseButton onClick={onClose}>
-                <MdClose />
-              </CloseButton>
-            </TitleContainer>
+  return (
+    <React.Fragment>
+      {transitions.map(
+        ({ item, key, props: styles }) =>
+          item && (
+            <AnimatedDialogOverlay
+              key={key}
+              onDismiss={onClose}
+              style={{ opacity: styles.opacity }}
+            >
+              <AnimatedDialogContent
+                style={{
+                  transform: styles.transform,
+                }}
+                aria-label="Story settings"
+              >
+                <TitleContainer>
+                  <Title>Settings</Title>
+                  <CloseButton onClick={onClose}>
+                    <MdClose />
+                  </CloseButton>
+                </TitleContainer>
 
-            <form onSubmit={onSubmit}>
-              <FormRow>
-                <FormLabel>Cover image</FormLabel>
+                <form onSubmit={onSubmit}>
+                  <FormRow>
+                    <FormLabel>Cover image</FormLabel>
 
-                <ImageEmpty
-                  {...getRootProps({ tabIndex: undefined })}
-                  haveImage={!!coverImageUrl}
-                >
-                  {coverImageUrl && <Image src={coverImageUrl} />}
-                  {!coverImageUrl && <span>Upload cover image</span>}
-                  <input {...getInputProps()} />
-                  <ImageEmptyIcon>
-                    <MdAddAPhoto />
-                  </ImageEmptyIcon>
-                </ImageEmpty>
-              </FormRow>
+                    <ImageEmpty
+                      {...getRootProps({ tabIndex: undefined })}
+                      haveImage={!!coverImageUrl}
+                    >
+                      {coverImageUrl && <Image src={coverImageUrl} />}
+                      {!coverImageUrl && <span>Upload cover image</span>}
+                      <input {...getInputProps()} />
+                      <ImageEmptyIcon>
+                        <MdAddAPhoto />
+                      </ImageEmptyIcon>
+                    </ImageEmpty>
+                  </FormRow>
 
-              <FormRow>
-                <FormLabel>Created on</FormLabel>
-                <FormInput
-                  type="date"
-                  value={format(story.createdAt, 'yyyy-MM-dd')}
-                  onChange={e => onChangeCreatedAt(e.target.value)}
-                />
-              </FormRow>
+                  <FormRow>
+                    <FormLabel>Created on</FormLabel>
+                    <FormInput
+                      type="date"
+                      value={format(story.createdAt, 'yyyy-MM-dd')}
+                      onChange={e => onChangeCreatedAt(e.target.value)}
+                    />
+                  </FormRow>
 
-              <FormRow>
-                <FormLabel>Meta title</FormLabel>
-                <FormInput
-                  value={story.metaTitle || ''}
-                  onChange={e => onChangeMetaTitle(e.target.value)}
-                  maxLength={100}
-                />
-                <FormHelper>
-                  Recommended: 70 characters. You have used{' '}
-                  {story.metaTitle ? story.metaTitle.length : 0} characters.
-                </FormHelper>
-              </FormRow>
+                  <FormRow>
+                    <FormLabel>Meta title</FormLabel>
+                    <FormInput
+                      value={story.metaTitle || ''}
+                      onChange={e => onChangeMetaTitle(e.target.value)}
+                      maxLength={100}
+                    />
+                    <FormHelper>
+                      Recommended: 70 characters. You have used{' '}
+                      {story.metaTitle ? story.metaTitle.length : 0} characters.
+                    </FormHelper>
+                  </FormRow>
 
-              <FormRow>
-                <FormLabel>Meta description</FormLabel>
-                <FormTextarea
-                  rows={3}
-                  value={story.metaDescription || ''}
-                  onChange={e => onChangeMetaDescription(e.target.value)}
-                  maxLength={250}
-                />
-                <FormHelper>
-                  Recommended: 156 characters. You have used{' '}
-                  {story.metaDescription ? story.metaDescription.length : 0}{' '}
-                  characters.
-                </FormHelper>
-              </FormRow>
+                  <FormRow>
+                    <FormLabel>Meta description</FormLabel>
+                    <FormTextarea
+                      rows={3}
+                      value={story.metaDescription || ''}
+                      onChange={e => onChangeMetaDescription(e.target.value)}
+                      maxLength={250}
+                    />
+                    <FormHelper>
+                      Recommended: 156 characters. You have used{' '}
+                      {story.metaDescription ? story.metaDescription.length : 0}{' '}
+                      characters.
+                    </FormHelper>
+                  </FormRow>
 
-              <SaveRow>
-                <Button disabled={loadingSave} type="submit">
-                  {loadingSave ? 'Saving...' : 'Save'}
-                </Button>
+                  <SaveRow>
+                    <Button disabled={loadingSave} type="submit">
+                      {loadingSave ? 'Saving...' : 'Save'}
+                    </Button>
 
-                {loadingDelete ? (
-                  <ButtonLink disabled>
-                    <MdDelete />
-                    <span>Deleting ...</span>
-                  </ButtonLink>
-                ) : (
-                  <ButtonLink onClick={onDelete}>
-                    <MdDelete />
-                    <span>Delete this story</span>
-                  </ButtonLink>
-                )}
-              </SaveRow>
-            </form>
-          </AnimatedDialogContent>
-        </AnimatedDialogOverlay>
-      )
-  ) as any;
+                    {loadingDelete ? (
+                      <ButtonLink disabled>
+                        <MdDelete />
+                        <span>Deleting ...</span>
+                      </ButtonLink>
+                    ) : (
+                      <ButtonLink onClick={onDelete}>
+                        <MdDelete />
+                        <span>Delete this story</span>
+                      </ButtonLink>
+                    )}
+                  </SaveRow>
+                </form>
+              </AnimatedDialogContent>
+            </AnimatedDialogOverlay>
+          )
+      )}
+    </React.Fragment>
+  );
 };
