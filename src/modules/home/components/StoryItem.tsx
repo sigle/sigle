@@ -27,7 +27,7 @@ const StoryTitleIcon = styled(MdMoreHoriz)`
 `;
 
 const StoryTitle = styled.h3`
-  ${tw`flex text-2xl font-bold no-underline text-black`};
+  ${tw`flex text-xl no-underline text-black`};
 `;
 
 const StoryDate = styled.p`

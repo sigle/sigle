@@ -21,7 +21,7 @@ export const PageTitleContainer = styled.div`
 `;
 
 export const PageTitle = styled.div`
-  ${tw`mt-6 lg:mt-0 text-3xl`};
+  ${tw`mt-6 lg:mt-0 text-xl font-bold flex items-center`};
 `;
 
 const ButtonsContainer = styled.div`
