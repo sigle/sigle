@@ -75,9 +75,6 @@ const MenuBottomItem = styled.li`
   a:hover {
     ${tw`bg-grey`}
   }
-  .logout {
-    ${tw`mt-2 font-normal cursor-pointer`}
-  }
 `;
 
 const SupportButton = styled.a`
@@ -152,11 +149,6 @@ export const DashboardLayout = ({ children }: Props) => {
               <MenuBottomItem>
                 <a href="https://github.com/pradel/sigle/blob/master/CHANGELOG.md">
                   Changelog
-                </a>
-              </MenuBottomItem>
-              <MenuBottomItem>
-                <a className="logout" onClick={handleLogout}>
-                  Logout
                 </a>
               </MenuBottomItem>
             </MenuBottom>
