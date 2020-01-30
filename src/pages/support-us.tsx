@@ -6,10 +6,6 @@ import { DashboardLayout } from '../modules/layout';
 import { DashboardPageContainer } from '../modules/layout/components/DashboardLayout';
 import { DashboardPageTitle } from '../modules/layout/components/DashboardHeader';
 
-const SupportUsTitle = styled.h2`
-  ${tw`text-3xl mt-8`};
-`;
-
 const SupportUsSubtitle = styled.h4`
   ${tw`text-xl mt-10 mb-4`};
 `;
@@ -56,10 +52,7 @@ const SupportUsPage = () => {
     <Protected>
       <DashboardLayout>
         <DashboardPageContainer>
-          <DashboardPageTitle />
-          <SupportUsTitle>
-            Hey, you! You rock, I hope you know that.
-          </SupportUsTitle>
+          <DashboardPageTitle title="Hey, you! You rock, I hope you know that." />
           <SupportUsSubtitle>
             Thank you for visiting this page!
           </SupportUsSubtitle>
