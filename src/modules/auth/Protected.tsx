@@ -25,12 +25,12 @@ interface Props {
 export const Protected = ({ children }: Props) => {
   const router = useRouter();
   const [state, setState] = useState({
-    loggedIn: config.isServer ? false : !!userSession.isUserSignedIn(),
-    loggingIn: config.isServer ? true : !!userSession.isSignInPending(),
+    loggedIn: false,
+    loggingIn: true,
   });
 
   useEffect(() => {
-    if (userSession.isUserSignedIn() && !state.loggedIn) {
+    if (userSession.isUserSignedIn()) {
       setState({
         loggedIn: true,
         loggingIn: false,
