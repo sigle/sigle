@@ -19,7 +19,7 @@ const SidebarContent = styled.div`
 `;
 
 const ContentContainer = styled.div`
-  ${tw`w-full px-8 lg:px-20 overflow-auto`}
+  ${tw`w-full px-4 lg:px-20 overflow-auto`}
 `;
 
 const Content = styled.div`
@@ -89,7 +89,7 @@ const SupportButton = styled.a`
  */
 
 export const DashboardPageContainer = styled.div`
-  ${tw`my-8`};
+  ${tw`my-4 lg:my-8`};
 `;
 
 interface Props {
