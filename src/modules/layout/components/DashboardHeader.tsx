@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
-import styled, { css } from 'styled-components';
+import styled from 'styled-components';
 import tw from 'tailwind.macro';
 import { toast } from 'react-toastify';
-import { MdRemoveRedEye } from 'react-icons/md';
+import { MdRemoveRedEye, MdSort } from 'react-icons/md';
 import * as Fathom from 'fathom-client';
 import { useRouter } from 'next/router';
 import { ButtonOutline, Button } from '../../../components';
@@ -17,15 +17,32 @@ import { Goals } from '../../../utils/fathom';
 import { userSession } from '../../../utils/blockstack';
 
 export const PageTitleContainer = styled.div`
-  ${tw`mb-2 flex justify-between border-b border-solid border-grey pb-8`};
+  ${tw`mb-2 pb-4 lg:pb-8 flex flex-col-reverse lg:flex-row justify-between border-b border-solid border-grey`};
 `;
 
 export const PageTitle = styled.div`
-  ${tw`text-3xl`};
+  ${tw`mt-6 lg:mt-0 text-3xl`};
+`;
+
+const ButtonsContainer = styled.div`
+  ${tw`flex items-center justify-between`};
+`;
+
+const LogoContainer = styled.div`
+  ${tw`flex items-center lg:hidden`};
+`;
+
+const MobileMenuButton = styled.button`
+  ${tw``};
+`;
+
+const Logo = styled.img`
+  ${tw`ml-4`};
+  height: 35px;
 `;
 
 const VisitButton = styled(ButtonOutline)`
-  ${tw`mr-6 inline-flex`};
+  ${tw`mr-6 hidden lg:inline-flex`};
 `;
 
 interface DashboardPageTitleProps {
@@ -60,7 +77,13 @@ export const DashboardPageTitle = ({ title }: DashboardPageTitleProps) => {
   return (
     <PageTitleContainer>
       <PageTitle>{title}</PageTitle>
-      <div>
+      <ButtonsContainer>
+        <LogoContainer>
+          <MobileMenuButton>
+            <MdSort size={32} />
+          </MobileMenuButton>
+          <Logo src="/img/logo.png" alt="logo" />
+        </LogoContainer>
         <VisitButton
           size="large"
           as="a"
@@ -73,7 +96,7 @@ export const DashboardPageTitle = ({ title }: DashboardPageTitleProps) => {
           <Button onClick={handleCreateNewPrivateStory}>New story</Button>
         )}
         {loadingCreate && <Button disabled>creating new story ...</Button>}
-      </div>
+      </ButtonsContainer>
     </PageTitleContainer>
   );
 };

@@ -15,7 +15,7 @@ import { SubsetStory, BlockstackUser } from '../../../types';
 import { FullScreenDialog } from '../../../components';
 
 const StoryContainer = styled.div`
-  ${tw`py-8 border-b border-solid border-grey`};
+  ${tw`py-4 lg:py-8 border-b border-solid border-grey`};
 `;
 
 const StoryTitleContainer = styled.div`
