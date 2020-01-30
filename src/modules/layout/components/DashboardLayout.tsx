@@ -68,6 +68,14 @@ const MenuBottom = styled.ul`
   ${tw`list-none px-3`}
 `;
 
+const MenuArrowIcon = styled(MdKeyboardArrowDown)<{ isOpen: boolean }>`
+  ${props =>
+    props.isOpen &&
+    css`
+      transform: rotate(180deg);
+    `}
+`;
+
 const MenuBottomItem = styled.li`
   a {
     ${tw`py-2 px-3 block rounded text-sm text-grey-darker font-light`}
@@ -110,7 +118,11 @@ export const DashboardSidebar = () => {
         </Link>
         <MenuButtonName onClick={() => setIsLogoutOpen(!isLogoutOpen)}>
           {user.username}
-          <MdKeyboardArrowDown size={18} style={{ marginLeft: 8 }} />
+          <MenuArrowIcon
+            isOpen={isLogoutOpen}
+            size={18}
+            style={{ marginLeft: 8 }}
+          />
         </MenuButtonName>
         {isLogoutOpen && (
           <MenuButtonName logout onClick={handleLogout}>
