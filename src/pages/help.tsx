@@ -6,7 +6,7 @@ import {
   FaTelegramPlane,
   FaTwitter,
 } from 'react-icons/fa';
-import { AppBar, Footer } from '../modules/layout';
+import { Footer } from '../modules/layout';
 import { Button } from '../components';
 import { config } from '../config';
 import {

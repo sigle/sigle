@@ -9,21 +9,6 @@ export const Container = styled.div`
   max-width: 992px;
 `;
 
-export const Tabs = styled.div`
-  ${tw`flex border-b border-solid border-grey`};
-`;
-
-export const Tab = styled.div`
-  ${tw`py-2 cursor-pointer mr-6`};
-
-  &:hover {
-    ${tw`font-bold`};
-  }
-  &.active {
-    ${tw`font-bold`};
-  }
-`;
-
 export const Button = styled.button<{ href?: string; target?: string }>`
   ${tw`bg-pink text-white py-2 px-8 rounded no-underline cursor-pointer`};
   transition: background-color 0.25s;

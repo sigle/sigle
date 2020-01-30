@@ -1,14 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
 import tw from 'tailwind.macro';
-import { MdRemoveRedEye } from 'react-icons/md';
-import {
-  Container,
-  Button,
-  ButtonOutline,
-  Tabs,
-  Tab,
-} from '../../../components';
 import { StoryItem } from '../';
 import { SubsetStory, BlockstackUser } from '../../../types';
 import { DashboardPageContainer } from '../../layout/components/DashboardLayout';
