@@ -1,9 +1,8 @@
-import React, { useEffect, useState } from 'react';
-import { toast } from 'react-toastify';
-import { useRouter } from 'next/router';
+import React from 'react';
 import styled from 'styled-components';
 import tw from 'tailwind.macro';
-import { userSession } from '../../utils/blockstack';
+import { useRouter } from 'next/router';
+import { useAuth } from './AuthContext';
 
 const FullScreenLoadingContainer = styled.div`
   ${tw`w-full h-screen flex flex-col items-center justify-center`};
@@ -23,43 +22,10 @@ interface Props {
 
 export const Protected = ({ children }: Props) => {
   const router = useRouter();
-  const [state, setState] = useState({
-    loggedIn: false,
-    loggingIn: true,
-  });
+  const { user, loggingIn } = useAuth();
 
-  useEffect(() => {
-    if (userSession.isUserSignedIn()) {
-      setState({
-        loggedIn: true,
-        loggingIn: false,
-      });
-    } else if (userSession.isSignInPending()) {
-      userSession
-        .handlePendingSignIn()
-        .then(() => {
-          setState({
-            loggedIn: true,
-            loggingIn: false,
-          });
-        })
-        .catch((error: Error) => {
-          setState({
-            loggedIn: false,
-            loggingIn: false,
-          });
-          console.error(error);
-          toast.error(error.message);
-        });
-    } else if (state.loggingIn) {
-      setState({
-        loggedIn: false,
-        loggingIn: false,
-      });
-    }
-  }, []);
-
-  if (state.loggingIn) {
+  // We show a big loading screen while the user is signing in
+  if (loggingIn) {
     return (
       <FullScreenLoadingContainer>
         <img src="/static/img/logo.png" alt="Logo Sigle" />
@@ -68,7 +34,7 @@ export const Protected = ({ children }: Props) => {
     );
   }
 
-  if (!state.loggedIn) {
+  if (!user) {
     router.push('/login');
     return null;
   }

@@ -21,6 +21,7 @@ import '../lib/fonts.css';
 import '../generated/tailwind.css';
 import { config } from '../config';
 import { colors } from '../utils/colors';
+import { AuthProvider } from '../modules/auth/AuthContext';
 
 blockstackConfig.logLevel = 'info';
 
@@ -145,7 +146,9 @@ export default class MyApp extends App {
         />
         <GlobalStyle />
         <FathomTrack />
-        <Component {...modifiedPageProps} />
+        <AuthProvider>
+          <Component {...modifiedPageProps} />
+        </AuthProvider>
         <ToastContainer autoClose={3000} toastClassName="reactToastify" />
       </React.Fragment>
     );
