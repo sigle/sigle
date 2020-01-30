@@ -89,11 +89,7 @@ export const DashboardPageContainer = styled.div`
   ${tw`my-4 lg:my-8`};
 `;
 
-interface Props {
-  children: React.ReactNode;
-}
-
-export const DashboardLayout = ({ children }: Props) => {
+export const DashboardSidebar = () => {
   const router = useRouter();
   const [isLogoutOpen, setIsLogoutOpen] = useState(false);
 
@@ -105,58 +101,68 @@ export const DashboardLayout = ({ children }: Props) => {
   };
 
   return (
+    <SidebarContent>
+      <div>
+        <Link href="/" passHref>
+          <LogoContainer>
+            <Logo src="/img/logo.png" alt="logo" />
+          </LogoContainer>
+        </Link>
+        <MenuButtonName onClick={() => setIsLogoutOpen(!isLogoutOpen)}>
+          {user.username}
+          <MdKeyboardArrowDown size={18} style={{ marginLeft: 8 }} />
+        </MenuButtonName>
+        {isLogoutOpen && (
+          <MenuButtonName logout onClick={handleLogout}>
+            Logout
+          </MenuButtonName>
+        )}
+        <MenuTop>
+          <MenuTopItem active={router.route === '/'}>
+            <Link href="/" passHref>
+              <a>Drafts</a>
+            </Link>
+          </MenuTopItem>
+          <MenuTopItem active={router.route === '/published'}>
+            <Link href="/published" passHref>
+              <a>Published</a>
+            </Link>
+          </MenuTopItem>
+        </MenuTop>
+      </div>
+      <div>
+        <MenuBottom>
+          <MenuBottomItem>
+            <a href="https://app.sigle.io/sigleapp.id.blockstack">Blog</a>
+          </MenuBottomItem>
+          <MenuBottomItem>
+            <Link href="/help" passHref>
+              <a>Help</a>
+            </Link>
+          </MenuBottomItem>
+          <MenuBottomItem>
+            <a href="https://github.com/pradel/sigle/blob/master/CHANGELOG.md">
+              Changelog
+            </a>
+          </MenuBottomItem>
+        </MenuBottom>
+        <Link href="/support-us" passHref>
+          <SupportButton>Support us</SupportButton>
+        </Link>
+      </div>
+    </SidebarContent>
+  );
+};
+
+interface Props {
+  children: React.ReactNode;
+}
+
+export const DashboardLayout = ({ children }: Props) => {
+  return (
     <Container>
       <Sidebar>
-        <SidebarContent>
-          <div>
-            <Link href="/" passHref>
-              <LogoContainer>
-                <Logo src="/img/logo.png" alt="logo" />
-              </LogoContainer>
-            </Link>
-            <MenuButtonName onClick={() => setIsLogoutOpen(!isLogoutOpen)}>
-              {user.username}
-              <MdKeyboardArrowDown size={18} style={{ marginLeft: 8 }} />
-            </MenuButtonName>
-            {isLogoutOpen && (
-              <MenuButtonName logout onClick={handleLogout}>
-                Logout
-              </MenuButtonName>
-            )}
-            <MenuTop>
-              <MenuTopItem active={router.route === '/'}>
-                <Link href="/" passHref>
-                  <a>Drafts</a>
-                </Link>
-              </MenuTopItem>
-              <MenuTopItem active={router.route === '/published'}>
-                <Link href="/published" passHref>
-                  <a>Published</a>
-                </Link>
-              </MenuTopItem>
-            </MenuTop>
-          </div>
-          <div>
-            <MenuBottom>
-              <MenuBottomItem>
-                <a href="https://app.sigle.io/sigleapp.id.blockstack">Blog</a>
-              </MenuBottomItem>
-              <MenuBottomItem>
-                <Link href="/help" passHref>
-                  <a>Help</a>
-                </Link>
-              </MenuBottomItem>
-              <MenuBottomItem>
-                <a href="https://github.com/pradel/sigle/blob/master/CHANGELOG.md">
-                  Changelog
-                </a>
-              </MenuBottomItem>
-            </MenuBottom>
-            <Link href="/support-us" passHref>
-              <SupportButton>Support us</SupportButton>
-            </Link>
-          </div>
-        </SidebarContent>
+        <DashboardSidebar />
       </Sidebar>
       <ContentContainer>
         <Content>{children}</Content>

@@ -6,9 +6,7 @@ import { Home } from '../modules/home';
 const HomePage = () => {
   return (
     <Protected>
-      <DashboardLayout>
-        <Home type="drafts" />
-      </DashboardLayout>
+      <Home type="drafts" />
     </Protected>
   );
 };

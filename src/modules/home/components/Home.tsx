@@ -3,7 +3,10 @@ import styled from 'styled-components';
 import tw from 'tailwind.macro';
 import { StoryItem } from '../';
 import { SubsetStory, BlockstackUser } from '../../../types';
-import { DashboardPageContainer } from '../../layout/components/DashboardLayout';
+import {
+  DashboardPageContainer,
+  DashboardLayout,
+} from '../../layout/components/DashboardLayout';
 import { DashboardPageTitle } from '../../layout/components/DashboardHeader';
 
 export const IlluContainer = styled.div`
@@ -34,30 +37,32 @@ export const Home = ({
   const showIllu = !loading && (!stories || stories.length === 0);
 
   return (
-    <DashboardPageContainer>
-      <DashboardPageTitle
-        title={
-          selectedTab === 'published' ? 'Published stories' : 'Drafts stories'
-        }
-      />
+    <DashboardLayout>
+      <DashboardPageContainer>
+        <DashboardPageTitle
+          title={
+            selectedTab === 'published' ? 'Published stories' : 'Drafts stories'
+          }
+        />
 
-      {showIllu && (
-        <IlluContainer>
-          <Illu src="/static/img/three.png" alt="Three" />
-          <p>Shoot the "new story" button to start.</p>
-        </IlluContainer>
-      )}
+        {showIllu && (
+          <IlluContainer>
+            <Illu src="/static/img/three.png" alt="Three" />
+            <p>Shoot the "new story" button to start.</p>
+          </IlluContainer>
+        )}
 
-      {stories &&
-        stories.map(story => (
-          <StoryItem
-            key={story.id}
-            user={user}
-            story={story}
-            type={selectedTab === 'published' ? 'public' : 'private'}
-            refetchStoriesLists={refetchStoriesLists}
-          />
-        ))}
-    </DashboardPageContainer>
+        {stories &&
+          stories.map(story => (
+            <StoryItem
+              key={story.id}
+              user={user}
+              story={story}
+              type={selectedTab === 'published' ? 'public' : 'private'}
+              refetchStoriesLists={refetchStoriesLists}
+            />
+          ))}
+      </DashboardPageContainer>
+    </DashboardLayout>
   );
 };

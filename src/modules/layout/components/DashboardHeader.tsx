@@ -5,6 +5,7 @@ import { toast } from 'react-toastify';
 import { MdRemoveRedEye, MdSort } from 'react-icons/md';
 import * as Fathom from 'fathom-client';
 import { useRouter } from 'next/router';
+import { DialogContent, DialogOverlay } from '@reach/dialog';
 import { ButtonOutline, Button } from '../../../components';
 import {
   createNewEmptyStory,
@@ -15,6 +16,7 @@ import {
 } from '../../../utils';
 import { Goals } from '../../../utils/fathom';
 import { userSession } from '../../../utils/blockstack';
+import { DashboardSidebar } from './DashboardLayout';
 
 export const PageTitleContainer = styled.div`
   ${tw`mb-2 pb-4 lg:pb-8 flex flex-col-reverse lg:flex-row justify-between border-b border-solid border-grey`};
@@ -45,12 +47,21 @@ const VisitButton = styled(ButtonOutline)`
   ${tw`mr-6 hidden lg:inline-flex`};
 `;
 
+/**
+ * Mobile menu
+ */
+
+const StyledDialogContent = styled(DialogContent)`
+  ${tw`fixed top-0 left-0 bottom-0 overflow-y-auto w-64 m-0 p-0 bg-grey-light`};
+`;
+
 interface DashboardPageTitleProps {
   title?: string;
 }
 
 export const DashboardPageTitle = ({ title }: DashboardPageTitleProps) => {
   const router = useRouter();
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [loadingCreate, setLoadingCreate] = useState(false);
   const user = userSession.loadUserData();
 
@@ -74,29 +85,40 @@ export const DashboardPageTitle = ({ title }: DashboardPageTitleProps) => {
     }
   };
 
+  const handleCloseMobileMenu = () => setMobileMenuOpen(false);
+
   return (
-    <PageTitleContainer>
-      <PageTitle>{title}</PageTitle>
-      <ButtonsContainer>
-        <LogoContainer>
-          <MobileMenuButton>
-            <MdSort size={32} />
-          </MobileMenuButton>
-          <Logo src="/img/logo.png" alt="logo" />
-        </LogoContainer>
-        <VisitButton
-          size="large"
-          as="a"
-          href={`/${user.username}`}
-          target="_blank"
-        >
-          Visit my blog <MdRemoveRedEye size={18} style={{ marginLeft: 8 }} />
-        </VisitButton>
-        {!loadingCreate && (
-          <Button onClick={handleCreateNewPrivateStory}>New story</Button>
-        )}
-        {loadingCreate && <Button disabled>creating new story ...</Button>}
-      </ButtonsContainer>
-    </PageTitleContainer>
+    <React.Fragment>
+      <DialogOverlay isOpen={mobileMenuOpen} onDismiss={handleCloseMobileMenu}>
+        <StyledDialogContent aria-label="Mobile menu">
+          <DashboardSidebar />
+        </StyledDialogContent>
+      </DialogOverlay>
+      <PageTitleContainer>
+        <PageTitle>{title}</PageTitle>
+        <ButtonsContainer>
+          <LogoContainer>
+            <MobileMenuButton
+              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            >
+              <MdSort size={32} />
+            </MobileMenuButton>
+            <Logo src="/img/logo.png" alt="logo" />
+          </LogoContainer>
+          <VisitButton
+            size="large"
+            as="a"
+            href={`/${user.username}`}
+            target="_blank"
+          >
+            Visit my blog <MdRemoveRedEye size={18} style={{ marginLeft: 8 }} />
+          </VisitButton>
+          {!loadingCreate && (
+            <Button onClick={handleCreateNewPrivateStory}>New story</Button>
+          )}
+          {loadingCreate && <Button disabled>creating new story ...</Button>}
+        </ButtonsContainer>
+      </PageTitleContainer>
+    </React.Fragment>
   );
 };
