@@ -1,25 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import { toast } from 'react-toastify';
-import * as Fathom from 'fathom-client';
 import { Home as Component } from '../components/Home';
-import {
-  createNewEmptyStory,
-  saveStoryFile,
-  convertStoryToSubsetStory,
-  getStoriesFile,
-  saveStoriesFile,
-} from '../../../utils';
+import { getStoriesFile } from '../../../utils';
 import { userSession } from '../../../utils/blockstack';
-import { StoryFile, SubsetStory, BlockstackUser } from '../../../types';
-import { useRouter } from 'next/router';
-import { Goals } from '../../../utils/fathom';
+import { SubsetStory } from '../../../types';
 
 interface HomeProps {
   type: 'published' | 'drafts';
 }
 
 export const Home = ({ type }: HomeProps) => {
-  const router = useRouter();
+  const [loading, setLoading] = useState(true);
   const [stories, setStories] = useState<SubsetStory[] | null>(null);
 
   const user = userSession.loadUserData();
@@ -33,6 +24,8 @@ export const Home = ({ type }: HomeProps) => {
     } catch (error) {
       console.error(error);
       toast.error(error.message);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -45,6 +38,7 @@ export const Home = ({ type }: HomeProps) => {
       selectedTab={type}
       user={user}
       stories={stories}
+      loading={loading}
       refetchStoriesLists={loadStoryFile}
     />
   );

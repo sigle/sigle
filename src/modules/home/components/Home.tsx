@@ -28,6 +28,7 @@ interface Props {
   selectedTab: 'published' | 'drafts';
   user: BlockstackUser;
   stories: SubsetStory[] | null;
+  loading: boolean;
   refetchStoriesLists: () => Promise<void>;
 }
 
@@ -35,9 +36,10 @@ export const Home = ({
   selectedTab,
   user,
   stories,
+  loading,
   refetchStoriesLists,
 }: Props) => {
-  const showIllu = !stories || stories.length === 0;
+  const showIllu = !loading && (!stories || stories.length === 0);
 
   return (
     <DashboardPageContainer>
