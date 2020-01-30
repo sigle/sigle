@@ -80,6 +80,7 @@ const SupportUsPage = () => {
             <a
               className="bmc-button"
               target="_blank"
+              rel="noopener noreferrer"
               href="https://www.buymeacoffee.com/sigle"
             >
               <img
