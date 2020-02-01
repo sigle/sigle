@@ -6,7 +6,6 @@ import {
   FaTelegramPlane,
   FaTwitter,
 } from 'react-icons/fa';
-import { Footer } from '../modules/layout';
 import { Button } from '../components';
 import { config } from '../config';
 import {
@@ -159,8 +158,6 @@ const HelpPage = () => {
             </StyledLink>
           </HelpMessageSocial>
         </DashboardPageContainer>
-
-        <Footer />
       </DashboardLayout>
     </Protected>
   );
