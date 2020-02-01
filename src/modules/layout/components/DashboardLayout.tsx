@@ -34,11 +34,11 @@ const Content = styled.div`
 `;
 
 const LogoContainer = styled.a`
-  ${tw`py-8 flex items-center justify-center`};
+  ${tw`py-6 flex items-center justify-center`};
 `;
 
 const Logo = styled.img`
-  height: 55px;
+  height: 45px;
 `;
 
 const MenuButtonName = styled.button<{ logout?: boolean }>`
