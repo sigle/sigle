@@ -21,12 +21,12 @@ const BuymeacoffeeButton = styled.div`
     width: 35px;
     padding: 7px 10px 7px 10px !important;
     line-height: 35px !important;
-    height: 51px !important;
-    min-width: 217px !important;
+    min-width: 200px !important;
     text-decoration: none !important;
     display: inline-flex !important;
+    align-items: center;
     color: #ffffff !important;
-    background-color: #ff5f5f !important;
+    background-color: #ff576a !important;
     border-radius: 5px !important;
     border: 1px solid transparent !important;
     padding: 7px 10px 7px 10px !important;
@@ -44,6 +44,9 @@ const BuymeacoffeeButton = styled.div`
     box-shadow: 0px 1px 2px 2px rgba(190, 190, 190, 0.5) !important;
     opacity: 0.85 !important;
     color: #ffffff !important;
+  }
+  .bmc-button img {
+    height: 30px;
   }
 `;
 
@@ -87,7 +90,7 @@ const SupportUsPage = () => {
                 src="https://cdn.buymeacoffee.com/buttons/bmc-new-btn-logo.svg"
                 alt="Support us"
               />
-              <span style={{ marginLeft: 15, fontSize: 28 }}>Support us</span>
+              <span style={{ marginLeft: 15, fontSize: 18 }}>Support us</span>
             </a>
           </BuymeacoffeeButton>
         </DashboardPageContainer>
