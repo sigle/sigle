@@ -1,22 +1,30 @@
-## January 18, 2019
+## February 1, 2020
+
+### New feature
+
+**🖼️ Dashboard redesign**: The new dashboard is now live, this redesign is essential for us to be ready for what will come next ✍️.
+
+https://twitter.com/sigleapp/status/1223657439540785152
+
+## January 18, 2020
 
 ### Improvements
 
 - The confirm dialog now have a smooth little animation.
 
-## January 17, 2019
+## January 17, 2020
 
 ### Improvements
 
 - We revamped the buttons in the story list and editor.
 
-## January 9, 2019
+## January 9, 2020
 
 ### Improvements
 
 - The fonts are now self-hosted, we don't rely on google fonts anymore.
 
-## January 6, 2019
+## January 6, 2020
 
 ### Improvements
 
