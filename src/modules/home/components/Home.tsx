@@ -24,6 +24,10 @@ const HelpDivider = styled.div`
   ${tw`border-b border-solid border-grey w-full py-4`};
 `;
 
+const HelpText = styled.p`
+  ${tw`mt-4`};
+`;
+
 const HelpContainer = styled.div`
   ${tw`flex flex-wrap -mx-4 mt-4`};
 `;
@@ -35,6 +39,10 @@ const HelpCardContainer = styled.div`
 
 const HelpCard = styled.a`
   ${tw`w-full relative rounded bg-grey-light`};
+  transition: background-color 0.25s;
+  &:hover {
+    background-color: rgba(0, 0, 0, 0.2);
+  }
 `;
 
 const HelpCardImg = styled.img`
@@ -88,6 +96,7 @@ export const Home = ({
               <p>Shoot the "new story" button to start.</p>
             </IlluContainer>
             <HelpDivider />
+            <HelpText>A bit lost? We show you how to get started.</HelpText>
             <HelpContainer>
               <HelpCardContainer>
                 <HelpCard href="https://github.com/pradel/sigle/blob/master/CHANGELOG.md">
