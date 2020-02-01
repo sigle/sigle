@@ -19,15 +19,15 @@ const StoryContainer = styled.div`
 `;
 
 const StoryTitleContainer = styled.div`
-  ${tw`flex justify-between`};
+  ${tw`flex`};
 `;
 
 const StoryTitleIcon = styled(MdMoreHoriz)`
-  ${tw`text-grey-dark`};
+  ${tw`text-grey-darker`};
 `;
 
 const StoryTitle = styled.h3`
-  ${tw`flex text-xl no-underline text-black`};
+  ${tw`flex text-xl no-underline text-black mr-2`};
 `;
 
 const StoryDate = styled.p`
