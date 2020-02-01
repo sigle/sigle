@@ -42,12 +42,15 @@ const Logo = styled.img`
 `;
 
 const MenuButtonName = styled.button<{ logout?: boolean }>`
-  ${tw`py-3 flex items-center justify-center bg-black text-white w-full`};
+  ${tw`py-3 flex items-center justify-center bg-black text-white w-full truncate px-4`};
   ${props =>
     props.logout &&
     css`
       ${tw`bg-white text-pink`}
     `}
+  span {
+    ${tw`truncate`};
+  }
 `;
 
 const MenuTop = styled.ul`
@@ -139,7 +142,7 @@ export const DashboardSidebar = () => {
           </LogoContainer>
         </Link>
         <MenuButtonName onClick={() => setIsLogoutOpen(!isLogoutOpen)}>
-          {user.username}
+          <span>{user.username}</span>
           <MenuArrowIcon
             isOpen={isLogoutOpen}
             size={18}
