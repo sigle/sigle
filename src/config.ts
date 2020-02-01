@@ -9,6 +9,7 @@ export const config = {
   telegramUrl: 'https://t.me/sigleapp',
   facebookUrl: 'https://www.facebook.com/sigleapp',
   messengerUrl: 'https://m.me/sigleapp',
+  documentationUrl: 'https://docs.sigle.io',
   email: 'sigle@protonmail.com',
   // This reflect the tailwindcss config
   breakpoints: {

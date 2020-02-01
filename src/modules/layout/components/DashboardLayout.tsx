@@ -5,6 +5,7 @@ import tw from 'tailwind.macro';
 import Link from 'next/link';
 import { MdKeyboardArrowDown } from 'react-icons/md';
 import { userSession } from '../../../utils/blockstack';
+import { config } from '../../../config';
 
 const Container = styled.div`
   ${tw`w-full h-screen flex`}
@@ -144,6 +145,9 @@ export const DashboardSidebar = () => {
       <div>
         <MenuBottom>
           <MenuBottomItem>
+            <a href={config.documentationUrl}>Documentation</a>
+          </MenuBottomItem>
+          <MenuBottomItem>
             <a href="https://app.sigle.io/sigleapp.id.blockstack">Blog</a>
           </MenuBottomItem>
           <MenuBottomItem>
@@ -153,7 +157,7 @@ export const DashboardSidebar = () => {
           </MenuBottomItem>
           <MenuBottomItem>
             <a href="https://github.com/pradel/sigle/blob/master/CHANGELOG.md">
-              Changelog
+              What's new?
             </a>
           </MenuBottomItem>
         </MenuBottom>

@@ -53,13 +53,8 @@ const HelpCardImg = styled.img`
 `;
 
 const HelpCardCaption = styled.div`
-  ${tw`absolute bottom-0 p-4 text-white w-full`};
-  background: rgb(255, 255, 255);
-  background: linear-gradient(
-    180deg,
-    rgba(255, 255, 255, 0) 0%,
-    rgba(0, 0, 0, 0.6) 100%
-  );
+  ${tw`absolute bottom-0 p-4 text-white w-full rounded-b`};
+  background: rgba(0, 0, 0, 0.4);
 `;
 
 const HelpCardCaptionTitle = styled.h5`
@@ -102,7 +97,7 @@ export const Home = ({
             <HelpText>A bit lost? We show you how to get started.</HelpText>
             <HelpContainer>
               <HelpCardContainer>
-                <HelpCard href="https://github.com/pradel/sigle/blob/master/CHANGELOG.md">
+                <HelpCard href={config.documentationUrl}>
                   <HelpCardImg src="/static/img/work.png" />
                   <HelpCardCaption>
                     <HelpCardCaptionTitle>Documentation</HelpCardCaptionTitle>
@@ -114,7 +109,7 @@ export const Home = ({
                 <HelpCard href="https://github.com/pradel/sigle/blob/master/CHANGELOG.md">
                   <HelpCardImg src="/static/img/data.png" />
                   <HelpCardCaption>
-                    <HelpCardCaptionTitle>Changelog</HelpCardCaptionTitle>
+                    <HelpCardCaptionTitle>What's new?</HelpCardCaptionTitle>
                     <p>List product releases and changes</p>
                   </HelpCardCaption>
                 </HelpCard>
