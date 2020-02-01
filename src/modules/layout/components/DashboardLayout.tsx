@@ -174,10 +174,22 @@ export const DashboardSidebar = () => {
       <div>
         <MenuBottom>
           <MenuBottomItem>
-            <a href={config.documentationUrl}>Documentation</a>
+            <a
+              href={config.documentationUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Documentation
+            </a>
           </MenuBottomItem>
           <MenuBottomItem>
-            <a href="https://app.sigle.io/sigleapp.id.blockstack">Blog</a>
+            <a
+              href="https://app.sigle.io/sigleapp.id.blockstack"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Blog
+            </a>
           </MenuBottomItem>
           <MenuBottomItem>
             <Link href="/help" passHref>
@@ -185,7 +197,11 @@ export const DashboardSidebar = () => {
             </Link>
           </MenuBottomItem>
           <MenuBottomItem>
-            <a href="https://github.com/pradel/sigle/blob/master/CHANGELOG.md">
+            <a
+              href="https://github.com/pradel/sigle/blob/master/CHANGELOG.md"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
               What's new?
             </a>
           </MenuBottomItem>
