@@ -9,6 +9,7 @@ import {
   DashboardLayout,
 } from '../../layout/components/DashboardLayout';
 import { DashboardPageTitle } from '../../layout/components/DashboardHeader';
+import { config } from '../../../config';
 
 const IlluContainer = styled.div`
   ${tw`flex flex-col items-center justify-center mt-8`};
@@ -25,7 +26,7 @@ const HelpDivider = styled.div`
 `;
 
 const HelpText = styled.p`
-  ${tw`mt-4`};
+  ${tw`mt-8`};
 `;
 
 const HelpContainer = styled.div`
@@ -33,8 +34,10 @@ const HelpContainer = styled.div`
 `;
 
 const HelpCardContainer = styled.div`
-  ${tw`w-1/2 md:w-1/3 xl:w-1/4 flex p-4`};
-  height: 20rem;
+  ${tw`w-1/2 md:w-1/3 xl:w-1/4 flex p-4 h-64`};
+  @media (min-width: ${config.breakpoints.md}px) {
+    height: 20rem;
+  }
 `;
 
 const HelpCard = styled.a`
