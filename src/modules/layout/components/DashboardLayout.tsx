@@ -96,6 +96,10 @@ const MenuBottomItem = styled.li`
 
 const SupportButton = styled.a`
   ${tw`py-2 pr-2 pl-6 mt-4 flex items-center justify-start bg-pink text-white`};
+  transition: background-color 0.25s;
+  &:hover {
+    background-color: #db3159;
+  }
 `;
 
 const MenuBottomItemSocial = styled.li`
