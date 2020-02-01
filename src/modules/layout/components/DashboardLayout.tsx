@@ -24,7 +24,6 @@ const ContentContainer = styled.div`
 
 const Content = styled.div`
   ${tw`w-full`}
-  max-width: 1100px;
 `;
 
 const LogoContainer = styled.a`
