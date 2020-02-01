@@ -4,6 +4,12 @@ import styled, { css } from 'styled-components';
 import tw from 'tailwind.macro';
 import Link from 'next/link';
 import { MdKeyboardArrowDown } from 'react-icons/md';
+import {
+  FaTwitter,
+  FaGithub,
+  FaTelegramPlane,
+  FaFacebookF,
+} from 'react-icons/fa';
 import { userSession } from '../../../utils/blockstack';
 import { config } from '../../../config';
 
@@ -89,6 +95,22 @@ const SupportButton = styled.a`
   ${tw`py-2 pr-2 pl-6 mt-4 flex items-center justify-start bg-pink text-white`};
 `;
 
+const MenuBottomItemSocial = styled.li`
+  ${tw`py-2 flex items-center px-3`}
+  a {
+    ${tw`pr-3`}
+  }
+`;
+
+const StyledLink = styled.a`
+  ${tw`text-sm text-grey-darker no-underline cursor-pointer`};
+  :hover {
+    ${tw`text-black`};
+  }
+`;
+
+const iconSize = 14;
+
 /**
  * Page utilities
  */
@@ -160,6 +182,20 @@ export const DashboardSidebar = () => {
               What's new?
             </a>
           </MenuBottomItem>
+          <MenuBottomItemSocial>
+            <StyledLink href={config.twitterUrl} target="_blank">
+              <FaTwitter size={iconSize} className="icon" />
+            </StyledLink>
+            <StyledLink href={config.facebookUrl} target="_blank">
+              <FaFacebookF size={iconSize} className="icon" />
+            </StyledLink>
+            <StyledLink href={config.telegramUrl} target="_blank">
+              <FaTelegramPlane size={iconSize} className="icon" />
+            </StyledLink>
+            <StyledLink href={config.githubUrl} target="_blank">
+              <FaGithub size={iconSize} className="icon" />
+            </StyledLink>
+          </MenuBottomItemSocial>
         </MenuBottom>
         <Link href="/support-us" passHref>
           <SupportButton>Support us</SupportButton>
