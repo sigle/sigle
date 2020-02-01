@@ -15,19 +15,19 @@ import { SubsetStory, BlockstackUser } from '../../../types';
 import { FullScreenDialog } from '../../../components';
 
 const StoryContainer = styled.div`
-  ${tw`py-8 border-b border-solid border-grey-light`};
+  ${tw`py-4 lg:py-8 border-b border-solid border-grey lg:flex`};
 `;
 
 const StoryTitleContainer = styled.div`
-  ${tw`flex justify-between`};
+  ${tw`flex`};
 `;
 
 const StoryTitleIcon = styled(MdMoreHoriz)`
-  ${tw`text-grey-dark`};
+  ${tw`text-grey-darker`};
 `;
 
 const StoryTitle = styled.h3`
-  ${tw`flex text-2xl font-bold no-underline text-black`};
+  ${tw`flex text-xl no-underline text-black mr-3`};
 `;
 
 const StoryDate = styled.p`
@@ -36,6 +36,10 @@ const StoryDate = styled.p`
 
 const StoryText = styled.p`
   ${tw`mt-4 text-grey-dark`};
+`;
+
+const StoryImage = styled.div`
+  ${tw`hidden xl:block bg-no-repeat bg-cover bg-center h-32 w-56 ml-8`};
 `;
 
 interface Props {
@@ -64,46 +68,63 @@ export const StoryItem = ({
   return (
     <React.Fragment>
       <StoryContainer>
-        <StoryTitleContainer>
-          <StoryTitle>
+        <div>
+          <StoryTitleContainer>
+            <StoryTitle>
+              <Link
+                href="/stories/[storyId]"
+                as={`/stories/${story.id}`}
+                passHref
+              >
+                <a>{story.title}</a>
+              </Link>
+            </StoryTitle>
+            <Menu>
+              <MenuButton>
+                <StoryTitleIcon size={22} />
+              </MenuButton>
+              <MenuList>
+                {type === 'public' && (
+                  <MenuLink
+                    as="a"
+                    href={`/${user.username}/${story.id}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    View my story
+                  </MenuLink>
+                )}
+                <MenuItem onSelect={onEdit}>Edit</MenuItem>
+                <MenuItem onSelect={onDelete}>Delete</MenuItem>
+              </MenuList>
+            </Menu>
+          </StoryTitleContainer>
+          <StoryDate>
             <Link
               href="/stories/[storyId]"
               as={`/stories/${story.id}`}
               passHref
             >
-              <a>{story.title}</a>
+              <a>{format(story.createdAt, 'HH:mm dd MMMM yyyy')}</a>
             </Link>
-          </StoryTitle>
-          <Menu>
-            <MenuButton>
-              <StoryTitleIcon size={22} />
-            </MenuButton>
-            <MenuList>
-              {type === 'public' && (
-                <MenuLink
-                  as="a"
-                  href={`/${user.username}/${story.id}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  View my story
-                </MenuLink>
-              )}
-              <MenuItem onSelect={onEdit}>Edit</MenuItem>
-              <MenuItem onSelect={onDelete}>Delete</MenuItem>
-            </MenuList>
-          </Menu>
-        </StoryTitleContainer>
-        <StoryDate>
-          <Link href="/stories/[storyId]" as={`/stories/${story.id}`} passHref>
-            <a>{format(story.createdAt, 'HH:mm dd MMMM yyyy')}</a>
-          </Link>
-        </StoryDate>
-        <StoryText>
-          <Link href="/stories/[storyId]" as={`/stories/${story.id}`} passHref>
-            <a>{story.content}</a>
-          </Link>
-        </StoryText>
+          </StoryDate>
+          <StoryText>
+            <Link
+              href="/stories/[storyId]"
+              as={`/stories/${story.id}`}
+              passHref
+            >
+              <a>{story.content}</a>
+            </Link>
+          </StoryText>
+        </div>
+        {story.coverImage && (
+          <div>
+            <StoryImage
+              style={{ backgroundImage: `url('${story.coverImage}')` }}
+            />
+          </div>
+        )}
       </StoryContainer>
 
       <FullScreenDialog

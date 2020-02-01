@@ -5,7 +5,7 @@ import { Home } from '../modules/home';
 const HomePage = () => {
   return (
     <Protected>
-      <Home type="drafts" />
+      <Home type="published" />
     </Protected>
   );
 };
