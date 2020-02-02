@@ -14,6 +14,7 @@ import {
 import { userSession } from '../../../utils/blockstack';
 import { config } from '../../../config';
 
+// We have to use react-div-100vh instead of css 100vh because of a bug in IOS
 const Container = styled(Div100vh)`
   ${tw`w-full flex`}
 `;
