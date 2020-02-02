@@ -1,3 +1,9 @@
+## February 2, 2020
+
+### Bug fixes
+
+- Fix save button on mobile
+
 ## February 1, 2020
 
 ### New feature
