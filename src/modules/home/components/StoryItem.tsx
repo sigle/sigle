@@ -68,7 +68,7 @@ export const StoryItem = ({
   return (
     <React.Fragment>
       <StoryContainer>
-        <div>
+        <div style={{ flex: 1 }}>
           <StoryTitleContainer>
             <StoryTitle>
               <Link
