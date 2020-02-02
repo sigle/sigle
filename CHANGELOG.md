@@ -3,6 +3,7 @@
 ### Bug fixes
 
 - Fix save button on mobile
+- On IOS fix the left column height on Ipad
 
 ## February 1, 2020
 
