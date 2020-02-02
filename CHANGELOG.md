@@ -1,5 +1,9 @@
 ## February 2, 2020
 
+### Improvements
+
+- Bring back total amount of drafts and published stories
+
 ### Bug fixes
 
 - Fix save button on mobile

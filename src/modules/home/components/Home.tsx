@@ -77,13 +77,16 @@ export const Home = ({
   refetchStoriesLists,
 }: Props) => {
   const showIllu = !loading && (!stories || stories.length === 0);
+  const nbStoriesLabel = loading ? '...' : stories ? stories.length : 0;
 
   return (
     <DashboardLayout>
       <DashboardPageContainer>
         <DashboardPageTitle
           title={
-            selectedTab === 'published' ? 'Published stories' : 'Drafts stories'
+            selectedTab === 'published'
+              ? `Published stories (${nbStoriesLabel})`
+              : `Drafts stories (${nbStoriesLabel})`
           }
         />
 
