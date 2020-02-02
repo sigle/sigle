@@ -1,23 +1,17 @@
 import React from 'react';
 import styled from 'styled-components';
 import tw from 'tailwind.macro';
-import { Container, Button, Tabs, Tab } from '../../../components';
+import Link from 'next/link';
 import { StoryItem } from '../';
 import { SubsetStory, BlockstackUser } from '../../../types';
+import {
+  DashboardPageContainer,
+  DashboardLayout,
+} from '../../layout/components/DashboardLayout';
+import { DashboardPageTitle } from '../../layout/components/DashboardHeader';
+import { config } from '../../../config';
 
-export const PageContainer = styled(Container)`
-  ${tw`mt-8`};
-`;
-
-export const PageTitleContainer = styled.div`
-  ${tw`mb-8 flex justify-between`};
-`;
-
-export const PageTitle = styled.div`
-  ${tw`text-3xl`};
-`;
-
-export const IlluContainer = styled.div`
+const IlluContainer = styled.div`
   ${tw`flex flex-col items-center justify-center mt-8`};
 `;
 
@@ -27,92 +21,137 @@ const Illu = styled.img`
   max-width: 100%;
 `;
 
+const HelpDivider = styled.div`
+  ${tw`border-b border-solid border-grey w-full py-4`};
+`;
+
+const HelpText = styled.p`
+  ${tw`mt-8`};
+`;
+
+const HelpContainer = styled.div`
+  ${tw`flex flex-wrap -mx-4 mt-4`};
+`;
+
+const HelpCardContainer = styled.div`
+  ${tw`w-1/2 md:w-1/3 xl:w-1/4 flex p-4 h-64`};
+  @media (min-width: ${config.breakpoints.md}px) {
+    height: 20rem;
+  }
+`;
+
+const HelpCard = styled.a`
+  ${tw`w-full relative rounded bg-grey-light`};
+  transition: background-color 0.25s;
+  &:hover {
+    background-color: rgba(0, 0, 0, 0.2);
+  }
+`;
+
+const HelpCardImg = styled.img`
+  ${tw`p-4 m-auto max-h-full`};
+`;
+
+const HelpCardCaption = styled.div`
+  ${tw`absolute bottom-0 p-4 text-white w-full rounded-b`};
+  background: rgba(0, 0, 0, 0.4);
+`;
+
+const HelpCardCaptionTitle = styled.h5`
+  ${tw`font-bold mb-1`};
+`;
+
 interface Props {
   selectedTab: 'published' | 'drafts';
-  onSelectTab: (tab: 'published' | 'drafts') => void;
   user: BlockstackUser;
-  loadingCreate: boolean;
-  onCreateNewPrivateStory: () => void;
-  privateStories: SubsetStory[] | null;
-  publicStories: SubsetStory[] | null;
-  onPublish: () => void;
-  onUnPublish: () => void;
+  stories: SubsetStory[] | null;
+  loading: boolean;
+  refetchStoriesLists: () => Promise<void>;
 }
 
 export const Home = ({
   selectedTab,
-  onSelectTab,
   user,
-  loadingCreate,
-  onCreateNewPrivateStory,
-  privateStories,
-  publicStories,
-  onPublish,
-  onUnPublish,
+  stories,
+  loading,
+  refetchStoriesLists,
 }: Props) => {
-  const showIllu =
-    (selectedTab === 'drafts' &&
-      (!privateStories || privateStories.length === 0)) ||
-    (selectedTab === 'published' &&
-      (!publicStories || publicStories.length === 0));
+  const showIllu = !loading && (!stories || stories.length === 0);
+  const nbStoriesLabel = loading ? '...' : stories ? stories.length : 0;
 
   return (
-    <PageContainer>
-      <PageTitleContainer>
-        <PageTitle>My stories</PageTitle>
-        {!loadingCreate && (
-          <Button onClick={onCreateNewPrivateStory}>New story</Button>
+    <DashboardLayout>
+      <DashboardPageContainer>
+        <DashboardPageTitle
+          title={
+            selectedTab === 'published'
+              ? `Published stories (${nbStoriesLabel})`
+              : `Drafts stories (${nbStoriesLabel})`
+          }
+        />
+
+        {showIllu && (
+          <React.Fragment>
+            <IlluContainer>
+              <Illu src="/static/img/three.png" alt="Three" />
+              <p>Shoot the "new story" button to start.</p>
+            </IlluContainer>
+            <HelpDivider />
+            <HelpText>A bit lost? We show you how to get started.</HelpText>
+            <HelpContainer>
+              <HelpCardContainer>
+                <HelpCard href={config.documentationUrl}>
+                  <HelpCardImg src="/static/img/work.png" />
+                  <HelpCardCaption>
+                    <HelpCardCaptionTitle>Documentation</HelpCardCaptionTitle>
+                    <p>Step by step instructions</p>
+                  </HelpCardCaption>
+                </HelpCard>
+              </HelpCardContainer>
+              <HelpCardContainer>
+                <HelpCard href="https://github.com/pradel/sigle/blob/master/CHANGELOG.md">
+                  <HelpCardImg src="/static/img/data.png" />
+                  <HelpCardCaption>
+                    <HelpCardCaptionTitle>What's new?</HelpCardCaptionTitle>
+                    <p>List product releases and changes</p>
+                  </HelpCardCaption>
+                </HelpCard>
+              </HelpCardContainer>
+              <HelpCardContainer>
+                <HelpCard href="https://app.sigle.io/sigleapp.id.blockstack">
+                  <HelpCardImg src="/static/img/albator.png" />
+                  <HelpCardCaption>
+                    <HelpCardCaptionTitle>Blog</HelpCardCaptionTitle>
+                    <p>Visit our blog to see the news</p>
+                  </HelpCardCaption>
+                </HelpCard>
+              </HelpCardContainer>
+              <HelpCardContainer>
+                <Link href="/help" passHref>
+                  <HelpCard>
+                    <HelpCardImg src="/static/img/support.png" />
+                    <HelpCardCaption>
+                      <HelpCardCaptionTitle>Help</HelpCardCaptionTitle>
+                      <p>Get in touch with us</p>
+                    </HelpCardCaption>
+                  </HelpCard>
+                </Link>
+              </HelpCardContainer>
+            </HelpContainer>
+          </React.Fragment>
         )}
-        {loadingCreate && <Button disabled>creating new story ...</Button>}
-      </PageTitleContainer>
 
-      <Tabs>
-        <Tab
-          className={selectedTab === 'drafts' ? 'active' : ''}
-          onClick={() => onSelectTab('drafts')}
-        >
-          Drafts ({privateStories ? privateStories.length : '...'})
-        </Tab>
-        <Tab
-          className={selectedTab === 'published' ? 'active' : ''}
-          onClick={() => onSelectTab('published')}
-        >
-          Published ({publicStories ? publicStories.length : '...'})
-        </Tab>
-      </Tabs>
-
-      {showIllu && (
-        <IlluContainer>
-          <Illu src="/static/img/three.png" alt="Three" />
-          <p>Shoot the "new story" button to start.</p>
-        </IlluContainer>
-      )}
-
-      {selectedTab === 'drafts' &&
-        privateStories &&
-        privateStories.map(story => (
-          <StoryItem
-            key={story.id}
-            user={user}
-            story={story}
-            type="private"
-            onPublish={onPublish}
-            onUnPublish={onUnPublish}
-          />
-        ))}
-
-      {selectedTab === 'published' &&
-        publicStories &&
-        publicStories.map(story => (
-          <StoryItem
-            key={story.id}
-            user={user}
-            story={story}
-            type="public"
-            onPublish={onPublish}
-            onUnPublish={onUnPublish}
-          />
-        ))}
-    </PageContainer>
+        {stories &&
+          stories.map(story => (
+            <StoryItem
+              key={story.id}
+              user={user}
+              story={story}
+              type={selectedTab === 'published' ? 'public' : 'private'}
+              refetchStoriesLists={refetchStoriesLists}
+            />
+          ))}
+      </DashboardPageContainer>
+    </DashboardLayout>
   );
 };

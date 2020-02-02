@@ -274,7 +274,10 @@ export const SlateEditorToolbar = ({
           </ButtonOutline>
         )}
         {!loadingSave && (
-          <ButtonOutline style={{ marginRight: 6 }} onClick={handleSave}>
+          <ButtonOutline
+            style={{ marginRight: 6 }}
+            onClick={() => handleSave()}
+          >
             Save
           </ButtonOutline>
         )}

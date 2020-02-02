@@ -1,7 +1,6 @@
 const dotenv = require('dotenv');
 const webpack = require('webpack');
 const withPlugins = require('next-compose-plugins');
-const withCSS = require('@zeit/next-css');
 const withBundleAnalyzer = require('@zeit/next-bundle-analyzer');
 const BundleAnalyzerPluginReporter = require('@bundle-analyzer/webpack-plugin');
 
@@ -9,7 +8,6 @@ dotenv.config();
 
 module.exports = withPlugins(
   [
-    [withCSS],
     [
       withBundleAnalyzer,
       {
@@ -40,6 +38,13 @@ module.exports = withPlugins(
       // See https://github.com/blockstack/blockstack.js/pull/683
       // Remove the BIP39 wordlist since it's used only by the wallet and it's huge
       config.plugins.push(new webpack.IgnorePlugin(/\.\/wordlists\//));
+
+      // In `pages/_app.js`, Sentry is imported from @sentry/node. While
+      // @sentry/browser will run in a Node.js environment, @sentry/node will use
+      // Node.js-only APIs to catch even more unhandled exceptions.
+      if (!isServer) {
+        config.resolve.alias['@sentry/node'] = '@sentry/browser';
+      }
 
       // We want to report only for the client bundle
       if (process.env.BUNDLE_ANALYZER_TOKEN && !isServer) {

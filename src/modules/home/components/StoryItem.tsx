@@ -2,116 +2,145 @@ import React from 'react';
 import Link from 'next/link';
 import styled from 'styled-components';
 import tw from 'tailwind.macro';
-import Tippy from '@tippy.js/react';
-import { IoIosEye } from 'react-icons/io';
+import { MdMoreHoriz } from 'react-icons/md';
 import format from 'date-fns/format';
-import { ButtonOutline } from '../../../components';
+import {
+  Menu,
+  MenuList,
+  MenuButton,
+  MenuItem,
+  MenuLink,
+} from '@reach/menu-button';
 import { SubsetStory, BlockstackUser } from '../../../types';
+import { FullScreenDialog } from '../../../components';
 
 const StoryContainer = styled.div`
-  ${tw`py-8 border-b border-solid border-grey-light`};
+  ${tw`py-4 lg:py-8 border-b border-solid border-grey lg:flex`};
 `;
 
 const StoryTitleContainer = styled.div`
-  ${tw`flex justify-between`};
-`;
-
-const StoryTitleContainerLeft = styled.div`
   ${tw`flex`};
 `;
 
-const StoryTitleIcon = styled.div`
-  ${tw`flex items-center text-grey-dark`};
-
-  a {
-    ${tw`flex text-black`};
-  }
+const StoryTitleIcon = styled(MdMoreHoriz)`
+  ${tw`text-grey-darker`};
 `;
 
-const StoryTitle = styled.div`
-  ${tw`flex text-2xl font-bold no-underline text-black cursor-pointer`};
+const StoryTitle = styled.h3`
+  ${tw`flex text-xl no-underline text-black mr-3`};
 `;
 
-const StoryDate = styled.div`
+const StoryDate = styled.p`
   ${tw`mt-1 text-sm italic text-grey-dark`};
 `;
 
-const StoryText = styled.div`
+const StoryText = styled.p`
   ${tw`mt-4 text-grey-dark`};
+`;
+
+const StoryImage = styled.div`
+  ${tw`hidden xl:block bg-no-repeat bg-cover bg-center h-32 w-56 ml-8`};
 `;
 
 interface Props {
   user: BlockstackUser;
   story: SubsetStory;
   type: 'public' | 'private';
-  loading: boolean;
-  onPublish: () => void;
-  onUnPublish: () => void;
+  onEdit: () => void;
+  onDelete: () => void;
+  showDeleteDialog: boolean;
+  deleteLoading: boolean;
+  onCancelDelete: () => void;
+  onConfirmDelete: () => void;
 }
 
 export const StoryItem = ({
   user,
   story,
   type,
-  loading,
-  onPublish,
-  onUnPublish,
+  onEdit,
+  onDelete,
+  showDeleteDialog,
+  deleteLoading,
+  onCancelDelete,
+  onConfirmDelete,
 }: Props) => {
   return (
-    <StoryContainer>
-      <StoryTitleContainer>
-        <StoryTitleContainerLeft>
-          <Link href="/stories/[storyId]" as={`/stories/${story.id}`}>
-            <StoryTitle as="a">{story.title}</StoryTitle>
-          </Link>
-          <Tippy
-            content={
-              type === 'public'
-                ? 'View my story'
-                : 'You need to publish your article to view it'
-            }
-            theme="light-border"
-          >
-            <StoryTitleIcon>
-              {type === 'public' ? (
-                <a
-                  href={`/${user.username}/${story.id}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  <IoIosEye size={22} style={{ marginLeft: 6 }} />
-                </a>
-              ) : (
-                <IoIosEye size={22} style={{ marginLeft: 6 }} />
-              )}
-            </StoryTitleIcon>
-          </Tippy>
-        </StoryTitleContainerLeft>
-
+    <React.Fragment>
+      <StoryContainer>
         <div>
-          {loading && (
-            <ButtonOutline style={{ marginRight: 8 }} disabled={true}>
-              Loading ...
-            </ButtonOutline>
-          )}
-          {!loading && type === 'private' && (
-            <ButtonOutline style={{ marginRight: 8 }} onClick={onPublish}>
-              Publish
-            </ButtonOutline>
-          )}
-          {!loading && type === 'public' && (
-            <ButtonOutline style={{ marginRight: 8 }} onClick={onUnPublish}>
-              Unpublish
-            </ButtonOutline>
-          )}
-          <Link href="/stories/[storyId]" as={`/stories/${story.id}`}>
-            <ButtonOutline as="a">Edit</ButtonOutline>
-          </Link>
+          <StoryTitleContainer>
+            <StoryTitle>
+              <Link
+                href="/stories/[storyId]"
+                as={`/stories/${story.id}`}
+                passHref
+              >
+                <a>{story.title}</a>
+              </Link>
+            </StoryTitle>
+            <Menu>
+              <MenuButton>
+                <StoryTitleIcon size={22} />
+              </MenuButton>
+              <MenuList>
+                {type === 'public' && (
+                  <MenuLink
+                    as="a"
+                    href={`/${user.username}/${story.id}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    View my story
+                  </MenuLink>
+                )}
+                <MenuItem onSelect={onEdit}>Edit</MenuItem>
+                <MenuItem onSelect={onDelete}>Delete</MenuItem>
+              </MenuList>
+            </Menu>
+          </StoryTitleContainer>
+          <StoryDate>
+            <Link
+              href="/stories/[storyId]"
+              as={`/stories/${story.id}`}
+              passHref
+            >
+              <a>{format(story.createdAt, 'HH:mm dd MMMM yyyy')}</a>
+            </Link>
+          </StoryDate>
+          <StoryText>
+            <Link
+              href="/stories/[storyId]"
+              as={`/stories/${story.id}`}
+              passHref
+            >
+              <a>{story.content}</a>
+            </Link>
+          </StoryText>
         </div>
-      </StoryTitleContainer>
+        {story.coverImage && (
+          <div>
+            <StoryImage
+              style={{ backgroundImage: `url('${story.coverImage}')` }}
+            />
+          </div>
+        )}
+      </StoryContainer>
 
-      <StoryDate>{format(story.createdAt, 'HH:mm dd MMMM yyyy')}</StoryDate>
-      <StoryText>{story.content}</StoryText>
-    </StoryContainer>
+      <FullScreenDialog
+        isOpen={showDeleteDialog}
+        confirmLoading={deleteLoading}
+        onConfirm={onConfirmDelete}
+        onCancel={onCancelDelete}
+        loadingTitle="Deleting ..."
+        title="Delete my story"
+        description={
+          <React.Fragment>
+            <p>You’re about to delete your story.</p>
+            <p>Would you like to continue?</p>
+          </React.Fragment>
+        }
+      />
+    </React.Fragment>
   );
 };

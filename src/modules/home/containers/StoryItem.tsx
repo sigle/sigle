@@ -1,50 +1,63 @@
 import React, { useState } from 'react';
+import { useRouter } from 'next/router';
 import { toast } from 'react-toastify';
+import NProgress from 'nprogress';
 import { StoryItem as Component } from '../components/StoryItem';
 import { SubsetStory, BlockstackUser } from '../../../types';
-import { publishStory, unPublishStory } from '../../../utils';
+import {
+  deleteStoryFile,
+  saveStoriesFile,
+  getStoriesFile,
+} from '../../../utils';
 
 interface Props {
   user: BlockstackUser;
   story: SubsetStory;
   type: 'public' | 'private';
-  onPublish: (storyId: string) => void;
-  onUnPublish: (storyId: string) => void;
+  refetchStoriesLists: () => Promise<void>;
 }
 
 export const StoryItem = ({
   user,
   story,
   type,
-  onPublish,
-  onUnPublish,
+  refetchStoriesLists,
 }: Props) => {
-  const [loading, setLoading] = useState(false);
+  const router = useRouter();
+  const [showDeleteDialog, setShowDeleteDialog] = useState(false);
+  const [deleteLoading, setDeleteLoading] = useState(false);
 
-  const handlePublish = async () => {
-    setLoading(true);
-    try {
-      await publishStory(story.id);
-      onPublish(story.id);
-      toast.success('Story published');
-    } catch (error) {
-      console.error(error);
-      toast.error(error.message);
-    }
-    setLoading(false);
+  const handleEdit = () => {
+    router.push('/stories/[storyId]', `/stories/${story.id}`);
   };
 
-  const handleUnPublishStory = async () => {
-    setLoading(true);
+  const handleDelete = async () => {
+    setShowDeleteDialog(true);
+  };
+
+  const handleConfirmDelete = async () => {
+    setDeleteLoading(true);
+    NProgress.start();
     try {
-      await unPublishStory(story.id);
-      onUnPublish(story.id);
-      toast.success('Story unpublished');
+      const file = await getStoriesFile();
+      const index = file.stories.findIndex(s => s.id === story.id);
+      if (index === -1) {
+        throw new Error('File not found in list');
+      }
+      file.stories.splice(index, 1);
+      await saveStoriesFile(file);
+      await deleteStoryFile(story);
+      await refetchStoriesLists();
     } catch (error) {
-      console.error(error);
       toast.error(error.message);
     }
-    setLoading(false);
+    NProgress.done();
+    setDeleteLoading(false);
+    setShowDeleteDialog(false);
+  };
+
+  const handleCancelDelete = () => {
+    setShowDeleteDialog(false);
   };
 
   return (
@@ -52,9 +65,12 @@ export const StoryItem = ({
       user={user}
       story={story}
       type={type}
-      loading={loading}
-      onPublish={handlePublish}
-      onUnPublish={handleUnPublishStory}
+      onEdit={handleEdit}
+      onDelete={handleDelete}
+      showDeleteDialog={showDeleteDialog}
+      deleteLoading={deleteLoading}
+      onConfirmDelete={handleConfirmDelete}
+      onCancelDelete={handleCancelDelete}
     />
   );
 };

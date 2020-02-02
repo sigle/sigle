@@ -7,15 +7,7 @@ import Document, {
   NextScript,
 } from 'next/document';
 import { ServerStyleSheet } from 'styled-components';
-import { init } from '@sentry/browser';
 import { config } from '../config';
-
-if (config.env === 'production' && config.sentryDsn) {
-  init({
-    dsn: config.sentryDsn,
-    environment: config.env,
-  });
-}
 
 export default class MyDocument extends Document {
   static async getInitialProps(ctx: DocumentContext) {
@@ -70,10 +62,6 @@ export default class MyDocument extends Document {
           />
           <meta name="msapplication-TileColor" content="#da532c" />
           <meta name="theme-color" content="#ffffff" />
-          <link
-            href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,500,700,700i&display=swap"
-            rel="stylesheet"
-          />
           <link rel="manifest" href={`${config.appUrl}/manifest.json`} />
         </Head>
         <body>

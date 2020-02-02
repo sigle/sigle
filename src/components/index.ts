@@ -1,4 +1,4 @@
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 import tw from 'tailwind.macro';
 
 // TODO max width media-queries
@@ -9,23 +9,8 @@ export const Container = styled.div`
   max-width: 992px;
 `;
 
-export const Tabs = styled.div`
-  ${tw`flex border-b border-solid border-grey`};
-`;
-
-export const Tab = styled.div`
-  ${tw`py-2 cursor-pointer mr-6`};
-
-  &:hover {
-    ${tw`font-bold`};
-  }
-  &.active {
-    ${tw`font-bold`};
-  }
-`;
-
 export const Button = styled.button<{ href?: string; target?: string }>`
-  ${tw`bg-pink text-white py-2 px-8 rounded-full no-underline cursor-pointer`};
+  ${tw`bg-pink text-white py-2 px-8 rounded no-underline cursor-pointer`};
   transition: background-color 0.25s;
 
   &:hover {
@@ -33,10 +18,28 @@ export const Button = styled.button<{ href?: string; target?: string }>`
   }
 `;
 
-export const ButtonOutline = styled.button`
-  ${tw`py-1 px-2 rounded-lg text-sm text-pink border border-solid border-pink no-underline cursor-pointer`};
+export const ButtonOutline = styled.button<{ size?: 'large' }>`
+  ${tw`py-1 px-2 rounded text-sm text-pink border border-solid border-pink no-underline cursor-pointer`};
 
   &:hover {
     ${tw`bg-pink text-white`};
   }
+
+  ${props =>
+    props.disabled &&
+    css`
+      ${tw`border-grey-dark text-grey-dark`};
+
+      &:hover {
+        ${tw`bg-transparent border-grey-dark text-grey-dark`};
+      }
+    `}
+
+  ${props =>
+    props.size === 'large' &&
+    css`
+      ${tw`py-2 px-8 text-base`};
+    `}
 `;
+
+export { FullScreenDialog } from './FullScreenDialog';
