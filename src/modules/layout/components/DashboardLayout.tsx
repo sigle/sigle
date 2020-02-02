@@ -3,6 +3,7 @@ import { useRouter } from 'next/router';
 import styled, { css } from 'styled-components';
 import tw from 'tailwind.macro';
 import Link from 'next/link';
+import Div100vh from 'react-div-100vh';
 import { MdKeyboardArrowDown } from 'react-icons/md';
 import {
   FaTwitter,
@@ -13,8 +14,8 @@ import {
 import { userSession } from '../../../utils/blockstack';
 import { config } from '../../../config';
 
-const Container = styled.div`
-  ${tw`w-full h-screen flex`}
+const Container = styled(Div100vh)`
+  ${tw`w-full flex`}
 `;
 
 const Sidebar = styled.div`
