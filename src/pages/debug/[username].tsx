@@ -1,13 +1,13 @@
 import React, { useEffect } from 'react';
-import { useRouter } from 'next/router';
+import { NextPage } from 'next';
 import { lookupProfile } from 'blockstack';
 import { config } from '../../config';
-import { StoryFile } from '../../types';
 
-const PublicHomePage = () => {
-  const router = useRouter();
-  const { username } = router.query;
+interface PublicHomePageProps {
+  username: string;
+}
 
+const PublicHomePage: NextPage<PublicHomePageProps> = ({ username }) => {
   useEffect(() => {
     const test = async () => {
       let file;
@@ -45,6 +45,9 @@ const PublicHomePage = () => {
         statusCode = 404;
       }
 
+      console.log('statusCode', statusCode);
+      console.log('file', file);
+
       return { statusCode, file };
     };
 
@@ -52,6 +55,10 @@ const PublicHomePage = () => {
   }, []);
 
   return <div>debug</div>;
+};
+PublicHomePage.getInitialProps = async ({ query, res }) => {
+  const { username } = query as { username: string };
+  return { username };
 };
 
 export default PublicHomePage;

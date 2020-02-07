@@ -31,6 +31,7 @@ PublicHomePage.getInitialProps = async ({ query, res }) => {
     userProfile = await lookupProfile(username);
   } catch (error) {
     statusCode = 500;
+    console.error('error', error);
     // This will happen if there is no blockstack user with this name
     if (error && error.message === 'Name not found') {
       statusCode = 404;
