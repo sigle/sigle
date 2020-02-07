@@ -14,13 +14,14 @@ const PublicHomePage = () => {
       let statusCode: boolean | number = false;
       let userProfile;
       try {
+        console.log('username', username);
         userProfile = await lookupProfile(username as string);
         console.log('userProfile', userProfile);
       } catch (error) {
         statusCode = 500;
         console.error(error);
         // This will happen if there is no blockstack user with this name
-        if (error.message === 'Name not found') {
+        if (error && error.message === 'Name not found') {
           statusCode = 404;
         }
       }

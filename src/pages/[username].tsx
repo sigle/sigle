@@ -32,7 +32,7 @@ PublicHomePage.getInitialProps = async ({ query, res }) => {
   } catch (error) {
     statusCode = 500;
     // This will happen if there is no blockstack user with this name
-    if (error.message === 'Name not found') {
+    if (error && error.message === 'Name not found') {
       statusCode = 404;
     }
   }
