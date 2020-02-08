@@ -59,7 +59,7 @@ PublicHomePage.getInitialProps = async ({ query, res }) => {
     statusCode = 404;
   }
 
-  console.log('stories', file.stories.length);
+  console.log('stories', file && file.stories.length);
   console.log('statusCode', statusCode);
 
   // If statusCode is not false we set the http response code
