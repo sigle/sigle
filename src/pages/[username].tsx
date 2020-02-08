@@ -28,7 +28,9 @@ PublicHomePage.getInitialProps = async ({ query, res }) => {
   let statusCode: boolean | number = false;
   let userProfile;
   try {
+    console.log('username', username);
     userProfile = await lookupProfile(username);
+    console.log('userProfile', userProfile);
   } catch (error) {
     statusCode = 500;
     console.error('error', error);
