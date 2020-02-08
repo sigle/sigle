@@ -43,7 +43,7 @@ PublicHomePage.getInitialProps = async ({ query, res }) => {
 
   const bucketUrl =
     userProfile && userProfile.apps && userProfile.apps[config.appUrl];
-  console.error('bucketUrl', bucketUrl);
+  console.log('bucketUrl', bucketUrl);
   // If the user already used the app we try to get the public list
   if (bucketUrl) {
     const data = await fetch(`${bucketUrl}publicStories.json`);
@@ -60,6 +60,7 @@ PublicHomePage.getInitialProps = async ({ query, res }) => {
   }
 
   console.log('stories', file.stories.length);
+  console.log('statusCode', statusCode);
 
   // If statusCode is not false we set the http response code
   if (statusCode && res) {
