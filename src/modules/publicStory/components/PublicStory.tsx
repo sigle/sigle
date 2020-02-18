@@ -59,7 +59,7 @@ const rules = [
       if (obj.object === 'inline') {
         switch (obj.type) {
           case 'link':
-            let href: string = obj.data.get('href');
+            const href: string = obj.data.get('href');
             // TODO add unit test for this
             // We sanitise the link to protect from js execution "javascript:"
             // In a future version react will throw and error if this is happening https://reactjs.org/blog/2019/08/08/react-v16.9.0.html#deprecating-javascript-urls
