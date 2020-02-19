@@ -56,6 +56,15 @@ export const StorySettings = ({
     multiple: false,
   });
 
+  const handleRemoveCover = (
+    event: React.MouseEvent<HTMLDivElement, MouseEvent>
+  ) => {
+    // We stop the event so it does not trigger react-dropzone
+    event.stopPropagation();
+    setCoverFile(undefined);
+    onChangeStoryField('coverImage', undefined);
+  };
+
   const handleChangeMetaTitle = (value: string) => {
     onChangeStoryField('metaTitle', value);
   };
@@ -142,6 +151,7 @@ export const StorySettings = ({
       loadingSave={loadingSave}
       onSubmit={handleSubmit}
       onDelete={handleDelete}
+      onRemoveCover={handleRemoveCover}
       onChangeMetaTitle={handleChangeMetaTitle}
       onChangeMetaDescription={handleChangeMetaDescription}
       onChangeCreatedAt={handleChangeCreatedAt}

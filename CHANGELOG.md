@@ -1,13 +1,25 @@
+## February 19, 2020
+
+### Improvements
+
+- You can now delete the cover image in the story settings.
+
+## February 18, 2020
+
+### Bug fixes
+
+- Fix security issue via links.
+
 ## February 2, 2020
 
 ### Improvements
 
-- Bring back total amount of drafts and published stories
+- Bring back total amount of drafts and published stories.
 
 ### Bug fixes
 
-- Fix save button on mobile
-- On IOS fix the left column height on Ipad
+- Fix save button on mobile.
+- On IOS fix the left column height on Ipad.
 
 ## February 1, 2020
 
