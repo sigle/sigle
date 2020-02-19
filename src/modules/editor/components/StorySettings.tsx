@@ -43,8 +43,12 @@ const ImageEmpty = styled.div<{ haveImage: boolean }>`
   }
 `;
 
-const ImageEmptyIcon = styled.div`
+const ImageEmptyIconAdd = styled.div`
   ${tw`absolute bottom-0 right-0 p-2 flex items-center text-grey-dark`};
+`;
+
+const ImageEmptyIconDelete = styled.div`
+  ${tw`absolute top-0 right-0 p-2 flex items-center text-grey-dark`};
 `;
 
 const Image = styled.img`
@@ -96,6 +100,7 @@ interface Props {
   coverFile?: Blob & { preview: string };
   loadingSave: boolean;
   onDelete: (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void;
+  onRemoveCover: (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => void;
   onChangeMetaTitle: (value: string) => void;
   onChangeMetaDescription: (value: string) => void;
   onChangeCreatedAt: (value: string) => void;
@@ -115,6 +120,7 @@ export const StorySettings = ({
   coverFile,
   loadingSave,
   onDelete,
+  onRemoveCover,
   onChangeMetaTitle,
   onChangeMetaDescription,
   onChangeCreatedAt,
@@ -162,12 +168,17 @@ export const StorySettings = ({
                       {...getRootProps({ tabIndex: undefined })}
                       haveImage={!!coverImageUrl}
                     >
+                      {coverImageUrl && (
+                        <ImageEmptyIconDelete onClick={onRemoveCover}>
+                          <MdDelete />
+                        </ImageEmptyIconDelete>
+                      )}
                       {coverImageUrl && <Image src={coverImageUrl} />}
                       {!coverImageUrl && <span>Upload cover image</span>}
                       <input {...getInputProps()} />
-                      <ImageEmptyIcon>
+                      <ImageEmptyIconAdd>
                         <MdAddAPhoto />
-                      </ImageEmptyIcon>
+                      </ImageEmptyIconAdd>
                     </ImageEmpty>
                   </FormRow>
 
