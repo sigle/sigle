@@ -62,8 +62,9 @@ const rules = [
             const href: string = obj.data.get('href');
             // TODO add unit test for this
             // We sanitise the link to protect from js execution "javascript:"
+            // We use includes instead of startWith because there might be some spaces at the beginning
             // In a future version react will throw and error if this is happening https://reactjs.org/blog/2019/08/08/react-v16.9.0.html#deprecating-javascript-urls
-            if (href.startsWith('javascript:')) {
+            if (href.includes('javascript:')) {
               return <a href="/">🤯</a>;
             }
             return <a href={href}>{children}</a>;
