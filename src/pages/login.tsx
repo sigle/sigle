@@ -10,6 +10,8 @@ const Login = () => {
     userSession.redirectToSignIn();
   };
 
+  // TODO if user already logged in, redirect him to the app
+
   return (
     <React.Fragment>
       <div className="w-full h-screen hidden md:flex">
