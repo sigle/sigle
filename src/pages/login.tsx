@@ -1,82 +1,8 @@
 import React from 'react';
-import styled, { css } from 'styled-components';
-import tw from 'tailwind.macro';
 import * as Fathom from 'fathom-client';
 import { userSession } from '../utils/blockstack';
-import { config } from '../config';
 import { Button } from '../components';
 import { Goals } from '../utils/fathom';
-
-const BackgroundContainer = styled.div`
-  ${tw`flex w-full h-screen`};
-
-  @media (max-width: ${config.breakpoints.md}px) {
-    display: none;
-  }
-`;
-
-const BackgroundColumn = styled.div<{ right?: boolean }>`
-  ${tw`flex-1`};
-  background-color: #f7f7f7;
-  ${props =>
-    props.right &&
-    css`
-      ${tw`bg-white bg-no-repeat bg-contain bg-left`};
-      background-image: url('/static/img/logo-login.png');
-    `}
-`;
-
-const AbsoluteContainer = styled.div`
-  ${tw`absolute w-full h-screen`};
-  top: 0;
-`;
-
-const Container = styled.div`
-  ${tw`flex items-center justify-center p-8 mx-auto`};
-  height: 100%;
-  width: 100%;
-  max-width: 1140px;
-
-  @media (max-width: ${config.breakpoints.md}px) {
-    ${tw`block`};
-  }
-`;
-
-const Column = styled.div<{ left?: boolean; right?: boolean }>`
-  ${tw`w-1/2 flex flex-col text-left`};
-  ${props =>
-    props.left &&
-    css`
-      ${tw`pr-32`};
-    `}
-  ${props =>
-    props.right &&
-    css`
-      ${tw`items-center`};
-    `}
-  @media (max-width: ${config.breakpoints.md}px) {
-    ${tw`w-full pr-0`};
-  }
-`;
-
-const Logo = styled.img`
-  ${tw`mb-4`};
-  width: 100px;
-`;
-
-const Illu = styled.img`
-  ${tw`mt-6 mb-4`};
-  width: 400px;
-  max-width: 100%;
-`;
-
-const Text = styled.p`
-  ${tw`mb-4`};
-`;
-
-const Link = styled.a`
-  ${tw`text-pink`};
-`;
 
 const Login = () => {
   const handleLogin = () => {
@@ -86,42 +12,62 @@ const Login = () => {
 
   return (
     <React.Fragment>
-      <BackgroundContainer>
-        <BackgroundColumn />
-        <BackgroundColumn right />
-      </BackgroundContainer>
-      <AbsoluteContainer>
-        <Container>
-          <Column left>
-            <Logo src="/static/img/logo.png" alt="Logo" />
-            <Text>
+      <div className="w-full h-screen hidden md:flex">
+        <div className="flex-1 bg-grey-light" />
+        <div
+          className="flex-1 bg-no-repeat bg-contain bg-left"
+          style={{ backgroundImage: "url('/static/img/logo-login.png')" }}
+        />
+      </div>
+      <div className="absolute w-full h-screen top-0">
+        <div className="md:flex items-center justify-center p-8 mx-auto h-full w-full max-w-6xl">
+          <div className="md:w-1/2 flex flex-col text-left md:pr-32">
+            <img
+              className="mb-4"
+              src="/static/img/logo.png"
+              alt="Logo"
+              width="100"
+            />
+            <p className="mb-4">
               Because Sigle is working on the decentralized internet thanks to
               the blockchain technology, you’ll be redicrected to{' '}
-              <Link href="https://blockstack.org/" target="_blank">
+              <a
+                className="text-pink"
+                href="https://blockstack.org/"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
                 Blockstack
-              </Link>{' '}
+              </a>{' '}
               to login or sign in.
-            </Text>
-            <Text>
+            </p>
+            <p className="mb-4">
               Blockstack ID provides user-controlled login and storage that
               enable you to take back control of your identity and data.
-            </Text>
-            <Text>Creating a Blockstack ID is easy, free, and secure.</Text>
-            <Text>
+            </p>
+            <p className="mb-4">
+              Creating a Blockstack ID is easy, free, and secure.
+            </p>
+            <p className="mb-4">
               Welcome to the family{' '}
               <span role="img" aria-label="Smile">
                 🙂
               </span>
-            </Text>
+            </p>
             <div>
               <Button onClick={handleLogin}>Login with blockstack</Button>
             </div>
-          </Column>
-          <Column right>
-            <Illu src="/static/img/login.png" alt="Login image" />
-          </Column>
-        </Container>
-      </AbsoluteContainer>
+          </div>
+          <div className="md:w-1/2 flex flex-col text-left items-center">
+            <img
+              className="mt-6 mb-4 max-w-full"
+              src="/static/img/login.png"
+              alt="Login image"
+              width="400"
+            />
+          </div>
+        </div>
+      </div>
     </React.Fragment>
   );
 };

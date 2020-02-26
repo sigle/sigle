@@ -10,6 +10,8 @@ import { config as blockstackConfig } from 'blockstack';
 import * as Sentry from '@sentry/node';
 import NProgress from 'nprogress';
 import 'nprogress/nprogress.css';
+// app style
+import '../styles/index.css';
 // TODO add tippy.js only on the pages that are using it
 import 'tippy.js/dist/tippy.css';
 import 'tippy.js/themes/light-border.css';
