@@ -1,11 +1,13 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import styled, { css } from 'styled-components';
 import tw from 'twin.macro';
+import { useRouter } from 'next/router';
 import * as Fathom from 'fathom-client';
 import { userSession } from '../utils/blockstack';
 import { config } from '../config';
 import { Button } from '../components';
 import { Goals } from '../utils/fathom';
+import { useAuth } from '../modules/auth/AuthContext';
 
 const BackgroundContainer = styled.div`
   ${tw`flex w-full h-screen`};
@@ -79,10 +81,20 @@ const Link = styled.a`
 `;
 
 const Login = () => {
+  const router = useRouter();
+  const { user } = useAuth();
+
   const handleLogin = () => {
     Fathom.trackGoal(Goals.LOGIN, 0);
     userSession.redirectToSignIn();
   };
+
+  useEffect(() => {
+    // If user is already logged in we redirect him to the homepage
+    if (user) {
+      router.push(`/`);
+    }
+  }, [user]);
 
   return (
     <React.Fragment>
