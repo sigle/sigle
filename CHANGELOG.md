@@ -1,3 +1,9 @@
+## February 28, 2020
+
+### Improvements
+
+- We polished the animations, they are now a smoother 🎨.
+
 ## February 19, 2020
 
 ### Improvements

@@ -97,8 +97,7 @@ const MenuBottomItem = styled.li`
 `;
 
 const SupportButton = styled.a`
-  ${tw`py-2 pr-2 pl-6 mt-4 flex items-center justify-start bg-pink text-white`};
-  transition: background-color 0.25s;
+  ${tw`py-2 pr-2 pl-6 mt-4 flex items-center justify-start bg-pink text-white transition-colors duration-200 ease-in-out`};
   &:hover {
     background-color: #db3159;
   }

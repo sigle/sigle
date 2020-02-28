@@ -20,7 +20,7 @@ import { hasLinks, hasBlock, hasMark } from './utils';
 import { onClickLink, onClickBlock, onClickMark } from './SlateEditorToolbar';
 
 const HoverMenuContainer = styled.div`
-  ${tw`flex`};
+  ${tw`flex transition-opacity duration-700`};
   padding: 8px 7px 6px;
   position: absolute;
   z-index: 1;
@@ -30,7 +30,6 @@ const HoverMenuContainer = styled.div`
   opacity: 0;
   background-color: #222;
   border-radius: 4px;
-  transition: opacity 0.75s;
 `;
 
 const SlateEditorHoverMenuButton = styled.button<{ active: boolean }>`

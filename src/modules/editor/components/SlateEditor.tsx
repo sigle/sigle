@@ -51,12 +51,11 @@ const Input = styled.input`
 `;
 
 const Image = styled.img<{ selected: boolean; isUploading?: boolean }>`
-  ${tw`opacity-100 block`};
+  ${tw`opacity-100 block transition-opacity duration-700`};
   max-width: 100%;
   max-height: 20em;
   box-shadow: ${(props: any) =>
     props.selected ? '0 0 0 1px #000000;' : 'none'};
-  transition: opacity 0.75s;
 
   ${props =>
     props.isUploading &&

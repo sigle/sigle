@@ -41,8 +41,7 @@ const HelpCardContainer = styled.div`
 `;
 
 const HelpCard = styled.a`
-  ${tw`w-full relative rounded bg-grey-light`};
-  transition: background-color 0.25s;
+  ${tw`w-full relative rounded bg-grey-light transition-colors duration-200`};
   &:hover {
     background-color: rgba(0, 0, 0, 0.2);
   }
