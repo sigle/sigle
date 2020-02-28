@@ -177,6 +177,9 @@ const handleKeyDown = (
     mark = 'italic';
   } else if (event.key === 'u') {
     mark = 'underlined';
+  } else if (event.keyCode === 192) {
+    // event.keyCode 192 is '`'
+    mark = 'code';
   } else {
     return next();
   }
@@ -327,6 +330,8 @@ export const SlateEditor = ({
         return <em {...attributes}>{children}</em>;
       case 'underlined':
         return <u {...attributes}>{children}</u>;
+      case 'code':
+        return <code {...attributes}>{children}</code>;
       default:
         return next();
     }
