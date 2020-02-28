@@ -1,6 +1,6 @@
 import React, { useRef } from 'react';
 import styled, { css } from 'styled-components';
-import tw from 'tailwind.macro';
+import tw from 'twin.macro';
 import { Value } from 'slate';
 import { Editor } from 'slate-react';
 import { IconType } from 'react-icons';

@@ -98,8 +98,8 @@
     "lint-staged": "10.0.7",
     "next-compose-plugins": "2.2.0",
     "prettier": "1.19.1",
-    "tailwind.macro": "1.0.0-alpha.10",
-    "tailwindcss": "1.1.4",
+    "tailwindcss": "1.2.0",
+    "twin.macro": "1.0.0-alpha.4",
     "typescript": "3.7.5"
   }
 }

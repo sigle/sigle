@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import tw from 'tailwind.macro';
+import tw from 'twin.macro';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
 import { StoryFile } from '../../../types';

@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import tw from 'tailwind.macro';
+import tw from 'twin.macro';
 import { Protected } from '../modules/auth/Protected';
 import { DashboardLayout } from '../modules/layout';
 import { DashboardPageContainer } from '../modules/layout/components/DashboardLayout';

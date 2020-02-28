@@ -1,7 +1,7 @@
 import React from 'react';
 import Link from 'next/link';
 import styled, { css } from 'styled-components';
-import tw from 'tailwind.macro';
+import tw from 'twin.macro';
 import format from 'date-fns/format';
 import { SubsetStory } from '../../../types';
 import { config } from '../../../config';

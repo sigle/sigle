@@ -2,7 +2,7 @@ import React, { forwardRef, useState, useRef } from 'react';
 import { Editor } from 'slate-react';
 import ReactDOM from 'react-dom';
 import styled, { css } from 'styled-components';
-import tw from 'tailwind.macro';
+import tw from 'twin.macro';
 import { MdAdd, MdAddAPhoto } from 'react-icons/md';
 
 const SideMenuContainer = styled.div`

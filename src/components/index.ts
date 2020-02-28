@@ -1,5 +1,5 @@
 import styled, { css } from 'styled-components';
-import tw from 'tailwind.macro';
+import tw from 'twin.macro';
 
 // TODO max width media-queries
 export const Container = styled.div`

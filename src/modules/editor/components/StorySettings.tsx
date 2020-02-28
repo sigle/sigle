@@ -1,6 +1,6 @@
 import React from 'react';
 import styled, { css } from 'styled-components';
-import tw from 'tailwind.macro';
+import tw from 'twin.macro';
 import { MdClose, MdAddAPhoto, MdDelete } from 'react-icons/md';
 import { DialogContent, DialogOverlay } from '@reach/dialog';
 import { animated, useTransition } from 'react-spring';

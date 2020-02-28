@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import tw from 'tailwind.macro';
+import tw from 'twin.macro';
 import Link from 'next/link';
 import { StoryItem } from '../';
 import { SubsetStory, BlockstackUser } from '../../../types';

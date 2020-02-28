@@ -3,7 +3,7 @@ import { Editor } from 'slate-react';
 import { IconType } from 'react-icons';
 import ReactDOM from 'react-dom';
 import styled, { css } from 'styled-components';
-import tw from 'tailwind.macro';
+import tw from 'twin.macro';
 import {
   MdFormatBold,
   MdFormatItalic,

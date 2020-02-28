@@ -1,7 +1,7 @@
 import React from 'react';
 import { DialogOverlay, DialogContent } from '@reach/dialog';
 import styled, { keyframes } from 'styled-components';
-import tw from 'tailwind.macro';
+import tw from 'twin.macro';
 import { ButtonOutline } from '.';
 
 const overlayAnimation = keyframes`
