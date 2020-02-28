@@ -3,6 +3,7 @@
 ### Improvements
 
 - We polished the animations, they are now a smoother 🎨.
+- If you visit the login page while being already logged in, you will now be redirected automatically to the home page.
 
 ## February 19, 2020
 
