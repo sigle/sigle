@@ -2,7 +2,7 @@ import React from 'react';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
 import styled, { css } from 'styled-components';
-import tw from 'tailwind.macro';
+import tw from 'twin.macro';
 import { Value } from 'slate';
 import Html from 'slate-html-serializer';
 import format from 'date-fns/format';

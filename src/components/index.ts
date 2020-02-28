@@ -1,5 +1,5 @@
 import styled, { css } from 'styled-components';
-import tw from 'tailwind.macro';
+import tw from 'twin.macro';
 
 // TODO max width media-queries
 export const Container = styled.div`
@@ -10,8 +10,7 @@ export const Container = styled.div`
 `;
 
 export const Button = styled.button<{ href?: string; target?: string }>`
-  ${tw`bg-pink text-white py-2 px-8 rounded no-underline cursor-pointer`};
-  transition: background-color 0.25s;
+  ${tw`bg-pink text-white py-2 px-8 rounded no-underline cursor-pointer transition-colors duration-200 ease-in-out`};
 
   &:hover {
     background-color: #db3159;

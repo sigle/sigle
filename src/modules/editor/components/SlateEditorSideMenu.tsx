@@ -2,16 +2,15 @@ import React, { forwardRef, useState, useRef } from 'react';
 import { Editor } from 'slate-react';
 import ReactDOM from 'react-dom';
 import styled, { css } from 'styled-components';
-import tw from 'tailwind.macro';
+import tw from 'twin.macro';
 import { MdAdd, MdAddAPhoto } from 'react-icons/md';
 
 const SideMenuContainer = styled.div`
-  ${tw`flex absolute`};
+  ${tw`flex absolute transition-opacity duration-700`};
   top: -10000px;
   left: -10000px;
   z-index: 1;
   opacity: 0;
-  transition: opacity 0.75s;
 `;
 
 const SideMenuButtonContainer = styled.div<{ open: boolean }>`
@@ -25,11 +24,10 @@ const SideMenuButtonContainer = styled.div<{ open: boolean }>`
 `;
 
 const SideMenuButton = styled.div`
-  ${tw`flex items-center justify-center cursor-pointer`};
+  ${tw`flex items-center justify-center cursor-pointer transition-transform duration-200`};
   border: 1px solid black;
   height: 29px;
   width: 29px;
-  transition: transform 0.25s;
   border-radius: 50%;
 `;
 
@@ -42,12 +40,11 @@ const SideMenuOpenButton = styled(SideMenuButton)<{ open: boolean }>`
 `;
 
 const SideMenuActionButton = styled(SideMenuButton)<{ open: boolean }>`
-  transform: scale(0);
-  transition: transform 0.15s;
+  ${tw`flex absolute transition-transform duration-200 scale-0`};
   ${props =>
     props.open &&
     css`
-      transform: scale(1);
+      ${tw`flex absolute transition-transform duration-200 scale-100`};
     `}
 `;
 
