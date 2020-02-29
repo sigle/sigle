@@ -2,6 +2,7 @@
 
 ### Improvements
 
+- **Inline code blocks**: In the editor you can now find the "code" option to style your text. This is a first step before we get fully highlighted code blocks.
 - We polished the animations, they are now a smoother 🎨.
 - If you visit the login page while being already logged in, you will now be redirected automatically to the home page.
 

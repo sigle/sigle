@@ -27,6 +27,7 @@ import {
   MdLink,
   MdSettings,
   MdImage,
+  MdCode,
 } from 'react-icons/md';
 import { ButtonOutline } from '../../../components';
 
@@ -241,6 +242,7 @@ export const SlateEditorToolbar = ({
         {renderMarkButton('bold', MdFormatBold)}
         {renderMarkButton('italic', MdFormatItalic)}
         {renderMarkButton('underlined', MdFormatUnderlined)}
+        {renderMarkButton('code', MdCode)}
         {renderBlockButton('block-quote', MdFormatQuote)}
         {renderBlockButton('heading-one', MdLooksOne)}
         {renderBlockButton('heading-two', MdLooksTwo)}

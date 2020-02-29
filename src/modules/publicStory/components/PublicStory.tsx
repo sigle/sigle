@@ -50,6 +50,8 @@ const rules = [
             return <em>{children}</em>;
           case 'underlined':
             return <u>{children}</u>;
+          case 'code':
+            return <code>{children}</code>;
         }
       }
     },
@@ -164,6 +166,12 @@ export const Content = styled.div`
 
   a {
     ${tw`text-pink`};
+  }
+
+  code {
+    ${tw`font-mono text-sm inline bg-grey-light px-1 rounded-sm`};
+    padding-top: 0.15rem;
+    padding-bottom: 0.15rem;
   }
 
   img {

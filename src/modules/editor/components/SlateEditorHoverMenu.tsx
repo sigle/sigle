@@ -15,6 +15,7 @@ import {
   MdFormatListNumbered,
   MdFormatListBulleted,
   MdLink,
+  MdCode,
 } from 'react-icons/md';
 import { hasLinks, hasBlock, hasMark } from './utils';
 import { onClickLink, onClickBlock, onClickMark } from './SlateEditorToolbar';
@@ -129,6 +130,7 @@ export const SlateEditorHoverMenu = forwardRef(
         {renderMarkButton('bold', MdFormatBold)}
         {renderMarkButton('italic', MdFormatItalic)}
         {renderMarkButton('underlined', MdFormatUnderlined)}
+        {renderMarkButton('code', MdCode)}
         {renderBlockButton('block-quote', MdFormatQuote)}
         {renderBlockButton('heading-one', MdLooksOne)}
         {renderBlockButton('heading-two', MdLooksTwo)}
