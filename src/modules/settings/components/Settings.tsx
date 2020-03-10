@@ -21,10 +21,6 @@ const FormInput = styled.input`
   ${tw`appearance-none block w-full bg-white border border-grey rounded py-3 px-3 text-sm leading-tight focus:outline-none`};
 `;
 
-const FormColorContainer = styled.div`
-  ${tw`flex`};
-`;
-
 const FormColor = styled.div<{ color: string }>`
   ${tw`p-3 text-white rounded cursor-pointer relative`};
   ${props =>
@@ -68,7 +64,10 @@ export const Settings = () => {
                     bottom: '0px',
                     left: '0px',
                   }}
-                  onClick={() => setColorOpen(false)}
+                  onClick={e => {
+                    e.stopPropagation();
+                    setColorOpen(false);
+                  }}
                 />
                 <BlockPicker
                   color={color}
@@ -77,10 +76,6 @@ export const Settings = () => {
               </div>
             )}
           </FormColor>
-          {/* <FormColorContainer>
-            <FormColor color={colors.pink} />
-            <FormInput placeholder={`${colors.pink}`} />
-          </FormColorContainer> */}
         </FormRow>
 
         <Button disabled={loadingSave} type="submit">
