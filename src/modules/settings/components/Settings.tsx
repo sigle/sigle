@@ -1,14 +1,16 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import styled, { css } from 'styled-components';
 import tw from 'twin.macro';
 import { useFormik } from 'formik';
 import { BlockPicker } from 'react-color';
+import { toast } from 'react-toastify';
 import { DashboardLayout } from '../../layout';
 import { DashboardPageContainer } from '../../layout/components/DashboardLayout';
 import { DashboardPageTitle } from '../../layout/components/DashboardHeader';
 import { useAuth } from '../../auth/AuthContext';
 import { Button } from '../../../components';
 import { colors } from '../../../utils/colors';
+import { getSettingsFile, saveSettingsFile } from '../../../utils';
 
 const FormRow = styled.div`
   ${tw`py-3`};
@@ -43,17 +45,41 @@ export const Settings = () => {
       // TODO validate hex code format
       return {};
     },
-    onSubmit: values => {
-      // TODO filter and remove empty strings
-      alert(JSON.stringify(values, null, 2));
+    onSubmit: async (values, { setSubmitting }) => {
+      const newSettings = {};
+      Object.keys(values).forEach(key => {
+        // We replace empty strings by undefined
+        // @ts-ignore
+        newSettings[key] = values[key] ? values[key] : undefined;
+      });
+
+      const settingsFile = await getSettingsFile();
+      await saveSettingsFile({
+        ...settingsFile,
+        ...newSettings,
+      });
+      toast.success('Settings saved');
+      setSubmitting(false);
     },
   });
+
+  useEffect(() => {
+    const loadSettings = async () => {
+      const settingsFile = await getSettingsFile();
+      if (settingsFile.siteName) {
+        formik.setFieldValue('siteName', settingsFile.siteName);
+      }
+      if (settingsFile.siteColor) {
+        formik.setFieldValue('siteColor', settingsFile.siteColor);
+      }
+    };
+
+    loadSettings();
+  }, []);
 
   if (!user) {
     return null;
   }
-
-  const loadingSave = false;
 
   return (
     <DashboardLayout>
@@ -104,8 +130,8 @@ export const Settings = () => {
             </FormColor>
           </FormRow>
 
-          <Button disabled={loadingSave} type="submit">
-            {loadingSave ? 'Saving...' : 'Save'}
+          <Button disabled={formik.isSubmitting} type="submit">
+            {formik.isSubmitting ? 'Saving...' : 'Save'}
           </Button>
         </form>
       </DashboardPageContainer>

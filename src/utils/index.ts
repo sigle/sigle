@@ -141,7 +141,9 @@ export const convertStoryToSubsetStory = (story: Story): SubsetStory => {
 };
 
 export const getSettingsFile = async (): Promise<SettingsFile> => {
-  let file = (await userSession.getFile(settingsFileName)) as any;
+  let file = (await userSession.getFile(settingsFileName, {
+    decrypt: false,
+  })) as any;
   if (file) {
     file = JSON.parse(file);
   }
