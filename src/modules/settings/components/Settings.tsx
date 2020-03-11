@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import styled, { css } from 'styled-components';
 import tw from 'twin.macro';
+import { useFormik } from 'formik';
 import { BlockPicker } from 'react-color';
 import { DashboardLayout } from '../../layout';
 import { DashboardPageContainer } from '../../layout/components/DashboardLayout';
@@ -32,7 +33,21 @@ const FormColor = styled.div<{ color: string }>`
 export const Settings = () => {
   const { user } = useAuth();
   const [colorOpen, setColorOpen] = useState(false);
-  const [color, setColor] = useState(colors.pink);
+  const formik = useFormik({
+    initialValues: {
+      siteName: '',
+      siteColor: '',
+    },
+    validate: () => {
+      // TODO validate name length
+      // TODO validate hex code format
+      return {};
+    },
+    onSubmit: values => {
+      // TODO filter and remove empty strings
+      alert(JSON.stringify(values, null, 2));
+    },
+  });
 
   if (!user) {
     return null;
@@ -45,42 +60,54 @@ export const Settings = () => {
       <DashboardPageContainer>
         <DashboardPageTitle title="Settings" />
 
-        <FormRow>
-          <FormLabel>Name</FormLabel>
-          <FormInput placeholder={user.username} />
-        </FormRow>
+        <form onSubmit={formik.handleSubmit}>
+          <FormRow>
+            <FormLabel>Name</FormLabel>
+            <FormInput
+              name="siteName"
+              placeholder={user.username}
+              value={formik.values.siteName}
+              onChange={formik.handleChange}
+            />
+          </FormRow>
 
-        <FormRow>
-          <FormLabel>Primary color</FormLabel>
-          <FormColor color={color} onClick={() => setColorOpen(true)}>
-            {color}
-            {colorOpen && (
-              <div style={{ position: 'absolute', zIndex: 2, top: 52 }}>
-                <div
-                  style={{
-                    position: 'fixed',
-                    top: '0px',
-                    right: '0px',
-                    bottom: '0px',
-                    left: '0px',
-                  }}
-                  onClick={e => {
-                    e.stopPropagation();
-                    setColorOpen(false);
-                  }}
-                />
-                <BlockPicker
-                  color={color}
-                  onChange={newColor => setColor(newColor.hex)}
-                />
-              </div>
-            )}
-          </FormColor>
-        </FormRow>
+          <FormRow>
+            <FormLabel>Primary color</FormLabel>
+            <FormColor
+              color={formik.values.siteColor || colors.pink}
+              onClick={() => setColorOpen(true)}
+            >
+              {formik.values.siteColor || colors.pink}
+              {colorOpen && (
+                <div style={{ position: 'absolute', zIndex: 2, top: 52 }}>
+                  <div
+                    style={{
+                      position: 'fixed',
+                      top: '0px',
+                      right: '0px',
+                      bottom: '0px',
+                      left: '0px',
+                    }}
+                    onClick={e => {
+                      e.stopPropagation();
+                      setColorOpen(false);
+                    }}
+                  />
+                  <BlockPicker
+                    color={formik.values.siteColor || colors.pink}
+                    onChange={newColor =>
+                      formik.setFieldValue('siteColor', newColor.hex)
+                    }
+                  />
+                </div>
+              )}
+            </FormColor>
+          </FormRow>
 
-        <Button disabled={loadingSave} type="submit">
-          {loadingSave ? 'Saving...' : 'Save'}
-        </Button>
+          <Button disabled={loadingSave} type="submit">
+            {loadingSave ? 'Saving...' : 'Save'}
+          </Button>
+        </form>
       </DashboardPageContainer>
     </DashboardLayout>
   );

@@ -51,3 +51,14 @@ export interface SubsetStory {
   createdAt: number;
   updatedAt: number;
 }
+
+export interface SettingsFile {
+  /**
+   * Custom name for the blog
+   */
+  siteName?: string;
+  /**
+   * Custom color used
+   */
+  siteColor?: string;
+}
