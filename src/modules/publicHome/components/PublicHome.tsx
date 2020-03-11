@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import tw from 'twin.macro';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
-import { StoryFile } from '../../../types';
+import { StoryFile, SettingsFile } from '../../../types';
 import { Container } from '../../../components';
 import { PublicStoryItem } from './PublicStoryItem';
 import {
@@ -24,9 +24,10 @@ const NoStories = styled.p`
 
 interface PublicHomeProps {
   file: StoryFile;
+  settings: SettingsFile;
 }
 
-export const PublicHome = ({ file }: PublicHomeProps) => {
+export const PublicHome = ({ file, settings }: PublicHomeProps) => {
   const router = useRouter();
   const { username } = router.query as { username: string };
 
@@ -34,7 +35,7 @@ export const PublicHome = ({ file }: PublicHomeProps) => {
     <React.Fragment>
       <Header>
         <HeaderContainer>
-          <HeaderTitle>{username}</HeaderTitle>
+          <HeaderTitle>{settings.siteName || username}</HeaderTitle>
           <Link href="/[username]" as={`/${username}`}>
             <HeaderLink>Stories</HeaderLink>
           </Link>
