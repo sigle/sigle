@@ -74,13 +74,16 @@ PublicHomePage.getInitialProps = async ({ query, res }) => {
     userProfile && userProfile.apps && userProfile.apps[config.appUrl];
   // If the user already used the app we try to get the public list
   if (bucketUrl) {
-    const dataPublicStories = await fetchPublicStories(bucketUrl);
+    const [dataPublicStories, dataSettings] = await Promise.all([
+      fetchPublicStories(bucketUrl),
+      fetchSettings(bucketUrl),
+    ]);
+
     file = dataPublicStories.file;
     if (dataPublicStories.statusCode) {
       statusCode = dataPublicStories.statusCode;
     }
 
-    const dataSettings = await fetchSettings(bucketUrl);
     settings = dataSettings.file;
   } else {
     statusCode = 404;
