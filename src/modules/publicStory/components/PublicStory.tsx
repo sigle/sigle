@@ -1,7 +1,7 @@
 import React from 'react';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
-import styled, { css } from 'styled-components';
+import styled, { css, createGlobalStyle } from 'styled-components';
 import tw from 'twin.macro';
 import { Value } from 'slate';
 import Html from 'slate-html-serializer';
@@ -182,6 +182,19 @@ export const Content = styled.div`
   }
 `;
 
+const CustomStyle = createGlobalStyle<{ siteColor?: string }>`
+  ${props =>
+    props.siteColor &&
+    css`
+      .sigle-date {
+        color: ${props.siteColor} !important;
+      }
+      .sigle-content a {
+        color: ${props.siteColor} !important;
+      }
+    `}
+`;
+
 interface PublicStoryProps {
   story: Story;
   settings: SettingsFile;
@@ -221,6 +234,7 @@ export const PublicStory = ({ story, settings }: PublicStoryProps) => {
           cardType: story.coverImage ? 'summary_large_image' : 'summary',
         }}
       />
+      <CustomStyle siteColor={settings.siteColor} />
       <Header>
         <HeaderContainer>
           <HeaderTitle>{settings.siteName || username}</HeaderTitle>
