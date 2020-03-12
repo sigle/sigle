@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import styled, { css } from 'styled-components';
 import tw from 'twin.macro';
-import { useFormik } from 'formik';
+import { useFormik, FormikErrors } from 'formik';
 import { BlockPicker } from 'react-color';
 import { toast } from 'react-toastify';
 import { DashboardLayout } from '../../layout';
@@ -32,18 +32,28 @@ const FormColor = styled.div<{ color: string }>`
     `}
 `;
 
+interface SettingsFormValues {
+  siteName: string;
+  siteColor: string;
+}
+
 export const Settings = () => {
   const { user } = useAuth();
   const [colorOpen, setColorOpen] = useState(false);
-  const formik = useFormik({
+  const formik = useFormik<SettingsFormValues>({
     initialValues: {
       siteName: '',
       siteColor: '',
     },
-    validate: () => {
-      // TODO validate name length
-      // TODO validate hex code format
-      return {};
+    validate: values => {
+      const errors: FormikErrors<SettingsFormValues> = {};
+      if (values.siteName && values.siteName.length > 50) {
+        errors.siteName = 'Name too long';
+      }
+      if (values.siteColor && !values.siteColor.match(/#([A-Fa-f0-9]{6})/gi)) {
+        errors.siteColor = 'Invalid color, only hexadecimal colors are allowed';
+      }
+      return errors;
     },
     onSubmit: async (values, { setSubmitting }) => {
       const newSettings = {};
@@ -92,6 +102,7 @@ export const Settings = () => {
             <FormLabel>Name</FormLabel>
             <FormInput
               name="siteName"
+              maxLength={50}
               placeholder={user.username}
               value={formik.values.siteName}
               onChange={formik.handleChange}
