@@ -7,7 +7,7 @@ import { Value } from 'slate';
 import Html from 'slate-html-serializer';
 import format from 'date-fns/format';
 import { NextSeo } from 'next-seo';
-import { Story } from '../../../types';
+import { Story, SettingsFile } from '../../../types';
 import { Container } from '../../../components';
 import { config } from '../../../config';
 
@@ -184,9 +184,10 @@ export const Content = styled.div`
 
 interface PublicStoryProps {
   story: Story;
+  settings: SettingsFile;
 }
 
-export const PublicStory = ({ story }: PublicStoryProps) => {
+export const PublicStory = ({ story, settings }: PublicStoryProps) => {
   const router = useRouter();
   const { username, storyId } = router.query as {
     username: string;
@@ -222,7 +223,7 @@ export const PublicStory = ({ story }: PublicStoryProps) => {
       />
       <Header>
         <HeaderContainer>
-          <HeaderTitle>{username}</HeaderTitle>
+          <HeaderTitle>{settings.siteName || username}</HeaderTitle>
           <Link href="/[username]" as={`/${username}`}>
             <HeaderLink>Stories</HeaderLink>
           </Link>
