@@ -65,4 +65,8 @@ export interface SettingsFile {
    * Custom color used
    */
   siteColor?: string;
+  /**
+   * Custom logo
+   */
+  siteLogo?: string;
 }
