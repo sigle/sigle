@@ -38,7 +38,8 @@ const FormHelper = styled.p`
 `;
 
 const FormColor = styled.div<{ color: string }>`
-  ${tw`py-3 px-10 text-white rounded cursor-pointer relative inline-block`};
+  ${tw`py-3 text-white rounded cursor-pointer relative inline-block text-center`};
+  width: 170px;
   ${props =>
     css`
       background-color: ${props.color};
@@ -230,7 +231,9 @@ export const Settings = () => {
             >
               {formik.values.siteColor || colors.pink}
               {colorOpen && (
-                <div style={{ position: 'absolute', zIndex: 2, top: 52 }}>
+                <div
+                  style={{ position: 'absolute', zIndex: 2, top: 52, left: 0 }}
+                >
                   <div
                     style={{
                       position: 'fixed',

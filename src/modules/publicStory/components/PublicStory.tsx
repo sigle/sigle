@@ -78,22 +78,18 @@ const rules = [
 
 const html = new Html({ rules });
 
-export const Header = styled.div`
-  ${tw`bg-black py-4 text-white`};
+const Header = styled.div`
+  ${tw`py-6 text-black`};
 `;
 
-export const HeaderContainer = styled.div`
+const HeaderContainer = styled.div`
   ${tw`mx-auto px-4 flex`};
   width: 100%;
   max-width: 768px;
 `;
 
-export const HeaderTitle = styled.div`
-  ${tw`font-bold`};
-`;
-
-export const HeaderLink = styled.a`
-  ${tw`text-white no-underline ml-8 cursor-pointer`};
+const HeaderTitle = styled.a`
+  ${tw`font-bold text-xl`};
 `;
 
 const StyledContainer = styled(Container)<{ hasCover: boolean }>`
@@ -207,6 +203,9 @@ export const PublicStory = ({ story, settings }: PublicStoryProps) => {
     storyId: string;
   };
 
+  const siteName = settings.siteName || username;
+  // TODO safe siteColor
+
   const seoUrl = `${config.appUrl}/${username}/${storyId}`;
   const seoTitle = story.metaTitle || `${story.title} | Sigle`;
   const seoDescription = story.metaDescription;
@@ -234,15 +233,17 @@ export const PublicStory = ({ story, settings }: PublicStoryProps) => {
           cardType: story.coverImage ? 'summary_large_image' : 'summary',
         }}
       />
+
       <CustomStyle siteColor={settings.siteColor} />
+
       <Header>
         <HeaderContainer>
-          <HeaderTitle>{settings.siteName || username}</HeaderTitle>
-          <Link href="/[username]" as={`/${username}`}>
-            <HeaderLink>Stories</HeaderLink>
+          <Link href="/[username]" as={`/${username}`} passHref>
+            <HeaderTitle>{siteName}</HeaderTitle>
           </Link>
         </HeaderContainer>
       </Header>
+
       <StyledContainer hasCover={!!story.coverImage}>
         <Title className="sigle-title">{story.title}</Title>
         <StoryDate className="sigle-date">
