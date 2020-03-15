@@ -3,14 +3,14 @@ import Link from 'next/link';
 import styled, { css } from 'styled-components';
 import tw from 'twin.macro';
 import format from 'date-fns/format';
-import { SubsetStory } from '../../../types';
+import { SubsetStory, SettingsFile } from '../../../types';
 import { config } from '../../../config';
 
 const Container = styled.div`
   ${tw`py-8 border-b border-solid border-grey-light `};
 `;
 
-const StoryContainer = styled.div`
+const StoryContainer = styled.div<{ siteColor?: string }>`
   ${tw`cursor-pointer`};
 
   @media (min-width: ${config.breakpoints.md}px) {
@@ -18,7 +18,7 @@ const StoryContainer = styled.div`
   }
 
   &:hover .sigle-story-title {
-    ${tw`text-pink`};
+    ${({ siteColor }) => (siteColor ? `color: ${siteColor}` : tw`text-pink`)}
   }
 `;
 
@@ -60,28 +60,34 @@ const StoryText = styled.div`
 interface Props {
   username: string;
   story: SubsetStory;
+  settings: SettingsFile;
 }
 
-export const PublicStoryItem = ({ username, story }: Props) => (
-  <Container>
-    <Link href="/[username]/[storyId]" as={`/${username}/${story.id}`}>
-      <StoryContainer>
-        {story.coverImage && (
-          <StoryContainerImage>
-            <StoryImage
-              className="sigle-story-cover-image"
-              src={story.coverImage}
-            />
-          </StoryContainerImage>
-        )}
-        <StoryContainerContent hasCover={!!story.coverImage}>
-          <StoryTitle className="sigle-story-title">{story.title}</StoryTitle>
-          <StoryDate className="sigle-story-date">
-            {format(story.createdAt, 'dd MMMM yyyy')}
-          </StoryDate>
-          <StoryText className="sigle-story-content">{story.content}</StoryText>
-        </StoryContainerContent>
-      </StoryContainer>
-    </Link>
-  </Container>
-);
+export const PublicStoryItem = ({ username, story, settings }: Props) => {
+  // TODO safe siteColor
+  return (
+    <Container>
+      <Link href="/[username]/[storyId]" as={`/${username}/${story.id}`}>
+        <StoryContainer siteColor={settings.siteColor}>
+          {story.coverImage && (
+            <StoryContainerImage>
+              <StoryImage
+                className="sigle-story-cover-image"
+                src={story.coverImage}
+              />
+            </StoryContainerImage>
+          )}
+          <StoryContainerContent hasCover={!!story.coverImage}>
+            <StoryTitle className="sigle-story-title">{story.title}</StoryTitle>
+            <StoryDate className="sigle-story-date">
+              {format(story.createdAt, 'dd MMMM yyyy')}
+            </StoryDate>
+            <StoryText className="sigle-story-content">
+              {story.content}
+            </StoryText>
+          </StoryContainerContent>
+        </StoryContainer>
+      </Link>
+    </Container>
+  );
+};

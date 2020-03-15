@@ -33,6 +33,10 @@ const FormTextarea = styled.textarea`
   ${tw`appearance-none block w-full bg-white border border-grey rounded py-3 px-3 text-sm leading-tight focus:outline-none`};
 `;
 
+const FormHelper = styled.p`
+  ${tw`text-sm text-grey-darker mt-1`};
+`;
+
 const FormColor = styled.div<{ color: string }>`
   ${tw`py-3 px-10 text-white rounded cursor-pointer relative inline-block`};
   ${props =>
@@ -64,7 +68,7 @@ const ImageEmptyIconDelete = styled.div`
 `;
 
 const Image = styled.img`
-  ${tw`cursor-pointer w-full`};
+  ${tw`cursor-pointer`};
 `;
 
 interface SettingsFormValues {
@@ -276,6 +280,9 @@ export const Settings = () => {
                 <MdAddAPhoto />
               </ImageEmptyIconAdd>
             </ImageEmpty>
+            <FormHelper>
+              Resize manually your image to get the result you want
+            </FormHelper>
           </FormRow>
 
           <Button disabled={formik.isSubmitting} type="submit">
