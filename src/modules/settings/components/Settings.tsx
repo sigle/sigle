@@ -24,8 +24,12 @@ const FormInput = styled.input`
   ${tw`appearance-none block w-full bg-white border border-grey rounded py-3 px-3 text-sm leading-tight focus:outline-none`};
 `;
 
+const FormTextarea = styled.textarea`
+  ${tw`appearance-none block w-full bg-white border border-grey rounded py-3 px-3 text-sm leading-tight focus:outline-none`};
+`;
+
 const FormColor = styled.div<{ color: string }>`
-  ${tw`p-3 text-white rounded cursor-pointer relative`};
+  ${tw`p-3 text-white rounded cursor-pointer relative inline-block`};
   ${props =>
     css`
       background-color: ${props.color};
@@ -34,6 +38,7 @@ const FormColor = styled.div<{ color: string }>`
 
 interface SettingsFormValues {
   siteName: string;
+  siteDescription: string;
   siteColor: string;
 }
 
@@ -43,6 +48,7 @@ export const Settings = () => {
   const formik = useFormik<SettingsFormValues>({
     initialValues: {
       siteName: '',
+      siteDescription: '',
       siteColor: '',
     },
     validate: values => {
@@ -110,6 +116,17 @@ export const Settings = () => {
           </FormRow>
 
           <FormRow>
+            <FormLabel>Description</FormLabel>
+            <FormTextarea
+              name="siteDescription"
+              rows={3}
+              maxLength={350}
+              value={formik.values.siteDescription}
+              onChange={formik.handleChange}
+            />
+          </FormRow>
+
+          <FormRow>
             <FormLabel>Primary color</FormLabel>
             <FormColor
               color={formik.values.siteColor || colors.pink}
@@ -136,6 +153,13 @@ export const Settings = () => {
                     onChange={newColor =>
                       formik.setFieldValue('siteColor', newColor.hex)
                     }
+                    colors={[
+                      '#D9E3F0',
+                      '#F47373',
+                      '#697689',
+                      '#37D67A',
+                      '#2CCCE4',
+                    ]}
                   />
                 </div>
               )}

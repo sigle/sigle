@@ -58,6 +58,10 @@ export interface SettingsFile {
    */
   siteName?: string;
   /**
+   * Custom description for the blog
+   */
+  siteDescription?: string;
+  /**
    * Custom color used
    */
   siteColor?: string;
