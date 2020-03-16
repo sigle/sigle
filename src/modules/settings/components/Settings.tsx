@@ -17,29 +17,17 @@ import { resizeImage } from '../../../utils/image';
 import { userSession } from '../../../utils/blockstack';
 import { SettingsFile } from '../../../types';
 import { hexRegex } from '../../../utils/regex';
+import {
+  FormRow,
+  FormLabel,
+  FormInput,
+  FormTextarea,
+  FormHelperError,
+  FormHelper,
+} from '../../../components/Form';
 
-const FormRow = styled.div`
-  ${tw`py-3 xl:w-1/2`};
-`;
-
-const FormLabel = styled.label`
-  ${tw`w-full block tracking-wide font-bold text-black mb-2`};
-`;
-
-const FormInput = styled.input`
-  ${tw`appearance-none block w-full bg-white border border-grey rounded py-3 px-3 text-sm leading-tight focus:outline-none`};
-`;
-
-const FormTextarea = styled.textarea`
-  ${tw`appearance-none block w-full bg-white border border-grey rounded py-3 px-3 text-sm leading-tight focus:outline-none`};
-`;
-
-const FormHelper = styled.p`
-  ${tw`text-sm text-grey-darker mt-1`};
-`;
-
-const FormHelperError = styled.p`
-  ${tw`text-sm text-pink mt-1`};
+const StyledFormRow = styled(FormRow)`
+  ${tw`xl:w-1/2`};
 `;
 
 const FormColor = styled.div<{ color: string }>`
@@ -211,7 +199,7 @@ export const Settings = () => {
         <DashboardPageTitle title="Settings" />
 
         <form onSubmit={formik.handleSubmit}>
-          <FormRow>
+          <StyledFormRow>
             <FormLabel>Name</FormLabel>
             <FormInput
               name="siteName"
@@ -223,9 +211,9 @@ export const Settings = () => {
             {formik.errors.siteName && (
               <FormHelperError>{formik.errors.siteName}</FormHelperError>
             )}
-          </FormRow>
+          </StyledFormRow>
 
-          <FormRow>
+          <StyledFormRow>
             <FormLabel>Description</FormLabel>
             <FormTextarea
               name="siteDescription"
@@ -237,9 +225,9 @@ export const Settings = () => {
             {formik.errors.siteDescription && (
               <FormHelperError>{formik.errors.siteDescription}</FormHelperError>
             )}
-          </FormRow>
+          </StyledFormRow>
 
-          <FormRow>
+          <StyledFormRow>
             <FormLabel>Primary color</FormLabel>
             <FormColor
               color={formik.values.siteColor || colors.pink}
@@ -282,9 +270,9 @@ export const Settings = () => {
             {formik.errors.siteColor && (
               <FormHelperError>{formik.errors.siteColor}</FormHelperError>
             )}
-          </FormRow>
+          </StyledFormRow>
 
-          <FormRow>
+          <StyledFormRow>
             <FormLabel>Logo</FormLabel>
             <ImageEmpty
               {...getRootProps({ tabIndex: undefined })}
@@ -305,7 +293,7 @@ export const Settings = () => {
             <FormHelper>
               Resize manually your image to get the result you want
             </FormHelper>
-          </FormRow>
+          </StyledFormRow>
 
           <Button disabled={formik.isSubmitting} type="submit">
             {formik.isSubmitting ? 'Saving...' : 'Save'}
