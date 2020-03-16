@@ -38,6 +38,10 @@ const FormHelper = styled.p`
   ${tw`text-sm text-grey-darker mt-1`};
 `;
 
+const FormHelperError = styled.p`
+  ${tw`text-sm text-pink mt-1`};
+`;
+
 const FormColor = styled.div<{ color: string }>`
   ${tw`py-3 text-white rounded cursor-pointer relative inline-block text-center`};
   width: 170px;
@@ -94,8 +98,11 @@ export const Settings = () => {
     },
     validate: values => {
       const errors: FormikErrors<SettingsFormValues> = {};
-      if (values.siteName && values.siteName.length > 50) {
+      if (values.siteName && values.siteName.length > 10) {
         errors.siteName = 'Name too long';
+      }
+      if (values.siteDescription && values.siteDescription.length > 350) {
+        errors.siteName = 'Description too long';
       }
       if (values.siteColor && !values.siteColor.match(hexRegex)) {
         errors.siteColor = 'Invalid color, only hexadecimal colors are allowed';
@@ -186,6 +193,7 @@ export const Settings = () => {
     // We stop the event so it does not trigger react-dropzone
     event.stopPropagation();
     setCustomLogo(undefined);
+    formik.setFieldValue('siteLogo', undefined);
   };
 
   if (!user) {
@@ -211,6 +219,9 @@ export const Settings = () => {
               value={formik.values.siteName}
               onChange={formik.handleChange}
             />
+            {formik.errors.siteName && (
+              <FormHelperError>{formik.errors.siteName}</FormHelperError>
+            )}
           </FormRow>
 
           <FormRow>
@@ -222,6 +233,9 @@ export const Settings = () => {
               value={formik.values.siteDescription}
               onChange={formik.handleChange}
             />
+            {formik.errors.siteDescription && (
+              <FormHelperError>{formik.errors.siteDescription}</FormHelperError>
+            )}
           </FormRow>
 
           <FormRow>
@@ -264,6 +278,9 @@ export const Settings = () => {
                 </div>
               )}
             </FormColor>
+            {formik.errors.siteColor && (
+              <FormHelperError>{formik.errors.siteColor}</FormHelperError>
+            )}
           </FormRow>
 
           <FormRow>
