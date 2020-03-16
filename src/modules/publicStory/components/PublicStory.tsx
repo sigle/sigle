@@ -10,7 +10,7 @@ import { NextSeo } from 'next-seo';
 import { Story, SettingsFile } from '../../../types';
 import { Container } from '../../../components';
 import { config } from '../../../config';
-import { sanitizeHexColor } from '../../../utils/security';
+import { sanitizeHexColor, sanitizeLink } from '../../../utils/security';
 
 const rules = [
   {
@@ -63,14 +63,12 @@ const rules = [
         switch (obj.type) {
           case 'link':
             const href: string = obj.data.get('href');
-            // TODO add unit test for this
-            // We sanitise the link to protect from js execution "javascript:"
-            // We use includes instead of startWith because there might be some spaces at the beginning
-            // In a future version react will throw and error if this is happening https://reactjs.org/blog/2019/08/08/react-v16.9.0.html#deprecating-javascript-urls
-            if (href.includes('javascript:')) {
+            const safeHref = sanitizeLink(href);
+
+            if (!safeHref) {
               return <a href="/">🤯</a>;
             }
-            return <a href={href}>{children}</a>;
+            return <a href={safeHref}>{children}</a>;
         }
       }
     },
