@@ -1,6 +1,6 @@
 import React from 'react';
 import { Protected } from '../modules/auth/Protected';
-import { Settings } from '../modules/settings/components/Settings';
+import { Settings } from '../modules/settings/Settings';
 
 const SettingsPage = () => {
   return (
