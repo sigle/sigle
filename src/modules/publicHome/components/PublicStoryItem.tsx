@@ -5,6 +5,7 @@ import tw from 'twin.macro';
 import format from 'date-fns/format';
 import { SubsetStory, SettingsFile } from '../../../types';
 import { config } from '../../../config';
+import { sanitizeHexColor } from '../../../utils/security';
 
 const Container = styled.div`
   ${tw`py-8 border-b border-solid border-grey-light `};
@@ -64,11 +65,13 @@ interface Props {
 }
 
 export const PublicStoryItem = ({ username, story, settings }: Props) => {
-  // TODO safe siteColor
+  const safeSiteColor =
+    settings.siteColor && sanitizeHexColor(settings.siteColor);
+
   return (
     <Container>
       <Link href="/[username]/[storyId]" as={`/${username}/${story.id}`}>
-        <StoryContainer siteColor={settings.siteColor}>
+        <StoryContainer siteColor={safeSiteColor}>
           {story.coverImage && (
             <StoryContainerImage>
               <StoryImage

@@ -5,11 +5,12 @@
   "scripts": {
     "start": "NODE_ENV=production node server.js",
     "build": "next build",
-    "test": "yarn test:lint",
+    "test": "yarn test:lint && yarn test:only",
     "analyze": "BUNDLE_ANALYZE=both next build",
     "analyze:server": "BUNDLE_ANALYZE=server next build",
     "analyze:browser": "BUNDLE_ANALYZE=browser next build",
     "prettier": "prettier --write '**/*.{js,ts,tsx,md,css}'",
+    "test:only": "jest",
     "test:lint": "eslint 'src/**/*.{js,ts,tsx}'"
   },
   "prettier": {

@@ -10,6 +10,7 @@ import { NextSeo } from 'next-seo';
 import { Story, SettingsFile } from '../../../types';
 import { Container } from '../../../components';
 import { config } from '../../../config';
+import { sanitizeHexColor } from '../../../utils/security';
 
 const rules = [
   {
@@ -204,7 +205,8 @@ export const PublicStory = ({ story, settings }: PublicStoryProps) => {
   };
 
   const siteName = settings.siteName || username;
-  // TODO safe siteColor
+  const safeSiteColor =
+    settings.siteColor && sanitizeHexColor(settings.siteColor);
 
   const seoUrl = `${config.appUrl}/${username}/${storyId}`;
   const seoTitle = story.metaTitle || `${story.title} | Sigle`;
@@ -234,7 +236,7 @@ export const PublicStory = ({ story, settings }: PublicStoryProps) => {
         }}
       />
 
-      <CustomStyle siteColor={settings.siteColor} />
+      <CustomStyle siteColor={safeSiteColor} />
 
       <Header>
         <HeaderContainer>

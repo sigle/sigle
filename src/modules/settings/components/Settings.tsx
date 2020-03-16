@@ -16,6 +16,7 @@ import { getSettingsFile, saveSettingsFile } from '../../../utils';
 import { resizeImage } from '../../../utils/image';
 import { userSession } from '../../../utils/blockstack';
 import { SettingsFile } from '../../../types';
+import { hexRegex } from '../../../utils/regex';
 
 const FormRow = styled.div`
   ${tw`py-3 xl:w-1/2`};
@@ -96,7 +97,7 @@ export const Settings = () => {
       if (values.siteName && values.siteName.length > 50) {
         errors.siteName = 'Name too long';
       }
-      if (values.siteColor && !values.siteColor.match(/#([A-Fa-f0-9]{6})/gi)) {
+      if (values.siteColor && !values.siteColor.match(hexRegex)) {
         errors.siteColor = 'Invalid color, only hexadecimal colors are allowed';
       }
       return errors;
