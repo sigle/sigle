@@ -17,5 +17,9 @@ export const sanitizeLink = (href: string): string | undefined => {
   if (href.includes('javascript:')) {
     return undefined;
   }
+  // We sanitise the link to protect from base64 "data:"
+  if (href.trim().startsWith('data:')) {
+    return undefined;
+  }
   return href;
 };

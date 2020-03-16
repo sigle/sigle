@@ -23,6 +23,26 @@ describe('sanitizeLink', () => {
     expect(sanitizeLink('javascript:alert("hack")')).toBeUndefined();
   });
 
+  it('Should return undefined if javascript value is passed with spaces', () => {
+    expect(sanitizeLink('   javascript:alert("hack")   ')).toBeUndefined();
+  });
+
+  it('Should return undefined if base64 encoded data is passed', () => {
+    expect(
+      sanitizeLink(
+        'data:text/html;base64,PHNjcmlwdD5hbGVydCgiSGFja2VkISIpOzwvc2NyaXB0Pg=='
+      )
+    ).toBeUndefined();
+  });
+
+  it('Should return undefined if base64 encoded data is passed with spaces', () => {
+    expect(
+      sanitizeLink(
+        '   data:text/html;base64,PHNjcmlwdD5hbGVydCgiSGFja2VkISIpOzwvc2NyaXB0Pg==   '
+      )
+    ).toBeUndefined();
+  });
+
   it('Should return link if secure link is passed', () => {
     expect(sanitizeLink('https://app.sigle.io')).toBe('https://app.sigle.io');
   });
