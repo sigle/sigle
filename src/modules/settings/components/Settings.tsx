@@ -81,7 +81,7 @@ interface SettingsFormValues {
   siteName: string;
   siteDescription: string;
   siteColor: string;
-  siteLogo?: string;
+  siteLogo: string;
 }
 
 export const Settings = () => {
@@ -95,6 +95,7 @@ export const Settings = () => {
       siteName: '',
       siteDescription: '',
       siteColor: '',
+      siteLogo: '',
     },
     validate: values => {
       const errors: FormikErrors<SettingsFormValues> = {};
@@ -193,7 +194,7 @@ export const Settings = () => {
     // We stop the event so it does not trigger react-dropzone
     event.stopPropagation();
     setCustomLogo(undefined);
-    formik.setFieldValue('siteLogo', undefined);
+    formik.setFieldValue('siteLogo', '');
   };
 
   if (!user) {
