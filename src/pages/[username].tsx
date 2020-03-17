@@ -54,7 +54,7 @@ const fetchSettings = async (bucketUrl: string) => {
   return { file, statusCode };
 };
 
-PublicHomePage.getInitialProps = async ({ query, res }) => {
+PublicHomePage.getInitialProps = async ({ query, req, res }) => {
   const { username } = query as { username: string };
   let file;
   let settings;
@@ -70,8 +70,11 @@ PublicHomePage.getInitialProps = async ({ query, res }) => {
     }
   }
 
-  const bucketUrl =
-    userProfile && userProfile.apps && userProfile.apps[config.appUrl];
+  // If deployed on now we want to get the deployment url to be able to test unmerged pr's
+  const appUrl =
+    (req?.headers['x-now-deployment-url'] as string) ?? config.appUrl;
+
+  const bucketUrl = userProfile && userProfile.apps && userProfile.apps[appUrl];
   // If the user already used the app we try to get the public list
   if (bucketUrl) {
     const [dataPublicStories, dataSettings] = await Promise.all([
