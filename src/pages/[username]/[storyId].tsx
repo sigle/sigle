@@ -68,8 +68,12 @@ PublicStoryPage.getInitialProps = async ({ query, req, res }) => {
   }
 
   // If deployed on now we want to get the deployment url to be able to test unmerged pr's
-  const appUrl =
-    (req?.headers['x-now-deployment-url'] as string) ?? config.appUrl;
+  // If client side we use window.location.origin
+  const appUrl = !req
+    ? window.location.origin
+    : req && req.headers['x-forwarded-host']
+    ? `${req.headers['x-forwarded-proto']}://${req.headers['x-forwarded-host']}`
+    : config.appUrl;
 
   const bucketUrl = userProfile && userProfile.apps && userProfile.apps[appUrl];
   // If the user already used the app we try to get the public list
