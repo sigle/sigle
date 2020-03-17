@@ -74,6 +74,8 @@ PublicHomePage.getInitialProps = async ({ query, req, res }) => {
   const appUrl =
     (req?.headers['x-now-deployment-url'] as string) ?? config.appUrl;
 
+  console.log(req?.headers['x-now-deployment-url'], appUrl);
+
   const bucketUrl = userProfile && userProfile.apps && userProfile.apps[appUrl];
   // If the user already used the app we try to get the public list
   if (bucketUrl) {
