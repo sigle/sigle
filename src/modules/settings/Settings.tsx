@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { toast } from 'react-toastify';
 import { DashboardLayout } from '../layout';
 import { DashboardPageContainer } from '../layout/components/DashboardLayout';
 import { DashboardPageTitle } from '../layout/components/DashboardHeader';
@@ -13,9 +14,13 @@ export const Settings = () => {
 
   useEffect(() => {
     const loadSettings = async () => {
-      // TODO try catch
-      const settingsFileResponse = await getSettingsFile();
-      setSettingsFile(settingsFileResponse);
+      try {
+        const settingsFileResponse = await getSettingsFile();
+        setSettingsFile(settingsFileResponse);
+      } catch (error) {
+        console.error(error);
+        toast.error(error.message);
+      }
     };
 
     loadSettings();
