@@ -87,7 +87,7 @@ export const SettingsForm = ({ settings, username }: SettingsFormProps) => {
     },
     validate: values => {
       const errors: FormikErrors<SettingsFormValues> = {};
-      if (values.siteName && values.siteName.length > 10) {
+      if (values.siteName && values.siteName.length > 50) {
         errors.siteName = 'Name too long';
       }
       if (values.siteDescription && values.siteDescription.length > 350) {
