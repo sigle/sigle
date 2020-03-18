@@ -1,3 +1,13 @@
+## March 18, 2020
+
+### New feature
+
+- **⚙️ Settings page**: We now have a new settings page, via this page you can customise your blog even more (name, description, primary color and logo).
+
+### Improvements
+
+- The default theme design has been updated to reflect the new setting options.
+
 ## February 28, 2020
 
 ### Improvements
