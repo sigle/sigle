@@ -120,7 +120,6 @@ export const SettingsForm = ({ settings, username }: SettingsFormProps) => {
             contentType: customLogo.type,
           }
         );
-        setCustomLogo(undefined);
         newSettings.siteLogo = coverImageUrl;
       }
 
@@ -128,6 +127,11 @@ export const SettingsForm = ({ settings, username }: SettingsFormProps) => {
         ...settingsFile,
         ...newSettings,
       });
+
+      if (customLogo) {
+        formik.setFieldValue('siteLogo', coverImageUrl);
+        setCustomLogo(undefined);
+      }
 
       toast.success('Settings saved');
       setSubmitting(false);
