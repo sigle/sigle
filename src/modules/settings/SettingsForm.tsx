@@ -129,7 +129,7 @@ export const SettingsForm = ({ settings, username }: SettingsFormProps) => {
       });
 
       if (customLogo) {
-        formik.setFieldValue('siteLogo', coverImageUrl);
+        formik.setFieldValue('siteLogo', newSettings.siteLogo);
         setCustomLogo(undefined);
       }
 
@@ -148,7 +148,7 @@ export const SettingsForm = ({ settings, username }: SettingsFormProps) => {
 
       const blob = await resizeImage(file, { maxWidth: 2000 });
       setCustomLogo(
-        Object.assign(blob as any, {
+        Object.assign(blob, {
           name: file.name,
         })
       );
