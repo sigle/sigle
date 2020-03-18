@@ -27,7 +27,7 @@ const HeaderName = styled.div`
   ${tw`text-3xl font-bold`};
 `;
 
-const HeaderDescription = styled.div`
+const HeaderDescription = styled.p`
   ${tw`text-base mt-2`};
 `;
 
@@ -50,9 +50,12 @@ export const PublicHome = ({ file, settings }: PublicHomeProps) => {
             <HeaderLogo src={settings.siteLogo} alt={`${siteName} logo`} />
           )}
           <HeaderName>{siteName}</HeaderName>
-          {settings.siteDescription && (
-            <HeaderDescription>{settings.siteDescription}</HeaderDescription>
-          )}
+          {settings.siteDescription &&
+            settings.siteDescription
+              .split('\n')
+              .map((text, index) => (
+                <HeaderDescription key={index}>{text}</HeaderDescription>
+              ))}
         </Header>
       </Container>
 
