@@ -170,6 +170,11 @@ export const DashboardSidebar = () => {
               <a>Published</a>
             </Link>
           </MenuTopItem>
+          <MenuTopItem active={router.route === '/settings'}>
+            <Link href="/settings" passHref>
+              <a>Settings</a>
+            </Link>
+          </MenuTopItem>
         </MenuTop>
       </div>
       <div>

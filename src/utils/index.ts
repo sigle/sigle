@@ -2,10 +2,11 @@ import nanoid from 'nanoid';
 import { Value } from 'slate';
 import Plain from 'slate-plain-serializer';
 import { userSession } from './blockstack';
-import { StoryFile, Story, SubsetStory } from '../types';
+import { StoryFile, Story, SubsetStory, SettingsFile } from '../types';
 
 const storiesFileName = 'stories.json';
 const publicStoriesFileName = 'publicStories.json';
+const settingsFileName = 'settings.json';
 
 export const getStoriesFile = async (): Promise<StoryFile> => {
   let file = (await userSession.getFile(storiesFileName)) as any;
@@ -137,4 +138,25 @@ export const convertStoryToSubsetStory = (story: Story): SubsetStory => {
     createdAt: story.createdAt,
     updatedAt: story.updatedAt,
   };
+};
+
+export const getSettingsFile = async (): Promise<SettingsFile> => {
+  let file = (await userSession.getFile(settingsFileName, {
+    decrypt: false,
+  })) as any;
+  if (file) {
+    file = JSON.parse(file);
+  }
+  if (!file) {
+    file = {};
+  }
+  return file;
+};
+
+export const saveSettingsFile = async (
+  settings: SettingsFile
+): Promise<void> => {
+  await userSession.putFile(settingsFileName, JSON.stringify(settings), {
+    encrypt: false,
+  });
 };
