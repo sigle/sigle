@@ -24,11 +24,11 @@ const HeaderLogo = styled.img`
 `;
 
 const HeaderName = styled.div`
-  ${tw`text-3xl font-bold`};
+  ${tw`text-3xl font-bold text-center`};
 `;
 
 const HeaderDescription = styled.p`
-  ${tw`text-base mt-2`};
+  ${tw`text-base mt-2 text-center`};
 `;
 
 interface PublicHomeProps {
