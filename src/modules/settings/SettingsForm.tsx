@@ -180,6 +180,9 @@ export const SettingsForm = ({ settings, username }: SettingsFormProps) => {
           value={formik.values.siteName}
           onChange={formik.handleChange}
         />
+        <FormHelper>
+          We will show your Blockstack ID if you leave this input empty
+        </FormHelper>
         {formik.errors.siteName && (
           <FormHelperError>{formik.errors.siteName}</FormHelperError>
         )}
@@ -231,13 +234,16 @@ export const SettingsForm = ({ settings, username }: SettingsFormProps) => {
             </div>
           )}
         </FormColor>
+        <FormHelper>
+          This will change the color of links on your blog
+        </FormHelper>
         {formik.errors.siteColor && (
           <FormHelperError>{formik.errors.siteColor}</FormHelperError>
         )}
       </StyledFormRow>
 
       <StyledFormRow>
-        <FormLabel>Logo</FormLabel>
+        <FormLabel>Logo or profile picture</FormLabel>
         <ImageEmpty
           {...getRootProps({ tabIndex: undefined })}
           haveImage={!!coverImageUrl}
