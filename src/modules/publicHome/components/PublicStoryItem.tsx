@@ -8,7 +8,7 @@ import { config } from '../../../config';
 import { sanitizeHexColor } from '../../../utils/security';
 
 const Container = styled.div`
-  ${tw`py-8 border-b border-solid border-grey-light `};
+  ${tw`py-8 border-b border-solid border-grey-light`};
 `;
 
 const StoryContainer = styled.div<{ siteColor?: string }>`
