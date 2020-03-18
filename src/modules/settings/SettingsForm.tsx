@@ -26,6 +26,10 @@ const StyledFormRow = styled(FormRow)`
   ${tw`xl:w-1/2`};
 `;
 
+const StyledFormHelper = styled(FormHelper)`
+  ${tw`mt-2`};
+`;
+
 const FormColor = styled.div<{ color: string }>`
   ${tw`py-3 text-white rounded cursor-pointer relative inline-block text-center`};
   width: 170px;
@@ -36,7 +40,7 @@ const FormColor = styled.div<{ color: string }>`
 `;
 
 const ImageEmpty = styled.div<{ haveImage: boolean }>`
-  ${tw`flex items-center justify-center bg-grey py-8 mb-4 cursor-pointer rounded-lg relative border border-solid border-grey focus:outline-none`};
+  ${tw`flex items-center justify-center bg-grey py-8 cursor-pointer rounded-lg relative border border-solid border-grey focus:outline-none`};
 
   ${props =>
     props.haveImage &&
@@ -184,9 +188,9 @@ export const SettingsForm = ({ settings, username }: SettingsFormProps) => {
           value={formik.values.siteName}
           onChange={formik.handleChange}
         />
-        <FormHelper>
+        <StyledFormHelper>
           We will show your Blockstack ID if you leave this input empty
-        </FormHelper>
+        </StyledFormHelper>
         {formik.errors.siteName && (
           <FormHelperError>{formik.errors.siteName}</FormHelperError>
         )}
@@ -238,9 +242,9 @@ export const SettingsForm = ({ settings, username }: SettingsFormProps) => {
             </div>
           )}
         </FormColor>
-        <FormHelper>
+        <StyledFormHelper>
           This will change the color of links on your blog
-        </FormHelper>
+        </StyledFormHelper>
         {formik.errors.siteColor && (
           <FormHelperError>{formik.errors.siteColor}</FormHelperError>
         )}
@@ -264,9 +268,9 @@ export const SettingsForm = ({ settings, username }: SettingsFormProps) => {
             <MdAddAPhoto />
           </ImageEmptyIconAdd>
         </ImageEmpty>
-        <FormHelper>
+        <StyledFormHelper>
           Resize manually your image to get the result you want
-        </FormHelper>
+        </StyledFormHelper>
       </StyledFormRow>
 
       <Button disabled={formik.isSubmitting} type="submit">
