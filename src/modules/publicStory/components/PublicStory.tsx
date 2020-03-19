@@ -1,15 +1,16 @@
 import React from 'react';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
-import styled, { css } from 'styled-components';
-import tw from 'tailwind.macro';
+import styled, { css, createGlobalStyle } from 'styled-components';
+import tw from 'twin.macro';
 import { Value } from 'slate';
 import Html from 'slate-html-serializer';
 import format from 'date-fns/format';
 import { NextSeo } from 'next-seo';
-import { Story } from '../../../types';
+import { Story, SettingsFile } from '../../../types';
 import { Container } from '../../../components';
 import { config } from '../../../config';
+import { sanitizeHexColor, sanitizeLink } from '../../../utils/security';
 
 const rules = [
   {
@@ -50,6 +51,8 @@ const rules = [
             return <em>{children}</em>;
           case 'underlined':
             return <u>{children}</u>;
+          case 'code':
+            return <code>{children}</code>;
         }
       }
     },
@@ -60,14 +63,12 @@ const rules = [
         switch (obj.type) {
           case 'link':
             const href: string = obj.data.get('href');
-            // TODO add unit test for this
-            // We sanitise the link to protect from js execution "javascript:"
-            // We use includes instead of startWith because there might be some spaces at the beginning
-            // In a future version react will throw and error if this is happening https://reactjs.org/blog/2019/08/08/react-v16.9.0.html#deprecating-javascript-urls
-            if (href.includes('javascript:')) {
+            const safeHref = sanitizeLink(href);
+
+            if (!safeHref) {
               return <a href="/">🤯</a>;
             }
-            return <a href={href}>{children}</a>;
+            return <a href={safeHref}>{children}</a>;
         }
       }
     },
@@ -76,22 +77,18 @@ const rules = [
 
 const html = new Html({ rules });
 
-export const Header = styled.div`
-  ${tw`bg-black py-4 text-white`};
+const Header = styled.div`
+  ${tw`py-6 text-black`};
 `;
 
-export const HeaderContainer = styled.div`
+const HeaderContainer = styled.div`
   ${tw`mx-auto px-4 flex`};
   width: 100%;
   max-width: 768px;
 `;
 
-export const HeaderTitle = styled.div`
-  ${tw`font-bold`};
-`;
-
-export const HeaderLink = styled.a`
-  ${tw`text-white no-underline ml-8 cursor-pointer`};
+const HeaderTitle = styled.a`
+  ${tw`font-bold text-xl`};
 `;
 
 const StyledContainer = styled(Container)<{ hasCover: boolean }>`
@@ -166,6 +163,12 @@ export const Content = styled.div`
     ${tw`text-pink`};
   }
 
+  code {
+    ${tw`font-mono text-sm inline bg-grey-light px-1 rounded-sm`};
+    padding-top: 0.15rem;
+    padding-bottom: 0.15rem;
+  }
+
   img {
     ${tw`mb-4`};
     display: block;
@@ -174,16 +177,34 @@ export const Content = styled.div`
   }
 `;
 
+const CustomStyle = createGlobalStyle<{ siteColor?: string }>`
+  ${props =>
+    props.siteColor &&
+    css`
+      .sigle-date {
+        color: ${props.siteColor} !important;
+      }
+      .sigle-content a {
+        color: ${props.siteColor} !important;
+      }
+    `}
+`;
+
 interface PublicStoryProps {
   story: Story;
+  settings: SettingsFile;
 }
 
-export const PublicStory = ({ story }: PublicStoryProps) => {
+export const PublicStory = ({ story, settings }: PublicStoryProps) => {
   const router = useRouter();
   const { username, storyId } = router.query as {
     username: string;
     storyId: string;
   };
+
+  const siteName = settings.siteName || username;
+  const safeSiteColor =
+    settings.siteColor && sanitizeHexColor(settings.siteColor);
 
   const seoUrl = `${config.appUrl}/${username}/${storyId}`;
   const seoTitle = story.metaTitle || `${story.title} | Sigle`;
@@ -212,14 +233,17 @@ export const PublicStory = ({ story }: PublicStoryProps) => {
           cardType: story.coverImage ? 'summary_large_image' : 'summary',
         }}
       />
+
+      <CustomStyle siteColor={safeSiteColor} />
+
       <Header>
         <HeaderContainer>
-          <HeaderTitle>{username}</HeaderTitle>
-          <Link href="/[username]" as={`/${username}`}>
-            <HeaderLink>Stories</HeaderLink>
+          <Link href="/[username]" as={`/${username}`} passHref>
+            <HeaderTitle>{siteName}</HeaderTitle>
           </Link>
         </HeaderContainer>
       </Header>
+
       <StyledContainer hasCover={!!story.coverImage}>
         <Title className="sigle-title">{story.title}</Title>
         <StoryDate className="sigle-date">

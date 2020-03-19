@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
-import tw from 'tailwind.macro';
+import tw from 'twin.macro';
 import { toast } from 'react-toastify';
 import { MdRemoveRedEye, MdSort } from 'react-icons/md';
 import * as Fathom from 'fathom-client';

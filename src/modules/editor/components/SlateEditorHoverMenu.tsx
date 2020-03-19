@@ -3,7 +3,7 @@ import { Editor } from 'slate-react';
 import { IconType } from 'react-icons';
 import ReactDOM from 'react-dom';
 import styled, { css } from 'styled-components';
-import tw from 'tailwind.macro';
+import tw from 'twin.macro';
 import {
   MdFormatBold,
   MdFormatItalic,
@@ -15,12 +15,13 @@ import {
   MdFormatListNumbered,
   MdFormatListBulleted,
   MdLink,
+  MdCode,
 } from 'react-icons/md';
 import { hasLinks, hasBlock, hasMark } from './utils';
 import { onClickLink, onClickBlock, onClickMark } from './SlateEditorToolbar';
 
 const HoverMenuContainer = styled.div`
-  ${tw`flex`};
+  ${tw`flex transition-opacity duration-700`};
   padding: 8px 7px 6px;
   position: absolute;
   z-index: 1;
@@ -30,7 +31,6 @@ const HoverMenuContainer = styled.div`
   opacity: 0;
   background-color: #222;
   border-radius: 4px;
-  transition: opacity 0.75s;
 `;
 
 const SlateEditorHoverMenuButton = styled.button<{ active: boolean }>`
@@ -130,6 +130,7 @@ export const SlateEditorHoverMenu = forwardRef(
         {renderMarkButton('bold', MdFormatBold)}
         {renderMarkButton('italic', MdFormatItalic)}
         {renderMarkButton('underlined', MdFormatUnderlined)}
+        {renderMarkButton('code', MdCode)}
         {renderBlockButton('block-quote', MdFormatQuote)}
         {renderBlockButton('heading-one', MdLooksOne)}
         {renderBlockButton('heading-two', MdLooksTwo)}

@@ -1,7 +1,7 @@
 import React from 'react';
 import Link from 'next/link';
 import styled from 'styled-components';
-import tw from 'tailwind.macro';
+import tw from 'twin.macro';
 import { MdMoreHoriz } from 'react-icons/md';
 import format from 'date-fns/format';
 import {

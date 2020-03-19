@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useRouter } from 'next/router';
 import styled, { css } from 'styled-components';
-import tw from 'tailwind.macro';
+import tw from 'twin.macro';
 import Link from 'next/link';
 import Div100vh from 'react-div-100vh';
 import { MdKeyboardArrowDown } from 'react-icons/md';
@@ -97,8 +97,7 @@ const MenuBottomItem = styled.li`
 `;
 
 const SupportButton = styled.a`
-  ${tw`py-2 pr-2 pl-6 mt-4 flex items-center justify-start bg-pink text-white`};
-  transition: background-color 0.25s;
+  ${tw`py-2 pr-2 pl-6 mt-4 flex items-center justify-start bg-pink text-white transition-colors duration-200 ease-in-out`};
   &:hover {
     background-color: #db3159;
   }
@@ -169,6 +168,11 @@ export const DashboardSidebar = () => {
           <MenuTopItem active={router.route === '/published'}>
             <Link href="/published" passHref>
               <a>Published</a>
+            </Link>
+          </MenuTopItem>
+          <MenuTopItem active={router.route === '/settings'}>
+            <Link href="/settings" passHref>
+              <a>Settings</a>
             </Link>
           </MenuTopItem>
         </MenuTop>

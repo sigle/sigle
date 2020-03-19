@@ -1,3 +1,21 @@
+## March 18, 2020
+
+### New feature
+
+- **⚙️ Settings page**: We now have a new settings page, via this page you can customise your blog even more (name, description, primary color and logo).
+
+### Improvements
+
+- The default theme design has been updated to reflect the new setting options.
+
+## February 28, 2020
+
+### Improvements
+
+- **Inline code blocks**: In the editor you can now find the "code" option to style your text. This is a first step before we get fully highlighted code blocks.
+- We polished the animations, they are now a smoother 🎨.
+- If you visit the login page while being already logged in, you will now be redirected automatically to the home page.
+
 ## February 19, 2020
 
 ### Improvements

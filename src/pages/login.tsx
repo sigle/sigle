@@ -1,16 +1,26 @@
-import React from 'react';
+import React, { useEffect } from 'react';
+import { useRouter } from 'next/router';
 import * as Fathom from 'fathom-client';
 import { userSession } from '../utils/blockstack';
 import { Button } from '../components';
 import { Goals } from '../utils/fathom';
+import { useAuth } from '../modules/auth/AuthContext';
 
 const Login = () => {
+  const router = useRouter();
+  const { user } = useAuth();
+
   const handleLogin = () => {
     Fathom.trackGoal(Goals.LOGIN, 0);
     userSession.redirectToSignIn();
   };
 
-  // TODO if user already logged in, redirect him to the app
+  useEffect(() => {
+    // If user is already logged in we redirect him to the homepage
+    if (user) {
+      router.push(`/`);
+    }
+  }, [user]);
 
   return (
     <React.Fragment>

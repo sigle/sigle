@@ -3,7 +3,7 @@ import App from 'next/app';
 import Router from 'next/router';
 import * as Fathom from 'fathom-client';
 import { createGlobalStyle, keyframes } from 'styled-components';
-import tw from 'tailwind.macro';
+import tw from 'twin.macro';
 import { DefaultSeo } from 'next-seo';
 import { ToastContainer } from 'react-toastify';
 import { config as blockstackConfig } from 'blockstack';

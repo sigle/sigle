@@ -1,6 +1,6 @@
 import React, { useRef } from 'react';
 import styled, { css } from 'styled-components';
-import tw from 'tailwind.macro';
+import tw from 'twin.macro';
 import { Value } from 'slate';
 import { Editor } from 'slate-react';
 import { IconType } from 'react-icons';
@@ -27,6 +27,7 @@ import {
   MdLink,
   MdSettings,
   MdImage,
+  MdCode,
 } from 'react-icons/md';
 import { ButtonOutline } from '../../../components';
 
@@ -241,6 +242,7 @@ export const SlateEditorToolbar = ({
         {renderMarkButton('bold', MdFormatBold)}
         {renderMarkButton('italic', MdFormatItalic)}
         {renderMarkButton('underlined', MdFormatUnderlined)}
+        {renderMarkButton('code', MdCode)}
         {renderBlockButton('block-quote', MdFormatQuote)}
         {renderBlockButton('heading-one', MdLooksOne)}
         {renderBlockButton('heading-two', MdLooksTwo)}

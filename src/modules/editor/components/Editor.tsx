@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import tw from 'tailwind.macro';
+import tw from 'twin.macro';
 import { Story } from '../../../types';
 import { SlateEditor } from '../containers/SlateEditor';
 import { AppBar } from '../../layout';

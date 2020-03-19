@@ -1,6 +1,6 @@
 import React from 'react';
 import styled, { css } from 'styled-components';
-import tw from 'tailwind.macro';
+import tw from 'twin.macro';
 import { MdClose, MdAddAPhoto, MdDelete } from 'react-icons/md';
 import { DialogContent, DialogOverlay } from '@reach/dialog';
 import { animated, useTransition } from 'react-spring';
@@ -8,6 +8,13 @@ import format from 'date-fns/format';
 import { DropzoneRootProps, DropzoneInputProps } from 'react-dropzone';
 import { Story } from '../../../types';
 import { Button } from '../../../components';
+import {
+  FormRow,
+  FormLabel,
+  FormInput,
+  FormHelper,
+  FormTextarea,
+} from '../../../components/Form';
 
 const StyledDialogOverlay = styled(DialogOverlay)`
   z-index: 11;
@@ -53,26 +60,6 @@ const ImageEmptyIconDelete = styled.div`
 
 const Image = styled.img`
   ${tw`cursor-pointer w-full`};
-`;
-
-const FormRow = styled.div`
-  ${tw`py-3`};
-`;
-
-const FormLabel = styled.label`
-  ${tw`w-full block tracking-wide font-bold text-black mb-2`};
-`;
-
-const FormInput = styled.input`
-  ${tw`appearance-none block w-full bg-white border border-grey rounded py-3 px-3 text-sm leading-tight focus:outline-none`};
-`;
-
-const FormTextarea = styled.textarea`
-  ${tw`appearance-none block w-full bg-white border border-grey rounded py-3 px-3 text-sm leading-tight focus:outline-none`};
-`;
-
-const FormHelper = styled.p`
-  ${tw`text-sm text-grey-darker mt-1`};
 `;
 
 const SaveRow = styled.div`

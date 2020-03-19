@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import tw from 'tailwind.macro';
+import tw from 'twin.macro';
 import {
   FaFacebookMessenger,
   FaTelegramPlane,
@@ -88,7 +88,7 @@ const HelpPage = () => {
             <ButtonContainer>
               <Button
                 as="a"
-                href="https://simpleform.xyz/submit/sigleapp.id.blockstack/6bc661b0-d09f-4909-a6a3-1960918d89d0"
+                href="https://blocksurvey.io/survey/1EusUjLbpYVLwaB7G2uRYqSYM1znNrzdRn/b4102865-64cc-4e6f-ac00-e94bf9166810"
                 target="_blank"
               >
                 Fill the issue form
@@ -107,7 +107,7 @@ const HelpPage = () => {
             <ButtonContainer>
               <Button
                 as="a"
-                href="https://simpleform.xyz/submit/sigleapp.id.blockstack/45296c0e-b5e9-485c-9096-0512203007e6"
+                href="https://blocksurvey.io/survey/1EusUjLbpYVLwaB7G2uRYqSYM1znNrzdRn/7c066442-a6fd-436c-8b6f-57135af47dbf"
                 target="_blank"
               >
                 Fill the feedback form
@@ -125,7 +125,7 @@ const HelpPage = () => {
             <ButtonContainer>
               <Button
                 as="a"
-                href="https://simpleform.xyz/submit/sigleapp.id.blockstack/26372579-86c4-4fb8-b7a2-399aa24f4a0f"
+                href="https://blocksurvey.io/survey/1EusUjLbpYVLwaB7G2uRYqSYM1znNrzdRn/966dea1e-5fb7-4729-8cfd-68ff2feb13de"
                 target="_blank"
               >
                 Fill the feature form

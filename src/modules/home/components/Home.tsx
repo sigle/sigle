@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import tw from 'tailwind.macro';
+import tw from 'twin.macro';
 import Link from 'next/link';
 import { StoryItem } from '../';
 import { SubsetStory, BlockstackUser } from '../../../types';
@@ -41,8 +41,7 @@ const HelpCardContainer = styled.div`
 `;
 
 const HelpCard = styled.a`
-  ${tw`w-full relative rounded bg-grey-light`};
-  transition: background-color 0.25s;
+  ${tw`w-full relative rounded bg-grey-light transition-colors duration-200`};
   &:hover {
     background-color: rgba(0, 0, 0, 0.2);
   }
