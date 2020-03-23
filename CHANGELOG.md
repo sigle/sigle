@@ -1,3 +1,9 @@
+## March 23, 2020
+
+### Improvements
+
+- When the blockstack API return an error, we now display the error message returned by blockstack.
+
 ## March 18, 2020
 
 ### New feature
