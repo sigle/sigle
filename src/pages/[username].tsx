@@ -1,6 +1,7 @@
 import React from 'react';
 import { NextPage } from 'next';
 import { lookupProfile } from 'blockstack';
+import * as Sentry from '@sentry/node';
 import { PublicHome } from '../modules/publicHome';
 import { config } from '../config';
 import { StoryFile, SettingsFile } from '../types';
@@ -8,17 +9,19 @@ import Error from './_error';
 
 interface PublicHomePageProps {
   statusCode: number | boolean;
+  errorMessage?: string;
   file: StoryFile;
   settings: SettingsFile;
 }
 
 const PublicHomePage: NextPage<PublicHomePageProps> = ({
   statusCode,
+  errorMessage,
   file,
   settings,
 }) => {
   if (typeof statusCode === 'number') {
-    return <Error statusCode={statusCode} />;
+    return <Error statusCode={statusCode} errorMessage={errorMessage} />;
   }
 
   return <PublicHome file={file} settings={settings} />;
@@ -59,14 +62,18 @@ PublicHomePage.getInitialProps = async ({ query, req, res }) => {
   let file;
   let settings;
   let statusCode: boolean | number = false;
+  let errorMessage: string | undefined;
   let userProfile;
   try {
     userProfile = await lookupProfile(username);
   } catch (error) {
-    statusCode = 500;
     // This will happen if there is no blockstack user with this name
     if (error.message === 'Name not found') {
       statusCode = 404;
+    } else {
+      statusCode = 500;
+      errorMessage = `Blockstack lookupProfile returned error: ${error.message}`;
+      Sentry.captureException(error);
     }
   }
 
@@ -92,7 +99,7 @@ PublicHomePage.getInitialProps = async ({ query, req, res }) => {
     }
 
     settings = dataSettings.file;
-  } else {
+  } else if (!statusCode) {
     statusCode = 404;
   }
 
@@ -100,7 +107,7 @@ PublicHomePage.getInitialProps = async ({ query, req, res }) => {
   if (statusCode && res) {
     res.statusCode = statusCode as number;
   }
-  return { statusCode, file, settings };
+  return { statusCode, errorMessage, file, settings };
 };
 
 export default PublicHomePage;
