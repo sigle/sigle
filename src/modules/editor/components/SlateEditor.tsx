@@ -358,26 +358,6 @@ export const SlateEditor = ({
   };
 
   /**
-   * Render the editor with the side menu
-   */
-  const renderEditor = (props: EditorProps, editor: any, next: () => any) => {
-    const children = next();
-
-    return (
-      <React.Fragment>
-        {children}
-
-        <SlateEditorSideMenu
-          ref={sideMenuRef}
-          editor={editor}
-          addImageToEditor={addImageToEditor}
-        />
-        <SlateEditorHoverMenu ref={hoverMenuRef} editor={editor} />
-      </React.Fragment>
-    );
-  };
-
-  /**
    * Update the menu's absolute position only if:
    * - it's a paragraph
    * - text is empty
@@ -496,6 +476,35 @@ export const SlateEditor = ({
     setSettingsOpen(false);
   };
 
+  /**
+   * Render the editor with the side menu and mobile menu
+   */
+  const renderEditor = (props: EditorProps, editor: any, next: () => any) => {
+    const children = next();
+
+    return (
+      <React.Fragment>
+        <SlateEditorToolbar
+          editor={editor}
+          value={value}
+          loadingSave={loadingSave}
+          handleOpenSettings={handleOpenSettings}
+          handleSave={handleSave}
+          addImageToEditor={addImageToEditor}
+        />
+
+        {children}
+
+        <SlateEditorSideMenu
+          ref={sideMenuRef}
+          editor={editor}
+          addImageToEditor={addImageToEditor}
+        />
+        <SlateEditorHoverMenu ref={hoverMenuRef} editor={editor} />
+      </React.Fragment>
+    );
+  };
+
   return (
     <React.Fragment>
       <FixedContainer>
@@ -552,15 +561,6 @@ export const SlateEditor = ({
         />
 
         <SlateContainer>
-          <SlateEditorToolbar
-            editor={editorRef.current}
-            value={value}
-            loadingSave={loadingSave}
-            handleOpenSettings={handleOpenSettings}
-            handleSave={handleSave}
-            addImageToEditor={addImageToEditor}
-          />
-
           <StyledContent>
             <StyledEditor
               ref={editorRef}

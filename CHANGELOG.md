@@ -4,6 +4,10 @@
 
 - When the blockstack API return an error, we now display the error message returned by blockstack.
 
+### Bug fixes
+
+- Fix editor toolbar crashing on mobile.
+
 ## March 18, 2020
 
 ### New feature
