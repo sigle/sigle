@@ -35,16 +35,19 @@ const NotFoundIllu = styled.img`
 
 interface ErrorProps {
   statusCode: number;
+  errorMessage?: string;
 }
 
-const MyError = ({ statusCode }: ErrorProps) => {
+const MyError = ({ statusCode, errorMessage }: ErrorProps) => {
   return (
     <NotFoundContainer>
       <NotFoundIllu src="/static/img/jungle.png" alt="One" />
       <NotFoundTextContainer>
         <NotFoundTitle>{statusCode} in sight!</NotFoundTitle>
         <NotFoundSubTitle>
-          Looks like you and Julia went too far...
+          {errorMessage
+            ? errorMessage
+            : 'Looks like you and Julia went too far...'}
         </NotFoundSubTitle>
         <Link href="/">
           <Button as="a">Go to the app</Button>
