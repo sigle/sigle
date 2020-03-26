@@ -39,6 +39,11 @@
     "not ie <= 11",
     "not op_mini all"
   ],
+  "jest": {
+    "setupFilesAfterEnv": [
+      "./src/jest.setup.ts"
+    ]
+  },
   "dependencies": {
     "@reach/dialog": "0.9.1",
     "@reach/menu-button": "0.9.1",
@@ -73,6 +78,8 @@
   },
   "devDependencies": {
     "@bundle-analyzer/webpack-plugin": "0.5.1",
+    "@testing-library/jest-dom": "5.2.0",
+    "@testing-library/react": "10.0.1",
     "@types/jest": "25.1.4",
     "@types/nanoid": "2.1.0",
     "@types/node": "13.9.2",
