@@ -37,7 +37,7 @@ const StoryImage = styled.img`
 `;
 
 const StoryContainerContent = styled.div<{ hasCover: boolean }>`
-  ${props =>
+  ${(props) =>
     props.hasCover &&
     css`
       @media (min-width: ${config.breakpoints.md}px) {

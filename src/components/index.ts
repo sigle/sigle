@@ -24,7 +24,7 @@ export const ButtonOutline = styled.button<{ size?: 'large' }>`
     ${tw`bg-pink text-white`};
   }
 
-  ${props =>
+  ${(props) =>
     props.disabled &&
     css`
       ${tw`border-grey-dark text-grey-dark`};
@@ -34,7 +34,7 @@ export const ButtonOutline = styled.button<{ size?: 'large' }>`
       }
     `}
 
-  ${props =>
+  ${(props) =>
     props.size === 'large' &&
     css`
       ${tw`py-2 px-8 text-base`};

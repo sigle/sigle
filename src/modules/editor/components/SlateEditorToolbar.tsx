@@ -47,7 +47,7 @@ const SlateToolbarButtonContainer = styled.div`
 const SlateEditorToolbarButton = styled.button<{ active: boolean }>`
   ${tw`py-2 px-2 outline-none flex text-grey-dark`};
 
-  ${props =>
+  ${(props) =>
     props.active &&
     css`
       ${tw`text-black`};
@@ -176,7 +176,7 @@ export const SlateEditorToolbar = ({
     return (
       <SlateEditorToolbarButton
         active={isActive}
-        onMouseDown={event => {
+        onMouseDown={(event) => {
           event.preventDefault();
           onClickMark(editor, type);
         }}
@@ -207,7 +207,7 @@ export const SlateEditorToolbar = ({
     return (
       <SlateEditorToolbarButton
         active={isActive}
-        onMouseDown={event => {
+        onMouseDown={(event) => {
           event.preventDefault();
           onClickBlock(editor, type);
         }}
@@ -226,7 +226,7 @@ export const SlateEditorToolbar = ({
     return (
       <SlateEditorToolbarButton
         active={isActive}
-        onMouseDown={event => {
+        onMouseDown={(event) => {
           event.preventDefault();
           onClickLink(editor);
         }}
@@ -252,7 +252,7 @@ export const SlateEditorToolbar = ({
         {renderLinkButton()}
         <SlateEditorToolbarButton
           active={false}
-          onMouseDown={event => {
+          onMouseDown={(event) => {
             event.preventDefault();
             fileUploaderRef.current && fileUploaderRef.current.click();
           }}
@@ -260,7 +260,7 @@ export const SlateEditorToolbar = ({
           <input
             type="file"
             accept="image/jpeg, image/png"
-            onChange={event =>
+            onChange={(event) =>
               addImageToEditor(editor, event.target.files as any)
             }
             ref={fileUploaderRef}

@@ -7,9 +7,9 @@ export const resizeImage = (
   return new Promise((resolve, reject) => {
     const canvas = document.createElement('canvas');
     const reader = new FileReader();
-    reader.onload = function() {
+    reader.onload = function () {
       const img = new Image();
-      img.onload = function() {
+      img.onload = function () {
         // image is loaded; sizes are available
         let width = img.width;
         let height = img.height;
@@ -23,7 +23,7 @@ export const resizeImage = (
         ctx.drawImage(img, 0, 0, width, height);
         const dataurl = canvas.toDataURL(file.type);
         canvas.toBlob(
-          blob => {
+          (blob) => {
             resolve(
               Object.assign(blob!, {
                 preview: dataurl,

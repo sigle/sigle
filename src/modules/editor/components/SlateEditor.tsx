@@ -57,7 +57,7 @@ const Image = styled.img<{ selected: boolean; isUploading?: boolean }>`
   box-shadow: ${(props: any) =>
     props.selected ? '0 0 0 1px #000000;' : 'none'};
 
-  ${props =>
+  ${(props) =>
     props.isUploading &&
     css`
       ${tw`opacity-25`};
@@ -402,14 +402,16 @@ export const SlateEditor = ({
     const range = native.getRangeAt(0);
     const rect = range.getBoundingClientRect();
     hoverMenu.style.opacity = 1;
-    hoverMenu.style.top = `${rect.top +
-      window.pageYOffset -
-      hoverMenu.offsetHeight}px`;
+    hoverMenu.style.top = `${
+      rect.top + window.pageYOffset - hoverMenu.offsetHeight
+    }px`;
 
-    hoverMenu.style.left = `${rect.left +
+    hoverMenu.style.left = `${
+      rect.left +
       window.pageXOffset -
       hoverMenu.offsetWidth / 2 +
-      rect.width / 2}px`;
+      rect.width / 2
+    }px`;
   };
 
   const handleTextChange = ({ value }: { value: Value }) => {
@@ -449,7 +451,7 @@ export const SlateEditor = ({
       };
       const subsetStory = convertStoryToSubsetStory(updatedStory);
       const file = await getStoriesFile();
-      const index = file.stories.findIndex(s => s.id === story.id);
+      const index = file.stories.findIndex((s) => s.id === story.id);
       if (index === -1) {
         throw new Error('File not found in list');
       }
@@ -556,7 +558,7 @@ export const SlateEditor = ({
       <PageContainer>
         <Input
           value={story.title}
-          onChange={e => onChangeTitle(e.target.value)}
+          onChange={(e) => onChangeTitle(e.target.value)}
           placeholder="Title"
         />
 

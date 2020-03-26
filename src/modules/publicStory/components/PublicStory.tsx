@@ -94,7 +94,7 @@ const HeaderTitle = styled.a`
 const StyledContainer = styled(Container)<{ hasCover: boolean }>`
   max-width: 768px;
 
-  ${props =>
+  ${(props) =>
     !props.hasCover &&
     css`
       .sigle-content {
@@ -178,7 +178,7 @@ export const Content = styled.div`
 `;
 
 const CustomStyle = createGlobalStyle<{ siteColor?: string }>`
-  ${props =>
+  ${(props) =>
     props.siteColor &&
     css`
       .sigle-date {

@@ -61,7 +61,7 @@ export const PublicHome = ({ file, settings }: PublicHomeProps) => {
 
       <StyledContainer>
         {file.stories.length === 0 && <NoStories>No stories yet</NoStories>}
-        {file.stories.map(story => (
+        {file.stories.map((story) => (
           <PublicStoryItem
             key={story.id}
             username={username}

@@ -25,7 +25,7 @@ export const getStoriesFile = async (): Promise<StoryFile> => {
 export const saveStoriesFile = async (file: StoryFile): Promise<void> => {
   await userSession.putFile(storiesFileName, JSON.stringify(file));
   const publickStoriesFile = {
-    stories: file.stories.filter(s => s.type === 'public'),
+    stories: file.stories.filter((s) => s.type === 'public'),
   };
   await userSession.putFile(
     publicStoriesFileName,
@@ -73,7 +73,7 @@ export const publishStory = async (storyId: string): Promise<void> => {
 
   const storiesFile = await getStoriesFile();
 
-  const index = storiesFile.stories.findIndex(s => s.id === story.id);
+  const index = storiesFile.stories.findIndex((s) => s.id === story.id);
   if (index === -1) {
     throw new Error('File not found in list');
   }
@@ -95,7 +95,7 @@ export const unPublishStory = async (storyId: string): Promise<void> => {
   story.type = 'private';
 
   const storiesFile = await getStoriesFile();
-  const index = storiesFile.stories.findIndex(s => s.id === story.id);
+  const index = storiesFile.stories.findIndex((s) => s.id === story.id);
   if (index === -1) {
     throw new Error('File not found in list');
   }

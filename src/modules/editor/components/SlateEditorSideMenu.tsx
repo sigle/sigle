@@ -16,7 +16,7 @@ const SideMenuContainer = styled.div`
 const SideMenuButtonContainer = styled.div<{ open: boolean }>`
   ${tw`pl-6`};
   margin-left: -1000px;
-  ${props =>
+  ${(props) =>
     props.open &&
     css`
       margin-left: 0;
@@ -32,7 +32,7 @@ const SideMenuButton = styled.div`
 `;
 
 const SideMenuOpenButton = styled(SideMenuButton)<{ open: boolean }>`
-  ${props =>
+  ${(props) =>
     props.open &&
     css`
       transform: rotate(45deg);
@@ -41,7 +41,7 @@ const SideMenuOpenButton = styled(SideMenuButton)<{ open: boolean }>`
 
 const SideMenuActionButton = styled(SideMenuButton)<{ open: boolean }>`
   ${tw`flex absolute transition-transform duration-200 scale-0`};
-  ${props =>
+  ${(props) =>
     props.open &&
     css`
       ${tw`flex absolute transition-transform duration-200 scale-100`};
@@ -65,7 +65,7 @@ export const SlateEditorSideMenu = forwardRef(
       <SideMenuContainer ref={ref}>
         <SideMenuOpenButton
           open={open}
-          onMouseDown={e => {
+          onMouseDown={(e) => {
             e.preventDefault();
             setOpen(!open);
           }}
@@ -83,7 +83,7 @@ export const SlateEditorSideMenu = forwardRef(
             <input
               type="file"
               accept="image/jpeg, image/png"
-              onChange={event =>
+              onChange={(event) =>
                 addImageToEditor(editor, event.target.files as any)
               }
               ref={fileUploaderRef}

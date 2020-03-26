@@ -141,7 +141,7 @@ export const Home = ({
         )}
 
         {stories &&
-          stories.map(story => (
+          stories.map((story) => (
             <StoryItem
               key={story.id}
               user={user}

@@ -33,7 +33,7 @@ const StyledFormHelper = styled(FormHelper)`
 const FormColor = styled.div<{ color: string }>`
   ${tw`py-3 text-white rounded cursor-pointer relative inline-block text-center`};
   width: 170px;
-  ${props =>
+  ${(props) =>
     css`
       background-color: ${props.color};
     `}
@@ -42,7 +42,7 @@ const FormColor = styled.div<{ color: string }>`
 const ImageEmpty = styled.div<{ haveImage: boolean }>`
   ${tw`flex items-center justify-center bg-grey py-8 cursor-pointer rounded-lg relative border border-solid border-grey focus:outline-none`};
 
-  ${props =>
+  ${(props) =>
     props.haveImage &&
     css`
       ${tw`py-0 bg-transparent`};
@@ -89,7 +89,7 @@ export const SettingsForm = ({ settings, username }: SettingsFormProps) => {
       siteColor: settings.siteColor || '',
       siteLogo: settings.siteLogo || '',
     },
-    validate: values => {
+    validate: (values) => {
       const errors: FormikErrors<SettingsFormValues> = {};
       if (values.siteName && values.siteName.length > 50) {
         errors.siteName = 'Name too long';
@@ -104,7 +104,7 @@ export const SettingsForm = ({ settings, username }: SettingsFormProps) => {
     },
     onSubmit: async (values, { setSubmitting }) => {
       const newSettings: SettingsFile = {};
-      Object.keys(values).forEach(key => {
+      Object.keys(values).forEach((key) => {
         // We replace empty strings by undefined
         // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
         // @ts-ignore
@@ -227,14 +227,14 @@ export const SettingsForm = ({ settings, username }: SettingsFormProps) => {
                   bottom: '0px',
                   left: '0px',
                 }}
-                onClick={e => {
+                onClick={(e) => {
                   e.stopPropagation();
                   setColorOpen(false);
                 }}
               />
               <BlockPicker
                 color={formik.values.siteColor || colors.pink}
-                onChange={newColor =>
+                onChange={(newColor) =>
                   formik.setFieldValue('siteColor', newColor.hex)
                 }
                 colors={['#ff576a', '#34c58b', '#e0a315', '#5b15e0', '#949494']}

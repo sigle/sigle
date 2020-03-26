@@ -38,7 +38,7 @@ const SlateEditorHoverMenuButton = styled.button<{ active: boolean }>`
   padding-left: 0.3rem;
   padding-right: 0.3rem;
 
-  ${props =>
+  ${(props) =>
     props.active &&
     css`
       ${tw`text-pink`};
@@ -65,7 +65,7 @@ export const SlateEditorHoverMenu = forwardRef(
       return (
         <SlateEditorHoverMenuButton
           active={isActive}
-          onMouseDown={event => {
+          onMouseDown={(event) => {
             event.preventDefault();
             onClickMark(editor, type);
           }}
@@ -96,7 +96,7 @@ export const SlateEditorHoverMenu = forwardRef(
       return (
         <SlateEditorHoverMenuButton
           active={isActive}
-          onMouseDown={event => {
+          onMouseDown={(event) => {
             event.preventDefault();
             onClickBlock(editor, type);
           }}
@@ -115,7 +115,7 @@ export const SlateEditorHoverMenu = forwardRef(
       return (
         <SlateEditorHoverMenuButton
           active={isActive}
-          onMouseDown={event => {
+          onMouseDown={(event) => {
             event.preventDefault();
             onClickLink(editor);
           }}

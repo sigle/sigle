@@ -45,7 +45,7 @@ const Logo = styled.img`
 
 const MenuButtonName = styled.button<{ logout?: boolean }>`
   ${tw`py-3 flex items-center justify-center bg-black text-white w-full truncate px-4`};
-  ${props =>
+  ${(props) =>
     props.logout &&
     css`
       ${tw`bg-white text-pink`}
@@ -66,7 +66,7 @@ const MenuTopItem = styled.li<{ active: boolean }>`
   a:hover {
     ${tw`bg-grey`}
   }
-  ${props =>
+  ${(props) =>
     props.active &&
     css`
       a {
@@ -80,7 +80,7 @@ const MenuBottom = styled.ul`
 `;
 
 const MenuArrowIcon = styled(MdKeyboardArrowDown)<{ isOpen: boolean }>`
-  ${props =>
+  ${(props) =>
     props.isOpen &&
     css`
       transform: rotate(180deg);

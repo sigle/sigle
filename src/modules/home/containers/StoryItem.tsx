@@ -40,7 +40,7 @@ export const StoryItem = ({
     NProgress.start();
     try {
       const file = await getStoriesFile();
-      const index = file.stories.findIndex(s => s.id === story.id);
+      const index = file.stories.findIndex((s) => s.id === story.id);
       if (index === -1) {
         throw new Error('File not found in list');
       }

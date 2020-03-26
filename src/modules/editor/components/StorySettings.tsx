@@ -39,7 +39,7 @@ const CloseButton = styled.div`
 const ImageEmpty = styled.div<{ haveImage: boolean }>`
   ${tw`flex items-center justify-center bg-grey py-16 mb-4 cursor-pointer rounded-lg relative border border-solid border-grey focus:outline-none`};
 
-  ${props =>
+  ${(props) =>
     props.haveImage &&
     css`
       ${tw`py-0`};
@@ -174,7 +174,7 @@ export const StorySettings = ({
                     <FormInput
                       type="date"
                       value={format(story.createdAt, 'yyyy-MM-dd')}
-                      onChange={e => onChangeCreatedAt(e.target.value)}
+                      onChange={(e) => onChangeCreatedAt(e.target.value)}
                     />
                   </FormRow>
 
@@ -182,7 +182,7 @@ export const StorySettings = ({
                     <FormLabel>Meta title</FormLabel>
                     <FormInput
                       value={story.metaTitle || ''}
-                      onChange={e => onChangeMetaTitle(e.target.value)}
+                      onChange={(e) => onChangeMetaTitle(e.target.value)}
                       maxLength={100}
                     />
                     <FormHelper>
@@ -196,7 +196,7 @@ export const StorySettings = ({
                     <FormTextarea
                       rows={3}
                       value={story.metaDescription || ''}
-                      onChange={e => onChangeMetaDescription(e.target.value)}
+                      onChange={(e) => onChangeMetaDescription(e.target.value)}
                       maxLength={250}
                     />
                     <FormHelper>

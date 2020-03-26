@@ -19,7 +19,7 @@ export const Home = ({ type }: HomeProps) => {
     try {
       const file = await getStoriesFile();
       const filter = type === 'published' ? 'public' : 'private';
-      const fileStories = file.stories.filter(s => s.type === filter);
+      const fileStories = file.stories.filter((s) => s.type === filter);
       setStories(fileStories);
     } catch (error) {
       console.error(error);

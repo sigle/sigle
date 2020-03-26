@@ -20,7 +20,7 @@ const BackgroundContainer = styled.div`
 const BackgroundColumn = styled.div<{ right?: boolean }>`
   ${tw`flex-1`};
   background-color: #f7f7f7;
-  ${props =>
+  ${(props) =>
     props.right &&
     css`
       ${tw`bg-white bg-no-repeat bg-contain bg-left`};
@@ -46,12 +46,12 @@ const Container = styled.div`
 
 const Column = styled.div<{ left?: boolean; right?: boolean }>`
   ${tw`w-1/2 flex flex-col text-left`};
-  ${props =>
+  ${(props) =>
     props.left &&
     css`
       ${tw`pr-32`};
     `}
-  ${props =>
+  ${(props) =>
     props.right &&
     css`
       ${tw`items-center`};
