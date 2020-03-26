@@ -75,17 +75,23 @@ export const PublicStoryItem = ({ username, story, settings }: Props) => {
           {story.coverImage && (
             <StoryContainerImage>
               <StoryImage
+                data-testid="story-cover-image"
                 className="sigle-story-cover-image"
                 src={story.coverImage}
               />
             </StoryContainerImage>
           )}
           <StoryContainerContent hasCover={!!story.coverImage}>
-            <StoryTitle className="sigle-story-title">{story.title}</StoryTitle>
-            <StoryDate className="sigle-story-date">
+            <StoryTitle data-testid="story-title" className="sigle-story-title">
+              {story.title}
+            </StoryTitle>
+            <StoryDate data-testid="story-date" className="sigle-story-date">
               {format(story.createdAt, 'dd MMMM yyyy')}
             </StoryDate>
-            <StoryText className="sigle-story-content">
+            <StoryText
+              data-testid="story-content"
+              className="sigle-story-content"
+            >
               {story.content}
             </StoryText>
           </StoryContainerContent>
