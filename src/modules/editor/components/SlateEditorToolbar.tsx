@@ -8,7 +8,6 @@ import {
   hasLinks,
   unwrapLink,
   wrapLink,
-  insertImage,
   hasMark,
   hasBlock,
   DEFAULT_NODE,

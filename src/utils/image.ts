@@ -4,7 +4,7 @@ export const resizeImage = (
     maxWidth: number;
   }
 ): Promise<Blob & { preview: string }> => {
-  return new Promise((resolve, reject) => {
+  return new Promise((resolve) => {
     const canvas = document.createElement('canvas');
     const reader = new FileReader();
     reader.onload = function () {

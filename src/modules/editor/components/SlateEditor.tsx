@@ -28,11 +28,7 @@ import { SlateEditorSideMenu } from './SlateEditorSideMenu';
 import { SlateEditorHoverMenu } from './SlateEditorHoverMenu';
 import { SlateEditorToolbar } from './SlateEditorToolbar';
 import { AppBar, AppBarRightContainer } from '../../layout';
-import {
-  ButtonOutline,
-  Container,
-  FullScreenDialog,
-} from '../../../components';
+import { ButtonOutline, FullScreenDialog } from '../../../components';
 import { DEFAULT_NODE, hasBlock, insertImage } from './utils';
 import { userSession } from '../../../utils/blockstack';
 import { resizeImage } from '../../../utils/image';
