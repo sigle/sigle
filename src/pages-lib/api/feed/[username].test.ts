@@ -7,6 +7,24 @@ jest.mock('@sentry/node');
 jest.unmock('blockstack');
 
 describe('test feed api', () => {
+  it('should throw 404 error if username not found', async () => {
+    const req = {
+      headers: {
+        'x-forwarded-proto': 'https',
+        'x-forwarded-host': 'app.sigle.io',
+      },
+      query: { username: 'sigleapp.id.doesnotexist' },
+    };
+    const res = {
+      statusCode: 200,
+      end: jest.fn(),
+    };
+    await apiFeed(req as any, res as any);
+
+    expect(res.statusCode).toBe(404);
+    expect(res.end).toHaveBeenCalledWith('sigleapp.id.doesnotexist not found');
+  });
+
   it('should work properly', async () => {
     const req = {
       headers: {
@@ -20,6 +38,7 @@ describe('test feed api', () => {
     };
     await apiFeed(req as any, res as any);
 
+    expect(res.end).toBeCalled();
     const jsonObj = parser.parse(res.end.mock.calls[0][0]);
     expect(jsonObj.rss.channel).toEqual({
       copyright: 'All rights reserved 2020, sigleapp.id.blockstack',
