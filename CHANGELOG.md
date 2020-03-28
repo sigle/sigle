@@ -1,3 +1,9 @@
+## March 28, 2020
+
+### New feature
+
+- **RSS feed**: We now provides RSS feeds for every blogs, check the docs to see how to use it https://docs.sigle.io/ressources/rss-feeds.
+
 ## March 23, 2020
 
 ### Improvements
