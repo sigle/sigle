@@ -1,4 +1,4 @@
-import nanoid from 'nanoid';
+import { nanoid } from 'nanoid';
 import { Value } from 'slate';
 import Plain from 'slate-plain-serializer';
 import { userSession } from './blockstack';
