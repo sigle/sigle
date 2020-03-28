@@ -1,19 +1,14 @@
 {
   "name": "sigle",
   "version": 2,
-  "headers": [
+  "routes": [
     {
-      "source": "/manifest.json",
-      "headers": [
-        {
-          "key": "Access-Control-Allow-Origin",
-          "value": "*"
-        },
-        {
-          "key": "Access-Control-Allow-Headers",
-          "value": "*"
-        }
-      ]
+      "src": "/manifest.json",
+      "dest": "/manifest.json",
+      "headers": {
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Headers": "*"
+      }
     }
   ],
   "build": {
