@@ -1,3 +1,9 @@
+## April 20, 2020
+
+### Improvements
+
+- Add validation to the story settings page and fix a bug on safari when updating the created date.
+
 ## March 28, 2020
 
 ### New feature
