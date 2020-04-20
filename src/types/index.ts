@@ -53,6 +53,7 @@ export interface SubsetStory {
   content: string;
   coverImage?: string;
   type: 'private' | 'public';
+  featured?: boolean;
   createdAt: number;
   updatedAt: number;
 }

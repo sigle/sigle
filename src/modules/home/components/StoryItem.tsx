@@ -2,7 +2,7 @@ import React from 'react';
 import Link from 'next/link';
 import styled from 'styled-components';
 import tw from 'twin.macro';
-import { MdMoreHoriz } from 'react-icons/md';
+import { MdMoreHoriz, MdStar } from 'react-icons/md';
 import format from 'date-fns/format';
 import {
   Menu,
@@ -24,6 +24,10 @@ const StoryTitleContainer = styled.div`
 
 const StoryTitleIcon = styled(MdMoreHoriz)`
   ${tw`text-grey-darker`};
+`;
+
+const StarIcon = styled(MdStar)`
+  ${tw`text-yellow-400 ml-2`};
 `;
 
 const StoryTitle = styled.h3`
@@ -52,6 +56,11 @@ interface Props {
   deleteLoading: boolean;
   onCancelDelete: () => void;
   onConfirmDelete: () => void;
+  onFeature: () => void;
+  showFeatureDialog: boolean;
+  featureLoading: boolean;
+  onCancelFeature: () => void;
+  onConfirmFeature: () => void;
 }
 
 export const StoryItem = ({
@@ -64,6 +73,11 @@ export const StoryItem = ({
   deleteLoading,
   onCancelDelete,
   onConfirmDelete,
+  onFeature,
+  showFeatureDialog,
+  featureLoading,
+  onCancelFeature,
+  onConfirmFeature,
 }: Props) => {
   return (
     <React.Fragment>
@@ -95,9 +109,13 @@ export const StoryItem = ({
                   </MenuLink>
                 )}
                 <MenuItem onSelect={onEdit}>Edit</MenuItem>
+                {!story.featured && (
+                  <MenuItem onSelect={onFeature}>Feature this story</MenuItem>
+                )}
                 <MenuItem onSelect={onDelete}>Delete</MenuItem>
               </MenuList>
             </Menu>
+            {story.featured && <StarIcon size={22} />}
           </StoryTitleContainer>
           <StoryDate>
             <Link
@@ -126,6 +144,21 @@ export const StoryItem = ({
           </div>
         )}
       </StoryContainer>
+
+      <FullScreenDialog
+        isOpen={showFeatureDialog}
+        confirmLoading={featureLoading}
+        onConfirm={onConfirmFeature}
+        onCancel={onCancelFeature}
+        loadingTitle="Processing ..."
+        title="Feature my story"
+        description={
+          <React.Fragment>
+            <p>You’re about to feature this story.</p>
+            <p>Would you like to continue?</p>
+          </React.Fragment>
+        }
+      />
 
       <FullScreenDialog
         isOpen={showDeleteDialog}

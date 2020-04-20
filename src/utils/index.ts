@@ -135,6 +135,7 @@ export const convertStoryToSubsetStory = (story: Story): SubsetStory => {
         : plainContent,
     coverImage: story.coverImage,
     type: story.type,
+    featured: story.featured,
     createdAt: story.createdAt,
     updatedAt: story.updatedAt,
   };
