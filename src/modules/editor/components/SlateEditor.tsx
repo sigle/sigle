@@ -20,10 +20,11 @@ import {
   getStoriesFile,
   saveStoriesFile,
   generateRandomId,
+  getStoryFile,
 } from '../../../utils';
 import { Story } from '../../../types';
 import { Content } from '../../publicStory/components/PublicStory';
-import { StorySettings } from '../containers/StorySettings';
+import { StorySettings } from './StorySettings';
 import { SlateEditorSideMenu } from './SlateEditorSideMenu';
 import { SlateEditorHoverMenu } from './SlateEditorHoverMenu';
 import { SlateEditorToolbar } from './SlateEditorToolbar';
@@ -187,7 +188,6 @@ const handleKeyDown = (
 interface Props {
   story: Story;
   onChangeTitle: (title: string) => void;
-  onChangeStoryField: (field: string, value: any) => void;
   showPublishDialog: boolean;
   publishLoading: boolean;
   onPublish: () => void;
@@ -203,7 +203,6 @@ interface Props {
 export const SlateEditor = ({
   story,
   onChangeTitle,
-  onChangeStoryField,
   showPublishDialog,
   publishLoading,
   onPublish,
@@ -435,13 +434,14 @@ export const SlateEditor = ({
     next();
   };
 
-  const handleSave = async (storyParam?: Partial<Story>) => {
+  const handleSave = async () => {
     setLoadingSave(true);
     try {
+      const storyFile = (await getStoryFile(story.id)) as Story;
       const content = value.toJSON();
       const updatedStory: Story = {
-        ...story,
-        ...storyParam,
+        ...storyFile,
+        title: story.title,
         content,
         updatedAt: Date.now(),
       };
@@ -581,8 +581,6 @@ export const SlateEditor = ({
           story={story}
           open={settingsOpen}
           onClose={handleCloseSettings}
-          onChangeStoryField={onChangeStoryField}
-          onSave={handleSave}
         />
 
         <FullScreenDialog

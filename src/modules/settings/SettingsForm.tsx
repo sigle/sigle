@@ -104,10 +104,8 @@ export const SettingsForm = ({ settings, username }: SettingsFormProps) => {
     },
     onSubmit: async (values, { setSubmitting }) => {
       const newSettings: SettingsFile = {};
-      Object.keys(values).forEach((key) => {
+      (Object.keys(values) as Array<keyof typeof values>).forEach((key) => {
         // We replace empty strings by undefined
-        // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
-        // @ts-ignore
         newSettings[key] = values[key] ? values[key] : undefined;
       });
 

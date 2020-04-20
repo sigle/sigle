@@ -72,7 +72,6 @@ export const SlateEditor = ({ story, onChangeStoryField }: Props) => {
     <Component
       story={story}
       onChangeTitle={handleChangeTitle}
-      onChangeStoryField={onChangeStoryField}
       showPublishDialog={showPublishDialog}
       publishLoading={publishLoading}
       onPublish={handlePublish}
