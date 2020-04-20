@@ -188,7 +188,6 @@ const handleKeyDown = (
 interface Props {
   story: Story;
   onChangeTitle: (title: string) => void;
-  onChangeStoryField: (field: string, value: any) => void;
   showPublishDialog: boolean;
   publishLoading: boolean;
   onPublish: () => void;
@@ -204,7 +203,6 @@ interface Props {
 export const SlateEditor = ({
   story,
   onChangeTitle,
-  onChangeStoryField,
   showPublishDialog,
   publishLoading,
   onPublish,

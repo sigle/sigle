@@ -4,7 +4,6 @@ import tw from 'twin.macro';
 import { MdClose } from 'react-icons/md';
 import { DialogContent, DialogOverlay } from '@reach/dialog';
 import { animated, useTransition } from 'react-spring';
-import { DropzoneRootProps, DropzoneInputProps } from 'react-dropzone';
 import { Story } from '../../../types';
 import { StorySettingsForm } from './StorySettingsForm';
 
