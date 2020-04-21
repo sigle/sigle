@@ -119,9 +119,10 @@ export const StoryItem = ({
                   </MenuLink>
                 )}
                 <MenuItem onSelect={onEdit}>Edit</MenuItem>
-                {!story.featured ? (
+                {!story.featured && type === 'public' && (
                   <MenuItem onSelect={onFeature}>Feature this story</MenuItem>
-                ) : (
+                )}
+                {story.featured && type === 'public' && (
                   <MenuItem onSelect={onUnFeature}>
                     Un-feature this story
                   </MenuItem>

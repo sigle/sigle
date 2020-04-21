@@ -93,6 +93,8 @@ export const unPublishStory = async (storyId: string): Promise<void> => {
     throw new Error('Story is already private');
   }
   story.type = 'private';
+  // A draft can't be featured
+  story.featured = false;
 
   const storiesFile = await getStoriesFile();
   const index = storiesFile.stories.findIndex((s) => s.id === story.id);
@@ -100,6 +102,8 @@ export const unPublishStory = async (storyId: string): Promise<void> => {
     throw new Error('File not found in list');
   }
   storiesFile.stories[index].type = 'private';
+  // A draft can't be featured
+  storiesFile.stories[index].featured = false;
 
   await saveStoriesFile(storiesFile);
   await saveStoryFile(story);
