@@ -61,6 +61,11 @@ interface Props {
   featureLoading: boolean;
   onCancelFeature: () => void;
   onConfirmFeature: () => void;
+  onUnFeature: () => void;
+  showUnFeatureDialog: boolean;
+  unFeatureLoading: boolean;
+  onCancelUnFeature: () => void;
+  onConfirmUnFeature: () => void;
 }
 
 export const StoryItem = ({
@@ -78,6 +83,11 @@ export const StoryItem = ({
   featureLoading,
   onCancelFeature,
   onConfirmFeature,
+  onUnFeature,
+  showUnFeatureDialog,
+  unFeatureLoading,
+  onCancelUnFeature,
+  onConfirmUnFeature,
 }: Props) => {
   return (
     <React.Fragment>
@@ -109,8 +119,12 @@ export const StoryItem = ({
                   </MenuLink>
                 )}
                 <MenuItem onSelect={onEdit}>Edit</MenuItem>
-                {!story.featured && (
+                {!story.featured ? (
                   <MenuItem onSelect={onFeature}>Feature this story</MenuItem>
+                ) : (
+                  <MenuItem onSelect={onUnFeature}>
+                    Un-feature this story
+                  </MenuItem>
                 )}
                 <MenuItem onSelect={onDelete}>Delete</MenuItem>
               </MenuList>
@@ -155,6 +169,21 @@ export const StoryItem = ({
         description={
           <React.Fragment>
             <p>You’re about to feature this story.</p>
+            <p>Would you like to continue?</p>
+          </React.Fragment>
+        }
+      />
+
+      <FullScreenDialog
+        isOpen={showUnFeatureDialog}
+        confirmLoading={unFeatureLoading}
+        onConfirm={onConfirmUnFeature}
+        onCancel={onCancelUnFeature}
+        loadingTitle="Processing ..."
+        title="Un-feature my story"
+        description={
+          <React.Fragment>
+            <p>You’re about to un-feature this story.</p>
             <p>Would you like to continue?</p>
           </React.Fragment>
         }

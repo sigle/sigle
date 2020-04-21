@@ -30,6 +30,8 @@ export const StoryItem = ({
   const [deleteLoading, setDeleteLoading] = useState(false);
   const [showFeatureDialog, setShowFeatureDialog] = useState(false);
   const [featureLoading, setFeatureLoading] = useState(false);
+  const [showUnFeatureDialog, setShowUnFeatureDialog] = useState(false);
+  const [unFeatureLoading, setUnFeatureLoading] = useState(false);
 
   const handleEdit = () => {
     router.push('/stories/[storyId]', `/stories/${story.id}`);
@@ -64,12 +66,12 @@ export const StoryItem = ({
     setShowDeleteDialog(false);
   };
 
-  const handleFeature = async () => {
-    setShowFeatureDialog(true);
-  };
-
-  const handleConfirmFeature = async () => {
-    setFeatureLoading(true);
+  const setFeaturedStory = async (featured: boolean) => {
+    if (featured) {
+      setFeatureLoading(true);
+    } else {
+      setUnFeatureLoading(true);
+    }
     NProgress.start();
     try {
       const file = await getStoriesFile();
@@ -83,22 +85,43 @@ export const StoryItem = ({
           file.stories[index].featured = false;
         }
       });
-      file.stories[index].featured = true;
+      file.stories[index].featured = featured;
       await saveStoriesFile(file);
       const storyFile = (await getStoryFile(story.id)) as Story;
-      storyFile.featured = true;
+      storyFile.featured = featured;
       await saveStoryFile(storyFile);
       await refetchStoriesLists();
     } catch (error) {
       toast.error(error.message);
     }
     NProgress.done();
-    setFeatureLoading(false);
-    setShowFeatureDialog(false);
+    if (featured) {
+      setFeatureLoading(false);
+      setShowFeatureDialog(false);
+    } else {
+      setUnFeatureLoading(false);
+      setShowUnFeatureDialog(false);
+    }
   };
+
+  const handleFeature = async () => {
+    setShowFeatureDialog(true);
+  };
+
+  const handleConfirmFeature = async () => setFeaturedStory(true);
 
   const handleCancelFeature = () => {
     setShowFeatureDialog(false);
+  };
+
+  const handleUnFeature = async () => {
+    setShowUnFeatureDialog(true);
+  };
+
+  const handleConfirmUnFeature = async () => setFeaturedStory(false);
+
+  const handleCancelUnFeature = () => {
+    setShowUnFeatureDialog(false);
   };
 
   return (
@@ -117,6 +140,11 @@ export const StoryItem = ({
       featureLoading={featureLoading}
       onConfirmFeature={handleConfirmFeature}
       onCancelFeature={handleCancelFeature}
+      onUnFeature={handleUnFeature}
+      showUnFeatureDialog={showUnFeatureDialog}
+      unFeatureLoading={unFeatureLoading}
+      onConfirmUnFeature={handleConfirmUnFeature}
+      onCancelUnFeature={handleCancelUnFeature}
     />
   );
 };
