@@ -15,6 +15,7 @@ import {
   saveStoryFile,
   saveStoriesFile,
   deleteStoryFile,
+  convertStoryToSubsetStory,
 } from '../../../utils';
 import { Button } from '../../../components';
 import {
@@ -138,16 +139,17 @@ export const StorySettingsForm = ({ story }: StorySettingsFormProps) => {
       // First we save the story
       await saveStoryFile(updatedStory);
 
-      // We sort the files by date if createdAt changed
-      if (updatedStory.createdAt !== story.createdAt) {
-        const file = await getStoriesFile();
-        const index = file.stories.findIndex((s) => s.id === story.id);
-        if (index === -1) {
-          throw new Error('File not found in list');
-        }
-        file.stories.sort((a, b) => b.createdAt - a.createdAt);
-        await saveStoriesFile(file);
+      const subsetStory = convertStoryToSubsetStory(updatedStory);
+      const file = await getStoriesFile();
+      const index = file.stories.findIndex((s) => s.id === story.id);
+      if (index === -1) {
+        throw new Error('File not found in list');
       }
+      // We need to update the subset story on the index
+      file.stories[index] = subsetStory;
+      // We sort the files by date
+      file.stories.sort((a, b) => b.createdAt - a.createdAt);
+      await saveStoriesFile(file);
 
       if (coverFile) {
         formik.setFieldValue('coverImage', updatedStory.coverImage);

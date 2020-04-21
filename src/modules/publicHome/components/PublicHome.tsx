@@ -42,6 +42,12 @@ export const PublicHome = ({ file, settings }: PublicHomeProps) => {
 
   const siteName = settings.siteName || username;
 
+  const featuredStoryIndex = file.stories.findIndex((story) => story.featured);
+  const stories = [...file.stories];
+  if (featuredStoryIndex !== -1) {
+    stories.splice(featuredStoryIndex, 1);
+  }
+
   return (
     <React.Fragment>
       <Container>
@@ -61,7 +67,14 @@ export const PublicHome = ({ file, settings }: PublicHomeProps) => {
 
       <StyledContainer>
         {file.stories.length === 0 && <NoStories>No stories yet</NoStories>}
-        {file.stories.map((story) => (
+        {featuredStoryIndex !== -1 && (
+          <PublicStoryItem
+            username={username}
+            story={file.stories[featuredStoryIndex]}
+            settings={settings}
+          />
+        )}
+        {stories.map((story) => (
           <PublicStoryItem
             key={story.id}
             username={username}
