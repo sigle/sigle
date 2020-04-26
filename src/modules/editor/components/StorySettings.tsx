@@ -29,6 +29,7 @@ const CloseButton = styled.div`
 
 interface Props {
   story: Story;
+  onSave: (storyParam?: Partial<Story>) => Promise<void>;
   open: boolean;
   onClose: () => void;
 }
@@ -36,7 +37,7 @@ interface Props {
 const AnimatedDialogOverlay = animated(StyledDialogOverlay);
 const AnimatedDialogContent = animated(StyledDialogContent);
 
-export const StorySettings = ({ open, onClose, story }: Props) => {
+export const StorySettings = ({ open, onClose, story, onSave }: Props) => {
   const transitions = useTransition(open, null, {
     from: { opacity: 0, transform: 'translateX(100%)' },
     enter: { opacity: 1, transform: 'translateX(0)' },
@@ -69,7 +70,7 @@ export const StorySettings = ({ open, onClose, story }: Props) => {
                   </CloseButton>
                 </TitleContainer>
 
-                <StorySettingsForm story={story} />
+                <StorySettingsForm story={story} onSave={onSave} />
               </AnimatedDialogContent>
             </AnimatedDialogOverlay>
           )

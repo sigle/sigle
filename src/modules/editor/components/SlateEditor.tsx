@@ -434,13 +434,14 @@ export const SlateEditor = ({
     next();
   };
 
-  const handleSave = async () => {
+  const handleSave = async (storyParam?: Partial<Story>) => {
     setLoadingSave(true);
     try {
       const storyFile = (await getStoryFile(story.id)) as Story;
       const content = value.toJSON();
       const updatedStory: Story = {
         ...storyFile,
+        ...storyParam,
         title: story.title,
         content,
         updatedAt: Date.now(),
@@ -581,6 +582,7 @@ export const SlateEditor = ({
           story={story}
           open={settingsOpen}
           onClose={handleCloseSettings}
+          onSave={handleSave}
         />
 
         <FullScreenDialog

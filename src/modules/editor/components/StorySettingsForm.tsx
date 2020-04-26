@@ -12,10 +12,8 @@ import { Story } from '../../../types';
 import { resizeImage } from '../../../utils/image';
 import {
   getStoriesFile,
-  saveStoryFile,
   saveStoriesFile,
   deleteStoryFile,
-  convertStoryToSubsetStory,
 } from '../../../utils';
 import { Button } from '../../../components';
 import {
@@ -78,9 +76,13 @@ interface StorySettingsFormValues {
 
 interface StorySettingsFormProps {
   story: Story;
+  onSave: (storyParam?: Partial<Story>) => Promise<void>;
 }
 
-export const StorySettingsForm = ({ story }: StorySettingsFormProps) => {
+export const StorySettingsForm = ({
+  story,
+  onSave,
+}: StorySettingsFormProps) => {
   const router = useRouter();
   const [coverFile, setCoverFile] = useState<
     (Blob & { preview: string; name: string }) | undefined
@@ -108,10 +110,7 @@ export const StorySettingsForm = ({ story }: StorySettingsFormProps) => {
       return errors;
     },
     onSubmit: async (values, { setSubmitting }) => {
-      const updatedStory: Story = {
-        ...story,
-        updatedAt: Date.now(),
-      };
+      const updatedStory: Partial<Story> = {};
       (Object.keys(values) as Array<keyof typeof values>).forEach((key) => {
         // We replace empty strings by undefined
         // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
@@ -120,7 +119,9 @@ export const StorySettingsForm = ({ story }: StorySettingsFormProps) => {
       });
 
       // We normalize the date to save it as number
-      updatedStory.createdAt = new Date(updatedStory.createdAt).getTime();
+      updatedStory.createdAt = updatedStory.createdAt
+        ? new Date(updatedStory.createdAt).getTime()
+        : updatedStory.createdAt;
 
       if (coverFile) {
         const now = new Date().getTime();
@@ -136,27 +137,13 @@ export const StorySettingsForm = ({ story }: StorySettingsFormProps) => {
         updatedStory.coverImage = coverImageUrl;
       }
 
-      // First we save the story
-      await saveStoryFile(updatedStory);
-
-      const subsetStory = convertStoryToSubsetStory(updatedStory);
-      const file = await getStoriesFile();
-      const index = file.stories.findIndex((s) => s.id === story.id);
-      if (index === -1) {
-        throw new Error('File not found in list');
-      }
-      // We need to update the subset story on the index
-      file.stories[index] = subsetStory;
-      // We sort the files by date
-      file.stories.sort((a, b) => b.createdAt - a.createdAt);
-      await saveStoriesFile(file);
+      await onSave(updatedStory);
 
       if (coverFile) {
         formik.setFieldValue('coverImage', updatedStory.coverImage);
         setCoverFile(undefined);
       }
 
-      toast.success('Settings saved');
       setSubmitting(false);
     },
   });
