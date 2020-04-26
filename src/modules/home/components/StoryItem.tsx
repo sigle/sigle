@@ -2,7 +2,7 @@ import React from 'react';
 import Link from 'next/link';
 import styled from 'styled-components';
 import tw from 'twin.macro';
-import { MdMoreHoriz } from 'react-icons/md';
+import { MdMoreHoriz, MdStar } from 'react-icons/md';
 import format from 'date-fns/format';
 import {
   Menu,
@@ -24,6 +24,11 @@ const StoryTitleContainer = styled.div`
 
 const StoryTitleIcon = styled(MdMoreHoriz)`
   ${tw`text-grey-darker`};
+`;
+
+const StarIcon = styled(MdStar)`
+  ${tw`ml-2`};
+  color: rgb(255, 199, 0);
 `;
 
 const StoryTitle = styled.h3`
@@ -52,6 +57,16 @@ interface Props {
   deleteLoading: boolean;
   onCancelDelete: () => void;
   onConfirmDelete: () => void;
+  onFeature: () => void;
+  showFeatureDialog: boolean;
+  featureLoading: boolean;
+  onCancelFeature: () => void;
+  onConfirmFeature: () => void;
+  onUnFeature: () => void;
+  showUnFeatureDialog: boolean;
+  unFeatureLoading: boolean;
+  onCancelUnFeature: () => void;
+  onConfirmUnFeature: () => void;
 }
 
 export const StoryItem = ({
@@ -64,6 +79,16 @@ export const StoryItem = ({
   deleteLoading,
   onCancelDelete,
   onConfirmDelete,
+  onFeature,
+  showFeatureDialog,
+  featureLoading,
+  onCancelFeature,
+  onConfirmFeature,
+  onUnFeature,
+  showUnFeatureDialog,
+  unFeatureLoading,
+  onCancelUnFeature,
+  onConfirmUnFeature,
 }: Props) => {
   return (
     <React.Fragment>
@@ -95,9 +120,18 @@ export const StoryItem = ({
                   </MenuLink>
                 )}
                 <MenuItem onSelect={onEdit}>Edit</MenuItem>
+                {!story.featured && type === 'public' && (
+                  <MenuItem onSelect={onFeature}>Feature this story</MenuItem>
+                )}
+                {story.featured && type === 'public' && (
+                  <MenuItem onSelect={onUnFeature}>
+                    Un-feature this story
+                  </MenuItem>
+                )}
                 <MenuItem onSelect={onDelete}>Delete</MenuItem>
               </MenuList>
             </Menu>
+            {story.featured && <StarIcon size={22} />}
           </StoryTitleContainer>
           <StoryDate>
             <Link
@@ -126,6 +160,37 @@ export const StoryItem = ({
           </div>
         )}
       </StoryContainer>
+
+      <FullScreenDialog
+        isOpen={showFeatureDialog}
+        confirmLoading={featureLoading}
+        onConfirm={onConfirmFeature}
+        onCancel={onCancelFeature}
+        loadingTitle="Processing ..."
+        title="Feature this story"
+        description={
+          <React.Fragment>
+            <p>This story, once featured, will appear on top of your blog.</p>
+            <p>Would you like to continue?</p>
+            <p>You can remove it at any time.</p>
+          </React.Fragment>
+        }
+      />
+
+      <FullScreenDialog
+        isOpen={showUnFeatureDialog}
+        confirmLoading={unFeatureLoading}
+        onConfirm={onConfirmUnFeature}
+        onCancel={onCancelUnFeature}
+        loadingTitle="Processing ..."
+        title="Un-feature this story"
+        description={
+          <React.Fragment>
+            <p>You’re about to un-feature this story.</p>
+            <p>Would you like to continue?</p>
+          </React.Fragment>
+        }
+      />
 
       <FullScreenDialog
         isOpen={showDeleteDialog}

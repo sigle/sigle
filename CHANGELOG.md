@@ -1,3 +1,9 @@
+## April 26, 2020
+
+### New feature
+
+- **📌 Feature a story**: You can now pick a featured story on your blog.
+
 ## April 20, 2020
 
 ### Improvements

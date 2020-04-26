@@ -38,6 +38,11 @@ export interface Story {
    * Meta description that will be used for SEO
    */
   metaDescription?: string;
+  /**
+   * Is the story featured. A featured story will be displayed in another way in the list
+   * it will also always appear first in the list, no matter the created date
+   */
+  featured?: boolean;
   createdAt: number;
   updatedAt: number;
 }
@@ -48,6 +53,7 @@ export interface SubsetStory {
   content: string;
   coverImage?: string;
   type: 'private' | 'public';
+  featured?: boolean;
   createdAt: number;
   updatedAt: number;
 }
