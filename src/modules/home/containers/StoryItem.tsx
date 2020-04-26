@@ -74,11 +74,29 @@ export const StoryItem = ({
     }
     NProgress.start();
     try {
+      // We update the new file
+      const storyFile = (await getStoryFile(story.id)) as Story;
+      storyFile.featured = featured;
+      await saveStoryFile(storyFile);
+
       const file = await getStoriesFile();
+      // Only when we feature a new one we need to un-feature the old one, not just the index
+      if (featured) {
+        const oldFeaturedStory = file.stories.find((story) => story.featured);
+        if (oldFeaturedStory) {
+          const oldFeaturedStoryFile = (await getStoryFile(
+            oldFeaturedStory.id
+          )) as Story;
+          oldFeaturedStoryFile.featured = false;
+          await saveStoryFile(oldFeaturedStoryFile);
+        }
+      }
+
       const index = file.stories.findIndex((s) => s.id === story.id);
       if (index === -1) {
         throw new Error('File not found in list');
       }
+
       // Only one story can be featured so we remove the old one
       file.stories.forEach((story, index) => {
         if (story.featured) {
@@ -87,9 +105,8 @@ export const StoryItem = ({
       });
       file.stories[index].featured = featured;
       await saveStoriesFile(file);
-      const storyFile = (await getStoryFile(story.id)) as Story;
-      storyFile.featured = featured;
-      await saveStoryFile(storyFile);
+
+      // We refetch the list to show the latest infos
       await refetchStoriesLists();
     } catch (error) {
       toast.error(error.message);
