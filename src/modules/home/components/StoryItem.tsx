@@ -27,7 +27,8 @@ const StoryTitleIcon = styled(MdMoreHoriz)`
 `;
 
 const StarIcon = styled(MdStar)`
-  ${tw`text-yellow-400 ml-2`};
+  ${tw`ml-2`};
+  color: rgb(255, 199, 0);
 `;
 
 const StoryTitle = styled.h3`
@@ -166,11 +167,12 @@ export const StoryItem = ({
         onConfirm={onConfirmFeature}
         onCancel={onCancelFeature}
         loadingTitle="Processing ..."
-        title="Feature my story"
+        title="Feature this story"
         description={
           <React.Fragment>
-            <p>You’re about to feature this story.</p>
+            <p>This story, once featured, will appear on top of your blog.</p>
             <p>Would you like to continue?</p>
+            <p>You can remove it at any time.</p>
           </React.Fragment>
         }
       />
@@ -181,7 +183,7 @@ export const StoryItem = ({
         onConfirm={onConfirmUnFeature}
         onCancel={onCancelUnFeature}
         loadingTitle="Processing ..."
-        title="Un-feature my story"
+        title="Un-feature this story"
         description={
           <React.Fragment>
             <p>You’re about to un-feature this story.</p>
