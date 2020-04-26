@@ -257,7 +257,9 @@ export const PublicStory = ({ story, settings }: PublicStoryProps) => {
         <Content
           className="sigle-content"
           dangerouslySetInnerHTML={{
-            __html: html.serialize(Value.fromJSON(story.content)),
+            __html: story.content
+              ? html.serialize(Value.fromJSON(story.content))
+              : '',
           }}
         />
       </StyledContainer>
