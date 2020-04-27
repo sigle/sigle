@@ -29,7 +29,7 @@ import { SlateEditorSideMenu } from './SlateEditorSideMenu';
 import { SlateEditorHoverMenu } from './SlateEditorHoverMenu';
 import { SlateEditorToolbar } from './SlateEditorToolbar';
 import { AppBar, AppBarRightContainer } from '../../layout';
-import { ButtonOutline, FullScreenDialog } from '../../../components';
+import { ButtonOutline, FullScreenDialog, Button } from '../../../components';
 import { DEFAULT_NODE, hasBlock, insertImage } from './utils';
 import { userSession } from '../../../utils/blockstack';
 import { resizeImage } from '../../../utils/image';
@@ -343,9 +343,28 @@ export const SlateEditor = ({
         const { data } = node;
         const href = data.get('href');
         return (
-          <a {...attributes} href={href}>
-            {children}
-          </a>
+          <Tippy
+            content={
+              <div>
+                <p>{children}</p>
+                <p>
+                  <a href={href} target="_blank">
+                    {href}
+                  </a>
+                </p>
+                <p>
+                  <ButtonOutline>Edit</ButtonOutline>
+                  <Button>Remove</Button>
+                </p>
+              </div>
+            }
+            theme="light-border"
+            interactive
+          >
+            <a {...attributes} href={href}>
+              {children}
+            </a>
+          </Tippy>
         );
       default:
         return next();
