@@ -18,7 +18,7 @@ import {
   MdCode,
 } from 'react-icons/md';
 import { hasLinks, hasBlock, hasMark } from './utils';
-import { onClickLink, onClickBlock, onClickMark } from './SlateEditorToolbar';
+import { onClickBlock, onClickMark } from './SlateEditorToolbar';
 
 const HoverMenuContainer = styled.div`
   ${tw`flex transition-opacity duration-700`};
@@ -47,10 +47,11 @@ const SlateEditorHoverMenuButton = styled.button<{ active: boolean }>`
 
 interface SlateEditorSideMenuProps {
   editor: Editor;
+  onEditLink: () => void;
 }
 
 export const SlateEditorHoverMenu = forwardRef(
-  ({ editor }: SlateEditorSideMenuProps, ref: any) => {
+  ({ editor, onEditLink }: SlateEditorSideMenuProps, ref: any) => {
     const root = window.document.getElementById('__next');
     if (!root) return null;
 
@@ -117,7 +118,7 @@ export const SlateEditorHoverMenu = forwardRef(
           active={isActive}
           onMouseDown={(event) => {
             event.preventDefault();
-            onClickLink(editor);
+            onEditLink();
           }}
         >
           <MdLink size={18} />

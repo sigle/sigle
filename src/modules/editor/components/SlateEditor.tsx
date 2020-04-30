@@ -34,6 +34,7 @@ import { DEFAULT_NODE, hasBlock, insertImage } from './utils';
 import { userSession } from '../../../utils/blockstack';
 import { resizeImage } from '../../../utils/image';
 import { FixedContainer, PageContainer } from './Editor';
+import { SlateEditorLink } from './SlateEditorLink';
 
 const StyledAppBarRightContainer = styled(AppBarRightContainer)`
   ${tw`hidden md:flex`};
@@ -219,6 +220,7 @@ export const SlateEditor = ({
   const hoverMenuRef = useRef<any>(null);
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [loadingSave, setLoadingSave] = useState(false);
+  const [editLinkOpen, setEditLinkOpen] = useState(false);
   const [value, setValue] = useState(
     story.content
       ? Value.fromJSON(story.content)
@@ -494,6 +496,10 @@ export const SlateEditor = ({
     setSettingsOpen(false);
   };
 
+  const handleEditLink = () => {
+    setEditLinkOpen(true);
+  };
+
   /**
    * Render the editor with the side menu and mobile menu
    */
@@ -518,7 +524,16 @@ export const SlateEditor = ({
           editor={editor}
           addImageToEditor={addImageToEditor}
         />
-        <SlateEditorHoverMenu ref={hoverMenuRef} editor={editor} />
+        <SlateEditorHoverMenu
+          ref={hoverMenuRef}
+          editor={editor}
+          onEditLink={handleEditLink}
+        />
+        <SlateEditorLink
+          editor={editor}
+          open={editLinkOpen}
+          onClose={() => setEditLinkOpen(false)}
+        />
       </React.Fragment>
     );
   };
