@@ -10,7 +10,7 @@ import {
   FormInput,
   FormHelperError,
 } from '../../../components/Form';
-import { Button } from '../../../components';
+import { Button, ButtonOutline } from '../../../components';
 
 const overlayAnimation = keyframes`
   0% {
@@ -29,7 +29,7 @@ const StyledDialogOverlay = styled(DialogOverlay)`
 `;
 
 const StyledDialogContent = styled(DialogContent)`
-  ${tw`max-w-lg w-full p-8`}
+  ${tw`max-w-lg w-full p-8 rounded`}
 `;
 
 const Title = styled.h2`
@@ -40,8 +40,8 @@ const SaveRow = styled.div`
   ${tw`pt-3 flex justify-end`};
 `;
 
-const CancelButton = styled(Button)`
-  ${tw`mr-4`};
+const CancelButton = styled(ButtonOutline)`
+  ${tw`mr-4 text-base`};
 `;
 
 interface SlateEditorLinkFormValues {
