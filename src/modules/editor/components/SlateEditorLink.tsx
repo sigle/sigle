@@ -27,6 +27,7 @@ const overlayAnimation = keyframes`
 
 const StyledDialogOverlay = styled(DialogOverlay)`
   animation: ${overlayAnimation} 75ms cubic-bezier(0, 0, 0.2, 1);
+  z-index: 11;
 `;
 
 const StyledDialogContent = styled(DialogContent)`

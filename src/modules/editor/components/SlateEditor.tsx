@@ -547,6 +547,7 @@ export const SlateEditor = ({
           handleOpenSettings={handleOpenSettings}
           handleSave={handleSave}
           addImageToEditor={addImageToEditor}
+          onEditLink={handleEditLink}
         />
 
         {children}

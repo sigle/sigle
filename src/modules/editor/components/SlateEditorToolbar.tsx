@@ -109,47 +109,6 @@ export const onClickBlock = (editor: Editor, type: string) => {
   }
 };
 
-/**
- * When clicking a link, if the selection has a link in it, remove the link.
- * Otherwise, add a new link with an href and text.
- */
-// TODO onPaste for links see https://github.com/ianstormtaylor/slate/blob/master/examples/links/index.js
-// TODO remove this part
-export const onClickLink = (editor: Editor) => {
-  const { value } = editor;
-
-  if (hasLinks(value)) {
-    // ok
-    editor.command(unwrapLink);
-  } else if (value.selection.isExpanded) {
-    const href = window.prompt('Enter the URL of the link:');
-
-    if (href === null) {
-      return;
-    }
-
-    editor.command(wrapLink, href);
-  } else {
-    // ok
-    const href = window.prompt('Enter the URL of the link:');
-
-    if (href === null) {
-      return;
-    }
-
-    const text = window.prompt('Enter the text for the link:');
-
-    if (text === null) {
-      return;
-    }
-
-    editor
-      .insertText(text)
-      .moveFocusBackward(text.length)
-      .command(wrapLink, href);
-  }
-};
-
 interface SlateEditorToolbarProps {
   editor: Editor;
   value: Value;
@@ -157,6 +116,7 @@ interface SlateEditorToolbarProps {
   addImageToEditor: (editor: Editor, files: File[], target?: any) => void;
   handleOpenSettings: () => void;
   handleSave: () => void;
+  onEditLink: () => void;
 }
 
 export const SlateEditorToolbar = ({
@@ -166,6 +126,7 @@ export const SlateEditorToolbar = ({
   handleOpenSettings,
   handleSave,
   addImageToEditor,
+  onEditLink,
 }: SlateEditorToolbarProps) => {
   const fileUploaderRef = useRef<HTMLInputElement>(null);
 
@@ -230,7 +191,7 @@ export const SlateEditorToolbar = ({
         active={isActive}
         onMouseDown={(event) => {
           event.preventDefault();
-          onClickLink(editor);
+          onEditLink();
         }}
       >
         <MdLink size={18} />
