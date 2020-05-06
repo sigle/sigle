@@ -1,3 +1,9 @@
+## May 6, 2020
+
+### Improvements
+
+- 🔗 Improved way to manage links.
+
 ## April 26, 2020
 
 ### New feature
