@@ -119,6 +119,7 @@ export const onClickLink = (editor: Editor) => {
   const { value } = editor;
 
   if (hasLinks(value)) {
+    // ok
     editor.command(unwrapLink);
   } else if (value.selection.isExpanded) {
     const href = window.prompt('Enter the URL of the link:');
@@ -129,6 +130,7 @@ export const onClickLink = (editor: Editor) => {
 
     editor.command(wrapLink, href);
   } else {
+    // ok
     const href = window.prompt('Enter the URL of the link:');
 
     if (href === null) {

@@ -520,18 +520,16 @@ export const SlateEditor = ({
     const { value } = editor;
     const valueHaveLinks = hasLinks(value);
 
-    console.log('valueHaveLinks', valueHaveLinks);
-
-    // If link text is empty and the current selection is a link we need to remove the link
-    if (values.link === '' && valueHaveLinks) {
-      unwrapLink(editor);
-    } else if (valueHaveLinks) {
+    if (valueHaveLinks) {
       // We first unwrap the text to avoid nested links
       unwrapLink(editor);
-      changeLink(editor, values.text, values.link);
-    } else {
-      // Means we are inserting a new link
-      editor.command(wrapLink, values.link);
+    }
+
+    if (values.link) {
+      editor
+        .insertText(values.text)
+        .moveFocusBackward(values.text.length)
+        .command(wrapLink, values.link);
     }
   };
 

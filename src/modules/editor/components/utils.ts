@@ -27,8 +27,8 @@ export const hasLinks = (value: Value) => {
 /**
  * A change helper to standardize editing links.
  */
-export const changeLink = (editor: Editor, text: string, href: string) => {
-  editor.insertText(text).setInlines({
+export const changeLink = (editor: Editor, href: string) => {
+  editor.setInlines({
     type: 'link',
     data: { href },
   });
