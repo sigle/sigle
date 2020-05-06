@@ -14,11 +14,13 @@ module.exports = {
     },
   },
   rules: {
+    'eslint/no-use-before-define': 'off',
     'react/no-unescaped-entities': 'off',
     'react/prop-types': 'off',
     '@typescript-eslint/explicit-function-return-type': 'off',
     '@typescript-eslint/explicit-member-accessibility': 'off',
     '@typescript-eslint/no-unused-vars': 2,
+    '@typescript-eslint/no-use-before-define': 'off',
   },
   settings: {
     react: {

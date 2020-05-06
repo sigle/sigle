@@ -214,7 +214,6 @@ export const StorySettingsForm = ({
     <form onSubmit={formik.handleSubmit}>
       <FormRow>
         <FormLabel>Cover image</FormLabel>
-
         <ImageEmpty
           {...getRootProps({ tabIndex: undefined })}
           haveImage={!!coverImageUrl}

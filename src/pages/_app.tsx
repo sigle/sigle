@@ -17,6 +17,7 @@ import 'react-toastify/dist/ReactToastify.css';
 // reach-ui styles
 import '@reach/dialog/styles.css';
 import '@reach/menu-button/styles.css';
+import '@reach/tooltip/styles.css';
 import '../lib/fonts.css';
 import '../generated/tailwind.css';
 import { config } from '../config';

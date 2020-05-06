@@ -1,4 +1,5 @@
-import { Value, Editor } from 'slate';
+import { Value, Inline } from 'slate';
+import { Editor } from 'slate-react';
 
 export const DEFAULT_NODE = 'paragraph';
 
@@ -17,6 +18,15 @@ export const hasBlock = (value: Value, type: string) => {
 };
 
 /**
+ * Get link
+ */
+export const getLink = (value: Value): Inline | undefined => {
+  return value.inlines.find(
+    (inline: Inline | undefined) => inline?.type === 'link'
+  );
+};
+
+/**
  * Check if the any of the currently selected blocks is a link.
  */
 export const hasLinks = (value: Value) => {
@@ -27,12 +37,12 @@ export const hasLinks = (value: Value) => {
  * A change helper to standardize wrapping links.
  */
 export const wrapLink = (editor: Editor, href: string) => {
-  editor.wrapInline({
-    type: 'link',
-    data: { href },
-  });
-
-  editor.moveToEnd();
+  editor
+    .wrapInline({
+      type: 'link',
+      data: { href },
+    })
+    .moveToEnd();
 };
 
 /**
