@@ -124,75 +124,6 @@ const slatePlugins = [SoftBreak({ shift: true })];
 
 // TODO warn user if he try to leave the page with unsaved changes
 
-/**
- * Handle key press from the user and allow shortcuts.
- */
-const handleKeyDown = (
-  event: React.KeyboardEvent,
-  editor: Editor,
-  next: () => any
-) => {
-  // When the user press enter on a title or quote we reset the style to paragraph
-  if (
-    event.key === 'Enter' &&
-    (hasBlock(editor.value, 'heading-one') ||
-      hasBlock(editor.value, 'heading-two') ||
-      hasBlock(editor.value, 'heading-three') ||
-      hasBlock(editor.value, 'block-quote'))
-  ) {
-    event.preventDefault();
-    editor.splitBlock().setBlocks(DEFAULT_NODE);
-    return;
-  }
-
-  // When the user press enter or backspace on a empty list item
-  // we should remove the list block and set it to paragraph
-  if (
-    ['Enter', 'Backspace'].includes(event.key) &&
-    editor.value.blocks.size > 0
-  ) {
-    const parent = editor.value.document.getParent(
-      editor.value.blocks.first().key
-    );
-    const isEmptyText =
-      editor.value.texts.get(0) && editor.value.texts.get(0).text.length === 0;
-    if (
-      parent &&
-      ['numbered-list', 'bulleted-list'].includes((parent as any).type) &&
-      isEmptyText
-    ) {
-      event.preventDefault();
-      editor
-        .setBlocks(DEFAULT_NODE)
-        .unwrapBlock('bulleted-list')
-        .unwrapBlock('numbered-list');
-      return;
-    }
-  }
-
-  // We want all our commands to start with the user pressing ctrl or cmd for mac users
-  if (!event.ctrlKey && !event.metaKey) {
-    return next();
-  }
-
-  let mark: string;
-  if (event.key === 'b') {
-    mark = 'bold';
-  } else if (event.key === 'i') {
-    mark = 'italic';
-  } else if (event.key === 'u') {
-    mark = 'underlined';
-  } else if (event.keyCode === 192) {
-    // event.keyCode 192 is '`'
-    mark = 'code';
-  } else {
-    return next();
-  }
-
-  event.preventDefault();
-  editor.toggleMark(mark);
-};
-
 interface Props {
   story: Story;
   onChangeTitle: (title: string) => void;
@@ -446,6 +377,80 @@ export const SlateEditor = ({
     setValue(value);
     updateSideMenu(value);
     updateHoverMenu(value);
+  };
+
+  /**
+   * Handle key press from the user and allow shortcuts.
+   */
+  const handleKeyDown = (
+    event: React.KeyboardEvent,
+    editor: Editor,
+    next: () => any
+  ) => {
+    // When the user press enter on a title or quote we reset the style to paragraph
+    if (
+      event.key === 'Enter' &&
+      (hasBlock(editor.value, 'heading-one') ||
+        hasBlock(editor.value, 'heading-two') ||
+        hasBlock(editor.value, 'heading-three') ||
+        hasBlock(editor.value, 'block-quote'))
+    ) {
+      event.preventDefault();
+      editor.splitBlock().setBlocks(DEFAULT_NODE);
+      return;
+    }
+
+    // When the user press enter or backspace on a empty list item
+    // we should remove the list block and set it to paragraph
+    if (
+      ['Enter', 'Backspace'].includes(event.key) &&
+      editor.value.blocks.size > 0
+    ) {
+      const parent = editor.value.document.getParent(
+        editor.value.blocks.first().key
+      );
+      const isEmptyText =
+        editor.value.texts.get(0) &&
+        editor.value.texts.get(0).text.length === 0;
+      if (
+        parent &&
+        ['numbered-list', 'bulleted-list'].includes((parent as any).type) &&
+        isEmptyText
+      ) {
+        event.preventDefault();
+        editor
+          .setBlocks(DEFAULT_NODE)
+          .unwrapBlock('bulleted-list')
+          .unwrapBlock('numbered-list');
+        return;
+      }
+    }
+
+    // We want all our commands to start with the user pressing ctrl or cmd for mac users
+    if (!event.ctrlKey && !event.metaKey) {
+      return next();
+    }
+
+    let mark: string | undefined;
+    if (event.key === 'b') {
+      mark = 'bold';
+    } else if (event.key === 'i') {
+      mark = 'italic';
+    } else if (event.key === 'u') {
+      mark = 'underlined';
+    } else if (event.key === 'k') {
+      handleEditLink();
+    } else if (event.keyCode === 192) {
+      // event.keyCode 192 is '`'
+      mark = 'code';
+    } else {
+      return next();
+    }
+
+    event.preventDefault();
+    if (mark) {
+      editor.toggleMark(mark);
+    }
   };
 
   const handleDrop = (
