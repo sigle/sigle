@@ -1,4 +1,4 @@
-import { Value } from 'slate';
+import { Value, Inline } from 'slate';
 import { Editor } from 'slate-react';
 
 export const DEFAULT_NODE = 'paragraph';
@@ -15,6 +15,15 @@ export const hasMark = (value: Value, type: string) => {
  */
 export const hasBlock = (value: Value, type: string) => {
   return value.blocks.some((node) => !!node && node.type === type);
+};
+
+/**
+ * Get link
+ */
+export const getLink = (value: Value): Inline | undefined => {
+  return value.inlines.find(
+    (inline: Inline | undefined) => inline?.type === 'link'
+  );
 };
 
 /**

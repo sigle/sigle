@@ -3,6 +3,7 @@ import styled, { css } from 'styled-components';
 import tw from 'twin.macro';
 import { toast } from 'react-toastify';
 import Tippy from '@tippy.js/react';
+import Tooltip from '@reach/tooltip';
 import {
   Editor,
   RenderBlockProps,
@@ -80,6 +81,10 @@ const StyledContent = styled(Content)`
 const StyledEditor = styled(Editor)`
   ${tw`py-4`};
   min-height: 150px;
+`;
+
+const StyledTooltip = styled(Tooltip)`
+  pointer-events: unset;
 `;
 
 // See https://github.com/ianstormtaylor/slate/blob/master/examples/rich-text/index.js
@@ -275,41 +280,36 @@ export const SlateEditor = ({
   /**
    * Render a Slate inline.
    */
-  const renderInline = (props: RenderInlineProps, _: any, next: () => any) => {
+  const renderInline = (
+    props: RenderInlineProps,
+    editor: Editor,
+    next: () => any
+  ) => {
+    const { value } = editor;
     const { attributes, children, node } = props;
 
     switch (node.type) {
+      /**
+       * Hovering the link should render a tooltip with a clickable link inside
+       */
       case 'link':
         const { data } = node;
         const href = data.get('href');
+
         return (
-          <a {...attributes} href={href}>
-            {children}
-          </a>
-        );
-        return (
-          <Tippy
-            content={
-              <div>
-                <p>{children}</p>
-                <p>
-                  <a href={href} target="_blank" rel="noopener noreferrer">
-                    {href}
-                  </a>
-                </p>
-                <p>
-                  <ButtonOutline onClick={handleEditLink}>Edit</ButtonOutline>
-                  <Button>Remove</Button>
-                </p>
-              </div>
-            }
-            theme="light-border"
-            interactive
-          >
-            <a {...attributes} href={href}>
-              {children}
-            </a>
-          </Tippy>
+          <span>
+            <StyledTooltip
+              label={
+                <a href={href} target="_blank" rel="noopener noreferrer">
+                  {href}
+                </a>
+              }
+            >
+              <a {...attributes} href={href}>
+                {children}
+              </a>
+            </StyledTooltip>
+          </span>
         );
       default:
         return next();
