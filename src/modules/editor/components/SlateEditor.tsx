@@ -37,7 +37,6 @@ import {
   unwrapLink,
   hasLinks,
   wrapLink,
-  changeLink,
 } from './utils';
 import { userSession } from '../../../utils/blockstack';
 import { resizeImage } from '../../../utils/image';

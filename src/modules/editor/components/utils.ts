@@ -25,16 +25,6 @@ export const hasLinks = (value: Value) => {
 };
 
 /**
- * A change helper to standardize editing links.
- */
-export const changeLink = (editor: Editor, href: string) => {
-  editor.setInlines({
-    type: 'link',
-    data: { href },
-  });
-};
-
-/**
  * A change helper to standardize wrapping links.
  */
 export const wrapLink = (editor: Editor, href: string) => {
