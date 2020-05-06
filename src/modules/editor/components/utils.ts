@@ -1,4 +1,5 @@
-import { Value, Editor } from 'slate';
+import { Value } from 'slate';
+import { Editor } from 'slate-react';
 
 export const DEFAULT_NODE = 'paragraph';
 
@@ -24,15 +25,25 @@ export const hasLinks = (value: Value) => {
 };
 
 /**
- * A change helper to standardize wrapping links.
+ * A change helper to standardize editing links.
  */
-export const wrapLink = (editor: Editor, href: string) => {
-  editor.wrapInline({
+export const changeLink = (editor: Editor, text: string, href: string) => {
+  editor.insertText(text).setInlines({
     type: 'link',
     data: { href },
   });
+};
 
-  editor.moveToEnd();
+/**
+ * A change helper to standardize wrapping links.
+ */
+export const wrapLink = (editor: Editor, href: string) => {
+  editor
+    .wrapInline({
+      type: 'link',
+      data: { href },
+    })
+    .moveToEnd();
 };
 
 /**

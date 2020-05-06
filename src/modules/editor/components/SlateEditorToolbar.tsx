@@ -114,6 +114,7 @@ export const onClickBlock = (editor: Editor, type: string) => {
  * Otherwise, add a new link with an href and text.
  */
 // TODO onPaste for links see https://github.com/ianstormtaylor/slate/blob/master/examples/links/index.js
+// TODO remove this part
 export const onClickLink = (editor: Editor) => {
   const { value } = editor;
 

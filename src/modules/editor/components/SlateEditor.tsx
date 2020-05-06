@@ -30,7 +30,15 @@ import { SlateEditorHoverMenu } from './SlateEditorHoverMenu';
 import { SlateEditorToolbar } from './SlateEditorToolbar';
 import { AppBar, AppBarRightContainer } from '../../layout';
 import { ButtonOutline, FullScreenDialog, Button } from '../../../components';
-import { DEFAULT_NODE, hasBlock, insertImage } from './utils';
+import {
+  DEFAULT_NODE,
+  hasBlock,
+  insertImage,
+  unwrapLink,
+  hasLinks,
+  wrapLink,
+  changeLink,
+} from './utils';
 import { userSession } from '../../../utils/blockstack';
 import { resizeImage } from '../../../utils/image';
 import { FixedContainer, PageContainer } from './Editor';
@@ -215,7 +223,7 @@ export const SlateEditor = ({
   onCancelUnpublish,
   onConfirmUnpublish,
 }: Props) => {
-  const editorRef = useRef<any>(null);
+  const editorRef = useRef<Editor>(null);
   const sideMenuRef = useRef<any>(null);
   const hoverMenuRef = useRef<any>(null);
   const [settingsOpen, setSettingsOpen] = useState(false);
@@ -345,6 +353,11 @@ export const SlateEditor = ({
         const { data } = node;
         const href = data.get('href');
         return (
+          <a {...attributes} href={href}>
+            {children}
+          </a>
+        );
+        return (
           <Tippy
             content={
               <div>
@@ -355,7 +368,7 @@ export const SlateEditor = ({
                   </a>
                 </p>
                 <p>
-                  <ButtonOutline>Edit</ButtonOutline>
+                  <ButtonOutline onClick={handleEditLink}>Edit</ButtonOutline>
                   <Button>Remove</Button>
                 </p>
               </div>
@@ -500,6 +513,28 @@ export const SlateEditor = ({
     setEditLinkOpen(true);
   };
 
+  // TODO onPaste for links see https://github.com/ianstormtaylor/slate/blob/master/examples/links/index.js
+  const handleConfirmEditLink = (values: { text: string; link: string }) => {
+    setEditLinkOpen(false);
+    const editor = editorRef.current!;
+    const { value } = editor;
+    const valueHaveLinks = hasLinks(value);
+
+    console.log('valueHaveLinks', valueHaveLinks);
+
+    // If link text is empty and the current selection is a link we need to remove the link
+    if (values.link === '' && valueHaveLinks) {
+      unwrapLink(editor);
+    } else if (valueHaveLinks) {
+      // We first unwrap the text to avoid nested links
+      unwrapLink(editor);
+      changeLink(editor, values.text, values.link);
+    } else {
+      // Means we are inserting a new link
+      editor.command(wrapLink, values.link);
+    }
+  };
+
   /**
    * Render the editor with the side menu and mobile menu
    */
@@ -528,11 +563,6 @@ export const SlateEditor = ({
           ref={hoverMenuRef}
           editor={editor}
           onEditLink={handleEditLink}
-        />
-        <SlateEditorLink
-          editor={editor}
-          open={editLinkOpen}
-          onClose={() => setEditLinkOpen(false)}
         />
       </React.Fragment>
     );
@@ -611,6 +641,15 @@ export const SlateEditor = ({
             />
           </StyledContent>
         </SlateContainer>
+
+        {editorRef.current && (
+          <SlateEditorLink
+            editor={editorRef.current}
+            open={editLinkOpen}
+            onConfirmEditLink={handleConfirmEditLink}
+            onClose={() => setEditLinkOpen(false)}
+          />
+        )}
 
         <StorySettings
           story={story}

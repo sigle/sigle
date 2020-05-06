@@ -1,8 +1,9 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import { DialogContent, DialogOverlay } from '@reach/dialog';
 import { useFormik, FormikErrors } from 'formik';
 import styled, { keyframes } from 'styled-components';
 import tw from 'twin.macro';
+import { Inline } from 'slate';
 import { Editor } from 'slate-react';
 import {
   FormRow,
@@ -11,6 +12,7 @@ import {
   FormHelperError,
 } from '../../../components/Form';
 import { Button } from '../../../components';
+import { hasLinks, wrapLink, unwrapLink } from './utils';
 
 const overlayAnimation = keyframes`
   0% {
@@ -28,7 +30,7 @@ const StyledDialogOverlay = styled(DialogOverlay)`
 `;
 
 const StyledDialogContent = styled(DialogContent)`
-  ${tw`max-w-lg w-full`}
+  ${tw`max-w-lg w-full p-8`}
 `;
 
 const Title = styled.h2`
@@ -36,7 +38,7 @@ const Title = styled.h2`
 `;
 
 const SaveRow = styled.div`
-  ${tw`py-3 flex justify-end`};
+  ${tw`pt-3 flex justify-end`};
 `;
 
 const CancelButton = styled(Button)`
@@ -52,18 +54,18 @@ interface SlateEditorLinkProps {
   editor: Editor;
   open: boolean;
   onClose: () => void;
+  onConfirmEditLink: (values: SlateEditorLinkFormValues) => void;
 }
 
 export const SlateEditorLink = ({
   editor,
   open,
   onClose,
+  onConfirmEditLink,
 }: SlateEditorLinkProps) => {
   const { value } = editor;
-  console.log(value, open);
 
   const formik = useFormik<SlateEditorLinkFormValues>({
-    // TODO default value
     initialValues: {
       text: '',
       link: '',
@@ -73,17 +75,25 @@ export const SlateEditorLink = ({
       if (!values.text) {
         errors.text = 'Text is required';
       }
-      if (!values.link) {
-        errors.link = 'Link is required';
-      }
-      // TODO validate the link format
       return errors;
     },
-    onSubmit: async (values, { setSubmitting }) => {
-      // TODO edit slate node
-      setSubmitting(false);
+    onSubmit: (values) => {
+      onConfirmEditLink(values);
     },
   });
+
+  // Every time the modal is opened we init the form with the selected text values
+  useEffect(() => {
+    if (open) {
+      const inline = value.inlines.find((inline) => inline?.type === 'link');
+      formik.resetForm({
+        values: {
+          text: value.fragment.text || '',
+          link: inline?.data.get('href') || '',
+        },
+      });
+    }
+  }, [open]);
 
   return (
     <StyledDialogOverlay isOpen={open} onDismiss={onClose}>
@@ -117,7 +127,14 @@ export const SlateEditorLink = ({
           </FormRow>
 
           <SaveRow>
-            <CancelButton onClick={onClose}>Cancel</CancelButton>
+            <CancelButton
+              onClick={(e) => {
+                e.preventDefault();
+                onClose();
+              }}
+            >
+              Cancel
+            </CancelButton>
             <Button disabled={formik.isSubmitting} type="submit">
               {formik.isSubmitting ? 'Saving...' : 'Save'}
             </Button>
