@@ -362,7 +362,7 @@ export const SlateEditor = ({
               <div>
                 <p>{children}</p>
                 <p>
-                  <a href={href} target="_blank">
+                  <a href={href} target="_blank" rel="noopener noreferrer">
                     {href}
                   </a>
                 </p>

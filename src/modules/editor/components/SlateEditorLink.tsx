@@ -3,7 +3,6 @@ import { DialogContent, DialogOverlay } from '@reach/dialog';
 import { useFormik, FormikErrors } from 'formik';
 import styled, { keyframes } from 'styled-components';
 import tw from 'twin.macro';
-import { Inline } from 'slate';
 import { Editor } from 'slate-react';
 import {
   FormRow,
@@ -12,7 +11,6 @@ import {
   FormHelperError,
 } from '../../../components/Form';
 import { Button } from '../../../components';
-import { hasLinks, wrapLink, unwrapLink } from './utils';
 
 const overlayAnimation = keyframes`
   0% {

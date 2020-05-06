@@ -4,14 +4,7 @@ import tw from 'twin.macro';
 import { Value } from 'slate';
 import { Editor } from 'slate-react';
 import { IconType } from 'react-icons';
-import {
-  hasLinks,
-  unwrapLink,
-  wrapLink,
-  hasMark,
-  hasBlock,
-  DEFAULT_NODE,
-} from './utils';
+import { hasLinks, hasMark, hasBlock, DEFAULT_NODE } from './utils';
 import { config } from '../../../config';
 import {
   MdFormatBold,

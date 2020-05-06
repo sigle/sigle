@@ -14,6 +14,7 @@ module.exports = {
     },
   },
   rules: {
+    'eslint/no-use-before-define': 'off',
     'react/no-unescaped-entities': 'off',
     'react/prop-types': 'off',
     '@typescript-eslint/explicit-function-return-type': 'off',
