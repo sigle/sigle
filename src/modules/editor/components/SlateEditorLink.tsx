@@ -77,7 +77,11 @@ export const SlateEditorLink = ({
       return errors;
     },
     onSubmit: (values) => {
-      onConfirmEditLink(values);
+      let link = values.link;
+      if (link && !link.startsWith('http') && !link.startsWith('#')) {
+        link = `http://${link}`;
+      }
+      onConfirmEditLink({ text: values.text, link });
     },
   });
 
