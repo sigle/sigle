@@ -68,7 +68,11 @@ const rules = [
             if (!safeHref) {
               return <a href="/">🤯</a>;
             }
-            return <a href={safeHref}>{children}</a>;
+            return (
+              <a href={safeHref} target="_blank" rel="noopener noreferrer">
+                {children}
+              </a>
+            );
         }
       }
     },
