@@ -20,6 +20,7 @@ module.exports = {
     '@typescript-eslint/explicit-function-return-type': 'off',
     '@typescript-eslint/explicit-member-accessibility': 'off',
     '@typescript-eslint/no-unused-vars': 2,
+    '@typescript-eslint/no-use-before-define': 'off',
   },
   settings: {
     react: {

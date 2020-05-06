@@ -30,7 +30,7 @@ import { SlateEditorSideMenu } from './SlateEditorSideMenu';
 import { SlateEditorHoverMenu } from './SlateEditorHoverMenu';
 import { SlateEditorToolbar } from './SlateEditorToolbar';
 import { AppBar, AppBarRightContainer } from '../../layout';
-import { ButtonOutline, FullScreenDialog, Button } from '../../../components';
+import { ButtonOutline, FullScreenDialog } from '../../../components';
 import {
   DEFAULT_NODE,
   hasBlock,
@@ -285,7 +285,6 @@ export const SlateEditor = ({
     editor: Editor,
     next: () => any
   ) => {
-    const { value } = editor;
     const { attributes, children, node } = props;
 
     switch (node.type) {

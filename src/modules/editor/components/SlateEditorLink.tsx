@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect } from 'react';
 import { DialogContent, DialogOverlay } from '@reach/dialog';
 import { useFormik, FormikErrors } from 'formik';
 import styled, { keyframes } from 'styled-components';
