@@ -45,9 +45,9 @@
     ]
   },
   "dependencies": {
-    "@reach/dialog": "0.9.1",
-    "@reach/menu-button": "0.9.1",
-    "@reach/tooltip": "^0.10.1",
+    "@reach/dialog": "0.10.3",
+    "@reach/menu-button": "0.10.3",
+    "@reach/tooltip": "^0.10.3",
     "@sentry/browser": "5.15.5",
     "@sentry/node": "5.15.5",
     "@tippy.js/react": "3.1.1",
