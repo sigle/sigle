@@ -113,7 +113,7 @@ export const StorySettingsForm = ({
       const updatedStory: Partial<Story> = {};
       (Object.keys(values) as Array<keyof typeof values>).forEach((key) => {
         // We replace empty strings by undefined
-        // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         // @ts-ignore
         updatedStory[key] = values[key] ? values[key] : undefined;
       });
