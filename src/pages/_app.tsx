@@ -137,7 +137,6 @@ export default class MyApp extends App {
           description={seoDescription}
           openGraph={{
             type: 'website',
-            // eslint-disable-next-line @typescript-eslint/camelcase
             site_name: 'Sigle',
             title: seoTitle,
             description: seoDescription,
