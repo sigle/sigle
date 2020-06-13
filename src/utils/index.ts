@@ -158,7 +158,6 @@ export const getSettingsFile = async (): Promise<SettingsFile> => {
   return file;
 };
 
-// remove
 export const saveSettingsFile = async (
   settings: SettingsFile
 ): Promise<void> => {
