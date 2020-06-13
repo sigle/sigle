@@ -111,7 +111,7 @@
     "next-compose-plugins": "2.2.0",
     "prettier": "2.0.5",
     "tailwindcss": "1.4.6",
-    "twin.macro": "1.2.0",
+    "twin.macro": "1.4.1",
     "typescript": "3.9.5"
   }
 }

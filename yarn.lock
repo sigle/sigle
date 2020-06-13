@@ -494,10 +494,15 @@
   resolved "https://registry.yarnpkg.com/@babel/parser/-/parser-7.9.4.tgz#68a35e6b0319bbc014465be43828300113f2f2e8"
   integrity sha512-bC49otXX6N0/VYhgOMh4gnP26E9xnDZK3TmbNpxYzzz9BQLBosQwfyOe9/cXUU3txYhTzLCbcqd5c8y/OmCjHA==
 
-"@babel/parser@^7.10.1", "@babel/parser@^7.7.7", "@babel/parser@^7.9.4":
+"@babel/parser@^7.10.1", "@babel/parser@^7.7.7":
   version "7.10.1"
   resolved "https://registry.yarnpkg.com/@babel/parser/-/parser-7.10.1.tgz#2e142c27ca58aa2c7b119d09269b702c8bbad28c"
   integrity sha512-AUTksaz3FqugBkbTZ1i+lDLG5qy8hIzCaAxEtttU6C0BtZZU9pkNZtWSVAht4EW9kl46YBiyTGMp9xTTGqViNg==
+
+"@babel/parser@^7.10.2":
+  version "7.10.2"
+  resolved "https://registry.yarnpkg.com/@babel/parser/-/parser-7.10.2.tgz#871807f10442b92ff97e4783b9b54f6a0ca812d0"
+  integrity sha512-PApSXlNMJyB4JiGVhCOlzKIif+TKFTvu0aQAhnTvfP/z3vVSN6ZypH5bfUNwFXXjRQtUEBNFd2PtmCmG2Py3qQ==
 
 "@babel/plugin-proposal-async-generator-functions@^7.8.3":
   version "7.10.1"
@@ -3523,6 +3528,14 @@ chalk@^3.0.0:
   version "3.0.0"
   resolved "https://registry.yarnpkg.com/chalk/-/chalk-3.0.0.tgz#3f73c2bf526591f574cc492c51e2456349f844e4"
   integrity sha512-4D3B6Wf41KOYRFdszmDqMCGq5VV/uMAB273JILmO+3jAlh8X4qDtdtgCR3fxtbLEMzSx22QdhnDcJvu2u1fVwg==
+  dependencies:
+    ansi-styles "^4.1.0"
+    supports-color "^7.1.0"
+
+chalk@^4.1.0:
+  version "4.1.0"
+  resolved "https://registry.yarnpkg.com/chalk/-/chalk-4.1.0.tgz#4e14870a618d9e2edd97dd8345fd9d9dc315646a"
+  integrity sha512-qwx12AxXe2Q5xQ43Ac//I6v5aXTipYrSESdOgzrN+9XjgEpyjpKuvSGaN4qE93f7TQTlerQQ8S+EQ0EyDoVL1A==
   dependencies:
     ansi-styles "^4.1.0"
     supports-color "^7.1.0"
@@ -10971,14 +10984,14 @@ tweetnacl@^0.14.3, tweetnacl@~0.14.0:
   resolved "https://registry.yarnpkg.com/tweetnacl/-/tweetnacl-0.14.5.tgz#5ae68177f192d4456269d108afa93ff8743f4f64"
   integrity sha1-WuaBd/GS1EViadEIr6k/+HQ/T2Q=
 
-twin.macro@1.2.0:
-  version "1.2.0"
-  resolved "https://registry.yarnpkg.com/twin.macro/-/twin.macro-1.2.0.tgz#8dcfa76cdb39d6d2e185a5bd9e71bcfdcd374e40"
-  integrity sha512-IphTV5Sub9QJi3+4Ns+CzBqfJywEBTZfAizyyrvbUwx3NNmI22NuWonioFXpfzIFhu2dmpsWv3brvE87xcuygg==
+twin.macro@1.4.1:
+  version "1.4.1"
+  resolved "https://registry.yarnpkg.com/twin.macro/-/twin.macro-1.4.1.tgz#48de95e52c34d068486610889a68d44c766bac1a"
+  integrity sha512-/hUXvyQepce26FvgfZmMl7IEgwxKy57te99FuECxeRUVjrX31A1F27lt+SSrtFNivoCN4Dk7FimUx5jqjth2jQ==
   dependencies:
-    "@babel/parser" "^7.9.4"
+    "@babel/parser" "^7.10.2"
     babel-plugin-macros "^2.8.0"
-    chalk "^4.0.0"
+    chalk "^4.1.0"
     clean-set "^1.1.1"
     color "^3.1.2"
     dlv "^1.1.3"
