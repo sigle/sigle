@@ -3,7 +3,7 @@ import styled, { css } from 'styled-components';
 import tw from 'twin.macro';
 import { useRouter } from 'next/router';
 import * as Fathom from 'fathom-client';
-import { userSession } from '../utils/blockstack';
+import { useConnect } from '@blockstack/connect';
 import { config } from '../config';
 import { Button } from '../components';
 import { Goals } from '../utils/fathom';
@@ -83,10 +83,11 @@ const Link = styled.a`
 const Login = () => {
   const router = useRouter();
   const { user } = useAuth();
+  const { doOpenAuth } = useConnect();
 
   const handleLogin = () => {
     Fathom.trackGoal(Goals.LOGIN, 0);
-    userSession.redirectToSignIn();
+    doOpenAuth();
   };
 
   useEffect(() => {

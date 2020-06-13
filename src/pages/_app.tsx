@@ -41,8 +41,7 @@ if (config.env === 'production' && config.sentryDsn) {
 const FathomTrack = () => {
   useEffect(() => {
     if (config.fathomSiteId) {
-      Fathom.load();
-      Fathom.setSiteId(config.fathomSiteId);
+      Fathom.load(config.fathomSiteId);
       Fathom.trackPageview();
     }
   }, []);

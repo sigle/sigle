@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
+import { Connect, AuthOptions } from '@blockstack/connect';
 import { BlockstackUser } from '../../types';
 import { userSession } from '../../utils/blockstack';
 
@@ -50,12 +51,29 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
     }
   }, []);
 
+  const authOptions: AuthOptions = {
+    redirectTo: '/',
+    appDetails: {
+      name: 'Sigle',
+      icon: 'https://app.sigle.io/icon-192x192.png',
+    },
+    userSession,
+    finished: () => {
+      setState({
+        loggingIn: false,
+        user: userSession.loadUserData(),
+      });
+    },
+  };
+
   return (
-    <AuthContext.Provider
-      value={{ user: state.user, loggingIn: state.loggingIn }}
-    >
-      {children}
-    </AuthContext.Provider>
+    <Connect authOptions={authOptions}>
+      <AuthContext.Provider
+        value={{ user: state.user, loggingIn: state.loggingIn }}
+      >
+        {children}
+      </AuthContext.Provider>
+    </Connect>
   );
 };
 
