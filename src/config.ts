@@ -4,6 +4,7 @@ export const config = {
   appUrl: process.env.APP_URL as string,
   sentryDsn: process.env.SENTRY_DSN_CLIENT,
   fathomSiteId: process.env.FATHOM_SITE_ID,
+  fathomSiteUrl: 'https://louse.sigle.io/script.js',
   githubUrl: 'https://github.com/pradel/sigle',
   twitterUrl: 'https://twitter.com/sigleapp',
   telegramUrl: 'https://t.me/sigleapp',
