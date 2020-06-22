@@ -109,7 +109,7 @@ const Login = () => {
             <Logo src="/static/img/logo.png" alt="Logo" />
             <Text>
               Because Sigle is working on the decentralized internet thanks to
-              the blockchain technology, you’ll be redicrected to{' '}
+              the blockchain technology, you’ll be redirected to{' '}
               <Link href="https://blockstack.org/" target="_blank">
                 Blockstack
               </Link>{' '}
