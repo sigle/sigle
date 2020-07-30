@@ -22,7 +22,8 @@
     }
   },
   "resolutions": {
-    "@types/slate": "0.47.4"
+    "@types/slate": "0.47.4",
+    "webpack": "^5.0.0-beta.22"
   },
   "lint-staged": {
     "*.{js,ts,tsx,md}": [
@@ -54,13 +55,14 @@
     "@sentry/node": "5.20.1",
     "@tippy.js/react": "3.1.1",
     "blockstack": "19.3.0",
+    "crypto-browserify": "3.12.0",
     "date-fns": "2.15.0",
     "fathom-client": "3.0.0",
     "feed": "4.2.1",
     "formik": "2.1.5",
     "immutable": "4.0.0-rc.12",
     "nanoid": "3.1.10",
-    "next": "9.4.4",
+    "next": "9.5.1",
     "next-seo": "4.7.3",
     "nprogress": "0.2.0",
     "react": "16.13.1",
@@ -76,8 +78,10 @@
     "slate-plain-serializer": "0.7.11",
     "slate-react": "0.22.10",
     "slate-soft-break": "0.9.0",
+    "stream-browserify": "3.0.0",
     "styled-components": "5.1.1",
-    "typeface-roboto": "0.0.75"
+    "typeface-roboto": "0.0.75",
+    "vm-browserify": "1.1.2"
   },
   "devDependencies": {
     "@bundle-analyzer/webpack-plugin": "0.5.1",

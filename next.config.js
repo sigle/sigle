@@ -1,4 +1,5 @@
 const dotenv = require('dotenv');
+const webpack = require('webpack');
 const withPlugins = require('next-compose-plugins');
 const withBundleAnalyzer = require('@zeit/next-bundle-analyzer');
 const BundleAnalyzerPluginReporter = require('@bundle-analyzer/webpack-plugin');
@@ -40,6 +41,11 @@ module.exports = withPlugins(
       if (!isServer) {
         config.resolve.alias['@sentry/node'] = '@sentry/browser';
       }
+
+      // Webpack 5 does not include polyfills anymore
+      config.resolve.alias['crypto'] = 'crypto-browserify';
+      config.resolve.alias['stream'] = 'stream-browserify';
+      config.resolve.alias['vm'] = 'vm-browserify';
 
       // We want to report only for the client bundle
       if (process.env.BUNDLE_ANALYZER_TOKEN && !isServer) {
