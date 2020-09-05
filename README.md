@@ -44,10 +44,10 @@ Then run the following command to install dependencies:
 yarn install
 ```
 
-We use now to handle the development mode so you will need to install their cli:
+We use vercel to handle the development mode so you will need to install their cli:
 
 ```sh
-yarn global add now
+yarn global add vercel
 ```
 
 Finally to start the project in development/watch mode run:

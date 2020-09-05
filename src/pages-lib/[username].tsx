@@ -77,7 +77,7 @@ PublicHomePage.getInitialProps = async ({ query, req, res }) => {
     }
   }
 
-  // If deployed on now we want to get the deployment url to be able to test unmerged pr's
+  // If deployed on vercel we want to get the deployment url to be able to test unmerged pr's
   // If client side we use window.location.origin
   const appUrl = !req
     ? window.location.origin
