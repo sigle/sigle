@@ -49,7 +49,9 @@ export const getStoryFile = async (storyId: string): Promise<Story | null> => {
     file = JSON.parse(originalFile);
   }
   if (file.mac) {
-    file = JSON.parse(userSession.decryptContent(originalFile) as any);
+    file = JSON.parse(
+      (await userSession.decryptContent(originalFile)) as string
+    );
   }
   return file;
 };
