@@ -27,36 +27,12 @@ Here is a list of the big technologies we use:
 
 - [Blockstack](https://blockstack.org/): Authentication and storage
 - [Next.js](https://nextjs.org/): React Framework
-- [Tailwind](https://tailwindcss.com/): CSS Framework
+- [Tailwind CSS](https://tailwindcss.com/): CSS Framework
 - [Slate](https://www.slatejs.org/): Text editor Framework
 
-## Local Development
+## Contributing
 
-First you need to clone the repository:
-
-```sh
-git clone git@github.com:pradel/sigle.git
-```
-
-Then run the following command to install dependencies:
-
-```sh
-yarn install
-```
-
-We use vercel to handle the development mode so you will need to install their cli:
-
-```sh
-yarn global add vercel
-```
-
-Finally to start the project in development/watch mode run:
-
-```sh
-yarn dev
-```
-
-You can now open your browser and go to http://localhost:3000 to see the app.
+Read our [contributing guide](CONTRIBUTING.md) to see how to locally setup the repository and see our development process.
 
 ## License
 
