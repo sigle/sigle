@@ -32,6 +32,10 @@ export const saveStoriesFile = async (file: StoryFile): Promise<void> => {
     JSON.stringify(publickStoriesFile),
     {
       encrypt: false,
+      // It's safe to use this flag here as the public index is built from the private index
+      // If the private index is outdated the code will throw an error when we write the storiesFileName
+      // before this call.
+      dangerouslyIgnoreEtag: true,
     }
   );
 };
