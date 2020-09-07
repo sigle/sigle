@@ -36,7 +36,7 @@ Read our [contributing guide](CONTRIBUTING.md) to see how to locally setup the r
 
 ## Support us
 
-Sigle is a **free** and **open-source** project built on top of Blockstack, but you can help us keep the project alive by buying us coffee! ☕️
+Sigle is a **free** and **open-source** project built on top of Blockstack, you can help us keep the project alive by buying us coffee! ☕️
 
 - [GitHub Sponsors](https://github.com/sponsors/pradel)
 - [Buy Me a Coffee](https://www.buymeacoffee.com/sigle)
