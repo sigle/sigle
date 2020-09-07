@@ -34,6 +34,13 @@ Here is a list of the big technologies we use:
 
 Read our [contributing guide](CONTRIBUTING.md) to see how to locally setup the repository and see our development process.
 
+## Support us
+
+Sigle is a **free** and **open-source** project built on top of Blockstack, but you can help us keep the project alive by buying us coffee! ☕️
+
+- [GitHub Sponsors](https://github.com/sponsors/pradel)
+- [Buy Me a Coffee](https://www.buymeacoffee.com/sigle)
+
 ## License
 
 MIT © [Léo Pradel](https://www.leopradel.com/)
