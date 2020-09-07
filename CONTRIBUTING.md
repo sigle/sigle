@@ -3,7 +3,7 @@
 ## Requirements
 
 - [Node](https://nodejs.org/en/) 12.0.0+
-- [Yarn](https://classic.yarnpkg.com/en/) 1.2.0+
+- [Yarn](https://classic.yarnpkg.com/en/) 1.22.0+
 
 ## Pull Requests
 
