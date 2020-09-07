@@ -9,7 +9,14 @@ const publicStoriesFileName = 'publicStories.json';
 const settingsFileName = 'settings.json';
 
 export const getStoriesFile = async (): Promise<StoryFile> => {
-  let file = (await userSession.getFile(storiesFileName)) as any;
+  let file;
+  try {
+    file = (await userSession.getFile(storiesFileName)) as string;
+  } catch (error) {
+    if (error.code !== 'does_not_exist') {
+      throw error;
+    }
+  }
   if (file) {
     file = JSON.parse(file);
   }
@@ -41,14 +48,21 @@ export const saveStoriesFile = async (file: StoryFile): Promise<void> => {
 };
 
 export const getStoryFile = async (storyId: string): Promise<Story | null> => {
-  const originalFile = (await userSession.getFile(`${storyId}.json`, {
-    decrypt: false,
-  })) as any;
+  let originalFile;
+  try {
+    originalFile = (await userSession.getFile(`${storyId}.json`, {
+      decrypt: false,
+    })) as string;
+  } catch (error) {
+    if (error.code !== 'does_not_exist') {
+      throw error;
+    }
+  }
   let file;
   if (originalFile) {
     file = JSON.parse(originalFile);
   }
-  if (file.mac) {
+  if (originalFile && file.mac) {
     file = JSON.parse(
       (await userSession.decryptContent(originalFile)) as string
     );
@@ -152,9 +166,16 @@ export const convertStoryToSubsetStory = (story: Story): SubsetStory => {
 };
 
 export const getSettingsFile = async (): Promise<SettingsFile> => {
-  let file = (await userSession.getFile(settingsFileName, {
-    decrypt: false,
-  })) as any;
+  let file;
+  try {
+    file = (await userSession.getFile(settingsFileName, {
+      decrypt: false,
+    })) as string;
+  } catch (error) {
+    if (error.code !== 'does_not_exist') {
+      throw error;
+    }
+  }
   if (file) {
     file = JSON.parse(file);
   }
