@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="https://raw.githubusercontent.com/pradel/sigle/master/assets/screens.png">
+</p>
+
 <h1 align="center">Sigle</h1>
 
 <p align="center">
@@ -6,10 +10,6 @@
 
 <p align="center">
   A beautiful decentralized and open source blog maker
-</p>
-
-<p align="center">
-  <img src="https://raw.githubusercontent.com/pradel/sigle/master/assets/screens.png">
 </p>
 
 <p align="center">
