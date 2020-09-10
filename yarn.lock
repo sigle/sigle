@@ -1072,12 +1072,12 @@
   resolved "https://registry.yarnpkg.com/@bcoe/v8-coverage/-/v8-coverage-0.2.3.tgz#75a2e8b51cb758a7553d6804a5932d7aace75c39"
   integrity sha512-0hYQ8SB4Db5zvZB4axdMHGwEaQjkZzFjQiN9LVYvIFB2nSUHW9tYpxWriPrWDASIxiaXax83REcLxuSdnGPZtw==
 
-"@blockstack/connect@2.12.1":
-  version "2.12.1"
-  resolved "https://registry.yarnpkg.com/@blockstack/connect/-/connect-2.12.1.tgz#4f91796028e3ff0954ac0c4a6bbd4557e3cff96a"
-  integrity sha512-1pOdA1hH+hAXDq+5JzlEiRtfOAAQn1ekPIzv7FDP0W65hTEGwtg9ltKikwzURrX1mFcRJSmjsjvyiIesgoNmYA==
+"@blockstack/connect@2.12.2":
+  version "2.12.2"
+  resolved "https://registry.yarnpkg.com/@blockstack/connect/-/connect-2.12.2.tgz#3fe33ccb686b3752e1f0e7d8964b91080d11f379"
+  integrity sha512-+0fLotXLH4Lxt5qMCKmUtuCxrW+lPTfZ8DmtagaoqWDr9nPHMcLsohFHcPACTRzzg0aS01N7w8lYwa1IxeMSXw==
   dependencies:
-    "@blockstack/ui" "^2.12.7"
+    "@blockstack/ui" "^2.12.8"
     jsontokens "^3.0.0"
     preact "^10.4.0"
     styled-components "^5.1.0"
@@ -1103,10 +1103,10 @@
     sha.js "^2.4.11"
     smart-buffer "^4.1.0"
 
-"@blockstack/ui@^2.12.7":
-  version "2.13.0"
-  resolved "https://registry.yarnpkg.com/@blockstack/ui/-/ui-2.13.0.tgz#d703e9a9f3cf7ad5ad49197796e3fcb5aa76aeae"
-  integrity sha512-6XSn3kqmcrJdj7MJe+zvhxT9uh3uZrQLWFjnDIXFxsLxhLXTtmixEHFK6p/u7ePYy3HcjlYKNpFhM0IoxcErXw==
+"@blockstack/ui@^2.12.8":
+  version "2.12.8"
+  resolved "https://registry.yarnpkg.com/@blockstack/ui/-/ui-2.12.8.tgz#58389933adae26339e21c4985eb3f875fe44f1f3"
+  integrity sha512-F8QJq8eJ3FnXhKMVDxznO1AtMt6u9/Ni6u/WnBFzeRTp4tFA/k3V4xAu4RVL7b8PUOzM9F6u8nK/z29gwXvutg==
   dependencies:
     "@popperjs/core" "^2.4.0"
     "@reach/alert" "^0.10.2"
