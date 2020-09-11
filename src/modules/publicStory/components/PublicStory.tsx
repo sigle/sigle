@@ -3,8 +3,8 @@ import { useRouter } from 'next/router';
 import Link from 'next/link';
 import styled, { css, createGlobalStyle } from 'styled-components';
 import tw from 'twin.macro';
-import { Value } from 'slate';
-import Html from 'slate-html-serializer';
+// import { Value } from 'slate';
+// import Html from 'slate-html-serializer';
 import format from 'date-fns/format';
 import { NextSeo } from 'next-seo';
 import { Story, SettingsFile } from '../../../types';
@@ -79,7 +79,7 @@ const rules = [
   },
 ];
 
-const html = new Html({ rules });
+// const html = new Html({ rules });
 
 const Header = styled.div`
   ${tw`py-6 text-black`};

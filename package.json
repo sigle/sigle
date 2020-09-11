@@ -56,6 +56,7 @@
     "feed": "4.2.1",
     "formik": "2.1.5",
     "immutable": "4.0.0-rc.12",
+    "is-hotkey": "0.1.6",
     "nanoid": "3.1.12",
     "next": "9.4.4",
     "next-seo": "4.7.3",
@@ -69,6 +70,7 @@
     "react-spring": "8.0.27",
     "react-toastify": "6.0.8",
     "slate": "0.58.4",
+    "slate-history": "0.58.4",
     "slate-react": "0.58.4",
     "styled-components": "5.2.0",
     "typeface-roboto": "0.0.75"
