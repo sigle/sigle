@@ -1,4 +1,4 @@
-export const config = {
+export const sigleConfig = {
   env: process.env.NODE_ENV,
   isServer: typeof window === 'undefined',
   appUrl: process.env.APP_URL as string,

@@ -5,7 +5,7 @@ import { Value } from 'slate';
 import { Editor } from 'slate-react';
 import { IconType } from 'react-icons';
 import { hasLinks, hasMark, hasBlock, DEFAULT_NODE } from './utils';
-import { config } from '../../../config';
+import { sigleConfig } from '../../../config';
 import {
   MdFormatBold,
   MdFormatItalic,
@@ -27,7 +27,7 @@ const SlateToolbar = styled.div`
   ${tw`py-4 border-b border-solid border-grey flex z-10 bg-white sticky flex justify-between max-w-full overflow-auto md:hidden`};
   top: 0;
 
-  @media (min-width: ${config.breakpoints.md}px) {
+  @media (min-width: ${sigleConfig.breakpoints.md}px) {
     ${tw`overflow-visible`};
   }
 `;

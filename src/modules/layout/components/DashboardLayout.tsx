@@ -12,7 +12,7 @@ import {
   FaFacebookF,
 } from 'react-icons/fa';
 import { userSession } from '../../../utils/blockstack';
-import { config } from '../../../config';
+import { sigleConfig } from '../../../config';
 
 // We have to use react-div-100vh instead of css 100vh because of a bug in IOS
 const Container = styled(Div100vh)`
@@ -181,7 +181,7 @@ export const DashboardSidebar = () => {
         <MenuBottom>
           <MenuBottomItem>
             <a
-              href={config.documentationUrl}
+              href={sigleConfig.documentationUrl}
               target="_blank"
               rel="noopener noreferrer"
             >
@@ -212,16 +212,16 @@ export const DashboardSidebar = () => {
             </a>
           </MenuBottomItem>
           <MenuBottomItemSocial>
-            <StyledLink href={config.twitterUrl} target="_blank">
+            <StyledLink href={sigleConfig.twitterUrl} target="_blank">
               <FaTwitter size={iconSize} className="icon" />
             </StyledLink>
-            <StyledLink href={config.facebookUrl} target="_blank">
+            <StyledLink href={sigleConfig.facebookUrl} target="_blank">
               <FaFacebookF size={iconSize} className="icon" />
             </StyledLink>
-            <StyledLink href={config.telegramUrl} target="_blank">
+            <StyledLink href={sigleConfig.telegramUrl} target="_blank">
               <FaTelegramPlane size={iconSize} className="icon" />
             </StyledLink>
-            <StyledLink href={config.githubUrl} target="_blank">
+            <StyledLink href={sigleConfig.githubUrl} target="_blank">
               <FaGithub size={iconSize} className="icon" />
             </StyledLink>
           </MenuBottomItemSocial>

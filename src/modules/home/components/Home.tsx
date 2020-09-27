@@ -9,7 +9,7 @@ import {
   DashboardLayout,
 } from '../../layout/components/DashboardLayout';
 import { DashboardPageTitle } from '../../layout/components/DashboardHeader';
-import { config } from '../../../config';
+import { sigleConfig } from '../../../config';
 
 const IlluContainer = styled.div`
   ${tw`flex flex-col items-center justify-center mt-8`};
@@ -35,7 +35,7 @@ const HelpContainer = styled.div`
 
 const HelpCardContainer = styled.div`
   ${tw`w-1/2 md:w-1/3 xl:w-1/4 flex p-4 h-64`};
-  @media (min-width: ${config.breakpoints.md}px) {
+  @media (min-width: ${sigleConfig.breakpoints.md}px) {
     height: 20rem;
   }
 `;
@@ -99,7 +99,7 @@ export const Home = ({
             <HelpText>A bit lost? We show you how to get started.</HelpText>
             <HelpContainer>
               <HelpCardContainer>
-                <HelpCard href={config.documentationUrl}>
+                <HelpCard href={sigleConfig.documentationUrl}>
                   <HelpCardImg src="/static/img/work.png" />
                   <HelpCardCaption>
                     <HelpCardCaptionTitle>Documentation</HelpCardCaptionTitle>

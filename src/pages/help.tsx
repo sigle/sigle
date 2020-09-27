@@ -7,7 +7,7 @@ import {
   FaTwitter,
 } from 'react-icons/fa';
 import { Button } from '../components';
-import { config } from '../config';
+import { sigleConfig } from '../config';
 import {
   DashboardPageContainer,
   DashboardLayout,
@@ -138,8 +138,8 @@ const HelpPage = () => {
               <HelpTitle>Just want to say hello?</HelpTitle>
               <HelpMessage>
                 You also can get in touch with us by sending an e-mail :{' '}
-                <HelpLink href={`mailto:${config.email}`}>
-                  {config.email}
+                <HelpLink href={`mailto:${sigleConfig.email}`}>
+                  {sigleConfig.email}
                 </HelpLink>
               </HelpMessage>
             </div>
@@ -147,13 +147,13 @@ const HelpPage = () => {
 
           <HelpMessageSocial>
             You can also reach us on Messenger, Telegram and Twitter{' '}
-            <StyledLink href={config.messengerUrl} target="_blank">
+            <StyledLink href={sigleConfig.messengerUrl} target="_blank">
               <FaFacebookMessenger size={16} className="icon" />
             </StyledLink>
-            <StyledLink href={config.telegramUrl} target="_blank">
+            <StyledLink href={sigleConfig.telegramUrl} target="_blank">
               <FaTelegramPlane size={16} className="icon" />
             </StyledLink>
-            <StyledLink href={config.twitterUrl} target="_blank">
+            <StyledLink href={sigleConfig.twitterUrl} target="_blank">
               <FaTwitter size={16} className="icon" />
             </StyledLink>
           </HelpMessageSocial>
