@@ -36,8 +36,8 @@ const NotFoundIllu = styled.img`
 
 interface ErrorProps {
   statusCode: number;
-  hasGetInitialPropsRun: boolean;
   errorMessage?: string;
+  hasGetInitialPropsRun?: boolean;
   err?: Error;
 }
 
