@@ -1,5 +1,6 @@
 import React from 'react';
 import { NextPageContext } from 'next';
+import NextErrorComponent from 'next/error';
 import styled from 'styled-components';
 import tw from 'twin.macro';
 import Link from 'next/link';
@@ -36,9 +37,23 @@ const NotFoundIllu = styled.img`
 interface ErrorProps {
   statusCode: number;
   errorMessage?: string;
+  hasGetInitialPropsRun?: boolean;
+  err?: Error;
 }
 
-export const MyError = ({ statusCode, errorMessage }: ErrorProps) => {
+export const MyError = ({
+  statusCode,
+  hasGetInitialPropsRun,
+  errorMessage,
+  err,
+}: ErrorProps) => {
+  if (!hasGetInitialPropsRun && err) {
+    // getInitialProps is not called in case of
+    // https://github.com/vercel/next.js/issues/8592. As a workaround, we pass
+    // err via _app.js so it can be captured
+    Sentry.captureException(err);
+  }
+
   return (
     <NotFoundContainer>
       <NotFoundIllu src="/static/img/jungle.png" alt="One" />
@@ -59,54 +74,48 @@ export const MyError = ({ statusCode, errorMessage }: ErrorProps) => {
   );
 };
 
-MyError.getInitialProps = ({ res, err, asPath }: NextPageContext) => {
-  const statusCode = res ? res.statusCode : err ? err.statusCode : 404;
+MyError.getInitialProps = async ({ res, err, asPath }: NextPageContext) => {
+  const errorInitialProps = await NextErrorComponent.getInitialProps({
+    res,
+    err,
+  } as any);
 
-  // Workaround for https://github.com/zeit/next.js/issues/8592, mark when
+  // Workaround for https://github.com/vercel/next.js/issues/8592, mark when
   // getInitialProps has run
-  const hasGetInitialPropsRun = true;
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-ignore
+  errorInitialProps.hasGetInitialPropsRun = true;
 
-  const errorInitialProps = { statusCode, hasGetInitialPropsRun };
+  // Running on the server, the response object (`res`) is available.
+  //
+  // Next.js will pass an err on the server if a page's data fetching methods
+  // threw or returned a Promise that rejected
+  //
+  // Running on the client (browser), Next.js will provide an err if:
+  //
+  //  - a page's `getInitialProps` threw or returned a Promise that rejected
+  //  - an exception was thrown somewhere in the React lifecycle (render,
+  //    componentDidMount, etc) that was caught by Next.js's React Error
+  //    Boundary. Read more about what types of exceptions are caught by Error
+  //    Boundaries: https://reactjs.org/docs/error-boundaries.html
 
-  if (res) {
-    // Running on the server, the response object is available.
-    //
-    // Next.js will pass an err on the server if a page's `getInitialProps`
-    // threw or returned a Promise that rejected
-
-    if (res.statusCode === 404) {
-      // Opinionated: do not record an exception in Sentry for 404
-      return { statusCode: 404 };
-    }
-
-    if (err) {
-      Sentry.captureException(err);
-
-      return errorInitialProps;
-    }
-  } else {
-    // Running on the client (browser).
-    //
-    // Next.js will provide an err if:
-    //
-    //  - a page's `getInitialProps` threw or returned a Promise that rejected
-    //  - an exception was thrown somewhere in the React lifecycle (render,
-    //    componentDidMount, etc) that was caught by Next.js's React Error
-    //    Boundary. Read more about what types of exceptions are caught by Error
-    //    Boundaries: https://reactjs.org/docs/error-boundaries.html
-    if (err) {
-      Sentry.captureException(err);
-
-      return errorInitialProps;
-    }
+  if (res?.statusCode === 404) {
+    // Opinionated: do not record an exception in Sentry for 404
+    return { statusCode: 404 };
+  }
+  if (err) {
+    Sentry.captureException(err);
+    await Sentry.flush(2000);
+    return errorInitialProps;
   }
 
   // If this point is reached, getInitialProps was called without any
   // information about what the error might be. This is unexpected and may
   // indicate a bug introduced in Next.js, so record it in Sentry
   Sentry.captureException(
-    new Error(`error.js getInitialProps missing data at path: ${asPath}`)
+    new Error(`_error.js getInitialProps missing data at path: ${asPath}`)
   );
+  await Sentry.flush(2000);
 
   return errorInitialProps;
 };
