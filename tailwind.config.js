@@ -2,6 +2,10 @@ const defaultConfig = require('tailwindcss/stubs/defaultConfig.stub');
 
 module.exports = {
   ...defaultConfig,
+  future: {
+    removeDeprecatedGapUtilities: true,
+    purgeLayersByDefault: true,
+  },
   theme: {
     ...defaultConfig.theme,
     fontFamily: {
