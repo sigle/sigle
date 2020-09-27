@@ -38,15 +38,18 @@ describe('getInitialProps', () => {
     jest.clearAllMocks();
   });
 
-  it('should not report 404 errors to sentry', () => {
-    const res = getInitialProps({ ...params, res: { statusCode: 404 } } as any);
+  it('should not report 404 errors to sentry', async () => {
+    const res = await getInitialProps({
+      ...params,
+      res: { statusCode: 404 },
+    } as any);
     expect(Sentry.captureException).not.toBeCalled();
     expect(res).toEqual({ statusCode: 404 });
   });
 
-  it('should report server errors to sentry', () => {
+  it('should report server errors to sentry', async () => {
     const error = new Error('Server error');
-    const res = getInitialProps({
+    const res = await getInitialProps({
       ...params,
       res: { statusCode: 500 },
       err: error,
@@ -55,21 +58,21 @@ describe('getInitialProps', () => {
     expect(res).toEqual({ hasGetInitialPropsRun: true, statusCode: 500 });
   });
 
-  it('should report generic server error if no error passed down', () => {
-    const res = getInitialProps({
+  it('should report generic server error if no error passed down', async () => {
+    const res = await getInitialProps({
       ...params,
       res: { statusCode: 500 },
     } as any);
     expect(Sentry.captureException).toBeCalledWith(
-      new Error('error.js getInitialProps missing data at path: /login')
+      new Error('_error.js getInitialProps missing data at path: /login')
     );
     expect(res).toEqual({ hasGetInitialPropsRun: true, statusCode: 500 });
   });
 
-  it('should report client errors to sentry', () => {
+  it('should report client errors to sentry', async () => {
     const error = new Error('Client error');
     (error as any).statusCode = 500;
-    const res = getInitialProps({
+    const res = await getInitialProps({
       ...params,
       req: undefined,
       res: undefined,
@@ -79,14 +82,14 @@ describe('getInitialProps', () => {
     expect(res).toEqual({ hasGetInitialPropsRun: true, statusCode: 500 });
   });
 
-  it('should report generic client error if no error passed down', () => {
-    const res = getInitialProps({
+  it('should report generic client error if no error passed down', async () => {
+    const res = await getInitialProps({
       ...params,
       req: undefined,
       res: undefined,
     } as any);
     expect(Sentry.captureException).toBeCalledWith(
-      new Error('error.js getInitialProps missing data at path: /login')
+      new Error('_error.js getInitialProps missing data at path: /login')
     );
     expect(res).toEqual({ hasGetInitialPropsRun: true, statusCode: 404 });
   });
