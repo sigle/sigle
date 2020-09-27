@@ -20,16 +20,16 @@ import '@reach/menu-button/styles.css';
 import '@reach/tooltip/styles.css';
 import '../lib/fonts.css';
 import '../generated/tailwind.css';
-import { config } from '../config';
+import { sigleConfig } from '../config';
 import { colors } from '../utils/colors';
 import { AuthProvider } from '../modules/auth/AuthContext';
 
 blockstackConfig.logLevel = 'info';
 
-if (config.env === 'production' && config.sentryDsn) {
+if (sigleConfig.env === 'production' && sigleConfig.sentryDsn) {
   Sentry.init({
-    dsn: config.sentryDsn,
-    environment: config.env,
+    dsn: sigleConfig.sentryDsn,
+    environment: sigleConfig.env,
   });
 }
 
@@ -40,9 +40,9 @@ if (config.env === 'production' && config.sentryDsn) {
 // Track when page is loaded
 const FathomTrack = () => {
   useEffect(() => {
-    if (config.fathomSiteId) {
-      Fathom.load(config.fathomSiteId, {
-        url: config.fathomSiteUrl,
+    if (sigleConfig.fathomSiteId) {
+      Fathom.load(sigleConfig.fathomSiteId, {
+        url: sigleConfig.fathomSiteUrl,
       });
       Fathom.trackPageview();
     }
@@ -141,7 +141,7 @@ export default class MyApp extends App {
             site_name: 'Sigle',
             title: seoTitle,
             description: seoDescription,
-            images: [{ url: `${config.appUrl}/static/images/share.jpg` }],
+            images: [{ url: `${sigleConfig.appUrl}/static/images/share.jpg` }],
           }}
           twitter={{ site: '@sigleapp', cardType: 'summary_large_image' }}
         />

@@ -9,7 +9,7 @@ import format from 'date-fns/format';
 import { NextSeo } from 'next-seo';
 import { Story, SettingsFile } from '../../../types';
 import { Container } from '../../../components';
-import { config } from '../../../config';
+import { sigleConfig } from '../../../config';
 import { sanitizeHexColor, sanitizeLink } from '../../../utils/security';
 
 const rules = [
@@ -118,7 +118,7 @@ const StoryDate = styled.div`
 const Cover = styled.div`
   ${tw`mt-8 -ml-4 -mr-4`};
 
-  @media (min-width: ${config.breakpoints.xl}px) {
+  @media (min-width: ${sigleConfig.breakpoints.xl}px) {
     ${tw`-ml-20 -mr-20`};
   }
 `;
@@ -210,7 +210,7 @@ export const PublicStory = ({ story, settings }: PublicStoryProps) => {
   const safeSiteColor =
     settings.siteColor && sanitizeHexColor(settings.siteColor);
 
-  const seoUrl = `${config.appUrl}/${username}/${storyId}`;
+  const seoUrl = `${sigleConfig.appUrl}/${username}/${storyId}`;
   const seoTitle = story.metaTitle || `${story.title} | Sigle`;
   const seoDescription = story.metaDescription;
 
@@ -228,7 +228,7 @@ export const PublicStory = ({ story, settings }: PublicStoryProps) => {
             {
               url: story.coverImage
                 ? story.coverImage
-                : `${config.appUrl}/static/icon-192x192.png`,
+                : `${sigleConfig.appUrl}/static/icon-192x192.png`,
             },
           ],
         }}

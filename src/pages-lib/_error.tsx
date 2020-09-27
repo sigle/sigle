@@ -5,7 +5,7 @@ import tw from 'twin.macro';
 import Link from 'next/link';
 import * as Sentry from '@sentry/node';
 import { Button, Container } from '../components';
-import { config } from '../config';
+import { sigleConfig } from '../config';
 
 const NotFoundContainer = styled(Container)`
   ${tw`mt-8 mb-8 flex flex-col items-center text-center md:flex-row md:text-left`};
@@ -28,7 +28,7 @@ const NotFoundIllu = styled.img`
   width: 300px;
   max-width: 100%;
 
-  @media (min-width: ${config.breakpoints.md}px) {
+  @media (min-width: ${sigleConfig.breakpoints.md}px) {
     width: 520px;
   }
 `;
