@@ -8,6 +8,8 @@ import { DefaultSeo } from 'next-seo';
 import { ToastContainer } from 'react-toastify';
 import { config as blockstackConfig } from 'blockstack';
 import * as Sentry from '@sentry/node';
+import { RewriteFrames } from '@sentry/integrations';
+import getConfig from 'next/config';
 import NProgress from 'nprogress';
 import 'nprogress/nprogress.css';
 // TODO add tippy.js only on the pages that are using it
@@ -26,10 +28,24 @@ import { AuthProvider } from '../modules/auth/AuthContext';
 
 blockstackConfig.logLevel = 'info';
 
-if (sigleConfig.env === 'production' && sigleConfig.sentryDsn) {
+/**
+ * Sentry integration for next.js
+ * https://github.com/vercel/next.js/blob/canary/examples/with-sentry/pages/_app.js
+ */
+if (sigleConfig.sentryDsn) {
+  const config = getConfig();
+  const distDir = `${config.serverRuntimeConfig.rootDir}/.next`;
   Sentry.init({
+    enabled: sigleConfig.env === 'production',
+    integrations: [
+      new RewriteFrames({
+        iteratee: (frame: any) => {
+          frame.filename = frame.filename.replace(distDir, 'app:///_next');
+          return frame;
+        },
+      }),
+    ],
     dsn: sigleConfig.sentryDsn,
-    environment: sigleConfig.env,
   });
 }
 
