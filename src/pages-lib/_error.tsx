@@ -82,8 +82,8 @@ MyError.getInitialProps = async ({ res, err, asPath }: NextPageContext) => {
 
   // Workaround for https://github.com/vercel/next.js/issues/8592, mark when
   // getInitialProps has run
-  // @ts-ignore
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-ignore
   errorInitialProps.hasGetInitialPropsRun = true;
 
   // Running on the server, the response object (`res`) is available.
