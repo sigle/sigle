@@ -1,4 +1,8 @@
-// TODO customise
-export default function Custom404() {
-  return <h1>404 - Page Not Found</h1>;
-}
+import React from 'react';
+import { MyError } from '../pages-lib/_error';
+
+const Custom404 = () => {
+  return <MyError statusCode={404} />;
+};
+
+export default Custom404;
