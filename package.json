@@ -68,9 +68,9 @@
     "react-icons": "3.11.0",
     "react-spring": "8.0.27",
     "react-toastify": "6.0.8",
-    "slate": "0.58.4",
-    "slate-history": "0.58.4",
-    "slate-react": "0.58.4",
+    "slate": "0.59.0",
+    "slate-history": "0.59.0",
+    "slate-react": "0.59.0",
     "styled-components": "5.2.0",
     "typeface-roboto": "0.0.75"
   },
