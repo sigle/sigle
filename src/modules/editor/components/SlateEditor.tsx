@@ -42,7 +42,7 @@ import { ButtonOutline, FullScreenDialog } from '../../../components';
 import { userSession } from '../../../utils/blockstack';
 import { resizeImage } from '../../../utils/image';
 import { FixedContainer, PageContainer } from './Editor';
-import { NewEditor } from './NewEditor';
+import { NewEditor } from './NewEditor/NewEditor';
 // import { SlateEditorLink } from './SlateEditorLink';
 
 const StyledAppBarRightContainer = styled(AppBarRightContainer)`

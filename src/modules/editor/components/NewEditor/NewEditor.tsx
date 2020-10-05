@@ -12,7 +12,7 @@ import {
 import { Editor, Transforms, createEditor, Node } from 'slate';
 import { withHistory } from 'slate-history';
 import isHotkey from 'is-hotkey';
-import { StateEditorHoverToolbar } from './NewEditor/StateEditorHoverToolbar';
+import { StateEditorHoverToolbar } from './StateEditorHoverToolbar';
 
 const initialValue = [
   {
