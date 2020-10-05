@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useRef, useEffect } from 'react';
+import React, { useRef, useEffect } from 'react';
 import ReactDOM from 'react-dom';
 import { ReactEditor, useSlate } from 'slate-react';
 import { Range, Editor, Transforms, Text } from 'slate';
