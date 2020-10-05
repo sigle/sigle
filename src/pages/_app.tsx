@@ -8,6 +8,8 @@ import { DefaultSeo } from 'next-seo';
 import { ToastContainer } from 'react-toastify';
 import { config as blockstackConfig } from 'blockstack';
 import * as Sentry from '@sentry/node';
+import { RewriteFrames } from '@sentry/integrations';
+import getConfig from 'next/config';
 import NProgress from 'nprogress';
 import 'nprogress/nprogress.css';
 // TODO add tippy.js only on the pages that are using it
@@ -20,16 +22,30 @@ import '@reach/menu-button/styles.css';
 import '@reach/tooltip/styles.css';
 import '../lib/fonts.css';
 import '../generated/tailwind.css';
-import { config } from '../config';
+import { sigleConfig } from '../config';
 import { colors } from '../utils/colors';
 import { AuthProvider } from '../modules/auth/AuthContext';
 
 blockstackConfig.logLevel = 'info';
 
-if (config.env === 'production' && config.sentryDsn) {
+/**
+ * Sentry integration for next.js
+ * https://github.com/vercel/next.js/blob/canary/examples/with-sentry/pages/_app.js
+ */
+if (sigleConfig.sentryDsn) {
+  const config = getConfig();
+  const distDir = `${config.serverRuntimeConfig.rootDir}/.next`;
   Sentry.init({
-    dsn: config.sentryDsn,
-    environment: config.env,
+    enabled: sigleConfig.env === 'production',
+    integrations: [
+      new RewriteFrames({
+        iteratee: (frame: any) => {
+          frame.filename = frame.filename.replace(distDir, 'app:///_next');
+          return frame;
+        },
+      }),
+    ],
+    dsn: sigleConfig.sentryDsn,
   });
 }
 
@@ -40,9 +56,9 @@ if (config.env === 'production' && config.sentryDsn) {
 // Track when page is loaded
 const FathomTrack = () => {
   useEffect(() => {
-    if (config.fathomSiteId) {
-      Fathom.load(config.fathomSiteId, {
-        url: config.fathomSiteUrl,
+    if (sigleConfig.fathomSiteId) {
+      Fathom.load(sigleConfig.fathomSiteId, {
+        url: sigleConfig.fathomSiteUrl,
       });
       Fathom.trackPageview();
     }
@@ -141,7 +157,7 @@ export default class MyApp extends App {
             site_name: 'Sigle',
             title: seoTitle,
             description: seoDescription,
-            images: [{ url: `${config.appUrl}/static/images/share.jpg` }],
+            images: [{ url: `${sigleConfig.appUrl}/static/images/share.jpg` }],
           }}
           twitter={{ site: '@sigleapp', cardType: 'summary_large_image' }}
         />

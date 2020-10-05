@@ -3,7 +3,7 @@ import { NextPage } from 'next';
 import { lookupProfile } from 'blockstack';
 import * as Sentry from '@sentry/node';
 import { PublicHome } from '../modules/publicHome';
-import { config } from '../config';
+import { sigleConfig } from '../config';
 import { StoryFile, SettingsFile } from '../types';
 import Error from '../pages/_error';
 
@@ -83,7 +83,7 @@ PublicHomePage.getInitialProps = async ({ query, req, res }) => {
     ? window.location.origin
     : req && req.headers['x-forwarded-host']
     ? `${req.headers['x-forwarded-proto']}://${req.headers['x-forwarded-host']}`
-    : config.appUrl;
+    : sigleConfig.appUrl;
 
   const bucketUrl = userProfile && userProfile.apps && userProfile.apps[appUrl];
   // If the user already used the app we try to get the public list

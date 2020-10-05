@@ -4,7 +4,7 @@ import styled, { css } from 'styled-components';
 import tw from 'twin.macro';
 import format from 'date-fns/format';
 import { SubsetStory, SettingsFile } from '../../../types';
-import { config } from '../../../config';
+import { sigleConfig } from '../../../config';
 import { sanitizeHexColor } from '../../../utils/security';
 
 const Container = styled.div`
@@ -17,7 +17,7 @@ const StoryContainer = styled.div<{ siteColor?: string; featured?: boolean }>`
   ${(props) =>
     !props.featured &&
     css`
-      @media (min-width: ${config.breakpoints.md}px) {
+      @media (min-width: ${sigleConfig.breakpoints.md}px) {
         ${tw`flex`};
       }
     `}
@@ -25,7 +25,7 @@ const StoryContainer = styled.div<{ siteColor?: string; featured?: boolean }>`
   ${(props) =>
     props.featured &&
     css`
-      @media (min-width: ${config.breakpoints.xl}px) {
+      @media (min-width: ${sigleConfig.breakpoints.xl}px) {
         ${tw`-ml-20 -mr-20`};
       }
     `}
@@ -43,7 +43,7 @@ const StoryContainerImage = styled.div<{ featured?: boolean }>`
   ${(props) =>
     !props.featured &&
     css`
-      @media (min-width: ${config.breakpoints.md}px) {
+      @media (min-width: ${sigleConfig.breakpoints.md}px) {
         ${tw`w-1/3 mb-0`};
       }
     `}
@@ -62,7 +62,7 @@ const StoryContainerContent = styled.div<{
     props.hasCover &&
     !props.featured &&
     css`
-      @media (min-width: ${config.breakpoints.md}px) {
+      @media (min-width: ${sigleConfig.breakpoints.md}px) {
         ${tw`w-2/3 pl-4`};
       }
     `}

@@ -4,7 +4,7 @@ import tw from 'twin.macro';
 import { useRouter } from 'next/router';
 import * as Fathom from 'fathom-client';
 import { useConnect } from '@blockstack/connect';
-import { config } from '../config';
+import { sigleConfig } from '../config';
 import { Button } from '../components';
 import { Goals } from '../utils/fathom';
 import { useAuth } from '../modules/auth/AuthContext';
@@ -12,7 +12,7 @@ import { useAuth } from '../modules/auth/AuthContext';
 const BackgroundContainer = styled.div`
   ${tw`flex w-full h-screen`};
 
-  @media (max-width: ${config.breakpoints.md}px) {
+  @media (max-width: ${sigleConfig.breakpoints.md}px) {
     display: none;
   }
 `;
@@ -39,7 +39,7 @@ const Container = styled.div`
   width: 100%;
   max-width: 1140px;
 
-  @media (max-width: ${config.breakpoints.md}px) {
+  @media (max-width: ${sigleConfig.breakpoints.md}px) {
     ${tw`block`};
   }
 `;
@@ -56,7 +56,7 @@ const Column = styled.div<{ left?: boolean; right?: boolean }>`
     css`
       ${tw`items-center`};
     `}
-  @media (max-width: ${config.breakpoints.md}px) {
+  @media (max-width: ${sigleConfig.breakpoints.md}px) {
     ${tw`w-full pr-0`};
   }
 `;

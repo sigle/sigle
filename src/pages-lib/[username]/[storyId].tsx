@@ -4,7 +4,7 @@ import { lookupProfile } from 'blockstack';
 import * as Sentry from '@sentry/node';
 import Error from '../../pages/_error';
 import { PublicStory } from '../../modules/publicStory';
-import { config } from '../../config';
+import { sigleConfig } from '../../config';
 import { Story, SettingsFile } from '../../types';
 
 interface PublicStoryPageProps {
@@ -80,7 +80,7 @@ PublicStoryPage.getInitialProps = async ({ query, req, res }) => {
     ? window.location.origin
     : req && req.headers['x-forwarded-host']
     ? `${req.headers['x-forwarded-proto']}://${req.headers['x-forwarded-host']}`
-    : config.appUrl;
+    : sigleConfig.appUrl;
 
   const bucketUrl = userProfile && userProfile.apps && userProfile.apps[appUrl];
   // If the user already used the app we try to get the public list
