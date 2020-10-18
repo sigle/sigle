@@ -1,6 +1,8 @@
 import React, { useEffect } from 'react';
 import App from 'next/app';
 import Router from 'next/router';
+import Head from 'next/head';
+import getConfig from 'next/config';
 import * as Fathom from 'fathom-client';
 import { createGlobalStyle, keyframes } from 'styled-components';
 import tw from 'twin.macro';
@@ -9,7 +11,6 @@ import { ToastContainer } from 'react-toastify';
 import { config as blockstackConfig } from 'blockstack';
 import * as Sentry from '@sentry/node';
 import { RewriteFrames } from '@sentry/integrations';
-import getConfig from 'next/config';
 import NProgress from 'nprogress';
 import 'nprogress/nprogress.css';
 // TODO add tippy.js only on the pages that are using it
@@ -149,6 +150,12 @@ export default class MyApp extends App {
 
     return (
       <React.Fragment>
+        <Head>
+          <meta
+            name="viewport"
+            content="width=device-width, initial-scale=1, shrink-to-fit=no"
+          />
+        </Head>
         <DefaultSeo
           title={seoTitle}
           description={seoDescription}
