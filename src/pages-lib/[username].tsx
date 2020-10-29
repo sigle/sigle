@@ -9,7 +9,7 @@ import Error from '../pages/_error';
 
 interface PublicHomePageProps {
   statusCode: number | boolean;
-  errorMessage?: string;
+  errorMessage: string | null;
   file: StoryFile;
   settings: SettingsFile;
 }
@@ -57,7 +57,7 @@ const fetchSettings = async (bucketUrl: string) => {
   return { file, statusCode };
 };
 
-export const getServerSideProps: GetServerSideProps = async ({
+export const getServerSideProps: GetServerSideProps<PublicHomePageProps> = async ({
   req,
   res,
   params,
