@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { lookupProfile } from 'blockstack';
 import * as Sentry from '@sentry/node';
-import { PublicHomePage, getServerSideProps } from './[username]';
+import { getServerSideProps } from './[username]';
 
 jest.mock('blockstack');
 jest.mock('@sentry/node');
