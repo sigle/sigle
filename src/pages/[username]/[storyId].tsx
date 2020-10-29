@@ -1,1 +1,4 @@
-export { PublicStoryPage as default } from '../../pages-lib/[username]/[storyId]';
+export {
+  PublicStoryPage as default,
+  getServerSideProps,
+} from '../../pages-lib/[username]/[storyId]';

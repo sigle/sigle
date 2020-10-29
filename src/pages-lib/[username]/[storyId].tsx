@@ -1,5 +1,5 @@
 import React from 'react';
-import { NextPage } from 'next';
+import { GetServerSideProps, NextPage } from 'next';
 import { lookupProfile } from 'blockstack';
 import * as Sentry from '@sentry/node';
 import Error from '../../pages/_error';
@@ -9,7 +9,7 @@ import { Story, SettingsFile } from '../../types';
 
 interface PublicStoryPageProps {
   statusCode: number | boolean;
-  errorMessage?: string;
+  errorMessage?: string | null;
   file: Story;
   settings: SettingsFile;
 }
@@ -54,12 +54,17 @@ const fetchSettings = async (bucketUrl: string) => {
   return { file, statusCode };
 };
 
-PublicStoryPage.getInitialProps = async ({ query, req, res }) => {
-  const { username, storyId } = query as { username: string; storyId: string };
-  let file;
-  let settings;
+export const getServerSideProps: GetServerSideProps<PublicStoryPageProps> = async ({
+  req,
+  res,
+  params,
+}) => {
+  const username = params?.username as string;
+  const storyId = params?.storyId as string;
+  let file = null;
+  let settings = null;
   let statusCode: boolean | number = false;
-  let errorMessage: string | undefined;
+  let errorMessage: string | null = null;
   let userProfile;
   try {
     userProfile = await lookupProfile(username);
@@ -76,10 +81,10 @@ PublicStoryPage.getInitialProps = async ({ query, req, res }) => {
 
   // If deployed on vercel we want to get the deployment url to be able to test unmerged pr's
   // If client side we use window.location.origin
-  const appUrl = !req
-    ? window.location.origin
-    : req && req.headers['x-forwarded-host']
+  const appUrl = req.headers['x-forwarded-host']
     ? `${req.headers['x-forwarded-proto']}://${req.headers['x-forwarded-host']}`
+    : req.headers.host === 'localhost:3000'
+    ? 'http://localhost:3000'
     : sigleConfig.appUrl;
 
   const bucketUrl = userProfile && userProfile.apps && userProfile.apps[appUrl];
@@ -104,5 +109,6 @@ PublicStoryPage.getInitialProps = async ({ query, req, res }) => {
   if (statusCode && res) {
     res.statusCode = statusCode as number;
   }
-  return { statusCode, errorMessage, file, settings };
+
+  return { props: { statusCode, errorMessage, file, settings } };
 };

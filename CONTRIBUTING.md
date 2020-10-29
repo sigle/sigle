@@ -26,16 +26,10 @@ Now you can run run the following command to install the dependencies:
 yarn install
 ```
 
-We use vercel to handle the development mode so you will need to install their cli:
+To start the project in development/watch mode run:
 
 ```sh
-yarn global add vercel
-```
-
-Finally to start the project in development/watch mode run:
-
-```sh
-vercel dev
+yarn dev
 ```
 
 You can now open your browser and go to http://localhost:3000 to see the app.
