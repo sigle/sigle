@@ -3,6 +3,7 @@
   "version": "0.0.1",
   "private": true,
   "scripts": {
+    "dev": "next dev",
     "start": "NODE_ENV=production node server.js",
     "build": "next build",
     "test": "yarn test:lint && yarn test:only",
