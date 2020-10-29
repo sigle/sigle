@@ -75,7 +75,13 @@ export const getServerSideProps: GetServerSideProps<PublicStoryPageProps> = asyn
     } else {
       statusCode = 500;
       errorMessage = `Blockstack lookupProfile returned error: ${error.message}`;
-      Sentry.captureException(error);
+      Sentry.withScope((scope) => {
+        scope.setExtras({
+          username,
+          storyId,
+        });
+        Sentry.captureException(error);
+      });
     }
   }
 
