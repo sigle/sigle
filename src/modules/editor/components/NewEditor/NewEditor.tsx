@@ -1,4 +1,3 @@
-// TODO change name of the component
 import React, { useState, useMemo, useCallback } from 'react';
 import {
   Editable,
@@ -118,6 +117,7 @@ interface NewEditorProps {
   content?: any;
 }
 
+// TODO change name of the component
 export const NewEditor = ({ content }: NewEditorProps) => {
   const editor = useMemo(() => withHistory(withReact(createEditor())), []);
   const [value, setValue] = useState<Node[]>(() =>
