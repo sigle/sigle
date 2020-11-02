@@ -45,7 +45,7 @@ const migrateTextNode = (oldNode: OldTextNode) => {
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const migrateElementNode = (node: OldElementNode): any => {
   return {
-    data: node.data ?? {},
+    ...(node.data ?? {}),
     type: node.type,
     children: node.nodes?.map(migrateNode) ?? [],
   };
