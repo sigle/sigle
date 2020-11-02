@@ -4,6 +4,7 @@ import { useRouter } from 'next/router';
 import { Editor as Component } from '../components/Editor';
 import { Story } from '../../../types';
 import { getStoryFile } from '../../../utils';
+import { migrationStory } from '../../../utils/migrations/story';
 
 export const Editor = () => {
   const router = useRouter();
@@ -13,7 +14,8 @@ export const Editor = () => {
 
   const loadStoryFile = async () => {
     try {
-      const file = await getStoryFile(storyId as string);
+      let file = await getStoryFile(storyId as string);
+      file = file ? migrationStory(file) : file;
       setStory(file);
     } catch (error) {
       console.error(error);

@@ -12,7 +12,7 @@ import { Editor, Transforms, createEditor, Node } from 'slate';
 import { withHistory } from 'slate-history';
 import isHotkey from 'is-hotkey';
 import { StateEditorHoverToolbar } from './StateEditorHoverToolbar';
-import { migrate } from '../../migration';
+// import { migrate } from '../../migration';
 
 const initialValue = [
   {
@@ -121,7 +121,7 @@ interface NewEditorProps {
 export const NewEditor = ({ content }: NewEditorProps) => {
   const editor = useMemo(() => withHistory(withReact(createEditor())), []);
   const [value, setValue] = useState<Node[]>(() =>
-    content ? migrate(content) : initialValue
+    content ? content : initialValue
   );
   const renderElement = useCallback((props) => <Element {...props} />, []);
   const renderLeaf = useCallback((props) => <Leaf {...props} />, []);
