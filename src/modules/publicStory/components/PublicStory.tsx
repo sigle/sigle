@@ -3,7 +3,7 @@ import { useRouter } from 'next/router';
 import Link from 'next/link';
 import styled, { css, createGlobalStyle } from 'styled-components';
 import tw from 'twin.macro';
-// import { Value } from 'slate';
+import { Node } from 'slate';
 // import Html from 'slate-html-serializer';
 import format from 'date-fns/format';
 import { NextSeo } from 'next-seo';
@@ -11,6 +11,8 @@ import { Story, SettingsFile } from '../../../types';
 import { Container } from '../../../components';
 import { sigleConfig } from '../../../config';
 import { sanitizeHexColor, sanitizeLink } from '../../../utils/security';
+import { migrate } from '../../editor/migration';
+import { SlateRenderer } from './SlateRenderer';
 
 const rules = [
   {
@@ -214,6 +216,9 @@ export const PublicStory = ({ story, settings }: PublicStoryProps) => {
   const seoTitle = story.metaTitle || `${story.title} | Sigle`;
   const seoDescription = story.metaDescription;
 
+  // TODO move this part to server
+  const content: Node[] = migrate(story.content);
+
   return (
     <React.Fragment>
       <NextSeo
@@ -258,14 +263,18 @@ export const PublicStory = ({ story, settings }: PublicStoryProps) => {
             <CoverImage className="sigle-cover" src={story.coverImage} />
           </Cover>
         )}
-        <Content
+        <Content className="sigle-content">
+          <SlateRenderer content={content} />
+        </Content>
+
+        {/* <Content
           className="sigle-content"
           dangerouslySetInnerHTML={{
             __html: story.content
               ? html.serialize(Value.fromJSON(story.content))
               : '',
           }}
-        />
+        /> */}
       </StyledContainer>
     </React.Fragment>
   );
