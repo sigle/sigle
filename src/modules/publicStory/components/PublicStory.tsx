@@ -80,8 +80,6 @@ const rules = [
   },
 ];
 
-// const html = new Html({ rules });
-
 const Header = styled.div`
   ${tw`py-6 text-black`};
 `;
@@ -262,15 +260,6 @@ export const PublicStory = ({ story, settings }: PublicStoryProps) => {
         <Content className="sigle-content">
           <SlateRenderer content={story.content} />
         </Content>
-
-        {/* <Content
-          className="sigle-content"
-          dangerouslySetInnerHTML={{
-            __html: story.content
-              ? html.serialize(Value.fromJSON(story.content))
-              : '',
-          }}
-        /> */}
       </StyledContainer>
     </React.Fragment>
   );
