@@ -1,1 +1,4 @@
-export { PublicHomePage as default } from '../pages-lib/[username]';
+export {
+  PublicHomePage as default,
+  getServerSideProps,
+} from '../pages-lib/[username]';
