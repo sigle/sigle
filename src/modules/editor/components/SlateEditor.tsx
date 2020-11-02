@@ -785,7 +785,7 @@ export const SlateEditor = ({
         />
         <SlateContainer>
           <StyledContent>
-            <NewEditor />
+            <NewEditor content={story.content} />
           </StyledContent>
         </SlateContainer>
         {/* <SlateContainer>

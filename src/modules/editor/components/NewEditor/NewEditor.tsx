@@ -13,6 +13,7 @@ import { Editor, Transforms, createEditor, Node } from 'slate';
 import { withHistory } from 'slate-history';
 import isHotkey from 'is-hotkey';
 import { StateEditorHoverToolbar } from './StateEditorHoverToolbar';
+import { migrate } from '../../migration';
 
 const initialValue = [
   {
@@ -112,9 +113,16 @@ const isMarkActive = (editor: ReactEditor, format: string) => {
   return marks ? marks[format] === true : false;
 };
 
-export const NewEditor = () => {
+interface NewEditorProps {
+  // TODO type content
+  content?: any;
+}
+
+export const NewEditor = ({ content }: NewEditorProps) => {
   const editor = useMemo(() => withHistory(withReact(createEditor())), []);
-  const [value, setValue] = useState<Node[]>(initialValue);
+  const [value, setValue] = useState<Node[]>(() =>
+    content ? migrate(content) : initialValue
+  );
   const renderElement = useCallback((props) => <Element {...props} />, []);
   const renderLeaf = useCallback((props) => <Leaf {...props} />, []);
 
