@@ -17,6 +17,11 @@ export interface Story {
    */
   title: string;
   /**
+   * Content version, used by migration to know the structure of the content
+   * If field is not set it means it's the first version
+   */
+  contentVersion?: '2';
+  /**
    * JSON representing the slate.js structure of the story
    */
   content: any;

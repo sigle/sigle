@@ -6,25 +6,26 @@ import Error from '../../pages/_error';
 import { PublicStory } from '../../modules/publicStory';
 import { sigleConfig } from '../../config';
 import { Story, SettingsFile } from '../../types';
+import { migrationStory } from '../../utils/migrations/story';
 
 interface PublicStoryPageProps {
   statusCode: number | boolean;
   errorMessage?: string | null;
-  file: Story;
+  story: Story;
   settings: SettingsFile;
 }
 
 export const PublicStoryPage: NextPage<PublicStoryPageProps> = ({
   statusCode,
   errorMessage,
-  file,
+  story,
   settings,
 }) => {
   if (typeof statusCode === 'number') {
     return <Error statusCode={statusCode} errorMessage={errorMessage} />;
   }
 
-  return <PublicStory story={file} settings={settings} />;
+  return <PublicStory story={story} settings={settings} />;
 };
 
 const fetchPublicStory = async (bucketUrl: string, storyId: string) => {
@@ -61,7 +62,7 @@ export const getServerSideProps: GetServerSideProps<PublicStoryPageProps> = asyn
 }) => {
   const username = params?.username as string;
   const storyId = params?.storyId as string;
-  let file = null;
+  let story = null;
   let settings = null;
   let statusCode: boolean | number = false;
   let errorMessage: string | null = null;
@@ -101,7 +102,9 @@ export const getServerSideProps: GetServerSideProps<PublicStoryPageProps> = asyn
       fetchSettings(bucketUrl),
     ]);
 
-    file = dataPublicStory.file;
+    story = dataPublicStory.file
+      ? migrationStory(dataPublicStory.file)
+      : dataPublicStory.file;
     if (dataPublicStory.statusCode) {
       statusCode = dataPublicStory.statusCode;
     }
@@ -116,5 +119,5 @@ export const getServerSideProps: GetServerSideProps<PublicStoryPageProps> = asyn
     res.statusCode = statusCode as number;
   }
 
-  return { props: { statusCode, errorMessage, file, settings } };
+  return { props: { statusCode, errorMessage, story, settings } };
 };
