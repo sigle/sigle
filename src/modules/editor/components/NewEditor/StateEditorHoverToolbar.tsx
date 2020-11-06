@@ -18,6 +18,7 @@ import {
   MdLink,
   MdCode,
 } from 'react-icons/md';
+import { isLinkActive } from './plugins/link/utils';
 
 // TODO ? format type underlined renamed to underline
 
@@ -137,7 +138,35 @@ const HoverToolbarBlockButton = ({
   );
 };
 
-export const StateEditorHoverToolbar = () => {
+interface HoverToolbarLinkButtonProps {
+  onEditLink: () => void;
+}
+
+const HoverToolbarLinkButton = ({
+  onEditLink,
+}: HoverToolbarLinkButtonProps) => {
+  const editor = useSlate();
+
+  return (
+    <StyledHoverToolbarButton
+      active={isLinkActive(editor)}
+      onMouseDown={(event) => {
+        event.preventDefault();
+        onEditLink();
+      }}
+    >
+      <MdLink size={18} />
+    </StyledHoverToolbarButton>
+  );
+};
+
+interface StateEditorHoverToolbarProps {
+  onEditLink: () => void;
+}
+
+export const StateEditorHoverToolbar = ({
+  onEditLink,
+}: StateEditorHoverToolbarProps) => {
   const ref = useRef<HTMLDivElement>(null);
   const editor = useSlate();
   const root = window.document.getElementById('__next');
@@ -192,8 +221,7 @@ export const StateEditorHoverToolbar = () => {
         format="bulleted-list"
         icon={MdFormatListBulleted}
       />
-      {/* TODO link is missing */}
-      {/* {renderLinkButton()} */}
+      <HoverToolbarLinkButton onEditLink={onEditLink} />
     </HoverToolbar>,
     root
   );

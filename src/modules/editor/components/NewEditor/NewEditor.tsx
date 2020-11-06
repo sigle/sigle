@@ -1,18 +1,24 @@
 import React, { useState, useMemo, useCallback } from 'react';
+import styled from 'styled-components';
 import {
   Editable,
   RenderElementProps,
   RenderLeafProps,
   withReact,
-  useSlate,
   Slate,
   ReactEditor,
 } from 'slate-react';
 import { Editor, Transforms, createEditor, Node } from 'slate';
 import { withHistory } from 'slate-history';
 import isHotkey from 'is-hotkey';
+import Tooltip from '@reach/tooltip';
 import { StateEditorHoverToolbar } from './StateEditorHoverToolbar';
-// import { migrate } from '../../migration';
+import { SlateEditorLink } from './SlateEditorLink';
+import { wrapLink } from './plugins/link/utils';
+
+const StyledTooltip = styled(Tooltip)`
+  pointer-events: unset;
+`;
 
 const initialValue = [
   {
@@ -58,8 +64,6 @@ const HOTKEYS = {
   'mod+`': 'code',
 };
 
-const LIST_TYPES = ['numbered-list', 'bulleted-list'];
-
 const Element = ({ attributes, children, element }: RenderElementProps) => {
   switch (element.type) {
     case 'block-quote':
@@ -76,6 +80,23 @@ const Element = ({ attributes, children, element }: RenderElementProps) => {
       return <li {...attributes}>{children}</li>;
     case 'numbered-list':
       return <ol {...attributes}>{children}</ol>;
+    case 'link':
+      const href = element.href as string;
+      return (
+        <span>
+          <StyledTooltip
+            label={
+              <a href={href} target="_blank" rel="noopener noreferrer">
+                {href}
+              </a>
+            }
+          >
+            <a {...attributes} href={href}>
+              {children}
+            </a>
+          </StyledTooltip>
+        </span>
+      );
     default:
       return <p {...attributes}>{children}</p>;
   }
@@ -123,12 +144,32 @@ export const NewEditor = ({ content }: NewEditorProps) => {
   const [value, setValue] = useState<Node[]>(() =>
     content ? content : initialValue
   );
+  const [editLinkOpen, setEditLinkOpen] = useState(false);
   const renderElement = useCallback((props) => <Element {...props} />, []);
   const renderLeaf = useCallback((props) => <Leaf {...props} />, []);
 
+  console.log('transformed content', content, value);
+
+  const handleEditLink = () => {
+    setEditLinkOpen(true);
+  };
+
+  // TODO onPaste for links see https://github.com/ianstormtaylor/slate/blob/master/examples/links/index.js
+  const handleConfirmEditLink = (values: { text: string; link: string }) => {
+    setEditLinkOpen(false);
+    wrapLink(editor, values.link);
+  };
+
   return (
     <Slate editor={editor} value={value} onChange={(value) => setValue(value)}>
-      <StateEditorHoverToolbar />
+      <StateEditorHoverToolbar onEditLink={handleEditLink} />
+
+      <SlateEditorLink
+        open={editLinkOpen}
+        onClose={() => setEditLinkOpen(false)}
+        onConfirmEditLink={handleConfirmEditLink}
+      />
+
       <Editable
         renderElement={renderElement}
         renderLeaf={renderLeaf}
