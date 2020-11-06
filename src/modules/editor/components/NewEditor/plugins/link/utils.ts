@@ -12,12 +12,12 @@ export const unwrapLink = (editor: Editor, at?: Range) => {
 export const wrapLink = (editor: Editor, href: string, at?: Range) => {
   unwrapLink(editor, at);
 
-  const link = {
-    type: 'link',
-    href,
-    children: [],
-  };
+  // const link = {
+  //   type: 'link',
+  //   href,
+  //   children: [],
+  // };
 
-  Transforms.wrapNodes(editor, link, { split: true, at });
-  Transforms.collapse(editor, { edge: 'end' });
+  // Transforms.wrapNodes(editor, link, { split: true, at });
+  // Transforms.collapse(editor, { edge: 'end' });
 };
