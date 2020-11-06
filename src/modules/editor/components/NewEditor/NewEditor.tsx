@@ -1,5 +1,6 @@
 import React, { useState, useMemo, useCallback } from 'react';
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
+import tw from 'twin.macro';
 import {
   Editable,
   RenderElementProps,
@@ -7,6 +8,8 @@ import {
   withReact,
   Slate,
   ReactEditor,
+  useSelected,
+  useFocused,
 } from 'slate-react';
 import { Editor, Transforms, createEditor, Node } from 'slate';
 import { withHistory } from 'slate-history';
@@ -18,6 +21,19 @@ import { wrapLink } from './plugins/link/utils';
 
 const StyledTooltip = styled(Tooltip)`
   pointer-events: unset;
+`;
+
+const Image = styled.img<{ selected?: boolean; isUploading?: boolean }>`
+  ${tw`opacity-100 block transition-opacity duration-700`};
+  max-width: 100%;
+  max-height: 20em;
+  box-shadow: ${(props) => (props.selected ? '0 0 0 1px #000000;' : 'none')};
+
+  ${(props) =>
+    props.isUploading &&
+    css`
+      ${tw`opacity-25`};
+    `}
 `;
 
 const initialValue = [
@@ -64,7 +80,25 @@ const HOTKEYS = {
   'mod+`': 'code',
 };
 
-const Element = ({ attributes, children, element }: RenderElementProps) => {
+const ImageElement = ({
+  attributes,
+  children,
+  element,
+}: RenderElementProps) => {
+  const selected = useSelected();
+  const focused = useFocused();
+
+  const src = element.src as string;
+
+  return <Image {...attributes} src={src} selected={selected && focused} />;
+};
+
+const Element = ({
+  attributes,
+  children,
+  element,
+  ...props
+}: RenderElementProps) => {
   switch (element.type) {
     case 'block-quote':
       return <blockquote {...attributes}>{children}</blockquote>;
@@ -97,6 +131,23 @@ const Element = ({ attributes, children, element }: RenderElementProps) => {
           </StyledTooltip>
         </span>
       );
+    case 'image':
+      const src = element.src as string;
+      // const id = node.data.get('id');
+      // const isUploading = node.data.get('isUploading');
+      return (
+        <ImageElement
+          {...props}
+          attributes={attributes}
+          children={children}
+          element={element}
+          // src={src}
+          // selected={isFocused}
+          // isUploading={isUploading}
+          // id={`image-${id}`}
+        />
+      );
+      return <p {...attributes}>Image</p>;
     default:
       return <p {...attributes}>{children}</p>;
   }
