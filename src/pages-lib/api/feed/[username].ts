@@ -8,6 +8,25 @@ import { migrationStories } from '../../../utils/migrations/stories';
 
 blockstackConfig.logLevel = 'info';
 
+const escapeXml = (unsafe: string) => {
+  return unsafe.replace(/[<>&'"]/g, (c) => {
+    switch (c) {
+      case '<':
+        return '&lt;';
+      case '>':
+        return '&gt;';
+      case '&':
+        return '&amp;';
+      case "'":
+        return '&apos;';
+      case '"':
+        return '&quot;';
+      default:
+        return c;
+    }
+  });
+};
+
 export const apiFeed: NextApiHandler = async (req, res) => {
   const { username } = req.query as { username: string };
 
@@ -99,7 +118,8 @@ export const apiFeed: NextApiHandler = async (req, res) => {
       link: storyLink,
       description: story.content,
       date: new Date(story.createdAt),
-      image: story.coverImage,
+      // The url can contains "&", we need to escape it to not have a XML parsing issue.
+      image: story.coverImage ? escapeXml(story.coverImage) : undefined,
     });
   });
 
