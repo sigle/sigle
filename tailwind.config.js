@@ -1,8 +1,5 @@
 module.exports = {
-  future: {
-    removeDeprecatedGapUtilities: true,
-    purgeLayersByDefault: true,
-  },
+  purge: ['./src/**/*.{js,ts,jsx,tsx}'],
   theme: {
     extend: {
       fontFamily: {
@@ -13,7 +10,7 @@ module.exports = {
         grey: {
           darker: '#838383',
           dark: '#bbbaba',
-          default: '#ededed',
+          DEFAULT: '#ededed',
           light: '#f7f7f7',
         },
         pink: {
@@ -22,4 +19,8 @@ module.exports = {
       },
     },
   },
+  variants: {
+    extend: {},
+  },
+  plugins: [],
 };
