@@ -258,8 +258,8 @@ export const PublicStory = ({ story, settings }: PublicStoryProps) => {
             <CoverImage className="sigle-cover" src={story.coverImage} />
           </Cover>
         )}
-        <Content
-          className="sigle-content"
+        <div
+          className="prose lg:prose-lg sigle-content"
           dangerouslySetInnerHTML={{
             __html: story.content
               ? html.serialize(Value.fromJSON(story.content))
