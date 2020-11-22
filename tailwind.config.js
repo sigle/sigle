@@ -10,7 +10,8 @@ module.exports = {
         grey: {
           darker: '#838383',
           dark: '#bbbaba',
-          DEFAULT: '#ededed',
+          // TODO change to DEFAULT once twin macro is released
+          default: '#ededed',
           light: '#f7f7f7',
         },
         pink: {
@@ -37,5 +38,5 @@ module.exports = {
   variants: {
     extend: {},
   },
-  plugins: [require('@tailwindcss/typography')],
+  plugins: [require('@tailwindcss/typography'), require('@tailwindcss/forms')],
 };

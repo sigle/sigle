@@ -9,12 +9,13 @@ export const FormLabel = styled.label`
   ${tw`w-full block tracking-wide font-bold text-black mb-2`};
 `;
 
+// TODO Cannot use ring-* in twin.macro, blocked till next release
 export const FormInput = styled.input`
-  ${tw`appearance-none block w-full bg-white border border-grey rounded py-3 px-3 text-sm leading-tight focus:outline-none`};
+  ${tw`block w-full bg-white border border-grey rounded py-3 px-3 text-sm leading-tight ring-grey-dark`};
 `;
 
 export const FormTextarea = styled.textarea`
-  ${tw`appearance-none block w-full bg-white border border-grey rounded py-3 px-3 text-sm leading-tight focus:outline-none`};
+  ${tw`block w-full bg-white border border-grey rounded py-3 px-3 text-sm leading-tight focus:outline-none`};
 `;
 
 export const FormHelper = styled.p`

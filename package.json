@@ -83,6 +83,7 @@
     "@bundle-analyzer/webpack-plugin": "0.5.1",
     "@next/bundle-analyzer": "10.0.2",
     "@sentry/webpack-plugin": "1.13.0",
+    "@tailwindcss/forms": "0.2.1",
     "@tailwindcss/typography": "0.3.1",
     "@testing-library/jest-dom": "5.11.6",
     "@testing-library/react": "11.2.2",
