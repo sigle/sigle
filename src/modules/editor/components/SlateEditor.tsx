@@ -15,6 +15,7 @@ import {
 import SoftBreak from 'slate-soft-break';
 import { Block, Value } from 'slate';
 import { MdSettings } from 'react-icons/md';
+import RichMarkdownEditor from 'rich-markdown-editor';
 import {
   saveStoryFile,
   convertStoryToSubsetStory,
@@ -627,6 +628,18 @@ export const SlateEditor = ({
 
         <SlateContainer>
           <StyledContent>
+            <RichMarkdownEditor
+              defaultValue=""
+              onChange={(data) => {
+                console.log(data());
+              }}
+              placeholder="Start your story here..."
+            />
+          </StyledContent>
+        </SlateContainer>
+
+        {/* <SlateContainer>
+          <StyledContent>
             <StyledEditor
               ref={editorRef}
               plugins={slatePlugins}
@@ -642,7 +655,7 @@ export const SlateEditor = ({
               renderInline={renderInline}
             />
           </StyledContent>
-        </SlateContainer>
+        </SlateContainer> */}
 
         {editorRef.current && (
           <SlateEditorLink
