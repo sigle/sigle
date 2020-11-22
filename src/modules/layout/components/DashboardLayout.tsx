@@ -79,9 +79,9 @@ const MenuBottom = styled.ul`
   ${tw`list-none px-3`}
 `;
 
-const MenuArrowIcon = styled(MdKeyboardArrowDown)<{ isOpen: boolean }>`
+const MenuArrowIcon = styled(MdKeyboardArrowDown)<{ $isOpen: boolean }>`
   ${(props) =>
-    props.isOpen &&
+    props.$isOpen &&
     css`
       transform: rotate(180deg);
     `}
@@ -149,7 +149,7 @@ export const DashboardSidebar = () => {
         <MenuButtonName onClick={() => setIsLogoutOpen(!isLogoutOpen)}>
           <span>{user.username}</span>
           <MenuArrowIcon
-            isOpen={isLogoutOpen}
+            $isOpen={isLogoutOpen}
             size={18}
             style={{ marginLeft: 8 }}
           />
