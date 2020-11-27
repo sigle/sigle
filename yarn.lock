@@ -2107,13 +2107,13 @@ attr-accept@^2.2.1:
   resolved "https://registry.yarnpkg.com/attr-accept/-/attr-accept-2.2.2.tgz#646613809660110749e92f2c10833b70968d929b"
   integrity sha512-7prDjvt9HmqiZ0cl5CRjtS84sEyhsHP2coDkaZKRKVfCDo9s7iw7ChVmar78Gu9pC4SoR/28wFu/G5JJhTnqEg==
 
-autoprefixer@10.0.2:
-  version "10.0.2"
-  resolved "https://registry.yarnpkg.com/autoprefixer/-/autoprefixer-10.0.2.tgz#a79f9a02bfb95c621998776ac0d85f8f855b367e"
-  integrity sha512-okBmu9OMdt6DNEcZmnl0IYVv8Xl/xYWRSnc2OJ9UJEOt1u30opG1B8aLsViqKryBaYv1SKB4f85fOGZs5zYxHQ==
+autoprefixer@10.0.3:
+  version "10.0.3"
+  resolved "https://registry.yarnpkg.com/autoprefixer/-/autoprefixer-10.0.3.tgz#43c8fb60ab095f4b6ff7bc5d24cd05925112f2ce"
+  integrity sha512-SIUDNQlGARsfL69nsmi7OKnDtz1HVwPAiYPGn1Nv9eLMpBywXK5DNwAnvTq6aTjuPx3XKPl2boCQRYcThjJa2A==
   dependencies:
     browserslist "^4.14.7"
-    caniuse-lite "^1.0.30001157"
+    caniuse-lite "^1.0.30001161"
     colorette "^1.2.1"
     normalize-range "^0.1.2"
     num2fraction "^1.2.2"
@@ -2770,6 +2770,11 @@ caniuse-lite@^1.0.30001157:
   version "1.0.30001159"
   resolved "https://registry.yarnpkg.com/caniuse-lite/-/caniuse-lite-1.0.30001159.tgz#bebde28f893fa9594dadcaa7d6b8e2aa0299df20"
   integrity sha512-w9Ph56jOsS8RL20K9cLND3u/+5WASWdhC/PPrf+V3/HsM3uHOavWOR1Xzakbv4Puo/srmPHudkmCRWM7Aq+/UA==
+
+caniuse-lite@^1.0.30001161:
+  version "1.0.30001161"
+  resolved "https://registry.yarnpkg.com/caniuse-lite/-/caniuse-lite-1.0.30001161.tgz#64f7ffe79ee780b8c92843ff34feb36cea4651e0"
+  integrity sha512-JharrCDxOqPLBULF9/SPa6yMcBRTjZARJ6sc3cuKrPfyIk64JN6kuMINWqA99Xc8uElMFcROliwtz0n9pYej+g==
 
 capture-exit@^2.0.0:
   version "2.0.0"
@@ -6616,7 +6621,7 @@ nan@^2.12.1, nan@^2.13.2, nan@^2.14.0:
   resolved "https://registry.yarnpkg.com/nan/-/nan-2.14.2.tgz#f5376400695168f4cc694ac9393d0c9585eeea19"
   integrity sha512-M2ufzIiINKCuDfBSAUr1vWQ+vuVcA9kqx8JJUsbQi6yf1uGRyb7HfpdfUr5qLXf3B/t8dPvcjhKMmlfnP47EzQ==
 
-nanoid@3.1.18:
+nanoid@3.1.18, nanoid@^3.1.18:
   version "3.1.18"
   resolved "https://registry.yarnpkg.com/nanoid/-/nanoid-3.1.18.tgz#0680db22ab01c372e89209f5d18283d98de3e96d"
   integrity sha512-rndlDjbbHbcV3xi+R2fpJ+PbGMdfBxz5v1fATIQFq0DP64FsicQdwnKLy47K4kZHdRpmQXtz24eGsxQqamzYTA==
@@ -7438,20 +7443,20 @@ postcss@7.0.32:
     source-map "^0.6.1"
     supports-color "^6.1.0"
 
+postcss@8.1.10:
+  version "8.1.10"
+  resolved "https://registry.yarnpkg.com/postcss/-/postcss-8.1.10.tgz#129834f94c720554d2cfdaeb27d5542ac4a026ea"
+  integrity sha512-iBXEV5VTTYaRRdxiFYzTtuv2lGMQBExqkZKSzkJe+Fl6rvQrA/49UVGKqB+LG54hpW/TtDBMGds8j33GFNW7pg==
+  dependencies:
+    colorette "^1.2.1"
+    nanoid "^3.1.18"
+    source-map "^0.6.1"
+    vfile-location "^3.2.0"
+
 postcss@8.1.7:
   version "8.1.7"
   resolved "https://registry.yarnpkg.com/postcss/-/postcss-8.1.7.tgz#ff6a82691bd861f3354fd9b17b2332f88171233f"
   integrity sha512-llCQW1Pz4MOPwbZLmOddGM9eIJ8Bh7SZ2Oj5sxZva77uVaotYDsYTch1WBTNu7fUY0fpWp0fdt7uW40D4sRiiQ==
-  dependencies:
-    colorette "^1.2.1"
-    line-column "^1.0.2"
-    nanoid "^3.1.16"
-    source-map "^0.6.1"
-
-postcss@8.1.8, postcss@^8.1.6:
-  version "8.1.8"
-  resolved "https://registry.yarnpkg.com/postcss/-/postcss-8.1.8.tgz#697439e7276735ecdd2893d2cf8efb2236693ac3"
-  integrity sha512-hO6jFWBy0QnBBRaw+s0F4hVPKGDICec/nLNEG1D4qqw9/LBzWMkTjckqqELXAo0J42jN8GFZXtgQfezEaoG9gQ==
   dependencies:
     colorette "^1.2.1"
     line-column "^1.0.2"
@@ -7475,6 +7480,16 @@ postcss@^7.0.11, postcss@^7.0.14, postcss@^7.0.18, postcss@^7.0.26, postcss@^7.0
     chalk "^2.4.2"
     source-map "^0.6.1"
     supports-color "^6.1.0"
+
+postcss@^8.1.6:
+  version "8.1.8"
+  resolved "https://registry.yarnpkg.com/postcss/-/postcss-8.1.8.tgz#697439e7276735ecdd2893d2cf8efb2236693ac3"
+  integrity sha512-hO6jFWBy0QnBBRaw+s0F4hVPKGDICec/nLNEG1D4qqw9/LBzWMkTjckqqELXAo0J42jN8GFZXtgQfezEaoG9gQ==
+  dependencies:
+    colorette "^1.2.1"
+    line-column "^1.0.2"
+    nanoid "^3.1.16"
+    source-map "^0.6.1"
 
 preact@^10.4.0:
   version "10.5.5"
@@ -9882,6 +9897,11 @@ verror@1.10.0:
     assert-plus "^1.0.0"
     core-util-is "1.0.2"
     extsprintf "^1.2.0"
+
+vfile-location@^3.2.0:
+  version "3.2.0"
+  resolved "https://registry.yarnpkg.com/vfile-location/-/vfile-location-3.2.0.tgz#d8e41fbcbd406063669ebf6c33d56ae8721d0f3c"
+  integrity sha512-aLEIZKv/oxuCDZ8lkJGhuhztf/BW4M+iHdCwglA/eWc+vtuRFJj8EtgceYFX4LRjOhCAAiNHsKGssC6onJ+jbA==
 
 vm-browserify@1.1.2, vm-browserify@^1.0.1:
   version "1.1.2"
