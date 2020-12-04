@@ -128,56 +128,22 @@ const CoverImage = styled.img`
 `;
 
 export const Content = styled.div`
-  ${tw`mt-8 mb-16 text-lg leading-relaxed`};
-  color: #494949;
-
-  p,
-  ol,
-  ul {
-    ${tw`mb-4`};
-  }
+  ${tw`prose lg:prose-lg`};
 
   p {
     min-height: 1rem;
   }
 
-  li + li {
-    ${tw`mt-2`};
-  }
-
-  blockquote {
-    ${tw`mb-4 py-4 px-4 italic text-sm`};
-    border-left: 3px solid #ccc;
-    letter-spacing: 0.01rem;
+  a {
+    ${tw`text-pink no-underline`};
   }
 
   h1 {
-    ${tw`mt-6 mb-4 text-4xl`};
-  }
-
-  h2 {
-    ${tw`mt-6 mb-4 text-3xl`};
-  }
-
-  h3 {
-    ${tw`mt-6 mb-4 text-2xl`};
-  }
-
-  a {
-    ${tw`text-pink`};
+    ${tw`text-4xl`};
   }
 
   code {
-    ${tw`font-mono text-sm inline bg-grey-light px-1 rounded-sm`};
-    padding-top: 0.15rem;
-    padding-bottom: 0.15rem;
-  }
-
-  img {
-    ${tw`mb-4`};
-    display: block;
-    max-width: 100%;
-    max-height: 100em;
+    ${tw`bg-grey-light px-1 rounded-sm`};
   }
 `;
 
@@ -258,8 +224,8 @@ export const PublicStory = ({ story, settings }: PublicStoryProps) => {
             <CoverImage className="sigle-cover" src={story.coverImage} />
           </Cover>
         )}
-        <div
-          className="prose lg:prose-lg sigle-content"
+        <Content
+          className="sigle-content"
           dangerouslySetInnerHTML={{
             __html: story.content
               ? html.serialize(Value.fromJSON(story.content))
