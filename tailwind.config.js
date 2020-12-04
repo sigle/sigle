@@ -10,12 +10,11 @@ module.exports = {
         grey: {
           darker: '#838383',
           dark: '#bbbaba',
-          // TODO change to DEFAULT once twin macro is released
-          default: '#ededed',
+          DEFAULT: '#ededed',
           light: '#f7f7f7',
         },
         pink: {
-          default: '#ff576a',
+          DEFAULT: '#ff576a',
         },
       },
       typography: {
