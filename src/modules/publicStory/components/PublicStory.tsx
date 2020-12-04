@@ -129,6 +129,7 @@ const CoverImage = styled.img`
 
 export const Content = styled.div`
   ${tw`prose lg:prose-lg`};
+  max-width: none;
 
   p {
     min-height: 1rem;
