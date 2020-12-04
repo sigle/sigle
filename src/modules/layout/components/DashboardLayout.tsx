@@ -56,7 +56,7 @@ const MenuButtonName = styled.button<{ logout?: boolean }>`
 `;
 
 const MenuTop = styled.ul`
-  ${tw`mt-6 list-none px-3`}
+  ${tw`mt-4 list-none px-3`}
 `;
 
 const MenuTopItem = styled.li<{ active: boolean }>`

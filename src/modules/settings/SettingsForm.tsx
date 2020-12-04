@@ -31,7 +31,7 @@ const StyledFormHelper = styled(FormHelper)`
 `;
 
 const FormColor = styled.div<{ color: string }>`
-  ${tw`py-3 text-white rounded cursor-pointer relative inline-block text-center`};
+  ${tw`py-2 text-white rounded cursor-pointer relative inline-block text-center`};
   width: 170px;
   ${(props) =>
     css`
