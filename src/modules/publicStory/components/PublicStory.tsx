@@ -145,6 +145,10 @@ export const Content = styled.div`
   code {
     ${tw`bg-grey-light px-1 rounded-sm`};
   }
+
+  img {
+    max-height: 100em;
+  }
 `;
 
 const CustomStyle = createGlobalStyle<{ siteColor?: string }>`
