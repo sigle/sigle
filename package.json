@@ -49,6 +49,7 @@
     "@reach/dialog": "0.11.2",
     "@reach/menu-button": "0.11.2",
     "@reach/tooltip": "0.11.2",
+    "@remirror/styles": "1.0.0-next.58",
     "@sentry/browser": "5.27.4",
     "@sentry/integrations": "5.27.4",
     "@sentry/node": "5.27.4",
