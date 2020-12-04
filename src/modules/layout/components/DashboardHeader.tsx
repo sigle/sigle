@@ -109,6 +109,7 @@ export const DashboardPageTitle = ({ title }: DashboardPageTitleProps) => {
               key={key}
               style={{ opacity: styles.opacity }}
               onDismiss={handleCloseMobileMenu}
+              as="div"
             >
               <AnimatedDialogContent
                 style={{
