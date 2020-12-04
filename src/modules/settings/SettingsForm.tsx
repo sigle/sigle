@@ -181,6 +181,7 @@ export const SettingsForm = ({ settings, username }: SettingsFormProps) => {
         <FormLabel>Name</FormLabel>
         <FormInput
           name="siteName"
+          type="text"
           maxLength={50}
           placeholder={username}
           value={formik.values.siteName}
