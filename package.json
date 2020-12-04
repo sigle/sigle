@@ -103,7 +103,7 @@
     "@typescript-eslint/parser": "4.8.1",
     "@zeit/next-source-maps": "0.0.4-canary.1",
     "autoprefixer": "10.0.3",
-    "babel-plugin-macros": "2.8.0",
+    "babel-plugin-macros": "3.0.0",
     "babel-plugin-styled-components": "1.12.0",
     "dotenv": "8.2.0",
     "eslint": "7.14.0",
