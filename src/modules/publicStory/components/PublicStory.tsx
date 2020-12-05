@@ -136,7 +136,10 @@ export const Content = styled.div`
   }
 
   a {
-    ${tw`text-pink no-underline`};
+    ${tw`text-pink no-underline font-normal`};
+  }
+  a strong {
+    ${tw`text-pink`};
   }
 
   h1 {
