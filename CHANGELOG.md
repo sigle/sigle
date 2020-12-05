@@ -1,3 +1,7 @@
+## December 5, 2020
+
+- Style improvements for the public pages, better experience for the readers.
+
 ## May 6, 2020
 
 ### Improvements
