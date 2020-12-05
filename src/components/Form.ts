@@ -10,11 +10,11 @@ export const FormLabel = styled.label`
 `;
 
 export const FormInput = styled.input`
-  ${tw`appearance-none block w-full bg-white border border-grey rounded py-3 px-3 text-sm leading-tight focus:outline-none`};
+  ${tw`block w-full bg-white border border-grey rounded py-3 px-3 text-sm leading-tight focus:border-grey-dark focus:ring-grey-dark`};
 `;
 
 export const FormTextarea = styled.textarea`
-  ${tw`appearance-none block w-full bg-white border border-grey rounded py-3 px-3 text-sm leading-tight focus:outline-none`};
+  ${tw`block w-full bg-white border border-grey rounded py-3 px-3 text-sm leading-tight focus:border-grey-dark focus:ring-grey-dark`};
 `;
 
 export const FormHelper = styled.p`

@@ -22,7 +22,7 @@ import '@reach/dialog/styles.css';
 import '@reach/menu-button/styles.css';
 import '@reach/tooltip/styles.css';
 import '../lib/fonts.css';
-import '../generated/tailwind.css';
+import '../styles/index.css';
 import { sigleConfig } from '../config';
 import { colors } from '../utils/colors';
 import { AuthProvider } from '../modules/auth/AuthContext';

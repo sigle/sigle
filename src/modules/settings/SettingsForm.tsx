@@ -31,7 +31,7 @@ const StyledFormHelper = styled(FormHelper)`
 `;
 
 const FormColor = styled.div<{ color: string }>`
-  ${tw`py-3 text-white rounded cursor-pointer relative inline-block text-center`};
+  ${tw`py-2 text-white rounded cursor-pointer relative inline-block text-center`};
   width: 170px;
   ${(props) =>
     css`
@@ -181,6 +181,7 @@ export const SettingsForm = ({ settings, username }: SettingsFormProps) => {
         <FormLabel>Name</FormLabel>
         <FormInput
           name="siteName"
+          type="text"
           maxLength={50}
           placeholder={username}
           value={formik.values.siteName}

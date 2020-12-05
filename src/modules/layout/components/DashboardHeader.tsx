@@ -45,7 +45,7 @@ const Logo = styled.img`
 `;
 
 const VisitButton = styled(ButtonOutline)`
-  ${tw`mr-6 hidden lg:inline-flex`};
+  ${tw`mr-6 hidden inline-flex items-center`};
 `;
 
 /**
@@ -109,6 +109,7 @@ export const DashboardPageTitle = ({ title }: DashboardPageTitleProps) => {
               key={key}
               style={{ opacity: styles.opacity }}
               onDismiss={handleCloseMobileMenu}
+              as="div"
             >
               <AnimatedDialogContent
                 style={{

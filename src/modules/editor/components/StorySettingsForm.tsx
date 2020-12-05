@@ -249,6 +249,7 @@ export const StorySettingsForm = ({
         <FormLabel>Meta title</FormLabel>
         <FormInput
           name="metaTitle"
+          type="text"
           value={formik.values.metaTitle}
           onChange={formik.handleChange}
           maxLength={100}

@@ -1,8 +1,5 @@
 module.exports = {
-  future: {
-    removeDeprecatedGapUtilities: true,
-    purgeLayersByDefault: true,
-  },
+  purge: ['./src/**/*.{js,ts,jsx,tsx}'],
   theme: {
     extend: {
       fontFamily: {
@@ -13,13 +10,32 @@ module.exports = {
         grey: {
           darker: '#838383',
           dark: '#bbbaba',
-          default: '#ededed',
+          DEFAULT: '#ededed',
           light: '#f7f7f7',
         },
         pink: {
-          default: '#ff576a',
+          DEFAULT: '#ff576a',
+        },
+      },
+      typography: {
+        DEFAULT: {
+          css: {
+            'code::before': {
+              content: '',
+            },
+            'code::after': {
+              content: '',
+            },
+            code: {
+              fontWeight: '400',
+            },
+          },
         },
       },
     },
   },
+  variants: {
+    extend: {},
+  },
+  plugins: [require('@tailwindcss/typography'), require('@tailwindcss/forms')],
 };
