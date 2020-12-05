@@ -41,15 +41,15 @@ const ImageEmpty = styled.div<{ haveImage: boolean }>`
 `;
 
 const ImageEmptyIconContainer = styled.div`
-  ${tw`absolute bottom-0 right-0 flex items-center text-grey-darker bg-white`};
+  ${tw`absolute bottom-2 right-2 flex items-center text-grey-darker`};
 `;
 
 const ImageEmptyIconAdd = styled.div`
-  ${tw`p-2`};
+  ${tw`p-2 bg-white rounded-full`};
 `;
 
 const ImageEmptyIconDelete = styled.div`
-  ${tw`p-2`};
+  ${tw`p-2 bg-white rounded-full ml-2`};
 `;
 
 const Image = styled.img`
@@ -227,14 +227,14 @@ export const StorySettingsForm = ({
           <input {...getInputProps()} />
           <ImageEmptyIconContainer>
             <ImageEmptyIconAdd title="Add cover image">
-              <MdAddAPhoto />
+              <MdAddAPhoto size={15} />
             </ImageEmptyIconAdd>
             {coverImageUrl && (
               <ImageEmptyIconDelete
                 title="Remove cover image"
                 onClick={handleRemoveCover}
               >
-                <MdDelete />
+                <MdDelete size={15} />
               </ImageEmptyIconDelete>
             )}
           </ImageEmptyIconContainer>
