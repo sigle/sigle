@@ -128,7 +128,7 @@ const CoverImage = styled.img`
 `;
 
 export const Content = styled.div`
-  ${tw`prose lg:prose-lg`};
+  ${tw`mt-8 mb-16 prose lg:prose-lg`};
   max-width: none;
 
   p {
