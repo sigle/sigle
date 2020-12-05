@@ -40,12 +40,16 @@ const ImageEmpty = styled.div<{ haveImage: boolean }>`
   }
 `;
 
+const ImageEmptyIconContainer = styled.div`
+  ${tw`absolute bottom-0 right-0 flex items-center text-grey-darker bg-white`};
+`;
+
 const ImageEmptyIconAdd = styled.div`
-  ${tw`absolute bottom-2 right-2 p-1 flex items-center text-grey-darker bg-white rounded-full`};
+  ${tw`p-2`};
 `;
 
 const ImageEmptyIconDelete = styled.div`
-  ${tw`absolute top-2 right-2 p-1 flex items-center text-grey-darker bg-white rounded-full`};
+  ${tw`p-2`};
 `;
 
 const Image = styled.img`
@@ -218,17 +222,22 @@ export const StorySettingsForm = ({
           {...getRootProps({ tabIndex: undefined })}
           haveImage={!!coverImageUrl}
         >
-          {coverImageUrl && (
-            <ImageEmptyIconDelete onClick={handleRemoveCover}>
-              <MdDelete />
-            </ImageEmptyIconDelete>
-          )}
           {coverImageUrl && <Image src={coverImageUrl} />}
           {!coverImageUrl && <span>Upload cover image</span>}
           <input {...getInputProps()} />
-          <ImageEmptyIconAdd>
-            <MdAddAPhoto />
-          </ImageEmptyIconAdd>
+          <ImageEmptyIconContainer>
+            <ImageEmptyIconAdd title="Add cover image">
+              <MdAddAPhoto />
+            </ImageEmptyIconAdd>
+            {coverImageUrl && (
+              <ImageEmptyIconDelete
+                title="Remove cover image"
+                onClick={handleRemoveCover}
+              >
+                <MdDelete />
+              </ImageEmptyIconDelete>
+            )}
+          </ImageEmptyIconContainer>
         </ImageEmpty>
       </FormRow>
 
