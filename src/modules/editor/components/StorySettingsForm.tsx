@@ -41,11 +41,11 @@ const ImageEmpty = styled.div<{ haveImage: boolean }>`
 `;
 
 const ImageEmptyIconAdd = styled.div`
-  ${tw`absolute bottom-0 right-0 p-2 flex items-center text-grey-dark`};
+  ${tw`absolute bottom-2 right-2 p-1 flex items-center text-grey-darker bg-white rounded-full`};
 `;
 
 const ImageEmptyIconDelete = styled.div`
-  ${tw`absolute top-0 right-0 p-2 flex items-center text-grey-dark`};
+  ${tw`absolute top-2 right-2 p-1 flex items-center text-grey-darker bg-white rounded-full`};
 `;
 
 const Image = styled.img`
