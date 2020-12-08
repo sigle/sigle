@@ -41,7 +41,7 @@ const ImageEmpty = styled.div<{ haveImage: boolean }>`
 `;
 
 const ImageEmptyIconContainer = styled.div`
-  ${tw`absolute bottom-2 right-2 flex items-center text-grey-darker`};
+  ${tw`absolute bottom-2 right-2 flex items-center text-gray-900`};
 `;
 
 const ImageEmptyIconAdd = styled.div`
