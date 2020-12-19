@@ -231,8 +231,7 @@ export const PublicStory = ({ story, settings }: PublicStoryProps) => {
       <StyledContainer hasCover={!!story.coverImage}>
         <Title className="sigle-title">{story.title}</Title>
         <StoryDate className="sigle-date">
-          {format(story.createdAt, 'dd MMMM yyyy')} • {storyReadingTime} trigger
-          deployment
+          {format(story.createdAt, 'dd MMMM yyyy')} • {storyReadingTime}
         </StoryDate>
         {story.coverImage && (
           <Cover>
