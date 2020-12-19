@@ -8,6 +8,7 @@ import Html from 'slate-html-serializer';
 import Plain from 'slate-plain-serializer';
 import format from 'date-fns/format';
 import { NextSeo } from 'next-seo';
+import readingTime from 'reading-time';
 import { Story, SettingsFile } from '../../../types';
 import { Container } from '../../../components';
 import { sigleConfig } from '../../../config';
