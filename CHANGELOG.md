@@ -1,3 +1,7 @@
+## December 19, 2020
+
+- Add reading time to the story page.
+
 ## December 5, 2020
 
 - Style improvements for the public pages, better experience for the readers.

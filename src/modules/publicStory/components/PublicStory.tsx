@@ -5,8 +5,10 @@ import styled, { css, createGlobalStyle } from 'styled-components';
 import tw from 'twin.macro';
 import { Value } from 'slate';
 import Html from 'slate-html-serializer';
+import Plain from 'slate-plain-serializer';
 import format from 'date-fns/format';
 import { NextSeo } from 'next-seo';
+import readingTime from 'reading-time';
 import { Story, SettingsFile } from '../../../types';
 import { Container } from '../../../components';
 import { sigleConfig } from '../../../config';
@@ -188,6 +190,10 @@ export const PublicStory = ({ story, settings }: PublicStoryProps) => {
   const seoTitle = story.metaTitle || `${story.title} | Sigle`;
   const seoDescription = story.metaDescription;
 
+  const storyReadingTime = story.content
+    ? readingTime(Plain.serialize(Value.fromJSON(story.content))).text
+    : undefined;
+
   return (
     <React.Fragment>
       <NextSeo
@@ -225,7 +231,7 @@ export const PublicStory = ({ story, settings }: PublicStoryProps) => {
       <StyledContainer hasCover={!!story.coverImage}>
         <Title className="sigle-title">{story.title}</Title>
         <StoryDate className="sigle-date">
-          {format(story.createdAt, 'dd MMMM yyyy')}
+          {format(story.createdAt, 'dd MMMM yyyy')} • {storyReadingTime}
         </StoryDate>
         {story.coverImage && (
           <Cover>

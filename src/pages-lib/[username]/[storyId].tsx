@@ -10,8 +10,8 @@ import { Story, SettingsFile } from '../../types';
 interface PublicStoryPageProps {
   statusCode: number | boolean;
   errorMessage?: string | null;
-  file: Story;
-  settings: SettingsFile;
+  file: Story | null;
+  settings: SettingsFile | null;
 }
 
 export const PublicStoryPage: NextPage<PublicStoryPageProps> = ({
@@ -24,10 +24,13 @@ export const PublicStoryPage: NextPage<PublicStoryPageProps> = ({
     return <Error statusCode={statusCode} errorMessage={errorMessage} />;
   }
 
-  return <PublicStory story={file} settings={settings} />;
+  return <PublicStory story={file!} settings={settings!} />;
 };
 
-const fetchPublicStory = async (bucketUrl: string, storyId: string) => {
+const fetchPublicStory = async (
+  bucketUrl: string,
+  storyId: string
+): Promise<{ file: Story; statusCode: false | number }> => {
   let file;
   let statusCode: false | number = false;
   const data = await fetch(`${bucketUrl}${storyId}.json`);
@@ -39,7 +42,9 @@ const fetchPublicStory = async (bucketUrl: string, storyId: string) => {
   return { file, statusCode };
 };
 
-const fetchSettings = async (bucketUrl: string) => {
+const fetchSettings = async (
+  bucketUrl: string
+): Promise<{ file: SettingsFile; statusCode: false | number }> => {
   let file;
   let statusCode: false | number = false;
   const data = await fetch(`${bucketUrl}settings.json`);
@@ -61,8 +66,8 @@ export const getServerSideProps: GetServerSideProps<PublicStoryPageProps> = asyn
 }) => {
   const username = params?.username as string;
   const storyId = params?.storyId as string;
-  let file = null;
-  let settings = null;
+  let file: Story | null = null;
+  let settings: SettingsFile | null = null;
   let statusCode: boolean | number = false;
   let errorMessage: string | null = null;
   let userProfile;

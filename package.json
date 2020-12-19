@@ -71,6 +71,7 @@
     "react-icons": "4.1.0",
     "react-spring": "8.0.27",
     "react-toastify": "6.2.0",
+    "reading-time": "1.2.1",
     "slate": "0.47.9",
     "slate-html-serializer": "0.8.11",
     "slate-plain-serializer": "0.7.11",
