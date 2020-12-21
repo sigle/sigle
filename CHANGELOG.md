@@ -1,4 +1,4 @@
-## December 19, 2020
+## December 21, 2020
 
 - Add reading time to the story page.
 
