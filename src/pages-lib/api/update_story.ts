@@ -76,6 +76,15 @@ export const updateStory: NextApiHandler = async (req, res) => {
           data: latestStoryData,
         });
       }
+    } else {
+      Sentry.withScope((scope) => {
+        scope.setExtras({
+          username,
+          storyId,
+          httpStatus: data.status,
+        });
+        Sentry.captureException('[update_story] Failed to get gaia object');
+      });
     }
   }
 
