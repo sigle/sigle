@@ -2,10 +2,13 @@ import React from 'react';
 import { GetServerSideProps, NextPage } from 'next';
 import { lookupProfile } from 'blockstack';
 import * as Sentry from '@sentry/node';
+import { GraphQLClient } from 'graphql-request';
+import fetch from 'node-fetch';
 import Error from '../../pages/_error';
 import { PublicStory } from '../../modules/publicStory';
 import { sigleConfig } from '../../config';
 import { Story, SettingsFile } from '../../types';
+import { getSdk } from '../../generated/graphql';
 
 interface PublicStoryPageProps {
   statusCode: number | boolean;
@@ -66,11 +69,25 @@ export const getServerSideProps: GetServerSideProps<PublicStoryPageProps> = asyn
 }) => {
   const username = params?.username as string;
   const storyId = params?.storyId as string;
+
+  const client = new GraphQLClient('https://graphql.fauna.com/graphql', {
+    headers: {
+      Authorization: `Bearer ${sigleConfig.faunaSecret}`,
+    },
+  });
+  const sdk = getSdk(client);
+  const data = await sdk.findUserStory({ username, id: storyId });
+
+  // If story is found in indexer we can serve it directly
+  if (data) {
+    // TODO return the data so it can be rendered directly
+  }
+
   let file: Story | null = null;
   let settings: SettingsFile | null = null;
   let statusCode: boolean | number = false;
   let errorMessage: string | null = null;
-  let userProfile;
+  let userProfile: undefined | { apps?: Record<string, string> };
   try {
     userProfile = await lookupProfile(username);
   } catch (error) {
@@ -98,7 +115,7 @@ export const getServerSideProps: GetServerSideProps<PublicStoryPageProps> = asyn
     ? 'http://localhost:3000'
     : sigleConfig.appUrl;
 
-  const bucketUrl = userProfile && userProfile.apps && userProfile.apps[appUrl];
+  const bucketUrl = userProfile?.apps?.[appUrl];
   // If the user already used the app we try to get the public list
   if (bucketUrl) {
     const [dataPublicStory, dataSettings] = await Promise.all([
@@ -119,6 +136,19 @@ export const getServerSideProps: GetServerSideProps<PublicStoryPageProps> = asyn
   // If statusCode is not false we set the http response code
   if (statusCode && res) {
     res.statusCode = statusCode as number;
+  }
+
+  // If story is found we start a task to add it to the indexer
+  if (file) {
+    // No need to await here as the task can be done in background
+    fetch(`${sigleConfig.appUrl}/api/update_story`, {
+      method: 'POST',
+      body: JSON.stringify({
+        username,
+        storyId,
+      }),
+      headers: { 'Content-Type': 'application/json' },
+    });
   }
 
   return { props: { statusCode, errorMessage, file, settings } };

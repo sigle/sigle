@@ -80,6 +80,59 @@ export type Story = {
   _ts: Scalars['Long'];
 };
 
+export type CreateUserStoryMutationVariables = Exact<{
+  data: StoryInput;
+}>;
+
+export type CreateUserStoryMutation = { __typename?: 'Mutation' } & {
+  createStory: { __typename?: 'Story' } & Pick<Story, '_id'>;
+};
+
+export type FindUserStoryQueryVariables = Exact<{
+  id: Scalars['ID'];
+  username: Scalars['String'];
+}>;
+
+export type FindUserStoryQuery = { __typename?: 'Query' } & {
+  userStory?: Maybe<
+    { __typename?: 'Story' } & Pick<Story, '_id' | 'id' | 'username' | 'title'>
+  >;
+};
+
+export type UpdateUserStoryMutationVariables = Exact<{
+  id: Scalars['ID'];
+  data: StoryInput;
+}>;
+
+export type UpdateUserStoryMutation = { __typename?: 'Mutation' } & {
+  updateStory?: Maybe<{ __typename?: 'Story' } & Pick<Story, '_id'>>;
+};
+
+export const CreateUserStoryDocument = gql`
+  mutation createUserStory($data: StoryInput!) {
+    createStory(data: $data) {
+      _id
+    }
+  }
+`;
+export const FindUserStoryDocument = gql`
+  query findUserStory($id: ID!, $username: String!) {
+    userStory(id: $id, username: $username) {
+      _id
+      id
+      username
+      title
+    }
+  }
+`;
+export const UpdateUserStoryDocument = gql`
+  mutation updateUserStory($id: ID!, $data: StoryInput!) {
+    updateStory(id: $id, data: $data) {
+      _id
+    }
+  }
+`;
+
 export type SdkFunctionWrapper = <T>(action: () => Promise<T>) => Promise<T>;
 
 const defaultWrapper: SdkFunctionWrapper = (sdkFunction) => sdkFunction();
@@ -87,6 +140,37 @@ export function getSdk(
   client: GraphQLClient,
   withWrapper: SdkFunctionWrapper = defaultWrapper
 ) {
-  return {};
+  return {
+    createUserStory(
+      variables: CreateUserStoryMutationVariables
+    ): Promise<CreateUserStoryMutation> {
+      return withWrapper(() =>
+        client.request<CreateUserStoryMutation>(
+          print(CreateUserStoryDocument),
+          variables
+        )
+      );
+    },
+    findUserStory(
+      variables: FindUserStoryQueryVariables
+    ): Promise<FindUserStoryQuery> {
+      return withWrapper(() =>
+        client.request<FindUserStoryQuery>(
+          print(FindUserStoryDocument),
+          variables
+        )
+      );
+    },
+    updateUserStory(
+      variables: UpdateUserStoryMutationVariables
+    ): Promise<UpdateUserStoryMutation> {
+      return withWrapper(() =>
+        client.request<UpdateUserStoryMutation>(
+          print(UpdateUserStoryDocument),
+          variables
+        )
+      );
+    },
+  };
 }
 export type Sdk = ReturnType<typeof getSdk>;

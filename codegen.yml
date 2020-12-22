@@ -2,6 +2,7 @@ schema:
   - https://graphql.fauna.com/graphql:
       headers:
         Authorization: Bearer ${FAUNA_SECRET}
+documents: ./src/**/*.graphql
 generates:
   ./src/generated/graphql.ts:
     plugins:

@@ -1,0 +1,5 @@
+mutation updateUserStory($id: ID!, $data: StoryInput!) {
+  updateStory(id: $id, data: $data) {
+    _id
+  }
+}
