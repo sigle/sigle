@@ -4,7 +4,7 @@ import { GraphQLClient } from 'graphql-request';
 import * as Sentry from '@sentry/node';
 import { sigleConfig } from '../../config';
 import { Story } from '../../types';
-import { getSdk } from '../../generated/graphql';
+import { getSdk, StoryInput } from '../../generated/graphql';
 
 /**
  * Update the indexer for a user story.
@@ -56,7 +56,18 @@ export const updateStory: NextApiHandler = async (req, res) => {
     if (data.status === 200) {
       file = await data.json();
 
-      const latestStoryData = { id: storyId, username, title: file.title };
+      // Object that will replace the current db value
+      const latestStoryData: StoryInput = {
+        id: storyId,
+        username,
+        title: file.title,
+        coverImage: file.coverImage,
+        metaTitle: file.metaTitle,
+        metaDescription: file.metaDescription,
+        featured: file.featured,
+        createdAt: new Date(file.createdAt),
+        updatedAt: new Date(file.updatedAt),
+      };
 
       const client = new GraphQLClient('https://graphql.fauna.com/graphql', {
         headers: {

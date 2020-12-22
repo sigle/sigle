@@ -50,13 +50,18 @@ export type StoryInput = {
   id: Scalars['ID'];
   username: Scalars['String'];
   title: Scalars['String'];
+  coverImage?: Maybe<Scalars['String']>;
+  metaTitle?: Maybe<Scalars['String']>;
+  metaDescription?: Maybe<Scalars['String']>;
+  featured?: Maybe<Scalars['Boolean']>;
+  createdAt: Scalars['Time'];
+  updatedAt: Scalars['Time'];
 };
 
 export type Query = {
   __typename?: 'Query';
   /** Find a document from the collection of 'Story' by its id. */
   findStoryByID?: Maybe<Story>;
-  story?: Maybe<Story>;
   userStory?: Maybe<Story>;
 };
 
@@ -71,10 +76,16 @@ export type QueryUserStoryArgs = {
 
 export type Story = {
   __typename?: 'Story';
+  updatedAt: Scalars['Time'];
+  metaDescription?: Maybe<Scalars['String']>;
   username: Scalars['String'];
   /** The document's ID. */
   _id: Scalars['ID'];
+  featured?: Maybe<Scalars['Boolean']>;
+  metaTitle?: Maybe<Scalars['String']>;
+  coverImage?: Maybe<Scalars['String']>;
   id: Scalars['ID'];
+  createdAt: Scalars['Time'];
   title: Scalars['String'];
   /** The document's timestamp. */
   _ts: Scalars['Long'];

@@ -2,6 +2,12 @@ type Story {
   id: ID!
   username: String!
   title: String!
+  coverImage: String
+  metaTitle: String
+  metaDescription: String
+  featured: Boolean
+  createdAt: Time!
+  updatedAt: Time!
 }
 
 type Query {
