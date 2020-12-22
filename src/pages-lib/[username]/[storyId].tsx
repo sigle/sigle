@@ -2,13 +2,11 @@ import React from 'react';
 import { GetServerSideProps, NextPage } from 'next';
 import { lookupProfile } from 'blockstack';
 import * as Sentry from '@sentry/node';
-import { GraphQLClient } from 'graphql-request';
 import fetch from 'node-fetch';
 import Error from '../../pages/_error';
 import { PublicStory } from '../../modules/publicStory';
 import { sigleConfig } from '../../config';
 import { Story, SettingsFile } from '../../types';
-import { getSdk } from '../../generated/graphql';
 
 interface PublicStoryPageProps {
   statusCode: number | boolean;
@@ -70,19 +68,6 @@ export const getServerSideProps: GetServerSideProps<PublicStoryPageProps> = asyn
   const username = params?.username as string;
   const storyId = params?.storyId as string;
 
-  const client = new GraphQLClient('https://graphql.fauna.com/graphql', {
-    headers: {
-      Authorization: `Bearer ${sigleConfig.faunaSecret}`,
-    },
-  });
-  const sdk = getSdk(client);
-  const data = await sdk.findUserStory({ username, id: storyId });
-
-  // If story is found in indexer we can serve it directly
-  if (data) {
-    // TODO return the data so it can be rendered directly
-  }
-
   let file: Story | null = null;
   let settings: SettingsFile | null = null;
   let statusCode: boolean | number = false;
@@ -139,7 +124,7 @@ export const getServerSideProps: GetServerSideProps<PublicStoryPageProps> = asyn
   }
 
   // If story is found we start a task to add it to the indexer
-  if (file && !data) {
+  if (file) {
     // No need to await here as the task can be done in background
     fetch(`${sigleConfig.appUrl}/api/update_story`, {
       method: 'POST',
