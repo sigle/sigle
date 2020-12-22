@@ -56,6 +56,16 @@ module.exports = withPlugins(
             config.resolve.alias['@sentry/node'] = '@sentry/browser';
           }
 
+          // Define an environment variable so source code can check whether or not
+          // it's running on the server so we can correctly initialize Sentry
+          config.plugins.push(
+            new options.webpack.DefinePlugin({
+              'process.env.NEXT_IS_SERVER': JSON.stringify(
+                options.isServer.toString()
+              ),
+            })
+          );
+
           // When all the Sentry configuration env variables are available/configured
           // The Sentry webpack plugin gets pushed to the webpack plugins to build
           // and upload the source maps to sentry.
@@ -88,8 +98,12 @@ module.exports = withPlugins(
   {
     env: {
       APP_URL: process.env.APP_URL,
-      NEXT_PUBLIC_SENTRY_DSN: process.env.NEXT_PUBLIC_SENTRY_DSN,
       FATHOM_SITE_ID: process.env.FATHOM_SITE_ID,
+      // Make the COMMIT_SHA available to the client so that Sentry events can be
+      // marked for the release they belong to. It may be undefined if running
+      // outside of Vercel
+      NEXT_PUBLIC_COMMIT_SHA: COMMIT_SHA,
+      NEXT_PUBLIC_SENTRY_DSN: process.env.NEXT_PUBLIC_SENTRY_DSN,
     },
     webpack: (config, { isServer }) => {
       // We want to report only for the client bundle

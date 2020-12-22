@@ -52,6 +52,7 @@ export const MyError = ({
     // https://github.com/vercel/next.js/issues/8592. As a workaround, we pass
     // err via _app.js so it can be captured
     Sentry.captureException(err);
+    // Flushing is not required in this case as it only happens on the client
   }
 
   return (
@@ -74,16 +75,14 @@ export const MyError = ({
   );
 };
 
-MyError.getInitialProps = async ({ res, err, asPath }: NextPageContext) => {
-  const errorInitialProps = await NextErrorComponent.getInitialProps({
-    res,
-    err,
-  } as any);
+MyError.getInitialProps = async (props: NextPageContext) => {
+  const { res, err, asPath } = props;
+  const errorInitialProps: ErrorProps & {
+    hasGetInitialPropsRun?: boolean;
+  } = await NextErrorComponent.getInitialProps(props);
 
   // Workaround for https://github.com/vercel/next.js/issues/8592, mark when
   // getInitialProps has run
-  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-  // @ts-ignore
   errorInitialProps.hasGetInitialPropsRun = true;
 
   // Running on the server, the response object (`res`) is available.
@@ -105,7 +104,11 @@ MyError.getInitialProps = async ({ res, err, asPath }: NextPageContext) => {
   }
   if (err) {
     Sentry.captureException(err);
+
+    // Flushing before returning is necessary if deploying to Vercel, see
+    // https://vercel.com/docs/platform/limits#streaming-responses
     await Sentry.flush(2000);
+
     return errorInitialProps;
   }
 
