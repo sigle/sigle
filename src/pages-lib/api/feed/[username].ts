@@ -5,6 +5,9 @@ import * as Sentry from '@sentry/node';
 import { SettingsFile, StoryFile } from '../../../types';
 import { migrationSettings } from '../../../utils/migrations/settings';
 import { migrationStories } from '../../../utils/migrations/stories';
+import { initSentry } from '../../../utils/sentry';
+
+initSentry();
 
 blockstackConfig.logLevel = 'info';
 

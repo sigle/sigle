@@ -2,15 +2,12 @@ import React, { useEffect } from 'react';
 import App from 'next/app';
 import Router from 'next/router';
 import Head from 'next/head';
-import getConfig from 'next/config';
 import * as Fathom from 'fathom-client';
 import { createGlobalStyle, keyframes } from 'styled-components';
 import tw from 'twin.macro';
 import { DefaultSeo } from 'next-seo';
 import { ToastContainer } from 'react-toastify';
 import { config as blockstackConfig } from 'blockstack';
-import * as Sentry from '@sentry/node';
-import { RewriteFrames } from '@sentry/integrations';
 import NProgress from 'nprogress';
 import 'nprogress/nprogress.css';
 // TODO add tippy.js only on the pages that are using it
@@ -26,29 +23,11 @@ import '../styles/index.css';
 import { sigleConfig } from '../config';
 import { colors } from '../utils/colors';
 import { AuthProvider } from '../modules/auth/AuthContext';
+import { initSentry } from '../utils/sentry';
 
 blockstackConfig.logLevel = 'info';
 
-/**
- * Sentry integration for next.js
- * https://github.com/vercel/next.js/blob/canary/examples/with-sentry/pages/_app.js
- */
-if (sigleConfig.sentryDsn) {
-  const config = getConfig();
-  const distDir = `${config.serverRuntimeConfig.rootDir}/.next`;
-  Sentry.init({
-    enabled: sigleConfig.env === 'production',
-    integrations: [
-      new RewriteFrames({
-        iteratee: (frame: any) => {
-          frame.filename = frame.filename.replace(distDir, 'app:///_next');
-          return frame;
-        },
-      }),
-    ],
-    dsn: sigleConfig.sentryDsn,
-  });
-}
+initSentry();
 
 /**
  * Fathom
