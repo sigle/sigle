@@ -139,7 +139,7 @@ export const getServerSideProps: GetServerSideProps<PublicStoryPageProps> = asyn
   }
 
   // If story is found we start a task to add it to the indexer
-  if (file) {
+  if (file && !data) {
     // No need to await here as the task can be done in background
     fetch(`${sigleConfig.appUrl}/api/update_story`, {
       method: 'POST',
