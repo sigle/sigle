@@ -3,3 +3,4 @@ node_modules
 bundles
 .vercel
 coverage
+.env.local

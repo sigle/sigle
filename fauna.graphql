@@ -1,0 +1,9 @@
+type Story {
+  id: ID!
+  username: String!
+  title: String!
+}
+
+type Query {
+  userStory(id: ID!, username: String!): Story
+}
