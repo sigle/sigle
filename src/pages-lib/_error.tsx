@@ -76,7 +76,7 @@ export const MyError = ({
 };
 
 MyError.getInitialProps = async (props: NextPageContext) => {
-  const { err, asPath } = props;
+  const { res, err, asPath } = props;
   const errorInitialProps: ErrorProps & {
     hasGetInitialPropsRun?: boolean;
   } = await NextErrorComponent.getInitialProps(props);
@@ -98,6 +98,10 @@ MyError.getInitialProps = async (props: NextPageContext) => {
   //    Boundary. Read more about what types of exceptions are caught by Error
   //    Boundaries: https://reactjs.org/docs/error-boundaries.html
 
+  if (res?.statusCode === 404) {
+    // Opinionated: do not record an exception in Sentry for 404
+    return { statusCode: 404 };
+  }
   if (err) {
     Sentry.captureException(err);
 
