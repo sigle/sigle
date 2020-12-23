@@ -3,12 +3,24 @@
  */
 // http://yurigor.com/how-to-make-http-request-from-node-js-without-waiting-for-response/
 import https from 'https';
+import fetch from 'node-fetch';
 
 export const delegateRequest = async (
   host: string,
   path: string,
   data: Record<string, any>
 ) => {
+  // When running locally the https.request is failing so using node-fetch as a workaround for now.
+  if (host.startsWith('localhost')) {
+    // No await as we do not want to block the function
+    fetch(`http://${host}${path}`, {
+      method: 'POST',
+      body: JSON.stringify(data),
+      headers: { 'Content-Type': 'application/json' },
+    });
+    return;
+  }
+
   const message = JSON.stringify(data);
   const options = {
     hostname: host,
