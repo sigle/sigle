@@ -9,7 +9,6 @@ export const delegateRequest = async (
   path: string,
   data: Record<string, any>
 ) => {
-  console.log({ host, path, data });
   const message = JSON.stringify(data);
   var options = {
     hostname: host,
@@ -28,7 +27,6 @@ export const delegateRequest = async (
     });
     req.write(message);
     req.end(() => {
-      console.log("NOW it's not λ1's problem anymore.");
       resolve();
     });
   });
