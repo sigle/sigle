@@ -1,3 +1,4 @@
+/* eslint-disable */
 import { GraphQLClient } from 'graphql-request';
 import { print } from 'graphql';
 import gql from 'graphql-tag';

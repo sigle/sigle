@@ -6,6 +6,8 @@ documents: ./src/**/*.graphql
 generates:
   ./src/generated/graphql.ts:
     plugins:
+      - add:
+          content: '/* eslint-disable */'
       - typescript
       - typescript-operations
       - typescript-graphql-request

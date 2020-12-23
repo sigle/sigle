@@ -86,6 +86,7 @@
   },
   "devDependencies": {
     "@bundle-analyzer/webpack-plugin": "0.5.1",
+    "@graphql-codegen/add": "2.0.2",
     "@graphql-codegen/cli": "1.19.4",
     "@graphql-codegen/typescript": "1.19.0",
     "@graphql-codegen/typescript-graphql-request": "2.0.3",
