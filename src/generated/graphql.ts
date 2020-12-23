@@ -51,6 +51,7 @@ export type StoryInput = {
   id: Scalars['ID'];
   username: Scalars['String'];
   title: Scalars['String'];
+  content: Scalars['String'];
   coverImage?: Maybe<Scalars['String']>;
   metaTitle?: Maybe<Scalars['String']>;
   metaDescription?: Maybe<Scalars['String']>;
@@ -87,6 +88,7 @@ export type Story = {
   coverImage?: Maybe<Scalars['String']>;
   id: Scalars['ID'];
   createdAt: Scalars['Time'];
+  content: Scalars['String'];
   title: Scalars['String'];
   /** The document's timestamp. */
   _ts: Scalars['Long'];

@@ -59,6 +59,8 @@ export const updateStory: NextApiHandler = async (req, res) => {
         id: storyId,
         username,
         title: file.title,
+        content: file.content ? JSON.stringify(file.content) : '',
+        // TODO time to read
         coverImage: file.coverImage,
         metaTitle: file.metaTitle,
         metaDescription: file.metaDescription,
@@ -74,16 +76,27 @@ export const updateStory: NextApiHandler = async (req, res) => {
       });
       const sdk = getSdk(client);
 
-      const dbUserStory = await sdk.findUserStory({ id: storyId, username });
-      if (dbUserStory.userStory) {
-        await sdk.updateUserStory({
-          id: dbUserStory.userStory._id,
-          data: latestStoryData,
+      try {
+        const dbUserStory = await sdk.findUserStory({ id: storyId, username });
+        if (dbUserStory.userStory) {
+          await sdk.updateUserStory({
+            id: dbUserStory.userStory._id,
+            data: latestStoryData,
+          });
+        } else {
+          await sdk.createUserStory({
+            data: latestStoryData,
+          });
+        }
+      } catch (error) {
+        Sentry.withScope((scope) => {
+          scope.setExtras({
+            username,
+            storyId,
+          });
+          Sentry.captureException(error);
         });
-      } else {
-        await sdk.createUserStory({
-          data: latestStoryData,
-        });
+        throw error;
       }
     } else {
       Sentry.withScope((scope) => {
@@ -92,10 +105,12 @@ export const updateStory: NextApiHandler = async (req, res) => {
           storyId,
           httpStatus: data.status,
         });
-        Sentry.captureException('[update_story] Failed to get gaia object');
+        Sentry.captureMessage('[update_story] Failed to get gaia object');
       });
     }
   }
 
-  res.json(true);
+  res.statusCode = 200;
+  res.setHeader('Content-Type', 'application/json');
+  res.end(JSON.stringify({ success: true }));
 };
