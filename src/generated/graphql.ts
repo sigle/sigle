@@ -52,6 +52,7 @@ export type StoryInput = {
   username: Scalars['String'];
   title: Scalars['String'];
   content: Scalars['String'];
+  readingTime: Scalars['Int'];
   coverImage?: Maybe<Scalars['String']>;
   metaTitle?: Maybe<Scalars['String']>;
   metaDescription?: Maybe<Scalars['String']>;
@@ -79,6 +80,7 @@ export type QueryUserStoryArgs = {
 export type Story = {
   __typename?: 'Story';
   updatedAt: Scalars['Time'];
+  readingTime: Scalars['Int'];
   metaDescription?: Maybe<Scalars['String']>;
   username: Scalars['String'];
   /** The document's ID. */

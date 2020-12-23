@@ -1,6 +1,9 @@
 import { NextApiHandler } from 'next';
 import { lookupProfile } from 'blockstack';
 import { GraphQLClient } from 'graphql-request';
+import readingTime from 'reading-time';
+import { Value } from 'slate';
+import Plain from 'slate-plain-serializer';
 import * as Sentry from '@sentry/node';
 import { sigleConfig } from '../../config';
 import { Story } from '../../types';
@@ -60,7 +63,12 @@ export const updateStory: NextApiHandler = async (req, res) => {
         username,
         title: file.title,
         content: file.content ? JSON.stringify(file.content) : '',
-        // TODO time to read
+        readingTime: file.content
+          ? // reading time minutes can contains decimals so we round it
+            Math.ceil(
+              readingTime(Plain.serialize(Value.fromJSON(file.content))).minutes
+            )
+          : 0,
         coverImage: file.coverImage,
         metaTitle: file.metaTitle,
         metaDescription: file.metaDescription,

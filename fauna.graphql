@@ -4,6 +4,7 @@ type Story {
   title: String!
   # JSON.stringify of the content
   content: String!
+  readingTime: Int!
   coverImage: String
   metaTitle: String
   metaDescription: String
