@@ -1,0 +1,35 @@
+/**
+ * Make a request without awaiting for the response
+ */
+// http://yurigor.com/how-to-make-http-request-from-node-js-without-waiting-for-response/
+import https from 'https';
+
+export const delegateRequest = async (
+  host: string,
+  path: string,
+  data: Record<string, any>
+) => {
+  console.log({ host, path, data });
+  const message = JSON.stringify(data);
+  var options = {
+    hostname: host,
+    method: 'POST',
+    path: path,
+    headers: {
+      'Content-Type': 'application/json',
+      'Content-Length': Buffer.byteLength(message),
+    },
+  };
+  await new Promise<void>((resolve, reject) => {
+    let req = https.request(options);
+    req.on('error', (e) => {
+      console.error(`problem with request: ${e.message}`);
+      reject(e);
+    });
+    req.write(message);
+    req.end(() => {
+      console.log("NOW it's not λ1's problem anymore.");
+      resolve();
+    });
+  });
+};

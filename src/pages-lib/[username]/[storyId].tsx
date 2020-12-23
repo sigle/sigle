@@ -5,8 +5,8 @@ import * as Sentry from '@sentry/node';
 import fetch from 'node-fetch';
 import Error from '../../pages/_error';
 import { PublicStory } from '../../modules/publicStory';
-import { sigleConfig } from '../../config';
 import { Story, SettingsFile } from '../../types';
+import { delegateRequest } from '../../utils/delegateRequest';
 
 interface PublicStoryPageProps {
   statusCode: number | boolean;
@@ -92,13 +92,11 @@ export const getServerSideProps: GetServerSideProps<PublicStoryPageProps> = asyn
     }
   }
 
-  // If deployed on vercel we want to get the deployment url to be able to test unmerged pr's
-  // If client side we use window.location.origin
-  const appUrl = req.headers['x-forwarded-host']
-    ? `${req.headers['x-forwarded-proto']}://${req.headers['x-forwarded-host']}`
-    : req.headers.host === 'localhost:3000'
-    ? 'http://localhost:3000'
-    : sigleConfig.appUrl;
+  const appHost =
+    (req.headers['x-forwarded-host'] as string) ||
+    (req.headers['host'] as string);
+  const appProto = (req.headers['x-forwarded-proto'] as string) || 'http';
+  const appUrl = `${appProto}://${appHost}`;
 
   const bucketUrl = userProfile?.apps?.[appUrl];
   // If the user already used the app we try to get the public list
@@ -125,14 +123,9 @@ export const getServerSideProps: GetServerSideProps<PublicStoryPageProps> = asyn
 
   // If story is found we start a task to add it to the indexer
   if (file) {
-    // No need to await here as the task can be done in background
-    await fetch(`${appUrl}/api/update_story`, {
-      method: 'POST',
-      body: JSON.stringify({
-        username,
-        storyId,
-      }),
-      headers: { 'Content-Type': 'application/json' },
+    await delegateRequest(appHost, '/api/update_story', {
+      username,
+      storyId,
     });
   }
 
