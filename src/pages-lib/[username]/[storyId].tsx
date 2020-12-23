@@ -126,7 +126,7 @@ export const getServerSideProps: GetServerSideProps<PublicStoryPageProps> = asyn
   // If story is found we start a task to add it to the indexer
   if (file) {
     // No need to await here as the task can be done in background
-    fetch(`${appUrl}/api/update_story`, {
+    await fetch(`${appUrl}/api/update_story`, {
       method: 'POST',
       body: JSON.stringify({
         username,
