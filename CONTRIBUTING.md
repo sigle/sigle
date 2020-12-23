@@ -26,6 +26,16 @@ Now you can run run the following command to install the dependencies:
 yarn install
 ```
 
+### Set up environment variables
+
+Copy the `env.local.example` file in this directory to `.env.local` (which will be ignored by Git) and setup each variable.
+
+```sh
+cp .env.local.example .env.local
+```
+
+### Run Next.js in development mode
+
 To start the project in development/watch mode run:
 
 ```sh

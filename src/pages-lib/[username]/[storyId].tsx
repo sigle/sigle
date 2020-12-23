@@ -2,10 +2,11 @@ import React from 'react';
 import { GetServerSideProps, NextPage } from 'next';
 import { lookupProfile } from 'blockstack';
 import * as Sentry from '@sentry/node';
+import fetch from 'node-fetch';
 import Error from '../../pages/_error';
 import { PublicStory } from '../../modules/publicStory';
-import { sigleConfig } from '../../config';
 import { Story, SettingsFile } from '../../types';
+import { delegateRequest } from '../../utils/delegateRequest';
 
 interface PublicStoryPageProps {
   statusCode: number | boolean;
@@ -66,11 +67,12 @@ export const getServerSideProps: GetServerSideProps<PublicStoryPageProps> = asyn
 }) => {
   const username = params?.username as string;
   const storyId = params?.storyId as string;
+
   let file: Story | null = null;
   let settings: SettingsFile | null = null;
   let statusCode: boolean | number = false;
   let errorMessage: string | null = null;
-  let userProfile;
+  let userProfile: undefined | { apps?: Record<string, string> };
   try {
     userProfile = await lookupProfile(username);
   } catch (error) {
@@ -90,15 +92,13 @@ export const getServerSideProps: GetServerSideProps<PublicStoryPageProps> = asyn
     }
   }
 
-  // If deployed on vercel we want to get the deployment url to be able to test unmerged pr's
-  // If client side we use window.location.origin
-  const appUrl = req.headers['x-forwarded-host']
-    ? `${req.headers['x-forwarded-proto']}://${req.headers['x-forwarded-host']}`
-    : req.headers.host === 'localhost:3000'
-    ? 'http://localhost:3000'
-    : sigleConfig.appUrl;
+  const appHost =
+    (req.headers['x-forwarded-host'] as string) ||
+    (req.headers['host'] as string);
+  const appProto = (req.headers['x-forwarded-proto'] as string) || 'http';
+  const appUrl = `${appProto}://${appHost}`;
 
-  const bucketUrl = userProfile && userProfile.apps && userProfile.apps[appUrl];
+  const bucketUrl = userProfile?.apps?.[appUrl];
   // If the user already used the app we try to get the public list
   if (bucketUrl) {
     const [dataPublicStory, dataSettings] = await Promise.all([
@@ -119,6 +119,14 @@ export const getServerSideProps: GetServerSideProps<PublicStoryPageProps> = asyn
   // If statusCode is not false we set the http response code
   if (statusCode && res) {
     res.statusCode = statusCode as number;
+  }
+
+  // If story is found we start a task to add it to the indexer
+  if (file) {
+    await delegateRequest(appHost, '/api/update_story', {
+      username,
+      storyId,
+    });
   }
 
   return { props: { statusCode, errorMessage, file, settings } };
