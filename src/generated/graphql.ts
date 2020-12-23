@@ -158,32 +158,38 @@ export function getSdk(
 ) {
   return {
     createUserStory(
-      variables: CreateUserStoryMutationVariables
+      variables: CreateUserStoryMutationVariables,
+      requestHeaders?: Headers
     ): Promise<CreateUserStoryMutation> {
       return withWrapper(() =>
         client.request<CreateUserStoryMutation>(
           print(CreateUserStoryDocument),
-          variables
+          variables,
+          requestHeaders
         )
       );
     },
     findUserStory(
-      variables: FindUserStoryQueryVariables
+      variables: FindUserStoryQueryVariables,
+      requestHeaders?: Headers
     ): Promise<FindUserStoryQuery> {
       return withWrapper(() =>
         client.request<FindUserStoryQuery>(
           print(FindUserStoryDocument),
-          variables
+          variables,
+          requestHeaders
         )
       );
     },
     updateUserStory(
-      variables: UpdateUserStoryMutationVariables
+      variables: UpdateUserStoryMutationVariables,
+      requestHeaders?: Headers
     ): Promise<UpdateUserStoryMutation> {
       return withWrapper(() =>
         client.request<UpdateUserStoryMutation>(
           print(UpdateUserStoryDocument),
-          variables
+          variables,
+          requestHeaders
         )
       );
     },
