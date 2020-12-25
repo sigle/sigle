@@ -1,0 +1,26 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model Story {
+  id              Int     @id @default(autoincrement())
+  storyId         String
+  username        String
+  title           String
+  content         String
+  readingTime     Int
+  coverImage      String?
+  metaTitle       String?
+  metaDescription String?
+  featured        Boolean
+  createdAt       DateTime
+  updatedAt       DateTime
+}

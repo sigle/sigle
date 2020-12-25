@@ -1,13 +1,14 @@
 import { NextApiHandler } from 'next';
 import { lookupProfile } from 'blockstack';
-import { GraphQLClient } from 'graphql-request';
 import readingTime from 'reading-time';
 import { Value } from 'slate';
 import Plain from 'slate-plain-serializer';
+import { PrismaClient, Story as PrismaStory } from '@prisma/client';
 import * as Sentry from '@sentry/node';
-import { sigleConfig } from '../../config';
 import { Story } from '../../types';
-import { getSdk, StoryInput } from '../../generated/graphql';
+
+// TODO move to a separate file to share?
+const prismaClient = new PrismaClient();
 
 /**
  * Update the indexer for a user story.
@@ -15,9 +16,8 @@ import { getSdk, StoryInput } from '../../generated/graphql';
  */
 export const updateStory: NextApiHandler = async (req, res) => {
   if (req.method !== 'POST') {
-    res.statusCode = 200;
-    res.setHeader('Content-Type', 'application/json');
-    res.end(JSON.stringify({ success: false }));
+    res.statusCode = 400;
+    res.json({ success: false });
     return;
   }
 
@@ -26,8 +26,7 @@ export const updateStory: NextApiHandler = async (req, res) => {
 
   if (!username || !storyId) {
     res.statusCode = 400;
-    res.setHeader('Content-Type', 'application/json');
-    res.end(JSON.stringify({ success: false }));
+    res.json({ success: false });
     return;
   }
 
@@ -58,43 +57,37 @@ export const updateStory: NextApiHandler = async (req, res) => {
       file = await data.json();
 
       // Object that will replace the current db value
-      const latestStoryData: StoryInput = {
-        id: storyId,
+      const latestStoryData: Omit<PrismaStory, 'id'> = {
+        storyId,
         username,
         title: file.title,
         content: file.content ? JSON.stringify(file.content) : '',
         readingTime: file.content
-          ? // reading time minutes can contains decimals so we round it
+          ? // Reading time minutes can contains decimals so we round it
             Math.ceil(
               readingTime(Plain.serialize(Value.fromJSON(file.content))).minutes
             )
           : 0,
-        coverImage: file.coverImage,
-        metaTitle: file.metaTitle,
-        metaDescription: file.metaDescription,
-        featured: file.featured,
+        coverImage: file.coverImage ?? null,
+        metaTitle: file.metaTitle ?? null,
+        metaDescription: file.metaDescription ?? null,
+        featured: file.featured ?? false,
         createdAt: new Date(file.createdAt),
         updatedAt: new Date(file.updatedAt),
       };
 
-      const client = new GraphQLClient('https://graphql.fauna.com/graphql', {
-        headers: {
-          Authorization: `Bearer ${sigleConfig.faunaSecret}`,
-        },
+      const dbStory = await prismaClient.story.findFirst({
+        where: { storyId, username },
       });
-      const sdk = getSdk(client);
 
       try {
-        const dbUserStory = await sdk.findUserStory({ id: storyId, username });
-        if (dbUserStory.userStory) {
-          await sdk.updateUserStory({
-            id: dbUserStory.userStory._id,
+        if (dbStory) {
+          await prismaClient.story.update({
+            where: { id: dbStory.id },
             data: latestStoryData,
           });
         } else {
-          await sdk.createUserStory({
-            data: latestStoryData,
-          });
+          await prismaClient.story.create({ data: latestStoryData });
         }
       } catch (error) {
         Sentry.withScope((scope) => {
@@ -118,7 +111,5 @@ export const updateStory: NextApiHandler = async (req, res) => {
     }
   }
 
-  res.statusCode = 200;
-  res.setHeader('Content-Type', 'application/json');
-  res.end(JSON.stringify({ success: true }));
+  res.json({ success: true });
 };
