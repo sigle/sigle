@@ -7,8 +7,7 @@ import { prismaClient } from '../../utils/prisma';
  */
 export const deleteStory: NextApiHandler = async (req, res) => {
   if (req.method !== 'POST') {
-    res.statusCode = 400;
-    res.json({ success: false });
+    res.status(400).json({ success: false });
     return;
   }
 
@@ -16,8 +15,7 @@ export const deleteStory: NextApiHandler = async (req, res) => {
   const storyId = req.body.storyId as string;
 
   if (!username || !storyId) {
-    res.statusCode = 400;
-    res.json({ success: false });
+    res.status(400).json({ success: false });
     return;
   }
 
