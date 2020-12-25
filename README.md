@@ -29,7 +29,6 @@ Here is a list of the big technologies we use:
 - [Next.js](https://nextjs.org/): React Framework
 - [Tailwind CSS](https://tailwindcss.com/): CSS Framework
 - [Slate](https://www.slatejs.org/): Text editor Framework
-- [Fauna](https://fauna.com/): Database used as an indexer
 
 ## Contributing
 

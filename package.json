@@ -9,7 +9,6 @@
     "test": "yarn test:lint && yarn test:only",
     "analyze": "ANALYZE=true next build",
     "prettier": "prettier --write '**/*.{js,ts,tsx,md,css}'",
-    "graphql:generate": "DOTENV_CONFIG_PATH=.env.local graphql-codegen --config codegen.yml -r dotenv/config",
     "test:only": "jest",
     "test:lint": "eslint 'src/**/*.{js,ts,tsx}'"
   },
@@ -60,8 +59,6 @@
     "fathom-client": "3.0.0",
     "feed": "4.2.1",
     "formik": "2.2.6",
-    "graphql": "15.4.0",
-    "graphql-request": "3.4.0",
     "immutable": "4.0.0-rc.12",
     "nanoid": "3.1.20",
     "next": "10.0.4",
@@ -87,11 +84,6 @@
   },
   "devDependencies": {
     "@bundle-analyzer/webpack-plugin": "0.5.1",
-    "@graphql-codegen/add": "2.0.2",
-    "@graphql-codegen/cli": "1.20.0",
-    "@graphql-codegen/typescript": "1.19.0",
-    "@graphql-codegen/typescript-graphql-request": "3.0.0",
-    "@graphql-codegen/typescript-operations": "1.17.13",
     "@next/bundle-analyzer": "10.0.4",
     "@prisma/cli": "2.13.1",
     "@sentry/webpack-plugin": "1.14.0",
