@@ -3,12 +3,10 @@ import { lookupProfile } from 'blockstack';
 import readingTime from 'reading-time';
 import { Value } from 'slate';
 import Plain from 'slate-plain-serializer';
-import { PrismaClient, Story as PrismaStory } from '@prisma/client';
+import { Story as PrismaStory } from '@prisma/client';
 import * as Sentry from '@sentry/node';
 import { Story } from '../../types';
-
-// TODO move to a separate file to share?
-const prismaClient = new PrismaClient();
+import { prismaClient } from '../../utils/prisma';
 
 /**
  * Update the indexer for a user story.
