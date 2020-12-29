@@ -3,6 +3,7 @@ application:
   name: 'sigle'
   project: 'sigle'
   organization: 'QoveryCommunity'
+  dockerfile: Dockerfile.production
 databases:
   - type: 'POSTGRESQL'
     name: 'sigle'
