@@ -1,0 +1,12 @@
+---
+application:
+  name: 'sigle'
+  project: 'sigle'
+  organization: 'QoveryCommunity'
+  dockerfile: Dockerfile
+routers:
+  - name: 'main-sigle'
+    routes:
+      - application_name: 'sigle'
+        paths:
+          - '/'
