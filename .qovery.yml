@@ -1,0 +1,15 @@
+---
+application:
+  name: 'sigle'
+  project: 'sigle'
+  organization: 'QoveryCommunity'
+databases:
+  - type: 'POSTGRESQL'
+    name: 'sigle'
+    version: '12'
+routers:
+  - name: 'main-sigle'
+    routes:
+      - application_name: 'sigle'
+        paths:
+          - '/'
