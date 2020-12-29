@@ -6,6 +6,11 @@ application:
   dockerfile: Dockerfile
 routers:
   - name: 'main-sigle'
+    custom_domains:
+      - branch: master
+        domain: dev.sigle.io
+      - branch: feature/qovery-setup
+        domain: dev.sigle.io
     routes:
       - application_name: 'sigle'
         paths:
