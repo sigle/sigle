@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "next dev",
     "start": "NODE_ENV=production node server.js",
-    "build": "next build",
+    "build": "prisma generate && next build",
     "test": "yarn test:lint && yarn test:only",
     "analyze": "ANALYZE=true next build",
     "prettier": "prettier --write '**/*.{js,ts,tsx,md,css}'",
