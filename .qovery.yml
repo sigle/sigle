@@ -8,9 +8,9 @@ routers:
   - name: 'main-sigle'
     custom_domains:
       - branch: master
-        domain: dev.sigle.io
+        domain: beta.sigle.io
       - branch: feature/qovery-setup
-        domain: dev.sigle.io
+        domain: beta.sigle.io
     routes:
       - application_name: 'sigle'
         paths:
