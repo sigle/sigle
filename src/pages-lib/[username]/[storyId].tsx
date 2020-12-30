@@ -92,6 +92,8 @@ export const getServerSideProps: GetServerSideProps<PublicStoryPageProps> = asyn
     }
   }
 
+  console.log(req.headers);
+
   const appHost =
     (req.headers['x-forwarded-host'] as string) ||
     (req.headers['host'] as string);
