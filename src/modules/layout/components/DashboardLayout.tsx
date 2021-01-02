@@ -5,12 +5,7 @@ import tw from 'twin.macro';
 import Link from 'next/link';
 import Div100vh from 'react-div-100vh';
 import { MdKeyboardArrowDown } from 'react-icons/md';
-import {
-  FaTwitter,
-  FaGithub,
-  FaTelegramPlane,
-  FaFacebookF,
-} from 'react-icons/fa';
+import { FaTwitter, FaGithub, FaFacebookF, FaDiscord } from 'react-icons/fa';
 import { userSession } from '../../../utils/blockstack';
 import { sigleConfig } from '../../../config';
 
@@ -218,8 +213,8 @@ export const DashboardSidebar = () => {
             <StyledLink href={sigleConfig.facebookUrl} target="_blank">
               <FaFacebookF size={iconSize} className="icon" />
             </StyledLink>
-            <StyledLink href={sigleConfig.telegramUrl} target="_blank">
-              <FaTelegramPlane size={iconSize} className="icon" />
+            <StyledLink href={sigleConfig.discordUrl} target="_blank">
+              <FaDiscord size={iconSize} className="icon" />
             </StyledLink>
             <StyledLink href={sigleConfig.githubUrl} target="_blank">
               <FaGithub size={iconSize} className="icon" />

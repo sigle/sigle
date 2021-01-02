@@ -8,7 +8,7 @@ export const sigleConfig = {
   fathomSiteUrl: 'https://louse.sigle.io/script.js',
   githubUrl: 'https://github.com/pradel/sigle',
   twitterUrl: 'https://twitter.com/sigleapp',
-  telegramUrl: 'https://t.me/sigleapp',
+  discordUrl: 'https://discord.gg/X2Dbz3xbrs',
   facebookUrl: 'https://www.facebook.com/sigleapp',
   messengerUrl: 'https://m.me/sigleapp',
   documentationUrl: 'https://docs.sigle.io',

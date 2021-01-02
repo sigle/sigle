@@ -1,11 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import tw from 'twin.macro';
-import {
-  FaFacebookMessenger,
-  FaTelegramPlane,
-  FaTwitter,
-} from 'react-icons/fa';
+import { FaFacebookMessenger, FaDiscord, FaTwitter } from 'react-icons/fa';
 import { Button } from '../components';
 import { sigleConfig } from '../config';
 import {
@@ -146,12 +142,12 @@ const HelpPage = () => {
           </HelpBlock>
 
           <HelpMessageSocial>
-            You can also reach us on Messenger, Telegram and Twitter{' '}
+            You can also reach us on Messenger, Discord and Twitter{' '}
             <StyledLink href={sigleConfig.messengerUrl} target="_blank">
               <FaFacebookMessenger size={16} className="icon" />
             </StyledLink>
-            <StyledLink href={sigleConfig.telegramUrl} target="_blank">
-              <FaTelegramPlane size={16} className="icon" />
+            <StyledLink href={sigleConfig.discordUrl} target="_blank">
+              <FaDiscord size={16} className="icon" />
             </StyledLink>
             <StyledLink href={sigleConfig.twitterUrl} target="_blank">
               <FaTwitter size={16} className="icon" />
