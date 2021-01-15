@@ -19,9 +19,8 @@ export const deleteStory: NextApiHandler = async (req, res) => {
     return;
   }
 
-  // TODO change to .delete single once index is implemented on storyId and username
-  await prismaClient.story.deleteMany({
-    where: { storyId, username },
+  await prismaClient.story.delete({
+    where: { storyId_username: { storyId, username } },
   });
 
   res.json({ success: true });

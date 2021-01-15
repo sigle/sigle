@@ -72,15 +72,14 @@ export const updateStory: NextApiHandler = async (req, res) => {
         updatedAt: new Date(file.updatedAt),
       };
 
-      // TODO create a unique index with storyId, username and make an upsert
-      const dbStory = await prismaClient.story.findFirst({
-        where: { storyId, username },
+      const dbStory = await prismaClient.story.findUnique({
+        where: { storyId_username: { storyId, username } },
       });
 
       try {
         if (dbStory) {
           await prismaClient.story.update({
-            where: { id: dbStory.id },
+            where: { storyId_username: { storyId, username } },
             data: latestStoryData,
           });
         } else {

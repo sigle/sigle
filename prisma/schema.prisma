@@ -11,7 +11,7 @@ generator client {
 }
 
 model Story {
-  id              Int     @id @default(autoincrement())
+  @@unique([storyId, username])
   storyId         String
   username        String
   title           String
