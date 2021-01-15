@@ -3,13 +3,18 @@ application:
   name: 'sigle'
   project: 'sigle'
   organization: 'QoveryCommunity'
-  dockerfile: Dockerfile.production
+  dockerfile: Dockerfile
 databases:
   - type: 'POSTGRESQL'
     name: 'sigle'
     version: '12'
 routers:
   - name: 'main-sigle'
+    custom_domains:
+      - branch: master
+        domain: dev.sigle.io
+      # - branch: feature/qovery-setup
+      #   domain: beta.sigle.io
     routes:
       - application_name: 'sigle'
         paths:
