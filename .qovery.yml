@@ -2,7 +2,7 @@
 application:
   name: 'sigle'
   project: 'sigle'
-  organization: 'QoveryCommunity'
+  organization: 'Sigle'
   dockerfile: Dockerfile
 routers:
   - name: 'main-sigle'
