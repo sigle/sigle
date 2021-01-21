@@ -4,6 +4,7 @@ application:
   project: 'sigle'
   organization: 'QoveryCommunity'
   dockerfile: Dockerfile
+  publicly_accessible: true
 routers:
   - name: 'main-sigle'
     custom_domains:
