@@ -39,7 +39,7 @@ import {
   hasLinks,
   wrapLink,
 } from './utils';
-import { userSession } from '../../../utils/blockstack';
+import { storage } from '../../../utils/blockstack';
 import { resizeImage } from '../../../utils/image';
 import { FixedContainer, PageContainer } from './Editor';
 import { SlateEditorLink } from './SlateEditorLink';
@@ -190,7 +190,7 @@ export const SlateEditor = ({
         const blob = await resizeImage(file, { maxWidth: 2000 });
 
         const name = `photos/${story.id}/${id}-${file.name}`;
-        const imageUrl = await userSession.putFile(name, blob as any, {
+        const imageUrl = await storage.putFile(name, blob as any, {
           // TODO encrypt if it's a draft or show a message to the user explaining the limitation
           encrypt: false,
           contentType: file.type,

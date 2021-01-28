@@ -24,7 +24,7 @@ import {
   FormTextarea,
   FormHelperError,
 } from '../../../components/Form';
-import { userSession } from '../../../utils/blockstack';
+import { storage } from '../../../utils/blockstack';
 
 const ImageEmpty = styled.div<{ haveImage: boolean }>`
   ${tw`flex items-center justify-center bg-grey py-16 mb-4 cursor-pointer rounded-lg relative border border-solid border-grey focus:outline-none`};
@@ -130,14 +130,10 @@ export const StorySettingsForm = ({
       if (coverFile) {
         const now = new Date().getTime();
         const name = `photos/${story.id}/${now}-${coverFile.name}`;
-        const coverImageUrl = await userSession.putFile(
-          name,
-          coverFile as any,
-          {
-            encrypt: false,
-            contentType: coverFile.type,
-          }
-        );
+        const coverImageUrl = await storage.putFile(name, coverFile as any, {
+          encrypt: false,
+          contentType: coverFile.type,
+        });
         updatedStory.coverImage = coverImageUrl;
       }
 

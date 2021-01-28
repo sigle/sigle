@@ -1,7 +1,7 @@
 import { nanoid } from 'nanoid';
 import { Value } from 'slate';
 import Plain from 'slate-plain-serializer';
-import { userSession } from './blockstack';
+import { storage, userSession } from './blockstack';
 import { StoryFile, Story, SubsetStory, SettingsFile } from '../types';
 
 const storiesFileName = 'stories.json';
@@ -11,7 +11,7 @@ const settingsFileName = 'settings.json';
 export const getStoriesFile = async (): Promise<StoryFile> => {
   let file;
   try {
-    file = (await userSession.getFile(storiesFileName)) as string;
+    file = (await storage.getFile(storiesFileName)) as string;
   } catch (error) {
     if (error.code !== 'does_not_exist') {
       throw error;
@@ -30,11 +30,11 @@ export const getStoriesFile = async (): Promise<StoryFile> => {
 };
 
 export const saveStoriesFile = async (file: StoryFile): Promise<void> => {
-  await userSession.putFile(storiesFileName, JSON.stringify(file));
+  await storage.putFile(storiesFileName, JSON.stringify(file));
   const publickStoriesFile = {
     stories: file.stories.filter((s) => s.type === 'public'),
   };
-  await userSession.putFile(
+  await storage.putFile(
     publicStoriesFileName,
     JSON.stringify(publickStoriesFile),
     {
@@ -50,7 +50,7 @@ export const saveStoriesFile = async (file: StoryFile): Promise<void> => {
 export const getStoryFile = async (storyId: string): Promise<Story | null> => {
   let originalFile;
   try {
-    originalFile = (await userSession.getFile(`${storyId}.json`, {
+    originalFile = (await storage.getFile(`${storyId}.json`, {
       decrypt: false,
     })) as string;
   } catch (error) {
@@ -71,13 +71,13 @@ export const getStoryFile = async (storyId: string): Promise<Story | null> => {
 };
 
 export const saveStoryFile = async (file: Story): Promise<void> => {
-  await userSession.putFile(`${file.id}.json`, JSON.stringify(file), {
+  await storage.putFile(`${file.id}.json`, JSON.stringify(file), {
     encrypt: file.type === 'private',
   });
 };
 
 export const deleteStoryFile = async (file: Story): Promise<void> => {
-  await userSession.deleteFile(`${file.id}.json`);
+  await storage.deleteFile(`${file.id}.json`);
 };
 
 export const publishStory = async (storyId: string): Promise<void> => {
@@ -168,7 +168,7 @@ export const convertStoryToSubsetStory = (story: Story): SubsetStory => {
 export const getSettingsFile = async (): Promise<SettingsFile> => {
   let file;
   try {
-    file = (await userSession.getFile(settingsFileName, {
+    file = (await storage.getFile(settingsFileName, {
       decrypt: false,
     })) as string;
   } catch (error) {
@@ -188,7 +188,7 @@ export const getSettingsFile = async (): Promise<SettingsFile> => {
 export const saveSettingsFile = async (
   settings: SettingsFile
 ): Promise<void> => {
-  await userSession.putFile(settingsFileName, JSON.stringify(settings), {
+  await storage.putFile(settingsFileName, JSON.stringify(settings), {
     encrypt: false,
   });
 };

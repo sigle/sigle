@@ -1713,7 +1713,7 @@
   dependencies:
     "@sinonjs/commons" "^1.7.0"
 
-"@stacks/auth@^1.0.0-beta.19":
+"@stacks/auth@^1.0.0-beta.19", "@stacks/auth@^1.0.2":
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/@stacks/auth/-/auth-1.0.2.tgz#290588b4399575f20011e88ba66aa64cce2c8c2f"
   integrity sha512-//ZCAR8gWYENNlWu0+gNmgwC1TSou9W8HQ8kpoTajJH1jkzcMirKB8BovD9XqZnFBKM4Y+Jdnw9h5OQ4YF+/WQ==
@@ -1792,6 +1792,15 @@
     jsontokens "^3.0.0"
     schema-inspector "^1.7.0"
     zone-file "^1.0.0"
+
+"@stacks/storage@1.0.2":
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/@stacks/storage/-/storage-1.0.2.tgz#2eb111d9854c6cfd6f05a63f2335d8cd534f15d6"
+  integrity sha512-6/aPv7m9J5QCpGMh9PlQbXH4wMFh0i97Fvh93YMvyAaQYR6lV9lgwXExvZRHpbzqJInc9LIrFkxYzWJ0GguMeg==
+  dependencies:
+    "@stacks/auth" "^1.0.2"
+    "@stacks/common" "^1.0.1"
+    "@stacks/encryption" "^1.0.1"
 
 "@stencil/core@^1.17.3":
   version "1.17.4"
