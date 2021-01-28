@@ -47,9 +47,9 @@
   "dependencies": {
     "@blockstack/connect": "2.12.7",
     "@blockstack/stacks-transactions": "0.7.0",
-    "@reach/dialog": "0.12.1",
-    "@reach/menu-button": "0.12.1",
-    "@reach/tooltip": "0.12.1",
+    "@reach/dialog": "0.13.0",
+    "@reach/menu-button": "0.13.0",
+    "@reach/tooltip": "0.13.0",
     "@sentry/browser": "6.0.1",
     "@sentry/integrations": "6.0.1",
     "@sentry/node": "6.0.1",
