@@ -1,7 +1,7 @@
 ---
 application:
   name: 'sigle'
-  project: 'sigle'
+  project: 'sigle-app'
   organization: 'QoveryCommunity'
   dockerfile: Dockerfile
   publicly_accessible: true
