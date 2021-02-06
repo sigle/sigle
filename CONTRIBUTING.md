@@ -11,7 +11,7 @@ For non-bug-fixes, please open an issue first and discuss your idea to make sure
 
 **Before submitting a pull request**, please make sure the following is done:
 
-- Fork the repository and create a new branch from `master`.
+- Fork the repository and create a new branch from `main`.
 - Must not break the test suite (`yarn test`). If you're fixing a bug, include a test that would fail without your fix.
 - Must be formatted with prettier (`yarn prettier`).
 - Must be **isolated**. Avoid grouping many, unrelated changes in a single PR.
@@ -46,4 +46,4 @@ You can now open your browser and go to http://localhost:3000 to see the app.
 
 ## License
 
-Sigle is licensed under the [MIT license](https://github.com/pradel/sigle/blob/master/LICENSE).
+Sigle is licensed under the [MIT license](https://github.com/pradel/sigle/blob/main/LICENSE).

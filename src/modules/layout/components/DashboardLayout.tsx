@@ -199,7 +199,7 @@ export const DashboardSidebar = () => {
           </MenuBottomItem>
           <MenuBottomItem>
             <a
-              href="https://github.com/pradel/sigle/blob/master/CHANGELOG.md"
+              href="https://github.com/pradel/sigle/blob/main/CHANGELOG.md"
               target="_blank"
               rel="noopener noreferrer"
             >
