@@ -33,7 +33,11 @@ const escapeXml = (unsafe: string) => {
 export const apiFeed: NextApiHandler = async (req, res) => {
   const { username } = req.query as { username: string };
 
-  const appUrl = `${req.headers['x-forwarded-proto']}://${req.headers['x-forwarded-host']}`;
+  const appHost =
+    (req.headers['x-forwarded-host'] as string) ||
+    (req.headers['host'] as string);
+  const appProto = (req.headers['x-forwarded-proto'] as string) || 'http';
+  const appUrl = `${appProto}://${appHost}`;
   const blogLink = `${appUrl}/${username}`;
 
   let userProfile;
