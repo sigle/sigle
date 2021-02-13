@@ -116,5 +116,22 @@ module.exports = withPlugins(
       }
       return config;
     },
+    headers: async () => {
+      return [
+        {
+          source: '/manifest.json',
+          headers: [
+            {
+              key: 'Access-Control-Allow-Origin',
+              value: '*',
+            },
+            {
+              key: 'Access-Control-Allow-Headers',
+              value: '*',
+            },
+          ],
+        },
+      ];
+    },
   }
 );
