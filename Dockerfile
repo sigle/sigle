@@ -3,6 +3,10 @@ FROM node:14 AS builder
 
 WORKDIR /app
 
+ENV APP_URL="https://dev.sigle.io"
+# TODO uncomment when pushing to prod
+# ENV FATHOM_SITE_ID="DLJCUFGQ"
+
 COPY package.json yarn.lock ./
 
 RUN yarn install --frozen-lockfile

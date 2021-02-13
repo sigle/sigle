@@ -5,9 +5,6 @@ app = "sigle"
 kill_signal = "SIGINT"
 kill_timeout = 5
 
-[env]
-  APP_URL = "https://app.sigle.io"
-
 [[services]]
   internal_port = 3000
   protocol = "tcp"
