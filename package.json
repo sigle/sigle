@@ -64,7 +64,7 @@
     "graphql-tag": "2.11.0",
     "immutable": "4.0.0-rc.12",
     "nanoid": "3.1.20",
-    "next": "10.0.4",
+    "next": "10.0.6",
     "next-seo": "4.17.0",
     "node-fetch": "2.6.1",
     "nprogress": "0.2.0",
