@@ -3047,6 +3047,16 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/slate@npm:*":
+  version: 0.47.8
+  resolution: "@types/slate@npm:0.47.8"
+  dependencies:
+    "@types/react": "*"
+    immutable: ^3.8.2
+  checksum: 75b4e0d293dd8269b5027921e4ea8cbcaff35fba1d6a6f5f3b603688c836a62ff6185a52f2fac29c3128b43c73d0f2877e714e40db2555e79441ecdcbae9c2a7
+  languageName: node
+  linkType: hard
+
 "@types/slate@npm:0.47.4":
   version: 0.47.4
   resolution: "@types/slate@npm:0.47.4"
@@ -12087,6 +12097,12 @@ resolve@^1.19.0:
   languageName: node
   linkType: hard
 
+"root-workspace-0b6124@workspace:.":
+  version: 0.0.0-use.local
+  resolution: "root-workspace-0b6124@workspace:."
+  languageName: unknown
+  linkType: soft
+
 "rsvp@npm:^4.8.4":
   version: 4.8.5
   resolution: "rsvp@npm:4.8.5"
@@ -12397,9 +12413,9 @@ resolve@^1.19.0:
   languageName: node
   linkType: hard
 
-"sigle@workspace:.":
+"sigle@workspace:sigle":
   version: 0.0.0-use.local
-  resolution: "sigle@workspace:."
+  resolution: "sigle@workspace:sigle"
   dependencies:
     "@blockstack/connect": 2.12.7
     "@blockstack/stacks-transactions": 0.7.0
