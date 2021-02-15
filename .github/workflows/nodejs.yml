@@ -16,6 +16,7 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: 12.x
+
       - name: Get yarn cache directory path
         id: yarn-cache-dir-path
         run: echo "::set-output name=dir::$(yarn config get cacheFolder)"
@@ -27,19 +28,23 @@ jobs:
           key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
           restore-keys: |
             ${{ runner.os }}-yarn-
+
       - name: Get next.js cache
         uses: actions/cache@v2
         with:
-          path: ${{ github.workspace }}/.next/cache
+          path: ${{ github.workspace }}/sigle/.next/cache
           key: ${{ runner.os }}-nextjs-${{ hashFiles('**/yarn.lock') }}
+
       - name: Install Dependencies
         run: yarn install --immutable
+
       - name: Build
-        run: yarn build
+        run: yarn workspace sigle build
         env:
           CI: true
           BUNDLE_ANALYZER_TOKEN: ${{ secrets.BUNDLE_ANALYZER_TOKEN }}
+
       - name: Run tests
-        run: yarn test
+        run: yarn workspace sigle test
         env:
           CI: true

@@ -12100,6 +12100,10 @@ resolve@^1.19.0:
 "root-workspace-0b6124@workspace:.":
   version: 0.0.0-use.local
   resolution: "root-workspace-0b6124@workspace:."
+  dependencies:
+    husky: 4.3.8
+    lint-staged: 10.5.4
+    prettier: 2.2.1
   languageName: unknown
   linkType: soft
 
@@ -12471,10 +12475,8 @@ resolve@^1.19.0:
     graphql: 15.4.0
     graphql-request: 3.4.0
     graphql-tag: 2.11.0
-    husky: 4.3.8
     immutable: 4.0.0-rc.12
     jest: 26.6.3
-    lint-staged: 10.5.4
     nanoid: 3.1.20
     next: 10.0.6
     next-compose-plugins: 2.2.1
@@ -12482,7 +12484,6 @@ resolve@^1.19.0:
     node-fetch: 2.6.1
     nprogress: 0.2.0
     postcss: 8.2.1
-    prettier: 2.2.1
     react: 17.0.1
     react-color: 2.19.3
     react-div-100vh: 0.5.6
