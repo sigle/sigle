@@ -1,7 +1,7 @@
 <h1 align="center">Sigle</h1>
 
 <p align="center">
-  <img src="https://raw.githubusercontent.com/pradel/sigle/main/public/icon-192x192.png" height="50">
+  <img src="https://raw.githubusercontent.com/pradel/sigle/main/assets/icon-192x192.png" height="50">
 </p>
 
 <p align="center">

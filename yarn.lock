@@ -3047,7 +3047,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/slate@npm:0.47.4":
+"@types/slate@npm:*, @types/slate@npm:0.47.4":
   version: 0.47.4
   resolution: "@types/slate@npm:0.47.4"
   dependencies:
@@ -12087,6 +12087,16 @@ resolve@^1.19.0:
   languageName: node
   linkType: hard
 
+"root-workspace-0b6124@workspace:.":
+  version: 0.0.0-use.local
+  resolution: "root-workspace-0b6124@workspace:."
+  dependencies:
+    husky: 4.3.8
+    lint-staged: 10.5.4
+    prettier: 2.2.1
+  languageName: unknown
+  linkType: soft
+
 "rsvp@npm:^4.8.4":
   version: 4.8.5
   resolution: "rsvp@npm:4.8.5"
@@ -12397,9 +12407,9 @@ resolve@^1.19.0:
   languageName: node
   linkType: hard
 
-"sigle@workspace:.":
+"sigle@workspace:sigle":
   version: 0.0.0-use.local
-  resolution: "sigle@workspace:."
+  resolution: "sigle@workspace:sigle"
   dependencies:
     "@blockstack/connect": 2.12.7
     "@blockstack/stacks-transactions": 0.7.0
@@ -12455,10 +12465,8 @@ resolve@^1.19.0:
     graphql: 15.4.0
     graphql-request: 3.4.0
     graphql-tag: 2.11.0
-    husky: 4.3.8
     immutable: 4.0.0-rc.12
     jest: 26.6.3
-    lint-staged: 10.5.4
     nanoid: 3.1.20
     next: 10.0.6
     next-compose-plugins: 2.2.1
@@ -12466,7 +12474,6 @@ resolve@^1.19.0:
     node-fetch: 2.6.1
     nprogress: 0.2.0
     postcss: 8.2.1
-    prettier: 2.2.1
     react: 17.0.1
     react-color: 2.19.3
     react-div-100vh: 0.5.6
