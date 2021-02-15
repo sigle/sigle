@@ -19,6 +19,7 @@
       ]
     }
   ],
+  "builds": [{ "src": "sigle/package.json", "use": "@now/next" }],
   "build": {
     "env": {
       "APP_URL": "https://app.sigle.io",
