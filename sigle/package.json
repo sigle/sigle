@@ -12,9 +12,6 @@
     "test:only": "jest",
     "test:lint": "eslint 'src/**/*.{js,ts,tsx}'"
   },
-  "resolutions": {
-    "@types/slate": "0.47.4"
-  },
   "eslintConfig": {
     "extends": "react-app"
   },
