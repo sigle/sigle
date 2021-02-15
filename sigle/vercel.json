@@ -1,6 +1,9 @@
 {
   "name": "sigle",
   "version": 2,
+  "github": {
+    "silent": true
+  },
   "headers": [
     {
       "source": "/manifest.json",
