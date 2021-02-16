@@ -2,7 +2,7 @@
   "name": "blog-viewer",
   "version": "0.0.1",
   "scripts": {
-    "dev": "next",
+    "dev": "next --port 3001",
     "build": "next build",
     "start": "next start",
     "test": "yarn test:lint && yarn test:only",
