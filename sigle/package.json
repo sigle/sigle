@@ -12,15 +12,6 @@
     "test:only": "jest",
     "test:lint": "eslint 'src/**/*.{js,ts,tsx}'"
   },
-  "eslintConfig": {
-    "extends": "react-app"
-  },
-  "browserslist": [
-    ">0.2%",
-    "not dead",
-    "not ie <= 11",
-    "not op_mini all"
-  ],
   "jest": {
     "setupFilesAfterEnv": [
       "./src/jest.setup.ts"
