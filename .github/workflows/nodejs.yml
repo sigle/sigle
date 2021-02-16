@@ -29,22 +29,38 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-yarn-
 
-      - name: Get next.js cache
+      - name: Get next.js sigle cache
         uses: actions/cache@v2
         with:
           path: ${{ github.workspace }}/sigle/.next/cache
-          key: ${{ runner.os }}-nextjs-${{ hashFiles('**/yarn.lock') }}
+          key: ${{ runner.os }}-nextjs-sigle-${{ hashFiles('**/yarn.lock') }}
+      
+      - name: Get next.js sigle cache
+        uses: actions/cache@v2
+        with:
+          path: ${{ github.workspace }}/blog-viewer/.next/cache
+          key: ${{ runner.os }}-nextjs-blog-viewer-${{ hashFiles('**/yarn.lock') }}
 
       - name: Install Dependencies
         run: yarn install --immutable
 
-      - name: Build
+      - name: Build sigle
         run: yarn workspace sigle build
         env:
           CI: true
           BUNDLE_ANALYZER_TOKEN: ${{ secrets.BUNDLE_ANALYZER_TOKEN }}
 
-      - name: Run tests
+      - name: Run sigle tests
         run: yarn workspace sigle test
+        env:
+          CI: true
+
+      - name: Build blog-viewer
+        run: yarn workspace blog-viewer build
+        env:
+          CI: true
+
+      - name: Run blog-viewer tests
+        run: yarn workspace blog-viewer test
         env:
           CI: true
