@@ -8,7 +8,9 @@ const customDomains: Record<string, string> = {
   'http://localhost:3001': 'leopradel.id.blockstack',
 };
 
-export const getServerSideProps: GetServerSideProps<{}> = async ({ req }) => {
+export const getServerSideProps: GetServerSideProps<
+  Record<string, never>
+> = async ({ req }) => {
   const appUrl = `${req.headers['x-forwarded-proto'] || 'http'}://${
     req.headers['host']
   }`;
