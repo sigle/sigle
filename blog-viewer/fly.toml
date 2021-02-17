@@ -1,0 +1,26 @@
+# fly.toml file generated for sigle on 2021-02-10T17:53:20+01:00
+
+app = "sigle-blog-viewer"
+
+kill_signal = "SIGINT"
+kill_timeout = 5
+
+[[services]]
+  internal_port = 3000
+  protocol = "tcp"
+
+  [[services.ports]]
+    handlers = ["http"]
+    port = "80"
+
+  [[services.ports]]
+    handlers = ["tls", "http"]
+    port = "443"
+
+# TODO proper check
+  [[services.tcp_checks]]
+    grace_period = "1s"
+    interval = "10s"
+    port = "3000"
+    restart_limit = 5
+    timeout = "2s"
