@@ -3,12 +3,12 @@ import App from 'next/app';
 import Router from 'next/router';
 import { createGlobalStyle } from 'styled-components';
 import * as Fathom from 'fathom-client';
-import { init } from '../utils/sentry';
+import { initSentry } from '../utils/sentry';
 import GlobalStyles from './../components/GlobalStyles';
 import '../styles/fonts.scss';
 import { sigleConfig } from '../config';
 
-init();
+initSentry();
 
 /**
  * Fathom
