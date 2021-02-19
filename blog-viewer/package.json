@@ -26,6 +26,7 @@
     "@stacks/auth": "1.2.2",
     "date-fns": "2.16.1",
     "fathom-client": "3.0.0",
+    "feed": "4.2.1",
     "immutable": "4.0.0-rc.12",
     "next": "10.0.6",
     "next-seo": "4.19.0",

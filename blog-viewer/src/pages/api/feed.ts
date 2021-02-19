@@ -47,8 +47,6 @@ const apiFeed: NextApiHandler = async (req, res) => {
     return;
   }
 
-  const blogLink = `${appUrl}/${resolvedUsername}`;
-
   let userProfile;
   try {
     userProfile = await lookupProfile({ username: resolvedUsername });
@@ -114,18 +112,18 @@ const apiFeed: NextApiHandler = async (req, res) => {
   const feed = new Feed({
     title: settings.siteName || resolvedUsername,
     description: settings.siteDescription,
-    id: blogLink,
-    link: blogLink,
+    id: appUrl,
+    link: appUrl,
     favicon: `${appUrl}/favicon/apple-touch-icon.png`,
     copyright: `All rights reserved ${new Date().getFullYear()}, ${resolvedUsername}`,
     author: {
       name: resolvedUsername,
-      link: blogLink,
+      link: appUrl,
     },
   });
 
   file.stories.forEach((story) => {
-    const storyLink = `${appUrl}/${resolvedUsername}/${story.id}`;
+    const storyLink = `${appUrl}/${story.id}`;
 
     feed.addItem({
       title: story.title,
