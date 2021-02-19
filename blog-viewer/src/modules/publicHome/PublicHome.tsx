@@ -1,7 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
 import tw from 'twin.macro';
-import { useRouter } from 'next/router';
 import { StoryFile, SettingsFile } from '../../types';
 import { Container } from '../../components';
 import { PublicStoryItem } from './PublicStoryItem';
@@ -38,6 +37,7 @@ interface PublicHomeProps {
 }
 
 export const PublicHome = ({ username, file, settings }: PublicHomeProps) => {
+  // TODO SEO for this page (title etc)
   const siteName = settings.siteName || username;
 
   const featuredStoryIndex = file.stories.findIndex((story) => story.featured);
