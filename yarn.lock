@@ -1160,6 +1160,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@fontsource/roboto@npm:4.2.1":
+  version: 4.2.1
+  resolution: "@fontsource/roboto@npm:4.2.1"
+  checksum: 8e95ce4d98eec73c0cdb5605301e9bf64e66c0b095cef7ec59141ca1401d63b895799d42d738437a278969ecce2bef2de00751eb3b546df0d8933e718d45af5f
+  languageName: node
+  linkType: hard
+
 "@fullhuman/postcss-purgecss@npm:^3.0.0":
   version: 3.0.0
   resolution: "@fullhuman/postcss-purgecss@npm:3.0.0"
@@ -4717,7 +4724,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"chokidar@npm:3.5.1":
+"chokidar@npm:3.5.1, chokidar@npm:>=2.0.0 <4.0.0":
   version: 3.5.1
   resolution: "chokidar@npm:3.5.1"
   dependencies:
@@ -12212,6 +12219,17 @@ resolve@^1.19.0:
   languageName: node
   linkType: hard
 
+"sass@npm:1.32.8":
+  version: 1.32.8
+  resolution: "sass@npm:1.32.8"
+  dependencies:
+    chokidar: ">=2.0.0 <4.0.0"
+  bin:
+    sass: sass.js
+  checksum: d319b3d7459451b6532b492984e3cbb37381e6c6379622f668900b196c0d545f5a2c32819cf02b5405fb2ef79720fe1f8f16b7614a2fef3fb7af8dfec83a6597
+  languageName: node
+  linkType: hard
+
 "sax@npm:^1.2.4":
   version: 1.2.4
   resolution: "sax@npm:1.2.4"
@@ -12450,6 +12468,7 @@ resolve@^1.19.0:
     "@blockstack/connect": 2.12.7
     "@blockstack/stacks-transactions": 0.7.0
     "@bundle-analyzer/webpack-plugin": 0.5.1
+    "@fontsource/roboto": 4.2.1
     "@graphql-codegen/add": 2.0.2
     "@graphql-codegen/cli": 1.20.1
     "@graphql-codegen/typescript": 1.20.2
@@ -12519,6 +12538,7 @@ resolve@^1.19.0:
     react-spring: 8.0.27
     react-toastify: 6.2.0
     reading-time: 1.2.1
+    sass: 1.32.8
     slate: 0.47.9
     slate-html-serializer: 0.8.11
     slate-plain-serializer: 0.7.11
@@ -12527,7 +12547,6 @@ resolve@^1.19.0:
     styled-components: 5.2.1
     tailwindcss: 2.0.2
     twin.macro: 2.0.7
-    typeface-roboto: 1.1.13
     typescript: 4.1.5
   languageName: unknown
   linkType: soft
@@ -14031,13 +14050,6 @@ resolve@^1.19.0:
   dependencies:
     is-typedarray: ^1.0.0
   checksum: e6e0e6812acc3496612d81abe026bb6c71bfc0f3daa00716a3236fe37c46a81508de8306df8a29ae81e2a2c4293b6b8067c77b65003e0022134d544902b9acec
-  languageName: node
-  linkType: hard
-
-"typeface-roboto@npm:1.1.13":
-  version: 1.1.13
-  resolution: "typeface-roboto@npm:1.1.13"
-  checksum: d8f68902575211262605fb50147084b295d410f376314d1b4d55d08e4dbb74339a1817c82a7df051694b3e3663a9d0c0179b728101e8403d906b89735b0e97e0
   languageName: node
   linkType: hard
 

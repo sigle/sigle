@@ -18,7 +18,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import '@reach/dialog/styles.css';
 import '@reach/menu-button/styles.css';
 import '@reach/tooltip/styles.css';
-import '../lib/fonts.css';
+import '../styles/fonts.scss';
 import '../styles/index.css';
 import { sigleConfig } from '../config';
 import { colors } from '../utils/colors';
