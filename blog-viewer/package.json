@@ -24,6 +24,7 @@
     "@sentry/integrations": "6.1.0",
     "@sentry/node": "6.1.0",
     "@stacks/auth": "1.2.2",
+    "date-fns": "2.16.1",
     "fathom-client": "3.0.0",
     "next": "10.0.6",
     "next-seo": "4.19.0",
