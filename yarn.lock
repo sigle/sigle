@@ -4272,6 +4272,7 @@ __metadata:
     fathom-client: 3.0.0
     jest: 26.6.3
     next: 10.0.6
+    next-seo: 4.19.0
     react: 17.0.1
     react-dom: 17.0.1
     sass: 1.32.8
@@ -10100,14 +10101,14 @@ fsevents@~2.3.1:
   languageName: node
   linkType: hard
 
-"next-seo@npm:4.17.0":
-  version: 4.17.0
-  resolution: "next-seo@npm:4.17.0"
+"next-seo@npm:4.19.0":
+  version: 4.19.0
+  resolution: "next-seo@npm:4.19.0"
   peerDependencies:
     next: ^8.1.1-canary.54 || ^9.0.0 || ^10.0.0
     react: ^16.0.0 || ^17.0.0
     react-dom: ^16.0.0 || ^17.0.0
-  checksum: d5f34bebe46040f2abd1ce4dcfc6b3db7092b7e83a251d3f215a0eda70c4601d7f61577649ba84bc07ff1ffa8d6fe52e4f831534cd92d49883f6d8ec5feb6bdd
+  checksum: 4cd9231128e4e2dda0c536a0ec1d671343183dfa3e424dbe133332b29d98930e5b85aacb4b77ce016db65b8e4b7828b6e37069a1f990367a96e1551d67b172e6
   languageName: node
   linkType: hard
 
@@ -12663,7 +12664,7 @@ resolve@^1.19.0:
     nanoid: 3.1.20
     next: 10.0.6
     next-compose-plugins: 2.2.1
-    next-seo: 4.17.0
+    next-seo: 4.19.0
     node-fetch: 2.6.1
     nprogress: 0.2.0
     postcss: 8.2.1
