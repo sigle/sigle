@@ -1160,6 +1160,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@fontsource/roboto@npm:4.2.1":
+  version: 4.2.1
+  resolution: "@fontsource/roboto@npm:4.2.1"
+  checksum: 8e95ce4d98eec73c0cdb5605301e9bf64e66c0b095cef7ec59141ca1401d63b895799d42d738437a278969ecce2bef2de00751eb3b546df0d8933e718d45af5f
+  languageName: node
+  linkType: hard
+
 "@fullhuman/postcss-purgecss@npm:^3.0.0":
   version: 3.0.0
   resolution: "@fullhuman/postcss-purgecss@npm:3.0.0"
@@ -4243,6 +4250,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "blog-viewer@workspace:blog-viewer"
   dependencies:
+    "@fontsource/roboto": 4.2.1
     "@sentry/browser": 6.1.0
     "@sentry/node": 6.1.0
     "@stacks/auth": 1.2.2
@@ -4265,6 +4273,7 @@ __metadata:
     next: 10.0.6
     react: 17.0.1
     react-dom: 17.0.1
+    sass: 1.32.8
     styled-components: 5.2.1
     tailwindcss: 2.0.2
     twin.macro: 2.2.3
@@ -4799,7 +4808,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"chokidar@npm:3.5.1":
+"chokidar@npm:3.5.1, chokidar@npm:>=2.0.0 <4.0.0":
   version: 3.5.1
   resolution: "chokidar@npm:3.5.1"
   dependencies:
@@ -12344,6 +12353,17 @@ resolve@^1.19.0:
   bin:
     sane: ./src/cli.js
   checksum: e384e252021b1afef7459e994fe3ea79d114a0e7d23a03e660444abf15a2b4c50ce7eac2810b2c289e857c618d96fb35ee66356ebd4d6cb97cb11b54b2b29600
+  languageName: node
+  linkType: hard
+
+"sass@npm:1.32.8":
+  version: 1.32.8
+  resolution: "sass@npm:1.32.8"
+  dependencies:
+    chokidar: ">=2.0.0 <4.0.0"
+  bin:
+    sass: sass.js
+  checksum: d319b3d7459451b6532b492984e3cbb37381e6c6379622f668900b196c0d545f5a2c32819cf02b5405fb2ef79720fe1f8f16b7614a2fef3fb7af8dfec83a6597
   languageName: node
   linkType: hard
 
