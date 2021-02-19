@@ -1,10 +1,37 @@
+import { useEffect } from 'react';
 import App from 'next/app';
+import Router from 'next/router';
 import { createGlobalStyle } from 'styled-components';
+import * as Fathom from 'fathom-client';
 import { init } from '../utils/sentry';
 import GlobalStyles from './../components/GlobalStyles';
 import '../styles/fonts.scss';
+import { sigleConfig } from '../config';
 
 init();
+
+/**
+ * Fathom
+ */
+
+// Track when page is loaded
+const FathomTrack = () => {
+  useEffect(() => {
+    if (sigleConfig.fathomSiteId) {
+      Fathom.load(sigleConfig.fathomSiteId, {
+        url: sigleConfig.fathomSiteUrl,
+      });
+      Fathom.trackPageview();
+    }
+  }, []);
+
+  return <></>;
+};
+
+// Track on each page change
+Router.events.on('routeChangeComplete', () => {
+  Fathom.trackPageview();
+});
 
 const GlobalStyle = createGlobalStyle`
   body {
@@ -19,6 +46,7 @@ export default class MyApp extends App {
       <>
         <GlobalStyles />
         <GlobalStyle />
+        <FathomTrack />
         <Component {...pageProps} />
       </>
     );
