@@ -1,14 +1,14 @@
 import { GetServerSideProps } from 'next';
-import tw from 'twin.macro';
 import * as Sentry from '@sentry/node';
 import { lookupProfile } from '@stacks/auth';
 import { SettingsFile, StoryFile } from '../types';
 import Error from './_error';
+import { PublicHome } from '../modules/publicHome/PublicHome';
 
 // Map the domain to the user blockstack id
 const customDomains: Record<string, string> = {
   'https://blog.sigle.io': 'sigleapp.id.blockstack',
-  'http://localhost:3001': 'leopradel.id.blockstack',
+  'http://localhost:3001': 'sigleapp.id.blockstack',
 };
 
 const fetchPublicStories = async (bucketUrl: string) => {
@@ -132,16 +132,5 @@ export default function Home({
     return <Error statusCode={statusCode} errorMessage={errorMessage} />;
   }
 
-  return (
-    <>
-      <div
-        css={[
-          tw`flex flex-col items-center justify-center h-screen`,
-          tw`bg-gradient-to-b from-gray-300 to-red-400`,
-        ]}
-      >
-        Yo
-      </div>
-    </>
-  );
+  return <PublicHome file={file} settings={settings} />;
 }
