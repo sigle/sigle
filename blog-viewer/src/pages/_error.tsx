@@ -18,6 +18,7 @@ const MyError = ({ statusCode, hasGetInitialPropsRun, err }: ErrorProps) => {
     // Flushing is not required in this case as it only happens on the client
   }
 
+  // TODO same custom error page from Sigle app
   return <NextErrorComponent statusCode={statusCode} />;
 };
 
