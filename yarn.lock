@@ -4252,6 +4252,7 @@ __metadata:
   dependencies:
     "@fontsource/roboto": 4.2.1
     "@sentry/browser": 6.1.0
+    "@sentry/integrations": 6.1.0
     "@sentry/node": 6.1.0
     "@stacks/auth": 1.2.2
     "@testing-library/jest-dom": 5.11.9

@@ -21,6 +21,7 @@
   },
   "dependencies": {
     "@sentry/browser": "6.1.0",
+    "@sentry/integrations": "6.1.0",
     "@sentry/node": "6.1.0",
     "@stacks/auth": "1.2.2",
     "fathom-client": "3.0.0",
