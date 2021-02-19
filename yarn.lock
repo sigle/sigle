@@ -4274,6 +4274,7 @@ __metadata:
     eslint-plugin-prettier: 3.3.1
     eslint-plugin-react: 7.22.0
     fathom-client: 3.0.0
+    immutable: 4.0.0-rc.12
     jest: 26.6.3
     next: 10.0.6
     next-seo: 4.19.0
@@ -4281,6 +4282,9 @@ __metadata:
     react-dom: 17.0.1
     reading-time: 1.2.1
     sass: 1.32.8
+    slate: 0.47.9
+    slate-html-serializer: 0.8.11
+    slate-plain-serializer: 0.7.11
     styled-components: 5.2.1
     tailwindcss: 2.0.2
     twin.macro: 2.2.3
