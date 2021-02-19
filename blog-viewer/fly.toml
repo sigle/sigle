@@ -17,10 +17,9 @@ kill_timeout = 5
     handlers = ["tls", "http"]
     port = "443"
 
-# TODO proper check
-  [[services.tcp_checks]]
-    grace_period = "1s"
-    interval = "10s"
-    port = "3000"
-    restart_limit = 5
+  [[services.http_checks]]
+    interval = 10000
+    method = "get"
+    path = "/api/health"
+    protocol = "http"
     timeout = "2s"
