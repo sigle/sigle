@@ -81,18 +81,17 @@ const StoryText = styled.div`
 `;
 
 interface Props {
-  username: string;
   story: SubsetStory;
   settings: SettingsFile;
 }
 
-export const PublicStoryItem = ({ username, story, settings }: Props) => {
+export const PublicStoryItem = ({ story, settings }: Props) => {
   const safeSiteColor =
     settings.siteColor && sanitizeHexColor(settings.siteColor);
 
   return (
     <Container>
-      <Link href="/[username]/[storyId]" as={`/${username}/${story.id}`}>
+      <Link href="/[storyId]" as={`/${story.id}`}>
         <StoryContainer siteColor={safeSiteColor} featured={story.featured}>
           {story.coverImage && (
             <StoryContainerImage featured={story.featured}>

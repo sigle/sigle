@@ -32,14 +32,12 @@ const HeaderDescription = styled.p`
 `;
 
 interface PublicHomeProps {
+  username: string;
   file: StoryFile;
   settings: SettingsFile;
 }
 
-export const PublicHome = ({ file, settings }: PublicHomeProps) => {
-  const router = useRouter();
-  const { username } = router.query as { username: string };
-
+export const PublicHome = ({ username, file, settings }: PublicHomeProps) => {
   const siteName = settings.siteName || username;
 
   const featuredStoryIndex = file.stories.findIndex((story) => story.featured);
@@ -69,18 +67,12 @@ export const PublicHome = ({ file, settings }: PublicHomeProps) => {
         {file.stories.length === 0 && <NoStories>No stories yet</NoStories>}
         {featuredStoryIndex !== -1 && (
           <PublicStoryItem
-            username={username}
             story={file.stories[featuredStoryIndex]}
             settings={settings}
           />
         )}
         {stories.map((story) => (
-          <PublicStoryItem
-            key={story.id}
-            username={username}
-            story={story}
-            settings={settings}
-          />
+          <PublicStoryItem key={story.id} story={story} settings={settings} />
         ))}
       </StyledContainer>
     </React.Fragment>

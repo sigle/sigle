@@ -111,13 +111,20 @@ export const getServerSideProps: GetServerSideProps<PublicHomePageProps> = async
   }
 
   return {
-    props: { statusCode, errorMessage, file, settings },
+    props: {
+      statusCode,
+      errorMessage,
+      username: resolvedUsername,
+      file,
+      settings,
+    },
   };
 };
 
 interface PublicHomePageProps {
   statusCode: number | boolean;
   errorMessage: string | null;
+  username: string;
   file: StoryFile;
   settings: SettingsFile;
 }
@@ -125,6 +132,7 @@ interface PublicHomePageProps {
 export default function Home({
   statusCode,
   errorMessage,
+  username,
   file,
   settings,
 }: PublicHomePageProps) {
@@ -132,5 +140,5 @@ export default function Home({
     return <Error statusCode={statusCode} errorMessage={errorMessage} />;
   }
 
-  return <PublicHome file={file} settings={settings} />;
+  return <PublicHome username={username} file={file} settings={settings} />;
 }
