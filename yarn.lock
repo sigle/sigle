@@ -12605,6 +12605,7 @@ resolve@^1.19.0:
     "@blockstack/connect": 2.12.7
     "@blockstack/stacks-transactions": 0.7.0
     "@bundle-analyzer/webpack-plugin": 0.5.1
+    "@fontsource/roboto": 4.2.1
     "@graphql-codegen/add": 2.0.2
     "@graphql-codegen/cli": 1.20.1
     "@graphql-codegen/typescript": 1.20.2
@@ -12674,6 +12675,7 @@ resolve@^1.19.0:
     react-spring: 8.0.27
     react-toastify: 6.2.0
     reading-time: 1.2.1
+    sass: 1.32.8
     slate: 0.47.9
     slate-html-serializer: 0.8.11
     slate-plain-serializer: 0.7.11
@@ -12682,7 +12684,6 @@ resolve@^1.19.0:
     styled-components: 5.2.1
     tailwindcss: 2.0.2
     twin.macro: 2.0.7
-    typeface-roboto: 1.1.13
     typescript: 4.1.5
   languageName: unknown
   linkType: soft
@@ -14215,13 +14216,6 @@ resolve@^1.19.0:
   dependencies:
     is-typedarray: ^1.0.0
   checksum: e6e0e6812acc3496612d81abe026bb6c71bfc0f3daa00716a3236fe37c46a81508de8306df8a29ae81e2a2c4293b6b8067c77b65003e0022134d544902b9acec
-  languageName: node
-  linkType: hard
-
-"typeface-roboto@npm:1.1.13":
-  version: 1.1.13
-  resolution: "typeface-roboto@npm:1.1.13"
-  checksum: d8f68902575211262605fb50147084b295d410f376314d1b4d55d08e4dbb74339a1817c82a7df051694b3e3663a9d0c0179b728101e8403d906b89735b0e97e0
   languageName: node
   linkType: hard
 
