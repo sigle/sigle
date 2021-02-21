@@ -45,6 +45,17 @@ export const getServerSideProps: GetServerSideProps<PublicHomePageProps> = async
   req,
   res,
 }) => {
+  // If app is running on fly redirect all the http to https
+  if (process.env.FLY_APP_NAME && req.headers['x-forwarded-proto'] === 'http') {
+    return {
+      redirect: {
+        destination: `https://${req.headers['host']}${req.url}`,
+        permanent: false,
+      },
+      props: {} as any,
+    };
+  }
+
   const appUrl = `${req.headers['x-forwarded-proto'] || 'http'}://${
     req.headers['host']
   }`;
