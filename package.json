@@ -1,7 +1,8 @@
 {
   "private": true,
   "scripts": {
-    "prettier": "prettier --write '**/*.{js,ts,tsx,md,css}'"
+    "prettier": "prettier --write '**/*.{js,ts,tsx,md,css}'",
+    "deploy:blog-viewer": "flyctl deploy --config blog-viewer/fly.toml --dockerfile blog-viewer/Dockerfile"
   },
   "workspaces": [
     "sigle",

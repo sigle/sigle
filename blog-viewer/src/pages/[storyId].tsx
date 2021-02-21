@@ -1,9 +1,10 @@
+import React from 'react';
 import { GetServerSideProps } from 'next';
-import * as Sentry from '@sentry/node';
 import { lookupProfile } from '@stacks/auth';
-import { SettingsFile, StoryFile } from '../types';
-import Error from './_error';
-import { PublicHome } from '../modules/publicHome/PublicHome';
+import * as Sentry from '@sentry/node';
+import Error from '../pages/_error';
+import { PublicStory } from '../modules/publicStory/PublicStory';
+import { Story, SettingsFile } from '../types';
 
 // Map the domain to the user blockstack id
 const customDomains: Record<string, string> = {
@@ -11,22 +12,24 @@ const customDomains: Record<string, string> = {
   'http://localhost:3001': 'sigleapp.id.blockstack',
 };
 
-const fetchPublicStories = async (bucketUrl: string) => {
+const fetchPublicStory = async (
+  bucketUrl: string,
+  storyId: string
+): Promise<{ file: Story; statusCode: false | number }> => {
   let file;
   let statusCode: false | number = false;
-  const data = await fetch(`${bucketUrl}publicStories.json`);
+  const data = await fetch(`${bucketUrl}${storyId}.json`);
   if (data.status === 200) {
     file = await data.json();
-  } else if (data.status === 404) {
-    // If file is not found we set an empty array to show an empty list
-    file = { stories: [] };
   } else {
     statusCode = data.status;
   }
   return { file, statusCode };
 };
 
-const fetchSettings = async (bucketUrl: string) => {
+const fetchSettings = async (
+  bucketUrl: string
+): Promise<{ file: SettingsFile; statusCode: false | number }> => {
   let file;
   let statusCode: false | number = false;
   const data = await fetch(`${bucketUrl}settings.json`);
@@ -41,9 +44,10 @@ const fetchSettings = async (bucketUrl: string) => {
   return { file, statusCode };
 };
 
-export const getServerSideProps: GetServerSideProps<PublicHomePageProps> = async ({
+export const getServerSideProps: GetServerSideProps<PublicStoryPageProps> = async ({
   req,
   res,
+  params,
 }) => {
   // If app is running on fly redirect all the http to https
   if (process.env.FLY_APP_NAME && req.headers['x-forwarded-proto'] === 'http') {
@@ -73,11 +77,13 @@ export const getServerSideProps: GetServerSideProps<PublicHomePageProps> = async
     };
   }
 
-  let file = null;
-  let settings = null;
+  const storyId = params?.storyId as string;
+
+  let file: Story | null = null;
+  let settings: SettingsFile | null = null;
   let statusCode: boolean | number = false;
   let errorMessage: string | null = null;
-  let userProfile: Record<string, any> | undefined;
+  let userProfile: undefined | { apps?: Record<string, string> };
   try {
     userProfile = await lookupProfile({ username: resolvedUsername });
   } catch (error) {
@@ -86,10 +92,11 @@ export const getServerSideProps: GetServerSideProps<PublicHomePageProps> = async
       statusCode = 404;
     } else {
       statusCode = 500;
-      errorMessage = `Stacks.js lookupProfile returned error: ${error.message}`;
+      errorMessage = `Blockstack lookupProfile returned error: ${error.message}`;
       Sentry.withScope((scope) => {
         scope.setExtras({
           username: resolvedUsername,
+          storyId,
           message: error.message,
         });
         Sentry.captureException(error);
@@ -101,14 +108,14 @@ export const getServerSideProps: GetServerSideProps<PublicHomePageProps> = async
 
   // If the user already used the app we try to get the public list
   if (bucketUrl) {
-    const [dataPublicStories, dataSettings] = await Promise.all([
-      fetchPublicStories(bucketUrl),
+    const [dataPublicStory, dataSettings] = await Promise.all([
+      fetchPublicStory(bucketUrl, storyId),
       fetchSettings(bucketUrl),
     ]);
 
-    file = dataPublicStories.file;
-    if (dataPublicStories.statusCode) {
-      statusCode = dataPublicStories.statusCode;
+    file = dataPublicStory.file;
+    if (dataPublicStory.statusCode) {
+      statusCode = dataPublicStory.statusCode;
     }
 
     settings = dataSettings.file;
@@ -125,6 +132,7 @@ export const getServerSideProps: GetServerSideProps<PublicHomePageProps> = async
     props: {
       statusCode,
       errorMessage,
+      appUrl,
       username: resolvedUsername,
       file,
       settings,
@@ -132,24 +140,33 @@ export const getServerSideProps: GetServerSideProps<PublicHomePageProps> = async
   };
 };
 
-interface PublicHomePageProps {
+interface PublicStoryPageProps {
   statusCode: number | boolean;
-  errorMessage: string | null;
+  errorMessage?: string | null;
+  appUrl: string;
   username: string;
-  file: StoryFile;
-  settings: SettingsFile;
+  file: Story | null;
+  settings: SettingsFile | null;
 }
 
-export default function Home({
+export default function PublicStoryPage({
   statusCode,
   errorMessage,
+  appUrl,
   username,
   file,
   settings,
-}: PublicHomePageProps) {
+}: PublicStoryPageProps) {
   if (typeof statusCode === 'number') {
     return <Error statusCode={statusCode} errorMessage={errorMessage} />;
   }
 
-  return <PublicHome username={username} file={file} settings={settings} />;
+  return (
+    <PublicStory
+      appUrl={appUrl}
+      username={username}
+      story={file!}
+      settings={settings!}
+    />
+  );
 }

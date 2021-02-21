@@ -16,6 +16,13 @@ For non-bug-fixes, please open an issue first and discuss your idea to make sure
 - Must be formatted with prettier (`yarn prettier`).
 - Must be **isolated**. Avoid grouping many, unrelated changes in a single PR.
 
+## Structure
+
+Sigle is a monorepo made of 2 next.js applications:
+
+1. `sigle` folder - Contains the editor to write and edit your posts
+2. `blog-viewer`folder - Contains the blog rendering application
+
 ## Development Workflow
 
 To setup the project locally you first need to fork the project on Github (top right on the project page). Then clone the project: `git clone git@github.com:yourname/sigle.git`.
@@ -28,7 +35,7 @@ yarn install
 
 ### Set up environment variables
 
-Copy the `env.local.example` file in this directory to `.env.local` (which will be ignored by Git) and setup each variable.
+Copy the `env.local.example` file in the application directory to `.env.local` (which will be ignored by Git) and setup each variable.
 
 ```sh
 cp .env.local.example .env.local
