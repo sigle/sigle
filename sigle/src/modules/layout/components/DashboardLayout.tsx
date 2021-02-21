@@ -185,7 +185,7 @@ export const DashboardSidebar = () => {
           </MenuBottomItem>
           <MenuBottomItem>
             <a
-              href="https://app.sigle.io/sigleapp.id.blockstack"
+              href="https://blog.sigle.io"
               target="_blank"
               rel="noopener noreferrer"
             >
