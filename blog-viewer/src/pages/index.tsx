@@ -51,7 +51,8 @@ export const getServerSideProps: GetServerSideProps<PublicHomePageProps> = async
     };
   }
 
-  // TODO in contributing
+  // First time the server is started in dev we need to create the first user
+  // Just uncomment these lines to get it created for you
   // await prismaClient.user.create({
   //   data: {
   //     username: 'sigleapp.id.blockstack',
