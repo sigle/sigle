@@ -1,8 +1,18 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import parser from 'fast-xml-parser';
 import apiFeed from '../../pages/api/feed';
+import { prismaClient } from '../../utils/prisma';
 
 jest.mock('@sentry/node');
+jest.mock('../../utils/prisma', () => {
+  return {
+    prismaClient: {
+      user: {
+        findUnique: jest.fn(),
+      },
+    },
+  };
+});
 
 describe('test feed api', () => {
   beforeAll(() => {
@@ -29,6 +39,9 @@ describe('test feed api', () => {
   });
 
   it('should work properly', async () => {
+    (prismaClient.user.findUnique as jest.Mock).mockResolvedValueOnce({
+      username: 'sigleapp.id.blockstack',
+    });
     const req = {
       headers: {
         'x-forwarded-proto': 'https',
