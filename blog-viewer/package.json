@@ -3,8 +3,9 @@
   "version": "0.0.1",
   "scripts": {
     "dev": "next --port 3001",
-    "build": "next build",
-    "start": "next start",
+    "build": "prisma generate && next build",
+    "start": "yarn db:migrate && next start",
+    "db:migrate": "prisma migrate dev --preview-feature",
     "test": "yarn test:lint && yarn test:only",
     "test:lint": "eslint 'src/**/*.{js,ts,tsx}'",
     "test:only": "jest --passWithNoTests"
@@ -20,6 +21,7 @@
     }
   },
   "dependencies": {
+    "@prisma/client": "2.17.0",
     "@sentry/browser": "6.1.0",
     "@sentry/integrations": "6.1.0",
     "@sentry/node": "6.1.0",
@@ -31,6 +33,7 @@
     "next": "10.0.6",
     "next-seo": "4.19.0",
     "nprogress": "0.2.0",
+    "prisma": "2.17.0",
     "react": "17.0.1",
     "react-dom": "17.0.1",
     "reading-time": "1.2.1",

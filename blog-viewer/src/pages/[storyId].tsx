@@ -5,12 +5,7 @@ import * as Sentry from '@sentry/node';
 import Error from '../pages/_error';
 import { PublicStory } from '../modules/publicStory/PublicStory';
 import { Story, SettingsFile } from '../types';
-
-// Map the domain to the user blockstack id
-const customDomains: Record<string, string> = {
-  'https://blog.sigle.io': 'sigleapp.id.blockstack',
-  'http://localhost:3001': 'sigleapp.id.blockstack',
-};
+import { prismaClient } from '../utils/prisma';
 
 const fetchPublicStory = async (
   bucketUrl: string,
@@ -60,14 +55,16 @@ export const getServerSideProps: GetServerSideProps<PublicStoryPageProps> = asyn
     };
   }
 
+  const resolvedUser = await prismaClient.user.findUnique({
+    where: { domain: req.headers['host'] },
+  });
+
   const appUrl = `${req.headers['x-forwarded-proto'] || 'http'}://${
     req.headers['host']
   }`;
 
-  const resolvedUsername = customDomains[appUrl];
-
   // If domain is not allowed, redirect the user to the root domain
-  if (!resolvedUsername) {
+  if (!resolvedUser) {
     return {
       redirect: {
         destination: process.env.APP_URL,
@@ -85,7 +82,7 @@ export const getServerSideProps: GetServerSideProps<PublicStoryPageProps> = asyn
   let errorMessage: string | null = null;
   let userProfile: undefined | { apps?: Record<string, string> };
   try {
-    userProfile = await lookupProfile({ username: resolvedUsername });
+    userProfile = await lookupProfile({ username: resolvedUser.username });
   } catch (error) {
     // This will happen if there is no blockstack user with this name
     if (error.message === 'Name not found') {
@@ -95,7 +92,7 @@ export const getServerSideProps: GetServerSideProps<PublicStoryPageProps> = asyn
       errorMessage = `Blockstack lookupProfile returned error: ${error.message}`;
       Sentry.withScope((scope) => {
         scope.setExtras({
-          username: resolvedUsername,
+          username: resolvedUser.username,
           storyId,
           message: error.message,
         });
@@ -133,7 +130,7 @@ export const getServerSideProps: GetServerSideProps<PublicStoryPageProps> = asyn
       statusCode,
       errorMessage,
       appUrl,
-      username: resolvedUsername,
+      username: resolvedUser.username,
       file,
       settings,
     },

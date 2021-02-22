@@ -6,14 +6,9 @@ import { SettingsFile, StoryFile } from '../../types';
 import { migrationSettings } from '../../utils/migrations/settings';
 import { migrationStories } from '../../utils/migrations/stories';
 import { initSentry } from '../../utils/sentry';
+import { prismaClient } from '../../utils/prisma';
 
 initSentry();
-
-// Map the domain to the user blockstack id
-const customDomains: Record<string, string> = {
-  'https://blog.sigle.io': 'sigleapp.id.blockstack',
-  'http://localhost:3001': 'sigleapp.id.blockstack',
-};
 
 const escapeXml = (unsafe: string) => {
   return unsafe.replace(/[<>&'"]/g, (c) => {
@@ -39,9 +34,11 @@ const apiFeed: NextApiHandler = async (req, res) => {
     req.headers['host']
   }`;
 
-  const resolvedUsername = customDomains[appUrl];
+  const resolvedUser = await prismaClient.user.findUnique({
+    where: { domain: req.headers['host'] },
+  });
 
-  if (!resolvedUsername) {
+  if (!resolvedUser) {
     res.statusCode = 404;
     res.end(`404 not found`);
     return;
@@ -49,12 +46,12 @@ const apiFeed: NextApiHandler = async (req, res) => {
 
   let userProfile;
   try {
-    userProfile = await lookupProfile({ username: resolvedUsername });
+    userProfile = await lookupProfile({ username: resolvedUser.username });
   } catch (error) {
     // This will happen if there is no blockstack user with this name
     if (error.message === 'Name not found') {
       res.statusCode = 404;
-      res.end(`${resolvedUsername} not found`);
+      res.end(`${resolvedUser.username} not found`);
       return;
     }
     Sentry.captureException(error);
@@ -66,7 +63,7 @@ const apiFeed: NextApiHandler = async (req, res) => {
   const bucketUrl = userProfile?.apps?.[process.env.APP_URL!];
   if (!bucketUrl) {
     res.statusCode = 404;
-    res.end(`${resolvedUsername} is not using the app`);
+    res.end(`${resolvedUser.username} is not using the app`);
     return;
   }
 
@@ -83,11 +80,11 @@ const apiFeed: NextApiHandler = async (req, res) => {
     file = migrationStories();
   } else {
     Sentry.captureException(
-      `${resolvedUsername} failed to fetch public stories with code ${resPublicStories.status}`
+      `${resolvedUser.username} failed to fetch public stories with code ${resPublicStories.status}`
     );
     res.statusCode = 500;
     res.end(
-      `${resolvedUsername} failed to fetch public stories with code ${resPublicStories.status}`
+      `${resolvedUser.username} failed to fetch public stories with code ${resPublicStories.status}`
     );
     return;
   }
@@ -100,24 +97,26 @@ const apiFeed: NextApiHandler = async (req, res) => {
     settings = migrationSettings();
   } else {
     Sentry.captureException(
-      `${resolvedUsername} failed to settings storied with code ${resSettings.status}`
+      `${resolvedUser.username} failed to settings storied with code ${resSettings.status}`
     );
     res.statusCode = 500;
     res.end(
-      `${resolvedUsername} failed to settings storied with code ${resSettings.status}`
+      `${resolvedUser.username} failed to settings storied with code ${resSettings.status}`
     );
     return;
   }
 
   const feed = new Feed({
-    title: settings.siteName || resolvedUsername,
+    title: settings.siteName || resolvedUser.username,
     description: settings.siteDescription,
     id: appUrl,
     link: appUrl,
     favicon: `${appUrl}/favicon/apple-touch-icon.png`,
-    copyright: `All rights reserved ${new Date().getFullYear()}, ${resolvedUsername}`,
+    copyright: `All rights reserved ${new Date().getFullYear()}, ${
+      resolvedUser.username
+    }`,
     author: {
-      name: resolvedUsername,
+      name: resolvedUser.username,
       link: appUrl,
     },
   });

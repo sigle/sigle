@@ -4,6 +4,7 @@
 
 - [Node](https://nodejs.org/en/) 12.0.0+
 - [Yarn](https://classic.yarnpkg.com/en/) 1.22.0+
+- [Docker](https://www.docker.com/)
 
 ## Pull Requests
 
@@ -39,6 +40,14 @@ Copy the `env.local.example` file in the application directory to `.env.local` (
 
 ```sh
 cp .env.local.example .env.local
+```
+
+### Start the database
+
+We use docker to manage the local postgres database.
+
+```sh
+docker-compose start
 ```
 
 ### Run Next.js in development mode
