@@ -2027,6 +2027,27 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@prisma/client@npm:2.17.0":
+  version: 2.17.0
+  resolution: "@prisma/client@npm:2.17.0"
+  dependencies:
+    "@prisma/engines-version": 2.17.0-35.3c463ebd78b1d21d8fdacdd27899e280cf686223
+  peerDependencies:
+    prisma: "*"
+  peerDependenciesMeta:
+    prisma:
+      optional: true
+  checksum: 374e746098ac9454f72b2cb1858fa89b30bb8a1a03c459722bf3db887938cf79627b204f3b546e020df3246680356f60fdf9c61050eba16c2e7458c609acbb2c
+  languageName: node
+  linkType: hard
+
+"@prisma/engines-version@npm:2.17.0-35.3c463ebd78b1d21d8fdacdd27899e280cf686223":
+  version: 2.17.0-35.3c463ebd78b1d21d8fdacdd27899e280cf686223
+  resolution: "@prisma/engines-version@npm:2.17.0-35.3c463ebd78b1d21d8fdacdd27899e280cf686223"
+  checksum: 49c67c2e41c8e4e7d202c444066dba572d73a866ef795c20b541f6a79c741f2abdf359ea2a43b231ca725984c856a06f5cb7b90de5323467b137c7e2d9252a1c
+  languageName: node
+  linkType: hard
+
 "@prisma/engines@npm:2.17.0-35.3c463ebd78b1d21d8fdacdd27899e280cf686223":
   version: 2.17.0-35.3c463ebd78b1d21d8fdacdd27899e280cf686223
   resolution: "@prisma/engines@npm:2.17.0-35.3c463ebd78b1d21d8fdacdd27899e280cf686223"
@@ -4258,6 +4279,7 @@ __metadata:
   resolution: "blog-viewer@workspace:blog-viewer"
   dependencies:
     "@fontsource/roboto": 4.2.1
+    "@prisma/client": 2.17.0
     "@sentry/browser": 6.1.0
     "@sentry/integrations": 6.1.0
     "@sentry/node": 6.1.0
