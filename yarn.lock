@@ -2027,6 +2027,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@prisma/engines@npm:2.17.0-35.3c463ebd78b1d21d8fdacdd27899e280cf686223":
+  version: 2.17.0-35.3c463ebd78b1d21d8fdacdd27899e280cf686223
+  resolution: "@prisma/engines@npm:2.17.0-35.3c463ebd78b1d21d8fdacdd27899e280cf686223"
+  checksum: 17f6c3b461322aa03fcdfdfc86868a549cabc57ab380e70aef11cb8929cf44f9ce673dd6bf882e383e77ddafab43a50e5cc560d1bbcf3f79099c0a9081819b09
+  languageName: node
+  linkType: hard
+
 "@reach/alert@npm:^0.10.2":
   version: 0.10.5
   resolution: "@reach/alert@npm:0.10.5"
@@ -4280,6 +4287,7 @@ __metadata:
     next: 10.0.6
     next-seo: 4.19.0
     nprogress: 0.2.0
+    prisma: 2.17.0
     react: 17.0.1
     react-dom: 17.0.1
     reading-time: 1.2.1
@@ -11345,6 +11353,18 @@ fsevents@~2.3.1:
   peerDependencies:
     react: ">=0.14.9"
   checksum: f3996b4fb45a620d806501b8b8c411e9084e779ef58986f45e988cc46759ae7dc9e27bd2a29dc7bff7cb9561d4ead8c8c66eeaba34bdbe65504dce66f718ee06
+  languageName: node
+  linkType: hard
+
+"prisma@npm:2.17.0":
+  version: 2.17.0
+  resolution: "prisma@npm:2.17.0"
+  dependencies:
+    "@prisma/engines": 2.17.0-35.3c463ebd78b1d21d8fdacdd27899e280cf686223
+  bin:
+    prisma: build/index.js
+    prisma2: build/index.js
+  checksum: a685267ca05830353fcdca059c86c39ace90d9e6267ee5ab917ad85c8efd56cf9cb29d3e5e2d58b3ea8acf6666fc1a3f6acc6bfd36e273501a66e2f4faa8bd43
   languageName: node
   linkType: hard
 

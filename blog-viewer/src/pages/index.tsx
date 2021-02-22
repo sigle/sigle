@@ -4,6 +4,7 @@ import { lookupProfile } from '@stacks/auth';
 import { SettingsFile, StoryFile } from '../types';
 import Error from './_error';
 import { PublicHome } from '../modules/publicHome/PublicHome';
+import { prismaClient } from '../utils/prisma';
 
 // Map the domain to the user blockstack id
 const customDomains: Record<string, string> = {
@@ -56,14 +57,14 @@ export const getServerSideProps: GetServerSideProps<PublicHomePageProps> = async
     };
   }
 
-  const appUrl = `${req.headers['x-forwarded-proto'] || 'http'}://${
-    req.headers['host']
-  }`;
+  const resolvedUser = await prismaClient.user.findUnique({
+    where: { domain: req.headers['host'] },
+  });
 
-  const resolvedUsername = customDomains[appUrl];
+  console.log({ resolvedUser });
 
   // If domain is not allowed, redirect the user to the root domain
-  if (!resolvedUsername) {
+  if (!resolvedUser) {
     return {
       redirect: {
         destination: process.env.APP_URL,
@@ -79,7 +80,7 @@ export const getServerSideProps: GetServerSideProps<PublicHomePageProps> = async
   let errorMessage: string | null = null;
   let userProfile: Record<string, any> | undefined;
   try {
-    userProfile = await lookupProfile({ username: resolvedUsername });
+    userProfile = await lookupProfile({ username: resolvedUser.username });
   } catch (error) {
     // This will happen if there is no blockstack user with this name
     if (error.message === 'Name not found') {
@@ -89,7 +90,7 @@ export const getServerSideProps: GetServerSideProps<PublicHomePageProps> = async
       errorMessage = `Stacks.js lookupProfile returned error: ${error.message}`;
       Sentry.withScope((scope) => {
         scope.setExtras({
-          username: resolvedUsername,
+          username: resolvedUser.username,
           message: error.message,
         });
         Sentry.captureException(error);
@@ -125,7 +126,7 @@ export const getServerSideProps: GetServerSideProps<PublicHomePageProps> = async
     props: {
       statusCode,
       errorMessage,
-      username: resolvedUsername,
+      username: resolvedUser.username,
       file,
       settings,
     },
