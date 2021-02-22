@@ -112,7 +112,9 @@ const apiFeed: NextApiHandler = async (req, res) => {
     id: appUrl,
     link: appUrl,
     favicon: `${appUrl}/favicon/apple-touch-icon.png`,
-    copyright: `All rights reserved ${new Date().getFullYear()}, ${resolvedUser.username}`,
+    copyright: `All rights reserved ${new Date().getFullYear()}, ${
+      resolvedUser.username
+    }`,
     author: {
       name: resolvedUser.username,
       link: appUrl,
