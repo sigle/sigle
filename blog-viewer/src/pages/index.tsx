@@ -6,12 +6,6 @@ import Error from './_error';
 import { PublicHome } from '../modules/publicHome/PublicHome';
 import { prismaClient } from '../utils/prisma';
 
-// Map the domain to the user blockstack id
-const customDomains: Record<string, string> = {
-  'https://blog.sigle.io': 'sigleapp.id.blockstack',
-  'http://localhost:3001': 'sigleapp.id.blockstack',
-};
-
 const fetchPublicStories = async (bucketUrl: string) => {
   let file;
   let statusCode: false | number = false;
@@ -57,11 +51,17 @@ export const getServerSideProps: GetServerSideProps<PublicHomePageProps> = async
     };
   }
 
+  // TODO in contributing
+  // await prismaClient.user.create({
+  //   data: {
+  //     username: 'sigleapp.id.blockstack',
+  //     domain: 'localhost:3001',
+  //   },
+  // });
+
   const resolvedUser = await prismaClient.user.findUnique({
     where: { domain: req.headers['host'] },
   });
-
-  console.log({ resolvedUser });
 
   // If domain is not allowed, redirect the user to the root domain
   if (!resolvedUser) {
