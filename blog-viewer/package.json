@@ -4,7 +4,8 @@
   "scripts": {
     "dev": "next --port 3001",
     "build": "prisma generate && next build",
-    "start": "next start",
+    "start": "yarn db:migrate && next start",
+    "db:migrate": "prisma migrate dev --preview-feature",
     "test": "yarn test:lint && yarn test:only",
     "test:lint": "eslint 'src/**/*.{js,ts,tsx}'",
     "test:only": "jest --passWithNoTests"

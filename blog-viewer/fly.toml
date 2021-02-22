@@ -23,3 +23,6 @@ kill_timeout = 5
     path = "/api/health"
     protocol = "http"
     timeout = "2s"
+
+[experimental]
+  private_network = true

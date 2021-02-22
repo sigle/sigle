@@ -20,6 +20,7 @@ WORKDIR /app
 # COPY package.json next.config.js .env* ./
 COPY --from=builder /app/package.json ./package.json
 COPY --from=builder /app/blog-viewer/package.json ./blog-viewer/package.json
+COPY --from=builder /app/blog-viewer/prisma ./blog-viewer/prisma
 COPY --from=builder /app/blog-viewer/public ./blog-viewer/public
 COPY --from=builder /app/blog-viewer/.next ./blog-viewer/.next
 COPY --from=builder /app/blog-viewer/.env.production ./blog-viewer/.env.production
