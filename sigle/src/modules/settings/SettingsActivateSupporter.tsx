@@ -42,7 +42,8 @@ export const SettingsActivateSupporter = () => {
       return errors;
     },
     onSubmit: async (values, { setSubmitting }) => {
-      toast.success('Settings saved');
+      // TODO do call to backend that link account with username
+      toast.success('Supporter account activated');
       setSubmitting(false);
     },
   });
@@ -75,7 +76,7 @@ export const SettingsActivateSupporter = () => {
       </StyledFormRow>
 
       <Button disabled={formik.isSubmitting} type="submit">
-        {formik.isSubmitting ? 'Saving...' : 'Save'}
+        {formik.isSubmitting ? 'Sending...' : 'Send'}
       </Button>
     </form>
   );
