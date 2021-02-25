@@ -136,7 +136,7 @@ interface Props {
   publishLoading: boolean;
   onPublish: () => void;
   onCancelPublish: () => void;
-  onConfirmPublish: () => void;
+  onConfirmPublish: () => Promise<void>;
   showUnpublishDialog: boolean;
   unpublishLoading: boolean;
   onUnpublish: () => void;
@@ -662,8 +662,12 @@ export const SlateEditor = ({
 
         <FullScreenDialog
           isOpen={showPublishDialog}
-          confirmLoading={publishLoading}
-          onConfirm={onConfirmPublish}
+          confirmLoading={loadingSave || publishLoading}
+          onConfirm={async () => {
+            // We save before publishing
+            await handleSave();
+            await onConfirmPublish();
+          }}
           onCancel={onCancelPublish}
           loadingTitle="Publishing ..."
           title="Publish my story"
