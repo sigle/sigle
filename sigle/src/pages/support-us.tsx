@@ -5,6 +5,7 @@ import { Protected } from '../modules/auth/Protected';
 import { DashboardLayout } from '../modules/layout';
 import { DashboardPageContainer } from '../modules/layout/components/DashboardLayout';
 import { DashboardPageTitle } from '../modules/layout/components/DashboardHeader';
+import { sigleConfig } from '../config';
 
 const SupportUsSubtitle = styled.h4`
   ${tw`text-xl mt-10 mb-4`};
@@ -84,7 +85,7 @@ const SupportUsPage = () => {
               className="bmc-button"
               target="_blank"
               rel="noopener noreferrer"
-              href="https://www.buymeacoffee.com/sigle"
+              href={sigleConfig.buyMeACoffeeUrl}
             >
               <img
                 src="https://cdn.buymeacoffee.com/buttons/bmc-new-btn-logo.svg"
