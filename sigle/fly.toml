@@ -5,13 +5,12 @@ app = "sigle"
 kill_signal = "SIGINT"
 kill_timeout = 5
 
-[[services]]
-  internal_port = 8080
-  protocol = "tcp"
+[experimental]
+  private_network = true
 
-  [services.concurrency]
-    hard_limit = 25
-    soft_limit = 20
+[[services]]
+  internal_port = 3000
+  protocol = "tcp"
 
   [[services.ports]]
     handlers = ["http"]
@@ -21,9 +20,16 @@ kill_timeout = 5
     handlers = ["tls", "http"]
     port = "443"
 
-  [[services.tcp_checks]]
+  [services.concurrency]
+    hard_limit = 25
+    soft_limit = 20
+
+  [[services.http_checks]]
     grace_period = "1s"
     interval = "10s"
-    port = "8080"
+    method = "get"
+    path = "/api/health"
+    protocol = "http"
     restart_limit = 5
     timeout = "2s"
+    tls_skip_verify = false
