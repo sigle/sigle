@@ -3,9 +3,6 @@ name: Deploy to production
 on:
   push:
     branches: [main]
-  # TODO remove
-  pull_request:
-    branches: [main]
 
 jobs:
   deploy-sigle:
