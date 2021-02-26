@@ -8,6 +8,8 @@ import tw from 'twin.macro';
 import { DefaultSeo } from 'next-seo';
 import { ToastContainer } from 'react-toastify';
 import { config as blockstackConfig } from 'blockstack';
+import { QueryClient, QueryClientProvider } from 'react-query';
+import { ReactQueryDevtools } from 'react-query/devtools';
 import NProgress from 'nprogress';
 import 'nprogress/nprogress.css';
 // TODO add tippy.js only on the pages that are using it
@@ -28,6 +30,8 @@ import { initSentry } from '../utils/sentry';
 blockstackConfig.logLevel = 'info';
 
 initSentry();
+
+const queryClient = new QueryClient();
 
 /**
  * Fathom
@@ -149,9 +153,12 @@ export default class MyApp extends App {
         />
         <GlobalStyle />
         <FathomTrack />
-        <AuthProvider>
-          <Component {...modifiedPageProps} />
-        </AuthProvider>
+        <QueryClientProvider client={queryClient}>
+          <ReactQueryDevtools initialIsOpen={false} />
+          <AuthProvider>
+            <Component {...modifiedPageProps} />
+          </AuthProvider>
+        </QueryClientProvider>
         <ToastContainer autoClose={3000} toastClassName="reactToastify" />
       </React.Fragment>
     );

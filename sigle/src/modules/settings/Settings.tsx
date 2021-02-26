@@ -1,30 +1,28 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { toast } from 'react-toastify';
+import { useQuery } from 'react-query';
+import * as Sentry from '@sentry/node';
 import { DashboardLayout } from '../layout';
 import { DashboardPageContainer } from '../layout/components/DashboardLayout';
 import { DashboardPageTitle } from '../layout/components/DashboardHeader';
 import { useAuth } from '../auth/AuthContext';
 import { getSettingsFile } from '../../utils';
-import { SettingsFile } from '../../types';
 import { SettingsForm } from './SettingsForm';
 
 export const Settings = () => {
   const { user } = useAuth();
-  const [settingsFile, setSettingsFile] = useState<SettingsFile>();
 
-  useEffect(() => {
-    const loadSettings = async () => {
-      try {
-        const settingsFileResponse = await getSettingsFile();
-        setSettingsFile(settingsFileResponse);
-      } catch (error) {
-        console.error(error);
-        toast.error(error.message);
-      }
-    };
-
-    loadSettings();
-  }, []);
+  const { data: settingsFile } = useQuery(
+    'user-settings',
+    () => getSettingsFile(),
+    {
+      cacheTime: 0,
+      onError: (error: Error) => {
+        Sentry.captureException(error);
+        toast.error(error.message || error);
+      },
+    }
+  );
 
   return (
     <DashboardLayout>

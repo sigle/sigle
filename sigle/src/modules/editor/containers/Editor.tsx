@@ -1,26 +1,29 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 import { useRouter } from 'next/router';
+import { useQuery } from 'react-query';
+import * as Sentry from '@sentry/node';
 import { Editor as Component } from '../components/Editor';
 import { Story } from '../../../types';
 import { getStoryFile } from '../../../utils';
 
 export const Editor = () => {
   const router = useRouter();
-  const { storyId } = router.query;
-  const [loading, setLoading] = useState(true);
+  const { storyId } = router.query as { storyId: string };
   const [story, setStory] = useState<Story | null>(null);
 
-  const loadStoryFile = async () => {
-    try {
-      const file = await getStoryFile(storyId as string);
-      setStory(file);
-    } catch (error) {
-      console.error(error);
-      toast.error(error.message);
+  const { data, isLoading } = useQuery(
+    ['story', storyId],
+    () => getStoryFile(storyId),
+    {
+      enabled: Boolean(storyId),
+      cacheTime: 0,
+      onError: (error: Error) => {
+        Sentry.captureException(error);
+        toast.error(error.message || error);
+      },
     }
-    setLoading(false);
-  };
+  );
 
   const handleChangeStoryField = (field: string, value: any) => {
     if (!story) {
@@ -34,13 +37,14 @@ export const Editor = () => {
   };
 
   useEffect(() => {
-    loadStoryFile();
-    // eslint-disable-next-line
-  }, []);
+    if (data) {
+      setStory(data);
+    }
+  }, [data]);
 
   return (
     <Component
-      loading={loading}
+      loading={isLoading}
       story={story}
       onChangeStoryField={handleChangeStoryField}
     />
