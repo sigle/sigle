@@ -1,0 +1,18 @@
+name: Deploy to production
+
+on:
+  push:
+    branches: [main]
+  # TODO remove
+  pull_request:
+    branches: [main]
+
+jobs:
+  deploy:
+    name: Deploy sigle
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: superfly/flyctl-actions@1.1
+        with:
+          args: 'deploy'
