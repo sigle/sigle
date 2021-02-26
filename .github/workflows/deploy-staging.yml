@@ -18,7 +18,7 @@ jobs:
         env:
           FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
         with:
-          args: 'deploy --config sigle/fly.staging.toml --dockerfile sigle/Dockerfile'
+          args: 'deploy --config sigle/fly.staging.toml --dockerfile sigle/Dockerfile --remote-only'
 
   deploy-blog-viewer:
     name: Deploy sigle blog viewer
@@ -31,4 +31,4 @@ jobs:
         env:
           FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
         with:
-          args: 'deploy --config blog-viewer/fly.staging.toml --dockerfile blog-viewer/Dockerfile'
+          args: 'deploy --config blog-viewer/fly.staging.toml --dockerfile blog-viewer/Dockerfile --remote-only'
