@@ -3,6 +3,9 @@ name: Deploy to production
 on:
   push:
     branches: [main]
+  # TODO remove
+  pull_request:
+    branches: [main]
 
 jobs:
   deploy-sigle:
@@ -14,7 +17,7 @@ jobs:
         env:
           FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
         with:
-          args: 'deploy --config sigle/fly.toml --dockerfile sigle/Dockerfile'
+          args: 'deploy --config sigle/fly.toml --dockerfile sigle/Dockerfile --remote-only'
 
   deploy-blog-viewer:
     name: Deploy sigle blog viewer
@@ -25,4 +28,4 @@ jobs:
         env:
           FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
         with:
-          args: 'deploy --config blog-viewer/fly.toml --dockerfile blog-viewer/Dockerfile'
+          args: 'deploy --config blog-viewer/fly.toml --dockerfile blog-viewer/Dockerfile --remote-only'
