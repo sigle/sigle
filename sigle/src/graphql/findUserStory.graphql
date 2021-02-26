@@ -1,8 +1,0 @@
-query findUserStory($id: ID!, $username: String!) {
-  userStory(id: $id, username: $username) {
-    _id
-    id
-    username
-    title
-  }
-}

@@ -2,11 +2,9 @@ import React from 'react';
 import { GetServerSideProps, NextPage } from 'next';
 import { lookupProfile } from 'blockstack';
 import * as Sentry from '@sentry/node';
-import fetch from 'node-fetch';
 import Error from '../../pages/_error';
 import { PublicStory } from '../../modules/publicStory';
 import { Story, SettingsFile } from '../../types';
-import { delegateRequest } from '../../utils/delegateRequest';
 
 interface PublicStoryPageProps {
   statusCode: number | boolean;
@@ -119,14 +117,6 @@ export const getServerSideProps: GetServerSideProps<PublicStoryPageProps> = asyn
   // If statusCode is not false we set the http response code
   if (statusCode && res) {
     res.statusCode = statusCode as number;
-  }
-
-  // If story is found we start a task to add it to the indexer
-  if (file) {
-    await delegateRequest(appHost, '/api/update_story', {
-      username,
-      storyId,
-    });
   }
 
   return { props: { statusCode, errorMessage, file, settings } };
