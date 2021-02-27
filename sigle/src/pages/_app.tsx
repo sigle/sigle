@@ -120,6 +120,22 @@ Router.events.on('routeChangeStart', () => NProgress.start());
 Router.events.on('routeChangeComplete', () => NProgress.done());
 Router.events.on('routeChangeError', () => NProgress.done());
 
+/**
+ * Force https client side
+ * Ideally it should be server side but we would lose the next.js optimisation
+ */
+const ForceHTTPS = () => {
+  useEffect(() => {
+    // Only check in production to avoid redirecting localhost
+    if (sigleConfig.env === 'production' && location.protocol !== 'https:') {
+      location.replace(
+        `https:${location.href.substring(location.protocol.length)}`
+      );
+    }
+  }, []);
+
+  return <React.Fragment />;
+};
 export default class MyApp extends App {
   render() {
     const { Component, pageProps } = this.props;
@@ -152,6 +168,7 @@ export default class MyApp extends App {
           twitter={{ site: '@sigleapp', cardType: 'summary_large_image' }}
         />
         <GlobalStyle />
+        <ForceHTTPS />
         <FathomTrack />
         <QueryClientProvider client={queryClient}>
           <ReactQueryDevtools initialIsOpen={false} />
