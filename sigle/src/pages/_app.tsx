@@ -8,6 +8,8 @@ import tw from 'twin.macro';
 import { DefaultSeo } from 'next-seo';
 import { ToastContainer } from 'react-toastify';
 import { config as blockstackConfig } from 'blockstack';
+import { QueryClient, QueryClientProvider } from 'react-query';
+import { ReactQueryDevtools } from 'react-query/devtools';
 import NProgress from 'nprogress';
 import 'nprogress/nprogress.css';
 // TODO add tippy.js only on the pages that are using it
@@ -28,6 +30,8 @@ import { initSentry } from '../utils/sentry';
 blockstackConfig.logLevel = 'info';
 
 initSentry();
+
+const queryClient = new QueryClient();
 
 /**
  * Fathom
@@ -116,6 +120,22 @@ Router.events.on('routeChangeStart', () => NProgress.start());
 Router.events.on('routeChangeComplete', () => NProgress.done());
 Router.events.on('routeChangeError', () => NProgress.done());
 
+/**
+ * Force https client side
+ * Ideally it should be server side but we would lose the next.js optimisation
+ */
+const ForceHTTPS = () => {
+  useEffect(() => {
+    // Only check in production to avoid redirecting localhost
+    if (sigleConfig.env === 'production' && location.protocol !== 'https:') {
+      location.replace(
+        `https:${location.href.substring(location.protocol.length)}`
+      );
+    }
+  }, []);
+
+  return <React.Fragment />;
+};
 export default class MyApp extends App {
   render() {
     const { Component, pageProps } = this.props;
@@ -148,10 +168,14 @@ export default class MyApp extends App {
           twitter={{ site: '@sigleapp', cardType: 'summary_large_image' }}
         />
         <GlobalStyle />
+        <ForceHTTPS />
         <FathomTrack />
-        <AuthProvider>
-          <Component {...modifiedPageProps} />
-        </AuthProvider>
+        <QueryClientProvider client={queryClient}>
+          <ReactQueryDevtools initialIsOpen={false} />
+          <AuthProvider>
+            <Component {...modifiedPageProps} />
+          </AuthProvider>
+        </QueryClientProvider>
         <ToastContainer autoClose={3000} toastClassName="reactToastify" />
       </React.Fragment>
     );
