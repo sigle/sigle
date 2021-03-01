@@ -10353,6 +10353,7 @@ resolve@^1.19.0:
     "@bundle-analyzer/webpack-plugin": 0.5.1
     "@fontsource/roboto": 4.2.1
     "@next/bundle-analyzer": 10.0.6
+    "@prisma/client": 2.17.0
     "@reach/dialog": 0.13.0
     "@reach/menu-button": 0.13.0
     "@reach/tooltip": 0.13.0
@@ -10402,6 +10403,7 @@ resolve@^1.19.0:
     next-seo: 4.19.0
     nprogress: 0.2.0
     postcss: 8.2.1
+    prisma: 2.17.0
     react: 17.0.1
     react-color: 2.19.3
     react-div-100vh: 0.5.6
