@@ -19,7 +19,7 @@
   "dependencies": {
     "@blockstack/connect": "2.12.7",
     "@blockstack/stacks-transactions": "0.7.0",
-    "@prisma/client": "2.17.0",
+    "@prisma/client": "2.18.0",
     "@reach/dialog": "0.13.0",
     "@reach/menu-button": "0.13.0",
     "@reach/tooltip": "0.13.0",
@@ -37,7 +37,7 @@
     "next": "10.0.6",
     "next-seo": "4.19.0",
     "nprogress": "0.2.0",
-    "prisma": "2.17.0",
+    "prisma": "2.18.0",
     "react": "17.0.1",
     "react-color": "2.19.3",
     "react-div-100vh": "0.5.6",

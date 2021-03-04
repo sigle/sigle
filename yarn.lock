@@ -1051,31 +1051,31 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@prisma/client@npm:2.17.0":
-  version: 2.17.0
-  resolution: "@prisma/client@npm:2.17.0"
+"@prisma/client@npm:2.18.0":
+  version: 2.18.0
+  resolution: "@prisma/client@npm:2.18.0"
   dependencies:
-    "@prisma/engines-version": 2.17.0-35.3c463ebd78b1d21d8fdacdd27899e280cf686223
+    "@prisma/engines-version": 2.18.0-34.da6fafb57b24e0b61ca20960c64e2d41f9e8cff1
   peerDependencies:
     prisma: "*"
   peerDependenciesMeta:
     prisma:
       optional: true
-  checksum: 374e746098ac9454f72b2cb1858fa89b30bb8a1a03c459722bf3db887938cf79627b204f3b546e020df3246680356f60fdf9c61050eba16c2e7458c609acbb2c
+  checksum: f8be594da9e69ebc4e33dc61f4017af26dba2a68bd93bad01930b157a924507bff4baf0ad44cc7960270fef20fab5d90f7fd48b4b15eba135d4712ac1ff735b9
   languageName: node
   linkType: hard
 
-"@prisma/engines-version@npm:2.17.0-35.3c463ebd78b1d21d8fdacdd27899e280cf686223":
-  version: 2.17.0-35.3c463ebd78b1d21d8fdacdd27899e280cf686223
-  resolution: "@prisma/engines-version@npm:2.17.0-35.3c463ebd78b1d21d8fdacdd27899e280cf686223"
-  checksum: 49c67c2e41c8e4e7d202c444066dba572d73a866ef795c20b541f6a79c741f2abdf359ea2a43b231ca725984c856a06f5cb7b90de5323467b137c7e2d9252a1c
+"@prisma/engines-version@npm:2.18.0-34.da6fafb57b24e0b61ca20960c64e2d41f9e8cff1":
+  version: 2.18.0-34.da6fafb57b24e0b61ca20960c64e2d41f9e8cff1
+  resolution: "@prisma/engines-version@npm:2.18.0-34.da6fafb57b24e0b61ca20960c64e2d41f9e8cff1"
+  checksum: f8b31a3558564ebde056ca347b24011db4bc0a828cf463a09fa4c886047b83779f729faee3335c4d15d92b30196af5fd9dfa2b612c53609704256809191ad6b7
   languageName: node
   linkType: hard
 
-"@prisma/engines@npm:2.17.0-35.3c463ebd78b1d21d8fdacdd27899e280cf686223":
-  version: 2.17.0-35.3c463ebd78b1d21d8fdacdd27899e280cf686223
-  resolution: "@prisma/engines@npm:2.17.0-35.3c463ebd78b1d21d8fdacdd27899e280cf686223"
-  checksum: 17f6c3b461322aa03fcdfdfc86868a549cabc57ab380e70aef11cb8929cf44f9ce673dd6bf882e383e77ddafab43a50e5cc560d1bbcf3f79099c0a9081819b09
+"@prisma/engines@npm:2.18.0-34.da6fafb57b24e0b61ca20960c64e2d41f9e8cff1":
+  version: 2.18.0-34.da6fafb57b24e0b61ca20960c64e2d41f9e8cff1
+  resolution: "@prisma/engines@npm:2.18.0-34.da6fafb57b24e0b61ca20960c64e2d41f9e8cff1"
+  checksum: 945844b5cf8d6c9cfd9fa6b07c055f8786e74829151fd208902cc92033adeda0d37061130c8a5925ddffdaf7e980b66d235d05ae6458ec0b70b98ed7d4f24e4f
   languageName: node
   linkType: hard
 
@@ -3104,7 +3104,7 @@ __metadata:
   resolution: "blog-viewer@workspace:blog-viewer"
   dependencies:
     "@fontsource/roboto": 4.2.1
-    "@prisma/client": 2.17.0
+    "@prisma/client": 2.18.0
     "@sentry/browser": 6.1.0
     "@sentry/integrations": 6.1.0
     "@sentry/node": 6.1.0
@@ -3134,7 +3134,7 @@ __metadata:
     next: 10.0.6
     next-seo: 4.19.0
     nprogress: 0.2.0
-    prisma: 2.17.0
+    prisma: 2.18.0
     react: 17.0.1
     react-dom: 17.0.1
     reading-time: 1.2.1
@@ -9184,15 +9184,15 @@ fsevents@~2.3.1:
   languageName: node
   linkType: hard
 
-"prisma@npm:2.17.0":
-  version: 2.17.0
-  resolution: "prisma@npm:2.17.0"
+"prisma@npm:2.18.0":
+  version: 2.18.0
+  resolution: "prisma@npm:2.18.0"
   dependencies:
-    "@prisma/engines": 2.17.0-35.3c463ebd78b1d21d8fdacdd27899e280cf686223
+    "@prisma/engines": 2.18.0-34.da6fafb57b24e0b61ca20960c64e2d41f9e8cff1
   bin:
     prisma: build/index.js
     prisma2: build/index.js
-  checksum: a685267ca05830353fcdca059c86c39ace90d9e6267ee5ab917ad85c8efd56cf9cb29d3e5e2d58b3ea8acf6666fc1a3f6acc6bfd36e273501a66e2f4faa8bd43
+  checksum: f46397044d9e61734914ae6d13bd09d1159ad531e2b29de61b04ea1a18adc38ea57cb634687c288e9d3a42e14c842e6b1fc01424ef265d5d4cd4e52cfff83fc3
   languageName: node
   linkType: hard
 
@@ -10353,7 +10353,7 @@ resolve@^1.19.0:
     "@bundle-analyzer/webpack-plugin": 0.5.1
     "@fontsource/roboto": 4.2.1
     "@next/bundle-analyzer": 10.0.6
-    "@prisma/client": 2.17.0
+    "@prisma/client": 2.18.0
     "@reach/dialog": 0.13.0
     "@reach/menu-button": 0.13.0
     "@reach/tooltip": 0.13.0
@@ -10403,7 +10403,7 @@ resolve@^1.19.0:
     next-seo: 4.19.0
     nprogress: 0.2.0
     postcss: 8.2.1
-    prisma: 2.17.0
+    prisma: 2.18.0
     react: 17.0.1
     react-color: 2.19.3
     react-div-100vh: 0.5.6

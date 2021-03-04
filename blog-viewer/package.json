@@ -21,7 +21,7 @@
     }
   },
   "dependencies": {
-    "@prisma/client": "2.17.0",
+    "@prisma/client": "2.18.0",
     "@sentry/browser": "6.1.0",
     "@sentry/integrations": "6.1.0",
     "@sentry/node": "6.1.0",
@@ -33,7 +33,7 @@
     "next": "10.0.6",
     "next-seo": "4.19.0",
     "nprogress": "0.2.0",
-    "prisma": "2.17.0",
+    "prisma": "2.18.0",
     "react": "17.0.1",
     "react-dom": "17.0.1",
     "reading-time": "1.2.1",

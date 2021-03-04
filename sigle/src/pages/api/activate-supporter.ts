@@ -1,4 +1,8 @@
 import { NextApiHandler } from 'next';
+import { prismaClient } from '../../utils/prisma';
+import { initSentry } from '../../utils/sentry';
+
+initSentry();
 
 type ActivateSupporterAccountResponse =
   | {
@@ -30,8 +34,32 @@ const activateSupporterAccount: NextApiHandler<ActivateSupporterAccountResponse>
   }
 
   // TODO extract username from request - see how to do this
+  const username = 'leopradel.id.blockstack';
+
   // TODO prisma query to find the unused code
-  // TODO prisma record to create a new user
+  // TODO check the code is unused
+  const dbCode = 'testCode';
+  if (code !== dbCode) {
+    res.status(200).json({ success: false, message: 'Invalid code' });
+    return;
+  }
+
+  // Check that the user does not already exist
+  const dbUser = await prismaClient.user.findUnique({
+    where: {
+      username,
+    },
+  });
+  if (!dbUser) {
+    res.status(200).json({ success: false, message: 'User already exist' });
+    return;
+  }
+
+  await prismaClient.user.create({
+    data: {
+      username,
+    },
+  });
 
   res.status(200).json({ success: true });
 };
