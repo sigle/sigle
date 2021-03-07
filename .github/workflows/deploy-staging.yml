@@ -4,7 +4,7 @@ on:
   push:
     branches:
       # Change the branch name to deploy the current feature branch to staging
-      - 'feature/change'
+      - 'feature/enable-supporter-plan'
 
 jobs:
   deploy-sigle:
