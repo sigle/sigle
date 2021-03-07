@@ -5,3 +5,4 @@ node_modules
 .yarn/install-state.gz
 blog-viewer/.env
 blog-viewer/.env.local
+sigle/.env.local

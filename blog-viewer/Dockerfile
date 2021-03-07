@@ -3,9 +3,18 @@ FROM node:14 AS builder
 
 WORKDIR /app
 
-COPY . .
+COPY ./.yarnrc.yml ./.yarnrc.yml
+COPY ./.yarn/releases ./.yarn/releases
+COPY ./.yarn/plugins ./.yarn/plugins
+COPY ./package.json ./package.json
+COPY ./yarn.lock ./yarn.lock
+COPY ./blog-viewer/package.json ./blog-viewer/package.json
+COPY ./sigle/package.json ./sigle/package.json
 
 RUN yarn install --immutable
+
+# Copy the rest of the code
+COPY . .
 
 # Build the next.js application
 RUN yarn workspace blog-viewer build

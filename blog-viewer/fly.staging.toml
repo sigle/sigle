@@ -1,6 +1,6 @@
 # fly.toml file generated for sigle-blog-viewer on 2021-02-26T13:00:03+01:00
 
-app = "sigle-blog-viewer"
+app = "sigle-blog-viewer-staging"
 
 kill_signal = "SIGINT"
 kill_timeout = 5
