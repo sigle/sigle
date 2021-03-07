@@ -3,7 +3,9 @@
   "scripts": {
     "prettier": "prettier --write '**/*.{js,ts,tsx,md,css}'",
     "deploy:blog-viewer": "flyctl deploy --config blog-viewer/fly.toml --dockerfile blog-viewer/Dockerfile",
-    "deploy:sigle": "flyctl deploy --config sigle/fly.toml --dockerfile sigle/Dockerfile"
+    "deploy:blog-viewer:staging": "deploy --config blog-viewer/fly.staging.toml --dockerfile blog-viewer/Dockerfile",
+    "deploy:sigle": "deploy --config sigle/fly.staging.toml --dockerfile sigle/Dockerfile",
+    "deploy:sigle:staging": "flyctl deploy --config sigle/fly.toml --dockerfile sigle/Dockerfile"
   },
   "workspaces": [
     "sigle",
