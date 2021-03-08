@@ -8,7 +8,7 @@ import { MdAddAPhoto, MdDelete } from 'react-icons/md';
 import { BlockPicker } from 'react-color';
 import { SettingsFile } from '../../types';
 import { hexRegex } from '../../utils/regex';
-import { userSession } from '../../utils/blockstack';
+import { storage } from '../../utils/blockstack';
 import { getSettingsFile, saveSettingsFile } from '../../utils';
 import { resizeImage } from '../../utils/image';
 import { Button } from '../../components';
@@ -114,7 +114,7 @@ export const SettingsForm = ({ settings, username }: SettingsFormProps) => {
       if (customLogo) {
         const now = new Date().getTime();
         const name = `photos/settings/${now}-${customLogo.name}`;
-        const coverImageUrl = await userSession.putFile(
+        const coverImageUrl = await storage.putFile(
           name,
           customLogo as any,
           {

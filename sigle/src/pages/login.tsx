@@ -3,7 +3,7 @@ import styled, { css } from 'styled-components';
 import tw from 'twin.macro';
 import { useRouter } from 'next/router';
 import * as Fathom from 'fathom-client';
-import { useConnect } from '@blockstack/connect';
+import { useConnect } from '@stacks/connect-react';
 import { sigleConfig } from '../config';
 import { Button } from '../components';
 import { Goals } from '../utils/fathom';

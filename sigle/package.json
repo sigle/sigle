@@ -17,8 +17,6 @@
     ]
   },
   "dependencies": {
-    "@blockstack/connect": "2.12.7",
-    "@blockstack/stacks-transactions": "0.7.0",
     "@reach/dialog": "0.13.0",
     "@reach/menu-button": "0.13.0",
     "@reach/tooltip": "0.13.0",
@@ -26,6 +24,9 @@
     "@sentry/integrations": "6.1.0",
     "@sentry/node": "6.1.0",
     "@stacks/auth": "1.2.3",
+    "@stacks/connect": "4.3.15",
+    "@stacks/connect-react": "2.17.15",
+    "@stacks/storage": "1.2.3",
     "@tippy.js/react": "3.1.1",
     "blockstack": "21.1.1",
     "date-fns": "2.16.1",

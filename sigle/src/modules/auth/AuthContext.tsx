@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
-import { Connect, AuthOptions } from '@blockstack/connect';
+import { Connect, AuthOptions } from '@stacks/connect-react';
 import { BlockstackUser } from '../../types';
 import { userSession } from '../../utils/blockstack';
 
@@ -57,7 +57,6 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
       name: 'Sigle',
       icon: 'https://app.sigle.io/icon-192x192.png',
     },
-    userSession,
     finished: () => {
       setState({
         loggingIn: false,
