@@ -1,9 +1,9 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { lookupProfile } from 'blockstack';
+import { lookupProfile } from '@stacks/auth';
 import * as Sentry from '@sentry/node';
 import { getServerSideProps } from './[username]';
 
-jest.mock('blockstack');
+jest.mock('@stacks/auth');
 jest.mock('@sentry/node');
 
 const params = {
@@ -21,7 +21,7 @@ describe('getServerSideProps', () => {
     const error = new Error('lookupProfile error message');
     (lookupProfile as jest.Mock).mockRejectedValueOnce(error);
     const data = await getServerSideProps(params as any);
-    expect(lookupProfile).toBeCalledWith(params.params.username);
+    expect(lookupProfile).toBeCalledWith({ username: params.params.username });
     expect(Sentry.captureException).toBeCalledWith(error);
     // Used for typechecking
     if (!('props' in data)) {
@@ -38,7 +38,7 @@ describe('getServerSideProps', () => {
       new Error('Name not found')
     );
     const data = await getServerSideProps(params as any);
-    expect(lookupProfile).toBeCalledWith(params.params.username);
+    expect(lookupProfile).toBeCalledWith({ username: params.params.username });
     expect(Sentry.captureException).not.toBeCalled();
     if (!('props' in data)) {
       throw new Error('Test failed');
@@ -49,7 +49,7 @@ describe('getServerSideProps', () => {
 
   it('should return 404 if app not found on the user apps', async () => {
     const data = await getServerSideProps(params as any);
-    expect(lookupProfile).toBeCalledWith(params.params.username);
+    expect(lookupProfile).toBeCalledWith({ username: params.params.username });
     expect(Sentry.captureException).not.toBeCalled();
     if (!('props' in data)) {
       throw new Error('Test failed');

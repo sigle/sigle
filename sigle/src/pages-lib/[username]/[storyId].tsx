@@ -1,6 +1,6 @@
 import React from 'react';
 import { GetServerSideProps, NextPage } from 'next';
-import { lookupProfile } from 'blockstack';
+import { lookupProfile } from '@stacks/auth';
 import * as Sentry from '@sentry/node';
 import Error from '../../pages/_error';
 import { PublicStory } from '../../modules/publicStory';
@@ -72,7 +72,7 @@ export const getServerSideProps: GetServerSideProps<PublicStoryPageProps> = asyn
   let errorMessage: string | null = null;
   let userProfile: undefined | { apps?: Record<string, string> };
   try {
-    userProfile = await lookupProfile(username);
+    userProfile = await lookupProfile({ username });
   } catch (error) {
     // This will happen if there is no blockstack user with this name
     if (error.message === 'Name not found') {

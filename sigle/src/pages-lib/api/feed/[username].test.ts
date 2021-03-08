@@ -3,8 +3,6 @@ import parser from 'fast-xml-parser';
 import { apiFeed } from './[username]';
 
 jest.mock('@sentry/node');
-// TODO see why this line is needed, looks like a bug in jest
-jest.unmock('blockstack');
 
 describe('test feed api', () => {
   it('should throw 404 error if username not found', async () => {
