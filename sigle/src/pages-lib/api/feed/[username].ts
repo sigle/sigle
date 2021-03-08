@@ -1,5 +1,5 @@
 import { NextApiHandler } from 'next';
-import { config as blockstackConfig, lookupProfile } from 'blockstack';
+import { lookupProfile } from '@stacks/auth';
 import { Feed } from 'feed';
 import * as Sentry from '@sentry/node';
 import { SettingsFile, StoryFile } from '../../../types';
@@ -8,8 +8,6 @@ import { migrationStories } from '../../../utils/migrations/stories';
 import { initSentry } from '../../../utils/sentry';
 
 initSentry();
-
-blockstackConfig.logLevel = 'info';
 
 const escapeXml = (unsafe: string) => {
   return unsafe.replace(/[<>&'"]/g, (c) => {
@@ -42,7 +40,7 @@ export const apiFeed: NextApiHandler = async (req, res) => {
 
   let userProfile;
   try {
-    userProfile = await lookupProfile(username);
+    userProfile = await lookupProfile({ username });
   } catch (error) {
     // This will happen if there is no blockstack user with this name
     if (error.message === 'Name not found') {

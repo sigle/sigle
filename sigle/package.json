@@ -25,6 +25,7 @@
     "@sentry/browser": "6.1.0",
     "@sentry/integrations": "6.1.0",
     "@sentry/node": "6.1.0",
+    "@stacks/auth": "1.2.3",
     "@tippy.js/react": "3.1.1",
     "blockstack": "21.1.1",
     "date-fns": "2.16.1",
