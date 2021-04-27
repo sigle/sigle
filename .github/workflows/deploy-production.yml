@@ -2,10 +2,7 @@ name: Deploy to production
 
 on:
   push:
-    # branches: [main]
-    branches:
-    # Tmp to remove
-      - 'feature/fix-https-redirect'
+    branches: [main]
 
 jobs:
   deploy-sigle:
@@ -19,13 +16,13 @@ jobs:
         with:
           args: 'deploy --config sigle/fly.toml --dockerfile sigle/Dockerfile --remote-only'
 
-  # deploy-blog-viewer:
-  #   name: Deploy sigle blog viewer
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #     - uses: actions/checkout@v2
-  #     - uses: superfly/flyctl-actions@1.1
-  #       env:
-  #         FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
-  #       with:
-  #         args: 'deploy --config blog-viewer/fly.toml --dockerfile blog-viewer/Dockerfile --remote-only'
+  deploy-blog-viewer:
+    name: Deploy sigle blog viewer
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: superfly/flyctl-actions@1.1
+        env:
+          FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
+        with:
+          args: 'deploy --config blog-viewer/fly.toml --dockerfile blog-viewer/Dockerfile --remote-only'
