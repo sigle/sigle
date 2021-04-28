@@ -164,7 +164,8 @@ const CustomStyle = createGlobalStyle<{ siteColor?: string }>`
       .sigle-date {
         color: ${props.siteColor} !important;
       }
-      .sigle-content a {
+      .sigle-content a,
+      .sigle-content a strong {
         color: ${props.siteColor} !important;
       }
     `}

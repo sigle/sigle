@@ -26,6 +26,8 @@ FROM node:14 as production
 
 WORKDIR /app
 
+ENV NODE_ENV=production
+
 # COPY package.json next.config.js .env* ./
 COPY --from=builder /app/package.json ./package.json
 COPY --from=builder /app/blog-viewer/package.json ./blog-viewer/package.json
