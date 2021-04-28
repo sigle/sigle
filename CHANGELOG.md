@@ -1,3 +1,27 @@
+## April 28, 2021
+
+- Fix bold links not using custom color.
+
+## April 27, 2021
+
+- Fix https auto redirect issue.
+
+## March 8, 2021
+
+- Improve how we load the user profile for faster page rendering.
+
+## February 19, 2021
+
+- Change the way we load fonts for faster page rendering.
+
+## February 15, 2021
+
+- Change the repository structure to monorepo.
+
+## February 1, 2021
+
+- Dependencies upgrade.
+
 ## December 21, 2020
 
 - Add reading time to the story page.
