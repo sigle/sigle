@@ -1530,16 +1530,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/cheerio@npm:^0.22.13":
-  version: 0.22.22
-  resolution: "@types/cheerio@npm:0.22.22"
-  dependencies:
-    "@types/node": "*"
-  checksum: a83ba86ee9dcbc9bb9d2e03cf8ad82fcfcede21159da17574a48c4e1b5af0a588be75239db272b0548ba6e4bdb4458c06d93b7484ac2200565d00ab055663343
-  languageName: node
-  linkType: hard
-
-"@types/elliptic@npm:^6.4.10, @types/elliptic@npm:^6.4.12, @types/elliptic@npm:^6.4.9":
+"@types/elliptic@npm:^6.4.12, @types/elliptic@npm:^6.4.9":
   version: 6.4.12
   resolution: "@types/elliptic@npm:6.4.12"
   dependencies:
@@ -1644,13 +1635,6 @@ __metadata:
   version: 14.14.28
   resolution: "@types/node@npm:14.14.28"
   checksum: e750df4d5e93c639d04100e7d54d9e416ecc649d4d7951ac1d5b82d092c556f6e7775a191995e06d6def65ae7bc25533d188fe122dc660724d119ce3ddae2cea
-  languageName: node
-  linkType: hard
-
-"@types/node@npm:^12.7.12":
-  version: 12.19.3
-  resolution: "@types/node@npm:12.19.3"
-  checksum: ef8ae4d86896d6cdcd4bda92fb43da62f6397e7a4041d492309771a51e85ec5918dbee6495d8b591fd87d7265468c87f4b5e986bc4f0362e1184b610c6b8abac
   languageName: node
   linkType: hard
 
@@ -2075,16 +2059,6 @@ __metadata:
     clean-stack: ^2.0.0
     indent-string: ^4.0.0
   checksum: 704d2001a303c185e9b836d211f7eef2f4557195a11c3271143b4dcda5f6f263abe746d9b8a06b5871d07870686c7db9c0b2c38e2d3cbc593784eaaee8a29043
-  languageName: node
-  linkType: hard
-
-"ajv@npm:^4.11.5":
-  version: 4.11.8
-  resolution: "ajv@npm:4.11.8"
-  dependencies:
-    co: ^4.6.0
-    json-stable-stringify: ^1.0.1
-  checksum: 7f18135443a3d3c73002afb18ca70f287e3bb1096034bfb1f756a0c052b0d39e9d980374f3f6b8e6a5c170d981cfc02e590937e6742b897bf4b5de179f129c84
   languageName: node
   linkType: hard
 
@@ -2724,7 +2698,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"bitcoinjs-lib@npm:^5.1.10, bitcoinjs-lib@npm:^5.1.6":
+"bitcoinjs-lib@npm:^5.1.10":
   version: 5.2.0
   resolution: "bitcoinjs-lib@npm:5.2.0"
   dependencies:
@@ -2755,36 +2729,6 @@ __metadata:
     inherits: ^2.0.4
     readable-stream: ^3.4.0
   checksum: 1f33c5a3da08a87260a7f11acadf088ef331ebb4b86db1160ec332be9326afdf9f73dca1fd5cc431dba7cc9d5574b508192f9fd7c37a9a11c9e4a50025917690
-  languageName: node
-  linkType: hard
-
-"blockstack@npm:21.1.1":
-  version: 21.1.1
-  resolution: "blockstack@npm:21.1.1"
-  dependencies:
-    "@types/bn.js": ^4.11.6
-    "@types/cheerio": ^0.22.13
-    "@types/elliptic": ^6.4.10
-    "@types/node": ^12.7.12
-    "@types/randombytes": ^2.0.0
-    ajv: ^4.11.5
-    bip39: ^3.0.2
-    bitcoinjs-lib: ^5.1.6
-    bn.js: ^4.11.8
-    cross-fetch: ^3.0.4
-    elliptic: ^6.5.1
-    form-data: ^2.5.1
-    jsontokens: 3.0.0
-    query-string: ^6.8.3
-    randombytes: ^2.1.0
-    request: ^2.88.0
-    ripemd160-min: 0.0.5
-    schema-inspector: ^1.6.8
-    sha.js: ^2.4.11
-    tslib: ^1.10.0
-    uuid: ^3.3.3
-    zone-file: ^1.0.0
-  checksum: 642ea8344aacdfb90fe92d280bc4c79731d9faee03f7ca8db400fbe1a19770c0a17d5673330413f5f7401df83d0bdbb4306ed884e123d5ce7f5a5baa2b037b72
   languageName: node
   linkType: hard
 
@@ -3714,7 +3658,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"cross-fetch@npm:^3.0.4, cross-fetch@npm:^3.0.5, cross-fetch@npm:^3.0.6":
+"cross-fetch@npm:^3.0.5, cross-fetch@npm:^3.0.6":
   version: 3.0.6
   resolution: "cross-fetch@npm:3.0.6"
   dependencies:
@@ -4289,7 +4233,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"elliptic@npm:^6.4.0, elliptic@npm:^6.4.1, elliptic@npm:^6.5.1, elliptic@npm:^6.5.2, elliptic@npm:^6.5.3":
+"elliptic@npm:^6.4.0, elliptic@npm:^6.4.1, elliptic@npm:^6.5.2, elliptic@npm:^6.5.3":
   version: 6.5.3
   resolution: "elliptic@npm:6.5.3"
   dependencies:
@@ -5100,17 +5044,6 @@ __metadata:
   version: 0.6.1
   resolution: "forever-agent@npm:0.6.1"
   checksum: 9cc0054dd4ea5fc26e014b8c929d1fb9247e931e81165cbd965a712061d65fb84791b2124f64cd79492e516662b94068d29fe1d824732382237321b3f61955fe
-  languageName: node
-  linkType: hard
-
-"form-data@npm:^2.5.1":
-  version: 2.5.1
-  resolution: "form-data@npm:2.5.1"
-  dependencies:
-    asynckit: ^0.4.0
-    combined-stream: ^1.0.6
-    mime-types: ^2.1.12
-  checksum: c46ee9a14a8678b6e0dfafabc96e25237d9f11ced9c51cd371a2b3448f6a3f2fa684b3bbbb35911bae8f5448b3f3c48c73f7f2be791a4ae5aee0eb0ab3cdfec2
   languageName: node
   linkType: hard
 
@@ -7069,15 +7002,6 @@ fsevents@~2.3.1:
   languageName: node
   linkType: hard
 
-"json-stable-stringify@npm:^1.0.1":
-  version: 1.0.1
-  resolution: "json-stable-stringify@npm:1.0.1"
-  dependencies:
-    jsonify: ~0.0.0
-  checksum: 0f49a4281b2a82dc0148580764dd8116992f972ddc3574bd1df4bfcec76f52e2b9975febe234cf1b99c7578bb8a285d026888458ea636b8f3b0297d5de032bf7
-  languageName: node
-  linkType: hard
-
 "json-stringify-safe@npm:~5.0.1":
   version: 5.0.1
   resolution: "json-stringify-safe@npm:5.0.1"
@@ -7120,14 +7044,7 @@ fsevents@~2.3.1:
   languageName: node
   linkType: hard
 
-"jsonify@npm:~0.0.0":
-  version: 0.0.0
-  resolution: "jsonify@npm:0.0.0"
-  checksum: 53630f54108a55e062534503bf4a236165082ff75d2872a08ce8625b476dcf5ad8c990b012b9c740f93c61f20227161eb58dd41a16a0894699cc47d697d6d7c7
-  languageName: node
-  linkType: hard
-
-"jsontokens@npm:3.0.0, jsontokens@npm:^3.0.0":
+"jsontokens@npm:^3.0.0":
   version: 3.0.0
   resolution: "jsontokens@npm:3.0.0"
   dependencies:
@@ -9006,17 +8923,6 @@ fsevents@~2.3.1:
   languageName: node
   linkType: hard
 
-"query-string@npm:^6.8.3":
-  version: 6.13.7
-  resolution: "query-string@npm:6.13.7"
-  dependencies:
-    decode-uri-component: ^0.2.0
-    split-on-first: ^1.0.0
-    strict-uri-encode: ^2.0.0
-  checksum: b6d9ef79b77640456e764dcb427591e6079616141aa68f1dae444387864cbc44f945d766085a1ebef1e0fa1b0f8faa8925a96eaebf933119b97bacc12c5d22e5
-  languageName: node
-  linkType: hard
-
 "querystring-es3@npm:0.2.1, querystring-es3@npm:^0.2.0":
   version: 0.2.1
   resolution: "querystring-es3@npm:0.2.1"
@@ -9504,7 +9410,7 @@ fsevents@~2.3.1:
   languageName: node
   linkType: hard
 
-"request@npm:^2.88.0, request@npm:^2.88.2":
+"request@npm:^2.88.2":
   version: 2.88.2
   resolution: "request@npm:2.88.2"
   dependencies:
@@ -9678,13 +9584,6 @@ resolve@^2.0.0-next.3:
   languageName: node
   linkType: hard
 
-"ripemd160-min@npm:0.0.5":
-  version: 0.0.5
-  resolution: "ripemd160-min@npm:0.0.5"
-  checksum: ba6ac1b6d2267d85b6ebd1a039aa3895b2fcdcfbf1e992e80a26f0a0f74cf670a9613feae706b81f4451465b797b3de379c3d414ccf471c7e25ddde69d8bd753
-  languageName: node
-  linkType: hard
-
 "ripemd160-min@npm:^0.0.6":
   version: 0.0.6
   resolution: "ripemd160-min@npm:0.0.6"
@@ -9821,7 +9720,7 @@ resolve@^2.0.0-next.3:
   languageName: node
   linkType: hard
 
-"schema-inspector@npm:^1.6.8, schema-inspector@npm:^1.7.0":
+"schema-inspector@npm:^1.7.0":
   version: 1.7.0
   resolution: "schema-inspector@npm:1.7.0"
   dependencies:
@@ -10028,7 +9927,6 @@ resolve@^2.0.0-next.3:
     autoprefixer: 10.1.0
     babel-plugin-macros: 3.0.1
     babel-plugin-styled-components: 1.12.0
-    blockstack: 21.1.1
     date-fns: 2.16.1
     dotenv: 8.2.0
     eslint: 7.25.0
@@ -11723,7 +11621,7 @@ typescript@4.1.5:
   languageName: node
   linkType: hard
 
-"uuid@npm:^3.3.2, uuid@npm:^3.3.3":
+"uuid@npm:^3.3.2":
   version: 3.4.0
   resolution: "uuid@npm:3.4.0"
   bin:
