@@ -130,14 +130,10 @@ export const StorySettingsForm = ({
       if (coverFile) {
         const now = new Date().getTime();
         const name = `photos/${story.id}/${now}-${coverFile.name}`;
-        const coverImageUrl = await storage.putFile(
-          name,
-          coverFile as any,
-          {
-            encrypt: false,
-            contentType: coverFile.type,
-          }
-        );
+        const coverImageUrl = await storage.putFile(name, coverFile as any, {
+          encrypt: false,
+          contentType: coverFile.type,
+        });
         updatedStory.coverImage = coverImageUrl;
       }
 

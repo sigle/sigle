@@ -114,14 +114,10 @@ export const SettingsForm = ({ settings, username }: SettingsFormProps) => {
       if (customLogo) {
         const now = new Date().getTime();
         const name = `photos/settings/${now}-${customLogo.name}`;
-        const coverImageUrl = await storage.putFile(
-          name,
-          customLogo as any,
-          {
-            encrypt: false,
-            contentType: customLogo.type,
-          }
-        );
+        const coverImageUrl = await storage.putFile(name, customLogo as any, {
+          encrypt: false,
+          contentType: customLogo.type,
+        });
         newSettings.siteLogo = coverImageUrl;
       }
 
