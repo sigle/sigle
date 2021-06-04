@@ -1267,6 +1267,22 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@stacks/auth@npm:2.0.0-beta.1":
+  version: 2.0.0-beta.1
+  resolution: "@stacks/auth@npm:2.0.0-beta.1"
+  dependencies:
+    "@stacks/common": ^2.0.0-beta.0
+    "@stacks/encryption": ^2.0.0-beta.0
+    "@stacks/network": ^2.0.0-beta.0
+    "@stacks/profile": ^2.0.0-beta.1
+    c32check: ^1.1.2
+    cross-fetch: ^3.1.4
+    jsontokens: ^3.0.0
+    query-string: ^6.13.1
+  checksum: eba885c83c8e3b62a9a834102a752efb3d1b5203f14d553ac010af89a15b34a52e43f6e7d99da546523133d2967b96b3233746728f5841b1485abcd9f319ef68
+  languageName: node
+  linkType: hard
+
 "@stacks/auth@npm:^1.2.3":
   version: 1.2.3
   resolution: "@stacks/auth@npm:1.2.3"
@@ -1317,6 +1333,17 @@ __metadata:
     buffer: ^6.0.3
     cross-fetch: ^3.1.4
   checksum: 1af47a96cc1ed4af170f1b92d53d03be609cbdfca0362c9207e04fc2330c65fba19929cc980065dff07ff507fa690cab11b2578c4482b7fcce8cc10119398145
+  languageName: node
+  linkType: hard
+
+"@stacks/common@npm:^2.0.0-beta.0":
+  version: 2.0.0-beta.0
+  resolution: "@stacks/common@npm:2.0.0-beta.0"
+  dependencies:
+    "@types/node": ^14.14.43
+    buffer: ^6.0.3
+    cross-fetch: ^3.1.4
+  checksum: e6c64423c12d63cfbfa24ea1399aa5f7c0e109bfd1009e7ed49a70253e23f6048928e3a2e0263ee3fbe3d4261d3aa3222da1356b8b502d5a68cf53d7aad8ce2d
   languageName: node
   linkType: hard
 
@@ -1371,7 +1398,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@stacks/encryption@npm:^1.5.0-alpha.0, @stacks/encryption@npm:^1.5.0-alpha.1":
+"@stacks/encryption@npm:^1.5.0-alpha.1":
   version: 1.5.0-alpha.1
   resolution: "@stacks/encryption@npm:1.5.0-alpha.1"
   dependencies:
@@ -1386,6 +1413,24 @@ __metadata:
     ripemd160-min: ^0.0.6
     sha.js: ^2.4.11
   checksum: c04ae1e0e82329989272507bbfc6c2395c14b736f9f042106c346347cfebd4a6a9e0e9bee6abd0483d2ad5833558be3bd1389fe5a49e8871055d5a4d8c3509ca
+  languageName: node
+  linkType: hard
+
+"@stacks/encryption@npm:^2.0.0-beta.0":
+  version: 2.0.0-beta.0
+  resolution: "@stacks/encryption@npm:2.0.0-beta.0"
+  dependencies:
+    "@stacks/common": ^2.0.0-beta.0
+    "@types/bn.js": ^4.11.6
+    "@types/node": ^14.14.43
+    bip39: ^3.0.2
+    bitcoinjs-lib: ^5.2.0
+    bn.js: ^4.12.0
+    elliptic: ^6.5.4
+    randombytes: ^2.1.0
+    ripemd160-min: ^0.0.6
+    sha.js: ^2.4.11
+  checksum: 1628b42eccb03e1da5b654c77bdc30e8afb10a96c440724edaa51468e82a849ec9bbf3e116b38ca364ab28901ccb4438051cd954ad77e84580860f8d1e9c1ea3
   languageName: node
   linkType: hard
 
@@ -1404,6 +1449,15 @@ __metadata:
   dependencies:
     "@stacks/common": ^1.5.0-alpha.1
   checksum: e556e03507b685f0ea57ebfe5e02d5e5f267e6a91a200c02bebc9a757586424057a99e622aa1b62cd7dd0a2608243ea37aa11cbc0a1517a7f60f3acbe0da122b
+  languageName: node
+  linkType: hard
+
+"@stacks/network@npm:^2.0.0-beta.0":
+  version: 2.0.0-beta.0
+  resolution: "@stacks/network@npm:2.0.0-beta.0"
+  dependencies:
+    "@stacks/common": ^2.0.0-beta.0
+  checksum: 8b2508b5dc967d30e960ac0cbb03c652ea79e63fce06a21059a907a14f06a0b5ca9af4a9c1faebe2966bb9bd38ffa79a3439e1fca0120697950a8b3393872cf7
   languageName: node
   linkType: hard
 
@@ -1437,14 +1491,54 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@stacks/storage@npm:1.5.0-alpha.0":
-  version: 1.5.0-alpha.0
-  resolution: "@stacks/storage@npm:1.5.0-alpha.0"
+"@stacks/profile@npm:^2.0.0-beta.1":
+  version: 2.0.0-beta.1
+  resolution: "@stacks/profile@npm:2.0.0-beta.1"
+  dependencies:
+    "@stacks/common": ^2.0.0-beta.0
+    "@stacks/network": ^1.2.2
+    "@stacks/transactions": ^2.0.0-beta.1
+    jsontokens: ^3.0.0
+    schema-inspector: ^2.0.1
+    zone-file: ^1.0.0
+  checksum: bf7bdfd9dd01243afd738280f947c714e17cebb1867ca7a00ae0a6b15a54704eab3ac14837f5835b0ee2994ff8b679d616fedb15ace5ba7ec80216f05acebd0b
+  languageName: node
+  linkType: hard
+
+"@stacks/storage@npm:2.0.0-beta.1":
+  version: 2.0.0-beta.1
+  resolution: "@stacks/storage@npm:2.0.0-beta.1"
   dependencies:
     "@stacks/auth": ^1.2.3
-    "@stacks/common": ^1.2.2
-    "@stacks/encryption": ^1.5.0-alpha.0
-  checksum: e1d34d8a19b0d3a08799129d10b2f8ce23c012dc77409570650567a942f6dd6bb62d5987bbe394d02af2267928fc97668c2b652536f6941d208aa63c067699d1
+    "@stacks/common": ^2.0.0-beta.0
+    "@stacks/encryption": ^2.0.0-beta.0
+    bitcoinjs-lib: ^5.2.0
+    jsontokens: ^3.0.0
+  checksum: 5b1f6bd29a49dafdbad5f48c8f16845becb0bc5674aeb20306b2edd425d8fee1052a77d785d1ea20eb13f277d31ba53c368ee54bb53ee9ca6b1deb663d144f98
+  languageName: node
+  linkType: hard
+
+"@stacks/transactions@npm:^2.0.0-beta.1":
+  version: 2.0.0-beta.1
+  resolution: "@stacks/transactions@npm:2.0.0-beta.1"
+  dependencies:
+    "@stacks/common": ^2.0.0-beta.0
+    "@stacks/network": ^1.2.2
+    "@types/bn.js": ^4.11.6
+    "@types/elliptic": ^6.4.12
+    "@types/node": ^14.14.43
+    "@types/randombytes": ^2.0.0
+    "@types/sha.js": ^2.4.0
+    bn.js: ^4.12.0
+    c32check: ^1.1.2
+    cross-fetch: ^3.1.4
+    elliptic: ^6.5.4
+    lodash: ^4.17.20
+    randombytes: ^2.1.0
+    ripemd160-min: ^0.0.6
+    sha.js: ^2.4.11
+    smart-buffer: ^4.1.0
+  checksum: 5c0417b80d52c7471e4568c795f62616495e698c5fbe92a127a90910f8ee13ec78a11195de2f078e142e752344ced231453cf6c47e1b8ed65b69af499ee3c66d
   languageName: node
   linkType: hard
 
@@ -10026,10 +10120,10 @@ resolve@^2.0.0-next.3:
     "@sentry/integrations": 6.3.5
     "@sentry/node": 6.3.5
     "@sentry/webpack-plugin": 1.15.1
-    "@stacks/auth": 1.5.0-alpha.1
+    "@stacks/auth": 2.0.0-beta.1
     "@stacks/connect": 4.3.18
     "@stacks/connect-react": 2.17.18
-    "@stacks/storage": 1.5.0-alpha.0
+    "@stacks/storage": 2.0.0-beta.1
     "@tailwindcss/forms": 0.2.1
     "@tailwindcss/typography": 0.3.1
     "@testing-library/jest-dom": 5.11.9

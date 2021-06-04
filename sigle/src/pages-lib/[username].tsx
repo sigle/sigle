@@ -71,7 +71,6 @@ export const getServerSideProps: GetServerSideProps<PublicHomePageProps> = async
   try {
     userProfile = await lookupProfile({ username });
   } catch (error) {
-    console.log(error);
     // This will happen if there is no blockstack user with this name
     if (error.message === 'Name not found') {
       statusCode = 404;
