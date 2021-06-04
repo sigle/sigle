@@ -58,6 +58,7 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
       name: 'Sigle',
       icon: 'https://app.sigle.io/icon-192x192.png',
     },
+    userSession,
     finished: () => {
       setState({
         loggingIn: false,
