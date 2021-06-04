@@ -7,7 +7,6 @@ import { createGlobalStyle, keyframes } from 'styled-components';
 import tw from 'twin.macro';
 import { DefaultSeo } from 'next-seo';
 import { ToastContainer } from 'react-toastify';
-import { config as blockstackConfig } from 'blockstack';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import { ReactQueryDevtools } from 'react-query/devtools';
 import NProgress from 'nprogress';
@@ -26,8 +25,6 @@ import { sigleConfig } from '../config';
 import { colors } from '../utils/colors';
 import { AuthProvider } from '../modules/auth/AuthContext';
 import { initSentry } from '../utils/sentry';
-
-blockstackConfig.logLevel = 'info';
 
 initSentry();
 
