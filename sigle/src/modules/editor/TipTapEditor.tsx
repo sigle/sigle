@@ -10,6 +10,9 @@ import {
   MdFormatBold,
   MdFormatItalic,
   MdFormatQuote,
+  MdLooks3,
+  MdLooksOne,
+  MdLooksTwo,
 } from 'react-icons/md';
 import styled, { css } from 'styled-components';
 import tw from 'twin.macro';
@@ -72,6 +75,30 @@ export const TipTapEditor = () => {
             active={editor.isActive('blockquote')}
           >
             <MdFormatQuote size={18} />
+          </BubbleMenuButton>
+          <BubbleMenuButton
+            onClick={() =>
+              editor.chain().focus().toggleHeading({ level: 1 }).run()
+            }
+            active={editor.isActive('heading', { level: 1 })}
+          >
+            <MdLooksOne size={18} />
+          </BubbleMenuButton>
+          <BubbleMenuButton
+            onClick={() =>
+              editor.chain().focus().toggleHeading({ level: 2 }).run()
+            }
+            active={editor.isActive('heading', { level: 2 })}
+          >
+            <MdLooksTwo size={18} />
+          </BubbleMenuButton>
+          <BubbleMenuButton
+            onClick={() =>
+              editor.chain().focus().toggleHeading({ level: 3 }).run()
+            }
+            active={editor.isActive('heading', { level: 3 })}
+          >
+            <MdLooks3 size={18} />
           </BubbleMenuButton>
         </StyledBubbleMenu>
       )}
