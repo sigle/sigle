@@ -1800,6 +1800,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@tiptap/extension-underline@npm:2.0.0-beta.15":
+  version: 2.0.0-beta.15
+  resolution: "@tiptap/extension-underline@npm:2.0.0-beta.15"
+  peerDependencies:
+    "@tiptap/core": ^2.0.0-beta.1
+  checksum: b637146e18541b59cf2b245e28f1b082b5e7185f800463a1b3537fcce4219b24bdf3564e168687ee646e75dd92ce9da81d82dd683ad0f6e416802b96595aa280
+  languageName: node
+  linkType: hard
+
 "@tiptap/react@npm:2.0.0-beta.46":
   version: 2.0.0-beta.46
   resolution: "@tiptap/react@npm:2.0.0-beta.46"
@@ -10590,6 +10599,7 @@ resolve@^2.0.0-next.3:
     "@testing-library/jest-dom": 5.11.9
     "@testing-library/react": 11.2.5
     "@tippy.js/react": 3.1.1
+    "@tiptap/extension-underline": 2.0.0-beta.15
     "@tiptap/react": 2.0.0-beta.46
     "@tiptap/starter-kit": 2.0.0-beta.77
     "@types/jest": 26.0.20

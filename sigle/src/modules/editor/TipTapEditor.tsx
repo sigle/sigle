@@ -5,6 +5,7 @@ import {
   FloatingMenu,
 } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
+import TipTapUnderline from '@tiptap/extension-underline';
 import {
   MdCode,
   MdFormatBold,
@@ -12,6 +13,7 @@ import {
   MdFormatListBulleted,
   MdFormatListNumbered,
   MdFormatQuote,
+  MdFormatUnderlined,
   MdLooks3,
   MdLooksOne,
   MdLooksTwo,
@@ -40,7 +42,7 @@ const BubbleMenuButton = styled.button<{ active: boolean }>`
 
 export const TipTapEditor = () => {
   const editor = useEditor({
-    extensions: [StarterKit],
+    extensions: [StarterKit, TipTapUnderline],
     content: '<p>Hello World! 🌎️</p>',
   });
 
@@ -61,10 +63,10 @@ export const TipTapEditor = () => {
             <MdFormatItalic size={18} />
           </BubbleMenuButton>
           <BubbleMenuButton
-            onClick={() => editor.chain().focus().toggleBold().run()}
+            onClick={() => editor.chain().focus().toggleUnderline().run()}
             active={editor.isActive('underline')}
           >
-            Underline TODO
+            <MdFormatUnderlined size={18} />
           </BubbleMenuButton>
           <BubbleMenuButton
             onClick={() => editor.chain().focus().toggleCode().run()}
