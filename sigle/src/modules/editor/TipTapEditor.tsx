@@ -21,6 +21,13 @@ import {
 import styled, { css } from 'styled-components';
 import tw from 'twin.macro';
 
+const StyledEditorContent = styled(EditorContent)`
+  .ProseMirror {
+    ${tw`py-4`};
+    min-height: 150px;
+  }
+`;
+
 const StyledBubbleMenu = styled(BubbleMenu)`
   ${tw`flex rounded`};
   background-color: #222;
@@ -118,7 +125,8 @@ export const TipTapEditor = () => {
           </BubbleMenuButton>
         </StyledBubbleMenu>
       )}
-      <EditorContent editor={editor} />
+
+      <StyledEditorContent editor={editor} />
     </>
   );
 };
