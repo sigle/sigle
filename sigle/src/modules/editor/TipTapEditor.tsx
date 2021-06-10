@@ -6,6 +6,7 @@ import {
 } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
 import TipTapUnderline from '@tiptap/extension-underline';
+import TipTapLink from '@tiptap/extension-link';
 import {
   MdCode,
   MdFormatBold,
@@ -14,6 +15,7 @@ import {
   MdFormatListNumbered,
   MdFormatQuote,
   MdFormatUnderlined,
+  MdLink,
   MdLooks3,
   MdLooksOne,
   MdLooksTwo,
@@ -54,12 +56,13 @@ const BubbleMenuButton = styled.button<{ active: boolean }>`
  * - mobile UI
  * - new line UI for images
  * - check all the shortcuts
+ * - remove starter-kit and add the extensions manually
  * - data migration from slate
  */
 
 export const TipTapEditor = () => {
   const editor = useEditor({
-    extensions: [StarterKit, TipTapUnderline],
+    extensions: [StarterKit, TipTapUnderline, TipTapLink],
     content: '<p>Hello World! 🌎️</p>',
   });
 
@@ -132,6 +135,12 @@ export const TipTapEditor = () => {
             active={editor.isActive('bulletList')}
           >
             <MdFormatListBulleted size={18} />
+          </BubbleMenuButton>
+          <BubbleMenuButton
+            onClick={() => alert('TODO')}
+            active={editor.isActive('link')}
+          >
+            <MdLink size={18} />
           </BubbleMenuButton>
         </StyledBubbleMenu>
       )}
