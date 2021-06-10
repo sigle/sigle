@@ -9,6 +9,8 @@ import {
   MdCode,
   MdFormatBold,
   MdFormatItalic,
+  MdFormatListBulleted,
+  MdFormatListNumbered,
   MdFormatQuote,
   MdLooks3,
   MdLooksOne,
@@ -99,6 +101,18 @@ export const TipTapEditor = () => {
             active={editor.isActive('heading', { level: 3 })}
           >
             <MdLooks3 size={18} />
+          </BubbleMenuButton>
+          <BubbleMenuButton
+            onClick={() => editor.chain().focus().toggleOrderedList().run()}
+            active={editor.isActive('orderedList')}
+          >
+            <MdFormatListNumbered size={18} />
+          </BubbleMenuButton>
+          <BubbleMenuButton
+            onClick={() => editor.chain().focus().toggleBulletList().run()}
+            active={editor.isActive('bulletList')}
+          >
+            <MdFormatListBulleted size={18} />
           </BubbleMenuButton>
         </StyledBubbleMenu>
       )}
