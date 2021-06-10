@@ -31,8 +31,6 @@ const StyledEditorContent = styled(EditorContent)`
 const StyledBubbleMenu = styled(BubbleMenu)`
   ${tw`flex rounded`};
   background-color: #222;
-  // padding: 8px 7px 6px;
-  // border-radius: 4px;
 `;
 
 const BubbleMenuButton = styled.button<{ active: boolean }>`
@@ -46,6 +44,18 @@ const BubbleMenuButton = styled.button<{ active: boolean }>`
       ${tw`text-pink`};
     `}
 `;
+
+/**
+ * TODO
+ * - link UI
+ * - link button in bubble menu
+ * - link should show on cmd + k
+ * - block quotes seems to add the " char before and after the quote
+ * - mobile UI
+ * - new line UI for images
+ * - check all the shortcuts
+ * - data migration from slate
+ */
 
 export const TipTapEditor = () => {
   const editor = useEditor({
