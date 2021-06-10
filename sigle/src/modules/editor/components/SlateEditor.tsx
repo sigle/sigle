@@ -43,6 +43,7 @@ import { storage } from '../../../utils/blockstack';
 import { resizeImage } from '../../../utils/image';
 import { FixedContainer, PageContainer } from './Editor';
 import { SlateEditorLink } from './SlateEditorLink';
+import { TipTapEditor } from '../TipTapEditor';
 
 const StyledAppBarRightContainer = styled(AppBarRightContainer)`
   ${tw`hidden md:flex`};
@@ -627,7 +628,7 @@ export const SlateEditor = ({
 
         <SlateContainer>
           <StyledContent>
-            <StyledEditor
+            {/* <StyledEditor
               ref={editorRef}
               plugins={slatePlugins}
               value={value}
@@ -640,18 +641,19 @@ export const SlateEditor = ({
               renderBlock={renderBlock}
               renderMark={renderMark}
               renderInline={renderInline}
-            />
+            /> */}
+            <TipTapEditor />
           </StyledContent>
         </SlateContainer>
 
-        {editorRef.current && (
+        {/* {editorRef.current && (
           <SlateEditorLink
             editor={editorRef.current}
             open={editLinkOpen}
             onConfirmEditLink={handleConfirmEditLink}
             onClose={() => setEditLinkOpen(false)}
           />
-        )}
+        )} */}
 
         <StorySettings
           story={story}
