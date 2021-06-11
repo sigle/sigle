@@ -2,7 +2,7 @@ import React, { useState, useRef } from 'react';
 import styled, { css } from 'styled-components';
 import tw from 'twin.macro';
 import { toast } from 'react-toastify';
-import Tippy from '@tippy.js/react';
+import Tippy from '@tippyjs/react';
 import Tooltip from '@reach/tooltip';
 import {
   Editor,
