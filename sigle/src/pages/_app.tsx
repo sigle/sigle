@@ -24,9 +24,6 @@ import '../styles/index.css';
 import { sigleConfig } from '../config';
 import { colors } from '../utils/colors';
 import { AuthProvider } from '../modules/auth/AuthContext';
-import { initSentry } from '../utils/sentry';
-
-initSentry();
 
 const queryClient = new QueryClient();
 

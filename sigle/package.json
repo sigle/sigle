@@ -19,9 +19,7 @@
     "@reach/dialog": "0.13.2",
     "@reach/menu-button": "0.13.2",
     "@reach/tooltip": "0.13.2",
-    "@sentry/browser": "6.3.5",
-    "@sentry/integrations": "6.3.5",
-    "@sentry/node": "6.3.5",
+    "@sentry/nextjs": "6.7.1",
     "@stacks/auth": "2.0.0-beta.1",
     "@stacks/connect": "4.3.18",
     "@stacks/connect-react": "2.17.18",
@@ -55,7 +53,6 @@
   },
   "devDependencies": {
     "@fontsource/roboto": "4.2.1",
-    "@sentry/webpack-plugin": "1.15.1",
     "@tailwindcss/forms": "0.2.1",
     "@tailwindcss/typography": "0.3.1",
     "@testing-library/jest-dom": "5.11.9",

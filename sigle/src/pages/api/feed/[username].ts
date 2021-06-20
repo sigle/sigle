@@ -1,1 +1,4 @@
-export { apiFeed as default } from '../../../pages-lib/api/feed/[username]';
+import * as Sentry from '@sentry/nextjs';
+import { apiFeed } from '../../../pages-lib/api/feed/[username]';
+
+export default Sentry.withSentry(apiFeed);

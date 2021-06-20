@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 import { useRouter } from 'next/router';
 import { useQuery } from 'react-query';
-import * as Sentry from '@sentry/node';
+import * as Sentry from '@sentry/nextjs';
 import { Editor as Component } from '../components/Editor';
 import { Story } from '../../../types';
 import { getStoryFile } from '../../../utils';
