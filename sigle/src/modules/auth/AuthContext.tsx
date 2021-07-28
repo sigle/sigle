@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
+import { UserData } from '@stacks/auth';
 import { Connect, AuthOptions } from '@stacks/connect-react';
-import { BlockstackUser } from '../../types';
 import { userSession } from '../../utils/blockstack';
 
 const AuthContext = React.createContext<{
-  user?: BlockstackUser;
+  user?: UserData;
   loggingIn: boolean;
 }>({ loggingIn: false });
 
@@ -16,7 +16,7 @@ interface AuthProviderProps {
 const AuthProvider = ({ children }: AuthProviderProps) => {
   const [state, setState] = useState<{
     loggingIn: boolean;
-    user?: BlockstackUser;
+    user?: UserData;
   }>({
     loggingIn: true,
   });
