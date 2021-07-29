@@ -13,7 +13,8 @@
   "jest": {
     "setupFilesAfterEnv": [
       "./src/jest.setup.ts"
-    ]
+    ],
+    "testEnvironment": "jsdom"
   },
   "babelMacros": {
     "twin": {
