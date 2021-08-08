@@ -4,9 +4,23 @@ import {
   BubbleMenu,
   FloatingMenu,
 } from '@tiptap/react';
-import StarterKit from '@tiptap/starter-kit';
-import TipTapUnderline from '@tiptap/extension-underline';
+import TipTapBlockquote from '@tiptap/extension-blockquote';
+import TipTapBold from '@tiptap/extension-bold';
+import TipTapBulletList from '@tiptap/extension-bullet-list';
+import TipTapCode from '@tiptap/extension-code';
+import TipTapDocument from '@tiptap/extension-document';
+import TipTapDropcursor from '@tiptap/extension-dropcursor';
+import TipTapHardBreak from '@tiptap/extension-hard-break';
+import TipTapHeading from '@tiptap/extension-heading';
+import TipTapHistory from '@tiptap/extension-history';
+import TipTapItalic from '@tiptap/extension-italic';
 import TipTapLink from '@tiptap/extension-link';
+import TipTapListItem from '@tiptap/extension-list-item';
+import TipTapOrderedList from '@tiptap/extension-ordered-list';
+import TipTapParagraph from '@tiptap/extension-paragraph';
+import TipTapStrike from '@tiptap/extension-strike';
+import TipTapText from '@tiptap/extension-text';
+import TipTapUnderline from '@tiptap/extension-underline';
 import {
   MdCode,
   MdFormatBold,
@@ -59,13 +73,36 @@ const BubbleMenuButton = styled.button<{ active: boolean }>`
  * - mobile UI
  * - new line UI for images
  * - check all the shortcuts
- * - remove starter-kit and add the extensions manually
  * - data migration from slate
  */
 
 export const TipTapEditor = () => {
   const editor = useEditor({
-    extensions: [StarterKit, TipTapUnderline, TipTapLink],
+    extensions: [
+      // Nodes
+      TipTapDocument,
+      TipTapParagraph,
+      TipTapText,
+      TipTapBlockquote,
+      TipTapLink,
+      TipTapListItem,
+      TipTapBulletList,
+      TipTapOrderedList,
+      TipTapHardBreak,
+      TipTapHeading.configure({
+        // Only allow h1, h2 and h3
+        levels: [1, 2, 3],
+      }),
+      // Marks
+      TipTapBold,
+      TipTapCode,
+      TipTapItalic,
+      TipTapStrike,
+      TipTapUnderline,
+      // Extensions
+      TipTapDropcursor,
+      TipTapHistory,
+    ],
     content: '<p>Hello World! 🌎️</p>',
   });
 
