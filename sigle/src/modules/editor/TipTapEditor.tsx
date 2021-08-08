@@ -28,6 +28,9 @@ const StyledEditorContent = styled(EditorContent)`
     ${tw`py-4`};
     min-height: 150px;
   }
+  .ProseMirror-focused {
+    outline: none;
+  }
 `;
 
 const StyledBubbleMenu = styled(BubbleMenu)`
