@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
 import { toast } from 'react-toastify';
 import NProgress from 'nprogress';
+import * as Fathom from 'fathom-client';
 import { SlateEditor as Component } from '../components/SlateEditor';
 import { Story } from '../../../types';
 import { publishStory, unPublishStory } from '../../../utils';
+import { Goals } from '../../../utils/fathom';
 
 interface Props {
   story: Story;
@@ -35,6 +37,7 @@ export const SlateEditor = ({ story, onChangeStoryField }: Props) => {
       await publishStory(story.id);
       onChangeStoryField('type', 'public');
       toast.success('Story published');
+      Fathom.trackGoal(Goals.PUBLISH, 0);
     } catch (error) {
       console.error(error);
       toast.error(error.message);

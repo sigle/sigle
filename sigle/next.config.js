@@ -1,10 +1,6 @@
 const dotenv = require('dotenv');
 const withPlugins = require('next-compose-plugins');
 const withSourceMaps = require('@zeit/next-source-maps')();
-const withBundleAnalyzer = require('@next/bundle-analyzer')({
-  enabled: process.env.ANALYZE === 'true',
-});
-const BundleAnalyzerPluginReporter = require('@bundle-analyzer/webpack-plugin');
 const SentryWebpackPlugin = require('@sentry/webpack-plugin');
 
 dotenv.config();
@@ -30,7 +26,6 @@ const basePath = '';
 
 module.exports = withPlugins(
   [
-    [withBundleAnalyzer],
     [
       withSourceMaps,
       {
@@ -104,17 +99,6 @@ module.exports = withPlugins(
       // outside of Vercel
       NEXT_PUBLIC_COMMIT_SHA: COMMIT_SHA,
       NEXT_PUBLIC_SENTRY_DSN: process.env.NEXT_PUBLIC_SENTRY_DSN,
-    },
-    webpack: (config, { isServer }) => {
-      // We want to report only for the client bundle
-      if (process.env.BUNDLE_ANALYZER_TOKEN && !isServer) {
-        config.plugins.push(
-          new BundleAnalyzerPluginReporter({
-            token: process.env.BUNDLE_ANALYZER_TOKEN,
-          })
-        );
-      }
-      return config;
     },
     headers: async () => {
       return [
