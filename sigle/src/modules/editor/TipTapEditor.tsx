@@ -90,6 +90,8 @@ const CommandsList = (props: {
  * - mobile UI
  * - left menu that trigger the commands menu
  * - check all the shortcuts
+ * - investigate figure extension instead of image
+ * - fade in / fade out for placeholder (animation)
  * - data migration from slate
  */
 
