@@ -642,7 +642,7 @@ export const SlateEditor = ({
               renderMark={renderMark}
               renderInline={renderInline}
             /> */}
-            <TipTapEditor />
+            <TipTapEditor story={story} />
           </StyledContent>
         </SlateContainer>
 

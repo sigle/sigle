@@ -1,3 +1,4 @@
+import { useRef } from 'react';
 import { useEditor, EditorContent, FloatingMenu } from '@tiptap/react';
 import TipTapBlockquote from '@tiptap/extension-blockquote';
 import TipTapBold from '@tiptap/extension-bold';
@@ -9,6 +10,7 @@ import TipTapHardBreak from '@tiptap/extension-hard-break';
 import TipTapHeading from '@tiptap/extension-heading';
 import TipTapHistory from '@tiptap/extension-history';
 import TipTapItalic from '@tiptap/extension-italic';
+import TipTapImage from '@tiptap/extension-image';
 import TipTapLink from '@tiptap/extension-link';
 import TipTapListItem from '@tiptap/extension-list-item';
 import TipTapOrderedList from '@tiptap/extension-ordered-list';
@@ -25,6 +27,11 @@ import {
   SlashCommandsCommand,
 } from './extensions/SlashCommands';
 import { BubbleMenu } from './BubbleMenu';
+import { generateRandomId } from '../../utils';
+import { resizeImage } from '../../utils/image';
+import { storage } from '../../utils/blockstack';
+import { Story } from '../../types';
+import { colors } from '../../utils/colors';
 
 const fadeInAnimation = keyframes`
   0% {
@@ -52,6 +59,11 @@ const StyledEditorContent = styled(EditorContent)`
     pointer-events: none;
     height: 0;
     animation: ${fadeInAnimation} 75ms cubic-bezier(0, 0, 0.2, 1);
+  }
+
+  // Image selected style
+  img.ProseMirror-selectednode {
+    outline: 1px solid ${colors.pink};
   }
 `;
 
@@ -104,7 +116,13 @@ const CommandsList = (props: {
  * - data migration from slate
  */
 
-export const TipTapEditor = () => {
+interface TipTapEditorProps {
+  story: Story;
+}
+
+export const TipTapEditor = ({ story }: TipTapEditorProps) => {
+  const fileUploaderRef = useRef<HTMLInputElement>(null);
+
   const editor = useEditor({
     extensions: [
       // Nodes
@@ -121,6 +139,7 @@ export const TipTapEditor = () => {
         // Only allow h1, h2 and h3
         levels: [1, 2, 3],
       }),
+      TipTapImage,
       // Marks
       TipTapBold,
       TipTapCode,
@@ -131,7 +150,7 @@ export const TipTapEditor = () => {
       TipTapDropcursor,
       TipTapHistory,
       TipTapPlaceholder.configure({
-        placeholder: ({ node, editor }) => {
+        placeholder: ({ editor }) => {
           const currentPos = editor.state.selection.$anchor.pos;
           return currentPos === 1
             ? 'Start your story here...'
@@ -181,7 +200,7 @@ export const TipTapEditor = () => {
             icon: MdAddAPhoto,
             title: 'Image',
             command: ({ editor, range }) => {
-              editor.chain().focus().deleteRange(range).setMark('bold').run();
+              fileUploaderRef.current?.click();
             },
           },
         ],
@@ -191,11 +210,58 @@ export const TipTapEditor = () => {
     content: '<p>Hello World! 🌎️</p>',
   });
 
+  const addImageToEditor = (files: FileList | null) => {
+    if (!files) {
+      return;
+    }
+
+    for (const file of files) {
+      const reader = new FileReader();
+      const [mime] = file.type.split('/');
+      if (mime !== 'image') continue;
+
+      // First show the image as uploading since this can take a while...
+      const preview = URL.createObjectURL(file);
+      const id = generateRandomId();
+
+      // TODO global loading state ?
+
+      // editor?.chain().focus().setImage({ src: preview }).run();
+
+      reader.addEventListener('load', async () => {
+        // resize the image for faster upload
+        const blob = await resizeImage(file, { maxWidth: 2000 });
+
+        const name = `photos/${story.id}/${id}-${file.name}`;
+        const imageUrl = await storage.putFile(name, blob as any, {
+          encrypt: false,
+          contentType: file.type,
+        });
+
+        editor?.state.tr.deleteSelection();
+
+        // TODO image should delete slash menu text and appear at the same place
+        editor?.chain().focus().setImage({ src: imageUrl }).run();
+      });
+
+      reader.readAsDataURL(file);
+    }
+  };
+
   return (
     <>
       {editor && <BubbleMenu editor={editor} />}
 
       <StyledEditorContent editor={editor} />
+
+      {/* Input used to accept images */}
+      <input
+        type="file"
+        accept="image/jpeg, image/png"
+        onChange={(event) => addImageToEditor(event.target.files)}
+        ref={fileUploaderRef}
+        style={{ display: 'none' }}
+      />
     </>
   );
 };
