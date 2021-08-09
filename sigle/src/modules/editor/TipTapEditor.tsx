@@ -3,8 +3,6 @@ import {
   EditorContent,
   BubbleMenu,
   FloatingMenu,
-  Editor,
-  Range,
 } from '@tiptap/react';
 import TipTapBlockquote from '@tiptap/extension-blockquote';
 import TipTapBold from '@tiptap/extension-bold';
@@ -20,10 +18,10 @@ import TipTapLink from '@tiptap/extension-link';
 import TipTapListItem from '@tiptap/extension-list-item';
 import TipTapOrderedList from '@tiptap/extension-ordered-list';
 import TipTapParagraph from '@tiptap/extension-paragraph';
+import TipTapPlaceholder from '@tiptap/extension-placeholder';
 import TipTapStrike from '@tiptap/extension-strike';
 import TipTapText from '@tiptap/extension-text';
 import TipTapUnderline from '@tiptap/extension-underline';
-import type { IconType } from 'react-icons/lib';
 import {
   MdCode,
   MdFormatBold,
@@ -52,6 +50,15 @@ const StyledEditorContent = styled(EditorContent)`
   }
   .ProseMirror-focused {
     outline: none;
+  }
+
+  // Placeholder plugin style
+  .ProseMirror p.is-empty::before {
+    content: attr(data-placeholder);
+    float: left;
+    color: #bbbaba;
+    pointer-events: none;
+    height: 0;
   }
 `;
 
@@ -115,7 +122,7 @@ const CommandsList = (props: {
  * - link should show on cmd + k
  * - block quotes seems to add the " char before and after the quote
  * - mobile UI
- * - show placeholder to explain how to use the / command
+ * - left menu that trigger the commands menu
  * - check all the shortcuts
  * - data migration from slate
  */
@@ -146,6 +153,14 @@ export const TipTapEditor = () => {
       // Extensions
       TipTapDropcursor,
       TipTapHistory,
+      TipTapPlaceholder.configure({
+        placeholder: ({ node, editor }) => {
+          const currentPos = editor.state.selection.$anchor.pos;
+          return currentPos === 1
+            ? 'Start your story here...'
+            : "Type '/' for commands";
+        },
+      }),
       // Custom extensions
       SlashCommands.configure({
         commands: [
