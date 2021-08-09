@@ -18,13 +18,22 @@ import TipTapStrike from '@tiptap/extension-strike';
 import TipTapText from '@tiptap/extension-text';
 import TipTapUnderline from '@tiptap/extension-underline';
 import { MdLooks3, MdLooksOne, MdLooksTwo, MdAddAPhoto } from 'react-icons/md';
-import styled, { css } from 'styled-components';
+import styled, { keyframes } from 'styled-components';
 import tw from 'twin.macro';
 import {
   SlashCommands,
   SlashCommandsCommand,
 } from './extensions/SlashCommands';
 import { BubbleMenu } from './BubbleMenu';
+
+const fadeInAnimation = keyframes`
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+`;
 
 const StyledEditorContent = styled(EditorContent)`
   .ProseMirror {
@@ -42,6 +51,7 @@ const StyledEditorContent = styled(EditorContent)`
     color: #bbbaba;
     pointer-events: none;
     height: 0;
+    animation: ${fadeInAnimation} 75ms cubic-bezier(0, 0, 0.2, 1);
   }
 `;
 
@@ -91,7 +101,6 @@ const CommandsList = (props: {
  * - left menu that trigger the commands menu
  * - check all the shortcuts
  * - investigate figure extension instead of image
- * - fade in / fade out for placeholder (animation)
  * - data migration from slate
  */
 
