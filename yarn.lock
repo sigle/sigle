@@ -1822,6 +1822,19 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@tiptap/suggestion@npm:2.0.0-beta.61":
+  version: 2.0.0-beta.61
+  resolution: "@tiptap/suggestion@npm:2.0.0-beta.61"
+  dependencies:
+    prosemirror-model: ^1.14.3
+    prosemirror-state: ^1.3.4
+    prosemirror-view: ^1.18.11
+  peerDependencies:
+    "@tiptap/core": ^2.0.0-beta.1
+  checksum: 5b02240ae066348728344a095db5548180eefd8fe79984b745c8bce0b89208bcb72e1317738a245bf126f23945a6ddd05552525a78210fe5526b1fa37b48458e
+  languageName: node
+  linkType: hard
+
 "@tootallnate/once@npm:1":
   version: 1.1.2
   resolution: "@tootallnate/once@npm:1.1.2"
@@ -9819,6 +9832,7 @@ resolve@^2.0.0-next.3:
     "@tiptap/extension-text": 2.0.0-beta.13
     "@tiptap/extension-underline": 2.0.0-beta.16
     "@tiptap/react": 2.0.0-beta.55
+    "@tiptap/suggestion": 2.0.0-beta.61
     "@types/jest": 26.0.24
     "@types/node": 14.17.6
     "@types/nprogress": 0.2.0

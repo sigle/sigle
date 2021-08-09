@@ -3,6 +3,8 @@ import {
   EditorContent,
   BubbleMenu,
   FloatingMenu,
+  Editor,
+  Range,
 } from '@tiptap/react';
 import TipTapBlockquote from '@tiptap/extension-blockquote';
 import TipTapBold from '@tiptap/extension-bold';
@@ -21,6 +23,7 @@ import TipTapParagraph from '@tiptap/extension-paragraph';
 import TipTapStrike from '@tiptap/extension-strike';
 import TipTapText from '@tiptap/extension-text';
 import TipTapUnderline from '@tiptap/extension-underline';
+import type { IconType } from 'react-icons/lib';
 import {
   MdCode,
   MdFormatBold,
@@ -33,9 +36,14 @@ import {
   MdLooks3,
   MdLooksOne,
   MdLooksTwo,
+  MdAddAPhoto,
 } from 'react-icons/md';
 import styled, { css } from 'styled-components';
 import tw from 'twin.macro';
+import {
+  SlashCommands,
+  SlashCommandsCommand,
+} from './extensions/SlashCommands';
 
 const StyledEditorContent = styled(EditorContent)`
   .ProseMirror {
@@ -64,6 +72,42 @@ const BubbleMenuButton = styled.button<{ active: boolean }>`
     `}
 `;
 
+const CommandsListItem = styled.li`
+  ${tw`cursor-pointer block w-full py-2 px-1 flex items-center`};
+
+  svg {
+    ${tw`mr-1`};
+  }
+
+  &.is-selected,
+  &:hover {
+    ${tw`text-pink`};
+  }
+`;
+
+const CommandsList = (props: {
+  items: SlashCommandsCommand[];
+  selectedIndex: number;
+  selectItem: (index: number) => void;
+}) => {
+  const { items, selectedIndex, selectItem } = props;
+
+  return (
+    <ul>
+      {items.map(({ title, icon: Icon }, idx) => (
+        <CommandsListItem
+          key={idx}
+          className={selectedIndex === idx ? 'is-selected' : ''}
+          onClick={() => selectItem(idx)}
+        >
+          <Icon size={18} />
+          {title}
+        </CommandsListItem>
+      ))}
+    </ul>
+  );
+};
+
 /**
  * TODO
  * - link UI
@@ -71,7 +115,7 @@ const BubbleMenuButton = styled.button<{ active: boolean }>`
  * - link should show on cmd + k
  * - block quotes seems to add the " char before and after the quote
  * - mobile UI
- * - new line UI for images
+ * - show placeholder to explain how to use the / command
  * - check all the shortcuts
  * - data migration from slate
  */
@@ -102,6 +146,55 @@ export const TipTapEditor = () => {
       // Extensions
       TipTapDropcursor,
       TipTapHistory,
+      // Custom extensions
+      SlashCommands.configure({
+        commands: [
+          {
+            icon: MdLooksOne,
+            title: 'Heading 1',
+            command: ({ editor, range }) => {
+              editor
+                .chain()
+                .focus()
+                .deleteRange(range)
+                .setNode('heading', { level: 1 })
+                .run();
+            },
+          },
+          {
+            icon: MdLooksTwo,
+            title: 'Heading 2',
+            command: ({ editor, range }) => {
+              editor
+                .chain()
+                .focus()
+                .deleteRange(range)
+                .setNode('heading', { level: 2 })
+                .run();
+            },
+          },
+          {
+            icon: MdLooks3,
+            title: 'Heading 3',
+            command: ({ editor, range }) => {
+              editor
+                .chain()
+                .focus()
+                .deleteRange(range)
+                .setNode('heading', { level: 3 })
+                .run();
+            },
+          },
+          {
+            icon: MdAddAPhoto,
+            title: 'Image',
+            command: ({ editor, range }) => {
+              editor.chain().focus().deleteRange(range).setMark('bold').run();
+            },
+          },
+        ],
+        component: CommandsList,
+      }),
     ],
     content: '<p>Hello World! 🌎️</p>',
   });
