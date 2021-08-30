@@ -238,7 +238,7 @@ export const TipTapEditor = ({ story }: TipTapEditorProps) => {
           contentType: file.type,
         });
 
-        editor?.state.tr.deleteSelection();
+        // editor?.state.tr.deleteSelection();
 
         // TODO image should delete slash menu text and appear at the same place
         editor?.chain().focus().setImage({ src: imageUrl }).run();
