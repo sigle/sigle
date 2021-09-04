@@ -48,7 +48,6 @@ jobs:
         run: yarn workspace sigle build
         env:
           CI: true
-          BUNDLE_ANALYZER_TOKEN: ${{ secrets.BUNDLE_ANALYZER_TOKEN }}
 
       - name: Run sigle tests
         run: yarn workspace sigle test
