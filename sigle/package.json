@@ -82,7 +82,6 @@
     "eslint-config-next": "11.1.2",
     "eslint-config-prettier": "8.3.0",
     "eslint-plugin-prettier": "4.0.0",
-    "eslint-plugin-react": "7.25.1",
     "fast-xml-parser": "3.17.5",
     "jest": "27.1.0",
     "next-compose-plugins": "2.2.1",
