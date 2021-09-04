@@ -73,7 +73,6 @@
     "@types/slate-react": "0.22.9",
     "@types/styled-components": "5.1.11",
     "@typescript-eslint/eslint-plugin": "4.30.0",
-    "@zeit/next-source-maps": "0.0.4-canary.1",
     "autoprefixer": "10.1.0",
     "babel-plugin-macros": "3.0.1",
     "babel-plugin-styled-components": "1.13.2",
