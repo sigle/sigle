@@ -1,9 +1,10 @@
 {
   "private": true,
   "scripts": {
-    "prettier": "prettier --write '**/*.{js,ts,tsx,md,css}'",
+    "prettier": "prettier --write '**/*.{json,md,js,ts,jsx,tsx,yml,css}'",
     "deploy:blog-viewer": "flyctl deploy --config blog-viewer/fly.toml --dockerfile blog-viewer/Dockerfile",
-    "deploy:sigle": "flyctl deploy --config sigle/fly.toml --dockerfile sigle/Dockerfile"
+    "deploy:sigle": "flyctl deploy --config sigle/fly.toml --dockerfile sigle/Dockerfile",
+    "postinstall": "husky install"
   },
   "workspaces": [
     "sigle",
@@ -12,20 +13,15 @@
   "prettier": {
     "singleQuote": true
   },
-  "husky": {
-    "hooks": {
-      "pre-commit": "lint-staged"
-    }
-  },
   "lint-staged": {
-    "*.{js,ts,tsx,md}": [
+    "*.{json,md,js,ts,jsx,tsx,yml,css}": [
       "prettier --write",
       "git add"
     ]
   },
   "devDependencies": {
-    "husky": "4.3.8",
-    "lint-staged": "10.5.4",
+    "husky": "7.0.2",
+    "lint-staged": "11.1.2",
     "prettier": "2.3.2"
   }
 }
