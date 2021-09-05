@@ -39,7 +39,6 @@ const BubbleMenuInput = styled.input`
 
 // TODO close icon to go back to previous state
 // TODO cmd + k should open UI for links
-// TODO press esc should revert to list of options setIsLinkOpen => false
 // TODO when bubble menu close reset state isLinkOpen to false
 // Maybe can be used on clicks https://github.com/ueberdosis/tiptap/issues/104#issuecomment-912794709
 
@@ -90,6 +89,15 @@ export const BubbleMenu = ({ editor }: BubbleMenuProps) => {
 
     setIsLinkOpen(false);
     setLinkValue('');
+  };
+
+  const onKeyDown = (event: React.KeyboardEvent) => {
+    // If user press escape we hide the link input
+    if (event.key === 'Escape') {
+      event.preventDefault();
+      setIsLinkOpen(false);
+      setLinkValue('');
+    }
   };
 
   return (
@@ -174,6 +182,7 @@ export const BubbleMenu = ({ editor }: BubbleMenuProps) => {
         <form onSubmit={onSubmitLink}>
           <BubbleMenuInput
             value={linkValue}
+            onKeyDown={onKeyDown}
             onChange={(e) => setLinkValue(e.target.value)}
             placeholder="Enter link ..."
           />
