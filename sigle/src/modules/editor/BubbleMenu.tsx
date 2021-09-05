@@ -14,6 +14,7 @@ import {
   MdLooks3,
   MdLooksOne,
   MdLooksTwo,
+  MdClose,
 } from 'react-icons/md';
 
 const StyledBubbleMenu = styled(TipTapBubbleMenu)`
@@ -33,11 +34,14 @@ const BubbleMenuButton = styled.button<{ active: boolean }>`
     `}
 `;
 
-const BubbleMenuInput = styled.input`
-  ${tw`outline-none w-full bg-transparent	px-2`};
+const BubbleMenuFormLink = styled.form`
+  ${tw`flex`};
 `;
 
-// TODO close icon to go back to previous state
+const BubbleMenuInput = styled.input`
+  ${tw`outline-none w-full bg-transparent	pl-2 pr-1`};
+`;
+
 // TODO cmd + k should open UI for links
 // TODO when bubble menu close reset state isLinkOpen to false
 // Maybe can be used on clicks https://github.com/ueberdosis/tiptap/issues/104#issuecomment-912794709
@@ -87,17 +91,20 @@ export const BubbleMenu = ({ editor }: BubbleMenuProps) => {
       editor.chain().focus().extendMarkRange('link').unsetLink().run();
     }
 
-    setIsLinkOpen(false);
-    setLinkValue('');
+    resetLink();
   };
 
   const onKeyDown = (event: React.KeyboardEvent) => {
     // If user press escape we hide the link input
     if (event.key === 'Escape') {
       event.preventDefault();
-      setIsLinkOpen(false);
-      setLinkValue('');
+      resetLink();
     }
+  };
+
+  const resetLink = () => {
+    setIsLinkOpen(false);
+    setLinkValue('');
   };
 
   return (
@@ -178,15 +185,21 @@ export const BubbleMenu = ({ editor }: BubbleMenuProps) => {
           </BubbleMenuButton>
         </>
       ) : (
-        // TODO nice animation when we show the link?
-        <form onSubmit={onSubmitLink}>
+        <BubbleMenuFormLink onSubmit={onSubmitLink}>
           <BubbleMenuInput
             value={linkValue}
             onKeyDown={onKeyDown}
             onChange={(e) => setLinkValue(e.target.value)}
             placeholder="Enter link ..."
           />
-        </form>
+          <BubbleMenuButton
+            type="button"
+            onClick={() => resetLink()}
+            active={false}
+          >
+            <MdClose />
+          </BubbleMenuButton>
+        </BubbleMenuFormLink>
       )}
     </StyledBubbleMenu>
   );
