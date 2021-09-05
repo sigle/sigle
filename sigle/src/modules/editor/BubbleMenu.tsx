@@ -43,8 +43,9 @@ const BubbleMenuInput = styled.input`
 `;
 
 // TODO cmd + k should open UI for links
-// TODO when bubble menu close reset state isLinkOpen to false
+// TODO show link on hover so user can see the value
 // Maybe can be used on clicks https://github.com/ueberdosis/tiptap/issues/104#issuecomment-912794709
+// TODO When we set the link set selection after the link and remove hover so user can continue to type
 
 interface BubbleMenuProps {
   editor: Editor;
@@ -62,8 +63,6 @@ export const BubbleMenu = ({ editor }: BubbleMenuProps) => {
 
     setLinkValue(existingHref);
     setIsLinkOpen(true);
-
-    // TODO focus input
   };
 
   const onSubmitLink = (event: React.FormEvent<HTMLFormElement>) => {
@@ -108,7 +107,10 @@ export const BubbleMenu = ({ editor }: BubbleMenuProps) => {
   };
 
   return (
-    <StyledBubbleMenu tippyOptions={{ duration: 100 }} editor={editor}>
+    <StyledBubbleMenu
+      tippyOptions={{ duration: 100, onHidden: () => resetLink() }}
+      editor={editor}
+    >
       {!isLinkOpen ? (
         <>
           <BubbleMenuButton
@@ -191,6 +193,7 @@ export const BubbleMenu = ({ editor }: BubbleMenuProps) => {
             onKeyDown={onKeyDown}
             onChange={(e) => setLinkValue(e.target.value)}
             placeholder="Enter link ..."
+            autoFocus
           />
           <BubbleMenuButton
             type="button"
