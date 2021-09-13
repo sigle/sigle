@@ -44,8 +44,8 @@
   },
   "devDependencies": {
     "@fontsource/roboto": "4.2.1",
-    "@tailwindcss/forms": "0.2.1",
-    "@tailwindcss/typography": "0.3.1",
+    "@tailwindcss/forms": "0.3.3",
+    "@tailwindcss/typography": "0.4.1",
     "@testing-library/jest-dom": "5.14.1",
     "@testing-library/react": "12.0.0",
     "@types/jest": "26.0.24",
@@ -62,8 +62,8 @@
     "eslint-plugin-prettier": "4.0.0",
     "jest": "27.1.0",
     "sass": "1.36.0",
-    "tailwindcss": "2.0.2",
-    "twin.macro": "2.2.3",
+    "tailwindcss": "2.2.15",
+    "twin.macro": "2.7.0",
     "typescript": "4.4.2"
   },
   "license": "MIT"
