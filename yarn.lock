@@ -1838,12 +1838,17 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@tailwindcss/typography@npm:0.3.1":
-  version: 0.3.1
-  resolution: "@tailwindcss/typography@npm:0.3.1"
+"@tailwindcss/typography@npm:0.4.1":
+  version: 0.4.1
+  resolution: "@tailwindcss/typography@npm:0.4.1"
+  dependencies:
+    lodash.castarray: ^4.4.0
+    lodash.isplainobject: ^4.0.6
+    lodash.merge: ^4.6.2
+    lodash.uniq: ^4.5.0
   peerDependencies:
-    tailwindcss: 2.0.0-alpha.24 || ^2.0.0
-  checksum: be318406a5e9ec02094ccbc665a2770bc46bfd2c0c3913b4b087a3660d5f0ab8e81028e30d2d0f1e18a9033ea7e1f29aedb44983363938b67e20b3e2cbb7a77d
+    tailwindcss: ">=2.0.0"
+  checksum: d234509964f59389d00ccc0529b033a5aa670a93149a48520cd2088d102b894cc746146052ea844a926bbea4b16904f5f6b2874399511bf78d55631bdb88ac68
   languageName: node
   linkType: hard
 
@@ -3236,7 +3241,7 @@ __metadata:
     "@sentry/node": 6.10.0
     "@stacks/auth": 2.0.0-beta.1
     "@tailwindcss/forms": 0.3.3
-    "@tailwindcss/typography": 0.3.1
+    "@tailwindcss/typography": 0.4.1
     "@testing-library/jest-dom": 5.14.1
     "@testing-library/react": 12.0.0
     "@types/jest": 26.0.24
@@ -7658,6 +7663,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"lodash.castarray@npm:^4.4.0":
+  version: 4.4.0
+  resolution: "lodash.castarray@npm:4.4.0"
+  checksum: fca8c7047e0ae2738b0b2503fb00157ae0ff6d8a1b716f87ed715b22560e09de438c75b65e01a7e44ceb41c5b31dce2eb576e46db04beb9c699c498e03cbd00f
+  languageName: node
+  linkType: hard
+
 "lodash.clonedeep@npm:^4.5.0":
   version: 4.5.0
   resolution: "lodash.clonedeep@npm:4.5.0"
@@ -7676,6 +7688,13 @@ __metadata:
   version: 4.4.2
   resolution: "lodash.get@npm:4.4.2"
   checksum: e403047ddb03181c9d0e92df9556570e2b67e0f0a930fcbbbd779370972368f5568e914f913e93f3b08f6d492abc71e14d4e9b7a18916c31fa04bd2306efe545
+  languageName: node
+  linkType: hard
+
+"lodash.isplainobject@npm:^4.0.6":
+  version: 4.0.6
+  resolution: "lodash.isplainobject@npm:4.0.6"
+  checksum: 29c6351f281e0d9a1d58f1a4c8f4400924b4c79f18dfc4613624d7d54784df07efaff97c1ff2659f3e085ecf4fff493300adc4837553104cef2634110b0d5337
   languageName: node
   linkType: hard
 
@@ -7704,6 +7723,13 @@ __metadata:
   version: 4.4.2
   resolution: "lodash.truncate@npm:4.4.2"
   checksum: b463d8a382cfb5f0e71c504dcb6f807a7bd379ff1ea216669aa42c52fc28c54e404bfbd96791aa09e6df0de2c1d7b8f1b7f4b1a61f324d38fe98bc535aeee4f5
+  languageName: node
+  linkType: hard
+
+"lodash.uniq@npm:^4.5.0":
+  version: 4.5.0
+  resolution: "lodash.uniq@npm:4.5.0"
+  checksum: a4779b57a8d0f3c441af13d9afe7ecff22dd1b8ce1129849f71d9bbc8e8ee4e46dfb4b7c28f7ad3d67481edd6e51126e4e2a6ee276e25906d10f7140187c392d
   languageName: node
   linkType: hard
 
@@ -10056,7 +10082,7 @@ resolve@^2.0.0-next.3:
     "@stacks/connect-react": 2.17.18
     "@stacks/storage": 2.0.0-beta.1
     "@tailwindcss/forms": 0.3.3
-    "@tailwindcss/typography": 0.3.1
+    "@tailwindcss/typography": 0.4.1
     "@testing-library/jest-dom": 5.14.1
     "@testing-library/react": 12.0.0
     "@tippyjs/react": 4.2.5
