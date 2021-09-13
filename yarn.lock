@@ -611,7 +611,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@babel/runtime@npm:^7.0.0, @babel/runtime@npm:^7.10.2, @babel/runtime@npm:^7.12.5, @babel/runtime@npm:^7.3.1, @babel/runtime@npm:^7.5.5, @babel/runtime@npm:^7.7.2, @babel/runtime@npm:^7.8.7, @babel/runtime@npm:^7.9.2":
+"@babel/runtime@npm:^7.0.0, @babel/runtime@npm:^7.10.2, @babel/runtime@npm:^7.12.5, @babel/runtime@npm:^7.3.1, @babel/runtime@npm:^7.5.5, @babel/runtime@npm:^7.7.2, @babel/runtime@npm:^7.9.2":
   version: 7.12.5
   resolution: "@babel/runtime@npm:7.12.5"
   dependencies:
@@ -4529,16 +4529,6 @@ __metadata:
   version: 0.5.6
   resolution: "dom-accessibility-api@npm:0.5.6"
   checksum: 900eee86c0065ea13a52524093ebf79513d89cc04f1f423d5f5e1641d9d3d41714d271d78ea9827f47013642f222fe515ec3658f51fd82c981512f0a83ba9708
-  languageName: node
-  linkType: hard
-
-"dom-helpers@npm:^5.0.1":
-  version: 5.2.0
-  resolution: "dom-helpers@npm:5.2.0"
-  dependencies:
-    "@babel/runtime": ^7.8.7
-    csstype: ^3.0.2
-  checksum: bea3e7217c2adac5f89285b7786dbcc3a356226f6ff12934c9626689829b00e7fa7630a8f77973028d039db1aba6b882b1494854aa910422d1644486136b1e55
   languageName: node
   linkType: hard
 
@@ -9330,31 +9320,15 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-toastify@npm:6.2.0":
-  version: 6.2.0
-  resolution: "react-toastify@npm:6.2.0"
+"react-toastify@npm:8.0.2":
+  version: 8.0.2
+  resolution: "react-toastify@npm:8.0.2"
   dependencies:
     clsx: ^1.1.1
-    prop-types: ^15.7.2
-    react-transition-group: ^4.4.1
   peerDependencies:
     react: ">=16"
-  checksum: a065c8900feb6c5f744dcf8788a46ccba87e0f59a69b855d1e01b04429380f9fa8f7e0ef3e1a428a6143681531a221a7b655c0841fa0c61f7ac2436ae75b86ef
-  languageName: node
-  linkType: hard
-
-"react-transition-group@npm:^4.4.1":
-  version: 4.4.1
-  resolution: "react-transition-group@npm:4.4.1"
-  dependencies:
-    "@babel/runtime": ^7.5.5
-    dom-helpers: ^5.0.1
-    loose-envify: ^1.4.0
-    prop-types: ^15.6.2
-  peerDependencies:
-    react: ">=16.6.0"
-    react-dom: ">=16.6.0"
-  checksum: 0bcd8af483709832e318dcef84c26ebddeb866bf4f58010286367ef0c1e7c5106e00cfc65688b9102414cb3d572c63909c2eb7ea972b4420fc70a78c10b6e8ad
+    react-dom: ">=16"
+  checksum: 81118f2df255bda07eece5dc32489270873bf909df54134af406a7c9dc3a35f687916f41d765cea649487003020ef25d1e3023c7acf0c459e768f392c78a8af9
   languageName: node
   linkType: hard
 
@@ -9981,7 +9955,7 @@ resolve@^2.0.0-next.3:
     react-icons: 4.1.0
     react-query: 3.12.0
     react-spring: 8.0.27
-    react-toastify: 6.2.0
+    react-toastify: 8.0.2
     reading-time: 1.2.1
     sass: 1.36.0
     slate: 0.47.9

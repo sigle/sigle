@@ -74,8 +74,8 @@ const GlobalStyle = createGlobalStyle`
   }
 
   /* For the toasts */
-  .reactToastify.Toastify__toast--success {
-    background-color: #4db6a1;
+  :root {
+    --toastify-color-success: #4db6a1;
   }
 
   /* For the nprogress bar */
@@ -173,7 +173,7 @@ export default class MyApp extends App {
             <Component {...modifiedPageProps} />
           </AuthProvider>
         </QueryClientProvider>
-        <ToastContainer autoClose={3000} toastClassName="reactToastify" />
+        <ToastContainer autoClose={30000} icon={false} theme="colored" />
       </React.Fragment>
     );
   }
