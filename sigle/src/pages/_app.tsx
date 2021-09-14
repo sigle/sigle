@@ -173,7 +173,7 @@ export default class MyApp extends App {
             <Component {...modifiedPageProps} />
           </AuthProvider>
         </QueryClientProvider>
-        <ToastContainer autoClose={30000} icon={false} theme="colored" />
+        <ToastContainer autoClose={3000} icon={false} theme="colored" />
       </React.Fragment>
     );
   }
