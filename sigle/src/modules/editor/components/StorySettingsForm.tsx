@@ -122,10 +122,13 @@ export const StorySettingsForm = ({
         updatedStory[key] = values[key] ? values[key] : undefined;
       });
 
-      // We normalize the date to save it as number
-      updatedStory.createdAt = updatedStory.createdAt
-        ? new Date(updatedStory.createdAt).getTime()
-        : updatedStory.createdAt;
+      if (updatedStory.createdAt) {
+        const newDate = new Date(updatedStory.createdAt);
+        // Set the time to midnight
+        newDate.setHours(0, 0, 0, 0);
+        // We normalize the date to save it as number
+        updatedStory.createdAt = newDate.getTime();
+      }
 
       if (coverFile) {
         const now = new Date().getTime();
