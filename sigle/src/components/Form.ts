@@ -13,6 +13,10 @@ export const FormInput = styled.input`
   ${tw`block w-full bg-white border border-grey rounded py-3 px-3 text-sm leading-tight focus:border-grey-dark focus:ring-grey-dark`};
 `;
 
+export const FormInputCheckbox = styled.input`
+  ${tw`block bg-white border border-grey rounded py-2 px-2 text-sm leading-tight focus:border-grey-dark focus:ring-grey-dark`};
+`;
+
 export const FormTextarea = styled.textarea`
   ${tw`block w-full bg-white border border-grey rounded py-3 px-3 text-sm leading-tight focus:border-grey-dark focus:ring-grey-dark`};
 `;

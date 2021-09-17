@@ -197,6 +197,8 @@ export const PublicStory = ({ story, settings }: PublicStoryProps) => {
     ? readingTime(Plain.serialize(Value.fromJSON(story.content))).text
     : undefined;
 
+  const showCoverImage = story.coverImage && !story.hideCoverImage;
+
   return (
     <React.Fragment>
       <NextSeo
@@ -231,12 +233,12 @@ export const PublicStory = ({ story, settings }: PublicStoryProps) => {
         </HeaderContainer>
       </Header>
 
-      <StyledContainer hasCover={!!story.coverImage}>
+      <StyledContainer hasCover={!!showCoverImage}>
         <Title className="sigle-title">{story.title}</Title>
         <StoryDate className="sigle-date">
           {format(story.createdAt, 'dd MMMM yyyy')} • {storyReadingTime}
         </StoryDate>
-        {story.coverImage && (
+        {showCoverImage && (
           <Cover>
             <CoverImage className="sigle-cover" src={story.coverImage} />
           </Cover>
