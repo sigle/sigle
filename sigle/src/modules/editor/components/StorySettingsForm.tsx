@@ -104,8 +104,6 @@ export const StorySettingsForm = ({
   >();
   const [loadingDelete, setLoadingDelete] = useState(false);
 
-  console.log({ story });
-
   const formik = useFormik<StorySettingsFormValues>({
     initialValues: {
       coverImage: story.coverImage || '',
@@ -226,8 +224,6 @@ export const StorySettingsForm = ({
   const coverImageUrl = coverFile
     ? coverFile.preview
     : formik.values.coverImage;
-
-  console.log({ hide: formik.values.hideCoverImage });
 
   return (
     <form onSubmit={formik.handleSubmit}>
