@@ -233,7 +233,7 @@ export const PublicStory = ({ story, settings }: PublicStoryProps) => {
         </HeaderContainer>
       </Header>
 
-      <StyledContainer hasCover={showCoverImage}>
+      <StyledContainer hasCover={!!showCoverImage}>
         <Title className="sigle-title">{story.title}</Title>
         <StoryDate className="sigle-date">
           {format(story.createdAt, 'dd MMMM yyyy')} • {storyReadingTime}
