@@ -20,6 +20,7 @@ import {
   FormRow,
   FormLabel,
   FormInput,
+  FormInputCheckbox,
   FormHelper,
   FormTextarea,
   FormHelperError,
@@ -52,6 +53,15 @@ const ImageEmptyIconDelete = styled.div`
   ${tw`p-2 bg-white rounded-full ml-2`};
 `;
 
+const ImageCheckboxContainer = styled.div`
+  ${tw`flex items-center`};
+
+  ${FormHelper} {
+    margin-top: 0;
+    ${tw`ml-2`};
+  }
+`;
+
 const Image = styled.img`
   ${tw`cursor-pointer w-full`};
 `;
@@ -76,6 +86,7 @@ interface StorySettingsFormValues {
   metaTitle: string;
   metaDescription: string;
   createdAt: string | number;
+  hideCoverImage: boolean;
 }
 
 interface StorySettingsFormProps {
@@ -93,12 +104,15 @@ export const StorySettingsForm = ({
   >();
   const [loadingDelete, setLoadingDelete] = useState(false);
 
+  console.log({ story });
+
   const formik = useFormik<StorySettingsFormValues>({
     initialValues: {
       coverImage: story.coverImage || '',
       metaTitle: story.metaTitle || '',
       metaDescription: story.metaDescription || '',
       createdAt: format(story.createdAt, 'yyyy-MM-dd'),
+      hideCoverImage: story.hideCoverImage ? true : false,
     },
     validate: (values) => {
       const errors: FormikErrors<StorySettingsFormValues> = {};
@@ -213,6 +227,8 @@ export const StorySettingsForm = ({
     ? coverFile.preview
     : formik.values.coverImage;
 
+  console.log({ hide: formik.values.hideCoverImage });
+
   return (
     <form onSubmit={formik.handleSubmit}>
       <FormRow>
@@ -238,6 +254,16 @@ export const StorySettingsForm = ({
             )}
           </ImageEmptyIconContainer>
         </ImageEmpty>
+        <ImageCheckboxContainer>
+          <FormInputCheckbox
+            type="checkbox"
+            name="hideCoverImage"
+            checked={formik.values.hideCoverImage}
+            value={formik.values.hideCoverImage ? 'true' : 'false'}
+            onChange={formik.handleChange}
+          />
+          <FormHelper>Hide cover image on the published story</FormHelper>
+        </ImageCheckboxContainer>
       </FormRow>
 
       <FormRow>
