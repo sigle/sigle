@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { toast } from 'react-toastify';
 import NProgress from 'nprogress';
 import * as Fathom from 'fathom-client';
+import posthog from 'posthog-js';
 import { SlateEditor as Component } from '../components/SlateEditor';
 import { Story } from '../../../types';
 import { publishStory, unPublishStory } from '../../../utils';
@@ -38,6 +39,7 @@ export const SlateEditor = ({ story, onChangeStoryField }: Props) => {
       onChangeStoryField('type', 'public');
       toast.success('Story published');
       Fathom.trackGoal(Goals.PUBLISH, 0);
+      posthog.capture('publish-story', { id: story.id });
     } catch (error) {
       console.error(error);
       toast.error(error.message);
@@ -62,6 +64,7 @@ export const SlateEditor = ({ story, onChangeStoryField }: Props) => {
       await unPublishStory(story.id);
       onChangeStoryField('type', 'private');
       toast.success('Story unpublished');
+      posthog.capture('unpublish-story', { id: story.id });
     } catch (error) {
       console.error(error);
       toast.error(error.message);

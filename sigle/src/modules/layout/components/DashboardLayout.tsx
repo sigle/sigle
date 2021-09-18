@@ -5,6 +5,7 @@ import tw from 'twin.macro';
 import Link from 'next/link';
 import Div100vh from 'react-div-100vh';
 import { MdKeyboardArrowDown } from 'react-icons/md';
+import posthog from 'posthog-js';
 import { FaTwitter, FaGithub, FaFacebookF, FaDiscord } from 'react-icons/fa';
 import { userSession } from '../../../utils/blockstack';
 import { sigleConfig } from '../../../config';
@@ -130,6 +131,7 @@ export const DashboardSidebar = () => {
 
   const handleLogout = () => {
     userSession.signUserOut();
+    posthog.reset();
     window.location.replace(window.location.origin);
   };
 
