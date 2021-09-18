@@ -3,6 +3,7 @@ import App from 'next/app';
 import Router from 'next/router';
 import Head from 'next/head';
 import * as Fathom from 'fathom-client';
+import posthog from 'posthog-js';
 import { createGlobalStyle, keyframes } from 'styled-components';
 import tw from 'twin.macro';
 import { DefaultSeo } from 'next-seo';
@@ -43,6 +44,13 @@ const FathomTrack = () => {
       });
       Fathom.trackPageview();
     }
+    if (sigleConfig.posthogToken) {
+      posthog.init(sigleConfig.posthogToken, {
+        api_host: 'https://app.posthog.com',
+        persistence: 'localStorage',
+        ip: false,
+      });
+    }
   }, []);
 
   return <React.Fragment />;
@@ -51,6 +59,7 @@ const FathomTrack = () => {
 // Track on each page change
 Router.events.on('routeChangeComplete', () => {
   Fathom.trackPageview();
+  posthog.capture('$pageview');
 });
 
 /**

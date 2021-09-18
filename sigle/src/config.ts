@@ -5,6 +5,7 @@ export const sigleConfig = {
   sentryDsn: process.env.NEXT_PUBLIC_SENTRY_DSN,
   fathomSiteId: process.env.FATHOM_SITE_ID,
   fathomSiteUrl: 'https://louse.sigle.io/script.js',
+  posthogToken: process.env.NEXT_PUBLIC_POSTHOG_TOKEN,
   githubUrl: 'https://github.com/pradel/sigle',
   twitterUrl: 'https://twitter.com/sigleapp',
   discordUrl: 'https://discord.gg/X2Dbz3xbrs',
