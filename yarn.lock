@@ -8995,7 +8995,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"posthog-js@npm:^1.13.13":
+"posthog-js@npm:1.13.13":
   version: 1.13.13
   resolution: "posthog-js@npm:1.13.13"
   dependencies:
@@ -10152,7 +10152,7 @@ resolve@^2.0.0-next.3:
     next-seo: 4.26.0
     nprogress: 0.2.0
     postcss: 8.3.6
-    posthog-js: ^1.13.13
+    posthog-js: 1.13.13
     react: 17.0.2
     react-color: 2.19.3
     react-div-100vh: 0.5.6
