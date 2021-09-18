@@ -142,7 +142,7 @@ export default class MyApp extends App {
 
     const seoTitle = 'Sigle | Decentralized blogging platform';
     const seoDescription =
-      'A secure, decentralized and open source blogging platform on top of blockstack';
+      'Sigle is a decentralised, open-source platform empowering creators. Write, share, build your audience and earn Bitcoin.';
 
     return (
       <React.Fragment>
