@@ -1,5 +1,8 @@
 export interface BlockstackUser {
   username: string;
+  profile: {
+    stxAddress: string;
+  };
 }
 
 export interface StoryFile {
