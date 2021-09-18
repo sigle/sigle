@@ -48,6 +48,7 @@ const FathomTrack = () => {
       posthog.init(sigleConfig.posthogToken, {
         api_host: 'https://app.posthog.com',
         persistence: 'localStorage',
+        ip: false,
       });
     }
   }, []);
