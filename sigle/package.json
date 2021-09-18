@@ -26,6 +26,7 @@
     "@stacks/connect": "4.3.18",
     "@stacks/connect-react": "2.17.18",
     "@stacks/storage": "2.0.0-beta.1",
+    "@stitches/react": "1.2.0",
     "@tippyjs/react": "4.2.5",
     "date-fns": "2.16.1",
     "fathom-client": "3.0.0",

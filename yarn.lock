@@ -1827,6 +1827,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@stitches/react@npm:1.2.0":
+  version: 1.2.0
+  resolution: "@stitches/react@npm:1.2.0"
+  peerDependencies:
+    react: ">= 16.3.0"
+  checksum: c791a9a7917f744483df9acc7b35f8898b96651a3422a163e68ff3314273ffaf38b7faa11101c3217668f7bcf4ec27acc7a144f5948d271cfd27f46b0adb3761
+  languageName: node
+  linkType: hard
+
 "@tailwindcss/forms@npm:0.3.3":
   version: 0.3.3
   resolution: "@tailwindcss/forms@npm:0.3.3"
@@ -10081,6 +10090,7 @@ resolve@^2.0.0-next.3:
     "@stacks/connect": 4.3.18
     "@stacks/connect-react": 2.17.18
     "@stacks/storage": 2.0.0-beta.1
+    "@stitches/react": 1.2.0
     "@tailwindcss/forms": 0.3.3
     "@tailwindcss/typography": 0.4.1
     "@testing-library/jest-dom": 5.14.1
