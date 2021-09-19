@@ -16,6 +16,7 @@
     "testEnvironment": "jsdom"
   },
   "dependencies": {
+    "@radix-ui/colors": "0.1.7",
     "@reach/dialog": "0.13.2",
     "@reach/menu-button": "0.13.2",
     "@reach/tooltip": "0.13.2",

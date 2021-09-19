@@ -1,3 +1,4 @@
+import { orange, orangeDark } from '@radix-ui/colors';
 import type * as Stitches from '@stitches/react';
 import { createStitches } from '@stitches/react';
 
@@ -31,11 +32,18 @@ const grayDark = {
   gray12: '#fcfcfc',
 };
 
+const updatedOrange = {
+  ...orange,
+  orange9: '#CA470F',
+  orange10: '#B7410E',
+};
+
 export const { styled, css, globalCss, keyframes, getCssText, createTheme } =
   createStitches({
     theme: {
       colors: {
         ...gray,
+        ...updatedOrange,
       },
       fonts: {
         lato: "'Lato', sans-serif",
@@ -155,5 +163,6 @@ export const { styled, css, globalCss, keyframes, getCssText, createTheme } =
 export const darkTheme = createTheme('dark-theme', {
   colors: {
     ...grayDark,
+    ...orangeDark,
   },
 });
