@@ -80,7 +80,7 @@ const Login = () => {
             </Heading>
             <Text css={{ mt: '$7' }}>
               Sigle is a web 3.0 open source blogging platform focused on{' '}
-              <strong>protecting your privacy</strong> built on top of Stacks.
+              <strong>protecting your privacy</strong>, built on top of Stacks.
             </Text>
             <Text
               color="orange"
