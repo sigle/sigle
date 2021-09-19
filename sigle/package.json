@@ -16,6 +16,8 @@
     "testEnvironment": "jsdom"
   },
   "dependencies": {
+    "@radix-ui/colors": "0.1.7",
+    "@radix-ui/react-icons": "1.0.3",
     "@reach/dialog": "0.13.2",
     "@reach/menu-button": "0.13.2",
     "@reach/tooltip": "0.13.2",
@@ -26,6 +28,7 @@
     "@stacks/connect": "4.3.18",
     "@stacks/connect-react": "2.17.18",
     "@stacks/storage": "2.0.0-beta.1",
+    "@stitches/react": "1.2.0",
     "@tippyjs/react": "4.2.5",
     "date-fns": "2.16.1",
     "fathom-client": "3.0.0",
@@ -55,7 +58,8 @@
     "styled-components": "5.3.1"
   },
   "devDependencies": {
-    "@fontsource/roboto": "4.2.1",
+    "@fontsource/lato": "4.5.0",
+    "@fontsource/merriweather": "4.5.1",
     "@sentry/webpack-plugin": "1.15.1",
     "@tailwindcss/forms": "0.3.3",
     "@tailwindcss/typography": "0.4.1",

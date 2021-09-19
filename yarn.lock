@@ -811,6 +811,20 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@fontsource/lato@npm:4.5.0":
+  version: 4.5.0
+  resolution: "@fontsource/lato@npm:4.5.0"
+  checksum: 6fafd09f4e0f9acecc4fe26f2c8dd3f17b7b410eeff614476ca906f60c0e7a5d7aa9892c387c8069925d901fdc95b48c8b5188791bc96af98e807ffb170ae6c6
+  languageName: node
+  linkType: hard
+
+"@fontsource/merriweather@npm:4.5.1":
+  version: 4.5.1
+  resolution: "@fontsource/merriweather@npm:4.5.1"
+  checksum: 6e695ab90cbfa3cd8b208f064754752720ccd4e920e310016cc3840595f4fc68e2510c357cab5d679d3605acfbc643a51c153ee1e4ecec1be0d29de088da7861
+  languageName: node
+  linkType: hard
+
 "@fontsource/roboto@npm:4.2.1":
   version: 4.2.1
   resolution: "@fontsource/roboto@npm:4.2.1"
@@ -1279,6 +1293,22 @@ __metadata:
   version: 2.17.0-35.3c463ebd78b1d21d8fdacdd27899e280cf686223
   resolution: "@prisma/engines@npm:2.17.0-35.3c463ebd78b1d21d8fdacdd27899e280cf686223"
   checksum: 1f7f87b396fb70f110115950df0baddb99e99ffbaea98f0ac3867b6c51bee81645c7659919b302ebe621d357b18ddc9d0d3ac6885c24872c85500b6a33bb685c
+  languageName: node
+  linkType: hard
+
+"@radix-ui/colors@npm:0.1.7":
+  version: 0.1.7
+  resolution: "@radix-ui/colors@npm:0.1.7"
+  checksum: dacc1cfee70aada164a107903cf5aa5154e53120022f6013d95f2cf1cc440251a3d2e46d485639fd9beb248b0e4362543b000d93f6cff63c305bd87883497619
+  languageName: node
+  linkType: hard
+
+"@radix-ui/react-icons@npm:1.0.3":
+  version: 1.0.3
+  resolution: "@radix-ui/react-icons@npm:1.0.3"
+  peerDependencies:
+    react: ^16.x || ^17.x
+  checksum: ca4ba98d2d60213301f873a9d7bc73278edb0803509aea376b096e1586726f8f2c53ecc51c2e3c9110be74cdb03f370b97a6299d677634b4cd8c2200d0cbe8f3
   languageName: node
   linkType: hard
 
@@ -1831,6 +1861,15 @@ __metadata:
   bin:
     stencil: bin/stencil
   checksum: 94b4335a60aabe23622ffa0cb6805252ee8bd6eeeeeb65cd1614630ecae64089ec5faa568adf595f478e17fed016b4e7ebd15d1a29ca1f554ecc7b1cc9ecf714
+  languageName: node
+  linkType: hard
+
+"@stitches/react@npm:1.2.0":
+  version: 1.2.0
+  resolution: "@stitches/react@npm:1.2.0"
+  peerDependencies:
+    react: ">= 16.3.0"
+  checksum: c791a9a7917f744483df9acc7b35f8898b96651a3422a163e68ff3314273ffaf38b7faa11101c3217668f7bcf4ec27acc7a144f5948d271cfd27f46b0adb3761
   languageName: node
   linkType: hard
 
@@ -10101,7 +10140,10 @@ resolve@^2.0.0-next.3:
   version: 0.0.0-use.local
   resolution: "sigle@workspace:sigle"
   dependencies:
-    "@fontsource/roboto": 4.2.1
+    "@fontsource/lato": 4.5.0
+    "@fontsource/merriweather": 4.5.1
+    "@radix-ui/colors": 0.1.7
+    "@radix-ui/react-icons": 1.0.3
     "@reach/dialog": 0.13.2
     "@reach/menu-button": 0.13.2
     "@reach/tooltip": 0.13.2
@@ -10113,6 +10155,7 @@ resolve@^2.0.0-next.3:
     "@stacks/connect": 4.3.18
     "@stacks/connect-react": 2.17.18
     "@stacks/storage": 2.0.0-beta.1
+    "@stitches/react": 1.2.0
     "@tailwindcss/forms": 0.3.3
     "@tailwindcss/typography": 0.4.1
     "@testing-library/jest-dom": 5.14.1
