@@ -811,6 +811,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@fontsource/merriweather@npm:4.5.1":
+  version: 4.5.1
+  resolution: "@fontsource/merriweather@npm:4.5.1"
+  checksum: 6e695ab90cbfa3cd8b208f064754752720ccd4e920e310016cc3840595f4fc68e2510c357cab5d679d3605acfbc643a51c153ee1e4ecec1be0d29de088da7861
+  languageName: node
+  linkType: hard
+
 "@fontsource/roboto@npm:4.2.1":
   version: 4.2.1
   resolution: "@fontsource/roboto@npm:4.2.1"
@@ -10117,6 +10124,7 @@ resolve@^2.0.0-next.3:
   version: 0.0.0-use.local
   resolution: "sigle@workspace:sigle"
   dependencies:
+    "@fontsource/merriweather": 4.5.1
     "@fontsource/roboto": 4.2.1
     "@radix-ui/colors": 0.1.7
     "@reach/dialog": 0.13.2
