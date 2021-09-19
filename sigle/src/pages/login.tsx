@@ -11,13 +11,9 @@ import { styled } from '../stitches.config';
 import { Box, Button, Container, Heading, Text } from '../ui';
 
 const FullScreen = styled('div', {
-  mt: '$20',
-  '@lg': {
-    mt: 0,
-    height: '100vh',
-    display: 'flex',
-    alignItems: 'center',
-  },
+  height: '100vh',
+  display: 'flex',
+  alignItems: 'center',
 });
 
 const LoginContainer = styled(Container, {
