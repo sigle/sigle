@@ -20,6 +20,12 @@ export const Button = styled('button', {
       },
     },
     color: {
+      ghost: {
+        color: '$gray11',
+        '&:hover': {
+          backgroundColor: '$gray4',
+        },
+      },
       gray: {
         color: '$gray1',
         backgroundColor: '$gray11',
@@ -38,6 +44,6 @@ export const Button = styled('button', {
   },
   defaultVariants: {
     size: 'md',
-    color: 'gray',
+    color: 'ghost',
   },
 });
