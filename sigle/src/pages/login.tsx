@@ -9,6 +9,16 @@ import { useAuth } from '../modules/auth/AuthContext';
 import { styled } from '../stitches.config';
 import { Button, Container, Heading, Text } from '../ui';
 
+const FullScreen = styled('div', {
+  mt: '$20',
+  '@lg': {
+    mt: 0,
+    height: '100vh',
+    display: 'flex',
+    alignItems: 'center',
+  },
+});
+
 const Grid = styled('div', {
   display: 'grid',
   '@lg': {
@@ -23,6 +33,13 @@ const BlockText = styled('div', {
   justifyContent: 'center',
   alignItems: 'center',
   textAlign: 'center',
+});
+
+const BlockIllustration = styled('div', {
+  display: 'none',
+  '@lg': {
+    display: 'block',
+  },
 });
 
 const Login = () => {
@@ -43,47 +60,51 @@ const Login = () => {
   }, [user]);
 
   return (
-    <Container>
-      <Grid>
-        <BlockText>
-          <a href={sigleConfig.landingUrl} target="_blank" rel="noreferrer">
+    <FullScreen>
+      <Container>
+        <Grid>
+          <BlockText>
+            <a href={sigleConfig.landingUrl} target="_blank" rel="noreferrer">
+              <Image
+                // TODO change to SVG
+                src="/static/img/logo.png"
+                alt="Logo"
+                width={100}
+                height={44}
+              />
+            </a>
+            <Heading as="h1" size="2xl" css={{ mt: '$15' }}>
+              Connect with Stacks
+            </Heading>
+            <Text css={{ mt: '$7' }}>
+              Decentralised platforms baked on top of Stacks need you to connect
+              with an ID.
+            </Text>
+            <Text css={{ mt: '$5' }}>
+              Stacks ID provides user-controlled login and storage that enable
+              you to take back control of your identity and data.
+            </Text>
+            <Button
+              color="orange"
+              size="lg"
+              onClick={handleLogin}
+              css={{ mt: '$7' }}
+            >
+              Connect with Stacks
+            </Button>
+          </BlockText>
+          <BlockIllustration>
             <Image
-              // TODO change to SVG
-              src="/static/img/logo.png"
-              alt="Logo"
-              width={100}
-              height={44}
+              src="/img/illustrations/login.png"
+              alt="Login illustration"
+              // TODO correct max width
+              width={1200}
+              height={951}
             />
-          </a>
-          <Heading as="h1" size="2xl" css={{ mt: '$15' }}>
-            Connect with Stacks
-          </Heading>
-          <Text css={{ mt: '$7' }}>
-            Decentralised platforms baked on top of Stacks need you to connect
-            with an ID.
-          </Text>
-          <Text css={{ mt: '$5' }}>
-            Stacks ID provides user-controlled login and storage that enable you
-            to take back control of your identity and data.
-          </Text>
-          <Button
-            color="orange"
-            size="lg"
-            onClick={handleLogin}
-            css={{ mt: '$7' }}
-          >
-            Connect with Stacks
-          </Button>
-        </BlockText>
-        <Image
-          src="/img/illustrations/login.png"
-          alt="Login illustration"
-          // TODO correct max width
-          width={1200}
-          height={951}
-        />
-      </Grid>
-    </Container>
+          </BlockIllustration>
+        </Grid>
+      </Container>
+    </FullScreen>
   );
 };
 
