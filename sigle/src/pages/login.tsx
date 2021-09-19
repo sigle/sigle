@@ -3,11 +3,12 @@ import { useRouter } from 'next/router';
 import Image from 'next/image';
 import * as Fathom from 'fathom-client';
 import { useConnect } from '@stacks/connect-react';
+import { ArrowTopRightIcon } from '@radix-ui/react-icons';
 import { sigleConfig } from '../config';
 import { Goals } from '../utils/fathom';
 import { useAuth } from '../modules/auth/AuthContext';
 import { styled } from '../stitches.config';
-import { Button, Container, Heading, Text } from '../ui';
+import { Box, Button, Container, Heading, Text } from '../ui';
 
 const FullScreen = styled('div', {
   mt: '$20',
@@ -29,7 +30,7 @@ const Grid = styled('div', {
   display: 'grid',
   '@lg': {
     gridTemplateColumns: '2fr 3fr',
-    gridGap: '$10',
+    gridGap: '$15',
   },
 });
 
@@ -72,7 +73,6 @@ const Login = () => {
           <BlockText>
             <a href={sigleConfig.landingUrl} target="_blank" rel="noreferrer">
               <Image
-                // TODO change to SVG
                 src="/static/img/logo.png"
                 alt="Logo"
                 width={100}
@@ -80,15 +80,24 @@ const Login = () => {
               />
             </a>
             <Heading as="h1" size="2xl" css={{ mt: '$15' }}>
-              Connect with Stacks
+              Welcome!
             </Heading>
             <Text css={{ mt: '$7' }}>
-              Decentralised platforms baked on top of Stacks need you to connect
-              with an ID.
+              Sigle is a web 3.0 open source blogging platform focused on
+              protecting your privacy built on top of Stacks.
             </Text>
-            <Text css={{ mt: '$5' }}>
-              Stacks ID provides user-controlled login and storage that enable
-              you to take back control of your identity and data.
+            <Text
+              css={{ mt: '$5', display: 'flex', alignItems: 'center' }}
+              color="orange"
+              as="a"
+              target="_blank"
+              rel="noreferrer"
+              href="https://www.stacks.co/what-is-stacks"
+            >
+              What is Stacks?
+              <Box as="span" css={{ ml: '$2' }}>
+                <ArrowTopRightIcon height={16} width={16} />
+              </Box>
             </Text>
             <Button
               color="orange"
@@ -96,16 +105,15 @@ const Login = () => {
               onClick={handleLogin}
               css={{ mt: '$7' }}
             >
-              Connect with Stacks
+              Start Writing
             </Button>
           </BlockText>
           <BlockIllustration>
             <Image
               src="/img/illustrations/login.png"
               alt="Login illustration"
-              // TODO correct max width
-              width={1200}
-              height={951}
+              width={600}
+              height={476}
             />
           </BlockIllustration>
         </Grid>

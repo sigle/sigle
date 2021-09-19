@@ -21,6 +21,11 @@ export const Text = styled('p', {
         lineHeight: '28.8px',
       },
     },
+    color: {
+      orange: {
+        color: '$orange11',
+      },
+    },
   },
   defaultVariants: { size: 'md' },
 });
