@@ -58,8 +58,8 @@
     "styled-components": "5.3.1"
   },
   "devDependencies": {
+    "@fontsource/lato": "4.5.0",
     "@fontsource/merriweather": "4.5.1",
-    "@fontsource/roboto": "4.5.0",
     "@sentry/webpack-plugin": "1.15.1",
     "@tailwindcss/forms": "0.3.3",
     "@tailwindcss/typography": "0.4.1",

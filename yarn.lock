@@ -811,6 +811,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@fontsource/lato@npm:4.5.0":
+  version: 4.5.0
+  resolution: "@fontsource/lato@npm:4.5.0"
+  checksum: 6fafd09f4e0f9acecc4fe26f2c8dd3f17b7b410eeff614476ca906f60c0e7a5d7aa9892c387c8069925d901fdc95b48c8b5188791bc96af98e807ffb170ae6c6
+  languageName: node
+  linkType: hard
+
 "@fontsource/merriweather@npm:4.5.1":
   version: 4.5.1
   resolution: "@fontsource/merriweather@npm:4.5.1"
@@ -822,13 +829,6 @@ __metadata:
   version: 4.2.1
   resolution: "@fontsource/roboto@npm:4.2.1"
   checksum: 3565f87d23349241e912209dba3bc7e9634d681ac54ff3aecfaf47409a03356a582d676e114722d8c369600342be0d323c79ed1cd59a4c229a4e9c95db58d047
-  languageName: node
-  linkType: hard
-
-"@fontsource/roboto@npm:4.5.0":
-  version: 4.5.0
-  resolution: "@fontsource/roboto@npm:4.5.0"
-  checksum: c045f5aaad68e4dcf4a293b764fefbf023298544ec453d72373104cf8d933f0e59e574d67fcf772b13ed511adfff2734d111c411e6fa6926e8379227d8460d8c
   languageName: node
   linkType: hard
 
@@ -10140,8 +10140,8 @@ resolve@^2.0.0-next.3:
   version: 0.0.0-use.local
   resolution: "sigle@workspace:sigle"
   dependencies:
+    "@fontsource/lato": 4.5.0
     "@fontsource/merriweather": 4.5.1
-    "@fontsource/roboto": 4.5.0
     "@radix-ui/colors": 0.1.7
     "@radix-ui/react-icons": 1.0.3
     "@reach/dialog": 0.13.2

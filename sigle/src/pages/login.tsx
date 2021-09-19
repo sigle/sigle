@@ -88,7 +88,7 @@ const Login = () => {
             </Text>
             <Text
               color="orange"
-              size="sm"
+              size="action"
               as="a"
               target="_blank"
               rel="noreferrer"
