@@ -19,6 +19,12 @@ const FullScreen = styled('div', {
   },
 });
 
+const LoginContainer = styled(Container, {
+  '@xl': {
+    maxWidth: '1024px',
+  },
+});
+
 const Grid = styled('div', {
   display: 'grid',
   '@lg': {
@@ -61,7 +67,7 @@ const Login = () => {
 
   return (
     <FullScreen>
-      <Container>
+      <LoginContainer>
         <Grid>
           <BlockText>
             <a href={sigleConfig.landingUrl} target="_blank" rel="noreferrer">
@@ -103,7 +109,7 @@ const Login = () => {
             />
           </BlockIllustration>
         </Grid>
-      </Container>
+      </LoginContainer>
     </FullScreen>
   );
 };
