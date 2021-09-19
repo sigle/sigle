@@ -12,7 +12,6 @@ export const Text = styled('p', {
       },
       sm: {
         fontSize: '$2',
-        color: '$gray9',
         letterSpacing: '0.2px',
       },
       md: {
@@ -22,10 +21,13 @@ export const Text = styled('p', {
       },
     },
     color: {
+      gray: {
+        color: '$gray10',
+      },
       orange: {
         color: '$orange11',
       },
     },
   },
-  defaultVariants: { size: 'md' },
+  defaultVariants: { color: 'gray', size: 'md' },
 });

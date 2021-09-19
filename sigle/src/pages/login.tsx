@@ -83,16 +83,17 @@ const Login = () => {
               Welcome!
             </Heading>
             <Text css={{ mt: '$7' }}>
-              Sigle is a web 3.0 open source blogging platform focused on
-              protecting your privacy built on top of Stacks.
+              Sigle is a web 3.0 open source blogging platform focused on{' '}
+              <strong>protecting your privacy</strong> built on top of Stacks.
             </Text>
             <Text
-              css={{ mt: '$5', display: 'flex', alignItems: 'center' }}
               color="orange"
+              size="sm"
               as="a"
               target="_blank"
               rel="noreferrer"
               href="https://www.stacks.co/what-is-stacks"
+              css={{ mt: '$5', display: 'flex', alignItems: 'center' }}
             >
               What is Stacks?
               <Box as="span" css={{ ml: '$2' }}>
