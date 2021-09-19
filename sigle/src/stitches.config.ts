@@ -59,6 +59,7 @@ export const { styled, css, globalCss, keyframes, getCssText, createTheme } =
         8: '32px',
         9: '36px',
         10: '40px',
+        15: '60px',
         20: '80px',
       },
       sizes: {

@@ -48,20 +48,21 @@ const Login = () => {
         <BlockText>
           <a href={sigleConfig.landingUrl} target="_blank" rel="noreferrer">
             <Image
+              // TODO change to SVG
               src="/static/img/logo.png"
               alt="Logo"
               width={100}
               height={44}
             />
           </a>
-          <Heading as="h1" size="2xl">
+          <Heading as="h1" size="2xl" css={{ mt: '$15' }}>
             Connect with Stacks
           </Heading>
-          <Text>
+          <Text css={{ mt: '$7' }}>
             Decentralised platforms baked on top of Stacks need you to connect
             with an ID.
           </Text>
-          <Text>
+          <Text css={{ mt: '$5' }}>
             Stacks ID provides user-controlled login and storage that enable you
             to take back control of your identity and data.
           </Text>
@@ -69,7 +70,7 @@ const Login = () => {
             color="orange"
             size="lg"
             onClick={handleLogin}
-            css={{ mt: '$10' }}
+            css={{ mt: '$7' }}
           >
             Connect with Stacks
           </Button>
