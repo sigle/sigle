@@ -149,7 +149,7 @@ export default class MyApp extends App {
     const { err } = this.props as any;
     const modifiedPageProps = { ...pageProps, err };
 
-    const seoTitle = 'Sigle | Decentralized blogging platform';
+    const seoTitle = 'Sigle | Decentralized writing platform';
     const seoDescription =
       'Sigle is a decentralised, open-source platform empowering creators. Write, share, build your audience and earn Bitcoin.';
 
@@ -166,12 +166,24 @@ export default class MyApp extends App {
           description={seoDescription}
           openGraph={{
             type: 'website',
+            locale: 'en_EN',
             site_name: 'Sigle',
             title: seoTitle,
             description: seoDescription,
-            images: [{ url: `${sigleConfig.appUrl}/static/images/share.jpg` }],
+            images: [
+              {
+                url: `${sigleConfig.appUrl}/img/illustrations/login.png`,
+                alt: `Sigle hero image`,
+                width: 1200,
+                height: 951,
+              },
+            ],
           }}
-          twitter={{ site: '@sigleapp', cardType: 'summary_large_image' }}
+          twitter={{
+            handle: '@sigleapp',
+            site: 'www.sigle.io',
+            cardType: 'summary_large_image',
+          }}
         />
         <GlobalStyle />
         <ForceHTTPS />
