@@ -131,8 +131,8 @@ export const DashboardSidebar = () => {
 
   const handleLogout = () => {
     userSession.signUserOut();
-    posthog.reset();
     window.location.replace(window.location.origin);
+    posthog.reset();
   };
 
   return (
