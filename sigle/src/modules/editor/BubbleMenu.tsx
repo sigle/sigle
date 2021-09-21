@@ -19,7 +19,6 @@ import {
 
 const StyledBubbleMenu = styled(TipTapBubbleMenu)`
   ${tw`flex rounded py-1`};
-  background-color: #222;
 `;
 
 const BubbleMenuButton = styled.button<{ active: boolean }>`
