@@ -54,7 +54,7 @@ const AppBarSettings = styled.div`
 `;
 
 const Input = styled.input`
-  ${tw`outline-none w-full text-2xl`};
+  ${tw`outline-none w-full text-4xl font-bold`};
 `;
 
 const Image = styled.img<{ selected: boolean; isUploading?: boolean }>`

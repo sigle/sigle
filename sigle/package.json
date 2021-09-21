@@ -16,6 +16,8 @@
     "testEnvironment": "jsdom"
   },
   "dependencies": {
+    "@radix-ui/colors": "0.1.7",
+    "@radix-ui/react-icons": "1.0.3",
     "@reach/dialog": "0.13.2",
     "@reach/menu-button": "0.13.2",
     "@reach/tooltip": "0.13.2",
@@ -26,6 +28,7 @@
     "@stacks/connect": "4.3.18",
     "@stacks/connect-react": "2.17.18",
     "@stacks/storage": "2.0.0-beta.1",
+    "@stitches/react": "1.2.0",
     "@tippyjs/react": "4.2.5",
     "@tiptap/core": "2.0.0-beta.102",
     "@tiptap/extension-blockquote": "2.0.0-beta.15",
@@ -58,6 +61,7 @@
     "next": "11.1.2",
     "next-seo": "4.26.0",
     "nprogress": "0.2.0",
+    "posthog-js": "1.13.13",
     "react": "17.0.2",
     "react-color": "2.19.3",
     "react-div-100vh": "0.5.6",
@@ -66,7 +70,7 @@
     "react-icons": "4.1.0",
     "react-query": "3.12.0",
     "react-spring": "8.0.27",
-    "react-toastify": "6.2.0",
+    "react-toastify": "8.0.2",
     "reading-time": "1.2.1",
     "slate": "0.47.9",
     "slate-html-serializer": "0.8.11",
@@ -76,10 +80,11 @@
     "styled-components": "5.3.1"
   },
   "devDependencies": {
-    "@fontsource/roboto": "4.2.1",
+    "@fontsource/lato": "4.5.0",
+    "@fontsource/merriweather": "4.5.1",
     "@sentry/webpack-plugin": "1.15.1",
-    "@tailwindcss/forms": "0.2.1",
-    "@tailwindcss/typography": "0.3.1",
+    "@tailwindcss/forms": "0.3.3",
+    "@tailwindcss/typography": "0.4.1",
     "@testing-library/jest-dom": "5.14.1",
     "@testing-library/react": "12.0.0",
     "@types/jest": "26.0.24",
@@ -95,7 +100,7 @@
     "@types/slate-react": "0.22.9",
     "@types/styled-components": "5.1.11",
     "@typescript-eslint/eslint-plugin": "4.30.0",
-    "autoprefixer": "10.1.0",
+    "autoprefixer": "10.3.4",
     "babel-plugin-macros": "3.0.1",
     "babel-plugin-styled-components": "1.13.2",
     "dotenv": "8.6.0",
@@ -106,10 +111,10 @@
     "fast-xml-parser": "3.17.5",
     "jest": "27.1.0",
     "next-compose-plugins": "2.2.1",
-    "postcss": "8.2.1",
+    "postcss": "8.3.6",
     "sass": "1.36.0",
-    "tailwindcss": "2.0.2",
-    "twin.macro": "2.0.7",
+    "tailwindcss": "2.2.15",
+    "twin.macro": "2.7.0",
     "typescript": "4.4.2"
   }
 }

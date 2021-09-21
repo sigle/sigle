@@ -20,6 +20,7 @@ import {
   FormRow,
   FormLabel,
   FormInput,
+  FormInputCheckbox,
   FormHelper,
   FormTextarea,
   FormHelperError,
@@ -52,6 +53,15 @@ const ImageEmptyIconDelete = styled.div`
   ${tw`p-2 bg-white rounded-full ml-2`};
 `;
 
+const ImageCheckboxContainer = styled.div`
+  ${tw`flex items-center`};
+
+  ${FormHelper} {
+    margin-top: 0;
+    ${tw`ml-2`};
+  }
+`;
+
 const Image = styled.img`
   ${tw`cursor-pointer w-full`};
 `;
@@ -76,6 +86,7 @@ interface StorySettingsFormValues {
   metaTitle: string;
   metaDescription: string;
   createdAt: string | number;
+  hideCoverImage: boolean;
 }
 
 interface StorySettingsFormProps {
@@ -99,6 +110,7 @@ export const StorySettingsForm = ({
       metaTitle: story.metaTitle || '',
       metaDescription: story.metaDescription || '',
       createdAt: format(story.createdAt, 'yyyy-MM-dd'),
+      hideCoverImage: story.hideCoverImage ? true : false,
     },
     validate: (values) => {
       const errors: FormikErrors<StorySettingsFormValues> = {};
@@ -122,10 +134,13 @@ export const StorySettingsForm = ({
         updatedStory[key] = values[key] ? values[key] : undefined;
       });
 
-      // We normalize the date to save it as number
-      updatedStory.createdAt = updatedStory.createdAt
-        ? new Date(updatedStory.createdAt).getTime()
-        : updatedStory.createdAt;
+      if (updatedStory.createdAt) {
+        const newDate = new Date(updatedStory.createdAt);
+        // Set the time to midnight
+        newDate.setHours(0, 0, 0, 0);
+        // We normalize the date to save it as number
+        updatedStory.createdAt = newDate.getTime();
+      }
 
       if (coverFile) {
         const now = new Date().getTime();
@@ -235,6 +250,16 @@ export const StorySettingsForm = ({
             )}
           </ImageEmptyIconContainer>
         </ImageEmpty>
+        <ImageCheckboxContainer>
+          <FormInputCheckbox
+            type="checkbox"
+            name="hideCoverImage"
+            checked={formik.values.hideCoverImage}
+            value={formik.values.hideCoverImage ? 'true' : 'false'}
+            onChange={formik.handleChange}
+          />
+          <FormHelper>Hide cover image on the published story</FormHelper>
+        </ImageCheckboxContainer>
       </FormRow>
 
       <FormRow>

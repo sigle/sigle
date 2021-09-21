@@ -1,84 +1,49 @@
 import React, { useEffect } from 'react';
-import styled, { css } from 'styled-components';
-import tw from 'twin.macro';
 import { useRouter } from 'next/router';
+import Image from 'next/image';
 import * as Fathom from 'fathom-client';
 import { useConnect } from '@stacks/connect-react';
+import { ArrowTopRightIcon } from '@radix-ui/react-icons';
 import { sigleConfig } from '../config';
-import { Button } from '../components';
 import { Goals } from '../utils/fathom';
 import { useAuth } from '../modules/auth/AuthContext';
+import { styled } from '../stitches.config';
+import { Box, Button, Container, Heading, Text } from '../ui';
 
-const BackgroundContainer = styled.div`
-  ${tw`flex w-full h-screen`};
+const FullScreen = styled('div', {
+  height: '100vh',
+  display: 'flex',
+  alignItems: 'center',
+});
 
-  @media (max-width: ${sigleConfig.breakpoints.md}px) {
-    display: none;
-  }
-`;
+const LoginContainer = styled(Container, {
+  '@xl': {
+    maxWidth: '1024px',
+  },
+});
 
-const BackgroundColumn = styled.div<{ right?: boolean }>`
-  ${tw`flex-1`};
-  background-color: #f7f7f7;
-  ${(props) =>
-    props.right &&
-    css`
-      ${tw`bg-white bg-no-repeat bg-contain bg-left`};
-      background-image: url('/static/img/logo-login.png');
-    `}
-`;
+const Grid = styled('div', {
+  display: 'grid',
+  '@lg': {
+    gridTemplateColumns: '2fr 3fr',
+    gridGap: '$15',
+  },
+});
 
-const AbsoluteContainer = styled.div`
-  ${tw`absolute w-full h-screen`};
-  top: 0;
-`;
+const BlockText = styled('div', {
+  display: 'flex',
+  flexDirection: 'column',
+  justifyContent: 'center',
+  alignItems: 'center',
+  textAlign: 'center',
+});
 
-const Container = styled.div`
-  ${tw`flex items-center justify-center p-8 mx-auto`};
-  height: 100%;
-  width: 100%;
-  max-width: 1140px;
-
-  @media (max-width: ${sigleConfig.breakpoints.md}px) {
-    ${tw`block`};
-  }
-`;
-
-const Column = styled.div<{ left?: boolean; right?: boolean }>`
-  ${tw`w-1/2 flex flex-col text-left`};
-  ${(props) =>
-    props.left &&
-    css`
-      ${tw`pr-32`};
-    `}
-  ${(props) =>
-    props.right &&
-    css`
-      ${tw`items-center`};
-    `}
-  @media (max-width: ${sigleConfig.breakpoints.md}px) {
-    ${tw`w-full pr-0`};
-  }
-`;
-
-const Logo = styled.img`
-  ${tw`mb-4`};
-  width: 100px;
-`;
-
-const Illu = styled.img`
-  ${tw`mt-6 mb-4`};
-  width: 400px;
-  max-width: 100%;
-`;
-
-const Text = styled.p`
-  ${tw`mb-4`};
-`;
-
-const Link = styled.a`
-  ${tw`text-pink`};
-`;
+const BlockIllustration = styled('div', {
+  display: 'none',
+  '@lg': {
+    display: 'block',
+  },
+});
 
 const Login = () => {
   const router = useRouter();
@@ -98,44 +63,59 @@ const Login = () => {
   }, [user]);
 
   return (
-    <React.Fragment>
-      <BackgroundContainer>
-        <BackgroundColumn />
-        <BackgroundColumn right />
-      </BackgroundContainer>
-      <AbsoluteContainer>
-        <Container>
-          <Column left>
-            <Logo src="/static/img/logo.png" alt="Logo" />
-            <Text>
-              Because Sigle is working on the decentralized internet thanks to
-              the blockchain technology, you’ll be redirected to{' '}
-              <Link href="https://blockstack.org/" target="_blank">
-                Blockstack
-              </Link>{' '}
-              to login or sign in.
+    <FullScreen>
+      <LoginContainer>
+        <Grid>
+          <BlockText>
+            <a href={sigleConfig.landingUrl} target="_blank" rel="noreferrer">
+              <Image
+                src="/static/img/logo.png"
+                alt="Logo"
+                width={100}
+                height={44}
+              />
+            </a>
+            <Heading as="h1" size="2xl" css={{ mt: '$15' }}>
+              Welcome!
+            </Heading>
+            <Text css={{ mt: '$7' }}>
+              Sigle is a web 3.0 open source blogging platform focused on{' '}
+              <strong>protecting your privacy</strong>, built on top of Stacks.
             </Text>
-            <Text>
-              Blockstack ID provides user-controlled login and storage that
-              enable you to take back control of your identity and data.
+            <Text
+              color="orange"
+              size="action"
+              as="a"
+              target="_blank"
+              rel="noreferrer"
+              href="https://www.stacks.co/what-is-stacks"
+              css={{ mt: '$5', display: 'flex', alignItems: 'center' }}
+            >
+              What is Stacks?
+              <Box as="span" css={{ ml: '$2' }}>
+                <ArrowTopRightIcon height={16} width={16} />
+              </Box>
             </Text>
-            <Text>Creating a Blockstack ID is easy, free, and secure.</Text>
-            <Text>
-              Welcome to the family{' '}
-              <span role="img" aria-label="Smile">
-                🙂
-              </span>
-            </Text>
-            <div>
-              <Button onClick={handleLogin}>Login with blockstack</Button>
-            </div>
-          </Column>
-          <Column right>
-            <Illu src="/static/img/login.png" alt="Login image" />
-          </Column>
-        </Container>
-      </AbsoluteContainer>
-    </React.Fragment>
+            <Button
+              color="orange"
+              size="lg"
+              onClick={handleLogin}
+              css={{ mt: '$7' }}
+            >
+              Start Writing
+            </Button>
+          </BlockText>
+          <BlockIllustration>
+            <Image
+              src="/img/illustrations/login.png"
+              alt="Login illustration"
+              width={600}
+              height={476}
+            />
+          </BlockIllustration>
+        </Grid>
+      </LoginContainer>
+    </FullScreen>
   );
 };
 

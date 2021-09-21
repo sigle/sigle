@@ -7,6 +7,7 @@ import Document, {
   NextScript,
 } from 'next/document';
 import { ServerStyleSheet } from 'styled-components';
+import { getCssText } from '../stitches.config';
 import { sigleConfig } from '../config';
 
 export default class MyDocument extends Document {
@@ -60,6 +61,10 @@ export default class MyDocument extends Document {
           <meta name="msapplication-TileColor" content="#da532c" />
           <meta name="theme-color" content="#ffffff" />
           <link rel="manifest" href={`${sigleConfig.appUrl}/manifest.json`} />
+          <style
+            id="stitches"
+            dangerouslySetInnerHTML={{ __html: getCssText() }}
+          />
         </Head>
         <body>
           <Main />
