@@ -105,8 +105,6 @@ const CommandsList = (props: {
 
 /**
  * TODO
- * - link UI
- * - link button in bubble menu
  * - link should show on cmd + k
  * - block quotes seems to add the " char before and after the quote
  * - mobile UI
