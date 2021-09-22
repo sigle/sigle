@@ -106,10 +106,10 @@ const CommandsList = (props: {
 /**
  * TODO
  * - link should show on cmd + k
- * - mobile UI
  * - left menu that trigger the commands menu
  * - check all the shortcuts
  * - investigate figure extension instead of image
+ * - mobile UI
  * - data migration from slate
  */
 
