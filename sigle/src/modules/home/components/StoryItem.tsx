@@ -2,15 +2,15 @@ import React from 'react';
 import Link from 'next/link';
 import styled from 'styled-components';
 import tw from 'twin.macro';
-import { MdMoreHoriz, MdStar } from 'react-icons/md';
+import { MdStar } from 'react-icons/md';
+import { DotsHorizontalIcon } from '@radix-ui/react-icons';
 import format from 'date-fns/format';
 import {
-  Menu,
-  MenuList,
-  MenuButton,
-  MenuItem,
-  MenuLink,
-} from '@reach/menu-button';
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuTrigger,
+  DropdownMenuItem,
+} from '../../../ui';
 import { SubsetStory, BlockstackUser } from '../../../types';
 import { FullScreenDialog } from '../../../components';
 
@@ -20,10 +20,6 @@ const StoryContainer = styled.div`
 
 const StoryTitleContainer = styled.div`
   ${tw`flex`};
-`;
-
-const StoryTitleIcon = styled(MdMoreHoriz)`
-  ${tw`text-grey-darker`};
 `;
 
 const StarIcon = styled(MdStar)`
@@ -104,33 +100,38 @@ export const StoryItem = ({
                 <a>{story.title}</a>
               </Link>
             </StoryTitle>
-            <Menu>
-              <MenuButton>
-                <StoryTitleIcon size={22} />
-              </MenuButton>
-              <MenuList>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <button aria-label="Story settings">
+                  <DotsHorizontalIcon width={22} height={22} />
+                </button>
+              </DropdownMenuTrigger>
+
+              <DropdownMenuContent>
                 {type === 'public' && (
-                  <MenuLink
+                  <DropdownMenuItem
                     as="a"
                     href={`/${user.username}/${story.id}`}
                     target="_blank"
                     rel="noopener noreferrer"
                   >
                     View my story
-                  </MenuLink>
+                  </DropdownMenuItem>
                 )}
-                <MenuItem onSelect={onEdit}>Edit</MenuItem>
+                <DropdownMenuItem onSelect={onEdit}>Edit</DropdownMenuItem>
                 {!story.featured && type === 'public' && (
-                  <MenuItem onSelect={onFeature}>Feature this story</MenuItem>
+                  <DropdownMenuItem onSelect={onFeature}>
+                    Feature this story
+                  </DropdownMenuItem>
                 )}
                 {story.featured && type === 'public' && (
-                  <MenuItem onSelect={onUnFeature}>
+                  <DropdownMenuItem onSelect={onUnFeature}>
                     Un-feature this story
-                  </MenuItem>
+                  </DropdownMenuItem>
                 )}
-                <MenuItem onSelect={onDelete}>Delete</MenuItem>
-              </MenuList>
-            </Menu>
+                <DropdownMenuItem onSelect={onDelete}>Delete</DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
             {story.featured && <StarIcon size={22} />}
           </StoryTitleContainer>
           <StoryDate>

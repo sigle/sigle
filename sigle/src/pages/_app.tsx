@@ -18,7 +18,6 @@ import 'tippy.js/themes/light-border.css';
 import 'react-toastify/dist/ReactToastify.css';
 // reach-ui styles
 import '@reach/dialog/styles.css';
-import '@reach/menu-button/styles.css';
 import '@reach/tooltip/styles.css';
 import '../styles/fonts.scss';
 import '../styles/index.css';
@@ -94,24 +93,6 @@ const GlobalStyle = createGlobalStyle`
   #nprogress .spinner-icon { 
     border-top-color: ${colors.pink};
     border-left-color: ${colors.pink};
-  }
-
-  /* For @reach/menu-button */
-  [data-reach-menu-button] {
-    :focus {
-      outline: 0;
-    }
-  }
-  [data-reach-menu-list] {
-    ${tw`py-2 bg-white rounded-lg border shadow-md`};
-    min-width: 5rem;
-    animation: ${menuAnimation} 75ms cubic-bezier(0, 0, 0.2, 1);
-  }
-  [data-reach-menu-item] {
-    ${tw`px-4 py-2`};
-  }
-  [data-reach-menu-item][data-selected] {
-    ${tw`bg-black text-white lg:text-sm`};
   }
 `;
 
