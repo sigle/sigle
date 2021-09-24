@@ -1,7 +1,7 @@
 import React from 'react';
 import { GetServerSideProps, NextPage } from 'next';
 import { lookupProfile } from '@stacks/auth';
-import * as Sentry from '@sentry/node';
+import * as Sentry from '@sentry/nextjs';
 import { PublicHome } from '../modules/publicHome';
 import { sigleConfig } from '../config';
 import { StoryFile, SettingsFile } from '../types';

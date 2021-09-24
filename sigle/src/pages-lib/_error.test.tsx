@@ -1,10 +1,10 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import React from 'react';
 import { render } from '@testing-library/react';
-import * as Sentry from '@sentry/node';
+import * as Sentry from '@sentry/nextjs';
 import { MyError } from './_error';
 
-jest.mock('@sentry/node');
+jest.mock('@sentry/nextjs');
 
 // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 const getInitialProps = MyError.getInitialProps!;
