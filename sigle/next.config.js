@@ -5,7 +5,6 @@ dotenv.config();
 
 module.exports = withSentryConfig(
   {
-    productionBrowserSourceMaps: true,
     env: {
       APP_URL: process.env.APP_URL,
       FATHOM_SITE_ID: process.env.FATHOM_SITE_ID,
