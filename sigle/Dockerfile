@@ -40,4 +40,4 @@ EXPOSE 3000
 
 WORKDIR /app/sigle
 
-CMD ["yarn", "start"] 
+CMD ["pnpm", "run", "start"] 

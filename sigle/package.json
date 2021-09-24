@@ -6,7 +6,7 @@
     "dev": "next dev",
     "start": "next start",
     "build": "next build",
-    "test": "yarn test:only",
+    "test": "pnpm run test:only",
     "test:only": "jest"
   },
   "jest": {
