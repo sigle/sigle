@@ -62,17 +62,6 @@ Router.events.on('routeChangeComplete', () => {
  * Global style
  */
 
-const menuAnimation = keyframes`
-  0% {
-    transform: scale(.9);
-    opacity: 0;
-  }
-  100% {
-    transform: scale(1);
-    opacity: 1;
-  }
-`;
-
 const GlobalStyle = createGlobalStyle`
   body {
     font-family: "Lato";
