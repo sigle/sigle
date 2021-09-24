@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-20.04
     strategy:
       matrix:
-        node-version: [15]
+        node-version: [14]
 
     steps:
       - uses: actions/checkout@v1
@@ -45,8 +45,6 @@ jobs:
 
       - name: Build sigle
         run: pnpm run build --filter=sigle
-        env:
-          CI: true
 
       - name: Run sigle tests
         run: pnpm run test --filter=sigle
@@ -55,8 +53,6 @@ jobs:
 
       - name: Build blog-viewer
         run: pnpm run build --filter=blog-viewer
-        env:
-          CI: true
 
       - name: Run blog-viewer tests
         run: pnpm run test --filter=blog-viewer
