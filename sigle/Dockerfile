@@ -7,17 +7,17 @@ WORKDIR /app
 
 COPY pnpm-lock.yaml ./
 
-RUN pnpm fetch --prod
+RUN pnpm fetch
 
 # Copy the rest of the code
 COPY . .
 
-RUN pnpm install -r --offline --prod
+RUN pnpm install -r --offline
 
 # Build the next.js application
 RUN pnpm run build --filter=sigle
 # Install only the production dependencies to reduce the image size
-RUN pnpm install --filter=sigle
+RUN pnpm install --prod --filter=sigle
 
 # Stage 2: And then copy over node_modules, etc from that stage to the smaller base image
 FROM node:14 as production
