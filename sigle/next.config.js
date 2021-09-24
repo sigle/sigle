@@ -9,6 +9,7 @@ module.exports = withSentryConfig(
       APP_URL: process.env.APP_URL,
       FATHOM_SITE_ID: process.env.FATHOM_SITE_ID,
       NEXT_PUBLIC_SENTRY_DSN: process.env.NEXT_PUBLIC_SENTRY_DSN,
+      NEXT_PUBLIC_POSTHOG_TOKEN: process.env.NEXT_PUBLIC_POSTHOG_TOKEN,
     },
     headers: async () => {
       return [
