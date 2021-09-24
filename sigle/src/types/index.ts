@@ -1,5 +1,8 @@
 export interface BlockstackUser {
   username: string;
+  profile: {
+    stxAddress: string;
+  };
 }
 
 export interface StoryFile {
@@ -43,6 +46,11 @@ export interface Story {
    * it will also always appear first in the list, no matter the created date
    */
   featured?: boolean;
+  /**
+   * Hide the cover image on the public story page.
+   * The cover image will be used as a thumbnail and SEO only.
+   */
+  hideCoverImage?: boolean;
   createdAt: number;
   updatedAt: number;
 }

@@ -1,6 +1,5 @@
 const dotenv = require('dotenv');
 const withPlugins = require('next-compose-plugins');
-const withSourceMaps = require('@zeit/next-source-maps')();
 const SentryWebpackPlugin = require('@sentry/webpack-plugin');
 
 dotenv.config();
@@ -27,7 +26,6 @@ const basePath = '';
 module.exports = withPlugins(
   [
     [
-      withSourceMaps,
       {
         serverRuntimeConfig: {
           rootDir: __dirname,
@@ -91,9 +89,11 @@ module.exports = withPlugins(
     ],
   ],
   {
+    productionBrowserSourceMaps: true,
     env: {
       APP_URL: process.env.APP_URL,
       FATHOM_SITE_ID: process.env.FATHOM_SITE_ID,
+      NEXT_PUBLIC_POSTHOG_TOKEN: process.env.NEXT_PUBLIC_POSTHOG_TOKEN,
       // Make the COMMIT_SHA available to the client so that Sentry events can be
       // marked for the release they belong to. It may be undefined if running
       // outside of Vercel

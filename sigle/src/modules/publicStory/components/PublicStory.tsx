@@ -13,6 +13,7 @@ import { Story, SettingsFile } from '../../../types';
 import { Container } from '../../../components';
 import { sigleConfig } from '../../../config';
 import { sanitizeHexColor, sanitizeLink } from '../../../utils/security';
+import { PoweredBy } from './PoweredBy';
 
 const rules = [
   {
@@ -98,6 +99,7 @@ const HeaderTitle = styled.a`
 `;
 
 const StyledContainer = styled(Container)<{ hasCover: boolean }>`
+  ${tw`mb-16`}
   max-width: 768px;
 
   ${(props) =>
@@ -130,7 +132,7 @@ const CoverImage = styled.img`
 `;
 
 export const Content = styled.div`
-  ${tw`mt-8 mb-16 prose lg:prose-lg`};
+  ${tw`mt-8 prose lg:prose-lg`};
   max-width: none;
 
   p {
@@ -195,6 +197,8 @@ export const PublicStory = ({ story, settings }: PublicStoryProps) => {
     ? readingTime(Plain.serialize(Value.fromJSON(story.content))).text
     : undefined;
 
+  const showCoverImage = story.coverImage && !story.hideCoverImage;
+
   return (
     <React.Fragment>
       <NextSeo
@@ -229,12 +233,12 @@ export const PublicStory = ({ story, settings }: PublicStoryProps) => {
         </HeaderContainer>
       </Header>
 
-      <StyledContainer hasCover={!!story.coverImage}>
+      <StyledContainer hasCover={!!showCoverImage}>
         <Title className="sigle-title">{story.title}</Title>
         <StoryDate className="sigle-date">
           {format(story.createdAt, 'dd MMMM yyyy')} • {storyReadingTime}
         </StoryDate>
-        {story.coverImage && (
+        {showCoverImage && (
           <Cover>
             <CoverImage className="sigle-cover" src={story.coverImage} />
           </Cover>
@@ -247,6 +251,7 @@ export const PublicStory = ({ story, settings }: PublicStoryProps) => {
               : '',
           }}
         />
+        <PoweredBy />
       </StyledContainer>
     </React.Fragment>
   );

@@ -5,6 +5,7 @@ import { useRouter } from 'next/router';
 import { StoryFile, SettingsFile } from '../../../types';
 import { Container } from '../../../components';
 import { PublicStoryItem } from './PublicStoryItem';
+import { PoweredBy } from '../../publicStory/components/PoweredBy';
 
 const StyledContainer = styled(Container)`
   ${tw`mt-4 mb-16`};
@@ -82,6 +83,8 @@ export const PublicHome = ({ file, settings }: PublicHomeProps) => {
             settings={settings}
           />
         ))}
+
+        <PoweredBy />
       </StyledContainer>
     </React.Fragment>
   );

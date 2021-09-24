@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 import { UserData } from '@stacks/auth';
 import { Connect, AuthOptions } from '@stacks/connect-react';
+import posthog from 'posthog-js';
 import { userSession } from '../../utils/blockstack';
 
 const AuthContext = React.createContext<{
@@ -31,7 +32,6 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
       userSession
         .handlePendingSignIn()
         .then(() => {
-          // TODO cleanup token in the url
           setState({
             loggingIn: false,
             user: userSession.loadUserData(),
@@ -50,6 +50,14 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
       });
     }
   }, []);
+
+  useEffect(() => {
+    if (state.user) {
+      posthog.identify(state.user.profile.stxAddress, {
+        username: state.user.username,
+      });
+    }
+  }, [state.user]);
 
   const authOptions: AuthOptions = {
     redirectTo: '/',

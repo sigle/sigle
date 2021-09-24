@@ -4,11 +4,3 @@ bundles
 .vercel
 coverage
 .env.local
-
-# yarn berry
-.yarn/*
-!.yarn/releases
-!.yarn/plugins
-!.yarn/sdks
-!.yarn/versions
-.pnp.*

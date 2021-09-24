@@ -5,6 +5,7 @@ import tw from 'twin.macro';
 import Link from 'next/link';
 import Div100vh from 'react-div-100vh';
 import { MdKeyboardArrowDown } from 'react-icons/md';
+import posthog from 'posthog-js';
 import { FaTwitter, FaGithub, FaFacebookF, FaDiscord } from 'react-icons/fa';
 import { userSession } from '../../../utils/blockstack';
 import { sigleConfig } from '../../../config';
@@ -131,6 +132,7 @@ export const DashboardSidebar = () => {
   const handleLogout = () => {
     userSession.signUserOut();
     window.location.replace(window.location.origin);
+    posthog.reset();
   };
 
   return (
@@ -185,7 +187,7 @@ export const DashboardSidebar = () => {
           </MenuBottomItem>
           <MenuBottomItem>
             <a
-              href="https://blog.sigle.io"
+              href="https://app.sigle.io/sigleapp.id.blockstack"
               target="_blank"
               rel="noopener noreferrer"
             >
