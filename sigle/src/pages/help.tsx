@@ -68,7 +68,7 @@ const HelpPage = () => {
                 Any question or feedback about Sigle? Or you just want to say
                 hello 🙋‍♀️?
                 <br />
-                You're in the good place.
+                You{"'"}re in the good place.
               </HelpMessage>
             </div>
           </HelpBlock>
@@ -77,8 +77,8 @@ const HelpPage = () => {
             <div>
               <HelpTitle>Found an issue?</HelpTitle>
               <HelpMessage>
-                Use the issue form to tell us what it is, or why you're having
-                trouble using Sigle.
+                Use the issue form to tell us what it is, or why you{"'"}re
+                having trouble using Sigle.
               </HelpMessage>
             </div>
             <ButtonContainer>

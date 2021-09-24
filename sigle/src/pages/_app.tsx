@@ -3,6 +3,7 @@ import App from 'next/app';
 import Router from 'next/router';
 import Head from 'next/head';
 import * as Fathom from 'fathom-client';
+import posthog from 'posthog-js';
 import { createGlobalStyle, keyframes } from 'styled-components';
 import tw from 'twin.macro';
 import { DefaultSeo } from 'next-seo';
@@ -40,6 +41,13 @@ const FathomTrack = () => {
       });
       Fathom.trackPageview();
     }
+    if (sigleConfig.posthogToken) {
+      posthog.init(sigleConfig.posthogToken, {
+        api_host: 'https://app.posthog.com',
+        persistence: 'localStorage',
+        ip: false,
+      });
+    }
   }, []);
 
   return <React.Fragment />;
@@ -48,6 +56,7 @@ const FathomTrack = () => {
 // Track on each page change
 Router.events.on('routeChangeComplete', () => {
   Fathom.trackPageview();
+  posthog.capture('$pageview');
 });
 
 /**
@@ -67,12 +76,12 @@ const menuAnimation = keyframes`
 
 const GlobalStyle = createGlobalStyle`
   body {
-    font-family: 'Roboto', sans-serif;
+    font-family: "Lato";
   }
 
   /* For the toasts */
-  .reactToastify.Toastify__toast--success {
-    background-color: #4db6a1;
+  :root {
+    --toastify-color-success: #4db6a1;
   }
 
   /* For the nprogress bar */
@@ -137,9 +146,9 @@ export default class MyApp extends App {
     const { err } = this.props as any;
     const modifiedPageProps = { ...pageProps, err };
 
-    const seoTitle = 'Sigle | Decentralized blogging platform';
+    const seoTitle = 'Sigle | Decentralized writing platform';
     const seoDescription =
-      'A secure, decentralized and open source blogging platform on top of blockstack';
+      'Sigle is a decentralised, open-source platform empowering creators. Write, share, build your audience and earn Bitcoin.';
 
     return (
       <React.Fragment>
@@ -154,12 +163,24 @@ export default class MyApp extends App {
           description={seoDescription}
           openGraph={{
             type: 'website',
+            locale: 'en_EN',
             site_name: 'Sigle',
             title: seoTitle,
             description: seoDescription,
-            images: [{ url: `${sigleConfig.appUrl}/static/images/share.jpg` }],
+            images: [
+              {
+                url: `${sigleConfig.appUrl}/img/illustrations/login.png`,
+                alt: `Sigle hero image`,
+                width: 1200,
+                height: 951,
+              },
+            ],
           }}
-          twitter={{ site: '@sigleapp', cardType: 'summary_large_image' }}
+          twitter={{
+            handle: '@sigleapp',
+            site: 'www.sigle.io',
+            cardType: 'summary_large_image',
+          }}
         />
         <GlobalStyle />
         <ForceHTTPS />
@@ -170,7 +191,7 @@ export default class MyApp extends App {
             <Component {...modifiedPageProps} />
           </AuthProvider>
         </QueryClientProvider>
-        <ToastContainer autoClose={3000} toastClassName="reactToastify" />
+        <ToastContainer autoClose={3000} icon={false} theme="colored" />
       </React.Fragment>
     );
   }
