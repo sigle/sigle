@@ -4,7 +4,7 @@ import Router from 'next/router';
 import Head from 'next/head';
 import * as Fathom from 'fathom-client';
 import posthog from 'posthog-js';
-import { createGlobalStyle, keyframes } from 'styled-components';
+import { createGlobalStyle } from 'styled-components';
 import tw from 'twin.macro';
 import { DefaultSeo } from 'next-seo';
 import { ToastContainer } from 'react-toastify';
