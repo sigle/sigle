@@ -1,7 +1,7 @@
 import React from 'react';
 import { toast } from 'react-toastify';
 import { useQuery } from 'react-query';
-import * as Sentry from '@sentry/node';
+import * as Sentry from '@sentry/nextjs';
 import { DashboardLayout } from '../layout';
 import { DashboardPageContainer } from '../layout/components/DashboardLayout';
 import { DashboardPageTitle } from '../layout/components/DashboardHeader';

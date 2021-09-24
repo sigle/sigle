@@ -2,7 +2,7 @@
 import parser from 'fast-xml-parser';
 import { apiFeed } from './[username]';
 
-jest.mock('@sentry/node');
+jest.mock('@sentry/nextjs');
 
 describe('test feed api', () => {
   it('should throw 404 error if username not found', async () => {
