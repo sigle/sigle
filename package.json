@@ -6,10 +6,6 @@
     "deploy:sigle": "flyctl deploy --config sigle/fly.toml --dockerfile sigle/Dockerfile",
     "postinstall": "husky install"
   },
-  "workspaces": [
-    "sigle",
-    "blog-viewer"
-  ],
   "prettier": {
     "singleQuote": true
   },
