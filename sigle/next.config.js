@@ -28,8 +28,8 @@ module.exports = withSentryConfig(
         },
       ];
     },
+  },
+  {
+    dryRun: process.env.NEXT_PUBLIC_APP_ENV !== 'production',
   }
-  // {
-  //   dryRun: process.env.NEXT_PUBLIC_APP_ENV !== 'production',
-  // }
 );
