@@ -6,10 +6,6 @@
     "deploy:sigle": "flyctl deploy --config sigle/fly.toml --dockerfile sigle/Dockerfile",
     "postinstall": "husky install"
   },
-  "workspaces": [
-    "sigle",
-    "blog-viewer"
-  ],
   "prettier": {
     "singleQuote": true
   },
@@ -22,6 +18,6 @@
   "devDependencies": {
     "husky": "7.0.2",
     "lint-staged": "11.1.2",
-    "prettier": "2.3.2"
+    "prettier": "2.4.1"
   }
 }
