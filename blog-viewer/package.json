@@ -4,9 +4,9 @@
   "scripts": {
     "dev": "next --port 3001",
     "build": "prisma generate && next build",
-    "start": "yarn db:migrate && next start",
+    "start": "pnpm run db:migrate && next start",
     "db:migrate": "prisma migrate dev --preview-feature",
-    "test": "yarn test:only",
+    "test": "pnpm run test:only",
     "test:only": "jest --passWithNoTests"
   },
   "jest": {
@@ -22,9 +22,9 @@
   },
   "dependencies": {
     "@prisma/client": "2.17.0",
-    "@sentry/browser": "6.10.0",
-    "@sentry/integrations": "6.10.0",
-    "@sentry/node": "6.10.0",
+    "@sentry/browser": "6.13.2",
+    "@sentry/integrations": "6.13.2",
+    "@sentry/node": "6.13.2",
     "@stacks/auth": "2.0.0-beta.1",
     "date-fns": "2.16.1",
     "fathom-client": "3.0.0",
@@ -43,7 +43,7 @@
     "styled-components": "5.3.1"
   },
   "devDependencies": {
-    "@fontsource/roboto": "4.2.1",
+    "@fontsource/roboto": "4.5.0",
     "@tailwindcss/forms": "0.3.3",
     "@tailwindcss/typography": "0.4.1",
     "@testing-library/jest-dom": "5.14.1",
@@ -64,7 +64,7 @@
     "sass": "1.36.0",
     "tailwindcss": "2.2.15",
     "twin.macro": "2.7.0",
-    "typescript": "4.4.2"
+    "typescript": "4.4.3"
   },
   "license": "MIT"
 }
