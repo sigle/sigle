@@ -19,7 +19,7 @@ importers:
       '@sentry/browser': 6.13.2
       '@sentry/integrations': 6.13.2
       '@sentry/node': 6.13.2
-      '@stacks/auth': 2.0.0-beta.1
+      '@stacks/auth': 2.0.1
       '@tailwindcss/forms': 0.3.3
       '@tailwindcss/typography': 0.4.1
       '@testing-library/jest-dom': 5.14.1
@@ -61,7 +61,7 @@ importers:
       '@sentry/browser': 6.13.2
       '@sentry/integrations': 6.13.2
       '@sentry/node': 6.13.2
-      '@stacks/auth': 2.0.0-beta.1
+      '@stacks/auth': 2.0.1
       date-fns: 2.16.1
       fathom-client: 3.0.0
       feed: 4.2.1
@@ -114,10 +114,10 @@ importers:
       '@sentry/integrations': 6.13.2
       '@sentry/node': 6.13.2
       '@sentry/webpack-plugin': 1.17.1
-      '@stacks/auth': 2.0.0-beta.1
-      '@stacks/connect': 4.3.18
-      '@stacks/connect-react': 2.17.18
-      '@stacks/storage': 2.0.0-beta.1
+      '@stacks/auth': 2.0.1
+      '@stacks/connect': 6.2.0
+      '@stacks/connect-react': 13.0.0
+      '@stacks/storage': 2.0.1
       '@stitches/react': 1.2.0
       '@tailwindcss/forms': 0.3.3
       '@tailwindcss/typography': 0.4.1
@@ -188,10 +188,10 @@ importers:
       '@sentry/browser': 6.13.2
       '@sentry/integrations': 6.13.2
       '@sentry/node': 6.13.2
-      '@stacks/auth': 2.0.0-beta.1
-      '@stacks/connect': 4.3.18
-      '@stacks/connect-react': 2.17.18_react-dom@17.0.2+react@17.0.2
-      '@stacks/storage': 2.0.0-beta.1
+      '@stacks/auth': 2.0.1
+      '@stacks/connect': 6.2.0
+      '@stacks/connect-react': 13.0.0_react-dom@17.0.2+react@17.0.2
+      '@stacks/storage': 2.0.1
       '@stitches/react': 1.2.0_react@17.0.2
       '@tippyjs/react': 4.2.5_react-dom@17.0.2+react@17.0.2
       date-fns: 2.16.1
@@ -653,24 +653,6 @@ packages:
   /@bcoe/v8-coverage/0.2.3:
     resolution: {integrity: sha512-0hYQ8SB4Db5zvZB4axdMHGwEaQjkZzFjQiN9LVYvIFB2nSUHW9tYpxWriPrWDASIxiaXax83REcLxuSdnGPZtw==}
     dev: true
-
-  /@blockstack/stacks-transactions/0.7.0:
-    resolution: {integrity: sha512-9IUR641PJpigYDCWdtKFgBIk0Oxyoc2M2XVdyaEOEcRhI+4lcacDhsuseAmGbkB9FhJgJcNicWPujUPNFl1XCw==}
-    dependencies:
-      '@types/bn.js': 4.11.6
-      '@types/elliptic': 6.4.13
-      '@types/randombytes': 2.0.0
-      '@types/sha.js': 2.4.0
-      bn.js: 4.12.0
-      c32check: 1.1.2
-      cross-fetch: 3.1.4
-      elliptic: 6.5.4
-      lodash: 4.17.21
-      randombytes: 2.1.0
-      ripemd160-min: 0.0.6
-      sha.js: 2.4.11
-      smart-buffer: 4.2.0
-    dev: false
 
   /@emotion/is-prop-valid/0.8.8:
     resolution: {integrity: sha512-u5WtneEAr5IDG2Wv65yhunPSMLIpuKsbuOktRojfrEiEvRyC85LgPMZI63cr7NUqT8ZIGdSVg8ZKGxIug4lXcA==}
@@ -1421,24 +1403,8 @@ packages:
       - supports-color
     dev: false
 
-  /@stacks/auth/1.3.0-beta-3:
-    resolution: {integrity: sha512-Jsv3p86bO2smuSTm7PZ9GY/ljs11/jZQ+Z6gkK+Gqih6xFC07F0mum8jFXaPpr+pDMG1H+VL5nPtTRoo1L3R4Q==}
-    dependencies:
-      '@stacks/common': 1.2.2
-      '@stacks/encryption': 1.2.3
-      '@stacks/network': 1.2.2
-      '@stacks/profile': 1.2.3
-      c32check: 1.1.2
-      codecov: 3.8.3
-      cross-fetch: 3.1.4
-      jsontokens: 3.0.0
-      query-string: 6.14.1
-    transitivePeerDependencies:
-      - supports-color
-    dev: false
-
-  /@stacks/auth/2.0.0-beta.1:
-    resolution: {integrity: sha512-A4+kt6hhnu5yYTYZyTI9Rco5f1NVbOrt5Xj2lknrrnVB43KaWp4OqqTy36EKaM71xsJh1dktBdBbWGVZ0eesNA==}
+  /@stacks/auth/2.0.1:
+    resolution: {integrity: sha512-RwKu3+Z2ryxOuS6wB8Y9hFeTnKM+31tOR4toalyPJRbkNsAqWWb0kuuPu7N5hD65zZsiyCImubAzNphJW1MGYw==}
     dependencies:
       '@stacks/common': 2.0.1
       '@stacks/encryption': 2.0.1
@@ -1465,36 +1431,38 @@ packages:
       cross-fetch: 3.1.4
     dev: false
 
-  /@stacks/connect-react/2.17.18_react-dom@17.0.2+react@17.0.2:
-    resolution: {integrity: sha512-DxodyMhGpa7JpcBfinIc1EYIF7uiMbKXo0RiGyyq1rbWgJVbF9GEsYtl4La6NNWoeji/sHnmdjLu4gqecaT3RQ==}
+  /@stacks/connect-react/13.0.0_react-dom@17.0.2+react@17.0.2:
+    resolution: {integrity: sha512-nlykqkbc9XLsNV0WGmgn6A9w6tBm+olZNpOzUhEozFnTdQG1ki42g60+G0OJdDtykpz7hLQ4xJwnd2CUgSerAQ==}
     peerDependencies:
-      blockstack: '>=19'
-      react: ^16.13.1
-      react-dom: ^16.13.1
+      react: ^16.x || 17.x
+      react-dom: ^16.x || 17.x
     dependencies:
-      '@stacks/connect': 4.3.18
+      '@stacks/auth': 2.0.1
+      '@stacks/connect': 6.2.0
       jsontokens: 3.0.0
       react: 17.0.2
       react-dom: 17.0.2_react@17.0.2
-    transitivePeerDependencies:
-      - supports-color
     dev: false
 
-  /@stacks/connect-ui/2.17.19:
-    resolution: {integrity: sha512-UEN6GmnOTUiZY0ZvfmsF1BpsAZROgQ/MZkV7rnIybQ8mcdUQxMsJPkerf6wfwxvSpCPcEoHW020zrXooklZ2kg==}
+  /@stacks/connect-ui/5.2.0:
+    resolution: {integrity: sha512-pBRcCBU4Ka0/PuUFsucML1oDVpXupV5hrW2TVh3HbKTRTyJ6HYWuTh4ckxkPlUKY8q+v3tQ7avwPXQaEfstFiA==}
     dependencies:
-      '@stencil/core': 1.17.4
+      '@stencil/core': 2.8.1
     dev: false
 
-  /@stacks/connect/4.3.18:
-    resolution: {integrity: sha512-as7QbkA1QziZ7Dr7ZADxVS9o9WpBTCH1+8IxeV3qURLcPRgFHuYVeCRZGo43lF6XfVKRQXMVzyd7nkScdHql3w==}
+  /@stacks/connect/6.2.0:
+    resolution: {integrity: sha512-5Go9D4OmkKkwycd244pkl2Zh060YN/1EAHkQa/jpSF2mH2aESXnKpjA0CIpEuhfas7IvcFqHVpa7OdJc6Qkk/w==}
     dependencies:
-      '@blockstack/stacks-transactions': 0.7.0
-      '@stacks/auth': 1.3.0-beta-3
-      '@stacks/connect-ui': 2.17.19
+      '@stacks/auth': 2.0.1
+      '@stacks/connect-ui': 5.2.0
+      '@stacks/network': 2.0.1
+      '@stacks/prettier-config': 0.0.8
+      '@stacks/transactions': 2.0.1
+      bn.js: 5.2.0
+      buffer: 6.0.3
       jsontokens: 3.0.0
-    transitivePeerDependencies:
-      - supports-color
+      readable-stream: 3.6.0
+      url: 0.11.0
     dev: false
 
   /@stacks/encryption/1.2.3:
@@ -1537,6 +1505,12 @@ packages:
       '@stacks/common': 2.0.1
     dev: false
 
+  /@stacks/prettier-config/0.0.8:
+    resolution: {integrity: sha512-WpxCIB2wPk2TT0Zs9oABNQ7Y2wBx2sSqEeFtgJ1lBNY6bKT5B82l/CkbaHPmnUj0KOwauXaSv0rXnxomTNj9xA==}
+    dependencies:
+      prettier: 2.4.1
+    dev: false
+
   /@stacks/profile/1.2.3:
     resolution: {integrity: sha512-bVLoSz8LFiuUS4wnZgVoShNRPaSSBvrAc5SmPZNOtfonUgeNLmwKvskbc6x6exgn/m7wMNp1gY7n+BIBmfST9w==}
     dependencies:
@@ -1560,8 +1534,8 @@ packages:
       zone-file: 1.0.0
     dev: false
 
-  /@stacks/storage/2.0.0-beta.1:
-    resolution: {integrity: sha512-yA88GqIWiB3dvU+f0XZ3bFjol7KZQSR5CkRh3eJgucAdyR1Z3ff5oAc530pcXOcKDz+TVI98jRhsbCsBBLL9cA==}
+  /@stacks/storage/2.0.1:
+    resolution: {integrity: sha512-rb0ewv19piQd3AHQHDPSGagX+C5jFfL8JVNmBCpgETmM5DROA2qz82NAGa01evU3+79oF3wIc/hF1q3ht0VRCw==}
     dependencies:
       '@stacks/auth': 1.2.3
       '@stacks/common': 2.0.1
@@ -1593,12 +1567,10 @@ packages:
       smart-buffer: 4.2.0
     dev: false
 
-  /@stencil/core/1.17.4:
-    resolution: {integrity: sha512-dmuNYM6fnHPvE2ptHoUBQtjcpXqrHnkDtdyUD6/JrZWcJt6jBtrykewObOxzpDCMLs+NT7668ussRagdVL03gQ==}
-    engines: {node: '>=10.13.0', npm: '>=6.0.0'}
+  /@stencil/core/2.8.1:
+    resolution: {integrity: sha512-iv9J6oLO/lv7/aO45M05yw3pp1J7olY400vlOZgdMVs3s5zHfalY1ZPYM0KyqU4+7DZuadKYbd0aQZ/g2PInZw==}
+    engines: {node: '>=12.10.0', npm: '>=6.0.0'}
     hasBin: true
-    dependencies:
-      typescript: 3.9.7
     dev: false
 
   /@stitches/react/1.2.0_react@17.0.2:
@@ -6417,7 +6389,6 @@ packages:
     resolution: {integrity: sha512-9fbDAXSBcc6Bs1mZrDYb3XKzDLm4EXXL9sC1LqKP5rZkT6KRr/rf9amVUcODVXgguK/isJz0d0hP72WeaKWsvA==}
     engines: {node: '>=10.13.0'}
     hasBin: true
-    dev: true
 
   /pretty-format/26.6.2:
     resolution: {integrity: sha512-7AeGuCYNGmycyQbCqd/3PWH4eOoX/OiCa0uphp57NVTeAGdJGaAliecxwBDHYQCIvrW7aDBZCYeNTP/WX69mkg==}
@@ -8045,12 +8016,6 @@ packages:
 
   /typeforce/1.18.0:
     resolution: {integrity: sha512-7uc1O8h1M1g0rArakJdf0uLRSSgFcYexrVoKo+bzJd32gd4gDy2L/Z+8/FjPnU9ydY3pEnVPtr9FyscYY60K1g==}
-    dev: false
-
-  /typescript/3.9.7:
-    resolution: {integrity: sha512-BLbiRkiBzAwsjut4x/dsibSTB6yWpwT5qWmC2OfuCg3GgVQCSgMs4vEctYPhsaGtd0AeuuHMkjZ2h2WG8MSzRw==}
-    engines: {node: '>=4.2.0'}
-    hasBin: true
     dev: false
 
   /typescript/4.4.3:
