@@ -108,8 +108,8 @@ importers:
       '@radix-ui/colors': 0.1.7
       '@radix-ui/react-dropdown-menu': 0.1.0
       '@radix-ui/react-icons': 1.0.3
+      '@radix-ui/react-tooltip': 0.1.0
       '@reach/dialog': 0.13.2
-      '@reach/tooltip': 0.13.2
       '@sentry/nextjs': 6.13.2
       '@stacks/auth': 2.0.0-beta.1
       '@stacks/connect': 4.3.18
@@ -180,8 +180,8 @@ importers:
       '@radix-ui/colors': 0.1.7
       '@radix-ui/react-dropdown-menu': 0.1.0_6ed7afba42f0472a9770b39da668445f
       '@radix-ui/react-icons': 1.0.3_react@17.0.2
+      '@radix-ui/react-tooltip': 0.1.0_react-dom@17.0.2+react@17.0.2
       '@reach/dialog': 0.13.2_6ed7afba42f0472a9770b39da668445f
-      '@reach/tooltip': 0.13.2_react-dom@17.0.2+react@17.0.2
       '@sentry/nextjs': 6.13.2_next@11.1.2+react@17.0.2
       '@stacks/auth': 2.0.0-beta.1
       '@stacks/connect': 4.3.18
@@ -1349,6 +1349,32 @@ packages:
       react: 17.0.2
     dev: false
 
+  /@radix-ui/react-tooltip/0.1.0_react-dom@17.0.2+react@17.0.2:
+    resolution: {integrity: sha512-6zzA9JUHdHLUSwYClYEOgONTbWEwO7kbh6ho92FHBic2ruIBKktT9MS71/c/G9yvuDNgpi4C5SJXCPLA4dTI3g==}
+    peerDependencies:
+      react: ^16.8 || ^17.0
+      react-dom: ^16.8 || ^17.0
+    dependencies:
+      '@babel/runtime': 7.15.4
+      '@radix-ui/primitive': 0.1.0
+      '@radix-ui/react-compose-refs': 0.1.0_react@17.0.2
+      '@radix-ui/react-context': 0.1.0_react@17.0.2
+      '@radix-ui/react-id': 0.1.0_react@17.0.2
+      '@radix-ui/react-popper': 0.1.0_react@17.0.2
+      '@radix-ui/react-portal': 0.1.0_react-dom@17.0.2+react@17.0.2
+      '@radix-ui/react-presence': 0.1.0_react@17.0.2
+      '@radix-ui/react-primitive': 0.1.0_react@17.0.2
+      '@radix-ui/react-slot': 0.1.0_react@17.0.2
+      '@radix-ui/react-use-controllable-state': 0.1.0_react@17.0.2
+      '@radix-ui/react-use-escape-keydown': 0.1.0_react@17.0.2
+      '@radix-ui/react-use-layout-effect': 0.1.0_react@17.0.2
+      '@radix-ui/react-use-previous': 0.1.0_react@17.0.2
+      '@radix-ui/react-use-rect': 0.1.0_react@17.0.2
+      '@radix-ui/react-visually-hidden': 0.1.0_react@17.0.2
+      react: 17.0.2
+      react-dom: 17.0.2_react@17.0.2
+    dev: false
+
   /@radix-ui/react-use-body-pointer-events/0.1.0_react@17.0.2:
     resolution: {integrity: sha512-svPyoHCcwOq/vpWNEvdH/yD91vN9p8BtiozNQbjVmJRxQ/vS12zqk70AxTGWe+2ZKHq2sggpEQNTv1JHyVFlnQ==}
     peerDependencies:
@@ -1406,6 +1432,15 @@ packages:
       react: 17.0.2
     dev: false
 
+  /@radix-ui/react-use-previous/0.1.0_react@17.0.2:
+    resolution: {integrity: sha512-0fxNc33rYnCzDMPSiSnfS8YklnxQo8WqbAQXPAgIaaA1jRu2qFB916PL4qCIW+avcAAqFD38vWhqDqcVmBharA==}
+    peerDependencies:
+      react: ^16.8 || ^17.0
+    dependencies:
+      '@babel/runtime': 7.15.4
+      react: 17.0.2
+    dev: false
+
   /@radix-ui/react-use-rect/0.1.0_react@17.0.2:
     resolution: {integrity: sha512-BTj9vMz336G3ukxCOb3QLC1oEOtGrWKPTdEG0pFEw75jyg360rLsfuydYemOtGFPVamXL9Pxo9JCwMcxLWdUlA==}
     peerDependencies:
@@ -1425,22 +1460,20 @@ packages:
       react: 17.0.2
     dev: false
 
+  /@radix-ui/react-visually-hidden/0.1.0_react@17.0.2:
+    resolution: {integrity: sha512-PS1SNgcx79ZOq+IiHJZNL0aNNl5ygYKQ8DI+7+xK+PlLyA6KpVEhk7D9VMyWUygWWqE6trOgcOG0AyuhnLlmjQ==}
+    peerDependencies:
+      react: ^16.8 || ^17.0
+    dependencies:
+      '@babel/runtime': 7.15.4
+      '@radix-ui/react-primitive': 0.1.0_react@17.0.2
+      react: 17.0.2
+    dev: false
+
   /@radix-ui/rect/0.1.0:
     resolution: {integrity: sha512-YcQuy5hUDnS8CkmIKJA6lE8wQpMqv8KN3SoO3dtOg7FQmZo1lgF1yAtrp5STJYxs1n7UChW3eEhrKXl/LmbHJQ==}
     dependencies:
       '@babel/runtime': 7.15.4
-    dev: false
-
-  /@reach/auto-id/0.13.2_react-dom@17.0.2+react@17.0.2:
-    resolution: {integrity: sha512-dWeXt6xxjN+NPRoZFXgmNkF89t8MEPsWLYjIIDf3gNXA/Dxaoytc9YBOIfVGpDSpdOwxPpxOu8rH+4Y3Jk2gHA==}
-    peerDependencies:
-      react: ^16.8.0 || 17.x
-      react-dom: ^16.8.0 || 17.x
-    dependencies:
-      '@reach/utils': 0.13.2_react-dom@17.0.2+react@17.0.2
-      react: 17.0.2
-      react-dom: 17.0.2_react@17.0.2
-      tslib: 2.3.1
     dev: false
 
   /@reach/dialog/0.13.2_6ed7afba42f0472a9770b39da668445f:
@@ -1461,10 +1494,6 @@ packages:
       - '@types/react'
     dev: false
 
-  /@reach/observe-rect/1.2.0:
-    resolution: {integrity: sha512-Ba7HmkFgfQxZqqaeIWWkNK0rEhpxVQHIoVyW1YDSkGsGIXzcaW4deC8B0pZrNSSyLTdIk7y+5olKt5+g0GmFIQ==}
-    dev: false
-
   /@reach/portal/0.13.2_react-dom@17.0.2+react@17.0.2:
     resolution: {integrity: sha512-g74BnCdtuTGthzzHn2cWW+bcyIYb0iIE/yRsm89i8oNzNgpopbkh9UY8TPbhNlys52h7U60s4kpRTmcq+JqsTA==}
     peerDependencies:
@@ -1472,37 +1501,6 @@ packages:
       react-dom: ^16.8.0 || 17.x
     dependencies:
       '@reach/utils': 0.13.2_react-dom@17.0.2+react@17.0.2
-      react: 17.0.2
-      react-dom: 17.0.2_react@17.0.2
-      tslib: 2.3.1
-    dev: false
-
-  /@reach/rect/0.13.2_react-dom@17.0.2+react@17.0.2:
-    resolution: {integrity: sha512-Vr1J2CzXWEGVMLxHblPMt8pgwW0d7s28SflFNCdFlbHwjgWSvnKwHue9p90bYRb4W/5u6gYjYX6znzSMxv/8ZA==}
-    peerDependencies:
-      react: ^16.8.0 || 17.x
-      react-dom: ^16.8.0 || 17.x
-    dependencies:
-      '@reach/observe-rect': 1.2.0
-      '@reach/utils': 0.13.2_react-dom@17.0.2+react@17.0.2
-      prop-types: 15.7.2
-      react: 17.0.2
-      react-dom: 17.0.2_react@17.0.2
-      tslib: 2.3.1
-    dev: false
-
-  /@reach/tooltip/0.13.2_react-dom@17.0.2+react@17.0.2:
-    resolution: {integrity: sha512-1MCH/2VkPHR2FrKlTJQtQGNwoF8IChMjWesJKGnwSe10UkrV+rb0rbMgYb8VSNXxuqTuN86Z0+BFb5NbyZJsPQ==}
-    peerDependencies:
-      react: ^16.8.0 || 17.x
-      react-dom: ^16.8.0 || 17.x
-    dependencies:
-      '@reach/auto-id': 0.13.2_react-dom@17.0.2+react@17.0.2
-      '@reach/portal': 0.13.2_react-dom@17.0.2+react@17.0.2
-      '@reach/rect': 0.13.2_react-dom@17.0.2+react@17.0.2
-      '@reach/utils': 0.13.2_react-dom@17.0.2+react@17.0.2
-      '@reach/visually-hidden': 0.13.2_react-dom@17.0.2+react@17.0.2
-      prop-types: 15.7.2
       react: 17.0.2
       react-dom: 17.0.2_react@17.0.2
       tslib: 2.3.1
@@ -1519,18 +1517,6 @@ packages:
       react-dom: 17.0.2_react@17.0.2
       tslib: 2.3.1
       warning: 4.0.3
-    dev: false
-
-  /@reach/visually-hidden/0.13.2_react-dom@17.0.2+react@17.0.2:
-    resolution: {integrity: sha512-sPZwNS0/duOuG0mYwE5DmgEAzW9VhgU3aIt1+mrfT/xiT9Cdncqke+kRBQgU708q/Ttm9tWsoHni03nn/SuPTQ==}
-    peerDependencies:
-      react: ^16.8.0 || 17.x
-      react-dom: ^16.8.0 || 17.x
-    dependencies:
-      prop-types: 15.7.2
-      react: 17.0.2
-      react-dom: 17.0.2_react@17.0.2
-      tslib: 2.3.1
     dev: false
 
   /@rushstack/eslint-patch/1.0.7:

@@ -3,7 +3,6 @@ import styled, { css } from 'styled-components';
 import tw from 'twin.macro';
 import { toast } from 'react-toastify';
 import Tippy from '@tippyjs/react';
-import Tooltip from '@reach/tooltip';
 import {
   Editor,
   RenderBlockProps,
@@ -15,6 +14,7 @@ import {
 import SoftBreak from 'slate-soft-break';
 import { Block, Value } from 'slate';
 import { MdSettings } from 'react-icons/md';
+import { Tooltip, TooltipTrigger, TooltipContent } from '../../../ui';
 import {
   saveStoryFile,
   convertStoryToSubsetStory,
@@ -81,10 +81,6 @@ const StyledContent = styled(Content)`
 const StyledEditor = styled(Editor)`
   ${tw`py-4`};
   min-height: 150px;
-`;
-
-const StyledTooltip = styled(Tooltip)`
-  pointer-events: unset;
 `;
 
 // See https://github.com/ianstormtaylor/slate/blob/master/examples/rich-text/index.js
@@ -296,19 +292,18 @@ export const SlateEditor = ({
         const href = data.get('href');
 
         return (
-          <span>
-            <StyledTooltip
-              label={
-                <a href={href} target="_blank" rel="noopener noreferrer">
-                  {href}
-                </a>
-              }
-            >
+          <Tooltip>
+            <TooltipTrigger asChild>
               <a {...attributes} href={href}>
                 {children}
               </a>
-            </StyledTooltip>
-          </span>
+            </TooltipTrigger>
+            <TooltipContent>
+              <a href={href} target="_blank" rel="noreferrer">
+                {href}
+              </a>
+            </TooltipContent>
+          </Tooltip>
         );
       default:
         return next();
