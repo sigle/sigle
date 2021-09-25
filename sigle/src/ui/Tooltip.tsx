@@ -28,8 +28,8 @@ export const TooltipContent = styled(TooltipPrimitive.Content, {
   borderRadius: 4,
   py: '$3',
   px: '$4',
-  fontSize: 15,
-  lineHeight: 1,
+  fontSize: '$1',
+  lineHeight: '1',
   br: '$1',
   backgroundColor: 'white',
   boxShadow:
@@ -45,4 +45,8 @@ export const TooltipContent = styled(TooltipPrimitive.Content, {
       '&[data-side="left"]': { animationName: slideRightAndFade },
     },
   },
+});
+
+export const TooltipArrow = styled(TooltipPrimitive.Arrow, {
+  fill: 'white',
 });
