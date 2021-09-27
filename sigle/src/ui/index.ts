@@ -1,3 +1,4 @@
+export * from './AlertDialog';
 export * from './Box';
 export * from './Button';
 export * from './Container';

@@ -6,10 +6,20 @@ import { MdStar } from 'react-icons/md';
 import { DotsHorizontalIcon } from '@radix-ui/react-icons';
 import format from 'date-fns/format';
 import {
+  AlertDialog,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogTitle,
+  AlertDialogAction,
+  AlertDialogCancel,
+  Button,
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuTrigger,
   DropdownMenuItem,
+  Heading,
+  Text,
+  Box,
 } from '../../../ui';
 import { SubsetStory, BlockstackUser } from '../../../types';
 import { FullScreenDialog } from '../../../components';
@@ -162,7 +172,34 @@ export const StoryItem = ({
         )}
       </StoryContainer>
 
-      <FullScreenDialog
+      <AlertDialog open={showFeatureDialog} onOpenChange={() => null}>
+        <AlertDialogContent>
+          <AlertDialogTitle asChild>
+            <Heading as="h2" size="xl" css={{ mb: '$3' }}>
+              Are you absolutely sure?
+            </Heading>
+          </AlertDialogTitle>
+          <AlertDialogDescription asChild>
+            <Text>
+              This story, once featured, will appear on top of your blog.
+            </Text>
+          </AlertDialogDescription>
+          <Box css={{ display: 'flex', justifyContent: 'flex-end', mt: '$4' }}>
+            <AlertDialogCancel asChild>
+              <Button size="lg" css={{ mr: '$6' }}>
+                Cancel
+              </Button>
+            </AlertDialogCancel>
+            <AlertDialogAction asChild>
+              <Button size="lg" color="orange">
+                Yes, continue
+              </Button>
+            </AlertDialogAction>
+          </Box>
+        </AlertDialogContent>
+      </AlertDialog>
+
+      {/* <FullScreenDialog
         isOpen={showFeatureDialog}
         confirmLoading={featureLoading}
         onConfirm={onConfirmFeature}
@@ -176,7 +213,7 @@ export const StoryItem = ({
             <p>You can remove it at any time.</p>
           </React.Fragment>
         }
-      />
+      /> */}
 
       <FullScreenDialog
         isOpen={showUnFeatureDialog}
