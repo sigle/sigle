@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { makeProfileZoneFile } from '@stacks/profile';
+import posthog from 'posthog-js';
 import {
   validateSubdomainFormat,
   IdentityNameValidityError,
@@ -83,12 +84,13 @@ export const RegisterUsername = () => {
       return;
     }
 
-    // TODO add tracking via posthog
+    posthog.capture('username-submitted');
 
     setFormState((state) => ({ ...state, loading: true }));
 
     const validationErrors = validateSubdomainFormat(formState.username);
     if (validationErrors !== null) {
+      posthog.capture('username-validation-error');
       setFormState((state) => ({
         ...state,
         loading: false,
@@ -102,6 +104,7 @@ export const RegisterUsername = () => {
       subdomain
     );
     if (validityError !== null) {
+      posthog.capture('username-validation-error');
       setFormState((state) => ({
         ...state,
         loading: false,
@@ -115,6 +118,7 @@ export const RegisterUsername = () => {
     const gaiaUrl = user.hubUrl;
     const btcAddress = getAddressFromDID(user.decentralizedID);
     if (!btcAddress) {
+      posthog.capture('username-btc-address-error');
       setFormState((state) => ({
         ...state,
         loading: false,
@@ -143,7 +147,7 @@ export const RegisterUsername = () => {
     const json = await response.json();
 
     if (!response.ok) {
-      // TODO report to posthog
+      posthog.capture('username-registration-error');
       setFormState((state) => ({
         ...state,
         loading: false,
@@ -151,6 +155,8 @@ export const RegisterUsername = () => {
       }));
       return;
     }
+
+    posthog.capture('username-registration-success');
 
     // TODO redirect user and find how to save username
 
