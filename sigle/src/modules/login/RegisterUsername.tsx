@@ -147,7 +147,9 @@ export const RegisterUsername = () => {
     const json = await response.json();
 
     if (!response.ok) {
-      posthog.capture('username-registration-error');
+      posthog.capture('username-registration-error', {
+        status: response.status,
+      });
       setFormState((state) => ({
         ...state,
         loading: false,
