@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import { useRouter } from 'next/router';
 import Image from 'next/image';
 import * as Fathom from 'fathom-client';
+import posthog from 'posthog-js';
 import { useConnect } from '@stacks/connect-react';
 import { ArrowTopRightIcon } from '@radix-ui/react-icons';
 import { sigleConfig } from '../config';
@@ -52,6 +53,7 @@ const Login = () => {
 
   const handleLogin = () => {
     Fathom.trackGoal(Goals.LOGIN, 0);
+    posthog.capture('start-login');
     doOpenAuth();
   };
 
