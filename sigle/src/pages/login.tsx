@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import Image from 'next/image';
 import * as Fathom from 'fathom-client';
@@ -10,6 +10,7 @@ import { Goals } from '../utils/fathom';
 import { useAuth } from '../modules/auth/AuthContext';
 import { styled } from '../stitches.config';
 import { Box, Button, Container, Heading, Text } from '../ui';
+import { RegisterUsername } from '../modules/login/RegisterUsername';
 
 const FullScreen = styled('div', {
   height: '100vh',
@@ -46,9 +47,7 @@ const BlockIllustration = styled('div', {
   },
 });
 
-const Login = () => {
-  const router = useRouter();
-  const { user } = useAuth();
+const BlockLogin = () => {
   const { doOpenAuth } = useConnect();
 
   const handleLogin = () => {
@@ -57,12 +56,48 @@ const Login = () => {
     doOpenAuth();
   };
 
+  return (
+    <>
+      <Heading as="h1" size="2xl" css={{ mt: '$15' }}>
+        Welcome!
+      </Heading>
+      <Text css={{ mt: '$7' }}>
+        Sigle is a web 3.0 open source blogging platform focused on{' '}
+        <strong>protecting your privacy</strong>, built on top of Stacks.
+      </Text>
+      <Text
+        color="orange"
+        size="action"
+        as="a"
+        target="_blank"
+        rel="noreferrer"
+        href="https://www.stacks.co/what-is-stacks"
+        css={{ mt: '$5', display: 'flex', alignItems: 'center' }}
+      >
+        What is Stacks?
+        <Box as="span" css={{ ml: '$2' }}>
+          <ArrowTopRightIcon height={16} width={16} />
+        </Box>
+      </Text>
+      <Button color="orange" size="lg" onClick={handleLogin} css={{ mt: '$7' }}>
+        Start Writing
+      </Button>
+    </>
+  );
+};
+
+const Login = () => {
+  const router = useRouter();
+  const { user } = useAuth();
+
   useEffect(() => {
-    // If user is already logged in we redirect him to the homepage
-    if (user) {
+    // If user is already logged in or has a username we redirect him to the homepage
+    if (user && user.username) {
       router.push(`/`);
     }
   }, [user]);
+
+  const hasUsername = !!user?.username;
 
   return (
     <FullScreen>
@@ -77,35 +112,8 @@ const Login = () => {
                 height={44}
               />
             </a>
-            <Heading as="h1" size="2xl" css={{ mt: '$15' }}>
-              Welcome!
-            </Heading>
-            <Text css={{ mt: '$7' }}>
-              Sigle is a web 3.0 open source blogging platform focused on{' '}
-              <strong>protecting your privacy</strong>, built on top of Stacks.
-            </Text>
-            <Text
-              color="orange"
-              size="action"
-              as="a"
-              target="_blank"
-              rel="noreferrer"
-              href="https://www.stacks.co/what-is-stacks"
-              css={{ mt: '$5', display: 'flex', alignItems: 'center' }}
-            >
-              What is Stacks?
-              <Box as="span" css={{ ml: '$2' }}>
-                <ArrowTopRightIcon height={16} width={16} />
-              </Box>
-            </Text>
-            <Button
-              color="orange"
-              size="lg"
-              onClick={handleLogin}
-              css={{ mt: '$7' }}
-            >
-              Start Writing
-            </Button>
+
+            {hasUsername ? <BlockLogin /> : <RegisterUsername />}
           </BlockText>
           <BlockIllustration>
             <Image

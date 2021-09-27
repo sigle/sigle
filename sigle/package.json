@@ -25,6 +25,8 @@
     "@stacks/auth": "2.0.1",
     "@stacks/connect": "6.2.0",
     "@stacks/connect-react": "13.0.0",
+    "@stacks/keychain": "2.0.1",
+    "@stacks/profile": "2.0.1",
     "@stacks/storage": "2.0.1",
     "@stitches/react": "1.2.0",
     "@tippyjs/react": "4.2.5",

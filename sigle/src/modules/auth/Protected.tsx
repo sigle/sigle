@@ -34,7 +34,7 @@ export const Protected = ({ children }: Props) => {
     );
   }
 
-  if (!user) {
+  if (!user || !user.username) {
     router.push('/login');
     return null;
   }
