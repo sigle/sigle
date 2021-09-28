@@ -46,8 +46,7 @@ export const { styled, css, globalCss, keyframes, getCssText, createTheme } =
         ...updatedOrange,
       },
       fonts: {
-        lato: "'Lato', sans-serif",
-        merri: "'Merriweather', serif",
+        openSans: "'Open Sans', sans-serif",
       },
       space: {
         1: '4px',

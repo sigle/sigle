@@ -103,8 +103,7 @@ importers:
 
   sigle:
     specifiers:
-      '@fontsource/lato': 4.5.0
-      '@fontsource/merriweather': 4.5.1
+      '@fontsource/open-sans': 4.5.1
       '@radix-ui/colors': 0.1.7
       '@radix-ui/react-dropdown-menu': 0.1.0
       '@radix-ui/react-icons': 1.0.3
@@ -220,8 +219,7 @@ importers:
       slate-soft-break: 0.9.0_slate-react@0.22.10+slate@0.47.9
       styled-components: 5.3.1_react-dom@17.0.2+react@17.0.2
     devDependencies:
-      '@fontsource/lato': 4.5.0
-      '@fontsource/merriweather': 4.5.1
+      '@fontsource/open-sans': 4.5.1
       '@tailwindcss/forms': 0.3.3_tailwindcss@2.2.15
       '@tailwindcss/typography': 0.4.1_tailwindcss@2.2.15
       '@testing-library/jest-dom': 5.14.1
@@ -714,12 +712,8 @@ packages:
       - supports-color
     dev: true
 
-  /@fontsource/lato/4.5.0:
-    resolution: {integrity: sha512-Y1qluoF+5b2U6MWcEz70+euZwl4TEV+9v7nZCmuRgNHb5McYc3VmbNmYNEiLsnb1HHwlAHA70P/LktP9EJ61ag==}
-    dev: true
-
-  /@fontsource/merriweather/4.5.1:
-    resolution: {integrity: sha512-6tkVHWgoq9wOZXLBOdyK5l/iWDi5Wsq4CL6yJNTUyTr/652j4UjlhIt2WLJAW94Mx3ObHNCA6Mv+CeoKKVmlig==}
+  /@fontsource/open-sans/4.5.1:
+    resolution: {integrity: sha512-Zvse9PG3XU+gfa44i4ENXvZi28X0RTtuc/b1v4AaqrSpSf2OALN2QrBf91BOC5gXU1Y6xW/S0To5wz8EraLPlQ==}
     dev: true
 
   /@fontsource/roboto/4.5.0:
