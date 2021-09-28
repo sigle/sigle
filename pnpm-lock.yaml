@@ -107,6 +107,7 @@ importers:
       '@fontsource/open-sans': 4.5.1
       '@radix-ui/colors': 0.1.7
       '@radix-ui/react-alert-dialog': 0.1.0
+      '@radix-ui/react-dialog': 0.1.0
       '@radix-ui/react-dropdown-menu': 0.1.0
       '@radix-ui/react-icons': 1.0.3
       '@reach/dialog': 0.13.2
@@ -180,6 +181,7 @@ importers:
     dependencies:
       '@radix-ui/colors': 0.1.7
       '@radix-ui/react-alert-dialog': 0.1.0_6ed7afba42f0472a9770b39da668445f
+      '@radix-ui/react-dialog': 0.1.0_6ed7afba42f0472a9770b39da668445f
       '@radix-ui/react-dropdown-menu': 0.1.0_6ed7afba42f0472a9770b39da668445f
       '@radix-ui/react-icons': 1.0.3_react@17.0.2
       '@reach/dialog': 0.13.2_6ed7afba42f0472a9770b39da668445f
