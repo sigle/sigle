@@ -3,7 +3,7 @@ module.exports = {
   theme: {
     extend: {
       fontFamily: {
-        lato: 'Lato',
+        openSans: 'Open Sans',
         baskerville: "'Libre Baskerville', serif",
       },
       colors: {
