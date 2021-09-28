@@ -47,7 +47,6 @@ export const { styled, css, globalCss, keyframes, getCssText, createTheme } =
       },
       fonts: {
         openSans: "'Open Sans', sans-serif",
-        merri: "'Merriweather', serif",
       },
       space: {
         1: '4px',
