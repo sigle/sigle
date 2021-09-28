@@ -64,7 +64,7 @@ Router.events.on('routeChangeComplete', () => {
 
 const GlobalStyle = createGlobalStyle`
   body {
-    font-family: "Lato";
+    font-family: "Open Sans";
   }
 
   /* For the toasts */
