@@ -70,7 +70,7 @@ export const SlateEditor = ({ story, onChangeStoryField }: Props) => {
       toast.error(error.message);
     }
     NProgress.done();
-    setUnpublishLoading(true);
+    setUnpublishLoading(false);
     setShowUnpublishDialog(false);
   };
 

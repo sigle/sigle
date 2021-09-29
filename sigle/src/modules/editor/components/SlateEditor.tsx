@@ -32,6 +32,17 @@ import { SlateEditorToolbar } from './SlateEditorToolbar';
 import { AppBar, AppBarRightContainer } from '../../layout';
 import { ButtonOutline, FullScreenDialog } from '../../../components';
 import {
+  Button,
+  Dialog,
+  DialogContent,
+  DialogTitle,
+  DialogDescription,
+  DialogClose,
+  Flex,
+  Heading,
+  Text,
+} from '../../../ui';
+import {
   DEFAULT_NODE,
   hasBlock,
   insertImage,
@@ -679,23 +690,38 @@ export const SlateEditor = ({
             </React.Fragment>
           }
         />
-        <FullScreenDialog
-          isOpen={showUnpublishDialog}
-          confirmLoading={unpublishLoading}
-          onConfirm={onConfirmUnpublish}
-          onCancel={onCancelUnpublish}
-          loadingTitle="Unpublishing ..."
-          title="Unpublish my story"
-          description={
-            <React.Fragment>
-              <p>You’re about to unpublish this story.</p>
-              <p>
+
+        <Dialog open={showUnpublishDialog} onOpenChange={onCancelUnpublish}>
+          <DialogContent>
+            <DialogTitle asChild>
+              <Heading as="h2" size="xl" css={{ mb: '$3' }}>
+                Unpublish my story
+              </Heading>
+            </DialogTitle>
+            <DialogDescription asChild>
+              <Text>You’re about to unpublish this story.</Text>
+              <Text>
                 It won’t be visible on your blog anymore but you still can see
                 and edit it in your draft section.
-              </p>
-            </React.Fragment>
-          }
-        />
+              </Text>
+            </DialogDescription>
+            <Flex justify="end" gap="6" css={{ mt: '$6' }}>
+              <DialogClose asChild>
+                <Button size="lg" disabled={unpublishLoading}>
+                  Cancel
+                </Button>
+              </DialogClose>
+              <Button
+                size="lg"
+                color="orange"
+                disabled={unpublishLoading}
+                onClick={onConfirmUnpublish}
+              >
+                {unpublishLoading ? 'Unpublishing ...' : 'Confirm'}
+              </Button>
+            </Flex>
+          </DialogContent>
+        </Dialog>
       </PageContainer>
     </React.Fragment>
   );
