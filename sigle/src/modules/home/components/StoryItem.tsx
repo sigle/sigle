@@ -13,10 +13,16 @@ import {
   AlertDialogAction,
   AlertDialogCancel,
   Button,
+  Dialog,
+  DialogContent,
+  DialogTitle,
+  DialogDescription,
+  DialogClose,
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuTrigger,
   DropdownMenuItem,
+  Flex,
   Heading,
   Text,
   Box,
@@ -172,7 +178,30 @@ export const StoryItem = ({
         )}
       </StoryContainer>
 
-      <AlertDialog open={showFeatureDialog} onOpenChange={() => null}>
+      <Dialog open={showFeatureDialog} onOpenChange={() => null}>
+        <DialogContent>
+          <DialogTitle asChild>
+            <Heading as="h2" size="xl" css={{ mb: '$3' }}>
+              Are you absolutely sure?
+            </Heading>
+          </DialogTitle>
+          <DialogDescription asChild>
+            <Text>
+              This story, once featured, will appear on top of your blog.
+            </Text>
+          </DialogDescription>
+          <Flex justify="end" gap="6" css={{ mt: '$6' }}>
+            <DialogClose asChild>
+              <Button size="lg">Cancel</Button>
+            </DialogClose>
+            <Button size="lg" color="orange">
+              Yes, continue
+            </Button>
+          </Flex>
+        </DialogContent>
+      </Dialog>
+
+      {/* <AlertDialog open={showFeatureDialog} onOpenChange={() => null}>
         <AlertDialogContent>
           <AlertDialogTitle asChild>
             <Heading as="h2" size="xl" css={{ mb: '$3' }}>
@@ -197,7 +226,7 @@ export const StoryItem = ({
             </AlertDialogAction>
           </Box>
         </AlertDialogContent>
-      </AlertDialog>
+      </AlertDialog> */}
 
       {/* <FullScreenDialog
         isOpen={showFeatureDialog}
