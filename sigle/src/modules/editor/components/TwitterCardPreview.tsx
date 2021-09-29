@@ -8,6 +8,15 @@ const MetaContainer = styled('div', {
   borderWidth: '1px',
   borderStyle: 'solid',
   overflow: 'hidden',
+  display: 'flex',
+
+  variants: {
+    image: {
+      true: {
+        display: 'block',
+      },
+    },
+  },
 });
 
 const MetaTitle = styled('div', {
@@ -40,37 +49,41 @@ const MetaLink = styled('div', {
 });
 
 // TODO take props
-// TODO style without image
+
+const imageUrl =
+  'url("https://pbs.twimg.com/card_img/1442525177884000258/U7x0MmsK?format=jpg&name=small")';
+// const imageUrl = undefined;
 
 export const TwitterCardPreview = () => {
   return (
-    <MetaContainer>
-      <Box css={{ overflow: 'hidden', position: 'relative' }}>
-        <Box css={{ paddingBottom: '52.356%' }} />
-        <Box
-          css={{
-            height: '100%',
-            width: '100%',
-            position: 'absolute',
-            top: 0,
-            left: 0,
-            bottom: 0,
-          }}
-        >
+    <MetaContainer image={!!imageUrl}>
+      {imageUrl ? (
+        <Box css={{ overflow: 'hidden', position: 'relative' }}>
+          <Box css={{ paddingBottom: '52.356%' }} />
           <Box
             css={{
-              backgroundImage:
-                'url("https://pbs.twimg.com/card_img/1442525177884000258/U7x0MmsK?format=jpg&name=small")',
-              backgroundSize: 'cover',
-              backgroundRepeat: 'no-repeat',
-              backgroundPosition: 'center center',
-              backgroundColor: 'rgba(0, 0, 0, 0)',
               height: '100%',
               width: '100%',
+              position: 'absolute',
+              top: 0,
+              left: 0,
+              bottom: 0,
             }}
-          />
+          >
+            <Box
+              css={{
+                backgroundImage: imageUrl,
+                backgroundSize: 'cover',
+                backgroundRepeat: 'no-repeat',
+                backgroundPosition: 'center center',
+                backgroundColor: 'rgba(0, 0, 0, 0)',
+                height: '100%',
+                width: '100%',
+              }}
+            />
+          </Box>
         </Box>
-      </Box>
+      ) : null}
 
       <Flex direction="column" css={{ gap: 2, padding: 12 }}>
         <MetaTitle>Sigle</MetaTitle>
