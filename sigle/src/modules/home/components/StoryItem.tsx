@@ -176,7 +176,7 @@ export const StoryItem = ({
         <DialogContent>
           <DialogTitle asChild>
             <Heading as="h2" size="xl" css={{ mb: '$3' }}>
-              Are you absolutely sure?
+              Feature this story
             </Heading>
           </DialogTitle>
           <DialogDescription asChild>
@@ -186,10 +186,17 @@ export const StoryItem = ({
           </DialogDescription>
           <Flex justify="end" gap="6" css={{ mt: '$6' }}>
             <DialogClose asChild>
-              <Button size="lg">Cancel</Button>
+              <Button size="lg" disabled={featureLoading}>
+                Cancel
+              </Button>
             </DialogClose>
-            <Button size="lg" color="orange">
-              Yes, continue
+            <Button
+              size="lg"
+              color="orange"
+              disabled={featureLoading}
+              onClick={onConfirmFeature}
+            >
+              {featureLoading ? 'Processing ...' : 'Confirm'}
             </Button>
           </Flex>
         </DialogContent>
