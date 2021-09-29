@@ -30,7 +30,7 @@ import { SlateEditorSideMenu } from './SlateEditorSideMenu';
 import { SlateEditorHoverMenu } from './SlateEditorHoverMenu';
 import { SlateEditorToolbar } from './SlateEditorToolbar';
 import { AppBar, AppBarRightContainer } from '../../layout';
-import { ButtonOutline, FullScreenDialog } from '../../../components';
+import { ButtonOutline } from '../../../components';
 import {
   Button,
   Dialog,
@@ -675,28 +675,36 @@ export const SlateEditor = ({
         <Dialog open={showPublishDialog} onOpenChange={onCancelPublish}>
           <DialogContent>
             <DialogTitle asChild>
-              <Heading as="h2" size="xl" css={{ mb: '$3' }}>
+              <Heading as="h2" size="xl" css={{ textAlign: 'center' }}>
                 One last check
               </Heading>
             </DialogTitle>
             <DialogDescription asChild>
-              <Text>Social media preview</Text>
+              <Text css={{ mb: '$5', textAlign: 'center' }}>
+                Social media preview
+              </Text>
             </DialogDescription>
-            <TwitterCardPreview />
+            <TwitterCardPreview story={story} />
             <Flex justify="end" gap="6" css={{ mt: '$6' }}>
               {/* <DialogClose asChild>
                 <Button size="lg" disabled={unpublishLoading}>
                   Cancel
                 </Button>
               </DialogClose> */}
-              {/* <Button
+              <Button
                 size="lg"
                 color="orange"
-                disabled={unpublishLoading}
-                onClick={onConfirmUnpublish}
+                disabled={loadingSave || publishLoading}
+                onClick={async () => {
+                  // We save before publishing
+                  await handleSave();
+                  await onConfirmPublish();
+                }}
               >
-                {unpublishLoading ? 'Unpublishing ...' : 'Confirm'}
-              </Button> */}
+                {loadingSave || publishLoading
+                  ? 'Publishing ...'
+                  : 'Publish now'}
+              </Button>
             </Flex>
           </DialogContent>
         </Dialog>

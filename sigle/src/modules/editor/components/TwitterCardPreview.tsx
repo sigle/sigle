@@ -1,6 +1,7 @@
 import { Link2Icon } from '@radix-ui/react-icons';
 import { styled } from '../../../stitches.config';
 import { Flex, Box } from '../../../ui';
+import { Story } from '../../../types';
 
 const MetaContainer = styled('div', {
   borderColor: 'rgb(207, 217, 222)',
@@ -48,16 +49,18 @@ const MetaLink = styled('div', {
   alignItems: 'center',
 });
 
-// TODO take props
+interface TwitterCardPreview {
+  story: Story;
+}
 
-const imageUrl =
-  'url("https://pbs.twimg.com/card_img/1442525177884000258/U7x0MmsK?format=jpg&name=small")';
-// const imageUrl = undefined;
+export const TwitterCardPreview = ({ story }: TwitterCardPreview) => {
+  const seoTitle = story.metaTitle || `${story.title} | Sigle`;
+  const seoDescription = story.metaDescription;
+  const seoImage = story.coverImage;
 
-export const TwitterCardPreview = () => {
   return (
-    <MetaContainer image={!!imageUrl}>
-      {imageUrl ? (
+    <MetaContainer image={!!seoImage}>
+      {seoImage ? (
         <Box css={{ overflow: 'hidden', position: 'relative' }}>
           <Box css={{ paddingBottom: '52.356%' }} />
           <Box
@@ -72,7 +75,7 @@ export const TwitterCardPreview = () => {
           >
             <Box
               css={{
-                backgroundImage: imageUrl,
+                backgroundImage: `url(${seoImage})`,
                 backgroundSize: 'cover',
                 backgroundRepeat: 'no-repeat',
                 backgroundPosition: 'center center',
@@ -86,11 +89,8 @@ export const TwitterCardPreview = () => {
       ) : null}
 
       <Flex direction="column" css={{ gap: 2, padding: 12 }}>
-        <MetaTitle>Sigle</MetaTitle>
-        <MetaDescription>
-          Sigle is a decentralised, open-source platform empowering creators.
-          Write, share, build your audience and earn Bitcoin.
-        </MetaDescription>
+        <MetaTitle>{seoTitle}</MetaTitle>
+        <MetaDescription>{seoDescription}</MetaDescription>
         <MetaLink>
           <Link2Icon />
           <Box as="span" css={{ ml: 4 }}>
