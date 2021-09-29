@@ -6,12 +6,6 @@ import { MdStar } from 'react-icons/md';
 import { DotsHorizontalIcon } from '@radix-ui/react-icons';
 import format from 'date-fns/format';
 import {
-  AlertDialog,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogTitle,
-  AlertDialogAction,
-  AlertDialogCancel,
   Button,
   Dialog,
   DialogContent,
@@ -178,7 +172,7 @@ export const StoryItem = ({
         )}
       </StoryContainer>
 
-      <Dialog open={showFeatureDialog} onOpenChange={() => null}>
+      <Dialog open={showFeatureDialog} onOpenChange={onCancelFeature}>
         <DialogContent>
           <DialogTitle asChild>
             <Heading as="h2" size="xl" css={{ mb: '$3' }}>
@@ -200,33 +194,6 @@ export const StoryItem = ({
           </Flex>
         </DialogContent>
       </Dialog>
-
-      {/* <AlertDialog open={showFeatureDialog} onOpenChange={() => null}>
-        <AlertDialogContent>
-          <AlertDialogTitle asChild>
-            <Heading as="h2" size="xl" css={{ mb: '$3' }}>
-              Are you absolutely sure?
-            </Heading>
-          </AlertDialogTitle>
-          <AlertDialogDescription asChild>
-            <Text>
-              This story, once featured, will appear on top of your blog.
-            </Text>
-          </AlertDialogDescription>
-          <Box css={{ display: 'flex', justifyContent: 'flex-end', mt: '$4' }}>
-            <AlertDialogCancel asChild>
-              <Button size="lg" css={{ mr: '$6' }}>
-                Cancel
-              </Button>
-            </AlertDialogCancel>
-            <AlertDialogAction asChild>
-              <Button size="lg" color="orange">
-                Yes, continue
-              </Button>
-            </AlertDialogAction>
-          </Box>
-        </AlertDialogContent>
-      </AlertDialog> */}
 
       {/* <FullScreenDialog
         isOpen={showFeatureDialog}
