@@ -54,6 +54,7 @@ import { storage } from '../../../utils/blockstack';
 import { resizeImage } from '../../../utils/image';
 import { FixedContainer, PageContainer } from './Editor';
 import { SlateEditorLink } from './SlateEditorLink';
+import { TwitterCardPreview } from './TwitterCardPreview';
 
 const StyledAppBarRightContainer = styled(AppBarRightContainer)`
   ${tw`hidden md:flex`};
@@ -671,7 +672,36 @@ export const SlateEditor = ({
           onSave={handleSave}
         />
 
-        <FullScreenDialog
+        <Dialog open={showPublishDialog} onOpenChange={onCancelPublish}>
+          <DialogContent>
+            <DialogTitle asChild>
+              <Heading as="h2" size="xl" css={{ mb: '$3' }}>
+                One last check
+              </Heading>
+            </DialogTitle>
+            <DialogDescription asChild>
+              <Text>Social media preview</Text>
+            </DialogDescription>
+            <TwitterCardPreview />
+            <Flex justify="end" gap="6" css={{ mt: '$6' }}>
+              {/* <DialogClose asChild>
+                <Button size="lg" disabled={unpublishLoading}>
+                  Cancel
+                </Button>
+              </DialogClose> */}
+              {/* <Button
+                size="lg"
+                color="orange"
+                disabled={unpublishLoading}
+                onClick={onConfirmUnpublish}
+              >
+                {unpublishLoading ? 'Unpublishing ...' : 'Confirm'}
+              </Button> */}
+            </Flex>
+          </DialogContent>
+        </Dialog>
+
+        {/* <FullScreenDialog
           isOpen={showPublishDialog}
           confirmLoading={loadingSave || publishLoading}
           onConfirm={async () => {
@@ -689,7 +719,7 @@ export const SlateEditor = ({
               <p>Would you like to continue?</p>
             </React.Fragment>
           }
-        />
+        /> */}
 
         <Dialog open={showUnpublishDialog} onOpenChange={onCancelUnpublish}>
           <DialogContent>
