@@ -17,7 +17,6 @@
   },
   "dependencies": {
     "@radix-ui/colors": "0.1.7",
-    "@radix-ui/react-alert-dialog": "0.1.0",
     "@radix-ui/react-dialog": "0.1.0",
     "@radix-ui/react-dropdown-menu": "0.1.0",
     "@radix-ui/react-icons": "1.0.3",
