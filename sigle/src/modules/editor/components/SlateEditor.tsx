@@ -686,11 +686,11 @@ export const SlateEditor = ({
             </DialogDescription>
             <TwitterCardPreview story={story} />
             <Flex justify="end" gap="6" css={{ mt: '$6' }}>
-              {/* <DialogClose asChild>
-                <Button size="lg" disabled={unpublishLoading}>
+              <DialogClose asChild>
+                <Button size="lg" disabled={loadingSave || publishLoading}>
                   Cancel
                 </Button>
-              </DialogClose> */}
+              </DialogClose>
               <Button
                 size="lg"
                 color="orange"
@@ -708,26 +708,6 @@ export const SlateEditor = ({
             </Flex>
           </DialogContent>
         </Dialog>
-
-        {/* <FullScreenDialog
-          isOpen={showPublishDialog}
-          confirmLoading={loadingSave || publishLoading}
-          onConfirm={async () => {
-            // We save before publishing
-            await handleSave();
-            await onConfirmPublish();
-          }}
-          onCancel={onCancelPublish}
-          loadingTitle="Publishing ..."
-          title="Publish my story"
-          description={
-            <React.Fragment>
-              <p>You’re about to publish your story.</p>
-              <p>You and everybody will be able to read it on your blog.</p>
-              <p>Would you like to continue?</p>
-            </React.Fragment>
-          }
-        /> */}
 
         <Dialog open={showUnpublishDialog} onOpenChange={onCancelUnpublish}>
           <DialogContent>
