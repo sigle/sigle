@@ -685,7 +685,7 @@ export const SlateEditor = ({
               </Text>
             </DialogDescription>
             <TwitterCardPreview story={story} />
-            <Flex justify="end" gap="6" css={{ mt: '$6' }}>
+            <Flex justify="end" gap="6" css={{ mt: '$5' }}>
               <DialogClose asChild>
                 <Button size="lg" disabled={loadingSave || publishLoading}>
                   Cancel

@@ -36,7 +36,7 @@ const contentShow = keyframes({
 
 const StyledContent = styled(DialogPrimitive.Content, {
   backgroundColor: 'white',
-  br: '$4',
+  br: '$2',
   boxShadow: '0px 0px 33px rgba(0, 0, 0, 0.08)',
   position: 'fixed',
   top: '50%',
@@ -45,9 +45,9 @@ const StyledContent = styled(DialogPrimitive.Content, {
   width: '90vw',
   maxWidth: '550px',
   maxHeight: '85vh',
-  padding: '$5',
-  pt: 90,
-  pb: '$10',
+  px: '$6',
+  pt: 48,
+  pb: '$5',
   overflow: 'scroll',
   '@media (prefers-reduced-motion: no-preference)': {
     animation: `${contentShow} 150ms cubic-bezier(0.16, 1, 0.3, 1)`,
@@ -58,8 +58,8 @@ const StyledContent = styled(DialogPrimitive.Content, {
 
 const StyledCloseButton = styled(DialogPrimitive.Close, {
   position: 'absolute',
-  top: '$8',
-  right: '$8',
+  top: '$4',
+  right: '$6',
 });
 
 type DialogContentProps = React.ComponentProps<typeof DialogPrimitive.Content>;
@@ -71,7 +71,7 @@ export function DialogContent({ children, ...props }: DialogContentProps) {
       <StyledCloseButton asChild>
         {/* <IconButton variant="ghost"> */}
         <button>
-          <Cross1Icon width={20} height={20} />
+          <Cross1Icon width={15} height={15} />
         </button>
         {/* </IconButton> */}
       </StyledCloseButton>
