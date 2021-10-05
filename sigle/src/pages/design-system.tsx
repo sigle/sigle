@@ -47,7 +47,7 @@ const DesignSystem = () => {
 
       <SectionHeading size="4xl">Button</SectionHeading>
       <Separator />
-      <Box css={{ display: 'flex', alignItems: 'center', gap: '$3' }}>
+      <Box css={{ display: 'flex', alignItems: 'center', gap: '$6' }}>
         <Text size="sm">Sizes:</Text>
         <Button size="md" color="gray">
           (md) Button
@@ -56,20 +56,26 @@ const DesignSystem = () => {
           (lg) Button
         </Button>
       </Box>
-      <Box css={{ display: 'flex', alignItems: 'center', gap: '$3', mt: '$4' }}>
+      <Box css={{ display: 'flex', alignItems: 'center', gap: '$6', mt: '$4' }}>
         <Text size="sm">Colors:</Text>
-        <Button color="ghost" css={{ mr: '$4' }}>
-          (ghost) Button
-        </Button>
-        <Button color="gray" css={{ mr: '$4' }}>
-          (gray) Button
-        </Button>
+        <Button color="gray">(gray) Button</Button>
         <Button color="orange">(orange) Button</Button>
+      </Box>
+      <Box css={{ display: 'flex', alignItems: 'center', gap: '$6', mt: '$4' }}>
+        <Text size="sm">Variants:</Text>
+        <Button variant="solid">(solid) Button</Button>
+        <Button variant="ghost">(ghost) Button</Button>
+      </Box>
+      <Box css={{ display: 'flex', alignItems: 'center', gap: '$6', mt: '$4' }}>
+        <Text size="sm">Some examples mixed:</Text>
+        <Button size="lg" variant="ghost" color="orange">
+          (lg, ghost, orange) Button
+        </Button>
       </Box>
 
       <SectionHeading size="4xl">IconButton</SectionHeading>
       <Separator />
-      <Box css={{ display: 'flex', alignItems: 'center', gap: '$3' }}>
+      <Box css={{ display: 'flex', alignItems: 'center', gap: '$6' }}>
         <IconButton>
           <Cross1Icon />
         </IconButton>
