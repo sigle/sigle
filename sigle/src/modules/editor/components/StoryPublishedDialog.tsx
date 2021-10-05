@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react';
 import { FaFacebookF, FaTwitter, FaLinkedin } from 'react-icons/fa';
 import { sigleConfig } from '../../../config';
 import { Story } from '../../../types';
@@ -21,8 +22,6 @@ interface StoryPublishedDialogProps {
 
 const iconSize = 20;
 
-// TODO Copy story link to work
-
 export const StoryPublishedDialog = ({
   open,
   onOpenChange,
@@ -30,12 +29,29 @@ export const StoryPublishedDialog = ({
 }: StoryPublishedDialogProps) => {
   const { user } = useAuth();
 
+  const [isCopied, setIsCopied] = useState(false);
+
+  useEffect(() => {
+    if (isCopied) {
+      const timer = setTimeout(() => setIsCopied(false), 3000);
+
+      return () => {
+        clearTimeout(timer);
+      };
+    }
+  }, [isCopied]);
+
   const storyUrl = `${sigleConfig.appUrl}/${user?.username}/${story.id}`;
   const storyUrlEncoded = encodeURIComponent(storyUrl);
   const storyTitleEncoded = encodeURIComponent(story.title);
   const shareTextEncoded = encodeURIComponent(
     `I just published "${story.title}" on @sigleapp\n${storyUrl}`
   );
+
+  const handleCopy = () => {
+    navigator.clipboard.writeText(storyUrl);
+    setIsCopied(true);
+  };
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -71,7 +87,9 @@ export const StoryPublishedDialog = ({
           </a>
         </Flex>
         <Flex justify="center" css={{ mt: '$6' }}>
-          <Button size="lg">Copy story link</Button>
+          <Button size="lg" onClick={handleCopy}>
+            {isCopied ? 'Copied!' : 'Copy story link'}
+          </Button>
         </Flex>
       </DialogContent>
     </Dialog>
