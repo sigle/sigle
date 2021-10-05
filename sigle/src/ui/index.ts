@@ -5,4 +5,5 @@ export * from './Dialog';
 export * from './DropdownMenu';
 export * from './Flex';
 export * from './Heading';
+export * from './IconButton';
 export * from './Text';

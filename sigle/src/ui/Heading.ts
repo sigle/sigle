@@ -34,4 +34,5 @@ export const Heading = styled('p', {
       },
     },
   },
+  defaultVariants: { size: 'lg' },
 });
