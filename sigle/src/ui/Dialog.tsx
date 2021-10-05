@@ -1,6 +1,7 @@
 import * as DialogPrimitive from '@radix-ui/react-dialog';
 import { Cross1Icon } from '@radix-ui/react-icons';
 import { keyframes, styled } from '../stitches.config';
+import { IconButton } from './IconButton';
 
 const overlayShow = keyframes({
   '0%': { opacity: 0 },
@@ -69,11 +70,9 @@ export function DialogContent({ children, ...props }: DialogContentProps) {
     <StyledContent {...props}>
       {children}
       <StyledCloseButton asChild>
-        {/* <IconButton variant="ghost"> */}
-        <button>
+        <IconButton>
           <Cross1Icon width={15} height={15} />
-        </button>
-        {/* </IconButton> */}
+        </IconButton>
       </StyledCloseButton>
     </StyledContent>
   );
