@@ -745,7 +745,7 @@ export const SlateEditor = ({
             </DialogDescription>
             <Flex justify="end" gap="6" css={{ mt: '$6' }}>
               <DialogClose asChild>
-                <Button size="lg" disabled={unpublishLoading}>
+                <Button size="lg" variant="ghost" disabled={unpublishLoading}>
                   Cancel
                 </Button>
               </DialogClose>

@@ -184,7 +184,7 @@ export const StoryItem = ({
           </DialogDescription>
           <Flex justify="end" gap="6" css={{ mt: '$6' }}>
             <DialogClose asChild>
-              <Button size="lg" disabled={featureLoading}>
+              <Button size="lg" variant="ghost" disabled={featureLoading}>
                 Cancel
               </Button>
             </DialogClose>
@@ -213,7 +213,7 @@ export const StoryItem = ({
           </DialogDescription>
           <Flex justify="end" gap="6" css={{ mt: '$6' }}>
             <DialogClose asChild>
-              <Button size="lg" disabled={unFeatureLoading}>
+              <Button size="lg" variant="ghost" disabled={unFeatureLoading}>
                 Cancel
               </Button>
             </DialogClose>
@@ -242,7 +242,7 @@ export const StoryItem = ({
           </DialogDescription>
           <Flex justify="end" gap="6" css={{ mt: '$6' }}>
             <DialogClose asChild>
-              <Button size="lg" disabled={deleteLoading}>
+              <Button size="lg" variant="ghost" disabled={deleteLoading}>
                 Cancel
               </Button>
             </DialogClose>
