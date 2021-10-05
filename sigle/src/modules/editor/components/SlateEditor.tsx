@@ -528,6 +528,11 @@ export const SlateEditor = ({
     setEditLinkOpen(true);
   };
 
+  const handleEditPreview = () => {
+    onCancelPublish();
+    handleOpenSettings();
+  };
+
   // TODO onPaste for links see https://github.com/ianstormtaylor/slate/blob/master/examples/links/index.js
   const handleConfirmEditLink = (values: { text: string; link: string }) => {
     setEditLinkOpen(false);
@@ -675,7 +680,7 @@ export const SlateEditor = ({
         <Dialog open={showPublishDialog} onOpenChange={onCancelPublish}>
           <DialogContent>
             <DialogTitle asChild>
-              <Heading as="h2" size="xl" css={{ textAlign: 'center' }}>
+              <Heading as="h2" size="2xl" css={{ textAlign: 'center' }}>
                 One last check
               </Heading>
             </DialogTitle>
@@ -686,11 +691,13 @@ export const SlateEditor = ({
             </DialogDescription>
             <TwitterCardPreview story={story} />
             <Flex justify="end" gap="6" css={{ mt: '$5' }}>
-              <DialogClose asChild>
-                <Button size="lg" disabled={loadingSave || publishLoading}>
-                  Cancel
-                </Button>
-              </DialogClose>
+              <Button
+                size="lg"
+                disabled={loadingSave || publishLoading}
+                onClick={handleEditPreview}
+              >
+                Edit preview
+              </Button>
               <Button
                 size="lg"
                 color="orange"
