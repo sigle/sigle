@@ -1,6 +1,17 @@
 import { Cross1Icon } from '@radix-ui/react-icons';
 import { styled } from '../stitches.config';
-import { Box, Container, Heading, Text, Button, IconButton } from '../ui';
+import {
+  Box,
+  Container,
+  Heading,
+  Text,
+  Button,
+  IconButton,
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuTrigger,
+  DropdownMenuItem,
+} from '../ui';
 
 const Separator = styled('div', {
   borderBottom: '1px solid $gray7',
@@ -45,6 +56,20 @@ const DesignSystem = () => {
         (xs) {typographyText}
       </Text>
 
+      <SectionHeading size="4xl">DropdownMenu</SectionHeading>
+      <Separator />
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+          <Button size="md" color="gray">
+            Open
+          </Button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent>
+          <DropdownMenuItem>Edit</DropdownMenuItem>
+          <DropdownMenuItem>Delete</DropdownMenuItem>
+        </DropdownMenuContent>
+      </DropdownMenu>
+
       <SectionHeading size="4xl">Button</SectionHeading>
       <Separator />
       <Box css={{ display: 'flex', alignItems: 'center', gap: '$6' }}>
@@ -80,9 +105,6 @@ const DesignSystem = () => {
           <Cross1Icon />
         </IconButton>
       </Box>
-
-      <SectionHeading size="4xl">Dropdown menu</SectionHeading>
-      <Separator />
     </Container>
   );
 };
