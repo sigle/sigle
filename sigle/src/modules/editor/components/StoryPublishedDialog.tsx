@@ -87,7 +87,7 @@ export const StoryPublishedDialog = ({
           </a>
         </Flex>
         <Flex justify="center" css={{ mt: '$6' }}>
-          <Button size="lg" onClick={handleCopy}>
+          <Button size="lg" variant="ghost" color="orange" onClick={handleCopy}>
             {isCopied ? 'Copied!' : 'Copy story link'}
           </Button>
         </Flex>

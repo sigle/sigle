@@ -150,6 +150,8 @@ interface Props {
   onPublish: () => void;
   onCancelPublish: () => void;
   onConfirmPublish: () => Promise<void>;
+  showPublishedDialog: boolean;
+  onClosePublished: () => void;
   showUnpublishDialog: boolean;
   unpublishLoading: boolean;
   onUnpublish: () => void;
@@ -165,6 +167,8 @@ export const SlateEditor = ({
   onPublish,
   onCancelPublish,
   onConfirmPublish,
+  showPublishedDialog,
+  onClosePublished,
   showUnpublishDialog,
   unpublishLoading,
   onUnpublish,
@@ -694,6 +698,8 @@ export const SlateEditor = ({
             <Flex justify="end" gap="6" css={{ mt: '$5' }}>
               <Button
                 size="lg"
+                variant="ghost"
+                color="orange"
                 disabled={loadingSave || publishLoading}
                 onClick={handleEditPreview}
               >
@@ -718,8 +724,8 @@ export const SlateEditor = ({
         </Dialog>
 
         <StoryPublishedDialog
-          open={true}
-          onOpenChange={() => null}
+          open={showPublishedDialog}
+          onOpenChange={onClosePublished}
           story={story}
         />
 

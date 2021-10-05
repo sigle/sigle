@@ -15,6 +15,7 @@ interface Props {
 
 export const SlateEditor = ({ story, onChangeStoryField }: Props) => {
   const [showPublishDialog, setShowPublishDialog] = useState(false);
+  const [showPublishedDialog, setShowPublishedDialog] = useState(false);
   const [publishLoading, setPublishLoading] = useState(false);
   const [showUnpublishDialog, setShowUnpublishDialog] = useState(false);
   const [unpublishLoading, setUnpublishLoading] = useState(false);
@@ -38,6 +39,7 @@ export const SlateEditor = ({ story, onChangeStoryField }: Props) => {
       await publishStory(story.id);
       onChangeStoryField('type', 'public');
       toast.success('Story published');
+      setShowPublishedDialog(true);
       Fathom.trackGoal(Goals.PUBLISH, 0);
       posthog.capture('publish-story', { id: story.id });
     } catch (error) {
@@ -47,6 +49,10 @@ export const SlateEditor = ({ story, onChangeStoryField }: Props) => {
     NProgress.done();
     setPublishLoading(false);
     setShowPublishDialog(false);
+  };
+
+  const handleClosePublished = () => {
+    setShowPublishedDialog(false);
   };
 
   const handleUnpublish = () => {
@@ -83,6 +89,8 @@ export const SlateEditor = ({ story, onChangeStoryField }: Props) => {
       onPublish={handlePublish}
       onCancelPublish={handleCancelPublish}
       onConfirmPublish={handleConfirmPublish}
+      showPublishedDialog={showPublishedDialog}
+      onClosePublished={handleClosePublished}
       showUnpublishDialog={showUnpublishDialog}
       unpublishLoading={unpublishLoading}
       onUnpublish={handleUnpublish}
