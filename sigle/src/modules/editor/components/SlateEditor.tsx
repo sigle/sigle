@@ -55,6 +55,7 @@ import { resizeImage } from '../../../utils/image';
 import { FixedContainer, PageContainer } from './Editor';
 import { SlateEditorLink } from './SlateEditorLink';
 import { TwitterCardPreview } from './TwitterCardPreview';
+import { StoryPublishedDialog } from './StoryPublishedDialog';
 
 const StyledAppBarRightContainer = styled(AppBarRightContainer)`
   ${tw`hidden md:flex`};
@@ -715,6 +716,12 @@ export const SlateEditor = ({
             </Flex>
           </DialogContent>
         </Dialog>
+
+        <StoryPublishedDialog
+          open={true}
+          onOpenChange={() => null}
+          story={story}
+        />
 
         <Dialog open={showUnpublishDialog} onOpenChange={onCancelUnpublish}>
           <DialogContent>
