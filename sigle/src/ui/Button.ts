@@ -20,12 +20,6 @@ export const Button = styled('button', {
       },
     },
     color: {
-      ghost: {
-        color: '$gray11',
-        '&:hover': {
-          backgroundColor: '$gray4',
-        },
-      },
       gray: {
         color: '$gray1',
         backgroundColor: '$gray11',
@@ -41,9 +35,47 @@ export const Button = styled('button', {
         },
       },
     },
+    variant: {
+      solid: {},
+      ghost: {
+        backgroundColor: 'transparent',
+        boxShadow: 'none',
+      },
+    },
   },
+  compoundVariants: [
+    {
+      color: 'gray',
+      variant: 'ghost',
+      css: {
+        backgroundColor: 'transparent',
+        color: '$gray11',
+        '&:hover': {
+          backgroundColor: '$gray4',
+        },
+        '&:active': {
+          backgroundColor: '$gray5',
+        },
+      },
+    },
+    {
+      color: 'orange',
+      variant: 'ghost',
+      css: {
+        backgroundColor: 'transparent',
+        color: '$orange11',
+        '&:hover': {
+          backgroundColor: '$orange4',
+        },
+        '&:active': {
+          backgroundColor: '$orange5',
+        },
+      },
+    },
+  ],
   defaultVariants: {
     size: 'md',
-    color: 'ghost',
+    color: 'gray',
+    variant: 'solid',
   },
 });
