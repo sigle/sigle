@@ -40,5 +40,3 @@ export const ButtonOutline = styled.button<{ size?: 'large' }>`
       ${tw`py-2 px-8 text-base`};
     `}
 `;
-
-export { FullScreenDialog } from './FullScreenDialog';
