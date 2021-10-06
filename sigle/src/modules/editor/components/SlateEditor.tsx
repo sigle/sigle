@@ -145,6 +145,7 @@ const slatePlugins = [SoftBreak({ shift: true })];
 interface Props {
   story: Story;
   onChangeTitle: (title: string) => void;
+  onChangeStory: (newStory: Story) => void;
   showPublishDialog: boolean;
   publishLoading: boolean;
   onPublish: () => void;
@@ -162,6 +163,7 @@ interface Props {
 export const SlateEditor = ({
   story,
   onChangeTitle,
+  onChangeStory,
   showPublishDialog,
   publishLoading,
   onPublish,
@@ -513,6 +515,8 @@ export const SlateEditor = ({
       // We sort the files by date in case createdAt was changed
       file.stories.sort((a, b) => b.createdAt - a.createdAt);
       await saveStoriesFile(file);
+      // Update the root object
+      onChangeStory(updatedStory);
       toast.success('Story saved');
     } catch (error) {
       console.error(error);

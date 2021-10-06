@@ -10,10 +10,15 @@ import { Goals } from '../../../utils/fathom';
 
 interface Props {
   story: Story;
+  onChangeStory: (newStory: Story) => void;
   onChangeStoryField: (field: string, value: any) => void;
 }
 
-export const SlateEditor = ({ story, onChangeStoryField }: Props) => {
+export const SlateEditor = ({
+  story,
+  onChangeStory,
+  onChangeStoryField,
+}: Props) => {
   const [showPublishDialog, setShowPublishDialog] = useState(false);
   const [showPublishedDialog, setShowPublishedDialog] = useState(false);
   const [publishLoading, setPublishLoading] = useState(false);
@@ -84,6 +89,7 @@ export const SlateEditor = ({ story, onChangeStoryField }: Props) => {
     <Component
       story={story}
       onChangeTitle={handleChangeTitle}
+      onChangeStory={onChangeStory}
       showPublishDialog={showPublishDialog}
       publishLoading={publishLoading}
       onPublish={handlePublish}

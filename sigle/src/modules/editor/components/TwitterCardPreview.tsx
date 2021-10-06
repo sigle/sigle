@@ -75,7 +75,7 @@ export const TwitterCardPreview = ({ story }: TwitterCardPreview) => {
           >
             <Box
               css={{
-                backgroundImage: `url(${seoImage})`,
+                backgroundImage: `url("${seoImage}")`,
                 backgroundSize: 'cover',
                 backgroundRepeat: 'no-repeat',
                 backgroundPosition: 'center center',
