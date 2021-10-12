@@ -10,11 +10,17 @@ import { Goals } from '../../../utils/fathom';
 
 interface Props {
   story: Story;
+  onChangeStory: (newStory: Story) => void;
   onChangeStoryField: (field: string, value: any) => void;
 }
 
-export const SlateEditor = ({ story, onChangeStoryField }: Props) => {
+export const SlateEditor = ({
+  story,
+  onChangeStory,
+  onChangeStoryField,
+}: Props) => {
   const [showPublishDialog, setShowPublishDialog] = useState(false);
+  const [showPublishedDialog, setShowPublishedDialog] = useState(false);
   const [publishLoading, setPublishLoading] = useState(false);
   const [showUnpublishDialog, setShowUnpublishDialog] = useState(false);
   const [unpublishLoading, setUnpublishLoading] = useState(false);
@@ -38,6 +44,7 @@ export const SlateEditor = ({ story, onChangeStoryField }: Props) => {
       await publishStory(story.id);
       onChangeStoryField('type', 'public');
       toast.success('Story published');
+      setShowPublishedDialog(true);
       Fathom.trackGoal(Goals.PUBLISH, 0);
       posthog.capture('publish-story', { id: story.id });
     } catch (error) {
@@ -47,6 +54,10 @@ export const SlateEditor = ({ story, onChangeStoryField }: Props) => {
     NProgress.done();
     setPublishLoading(false);
     setShowPublishDialog(false);
+  };
+
+  const handleClosePublished = () => {
+    setShowPublishedDialog(false);
   };
 
   const handleUnpublish = () => {
@@ -70,7 +81,7 @@ export const SlateEditor = ({ story, onChangeStoryField }: Props) => {
       toast.error(error.message);
     }
     NProgress.done();
-    setUnpublishLoading(true);
+    setUnpublishLoading(false);
     setShowUnpublishDialog(false);
   };
 
@@ -78,11 +89,14 @@ export const SlateEditor = ({ story, onChangeStoryField }: Props) => {
     <Component
       story={story}
       onChangeTitle={handleChangeTitle}
+      onChangeStory={onChangeStory}
       showPublishDialog={showPublishDialog}
       publishLoading={publishLoading}
       onPublish={handlePublish}
       onCancelPublish={handleCancelPublish}
       onConfirmPublish={handleConfirmPublish}
+      showPublishedDialog={showPublishedDialog}
+      onClosePublished={handleClosePublished}
       showUnpublishDialog={showUnpublishDialog}
       unpublishLoading={unpublishLoading}
       onUnpublish={handleUnpublish}

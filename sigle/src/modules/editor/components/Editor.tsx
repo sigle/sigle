@@ -17,10 +17,16 @@ export const PageContainer = styled(Container)`
 interface Props {
   loading: boolean;
   story: Story | null;
+  onChangeStory: (newStory: Story) => void;
   onChangeStoryField: (field: string, value: any) => void;
 }
 
-export const Editor = ({ loading, story, onChangeStoryField }: Props) => {
+export const Editor = ({
+  loading,
+  story,
+  onChangeStory,
+  onChangeStoryField,
+}: Props) => {
   // TODO nice loading
   if (loading) {
     return (
@@ -49,5 +55,11 @@ export const Editor = ({ loading, story, onChangeStoryField }: Props) => {
     );
   }
 
-  return <SlateEditor story={story} onChangeStoryField={onChangeStoryField} />;
+  return (
+    <SlateEditor
+      story={story}
+      onChangeStory={onChangeStory}
+      onChangeStoryField={onChangeStoryField}
+    />
+  );
 };
