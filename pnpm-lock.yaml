@@ -94,7 +94,7 @@ importers:
       eslint: 8.0.0
       eslint-config-next: 11.1.2_c2051ee12dac60c3dae3ae8bd2da3c70
       eslint-config-prettier: 8.3.0_eslint@8.0.0
-      eslint-plugin-prettier: 4.0.0_45df4f8155fcc170559035a2befce332
+      eslint-plugin-prettier: 4.0.0_d9a06a67ccd5236c5645569c7624c2c9
       jest: 27.2.5
       sass: 1.42.1
       tailwindcss: 2.2.15
@@ -108,8 +108,8 @@ importers:
       '@radix-ui/react-dialog': 0.1.0
       '@radix-ui/react-dropdown-menu': 0.1.0
       '@radix-ui/react-icons': 1.0.3
+      '@radix-ui/react-tooltip': 0.1.0
       '@reach/dialog': 0.13.2
-      '@reach/tooltip': 0.13.2
       '@sentry/nextjs': 6.13.3
       '@stacks/auth': 2.0.0-beta.1
       '@stacks/connect': 4.3.18
@@ -126,7 +126,6 @@ importers:
       '@types/nprogress': 0.2.0
       '@types/react': 17.0.28
       '@types/react-color': 3.0.5
-      '@types/react-div-100vh': 0.4.0
       '@types/react-dom': 17.0.9
       '@types/slate': 0.47.4
       '@types/slate-html-serializer': 0.6.3
@@ -181,8 +180,8 @@ importers:
       '@radix-ui/react-dialog': 0.1.0_bf48e1ad12752d96bd1cc6ac30006141
       '@radix-ui/react-dropdown-menu': 0.1.0_bf48e1ad12752d96bd1cc6ac30006141
       '@radix-ui/react-icons': 1.0.3_react@17.0.2
+      '@radix-ui/react-tooltip': 0.1.0_react-dom@17.0.2+react@17.0.2
       '@reach/dialog': 0.13.2_bf48e1ad12752d96bd1cc6ac30006141
-      '@reach/tooltip': 0.13.2_react-dom@17.0.2+react@17.0.2
       '@sentry/nextjs': 6.13.3_next@11.1.2+react@17.0.2
       '@stacks/auth': 2.0.0-beta.1
       '@stacks/connect': 4.3.18
@@ -227,7 +226,6 @@ importers:
       '@types/nprogress': 0.2.0
       '@types/react': 17.0.28
       '@types/react-color': 3.0.5
-      '@types/react-div-100vh': 0.4.0_react@17.0.2
       '@types/react-dom': 17.0.9
       '@types/slate': 0.47.4
       '@types/slate-html-serializer': 0.6.3
@@ -242,7 +240,7 @@ importers:
       eslint: 8.0.0
       eslint-config-next: 11.1.2_c2051ee12dac60c3dae3ae8bd2da3c70
       eslint-config-prettier: 8.3.0_eslint@8.0.0
-      eslint-plugin-prettier: 4.0.0_45df4f8155fcc170559035a2befce332
+      eslint-plugin-prettier: 4.0.0_d9a06a67ccd5236c5645569c7624c2c9
       fast-xml-parser: 3.17.5
       jest: 27.2.5
       next-compose-plugins: 2.2.1
@@ -1394,6 +1392,32 @@ packages:
       react: 17.0.2
     dev: false
 
+  /@radix-ui/react-tooltip/0.1.0_react-dom@17.0.2+react@17.0.2:
+    resolution: {integrity: sha512-6zzA9JUHdHLUSwYClYEOgONTbWEwO7kbh6ho92FHBic2ruIBKktT9MS71/c/G9yvuDNgpi4C5SJXCPLA4dTI3g==}
+    peerDependencies:
+      react: ^16.8 || ^17.0
+      react-dom: ^16.8 || ^17.0
+    dependencies:
+      '@babel/runtime': 7.15.4
+      '@radix-ui/primitive': 0.1.0
+      '@radix-ui/react-compose-refs': 0.1.0_react@17.0.2
+      '@radix-ui/react-context': 0.1.0_react@17.0.2
+      '@radix-ui/react-id': 0.1.0_react@17.0.2
+      '@radix-ui/react-popper': 0.1.0_react@17.0.2
+      '@radix-ui/react-portal': 0.1.0_react-dom@17.0.2+react@17.0.2
+      '@radix-ui/react-presence': 0.1.0_react@17.0.2
+      '@radix-ui/react-primitive': 0.1.0_react@17.0.2
+      '@radix-ui/react-slot': 0.1.0_react@17.0.2
+      '@radix-ui/react-use-controllable-state': 0.1.0_react@17.0.2
+      '@radix-ui/react-use-escape-keydown': 0.1.0_react@17.0.2
+      '@radix-ui/react-use-layout-effect': 0.1.0_react@17.0.2
+      '@radix-ui/react-use-previous': 0.1.0_react@17.0.2
+      '@radix-ui/react-use-rect': 0.1.0_react@17.0.2
+      '@radix-ui/react-visually-hidden': 0.1.0_react@17.0.2
+      react: 17.0.2
+      react-dom: 17.0.2_react@17.0.2
+    dev: false
+
   /@radix-ui/react-use-body-pointer-events/0.1.0_react@17.0.2:
     resolution: {integrity: sha512-svPyoHCcwOq/vpWNEvdH/yD91vN9p8BtiozNQbjVmJRxQ/vS12zqk70AxTGWe+2ZKHq2sggpEQNTv1JHyVFlnQ==}
     peerDependencies:
@@ -1451,6 +1475,15 @@ packages:
       react: 17.0.2
     dev: false
 
+  /@radix-ui/react-use-previous/0.1.0_react@17.0.2:
+    resolution: {integrity: sha512-0fxNc33rYnCzDMPSiSnfS8YklnxQo8WqbAQXPAgIaaA1jRu2qFB916PL4qCIW+avcAAqFD38vWhqDqcVmBharA==}
+    peerDependencies:
+      react: ^16.8 || ^17.0
+    dependencies:
+      '@babel/runtime': 7.15.4
+      react: 17.0.2
+    dev: false
+
   /@radix-ui/react-use-rect/0.1.0_react@17.0.2:
     resolution: {integrity: sha512-BTj9vMz336G3ukxCOb3QLC1oEOtGrWKPTdEG0pFEw75jyg360rLsfuydYemOtGFPVamXL9Pxo9JCwMcxLWdUlA==}
     peerDependencies:
@@ -1470,22 +1503,20 @@ packages:
       react: 17.0.2
     dev: false
 
+  /@radix-ui/react-visually-hidden/0.1.0_react@17.0.2:
+    resolution: {integrity: sha512-PS1SNgcx79ZOq+IiHJZNL0aNNl5ygYKQ8DI+7+xK+PlLyA6KpVEhk7D9VMyWUygWWqE6trOgcOG0AyuhnLlmjQ==}
+    peerDependencies:
+      react: ^16.8 || ^17.0
+    dependencies:
+      '@babel/runtime': 7.15.4
+      '@radix-ui/react-primitive': 0.1.0_react@17.0.2
+      react: 17.0.2
+    dev: false
+
   /@radix-ui/rect/0.1.0:
     resolution: {integrity: sha512-YcQuy5hUDnS8CkmIKJA6lE8wQpMqv8KN3SoO3dtOg7FQmZo1lgF1yAtrp5STJYxs1n7UChW3eEhrKXl/LmbHJQ==}
     dependencies:
       '@babel/runtime': 7.15.4
-    dev: false
-
-  /@reach/auto-id/0.13.2_react-dom@17.0.2+react@17.0.2:
-    resolution: {integrity: sha512-dWeXt6xxjN+NPRoZFXgmNkF89t8MEPsWLYjIIDf3gNXA/Dxaoytc9YBOIfVGpDSpdOwxPpxOu8rH+4Y3Jk2gHA==}
-    peerDependencies:
-      react: ^16.8.0 || 17.x
-      react-dom: ^16.8.0 || 17.x
-    dependencies:
-      '@reach/utils': 0.13.2_react-dom@17.0.2+react@17.0.2
-      react: 17.0.2
-      react-dom: 17.0.2_react@17.0.2
-      tslib: 2.3.1
     dev: false
 
   /@reach/dialog/0.13.2_bf48e1ad12752d96bd1cc6ac30006141:
@@ -1506,10 +1537,6 @@ packages:
       - '@types/react'
     dev: false
 
-  /@reach/observe-rect/1.2.0:
-    resolution: {integrity: sha512-Ba7HmkFgfQxZqqaeIWWkNK0rEhpxVQHIoVyW1YDSkGsGIXzcaW4deC8B0pZrNSSyLTdIk7y+5olKt5+g0GmFIQ==}
-    dev: false
-
   /@reach/portal/0.13.2_react-dom@17.0.2+react@17.0.2:
     resolution: {integrity: sha512-g74BnCdtuTGthzzHn2cWW+bcyIYb0iIE/yRsm89i8oNzNgpopbkh9UY8TPbhNlys52h7U60s4kpRTmcq+JqsTA==}
     peerDependencies:
@@ -1517,37 +1544,6 @@ packages:
       react-dom: ^16.8.0 || 17.x
     dependencies:
       '@reach/utils': 0.13.2_react-dom@17.0.2+react@17.0.2
-      react: 17.0.2
-      react-dom: 17.0.2_react@17.0.2
-      tslib: 2.3.1
-    dev: false
-
-  /@reach/rect/0.13.2_react-dom@17.0.2+react@17.0.2:
-    resolution: {integrity: sha512-Vr1J2CzXWEGVMLxHblPMt8pgwW0d7s28SflFNCdFlbHwjgWSvnKwHue9p90bYRb4W/5u6gYjYX6znzSMxv/8ZA==}
-    peerDependencies:
-      react: ^16.8.0 || 17.x
-      react-dom: ^16.8.0 || 17.x
-    dependencies:
-      '@reach/observe-rect': 1.2.0
-      '@reach/utils': 0.13.2_react-dom@17.0.2+react@17.0.2
-      prop-types: 15.7.2
-      react: 17.0.2
-      react-dom: 17.0.2_react@17.0.2
-      tslib: 2.3.1
-    dev: false
-
-  /@reach/tooltip/0.13.2_react-dom@17.0.2+react@17.0.2:
-    resolution: {integrity: sha512-1MCH/2VkPHR2FrKlTJQtQGNwoF8IChMjWesJKGnwSe10UkrV+rb0rbMgYb8VSNXxuqTuN86Z0+BFb5NbyZJsPQ==}
-    peerDependencies:
-      react: ^16.8.0 || 17.x
-      react-dom: ^16.8.0 || 17.x
-    dependencies:
-      '@reach/auto-id': 0.13.2_react-dom@17.0.2+react@17.0.2
-      '@reach/portal': 0.13.2_react-dom@17.0.2+react@17.0.2
-      '@reach/rect': 0.13.2_react-dom@17.0.2+react@17.0.2
-      '@reach/utils': 0.13.2_react-dom@17.0.2+react@17.0.2
-      '@reach/visually-hidden': 0.13.2_react-dom@17.0.2+react@17.0.2
-      prop-types: 15.7.2
       react: 17.0.2
       react-dom: 17.0.2_react@17.0.2
       tslib: 2.3.1
@@ -1564,18 +1560,6 @@ packages:
       react-dom: 17.0.2_react@17.0.2
       tslib: 2.3.1
       warning: 4.0.3
-    dev: false
-
-  /@reach/visually-hidden/0.13.2_react-dom@17.0.2+react@17.0.2:
-    resolution: {integrity: sha512-sPZwNS0/duOuG0mYwE5DmgEAzW9VhgU3aIt1+mrfT/xiT9Cdncqke+kRBQgU708q/Ttm9tWsoHni03nn/SuPTQ==}
-    peerDependencies:
-      react: ^16.8.0 || 17.x
-      react-dom: ^16.8.0 || 17.x
-    dependencies:
-      prop-types: 15.7.2
-      react: 17.0.2
-      react-dom: 17.0.2_react@17.0.2
-      tslib: 2.3.1
     dev: false
 
   /@rushstack/eslint-patch/1.0.7:
@@ -1954,7 +1938,7 @@ packages:
       tailwindcss: '>=2.0.0'
     dependencies:
       mini-svg-data-uri: 1.3.3
-      tailwindcss: 2.2.15_96f83969316717847b3edf58a3f353f3
+      tailwindcss: 2.2.15
     dev: true
 
   /@tailwindcss/typography/0.4.1_tailwindcss@2.2.15:
@@ -1966,7 +1950,7 @@ packages:
       lodash.isplainobject: 4.0.6
       lodash.merge: 4.6.2
       lodash.uniq: 4.5.0
-      tailwindcss: 2.2.15_96f83969316717847b3edf58a3f353f3
+      tailwindcss: 2.2.15
     dev: true
 
   /@testing-library/dom/8.7.2:
@@ -2062,13 +2046,13 @@ packages:
   /@types/bn.js/4.11.6:
     resolution: {integrity: sha512-pqr857jrp2kPuO9uRjZ3PwnJTjoQy+fcdxvBTvHm6dkmEL9q+hDD/2j/0ELOBPtPnS8LjCX0gI9nbl8lVkadpg==}
     dependencies:
-      '@types/node': 14.17.6
+      '@types/node': 16.10.3
     dev: false
 
   /@types/bn.js/5.1.0:
     resolution: {integrity: sha512-QSSVYj7pYFN49kW77o2s9xTCwZ8F2xLbjLLSEVh8D2F4JUhZtPAGOFLTD+ffqksBx/u4cE/KImFjyhqCjn/LIA==}
     dependencies:
-      '@types/node': 14.17.6
+      '@types/node': 16.10.3
     dev: false
 
   /@types/elliptic/6.4.13:
@@ -2141,7 +2125,6 @@ packages:
 
   /@types/node/16.10.3:
     resolution: {integrity: sha512-ho3Ruq+fFnBrZhUYI46n/bV2GjwzSkwuT4dTf0GkuNFmnb8nq4ny2z9JEVemFi6bdEJanHLlYfy9c6FN9B9McQ==}
-    dev: true
 
   /@types/node/8.10.66:
     resolution: {integrity: sha512-tktOkFUA4kXx2hhhrB8bIFb5TbwzS4uOhKEmwiD+NoiL0qtP2OQ9mFldbgD4dV1djrlBYP6eBuQZiWjuHUpqFw==}
@@ -2166,7 +2149,7 @@ packages:
   /@types/randombytes/2.0.0:
     resolution: {integrity: sha512-bz8PhAVlwN72vqefzxa14DKNT8jK/mV66CSjwdVQM/k3Th3EPKfUtdMniwZgMedQTFuywAsfjnZsg+pEnltaMA==}
     dependencies:
-      '@types/node': 14.17.6
+      '@types/node': 16.10.3
     dev: false
 
   /@types/react-color/3.0.5:
@@ -2174,15 +2157,6 @@ packages:
     dependencies:
       '@types/react': 17.0.28
       '@types/reactcss': 1.2.4
-    dev: true
-
-  /@types/react-div-100vh/0.4.0_react@17.0.2:
-    resolution: {integrity: sha512-mkgDNAqtgoKnTu58DBKT+/AbVxEN1cqc+pNqTKvwPduxgE9WiAVKs4k1wGJ95oJzWX/apnwGM99A560B6c01xw==}
-    deprecated: This is a stub types definition. react-div-100vh provides its own type definitions, so you do not need this installed.
-    dependencies:
-      react-div-100vh: 0.6.0_react@17.0.2
-    transitivePeerDependencies:
-      - react
     dev: true
 
   /@types/react-dom/17.0.9:
@@ -2220,7 +2194,7 @@ packages:
   /@types/sha.js/2.4.0:
     resolution: {integrity: sha512-amxKgPy6WJTKuw8mpUwjX2BSxuBtBmZfRwIUDIuPJKNwGN8CWDli8JTg5ONTWOtcTkHIstvT7oAhhYXqEjStHQ==}
     dependencies:
-      '@types/node': 14.17.6
+      '@types/node': 16.10.3
     dev: false
 
   /@types/slate-html-serializer/0.6.3:
@@ -4083,7 +4057,7 @@ packages:
       language-tags: 1.0.5
     dev: true
 
-  /eslint-plugin-prettier/4.0.0_45df4f8155fcc170559035a2befce332:
+  /eslint-plugin-prettier/4.0.0_d9a06a67ccd5236c5645569c7624c2c9:
     resolution: {integrity: sha512-98MqmCJ7vJodoQK359bqQWaxOE0CS8paAz/GgjaZLyex4TTk3g9HugoO89EqWCrFiOqn9EVvcoo7gZzONCWVwQ==}
     engines: {node: '>=6.0.0'}
     peerDependencies:
@@ -4096,6 +4070,7 @@ packages:
     dependencies:
       eslint: 8.0.0
       eslint-config-prettier: 8.3.0_eslint@8.0.0
+      prettier: 2.4.1
       prettier-linter-helpers: 1.0.0
     dev: true
 
@@ -7033,6 +7008,7 @@ packages:
       react: '>=16.8.0'
     dependencies:
       react: 17.0.2
+    dev: false
 
   /react-dom/17.0.2_react@17.0.2:
     resolution: {integrity: sha512-s4h96KtLDUQlsENhMn1ar8t2bEa+q/YAtj8pPPdIjPDGBDIVNsrD9aXNWqspUe6AzKCIG0C1HZZLqLV7qpOBGA==}
