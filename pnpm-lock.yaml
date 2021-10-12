@@ -125,7 +125,6 @@ importers:
       '@types/nprogress': 0.2.0
       '@types/react': 17.0.28
       '@types/react-color': 3.0.5
-      '@types/react-div-100vh': 0.4.0
       '@types/react-dom': 17.0.9
       '@types/slate': 0.47.4
       '@types/slate-html-serializer': 0.6.3
@@ -225,7 +224,6 @@ importers:
       '@types/nprogress': 0.2.0
       '@types/react': 17.0.28
       '@types/react-color': 3.0.5
-      '@types/react-div-100vh': 0.4.0_react@17.0.2
       '@types/react-dom': 17.0.9
       '@types/slate': 0.47.4
       '@types/slate-html-serializer': 0.6.3
@@ -2158,15 +2156,6 @@ packages:
     dependencies:
       '@types/react': 17.0.28
       '@types/reactcss': 1.2.4
-    dev: true
-
-  /@types/react-div-100vh/0.4.0_react@17.0.2:
-    resolution: {integrity: sha512-mkgDNAqtgoKnTu58DBKT+/AbVxEN1cqc+pNqTKvwPduxgE9WiAVKs4k1wGJ95oJzWX/apnwGM99A560B6c01xw==}
-    deprecated: This is a stub types definition. react-div-100vh provides its own type definitions, so you do not need this installed.
-    dependencies:
-      react-div-100vh: 0.6.0_react@17.0.2
-    transitivePeerDependencies:
-      - react
     dev: true
 
   /@types/react-dom/17.0.9:
@@ -7018,6 +7007,7 @@ packages:
       react: '>=16.8.0'
     dependencies:
       react: 17.0.2
+    dev: false
 
   /react-dom/17.0.2_react@17.0.2:
     resolution: {integrity: sha512-s4h96KtLDUQlsENhMn1ar8t2bEa+q/YAtj8pPPdIjPDGBDIVNsrD9aXNWqspUe6AzKCIG0C1HZZLqLV7qpOBGA==}
