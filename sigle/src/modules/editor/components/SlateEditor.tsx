@@ -312,16 +312,18 @@ export const SlateEditor = ({
 
         return (
           <Tooltip>
-            <TooltipTrigger asChild>
+            <TooltipTrigger>
               <a {...attributes} href={href}>
                 {children}
               </a>
+
+              {/* TooltipContent is rendered inside TooltipTrigger in order to be interactive */}
+              <TooltipContent>
+                <a href={href} target="_blank" rel="noreferrer">
+                  {href}
+                </a>
+              </TooltipContent>
             </TooltipTrigger>
-            <TooltipContent>
-              <a href={href} target="_blank" rel="noreferrer">
-                {href}
-              </a>
-            </TooltipContent>
           </Tooltip>
         );
       default:
