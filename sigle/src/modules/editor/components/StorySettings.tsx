@@ -1,31 +1,52 @@
 import React from 'react';
-import styled from 'styled-components';
-import tw from 'twin.macro';
-import { MdClose } from 'react-icons/md';
-import { DialogContent, DialogOverlay } from '@reach/dialog';
 import { animated, useTransition } from 'react-spring';
+import * as DialogPrimitive from '@radix-ui/react-dialog';
+import { Cross1Icon } from '@radix-ui/react-icons';
 import { Story } from '../../../types';
 import { StorySettingsForm } from './StorySettingsForm';
+import {
+  Dialog,
+  DialogContent,
+  DialogTitle,
+  Heading,
+  IconButton,
+} from '../../../ui';
+import { keyframes, styled } from '../../../stitches.config';
 
-const StyledDialogOverlay = styled(DialogOverlay)`
-  z-index: 11;
-`;
+// const StyledDialogOverlay = styled(DialogOverlay)`
+//   z-index: 11;
+// `;
 
-const StyledDialogContent = styled(DialogContent)`
-  ${tw`fixed top-0 right-0 bottom-0 overflow-y-auto w-full max-w-md m-0 px-8 py-4 bg-white`};
-`;
+const contentShow = keyframes({
+  '0%': { opacity: 0, transform: 'translateX(100%)' },
+  '100%': { opacity: 1, transform: 'translateX(0)' },
+});
 
-const TitleContainer = styled.div`
-  ${tw`py-4 flex justify-between items-center`};
-`;
+const StyledDialogContent = styled(DialogPrimitive.Content, {
+  transform: 'translateX(0)',
+  maxWidth: '28rem',
+  maxHeight: 'initial',
+  overflowY: 'auto',
+  width: '100%',
+  backgroundColor: 'white',
+  margin: 0,
+  padding: '1rem 2rem',
+  borderRadius: 0,
+  position: 'fixed',
+  top: 0,
+  right: 0,
+  bottom: 0,
+  '@media (prefers-reduced-motion: no-preference)': {
+    animation: `${contentShow} 150ms cubic-bezier(0.16, 1, 0.3, 1)`,
+    willChange: 'translateX',
+  },
+});
 
-const Title = styled.div`
-  ${tw`text-2xl`};
-`;
-
-const CloseButton = styled.div`
-  ${tw`p-2 -mr-2 flex items-center cursor-pointer`};
-`;
+const StyledCloseButton = styled(DialogPrimitive.Close, {
+  position: 'absolute',
+  top: '$4',
+  right: '$6',
+});
 
 interface Props {
   story: Story;
@@ -34,47 +55,24 @@ interface Props {
   onClose: () => void;
 }
 
-const AnimatedDialogOverlay = animated(StyledDialogOverlay);
-const AnimatedDialogContent = animated(StyledDialogContent);
-
 export const StorySettings = ({ open, onClose, story, onSave }: Props) => {
-  const transitions = useTransition(open, null, {
-    from: { opacity: 0, transform: 'translateX(100%)' },
-    enter: { opacity: 1, transform: 'translateX(0)' },
-    leave: { opacity: 0, transform: 'translateX(100%)' },
-    config: {
-      duration: 250,
-    },
-  });
-
   return (
-    <React.Fragment>
-      {transitions.map(
-        ({ item, key, props: styles }) =>
-          item && (
-            <AnimatedDialogOverlay
-              key={key}
-              onDismiss={onClose}
-              style={{ opacity: styles.opacity }}
-            >
-              <AnimatedDialogContent
-                style={{
-                  transform: styles.transform,
-                }}
-                aria-label="Story settings"
-              >
-                <TitleContainer>
-                  <Title>Settings</Title>
-                  <CloseButton onClick={onClose}>
-                    <MdClose />
-                  </CloseButton>
-                </TitleContainer>
+    <Dialog open={open} onOpenChange={onClose}>
+      <StyledDialogContent aria-label="Story settings">
+        <DialogTitle asChild>
+          <Heading as="h2" size="2xl" css={{ mt: '$5' }}>
+            Settings
+          </Heading>
+        </DialogTitle>
 
-                <StorySettingsForm story={story} onSave={onSave} />
-              </AnimatedDialogContent>
-            </AnimatedDialogOverlay>
-          )
-      )}
-    </React.Fragment>
+        <StorySettingsForm story={story} onSave={onSave} />
+
+        <StyledCloseButton asChild>
+          <IconButton>
+            <Cross1Icon width={15} height={15} />
+          </IconButton>
+        </StyledCloseButton>
+      </StyledDialogContent>
+    </Dialog>
   );
 };
