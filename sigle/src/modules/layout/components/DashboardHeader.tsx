@@ -5,8 +5,10 @@ import { toast } from 'react-toastify';
 import { MdRemoveRedEye, MdSort } from 'react-icons/md';
 import * as Fathom from 'fathom-client';
 import { useRouter } from 'next/router';
+import * as DialogPrimitive from '@radix-ui/react-dialog';
 import { ButtonOutline, Button } from '../../../components';
-import { Dialog, DialogContent } from '../../../ui';
+import { Dialog } from '../../../ui';
+import { keyframes, styled } from '../../../stitches.config';
 import {
   createNewEmptyStory,
   convertStoryToSubsetStory,
@@ -51,13 +53,30 @@ const VisitButton = styledC(ButtonOutline)`
  * Mobile menu
  */
 
-const StyledDialogContent = styledC(DialogContent)`
-  ${tw`fixed top-0 left-0 bottom-0 overflow-y-auto w-64 m-0 p-0 bg-grey-light`};
-  transform: none;
-  max-height: initial;
-  max-width: initial;
-  border-radius: 0px;
-`;
+const contentShow = keyframes({
+  '0%': { opacity: 0, transform: 'translateX(-100%)' },
+  '100%': { opacity: 1, transform: 'translateX(0)' },
+});
+
+const StyledDialogContent = styled(DialogPrimitive.Content, {
+  transform: 'translateX(0)',
+  maxWidth: 'initial',
+  maxHeight: 'initial',
+  overflowY: 'auto',
+  width: '16rem',
+  backgroundColor: 'rgba(247,247,247)',
+  margin: 0,
+  padding: 0,
+  borderRadius: 0,
+  position: 'fixed',
+  top: 0,
+  left: 0,
+  bottom: 0,
+  '@media (prefers-reduced-motion: no-preference)': {
+    animation: `${contentShow} 150ms cubic-bezier(0.16, 1, 0.3, 1)`,
+    willChange: 'translateX',
+  },
+});
 
 interface DashboardPageTitleProps {
   title?: string;
