@@ -1,5 +1,4 @@
 import React from 'react';
-import { animated, useTransition } from 'react-spring';
 import * as DialogPrimitive from '@radix-ui/react-dialog';
 import { Cross1Icon } from '@radix-ui/react-icons';
 import { Story } from '../../../types';
