@@ -116,6 +116,7 @@ export const RegisterUsername = () => {
     const username = formState.username;
     const fullUsername = `${username}.${subdomain}`;
     const gaiaUrl = user.hubUrl;
+    // TODO use identityAddress
     const btcAddress = getAddressFromDID(user.decentralizedID);
     if (!btcAddress) {
       posthog.capture('username-btc-address-error');
