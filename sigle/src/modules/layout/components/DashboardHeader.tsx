@@ -1,13 +1,14 @@
 import React, { useState } from 'react';
-import styled from 'styled-components';
+import styledC from 'styled-components';
 import tw from 'twin.macro';
 import { toast } from 'react-toastify';
 import { MdRemoveRedEye, MdSort } from 'react-icons/md';
 import * as Fathom from 'fathom-client';
 import { useRouter } from 'next/router';
-import { DialogContent, DialogOverlay } from '@reach/dialog';
-import { animated, useTransition } from 'react-spring';
+import * as DialogPrimitive from '@radix-ui/react-dialog';
 import { ButtonOutline, Button } from '../../../components';
+import { Dialog } from '../../../ui';
+import { keyframes, styled } from '../../../stitches.config';
 import {
   createNewEmptyStory,
   convertStoryToSubsetStory,
@@ -19,32 +20,32 @@ import { Goals } from '../../../utils/fathom';
 import { userSession } from '../../../utils/blockstack';
 import { DashboardSidebar } from './DashboardLayout';
 
-export const PageTitleContainer = styled.div`
+export const PageTitleContainer = styledC.div`
   ${tw`mb-2 pb-4 lg:pb-8 flex flex-col-reverse lg:flex-row justify-between border-b border-solid border-grey`};
 `;
 
-export const PageTitle = styled.div`
+export const PageTitle = styledC.div`
   ${tw`mt-6 lg:mt-0 text-xl font-bold flex items-center`};
 `;
 
-const ButtonsContainer = styled.div`
+const ButtonsContainer = styledC.div`
   ${tw`flex items-center justify-between`};
 `;
 
-const LogoContainer = styled.div`
+const LogoContainer = styledC.div`
   ${tw`flex items-center lg:hidden`};
 `;
 
-const MobileMenuButton = styled.button`
+const MobileMenuButton = styledC.button`
   ${tw``};
 `;
 
-const Logo = styled.img`
+const Logo = styledC.img`
   ${tw`ml-4`};
   height: 35px;
 `;
 
-const VisitButton = styled(ButtonOutline)`
+const VisitButton = styledC(ButtonOutline)`
   ${tw`mr-6 hidden inline-flex items-center`};
 `;
 
@@ -52,31 +53,40 @@ const VisitButton = styled(ButtonOutline)`
  * Mobile menu
  */
 
-const StyledDialogContent = styled(DialogContent)`
-  ${tw`fixed top-0 left-0 bottom-0 overflow-y-auto w-64 m-0 p-0 bg-grey-light`};
-`;
+const contentShow = keyframes({
+  '0%': { opacity: 0, transform: 'translateX(-100%)' },
+  '100%': { opacity: 1, transform: 'translateX(0)' },
+});
+
+const StyledDialogContent = styled(DialogPrimitive.Content, {
+  transform: 'translateX(0)',
+  maxWidth: 'initial',
+  maxHeight: 'initial',
+  overflowY: 'auto',
+  width: '16rem',
+  backgroundColor: 'rgba(247,247,247)',
+  margin: 0,
+  padding: 0,
+  borderRadius: 0,
+  position: 'fixed',
+  top: 0,
+  left: 0,
+  bottom: 0,
+  '@media (prefers-reduced-motion: no-preference)': {
+    animation: `${contentShow} 150ms cubic-bezier(0.16, 1, 0.3, 1)`,
+    willChange: 'translateX',
+  },
+});
 
 interface DashboardPageTitleProps {
   title?: string;
 }
-
-const AnimatedDialogOverlay = animated(DialogOverlay);
-const AnimatedDialogContent = animated(StyledDialogContent);
 
 export const DashboardPageTitle = ({ title }: DashboardPageTitleProps) => {
   const router = useRouter();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [loadingCreate, setLoadingCreate] = useState(false);
   const user = userSession.loadUserData();
-
-  const transitions = useTransition(mobileMenuOpen, null, {
-    from: { opacity: 0, transform: 'translateX(-100%)' },
-    enter: { opacity: 1, transform: 'translateX(0)' },
-    leave: { opacity: 0, transform: 'translateX(-100%)' },
-    config: {
-      duration: 150,
-    },
-  });
 
   const handleCreateNewPrivateStory = async () => {
     setLoadingCreate(true);
@@ -102,26 +112,11 @@ export const DashboardPageTitle = ({ title }: DashboardPageTitleProps) => {
 
   return (
     <React.Fragment>
-      {transitions.map(
-        ({ item, key, props: styles }) =>
-          item && (
-            <AnimatedDialogOverlay
-              key={key}
-              style={{ opacity: styles.opacity }}
-              onDismiss={handleCloseMobileMenu}
-              as="div"
-            >
-              <AnimatedDialogContent
-                style={{
-                  transform: styles.transform,
-                }}
-                aria-label="Mobile menu"
-              >
-                <DashboardSidebar />
-              </AnimatedDialogContent>
-            </AnimatedDialogOverlay>
-          )
-      )}
+      <Dialog open={mobileMenuOpen} onOpenChange={handleCloseMobileMenu}>
+        <StyledDialogContent aria-label="Mobile menu">
+          <DashboardSidebar />
+        </StyledDialogContent>
+      </Dialog>
 
       <PageTitleContainer>
         <PageTitle>{title}</PageTitle>

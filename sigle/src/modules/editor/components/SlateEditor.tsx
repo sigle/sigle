@@ -3,7 +3,6 @@ import styled, { css } from 'styled-components';
 import tw from 'twin.macro';
 import { toast } from 'react-toastify';
 import Tippy from '@tippyjs/react';
-import Tooltip from '@reach/tooltip';
 import {
   Editor,
   RenderBlockProps,
@@ -15,6 +14,7 @@ import {
 import SoftBreak from 'slate-soft-break';
 import { Block, Value } from 'slate';
 import { MdSettings } from 'react-icons/md';
+import { Tooltip, TooltipTrigger, TooltipContent } from '../../../ui';
 import {
   saveStoryFile,
   convertStoryToSubsetStory,
@@ -30,7 +30,18 @@ import { SlateEditorSideMenu } from './SlateEditorSideMenu';
 import { SlateEditorHoverMenu } from './SlateEditorHoverMenu';
 import { SlateEditorToolbar } from './SlateEditorToolbar';
 import { AppBar, AppBarRightContainer } from '../../layout';
-import { ButtonOutline, FullScreenDialog } from '../../../components';
+import { ButtonOutline } from '../../../components';
+import {
+  Button,
+  Dialog,
+  DialogContent,
+  DialogTitle,
+  DialogDescription,
+  DialogClose,
+  Flex,
+  Heading,
+  Text,
+} from '../../../ui';
 import {
   DEFAULT_NODE,
   hasBlock,
@@ -43,6 +54,8 @@ import { storage } from '../../../utils/blockstack';
 import { resizeImage } from '../../../utils/image';
 import { FixedContainer, PageContainer } from './Editor';
 import { SlateEditorLink } from './SlateEditorLink';
+import { TwitterCardPreview } from './TwitterCardPreview';
+import { StoryPublishedDialog } from './StoryPublishedDialog';
 
 const StyledAppBarRightContainer = styled(AppBarRightContainer)`
   ${tw`hidden md:flex`};
@@ -81,10 +94,6 @@ const StyledContent = styled(Content)`
 const StyledEditor = styled(Editor)`
   ${tw`py-4`};
   min-height: 150px;
-`;
-
-const StyledTooltip = styled(Tooltip)`
-  pointer-events: unset;
 `;
 
 // See https://github.com/ianstormtaylor/slate/blob/master/examples/rich-text/index.js
@@ -132,11 +141,14 @@ const slatePlugins = [SoftBreak({ shift: true })];
 interface Props {
   story: Story;
   onChangeTitle: (title: string) => void;
+  onChangeStory: (newStory: Story) => void;
   showPublishDialog: boolean;
   publishLoading: boolean;
   onPublish: () => void;
   onCancelPublish: () => void;
   onConfirmPublish: () => Promise<void>;
+  showPublishedDialog: boolean;
+  onClosePublished: () => void;
   showUnpublishDialog: boolean;
   unpublishLoading: boolean;
   onUnpublish: () => void;
@@ -147,11 +159,14 @@ interface Props {
 export const SlateEditor = ({
   story,
   onChangeTitle,
+  onChangeStory,
   showPublishDialog,
   publishLoading,
   onPublish,
   onCancelPublish,
   onConfirmPublish,
+  showPublishedDialog,
+  onClosePublished,
   showUnpublishDialog,
   unpublishLoading,
   onUnpublish,
@@ -296,19 +311,20 @@ export const SlateEditor = ({
         const href = data.get('href');
 
         return (
-          <span>
-            <StyledTooltip
-              label={
-                <a href={href} target="_blank" rel="noopener noreferrer">
-                  {href}
-                </a>
-              }
-            >
+          <Tooltip>
+            <TooltipTrigger asChild>
               <a {...attributes} href={href}>
                 {children}
+
+                {/* TooltipContent is rendered inside TooltipTrigger in order to be interactive */}
+                <TooltipContent>
+                  <a href={href} target="_blank" rel="noreferrer">
+                    {href}
+                  </a>
+                </TooltipContent>
               </a>
-            </StyledTooltip>
-          </span>
+            </TooltipTrigger>
+          </Tooltip>
         );
       default:
         return next();
@@ -496,6 +512,8 @@ export const SlateEditor = ({
       // We sort the files by date in case createdAt was changed
       file.stories.sort((a, b) => b.createdAt - a.createdAt);
       await saveStoriesFile(file);
+      // Update the root object
+      onChangeStory(updatedStory);
       toast.success('Story saved');
     } catch (error) {
       console.error(error);
@@ -514,6 +532,11 @@ export const SlateEditor = ({
 
   const handleEditLink = () => {
     setEditLinkOpen(true);
+  };
+
+  const handleEditPreview = () => {
+    onCancelPublish();
+    handleOpenSettings();
   };
 
   // TODO onPaste for links see https://github.com/ianstormtaylor/slate/blob/master/examples/links/index.js
@@ -660,42 +683,84 @@ export const SlateEditor = ({
           onSave={handleSave}
         />
 
-        <FullScreenDialog
-          isOpen={showPublishDialog}
-          confirmLoading={loadingSave || publishLoading}
-          onConfirm={async () => {
-            // We save before publishing
-            await handleSave();
-            await onConfirmPublish();
-          }}
-          onCancel={onCancelPublish}
-          loadingTitle="Publishing ..."
-          title="Publish my story"
-          description={
-            <React.Fragment>
-              <p>You’re about to publish your story.</p>
-              <p>You and everybody will be able to read it on your blog.</p>
-              <p>Would you like to continue?</p>
-            </React.Fragment>
-          }
+        <Dialog open={showPublishDialog} onOpenChange={onCancelPublish}>
+          <DialogContent>
+            <DialogTitle asChild>
+              <Heading as="h2" size="2xl" css={{ textAlign: 'center' }}>
+                One last check
+              </Heading>
+            </DialogTitle>
+            <DialogDescription asChild>
+              <Text css={{ mb: '$5', textAlign: 'center' }}>
+                Social media preview
+              </Text>
+            </DialogDescription>
+            <TwitterCardPreview story={story} />
+            <Flex justify="end" gap="6" css={{ mt: '$5' }}>
+              <Button
+                size="lg"
+                variant="ghost"
+                color="orange"
+                disabled={loadingSave || publishLoading}
+                onClick={handleEditPreview}
+              >
+                Edit preview
+              </Button>
+              <Button
+                size="lg"
+                color="orange"
+                disabled={loadingSave || publishLoading}
+                onClick={async () => {
+                  // We save before publishing
+                  await handleSave();
+                  await onConfirmPublish();
+                }}
+              >
+                {loadingSave || publishLoading
+                  ? 'Publishing ...'
+                  : 'Publish now'}
+              </Button>
+            </Flex>
+          </DialogContent>
+        </Dialog>
+
+        <StoryPublishedDialog
+          open={showPublishedDialog}
+          onOpenChange={onClosePublished}
+          story={story}
         />
-        <FullScreenDialog
-          isOpen={showUnpublishDialog}
-          confirmLoading={unpublishLoading}
-          onConfirm={onConfirmUnpublish}
-          onCancel={onCancelUnpublish}
-          loadingTitle="Unpublishing ..."
-          title="Unpublish my story"
-          description={
-            <React.Fragment>
-              <p>You’re about to unpublish this story.</p>
-              <p>
+
+        <Dialog open={showUnpublishDialog} onOpenChange={onCancelUnpublish}>
+          <DialogContent>
+            <DialogTitle asChild>
+              <Heading as="h2" size="xl" css={{ mb: '$3' }}>
+                Unpublish my story
+              </Heading>
+            </DialogTitle>
+            <DialogDescription asChild>
+              <Text>You’re about to unpublish this story.</Text>
+              <Text>
                 It won’t be visible on your blog anymore but you still can see
                 and edit it in your draft section.
-              </p>
-            </React.Fragment>
-          }
-        />
+              </Text>
+            </DialogDescription>
+            <Flex justify="end" gap="6" css={{ mt: '$6' }}>
+              <DialogClose asChild>
+                <Button size="lg" variant="ghost" disabled={unpublishLoading}>
+                  Cancel
+                </Button>
+              </DialogClose>
+              <Button
+                size="lg"
+                color="orange"
+                disabled={unpublishLoading}
+                onClick={onConfirmUnpublish}
+              >
+                {unpublishLoading ? 'Unpublishing ...' : 'Confirm'}
+              </Button>
+            </Flex>
+          </DialogContent>
+        </Dialog>
       </PageContainer>
     </React.Fragment>
   );

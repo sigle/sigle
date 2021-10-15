@@ -17,8 +17,6 @@ import 'tippy.js/dist/tippy.css';
 import 'tippy.js/themes/light-border.css';
 import 'react-toastify/dist/ReactToastify.css';
 // reach-ui styles
-import '@reach/dialog/styles.css';
-import '@reach/tooltip/styles.css';
 import '../styles/fonts.scss';
 import '../styles/index.css';
 import { sigleConfig } from '../config';

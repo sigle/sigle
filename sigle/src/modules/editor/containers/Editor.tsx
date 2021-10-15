@@ -36,6 +36,17 @@ export const Editor = () => {
     });
   };
 
+  const handleChangeStory = (newStory: Story) => {
+    if (!story) {
+      return;
+    }
+
+    setStory({
+      ...story,
+      ...newStory,
+    });
+  };
+
   useEffect(() => {
     if (data) {
       setStory(data);
@@ -46,6 +57,7 @@ export const Editor = () => {
     <Component
       loading={isLoading}
       story={story}
+      onChangeStory={handleChangeStory}
       onChangeStoryField={handleChangeStoryField}
     />
   );
