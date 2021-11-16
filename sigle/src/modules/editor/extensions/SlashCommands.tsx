@@ -24,20 +24,22 @@ export const SlashCommands = Extension.create<{
 }>({
   name: 'slash-command',
 
-  defaultOptions: {
-    commands: [],
-    filterCommands: (commands, query) => {
-      return commands
-        .filter((item) =>
-          item.title.toLowerCase().startsWith(query.toLowerCase())
-        )
-        .slice(0, 10);
-    },
-    component: null,
-    suggestion: {
-      char: '/',
-      startOfLine: true,
-    },
+  addOptions() {
+    return {
+      commands: [],
+      filterCommands: (commands, query) => {
+        return commands
+          .filter((item) =>
+            item.title.toLowerCase().startsWith(query.toLowerCase())
+          )
+          .slice(0, 10);
+      },
+      component: null,
+      suggestion: {
+        char: '/',
+        startOfLine: true,
+      },
+    };
   },
 
   addProseMirrorPlugins() {
