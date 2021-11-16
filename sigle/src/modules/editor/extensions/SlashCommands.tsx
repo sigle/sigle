@@ -46,7 +46,7 @@ export const SlashCommands = Extension.create<{
         editor: this.editor,
         ...this.options.suggestion,
         items: (query) =>
-          this.options.filterCommands(this.options.commands, query),
+          this.options.filterCommands(this.options.commands, query.query),
         command: ({ editor, range, props }) => {
           props.command({ editor, range });
         },
