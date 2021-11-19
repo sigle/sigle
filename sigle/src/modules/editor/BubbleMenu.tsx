@@ -3,19 +3,25 @@ import styled, { css } from 'styled-components';
 import tw from 'twin.macro';
 import { Editor, BubbleMenu as TipTapBubbleMenu } from '@tiptap/react';
 import {
-  MdCode,
-  MdFormatBold,
-  MdFormatItalic,
-  MdFormatListBulleted,
   MdFormatListNumbered,
-  MdFormatQuote,
-  MdFormatUnderlined,
-  MdLink,
   MdLooks3,
   MdLooksOne,
   MdLooksTwo,
-  MdClose,
 } from 'react-icons/md';
+import {
+  ListBulletIcon,
+  Link1Icon,
+  FontBoldIcon,
+  FontItalicIcon,
+  UnderlineIcon,
+  CodeIcon,
+  QuoteIcon,
+  Cross2Icon,
+} from '@radix-ui/react-icons';
+
+// TODO custom icons:
+// - MdFormatListNumbered
+// - Heading 1, 2, 3
 
 const StyledBubbleMenu = styled(TipTapBubbleMenu)`
   ${tw`flex rounded py-1`};
@@ -116,31 +122,31 @@ export const BubbleMenu = ({ editor }: BubbleMenuProps) => {
             onClick={() => editor.chain().focus().toggleBold().run()}
             active={editor.isActive('bold')}
           >
-            <MdFormatBold size={18} />
+            <FontBoldIcon height={18} width={18} />
           </BubbleMenuButton>
           <BubbleMenuButton
             onClick={() => editor.chain().focus().toggleItalic().run()}
             active={editor.isActive('italic')}
           >
-            <MdFormatItalic size={18} />
+            <FontItalicIcon height={18} width={18} />
           </BubbleMenuButton>
           <BubbleMenuButton
             onClick={() => editor.chain().focus().toggleUnderline().run()}
             active={editor.isActive('underline')}
           >
-            <MdFormatUnderlined size={18} />
+            <UnderlineIcon height={18} width={18} />
           </BubbleMenuButton>
           <BubbleMenuButton
             onClick={() => editor.chain().focus().toggleCode().run()}
             active={editor.isActive('code')}
           >
-            <MdCode size={18} />
+            <CodeIcon height={18} width={18} />
           </BubbleMenuButton>
           <BubbleMenuButton
             onClick={() => editor.chain().focus().toggleBlockquote().run()}
             active={editor.isActive('blockquote')}
           >
-            <MdFormatQuote size={18} />
+            <QuoteIcon height={18} width={18} />
           </BubbleMenuButton>
           <BubbleMenuButton
             onClick={() =>
@@ -176,13 +182,13 @@ export const BubbleMenu = ({ editor }: BubbleMenuProps) => {
             onClick={() => editor.chain().focus().toggleBulletList().run()}
             active={editor.isActive('bulletList')}
           >
-            <MdFormatListBulleted size={18} />
+            <ListBulletIcon height={18} width={18} />
           </BubbleMenuButton>
           <BubbleMenuButton
             onClick={() => onSelectLink()}
             active={editor.isActive('link')}
           >
-            <MdLink size={18} />
+            <Link1Icon height={18} width={18} />
           </BubbleMenuButton>
         </>
       ) : (
@@ -199,7 +205,7 @@ export const BubbleMenu = ({ editor }: BubbleMenuProps) => {
             onClick={() => resetLink()}
             active={false}
           >
-            <MdClose />
+            <Cross2Icon height={18} width={18} />
           </BubbleMenuButton>
         </BubbleMenuFormLink>
       )}
