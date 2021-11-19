@@ -2,12 +2,7 @@ import { useState } from 'react';
 import styled, { css } from 'styled-components';
 import tw from 'twin.macro';
 import { Editor, BubbleMenu as TipTapBubbleMenu } from '@tiptap/react';
-import {
-  MdFormatListNumbered,
-  MdLooks3,
-  MdLooksOne,
-  MdLooksTwo,
-} from 'react-icons/md';
+import { MdFormatListNumbered } from 'react-icons/md';
 import {
   ListBulletIcon,
   Link1Icon,
@@ -18,6 +13,7 @@ import {
   QuoteIcon,
   Cross2Icon,
 } from '@radix-ui/react-icons';
+import { Heading1Icon, Heading2Icon, Heading3Icon } from '../../icons';
 
 // TODO custom icons:
 // - MdFormatListNumbered
@@ -154,7 +150,7 @@ export const BubbleMenu = ({ editor }: BubbleMenuProps) => {
             }
             active={editor.isActive('heading', { level: 1 })}
           >
-            <MdLooksOne size={18} />
+            <Heading1Icon height={18} width={18} />
           </BubbleMenuButton>
           <BubbleMenuButton
             onClick={() =>
@@ -162,7 +158,7 @@ export const BubbleMenu = ({ editor }: BubbleMenuProps) => {
             }
             active={editor.isActive('heading', { level: 2 })}
           >
-            <MdLooksTwo size={18} />
+            <Heading2Icon height={18} width={18} />
           </BubbleMenuButton>
           <BubbleMenuButton
             onClick={() =>
@@ -170,7 +166,7 @@ export const BubbleMenu = ({ editor }: BubbleMenuProps) => {
             }
             active={editor.isActive('heading', { level: 3 })}
           >
-            <MdLooks3 size={18} />
+            <Heading3Icon height={18} width={18} />
           </BubbleMenuButton>
           <BubbleMenuButton
             onClick={() => editor.chain().focus().toggleOrderedList().run()}
