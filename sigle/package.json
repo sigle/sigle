@@ -34,7 +34,7 @@
     "formik": "2.2.6",
     "immutable": "4.0.0-rc.12",
     "nanoid": "3.1.20",
-    "next": "11.1.2",
+    "next": "12.0.4",
     "next-seo": "4.28.1",
     "nprogress": "0.2.0",
     "posthog-js": "1.14.1",
@@ -76,8 +76,8 @@
     "babel-plugin-macros": "3.1.0",
     "babel-plugin-styled-components": "1.13.2",
     "dotenv": "10.0.0",
-    "eslint": "8.0.0",
-    "eslint-config-next": "11.1.2",
+    "eslint": "7.32.0",
+    "eslint-config-next": "12.0.4",
     "eslint-config-prettier": "8.3.0",
     "eslint-plugin-prettier": "4.0.0",
     "fast-xml-parser": "3.17.5",
@@ -86,7 +86,7 @@
     "postcss": "8.3.9",
     "sass": "1.42.1",
     "tailwindcss": "2.2.15",
-    "twin.macro": "2.7.0",
+    "twin.macro": "2.8.1",
     "typescript": "4.4.3"
   }
 }
