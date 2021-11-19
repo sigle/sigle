@@ -72,7 +72,7 @@ const MenuTopItem = styled.li<{ active: boolean }>`
 `;
 
 const MenuBottom = styled.ul`
-  ${tw`list-none px-3`}
+  ${tw`list-none px-3 pb-2`}
 `;
 
 const MenuArrowIcon = styled(MdKeyboardArrowDown)<{ $isOpen: boolean }>`
@@ -89,13 +89,6 @@ const MenuBottomItem = styled.li`
   }
   a:hover {
     ${tw`bg-grey`}
-  }
-`;
-
-const SupportButton = styled.a`
-  ${tw`py-2 pr-2 pl-6 mt-4 flex items-center justify-start bg-pink text-white transition-colors duration-200 ease-in-out`};
-  &:hover {
-    background-color: #db3159;
   }
 `;
 
@@ -223,9 +216,6 @@ export const DashboardSidebar = () => {
             </StyledLink>
           </MenuBottomItemSocial>
         </MenuBottom>
-        <Link href="/support-us" passHref>
-          <SupportButton>Support us</SupportButton>
-        </Link>
       </div>
     </SidebarContent>
   );
