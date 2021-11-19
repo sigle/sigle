@@ -19,7 +19,7 @@ import TipTapPlaceholder from '@tiptap/extension-placeholder';
 import TipTapStrike from '@tiptap/extension-strike';
 import TipTapText from '@tiptap/extension-text';
 import TipTapUnderline from '@tiptap/extension-underline';
-import { MdLooks3, MdLooksOne, MdLooksTwo, MdAddAPhoto } from 'react-icons/md';
+import { MdAddAPhoto } from 'react-icons/md';
 import styled, { keyframes } from 'styled-components';
 import tw from 'twin.macro';
 import {
@@ -27,6 +27,7 @@ import {
   SlashCommandsCommand,
 } from './extensions/SlashCommands';
 import { BubbleMenu } from './BubbleMenu';
+import { Heading1Icon, Heading2Icon, Heading3Icon } from '../../icons';
 import { generateRandomId } from '../../utils';
 import { resizeImage } from '../../utils/image';
 import { storage } from '../../utils/blockstack';
@@ -95,7 +96,7 @@ const CommandsList = (props: {
           className={selectedIndex === idx ? 'is-selected' : ''}
           onClick={() => selectItem(idx)}
         >
-          <Icon size={18} />
+          <Icon width={18} height={18} />
           {title}
         </CommandsListItem>
       ))}
@@ -158,7 +159,7 @@ export const TipTapEditor = ({ story }: TipTapEditorProps) => {
       SlashCommands.configure({
         commands: [
           {
-            icon: MdLooksOne,
+            icon: Heading1Icon,
             title: 'Heading 1',
             command: ({ editor, range }) => {
               editor
@@ -170,7 +171,7 @@ export const TipTapEditor = ({ story }: TipTapEditorProps) => {
             },
           },
           {
-            icon: MdLooksTwo,
+            icon: Heading2Icon,
             title: 'Heading 2',
             command: ({ editor, range }) => {
               editor
@@ -182,7 +183,7 @@ export const TipTapEditor = ({ story }: TipTapEditorProps) => {
             },
           },
           {
-            icon: MdLooks3,
+            icon: Heading3Icon,
             title: 'Heading 3',
             command: ({ editor, range }) => {
               editor

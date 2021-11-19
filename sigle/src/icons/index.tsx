@@ -1,10 +1,6 @@
-export const Heading1Icon = ({
-  width,
-  height,
-}: {
-  width: number;
-  height: number;
-}) => {
+import { IconProps } from '@radix-ui/react-icons/dist/types';
+
+export const Heading1Icon = ({ width, height }: IconProps) => {
   return (
     <svg
       width={width}
@@ -27,13 +23,7 @@ export const Heading1Icon = ({
   );
 };
 
-export const Heading2Icon = ({
-  width,
-  height,
-}: {
-  width: number;
-  height: number;
-}) => {
+export const Heading2Icon = ({ width, height }: IconProps) => {
   return (
     <svg
       width={width}
@@ -56,13 +46,7 @@ export const Heading2Icon = ({
   );
 };
 
-export const Heading3Icon = ({
-  width,
-  height,
-}: {
-  width: number;
-  height: number;
-}) => {
+export const Heading3Icon = ({ width, height }: IconProps) => {
   return (
     <svg
       width={width}

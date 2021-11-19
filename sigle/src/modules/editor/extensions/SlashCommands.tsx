@@ -5,11 +5,11 @@ import { Extension } from '@tiptap/core';
 import Suggestion, { SuggestionOptions } from '@tiptap/suggestion';
 import { Editor, ReactRenderer, Range } from '@tiptap/react';
 import tippy, { Instance } from 'tippy.js';
-import type { IconType } from 'react-icons/lib';
+import { IconProps } from '@radix-ui/react-icons/dist/types';
 
 export interface SlashCommandsCommand {
   title: string;
-  icon: IconType;
+  icon: (props: IconProps) => JSX.Element;
   command: ({ editor, range }: { editor: Editor; range: Range }) => void;
 }
 
