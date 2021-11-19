@@ -1,8 +1,5 @@
 import React, { useEffect } from 'react';
-import { DialogContent, DialogOverlay } from '@reach/dialog';
 import { useFormik, FormikErrors } from 'formik';
-import styled, { keyframes } from 'styled-components';
-import tw from 'twin.macro';
 import { Editor } from 'slate-react';
 import {
   FormRow,
@@ -10,39 +7,15 @@ import {
   FormInput,
   FormHelperError,
 } from '../../../components/Form';
-import { Button, ButtonOutline } from '../../../components';
-
-const overlayAnimation = keyframes`
-  0% {
-    transform: scale(.9);
-    opacity: 0;
-  }
-  100% {
-    transform: scale(1);
-    opacity: 1;
-  }
-`;
-
-const StyledDialogOverlay = styled(DialogOverlay)`
-  animation: ${overlayAnimation} 75ms cubic-bezier(0, 0, 0.2, 1);
-  z-index: 11;
-`;
-
-const StyledDialogContent = styled(DialogContent)`
-  ${tw`max-w-lg w-full p-8 rounded`}
-`;
-
-const Title = styled.h2`
-  ${tw`text-2xl mb-4`};
-`;
-
-const SaveRow = styled.div`
-  ${tw`pt-3 flex justify-end`};
-`;
-
-const CancelButton = styled(ButtonOutline)`
-  ${tw`mr-4 text-base`};
-`;
+import {
+  Button,
+  Dialog,
+  DialogContent,
+  DialogClose,
+  DialogTitle,
+  Flex,
+  Heading,
+} from '../../../ui';
 
 interface SlateEditorLinkFormValues {
   text: string;
@@ -99,9 +72,14 @@ export const SlateEditorLink = ({
   }, [open]);
 
   return (
-    <StyledDialogOverlay isOpen={open} onDismiss={onClose}>
-      <StyledDialogContent aria-label="Edit link">
-        <Title>Edit link</Title>
+    <Dialog open={open} onOpenChange={onClose}>
+      <DialogContent aria-label="Edit link">
+        <DialogTitle asChild>
+          <Heading as="h2" size="2xl">
+            Edit link
+          </Heading>
+        </DialogTitle>
+
         <form onSubmit={formik.handleSubmit}>
           <FormRow>
             <FormLabel>Text</FormLabel>
@@ -129,21 +107,23 @@ export const SlateEditorLink = ({
             )}
           </FormRow>
 
-          <SaveRow>
-            <CancelButton
-              onClick={(e) => {
-                e.preventDefault();
-                onClose();
-              }}
+          <Flex justify="end" gap="6" css={{ mt: '$5' }}>
+            <DialogClose asChild>
+              <Button size="lg" variant="ghost">
+                Cancel
+              </Button>
+            </DialogClose>
+            <Button
+              disabled={formik.isSubmitting}
+              size="lg"
+              color="orange"
+              type="submit"
             >
-              Cancel
-            </CancelButton>
-            <Button disabled={formik.isSubmitting} type="submit">
               {formik.isSubmitting ? 'Saving...' : 'Save'}
             </Button>
-          </SaveRow>
+          </Flex>
         </form>
-      </StyledDialogContent>
-    </StyledDialogOverlay>
+      </DialogContent>
+    </Dialog>
   );
 };

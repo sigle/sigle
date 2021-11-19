@@ -1,10 +1,10 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { lookupProfile } from '@stacks/auth';
-import * as Sentry from '@sentry/node';
+import * as Sentry from '@sentry/nextjs';
 import { getServerSideProps } from './[username]';
 
 jest.mock('@stacks/auth');
-jest.mock('@sentry/node');
+jest.mock('@sentry/nextjs');
 
 const params = {
   params: { username: 'usernameTest' },

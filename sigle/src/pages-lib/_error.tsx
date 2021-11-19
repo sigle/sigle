@@ -4,7 +4,7 @@ import NextErrorComponent from 'next/error';
 import styled from 'styled-components';
 import tw from 'twin.macro';
 import Link from 'next/link';
-import * as Sentry from '@sentry/node';
+import * as Sentry from '@sentry/nextjs';
 import { Button, Container } from '../components';
 import { sigleConfig } from '../config';
 

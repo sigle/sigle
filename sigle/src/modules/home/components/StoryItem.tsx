@@ -2,17 +2,25 @@ import React from 'react';
 import Link from 'next/link';
 import styled from 'styled-components';
 import tw from 'twin.macro';
-import { MdMoreHoriz, MdStar } from 'react-icons/md';
+import { MdStar } from 'react-icons/md';
+import { DotsHorizontalIcon } from '@radix-ui/react-icons';
 import format from 'date-fns/format';
 import {
-  Menu,
-  MenuList,
-  MenuButton,
-  MenuItem,
-  MenuLink,
-} from '@reach/menu-button';
+  Button,
+  Dialog,
+  DialogContent,
+  DialogTitle,
+  DialogDescription,
+  DialogClose,
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuTrigger,
+  DropdownMenuItem,
+  Flex,
+  Heading,
+  Text,
+} from '../../../ui';
 import { SubsetStory, BlockstackUser } from '../../../types';
-import { FullScreenDialog } from '../../../components';
 
 const StoryContainer = styled.div`
   ${tw`py-4 lg:py-8 border-b border-solid border-grey lg:flex`};
@@ -20,10 +28,6 @@ const StoryContainer = styled.div`
 
 const StoryTitleContainer = styled.div`
   ${tw`flex`};
-`;
-
-const StoryTitleIcon = styled(MdMoreHoriz)`
-  ${tw`text-grey-darker`};
 `;
 
 const StarIcon = styled(MdStar)`
@@ -104,33 +108,38 @@ export const StoryItem = ({
                 <a>{story.title}</a>
               </Link>
             </StoryTitle>
-            <Menu>
-              <MenuButton>
-                <StoryTitleIcon size={22} />
-              </MenuButton>
-              <MenuList>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <button aria-label="Story settings">
+                  <DotsHorizontalIcon width={22} height={22} />
+                </button>
+              </DropdownMenuTrigger>
+
+              <DropdownMenuContent>
                 {type === 'public' && (
-                  <MenuLink
+                  <DropdownMenuItem
                     as="a"
                     href={`/${user.username}/${story.id}`}
                     target="_blank"
                     rel="noopener noreferrer"
                   >
                     View my story
-                  </MenuLink>
+                  </DropdownMenuItem>
                 )}
-                <MenuItem onSelect={onEdit}>Edit</MenuItem>
+                <DropdownMenuItem onSelect={onEdit}>Edit</DropdownMenuItem>
                 {!story.featured && type === 'public' && (
-                  <MenuItem onSelect={onFeature}>Feature this story</MenuItem>
+                  <DropdownMenuItem onSelect={onFeature}>
+                    Feature this story
+                  </DropdownMenuItem>
                 )}
                 {story.featured && type === 'public' && (
-                  <MenuItem onSelect={onUnFeature}>
+                  <DropdownMenuItem onSelect={onUnFeature}>
                     Un-feature this story
-                  </MenuItem>
+                  </DropdownMenuItem>
                 )}
-                <MenuItem onSelect={onDelete}>Delete</MenuItem>
-              </MenuList>
-            </Menu>
+                <DropdownMenuItem onSelect={onDelete}>Delete</DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
             {story.featured && <StarIcon size={22} />}
           </StoryTitleContainer>
           <StoryDate>
@@ -161,51 +170,93 @@ export const StoryItem = ({
         )}
       </StoryContainer>
 
-      <FullScreenDialog
-        isOpen={showFeatureDialog}
-        confirmLoading={featureLoading}
-        onConfirm={onConfirmFeature}
-        onCancel={onCancelFeature}
-        loadingTitle="Processing ..."
-        title="Feature this story"
-        description={
-          <React.Fragment>
-            <p>This story, once featured, will appear on top of your blog.</p>
-            <p>Would you like to continue?</p>
-            <p>You can remove it at any time.</p>
-          </React.Fragment>
-        }
-      />
+      <Dialog open={showFeatureDialog} onOpenChange={onCancelFeature}>
+        <DialogContent>
+          <DialogTitle asChild>
+            <Heading as="h2" size="xl" css={{ mb: '$3' }}>
+              Feature this story
+            </Heading>
+          </DialogTitle>
+          <DialogDescription asChild>
+            <Text>
+              This story, once featured, will appear on top of your blog.
+            </Text>
+          </DialogDescription>
+          <Flex justify="end" gap="6" css={{ mt: '$6' }}>
+            <DialogClose asChild>
+              <Button size="lg" variant="ghost" disabled={featureLoading}>
+                Cancel
+              </Button>
+            </DialogClose>
+            <Button
+              size="lg"
+              color="orange"
+              disabled={featureLoading}
+              onClick={onConfirmFeature}
+            >
+              {featureLoading ? 'Processing ...' : 'Confirm'}
+            </Button>
+          </Flex>
+        </DialogContent>
+      </Dialog>
 
-      <FullScreenDialog
-        isOpen={showUnFeatureDialog}
-        confirmLoading={unFeatureLoading}
-        onConfirm={onConfirmUnFeature}
-        onCancel={onCancelUnFeature}
-        loadingTitle="Processing ..."
-        title="Un-feature this story"
-        description={
-          <React.Fragment>
-            <p>You’re about to un-feature this story.</p>
-            <p>Would you like to continue?</p>
-          </React.Fragment>
-        }
-      />
+      <Dialog open={showUnFeatureDialog} onOpenChange={onCancelUnFeature}>
+        <DialogContent>
+          <DialogTitle asChild>
+            <Heading as="h2" size="xl" css={{ mb: '$3' }}>
+              Un-feature this story
+            </Heading>
+          </DialogTitle>
+          <DialogDescription asChild>
+            <Text>You’re about to un-feature this story.</Text>
+            <Text>Would you like to continue?</Text>
+          </DialogDescription>
+          <Flex justify="end" gap="6" css={{ mt: '$6' }}>
+            <DialogClose asChild>
+              <Button size="lg" variant="ghost" disabled={unFeatureLoading}>
+                Cancel
+              </Button>
+            </DialogClose>
+            <Button
+              size="lg"
+              color="orange"
+              disabled={unFeatureLoading}
+              onClick={onConfirmUnFeature}
+            >
+              {unFeatureLoading ? 'Processing ...' : 'Confirm'}
+            </Button>
+          </Flex>
+        </DialogContent>
+      </Dialog>
 
-      <FullScreenDialog
-        isOpen={showDeleteDialog}
-        confirmLoading={deleteLoading}
-        onConfirm={onConfirmDelete}
-        onCancel={onCancelDelete}
-        loadingTitle="Deleting ..."
-        title="Delete my story"
-        description={
-          <React.Fragment>
-            <p>You’re about to delete your story.</p>
-            <p>Would you like to continue?</p>
-          </React.Fragment>
-        }
-      />
+      <Dialog open={showDeleteDialog} onOpenChange={onCancelDelete}>
+        <DialogContent>
+          <DialogTitle asChild>
+            <Heading as="h2" size="xl" css={{ mb: '$3' }}>
+              Delete my story
+            </Heading>
+          </DialogTitle>
+          <DialogDescription asChild>
+            <Text>You’re about to delete your story.</Text>
+            <Text>Would you like to continue?</Text>
+          </DialogDescription>
+          <Flex justify="end" gap="6" css={{ mt: '$6' }}>
+            <DialogClose asChild>
+              <Button size="lg" variant="ghost" disabled={deleteLoading}>
+                Cancel
+              </Button>
+            </DialogClose>
+            <Button
+              size="lg"
+              color="orange"
+              disabled={deleteLoading}
+              onClick={onConfirmDelete}
+            >
+              {deleteLoading ? 'Deleting ...' : 'Confirm'}
+            </Button>
+          </Flex>
+        </DialogContent>
+      </Dialog>
     </React.Fragment>
   );
 };

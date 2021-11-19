@@ -1,13 +1,10 @@
 import { NextApiHandler } from 'next';
 import { lookupProfile } from '@stacks/auth';
 import { Feed } from 'feed';
-import * as Sentry from '@sentry/node';
+import * as Sentry from '@sentry/nextjs';
 import { SettingsFile, StoryFile } from '../../../types';
 import { migrationSettings } from '../../../utils/migrations/settings';
 import { migrationStories } from '../../../utils/migrations/stories';
-import { initSentry } from '../../../utils/sentry';
-
-initSentry();
 
 const escapeXml = (unsafe: string) => {
   return unsafe.replace(/[<>&'"]/g, (c) => {
