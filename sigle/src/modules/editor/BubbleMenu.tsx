@@ -17,7 +17,6 @@ import { Heading1Icon, Heading2Icon, Heading3Icon } from '../../icons';
 
 // TODO custom icons:
 // - MdFormatListNumbered
-// - Heading 1, 2, 3
 
 const StyledBubbleMenu = styled(TipTapBubbleMenu)`
   ${tw`flex rounded py-1`};
