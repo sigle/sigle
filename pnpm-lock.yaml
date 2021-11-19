@@ -199,6 +199,7 @@ importers:
       slate-soft-break: 0.9.0
       styled-components: 5.3.1
       tailwindcss: 2.2.15
+      tippy.js: 6.3.7
       twin.macro: 2.7.0
       typescript: 4.4.3
     dependencies:
@@ -264,6 +265,7 @@ importers:
       slate-react: 0.22.10_fe01be42f2210f915db804e4bfbdd93c
       slate-soft-break: 0.9.0_slate-react@0.22.10+slate@0.47.9
       styled-components: 5.3.1_react-dom@17.0.2+react@17.0.2
+      tippy.js: 6.3.7
     devDependencies:
       '@fontsource/lato': 4.5.0
       '@fontsource/merriweather': 4.5.1
@@ -1724,7 +1726,7 @@ packages:
     dependencies:
       react: 17.0.2
       react-dom: 17.0.2_react@17.0.2
-      tippy.js: 6.3.1
+      tippy.js: 6.3.7
     dev: false
 
   /@tiptap/core/2.0.0-beta.138:
@@ -8315,12 +8317,6 @@ packages:
 
   /tinycolor2/1.4.2:
     resolution: {integrity: sha512-vJhccZPs965sV/L2sU4oRQVAos0pQXwsvTLkWYdqJ+a8Q5kPFzJTuOFwy7UniPli44NKQGAglksjvOcpo95aZA==}
-    dev: false
-
-  /tippy.js/6.3.1:
-    resolution: {integrity: sha512-JnFncCq+rF1dTURupoJ4yPie5Cof978inW6/4S6kmWV7LL9YOSEVMifED3KdrVPEG+Z/TFH2CDNJcQEfaeuQww==}
-    dependencies:
-      '@popperjs/core': 2.10.1
     dev: false
 
   /tippy.js/6.3.7:

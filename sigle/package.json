@@ -77,7 +77,8 @@
     "slate-plain-serializer": "0.7.11",
     "slate-react": "0.22.10",
     "slate-soft-break": "0.9.0",
-    "styled-components": "5.3.1"
+    "styled-components": "5.3.1",
+    "tippy.js": "6.3.7"
   },
   "devDependencies": {
     "@fontsource/lato": "4.5.0",
