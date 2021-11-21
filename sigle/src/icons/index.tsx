@@ -68,3 +68,21 @@ export const Heading3Icon = ({ width, height }: IconProps) => {
     </svg>
   );
 };
+
+export const ListNumberedIcon = ({ width, height }: IconProps) => {
+  return (
+    <svg
+      width={width}
+      height={height}
+      viewBox="0 0 15 15"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <path
+        d="M1.60119 5.29C1.60119 5.416 1.70319 5.518 1.82919 5.518C1.95519 5.518 2.05719 5.416 2.05719 5.29V3.598C2.05719 3.472 1.95519 3.37 1.82919 3.37H1.82319C1.76019 3.37 1.69419 3.385 1.60719 3.409L1.31019 3.496C1.21719 3.523 1.15719 3.601 1.15719 3.694C1.15719 3.802 1.25019 3.892 1.35819 3.892C1.38219 3.892 1.41519 3.886 1.43919 3.88L1.60119 3.838V5.29Z"
+        fill="currentColor"
+      />
+      <path d="M4.5 4.5H13.5" stroke="currentColor" stroke-linecap="round" />
+    </svg>
+  );
+};

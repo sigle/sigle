@@ -2,7 +2,6 @@ import { useState } from 'react';
 import styled, { css } from 'styled-components';
 import tw from 'twin.macro';
 import { Editor, BubbleMenu as TipTapBubbleMenu } from '@tiptap/react';
-import { MdFormatListNumbered } from 'react-icons/md';
 import {
   ListBulletIcon,
   Link1Icon,
@@ -13,10 +12,12 @@ import {
   QuoteIcon,
   Cross2Icon,
 } from '@radix-ui/react-icons';
-import { Heading1Icon, Heading2Icon, Heading3Icon } from '../../icons';
-
-// TODO custom icons:
-// - MdFormatListNumbered
+import {
+  Heading1Icon,
+  Heading2Icon,
+  Heading3Icon,
+  ListNumberedIcon,
+} from '../../icons';
 
 const StyledBubbleMenu = styled(TipTapBubbleMenu)`
   ${tw`flex rounded py-1`};
@@ -171,7 +172,7 @@ export const BubbleMenu = ({ editor }: BubbleMenuProps) => {
             onClick={() => editor.chain().focus().toggleOrderedList().run()}
             active={editor.isActive('orderedList')}
           >
-            <MdFormatListNumbered size={18} />
+            <ListNumberedIcon height={18} width={18} />
           </BubbleMenuButton>
           <BubbleMenuButton
             onClick={() => editor.chain().focus().toggleBulletList().run()}
