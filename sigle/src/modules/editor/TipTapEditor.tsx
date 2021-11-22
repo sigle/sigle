@@ -1,5 +1,5 @@
 import { useRef } from 'react';
-import { useEditor, EditorContent, FloatingMenu } from '@tiptap/react';
+import { useEditor, EditorContent } from '@tiptap/react';
 import TipTapBlockquote from '@tiptap/extension-blockquote';
 import TipTapBold from '@tiptap/extension-bold';
 import TipTapBulletList from '@tiptap/extension-bullet-list';
@@ -27,6 +27,7 @@ import {
   SlashCommandsCommand,
 } from './extensions/SlashCommands';
 import { BubbleMenu } from './BubbleMenu';
+import { FloatingMenu } from './FloatingMenu';
 import { Heading1Icon, Heading2Icon, Heading3Icon } from '../../icons';
 import { generateRandomId } from '../../utils';
 import { resizeImage } from '../../utils/image';
@@ -249,6 +250,7 @@ export const TipTapEditor = ({ story }: TipTapEditorProps) => {
   return (
     <>
       {editor && <BubbleMenu editor={editor} />}
+      {editor && <FloatingMenu editor={editor} />}
 
       <StyledEditorContent editor={editor} />
 
