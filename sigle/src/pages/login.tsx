@@ -113,7 +113,7 @@ const Login = () => {
               />
             </a>
 
-            {hasUsername ? <BlockLogin /> : <RegisterUsername />}
+            {user && !hasUsername ? <RegisterUsername /> : <BlockLogin />}
           </BlockText>
           <BlockIllustration>
             <Image
