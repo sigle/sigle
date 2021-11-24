@@ -23,7 +23,7 @@
     "@radix-ui/react-tooltip": "0.1.0",
     "@sentry/nextjs": "6.13.3",
     "@stacks/auth": "2.0.1",
-    "@stacks/connect": "6.2.0",
+    "@stacks/connect": "6.2.1",
     "@stacks/connect-react": "13.0.0",
     "@stacks/keychain": "2.0.1",
     "@stacks/profile": "2.0.1",
