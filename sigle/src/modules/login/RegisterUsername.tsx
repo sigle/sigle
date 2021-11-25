@@ -8,18 +8,6 @@ import {
 import { Box, Button, Heading, Text } from '../../ui';
 import { useAuth } from '../auth/AuthContext';
 
-function getAddressFromDID(decentralizedID?: string): string | undefined {
-  if (decentralizedID) {
-    const didParts = decentralizedID.split(':');
-    if (didParts[1].toLowerCase() === 'btc-addr') {
-      return decentralizedID.split(':')[2];
-    } else {
-      return undefined;
-    }
-  }
-  return undefined;
-}
-
 interface HubInfo {
   challenge_text?: string;
   read_url_prefix: string;
@@ -116,14 +104,13 @@ export const RegisterUsername = () => {
     const username = formState.username;
     const fullUsername = `${username}.${subdomain}`;
     const gaiaUrl = user.hubUrl;
-    // TODO use identityAddress
-    const btcAddress = getAddressFromDID(user.decentralizedID);
+    const btcAddress = user.identityAddress;
     if (!btcAddress) {
       posthog.capture('username-btc-address-error');
       setFormState((state) => ({
         ...state,
         loading: false,
-        errorMessage: "BTC address can't beextracted from the DID.",
+        errorMessage: 'identity address is empty.',
       }));
       return;
     }
@@ -161,7 +148,7 @@ export const RegisterUsername = () => {
 
     posthog.capture('username-registration-success');
 
-    // TODO redirect user and find how to save username
+    // TODO redirect user and find how to save username into hiro wallet
 
     console.log({ json });
   };
