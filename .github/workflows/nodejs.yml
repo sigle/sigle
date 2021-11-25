@@ -7,7 +7,7 @@ on:
     branches: [main]
 
 jobs:
-  build:
+  test-sigle:
     runs-on: ubuntu-20.04
     strategy:
       matrix:
@@ -15,30 +15,22 @@ jobs:
 
     steps:
       - uses: actions/checkout@v1
+
+      - uses: pnpm/action-setup@v2.0.1
+        with:
+          version: 6.22.2
+
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v2
         with:
           node-version: ${{ matrix.node-version }}
-
-      - name: Cache .pnpm-store
-        uses: actions/cache@v1
-        with:
-          path: ~/.pnpm-store
-          key: ${{ runner.os }}-node${{ matrix.node-version }}-${{ hashFiles('**/pnpm-lock.yaml') }}
-      - name: Install pnpm
-        run: curl -f https://get.pnpm.io/v6.14.js | node - add --global pnpm@6
+          cache: 'pnpm'
 
       - name: Get next.js sigle cache
         uses: actions/cache@v2
         with:
           path: ${{ github.workspace }}/sigle/.next/cache
           key: ${{ runner.os }}-nextjs-sigle-${{ hashFiles('**/pnpm-lock.yaml') }}
-
-      - name: Get next.js sigle cache
-        uses: actions/cache@v2
-        with:
-          path: ${{ github.workspace }}/blog-viewer/.next/cache
-          key: ${{ runner.os }}-nextjs-blog-viewer-${{ hashFiles('**/pnpm-lock.yaml') }}
 
       - name: Install Dependencies
         run: pnpm install
@@ -48,8 +40,34 @@ jobs:
 
       - name: Run sigle tests
         run: pnpm run test --filter=sigle
-        env:
-          CI: true
+
+  test-blog-viewer:
+    runs-on: ubuntu-20.04
+    strategy:
+      matrix:
+        node-version: [14]
+
+    steps:
+      - uses: actions/checkout@v1
+
+      - uses: pnpm/action-setup@v2.0.1
+        with:
+          version: 6.22.2
+
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v2
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'pnpm'
+
+      - name: Get next.js blog-viewer cache
+        uses: actions/cache@v2
+        with:
+          path: ${{ github.workspace }}/blog-viewer/.next/cache
+          key: ${{ runner.os }}-nextjs-blog-viewer-${{ hashFiles('**/pnpm-lock.yaml') }}
+
+      - name: Install Dependencies
+        run: pnpm install
 
       - name: Build blog-viewer
         run: pnpm run build --filter=blog-viewer
