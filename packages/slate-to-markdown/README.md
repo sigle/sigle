@@ -1,6 +1,6 @@
 # @sigle/slate-to-markdown
 
-This package converts a State JSON representation to a Markdown document.
+This package converts a Sigle story State JSON representation to a Markdown document. Before storing plain markdown, Sigle used to store stories in a JSON format.
 
 ## Usage
 
@@ -8,7 +8,7 @@ This package converts a State JSON representation to a Markdown document.
 import { convert } from '@sigle/slate-to-markdown';
 
 const slateJSON = [
-  // ... Slate JSON
+  // ... Slate Sigle JSON
 ];
 
 const markdown = convert(slateJSON);
