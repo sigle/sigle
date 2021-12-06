@@ -99,5 +99,8 @@ jobs:
       - name: Install Dependencies
         run: pnpm install
 
-      - name: Build packages/slate-to-markdown
+      - name: Build @sigle/slate-to-markdown
         run: pnpm run build --filter=@sigle/slate-to-markdown
+
+      - name: Test @sigle/slate-to-markdown
+        run: pnpm run test --filter=@sigle/slate-to-markdown
