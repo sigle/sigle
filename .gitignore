@@ -4,3 +4,4 @@ bundles
 .vercel
 coverage
 .env.local
+lib
