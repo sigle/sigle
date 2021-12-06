@@ -76,3 +76,28 @@ jobs:
         run: pnpm run test --filter=blog-viewer
         env:
           CI: true
+
+  test-packages:
+    runs-on: ubuntu-20.04
+    strategy:
+      matrix:
+        node-version: [14]
+
+    steps:
+      - uses: actions/checkout@v1
+
+      - uses: pnpm/action-setup@v2.0.1
+        with:
+          version: 6.22.2
+
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v2
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'pnpm'
+
+      - name: Install Dependencies
+        run: pnpm install
+
+      - name: Build packages/slate-to-markdown
+        run: pnpm run build --filter=@sigle/slate-to-markdown
