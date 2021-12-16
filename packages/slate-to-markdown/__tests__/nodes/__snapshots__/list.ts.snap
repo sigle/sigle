@@ -1,0 +1,9 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`render numbered list 1`] = `
+"
+1. List item 1
+1. List item 2
+
+"
+`;

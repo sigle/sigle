@@ -32,6 +32,20 @@ const migrateLinkNode = (node: any) => {
   };
 };
 
+// List items needs to be wrapped in a paragraph
+const migrateListItemNode = (node: any) => {
+  return {
+    data: node.data ?? {},
+    type: 'list_item',
+    children: [
+      {
+        type: 'paragraph',
+        children: node.nodes?.map(migrateNode).flat() ?? [],
+      },
+    ],
+  };
+};
+
 const migrateElementNode = (node: any) => {
   let newNodeType = node.type;
   switch (node.type) {
@@ -46,6 +60,9 @@ const migrateElementNode = (node: any) => {
       break;
     case 'heading-three':
       newNodeType = 'heading_three';
+      break;
+    case 'numbered-list':
+      newNodeType = 'ol_list';
       break;
     default:
       break;
@@ -63,6 +80,8 @@ const migrateNode = (oldNode: any) => {
     return migrateTextNode(oldNode);
   } else if (oldNode.object === 'inline' && oldNode.type === 'link') {
     return migrateLinkNode(oldNode);
+  } else if (oldNode.object === 'block' && oldNode.type === 'list-item') {
+    return migrateListItemNode(oldNode);
   } else {
     return migrateElementNode(oldNode);
   }
