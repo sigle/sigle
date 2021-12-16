@@ -198,3 +198,44 @@ it('render all marks text', () => {
   };
   expect(convert(slateJSON)).toMatchSnapshot();
 });
+
+it('render code text', () => {
+  const slateJSON = {
+    object: 'value',
+    document: {
+      object: 'document',
+      data: {},
+      nodes: [
+        {
+          object: 'block',
+          type: 'paragraph',
+          data: {},
+          nodes: [
+            {
+              object: 'text',
+              text: 'Hello ',
+              marks: [],
+            },
+            {
+              object: 'text',
+              text: 'code',
+              marks: [
+                {
+                  object: 'mark',
+                  type: 'code',
+                  data: {},
+                },
+              ],
+            },
+            {
+              object: 'text',
+              text: ' hello',
+              marks: [],
+            },
+          ],
+        },
+      ],
+    },
+  };
+  expect(convert(slateJSON)).toMatchSnapshot();
+});
