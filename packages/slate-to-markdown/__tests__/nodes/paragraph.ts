@@ -24,3 +24,44 @@ it('render text', () => {
   };
   expect(convert(slateJSON)).toMatchSnapshot();
 });
+
+it('render bold text', () => {
+  const slateJSON = {
+    object: 'value',
+    document: {
+      object: 'document',
+      data: {},
+      nodes: [
+        {
+          object: 'block',
+          type: 'paragraph',
+          data: {},
+          nodes: [
+            {
+              object: 'text',
+              text: 'Hello ',
+              marks: [],
+            },
+            {
+              object: 'text',
+              text: 'bold',
+              marks: [
+                {
+                  object: 'mark',
+                  type: 'bold',
+                  data: {},
+                },
+              ],
+            },
+            {
+              object: 'text',
+              text: ' hello',
+              marks: [],
+            },
+          ],
+        },
+      ],
+    },
+  };
+  expect(convert(slateJSON)).toMatchSnapshot();
+});

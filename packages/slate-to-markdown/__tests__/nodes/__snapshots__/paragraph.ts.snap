@@ -1,5 +1,10 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`render bold text 1`] = `
+"Hello **bold** hello
+"
+`;
+
 exports[`render text 1`] = `
 "Hello
 "
