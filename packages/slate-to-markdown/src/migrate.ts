@@ -38,6 +38,9 @@ const migrateElementNode = (node: any) => {
     case 'block-quote':
       newNodeType = 'block_quote';
       break;
+    case 'heading-one':
+      newNodeType = 'heading_one';
+      break;
     default:
       break;
   }
