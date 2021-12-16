@@ -16,7 +16,7 @@ const migrateTextNode = (oldNode: any) => {
     ...oldNode.marks?.reduce(
       (acc: any, mark: any) => ({
         ...acc,
-        [mark.type]: true,
+        [mark.type === 'underlined' ? 'strikeThrough' : mark.type]: true,
       }),
       {}
     ),

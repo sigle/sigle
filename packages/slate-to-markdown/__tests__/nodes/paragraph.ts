@@ -106,3 +106,44 @@ it('render italic text', () => {
   };
   expect(convert(slateJSON)).toMatchSnapshot();
 });
+
+it('render underlined text', () => {
+  const slateJSON = {
+    object: 'value',
+    document: {
+      object: 'document',
+      data: {},
+      nodes: [
+        {
+          object: 'block',
+          type: 'paragraph',
+          data: {},
+          nodes: [
+            {
+              object: 'text',
+              text: 'Hello ',
+              marks: [],
+            },
+            {
+              object: 'text',
+              text: 'underlined',
+              marks: [
+                {
+                  object: 'mark',
+                  type: 'underlined',
+                  data: {},
+                },
+              ],
+            },
+            {
+              object: 'text',
+              text: ' hello',
+              marks: [],
+            },
+          ],
+        },
+      ],
+    },
+  };
+  expect(convert(slateJSON)).toMatchSnapshot();
+});
