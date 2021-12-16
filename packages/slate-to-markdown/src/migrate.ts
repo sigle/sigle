@@ -11,8 +11,6 @@
  */
 
 const migrateTextNode = (oldNode: any) => {
-  console.log({ oldNode });
-  // const leaves = oldNode.leaves.map((leaf: any) => ());
   const leaves = {
     text: oldNode.text,
     ...oldNode.marks?.reduce(
@@ -26,6 +24,14 @@ const migrateTextNode = (oldNode: any) => {
   return leaves;
 };
 
+const migrateLinkNode = (node: any) => {
+  return {
+    link: node.data.href,
+    type: node.type,
+    children: node.nodes?.map(migrateNode).flat() ?? [],
+  };
+};
+
 const migrateElementNode = (node: any) => {
   return {
     data: node.data ?? {},
@@ -37,6 +43,8 @@ const migrateElementNode = (node: any) => {
 const migrateNode = (oldNode: any) => {
   if (oldNode.object === 'text') {
     return migrateTextNode(oldNode);
+  } else if (oldNode.object === 'inline' && oldNode.type === 'link') {
+    return migrateLinkNode(oldNode);
   } else {
     return migrateElementNode(oldNode);
   }

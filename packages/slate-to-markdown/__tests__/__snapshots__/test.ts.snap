@@ -1,7 +1,7 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`markdown render link 1`] = `
-"[sigle]()
+"[sigle](https://www.sigle.io)
 "
 `;
 
