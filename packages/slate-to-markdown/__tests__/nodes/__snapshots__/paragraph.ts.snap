@@ -5,6 +5,11 @@ exports[`render bold text 1`] = `
 "
 `;
 
+exports[`render italic text 1`] = `
+"Hello _italic_ hello
+"
+`;
+
 exports[`render text 1`] = `
 "Hello
 "
