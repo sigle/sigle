@@ -1,7 +1,7 @@
 {
   "name": "@sigle/slate-to-markdown",
   "version": "0.0.1",
-  "description": "This package converts a State JSON representation to a Markdown document.",
+  "description": "This package converts a Slate JSON representation to a Markdown document.",
   "main": "lib/index.js",
   "module": "./lib/index.js",
   "types": "./lib/index.d.ts",
