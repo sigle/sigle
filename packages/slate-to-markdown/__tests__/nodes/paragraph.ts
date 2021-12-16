@@ -147,3 +147,54 @@ it('render underlined text', () => {
   };
   expect(convert(slateJSON)).toMatchSnapshot();
 });
+
+it('render all marks text', () => {
+  const slateJSON = {
+    object: 'value',
+    document: {
+      object: 'document',
+      data: {},
+      nodes: [
+        {
+          object: 'block',
+          type: 'paragraph',
+          data: {},
+          nodes: [
+            {
+              object: 'text',
+              text: 'Hello ',
+              marks: [],
+            },
+            {
+              object: 'text',
+              text: 'bold, italic, underlined',
+              marks: [
+                {
+                  object: 'mark',
+                  type: 'bold',
+                  data: {},
+                },
+                {
+                  object: 'mark',
+                  type: 'italic',
+                  data: {},
+                },
+                {
+                  object: 'mark',
+                  type: 'underlined',
+                  data: {},
+                },
+              ],
+            },
+            {
+              object: 'text',
+              text: ' hello',
+              marks: [],
+            },
+          ],
+        },
+      ],
+    },
+  };
+  expect(convert(slateJSON)).toMatchSnapshot();
+});
