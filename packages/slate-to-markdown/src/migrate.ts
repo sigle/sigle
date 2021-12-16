@@ -41,6 +41,12 @@ const migrateElementNode = (node: any) => {
     case 'heading-one':
       newNodeType = 'heading_one';
       break;
+    case 'heading-two':
+      newNodeType = 'heading_two';
+      break;
+    case 'heading-three':
+      newNodeType = 'heading_three';
+      break;
     default:
       break;
   }
