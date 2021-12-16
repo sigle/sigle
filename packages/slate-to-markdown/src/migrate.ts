@@ -33,9 +33,18 @@ const migrateLinkNode = (node: any) => {
 };
 
 const migrateElementNode = (node: any) => {
+  let newNodeType = node.type;
+  switch (node.type) {
+    case 'block-quote':
+      newNodeType = 'block_quote';
+      break;
+    default:
+      break;
+  }
+
   return {
     data: node.data ?? {},
-    type: node.type,
+    type: newNodeType,
     children: node.nodes?.map(migrateNode).flat() ?? [],
   };
 };
