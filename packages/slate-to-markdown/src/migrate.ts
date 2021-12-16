@@ -32,6 +32,15 @@ const migrateLinkNode = (node: any) => {
   };
 };
 
+const migrateImageNode = (node: any) => {
+  return {
+    link: node.data.src,
+    caption: '',
+    type: node.type,
+    children: [],
+  };
+};
+
 // List items needs to be wrapped in a paragraph
 const migrateListItemNode = (node: any) => {
   return {
@@ -83,6 +92,8 @@ const migrateNode = (oldNode: any) => {
     return migrateTextNode(oldNode);
   } else if (oldNode.object === 'inline' && oldNode.type === 'link') {
     return migrateLinkNode(oldNode);
+  } else if (oldNode.object === 'block' && oldNode.type === 'image') {
+    return migrateImageNode(oldNode);
   } else if (oldNode.object === 'block' && oldNode.type === 'list-item') {
     return migrateListItemNode(oldNode);
   } else {
