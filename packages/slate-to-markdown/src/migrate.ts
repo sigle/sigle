@@ -64,6 +64,9 @@ const migrateElementNode = (node: any) => {
     case 'numbered-list':
       newNodeType = 'ol_list';
       break;
+    case 'bulleted-list':
+      newNodeType = 'ul_list';
+      break;
     default:
       break;
   }
