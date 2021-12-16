@@ -1,6 +1,11 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`test works 1`] = `
+exports[`markdown render link 1`] = `
+"[sigle]()
+"
+`;
+
+exports[`markdown render text 1`] = `
 "Hello
 "
 `;
