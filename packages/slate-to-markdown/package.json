@@ -10,6 +10,9 @@
     "build": "tsc",
     "test": "jest"
   },
+  "dependencies": {
+    "remark-slate": "1.8.0"
+  },
   "devDependencies": {
     "@types/jest": "27.0.2",
     "@types/node": "16.10.3",
