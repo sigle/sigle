@@ -110,6 +110,7 @@ importers:
       '@radix-ui/react-icons': 1.0.3
       '@radix-ui/react-tooltip': 0.1.0
       '@sentry/nextjs': 6.15.0
+      '@sigle/slate-to-markdown': 0.1.1
       '@stacks/auth': 2.0.0-beta.1
       '@stacks/connect': 4.3.18
       '@stacks/connect-react': 2.17.18
@@ -180,6 +181,7 @@ importers:
       '@radix-ui/react-icons': 1.0.3_react@17.0.2
       '@radix-ui/react-tooltip': 0.1.0_react-dom@17.0.2+react@17.0.2
       '@sentry/nextjs': 6.15.0_next@12.0.4+react@17.0.2
+      '@sigle/slate-to-markdown': 0.1.1
       '@stacks/auth': 2.0.0-beta.1
       '@stacks/connect': 4.3.18
       '@stacks/connect-react': 2.17.18_react-dom@17.0.2+react@17.0.2
@@ -1815,6 +1817,19 @@ packages:
       - supports-color
     dev: false
 
+  /@sigle/remark-slate/1.8.1:
+    resolution: {integrity: sha512-9sd0RsrIRCKDRcesBoQUw2T+BwYBTMXV2Hg+IGPOb3JgW1R3CKRW9fadziViQvdeQI5m05yqo9dAOTPdRowpAg==}
+    dependencies:
+      '@types/escape-html': 1.0.1
+      escape-html: 1.0.3
+    dev: false
+
+  /@sigle/slate-to-markdown/0.1.1:
+    resolution: {integrity: sha512-xTjvDXeYbe62ELtb1tPkTqMhD5LJvI7pmIKXlPj87eflQV3OXbUqwXRJ3r2umVZcyn+oq49l7UmmtRtb6oXTsA==}
+    dependencies:
+      '@sigle/remark-slate': 1.8.1
+    dev: false
+
   /@sinonjs/commons/1.8.3:
     resolution: {integrity: sha512-xkNcLAn/wZaX14RPlwizcKicDk9G3F8m2nU3L7Ukm5zBgTwiT0wsoFAHx9Jq56fJA1z/7uKGtCRu16sOUCLIHQ==}
     dependencies:
@@ -2157,6 +2172,10 @@ packages:
     resolution: {integrity: sha512-e8iyLJ8vMLpWxXpVWrIt0ujqsfHWgVe5XAz9IMhBYoDirK6th7J+mHjzp797OLc62ZX419nrlwwzsNAA0a0mKg==}
     dependencies:
       '@types/bn.js': 5.1.0
+    dev: false
+
+  /@types/escape-html/1.0.1:
+    resolution: {integrity: sha512-4mI1FuUUZiuT95fSVqvZxp/ssQK9zsa86S43h9x3zPOSU9BBJ+BfDkXwuaU7BfsD+e7U0/cUUfJFk3iW2M4okA==}
     dev: false
 
   /@types/graceful-fs/4.1.5:
@@ -3948,6 +3967,10 @@ packages:
   /escalade/3.1.1:
     resolution: {integrity: sha512-k0er2gUkLf8O0zKJiAhmkTnJlTvINGv7ygDNPbeIsX/TJjGJZHuh9B2UxbsaEkmlEo9MfhrSzmhIlhRlI2GXnw==}
     engines: {node: '>=6'}
+
+  /escape-html/1.0.3:
+    resolution: {integrity: sha1-Aljq5NPQwJdN4cFpGI7wBR0dGYg=}
+    dev: false
 
   /escape-string-regexp/1.0.5:
     resolution: {integrity: sha1-G2HAViGQqN/2rjuyzwIAyhMLhtQ=}
