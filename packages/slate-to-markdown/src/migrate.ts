@@ -56,33 +56,9 @@ const migrateListItemNode = (node: any) => {
 };
 
 const migrateElementNode = (node: any) => {
-  let newNodeType = node.type;
-  switch (node.type) {
-    case 'block-quote':
-      newNodeType = 'block_quote';
-      break;
-    case 'heading-one':
-      newNodeType = 'heading_one';
-      break;
-    case 'heading-two':
-      newNodeType = 'heading_two';
-      break;
-    case 'heading-three':
-      newNodeType = 'heading_three';
-      break;
-    case 'numbered-list':
-      newNodeType = 'ol_list';
-      break;
-    case 'bulleted-list':
-      newNodeType = 'ul_list';
-      break;
-    default:
-      break;
-  }
-
   return {
     data: node.data ?? {},
-    type: newNodeType,
+    type: node.type,
     children: node.nodes?.map(migrateNode).flat() ?? [],
   };
 };
