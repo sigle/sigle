@@ -1,5 +1,5 @@
 /**
- * https://gist.github.com/webel/545f229fe79c2176dbaed9023de46e12
+ * Inspired by https://gist.github.com/webel/545f229fe79c2176dbaed9023de46e12
  *
  * Slate's schema has changed vastly under 2 years. The text editor is still
  * a better candidate than the other OSS editors out there, so we must live
