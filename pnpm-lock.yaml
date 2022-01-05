@@ -103,7 +103,7 @@ importers:
 
   sigle:
     specifiers:
-      '@fontsource/open-sans': 4.5.1
+      '@fontsource/open-sans': 4.5.2
       '@radix-ui/colors': 0.1.7
       '@radix-ui/react-dialog': 0.1.0
       '@radix-ui/react-dropdown-menu': 0.1.0
@@ -212,7 +212,7 @@ importers:
       slate-soft-break: 0.9.0_slate-react@0.22.10+slate@0.47.9
       styled-components: 5.3.1_react-dom@17.0.2+react@17.0.2
     devDependencies:
-      '@fontsource/open-sans': 4.5.1
+      '@fontsource/open-sans': 4.5.2
       '@tailwindcss/forms': 0.3.4_tailwindcss@2.2.15
       '@tailwindcss/typography': 0.4.1_tailwindcss@2.2.15
       '@testing-library/jest-dom': 5.14.1
@@ -710,8 +710,8 @@ packages:
       - supports-color
     dev: true
 
-  /@fontsource/open-sans/4.5.1:
-    resolution: {integrity: sha512-Zvse9PG3XU+gfa44i4ENXvZi28X0RTtuc/b1v4AaqrSpSf2OALN2QrBf91BOC5gXU1Y6xW/S0To5wz8EraLPlQ==}
+  /@fontsource/open-sans/4.5.2:
+    resolution: {integrity: sha512-aDQrW8s0KslG2aKb9nM5R6fiQR9iPomqWXf6iZCC30qv/UFlSY14SppodA3rE//+w37EqsJjyUq3BSEYzLdisg==}
     dev: true
 
   /@fontsource/roboto/4.5.1:
@@ -2036,7 +2036,7 @@ packages:
       tailwindcss: '>=2.0.0'
     dependencies:
       mini-svg-data-uri: 1.3.3
-      tailwindcss: 2.2.15
+      tailwindcss: 2.2.15_96f83969316717847b3edf58a3f353f3
     dev: true
 
   /@tailwindcss/typography/0.4.1_tailwindcss@2.2.15:
@@ -2048,7 +2048,7 @@ packages:
       lodash.isplainobject: 4.0.6
       lodash.merge: 4.6.2
       lodash.uniq: 4.5.0
-      tailwindcss: 2.2.15
+      tailwindcss: 2.2.15_96f83969316717847b3edf58a3f353f3
     dev: true
 
   /@testing-library/dom/8.7.2:

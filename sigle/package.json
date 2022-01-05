@@ -55,7 +55,7 @@
     "styled-components": "5.3.1"
   },
   "devDependencies": {
-    "@fontsource/open-sans": "4.5.1",
+    "@fontsource/open-sans": "4.5.2",
     "@tailwindcss/forms": "0.3.4",
     "@tailwindcss/typography": "0.4.1",
     "@testing-library/jest-dom": "5.14.1",
