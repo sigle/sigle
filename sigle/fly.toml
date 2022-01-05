@@ -1,4 +1,8 @@
-# fly.toml file generated for sigle on 2021-02-26T13:16:43+01:00
+# fly configuration via the cli
+#
+# 1. fly scale vm shared-cpu-1x --memory 512
+# 2. flyctl autoscale standard min=1 max=5
+# 3. flyctl regions add ams
 
 app = "sigle"
 
