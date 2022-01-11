@@ -100,7 +100,7 @@ export const SlateEditorLink = ({
               name="link"
               value={formik.values.link}
               onChange={formik.handleChange}
-              maxLength={120}
+              maxLength={400}
             />
             {formik.errors.link && (
               <FormHelperError>{formik.errors.link}</FormHelperError>
