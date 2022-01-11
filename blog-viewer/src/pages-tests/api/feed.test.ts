@@ -56,7 +56,7 @@ describe('test feed api', () => {
     expect(res.end).toBeCalled();
     const jsonObj = parser.parse(res.end.mock.calls[0][0]);
     expect(jsonObj.rss.channel).toEqual({
-      copyright: 'All rights reserved 2021, sigleapp.id.blockstack',
+      copyright: 'All rights reserved 2022, sigleapp.id.blockstack',
       description: expect.stringContaining('official blog of Sigle'),
       docs: expect.any(String),
       generator: expect.any(String),
