@@ -147,6 +147,7 @@ export const RegisterUsername = () => {
     }
 
     posthog.capture('username-registration-success');
+    // TODO fathom event
 
     // TODO redirect user and find how to save username into hiro wallet
 
