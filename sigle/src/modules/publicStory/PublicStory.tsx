@@ -9,10 +9,10 @@ import Plain from 'slate-plain-serializer';
 import format from 'date-fns/format';
 import { NextSeo } from 'next-seo';
 import readingTime from 'reading-time';
-import { Story, SettingsFile } from '../../../types';
-import { Container } from '../../../components';
-import { sigleConfig } from '../../../config';
-import { sanitizeHexColor, sanitizeLink } from '../../../utils/security';
+import { Story, SettingsFile } from '../../types';
+import { Container } from '../../components';
+import { sigleConfig } from '../../config';
+import { sanitizeHexColor, sanitizeLink } from '../../utils/security';
 import { PoweredBy } from './PoweredBy';
 
 const rules = [

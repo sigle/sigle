@@ -1,1 +1,1 @@
-export { PublicStory } from './components/PublicStory';
+export { PublicStory } from './PublicStory';
