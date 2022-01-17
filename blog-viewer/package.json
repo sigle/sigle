@@ -25,7 +25,7 @@
     "@sentry/browser": "6.13.3",
     "@sentry/integrations": "6.13.3",
     "@sentry/node": "6.13.3",
-    "@stacks/auth": "2.0.1",
+    "@stacks/auth": "3.1.0",
     "date-fns": "2.25.0",
     "fathom-client": "3.2.0",
     "feed": "4.2.2",
