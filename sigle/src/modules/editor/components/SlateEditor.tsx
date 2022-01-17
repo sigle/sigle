@@ -24,7 +24,7 @@ import {
   getStoryFile,
 } from '../../../utils';
 import { Story } from '../../../types';
-import { Content } from '../../publicStory/components/PublicStory';
+import { Content } from '../../publicStory/PublicStory';
 import { StorySettings } from './StorySettings';
 import { SlateEditorSideMenu } from './SlateEditorSideMenu';
 import { SlateEditorHoverMenu } from './SlateEditorHoverMenu';
