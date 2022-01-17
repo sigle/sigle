@@ -110,7 +110,7 @@ importers:
       '@radix-ui/react-icons': 1.0.3
       '@radix-ui/react-tooltip': 0.1.0
       '@sentry/nextjs': 6.15.0
-      '@sigle/slate-to-markdown': 0.1.1
+      '@sigle/slate-to-markdown': 0.3.1
       '@stacks/auth': 2.0.0-beta.1
       '@stacks/connect': 4.3.18
       '@stacks/connect-react': 2.17.18
@@ -182,7 +182,7 @@ importers:
       '@radix-ui/react-icons': 1.0.3_react@17.0.2
       '@radix-ui/react-tooltip': 0.1.0_react-dom@17.0.2+react@17.0.2
       '@sentry/nextjs': 6.15.0_next@12.0.4+react@17.0.2
-      '@sigle/slate-to-markdown': 0.1.1
+      '@sigle/slate-to-markdown': 0.3.1
       '@stacks/auth': 2.0.0-beta.1
       '@stacks/connect': 4.3.18
       '@stacks/connect-react': 2.17.18_react-dom@17.0.2+react@17.0.2
@@ -1819,17 +1819,10 @@ packages:
       - supports-color
     dev: false
 
-  /@sigle/remark-slate/1.8.1:
-    resolution: {integrity: sha512-9sd0RsrIRCKDRcesBoQUw2T+BwYBTMXV2Hg+IGPOb3JgW1R3CKRW9fadziViQvdeQI5m05yqo9dAOTPdRowpAg==}
+  /@sigle/slate-to-markdown/0.3.1:
+    resolution: {integrity: sha512-Sr8grPnspP4+LTTZ4wLgvG8XPXV8rg4iXy4xrwb9VH0bjlXne+MlJl1jqzVs9ulFB3FRijYDIj+lSVf5gA0G0Q==}
     dependencies:
-      '@types/escape-html': 1.0.1
-      escape-html: 1.0.3
-    dev: false
-
-  /@sigle/slate-to-markdown/0.1.1:
-    resolution: {integrity: sha512-xTjvDXeYbe62ELtb1tPkTqMhD5LJvI7pmIKXlPj87eflQV3OXbUqwXRJ3r2umVZcyn+oq49l7UmmtRtb6oXTsA==}
-    dependencies:
-      '@sigle/remark-slate': 1.8.1
+      remark-slate: 1.8.2
     dev: false
 
   /@sinonjs/commons/1.8.3:
@@ -2053,7 +2046,7 @@ packages:
       tailwindcss: '>=2.0.0'
     dependencies:
       mini-svg-data-uri: 1.3.3
-      tailwindcss: 2.2.15_96f83969316717847b3edf58a3f353f3
+      tailwindcss: 2.2.15
     dev: true
 
   /@tailwindcss/typography/0.4.1_tailwindcss@2.2.15:
@@ -2065,7 +2058,7 @@ packages:
       lodash.isplainobject: 4.0.6
       lodash.merge: 4.6.2
       lodash.uniq: 4.5.0
-      tailwindcss: 2.2.15_96f83969316717847b3edf58a3f353f3
+      tailwindcss: 2.2.15
     dev: true
 
   /@testing-library/dom/8.7.2:
@@ -7570,6 +7563,13 @@ packages:
       '@types/mdast': 3.0.10
       mdast-util-to-hast: 11.3.0
       unified: 10.1.1
+    dev: false
+
+  /remark-slate/1.8.2:
+    resolution: {integrity: sha512-b/WFvUPZsGqyaQOr+8WS/NDmLaiHiTt3lw3+V91S96PLvqr30ryngxO+XjMxqzZzKUO5DpYimWbfhtb68iNXFw==}
+    dependencies:
+      '@types/escape-html': 1.0.1
+      escape-html: 1.0.3
     dev: false
 
   /remove-accents/0.4.2:
