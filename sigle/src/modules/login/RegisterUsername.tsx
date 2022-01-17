@@ -20,6 +20,7 @@ const getHubInfo = async (hubUrl: string) => {
 };
 
 const identityNameLengthError =
+  // TODO check if 8 min and 37 max are
   'Your username should be at least 8 characters, with a maximum of 37 characters.';
 const identityNameIllegalCharError =
   'You can only use lowercase letters (a–z), numbers (0–9), and underscores (_).';
@@ -64,6 +65,10 @@ export const RegisterUsername = () => {
     username: '',
     loading: false,
   });
+
+  // TODO loading indicator as the request can take some time
+
+  console.log({ user });
 
   // TODO type any
   const handleSubmit = async (event: any) => {
