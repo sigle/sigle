@@ -22,6 +22,7 @@ import '../styles/index.css';
 import { sigleConfig } from '../config';
 import { colors } from '../utils/colors';
 import { AuthProvider } from '../modules/auth/AuthContext';
+import { AppHeader } from '../modules/layout/components/AppHeader';
 
 const queryClient = new QueryClient();
 
@@ -156,6 +157,7 @@ export default class MyApp extends App {
         <QueryClientProvider client={queryClient}>
           <ReactQueryDevtools initialIsOpen={false} />
           <AuthProvider>
+            <AppHeader />
             <Component {...modifiedPageProps} />
           </AuthProvider>
         </QueryClientProvider>
