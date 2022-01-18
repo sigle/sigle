@@ -161,7 +161,7 @@ importers:
       react-dom: 17.0.2
       react-dropzone: 11.4.2
       react-icons: 4.1.0
-      react-markdown: 7.1.1
+      react-markdown: 8.0.0
       react-query: 3.12.0
       react-toastify: 8.0.3
       reading-time: 1.2.1
@@ -205,7 +205,7 @@ importers:
       react-dom: 17.0.2_react@17.0.2
       react-dropzone: 11.4.2_react@17.0.2
       react-icons: 4.1.0_react@17.0.2
-      react-markdown: 7.1.1_2e85f295313447ececc5eac3f7d3ca09
+      react-markdown: 8.0.0_2e85f295313447ececc5eac3f7d3ca09
       react-query: 3.12.0_react-dom@17.0.2+react@17.0.2
       react-toastify: 8.0.3_react-dom@17.0.2+react@17.0.2
       reading-time: 1.2.1
@@ -6154,14 +6154,15 @@ packages:
       - supports-color
     dev: false
 
-  /mdast-util-to-hast/11.3.0:
-    resolution: {integrity: sha512-4o3Cli3hXPmm1LhB+6rqhfsIUBjnKFlIUZvudaermXB+4/KONdd/W4saWWkC+LBLbPMqhFSSTSRgafHsT5fVJw==}
+  /mdast-util-to-hast/12.1.0:
+    resolution: {integrity: sha512-dHfCt9Yh05AXEeghoziB3DjJV8oCIKdQmBJOPoAT1NlgMDBy+/MQn7Pxfq0jI8YRO1IfzcnmA/OU3FVVn/E5Sg==}
     dependencies:
       '@types/hast': 2.3.4
       '@types/mdast': 3.0.10
       '@types/mdurl': 1.0.2
       mdast-util-definitions: 5.1.0
       mdurl: 1.0.1
+      micromark-util-sanitize-uri: 1.0.0
       unist-builder: 3.0.0
       unist-util-generated: 2.0.0
       unist-util-position: 4.0.1
@@ -7330,8 +7331,8 @@ packages:
   /react-is/17.0.2:
     resolution: {integrity: sha512-w2GsyukL62IJnlaff/nRegPQR94C/XXamvMWmSHRJ4y7Ts/4ocGRmTHvOs8PSE6pB3dWOrD/nueuU5sduBsQ4w==}
 
-  /react-markdown/7.1.1_2e85f295313447ececc5eac3f7d3ca09:
-    resolution: {integrity: sha512-bXS7indkcPlCLB6wRFFzX8Xdghr62TBxUF2587o+CUkaZlNaoILb2qNt+5pYmTZuCOC+OeEcdJ+06mu5whtCVQ==}
+  /react-markdown/8.0.0_2e85f295313447ececc5eac3f7d3ca09:
+    resolution: {integrity: sha512-qbrWpLny6Ef2xHqnYqtot948LXP+4FtC+MWIuaN1kvSnowM+r1qEeEHpSaU0TDBOisQuj+Qe6eFY15cNL3gLAw==}
     peerDependencies:
       '@types/react': '>=16'
       react: '>=16'
@@ -7346,7 +7347,7 @@ packages:
       react: 17.0.2
       react-is: 17.0.2
       remark-parse: 10.0.1
-      remark-rehype: 9.1.0
+      remark-rehype: 10.1.0
       space-separated-tokens: 2.0.1
       style-to-object: 0.3.0
       unified: 10.1.1
@@ -7558,12 +7559,12 @@ packages:
       - supports-color
     dev: false
 
-  /remark-rehype/9.1.0:
-    resolution: {integrity: sha512-oLa6YmgAYg19zb0ZrBACh40hpBLteYROaPLhBXzLgjqyHQrN+gVP9N/FJvfzuNNuzCutktkroXEZBrxAxKhh7Q==}
+  /remark-rehype/10.1.0:
+    resolution: {integrity: sha512-EFmR5zppdBp0WQeDVZ/b66CWJipB2q2VLNFMabzDSGR66Z2fQii83G5gTBbgGEnEEA0QRussvrFHxk1HWGJskw==}
     dependencies:
       '@types/hast': 2.3.4
       '@types/mdast': 3.0.10
-      mdast-util-to-hast: 11.3.0
+      mdast-util-to-hast: 12.1.0
       unified: 10.1.1
     dev: false
 
