@@ -110,7 +110,7 @@ importers:
       '@radix-ui/react-icons': 1.0.3
       '@radix-ui/react-tooltip': 0.1.0
       '@sentry/nextjs': 6.15.0
-      '@sigle/slate-to-markdown': 0.3.1
+      '@sigle/slate-to-markdown': 0.4.0
       '@stacks/auth': 2.0.0-beta.1
       '@stacks/connect': 4.3.18
       '@stacks/connect-react': 2.17.18
@@ -182,7 +182,7 @@ importers:
       '@radix-ui/react-icons': 1.0.3_react@17.0.2
       '@radix-ui/react-tooltip': 0.1.0_react-dom@17.0.2+react@17.0.2
       '@sentry/nextjs': 6.15.0_next@12.0.4+react@17.0.2
-      '@sigle/slate-to-markdown': 0.3.1
+      '@sigle/slate-to-markdown': 0.4.0
       '@stacks/auth': 2.0.0-beta.1
       '@stacks/connect': 4.3.18
       '@stacks/connect-react': 2.17.18_react-dom@17.0.2+react@17.0.2
@@ -1819,10 +1819,12 @@ packages:
       - supports-color
     dev: false
 
-  /@sigle/slate-to-markdown/0.3.1:
-    resolution: {integrity: sha512-Sr8grPnspP4+LTTZ4wLgvG8XPXV8rg4iXy4xrwb9VH0bjlXne+MlJl1jqzVs9ulFB3FRijYDIj+lSVf5gA0G0Q==}
+  /@sigle/slate-to-markdown/0.4.0:
+    resolution: {integrity: sha512-h2Oj656JxDOHHQMlbSkQpspr9wl6MNxojZdwsEhVPrJ2RUSTWv7L+pfR7U7sb7wxtGexamTX0juTKHjJrZ28XQ==}
     dependencies:
+      immutable: 4.0.0-rc.12
       remark-slate: 1.8.2
+      slate: 0.47.9_immutable@4.0.0-rc.12
     dev: false
 
   /@sinonjs/commons/1.8.3:
