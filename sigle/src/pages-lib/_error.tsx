@@ -1,36 +1,43 @@
-import React /*{ useEffect }*/ from 'react';
-import { useEffect } from 'react';
+import React from 'react';
 import { NextPageContext } from 'next';
 import NextErrorComponent from 'next/error';
 import { styled } from '../stitches.config';
 import Link from 'next/link';
 import * as Sentry from '@sentry/nextjs';
-import { Button, Text } from '../ui';
+import { Button, Heading, Text } from '../ui';
 import { Container } from '../ui';
 import Image from 'next/image';
 import { useAuth } from '../modules/auth/AuthContext';
+import { AppHeader } from '../modules/layout/components/AppHeader';
 
-const NotFoundContainer = styled(Container, {
+const NotFoundContainer = styled('div', {
   '@xs': {
     flexDirection: 'column',
     textAlign: 'center',
   },
 
   '@lg': {
+    width: '90%',
     flexDirection: 'row-reverse',
     textAlign: 'left',
   },
 
-  px: 0,
-  width: '100%',
+  '@xl': {
+    width: '80%',
+  },
+
+  '@2xl': {
+    width: '100%',
+  },
+
   display: 'flex',
+  justifyContent: 'space-between',
   alignItems: 'center',
-  mx: 'auto',
-  mt: '$8',
-  mb: '$3',
+  my: 'auto',
+  mt: '$20',
 });
 
-const NotFoundTextContainer = styled(Container, {
+const NotFoundTextContainer = styled('div', {
   '@xs': {
     alignItems: 'center',
   },
@@ -41,27 +48,15 @@ const NotFoundTextContainer = styled(Container, {
 
   '@lg': {
     alignItems: 'start',
+    pr: '$3',
   },
 
-  px: 0,
-  pr: '$5',
+  '@xl': {
+    pr: '$3',
+  },
+
   display: 'flex',
   flexDirection: 'column',
-});
-
-const NotFoundTitle = styled('h1', {
-  mb: '$3',
-  lineHeight: 1,
-
-  fontSize: '$9',
-  fontWeight: 700,
-});
-
-const NotFoundSubTitle = styled('h3', {
-  mb: '$6',
-  fontSize: '$5',
-  fontWeight: 700,
-  lineHeight: 1,
 });
 
 const NotFoundText = styled(Text, {
@@ -76,7 +71,7 @@ const NotFoundWrapper = styled('div', {
   },
 
   '@lg': {
-    width: '520px',
+    minWidth: '520px',
     height: '488px',
   },
 
@@ -119,24 +114,36 @@ const NotFoundIllu = ({
 }: {
   statusCode: number;
   alt: string;
-}) => (
-  <Image
-    src={`/static/img/${statusCode === 404 ? '404' : '5XX'}.png`}
-    alt={alt}
-    priority
-    layout="fill"
-    // objectFit="cover"
-    objectPosition="center"
-  />
-);
+}) => {
+  if (statusCode === 404) {
+    return (
+      <Image
+        src="/static/img/404.png"
+        alt={alt}
+        priority
+        layout="fill"
+        objectPosition="center"
+      />
+    );
+  }
 
-const NotFoundButton = styled('a', Button);
+  return (
+    <Image
+      src="/static/img/5XX.png"
+      alt={alt}
+      priority
+      layout="fill"
+      objectPosition="center"
+    />
+  );
+};
 
 interface ErrorProps {
   statusCode: number;
   errorMessage?: string | null;
   hasGetInitialPropsRun?: boolean;
   err?: Error;
+  sentryErrorId?: string;
 }
 
 export const MyError = ({
@@ -144,70 +151,81 @@ export const MyError = ({
   hasGetInitialPropsRun,
   errorMessage,
   err,
+  sentryErrorId,
 }: ErrorProps) => {
   const { user } = useAuth();
   const notFound = statusCode === 404;
-  const fakeId = '1f9be6355d35eb9c0ae242b6a46244e';
-
-  useEffect(() => {
-    console.log(Sentry.captureException('error'));
-  }, []);
 
   if (!hasGetInitialPropsRun && err) {
     // getInitialProps is not called in case of
     // https://github.com/vercel/next.js/issues/8592. As a workaround, we pass
     // err via _app.js so it can be captured
-    Sentry.captureException(err);
+    sentryErrorId = Sentry.captureException(err);
     // Flushing is not required in this case as it only happens on the client
   }
 
   return (
-    <NotFoundContainer>
-      {notFound ? (
-        <NotFoundWrapper>
-          <NotFoundIllu statusCode={404} alt="A lost traveller" />
-        </NotFoundWrapper>
-      ) : (
-        <ErrorWrapper>
-          <NotFoundIllu statusCode={500} alt="Woodpecker and broken pencil" />
-        </ErrorWrapper>
-      )}
-      <NotFoundTextContainer>
-        <NotFoundTitle data-testid="error-title">{statusCode}</NotFoundTitle>
-        <NotFoundSubTitle data-testid="error-sub-title">
-          {errorMessage
-            ? errorMessage
-            : notFound
-            ? 'The page could not be found'
-            : 'An error has occured'}
-        </NotFoundSubTitle>
-        <NotFoundText>
-          {notFound
-            ? 'It seems that you got lost into the Sigleverse.'
-            : `Oops! It seems that Sigle has stopped working. Please refresh the page or try again later`}
-        </NotFoundText>
-        {err && (
-          <NotFoundText data-testid="error-id">{`Error ID: ${fakeId}`}</NotFoundText>
-        )}
-        {notFound ? (
-          <Link href="/login" passHref>
-            <NotFoundButton size="lg" color="orange">
-              {user ? 'Go back to your dashboard' : 'Log in'}
-            </NotFoundButton>
-          </Link>
-        ) : (
-          <Link href="/" passHref>
-            <Button
-              onClick={() => window.location.reload()}
-              size="lg"
-              color="orange"
+    <>
+      <AppHeader />
+      <Container>
+        <NotFoundContainer>
+          {notFound ? (
+            <NotFoundWrapper>
+              <NotFoundIllu statusCode={404} alt="A lost traveller" />
+            </NotFoundWrapper>
+          ) : (
+            <ErrorWrapper>
+              <NotFoundIllu
+                statusCode={500}
+                alt="Woodpecker and broken pencil"
+              />
+            </ErrorWrapper>
+          )}
+          <NotFoundTextContainer>
+            <Heading
+              css={{ mb: '$3' }}
+              as="h1"
+              size="5xl"
+              data-testid="error-title"
             >
-              Refresh the page
-            </Button>
-          </Link>
-        )}
-      </NotFoundTextContainer>
-    </NotFoundContainer>
+              {statusCode}
+            </Heading>
+            <Heading css={{ mb: '$3' }} as="h3" data-testid="error-sub-title">
+              {errorMessage
+                ? errorMessage
+                : notFound
+                ? 'The page could not be found'
+                : 'An error has occured'}
+            </Heading>
+            <NotFoundText>
+              {notFound
+                ? 'It seems that you got lost into the Sigleverse.'
+                : `Oops! It seems that Sigle has stopped working. Please refresh the page or try again later`}
+            </NotFoundText>
+            {sentryErrorId && (
+              <NotFoundText data-testid="error-id">{`Error ID: ${sentryErrorId}`}</NotFoundText>
+            )}
+            {notFound ? (
+              <Link href="/login" passHref>
+                <Button as="a" size="lg" color="orange">
+                  {user ? 'Go back to your dashboard' : 'Log in'}
+                </Button>
+              </Link>
+            ) : (
+              <Link href="/" passHref>
+                <Button
+                  onClick={() => window.location.reload()}
+                  size="lg"
+                  color="orange"
+                >
+                  Refresh the page
+                </Button>
+              </Link>
+            )}
+          </NotFoundTextContainer>
+        </NotFoundContainer>
+      </Container>
+    </>
   );
 };
 
@@ -239,7 +257,7 @@ MyError.getInitialProps = async (props: NextPageContext) => {
     return { statusCode: 404 };
   }
   if (err) {
-    Sentry.captureException(err);
+    errorInitialProps.sentryErrorId = Sentry.captureException(err);
 
     // Flushing before returning is necessary if deploying to Vercel, see
     // https://vercel.com/docs/platform/limits#streaming-responses
@@ -251,7 +269,7 @@ MyError.getInitialProps = async (props: NextPageContext) => {
   // If this point is reached, getInitialProps was called without any
   // information about what the error might be. This is unexpected and may
   // indicate a bug introduced in Next.js, so record it in Sentry
-  Sentry.captureException(
+  errorInitialProps.sentryErrorId = Sentry.captureException(
     new Error(`_error.js getInitialProps missing data at path: ${asPath}`)
   );
   await Sentry.flush(2000);
