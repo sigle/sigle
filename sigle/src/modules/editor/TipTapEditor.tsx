@@ -221,9 +221,14 @@ export const TipTapEditor = ({ story }: TipTapEditorProps) => {
             icon: QuoteLight,
             title: 'Quote',
             description: 'Display a quote',
-            command: ({ editor }) => {
-              // TODO should remove "/q" from the line
-              editor.chain().focus().toggleBlockquote().run();
+            command: ({ editor, range }) => {
+              editor
+                .chain()
+                .focus()
+                // Use deleteRange to clear the text from command chars "/q" etc..
+                .deleteRange(range)
+                .toggleBlockquote()
+                .run();
             },
           },
         ],
