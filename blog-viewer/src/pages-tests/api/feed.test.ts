@@ -1,9 +1,9 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import parser from 'fast-xml-parser';
-import apiFeed from '../../pages/api/feed';
+import { apiFeed } from '../../pages/api/feed';
 import { prismaClient } from '../../utils/prisma';
 
-jest.mock('@sentry/node');
+jest.mock('@sentry/nextjs');
 jest.mock('../../utils/prisma', () => {
   return {
     prismaClient: {

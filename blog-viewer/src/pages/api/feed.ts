@@ -1,14 +1,11 @@
 import { NextApiHandler } from 'next';
 import { lookupProfile } from '@stacks/auth';
 import { Feed } from 'feed';
-import * as Sentry from '@sentry/node';
+import * as Sentry from '@sentry/nextjs';
 import { SettingsFile, StoryFile } from '../../types';
 import { migrationSettings } from '../../utils/migrations/settings';
 import { migrationStories } from '../../utils/migrations/stories';
-import { initSentry } from '../../utils/sentry';
 import { prismaClient } from '../../utils/prisma';
-
-initSentry();
 
 const escapeXml = (unsafe: string) => {
   return unsafe.replace(/[<>&'"]/g, (c) => {
@@ -29,7 +26,7 @@ const escapeXml = (unsafe: string) => {
   });
 };
 
-const apiFeed: NextApiHandler = async (req, res) => {
+export const apiFeed: NextApiHandler = async (req, res) => {
   const appUrl = `${req.headers['x-forwarded-proto'] || 'http'}://${
     req.headers['host']
   }`;
@@ -138,4 +135,4 @@ const apiFeed: NextApiHandler = async (req, res) => {
   res.end(feed.rss2());
 };
 
-export default apiFeed;
+export default Sentry.withSentry(apiFeed);

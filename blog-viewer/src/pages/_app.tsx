@@ -7,13 +7,10 @@ import * as Fathom from 'fathom-client';
 import { DefaultSeo } from 'next-seo';
 import NProgress from 'nprogress';
 import 'nprogress/nprogress.css';
-import { initSentry } from '../utils/sentry';
 import { colors } from '../utils/colors';
 import GlobalStyles from './../components/GlobalStyles';
 import '../styles/fonts.scss';
 import { sigleConfig } from '../config';
-
-initSentry();
 
 /**
  * Fathom

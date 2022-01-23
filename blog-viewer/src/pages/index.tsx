@@ -1,5 +1,5 @@
 import { GetServerSideProps } from 'next';
-import * as Sentry from '@sentry/node';
+import * as Sentry from '@sentry/nextjs';
 import { lookupProfile } from '@stacks/auth';
 import { SettingsFile, StoryFile } from '../types';
 import Error from './_error';
