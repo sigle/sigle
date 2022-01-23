@@ -1,4 +1,9 @@
 import { IconProps } from '@radix-ui/react-icons/dist/types';
+export * from './Heading1Light';
+export * from './Heading2Light';
+export * from './Heading3Light';
+export * from './ImageLight';
+export * from './QuoteLight';
 
 export const Heading1Icon = ({ width, height }: IconProps) => {
   return (

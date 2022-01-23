@@ -19,7 +19,7 @@ import TipTapPlaceholder from '@tiptap/extension-placeholder';
 import TipTapStrike from '@tiptap/extension-strike';
 import TipTapText from '@tiptap/extension-text';
 import { MdAddAPhoto } from 'react-icons/md';
-import styled, { keyframes } from 'styled-components';
+import styledSC, { keyframes } from 'styled-components';
 import tw from 'twin.macro';
 import {
   SlashCommands,
@@ -27,12 +27,20 @@ import {
 } from './extensions/SlashCommands';
 import { BubbleMenu } from './BubbleMenu';
 import { FloatingMenu } from './FloatingMenu';
-import { Heading1Icon, Heading2Icon, Heading3Icon } from '../../icons';
+import {
+  Heading1Light,
+  Heading2Light,
+  Heading3Light,
+  ImageLight,
+  QuoteLight,
+} from '../../icons';
 import { generateRandomId } from '../../utils';
 import { resizeImage } from '../../utils/image';
 import { storage } from '../../utils/blockstack';
 import { Story } from '../../types';
 import { colors } from '../../utils/colors';
+import { Flex, Text } from '../../ui';
+import { styled } from '../../stitches.config';
 
 const fadeInAnimation = keyframes`
   0% {
@@ -43,7 +51,7 @@ const fadeInAnimation = keyframes`
   }
 `;
 
-const StyledEditorContent = styled(EditorContent)`
+const StyledEditorContent = styledSC(EditorContent)`
   .ProseMirror {
     ${tw`py-4`};
     min-height: 150px;
@@ -68,18 +76,17 @@ const StyledEditorContent = styled(EditorContent)`
   }
 `;
 
-const CommandsListItem = styled.li`
-  ${tw`cursor-pointer block w-full py-2 px-1 flex items-center`};
-
-  svg {
-    ${tw`mr-1`};
-  }
-
-  &.is-selected,
-  &:hover {
-    ${tw`text-pink`};
-  }
-`;
+const CommandsListItem = styled('li', {
+  cursor: 'pointer',
+  display: 'flex',
+  alignItems: 'center',
+  width: '100%',
+  py: '$1',
+  px: '$3',
+  '&.is-selected,&:hover': {
+    backgroundColor: '$gray3',
+  },
+});
 
 const CommandsList = (props: {
   items: SlashCommandsCommand[];
@@ -88,19 +95,24 @@ const CommandsList = (props: {
 }) => {
   const { items, selectedIndex, selectItem } = props;
 
+  // TODO mpty selectin
+
   return (
-    <ul>
-      {items.map(({ title, icon: Icon }, idx) => (
+    <Flex gap="2" direction="column">
+      {items.map(({ title, description, icon: Icon }, idx) => (
         <CommandsListItem
           key={idx}
           className={selectedIndex === idx ? 'is-selected' : ''}
           onClick={() => selectItem(idx)}
         >
-          <Icon width={18} height={18} />
-          {title}
+          <Icon width={35} height={35} />
+          <Flex direction="column" css={{ ml: '$2' }}>
+            <Text>{title}</Text>
+            <Text css={{ color: '$gray9' }}>{description}</Text>
+          </Flex>
         </CommandsListItem>
       ))}
-    </ul>
+    </Flex>
   );
 };
 
@@ -158,8 +170,9 @@ export const TipTapEditor = ({ story }: TipTapEditorProps) => {
       SlashCommands.configure({
         commands: [
           {
-            icon: Heading1Icon,
+            icon: Heading1Light,
             title: 'Heading 1',
+            description: 'Large section Heading',
             command: ({ editor, range }) => {
               editor
                 .chain()
@@ -170,8 +183,9 @@ export const TipTapEditor = ({ story }: TipTapEditorProps) => {
             },
           },
           {
-            icon: Heading2Icon,
+            icon: Heading2Light,
             title: 'Heading 2',
+            description: 'Medium section Heading',
             command: ({ editor, range }) => {
               editor
                 .chain()
@@ -182,8 +196,9 @@ export const TipTapEditor = ({ story }: TipTapEditorProps) => {
             },
           },
           {
-            icon: Heading3Icon,
+            icon: Heading3Light,
             title: 'Heading 3',
+            description: 'Small section Heading',
             command: ({ editor, range }) => {
               editor
                 .chain()
@@ -194,10 +209,21 @@ export const TipTapEditor = ({ story }: TipTapEditorProps) => {
             },
           },
           {
-            icon: MdAddAPhoto,
+            icon: ImageLight,
             title: 'Image',
+            description: 'Upload from your computer',
             command: ({ editor, range }) => {
+              // TODO get it working
               fileUploaderRef.current?.click();
+            },
+          },
+          {
+            icon: QuoteLight,
+            title: 'Quote',
+            description: 'Display a quote',
+            command: ({ editor }) => {
+              // TODO should remove "/q" from the line
+              editor.chain().focus().toggleBlockquote().run();
             },
           },
         ],
@@ -248,7 +274,7 @@ export const TipTapEditor = ({ story }: TipTapEditorProps) => {
   return (
     <>
       {editor && <BubbleMenu editor={editor} />}
-      {editor && <FloatingMenu editor={editor} />}
+      {/* {editor && <FloatingMenu editor={editor} />} */}
 
       <StyledEditorContent editor={editor} />
 
