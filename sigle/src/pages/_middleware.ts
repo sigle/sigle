@@ -1,10 +1,10 @@
-import { NextFetchEvent, NextRequest, NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 
 /**
  * The goal of this middleware is to force https server side.
  * Fly.io does not provide this option internally.
  */
-export function middleware(req: NextRequest, ev: NextFetchEvent) {
+export function middleware(req: NextRequest) {
   if (
     process.env.NODE_ENV === 'production' &&
     req.headers.get('x-forwarded-proto') !== 'https'
