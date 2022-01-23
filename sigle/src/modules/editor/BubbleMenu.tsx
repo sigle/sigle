@@ -7,7 +7,6 @@ import {
   Link1Icon,
   FontBoldIcon,
   FontItalicIcon,
-  UnderlineIcon,
   CodeIcon,
   QuoteIcon,
   Cross2Icon,
@@ -125,12 +124,6 @@ export const BubbleMenu = ({ editor }: BubbleMenuProps) => {
             active={editor.isActive('italic')}
           >
             <FontItalicIcon height={18} width={18} />
-          </BubbleMenuButton>
-          <BubbleMenuButton
-            onClick={() => editor.chain().focus().toggleUnderline().run()}
-            active={editor.isActive('underline')}
-          >
-            <UnderlineIcon height={18} width={18} />
           </BubbleMenuButton>
           <BubbleMenuButton
             onClick={() => editor.chain().focus().toggleCode().run()}

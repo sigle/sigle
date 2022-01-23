@@ -18,7 +18,6 @@ import TipTapParagraph from '@tiptap/extension-paragraph';
 import TipTapPlaceholder from '@tiptap/extension-placeholder';
 import TipTapStrike from '@tiptap/extension-strike';
 import TipTapText from '@tiptap/extension-text';
-import TipTapUnderline from '@tiptap/extension-underline';
 import { MdAddAPhoto } from 'react-icons/md';
 import styled, { keyframes } from 'styled-components';
 import tw from 'twin.macro';
@@ -144,7 +143,6 @@ export const TipTapEditor = ({ story }: TipTapEditorProps) => {
       TipTapCode,
       TipTapItalic,
       TipTapStrike,
-      TipTapUnderline,
       // Extensions
       TipTapDropcursor,
       TipTapHistory,
