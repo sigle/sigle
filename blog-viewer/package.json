@@ -22,9 +22,7 @@
   },
   "dependencies": {
     "@prisma/client": "2.17.0",
-    "@sentry/browser": "6.13.3",
-    "@sentry/integrations": "6.13.3",
-    "@sentry/node": "6.13.3",
+    "@sentry/nextjs": "6.16.1",
     "@stacks/auth": "2.0.0-beta.1",
     "date-fns": "2.25.0",
     "fathom-client": "3.2.0",
