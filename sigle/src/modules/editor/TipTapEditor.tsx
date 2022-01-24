@@ -127,7 +127,6 @@ const globalStylesCustomEditor = globalCss({
 
 /**
  * TODO
- * - link should show on cmd + k
  * - left menu that trigger the commands menu
  * - check all the shortcuts and update the GitBook
  * - check all the markdown shorcuts
