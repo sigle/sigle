@@ -9,15 +9,13 @@ import { TipTapEditor } from '../modules/editor/TipTapEditor';
 
 const TipTapEditorPage = () => {
   return (
-    <Protected>
-      <PageContainer>
-        <SlateContainer>
-          <StyledContent>
-            <TipTapEditor />
-          </StyledContent>
-        </SlateContainer>
-      </PageContainer>
-    </Protected>
+    <PageContainer>
+      <SlateContainer>
+        <StyledContent>
+          <TipTapEditor />
+        </StyledContent>
+      </SlateContainer>
+    </PageContainer>
   );
 };
 
