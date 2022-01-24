@@ -6,15 +6,9 @@ import {
   FontBoldIcon,
   FontItalicIcon,
   CodeIcon,
-  QuoteIcon,
   Cross2Icon,
 } from '@radix-ui/react-icons';
-import {
-  Heading1Icon,
-  Heading2Icon,
-  Heading3Icon,
-  ListNumberedIcon,
-} from '../../icons';
+import { ListNumberedIcon } from '../../icons';
 import { styled } from '../../stitches.config';
 import { Flex } from '../../ui';
 
@@ -148,36 +142,6 @@ export const BubbleMenu = ({ editor }: BubbleMenuProps) => {
             active={editor.isActive('code')}
           >
             <CodeIcon height={18} width={18} />
-          </BubbleMenuButton>
-          <BubbleMenuButton
-            onClick={() => editor.chain().focus().toggleBlockquote().run()}
-            active={editor.isActive('blockquote')}
-          >
-            <QuoteIcon height={18} width={18} />
-          </BubbleMenuButton>
-          <BubbleMenuButton
-            onClick={() =>
-              editor.chain().focus().toggleHeading({ level: 1 }).run()
-            }
-            active={editor.isActive('heading', { level: 1 })}
-          >
-            <Heading1Icon height={18} width={18} />
-          </BubbleMenuButton>
-          <BubbleMenuButton
-            onClick={() =>
-              editor.chain().focus().toggleHeading({ level: 2 }).run()
-            }
-            active={editor.isActive('heading', { level: 2 })}
-          >
-            <Heading2Icon height={18} width={18} />
-          </BubbleMenuButton>
-          <BubbleMenuButton
-            onClick={() =>
-              editor.chain().focus().toggleHeading({ level: 3 }).run()
-            }
-            active={editor.isActive('heading', { level: 3 })}
-          >
-            <Heading3Icon height={18} width={18} />
           </BubbleMenuButton>
           <BubbleMenuButton
             onClick={() => editor.chain().focus().toggleOrderedList().run()}
