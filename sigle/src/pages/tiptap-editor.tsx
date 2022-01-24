@@ -1,5 +1,4 @@
 import React from 'react';
-import { Protected } from '../modules/auth/Protected';
 import { PageContainer } from '../modules/editor/components/Editor';
 import {
   SlateContainer,
