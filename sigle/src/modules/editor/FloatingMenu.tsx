@@ -1,5 +1,5 @@
 import { Editor, FloatingMenu as TipTapFloatingMenu } from '@tiptap/react';
-import { Box } from '../../ui';
+import { Flex } from '../../ui';
 import { globalCss } from '../../stitches.config';
 import { RoundPlus } from '../../icons';
 
@@ -51,15 +51,9 @@ export const FloatingMenu = ({ editor }: FloatingMenuProps) => {
         return editor.isActive('paragraph') && empty && node.content.size === 0;
       }}
     >
-      <Box
-        as="button"
-        onClick={handleButtonClick}
-        css={{
-          display: 'flex',
-        }}
-      >
+      <Flex as="button" onClick={handleButtonClick}>
         <RoundPlus width={27} height={27} />
-      </Box>
+      </Flex>
     </TipTapFloatingMenu>
   );
 };
