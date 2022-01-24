@@ -11,7 +11,7 @@ export const RoundPlus = ({ width = 27, height = 27 }: IconProps) => (
       fillRule="evenodd"
       clipRule="evenodd"
       d="M13.75 8.5a.5.5 0 0 0-1 0v4.25H8.5a.5.5 0 0 0 0 1h4.25V18a.5.5 0 0 0 1 0v-4.25H18a.5.5 0 0 0 0-1h-4.25V8.5Z"
-      fill="#1A1A1A"
+      fill="currentColor"
     />
     <rect
       x={0.5}
@@ -19,7 +19,7 @@ export const RoundPlus = ({ width = 27, height = 27 }: IconProps) => (
       width={25.5}
       height={25.5}
       rx={12.75}
-      stroke="#1A1A1A"
+      stroke="currentColor"
     />
   </svg>
 );

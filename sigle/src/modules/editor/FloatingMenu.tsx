@@ -11,7 +11,6 @@ const globalStylesCustomEditor = globalCss({
   ".tippy-box[data-theme~='sigle-editor-floating-menu'] .tippy-content": {
     backgroundColor: 'transparent',
     padding: 0,
-    color: '$gray8',
   },
 });
 
@@ -56,6 +55,7 @@ export const FloatingMenu = ({ editor }: FloatingMenuProps) => {
         onClick={handleButtonClick}
         css={{
           display: 'flex',
+          color: '$gray8',
         }}
       >
         <RoundPlus width={27} height={27} />
