@@ -18,8 +18,6 @@ import TipTapParagraph from '@tiptap/extension-paragraph';
 import TipTapPlaceholder from '@tiptap/extension-placeholder';
 import TipTapStrike from '@tiptap/extension-strike';
 import TipTapText from '@tiptap/extension-text';
-import styledSC, { keyframes } from 'styled-components';
-import tw from 'twin.macro';
 import {
   SlashCommands,
   SlashCommandsCommand,
@@ -39,41 +37,35 @@ import { storage } from '../../utils/blockstack';
 import { Story } from '../../types';
 import { colors } from '../../utils/colors';
 import { Flex, Text } from '../../ui';
-import { styled, globalCss } from '../../stitches.config';
+import { styled, globalCss, keyframes } from '../../stitches.config';
 
-const fadeInAnimation = keyframes`
-  0% {
-    opacity: 0;
-  }
-  100% {
-    opacity: 1;
-  }
-`;
+const fadeInAnimation = keyframes({
+  '0%': { opacity: '0' },
+  '100%': { opacity: '1' },
+});
 
-const StyledEditorContent = styledSC(EditorContent)`
-  .ProseMirror {
-    ${tw`py-4`};
-    min-height: 150px;
-  }
-  .ProseMirror-focused {
-    outline: none;
-  }
-
+const StyledEditorContent = styled(EditorContent, {
+  '& .ProseMirror': {
+    py: '$4',
+    minHeight: 150,
+  },
+  '& .ProseMirror-focused': {
+    outline: 'none',
+  },
   // Placeholder plugin style
-  .ProseMirror p.is-empty::before {
-    content: attr(data-placeholder);
-    float: left;
-    color: #bbbaba;
-    pointer-events: none;
-    height: 0;
-    animation: ${fadeInAnimation} 75ms cubic-bezier(0, 0, 0.2, 1);
-  }
-
+  '& .ProseMirror p.is-empty::before': {
+    content: 'attr(data-placeholder)',
+    float: 'left',
+    color: '#bbbaba',
+    pointerEvents: 'none',
+    height: 0,
+    animation: `${fadeInAnimation} 75ms cubic-bezier(0, 0, 0.2, 1)`,
+  },
   // Image selected style
-  img.ProseMirror-selectednode {
-    outline: 1px solid ${colors.pink};
-  }
-`;
+  '& img.ProseMirror-selectednode': {
+    outline: '1px solid $orange11',
+  },
+});
 
 const CommandsListItem = styled('li', {
   cursor: 'pointer',
