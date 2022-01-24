@@ -94,8 +94,6 @@ const CommandsList = (props: {
 }) => {
   const { items, selectedIndex, selectItem } = props;
 
-  // TODO empty filter design
-
   return (
     <Flex gap="2" direction="column">
       {items.map(({ title, description, icon: Icon }, idx) => (
