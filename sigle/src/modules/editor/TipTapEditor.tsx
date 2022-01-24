@@ -136,10 +136,10 @@ const globalStylesCustomEditor = globalCss({
  */
 
 interface TipTapEditorProps {
-  story: Story;
+  // story: Story;
 }
 
-export const TipTapEditor = ({ story }: TipTapEditorProps) => {
+export const TipTapEditor = ({}: TipTapEditorProps) => {
   globalStylesCustomEditor();
 
   const fileUploaderRef = useRef<HTMLInputElement>(null);
@@ -254,37 +254,37 @@ export const TipTapEditor = ({ story }: TipTapEditorProps) => {
       return;
     }
 
-    for (const file of files) {
-      const reader = new FileReader();
-      const [mime] = file.type.split('/');
-      if (mime !== 'image') continue;
+    // for (const file of files) {
+    //   const reader = new FileReader();
+    //   const [mime] = file.type.split('/');
+    //   if (mime !== 'image') continue;
 
-      // First show the image as uploading since this can take a while...
-      const preview = URL.createObjectURL(file);
-      const id = generateRandomId();
+    //   // First show the image as uploading since this can take a while...
+    //   const preview = URL.createObjectURL(file);
+    //   const id = generateRandomId();
 
-      // TODO global loading state ?
+    //   // TODO global loading state ?
 
-      // editor?.chain().focus().setImage({ src: preview }).run();
+    //   // editor?.chain().focus().setImage({ src: preview }).run();
 
-      reader.addEventListener('load', async () => {
-        // resize the image for faster upload
-        const blob = await resizeImage(file, { maxWidth: 2000 });
+    //   reader.addEventListener('load', async () => {
+    //     // resize the image for faster upload
+    //     const blob = await resizeImage(file, { maxWidth: 2000 });
 
-        const name = `photos/${story.id}/${id}-${file.name}`;
-        const imageUrl = await storage.putFile(name, blob as any, {
-          encrypt: false,
-          contentType: file.type,
-        });
+    //     const name = `photos/${story.id}/${id}-${file.name}`;
+    //     const imageUrl = await storage.putFile(name, blob as any, {
+    //       encrypt: false,
+    //       contentType: file.type,
+    //     });
 
-        // editor?.state.tr.deleteSelection();
+    //     // editor?.state.tr.deleteSelection();
 
-        // TODO image should delete slash menu text and appear at the same place
-        editor?.chain().focus().setImage({ src: imageUrl }).run();
-      });
+    //     // TODO image should delete slash menu text and appear at the same place
+    //     editor?.chain().focus().setImage({ src: imageUrl }).run();
+    //   });
 
-      reader.readAsDataURL(file);
-    }
+    //   reader.readAsDataURL(file);
+    // }
   };
 
   return (

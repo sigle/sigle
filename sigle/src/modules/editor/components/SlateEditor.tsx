@@ -54,7 +54,6 @@ import { storage } from '../../../utils/blockstack';
 import { resizeImage } from '../../../utils/image';
 import { FixedContainer, PageContainer } from './Editor';
 import { SlateEditorLink } from './SlateEditorLink';
-import { TipTapEditor } from '../TipTapEditor';
 import { TwitterCardPreview } from './TwitterCardPreview';
 import { StoryPublishedDialog } from './StoryPublishedDialog';
 
@@ -84,11 +83,11 @@ const Image = styled.img<{ selected: boolean; isUploading?: boolean }>`
     `}
 `;
 
-const SlateContainer = styled.div`
+export const SlateContainer = styled.div`
   ${tw`my-8`};
 `;
 
-const StyledContent = styled(Content)`
+export const StyledContent = styled(Content)`
   margin: 0;
 `;
 
@@ -651,7 +650,7 @@ export const SlateEditor = ({
 
         <SlateContainer>
           <StyledContent>
-            {/* <StyledEditor
+            <StyledEditor
               ref={editorRef}
               plugins={slatePlugins}
               value={value}
@@ -664,19 +663,18 @@ export const SlateEditor = ({
               renderBlock={renderBlock}
               renderMark={renderMark}
               renderInline={renderInline}
-            /> */}
-            <TipTapEditor story={story} />
+            />
           </StyledContent>
         </SlateContainer>
 
-        {/* {editorRef.current && (
+        {editorRef.current && (
           <SlateEditorLink
             editor={editorRef.current}
             open={editLinkOpen}
             onConfirmEditLink={handleConfirmEditLink}
             onClose={() => setEditLinkOpen(false)}
           />
-        )} */}
+        )}
 
         <StorySettings
           story={story}
