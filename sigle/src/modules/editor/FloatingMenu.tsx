@@ -55,7 +55,7 @@ export const FloatingMenu = ({ editor }: FloatingMenuProps) => {
         onClick={handleButtonClick}
         css={{
           display: 'flex',
-          color: '$gray8',
+          color: '$gray9',
         }}
       >
         <RoundPlus width={27} height={27} />
