@@ -1,5 +1,6 @@
 import {
   BulletedListLight,
+  NumberedListLight,
   Heading1Light,
   Heading2Light,
   Heading3Light,
@@ -58,9 +59,23 @@ export const slashCommands: SlashCommandsCommand[] = [
       editor
         .chain()
         .focus()
-        // Use deleteRange to clear the text from command chars "/q" etc..
+        // Use deleteRange to clear the text from command chars "/bu" etc..
         .deleteRange(range)
         .toggleBulletList()
+        .run();
+    },
+  },
+  {
+    icon: NumberedListLight,
+    title: 'Numbered list',
+    description: 'Create a numbered list',
+    command: ({ editor, range }) => {
+      editor
+        .chain()
+        .focus()
+        // Use deleteRange to clear the text from command chars "/q" etc..
+        .deleteRange(range)
+        .toggleOrderedList()
         .run();
     },
   },

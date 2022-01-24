@@ -144,12 +144,6 @@ export const BubbleMenu = ({ editor }: BubbleMenuProps) => {
             <CodeIcon height={18} width={18} />
           </BubbleMenuButton>
           <BubbleMenuButton
-            onClick={() => editor.chain().focus().toggleOrderedList().run()}
-            active={editor.isActive('orderedList')}
-          >
-            <ListNumberedIcon height={18} width={18} />
-          </BubbleMenuButton>
-          <BubbleMenuButton
             onClick={() => onSelectLink()}
             active={editor.isActive('link')}
           >
