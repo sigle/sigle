@@ -55,8 +55,7 @@ interface BubbleMenuProps {
 }
 
 export const BubbleMenu = ({ editor }: BubbleMenuProps) => {
-  const [isLinkOpen, setIsLinkOpen] = useState(false);
-  const [linkValue, setLinkValue] = useState('');
+  const [linkState, setLinkState] = useState({ open: false, value: '' });
 
   const onSelectLink = () => {
     // Get href of selected link to pre fill the input
@@ -64,21 +63,23 @@ export const BubbleMenu = ({ editor }: BubbleMenuProps) => {
       ? editor.getAttributes('link').href
       : '';
 
-    setLinkValue(existingHref);
-    setIsLinkOpen(true);
+    setLinkState({
+      open: true,
+      value: existingHref,
+    });
   };
 
   const onSubmitLink = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
-    let safeLinkValue = linkValue.trim();
+    let safeLinkValue = linkState.value.trim();
 
     if (
       safeLinkValue &&
       !safeLinkValue.startsWith('http') &&
       !safeLinkValue.startsWith('#')
     ) {
-      safeLinkValue = `https://${linkValue}`;
+      safeLinkValue = `https://${linkState.value}`;
     }
 
     if (safeLinkValue) {
@@ -105,8 +106,10 @@ export const BubbleMenu = ({ editor }: BubbleMenuProps) => {
   };
 
   const resetLink = () => {
-    setIsLinkOpen(false);
-    setLinkValue('');
+    setLinkState({
+      open: false,
+      value: '',
+    });
   };
 
   return (
@@ -114,7 +117,7 @@ export const BubbleMenu = ({ editor }: BubbleMenuProps) => {
       tippyOptions={{ duration: 100, onHidden: () => resetLink() }}
       editor={editor}
     >
-      {!isLinkOpen ? (
+      {!linkState.open ? (
         <>
           <BubbleMenuButton
             onClick={() => editor.chain().focus().toggleBold().run()}
@@ -186,9 +189,11 @@ export const BubbleMenu = ({ editor }: BubbleMenuProps) => {
       ) : (
         <Flex as="form" onSubmit={onSubmitLink}>
           <BubbleMenuInput
-            value={linkValue}
+            value={linkState.value}
             onKeyDown={onKeyDown}
-            onChange={(e) => setLinkValue(e.target.value)}
+            onChange={(e) =>
+              setLinkState((state) => ({ ...state, value: e.target.value }))
+            }
             placeholder="Enter link ..."
             autoFocus
           />
