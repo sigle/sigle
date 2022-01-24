@@ -1,6 +1,4 @@
 import { useState } from 'react';
-import styled, { css } from 'styled-components';
-import tw from 'twin.macro';
 import { Editor, BubbleMenu as TipTapBubbleMenu } from '@tiptap/react';
 import {
   ListBulletIcon,
@@ -17,30 +15,35 @@ import {
   Heading3Icon,
   ListNumberedIcon,
 } from '../../icons';
+import { styled } from '../../stitches.config';
+import { Flex } from '../../ui';
 
-const StyledBubbleMenu = styled(TipTapBubbleMenu)`
-  ${tw`flex rounded py-1`};
-`;
+const StyledBubbleMenu = styled(TipTapBubbleMenu, {
+  display: 'flex',
+  br: '$1',
+  py: '$1',
+});
 
-const BubbleMenuButton = styled.button<{ active: boolean }>`
-  ${tw`text-white cursor-pointer`};
-  padding-left: 0.3rem;
-  padding-right: 0.3rem;
+const BubbleMenuButton = styled('button', {
+  color: '$gray1',
+  px: '$1',
 
-  ${(props) =>
-    props.active &&
-    css`
-      ${tw`text-pink`};
-    `}
-`;
+  variants: {
+    active: {
+      true: {
+        color: '$orange11',
+      },
+    },
+  },
+});
 
-const BubbleMenuFormLink = styled.form`
-  ${tw`flex`};
-`;
-
-const BubbleMenuInput = styled.input`
-  ${tw`outline-none w-full bg-transparent	pl-2 pr-1`};
-`;
+const BubbleMenuInput = styled('input', {
+  width: '100%',
+  pl: '$2',
+  pr: '$1',
+  backgroundColor: 'transparent',
+  outline: 'none',
+});
 
 // TODO cmd + k should open UI for links
 // TODO show link on hover so user can see the value
@@ -181,7 +184,7 @@ export const BubbleMenu = ({ editor }: BubbleMenuProps) => {
           </BubbleMenuButton>
         </>
       ) : (
-        <BubbleMenuFormLink onSubmit={onSubmitLink}>
+        <Flex as="form" onSubmit={onSubmitLink}>
           <BubbleMenuInput
             value={linkValue}
             onKeyDown={onKeyDown}
@@ -196,7 +199,7 @@ export const BubbleMenu = ({ editor }: BubbleMenuProps) => {
           >
             <Cross2Icon height={18} width={18} />
           </BubbleMenuButton>
-        </BubbleMenuFormLink>
+        </Flex>
       )}
     </StyledBubbleMenu>
   );
