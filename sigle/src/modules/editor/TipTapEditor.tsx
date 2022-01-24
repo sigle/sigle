@@ -18,7 +18,6 @@ import TipTapParagraph from '@tiptap/extension-paragraph';
 import TipTapPlaceholder from '@tiptap/extension-placeholder';
 import TipTapStrike from '@tiptap/extension-strike';
 import TipTapText from '@tiptap/extension-text';
-import { MdAddAPhoto } from 'react-icons/md';
 import styledSC, { keyframes } from 'styled-components';
 import tw from 'twin.macro';
 import {
