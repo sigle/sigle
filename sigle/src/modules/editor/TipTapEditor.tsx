@@ -122,6 +122,7 @@ const globalStylesCustomEditor = globalCss({
     boxShadow:
       '0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1)',
     br: '$1',
+    minWidth: '280px',
   },
 });
 
