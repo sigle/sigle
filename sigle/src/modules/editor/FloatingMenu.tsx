@@ -1,20 +1,49 @@
-import { useState } from 'react';
 import { Editor, FloatingMenu as TipTapFloatingMenu } from '@tiptap/react';
-import { PlusCircledIcon, CrossCircledIcon } from '@radix-ui/react-icons';
 import { Box } from '../../ui';
+import { globalCss } from '../../stitches.config';
+import { RoundPlus } from '../../icons';
+
+// Tippyjs theme used by the slash command menu
+const globalStylesCustomEditor = globalCss({
+  ".tippy-box[data-theme~='sigle-editor-floating-menu']": {
+    backgroundColor: 'transparent',
+  },
+  ".tippy-box[data-theme~='sigle-editor-floating-menu'] .tippy-content": {
+    backgroundColor: 'transparent',
+    padding: 0,
+    color: '$gray8',
+  },
+});
 
 interface FloatingMenuProps {
   editor: Editor;
 }
 
 export const FloatingMenu = ({ editor }: FloatingMenuProps) => {
-  const [menuOpen, setMenuOpen] = useState(false);
+  globalStylesCustomEditor();
+
+  const handleButtonClick = () => {
+    editor
+      .chain()
+      .focus()
+      .command(({ tr }) => {
+        // manipulate the transaction
+        tr.insertText('/');
+
+        return true;
+      })
+      .run();
+  };
 
   return (
     <TipTapFloatingMenu
       editor={editor}
       pluginKey="inline-add-menu"
-      tippyOptions={{ theme: 'light-border' }}
+      tippyOptions={{
+        theme: 'sigle-editor-floating-menu',
+        placement: 'left',
+        arrow: false,
+      }}
       shouldShow={({ editor, state }) => {
         // Show only on empty blocks
         const empty = state.selection.empty;
@@ -22,18 +51,15 @@ export const FloatingMenu = ({ editor }: FloatingMenuProps) => {
         return editor.isActive('paragraph') && empty && node.content.size === 0;
       }}
     >
-      <Box css={{ position: 'absolute', top: 5, left: -46, color: '$gray11' }}>
-        {/* TODO animation */}
-        <button onClick={() => setMenuOpen(!menuOpen)}>
-          {!menuOpen ? (
-            <PlusCircledIcon width={24} height={24} />
-          ) : (
-            <CrossCircledIcon width={24} height={24} />
-          )}
-        </button>
+      <Box
+        as="button"
+        onClick={handleButtonClick}
+        css={{
+          display: 'flex',
+        }}
+      >
+        <RoundPlus width={27} height={27} />
       </Box>
-
-      {menuOpen ? <div>Heya</div> : null}
     </TipTapFloatingMenu>
   );
 };
