@@ -1,4 +1,5 @@
 import {
+  BulletedListLight,
   Heading1Light,
   Heading2Light,
   Heading3Light,
@@ -50,18 +51,23 @@ export const slashCommands: SlashCommandsCommand[] = [
     },
   },
   {
-    icon: ImageLight,
-    title: 'Image',
-    description: 'Upload from your computer',
+    icon: BulletedListLight,
+    title: 'Bulleted list',
+    description: 'Create a bulleted list',
     command: ({ editor, range }) => {
-      // TODO get it working
-      // fileUploaderRef.current?.click();
+      editor
+        .chain()
+        .focus()
+        // Use deleteRange to clear the text from command chars "/q" etc..
+        .deleteRange(range)
+        .toggleBulletList()
+        .run();
     },
   },
   {
     icon: QuoteLight,
     title: 'Quote',
-    description: 'Display a quote',
+    description: 'Create a quote',
     command: ({ editor, range }) => {
       editor
         .chain()
@@ -70,6 +76,15 @@ export const slashCommands: SlashCommandsCommand[] = [
         .deleteRange(range)
         .toggleBlockquote()
         .run();
+    },
+  },
+  {
+    icon: ImageLight,
+    title: 'Image',
+    description: 'Upload from your computer',
+    command: ({ editor, range }) => {
+      // TODO get it working
+      // fileUploaderRef.current?.click();
     },
   },
 ];
@@ -85,6 +100,8 @@ const CommandsListItem = styled('li', {
     backgroundColor: '$gray3',
   },
 });
+
+// TODO display max 5 then scroll
 
 export const SlashCommandsList = (props: {
   items: SlashCommandsCommand[];

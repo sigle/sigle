@@ -150,12 +150,6 @@ export const BubbleMenu = ({ editor }: BubbleMenuProps) => {
             <ListNumberedIcon height={18} width={18} />
           </BubbleMenuButton>
           <BubbleMenuButton
-            onClick={() => editor.chain().focus().toggleBulletList().run()}
-            active={editor.isActive('bulletList')}
-          >
-            <ListBulletIcon height={18} width={18} />
-          </BubbleMenuButton>
-          <BubbleMenuButton
             onClick={() => onSelectLink()}
             active={editor.isActive('link')}
           >
