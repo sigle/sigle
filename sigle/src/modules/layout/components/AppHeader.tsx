@@ -15,14 +15,20 @@ import {
 } from '../../../utils';
 import * as Fathom from 'fathom-client';
 import { useAuth } from '../../auth/AuthContext';
-
 import { Goals } from '../../../utils/fathom';
 
 const Header = styled('header', Container, {
+  '@xs': {
+    mt: '$4',
+  },
+
+  '@md': {
+    mt: '$10',
+  },
+
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'space-between',
-  mt: '$10',
 });
 
 const Logo = () => (
@@ -74,20 +80,28 @@ export const AppHeader = () => {
 
   return (
     <Header>
-      <Flex gap="10" as="nav" align="center">
+      <Flex justify="center" gap="10" as="nav" align="center">
         <Link href="/" passHref>
-          <a>
+          <a style={{ height: '29px' }}>
             <Logo />
           </a>
         </Link>
         {user && (
           <Button
+            css={{
+              '@xs': {
+                display: 'none',
+              },
+              '@xl': {
+                display: 'block',
+              },
+            }}
             variant="ghost"
             href={`/${user.username}`}
             target="_blank"
             as="a"
           >
-            <Text css={{ mr: '$2', display: 'inline-block' }}>
+            <Text size="action" css={{ mr: '$2', display: 'inline-block' }}>
               Visit my blog
             </Text>
             <EyeOpenIcon />
@@ -95,7 +109,18 @@ export const AppHeader = () => {
         )}
       </Flex>
       {user && (
-        <Flex align="center" gap="10">
+        <Flex
+          css={{
+            '@xs': {
+              display: 'none',
+            },
+            '@xl': {
+              display: 'flex',
+            },
+          }}
+          align="center"
+          gap="10"
+        >
           <Flex gap="1" align="center">
             <StatusDot />
             <Text>{user.username}</Text>
