@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Editor, BubbleMenu as TipTapBubbleMenu } from '@tiptap/react';
 import {
   ListBulletIcon,
@@ -45,7 +45,6 @@ const BubbleMenuInput = styled('input', {
   outline: 'none',
 });
 
-// TODO cmd + k should open UI for links
 // TODO show link on hover so user can see the value
 // Maybe can be used on clicks https://github.com/ueberdosis/tiptap/issues/104#issuecomment-912794709
 // TODO When we set the link set selection after the link and remove hover so user can continue to type
@@ -56,6 +55,19 @@ interface BubbleMenuProps {
 
 export const BubbleMenu = ({ editor }: BubbleMenuProps) => {
   const [linkState, setLinkState] = useState({ open: false, value: '' });
+
+  // Listen to any key press to detect cmd + k and activate the link edition
+  useEffect(() => {
+    function onKeyDown(event: KeyboardEvent) {
+      // We want all our commands to start with the user pressing ctrl or cmd for mac users
+      if ((event.ctrlKey || event.metaKey) && event.key === 'k') {
+        onSelectLink();
+      }
+    }
+
+    window.addEventListener('keydown', onKeyDown);
+    return () => window.removeEventListener('keydown', onKeyDown);
+  }, []);
 
   const onSelectLink = () => {
     // Get href of selected link to pre fill the input
