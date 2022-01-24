@@ -158,7 +158,7 @@ importers:
       react-dom: 17.0.2
       react-dropzone: 11.4.2
       react-icons: 4.1.0
-      react-query: 3.12.0
+      react-query: 3.34.12
       react-toastify: 8.0.3
       reading-time: 1.2.1
       sass: 1.42.1
@@ -200,7 +200,7 @@ importers:
       react-dom: 17.0.2_react@17.0.2
       react-dropzone: 11.4.2_react@17.0.2
       react-icons: 4.1.0_react@17.0.2
-      react-query: 3.12.0_react-dom@17.0.2+react@17.0.2
+      react-query: 3.34.12_react-dom@17.0.2+react@17.0.2
       react-toastify: 8.0.3_react-dom@17.0.2+react@17.0.2
       reading-time: 1.2.1
       slate: 0.47.9_immutable@4.0.0-rc.12
@@ -611,7 +611,6 @@ packages:
     engines: {node: '>=6.9.0'}
     dependencies:
       regenerator-runtime: 0.13.9
-    dev: true
 
   /@babel/template/7.15.4:
     resolution: {integrity: sha512-UgBAfEa1oGuYgDIPM2G+aHa4Nlo9Lh6mGD2bDBGMTbYnc38vulXPuC1MGjYILIEmlwl6Rd+BPR9ee3gm20CBtg==}
@@ -1152,7 +1151,7 @@ packages:
   /@radix-ui/popper/0.1.0:
     resolution: {integrity: sha512-uzYeElL3w7SeNMuQpXiFlBhTT+JyaNMCwDfjKkrzugEcYrf5n52PHqncNdQPUtR42hJh8V9FsqyEDbDxkeNjJQ==}
     dependencies:
-      '@babel/runtime': 7.15.4
+      '@babel/runtime': 7.16.7
       csstype: 3.0.9
     dev: false
 
@@ -1167,7 +1166,7 @@ packages:
     peerDependencies:
       react: ^16.8 || ^17.0
     dependencies:
-      '@babel/runtime': 7.15.4
+      '@babel/runtime': 7.16.7
       '@radix-ui/react-primitive': 0.1.0_react@17.0.2
       react: 17.0.2
     dev: false
@@ -1177,7 +1176,7 @@ packages:
     peerDependencies:
       react: ^16.8 || ^17.0
     dependencies:
-      '@babel/runtime': 7.15.4
+      '@babel/runtime': 7.16.7
       '@radix-ui/react-compose-refs': 0.1.0_react@17.0.2
       '@radix-ui/react-primitive': 0.1.0_react@17.0.2
       '@radix-ui/react-slot': 0.1.0_react@17.0.2
@@ -1386,7 +1385,7 @@ packages:
     peerDependencies:
       react: ^16.8 || ^17.0
     dependencies:
-      '@babel/runtime': 7.15.4
+      '@babel/runtime': 7.16.7
       '@radix-ui/primitive': 0.1.0
       '@radix-ui/react-collection': 0.1.0_react@17.0.2
       '@radix-ui/react-compose-refs': 0.1.0_react@17.0.2
@@ -1439,7 +1438,7 @@ packages:
     peerDependencies:
       react: ^16.8 || ^17.0
     dependencies:
-      '@babel/runtime': 7.15.4
+      '@babel/runtime': 7.16.7
       '@radix-ui/react-use-layout-effect': 0.1.0_react@17.0.2
       react: 17.0.2
     dev: false
@@ -1449,7 +1448,7 @@ packages:
     peerDependencies:
       react: ^16.8 || ^17.0
     dependencies:
-      '@babel/runtime': 7.15.4
+      '@babel/runtime': 7.16.7
       react: 17.0.2
     dev: false
 
@@ -1468,7 +1467,7 @@ packages:
     peerDependencies:
       react: ^16.8 || ^17.0
     dependencies:
-      '@babel/runtime': 7.15.4
+      '@babel/runtime': 7.16.7
       react: 17.0.2
     dev: false
 
@@ -1515,7 +1514,7 @@ packages:
     peerDependencies:
       react: ^16.8 || ^17.0
     dependencies:
-      '@babel/runtime': 7.15.4
+      '@babel/runtime': 7.16.7
       react: 17.0.2
     dev: false
 
@@ -1532,7 +1531,7 @@ packages:
   /@radix-ui/rect/0.1.0:
     resolution: {integrity: sha512-YcQuy5hUDnS8CkmIKJA6lE8wQpMqv8KN3SoO3dtOg7FQmZo1lgF1yAtrp5STJYxs1n7UChW3eEhrKXl/LmbHJQ==}
     dependencies:
-      '@babel/runtime': 7.15.4
+      '@babel/runtime': 7.16.7
     dev: false
 
   /@rushstack/eslint-patch/1.1.0:
@@ -2888,7 +2887,7 @@ packages:
   /broadcast-channel/3.7.0:
     resolution: {integrity: sha512-cIAKJXAxGJceNZGTZSBzMxzyOn72cVgPnKx4dc6LRjQgbaJUQqhy5rzL3zbMxkMWsGKkv2hSFkPRMEXfoMZ2Mg==}
     dependencies:
-      '@babel/runtime': 7.15.4
+      '@babel/runtime': 7.16.7
       detect-node: 2.1.0
       js-sha3: 0.8.0
       microseconds: 0.2.0
@@ -5684,7 +5683,7 @@ packages:
   /match-sorter/6.3.1:
     resolution: {integrity: sha512-mxybbo3pPNuA+ZuCUhm5bwNkXrJTbsk5VWbR5wiwz/GC6LIiegBGn2w3O08UG/jdbYLinw51fSQ5xNU1U3MgBw==}
     dependencies:
-      '@babel/runtime': 7.15.4
+      '@babel/runtime': 7.16.7
       remove-accents: 0.4.2
     dev: false
 
@@ -6503,8 +6502,8 @@ packages:
   /react-is/17.0.2:
     resolution: {integrity: sha512-w2GsyukL62IJnlaff/nRegPQR94C/XXamvMWmSHRJ4y7Ts/4ocGRmTHvOs8PSE6pB3dWOrD/nueuU5sduBsQ4w==}
 
-  /react-query/3.12.0_react-dom@17.0.2+react@17.0.2:
-    resolution: {integrity: sha512-WJYECeZ6xT2oxIlgqXUjLNLWRvJbeelXscVnAFfyUFgO21OYEYHMWPG61V9W57EUUqrXioQsNPsU9XyddfEvXQ==}
+  /react-query/3.34.12_react-dom@17.0.2+react@17.0.2:
+    resolution: {integrity: sha512-flDdudQVH4CqE+kNYYYyo4g2Yjek3H/36G3b9bK5oe26jD5gFnx+PPwnq0gayq5z2dcSfr2z4+drvuyeZ3A5QQ==}
     peerDependencies:
       react: ^16.8.0 || ^17.0.0
       react-dom: '*'
@@ -6515,7 +6514,7 @@ packages:
       react-native:
         optional: true
     dependencies:
-      '@babel/runtime': 7.15.4
+      '@babel/runtime': 7.16.7
       broadcast-channel: 3.7.0
       match-sorter: 6.3.1
       react: 17.0.2
@@ -7710,7 +7709,7 @@ packages:
   /unload/2.2.0:
     resolution: {integrity: sha512-B60uB5TNBLtN6/LsgAf3udH9saB5p7gqJwcFfbOEZ8BcBHnGwCf6G/TGiEqkRAxX7zAFIUtzdrXQSdL3Q/wqNA==}
     dependencies:
-      '@babel/runtime': 7.15.4
+      '@babel/runtime': 7.16.7
       detect-node: 2.1.0
     dev: false
 

@@ -95,6 +95,7 @@ export default class MyApp extends App {
   render() {
     const { Component, pageProps } = this.props;
     // Workaround for https://github.com/zeit/next.js/issues/8592
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const { err } = this.props as any;
     const modifiedPageProps = { ...pageProps, err };
 
