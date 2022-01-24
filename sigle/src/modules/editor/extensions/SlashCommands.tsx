@@ -9,6 +9,7 @@ import { IconProps } from '@radix-ui/react-icons/dist/types';
 
 export interface SlashCommandsCommand {
   title: string;
+  description: string;
   icon: (props: IconProps) => JSX.Element;
   command: ({ editor, range }: { editor: Editor; range: Range }) => void;
 }
@@ -71,7 +72,8 @@ export const SlashCommands = Extension.create<{
                 interactive: true,
                 trigger: 'manual',
                 placement: 'bottom-start',
-                theme: 'light-border',
+                theme: 'sigle-editor',
+                arrow: false,
               });
             },
             onUpdate: (props) => {

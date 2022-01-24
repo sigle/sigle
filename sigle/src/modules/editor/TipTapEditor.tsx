@@ -40,7 +40,7 @@ import { storage } from '../../utils/blockstack';
 import { Story } from '../../types';
 import { colors } from '../../utils/colors';
 import { Flex, Text } from '../../ui';
-import { styled } from '../../stitches.config';
+import { styled, globalCss } from '../../stitches.config';
 
 const fadeInAnimation = keyframes`
   0% {
@@ -116,14 +116,25 @@ const CommandsList = (props: {
   );
 };
 
+const globalStylesCustomEditor = globalCss({
+  ".tippy-box[data-theme~='sigle-editor'] .tippy-content": {
+    padding: 0,
+    backgroundColor: '$gray1',
+    boxShadow:
+      '0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1)',
+    br: '$1',
+  },
+});
+
 /**
  * TODO
  * - link should show on cmd + k
  * - left menu that trigger the commands menu
- * - check all the shortcuts
+ * - check all the shortcuts and update the GitBook
+ * - check all the markdown shorcuts
  * - investigate figure extension instead of image
- * - mobile UI
- * - data migration from slate
+ * - separate PR - mobile UI
+ * - WIP separate PR - data migration from slate
  */
 
 interface TipTapEditorProps {
@@ -131,6 +142,8 @@ interface TipTapEditorProps {
 }
 
 export const TipTapEditor = ({ story }: TipTapEditorProps) => {
+  globalStylesCustomEditor();
+
   const fileUploaderRef = useRef<HTMLInputElement>(null);
 
   const editor = useEditor({
