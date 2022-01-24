@@ -48,6 +48,7 @@ export const FloatingMenu = ({ editor }: FloatingMenuProps) => {
         // Show only on empty blocks
         const empty = state.selection.empty;
         const node = state.selection.$head.node();
+
         return editor.isActive('paragraph') && empty && node.content.size === 0;
       }}
     >
