@@ -104,7 +104,7 @@ export const SlashCommandsList = (props: {
           <Icon width={35} height={35} />
           <Flex direction="column" css={{ ml: '$2' }}>
             <Text>{title}</Text>
-            <Text css={{ color: '$gray9' }}>{description}</Text>
+            <Text css={{ color: '$gray9', mt: '-8px' }}>{description}</Text>
           </Flex>
         </CommandsListItem>
       ))}
