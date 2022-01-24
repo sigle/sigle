@@ -116,8 +116,6 @@ const CommandsListItem = styled('li', {
   },
 });
 
-// TODO display max 5 then scroll
-
 export const SlashCommandsList = (props: {
   items: SlashCommandsCommand[];
   selectedIndex: number;
@@ -126,7 +124,7 @@ export const SlashCommandsList = (props: {
   const { items, selectedIndex, selectItem } = props;
 
   return (
-    <Flex gap="2" direction="column">
+    <Flex gap="2" direction="column" css={{ maxHeight: 360, overflow: 'auto' }}>
       {items.map(({ title, description, icon: Icon }, idx) => (
         <CommandsListItem
           key={idx}

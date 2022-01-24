@@ -1,14 +1,12 @@
 import { useState, useEffect } from 'react';
 import { Editor, BubbleMenu as TipTapBubbleMenu } from '@tiptap/react';
 import {
-  ListBulletIcon,
   Link1Icon,
   FontBoldIcon,
   FontItalicIcon,
   CodeIcon,
   Cross2Icon,
 } from '@radix-ui/react-icons';
-import { ListNumberedIcon } from '../../icons';
 import { styled } from '../../stitches.config';
 import { Flex } from '../../ui';
 
