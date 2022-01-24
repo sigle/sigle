@@ -1,7 +1,7 @@
 # Stage 1: Building the code
-FROM node:14 AS builder
+FROM node:16 AS builder
 
-RUN curl -f https://get.pnpm.io/v6.14.js | node - add --global pnpm
+RUN curl -f https://get.pnpm.io/v6.16.js | node - add --global pnpm
 
 WORKDIR /app
 
@@ -20,9 +20,9 @@ RUN pnpm run build --filter=blog-viewer
 RUN pnpm install --prod --filter=blog-viewer
 
 # Stage 2: And then copy over node_modules, etc from that stage to the smaller base image
-FROM node:14 as production
+FROM node:16 as production
 
-RUN curl -f https://get.pnpm.io/v6.14.js | node - add --global pnpm
+RUN curl -f https://get.pnpm.io/v6.16.js | node - add --global pnpm
 
 WORKDIR /app
 
