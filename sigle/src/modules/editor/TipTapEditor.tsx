@@ -94,7 +94,7 @@ const CommandsList = (props: {
 }) => {
   const { items, selectedIndex, selectItem } = props;
 
-  // TODO mpty selectin
+  // TODO empty filter design
 
   return (
     <Flex gap="2" direction="column">
