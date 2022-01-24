@@ -5,7 +5,6 @@ import { styled } from '../stitches.config';
 import Link from 'next/link';
 import * as Sentry from '@sentry/nextjs';
 import { Button, Heading, Text } from '../ui';
-import { Container } from '../ui';
 import Image from 'next/image';
 import { useAuth } from '../modules/auth/AuthContext';
 import { AppHeader } from '../modules/layout/components/AppHeader';
@@ -14,12 +13,16 @@ const NotFoundContainer = styled('div', {
   '@xs': {
     flexDirection: 'column',
     textAlign: 'center',
+    mt: '$10',
+    height: '90%',
   },
 
   '@lg': {
     width: '90%',
     flexDirection: 'row-reverse',
     textAlign: 'left',
+    mt: '$20',
+    height: '90%',
   },
 
   '@xl': {
@@ -28,13 +31,14 @@ const NotFoundContainer = styled('div', {
 
   '@2xl': {
     width: '100%',
+    height: '100%',
   },
 
   display: 'flex',
-  justifyContent: 'space-between',
+  justifyContent: 'center',
   alignItems: 'center',
   my: 'auto',
-  mt: '$20',
+  mx: 'auto',
 });
 
 const NotFoundTextContainer = styled('div', {
@@ -167,64 +171,63 @@ export const MyError = ({
   return (
     <>
       <AppHeader />
-      <Container>
-        <NotFoundContainer>
-          {notFound ? (
-            <NotFoundWrapper>
-              <NotFoundIllu statusCode={404} alt="A lost traveller" />
-            </NotFoundWrapper>
-          ) : (
-            <ErrorWrapper>
-              <NotFoundIllu
-                statusCode={500}
-                alt="Woodpecker and broken pencil"
-              />
-            </ErrorWrapper>
+      <NotFoundContainer>
+        {notFound ? (
+          <NotFoundWrapper>
+            <NotFoundIllu statusCode={404} alt="A lost traveller" />
+          </NotFoundWrapper>
+        ) : (
+          <ErrorWrapper>
+            <NotFoundIllu statusCode={500} alt="Woodpecker and broken pencil" />
+          </ErrorWrapper>
+        )}
+        <NotFoundTextContainer>
+          <Heading
+            css={{ mb: '$3', lineHeight: 1 }}
+            as="h1"
+            size="5xl"
+            data-testid="error-title"
+          >
+            {statusCode}
+          </Heading>
+          <Heading
+            size="xl"
+            css={{ mb: '$3', lineHeight: 1.25 }}
+            as="h3"
+            data-testid="error-sub-title"
+          >
+            {errorMessage
+              ? errorMessage
+              : notFound
+              ? 'The page could not be found'
+              : 'An error has occured'}
+          </Heading>
+          <NotFoundText>
+            {notFound
+              ? 'It seems that you got lost into the Sigleverse.'
+              : `Oops! It seems that Sigle has stopped working. Please refresh the page or try again later.`}
+          </NotFoundText>
+          {sentryErrorId && (
+            <NotFoundText data-testid="error-id">{`Error ID: ${sentryErrorId}`}</NotFoundText>
           )}
-          <NotFoundTextContainer>
-            <Heading
-              css={{ mb: '$3' }}
-              as="h1"
-              size="5xl"
-              data-testid="error-title"
+          {notFound ? (
+            <Link href="/login" passHref>
+              <Button css={{ mb: '$10' }} as="a" size="lg" color="orange">
+                {user ? 'Go back to your dashboard' : 'Log in'}
+              </Button>
+            </Link>
+          ) : (
+            <Button
+              css={{ mb: '$10' }}
+              onClick={() => window.location.reload()}
+              size="lg"
+              color="orange"
             >
-              {statusCode}
-            </Heading>
-            <Heading css={{ mb: '$3' }} as="h3" data-testid="error-sub-title">
-              {errorMessage
-                ? errorMessage
-                : notFound
-                ? 'The page could not be found'
-                : 'An error has occured'}
-            </Heading>
-            <NotFoundText>
-              {notFound
-                ? 'It seems that you got lost into the Sigleverse.'
-                : `Oops! It seems that Sigle has stopped working. Please refresh the page or try again later`}
-            </NotFoundText>
-            {sentryErrorId && (
-              <NotFoundText data-testid="error-id">{`Error ID: ${sentryErrorId}`}</NotFoundText>
-            )}
-            {notFound ? (
-              <Link href="/login" passHref>
-                <Button as="a" size="lg" color="orange">
-                  {user ? 'Go back to your dashboard' : 'Log in'}
-                </Button>
-              </Link>
-            ) : (
-              <Link href="/" passHref>
-                <Button
-                  onClick={() => window.location.reload()}
-                  size="lg"
-                  color="orange"
-                >
-                  Refresh the page
-                </Button>
-              </Link>
-            )}
-          </NotFoundTextContainer>
-        </NotFoundContainer>
-      </Container>
+              Refresh the page
+            </Button>
+          )}
+        </NotFoundTextContainer>
+      </NotFoundContainer>
     </>
   );
 };
