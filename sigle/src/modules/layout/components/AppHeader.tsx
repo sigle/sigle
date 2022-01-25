@@ -34,10 +34,10 @@ const Header = styled('header', Container, {
 const Logo = () => (
   <Image
     priority
-    width={97}
-    height={29}
+    width={101}
+    height={45}
     objectFit="cover"
-    src="/static/img/new-logo.png"
+    src="/static/img/logo.png"
     alt="logo"
   />
 );
@@ -82,7 +82,7 @@ export const AppHeader = () => {
     <Header>
       <Flex justify="center" gap="10" as="nav" align="center">
         <Link href="/" passHref>
-          <a style={{ height: '29px' }}>
+          <a style={{ display: 'flex' }}>
             <Logo />
           </a>
         </Link>
