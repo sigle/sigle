@@ -6,3 +6,4 @@ export * from './Heading2Light';
 export * from './Heading3Light';
 export * from './ImageLight';
 export * from './QuoteLight';
+export * from './RoundPlus';
