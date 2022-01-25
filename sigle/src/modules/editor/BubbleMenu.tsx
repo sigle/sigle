@@ -7,23 +7,51 @@ import {
   CodeIcon,
   Cross2Icon,
 } from '@radix-ui/react-icons';
-import { styled } from '../../stitches.config';
+import { globalCss, styled } from '../../stitches.config';
 import { Flex } from '../../ui';
+
+// Tippyjs theme used by the bubble menu
+const globalStylesCustomEditor = globalCss({
+  ".tippy-box[data-theme~='sigle-editor-bubble-menu']": {
+    backgroundColor: '$gray11',
+  },
+  ".tippy-box[data-theme~='sigle-editor-bubble-menu'][data-placement^='top'] > .tippy-arrow::before":
+    {
+      borderTopColor: '$gray11',
+    },
+  ".tippy-box[data-theme~='sigle-editor-bubble-menu'][data-placement^='bottom'] > .tippy-arrow::before":
+    {
+      borderBottomColor: '$gray11',
+    },
+  ".tippy-box[data-theme~='sigle-editor-bubble-menu'][data-placement^='left'] > .tippy-arrow::before":
+    {
+      borderLeftColor: '$gray11',
+    },
+  ".tippy-box[data-theme~='sigle-editor-bubble-menu'][data-placement^='right'] > .tippy-arrow::before":
+    {
+      borderRightColor: '$gray11',
+    },
+  ".tippy-box[data-theme~='sigle-editor-bubble-menu'] .tippy-content": {
+    padding: 0,
+    color: '$gray1',
+  },
+});
 
 const StyledBubbleMenu = styled(TipTapBubbleMenu, {
   display: 'flex',
+  gap: '$3',
   br: '$1',
-  py: '$1',
+  py: '$3',
+  px: '$4',
 });
 
 const BubbleMenuButton = styled('button', {
   color: '$gray1',
-  px: '$1',
 
   variants: {
     active: {
       true: {
-        color: '$orange11',
+        color: '$orange10',
       },
     },
   },
@@ -46,6 +74,8 @@ interface BubbleMenuProps {
 }
 
 export const BubbleMenu = ({ editor }: BubbleMenuProps) => {
+  globalStylesCustomEditor();
+
   const [linkState, setLinkState] = useState({ open: false, value: '' });
 
   // Listen to any key press to detect cmd + k and activate the link edition
@@ -118,7 +148,11 @@ export const BubbleMenu = ({ editor }: BubbleMenuProps) => {
 
   return (
     <StyledBubbleMenu
-      tippyOptions={{ duration: 100, onHidden: () => resetLink() }}
+      tippyOptions={{
+        duration: 100,
+        theme: 'sigle-editor-bubble-menu',
+        onHidden: () => resetLink(),
+      }}
       editor={editor}
     >
       {!linkState.open ? (
