@@ -62,8 +62,14 @@ Router.events.on('routeChangeComplete', () => {
 
 const GlobalStyle = createGlobalStyle`
 
-  html, body, #root, #__next {
+  html, body, #root, #__next{
     height: 100%;
+  }
+
+  #__next {
+    width: 100%;
+    position: absolute;
+    z-index: 0;
   }
 
   body {
