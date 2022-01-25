@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import parser from 'fast-xml-parser';
+import { XMLParser } from 'fast-xml-parser';
 import { apiFeed } from './[username]';
 
 jest.mock('@sentry/nextjs');
@@ -37,6 +37,7 @@ describe('test feed api', () => {
     await apiFeed(req as any, res as any);
 
     expect(res.end).toBeCalled();
+    const parser = new XMLParser();
     const jsonObj = parser.parse(res.end.mock.calls[0][0]);
     expect(jsonObj.rss.channel).toEqual({
       copyright: 'All rights reserved 2022, sigleapp.id.blockstack',

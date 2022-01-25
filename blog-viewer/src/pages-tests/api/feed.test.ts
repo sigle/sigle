@@ -1,9 +1,9 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import parser from 'fast-xml-parser';
-import apiFeed from '../../pages/api/feed';
+import { XMLParser } from 'fast-xml-parser';
+import { apiFeed } from '../../pages/api/feed';
 import { prismaClient } from '../../utils/prisma';
 
-jest.mock('@sentry/node');
+jest.mock('@sentry/nextjs');
 jest.mock('../../utils/prisma', () => {
   return {
     prismaClient: {
@@ -54,9 +54,10 @@ describe('test feed api', () => {
     await apiFeed(req as any, res as any);
 
     expect(res.end).toBeCalled();
+    const parser = new XMLParser();
     const jsonObj = parser.parse(res.end.mock.calls[0][0]);
     expect(jsonObj.rss.channel).toEqual({
-      copyright: 'All rights reserved 2021, sigleapp.id.blockstack',
+      copyright: 'All rights reserved 2022, sigleapp.id.blockstack',
       description: expect.stringContaining('official blog of Sigle'),
       docs: expect.any(String),
       generator: expect.any(String),

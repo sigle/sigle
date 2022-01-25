@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-20.04
     strategy:
       matrix:
-        node-version: [14]
+        node-version: [16]
 
     steps:
       - uses: actions/checkout@v1
@@ -41,11 +41,36 @@ jobs:
       - name: Run sigle tests
         run: pnpm run test --filter=sigle
 
+  # The production app is deployed with docker.
+  # This step make sure the docker build is working properly.
+  test-sigle-docker:
+    runs-on: ubuntu-20.04
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v1
+        with:
+          driver: docker
+
+      - name: Build the Docker image
+        uses: docker/build-push-action@v2
+        with:
+          push: false
+          context: .
+          file: ./sigle/Dockerfile
+          tags: sigle:test-docker
+
+      # Print docker images so we can check the size
+      - name: Print docker image size
+        run: docker images | grep sigle
+
   test-blog-viewer:
     runs-on: ubuntu-20.04
     strategy:
       matrix:
-        node-version: [14]
+        node-version: [16]
 
     steps:
       - uses: actions/checkout@v1

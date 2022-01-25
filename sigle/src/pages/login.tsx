@@ -60,7 +60,7 @@ const Login = () => {
     if (user) {
       router.push(`/`);
     }
-  }, [user]);
+  }, [router, user]);
 
   return (
     <FullScreen>

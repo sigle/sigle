@@ -83,11 +83,11 @@ const Image = styled.img<{ selected: boolean; isUploading?: boolean }>`
     `}
 `;
 
-const SlateContainer = styled.div`
+export const SlateContainer = styled.div`
   ${tw`my-8`};
 `;
 
-const StyledContent = styled(Content)`
+export const StyledContent = styled(Content)`
   margin: 0;
 `;
 
