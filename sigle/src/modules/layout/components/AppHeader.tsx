@@ -18,17 +18,14 @@ import { useAuth } from '../../auth/AuthContext';
 import { Goals } from '../../../utils/fathom';
 
 const Header = styled('header', Container, {
-  '@xs': {
-    mt: '$4',
-  },
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'space-between',
+  mt: '$4',
 
   '@md': {
     mt: '$10',
   },
-
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'space-between',
 });
 
 const Logo = () => (
@@ -89,9 +86,7 @@ export const AppHeader = () => {
         {user && (
           <Button
             css={{
-              '@xs': {
-                display: 'none',
-              },
+              display: 'none',
               '@xl': {
                 display: 'block',
               },
@@ -111,9 +106,7 @@ export const AppHeader = () => {
       {user && (
         <Flex
           css={{
-            '@xs': {
-              display: 'none',
-            },
+            display: 'none',
             '@xl': {
               display: 'flex',
             },

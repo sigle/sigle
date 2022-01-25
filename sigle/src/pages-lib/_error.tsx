@@ -10,19 +10,20 @@ import { useAuth } from '../modules/auth/AuthContext';
 import { AppHeader } from '../modules/layout/components/AppHeader';
 
 const NotFoundContainer = styled('div', {
-  '@xs': {
-    flexDirection: 'column',
-    textAlign: 'center',
-    mt: '$10',
-    height: '90%',
-  },
+  boxSizing: 'border-box',
+  display: 'flex',
+  flexDirection: 'column',
+  justifyContent: 'center',
+  alignItems: 'center',
+  textAlign: 'center',
+  height: '90%',
+  my: 'auto',
+  mx: 'auto',
 
   '@lg': {
     width: '90%',
     flexDirection: 'row-reverse',
     textAlign: 'left',
-    mt: '$20',
-    height: '90%',
   },
 
   '@xl': {
@@ -31,20 +32,13 @@ const NotFoundContainer = styled('div', {
 
   '@2xl': {
     width: '100%',
-    height: '100%',
   },
-
-  display: 'flex',
-  justifyContent: 'center',
-  alignItems: 'center',
-  my: 'auto',
-  mx: 'auto',
 });
 
 const NotFoundTextContainer = styled('div', {
-  '@xs': {
-    alignItems: 'center',
-  },
+  alignItems: 'center',
+  display: 'flex',
+  flexDirection: 'column',
 
   '@md': {
     width: '501px',
@@ -58,9 +52,6 @@ const NotFoundTextContainer = styled('div', {
   '@xl': {
     pr: '$3',
   },
-
-  display: 'flex',
-  flexDirection: 'column',
 });
 
 const NotFoundText = styled(Text, {
@@ -69,10 +60,11 @@ const NotFoundText = styled(Text, {
 });
 
 const NotFoundWrapper = styled('div', {
-  '@xs': {
-    width: '300px',
-    height: '282px',
-  },
+  width: '300px',
+  height: '282px',
+  position: 'relative',
+  mt: '$4',
+  mb: '$4',
 
   '@lg': {
     minWidth: '520px',
@@ -83,18 +75,15 @@ const NotFoundWrapper = styled('div', {
     width: '737px',
     height: '693px',
   },
-
-  position: 'relative',
-  mt: '$4',
-  mb: '$4',
-  maxWidth: '100%',
 });
 
 const ErrorWrapper = styled('div', {
-  '@xs': {
-    width: '300px',
-    height: '232px',
-  },
+  width: '300px',
+  height: '232px',
+  maxWidth: '100%',
+  position: 'relative',
+  mt: '$4',
+  mb: '$4',
 
   '@lg': {
     width: '520px',
@@ -105,11 +94,6 @@ const ErrorWrapper = styled('div', {
     width: '765px',
     height: '593px',
   },
-
-  position: 'relative',
-  mt: '$4',
-  mb: '$4',
-  maxWidth: '100%',
 });
 
 const NotFoundIllu = ({
