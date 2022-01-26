@@ -61,6 +61,11 @@ Router.events.on('routeChangeComplete', () => {
  */
 
 const GlobalStyle = createGlobalStyle`
+
+  html, body, #root, #__next {
+    height: 100%;
+  }
+
   body {
     font-family: "Open Sans";
   }

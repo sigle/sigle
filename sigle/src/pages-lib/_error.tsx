@@ -1,44 +1,95 @@
 import React from 'react';
 import { NextPageContext } from 'next';
 import NextErrorComponent from 'next/error';
-import styled from 'styled-components';
-import tw from 'twin.macro';
+import { styled } from '../stitches.config';
 import Link from 'next/link';
 import * as Sentry from '@sentry/nextjs';
-import { Button, Container } from '../components';
-import { sigleConfig } from '../config';
+import { Button, Container, Flex, Heading, Text } from '../ui';
+import Image from 'next/image';
+import { useAuth } from '../modules/auth/AuthContext';
+import { AppHeader } from '../modules/layout/components/AppHeader';
 
-const NotFoundContainer = styled(Container)`
-  ${tw`mt-8 mb-8 flex flex-col items-center text-center md:flex-row md:text-left`};
-`;
+const NotFoundContainer = styled(Container, {
+  display: 'flex',
+  flexDirection: 'column',
+  justifyContent: 'center',
+  alignItems: 'center',
+  textAlign: 'center',
+  flex: 1,
 
-const NotFoundTextContainer = styled(Container)`
-  ${tw`flex flex-col items-center md:items-start md:pl-8`};
-`;
+  '@xl': {
+    flexDirection: 'row-reverse',
+    textAlign: 'left',
+  },
+});
 
-const NotFoundTitle = styled.div`
-  ${tw`mb-2 text-5xl`};
-`;
+const NotFoundTextContainer = styled('div', {
+  alignItems: 'center',
+  display: 'flex',
+  flexDirection: 'column',
 
-const NotFoundSubTitle = styled.div`
-  ${tw`mb-8 text-3xl`};
-`;
+  '@md': {
+    width: '501px',
+  },
 
-const NotFoundIllu = styled.img`
-  ${tw`mt-4 mb-4`};
-  width: 300px;
-  max-width: 100%;
+  '@lg': {
+    alignItems: 'start',
+    pr: '$3',
+  },
 
-  @media (min-width: ${sigleConfig.breakpoints.md}px) {
-    width: 520px;
-  }
-`;
+  '@xl': {
+    pr: '$3',
+  },
+});
+
+const NotFoundText = styled(Text, {
+  mb: '$6',
+  maxWidth: '400px',
+});
+
+const NotFoundWrapper = styled('div', {
+  width: '300px',
+  height: '282px',
+  position: 'relative',
+  mt: '$4',
+  mb: '$4',
+
+  '@lg': {
+    minWidth: '520px',
+    height: '488px',
+  },
+
+  '@2xl': {
+    width: '737px',
+    height: '693px',
+  },
+});
+
+const ErrorWrapper = styled('div', {
+  width: '300px',
+  height: '232px',
+  maxWidth: '100%',
+  position: 'relative',
+  mt: '$4',
+  mb: '$4',
+
+  '@lg': {
+    width: '520px',
+    height: '403px',
+  },
+
+  '@2xl': {
+    width: '765px',
+    height: '593px',
+  },
+});
 
 interface ErrorProps {
   statusCode: number;
   errorMessage?: string | null;
   hasGetInitialPropsRun?: boolean;
   err?: Error;
+  sentryErrorId?: string;
 }
 
 export const MyError = ({
@@ -46,32 +97,96 @@ export const MyError = ({
   hasGetInitialPropsRun,
   errorMessage,
   err,
+  sentryErrorId,
 }: ErrorProps) => {
+  const { user } = useAuth();
+  const notFound = statusCode === 404;
+
   if (!hasGetInitialPropsRun && err) {
     // getInitialProps is not called in case of
     // https://github.com/vercel/next.js/issues/8592. As a workaround, we pass
     // err via _app.js so it can be captured
-    Sentry.captureException(err);
+    sentryErrorId = Sentry.captureException(err);
     // Flushing is not required in this case as it only happens on the client
   }
 
   return (
-    <NotFoundContainer>
-      <NotFoundIllu src="/static/img/jungle.png" alt="One" />
-      <NotFoundTextContainer>
-        <NotFoundTitle data-testid="error-title">
-          {statusCode} in sight!
-        </NotFoundTitle>
-        <NotFoundSubTitle data-testid="error-sub-title">
-          {errorMessage
-            ? errorMessage
-            : 'Looks like you and Julia went too far...'}
-        </NotFoundSubTitle>
-        <Link href="/">
-          <Button as="a">Go to the app</Button>
-        </Link>
-      </NotFoundTextContainer>
-    </NotFoundContainer>
+    <Flex direction="column" css={{ height: '100%' }}>
+      <AppHeader />
+      <NotFoundContainer>
+        {notFound ? (
+          <NotFoundWrapper>
+            <Image
+              src="/static/img/404.png"
+              alt="A lost traveller"
+              width={737}
+              height={693}
+              priority
+              layout="responsive"
+              objectPosition="center"
+            />
+          </NotFoundWrapper>
+        ) : (
+          <ErrorWrapper>
+            <Image
+              src="/static/img/5XX.png"
+              alt="Woodpecker and broken pencil"
+              width={765}
+              height={593}
+              priority
+              layout="responsive"
+              objectPosition="center"
+            />
+          </ErrorWrapper>
+        )}
+        <NotFoundTextContainer>
+          <Heading
+            css={{ mb: '$3', lineHeight: 1 }}
+            as="h1"
+            size="5xl"
+            data-testid="error-title"
+          >
+            {statusCode}
+          </Heading>
+          <Heading
+            size="xl"
+            css={{ mb: '$3', lineHeight: 1.25 }}
+            as="h3"
+            data-testid="error-sub-title"
+          >
+            {errorMessage
+              ? errorMessage
+              : notFound
+              ? 'The page could not be found'
+              : 'An error has occured'}
+          </Heading>
+          <NotFoundText>
+            {notFound
+              ? 'It seems that you got lost into the Sigleverse.'
+              : `Oops! It seems that Sigle has stopped working. Please refresh the page or try again later.`}
+          </NotFoundText>
+          {sentryErrorId && (
+            <NotFoundText data-testid="error-id">{`Error ID: ${sentryErrorId}`}</NotFoundText>
+          )}
+          {notFound ? (
+            <Link href="/login" passHref>
+              <Button css={{ mb: '$10' }} as="a" size="lg" color="orange">
+                {user ? 'Go back to your dashboard' : 'Log in'}
+              </Button>
+            </Link>
+          ) : (
+            <Button
+              css={{ mb: '$10' }}
+              onClick={() => window.location.reload()}
+              size="lg"
+              color="orange"
+            >
+              Refresh the page
+            </Button>
+          )}
+        </NotFoundTextContainer>
+      </NotFoundContainer>
+    </Flex>
   );
 };
 
@@ -103,7 +218,7 @@ MyError.getInitialProps = async (props: NextPageContext) => {
     return { statusCode: 404 };
   }
   if (err) {
-    Sentry.captureException(err);
+    errorInitialProps.sentryErrorId = Sentry.captureException(err);
 
     // Flushing before returning is necessary if deploying to Vercel, see
     // https://vercel.com/docs/platform/limits#streaming-responses
@@ -115,7 +230,7 @@ MyError.getInitialProps = async (props: NextPageContext) => {
   // If this point is reached, getInitialProps was called without any
   // information about what the error might be. This is unexpected and may
   // indicate a bug introduced in Next.js, so record it in Sentry
-  Sentry.captureException(
+  errorInitialProps.sentryErrorId = Sentry.captureException(
     new Error(`_error.js getInitialProps missing data at path: ${asPath}`)
   );
   await Sentry.flush(2000);
