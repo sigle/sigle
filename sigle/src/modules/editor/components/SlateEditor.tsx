@@ -170,6 +170,7 @@ export const SlateEditor = ({
   onCancelUnpublish,
   onConfirmUnpublish,
 }: Props) => {
+  const { user } = useAuth();
   const editorRef = useRef<Editor>(null);
   const sideMenuRef = useRef<any>(null);
   const hoverMenuRef = useRef<any>(null);
@@ -181,7 +182,6 @@ export const SlateEditor = ({
       ? Value.fromJSON(story.content)
       : Value.fromJSON(emptyNode as any)
   );
-  const { user } = useAuth();
 
   const addImageToEditor = (editor: Editor, files: File[], target?: any) => {
     for (const file of files) {
