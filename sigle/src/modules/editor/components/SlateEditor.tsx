@@ -18,6 +18,8 @@ import {
   TooltipTrigger,
   TooltipContent,
   Container,
+  Box,
+  IconButton,
 } from '../../../ui';
 import {
   saveStoryFile,
@@ -647,13 +649,9 @@ export const SlateEditor = ({
               Publish
             </Button>
           )}
-          <Button
-            onClick={handleOpenSettings}
-            variant="ghost"
-            aria-label="Open settings"
-          >
+          <IconButton onClick={handleOpenSettings} aria-label="Open settings">
             <MixerHorizontalIcon />
-          </Button>
+          </IconButton>
         </Flex>
       </Flex>
 
