@@ -84,40 +84,6 @@ const ErrorWrapper = styled('div', {
   },
 });
 
-const NotFoundIllu = ({
-  statusCode,
-  alt,
-}: {
-  statusCode: number;
-  alt: string;
-}) => {
-  if (statusCode === 404) {
-    return (
-      <Image
-        src="/static/img/404.png"
-        alt={alt}
-        width={737}
-        height={693}
-        priority
-        layout="responsive"
-        objectPosition="center"
-      />
-    );
-  }
-
-  return (
-    <Image
-      src="/static/img/5XX.png"
-      alt={alt}
-      width={765}
-      height={593}
-      priority
-      layout="responsive"
-      objectPosition="center"
-    />
-  );
-};
-
 interface ErrorProps {
   statusCode: number;
   errorMessage?: string | null;
@@ -150,11 +116,27 @@ export const MyError = ({
       <NotFoundContainer>
         {notFound ? (
           <NotFoundWrapper>
-            <NotFoundIllu statusCode={404} alt="A lost traveller" />
+            <Image
+              src="/static/img/404.png"
+              alt="A lost traveller"
+              width={737}
+              height={693}
+              priority
+              layout="responsive"
+              objectPosition="center"
+            />
           </NotFoundWrapper>
         ) : (
           <ErrorWrapper>
-            <NotFoundIllu statusCode={500} alt="Woodpecker and broken pencil" />
+            <Image
+              src="/static/img/5XX.png"
+              alt="Woodpecker and broken pencil"
+              width={765}
+              height={593}
+              priority
+              layout="responsive"
+              objectPosition="center"
+            />
           </ErrorWrapper>
         )}
         <NotFoundTextContainer>
