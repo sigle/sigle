@@ -612,7 +612,9 @@ export const SlateEditor = ({
             </a>
           </Link>
           <Text size="sm">
-            <span style={{ fontWeight: 'bold' }}>{user?.username}</span>
+            <Box as="span" css={{ fontWeight: 'bold' }}>
+              {user?.username}
+            </Box>
             <span>{` | Draft`}</span>
           </Text>
         </Flex>
