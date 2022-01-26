@@ -613,7 +613,7 @@ export const SlateEditor = ({
               <ArrowLeftIcon />
             </a>
           </Link>
-          <Text size="sm">
+          <Text css={{ color: '$gray11' }} size="sm">
             <Box as="span" css={{ fontWeight: 'bold' }}>
               {user?.username}
             </Box>
