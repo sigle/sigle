@@ -10,15 +10,11 @@ import { useAuth } from '../modules/auth/AuthContext';
 import { AppHeader } from '../modules/layout/components/AppHeader';
 
 const NotFoundContainer = styled(Container, {
-  position: 'relative',
-  boxSizing: 'border-box',
   display: 'flex',
   flexDirection: 'column',
   justifyContent: 'center',
   alignItems: 'center',
   textAlign: 'center',
-  my: 'auto',
-  mx: 'auto',
   flex: 1,
 
   '@xl': {
