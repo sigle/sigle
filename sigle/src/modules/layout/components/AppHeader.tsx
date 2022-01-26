@@ -22,22 +22,12 @@ const Header = styled('header', Container, {
   alignItems: 'center',
   justifyContent: 'space-between',
   mt: '$4',
+  width: '100%',
 
   '@md': {
     mt: '$10',
   },
 });
-
-const Logo = () => (
-  <Image
-    priority
-    width={101}
-    height={45}
-    objectFit="cover"
-    src="/static/img/logo.png"
-    alt="logo"
-  />
-);
 
 const EyeOpenIcon = styled(EyeOpenIconBase, {
   display: 'inline-block',
@@ -80,7 +70,14 @@ export const AppHeader = () => {
       <Flex justify="center" gap="10" as="nav" align="center">
         <Link href="/" passHref>
           <a style={{ display: 'flex' }}>
-            <Logo />
+            <Image
+              priority
+              width={101}
+              height={45}
+              objectFit="cover"
+              src="/static/img/logo.png"
+              alt="logo"
+            />
           </a>
         </Link>
         {user && (
