@@ -4,34 +4,26 @@ import NextErrorComponent from 'next/error';
 import { styled } from '../stitches.config';
 import Link from 'next/link';
 import * as Sentry from '@sentry/nextjs';
-import { Button, Heading, Text } from '../ui';
+import { Button, Container, Flex, Heading, Text } from '../ui';
 import Image from 'next/image';
 import { useAuth } from '../modules/auth/AuthContext';
 import { AppHeader } from '../modules/layout/components/AppHeader';
 
-const NotFoundContainer = styled('div', {
+const NotFoundContainer = styled(Container, {
+  position: 'relative',
   boxSizing: 'border-box',
   display: 'flex',
   flexDirection: 'column',
   justifyContent: 'center',
   alignItems: 'center',
   textAlign: 'center',
-  height: '90%',
   my: 'auto',
   mx: 'auto',
-
-  '@lg': {
-    width: '90%',
-    flexDirection: 'row-reverse',
-    textAlign: 'left',
-  },
+  flex: 1,
 
   '@xl': {
-    width: '80%',
-  },
-
-  '@2xl': {
-    width: '100%',
+    flexDirection: 'row-reverse',
+    textAlign: 'left',
   },
 });
 
@@ -108,8 +100,10 @@ const NotFoundIllu = ({
       <Image
         src="/static/img/404.png"
         alt={alt}
+        width={737}
+        height={693}
         priority
-        layout="fill"
+        layout="responsive"
         objectPosition="center"
       />
     );
@@ -119,8 +113,10 @@ const NotFoundIllu = ({
     <Image
       src="/static/img/5XX.png"
       alt={alt}
+      width={765}
+      height={593}
       priority
-      layout="fill"
+      layout="responsive"
       objectPosition="center"
     />
   );
@@ -153,7 +149,7 @@ export const MyError = ({
   }
 
   return (
-    <>
+    <Flex direction="column" css={{ height: '100%' }}>
       <AppHeader />
       <NotFoundContainer>
         {notFound ? (
@@ -212,7 +208,7 @@ export const MyError = ({
           )}
         </NotFoundTextContainer>
       </NotFoundContainer>
-    </>
+    </Flex>
   );
 };
 
