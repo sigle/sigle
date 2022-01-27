@@ -13,8 +13,14 @@ import {
 } from 'slate-react';
 import SoftBreak from 'slate-soft-break';
 import { Block, Value } from 'slate';
-import { MdSettings } from 'react-icons/md';
-import { Tooltip, TooltipTrigger, TooltipContent } from '../../../ui';
+import {
+  Tooltip,
+  TooltipTrigger,
+  TooltipContent,
+  Container,
+  Box,
+  IconButton,
+} from '../../../ui';
 import {
   saveStoryFile,
   convertStoryToSubsetStory,
@@ -29,8 +35,6 @@ import { StorySettings } from './StorySettings';
 import { SlateEditorSideMenu } from './SlateEditorSideMenu';
 import { SlateEditorHoverMenu } from './SlateEditorHoverMenu';
 import { SlateEditorToolbar } from './SlateEditorToolbar';
-import { AppBar, AppBarRightContainer } from '../../layout';
-import { ButtonOutline } from '../../../components';
 import {
   Button,
   Dialog,
@@ -52,18 +56,13 @@ import {
 } from './utils';
 import { storage } from '../../../utils/blockstack';
 import { resizeImage } from '../../../utils/image';
-import { FixedContainer, PageContainer } from './Editor';
+import { PageContainer } from './Editor';
 import { SlateEditorLink } from './SlateEditorLink';
 import { TwitterCardPreview } from './TwitterCardPreview';
 import { StoryPublishedDialog } from './StoryPublishedDialog';
-
-const StyledAppBarRightContainer = styled(AppBarRightContainer)`
-  ${tw`hidden md:flex`};
-`;
-
-const AppBarSettings = styled.div`
-  ${tw`p-2 -mr-2 flex items-center cursor-pointer text-pink`};
-`;
+import { ArrowLeftIcon, MixerHorizontalIcon } from '@radix-ui/react-icons';
+import Link from 'next/link';
+import { useAuth } from '../../auth/AuthContext';
 
 const Input = styled.input`
   ${tw`outline-none w-full text-4xl font-bold`};
@@ -173,6 +172,7 @@ export const SlateEditor = ({
   onCancelUnpublish,
   onConfirmUnpublish,
 }: Props) => {
+  const { user } = useAuth();
   const editorRef = useRef<Editor>(null);
   const sideMenuRef = useRef<any>(null);
   const hoverMenuRef = useRef<any>(null);
@@ -594,52 +594,66 @@ export const SlateEditor = ({
   };
 
   return (
-    <React.Fragment>
-      <FixedContainer>
-        <AppBar>
-          <StyledAppBarRightContainer>
-            {loadingSave && (
-              <ButtonOutline style={{ marginRight: 6 }} disabled>
-                Saving ...
-              </ButtonOutline>
-            )}
-            {!loadingSave && story.type === 'public' && (
-              <ButtonOutline
-                style={{ marginRight: 6 }}
-                onClick={() => handleSave()}
-              >
+    <Container>
+      <Flex
+        as="header"
+        justify="between"
+        align="center"
+        css={{
+          mt: '$5',
+
+          '@md': {
+            mt: '$10',
+          },
+        }}
+      >
+        <Flex gap="10" align="center">
+          <Link href="/" passHref>
+            <a>
+              <ArrowLeftIcon />
+            </a>
+          </Link>
+          <Text css={{ color: '$gray11' }} size="sm">
+            <Box as="span" css={{ fontWeight: 'bold', fontSize: '$3' }}>
+              {user?.username}
+            </Box>
+            <span>{` | Draft`}</span>
+          </Text>
+        </Flex>
+        <Flex gap="10">
+          {loadingSave && (
+            <Button disabled variant="ghost">
+              Saving ...
+            </Button>
+          )}
+          {!loadingSave && story.type === 'public' && (
+            <Button variant="ghost">Save</Button>
+          )}
+          {!loadingSave && story.type === 'private' && (
+            <Tippy
+              content="Nobody can see it unless you click on « publish »"
+              theme="light-border"
+            >
+              <Button onClick={() => handleSave()} variant="ghost">
                 Save
-              </ButtonOutline>
-            )}
-            {!loadingSave && story.type === 'private' && (
-              <Tippy
-                content="Nobody can see it unless you click on « publish »"
-                theme="light-border"
-              >
-                <ButtonOutline
-                  style={{ marginRight: 12 }}
-                  onClick={() => handleSave()}
-                >
-                  Save
-                </ButtonOutline>
-              </Tippy>
-            )}
-            {story.type === 'private' && (
-              <ButtonOutline style={{ marginRight: 6 }} onClick={onPublish}>
-                Publish
-              </ButtonOutline>
-            )}
-            {story.type === 'public' && (
-              <ButtonOutline style={{ marginRight: 6 }} onClick={onUnpublish}>
-                Unpublish
-              </ButtonOutline>
-            )}
-            <AppBarSettings onClick={handleOpenSettings}>
-              <MdSettings size={22} />
-            </AppBarSettings>
-          </StyledAppBarRightContainer>
-        </AppBar>
-      </FixedContainer>
+              </Button>
+            </Tippy>
+          )}
+          {story.type === 'private' && (
+            <Button onClick={onPublish} variant="ghost">
+              Publish
+            </Button>
+          )}
+          {story.type === 'public' && (
+            <Button onClick={onUnpublish} variant="ghost">
+              Publish
+            </Button>
+          )}
+          <IconButton onClick={handleOpenSettings} aria-label="Open settings">
+            <MixerHorizontalIcon />
+          </IconButton>
+        </Flex>
+      </Flex>
 
       <PageContainer>
         <Input
@@ -762,6 +776,6 @@ export const SlateEditor = ({
           </DialogContent>
         </Dialog>
       </PageContainer>
-    </React.Fragment>
+    </Container>
   );
 };
