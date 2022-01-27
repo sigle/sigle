@@ -643,7 +643,9 @@ export const SlateEditor = ({
             </Button>
           )}
           {!loadingSave && story.type === 'public' && (
-            <Button variant="ghost">Save</Button>
+            <Button onClick={() => handleSave()} variant="ghost">
+              Save
+            </Button>
           )}
           {!loadingSave && story.type === 'private' && (
             <Tippy
