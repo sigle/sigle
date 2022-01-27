@@ -60,7 +60,11 @@ import { PageContainer } from './Editor';
 import { SlateEditorLink } from './SlateEditorLink';
 import { TwitterCardPreview } from './TwitterCardPreview';
 import { StoryPublishedDialog } from './StoryPublishedDialog';
-import { ArrowLeftIcon, MixerHorizontalIcon } from '@radix-ui/react-icons';
+import {
+  ArrowLeftIcon,
+  EyeOpenIcon,
+  MixerHorizontalIcon,
+} from '@radix-ui/react-icons';
 import Link from 'next/link';
 import { useAuth } from '../../auth/AuthContext';
 
@@ -619,6 +623,18 @@ export const SlateEditor = ({
             </Box>
             <span>{story.type === 'public' ? ' | Published' : ' | Draft'}</span>
           </Text>
+          {story.type === 'public' && (
+            <Button
+              css={{ display: 'flex', alignItems: 'center', gap: '$2' }}
+              variant="ghost"
+              href={`/${user?.username}/${story.id}`}
+              target="_blank"
+              as="a"
+            >
+              <Text size="action">See my blog</Text>
+              <EyeOpenIcon />
+            </Button>
+          )}
         </Flex>
         <Flex gap="10">
           {loadingSave && (
