@@ -614,7 +614,7 @@ export const SlateEditor = ({
             </a>
           </Link>
           <Text css={{ color: '$gray11' }} size="sm">
-            <Box as="span" css={{ fontWeight: 'bold' }}>
+            <Box as="span" css={{ fontWeight: 'bold', fontSize: '$3' }}>
               {user?.username}
             </Box>
             <span>{` | Draft`}</span>
