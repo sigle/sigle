@@ -60,7 +60,11 @@ import { PageContainer } from './Editor';
 import { SlateEditorLink } from './SlateEditorLink';
 import { TwitterCardPreview } from './TwitterCardPreview';
 import { StoryPublishedDialog } from './StoryPublishedDialog';
-import { ArrowLeftIcon, MixerHorizontalIcon } from '@radix-ui/react-icons';
+import {
+  ArrowLeftIcon,
+  EyeOpenIcon,
+  MixerHorizontalIcon,
+} from '@radix-ui/react-icons';
 import Link from 'next/link';
 import { useAuth } from '../../auth/AuthContext';
 
@@ -594,19 +598,15 @@ export const SlateEditor = ({
   };
 
   return (
-    <Container>
-      <Flex
-        as="header"
-        justify="between"
-        align="center"
-        css={{
-          mt: '$5',
-
-          '@md': {
-            mt: '$10',
-          },
-        }}
-      >
+    <Container
+      css={{
+        pt: '$5',
+        '@md': {
+          pt: '$10',
+        },
+      }}
+    >
+      <Flex as="header" justify="between" align="center">
         <Flex gap="10" align="center">
           <Link href="/" passHref>
             <a>
@@ -617,8 +617,20 @@ export const SlateEditor = ({
             <Box as="span" css={{ fontWeight: 'bold', fontSize: '$3' }}>
               {user?.username}
             </Box>
-            <span>{` | Draft`}</span>
+            <span>{story.type === 'public' ? ' | Published' : ' | Draft'}</span>
           </Text>
+          {story.type === 'public' && (
+            <Button
+              css={{ display: 'flex', alignItems: 'center', gap: '$2' }}
+              variant="ghost"
+              href={`/${user?.username}/${story.id}`}
+              target="_blank"
+              as="a"
+            >
+              <Text size="action">See my blog</Text>
+              <EyeOpenIcon />
+            </Button>
+          )}
         </Flex>
         <Flex gap="10">
           {loadingSave && (
@@ -627,7 +639,9 @@ export const SlateEditor = ({
             </Button>
           )}
           {!loadingSave && story.type === 'public' && (
-            <Button variant="ghost">Save</Button>
+            <Button onClick={() => handleSave()} variant="ghost">
+              Save
+            </Button>
           )}
           {!loadingSave && story.type === 'private' && (
             <Tippy
@@ -646,7 +660,7 @@ export const SlateEditor = ({
           )}
           {story.type === 'public' && (
             <Button onClick={onUnpublish} variant="ghost">
-              Publish
+              Unpublish
             </Button>
           )}
           <IconButton onClick={handleOpenSettings} aria-label="Open settings">
