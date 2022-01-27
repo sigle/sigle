@@ -598,19 +598,15 @@ export const SlateEditor = ({
   };
 
   return (
-    <Container>
-      <Flex
-        as="header"
-        justify="between"
-        align="center"
-        css={{
-          mt: '$5',
-
-          '@md': {
-            mt: '$10',
-          },
-        }}
-      >
+    <Container
+      css={{
+        pt: '$5',
+        '@md': {
+          pt: '$10',
+        },
+      }}
+    >
+      <Flex as="header" justify="between" align="center">
         <Flex gap="10" align="center">
           <Link href="/" passHref>
             <a>
