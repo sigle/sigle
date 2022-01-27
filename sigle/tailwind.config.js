@@ -29,6 +29,9 @@ module.exports = {
             code: {
               fontWeight: '400',
             },
+            blockquote: {
+              quotes: 'none',
+            },
           },
         },
       },

@@ -29,9 +29,9 @@ export const Button = styled('button', {
       },
       orange: {
         color: 'white',
-        backgroundColor: '$orange9',
+        backgroundColor: '$orange11',
         '&:hover': {
-          backgroundColor: '$orange10',
+          backgroundColor: '$orange12',
         },
       },
     },

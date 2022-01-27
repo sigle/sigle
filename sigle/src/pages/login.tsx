@@ -95,7 +95,7 @@ const Login = () => {
     if (user && user.username) {
       router.push(`/`);
     }
-  }, [user]);
+  }, [router, user]);
 
   const hasUsername = !!user?.username;
 

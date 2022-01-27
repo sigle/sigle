@@ -94,3 +94,18 @@ describe('getInitialProps', () => {
     expect(res).toEqual({ hasGetInitialPropsRun: true, statusCode: 404 });
   });
 });
+
+describe('Sentry ID', () => {
+  it('should display server error Sentry ID', async () => {
+    const sentryID = '737H3RJA3RRH237';
+    const { getByTestId } = render(
+      <MyError
+        sentryErrorId={sentryID}
+        statusCode={500}
+        errorMessage="Custom error message"
+      />
+    );
+    expect(getByTestId('error-id')).toBeInTheDocument();
+    expect(getByTestId('error-id')).toHaveTextContent(/737H3RJA3RRH237/);
+  });
+});

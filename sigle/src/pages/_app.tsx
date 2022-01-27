@@ -4,8 +4,6 @@ import Router from 'next/router';
 import Head from 'next/head';
 import * as Fathom from 'fathom-client';
 import posthog from 'posthog-js';
-import { createGlobalStyle } from 'styled-components';
-import tw from 'twin.macro';
 import { DefaultSeo } from 'next-seo';
 import { ToastContainer } from 'react-toastify';
 import { QueryClient, QueryClientProvider } from 'react-query';
@@ -22,6 +20,7 @@ import '../styles/index.css';
 import { sigleConfig } from '../config';
 import { colors } from '../utils/colors';
 import { AuthProvider } from '../modules/auth/AuthContext';
+import { globalCss } from '../stitches.config';
 
 const queryClient = new QueryClient();
 
@@ -60,28 +59,34 @@ Router.events.on('routeChangeComplete', () => {
  * Global style
  */
 
-const GlobalStyle = createGlobalStyle`
-  body {
-    font-family: "Open Sans";
-  }
+const GlobalStyle = globalCss({
+  'html, body, #root, #__next': {
+    height: '100%',
+  },
 
-  /* For the toasts */
-  :root {
-    --toastify-color-success: #4db6a1;
-  }
+  body: {
+    fontFamily: '$openSans',
+  },
 
-  /* For the nprogress bar */
-  #nprogress .bar {
-    ${tw`bg-pink`};
-  }
-  #nprogress .peg {
-    box-shadow: 0 0 10px ${colors.pink}, 0 0 5px ${colors.pink};
-  }
-  #nprogress .spinner-icon { 
-    border-top-color: ${colors.pink};
-    border-left-color: ${colors.pink};
-  }
-`;
+  ':root': {
+    '--toastify-color-success': '#4db6a1',
+  },
+
+  '#nprogress, .bar': {
+    backgroundColor: colors.pink,
+  },
+
+  '#nprogress .peg': {
+    boxShadow: `0 0 10px ${colors.pink}, 0 0 5px ${colors.pink}`,
+  },
+
+  '#nprogress .spinner-icon': {
+    borderTopColor: `${colors.pink}`,
+    borderLeftColor: `${colors.pink}`,
+  },
+});
+
+GlobalStyle();
 
 /**
  * Loading bar
@@ -91,26 +96,11 @@ Router.events.on('routeChangeStart', () => NProgress.start());
 Router.events.on('routeChangeComplete', () => NProgress.done());
 Router.events.on('routeChangeError', () => NProgress.done());
 
-/**
- * Force https client side
- * Ideally it should be server side but we would lose the next.js optimisation
- */
-const ForceHTTPS = () => {
-  useEffect(() => {
-    // Only check in production to avoid redirecting localhost
-    if (sigleConfig.env === 'production' && location.protocol !== 'https:') {
-      location.replace(
-        `https:${location.href.substring(location.protocol.length)}`
-      );
-    }
-  }, []);
-
-  return <React.Fragment />;
-};
 export default class MyApp extends App {
   render() {
     const { Component, pageProps } = this.props;
     // Workaround for https://github.com/zeit/next.js/issues/8592
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const { err } = this.props as any;
     const modifiedPageProps = { ...pageProps, err };
 
@@ -150,8 +140,6 @@ export default class MyApp extends App {
             cardType: 'summary_large_image',
           }}
         />
-        <GlobalStyle />
-        <ForceHTTPS />
         <FathomTrack />
         <QueryClientProvider client={queryClient}>
           <ReactQueryDevtools initialIsOpen={false} />
