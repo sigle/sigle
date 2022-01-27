@@ -617,7 +617,7 @@ export const SlateEditor = ({
             <Box as="span" css={{ fontWeight: 'bold', fontSize: '$3' }}>
               {user?.username}
             </Box>
-            <span>{` | Draft`}</span>
+            <span>{story.type === 'public' ? ' | Published' : ' | Draft'}</span>
           </Text>
         </Flex>
         <Flex gap="10">
@@ -646,7 +646,7 @@ export const SlateEditor = ({
           )}
           {story.type === 'public' && (
             <Button onClick={onUnpublish} variant="ghost">
-              Publish
+              Unpublish
             </Button>
           )}
           <IconButton onClick={handleOpenSettings} aria-label="Open settings">
