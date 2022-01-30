@@ -99,14 +99,14 @@ const HeaderTitle = styled.a`
 `;
 
 const StyledContainer = styled(Container)<{ hasCover: boolean }>`
-  ${tw`mb-16`}
+  ${tw`pb-16`}
   max-width: 768px;
 
   ${(props) =>
     !props.hasCover &&
     css`
       .sigle-content {
-        ${tw`mt-16`};
+        ${tw`pt-16`};
       }
     `}
 `;
