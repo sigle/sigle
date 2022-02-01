@@ -24,18 +24,12 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
 
   useEffect(() => {
     if (userSession.isUserSignedIn()) {
-      setState({
-        loggingIn: false,
-        user: userSession.loadUserData(),
-      });
+      handleAuthSignIn();
     } else if (userSession.isSignInPending()) {
       userSession
         .handlePendingSignIn()
         .then(() => {
-          setState({
-            loggingIn: false,
-            user: userSession.loadUserData(),
-          });
+          handleAuthSignIn();
         })
         .catch((error: Error) => {
           setState({
@@ -67,11 +61,37 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
     },
     userSession,
     onFinish: () => {
-      setState({
-        loggingIn: false,
-        user: userSession.loadUserData(),
-      });
+      handleAuthSignIn();
     },
+  };
+
+  const handleAuthSignIn = async () => {
+    const userData = userSession.loadUserData();
+    const address = userData.profile.stxAddress.mainnet;
+
+    /**
+     * We try to manually inject the user's username into the userData object,
+     * to fix the following edge case:
+     * 1. Username is not populated for .btc names https://github.com/hirosystems/stacks.js/issues/1144
+     * 2. When registering a new free subdomain with Sigle, it takes time to get injected by
+     * the Hiro wallet.
+     */
+    if (userData.username === '') {
+      try {
+        const namesResponse = await fetch(
+          `https://stacks-node-api.stacks.co/v1/addresses/stacks/${address}`
+        );
+        const namesJson = await namesResponse.json();
+        if ((namesJson.names.length || 0) > 0) {
+          userData.username = namesJson.names[0];
+        }
+      } catch (e) {}
+    }
+
+    setState({
+      loggingIn: false,
+      user: userData,
+    });
   };
 
   return (

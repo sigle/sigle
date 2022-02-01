@@ -17,8 +17,8 @@ import {
   getStoriesFile,
 } from '../../../utils';
 import { Goals } from '../../../utils/fathom';
-import { userSession } from '../../../utils/blockstack';
 import { DashboardSidebar } from './DashboardLayout';
+import { useAuth } from '../../auth/AuthContext';
 
 export const PageTitleContainer = styledC.div`
   ${tw`mb-2 pb-4 lg:pb-8 flex flex-col-reverse lg:flex-row justify-between border-b border-solid border-grey`};
@@ -84,9 +84,9 @@ interface DashboardPageTitleProps {
 
 export const DashboardPageTitle = ({ title }: DashboardPageTitleProps) => {
   const router = useRouter();
+  const { user } = useAuth();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [loadingCreate, setLoadingCreate] = useState(false);
-  const user = userSession.loadUserData();
 
   const handleCreateNewPrivateStory = async () => {
     setLoadingCreate(true);
@@ -132,7 +132,7 @@ export const DashboardPageTitle = ({ title }: DashboardPageTitleProps) => {
           <VisitButton
             size="large"
             as="a"
-            href={`/${user.username}`}
+            href={`/${user?.username}`}
             target="_blank"
           >
             Visit my blog <MdRemoveRedEye size={18} style={{ marginLeft: 8 }} />
