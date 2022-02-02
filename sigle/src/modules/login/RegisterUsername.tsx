@@ -73,10 +73,9 @@ export const RegisterUsername = () => {
 
   // TODO loading indicator as the request can take some time @greg
 
-  console.log({ user });
-
-  // TODO type any
-  const handleSubmit = async (event: any) => {
+  const handleSubmit: React.FormEventHandler<HTMLFormElement> = async (
+    event
+  ) => {
     event.preventDefault();
     if (!user) {
       return;
@@ -171,8 +170,6 @@ export const RegisterUsername = () => {
       }));
       return;
     }
-
-    // TODO handle error when a username is already registered for this address aka bug path
 
     posthog.capture('username-registration-success');
     Fathom.trackGoal(Goals.FREE_USERNAME_CREATED, 0);
