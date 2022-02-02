@@ -79,7 +79,11 @@ export const RegisterUsername = () => {
 
     posthog.capture('username-submitted');
 
-    setFormState((state) => ({ ...state, loading: true }));
+    setFormState((state) => ({
+      ...state,
+      loading: true,
+      errorMessage: undefined,
+    }));
 
     const validationErrors = validateSubdomainFormat(formState.username);
     if (validationErrors !== null) {
