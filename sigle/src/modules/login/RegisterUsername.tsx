@@ -1,12 +1,14 @@
 import { useState } from 'react';
 import { makeProfileZoneFile } from '@stacks/profile';
 import posthog from 'posthog-js';
+import * as Fathom from 'fathom-client';
 import {
   validateSubdomainFormat,
   IdentityNameValidityError,
 } from '@stacks/keychain';
 import { Box, Button, Heading, Text } from '../../ui';
 import { useAuth } from '../auth/AuthContext';
+import { Goals } from '../../utils/fathom';
 
 interface HubInfo {
   challenge_text?: string;
@@ -124,7 +126,18 @@ export const RegisterUsername = () => {
       return;
     }
 
-    const hubInfo = await getHubInfo(gaiaUrl);
+    let hubInfo: HubInfo;
+    try {
+      hubInfo = await getHubInfo(gaiaUrl);
+    } catch (error) {
+      posthog.capture('username-hub-info-error', { error });
+      setFormState((state) => ({
+        ...state,
+        loading: false,
+        errorMessage: 'Failed to fetch hub info.',
+      }));
+      return;
+    }
     const profileUrl = `${hubInfo.read_url_prefix}${btcAddress}/profile.json`;
     const zoneFile = makeProfileZoneFile(fullUsername, profileUrl);
 
@@ -143,9 +156,10 @@ export const RegisterUsername = () => {
 
     const json = await response.json();
 
-    if (!response.ok) {
+    if (!response.ok || !json.status) {
       posthog.capture('username-registration-error', {
         status: response.status,
+        json,
       });
       setFormState((state) => ({
         ...state,
@@ -156,11 +170,23 @@ export const RegisterUsername = () => {
     }
 
     posthog.capture('username-registration-success');
-    // TODO fathom event
+    Fathom.trackGoal(Goals.FREE_USERNAME_CREATED, 0);
+
+    const address = user.profile.stxAddress.mainnet;
+
+    const namesResponse = await fetch(
+      `https://stacks-node-api.stacks.co/v1/addresses/stacks/${address}`
+    );
+    const namesJson = await namesResponse.json();
+
+    // TODO decide how we save the username in the Hiro wallet
+    // TODO set username in auth object
+    // TODO redirect to dashboard, everything should work
+
+    console.log({ namesJson });
+    console.log({ json, address });
 
     // TODO redirect user and find how to save username into hiro wallet
-
-    console.log({ json });
   };
 
   return (
