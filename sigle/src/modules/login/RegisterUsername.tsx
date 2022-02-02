@@ -187,7 +187,8 @@ export const RegisterUsername = () => {
      * At this step, we can remove the username from the local storage safely. This is handled
      * in the AuthContext file logic.
      */
-    localStorage.setItem('sigle-username', fullUsername);
+    const address = user.profile.stxAddress.mainnet;
+    localStorage.setItem(`sigle-username-${address}`, fullUsername);
     setUsername(fullUsername);
 
     router.push(`/`);

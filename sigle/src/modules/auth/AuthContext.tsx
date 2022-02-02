@@ -89,6 +89,20 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
       } catch (e) {}
     }
 
+    /**
+     * Try to find if a username is registered in localStorage.
+     * If userData.username is empty, we will use the username from localStorage.
+     * If userData.username value is returned by the API we can clean the localStorage.
+     */
+    const username = localStorage.getItem(`sigle-username-${address}`);
+    if (username) {
+      if (username === userData.username) {
+        localStorage.removeItem(`sigle-username-${address}`);
+      } else {
+        userData.username = username;
+      }
+    }
+
     setState({
       loggingIn: false,
       user: userData,
