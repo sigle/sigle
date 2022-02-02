@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useRouter } from 'next/router';
 import { makeProfileZoneFile } from '@stacks/profile';
 import posthog from 'posthog-js';
 import * as Fathom from 'fathom-client';
@@ -62,7 +63,9 @@ interface FormState {
 const subdomain = 'id.stx';
 
 export const RegisterUsername = () => {
-  const { user } = useAuth();
+  const router = useRouter();
+  const { user, setUsername } = useAuth();
+
   const [formState, setFormState] = useState<FormState>({
     username: '',
     loading: false,
@@ -169,17 +172,25 @@ export const RegisterUsername = () => {
       return;
     }
 
+    // TODO handle error when a username is already registered for this address aka bug path
+
     posthog.capture('username-registration-success');
     Fathom.trackGoal(Goals.FREE_USERNAME_CREATED, 0);
 
-    // TODO decide how we save the username in the Hiro wallet
-    // TODO set username in auth object
-    // TODO redirect to dashboard, everything should work
-    // TODO dashboard should show
+    /**
+     * After the request was sent to the registrar, while the tx is being processed,
+     * and not yet included in the blockchain, the endpoint "https://stacks-node-api.stacks.co/v1/addresses/stacks/${address}"
+     * which we use to get the username will return a empty username array.
+     * To solve this issue, we store the username in the local storage.
+     * The dashboard will notify the user that the username is being processed.
+     * Once the tx is included in the blockchain, the endpoint will return the username.
+     * At this step, we can remove the username from the local storage safely. This is handled
+     * in the AuthContext file logic.
+     */
+    localStorage.setItem('sigle-username', fullUsername);
+    setUsername(fullUsername);
 
-    console.log({ json });
-
-    // TODO redirect user and find how to save username into hiro wallet
+    router.push(`/`);
   };
 
   return (

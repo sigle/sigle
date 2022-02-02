@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback, useMemo } from 'react';
 import { toast } from 'react-toastify';
 import { UserData } from '@stacks/auth';
 import { Connect, AuthOptions } from '@stacks/connect-react';
@@ -8,7 +8,8 @@ import { userSession } from '../../utils/blockstack';
 const AuthContext = React.createContext<{
   user?: UserData;
   loggingIn: boolean;
-}>({ loggingIn: false });
+  setUsername: (username: string) => void;
+}>({ loggingIn: false, setUsername: () => {} });
 
 interface AuthProviderProps {
   children: React.ReactNode;
@@ -94,10 +95,26 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
     });
   };
 
+  const handleSetUsername = useCallback((username: string) => {
+    const userData = userSession.loadUserData();
+    userData.username = username;
+
+    setState({
+      loggingIn: false,
+      user: userData,
+    });
+  }, []);
+
+  const userApi = useMemo(() => ({ handleSetUsername }), []);
+
   return (
     <Connect authOptions={authOptions}>
       <AuthContext.Provider
-        value={{ user: state.user, loggingIn: state.loggingIn }}
+        value={{
+          user: state.user,
+          loggingIn: state.loggingIn,
+          setUsername: userApi.handleSetUsername,
+        }}
       >
         {children}
       </AuthContext.Provider>
