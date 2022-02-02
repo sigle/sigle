@@ -68,7 +68,7 @@ export const RegisterUsername = () => {
     loading: false,
   });
 
-  // TODO loading indicator as the request can take some time
+  // TODO loading indicator as the request can take some time @greg
 
   console.log({ user });
 
@@ -172,19 +172,12 @@ export const RegisterUsername = () => {
     posthog.capture('username-registration-success');
     Fathom.trackGoal(Goals.FREE_USERNAME_CREATED, 0);
 
-    const address = user.profile.stxAddress.mainnet;
-
-    const namesResponse = await fetch(
-      `https://stacks-node-api.stacks.co/v1/addresses/stacks/${address}`
-    );
-    const namesJson = await namesResponse.json();
-
     // TODO decide how we save the username in the Hiro wallet
     // TODO set username in auth object
     // TODO redirect to dashboard, everything should work
+    // TODO dashboard should show
 
-    console.log({ namesJson });
-    console.log({ json, address });
+    console.log({ json });
 
     // TODO redirect user and find how to save username into hiro wallet
   };
