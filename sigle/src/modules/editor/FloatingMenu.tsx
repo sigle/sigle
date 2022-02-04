@@ -55,56 +55,54 @@ export const FloatingMenu = ({ editor }: FloatingMenuProps) => {
   );
 
   return (
-    <>
-      <TipTapFloatingMenu
-        editor={editor}
-        pluginKey="inline-add-menu"
-        tippyOptions={{
-          theme: 'sigle-editor-floating-menu',
-          placement: 'left',
-          arrow: false,
-        }}
-        shouldShow={({ editor, state }) => {
-          // Show only on empty blocks
-          const empty = state.selection.empty;
-          const node = state.selection.$head.node();
+    <TipTapFloatingMenu
+      editor={editor}
+      pluginKey="inline-add-menu"
+      tippyOptions={{
+        theme: 'sigle-editor-floating-menu',
+        placement: 'left',
+        arrow: false,
+      }}
+      shouldShow={({ editor, state }) => {
+        // Show only on empty blocks
+        const empty = state.selection.empty;
+        const node = state.selection.$head.node();
 
-          // This might be pretty heavy to do as it's run on every keypress
-          // We should look into a different way to do it when we have more time
-          const isNotAllowed =
-            editor.isActive('bulletList') ||
-            editor.isActive('orderedList') ||
-            editor.isActive('blockquote');
+        // This might be pretty heavy to do as it's run on every keypress
+        // We should look into a different way to do it when we have more time
+        const isNotAllowed =
+          editor.isActive('bulletList') ||
+          editor.isActive('orderedList') ||
+          editor.isActive('blockquote');
 
-          return (
-            editor.isActive('paragraph') &&
-            !isNotAllowed &&
-            empty &&
-            node.content.size === 0
-          );
-        }}
+        return (
+          editor.isActive('paragraph') &&
+          !isNotAllowed &&
+          empty &&
+          node.content.size === 0
+        );
+      }}
+    >
+      <Tippy
+        content={
+          <CommandsListController
+            component={SlashCommandsList}
+            items={slashCommands}
+            command={handleSelect}
+          />
+        }
+        visible={isOpen}
+        placement="right-end"
+        theme="sigle-editor"
+        arrow={false}
+        interactive
+        appendTo={() => document.body}
+        onClickOutside={handleButtonClick}
       >
-        <Tippy
-          content={
-            <CommandsListController
-              component={SlashCommandsList}
-              items={slashCommands}
-              command={handleSelect}
-            />
-          }
-          visible={isOpen}
-          placement="right-end"
-          theme="sigle-editor"
-          arrow={false}
-          interactive
-          appendTo={() => document.body}
-          onClickOutside={handleButtonClick}
-        >
-          <PlusButton open={isOpen} onClick={handleButtonClick}>
-            <RoundPlus width={27} height={27} />
-          </PlusButton>
-        </Tippy>
-      </TipTapFloatingMenu>
-    </>
+        <PlusButton open={isOpen} onClick={handleButtonClick}>
+          <RoundPlus width={27} height={27} />
+        </PlusButton>
+      </Tippy>
+    </TipTapFloatingMenu>
   );
 };
