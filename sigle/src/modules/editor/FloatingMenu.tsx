@@ -2,7 +2,7 @@ import { useState, useCallback } from 'react';
 import { Editor, FloatingMenu as TipTapFloatingMenu } from '@tiptap/react';
 import Tippy from '@tippyjs/react';
 import { Flex } from '../../ui';
-import { globalCss } from '../../stitches.config';
+import { globalCss, styled } from '../../stitches.config';
 import { RoundPlus } from '../../icons';
 import { CommandsListController } from './extensions/SlashCommands';
 import { SlashCommandsList, slashCommands } from './InlineMenu';
@@ -16,6 +16,21 @@ const globalStylesCustomEditor = globalCss({
     backgroundColor: 'transparent',
     padding: 0,
     color: '$gray9',
+  },
+});
+
+const PlusButton = styled('button', {
+  display: 'flex',
+  transitionProperty: 'transform',
+  transitionTimingFunction: 'cubic-bezier(0.4, 0, 0.2, 1)',
+  transitionDuration: '150ms',
+
+  variants: {
+    open: {
+      true: {
+        transform: 'rotate(45deg)',
+      },
+    },
   },
 });
 
@@ -54,6 +69,7 @@ export const FloatingMenu = ({ editor }: FloatingMenuProps) => {
           // Show only on empty blocks
           const empty = state.selection.empty;
           const node = state.selection.$head.node();
+          console.log({ state, node, test: node.type });
           return (
             editor.isActive('paragraph') && empty && node.content.size === 0
           );
@@ -75,9 +91,9 @@ export const FloatingMenu = ({ editor }: FloatingMenuProps) => {
           appendTo={() => document.body}
           onClickOutside={handleButtonClick}
         >
-          <Flex as="button" onClick={handleButtonClick}>
+          <PlusButton open={isOpen} onClick={handleButtonClick}>
             <RoundPlus width={27} height={27} />
-          </Flex>
+          </PlusButton>
         </Tippy>
       </TipTapFloatingMenu>
     </>
