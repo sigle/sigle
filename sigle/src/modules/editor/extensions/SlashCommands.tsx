@@ -11,7 +11,7 @@ export interface SlashCommandsCommand {
   title: string;
   description: string;
   icon: (props: IconProps) => JSX.Element;
-  command: ({ editor, range }: { editor: Editor; range: Range }) => void;
+  command: ({ editor, range }: { editor: Editor; range?: Range }) => void;
 }
 
 export const SlashCommands = Extension.create<{
@@ -100,7 +100,7 @@ export const SlashCommands = Extension.create<{
   },
 });
 
-class CommandsListController extends React.Component<
+export class CommandsListController extends React.Component<
   { items: any[]; command: (item: any) => void; component: any },
   { selectedIndex: number }
 > {
