@@ -1,7 +1,6 @@
 import { useState, useCallback } from 'react';
 import { Editor, FloatingMenu as TipTapFloatingMenu } from '@tiptap/react';
 import Tippy from '@tippyjs/react';
-import { Flex } from '../../ui';
 import { globalCss, styled } from '../../stitches.config';
 import { RoundPlus } from '../../icons';
 import { CommandsListController } from './extensions/SlashCommands';
