@@ -69,7 +69,8 @@ export const FloatingMenu = ({ editor }: FloatingMenuProps) => {
           // Show only on empty blocks
           const empty = state.selection.empty;
           const node = state.selection.$head.node();
-          console.log({ state, node, test: node.type });
+
+          // TODO currently shows on any node, but should only show on empty paragraph blocks
           return (
             editor.isActive('paragraph') && empty && node.content.size === 0
           );
