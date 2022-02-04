@@ -27,7 +27,10 @@ const PlusButton = styled('button', {
   variants: {
     open: {
       true: {
-        transform: 'rotate(45deg)',
+        // For now rotate is disabled because it doesn't work well. It's
+        // creating a glitch when you close the menu and the icon is moving
+        // by 2px on the right side.
+        // transform: 'rotate(45deg)',
       },
     },
   },
