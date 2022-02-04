@@ -69,9 +69,18 @@ export const FloatingMenu = ({ editor }: FloatingMenuProps) => {
           const empty = state.selection.empty;
           const node = state.selection.$head.node();
 
-          // TODO currently shows on any node, but should only show on empty paragraph blocks
+          // This might be pretty heavy to do as it's run on every keypress
+          // We should look into a different way to do it when we have more time
+          const isNotAllowed =
+            editor.isActive('bulletList') ||
+            editor.isActive('orderedList') ||
+            editor.isActive('blockquote');
+
           return (
-            editor.isActive('paragraph') && empty && node.content.size === 0
+            editor.isActive('paragraph') &&
+            !isNotAllowed &&
+            empty &&
+            node.content.size === 0
           );
         }}
       >
