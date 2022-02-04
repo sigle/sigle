@@ -76,9 +76,6 @@ const globalStylesCustomEditor = globalCss({
     br: '$1',
     minWidth: '280px',
   },
-  // ".tippy-box[data-theme~='sigle-editor'] p": {
-  //   my: 0,
-  // },
 });
 
 /**

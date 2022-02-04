@@ -72,6 +72,7 @@ export const FloatingMenu = ({ editor }: FloatingMenuProps) => {
           theme="sigle-editor"
           arrow={false}
           interactive
+          appendTo={() => document.body}
           onClickOutside={handleButtonClick}
         >
           <Flex as="button" onClick={handleButtonClick}>
