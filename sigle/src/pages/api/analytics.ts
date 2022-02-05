@@ -8,7 +8,7 @@ const analyticsEndpoint: NextApiHandler = async (_, res) => {
   const params = {
     entity: 'pageview',
     entity_id: 'DLJCUFGQ',
-    aggregates: 'pageviews',
+    aggregates: 'visits,pageviews',
     date_grouping: 'month',
     field_grouping: 'pathname',
     filters: JSON.stringify([
@@ -30,6 +30,11 @@ const analyticsEndpoint: NextApiHandler = async (_, res) => {
   );
 
   const data = await response.json();
+
+  const filter = data.filter((record: { pathname: string }) =>
+    record.pathname?.startsWith('/sigleapp.id.blockstack')
+  );
+  console.log(JSON.stringify(filter, null, 2));
 
   res.status(200).json(data);
 };
