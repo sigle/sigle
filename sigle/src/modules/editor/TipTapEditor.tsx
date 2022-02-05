@@ -104,7 +104,9 @@ export const TipTapEditor = ({}: TipTapEditorProps) => {
       TipTapParagraph,
       TipTapText,
       TipTapBlockquote,
-      TipTapLink,
+      TipTapLink.configure({
+        openOnClick: false,
+      }),
       TipTapListItem,
       TipTapBulletList,
       TipTapOrderedList,
