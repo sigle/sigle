@@ -65,9 +65,7 @@ const BubbleMenuInput = styled('input', {
   outline: 'none',
 });
 
-// TODO show link on hover so user can see the value
 // Maybe can be used on clicks https://github.com/ueberdosis/tiptap/issues/104#issuecomment-912794709
-// TODO When we set the link set selection after the link and remove hover so user can continue to type
 
 interface BubbleMenuProps {
   editor: Editor;
