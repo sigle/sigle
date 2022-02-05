@@ -122,6 +122,11 @@ export const BubbleMenu = ({ editor }: BubbleMenuProps) => {
         .focus()
         .extendMarkRange('link')
         .setLink({ href: safeLinkValue })
+        // Set the text selection at the end of the link selection
+        // that way user can continue to type easily
+        .setTextSelection(editor.state.selection.$to.pos)
+        // Unset link selection se when the user continues to type it won't be a link
+        .unsetLink()
         .run();
     } else {
       // If input text is empty we unset the link
