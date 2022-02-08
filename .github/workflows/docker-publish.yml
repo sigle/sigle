@@ -55,4 +55,4 @@ jobs:
 
       # Print docker images so we can check the size
       - name: Print docker image size
-        run: docker images | grep sigle
+        run: docker images | grep ${{ env.IMAGE_NAME }}
