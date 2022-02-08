@@ -1,7 +1,10 @@
+import { useState, useCallback } from 'react';
 import { Editor, FloatingMenu as TipTapFloatingMenu } from '@tiptap/react';
-import { Flex } from '../../ui';
-import { globalCss } from '../../stitches.config';
+import Tippy from '@tippyjs/react';
+import { globalCss, styled } from '../../stitches.config';
 import { RoundPlus } from '../../icons';
+import { CommandsListController } from './extensions/SlashCommands';
+import { SlashCommandsList, slashCommands } from './InlineMenu';
 
 // Tippyjs theme used by the slash command menu
 const globalStylesCustomEditor = globalCss({
@@ -15,6 +18,24 @@ const globalStylesCustomEditor = globalCss({
   },
 });
 
+const PlusButton = styled('button', {
+  display: 'flex',
+  transitionProperty: 'transform',
+  transitionTimingFunction: 'cubic-bezier(0.4, 0, 0.2, 1)',
+  transitionDuration: '150ms',
+
+  variants: {
+    open: {
+      true: {
+        // For now rotate is disabled because it doesn't work well. It's
+        // creating a glitch when you close the menu and the icon is moving
+        // by 2px on the right side.
+        // transform: 'rotate(45deg)',
+      },
+    },
+  },
+});
+
 interface FloatingMenuProps {
   editor: Editor;
 }
@@ -22,18 +43,19 @@ interface FloatingMenuProps {
 export const FloatingMenu = ({ editor }: FloatingMenuProps) => {
   globalStylesCustomEditor();
 
-  const handleButtonClick = () => {
-    editor
-      .chain()
-      .focus()
-      .command(({ tr }) => {
-        // manipulate the transaction
-        tr.insertText('/');
+  const [isOpen, setIsOpen] = useState(false);
 
-        return true;
-      })
-      .run();
+  const handleButtonClick = () => {
+    setIsOpen(!isOpen);
   };
+
+  const handleSelect = useCallback(
+    ({ command }) => {
+      command({ editor });
+      setIsOpen(false);
+    },
+    [editor]
+  );
 
   return (
     <TipTapFloatingMenu
@@ -48,12 +70,42 @@ export const FloatingMenu = ({ editor }: FloatingMenuProps) => {
         // Show only on empty blocks
         const empty = state.selection.empty;
         const node = state.selection.$head.node();
-        return editor.isActive('paragraph') && empty && node.content.size === 0;
+
+        // This might be pretty heavy to do as it's run on every keypress
+        // We should look into a different way to do it when we have more time
+        const isNotAllowed =
+          editor.isActive('bulletList') ||
+          editor.isActive('orderedList') ||
+          editor.isActive('blockquote');
+
+        return (
+          editor.isActive('paragraph') &&
+          !isNotAllowed &&
+          empty &&
+          node.content.size === 0
+        );
       }}
     >
-      <Flex as="button" onClick={handleButtonClick}>
-        <RoundPlus width={27} height={27} />
-      </Flex>
+      <Tippy
+        content={
+          <CommandsListController
+            component={SlashCommandsList}
+            items={slashCommands}
+            command={handleSelect}
+          />
+        }
+        visible={isOpen}
+        placement="right-end"
+        theme="sigle-editor"
+        arrow={false}
+        interactive
+        appendTo={() => document.body}
+        onClickOutside={handleButtonClick}
+      >
+        <PlusButton open={isOpen} onClick={handleButtonClick}>
+          <RoundPlus width={27} height={27} />
+        </PlusButton>
+      </Tippy>
     </TipTapFloatingMenu>
   );
 };

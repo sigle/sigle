@@ -17,6 +17,11 @@ export const slashCommands: SlashCommandsCommand[] = [
     title: 'Heading 1',
     description: 'Large section Heading',
     command: ({ editor, range }) => {
+      if (!range) {
+        editor.chain().focus().toggleHeading({ level: 1 }).run();
+        return;
+      }
+
       editor
         .chain()
         .focus()
@@ -30,6 +35,11 @@ export const slashCommands: SlashCommandsCommand[] = [
     title: 'Heading 2',
     description: 'Medium section Heading',
     command: ({ editor, range }) => {
+      if (!range) {
+        editor.chain().focus().toggleHeading({ level: 2 }).run();
+        return;
+      }
+
       editor
         .chain()
         .focus()
@@ -43,6 +53,11 @@ export const slashCommands: SlashCommandsCommand[] = [
     title: 'Heading 3',
     description: 'Small section Heading',
     command: ({ editor, range }) => {
+      if (!range) {
+        editor.chain().focus().toggleHeading({ level: 3 }).run();
+        return;
+      }
+
       editor
         .chain()
         .focus()
@@ -56,6 +71,10 @@ export const slashCommands: SlashCommandsCommand[] = [
     title: 'Bulleted list',
     description: 'Create a bulleted list',
     command: ({ editor, range }) => {
+      if (!range) {
+        editor.chain().focus().toggleBulletList().run();
+        return;
+      }
       editor
         .chain()
         .focus()
@@ -70,6 +89,11 @@ export const slashCommands: SlashCommandsCommand[] = [
     title: 'Numbered list',
     description: 'Create a numbered list',
     command: ({ editor, range }) => {
+      if (!range) {
+        editor.chain().focus().toggleOrderedList().run();
+        return;
+      }
+
       editor
         .chain()
         .focus()
@@ -84,6 +108,11 @@ export const slashCommands: SlashCommandsCommand[] = [
     title: 'Quote',
     description: 'Create a quote',
     command: ({ editor, range }) => {
+      if (!range) {
+        editor.chain().focus().toggleBlockquote().run();
+        return;
+      }
+
       editor
         .chain()
         .focus()

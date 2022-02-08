@@ -8,7 +8,7 @@ import { PublicStoryItem } from './PublicStoryItem';
 import { PoweredBy } from '../../publicStory/components/PoweredBy';
 
 const StyledContainer = styled(Container)`
-  ${tw`mt-4 mb-16`};
+  ${tw`pt-4 pb-16`};
   max-width: 768px;
 `;
 

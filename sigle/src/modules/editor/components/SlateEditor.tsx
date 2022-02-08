@@ -627,7 +627,7 @@ export const SlateEditor = ({
               target="_blank"
               as="a"
             >
-              <Text size="action">See my blog</Text>
+              <Text size="action">See your story</Text>
               <EyeOpenIcon />
             </Button>
           )}
