@@ -55,4 +55,4 @@ jobs:
 
       # Print docker images so we can check the size
       - name: Print docker image size
-        run: docker images
+        run: docker buildx du
