@@ -215,7 +215,7 @@ export const SlateEditorToolbar = ({
         >
           <input
             type="file"
-            accept="image/jpeg, image/png"
+            accept="image/jpeg,image/png,image/gif"
             onChange={(event) =>
               addImageToEditor(editor, event.target.files as any)
             }

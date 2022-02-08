@@ -205,8 +205,12 @@ export const SlateEditor = ({
       );
 
       reader.addEventListener('load', async () => {
-        // resize the image for faster upload
-        const blob = await resizeImage(file, { maxWidth: 2000 });
+        // We skip resizing gif as it's turning them as single image
+        let blob: Blob | File = file;
+        if (file.type !== 'image/gif') {
+          // resize the image for faster upload
+          blob = await resizeImage(file, { maxWidth: 2000 });
+        }
 
         const name = `photos/${story.id}/${id}-${file.name}`;
         const imageUrl = await storage.putFile(name, blob as any, {
