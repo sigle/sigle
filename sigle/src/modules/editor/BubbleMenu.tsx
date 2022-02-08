@@ -65,9 +65,7 @@ const BubbleMenuInput = styled('input', {
   outline: 'none',
 });
 
-// TODO show link on hover so user can see the value
 // Maybe can be used on clicks https://github.com/ueberdosis/tiptap/issues/104#issuecomment-912794709
-// TODO When we set the link set selection after the link and remove hover so user can continue to type
 
 interface BubbleMenuProps {
   editor: Editor;
@@ -122,6 +120,11 @@ export const BubbleMenu = ({ editor }: BubbleMenuProps) => {
         .focus()
         .extendMarkRange('link')
         .setLink({ href: safeLinkValue })
+        // Set the text selection at the end of the link selection
+        // that way user can continue to type easily
+        .setTextSelection(editor.state.selection.$to.pos)
+        // Unset link selection se when the user continues to type it won't be a link
+        .unsetLink()
         .run();
     } else {
       // If input text is empty we unset the link
