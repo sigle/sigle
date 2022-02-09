@@ -53,8 +53,10 @@ jobs:
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
           # This option is required to get the docker images command to list the result
-          load: true
+          # load is disabled on main as it's creating an error when "push" is true
+          load: ${{ github.event_name == 'pull_request' }}
 
       # Print docker images so we can check the size
       - name: Print docker image size
+        if: github.event_name == 'pull_request'
         run: docker images | grep sigle
