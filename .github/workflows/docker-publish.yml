@@ -25,8 +25,6 @@ jobs:
 
       - name: Setup Docker buildx
         uses: docker/setup-buildx-action@v1
-        with:
-          driver: docker
 
       # Login against a Docker registry except on PR
       - name: Log into registry ${{ env.REGISTRY }}
@@ -54,6 +52,8 @@ jobs:
           push: ${{ github.event_name != 'pull_request' }}
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
+          # This option is required to get the docker images command to list the result
+          load: true
 
       # Print docker images so we can check the size
       - name: Print docker image size
