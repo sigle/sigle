@@ -157,9 +157,6 @@ export const slashCommands: SlashCommandsCommand[] = [
     title: 'Image',
     description: 'Upload from your computer',
     command: ({ editor, range }) => {
-      // TODO bubble menu should not be shown on the image
-      // TODO see with Quentin how to do the loading part
-
       const input = document.createElement('input');
       input.type = 'file';
       input.accept = 'image/jpeg,image/png,image/gif';
@@ -177,16 +174,10 @@ export const slashCommands: SlashCommandsCommand[] = [
             .chain()
             .focus()
             .deleteRange(range)
-            // TODO show loader image placeholder?
             .setImage({ src: preview })
             .run();
         } else {
-          editor
-            .chain()
-            .focus()
-            // TODO show loader image placeholder?
-            .setImage({ src: preview })
-            .run();
+          editor.chain().focus().setImage({ src: preview }).run();
         }
 
         const id = generateRandomId();
