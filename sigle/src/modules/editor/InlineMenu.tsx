@@ -10,6 +10,36 @@ import {
 import { SlashCommandsCommand } from './extensions/SlashCommands';
 import { styled } from '../../stitches.config';
 import { Flex, Text } from '../../ui';
+import { resizeImage } from '../../utils/image';
+import { storage } from '../../utils/blockstack';
+import { generateRandomId } from '../../utils';
+
+const resizeAndUploadImage = async (
+  image: File,
+  name: string
+): Promise<string> => {
+  return new Promise((resolve) => {
+    const reader = new FileReader();
+
+    reader.readAsDataURL(image);
+
+    reader.addEventListener('load', async () => {
+      // Resize the image client side for faster upload and to save storage space
+      // We skip resizing gif as it's turning them as single image
+      let blob: Blob | File = image;
+      if (image.type !== 'image/gif') {
+        blob = await resizeImage(image, { maxWidth: 2000 });
+      }
+
+      const imageUrl = await storage.putFile(name, blob as any, {
+        encrypt: false,
+        contentType: image.type,
+      });
+
+      resolve(imageUrl);
+    });
+  });
+};
 
 export const slashCommands: SlashCommandsCommand[] = [
   {
@@ -127,8 +157,47 @@ export const slashCommands: SlashCommandsCommand[] = [
     title: 'Image',
     description: 'Upload from your computer',
     command: ({ editor, range }) => {
-      // TODO get it working
-      // fileUploaderRef.current?.click();
+      const input = document.createElement('input');
+      input.type = 'file';
+      input.accept = 'image/jpeg,image/png,image/gif';
+
+      input.onchange = async (e) => {
+        const file: File | undefined = (e.target as any)?.files?.[0];
+        if (!file) return;
+        const [mime] = file.type.split('/');
+        if (mime !== 'image') return;
+
+        // We show a preview of  the image image as uploading can take a while...
+        const preview = URL.createObjectURL(file);
+        if (range) {
+          editor
+            .chain()
+            .focus()
+            .deleteRange(range)
+            .setImage({ src: preview })
+            .run();
+        } else {
+          editor.chain().focus().setImage({ src: preview }).run();
+        }
+
+        const id = generateRandomId();
+        // TODO real story id
+        const story = { id: 'tiptap-editor-dev' };
+        const name = `photos/${story.id}/${id}-${file.name}`;
+        const imageUrl = await resizeAndUploadImage(file, name);
+
+        editor
+          .chain()
+          .focus()
+          .updateAttributes('image', {
+            src: imageUrl,
+          })
+          // Create a new paragraph so user can continue writing
+          .createParagraphNear()
+          .run();
+      };
+
+      input.click();
     },
   },
 ];

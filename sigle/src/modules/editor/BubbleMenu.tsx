@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Editor, BubbleMenu as TipTapBubbleMenu } from '@tiptap/react';
+import { isTextSelection } from '@tiptap/core';
 import {
   Link1Icon,
   FontBoldIcon,
@@ -155,6 +156,29 @@ export const BubbleMenu = ({ editor }: BubbleMenuProps) => {
         duration: 100,
         theme: 'sigle-editor-bubble-menu',
         onHidden: () => resetLink(),
+      }}
+      shouldShow={({ editor, state, from, to, view }) => {
+        // Take the initial implementation of the plugin and extends it
+        // https://github.com/ueberdosis/tiptap/blob/main/packages/extension-bubble-menu/src/bubble-menu-plugin.ts#L43
+        const { doc, selection } = state;
+        const { empty } = selection;
+        // Sometime check for `empty` is not enough.
+        // Doubleclick an empty paragraph returns a node size of 2.
+        // So we check also for an empty text size.
+        const isEmptyTextBlock =
+          !doc.textBetween(from, to).length && isTextSelection(state.selection);
+
+        if (!view.hasFocus() || empty || isEmptyTextBlock) {
+          return false;
+        }
+        // End default implementation
+
+        // Do not show menu on images
+        if (editor.isActive('image')) {
+          return false;
+        }
+
+        return true;
       }}
       editor={editor}
     >

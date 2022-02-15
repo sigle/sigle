@@ -1,4 +1,3 @@
-import { useRef } from 'react';
 import { useEditor, EditorContent } from '@tiptap/react';
 import TipTapBlockquote from '@tiptap/extension-blockquote';
 import TipTapBold from '@tiptap/extension-bold';
@@ -18,24 +17,10 @@ import TipTapParagraph from '@tiptap/extension-paragraph';
 import TipTapPlaceholder from '@tiptap/extension-placeholder';
 import TipTapStrike from '@tiptap/extension-strike';
 import TipTapText from '@tiptap/extension-text';
-import {
-  SlashCommands,
-  SlashCommandsCommand,
-} from './extensions/SlashCommands';
+import { SlashCommands } from './extensions/SlashCommands';
 import { BubbleMenu } from './BubbleMenu';
 import { slashCommands, SlashCommandsList } from './InlineMenu';
 import { FloatingMenu } from './FloatingMenu';
-import {
-  Heading1Light,
-  Heading2Light,
-  Heading3Light,
-  ImageLight,
-  QuoteLight,
-} from '../../icons';
-import { generateRandomId } from '../../utils';
-import { resizeImage } from '../../utils/image';
-import { storage } from '../../utils/blockstack';
-import { Story } from '../../types';
 import { styled, globalCss, keyframes } from '../../stitches.config';
 
 const fadeInAnimation = keyframes({
@@ -80,7 +65,6 @@ const globalStylesCustomEditor = globalCss({
 
 /**
  * TODO
- * - left menu that trigger the commands menu
  * - check all the shortcuts and update the GitBook
  * - check all the markdown shorcuts
  * - investigate figure extension instead of image
@@ -94,8 +78,6 @@ interface TipTapEditorProps {
 
 export const TipTapEditor = ({}: TipTapEditorProps) => {
   globalStylesCustomEditor();
-
-  const fileUploaderRef = useRef<HTMLInputElement>(null);
 
   const editor = useEditor({
     extensions: [
@@ -141,59 +123,12 @@ export const TipTapEditor = ({}: TipTapEditorProps) => {
     content: '<p>Hello World! 🌎️</p>',
   });
 
-  const addImageToEditor = (files: FileList | null) => {
-    if (!files) {
-      return;
-    }
-
-    // for (const file of files) {
-    //   const reader = new FileReader();
-    //   const [mime] = file.type.split('/');
-    //   if (mime !== 'image') continue;
-
-    //   // First show the image as uploading since this can take a while...
-    //   const preview = URL.createObjectURL(file);
-    //   const id = generateRandomId();
-
-    //   // TODO global loading state ?
-
-    //   // editor?.chain().focus().setImage({ src: preview }).run();
-
-    //   reader.addEventListener('load', async () => {
-    //     // resize the image for faster upload
-    //     const blob = await resizeImage(file, { maxWidth: 2000 });
-
-    //     const name = `photos/${story.id}/${id}-${file.name}`;
-    //     const imageUrl = await storage.putFile(name, blob as any, {
-    //       encrypt: false,
-    //       contentType: file.type,
-    //     });
-
-    //     // editor?.state.tr.deleteSelection();
-
-    //     // TODO image should delete slash menu text and appear at the same place
-    //     editor?.chain().focus().setImage({ src: imageUrl }).run();
-    //   });
-
-    //   reader.readAsDataURL(file);
-    // }
-  };
-
   return (
     <>
       {editor && <BubbleMenu editor={editor} />}
       {editor && <FloatingMenu editor={editor} />}
 
       <StyledEditorContent editor={editor} />
-
-      {/* Input used to accept images */}
-      <input
-        type="file"
-        accept="image/jpeg, image/png"
-        onChange={(event) => addImageToEditor(event.target.files)}
-        ref={fileUploaderRef}
-        style={{ display: 'none' }}
-      />
     </>
   );
 };
