@@ -14,6 +14,33 @@ import { resizeImage } from '../../utils/image';
 import { storage } from '../../utils/blockstack';
 import { generateRandomId } from '../../utils';
 
+const resizeAndUploadImage = async (
+  image: File,
+  name: string
+): Promise<string> => {
+  return new Promise((resolve) => {
+    const reader = new FileReader();
+
+    reader.readAsDataURL(image);
+
+    reader.addEventListener('load', async () => {
+      // Resize the image client side for faster upload and to save storage space
+      // We skip resizing gif as it's turning them as single image
+      let blob: Blob | File = image;
+      if (image.type !== 'image/gif') {
+        blob = await resizeImage(image, { maxWidth: 2000 });
+      }
+
+      const imageUrl = await storage.putFile(name, blob as any, {
+        encrypt: false,
+        contentType: image.type,
+      });
+
+      resolve(imageUrl);
+    });
+  });
+};
+
 export const slashCommands: SlashCommandsCommand[] = [
   {
     icon: Heading1Light,
@@ -137,14 +164,11 @@ export const slashCommands: SlashCommandsCommand[] = [
       input.type = 'file';
       input.accept = 'image/jpeg,image/png,image/gif';
 
-      input.onchange = (e) => {
-        const file = e.target?.files?.[0];
+      input.onchange = async (e) => {
+        const file = (e.target as any)?.files?.[0];
+        if (!file) return;
         const [mime] = file.type.split('/');
-        if (mime !== 'image') {
-          return;
-        }
-
-        console.log(file);
+        if (mime !== 'image') return;
 
         // We show a preview of  the image image as uploading can take a while...
         const preview = URL.createObjectURL(file);
@@ -165,37 +189,20 @@ export const slashCommands: SlashCommandsCommand[] = [
             .run();
         }
 
-        const reader = new FileReader();
         const id = generateRandomId();
-
-        reader.readAsDataURL(file);
-
         // TODO after done uploading cursor should be ready to write after the image
         // TODO real story id
         const story = { id: 'tiptap-editor-dev' };
+        const name = `photos/${story.id}/${id}-${file.name}`;
+        const imageUrl = await resizeAndUploadImage(file, name);
 
-        reader.addEventListener('load', async () => {
-          // Resize the image client side for faster upload and to save storage space
-          // We skip resizing gif as it's turning them as single image
-          let blob: Blob | File = file;
-          if (file.type !== 'image/gif') {
-            blob = await resizeImage(file, { maxWidth: 2000 });
-          }
-
-          const name = `photos/${story.id}/${id}-${file.name}`;
-          const imageUrl = await storage.putFile(name, blob as any, {
-            encrypt: false,
-            contentType: file.type,
-          });
-
-          editor
-            .chain()
-            .focus()
-            .updateAttributes('image', {
-              src: imageUrl,
-            })
-            .run();
-        });
+        editor
+          .chain()
+          .focus()
+          .updateAttributes('image', {
+            src: imageUrl,
+          })
+          .run();
       };
 
       input.click();
