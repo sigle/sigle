@@ -10,6 +10,9 @@ import {
 import { SlashCommandsCommand } from './extensions/SlashCommands';
 import { styled } from '../../stitches.config';
 import { Flex, Text } from '../../ui';
+import { resizeImage } from '../../utils/image';
+import { storage } from '../../utils/blockstack';
+import { generateRandomId } from '../../utils';
 
 export const slashCommands: SlashCommandsCommand[] = [
   {
@@ -127,22 +130,75 @@ export const slashCommands: SlashCommandsCommand[] = [
     title: 'Image',
     description: 'Upload from your computer',
     command: ({ editor, range }) => {
-      // TODO get it working
-      // fileUploaderRef.current?.click();
-      if (!range) {
-        // TODO
-        return;
-      }
-
       // TODO bubble menu should not be shown on the image
       // TODO see with Quentin how to do the loading part
 
-      editor
-        .chain()
-        .focus()
-        .deleteRange(range)
-        .setImage({ src: 'https://source.unsplash.com/K9QHL52rE2k/800x400' })
-        .run();
+      const input = document.createElement('input');
+      input.type = 'file';
+      input.accept = 'image/jpeg,image/png,image/gif';
+
+      input.onchange = (e) => {
+        const file = e.target?.files?.[0];
+        const [mime] = file.type.split('/');
+        if (mime !== 'image') {
+          return;
+        }
+
+        console.log(file);
+
+        // We show a preview of  the image image as uploading can take a while...
+        const preview = URL.createObjectURL(file);
+        if (range) {
+          editor
+            .chain()
+            .focus()
+            .deleteRange(range)
+            // TODO show loader image placeholder?
+            .setImage({ src: preview })
+            .run();
+        } else {
+          editor
+            .chain()
+            .focus()
+            // TODO show loader image placeholder?
+            .setImage({ src: preview })
+            .run();
+        }
+
+        const reader = new FileReader();
+        const id = generateRandomId();
+
+        reader.readAsDataURL(file);
+
+        // TODO after done uploading cursor should be ready to write after the image
+        // TODO real story id
+        const story = { id: 'tiptap-editor-dev' };
+
+        reader.addEventListener('load', async () => {
+          // Resize the image client side for faster upload and to save storage space
+          // We skip resizing gif as it's turning them as single image
+          let blob: Blob | File = file;
+          if (file.type !== 'image/gif') {
+            blob = await resizeImage(file, { maxWidth: 2000 });
+          }
+
+          const name = `photos/${story.id}/${id}-${file.name}`;
+          const imageUrl = await storage.putFile(name, blob as any, {
+            encrypt: false,
+            contentType: file.type,
+          });
+
+          editor
+            .chain()
+            .focus()
+            .updateAttributes('image', {
+              src: imageUrl,
+            })
+            .run();
+        });
+      };
+
+      input.click();
     },
   },
 ];
