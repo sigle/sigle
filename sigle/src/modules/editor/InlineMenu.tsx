@@ -129,6 +129,20 @@ export const slashCommands: SlashCommandsCommand[] = [
     command: ({ editor, range }) => {
       // TODO get it working
       // fileUploaderRef.current?.click();
+      if (!range) {
+        // TODO
+        return;
+      }
+
+      // TODO bubble menu should not be shown on the image
+      // TODO see with Quentin how to do the loading part
+
+      editor
+        .chain()
+        .focus()
+        .deleteRange(range)
+        .setImage({ src: 'https://source.unsplash.com/K9QHL52rE2k/800x400' })
+        .run();
     },
   },
 ];
