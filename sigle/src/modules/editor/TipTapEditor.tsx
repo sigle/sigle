@@ -120,8 +120,7 @@ export const TipTapEditor = ({}: TipTapEditorProps) => {
         component: SlashCommandsList,
       }),
     ],
-    content:
-      '<p>Hello World! 🌎️</p><img src="https://gaia.blockstack.org/hub/18D2Jwi8xaF9k1natrajDSsg7gUmr3KQGw/photos/tiptap-editor-dev/-vsopNZD2wgoTT3pJdHHt-carbon.png" contenteditable="false" draggable="true">',
+    content: '<p>Hello World! 🌎️</p>',
   });
 
   return (
