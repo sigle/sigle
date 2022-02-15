@@ -165,7 +165,7 @@ export const slashCommands: SlashCommandsCommand[] = [
       input.accept = 'image/jpeg,image/png,image/gif';
 
       input.onchange = async (e) => {
-        const file = (e.target as any)?.files?.[0];
+        const file: File | undefined = (e.target as any)?.files?.[0];
         if (!file) return;
         const [mime] = file.type.split('/');
         if (mime !== 'image') return;
@@ -190,7 +190,6 @@ export const slashCommands: SlashCommandsCommand[] = [
         }
 
         const id = generateRandomId();
-        // TODO after done uploading cursor should be ready to write after the image
         // TODO real story id
         const story = { id: 'tiptap-editor-dev' };
         const name = `photos/${story.id}/${id}-${file.name}`;
@@ -202,6 +201,8 @@ export const slashCommands: SlashCommandsCommand[] = [
           .updateAttributes('image', {
             src: imageUrl,
           })
+          // Create a new paragraph so user can continue writing
+          .createParagraphNear()
           .run();
       };
 
