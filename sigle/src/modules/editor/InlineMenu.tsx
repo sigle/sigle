@@ -1,5 +1,6 @@
 import {
   BulletedListLight,
+  DividerLight,
   NumberedListLight,
   Heading1Light,
   Heading2Light,
@@ -153,7 +154,7 @@ export const slashCommands: SlashCommandsCommand[] = [
     },
   },
   {
-    icon: QuoteLight,
+    icon: DividerLight,
     title: 'Divider',
     description: 'Create a divider',
     command: ({ editor, range }) => {
