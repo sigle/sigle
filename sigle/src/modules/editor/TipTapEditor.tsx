@@ -1,3 +1,4 @@
+import 'highlight.js/styles/night-owl.css';
 import { useEditor, EditorContent } from '@tiptap/react';
 import TipTapBlockquote from '@tiptap/extension-blockquote';
 import TipTapBold from '@tiptap/extension-bold';
@@ -17,6 +18,8 @@ import TipTapParagraph from '@tiptap/extension-paragraph';
 import TipTapPlaceholder from '@tiptap/extension-placeholder';
 import TipTapStrike from '@tiptap/extension-strike';
 import TipTapText from '@tiptap/extension-text';
+import TipTapCodeBlockLowlight from '@tiptap/extension-code-block-lowlight';
+import { lowlight } from 'lowlight/lib/common.js';
 import { SlashCommands } from './extensions/SlashCommands';
 import { BubbleMenu } from './BubbleMenu';
 import { slashCommands, SlashCommandsList } from './InlineMenu';
@@ -48,6 +51,10 @@ const StyledEditorContent = styled(EditorContent, {
   // Image selected style
   '& img.ProseMirror-selectednode': {
     outline: '1px solid $orange11',
+  },
+  // Code block style
+  '& pre': {
+    backgroundColor: '$gray11 !important',
   },
 });
 
@@ -98,6 +105,9 @@ export const TipTapEditor = ({}: TipTapEditorProps) => {
         levels: [1, 2, 3],
       }),
       TipTapImage,
+      TipTapCodeBlockLowlight.configure({
+        lowlight,
+      }),
       // Marks
       TipTapBold,
       TipTapCode,

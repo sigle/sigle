@@ -42,6 +42,26 @@ const resizeAndUploadImage = async (
 };
 
 export const slashCommands: SlashCommandsCommand[] = [
+  // TODO cleanup + move
+  {
+    icon: Heading1Light,
+    title: 'Code',
+    description: 'Create a code snippet',
+    command: ({ editor, range }) => {
+      if (!range) {
+        // TODO
+        return;
+      }
+
+      editor
+        .chain()
+        .focus()
+        .deleteRange(range)
+        // TODO drowpdown to select the language
+        .setCodeBlock({ language: 'javascript' })
+        .run();
+    },
+  },
   {
     icon: Heading1Light,
     title: 'Heading 1',
