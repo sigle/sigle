@@ -162,7 +162,6 @@ export const slashCommands: SlashCommandsCommand[] = [
       if (range) {
         chainCommands = chainCommands.deleteRange(range);
       }
-
       chainCommands
         .setHorizontalRule()
         // Here we insert a paragraph after the divider that will be removed directly to fix
