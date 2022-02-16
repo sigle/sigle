@@ -1,5 +1,5 @@
 import 'highlight.js/styles/night-owl.css';
-import { useEditor, EditorContent } from '@tiptap/react';
+import { useEditor, EditorContent, ReactNodeViewRenderer } from '@tiptap/react';
 import TipTapBlockquote from '@tiptap/extension-blockquote';
 import TipTapBold from '@tiptap/extension-bold';
 import TipTapBulletList from '@tiptap/extension-bullet-list';
@@ -25,6 +25,7 @@ import { BubbleMenu } from './BubbleMenu';
 import { slashCommands, SlashCommandsList } from './InlineMenu';
 import { FloatingMenu } from './FloatingMenu';
 import { styled, globalCss, keyframes } from '../../stitches.config';
+import { CodeBlockComponent } from './extensions/CodeBlock';
 
 const fadeInAnimation = keyframes({
   '0%': { opacity: '0' },
@@ -105,7 +106,11 @@ export const TipTapEditor = ({}: TipTapEditorProps) => {
         levels: [1, 2, 3],
       }),
       TipTapImage,
-      TipTapCodeBlockLowlight.configure({
+      TipTapCodeBlockLowlight.extend({
+        addNodeView() {
+          return ReactNodeViewRenderer(CodeBlockComponent);
+        },
+      }).configure({
         lowlight,
       }),
       // Marks

@@ -207,17 +207,11 @@ export const slashCommands: SlashCommandsCommand[] = [
     description: 'Create a code snippet',
     command: ({ editor, range }) => {
       if (!range) {
-        // TODO
+        editor.chain().focus().setCodeBlock().run();
         return;
       }
 
-      editor
-        .chain()
-        .focus()
-        .deleteRange(range)
-        // TODO drowpdown to select the language
-        .setCodeBlock({ language: 'javascript' })
-        .run();
+      editor.chain().focus().deleteRange(range).setCodeBlock().run();
     },
   },
 ];
