@@ -1,5 +1,6 @@
 import {
   BulletedListLight,
+  CodeLight,
   DividerLight,
   NumberedListLight,
   Heading1Light,
@@ -227,6 +228,19 @@ export const slashCommands: SlashCommandsCommand[] = [
       };
 
       input.click();
+    },
+  },
+  {
+    icon: CodeLight,
+    title: 'Code',
+    description: 'Create a code snippet',
+    command: ({ editor, range }) => {
+      if (!range) {
+        editor.chain().focus().setCodeBlock().run();
+        return;
+      }
+
+      editor.chain().focus().deleteRange(range).setCodeBlock().run();
     },
   },
 ];

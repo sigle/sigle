@@ -178,6 +178,11 @@ export const BubbleMenu = ({ editor }: BubbleMenuProps) => {
           return false;
         }
 
+        // Do not show menu on code blocks
+        if (editor.isActive('codeBlock')) {
+          return false;
+        }
+
         return true;
       }}
       editor={editor}

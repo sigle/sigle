@@ -1,5 +1,6 @@
 export * from './Radix';
 export * from './BulletedListLight';
+export * from './CodeLight';
 export * from './DividerLight';
 export * from './NumberedListLight';
 export * from './Heading1Light';
