@@ -50,6 +50,10 @@ const StyledEditorContent = styled(EditorContent, {
   '& img.ProseMirror-selectednode': {
     outline: '1px solid $orange11',
   },
+  // Image uploading style
+  '& img[data-loading="true"]': {
+    opacity: 0.25,
+  },
 });
 
 // Tippyjs theme used by the slash command menu
@@ -98,8 +102,24 @@ export const TipTapEditor = ({}: TipTapEditorProps) => {
         // Only allow h1, h2 and h3
         levels: [1, 2, 3],
       }),
-      TipTapImage,
       TipTapHorizontalRule,
+      TipTapImage.extend({
+        addAttributes() {
+          return {
+            ...this.parent?.(),
+            loading: {
+              default: false,
+              renderHTML: (attributes) => {
+                if (attributes.loading) {
+                  return {
+                    'data-loading': attributes.loading,
+                  };
+                }
+              },
+            },
+          };
+        },
+      }),
       // Marks
       TipTapBold,
       TipTapCode,

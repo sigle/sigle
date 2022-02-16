@@ -198,6 +198,7 @@ export const slashCommands: SlashCommandsCommand[] = [
             .focus()
             .deleteRange(range)
             .setImage({ src: preview })
+            .updateAttributes('image', { loading: true })
             .run();
         } else {
           editor.chain().focus().setImage({ src: preview }).run();
@@ -209,15 +210,21 @@ export const slashCommands: SlashCommandsCommand[] = [
         const name = `photos/${story.id}/${id}-${file.name}`;
         const imageUrl = await resizeAndUploadImage(file, name);
 
-        editor
-          .chain()
-          .focus()
-          .updateAttributes('image', {
-            src: imageUrl,
-          })
+        // Preload the new image so there is no flicker
+        const uploadedImage = new Image();
+        uploadedImage.src = imageUrl;
+        uploadedImage.onload = () => {
+          editor
+            .chain()
+            .focus()
+            .updateAttributes('image', {
+              src: imageUrl,
+              loading: false,
+            })
+            .run();
           // Create a new paragraph so user can continue writing
-          .createParagraphNear()
-          .run();
+          editor.commands.createParagraphNear();
+        };
       };
 
       input.click();
