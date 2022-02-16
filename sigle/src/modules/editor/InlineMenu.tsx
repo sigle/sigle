@@ -158,12 +158,21 @@ export const slashCommands: SlashCommandsCommand[] = [
     title: 'Divider',
     description: 'Create a divider',
     command: ({ editor, range }) => {
-      if (!range) {
-        editor.chain().focus().setHorizontalRule().run();
-        return;
+      let chainCommands = editor.chain().focus();
+      if (range) {
+        chainCommands = chainCommands.deleteRange(range);
       }
 
-      editor.chain().focus().deleteRange(range).setHorizontalRule().run();
+      chainCommands
+        .setHorizontalRule()
+        // Here we insert a paragraph after the divider that will be removed directly to fix
+        // an issue with TipTap where the isActive('paragraph') function is returning
+        // false. The "plus" menu on the left is not showing without this fix.
+        .insertContent({
+          type: 'paragraph',
+        })
+        .deleteNode('paragraph')
+        .run();
     },
   },
   {
