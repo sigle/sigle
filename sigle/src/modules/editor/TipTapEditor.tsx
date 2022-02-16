@@ -1,4 +1,5 @@
-import { useEditor, EditorContent } from '@tiptap/react';
+import 'highlight.js/styles/night-owl.css';
+import { useEditor, EditorContent, ReactNodeViewRenderer } from '@tiptap/react';
 import TipTapBlockquote from '@tiptap/extension-blockquote';
 import TipTapBold from '@tiptap/extension-bold';
 import TipTapBulletList from '@tiptap/extension-bullet-list';
@@ -17,11 +18,14 @@ import TipTapParagraph from '@tiptap/extension-paragraph';
 import TipTapPlaceholder from '@tiptap/extension-placeholder';
 import TipTapStrike from '@tiptap/extension-strike';
 import TipTapText from '@tiptap/extension-text';
+import TipTapCodeBlockLowlight from '@tiptap/extension-code-block-lowlight';
+import { lowlight } from 'lowlight/lib/common.js';
 import { SlashCommands } from './extensions/SlashCommands';
 import { BubbleMenu } from './BubbleMenu';
 import { slashCommands, SlashCommandsList } from './InlineMenu';
 import { FloatingMenu } from './FloatingMenu';
 import { styled, globalCss, keyframes } from '../../stitches.config';
+import { CodeBlockComponent } from './extensions/CodeBlock';
 
 const fadeInAnimation = keyframes({
   '0%': { opacity: '0' },
@@ -48,6 +52,10 @@ const StyledEditorContent = styled(EditorContent, {
   // Image selected style
   '& img.ProseMirror-selectednode': {
     outline: '1px solid $orange11',
+  },
+  // Code block style
+  '& pre': {
+    backgroundColor: '$gray11 !important',
   },
   // Image uploading style
   '& img[data-loading="true"]': {
@@ -100,6 +108,14 @@ export const TipTapEditor = ({}: TipTapEditorProps) => {
       TipTapHeading.configure({
         // Only allow h1, h2 and h3
         levels: [1, 2, 3],
+      }),
+      TipTapImage,
+      TipTapCodeBlockLowlight.extend({
+        addNodeView() {
+          return ReactNodeViewRenderer(CodeBlockComponent);
+        },
+      }).configure({
+        lowlight,
       }),
       TipTapImage.extend({
         addAttributes() {

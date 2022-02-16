@@ -123,6 +123,7 @@ importers:
       '@tiptap/extension-bold': 2.0.0-beta.26
       '@tiptap/extension-bullet-list': 2.0.0-beta.26
       '@tiptap/extension-code': 2.0.0-beta.26
+      '@tiptap/extension-code-block-lowlight': 2.0.0-beta.68
       '@tiptap/extension-document': 2.0.0-beta.15
       '@tiptap/extension-dropcursor': 2.0.0-beta.25
       '@tiptap/extension-hard-break': 2.0.0-beta.30
@@ -164,8 +165,10 @@ importers:
       fathom-client: 3.2.0
       feed: 4.2.2
       formik: 2.2.6
+      highlight.js: 11.4.0
       immutable: 4.0.0-rc.12
       jest: 27.5.1
+      lowlight: 2.5.0
       nanoid: 3.2.0
       next: 12.0.10
       next-compose-plugins: 2.2.1
@@ -211,6 +214,7 @@ importers:
       '@tiptap/extension-bold': 2.0.0-beta.26_@tiptap+core@2.0.0-beta.174
       '@tiptap/extension-bullet-list': 2.0.0-beta.26_@tiptap+core@2.0.0-beta.174
       '@tiptap/extension-code': 2.0.0-beta.26_@tiptap+core@2.0.0-beta.174
+      '@tiptap/extension-code-block-lowlight': 2.0.0-beta.68_@tiptap+core@2.0.0-beta.174
       '@tiptap/extension-document': 2.0.0-beta.15_@tiptap+core@2.0.0-beta.174
       '@tiptap/extension-dropcursor': 2.0.0-beta.25_@tiptap+core@2.0.0-beta.174
       '@tiptap/extension-hard-break': 2.0.0-beta.30_@tiptap+core@2.0.0-beta.174
@@ -231,7 +235,9 @@ importers:
       fathom-client: 3.2.0
       feed: 4.2.2
       formik: 2.2.6_react@17.0.2
+      highlight.js: 11.4.0
       immutable: 4.0.0-rc.12
+      lowlight: 2.5.0
       nanoid: 3.2.0
       next: 12.0.10_49a38fd3ae9b3ccf914707d6c6f0d387
       next-seo: 4.28.1_61390be992b634a688f7c2555547b55b
@@ -278,7 +284,7 @@ importers:
       eslint: 7.32.0
       eslint-config-next: 12.0.10_98f6ccf9ec826fe66ebea42b6b95ee7b
       eslint-config-prettier: 8.3.0_eslint@7.32.0
-      eslint-plugin-prettier: 4.0.0_94254c01413ebaf1ad99cec97ec78f12
+      eslint-plugin-prettier: 4.0.0_6e6a25a49a944db0fa38418c3ba4bc86
       fast-xml-parser: 4.0.1
       jest: 27.5.1
       next-compose-plugins: 2.2.1
@@ -2159,6 +2165,29 @@ packages:
       '@tiptap/core': 2.0.0-beta.174
     dev: false
 
+  /@tiptap/extension-code-block-lowlight/2.0.0-beta.68_@tiptap+core@2.0.0-beta.174:
+    resolution: {integrity: sha512-927vw4DJ5pq3lYOdJbBrCjJZ/YsbsEzWkb7SwRsaztDXcgsF2z8gt6dy7onXMaqm5rDx6eNofLPdhUyLCswW8Q==}
+    peerDependencies:
+      '@tiptap/core': ^2.0.0-beta.1
+    dependencies:
+      '@tiptap/core': 2.0.0-beta.174
+      '@tiptap/extension-code-block': 2.0.0-beta.37_@tiptap+core@2.0.0-beta.174
+      '@types/lowlight': 0.0.3
+      lowlight: 1.20.0
+      prosemirror-model: 1.16.1
+      prosemirror-state: 1.3.4
+      prosemirror-view: 1.23.6
+    dev: false
+
+  /@tiptap/extension-code-block/2.0.0-beta.37_@tiptap+core@2.0.0-beta.174:
+    resolution: {integrity: sha512-mJAM+PHaNoKRYwM3D36lZ51/aoPxxvZNQn3UBnZ6G7l0ZJSgB3JvBEzqK6S8nNFeYIIxGwv4QF6vXe4MG9ie2g==}
+    peerDependencies:
+      '@tiptap/core': ^2.0.0-beta.1
+    dependencies:
+      '@tiptap/core': 2.0.0-beta.174
+      prosemirror-state: 1.3.4
+    dev: false
+
   /@tiptap/extension-code/2.0.0-beta.26_@tiptap+core@2.0.0-beta.174:
     resolution: {integrity: sha512-QcFWdEFfbJ1n5UFFBD17QPPAJ3J5p/b7XV484u0shCzywO7aNPV32QeHy1z0eMoyZtCbOWf6hg/a7Ugv8IwpHw==}
     peerDependencies:
@@ -2387,6 +2416,12 @@ packages:
       '@types/node': 16.10.3
     dev: true
 
+  /@types/hast/2.3.4:
+    resolution: {integrity: sha512-wLEm0QvaoawEDoTRwzTXp4b4jpwiJDvR5KMnFnVodm3scufTlBOWRD6N1OBf9TZMhjlNsSfcO5V+7AF4+Vy+9g==}
+    dependencies:
+      '@types/unist': 2.0.6
+    dev: false
+
   /@types/hoist-non-react-statics/3.3.1:
     resolution: {integrity: sha512-iMIqiko6ooLrTh1joXodJK5X9xeEALT1kM5G3ZLhD3hszxBdIEd5C75U834D9mLcINgD4OyZf5uQXjkuYydWvA==}
     dependencies:
@@ -2435,6 +2470,10 @@ packages:
   /@types/json5/0.0.29:
     resolution: {integrity: sha1-7ihweulOEdK4J7y+UnC86n8+ce4=}
     dev: true
+
+  /@types/lowlight/0.0.3:
+    resolution: {integrity: sha512-R83q/yPX2nIlo9D3WtSjyUDd57t8s+GVLaL8YIv3k7zMMWpYpOXqjJgrWp80qXUJB/a1t76nTyBpxrv0JNYaEg==}
+    dev: false
 
   /@types/node/10.12.18:
     resolution: {integrity: sha512-fh+pAqt4xRzPfqA6eh3Z2y6fyZavRIumvjhaCL753+TVkGKGhpPeyrJG2JftD0T9q4GF00KjefsQ+PQNDdWQaQ==}
@@ -2664,6 +2703,10 @@ packages:
     dependencies:
       '@types/jest': 26.0.24
     dev: true
+
+  /@types/unist/2.0.6:
+    resolution: {integrity: sha512-PBjIUxZHOuj0R15/xuwJYjFi+KZdNFrehocChv4g5hu6aFroHue8m0lBP0POdK2nKzbw0cgV1mws8+V/JAcEkQ==}
+    dev: false
 
   /@types/yargs-parser/20.2.1:
     resolution: {integrity: sha512-7tFImggNeNBVMsn0vLrpn1H1uPrUBdnARPTpZoitY37ZrdJREzf7I16tMrlK3hen349gr1NYh8CmZQa7CTG6Aw==}
@@ -4272,22 +4315,6 @@ packages:
       prettier-linter-helpers: 1.0.0
     dev: true
 
-  /eslint-plugin-prettier/4.0.0_94254c01413ebaf1ad99cec97ec78f12:
-    resolution: {integrity: sha512-98MqmCJ7vJodoQK359bqQWaxOE0CS8paAz/GgjaZLyex4TTk3g9HugoO89EqWCrFiOqn9EVvcoo7gZzONCWVwQ==}
-    engines: {node: '>=6.0.0'}
-    peerDependencies:
-      eslint: '>=7.28.0'
-      eslint-config-prettier: '*'
-      prettier: '>=2.0.0'
-    peerDependenciesMeta:
-      eslint-config-prettier:
-        optional: true
-    dependencies:
-      eslint: 7.32.0
-      eslint-config-prettier: 8.3.0_eslint@7.32.0
-      prettier-linter-helpers: 1.0.0
-    dev: true
-
   /eslint-plugin-react-hooks/4.3.0_eslint@7.32.0:
     resolution: {integrity: sha512-XslZy0LnMn+84NEG9jSGR6eGqaZB3133L8xewQo3fQagbQuGt7a63gf+P1NGKZavEYEC3UXaWEAA/AqDkuN6xA==}
     engines: {node: '>=10'}
@@ -4558,6 +4585,18 @@ packages:
     resolution: {integrity: sha512-WF/qA5wXYSuA5K8uiIhGNbErOcTAmfLEWrBxWP2px2dEc9waH9zxjdh9k0F907VCBhdJrv+f7V3HT/Pmro40zA==}
     dev: false
 
+  /fault/1.0.4:
+    resolution: {integrity: sha512-CJ0HCB5tL5fYTEA7ToAq5+kTwd++Borf1/bifxd9iT70QcXr4MRrO3Llf8Ifs70q+SJcGHFtnIE/Nw6giCtECA==}
+    dependencies:
+      format: 0.2.2
+    dev: false
+
+  /fault/2.0.1:
+    resolution: {integrity: sha512-WtySTkS4OKev5JtpHXnib4Gxiurzh5NCGvWrFaZ34m6JehfTUhKZvn9njTfw48t6JumVQOmrKqpmGcdwxnhqBQ==}
+    dependencies:
+      format: 0.2.2
+    dev: false
+
   /fb-watchman/2.0.1:
     resolution: {integrity: sha512-DkPJKQeY6kKwmuMretBhr7G6Vodr7bFwDYTXIkfG1gjvNpaxBTQV3PbXg6bR1c1UP4jPOX0jHUbbHANL9vRjVg==}
     dependencies:
@@ -4640,6 +4679,11 @@ packages:
       combined-stream: 1.0.8
       mime-types: 2.1.34
     dev: true
+
+  /format/0.2.2:
+    resolution: {integrity: sha1-1hcBB+nv3E7TDJ3DkBbflCtctYs=}
+    engines: {node: '>=0.4.x'}
+    dev: false
 
   /formik/2.2.6_react@17.0.2:
     resolution: {integrity: sha512-Kxk2zQRafy56zhLmrzcbryUpMBvT0tal5IvcifK5+4YNGelKsnrODFJ0sZQRMQboblWNym4lAW3bt+tf2vApSA==}
@@ -4885,6 +4929,15 @@ packages:
   /hex-color-regex/1.1.0:
     resolution: {integrity: sha512-l9sfDFsuqtOqKDsQdqrMRk0U85RZc0RtOR9yPI7mRVOa4FsR/BVnZ0shmQRM96Ji99kYZP/7hn1cedc1+ApsTQ==}
     dev: true
+
+  /highlight.js/10.7.3:
+    resolution: {integrity: sha512-tzcUFauisWKNHaRkN4Wjl/ZA07gENAjFl3J/c480dprkGTg5EQstgaNFqBfUqCq54kZRIEcreTsAgF/m2quD7A==}
+    dev: false
+
+  /highlight.js/11.4.0:
+    resolution: {integrity: sha512-nawlpCBCSASs7EdvZOYOYVkJpGmAOKMYZgZtUqSRqodZE0GRVcFKwo1RcpeOemqh9hyttTdd5wDBwHkuSyUfnA==}
+    engines: {node: '>=12.0.0'}
+    dev: false
 
   /hmac-drbg/1.0.1:
     resolution: {integrity: sha1-0nRXAQJabHdabFRXk+1QL8DGSaE=}
@@ -5905,7 +5958,7 @@ packages:
     dependencies:
       universalify: 2.0.0
     optionalDependencies:
-      graceful-fs: 4.2.8
+      graceful-fs: 4.2.9
     dev: true
 
   /jsontokens/3.0.0:
@@ -6103,6 +6156,21 @@ packages:
     hasBin: true
     dependencies:
       js-tokens: 4.0.0
+
+  /lowlight/1.20.0:
+    resolution: {integrity: sha512-8Ktj+prEb1RoCPkEOrPMYUN/nCggB7qAWe3a7OpMjWQkh3l2RD5wKRQ+o8Q8YuI9RG/xs95waaI/E6ym/7NsTw==}
+    dependencies:
+      fault: 1.0.4
+      highlight.js: 10.7.3
+    dev: false
+
+  /lowlight/2.5.0:
+    resolution: {integrity: sha512-OXGUch9JZu4q5r4Ir6QlUp5pBXMxS7NHaclhRiUlxNRcOSK0gtXZcVrsGP4eM7bv0/KDHg/TXQagx/X35EULsA==}
+    dependencies:
+      '@types/hast': 2.3.4
+      fault: 2.0.1
+      highlight.js: 11.4.0
+    dev: false
 
   /lru-cache/6.0.0:
     resolution: {integrity: sha512-Jo6dJ04CmSjuznwJSS3pUeWmd/H0ffTlkXXgwZi+eq1UCmqQwCh+eLsYOYCwY991i2Fah4h1BEMCx4qThGbsiA==}
@@ -6898,7 +6966,7 @@ packages:
     resolution: {integrity: sha512-Xkkrpd1y/TQ6HKzN3agsQIGRcLckUMA9u3j207L04mt8ToRgpGeyhbVv0HI7omDORIBHjR29b7AwlATFFf2GLA==}
     dependencies:
       prosemirror-model: 1.16.1
-      prosemirror-transform: 1.3.3
+      prosemirror-transform: 1.3.4
     dev: false
 
   /prosemirror-transform/1.3.2:
