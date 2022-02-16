@@ -21,7 +21,7 @@ describe('test feed api', () => {
 
     expect(res.statusCode).toBe(404);
     expect(res.end).toHaveBeenCalledWith('sigleapp.id.doesnotexist not found');
-  });
+  }, 10000);
 
   it('should work properly', async () => {
     const req = {
