@@ -57,6 +57,10 @@ const StyledEditorContent = styled(EditorContent, {
   '& pre': {
     backgroundColor: '$gray11 !important',
   },
+  // Image uploading style
+  '& img[data-loading="true"]': {
+    opacity: 0.25,
+  },
 });
 
 // Tippyjs theme used by the slash command menu
@@ -112,6 +116,23 @@ export const TipTapEditor = ({}: TipTapEditorProps) => {
         },
       }).configure({
         lowlight,
+      }),
+      TipTapImage.extend({
+        addAttributes() {
+          return {
+            ...this.parent?.(),
+            loading: {
+              default: false,
+              renderHTML: (attributes) => {
+                if (attributes.loading) {
+                  return {
+                    'data-loading': attributes.loading,
+                  };
+                }
+              },
+            },
+          };
+        },
       }),
       // Marks
       TipTapBold,
