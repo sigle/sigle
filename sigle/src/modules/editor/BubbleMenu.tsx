@@ -183,6 +183,11 @@ export const BubbleMenu = ({ editor }: BubbleMenuProps) => {
           return false;
         }
 
+        // Do not show menu on dividers
+        if (editor.isActive('horizontalRule')) {
+          return false;
+        }
+
         return true;
       }}
       editor={editor}
