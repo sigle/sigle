@@ -153,6 +153,19 @@ export const slashCommands: SlashCommandsCommand[] = [
     },
   },
   {
+    icon: QuoteLight,
+    title: 'Divider',
+    description: 'Create a divider',
+    command: ({ editor, range }) => {
+      if (!range) {
+        editor.chain().focus().setHorizontalRule().run();
+        return;
+      }
+
+      editor.chain().focus().deleteRange(range).setHorizontalRule().run();
+    },
+  },
+  {
     icon: ImageLight,
     title: 'Image',
     description: 'Upload from your computer',

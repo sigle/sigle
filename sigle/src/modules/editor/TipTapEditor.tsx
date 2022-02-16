@@ -8,6 +8,7 @@ import TipTapDropcursor from '@tiptap/extension-dropcursor';
 import TipTapHardBreak from '@tiptap/extension-hard-break';
 import TipTapHeading from '@tiptap/extension-heading';
 import TipTapHistory from '@tiptap/extension-history';
+import TipTapHorizontalRule from '@tiptap/extension-horizontal-rule';
 import TipTapItalic from '@tiptap/extension-italic';
 import TipTapImage from '@tiptap/extension-image';
 import TipTapLink from '@tiptap/extension-link';
@@ -98,6 +99,7 @@ export const TipTapEditor = ({}: TipTapEditorProps) => {
         levels: [1, 2, 3],
       }),
       TipTapImage,
+      TipTapHorizontalRule,
       // Marks
       TipTapBold,
       TipTapCode,
