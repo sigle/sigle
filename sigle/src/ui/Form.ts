@@ -1,10 +1,7 @@
 import { styled } from '../stitches.config';
 
 export const FormRow = styled('div', {
-  display: 'flex',
-  flexDirection: 'column',
-  gap: '$3',
-  py: '$3',
+  mb: '$5',
 });
 
 export const FormLabel = styled('label', {
@@ -12,6 +9,7 @@ export const FormLabel = styled('label', {
   display: 'block',
   fontSize: '$2',
   color: '$gray11',
+  mb: '$3',
 });
 
 export const FormInput = styled('input', {
@@ -41,15 +39,15 @@ export const FormInput = styled('input', {
     px: '$2',
     py: '$1',
     fontSize: '$1',
-    color: '$gray9',
+    color: '$gray11',
 
     '&:focus': {
       boxShadow: '0 0 0 2px $colors$gray8',
     },
-  },
 
-  '&::placeholder': {
-    color: '$gray9',
+    '&::placeholder': {
+      color: '$gray9',
+    },
   },
 });
 
@@ -62,6 +60,7 @@ export const FormInputCheckbox = styled('input', {
     backgroundColor: '$gray3',
     boxShadow: '0 0 0 1px $colors$gray7',
     p: '$2',
+    mt: '$2',
     borderRadius: '$1',
 
     '&:focus': {
@@ -88,7 +87,7 @@ export const FormTextarea = styled('textarea', {
 });
 
 export const FormHelper = styled('p', {
-  mt: '$1',
+  mt: '$2',
   color: '$gray9',
   fontSize: '$1',
 });

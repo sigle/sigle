@@ -3,7 +3,7 @@ import { useFormik, FormikErrors } from 'formik';
 import { useRouter } from 'next/router';
 import { toast } from 'react-toastify';
 import { useDropzone } from 'react-dropzone';
-import { MdAddAPhoto, MdDelete } from 'react-icons/md';
+import { MdAddAPhoto } from 'react-icons/md';
 import format from 'date-fns/format';
 import isValid from 'date-fns/isValid';
 import { Story } from '../../../types';
@@ -25,7 +25,7 @@ import {
   FormTextarea,
 } from '../../../ui/Form';
 import { styled } from '../../../stitches.config';
-import Image from 'next/image';
+import { TrashIcon } from '@radix-ui/react-icons';
 
 const ImageEmpty = styled('div', {
   display: 'flex',
@@ -33,7 +33,6 @@ const ImageEmpty = styled('div', {
   justifyContent: 'center',
   backgroundColor: '$gray3',
   py: '$4',
-  mb: '$1',
   cursor: 'pointer',
   borderRadius: '$1',
   position: 'relative',
@@ -45,6 +44,10 @@ const ImageEmpty = styled('div', {
     fontSize: '$1',
     color: '$gray9',
   },
+});
+
+const Image = styled('img', {
+  width: '100%',
 });
 
 const ImageEmptyIconContainer = styled('div', {
@@ -80,10 +83,10 @@ const ImageCheckboxContainer = styled('div', {
 });
 
 const SaveRow = styled('div', {
-  backgroundColor: 'white',
   pt: '$5',
   pb: '$10',
   display: 'flex',
+  justifyContent: 'end',
   gap: '$6',
 });
 
@@ -243,20 +246,20 @@ export const StorySettingsForm = ({
             height: !!coverImageUrl ? undefined : 178,
           }}
         >
-          {coverImageUrl && <Image src={coverImageUrl} layout="fill" />}
+          {coverImageUrl && <Image src={coverImageUrl} />}
           {!coverImageUrl && <span>Upload cover image</span>}
           <input {...getInputProps()} />
           <ImageEmptyIconContainer>
             {!coverImageUrl ? (
               <ImageEmptyIconAdd title="Add cover image">
-                <MdAddAPhoto size={15} />
+                <MdAddAPhoto />
               </ImageEmptyIconAdd>
             ) : (
               <ImageEmptyIconDelete
                 title="Remove cover image"
                 onClick={handleRemoveCover}
               >
-                <MdDelete size={15} />
+                <TrashIcon />
               </ImageEmptyIconDelete>
             )}
           </ImageEmptyIconContainer>
@@ -269,7 +272,9 @@ export const StorySettingsForm = ({
             value={formik.values.hideCoverImage ? 'true' : 'false'}
             onChange={formik.handleChange}
           />
-          <FormHelper>Hide cover image on the published story</FormHelper>
+          <FormHelper css={{ ml: '$2', pt: '$2' }}>
+            Hide cover image on the published story
+          </FormHelper>
         </ImageCheckboxContainer>
       </FormRow>
 
@@ -287,8 +292,9 @@ export const StorySettingsForm = ({
       </FormRow>
 
       <FormRow>
-        <FormLabel>Meta title</FormLabel>
+        <FormLabel>Twitter title</FormLabel>
         <FormInput
+          placeholder="Type here..."
           name="metaTitle"
           type="text"
           value={formik.values.metaTitle}
@@ -296,7 +302,7 @@ export const StorySettingsForm = ({
           maxLength={100}
         />
         <FormHelper>
-          Recommended: 70 characters. You have used{' '}
+          Recommended: 70 characters. <br /> You have used{' '}
           {formik.values.metaTitle.length} characters.
         </FormHelper>
         {formik.errors.metaTitle && (
@@ -305,8 +311,9 @@ export const StorySettingsForm = ({
       </FormRow>
 
       <FormRow>
-        <FormLabel>Meta description</FormLabel>
+        <FormLabel>Twitter description</FormLabel>
         <FormTextarea
+          placeholder="Type here..."
           name="metaDescription"
           value={formik.values.metaDescription}
           onChange={formik.handleChange}
@@ -314,7 +321,7 @@ export const StorySettingsForm = ({
           maxLength={250}
         />
         <FormHelper>
-          Recommended: 156 characters. You have used{' '}
+          Recommended: 156 characters. <br /> You have used{' '}
           {formik.values.metaDescription.length} characters.
         </FormHelper>
         {formik.errors.metaDescription && (
@@ -325,7 +332,7 @@ export const StorySettingsForm = ({
       <SaveRow>
         {loadingDelete ? (
           <Button variant="warning" size="lg" disabled>
-            <MdDelete />
+            <TrashIcon />
             <span>Deleting ...</span>
           </Button>
         ) : (
@@ -336,7 +343,7 @@ export const StorySettingsForm = ({
             variant="warning"
           >
             <span>Delete this story</span>
-            <MdDelete />
+            <TrashIcon />
           </Button>
         )}
         <Button
