@@ -1,8 +1,6 @@
 import React, { useState, useCallback } from 'react';
 import { useFormik, FormikErrors } from 'formik';
 import { useRouter } from 'next/router';
-import styled, { css } from 'styled-components';
-import tw from 'twin.macro';
 import { toast } from 'react-toastify';
 import { useDropzone } from 'react-dropzone';
 import { MdAddAPhoto, MdDelete } from 'react-icons/md';
@@ -15,71 +13,79 @@ import {
   saveStoriesFile,
   deleteStoryFile,
 } from '../../../utils';
-import { Button } from '../../../components';
+import { Button } from '../../../ui/Button';
+import { storage } from '../../../utils/blockstack';
 import {
-  FormRow,
-  FormLabel,
+  FormHelper,
+  FormHelperError,
   FormInput,
   FormInputCheckbox,
-  FormHelper,
+  FormLabel,
+  FormRow,
   FormTextarea,
-  FormHelperError,
-} from '../../../components/Form';
-import { storage } from '../../../utils/blockstack';
+} from '../../../ui/Form';
+import { styled } from '../../../stitches.config';
+import Image from 'next/image';
 
-const ImageEmpty = styled.div<{ haveImage: boolean }>`
-  ${tw`flex items-center justify-center bg-grey py-16 mb-4 cursor-pointer rounded-lg relative border border-solid border-grey focus:outline-none`};
+const ImageEmpty = styled('div', {
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+  backgroundColor: '$gray3',
+  py: '$4',
+  mb: '$1',
+  cursor: 'pointer',
+  borderRadius: '$1',
+  position: 'relative',
+  overflow: 'hidden',
 
-  ${(props) =>
-    props.haveImage &&
-    css`
-      ${tw`py-0`};
-    `}
+  '& span': {
+    py: '$1',
+    px: '$2',
+    fontSize: '$1',
+    color: '$gray9',
+  },
+});
 
-  span {
-    ${tw`py-1 px-2 text-sm text-grey-darker`};
-  }
-`;
+const ImageEmptyIconContainer = styled('div', {
+  position: 'absolute',
+  bottom: '$1',
+  right: '$1',
+  display: 'flex',
+  alignItems: 'center',
+  color: '$gray9',
+  gap: '$1',
+});
 
-const ImageEmptyIconContainer = styled.div`
-  ${tw`absolute bottom-2 right-2 flex items-center text-gray-900`};
-`;
+const ImageEmptyIconAdd = styled('div', {
+  p: '$1',
+  borderRadius: '$1',
+});
 
-const ImageEmptyIconAdd = styled.div`
-  ${tw`p-2 bg-white rounded-full`};
-`;
+const ImageEmptyIconDelete = styled('div', {
+  p: '$1',
+  borderRadius: '$1',
+  backgroundColor: '$gray3',
+  opacity: '50%',
+});
 
-const ImageEmptyIconDelete = styled.div`
-  ${tw`p-2 bg-white rounded-full ml-2`};
-`;
+const ImageCheckboxContainer = styled('div', {
+  display: 'flex',
+  alignItems: 'center',
 
-const ImageCheckboxContainer = styled.div`
-  ${tw`flex items-center`};
+  [`& ${FormHelper}`]: {
+    mt: 0,
+    ml: '$2',
+  },
+});
 
-  ${FormHelper} {
-    margin-top: 0;
-    ${tw`ml-2`};
-  }
-`;
-
-const Image = styled.img`
-  ${tw`cursor-pointer w-full`};
-`;
-
-const SaveRow = styled.div`
-  ${tw`py-3 flex justify-between`};
-`;
-
-const ButtonLink = styled.button`
-  ${tw`flex items-center text-pink text-sm mt-2`};
-  &:focus {
-    outline: 0;
-  }
-
-  span {
-    ${tw`ml-1`};
-  }
-`;
+const SaveRow = styled('div', {
+  backgroundColor: 'white',
+  pt: '$5',
+  pb: '$10',
+  display: 'flex',
+  gap: '$6',
+});
 
 interface StorySettingsFormValues {
   coverImage: string;
@@ -231,16 +237,21 @@ export const StorySettingsForm = ({
         <FormLabel>Cover image</FormLabel>
         <ImageEmpty
           {...getRootProps({ tabIndex: undefined })}
-          haveImage={!!coverImageUrl}
+          // haveImage={!!coverImageUrl}
+          css={{
+            py: !!coverImageUrl ? 0 : undefined,
+            height: !!coverImageUrl ? undefined : 178,
+          }}
         >
-          {coverImageUrl && <Image src={coverImageUrl} />}
+          {coverImageUrl && <Image src={coverImageUrl} layout="fill" />}
           {!coverImageUrl && <span>Upload cover image</span>}
           <input {...getInputProps()} />
           <ImageEmptyIconContainer>
-            <ImageEmptyIconAdd title="Add cover image">
-              <MdAddAPhoto size={15} />
-            </ImageEmptyIconAdd>
-            {coverImageUrl && (
+            {!coverImageUrl ? (
+              <ImageEmptyIconAdd title="Add cover image">
+                <MdAddAPhoto size={15} />
+              </ImageEmptyIconAdd>
+            ) : (
               <ImageEmptyIconDelete
                 title="Remove cover image"
                 onClick={handleRemoveCover}
@@ -312,21 +323,30 @@ export const StorySettingsForm = ({
       </FormRow>
 
       <SaveRow>
-        <Button disabled={formik.isSubmitting} type="submit">
-          {formik.isSubmitting ? 'Saving...' : 'Save'}
-        </Button>
-
         {loadingDelete ? (
-          <ButtonLink disabled>
+          <Button variant="warning" size="lg" disabled>
             <MdDelete />
             <span>Deleting ...</span>
-          </ButtonLink>
+          </Button>
         ) : (
-          <ButtonLink onClick={handleDelete}>
-            <MdDelete />
+          <Button
+            css={{ display: 'flex', gap: '$2' }}
+            size="lg"
+            onClick={handleDelete}
+            variant="warning"
+          >
             <span>Delete this story</span>
-          </ButtonLink>
+            <MdDelete />
+          </Button>
         )}
+        <Button
+          size="lg"
+          color="orange"
+          disabled={formik.isSubmitting}
+          type="submit"
+        >
+          {formik.isSubmitting ? 'Saving...' : 'Save Settings'}
+        </Button>
       </SaveRow>
     </form>
   );

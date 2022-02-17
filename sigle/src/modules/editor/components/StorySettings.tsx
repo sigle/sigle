@@ -3,13 +3,7 @@ import * as DialogPrimitive from '@radix-ui/react-dialog';
 import { Cross1Icon } from '@radix-ui/react-icons';
 import { Story } from '../../../types';
 import { StorySettingsForm } from './StorySettingsForm';
-import {
-  Dialog,
-  DialogContent,
-  DialogTitle,
-  Heading,
-  IconButton,
-} from '../../../ui';
+import { Dialog, DialogTitle, Heading, IconButton } from '../../../ui';
 import { keyframes, styled } from '../../../stitches.config';
 
 // const StyledDialogOverlay = styled(DialogOverlay)`
@@ -29,21 +23,21 @@ const StyledDialogContent = styled(DialogPrimitive.Content, {
   width: '100%',
   backgroundColor: 'white',
   margin: 0,
-  padding: '1rem 2rem',
+  padding: '1.25rem 2rem',
   borderRadius: 0,
   position: 'fixed',
   top: 0,
   right: 0,
   bottom: 0,
   '@media (prefers-reduced-motion: no-preference)': {
-    animation: `${contentShow} 150ms cubic-bezier(0.16, 1, 0.3, 1)`,
+    animation: `${contentShow} 300ms ease-in-out`,
     willChange: 'translateX',
   },
 });
 
 const StyledCloseButton = styled(DialogPrimitive.Close, {
   position: 'absolute',
-  top: '$4',
+  top: '$9',
   right: '$6',
 });
 
@@ -59,8 +53,12 @@ export const StorySettings = ({ open, onClose, story, onSave }: Props) => {
     <Dialog open={open} onOpenChange={onClose}>
       <StyledDialogContent aria-label="Story settings">
         <DialogTitle asChild>
-          <Heading as="h2" size="2xl" css={{ mt: '$5' }}>
-            Settings
+          <Heading
+            as="h2"
+            size="lg"
+            css={{ mt: '$5', mb: '$8', fontWeight: 'normal' }}
+          >
+            Story settings
           </Heading>
         </DialogTitle>
 

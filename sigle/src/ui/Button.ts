@@ -41,6 +41,16 @@ export const Button = styled('button', {
         backgroundColor: 'transparent',
         boxShadow: 'none',
       },
+      warning: {
+        backgroundColor: '$orange3',
+        color: '$orange11',
+        '&:hover': {
+          backgroundColor: '$orange4',
+        },
+        '&:active': {
+          backgroundColor: '$orange5',
+        },
+      },
     },
   },
   compoundVariants: [
