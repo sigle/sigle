@@ -57,7 +57,7 @@ import { PageContainer } from './Editor';
 import { SlateEditorLink } from './SlateEditorLink';
 import { TwitterCardPreview } from './TwitterCardPreview';
 import { StoryPublishedDialog } from './StoryPublishedDialog';
-import { EditorHeader } from '../Editorheader';
+import { EditorHeader } from '../EditorHeader';
 
 const Input = styled.input`
   ${tw`outline-none w-full text-4xl font-bold`};
