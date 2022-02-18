@@ -106,6 +106,7 @@ importers:
       '@radix-ui/react-dialog': 0.1.0
       '@radix-ui/react-dropdown-menu': 0.1.0
       '@radix-ui/react-icons': 1.0.3
+      '@radix-ui/react-scroll-area': ^0.1.3
       '@radix-ui/react-tooltip': 0.1.0
       '@sentry/nextjs': 6.17.6
       '@stacks/auth': 2.0.0-beta.1
@@ -198,6 +199,7 @@ importers:
       '@radix-ui/react-dialog': 0.1.0_bf48e1ad12752d96bd1cc6ac30006141
       '@radix-ui/react-dropdown-menu': 0.1.0_bf48e1ad12752d96bd1cc6ac30006141
       '@radix-ui/react-icons': 1.0.3_react@17.0.2
+      '@radix-ui/react-scroll-area': 0.1.3_react@17.0.2
       '@radix-ui/react-tooltip': 0.1.0_react-dom@17.0.2+react@17.0.2
       '@sentry/nextjs': 6.17.6_next@12.0.10+react@17.0.2
       '@stacks/auth': 2.0.0-beta.1
@@ -278,7 +280,7 @@ importers:
       eslint: 7.32.0
       eslint-config-next: 12.0.10_98f6ccf9ec826fe66ebea42b6b95ee7b
       eslint-config-prettier: 8.3.0_eslint@7.32.0
-      eslint-plugin-prettier: 4.0.0_94254c01413ebaf1ad99cec97ec78f12
+      eslint-plugin-prettier: 4.0.0_6e6a25a49a944db0fa38418c3ba4bc86
       fast-xml-parser: 4.0.1
       jest: 27.5.1
       next-compose-plugins: 2.2.1
@@ -700,7 +702,6 @@ packages:
     engines: {node: '>=6.9.0'}
     dependencies:
       regenerator-runtime: 0.13.9
-    dev: true
 
   /@babel/template/7.15.4:
     resolution: {integrity: sha512-UgBAfEa1oGuYgDIPM2G+aHa4Nlo9Lh6mGD2bDBGMTbYnc38vulXPuC1MGjYILIEmlwl6Rd+BPR9ee3gm20CBtg==}
@@ -1263,6 +1264,12 @@ packages:
     resolution: {integrity: sha512-E6+ZPQ+FFn1/NZ4c/KRvZTu9KjC/MXrbJNETYs1HKe96gyxQivPu65FkhOsRnPigvJ0YJ9ZxYGxayqDNmaC1cQ==}
     dev: false
 
+  /@radix-ui/number/0.1.0:
+    resolution: {integrity: sha512-rpf6QiOWLHAkM4FEMYu9i+5Jr8cKT893+R4mPpcdsy4LD7omr9JfdOqj/h/xPA5+EcVrpMMlU6rrRYpUB5UI8g==}
+    dependencies:
+      '@babel/runtime': 7.17.2
+    dev: false
+
   /@radix-ui/popper/0.1.0:
     resolution: {integrity: sha512-uzYeElL3w7SeNMuQpXiFlBhTT+JyaNMCwDfjKkrzugEcYrf5n52PHqncNdQPUtR42hJh8V9FsqyEDbDxkeNjJQ==}
     dependencies:
@@ -1273,7 +1280,7 @@ packages:
   /@radix-ui/primitive/0.1.0:
     resolution: {integrity: sha512-tqxZKybwN5Fa3VzZry4G6mXAAb9aAqKmPtnVbZpL0vsBwvOHTBwsjHVPXylocYLwEtBY9SCe665bYnNB515uoA==}
     dependencies:
-      '@babel/runtime': 7.15.4
+      '@babel/runtime': 7.17.2
     dev: false
 
   /@radix-ui/react-arrow/0.1.0_react@17.0.2:
@@ -1303,7 +1310,7 @@ packages:
     peerDependencies:
       react: ^16.8 || ^17.0
     dependencies:
-      '@babel/runtime': 7.15.4
+      '@babel/runtime': 7.17.2
       react: 17.0.2
     dev: false
 
@@ -1313,6 +1320,15 @@ packages:
       react: ^16.8 || ^17.0
     dependencies:
       '@babel/runtime': 7.15.4
+      react: 17.0.2
+    dev: false
+
+  /@radix-ui/react-context/0.1.1_react@17.0.2:
+    resolution: {integrity: sha512-PkyVX1JsLBioeu0jB9WvRpDBBLtLZohVDT3BB5CTSJqActma8S8030P57mWZb4baZifMvN7KKWPAA40UmWKkQg==}
+    peerDependencies:
+      react: ^16.8 || ^17.0
+    dependencies:
+      '@babel/runtime': 7.17.2
       react: 17.0.2
     dev: false
 
@@ -1485,6 +1501,17 @@ packages:
       react: 17.0.2
     dev: false
 
+  /@radix-ui/react-presence/0.1.1_react@17.0.2:
+    resolution: {integrity: sha512-LsL+NcWDpFUAYCmXeH02o4pgqcSLpwxP84UIjCtpIKrsPe2vLuhcp79KC/jZJeXz+of2lUpMAxpM+eCpxFZtlg==}
+    peerDependencies:
+      react: '>=16.8'
+    dependencies:
+      '@babel/runtime': 7.17.2
+      '@radix-ui/react-compose-refs': 0.1.0_react@17.0.2
+      '@radix-ui/react-use-layout-effect': 0.1.0_react@17.0.2
+      react: 17.0.2
+    dev: false
+
   /@radix-ui/react-primitive/0.1.0_react@17.0.2:
     resolution: {integrity: sha512-ydO24k5Cvry5RCMfm5OJNnIwvxSIUuUZ3Kf6bu1GaSsDfBKiv5JeuQkipURW28KlX7I85Jr/I02JlE+Ec4HmWA==}
     peerDependencies:
@@ -1492,6 +1519,16 @@ packages:
     dependencies:
       '@babel/runtime': 7.15.4
       '@radix-ui/react-slot': 0.1.0_react@17.0.2
+      react: 17.0.2
+    dev: false
+
+  /@radix-ui/react-primitive/0.1.3_react@17.0.2:
+    resolution: {integrity: sha512-fcyADaaAx2jdqEDLsTs6aX50S3L1c9K9CC6XMpJpuXFJCU4n9PGTFDZRtY2gAoXXoRCPIBsklCopSmGb6SsDjQ==}
+    peerDependencies:
+      react: ^16.8 || ^17.0
+    dependencies:
+      '@babel/runtime': 7.17.2
+      '@radix-ui/react-slot': 0.1.2_react@17.0.2
       react: 17.0.2
     dev: false
 
@@ -1512,12 +1549,40 @@ packages:
       react: 17.0.2
     dev: false
 
+  /@radix-ui/react-scroll-area/0.1.3_react@17.0.2:
+    resolution: {integrity: sha512-wn5FdX5pU8N6ygqIad4clrhyiLo3LWCdscIee2nKe2bu7AijtUs/VAqmLEoDLIi2gpkS5RclxHbiHRkaxVvccw==}
+    peerDependencies:
+      react: ^16.8 || ^17.0
+    dependencies:
+      '@babel/runtime': 7.17.2
+      '@radix-ui/number': 0.1.0
+      '@radix-ui/primitive': 0.1.0
+      '@radix-ui/react-compose-refs': 0.1.0_react@17.0.2
+      '@radix-ui/react-context': 0.1.1_react@17.0.2
+      '@radix-ui/react-presence': 0.1.1_react@17.0.2
+      '@radix-ui/react-primitive': 0.1.3_react@17.0.2
+      '@radix-ui/react-use-callback-ref': 0.1.0_react@17.0.2
+      '@radix-ui/react-use-direction': 0.1.0_react@17.0.2
+      '@radix-ui/react-use-layout-effect': 0.1.0_react@17.0.2
+      react: 17.0.2
+    dev: false
+
   /@radix-ui/react-slot/0.1.0_react@17.0.2:
     resolution: {integrity: sha512-ZuvAUhSK9EAE42b3+K7k7w4nF1uF+Wd4bFj2OCE1aSiW3tgiu7ZU+J61m2+RIDps0WLu95PUx6eZrnpfqBXFRg==}
     peerDependencies:
       react: ^16.8 || ^17.0
     dependencies:
       '@babel/runtime': 7.15.4
+      '@radix-ui/react-compose-refs': 0.1.0_react@17.0.2
+      react: 17.0.2
+    dev: false
+
+  /@radix-ui/react-slot/0.1.2_react@17.0.2:
+    resolution: {integrity: sha512-ADkqfL+agEzEguU3yS26jfB50hRrwf7U4VTwAOZEmi/g+ITcBWe12yM46ueS/UCIMI9Py+gFUaAdxgxafFvY2Q==}
+    peerDependencies:
+      react: ^16.8 || ^17.0
+    dependencies:
+      '@babel/runtime': 7.17.2
       '@radix-ui/react-compose-refs': 0.1.0_react@17.0.2
       react: 17.0.2
     dev: false
@@ -1563,7 +1628,7 @@ packages:
     peerDependencies:
       react: ^16.8 || ^17.0
     dependencies:
-      '@babel/runtime': 7.16.7
+      '@babel/runtime': 7.17.2
       react: 17.0.2
     dev: false
 
@@ -1601,7 +1666,7 @@ packages:
     peerDependencies:
       react: ^16.8 || ^17.0
     dependencies:
-      '@babel/runtime': 7.15.4
+      '@babel/runtime': 7.17.2
       react: 17.0.2
     dev: false
 
@@ -4272,22 +4337,6 @@ packages:
       prettier-linter-helpers: 1.0.0
     dev: true
 
-  /eslint-plugin-prettier/4.0.0_94254c01413ebaf1ad99cec97ec78f12:
-    resolution: {integrity: sha512-98MqmCJ7vJodoQK359bqQWaxOE0CS8paAz/GgjaZLyex4TTk3g9HugoO89EqWCrFiOqn9EVvcoo7gZzONCWVwQ==}
-    engines: {node: '>=6.0.0'}
-    peerDependencies:
-      eslint: '>=7.28.0'
-      eslint-config-prettier: '*'
-      prettier: '>=2.0.0'
-    peerDependenciesMeta:
-      eslint-config-prettier:
-        optional: true
-    dependencies:
-      eslint: 7.32.0
-      eslint-config-prettier: 8.3.0_eslint@7.32.0
-      prettier-linter-helpers: 1.0.0
-    dev: true
-
   /eslint-plugin-react-hooks/4.3.0_eslint@7.32.0:
     resolution: {integrity: sha512-XslZy0LnMn+84NEG9jSGR6eGqaZB3133L8xewQo3fQagbQuGt7a63gf+P1NGKZavEYEC3UXaWEAA/AqDkuN6xA==}
     engines: {node: '>=10'}
@@ -5905,7 +5954,7 @@ packages:
     dependencies:
       universalify: 2.0.0
     optionalDependencies:
-      graceful-fs: 4.2.8
+      graceful-fs: 4.2.9
     dev: true
 
   /jsontokens/3.0.0:

@@ -19,11 +19,10 @@ const StyledDialogContent = styled(DialogPrimitive.Content, {
   transform: 'translateX(0)',
   maxWidth: '28rem',
   maxHeight: 'initial',
-  overflowY: 'auto',
+  overflow: 'hidden',
   width: '100%',
-  backgroundColor: 'white',
+  backgroundColor: '$gray1',
   margin: 0,
-  padding: '1.25rem 2rem',
   borderRadius: 0,
   position: 'fixed',
   top: 0,
@@ -56,7 +55,7 @@ export const StorySettings = ({ open, onClose, story, onSave }: Props) => {
           <Heading
             as="h2"
             size="lg"
-            css={{ mt: '$5', mb: '$8', fontWeight: 'normal' }}
+            css={{ ml: '$8', mt: '$10', pb: '$4', fontWeight: 'normal' }}
           >
             Story settings
           </Heading>
