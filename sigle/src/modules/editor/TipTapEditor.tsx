@@ -27,6 +27,7 @@ import { slashCommands, SlashCommandsList } from './InlineMenu';
 import { FloatingMenu } from './FloatingMenu';
 import { styled, globalCss, keyframes } from '../../stitches.config';
 import { CodeBlockComponent } from './extensions/CodeBlock';
+import { forwardRef, useImperativeHandle } from 'react';
 
 const fadeInAnimation = keyframes({
   '0%': { opacity: '0' },
@@ -89,7 +90,9 @@ interface TipTapEditorProps {
   // story: Story;
 }
 
-export const TipTapEditor = ({}: TipTapEditorProps) => {
+export const TipTapEditor = forwardRef<{
+  getEditorHTML: () => string | undefined;
+}>(({}: TipTapEditorProps, ref) => {
   globalStylesCustomEditor();
 
   const editor = useEditor({
@@ -160,6 +163,16 @@ export const TipTapEditor = ({}: TipTapEditorProps) => {
     content: '<p>Hello World! 🌎️</p>',
   });
 
+  // Here we extend the received ref so the parent can get the editor content at any time
+  useImperativeHandle(
+    ref,
+    () => ({
+      // TODO cleanup empty <p> tags
+      getEditorHTML: () => editor?.getHTML(),
+    }),
+    [editor]
+  );
+
   return (
     <>
       {editor && <BubbleMenu editor={editor} />}
@@ -168,4 +181,4 @@ export const TipTapEditor = ({}: TipTapEditorProps) => {
       <StyledEditorContent editor={editor} />
     </>
   );
-};
+});

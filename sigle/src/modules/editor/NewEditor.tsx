@@ -1,3 +1,4 @@
+import { useRef } from 'react';
 import { Story } from '../../types';
 import { Container } from '../../ui';
 import { Content } from '../publicStory/components/PublicStory';
@@ -16,10 +17,19 @@ export const NewEditor = ({
   onPublish,
   onUnpublish,
 }: NewEditorProps) => {
+  const editorRef = useRef<{ getEditorHTML: () => string | undefined }>(null);
   const loadingSave = false;
-  const handleSave = () => null;
   const handleOpenSettings = () => null;
-  const onChangeTitle = () => null;
+  // const onChangeTitle = () => null;
+
+  const handleSave = () => {
+    const html = editorRef.current?.getEditorHTML();
+    if (!html) {
+      return;
+    }
+
+    console.log({ html });
+  };
 
   return (
     <Container
@@ -48,7 +58,7 @@ export const NewEditor = ({
         /> */}
         {/* TODO rename component + move to radix */}
         <Content>
-          <TipTapEditor />
+          <TipTapEditor ref={editorRef} />
         </Content>
       </PageContainer>
     </Container>
