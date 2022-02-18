@@ -167,7 +167,7 @@ export const TipTapEditor = forwardRef<{
   useImperativeHandle(
     ref,
     () => ({
-      // TODO cleanup empty <p> tags
+      // TODO cleanup empty <p>, <h1> etc tags, basically all empty tags
       getEditorHTML: () => editor?.getHTML(),
     }),
     [editor]
