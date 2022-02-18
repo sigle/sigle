@@ -1,6 +1,6 @@
 import { useRef } from 'react';
 import { Story } from '../../types';
-import { Container } from '../../ui';
+import { Container, Text } from '../../ui';
 import { Content } from '../publicStory/components/PublicStory';
 import { PageContainer } from './components/Editor';
 import { EditorHeader } from './EditorHeader';
@@ -48,6 +48,10 @@ export const NewEditor = ({
         onPublish={onPublish}
         onUnpublish={onUnpublish}
       />
+
+      <Text size="sm" color="orange">
+        ⚠️ You are using the experimental editor, expect things to break
+      </Text>
 
       <PageContainer>
         {/* TODO input */}
