@@ -16,7 +16,6 @@ export const FormInput = styled('input', {
   '&[type]': {
     // reset
     appearance: 'none',
-
     borderWidth: '0',
     boxSizing: 'border-box',
     fontFamily: 'inherit',
@@ -25,12 +24,6 @@ export const FormInput = styled('input', {
     padding: '0',
     width: '100%',
     WebkitTapHighlightColor: 'rgba(0,0,0,0)',
-    '&::before': {
-      boxSizing: 'border-box',
-    },
-    '&::after': {
-      boxSizing: 'border-box',
-    },
 
     //custom
     backgroundColor: '$gray3',
@@ -53,9 +46,7 @@ export const FormInput = styled('input', {
 
 export const FormInputCheckbox = styled('input', {
   '&[type="checkbox"]': {
-    // reset
     all: 'unset',
-    //custom
     display: 'block',
     backgroundColor: '$gray3',
     boxShadow: '0 0 0 1px $colors$gray7',
@@ -70,9 +61,7 @@ export const FormInputCheckbox = styled('input', {
 });
 
 export const FormTextarea = styled('textarea', {
-  //reset
   all: 'unset',
-
   width: '100%',
   backgroundColor: '$gray3',
   boxShadow: '0 0 0 1px $colors$gray7',
