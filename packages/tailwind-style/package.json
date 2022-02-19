@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "description": "This package use tailwind css to generate a reset css file used by the client.",
   "scripts": {
-    "build": "pnpx tailwindcss --no-autoprefixer -i ./src/tailwind.css -o ./dist/tailwind.css"
+    "build": "NODE_ENV=production pnpx tailwindcss --no-autoprefixer -i ./src/tailwind.css -o ./dist/tailwind.css"
   },
   "devDependencies": {
     "tailwindcss": "2.2.15"
