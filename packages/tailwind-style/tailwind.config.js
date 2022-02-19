@@ -7,6 +7,9 @@ module.exports = {
           css: {
             color: false,
             maxWidth: false,
+            blockquote: {
+              quotes: 'none',
+            },
           },
         },
       },
