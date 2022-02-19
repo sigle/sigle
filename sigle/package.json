@@ -9,6 +9,12 @@
     "test": "pnpm run test:only",
     "test:only": "jest"
   },
+  "jest": {
+    "setupFilesAfterEnv": [
+      "./src/jest.setup.ts"
+    ],
+    "testEnvironment": "jsdom"
+  },
   "dependencies": {
     "@radix-ui/colors": "0.1.7",
     "@radix-ui/react-dialog": "0.1.0",
