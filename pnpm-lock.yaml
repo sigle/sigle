@@ -101,8 +101,10 @@ importers:
 
   packages/tailwind-style:
     specifiers:
+      '@tailwindcss/typography': 0.5.2
       tailwindcss: 3.0.23
     devDependencies:
+      '@tailwindcss/typography': 0.5.2_tailwindcss@3.0.23
       tailwindcss: 3.0.23
 
   sigle:
@@ -2036,6 +2038,17 @@ packages:
       lodash.merge: 4.6.2
       lodash.uniq: 4.5.0
       tailwindcss: 2.2.15
+    dev: true
+
+  /@tailwindcss/typography/0.5.2_tailwindcss@3.0.23:
+    resolution: {integrity: sha512-coq8DBABRPFcVhVIk6IbKyyHUt7YTEC/C992tatFB+yEx5WGBQrCgsSFjxHUr8AWXphWckadVJbominEduYBqw==}
+    peerDependencies:
+      tailwindcss: '>=3.0.0 || >= 3.0.0-alpha.1 || insiders'
+    dependencies:
+      lodash.castarray: 4.4.0
+      lodash.isplainobject: 4.0.6
+      lodash.merge: 4.6.2
+      tailwindcss: 3.0.23
     dev: true
 
   /@testing-library/dom/8.11.3:
