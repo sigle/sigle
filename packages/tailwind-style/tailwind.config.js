@@ -8,8 +8,10 @@ module.exports = {
             color: false,
             maxWidth: false,
             blockquote: {
-              quotes: 'none',
+              quotes: false,
             },
+            'code::before': false,
+            'code::after': false,
           },
         },
       },
