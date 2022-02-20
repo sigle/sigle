@@ -1,4 +1,5 @@
 import 'highlight.js/styles/night-owl.css';
+import { forwardRef, useImperativeHandle } from 'react';
 import {
   useEditor,
   EditorContent,
@@ -32,7 +33,7 @@ import { slashCommands, SlashCommandsList } from './InlineMenu';
 import { FloatingMenu } from './FloatingMenu';
 import { styled, globalCss, keyframes } from '../../stitches.config';
 import { CodeBlockComponent } from './extensions/CodeBlock';
-import { forwardRef, useImperativeHandle } from 'react';
+import { Story } from '../../types';
 
 const fadeInAnimation = keyframes({
   '0%': { opacity: '0' },
@@ -92,12 +93,15 @@ const globalStylesCustomEditor = globalCss({
  */
 
 interface TipTapEditorProps {
-  // story: Story;
+  story: Story;
 }
 
-export const TipTapEditor = forwardRef<{
-  getEditor: () => Editor | null;
-}>(({}: TipTapEditorProps, ref) => {
+export const TipTapEditor = forwardRef<
+  {
+    getEditor: () => Editor | null;
+  },
+  TipTapEditorProps
+>(({ story }, ref) => {
   globalStylesCustomEditor();
 
   const editor = useEditor({
@@ -165,7 +169,7 @@ export const TipTapEditor = forwardRef<{
         component: SlashCommandsList,
       }),
     ],
-    content: '<p>Hello World! 🌎️</p>',
+    content: story.contentVersion === '2' ? story.content : '',
   });
 
   // Here we extend the received ref so the parent can get the editor content at any time

@@ -93,13 +93,13 @@ export const NewEditor = ({
           <>
             {/* TODO input */}
             {/* <Input
-          value={story.title}
-          onChange={(e) => onChangeTitle(e.target.value)}
-          placeholder="Title"
-        /> */}
+              value={story.title}
+              onChange={(e) => onChangeTitle(e.target.value)}
+              placeholder="Title"
+            /> */}
             {/* TODO rename component + move to radix */}
             <Content>
-              <TipTapEditor ref={editorRef} />
+              <TipTapEditor ref={editorRef} story={story} />
             </Content>
           </>
         )}
