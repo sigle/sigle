@@ -1,5 +1,10 @@
 import 'highlight.js/styles/night-owl.css';
-import { useEditor, EditorContent, ReactNodeViewRenderer } from '@tiptap/react';
+import {
+  useEditor,
+  EditorContent,
+  ReactNodeViewRenderer,
+  Editor,
+} from '@tiptap/react';
 import TipTapBlockquote from '@tiptap/extension-blockquote';
 import TipTapBold from '@tiptap/extension-bold';
 import TipTapBulletList from '@tiptap/extension-bullet-list';
@@ -91,7 +96,7 @@ interface TipTapEditorProps {
 }
 
 export const TipTapEditor = forwardRef<{
-  getEditorHTML: () => string | undefined;
+  getEditor: () => Editor | null;
 }>(({}: TipTapEditorProps, ref) => {
   globalStylesCustomEditor();
 
@@ -168,7 +173,7 @@ export const TipTapEditor = forwardRef<{
     ref,
     () => ({
       // TODO cleanup empty <p>, <h1> etc tags, basically all empty tags
-      getEditorHTML: () => editor?.getHTML(),
+      getEditor: () => editor,
     }),
     [editor]
   );
