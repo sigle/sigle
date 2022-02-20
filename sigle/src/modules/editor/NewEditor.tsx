@@ -37,8 +37,8 @@ export const NewEditor = ({
   const [loadingSave, setLoadingSave] = useState(false);
   const [newStory, setNewStory] = useState(story);
 
+  // TODO link settings
   const handleOpenSettings = () => null;
-  // const onChangeTitle = () => null;
 
   const handleSave = async () => {
     const editor = editorRef.current?.getEditor();
@@ -58,9 +58,9 @@ export const NewEditor = ({
       const subsetStory = createSubsetStory(updatedStory, {
         plainContent: editor.getText(),
       });
-      saveStory(updatedStory, subsetStory);
+      await saveStory(updatedStory, subsetStory);
       setNewStory(updatedStory);
-      // Success toast
+      toast.success('Story saved');
     } catch (error) {
       console.error(error);
       toast.error(error.message);
