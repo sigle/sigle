@@ -27,7 +27,7 @@ export interface Story {
    * Version representing the format of the content
    * When the value is not set, we consider it as v1
    * v1: Slate.js JSON
-   * v2: HTML
+   * v2: TipTap HTML
    */
   contentVersion?: '2';
   /**
