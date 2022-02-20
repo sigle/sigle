@@ -89,8 +89,9 @@ export const SlateEditor = ({
   };
 
   // Hide the new Editor under a flag until it's ready
-  const isExperimentalEditor = router.query.experimentalEditor;
-  if (isExperimentalEditor === 'true') {
+  const isExperimentalEditor =
+    router.query.experimentalEditor === 'true' || story.contentVersion === '2';
+  if (isExperimentalEditor) {
     return (
       <NewEditor
         story={story}
