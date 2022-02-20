@@ -457,6 +457,10 @@ Ensure the default browser behavior of the `hidden` attribute.
   --tw-backdrop-sepia: ;
 }
 
+.prose {
+  color: var(--tw-prose-body);
+}
+
 .prose :where([class~='lead']):not(:where([class~='not-prose'] *)) {
   color: var(--tw-prose-lead);
   font-size: 1.25em;
@@ -711,20 +715,20 @@ Ensure the default browser behavior of the `hidden` attribute.
 }
 
 .prose {
-  --tw-prose-body: #374151;
-  --tw-prose-headings: #111827;
-  --tw-prose-lead: #4b5563;
-  --tw-prose-links: #111827;
-  --tw-prose-bold: #111827;
-  --tw-prose-counters: #6b7280;
-  --tw-prose-bullets: #d1d5db;
+  --tw-prose-body: #2f2f2f;
+  --tw-prose-headings: #1a1a1a;
+  --tw-prose-lead: #e2e2e2;
+  --tw-prose-links: #1a1a1a;
+  --tw-prose-bold: #1a1a1a;
+  --tw-prose-counters: #737373;
+  --tw-prose-bullets: #e8e8e8;
   --tw-prose-hr: #e5e7eb;
-  --tw-prose-quotes: #111827;
-  --tw-prose-quote-borders: #e5e7eb;
-  --tw-prose-captions: #6b7280;
-  --tw-prose-code: #111827;
-  --tw-prose-pre-code: #e5e7eb;
-  --tw-prose-pre-bg: #1f2937;
+  --tw-prose-quotes: #2f2f2f;
+  --tw-prose-quote-borders: #e8e8e8;
+  --tw-prose-captions: #c7c7c7;
+  --tw-prose-code: #1a1a1a;
+  --tw-prose-pre-code: #e8e8e8;
+  --tw-prose-pre-bg: #2f2f2f;
   --tw-prose-th-borders: #d1d5db;
   --tw-prose-td-borders: #e5e7eb;
   --tw-prose-invert-body: #d1d5db;
