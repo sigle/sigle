@@ -1,6 +1,7 @@
 import { Editor } from '@tiptap/react';
 import { useRef, useState } from 'react';
 import { toast } from 'react-toastify';
+import { styled } from '../../stitches.config';
 import { Story } from '../../types';
 import { Container, Text } from '../../ui';
 import { Content } from '../publicStory/components/PublicStory';
@@ -8,6 +9,15 @@ import { PageContainer } from './components/Editor';
 import { EditorHeader } from './EditorHeader';
 import { TipTapEditor } from './TipTapEditor';
 import { createSubsetStory, saveStory } from './utils';
+
+const TitleInput = styled('input', {
+  outline: 'transparent',
+  width: '100%',
+  // Style as h1
+  fontSize: '$7',
+  letterSpacing: '-0.3px',
+  fontWeight: 'bold',
+});
 
 interface NewEditorProps {
   story: Story;
@@ -25,6 +35,7 @@ export const NewEditor = ({
 }: NewEditorProps) => {
   const editorRef = useRef<{ getEditor: () => Editor | null }>(null);
   const [loadingSave, setLoadingSave] = useState(false);
+  const [newStory, setNewStory] = useState(story);
 
   const handleOpenSettings = () => null;
   // const onChangeTitle = () => null;
@@ -39,7 +50,7 @@ export const NewEditor = ({
     try {
       const html = editor.getHTML();
       const updatedStory: Story = {
-        ...story,
+        ...newStory,
         content: html,
         contentVersion: '2',
         updatedAt: Date.now(),
@@ -48,8 +59,8 @@ export const NewEditor = ({
         plainContent: editor.getText(),
       });
       saveStory(updatedStory, subsetStory);
-      // Update the root object
-      // onChangeStory(updatedStory);
+      setNewStory(updatedStory);
+      // Success toast
     } catch (error) {
       console.error(error);
       toast.error(error.message);
@@ -92,11 +103,13 @@ export const NewEditor = ({
         ) : (
           <>
             {/* TODO input */}
-            {/* <Input
-              value={story.title}
-              onChange={(e) => onChangeTitle(e.target.value)}
+            <TitleInput
+              value={newStory.title}
+              onChange={(e) => {
+                setNewStory({ ...newStory, title: e.target.value });
+              }}
               placeholder="Title"
-            /> */}
+            />
             {/* TODO rename component + move to radix */}
             <Content>
               <TipTapEditor ref={editorRef} story={story} />
