@@ -102,7 +102,6 @@ export const NewEditor = ({
           </Text>
         ) : (
           <>
-            {/* TODO input */}
             <TitleInput
               value={newStory.title}
               onChange={(e) => {
