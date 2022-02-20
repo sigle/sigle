@@ -625,7 +625,7 @@ Ensure the default browser behavior of the `hidden` attribute.
 
 .prose :where(code):not(:where([class~='not-prose'] *)) {
   color: var(--tw-prose-code);
-  font-weight: 600;
+  font-weight: 400;
   font-size: 0.875em;
 }
 

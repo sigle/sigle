@@ -16,7 +16,8 @@ import 'tippy.js/themes/light-border.css';
 import 'react-toastify/dist/ReactToastify.css';
 // reach-ui styles
 import '../styles/fonts.scss';
-import '../styles/index.css';
+// TODO publish to npm and import from there
+import '../../../packages/tailwind-style/dist/tailwind.css';
 import { sigleConfig } from '../config';
 import { colors } from '../utils/colors';
 import { AuthProvider } from '../modules/auth/AuthContext';

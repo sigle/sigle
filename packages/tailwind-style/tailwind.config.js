@@ -12,6 +12,9 @@ module.exports = {
             },
             'code::before': false,
             'code::after': false,
+            code: {
+              fontWeight: '400',
+            },
           },
         },
       },

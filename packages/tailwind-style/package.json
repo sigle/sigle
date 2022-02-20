@@ -1,6 +1,6 @@
 {
   "name": "@sigle/tailwind-style",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "This package use tailwind css to generate a reset css file used by the client.",
   "scripts": {
     "build": "NODE_ENV=production pnpx tailwindcss --no-autoprefixer -i ./src/tailwind.css -o ./dist/tailwind.css"

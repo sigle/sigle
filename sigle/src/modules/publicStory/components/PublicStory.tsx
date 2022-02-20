@@ -132,7 +132,7 @@ const CoverImage = styled.img`
 `;
 
 export const Content = styled.div`
-  ${tw`mt-8 prose lg:prose-lg`};
+  ${tw`mt-8`};
   max-width: none;
 
   p {
@@ -244,7 +244,7 @@ export const PublicStory = ({ story, settings }: PublicStoryProps) => {
           </Cover>
         )}
         <Content
-          className="sigle-content"
+          className="sigle-content prose lg:prose-lg"
           dangerouslySetInnerHTML={{
             __html: story.content
               ? html.serialize(Value.fromJSON(story.content))
