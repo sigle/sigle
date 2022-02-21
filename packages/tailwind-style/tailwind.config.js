@@ -17,6 +17,21 @@ const gray = {
   gray12: '#080808',
 };
 
+const orange = {
+  orange1: '#FFF9F6',
+  orange2: '#FFF1EC',
+  orange3: '#FFE9E1',
+  orange4: '#FFE0D5',
+  orange5: '#FFD6C7',
+  orange6: '#FFC8B4',
+  orange7: '#FFB79D',
+  orange8: '#FF9873',
+  orange9: '#F9703E',
+  orange10: '#E9531D',
+  orange11: '#DA3A00',
+  orange12: '#CC3600',
+};
+
 module.exports = {
   content: ['./src/**/*.html'],
   theme: {
@@ -31,13 +46,13 @@ module.exports = {
             // TODO orange 11
             '--tw-prose-links': gray.gray11,
             '--tw-prose-bold': gray.gray10,
-            // TODO color of the rest of the items
-            '--tw-prose-counters': gray.gray9,
-            '--tw-prose-bullets': gray.gray5,
+            '--tw-prose-counters': gray.gray10,
+            '--tw-prose-bullets': gray.gray10,
             '--tw-prose-quotes': gray.gray10,
             '--tw-prose-quote-borders': gray.gray6,
-            '--tw-prose-captions': gray.gray8,
+            '--tw-prose-captions': gray.gray9,
             '--tw-prose-code': gray.gray11,
+            // TODO when images are implemented
             '--tw-prose-pre-code': gray.gray5,
             '--tw-prose-pre-bg': gray.gray10,
             '--tw-prose-hr': gray.gray6,
@@ -48,6 +63,7 @@ module.exports = {
             maxWidth: false,
             blockquote: {
               quotes: false,
+              borderLeftWidth: '2px',
             },
             'blockquote p:first-of-type::before': false,
             'blockquote p:last-of-type::after': false,
@@ -55,6 +71,10 @@ module.exports = {
             'code::after': false,
             code: {
               fontWeight: '400',
+              fontSize: '14px',
+              backgroundColor: gray.gray4,
+              padding: '1px 4px',
+              borderRadius: '4px',
             },
             // TODO make tests with 600 / 700 by defaults for title
             h2: {

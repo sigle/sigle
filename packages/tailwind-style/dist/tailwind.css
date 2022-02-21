@@ -546,7 +546,7 @@ Ensure the default browser behavior of the `hidden` attribute.
   font-weight: 500;
   font-style: italic;
   color: var(--tw-prose-quotes);
-  border-left-width: 0.25rem;
+  border-left-width: 2px;
   border-left-color: var(--tw-prose-quote-borders);
   margin-top: 1.6em;
   margin-bottom: 1.6em;
@@ -613,7 +613,10 @@ Ensure the default browser behavior of the `hidden` attribute.
 .prose :where(code):not(:where([class~='not-prose'] *)) {
   color: var(--tw-prose-code);
   font-weight: 400;
-  font-size: 0.875em;
+  font-size: 14px;
+  background-color: #ededed;
+  padding: 1px 4px;
+  border-radius: 4px;
 }
 
 .prose :where(a code):not(:where([class~='not-prose'] *)) {
@@ -703,12 +706,12 @@ Ensure the default browser behavior of the `hidden` attribute.
   --tw-prose-lead: #e2e2e2;
   --tw-prose-links: #1a1a1a;
   --tw-prose-bold: #2f2f2f;
-  --tw-prose-counters: #737373;
-  --tw-prose-bullets: #e8e8e8;
+  --tw-prose-counters: #2f2f2f;
+  --tw-prose-bullets: #2f2f2f;
   --tw-prose-hr: #e2e2e2;
   --tw-prose-quotes: #2f2f2f;
   --tw-prose-quote-borders: #e2e2e2;
-  --tw-prose-captions: #c7c7c7;
+  --tw-prose-captions: #737373;
   --tw-prose-code: #1a1a1a;
   --tw-prose-pre-code: #e8e8e8;
   --tw-prose-pre-bg: #2f2f2f;
