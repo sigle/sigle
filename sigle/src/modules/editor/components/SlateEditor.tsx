@@ -55,7 +55,6 @@ import { storage } from '../../../utils/blockstack';
 import { resizeImage } from '../../../utils/image';
 import { PageContainer } from './Editor';
 import { SlateEditorLink } from './SlateEditorLink';
-import { TwitterCardPreview } from './TwitterCardPreview';
 import { StoryPublishedDialog } from './StoryPublishedDialog';
 import { EditorHeader } from '../EditorHeader';
 
@@ -649,47 +648,6 @@ export const SlateEditor = ({
           onClose={handleCloseSettings}
           onSave={handleSave}
         />
-
-        <Dialog open={showPublishDialog} onOpenChange={onCancelPublish}>
-          <DialogContent>
-            <DialogTitle asChild>
-              <Heading as="h2" size="2xl" css={{ textAlign: 'center' }}>
-                One last check
-              </Heading>
-            </DialogTitle>
-            <DialogDescription asChild>
-              <Text css={{ mb: '$5', textAlign: 'center' }}>
-                Social media preview
-              </Text>
-            </DialogDescription>
-            <TwitterCardPreview story={story} />
-            <Flex justify="end" gap="6" css={{ mt: '$5' }}>
-              <Button
-                size="lg"
-                variant="ghost"
-                color="orange"
-                disabled={loadingSave || publishLoading}
-                onClick={handleEditPreview}
-              >
-                Edit preview
-              </Button>
-              <Button
-                size="lg"
-                color="orange"
-                disabled={loadingSave || publishLoading}
-                onClick={async () => {
-                  // We save before publishing
-                  await handleSave();
-                  await onConfirmPublish();
-                }}
-              >
-                {loadingSave || publishLoading
-                  ? 'Publishing ...'
-                  : 'Publish now'}
-              </Button>
-            </Flex>
-          </DialogContent>
-        </Dialog>
 
         <StoryPublishedDialog
           open={showPublishedDialog}

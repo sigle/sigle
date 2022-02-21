@@ -1,14 +1,20 @@
 import { Editor } from '@tiptap/react';
 import { useRef, useState } from 'react';
 import { toast } from 'react-toastify';
+import NProgress from 'nprogress';
+import * as Fathom from 'fathom-client';
+import posthog from 'posthog-js';
 import { styled } from '../../stitches.config';
 import { Story } from '../../types';
 import { Container, Text } from '../../ui';
 import { Content } from '../publicStory/components/PublicStory';
 import { PageContainer } from './components/Editor';
 import { EditorHeader } from './EditorHeader';
+import { PublishDialog } from './PublishDialog';
 import { TipTapEditor } from './TipTapEditor';
 import { createSubsetStory, saveStory } from './utils';
+import { publishStory, unPublishStory } from '../../utils';
+import { Goals } from '../../utils/fathom';
 
 const TitleInput = styled('input', {
   outline: 'transparent',
@@ -36,9 +42,52 @@ export const NewEditor = ({
   const editorRef = useRef<{ getEditor: () => Editor | null }>(null);
   const [loadingSave, setLoadingSave] = useState(false);
   const [newStory, setNewStory] = useState(story);
+  const [publishDialogState, setPublishDialogState] = useState({
+    open: false,
+    loading: false,
+  });
 
   // TODO link settings
   const handleOpenSettings = () => null;
+
+  const handlePublish = () => {
+    setPublishDialogState({
+      open: true,
+      loading: false,
+    });
+  };
+
+  const handleCancelPublish = () => {
+    setPublishDialogState({
+      open: false,
+      loading: false,
+    });
+  };
+
+  const handleConfirmPublish = async () => {
+    setPublishDialogState({
+      open: true,
+      loading: true,
+    });
+    NProgress.start();
+    try {
+      await handleSave();
+      await publishStory(story.id);
+      setNewStory({ ...newStory, type: 'public' });
+      toast.success('Story published');
+      // setShowPublishedDialog(true);
+      Fathom.trackGoal(Goals.PUBLISH, 0);
+      posthog.capture('publish-story', { id: story.id });
+    } catch (error) {
+      console.error(error);
+      toast.error(error.message);
+    }
+    NProgress.done();
+    setPublishDialogState({
+      open: false,
+      loading: false,
+    });
+  };
 
   const handleSave = async () => {
     const editor = editorRef.current?.getEditor();
@@ -87,7 +136,7 @@ export const NewEditor = ({
         loadingSave={loadingSave}
         onOpenSettings={handleOpenSettings}
         onSave={handleSave}
-        onPublish={onPublish}
+        onPublish={handlePublish}
         onUnpublish={onUnpublish}
       />
 
@@ -116,6 +165,16 @@ export const NewEditor = ({
           </>
         )}
       </PageContainer>
+
+      <PublishDialog
+        story={story}
+        open={publishDialogState.open}
+        loading={publishDialogState.loading}
+        onConfirm={handleConfirmPublish}
+        onClose={handleCancelPublish}
+        // TODO onEditPreview
+        onEditPreview={() => null}
+      />
     </Container>
   );
 };
