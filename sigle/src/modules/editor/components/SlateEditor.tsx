@@ -50,7 +50,7 @@ import { PublishDialog } from '../PublishDialog';
 import { UnpublishDialog } from '../UnpublishDialog';
 
 const Input = styled.input`
-  ${tw`outline-none w-full text-4xl font-bold`};
+  ${tw`outline-none w-full text-4xl font-bold bg-transparent`};
 `;
 
 const Image = styled.img<{ selected: boolean; isUploading?: boolean }>`
