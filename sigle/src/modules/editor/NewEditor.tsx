@@ -15,6 +15,7 @@ import { TipTapEditor } from './TipTapEditor';
 import { createSubsetStory, saveStory } from './utils';
 import { publishStory, unPublishStory } from '../../utils';
 import { Goals } from '../../utils/fathom';
+import { UnpublishDialog } from './UnpublishDialog';
 
 const TitleInput = styled('input', {
   outline: 'transparent',
@@ -48,6 +49,10 @@ export const NewEditor = ({
   });
   //  TODO
   const [showPublishedDialog, setShowPublishedDialog] = useState(false);
+  const [unpublishDialogState, setUnpublishDialogState] = useState({
+    open: false,
+    loading: false,
+  });
 
   // TODO link settings
   const handleOpenSettings = () => null;
@@ -86,6 +91,42 @@ export const NewEditor = ({
     }
     NProgress.done();
     setPublishDialogState({
+      open: false,
+      loading: false,
+    });
+  };
+
+  const handleUnpublish = () => {
+    setUnpublishDialogState({
+      open: true,
+      loading: false,
+    });
+  };
+
+  const handleCancelUnpublish = () => {
+    setUnpublishDialogState({
+      open: false,
+      loading: false,
+    });
+  };
+
+  const handleConfirmUnpublish = async () => {
+    setUnpublishDialogState({
+      open: true,
+      loading: true,
+    });
+    NProgress.start();
+    try {
+      await unPublishStory(story.id);
+      setNewStory({ ...newStory, type: 'private' });
+      toast.success('Story unpublished');
+      posthog.capture('unpublish-story', { id: story.id });
+    } catch (error) {
+      console.error(error);
+      toast.error(error.message);
+    }
+    NProgress.done();
+    setUnpublishDialogState({
       open: false,
       loading: false,
     });
@@ -134,12 +175,12 @@ export const NewEditor = ({
       }}
     >
       <EditorHeader
-        story={story}
+        story={newStory}
         loadingSave={loadingSave}
         onOpenSettings={handleOpenSettings}
         onSave={handleSave}
         onPublish={handlePublish}
-        onUnpublish={onUnpublish}
+        onUnpublish={handleUnpublish}
       />
 
       <Text size="sm" color="orange">
@@ -176,6 +217,13 @@ export const NewEditor = ({
         onClose={handleCancelPublish}
         // TODO onEditPreview
         onEditPreview={() => null}
+      />
+
+      <UnpublishDialog
+        open={unpublishDialogState.open}
+        loading={unpublishDialogState.loading}
+        onConfirm={handleConfirmUnpublish}
+        onClose={handleCancelUnpublish}
       />
     </Container>
   );
