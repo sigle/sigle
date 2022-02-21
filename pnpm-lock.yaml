@@ -118,6 +118,7 @@ importers:
       '@radix-ui/react-icons': 1.0.3
       '@radix-ui/react-tooltip': 0.1.0
       '@sentry/nextjs': 6.17.9
+      '@sigle/tailwind-style': workspace:^0.0.1
       '@stacks/auth': 2.0.0-beta.1
       '@stacks/connect': 4.3.18
       '@stacks/connect-react': 2.17.18
@@ -273,6 +274,7 @@ importers:
       tippy.js: 6.3.7
     devDependencies:
       '@fontsource/open-sans': 4.5.2
+      '@sigle/tailwind-style': link:../packages/tailwind-style
       '@tailwindcss/forms': 0.3.4_tailwindcss@2.2.15
       '@tailwindcss/typography': 0.4.1_tailwindcss@2.2.15
       '@testing-library/jest-dom': 5.16.2

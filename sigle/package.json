@@ -82,6 +82,7 @@
   },
   "devDependencies": {
     "@fontsource/open-sans": "4.5.2",
+    "@sigle/tailwind-style": "workspace:^0.0.1",
     "@tailwindcss/forms": "0.3.4",
     "@tailwindcss/typography": "0.4.1",
     "@testing-library/jest-dom": "5.16.2",
