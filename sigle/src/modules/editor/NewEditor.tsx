@@ -20,6 +20,11 @@ const TitleInput = styled('input', {
   letterSpacing: '-0.3px',
 });
 
+const EditorContainer = styled('div', {
+  margin: '0 auto',
+  paddingTop: 60,
+});
+
 interface NewEditorProps {
   story: Story;
   onPublish: () => void;
@@ -96,7 +101,7 @@ export const NewEditor = ({
         ⚠️ You are using the experimental editor, expect things to break
       </Text>
 
-      <PageContainer>
+      <EditorContainer className="prose lg:prose">
         {isOldStory ? (
           <Text size="sm" color="orange">
             ⚠️ The experimental editor can't be used on old stories for now
@@ -110,12 +115,10 @@ export const NewEditor = ({
               }}
               placeholder="Title"
             />
-            <div className="prose lg:prose">
-              <TipTapEditor ref={editorRef} story={story} />
-            </div>
+            <TipTapEditor ref={editorRef} story={story} />
           </>
         )}
-      </PageContainer>
+      </EditorContainer>
     </Container>
   );
 };

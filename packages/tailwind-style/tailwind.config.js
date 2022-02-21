@@ -53,7 +53,7 @@ module.exports = {
         },
         DEFAULT: {
           css: {
-            maxWidth: false,
+            maxWidth: '760px',
             blockquote: {
               quotes: false,
               borderLeftWidth: '2px',
