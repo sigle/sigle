@@ -8,6 +8,7 @@ import {
   CodeIcon,
   Cross2Icon,
   StrikethroughIcon,
+  UnderlineIcon,
 } from '@radix-ui/react-icons';
 import { globalCss, styled } from '../../stitches.config';
 import { Flex } from '../../ui';
@@ -206,6 +207,12 @@ export const BubbleMenu = ({ editor }: BubbleMenuProps) => {
             active={editor.isActive('italic')}
           >
             <FontItalicIcon height={18} width={18} />
+          </BubbleMenuButton>
+          <BubbleMenuButton
+            onClick={() => editor.chain().focus().toggleUnderline().run()}
+            active={editor.isActive('underline')}
+          >
+            <UnderlineIcon height={18} width={18} />
           </BubbleMenuButton>
           <BubbleMenuButton
             onClick={() => editor.chain().focus().toggleStrike().run()}
