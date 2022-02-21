@@ -33,17 +33,6 @@ import { SlateEditorSideMenu } from './SlateEditorSideMenu';
 import { SlateEditorHoverMenu } from './SlateEditorHoverMenu';
 import { SlateEditorToolbar } from './SlateEditorToolbar';
 import {
-  Button,
-  Dialog,
-  DialogContent,
-  DialogTitle,
-  DialogDescription,
-  DialogClose,
-  Flex,
-  Heading,
-  Text,
-} from '../../../ui';
-import {
   DEFAULT_NODE,
   hasBlock,
   insertImage,
@@ -55,7 +44,7 @@ import { storage } from '../../../utils/blockstack';
 import { resizeImage } from '../../../utils/image';
 import { PageContainer } from './Editor';
 import { SlateEditorLink } from './SlateEditorLink';
-import { StoryPublishedDialog } from './StoryPublishedDialog';
+import { StoryPublishedDialog } from '../StoryPublishedDialog';
 import { EditorHeader } from '../EditorHeader';
 
 const Input = styled.input`

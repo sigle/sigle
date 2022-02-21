@@ -16,6 +16,7 @@ import { createSubsetStory, saveStory } from './utils';
 import { publishStory, unPublishStory } from '../../utils';
 import { Goals } from '../../utils/fathom';
 import { UnpublishDialog } from './UnpublishDialog';
+import { StoryPublishedDialog } from './StoryPublishedDialog';
 
 const TitleInput = styled('input', {
   outline: 'transparent',
@@ -28,18 +29,12 @@ const TitleInput = styled('input', {
 
 interface NewEditorProps {
   story: Story;
-  onPublish: () => void;
-  onUnpublish: () => void;
 }
 
 // TODO check security handled by TipTap when loading HTML (read only mode)
 // Is it enough or do we need another lib to sanitize the HTML first?
 
-export const NewEditor = ({
-  story,
-  onPublish,
-  onUnpublish,
-}: NewEditorProps) => {
+export const NewEditor = ({ story }: NewEditorProps) => {
   const editorRef = useRef<{ getEditor: () => Editor | null }>(null);
   const [loadingSave, setLoadingSave] = useState(false);
   const [newStory, setNewStory] = useState(story);
@@ -78,10 +73,9 @@ export const NewEditor = ({
     });
     NProgress.start();
     try {
-      await handleSave();
+      await handleSave({ hideToast: true });
       await publishStory(story.id);
       setNewStory({ ...newStory, type: 'public' });
-      toast.success('Story published');
       setShowPublishedDialog(true);
       Fathom.trackGoal(Goals.PUBLISH, 0);
       posthog.capture('publish-story', { id: story.id });
@@ -94,6 +88,10 @@ export const NewEditor = ({
       open: false,
       loading: false,
     });
+  };
+
+  const handleCancelPublished = () => {
+    setShowPublishedDialog(false);
   };
 
   const handleUnpublish = () => {
@@ -132,7 +130,7 @@ export const NewEditor = ({
     });
   };
 
-  const handleSave = async () => {
+  const handleSave = async ({ hideToast }: { hideToast?: boolean } = {}) => {
     const editor = editorRef.current?.getEditor();
     if (!editor) {
       return;
@@ -152,7 +150,9 @@ export const NewEditor = ({
       });
       await saveStory(updatedStory, subsetStory);
       setNewStory(updatedStory);
-      toast.success('Story saved');
+      if (!hideToast) {
+        toast.success('Story saved');
+      }
     } catch (error) {
       console.error(error);
       toast.error(error.message);
@@ -217,6 +217,12 @@ export const NewEditor = ({
         onClose={handleCancelPublish}
         // TODO onEditPreview
         onEditPreview={() => null}
+      />
+
+      <StoryPublishedDialog
+        open={showPublishedDialog}
+        onOpenChange={handleCancelPublished}
+        story={story}
       />
 
       <UnpublishDialog

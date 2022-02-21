@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { FaFacebookF, FaTwitter, FaLinkedin } from 'react-icons/fa';
-import { sigleConfig } from '../../../config';
-import { Story } from '../../../types';
+import { sigleConfig } from '../../config';
+import { Story } from '../../types';
 import {
   Button,
   Dialog,
@@ -11,8 +11,8 @@ import {
   Flex,
   Heading,
   Text,
-} from '../../../ui';
-import { useAuth } from '../../auth/AuthContext';
+} from '../../ui';
+import { useAuth } from '../auth/AuthContext';
 
 interface StoryPublishedDialogProps {
   open: boolean;
