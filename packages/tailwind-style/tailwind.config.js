@@ -79,7 +79,6 @@ module.exports = {
               lineHeight: '42px',
               letterSpacing: '-0.3px',
             },
-            // TODO make tests with 600 / 700 by defaults for title
             h2: {
               fontWeight: '600',
               fontSize: '30px',
