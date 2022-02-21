@@ -36,4 +36,4 @@ Read our [contributing guide](CONTRIBUTING.md) to see how to locally setup the r
 
 ## License
 
-MIT © [Léo Pradel](https://www.leopradel.com/)
+MIT © [Sigle](https://www.sigle.io/)
