@@ -2,7 +2,6 @@ import React, { useState, useRef } from 'react';
 import styled, { css } from 'styled-components';
 import tw from 'twin.macro';
 import { toast } from 'react-toastify';
-import Tippy from '@tippyjs/react';
 import {
   Editor,
   RenderBlockProps,
@@ -18,8 +17,6 @@ import {
   TooltipTrigger,
   TooltipContent,
   Container,
-  Box,
-  IconButton,
 } from '../../../ui';
 import {
   saveStoryFile,
@@ -60,13 +57,7 @@ import { PageContainer } from './Editor';
 import { SlateEditorLink } from './SlateEditorLink';
 import { TwitterCardPreview } from './TwitterCardPreview';
 import { StoryPublishedDialog } from './StoryPublishedDialog';
-import {
-  ArrowLeftIcon,
-  EyeOpenIcon,
-  MixerHorizontalIcon,
-} from '@radix-ui/react-icons';
-import Link from 'next/link';
-import { useAuth } from '../../auth/AuthContext';
+import { EditorHeader } from '../EditorHeader';
 
 const Input = styled.input`
   ${tw`outline-none w-full text-4xl font-bold`};
@@ -176,7 +167,6 @@ export const SlateEditor = ({
   onCancelUnpublish,
   onConfirmUnpublish,
 }: Props) => {
-  const { user } = useAuth();
   const editorRef = useRef<Editor>(null);
   const sideMenuRef = useRef<any>(null);
   const hoverMenuRef = useRef<any>(null);
@@ -610,69 +600,14 @@ export const SlateEditor = ({
         },
       }}
     >
-      <Flex as="header" justify="between" align="center">
-        <Flex gap="10" align="center">
-          <Link href="/" passHref>
-            <a>
-              <ArrowLeftIcon />
-            </a>
-          </Link>
-          <Text css={{ color: '$gray11' }} size="sm">
-            <Box as="span" css={{ fontWeight: 'bold', fontSize: '$3' }}>
-              {user?.username}
-            </Box>
-            <span>{story.type === 'public' ? ' | Published' : ' | Draft'}</span>
-          </Text>
-          {story.type === 'public' && (
-            <Button
-              css={{ display: 'flex', alignItems: 'center', gap: '$2' }}
-              variant="ghost"
-              href={`/${user?.username}/${story.id}`}
-              target="_blank"
-              as="a"
-            >
-              <Text size="action">See your story</Text>
-              <EyeOpenIcon />
-            </Button>
-          )}
-        </Flex>
-        <Flex gap="10">
-          {loadingSave && (
-            <Button disabled variant="ghost">
-              Saving ...
-            </Button>
-          )}
-          {!loadingSave && story.type === 'public' && (
-            <Button onClick={() => handleSave()} variant="ghost">
-              Save
-            </Button>
-          )}
-          {!loadingSave && story.type === 'private' && (
-            <Tippy
-              content="Nobody can see it unless you click on « publish »"
-              theme="light-border"
-            >
-              <Button onClick={() => handleSave()} variant="ghost">
-                Save
-              </Button>
-            </Tippy>
-          )}
-          {story.type === 'private' && (
-            <Button onClick={onPublish} variant="ghost">
-              Publish
-            </Button>
-          )}
-          {story.type === 'public' && (
-            <Button onClick={onUnpublish} variant="ghost">
-              Unpublish
-            </Button>
-          )}
-          <IconButton onClick={handleOpenSettings} aria-label="Open settings">
-            <MixerHorizontalIcon />
-          </IconButton>
-        </Flex>
-      </Flex>
-
+      <EditorHeader
+        story={story}
+        loadingSave={loadingSave}
+        onOpenSettings={handleOpenSettings}
+        onSave={handleSave}
+        onPublish={onPublish}
+        onUnpublish={onUnpublish}
+      />
       <PageContainer>
         <Input
           value={story.title}

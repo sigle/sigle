@@ -24,6 +24,13 @@ export interface Story {
    */
   content: any;
   /**
+   * Version representing the format of the content
+   * When the value is not set, we consider it as v1
+   * v1: Slate.js JSON
+   * v2: TipTap HTML
+   */
+  contentVersion?: '2';
+  /**
    * Image used to display the cards
    */
   coverImage?: string;

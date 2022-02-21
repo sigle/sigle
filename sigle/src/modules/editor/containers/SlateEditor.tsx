@@ -3,10 +3,12 @@ import { toast } from 'react-toastify';
 import NProgress from 'nprogress';
 import * as Fathom from 'fathom-client';
 import posthog from 'posthog-js';
+import { useRouter } from 'next/router';
 import { SlateEditor as Component } from '../components/SlateEditor';
 import { Story } from '../../../types';
 import { publishStory, unPublishStory } from '../../../utils';
 import { Goals } from '../../../utils/fathom';
+import { NewEditor } from '../NewEditor';
 
 interface Props {
   story: Story;
@@ -19,6 +21,7 @@ export const SlateEditor = ({
   onChangeStory,
   onChangeStoryField,
 }: Props) => {
+  const router = useRouter();
   const [showPublishDialog, setShowPublishDialog] = useState(false);
   const [showPublishedDialog, setShowPublishedDialog] = useState(false);
   const [publishLoading, setPublishLoading] = useState(false);
@@ -84,6 +87,19 @@ export const SlateEditor = ({
     setUnpublishLoading(false);
     setShowUnpublishDialog(false);
   };
+
+  // Hide the new Editor under a flag until it's ready
+  const isExperimentalEditor =
+    router.query.experimentalEditor === 'true' || story.contentVersion === '2';
+  if (isExperimentalEditor) {
+    return (
+      <NewEditor
+        story={story}
+        onPublish={handlePublish}
+        onUnpublish={handleUnpublish}
+      />
+    );
+  }
 
   return (
     <Component
