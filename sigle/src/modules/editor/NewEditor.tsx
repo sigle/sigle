@@ -210,7 +210,7 @@ export const NewEditor = ({ story }: NewEditorProps) => {
       </PageContainer>
 
       <PublishDialog
-        story={story}
+        story={newStory}
         open={publishDialogState.open}
         loading={publishDialogState.loading}
         onConfirm={handleConfirmPublish}

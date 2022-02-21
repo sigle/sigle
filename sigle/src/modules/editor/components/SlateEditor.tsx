@@ -46,6 +46,8 @@ import { PageContainer } from './Editor';
 import { SlateEditorLink } from './SlateEditorLink';
 import { PublishedDialog } from '../PublishedDialog';
 import { EditorHeader } from '../EditorHeader';
+import { PublishDialog } from '../PublishDialog';
+import { UnpublishDialog } from '../UnpublishDialog';
 
 const Input = styled.input`
   ${tw`outline-none w-full text-4xl font-bold`};
@@ -638,10 +640,30 @@ export const SlateEditor = ({
           onSave={handleSave}
         />
 
+        <PublishDialog
+          story={story}
+          open={showPublishDialog}
+          loading={loadingSave || publishLoading}
+          onConfirm={async () => {
+            // We save before publishing
+            await handleSave();
+            await onConfirmPublish();
+          }}
+          onClose={onCancelPublish}
+          onEditPreview={handleEditPreview}
+        />
+
         <PublishedDialog
           open={showPublishedDialog}
           onOpenChange={onClosePublished}
           story={story}
+        />
+
+        <UnpublishDialog
+          open={showUnpublishDialog}
+          loading={unpublishLoading}
+          onConfirm={onConfirmUnpublish}
+          onClose={onCancelUnpublish}
         />
       </PageContainer>
     </Container>
