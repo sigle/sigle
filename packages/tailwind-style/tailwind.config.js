@@ -1,3 +1,9 @@
+// TODO background color general gray 1
+// TODO remove " in blockquotes
+// TODO remove H1 from editor options
+// TODO rename H2 - H3 big + small
+// TODO add titles icons to bubble menu @quentin?
+
 const gray = {
   gray1: '#fcfcfc',
   gray2: '#f6f6f6',
@@ -22,17 +28,21 @@ module.exports = {
           css: {
             '--tw-prose-body': gray.gray10,
             '--tw-prose-headings': gray.gray11,
+            // What is this?
             '--tw-prose-lead': gray.gray6,
+            // TODO orange 11
             '--tw-prose-links': gray.gray11,
-            '--tw-prose-bold': gray.gray11,
+            '--tw-prose-bold': gray.gray10,
+            // TODO color of the rest of the items
             '--tw-prose-counters': gray.gray9,
             '--tw-prose-bullets': gray.gray5,
             '--tw-prose-quotes': gray.gray10,
-            '--tw-prose-quote-borders': gray.gray5,
+            '--tw-prose-quote-borders': gray.gray6,
             '--tw-prose-captions': gray.gray8,
             '--tw-prose-code': gray.gray11,
             '--tw-prose-pre-code': gray.gray5,
             '--tw-prose-pre-bg': gray.gray10,
+            '--tw-prose-hr': gray.gray6,
           },
         },
         DEFAULT: {
@@ -46,6 +56,24 @@ module.exports = {
             code: {
               fontWeight: '400',
             },
+            // TODO make tests with 600 / 700 by defaults for title
+            h2: {
+              fontWeight: '600',
+              fontSize: '30px',
+            },
+            'h2 strong': {
+              color: 'var(--tw-prose-headings)',
+              fontWeight: '700',
+            },
+            h3: {
+              fontWeight: '600',
+            },
+            'h3 strong': {
+              color: 'var(--tw-prose-headings)',
+              fontWeight: '700',
+            },
+            // We only use h1, h2, h3
+            h4: false,
           },
         },
       },

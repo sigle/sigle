@@ -579,15 +579,16 @@ Ensure the default browser behavior of the `hidden` attribute.
 
 .prose :where(h2):not(:where([class~='not-prose'] *)) {
   color: var(--tw-prose-headings);
-  font-weight: 700;
-  font-size: 1.5em;
+  font-weight: 600;
+  font-size: 30px;
   margin-top: 2em;
   margin-bottom: 1em;
   line-height: 1.3333333;
 }
 
 .prose :where(h2 strong):not(:where([class~='not-prose'] *)) {
-  font-weight: 800;
+  font-weight: 700;
+  color: var(--tw-prose-headings);
 }
 
 .prose :where(h3):not(:where([class~='not-prose'] *)) {
@@ -601,14 +602,7 @@ Ensure the default browser behavior of the `hidden` attribute.
 
 .prose :where(h3 strong):not(:where([class~='not-prose'] *)) {
   font-weight: 700;
-}
-
-.prose :where(h4):not(:where([class~='not-prose'] *)) {
   color: var(--tw-prose-headings);
-  font-weight: 600;
-  margin-top: 1.5em;
-  margin-bottom: 0.5em;
-  line-height: 1.5;
 }
 
 .prose :where(h4 strong):not(:where([class~='not-prose'] *)) {
@@ -719,12 +713,12 @@ Ensure the default browser behavior of the `hidden` attribute.
   --tw-prose-headings: #1a1a1a;
   --tw-prose-lead: #e2e2e2;
   --tw-prose-links: #1a1a1a;
-  --tw-prose-bold: #1a1a1a;
+  --tw-prose-bold: #2f2f2f;
   --tw-prose-counters: #737373;
   --tw-prose-bullets: #e8e8e8;
-  --tw-prose-hr: #e5e7eb;
+  --tw-prose-hr: #e2e2e2;
   --tw-prose-quotes: #2f2f2f;
-  --tw-prose-quote-borders: #e8e8e8;
+  --tw-prose-quote-borders: #e2e2e2;
   --tw-prose-captions: #c7c7c7;
   --tw-prose-code: #1a1a1a;
   --tw-prose-pre-code: #e8e8e8;

@@ -110,9 +110,9 @@ export const NewEditor = ({
               placeholder="Title"
             />
             {/* TODO rename component + move to radix */}
-            <Content>
+            <div className="prose lg:prose">
               <TipTapEditor ref={editorRef} story={story} />
-            </Content>
+            </div>
           </>
         )}
       </PageContainer>
