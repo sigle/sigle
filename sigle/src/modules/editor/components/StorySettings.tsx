@@ -50,7 +50,10 @@ interface Props {
 export const StorySettings = ({ open, onClose, story, onSave }: Props) => {
   return (
     <Dialog open={open} onOpenChange={onClose}>
-      <StyledDialogContent aria-label="Story settings">
+      <StyledDialogContent
+        aria-label="Story settings"
+        css={{ display: 'flex', flexDirection: 'column' }}
+      >
         <DialogTitle asChild>
           <Heading
             as="h2"

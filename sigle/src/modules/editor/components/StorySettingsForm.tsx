@@ -244,7 +244,11 @@ export const StorySettingsForm = ({
     : formik.values.coverImage;
 
   return (
-    <Box as="form" css={{ height: '100%' }} onSubmit={formik.handleSubmit}>
+    <Box
+      as="form"
+      css={{ height: '100%', overflow: 'auto' }}
+      onSubmit={formik.handleSubmit}
+    >
       <ScrollArea type="scroll" scrollHideDelay={300}>
         <ScrollAreaViewport>
           <Box

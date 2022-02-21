@@ -10,7 +10,6 @@ const StyledScrollArea = styled(ScrollAreaPrimitive.Root, {
 
 const StyledViewport = styled(ScrollAreaPrimitive.Viewport, {
   width: '100%',
-  height: '768px',
   pb: '$4',
 });
 
