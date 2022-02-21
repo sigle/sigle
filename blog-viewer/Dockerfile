@@ -15,9 +15,9 @@ COPY . .
 RUN pnpm install -r --offline
 
 # Build the next.js application
-RUN pnpm run build --filter=blog-viewer
+RUN pnpm run build --filter=@sigle/blog-viewer
 # Install only the production dependencies to reduce the image size
-RUN pnpm install --prod --filter=blog-viewer
+RUN pnpm install --prod --filter=@sigle/blog-viewer
 
 # Stage 2: And then copy over node_modules, etc from that stage to the smaller base image
 FROM node:16 as production
