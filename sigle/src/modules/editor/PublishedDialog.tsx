@@ -14,7 +14,7 @@ import {
 } from '../../ui';
 import { useAuth } from '../auth/AuthContext';
 
-interface StoryPublishedDialogProps {
+interface PublishedDialogProps {
   open: boolean;
   story: Story;
   onOpenChange: () => void;
@@ -22,11 +22,11 @@ interface StoryPublishedDialogProps {
 
 const iconSize = 20;
 
-export const StoryPublishedDialog = ({
+export const PublishedDialog = ({
   open,
   onOpenChange,
   story,
-}: StoryPublishedDialogProps) => {
+}: PublishedDialogProps) => {
   const { user } = useAuth();
 
   const [isCopied, setIsCopied] = useState(false);

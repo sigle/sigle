@@ -44,7 +44,7 @@ import { storage } from '../../../utils/blockstack';
 import { resizeImage } from '../../../utils/image';
 import { PageContainer } from './Editor';
 import { SlateEditorLink } from './SlateEditorLink';
-import { StoryPublishedDialog } from '../StoryPublishedDialog';
+import { PublishedDialog } from '../PublishedDialog';
 import { EditorHeader } from '../EditorHeader';
 
 const Input = styled.input`
@@ -638,7 +638,7 @@ export const SlateEditor = ({
           onSave={handleSave}
         />
 
-        <StoryPublishedDialog
+        <PublishedDialog
           open={showPublishedDialog}
           onOpenChange={onClosePublished}
           story={story}

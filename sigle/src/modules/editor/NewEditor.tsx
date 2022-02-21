@@ -16,7 +16,7 @@ import { createSubsetStory, saveStory } from './utils';
 import { publishStory, unPublishStory } from '../../utils';
 import { Goals } from '../../utils/fathom';
 import { UnpublishDialog } from './UnpublishDialog';
-import { StoryPublishedDialog } from './StoryPublishedDialog';
+import { PublishedDialog } from './PublishedDialog';
 
 const TitleInput = styled('input', {
   outline: 'transparent',
@@ -219,7 +219,7 @@ export const NewEditor = ({ story }: NewEditorProps) => {
         onEditPreview={() => null}
       />
 
-      <StoryPublishedDialog
+      <PublishedDialog
         open={showPublishedDialog}
         onOpenChange={handleCancelPublished}
         story={story}
