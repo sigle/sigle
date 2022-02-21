@@ -1,5 +1,11 @@
 import 'highlight.js/styles/night-owl.css';
-import { useEditor, EditorContent, ReactNodeViewRenderer } from '@tiptap/react';
+import { forwardRef, useImperativeHandle } from 'react';
+import {
+  useEditor,
+  EditorContent,
+  ReactNodeViewRenderer,
+  Editor,
+} from '@tiptap/react';
 import TipTapBlockquote from '@tiptap/extension-blockquote';
 import TipTapBold from '@tiptap/extension-bold';
 import TipTapBulletList from '@tiptap/extension-bullet-list';
@@ -27,6 +33,7 @@ import { slashCommands, SlashCommandsList } from './InlineMenu';
 import { FloatingMenu } from './FloatingMenu';
 import { styled, globalCss, keyframes } from '../../stitches.config';
 import { CodeBlockComponent } from './extensions/CodeBlock';
+import { Story } from '../../types';
 
 const fadeInAnimation = keyframes({
   '0%': { opacity: '0' },
@@ -86,10 +93,15 @@ const globalStylesCustomEditor = globalCss({
  */
 
 interface TipTapEditorProps {
-  // story: Story;
+  story: Story;
 }
 
-export const TipTapEditor = ({}: TipTapEditorProps) => {
+export const TipTapEditor = forwardRef<
+  {
+    getEditor: () => Editor | null;
+  },
+  TipTapEditorProps
+>(({ story }, ref) => {
   globalStylesCustomEditor();
 
   const editor = useEditor({
@@ -157,8 +169,18 @@ export const TipTapEditor = ({}: TipTapEditorProps) => {
         component: SlashCommandsList,
       }),
     ],
-    content: '<p>Hello World! 🌎️</p>',
+    content: story.contentVersion === '2' ? story.content : '',
   });
+
+  // Here we extend the received ref so the parent can get the editor content at any time
+  useImperativeHandle(
+    ref,
+    () => ({
+      // TODO cleanup empty <p>, <h1> etc tags, basically all empty tags
+      getEditor: () => editor,
+    }),
+    [editor]
+  );
 
   return (
     <>
@@ -168,4 +190,4 @@ export const TipTapEditor = ({}: TipTapEditorProps) => {
       <StyledEditorContent editor={editor} />
     </>
   );
-};
+});
