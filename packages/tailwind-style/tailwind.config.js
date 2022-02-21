@@ -1,7 +1,3 @@
-// TODO remove H1 from editor options
-// TODO rename H2 - H3 big + small
-// Add underline + strikethrough
-
 const gray = {
   gray1: '#fcfcfc',
   gray2: '#f6f6f6',

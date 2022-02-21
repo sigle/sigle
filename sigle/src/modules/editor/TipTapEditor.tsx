@@ -115,8 +115,8 @@ export const TipTapEditor = forwardRef<
       TipTapOrderedList,
       TipTapHardBreak,
       TipTapHeading.configure({
-        // Only allow h1, h2 and h3
-        levels: [1, 2, 3],
+        // Only allow h2 and h3
+        levels: [2, 3],
       }),
       TipTapHorizontalRule,
       TipTapCodeBlockLowlight.extend({

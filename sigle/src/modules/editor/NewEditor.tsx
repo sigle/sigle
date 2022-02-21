@@ -4,7 +4,6 @@ import { toast } from 'react-toastify';
 import { styled } from '../../stitches.config';
 import { Story } from '../../types';
 import { Container, Text } from '../../ui';
-import { Content } from '../publicStory/components/PublicStory';
 import { PageContainer } from './components/Editor';
 import { EditorHeader } from './EditorHeader';
 import { TipTapEditor } from './TipTapEditor';
