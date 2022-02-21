@@ -1,6 +1,6 @@
 // TODO remove H1 from editor options
 // TODO rename H2 - H3 big + small
-// TODO add titles icons to bubble menu @quentin?
+// Add underline + strikethrough
 
 const gray = {
   gray1: '#fcfcfc',
@@ -43,8 +43,7 @@ module.exports = {
             '--tw-prose-headings': gray.gray11,
             // What is this?
             '--tw-prose-lead': gray.gray6,
-            // TODO orange 11
-            '--tw-prose-links': gray.gray11,
+            '--tw-prose-links': orange.orange11,
             '--tw-prose-bold': gray.gray10,
             '--tw-prose-counters': gray.gray10,
             '--tw-prose-bullets': gray.gray10,
@@ -107,6 +106,9 @@ module.exports = {
             },
             // We only use h1, h2, h3
             h4: false,
+            a: {
+              textDecoration: 'none',
+            },
             img: {
               marginTop: false,
               marginBottom: false,

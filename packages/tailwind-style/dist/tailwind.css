@@ -471,7 +471,7 @@ Ensure the default browser behavior of the `hidden` attribute.
 
 .prose :where(a):not(:where([class~='not-prose'] *)) {
   color: var(--tw-prose-links);
-  text-decoration: underline;
+  text-decoration: none;
   font-weight: 500;
 }
 
@@ -706,7 +706,7 @@ Ensure the default browser behavior of the `hidden` attribute.
   --tw-prose-body: #2f2f2f;
   --tw-prose-headings: #1a1a1a;
   --tw-prose-lead: #e2e2e2;
-  --tw-prose-links: #1a1a1a;
+  --tw-prose-links: #da3a00;
   --tw-prose-bold: #2f2f2f;
   --tw-prose-counters: #2f2f2f;
   --tw-prose-bullets: #2f2f2f;
