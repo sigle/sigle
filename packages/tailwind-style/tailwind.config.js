@@ -1,4 +1,3 @@
-// TODO background color general gray 1
 // TODO remove " in blockquotes
 // TODO remove H1 from editor options
 // TODO rename H2 - H3 big + small
