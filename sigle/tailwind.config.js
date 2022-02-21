@@ -17,10 +17,28 @@ module.exports = {
           DEFAULT: '#ff576a',
         },
       },
+      typography: {
+        DEFAULT: {
+          css: {
+            'code::before': {
+              content: '',
+            },
+            'code::after': {
+              content: '',
+            },
+            code: {
+              fontWeight: '400',
+            },
+            blockquote: {
+              quotes: 'none',
+            },
+          },
+        },
+      },
     },
   },
   variants: {
     extend: {},
   },
-  plugins: [require('@tailwindcss/forms')],
+  plugins: [require('@tailwindcss/typography'), require('@tailwindcss/forms')],
 };
