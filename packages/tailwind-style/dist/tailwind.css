@@ -742,6 +742,8 @@ Ensure the default browser behavior of the `hidden` attribute.
 .prose :where(p):not(:where([class~='not-prose'] *)) {
   margin-top: 1.25em;
   margin-bottom: 1.25em;
+  letter-spacing: 0.2px;
+  line-height: 28.8px;
 }
 
 .prose :where(img):not(:where([class~='not-prose'] *)) {

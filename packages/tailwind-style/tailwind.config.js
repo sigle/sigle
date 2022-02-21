@@ -75,6 +75,10 @@ module.exports = {
               padding: '1px 4px',
               borderRadius: '4px',
             },
+            p: {
+              letterSpacing: '0.2px',
+              lineHeight: '28.8px',
+            },
             h1: {
               fontWeight: '700',
               fontSize: '36px',
