@@ -110,6 +110,7 @@ module.exports = {
               marginBottom: false,
               margin: '2em auto',
             },
+            '[class~="lead"]': false,
           },
         },
       },
