@@ -37,7 +37,6 @@ module.exports = {
           css: {
             '--tw-prose-body': gray.gray10,
             '--tw-prose-headings': gray.gray11,
-            // What is this?
             '--tw-prose-lead': gray.gray6,
             '--tw-prose-links': orange.orange11,
             '--tw-prose-bold': gray.gray10,
