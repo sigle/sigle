@@ -42,7 +42,6 @@ export const NewEditor = ({ story }: NewEditorProps) => {
     open: false,
     loading: false,
   });
-  //  TODO
   const [showPublishedDialog, setShowPublishedDialog] = useState(false);
   const [unpublishDialogState, setUnpublishDialogState] = useState({
     open: false,
@@ -215,7 +214,7 @@ export const NewEditor = ({ story }: NewEditorProps) => {
         loading={publishDialogState.loading}
         onConfirm={handleConfirmPublish}
         onClose={handleCancelPublish}
-        // TODO onEditPreview
+        // TODO onEditPreview once setting modal is merged
         onEditPreview={() => null}
       />
 
