@@ -25,7 +25,7 @@
 
 Here is a list of the big technologies we use:
 
-- [Blockstack](https://blockstack.org/): Authentication and storage
+- [Stacks](https://www.stacks.co/): Authentication and storage
 - [Next.js](https://nextjs.org/): React Framework
 - [Tailwind CSS](https://tailwindcss.com/): CSS Framework
 - [Slate](https://www.slatejs.org/): Text editor Framework
@@ -33,13 +33,6 @@ Here is a list of the big technologies we use:
 ## Contributing
 
 Read our [contributing guide](CONTRIBUTING.md) to see how to locally setup the repository and see our development process.
-
-## Support us
-
-Sigle is a **free** and **open-source** project built on top of Blockstack, you can help us keep the project alive by buying us coffee! ☕️
-
-- [GitHub Sponsors](https://github.com/sponsors/pradel)
-- [Buy Me a Coffee](https://www.buymeacoffee.com/sigle)
 
 ## License
 
