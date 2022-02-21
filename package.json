@@ -4,6 +4,7 @@
     "prettier": "prettier --write '**/*.{json,md,js,ts,jsx,tsx,yml,css}'",
     "deploy:blog-viewer": "flyctl deploy --config blog-viewer/fly.toml --dockerfile blog-viewer/Dockerfile",
     "deploy:sigle": "flyctl deploy --config sigle/fly.toml --dockerfile sigle/Dockerfile",
+    "version": "pnpx changeset version && pnpm install --lockfile-only",
     "postinstall": "husky install"
   },
   "prettier": {
@@ -16,6 +17,7 @@
     ]
   },
   "devDependencies": {
+    "@changesets/cli": "2.20.0",
     "husky": "7.0.4",
     "lint-staged": "12.3.4",
     "prettier": "2.5.1"
