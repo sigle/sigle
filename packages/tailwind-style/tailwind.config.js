@@ -75,6 +75,12 @@ module.exports = {
               padding: '1px 4px',
               borderRadius: '4px',
             },
+            h1: {
+              fontWeight: '700',
+              fontSize: '36px',
+              lineHeight: '42px',
+              letterSpacing: '-0.3px',
+            },
             // TODO make tests with 600 / 700 by defaults for title
             h2: {
               fontWeight: '600',
