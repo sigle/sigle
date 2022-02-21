@@ -107,6 +107,11 @@ module.exports = {
             },
             // We only use h1, h2, h3
             h4: false,
+            img: {
+              marginTop: false,
+              marginBottom: false,
+              margin: '2em auto',
+            },
           },
         },
       },

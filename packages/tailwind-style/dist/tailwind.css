@@ -747,8 +747,7 @@ Ensure the default browser behavior of the `hidden` attribute.
 }
 
 .prose :where(img):not(:where([class~='not-prose'] *)) {
-  margin-top: 2em;
-  margin-bottom: 2em;
+  margin: 2em auto;
 }
 
 .prose :where(video):not(:where([class~='not-prose'] *)) {
