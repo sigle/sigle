@@ -572,7 +572,8 @@ Ensure the default browser behavior of the `hidden` attribute.
   font-size: 30px;
   margin-top: 2em;
   margin-bottom: 1em;
-  line-height: 1.3333333;
+  line-height: 40px;
+  letter-spacing: -0.3px;
 }
 
 .prose :where(h2 strong):not(:where([class~='not-prose'] *)) {
@@ -586,7 +587,7 @@ Ensure the default browser behavior of the `hidden` attribute.
   font-size: 1.25em;
   margin-top: 1.6em;
   margin-bottom: 0.6em;
-  line-height: 1.6;
+  line-height: 32px;
 }
 
 .prose :where(h3 strong):not(:where([class~='not-prose'] *)) {

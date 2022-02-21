@@ -79,6 +79,8 @@ module.exports = {
             h2: {
               fontWeight: '600',
               fontSize: '30px',
+              lineHeight: '40px',
+              letterSpacing: '-0.3px',
             },
             'h2 strong': {
               color: 'var(--tw-prose-headings)',
@@ -86,6 +88,8 @@ module.exports = {
             },
             h3: {
               fontWeight: '600',
+              fontSize: '20px',
+              lineHeight: '32px',
             },
             'h3 strong': {
               color: 'var(--tw-prose-headings)',
