@@ -150,6 +150,7 @@ importers:
       '@tiptap/extension-placeholder': 2.0.0-beta.48
       '@tiptap/extension-strike': 2.0.0-beta.27
       '@tiptap/extension-text': 2.0.0-beta.15
+      '@tiptap/extension-underline': 2.0.0-beta.23
       '@tiptap/react': 2.0.0-beta.108
       '@tiptap/suggestion': 2.0.0-beta.90
       '@types/jest': 27.4.0
@@ -242,6 +243,7 @@ importers:
       '@tiptap/extension-placeholder': 2.0.0-beta.48_@tiptap+core@2.0.0-beta.174
       '@tiptap/extension-strike': 2.0.0-beta.27_@tiptap+core@2.0.0-beta.174
       '@tiptap/extension-text': 2.0.0-beta.15_@tiptap+core@2.0.0-beta.174
+      '@tiptap/extension-underline': 2.0.0-beta.23_@tiptap+core@2.0.0-beta.174
       '@tiptap/react': 2.0.0-beta.108_f9947707ac080ff24f30e061131767eb
       '@tiptap/suggestion': 2.0.0-beta.90_@tiptap+core@2.0.0-beta.174
       date-fns: 2.25.0
@@ -2119,7 +2121,7 @@ packages:
       tailwindcss: '>=2.0.0'
     dependencies:
       mini-svg-data-uri: 1.4.3
-      tailwindcss: 2.2.15
+      tailwindcss: 2.2.15_96f83969316717847b3edf58a3f353f3
     dev: true
 
   /@tailwindcss/typography/0.4.1_tailwindcss@2.2.15:
@@ -2131,7 +2133,7 @@ packages:
       lodash.isplainobject: 4.0.6
       lodash.merge: 4.6.2
       lodash.uniq: 4.5.0
-      tailwindcss: 2.2.15
+      tailwindcss: 2.2.15_96f83969316717847b3edf58a3f353f3
     dev: true
 
   /@tailwindcss/typography/0.5.2_tailwindcss@3.0.23:
@@ -2420,6 +2422,14 @@ packages:
 
   /@tiptap/extension-text/2.0.0-beta.15_@tiptap+core@2.0.0-beta.174:
     resolution: {integrity: sha512-S3j2+HyV2gsXZP8Wg/HA+YVXQsZ3nrXgBM9HmGAxB0ESOO50l7LWfip0f3qcw1oRlh5H3iLPkA6/f7clD2/TFA==}
+    peerDependencies:
+      '@tiptap/core': ^2.0.0-beta.1
+    dependencies:
+      '@tiptap/core': 2.0.0-beta.174
+    dev: false
+
+  /@tiptap/extension-underline/2.0.0-beta.23_@tiptap+core@2.0.0-beta.174:
+    resolution: {integrity: sha512-pMjFH/NpFWLd2XQQa5rG9rGVQ9mu3ygdtu6VGfJ3aAjzBiyLXDKhE4biIFWyFsr8zLpp7DjwbrmLV0UGvbG1WQ==}
     peerDependencies:
       '@tiptap/core': ^2.0.0-beta.1
     dependencies:

@@ -7,7 +7,7 @@ export const sigleConfig = {
   fathomSiteId: process.env.FATHOM_SITE_ID,
   fathomSiteUrl: 'https://louse.sigle.io/script.js',
   posthogToken: process.env.NEXT_PUBLIC_POSTHOG_TOKEN,
-  githubUrl: 'https://github.com/pradel/sigle',
+  githubUrl: 'https://github.com/sigle/sigle',
   twitterUrl: 'https://twitter.com/sigleapp',
   discordUrl: 'https://discord.gg/X2Dbz3xbrs',
   facebookUrl: 'https://www.facebook.com/sigleapp',
