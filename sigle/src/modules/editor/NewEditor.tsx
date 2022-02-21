@@ -12,11 +12,13 @@ import { createSubsetStory, saveStory } from './utils';
 
 const TitleInput = styled('input', {
   outline: 'transparent',
+  background: 'transparent',
   width: '100%',
-  // Style as h1
-  fontSize: '$7',
+  // Replicate style of packages/tailwind-style/tailwind.config.js for h1
+  fontWeight: '700',
+  fontSize: '36px',
+  lineHeight: '42px',
   letterSpacing: '-0.3px',
-  fontWeight: 'bold',
 });
 
 interface NewEditorProps {
