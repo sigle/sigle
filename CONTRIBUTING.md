@@ -63,4 +63,4 @@ You can now open your browser and go to http://localhost:3000 to see the app.
 
 ## License
 
-Sigle is licensed under the [MIT license](https://github.com/pradel/sigle/blob/main/LICENSE).
+Sigle is licensed under the [MIT license](https://github.com/sigle/sigle/blob/main/LICENSE).

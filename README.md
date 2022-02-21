@@ -1,7 +1,7 @@
 <h1 align="center">Sigle</h1>
 
 <p align="center">
-  <img src="https://raw.githubusercontent.com/pradel/sigle/main/assets/icon-192x192.png" height="50">
+  <img src="https://raw.githubusercontent.com/sigle/sigle/main/assets/icon-192x192.png" height="50">
 </p>
 
 <p align="center">
@@ -9,11 +9,11 @@
 </p>
 
 <p align="center">
-  <img src="https://raw.githubusercontent.com/pradel/sigle/main/assets/screens.png">
+  <img src="https://raw.githubusercontent.com/sigle/sigle/main/assets/screens.png">
 </p>
 
 <p align="center">
-  <img src="https://badgen.net/travis/pradel/sigle" alt="License">
+  <img src="https://badgen.net/travis/sigle/sigle" alt="License">
   <img src="https://badgen.net/badge/license/MIT/blue" alt="License">
 </p>
 
