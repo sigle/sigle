@@ -1,4 +1,3 @@
-// TODO remove " in blockquotes
 // TODO remove H1 from editor options
 // TODO rename H2 - H3 big + small
 // TODO add titles icons to bubble menu @quentin?
@@ -50,6 +49,8 @@ module.exports = {
             blockquote: {
               quotes: false,
             },
+            'blockquote p:first-of-type::before': false,
+            'blockquote p:last-of-type::after': false,
             'code::before': false,
             'code::after': false,
             code: {
