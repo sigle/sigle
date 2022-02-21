@@ -46,6 +46,8 @@ export const NewEditor = ({
     open: false,
     loading: false,
   });
+  //  TODO
+  const [showPublishedDialog, setShowPublishedDialog] = useState(false);
 
   // TODO link settings
   const handleOpenSettings = () => null;
@@ -75,7 +77,7 @@ export const NewEditor = ({
       await publishStory(story.id);
       setNewStory({ ...newStory, type: 'public' });
       toast.success('Story published');
-      // setShowPublishedDialog(true);
+      setShowPublishedDialog(true);
       Fathom.trackGoal(Goals.PUBLISH, 0);
       posthog.capture('publish-story', { id: story.id });
     } catch (error) {
