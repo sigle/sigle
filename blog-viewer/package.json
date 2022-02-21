@@ -1,6 +1,7 @@
 {
-  "name": "blog-viewer",
-  "version": "0.0.1",
+  "name": "@sigle/blog-viewer",
+  "version": "0.0.0",
+  "private": true,
   "scripts": {
     "dev": "next --port 3001",
     "build": "prisma generate && next build",
