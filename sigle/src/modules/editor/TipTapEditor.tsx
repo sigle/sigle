@@ -61,10 +61,6 @@ const StyledEditorContent = styled(EditorContent, {
   '& img.ProseMirror-selectednode': {
     outline: '1px solid $orange11',
   },
-  // Code block style
-  '& pre': {
-    backgroundColor: '$gray11 !important',
-  },
   // Image uploading style
   '& img[data-loading="true"]': {
     opacity: 0.25,

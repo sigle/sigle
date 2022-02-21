@@ -52,9 +52,8 @@ module.exports = {
             '--tw-prose-quote-borders': gray.gray6,
             '--tw-prose-captions': gray.gray9,
             '--tw-prose-code': gray.gray11,
-            // TODO when images are implemented
             '--tw-prose-pre-code': gray.gray5,
-            '--tw-prose-pre-bg': gray.gray10,
+            '--tw-prose-pre-bg': gray.gray11,
             '--tw-prose-hr': gray.gray6,
           },
         },
