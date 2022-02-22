@@ -14,7 +14,6 @@ export const FormLabel = styled('label', {
 
 export const FormInput = styled('input', {
   '&[type]': {
-    // reset
     appearance: 'none',
     borderWidth: '0',
     boxSizing: 'border-box',
@@ -24,8 +23,6 @@ export const FormInput = styled('input', {
     padding: '0',
     width: '100%',
     WebkitTapHighlightColor: 'rgba(0,0,0,0)',
-
-    //custom
     backgroundColor: '$gray3',
     boxShadow: '0 0 0 1px $colors$gray7',
     borderRadius: '$1',
@@ -41,10 +38,6 @@ export const FormInput = styled('input', {
     '&::placeholder': {
       color: '$gray9',
     },
-
-    // '&::webkit-calendar-picker-indicator': {
-    //   marginRight: '2rem',
-    // },
   },
 
   '&[type="date"]::-webkit-calendar-picker-indicator': {

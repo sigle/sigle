@@ -3,7 +3,6 @@ import { useFormik, FormikErrors } from 'formik';
 import { useRouter } from 'next/router';
 import { toast } from 'react-toastify';
 import { useDropzone } from 'react-dropzone';
-import { MdAddAPhoto } from 'react-icons/md';
 import format from 'date-fns/format';
 import isValid from 'date-fns/isValid';
 import { Story } from '../../../types';
