@@ -91,6 +91,7 @@ const globalStylesCustomEditor = globalCss({
 
 interface TipTapEditorProps {
   story: Story;
+  editable?: boolean;
 }
 
 export const TipTapEditor = forwardRef<
@@ -98,10 +99,11 @@ export const TipTapEditor = forwardRef<
     getEditor: () => Editor | null;
   },
   TipTapEditorProps
->(({ story }, ref) => {
+>(({ story, editable = true }, ref) => {
   globalStylesCustomEditor();
 
   const editor = useEditor({
+    editable,
     extensions: [
       // Nodes
       TipTapDocument,
