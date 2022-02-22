@@ -25,7 +25,7 @@ import {
   FormTextarea,
 } from '../../../ui/Form';
 import { styled } from '../../../stitches.config';
-import { FileTextIcon, TrashIcon } from '@radix-ui/react-icons';
+import { CameraIcon, FileTextIcon, TrashIcon } from '@radix-ui/react-icons';
 import { Box, Flex, IconButton, Text } from '../../../ui';
 import {
   ScrollArea,
@@ -34,7 +34,6 @@ import {
   ScrollAreaThumb,
   ScrollAreaViewport,
 } from '../../../ui/ScrollArea';
-import Image from 'next/image';
 
 const ImageEmpty = styled('div', {
   display: 'flex',
@@ -53,6 +52,10 @@ const ImageEmpty = styled('div', {
     fontSize: '$1',
     color: '$gray9',
   },
+});
+
+const Image = styled('img', {
+  width: '100%',
 });
 
 const ImageEmptyIconContainer = styled('div', {
@@ -279,20 +282,19 @@ export const StorySettingsForm = ({
                   }}
                 >
                   {coverImageUrl && (
-                    <Image src={coverImageUrl} layout="fill" alt="Meta image" />
+                    <Image src={coverImageUrl} alt="Cover image" />
                   )}
-                  {!coverImageUrl && <span>Upload cover image</span>}
+                  {!coverImageUrl && (
+                    <Flex align="center" gap="1" css={{ color: '$gray9' }}>
+                      <CameraIcon />
+                      <Text size="action" css={{ color: '$gray9' }}>
+                        Add a cover image
+                      </Text>
+                    </Flex>
+                  )}
                   <input {...getInputProps()} />
                   <ImageEmptyIconContainer>
-                    {!coverImageUrl ? (
-                      <IconButton
-                        css={{ backgroundColor: '$gray3', opacity: '70%' }}
-                        size="sm"
-                        title="Add cover image"
-                      >
-                        <MdAddAPhoto />
-                      </IconButton>
-                    ) : (
+                    {coverImageUrl && (
                       <IconButton
                         css={{ backgroundColor: '$gray3', opacity: '70%' }}
                         title="Remove cover image"
@@ -374,7 +376,7 @@ export const StorySettingsForm = ({
               <Text css={{ mb: '$3' }}>Preview</Text>
               {coverImageUrl ? (
                 <PreviewCard>
-                  <Image layout="fill" src={coverImageUrl} alt="Meta image" />
+                  <Image src={coverImageUrl} alt="Cover image" />
                   <Box css={{ p: '$2' }}>
                     <Text size="xs" css={{ display: 'flex', gap: '$1' }}>
                       app.sigle.io
