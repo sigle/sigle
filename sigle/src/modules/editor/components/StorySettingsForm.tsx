@@ -34,7 +34,7 @@ import {
   ScrollAreaThumb,
   ScrollAreaViewport,
 } from '../../../ui/ScrollArea';
-// import Image from 'next/image';
+import Image from 'next/image';
 
 const ImageEmpty = styled('div', {
   display: 'flex',
@@ -53,10 +53,6 @@ const ImageEmpty = styled('div', {
     fontSize: '$1',
     color: '$gray9',
   },
-});
-
-const Image = styled('img', {
-  width: '100%',
 });
 
 const ImageEmptyIconContainer = styled('div', {
@@ -277,13 +273,14 @@ export const StorySettingsForm = ({
                 <FormLabel>Cover image</FormLabel>{' '}
                 <ImageEmpty
                   {...getRootProps({ tabIndex: undefined })}
-                  // haveImage={!!coverImageUrl}
                   css={{
                     py: !!coverImageUrl ? 0 : undefined,
                     height: !!coverImageUrl ? undefined : 178,
                   }}
                 >
-                  {coverImageUrl && <Image src={coverImageUrl} />}
+                  {coverImageUrl && (
+                    <Image src={coverImageUrl} layout="fill" alt="Meta image" />
+                  )}
                   {!coverImageUrl && <span>Upload cover image</span>}
                   <input {...getInputProps()} />
                   <ImageEmptyIconContainer>
@@ -377,14 +374,7 @@ export const StorySettingsForm = ({
               <Text css={{ mb: '$3' }}>Preview</Text>
               {coverImageUrl ? (
                 <PreviewCard>
-                  <Image
-                    css={{
-                      borderBottomRightRadius: 0,
-                      borderBottomLeftRadius: 0,
-                    }}
-                    src={coverImageUrl}
-                    alt={''}
-                  />
+                  <Image layout="fill" src={coverImageUrl} alt="Meta image" />
                   <Box css={{ p: '$2' }}>
                     <Text size="xs" css={{ display: 'flex', gap: '$1' }}>
                       app.sigle.io
