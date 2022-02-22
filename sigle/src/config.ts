@@ -13,6 +13,7 @@ export const sigleConfig = {
   facebookUrl: 'https://www.facebook.com/sigleapp',
   messengerUrl: 'https://m.me/sigleapp',
   documentationUrl: 'https://docs.sigle.io',
+  feedbackUrl: 'https://sigle.canny.io/feature-requests',
   email: 'sigle@protonmail.com',
   // This reflect the tailwindcss config
   breakpoints: {
