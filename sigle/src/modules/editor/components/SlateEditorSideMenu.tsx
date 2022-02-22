@@ -3,7 +3,7 @@ import { Editor } from 'slate-react';
 import ReactDOM from 'react-dom';
 import styled, { css } from 'styled-components';
 import tw from 'twin.macro';
-import { MdAdd, MdAddAPhoto } from 'react-icons/md';
+import { PlusIcon, CameraIcon } from '@radix-ui/react-icons';
 
 const SideMenuContainer = styled.div`
   ${tw`flex absolute transition-opacity duration-700`};
@@ -70,7 +70,7 @@ export const SlateEditorSideMenu = forwardRef(
             setOpen(!open);
           }}
         >
-          <MdAdd size={20} />
+          <PlusIcon height={20} width={20} />
         </SideMenuOpenButton>
 
         <SideMenuButtonContainer open={open}>
@@ -89,7 +89,7 @@ export const SlateEditorSideMenu = forwardRef(
               ref={fileUploaderRef}
               style={{ display: 'none' }}
             />
-            <MdAddAPhoto size={18} />
+            <CameraIcon height={18} width={18} />
           </SideMenuActionButton>
         </SideMenuButtonContainer>
       </SideMenuContainer>,
