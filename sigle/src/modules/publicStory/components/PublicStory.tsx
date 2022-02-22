@@ -174,7 +174,7 @@ const CustomStyle = createGlobalStyle<{ siteColor?: string }>`
     `}
 `;
 
-const DynamicTipTapEditor = dynamic(() =>
+const DynamicTipTapEditor = dynamic<{ story: Story; editable: boolean }>(() =>
   import('../../editor/TipTapEditor').then((mod: any) => mod.TipTapEditor)
 );
 
