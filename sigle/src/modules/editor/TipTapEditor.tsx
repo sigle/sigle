@@ -62,10 +62,6 @@ const StyledEditorContent = styled(EditorContent, {
   '& img.ProseMirror-selectednode': {
     outline: '1px solid $orange11',
   },
-  // Code block style
-  '& pre': {
-    backgroundColor: '$gray11 !important',
-  },
   // Image uploading style
   '& img[data-loading="true"]': {
     opacity: 0.25,
@@ -78,7 +74,7 @@ const globalStylesCustomEditor = globalCss({
     padding: 0,
     backgroundColor: '$gray1',
     boxShadow:
-      '0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1)',
+      '0px 10px 38px -10px rgba(26, 26, 26, 0.35), 0px 10px 20px -15px rgba(26, 26, 26, 0.2)',
     br: '$1',
     minWidth: '280px',
   },
@@ -120,8 +116,8 @@ export const TipTapEditor = forwardRef<
       TipTapOrderedList,
       TipTapHardBreak,
       TipTapHeading.configure({
-        // Only allow h1, h2 and h3
-        levels: [1, 2, 3],
+        // Only allow h2 and h3
+        levels: [2, 3],
       }),
       TipTapHorizontalRule,
       TipTapCodeBlockLowlight.extend({

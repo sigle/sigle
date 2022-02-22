@@ -7,8 +7,6 @@ import posthog from 'posthog-js';
 import { styled } from '../../stitches.config';
 import { Story } from '../../types';
 import { Container, Text } from '../../ui';
-import { Content } from '../publicStory/components/PublicStory';
-import { PageContainer } from './components/Editor';
 import { EditorHeader } from './EditorHeader';
 import { PublishDialog } from './PublishDialog';
 import { TipTapEditor } from './TipTapEditor';
@@ -20,11 +18,18 @@ import { PublishedDialog } from './PublishedDialog';
 
 const TitleInput = styled('input', {
   outline: 'transparent',
+  background: 'transparent',
   width: '100%',
-  // Style as h1
-  fontSize: '$7',
+  // Replicate style of packages/tailwind-style/tailwind.config.js for h1
+  fontWeight: '700',
+  fontSize: '36px',
+  lineHeight: '42px',
   letterSpacing: '-0.3px',
-  fontWeight: 'bold',
+});
+
+const EditorContainer = styled('div', {
+  margin: '0 auto',
+  paddingTop: 60,
 });
 
 interface NewEditorProps {
@@ -186,7 +191,7 @@ export const NewEditor = ({ story }: NewEditorProps) => {
         ⚠️ You are using the experimental editor, expect things to break
       </Text>
 
-      <PageContainer>
+      <EditorContainer className="prose lg:prose">
         {isOldStory ? (
           <Text size="sm" color="orange">
             ⚠️ The experimental editor can't be used on old stories for now
@@ -200,13 +205,10 @@ export const NewEditor = ({ story }: NewEditorProps) => {
               }}
               placeholder="Title"
             />
-            {/* TODO rename component + move to radix */}
-            <Content>
-              <TipTapEditor ref={editorRef} story={story} />
-            </Content>
+            <TipTapEditor ref={editorRef} story={story} />
           </>
         )}
-      </PageContainer>
+      </EditorContainer>
 
       <PublishDialog
         story={newStory}

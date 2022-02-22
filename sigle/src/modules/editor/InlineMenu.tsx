@@ -3,7 +3,6 @@ import {
   CodeLight,
   DividerLight,
   NumberedListLight,
-  Heading1Light,
   Heading2Light,
   Heading3Light,
   ImageLight,
@@ -45,27 +44,9 @@ const resizeAndUploadImage = async (
 
 export const slashCommands: SlashCommandsCommand[] = [
   {
-    icon: Heading1Light,
-    title: 'Heading 1',
-    description: 'Large section Heading',
-    command: ({ editor, range }) => {
-      if (!range) {
-        editor.chain().focus().toggleHeading({ level: 1 }).run();
-        return;
-      }
-
-      editor
-        .chain()
-        .focus()
-        .deleteRange(range)
-        .setNode('heading', { level: 1 })
-        .run();
-    },
-  },
-  {
     icon: Heading2Light,
-    title: 'Heading 2',
-    description: 'Medium section Heading',
+    title: 'Big Heading',
+    description: 'Big section Heading',
     command: ({ editor, range }) => {
       if (!range) {
         editor.chain().focus().toggleHeading({ level: 2 }).run();
@@ -82,7 +63,7 @@ export const slashCommands: SlashCommandsCommand[] = [
   },
   {
     icon: Heading3Light,
-    title: 'Heading 3',
+    title: 'Small Heading',
     description: 'Small section Heading',
     command: ({ editor, range }) => {
       if (!range) {
