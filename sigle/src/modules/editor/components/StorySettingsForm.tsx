@@ -25,8 +25,8 @@ import {
   FormTextarea,
 } from '../../../ui/Form';
 import { styled } from '../../../stitches.config';
-import { TrashIcon } from '@radix-ui/react-icons';
-import { Box, IconButton } from '../../../ui';
+import { FileTextIcon, TrashIcon } from '@radix-ui/react-icons';
+import { Box, Flex, IconButton, Text } from '../../../ui';
 import {
   ScrollArea,
   ScrollAreaCorner,
@@ -69,18 +69,6 @@ const ImageEmptyIconContainer = styled('div', {
   gap: '$1',
 });
 
-// const ImageEmptyIconAdd = styled('div', {
-//   p: '$1',
-//   borderRadius: '$1',
-// });
-
-// const ImageEmptyIconDelete = styled('div', {
-//   p: '$1',
-//   borderRadius: '$1',
-//   backgroundColor: '$gray3',
-//   opacity: '50%',
-// });
-
 const ImageCheckboxContainer = styled('div', {
   display: 'flex',
   alignItems: 'center',
@@ -97,6 +85,31 @@ const SaveRow = styled('div', {
   display: 'flex',
   justifyContent: 'end',
   gap: '$6',
+});
+
+const PreviewCard = styled('div', {
+  mb: '$5',
+  boxShadow: '0 0 0 1px $colors$gray6',
+  borderRadius: '$4',
+  overflow: 'hidden',
+  //position: 'relative',
+
+  '& img': {
+    maxHeight: 186,
+    borderBottomRightRadius: 0,
+    borderBottomLeftRadius: 0,
+    objectFit: 'cover',
+    objectPosition: 'top',
+  },
+});
+
+const PreviewCardNoImage = styled('div', {
+  display: 'flex',
+  minHeight: 80,
+  mb: '$5',
+  boxShadow: '0 0 0 1px $colors$gray6',
+  borderRadius: '$4',
+  overflow: 'hidden',
 });
 
 interface StorySettingsFormValues {
@@ -247,7 +260,10 @@ export const StorySettingsForm = ({
     <>
       <Box
         as="form"
-        css={{ height: '100%', overflow: 'auto' }}
+        css={{
+          height: '100%',
+          overflow: 'auto',
+        }}
         onSubmit={formik.handleSubmit}
       >
         <ScrollArea type="scroll" scrollHideDelay={300}>
@@ -255,11 +271,10 @@ export const StorySettingsForm = ({
             <Box
               css={{
                 px: '$8',
-                height: '100%',
               }}
             >
               <FormRow>
-                <FormLabel>Cover image</FormLabel>
+                <FormLabel>Cover image</FormLabel>{' '}
                 <ImageEmpty
                   {...getRootProps({ tabIndex: undefined })}
                   // haveImage={!!coverImageUrl}
@@ -358,6 +373,68 @@ export const StorySettingsForm = ({
                   </FormHelperError>
                 )}
               </FormRow>
+
+              <Text css={{ mb: '$3' }}>Preview</Text>
+              {coverImageUrl ? (
+                <PreviewCard>
+                  <Image
+                    css={{
+                      borderBottomRightRadius: 0,
+                      borderBottomLeftRadius: 0,
+                    }}
+                    src={coverImageUrl}
+                    alt={''}
+                  />
+                  <Box css={{ p: '$2' }}>
+                    <Text size="xs" css={{ display: 'flex', gap: '$1' }}>
+                      app.sigle.io
+                    </Text>
+                    <Text as="h3" css={{ fontWeight: 600 }}>
+                      {story.metaTitle
+                        ? story.metaTitle
+                        : story.title + ' | Sigle'}
+                    </Text>
+                    {story.metaDescription && (
+                      <Text size="xs" css={{ mb: '$1' }}>
+                        {story.metaDescription}
+                      </Text>
+                    )}
+                  </Box>
+                </PreviewCard>
+              ) : (
+                <PreviewCardNoImage>
+                  <Box
+                    css={{
+                      display: 'grid',
+                      placeItems: 'center',
+                      width: 75,
+                      backgroundColor: '$gray3',
+                      borderRight: '1px solid $colors$gray7',
+
+                      '& svg': {
+                        color: '$gray9',
+                      },
+                    }}
+                  >
+                    <FileTextIcon />
+                  </Box>
+                  <Flex direction="column" justify="center" css={{ p: '$2' }}>
+                    <Text size="xs" css={{ display: 'flex', gap: '$1' }}>
+                      app.sigle.io
+                    </Text>
+                    <Text as="h3" css={{ fontWeight: 600 }}>
+                      {story.metaTitle
+                        ? story.metaTitle
+                        : story.title + ' | Sigle'}
+                    </Text>
+                    {story.metaDescription && (
+                      <Text size="xs" css={{ mb: '$1' }}>
+                        {story.metaDescription}
+                      </Text>
+                    )}
+                  </Flex>
+                </PreviewCardNoImage>
+              )}
             </Box>
           </ScrollAreaViewport>
           <ScrollAreaScrollbar orientation="vertical">
@@ -369,12 +446,13 @@ export const StorySettingsForm = ({
         <Box
           css={{
             borderTop: '1px solid $colors$gray6',
+            boxShadow: 'inset 1px 0 0 0 $colors$gray7',
             position: 'fixed',
             width: '100%',
             left: 0,
             bottom: 0,
             px: '$8',
-            backgroundColor: 'white',
+            backgroundColor: '$gray1',
           }}
         >
           <SaveRow>
