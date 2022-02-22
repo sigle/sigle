@@ -5,6 +5,7 @@
     "deploy:blog-viewer": "flyctl deploy --config blog-viewer/fly.toml --dockerfile blog-viewer/Dockerfile",
     "deploy:sigle": "flyctl deploy --config sigle/fly.toml --dockerfile sigle/Dockerfile",
     "version": "pnpx changeset version && pnpm install --lockfile-only",
+    "release": "pnpx changeset publish",
     "postinstall": "husky install"
   },
   "prettier": {

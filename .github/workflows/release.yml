@@ -33,6 +33,7 @@ jobs:
         uses: changesets/action@v1
         with:
           version: pnpm run version
+          publish: pnpm run release
           commit: 'chore: release'
           title: 'chore: create new release'
         env:
