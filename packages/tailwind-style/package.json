@@ -1,0 +1,19 @@
+{
+  "name": "@sigle/tailwind-style",
+  "version": "0.0.1",
+  "description": "This package use tailwind css to generate the typography style used by the client.",
+  "publishConfig": {
+    "access": "public"
+  },
+  "files": [
+    "src",
+    "dist"
+  ],
+  "scripts": {
+    "build": "NODE_ENV=production pnpx tailwindcss --no-autoprefixer -i ./src/tailwind.css -o ./dist/tailwind.css"
+  },
+  "devDependencies": {
+    "@tailwindcss/typography": "0.5.2",
+    "tailwindcss": "3.0.23"
+  }
+}

@@ -22,7 +22,7 @@ export const CodeBlockComponent = (props: NodeViewProps) => {
             <Button
               as="select"
               css={{
-                color: '$gray1',
+                color: '$gray5',
                 backgroundColor: '$gray10',
                 fontSize: '$1',
                 outline: 'none',
