@@ -1,5 +1,11 @@
 # @sigle/app
 
+## 0.1.1
+
+### Patch Changes
+
+- 723da11: Experimental editor: public rendering of the new articles.
+
 ## 0.1.0
 
 ### Minor Changes
