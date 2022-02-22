@@ -52,7 +52,11 @@ export const StorySettings = ({ open, onClose, story, onSave }: Props) => {
     <Dialog open={open} onOpenChange={onClose}>
       <StyledDialogContent
         aria-label="Story settings"
-        css={{ display: 'flex', flexDirection: 'column' }}
+        css={{
+          display: 'flex',
+          flexDirection: 'column',
+          boxShadow: 'inset 1px 0 0 0 $colors$gray7',
+        }}
       >
         <DialogTitle asChild>
           <Heading
