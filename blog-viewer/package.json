@@ -1,6 +1,6 @@
 {
   "name": "@sigle/blog-viewer",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "private": true,
   "scripts": {
     "dev": "next --port 3001",
