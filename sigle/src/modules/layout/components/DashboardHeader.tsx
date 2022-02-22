@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import styledC from 'styled-components';
 import tw from 'twin.macro';
 import { toast } from 'react-toastify';
-import { MdRemoveRedEye, MdSort } from 'react-icons/md';
+import { EyeOpenIcon, HamburgerMenuIcon } from '@radix-ui/react-icons';
 import * as Fathom from 'fathom-client';
 import { useRouter } from 'next/router';
 import * as DialogPrimitive from '@radix-ui/react-dialog';
@@ -125,7 +125,7 @@ export const DashboardPageTitle = ({ title }: DashboardPageTitleProps) => {
             <MobileMenuButton
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
             >
-              <MdSort size={32} />
+              <HamburgerMenuIcon width={32} height={32} />
             </MobileMenuButton>
             <Logo src="/img/logo.png" alt="logo" />
           </LogoContainer>
@@ -135,7 +135,8 @@ export const DashboardPageTitle = ({ title }: DashboardPageTitleProps) => {
             href={`/${user.username}`}
             target="_blank"
           >
-            Visit my blog <MdRemoveRedEye size={18} style={{ marginLeft: 8 }} />
+            Visit my blog{' '}
+            <EyeOpenIcon width={18} height={18} style={{ marginLeft: 8 }} />
           </VisitButton>
           {!loadingCreate && (
             <Button onClick={handleCreateNewPrivateStory}>New story</Button>

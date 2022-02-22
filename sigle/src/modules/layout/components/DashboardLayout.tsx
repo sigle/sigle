@@ -4,7 +4,7 @@ import styled, { css } from 'styled-components';
 import tw from 'twin.macro';
 import Link from 'next/link';
 import Div100vh from 'react-div-100vh';
-import { MdKeyboardArrowDown } from 'react-icons/md';
+import { ChevronDownIcon } from '@radix-ui/react-icons';
 import posthog from 'posthog-js';
 import { FaTwitter, FaGithub, FaFacebookF, FaDiscord } from 'react-icons/fa';
 import { userSession } from '../../../utils/blockstack';
@@ -75,7 +75,7 @@ const MenuBottom = styled.ul`
   ${tw`list-none px-3 pb-2`}
 `;
 
-const MenuArrowIcon = styled(MdKeyboardArrowDown)<{ $isOpen: boolean }>`
+const MenuArrowIcon = styled(ChevronDownIcon)<{ $isOpen: boolean }>`
   ${(props) =>
     props.$isOpen &&
     css`
@@ -140,7 +140,8 @@ export const DashboardSidebar = () => {
           <span>{user.username}</span>
           <MenuArrowIcon
             $isOpen={isLogoutOpen}
-            size={18}
+            width={18}
+            height={18}
             style={{ marginLeft: 8 }}
           />
         </MenuButtonName>

@@ -5,7 +5,7 @@ import styled, { css } from 'styled-components';
 import tw from 'twin.macro';
 import { toast } from 'react-toastify';
 import { useDropzone } from 'react-dropzone';
-import { MdAddAPhoto, MdDelete } from 'react-icons/md';
+import { CameraIcon, TrashIcon } from '@radix-ui/react-icons';
 import format from 'date-fns/format';
 import isValid from 'date-fns/isValid';
 import { Story } from '../../../types';
@@ -238,14 +238,14 @@ export const StorySettingsForm = ({
           <input {...getInputProps()} />
           <ImageEmptyIconContainer>
             <ImageEmptyIconAdd title="Add cover image">
-              <MdAddAPhoto size={15} />
+              <CameraIcon width={15} height={15} />
             </ImageEmptyIconAdd>
             {coverImageUrl && (
               <ImageEmptyIconDelete
                 title="Remove cover image"
                 onClick={handleRemoveCover}
               >
-                <MdDelete size={15} />
+                <TrashIcon width={15} height={15} />
               </ImageEmptyIconDelete>
             )}
           </ImageEmptyIconContainer>
@@ -318,12 +318,12 @@ export const StorySettingsForm = ({
 
         {loadingDelete ? (
           <ButtonLink disabled>
-            <MdDelete />
+            <TrashIcon width={14} height={14} />
             <span>Deleting ...</span>
           </ButtonLink>
         ) : (
           <ButtonLink onClick={handleDelete}>
-            <MdDelete />
+            <TrashIcon width={14} height={14} />
             <span>Delete this story</span>
           </ButtonLink>
         )}
