@@ -70,6 +70,11 @@ export const FloatingMenu = ({ editor }: FloatingMenuProps) => {
         arrow: false,
       }}
       shouldShow={({ editor, state }) => {
+        // Should never show when read-only mode is enabled
+        if (!editor.isEditable) {
+          return false;
+        }
+
         // Show only on empty blocks
         const empty = state.selection.empty;
         const node = state.selection.$head.node();
