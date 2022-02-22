@@ -92,13 +92,7 @@ export const SlateEditor = ({
   const isExperimentalEditor =
     router.query.experimentalEditor === 'true' || story.contentVersion === '2';
   if (isExperimentalEditor) {
-    return (
-      <NewEditor
-        story={story}
-        onPublish={handlePublish}
-        onUnpublish={handleUnpublish}
-      />
-    );
+    return <NewEditor story={story} />;
   }
 
   return (

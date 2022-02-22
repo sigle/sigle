@@ -1,13 +1,20 @@
 import { Editor } from '@tiptap/react';
 import { useRef, useState } from 'react';
 import { toast } from 'react-toastify';
+import NProgress from 'nprogress';
+import * as Fathom from 'fathom-client';
+import posthog from 'posthog-js';
 import { styled } from '../../stitches.config';
 import { Story } from '../../types';
 import { Container, Text } from '../../ui';
-import { PageContainer } from './components/Editor';
 import { EditorHeader } from './EditorHeader';
+import { PublishDialog } from './PublishDialog';
 import { TipTapEditor } from './TipTapEditor';
 import { createSubsetStory, saveStory } from './utils';
+import { publishStory, unPublishStory } from '../../utils';
+import { Goals } from '../../utils/fathom';
+import { UnpublishDialog } from './UnpublishDialog';
+import { PublishedDialog } from './PublishedDialog';
 
 const TitleInput = styled('input', {
   outline: 'transparent',
@@ -27,26 +34,107 @@ const EditorContainer = styled('div', {
 
 interface NewEditorProps {
   story: Story;
-  onPublish: () => void;
-  onUnpublish: () => void;
 }
 
 // TODO check security handled by TipTap when loading HTML (read only mode)
 // Is it enough or do we need another lib to sanitize the HTML first?
 
-export const NewEditor = ({
-  story,
-  onPublish,
-  onUnpublish,
-}: NewEditorProps) => {
+export const NewEditor = ({ story }: NewEditorProps) => {
   const editorRef = useRef<{ getEditor: () => Editor | null }>(null);
   const [loadingSave, setLoadingSave] = useState(false);
   const [newStory, setNewStory] = useState(story);
+  const [publishDialogState, setPublishDialogState] = useState({
+    open: false,
+    loading: false,
+  });
+  const [showPublishedDialog, setShowPublishedDialog] = useState(false);
+  const [unpublishDialogState, setUnpublishDialogState] = useState({
+    open: false,
+    loading: false,
+  });
 
   // TODO link settings
   const handleOpenSettings = () => null;
 
-  const handleSave = async () => {
+  const handlePublish = () => {
+    setPublishDialogState({
+      open: true,
+      loading: false,
+    });
+  };
+
+  const handleCancelPublish = () => {
+    setPublishDialogState({
+      open: false,
+      loading: false,
+    });
+  };
+
+  const handleConfirmPublish = async () => {
+    setPublishDialogState({
+      open: true,
+      loading: true,
+    });
+    NProgress.start();
+    try {
+      await handleSave({ hideToast: true });
+      await publishStory(story.id);
+      setNewStory({ ...newStory, type: 'public' });
+      setShowPublishedDialog(true);
+      Fathom.trackGoal(Goals.PUBLISH, 0);
+      posthog.capture('publish-story', { id: story.id });
+    } catch (error) {
+      console.error(error);
+      toast.error(error.message);
+    }
+    NProgress.done();
+    setPublishDialogState({
+      open: false,
+      loading: false,
+    });
+  };
+
+  const handleCancelPublished = () => {
+    setShowPublishedDialog(false);
+  };
+
+  const handleUnpublish = () => {
+    setUnpublishDialogState({
+      open: true,
+      loading: false,
+    });
+  };
+
+  const handleCancelUnpublish = () => {
+    setUnpublishDialogState({
+      open: false,
+      loading: false,
+    });
+  };
+
+  const handleConfirmUnpublish = async () => {
+    setUnpublishDialogState({
+      open: true,
+      loading: true,
+    });
+    NProgress.start();
+    try {
+      await unPublishStory(story.id);
+      setNewStory({ ...newStory, type: 'private' });
+      toast.success('Story unpublished');
+      posthog.capture('unpublish-story', { id: story.id });
+    } catch (error) {
+      console.error(error);
+      toast.error(error.message);
+    }
+    NProgress.done();
+    setUnpublishDialogState({
+      open: false,
+      loading: false,
+    });
+  };
+
+  const handleSave = async ({ hideToast }: { hideToast?: boolean } = {}) => {
     const editor = editorRef.current?.getEditor();
     if (!editor) {
       return;
@@ -66,7 +154,9 @@ export const NewEditor = ({
       });
       await saveStory(updatedStory, subsetStory);
       setNewStory(updatedStory);
-      toast.success('Story saved');
+      if (!hideToast) {
+        toast.success('Story saved');
+      }
     } catch (error) {
       console.error(error);
       toast.error(error.message);
@@ -89,12 +179,12 @@ export const NewEditor = ({
       }}
     >
       <EditorHeader
-        story={story}
+        story={newStory}
         loadingSave={loadingSave}
         onOpenSettings={handleOpenSettings}
         onSave={handleSave}
-        onPublish={onPublish}
-        onUnpublish={onUnpublish}
+        onPublish={handlePublish}
+        onUnpublish={handleUnpublish}
       />
 
       <Text size="sm" color="orange">
@@ -119,6 +209,29 @@ export const NewEditor = ({
           </>
         )}
       </EditorContainer>
+
+      <PublishDialog
+        story={newStory}
+        open={publishDialogState.open}
+        loading={publishDialogState.loading}
+        onConfirm={handleConfirmPublish}
+        onClose={handleCancelPublish}
+        // TODO onEditPreview once setting modal is merged
+        onEditPreview={() => null}
+      />
+
+      <PublishedDialog
+        open={showPublishedDialog}
+        onOpenChange={handleCancelPublished}
+        story={story}
+      />
+
+      <UnpublishDialog
+        open={unpublishDialogState.open}
+        loading={unpublishDialogState.loading}
+        onConfirm={handleConfirmUnpublish}
+        onClose={handleCancelUnpublish}
+      />
     </Container>
   );
 };
