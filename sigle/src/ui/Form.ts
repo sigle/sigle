@@ -41,6 +41,15 @@ export const FormInput = styled('input', {
     '&::placeholder': {
       color: '$gray9',
     },
+
+    // '&::webkit-calendar-picker-indicator': {
+    //   marginRight: '2rem',
+    // },
+  },
+
+  '&[type="date"]::-webkit-calendar-picker-indicator': {
+    background: 'url(/static/img/Calendar.svg) no-repeat',
+    mt: '$1',
   },
 });
 
