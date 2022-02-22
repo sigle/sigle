@@ -1,6 +1,7 @@
 import React from 'react';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
+import dynamic from 'next/dynamic';
 import styled, { css, createGlobalStyle } from 'styled-components';
 import tw from 'twin.macro';
 import { Value } from 'slate';
@@ -173,6 +174,10 @@ const CustomStyle = createGlobalStyle<{ siteColor?: string }>`
     `}
 `;
 
+const DynamicTipTapEditor = dynamic(() =>
+  import('../../editor/TipTapEditor').then((mod: any) => mod.TipTapEditor)
+);
+
 interface PublicStoryProps {
   story: Story;
   settings: SettingsFile;
@@ -243,14 +248,18 @@ export const PublicStory = ({ story, settings }: PublicStoryProps) => {
             <CoverImage className="sigle-cover" src={story.coverImage} />
           </Cover>
         )}
-        <Content
-          className="sigle-content"
-          dangerouslySetInnerHTML={{
-            __html: story.content
-              ? html.serialize(Value.fromJSON(story.content))
-              : '',
-          }}
-        />
+        {story.contentVersion === '2' ? (
+          <DynamicTipTapEditor story={story} />
+        ) : (
+          <Content
+            className="sigle-content"
+            dangerouslySetInnerHTML={{
+              __html: story.content
+                ? html.serialize(Value.fromJSON(story.content))
+                : '',
+            }}
+          />
+        )}
         <PoweredBy />
       </StyledContainer>
     </React.Fragment>
