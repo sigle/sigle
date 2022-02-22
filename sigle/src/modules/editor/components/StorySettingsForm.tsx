@@ -335,7 +335,7 @@ export const StorySettingsForm = ({
               </FormRow>
 
               <FormRow>
-                <FormLabel>Twitter title</FormLabel>
+                <FormLabel>Meta title</FormLabel>
                 <FormInput
                   placeholder="Type here..."
                   name="metaTitle"
@@ -354,7 +354,7 @@ export const StorySettingsForm = ({
               </FormRow>
 
               <FormRow>
-                <FormLabel>Twitter description</FormLabel>
+                <FormLabel>Meta description</FormLabel>
                 <FormTextarea
                   placeholder="Type here..."
                   name="metaDescription"
