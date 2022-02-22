@@ -244,166 +244,174 @@ export const StorySettingsForm = ({
     : formik.values.coverImage;
 
   return (
-    <Box
-      as="form"
-      css={{ height: '100%', overflow: 'auto' }}
-      onSubmit={formik.handleSubmit}
-    >
-      <ScrollArea type="scroll" scrollHideDelay={300}>
-        <ScrollAreaViewport>
-          <Box
-            css={{
-              px: '$8',
-              height: '100%',
-            }}
-          >
-            <FormRow>
-              <FormLabel>Cover image</FormLabel>
-              <ImageEmpty
-                {...getRootProps({ tabIndex: undefined })}
-                // haveImage={!!coverImageUrl}
-                css={{
-                  py: !!coverImageUrl ? 0 : undefined,
-                  height: !!coverImageUrl ? undefined : 178,
-                }}
-              >
-                {coverImageUrl && <Image src={coverImageUrl} />}
-                {!coverImageUrl && <span>Upload cover image</span>}
-                <input {...getInputProps()} />
-                <ImageEmptyIconContainer>
-                  {!coverImageUrl ? (
-                    <IconButton
-                      css={{ backgroundColor: '$gray3', opacity: '70%' }}
-                      size="sm"
-                      title="Add cover image"
-                    >
-                      <MdAddAPhoto />
-                    </IconButton>
-                  ) : (
-                    <IconButton
-                      css={{ backgroundColor: '$gray3', opacity: '70%' }}
-                      title="Remove cover image"
-                      size="sm"
-                      onClick={handleRemoveCover}
-                    >
-                      <TrashIcon />
-                    </IconButton>
-                  )}
-                </ImageEmptyIconContainer>
-              </ImageEmpty>
-              <ImageCheckboxContainer>
-                <FormInputCheckbox
-                  type="checkbox"
-                  name="hideCoverImage"
-                  checked={formik.values.hideCoverImage}
-                  value={formik.values.hideCoverImage ? 'true' : 'false'}
+    <>
+      <Box
+        as="form"
+        css={{ height: '100%', overflow: 'auto' }}
+        onSubmit={formik.handleSubmit}
+      >
+        <ScrollArea type="scroll" scrollHideDelay={300}>
+          <ScrollAreaViewport>
+            <Box
+              css={{
+                px: '$8',
+                height: '100%',
+              }}
+            >
+              <FormRow>
+                <FormLabel>Cover image</FormLabel>
+                <ImageEmpty
+                  {...getRootProps({ tabIndex: undefined })}
+                  // haveImage={!!coverImageUrl}
+                  css={{
+                    py: !!coverImageUrl ? 0 : undefined,
+                    height: !!coverImageUrl ? undefined : 178,
+                  }}
+                >
+                  {coverImageUrl && <Image src={coverImageUrl} />}
+                  {!coverImageUrl && <span>Upload cover image</span>}
+                  <input {...getInputProps()} />
+                  <ImageEmptyIconContainer>
+                    {!coverImageUrl ? (
+                      <IconButton
+                        css={{ backgroundColor: '$gray3', opacity: '70%' }}
+                        size="sm"
+                        title="Add cover image"
+                      >
+                        <MdAddAPhoto />
+                      </IconButton>
+                    ) : (
+                      <IconButton
+                        css={{ backgroundColor: '$gray3', opacity: '70%' }}
+                        title="Remove cover image"
+                        size="sm"
+                        onClick={handleRemoveCover}
+                      >
+                        <TrashIcon />
+                      </IconButton>
+                    )}
+                  </ImageEmptyIconContainer>
+                </ImageEmpty>
+                <ImageCheckboxContainer>
+                  <FormInputCheckbox
+                    type="checkbox"
+                    name="hideCoverImage"
+                    checked={formik.values.hideCoverImage}
+                    value={formik.values.hideCoverImage ? 'true' : 'false'}
+                    onChange={formik.handleChange}
+                  />
+                  <FormHelper css={{ ml: '$2', pt: '$2' }}>
+                    Hide cover image on the published story
+                  </FormHelper>
+                </ImageCheckboxContainer>
+              </FormRow>
+
+              <FormRow>
+                <FormLabel>Created on</FormLabel>
+                <FormInput
+                  type="date"
+                  name="createdAt"
+                  value={formik.values.createdAt}
                   onChange={formik.handleChange}
                 />
-                <FormHelper css={{ ml: '$2', pt: '$2' }}>
-                  Hide cover image on the published story
+                {formik.errors.createdAt && (
+                  <FormHelperError>{formik.errors.createdAt}</FormHelperError>
+                )}
+              </FormRow>
+
+              <FormRow>
+                <FormLabel>Twitter title</FormLabel>
+                <FormInput
+                  placeholder="Type here..."
+                  name="metaTitle"
+                  type="text"
+                  value={formik.values.metaTitle}
+                  onChange={formik.handleChange}
+                  maxLength={100}
+                />
+                <FormHelper>
+                  Recommended: 70 characters. <br /> You have used{' '}
+                  {formik.values.metaTitle.length} characters.
                 </FormHelper>
-              </ImageCheckboxContainer>
-            </FormRow>
+                {formik.errors.metaTitle && (
+                  <FormHelperError>{formik.errors.metaTitle}</FormHelperError>
+                )}
+              </FormRow>
 
-            <FormRow>
-              <FormLabel>Created on</FormLabel>
-              <FormInput
-                type="date"
-                name="createdAt"
-                value={formik.values.createdAt}
-                onChange={formik.handleChange}
-              />
-              {formik.errors.createdAt && (
-                <FormHelperError>{formik.errors.createdAt}</FormHelperError>
-              )}
-            </FormRow>
+              <FormRow>
+                <FormLabel>Twitter description</FormLabel>
+                <FormTextarea
+                  placeholder="Type here..."
+                  name="metaDescription"
+                  value={formik.values.metaDescription}
+                  onChange={formik.handleChange}
+                  rows={3}
+                  maxLength={250}
+                />
+                <FormHelper>
+                  Recommended: 156 characters. <br /> You have used{' '}
+                  {formik.values.metaDescription.length} characters.
+                </FormHelper>
+                {formik.errors.metaDescription && (
+                  <FormHelperError>
+                    {formik.errors.metaDescription}
+                  </FormHelperError>
+                )}
+              </FormRow>
+            </Box>
+          </ScrollAreaViewport>
+          <ScrollAreaScrollbar orientation="vertical">
+            <ScrollAreaThumb />
+          </ScrollAreaScrollbar>
+          <ScrollAreaCorner />
+        </ScrollArea>
 
-            <FormRow>
-              <FormLabel>Twitter title</FormLabel>
-              <FormInput
-                placeholder="Type here..."
-                name="metaTitle"
-                type="text"
-                value={formik.values.metaTitle}
-                onChange={formik.handleChange}
-                maxLength={100}
-              />
-              <FormHelper>
-                Recommended: 70 characters. <br /> You have used{' '}
-                {formik.values.metaTitle.length} characters.
-              </FormHelper>
-              {formik.errors.metaTitle && (
-                <FormHelperError>{formik.errors.metaTitle}</FormHelperError>
-              )}
-            </FormRow>
-
-            <FormRow>
-              <FormLabel>Twitter description</FormLabel>
-              <FormTextarea
-                placeholder="Type here..."
-                name="metaDescription"
-                value={formik.values.metaDescription}
-                onChange={formik.handleChange}
-                rows={3}
-                maxLength={250}
-              />
-              <FormHelper>
-                Recommended: 156 characters. <br /> You have used{' '}
-                {formik.values.metaDescription.length} characters.
-              </FormHelper>
-              {formik.errors.metaDescription && (
-                <FormHelperError>
-                  {formik.errors.metaDescription}
-                </FormHelperError>
-              )}
-            </FormRow>
-          </Box>
-        </ScrollAreaViewport>
-        <ScrollAreaScrollbar orientation="vertical">
-          <ScrollAreaThumb />
-        </ScrollAreaScrollbar>
-        <ScrollAreaCorner />
-      </ScrollArea>
+        <Box
+          css={{
+            borderTop: '1px solid $colors$gray6',
+            position: 'fixed',
+            width: '100%',
+            left: 0,
+            bottom: 0,
+            px: '$8',
+            backgroundColor: 'white',
+          }}
+        >
+          <SaveRow>
+            {loadingDelete ? (
+              <Button variant="ghost" color="orange" size="lg" disabled>
+                <TrashIcon />
+                <span>Deleting ...</span>
+              </Button>
+            ) : (
+              <Button
+                css={{ display: 'flex', gap: '$2' }}
+                size="lg"
+                onClick={handleDelete}
+                variant="ghost"
+                color="orange"
+              >
+                <span>Delete this story</span>
+                <TrashIcon />
+              </Button>
+            )}
+            <Button
+              size="lg"
+              color="orange"
+              disabled={formik.isSubmitting}
+              type="submit"
+            >
+              {formik.isSubmitting ? 'Saving...' : 'Save Settings'}
+            </Button>
+          </SaveRow>
+        </Box>
+      </Box>
 
       <Box
         css={{
-          borderTop: '1px solid $colors$gray6',
-          position: 'fixed',
-          width: '100%',
-          left: 0,
-          bottom: 0,
-          px: '$8',
-          backgroundColor: 'white',
+          height: 107.5,
         }}
-      >
-        <SaveRow>
-          {loadingDelete ? (
-            <Button variant="ghost" color="orange" size="lg" disabled>
-              <TrashIcon />
-              <span>Deleting ...</span>
-            </Button>
-          ) : (
-            <Button
-              css={{ display: 'flex', gap: '$2' }}
-              size="lg"
-              onClick={handleDelete}
-              variant="ghost"
-              color="orange"
-            >
-              <span>Delete this story</span>
-              <TrashIcon />
-            </Button>
-          )}
-          <Button
-            size="lg"
-            color="orange"
-            disabled={formik.isSubmitting}
-            type="submit"
-          >
-            {formik.isSubmitting ? 'Saving...' : 'Save Settings'}
-          </Button>
-        </SaveRow>
-      </Box>
-    </Box>
+      />
+    </>
   );
 };
