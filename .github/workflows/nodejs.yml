@@ -36,10 +36,10 @@ jobs:
         run: pnpm install
 
       - name: Build sigle
-        run: pnpm run build --filter=sigle
+        run: pnpm run build --filter=@sigle/app
 
       - name: Run sigle tests
-        run: pnpm run test --filter=sigle
+        run: pnpm run test --filter=@sigle/app
 
   test-blog-viewer:
     runs-on: ubuntu-20.04
@@ -70,9 +70,9 @@ jobs:
         run: pnpm install
 
       - name: Build blog-viewer
-        run: pnpm run build --filter=blog-viewer
+        run: pnpm run build --filter=@sigle/blog-viewer
 
       - name: Run blog-viewer tests
-        run: pnpm run test --filter=blog-viewer
+        run: pnpm run test --filter=@sigle/blog-viewer
         env:
           CI: true

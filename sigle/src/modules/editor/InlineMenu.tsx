@@ -1,7 +1,8 @@
 import {
   BulletedListLight,
+  CodeLight,
+  DividerLight,
   NumberedListLight,
-  Heading1Light,
   Heading2Light,
   Heading3Light,
   ImageLight,
@@ -43,27 +44,9 @@ const resizeAndUploadImage = async (
 
 export const slashCommands: SlashCommandsCommand[] = [
   {
-    icon: Heading1Light,
-    title: 'Heading 1',
-    description: 'Large section Heading',
-    command: ({ editor, range }) => {
-      if (!range) {
-        editor.chain().focus().toggleHeading({ level: 1 }).run();
-        return;
-      }
-
-      editor
-        .chain()
-        .focus()
-        .deleteRange(range)
-        .setNode('heading', { level: 1 })
-        .run();
-    },
-  },
-  {
     icon: Heading2Light,
-    title: 'Heading 2',
-    description: 'Medium section Heading',
+    title: 'Big Heading',
+    description: 'Big section Heading',
     command: ({ editor, range }) => {
       if (!range) {
         editor.chain().focus().toggleHeading({ level: 2 }).run();
@@ -80,7 +63,7 @@ export const slashCommands: SlashCommandsCommand[] = [
   },
   {
     icon: Heading3Light,
-    title: 'Heading 3',
+    title: 'Small Heading',
     description: 'Small section Heading',
     command: ({ editor, range }) => {
       if (!range) {
@@ -153,6 +136,27 @@ export const slashCommands: SlashCommandsCommand[] = [
     },
   },
   {
+    icon: DividerLight,
+    title: 'Divider',
+    description: 'Create a divider',
+    command: ({ editor, range }) => {
+      let chainCommands = editor.chain().focus();
+      if (range) {
+        chainCommands = chainCommands.deleteRange(range);
+      }
+      chainCommands
+        .setHorizontalRule()
+        // Here we insert a paragraph after the divider that will be removed directly to fix
+        // an issue with TipTap where the isActive('paragraph') function is returning
+        // false. The "plus" menu on the left is not showing without this fix.
+        .insertContent({
+          type: 'paragraph',
+        })
+        .deleteNode('paragraph')
+        .run();
+    },
+  },
+  {
     icon: ImageLight,
     title: 'Image',
     description: 'Upload from your computer',
@@ -175,6 +179,7 @@ export const slashCommands: SlashCommandsCommand[] = [
             .focus()
             .deleteRange(range)
             .setImage({ src: preview })
+            .updateAttributes('image', { loading: true })
             .run();
         } else {
           editor.chain().focus().setImage({ src: preview }).run();
@@ -186,18 +191,37 @@ export const slashCommands: SlashCommandsCommand[] = [
         const name = `photos/${story.id}/${id}-${file.name}`;
         const imageUrl = await resizeAndUploadImage(file, name);
 
-        editor
-          .chain()
-          .focus()
-          .updateAttributes('image', {
-            src: imageUrl,
-          })
+        // Preload the new image so there is no flicker
+        const uploadedImage = new Image();
+        uploadedImage.src = imageUrl;
+        uploadedImage.onload = () => {
+          editor
+            .chain()
+            .focus()
+            .updateAttributes('image', {
+              src: imageUrl,
+              loading: false,
+            })
+            .run();
           // Create a new paragraph so user can continue writing
-          .createParagraphNear()
-          .run();
+          editor.commands.createParagraphNear();
+        };
       };
 
       input.click();
+    },
+  },
+  {
+    icon: CodeLight,
+    title: 'Code',
+    description: 'Create a code snippet',
+    command: ({ editor, range }) => {
+      if (!range) {
+        editor.chain().focus().setCodeBlock().run();
+        return;
+      }
+
+      editor.chain().focus().deleteRange(range).setCodeBlock().run();
     },
   },
 ];

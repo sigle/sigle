@@ -14,15 +14,18 @@ const globalStylesCustomEditor = globalCss({
   ".tippy-box[data-theme~='sigle-editor-floating-menu'] .tippy-content": {
     backgroundColor: 'transparent',
     padding: 0,
-    color: '$gray9',
   },
 });
 
 const PlusButton = styled('button', {
   display: 'flex',
-  transitionProperty: 'transform',
+  transitionProperty: 'color',
   transitionTimingFunction: 'cubic-bezier(0.4, 0, 0.2, 1)',
   transitionDuration: '150ms',
+  color: '$gray9',
+  '&:hover': {
+    color: '$gray11',
+  },
 
   variants: {
     open: {
@@ -67,6 +70,11 @@ export const FloatingMenu = ({ editor }: FloatingMenuProps) => {
         arrow: false,
       }}
       shouldShow={({ editor, state }) => {
+        // Should never show when read-only mode is enabled
+        if (!editor.isEditable) {
+          return false;
+        }
+
         // Show only on empty blocks
         const empty = state.selection.empty;
         const node = state.selection.$head.node();

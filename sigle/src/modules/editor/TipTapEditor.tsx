@@ -1,4 +1,11 @@
-import { useEditor, EditorContent } from '@tiptap/react';
+import 'highlight.js/styles/night-owl.css';
+import { forwardRef, useImperativeHandle } from 'react';
+import {
+  useEditor,
+  EditorContent,
+  ReactNodeViewRenderer,
+  Editor,
+} from '@tiptap/react';
 import TipTapBlockquote from '@tiptap/extension-blockquote';
 import TipTapBold from '@tiptap/extension-bold';
 import TipTapBulletList from '@tiptap/extension-bullet-list';
@@ -8,6 +15,7 @@ import TipTapDropcursor from '@tiptap/extension-dropcursor';
 import TipTapHardBreak from '@tiptap/extension-hard-break';
 import TipTapHeading from '@tiptap/extension-heading';
 import TipTapHistory from '@tiptap/extension-history';
+import TipTapHorizontalRule from '@tiptap/extension-horizontal-rule';
 import TipTapItalic from '@tiptap/extension-italic';
 import TipTapImage from '@tiptap/extension-image';
 import TipTapLink from '@tiptap/extension-link';
@@ -17,11 +25,16 @@ import TipTapParagraph from '@tiptap/extension-paragraph';
 import TipTapPlaceholder from '@tiptap/extension-placeholder';
 import TipTapStrike from '@tiptap/extension-strike';
 import TipTapText from '@tiptap/extension-text';
+import TipTapUnderline from '@tiptap/extension-underline';
+import TipTapCodeBlockLowlight from '@tiptap/extension-code-block-lowlight';
+import { lowlight } from 'lowlight/lib/common.js';
 import { SlashCommands } from './extensions/SlashCommands';
 import { BubbleMenu } from './BubbleMenu';
 import { slashCommands, SlashCommandsList } from './InlineMenu';
 import { FloatingMenu } from './FloatingMenu';
 import { styled, globalCss, keyframes } from '../../stitches.config';
+import { CodeBlockComponent } from './extensions/CodeBlock';
+import { Story } from '../../types';
 
 const fadeInAnimation = keyframes({
   '0%': { opacity: '0' },
@@ -49,6 +62,10 @@ const StyledEditorContent = styled(EditorContent, {
   '& img.ProseMirror-selectednode': {
     outline: '1px solid $orange11',
   },
+  // Image uploading style
+  '& img[data-loading="true"]': {
+    opacity: 0.25,
+  },
 });
 
 // Tippyjs theme used by the slash command menu
@@ -57,7 +74,7 @@ const globalStylesCustomEditor = globalCss({
     padding: 0,
     backgroundColor: '$gray1',
     boxShadow:
-      '0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1)',
+      '0px 10px 38px -10px rgba(26, 26, 26, 0.35), 0px 10px 20px -15px rgba(26, 26, 26, 0.2)',
     br: '$1',
     minWidth: '280px',
   },
@@ -73,13 +90,20 @@ const globalStylesCustomEditor = globalCss({
  */
 
 interface TipTapEditorProps {
-  // story: Story;
+  story: Story;
+  editable?: boolean;
 }
 
-export const TipTapEditor = ({}: TipTapEditorProps) => {
+export const TipTapEditor = forwardRef<
+  {
+    getEditor: () => Editor | null;
+  },
+  TipTapEditorProps
+>(({ story, editable = true }, ref) => {
   globalStylesCustomEditor();
 
   const editor = useEditor({
+    editable,
     extensions: [
       // Nodes
       TipTapDocument,
@@ -94,15 +118,40 @@ export const TipTapEditor = ({}: TipTapEditorProps) => {
       TipTapOrderedList,
       TipTapHardBreak,
       TipTapHeading.configure({
-        // Only allow h1, h2 and h3
-        levels: [1, 2, 3],
+        // Only allow h2 and h3
+        levels: [2, 3],
       }),
-      TipTapImage,
+      TipTapHorizontalRule,
+      TipTapCodeBlockLowlight.extend({
+        addNodeView() {
+          return ReactNodeViewRenderer(CodeBlockComponent);
+        },
+      }).configure({
+        lowlight,
+      }),
+      TipTapImage.extend({
+        addAttributes() {
+          return {
+            ...this.parent?.(),
+            loading: {
+              default: false,
+              renderHTML: (attributes) => {
+                if (attributes.loading) {
+                  return {
+                    'data-loading': attributes.loading,
+                  };
+                }
+              },
+            },
+          };
+        },
+      }),
       // Marks
       TipTapBold,
       TipTapCode,
       TipTapItalic,
       TipTapStrike,
+      TipTapUnderline,
       // Extensions
       TipTapDropcursor,
       TipTapHistory,
@@ -120,8 +169,18 @@ export const TipTapEditor = ({}: TipTapEditorProps) => {
         component: SlashCommandsList,
       }),
     ],
-    content: '<p>Hello World! 🌎️</p>',
+    content: story.contentVersion === '2' ? story.content : '',
   });
+
+  // Here we extend the received ref so the parent can get the editor content at any time
+  useImperativeHandle(
+    ref,
+    () => ({
+      // TODO cleanup empty <p>, <h1> etc tags, basically all empty tags
+      getEditor: () => editor,
+    }),
+    [editor]
+  );
 
   return (
     <>
@@ -131,4 +190,4 @@ export const TipTapEditor = ({}: TipTapEditorProps) => {
       <StyledEditorContent editor={editor} />
     </>
   );
-};
+});

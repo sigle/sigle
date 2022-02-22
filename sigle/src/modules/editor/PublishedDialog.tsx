@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { FaFacebookF, FaTwitter, FaLinkedin } from 'react-icons/fa';
-import { sigleConfig } from '../../../config';
-import { Story } from '../../../types';
+import { sigleConfig } from '../../config';
+import { Story } from '../../types';
 import {
   Button,
   Dialog,
@@ -11,10 +11,10 @@ import {
   Flex,
   Heading,
   Text,
-} from '../../../ui';
-import { useAuth } from '../../auth/AuthContext';
+} from '../../ui';
+import { useAuth } from '../auth/AuthContext';
 
-interface StoryPublishedDialogProps {
+interface PublishedDialogProps {
   open: boolean;
   story: Story;
   onOpenChange: () => void;
@@ -22,11 +22,11 @@ interface StoryPublishedDialogProps {
 
 const iconSize = 20;
 
-export const StoryPublishedDialog = ({
+export const PublishedDialog = ({
   open,
   onOpenChange,
   story,
-}: StoryPublishedDialogProps) => {
+}: PublishedDialogProps) => {
   const { user } = useAuth();
 
   const [isCopied, setIsCopied] = useState(false);

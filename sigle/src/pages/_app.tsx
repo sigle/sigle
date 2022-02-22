@@ -16,7 +16,7 @@ import 'tippy.js/themes/light-border.css';
 import 'react-toastify/dist/ReactToastify.css';
 // reach-ui styles
 import '../styles/fonts.scss';
-import '../styles/index.css';
+import '@sigle/tailwind-style/dist/tailwind.css';
 import { sigleConfig } from '../config';
 import { colors } from '../utils/colors';
 import { AuthProvider } from '../modules/auth/AuthContext';
@@ -66,6 +66,7 @@ const GlobalStyle = globalCss({
 
   body: {
     fontFamily: '$openSans',
+    backgroundColor: '$gray1',
   },
 
   ':root': {
