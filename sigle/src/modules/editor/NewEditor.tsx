@@ -188,7 +188,7 @@ export const NewEditor = ({ story }: NewEditorProps) => {
         ⚠️ You are using the experimental editor, expect things to break
       </Text>
 
-      <EditorContainer className="prose lg:prose">
+      <EditorContainer className="prose lg:prose-lg">
         <TitleInput
           value={newStory.title}
           onChange={(e) => {

@@ -249,7 +249,7 @@ export const PublicStory = ({ story, settings }: PublicStoryProps) => {
           </Cover>
         )}
         {story.contentVersion === '2' ? (
-          <div className="prose lg:prose sigle-content">
+          <div className="prose lg:prose-lg sigle-content">
             <DynamicTipTapEditor story={story} editable={false} />
           </div>
         ) : (

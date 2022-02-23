@@ -728,14 +728,13 @@ Ensure the default browser behavior of the `hidden` attribute.
   --tw-prose-invert-pre-bg: rgb(0 0 0 / 50%);
   --tw-prose-invert-th-borders: #4b5563;
   --tw-prose-invert-td-borders: #374151;
-  font-size: 1rem;
+  font-size: 16px;
   line-height: 1.75;
 }
 
 .prose :where(p):not(:where([class~='not-prose'] *)) {
   margin-top: 1.25em;
   margin-bottom: 1.25em;
-  font-size: 16px;
   line-height: 26px;
   letter-spacing: 0.2px;
 }

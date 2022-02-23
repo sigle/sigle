@@ -54,6 +54,7 @@ module.exports = {
         DEFAULT: {
           css: {
             maxWidth: '760px',
+            fontSize: '16px',
             blockquote: {
               quotes: false,
               borderLeftWidth: '2px',
@@ -70,7 +71,6 @@ module.exports = {
               borderRadius: '4px',
             },
             p: {
-              fontSize: '16px',
               lineHeight: '26px',
               letterSpacing: '0.2px',
             },
