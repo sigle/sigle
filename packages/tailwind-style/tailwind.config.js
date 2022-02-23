@@ -103,6 +103,9 @@ module.exports = {
             a: {
               textDecoration: 'none',
             },
+            'a strong': {
+              color: 'var(--tw-prose-links)',
+            },
             img: {
               marginTop: false,
               marginBottom: false,
