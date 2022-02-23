@@ -56,14 +56,12 @@ const rules = [
       if (obj.object === 'inline') {
         switch (obj.type) {
           case 'link':
-            const href: string = obj.data.get('href');
-            const safeHref = sanitizeLink(href);
-
-            if (!safeHref) {
-              return <a href="/">🤯</a>;
-            }
             return (
-              <a href={safeHref} target="_blank" rel="noopener noreferrer">
+              <a
+                href={obj.data.get('href')}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
                 {children}
               </a>
             );
