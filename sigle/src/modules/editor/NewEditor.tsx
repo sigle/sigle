@@ -24,7 +24,7 @@ const TitleInput = styled('input', {
   // Replicate style of packages/tailwind-style/tailwind.config.js for h1
   fontWeight: '700',
   fontSize: '36px',
-  lineHeight: '42px',
+  lineHeight: '46px',
   letterSpacing: '-0.3px',
 });
 
