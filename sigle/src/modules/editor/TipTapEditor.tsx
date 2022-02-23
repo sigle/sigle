@@ -109,7 +109,7 @@ export const TipTapEditor = forwardRef<
       TipTapDocument,
       TipTapParagraph,
       TipTapText,
-      TipTapBlockquote,
+      TipTapBlockquote.extend({ content: 'paragraph+' }),
       TipTapLink.configure({
         openOnClick: false,
       }),
