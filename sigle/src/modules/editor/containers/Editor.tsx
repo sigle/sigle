@@ -6,6 +6,7 @@ import * as Sentry from '@sentry/nextjs';
 import { Editor as Component } from '../components/Editor';
 import { Story } from '../../../types';
 import { getStoryFile } from '../../../utils';
+import { migrationStory } from '../../../utils/migrations/story';
 
 export const Editor = () => {
   const router = useRouter();
@@ -15,6 +16,9 @@ export const Editor = () => {
   const { data, isLoading } = useQuery(
     ['story', storyId],
     () => getStoryFile(storyId),
+    // getStoryFile(storyId).then((data) =>
+    //   data ? migrationStory(data) : null
+    // ),
     {
       enabled: Boolean(storyId),
       cacheTime: 0,

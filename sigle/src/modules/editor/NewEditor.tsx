@@ -15,6 +15,7 @@ import { publishStory, unPublishStory } from '../../utils';
 import { Goals } from '../../utils/fathom';
 import { UnpublishDialog } from './UnpublishDialog';
 import { PublishedDialog } from './PublishedDialog';
+import { migrationStory } from '../../utils/migrations/story';
 
 const TitleInput = styled('input', {
   outline: 'transparent',
@@ -42,7 +43,7 @@ interface NewEditorProps {
 export const NewEditor = ({ story }: NewEditorProps) => {
   const editorRef = useRef<{ getEditor: () => Editor | null }>(null);
   const [loadingSave, setLoadingSave] = useState(false);
-  const [newStory, setNewStory] = useState(story);
+  const [newStory, setNewStory] = useState(migrationStory(story));
   const [publishDialogState, setPublishDialogState] = useState({
     open: false,
     loading: false,
