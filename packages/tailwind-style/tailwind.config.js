@@ -70,19 +70,20 @@ module.exports = {
               borderRadius: '4px',
             },
             p: {
+              fontSize: '16px',
+              lineHeight: '26px',
               letterSpacing: '0.2px',
-              lineHeight: '28.8px',
             },
             h1: {
               fontWeight: '700',
-              fontSize: '36px',
-              lineHeight: '42px',
+              fontSize: '32px',
+              lineHeight: '40px',
               letterSpacing: '-0.3px',
             },
             h2: {
               fontWeight: '600',
-              fontSize: '30px',
-              lineHeight: '40px',
+              fontSize: '24px',
+              lineHeight: '28px',
               letterSpacing: '-0.3px',
             },
             'h2 strong': {
@@ -91,8 +92,8 @@ module.exports = {
             },
             h3: {
               fontWeight: '600',
-              fontSize: '22px',
-              lineHeight: '28px',
+              fontSize: '20px',
+              lineHeight: '24px',
             },
             'h3 strong': {
               color: 'var(--tw-prose-headings)',
@@ -112,6 +113,23 @@ module.exports = {
               margin: '2em auto',
             },
             '[class~="lead"]': false,
+          },
+        },
+        lg: {
+          css: {
+            fontSize: '18px',
+            h1: {
+              fontSize: '36px',
+              lineHeight: '42px',
+            },
+            h2: {
+              fontSize: '30px',
+              lineHeight: '40px',
+            },
+            h3: {
+              fontSize: '22px',
+              lineHeight: '28px',
+            },
           },
         },
       },
