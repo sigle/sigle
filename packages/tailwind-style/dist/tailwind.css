@@ -578,10 +578,10 @@ Ensure the default browser behavior of the `hidden` attribute.
 .prose :where(h3):not(:where([class~='not-prose'] *)) {
   color: var(--tw-prose-headings);
   font-weight: 600;
-  font-size: 20px;
+  font-size: 22px;
   margin-top: 1.6em;
   margin-bottom: 0.6em;
-  line-height: 32px;
+  line-height: 28px;
 }
 
 .prose :where(h3 strong):not(:where([class~='not-prose'] *)) {
