@@ -853,6 +853,7 @@ Ensure the default browser behavior of the `hidden` attribute.
   .lg\:prose-lg :where(p):not(:where([class~='not-prose'] *)) {
     margin-top: 1.3333333em;
     margin-bottom: 1.3333333em;
+    line-height: 28.8px;
   }
 
   .lg\:prose-lg :where([class~='lead']):not(:where([class~='not-prose'] *)) {

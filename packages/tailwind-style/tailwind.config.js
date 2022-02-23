@@ -118,6 +118,9 @@ module.exports = {
         lg: {
           css: {
             fontSize: '18px',
+            p: {
+              lineHeight: '28.8px',
+            },
             h1: {
               fontSize: '36px',
               lineHeight: '42px',
