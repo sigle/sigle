@@ -79,7 +79,6 @@ export const FormInput = styled('input', {
 
 const FormInputCheckbox = styled('input', {
   '&[type="checkbox"]': {
-    all: 'unset',
     display: 'block',
     backgroundColor: '$gray3',
     boxShadow: '0 0 0 1px $colors$gray7',
