@@ -56,7 +56,13 @@ export const FormInput = styled('input', {
     fontSize: '$1',
     color: '$gray11',
 
+    '&:hover': {
+      backgroundColor: '$gray4',
+      boxShadow: '0 0 0 1px $colors$gray8',
+    },
+
     '&:focus': {
+      backgroundColor: '$gray5',
       boxShadow: '0 0 0 2px $colors$gray8',
     },
 
@@ -88,7 +94,7 @@ const FormInputCheckbox = styled('input', {
 });
 
 const FormTextarea = styled('textarea', {
-  all: 'unset',
+  outline: 'none',
   width: '100%',
   backgroundColor: '$gray3',
   boxShadow: '0 0 0 1px $colors$gray7',
