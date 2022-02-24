@@ -6,16 +6,8 @@ export const IconButton = styled('button', {
   alignItems: 'center',
   fontSize: '$2',
 
-  '& svg': {
-    color: '$gray11',
-  },
-
   variants: {
     size: {
-      sm: {
-        p: '$2',
-        br: '$1',
-      },
       md: {
         p: '$2',
         br: '$1',
