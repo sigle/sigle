@@ -163,8 +163,7 @@ const ImageCheckboxContainer = styled('div', {
 });
 
 const SaveRow = styled('div', {
-  pt: '$5',
-  pb: '$10',
+  py: '$5',
   display: 'flex',
   justifyContent: 'end',
   gap: '$6',
@@ -175,7 +174,6 @@ const PreviewCard = styled('div', {
   boxShadow: '0 0 0 1px $colors$gray6',
   borderRadius: '$4',
   overflow: 'hidden',
-  //position: 'relative',
 
   '& img': {
     maxHeight: 186,
