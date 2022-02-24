@@ -103,8 +103,18 @@ const FormTextarea = styled('textarea', {
   px: '$2',
   fontSize: '$1',
 
+  '&:hover': {
+    backgroundColor: '$gray4',
+    boxShadow: '0 0 0 1px $colors$gray8',
+  },
+
   '&:focus': {
+    backgroundColor: '$gray5',
     boxShadow: '0 0 0 2px $colors$gray8',
+  },
+
+  '&::placeholder': {
+    color: '$gray9',
   },
 });
 
