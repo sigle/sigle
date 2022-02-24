@@ -118,7 +118,7 @@ importers:
       '@radix-ui/react-icons': 1.0.3
       '@radix-ui/react-tooltip': 0.1.0
       '@sentry/nextjs': 6.17.9
-      '@sigle/tailwind-style': workspace:^0.1.0
+      '@sigle/tailwind-style': workspace:^0.2.0
       '@stacks/auth': 2.0.0-beta.1
       '@stacks/connect': 4.3.18
       '@stacks/connect-react': 2.17.18
