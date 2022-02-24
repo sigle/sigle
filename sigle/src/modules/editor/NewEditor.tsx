@@ -24,7 +24,7 @@ const TitleInput = styled('input', {
   // Replicate style of packages/tailwind-style/tailwind.config.js for h1
   fontWeight: '700',
   fontSize: '36px',
-  lineHeight: '42px',
+  lineHeight: '46px',
   letterSpacing: '-0.3px',
 });
 
@@ -188,7 +188,7 @@ export const NewEditor = ({ story }: NewEditorProps) => {
         ⚠️ You are using the experimental editor, expect things to break
       </Text>
 
-      <EditorContainer className="prose lg:prose">
+      <EditorContainer className="prose lg:prose-lg">
         <TitleInput
           value={newStory.title}
           onChange={(e) => {

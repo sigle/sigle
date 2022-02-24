@@ -549,10 +549,10 @@ Ensure the default browser behavior of the `hidden` attribute.
 .prose :where(h1):not(:where([class~='not-prose'] *)) {
   color: var(--tw-prose-headings);
   font-weight: 700;
-  font-size: 36px;
+  font-size: 32px;
   margin-top: 0;
   margin-bottom: 0.8888889em;
-  line-height: 42px;
+  line-height: 40px;
   letter-spacing: -0.3px;
 }
 
@@ -563,10 +563,10 @@ Ensure the default browser behavior of the `hidden` attribute.
 .prose :where(h2):not(:where([class~='not-prose'] *)) {
   color: var(--tw-prose-headings);
   font-weight: 600;
-  font-size: 30px;
+  font-size: 24px;
   margin-top: 2em;
   margin-bottom: 1em;
-  line-height: 40px;
+  line-height: 28px;
   letter-spacing: -0.3px;
 }
 
@@ -578,10 +578,10 @@ Ensure the default browser behavior of the `hidden` attribute.
 .prose :where(h3):not(:where([class~='not-prose'] *)) {
   color: var(--tw-prose-headings);
   font-weight: 600;
-  font-size: 22px;
+  font-size: 20px;
   margin-top: 1.6em;
   margin-bottom: 0.6em;
-  line-height: 28px;
+  line-height: 24px;
 }
 
 .prose :where(h3 strong):not(:where([class~='not-prose'] *)) {
@@ -728,15 +728,15 @@ Ensure the default browser behavior of the `hidden` attribute.
   --tw-prose-invert-pre-bg: rgb(0 0 0 / 50%);
   --tw-prose-invert-th-borders: #4b5563;
   --tw-prose-invert-td-borders: #374151;
-  font-size: 1rem;
+  font-size: 16px;
   line-height: 1.75;
 }
 
 .prose :where(p):not(:where([class~='not-prose'] *)) {
   margin-top: 1.25em;
   margin-bottom: 1.25em;
+  line-height: 26px;
   letter-spacing: 0.2px;
-  line-height: 28.8px;
 }
 
 .prose :where(img):not(:where([class~='not-prose'] *)) {
@@ -846,13 +846,14 @@ Ensure the default browser behavior of the `hidden` attribute.
 
 @media (min-width: 1024px) {
   .lg\:prose-lg {
-    font-size: 1.125rem;
+    font-size: 18px;
     line-height: 1.7777778;
   }
 
   .lg\:prose-lg :where(p):not(:where([class~='not-prose'] *)) {
     margin-top: 1.3333333em;
     margin-bottom: 1.3333333em;
+    line-height: 28.8px;
   }
 
   .lg\:prose-lg :where([class~='lead']):not(:where([class~='not-prose'] *)) {
@@ -869,24 +870,24 @@ Ensure the default browser behavior of the `hidden` attribute.
   }
 
   .lg\:prose-lg :where(h1):not(:where([class~='not-prose'] *)) {
-    font-size: 2.6666667em;
+    font-size: 36px;
     margin-top: 0;
     margin-bottom: 0.8333333em;
-    line-height: 1;
+    line-height: 42px;
   }
 
   .lg\:prose-lg :where(h2):not(:where([class~='not-prose'] *)) {
-    font-size: 1.6666667em;
+    font-size: 30px;
     margin-top: 1.8666667em;
     margin-bottom: 1.0666667em;
-    line-height: 1.3333333;
+    line-height: 40px;
   }
 
   .lg\:prose-lg :where(h3):not(:where([class~='not-prose'] *)) {
-    font-size: 1.3333333em;
+    font-size: 22px;
     margin-top: 1.6666667em;
     margin-bottom: 0.6666667em;
-    line-height: 1.5;
+    line-height: 28px;
   }
 
   .lg\:prose-lg :where(h4):not(:where([class~='not-prose'] *)) {
