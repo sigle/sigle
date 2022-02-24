@@ -16,12 +16,15 @@ const contentShow = keyframes({
 });
 
 const StyledDialogContent = styled(DialogPrimitive.Content, {
+  display: 'flex',
+  flexDirection: 'column',
   transform: 'translateX(0)',
   maxWidth: '28rem',
   maxHeight: 'initial',
   overflow: 'hidden',
   width: '100%',
   backgroundColor: '$gray1',
+  boxShadow: 'inset 1px 0 0 0 $colors$gray7',
   margin: 0,
   borderRadius: 0,
   position: 'fixed',
@@ -50,14 +53,7 @@ interface Props {
 export const StorySettings = ({ open, onClose, story, onSave }: Props) => {
   return (
     <Dialog open={open} onOpenChange={onClose}>
-      <StyledDialogContent
-        aria-label="Story settings"
-        css={{
-          display: 'flex',
-          flexDirection: 'column',
-          boxShadow: 'inset 1px 0 0 0 $colors$gray7',
-        }}
-      >
+      <StyledDialogContent aria-label="Story settings">
         <DialogTitle asChild>
           <Heading
             as="h2"
