@@ -9,7 +9,7 @@ const overlayShow = keyframes({
 });
 
 const StyledOverlay = styled(DialogPrimitive.Overlay, {
-  backgroundColor: 'rgba(26, 26, 26, 0.2)',
+  backgroundColor: 'rgba(23, 23, 23, 0.3)',
   position: 'fixed',
   inset: 0,
   '@media (prefers-reduced-motion: no-preference)': {

@@ -98,8 +98,8 @@ export const { styled, css, globalCss, keyframes, getCssText, createTheme } =
         10: '40px',
       },
       fontSizes: {
-        1: '12px',
-        2: '14px',
+        1: '13px',
+        2: '15px',
         3: '16px',
         4: '21px',
         5: '24px',
