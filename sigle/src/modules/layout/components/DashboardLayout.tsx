@@ -188,9 +188,13 @@ export const DashboardSidebar = () => {
             </a>
           </MenuBottomItem>
           <MenuBottomItem>
-            <Link href="/help" passHref>
-              <a>Help</a>
-            </Link>
+            <a
+              href={sigleConfig.feedbackUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Feedback
+            </a>
           </MenuBottomItem>
           <MenuBottomItem>
             <a

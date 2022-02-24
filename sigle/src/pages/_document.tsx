@@ -29,6 +29,10 @@ export default class MyDocument extends Document {
           <>
             {initialProps.styles}
             {sheet.getStyleElement()}
+            <style
+              id="stitches"
+              dangerouslySetInnerHTML={{ __html: getCssText() }}
+            />
           </>
         ),
       };
@@ -61,10 +65,6 @@ export default class MyDocument extends Document {
           <meta name="msapplication-TileColor" content="#da532c" />
           <meta name="theme-color" content="#ffffff" />
           <link rel="manifest" href={`${sigleConfig.appUrl}/manifest.json`} />
-          <style
-            id="stitches"
-            dangerouslySetInnerHTML={{ __html: getCssText() }}
-          />
         </Head>
         <body>
           <Main />

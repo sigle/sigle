@@ -91,8 +91,8 @@ module.exports = {
             },
             h3: {
               fontWeight: '600',
-              fontSize: '20px',
-              lineHeight: '32px',
+              fontSize: '22px',
+              lineHeight: '28px',
             },
             'h3 strong': {
               color: 'var(--tw-prose-headings)',
@@ -102,6 +102,9 @@ module.exports = {
             h4: false,
             a: {
               textDecoration: 'none',
+            },
+            'a strong': {
+              color: 'var(--tw-prose-links)',
             },
             img: {
               marginTop: false,

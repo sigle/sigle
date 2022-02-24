@@ -1,5 +1,5 @@
 import { Editor } from '@tiptap/react';
-import { useRef, useState } from 'react';
+import { useMemo, useRef, useState } from 'react';
 import { toast } from 'react-toastify';
 import NProgress from 'nprogress';
 import * as Fathom from 'fathom-client';
@@ -15,6 +15,7 @@ import { publishStory, unPublishStory } from '../../utils';
 import { Goals } from '../../utils/fathom';
 import { UnpublishDialog } from './UnpublishDialog';
 import { PublishedDialog } from './PublishedDialog';
+import { migrationStory } from '../../utils/migrations/story';
 
 const TitleInput = styled('input', {
   outline: 'transparent',
@@ -42,7 +43,8 @@ interface NewEditorProps {
 export const NewEditor = ({ story }: NewEditorProps) => {
   const editorRef = useRef<{ getEditor: () => Editor | null }>(null);
   const [loadingSave, setLoadingSave] = useState(false);
-  const [newStory, setNewStory] = useState(story);
+  const migratedStory = useMemo(() => migrationStory(story), [story]);
+  const [newStory, setNewStory] = useState(migratedStory);
   const [publishDialogState, setPublishDialogState] = useState({
     open: false,
     loading: false,
@@ -164,11 +166,6 @@ export const NewEditor = ({ story }: NewEditorProps) => {
     setLoadingSave(false);
   };
 
-  // Editing an old story with the new editor is not allowed for now
-  // We allow empty stories to pass the check and use the new editor
-  const isOldStory =
-    !story.contentVersion && story.content?.document.nodes.length > 1;
-
   return (
     <Container
       css={{
@@ -192,22 +189,14 @@ export const NewEditor = ({ story }: NewEditorProps) => {
       </Text>
 
       <EditorContainer className="prose lg:prose">
-        {isOldStory ? (
-          <Text size="sm" color="orange">
-            ⚠️ The experimental editor can't be used on old stories for now
-          </Text>
-        ) : (
-          <>
-            <TitleInput
-              value={newStory.title}
-              onChange={(e) => {
-                setNewStory({ ...newStory, title: e.target.value });
-              }}
-              placeholder="Title"
-            />
-            <TipTapEditor ref={editorRef} story={story} />
-          </>
-        )}
+        <TitleInput
+          value={newStory.title}
+          onChange={(e) => {
+            setNewStory({ ...newStory, title: e.target.value });
+          }}
+          placeholder="Title"
+        />
+        <TipTapEditor ref={editorRef} story={story} />
       </EditorContainer>
 
       <PublishDialog
