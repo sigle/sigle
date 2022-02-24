@@ -14,15 +14,6 @@ import {
 } from '../../../utils';
 import { Button } from '../../../ui/Button';
 import { storage } from '../../../utils/blockstack';
-import {
-  FormHelper,
-  FormHelperError,
-  FormInput,
-  FormInputCheckbox,
-  FormLabel,
-  FormRow,
-  FormTextarea,
-} from '../../../ui/Form';
 import { styled } from '../../../stitches.config';
 import { CameraIcon, FileTextIcon, TrashIcon } from '@radix-ui/react-icons';
 import { Box, Flex, IconButton, Text } from '../../../ui';
@@ -33,6 +24,94 @@ import {
   ScrollAreaThumb,
   ScrollAreaViewport,
 } from '../../../ui/ScrollArea';
+
+export const FormRow = styled('div', {
+  mb: '$5',
+});
+
+export const FormLabel = styled('label', {
+  width: '100%',
+  display: 'block',
+  fontSize: '$2',
+  color: '$gray11',
+  mb: '$3',
+});
+
+export const FormInput = styled('input', {
+  '&[type]': {
+    appearance: 'none',
+    borderWidth: '0',
+    boxSizing: 'border-box',
+    fontFamily: 'inherit',
+    margin: '0',
+    outline: 'none',
+    padding: '0',
+    width: '100%',
+    WebkitTapHighlightColor: 'rgba(0,0,0,0)',
+    backgroundColor: '$gray3',
+    boxShadow: '0 0 0 1px $colors$gray7',
+    borderRadius: '$1',
+    px: '$2',
+    py: '$1',
+    fontSize: '$1',
+    color: '$gray11',
+
+    '&:focus': {
+      boxShadow: '0 0 0 2px $colors$gray8',
+    },
+
+    '&::placeholder': {
+      color: '$gray9',
+    },
+  },
+
+  '&[type="date"]::-webkit-calendar-picker-indicator': {
+    background: 'url(/static/img/Calendar.svg) no-repeat',
+    mt: '$1',
+  },
+});
+
+const FormInputCheckbox = styled('input', {
+  '&[type="checkbox"]': {
+    all: 'unset',
+    display: 'block',
+    backgroundColor: '$gray3',
+    boxShadow: '0 0 0 1px $colors$gray7',
+    p: '$2',
+    mt: '$2',
+    borderRadius: '$1',
+
+    '&:focus': {
+      boxShadow: '0 0 0 2px $colors$gray8',
+    },
+  },
+});
+
+const FormTextarea = styled('textarea', {
+  all: 'unset',
+  width: '100%',
+  backgroundColor: '$gray3',
+  boxShadow: '0 0 0 1px $colors$gray7',
+  borderRadius: '$1',
+  py: '$2',
+  px: '$2',
+  fontSize: '$1',
+
+  '&:focus': {
+    boxShadow: '0 0 0 2px $colors$gray8',
+  },
+});
+
+const FormHelper = styled('p', {
+  mt: '$2',
+  color: '$gray9',
+  fontSize: '$1',
+});
+
+const FormHelperError = styled('p', {
+  mt: '$1',
+  color: '$orange11',
+});
 
 const ImageEmpty = styled('div', {
   display: 'flex',
@@ -297,7 +376,6 @@ export const StorySettingsForm = ({
                       <IconButton
                         css={{ backgroundColor: '$gray3', opacity: '70%' }}
                         title="Remove cover image"
-                        size="sm"
                         onClick={handleRemoveCover}
                       >
                         <TrashIcon />
