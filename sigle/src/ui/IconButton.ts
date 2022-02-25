@@ -16,6 +16,7 @@ export const IconButton = styled('button', {
     color: {
       gray: {
         color: '$gray11',
+        backgroundColor: '$gray3',
         '&:hover': {
           backgroundColor: '$gray4',
         },
@@ -24,9 +25,25 @@ export const IconButton = styled('button', {
         },
       },
     },
+    variant: {
+      solid: {},
+      ghost: {
+        backgroundColor: 'transparent',
+      },
+    },
   },
+  compoundVariants: [
+    {
+      color: 'gray',
+      variant: 'ghost',
+      css: {
+        backgroundColor: 'transparent',
+      },
+    },
+  ],
   defaultVariants: {
     size: 'md',
     color: 'gray',
+    variant: 'ghost',
   },
 });

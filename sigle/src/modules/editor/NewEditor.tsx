@@ -16,6 +16,7 @@ import { Goals } from '../../utils/fathom';
 import { UnpublishDialog } from './UnpublishDialog';
 import { PublishedDialog } from './PublishedDialog';
 import { migrationStory } from '../../utils/migrations/story';
+import { CoverImage } from './CoverImage';
 
 const TitleInput = styled('input', {
   outline: 'transparent',
@@ -30,7 +31,8 @@ const TitleInput = styled('input', {
 
 const EditorContainer = styled('div', {
   margin: '0 auto',
-  paddingTop: 60,
+  paddingTop: '$15',
+  paddingBottom: '$15',
 });
 
 interface NewEditorProps {
@@ -196,6 +198,8 @@ export const NewEditor = ({ story }: NewEditorProps) => {
           }}
           placeholder="Title"
         />
+        <CoverImage story={newStory} setStoryFile={setNewStory} />
+
         <TipTapEditor ref={editorRef} story={story} />
       </EditorContainer>
 
