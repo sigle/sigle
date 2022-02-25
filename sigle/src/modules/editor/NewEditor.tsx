@@ -31,7 +31,8 @@ const TitleInput = styled('input', {
 
 const EditorContainer = styled('div', {
   margin: '0 auto',
-  paddingTop: 60,
+  paddingTop: '$15',
+  paddingBottom: '$15',
 });
 
 interface NewEditorProps {

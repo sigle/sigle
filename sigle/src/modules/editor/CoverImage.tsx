@@ -7,8 +7,6 @@ import { resizeImage } from '../../utils/image';
 import { Story } from '../../types';
 import { storage } from '../../utils/blockstack';
 
-// TODO heading cover: HX should not have padding top
-
 const StyledImage = styled('img', {
   variants: {
     loading: {
