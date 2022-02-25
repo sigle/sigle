@@ -134,6 +134,7 @@ importers:
       '@tiptap/extension-blockquote': 2.0.0-beta.26
       '@tiptap/extension-bold': 2.0.0-beta.26
       '@tiptap/extension-bullet-list': 2.0.0-beta.26
+      '@tiptap/extension-character-count': 2.0.0-beta.25
       '@tiptap/extension-code': 2.0.0-beta.26
       '@tiptap/extension-code-block-lowlight': 2.0.0-beta.68
       '@tiptap/extension-document': 2.0.0-beta.15
@@ -228,6 +229,7 @@ importers:
       '@tiptap/extension-blockquote': 2.0.0-beta.26_@tiptap+core@2.0.0-beta.174
       '@tiptap/extension-bold': 2.0.0-beta.26_@tiptap+core@2.0.0-beta.174
       '@tiptap/extension-bullet-list': 2.0.0-beta.26_@tiptap+core@2.0.0-beta.174
+      '@tiptap/extension-character-count': 2.0.0-beta.25_@tiptap+core@2.0.0-beta.174
       '@tiptap/extension-code': 2.0.0-beta.26_@tiptap+core@2.0.0-beta.174
       '@tiptap/extension-code-block-lowlight': 2.0.0-beta.68_@tiptap+core@2.0.0-beta.174
       '@tiptap/extension-document': 2.0.0-beta.15_@tiptap+core@2.0.0-beta.174
@@ -2319,6 +2321,17 @@ packages:
       '@tiptap/core': ^2.0.0-beta.1
     dependencies:
       '@tiptap/core': 2.0.0-beta.174
+    dev: false
+
+  /@tiptap/extension-character-count/2.0.0-beta.25_@tiptap+core@2.0.0-beta.174:
+    resolution: {integrity: sha512-TvTC5Mqq0HK5wts49Eb0YXN+1Q49Vyv9Awr3b63GP/6r4VKd8+wC96xGOnWtjzDclSiYKQz1Gsv8yeOWhMRqpA==}
+    peerDependencies:
+      '@tiptap/core': ^2.0.0-beta.1
+      '@tiptap/extension-text-style': ^2.0.0-beta.1
+    dependencies:
+      '@tiptap/core': 2.0.0-beta.174
+      prosemirror-model: 1.16.1
+      prosemirror-state: 1.3.4
     dev: false
 
   /@tiptap/extension-code-block-lowlight/2.0.0-beta.68_@tiptap+core@2.0.0-beta.174:

@@ -35,6 +35,8 @@ import { FloatingMenu } from './FloatingMenu';
 import { styled, globalCss, keyframes } from '../../stitches.config';
 import { CodeBlockComponent } from './extensions/CodeBlock';
 import { Story } from '../../types';
+import CharacterCount from '@tiptap/extension-character-count';
+import { Container, Text } from '../../ui';
 
 const fadeInAnimation = keyframes({
   '0%': { opacity: '0' },
@@ -105,6 +107,7 @@ export const TipTapEditor = forwardRef<
   const editor = useEditor({
     editable,
     extensions: [
+      CharacterCount,
       // Nodes
       TipTapDocument,
       TipTapParagraph,
@@ -188,6 +191,18 @@ export const TipTapEditor = forwardRef<
       {editor && <FloatingMenu editor={editor} />}
 
       <StyledEditorContent editor={editor} />
+      <Container
+        css={{
+          position: 'fixed',
+          bottom: 0,
+          right: 0,
+          left: 0,
+          zIndex: -1,
+          textAlign: 'right',
+        }}
+      >
+        <Text size="sm">{editor?.storage.characterCount.words()} words</Text>
+      </Container>
     </>
   );
 });
