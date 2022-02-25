@@ -96,7 +96,6 @@ interface TipTapEditorProps {
   editable?: boolean;
 }
 
-//eslint-disable-next-line
 export const TipTapEditor = forwardRef<
   {
     getEditor: () => Editor | null;
@@ -202,7 +201,7 @@ export const TipTapEditor = forwardRef<
           textAlign: 'right',
         }}
       >
-        <Text size="sm"> {editor?.storage.characterCount.words()} words</Text>
+        <Text size="sm">{editor?.storage.characterCount.words()} words</Text>
       </Container>
     </>
   );
