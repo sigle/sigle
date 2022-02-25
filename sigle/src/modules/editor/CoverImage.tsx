@@ -7,6 +7,8 @@ import { resizeImage } from '../../utils/image';
 import { Story } from '../../types';
 import { storage } from '../../utils/blockstack';
 
+// TODO heading cover: HX should not have padding top
+
 const StyledImage = styled('img', {
   variants: {
     loading: {
@@ -56,11 +58,9 @@ export const CoverImage = ({ story, setStoryFile }: CoverImageProps) => {
     accept: 'image/jpeg,image/png',
   });
 
-  const coverImage = story.coverImage;
-
   return (
     <>
-      {!coverImage ? (
+      {!story.coverImage ? (
         <Box css={{ mt: '$5' }} {...getRootProps()}>
           <input {...getInputProps()} />
           <Button
@@ -75,16 +75,27 @@ export const CoverImage = ({ story, setStoryFile }: CoverImageProps) => {
       ) : (
         <Box
           css={{
-            margin: '2em auto',
+            margin: '$8 auto',
             display: 'flex',
             justifyContent: 'center',
           }}
           className="not-prose"
         >
-          <Box css={{ position: 'relative' }}>
-            <StyledImage src={coverImage} loading={loadingSave} />
+          <Box
+            css={{
+              position: 'relative',
+              marginLeft: '-$20',
+              marginRight: '-$20',
+            }}
+          >
+            <StyledImage src={story.coverImage} loading={loadingSave} />
             <IconButton
-              css={{ position: 'absolute', top: '$2', right: '$2' }}
+              css={{
+                position: 'absolute',
+                top: '$2',
+                right: '$2',
+                opacity: 0.7,
+              }}
               variant="solid"
               title="Remove cover image"
               onClick={handleRemoveCoverImage}

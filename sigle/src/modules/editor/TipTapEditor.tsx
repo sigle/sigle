@@ -43,7 +43,6 @@ const fadeInAnimation = keyframes({
 
 const StyledEditorContent = styled(EditorContent, {
   '& .ProseMirror': {
-    py: '$4',
     minHeight: 150,
   },
   '& .ProseMirror-focused': {
