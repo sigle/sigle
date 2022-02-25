@@ -4,10 +4,9 @@ import { toast } from 'react-toastify';
 import NProgress from 'nprogress';
 import * as Fathom from 'fathom-client';
 import posthog from 'posthog-js';
-import { CameraIcon } from '@radix-ui/react-icons';
 import { styled } from '../../stitches.config';
 import { Story } from '../../types';
-import { Box, Button, Container, Flex, Text } from '../../ui';
+import { Container, Text } from '../../ui';
 import { EditorHeader } from './EditorHeader';
 import { PublishDialog } from './PublishDialog';
 import { TipTapEditor } from './TipTapEditor';
@@ -17,6 +16,7 @@ import { Goals } from '../../utils/fathom';
 import { UnpublishDialog } from './UnpublishDialog';
 import { PublishedDialog } from './PublishedDialog';
 import { migrationStory } from '../../utils/migrations/story';
+import { CoverImage } from './CoverImage';
 
 const TitleInput = styled('input', {
   outline: 'transparent',
@@ -197,12 +197,8 @@ export const NewEditor = ({ story }: NewEditorProps) => {
           }}
           placeholder="Title"
         />
-        <Box css={{ mt: '$5' }}>
-          <Button variant="ghost" css={{ color: '$gray9', gap: '$1' }}>
-            <CameraIcon />
-            Add cover image
-          </Button>
-        </Box>
+        <CoverImage story={newStory} setStoryFile={setNewStory} />
+
         <TipTapEditor ref={editorRef} story={story} />
       </EditorContainer>
 
