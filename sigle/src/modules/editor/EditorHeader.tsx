@@ -32,9 +32,9 @@ export const EditorHeader = ({
     <Flex as="header" justify="between" align="center">
       <Flex gap="10" align="center">
         <Link href="/" passHref>
-          <a>
+          <IconButton as="a" aria-label="Go back to the dashboard">
             <ArrowLeftIcon />
-          </a>
+          </IconButton>
         </Link>
         <Text css={{ color: '$gray11' }} size="sm">
           <Box as="span" css={{ fontWeight: 'bold', fontSize: '$3' }}>
