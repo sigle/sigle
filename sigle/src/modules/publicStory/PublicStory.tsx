@@ -7,9 +7,12 @@ import { sanitizeHexColor } from '../../utils/security';
 import { sigleConfig } from '../../config';
 import { TipTapEditor } from '../editor/TipTapEditor';
 import { styled } from '../../stitches.config';
-import { Box } from '../../ui';
+import { Box, Heading, Text } from '../../ui';
 import { PoweredBy } from './components/PoweredBy';
 import { getTextFromHtml } from '../editor/utils/getTextFromHtml';
+import { AppHeader } from '../layout/components/AppHeader';
+import format from 'date-fns/format';
+import Link from 'next/link';
 
 const PublicStoryContainer = styled('div', {
   margin: '0 auto',
@@ -68,6 +71,8 @@ export const PublicStory = ({ story, settings }: PublicStoryProps) => {
         }}
       />
 
+      <AppHeader />
+
       <PublicStoryContainer
         className="prose lg:prose-lg sigle-content"
         css={{
@@ -77,9 +82,35 @@ export const PublicStory = ({ story, settings }: PublicStoryProps) => {
           "& :where(a strong):not(:where([class~='not-prose'] *))": {
             color: safeSiteColor,
           },
+
+          px: '$4',
+
+          '& p': {
+            m: 0,
+            p: 0,
+          },
         }}
       >
-        <h1 className="sigle-title">{story.title}</h1>
+        <Link href="/[username]" as={`/${username}`} passHref>
+          <a>
+            <Text size="action">{siteName}</Text>
+            <Box css={{ mt: '$1', mb: '$7' }}>
+              <Text
+                size="action"
+                css={{
+                  display: 'flex',
+                  gap: '$2',
+                  color: '$gray9',
+                }}
+              >
+                {format(story.createdAt, 'MMM dd')}
+                <span>•</span>
+                <span>{storyReadingTime?.text}</span>
+              </Text>
+            </Box>
+          </a>
+        </Link>
+        <Heading size="3xl">{story.title}</Heading>
         {showCoverImage && (
           <Box
             css={{
@@ -93,6 +124,7 @@ export const PublicStory = ({ story, settings }: PublicStoryProps) => {
               css={{
                 marginLeft: '-$20',
                 marginRight: '-$20',
+                width: '100%',
               }}
             >
               <img className="sigle-cover" src={story.coverImage} />
