@@ -81,15 +81,6 @@ const globalStylesCustomEditor = globalCss({
   },
 });
 
-/**
- * TODO
- * - check all the shortcuts and update the GitBook
- * - check all the markdown shorcuts
- * - investigate figure extension instead of image
- * - separate PR - mobile UI
- * - WIP separate PR - data migration from slate
- */
-
 interface TipTapEditorProps {
   story: Story;
   editable?: boolean;
