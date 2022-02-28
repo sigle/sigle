@@ -41,9 +41,10 @@ const PlusButton = styled('button', {
 
 interface FloatingMenuProps {
   editor: Editor;
+  storyId: string;
 }
 
-export const FloatingMenu = ({ editor }: FloatingMenuProps) => {
+export const FloatingMenu = ({ editor, storyId }: FloatingMenuProps) => {
   globalStylesCustomEditor();
 
   const [isOpen, setIsOpen] = useState(false);
@@ -98,7 +99,7 @@ export const FloatingMenu = ({ editor }: FloatingMenuProps) => {
         content={
           <CommandsListController
             component={SlashCommandsList}
-            items={slashCommands}
+            items={slashCommands({ storyId })}
             command={handleSelect}
           />
         }
