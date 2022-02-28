@@ -89,21 +89,6 @@ export const FormInput = styled('input', {
   },
 });
 
-const FormInputCheckbox = styled('input', {
-  '&[type="checkbox"]': {
-    display: 'block',
-    backgroundColor: '$gray3',
-    boxShadow: '0 0 0 1px $colors$gray7',
-    p: '$2',
-    mt: '$2',
-    borderRadius: '$1',
-
-    '&:focus': {
-      boxShadow: '0 0 0 2px $colors$gray8',
-    },
-  },
-});
-
 const FormTextarea = styled('textarea', {
   outline: 'none',
   width: '100%',
@@ -252,7 +237,6 @@ interface StorySettingsFormValues {
   metaTitle: string;
   metaDescription: string;
   createdAt: string | number;
-  hideCoverImage: boolean;
 }
 
 interface EditorSettingsProps {
@@ -280,7 +264,6 @@ export const EditorSettings = ({
       metaTitle: story.metaTitle || '',
       metaDescription: story.metaDescription || '',
       createdAt: format(story.createdAt, 'yyyy-MM-dd'),
-      hideCoverImage: story.hideCoverImage ? true : false,
     },
     validate: (values) => {
       const errors: FormikErrors<StorySettingsFormValues> = {};
@@ -456,18 +439,6 @@ export const EditorSettings = ({
                       )}
                     </ImageEmptyIconContainer>
                   </ImageEmpty>
-                  <ImageCheckboxContainer>
-                    <FormInputCheckbox
-                      type="checkbox"
-                      name="hideCoverImage"
-                      checked={formik.values.hideCoverImage}
-                      value={formik.values.hideCoverImage ? 'true' : 'false'}
-                      onChange={formik.handleChange}
-                    />
-                    <FormHelper css={{ ml: '$2', pt: '$2' }}>
-                      Hide cover image on the published story
-                    </FormHelper>
-                  </ImageCheckboxContainer>
                 </FormRow>
 
                 <FormRow>
