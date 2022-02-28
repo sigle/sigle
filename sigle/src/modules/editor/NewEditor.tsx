@@ -17,6 +17,7 @@ import { UnpublishDialog } from './UnpublishDialog';
 import { PublishedDialog } from './PublishedDialog';
 import { migrationStory } from '../../utils/migrations/story';
 import { CoverImage } from './CoverImage';
+import { EditorSettings } from './EditorSettings/EditorSettings';
 
 const TitleInput = styled('input', {
   outline: 'transparent',
@@ -53,9 +54,10 @@ export const NewEditor = ({ story }: NewEditorProps) => {
     open: false,
     loading: false,
   });
+  const [showSettingsDialog, setShowSettingsDialog] = useState(false);
 
-  // TODO link settings
-  const handleOpenSettings = () => null;
+  const handleOpenSettings = () => setShowSettingsDialog(true);
+  const handleCloseSettings = () => setShowSettingsDialog(false);
 
   const handlePublish = () => {
     setPublishDialogState({
@@ -206,8 +208,7 @@ export const NewEditor = ({ story }: NewEditorProps) => {
         loading={publishDialogState.loading}
         onConfirm={handleConfirmPublish}
         onClose={handleCancelPublish}
-        // TODO onEditPreview once setting modal is merged
-        onEditPreview={() => null}
+        onEditPreview={handleOpenSettings}
       />
 
       <PublishedDialog
@@ -221,6 +222,13 @@ export const NewEditor = ({ story }: NewEditorProps) => {
         loading={unpublishDialogState.loading}
         onConfirm={handleConfirmUnpublish}
         onClose={handleCancelUnpublish}
+      />
+
+      <EditorSettings
+        story={story}
+        open={showSettingsDialog}
+        onClose={handleCloseSettings}
+        onSave={() => Promise.resolve(null)}
       />
     </Container>
   );
