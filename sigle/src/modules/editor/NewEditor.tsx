@@ -139,8 +139,13 @@ export const NewEditor = ({ story }: NewEditorProps) => {
 
   const handleSave = async ({
     hideToast,
+    toastPosition,
     story,
-  }: { story?: Story; hideToast?: boolean } = {}) => {
+  }: {
+    story?: Story;
+    hideToast?: boolean;
+    toastPosition?: 'top-left';
+  } = {}) => {
     const editor = editorRef.current?.getEditor();
     if (!editor) {
       return;
@@ -161,7 +166,7 @@ export const NewEditor = ({ story }: NewEditorProps) => {
       await saveStory(updatedStory, subsetStory);
       setNewStory(updatedStory);
       if (!hideToast) {
-        toast.success('Story saved');
+        toast.success('Story saved', { position: toastPosition });
       }
     } catch (error) {
       console.error(error);

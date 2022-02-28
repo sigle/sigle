@@ -243,7 +243,7 @@ interface EditorSettingsProps {
   story: Story;
   setStoryFile: (story: Story) => void;
   open: boolean;
-  onSave: ({}: { story: Story }) => Promise<void>;
+  onSave: ({}: { story: Story; toastPosition: 'top-left' }) => Promise<void>;
   onClose: () => void;
 }
 
@@ -297,7 +297,7 @@ export const EditorSettings = ({
       }
 
       setStoryFile(updatedStory);
-      await onSave({ story: updatedStory });
+      await onSave({ story: updatedStory, toastPosition: 'top-left' });
       setSubmitting(false);
     },
   });
