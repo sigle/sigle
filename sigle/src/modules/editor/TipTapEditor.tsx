@@ -159,7 +159,7 @@ export const TipTapEditor = forwardRef<
       }),
       // Custom extensions
       SlashCommands.configure({
-        commands: slashCommands,
+        commands: slashCommands({ storyId: story.id }),
         component: SlashCommandsList,
       }),
     ],
@@ -179,7 +179,7 @@ export const TipTapEditor = forwardRef<
   return (
     <>
       {editor && <BubbleMenu editor={editor} />}
-      {editor && <FloatingMenu editor={editor} />}
+      {editor && <FloatingMenu editor={editor} storyId={story.id} />}
 
       <StyledEditorContent editor={editor} />
       <Container
