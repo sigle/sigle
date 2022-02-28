@@ -101,6 +101,7 @@ export const TipTapEditor = forwardRef<
   },
   TipTapEditorProps
 >(({ story, editable = true }, ref) => {
+  // TODO is story really needed? Could it be just the content prop?
   globalStylesCustomEditor();
 
   const editor = useEditor({
