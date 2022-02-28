@@ -43,8 +43,6 @@ export const PublicStory = ({ story, settings }: PublicStoryProps) => {
   const seoDescription = story.metaDescription;
   const seoImage = story.metaImage || story.coverImage;
 
-  const showCoverImage = story.coverImage && !story.hideCoverImage;
-
   return (
     <>
       <NextSeo
@@ -79,7 +77,7 @@ export const PublicStory = ({ story, settings }: PublicStoryProps) => {
         }}
       >
         <h1 className="sigle-title">{story.title}</h1>
-        {showCoverImage && (
+        {story.coverImage && (
           <Box
             css={{
               margin: '$8 auto',
