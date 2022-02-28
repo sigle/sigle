@@ -1,5 +1,7 @@
 import { useRouter } from 'next/router';
 import { NextSeo } from 'next-seo';
+import readingTime from 'reading-time';
+import { useMemo } from 'react';
 import { SettingsFile, Story } from '../../types';
 import { sanitizeHexColor } from '../../utils/security';
 import { sigleConfig } from '../../config';
@@ -7,6 +9,7 @@ import { TipTapEditor } from '../editor/TipTapEditor';
 import { styled } from '../../stitches.config';
 import { Box } from '../../ui';
 import { PoweredBy } from './components/PoweredBy';
+import { getTextFromHtml } from '../editor/utils/getTextFromHtml';
 
 const PublicStoryContainer = styled('div', {
   margin: '0 auto',
@@ -25,6 +28,11 @@ export const PublicStory = ({ story, settings }: PublicStoryProps) => {
     username: string;
     storyId: string;
   };
+  const storyReadingTime = useMemo(
+    () =>
+      story.content ? readingTime(getTextFromHtml(story.content)) : undefined,
+    [story.content]
+  );
 
   const siteName = settings.siteName || username;
   const safeSiteColor =
@@ -33,9 +41,6 @@ export const PublicStory = ({ story, settings }: PublicStoryProps) => {
   const seoUrl = `${sigleConfig.appUrl}/${username}/${storyId}`;
   const seoTitle = story.metaTitle || `${story.title} | Sigle`;
   const seoDescription = story.metaDescription;
-
-  // TODO in a separate PR
-  const storyReadingTime = undefined;
 
   const showCoverImage = story.coverImage && !story.hideCoverImage;
 
