@@ -70,8 +70,6 @@ export const PublicStory = ({ story, settings }: PublicStoryProps) => {
         }}
       />
 
-      {/* TODO find how to do this */}
-      {/* <CustomStyle siteColor={safeSiteColor} /> */}
       <PublicStoryContainer className="prose lg:prose-lg sigle-content">
         <h1 className="sigle-title">{story.title}</h1>
         {showCoverImage && (
