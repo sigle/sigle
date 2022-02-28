@@ -37,6 +37,9 @@ import {
   saveStoriesFile,
 } from '../../../utils';
 
+// TODO - migrate hideCoverImage from old articles
+// TODO - use twitter card preview component in settings?
+
 export const FormRow = styled('div', {
   mb: '$5',
 });
@@ -146,6 +149,13 @@ const ImageEmpty = styled('div', {
 
 const Image = styled('img', {
   width: '100%',
+  variants: {
+    loading: {
+      true: {
+        opacity: 0.75,
+      },
+    },
+  },
 });
 
 const ImageEmptyIconContainer = styled('div', {
@@ -156,16 +166,6 @@ const ImageEmptyIconContainer = styled('div', {
   alignItems: 'center',
   color: '$gray9',
   gap: '$1',
-});
-
-const ImageCheckboxContainer = styled('div', {
-  display: 'flex',
-  alignItems: 'center',
-
-  [`& ${FormHelper}`]: {
-    mt: 0,
-    ml: '$2',
-  },
 });
 
 const SaveRow = styled('div', {
@@ -233,9 +233,9 @@ const StyledCloseButton = styled(DialogPrimitive.Close, {
 });
 
 interface StorySettingsFormValues {
-  coverImage: string;
   metaTitle: string;
   metaDescription: string;
+  metaImage: string;
   createdAt: string | number;
 }
 
@@ -253,16 +253,14 @@ export const EditorSettings = ({
   onSave,
 }: EditorSettingsProps) => {
   const router = useRouter();
-  const [coverFile, setCoverFile] = useState<
-    (Blob & { preview: string; name: string }) | undefined
-  >();
+  const [loadingUploadMetaImage, setLoadingUploadMetaImage] = useState(false);
   const [loadingDelete, setLoadingDelete] = useState(false);
 
   const formik = useFormik<StorySettingsFormValues>({
     initialValues: {
-      coverImage: story.coverImage || '',
       metaTitle: story.metaTitle || '',
       metaDescription: story.metaDescription || '',
+      metaImage: story.metaImage || '',
       createdAt: format(story.createdAt, 'yyyy-MM-dd'),
     },
     validate: (values) => {
@@ -295,23 +293,7 @@ export const EditorSettings = ({
         updatedStory.createdAt = newDate.getTime();
       }
 
-      if (coverFile) {
-        const now = new Date().getTime();
-        const name = `photos/${story.id}/${now}-${coverFile.name}`;
-        const coverImageUrl = await storage.putFile(name, coverFile as any, {
-          encrypt: false,
-          contentType: coverFile.type,
-        });
-        updatedStory.coverImage = coverImageUrl;
-      }
-
       await onSave(updatedStory);
-
-      if (coverFile) {
-        formik.setFieldValue('coverImage', updatedStory.coverImage);
-        setCoverFile(undefined);
-      }
-
       setSubmitting(false);
     },
   });
@@ -325,16 +307,22 @@ export const EditorSettings = ({
       }
 
       const blob = await resizeImage(file, { maxWidth: 2000 });
-      setCoverFile(
-        Object.assign(blob as any, {
-          name: file.name,
-        })
-      );
+      setLoadingUploadMetaImage(true);
+      formik.setFieldValue('metaImage', blob.preview);
+
+      const now = new Date().getTime();
+      const name = `photos/${story.id}/${now}-${file.name}`;
+      const metaImageUrl = await storage.putFile(name, file, {
+        encrypt: false,
+        contentType: file.type,
+      });
+      setLoadingUploadMetaImage(false);
+      formik.setFieldValue('metaImage', metaImageUrl);
     }
   }, []);
   const { getRootProps, getInputProps } = useDropzone({
     onDrop,
-    accept: 'image/jpeg, image/png',
+    accept: 'image/jpeg,image/png',
     multiple: false,
   });
 
@@ -343,8 +331,7 @@ export const EditorSettings = ({
   ) => {
     // We stop the event so it does not trigger react-dropzone
     event.stopPropagation();
-    setCoverFile(undefined);
-    formik.setFieldValue('coverImage', '');
+    formik.setFieldValue('metaImage', '');
   };
 
   const handleDelete = async (
@@ -374,9 +361,7 @@ export const EditorSettings = ({
     }
   };
 
-  const coverImageUrl = coverFile
-    ? coverFile.preview
-    : formik.values.coverImage;
+  //   const coverImageUrl = coverFile ? coverFile.preview : formik.values.metaImage;
 
   return (
     <Dialog open={open} onOpenChange={onClose}>
@@ -407,41 +392,6 @@ export const EditorSettings = ({
                 }}
               >
                 <FormRow>
-                  <FormLabel>Cover image</FormLabel>{' '}
-                  <ImageEmpty
-                    {...getRootProps({ tabIndex: undefined })}
-                    css={{
-                      py: !!coverImageUrl ? 0 : undefined,
-                      height: !!coverImageUrl ? undefined : 178,
-                    }}
-                  >
-                    {coverImageUrl && (
-                      <Image src={coverImageUrl} alt="Cover image" />
-                    )}
-                    {!coverImageUrl && (
-                      <Flex align="center" gap="1" css={{ color: '$gray9' }}>
-                        <CameraIcon />
-                        <Text size="action" css={{ color: '$gray9' }}>
-                          Add a cover image
-                        </Text>
-                      </Flex>
-                    )}
-                    <input {...getInputProps()} />
-                    <ImageEmptyIconContainer>
-                      {coverImageUrl && (
-                        <IconButton
-                          css={{ backgroundColor: '$gray3', opacity: '70%' }}
-                          title="Remove cover image"
-                          onClick={handleRemoveCover}
-                        >
-                          <TrashIcon />
-                        </IconButton>
-                      )}
-                    </ImageEmptyIconContainer>
-                  </ImageEmpty>
-                </FormRow>
-
-                <FormRow>
                   <FormLabel>Created on</FormLabel>
                   <FormInput
                     type="date"
@@ -452,6 +402,45 @@ export const EditorSettings = ({
                   {formik.errors.createdAt && (
                     <FormHelperError>{formik.errors.createdAt}</FormHelperError>
                   )}
+                </FormRow>
+
+                <FormRow>
+                  <FormLabel>Meta image</FormLabel>{' '}
+                  <ImageEmpty
+                    {...getRootProps({ tabIndex: undefined })}
+                    css={{
+                      py: !!formik.values.metaImage ? 0 : undefined,
+                      height: !!formik.values.metaImage ? undefined : 178,
+                    }}
+                  >
+                    {formik.values.metaImage && (
+                      <Image
+                        src={formik.values.metaImage}
+                        alt="Meta image"
+                        loading={loadingUploadMetaImage}
+                      />
+                    )}
+                    {!formik.values.metaImage && (
+                      <Flex align="center" gap="1" css={{ color: '$gray9' }}>
+                        <CameraIcon />
+                        <Text size="action" css={{ color: '$gray9' }}>
+                          Add a custom meta image
+                        </Text>
+                      </Flex>
+                    )}
+                    <input {...getInputProps()} />
+                    <ImageEmptyIconContainer>
+                      {formik.values.metaImage && (
+                        <IconButton
+                          css={{ backgroundColor: '$gray3', opacity: '70%' }}
+                          title="Remove meta image"
+                          onClick={handleRemoveCover}
+                        >
+                          <TrashIcon />
+                        </IconButton>
+                      )}
+                    </ImageEmptyIconContainer>
+                  </ImageEmpty>
                 </FormRow>
 
                 <FormRow>
@@ -495,9 +484,12 @@ export const EditorSettings = ({
                 </FormRow>
 
                 <Text css={{ mb: '$3' }}>Preview</Text>
-                {coverImageUrl ? (
+                {formik.values.metaImage || story.coverImage ? (
                   <PreviewCard>
-                    <Image src={coverImageUrl} alt="Cover image" />
+                    <Image
+                      src={formik.values.metaImage || story.coverImage}
+                      alt="Meta image"
+                    />
                     <Box css={{ p: '$2' }}>
                       <Text size="xs" css={{ display: 'flex', gap: '$1' }}>
                         app.sigle.io

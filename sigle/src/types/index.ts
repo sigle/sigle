@@ -49,6 +49,10 @@ export interface Story {
    */
   metaDescription?: string;
   /**
+   * Meta image that will be used for SEO
+   */
+  metaImage?: string;
+  /**
    * Is the story featured. A featured story will be displayed in another way in the list
    * it will also always appear first in the list, no matter the created date
    */
