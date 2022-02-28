@@ -4,7 +4,7 @@ import { SettingsFile, Story } from '../../types';
 import { sanitizeHexColor } from '../../utils/security';
 import { sigleConfig } from '../../config';
 import { TipTapEditor } from '../editor/TipTapEditor';
-import { globalCss, styled } from '../../stitches.config';
+import { styled } from '../../stitches.config';
 import { Box } from '../../ui';
 import { PoweredBy } from './components/PoweredBy';
 
@@ -29,13 +29,6 @@ export const PublicStory = ({ story, settings }: PublicStoryProps) => {
   const siteName = settings.siteName || username;
   const safeSiteColor =
     settings.siteColor && sanitizeHexColor(settings.siteColor);
-
-  const globalStyles = globalCss({
-    '.sigle-content a, .sigle-content a strong': {
-      color: safeSiteColor,
-    },
-  });
-  globalStyles();
 
   const seoUrl = `${sigleConfig.appUrl}/${username}/${storyId}`;
   const seoTitle = story.metaTitle || `${story.title} | Sigle`;
@@ -70,7 +63,17 @@ export const PublicStory = ({ story, settings }: PublicStoryProps) => {
         }}
       />
 
-      <PublicStoryContainer className="prose lg:prose-lg sigle-content">
+      <PublicStoryContainer
+        className="prose lg:prose-lg sigle-content"
+        css={{
+          "& :where(a):not(:where([class~='not-prose'] *))": {
+            color: safeSiteColor,
+          },
+          "& :where(a strong):not(:where([class~='not-prose'] *))": {
+            color: safeSiteColor,
+          },
+        }}
+      >
         <h1 className="sigle-title">{story.title}</h1>
         {showCoverImage && (
           <Box
