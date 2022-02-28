@@ -17,6 +17,7 @@ import { UnpublishDialog } from './UnpublishDialog';
 import { PublishedDialog } from './PublishedDialog';
 import { migrationStory } from '../../utils/migrations/story';
 import { CoverImage } from './CoverImage';
+import { EditorSettings } from './EditorSettings/EditorSettings';
 
 const TitleInput = styled('input', {
   outline: 'transparent',
@@ -53,9 +54,10 @@ export const NewEditor = ({ story }: NewEditorProps) => {
     open: false,
     loading: false,
   });
+  const [showSettingsDialog, setShowSettingsDialog] = useState(false);
 
-  // TODO link settings
-  const handleOpenSettings = () => null;
+  const handleOpenSettings = () => setShowSettingsDialog(true);
+  const handleCloseSettings = () => setShowSettingsDialog(false);
 
   const handlePublish = () => {
     setPublishDialogState({
@@ -135,7 +137,15 @@ export const NewEditor = ({ story }: NewEditorProps) => {
     });
   };
 
-  const handleSave = async ({ hideToast }: { hideToast?: boolean } = {}) => {
+  const handleSave = async ({
+    hideToast,
+    toastPosition,
+    story,
+  }: {
+    story?: Story;
+    hideToast?: boolean;
+    toastPosition?: 'top-left';
+  } = {}) => {
     const editor = editorRef.current?.getEditor();
     if (!editor) {
       return;
@@ -145,7 +155,7 @@ export const NewEditor = ({ story }: NewEditorProps) => {
     try {
       const html = editor.getHTML();
       const updatedStory: Story = {
-        ...newStory,
+        ...(story ? story : newStory),
         content: html,
         contentVersion: '2',
         updatedAt: Date.now(),
@@ -156,7 +166,7 @@ export const NewEditor = ({ story }: NewEditorProps) => {
       await saveStory(updatedStory, subsetStory);
       setNewStory(updatedStory);
       if (!hideToast) {
-        toast.success('Story saved');
+        toast.success('Story saved', { position: toastPosition });
       }
     } catch (error) {
       console.error(error);
@@ -206,14 +216,13 @@ export const NewEditor = ({ story }: NewEditorProps) => {
         loading={publishDialogState.loading}
         onConfirm={handleConfirmPublish}
         onClose={handleCancelPublish}
-        // TODO onEditPreview once setting modal is merged
-        onEditPreview={() => null}
+        onEditPreview={handleOpenSettings}
       />
 
       <PublishedDialog
         open={showPublishedDialog}
         onOpenChange={handleCancelPublished}
-        story={story}
+        story={newStory}
       />
 
       <UnpublishDialog
@@ -221,6 +230,14 @@ export const NewEditor = ({ story }: NewEditorProps) => {
         loading={unpublishDialogState.loading}
         onConfirm={handleConfirmUnpublish}
         onClose={handleCancelUnpublish}
+      />
+
+      <EditorSettings
+        story={newStory}
+        open={showSettingsDialog}
+        onClose={handleCloseSettings}
+        setStoryFile={setNewStory}
+        onSave={handleSave}
       />
     </Container>
   );

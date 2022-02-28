@@ -41,8 +41,7 @@ export const PublicStory = ({ story, settings }: PublicStoryProps) => {
   const seoUrl = `${sigleConfig.appUrl}/${username}/${storyId}`;
   const seoTitle = story.metaTitle || `${story.title} | Sigle`;
   const seoDescription = story.metaDescription;
-
-  const showCoverImage = story.coverImage && !story.hideCoverImage;
+  const seoImage = story.metaImage || story.coverImage;
 
   return (
     <>
@@ -56,15 +55,13 @@ export const PublicStory = ({ story, settings }: PublicStoryProps) => {
           description: seoDescription,
           images: [
             {
-              url: story.coverImage
-                ? story.coverImage
-                : `${sigleConfig.appUrl}/static/icon-192x192.png`,
+              url: seoImage || `${sigleConfig.appUrl}/static/icon-192x192.png`,
             },
           ],
         }}
         twitter={{
           site: '@sigleapp',
-          cardType: story.coverImage ? 'summary_large_image' : 'summary',
+          cardType: seoImage ? 'summary_large_image' : 'summary',
         }}
       />
 
@@ -80,7 +77,7 @@ export const PublicStory = ({ story, settings }: PublicStoryProps) => {
         }}
       >
         <h1 className="sigle-title">{story.title}</h1>
-        {showCoverImage && (
+        {story.coverImage && (
           <Box
             css={{
               margin: '$8 auto',
