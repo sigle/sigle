@@ -42,7 +42,11 @@ const resizeAndUploadImage = async (
   });
 };
 
-export const slashCommands: SlashCommandsCommand[] = [
+export const slashCommands = ({
+  storyId,
+}: {
+  storyId: string;
+}): SlashCommandsCommand[] => [
   {
     icon: Heading2Light,
     title: 'Big Heading',
@@ -186,9 +190,7 @@ export const slashCommands: SlashCommandsCommand[] = [
         }
 
         const id = generateRandomId();
-        // TODO real story id
-        const story = { id: 'tiptap-editor-dev' };
-        const name = `photos/${story.id}/${id}-${file.name}`;
+        const name = `photos/${storyId}/${id}-${file.name}`;
         const imageUrl = await resizeAndUploadImage(file, name);
 
         // Preload the new image so there is no flicker
