@@ -39,9 +39,6 @@ interface NewEditorProps {
   story: Story;
 }
 
-// TODO check security handled by TipTap when loading HTML (read only mode)
-// Is it enough or do we need another lib to sanitize the HTML first?
-
 export const NewEditor = ({ story }: NewEditorProps) => {
   const editorRef = useRef<{ getEditor: () => Editor | null }>(null);
   const [loadingSave, setLoadingSave] = useState(false);
