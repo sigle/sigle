@@ -1,11 +1,19 @@
 import React from 'react';
 import { GetServerSideProps, NextPage } from 'next';
+import dynamic from 'next/dynamic';
 import { lookupProfile } from '@stacks/auth';
 import * as Sentry from '@sentry/nextjs';
 import sanitizeHtml from 'sanitize-html';
 import Error from '../../pages/_error';
 import { PublicStory } from '../../modules/publicStory';
 import { Story, SettingsFile } from '../../types';
+
+const DynamicNewPublicStory = dynamic<{ story: Story; settings: SettingsFile }>(
+  () =>
+    import('../../modules/publicStory/PublicStory').then(
+      (mod: any) => mod.PublicStory
+    )
+);
 
 interface PublicStoryPageProps {
   statusCode: number | boolean;
@@ -22,6 +30,10 @@ export const PublicStoryPage: NextPage<PublicStoryPageProps> = ({
 }) => {
   if (typeof statusCode === 'number') {
     return <Error statusCode={statusCode} errorMessage={errorMessage} />;
+  }
+
+  if (file?.contentVersion === '2') {
+    return <DynamicNewPublicStory story={file} settings={settings!} />;
   }
 
   return <PublicStory story={file!} settings={settings!} />;
