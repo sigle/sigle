@@ -1,12 +1,18 @@
 import React from 'react';
 import { GetServerSideProps, NextPage } from 'next';
+import dynamic from 'next/dynamic';
 import { lookupProfile } from '@stacks/auth';
 import * as Sentry from '@sentry/nextjs';
 import Error from '../../pages/_error';
 import { PublicStory } from '../../modules/publicStory';
-// TODO dynamic loading
-import { PublicStory as NewEditorPublicStory } from '../../modules/publicStory/PublicStory';
 import { Story, SettingsFile } from '../../types';
+
+const DynamicNewPublicStory = dynamic<{ story: Story; settings: SettingsFile }>(
+  () =>
+    import('../../modules/publicStory/PublicStory').then(
+      (mod: any) => mod.PublicStory
+    )
+);
 
 interface PublicStoryPageProps {
   statusCode: number | boolean;
@@ -26,7 +32,7 @@ export const PublicStoryPage: NextPage<PublicStoryPageProps> = ({
   }
 
   if (file?.contentVersion === '2') {
-    return <NewEditorPublicStory story={file} settings={settings!} />;
+    return <DynamicNewPublicStory story={file} settings={settings!} />;
   }
 
   return <PublicStory story={file!} settings={settings!} />;
