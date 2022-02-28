@@ -1,5 +1,6 @@
 import { useRouter } from 'next/router';
 import { NextSeo } from 'next-seo';
+import readingTime from 'reading-time';
 import { SettingsFile, Story } from '../../types';
 import { sanitizeHexColor } from '../../utils/security';
 import { sigleConfig } from '../../config';
@@ -7,6 +8,7 @@ import { TipTapEditor } from '../editor/TipTapEditor';
 import { styled } from '../../stitches.config';
 import { Box } from '../../ui';
 import { PoweredBy } from './components/PoweredBy';
+import { getTextFromHtml } from '../editor/utils/getTextFromHtml';
 
 const PublicStoryContainer = styled('div', {
   margin: '0 auto',
@@ -34,8 +36,9 @@ export const PublicStory = ({ story, settings }: PublicStoryProps) => {
   const seoTitle = story.metaTitle || `${story.title} | Sigle`;
   const seoDescription = story.metaDescription;
 
-  // TODO in a separate PR
-  const storyReadingTime = undefined;
+  const storyReadingTime = story.content
+    ? readingTime(getTextFromHtml(story.content))
+    : undefined;
 
   const showCoverImage = story.coverImage && !story.hideCoverImage;
 

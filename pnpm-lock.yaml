@@ -153,6 +153,7 @@ importers:
       '@tiptap/extension-strike': 2.0.0-beta.27
       '@tiptap/extension-text': 2.0.0-beta.15
       '@tiptap/extension-underline': 2.0.0-beta.23
+      '@tiptap/html': 2.0.0-beta.173
       '@tiptap/react': 2.0.0-beta.108
       '@tiptap/suggestion': 2.0.0-beta.90
       '@types/jest': 27.4.0
@@ -250,6 +251,7 @@ importers:
       '@tiptap/extension-strike': 2.0.0-beta.27_@tiptap+core@2.0.0-beta.174
       '@tiptap/extension-text': 2.0.0-beta.15_@tiptap+core@2.0.0-beta.174
       '@tiptap/extension-underline': 2.0.0-beta.23_@tiptap+core@2.0.0-beta.174
+      '@tiptap/html': 2.0.0-beta.173
       '@tiptap/react': 2.0.0-beta.108_f9947707ac080ff24f30e061131767eb
       '@tiptap/suggestion': 2.0.0-beta.90_@tiptap+core@2.0.0-beta.174
       date-fns: 2.25.0
@@ -2519,6 +2521,14 @@ packages:
       '@tiptap/core': 2.0.0-beta.174
     dev: false
 
+  /@tiptap/html/2.0.0-beta.173:
+    resolution: {integrity: sha512-9C/Hy9+7XAhfoAASVeUZHWSJ4d53+O9mNbQu4hOk7wdg/V4WVzsIupNYA3awcuwiT4GMQb1r+UNegwAhFdftWw==}
+    dependencies:
+      '@tiptap/core': 2.0.0-beta.174
+      prosemirror-model: 1.16.1
+      zeed-dom: 0.9.23
+    dev: false
+
   /@tiptap/react/2.0.0-beta.108_f9947707ac080ff24f30e061131767eb:
     resolution: {integrity: sha512-uYfYx0em6rUoaTkwblYIzT6WLsNGA65XyP5PH56yLvHoOz+Q+skJMBkfrJ7n75tuWa3zMS+W9iYtybxaqPP0aw==}
     peerDependencies:
@@ -4007,6 +4017,11 @@ packages:
     resolution: {integrity: sha512-IiJwMC8rdZE0+xiEZHeru6YoONC4rfPMqGm2W85jMIbkFvv5nFTwJVFHam2eFrN6txmoUYFAFXiv8ICVeTO0MA==}
     dev: true
 
+  /css-what/6.0.1:
+    resolution: {integrity: sha512-z93ZGFLNc6yaoXAmVhqoSIb+BduplteCt1fepvwhBUQK6MNE4g6fgjpuZKJKp0esUe+vXWlIkwZZjNWoOKw0ZA==}
+    engines: {node: '>= 6'}
+    dev: false
+
   /css.escape/1.5.1:
     resolution: {integrity: sha1-QuJ9T6BK4y+TGktNQZH6nN3ul8s=}
     dev: true
@@ -5173,6 +5188,11 @@ packages:
     dependencies:
       inherits: 2.0.4
       minimalistic-assert: 1.0.1
+    dev: false
+
+  /he/1.2.0:
+    resolution: {integrity: sha512-F/1DnUGPopORZi0ni+CvrCgHQ5FyEAHRLSApuYWMmrbSwoN2Mn/7k+Gl38gJnR7yyDZk6WLXwiGod1JOWNDKGw==}
+    hasBin: true
     dev: false
 
   /hex-color-regex/1.1.0:
@@ -9192,6 +9212,14 @@ packages:
     resolution: {integrity: sha512-rVksvsnNCdJ/ohGc6xgPwyN8eheCxsiLM8mxuE/t/mOVqJewPuO1miLpTHQiRgTKCLexL4MeAFVagts7HmNZ2Q==}
     engines: {node: '>=10'}
     dev: true
+
+  /zeed-dom/0.9.23:
+    resolution: {integrity: sha512-0n05W12DaMh38E28zcpQOYY2hTmz8nTRbrkYuKYlQ2d2lp4ovOSWVwJ1+ybYYEwJp+4VfSPTv3/wbT8jijMQ7A==}
+    engines: {node: '>=14.13.1'}
+    dependencies:
+      css-what: 6.0.1
+      he: 1.2.0
+    dev: false
 
   /zone-file/1.0.0:
     resolution: {integrity: sha512-dJynTf/5XCobE6diQBpNWQQRBzXE8d1QhHKemzrkffrZ36F9uKlbBVyIXXbG2CJoaTGZGh8zt2AHX/mG4txtqA==}
