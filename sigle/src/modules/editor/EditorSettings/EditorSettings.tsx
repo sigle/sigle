@@ -241,14 +241,16 @@ interface StorySettingsFormValues {
 
 interface EditorSettingsProps {
   story: Story;
-  onSave: (storyParam?: Partial<Story>) => Promise<void>;
+  setStoryFile: (story: Story) => void;
   open: boolean;
+  onSave: ({}: { story: Story }) => Promise<void>;
   onClose: () => void;
 }
 
 export const EditorSettings = ({
   open,
   onClose,
+  setStoryFile,
   story,
   onSave,
 }: EditorSettingsProps) => {
@@ -277,13 +279,14 @@ export const EditorSettings = ({
       return errors;
     },
     onSubmit: async (values, { setSubmitting }) => {
-      const updatedStory: Partial<Story> = {};
-      (Object.keys(values) as Array<keyof typeof values>).forEach((key) => {
-        // We replace empty strings by undefined
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-        // @ts-ignore
-        updatedStory[key] = values[key] ? values[key] : undefined;
-      });
+      const updatedStory: Story = {
+        ...story,
+        metaTitle: values.metaTitle ? values.metaTitle : undefined,
+        metaDescription: values.metaDescription
+          ? values.metaDescription
+          : undefined,
+        metaImage: values.metaImage ? values.metaImage : undefined,
+      };
 
       if (updatedStory.createdAt) {
         const newDate = new Date(updatedStory.createdAt);
@@ -293,7 +296,8 @@ export const EditorSettings = ({
         updatedStory.createdAt = newDate.getTime();
       }
 
-      await onSave(updatedStory);
+      setStoryFile(updatedStory);
+      await onSave({ story: updatedStory });
       setSubmitting(false);
     },
   });
@@ -360,8 +364,6 @@ export const EditorSettings = ({
       setLoadingDelete(false);
     }
   };
-
-  //   const coverImageUrl = coverFile ? coverFile.preview : formik.values.metaImage;
 
   return (
     <Dialog open={open} onOpenChange={onClose}>

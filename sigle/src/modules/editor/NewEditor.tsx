@@ -137,7 +137,10 @@ export const NewEditor = ({ story }: NewEditorProps) => {
     });
   };
 
-  const handleSave = async ({ hideToast }: { hideToast?: boolean } = {}) => {
+  const handleSave = async ({
+    hideToast,
+    story,
+  }: { story?: Story; hideToast?: boolean } = {}) => {
     const editor = editorRef.current?.getEditor();
     if (!editor) {
       return;
@@ -147,7 +150,7 @@ export const NewEditor = ({ story }: NewEditorProps) => {
     try {
       const html = editor.getHTML();
       const updatedStory: Story = {
-        ...newStory,
+        ...(story ? story : newStory),
         content: html,
         contentVersion: '2',
         updatedAt: Date.now(),
@@ -228,7 +231,8 @@ export const NewEditor = ({ story }: NewEditorProps) => {
         story={newStory}
         open={showSettingsDialog}
         onClose={handleCloseSettings}
-        onSave={() => Promise.resolve(null)}
+        setStoryFile={setNewStory}
+        onSave={handleSave}
       />
     </Container>
   );
