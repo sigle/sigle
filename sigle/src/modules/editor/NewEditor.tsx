@@ -214,7 +214,7 @@ export const NewEditor = ({ story }: NewEditorProps) => {
       <PublishedDialog
         open={showPublishedDialog}
         onOpenChange={handleCancelPublished}
-        story={story}
+        story={newStory}
       />
 
       <UnpublishDialog
@@ -225,7 +225,7 @@ export const NewEditor = ({ story }: NewEditorProps) => {
       />
 
       <EditorSettings
-        story={story}
+        story={newStory}
         open={showSettingsDialog}
         onClose={handleCloseSettings}
         onSave={() => Promise.resolve(null)}
