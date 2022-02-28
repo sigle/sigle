@@ -4,6 +4,8 @@ import { lookupProfile } from '@stacks/auth';
 import * as Sentry from '@sentry/nextjs';
 import Error from '../../pages/_error';
 import { PublicStory } from '../../modules/publicStory';
+// TODO dynamic loading
+import { PublicStory as NewEditorPublicStory } from '../../modules/publicStory/PublicStory';
 import { Story, SettingsFile } from '../../types';
 
 interface PublicStoryPageProps {
@@ -21,6 +23,10 @@ export const PublicStoryPage: NextPage<PublicStoryPageProps> = ({
 }) => {
   if (typeof statusCode === 'number') {
     return <Error statusCode={statusCode} errorMessage={errorMessage} />;
+  }
+
+  if (file?.contentVersion === '2') {
+    return <NewEditorPublicStory story={file} settings={settings!} />;
   }
 
   return <PublicStory story={file!} settings={settings!} />;
