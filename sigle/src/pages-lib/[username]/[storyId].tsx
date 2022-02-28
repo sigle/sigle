@@ -115,8 +115,41 @@ export const getServerSideProps: GetServerSideProps<
 
   // Sanitize the HTML of the story so it's safe to display to external users
   if (file && file.contentVersion === '2') {
-    // TODO verify all the tags allowed before merging this pull request
-    file.content = file.content ? sanitizeHtml(file.content) : '';
+    file.content = file.content
+      ? sanitizeHtml(file.content, {
+          allowedTags: [
+            'br',
+            // Titles
+            'h2',
+            'h3',
+            // Paragraphs
+            'p',
+            // Lists
+            'ul',
+            'ol',
+            'li',
+            // Links
+            'a',
+            // Blockquotes
+            'blockquote',
+            // Divider
+            'hr',
+            // Code
+            'code',
+            'pre',
+            // Images
+            'img',
+            // Marks
+            'strong',
+            'em',
+            'u',
+            's',
+            'sub',
+            'sup',
+            'span',
+          ],
+        })
+      : '';
   }
 
   // If statusCode is not false we set the http response code
