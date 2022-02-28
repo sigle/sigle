@@ -5,6 +5,9 @@ import { SettingsFile, Story } from '../../types';
 import { sanitizeHexColor } from '../../utils/security';
 import { sigleConfig } from '../../config';
 import { TipTapEditor } from '../editor/TipTapEditor';
+import { styled } from '../../stitches.config';
+import { Box } from '../../ui';
+import { PoweredBy } from './components/PoweredBy';
 
 // const CustomStyle = createGlobalStyle<{ siteColor?: string }>`
 //   ${(props) =>
@@ -19,6 +22,12 @@ import { TipTapEditor } from '../editor/TipTapEditor';
 //       }
 //     `}
 // `;
+
+const PublicStoryContainer = styled('div', {
+  margin: '0 auto',
+  paddingTop: '$15',
+  paddingBottom: '$15',
+});
 
 interface PublicStoryProps {
   story: Story;
@@ -71,9 +80,30 @@ export const PublicStory = ({ story, settings }: PublicStoryProps) => {
 
       {/* TODO find how to do this */}
       {/* <CustomStyle siteColor={safeSiteColor} /> */}
-      <div className="prose lg:prose-lg sigle-content">
+      <PublicStoryContainer className="prose lg:prose-lg sigle-content">
+        <h1 className="sigle-title">{story.title}</h1>
+        {showCoverImage && (
+          <Box
+            css={{
+              margin: '$8 auto',
+              display: 'flex',
+              justifyContent: 'center',
+            }}
+            className="not-prose"
+          >
+            <Box
+              css={{
+                marginLeft: '-$20',
+                marginRight: '-$20',
+              }}
+            >
+              <img className="sigle-cover" src={story.coverImage} />
+            </Box>
+          </Box>
+        )}
         <TipTapEditor story={story} editable={false} />
-      </div>
+        <PoweredBy />
+      </PublicStoryContainer>
     </>
   );
 };

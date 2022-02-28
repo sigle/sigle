@@ -17,7 +17,7 @@ const StyledPoweredBy = styled.div`
 
 export const PoweredBy = () => {
   return (
-    <StyledPoweredBy>
+    <StyledPoweredBy className="not-prose">
       <a href="https://www.sigle.io/" target="_blank" rel="noopener noreferrer">
         Powered by <img src="/static/img/logo-gray.svg" alt="Logo Sigle" />
       </a>
