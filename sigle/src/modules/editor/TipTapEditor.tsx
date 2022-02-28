@@ -200,7 +200,9 @@ export const TipTapEditor = forwardRef<
           textAlign: 'right',
         }}
       >
-        <Text size="sm">{editor?.storage.characterCount.words()} words</Text>
+        {editable && (
+          <Text size="sm">{editor?.storage.characterCount.words()} words</Text>
+        )}
       </Container>
     </>
   );
