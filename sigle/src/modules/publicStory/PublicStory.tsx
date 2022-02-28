@@ -1,27 +1,12 @@
 import { useRouter } from 'next/router';
-import Link from 'next/link';
 import { NextSeo } from 'next-seo';
 import { SettingsFile, Story } from '../../types';
 import { sanitizeHexColor } from '../../utils/security';
 import { sigleConfig } from '../../config';
 import { TipTapEditor } from '../editor/TipTapEditor';
-import { styled } from '../../stitches.config';
+import { globalCss, styled } from '../../stitches.config';
 import { Box } from '../../ui';
 import { PoweredBy } from './components/PoweredBy';
-
-// const CustomStyle = createGlobalStyle<{ siteColor?: string }>`
-//   ${(props) =>
-//     props.siteColor &&
-//     css`
-//       .sigle-date {
-//         color: ${props.siteColor} !important;
-//       }
-//       .sigle-content a,
-//       .sigle-content a strong {
-//         color: ${props.siteColor} !important;
-//       }
-//     `}
-// `;
 
 const PublicStoryContainer = styled('div', {
   margin: '0 auto',
@@ -44,6 +29,13 @@ export const PublicStory = ({ story, settings }: PublicStoryProps) => {
   const siteName = settings.siteName || username;
   const safeSiteColor =
     settings.siteColor && sanitizeHexColor(settings.siteColor);
+
+  const globalStyles = globalCss({
+    '.sigle-content a, .sigle-content a strong': {
+      color: safeSiteColor,
+    },
+  });
+  globalStyles();
 
   const seoUrl = `${sigleConfig.appUrl}/${username}/${storyId}`;
   const seoTitle = story.metaTitle || `${story.title} | Sigle`;
