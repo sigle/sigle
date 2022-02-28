@@ -113,7 +113,10 @@ export const getServerSideProps: GetServerSideProps<
     statusCode = 404;
   }
 
-  // Sanitize the HTML of the story so it's safe to display to external users
+  /**
+   * Sanitize the HTML of the story so it's safe to display to external users.
+   * Only allow a subset of tags and attributes to avoid XSS attacks.
+   */
   if (file && file.contentVersion === '2') {
     file.content = file.content
       ? sanitizeHtml(file.content, {
