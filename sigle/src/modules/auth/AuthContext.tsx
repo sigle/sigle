@@ -12,9 +12,10 @@ import { userSession } from '../../utils/blockstack';
 
 const AuthContext = React.createContext<{
   user?: UserData | LegacyUserData;
+  isLegacy?: boolean;
   loggingIn: boolean;
   setUsername: (username: string) => void;
-}>({ loggingIn: false, setUsername: () => {} });
+}>({ loggingIn: false, isLegacy: false, setUsername: () => {} });
 
 interface AuthProviderProps {
   children: React.ReactNode;
@@ -23,6 +24,7 @@ interface AuthProviderProps {
 const AuthProvider = ({ children }: AuthProviderProps) => {
   const [state, setState] = useState<{
     loggingIn: boolean;
+    isLegacy?: boolean;
     user?: UserData | LegacyUserData;
   }>({
     loggingIn: true,
@@ -55,9 +57,10 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
     if (state.user) {
       posthog.identify(state.user.profile.stxAddress, {
         username: state.user.username,
+        isLegacy: state.isLegacy,
       });
     }
-  }, [state.user]);
+  }, [state.user, state.isLegacy]);
 
   const appDetails = {
     name: 'Sigle',
@@ -136,6 +139,7 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
     finished: () => {
       setState({
         loggingIn: false,
+        isLegacy: true,
         user: userSession.loadUserData(),
       });
     },
