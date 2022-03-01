@@ -115,7 +115,6 @@ export const PublicStory = ({ story, settings }: PublicStoryProps) => {
               css={{
                 marginLeft: '-$20',
                 marginRight: '-$20',
-                width: '100%',
               }}
             >
               <img className="sigle-cover" src={story.coverImage} />
