@@ -1,5 +1,11 @@
-import { useRef } from 'react';
-import { useEditor, EditorContent } from '@tiptap/react';
+import 'highlight.js/styles/night-owl.css';
+import { forwardRef, useImperativeHandle } from 'react';
+import {
+  useEditor,
+  EditorContent,
+  ReactNodeViewRenderer,
+  Editor,
+} from '@tiptap/react';
 import TipTapBlockquote from '@tiptap/extension-blockquote';
 import TipTapBold from '@tiptap/extension-bold';
 import TipTapBulletList from '@tiptap/extension-bullet-list';
@@ -9,6 +15,7 @@ import TipTapDropcursor from '@tiptap/extension-dropcursor';
 import TipTapHardBreak from '@tiptap/extension-hard-break';
 import TipTapHeading from '@tiptap/extension-heading';
 import TipTapHistory from '@tiptap/extension-history';
+import TipTapHorizontalRule from '@tiptap/extension-horizontal-rule';
 import TipTapItalic from '@tiptap/extension-italic';
 import TipTapImage from '@tiptap/extension-image';
 import TipTapLink from '@tiptap/extension-link';
@@ -18,25 +25,18 @@ import TipTapParagraph from '@tiptap/extension-paragraph';
 import TipTapPlaceholder from '@tiptap/extension-placeholder';
 import TipTapStrike from '@tiptap/extension-strike';
 import TipTapText from '@tiptap/extension-text';
-import {
-  SlashCommands,
-  SlashCommandsCommand,
-} from './extensions/SlashCommands';
+import TipTapUnderline from '@tiptap/extension-underline';
+import TipTapCodeBlockLowlight from '@tiptap/extension-code-block-lowlight';
+import { lowlight } from 'lowlight/lib/common.js';
+import { SlashCommands } from './extensions/SlashCommands';
 import { BubbleMenu } from './BubbleMenu';
 import { slashCommands, SlashCommandsList } from './InlineMenu';
 import { FloatingMenu } from './FloatingMenu';
-import {
-  Heading1Light,
-  Heading2Light,
-  Heading3Light,
-  ImageLight,
-  QuoteLight,
-} from '../../icons';
-import { generateRandomId } from '../../utils';
-import { resizeImage } from '../../utils/image';
-import { storage } from '../../utils/blockstack';
-import { Story } from '../../types';
 import { styled, globalCss, keyframes } from '../../stitches.config';
+import { CodeBlockComponent } from './extensions/CodeBlock';
+import { Story } from '../../types';
+import CharacterCount from '@tiptap/extension-character-count';
+import { Container, Text } from '../../ui';
 
 const fadeInAnimation = keyframes({
   '0%': { opacity: '0' },
@@ -45,7 +45,6 @@ const fadeInAnimation = keyframes({
 
 const StyledEditorContent = styled(EditorContent, {
   '& .ProseMirror': {
-    py: '$4',
     minHeight: 150,
   },
   '& .ProseMirror-focused': {
@@ -64,6 +63,10 @@ const StyledEditorContent = styled(EditorContent, {
   '& img.ProseMirror-selectednode': {
     outline: '1px solid $orange11',
   },
+  // Image uploading style
+  '& img[data-loading="true"]': {
+    opacity: 0.25,
+  },
 });
 
 // Tippyjs theme used by the slash command menu
@@ -72,38 +75,35 @@ const globalStylesCustomEditor = globalCss({
     padding: 0,
     backgroundColor: '$gray1',
     boxShadow:
-      '0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1)',
+      '0px 10px 38px -10px rgba(26, 26, 26, 0.35), 0px 10px 20px -15px rgba(26, 26, 26, 0.2)',
     br: '$1',
     minWidth: '280px',
   },
 });
 
-/**
- * TODO
- * - left menu that trigger the commands menu
- * - check all the shortcuts and update the GitBook
- * - check all the markdown shorcuts
- * - investigate figure extension instead of image
- * - separate PR - mobile UI
- * - WIP separate PR - data migration from slate
- */
-
 interface TipTapEditorProps {
-  // story: Story;
+  story: Story;
+  editable?: boolean;
 }
 
-export const TipTapEditor = ({}: TipTapEditorProps) => {
+export const TipTapEditor = forwardRef<
+  {
+    getEditor: () => Editor | null;
+  },
+  TipTapEditorProps
+>(({ story, editable = true }, ref) => {
+  // TODO is story really needed? Could it be just the content prop?
   globalStylesCustomEditor();
 
-  const fileUploaderRef = useRef<HTMLInputElement>(null);
-
   const editor = useEditor({
+    editable,
     extensions: [
+      CharacterCount,
       // Nodes
       TipTapDocument,
       TipTapParagraph,
       TipTapText,
-      TipTapBlockquote,
+      TipTapBlockquote.extend({ content: 'paragraph+' }),
       TipTapLink.configure({
         openOnClick: false,
       }),
@@ -112,15 +112,40 @@ export const TipTapEditor = ({}: TipTapEditorProps) => {
       TipTapOrderedList,
       TipTapHardBreak,
       TipTapHeading.configure({
-        // Only allow h1, h2 and h3
-        levels: [1, 2, 3],
+        // Only allow h2 and h3
+        levels: [2, 3],
       }),
-      TipTapImage,
+      TipTapHorizontalRule,
+      TipTapCodeBlockLowlight.extend({
+        addNodeView() {
+          return ReactNodeViewRenderer(CodeBlockComponent);
+        },
+      }).configure({
+        lowlight,
+      }),
+      TipTapImage.extend({
+        addAttributes() {
+          return {
+            ...this.parent?.(),
+            loading: {
+              default: false,
+              renderHTML: (attributes) => {
+                if (attributes.loading) {
+                  return {
+                    'data-loading': attributes.loading,
+                  };
+                }
+              },
+            },
+          };
+        },
+      }),
       // Marks
       TipTapBold,
       TipTapCode,
       TipTapItalic,
       TipTapStrike,
+      TipTapUnderline,
       // Extensions
       TipTapDropcursor,
       TipTapHistory,
@@ -134,66 +159,43 @@ export const TipTapEditor = ({}: TipTapEditorProps) => {
       }),
       // Custom extensions
       SlashCommands.configure({
-        commands: slashCommands,
+        commands: slashCommands({ storyId: story.id }),
         component: SlashCommandsList,
       }),
     ],
-    content: '<p>Hello World! 🌎️</p>',
+    content: story.contentVersion === '2' ? story.content : '',
   });
 
-  const addImageToEditor = (files: FileList | null) => {
-    if (!files) {
-      return;
-    }
-
-    // for (const file of files) {
-    //   const reader = new FileReader();
-    //   const [mime] = file.type.split('/');
-    //   if (mime !== 'image') continue;
-
-    //   // First show the image as uploading since this can take a while...
-    //   const preview = URL.createObjectURL(file);
-    //   const id = generateRandomId();
-
-    //   // TODO global loading state ?
-
-    //   // editor?.chain().focus().setImage({ src: preview }).run();
-
-    //   reader.addEventListener('load', async () => {
-    //     // resize the image for faster upload
-    //     const blob = await resizeImage(file, { maxWidth: 2000 });
-
-    //     const name = `photos/${story.id}/${id}-${file.name}`;
-    //     const imageUrl = await storage.putFile(name, blob as any, {
-    //       encrypt: false,
-    //       contentType: file.type,
-    //     });
-
-    //     // editor?.state.tr.deleteSelection();
-
-    //     // TODO image should delete slash menu text and appear at the same place
-    //     editor?.chain().focus().setImage({ src: imageUrl }).run();
-    //   });
-
-    //   reader.readAsDataURL(file);
-    // }
-  };
+  // Here we extend the received ref so the parent can get the editor content at any time
+  useImperativeHandle(
+    ref,
+    () => ({
+      // TODO cleanup empty <p>, <h1> etc tags, basically all empty tags
+      getEditor: () => editor,
+    }),
+    [editor]
+  );
 
   return (
     <>
       {editor && <BubbleMenu editor={editor} />}
-      {editor && <FloatingMenu editor={editor} />}
+      {editor && <FloatingMenu editor={editor} storyId={story.id} />}
 
       <StyledEditorContent editor={editor} />
-
-      {/* Input used to accept images */}
-      <input
-        type="file"
-        accept="image/jpeg, image/png"
-        onChange={(event) => addImageToEditor(event.target.files)}
-        ref={fileUploaderRef}
-        style={{ display: 'none' }}
-      />
+      <Container
+        css={{
+          position: 'fixed',
+          bottom: 0,
+          right: 0,
+          left: 0,
+          zIndex: -1,
+          textAlign: 'right',
+        }}
+      >
+        {editable && (
+          <Text size="sm">{editor?.storage.characterCount.words()} words</Text>
+        )}
+      </Container>
     </>
   );
-};
+});

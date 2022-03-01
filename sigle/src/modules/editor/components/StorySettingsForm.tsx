@@ -1,11 +1,8 @@
 import React, { useState, useCallback } from 'react';
 import { useFormik, FormikErrors } from 'formik';
 import { useRouter } from 'next/router';
-import styled, { css } from 'styled-components';
-import tw from 'twin.macro';
 import { toast } from 'react-toastify';
 import { useDropzone } from 'react-dropzone';
-import { MdAddAPhoto, MdDelete } from 'react-icons/md';
 import format from 'date-fns/format';
 import isValid from 'date-fns/isValid';
 import { Story } from '../../../types';
@@ -15,71 +12,195 @@ import {
   saveStoriesFile,
   deleteStoryFile,
 } from '../../../utils';
-import { Button } from '../../../components';
-import {
-  FormRow,
-  FormLabel,
-  FormInput,
-  FormInputCheckbox,
-  FormHelper,
-  FormTextarea,
-  FormHelperError,
-} from '../../../components/Form';
+import { Button } from '../../../ui/Button';
 import { storage } from '../../../utils/blockstack';
+import { styled } from '../../../stitches.config';
+import { CameraIcon, FileTextIcon, TrashIcon } from '@radix-ui/react-icons';
+import { Box, Flex, IconButton, Text } from '../../../ui';
+import {
+  ScrollArea,
+  ScrollAreaCorner,
+  ScrollAreaScrollbar,
+  ScrollAreaThumb,
+  ScrollAreaViewport,
+} from '../../../ui/ScrollArea';
 
-const ImageEmpty = styled.div<{ haveImage: boolean }>`
-  ${tw`flex items-center justify-center bg-grey py-16 mb-4 cursor-pointer rounded-lg relative border border-solid border-grey focus:outline-none`};
+export const FormRow = styled('div', {
+  mb: '$5',
+});
 
-  ${(props) =>
-    props.haveImage &&
-    css`
-      ${tw`py-0`};
-    `}
+export const FormLabel = styled('label', {
+  width: '100%',
+  display: 'block',
+  fontSize: '$2',
+  color: '$gray11',
+  mb: '$3',
+});
 
-  span {
-    ${tw`py-1 px-2 text-sm text-grey-darker`};
-  }
-`;
+export const FormInput = styled('input', {
+  '&[type]': {
+    appearance: 'none',
+    borderWidth: '0',
+    boxSizing: 'border-box',
+    fontFamily: 'inherit',
+    margin: '0',
+    outline: 'none',
+    padding: '0',
+    width: '100%',
+    WebkitTapHighlightColor: 'rgba(0,0,0,0)',
+    backgroundColor: '$gray3',
+    boxShadow: '0 0 0 1px $colors$gray7',
+    borderRadius: '$1',
+    px: '$2',
+    py: '$1',
+    fontSize: '$1',
+    color: '$gray11',
 
-const ImageEmptyIconContainer = styled.div`
-  ${tw`absolute bottom-2 right-2 flex items-center text-gray-900`};
-`;
+    '&:hover': {
+      backgroundColor: '$gray4',
+      boxShadow: '0 0 0 1px $colors$gray8',
+    },
 
-const ImageEmptyIconAdd = styled.div`
-  ${tw`p-2 bg-white rounded-full`};
-`;
+    '&:focus': {
+      backgroundColor: '$gray5',
+      boxShadow: '0 0 0 2px $colors$gray8',
+    },
 
-const ImageEmptyIconDelete = styled.div`
-  ${tw`p-2 bg-white rounded-full ml-2`};
-`;
+    '&::placeholder': {
+      color: '$gray9',
+    },
+  },
 
-const ImageCheckboxContainer = styled.div`
-  ${tw`flex items-center`};
+  '&[type="date"]::-webkit-calendar-picker-indicator': {
+    background: 'url(/static/img/Calendar.svg) no-repeat',
+    mt: '$1',
+  },
+});
 
-  ${FormHelper} {
-    margin-top: 0;
-    ${tw`ml-2`};
-  }
-`;
+const FormInputCheckbox = styled('input', {
+  '&[type="checkbox"]': {
+    display: 'block',
+    backgroundColor: '$gray3',
+    boxShadow: '0 0 0 1px $colors$gray7',
+    p: '$2',
+    mt: '$2',
+    borderRadius: '$1',
 
-const Image = styled.img`
-  ${tw`cursor-pointer w-full`};
-`;
+    '&:focus': {
+      boxShadow: '0 0 0 2px $colors$gray8',
+    },
+  },
+});
 
-const SaveRow = styled.div`
-  ${tw`py-3 flex justify-between`};
-`;
+const FormTextarea = styled('textarea', {
+  outline: 'none',
+  width: '100%',
+  backgroundColor: '$gray3',
+  boxShadow: '0 0 0 1px $colors$gray7',
+  borderRadius: '$1',
+  py: '$2',
+  px: '$2',
+  fontSize: '$1',
 
-const ButtonLink = styled.button`
-  ${tw`flex items-center text-pink text-sm mt-2`};
-  &:focus {
-    outline: 0;
-  }
+  '&:hover': {
+    backgroundColor: '$gray4',
+    boxShadow: '0 0 0 1px $colors$gray8',
+  },
 
-  span {
-    ${tw`ml-1`};
-  }
-`;
+  '&:focus': {
+    backgroundColor: '$gray5',
+    boxShadow: '0 0 0 2px $colors$gray8',
+  },
+
+  '&::placeholder': {
+    color: '$gray9',
+  },
+});
+
+const FormHelper = styled('p', {
+  mt: '$2',
+  color: '$gray9',
+  fontSize: '$1',
+});
+
+const FormHelperError = styled('p', {
+  mt: '$1',
+  color: '$orange11',
+});
+
+const ImageEmpty = styled('div', {
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+  backgroundColor: '$gray3',
+  py: '$4',
+  cursor: 'pointer',
+  borderRadius: '$1',
+  position: 'relative',
+  overflow: 'hidden',
+
+  '& span': {
+    py: '$1',
+    px: '$2',
+    fontSize: '$1',
+    color: '$gray9',
+  },
+});
+
+const Image = styled('img', {
+  width: '100%',
+});
+
+const ImageEmptyIconContainer = styled('div', {
+  position: 'absolute',
+  bottom: '$1',
+  right: '$1',
+  display: 'flex',
+  alignItems: 'center',
+  color: '$gray9',
+  gap: '$1',
+});
+
+const ImageCheckboxContainer = styled('div', {
+  display: 'flex',
+  alignItems: 'center',
+
+  [`& ${FormHelper}`]: {
+    mt: 0,
+    ml: '$2',
+  },
+});
+
+const SaveRow = styled('div', {
+  py: '$5',
+  display: 'flex',
+  justifyContent: 'end',
+  gap: '$6',
+});
+
+const PreviewCard = styled('div', {
+  mb: '$5',
+  boxShadow: '0 0 0 1px $colors$gray6',
+  borderRadius: '$4',
+  overflow: 'hidden',
+
+  '& img': {
+    maxHeight: 186,
+    borderBottomRightRadius: 0,
+    borderBottomLeftRadius: 0,
+    objectFit: 'cover',
+    objectPosition: 'top',
+  },
+});
+
+const PreviewCardNoImage = styled('div', {
+  display: 'flex',
+  minHeight: 80,
+  mb: '$5',
+  boxShadow: '0 0 0 1px $colors$gray6',
+  borderRadius: '$4',
+  overflow: 'hidden',
+});
 
 interface StorySettingsFormValues {
   coverImage: string;
@@ -186,7 +307,7 @@ export const StorySettingsForm = ({
   });
 
   const handleRemoveCover = (
-    event: React.MouseEvent<HTMLDivElement, MouseEvent>
+    event: React.MouseEvent<HTMLButtonElement, MouseEvent>
   ) => {
     // We stop the event so it does not trigger react-dropzone
     event.stopPropagation();
@@ -226,108 +347,231 @@ export const StorySettingsForm = ({
     : formik.values.coverImage;
 
   return (
-    <form onSubmit={formik.handleSubmit}>
-      <FormRow>
-        <FormLabel>Cover image</FormLabel>
-        <ImageEmpty
-          {...getRootProps({ tabIndex: undefined })}
-          haveImage={!!coverImageUrl}
+    <>
+      <Box
+        as="form"
+        css={{
+          height: '100%',
+          overflow: 'auto',
+        }}
+        onSubmit={formik.handleSubmit}
+      >
+        <ScrollArea type="scroll" scrollHideDelay={300}>
+          <ScrollAreaViewport>
+            <Box
+              css={{
+                px: '$8',
+              }}
+            >
+              <FormRow>
+                <FormLabel>Cover image</FormLabel>{' '}
+                <ImageEmpty
+                  {...getRootProps({ tabIndex: undefined })}
+                  css={{
+                    py: !!coverImageUrl ? 0 : undefined,
+                    height: !!coverImageUrl ? undefined : 178,
+                  }}
+                >
+                  {coverImageUrl && (
+                    <Image src={coverImageUrl} alt="Cover image" />
+                  )}
+                  {!coverImageUrl && (
+                    <Flex align="center" gap="1" css={{ color: '$gray9' }}>
+                      <CameraIcon />
+                      <Text size="action" css={{ color: '$gray9' }}>
+                        Add a cover image
+                      </Text>
+                    </Flex>
+                  )}
+                  <input {...getInputProps()} />
+                  <ImageEmptyIconContainer>
+                    {coverImageUrl && (
+                      <IconButton
+                        css={{ backgroundColor: '$gray3', opacity: '70%' }}
+                        title="Remove cover image"
+                        onClick={handleRemoveCover}
+                      >
+                        <TrashIcon />
+                      </IconButton>
+                    )}
+                  </ImageEmptyIconContainer>
+                </ImageEmpty>
+                <ImageCheckboxContainer>
+                  <FormInputCheckbox
+                    type="checkbox"
+                    name="hideCoverImage"
+                    checked={formik.values.hideCoverImage}
+                    value={formik.values.hideCoverImage ? 'true' : 'false'}
+                    onChange={formik.handleChange}
+                  />
+                  <FormHelper css={{ ml: '$2', pt: '$2' }}>
+                    Hide cover image on the published story
+                  </FormHelper>
+                </ImageCheckboxContainer>
+              </FormRow>
+
+              <FormRow>
+                <FormLabel>Created on</FormLabel>
+                <FormInput
+                  type="date"
+                  name="createdAt"
+                  value={formik.values.createdAt}
+                  onChange={formik.handleChange}
+                />
+                {formik.errors.createdAt && (
+                  <FormHelperError>{formik.errors.createdAt}</FormHelperError>
+                )}
+              </FormRow>
+
+              <FormRow>
+                <FormLabel>Meta title</FormLabel>
+                <FormInput
+                  placeholder="Type here..."
+                  name="metaTitle"
+                  type="text"
+                  value={formik.values.metaTitle}
+                  onChange={formik.handleChange}
+                  maxLength={100}
+                />
+                <FormHelper>
+                  Recommended: 70 characters. <br /> You have used{' '}
+                  {formik.values.metaTitle.length} characters.
+                </FormHelper>
+                {formik.errors.metaTitle && (
+                  <FormHelperError>{formik.errors.metaTitle}</FormHelperError>
+                )}
+              </FormRow>
+
+              <FormRow>
+                <FormLabel>Meta description</FormLabel>
+                <FormTextarea
+                  placeholder="Type here..."
+                  name="metaDescription"
+                  value={formik.values.metaDescription}
+                  onChange={formik.handleChange}
+                  rows={3}
+                  maxLength={250}
+                />
+                <FormHelper>
+                  Recommended: 156 characters. <br /> You have used{' '}
+                  {formik.values.metaDescription.length} characters.
+                </FormHelper>
+                {formik.errors.metaDescription && (
+                  <FormHelperError>
+                    {formik.errors.metaDescription}
+                  </FormHelperError>
+                )}
+              </FormRow>
+
+              <Text css={{ mb: '$3' }}>Preview</Text>
+              {coverImageUrl ? (
+                <PreviewCard>
+                  <Image src={coverImageUrl} alt="Cover image" />
+                  <Box css={{ p: '$2' }}>
+                    <Text size="xs" css={{ display: 'flex', gap: '$1' }}>
+                      app.sigle.io
+                    </Text>
+                    <Text as="h3" css={{ fontWeight: 600 }}>
+                      {story.metaTitle
+                        ? story.metaTitle
+                        : story.title + ' | Sigle'}
+                    </Text>
+                    {story.metaDescription && (
+                      <Text size="xs" css={{ mb: '$1' }}>
+                        {story.metaDescription}
+                      </Text>
+                    )}
+                  </Box>
+                </PreviewCard>
+              ) : (
+                <PreviewCardNoImage>
+                  <Box
+                    css={{
+                      display: 'grid',
+                      placeItems: 'center',
+                      width: 75,
+                      backgroundColor: '$gray3',
+                      borderRight: '1px solid $colors$gray7',
+
+                      '& svg': {
+                        color: '$gray9',
+                      },
+                    }}
+                  >
+                    <FileTextIcon />
+                  </Box>
+                  <Flex direction="column" justify="center" css={{ p: '$2' }}>
+                    <Text size="xs" css={{ display: 'flex', gap: '$1' }}>
+                      app.sigle.io
+                    </Text>
+                    <Text as="h3" css={{ fontWeight: 600 }}>
+                      {story.metaTitle
+                        ? story.metaTitle
+                        : story.title + ' | Sigle'}
+                    </Text>
+                    {story.metaDescription && (
+                      <Text size="xs" css={{ mb: '$1' }}>
+                        {story.metaDescription}
+                      </Text>
+                    )}
+                  </Flex>
+                </PreviewCardNoImage>
+              )}
+            </Box>
+          </ScrollAreaViewport>
+          <ScrollAreaScrollbar orientation="vertical">
+            <ScrollAreaThumb />
+          </ScrollAreaScrollbar>
+          <ScrollAreaCorner />
+        </ScrollArea>
+
+        <Box
+          css={{
+            borderTop: '1px solid $colors$gray6',
+            boxShadow: 'inset 1px 0 0 0 $colors$gray7',
+            position: 'fixed',
+            width: '100%',
+            left: 0,
+            bottom: 0,
+            px: '$8',
+            backgroundColor: '$gray1',
+          }}
         >
-          {coverImageUrl && <Image src={coverImageUrl} />}
-          {!coverImageUrl && <span>Upload cover image</span>}
-          <input {...getInputProps()} />
-          <ImageEmptyIconContainer>
-            <ImageEmptyIconAdd title="Add cover image">
-              <MdAddAPhoto size={15} />
-            </ImageEmptyIconAdd>
-            {coverImageUrl && (
-              <ImageEmptyIconDelete
-                title="Remove cover image"
-                onClick={handleRemoveCover}
+          <SaveRow>
+            {loadingDelete ? (
+              <Button variant="ghost" color="orange" size="lg" disabled>
+                <TrashIcon />
+                <span>Deleting ...</span>
+              </Button>
+            ) : (
+              <Button
+                css={{ display: 'flex', gap: '$2' }}
+                size="lg"
+                onClick={handleDelete}
+                variant="ghost"
+                color="orange"
               >
-                <MdDelete size={15} />
-              </ImageEmptyIconDelete>
+                <span>Delete this story</span>
+                <TrashIcon />
+              </Button>
             )}
-          </ImageEmptyIconContainer>
-        </ImageEmpty>
-        <ImageCheckboxContainer>
-          <FormInputCheckbox
-            type="checkbox"
-            name="hideCoverImage"
-            checked={formik.values.hideCoverImage}
-            value={formik.values.hideCoverImage ? 'true' : 'false'}
-            onChange={formik.handleChange}
-          />
-          <FormHelper>Hide cover image on the published story</FormHelper>
-        </ImageCheckboxContainer>
-      </FormRow>
+            <Button
+              size="lg"
+              color="orange"
+              disabled={formik.isSubmitting}
+              type="submit"
+            >
+              {formik.isSubmitting ? 'Saving...' : 'Save Settings'}
+            </Button>
+          </SaveRow>
+        </Box>
+      </Box>
 
-      <FormRow>
-        <FormLabel>Created on</FormLabel>
-        <FormInput
-          type="date"
-          name="createdAt"
-          value={formik.values.createdAt}
-          onChange={formik.handleChange}
-        />
-        {formik.errors.createdAt && (
-          <FormHelperError>{formik.errors.createdAt}</FormHelperError>
-        )}
-      </FormRow>
-
-      <FormRow>
-        <FormLabel>Meta title</FormLabel>
-        <FormInput
-          name="metaTitle"
-          type="text"
-          value={formik.values.metaTitle}
-          onChange={formik.handleChange}
-          maxLength={100}
-        />
-        <FormHelper>
-          Recommended: 70 characters. You have used{' '}
-          {formik.values.metaTitle.length} characters.
-        </FormHelper>
-        {formik.errors.metaTitle && (
-          <FormHelperError>{formik.errors.metaTitle}</FormHelperError>
-        )}
-      </FormRow>
-
-      <FormRow>
-        <FormLabel>Meta description</FormLabel>
-        <FormTextarea
-          name="metaDescription"
-          value={formik.values.metaDescription}
-          onChange={formik.handleChange}
-          rows={3}
-          maxLength={250}
-        />
-        <FormHelper>
-          Recommended: 156 characters. You have used{' '}
-          {formik.values.metaDescription.length} characters.
-        </FormHelper>
-        {formik.errors.metaDescription && (
-          <FormHelperError>{formik.errors.metaDescription}</FormHelperError>
-        )}
-      </FormRow>
-
-      <SaveRow>
-        <Button disabled={formik.isSubmitting} type="submit">
-          {formik.isSubmitting ? 'Saving...' : 'Save'}
-        </Button>
-
-        {loadingDelete ? (
-          <ButtonLink disabled>
-            <MdDelete />
-            <span>Deleting ...</span>
-          </ButtonLink>
-        ) : (
-          <ButtonLink onClick={handleDelete}>
-            <MdDelete />
-            <span>Delete this story</span>
-          </ButtonLink>
-        )}
-      </SaveRow>
-    </form>
+      <Box
+        css={{
+          height: 107.5,
+        }}
+      />
+    </>
   );
 };

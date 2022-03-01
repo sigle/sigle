@@ -2,7 +2,6 @@ import React, { useState, useRef } from 'react';
 import styled, { css } from 'styled-components';
 import tw from 'twin.macro';
 import { toast } from 'react-toastify';
-import Tippy from '@tippyjs/react';
 import {
   Editor,
   RenderBlockProps,
@@ -18,8 +17,6 @@ import {
   TooltipTrigger,
   TooltipContent,
   Container,
-  Box,
-  IconButton,
 } from '../../../ui';
 import {
   saveStoryFile,
@@ -36,17 +33,6 @@ import { SlateEditorSideMenu } from './SlateEditorSideMenu';
 import { SlateEditorHoverMenu } from './SlateEditorHoverMenu';
 import { SlateEditorToolbar } from './SlateEditorToolbar';
 import {
-  Button,
-  Dialog,
-  DialogContent,
-  DialogTitle,
-  DialogDescription,
-  DialogClose,
-  Flex,
-  Heading,
-  Text,
-} from '../../../ui';
-import {
   DEFAULT_NODE,
   hasBlock,
   insertImage,
@@ -58,18 +44,13 @@ import { storage } from '../../../utils/blockstack';
 import { resizeImage } from '../../../utils/image';
 import { PageContainer } from './Editor';
 import { SlateEditorLink } from './SlateEditorLink';
-import { TwitterCardPreview } from './TwitterCardPreview';
-import { StoryPublishedDialog } from './StoryPublishedDialog';
-import {
-  ArrowLeftIcon,
-  EyeOpenIcon,
-  MixerHorizontalIcon,
-} from '@radix-ui/react-icons';
-import Link from 'next/link';
-import { useAuth } from '../../auth/AuthContext';
+import { PublishedDialog } from '../PublishedDialog';
+import { EditorHeader } from '../EditorHeader';
+import { PublishDialog } from '../PublishDialog';
+import { UnpublishDialog } from '../UnpublishDialog';
 
 const Input = styled.input`
-  ${tw`outline-none w-full text-4xl font-bold`};
+  ${tw`outline-none w-full text-4xl font-bold bg-transparent`};
 `;
 
 const Image = styled.img<{ selected: boolean; isUploading?: boolean }>`
@@ -176,7 +157,6 @@ export const SlateEditor = ({
   onCancelUnpublish,
   onConfirmUnpublish,
 }: Props) => {
-  const { user } = useAuth();
   const editorRef = useRef<Editor>(null);
   const sideMenuRef = useRef<any>(null);
   const hoverMenuRef = useRef<any>(null);
@@ -205,8 +185,12 @@ export const SlateEditor = ({
       );
 
       reader.addEventListener('load', async () => {
-        // resize the image for faster upload
-        const blob = await resizeImage(file, { maxWidth: 2000 });
+        // Resize the image client side for faster upload and to save storage space
+        // We skip resizing gif as it's turning them as single image
+        let blob: Blob | File = file;
+        if (file.type !== 'image/gif') {
+          blob = await resizeImage(file, { maxWidth: 2000 });
+        }
 
         const name = `photos/${story.id}/${id}-${file.name}`;
         const imageUrl = await storage.putFile(name, blob as any, {
@@ -606,69 +590,14 @@ export const SlateEditor = ({
         },
       }}
     >
-      <Flex as="header" justify="between" align="center">
-        <Flex gap="10" align="center">
-          <Link href="/" passHref>
-            <a>
-              <ArrowLeftIcon />
-            </a>
-          </Link>
-          <Text css={{ color: '$gray11' }} size="sm">
-            <Box as="span" css={{ fontWeight: 'bold', fontSize: '$3' }}>
-              {user?.username}
-            </Box>
-            <span>{story.type === 'public' ? ' | Published' : ' | Draft'}</span>
-          </Text>
-          {story.type === 'public' && (
-            <Button
-              css={{ display: 'flex', alignItems: 'center', gap: '$2' }}
-              variant="ghost"
-              href={`/${user?.username}/${story.id}`}
-              target="_blank"
-              as="a"
-            >
-              <Text size="action">See your story</Text>
-              <EyeOpenIcon />
-            </Button>
-          )}
-        </Flex>
-        <Flex gap="10">
-          {loadingSave && (
-            <Button disabled variant="ghost">
-              Saving ...
-            </Button>
-          )}
-          {!loadingSave && story.type === 'public' && (
-            <Button onClick={() => handleSave()} variant="ghost">
-              Save
-            </Button>
-          )}
-          {!loadingSave && story.type === 'private' && (
-            <Tippy
-              content="Nobody can see it unless you click on « publish »"
-              theme="light-border"
-            >
-              <Button onClick={() => handleSave()} variant="ghost">
-                Save
-              </Button>
-            </Tippy>
-          )}
-          {story.type === 'private' && (
-            <Button onClick={onPublish} variant="ghost">
-              Publish
-            </Button>
-          )}
-          {story.type === 'public' && (
-            <Button onClick={onUnpublish} variant="ghost">
-              Unpublish
-            </Button>
-          )}
-          <IconButton onClick={handleOpenSettings} aria-label="Open settings">
-            <MixerHorizontalIcon />
-          </IconButton>
-        </Flex>
-      </Flex>
-
+      <EditorHeader
+        story={story}
+        loadingSave={loadingSave}
+        onOpenSettings={handleOpenSettings}
+        onSave={handleSave}
+        onPublish={onPublish}
+        onUnpublish={onUnpublish}
+      />
       <PageContainer>
         <Input
           value={story.title}
@@ -711,84 +640,31 @@ export const SlateEditor = ({
           onSave={handleSave}
         />
 
-        <Dialog open={showPublishDialog} onOpenChange={onCancelPublish}>
-          <DialogContent>
-            <DialogTitle asChild>
-              <Heading as="h2" size="2xl" css={{ textAlign: 'center' }}>
-                One last check
-              </Heading>
-            </DialogTitle>
-            <DialogDescription asChild>
-              <Text css={{ mb: '$5', textAlign: 'center' }}>
-                Social media preview
-              </Text>
-            </DialogDescription>
-            <TwitterCardPreview story={story} />
-            <Flex justify="end" gap="6" css={{ mt: '$5' }}>
-              <Button
-                size="lg"
-                variant="ghost"
-                color="orange"
-                disabled={loadingSave || publishLoading}
-                onClick={handleEditPreview}
-              >
-                Edit preview
-              </Button>
-              <Button
-                size="lg"
-                color="orange"
-                disabled={loadingSave || publishLoading}
-                onClick={async () => {
-                  // We save before publishing
-                  await handleSave();
-                  await onConfirmPublish();
-                }}
-              >
-                {loadingSave || publishLoading
-                  ? 'Publishing ...'
-                  : 'Publish now'}
-              </Button>
-            </Flex>
-          </DialogContent>
-        </Dialog>
+        <PublishDialog
+          story={story}
+          open={showPublishDialog}
+          loading={loadingSave || publishLoading}
+          onConfirm={async () => {
+            // We save before publishing
+            await handleSave();
+            await onConfirmPublish();
+          }}
+          onClose={onCancelPublish}
+          onEditPreview={handleEditPreview}
+        />
 
-        <StoryPublishedDialog
+        <PublishedDialog
           open={showPublishedDialog}
           onOpenChange={onClosePublished}
           story={story}
         />
 
-        <Dialog open={showUnpublishDialog} onOpenChange={onCancelUnpublish}>
-          <DialogContent>
-            <DialogTitle asChild>
-              <Heading as="h2" size="xl" css={{ mb: '$3' }}>
-                Unpublish my story
-              </Heading>
-            </DialogTitle>
-            <DialogDescription asChild>
-              <Text>You’re about to unpublish this story.</Text>
-              <Text>
-                It won’t be visible on your blog anymore but you still can see
-                and edit it in your draft section.
-              </Text>
-            </DialogDescription>
-            <Flex justify="end" gap="6" css={{ mt: '$6' }}>
-              <DialogClose asChild>
-                <Button size="lg" variant="ghost" disabled={unpublishLoading}>
-                  Cancel
-                </Button>
-              </DialogClose>
-              <Button
-                size="lg"
-                color="orange"
-                disabled={unpublishLoading}
-                onClick={onConfirmUnpublish}
-              >
-                {unpublishLoading ? 'Unpublishing ...' : 'Confirm'}
-              </Button>
-            </Flex>
-          </DialogContent>
-        </Dialog>
+        <UnpublishDialog
+          open={showUnpublishDialog}
+          loading={unpublishLoading}
+          onConfirm={onConfirmUnpublish}
+          onClose={onCancelUnpublish}
+        />
       </PageContainer>
     </Container>
   );

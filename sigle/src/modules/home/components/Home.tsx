@@ -108,7 +108,7 @@ export const Home = ({
                 </HelpCard>
               </HelpCardContainer>
               <HelpCardContainer>
-                <HelpCard href="https://github.com/pradel/sigle/blob/main/CHANGELOG.md">
+                <HelpCard href="https://github.com/sigle/sigle/blob/main/CHANGELOG.md">
                   <HelpCardImg src="/static/img/data.png" />
                   <HelpCardCaption>
                     <HelpCardCaptionTitle>What's new?</HelpCardCaptionTitle>

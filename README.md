@@ -1,7 +1,7 @@
 <h1 align="center">Sigle</h1>
 
 <p align="center">
-  <img src="https://raw.githubusercontent.com/pradel/sigle/main/assets/icon-192x192.png" height="50">
+  <img src="https://raw.githubusercontent.com/sigle/sigle/main/assets/icon-192x192.png" height="50">
 </p>
 
 <p align="center">
@@ -9,11 +9,11 @@
 </p>
 
 <p align="center">
-  <img src="https://raw.githubusercontent.com/pradel/sigle/main/assets/screens.png">
+  <img src="https://raw.githubusercontent.com/sigle/sigle/main/assets/screens.png">
 </p>
 
 <p align="center">
-  <img src="https://badgen.net/travis/pradel/sigle" alt="License">
+  <img src="https://badgen.net/travis/sigle/sigle" alt="License">
   <img src="https://badgen.net/badge/license/MIT/blue" alt="License">
 </p>
 
@@ -25,7 +25,7 @@
 
 Here is a list of the big technologies we use:
 
-- [Blockstack](https://blockstack.org/): Authentication and storage
+- [Stacks](https://www.stacks.co/): Authentication and storage
 - [Next.js](https://nextjs.org/): React Framework
 - [Tailwind CSS](https://tailwindcss.com/): CSS Framework
 - [Slate](https://www.slatejs.org/): Text editor Framework
@@ -34,13 +34,6 @@ Here is a list of the big technologies we use:
 
 Read our [contributing guide](CONTRIBUTING.md) to see how to locally setup the repository and see our development process.
 
-## Support us
-
-Sigle is a **free** and **open-source** project built on top of Blockstack, you can help us keep the project alive by buying us coffee! ☕️
-
-- [GitHub Sponsors](https://github.com/sponsors/pradel)
-- [Buy Me a Coffee](https://www.buymeacoffee.com/sigle)
-
 ## License
 
-MIT © [Léo Pradel](https://www.leopradel.com/)
+MIT © [Sigle](https://www.sigle.io/)

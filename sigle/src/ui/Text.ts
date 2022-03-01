@@ -7,6 +7,7 @@ export const Text = styled('p', {
         fontSize: '$1',
         color: '$gray9',
         letterSpacing: '0.2px',
+        lineHeight: '18px',
       },
       sm: {
         fontSize: '$2',
@@ -22,6 +23,7 @@ export const Text = styled('p', {
         fontFamily: '$lato',
         fontSize: '$2',
         letterSpacing: '0.2px',
+        lineHeight: '20.4px',
       },
     },
     color: {

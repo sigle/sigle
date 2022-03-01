@@ -1,7 +1,7 @@
 import { Link2Icon } from '@radix-ui/react-icons';
-import { styled } from '../../../stitches.config';
-import { Flex, Box } from '../../../ui';
-import { Story } from '../../../types';
+import { styled } from '../../stitches.config';
+import { Flex, Box } from '../../ui';
+import { Story } from '../../types';
 
 const MetaContainer = styled('div', {
   borderColor: 'rgb(207, 217, 222)',
@@ -56,7 +56,7 @@ interface TwitterCardPreview {
 export const TwitterCardPreview = ({ story }: TwitterCardPreview) => {
   const seoTitle = story.metaTitle || `${story.title} | Sigle`;
   const seoDescription = story.metaDescription;
-  const seoImage = story.coverImage;
+  const seoImage = story.metaImage || story.coverImage;
 
   return (
     <MetaContainer image={!!seoImage}>
