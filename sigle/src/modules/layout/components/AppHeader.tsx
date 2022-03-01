@@ -48,7 +48,7 @@ const StatusDot = styled('div', {
 
 export const AppHeader = () => {
   const { user } = useAuth();
-  const router = useRouter() || { query: { username: '' } };
+  const router = useRouter();
   const [loadingCreate, setLoadingCreate] = useState(false);
   const { username } = router.query as {
     username: string;
