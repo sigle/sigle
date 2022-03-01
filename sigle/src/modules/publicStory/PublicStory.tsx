@@ -7,7 +7,7 @@ import { sanitizeHexColor } from '../../utils/security';
 import { sigleConfig } from '../../config';
 import { TipTapEditor } from '../editor/TipTapEditor';
 import { styled } from '../../stitches.config';
-import { Box, Heading, Text } from '../../ui';
+import { Box, Text } from '../../ui';
 import { PoweredBy } from './components/PoweredBy';
 import { getTextFromHtml } from '../editor/utils/getTextFromHtml';
 import { AppHeader } from '../layout/components/AppHeader';
@@ -18,6 +18,7 @@ const PublicStoryContainer = styled('div', {
   margin: '0 auto',
   paddingTop: '$15',
   paddingBottom: '$15',
+  px: '$4',
 });
 
 interface PublicStoryProps {
@@ -79,35 +80,28 @@ export const PublicStory = ({ story, settings }: PublicStoryProps) => {
           "& :where(a strong):not(:where([class~='not-prose'] *))": {
             color: safeSiteColor,
           },
-
-          px: '$4',
-
-          '& p': {
-            m: 0,
-            p: 0,
-          },
         }}
       >
         <Link href="/[username]" as={`/${username}`} passHref>
-          <a>
+          <a className="not-prose">
             <Text size="action">{siteName}</Text>
-            <Box css={{ mt: '$1', mb: '$7' }}>
-              <Text
-                size="action"
-                css={{
-                  display: 'flex',
-                  gap: '$2',
-                  color: '$gray9',
-                }}
-              >
-                {format(story.createdAt, 'MMM dd')}
-                <span>•</span>
-                <span>{storyReadingTime?.text}</span>
-              </Text>
-            </Box>
+            <Text
+              size="action"
+              css={{
+                display: 'flex',
+                gap: '$2',
+                color: '$gray9',
+                mt: '$1',
+                mb: '$7',
+              }}
+            >
+              {format(story.createdAt, 'MMM dd')}
+              <span>•</span>
+              <span>{storyReadingTime?.text}</span>
+            </Text>
           </a>
         </Link>
-        <Heading size="3xl">{story.title}</Heading>
+        <h1 className="sigle-title">{story.title}</h1>
         {story.coverImage && (
           <Box
             css={{
