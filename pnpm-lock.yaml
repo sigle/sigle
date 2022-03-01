@@ -2195,7 +2195,7 @@ packages:
       tailwindcss: '>=2.0.0'
     dependencies:
       mini-svg-data-uri: 1.4.3
-      tailwindcss: 2.2.15_96f83969316717847b3edf58a3f353f3
+      tailwindcss: 2.2.15
     dev: true
 
   /@tailwindcss/typography/0.4.1_tailwindcss@2.2.15:
@@ -2207,7 +2207,7 @@ packages:
       lodash.isplainobject: 4.0.6
       lodash.merge: 4.6.2
       lodash.uniq: 4.5.0
-      tailwindcss: 2.2.15_96f83969316717847b3edf58a3f353f3
+      tailwindcss: 2.2.15
     dev: true
 
   /@tailwindcss/typography/0.5.2_tailwindcss@3.0.23:

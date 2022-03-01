@@ -1,5 +1,23 @@
 # @sigle/app
 
+## 0.3.0
+
+### Minor Changes
+
+- 407f2f9: Experimental editor: sanitize HTML.
+- 578ba84: Add a word count to the editor.
+- 067c1c4: Experimental editor: improve cover image behavior.
+- 1f38066: Redesign public story page.
+  Update app header for logged out users.
+
+### Patch Changes
+
+- 2928b7b: Experimental Editor: save flag in local storage.
+- 60d1596: Add interactive styling to back arrow.
+- 505d9f6: Redesign the editor settings modal.
+- 4d83892: Migrate styles from styled components to Stitches.
+- 69b9b64: Fix word count showing on published story page.
+
 ## 0.2.0
 
 ### Minor Changes
