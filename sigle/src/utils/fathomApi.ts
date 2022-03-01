@@ -18,7 +18,7 @@ export const initFathomClient = ({
       date_from?: string;
       date_to?: string;
       limit?: number;
-      filters: {
+      filters?: {
         property: 'hostname' | 'pathname';
         operator: 'is' | 'is not';
         value: string;
