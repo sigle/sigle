@@ -19,7 +19,7 @@ importers:
       '@fontsource/roboto': 4.5.1
       '@prisma/client': 2.17.0
       '@sentry/nextjs': 6.17.9
-      '@stacks/auth': 3.1.0
+      '@stacks/auth': 3.3.0
       '@tailwindcss/forms': 0.3.4
       '@tailwindcss/typography': 0.4.1
       '@testing-library/jest-dom': 5.16.2
@@ -60,7 +60,7 @@ importers:
     dependencies:
       '@prisma/client': 2.17.0_prisma@2.17.0
       '@sentry/nextjs': 6.17.9_next@12.1.0+react@17.0.2
-      '@stacks/auth': 3.1.0
+      '@stacks/auth': 3.3.0
       date-fns: 2.25.0
       fathom-client: 3.2.0
       feed: 4.2.2
@@ -93,7 +93,7 @@ importers:
       eslint: 8.9.0
       eslint-config-next: 12.1.0_05da38aa0d7c6b76490c613c98841282
       eslint-config-prettier: 8.3.0_eslint@8.9.0
-      eslint-plugin-prettier: 4.0.0_07b422646bb75d3db791621d4fdbc992
+      eslint-plugin-prettier: 4.0.0_3c0ea6a16e734167c160783920360452
       fast-xml-parser: 4.0.1
       jest: 27.5.1
       sass: 1.42.1
@@ -120,12 +120,12 @@ importers:
       '@radix-ui/react-tooltip': 0.1.0
       '@sentry/nextjs': 6.17.9
       '@sigle/tailwind-style': workspace:^0.2.0
-      '@stacks/auth': 3.1.0
+      '@stacks/auth': 3.3.0
       '@stacks/connect': 6.4.0
       '@stacks/connect-react': 13.0.0
-      '@stacks/keychain': 3.1.0
-      '@stacks/profile': 3.1.0
-      '@stacks/storage': 3.1.0
+      '@stacks/keychain': 3.3.0
+      '@stacks/profile': 3.3.0
+      '@stacks/storage': 3.3.0
       '@stitches/react': 1.2.5
       '@tailwindcss/forms': 0.3.4
       '@tailwindcss/typography': 0.4.1
@@ -224,12 +224,12 @@ importers:
       '@radix-ui/react-scroll-area': 0.1.3_react@17.0.2
       '@radix-ui/react-tooltip': 0.1.0_react-dom@17.0.2+react@17.0.2
       '@sentry/nextjs': 6.17.9_next@12.1.0+react@17.0.2
-      '@stacks/auth': 3.1.0
+      '@stacks/auth': 3.3.0
       '@stacks/connect': 6.4.0
       '@stacks/connect-react': 13.0.0_react-dom@17.0.2+react@17.0.2
-      '@stacks/keychain': 3.1.0
-      '@stacks/profile': 3.1.0
-      '@stacks/storage': 3.1.0
+      '@stacks/keychain': 3.3.0
+      '@stacks/profile': 3.3.0
+      '@stacks/storage': 3.3.0
       '@stitches/react': 1.2.5_react@17.0.2
       '@tippyjs/react': 4.2.6_react-dom@17.0.2+react@17.0.2
       '@tiptap/core': 2.0.0-beta.174
@@ -314,7 +314,7 @@ importers:
       eslint: 8.9.0
       eslint-config-next: 12.1.0_05da38aa0d7c6b76490c613c98841282
       eslint-config-prettier: 8.3.0_eslint@8.9.0
-      eslint-plugin-prettier: 4.0.0_07b422646bb75d3db791621d4fdbc992
+      eslint-plugin-prettier: 4.0.0_3c0ea6a16e734167c160783920360452
       fast-xml-parser: 4.0.1
       jest: 27.5.1
       next-compose-plugins: 2.2.1
@@ -1999,13 +1999,13 @@ packages:
       - encoding
     dev: false
 
-  /@stacks/auth/3.1.0:
-    resolution: {integrity: sha512-VmG+CO2bMnegKr3yg2C/Qdw1CLPBq098wlsOe1WayfNUoPvVwmsvLZpTQKrQLgdav2yrgGn5EsHA+QrwkYFQGw==}
+  /@stacks/auth/3.3.0:
+    resolution: {integrity: sha512-jt/NZHs46o+UdMAp4rP+GJhSy5dj1HzXtKDnGaGvXLY4mhecSb+JnCi0Jiwyea1cU0jcq7nHbkEOydxDFe+/Gw==}
     dependencies:
       '@stacks/common': 3.3.0
       '@stacks/encryption': 3.3.0
       '@stacks/network': 3.3.0
-      '@stacks/profile': 3.1.0
+      '@stacks/profile': 3.3.0
       c32check: 1.1.3
       cross-fetch: 3.1.5
       jsontokens: 3.0.0
@@ -2133,16 +2133,16 @@ packages:
       - encoding
     dev: false
 
-  /@stacks/keychain/3.1.0:
-    resolution: {integrity: sha512-COeuQ2PS/hM8T1hZO5OQHkM/YBq1t4+uEvu9emDl1gV1AJ9+zVXn3NkwVR1lKYBFfvtfnTPwuXMBq6dl6MHlKQ==}
+  /@stacks/keychain/3.3.0:
+    resolution: {integrity: sha512-eoRUb4FFnsb2D180MZP/uoNzp46fflJkbPs2Vxgr/yB9YeahMWUcf8QXPbQKuWmQcQqQxmoNJllrwInE/sENwQ==}
     dependencies:
       '@blockstack/rpc-client': 0.3.0-alpha.22
-      '@stacks/auth': 3.1.0
+      '@stacks/auth': 3.3.0
       '@stacks/common': 3.3.0
       '@stacks/encryption': 3.3.0
       '@stacks/network': 3.3.0
-      '@stacks/profile': 3.1.0
-      '@stacks/storage': 3.1.0
+      '@stacks/profile': 3.3.0
+      '@stacks/storage': 3.3.0
       '@stacks/transactions': 3.3.0
       '@types/bn.js': 4.11.6
       '@types/node': 14.18.12
@@ -2150,7 +2150,7 @@ packages:
       bip32: 2.0.6
       bip39: 3.0.4
       bitcoinjs-lib: 5.2.0
-      bn.js: 4.12.0
+      bn.js: 5.2.0
       c32check: 1.1.3
       jsontokens: 3.0.0
       randombytes: 2.1.0
@@ -2211,8 +2211,8 @@ packages:
       - encoding
     dev: false
 
-  /@stacks/profile/3.1.0:
-    resolution: {integrity: sha512-XkuuzRVLXn45+4o8JHJ9RsWQn9Vahm2vBnbFHY/f0FAywK+D06VBpse9qj9ZbtsYtolB1pjdy+6kLsewPiBNIw==}
+  /@stacks/profile/3.3.0:
+    resolution: {integrity: sha512-UbuhRHr27ik4J3W7Tdi9azs2HmhxTZHa4MHyGtjYrQhoTa3CLSPXfKnVKpTy38+vs11y2G79kd8Q8TSOy+0Ewg==}
     dependencies:
       '@stacks/common': 3.3.0
       '@stacks/network': 3.3.0
@@ -2224,10 +2224,10 @@ packages:
       - encoding
     dev: false
 
-  /@stacks/storage/3.1.0:
-    resolution: {integrity: sha512-2xmd3oYsTJxM4QsYos5amkJPRabC365tyv/2m+arwSqC4lSmVKrs1pPCL6omm9Qz61KdENtn/JG1vDQmqXzKXQ==}
+  /@stacks/storage/3.3.0:
+    resolution: {integrity: sha512-Rt6X74R6j2LZu4Hlkb3cUmBVblDU55ZFik4tq4kquAwhCWnf7CnUkZY6Sdy50QWCpishlcqCIz7NbFkcxRXIDQ==}
     dependencies:
-      '@stacks/auth': 3.1.0
+      '@stacks/auth': 3.3.0
       '@stacks/common': 3.3.0
       '@stacks/encryption': 3.3.0
       bitcoinjs-lib: 5.2.0
@@ -4671,7 +4671,7 @@ packages:
       minimatch: 3.1.2
     dev: true
 
-  /eslint-plugin-prettier/4.0.0_07b422646bb75d3db791621d4fdbc992:
+  /eslint-plugin-prettier/4.0.0_3c0ea6a16e734167c160783920360452:
     resolution: {integrity: sha512-98MqmCJ7vJodoQK359bqQWaxOE0CS8paAz/GgjaZLyex4TTk3g9HugoO89EqWCrFiOqn9EVvcoo7gZzONCWVwQ==}
     engines: {node: '>=6.0.0'}
     peerDependencies:
@@ -4684,7 +4684,6 @@ packages:
     dependencies:
       eslint: 8.9.0
       eslint-config-prettier: 8.3.0_eslint@8.9.0
-      prettier: 2.5.1
       prettier-linter-helpers: 1.0.0
     dev: true
 
