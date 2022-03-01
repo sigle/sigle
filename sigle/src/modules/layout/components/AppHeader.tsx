@@ -9,7 +9,7 @@ import { useRouter } from 'next/router';
 import { useState } from 'react';
 import { toast } from 'react-toastify';
 import { styled } from '../../../stitches.config';
-import { Box, Button, Container, Flex, Text } from '../../../ui';
+import { Box, Button, Container, Flex, IconButton, Text } from '../../../ui';
 import {
   convertStoryToSubsetStory,
   createNewEmptyStory,
@@ -138,15 +138,30 @@ export const AppHeader = () => {
           </Flex>
         ) : (
           <Flex gap="6">
-            <a href={sigleConfig.twitterUrl} target="_blank" rel="noreferrer">
+            <IconButton
+              as="a"
+              href={sigleConfig.twitterUrl}
+              target="_blank"
+              rel="noreferrer"
+            >
               <TwitterLogoIcon />
-            </a>
-            <a href={sigleConfig.discordUrl} target="_blank" rel="noreferrer">
+            </IconButton>
+            <IconButton
+              as="a"
+              href={sigleConfig.discordUrl}
+              target="_blank"
+              rel="noreferrer"
+            >
               <DiscordIcon />
-            </a>
-            <a href={sigleConfig.twitterUrl} target="_blank" rel="noreferrer">
+            </IconButton>
+            <IconButton
+              as="a"
+              href={sigleConfig.twitterUrl}
+              target="_blank"
+              rel="noreferrer"
+            >
               <GitHubLogoIcon />
-            </a>
+            </IconButton>
           </Flex>
         )}
         {user ? (
