@@ -4,6 +4,7 @@ import Image from 'next/image';
 import * as Fathom from 'fathom-client';
 import posthog from 'posthog-js';
 import { useConnect } from '@stacks/connect-react';
+import { useConnect as legacyUseConnect } from '@stacks/legacy-connect-react';
 import { ArrowTopRightIcon } from '@radix-ui/react-icons';
 import { sigleConfig } from '../config';
 import { Goals } from '../utils/fathom';
@@ -49,11 +50,18 @@ const BlockIllustration = styled('div', {
 
 const BlockLogin = () => {
   const { doOpenAuth } = useConnect();
+  const { doOpenAuth: legacyDoOpenAuth } = legacyUseConnect();
 
   const handleLogin = () => {
     Fathom.trackGoal(Goals.LOGIN, 0);
     posthog.capture('start-login');
     doOpenAuth();
+  };
+
+  const handleLoginLegacy = () => {
+    Fathom.trackGoal(Goals.LOGIN, 0);
+    posthog.capture('start-login-legacy');
+    legacyDoOpenAuth();
   };
 
   return (
@@ -81,6 +89,14 @@ const BlockLogin = () => {
       </Text>
       <Button color="orange" size="lg" onClick={handleLogin} css={{ mt: '$7' }}>
         Start Writing
+      </Button>
+      <Button
+        color="orange"
+        size="lg"
+        onClick={handleLoginLegacy}
+        css={{ mt: '$7' }}
+      >
+        Start Writing Legacy
       </Button>
     </>
   );

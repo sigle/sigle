@@ -1,12 +1,17 @@
 import React, { useEffect, useState, useCallback, useMemo } from 'react';
 import { toast } from 'react-toastify';
 import { UserData } from '@stacks/auth';
+import { UserData as LegacyUserData } from '@stacks/legacy-auth';
 import { Connect, AuthOptions } from '@stacks/connect-react';
+import {
+  Connect as LegacyConnect,
+  AuthOptions as LegacyAuthOptions,
+} from '@stacks/legacy-connect-react';
 import posthog from 'posthog-js';
 import { userSession } from '../../utils/blockstack';
 
 const AuthContext = React.createContext<{
-  user?: UserData;
+  user?: UserData | LegacyUserData;
   loggingIn: boolean;
   setUsername: (username: string) => void;
 }>({ loggingIn: false, setUsername: () => {} });
@@ -18,7 +23,7 @@ interface AuthProviderProps {
 const AuthProvider = ({ children }: AuthProviderProps) => {
   const [state, setState] = useState<{
     loggingIn: boolean;
-    user?: UserData;
+    user?: UserData | LegacyUserData;
   }>({
     loggingIn: true,
   });
@@ -54,12 +59,14 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
     }
   }, [state.user]);
 
+  const appDetails = {
+    name: 'Sigle',
+    icon: 'https://app.sigle.io/icon-192x192.png',
+  };
+
   const authOptions: AuthOptions = {
     redirectTo: '/',
-    appDetails: {
-      name: 'Sigle',
-      icon: 'https://app.sigle.io/icon-192x192.png',
-    },
+    appDetails,
     userSession,
     onFinish: () => {
       handleAuthSignIn();
@@ -121,18 +128,33 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
 
   const userApi = useMemo(() => ({ handleSetUsername }), []);
 
+  const legacyAuthOptions: LegacyAuthOptions = {
+    redirectTo: '/',
+    registerSubdomain: true,
+    appDetails,
+    userSession,
+    finished: () => {
+      setState({
+        loggingIn: false,
+        user: userSession.loadUserData(),
+      });
+    },
+  };
+
   return (
-    <Connect authOptions={authOptions}>
-      <AuthContext.Provider
-        value={{
-          user: state.user,
-          loggingIn: state.loggingIn,
-          setUsername: userApi.handleSetUsername,
-        }}
-      >
-        {children}
-      </AuthContext.Provider>
-    </Connect>
+    <LegacyConnect authOptions={legacyAuthOptions}>
+      <Connect authOptions={authOptions}>
+        <AuthContext.Provider
+          value={{
+            user: state.user,
+            loggingIn: state.loggingIn,
+            setUsername: userApi.handleSetUsername,
+          }}
+        >
+          {children}
+        </AuthContext.Provider>
+      </Connect>
+    </LegacyConnect>
   );
 };
 
