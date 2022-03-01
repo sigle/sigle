@@ -29,28 +29,31 @@ export const CoverImage = ({ story, setStoryFile }: CoverImageProps) => {
     setStoryFile({ ...story, coverImage: undefined });
   };
 
-  const onDrop = useCallback(async (acceptedFiles) => {
-    const file: File | undefined = acceptedFiles[0];
-    if (!file) return;
-    const [mime] = file.type.split('/');
-    if (mime !== 'image') return;
+  const onDrop = useCallback(
+    async (acceptedFiles) => {
+      const file: File | undefined = acceptedFiles[0];
+      if (!file) return;
+      const [mime] = file.type.split('/');
+      if (mime !== 'image') return;
 
-    // We show a preview of  the image image as uploading can take a while...
-    const preview = URL.createObjectURL(file);
-    setLoadingSave(true);
-    setStoryFile({ ...story, coverImage: preview });
+      // We show a preview of  the image image as uploading can take a while...
+      const preview = URL.createObjectURL(file);
+      setLoadingSave(true);
+      setStoryFile({ ...story, coverImage: preview });
 
-    const blob = await resizeImage(file, { maxWidth: 2000 });
-    const now = new Date().getTime();
-    const name = `photos/${story.id}/${now}-${file.name}`;
-    const coverImageUrl = await storage.putFile(name, blob, {
-      encrypt: false,
-      contentType: blob.type,
-    });
+      const blob = await resizeImage(file, { maxWidth: 2000 });
+      const now = new Date().getTime();
+      const name = `photos/${story.id}/${now}-${file.name}`;
+      const coverImageUrl = await storage.putFile(name, blob, {
+        encrypt: false,
+        contentType: blob.type,
+      });
 
-    setLoadingSave(false);
-    setStoryFile({ ...story, coverImage: coverImageUrl });
-  }, []);
+      setLoadingSave(false);
+      setStoryFile({ ...story, coverImage: coverImageUrl });
+    },
+    [story]
+  );
   const { getRootProps, getInputProps } = useDropzone({
     onDrop,
     accept: 'image/jpeg,image/png',
