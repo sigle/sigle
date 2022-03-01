@@ -48,11 +48,10 @@ const StatusDot = styled('div', {
 
 export const AppHeader = () => {
   const { user } = useAuth();
-  const router = useRouter();
+  const router = useRouter() || { query: { username: '' } };
   const [loadingCreate, setLoadingCreate] = useState(false);
-  const { username, storyId } = router.query as {
+  const { username } = router.query as {
     username: string;
-    storyId: string;
   };
 
   const handleCreateNewPrivateStory = async () => {
