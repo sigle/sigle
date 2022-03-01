@@ -1,7 +1,8 @@
 import {
   BulletedListLight,
+  CodeLight,
+  DividerLight,
   NumberedListLight,
-  Heading1Light,
   Heading2Light,
   Heading3Light,
   ImageLight,
@@ -10,30 +11,46 @@ import {
 import { SlashCommandsCommand } from './extensions/SlashCommands';
 import { styled } from '../../stitches.config';
 import { Flex, Text } from '../../ui';
+import { resizeImage } from '../../utils/image';
+import { storage } from '../../utils/blockstack';
+import { generateRandomId } from '../../utils';
 
-export const slashCommands: SlashCommandsCommand[] = [
-  {
-    icon: Heading1Light,
-    title: 'Heading 1',
-    description: 'Large section Heading',
-    command: ({ editor, range }) => {
-      if (!range) {
-        editor.chain().focus().toggleHeading({ level: 1 }).run();
-        return;
+const resizeAndUploadImage = async (
+  image: File,
+  name: string
+): Promise<string> => {
+  return new Promise((resolve) => {
+    const reader = new FileReader();
+
+    reader.readAsDataURL(image);
+
+    reader.addEventListener('load', async () => {
+      // Resize the image client side for faster upload and to save storage space
+      // We skip resizing gif as it's turning them as single image
+      let blob: Blob | File = image;
+      if (image.type !== 'image/gif') {
+        blob = await resizeImage(image, { maxWidth: 2000 });
       }
 
-      editor
-        .chain()
-        .focus()
-        .deleteRange(range)
-        .setNode('heading', { level: 1 })
-        .run();
-    },
-  },
+      const imageUrl = await storage.putFile(name, blob as any, {
+        encrypt: false,
+        contentType: image.type,
+      });
+
+      resolve(imageUrl);
+    });
+  });
+};
+
+export const slashCommands = ({
+  storyId,
+}: {
+  storyId: string;
+}): SlashCommandsCommand[] => [
   {
     icon: Heading2Light,
-    title: 'Heading 2',
-    description: 'Medium section Heading',
+    title: 'Big Heading',
+    description: 'Big section Heading',
     command: ({ editor, range }) => {
       if (!range) {
         editor.chain().focus().toggleHeading({ level: 2 }).run();
@@ -50,7 +67,7 @@ export const slashCommands: SlashCommandsCommand[] = [
   },
   {
     icon: Heading3Light,
-    title: 'Heading 3',
+    title: 'Small Heading',
     description: 'Small section Heading',
     command: ({ editor, range }) => {
       if (!range) {
@@ -123,12 +140,90 @@ export const slashCommands: SlashCommandsCommand[] = [
     },
   },
   {
+    icon: DividerLight,
+    title: 'Divider',
+    description: 'Create a divider',
+    command: ({ editor, range }) => {
+      let chainCommands = editor.chain().focus();
+      if (range) {
+        chainCommands = chainCommands.deleteRange(range);
+      }
+      chainCommands
+        .setHorizontalRule()
+        // Here we insert a paragraph after the divider that will be removed directly to fix
+        // an issue with TipTap where the isActive('paragraph') function is returning
+        // false. The "plus" menu on the left is not showing without this fix.
+        .insertContent({
+          type: 'paragraph',
+        })
+        .deleteNode('paragraph')
+        .run();
+    },
+  },
+  {
     icon: ImageLight,
     title: 'Image',
     description: 'Upload from your computer',
     command: ({ editor, range }) => {
-      // TODO get it working
-      // fileUploaderRef.current?.click();
+      const input = document.createElement('input');
+      input.type = 'file';
+      input.accept = 'image/jpeg,image/png,image/gif';
+
+      input.onchange = async (e) => {
+        const file: File | undefined = (e.target as any)?.files?.[0];
+        if (!file) return;
+        const [mime] = file.type.split('/');
+        if (mime !== 'image') return;
+
+        // We show a preview of  the image image as uploading can take a while...
+        const preview = URL.createObjectURL(file);
+        if (range) {
+          editor
+            .chain()
+            .focus()
+            .deleteRange(range)
+            .setImage({ src: preview })
+            .updateAttributes('image', { loading: true })
+            .run();
+        } else {
+          editor.chain().focus().setImage({ src: preview }).run();
+        }
+
+        const id = generateRandomId();
+        const name = `photos/${storyId}/${id}-${file.name}`;
+        const imageUrl = await resizeAndUploadImage(file, name);
+
+        // Preload the new image so there is no flicker
+        const uploadedImage = new Image();
+        uploadedImage.src = imageUrl;
+        uploadedImage.onload = () => {
+          editor
+            .chain()
+            .focus()
+            .updateAttributes('image', {
+              src: imageUrl,
+              loading: false,
+            })
+            .run();
+          // Create a new paragraph so user can continue writing
+          editor.commands.createParagraphNear();
+        };
+      };
+
+      input.click();
+    },
+  },
+  {
+    icon: CodeLight,
+    title: 'Code',
+    description: 'Create a code snippet',
+    command: ({ editor, range }) => {
+      if (!range) {
+        editor.chain().focus().setCodeBlock().run();
+        return;
+      }
+
+      editor.chain().focus().deleteRange(range).setCodeBlock().run();
     },
   },
 ];

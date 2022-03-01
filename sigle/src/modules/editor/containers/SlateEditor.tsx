@@ -7,6 +7,8 @@ import { SlateEditor as Component } from '../components/SlateEditor';
 import { Story } from '../../../types';
 import { publishStory, unPublishStory } from '../../../utils';
 import { Goals } from '../../../utils/fathom';
+import { NewEditor } from '../NewEditor';
+import { isExperimentalEditorEnabled } from '../utils/experimentalEditor';
 
 interface Props {
   story: Story;
@@ -84,6 +86,13 @@ export const SlateEditor = ({
     setUnpublishLoading(false);
     setShowUnpublishDialog(false);
   };
+
+  // Hide the new Editor under a flag until it's ready
+  const isExperimentalEditor =
+    isExperimentalEditorEnabled || story.contentVersion === '2';
+  if (isExperimentalEditor) {
+    return <NewEditor story={story} />;
+  }
 
   return (
     <Component

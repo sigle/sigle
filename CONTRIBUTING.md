@@ -16,6 +16,7 @@ For non-bug-fixes, please open an issue first and discuss your idea to make sure
 - Must not break the test suite (`pnpm run test`). If you're fixing a bug, include a test that would fail without your fix.
 - Must be formatted with prettier (`pnpm run prettier`).
 - Must be **isolated**. Avoid grouping many, unrelated changes in a single PR.
+- Must contain a changeset file describing the changes and affected packages. Run `pnpx changeset` to generate one.
 
 ## Structure
 
@@ -62,4 +63,4 @@ You can now open your browser and go to http://localhost:3000 to see the app.
 
 ## License
 
-Sigle is licensed under the [MIT license](https://github.com/pradel/sigle/blob/main/LICENSE).
+Sigle is licensed under the [MIT license](https://github.com/sigle/sigle/blob/main/LICENSE).

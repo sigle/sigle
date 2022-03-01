@@ -1,11 +1,14 @@
 import { useState, useEffect } from 'react';
 import { Editor, BubbleMenu as TipTapBubbleMenu } from '@tiptap/react';
+import { isTextSelection } from '@tiptap/core';
 import {
   Link1Icon,
   FontBoldIcon,
   FontItalicIcon,
   CodeIcon,
   Cross2Icon,
+  StrikethroughIcon,
+  UnderlineIcon,
 } from '@radix-ui/react-icons';
 import { globalCss, styled } from '../../stitches.config';
 import { Flex } from '../../ui';
@@ -65,9 +68,7 @@ const BubbleMenuInput = styled('input', {
   outline: 'none',
 });
 
-// TODO show link on hover so user can see the value
 // Maybe can be used on clicks https://github.com/ueberdosis/tiptap/issues/104#issuecomment-912794709
-// TODO When we set the link set selection after the link and remove hover so user can continue to type
 
 interface BubbleMenuProps {
   editor: Editor;
@@ -122,6 +123,11 @@ export const BubbleMenu = ({ editor }: BubbleMenuProps) => {
         .focus()
         .extendMarkRange('link')
         .setLink({ href: safeLinkValue })
+        // Set the text selection at the end of the link selection
+        // that way user can continue to type easily
+        .setTextSelection(editor.state.selection.$to.pos)
+        // Unset link selection se when the user continues to type it won't be a link
+        .unsetLink()
         .run();
     } else {
       // If input text is empty we unset the link
@@ -153,6 +159,39 @@ export const BubbleMenu = ({ editor }: BubbleMenuProps) => {
         theme: 'sigle-editor-bubble-menu',
         onHidden: () => resetLink(),
       }}
+      shouldShow={({ editor, state, from, to, view }) => {
+        // Take the initial implementation of the plugin and extends it
+        // https://github.com/ueberdosis/tiptap/blob/main/packages/extension-bubble-menu/src/bubble-menu-plugin.ts#L43
+        const { doc, selection } = state;
+        const { empty } = selection;
+        // Sometime check for `empty` is not enough.
+        // Doubleclick an empty paragraph returns a node size of 2.
+        // So we check also for an empty text size.
+        const isEmptyTextBlock =
+          !doc.textBetween(from, to).length && isTextSelection(state.selection);
+
+        if (!view.hasFocus() || empty || isEmptyTextBlock) {
+          return false;
+        }
+        // End default implementation
+
+        // Do not show menu on images
+        if (editor.isActive('image')) {
+          return false;
+        }
+
+        // Do not show menu on code blocks
+        if (editor.isActive('codeBlock')) {
+          return false;
+        }
+
+        // Do not show menu on dividers
+        if (editor.isActive('horizontalRule')) {
+          return false;
+        }
+
+        return true;
+      }}
       editor={editor}
     >
       {!linkState.open ? (
@@ -168,6 +207,18 @@ export const BubbleMenu = ({ editor }: BubbleMenuProps) => {
             active={editor.isActive('italic')}
           >
             <FontItalicIcon height={18} width={18} />
+          </BubbleMenuButton>
+          <BubbleMenuButton
+            onClick={() => editor.chain().focus().toggleUnderline().run()}
+            active={editor.isActive('underline')}
+          >
+            <UnderlineIcon height={18} width={18} />
+          </BubbleMenuButton>
+          <BubbleMenuButton
+            onClick={() => editor.chain().focus().toggleStrike().run()}
+            active={editor.isActive('strike')}
+          >
+            <StrikethroughIcon height={18} width={18} />
           </BubbleMenuButton>
           <BubbleMenuButton
             onClick={() => editor.chain().focus().toggleCode().run()}

@@ -188,13 +188,17 @@ export const DashboardSidebar = () => {
             </a>
           </MenuBottomItem>
           <MenuBottomItem>
-            <Link href="/help" passHref>
-              <a>Help</a>
-            </Link>
+            <a
+              href={sigleConfig.feedbackUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Feedback
+            </a>
           </MenuBottomItem>
           <MenuBottomItem>
             <a
-              href="https://github.com/pradel/sigle/blob/main/CHANGELOG.md"
+              href="https://github.com/sigle/sigle/blob/main/CHANGELOG.md"
               target="_blank"
               rel="noopener noreferrer"
             >

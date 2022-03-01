@@ -24,6 +24,13 @@ export interface Story {
    */
   content: any;
   /**
+   * Version representing the format of the content
+   * When the value is not set, we consider it as v1
+   * v1: Slate.js JSON
+   * v2: TipTap HTML
+   */
+  contentVersion?: '2';
+  /**
    * Image used to display the cards
    */
   coverImage?: string;
@@ -41,6 +48,10 @@ export interface Story {
    * Meta description that will be used for SEO
    */
   metaDescription?: string;
+  /**
+   * Meta image that will be used for SEO
+   */
+  metaImage?: string;
   /**
    * Is the story featured. A featured story will be displayed in another way in the list
    * it will also always appear first in the list, no matter the created date
