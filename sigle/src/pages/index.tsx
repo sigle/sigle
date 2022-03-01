@@ -11,8 +11,6 @@ const HomePage = () => {
   const router = useRouter();
   const isExperimentalEditor = router.query.experimentalEditor === 'true';
 
-  console.log({ isExperimentalEditorEnabled });
-
   useEffect(() => {
     if (isExperimentalEditor && !isExperimentalEditorEnabled) {
       enableExperimentalEditor();
