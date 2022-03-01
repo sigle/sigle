@@ -2,6 +2,7 @@ import {
   EyeOpenIcon as EyeOpenIconBase,
   GitHubLogoIcon,
   TwitterLogoIcon,
+  DiscordLogoIcon,
 } from '@radix-ui/react-icons';
 import Link from 'next/link';
 import Image from 'next/image';
@@ -21,7 +22,6 @@ import * as Fathom from 'fathom-client';
 import { useAuth } from '../../auth/AuthContext';
 import { Goals } from '../../../utils/fathom';
 import { sigleConfig } from '../../../config';
-import { DiscordIcon } from '../../../icons/Discord';
 
 const Header = styled('header', Container, {
   display: 'flex',
@@ -152,7 +152,7 @@ export const AppHeader = () => {
               target="_blank"
               rel="noreferrer"
             >
-              <DiscordIcon />
+              <DiscordLogoIcon />
             </IconButton>
             <IconButton
               as="a"
