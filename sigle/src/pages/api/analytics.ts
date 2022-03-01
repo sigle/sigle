@@ -9,7 +9,6 @@ const fathomClient = initFathomClient({
 
 const analyticsEndpoint: NextApiHandler = async (_, res) => {
   // TODO proper error handling
-  // TODO entity_id from env variable
 
   const data = await fathomClient.aggregate({
     entity: 'pageview',
