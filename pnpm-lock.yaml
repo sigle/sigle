@@ -127,7 +127,6 @@ importers:
       '@stacks/legacy-auth': npm:@stacks/auth@2.0.0-beta.1
       '@stacks/legacy-connect': npm:@stacks/connect@4.3.18
       '@stacks/legacy-connect-react': npm:@stacks/connect-react@2.17.18
-      '@stacks/legacy-storage': npm:@stacks/storage@2.0.0-beta.1
       '@stacks/profile': 3.3.0
       '@stacks/storage': 3.3.0
       '@stitches/react': 1.2.5
@@ -235,7 +234,6 @@ importers:
       '@stacks/legacy-auth': /@stacks/auth/2.0.0-beta.1
       '@stacks/legacy-connect': /@stacks/connect/4.3.18
       '@stacks/legacy-connect-react': /@stacks/connect-react/2.17.18_react-dom@17.0.2+react@17.0.2
-      '@stacks/legacy-storage': /@stacks/storage/2.0.0-beta.1
       '@stacks/profile': 3.3.0
       '@stacks/storage': 3.3.0
       '@stitches/react': 1.2.5_react@17.0.2
@@ -2012,22 +2010,6 @@ packages:
       '@sinonjs/commons': 1.8.3
     dev: true
 
-  /@stacks/auth/1.2.3:
-    resolution: {integrity: sha512-EDXX1hiQ9UnAjrX4D1UyeVZQF647RdtC6EYAIxzgn2L6XxARACGpn+d/fRpE1q411y94lF/2Oqj8MPSwDb/NHQ==}
-    dependencies:
-      '@stacks/common': 1.2.2
-      '@stacks/encryption': 1.2.3
-      '@stacks/network': 1.2.2
-      '@stacks/profile': 1.2.3
-      codecov: 3.8.3
-      cross-fetch: 3.1.5
-      jsontokens: 3.0.0
-      query-string: 6.14.1
-    transitivePeerDependencies:
-      - encoding
-      - supports-color
-    dev: false
-
   /@stacks/auth/1.3.0-beta-3:
     resolution: {integrity: sha512-Jsv3p86bO2smuSTm7PZ9GY/ljs11/jZQ+Z6gkK+Gqih6xFC07F0mum8jFXaPpr+pDMG1H+VL5nPtTRoo1L3R4Q==}
     dependencies:
@@ -2361,19 +2343,6 @@ packages:
       zone-file: 2.0.0-beta.3
     transitivePeerDependencies:
       - encoding
-    dev: false
-
-  /@stacks/storage/2.0.0-beta.1:
-    resolution: {integrity: sha512-yA88GqIWiB3dvU+f0XZ3bFjol7KZQSR5CkRh3eJgucAdyR1Z3ff5oAc530pcXOcKDz+TVI98jRhsbCsBBLL9cA==}
-    dependencies:
-      '@stacks/auth': 1.2.3
-      '@stacks/common': 2.0.2
-      '@stacks/encryption': 2.0.1
-      bitcoinjs-lib: 5.2.0
-      jsontokens: 3.0.0
-    transitivePeerDependencies:
-      - encoding
-      - supports-color
     dev: false
 
   /@stacks/storage/3.3.0:
