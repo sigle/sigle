@@ -22,6 +22,14 @@ import * as Fathom from 'fathom-client';
 import { useAuth } from '../../auth/AuthContext';
 import { Goals } from '../../../utils/fathom';
 import { sigleConfig } from '../../../config';
+import {
+  HoverCard,
+  HoverCardArrow,
+  HoverCardContent,
+  HoverCardTrigger,
+} from '../../../ui/HoverCard';
+import { userSession } from '../../../utils/blockstack';
+import posthog from 'posthog-js';
 
 const Header = styled('header', Container, {
   display: 'flex',
@@ -72,6 +80,12 @@ export const AppHeader = () => {
       toast.error(error.message);
       setLoadingCreate(false);
     }
+  };
+
+  const handleLogout = () => {
+    userSession.signUserOut();
+    window.location.reload();
+    posthog.reset();
   };
 
   return (
@@ -132,10 +146,23 @@ export const AppHeader = () => {
         gap="10"
       >
         {user ? (
-          <Flex gap="1" align="center">
-            <StatusDot />
-            <Text>{user.username}</Text>
-          </Flex>
+          <HoverCard openDelay={200} closeDelay={100}>
+            <HoverCardTrigger asChild>
+              <Flex
+                tabIndex={0}
+                css={{ cursor: 'pointer' }}
+                gap="1"
+                align="center"
+              >
+                <StatusDot />
+                <Text>{user.username}</Text>
+              </Flex>
+            </HoverCardTrigger>
+            <HoverCardContent onClick={handleLogout} sideOffset={16}>
+              logout
+              <HoverCardArrow />
+            </HoverCardContent>
+          </HoverCard>
         ) : (
           <Flex gap="6">
             <IconButton
