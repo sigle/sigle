@@ -23,6 +23,7 @@ export const Text = styled('p', {
         fontFamily: '$lato',
         fontSize: '$2',
         letterSpacing: '0.2px',
+        lineHeight: '20.4px',
       },
     },
     color: {
