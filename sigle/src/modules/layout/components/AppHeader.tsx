@@ -90,7 +90,7 @@ export const AppHeader = () => {
           </Flex>
         </Link>
         <Link href="/" passHref>
-          <Box css={{ display: 'none', '@lg': { display: 'flex' } }}>
+          <Box as="a" css={{ display: 'none', '@lg': { display: 'flex' } }}>
             <Image
               priority
               width={101}
