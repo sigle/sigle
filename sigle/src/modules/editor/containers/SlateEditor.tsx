@@ -8,7 +8,7 @@ import { Story } from '../../../types';
 import { publishStory, unPublishStory } from '../../../utils';
 import { Goals } from '../../../utils/fathom';
 import { NewEditor } from '../NewEditor';
-import { isExperimentalEditorEnabled } from '../utils/experimentalEditor';
+import { isExperimentalEditorEnabled } from '../../../utils/featureFlags';
 
 interface Props {
   story: Story;

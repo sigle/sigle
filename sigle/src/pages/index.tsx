@@ -5,15 +5,22 @@ import { Home } from '../modules/home';
 import {
   enableExperimentalEditor,
   isExperimentalEditorEnabled,
-} from '../modules/editor/utils/experimentalEditor';
+  enableExperimentalHiroWallet,
+  isExperimentalHiroWalletEnabled,
+} from '../utils/featureFlags';
 
 const HomePage = () => {
   const router = useRouter();
   const isExperimentalEditor = router.query.experimentalEditor === 'true';
+  const isExperimentalHiroWallet =
+    router.query.experimentalHiroWallet === 'true';
 
   useEffect(() => {
     if (isExperimentalEditor && !isExperimentalEditorEnabled) {
       enableExperimentalEditor();
+    }
+    if (isExperimentalHiroWallet && !isExperimentalHiroWalletEnabled) {
+      enableExperimentalHiroWallet();
     }
   }, [isExperimentalEditor]);
 

@@ -24,19 +24,11 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
 
   useEffect(() => {
     if (userSession.isUserSignedIn()) {
-      setState({
-        loggingIn: false,
-        user: userSession.loadUserData(),
-      });
+      handleAuthSignIn();
     } else if (userSession.isSignInPending()) {
       userSession
         .handlePendingSignIn()
-        .then(() => {
-          setState({
-            loggingIn: false,
-            user: userSession.loadUserData(),
-          });
-        })
+        .then(handleAuthSignIn)
         .catch((error: Error) => {
           setState({
             loggingIn: false,
@@ -59,6 +51,13 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
     }
   }, [state.user]);
 
+  const handleAuthSignIn = () => {
+    setState({
+      loggingIn: false,
+      user: userSession.loadUserData(),
+    });
+  };
+
   const authOptions: AuthOptions = {
     redirectTo: '/',
     registerSubdomain: true,
@@ -67,12 +66,7 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
       icon: 'https://app.sigle.io/icon-192x192.png',
     },
     userSession,
-    finished: () => {
-      setState({
-        loggingIn: false,
-        user: userSession.loadUserData(),
-      });
-    },
+    finished: handleAuthSignIn,
   };
 
   return (
