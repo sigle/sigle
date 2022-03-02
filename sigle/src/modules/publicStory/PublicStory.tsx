@@ -113,8 +113,10 @@ export const PublicStory = ({ story, settings }: PublicStoryProps) => {
           >
             <Box
               css={{
-                marginLeft: '-$20',
-                marginRight: '-$20',
+                '@md': {
+                  marginLeft: '-$20',
+                  marginRight: '-$20',
+                },
               }}
             >
               <img className="sigle-cover" src={story.coverImage} />
