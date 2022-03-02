@@ -9,6 +9,7 @@ import posthog from 'posthog-js';
 import { FaTwitter, FaGithub, FaFacebookF, FaDiscord } from 'react-icons/fa';
 import { userSession } from '../../../utils/blockstack';
 import { sigleConfig } from '../../../config';
+import { useAuth } from '../../auth/AuthContext';
 
 // We have to use react-div-100vh instead of css 100vh because of a bug in IOS
 const Container = styled(Div100vh)`
@@ -118,9 +119,8 @@ export const DashboardPageContainer = styled.div`
 
 export const DashboardSidebar = () => {
   const router = useRouter();
+  const { user } = useAuth();
   const [isLogoutOpen, setIsLogoutOpen] = useState(false);
-
-  const user = userSession.loadUserData();
 
   const handleLogout = () => {
     userSession.signUserOut();
@@ -137,7 +137,7 @@ export const DashboardSidebar = () => {
           </LogoContainer>
         </Link>
         <MenuButtonName onClick={() => setIsLogoutOpen(!isLogoutOpen)}>
-          <span>{user.username}</span>
+          <span>{user?.username}</span>
           <MenuArrowIcon
             $isOpen={isLogoutOpen}
             size={18}
