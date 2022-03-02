@@ -23,7 +23,7 @@ const slideLeftAndFade = keyframes({
 
 const StyledContent = styled(HoverCardPrimitive.Content, {
   cursor: 'pointer',
-  borderRadius: 6,
+  borderRadius: '$1',
   py: '$2',
   px: '$5',
   backgroundColor: '$gray3',
