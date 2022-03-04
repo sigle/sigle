@@ -1,6 +1,6 @@
 import * as DialogPrimitive from '@radix-ui/react-dialog';
 import { Cross1Icon } from '@radix-ui/react-icons';
-import { keyframes, styled } from '../stitches.config';
+import { CSS, keyframes, styled } from '../stitches.config';
 import { IconButton } from './IconButton';
 
 const overlayShow = keyframes({
@@ -63,11 +63,13 @@ const StyledCloseButton = styled(DialogPrimitive.Close, {
   right: '$6',
 });
 
-type DialogContentProps = React.ComponentProps<typeof DialogPrimitive.Content>;
+type DialogContentProps = React.ComponentProps<
+  typeof DialogPrimitive.Content
+> & { css?: CSS };
 
 export function DialogContent({ children, ...props }: DialogContentProps) {
   return (
-    <StyledContent {...props}>
+    <StyledContent css={{ ...props.css }} {...props}>
       {children}
       <StyledCloseButton asChild>
         <IconButton>
