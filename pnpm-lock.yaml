@@ -120,6 +120,7 @@ importers:
       '@radix-ui/react-scroll-area': 0.1.3
       '@radix-ui/react-tooltip': 0.1.0
       '@sentry/nextjs': 6.17.9
+      '@sigle/slate-to-html': 1.0.0
       '@sigle/tailwind-style': workspace:^0.2.0
       '@stacks/auth': 2.0.0-beta.1
       '@stacks/connect': 4.3.18
@@ -224,6 +225,7 @@ importers:
       '@radix-ui/react-scroll-area': 0.1.3_react@17.0.2
       '@radix-ui/react-tooltip': 0.1.0_react-dom@17.0.2+react@17.0.2
       '@sentry/nextjs': 6.17.9_next@12.1.0+react@17.0.2
+      '@sigle/slate-to-html': 1.0.0_d885a74d5675625ffd7e092bb07f40f8
       '@stacks/auth': 2.0.0-beta.1
       '@stacks/connect': 4.3.18
       '@stacks/connect-react': 2.17.18_react-dom@17.0.2+react@17.0.2
@@ -2080,6 +2082,17 @@ packages:
     transitivePeerDependencies:
       - encoding
       - supports-color
+    dev: false
+
+  /@sigle/slate-to-html/1.0.0_d885a74d5675625ffd7e092bb07f40f8:
+    resolution: {integrity: sha512-Y0oMVPRPweeO8zzK3SfkooXFK+XDQdHjXBUv2wxbLgFaLB9F6GYQWkmF264dpBe9dBtUhTtHybh5UOCcnfSL5A==}
+    dependencies:
+      slate: 0.47.9_immutable@4.0.0-rc.12
+      slate-html-serializer: 0.8.11_fe01be42f2210f915db804e4bfbdd93c
+    transitivePeerDependencies:
+      - immutable
+      - react
+      - react-dom
     dev: false
 
   /@sinonjs/commons/1.8.3:
