@@ -77,6 +77,7 @@ export const {
     },
     fonts: {
       openSans: "'Open Sans', sans-serif",
+      monaco: "'Monaco', monospace",
     },
     space: {
       1: '4px',
