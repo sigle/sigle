@@ -1,0 +1,141 @@
+import {
+  ArrowLeftIcon,
+  ArrowRightIcon,
+  MixerHorizontalIcon,
+  TrashIcon,
+} from '@radix-ui/react-icons';
+import Image from 'next/image';
+import { useEffect, useState } from 'react';
+import { RoundPlus } from '../../icons';
+import { styled } from '../../stitches.config';
+import { Box, Flex, IconButton, Text } from '../../ui';
+
+const ImgWrapper = styled('div', {
+  width: 600,
+  height: 350,
+  position: 'relative',
+  mx: 'auto',
+  boxShadow: '0 0 0 1px $colors$gray7',
+  borderRadius: '$1',
+  overflow: 'hidden',
+});
+
+export const HintsCarousel = () => {
+  const [activeSlide, setActiveSlide] = useState(0);
+
+  useEffect(() => {
+    console.log(activeSlide);
+  }, [activeSlide]);
+
+  const nextSlide = () => {
+    if (activeSlide === 3) {
+      setActiveSlide(0);
+      return;
+    }
+    setActiveSlide(activeSlide + 1);
+  };
+
+  const previousSlide = () => {
+    if (activeSlide === 0) {
+      setActiveSlide(3);
+      return;
+    }
+    setActiveSlide(activeSlide - 1);
+  };
+
+  return (
+    <Flex
+      align="start"
+      justify="between"
+      css={{ textAlign: 'center' }}
+      as="section"
+      aria-label="hints carousel"
+    >
+      <IconButton
+        css={{ position: 'absolute', left: 0, top: '50%' }}
+        onClick={previousSlide}
+        aria-label="previous slide"
+      >
+        <ArrowLeftIcon />
+      </IconButton>
+      <Box
+        css={{
+          display: 'grid',
+          gridAutoRows: '1fr',
+          width: '100%',
+        }}
+      >
+        <Box css={{ display: activeSlide === 0 ? 'block' : 'none' }}>
+          <Text css={{ mb: '$5', color: '$gray9' }}>
+            Add and remove a cover image to your story by clicking on the{' '}
+            <Box css={{ display: 'inline-block', px: '$1' }} as="span">
+              <TrashIcon />
+            </Box>
+            button. you can change this image manually for sharing on social
+            networks in the settings{' '}
+            <Box css={{ display: 'inline-block', px: '$1' }} as="span">
+              <MixerHorizontalIcon />
+            </Box>
+          </Text>
+          <ImgWrapper>
+            <Image
+              src="/static/img/hint1.gif"
+              layout="fill"
+              objectFit="cover"
+            />
+          </ImgWrapper>
+        </Box>
+
+        <Box css={{ display: activeSlide === 1 ? 'block' : 'none' }}>
+          <Text css={{ mb: '$5', color: '$gray9' }}>
+            Open a new paragraph and click on the{' '}
+            <Box as="span" css={{ display: 'inline-block' }}>
+              <RoundPlus />{' '}
+            </Box>{' '}
+            button to display the inline menu
+          </Text>
+          <ImgWrapper>
+            <Image
+              src="/static/img/hint2.gif"
+              layout="fill"
+              objectFit="cover"
+            />
+          </ImgWrapper>
+        </Box>
+
+        <Box css={{ display: activeSlide === 2 ? 'block' : 'none' }}>
+          <Text css={{ mb: '$5', color: '$gray9' }}>
+            You can use the slash command "/" to open the inline menu faster
+          </Text>
+          <ImgWrapper>
+            <Image
+              src="/static/img/hint3.gif"
+              layout="fill"
+              objectFit="cover"
+            />
+          </ImgWrapper>
+        </Box>
+
+        <Box css={{ display: activeSlide === 3 ? 'block' : 'none' }}>
+          <Text css={{ mb: '$5', color: '$gray9' }}>
+            Highlight text to display the Bubble menu and change the formatting
+          </Text>
+          <ImgWrapper>
+            <Image
+              src="/static/img/hint4.gif"
+              layout="fill"
+              objectFit="cover"
+            />
+          </ImgWrapper>
+        </Box>
+      </Box>
+      <IconButton
+        css={{ position: 'absolute', right: 0, top: '50%' }}
+        onClick={nextSlide}
+        aria-label="next slide"
+      >
+        <ArrowRightIcon />
+      </IconButton>
+    </Flex>
+  );
+};

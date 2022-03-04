@@ -10,6 +10,7 @@ import {
 } from '../../ui';
 import { styled } from '../../stitches.config';
 import { KeyboardIcon } from '@radix-ui/react-icons';
+import { HintsCarousel } from './HintsCarousel';
 
 const StyledTable = styled('table', {
   width: '100%',
@@ -87,10 +88,6 @@ export const ShortcutsDialog = () => {
           gap: '$7',
           maxWidth: '760px',
           px: '$8',
-
-          '@xl': {
-            height: '817px',
-          },
         }}
       >
         <Tabs defaultValue="shortcuts">
@@ -99,7 +96,7 @@ export const ShortcutsDialog = () => {
             <TabsTrigger value="hints">Hints</TabsTrigger>
           </TabsList>
 
-          <TabsContent value="shortcuts">
+          <TabsContent css={{ height: 650 }} value="shortcuts">
             <Tabs defaultValue="essentials">
               <TabsList css={{ mb: '$4' }} aria-label="Explore shortcut types">
                 <TabsTrigger value="essentials">Essentials</TabsTrigger>
@@ -442,6 +439,16 @@ export const ShortcutsDialog = () => {
                 </Table>
               </TabsContent>
             </Tabs>
+          </TabsContent>
+          <TabsContent
+            value="hints"
+            css={{
+              position: 'relative',
+              px: '$5',
+              py: '$4',
+            }}
+          >
+            <HintsCarousel />
           </TabsContent>
         </Tabs>
       </DialogContent>
