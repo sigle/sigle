@@ -101,8 +101,14 @@ const Login = () => {
             >
               {isExperimentalHiroWalletEnabled
                 ? '(*Monetisation coming soon)'
-                : `Sigle is a web 3.0 open source blogging platform focused on{' '}
-              <strong>protecting your privacy</strong>, built on top of Stacks.`}
+                : `Sigle is a web 3.0 open source blogging platform focused on`}
+              {!isExperimentalHiroWalletEnabled && (
+                <span>
+                  {' '}
+                  <strong>protecting your privacy</strong>, built on top of
+                  Stacks.`
+                </span>
+              )}
             </Text>
             {isExperimentalHiroWalletEnabled ? null : (
               <Text
