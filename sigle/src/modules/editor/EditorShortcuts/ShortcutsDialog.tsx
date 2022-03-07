@@ -12,6 +12,148 @@ import { styled } from '../../../stitches.config';
 import { KeyboardIcon } from '@radix-ui/react-icons';
 import { HintsCarousel } from './HintsCarousel';
 
+const essentials = [
+  {
+    action: 'Copy',
+    winCommand: ['Control', 'C'],
+    macCommand: ['Cmd', 'C'],
+  },
+  {
+    action: 'Cut',
+    winCommand: ['Control', 'X'],
+    macCommand: ['Cmd', 'X'],
+  },
+  {
+    action: 'Paste',
+    winCommand: ['Control', 'V'],
+    macCommand: ['Cmd', 'V'],
+  },
+  {
+    action: 'Paste without formatting',
+    winCommand: ['Control', 'Shift', 'V'],
+    macCommand: ['Cmd', 'Shift', 'V'],
+  },
+  {
+    action: 'Undo',
+    winCommand: ['Control', 'Z'],
+    macCommand: ['Cmd', 'Z'],
+  },
+  {
+    action: 'Redo',
+    winCommand: ['Control', 'Shift', 'Z'],
+    macCommand: ['Cmd', 'Shift', 'Z'],
+  },
+  {
+    action: 'Add a line break',
+    winCommand: ['Shift', 'Enter'],
+    macCommand: ['Shift', 'Enter'],
+  },
+];
+
+const textFormatting = [
+  {
+    action: 'Bold',
+    winCommand: ['Control', 'B'],
+    macCommand: ['Cmd', 'B'],
+  },
+  {
+    action: 'Italicize',
+    winCommand: ['Control', 'I'],
+    macCommand: ['Cmd', 'I'],
+  },
+  {
+    action: 'Underline',
+    winCommand: ['Control', 'U'],
+    macCommand: ['Cmd', 'U'],
+  },
+  {
+    action: 'Strikethrough',
+    winCommand: ['Control', 'Shift', 'X'],
+    macCommand: ['Cmd', 'Shift', 'X'],
+  },
+  {
+    action: 'Code',
+    winCommand: ['Control', 'E'],
+    macCommand: ['Cmd', 'E'],
+  },
+];
+
+const paragraphFormatting = [
+  {
+    action: 'Apply normal text style',
+    winCommand: ['Control', 'Alt', '0'],
+    macCommand: ['Cmd', 'Alt', '0'],
+  },
+  {
+    action: 'Apply heading style 2',
+    winCommand: ['Control', 'Alt', '2'],
+    macCommand: ['Cmd', 'Alt', '2'],
+  },
+  {
+    action: 'Apply heading style 3',
+    winCommand: ['Control', 'Alt', '3'],
+    macCommand: ['Cmd', 'Alt', '3'],
+  },
+  {
+    action: 'Ordered list',
+    winCommand: ['Control', 'Shift', '7'],
+    macCommand: ['Cmd', 'Shift', '7'],
+  },
+  {
+    action: 'Bullet list',
+    winCommand: ['Control', 'Shift', '8'],
+    macCommand: ['Cmd', 'Shift', '8'],
+  },
+  {
+    action: 'Blockquote',
+    winCommand: ['Control', 'Shift', 'B'],
+    macCommand: ['Cmd', 'Shift', 'B'],
+  },
+  {
+    action: 'Code block',
+    winCommand: ['Control', 'Alt', 'C'],
+    macCommand: ['Cmd', 'Alt', 'C'],
+  },
+];
+
+const textSelection = [
+  {
+    action: 'Select all',
+    winCommand: ['Control', 'A'],
+    macCommand: ['Cmd', 'A'],
+  },
+  {
+    action: 'Extend selection one character to left',
+    winCommand: ['Shift', '←'],
+    macCommand: ['Shift', '←'],
+  },
+  {
+    action: 'Extend selection one character to right',
+    winCommand: ['Shift', '→'],
+    macCommand: ['Shift', '→'],
+  },
+  {
+    action: 'Extend selection one line up',
+    winCommand: ['Shift', '↑'],
+    macCommand: ['Shift', '↑'],
+  },
+  {
+    action: 'Extend selection one line down',
+    winCommand: ['Shift', '↓'],
+    macCommand: ['Shift', '↓'],
+  },
+  {
+    action: 'Extend selection to the beginning of the document',
+    winCommand: ['Control', 'Shift', '↑'],
+    macCommand: ['Cmd', 'Shift', '↑'],
+  },
+  {
+    action: 'Extend selection to the end of the document',
+    winCommand: ['Control', 'Shift', '↓'],
+    macCommand: ['Cmd', 'Shift', '↓'],
+  },
+];
+
 const StyledTable = styled('table', {
   width: '100%',
 });
@@ -108,332 +250,78 @@ export const ShortcutsDialog = () => {
               </TabsList>
               <TabsContent value="essentials">
                 <Table>
-                  <Tr>
-                    <Th scope="row">Copy</Th>
-                    <Td>
-                      <Kbd>Control</Kbd>
-                      <Kbd>C</Kbd>
-                    </Td>
-                    <Td>
-                      <Kbd>Cmd</Kbd>
-                      <Kbd>C</Kbd>
-                    </Td>
-                  </Tr>
-                  <Tr>
-                    <Th scope="row">Cut</Th>
-                    <Td>
-                      <Kbd>Control</Kbd>
-                      <Kbd>X</Kbd>
-                    </Td>
-                    <Td>
-                      <Kbd>Cmd</Kbd>
-                      <Kbd>X</Kbd>
-                    </Td>
-                  </Tr>
-                  <Tr>
-                    <Th scope="row">Paste</Th>
-                    <Td>
-                      <Kbd>Control</Kbd>
-                      <Kbd>V</Kbd>
-                    </Td>
-                    <Td>
-                      <Kbd>Cmd</Kbd>
-                      <Kbd>V</Kbd>
-                    </Td>
-                  </Tr>
-                  <Tr>
-                    <Th scope="row">Paste without formatting</Th>
-                    <Td>
-                      <Kbd>Control</Kbd>
-                      <Kbd>Shift</Kbd>
-                      <Kbd>V</Kbd>
-                    </Td>
-                    <Td>
-                      <Kbd>Cmd</Kbd>
-                      <Kbd>Shift</Kbd>
-                      <Kbd>V</Kbd>
-                    </Td>
-                  </Tr>
-                  <Tr>
-                    <Th scope="row">Undo</Th>
-                    <Td>
-                      <Kbd>Control</Kbd>
-                      <Kbd>Z</Kbd>
-                    </Td>
-                    <Td>
-                      <Kbd>Cmd</Kbd>
-                      <Kbd>Z</Kbd>
-                    </Td>
-                  </Tr>
-                  <Tr>
-                    <Th scope="row">Redo</Th>
-                    <Td>
-                      <Kbd>Control</Kbd>
-                      <Kbd>Shift</Kbd>
-                      <Kbd>Z</Kbd>
-                    </Td>
-                    <Td>
-                      <Kbd>Cmd</Kbd>
-                      <Kbd>Shift</Kbd>
-                      <Kbd>Z</Kbd>
-                    </Td>
-                  </Tr>
-                  <Tr>
-                    <Th scope="row">Add a line break</Th>
-                    <Td>
-                      <Kbd>Shift</Kbd>
-                      <Kbd>Enter</Kbd>
-                    </Td>
-                    <Td>
-                      <Kbd>Cmd</Kbd>
-                      <Kbd>Enter</Kbd>
-                    </Td>
-                  </Tr>
+                  {essentials.map((shortcut) => (
+                    <Tr>
+                      <Th scope="row">{shortcut.action}</Th>
+                      <Td>
+                        {shortcut.winCommand.map((command) => (
+                          <Kbd>{command}</Kbd>
+                        ))}
+                      </Td>
+                      <Td>
+                        {shortcut.macCommand.map((command) => (
+                          <Kbd>{command}</Kbd>
+                        ))}
+                      </Td>
+                    </Tr>
+                  ))}
                 </Table>
               </TabsContent>
               <TabsContent value="text-formatting">
                 <Table>
-                  <Tr>
-                    <Th scope="row">Bold</Th>
-                    <Td>
-                      <Kbd>Control</Kbd>
-                      <Kbd>B</Kbd>
-                    </Td>
-                    <Td>
-                      <Kbd>Cmd</Kbd>
-                      <Kbd>B</Kbd>
-                    </Td>
-                  </Tr>
-                  <Tr>
-                    <Th scope="row">Italicize</Th>
-                    <Td>
-                      <Kbd>Control</Kbd>
-                      <Kbd>I</Kbd>
-                    </Td>
-                    <Td>
-                      <Kbd>Cmd</Kbd>
-                      <Kbd>I</Kbd>
-                    </Td>
-                  </Tr>
-                  <Tr>
-                    <Th scope="row">Underline</Th>
-                    <Td>
-                      <Kbd>Control</Kbd>
-                      <Kbd>U</Kbd>
-                    </Td>
-                    <Td>
-                      <Kbd>Cmd</Kbd>
-                      <Kbd>U</Kbd>
-                    </Td>
-                  </Tr>
-                  <Tr>
-                    <Th scope="row">Strikethrough</Th>
-                    <Td>
-                      <Kbd>Control</Kbd>
-                      <Kbd>Shift</Kbd>
-                      <Kbd>X</Kbd>
-                    </Td>
-                    <Td>
-                      <Kbd>Cmd</Kbd>
-                      <Kbd>Shift</Kbd>
-                      <Kbd>X</Kbd>
-                    </Td>
-                  </Tr>
-                  <Tr>
-                    <Th scope="row">Code</Th>
-                    <Td>
-                      <Kbd>Control</Kbd>
-                      <Kbd>E</Kbd>
-                    </Td>
-                    <Td>
-                      <Kbd>Cmd</Kbd>
-                      <Kbd>E</Kbd>
-                    </Td>
-                  </Tr>
+                  {textFormatting.map((shortcut) => (
+                    <Tr>
+                      <Th scope="row">{shortcut.action}</Th>
+                      <Td>
+                        {shortcut.winCommand.map((command) => (
+                          <Kbd>{command}</Kbd>
+                        ))}
+                      </Td>
+                      <Td>
+                        {shortcut.macCommand.map((command) => (
+                          <Kbd>{command}</Kbd>
+                        ))}
+                      </Td>
+                    </Tr>
+                  ))}
                 </Table>
               </TabsContent>
               <TabsContent value="p-formatting">
                 <Table>
-                  <Tr>
-                    <Th scope="row">Apply normal text style</Th>
-                    <Td>
-                      <Kbd>Control</Kbd>
-                      <Kbd>Alt</Kbd>
-                      <Kbd>0</Kbd>
-                    </Td>
-                    <Td>
-                      <Kbd>Cmd</Kbd>
-                      <Kbd>Alt</Kbd>
-                      <Kbd>0</Kbd>
-                    </Td>
-                  </Tr>
-                  <Tr>
-                    <Th scope="row">Apply heading style 2</Th>
-                    <Td>
-                      <Kbd>Control</Kbd>
-                      <Kbd>Alt</Kbd>
-                      <Kbd>2</Kbd>
-                    </Td>
-                    <Td>
-                      <Kbd>Cmd</Kbd>
-                      <Kbd>Alt</Kbd>
-                      <Kbd>2</Kbd>
-                    </Td>
-                  </Tr>
-                  <Tr>
-                    <Th scope="row">Apply heading style 3</Th>
-                    <Td>
-                      <Kbd>Control</Kbd>
-                      <Kbd>Alt</Kbd>
-                      <Kbd>3</Kbd>
-                    </Td>
-                    <Td>
-                      <Kbd>Cmd</Kbd>
-                      <Kbd>Alt</Kbd>
-                      <Kbd>3</Kbd>
-                    </Td>
-                  </Tr>
-                  <Tr>
-                    <Th scope="row">Ordered list</Th>
-                    <Td>
-                      <Kbd>Control</Kbd>
-                      <Kbd>Shift</Kbd>
-                      <Kbd>7</Kbd>
-                    </Td>
-                    <Td>
-                      <Kbd>Cmd</Kbd>
-                      <Kbd>Shift</Kbd>
-                      <Kbd>7</Kbd>
-                    </Td>
-                  </Tr>
-                  <Tr>
-                    <Th scope="row">Bullet list</Th>
-                    <Td>
-                      <Kbd>Control</Kbd>
-                      <Kbd>Shift</Kbd>
-                      <Kbd>8</Kbd>
-                    </Td>
-                    <Td>
-                      <Kbd>Cmd</Kbd>
-                      <Kbd>Shift</Kbd>
-                      <Kbd>8</Kbd>
-                    </Td>
-                  </Tr>
-                  <Tr>
-                    <Th scope="row">Blockquote</Th>
-                    <Td>
-                      <Kbd>Control</Kbd>
-                      <Kbd>Shift</Kbd>
-                      <Kbd>B</Kbd>
-                    </Td>
-                    <Td>
-                      <Kbd>Cmd</Kbd>
-                      <Kbd>Shift</Kbd>
-                      <Kbd>B</Kbd>
-                    </Td>
-                  </Tr>
-                  <Tr>
-                    <Th scope="row">Code block</Th>
-                    <Td>
-                      <Kbd>Control</Kbd>
-                      <Kbd>Alt</Kbd>
-                      <Kbd>C</Kbd>
-                    </Td>
-                    <Td>
-                      <Kbd>Cmd</Kbd>
-                      <Kbd>Alt</Kbd>
-                      <Kbd>C</Kbd>
-                    </Td>
-                  </Tr>
+                  {paragraphFormatting.map((shortcut) => (
+                    <Tr>
+                      <Th scope="row">{shortcut.action}</Th>
+                      <Td>
+                        {shortcut.winCommand.map((command) => (
+                          <Kbd>{command}</Kbd>
+                        ))}
+                      </Td>
+                      <Td>
+                        {shortcut.macCommand.map((command) => (
+                          <Kbd>{command}</Kbd>
+                        ))}
+                      </Td>
+                    </Tr>
+                  ))}
                 </Table>
               </TabsContent>
               <TabsContent value="selection">
                 <Table>
-                  <Tr>
-                    <Th scope="row">Select all</Th>
-                    <Td>
-                      <Kbd>Control</Kbd>
-                      <Kbd>A</Kbd>
-                    </Td>
-                    <Td>
-                      <Kbd>Cmd</Kbd>
-                      <Kbd>A</Kbd>
-                    </Td>
-                  </Tr>
-                  <Tr>
-                    <Th scope="row">Extend selection one character to left</Th>
-                    <Td>
-                      <Kbd>Shift</Kbd>
-                      <Kbd>←</Kbd>
-                    </Td>
-                    <Td>
-                      <Kbd>Shift</Kbd>
-                      <Kbd>←</Kbd>
-                    </Td>
-                  </Tr>
-                  <Tr>
-                    <Th scope="row">Extend selection one character to right</Th>
-                    <Td>
-                      <Kbd>Shift</Kbd>
-                      <Kbd>→</Kbd>
-                    </Td>
-                    <Td>
-                      <Kbd>Shift</Kbd>
-                      <Kbd>→</Kbd>
-                    </Td>
-                  </Tr>
-                  <Tr>
-                    <Th scope="row">Extend selection one line up</Th>
-                    <Td>
-                      <Kbd>Shift</Kbd>
-                      <Kbd>↑</Kbd>
-                    </Td>
-                    <Td>
-                      <Kbd>Shift</Kbd>
-                      <Kbd>↑</Kbd>
-                    </Td>
-                  </Tr>
-                  <Tr>
-                    <Th scope="row">Extend selection one line down</Th>
-                    <Td>
-                      <Kbd>Shift</Kbd>
-                      <Kbd>↓</Kbd>
-                    </Td>
-                    <Td>
-                      <Kbd>Shift</Kbd>
-                      <Kbd>↓</Kbd>
-                    </Td>
-                  </Tr>
-                  <Tr>
-                    <Th scope="row">
-                      Extend selection to the beginning of the document
-                    </Th>
-                    <Td>
-                      <Kbd>Control</Kbd>
-                      <Kbd>Shift</Kbd>
-                      <Kbd>↑</Kbd>
-                    </Td>
-                    <Td>
-                      <Kbd>Cmd</Kbd>
-                      <Kbd>Shift</Kbd>
-                      <Kbd>↑</Kbd>
-                    </Td>
-                  </Tr>
-                  <Tr>
-                    <Th scope="row">
-                      Extend selection to the end of the document
-                    </Th>
-                    <Td>
-                      <Kbd>Control</Kbd>
-                      <Kbd>Shift</Kbd>
-                      <Kbd>↓</Kbd>
-                    </Td>
-                    <Td>
-                      <Kbd>Cmd</Kbd>
-                      <Kbd>Shift</Kbd>
-                      <Kbd>↓</Kbd>
-                    </Td>
-                  </Tr>
+                  {textSelection.map((shortcut) => (
+                    <Tr>
+                      <Th scope="row">{shortcut.action}</Th>
+                      <Td>
+                        {shortcut.winCommand.map((command) => (
+                          <Kbd>{command}</Kbd>
+                        ))}
+                      </Td>
+                      <Td>
+                        {shortcut.macCommand.map((command) => (
+                          <Kbd>{command}</Kbd>
+                        ))}
+                      </Td>
+                    </Tr>
+                  ))}
                 </Table>
               </TabsContent>
             </Tabs>
