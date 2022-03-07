@@ -165,10 +165,6 @@ importers:
       '@types/react-color': 3.0.5
       '@types/react-dom': 17.0.9
       '@types/sanitize-html': 2.6.2
-      '@types/slate': 0.47.4
-      '@types/slate-html-serializer': 0.6.3
-      '@types/slate-plain-serializer': 0.7.0
-      '@types/slate-react': 0.22.9
       '@types/styled-components': 5.1.15
       '@typescript-eslint/eslint-plugin': 5.12.0
       autoprefixer: 10.3.7
@@ -206,11 +202,6 @@ importers:
       reading-time: 1.2.1
       sanitize-html: 2.7.0
       sass: 1.42.1
-      slate: 0.47.9
-      slate-html-serializer: 0.8.11
-      slate-plain-serializer: 0.7.11
-      slate-react: 0.22.10
-      slate-soft-break: 0.9.0
       styled-components: 5.3.1
       tailwindcss: 2.2.15
       tippy.js: 6.3.7
@@ -280,11 +271,6 @@ importers:
       react-toastify: 8.0.3_react-dom@17.0.2+react@17.0.2
       reading-time: 1.2.1
       sanitize-html: 2.7.0
-      slate: 0.47.9_immutable@4.0.0-rc.12
-      slate-html-serializer: 0.8.11_fe01be42f2210f915db804e4bfbdd93c
-      slate-plain-serializer: 0.7.11_8926012ca85d6cf65aefe69b6511996a
-      slate-react: 0.22.10_fe01be42f2210f915db804e4bfbdd93c
-      slate-soft-break: 0.9.0_slate-react@0.22.10+slate@0.47.9
       styled-components: 5.3.1_react-dom@17.0.2+react@17.0.2
       tippy.js: 6.3.7
     devDependencies:
@@ -301,10 +287,6 @@ importers:
       '@types/react-color': 3.0.5
       '@types/react-dom': 17.0.9
       '@types/sanitize-html': 2.6.2
-      '@types/slate': 0.47.4
-      '@types/slate-html-serializer': 0.6.3
-      '@types/slate-plain-serializer': 0.7.0
-      '@types/slate-react': 0.22.9
       '@types/styled-components': 5.1.15
       '@typescript-eslint/eslint-plugin': 5.12.0_eslint@8.9.0+typescript@4.5.5
       autoprefixer: 10.3.7_postcss@8.3.9
@@ -2341,7 +2323,7 @@ packages:
       tailwindcss: '>=2.0.0'
     dependencies:
       mini-svg-data-uri: 1.4.3
-      tailwindcss: 2.2.15_96f83969316717847b3edf58a3f353f3
+      tailwindcss: 2.2.15
     dev: true
 
   /@tailwindcss/typography/0.4.1_tailwindcss@2.2.15:
@@ -2353,7 +2335,7 @@ packages:
       lodash.isplainobject: 4.0.6
       lodash.merge: 4.6.2
       lodash.uniq: 4.5.0
-      tailwindcss: 2.2.15_96f83969316717847b3edf58a3f353f3
+      tailwindcss: 2.2.15
     dev: true
 
   /@tailwindcss/typography/0.5.2_tailwindcss@3.0.23:
@@ -2981,34 +2963,6 @@ packages:
     dependencies:
       '@types/node': 16.10.3
     dev: false
-
-  /@types/slate-html-serializer/0.6.3:
-    resolution: {integrity: sha512-edpVOozSya2XkGtJ0qKeP986hOutGS1jff+G1ysv6tPYl+ix0JNDtwjiBJ8iofl07SBghNB0kUr82CI8i+Za2g==}
-    dependencies:
-      '@types/react': 17.0.28
-      '@types/slate': 0.47.4
-    dev: true
-
-  /@types/slate-plain-serializer/0.7.0:
-    resolution: {integrity: sha512-Df/VsJI/1c3YTUzzQF4mj9aRoDVotYud6nQnc7twUfr109RG1wzVkw/NXYvarMo8U4JQttJibrqPyCFDmIgt3w==}
-    dependencies:
-      '@types/slate': 0.47.4
-    dev: true
-
-  /@types/slate-react/0.22.9:
-    resolution: {integrity: sha512-x8u/mpQhxmzxlwGzM1GLsGMTSRtNO7yjtoqo23k5nZzPrz5iuUdtmtlmxjHzl2x3hBE7KQUDn5JhyuUSBLtxVQ==}
-    dependencies:
-      '@types/react': 17.0.28
-      '@types/slate': 0.47.4
-      immutable: 3.8.2
-    dev: true
-
-  /@types/slate/0.47.4:
-    resolution: {integrity: sha512-vkazFgQYQkXB52FCPG/Uv8guOOltJBWHzPp+ZCT2H/avtcr6gXRuyZN1I6vziWzHNLfhcsmvV5n2YKNzV7u+Yg==}
-    dependencies:
-      '@types/react': 17.0.28
-      immutable: 3.8.2
-    dev: true
 
   /@types/stack-utils/2.0.1:
     resolution: {integrity: sha512-Hl219/BT5fLAaz6NDkSuhzasy49dwQS/DSdu4MdggFB8zcXv7vflBI3xp7FEmkmdDkBUI2bPUNeMttp2knYdxw==}
@@ -5172,10 +5126,6 @@ packages:
     engines: {node: 6.* || 8.* || >= 10.*}
     dev: true
 
-  /get-document/1.0.0:
-    resolution: {integrity: sha1-SCG85m8cJMsDMWAr5strEsTwHEs=}
-    dev: false
-
   /get-intrinsic/1.1.1:
     resolution: {integrity: sha512-kWZrnVM42QCiEA2Ig1bG8zjoIMOgxWwYCEeNdwY6Tv/cOSeGpcoX4pXHfKUxNKVoArnrEr2e9srnAxxGIraS9Q==}
     dependencies:
@@ -5206,12 +5156,6 @@ packages:
       call-bind: 1.0.2
       get-intrinsic: 1.1.1
     dev: true
-
-  /get-window/1.1.2:
-    resolution: {integrity: sha512-yjWpFcy9fjhLQHW1dPtg9ga4pmizLY8y4ZSHdGrAQ1NU277MRhnGnnLPxe19X8W5lWVsCZz++5xEuNozWMVmTw==}
-    dependencies:
-      get-document: 1.0.0
-    dev: false
 
   /glob-parent/5.1.2:
     resolution: {integrity: sha512-AOIgSQCepiJYwP3ARnGx+5VnTu2HBYdzbGP45eLw1vr3zB3vZLeyed1sC9hnbcOc9/SrMyM5RPQrkGz4aS9Zow==}
@@ -5468,11 +5412,6 @@ packages:
     resolution: {integrity: sha1-nbHb0Pr43m++D13V5Wu2BigN5ps=}
     dev: false
 
-  /immutable/3.8.2:
-    resolution: {integrity: sha1-wkOZUUVbs5kT2vKBN28VMOEErfM=}
-    engines: {node: '>=0.10.0'}
-    dev: true
-
   /immutable/4.0.0-rc.12:
     resolution: {integrity: sha512-0M2XxkZLx/mi3t8NVwIm1g8nHoEmM9p9UBl/G9k4+hm0kBgOVdMV/B3CY5dQ8qG8qc80NN4gDV4HQv6FTJ5q7A==}
     dev: false
@@ -5627,14 +5566,6 @@ packages:
       is-extglob: 2.1.1
     dev: true
 
-  /is-hotkey/0.1.4:
-    resolution: {integrity: sha512-Py+aW4r5mBBY18TGzGz286/gKS+fCQ0Hee3qkaiSmEPiD0PqFpe0wuA3l7rTOUKyeXl8Mxf3XzJxIoTlSv+kxA==}
-    dev: false
-
-  /is-in-browser/1.1.3:
-    resolution: {integrity: sha1-Vv9NtoOgeMYILrldrX3GLh0E+DU=}
-    dev: false
-
   /is-negative-zero/2.0.2:
     resolution: {integrity: sha512-dqJvarLawXsFbNDeJW7zAz8ItJ9cd28YufuuFzh0G8pNHjJMnY08Dv7sYX2uF5UpQOwieAeOExEYAWWfu7ZZUA==}
     engines: {node: '>= 0.4'}
@@ -5721,10 +5652,6 @@ packages:
       call-bind: 1.0.2
     dev: true
 
-  /is-window/1.0.2:
-    resolution: {integrity: sha1-LIlspT25feRdPDMTOmXYyfVjSA0=}
-    dev: false
-
   /is-windows/1.0.2:
     resolution: {integrity: sha512-eXK1UInq2bPmjyX6e3VHIzMLobc4J94i4AWn+Hpq3OU5KkrRC96OAcR3PRJ/pGu6m8TRnBHP9dkXQVsT/COVIA==}
     engines: {node: '>=0.10.0'}
@@ -5741,10 +5668,6 @@ packages:
   /isobject/3.0.1:
     resolution: {integrity: sha1-TkMekrEalzFjaqH5yNHMvP2reN8=}
     engines: {node: '>=0.10.0'}
-    dev: false
-
-  /isomorphic-base64/1.0.2:
-    resolution: {integrity: sha1-9Caq6CVpuopOxcpzrSGkSrHueAM=}
     dev: false
 
   /istanbul-lib-coverage/3.2.0:
@@ -6659,10 +6582,6 @@ packages:
       hash-base: 3.1.0
       inherits: 2.0.4
       safe-buffer: 5.2.1
-    dev: false
-
-  /memoize-one/4.0.3:
-    resolution: {integrity: sha512-QmpUu4KqDmX0plH4u+tf0riMc1KHE1+lw95cMrLlXQAFOx/xnBtwhZ52XJxd9X2O6kwKBqX32kmhbhlobD0cuw==}
     dev: false
 
   /meow/6.1.1:
@@ -7607,15 +7526,6 @@ packages:
       react: 17.0.2
     dev: false
 
-  /react-immutable-proptypes/2.2.0_immutable@4.0.0-rc.12:
-    resolution: {integrity: sha512-Vf4gBsePlwdGvSZoLSBfd4HAP93HDauMY4fDjXhreg/vg6F3Fj/MXDNyTbltPC/xZKmZc+cjLu3598DdYK6sgQ==}
-    peerDependencies:
-      immutable: '>=3.6.2'
-    dependencies:
-      immutable: 4.0.0-rc.12
-      invariant: 2.2.4
-    dev: false
-
   /react-is/16.13.1:
     resolution: {integrity: sha512-24e6ynE2H+OKt4kqsOvNd8kBpV65zoxbA4BVsEOB3ARVWQki/DHzaUoC5KuON/BiccDaCCTZBuOcfZs70kR8bQ==}
 
@@ -7984,10 +7894,6 @@ packages:
       async: 2.6.3
     dev: false
 
-  /selection-is-backward/1.0.0:
-    resolution: {integrity: sha1-l6VGMxiKURq6ZBn8XB+pG0Z+a+E=}
-    dev: false
-
   /semver/5.7.1:
     resolution: {integrity: sha512-sauaDf/PZdVgrLTNYHRtpXa1iRiKcaebiKQ1BJdpQlWH2lCvexQdX55snPFyK7QzpudqbCI0qXFfOasHdyNDGQ==}
     hasBin: true
@@ -8071,28 +7977,6 @@ packages:
     engines: {node: '>=8'}
     dev: true
 
-  /slate-base64-serializer/0.2.115_slate@0.47.9:
-    resolution: {integrity: sha512-GnLV7bUW/UQ5j7rVIxCU5zdB6NOVsEU6YWsCp68dndIjSGTGLaQv2+WwV3NcnrGGZEYe5qgo33j2QWrPws2C1A==}
-    peerDependencies:
-      slate: '>=0.32.0 <0.50.0'
-    dependencies:
-      isomorphic-base64: 1.0.2
-      slate: 0.47.9_immutable@4.0.0-rc.12
-    dev: false
-
-  /slate-dev-environment/0.2.5:
-    resolution: {integrity: sha512-oLD8Fclv/RqrDv6RYfN2CRzNcRXsUB99Qgcw5L/njTjxAdDPguV6edQ3DgUG9Q2pLFLhI15DwsKClzVfFzfwGQ==}
-    dependencies:
-      is-in-browser: 1.1.3
-    dev: false
-
-  /slate-hotkeys/0.2.11:
-    resolution: {integrity: sha512-xhq/TlI74dRbO57O4ulGsvCcV4eaQ5nEEz9noZjeNLtNzFRd6lSgExRqAJqKGGIeJw+FnJ3OcqGvdb5CEc9/Ew==}
-    dependencies:
-      is-hotkey: 0.1.4
-      slate-dev-environment: 0.2.5
-    dev: false
-
   /slate-html-serializer/0.8.11_fe01be42f2210f915db804e4bfbdd93c:
     resolution: {integrity: sha512-WHwmjccjpAwxvvNv31kMlIKrmTGOIEs+hs1y/08oDXTpnb5EGcmqHV1WOjBx70C9B33i+MLA/sp4ZXVC/r22+w==}
     peerDependencies:
@@ -8116,68 +8000,6 @@ packages:
     dependencies:
       immutable: 4.0.0-rc.12
       slate: 0.47.9_immutable@4.0.0-rc.12
-    dev: false
-
-  /slate-prop-types/0.5.44_8926012ca85d6cf65aefe69b6511996a:
-    resolution: {integrity: sha512-JS0iW7uaciE/W3ADuzeN1HOnSjncQhHPXJ65nZNQzB0DF7mXVmbwQKI6cmCo/xKni7XRJT0JbWSpXFhEdPiBUA==}
-    peerDependencies:
-      immutable: '>=3.8.1'
-      slate: '>=0.32.0 <0.50.0'
-    dependencies:
-      immutable: 4.0.0-rc.12
-      slate: 0.47.9_immutable@4.0.0-rc.12
-    dev: false
-
-  /slate-react-placeholder/0.2.9_80aa60107205843d8408e20beaed7b43:
-    resolution: {integrity: sha512-YSJ9Gb4tGpbzPje3eNKtu26hWM8ApxTk9RzjK+6zfD5V/RMTkuWONk24y6c9lZk0OAYNZNUmrnb/QZfU3j9nag==}
-    peerDependencies:
-      react: '>=16.0.0'
-      slate: '>=0.47.0'
-      slate-react: '>=0.22.0'
-    dependencies:
-      react: 17.0.2
-      slate: 0.47.9_immutable@4.0.0-rc.12
-      slate-react: 0.22.10_fe01be42f2210f915db804e4bfbdd93c
-    dev: false
-
-  /slate-react/0.22.10_fe01be42f2210f915db804e4bfbdd93c:
-    resolution: {integrity: sha512-B2Ms1u/REbdd8yKkOItKgrw/tX8klgz5l5x6PP86+oh/yqmB6EHe0QyrYlQ9fc3WBlJUVTOL+nyAP1KmlKj2/w==}
-    peerDependencies:
-      immutable: '>=3.8.1 || >4.0.0-rc'
-      react: '>=16.6.0'
-      react-dom: '>=16.6.0'
-      slate: '>=0.47.0'
-    dependencies:
-      debug: 3.2.7
-      get-window: 1.1.2
-      immutable: 4.0.0-rc.12
-      is-window: 1.0.2
-      lodash: 4.17.21
-      memoize-one: 4.0.3
-      prop-types: 15.8.1
-      react: 17.0.2
-      react-dom: 17.0.2_react@17.0.2
-      react-immutable-proptypes: 2.2.0_immutable@4.0.0-rc.12
-      selection-is-backward: 1.0.0
-      slate: 0.47.9_immutable@4.0.0-rc.12
-      slate-base64-serializer: 0.2.115_slate@0.47.9
-      slate-dev-environment: 0.2.5
-      slate-hotkeys: 0.2.11
-      slate-plain-serializer: 0.7.11_8926012ca85d6cf65aefe69b6511996a
-      slate-prop-types: 0.5.44_8926012ca85d6cf65aefe69b6511996a
-      slate-react-placeholder: 0.2.9_80aa60107205843d8408e20beaed7b43
-      tiny-invariant: 1.2.0
-      tiny-warning: 0.0.3
-    dev: false
-
-  /slate-soft-break/0.9.0_slate-react@0.22.10+slate@0.47.9:
-    resolution: {integrity: sha512-iTy2bl/G+tphN10YQBOPDRxDqgM46ZH1UUz0ublmL6PLtwJ3jJK1n08w37YxnY/ge4aW31UN386KV6qvFx6Hsw==}
-    peerDependencies:
-      slate: '>=0.42.2'
-      slate-react: '>=0.19.3'
-    dependencies:
-      slate: 0.47.9_immutable@4.0.0-rc.12
-      slate-react: 0.22.10_fe01be42f2210f915db804e4bfbdd93c
     dev: false
 
   /slate/0.47.9_immutable@4.0.0-rc.12:
