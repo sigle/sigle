@@ -65,7 +65,11 @@ export const HintsCarousel = () => {
           width: '100%',
         }}
       >
-        <Box css={{ display: activeSlide === 0 ? 'block' : 'none' }}>
+        <Box
+          aria-label="slide 1 of 4"
+          aria-current={activeSlide === 0 ? 'true' : 'false'}
+          css={{ display: activeSlide === 0 ? 'block' : 'none' }}
+        >
           <Text css={{ mb: '$5', color: '$gray9' }}>
             Add and remove a cover image to your story by clicking on the{' '}
             <Box css={{ display: 'inline-block', px: '$1' }} as="span">
@@ -85,8 +89,11 @@ export const HintsCarousel = () => {
             />
           </ImgWrapper>
         </Box>
-
-        <Box css={{ display: activeSlide === 1 ? 'block' : 'none' }}>
+        <Box
+          aria-label="slide 2 of 4"
+          aria-current={activeSlide === 1 ? 'true' : 'false'}
+          css={{ display: activeSlide === 1 ? 'block' : 'none' }}
+        >
           <Text css={{ mb: '$5', color: '$gray9' }}>
             Open a new paragraph and click on the{' '}
             <Box as="span" css={{ display: 'inline-block' }}>
@@ -102,8 +109,11 @@ export const HintsCarousel = () => {
             />
           </ImgWrapper>
         </Box>
-
-        <Box css={{ display: activeSlide === 2 ? 'block' : 'none' }}>
+        <Box
+          aria-label="slide 3 of 4"
+          aria-current={activeSlide === 2 ? 'true' : 'false'}
+          css={{ display: activeSlide === 2 ? 'block' : 'none' }}
+        >
           <Text css={{ mb: '$5', color: '$gray9' }}>
             You can use the slash command "/" to open the inline menu faster
           </Text>
@@ -116,7 +126,11 @@ export const HintsCarousel = () => {
           </ImgWrapper>
         </Box>
 
-        <Box css={{ display: activeSlide === 3 ? 'block' : 'none' }}>
+        <Box
+          aria-label="slide 4 of 4"
+          aria-current={activeSlide === 3 ? 'true' : 'false'}
+          css={{ display: activeSlide === 3 ? 'block' : 'none' }}
+        >
           <Text css={{ mb: '$5', color: '$gray9' }}>
             Highlight text to display the Bubble menu and change the formatting
           </Text>
