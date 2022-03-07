@@ -69,7 +69,7 @@ type DialogContentProps = React.ComponentProps<
 
 export function DialogContent({ children, ...props }: DialogContentProps) {
   return (
-    <StyledContent css={{ ...props.css }} {...props}>
+    <StyledContent {...props}>
       {children}
       <StyledCloseButton asChild>
         <IconButton>
