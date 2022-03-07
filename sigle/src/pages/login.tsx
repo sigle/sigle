@@ -153,7 +153,7 @@ const Login = () => {
           </IconButton>
           <IconButton
             as="a"
-            href={sigleConfig.twitterUrl}
+            href={sigleConfig.githubUrl}
             target="_blank"
             rel="noreferrer"
           >
@@ -237,7 +237,7 @@ const Login = () => {
             color: '$gray12',
           }}
         >
-          © Sigle {new Date().getFullYear()} - SAS Incognito Lab
+          © Sigle {new Date().getFullYear()}
         </Text>
       </Footer>
     </FullScreen>
