@@ -37,7 +37,7 @@ import { CodeBlockComponent } from './extensions/CodeBlock';
 import { Story } from '../../types';
 import CharacterCount from '@tiptap/extension-character-count';
 import { Container, Text } from '../../ui';
-import { ShortcutsDialog } from './ShortcutsDialog';
+import { ShortcutsDialog } from './EditorShortcuts/ShortcutsDialog';
 
 const fadeInAnimation = keyframes({
   '0%': { opacity: '0' },

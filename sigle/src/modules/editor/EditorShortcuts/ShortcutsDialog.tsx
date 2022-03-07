@@ -7,8 +7,8 @@ import {
   TabsContent,
   TabsList,
   TabsTrigger,
-} from '../../ui';
-import { styled } from '../../stitches.config';
+} from '../../../ui';
+import { styled } from '../../../stitches.config';
 import { KeyboardIcon } from '@radix-ui/react-icons';
 import { HintsCarousel } from './HintsCarousel';
 
