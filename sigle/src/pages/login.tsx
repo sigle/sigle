@@ -79,7 +79,12 @@ const Login = () => {
             <Heading
               as="h1"
               size="2xl"
-              css={{ mt: isExperimentalHiroWalletEnabled ? '$8' : '$15' }}
+              css={{
+                mt: isExperimentalHiroWalletEnabled ? '$7' : '$15',
+                fontWeight: !isExperimentalHiroWalletEnabled
+                  ? '600'
+                  : undefined,
+              }}
             >
               {isExperimentalHiroWalletEnabled
                 ? 'Connect, Write, Earn*'
@@ -89,10 +94,13 @@ const Login = () => {
               css={{
                 mt: isExperimentalHiroWalletEnabled ? '$2' : '$7',
                 color: isExperimentalHiroWalletEnabled ? '$gray8' : '$gray10',
+                fontStyle: isExperimentalHiroWalletEnabled
+                  ? 'italic'
+                  : undefined,
               }}
             >
               {isExperimentalHiroWalletEnabled
-                ? '*Monetisation coming soon'
+                ? '(*Monetisation coming soon)'
                 : `Sigle is a web 3.0 open source blogging platform focused on{' '}
               <strong>protecting your privacy</strong>, built on top of Stacks.`}
             </Text>
@@ -116,7 +124,7 @@ const Login = () => {
               color="orange"
               size="lg"
               onClick={handleLogin}
-              css={{ mt: isExperimentalHiroWalletEnabled ? '$2' : '$7' }}
+              css={{ mt: '$7' }}
             >
               {isExperimentalHiroWalletEnabled
                 ? 'Connect Wallet'
@@ -128,7 +136,7 @@ const Login = () => {
                 color="gray"
                 size="lg"
                 onClick={handleLogin}
-                css={{ mt: '$4' }}
+                css={{ mt: '$3' }}
               >
                 Legacy login
               </Button>
