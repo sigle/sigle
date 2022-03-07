@@ -1,12 +1,12 @@
 import { Editor } from '@tiptap/react';
-import { useMemo, useRef, useState } from 'react';
+import { useRef, useState } from 'react';
 import { toast } from 'react-toastify';
 import NProgress from 'nprogress';
 import * as Fathom from 'fathom-client';
 import posthog from 'posthog-js';
 import { styled } from '../../stitches.config';
 import { Story } from '../../types';
-import { Container, Text } from '../../ui';
+import { Container } from '../../ui';
 import { EditorHeader } from './EditorHeader';
 import { PublishDialog } from './PublishDialog';
 import { TipTapEditor } from './TipTapEditor';
@@ -15,7 +15,6 @@ import { publishStory, unPublishStory } from '../../utils';
 import { Goals } from '../../utils/fathom';
 import { UnpublishDialog } from './UnpublishDialog';
 import { PublishedDialog } from './PublishedDialog';
-import { migrationStory } from '../../utils/migrations/story';
 import { CoverImage } from './CoverImage';
 import { EditorSettings } from './EditorSettings/EditorSettings';
 
@@ -43,8 +42,7 @@ interface NewEditorProps {
 export const NewEditor = ({ story }: NewEditorProps) => {
   const editorRef = useRef<{ getEditor: () => Editor | null }>(null);
   const [loadingSave, setLoadingSave] = useState(false);
-  const migratedStory = useMemo(() => migrationStory(story), [story]);
-  const [newStory, setNewStory] = useState(migratedStory);
+  const [newStory, setNewStory] = useState(story);
   const [publishDialogState, setPublishDialogState] = useState({
     open: false,
     loading: false,
@@ -192,10 +190,6 @@ export const NewEditor = ({ story }: NewEditorProps) => {
         onPublish={handlePublish}
         onUnpublish={handleUnpublish}
       />
-
-      <Text size="sm" color="orange">
-        ⚠️ You are using the experimental editor, expect things to break
-      </Text>
 
       <EditorContainer className="prose lg:prose-lg">
         <TitleInput
