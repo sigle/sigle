@@ -83,11 +83,9 @@ export const ShortcutsDialog = () => {
       <DialogContent
         css={{
           backgroundColor: '$gray1',
-          display: 'flex',
-          flexDirection: 'column',
-          gap: '$7',
           maxWidth: '760px',
           px: '$8',
+          py: '$8',
         }}
       >
         <Tabs defaultValue="shortcuts">
@@ -96,7 +94,7 @@ export const ShortcutsDialog = () => {
             <TabsTrigger value="hints">Hints</TabsTrigger>
           </TabsList>
 
-          <TabsContent css={{ height: 650 }} value="shortcuts">
+          <TabsContent css={{ height: 600 }} value="shortcuts">
             <Tabs defaultValue="essentials">
               <TabsList css={{ mb: '$4' }} aria-label="Explore shortcut types">
                 <TabsTrigger value="essentials">Essentials</TabsTrigger>

@@ -43,7 +43,7 @@ export const HintsCarousel = () => {
     <Flex
       align="start"
       justify="between"
-      css={{ textAlign: 'center', position: 'relative', px: '$5', py: '$4' }}
+      css={{ textAlign: 'center', position: 'relative', py: '$4' }}
       as="section"
       aria-label="hints carousel"
     >
