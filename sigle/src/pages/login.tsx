@@ -103,9 +103,9 @@ const Login = () => {
                 '(*Monetisation coming soon)'
               ) : (
                 <span>
-                  `Sigle is a web 3.0 open source blogging platform focused on{' '}
+                  Sigle is a web 3.0 open source blogging platform focused on{' '}
                   <strong>protecting your privacy</strong>, built on top of
-                  Stacks.`
+                  Stacks.
                 </span>
               )}
             </Text>
