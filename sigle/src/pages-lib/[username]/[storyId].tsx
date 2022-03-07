@@ -114,8 +114,6 @@ export const getServerSideProps: GetServerSideProps<
     statusCode = 404;
   }
 
-  // TODO migrate content
-
   /**
    * 1. Migrate the story to the new format.
    * 2. Sanitize the HTML of the story so it's safe to display to external users.
