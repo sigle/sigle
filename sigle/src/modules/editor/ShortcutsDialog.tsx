@@ -440,14 +440,7 @@ export const ShortcutsDialog = () => {
               </TabsContent>
             </Tabs>
           </TabsContent>
-          <TabsContent
-            value="hints"
-            css={{
-              position: 'relative',
-              px: '$5',
-              py: '$4',
-            }}
-          >
+          <TabsContent value="hints">
             <HintsCarousel />
           </TabsContent>
         </Tabs>

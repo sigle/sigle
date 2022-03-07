@@ -23,10 +23,6 @@ const ImgWrapper = styled('div', {
 export const HintsCarousel = () => {
   const [activeSlide, setActiveSlide] = useState(0);
 
-  useEffect(() => {
-    console.log(activeSlide);
-  }, [activeSlide]);
-
   const nextSlide = () => {
     if (activeSlide === 3) {
       setActiveSlide(0);
@@ -47,7 +43,7 @@ export const HintsCarousel = () => {
     <Flex
       align="start"
       justify="between"
-      css={{ textAlign: 'center' }}
+      css={{ textAlign: 'center', position: 'relative', px: '$5', py: '$4' }}
       as="section"
       aria-label="hints carousel"
     >
