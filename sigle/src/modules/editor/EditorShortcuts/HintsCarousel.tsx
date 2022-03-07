@@ -6,9 +6,9 @@ import {
 } from '@radix-ui/react-icons';
 import Image from 'next/image';
 import { useEffect, useState } from 'react';
-import { RoundPlus } from '../../icons';
-import { styled } from '../../stitches.config';
-import { Box, Flex, IconButton, Text } from '../../ui';
+import { RoundPlus } from '../../../icons';
+import { styled } from '../../../stitches.config';
+import { Box, Flex, IconButton, Text } from '../../../ui';
 
 const ImgWrapper = styled('div', {
   width: 600,
