@@ -1,4 +1,3 @@
 packages:
   - 'sigle'
-  - 'blog-viewer'
   - 'packages/**'
