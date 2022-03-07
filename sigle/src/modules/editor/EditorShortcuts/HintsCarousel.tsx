@@ -62,24 +62,16 @@ export const HintsCarousel = () => {
         }}
       >
         <Box
-          aria-label="slide 1 of 4"
+          aria-label="slide 4 of 4"
           aria-current={activeSlide === 0 ? 'true' : 'false'}
           css={{ display: activeSlide === 0 ? 'block' : 'none' }}
         >
           <Text css={{ mb: '$5', color: '$gray9' }}>
-            Add and remove a cover image to your story by clicking on the{' '}
-            <Box css={{ display: 'inline-block', px: '$1' }} as="span">
-              <TrashIcon />
-            </Box>
-            button. you can change this image manually for sharing on social
-            networks in the settings{' '}
-            <Box css={{ display: 'inline-block', px: '$1' }} as="span">
-              <MixerHorizontalIcon />
-            </Box>
+            Highlight text to display the Bubble menu and change the formatting
           </Text>
           <ImgWrapper>
             <Image
-              src="/static/img/hint1.gif"
+              src="/static/img/hint4.gif"
               layout="fill"
               objectFit="cover"
             />
@@ -123,16 +115,24 @@ export const HintsCarousel = () => {
         </Box>
 
         <Box
-          aria-label="slide 4 of 4"
+          aria-label="slide 1 of 4"
           aria-current={activeSlide === 3 ? 'true' : 'false'}
           css={{ display: activeSlide === 3 ? 'block' : 'none' }}
         >
           <Text css={{ mb: '$5', color: '$gray9' }}>
-            Highlight text to display the Bubble menu and change the formatting
+            Add and remove a cover image to your story by clicking on the{' '}
+            <Box css={{ display: 'inline-block', px: '$1' }} as="span">
+              <TrashIcon />
+            </Box>
+            button. you can change this image manually for sharing on social
+            networks in the settings{' '}
+            <Box css={{ display: 'inline-block', px: '$1' }} as="span">
+              <MixerHorizontalIcon />
+            </Box>
           </Text>
           <ImgWrapper>
             <Image
-              src="/static/img/hint4.gif"
+              src="/static/img/hint1.gif"
               layout="fill"
               objectFit="cover"
             />
