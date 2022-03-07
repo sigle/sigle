@@ -93,7 +93,7 @@ const Login = () => {
             <Text
               css={{
                 mt: isExperimentalHiroWalletEnabled ? '$2' : '$7',
-                color: isExperimentalHiroWalletEnabled ? '$gray8' : '$gray10',
+                color: isExperimentalHiroWalletEnabled ? '$gray9' : '$gray10',
                 fontStyle: isExperimentalHiroWalletEnabled
                   ? 'italic'
                   : undefined,
