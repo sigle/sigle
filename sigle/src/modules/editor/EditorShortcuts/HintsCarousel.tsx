@@ -11,8 +11,6 @@ import { styled } from '../../../stitches.config';
 import { Box, Flex, IconButton, Text } from '../../../ui';
 
 const ImgWrapper = styled('div', {
-  width: 600,
-  height: 350,
   position: 'relative',
   mx: 'auto',
   boxShadow: '0 0 0 1px $colors$gray7',
@@ -71,8 +69,10 @@ export const HintsCarousel = () => {
           </Text>
           <ImgWrapper>
             <Image
+              width={600}
+              height={350}
               src="/static/img/hint4.gif"
-              layout="fill"
+              layout="responsive"
               objectFit="cover"
             />
           </ImgWrapper>
@@ -91,8 +91,10 @@ export const HintsCarousel = () => {
           </Text>
           <ImgWrapper>
             <Image
+              width={600}
+              height={350}
               src="/static/img/hint2.gif"
-              layout="fill"
+              layout="responsive"
               objectFit="cover"
             />
           </ImgWrapper>
@@ -107,8 +109,10 @@ export const HintsCarousel = () => {
           </Text>
           <ImgWrapper>
             <Image
+              width={600}
+              height={350}
               src="/static/img/hint3.gif"
-              layout="fill"
+              layout="responsive"
               objectFit="cover"
             />
           </ImgWrapper>
@@ -132,8 +136,10 @@ export const HintsCarousel = () => {
           </Text>
           <ImgWrapper>
             <Image
+              width={600}
+              height={350}
               src="/static/img/hint1.gif"
-              layout="fill"
+              layout="responsive"
               objectFit="cover"
             />
           </ImgWrapper>
