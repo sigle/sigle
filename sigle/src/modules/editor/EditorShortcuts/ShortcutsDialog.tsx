@@ -166,6 +166,10 @@ const Tr = styled('tr', {
   py: '$4',
   mb: '$2',
   boxShadow: '0 1px 0 0 $colors$gray6',
+
+  '&:last-of-type': {
+    boxShadow: 'none',
+  },
 });
 
 const Th = styled('th', {
