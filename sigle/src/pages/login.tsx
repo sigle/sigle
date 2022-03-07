@@ -9,6 +9,7 @@ import { Goals } from '../utils/fathom';
 import { useAuth } from '../modules/auth/AuthContext';
 import { styled } from '../stitches.config';
 import { Box, Button, Container, Heading, Text } from '../ui';
+import { isExperimentalHiroWalletEnabled } from '../utils/featureFlags';
 
 const FullScreen = styled('div', {
   height: '100vh',
@@ -75,35 +76,63 @@ const Login = () => {
                 height={44}
               />
             </a>
-            <Heading as="h1" size="2xl" css={{ mt: '$15' }}>
-              Welcome!
-            </Heading>
-            <Text css={{ mt: '$7' }}>
-              Sigle is a web 3.0 open source blogging platform focused on{' '}
-              <strong>protecting your privacy</strong>, built on top of Stacks.
-            </Text>
-            <Text
-              color="orange"
-              size="action"
-              as="a"
-              target="_blank"
-              rel="noreferrer"
-              href="https://www.stacks.co/what-is-stacks"
-              css={{ mt: '$5', display: 'flex', alignItems: 'center' }}
+            <Heading
+              as="h1"
+              size="2xl"
+              css={{ mt: isExperimentalHiroWalletEnabled ? '$8' : '$15' }}
             >
-              What is Stacks?
-              <Box as="span" css={{ ml: '$2' }}>
-                <ArrowTopRightIcon height={16} width={16} />
-              </Box>
+              {isExperimentalHiroWalletEnabled
+                ? 'Connect, Write, Earn*'
+                : 'Welcome!'}
+            </Heading>
+            <Text
+              css={{
+                mt: isExperimentalHiroWalletEnabled ? '$2' : '$7',
+                color: isExperimentalHiroWalletEnabled ? '$gray8' : '$gray10',
+              }}
+            >
+              {isExperimentalHiroWalletEnabled
+                ? '*Monetisation coming soon'
+                : `Sigle is a web 3.0 open source blogging platform focused on{' '}
+              <strong>protecting your privacy</strong>, built on top of Stacks.`}
             </Text>
+            {isExperimentalHiroWalletEnabled ? null : (
+              <Text
+                color="orange"
+                size="action"
+                as="a"
+                target="_blank"
+                rel="noreferrer"
+                href="https://www.stacks.co/what-is-stacks"
+                css={{ mt: '$5', display: 'flex', alignItems: 'center' }}
+              >
+                What is Stacks?
+                <Box as="span" css={{ ml: '$2' }}>
+                  <ArrowTopRightIcon height={16} width={16} />
+                </Box>
+              </Text>
+            )}
             <Button
               color="orange"
               size="lg"
               onClick={handleLogin}
-              css={{ mt: '$7' }}
+              css={{ mt: isExperimentalHiroWalletEnabled ? '$2' : '$7' }}
             >
-              Start Writing
+              {isExperimentalHiroWalletEnabled
+                ? 'Connect Wallet'
+                : 'Start Writing'}
             </Button>
+            {isExperimentalHiroWalletEnabled ? (
+              <Button
+                variant="ghost"
+                color="gray"
+                size="lg"
+                onClick={handleLogin}
+                css={{ mt: '$4' }}
+              >
+                Legacy login
+              </Button>
+            ) : null}
           </BlockText>
           <BlockIllustration>
             <Image
