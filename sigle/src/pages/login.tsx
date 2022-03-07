@@ -9,6 +9,7 @@ import { Goals } from '../utils/fathom';
 import { useAuth } from '../modules/auth/AuthContext';
 import { styled } from '../stitches.config';
 import { Box, Button, Container, Heading, Text } from '../ui';
+import { isExperimentalHiroWalletEnabled } from '../utils/featureFlags';
 
 const FullScreen = styled('div', {
   height: '100vh',
@@ -75,35 +76,76 @@ const Login = () => {
                 height={44}
               />
             </a>
-            <Heading as="h1" size="2xl" css={{ mt: '$15' }}>
-              Welcome!
-            </Heading>
-            <Text css={{ mt: '$7' }}>
-              Sigle is a web 3.0 open source blogging platform focused on{' '}
-              <strong>protecting your privacy</strong>, built on top of Stacks.
-            </Text>
-            <Text
-              color="orange"
-              size="action"
-              as="a"
-              target="_blank"
-              rel="noreferrer"
-              href="https://www.stacks.co/what-is-stacks"
-              css={{ mt: '$5', display: 'flex', alignItems: 'center' }}
+            <Heading
+              as="h1"
+              size="2xl"
+              css={{
+                mt: isExperimentalHiroWalletEnabled ? '$7' : '$15',
+                fontWeight: !isExperimentalHiroWalletEnabled
+                  ? '600'
+                  : undefined,
+              }}
             >
-              What is Stacks?
-              <Box as="span" css={{ ml: '$2' }}>
-                <ArrowTopRightIcon height={16} width={16} />
-              </Box>
+              {isExperimentalHiroWalletEnabled
+                ? 'Connect, Write, Earn*'
+                : 'Welcome!'}
+            </Heading>
+            <Text
+              css={{
+                mt: isExperimentalHiroWalletEnabled ? '$2' : '$7',
+                color: isExperimentalHiroWalletEnabled ? '$gray9' : '$gray10',
+                fontStyle: isExperimentalHiroWalletEnabled
+                  ? 'italic'
+                  : undefined,
+              }}
+            >
+              {isExperimentalHiroWalletEnabled ? (
+                '(*Monetisation coming soon)'
+              ) : (
+                <span>
+                  Sigle is a web 3.0 open source blogging platform focused on{' '}
+                  <strong>protecting your privacy</strong>, built on top of
+                  Stacks.
+                </span>
+              )}
             </Text>
+            {isExperimentalHiroWalletEnabled ? null : (
+              <Text
+                color="orange"
+                size="action"
+                as="a"
+                target="_blank"
+                rel="noreferrer"
+                href="https://www.stacks.co/what-is-stacks"
+                css={{ mt: '$5', display: 'flex', alignItems: 'center' }}
+              >
+                What is Stacks?
+                <Box as="span" css={{ ml: '$2' }}>
+                  <ArrowTopRightIcon height={16} width={16} />
+                </Box>
+              </Text>
+            )}
             <Button
               color="orange"
               size="lg"
               onClick={handleLogin}
               css={{ mt: '$7' }}
             >
-              Start Writing
+              {isExperimentalHiroWalletEnabled
+                ? 'Connect Wallet'
+                : 'Start Writing'}
             </Button>
+            {isExperimentalHiroWalletEnabled ? (
+              <Button
+                variant="ghost"
+                color="gray"
+                size="lg"
+                onClick={handleLogin}
+                css={{ mt: '$3' }}
+              >
+                Legacy login
+              </Button>
+            ) : null}
           </BlockText>
           <BlockIllustration>
             <Image
