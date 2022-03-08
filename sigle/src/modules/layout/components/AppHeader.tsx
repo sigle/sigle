@@ -3,6 +3,7 @@ import {
   GitHubLogoIcon,
   TwitterLogoIcon,
   DiscordLogoIcon,
+  SunIcon,
 } from '@radix-ui/react-icons';
 import Link from 'next/link';
 import Image from 'next/image';
@@ -29,6 +30,8 @@ import {
 } from '../../../ui/HoverCard';
 import { userSession } from '../../../utils/blockstack';
 import posthog from 'posthog-js';
+
+import { isExperimentalThemeToggleEnabled } from '../../../utils/featureFlags';
 import { createSubsetStory } from '../../editor/utils';
 
 const Header = styled('header', Container, {
@@ -207,6 +210,16 @@ export const AppHeader = () => {
               Enter App
             </Button>
           </Link>
+        )}
+        {!isExperimentalThemeToggleEnabled && (
+          <IconButton
+            as="button"
+            onClick={() => {
+              console.log('Toggle clicked');
+            }}
+          >
+            <SunIcon />
+          </IconButton>
         )}
       </Flex>
     </Header>
