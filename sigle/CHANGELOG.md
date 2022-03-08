@@ -1,5 +1,11 @@
 # @sigle/app
 
+## 1.1.0
+
+### Minor Changes
+
+- 46a0a95: New editor is live! See https://app.sigle.io/sigleapp.id.blockstack/zsoVIi3V6CE55-ygCdjVG to see what's new.
+
 ## 1.0.0
 
 ### Major Changes
