@@ -163,6 +163,10 @@ export const getServerSideProps: GetServerSideProps<
             'sup',
             'span',
           ],
+          allowedAttributes: {
+            ...sanitizeHtml.defaults.allowedAttributes,
+            code: ['class'],
+          },
         })
       : '';
   }
