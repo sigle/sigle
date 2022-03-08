@@ -12,7 +12,6 @@ import { toast } from 'react-toastify';
 import { styled } from '../../../stitches.config';
 import { Box, Button, Container, Flex, IconButton, Text } from '../../../ui';
 import {
-  convertStoryToSubsetStory,
   createNewEmptyStory,
   getStoriesFile,
   saveStoriesFile,
@@ -30,6 +29,7 @@ import {
 } from '../../../ui/HoverCard';
 import { userSession } from '../../../utils/blockstack';
 import posthog from 'posthog-js';
+import { createSubsetStory } from '../../editor/utils';
 
 const Header = styled('header', Container, {
   display: 'flex',
@@ -68,7 +68,9 @@ export const AppHeader = () => {
       const storiesFile = await getStoriesFile();
       const story = createNewEmptyStory();
 
-      storiesFile.stories.unshift(convertStoryToSubsetStory(story));
+      storiesFile.stories.unshift(
+        createSubsetStory(story, { plainContent: '' })
+      );
 
       await saveStoriesFile(storiesFile);
       await saveStoryFile(story);

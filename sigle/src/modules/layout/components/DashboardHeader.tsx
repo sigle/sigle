@@ -11,7 +11,6 @@ import { Dialog } from '../../../ui';
 import { keyframes, styled } from '../../../stitches.config';
 import {
   createNewEmptyStory,
-  convertStoryToSubsetStory,
   saveStoriesFile,
   saveStoryFile,
   getStoriesFile,
@@ -19,6 +18,7 @@ import {
 import { Goals } from '../../../utils/fathom';
 import { DashboardSidebar } from './DashboardLayout';
 import { useAuth } from '../../auth/AuthContext';
+import { createSubsetStory } from '../../editor/utils';
 
 export const PageTitleContainer = styledC.div`
   ${tw`mb-2 pb-4 lg:pb-8 flex flex-col-reverse lg:flex-row justify-between border-b border-solid border-grey`};
@@ -94,7 +94,9 @@ export const DashboardPageTitle = ({ title }: DashboardPageTitleProps) => {
       const storiesFile = await getStoriesFile();
       const story = createNewEmptyStory();
 
-      storiesFile.stories.unshift(convertStoryToSubsetStory(story));
+      storiesFile.stories.unshift(
+        createSubsetStory(story, { plainContent: '' })
+      );
 
       await saveStoriesFile(storiesFile);
       await saveStoryFile(story);

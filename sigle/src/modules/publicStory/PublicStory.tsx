@@ -8,7 +8,7 @@ import { sigleConfig } from '../../config';
 import { TipTapEditor } from '../editor/TipTapEditor';
 import { styled } from '../../stitches.config';
 import { Box, Text } from '../../ui';
-import { PoweredBy } from './components/PoweredBy';
+import { PoweredBy } from './PoweredBy';
 import { getTextFromHtml } from '../editor/utils/getTextFromHtml';
 import { AppHeader } from '../layout/components/AppHeader';
 import format from 'date-fns/format';
