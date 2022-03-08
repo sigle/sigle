@@ -31,6 +31,7 @@ importers:
       '@radix-ui/react-hover-card': 0.1.5
       '@radix-ui/react-icons': 1.1.0
       '@radix-ui/react-scroll-area': 0.1.3
+      '@radix-ui/react-tabs': 0.1.5
       '@radix-ui/react-tooltip': 0.1.0
       '@sentry/nextjs': 6.17.9
       '@sigle/tailwind-style': workspace:^0.2.0
@@ -135,6 +136,7 @@ importers:
       '@radix-ui/react-hover-card': 0.1.5_react-dom@17.0.2+react@17.0.2
       '@radix-ui/react-icons': 1.1.0_react@17.0.2
       '@radix-ui/react-scroll-area': 0.1.3_react@17.0.2
+      '@radix-ui/react-tabs': 0.1.5_react@17.0.2
       '@radix-ui/react-tooltip': 0.1.0_react-dom@17.0.2+react@17.0.2
       '@sentry/nextjs': 6.17.9_next@12.1.0+react@17.0.2
       '@stacks/auth': 2.0.0-beta.1
@@ -1276,6 +1278,19 @@ packages:
       react: 17.0.2
     dev: false
 
+  /@radix-ui/react-collection/0.1.4_react@17.0.2:
+    resolution: {integrity: sha512-3muGI15IdgaDFjOcO7xX8a35HQRBRF6LH9pS6UCeZeRmbslkVeHyJRQr2rzICBUoX7zgIA0kXyMDbpQnJGyJTA==}
+    peerDependencies:
+      react: ^16.8 || ^17.0
+    dependencies:
+      '@babel/runtime': 7.17.2
+      '@radix-ui/react-compose-refs': 0.1.0_react@17.0.2
+      '@radix-ui/react-context': 0.1.1_react@17.0.2
+      '@radix-ui/react-primitive': 0.1.4_react@17.0.2
+      '@radix-ui/react-slot': 0.1.2_react@17.0.2
+      react: 17.0.2
+    dev: false
+
   /@radix-ui/react-compose-refs/0.1.0_react@17.0.2:
     resolution: {integrity: sha512-eyclbh+b77k+69Dk72q3694OHrn9B3QsoIRx7ywX341U9RK1ThgQjMFZoPtmZNQTksXHLNEiefR8hGVeFyInGg==}
     peerDependencies:
@@ -1433,6 +1448,16 @@ packages:
       react: ^16.8 || ^17.0
     dependencies:
       '@babel/runtime': 7.17.2
+      react: 17.0.2
+    dev: false
+
+  /@radix-ui/react-id/0.1.5_react@17.0.2:
+    resolution: {integrity: sha512-IPc4H/63bes0IZ1GJJozSEkSWcDyhNGtKFWUpJ+XtaLyQ1X3x7Mf6fWwWhDcpqlYEP+5WtAvfqcyEsyjP+ZhBQ==}
+    peerDependencies:
+      react: ^16.8 || ^17.0
+    dependencies:
+      '@babel/runtime': 7.17.2
+      '@radix-ui/react-use-layout-effect': 0.1.0_react@17.0.2
       react: 17.0.2
     dev: false
 
@@ -1606,6 +1631,23 @@ packages:
       react: 17.0.2
     dev: false
 
+  /@radix-ui/react-roving-focus/0.1.5_react@17.0.2:
+    resolution: {integrity: sha512-ClwKPS5JZE+PaHCoW7eu1onvE61pDv4kO8W4t5Ra3qMFQiTJLZMdpBQUhksN//DaVygoLirz4Samdr5Y1x1FSA==}
+    peerDependencies:
+      react: ^16.8 || ^17.0
+    dependencies:
+      '@babel/runtime': 7.17.2
+      '@radix-ui/primitive': 0.1.0
+      '@radix-ui/react-collection': 0.1.4_react@17.0.2
+      '@radix-ui/react-compose-refs': 0.1.0_react@17.0.2
+      '@radix-ui/react-context': 0.1.1_react@17.0.2
+      '@radix-ui/react-id': 0.1.5_react@17.0.2
+      '@radix-ui/react-primitive': 0.1.4_react@17.0.2
+      '@radix-ui/react-use-callback-ref': 0.1.0_react@17.0.2
+      '@radix-ui/react-use-controllable-state': 0.1.0_react@17.0.2
+      react: 17.0.2
+    dev: false
+
   /@radix-ui/react-scroll-area/0.1.3_react@17.0.2:
     resolution: {integrity: sha512-wn5FdX5pU8N6ygqIad4clrhyiLo3LWCdscIee2nKe2bu7AijtUs/VAqmLEoDLIi2gpkS5RclxHbiHRkaxVvccw==}
     peerDependencies:
@@ -1641,6 +1683,21 @@ packages:
     dependencies:
       '@babel/runtime': 7.17.2
       '@radix-ui/react-compose-refs': 0.1.0_react@17.0.2
+      react: 17.0.2
+    dev: false
+
+  /@radix-ui/react-tabs/0.1.5_react@17.0.2:
+    resolution: {integrity: sha512-ieVQS1TFr0dX1XA8B+CsSFKOE7kcgEaNWWEfItxj9D1GZjn1o3WqPkW+FhQWDAWZLSKCH2PezYF3MNyO41lgJg==}
+    peerDependencies:
+      react: ^16.8 || ^17.0
+    dependencies:
+      '@babel/runtime': 7.17.2
+      '@radix-ui/primitive': 0.1.0
+      '@radix-ui/react-context': 0.1.1_react@17.0.2
+      '@radix-ui/react-id': 0.1.5_react@17.0.2
+      '@radix-ui/react-primitive': 0.1.4_react@17.0.2
+      '@radix-ui/react-roving-focus': 0.1.5_react@17.0.2
+      '@radix-ui/react-use-controllable-state': 0.1.0_react@17.0.2
       react: 17.0.2
     dev: false
 
