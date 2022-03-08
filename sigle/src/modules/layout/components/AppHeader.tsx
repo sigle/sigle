@@ -30,6 +30,8 @@ import {
 } from '../../../ui/HoverCard';
 import { userSession } from '../../../utils/blockstack';
 import posthog from 'posthog-js';
+import { ThemeToggle } from '../../../icons/ThemeToggle';
+import { enableExperimentalThemeToggle } from '../../../utils/featureFlags';
 
 const Header = styled('header', Container, {
   display: 'flex',
@@ -206,6 +208,9 @@ export const AppHeader = () => {
             </Button>
           </Link>
         )}
+        <IconButton as="button" onClick={enableExperimentalThemeToggle}>
+          <ThemeToggle />
+        </IconButton>
       </Flex>
     </Header>
   );
