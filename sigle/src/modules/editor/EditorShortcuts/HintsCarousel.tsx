@@ -11,6 +11,7 @@ import { styled } from '../../../stitches.config';
 import { Box, Flex, IconButton, Text } from '../../../ui';
 
 const ImgWrapper = styled('div', {
+  width: 600,
   position: 'relative',
   mx: 'auto',
   boxShadow: '0 0 0 1px $colors$gray7',
