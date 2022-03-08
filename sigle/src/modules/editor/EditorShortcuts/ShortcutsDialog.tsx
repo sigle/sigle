@@ -255,16 +255,16 @@ export const ShortcutsDialog = () => {
               <TabsContent value="essentials">
                 <Table>
                   {essentials.map((shortcut) => (
-                    <Tr>
+                    <Tr key={shortcut.action}>
                       <Th scope="row">{shortcut.action}</Th>
                       <Td>
                         {shortcut.winCommand.map((command) => (
-                          <Kbd>{command}</Kbd>
+                          <Kbd key={command}>{command}</Kbd>
                         ))}
                       </Td>
                       <Td>
                         {shortcut.macCommand.map((command) => (
-                          <Kbd>{command}</Kbd>
+                          <Kbd key={command}>{command}</Kbd>
                         ))}
                       </Td>
                     </Tr>
@@ -274,16 +274,16 @@ export const ShortcutsDialog = () => {
               <TabsContent value="text-formatting">
                 <Table>
                   {textFormatting.map((shortcut) => (
-                    <Tr>
+                    <Tr key={shortcut.action}>
                       <Th scope="row">{shortcut.action}</Th>
                       <Td>
                         {shortcut.winCommand.map((command) => (
-                          <Kbd>{command}</Kbd>
+                          <Kbd key={command}>{command}</Kbd>
                         ))}
                       </Td>
                       <Td>
                         {shortcut.macCommand.map((command) => (
-                          <Kbd>{command}</Kbd>
+                          <Kbd key={command}>{command}</Kbd>
                         ))}
                       </Td>
                     </Tr>
@@ -293,16 +293,16 @@ export const ShortcutsDialog = () => {
               <TabsContent value="p-formatting">
                 <Table>
                   {paragraphFormatting.map((shortcut) => (
-                    <Tr>
+                    <Tr key={shortcut.action}>
                       <Th scope="row">{shortcut.action}</Th>
                       <Td>
                         {shortcut.winCommand.map((command) => (
-                          <Kbd>{command}</Kbd>
+                          <Kbd key={command}>{command}</Kbd>
                         ))}
                       </Td>
                       <Td>
                         {shortcut.macCommand.map((command) => (
-                          <Kbd>{command}</Kbd>
+                          <Kbd key={command}>{command}</Kbd>
                         ))}
                       </Td>
                     </Tr>
@@ -312,16 +312,16 @@ export const ShortcutsDialog = () => {
               <TabsContent value="selection">
                 <Table>
                   {textSelection.map((shortcut) => (
-                    <Tr>
+                    <Tr key={shortcut.action}>
                       <Th scope="row">{shortcut.action}</Th>
                       <Td>
                         {shortcut.winCommand.map((command) => (
-                          <Kbd>{command}</Kbd>
+                          <Kbd key={command}>{command}</Kbd>
                         ))}
                       </Td>
                       <Td>
                         {shortcut.macCommand.map((command) => (
-                          <Kbd>{command}</Kbd>
+                          <Kbd key={command}>{command}</Kbd>
                         ))}
                       </Td>
                     </Tr>
