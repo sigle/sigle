@@ -3,6 +3,7 @@ import {
   GitHubLogoIcon,
   TwitterLogoIcon,
   DiscordLogoIcon,
+  SunIcon,
 } from '@radix-ui/react-icons';
 import Link from 'next/link';
 import Image from 'next/image';
@@ -31,7 +32,10 @@ import {
 import { userSession } from '../../../utils/blockstack';
 import posthog from 'posthog-js';
 import { ThemeToggle } from '../../../icons/ThemeToggle';
-import { enableExperimentalThemeToggle } from '../../../utils/featureFlags';
+import {
+  enableExperimentalThemeToggle,
+  isExperimentalThemeToggleEnabled,
+} from '../../../utils/featureFlags';
 
 const Header = styled('header', Container, {
   display: 'flex',
@@ -208,9 +212,16 @@ export const AppHeader = () => {
             </Button>
           </Link>
         )}
-        <IconButton as="button" onClick={enableExperimentalThemeToggle}>
-          <ThemeToggle />
-        </IconButton>
+        {!isExperimentalThemeToggleEnabled && (
+          <IconButton
+            as="button"
+            onClick={() => {
+              console.log('hello');
+            }}
+          >
+            <SunIcon />
+          </IconButton>
+        )}
       </Flex>
     </Header>
   );

@@ -7,6 +7,8 @@ import {
   isExperimentalEditorEnabled,
   enableExperimentalHiroWallet,
   isExperimentalHiroWalletEnabled,
+  isExperimentalThemeToggleEnabled,
+  enableExperimentalThemeToggle,
 } from '../utils/featureFlags';
 
 const HomePage = () => {
@@ -14,6 +16,8 @@ const HomePage = () => {
   const isExperimentalEditor = router.query.experimentalEditor === 'true';
   const isExperimentalHiroWallet =
     router.query.experimentalHiroWallet === 'true';
+  const isExperimentalThemeToggle =
+    router.query.experimentalThemeToggle === 'true';
 
   useEffect(() => {
     if (isExperimentalEditor && !isExperimentalEditorEnabled) {
@@ -21,6 +25,9 @@ const HomePage = () => {
     }
     if (isExperimentalHiroWallet && !isExperimentalHiroWalletEnabled) {
       enableExperimentalHiroWallet();
+    }
+    if (isExperimentalThemeToggle && !isExperimentalThemeToggleEnabled) {
+      enableExperimentalThemeToggle();
     }
   }, [isExperimentalEditor]);
 
