@@ -1,5 +1,11 @@
 # @sigle/app
 
+## 1.0.0
+
+### Major Changes
+
+- d7ac262: First major version to have concistent versionning after this release.
+
 ## 0.4.0
 
 ### Minor Changes
