@@ -1,5 +1,11 @@
 # @sigle/tailwind-style
 
+## 1.0.0
+
+### Major Changes
+
+- d7ac262: First major version to have concistent versionning after this release.
+
 ## 0.2.0
 
 ### Minor Changes
