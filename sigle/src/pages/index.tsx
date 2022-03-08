@@ -3,8 +3,6 @@ import { useRouter } from 'next/router';
 import { Protected } from '../modules/auth/Protected';
 import { Home } from '../modules/home';
 import {
-  enableExperimentalEditor,
-  isExperimentalEditorEnabled,
   enableExperimentalHiroWallet,
   isExperimentalHiroWalletEnabled,
   isExperimentalThemeToggleEnabled,
@@ -13,23 +11,19 @@ import {
 
 const HomePage = () => {
   const router = useRouter();
-  const isExperimentalEditor = router.query.experimentalEditor === 'true';
   const isExperimentalHiroWallet =
     router.query.experimentalHiroWallet === 'true';
   const isExperimentalThemeToggle =
     router.query.experimentalThemeToggle === 'true';
 
   useEffect(() => {
-    if (isExperimentalEditor && !isExperimentalEditorEnabled) {
-      enableExperimentalEditor();
-    }
     if (isExperimentalHiroWallet && !isExperimentalHiroWalletEnabled) {
       enableExperimentalHiroWallet();
     }
     if (isExperimentalThemeToggle && !isExperimentalThemeToggleEnabled) {
       enableExperimentalThemeToggle();
     }
-  }, [isExperimentalEditor]);
+  }, [isExperimentalHiroWallet]);
 
   return (
     <Protected>

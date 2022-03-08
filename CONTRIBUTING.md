@@ -20,10 +20,9 @@ For non-bug-fixes, please open an issue first and discuss your idea to make sure
 
 ## Structure
 
-Sigle is a monorepo made of 2 next.js applications:
+Sigle is a monorepo made of 1 next.js application:
 
-1. `sigle` folder - Contains the editor to write and edit your posts
-2. `blog-viewer`folder - Contains the blog rendering application
+`sigle` folder - Contains the editor to write and edit your posts
 
 ## Development Workflow
 
