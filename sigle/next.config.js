@@ -1,10 +1,14 @@
 const dotenv = require('dotenv');
+const withPlugins = require('next-compose-plugins');
 const { withSentryConfig } = require('@sentry/nextjs');
+const withBundleAnalyzer = require('@next/bundle-analyzer')({
+  enabled: process.env.ANALYZE === 'true',
+});
 
 dotenv.config();
 
 module.exports = withSentryConfig(
-  {
+  withPlugins([[withBundleAnalyzer]], {
     env: {
       APP_URL: process.env.APP_URL,
       FATHOM_SITE_ID: process.env.FATHOM_SITE_ID,
@@ -28,7 +32,7 @@ module.exports = withSentryConfig(
         },
       ];
     },
-  },
+  }),
   {
     dryRun: process.env.NEXT_PUBLIC_APP_ENV !== 'production',
   }
