@@ -1,3 +1,4 @@
+import { findChildren } from '@tiptap/core';
 import {
   BulletedListLight,
   CodeLight,
@@ -177,19 +178,24 @@ export const slashCommands = ({
 
         // We show a preview of  the image image as uploading can take a while...
         const preview = URL.createObjectURL(file);
+        const id = generateRandomId();
         if (range) {
           editor
             .chain()
             .focus()
             .deleteRange(range)
             .setImage({ src: preview })
-            .updateAttributes('image', { loading: true })
+            .updateAttributes('image', { loading: true, id })
             .run();
         } else {
-          editor.chain().focus().setImage({ src: preview }).run();
+          editor
+            .chain()
+            .focus()
+            .setImage({ src: preview })
+            .updateAttributes('image', { loading: true, id })
+            .run();
         }
 
-        const id = generateRandomId();
         const name = `photos/${storyId}/${id}-${file.name}`;
         const imageUrl = await resizeAndUploadImage(file, name);
 
@@ -197,14 +203,31 @@ export const slashCommands = ({
         const uploadedImage = new Image();
         uploadedImage.src = imageUrl;
         uploadedImage.onload = () => {
+          // When an image finished being uploaded, the selection of the user might habe changed
+          // so we need to find the right image associated with the ID in order to update it.
           editor
             .chain()
             .focus()
-            .updateAttributes('image', {
-              src: imageUrl,
-              loading: false,
+            .command(({ tr }) => {
+              const doc = tr.doc;
+              const images = findChildren(
+                doc,
+                (node) => node.type.name === 'image'
+              ).filter((node) => node.node.attrs.id === id);
+              const image = images[0];
+              if (!image || images.length > 1) {
+                return false;
+              }
+
+              tr.setNodeMarkup(image.pos, undefined, {
+                ...image.node.attrs,
+                src: imageUrl,
+                loading: false,
+              });
+              return true;
             })
             .run();
+
           // Create a new paragraph so user can continue writing
           editor.commands.createParagraphNear();
         };

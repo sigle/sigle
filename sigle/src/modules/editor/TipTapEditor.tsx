@@ -138,6 +138,10 @@ export const TipTapEditor = forwardRef<
                 }
               },
             },
+            id: {
+              default: false,
+              renderHTML: () => ({}),
+            },
           };
         },
       }),
