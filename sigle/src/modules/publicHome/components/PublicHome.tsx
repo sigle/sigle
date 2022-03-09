@@ -5,7 +5,7 @@ import { useRouter } from 'next/router';
 import { StoryFile, SettingsFile } from '../../../types';
 import { Container } from '../../../components';
 import { PublicStoryItem } from './PublicStoryItem';
-import { PoweredBy } from '../../publicStory/components/PoweredBy';
+import { PoweredBy } from '../../publicStory/PoweredBy';
 
 const StyledContainer = styled(Container)`
   ${tw`pt-4 pb-16`};

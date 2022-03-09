@@ -1,5 +1,39 @@
 # @sigle/app
 
+## 1.1.1
+
+### Patch Changes
+
+- dc163d3: Add missing Link shortcut.
+- da6d41a: Fix hints layout issue.
+- 91b23dd: Fix an issue when uploading large images/gifs in the editor and changing the focus before the upload is finished.
+
+## 1.1.0
+
+### Minor Changes
+
+- 46a0a95: New editor is live! See https://app.sigle.io/sigleapp.id.blockstack/zsoVIi3V6CE55-ygCdjVG to see what's new.
+
+## 1.0.0
+
+### Major Changes
+
+- d7ac262: First major version to have concistent versionning after this release.
+
+## 0.4.0
+
+### Minor Changes
+
+- 52ed980: Add dialog with editor shortcuts and hints.
+- 7c5cdb3: Add hover card to allow users to logout on published story page.
+- ce7e030: Add footer to login page.
+
+### Patch Changes
+
+- 1a4d94c: Fix horizontal scroll appearing on mobile screen sizes.
+- 8bc7a11: Create feature flag for the Hiro wallet integration.
+- 2660d62: Fix language issue when displaying code blocks.
+
 ## 0.3.0
 
 ### Minor Changes

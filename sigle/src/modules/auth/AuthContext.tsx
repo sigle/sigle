@@ -29,9 +29,7 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
     } else if (userSession.isSignInPending()) {
       userSession
         .handlePendingSignIn()
-        .then(() => {
-          handleAuthSignIn();
-        })
+        .then(handleAuthSignIn)
         .catch((error: Error) => {
           setState({
             loggingIn: false,
@@ -53,18 +51,6 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
       });
     }
   }, [state.user]);
-
-  const authOptions: AuthOptions = {
-    redirectTo: '/',
-    appDetails: {
-      name: 'Sigle',
-      icon: 'https://app.sigle.io/icon-192x192.png',
-    },
-    userSession,
-    onFinish: () => {
-      handleAuthSignIn();
-    },
-  };
 
   const handleAuthSignIn = async () => {
     const userData = userSession.loadUserData();
@@ -107,6 +93,16 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
       loggingIn: false,
       user: userData,
     });
+  };
+
+  const authOptions: AuthOptions = {
+    redirectTo: '/',
+    appDetails: {
+      name: 'Sigle',
+      icon: 'https://app.sigle.io/icon-192x192.png',
+    },
+    userSession,
+    onFinish: handleAuthSignIn,
   };
 
   const handleSetUsername = useCallback((username: string) => {

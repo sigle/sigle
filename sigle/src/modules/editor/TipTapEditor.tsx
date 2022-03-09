@@ -37,6 +37,7 @@ import { CodeBlockComponent } from './extensions/CodeBlock';
 import { Story } from '../../types';
 import CharacterCount from '@tiptap/extension-character-count';
 import { Container, Text } from '../../ui';
+import { ShortcutsDialog } from './EditorShortcuts/ShortcutsDialog';
 
 const fadeInAnimation = keyframes({
   '0%': { opacity: '0' },
@@ -137,6 +138,10 @@ export const TipTapEditor = forwardRef<
                 }
               },
             },
+            id: {
+              default: false,
+              renderHTML: () => ({}),
+            },
           };
         },
       }),
@@ -184,16 +189,24 @@ export const TipTapEditor = forwardRef<
       <StyledEditorContent editor={editor} />
       <Container
         css={{
+          display: 'flex',
+          alignItems: 'center',
+          gap: '$10',
           position: 'fixed',
           bottom: 0,
           right: 0,
           left: 0,
-          zIndex: -1,
-          textAlign: 'right',
+          zIndex: 0,
+          justifyContent: 'end',
         }}
       >
         {editable && (
-          <Text size="sm">{editor?.storage.characterCount.words()} words</Text>
+          <>
+            <Text size="sm">
+              {editor?.storage.characterCount.words()} words
+            </Text>
+            <ShortcutsDialog />
+          </>
         )}
       </Container>
     </>

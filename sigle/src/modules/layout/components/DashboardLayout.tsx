@@ -120,6 +120,7 @@ export const DashboardPageContainer = styled.div`
 export const DashboardSidebar = () => {
   const { user } = useAuth();
   const router = useRouter();
+  const { user } = useAuth();
   const [isLogoutOpen, setIsLogoutOpen] = useState(false);
 
   const handleLogout = () => {

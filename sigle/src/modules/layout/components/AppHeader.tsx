@@ -3,6 +3,7 @@ import {
   GitHubLogoIcon,
   TwitterLogoIcon,
   DiscordLogoIcon,
+  SunIcon,
 } from '@radix-ui/react-icons';
 import Link from 'next/link';
 import Image from 'next/image';
@@ -12,7 +13,6 @@ import { toast } from 'react-toastify';
 import { styled } from '../../../stitches.config';
 import { Box, Button, Container, Flex, IconButton, Text } from '../../../ui';
 import {
-  convertStoryToSubsetStory,
   createNewEmptyStory,
   getStoriesFile,
   saveStoriesFile,
@@ -22,6 +22,17 @@ import * as Fathom from 'fathom-client';
 import { useAuth } from '../../auth/AuthContext';
 import { Goals } from '../../../utils/fathom';
 import { sigleConfig } from '../../../config';
+import {
+  HoverCard,
+  HoverCardArrow,
+  HoverCardContent,
+  HoverCardTrigger,
+} from '../../../ui/HoverCard';
+import { userSession } from '../../../utils/blockstack';
+import posthog from 'posthog-js';
+
+import { isExperimentalThemeToggleEnabled } from '../../../utils/featureFlags';
+import { createSubsetStory } from '../../editor/utils';
 
 const Header = styled('header', Container, {
   display: 'flex',
@@ -60,7 +71,9 @@ export const AppHeader = () => {
       const storiesFile = await getStoriesFile();
       const story = createNewEmptyStory();
 
-      storiesFile.stories.unshift(convertStoryToSubsetStory(story));
+      storiesFile.stories.unshift(
+        createSubsetStory(story, { plainContent: '' })
+      );
 
       await saveStoriesFile(storiesFile);
       await saveStoryFile(story);
@@ -72,6 +85,12 @@ export const AppHeader = () => {
       toast.error(error.message);
       setLoadingCreate(false);
     }
+  };
+
+  const handleLogout = () => {
+    userSession.signUserOut();
+    window.location.reload();
+    posthog.reset();
   };
 
   return (
@@ -132,10 +151,23 @@ export const AppHeader = () => {
         gap="10"
       >
         {user ? (
-          <Flex gap="1" align="center">
-            <StatusDot />
-            <Text>{user.username}</Text>
-          </Flex>
+          <HoverCard openDelay={200} closeDelay={100}>
+            <HoverCardTrigger asChild>
+              <Flex
+                tabIndex={0}
+                css={{ cursor: 'pointer' }}
+                gap="1"
+                align="center"
+              >
+                <StatusDot />
+                <Text>{user.username}</Text>
+              </Flex>
+            </HoverCardTrigger>
+            <HoverCardContent onClick={handleLogout} sideOffset={16}>
+              logout
+              <HoverCardArrow />
+            </HoverCardContent>
+          </HoverCard>
         ) : (
           <Flex gap="6">
             <IconButton
@@ -178,6 +210,16 @@ export const AppHeader = () => {
               Enter App
             </Button>
           </Link>
+        )}
+        {!isExperimentalThemeToggleEnabled && (
+          <IconButton
+            as="button"
+            onClick={() => {
+              console.log('Toggle clicked');
+            }}
+          >
+            <SunIcon />
+          </IconButton>
         )}
       </Flex>
     </Header>
