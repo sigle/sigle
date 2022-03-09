@@ -1,5 +1,13 @@
 # @sigle/app
 
+## 1.1.1
+
+### Patch Changes
+
+- dc163d3: Add missing Link shortcut.
+- da6d41a: Fix hints layout issue.
+- 91b23dd: Fix an issue when uploading large images/gifs in the editor and changing the focus before the upload is finished.
+
 ## 1.1.0
 
 ### Minor Changes
