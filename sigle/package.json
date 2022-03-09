@@ -6,6 +6,7 @@
     "dev": "next dev",
     "start": "next start",
     "build": "next build",
+    "analyze": "ANALYZE=true pnpm run build",
     "test": "pnpm run test:only",
     "test:only": "jest"
   },
@@ -24,7 +25,7 @@
     "@radix-ui/react-scroll-area": "0.1.3",
     "@radix-ui/react-tabs": "0.1.5",
     "@radix-ui/react-tooltip": "0.1.0",
-    "@sentry/nextjs": "6.17.9",
+    "@sentry/nextjs": "6.18.2",
     "@sigle/slate-to-html": "1.0.0",
     "@stacks/auth": "3.3.0",
     "@stacks/connect": "6.4.0",
@@ -87,6 +88,7 @@
   },
   "devDependencies": {
     "@fontsource/open-sans": "4.5.2",
+    "@next/bundle-analyzer": "12.1.0",
     "@sigle/tailwind-style": "workspace:^1.0.0",
     "@tailwindcss/forms": "0.3.4",
     "@tailwindcss/typography": "0.4.1",
