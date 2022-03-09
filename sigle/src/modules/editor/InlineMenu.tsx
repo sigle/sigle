@@ -179,22 +179,14 @@ export const slashCommands = ({
         // We show a preview of  the image image as uploading can take a while...
         const preview = URL.createObjectURL(file);
         const id = generateRandomId();
+        let chainCommands = editor.chain().focus();
         if (range) {
-          editor
-            .chain()
-            .focus()
-            .deleteRange(range)
-            .setImage({ src: preview })
-            .updateAttributes('image', { loading: true, id })
-            .run();
-        } else {
-          editor
-            .chain()
-            .focus()
-            .setImage({ src: preview })
-            .updateAttributes('image', { loading: true, id })
-            .run();
+          chainCommands = chainCommands.deleteRange(range);
         }
+        chainCommands
+          .setImage({ src: preview })
+          .updateAttributes('image', { loading: true, id })
+          .run();
 
         const name = `photos/${storyId}/${id}-${file.name}`;
         const imageUrl = await resizeAndUploadImage(file, name);
