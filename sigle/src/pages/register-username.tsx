@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Button, Flex, Heading, Text } from '../ui';
 import { LoginLayout } from '../modules/layout/components/LoginLayout';
 import { keyframes, styled } from '../stitches.config';
@@ -36,6 +36,7 @@ const ControlGroup = styled('div', {
   boxShadow: '0 0 0 1px $colors$gray7',
   borderRadius: '$1',
   minWidth: 320,
+  gap: '$3',
   pr: '$2',
   pl: '$3',
   py: '$2',
@@ -52,6 +53,7 @@ const ControlGroup = styled('div', {
 });
 
 const FormInput = styled('input', {
+  width: '100%',
   outline: 'none',
   backgroundColor: 'transparent',
   fontSize: '$2',
@@ -102,40 +104,40 @@ const Login = () => {
               pointerEvents: isLoading ? 'none' : 'auto',
             }}
           >
-            {isLoading ? (
-              <>
-                <LoadingSpinner />
-                <Text size="sm" as="span">
-                  Loading...
-                </Text>
-              </>
-            ) : (
-              'Submit'
-            )}
+            {isLoading ? <LoadingSpinner /> : 'Submit'}
           </Button>
         </ControlGroup>
       </form>
       <Flex css={{ mb: '$5' }} align="center" gap="5">
-        <Text
-          css={{ color: '$orange11', '&:hover': { boxShadow: '0 1px 0 0' } }}
-          size="sm"
-          as="a"
-          href="https://btc.us/"
-          target="_blank"
-          rel="noreferrer"
-        >
-          Or buy a .BTC domain instead
-        </Text>
-        <Text
-          as="a"
-          color="orange"
-          href="https://docs.sigle.io/"
-          target="_blank"
-          rel="noreferrer"
-          aria-label="Learn more"
-        >
-          <QuestionMarkCircledIcon />
-        </Text>
+        {isLoading ? (
+          <Text size="sm">Your username is being created. Please wait...</Text>
+        ) : (
+          <>
+            <Text
+              css={{
+                color: '$orange11',
+                '&:hover': { boxShadow: '0 1px 0 0' },
+              }}
+              size="sm"
+              as="a"
+              href="https://btc.us/"
+              target="_blank"
+              rel="noreferrer"
+            >
+              Or buy a .BTC domain instead
+            </Text>
+            <Text
+              as="a"
+              color="orange"
+              href="https://docs.sigle.io/"
+              target="_blank"
+              rel="noreferrer"
+              aria-label="Learn more"
+            >
+              <QuestionMarkCircledIcon />
+            </Text>
+          </>
+        )}
       </Flex>
     </LoginLayout>
   );
