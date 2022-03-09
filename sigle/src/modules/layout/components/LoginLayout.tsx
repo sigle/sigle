@@ -140,8 +140,7 @@ export const LoginLayout = ({ children }: LoginLayoutProps) => {
             as="a"
             target="_blank"
             rel="noreferrer"
-            // LINK BELOW SHOULD BE blogUrl
-            href={sigleConfig.documentationUrl}
+            href={sigleConfig.blogUrl}
             css={{
               color: '$gray12',
               '&:hover': {
