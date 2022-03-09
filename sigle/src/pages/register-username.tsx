@@ -63,6 +63,8 @@ const FormInput = styled('input', {
 });
 
 const Login = () => {
+  // Remove line below when logic is added
+  // eslint-disable-next-line
   const [isLoading, setIsLoading] = useState(false);
   return (
     <LoginLayout>
