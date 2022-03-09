@@ -63,8 +63,6 @@ const FormInput = styled('input', {
 });
 
 const Login = () => {
-  // Remove line below when logic is added
-  // eslint-disable-next-line
   const [isLoading, setIsLoading] = useState(false);
   return (
     <LoginLayout>
@@ -94,6 +92,7 @@ const Login = () => {
             placeholder="johndoe.id.stx"
           />
           <Button
+            onClick={() => setIsLoading(true)}
             disabled={isLoading ? true : false}
             variant={isLoading ? 'ghost' : 'solid'}
             color="orange"
