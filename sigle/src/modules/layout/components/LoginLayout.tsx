@@ -1,7 +1,5 @@
-import React, { useEffect } from 'react';
-import { useRouter } from 'next/router';
+import React from 'react';
 import Image from 'next/image';
-import { useAuth } from '../../../modules/auth/AuthContext';
 import { styled } from '../../../stitches.config';
 import { Container, Flex, IconButton, Text } from '../../../ui';
 import { sigleConfig } from '../../../config';
@@ -64,16 +62,6 @@ interface LoginLayoutProps {
 }
 
 export const LoginLayout = ({ children }: LoginLayoutProps) => {
-  const router = useRouter();
-  const { user } = useAuth();
-
-  useEffect(() => {
-    // If user is already logged in we redirect him to the homepage
-    if (user) {
-      router.push(`/`);
-    }
-  }, [router, user]);
-
   return (
     <FullScreen>
       <LoginContainer>

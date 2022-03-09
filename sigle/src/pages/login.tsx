@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import * as Fathom from 'fathom-client';
 import { useConnect } from '@stacks/connect-react';
 import { ArrowTopRightIcon } from '@radix-ui/react-icons';
@@ -6,14 +6,25 @@ import { Goals } from '../utils/fathom';
 import { Box, Button, Heading, Text } from '../ui';
 import { isExperimentalHiroWalletEnabled } from '../utils/featureFlags';
 import { LoginLayout } from '../modules/layout/components/LoginLayout';
+import { useRouter } from 'next/router';
+import { useAuth } from '../modules/auth/AuthContext';
 
 const Login = () => {
+  const router = useRouter();
+  const { user } = useAuth();
   const { doOpenAuth } = useConnect();
 
   const handleLogin = () => {
     Fathom.trackGoal(Goals.LOGIN, 0);
     doOpenAuth();
   };
+
+  useEffect(() => {
+    // If user is already logged in we redirect him to the homepage
+    if (user) {
+      router.push(`/`);
+    }
+  }, [router, user]);
 
   return (
     <LoginLayout>
