@@ -11,6 +11,8 @@ import { styled } from '../../../stitches.config';
 import { Box, Flex, IconButton, Text } from '../../../ui';
 
 const ImgWrapper = styled('div', {
+  maxWidth: 600,
+  zIndex: -1,
   position: 'relative',
   mx: 'auto',
   boxShadow: '0 0 0 1px $colors$gray7',
@@ -39,17 +41,13 @@ export const HintsCarousel = () => {
 
   return (
     <Flex
-      align="start"
+      align="center"
       justify="between"
       css={{ textAlign: 'center', position: 'relative', py: '$4' }}
       as="section"
       aria-label="hints carousel"
     >
-      <IconButton
-        css={{ position: 'absolute', left: 0, top: '50%' }}
-        onClick={previousSlide}
-        aria-label="previous slide"
-      >
+      <IconButton onClick={previousSlide} aria-label="previous slide">
         <ArrowLeftIcon />
       </IconButton>
       <Box
@@ -145,11 +143,7 @@ export const HintsCarousel = () => {
           </ImgWrapper>
         </Box>
       </Box>
-      <IconButton
-        css={{ position: 'absolute', right: 0, top: '50%' }}
-        onClick={nextSlide}
-        aria-label="next slide"
-      >
+      <IconButton onClick={nextSlide} aria-label="next slide">
         <ArrowRightIcon />
       </IconButton>
     </Flex>
