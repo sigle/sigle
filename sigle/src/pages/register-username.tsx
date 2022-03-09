@@ -1,8 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useRouter } from 'next/router';
 import { Button, Flex, Heading, Text } from '../ui';
 import { LoginLayout } from '../modules/layout/components/LoginLayout';
 import { keyframes, styled } from '../stitches.config';
 import { QuestionMarkCircledIcon } from '@radix-ui/react-icons';
+import { useAuth } from '../modules/auth/AuthContext';
 
 const spin = keyframes({
   to: { transform: 'rotate(360deg)' },
@@ -64,8 +66,24 @@ const FormInput = styled('input', {
   },
 });
 
-const Login = () => {
+const RegisterUsername = () => {
+  const router = useRouter();
+  const { user, loggingIn } = useAuth();
   const [isLoading, setIsLoading] = useState(false);
+
+  useEffect(() => {
+    // If user is not logged him redirect him to the login page
+    if (!loggingIn && !user) {
+      router.push(`/login`);
+      return;
+    }
+    // If user already has a username we redirect him to the homepage
+    if (user && user.username) {
+      router.push(`/`);
+      return;
+    }
+  }, [loggingIn, router, user]);
+
   return (
     <LoginLayout>
       <Heading
@@ -143,4 +161,4 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default RegisterUsername;

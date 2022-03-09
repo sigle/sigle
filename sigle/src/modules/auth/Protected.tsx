@@ -16,8 +16,13 @@ export const Protected = ({ children }: Props) => {
     return <FullScreenLoading />;
   }
 
-  if (!user || !user.username) {
+  if (!user) {
     router.push('/login');
+    return null;
+  }
+
+  if (!user.username) {
+    router.push('/register-username');
     return null;
   }
 

@@ -17,7 +17,7 @@ const Login = () => {
 
   useEffect(() => {
     // If user is already logged in or has a username we redirect him to the homepage
-    if (user && user.username) {
+    if (user) {
       router.push(`/`);
     }
   }, [router, user]);
