@@ -76,6 +76,11 @@ const textFormatting = [
     winCommand: ['Control', 'E'],
     macCommand: ['Cmd', 'E'],
   },
+  {
+    action: 'Link',
+    winCommand: ['Control', 'K'],
+    macCommand: ['Cmd', 'K'],
+  },
 ];
 
 const paragraphFormatting = [
