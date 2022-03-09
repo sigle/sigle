@@ -212,8 +212,8 @@ export const slashCommands = ({
               const doc = tr.doc;
               const images = findChildren(
                 doc,
-                (node) => node.type.name === 'image'
-              ).filter((node) => node.node.attrs.id === id);
+                (node) => node.type.name === 'image' && node.attrs.id === id
+              );
               const image = images[0];
               if (!image || images.length > 1) {
                 return false;
