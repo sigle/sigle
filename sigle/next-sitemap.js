@@ -1,3 +1,4 @@
+const urls = require('../packages/subdomain-list/urls.json');
 const appUrl = 'https://app.sigle.io';
 
 // TODO generate a list of subdomains
@@ -16,4 +17,18 @@ module.exports = {
     '/published',
     '/settings',
   ],
+  additionalPaths: () => {
+    const result = [];
+
+    urls.forEach((url) => {
+      // all possible values
+      result.push({
+        loc: url,
+        changefreq: 'weekly',
+        priority: 0.5,
+      });
+    });
+
+    return result;
+  },
 };

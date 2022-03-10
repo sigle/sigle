@@ -67,7 +67,7 @@ const start = async () => {
     }
   }
 
-  fs.writeFileSync(`${__dirname}/urls.json`, JSON.stringify(urlsToIndex), {
+  fs.writeFileSync(`${__dirname}/../urls.json`, JSON.stringify(urlsToIndex), {
     encoding: 'utf8',
   });
 
