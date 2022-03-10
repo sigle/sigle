@@ -2,18 +2,18 @@ import React, { useState, useEffect } from 'react';
 import { toast } from 'react-toastify';
 import { Home as Component } from '../components/Home';
 import { getStoriesFile } from '../../../utils';
-import { userSession } from '../../../utils/blockstack';
 import { SubsetStory } from '../../../types';
+import { useAuth } from '../../auth/AuthContext';
 
 interface HomeProps {
   type: 'published' | 'drafts';
 }
 
 export const Home = ({ type }: HomeProps) => {
+  const { user } = useAuth();
+
   const [loading, setLoading] = useState(true);
   const [stories, setStories] = useState<SubsetStory[] | null>(null);
-
-  const user = userSession.loadUserData();
 
   const loadStoryFile = async () => {
     try {
@@ -32,6 +32,10 @@ export const Home = ({ type }: HomeProps) => {
   useEffect(() => {
     loadStoryFile();
   }, []);
+
+  if (!user) {
+    return null;
+  }
 
   return (
     <Component

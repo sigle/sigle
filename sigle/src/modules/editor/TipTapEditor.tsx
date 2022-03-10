@@ -35,6 +35,9 @@ import { FloatingMenu } from './FloatingMenu';
 import { styled, globalCss, keyframes } from '../../stitches.config';
 import { CodeBlockComponent } from './extensions/CodeBlock';
 import { Story } from '../../types';
+import CharacterCount from '@tiptap/extension-character-count';
+import { Container, Text } from '../../ui';
+import { ShortcutsDialog } from './EditorShortcuts/ShortcutsDialog';
 
 const fadeInAnimation = keyframes({
   '0%': { opacity: '0' },
@@ -43,7 +46,6 @@ const fadeInAnimation = keyframes({
 
 const StyledEditorContent = styled(EditorContent, {
   '& .ProseMirror': {
-    py: '$4',
     minHeight: 150,
   },
   '& .ProseMirror-focused': {
@@ -80,15 +82,6 @@ const globalStylesCustomEditor = globalCss({
   },
 });
 
-/**
- * TODO
- * - check all the shortcuts and update the GitBook
- * - check all the markdown shorcuts
- * - investigate figure extension instead of image
- * - separate PR - mobile UI
- * - WIP separate PR - data migration from slate
- */
-
 interface TipTapEditorProps {
   story: Story;
   editable?: boolean;
@@ -100,16 +93,18 @@ export const TipTapEditor = forwardRef<
   },
   TipTapEditorProps
 >(({ story, editable = true }, ref) => {
+  // TODO is story really needed? Could it be just the content prop?
   globalStylesCustomEditor();
 
   const editor = useEditor({
     editable,
     extensions: [
+      CharacterCount,
       // Nodes
       TipTapDocument,
       TipTapParagraph,
       TipTapText,
-      TipTapBlockquote,
+      TipTapBlockquote.extend({ content: 'paragraph+' }),
       TipTapLink.configure({
         openOnClick: false,
       }),
@@ -143,6 +138,10 @@ export const TipTapEditor = forwardRef<
                 }
               },
             },
+            id: {
+              default: false,
+              renderHTML: () => ({}),
+            },
           };
         },
       }),
@@ -165,7 +164,7 @@ export const TipTapEditor = forwardRef<
       }),
       // Custom extensions
       SlashCommands.configure({
-        commands: slashCommands,
+        commands: slashCommands({ storyId: story.id }),
         component: SlashCommandsList,
       }),
     ],
@@ -185,9 +184,31 @@ export const TipTapEditor = forwardRef<
   return (
     <>
       {editor && <BubbleMenu editor={editor} />}
-      {editor && <FloatingMenu editor={editor} />}
+      {editor && <FloatingMenu editor={editor} storyId={story.id} />}
 
       <StyledEditorContent editor={editor} />
+      <Container
+        css={{
+          display: 'flex',
+          alignItems: 'center',
+          gap: '$10',
+          position: 'fixed',
+          bottom: 0,
+          right: 0,
+          left: 0,
+          zIndex: 0,
+          justifyContent: 'end',
+        }}
+      >
+        {editable && (
+          <>
+            <Text size="sm">
+              {editor?.storage.characterCount.words()} words
+            </Text>
+            <ShortcutsDialog />
+          </>
+        )}
+      </Container>
     </>
   );
 });

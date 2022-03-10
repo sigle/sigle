@@ -11,14 +11,14 @@ import { Dialog } from '../../../ui';
 import { keyframes, styled } from '../../../stitches.config';
 import {
   createNewEmptyStory,
-  convertStoryToSubsetStory,
   saveStoriesFile,
   saveStoryFile,
   getStoriesFile,
 } from '../../../utils';
 import { Goals } from '../../../utils/fathom';
-import { userSession } from '../../../utils/blockstack';
 import { DashboardSidebar } from './DashboardLayout';
+import { useAuth } from '../../auth/AuthContext';
+import { createSubsetStory } from '../../editor/utils';
 
 export const PageTitleContainer = styledC.div`
   ${tw`mb-2 pb-4 lg:pb-8 flex flex-col-reverse lg:flex-row justify-between border-b border-solid border-grey`};
@@ -84,9 +84,9 @@ interface DashboardPageTitleProps {
 
 export const DashboardPageTitle = ({ title }: DashboardPageTitleProps) => {
   const router = useRouter();
+  const { user } = useAuth();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [loadingCreate, setLoadingCreate] = useState(false);
-  const user = userSession.loadUserData();
 
   const handleCreateNewPrivateStory = async () => {
     setLoadingCreate(true);
@@ -94,7 +94,9 @@ export const DashboardPageTitle = ({ title }: DashboardPageTitleProps) => {
       const storiesFile = await getStoriesFile();
       const story = createNewEmptyStory();
 
-      storiesFile.stories.unshift(convertStoryToSubsetStory(story));
+      storiesFile.stories.unshift(
+        createSubsetStory(story, { plainContent: '' })
+      );
 
       await saveStoriesFile(storiesFile);
       await saveStoryFile(story);
@@ -132,7 +134,7 @@ export const DashboardPageTitle = ({ title }: DashboardPageTitleProps) => {
           <VisitButton
             size="large"
             as="a"
-            href={`/${user.username}`}
+            href={`/${user?.username}`}
             target="_blank"
           >
             Visit my blog{' '}

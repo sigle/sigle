@@ -2,9 +2,9 @@ import React from 'react';
 import styled from 'styled-components';
 import tw from 'twin.macro';
 import { Story } from '../../../types';
-import { SlateEditor } from '../containers/SlateEditor';
 import { AppBar } from '../../layout';
 import { Container } from '../../../components';
+import { NewEditor } from '../NewEditor';
 
 export const FixedContainer = styled.div`
   ${tw`fixed w-full bg-white top-0`};
@@ -55,11 +55,5 @@ export const Editor = ({
     );
   }
 
-  return (
-    <SlateEditor
-      story={story}
-      onChangeStory={onChangeStory}
-      onChangeStoryField={onChangeStoryField}
-    />
-  );
+  return <NewEditor story={story} />;
 };

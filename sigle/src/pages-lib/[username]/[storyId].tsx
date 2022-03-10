@@ -2,9 +2,11 @@ import React from 'react';
 import { GetServerSideProps, NextPage } from 'next';
 import { lookupProfile } from '@stacks/auth';
 import * as Sentry from '@sentry/nextjs';
+import sanitizeHtml from 'sanitize-html';
 import Error from '../../pages/_error';
-import { PublicStory } from '../../modules/publicStory';
+import { PublicStory } from '../../modules/publicStory/PublicStory';
 import { Story, SettingsFile } from '../../types';
+import { migrationStory } from '../../utils/migrations/story';
 
 interface PublicStoryPageProps {
   statusCode: number | boolean;
@@ -110,6 +112,54 @@ export const getServerSideProps: GetServerSideProps<
     settings = dataSettings.file;
   } else if (!statusCode) {
     statusCode = 404;
+  }
+
+  /**
+   * 1. Migrate the story to the new format.
+   * 2. Sanitize the HTML of the story so it's safe to display to external users.
+   * Only allow a subset of tags and attributes to avoid XSS attacks.
+   */
+  if (file) {
+    file = migrationStory(file);
+    file.content = file.content
+      ? sanitizeHtml(file.content, {
+          allowedTags: [
+            'br',
+            // Titles
+            'h2',
+            'h3',
+            // Paragraphs
+            'p',
+            // Lists
+            'ul',
+            'ol',
+            'li',
+            // Links
+            'a',
+            // Blockquotes
+            'blockquote',
+            // Divider
+            'hr',
+            // Code
+            'code',
+            'pre',
+            // Images
+            'img',
+            // Marks
+            'strong',
+            'em',
+            'u',
+            's',
+            'sub',
+            'sup',
+            'span',
+          ],
+          allowedAttributes: {
+            ...sanitizeHtml.defaults.allowedAttributes,
+            code: ['class'],
+          },
+        })
+      : '';
   }
 
   // If statusCode is not false we set the http response code

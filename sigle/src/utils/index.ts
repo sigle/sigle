@@ -1,8 +1,6 @@
 import { nanoid } from 'nanoid';
-import { Value } from 'slate';
-import Plain from 'slate-plain-serializer';
 import { userSession, storage } from './blockstack';
-import { StoryFile, Story, SubsetStory, SettingsFile } from '../types';
+import { StoryFile, Story, SettingsFile } from '../types';
 
 const storiesFileName = 'stories.json';
 const publicStoriesFileName = 'publicStories.json';
@@ -137,31 +135,9 @@ export const createNewEmptyStory = (): Story => {
     id: generateRandomId(),
     type: 'private',
     title: '',
-    content: undefined,
+    content: '',
     createdAt: now,
     updatedAt: now,
-  };
-};
-
-const CONTENT_SUBSET_SIZE = 300;
-
-export const convertStoryToSubsetStory = (story: Story): SubsetStory => {
-  const plainContent = story.content
-    ? Plain.serialize(Value.fromJSON(story.content))
-    : '';
-
-  return {
-    id: story.id,
-    title: story.title,
-    content:
-      plainContent.length > CONTENT_SUBSET_SIZE
-        ? plainContent.substring(0, CONTENT_SUBSET_SIZE) + '...'
-        : plainContent,
-    coverImage: story.coverImage,
-    type: story.type,
-    featured: story.featured,
-    createdAt: story.createdAt,
-    updatedAt: story.updatedAt,
   };
 };
 

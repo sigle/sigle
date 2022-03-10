@@ -1,13 +1,18 @@
-import { EyeOpenIcon as EyeOpenIconBase } from '@radix-ui/react-icons';
+import {
+  EyeOpenIcon as EyeOpenIconBase,
+  GitHubLogoIcon,
+  TwitterLogoIcon,
+  DiscordLogoIcon,
+  SunIcon,
+} from '@radix-ui/react-icons';
 import Link from 'next/link';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
 import { toast } from 'react-toastify';
 import { styled } from '../../../stitches.config';
-import { Button, Container, Flex, Text } from '../../../ui';
+import { Box, Button, Container, Flex, IconButton, Text } from '../../../ui';
 import {
-  convertStoryToSubsetStory,
   createNewEmptyStory,
   getStoriesFile,
   saveStoriesFile,
@@ -16,6 +21,18 @@ import {
 import * as Fathom from 'fathom-client';
 import { useAuth } from '../../auth/AuthContext';
 import { Goals } from '../../../utils/fathom';
+import { sigleConfig } from '../../../config';
+import {
+  HoverCard,
+  HoverCardArrow,
+  HoverCardContent,
+  HoverCardTrigger,
+} from '../../../ui/HoverCard';
+import { userSession } from '../../../utils/blockstack';
+import posthog from 'posthog-js';
+
+import { isExperimentalThemeToggleEnabled } from '../../../utils/featureFlags';
+import { createSubsetStory } from '../../editor/utils';
 
 const Header = styled('header', Container, {
   display: 'flex',
@@ -44,6 +61,9 @@ export const AppHeader = () => {
   const { user } = useAuth();
   const router = useRouter();
   const [loadingCreate, setLoadingCreate] = useState(false);
+  const { username } = router.query as {
+    username: string;
+  };
 
   const handleCreateNewPrivateStory = async () => {
     setLoadingCreate(true);
@@ -51,7 +71,9 @@ export const AppHeader = () => {
       const storiesFile = await getStoriesFile();
       const story = createNewEmptyStory();
 
-      storiesFile.stories.unshift(convertStoryToSubsetStory(story));
+      storiesFile.stories.unshift(
+        createSubsetStory(story, { plainContent: '' })
+      );
 
       await saveStoriesFile(storiesFile);
       await saveStoryFile(story);
@@ -65,11 +87,17 @@ export const AppHeader = () => {
     }
   };
 
+  const handleLogout = () => {
+    userSession.signUserOut();
+    window.location.reload();
+    posthog.reset();
+  };
+
   return (
     <Header>
       <Flex justify="center" gap="10" as="nav" align="center">
-        <Link href="/" passHref>
-          <a style={{ display: 'flex' }}>
+        <Link href="/[username]" as={`/${username}`} passHref>
+          <Flex as="a" css={{ '@lg': { display: 'none' } }}>
             <Image
               priority
               width={101}
@@ -78,7 +106,19 @@ export const AppHeader = () => {
               src="/static/img/logo.png"
               alt="logo"
             />
-          </a>
+          </Flex>
+        </Link>
+        <Link href="/" passHref>
+          <Box as="a" css={{ display: 'none', '@lg': { display: 'flex' } }}>
+            <Image
+              priority
+              width={101}
+              height={45}
+              objectFit="cover"
+              src="/static/img/logo.png"
+              alt="logo"
+            />
+          </Box>
         </Link>
         {user && (
           <Button
@@ -100,33 +140,88 @@ export const AppHeader = () => {
           </Button>
         )}
       </Flex>
-      {user && (
-        <Flex
-          css={{
-            display: 'none',
-            '@xl': {
-              display: 'flex',
-            },
-          }}
-          align="center"
-          gap="10"
-        >
-          <Flex gap="1" align="center">
-            <StatusDot />
-            <Text>{user.username}</Text>
+      <Flex
+        css={{
+          display: 'none',
+          '@xl': {
+            display: 'flex',
+          },
+        }}
+        align="center"
+        gap="10"
+      >
+        {user ? (
+          <HoverCard openDelay={200} closeDelay={100}>
+            <HoverCardTrigger asChild>
+              <Flex
+                tabIndex={0}
+                css={{ cursor: 'pointer' }}
+                gap="1"
+                align="center"
+              >
+                <StatusDot />
+                <Text>{user.username}</Text>
+              </Flex>
+            </HoverCardTrigger>
+            <HoverCardContent onClick={handleLogout} sideOffset={16}>
+              logout
+              <HoverCardArrow />
+            </HoverCardContent>
+          </HoverCard>
+        ) : (
+          <Flex gap="6">
+            <IconButton
+              as="a"
+              href={sigleConfig.twitterUrl}
+              target="_blank"
+              rel="noreferrer"
+            >
+              <TwitterLogoIcon />
+            </IconButton>
+            <IconButton
+              as="a"
+              href={sigleConfig.discordUrl}
+              target="_blank"
+              rel="noreferrer"
+            >
+              <DiscordLogoIcon />
+            </IconButton>
+            <IconButton
+              as="a"
+              href={sigleConfig.twitterUrl}
+              target="_blank"
+              rel="noreferrer"
+            >
+              <GitHubLogoIcon />
+            </IconButton>
           </Flex>
-          {!loadingCreate && (
-            <Button onClick={handleCreateNewPrivateStory} size="lg">
-              Write a story
+        )}
+        {user ? (
+          <Button
+            disabled={loadingCreate}
+            onClick={handleCreateNewPrivateStory}
+            size="lg"
+          >
+            {!loadingCreate ? `Write a story` : `Creating new story...`}
+          </Button>
+        ) : (
+          <Link href="/" passHref>
+            <Button as="a" size="lg">
+              Enter App
             </Button>
-          )}
-          {loadingCreate && (
-            <Button disabled size="lg">
-              Creating new story...
-            </Button>
-          )}
-        </Flex>
-      )}
+          </Link>
+        )}
+        {!isExperimentalThemeToggleEnabled && (
+          <IconButton
+            as="button"
+            onClick={() => {
+              console.log('Toggle clicked');
+            }}
+          >
+            <SunIcon />
+          </IconButton>
+        )}
+      </Flex>
     </Header>
   );
 };

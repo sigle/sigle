@@ -6,5 +6,7 @@ export * from './DropdownMenu';
 export * from './Flex';
 export * from './Heading';
 export * from './IconButton';
+export * from './ScrollArea';
 export * from './Text';
 export * from './Tooltip';
+export * from './Tabs';

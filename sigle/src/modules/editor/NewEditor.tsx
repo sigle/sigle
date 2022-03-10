@@ -6,7 +6,7 @@ import * as Fathom from 'fathom-client';
 import posthog from 'posthog-js';
 import { styled } from '../../stitches.config';
 import { Story } from '../../types';
-import { Container, Text } from '../../ui';
+import { Container } from '../../ui';
 import { EditorHeader } from './EditorHeader';
 import { PublishDialog } from './PublishDialog';
 import { TipTapEditor } from './TipTapEditor';
@@ -15,6 +15,8 @@ import { publishStory, unPublishStory } from '../../utils';
 import { Goals } from '../../utils/fathom';
 import { UnpublishDialog } from './UnpublishDialog';
 import { PublishedDialog } from './PublishedDialog';
+import { CoverImage } from './CoverImage';
+import { EditorSettings } from './EditorSettings/EditorSettings';
 
 const TitleInput = styled('input', {
   outline: 'transparent',
@@ -23,21 +25,19 @@ const TitleInput = styled('input', {
   // Replicate style of packages/tailwind-style/tailwind.config.js for h1
   fontWeight: '700',
   fontSize: '36px',
-  lineHeight: '42px',
+  lineHeight: '46px',
   letterSpacing: '-0.3px',
 });
 
 const EditorContainer = styled('div', {
   margin: '0 auto',
-  paddingTop: 60,
+  paddingTop: '$15',
+  paddingBottom: '$15',
 });
 
 interface NewEditorProps {
   story: Story;
 }
-
-// TODO check security handled by TipTap when loading HTML (read only mode)
-// Is it enough or do we need another lib to sanitize the HTML first?
 
 export const NewEditor = ({ story }: NewEditorProps) => {
   const editorRef = useRef<{ getEditor: () => Editor | null }>(null);
@@ -52,9 +52,10 @@ export const NewEditor = ({ story }: NewEditorProps) => {
     open: false,
     loading: false,
   });
+  const [showSettingsDialog, setShowSettingsDialog] = useState(false);
 
-  // TODO link settings
-  const handleOpenSettings = () => null;
+  const handleOpenSettings = () => setShowSettingsDialog(true);
+  const handleCloseSettings = () => setShowSettingsDialog(false);
 
   const handlePublish = () => {
     setPublishDialogState({
@@ -134,7 +135,15 @@ export const NewEditor = ({ story }: NewEditorProps) => {
     });
   };
 
-  const handleSave = async ({ hideToast }: { hideToast?: boolean } = {}) => {
+  const handleSave = async ({
+    hideToast,
+    toastPosition,
+    story,
+  }: {
+    story?: Story;
+    hideToast?: boolean;
+    toastPosition?: 'top-left';
+  } = {}) => {
     const editor = editorRef.current?.getEditor();
     if (!editor) {
       return;
@@ -144,7 +153,7 @@ export const NewEditor = ({ story }: NewEditorProps) => {
     try {
       const html = editor.getHTML();
       const updatedStory: Story = {
-        ...newStory,
+        ...(story ? story : newStory),
         content: html,
         contentVersion: '2',
         updatedAt: Date.now(),
@@ -155,7 +164,7 @@ export const NewEditor = ({ story }: NewEditorProps) => {
       await saveStory(updatedStory, subsetStory);
       setNewStory(updatedStory);
       if (!hideToast) {
-        toast.success('Story saved');
+        toast.success('Story saved', { position: toastPosition });
       }
     } catch (error) {
       console.error(error);
@@ -163,11 +172,6 @@ export const NewEditor = ({ story }: NewEditorProps) => {
     }
     setLoadingSave(false);
   };
-
-  // Editing an old story with the new editor is not allowed for now
-  // We allow empty stories to pass the check and use the new editor
-  const isOldStory =
-    !story.contentVersion && story.content?.document.nodes.length > 1;
 
   return (
     <Container
@@ -187,27 +191,17 @@ export const NewEditor = ({ story }: NewEditorProps) => {
         onUnpublish={handleUnpublish}
       />
 
-      <Text size="sm" color="orange">
-        ⚠️ You are using the experimental editor, expect things to break
-      </Text>
+      <EditorContainer className="prose lg:prose-lg">
+        <TitleInput
+          value={newStory.title}
+          onChange={(e) => {
+            setNewStory({ ...newStory, title: e.target.value });
+          }}
+          placeholder="Title"
+        />
+        <CoverImage story={newStory} setStoryFile={setNewStory} />
 
-      <EditorContainer className="prose lg:prose">
-        {isOldStory ? (
-          <Text size="sm" color="orange">
-            ⚠️ The experimental editor can't be used on old stories for now
-          </Text>
-        ) : (
-          <>
-            <TitleInput
-              value={newStory.title}
-              onChange={(e) => {
-                setNewStory({ ...newStory, title: e.target.value });
-              }}
-              placeholder="Title"
-            />
-            <TipTapEditor ref={editorRef} story={story} />
-          </>
-        )}
+        <TipTapEditor ref={editorRef} story={story} />
       </EditorContainer>
 
       <PublishDialog
@@ -216,14 +210,13 @@ export const NewEditor = ({ story }: NewEditorProps) => {
         loading={publishDialogState.loading}
         onConfirm={handleConfirmPublish}
         onClose={handleCancelPublish}
-        // TODO onEditPreview once setting modal is merged
-        onEditPreview={() => null}
+        onEditPreview={handleOpenSettings}
       />
 
       <PublishedDialog
         open={showPublishedDialog}
         onOpenChange={handleCancelPublished}
-        story={story}
+        story={newStory}
       />
 
       <UnpublishDialog
@@ -231,6 +224,14 @@ export const NewEditor = ({ story }: NewEditorProps) => {
         loading={unpublishDialogState.loading}
         onConfirm={handleConfirmUnpublish}
         onClose={handleCancelUnpublish}
+      />
+
+      <EditorSettings
+        story={newStory}
+        open={showSettingsDialog}
+        onClose={handleCloseSettings}
+        setStoryFile={setNewStory}
+        onSave={handleSave}
       />
     </Container>
   );
