@@ -6,7 +6,11 @@ import Link from 'next/link';
 import Div100vh from 'react-div-100vh';
 import { ChevronDownIcon } from '@radix-ui/react-icons';
 import posthog from 'posthog-js';
-import { FaTwitter, FaGithub, FaFacebookF, FaDiscord } from 'react-icons/fa';
+import {
+  TwitterLogoIcon,
+  GitHubLogoIcon,
+  DiscordLogoIcon,
+} from '@radix-ui/react-icons';
 import { userSession } from '../../../utils/blockstack';
 import { sigleConfig } from '../../../config';
 import { useAuth } from '../../auth/AuthContext';
@@ -208,16 +212,25 @@ export const DashboardSidebar = () => {
           </MenuBottomItem>
           <MenuBottomItemSocial>
             <StyledLink href={sigleConfig.twitterUrl} target="_blank">
-              <FaTwitter size={iconSize} className="icon" />
-            </StyledLink>
-            <StyledLink href={sigleConfig.facebookUrl} target="_blank">
-              <FaFacebookF size={iconSize} className="icon" />
+              <TwitterLogoIcon
+                height={iconSize}
+                width={iconSize}
+                className="icon"
+              />
             </StyledLink>
             <StyledLink href={sigleConfig.discordUrl} target="_blank">
-              <FaDiscord size={iconSize} className="icon" />
+              <DiscordLogoIcon
+                height={iconSize}
+                width={iconSize}
+                className="icon"
+              />
             </StyledLink>
             <StyledLink href={sigleConfig.githubUrl} target="_blank">
-              <FaGithub size={iconSize} className="icon" />
+              <GitHubLogoIcon
+                height={iconSize}
+                width={iconSize}
+                className="icon"
+              />
             </StyledLink>
           </MenuBottomItemSocial>
         </MenuBottom>
