@@ -2,6 +2,7 @@ export * from './Radix';
 export * from './BulletedListLight';
 export * from './CodeLight';
 export * from './DividerLight';
+export * from './FacebookLogo';
 export * from './NumberedListLight';
 export * from './Heading2Light';
 export * from './Heading3Light';
