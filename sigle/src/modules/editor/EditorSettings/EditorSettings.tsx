@@ -286,6 +286,7 @@ export const EditorSettings = ({
           ? values.metaDescription
           : undefined,
         metaImage: values.metaImage ? values.metaImage : undefined,
+        createdAt: new Date(values.createdAt).getTime(),
       };
 
       if (updatedStory.createdAt) {
