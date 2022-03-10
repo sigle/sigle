@@ -2,7 +2,7 @@
   "name": "@sigle/subdomain-list",
   "private": true,
   "scripts": {
-    "run": "ts-node src/index.ts",
+    "start": "ts-node src/index.ts",
     "build": "tsc --noEmit"
   },
   "dependencies": {

@@ -20,7 +20,7 @@ const start = async () => {
     'doesnotexist404.id.blockstack',
     'leopradel.id.blockstack',
   ];
-  let urlsToIndex: string[] = [];
+  let subdomainsFound: { subdomain: string; storage: string }[] = [];
 
   for (const subdomain of subdomains) {
     // 2. Check if they are using Sigle in their profile
@@ -42,35 +42,41 @@ const start = async () => {
 
       const storage = userProfile.appsMeta[appUrl].storage;
 
-      // TODO move this somewhere else?
-      const res = await fetch(`${storage}publicStories.json`);
-      let file: any;
-      if (res.status === 200) {
-        file = await res.json();
-      } else if (res.status === 404) {
-        publicStoriesNotFound += 1;
-        continue;
-      } else {
-        throw new Error(
-          `Unexpected status code: ${res.status} for domain ${subdomain}`
-        );
-      }
+      subdomainsFound.push({ subdomain, storage });
 
-      // TODO allow users to disable indexing
-      const storyUrls: string[] = file.stories.map(
-        (story: { id: string }) => `${appUrl}/${subdomain}/${story.id}`
-      );
-      storyUrls.unshift(`${appUrl}/${subdomain}`);
-      urlsToIndex = urlsToIndex.concat(storyUrls);
+      // TODO move this somewhere else?
+      // const res = await fetch(`${storage}publicStories.json`);
+      // let file: any;
+      // if (res.status === 200) {
+      //   file = await res.json();
+      // } else if (res.status === 404) {
+      //   publicStoriesNotFound += 1;
+      //   continue;
+      // } else {
+      //   throw new Error(
+      //     `Unexpected status code: ${res.status} for domain ${subdomain}`
+      //   );
+      // }
+
+      // // TODO allow users to disable indexing
+      // const storyUrls: string[] = file.stories.map(
+      //   (story: { id: string }) => `${appUrl}/${subdomain}/${story.id}`
+      // );
+      // storyUrls.unshift(`${appUrl}/${subdomain}`);
+      // urlsToIndex = urlsToIndex.concat(storyUrls);
     } catch (error) {
       console.error(`Error checking ${subdomain}: ${error}`);
       process.exit(1);
     }
   }
 
-  fs.writeFileSync(`${__dirname}/../urls.json`, JSON.stringify(urlsToIndex), {
-    encoding: 'utf8',
-  });
+  fs.writeFileSync(
+    `${__dirname}/../subdomains.json`,
+    JSON.stringify(subdomainsFound),
+    {
+      encoding: 'utf8',
+    }
+  );
 
   console.log('Urls generated', { subdomainsNotFound, publicStoriesNotFound });
 };
