@@ -1,3 +1,5 @@
+const appUrl = 'https://app.sigle.io';
+
 // TODO generate a list of subdomains
 // TODO check if these subdomains are using Sigle (get profile and check apps entry)
 // TODO get list of stories.json and add them to the sitemap
@@ -5,7 +7,7 @@
 
 /** @type {import('next-sitemap').IConfig} */
 module.exports = {
-  siteUrl: 'https://app.sigle.io',
+  siteUrl: appUrl,
   generateRobotsTxt: true,
   exclude: [
     // Exclude all the protected routes
