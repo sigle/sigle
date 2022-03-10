@@ -2,7 +2,7 @@ import React from 'react';
 import Link from 'next/link';
 import styled from 'styled-components';
 import tw from 'twin.macro';
-import { MdStar } from 'react-icons/md';
+import { StarFilledIcon } from '@radix-ui/react-icons';
 import { DotsHorizontalIcon } from '@radix-ui/react-icons';
 import format from 'date-fns/format';
 import {
@@ -30,7 +30,7 @@ const StoryTitleContainer = styled.div`
   ${tw`flex`};
 `;
 
-const StarIcon = styled(MdStar)`
+const StarIcon = styled(StarFilledIcon)`
   ${tw`ml-2`};
   color: rgb(255, 199, 0);
 `;
@@ -140,7 +140,7 @@ export const StoryItem = ({
                 <DropdownMenuItem onSelect={onDelete}>Delete</DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
-            {story.featured && <StarIcon size={22} />}
+            {story.featured && <StarIcon width={22} height={22} />}
           </StoryTitleContainer>
           <StoryDate>
             <Link

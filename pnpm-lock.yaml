@@ -111,7 +111,6 @@ importers:
       react-div-100vh: 0.6.0
       react-dom: 17.0.2
       react-dropzone: 11.4.2
-      react-icons: 4.1.0
       react-query: 3.34.12
       react-toastify: 8.0.3
       reading-time: 1.2.1
@@ -182,7 +181,6 @@ importers:
       react-div-100vh: 0.6.0_react@17.0.2
       react-dom: 17.0.2_react@17.0.2
       react-dropzone: 11.4.2_react@17.0.2
-      react-icons: 4.1.0_react@17.0.2
       react-query: 3.34.12_react-dom@17.0.2+react@17.0.2
       react-toastify: 8.0.3_react-dom@17.0.2+react@17.0.2
       reading-time: 1.2.1
@@ -7510,14 +7508,6 @@ packages:
 
   /react-fast-compare/2.0.4:
     resolution: {integrity: sha512-suNP+J1VU1MWFKcyt7RtjiSWUjvidmQSlqu+eHslq+342xCbGTYmC0mEhPCOHxlW0CywylOC1u2DFAT+bv4dBw==}
-    dev: false
-
-  /react-icons/4.1.0_react@17.0.2:
-    resolution: {integrity: sha512-FCXBg1JbbR0vWALXIxmFAfozHdVIJmmwCD81Jk0EKOt7Ax4AdBNcaRkWhR0NaKy9ugJgoY3fFvo0PHpte55pXg==}
-    peerDependencies:
-      react: '*'
-    dependencies:
-      react: 17.0.2
     dev: false
 
   /react-is/16.13.1:
