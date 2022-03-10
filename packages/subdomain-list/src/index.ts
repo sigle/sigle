@@ -22,7 +22,6 @@ const start = async () => {
   ];
   let urlsToIndex: string[] = [];
 
-  // TODO check if these subdomains are using Sigle (get profile and check apps entry)
   for (const subdomain of subdomains) {
     // 2. Check if they are using Sigle in their profile
     try {
@@ -43,6 +42,7 @@ const start = async () => {
 
       const storage = userProfile.appsMeta[appUrl].storage;
 
+      // TODO move this somewhere else?
       const res = await fetch(`${storage}publicStories.json`);
       let file: any;
       if (res.status === 200) {
@@ -56,6 +56,7 @@ const start = async () => {
         );
       }
 
+      // TODO allow users to disable indexing
       const storyUrls: string[] = file.stories.map(
         (story: { id: string }) => `${appUrl}/${subdomain}/${story.id}`
       );
