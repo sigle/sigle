@@ -33,6 +33,7 @@ import posthog from 'posthog-js';
 
 import { isExperimentalThemeToggleEnabled } from '../../../utils/featureFlags';
 import { createSubsetStory } from '../../editor/utils';
+import { useTheme } from 'next-themes';
 
 const Header = styled('header', Container, {
   display: 'flex',
@@ -58,11 +59,16 @@ const StatusDot = styled('div', {
 });
 
 export const AppHeader = () => {
+  const { resolvedTheme, setTheme } = useTheme();
   const { user } = useAuth();
   const router = useRouter();
   const [loadingCreate, setLoadingCreate] = useState(false);
   const { username } = router.query as {
     username: string;
+  };
+
+  const toggleTheme = () => {
+    resolvedTheme === 'dark' ? setTheme('light') : setTheme('dark');
   };
 
   const handleCreateNewPrivateStory = async () => {
@@ -103,7 +109,9 @@ export const AppHeader = () => {
               width={101}
               height={45}
               objectFit="cover"
-              src="/static/img/logo.png"
+              src={`/static/img/${
+                resolvedTheme === 'dark' ? 'logo_white.png' : 'logo.png'
+              }`}
               alt="logo"
             />
           </Flex>
@@ -115,7 +123,9 @@ export const AppHeader = () => {
               width={101}
               height={45}
               objectFit="cover"
-              src="/static/img/logo.png"
+              src={`/static/img/${
+                resolvedTheme === 'dark' ? 'logo_white.png' : 'logo.png'
+              }`}
               alt="logo"
             />
           </Box>
@@ -211,13 +221,8 @@ export const AppHeader = () => {
             </Button>
           </Link>
         )}
-        {!isExperimentalThemeToggleEnabled && (
-          <IconButton
-            as="button"
-            onClick={() => {
-              console.log('Toggle clicked');
-            }}
-          >
+        {isExperimentalThemeToggleEnabled && (
+          <IconButton as="button" onClick={toggleTheme}>
             <SunIcon />
           </IconButton>
         )}

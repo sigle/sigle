@@ -13,6 +13,21 @@ const gray = {
   gray12: '#080808',
 };
 
+const grayDark = {
+  gray1: '#1a1a1a',
+  gray2: '#202020',
+  gray3: '#232323',
+  gray4: '#282828',
+  gray5: '#2e2e2e',
+  gray6: '#343434',
+  gray7: '#3e3e3e',
+  gray8: '#505050',
+  gray9: '#a1a1a1',
+  gray10: '#e5e5e5',
+  gray11: '#f2f2f2',
+  gray12: '#fcfcfc',
+};
+
 const orange = {
   orange1: '#FFF9F6',
   orange2: '#FFF1EC',
@@ -29,6 +44,7 @@ const orange = {
 };
 
 module.exports = {
+  darkMode: 'class',
   content: ['./src/**/*.html'],
   theme: {
     extend: {
@@ -49,6 +65,20 @@ module.exports = {
             '--tw-prose-pre-code': gray.gray5,
             '--tw-prose-pre-bg': gray.gray11,
             '--tw-prose-hr': gray.gray6,
+            '--tw-prose-invert-body': grayDark.gray10,
+            '--tw-prose-invert-headings': grayDark.gray11,
+            '--tw-prose-invert-lead': grayDark.gray6,
+            '--tw-prose-invert-links': orange.orange11,
+            '--tw-prose-invert-bold': grayDark.gray10,
+            '--tw-prose-invert-counters': grayDark.gray10,
+            '--tw-prose-invert-bullets': grayDark.gray10,
+            '--tw-prose-invert-quotes': grayDark.gray10,
+            '--tw-prose-invert-quote-borders': grayDark.gray6,
+            '--tw-prose-invert-captions': grayDark.gray9,
+            '--tw-prose-invert-code': grayDark.gray11,
+            '--tw-prose-invert-pre-code': grayDark.gray5,
+            '--tw-prose-invert-pre-bg': grayDark.gray11,
+            '--tw-prose-invert-hr': grayDark.gray6,
           },
         },
         DEFAULT: {

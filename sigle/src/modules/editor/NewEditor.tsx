@@ -191,7 +191,7 @@ export const NewEditor = ({ story }: NewEditorProps) => {
         onUnpublish={handleUnpublish}
       />
 
-      <EditorContainer className="prose lg:prose-lg">
+      <EditorContainer className="prose dark:prose-invert lg:prose-lg">
         <TitleInput
           value={newStory.title}
           onChange={(e) => {

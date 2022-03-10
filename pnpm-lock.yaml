@@ -102,6 +102,7 @@ importers:
       next: 12.1.0
       next-compose-plugins: 2.2.1
       next-seo: 4.28.1
+      next-themes: 0.1.1
       nprogress: 0.2.0
       postcss: 8.3.9
       posthog-js: 1.14.1
@@ -174,6 +175,7 @@ importers:
       nanoid: 3.2.0
       next: 12.1.0_49a38fd3ae9b3ccf914707d6c6f0d387
       next-seo: 4.28.1_caa633a00319350dbda42996613fe26c
+      next-themes: 0.1.1_caa633a00319350dbda42996613fe26c
       nprogress: 0.2.0
       posthog-js: 1.14.1
       react: 17.0.2
@@ -6713,6 +6715,18 @@ packages:
       next: ^8.1.1-canary.54 || >=9.0.0
       react: '>=16.0.0'
       react-dom: '>=16.0.0'
+    dependencies:
+      next: 12.1.0_49a38fd3ae9b3ccf914707d6c6f0d387
+      react: 17.0.2
+      react-dom: 17.0.2_react@17.0.2
+    dev: false
+
+  /next-themes/0.1.1_caa633a00319350dbda42996613fe26c:
+    resolution: {integrity: sha512-Iqxt6rhS/KfK/iHJ0tfFjTcdLEAI0AgwFuAFrMwLOPK5e+MI3I+fzyvBoS+VaOS+NldUiazurhgwYhrfV0VXsQ==}
+    peerDependencies:
+      next: '>=11.1.1'
+      react: '*'
+      react-dom: '*'
     dependencies:
       next: 12.1.0_49a38fd3ae9b3ccf914707d6c6f0d387
       react: 17.0.2
