@@ -4,7 +4,7 @@ import tw from 'twin.macro';
 import { toast } from 'react-toastify';
 import { useFormik, FormikErrors } from 'formik';
 import { useDropzone } from 'react-dropzone';
-import { MdAddAPhoto, MdDelete } from 'react-icons/md';
+import { CameraIcon, TrashIcon } from '@radix-ui/react-icons';
 import { BlockPicker } from 'react-color';
 import { SettingsFile } from '../../types';
 import { hexRegex } from '../../utils/regex';
@@ -253,14 +253,14 @@ export const SettingsForm = ({ settings, username }: SettingsFormProps) => {
         >
           {coverImageUrl && (
             <ImageEmptyIconDelete onClick={handleRemoveCover}>
-              <MdDelete />
+              <TrashIcon width={18} height={18} />
             </ImageEmptyIconDelete>
           )}
           {coverImageUrl && <Image src={coverImageUrl} />}
           {!coverImageUrl && <span>Upload cover image</span>}
           <input {...getInputProps()} />
           <ImageEmptyIconAdd>
-            <MdAddAPhoto />
+            <CameraIcon width={18} height={18} />
           </ImageEmptyIconAdd>
         </ImageEmpty>
         <StyledFormHelper>
