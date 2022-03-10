@@ -111,6 +111,7 @@
     "fast-xml-parser": "4.0.1",
     "jest": "27.5.1",
     "next-compose-plugins": "2.2.1",
+    "next-sitemap": "2.5.7",
     "postcss": "8.3.9",
     "sass": "1.42.1",
     "tailwindcss": "2.2.15",

@@ -103,6 +103,7 @@ importers:
       next: 12.1.0
       next-compose-plugins: 2.2.1
       next-seo: 4.28.1
+      next-sitemap: 2.5.7
       nprogress: 0.2.0
       postcss: 8.3.9
       posthog-js: 1.14.1
@@ -215,6 +216,7 @@ importers:
       fast-xml-parser: 4.0.1
       jest: 27.5.1
       next-compose-plugins: 2.2.1
+      next-sitemap: 2.5.7_next@12.1.0
       postcss: 8.3.9
       sass: 1.42.1
       tailwindcss: 2.2.15_96f83969316717847b3edf58a3f353f3
@@ -766,6 +768,10 @@ packages:
       fs-extra: 7.0.1
       human-id: 1.0.2
       prettier: 1.19.1
+    dev: true
+
+  /@corex/deepmerge/2.6.148:
+    resolution: {integrity: sha512-6QMz0/2h5C3ua51iAnXMPWFbb1QOU1UvSM4bKBw5mzdT+WtLgjbETBBIQZ+Sh9WvEcGwlAt/DEdRpIC3XlDBMA==}
     dev: true
 
   /@emotion/is-prop-valid/0.8.8:
@@ -6749,6 +6755,18 @@ packages:
       react: 17.0.2
       react-dom: 17.0.2_react@17.0.2
     dev: false
+
+  /next-sitemap/2.5.7_next@12.1.0:
+    resolution: {integrity: sha512-snyIWKwzy4QfLrZmXk2fT7ue5RYc1GNqrMfvC/VQJWyPX5QRZnYJLVScd9jmfdVlN5l6M5sFY3VSuFmCQUZ5Vg==}
+    engines: {node: '>=14.18.3'}
+    hasBin: true
+    peerDependencies:
+      next: '*'
+    dependencies:
+      '@corex/deepmerge': 2.6.148
+      minimist: 1.2.5
+      next: 12.1.0_49a38fd3ae9b3ccf914707d6c6f0d387
+    dev: true
 
   /next/12.1.0_49a38fd3ae9b3ccf914707d6c6f0d387:
     resolution: {integrity: sha512-s885kWvnIlxsUFHq9UGyIyLiuD0G3BUC/xrH0CEnH5lHEWkwQcHOORgbDF0hbrW9vr/7am4ETfX4A7M6DjrE7Q==}
