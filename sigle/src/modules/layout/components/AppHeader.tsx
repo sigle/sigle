@@ -30,7 +30,6 @@ import {
 } from '../../../ui/HoverCard';
 import { userSession } from '../../../utils/blockstack';
 import posthog from 'posthog-js';
-
 import { isExperimentalThemeToggleEnabled } from '../../../utils/featureFlags';
 import { createSubsetStory } from '../../editor/utils';
 import { useTheme } from 'next-themes';
@@ -120,8 +119,8 @@ export const AppHeader = () => {
           <Box as="a" css={{ display: 'none', '@lg': { display: 'flex' } }}>
             <Image
               priority
-              width={101}
-              height={45}
+              width={93}
+              height={34}
               objectFit="cover"
               src={`/static/img/${
                 resolvedTheme === 'dark' ? 'logo_white.png' : 'logo.png'

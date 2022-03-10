@@ -213,7 +213,6 @@ const StyledDialogContent = styled(DialogPrimitive.Content, {
   overflow: 'hidden',
   width: '100%',
   backgroundColor: '$gray1',
-  // boxShadow: 'inset 1px 0 0 0 $colors$gray7',
   margin: 0,
   borderRadius: 0,
   position: 'fixed',
@@ -553,7 +552,6 @@ export const EditorSettings = ({
           <Box
             css={{
               borderTop: '1px solid $colors$gray6',
-              //  boxShadow: 'inset 1px 0 0 0 $colors$gray7',
               position: 'fixed',
               width: '100%',
               left: 0,

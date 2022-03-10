@@ -72,7 +72,7 @@ export const PublicStory = ({ story, settings }: PublicStoryProps) => {
       <AppHeader />
 
       <PublicStoryContainer
-        className="prose dark:prose-invert-body lg:prose-lg sigle-content"
+        className="prose dark:prose-invert lg:prose-lg sigle-content"
         css={{
           "& :where(a):not(:where([class~='not-prose'] *))": {
             color: safeSiteColor,
