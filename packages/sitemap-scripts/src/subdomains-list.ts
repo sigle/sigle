@@ -24,6 +24,8 @@ const start = async () => {
     'stackerdaolabs.id.stx',
     'madstar_nft.id.stx',
     'akirtovskis.id.stx',
+    'learnblock.id.blockstack',
+    'privacyperspective.id.stx',
   ];
   let subdomainsFound: { subdomain: string; storage: string }[] = [];
 

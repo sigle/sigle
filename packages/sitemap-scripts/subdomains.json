@@ -34,5 +34,17 @@
   {
     "subdomain": "madstar_nft.id.stx",
     "storage": "https://gaia.blockstack.org/hub/1Hux2iKDmdn3wfaTHkQ9a6UEhMN2KfV3Md/"
+  },
+  {
+    "subdomain": "akirtovskis.id.stx",
+    "storage": "https://gaia.blockstack.org/hub/1KLtZmuVCCZNFMqn1dTxe68ZdzgZ5XTFEg/"
+  },
+  {
+    "subdomain": "learnblock.id.blockstack",
+    "storage": "https://gaia.blockstack.org/hub/1L7kfiKtkDsqb2SMGcPbkgE7PXw1cZAn6U/"
+  },
+  {
+    "subdomain": "privacyperspective.id.stx",
+    "storage": "https://gaia.blockstack.org/hub/1FfudHbp8ND73iQDPMgtBHTGNFBG76Ld8J/"
   }
 ]
