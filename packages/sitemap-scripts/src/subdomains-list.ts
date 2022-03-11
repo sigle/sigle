@@ -26,6 +26,8 @@ const start = async () => {
     'akirtovskis.id.stx',
     'learnblock.id.blockstack',
     'privacyperspective.id.stx',
+    'freeos_dao.id.blockstack',
+    'retcheto.id.stx',
   ];
   let subdomainsFound: { subdomain: string; storage: string }[] = [];
 

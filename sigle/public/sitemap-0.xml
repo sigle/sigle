@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:news="http://www.google.com/schemas/sitemap-news/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml" xmlns:mobile="http://www.google.com/schemas/sitemap-mobile/1.0" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1" xmlns:video="http://www.google.com/schemas/sitemap-video/1.1">
-<url><loc>https://app.sigle.io</loc><changefreq>daily</changefreq><priority>0.7</priority><lastmod>2022-03-11T11:52:05.386Z</lastmod></url>
-<url><loc>https://app.sigle.io/design-system</loc><changefreq>daily</changefreq><priority>0.7</priority><lastmod>2022-03-11T11:52:05.386Z</lastmod></url>
+<url><loc>https://app.sigle.io</loc><changefreq>daily</changefreq><priority>0.7</priority><lastmod>2022-03-11T12:08:15.187Z</lastmod></url>
+<url><loc>https://app.sigle.io/design-system</loc><changefreq>daily</changefreq><priority>0.7</priority><lastmod>2022-03-11T12:08:15.187Z</lastmod></url>
 <url><loc>https://app.sigle.io/sigleapp.id.blockstack</loc><changefreq>weekly</changefreq><priority>0.5</priority></url>
 <url><loc>https://app.sigle.io/sigleapp.id.blockstack/JA9dBfdPDp7kQhkFkgPdv</loc><changefreq>weekly</changefreq><priority>0.5</priority></url>
 <url><loc>https://app.sigle.io/sigleapp.id.blockstack/zsoVIi3V6CE55-ygCdjVG</loc><changefreq>weekly</changefreq><priority>0.5</priority></url>
@@ -99,4 +99,10 @@
 <url><loc>https://app.sigle.io/privacyperspective.id.stx/fAVuh8o4snZBeGVWji4dH</loc><changefreq>weekly</changefreq><priority>0.5</priority></url>
 <url><loc>https://app.sigle.io/privacyperspective.id.stx/TNH5vdOeZBugUFH-RpVbo</loc><changefreq>weekly</changefreq><priority>0.5</priority></url>
 <url><loc>https://app.sigle.io/privacyperspective.id.stx/x2oShXPaIWxuIGRUWzFx9</loc><changefreq>weekly</changefreq><priority>0.5</priority></url>
+<url><loc>https://app.sigle.io/freeos_dao.id.blockstack</loc><changefreq>weekly</changefreq><priority>0.5</priority></url>
+<url><loc>https://app.sigle.io/freeos_dao.id.blockstack/FrvlXRBbHa-2Zcqfmhg5t</loc><changefreq>weekly</changefreq><priority>0.5</priority></url>
+<url><loc>https://app.sigle.io/freeos_dao.id.blockstack/nE-kD-pl6Wqd-jDPMlq-p</loc><changefreq>weekly</changefreq><priority>0.5</priority></url>
+<url><loc>https://app.sigle.io/freeos_dao.id.blockstack/WI1ONIeq_nPBftUb06zJv</loc><changefreq>weekly</changefreq><priority>0.5</priority></url>
+<url><loc>https://app.sigle.io/retcheto.id.stx</loc><changefreq>weekly</changefreq><priority>0.5</priority></url>
+<url><loc>https://app.sigle.io/retcheto.id.stx/wOo_ReUZdnKZW3nxGgKcA</loc><changefreq>weekly</changefreq><priority>0.5</priority></url>
 </urlset>
