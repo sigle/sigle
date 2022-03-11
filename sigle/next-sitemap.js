@@ -1,9 +1,6 @@
 const urls = require('../packages/sitemap-scripts/urls.json');
 const appUrl = 'https://app.sigle.io';
 
-// TODO generate a list of subdomains
-// TODO Get from settings if website should not be listed
-
 /** @type {import('next-sitemap').IConfig} */
 module.exports = {
   siteUrl: appUrl,
