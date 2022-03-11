@@ -17,6 +17,13 @@ const start = async () => {
     'sigleapp.id.blockstack',
     'friedger.id',
     'project_indigo.id.stx',
+    'eliherf01.id.stx',
+    'nonnish_kingdom.id.stx',
+    'the_ghost_of_kyiv.id.stx',
+    'tigerforce.id.stx',
+    'stackerdaolabs.id.stx',
+    'madstar_nft.id.stx',
+    'akirtovskis.id.stx',
   ];
   let subdomainsFound: { subdomain: string; storage: string }[] = [];
 
