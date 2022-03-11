@@ -17,8 +17,8 @@ const start = async () => {
   // TODO https://github.com/hirosystems/stacks-blockchain-api/issues/1097
   const subdomains = [
     'sigleapp.id.blockstack',
-    'doesnotexist404.id.blockstack',
-    'leopradel.id.blockstack',
+    'friedger.id',
+    'project_indigo.id.stx',
   ];
   let subdomainsFound: { subdomain: string; storage: string }[] = [];
 
