@@ -70,6 +70,21 @@ export const AppHeader = () => {
     resolvedTheme === 'dark' ? setTheme('light') : setTheme('dark');
   };
 
+  let src;
+
+  switch (resolvedTheme) {
+    case 'light':
+      src = '/static/img/logo.png';
+      break;
+    case 'dark':
+      src = '/static/img/logo_white.png';
+      break;
+    default:
+      src =
+        'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7';
+      break;
+  }
+
   const handleCreateNewPrivateStory = async () => {
     setLoadingCreate(true);
     try {
@@ -104,13 +119,10 @@ export const AppHeader = () => {
         <Link href="/[username]" as={`/${username}`} passHref>
           <Flex as="a" css={{ '@lg': { display: 'none' } }}>
             <Image
-              priority
-              width={101}
-              height={45}
+              width={93}
+              height={34}
               objectFit="cover"
-              src={`/static/img/${
-                resolvedTheme === 'dark' ? 'logo_white.png' : 'logo.png'
-              }`}
+              src={src}
               alt="logo"
             />
           </Flex>
@@ -118,13 +130,10 @@ export const AppHeader = () => {
         <Link href="/" passHref>
           <Box as="a" css={{ display: 'none', '@lg': { display: 'flex' } }}>
             <Image
-              priority
               width={93}
               height={34}
               objectFit="cover"
-              src={`/static/img/${
-                resolvedTheme === 'dark' ? 'logo_white.png' : 'logo.png'
-              }`}
+              src={src}
               alt="logo"
             />
           </Box>
