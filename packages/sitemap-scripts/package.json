@@ -2,7 +2,7 @@
   "name": "@sigle/sitemap-scripts",
   "private": true,
   "scripts": {
-    "start": "pnpm run subdomains-list && pnpm run sitemap-generate",
+    "start": "pnpm run subdomains-list && pnpm run subdomains-list",
     "subdomains-list": "ts-node src/subdomains-list.ts",
     "urls-list": "ts-node src/urls-list.ts",
     "build": "tsc --noEmit"
