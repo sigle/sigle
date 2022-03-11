@@ -1,4 +1,3 @@
-import { fetch } from 'undici';
 import { lookupProfile } from '@stacks/auth';
 import * as fs from 'fs';
 
@@ -11,7 +10,6 @@ const appUrl = 'https://app.sigle.io';
  */
 const start = async () => {
   let subdomainsNotFound = 0;
-  let publicStoriesNotFound = 0;
 
   // 1. List all the subdomains registered on Stacks
   // TODO https://github.com/hirosystems/stacks-blockchain-api/issues/1097
@@ -43,27 +41,6 @@ const start = async () => {
       const storage = userProfile.appsMeta[appUrl].storage;
 
       subdomainsFound.push({ subdomain, storage });
-
-      // TODO move this somewhere else?
-      // const res = await fetch(`${storage}publicStories.json`);
-      // let file: any;
-      // if (res.status === 200) {
-      //   file = await res.json();
-      // } else if (res.status === 404) {
-      //   publicStoriesNotFound += 1;
-      //   continue;
-      // } else {
-      //   throw new Error(
-      //     `Unexpected status code: ${res.status} for domain ${subdomain}`
-      //   );
-      // }
-
-      // // TODO allow users to disable indexing
-      // const storyUrls: string[] = file.stories.map(
-      //   (story: { id: string }) => `${appUrl}/${subdomain}/${story.id}`
-      // );
-      // storyUrls.unshift(`${appUrl}/${subdomain}`);
-      // urlsToIndex = urlsToIndex.concat(storyUrls);
     } catch (error) {
       console.error(`Error checking ${subdomain}: ${error}`);
       process.exit(1);
@@ -78,7 +55,7 @@ const start = async () => {
     }
   );
 
-  console.log('Urls generated', { subdomainsNotFound, publicStoriesNotFound });
+  console.log('Subdomains generated', { subdomainsNotFound });
 };
 
 start();

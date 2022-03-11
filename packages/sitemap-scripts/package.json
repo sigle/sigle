@@ -1,8 +1,9 @@
 {
-  "name": "@sigle/subdomain-list",
+  "name": "@sigle/sitemap-scripts",
   "private": true,
   "scripts": {
-    "start": "ts-node src/index.ts",
+    "subdomains-list": "ts-node src/subdomains-list.ts",
+    "urls-list": "ts-node src/urls-list.ts",
     "build": "tsc --noEmit"
   },
   "dependencies": {
