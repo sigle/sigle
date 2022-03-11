@@ -6,7 +6,7 @@
     "dev": "next dev",
     "start": "next start",
     "build": "next build",
-    "postbuild": "next-sitemap",
+    "generate-sitemap": "next-sitemap",
     "analyze": "ANALYZE=true pnpm run build",
     "test": "pnpm run test:only",
     "test:only": "jest"
