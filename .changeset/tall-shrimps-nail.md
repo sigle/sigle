@@ -1,5 +1,4 @@
 ---
-'@sigle/tailwind-style': minor
 '@sigle/app': minor
 ---
 
