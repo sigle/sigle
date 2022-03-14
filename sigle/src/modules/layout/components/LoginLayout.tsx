@@ -8,6 +8,7 @@ import {
   GitHubLogoIcon,
   TwitterLogoIcon,
 } from '@radix-ui/react-icons';
+import { useTheme } from 'next-themes';
 
 const Footer = styled('footer', {
   width: '100%',
@@ -62,18 +63,30 @@ interface LoginLayoutProps {
 }
 
 export const LoginLayout = ({ children }: LoginLayoutProps) => {
+  const { resolvedTheme } = useTheme();
+
+  let src;
+
+  switch (resolvedTheme) {
+    case 'light':
+      src = '/static/img/logo.png';
+      break;
+    case 'dark':
+      src = '/static/img/logo_white.png';
+      break;
+    default:
+      src =
+        'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7';
+      break;
+  }
+
   return (
     <FullScreen>
       <LoginContainer>
         <Grid>
           <BlockText>
             <a href={sigleConfig.landingUrl} target="_blank" rel="noreferrer">
-              <Image
-                src="/static/img/logo.png"
-                alt="Logo"
-                width={100}
-                height={44}
-              />
+              <Image src={src} alt="Logo" width={100} height={36} />
             </a>
             {children}
           </BlockText>
