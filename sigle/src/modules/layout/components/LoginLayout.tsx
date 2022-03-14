@@ -86,7 +86,7 @@ export const LoginLayout = ({ children }: LoginLayoutProps) => {
         <Grid>
           <BlockText>
             <a href={sigleConfig.landingUrl} target="_blank" rel="noreferrer">
-              <Image src={src} alt="Logo" width={100} height={36} />
+              <Image src={src} alt="Logo" width={123} height={45} />
             </a>
             {children}
           </BlockText>
