@@ -23,7 +23,7 @@ const HomePage = () => {
     if (isExperimentalThemeToggle && !isExperimentalThemeToggleEnabled) {
       enableExperimentalThemeToggle();
     }
-  }, [isExperimentalHiroWallet]);
+  }, [isExperimentalHiroWallet, isExperimentalThemeToggle]);
 
   return (
     <Protected>

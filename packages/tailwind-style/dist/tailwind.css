@@ -712,20 +712,20 @@ Ensure the default browser behavior of the `hidden` attribute.
   --tw-prose-pre-bg: #1a1a1a;
   --tw-prose-th-borders: #d1d5db;
   --tw-prose-td-borders: #e5e7eb;
-  --tw-prose-invert-body: #d1d5db;
-  --tw-prose-invert-headings: #fff;
-  --tw-prose-invert-lead: #9ca3af;
-  --tw-prose-invert-links: #fff;
-  --tw-prose-invert-bold: #fff;
-  --tw-prose-invert-counters: #9ca3af;
-  --tw-prose-invert-bullets: #4b5563;
-  --tw-prose-invert-hr: #374151;
-  --tw-prose-invert-quotes: #f3f4f6;
-  --tw-prose-invert-quote-borders: #374151;
-  --tw-prose-invert-captions: #9ca3af;
-  --tw-prose-invert-code: #fff;
-  --tw-prose-invert-pre-code: #d1d5db;
-  --tw-prose-invert-pre-bg: rgb(0 0 0 / 50%);
+  --tw-prose-invert-body: #e5e5e5;
+  --tw-prose-invert-headings: #f2f2f2;
+  --tw-prose-invert-lead: #343434;
+  --tw-prose-invert-links: #da3a00;
+  --tw-prose-invert-bold: #e5e5e5;
+  --tw-prose-invert-counters: #e5e5e5;
+  --tw-prose-invert-bullets: #e5e5e5;
+  --tw-prose-invert-hr: #343434;
+  --tw-prose-invert-quotes: #e5e5e5;
+  --tw-prose-invert-quote-borders: #343434;
+  --tw-prose-invert-captions: #a1a1a1;
+  --tw-prose-invert-code: #f2f2f2;
+  --tw-prose-invert-pre-code: #2e2e2e;
+  --tw-prose-invert-pre-bg: #f2f2f2;
   --tw-prose-invert-th-borders: #4b5563;
   --tw-prose-invert-td-borders: #374151;
   font-size: 16px;
@@ -842,6 +842,25 @@ Ensure the default browser behavior of the `hidden` attribute.
 
 .prose :where(a strong):not(:where([class~='not-prose'] *)) {
   color: var(--tw-prose-links);
+}
+
+.dark .dark\:prose-invert {
+  --tw-prose-body: var(--tw-prose-invert-body);
+  --tw-prose-headings: var(--tw-prose-invert-headings);
+  --tw-prose-lead: var(--tw-prose-invert-lead);
+  --tw-prose-links: var(--tw-prose-invert-links);
+  --tw-prose-bold: var(--tw-prose-invert-bold);
+  --tw-prose-counters: var(--tw-prose-invert-counters);
+  --tw-prose-bullets: var(--tw-prose-invert-bullets);
+  --tw-prose-hr: var(--tw-prose-invert-hr);
+  --tw-prose-quotes: var(--tw-prose-invert-quotes);
+  --tw-prose-quote-borders: var(--tw-prose-invert-quote-borders);
+  --tw-prose-captions: var(--tw-prose-invert-captions);
+  --tw-prose-code: var(--tw-prose-invert-code);
+  --tw-prose-pre-code: var(--tw-prose-invert-pre-code);
+  --tw-prose-pre-bg: var(--tw-prose-invert-pre-bg);
+  --tw-prose-th-borders: var(--tw-prose-invert-th-borders);
+  --tw-prose-td-borders: var(--tw-prose-invert-td-borders);
 }
 
 @media (min-width: 1024px) {
