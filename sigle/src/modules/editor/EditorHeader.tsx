@@ -19,7 +19,10 @@ interface EditorHeaderProps {
   onSave: () => void;
 }
 
-type ScrollDirection = 'up' | 'down' | null;
+interface ScrollDirection {
+  direction: 'up' | 'down' | null;
+  prevOffset: number;
+}
 
 export const EditorHeader = ({
   story,
@@ -29,8 +32,10 @@ export const EditorHeader = ({
   onOpenSettings,
   onSave,
 }: EditorHeaderProps) => {
-  const [scrollDirection, setScrollDirection] = useState<ScrollDirection>(null);
-  const [prevOffset, setPrevOffset] = useState(0);
+  const [scroll, setScroll] = useState<ScrollDirection>({
+    direction: null,
+    prevOffset: 0,
+  });
   const { user } = useAuth();
 
   useEffect(() => {
@@ -43,21 +48,20 @@ export const EditorHeader = ({
   const handleScroll = () => {
     let scrollY = window.scrollY;
     if (scrollY === 0) {
-      setScrollDirection(null);
+      setScroll({ direction: null, prevOffset: scrollY });
     }
-    if (scrollY > prevOffset) {
-      setScrollDirection('down');
-    } else if (scrollY < prevOffset) {
-      setScrollDirection('up');
+    if (scrollY > scroll.prevOffset) {
+      setScroll({ direction: 'down', prevOffset: scrollY });
+    } else if (scrollY < scroll.prevOffset) {
+      setScroll({ direction: 'up', prevOffset: scrollY });
     }
-    setPrevOffset(scrollY);
   };
 
   return (
     <Flex
       css={{
         position: 'sticky',
-        transform: scrollDirection === 'down' ? 'translateY(-100%)' : 'none',
+        transform: scroll.direction === 'down' ? 'translateY(-100%)' : 'none',
         transition: 'transform 0.5s, padding 0.2s',
         backgroundColor: '$gray1',
         top: window.scrollY < 40 ? 'auto' : 0,
