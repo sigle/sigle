@@ -1,7 +1,18 @@
 import { lookupProfile } from '@stacks/auth';
 import * as fs from 'fs';
+import * as path from 'path';
 
 const appUrl = 'https://app.sigle.io';
+const generatedFolderPath = path.join(__dirname, '..', '__generated__');
+const subdomainsFilePath = path.join(generatedFolderPath, 'subdomains.json');
+
+// TODO read file and update only if needed
+
+interface Subdomain {
+  subdomain: string;
+  storage: string;
+  lastFetch: number;
+}
 
 /**
  * 1. List all the subdomains registered on Stacks
@@ -9,7 +20,14 @@ const appUrl = 'https://app.sigle.io';
  * 3. If they allow it, add them to the list of users
  */
 const start = async () => {
+  // Init required folders
+  if (!fs.existsSync(generatedFolderPath)) {
+    fs.mkdirSync(generatedFolderPath);
+  }
+
+  let subdomainsProcessed = 0;
   let subdomainsNotFound = 0;
+  let subdomainsSkipped = 0;
 
   // 1. List all the subdomains registered on Stacks
   // TODO https://github.com/hirosystems/stacks-blockchain-api/issues/1097
@@ -29,7 +47,7 @@ const start = async () => {
     'freeos_dao.id.blockstack',
     'retcheto.id.stx',
   ];
-  let subdomainsFound: { subdomain: string; storage: string }[] = [];
+  let subdomainsFound: Subdomain[] = [];
 
   for (const subdomain of subdomains) {
     // 2. Check if they are using Sigle in their profile
@@ -51,22 +69,27 @@ const start = async () => {
 
       const storage = userProfile.appsMeta[appUrl].storage;
 
-      subdomainsFound.push({ subdomain, storage });
+      subdomainsFound.push({
+        subdomain,
+        storage,
+        lastFetch: new Date().getTime(),
+      });
+      subdomainsProcessed += 1;
     } catch (error) {
       console.error(`Error checking ${subdomain}: ${error}`);
       process.exit(1);
     }
   }
 
-  fs.writeFileSync(
-    `${__dirname}/../subdomains.json`,
-    JSON.stringify(subdomainsFound),
-    {
-      encoding: 'utf8',
-    }
-  );
+  fs.writeFileSync(subdomainsFilePath, JSON.stringify(subdomainsFound), {
+    encoding: 'utf8',
+  });
 
-  console.log('Subdomains generated', { subdomainsNotFound });
+  console.log('Subdomains generated', {
+    subdomainsProcessed,
+    subdomainsSkipped,
+    subdomainsNotFound,
+  });
 };
 
 start();
