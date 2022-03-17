@@ -1,12 +1,16 @@
 import { fetch } from 'undici';
 import * as fs from 'fs';
+import * as path from 'path';
 
 const appUrl = 'https://app.sigle.io';
+const generatedFolderPath = path.join(__dirname, '..', '__generated__');
+const subdomainsFilePath = path.join(generatedFolderPath, 'subdomains.json');
+const urlsFilePath = path.join(generatedFolderPath, 'urls.json');
 
 const subdomains: {
   subdomain: string;
   storage: string;
-}[] = require('../subdomains.json');
+}[] = require(subdomainsFilePath);
 
 /**
  * List the users stories and generate an url list
@@ -42,7 +46,7 @@ const start = async () => {
     }
   }
 
-  fs.writeFileSync(`${__dirname}/../urls.json`, JSON.stringify(urlsToIndex), {
+  fs.writeFileSync(urlsFilePath, JSON.stringify(urlsToIndex), {
     encoding: 'utf8',
   });
 
