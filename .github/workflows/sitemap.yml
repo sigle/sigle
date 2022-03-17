@@ -1,0 +1,36 @@
+name: Sitemap
+
+# TODO change this should be cron job
+# TODO can trigger manually?
+# TODO on fail notify somewhere
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  generate-sitemap:
+    runs-on: ubuntu-20.04
+    strategy:
+      matrix:
+        node-version: [16]
+
+    steps:
+      - uses: actions/checkout@v1
+
+      - uses: pnpm/action-setup@v2
+        with:
+          version: 6.32.3
+
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v2
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'pnpm'
+
+      - name: Install Dependencies
+        run: pnpm install
+
+      - name: Generate sitemap
+        run: pnpm run start --filter=@sigle/sitemap-scripts
