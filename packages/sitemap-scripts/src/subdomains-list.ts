@@ -1,12 +1,11 @@
 import { lookupProfile } from '@stacks/auth';
+import { differenceInDays } from 'date-fns';
 import * as fs from 'fs';
 import * as path from 'path';
 
 const appUrl = 'https://app.sigle.io';
 const generatedFolderPath = path.join(__dirname, '..', '__generated__');
 const subdomainsFilePath = path.join(generatedFolderPath, 'subdomains.json');
-
-// TODO read file and update only if needed
 
 interface Subdomain {
   subdomain: string;
@@ -23,6 +22,21 @@ const start = async () => {
   // Init required folders
   if (!fs.existsSync(generatedFolderPath)) {
     fs.mkdirSync(generatedFolderPath);
+  }
+
+  let subdomainsFile: Subdomain[] = [];
+  try {
+    subdomainsFile = JSON.parse(
+      fs.readFileSync(subdomainsFilePath, {
+        encoding: 'utf8',
+      })
+    );
+  } catch (error) {
+    if (error.code === 'ENOENT') {
+      subdomainsFile = [];
+    } else {
+      throw error;
+    }
   }
 
   let subdomainsProcessed = 0;
@@ -50,6 +64,19 @@ const start = async () => {
   let subdomainsFound: Subdomain[] = [];
 
   for (const subdomain of subdomains) {
+    // Only refetch the profile if checked more than an week ago
+    const subdomainProfile = subdomainsFile.find(
+      (data) => data.subdomain === subdomain
+    );
+    if (
+      subdomainProfile &&
+      differenceInDays(new Date(), new Date(subdomainProfile.lastFetch)) < 7
+    ) {
+      subdomainsFound.push(subdomainProfile);
+      subdomainsSkipped += 1;
+      continue;
+    }
+
     // 2. Check if they are using Sigle in their profile
     try {
       let userProfile;
