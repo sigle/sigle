@@ -29,6 +29,8 @@ const NavItem = ({ children, ...props }: NavItemProps) => {
   const router = useRouter();
   return (
     <Box
+      {...props}
+      as="a"
       css={{
         py: '$3',
         px: '$3',
@@ -39,7 +41,7 @@ const NavItem = ({ children, ...props }: NavItemProps) => {
 
         '&:hover': {
           backgroundColor:
-            router.pathname === props.href ? undefined : '$gray5',
+            router.pathname === props.href ? undefined : '$gray4',
         },
 
         '&:active': {
@@ -68,13 +70,13 @@ export const NewDashboardLayout = () => {
           <Link href="/dashboard" passHref>
             <NavItem>Profile</NavItem>
           </Link>
-          <Link href="/" passHref>
+          <Link href="#" passHref>
             <NavItem>Bookmarks</NavItem>
           </Link>
-          <Link href="/" passHref>
+          <Link href="#" passHref>
             <NavItem>Analytics</NavItem>
           </Link>
-          <Link href="/" passHref>
+          <Link href="#" passHref>
             <NavItem>Settings</NavItem>
           </Link>
         </Sidebar>
