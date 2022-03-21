@@ -2,4 +2,4 @@
 '@sigle/app': minor
 ---
 
-Redesign view when editor is loading.
+Improve the view when editor is loading.
