@@ -3,8 +3,9 @@ import styled from 'styled-components';
 import tw from 'twin.macro';
 import { Story } from '../../../types';
 import { AppBar } from '../../layout';
-import { Container } from '../../../components';
+import { Container, Text } from '../../../ui';
 import { NewEditor } from '../NewEditor';
+import { EditorHeader } from '../EditorHeader';
 
 export const FixedContainer = styled.div`
   ${tw`fixed w-full bg-white top-0`};
@@ -17,41 +18,31 @@ export const PageContainer = styled(Container)`
 interface Props {
   loading: boolean;
   story: Story | null;
-  onChangeStory: (newStory: Story) => void;
-  onChangeStoryField: (field: string, value: any) => void;
 }
 
-export const Editor = ({
-  loading,
-  story,
-  onChangeStory,
-  onChangeStoryField,
-}: Props) => {
-  // TODO nice loading
-  if (loading) {
+export const Editor = ({ loading, story }: Props) => {
+  if (loading || !story) {
     return (
-      <React.Fragment>
-        <FixedContainer>
-          <AppBar />
-        </FixedContainer>
-        <PageContainer>
-          <p>Loading ...</p>
-        </PageContainer>
-      </React.Fragment>
-    );
-  }
-
-  // TODO nice 404
-  if (!story) {
-    return (
-      <React.Fragment>
-        <FixedContainer>
-          <AppBar />
-        </FixedContainer>
-        <PageContainer>
-          <p>404 Story not found</p>
-        </PageContainer>
-      </React.Fragment>
+      <Container
+        css={{
+          pt: '$5',
+          '@md': {
+            pt: '$10',
+          },
+        }}
+      >
+        <EditorHeader
+          story={false}
+          loadingSave={false}
+          onOpenSettings={() => null}
+          onSave={() => null}
+          onPublish={() => null}
+          onUnpublish={() => null}
+        />
+        <Text css={{ paddingTop: '$15', textAlign: 'center' }}>
+          {loading ? 'Loading ...' : '404 Story not found'}
+        </Text>
+      </Container>
     );
   }
 

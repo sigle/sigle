@@ -29,40 +29,11 @@ export const Editor = () => {
     }
   );
 
-  const handleChangeStoryField = (field: string, value: any) => {
-    if (!story) {
-      return;
-    }
-
-    setStory({
-      ...story,
-      [field]: value,
-    });
-  };
-
-  const handleChangeStory = (newStory: Story) => {
-    if (!story) {
-      return;
-    }
-
-    setStory({
-      ...story,
-      ...newStory,
-    });
-  };
-
   useEffect(() => {
     if (data) {
       setStory(data);
     }
   }, [data]);
 
-  return (
-    <Component
-      loading={isLoading}
-      story={story}
-      onChangeStory={handleChangeStory}
-      onChangeStoryField={handleChangeStoryField}
-    />
-  );
+  return <Component loading={isLoading} story={story} />;
 };
