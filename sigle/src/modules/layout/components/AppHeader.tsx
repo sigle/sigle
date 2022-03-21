@@ -30,9 +30,9 @@ import {
 } from '../../../ui/HoverCard';
 import { userSession } from '../../../utils/blockstack';
 import posthog from 'posthog-js';
-
 import { isExperimentalThemeToggleEnabled } from '../../../utils/featureFlags';
 import { createSubsetStory } from '../../editor/utils';
+import { useTheme } from 'next-themes';
 
 const Header = styled('header', Container, {
   display: 'flex',
@@ -58,12 +58,32 @@ const StatusDot = styled('div', {
 });
 
 export const AppHeader = () => {
+  const { resolvedTheme, setTheme } = useTheme();
   const { user } = useAuth();
   const router = useRouter();
   const [loadingCreate, setLoadingCreate] = useState(false);
   const { username } = router.query as {
     username: string;
   };
+
+  const toggleTheme = () => {
+    resolvedTheme === 'dark' ? setTheme('light') : setTheme('dark');
+  };
+
+  let src;
+
+  switch (resolvedTheme) {
+    case 'light':
+      src = '/static/img/logo.png';
+      break;
+    case 'dark':
+      src = '/static/img/logo_white.png';
+      break;
+    default:
+      src =
+        'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7';
+      break;
+  }
 
   const handleCreateNewPrivateStory = async () => {
     setLoadingCreate(true);
@@ -99,11 +119,10 @@ export const AppHeader = () => {
         <Link href="/[username]" as={`/${username}`} passHref>
           <Flex as="a" css={{ '@lg': { display: 'none' } }}>
             <Image
-              priority
-              width={101}
-              height={45}
+              width={93}
+              height={34}
               objectFit="cover"
-              src="/static/img/logo.png"
+              src={src}
               alt="logo"
             />
           </Flex>
@@ -111,11 +130,10 @@ export const AppHeader = () => {
         <Link href="/" passHref>
           <Box as="a" css={{ display: 'none', '@lg': { display: 'flex' } }}>
             <Image
-              priority
-              width={101}
-              height={45}
+              width={93}
+              height={34}
               objectFit="cover"
-              src="/static/img/logo.png"
+              src={src}
               alt="logo"
             />
           </Box>
@@ -211,13 +229,8 @@ export const AppHeader = () => {
             </Button>
           </Link>
         )}
-        {!isExperimentalThemeToggleEnabled && (
-          <IconButton
-            as="button"
-            onClick={() => {
-              console.log('Toggle clicked');
-            }}
-          >
+        {isExperimentalThemeToggleEnabled && (
+          <IconButton as="button" onClick={toggleTheme}>
             <SunIcon />
           </IconButton>
         )}

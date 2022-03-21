@@ -1,0 +1,19 @@
+{
+  "name": "@sigle/sitemap-scripts",
+  "private": true,
+  "scripts": {
+    "start": "pnpm run subdomains-list && pnpm run urls-list",
+    "subdomains-list": "ts-node src/subdomains-list.ts",
+    "urls-list": "ts-node src/urls-list.ts",
+    "build": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@stacks/auth": "3.3.0"
+  },
+  "devDependencies": {
+    "@types/node": "16.11.12",
+    "ts-node": "10.4.0",
+    "typescript": "4.5.2",
+    "undici": "4.15.1"
+  }
+}

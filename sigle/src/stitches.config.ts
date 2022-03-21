@@ -192,7 +192,7 @@ export const {
   },
 });
 
-export const darkTheme = createTheme('dark-theme', {
+export const darkTheme = createTheme('dark', {
   colors: {
     ...grayDark,
     ...orangeDark,

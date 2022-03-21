@@ -8,6 +8,7 @@ import Tippy from '@tippyjs/react';
 import { Box, Button, Flex, IconButton, Text } from '../../ui';
 import { Story } from '../../types';
 import { useAuth } from '../auth/AuthContext';
+import { useEffect, useState } from 'react';
 
 interface EditorHeaderProps {
   story: Story;
@@ -18,6 +19,11 @@ interface EditorHeaderProps {
   onSave: () => void;
 }
 
+interface ScrollDirection {
+  direction: 'up' | 'down' | null;
+  prevOffset: number;
+}
+
 export const EditorHeader = ({
   story,
   loadingSave,
@@ -26,10 +32,48 @@ export const EditorHeader = ({
   onOpenSettings,
   onSave,
 }: EditorHeaderProps) => {
+  const [scroll, setScroll] = useState<ScrollDirection>({
+    direction: null,
+    prevOffset: 0,
+  });
   const { user } = useAuth();
 
+  useEffect(() => {
+    window.addEventListener('scroll', handleScroll);
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+    };
+  });
+
+  const handleScroll = () => {
+    let scrollY = window.scrollY;
+    if (scrollY === 0) {
+      setScroll({ direction: null, prevOffset: scrollY });
+    }
+    if (scrollY > scroll.prevOffset) {
+      setScroll({ direction: 'down', prevOffset: scrollY });
+    } else if (scrollY < scroll.prevOffset) {
+      setScroll({ direction: 'up', prevOffset: scrollY });
+    }
+  };
+
   return (
-    <Flex as="header" justify="between" align="center">
+    <Flex
+      css={{
+        position: 'sticky',
+        transform: scroll.direction === 'down' ? 'translateY(-100%)' : 'none',
+        transition: 'transform 0.5s, padding 0.2s',
+        backgroundColor: '$gray1',
+        top: window.scrollY < 40 ? 'auto' : 0,
+        zIndex: 1,
+        width: '100%',
+        py: window.scrollY < 40 ? 0 : '$2',
+        boxShadow: window.scrollY < 40 ? 'none' : '0 1px 0 0 $colors$gray6',
+      }}
+      as="header"
+      justify="between"
+      align="center"
+    >
       <Flex gap="10" align="center">
         <Link href="/" passHref>
           <IconButton as="a" aria-label="Go back to the dashboard">
