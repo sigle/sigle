@@ -1,19 +1,8 @@
 import React from 'react';
-import styled from 'styled-components';
-import tw from 'twin.macro';
 import { Story } from '../../../types';
-import { AppBar } from '../../layout';
 import { Container, Text } from '../../../ui';
 import { NewEditor } from '../NewEditor';
 import { EditorHeader } from '../EditorHeader';
-
-export const FixedContainer = styled.div`
-  ${tw`fixed w-full bg-white top-0`};
-`;
-
-export const PageContainer = styled(Container)`
-  ${tw`mt-24`};
-`;
 
 interface Props {
   loading: boolean;
