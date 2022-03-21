@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import * as Fathom from 'fathom-client';
 import posthog from 'posthog-js';
 import { useConnect } from '@stacks/connect-react';
+import { useConnect as legacyUseConnect } from '@stacks/legacy-connect-react';
 import { ArrowTopRightIcon } from '@radix-ui/react-icons';
 import { Goals } from '../utils/fathom';
 import { Box, Button, Heading, Text } from '../ui';
@@ -14,6 +15,7 @@ const Login = () => {
   const router = useRouter();
   const { user } = useAuth();
   const { doOpenAuth } = useConnect();
+  const { doOpenAuth: legacyDoOpenAuth } = legacyUseConnect();
 
   useEffect(() => {
     // If user is already logged in or has a username we redirect him to the homepage
@@ -26,6 +28,12 @@ const Login = () => {
     Fathom.trackGoal(Goals.LOGIN, 0);
     posthog.capture('start-login');
     doOpenAuth();
+  };
+
+  const handleLoginLegacy = () => {
+    Fathom.trackGoal(Goals.LOGIN, 0);
+    posthog.capture('start-login-legacy');
+    legacyDoOpenAuth();
   };
 
   return (
@@ -80,7 +88,7 @@ const Login = () => {
           variant="ghost"
           color="gray"
           size="lg"
-          onClick={handleLogin}
+          onClick={handleLoginLegacy}
           css={{ mt: '$3' }}
         >
           Legacy login
