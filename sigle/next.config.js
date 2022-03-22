@@ -28,6 +28,18 @@ module.exports = withSentryConfig(
               key: 'Access-Control-Allow-Headers',
               value: '*',
             },
+            {
+              key: 'Content-Security-Policy',
+              value: `
+                  default-src 'self';
+                  script-src 'self';
+                  child-src example.com;
+                  style-src 'self' example.com;
+                  font-src 'self';  
+                `
+                .replace(/\s{2,}/g, ' ')
+                .trim(),
+            },
           ],
         },
       ];
