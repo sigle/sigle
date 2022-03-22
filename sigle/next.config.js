@@ -5,6 +5,8 @@ const withBundleAnalyzer = require('@next/bundle-analyzer')({
   enabled: process.env.ANALYZE === 'true',
 });
 
+const isDev = process.env.NODE_ENV !== 'production';
+
 dotenv.config();
 
 module.exports = withSentryConfig(
@@ -18,6 +20,39 @@ module.exports = withSentryConfig(
     headers: async () => {
       return [
         {
+          source: '/:path*',
+          headers: [
+            {
+              key: 'Content-Security-Policy-Report-Only',
+              // TODO change condition
+              value: isDev
+                ? `
+                  script-src 'unsafe-eval';
+                  style-src 'unsafe-inline';
+                `
+                    .replace(/\s{2,}/g, ' ')
+                    .trim()
+                : `
+                  child-src 'none';
+                  font-src 'self';
+                  form-action 'self';
+                  frame-ancestors 'none';
+                  frame-src 'none';
+                  manifest-src 'self';
+                  media-src 'self';
+                  object-src 'none';
+                  prefetch-src 'self';
+                  script-src 'self' data:;
+                  style-src 'unsafe-inline';
+                  worker-src 'self';
+                  report-uri https://o72928.ingest.sentry.io/api/1419975/security/?sentry_key=82a06f89d9474f40abd8f2058bbf9c1e;
+                  `
+                    .replace(/\s{2,}/g, ' ')
+                    .trim(),
+            },
+          ],
+        },
+        {
           source: '/manifest.json',
           headers: [
             {
@@ -27,20 +62,6 @@ module.exports = withSentryConfig(
             {
               key: 'Access-Control-Allow-Headers',
               value: '*',
-            },
-            // TODO only on prod?
-            {
-              key: 'Content-Security-Policy',
-              value: `
-                  default-src 'self';
-                  script-src 'self';
-                  child-src example.com;
-                  style-src 'self' example.com;
-                  font-src 'self';
-                  report-uri https://o72928.ingest.sentry.io/api/1419975/security/?sentry_key=82a06f89d9474f40abd8f2058bbf9c1e;
-                `
-                .replace(/\s{2,}/g, ' ')
-                .trim(),
             },
           ],
         },
