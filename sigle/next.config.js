@@ -37,7 +37,7 @@ module.exports = withSentryConfig(
                   child-src example.com;
                   style-src 'self' example.com;
                   font-src 'self';
-                  report-uri https://o72928.ingest.sentry.io/api/1419975/security/?sentry_key=82a06f89d9474f40abd8f2058bbf9c1e
+                  report-uri https://o72928.ingest.sentry.io/api/1419975/security/?sentry_key=82a06f89d9474f40abd8f2058bbf9c1e;
                 `
                 .replace(/\s{2,}/g, ' ')
                 .trim(),
