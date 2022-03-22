@@ -28,8 +28,9 @@ module.exports = withSentryConfig(
               key: 'Access-Control-Allow-Headers',
               value: '*',
             },
+            // TODO only on prod?
             {
-              key: 'Content-Security-Policy-Report-Only',
+              key: 'Content-Security-Policy',
               value: `
                   default-src 'self';
                   script-src 'self';
