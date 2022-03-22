@@ -54,32 +54,35 @@ const NavItem = ({ children, ...props }: NavItemProps) => {
   );
 };
 
-export const NewDashboardLayout = () => {
+interface NewDashboardLayoutProps {
+  children: React.ReactNode;
+}
+
+export const NewDashboardLayout = ({ children }: NewDashboardLayoutProps) => {
   return (
     <FullScreen>
       <AppHeader />
       <Container
         css={{
           display: 'flex',
+          gap: 103,
           mt: '$10',
           width: '100%',
           height: '100%',
         }}
       >
         <Sidebar>
-          <Link href="/dashboard" passHref>
-            <NavItem>Profile</NavItem>
+          <Link href="/" passHref>
+            <NavItem>Drafts</NavItem>
           </Link>
-          <Link href="#" passHref>
-            <NavItem>Bookmarks</NavItem>
+          <Link href="/published" passHref>
+            <NavItem>Published</NavItem>
           </Link>
-          <Link href="#" passHref>
-            <NavItem>Analytics</NavItem>
-          </Link>
-          <Link href="#" passHref>
+          <Link href="/settings" passHref>
             <NavItem>Settings</NavItem>
           </Link>
         </Sidebar>
+        <Box css={{ width: '100%', mb: '$5' }}>{children}</Box>
       </Container>
       <AppFooter />
     </FullScreen>
