@@ -66,12 +66,12 @@ export const DashboardLayout = ({ children }: DashboardLayoutProps) => {
         css={{
           display: 'flex',
           flex: 1,
-          gap: 103,
           mt: '$10',
           width: '100%',
+          position: 'relative',
         }}
       >
-        <Sidebar>
+        <Sidebar css={{ position: 'absolute' }}>
           <Link href="/" passHref>
             <NavItem>Drafts</NavItem>
           </Link>
@@ -82,7 +82,9 @@ export const DashboardLayout = ({ children }: DashboardLayoutProps) => {
             <NavItem>Settings</NavItem>
           </Link>
         </Sidebar>
-        <Box css={{ width: '100%', maxWidth: 826, mb: '$5' }}>{children}</Box>
+        <Box css={{ mx: 'auto', width: '100%', maxWidth: 826, mb: '$5' }}>
+          {children}
+        </Box>
       </Container>
       <AppFooter />
     </FullScreen>
