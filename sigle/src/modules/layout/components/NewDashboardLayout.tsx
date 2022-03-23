@@ -54,11 +54,11 @@ const NavItem = ({ children, ...props }: NavItemProps) => {
   );
 };
 
-interface NewDashboardLayoutProps {
+interface DashboardLayoutProps {
   children: React.ReactNode;
 }
 
-export const NewDashboardLayout = ({ children }: NewDashboardLayoutProps) => {
+export const DashboardLayout = ({ children }: DashboardLayoutProps) => {
   return (
     <FullScreen>
       <AppHeader />
@@ -82,7 +82,7 @@ export const NewDashboardLayout = ({ children }: NewDashboardLayoutProps) => {
             <NavItem>Settings</NavItem>
           </Link>
         </Sidebar>
-        <Box css={{ width: '100%', mb: '$5' }}>{children}</Box>
+        <Box css={{ width: '100%', maxWidth: 826, mb: '$5' }}>{children}</Box>
       </Container>
       <AppFooter />
     </FullScreen>

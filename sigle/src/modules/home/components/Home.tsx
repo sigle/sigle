@@ -6,7 +6,7 @@ import { StoryItem } from '../';
 import { SubsetStory, BlockstackUser } from '../../../types';
 import { DashboardPageTitle } from '../../layout/components/DashboardHeader';
 import { sigleConfig } from '../../../config';
-import { NewDashboardLayout } from '../../layout/components/NewDashboardLayout';
+import { DashboardLayout } from '../../layout/components/NewDashboardLayout';
 
 const IlluContainer = styled.div`
   ${tw`flex flex-col items-center justify-center mt-8`};
@@ -76,7 +76,7 @@ export const Home = ({
   const nbStoriesLabel = loading ? '...' : stories ? stories.length : 0;
 
   return (
-    <NewDashboardLayout>
+    <DashboardLayout>
       <DashboardPageTitle
         title={
           selectedTab === 'published'
@@ -146,6 +146,6 @@ export const Home = ({
             refetchStoriesLists={refetchStoriesLists}
           />
         ))}
-    </NewDashboardLayout>
+    </DashboardLayout>
   );
 };
