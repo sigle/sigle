@@ -65,10 +65,10 @@ export const DashboardLayout = ({ children }: DashboardLayoutProps) => {
       <Container
         css={{
           display: 'flex',
+          flex: 1,
           gap: 103,
           mt: '$10',
           width: '100%',
-          height: '100%',
         }}
       >
         <Sidebar>
