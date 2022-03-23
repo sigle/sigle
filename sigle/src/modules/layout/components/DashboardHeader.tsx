@@ -131,19 +131,6 @@ export const DashboardPageTitle = ({ title }: DashboardPageTitleProps) => {
             </MobileMenuButton>
             <Logo src="/img/logo.png" alt="logo" />
           </LogoContainer>
-          <VisitButton
-            size="large"
-            as="a"
-            href={`/${user?.username}`}
-            target="_blank"
-          >
-            Visit my blog{' '}
-            <EyeOpenIcon width={18} height={18} style={{ marginLeft: 8 }} />
-          </VisitButton>
-          {!loadingCreate && (
-            <Button onClick={handleCreateNewPrivateStory}>New story</Button>
-          )}
-          {loadingCreate && <Button disabled>creating new story ...</Button>}
         </ButtonsContainer>
       </PageTitleContainer>
     </React.Fragment>
