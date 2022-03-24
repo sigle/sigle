@@ -65,13 +65,22 @@ export const DashboardLayout = ({ children }: DashboardLayoutProps) => {
       <Container
         css={{
           display: 'grid',
-          gridTemplateColumns: '1fr 820px 1fr',
           flex: 1,
           mt: '$10',
           width: '100%',
+          '@xl': {
+            gridTemplateColumns: '1fr 826px 1fr',
+          },
         }}
       >
-        <Sidebar>
+        <Sidebar
+          css={{
+            display: 'none',
+            '@xl': {
+              display: 'flex',
+            },
+          }}
+        >
           <Link href="/" passHref>
             <NavItem>Drafts</NavItem>
           </Link>
@@ -82,7 +91,22 @@ export const DashboardLayout = ({ children }: DashboardLayoutProps) => {
             <NavItem>Settings</NavItem>
           </Link>
         </Sidebar>
-        <Box css={{ mb: '$5' }}>{children}</Box>
+        <Box
+          css={{
+            mb: '$5',
+            mx: 'auto',
+
+            '@md': {
+              maxWidth: 724,
+            },
+
+            '@lg': {
+              maxWidth: 834,
+            },
+          }}
+        >
+          {children}
+        </Box>
       </Container>
       <AppFooter />
     </FullScreen>
