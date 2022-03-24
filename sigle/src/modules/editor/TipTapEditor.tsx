@@ -45,10 +45,6 @@ const fadeInAnimation = keyframes({
 });
 
 const StyledEditorContent = styled(EditorContent, {
-  '& code': {
-    backgroundColor: '$gray2',
-  },
-
   '& .ProseMirror': {
     minHeight: 150,
   },
