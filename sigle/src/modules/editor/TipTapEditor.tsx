@@ -45,6 +45,10 @@ const fadeInAnimation = keyframes({
 });
 
 const StyledEditorContent = styled(EditorContent, {
+  '& code': {
+    backgroundColor: '$gray2',
+  },
+
   '& .ProseMirror': {
     minHeight: 150,
   },
@@ -60,6 +64,7 @@ const StyledEditorContent = styled(EditorContent, {
     height: 0,
     animation: `${fadeInAnimation} 75ms cubic-bezier(0, 0, 0.2, 1)`,
   },
+
   // Image selected style
   '& img.ProseMirror-selectednode': {
     outline: '1px solid $orange11',

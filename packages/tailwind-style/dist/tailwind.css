@@ -724,8 +724,8 @@ Ensure the default browser behavior of the `hidden` attribute.
   --tw-prose-invert-quote-borders: #343434;
   --tw-prose-invert-captions: #a1a1a1;
   --tw-prose-invert-code: #f2f2f2;
-  --tw-prose-invert-pre-code: #2e2e2e;
-  --tw-prose-invert-pre-bg: #f2f2f2;
+  --tw-prose-invert-pre-code: #f2f2f2;
+  --tw-prose-invert-pre-bg: #202020;
   --tw-prose-invert-th-borders: #4b5563;
   --tw-prose-invert-td-borders: #374151;
   font-size: 16px;
