@@ -6,7 +6,7 @@ import { DashboardPageTitle } from '../layout/components/DashboardHeader';
 import { useAuth } from '../auth/AuthContext';
 import { getSettingsFile } from '../../utils';
 import { SettingsForm } from './SettingsForm';
-import { DashboardLayout } from '../layout/components/NewDashboardLayout';
+import { DashboardLayout } from '../layout/components/DashboardLayout';
 import { Box } from '../../ui';
 
 export const Settings = () => {

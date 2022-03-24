@@ -6,7 +6,7 @@ import { StoryItem } from '../';
 import { SubsetStory, BlockstackUser } from '../../../types';
 import { DashboardPageTitle } from '../../layout/components/DashboardHeader';
 import { sigleConfig } from '../../../config';
-import { DashboardLayout } from '../../layout/components/NewDashboardLayout';
+import { DashboardLayout } from '../../layout/components/DashboardLayout';
 
 const IlluContainer = styled.div`
   ${tw`flex flex-col items-center justify-center mt-8`};
