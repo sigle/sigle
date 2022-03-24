@@ -83,7 +83,7 @@ module.exports = {
         },
         DEFAULT: {
           css: {
-            maxWidth: '760px',
+            maxWidth: '826px',
             fontSize: '16px',
             blockquote: {
               quotes: false,
