@@ -609,7 +609,7 @@ Ensure the default browser behavior of the `hidden` attribute.
   color: var(--tw-prose-code);
   font-weight: 400;
   font-size: 14px;
-  background-color: #ededed;
+  background-color: var(--tw-prose-code-bg);
   padding: 1px 4px;
   border-radius: 4px;
 }
@@ -728,6 +728,8 @@ Ensure the default browser behavior of the `hidden` attribute.
   --tw-prose-invert-pre-bg: #202020;
   --tw-prose-invert-th-borders: #4b5563;
   --tw-prose-invert-td-borders: #374151;
+  --tw-prose-code-bg: #f6f6f6;
+  --tw-prose-invert-code-bg: #202020;
   font-size: 16px;
   line-height: 1.75;
 }
@@ -861,6 +863,7 @@ Ensure the default browser behavior of the `hidden` attribute.
   --tw-prose-pre-bg: var(--tw-prose-invert-pre-bg);
   --tw-prose-th-borders: var(--tw-prose-invert-th-borders);
   --tw-prose-td-borders: var(--tw-prose-invert-td-borders);
+  --tw-prose-code-bg: var(--tw-prose-invert-code-bg);
 }
 
 @media (min-width: 1024px) {
