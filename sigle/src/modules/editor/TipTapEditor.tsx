@@ -1,5 +1,9 @@
 import 'highlight.js/styles/night-owl.css';
-import { forwardRef, useImperativeHandle } from 'react';
+import { forwardRef, useEffect, useImperativeHandle } from 'react';
+import { useRouter } from 'next/router';
+import { toast } from 'react-toastify';
+import { useQuery } from 'react-query';
+
 import {
   useEditor,
   EditorContent,
@@ -38,6 +42,8 @@ import { Story } from '../../types';
 import CharacterCount from '@tiptap/extension-character-count';
 import { Container, Text } from '../../ui';
 import { ShortcutsDialog } from './EditorShortcuts/ShortcutsDialog';
+import { getStoryFile } from '../../utils';
+import { migrationStory } from '../../utils/migrations/story';
 
 const fadeInAnimation = keyframes({
   '0%': { opacity: '0' },
@@ -186,6 +192,55 @@ export const TipTapEditor = forwardRef<
     }),
     [editor]
   );
+
+  // Getting
+  const storyHTML = editor?.getHTML();
+
+  const router = useRouter();
+  const { storyId } = router.query as { storyId: string };
+
+  const { data, isLoading } = useQuery(
+    ['story', storyId],
+    async () => {
+      const file = await getStoryFile(storyId);
+      return file ? migrationStory(file) : file;
+    },
+    {
+      refetchInterval: 4000,
+      enabled: Boolean(storyId),
+      cacheTime: 0,
+      onError: (error: Error) => {
+        // Sentry.captureException(error);
+        toast.error(error.message || error);
+      },
+    }
+  );
+
+  // Compared existing HTML to saved HTML to determine whether ther are unsaved changes
+  const unsavedChanges = storyHTML !== data?.content;
+
+  // prompt the user if they try and leave with unsaved changes
+  useEffect(() => {
+    const warningText =
+      'You have unsaved changes - are you sure you wish to leave this page?';
+    const handleWindowClose = (e: BeforeUnloadEvent) => {
+      if (!unsavedChanges) return;
+      e.preventDefault();
+      return (e.returnValue = warningText);
+    };
+    const handleBrowseAway = () => {
+      if (!unsavedChanges) return;
+      if (window.confirm(warningText)) return;
+      router.events.emit('routeChangeError');
+      throw 'routeChange aborted.';
+    };
+    window.addEventListener('beforeunload', handleWindowClose);
+    router.events.on('routeChangeStart', handleBrowseAway);
+    return () => {
+      window.removeEventListener('beforeunload', handleWindowClose);
+      router.events.off('routeChangeStart', handleBrowseAway);
+    };
+  }, [unsavedChanges]);
 
   return (
     <>
