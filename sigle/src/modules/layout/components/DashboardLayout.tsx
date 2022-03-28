@@ -95,6 +95,7 @@ export const DashboardLayout = ({ children }: DashboardLayoutProps) => {
           css={{
             mb: '$5',
             mx: 'auto',
+            width: '100%',
 
             '@md': {
               maxWidth: 724,
