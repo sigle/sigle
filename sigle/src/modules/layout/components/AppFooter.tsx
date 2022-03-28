@@ -48,10 +48,16 @@ export const AppFooter = () => {
       </Flex>
       <Flex
         css={{
+          flexDirection: 'column',
           boxShadow: '0 1px 0 0 $colors$gray6',
           pb: '$3',
+          alignItems: 'center',
           justifyContent: 'center',
           width: '100%',
+
+          '@md': {
+            flexDirection: 'row',
+          },
         }}
         gap="5"
       >

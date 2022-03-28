@@ -4,6 +4,8 @@ import {
   TwitterLogoIcon,
   DiscordLogoIcon,
   SunIcon,
+  HamburgerMenuIcon,
+  Cross1Icon,
 } from '@radix-ui/react-icons';
 import Link from 'next/link';
 import Image from 'next/image';
@@ -11,7 +13,17 @@ import { useRouter } from 'next/router';
 import { useState } from 'react';
 import { toast } from 'react-toastify';
 import { styled } from '../../../stitches.config';
-import { Box, Button, Container, Flex, IconButton, Text } from '../../../ui';
+import {
+  Box,
+  Button,
+  Container,
+  Dialog,
+  DialogClose,
+  DialogTrigger,
+  Flex,
+  IconButton,
+  Text,
+} from '../../../ui';
 import {
   createNewEmptyStory,
   getStoriesFile,
@@ -33,6 +45,7 @@ import posthog from 'posthog-js';
 import { isExperimentalThemeToggleEnabled } from '../../../utils/featureFlags';
 import { createSubsetStory } from '../../editor/utils';
 import { useTheme } from 'next-themes';
+import * as DialogPrimitive from '@radix-ui/react-dialog';
 
 const Header = styled('header', Container, {
   display: 'flex',
@@ -46,6 +59,67 @@ const Header = styled('header', Container, {
   },
 });
 
+const StyledDialogContent = styled(DialogPrimitive.Content, {
+  display: 'flex',
+  flexDirection: 'column',
+  backgroundColor: '$gray1',
+  position: 'fixed',
+  inset: 0,
+  p: '$5',
+  pt: '$4',
+  zIndex: 1,
+});
+
+const StyledCloseButton = styled(DialogClose, {
+  position: 'absolute',
+  top: '$5',
+  right: '$5',
+});
+
+const Sidebar = styled('div', {
+  display: 'flex',
+  flexDirection: 'column',
+  justifyContent: 'space-between',
+  height: '100%',
+});
+
+interface NavItemProps {
+  href?: string;
+  children: React.ReactNode;
+}
+
+const NavItem = ({ children, ...props }: NavItemProps) => {
+  const router = useRouter();
+  return (
+    <Box
+      {...props}
+      as="a"
+      css={{
+        py: '$3',
+        px: '$3',
+        br: '$2',
+        backgroundColor:
+          router.pathname === props.href ? '$gray3' : 'transparent',
+
+        '&:hover': {
+          backgroundColor:
+            router.pathname === props.href ? undefined : '$gray4',
+        },
+
+        '&:active': {
+          backgroundColor: '$gray5',
+        },
+
+        '@lg': {
+          alignSelf: 'start',
+        },
+      }}
+    >
+      {children}
+    </Box>
+  );
+};
+
 const EyeOpenIcon = styled(EyeOpenIconBase, {
   display: 'inline-block',
 });
@@ -57,7 +131,11 @@ const StatusDot = styled('div', {
   borderRadius: '$round',
 });
 
-export const AppHeader = () => {
+interface AppHeaderProps {
+  children?: React.ReactNode;
+}
+
+export const AppHeader = ({ children }: AppHeaderProps) => {
   const { resolvedTheme, setTheme } = useTheme();
   const { user } = useAuth();
   const router = useRouter();
@@ -114,127 +192,236 @@ export const AppHeader = () => {
   };
 
   return (
-    <Header>
-      <Flex justify="center" gap="10" as="nav" align="center">
-        <Link href="/[username]" as={`/${username}`} passHref>
-          <Flex as="a" css={{ '@lg': { display: 'none' } }}>
-            <Image
-              width={93}
-              height={34}
-              objectFit="cover"
-              src={src}
-              alt="logo"
-            />
-          </Flex>
-        </Link>
-        <Link href="/" passHref>
-          <Box as="a" css={{ display: 'none', '@lg': { display: 'flex' } }}>
-            <Image
-              width={93}
-              height={34}
-              objectFit="cover"
-              src={src}
-              alt="logo"
-            />
-          </Box>
-        </Link>
-        {user && (
-          <Button
-            css={{
-              display: 'none',
-              '@xl': {
-                display: 'block',
-              },
-            }}
-            variant="ghost"
-            href={`/${user.username}`}
-            target="_blank"
-            as="a"
-          >
-            <Text size="action" css={{ mr: '$2', display: 'inline-block' }}>
-              Visit my blog
-            </Text>
-            <EyeOpenIcon />
-          </Button>
-        )}
-      </Flex>
-      <Flex
-        css={{
-          display: 'none',
-          '@xl': {
-            display: 'flex',
-          },
-        }}
-        align="center"
-        gap="10"
-      >
-        {user ? (
-          <HoverCard openDelay={200} closeDelay={100}>
-            <HoverCardTrigger asChild>
-              <Flex
-                tabIndex={0}
-                css={{ cursor: 'pointer' }}
-                gap="1"
-                align="center"
-              >
-                <StatusDot />
-                <Text>{user.username}</Text>
-              </Flex>
-            </HoverCardTrigger>
-            <HoverCardContent onClick={handleLogout} sideOffset={16}>
-              logout
-              <HoverCardArrow />
-            </HoverCardContent>
-          </HoverCard>
-        ) : (
-          <Flex gap="6">
-            <IconButton
-              as="a"
-              href={sigleConfig.twitterUrl}
-              target="_blank"
-              rel="noreferrer"
-            >
-              <TwitterLogoIcon />
-            </IconButton>
-            <IconButton
-              as="a"
-              href={sigleConfig.discordUrl}
-              target="_blank"
-              rel="noreferrer"
-            >
-              <DiscordLogoIcon />
-            </IconButton>
-            <IconButton
-              as="a"
-              href={sigleConfig.twitterUrl}
-              target="_blank"
-              rel="noreferrer"
-            >
-              <GitHubLogoIcon />
-            </IconButton>
-          </Flex>
-        )}
-        {user ? (
-          <Button
-            disabled={loadingCreate}
-            onClick={handleCreateNewPrivateStory}
-            size="lg"
-          >
-            {!loadingCreate ? `Write a story` : `Creating new story...`}
-          </Button>
-        ) : (
-          <Link href="/" passHref>
-            <Button as="a" size="lg">
-              Enter App
-            </Button>
+    <>
+      <Header>
+        <Flex
+          css={{ width: '100%', '@lg': { width: 'auto' } }}
+          justify="between"
+          gap="10"
+          as="nav"
+          align="center"
+        >
+          <Link href="/[username]" as={`/${username}`} passHref>
+            <Flex as="a" css={{ '@lg': { display: 'none' } }}>
+              <Image
+                width={93}
+                height={34}
+                objectFit="cover"
+                src={src}
+                alt="logo"
+              />
+            </Flex>
           </Link>
-        )}
-        {isExperimentalThemeToggleEnabled && (
-          <IconButton as="button" onClick={toggleTheme}>
-            <SunIcon />
-          </IconButton>
-        )}
-      </Flex>
-    </Header>
+
+          <Dialog>
+            <DialogTrigger asChild>
+              <IconButton
+                css={{
+                  '@md': {
+                    display: 'none',
+                  },
+                }}
+                aria-label="Mobile menu"
+              >
+                <HamburgerMenuIcon />
+              </IconButton>
+            </DialogTrigger>
+            <StyledDialogContent>
+              <Sidebar>
+                <Flex justify="between">
+                  <Link href="/" passHref>
+                    <Box as="a">
+                      <Image
+                        width={93}
+                        height={34}
+                        objectFit="cover"
+                        src={src}
+                        alt="logo"
+                      />
+                    </Box>
+                  </Link>
+                  <StyledCloseButton asChild>
+                    <IconButton>
+                      <Cross1Icon />
+                    </IconButton>
+                  </StyledCloseButton>
+                </Flex>
+                <Flex direction="column" gap="10" align="center">
+                  {user && (
+                    <Flex direction="column" gap="4" align="center">
+                      <Link href="/" passHref>
+                        <NavItem>Drafts</NavItem>
+                      </Link>
+                      <Link href="/published" passHref>
+                        <NavItem>Published</NavItem>
+                      </Link>
+                      <Link href="/settings" passHref>
+                        <NavItem>Settings</NavItem>
+                      </Link>
+                    </Flex>
+                  )}
+                  {user ? (
+                    <Button
+                      css={{ width: 300 }}
+                      disabled={loadingCreate}
+                      onClick={handleCreateNewPrivateStory}
+                      size="lg"
+                    >
+                      {!loadingCreate
+                        ? `Write a story`
+                        : `Creating new story...`}
+                    </Button>
+                  ) : (
+                    <Link href="/" passHref>
+                      <Button css={{ width: 300 }} as="a" size="lg">
+                        Enter App
+                      </Button>
+                    </Link>
+                  )}
+                  {isExperimentalThemeToggleEnabled && (
+                    <Button
+                      variant="ghost"
+                      css={{
+                        display: 'flex',
+                        gap: '$2',
+                        backgroundColor: '$gray4',
+
+                        '&:hover': {
+                          backgroundColor: '$gray5',
+                        },
+                      }}
+                      onClick={toggleTheme}
+                    >
+                      Switch theme
+                      <SunIcon />
+                    </Button>
+                  )}
+                </Flex>
+                <Button
+                  onClick={handleLogout}
+                  size="lg"
+                  css={{
+                    color: '$red11',
+                    pt: '$5',
+                    borderTop: '1px solid $colors$gray6',
+                  }}
+                  variant="ghost"
+                >
+                  Logout
+                </Button>
+              </Sidebar>
+            </StyledDialogContent>
+          </Dialog>
+
+          <Link href="/" passHref>
+            <Box as="a" css={{ display: 'none', '@lg': { display: 'flex' } }}>
+              <Image
+                width={93}
+                height={34}
+                objectFit="cover"
+                src={src}
+                alt="logo"
+              />
+            </Box>
+          </Link>
+          {user && (
+            <Button
+              css={{
+                display: 'none',
+                '@xl': {
+                  display: 'block',
+                },
+              }}
+              variant="ghost"
+              href={`/${user.username}`}
+              target="_blank"
+              as="a"
+            >
+              <Text size="action" css={{ mr: '$2', display: 'inline-block' }}>
+                Visit my blog
+              </Text>
+              <EyeOpenIcon />
+            </Button>
+          )}
+        </Flex>
+        <Flex
+          css={{
+            display: 'none',
+            '@xl': {
+              display: 'flex',
+            },
+          }}
+          align="center"
+          gap="10"
+        >
+          {user ? (
+            <HoverCard openDelay={200} closeDelay={100}>
+              <HoverCardTrigger asChild>
+                <Flex
+                  tabIndex={0}
+                  css={{ cursor: 'pointer' }}
+                  gap="1"
+                  align="center"
+                >
+                  <StatusDot />
+                  <Text>{user.username}</Text>
+                </Flex>
+              </HoverCardTrigger>
+              <HoverCardContent onClick={handleLogout} sideOffset={16}>
+                logout
+                <HoverCardArrow />
+              </HoverCardContent>
+            </HoverCard>
+          ) : (
+            <Flex gap="6">
+              <IconButton
+                as="a"
+                href={sigleConfig.twitterUrl}
+                target="_blank"
+                rel="noreferrer"
+              >
+                <TwitterLogoIcon />
+              </IconButton>
+              <IconButton
+                as="a"
+                href={sigleConfig.discordUrl}
+                target="_blank"
+                rel="noreferrer"
+              >
+                <DiscordLogoIcon />
+              </IconButton>
+              <IconButton
+                as="a"
+                href={sigleConfig.twitterUrl}
+                target="_blank"
+                rel="noreferrer"
+              >
+                <GitHubLogoIcon />
+              </IconButton>
+            </Flex>
+          )}
+          {user ? (
+            <Button
+              disabled={loadingCreate}
+              onClick={handleCreateNewPrivateStory}
+              size="lg"
+            >
+              {!loadingCreate ? `Write a story` : `Creating new story...`}
+            </Button>
+          ) : (
+            <Link href="/" passHref>
+              <Button as="a" size="lg">
+                Enter App
+              </Button>
+            </Link>
+          )}
+          {isExperimentalThemeToggleEnabled && (
+            <IconButton as="button" onClick={toggleTheme}>
+              <SunIcon />
+            </IconButton>
+          )}
+        </Flex>
+      </Header>
+    </>
   );
 };

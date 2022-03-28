@@ -61,6 +61,14 @@ const orangeDark = {
   orange12: '#FF802B',
 };
 
+const red = {
+  red11: '#F43939',
+};
+
+const redDark = {
+  red11: '#FF6C6C',
+};
+
 export const {
   styled,
   css,
@@ -74,6 +82,7 @@ export const {
     colors: {
       ...gray,
       ...orange,
+      ...red,
     },
     fonts: {
       openSans: "'Open Sans', sans-serif",
@@ -196,6 +205,7 @@ export const darkTheme = createTheme('dark', {
   colors: {
     ...grayDark,
     ...orangeDark,
+    ...redDark,
   },
 });
 
