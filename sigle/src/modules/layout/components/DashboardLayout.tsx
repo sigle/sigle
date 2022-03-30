@@ -5,6 +5,12 @@ import { Box, Container } from '../../../ui';
 import { styled } from '../../../stitches.config';
 import { AppFooter } from './AppFooter';
 import { useRouter } from 'next/router';
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from '../../../ui/Accordion';
 
 const FullScreen = styled('div', {
   height: '100vh',
@@ -54,11 +60,62 @@ const NavItem = ({ children, ...props }: NavItemProps) => {
   );
 };
 
+interface AccordionNavItemProps {
+  href?: string;
+  children: React.ReactNode;
+}
+
+const AccordionNavItem = ({ children, ...props }: AccordionNavItemProps) => {
+  const router = useRouter();
+  return (
+    <Box
+      {...props}
+      as="a"
+      css={{
+        py: '$3',
+        px: '$3',
+        br: '$2',
+        display: router.pathname === props.href ? 'none' : 'block',
+
+        '&:hover': {
+          backgroundColor:
+            router.pathname === props.href ? undefined : '$gray4',
+        },
+
+        '&:active': {
+          backgroundColor: '$gray5',
+        },
+      }}
+    >
+      {children}
+    </Box>
+  );
+};
+
 interface DashboardLayoutProps {
   children: React.ReactNode;
 }
 
 export const DashboardLayout = ({ children }: DashboardLayoutProps) => {
+  const router = useRouter();
+
+  let triggerName;
+
+  switch (router.pathname) {
+    case '/':
+      triggerName = 'Drafts';
+      break;
+    case '/published':
+      triggerName = 'Published';
+      break;
+    case '/settings':
+      triggerName = 'Settings';
+      break;
+    default:
+      triggerName = 'Drafts';
+      break;
+  }
+
   return (
     <FullScreen>
       <AppHeader />
@@ -104,8 +161,29 @@ export const DashboardLayout = ({ children }: DashboardLayoutProps) => {
             '@lg': {
               maxWidth: 834,
             },
+
+            '@xl': {
+              maxWidth: 826,
+            },
           }}
         >
+          <Accordion collapsible type="single">
+            <AccordionItem value="item1">
+              <AccordionTrigger>{triggerName}</AccordionTrigger>
+              <AccordionContent>
+                <Link href="/" passHref>
+                  <AccordionNavItem>Drafts</AccordionNavItem>
+                </Link>
+                <Link href="/published" passHref>
+                  <AccordionNavItem>Published</AccordionNavItem>
+                </Link>
+                <Link href="/settings" passHref>
+                  <AccordionNavItem>Settings</AccordionNavItem>
+                </Link>
+              </AccordionContent>
+            </AccordionItem>
+          </Accordion>
+
           {children}
         </Box>
       </Container>
