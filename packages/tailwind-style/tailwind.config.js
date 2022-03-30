@@ -62,6 +62,7 @@ module.exports = {
             '--tw-prose-quote-borders': gray.gray6,
             '--tw-prose-captions': gray.gray9,
             '--tw-prose-code': gray.gray11,
+            '--tw-prose-code-bg': gray.gray2,
             '--tw-prose-pre-code': gray.gray5,
             '--tw-prose-pre-bg': gray.gray11,
             '--tw-prose-hr': gray.gray6,
@@ -76,9 +77,15 @@ module.exports = {
             '--tw-prose-invert-quote-borders': grayDark.gray6,
             '--tw-prose-invert-captions': grayDark.gray9,
             '--tw-prose-invert-code': grayDark.gray11,
-            '--tw-prose-invert-pre-code': grayDark.gray5,
-            '--tw-prose-invert-pre-bg': grayDark.gray11,
+            '--tw-prose-invert-code-bg': grayDark.gray2,
+            '--tw-prose-invert-pre-code': grayDark.gray11,
+            '--tw-prose-invert-pre-bg': grayDark.gray2,
             '--tw-prose-invert-hr': grayDark.gray6,
+          },
+        },
+        invert: {
+          css: {
+            '--tw-prose-code-bg': 'var(--tw-prose-invert-code-bg)',
           },
         },
         DEFAULT: {
@@ -96,7 +103,7 @@ module.exports = {
             code: {
               fontWeight: '400',
               fontSize: '14px',
-              backgroundColor: gray.gray4,
+              backgroundColor: 'var(--tw-prose-code-bg)',
               padding: '1px 4px',
               borderRadius: '4px',
             },

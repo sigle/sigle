@@ -1,4 +1,5 @@
 import { NodeViewWrapper, NodeViewProps, NodeViewContent } from '@tiptap/react';
+import { darkTheme } from '../../../stitches.config';
 import { Box, Button } from '../../../ui';
 
 /**
@@ -30,6 +31,11 @@ export const CodeBlockComponent = (props: NodeViewProps) => {
                 '&:hover': {
                   color: '$gray1',
                   backgroundColor: '$gray10',
+                },
+
+                [`.${darkTheme} &`]: {
+                  color: '$gray10',
+                  backgroundColor: '$gray5',
                 },
               }}
               contentEditable={false}
