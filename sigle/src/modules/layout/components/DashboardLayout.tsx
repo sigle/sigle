@@ -96,7 +96,17 @@ export const DashboardLayout = ({ children }: DashboardLayoutProps) => {
           flex: 1,
           mt: '$10',
           width: '100%',
-          '@xl': {
+
+          '@md': {
+            px: 0,
+            maxWidth: 724,
+          },
+
+          '@lg': {
+            maxWidth: 834,
+          },
+
+          '@2xl': {
             gridTemplateColumns: '1fr 826px 1fr',
           },
         }}
@@ -104,7 +114,7 @@ export const DashboardLayout = ({ children }: DashboardLayoutProps) => {
         <Sidebar
           css={{
             display: 'none',
-            '@xl': {
+            '@2xl': {
               display: 'flex',
             },
           }}
@@ -128,18 +138,6 @@ export const DashboardLayout = ({ children }: DashboardLayoutProps) => {
             mb: '$5',
             mx: 'auto',
             width: '100%',
-
-            '@md': {
-              maxWidth: 724,
-            },
-
-            '@lg': {
-              maxWidth: 834,
-            },
-
-            '@xl': {
-              maxWidth: 826,
-            },
           }}
         >
           <Accordion collapsible type="single">
