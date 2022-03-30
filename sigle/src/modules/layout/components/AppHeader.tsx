@@ -55,7 +55,17 @@ const Header = styled('header', Container, {
   width: '100%',
 
   '@md': {
+    px: 0,
+    maxWidth: 724,
     mt: '$10',
+  },
+
+  '@lg': {
+    maxWidth: 1000,
+  },
+
+  '@xl': {
+    maxWidth: 1240,
   },
 });
 
@@ -195,7 +205,7 @@ export const AppHeader = ({ children }: AppHeaderProps) => {
     <>
       <Header>
         <Flex
-          css={{ width: '100%', '@lg': { width: 'auto' } }}
+          css={{ width: '100%', '@md': { width: 'auto' } }}
           justify="between"
           gap="10"
           as="nav"
@@ -347,7 +357,7 @@ export const AppHeader = ({ children }: AppHeaderProps) => {
         <Flex
           css={{
             display: 'none',
-            '@xl': {
+            '@md': {
               display: 'flex',
             },
           }}
