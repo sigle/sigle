@@ -26,71 +26,42 @@ const Sidebar = styled('div', {
   gap: '$3',
 });
 
-interface NavItemProps {
-  href?: string;
-  children: React.ReactNode;
-}
+const NavItem = styled('a', {
+  py: '$3',
+  px: '$3',
+  br: '$2',
 
-const NavItem = ({ children, ...props }: NavItemProps) => {
-  const router = useRouter();
-  return (
-    <Box
-      {...props}
-      as="a"
-      css={{
-        py: '$3',
-        px: '$3',
-        br: '$2',
+  '&:hover': {
+    backgroundColor: '$gray4',
+  },
+
+  '&:active': {
+    backgroundColor: '$gray5',
+  },
+
+  variants: {
+    variant: {
+      sidebar: {
         alignSelf: 'start',
-        backgroundColor:
-          router.pathname === props.href ? '$gray3' : 'transparent',
+      },
+      accordion: {},
+    },
+    selected: {
+      true: {
+        backgroundColor: '$gray3',
+      },
+    },
+    hidden: {
+      true: {
+        display: 'none',
+      },
+    },
+  },
 
-        '&:hover': {
-          backgroundColor:
-            router.pathname === props.href ? undefined : '$gray4',
-        },
-
-        '&:active': {
-          backgroundColor: '$gray5',
-        },
-      }}
-    >
-      {children}
-    </Box>
-  );
-};
-
-interface AccordionNavItemProps {
-  href?: string;
-  children: React.ReactNode;
-}
-
-const AccordionNavItem = ({ children, ...props }: AccordionNavItemProps) => {
-  const router = useRouter();
-  return (
-    <Box
-      {...props}
-      as="a"
-      css={{
-        py: '$3',
-        px: '$3',
-        br: '$2',
-        display: router.pathname === props.href ? 'none' : 'block',
-
-        '&:hover': {
-          backgroundColor:
-            router.pathname === props.href ? undefined : '$gray4',
-        },
-
-        '&:active': {
-          backgroundColor: '$gray5',
-        },
-      }}
-    >
-      {children}
-    </Box>
-  );
-};
+  defaultVariants: {
+    variant: 'sidebar',
+  },
+});
 
 interface DashboardLayoutProps {
   children: React.ReactNode;
@@ -139,13 +110,17 @@ export const DashboardLayout = ({ children }: DashboardLayoutProps) => {
           }}
         >
           <Link href="/" passHref>
-            <NavItem>Drafts</NavItem>
+            <NavItem selected={router.pathname === '/'}>Drafts</NavItem>
           </Link>
           <Link href="/published" passHref>
-            <NavItem>Published</NavItem>
+            <NavItem selected={router.pathname === '/published'}>
+              Published
+            </NavItem>
           </Link>
           <Link href="/settings" passHref>
-            <NavItem>Settings</NavItem>
+            <NavItem selected={router.pathname === '/settings'}>
+              Settings
+            </NavItem>
           </Link>
         </Sidebar>
         <Box
@@ -172,13 +147,25 @@ export const DashboardLayout = ({ children }: DashboardLayoutProps) => {
               <AccordionTrigger>{triggerName}</AccordionTrigger>
               <AccordionContent>
                 <Link href="/" passHref>
-                  <AccordionNavItem>Drafts</AccordionNavItem>
+                  <NavItem hidden={router.pathname === '/'} variant="accordion">
+                    Drafts
+                  </NavItem>
                 </Link>
                 <Link href="/published" passHref>
-                  <AccordionNavItem>Published</AccordionNavItem>
+                  <NavItem
+                    hidden={router.pathname === '/published'}
+                    variant="accordion"
+                  >
+                    Published
+                  </NavItem>
                 </Link>
                 <Link href="/settings" passHref>
-                  <AccordionNavItem>Settings</AccordionNavItem>
+                  <NavItem
+                    hidden={router.pathname === '/settings'}
+                    variant="accordion"
+                  >
+                    Settings
+                  </NavItem>
                 </Link>
               </AccordionContent>
             </AccordionItem>
