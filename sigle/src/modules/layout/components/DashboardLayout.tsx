@@ -140,7 +140,11 @@ export const DashboardLayout = ({ children }: DashboardLayoutProps) => {
             width: '100%',
           }}
         >
-          <Accordion collapsible type="single">
+          <Accordion
+            css={{ '@xl': { display: 'none' } }}
+            collapsible
+            type="single"
+          >
             <AccordionItem value="item1">
               <AccordionTrigger>{triggerName}</AccordionTrigger>
               <AccordionContent>
