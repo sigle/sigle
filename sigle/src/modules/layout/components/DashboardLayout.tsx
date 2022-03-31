@@ -98,15 +98,15 @@ export const DashboardLayout = ({ children }: DashboardLayoutProps) => {
           width: '100%',
 
           '@md': {
-            px: 0,
-            maxWidth: 724,
+            justifyContent: 'center',
+            gridTemplateColumns: '724px',
           },
 
           '@lg': {
-            maxWidth: 834,
+            gridTemplateColumns: '834px',
           },
 
-          '@2xl': {
+          '@xl': {
             gridTemplateColumns: '1fr 826px 1fr',
           },
         }}
@@ -114,7 +114,7 @@ export const DashboardLayout = ({ children }: DashboardLayoutProps) => {
         <Sidebar
           css={{
             display: 'none',
-            '@2xl': {
+            '@xl': {
               display: 'flex',
             },
           }}
