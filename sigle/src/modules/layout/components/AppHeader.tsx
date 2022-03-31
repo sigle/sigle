@@ -42,17 +42,7 @@ const Header = styled('header', Container, {
   width: '100%',
 
   '@md': {
-    px: 0,
-    maxWidth: 724,
     mt: '$10',
-  },
-
-  '@lg': {
-    maxWidth: 1000,
-  },
-
-  '@xl': {
-    maxWidth: 1240,
   },
 });
 
@@ -67,11 +57,7 @@ const StatusDot = styled('div', {
   borderRadius: '$round',
 });
 
-interface AppHeaderProps {
-  children?: React.ReactNode;
-}
-
-export const AppHeader = ({ children }: AppHeaderProps) => {
+export const AppHeader = () => {
   const { resolvedTheme, setTheme } = useTheme();
   const { user } = useAuth();
   const router = useRouter();
@@ -128,136 +114,134 @@ export const AppHeader = ({ children }: AppHeaderProps) => {
   };
 
   return (
-    <>
-      <Header>
-        <Flex
-          css={{ width: '100%', '@md': { width: 'auto' } }}
-          justify="between"
-          gap="10"
-          as="nav"
-          align="center"
-        >
-          <Link href="/[username]" as={`/${username}`} passHref>
-            <Flex as="a" css={{ '@lg': { display: 'none' } }}>
-              <Image
-                width={93}
-                height={34}
-                objectFit="cover"
-                src={src}
-                alt="logo"
-              />
-            </Flex>
-          </Link>
+    <Header>
+      <Flex
+        css={{ width: '100%', '@md': { width: 'auto' } }}
+        justify="between"
+        gap="10"
+        as="nav"
+        align="center"
+      >
+        <Link href="/[username]" as={`/${username}`} passHref>
+          <Flex as="a" css={{ '@lg': { display: 'none' } }}>
+            <Image
+              width={93}
+              height={34}
+              objectFit="cover"
+              src={src}
+              alt="logo"
+            />
+          </Flex>
+        </Link>
 
-          <Link href="/" passHref>
-            <Box as="a" css={{ display: 'none', '@lg': { display: 'flex' } }}>
-              <Image
-                width={93}
-                height={34}
-                objectFit="cover"
-                src={src}
-                alt="logo"
-              />
-            </Box>
-          </Link>
-          {user && (
-            <Button
-              css={{
-                display: 'none',
-                '@xl': {
-                  display: 'block',
-                },
-              }}
-              variant="ghost"
-              href={`/${user.username}`}
-              target="_blank"
+        <Link href="/" passHref>
+          <Box as="a" css={{ display: 'none', '@lg': { display: 'flex' } }}>
+            <Image
+              width={93}
+              height={34}
+              objectFit="cover"
+              src={src}
+              alt="logo"
+            />
+          </Box>
+        </Link>
+        {user && (
+          <Button
+            css={{
+              display: 'none',
+              '@xl': {
+                display: 'block',
+              },
+            }}
+            variant="ghost"
+            href={`/${user.username}`}
+            target="_blank"
+            as="a"
+          >
+            <Text size="action" css={{ mr: '$2', display: 'inline-block' }}>
+              Visit my blog
+            </Text>
+            <EyeOpenIcon />
+          </Button>
+        )}
+      </Flex>
+      <Flex
+        css={{
+          display: 'none',
+          '@md': {
+            display: 'flex',
+          },
+        }}
+        align="center"
+        gap="10"
+      >
+        {user ? (
+          <HoverCard openDelay={200} closeDelay={100}>
+            <HoverCardTrigger asChild>
+              <Flex
+                tabIndex={0}
+                css={{ cursor: 'pointer' }}
+                gap="1"
+                align="center"
+              >
+                <StatusDot />
+                <Text>{user.username}</Text>
+              </Flex>
+            </HoverCardTrigger>
+            <HoverCardContent onClick={handleLogout} sideOffset={16}>
+              logout
+              <HoverCardArrow />
+            </HoverCardContent>
+          </HoverCard>
+        ) : (
+          <Flex gap="6">
+            <IconButton
               as="a"
+              href={sigleConfig.twitterUrl}
+              target="_blank"
+              rel="noreferrer"
             >
-              <Text size="action" css={{ mr: '$2', display: 'inline-block' }}>
-                Visit my blog
-              </Text>
-              <EyeOpenIcon />
-            </Button>
-          )}
-        </Flex>
-        <Flex
-          css={{
-            display: 'none',
-            '@md': {
-              display: 'flex',
-            },
-          }}
-          align="center"
-          gap="10"
-        >
-          {user ? (
-            <HoverCard openDelay={200} closeDelay={100}>
-              <HoverCardTrigger asChild>
-                <Flex
-                  tabIndex={0}
-                  css={{ cursor: 'pointer' }}
-                  gap="1"
-                  align="center"
-                >
-                  <StatusDot />
-                  <Text>{user.username}</Text>
-                </Flex>
-              </HoverCardTrigger>
-              <HoverCardContent onClick={handleLogout} sideOffset={16}>
-                logout
-                <HoverCardArrow />
-              </HoverCardContent>
-            </HoverCard>
-          ) : (
-            <Flex gap="6">
-              <IconButton
-                as="a"
-                href={sigleConfig.twitterUrl}
-                target="_blank"
-                rel="noreferrer"
-              >
-                <TwitterLogoIcon />
-              </IconButton>
-              <IconButton
-                as="a"
-                href={sigleConfig.discordUrl}
-                target="_blank"
-                rel="noreferrer"
-              >
-                <DiscordLogoIcon />
-              </IconButton>
-              <IconButton
-                as="a"
-                href={sigleConfig.twitterUrl}
-                target="_blank"
-                rel="noreferrer"
-              >
-                <GitHubLogoIcon />
-              </IconButton>
-            </Flex>
-          )}
-          {user ? (
-            <Button
-              disabled={loadingCreate}
-              onClick={handleCreateNewPrivateStory}
-              size="lg"
-            >
-              {!loadingCreate ? `Write a story` : `Creating new story...`}
-            </Button>
-          ) : (
-            <Link href="/" passHref>
-              <Button as="a" size="lg">
-                Enter App
-              </Button>
-            </Link>
-          )}
-          {isExperimentalThemeToggleEnabled && (
-            <IconButton as="button" onClick={toggleTheme}>
-              <SunIcon />
+              <TwitterLogoIcon />
             </IconButton>
-          )}
-        </Flex>
-      </Header>
-    </>
+            <IconButton
+              as="a"
+              href={sigleConfig.discordUrl}
+              target="_blank"
+              rel="noreferrer"
+            >
+              <DiscordLogoIcon />
+            </IconButton>
+            <IconButton
+              as="a"
+              href={sigleConfig.twitterUrl}
+              target="_blank"
+              rel="noreferrer"
+            >
+              <GitHubLogoIcon />
+            </IconButton>
+          </Flex>
+        )}
+        {user ? (
+          <Button
+            disabled={loadingCreate}
+            onClick={handleCreateNewPrivateStory}
+            size="lg"
+          >
+            {!loadingCreate ? `Write a story` : `Creating new story...`}
+          </Button>
+        ) : (
+          <Link href="/" passHref>
+            <Button as="a" size="lg">
+              Enter App
+            </Button>
+          </Link>
+        )}
+        {isExperimentalThemeToggleEnabled && (
+          <IconButton as="button" onClick={toggleTheme}>
+            <SunIcon />
+          </IconButton>
+        )}
+      </Flex>
+    </Header>
   );
 };

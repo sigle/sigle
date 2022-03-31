@@ -51,11 +51,6 @@ const NavItem = styled('a', {
         backgroundColor: '$gray3',
       },
     },
-    hidden: {
-      true: {
-        display: 'none',
-      },
-    },
   },
 
   defaultVariants: {
@@ -136,8 +131,6 @@ export const DashboardLayout = ({ children }: DashboardLayoutProps) => {
         <Box
           css={{
             mb: '$5',
-            mx: 'auto',
-            width: '100%',
           }}
         >
           <Accordion
@@ -148,27 +141,21 @@ export const DashboardLayout = ({ children }: DashboardLayoutProps) => {
             <AccordionItem value="item1">
               <AccordionTrigger>{triggerName}</AccordionTrigger>
               <AccordionContent>
-                <Link href="/" passHref>
-                  <NavItem hidden={router.pathname === '/'} variant="accordion">
-                    Drafts
-                  </NavItem>
-                </Link>
-                <Link href="/published" passHref>
-                  <NavItem
-                    hidden={router.pathname === '/published'}
-                    variant="accordion"
-                  >
-                    Published
-                  </NavItem>
-                </Link>
-                <Link href="/settings" passHref>
-                  <NavItem
-                    hidden={router.pathname === '/settings'}
-                    variant="accordion"
-                  >
-                    Settings
-                  </NavItem>
-                </Link>
+                {router.pathname !== '/' ? (
+                  <Link href="/" passHref>
+                    <NavItem variant="accordion">Drafts</NavItem>
+                  </Link>
+                ) : null}
+                {router.pathname !== '/published' ? (
+                  <Link href="/published" passHref>
+                    <NavItem variant="accordion">Published</NavItem>
+                  </Link>
+                ) : null}
+                {router.pathname !== '/settings' ? (
+                  <Link href="/settings" passHref>
+                    <NavItem variant="accordion">Settings</NavItem>
+                  </Link>
+                ) : null}
               </AccordionContent>
             </AccordionItem>
           </Accordion>
