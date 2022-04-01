@@ -459,7 +459,7 @@ Ensure the default browser behavior of the `hidden` attribute.
 
 .prose {
   color: var(--tw-prose-body);
-  max-width: 760px;
+  max-width: 826px;
 }
 
 .prose :where(a):not(:where([class~='not-prose'] *)) {
