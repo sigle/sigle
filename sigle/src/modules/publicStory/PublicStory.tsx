@@ -151,7 +151,7 @@ export const PublicStory = ({ story, settings }: PublicStoryProps) => {
       story.content ? readingTime(getTextFromHtml(story.content)) : undefined,
     [story.content]
   );
-  const [isShown, setIsShown] = useState(true);
+  const [isShown, setIsShown] = useState(false);
 
   useEffect(() => {
     window.addEventListener('scroll', handleScroll);
