@@ -278,7 +278,9 @@ export const PublicStory = ({ story, settings }: PublicStoryProps) => {
           }}
         >
           <Box>
-            <Text css={{ mt: 0, mb: '$3' }}>Share this story</Text>
+            <Text size="sm" css={{ mt: 0, mb: '$3', color: '$gray11' }}>
+              Share this story
+            </Text>
             <ShareButtons story={story} />
           </Box>
         </Container>
