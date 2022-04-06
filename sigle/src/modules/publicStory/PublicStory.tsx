@@ -41,9 +41,12 @@ const ShareButtons = ({ story }: ShareButtonsProps) => {
   const title = story.metaTitle ? story.metaTitle : story.title;
 
   const handleClick = () => {
-    navigator.clipboard
-      .writeText(window.location.href)
-      .then(() => toast.success('Link copied!', { position: 'top-right' }));
+    navigator.clipboard.writeText(window.location.href).then(() =>
+      toast.success('Link copied!', {
+        position: 'top-right',
+        toastId: 'copy-link',
+      })
+    );
   };
 
   if (typeof window === 'undefined') {
