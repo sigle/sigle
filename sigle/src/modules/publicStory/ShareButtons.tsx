@@ -27,11 +27,15 @@ export const ShareButtons = ({ story, settings }: ShareButtonsProps) => {
   const username = settings.siteName ? settings.siteName : user?.username;
 
   const handleClick = () => {
-    setIsCopied(true);
-    setTimeout(() => {
-      setIsCopied(false);
-    }, 2000);
-    setIsOpen(true);
+    navigator.clipboard
+      .writeText(`${sigleConfig.appUrl}/${user?.username}/${story.id}`)
+      .then(() => {
+        setIsCopied(true);
+        setTimeout(() => {
+          setIsCopied(false);
+        }, 2000);
+        setIsOpen(true);
+      });
   };
 
   return (
