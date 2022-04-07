@@ -80,6 +80,13 @@ export const PublicStory = ({ story, settings }: PublicStoryProps) => {
           "& :where(a strong):not(:where([class~='not-prose'] *))": {
             color: safeSiteColor,
           },
+          '.ProseMirror': {
+            '& a': {
+              '&:hover': {
+                boxShadow: '0 1px 0 0 currentColor',
+              },
+            },
+          },
         }}
       >
         <Link href="/[username]" as={`/${username}`} passHref>
