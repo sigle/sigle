@@ -7,24 +7,13 @@ import { sanitizeHexColor } from '../../utils/security';
 import { sigleConfig } from '../../config';
 import { TipTapEditor } from '../editor/TipTapEditor';
 import { styled } from '../../stitches.config';
-import {
-  Box,
-  Container,
-  Flex,
-  IconButton,
-  Text,
-  Tooltip,
-  TooltipContent,
-  TooltipTrigger,
-} from '../../ui';
+import { Box, Container, Flex, Text } from '../../ui';
 import { PoweredBy } from './PoweredBy';
 import { getTextFromHtml } from '../editor/utils/getTextFromHtml';
 import { AppHeader } from '../layout/components/AppHeader';
 import format from 'date-fns/format';
 import Link from 'next/link';
-import { TwitterFilledIcon, FacebookLogoIcon } from '../../icons';
-import { Link2Icon, LinkedInLogoIcon } from '@radix-ui/react-icons';
-import { toast } from 'react-toastify';
+import { ShareButtons } from './ShareButtons';
 
 const PublicStoryContainer = styled('div', {
   margin: '0 auto',
@@ -33,108 +22,54 @@ const PublicStoryContainer = styled('div', {
   px: '$4',
 });
 
-interface ShareButtonsProps {
+interface ShareButtonsOnScrollProps {
   story: Story;
 }
 
-const ShareButtons = ({ story }: ShareButtonsProps) => {
-  const title = story.metaTitle ? story.metaTitle : story.title;
+const ShareButtonsOnScroll = ({ story }: ShareButtonsOnScrollProps) => {
+  const [isShown, setIsShown] = useState(false);
 
-  const handleClick = () => {
-    navigator.clipboard.writeText(window.location.href).then(() =>
-      toast.success('Link copied!', {
-        position: 'top-right',
-        toastId: 'copy-link',
-      })
-    );
+  useEffect(() => {
+    window.addEventListener('scroll', handleScroll);
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+    };
+  }, []);
+
+  const handleScroll = () => {
+    if (window.scrollY > 200) {
+      setIsShown(true);
+    } else {
+      setIsShown(false);
+    }
   };
 
-  if (typeof window === 'undefined') {
-    return null;
-  }
-
   return (
-    <Flex
+    <Container
       css={{
-        '& svg': {
-          color: '$gray9',
-          '&:hover': { color: '$gray11' },
-          '&:active': { color: '$gray11' },
+        display: 'flex',
+        position: 'relative',
+        justifyContent: 'center',
+        mb: '$5',
+        '@xl': {
+          justifyContent: 'end',
+          bottom: 40,
+          right: 0,
+          left: 0,
+          position: 'fixed',
+          opacity: isShown ? 1 : 0,
+          transform: isShown ? 'none' : 'translateY(100%)',
+          transition: 'opacity 0.4s, transform 0.6s',
         },
       }}
-      gap="6"
     >
-      <Flex gap="3">
-        <Tooltip delayDuration={200}>
-          <TooltipTrigger asChild>
-            <Box
-              as="a"
-              href={`https://twitter.com/intent/tweet?text=${title}&url=${window.location.href}`}
-              target="_blank"
-              rel="noopener"
-            >
-              <TwitterFilledIcon />
-            </Box>
-          </TooltipTrigger>
-          <TooltipContent css={{ boxShadow: 'none' }} side="top" sideOffset={8}>
-            Share on Twitter
-          </TooltipContent>
-        </Tooltip>
-        <Tooltip delayDuration={200}>
-          <TooltipTrigger asChild>
-            <Box
-              as="a"
-              href={`https://www.facebook.com/sharer/sharer.php?u=${window.location.href}&quote=${title}`}
-              target="_blank"
-              rel="noopener"
-            >
-              <FacebookLogoIcon />
-            </Box>
-          </TooltipTrigger>
-          <TooltipContent css={{ boxShadow: 'none' }} side="top" sideOffset={8}>
-            Share on Facebook
-          </TooltipContent>
-        </Tooltip>
-        <Tooltip delayDuration={200}>
-          <TooltipTrigger asChild>
-            <Box
-              as="a"
-              href={`https://www.linkedin.com/sharing/share-offsite/?url=${window.location.href}`}
-              target="_blank"
-              rel="noopener"
-            >
-              <LinkedInLogoIcon />
-            </Box>
-          </TooltipTrigger>
-          <TooltipContent css={{ boxShadow: 'none' }} side="top" sideOffset={8}>
-            Share on LinkedIn
-          </TooltipContent>
-        </Tooltip>
-      </Flex>
-      <Tooltip delayDuration={200}>
-        <TooltipTrigger asChild>
-          <IconButton
-            css={{
-              p: 0,
-              '&:hover': { backgroundColor: 'transparent' },
-              '&:active': { backgroundColor: 'transparent' },
-            }}
-            onClick={handleClick}
-          >
-            <Link2Icon />
-          </IconButton>
-        </TooltipTrigger>
-        <TooltipContent
-          css={{
-            boxShadow: 'none',
-          }}
-          side="top"
-          sideOffset={8}
-        >
-          Copy link
-        </TooltipContent>
-      </Tooltip>
-    </Flex>
+      <Box>
+        <Text size="sm" css={{ mt: 0, mb: '$3', color: '$gray11' }}>
+          Share this story
+        </Text>
+        <ShareButtons story={story} />
+      </Box>
+    </Container>
   );
 };
 
@@ -154,22 +89,6 @@ export const PublicStory = ({ story, settings }: PublicStoryProps) => {
       story.content ? readingTime(getTextFromHtml(story.content)) : undefined,
     [story.content]
   );
-  const [isShown, setIsShown] = useState(false);
-
-  useEffect(() => {
-    window.addEventListener('scroll', handleScroll);
-    return () => {
-      window.removeEventListener('scroll', handleScroll);
-    };
-  }, []);
-
-  const handleScroll = () => {
-    if (window.scrollY > 200) {
-      setIsShown(true);
-    } else {
-      setIsShown(false);
-    }
-  };
 
   const siteName = settings.siteName || username;
   const safeSiteColor =
@@ -259,31 +178,7 @@ export const PublicStory = ({ story, settings }: PublicStoryProps) => {
           </Box>
         )}
         <TipTapEditor story={story} editable={false} />
-        <Container
-          css={{
-            display: 'flex',
-            position: 'relative',
-            justifyContent: 'center',
-            mb: '$5',
-            '@xl': {
-              justifyContent: 'end',
-              bottom: 40,
-              right: 0,
-              left: 0,
-              position: 'fixed',
-              opacity: isShown ? 1 : 0,
-              transform: isShown ? 'none' : 'translateY(100%)',
-              transition: 'opacity 0.4s, transform 0.6s',
-            },
-          }}
-        >
-          <Box>
-            <Text size="sm" css={{ mt: 0, mb: '$3', color: '$gray11' }}>
-              Share this story
-            </Text>
-            <ShareButtons story={story} />
-          </Box>
-        </Container>
+        <ShareButtonsOnScroll story={story} />
         <PoweredBy />
       </PublicStoryContainer>
     </>
