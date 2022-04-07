@@ -11,6 +11,7 @@ import { Link2Icon, LinkedInLogoIcon } from '@radix-ui/react-icons';
 import { SettingsFile, Story } from '../../types';
 import { useState } from 'react';
 import { useAuth } from '../auth/AuthContext';
+import { sigleConfig } from '../../config';
 
 interface ShareButtonsProps {
   story: Story;
@@ -33,10 +34,6 @@ export const ShareButtons = ({ story, settings }: ShareButtonsProps) => {
     setIsOpen(true);
   };
 
-  if (typeof window === 'undefined') {
-    return null;
-  }
-
   return (
     <Flex
       css={{
@@ -53,7 +50,7 @@ export const ShareButtons = ({ story, settings }: ShareButtonsProps) => {
           <TooltipTrigger asChild>
             <Box
               as="a"
-              href={`https://twitter.com/intent/tweet?text=${title} by ${username}&url=${window.location.href}`}
+              href={`https://twitter.com/intent/tweet?text=${title} by ${username}&url=${sigleConfig.appUrl}/${user?.username}/${story.id}`}
               target="_blank"
               rel="noopener"
             >
@@ -68,7 +65,7 @@ export const ShareButtons = ({ story, settings }: ShareButtonsProps) => {
           <TooltipTrigger asChild>
             <Box
               as="a"
-              href={`https://www.facebook.com/sharer/sharer.php?u=${window.location.href}&quote=${title} by ${username}`}
+              href={`https://www.facebook.com/sharer/sharer.php?u=${sigleConfig.appUrl}/${user?.username}/${story.id}&quote=${title} by ${username}`}
               target="_blank"
               rel="noopener"
             >
@@ -83,7 +80,7 @@ export const ShareButtons = ({ story, settings }: ShareButtonsProps) => {
           <TooltipTrigger asChild>
             <Box
               as="a"
-              href={`https://www.linkedin.com/sharing/share-offsite/?url=${window.location.href}`}
+              href={`https://www.linkedin.com/sharing/share-offsite/?url=${sigleConfig.appUrl}/${user?.username}/${story.id}`}
               target="_blank"
               rel="noopener"
             >
