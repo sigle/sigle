@@ -8,18 +8,22 @@ import {
 } from '../../ui';
 import { TwitterFilledIcon, FacebookLogoIcon } from '../../icons';
 import { Link2Icon, LinkedInLogoIcon } from '@radix-ui/react-icons';
-import { Story } from '../../types';
+import { SettingsFile, Story } from '../../types';
 import { useState } from 'react';
 import { darkTheme } from '../../stitches.config';
+import { useAuth } from '../auth/AuthContext';
 
 interface ShareButtonsProps {
   story: Story;
+  settings: SettingsFile;
 }
 
-export const ShareButtons = ({ story }: ShareButtonsProps) => {
+export const ShareButtons = ({ story, settings }: ShareButtonsProps) => {
+  const { user } = useAuth();
   const [isCopied, setIsCopied] = useState(false);
 
   const title = story.metaTitle ? story.metaTitle : story.title;
+  const username = settings.siteName ? settings.siteName : user?.username;
 
   const handleClick = () => {
     setIsCopied(true);
@@ -48,7 +52,7 @@ export const ShareButtons = ({ story }: ShareButtonsProps) => {
           <TooltipTrigger asChild>
             <Box
               as="a"
-              href={`https://twitter.com/intent/tweet?text=${title}&url=${window.location.href}`}
+              href={`https://twitter.com/intent/tweet?text=${title} by ${username}&url=${window.location.href}`}
               target="_blank"
               rel="noopener"
             >
@@ -63,7 +67,7 @@ export const ShareButtons = ({ story }: ShareButtonsProps) => {
           <TooltipTrigger asChild>
             <Box
               as="a"
-              href={`https://www.facebook.com/sharer/sharer.php?u=${window.location.href}&quote=${title}`}
+              href={`https://www.facebook.com/sharer/sharer.php?u=${window.location.href}&quote=${title} by ${username}`}
               target="_blank"
               rel="noopener"
             >
