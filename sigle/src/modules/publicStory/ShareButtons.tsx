@@ -10,7 +10,6 @@ import { TwitterFilledIcon, FacebookLogoIcon } from '../../icons';
 import { Link2Icon, LinkedInLogoIcon } from '@radix-ui/react-icons';
 import { SettingsFile, Story } from '../../types';
 import { useState } from 'react';
-import { darkTheme } from '../../stitches.config';
 import { useAuth } from '../auth/AuthContext';
 
 interface ShareButtonsProps {
@@ -21,6 +20,7 @@ interface ShareButtonsProps {
 export const ShareButtons = ({ story, settings }: ShareButtonsProps) => {
   const { user } = useAuth();
   const [isCopied, setIsCopied] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
 
   const title = story.metaTitle ? story.metaTitle : story.title;
   const username = settings.siteName ? settings.siteName : user?.username;
@@ -30,6 +30,7 @@ export const ShareButtons = ({ story, settings }: ShareButtonsProps) => {
     setTimeout(() => {
       setIsCopied(false);
     }, 2000);
+    setIsOpen(true);
   };
 
   if (typeof window === 'undefined') {
@@ -94,9 +95,14 @@ export const ShareButtons = ({ story, settings }: ShareButtonsProps) => {
           </TooltipContent>
         </Tooltip>
       </Flex>
-      <Tooltip delayDuration={200}>
+      <Tooltip
+        open={isOpen}
+        onOpenChange={() => setIsOpen(!isOpen)}
+        delayDuration={200}
+      >
         <TooltipTrigger asChild>
           <IconButton
+            disabled={isCopied}
             css={{
               p: 0,
               '&:hover': { backgroundColor: 'transparent' },
