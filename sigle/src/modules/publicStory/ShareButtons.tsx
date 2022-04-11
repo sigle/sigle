@@ -9,26 +9,35 @@ import {
 import { TwitterFilledIcon, FacebookLogoIcon } from '../../icons';
 import { Link2Icon, LinkedInLogoIcon } from '@radix-ui/react-icons';
 import { SettingsFile, Story } from '../../types';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useAuth } from '../auth/AuthContext';
 import { sigleConfig } from '../../config';
 
 interface ShareButtonsProps {
+  username: string;
   story: Story;
   settings: SettingsFile;
 }
 
-export const ShareButtons = ({ story, settings }: ShareButtonsProps) => {
+export const ShareButtons = ({
+  username,
+  story,
+  settings,
+}: ShareButtonsProps) => {
   const { user } = useAuth();
   const [isCopied, setIsCopied] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
 
+  useEffect(() => {
+    console.log(story);
+  }, []);
+
   const title = story.metaTitle ? story.metaTitle : story.title;
-  const username = settings.siteName ? settings.siteName : user?.username;
+  const siteName = settings.siteName ? settings.siteName : username;
 
   const handleClick = () => {
     navigator.clipboard
-      .writeText(`${sigleConfig.appUrl}/${user?.username}/${story.id}`)
+      .writeText(`${sigleConfig.appUrl}/${username}/${story.id}`)
       .then(() => {
         setIsCopied(true);
         setTimeout(() => {
@@ -54,7 +63,7 @@ export const ShareButtons = ({ story, settings }: ShareButtonsProps) => {
           <TooltipTrigger asChild>
             <Box
               as="a"
-              href={`https://twitter.com/intent/tweet?text=${title} by ${username}&url=${sigleConfig.appUrl}/${user?.username}/${story.id}`}
+              href={`https://twitter.com/intent/tweet?text=${title} by ${siteName}&url=${sigleConfig.appUrl}/${username}/${story.id}`}
               target="_blank"
               rel="noopener"
             >
@@ -69,7 +78,7 @@ export const ShareButtons = ({ story, settings }: ShareButtonsProps) => {
           <TooltipTrigger asChild>
             <Box
               as="a"
-              href={`https://www.facebook.com/sharer/sharer.php?u=${sigleConfig.appUrl}/${user?.username}/${story.id}&quote=${title} by ${username}`}
+              href={`https://www.facebook.com/sharer/sharer.php?u=${sigleConfig.appUrl}/${siteName}/${story.id}&quote=${title} by ${username}`}
               target="_blank"
               rel="noopener"
             >
