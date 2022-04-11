@@ -213,7 +213,7 @@ export const AppHeader = () => {
             </IconButton>
             <IconButton
               as="a"
-              href={sigleConfig.twitterUrl}
+              href={sigleConfig.githubUrl}
               target="_blank"
               rel="noreferrer"
             >
