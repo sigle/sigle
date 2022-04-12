@@ -9,7 +9,7 @@ import {
 import { TwitterFilledIcon, FacebookLogoIcon } from '../../icons';
 import { Link2Icon, LinkedInLogoIcon } from '@radix-ui/react-icons';
 import { SettingsFile, Story } from '../../types';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useAuth } from '../auth/AuthContext';
 import { sigleConfig } from '../../config';
 
@@ -27,10 +27,6 @@ export const ShareButtons = ({
   const { user } = useAuth();
   const [isCopied, setIsCopied] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
-
-  useEffect(() => {
-    console.log(story);
-  }, []);
 
   const title = story.metaTitle ? story.metaTitle : story.title;
   const siteName = settings.siteName ? settings.siteName : username;
