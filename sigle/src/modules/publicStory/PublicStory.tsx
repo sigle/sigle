@@ -23,11 +23,13 @@ const PublicStoryContainer = styled('div', {
 });
 
 interface ShareButtonsOnScrollProps {
+  username: string;
   story: Story;
   settings: SettingsFile;
 }
 
 const ShareButtonsOnScroll = ({
+  username,
   story,
   settings,
 }: ShareButtonsOnScrollProps) => {
@@ -71,7 +73,7 @@ const ShareButtonsOnScroll = ({
         <Text size="sm" css={{ mt: 0, mb: '$3', color: '$gray11' }}>
           Share this story
         </Text>
-        <ShareButtons story={story} settings={settings} />
+        <ShareButtons username={username} story={story} settings={settings} />
       </Box>
     </Container>
   );
@@ -157,7 +159,7 @@ export const PublicStory = ({ story, settings }: PublicStoryProps) => {
               </Text>
             </a>
           </Link>
-          <ShareButtons story={story} settings={settings} />
+          <ShareButtons username={username} story={story} settings={settings} />
         </Flex>
         <h1 className="sigle-title">{story.title}</h1>
         {story.coverImage && (
@@ -182,7 +184,11 @@ export const PublicStory = ({ story, settings }: PublicStoryProps) => {
           </Box>
         )}
         <TipTapEditor story={story} editable={false} />
-        <ShareButtonsOnScroll story={story} settings={settings} />
+        <ShareButtonsOnScroll
+          username={username}
+          story={story}
+          settings={settings}
+        />
         <PoweredBy />
       </PublicStoryContainer>
     </>
