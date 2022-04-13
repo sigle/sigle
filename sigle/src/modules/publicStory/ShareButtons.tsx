@@ -53,12 +53,12 @@ export const ShareButtons = ({
         },
       }}
       gap="6"
+      className="not-prose"
     >
       <Flex gap="3">
         <Tooltip delayDuration={200}>
           <TooltipTrigger asChild>
             <Box
-              className="not-prose"
               as="a"
               href={`https://twitter.com/intent/tweet?text=${title} by ${siteName}&url=${sigleConfig.appUrl}/${username}/${story.id}`}
               target="_blank"
@@ -74,7 +74,6 @@ export const ShareButtons = ({
         <Tooltip delayDuration={200}>
           <TooltipTrigger asChild>
             <Box
-              className="not-prose"
               as="a"
               href={`https://www.facebook.com/sharer/sharer.php?u=${sigleConfig.appUrl}/${siteName}/${story.id}&quote=${title} by ${username}`}
               target="_blank"
@@ -90,7 +89,6 @@ export const ShareButtons = ({
         <Tooltip delayDuration={200}>
           <TooltipTrigger asChild>
             <Box
-              className="not-prose"
               as="a"
               href={`https://www.linkedin.com/sharing/share-offsite/?url=${sigleConfig.appUrl}/${user?.username}/${story.id}`}
               target="_blank"
