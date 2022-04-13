@@ -144,10 +144,8 @@ module.exports = {
             'a strong': {
               color: 'var(--tw-prose-links)',
             },
-            '.ProseMirror': {
-              'a:hover': {
-                boxShadow: '0 1px 0 0 currentColor',
-              },
+            'a:hover': {
+              boxShadow: '0 1px 0 0 currentColor',
             },
             u: {
               textDecoration: 'none',
