@@ -850,6 +850,11 @@ Ensure the default browser behavior of the `hidden` attribute.
   box-shadow: 0 1px 0 0 currentColor;
 }
 
+.prose :where(u):not(:where([class~='not-prose'] *)) {
+  text-decoration: none;
+  box-shadow: 0 1px 0 0 currentColor;
+}
+
 .dark .dark\:prose-invert {
   --tw-prose-body: var(--tw-prose-invert-body);
   --tw-prose-headings: var(--tw-prose-invert-headings);

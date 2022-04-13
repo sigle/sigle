@@ -149,6 +149,10 @@ module.exports = {
                 boxShadow: '0 1px 0 0 currentColor',
               },
             },
+            u: {
+              textDecoration: 'none',
+              boxShadow: '0 1px 0 0 currentColor',
+            },
             img: {
               marginTop: false,
               marginBottom: false,
