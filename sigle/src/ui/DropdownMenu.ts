@@ -3,6 +3,10 @@ import { keyframes, styled } from '../stitches.config';
 
 export const DropdownMenu = DropdownMenuPrimitive.Root;
 export const DropdownMenuTrigger = DropdownMenuPrimitive.Trigger;
+export const DropdownMenuSeparator = styled(DropdownMenuPrimitive.Separator, {
+  height: 1,
+  backgroundColor: '$gray6',
+});
 
 const slideUpAndFade = keyframes({
   '0%': { opacity: 0, transform: 'translateY(2px)' },

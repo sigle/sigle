@@ -19,7 +19,7 @@ import {
   Flex,
   Heading,
   Text,
-  Box,
+  DropdownMenuSeparator,
 } from '../../../ui';
 import { SubsetStory, BlockstackUser } from '../../../types';
 
@@ -138,7 +138,7 @@ export const StoryItem = ({
                     Un-feature this story
                   </DropdownMenuItem>
                 )}
-                <Box css={{ height: 1, backgroundColor: '$gray6' }} />
+                <DropdownMenuSeparator />
                 <DropdownMenuItem
                   css={{ color: '$red11', '&:hover': { color: '$red11' } }}
                   onSelect={onDelete}
