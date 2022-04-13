@@ -846,7 +846,7 @@ Ensure the default browser behavior of the `hidden` attribute.
   color: var(--tw-prose-links);
 }
 
-.prose :where(a:hover):not(:where([class~='not-prose'] *)) {
+.prose :where(.ProseMirror):not(:where([class~='not-prose'] *)) a:hover {
   box-shadow: 0 1px 0 0 currentColor;
 }
 

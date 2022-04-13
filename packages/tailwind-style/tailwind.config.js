@@ -144,8 +144,10 @@ module.exports = {
             'a strong': {
               color: 'var(--tw-prose-links)',
             },
-            'a:hover': {
-              boxShadow: '0 1px 0 0 currentColor',
+            '.ProseMirror': {
+              'a:hover': {
+                boxShadow: '0 1px 0 0 currentColor',
+              },
             },
             img: {
               marginTop: false,
