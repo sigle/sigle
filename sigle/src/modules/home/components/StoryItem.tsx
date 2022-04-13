@@ -19,6 +19,7 @@ import {
   Flex,
   Heading,
   Text,
+  DropdownMenuSeparator,
 } from '../../../ui';
 import { SubsetStory, BlockstackUser } from '../../../types';
 
@@ -137,7 +138,13 @@ export const StoryItem = ({
                     Un-feature this story
                   </DropdownMenuItem>
                 )}
-                <DropdownMenuItem onSelect={onDelete}>Delete</DropdownMenuItem>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem
+                  css={{ color: '$red11', '&:hover': { color: '$red11' } }}
+                  onSelect={onDelete}
+                >
+                  Delete
+                </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
             {story.featured && <StarIcon width={22} height={22} />}

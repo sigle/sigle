@@ -3,6 +3,10 @@ import { keyframes, styled } from '../stitches.config';
 
 export const DropdownMenu = DropdownMenuPrimitive.Root;
 export const DropdownMenuTrigger = DropdownMenuPrimitive.Trigger;
+export const DropdownMenuSeparator = styled(DropdownMenuPrimitive.Separator, {
+  height: 1,
+  backgroundColor: '$gray6',
+});
 
 const slideUpAndFade = keyframes({
   '0%': { opacity: 0, transform: 'translateY(2px)' },
@@ -26,12 +30,10 @@ const slideLeftAndFade = keyframes({
 
 export const DropdownMenuContent = styled(DropdownMenuPrimitive.Content, {
   minWidth: 80,
-  backgroundColor: 'white',
+  backgroundColor: '$gray1',
   br: '$1',
   border: '1px solid $gray6',
   overflow: 'hidden',
-  boxShadow:
-    '0px 10px 38px -10px rgba(22, 23, 24, 0.35), 0px 10px 20px -15px rgba(22, 23, 24, 0.2)',
   '@media (prefers-reduced-motion: no-preference)': {
     animationDuration: '400ms',
     animationTimingFunction: 'cubic-bezier(0.16, 1, 0.3, 1)',
@@ -58,14 +60,13 @@ export const DropdownMenuItem = styled(DropdownMenuPrimitive.Item, {
   position: 'relative',
   userSelect: 'none',
   cursor: 'pointer',
+  color: '$gray9',
 
   '&:hover': {
-    backgroundColor: '$gray11',
-    color: '$gray1',
+    color: '$gray11',
   },
   '&:focus': {
     outline: 'none',
-    backgroundColor: '$gray11',
-    color: '$gray1',
+    color: '$gray11',
   },
 });
