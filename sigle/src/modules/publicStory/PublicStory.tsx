@@ -140,9 +140,14 @@ export const PublicStory = ({ story, settings }: PublicStoryProps) => {
           },
         }}
       >
-        <Flex justify="between" align="end" css={{ mb: '$7' }}>
+        <Flex
+          justify="between"
+          align="end"
+          css={{ mb: '$7' }}
+          className="not-prose"
+        >
           <Link href="/[username]" as={`/${username}`} passHref>
-            <a className="not-prose">
+            <a>
               <Text size="action">{siteName}</Text>
               <Text
                 size="action"
