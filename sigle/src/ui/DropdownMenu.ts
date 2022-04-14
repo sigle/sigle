@@ -67,20 +67,49 @@ export const DropdownMenuItem = styled(DropdownMenuPrimitive.Item, {
   position: 'relative',
   userSelect: 'none',
   cursor: 'pointer',
-  color: '$gray9',
 
-  '&:hover': {
-    color: '$gray11',
-    backgroundColor: '$gray4',
+  variants: {
+    color: {
+      gray: {
+        color: '$gray9',
+
+        '&:hover': {
+          color: '$gray11',
+          backgroundColor: '$gray4',
+        },
+
+        '&:active': {
+          color: '$gray11',
+          backgroundColor: '$gray5',
+        },
+
+        '&:focus': {
+          outline: 'none',
+          color: '$gray11',
+        },
+      },
+      red: {
+        color: '$red11',
+
+        '&:hover': {
+          color: '$red11',
+          backgroundColor: '$red4',
+        },
+
+        '&:active': {
+          color: '$red11',
+          backgroundColor: '$red5',
+        },
+
+        '&:focus': {
+          outline: 'none',
+          color: '$red11',
+        },
+      },
+    },
   },
 
-  '&:active': {
-    color: '$gray11',
-    backgroundColor: '$gray5',
-  },
-
-  '&:focus': {
-    outline: 'none',
-    color: '$gray11',
+  defaultVariants: {
+    color: 'gray',
   },
 });

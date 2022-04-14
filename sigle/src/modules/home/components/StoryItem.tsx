@@ -139,14 +139,7 @@ export const StoryItem = ({
                   </DropdownMenuItem>
                 )}
                 <DropdownMenuSeparator />
-                <DropdownMenuItem
-                  css={{
-                    color: '$red11',
-                    '&:hover': { color: '$red11', backgroundColor: '$red4' },
-                    '&:active': { color: '$red11', backgroundColor: '$red5' },
-                  }}
-                  onSelect={onDelete}
-                >
+                <DropdownMenuItem color="red" onSelect={onDelete}>
                   Delete
                 </DropdownMenuItem>
               </DropdownMenuContent>
