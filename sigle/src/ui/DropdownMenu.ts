@@ -85,6 +85,7 @@ export const DropdownMenuItem = styled(DropdownMenuPrimitive.Item, {
 
         '&:focus': {
           outline: 'none',
+          backgroundColor: '$gray5',
           color: '$gray11',
         },
       },
@@ -103,6 +104,7 @@ export const DropdownMenuItem = styled(DropdownMenuPrimitive.Item, {
 
         '&:focus': {
           outline: 'none',
+          backgroundColor: '$red5',
           color: '$red11',
         },
       },
