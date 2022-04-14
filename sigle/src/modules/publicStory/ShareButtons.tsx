@@ -53,6 +53,7 @@ export const ShareButtons = ({
         },
       }}
       gap="6"
+      className="not-prose"
     >
       <Flex gap="3">
         <Tooltip delayDuration={200}>
