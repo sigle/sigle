@@ -2,4 +2,4 @@
 '@sigle/tailwind-style': patch
 ---
 
-Fix underline on links showing up outside of article.
+Fix double underline appearing on editor where a user manually adds an underline to a link.
