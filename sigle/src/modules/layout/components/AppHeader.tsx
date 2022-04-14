@@ -11,7 +11,19 @@ import { useRouter } from 'next/router';
 import { useState } from 'react';
 import { toast } from 'react-toastify';
 import { styled } from '../../../stitches.config';
-import { Box, Button, Container, Flex, IconButton, Text } from '../../../ui';
+import {
+  Box,
+  Button,
+  Container,
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+  Flex,
+  IconButton,
+  Text,
+} from '../../../ui';
 import {
   createNewEmptyStory,
   getStoriesFile,
@@ -22,12 +34,6 @@ import * as Fathom from 'fathom-client';
 import { useAuth } from '../../auth/AuthContext';
 import { Goals } from '../../../utils/fathom';
 import { sigleConfig } from '../../../config';
-import {
-  HoverCard,
-  HoverCardArrow,
-  HoverCardContent,
-  HoverCardTrigger,
-} from '../../../ui/HoverCard';
 import { userSession } from '../../../utils/blockstack';
 import posthog from 'posthog-js';
 import { isExperimentalThemeToggleEnabled } from '../../../utils/featureFlags';
@@ -176,8 +182,8 @@ export const AppHeader = () => {
         gap="10"
       >
         {user ? (
-          <HoverCard openDelay={200} closeDelay={100}>
-            <HoverCardTrigger asChild>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
               <Flex
                 tabIndex={0}
                 css={{ cursor: 'pointer' }}
@@ -187,12 +193,29 @@ export const AppHeader = () => {
                 <StatusDot />
                 <Text>{user.username}</Text>
               </Flex>
-            </HoverCardTrigger>
-            <HoverCardContent onClick={handleLogout} sideOffset={16}>
-              logout
-              <HoverCardArrow />
-            </HoverCardContent>
-          </HoverCard>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent sideOffset={8}>
+              <DropdownMenuItem>
+                <Link href={`/${user.username}`} passHref>
+                  <a>My blog</a>
+                </Link>
+              </DropdownMenuItem>
+              <DropdownMenuItem>
+                <Link href="/" passHref>
+                  <a>Dashboard</a>
+                </Link>
+              </DropdownMenuItem>
+              <DropdownMenuItem>
+                <Link href="/settings" passHref>
+                  <a>Settings</a>
+                </Link>
+              </DropdownMenuItem>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem color="red" onClick={handleLogout}>
+                Logout
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
         ) : (
           <Flex gap="6">
             <IconButton
