@@ -5,6 +5,7 @@ export const DropdownMenu = DropdownMenuPrimitive.Root;
 export const DropdownMenuTrigger = DropdownMenuPrimitive.Trigger;
 export const DropdownMenuSeparator = styled(DropdownMenuPrimitive.Separator, {
   height: 1,
+  mx: '-$3',
   backgroundColor: '$gray6',
 });
 
@@ -34,6 +35,10 @@ export const DropdownMenuContent = styled(DropdownMenuPrimitive.Content, {
   br: '$1',
   border: '1px solid $gray6',
   overflow: 'hidden',
+  display: 'flex',
+  flexDirection: 'column',
+  gap: '$2',
+  p: '$3',
   '@media (prefers-reduced-motion: no-preference)': {
     animationDuration: '400ms',
     animationTimingFunction: 'cubic-bezier(0.16, 1, 0.3, 1)',
@@ -55,8 +60,10 @@ export const DropdownMenuItem = styled(DropdownMenuPrimitive.Item, {
   alignItems: 'center',
   justifyContent: 'space-between',
   whiteSpace: 'nowrap',
-  py: '$3',
-  px: '$4',
+  py: '$2',
+  pl: '$2',
+  pr: '$5',
+  br: '$1',
   position: 'relative',
   userSelect: 'none',
   cursor: 'pointer',
@@ -64,7 +71,14 @@ export const DropdownMenuItem = styled(DropdownMenuPrimitive.Item, {
 
   '&:hover': {
     color: '$gray11',
+    backgroundColor: '$gray4',
   },
+
+  '&:active': {
+    color: '$gray11',
+    backgroundColor: '$gray5',
+  },
+
   '&:focus': {
     outline: 'none',
     color: '$gray11',
