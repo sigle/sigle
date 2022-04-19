@@ -210,14 +210,16 @@ export const AppHeader = () => {
                   <a>Settings</a>
                 </Link>
               </DropdownMenuItem>
-              <DropdownMenuSeparator />
               {isExperimentalThemeToggleEnabled && (
-                <DropdownMenuItem onClick={toggleTheme}>
-                  Switch theme
-                  <IconButton css={{ p: 0 }} as="button">
-                    <SunIcon />
-                  </IconButton>
-                </DropdownMenuItem>
+                <>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem onClick={toggleTheme}>
+                    Switch theme
+                    <IconButton css={{ p: 0 }} as="button">
+                      <SunIcon />
+                    </IconButton>
+                  </DropdownMenuItem>
+                </>
               )}
               <DropdownMenuSeparator />
               <DropdownMenuItem color="red" onClick={handleLogout}>
