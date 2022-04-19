@@ -3,3 +3,5 @@
 ---
 
 Replace hover card with dropdown menu in header.
+
+Move theme switch into dropdown.

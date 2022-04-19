@@ -211,6 +211,15 @@ export const AppHeader = () => {
                 </Link>
               </DropdownMenuItem>
               <DropdownMenuSeparator />
+              {isExperimentalThemeToggleEnabled && (
+                <DropdownMenuItem onClick={toggleTheme}>
+                  Switch theme
+                  <IconButton css={{ p: 0 }} as="button">
+                    <SunIcon />
+                  </IconButton>
+                </DropdownMenuItem>
+              )}
+              <DropdownMenuSeparator />
               <DropdownMenuItem color="red" onClick={handleLogout}>
                 Logout
               </DropdownMenuItem>
@@ -258,11 +267,6 @@ export const AppHeader = () => {
               Enter App
             </Button>
           </Link>
-        )}
-        {isExperimentalThemeToggleEnabled && (
-          <IconButton as="button" onClick={toggleTheme}>
-            <SunIcon />
-          </IconButton>
         )}
       </Flex>
     </Header>

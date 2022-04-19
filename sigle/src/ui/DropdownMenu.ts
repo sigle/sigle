@@ -57,6 +57,7 @@ export const DropdownMenuItem = styled(DropdownMenuPrimitive.Item, {
   fontSize: '$2',
   lineHeight: '1',
   display: 'flex',
+  gap: '$2',
   alignItems: 'center',
   justifyContent: 'space-between',
   whiteSpace: 'nowrap',
