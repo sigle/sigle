@@ -181,18 +181,27 @@ export const AppHeader = () => {
               <DropdownMenuItem
                 selected={router.pathname === `/${user.username}`}
               >
-                <a href={`/${user.username}`} target="_blank">
+                <Box
+                  css={{ width: '100%' }}
+                  as="a"
+                  href={`/${user.username}`}
+                  target="_blank"
+                >
                   My blog
-                </a>
+                </Box>
               </DropdownMenuItem>
               <DropdownMenuItem selected={router.pathname === '/'}>
                 <Link href="/" passHref>
-                  <a>Dashboard</a>
+                  <Box css={{ width: '100%' }} as="a">
+                    Dashboard
+                  </Box>
                 </Link>
               </DropdownMenuItem>
               <DropdownMenuItem selected={router.pathname === '/settings'}>
                 <Link href="/settings" passHref>
-                  <a>Settings</a>
+                  <Box css={{ width: '100%' }} as="a">
+                    Settings
+                  </Box>
                 </Link>
               </DropdownMenuItem>
               {isExperimentalThemeToggleEnabled && (
