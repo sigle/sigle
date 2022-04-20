@@ -71,7 +71,7 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
      * 2. When registering a new free subdomain with Sigle, it takes time to get injected by
      * the Hiro wallet.
      */
-    if (userData.username === '') {
+    if (userData.username === undefined) {
       try {
         const namesResponse = await fetch(
           `https://stacks-node-api.stacks.co/v1/addresses/stacks/${address}`
