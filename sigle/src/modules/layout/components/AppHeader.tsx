@@ -11,7 +11,19 @@ import { useRouter } from 'next/router';
 import { useState } from 'react';
 import { toast } from 'react-toastify';
 import { styled } from '../../../stitches.config';
-import { Box, Button, Container, Flex, IconButton, Text } from '../../../ui';
+import {
+  Box,
+  Button,
+  Container,
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+  Flex,
+  IconButton,
+  Text,
+} from '../../../ui';
 import {
   createNewEmptyStory,
   getStoriesFile,
@@ -22,12 +34,6 @@ import * as Fathom from 'fathom-client';
 import { useAuth } from '../../auth/AuthContext';
 import { Goals } from '../../../utils/fathom';
 import { sigleConfig } from '../../../config';
-import {
-  HoverCard,
-  HoverCardArrow,
-  HoverCardContent,
-  HoverCardTrigger,
-} from '../../../ui/HoverCard';
 import { userSession } from '../../../utils/blockstack';
 import posthog from 'posthog-js';
 import { isExperimentalThemeToggleEnabled } from '../../../utils/featureFlags';
@@ -44,10 +50,6 @@ const Header = styled('header', Container, {
   '@md': {
     mt: '$10',
   },
-});
-
-const EyeOpenIcon = styled(EyeOpenIconBase, {
-  display: 'inline-block',
 });
 
 const StatusDot = styled('div', {
@@ -145,25 +147,6 @@ export const AppHeader = () => {
             />
           </Box>
         </Link>
-        {user && (
-          <Button
-            css={{
-              display: 'none',
-              '@xl': {
-                display: 'block',
-              },
-            }}
-            variant="ghost"
-            href={`/${user.username}`}
-            target="_blank"
-            as="a"
-          >
-            <Text size="action" css={{ mr: '$2', display: 'inline-block' }}>
-              Visit my blog
-            </Text>
-            <EyeOpenIcon />
-          </Button>
-        )}
       </Flex>
       <Flex
         css={{
@@ -176,23 +159,63 @@ export const AppHeader = () => {
         gap="10"
       >
         {user ? (
-          <HoverCard openDelay={200} closeDelay={100}>
-            <HoverCardTrigger asChild>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
               <Flex
                 tabIndex={0}
-                css={{ cursor: 'pointer' }}
-                gap="1"
+                css={{
+                  cursor: 'pointer',
+                  p: '$3',
+                  br: '$1',
+                  '&:hover': { backgroundColor: '$gray4' },
+                }}
+                gap="2"
                 align="center"
               >
                 <StatusDot />
-                <Text>{user.username}</Text>
+                <Text size="sm">{user.username}</Text>
               </Flex>
-            </HoverCardTrigger>
-            <HoverCardContent onClick={handleLogout} sideOffset={16}>
-              logout
-              <HoverCardArrow />
-            </HoverCardContent>
-          </HoverCard>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent sideOffset={8}>
+              <DropdownMenuItem
+                selected={router.pathname === `/${user.username}`}
+                as="a"
+                href={`/${user.username}`}
+                target="_blank"
+              >
+                My blog
+              </DropdownMenuItem>
+              <DropdownMenuItem
+                selected={router.pathname === '/'}
+                as="a"
+                href="/"
+              >
+                Dashboard
+              </DropdownMenuItem>
+              <DropdownMenuItem
+                selected={router.pathname === '/settings'}
+                as="a"
+                href="/settings"
+              >
+                Settings
+              </DropdownMenuItem>
+              {isExperimentalThemeToggleEnabled && (
+                <>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem onClick={toggleTheme}>
+                    Switch theme
+                    <IconButton css={{ p: 0 }} as="button">
+                      <SunIcon />
+                    </IconButton>
+                  </DropdownMenuItem>
+                </>
+              )}
+              <DropdownMenuSeparator />
+              <DropdownMenuItem color="red" onClick={handleLogout}>
+                Logout
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
         ) : (
           <Flex gap="6">
             <IconButton
@@ -236,7 +259,7 @@ export const AppHeader = () => {
             </Button>
           </Link>
         )}
-        {isExperimentalThemeToggleEnabled && (
+        {!user && isExperimentalThemeToggleEnabled && (
           <IconButton as="button" onClick={toggleTheme}>
             <SunIcon />
           </IconButton>
