@@ -165,16 +165,15 @@ export const AppHeader = () => {
                 tabIndex={0}
                 css={{
                   cursor: 'pointer',
-                  p: '$2',
+                  p: '$3',
                   br: '$1',
                   '&:hover': { backgroundColor: '$gray4' },
-                  '&:active': { backgroundColor: '$gray5' },
                 }}
-                gap="1"
+                gap="2"
                 align="center"
               >
                 <StatusDot />
-                <Text>{user.username}</Text>
+                <Text size="sm">{user.username}</Text>
               </Flex>
             </DropdownMenuTrigger>
             <DropdownMenuContent sideOffset={8}>
