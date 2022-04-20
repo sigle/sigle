@@ -179,29 +179,25 @@ export const AppHeader = () => {
             <DropdownMenuContent sideOffset={8}>
               <DropdownMenuItem
                 selected={router.pathname === `/${user.username}`}
+                as="a"
+                href={`/${user.username}`}
+                target="_blank"
               >
-                <Box
-                  css={{ width: '100%' }}
-                  as="a"
-                  href={`/${user.username}`}
-                  target="_blank"
-                >
-                  My blog
-                </Box>
+                My blog
               </DropdownMenuItem>
-              <DropdownMenuItem selected={router.pathname === '/'}>
-                <Link href="/" passHref>
-                  <Box css={{ width: '100%' }} as="a">
-                    Dashboard
-                  </Box>
-                </Link>
+              <DropdownMenuItem
+                selected={router.pathname === '/'}
+                as="a"
+                href="/"
+              >
+                Dashboard
               </DropdownMenuItem>
-              <DropdownMenuItem selected={router.pathname === '/settings'}>
-                <Link href="/settings" passHref>
-                  <Box css={{ width: '100%' }} as="a">
-                    Settings
-                  </Box>
-                </Link>
+              <DropdownMenuItem
+                selected={router.pathname === '/settings'}
+                as="a"
+                href="/settings"
+              >
+                Settings
               </DropdownMenuItem>
               {isExperimentalThemeToggleEnabled && (
                 <>
