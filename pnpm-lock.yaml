@@ -53,15 +53,15 @@ importers:
       '@sentry/nextjs': 6.18.2
       '@sigle/slate-to-html': 1.0.0
       '@sigle/tailwind-style': workspace:^1.0.0
-      '@stacks/auth': 4.0.0-beta.1
-      '@stacks/connect': 6.4.2
-      '@stacks/connect-react': 13.0.3
-      '@stacks/keychain': 4.0.0-beta.1
+      '@stacks/auth': 4.0.0
+      '@stacks/connect': 6.5.0
+      '@stacks/connect-react': 14.0.0
+      '@stacks/keychain': 4.0.0
       '@stacks/legacy-auth': npm:@stacks/auth@2.0.0-beta.1
       '@stacks/legacy-connect': npm:@stacks/connect@4.3.18
       '@stacks/legacy-connect-react': npm:@stacks/connect-react@2.17.18
-      '@stacks/profile': 4.0.0-beta.1
-      '@stacks/storage': 4.0.0-beta.1
+      '@stacks/profile': 4.0.0
+      '@stacks/storage': 4.0.0
       '@stitches/react': 1.2.5
       '@tailwindcss/forms': 0.3.4
       '@tailwindcss/typography': 0.4.1
@@ -156,15 +156,15 @@ importers:
       '@radix-ui/react-tooltip': 0.1.0_react-dom@17.0.2+react@17.0.2
       '@sentry/nextjs': 6.18.2_next@12.1.0+react@17.0.2
       '@sigle/slate-to-html': 1.0.0_d885a74d5675625ffd7e092bb07f40f8
-      '@stacks/auth': 4.0.0-beta.1
-      '@stacks/connect': 6.4.2
-      '@stacks/connect-react': 13.0.3_react-dom@17.0.2+react@17.0.2
-      '@stacks/keychain': 4.0.0-beta.1
+      '@stacks/auth': 4.0.0
+      '@stacks/connect': 6.5.0
+      '@stacks/connect-react': 14.0.0_react-dom@17.0.2+react@17.0.2
+      '@stacks/keychain': 4.0.0
       '@stacks/legacy-auth': /@stacks/auth/2.0.0-beta.1
       '@stacks/legacy-connect': /@stacks/connect/4.3.18
       '@stacks/legacy-connect-react': /@stacks/connect-react/2.17.18_react-dom@17.0.2+react@17.0.2
-      '@stacks/profile': 4.0.0-beta.1
-      '@stacks/storage': 4.0.0-beta.1
+      '@stacks/profile': 4.0.0
+      '@stacks/storage': 4.0.0
       '@stitches/react': 1.2.5_react@17.0.2
       '@tippyjs/react': 4.2.6_react-dom@17.0.2+react@17.0.2
       '@tiptap/core': 2.0.0-beta.174
@@ -2209,21 +2209,6 @@ packages:
       - encoding
     dev: false
 
-  /@stacks/auth/2.0.1:
-    resolution: {integrity: sha512-RwKu3+Z2ryxOuS6wB8Y9hFeTnKM+31tOR4toalyPJRbkNsAqWWb0kuuPu7N5hD65zZsiyCImubAzNphJW1MGYw==}
-    dependencies:
-      '@stacks/common': 2.0.2
-      '@stacks/encryption': 2.0.1
-      '@stacks/network': 2.0.2
-      '@stacks/profile': 2.0.1
-      c32check: 1.1.3
-      cross-fetch: 3.1.5
-      jsontokens: 3.0.0
-      query-string: 6.14.1
-    transitivePeerDependencies:
-      - encoding
-    dev: false
-
   /@stacks/auth/3.3.0:
     resolution: {integrity: sha512-jt/NZHs46o+UdMAp4rP+GJhSy5dj1HzXtKDnGaGvXLY4mhecSb+JnCi0Jiwyea1cU0jcq7nHbkEOydxDFe+/Gw==}
     dependencies:
@@ -2239,13 +2224,13 @@ packages:
       - encoding
     dev: false
 
-  /@stacks/auth/4.0.0-beta.1:
-    resolution: {integrity: sha512-+C1cI9UDc4LRxL/OaHN4yHQsJl/7alhOIQs9Dgu/RBtCTnf6nP7MiBQmv73Z9LQMjHCJosErdEUn5StNSpsVWw==}
+  /@stacks/auth/4.0.0:
+    resolution: {integrity: sha512-vGl7ozNbm2aktcGwSbFrr6aXrRLoJLAVvf5wX59p/EyotwvrzbblHSzyXFEoY61Nw8FW/cdwDA2ThY9nvBxsnA==}
     dependencies:
-      '@stacks/common': 4.0.0-beta.1
-      '@stacks/encryption': 4.0.0-beta.1
-      '@stacks/network': 4.0.0-beta.1
-      '@stacks/profile': 4.0.0-beta.1
+      '@stacks/common': 4.0.0
+      '@stacks/encryption': 4.0.0
+      '@stacks/network': 4.0.0
+      '@stacks/profile': 4.0.0
       cross-fetch: 3.1.5
       jsontokens: 3.0.0
       query-string: 6.14.1
@@ -2283,8 +2268,8 @@ packages:
       - encoding
     dev: false
 
-  /@stacks/common/4.0.0-beta.1:
-    resolution: {integrity: sha512-4/dzbiWDjvLALDXtV3TR2NksekHwjlruNg+ZEryyWtfSjHTJj9UQNWL5IohCgN2e9/uBIhH7E6j+7iDEjAn2WQ==}
+  /@stacks/common/4.0.0:
+    resolution: {integrity: sha512-labnD6und7ax9MX2jxahZhLBDqi6MNnMHF0Prro6/ZzGnjfg2qYDqG2xBjof21D+XSWP9IitzOiBZ3Hdye6DWw==}
     dependencies:
       '@types/node': 14.18.12
       bn.js: 5.2.0
@@ -2294,14 +2279,14 @@ packages:
       - encoding
     dev: false
 
-  /@stacks/connect-react/13.0.3_react-dom@17.0.2+react@17.0.2:
-    resolution: {integrity: sha512-60Bo+15nBix2FPGXhqP0fN7JZbs7GxmG/N99Ka7TiJZMVsoQVXwipSFE9Gp07poWa/e5mhppHd491+JJBngAqQ==}
+  /@stacks/connect-react/14.0.0_react-dom@17.0.2+react@17.0.2:
+    resolution: {integrity: sha512-5wIRoLQBbPvhiz2K5Sg1guV0H+bu5WREockB4S28S1AUcnCn0I18QJrbQlFCA2EoEslZxBfi3KwbxGe7KnsTpA==}
     peerDependencies:
       react: ^16.x || 17.x
       react-dom: ^16.x || 17.x
     dependencies:
-      '@stacks/auth': 2.0.1
-      '@stacks/connect': 6.4.2
+      '@stacks/auth': 4.0.0
+      '@stacks/connect': 6.5.0
       jsontokens: 3.0.0
       react: 17.0.2
       react-dom: 17.0.2_react@17.0.2
@@ -2331,8 +2316,8 @@ packages:
       '@stencil/core': 1.17.4
     dev: false
 
-  /@stacks/connect-ui/5.4.1:
-    resolution: {integrity: sha512-JRa2dOTwaVwrLboI17WIg7AjEHoXH1pD0kmQSDD7PbgDDLIw8cb1rA7jm8XLn/aeoI0/2e9b52yVCD687Yv2Wg==}
+  /@stacks/connect-ui/5.5.0:
+    resolution: {integrity: sha512-SGSyAx43eS4CwcJ+iT4mdbRuAEk7tLrQDBLSm9XsipNu3f1nCbcQKxYYUNEpEmVhiQJPBMMeyQaOChFv8LS4Jw==}
     dependencies:
       '@stencil/core': 2.15.0
     dev: false
@@ -2349,14 +2334,14 @@ packages:
       - supports-color
     dev: false
 
-  /@stacks/connect/6.4.2:
-    resolution: {integrity: sha512-m8J8F/Jincc6N8qPJjjZkVQT2adMx78TDzOEokLU8/imS+rxQZqAkb3+wHrOzP+Fiqs/ZrE9PlaenObwDquplg==}
+  /@stacks/connect/6.5.0:
+    resolution: {integrity: sha512-CMSvPa8LMp7dwPhruSW3CqySw++kyG37oO810E+0U9KvyfqDgrHC7PbMRz95nkbhRhpsAGMaYc/8PrW9KnW4Gw==}
     dependencies:
-      '@stacks/auth': 2.0.1
-      '@stacks/connect-ui': 5.4.1
-      '@stacks/network': 2.0.1
+      '@stacks/auth': 4.0.0
+      '@stacks/connect-ui': 5.5.0
+      '@stacks/network': 4.0.0
       '@stacks/prettier-config': 0.0.8
-      '@stacks/transactions': 2.0.1
+      '@stacks/transactions': 4.0.0
       bn.js: 5.2.0
       buffer: 6.0.3
       jsontokens: 3.0.0
@@ -2415,34 +2400,35 @@ packages:
       - encoding
     dev: false
 
-  /@stacks/encryption/4.0.0-beta.1:
-    resolution: {integrity: sha512-7lZcCqdSyPwdq9ds7+eqWnEde49r1T53E/alo8Gu573f2EcKQfidomMkqtw+Kvqqc+5hKeQbZ0JxItrHxs7/9A==}
+  /@stacks/encryption/4.0.0:
+    resolution: {integrity: sha512-nk2XzL/35b0Te3j1MsApe9XD0aPg/AH9gGdqzns9d5HSL3j/zjSdHS45LDm6GmNDypUoh+WptrD13Z+VM+JywQ==}
     dependencies:
       '@noble/hashes': 1.0.0
       '@noble/secp256k1': 1.5.5
       '@scure/bip39': 1.0.0
-      '@stacks/common': 4.0.0-beta.1
+      '@stacks/common': 4.0.0
       '@types/bn.js': 4.11.6
       '@types/node': 14.18.12
       bn.js: 5.2.0
       bs58: 5.0.0
       ripemd160-min: 0.0.6
       sha.js: 2.4.11
+      varuint-bitcoin: 1.1.2
     transitivePeerDependencies:
       - encoding
     dev: false
 
-  /@stacks/keychain/4.0.0-beta.1:
-    resolution: {integrity: sha512-/gjEOnC9DOaHiUeS5kwJEVOZc8NdE0f8Jnt1wv1JE1L/a+hjDh6IPQOr1XvlsPunBi7JHIOdiIiImQneHxZvug==}
+  /@stacks/keychain/4.0.0:
+    resolution: {integrity: sha512-FgZVlxofqqhQIdXSgejtVw4Iq3Xxqjmzr2llaFpdS5TpbsCwaFksDEE0sFX0RVcnW1+PKpAVpATCb6+OxY/ukA==}
     dependencies:
       '@blockstack/rpc-client': 0.3.0-alpha.22
-      '@stacks/auth': 4.0.0-beta.1
-      '@stacks/common': 4.0.0-beta.1
-      '@stacks/encryption': 4.0.0-beta.1
-      '@stacks/network': 4.0.0-beta.1
-      '@stacks/profile': 4.0.0-beta.1
-      '@stacks/storage': 4.0.0-beta.1
-      '@stacks/transactions': 4.0.0-beta.1
+      '@stacks/auth': 4.0.0
+      '@stacks/common': 4.0.0
+      '@stacks/encryption': 4.0.0
+      '@stacks/network': 4.0.0
+      '@stacks/profile': 4.0.0
+      '@stacks/storage': 4.0.0
+      '@stacks/transactions': 4.0.0
       '@types/bn.js': 4.11.6
       '@types/node': 14.18.12
       '@types/triplesec': 3.0.1
@@ -2467,14 +2453,6 @@ packages:
       - encoding
     dev: false
 
-  /@stacks/network/2.0.1:
-    resolution: {integrity: sha512-eA4AHrhFcIXIurW54HxzIoR6cYqe7hg/eS6aebtgyOUBaMc5w+RwR2iqZwG4M5aO4/Bwe3xdReINUUXJgMFK3g==}
-    dependencies:
-      '@stacks/common': 2.0.2
-    transitivePeerDependencies:
-      - encoding
-    dev: false
-
   /@stacks/network/2.0.2:
     resolution: {integrity: sha512-DX6yFP8NgrxZ1bMwTbIoYzcCcjo979Mao1YsyClFr0Bv6JBF7+jh091A9hJ62jPLZDGbZA/PNWn6QGR+t3VY/w==}
     dependencies:
@@ -2491,10 +2469,10 @@ packages:
       - encoding
     dev: false
 
-  /@stacks/network/4.0.0-beta.1:
-    resolution: {integrity: sha512-Wu9btRJJ4mJ9dFi2UiCchJ/IHAR9/C3LmJLUHtJo1jGkeLTbk6CrpY40aai18qKTaT+C+iRT0V5IjZ8Tefo+QQ==}
+  /@stacks/network/4.0.0:
+    resolution: {integrity: sha512-EcZRBUCio1K/YcL0BvA4uOPuyidiTsyDGwEY6O/aft1c+okrOwuk9blGLmwSfMvGXKD7R6o9Y3DBix55oofFnA==}
     dependencies:
-      '@stacks/common': 4.0.0-beta.1
+      '@stacks/common': 4.0.0
     transitivePeerDependencies:
       - encoding
     dev: false
@@ -2545,12 +2523,12 @@ packages:
       - encoding
     dev: false
 
-  /@stacks/profile/4.0.0-beta.1:
-    resolution: {integrity: sha512-KMeNPMepRaK8IckYfpzryHkijQkKgutLlMSIiUsBwY0iHAx89K34DAX7zpFyRG941c3OcKdzXQvvaQGgUkyvwg==}
+  /@stacks/profile/4.0.0:
+    resolution: {integrity: sha512-7PUrg7zxbAP3AzOeaF+AKkEKZhyvA9JGgBfDO1btq1Y+H/kFmEEV2I0O6XyQSLQeGRxj6Y87TJzsWEG1ypszXA==}
     dependencies:
-      '@stacks/common': 4.0.0-beta.1
-      '@stacks/network': 4.0.0-beta.1
-      '@stacks/transactions': 4.0.0-beta.1
+      '@stacks/common': 4.0.0
+      '@stacks/network': 4.0.0
+      '@stacks/transactions': 4.0.0
       jsontokens: 3.0.0
       schema-inspector: 2.0.1
       zone-file: 2.0.0-beta.3
@@ -2558,12 +2536,12 @@ packages:
       - encoding
     dev: false
 
-  /@stacks/storage/4.0.0-beta.1:
-    resolution: {integrity: sha512-3pur0teKrGhrcIdkUjesRvO9o2nJKinPrONQqOMktBUJQ1wD8ZP1029veljBf+C1zw4Iauptmnnvb7Kqm/iZrQ==}
+  /@stacks/storage/4.0.0:
+    resolution: {integrity: sha512-4KQyfLMzoMv79IhJfXGbu1N89HhYzW8OSf5NIrkexcAhzo8dkiKL5XLgcKZm+ycHfPlxiBfqk09Mx7MJLquK1Q==}
     dependencies:
-      '@stacks/auth': 4.0.0-beta.1
-      '@stacks/common': 4.0.0-beta.1
-      '@stacks/encryption': 4.0.0-beta.1
+      '@stacks/auth': 4.0.0
+      '@stacks/common': 4.0.0
+      '@stacks/encryption': 4.0.0
       bitcoinjs-lib: 5.2.0
       jsontokens: 3.0.0
     transitivePeerDependencies:
@@ -2616,13 +2594,13 @@ packages:
       - encoding
     dev: false
 
-  /@stacks/transactions/4.0.0-beta.1:
-    resolution: {integrity: sha512-7sRepyOJrFwnMjfVcJ2fagQI7WPs6VYFX5b5GYXkYu1oByjme+6BXdXXMsWVHuFFY+YfwX0MI2/Ag+nJALQ0Hg==}
+  /@stacks/transactions/4.0.0:
+    resolution: {integrity: sha512-84FKWlr2BZKisIMHdEjmmHzP+KmKLF2LCN18U8e4gYYlElqI+DsUTMquA9acPA820JgWoEBUiSu82KLsz0sxJA==}
     dependencies:
       '@noble/hashes': 1.0.0
       '@noble/secp256k1': 1.5.5
-      '@stacks/common': 4.0.0-beta.1
-      '@stacks/network': 4.0.0-beta.1
+      '@stacks/common': 4.0.0
+      '@stacks/network': 4.0.0
       '@types/bn.js': 4.11.6
       '@types/node': 14.18.12
       '@types/sha.js': 2.4.0
