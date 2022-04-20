@@ -52,10 +52,6 @@ const Header = styled('header', Container, {
   },
 });
 
-const EyeOpenIcon = styled(EyeOpenIconBase, {
-  display: 'inline-block',
-});
-
 const StatusDot = styled('div', {
   backgroundColor: '#37C391',
   width: '$2',
@@ -151,25 +147,6 @@ export const AppHeader = () => {
             />
           </Box>
         </Link>
-        {user && (
-          <Button
-            css={{
-              display: 'none',
-              '@xl': {
-                display: 'block',
-              },
-            }}
-            variant="ghost"
-            href={`/${user.username}`}
-            target="_blank"
-            as="a"
-          >
-            <Text size="action" css={{ mr: '$2', display: 'inline-block' }}>
-              Visit my blog
-            </Text>
-            <EyeOpenIcon />
-          </Button>
-        )}
       </Flex>
       <Flex
         css={{
@@ -186,7 +163,13 @@ export const AppHeader = () => {
             <DropdownMenuTrigger asChild>
               <Flex
                 tabIndex={0}
-                css={{ cursor: 'pointer' }}
+                css={{
+                  cursor: 'pointer',
+                  p: '$2',
+                  br: '$1',
+                  '&:hover': { backgroundColor: '$gray4' },
+                  '&:active': { backgroundColor: '$gray5' },
+                }}
                 gap="1"
                 align="center"
               >
@@ -195,17 +178,19 @@ export const AppHeader = () => {
               </Flex>
             </DropdownMenuTrigger>
             <DropdownMenuContent sideOffset={8}>
-              <DropdownMenuItem>
-                <Link href={`/${user.username}`} passHref>
-                  <a>My blog</a>
-                </Link>
+              <DropdownMenuItem
+                selected={router.pathname === `/${user.username}`}
+              >
+                <a href={`/${user.username}`} target="_blank">
+                  My blog
+                </a>
               </DropdownMenuItem>
-              <DropdownMenuItem>
+              <DropdownMenuItem selected={router.pathname === '/'}>
                 <Link href="/" passHref>
                   <a>Dashboard</a>
                 </Link>
               </DropdownMenuItem>
-              <DropdownMenuItem>
+              <DropdownMenuItem selected={router.pathname === '/settings'}>
                 <Link href="/settings" passHref>
                   <a>Settings</a>
                 </Link>
@@ -269,6 +254,11 @@ export const AppHeader = () => {
               Enter App
             </Button>
           </Link>
+        )}
+        {!user && isExperimentalThemeToggleEnabled && (
+          <IconButton as="button" onClick={toggleTheme}>
+            <SunIcon />
+          </IconButton>
         )}
       </Flex>
     </Header>

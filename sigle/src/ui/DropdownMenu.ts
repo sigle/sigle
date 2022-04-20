@@ -110,6 +110,11 @@ export const DropdownMenuItem = styled(DropdownMenuPrimitive.Item, {
         },
       },
     },
+    selected: {
+      true: {
+        backgroundColor: '$gray3',
+      },
+    },
   },
 
   defaultVariants: {
