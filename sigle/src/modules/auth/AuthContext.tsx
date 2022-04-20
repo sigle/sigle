@@ -10,8 +10,16 @@ import {
 import posthog from 'posthog-js';
 import { userSession } from '../../utils/blockstack';
 
+/**
+ * This interface is needed for now as users connected via Blockstack connect will see their username injected.
+ * Can be removed when we remove Blockstack connect.
+ */
+interface UserDataWithUsername extends UserData {
+  username: string;
+}
+
 const AuthContext = React.createContext<{
-  user?: UserData | LegacyUserData;
+  user?: UserDataWithUsername | LegacyUserData;
   isLegacy?: boolean;
   loggingIn: boolean;
   setUsername: (username: string) => void;
@@ -25,7 +33,7 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
   const [state, setState] = useState<{
     loggingIn: boolean;
     isLegacy?: boolean;
-    user?: UserData | LegacyUserData;
+    user?: UserDataWithUsername | LegacyUserData;
   }>({
     loggingIn: true,
   });
@@ -61,7 +69,7 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
   }, [state.user, state.isLegacy]);
 
   const handleAuthSignIn = async () => {
-    const userData = userSession.loadUserData();
+    const userData = userSession.loadUserData() as UserDataWithUsername;
     const address = userData.profile.stxAddress.mainnet;
 
     /**
@@ -117,11 +125,13 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
 
   const handleSetUsername = useCallback((username: string) => {
     const userData = userSession.loadUserData();
-    userData.username = username;
 
     setState({
       loggingIn: false,
-      user: userData,
+      user: {
+        ...userData,
+        username,
+      },
     });
   }, []);
 
@@ -131,12 +141,12 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
     redirectTo: '/',
     registerSubdomain: true,
     appDetails,
-    userSession,
+    userSession: userSession as any,
     finished: () => {
       setState({
         loggingIn: false,
         isLegacy: true,
-        user: userSession.loadUserData(),
+        user: userSession.loadUserData() as UserDataWithUsername,
       });
     },
   };
