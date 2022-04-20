@@ -57,6 +57,7 @@ const StatusDot = styled('div', {
   width: '$2',
   height: '$2',
   borderRadius: '$round',
+  mr: '$2',
 });
 
 export const AppHeader = () => {
@@ -161,20 +162,10 @@ export const AppHeader = () => {
         {user ? (
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Flex
-                tabIndex={0}
-                css={{
-                  cursor: 'pointer',
-                  p: '$3',
-                  br: '$1',
-                  '&:hover': { backgroundColor: '$gray4' },
-                }}
-                gap="2"
-                align="center"
-              >
+              <Button size="lg" variant="ghost">
                 <StatusDot />
                 <Text size="sm">{user.username}</Text>
-              </Flex>
+              </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent sideOffset={8}>
               <DropdownMenuItem
