@@ -115,7 +115,13 @@ export const AppHeader = () => {
 
   return (
     <Header>
-      <Flex justify="center" gap="10" as="nav" align="center">
+      <Flex
+        css={{ width: '100%', '@md': { width: 'auto' } }}
+        justify="between"
+        gap="10"
+        as="nav"
+        align="center"
+      >
         <Link href="/[username]" as={`/${username}`} passHref>
           <Flex as="a" css={{ '@lg': { display: 'none' } }}>
             <Image
@@ -127,6 +133,7 @@ export const AppHeader = () => {
             />
           </Flex>
         </Link>
+
         <Link href="/" passHref>
           <Box as="a" css={{ display: 'none', '@lg': { display: 'flex' } }}>
             <Image
@@ -161,7 +168,7 @@ export const AppHeader = () => {
       <Flex
         css={{
           display: 'none',
-          '@xl': {
+          '@md': {
             display: 'flex',
           },
         }}
@@ -206,7 +213,7 @@ export const AppHeader = () => {
             </IconButton>
             <IconButton
               as="a"
-              href={sigleConfig.twitterUrl}
+              href={sigleConfig.githubUrl}
               target="_blank"
               rel="noreferrer"
             >

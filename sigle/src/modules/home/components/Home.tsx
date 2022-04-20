@@ -4,12 +4,9 @@ import tw from 'twin.macro';
 import Link from 'next/link';
 import { StoryItem } from '../';
 import { SubsetStory, BlockstackUser } from '../../../types';
-import {
-  DashboardPageContainer,
-  DashboardLayout,
-} from '../../layout/components/DashboardLayout';
 import { DashboardPageTitle } from '../../layout/components/DashboardHeader';
 import { sigleConfig } from '../../../config';
+import { DashboardLayout } from '../../layout/components/DashboardLayout';
 
 const IlluContainer = styled.div`
   ${tw`flex flex-col items-center justify-center mt-8`};
@@ -80,77 +77,75 @@ export const Home = ({
 
   return (
     <DashboardLayout>
-      <DashboardPageContainer>
-        <DashboardPageTitle
-          title={
-            selectedTab === 'published'
-              ? `Published stories (${nbStoriesLabel})`
-              : `Drafts stories (${nbStoriesLabel})`
-          }
-        />
+      <DashboardPageTitle
+        title={
+          selectedTab === 'published'
+            ? `Published stories (${nbStoriesLabel})`
+            : `Drafts stories (${nbStoriesLabel})`
+        }
+      />
 
-        {showIllu && (
-          <React.Fragment>
-            <IlluContainer>
-              <Illu src="/static/img/three.png" alt="Three" />
-              <p>Shoot the "new story" button to start.</p>
-            </IlluContainer>
-            <HelpDivider />
-            <HelpText>A bit lost? We show you how to get started.</HelpText>
-            <HelpContainer>
-              <HelpCardContainer>
-                <HelpCard href={sigleConfig.documentationUrl}>
-                  <HelpCardImg src="/static/img/work.png" />
+      {showIllu && (
+        <React.Fragment>
+          <IlluContainer>
+            <Illu src="/static/img/three.png" alt="Three" />
+            <p>Shoot the "new story" button to start.</p>
+          </IlluContainer>
+          <HelpDivider />
+          <HelpText>A bit lost? We show you how to get started.</HelpText>
+          <HelpContainer>
+            <HelpCardContainer>
+              <HelpCard href={sigleConfig.documentationUrl}>
+                <HelpCardImg src="/static/img/work.png" />
+                <HelpCardCaption>
+                  <HelpCardCaptionTitle>Documentation</HelpCardCaptionTitle>
+                  <p>Step by step instructions</p>
+                </HelpCardCaption>
+              </HelpCard>
+            </HelpCardContainer>
+            <HelpCardContainer>
+              <HelpCard href="https://github.com/sigle/sigle/blob/main/CHANGELOG.md">
+                <HelpCardImg src="/static/img/data.png" />
+                <HelpCardCaption>
+                  <HelpCardCaptionTitle>What's new?</HelpCardCaptionTitle>
+                  <p>List product releases and changes</p>
+                </HelpCardCaption>
+              </HelpCard>
+            </HelpCardContainer>
+            <HelpCardContainer>
+              <HelpCard href="https://app.sigle.io/sigleapp.id.blockstack">
+                <HelpCardImg src="/static/img/albator.png" />
+                <HelpCardCaption>
+                  <HelpCardCaptionTitle>Blog</HelpCardCaptionTitle>
+                  <p>Visit our blog to see the news</p>
+                </HelpCardCaption>
+              </HelpCard>
+            </HelpCardContainer>
+            <HelpCardContainer>
+              <Link href="/help" passHref>
+                <HelpCard>
+                  <HelpCardImg src="/static/img/support.png" />
                   <HelpCardCaption>
-                    <HelpCardCaptionTitle>Documentation</HelpCardCaptionTitle>
-                    <p>Step by step instructions</p>
+                    <HelpCardCaptionTitle>Help</HelpCardCaptionTitle>
+                    <p>Get in touch with us</p>
                   </HelpCardCaption>
                 </HelpCard>
-              </HelpCardContainer>
-              <HelpCardContainer>
-                <HelpCard href="https://github.com/sigle/sigle/blob/main/CHANGELOG.md">
-                  <HelpCardImg src="/static/img/data.png" />
-                  <HelpCardCaption>
-                    <HelpCardCaptionTitle>What's new?</HelpCardCaptionTitle>
-                    <p>List product releases and changes</p>
-                  </HelpCardCaption>
-                </HelpCard>
-              </HelpCardContainer>
-              <HelpCardContainer>
-                <HelpCard href="https://app.sigle.io/sigleapp.id.blockstack">
-                  <HelpCardImg src="/static/img/albator.png" />
-                  <HelpCardCaption>
-                    <HelpCardCaptionTitle>Blog</HelpCardCaptionTitle>
-                    <p>Visit our blog to see the news</p>
-                  </HelpCardCaption>
-                </HelpCard>
-              </HelpCardContainer>
-              <HelpCardContainer>
-                <Link href="/help" passHref>
-                  <HelpCard>
-                    <HelpCardImg src="/static/img/support.png" />
-                    <HelpCardCaption>
-                      <HelpCardCaptionTitle>Help</HelpCardCaptionTitle>
-                      <p>Get in touch with us</p>
-                    </HelpCardCaption>
-                  </HelpCard>
-                </Link>
-              </HelpCardContainer>
-            </HelpContainer>
-          </React.Fragment>
-        )}
+              </Link>
+            </HelpCardContainer>
+          </HelpContainer>
+        </React.Fragment>
+      )}
 
-        {stories &&
-          stories.map((story) => (
-            <StoryItem
-              key={story.id}
-              user={user}
-              story={story}
-              type={selectedTab === 'published' ? 'public' : 'private'}
-              refetchStoriesLists={refetchStoriesLists}
-            />
-          ))}
-      </DashboardPageContainer>
+      {stories &&
+        stories.map((story) => (
+          <StoryItem
+            key={story.id}
+            user={user}
+            story={story}
+            type={selectedTab === 'published' ? 'public' : 'private'}
+            refetchStoriesLists={refetchStoriesLists}
+          />
+        ))}
     </DashboardLayout>
   );
 };
