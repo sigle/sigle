@@ -127,7 +127,7 @@ export const {
       10: '40px',
     },
     fontSizes: {
-      1: '13px',
+      1: '14px',
       2: '15px',
       3: '16px',
       4: '21px',

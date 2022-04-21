@@ -13,6 +13,7 @@ export const Text = styled('p', {
         fontSize: '$2',
         color: '$gray9',
         letterSpacing: '0.2px',
+        lineHeight: '20.4px',
       },
       md: {
         fontSize: '$3',
