@@ -1,7 +1,5 @@
 import React from 'react';
 import Link from 'next/link';
-import styledC from 'styled-components';
-import tw from 'twin.macro';
 import { StarFilledIcon } from '@radix-ui/react-icons';
 import { DotsHorizontalIcon } from '@radix-ui/react-icons';
 import format from 'date-fns/format';
