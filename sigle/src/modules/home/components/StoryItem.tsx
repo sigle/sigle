@@ -125,7 +125,6 @@ export const StoryItem = ({
           </Box>
         )}
         {story.coverImage && (
-          // <Box css={{ position: 'relative' }}>
           <Link href="/stories/[storyId]" as={`/stories/${story.id}`} passHref>
             <Box
               css={{
