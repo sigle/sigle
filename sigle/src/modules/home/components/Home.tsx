@@ -12,7 +12,6 @@ import { styled } from '../../../stitches.config';
 import { Box, Button, Flex, Text } from '../../../ui';
 
 const ImgWrapper = styled('div', {
-  maxWidth: 256,
   position: 'relative',
   mx: 'auto',
 });
@@ -21,8 +20,13 @@ const StoryCardSkeleton = () => {
   return (
     <Flex
       css={{
-        gap: '$7',
-        p: '$7',
+        display: 'none',
+
+        '@lg': {
+          display: 'flex',
+          gap: '$7',
+          p: '$7',
+        },
       }}
     >
       <Box
@@ -103,7 +107,7 @@ export const Home = ({
           {selectedTab === 'drafts' && (
             <ImgWrapper>
               <Image
-                width={256}
+                width={250}
                 height={94}
                 src="/static/img/zero_data.gif"
                 objectFit="cover"
