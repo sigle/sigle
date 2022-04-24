@@ -60,21 +60,24 @@ export const NewEditor = ({ story }: NewEditorProps) => {
   useEffect(() => {
     const warningText =
       'You have unsaved changes - are you sure you wish to leave this page?';
-    const handleWindowClose = (e: BeforeUnloadEvent) => {
-      // Compare existing HTML to saved HTML to determine whether there are unsaved changes
+
+    // Compare existing HTML to saved HTML to determine whether there are unsaved changes
+    const isEditorContentUnsaved = () => {
       const editor = editorRef.current?.getEditor();
       const storyHTML = editor?.getHTML();
-      if (storyHTML === newStory.content) {
+      return storyHTML !== newStory.content;
+    };
+
+    const handleWindowClose = (e: BeforeUnloadEvent) => {
+      if (!isEditorContentUnsaved()) {
         return;
       }
-
       e.preventDefault();
       return (e.returnValue = warningText);
     };
+
     const handleBrowseAway = () => {
-      const editor = editorRef.current?.getEditor();
-      const storyHTML = editor?.getHTML();
-      if (storyHTML === newStory.content) {
+      if (!isEditorContentUnsaved()) {
         return;
       }
 
@@ -82,6 +85,7 @@ export const NewEditor = ({ story }: NewEditorProps) => {
       router.events.emit('routeChangeError');
       throw 'routeChange aborted.';
     };
+
     window.addEventListener('beforeunload', handleWindowClose);
     router.events.on('routeChangeStart', handleBrowseAway);
     return () => {
