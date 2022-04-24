@@ -11,7 +11,19 @@ import { useRouter } from 'next/router';
 import { useState } from 'react';
 import { toast } from 'react-toastify';
 import { styled } from '../../../stitches.config';
-import { Box, Button, Container, Flex, IconButton, Text } from '../../../ui';
+import {
+  Box,
+  Button,
+  Container,
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+  Flex,
+  IconButton,
+  Text,
+} from '../../../ui';
 import {
   createNewEmptyStory,
   getStoriesFile,
@@ -22,12 +34,6 @@ import * as Fathom from 'fathom-client';
 import { useAuth } from '../../auth/AuthContext';
 import { Goals } from '../../../utils/fathom';
 import { sigleConfig } from '../../../config';
-import {
-  HoverCard,
-  HoverCardArrow,
-  HoverCardContent,
-  HoverCardTrigger,
-} from '../../../ui/HoverCard';
 import { userSession } from '../../../utils/blockstack';
 import posthog from 'posthog-js';
 import { isExperimentalThemeToggleEnabled } from '../../../utils/featureFlags';
@@ -46,15 +52,12 @@ const Header = styled('header', Container, {
   },
 });
 
-const EyeOpenIcon = styled(EyeOpenIconBase, {
-  display: 'inline-block',
-});
-
 const StatusDot = styled('div', {
   backgroundColor: '#37C391',
   width: '$2',
   height: '$2',
   borderRadius: '$round',
+  mr: '$2',
 });
 
 export const AppHeader = () => {
@@ -115,7 +118,13 @@ export const AppHeader = () => {
 
   return (
     <Header>
-      <Flex justify="center" gap="10" as="nav" align="center">
+      <Flex
+        css={{ width: '100%', '@md': { width: 'auto' } }}
+        justify="between"
+        gap="10"
+        as="nav"
+        align="center"
+      >
         <Link href="/[username]" as={`/${username}`} passHref>
           <Flex as="a" css={{ '@lg': { display: 'none' } }}>
             <Image
@@ -127,6 +136,7 @@ export const AppHeader = () => {
             />
           </Flex>
         </Link>
+
         <Link href="/" passHref>
           <Box as="a" css={{ display: 'none', '@lg': { display: 'flex' } }}>
             <Image
@@ -138,30 +148,11 @@ export const AppHeader = () => {
             />
           </Box>
         </Link>
-        {user && (
-          <Button
-            css={{
-              display: 'none',
-              '@xl': {
-                display: 'block',
-              },
-            }}
-            variant="ghost"
-            href={`/${user.username}`}
-            target="_blank"
-            as="a"
-          >
-            <Text size="action" css={{ mr: '$2', display: 'inline-block' }}>
-              Visit my blog
-            </Text>
-            <EyeOpenIcon />
-          </Button>
-        )}
       </Flex>
       <Flex
         css={{
           display: 'none',
-          '@xl': {
+          '@md': {
             display: 'flex',
           },
         }}
@@ -169,23 +160,53 @@ export const AppHeader = () => {
         gap="10"
       >
         {user ? (
-          <HoverCard openDelay={200} closeDelay={100}>
-            <HoverCardTrigger asChild>
-              <Flex
-                tabIndex={0}
-                css={{ cursor: 'pointer' }}
-                gap="1"
-                align="center"
-              >
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button size="lg" variant="ghost">
                 <StatusDot />
-                <Text>{user.username}</Text>
-              </Flex>
-            </HoverCardTrigger>
-            <HoverCardContent onClick={handleLogout} sideOffset={16}>
-              logout
-              <HoverCardArrow />
-            </HoverCardContent>
-          </HoverCard>
+                <Text size="sm">{user.username}</Text>
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent sideOffset={8}>
+              <DropdownMenuItem
+                selected={router.pathname === `/${user.username}`}
+                as="a"
+                href={`/${user.username}`}
+                target="_blank"
+              >
+                My blog
+              </DropdownMenuItem>
+              <DropdownMenuItem
+                selected={router.pathname === '/'}
+                as="a"
+                href="/"
+              >
+                Dashboard
+              </DropdownMenuItem>
+              <DropdownMenuItem
+                selected={router.pathname === '/settings'}
+                as="a"
+                href="/settings"
+              >
+                Settings
+              </DropdownMenuItem>
+              {isExperimentalThemeToggleEnabled && (
+                <>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem onClick={toggleTheme}>
+                    Switch theme
+                    <IconButton css={{ p: 0 }} as="button">
+                      <SunIcon />
+                    </IconButton>
+                  </DropdownMenuItem>
+                </>
+              )}
+              <DropdownMenuSeparator />
+              <DropdownMenuItem color="red" onClick={handleLogout}>
+                Logout
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
         ) : (
           <Flex gap="6">
             <IconButton
@@ -206,7 +227,7 @@ export const AppHeader = () => {
             </IconButton>
             <IconButton
               as="a"
-              href={sigleConfig.twitterUrl}
+              href={sigleConfig.githubUrl}
               target="_blank"
               rel="noreferrer"
             >
@@ -229,7 +250,7 @@ export const AppHeader = () => {
             </Button>
           </Link>
         )}
-        {isExperimentalThemeToggleEnabled && (
+        {!user && isExperimentalThemeToggleEnabled && (
           <IconButton as="button" onClick={toggleTheme}>
             <SunIcon />
           </IconButton>

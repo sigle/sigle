@@ -1,18 +1,19 @@
 import { useRouter } from 'next/router';
 import { NextSeo } from 'next-seo';
 import readingTime from 'reading-time';
-import { useMemo } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { SettingsFile, Story } from '../../types';
 import { sanitizeHexColor } from '../../utils/security';
 import { sigleConfig } from '../../config';
 import { TipTapEditor } from '../editor/TipTapEditor';
 import { styled } from '../../stitches.config';
-import { Box, Text } from '../../ui';
+import { Box, Container, Flex, Text } from '../../ui';
 import { PoweredBy } from './PoweredBy';
 import { getTextFromHtml } from '../editor/utils/getTextFromHtml';
 import { AppHeader } from '../layout/components/AppHeader';
 import format from 'date-fns/format';
 import Link from 'next/link';
+import { ShareButtons } from './ShareButtons';
 
 const PublicStoryContainer = styled('div', {
   margin: '0 auto',
@@ -20,6 +21,63 @@ const PublicStoryContainer = styled('div', {
   paddingBottom: '$15',
   px: '$4',
 });
+
+interface ShareButtonsOnScrollProps {
+  username: string;
+  story: Story;
+  settings: SettingsFile;
+}
+
+const ShareButtonsOnScroll = ({
+  username,
+  story,
+  settings,
+}: ShareButtonsOnScrollProps) => {
+  const [isShown, setIsShown] = useState(false);
+
+  useEffect(() => {
+    window.addEventListener('scroll', handleScroll);
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+    };
+  }, []);
+
+  const handleScroll = () => {
+    if (window.scrollY > 200) {
+      setIsShown(true);
+    } else {
+      setIsShown(false);
+    }
+  };
+
+  return (
+    <Container
+      css={{
+        display: 'flex',
+        position: 'relative',
+        justifyContent: 'center',
+        mb: '$5',
+        '@xl': {
+          justifyContent: 'end',
+          bottom: 40,
+          right: 0,
+          left: 0,
+          position: 'fixed',
+          opacity: isShown ? 1 : 0,
+          transform: isShown ? 'none' : 'translateY(100%)',
+          transition: 'opacity 0.4s, transform 0.6s',
+        },
+      }}
+    >
+      <Box>
+        <Text size="sm" css={{ mt: 0, mb: '$3', color: '$gray11' }}>
+          Share this story
+        </Text>
+        <ShareButtons username={username} story={story} settings={settings} />
+      </Box>
+    </Container>
+  );
+};
 
 interface PublicStoryProps {
   story: Story;
@@ -82,25 +140,32 @@ export const PublicStory = ({ story, settings }: PublicStoryProps) => {
           },
         }}
       >
-        <Link href="/[username]" as={`/${username}`} passHref>
-          <a className="not-prose">
-            <Text size="action">{siteName}</Text>
-            <Text
-              size="action"
-              css={{
-                display: 'flex',
-                gap: '$2',
-                color: '$gray9',
-                mt: '$1',
-                mb: '$7',
-              }}
-            >
-              {format(story.createdAt, 'MMM dd')}
-              <span>•</span>
-              <span>{storyReadingTime?.text}</span>
-            </Text>
-          </a>
-        </Link>
+        <Flex
+          justify="between"
+          align="end"
+          css={{ mb: '$7' }}
+          className="not-prose"
+        >
+          <Link href="/[username]" as={`/${username}`} passHref>
+            <a>
+              <Text size="action">{siteName}</Text>
+              <Text
+                size="action"
+                css={{
+                  display: 'flex',
+                  gap: '$2',
+                  color: '$gray9',
+                  mt: '$1',
+                }}
+              >
+                {format(story.createdAt, 'MMM dd')}
+                <span>•</span>
+                <span>{storyReadingTime?.text}</span>
+              </Text>
+            </a>
+          </Link>
+          <ShareButtons username={username} story={story} settings={settings} />
+        </Flex>
         <h1 className="sigle-title">{story.title}</h1>
         {story.coverImage && (
           <Box
@@ -124,6 +189,11 @@ export const PublicStory = ({ story, settings }: PublicStoryProps) => {
           </Box>
         )}
         <TipTapEditor story={story} editable={false} />
+        <ShareButtonsOnScroll
+          username={username}
+          story={story}
+          settings={settings}
+        />
         <PoweredBy />
       </PublicStoryContainer>
     </>

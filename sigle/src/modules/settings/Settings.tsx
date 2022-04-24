@@ -2,12 +2,12 @@ import React from 'react';
 import { toast } from 'react-toastify';
 import { useQuery } from 'react-query';
 import * as Sentry from '@sentry/nextjs';
-import { DashboardLayout } from '../layout';
-import { DashboardPageContainer } from '../layout/components/DashboardLayout';
 import { DashboardPageTitle } from '../layout/components/DashboardHeader';
 import { useAuth } from '../auth/AuthContext';
 import { getSettingsFile } from '../../utils';
 import { SettingsForm } from './SettingsForm';
+import { DashboardLayout } from '../layout/components/DashboardLayout';
+import { Box } from '../../ui';
 
 export const Settings = () => {
   const { user } = useAuth();
@@ -26,13 +26,12 @@ export const Settings = () => {
 
   return (
     <DashboardLayout>
-      <DashboardPageContainer>
-        <DashboardPageTitle title="Settings" />
-
+      <DashboardPageTitle title="Settings" />
+      <Box css={{ width: '100%' }}>
         {user && settingsFile && (
           <SettingsForm settings={settingsFile} username={user.username} />
         )}
-      </DashboardPageContainer>
+      </Box>
     </DashboardLayout>
   );
 };
