@@ -32,11 +32,13 @@ export const UnpublishDialog = ({
           </Heading>
         </DialogTitle>
         <DialogDescription asChild>
-          <Text>You’re about to unpublish this story.</Text>
-          <Text>
-            It won’t be visible on your blog anymore but you still can see and
-            edit it in your draft section.
-          </Text>
+          <>
+            <Text>You’re about to unpublish this story.</Text>
+            <Text>
+              It won’t be visible on your blog anymore but you still can see and
+              edit it in your draft section.
+            </Text>
+          </>
         </DialogDescription>
         <Flex justify="end" gap="6" css={{ mt: '$6' }}>
           <DialogClose asChild>

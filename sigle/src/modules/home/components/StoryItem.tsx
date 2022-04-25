@@ -365,8 +365,10 @@ export const StoryItem = ({
             </Heading>
           </DialogTitle>
           <DialogDescription asChild>
-            <Text>You’re about to un-feature this story.</Text>
-            <Text>Would you like to continue?</Text>
+            <>
+              <Text>You’re about to un-feature this story.</Text>
+              <Text>Would you like to continue?</Text>
+            </>
           </DialogDescription>
           <Flex justify="end" gap="6" css={{ mt: '$6' }}>
             <DialogClose asChild>
@@ -394,8 +396,10 @@ export const StoryItem = ({
             </Heading>
           </DialogTitle>
           <DialogDescription asChild>
-            <Text>You’re about to delete your story.</Text>
-            <Text>Would you like to continue?</Text>
+            <>
+              <Text>You’re about to delete your story.</Text>
+              <Text>Would you like to continue?</Text>
+            </>
           </DialogDescription>
           <Flex justify="end" gap="6" css={{ mt: '$6' }}>
             <DialogClose asChild>
