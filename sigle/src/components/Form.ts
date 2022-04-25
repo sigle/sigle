@@ -6,7 +6,7 @@ export const FormRow = styled.div`
 `;
 
 export const FormLabel = styled.label`
-  ${tw`w-full block tracking-wide font-bold text-black mb-2`};
+  ${tw`w-full block tracking-wide font-bold mb-2`};
 `;
 
 export const FormInput = styled.input`
