@@ -1,8 +1,3 @@
-/*
-Language: Clarity
-Description: Clarity syntax
-*/
-
 import { LanguageFn, Mode } from 'highlight.js';
 
 const MAIN_KEYWORDS = [
@@ -33,6 +28,7 @@ const MAIN_KEYWORDS = [
   'define-fungible-token',
   'define-non-fungible-token',
   'define-read-only',
+  'is-none',
 ];
 
 const WRITE_KEYWORDS = [
@@ -48,6 +44,8 @@ const WRITE_KEYWORDS = [
   'ft-get-balance?',
   'contract-call',
 ];
+
+const COMP_KEYWORDS = ['is-eq', 'is-some', 'is-none', 'is-ok', 'is-err'];
 
 const TYPES_FUNC_KEYWORDS = [
   'list',
@@ -66,8 +64,6 @@ const TYPES_FUNC_KEYWORDS = [
   'sha512/256',
   'keccak256',
 ];
-
-const COMP_KEYWORDS = ['is-eq', 'is-some', 'is-none', 'is-ok', 'is-err'];
 
 const CLARITY_KEYWORDS = [
   'as-contract',
@@ -102,7 +98,7 @@ export const clarity: LanguageFn = (hljs) => {
 
   const BOOLEAN: Mode = {
     scope: 'literal',
-    begin: '\\b(some|none|true|false)',
+    begin: '( |\\()(some|none|true|false)',
   };
 
   const TYPES: Mode = {
@@ -124,13 +120,21 @@ export const clarity: LanguageFn = (hljs) => {
     begin: '[a-zA-Z0-9_\\-$?!]*:',
   };
 
+  const KEYWORDS = [
+    ...MAIN_KEYWORDS,
+    ...COMP_KEYWORDS,
+    ...WRITE_KEYWORDS,
+    ...TYPES_FUNC_KEYWORDS,
+    ...CLARITY_KEYWORDS,
+  ];
+
   return {
     name: 'Clarity',
     keywords: {
-      $pattern: '[a-zA-Z][a-zA-Z0-9_\\-$?!]*',
-      keyword: [...MAIN_KEYWORDS, ...WRITE_KEYWORDS],
+      $pattern: '[a-zA-Z][a-zA-Z0-9-_$?!]*',
+      keyword: KEYWORDS,
     },
 
-    contains: [COMMENT, STRING, NUMBER, BOOLEAN, TUPLE, TYPES],
+    contains: [COMMENT, STRING, NUMBER, BOOLEAN, TYPES, TUPLE],
   };
 };
