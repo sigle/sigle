@@ -22,7 +22,7 @@ import {
   Box,
 } from '../../../ui';
 import { SubsetStory, BlockstackUser } from '../../../types';
-import { styled } from '../../../stitches.config';
+import { darkTheme, styled } from '../../../stitches.config';
 
 const StoryContainer = styled('div', {
   display: 'flex',
@@ -152,6 +152,10 @@ export const StoryItem = ({
                     backgroundColor: '$gray11',
                     opacity: 0,
                     transition: '.2s',
+
+                    [`.${darkTheme} &`]: {
+                      backgroundColor: '$colors$gray1',
+                    },
                   },
 
                   '&:hover::before': {
@@ -290,7 +294,7 @@ export const StoryItem = ({
               <Text size="xs" as="a">
                 {format(story.createdAt, 'MMMM dd, yyyy ')}
                 at
-                {format(story.createdAt, ' h:mmaaa')}
+                {format(story.createdAt, ' hh:mmaaa')}
               </Text>
             </Link>
           </Box>
