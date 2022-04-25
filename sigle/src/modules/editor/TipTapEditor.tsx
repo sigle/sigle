@@ -95,7 +95,7 @@ interface TipTapEditorProps {
   editable?: boolean;
 }
 
-lowlight.registerLanguage('clarity', clarity);
+lowlight.registerLanguage('clarity (beta)', clarity);
 
 export const TipTapEditor = forwardRef<
   {
