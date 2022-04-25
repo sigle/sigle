@@ -1,15 +1,22 @@
-import React from 'react';
-import styledC from 'styled-components';
-import tw from 'twin.macro';
-import Link from 'next/link';
+import React, { useState } from 'react';
 import { StoryItem } from '../';
 import { SubsetStory, BlockstackUser } from '../../../types';
 import { DashboardPageTitle } from '../../layout/components/DashboardHeader';
-import { sigleConfig } from '../../../config';
 import { DashboardLayout } from '../../layout/components/DashboardLayout';
 import Image from 'next/image';
 import { styled } from '../../../stitches.config';
 import { Box, Button, Flex, Text } from '../../../ui';
+import {
+  createNewEmptyStory,
+  getStoriesFile,
+  saveStoriesFile,
+  saveStoryFile,
+} from '../../../utils';
+import { createSubsetStory } from '../../editor/utils';
+import * as Fathom from 'fathom-client';
+import { Goals } from '../../../utils/fathom';
+import { useRouter } from 'next/router';
+import { toast } from 'react-toastify';
 
 const ImgWrapper = styled('div', {
   position: 'relative',
@@ -89,8 +96,33 @@ export const Home = ({
   loading,
   refetchStoriesLists,
 }: Props) => {
+  const [loadingCreate, setLoadingCreate] = useState(false);
+  const router = useRouter();
+
   const showIllu = !loading && (!stories || stories.length === 0);
   const nbStoriesLabel = loading ? '...' : stories ? stories.length : 0;
+
+  const handleCreateNewPrivateStory = async () => {
+    setLoadingCreate(true);
+    try {
+      const storiesFile = await getStoriesFile();
+      const story = createNewEmptyStory();
+
+      storiesFile.stories.unshift(
+        createSubsetStory(story, { plainContent: '' })
+      );
+
+      await saveStoriesFile(storiesFile);
+      await saveStoryFile(story);
+
+      Fathom.trackGoal(Goals.CREATE_NEW_STORY, 0);
+      router.push('/stories/[storyId]', `/stories/${story.id}`);
+    } catch (error) {
+      console.error(error);
+      toast.error(error.message);
+      setLoadingCreate(false);
+    }
+  };
 
   return (
     <DashboardLayout>
@@ -117,7 +149,15 @@ export const Home = ({
           <Text>{`You currently have no ${
             selectedTab === 'published' ? 'published stories' : 'drafts'
           }`}</Text>
-          {selectedTab === 'drafts' && <Button size="lg">Write a story</Button>}
+          {selectedTab === 'drafts' && (
+            <Button
+              disabled={loadingCreate}
+              onClick={handleCreateNewPrivateStory}
+              size="lg"
+            >
+              {!loadingCreate ? `Write a story` : `Creating new story...`}
+            </Button>
+          )}
           <StoryCardSkeleton />
           <StoryCardSkeleton />
         </Flex>
