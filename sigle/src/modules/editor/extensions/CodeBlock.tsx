@@ -46,6 +46,7 @@ export const CodeBlockComponent = (props: NodeViewProps) => {
               <option disabled>—</option>
               {props.extension.options.lowlight
                 .listLanguages()
+                .sort()
                 .map((o: string) => (
                   <option value={o} key={o}>
                     {o}

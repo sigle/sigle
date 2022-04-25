@@ -38,6 +38,7 @@ import { Story } from '../../types';
 import CharacterCount from '@tiptap/extension-character-count';
 import { Container, Text } from '../../ui';
 import { ShortcutsDialog } from './EditorShortcuts/ShortcutsDialog';
+import { clarity } from './utils/clarity-syntax';
 
 const fadeInAnimation = keyframes({
   '0%': { opacity: '0' },
@@ -93,6 +94,8 @@ interface TipTapEditorProps {
   story: Story;
   editable?: boolean;
 }
+
+lowlight.registerLanguage('clarity (beta)', clarity);
 
 export const TipTapEditor = forwardRef<
   {
