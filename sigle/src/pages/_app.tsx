@@ -149,7 +149,6 @@ export default class MyApp extends App {
             <ThemeProvider
               disableTransitionOnChange
               attribute="class"
-              defaultTheme="light"
               value={{ light: 'light-theme', dark: darkTheme.toString() }}
             >
               <Component {...modifiedPageProps} />

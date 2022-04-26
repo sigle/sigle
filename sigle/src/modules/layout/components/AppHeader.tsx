@@ -36,7 +36,6 @@ import { Goals } from '../../../utils/fathom';
 import { sigleConfig } from '../../../config';
 import { userSession } from '../../../utils/blockstack';
 import posthog from 'posthog-js';
-import { isExperimentalThemeToggleEnabled } from '../../../utils/featureFlags';
 import { createSubsetStory } from '../../editor/utils';
 import { useTheme } from 'next-themes';
 
@@ -190,17 +189,13 @@ export const AppHeader = () => {
               >
                 Settings
               </DropdownMenuItem>
-              {isExperimentalThemeToggleEnabled && (
-                <>
-                  <DropdownMenuSeparator />
-                  <DropdownMenuItem onClick={toggleTheme}>
-                    Switch theme
-                    <IconButton css={{ p: 0 }} as="button">
-                      <SunIcon />
-                    </IconButton>
-                  </DropdownMenuItem>
-                </>
-              )}
+              <DropdownMenuSeparator />
+              <DropdownMenuItem onClick={toggleTheme}>
+                Switch theme
+                <IconButton css={{ p: 0 }} as="button">
+                  <SunIcon />
+                </IconButton>
+              </DropdownMenuItem>
               <DropdownMenuSeparator />
               <DropdownMenuItem color="red" onClick={handleLogout}>
                 Logout
@@ -250,7 +245,7 @@ export const AppHeader = () => {
             </Button>
           </Link>
         )}
-        {!user && isExperimentalThemeToggleEnabled && (
+        {!user && (
           <IconButton as="button" onClick={toggleTheme}>
             <SunIcon />
           </IconButton>

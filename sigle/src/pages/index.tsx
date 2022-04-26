@@ -5,25 +5,18 @@ import { Home } from '../modules/home';
 import {
   enableExperimentalHiroWallet,
   isExperimentalHiroWalletEnabled,
-  isExperimentalThemeToggleEnabled,
-  enableExperimentalThemeToggle,
 } from '../utils/featureFlags';
 
 const HomePage = () => {
   const router = useRouter();
   const isExperimentalHiroWallet =
     router.query.experimentalHiroWallet === 'true';
-  const isExperimentalThemeToggle =
-    router.query.experimentalThemeToggle === 'true';
 
   useEffect(() => {
     if (isExperimentalHiroWallet && !isExperimentalHiroWalletEnabled) {
       enableExperimentalHiroWallet();
     }
-    if (isExperimentalThemeToggle && !isExperimentalThemeToggleEnabled) {
-      enableExperimentalThemeToggle();
-    }
-  }, [isExperimentalHiroWallet, isExperimentalThemeToggle]);
+  }, [isExperimentalHiroWallet]);
 
   return (
     <Protected>
