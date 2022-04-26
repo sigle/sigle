@@ -43,6 +43,21 @@ const orange = {
   orange12: '#CC3600',
 };
 
+const orangeDark = {
+  orange1: '#1D0900',
+  orange2: '#2C1004',
+  orange3: '#391505',
+  orange4: '#4C1D08',
+  orange5: '#572109',
+  orange6: '#6D2607',
+  orange7: '#812E0A',
+  orange8: '#A33D10',
+  orange9: '#BC410D',
+  orange10: '#CA470F',
+  orange11: '#F76808',
+  orange12: '#FF802B',
+};
+
 module.exports = {
   darkMode: 'class',
   content: ['./src/**/*.html'],
@@ -69,7 +84,7 @@ module.exports = {
             '--tw-prose-invert-body': grayDark.gray10,
             '--tw-prose-invert-headings': grayDark.gray11,
             '--tw-prose-invert-lead': grayDark.gray6,
-            '--tw-prose-invert-links': orange.orange11,
+            '--tw-prose-invert-links': orangeDark.orange11,
             '--tw-prose-invert-bold': grayDark.gray10,
             '--tw-prose-invert-counters': grayDark.gray10,
             '--tw-prose-invert-bullets': grayDark.gray10,
