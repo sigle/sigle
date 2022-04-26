@@ -1,5 +1,43 @@
 # @sigle/app
 
+## 1.2.0
+
+### Minor Changes
+
+- 90aa0ed: Improve the view when editor is loading.
+- 33eea68: Header is visible when scrolling up so users are able to save, publish and access settings at any time when writing.
+- cc136d7: Added dark theme support, you can find the dark theme toggle in the dropdown menu.
+- f00586a: Add new dashboard layout
+- d16f74d: Adjust style of dropdown menu.
+- 16ab92d: Add clarity highlighting for code blocks.
+- 3b57667: Replace hover card with dropdown menu in header.
+
+  Move theme switch into dropdown.
+
+  Move blog link into dropdown.
+
+- a834174: Add buttons to allow users to share articles on social media.
+- 34eec36: Add page for registering a username (layout only).
+- ef35f44: Trying to quit or close the editor page with unsaved changes will now prompt a warning.
+- 85fde42: Redesign story cards for desktop and mobile.
+- db19118: Add dark mode support with feature flag enabled.
+- 8fe8252: Update the content shown when the list of blog posts are empty.
+
+### Patch Changes
+
+- 0322c20: Fix code blocks not displaying with the correct styling on dark mode.
+- 28a967f: Remove underline on hover showing on links outside of the public story.
+- b17cd8c: Add clearer interactive states for dropdown items.
+- a771420: Fix incorrect text colors on dark mode in dialog modal and settings page.
+- c1eabf3: Fix the github icon pointing to twitter while logged out.
+- 3c6fd11: Fix issue with share widgets incorrectly displaying author and article url.
+- baaa19a: Update title color on public story cards.
+- 7d57960: Fix creation date for stories not working after the new editor release.
+- c0614bb: Fix editor header appearing over settings dialog.
+- 256cba1: Add a header to the blog page.
+- 464dd64: Use button component for header dropdown trigger.
+- a622863: Fix issues with text color on dark mode for twitter preview cards and settings menu inputs.
+
 ## 1.1.1
 
 ### Patch Changes
