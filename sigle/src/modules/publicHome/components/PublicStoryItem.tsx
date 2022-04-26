@@ -30,8 +30,6 @@ const StoryContainer = styled.div<{ siteColor?: string; featured?: boolean }>`
       }
     `}
 
-   
-
   &:hover .sigle-story-title {
     ${({ siteColor }) => (siteColor ? `color: ${siteColor}` : tw`text-pink`)}
   }
@@ -69,7 +67,7 @@ const StoryContainerContent = styled.div<{
 `;
 
 const StoryTitle = styled.div`
-  ${tw`text-2xl font-bold no-underline text-black transition-colors duration-200 ease-in-out`};
+  ${tw`text-2xl font-bold no-underline transition-colors duration-200 ease-in-out`};
 `;
 
 const StoryDate = styled.div`
