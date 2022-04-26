@@ -10,7 +10,7 @@ export const FormLabel = styled.label`
 `;
 
 export const FormInput = styled.input`
-  ${tw`block w-full bg-white border border-grey rounded py-3 px-3 text-sm leading-tight focus:border-grey-dark focus:ring-grey-dark`};
+  ${tw`block w-full bg-white dark:text-black border border-grey rounded py-3 px-3 text-sm leading-tight focus:border-grey-dark focus:ring-grey-dark`};
 `;
 
 export const FormInputCheckbox = styled.input`
@@ -18,7 +18,7 @@ export const FormInputCheckbox = styled.input`
 `;
 
 export const FormTextarea = styled.textarea`
-  ${tw`block w-full bg-white border border-grey rounded py-3 px-3 text-sm leading-tight focus:border-grey-dark focus:ring-grey-dark`};
+  ${tw`block w-full bg-white dark:text-black border border-grey rounded py-3 px-3 text-sm leading-tight focus:border-grey-dark focus:ring-grey-dark`};
 `;
 
 export const FormHelper = styled.p`

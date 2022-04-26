@@ -21,7 +21,7 @@ const MetaContainer = styled('div', {
 });
 
 const MetaTitle = styled('div', {
-  color: 'rgb(15, 20, 25)',
+  color: '$gray11',
   fontSize: '15px',
   lineHeight: '20px',
   overflowWrap: 'break-word',
@@ -30,7 +30,7 @@ const MetaTitle = styled('div', {
 });
 
 const MetaDescription = styled('div', {
-  color: 'rgb(83, 100, 113)',
+  color: '$gray10',
   fontSize: '15px',
   lineHeight: '20px',
   overflowWrap: 'break-word',
@@ -39,7 +39,7 @@ const MetaDescription = styled('div', {
 });
 
 const MetaLink = styled('div', {
-  color: 'rgb(83, 100, 113)',
+  color: '$gray9',
   fontSize: '15px',
   lineHeight: '20px',
   overflowWrap: 'break-word',
