@@ -1,5 +1,6 @@
 import { Editor } from '@tiptap/react';
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
+import { useRouter } from 'next/router';
 import { toast } from 'react-toastify';
 import NProgress from 'nprogress';
 import * as Fathom from 'fathom-client';
@@ -40,6 +41,7 @@ interface NewEditorProps {
 }
 
 export const NewEditor = ({ story }: NewEditorProps) => {
+  const router = useRouter();
   const editorRef = useRef<{ getEditor: () => Editor | null }>(null);
   const [loadingSave, setLoadingSave] = useState(false);
   const [newStory, setNewStory] = useState(story);
@@ -53,6 +55,44 @@ export const NewEditor = ({ story }: NewEditorProps) => {
     loading: false,
   });
   const [showSettingsDialog, setShowSettingsDialog] = useState(false);
+
+  // prompt the user if they try and leave with unsaved changes
+  useEffect(() => {
+    const warningText =
+      'You have unsaved changes - are you sure you wish to leave this page?';
+
+    // Compare existing HTML to saved HTML to determine whether there are unsaved changes
+    const isEditorContentUnsaved = () => {
+      const editor = editorRef.current?.getEditor();
+      const storyHTML = editor?.getHTML();
+      return storyHTML !== newStory.content;
+    };
+
+    const handleWindowClose = (e: BeforeUnloadEvent) => {
+      if (!isEditorContentUnsaved()) {
+        return;
+      }
+      e.preventDefault();
+      return (e.returnValue = warningText);
+    };
+
+    const handleBrowseAway = () => {
+      if (!isEditorContentUnsaved()) {
+        return;
+      }
+
+      if (window.confirm(warningText)) return;
+      router.events.emit('routeChangeError');
+      throw 'routeChange aborted.';
+    };
+
+    window.addEventListener('beforeunload', handleWindowClose);
+    router.events.on('routeChangeStart', handleBrowseAway);
+    return () => {
+      window.removeEventListener('beforeunload', handleWindowClose);
+      router.events.off('routeChangeStart', handleBrowseAway);
+    };
+  }, [newStory]);
 
   const handleOpenSettings = () => setShowSettingsDialog(true);
   const handleCloseSettings = () => setShowSettingsDialog(false);

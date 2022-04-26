@@ -60,12 +60,12 @@ export const EditorHeader = ({
   return (
     <Flex
       css={{
-        position: 'sticky',
+        position: window.scrollY < 40 ? 'relative' : 'sticky',
         transform: scroll.direction === 'down' ? 'translateY(-100%)' : 'none',
         transition: 'transform 0.5s, padding 0.2s',
         backgroundColor: '$gray1',
         top: window.scrollY < 40 ? 'auto' : 0,
-        zIndex: 1,
+        zIndex: window.scrollY < 40 ? 0 : 1,
         width: '100%',
         py: window.scrollY < 40 ? 0 : '$2',
         boxShadow: window.scrollY < 40 ? 'none' : '0 1px 0 0 $colors$gray6',
