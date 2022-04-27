@@ -7,7 +7,7 @@ import { useDropzone } from 'react-dropzone';
 import { CameraIcon, TrashIcon } from '@radix-ui/react-icons';
 import { BlockPicker } from 'react-color';
 import { SettingsFile } from '../../types';
-import { hexRegex } from '../../utils/regex';
+import { hexRegex, urlRegex } from '../../utils/regex';
 import { storage } from '../../utils/blockstack';
 import { getSettingsFile, saveSettingsFile } from '../../utils';
 import { resizeImage } from '../../utils/image';
@@ -70,6 +70,8 @@ interface SettingsFormValues {
   siteDescription: string;
   siteColor: string;
   siteLogo: string;
+  siteUrl: string;
+  siteTwitterHandle: string;
 }
 
 interface SettingsFormProps {
@@ -88,6 +90,8 @@ export const SettingsForm = ({ settings, username }: SettingsFormProps) => {
       siteDescription: settings.siteDescription || '',
       siteColor: settings.siteColor || '',
       siteLogo: settings.siteLogo || '',
+      siteUrl: settings.siteUrl || '',
+      siteTwitterHandle: settings.siteTwitterHandle || '',
     },
     validate: (values) => {
       const errors: FormikErrors<SettingsFormValues> = {};
@@ -120,6 +124,19 @@ export const SettingsForm = ({ settings, username }: SettingsFormProps) => {
         });
         newSettings.siteLogo = coverImageUrl;
       }
+      const handle = formik.values.siteTwitterHandle;
+      const website = formik.values.siteUrl;
+
+      formik.values.siteTwitterHandle = handle.split('/').pop() as string;
+      newSettings.siteTwitterHandle = handle.split('/').pop() as string;
+
+      if (handle.includes('@')) {
+        formik.values.siteTwitterHandle = handle.replace('@', '');
+        newSettings.siteTwitterHandle = handle.replace('@', '');
+      }
+
+      formik.values.siteUrl = website.replace(urlRegex, '');
+      newSettings.siteUrl = website.replace(urlRegex, '');
 
       await saveSettingsFile({
         ...settingsFile,
@@ -202,6 +219,39 @@ export const SettingsForm = ({ settings, username }: SettingsFormProps) => {
         />
         {formik.errors.siteDescription && (
           <FormHelperError>{formik.errors.siteDescription}</FormHelperError>
+        )}
+      </StyledFormRow>
+
+      <StyledFormRow>
+        <FormLabel>Website</FormLabel>
+        <FormInput
+          name="siteUrl"
+          type="text"
+          maxLength={50}
+          placeholder="https://"
+          value={formik.values.siteUrl}
+          onChange={formik.handleChange}
+        />
+        <StyledFormHelper>
+          Add a link to your personal website.
+        </StyledFormHelper>
+        {formik.errors.siteUrl && (
+          <FormHelperError>{formik.errors.siteUrl}</FormHelperError>
+        )}
+      </StyledFormRow>
+
+      <StyledFormRow>
+        <FormLabel>Twitter Handle</FormLabel>
+        <FormInput
+          name="siteTwitterHandle"
+          type="text"
+          maxLength={50}
+          value={formik.values.siteTwitterHandle}
+          onChange={formik.handleChange}
+        />
+        <StyledFormHelper>Add your twitter handle.</StyledFormHelper>
+        {formik.errors.siteUrl && (
+          <FormHelperError>{formik.errors.siteUrl}</FormHelperError>
         )}
       </StyledFormRow>
 

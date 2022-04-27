@@ -94,4 +94,12 @@ export interface SettingsFile {
    * Custom logo
    */
   siteLogo?: string;
+  /**
+   * Website link
+   */
+  siteUrl?: string;
+  /**
+   * Twitter handle
+   */
+  siteTwitterHandle?: string;
 }
