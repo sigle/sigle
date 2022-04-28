@@ -31,7 +31,7 @@ const HeaderName = styled.div`
 `;
 
 const HeaderDescription = styled.p`
-  ${tw`text-base mt-2 mb-5 text-center`};
+  ${tw`text-base mt-2 text-center`};
 `;
 
 interface PublicHomeProps {
@@ -68,7 +68,7 @@ export const PublicHome = ({ file, settings }: PublicHomeProps) => {
               .map((text, index) => (
                 <HeaderDescription key={index}>{text}</HeaderDescription>
               ))}
-          <Flex gap="3">
+          <Flex css={{ pt: '$5' }} gap="3">
             {settings.siteUrl && (
               <Text
                 css={{
