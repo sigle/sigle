@@ -1,61 +1,85 @@
-import React from 'react';
-import styled from 'styled-components';
-import tw from 'twin.macro';
-import Link from 'next/link';
+import React, { useState } from 'react';
 import { StoryItem } from '../';
 import { SubsetStory, BlockstackUser } from '../../../types';
 import { DashboardPageTitle } from '../../layout/components/DashboardHeader';
-import { sigleConfig } from '../../../config';
 import { DashboardLayout } from '../../layout/components/DashboardLayout';
+import Image from 'next/image';
+import { styled } from '../../../stitches.config';
+import { Box, Button, Flex, Text } from '../../../ui';
+import {
+  createNewEmptyStory,
+  getStoriesFile,
+  saveStoriesFile,
+  saveStoryFile,
+} from '../../../utils';
+import { createSubsetStory } from '../../editor/utils';
+import * as Fathom from 'fathom-client';
+import { Goals } from '../../../utils/fathom';
+import { useRouter } from 'next/router';
+import { toast } from 'react-toastify';
 
-const IlluContainer = styled.div`
-  ${tw`flex flex-col items-center justify-center mt-8`};
-`;
+const ImgWrapper = styled('div', {
+  position: 'relative',
+  mx: 'auto',
+});
 
-const Illu = styled.img`
-  ${tw`mb-4`};
-  width: 250px;
-  max-width: 100%;
-`;
+const StoryCardSkeleton = () => {
+  return (
+    <Flex
+      css={{
+        display: 'none',
 
-const HelpDivider = styled.div`
-  ${tw`border-b border-solid border-grey w-full py-4`};
-`;
-
-const HelpText = styled.p`
-  ${tw`mt-8`};
-`;
-
-const HelpContainer = styled.div`
-  ${tw`flex flex-wrap -mx-4 mt-4`};
-`;
-
-const HelpCardContainer = styled.div`
-  ${tw`w-1/2 md:w-1/3 xl:w-1/4 flex p-4 h-64`};
-  @media (min-width: ${sigleConfig.breakpoints.md}px) {
-    height: 20rem;
-  }
-`;
-
-const HelpCard = styled.a`
-  ${tw`w-full relative rounded bg-grey-light transition-colors duration-200`};
-  &:hover {
-    background-color: rgba(0, 0, 0, 0.2);
-  }
-`;
-
-const HelpCardImg = styled.img`
-  ${tw`p-4 m-auto max-h-full`};
-`;
-
-const HelpCardCaption = styled.div`
-  ${tw`absolute bottom-0 p-4 text-white w-full rounded-b`};
-  background: rgba(0, 0, 0, 0.4);
-`;
-
-const HelpCardCaptionTitle = styled.h5`
-  ${tw`font-bold mb-1`};
-`;
+        '@lg': {
+          display: 'flex',
+          gap: '$7',
+          p: '$7',
+        },
+      }}
+    >
+      <Box
+        css={{ width: 180, height: 130, backgroundColor: '$gray2', br: '$1' }}
+      />
+      <Flex direction="column" justify="between">
+        <Flex direction="column" gap="2">
+          <Box
+            css={{
+              width: 350,
+              height: 20,
+              backgroundColor: '$gray2',
+              br: '$1',
+            }}
+          />
+          <Box
+            css={{
+              width: 150,
+              height: 20,
+              backgroundColor: '$gray2',
+              br: '$1',
+            }}
+          />
+        </Flex>
+        <Flex direction="column" gap="2">
+          <Box
+            css={{
+              width: 600,
+              height: 20,
+              backgroundColor: '$gray2',
+              br: '$1',
+            }}
+          />
+          <Box
+            css={{
+              width: 500,
+              height: 20,
+              backgroundColor: '$gray2',
+              br: '$1',
+            }}
+          />
+        </Flex>
+      </Flex>
+    </Flex>
+  );
+};
 
 interface Props {
   selectedTab: 'published' | 'drafts';
@@ -72,8 +96,33 @@ export const Home = ({
   loading,
   refetchStoriesLists,
 }: Props) => {
+  const [loadingCreate, setLoadingCreate] = useState(false);
+  const router = useRouter();
+
   const showIllu = !loading && (!stories || stories.length === 0);
   const nbStoriesLabel = loading ? '...' : stories ? stories.length : 0;
+
+  const handleCreateNewPrivateStory = async () => {
+    setLoadingCreate(true);
+    try {
+      const storiesFile = await getStoriesFile();
+      const story = createNewEmptyStory();
+
+      storiesFile.stories.unshift(
+        createSubsetStory(story, { plainContent: '' })
+      );
+
+      await saveStoriesFile(storiesFile);
+      await saveStoryFile(story);
+
+      Fathom.trackGoal(Goals.CREATE_NEW_STORY, 0);
+      router.push('/stories/[storyId]', `/stories/${story.id}`);
+    } catch (error) {
+      console.error(error);
+      toast.error(error.message);
+      setLoadingCreate(false);
+    }
+  };
 
   return (
     <DashboardLayout>
@@ -86,54 +135,32 @@ export const Home = ({
       />
 
       {showIllu && (
-        <React.Fragment>
-          <IlluContainer>
-            <Illu src="/static/img/three.png" alt="Three" />
-            <p>Shoot the "new story" button to start.</p>
-          </IlluContainer>
-          <HelpDivider />
-          <HelpText>A bit lost? We show you how to get started.</HelpText>
-          <HelpContainer>
-            <HelpCardContainer>
-              <HelpCard href={sigleConfig.documentationUrl}>
-                <HelpCardImg src="/static/img/work.png" />
-                <HelpCardCaption>
-                  <HelpCardCaptionTitle>Documentation</HelpCardCaptionTitle>
-                  <p>Step by step instructions</p>
-                </HelpCardCaption>
-              </HelpCard>
-            </HelpCardContainer>
-            <HelpCardContainer>
-              <HelpCard href="https://github.com/sigle/sigle/blob/main/CHANGELOG.md">
-                <HelpCardImg src="/static/img/data.png" />
-                <HelpCardCaption>
-                  <HelpCardCaptionTitle>What's new?</HelpCardCaptionTitle>
-                  <p>List product releases and changes</p>
-                </HelpCardCaption>
-              </HelpCard>
-            </HelpCardContainer>
-            <HelpCardContainer>
-              <HelpCard href="https://app.sigle.io/sigleapp.id.blockstack">
-                <HelpCardImg src="/static/img/albator.png" />
-                <HelpCardCaption>
-                  <HelpCardCaptionTitle>Blog</HelpCardCaptionTitle>
-                  <p>Visit our blog to see the news</p>
-                </HelpCardCaption>
-              </HelpCard>
-            </HelpCardContainer>
-            <HelpCardContainer>
-              <Link href="/help" passHref>
-                <HelpCard>
-                  <HelpCardImg src="/static/img/support.png" />
-                  <HelpCardCaption>
-                    <HelpCardCaptionTitle>Help</HelpCardCaptionTitle>
-                    <p>Get in touch with us</p>
-                  </HelpCardCaption>
-                </HelpCard>
-              </Link>
-            </HelpCardContainer>
-          </HelpContainer>
-        </React.Fragment>
+        <Flex css={{ mt: '$10' }} align="center" direction="column" gap="5">
+          {selectedTab === 'drafts' && (
+            <ImgWrapper>
+              <Image
+                width={250}
+                height={94}
+                src="/static/img/zero_data.gif"
+                objectFit="cover"
+              />
+            </ImgWrapper>
+          )}
+          <Text>{`You currently have no ${
+            selectedTab === 'published' ? 'published stories' : 'drafts'
+          }`}</Text>
+          {selectedTab === 'drafts' && (
+            <Button
+              disabled={loadingCreate}
+              onClick={handleCreateNewPrivateStory}
+              size="lg"
+            >
+              {!loadingCreate ? `Write a story` : `Creating new story...`}
+            </Button>
+          )}
+          <StoryCardSkeleton />
+          <StoryCardSkeleton />
+        </Flex>
       )}
 
       {stories &&

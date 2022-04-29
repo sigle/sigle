@@ -65,6 +65,11 @@ const GlobalStyle = globalCss({
     height: '100%',
   },
 
+  '#__next': {
+    position: 'relative',
+    zIndex: 0,
+  },
+
   body: {
     fontFamily: '$openSans',
     backgroundColor: '$gray1',
@@ -149,7 +154,6 @@ export default class MyApp extends App {
             <ThemeProvider
               disableTransitionOnChange
               attribute="class"
-              defaultTheme="light"
               value={{ light: 'light-theme', dark: darkTheme.toString() }}
             >
               <Component {...modifiedPageProps} />

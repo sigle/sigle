@@ -29,8 +29,10 @@ type DialogProps = React.ComponentProps<typeof DialogPrimitive.Root> & {
 export function Dialog({ children, ...props }: DialogProps) {
   return (
     <DialogPrimitive.Root {...props}>
-      <StyledOverlay />
-      {children}
+      <DialogPrimitive.Portal>
+        <StyledOverlay />
+        {children}
+      </DialogPrimitive.Portal>
     </DialogPrimitive.Root>
   );
 }
@@ -41,7 +43,8 @@ const contentShow = keyframes({
 });
 
 const StyledContent = styled(DialogPrimitive.Content, {
-  backgroundColor: 'white',
+  backgroundColor: '$gray1',
+  color: '$gray11',
   br: '$2',
   boxShadow: '0px 0px 33px rgba(0, 0, 0, 0.08)',
   position: 'fixed',
