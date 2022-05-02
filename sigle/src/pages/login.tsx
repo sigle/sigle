@@ -80,7 +80,14 @@ const Login = () => {
           </Box>
         </Text>
       )}
-      <Button color="orange" size="lg" onClick={handleLogin} css={{ mt: '$7' }}>
+      <Button
+        color="orange"
+        size="lg"
+        onClick={
+          isExperimentalHiroWalletEnabled ? handleLogin : handleLoginLegacy
+        }
+        css={{ mt: '$7' }}
+      >
         {isExperimentalHiroWalletEnabled ? 'Connect Wallet' : 'Start Writing'}
       </Button>
       {isExperimentalHiroWalletEnabled ? (

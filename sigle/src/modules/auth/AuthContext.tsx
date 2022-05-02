@@ -70,7 +70,9 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
 
   const handleAuthSignIn = async () => {
     const userData = userSession.loadUserData() as UserDataWithUsername;
-    const address = userData.profile.stxAddress.mainnet;
+    // userData.profile.stxAddress is used when user login via Blockstack connect
+    const address =
+      userData.profile.stxAddress.mainnet || userData.profile.stxAddress;
 
     /**
      * We try to manually inject the user's username into the userData object,
