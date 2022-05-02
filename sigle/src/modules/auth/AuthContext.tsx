@@ -8,7 +8,7 @@ import {
   AuthOptions as LegacyAuthOptions,
 } from '@stacks/legacy-connect-react';
 import posthog from 'posthog-js';
-import { userSession } from '../../utils/blockstack';
+import { userSession, legacyUserSession } from '../../utils/blockstack';
 
 /**
  * This interface is needed for now as users connected via Blockstack connect will see their username injected.
@@ -70,9 +70,7 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
 
   const handleAuthSignIn = async () => {
     const userData = userSession.loadUserData() as UserDataWithUsername;
-    // userData.profile.stxAddress is used when user login via Blockstack connect
-    const address =
-      userData.profile.stxAddress.mainnet || userData.profile.stxAddress;
+    const address = userData.profile.stxAddress.mainnet;
 
     /**
      * We try to manually inject the user's username into the userData object,
@@ -81,7 +79,7 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
      * 2. When registering a new free subdomain with Sigle, it takes time to get injected by
      * the Hiro wallet.
      */
-    if (userData.username === undefined) {
+    if (userData.username === undefined && address) {
       try {
         const namesResponse = await fetch(
           `https://stacks-node-api.stacks.co/v1/addresses/stacks/${address}`
@@ -143,12 +141,12 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
     redirectTo: '/',
     registerSubdomain: true,
     appDetails,
-    userSession: userSession as any,
+    userSession: legacyUserSession,
     finished: () => {
       setState({
         loggingIn: false,
         isLegacy: true,
-        user: userSession.loadUserData() as UserDataWithUsername,
+        user: legacyUserSession.loadUserData(),
       });
     },
   };
