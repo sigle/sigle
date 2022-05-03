@@ -41,7 +41,7 @@ const Login = () => {
       {isExperimentalHiroWalletEnabled ? (
         <Heading
           as="h1"
-          size="2xl"
+          size="lg"
           css={{
             mt: '$3',
             fontWeight: 600,

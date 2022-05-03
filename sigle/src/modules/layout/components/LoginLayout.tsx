@@ -1,13 +1,8 @@
 import React from 'react';
 import Image from 'next/image';
 import { styled } from '../../../stitches.config';
-import { Container, Flex, IconButton, Text } from '../../../ui';
+import { Container } from '../../../ui';
 import { sigleConfig } from '../../../config';
-import {
-  DiscordLogoIcon,
-  GitHubLogoIcon,
-  TwitterLogoIcon,
-} from '@radix-ui/react-icons';
 import { useTheme } from 'next-themes';
 import { AppFooter } from './AppFooter';
 
