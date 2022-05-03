@@ -128,15 +128,30 @@ export const SettingsForm = ({ settings, username }: SettingsFormProps) => {
       const website = formik.values.siteUrl;
 
       formik.values.siteTwitterHandle = handle.split('/').pop() as string;
-      newSettings.siteTwitterHandle = handle.split('/').pop() as string;
 
-      if (handle.includes('@')) {
-        formik.values.siteTwitterHandle = handle.replace('@', '');
-        newSettings.siteTwitterHandle = handle.replace('@', '');
-      }
+      formik.values.siteTwitterHandle = handle.replace('@', '');
+      newSettings.siteTwitterHandle = handle.replace('@', '');
 
-      formik.values.siteUrl = website.replace(urlRegex, '');
-      newSettings.siteUrl = website.replace(urlRegex, '');
+      const isValidUrl = (url: string) => {
+        try {
+          new URL(url);
+        } catch (e) {
+          console.error(e);
+          return false;
+        }
+        return true;
+      };
+
+      formik.values.siteUrl = isValidUrl(website)
+        ? website.replace(urlRegex, '')
+        : '';
+      newSettings.siteUrl = isValidUrl(website)
+        ? website.replace(urlRegex, '')
+        : '';
+
+      formik.errors.siteUrl = isValidUrl(website)
+        ? undefined
+        : 'Invalid TLD entered';
 
       await saveSettingsFile({
         ...settingsFile,
@@ -228,7 +243,7 @@ export const SettingsForm = ({ settings, username }: SettingsFormProps) => {
           name="siteUrl"
           type="text"
           maxLength={50}
-          placeholder="https://"
+          placeholder="https://example.com"
           value={formik.values.siteUrl}
           onChange={formik.handleChange}
         />
@@ -250,8 +265,8 @@ export const SettingsForm = ({ settings, username }: SettingsFormProps) => {
           onChange={formik.handleChange}
         />
         <StyledFormHelper>Add your twitter handle.</StyledFormHelper>
-        {formik.errors.siteUrl && (
-          <FormHelperError>{formik.errors.siteUrl}</FormHelperError>
+        {formik.errors.siteTwitterHandle && (
+          <FormHelperError>{formik.errors.siteTwitterHandle}</FormHelperError>
         )}
       </StyledFormRow>
 
