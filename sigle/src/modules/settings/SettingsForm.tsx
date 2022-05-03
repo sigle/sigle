@@ -250,8 +250,8 @@ export const SettingsForm = ({ settings, username }: SettingsFormProps) => {
           onChange={formik.handleChange}
         />
         <StyledFormHelper>Add your twitter handle.</StyledFormHelper>
-        {formik.errors.siteUrl && (
-          <FormHelperError>{formik.errors.siteUrl}</FormHelperError>
+        {formik.errors.siteTwitterHandle && (
+          <FormHelperError>{formik.errors.siteTwitterHandle}</FormHelperError>
         )}
       </StyledFormRow>
 
