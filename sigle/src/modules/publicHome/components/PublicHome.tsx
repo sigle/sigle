@@ -5,7 +5,8 @@ import { useRouter } from 'next/router';
 import { StoryFile, SettingsFile } from '../../../types';
 import { Container } from '../../../components';
 import { PublicStoryItem } from './PublicStoryItem';
-import { PoweredBy } from '../../publicStory/components/PoweredBy';
+import { PoweredBy } from '../../publicStory/PoweredBy';
+import { AppHeader } from '../../layout/components/AppHeader';
 
 const StyledContainer = styled(Container)`
   ${tw`pt-4 pb-16`};
@@ -52,6 +53,7 @@ export const PublicHome = ({ file, settings }: PublicHomeProps) => {
   return (
     <React.Fragment>
       <Container>
+        <AppHeader />
         <Header>
           {settings.siteLogo && (
             <HeaderLogo src={settings.siteLogo} alt={`${siteName} logo`} />

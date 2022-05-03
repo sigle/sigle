@@ -1,4 +1,5 @@
 import { NodeViewWrapper, NodeViewProps, NodeViewContent } from '@tiptap/react';
+import { darkTheme } from '../../../stitches.config';
 import { Box, Button } from '../../../ui';
 
 /**
@@ -31,6 +32,11 @@ export const CodeBlockComponent = (props: NodeViewProps) => {
                   color: '$gray1',
                   backgroundColor: '$gray10',
                 },
+
+                [`.${darkTheme} &`]: {
+                  color: '$gray10',
+                  backgroundColor: '$gray5',
+                },
               }}
               contentEditable={false}
               onChange={handleCHangeLanguage}
@@ -40,6 +46,7 @@ export const CodeBlockComponent = (props: NodeViewProps) => {
               <option disabled>—</option>
               {props.extension.options.lowlight
                 .listLanguages()
+                .sort()
                 .map((o: string) => (
                   <option value={o} key={o}>
                     {o}

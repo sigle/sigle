@@ -1,5 +1,77 @@
 # @sigle/app
 
+## 1.2.0
+
+### Minor Changes
+
+- 90aa0ed: Improve the view when editor is loading.
+- 33eea68: Header is visible when scrolling up so users are able to save, publish and access settings at any time when writing.
+- cc136d7: Added dark theme support, you can find the dark theme toggle in the dropdown menu.
+- f00586a: Add new dashboard layout
+- d16f74d: Adjust style of dropdown menu.
+- 16ab92d: Add clarity highlighting for code blocks.
+- 3b57667: Replace hover card with dropdown menu in header.
+
+  Move theme switch into dropdown.
+
+  Move blog link into dropdown.
+
+- a834174: Add buttons to allow users to share articles on social media.
+- 34eec36: Add page for registering a username (layout only).
+- ef35f44: Trying to quit or close the editor page with unsaved changes will now prompt a warning.
+- 85fde42: Redesign story cards for desktop and mobile.
+- db19118: Add dark mode support with feature flag enabled.
+- 8fe8252: Update the content shown when the list of blog posts are empty.
+
+### Patch Changes
+
+- 0322c20: Fix code blocks not displaying with the correct styling on dark mode.
+- 28a967f: Remove underline on hover showing on links outside of the public story.
+- b17cd8c: Add clearer interactive states for dropdown items.
+- a771420: Fix incorrect text colors on dark mode in dialog modal and settings page.
+- c1eabf3: Fix the github icon pointing to twitter while logged out.
+- 3c6fd11: Fix issue with share widgets incorrectly displaying author and article url.
+- baaa19a: Update title color on public story cards.
+- 7d57960: Fix creation date for stories not working after the new editor release.
+- c0614bb: Fix editor header appearing over settings dialog.
+- 256cba1: Add a header to the blog page.
+- 464dd64: Use button component for header dropdown trigger.
+- a622863: Fix issues with text color on dark mode for twitter preview cards and settings menu inputs.
+
+## 1.1.1
+
+### Patch Changes
+
+- dc163d3: Add missing Link shortcut.
+- da6d41a: Fix hints layout issue.
+- 91b23dd: Fix an issue when uploading large images/gifs in the editor and changing the focus before the upload is finished.
+
+## 1.1.0
+
+### Minor Changes
+
+- 46a0a95: New editor is live! See https://app.sigle.io/sigleapp.id.blockstack/zsoVIi3V6CE55-ygCdjVG to see what's new.
+
+## 1.0.0
+
+### Major Changes
+
+- d7ac262: First major version to have concistent versionning after this release.
+
+## 0.4.0
+
+### Minor Changes
+
+- 52ed980: Add dialog with editor shortcuts and hints.
+- 7c5cdb3: Add hover card to allow users to logout on published story page.
+- ce7e030: Add footer to login page.
+
+### Patch Changes
+
+- 1a4d94c: Fix horizontal scroll appearing on mobile screen sizes.
+- 8bc7a11: Create feature flag for the Hiro wallet integration.
+- 2660d62: Fix language issue when displaying code blocks.
+
 ## 0.3.0
 
 ### Minor Changes

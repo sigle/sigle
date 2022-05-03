@@ -1,6 +1,6 @@
 import * as DialogPrimitive from '@radix-ui/react-dialog';
 import { Cross1Icon } from '@radix-ui/react-icons';
-import { keyframes, styled } from '../stitches.config';
+import { CSS, darkTheme, keyframes, styled } from '../stitches.config';
 import { IconButton } from './IconButton';
 
 const overlayShow = keyframes({
@@ -9,9 +9,14 @@ const overlayShow = keyframes({
 });
 
 const StyledOverlay = styled(DialogPrimitive.Overlay, {
-  backgroundColor: 'rgba(23, 23, 23, 0.3)',
+  backgroundColor: 'rgba(8, 8, 8, 0.7)',
   position: 'fixed',
   inset: 0,
+
+  [`.${darkTheme} &`]: {
+    backgroundColor: 'rgba(46, 46, 46, 0.7)',
+  },
+
   '@media (prefers-reduced-motion: no-preference)': {
     animation: `${overlayShow} 150ms cubic-bezier(0.16, 1, 0.3, 1)`,
   },
@@ -24,8 +29,10 @@ type DialogProps = React.ComponentProps<typeof DialogPrimitive.Root> & {
 export function Dialog({ children, ...props }: DialogProps) {
   return (
     <DialogPrimitive.Root {...props}>
-      <StyledOverlay />
-      {children}
+      <DialogPrimitive.Portal>
+        <StyledOverlay />
+        {children}
+      </DialogPrimitive.Portal>
     </DialogPrimitive.Root>
   );
 }
@@ -36,7 +43,8 @@ const contentShow = keyframes({
 });
 
 const StyledContent = styled(DialogPrimitive.Content, {
-  backgroundColor: 'white',
+  backgroundColor: '$gray1',
+  color: '$gray11',
   br: '$2',
   boxShadow: '0px 0px 33px rgba(0, 0, 0, 0.08)',
   position: 'fixed',
@@ -63,7 +71,9 @@ const StyledCloseButton = styled(DialogPrimitive.Close, {
   right: '$6',
 });
 
-type DialogContentProps = React.ComponentProps<typeof DialogPrimitive.Content>;
+type DialogContentProps = React.ComponentProps<
+  typeof DialogPrimitive.Content
+> & { css?: CSS };
 
 export function DialogContent({ children, ...props }: DialogContentProps) {
   return (

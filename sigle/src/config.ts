@@ -10,10 +10,10 @@ export const sigleConfig = {
   githubUrl: 'https://github.com/sigle/sigle',
   twitterUrl: 'https://twitter.com/sigleapp',
   discordUrl: 'https://discord.gg/X2Dbz3xbrs',
-  facebookUrl: 'https://www.facebook.com/sigleapp',
   messengerUrl: 'https://m.me/sigleapp',
   documentationUrl: 'https://docs.sigle.io',
   feedbackUrl: 'https://sigle.canny.io/feature-requests',
+  blogUrl: 'https://app.sigle.io/sigleapp.id.blockstack',
   email: 'sigle@protonmail.com',
   // This reflect the tailwindcss config
   breakpoints: {

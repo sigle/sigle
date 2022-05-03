@@ -21,15 +21,6 @@
   <a href="https://www.producthunt.com/posts/sigle?utm_source=badge-featured&utm_medium=badge&utm_souce=badge-sigle" target="_blank"><img src="https://api.producthunt.com/widgets/embed-image/v1/featured.svg?post_id=145305&theme=light" alt="Sigle - A beautiful, decentralized and open source blog maker | Product Hunt Embed" style="width: 250px; height: 54px;" width="250px" height="54px" /></a>
 </p>
 
-## Codebase
-
-Here is a list of the big technologies we use:
-
-- [Stacks](https://www.stacks.co/): Authentication and storage
-- [Next.js](https://nextjs.org/): React Framework
-- [Tailwind CSS](https://tailwindcss.com/): CSS Framework
-- [Slate](https://www.slatejs.org/): Text editor Framework
-
 ## Contributing
 
 Read our [contributing guide](CONTRIBUTING.md) to see how to locally setup the repository and see our development process.

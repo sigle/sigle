@@ -1,5 +1,25 @@
 # @sigle/tailwind-style
 
+## 1.1.0
+
+### Minor Changes
+
+- db19118: Add dark mode styles to config.
+- a622863: Add orange palette for dark mode.
+
+### Patch Changes
+
+- 3cd8380: Add underline to links on public story when hovering.
+- 0322c20: Fix code block color styles on dark mode.
+- 28a967f: Fix double underline appearing on editor where a user manually adds an underline to a link.
+- f00586a: Update editor content max width.
+
+## 1.0.0
+
+### Major Changes
+
+- d7ac262: First major version to have concistent versionning after this release.
+
 ## 0.2.0
 
 ### Minor Changes

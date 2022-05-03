@@ -3,6 +3,7 @@ import {
   GitHubLogoIcon,
   TwitterLogoIcon,
   DiscordLogoIcon,
+  SunIcon,
 } from '@radix-ui/react-icons';
 import Link from 'next/link';
 import Image from 'next/image';
@@ -10,9 +11,20 @@ import { useRouter } from 'next/router';
 import { useState } from 'react';
 import { toast } from 'react-toastify';
 import { styled } from '../../../stitches.config';
-import { Box, Button, Container, Flex, IconButton, Text } from '../../../ui';
 import {
-  convertStoryToSubsetStory,
+  Box,
+  Button,
+  Container,
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+  Flex,
+  IconButton,
+  Text,
+} from '../../../ui';
+import {
   createNewEmptyStory,
   getStoriesFile,
   saveStoriesFile,
@@ -22,6 +34,10 @@ import * as Fathom from 'fathom-client';
 import { useAuth } from '../../auth/AuthContext';
 import { Goals } from '../../../utils/fathom';
 import { sigleConfig } from '../../../config';
+import { userSession } from '../../../utils/blockstack';
+import posthog from 'posthog-js';
+import { createSubsetStory } from '../../editor/utils';
+import { useTheme } from 'next-themes';
 
 const Header = styled('header', Container, {
   display: 'flex',
@@ -35,18 +51,16 @@ const Header = styled('header', Container, {
   },
 });
 
-const EyeOpenIcon = styled(EyeOpenIconBase, {
-  display: 'inline-block',
-});
-
 const StatusDot = styled('div', {
   backgroundColor: '#37C391',
   width: '$2',
   height: '$2',
   borderRadius: '$round',
+  mr: '$2',
 });
 
 export const AppHeader = () => {
+  const { resolvedTheme, setTheme } = useTheme();
   const { user } = useAuth();
   const router = useRouter();
   const [loadingCreate, setLoadingCreate] = useState(false);
@@ -54,13 +68,34 @@ export const AppHeader = () => {
     username: string;
   };
 
+  const toggleTheme = () => {
+    resolvedTheme === 'dark' ? setTheme('light') : setTheme('dark');
+  };
+
+  let src;
+
+  switch (resolvedTheme) {
+    case 'light':
+      src = '/static/img/logo.png';
+      break;
+    case 'dark':
+      src = '/static/img/logo_white.png';
+      break;
+    default:
+      src =
+        'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7';
+      break;
+  }
+
   const handleCreateNewPrivateStory = async () => {
     setLoadingCreate(true);
     try {
       const storiesFile = await getStoriesFile();
       const story = createNewEmptyStory();
 
-      storiesFile.stories.unshift(convertStoryToSubsetStory(story));
+      storiesFile.stories.unshift(
+        createSubsetStory(story, { plainContent: '' })
+      );
 
       await saveStoriesFile(storiesFile);
       await saveStoryFile(story);
@@ -74,57 +109,49 @@ export const AppHeader = () => {
     }
   };
 
+  const handleLogout = () => {
+    userSession.signUserOut();
+    window.location.reload();
+    posthog.reset();
+  };
+
   return (
     <Header>
-      <Flex justify="center" gap="10" as="nav" align="center">
+      <Flex
+        css={{ width: '100%', '@md': { width: 'auto' } }}
+        justify="between"
+        gap="10"
+        as="nav"
+        align="center"
+      >
         <Link href="/[username]" as={`/${username}`} passHref>
           <Flex as="a" css={{ '@lg': { display: 'none' } }}>
             <Image
-              priority
-              width={101}
-              height={45}
+              width={93}
+              height={34}
               objectFit="cover"
-              src="/static/img/logo.png"
+              src={src}
               alt="logo"
             />
           </Flex>
         </Link>
+
         <Link href="/" passHref>
           <Box as="a" css={{ display: 'none', '@lg': { display: 'flex' } }}>
             <Image
-              priority
-              width={101}
-              height={45}
+              width={93}
+              height={34}
               objectFit="cover"
-              src="/static/img/logo.png"
+              src={src}
               alt="logo"
             />
           </Box>
         </Link>
-        {user && (
-          <Button
-            css={{
-              display: 'none',
-              '@xl': {
-                display: 'block',
-              },
-            }}
-            variant="ghost"
-            href={`/${user.username}`}
-            target="_blank"
-            as="a"
-          >
-            <Text size="action" css={{ mr: '$2', display: 'inline-block' }}>
-              Visit my blog
-            </Text>
-            <EyeOpenIcon />
-          </Button>
-        )}
       </Flex>
       <Flex
         css={{
           display: 'none',
-          '@xl': {
+          '@md': {
             display: 'flex',
           },
         }}
@@ -132,10 +159,49 @@ export const AppHeader = () => {
         gap="10"
       >
         {user ? (
-          <Flex gap="1" align="center">
-            <StatusDot />
-            <Text>{user.username}</Text>
-          </Flex>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button size="lg" variant="ghost">
+                <StatusDot />
+                <Text size="sm">{user.username}</Text>
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent sideOffset={8}>
+              <DropdownMenuItem
+                selected={router.pathname === `/${user.username}`}
+                as="a"
+                href={`/${user.username}`}
+                target="_blank"
+              >
+                My blog
+              </DropdownMenuItem>
+              <DropdownMenuItem
+                selected={router.pathname === '/'}
+                as="a"
+                href="/"
+              >
+                Dashboard
+              </DropdownMenuItem>
+              <DropdownMenuItem
+                selected={router.pathname === '/settings'}
+                as="a"
+                href="/settings"
+              >
+                Settings
+              </DropdownMenuItem>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem onClick={toggleTheme}>
+                Switch theme
+                <IconButton css={{ p: 0 }} as="button">
+                  <SunIcon />
+                </IconButton>
+              </DropdownMenuItem>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem color="red" onClick={handleLogout}>
+                Logout
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
         ) : (
           <Flex gap="6">
             <IconButton
@@ -156,7 +222,7 @@ export const AppHeader = () => {
             </IconButton>
             <IconButton
               as="a"
-              href={sigleConfig.twitterUrl}
+              href={sigleConfig.githubUrl}
               target="_blank"
               rel="noreferrer"
             >
@@ -178,6 +244,11 @@ export const AppHeader = () => {
               Enter App
             </Button>
           </Link>
+        )}
+        {!user && (
+          <IconButton as="button" onClick={toggleTheme}>
+            <SunIcon />
+          </IconButton>
         )}
       </Flex>
     </Header>

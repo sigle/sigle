@@ -5,6 +5,7 @@ import { getServerSideProps } from './[storyId]';
 
 jest.mock('@stacks/auth');
 jest.mock('@sentry/nextjs');
+jest.mock('../../modules/publicStory/PublicStory', () => null);
 
 const params = {
   params: { username: 'usernameTest' },

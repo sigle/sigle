@@ -20,7 +20,8 @@ import '@sigle/tailwind-style/dist/tailwind.css';
 import { sigleConfig } from '../config';
 import { colors } from '../utils/colors';
 import { AuthProvider } from '../modules/auth/AuthContext';
-import { globalCss } from '../stitches.config';
+import { darkTheme, globalCss } from '../stitches.config';
+import { ThemeProvider } from 'next-themes';
 
 const queryClient = new QueryClient();
 
@@ -62,6 +63,11 @@ Router.events.on('routeChangeComplete', () => {
 const GlobalStyle = globalCss({
   'html, body, #root, #__next': {
     height: '100%',
+  },
+
+  '#__next': {
+    position: 'relative',
+    zIndex: 0,
   },
 
   body: {
@@ -145,7 +151,13 @@ export default class MyApp extends App {
         <QueryClientProvider client={queryClient}>
           <ReactQueryDevtools initialIsOpen={false} />
           <AuthProvider>
-            <Component {...modifiedPageProps} />
+            <ThemeProvider
+              disableTransitionOnChange
+              attribute="class"
+              value={{ light: 'light-theme', dark: darkTheme.toString() }}
+            >
+              <Component {...modifiedPageProps} />
+            </ThemeProvider>
           </AuthProvider>
         </QueryClientProvider>
         <ToastContainer autoClose={3000} icon={false} theme="colored" />

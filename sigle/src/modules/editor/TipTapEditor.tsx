@@ -32,11 +32,13 @@ import { SlashCommands } from './extensions/SlashCommands';
 import { BubbleMenu } from './BubbleMenu';
 import { slashCommands, SlashCommandsList } from './InlineMenu';
 import { FloatingMenu } from './FloatingMenu';
-import { styled, globalCss, keyframes } from '../../stitches.config';
+import { styled, globalCss, keyframes, darkTheme } from '../../stitches.config';
 import { CodeBlockComponent } from './extensions/CodeBlock';
 import { Story } from '../../types';
 import CharacterCount from '@tiptap/extension-character-count';
 import { Container, Text } from '../../ui';
+import { ShortcutsDialog } from './EditorShortcuts/ShortcutsDialog';
+import { clarity } from './utils/clarity-syntax';
 
 const fadeInAnimation = keyframes({
   '0%': { opacity: '0' },
@@ -54,11 +56,12 @@ const StyledEditorContent = styled(EditorContent, {
   '& .ProseMirror p.is-empty::before': {
     content: 'attr(data-placeholder)',
     float: 'left',
-    color: '#bbbaba',
+    color: '$gray8',
     pointerEvents: 'none',
     height: 0,
     animation: `${fadeInAnimation} 75ms cubic-bezier(0, 0, 0.2, 1)`,
   },
+
   // Image selected style
   '& img.ProseMirror-selectednode': {
     outline: '1px solid $orange11',
@@ -72,12 +75,18 @@ const StyledEditorContent = styled(EditorContent, {
 // Tippyjs theme used by the slash command menu
 const globalStylesCustomEditor = globalCss({
   ".tippy-box[data-theme~='sigle-editor'] .tippy-content": {
+    overflow: 'hidden',
     padding: 0,
     backgroundColor: '$gray1',
     boxShadow:
-      '0px 10px 38px -10px rgba(26, 26, 26, 0.35), 0px 10px 20px -15px rgba(26, 26, 26, 0.2)',
+      '0px 8px 20px rgba(8, 8, 8, 0.09), 0px 10px 18px rgba(8, 8, 8, 0.06), 0px 5px 14px rgba(8, 8, 8, 0.05), 0px 3px 8px rgba(8, 8, 8, 0.05), 0px 1px 5px rgba(8, 8, 8, 0.04), 0px 1px 2px rgba(8, 8, 8, 0.03), 0px 0.2px 1px rgba(8, 8, 8, 0.02)',
     br: '$1',
     minWidth: '280px',
+
+    [`.${darkTheme} &`]: {
+      boxShadow:
+        '0px 8px 20px rgba(8, 8, 8, 0.3), 0px 10px 18px rgba(8, 8, 8, 0.28), 0px 5px 14px rgba(8, 8, 8, 0.24), 0px 3px 8px rgba(8, 8, 8, 0.2), 0px 1px 5px rgba(8, 8, 8, 0.18), 0px 1px 2px rgba(8, 8, 8, 0.16), 0px 0.2px 1px rgba(8, 8, 8, 0.08)',
+    },
   },
 });
 
@@ -85,6 +94,8 @@ interface TipTapEditorProps {
   story: Story;
   editable?: boolean;
 }
+
+lowlight.registerLanguage('clarity (beta)', clarity);
 
 export const TipTapEditor = forwardRef<
   {
@@ -137,6 +148,10 @@ export const TipTapEditor = forwardRef<
                 }
               },
             },
+            id: {
+              default: false,
+              renderHTML: () => ({}),
+            },
           };
         },
       }),
@@ -184,16 +199,24 @@ export const TipTapEditor = forwardRef<
       <StyledEditorContent editor={editor} />
       <Container
         css={{
+          display: 'flex',
+          alignItems: 'center',
+          gap: '$10',
           position: 'fixed',
           bottom: 0,
           right: 0,
           left: 0,
-          zIndex: -1,
-          textAlign: 'right',
+          zIndex: 0,
+          justifyContent: 'end',
         }}
       >
         {editable && (
-          <Text size="sm">{editor?.storage.characterCount.words()} words</Text>
+          <>
+            <Text size="sm">
+              {editor?.storage.characterCount.words()} words
+            </Text>
+            <ShortcutsDialog />
+          </>
         )}
       </Container>
     </>

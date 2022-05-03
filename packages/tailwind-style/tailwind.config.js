@@ -13,6 +13,21 @@ const gray = {
   gray12: '#080808',
 };
 
+const grayDark = {
+  gray1: '#1a1a1a',
+  gray2: '#202020',
+  gray3: '#232323',
+  gray4: '#282828',
+  gray5: '#2e2e2e',
+  gray6: '#343434',
+  gray7: '#3e3e3e',
+  gray8: '#505050',
+  gray9: '#a1a1a1',
+  gray10: '#e5e5e5',
+  gray11: '#f2f2f2',
+  gray12: '#fcfcfc',
+};
+
 const orange = {
   orange1: '#FFF9F6',
   orange2: '#FFF1EC',
@@ -28,7 +43,23 @@ const orange = {
   orange12: '#CC3600',
 };
 
+const orangeDark = {
+  orange1: '#1D0900',
+  orange2: '#2C1004',
+  orange3: '#391505',
+  orange4: '#4C1D08',
+  orange5: '#572109',
+  orange6: '#6D2607',
+  orange7: '#812E0A',
+  orange8: '#A33D10',
+  orange9: '#BC410D',
+  orange10: '#CA470F',
+  orange11: '#F76808',
+  orange12: '#FF802B',
+};
+
 module.exports = {
+  darkMode: 'class',
   content: ['./src/**/*.html'],
   theme: {
     extend: {
@@ -46,14 +77,35 @@ module.exports = {
             '--tw-prose-quote-borders': gray.gray6,
             '--tw-prose-captions': gray.gray9,
             '--tw-prose-code': gray.gray11,
+            '--tw-prose-code-bg': gray.gray2,
             '--tw-prose-pre-code': gray.gray5,
             '--tw-prose-pre-bg': gray.gray11,
             '--tw-prose-hr': gray.gray6,
+            '--tw-prose-invert-body': grayDark.gray10,
+            '--tw-prose-invert-headings': grayDark.gray11,
+            '--tw-prose-invert-lead': grayDark.gray6,
+            '--tw-prose-invert-links': orangeDark.orange11,
+            '--tw-prose-invert-bold': grayDark.gray10,
+            '--tw-prose-invert-counters': grayDark.gray10,
+            '--tw-prose-invert-bullets': grayDark.gray10,
+            '--tw-prose-invert-quotes': grayDark.gray10,
+            '--tw-prose-invert-quote-borders': grayDark.gray6,
+            '--tw-prose-invert-captions': grayDark.gray9,
+            '--tw-prose-invert-code': grayDark.gray11,
+            '--tw-prose-invert-code-bg': grayDark.gray2,
+            '--tw-prose-invert-pre-code': grayDark.gray11,
+            '--tw-prose-invert-pre-bg': grayDark.gray2,
+            '--tw-prose-invert-hr': grayDark.gray6,
+          },
+        },
+        invert: {
+          css: {
+            '--tw-prose-code-bg': 'var(--tw-prose-invert-code-bg)',
           },
         },
         DEFAULT: {
           css: {
-            maxWidth: '760px',
+            maxWidth: '826px',
             fontSize: '16px',
             blockquote: {
               quotes: false,
@@ -66,7 +118,7 @@ module.exports = {
             code: {
               fontWeight: '400',
               fontSize: '14px',
-              backgroundColor: gray.gray4,
+              backgroundColor: 'var(--tw-prose-code-bg)',
               padding: '1px 4px',
               borderRadius: '4px',
             },
@@ -106,6 +158,13 @@ module.exports = {
             },
             'a strong': {
               color: 'var(--tw-prose-links)',
+            },
+            'a:hover': {
+              boxShadow: '0 1px 0 0 currentColor',
+            },
+            u: {
+              textDecoration: 'none',
+              boxShadow: '0 1px 0 0 currentColor',
             },
             img: {
               marginTop: false,

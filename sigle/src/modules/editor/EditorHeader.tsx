@@ -8,14 +8,20 @@ import Tippy from '@tippyjs/react';
 import { Box, Button, Flex, IconButton, Text } from '../../ui';
 import { Story } from '../../types';
 import { useAuth } from '../auth/AuthContext';
+import { useEffect, useState } from 'react';
 
 interface EditorHeaderProps {
-  story: Story;
+  story: Story | false;
   loadingSave: boolean;
   onPublish: () => void;
   onUnpublish: () => void;
   onOpenSettings: () => void;
   onSave: () => void;
+}
+
+interface ScrollDirection {
+  direction: 'up' | 'down' | null;
+  prevOffset: number;
 }
 
 export const EditorHeader = ({
@@ -26,10 +32,48 @@ export const EditorHeader = ({
   onOpenSettings,
   onSave,
 }: EditorHeaderProps) => {
+  const [scroll, setScroll] = useState<ScrollDirection>({
+    direction: null,
+    prevOffset: 0,
+  });
   const { user } = useAuth();
 
+  useEffect(() => {
+    window.addEventListener('scroll', handleScroll);
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+    };
+  });
+
+  const handleScroll = () => {
+    let scrollY = window.scrollY;
+    if (scrollY === 0) {
+      setScroll({ direction: null, prevOffset: scrollY });
+    }
+    if (scrollY > scroll.prevOffset) {
+      setScroll({ direction: 'down', prevOffset: scrollY });
+    } else if (scrollY < scroll.prevOffset) {
+      setScroll({ direction: 'up', prevOffset: scrollY });
+    }
+  };
+
   return (
-    <Flex as="header" justify="between" align="center">
+    <Flex
+      css={{
+        position: 'sticky',
+        transform: scroll.direction === 'down' ? 'translateY(-100%)' : 'none',
+        transition: 'transform 0.5s, padding 0.2s',
+        backgroundColor: '$gray1',
+        top: window.scrollY < 40 ? 'auto' : 0,
+        zIndex: 1,
+        width: '100%',
+        py: window.scrollY < 40 ? 0 : '$2',
+        boxShadow: window.scrollY < 40 ? 'none' : '0 1px 0 0 $colors$gray6',
+      }}
+      as="header"
+      justify="between"
+      align="center"
+    >
       <Flex gap="10" align="center">
         <Link href="/" passHref>
           <IconButton as="a" aria-label="Go back to the dashboard">
@@ -40,9 +84,11 @@ export const EditorHeader = ({
           <Box as="span" css={{ fontWeight: 'bold', fontSize: '$3' }}>
             {user?.username}
           </Box>
-          <span>{story.type === 'public' ? ' | Published' : ' | Draft'}</span>
+          {story ? (
+            <span>{story.type === 'public' ? ' | Published' : ' | Draft'}</span>
+          ) : null}
         </Text>
-        {story.type === 'public' && (
+        {story && story.type === 'public' && (
           <Button
             css={{ display: 'flex', alignItems: 'center', gap: '$2' }}
             variant="ghost"
@@ -61,12 +107,12 @@ export const EditorHeader = ({
             Saving ...
           </Button>
         )}
-        {!loadingSave && story.type === 'public' && (
+        {!loadingSave && story && story.type === 'public' && (
           <Button onClick={() => onSave()} variant="ghost">
             Save
           </Button>
         )}
-        {!loadingSave && story.type === 'private' && (
+        {!loadingSave && story && story.type === 'private' && (
           <Tippy
             content="Nobody can see it unless you click on « publish »"
             theme="light-border"
@@ -76,12 +122,12 @@ export const EditorHeader = ({
             </Button>
           </Tippy>
         )}
-        {story.type === 'private' && (
+        {story && story.type === 'private' && (
           <Button onClick={onPublish} variant="ghost">
             Publish
           </Button>
         )}
-        {story.type === 'public' && (
+        {story && story.type === 'public' && (
           <Button onClick={onUnpublish} variant="ghost">
             Unpublish
           </Button>

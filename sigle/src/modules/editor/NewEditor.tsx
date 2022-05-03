@@ -1,12 +1,13 @@
 import { Editor } from '@tiptap/react';
-import { useMemo, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
+import { useRouter } from 'next/router';
 import { toast } from 'react-toastify';
 import NProgress from 'nprogress';
 import * as Fathom from 'fathom-client';
 import posthog from 'posthog-js';
 import { styled } from '../../stitches.config';
 import { Story } from '../../types';
-import { Container, Text } from '../../ui';
+import { Container } from '../../ui';
 import { EditorHeader } from './EditorHeader';
 import { PublishDialog } from './PublishDialog';
 import { TipTapEditor } from './TipTapEditor';
@@ -15,7 +16,6 @@ import { publishStory, unPublishStory } from '../../utils';
 import { Goals } from '../../utils/fathom';
 import { UnpublishDialog } from './UnpublishDialog';
 import { PublishedDialog } from './PublishedDialog';
-import { migrationStory } from '../../utils/migrations/story';
 import { CoverImage } from './CoverImage';
 import { EditorSettings } from './EditorSettings/EditorSettings';
 
@@ -41,10 +41,10 @@ interface NewEditorProps {
 }
 
 export const NewEditor = ({ story }: NewEditorProps) => {
+  const router = useRouter();
   const editorRef = useRef<{ getEditor: () => Editor | null }>(null);
   const [loadingSave, setLoadingSave] = useState(false);
-  const migratedStory = useMemo(() => migrationStory(story), [story]);
-  const [newStory, setNewStory] = useState(migratedStory);
+  const [newStory, setNewStory] = useState(story);
   const [publishDialogState, setPublishDialogState] = useState({
     open: false,
     loading: false,
@@ -55,6 +55,44 @@ export const NewEditor = ({ story }: NewEditorProps) => {
     loading: false,
   });
   const [showSettingsDialog, setShowSettingsDialog] = useState(false);
+
+  // prompt the user if they try and leave with unsaved changes
+  useEffect(() => {
+    const warningText =
+      'You have unsaved changes - are you sure you wish to leave this page?';
+
+    // Compare existing HTML to saved HTML to determine whether there are unsaved changes
+    const isEditorContentUnsaved = () => {
+      const editor = editorRef.current?.getEditor();
+      const storyHTML = editor?.getHTML();
+      return storyHTML !== newStory.content;
+    };
+
+    const handleWindowClose = (e: BeforeUnloadEvent) => {
+      if (!isEditorContentUnsaved()) {
+        return;
+      }
+      e.preventDefault();
+      return (e.returnValue = warningText);
+    };
+
+    const handleBrowseAway = () => {
+      if (!isEditorContentUnsaved()) {
+        return;
+      }
+
+      if (window.confirm(warningText)) return;
+      router.events.emit('routeChangeError');
+      throw 'routeChange aborted.';
+    };
+
+    window.addEventListener('beforeunload', handleWindowClose);
+    router.events.on('routeChangeStart', handleBrowseAway);
+    return () => {
+      window.removeEventListener('beforeunload', handleWindowClose);
+      router.events.off('routeChangeStart', handleBrowseAway);
+    };
+  }, [newStory]);
 
   const handleOpenSettings = () => setShowSettingsDialog(true);
   const handleCloseSettings = () => setShowSettingsDialog(false);
@@ -193,11 +231,7 @@ export const NewEditor = ({ story }: NewEditorProps) => {
         onUnpublish={handleUnpublish}
       />
 
-      <Text size="sm" color="orange">
-        ⚠️ You are using the experimental editor, expect things to break
-      </Text>
-
-      <EditorContainer className="prose lg:prose-lg">
+      <EditorContainer className="prose dark:prose-invert lg:prose-lg">
         <TitleInput
           value={newStory.title}
           onChange={(e) => {
