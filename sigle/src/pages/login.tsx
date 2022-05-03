@@ -38,32 +38,41 @@ const Login = () => {
 
   return (
     <LoginLayout>
-      <Heading
-        as="h1"
-        size="2xl"
-        css={{
-          mt: isExperimentalHiroWalletEnabled ? '$7' : '$15',
-          fontWeight: !isExperimentalHiroWalletEnabled ? '600' : undefined,
-        }}
-      >
-        {isExperimentalHiroWalletEnabled ? 'Connect, Write, Earn*' : 'Welcome!'}
-      </Heading>
-      <Text
-        css={{
-          mt: isExperimentalHiroWalletEnabled ? '$2' : '$7',
-          color: isExperimentalHiroWalletEnabled ? '$gray9' : '$gray10',
-          fontStyle: isExperimentalHiroWalletEnabled ? 'italic' : undefined,
-        }}
-      >
-        {isExperimentalHiroWalletEnabled ? (
-          '(*Monetisation coming soon)'
-        ) : (
-          <span>
-            Sigle is a web 3.0 open source blogging platform focused on{' '}
-            <strong>protecting your privacy</strong>, built on top of Stacks.
-          </span>
-        )}
-      </Text>
+      {isExperimentalHiroWalletEnabled ? (
+        <Heading
+          as="h1"
+          size="2xl"
+          css={{
+            mt: '$3',
+            fontWeight: 600,
+            fontSize: 22,
+          }}
+        >
+          Where Web3 stories come to life
+        </Heading>
+      ) : (
+        <Heading
+          as="h1"
+          size="2xl"
+          css={{
+            mt: '$15',
+          }}
+        >
+          Welcome!
+        </Heading>
+      )}
+
+      {isExperimentalHiroWalletEnabled ? null : (
+        <Text
+          css={{
+            mt: '$7',
+            color: '$gray10',
+          }}
+        >
+          Sigle is a web 3.0 open source blogging platform focused on{' '}
+          <strong>protecting your privacy</strong>, built on top of Stacks.
+        </Text>
+      )}
       {isExperimentalHiroWalletEnabled ? null : (
         <Text
           color="orange"
