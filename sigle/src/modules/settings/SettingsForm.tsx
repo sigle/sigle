@@ -9,7 +9,7 @@ import { BlockPicker } from 'react-color';
 import { SettingsFile } from '../../types';
 import { hexRegex, urlRegex } from '../../utils/regex';
 import { storage } from '../../utils/blockstack';
-import { getSettingsFile, saveSettingsFile } from '../../utils';
+import { getSettingsFile, isValidUrl, saveSettingsFile } from '../../utils';
 import { resizeImage } from '../../utils/image';
 import { Button } from '../../components';
 import {
@@ -104,6 +104,9 @@ export const SettingsForm = ({ settings, username }: SettingsFormProps) => {
       if (values.siteColor && !values.siteColor.match(hexRegex)) {
         errors.siteColor = 'Invalid color, only hexadecimal colors are allowed';
       }
+      if (!isValidUrl(values.siteUrl)) {
+        errors.siteUrl = 'Invalid TLD entered';
+      }
       return errors;
     },
     onSubmit: async (values, { setSubmitting }) => {
@@ -132,26 +135,8 @@ export const SettingsForm = ({ settings, username }: SettingsFormProps) => {
       formik.values.siteTwitterHandle = handle.replace('@', '');
       newSettings.siteTwitterHandle = handle.replace('@', '');
 
-      const isValidUrl = (url: string) => {
-        try {
-          new URL(url);
-        } catch (e) {
-          console.error(e);
-          return false;
-        }
-        return true;
-      };
-
-      formik.values.siteUrl = isValidUrl(website)
-        ? website.replace(urlRegex, '')
-        : '';
-      newSettings.siteUrl = isValidUrl(website)
-        ? website.replace(urlRegex, '')
-        : '';
-
-      formik.errors.siteUrl = isValidUrl(website)
-        ? undefined
-        : 'Invalid TLD entered';
+      formik.values.siteUrl = website.replace(urlRegex, '');
+      newSettings.siteUrl = website.replace(urlRegex, '');
 
       await saveSettingsFile({
         ...settingsFile,
