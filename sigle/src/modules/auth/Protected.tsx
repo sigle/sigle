@@ -21,5 +21,10 @@ export const Protected = ({ children }: Props) => {
     return null;
   }
 
+  if (!user.username) {
+    router.push('/register-username');
+    return null;
+  }
+
   return children;
 };
