@@ -68,6 +68,8 @@
     "highlight.js": "11.5.1",
     "immutable": "4.0.0-rc.12",
     "lowlight": "2.6.1",
+    "motion": "10.8.1",
+    "motion-hooks": "0.1.1",
     "nanoid": "3.3.3",
     "next": "12.1.5",
     "next-seo": "5.4.0",

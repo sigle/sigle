@@ -115,6 +115,8 @@ importers:
       immutable: 4.0.0-rc.12
       jest: 27.5.1
       lowlight: 2.6.1
+      motion: 10.8.1
+      motion-hooks: 0.1.1
       nanoid: 3.3.3
       next: 12.1.5
       next-compose-plugins: 2.2.1
@@ -190,6 +192,8 @@ importers:
       highlight.js: 11.5.1
       immutable: 4.0.0-rc.12
       lowlight: 2.6.1
+      motion: 10.8.1_react-dom@17.0.2+react@17.0.2
+      motion-hooks: 0.1.1_67e03ffdb1e1c34d040995bcf645dc1b
       nanoid: 3.3.3
       next: 12.1.5_a52b1f86ec9e7f1788c959c246772339
       next-seo: 5.4.0_7711af82ee0d60a5c39f3f11da715b4c
@@ -1049,7 +1053,7 @@ packages:
       collect-v8-coverage: 1.0.1
       exit: 0.1.2
       glob: 7.2.0
-      graceful-fs: 4.2.9
+      graceful-fs: 4.2.10
       istanbul-lib-coverage: 3.2.0
       istanbul-lib-instrument: 5.1.0
       istanbul-lib-report: 3.0.0
@@ -1073,7 +1077,7 @@ packages:
     engines: {node: ^10.13.0 || ^12.13.0 || ^14.15.0 || >=15.0.0}
     dependencies:
       callsites: 3.1.0
-      graceful-fs: 4.2.9
+      graceful-fs: 4.2.10
       source-map: 0.6.1
     dev: true
 
@@ -1092,7 +1096,7 @@ packages:
     engines: {node: ^10.13.0 || ^12.13.0 || ^14.15.0 || >=15.0.0}
     dependencies:
       '@jest/test-result': 27.5.1
-      graceful-fs: 4.2.9
+      graceful-fs: 4.2.10
       jest-haste-map: 27.5.1
       jest-runtime: 27.5.1
     transitivePeerDependencies:
@@ -1109,7 +1113,7 @@ packages:
       chalk: 4.1.2
       convert-source-map: 1.8.0
       fast-json-stable-stringify: 2.1.0
-      graceful-fs: 4.2.9
+      graceful-fs: 4.2.10
       jest-haste-map: 27.5.1
       jest-regex-util: 27.5.1
       jest-util: 27.5.1
@@ -1168,6 +1172,85 @@ packages:
       globby: 11.1.0
       read-yaml-file: 1.1.0
     dev: true
+
+  /@motionone/animation/10.8.0:
+    resolution: {integrity: sha512-dcI9xPwmBAtzxK8+kD3QCiR3uqsmDvsa1z3e3yjoz8EkJgQM409yuSGmhiidEdDSlMDFVu1GfODrElRc5qguhQ==}
+    dependencies:
+      '@motionone/easing': 10.8.0
+      '@motionone/types': 10.8.0
+      '@motionone/utils': 10.8.0
+      tslib: 2.4.0
+    dev: false
+
+  /@motionone/dom/10.8.1:
+    resolution: {integrity: sha512-/y92htpEk7GonxM1NrxtYGnV0Q3WmUrCh9yp9mHNrtthBa9jE69LvWrkX0Nazv5VHOfyKudPm7LQUd5q3FpayQ==}
+    dependencies:
+      '@motionone/animation': 10.8.0
+      '@motionone/generators': 10.8.0
+      '@motionone/types': 10.8.0
+      '@motionone/utils': 10.8.0
+      hey-listen: 1.0.8
+      tslib: 2.4.0
+    dev: false
+
+  /@motionone/easing/10.8.0:
+    resolution: {integrity: sha512-7yvPPMKphWM2RL5TyXFCkbQJENAS6hrEJlj3pKTs9JPiwifSI8UQywQGExBenLdB8RVJoY+h5OqupehS0wKDHw==}
+    dependencies:
+      '@motionone/utils': 10.8.0
+      tslib: 2.4.0
+    dev: false
+
+  /@motionone/generators/10.8.0:
+    resolution: {integrity: sha512-8zds1zikM1cwaXJoiBSPjUy8NJ0JyGl+tHgail44p5MmaK+e2IhZVzyaCrvPlZi7tlAvzoURx5W5lFh6YI6aTQ==}
+    dependencies:
+      '@motionone/types': 10.8.0
+      '@motionone/utils': 10.8.0
+      tslib: 2.4.0
+    dev: false
+
+  /@motionone/react/10.8.1_react-dom@17.0.2+react@17.0.2:
+    resolution: {integrity: sha512-SaVGncC2Vyv0WNSmT4Rs4Oo51S4ii7PXPVxqk7QR8Jv+XTvytJ2z8IBrfzkP8usPItqvNRaztQ+r/P+cHcssOA==}
+    peerDependencies:
+      react: ^17.0.2
+      react-dom: ^17.0.2
+    peerDependenciesMeta:
+      react:
+        optional: true
+      react-dom:
+        optional: true
+    dependencies:
+      '@motionone/dom': 10.8.1
+      hey-listen: 1.0.8
+      react: 17.0.2
+      react-dom: 17.0.2_react@17.0.2
+      tslib: 2.4.0
+    dev: false
+
+  /@motionone/svelte/10.8.1:
+    resolution: {integrity: sha512-UC76pQaYaxwsPLgVVjZUUdMrwgc2TyqvYeQDhOoVGTJdwDoNQWoonL7d49yRDmwr1WJxVGKnVf0IjAeSSWlwrQ==}
+    dependencies:
+      '@motionone/dom': 10.8.1
+      tslib: 2.4.0
+    dev: false
+
+  /@motionone/types/10.8.0:
+    resolution: {integrity: sha512-O19S5+3ksCjmt417fypfhj9ZK33pOA4lUdD3iHuWOxRCRk56zJXr8Hftr8dGzr0kmaxPAoX3oCoVc3sEl7W02w==}
+    dev: false
+
+  /@motionone/utils/10.8.0:
+    resolution: {integrity: sha512-uBn+G0NwBaSRMnq++F/fIKoxOhd+WWM7s36WaRC4gubg2K6HqSsgQ61JRmfxYMk5jpihMNFGfWLaEts3mCS6Jw==}
+    dependencies:
+      '@motionone/types': 10.8.0
+      hey-listen: 1.0.8
+      tslib: 2.4.0
+    dev: false
+
+  /@motionone/vue/10.8.1:
+    resolution: {integrity: sha512-uwamEQHB1+bVoqa5qya81WNKflAN/UT/1GeVA739oLSCM4b6W0Yt76zeH+9R/9NH9/A7AHeoKZlmF17R5kGimQ==}
+    dependencies:
+      '@motionone/dom': 10.8.1
+      tslib: 2.4.0
+    dev: false
 
   /@next/bundle-analyzer/12.1.5:
     resolution: {integrity: sha512-A9MkhWCPvSp1vl0Ox7IjJ/qpugDC5YAb40btGGIPPXHQtkal107Sf8dbay4fqw4Hekee5gdS0WUMfe1BaSur7w==}
@@ -3485,7 +3568,7 @@ packages:
       babel-plugin-istanbul: 6.1.1
       babel-preset-jest: 27.5.1_@babel+core@7.17.5
       chalk: 4.1.2
-      graceful-fs: 4.2.9
+      graceful-fs: 4.2.10
       slash: 3.0.0
     transitivePeerDependencies:
       - supports-color
@@ -5436,6 +5519,10 @@ packages:
     resolution: {integrity: sha512-l9sfDFsuqtOqKDsQdqrMRk0U85RZc0RtOR9yPI7mRVOa4FsR/BVnZ0shmQRM96Ji99kYZP/7hn1cedc1+ApsTQ==}
     dev: true
 
+  /hey-listen/1.0.8:
+    resolution: {integrity: sha512-COpmrF2NOg4TBWUJ5UVyaCU2A88wEMkUPK4hNqyCkqHbxT92BbvfjoSozkAIIm6XhicGlJHhFdullInrdhwU8Q==}
+    dev: false
+
   /highlight.js/10.7.3:
     resolution: {integrity: sha512-tzcUFauisWKNHaRkN4Wjl/ZA07gENAjFl3J/c480dprkGTg5EQstgaNFqBfUqCq54kZRIEcreTsAgF/m2quD7A==}
     dev: false
@@ -5962,7 +6049,7 @@ packages:
       ci-info: 3.3.0
       deepmerge: 4.2.2
       glob: 7.2.0
-      graceful-fs: 4.2.9
+      graceful-fs: 4.2.10
       jest-circus: 27.5.1
       jest-environment-jsdom: 27.5.1
       jest-environment-node: 27.5.1
@@ -6057,7 +6144,7 @@ packages:
       '@types/node': 17.0.25
       anymatch: 3.1.2
       fb-watchman: 2.0.1
-      graceful-fs: 4.2.9
+      graceful-fs: 4.2.10
       jest-regex-util: 27.5.1
       jest-serializer: 27.5.1
       jest-util: 27.5.1
@@ -6119,7 +6206,7 @@ packages:
       '@jest/types': 27.5.1
       '@types/stack-utils': 2.0.1
       chalk: 4.1.2
-      graceful-fs: 4.2.9
+      graceful-fs: 4.2.10
       micromatch: 4.0.4
       pretty-format: 27.5.1
       slash: 3.0.0
@@ -6168,7 +6255,7 @@ packages:
     dependencies:
       '@jest/types': 27.5.1
       chalk: 4.1.2
-      graceful-fs: 4.2.9
+      graceful-fs: 4.2.10
       jest-haste-map: 27.5.1
       jest-pnp-resolver: 1.2.2_jest-resolve@27.5.1
       jest-util: 27.5.1
@@ -6190,7 +6277,7 @@ packages:
       '@types/node': 17.0.25
       chalk: 4.1.2
       emittery: 0.8.1
-      graceful-fs: 4.2.9
+      graceful-fs: 4.2.10
       jest-docblock: 27.5.1
       jest-environment-jsdom: 27.5.1
       jest-environment-node: 27.5.1
@@ -6226,7 +6313,7 @@ packages:
       collect-v8-coverage: 1.0.1
       execa: 5.1.1
       glob: 7.2.0
-      graceful-fs: 4.2.9
+      graceful-fs: 4.2.10
       jest-haste-map: 27.5.1
       jest-message-util: 27.5.1
       jest-mock: 27.5.1
@@ -6245,7 +6332,7 @@ packages:
     engines: {node: ^10.13.0 || ^12.13.0 || ^14.15.0 || >=15.0.0}
     dependencies:
       '@types/node': 17.0.25
-      graceful-fs: 4.2.9
+      graceful-fs: 4.2.10
     dev: true
 
   /jest-snapshot/27.5.1:
@@ -6264,7 +6351,7 @@ packages:
       babel-preset-current-node-syntax: 1.0.1_@babel+core@7.17.5
       chalk: 4.1.2
       expect: 27.5.1
-      graceful-fs: 4.2.9
+      graceful-fs: 4.2.10
       jest-diff: 27.5.1
       jest-get-type: 27.5.1
       jest-haste-map: 27.5.1
@@ -6286,7 +6373,7 @@ packages:
       '@types/node': 17.0.25
       chalk: 4.1.2
       ci-info: 3.3.0
-      graceful-fs: 4.2.9
+      graceful-fs: 4.2.10
       picomatch: 2.3.1
     dev: true
 
@@ -6451,7 +6538,7 @@ packages:
     dependencies:
       universalify: 2.0.0
     optionalDependencies:
-      graceful-fs: 4.2.9
+      graceful-fs: 4.2.10
     dev: true
 
   /jsontokens/3.0.0:
@@ -6878,6 +6965,31 @@ packages:
     resolution: {integrity: sha512-2lMlY1Yc1+CUy0gw4H95uNN7vjbpoED7NNRSBHE25nWfLBdmMzFCsPshlzbxHz+gYMcBEUN8V4pU16prcdPSgA==}
     engines: {node: '>=6'}
     dev: true
+
+  /motion-hooks/0.1.1_67e03ffdb1e1c34d040995bcf645dc1b:
+    resolution: {integrity: sha512-uQHeJ/nQxLdFLLSYk8dsZMWVNjCNV6Z7Sl/8wcxf5GZnMM+L00uMNgQqGAqD2VRB7EQ9Gz+E1vAPOsOs7vQ6oQ==}
+    peerDependencies:
+      motion: ^10.1.1
+      react: '>= 17.0.2'
+      react-dom: '>= 17.0.2'
+    dependencies:
+      motion: 10.8.1_react-dom@17.0.2+react@17.0.2
+      react: 17.0.2
+      react-dom: 17.0.2_react@17.0.2
+    dev: false
+
+  /motion/10.8.1_react-dom@17.0.2+react@17.0.2:
+    resolution: {integrity: sha512-rtFxMnMZ+HEGjV7cHTf3bV56hOu8VvOy3Jx38dCnk/P/LNZh1jExVsLeSaIaAI/G6qfqELFpfbXwJ/WeY5ZFbQ==}
+    dependencies:
+      '@motionone/animation': 10.8.0
+      '@motionone/dom': 10.8.1
+      '@motionone/react': 10.8.1_react-dom@17.0.2+react@17.0.2
+      '@motionone/svelte': 10.8.1
+      '@motionone/vue': 10.8.1
+    transitivePeerDependencies:
+      - react
+      - react-dom
+    dev: false
 
   /mrmime/1.0.0:
     resolution: {integrity: sha512-a70zx7zFfVO7XpnQ2IX1Myh9yY4UYvfld/dikWRnsXxbyvMcfz+u6UfgNAtH+k2QqtJuzVpv6eLTx1G2+WKZbQ==}
