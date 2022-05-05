@@ -11,6 +11,7 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from '../../../ui/Accordion';
+import { isExperimentalAnalyticsPageEnabled } from '../../../utils/featureFlags';
 
 const FullScreen = styled('div', {
   height: '100vh',
@@ -74,6 +75,9 @@ export const DashboardLayout = ({ children }: DashboardLayoutProps) => {
     case '/published':
       triggerName = 'Published';
       break;
+    case '/analytics':
+      triggerName = 'Analytics';
+      break;
     case '/settings':
       triggerName = 'Settings';
       break;
@@ -122,6 +126,13 @@ export const DashboardLayout = ({ children }: DashboardLayoutProps) => {
               Published
             </NavItem>
           </Link>
+          {isExperimentalAnalyticsPageEnabled && (
+            <Link href="/analytics" passHref>
+              <NavItem selected={router.pathname === '/analytics'}>
+                Analytics
+              </NavItem>
+            </Link>
+          )}
           <Link href="/settings" passHref>
             <NavItem selected={router.pathname === '/settings'}>
               Settings
