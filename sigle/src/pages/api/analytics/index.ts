@@ -1,8 +1,8 @@
 import { NextApiHandler, NextApiRequest } from 'next';
 import * as Sentry from '@sentry/nextjs';
 import { lookupProfile } from '@stacks/auth';
-import { migrationStories } from '../../utils/migrations/stories';
-import { initFathomClient } from '../../external/fathom';
+import { migrationStories } from '../../../utils/migrations/stories';
+import { initFathomClient } from '../../../external/fathom';
 
 const getBucketUrl = async ({
   req,
@@ -70,6 +70,7 @@ const analyticsEndpoint: NextApiHandler<
     return;
   }
 
+  // TODO mock during tests
   const { profile, bucketUrl } = await getBucketUrl({ req, username });
   if (!profile || !bucketUrl) {
     // TODO as this should never happen, report it to Sentry
