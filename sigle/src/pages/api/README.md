@@ -9,17 +9,19 @@
 Sample Response:
 
 ```json
-{
-  "2022-04-29": {
+[
+  {
+    "date": "2022-04-29",
     "visits": 0,
     "pageviews": 0
   },
-  "2022-04-30": {
+  {
+    "date": "2022-04-30",
     "visits": 0,
     "pageviews": 0
   }
   // ...
-}
+]
 ```
 
 #### Parameters
