@@ -72,8 +72,10 @@ export const analyticsHistoricalEndpoint: NextApiHandler<
 
   const { profile, bucketUrl } = await getBucketUrl({ req, username });
   if (!profile || !bucketUrl) {
-    // TODO as this should never happen, report it to Sentry
-    res.status(500).json({ error: 'user not found' });
+    const errorId = Sentry.captureMessage(
+      `No profile or bucketUrl for ${username}`
+    );
+    res.status(500).json({ error: `Internal server error: ${errorId}` });
     return;
   }
 
@@ -115,8 +117,10 @@ export const analyticsHistoricalEndpoint: NextApiHandler<
       (historical) => historical.date === date
     );
     if (index === -1) {
-      // TODO as this should never happen, report it to Sentry
-      res.status(500).json({ error: 'Internal server error' });
+      const errorId = Sentry.captureMessage(
+        `No index for date ${date} and username ${username}`
+      );
+      res.status(500).json({ error: `Internal server error: ${errorId}` });
       return;
     }
     historicalResponse[index].visits = dateValues.visits;
