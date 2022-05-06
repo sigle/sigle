@@ -12,3 +12,8 @@ export const initFathomClient = (clientParams: FathomClientParams) => {
     aggregatePath: aggregatePath(clientParams),
   };
 };
+
+export const fathomClient = initFathomClient({
+  apiToken: process.env.FATHOM_API_TOKEN!,
+  entityId: process.env.FATHOM_ENTITY_ID!,
+});

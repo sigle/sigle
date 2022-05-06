@@ -2,12 +2,7 @@ import { NextApiHandler } from 'next';
 import * as Sentry from '@sentry/nextjs';
 import { addDays, format, isBefore, isValid, parse } from 'date-fns';
 import { getBucketUrl, getPublicStories } from './utils';
-import { initFathomClient } from '../../../external/fathom';
-
-const fathomClient = initFathomClient({
-  apiToken: process.env.FATHOM_API_TOKEN!,
-  entityId: process.env.FATHOM_ENTITY_ID!,
-});
+import { fathomClient } from '../../../external/fathom';
 
 interface AnalyticsHistoricalParams {
   dateFrom?: string;
