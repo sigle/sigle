@@ -7,6 +7,7 @@ import { Container } from '../../../components';
 import { PublicStoryItem } from './PublicStoryItem';
 import { PoweredBy } from '../../publicStory/PoweredBy';
 import { AppHeader } from '../../layout/components/AppHeader';
+import { Box, Flex, Text } from '../../../ui';
 
 const StyledContainer = styled(Container)`
   ${tw`pt-4 pb-16`};
@@ -43,6 +44,8 @@ export const PublicHome = ({ file, settings }: PublicHomeProps) => {
   const { username } = router.query as { username: string };
 
   const siteName = settings.siteName || username;
+  const website = settings.siteUrl;
+  const twitterHandle = settings.siteTwitterHandle;
 
   const featuredStoryIndex = file.stories.findIndex((story) => story.featured);
   const stories = [...file.stories];
@@ -65,6 +68,55 @@ export const PublicHome = ({ file, settings }: PublicHomeProps) => {
               .map((text, index) => (
                 <HeaderDescription key={index}>{text}</HeaderDescription>
               ))}
+          <Flex css={{ pt: '$5' }} gap="3">
+            {settings.siteUrl && (
+              <Text
+                css={{
+                  color: '$gray9',
+
+                  '&:hover': {
+                    color: '$gray10',
+                  },
+                  '&:active': {
+                    color: '$gray12',
+                  },
+                }}
+                size="sm"
+                as="a"
+                href={`https://${website}`}
+                target="_blank"
+                rel="noreferrer"
+              >
+                {website}
+              </Text>
+            )}
+            {settings.siteUrl && settings.siteTwitterHandle && (
+              <Box css={{ width: '1px', backgroundColor: '$gray9' }} />
+            )}
+            {settings.siteTwitterHandle && (
+              <Text
+                css={{
+                  color: '$gray9',
+
+                  '&:hover': {
+                    color: '$gray10',
+                  },
+                  '&:active': {
+                    color: '$gray12',
+                  },
+                }}
+                size="sm"
+                as="a"
+                href={`https://twitter.com/${twitterHandle}`}
+                target="_blank"
+                rel="noreferrer"
+              >
+                {twitterHandle?.includes('@')
+                  ? twitterHandle
+                  : `@${twitterHandle}`}
+              </Text>
+            )}
+          </Flex>
         </Header>
       </Container>
 
