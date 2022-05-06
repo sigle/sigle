@@ -15,6 +15,12 @@ module.exports = withSentryConfig(
       NEXT_PUBLIC_SENTRY_DSN: process.env.NEXT_PUBLIC_SENTRY_DSN,
       NEXT_PUBLIC_POSTHOG_TOKEN: process.env.NEXT_PUBLIC_POSTHOG_TOKEN,
     },
+    pageExtensions: [
+      // `.page.tsx` for page components
+      'page.tsx',
+      // `.api.ts` for API routes
+      'api.ts',
+    ],
     headers: async () => {
       return [
         {

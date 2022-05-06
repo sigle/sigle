@@ -1,5 +1,5 @@
 import React from 'react';
-import { MyError } from '../pages-lib/_error';
+import { MyError } from './_error.page';
 
 const Custom404 = () => {
   return (

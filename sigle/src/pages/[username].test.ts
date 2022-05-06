@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { lookupProfile } from '@stacks/auth';
 import * as Sentry from '@sentry/nextjs';
-import { getServerSideProps } from './[username]';
+import { getServerSideProps } from './[username].page';
 
 jest.mock('@stacks/auth');
 jest.mock('@sentry/nextjs');
