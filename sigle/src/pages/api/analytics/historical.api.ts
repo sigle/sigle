@@ -56,7 +56,6 @@ export const analyticsHistoricalEndpoint: NextApiHandler<
     parsedDateFrom = new Date(FATHOM_MAX_FROM_DATE);
   }
 
-  // TODO test what is happening with a date in the future
   const dateTo = new Date();
 
   const historicalResponse: AnalyticsHistoricalResponse = [];
