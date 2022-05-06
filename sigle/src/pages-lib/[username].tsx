@@ -5,7 +5,7 @@ import * as Sentry from '@sentry/nextjs';
 import { PublicHome } from '../modules/publicHome';
 import { sigleConfig } from '../config';
 import { StoryFile, SettingsFile } from '../types';
-import Error from '../pages/_error';
+import Error from '../pages/_error.page';
 
 interface PublicHomePageProps {
   statusCode: number | boolean;

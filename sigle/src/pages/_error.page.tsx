@@ -237,3 +237,5 @@ MyError.getInitialProps = async (props: NextPageContext) => {
 
   return errorInitialProps;
 };
+
+export default MyError;
