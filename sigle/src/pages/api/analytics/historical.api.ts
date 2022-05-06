@@ -1,6 +1,7 @@
 import { NextApiHandler } from 'next';
 import * as Sentry from '@sentry/nextjs';
 import { addDays, format, isBefore, isValid, parse } from 'date-fns';
+import { getBucketUrl } from './utils';
 
 interface AnalyticsHistoricalParams {
   dateFrom?: string;
@@ -61,6 +62,13 @@ export const analyticsHistoricalEndpoint: NextApiHandler<
       pageviews: 0,
     });
     parsedDateFrom = addDays(parsedDateFrom, 1);
+  }
+
+  const { profile, bucketUrl } = await getBucketUrl({ req, username });
+  if (!profile || !bucketUrl) {
+    // TODO as this should never happen, report it to Sentry
+    res.status(500).json({ error: 'user not found' });
+    return;
   }
 
   res.status(200).json(historicalResponse);
