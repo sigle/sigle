@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useMemo, useState } from 'react';
 import { SubsetStory } from '../../types';
 import { Box } from '../../ui';
 import { Pagination } from './Pagination';
@@ -11,18 +11,15 @@ interface PublishedStoriesFrameProps {
 export const PublishedStoriesFrame = ({
   stories,
 }: PublishedStoriesFrameProps) => {
-  const [currentStories, setCurrentStories] = useState<SubsetStory[] | null>(
-    stories
-  );
   const [currentPage, setCurrentPage] = useState<number>(1);
 
   // how many stories we should show on each page
   let itemSize = 7;
 
-  useEffect(() => {
+  const currentStories = useMemo(() => {
     const firstPageIndex = (currentPage - 1) * itemSize;
     const lastPageIndex = firstPageIndex + itemSize;
-    setCurrentStories(stories.slice(firstPageIndex, lastPageIndex));
+    return stories.slice(firstPageIndex, lastPageIndex);
   }, [currentPage]);
 
   return (
