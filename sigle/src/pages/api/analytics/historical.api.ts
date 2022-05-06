@@ -1,6 +1,6 @@
 import { NextApiHandler } from 'next';
 import * as Sentry from '@sentry/nextjs';
-import { format, isValid, parse } from 'date-fns';
+import { addDays, format, isBefore, isValid, parse } from 'date-fns';
 
 interface AnalyticsHistoricalParams {
   dateFrom?: string;
@@ -28,8 +28,8 @@ export const analyticsHistoricalEndpoint: NextApiHandler<
     res.status(400).json({ error: 'dateFrom is required' });
     return;
   }
-  const parsedDate = parse(dateFrom, 'yyyy-MM-dd', new Date());
-  const isValidDate = isValid(parsedDate);
+  let parsedDateFrom = parse(dateFrom, 'yyyy-MM-dd', new Date());
+  const isValidDate = isValid(parsedDateFrom);
   if (!isValidDate) {
     res.status(400).json({ error: 'dateFrom is invalid' });
     return;
@@ -47,8 +47,23 @@ export const analyticsHistoricalEndpoint: NextApiHandler<
   // TODO protect to logged in users
   // TODO take username from session
   const username = 'sigleapp.id.blockstack';
+  // TODO test what is happening with a date in the future
+  const dateTo = new Date();
 
-  res.status(200).json([]);
+  const historicalResponse: AnalyticsHistoricalResponse = [];
+
+  // As fathom does not return data for all the days, we need to add the missing days
+  while (isBefore(parsedDateFrom, dateTo)) {
+    const date = format(parsedDateFrom, 'yyyy-MM-dd');
+    historicalResponse.push({
+      date,
+      visits: 0,
+      pageviews: 0,
+    });
+    parsedDateFrom = addDays(parsedDateFrom, 1);
+  }
+
+  res.status(200).json(historicalResponse);
 };
 
 export default Sentry.withSentry(analyticsHistoricalEndpoint);
