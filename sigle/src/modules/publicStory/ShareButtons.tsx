@@ -30,6 +30,9 @@ export const ShareButtons = ({
 
   const title = story.metaTitle ? story.metaTitle : story.title;
   const siteName = settings.siteName ? settings.siteName : username;
+  const handle = settings.siteTwitterHandle
+    ? settings.siteTwitterHandle
+    : siteName;
 
   const handleClick = () => {
     navigator.clipboard
@@ -60,7 +63,7 @@ export const ShareButtons = ({
           <TooltipTrigger asChild>
             <Box
               as="a"
-              href={`https://twitter.com/intent/tweet?text=${title} by ${siteName}&url=${sigleConfig.appUrl}/${username}/${story.id}`}
+              href={`https://twitter.com/intent/tweet?text=${title} by @${handle}&url=${sigleConfig.appUrl}/${username}/${story.id}`}
               target="_blank"
               rel="noopener"
             >
