@@ -1,5 +1,6 @@
 import { lookupProfile } from '@stacks/auth';
 import { NextApiRequest } from 'next';
+import { migrationStories } from '../../../utils/migrations/stories';
 
 export const getBucketUrl = async ({
   req,
@@ -32,4 +33,18 @@ export const getBucketUrl = async ({
     userProfile && userProfile.apps && userProfile.apps[appUrl];
 
   return { profile: userProfile, bucketUrl };
+};
+
+export const getPublicStories = async ({
+  bucketUrl,
+}: {
+  bucketUrl: string;
+}) => {
+  const resPublicStories = await fetch(`${bucketUrl}publicStories.json`);
+  // This would happen if the user has not published any stories
+  if (resPublicStories.status !== 200) {
+    return [];
+  }
+  const publicStoriesFile = migrationStories(await resPublicStories.json());
+  return publicStoriesFile.stories;
 };

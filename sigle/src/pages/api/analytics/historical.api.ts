@@ -1,7 +1,13 @@
 import { NextApiHandler } from 'next';
 import * as Sentry from '@sentry/nextjs';
 import { addDays, format, isBefore, isValid, parse } from 'date-fns';
-import { getBucketUrl } from './utils';
+import { getBucketUrl, getPublicStories } from './utils';
+import { initFathomClient } from '../../../external/fathom';
+
+const fathomClient = initFathomClient({
+  apiToken: process.env.FATHOM_API_TOKEN!,
+  entityId: process.env.FATHOM_ENTITY_ID!,
+});
 
 interface AnalyticsHistoricalParams {
   dateFrom?: string;
@@ -70,6 +76,67 @@ export const analyticsHistoricalEndpoint: NextApiHandler<
     res.status(500).json({ error: 'user not found' });
     return;
   }
+
+  const publicStoriesFile = await getPublicStories({ bucketUrl });
+  const storiesPath = publicStoriesFile.map(
+    (publicStory) => `/${username}/${publicStory.id}`
+  );
+  // Add the root path to the list of paths
+  storiesPath.push(`/${username}`);
+
+  // TODO batch with max concurrent limit
+  const fathomAggregationResult: {
+    pathname: string;
+    date: string;
+    visits: string;
+    pageviews: string;
+  }[][] = await Promise.all(
+    storiesPath.map((path) =>
+      fathomClient.aggregate({
+        date_from: dateFrom,
+        entity: 'pageview',
+        aggregates: 'visits,pageviews',
+        date_grouping: dateGrouping,
+        field_grouping: 'pathname',
+        sort_by: 'timestamp:asc',
+        filters: [
+          {
+            property: 'pathname',
+            operator: 'is',
+            value: path,
+          },
+        ],
+      })
+    )
+  );
+
+  const datesValues: { [key: string]: { visits: number; pageviews: number } } =
+    {};
+
+  // Aggregate the results from fathom and sum the values by date
+  fathomAggregationResult.forEach((aggregationResult) => {
+    aggregationResult.forEach((result) => {
+      if (!datesValues[result.date]) {
+        datesValues[result.date] = { visits: 0, pageviews: 0 };
+      }
+      datesValues[result.date].visits += parseInt(result.visits, 10);
+      datesValues[result.date].pageviews += parseInt(result.pageviews, 10);
+    });
+  });
+
+  Object.keys(datesValues).forEach((date) => {
+    const dateValues = datesValues[date];
+    const index = historicalResponse.findIndex(
+      (historical) => historical.date === date
+    );
+    if (index === -1) {
+      // TODO as this should never happen, report it to Sentry
+      res.status(500).json({ error: 'Internal server error' });
+      return;
+    }
+    historicalResponse[index].visits = dateValues.visits;
+    historicalResponse[index].pageviews = dateValues.pageviews;
+  });
 
   res.status(200).json(historicalResponse);
 };
