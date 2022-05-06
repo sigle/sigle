@@ -1,5 +1,5 @@
 import { SubsetStory } from '../../../types';
-import { Text } from '../../../ui';
+import { Heading, Text } from '../../../ui';
 import { DashboardLayout } from '../../layout';
 import { PublishedStoriesFrame } from '../PublishedStoriesFrame';
 
@@ -13,9 +13,9 @@ export const Analytics = ({ stories, loading }: AnalyticsProps) => {
 
   return (
     <DashboardLayout>
-      <Text as="h3" size="sm" css={{ mb: '$3', fontWeight: 600 }}>
+      <Heading as="h3" css={{ mb: '$3', fontSize: 15, fontWeight: 600 }}>
         {`My published stories (${nbStoriesLabel})`}
-      </Text>
+      </Heading>
       {stories && <PublishedStoriesFrame stories={stories} />}
     </DashboardLayout>
   );
