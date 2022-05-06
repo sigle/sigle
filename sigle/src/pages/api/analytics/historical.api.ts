@@ -12,6 +12,7 @@ const fathomClient = initFathomClient({
 interface AnalyticsHistoricalParams {
   dateFrom?: string;
   dateGrouping?: 'day' | 'month';
+  storyId?: string;
 }
 
 interface AnalyticsHistoricalResponseError {
@@ -29,7 +30,8 @@ type AnalyticsHistoricalResponse = {
 export const analyticsHistoricalEndpoint: NextApiHandler<
   AnalyticsHistoricalResponseError | AnalyticsHistoricalResponse
 > = async (req, res) => {
-  let { dateFrom, dateGrouping } = req.query as AnalyticsHistoricalParams;
+  let { dateFrom, dateGrouping, storyId } =
+    req.query as AnalyticsHistoricalParams;
 
   if (!dateFrom) {
     res.status(400).json({ error: 'dateFrom is required' });
@@ -79,12 +81,17 @@ export const analyticsHistoricalEndpoint: NextApiHandler<
     return;
   }
 
-  const publicStoriesFile = await getPublicStories({ bucketUrl });
-  const storiesPath = publicStoriesFile.map(
-    (publicStory) => `/${username}/${publicStory.id}`
-  );
-  // Add the root path to the list of paths
-  storiesPath.push(`/${username}`);
+  let storiesPath: string[];
+  if (storyId) {
+    storiesPath = [`/${username}/${storyId}`];
+  } else {
+    const publicStoriesFile = await getPublicStories({ bucketUrl });
+    storiesPath = publicStoriesFile.map(
+      (publicStory) => `/${username}/${publicStory.id}`
+    );
+    // Add the root path to the list of paths
+    storiesPath.push(`/${username}`);
+  }
 
   // TODO batch with max concurrent limit
   const fathomAggregationResult = await Promise.all(
