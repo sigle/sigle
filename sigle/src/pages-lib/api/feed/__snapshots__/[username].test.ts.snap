@@ -3,14 +3,14 @@
 exports[`test feed api should work properly 1`] = `
 Object {
   "description": "This content was created on app.sigle.io
+
 In just a few words, Sigle is the perfect tool for writers/bloggers to easily create decentralized content and take notes.
 That means no one but you owns your data and published work. It is safe from any censorship and you maintain your privacy and freedom.
-
 ...",
   "enclosure": "",
   "guid": "https://app.sigle.io/sigleapp.id.blockstack/L7I4iV6bYQ8WYvuT3RcoM",
   "link": "https://app.sigle.io/sigleapp.id.blockstack/L7I4iV6bYQ8WYvuT3RcoM",
-  "pubDate": "Wed, 06 Feb 2019 12:15:51 GMT",
+  "pubDate": "Tue, 05 Feb 2019 23:00:00 GMT",
   "title": "Sigle.io: Step by step guide 🤓",
 }
 `;
