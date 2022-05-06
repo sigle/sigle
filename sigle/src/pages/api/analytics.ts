@@ -1,8 +1,8 @@
 import { NextApiHandler, NextApiRequest } from 'next';
 import * as Sentry from '@sentry/nextjs';
 import { lookupProfile } from '@stacks/auth';
-import { initFathomClient } from '../../utils/fathomApi';
 import { migrationStories } from '../../utils/migrations/stories';
+import { initFathomClient } from '../../external/fathom';
 
 const getBucketUrl = async ({
   req,
@@ -42,7 +42,19 @@ const fathomClient = initFathomClient({
   entityId: process.env.FATHOM_ENTITY_ID!,
 });
 
-const analyticsEndpoint: NextApiHandler = async (req, res) => {
+const dateFrom = '2021-04-01';
+
+interface AnalyticsResponseError {
+  error: string;
+}
+
+interface AnalyticsResponse {
+  stories: { pathname: string; visits: number; pageviews: number }[];
+}
+
+const analyticsEndpoint: NextApiHandler<
+  AnalyticsResponseError | AnalyticsResponse
+> = async (req, res) => {
   // TODO proper error handling
 
   // TODO this should come from the user session
@@ -68,7 +80,7 @@ const analyticsEndpoint: NextApiHandler = async (req, res) => {
   const resPublicStories = await fetch(`${bucketUrl}publicStories.json`);
   // This would happen if the user has not published any stories
   if (resPublicStories.status !== 200) {
-    res.status(200).json([]);
+    res.status(200).json({ stories: [] });
     return;
   }
   const publicStoriesFile = migrationStories(await resPublicStories.json());
@@ -79,9 +91,10 @@ const analyticsEndpoint: NextApiHandler = async (req, res) => {
   storiesPath.push(`/${username}`);
 
   // TODO batch with max concurrent limit
-  const result = await Promise.all(
+  const results = await Promise.all(
     storiesPath.map((path) =>
       fathomClient.aggregate({
+        date_from: dateFrom,
         entity: 'pageview',
         aggregates: 'visits,pageviews',
         date_grouping: 'month',
@@ -98,7 +111,30 @@ const analyticsEndpoint: NextApiHandler = async (req, res) => {
     )
   );
 
-  res.status(200).json(result);
+  console.log(JSON.stringify(results, null, 2));
+
+  const normalizedResponse = results.map(
+    (result: { pathname: string; visits: string; pageviews: string }[]) => {
+      const pathname = result[0].pathname;
+      const totalStats = result.reduce(
+        (acc, curr) => {
+          acc.visits += Number(curr.visits);
+          acc.pageviews += Number(curr.pageviews);
+          return acc;
+        },
+        { pathname, visits: 0, pageviews: 0 }
+      );
+      return {
+        pathname,
+        visits: totalStats.visits,
+        pageviews: totalStats.pageviews,
+      };
+    }
+  );
+
+  console.log(JSON.stringify(normalizedResponse, null, 2));
+
+  res.status(200).json({ stories: normalizedResponse });
 };
 
 export default Sentry.withSentry(analyticsEndpoint);
