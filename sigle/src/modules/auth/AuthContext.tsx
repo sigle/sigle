@@ -1,14 +1,29 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback, useMemo } from 'react';
 import { toast } from 'react-toastify';
+import type { UserData } from '@stacks/auth';
+import type { UserData as LegacyUserData } from '@stacks/legacy-auth';
 import { Connect, AuthOptions } from '@stacks/connect-react';
+import {
+  Connect as LegacyConnect,
+  AuthOptions as LegacyAuthOptions,
+} from '@stacks/legacy-connect-react';
 import posthog from 'posthog-js';
-import { BlockstackUser } from '../../types';
-import { userSession } from '../../utils/blockstack';
+import { userSession, legacyUserSession } from '../../utils/blockstack';
+
+/**
+ * This interface is needed for now as users connected via Blockstack connect will see their username injected.
+ * Can be removed when we remove Blockstack connect.
+ */
+interface UserDataWithUsername extends UserData {
+  username: string;
+}
 
 const AuthContext = React.createContext<{
-  user?: BlockstackUser;
+  user?: UserDataWithUsername | LegacyUserData;
+  isLegacy?: boolean;
   loggingIn: boolean;
-}>({ loggingIn: false });
+  setUsername: (username: string) => void;
+}>({ loggingIn: false, setUsername: () => {} });
 
 interface AuthProviderProps {
   children: React.ReactNode;
@@ -17,7 +32,8 @@ interface AuthProviderProps {
 const AuthProvider = ({ children }: AuthProviderProps) => {
   const [state, setState] = useState<{
     loggingIn: boolean;
-    user?: BlockstackUser;
+    isLegacy?: boolean;
+    user?: UserDataWithUsername | LegacyUserData;
   }>({
     loggingIn: true,
   });
@@ -47,36 +63,108 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
     if (state.user) {
       posthog.identify(state.user.profile.stxAddress, {
         username: state.user.username,
+        isLegacy: state.isLegacy,
       });
     }
-  }, [state.user]);
+  }, [state.user, state.isLegacy]);
 
-  const handleAuthSignIn = () => {
+  const handleAuthSignIn = async () => {
+    const userData = userSession.loadUserData() as UserDataWithUsername;
+    const address = userData.profile.stxAddress.mainnet;
+
+    /**
+     * We try to manually inject the user's username into the userData object,
+     * to fix the following edge case:
+     * 1. Username is not populated for .btc names https://github.com/hirosystems/stacks.js/issues/1144
+     * 2. When registering a new free subdomain with Sigle, it takes time to get injected by
+     * the Hiro wallet.
+     */
+    if (userData.username === undefined && address) {
+      try {
+        const namesResponse = await fetch(
+          `https://stacks-node-api.stacks.co/v1/addresses/stacks/${address}`
+        );
+        const namesJson = await namesResponse.json();
+        if ((namesJson.names.length || 0) > 0) {
+          userData.username = namesJson.names[0];
+        }
+      } catch (e) {}
+    }
+
+    /**
+     * Try to find if a username is registered in localStorage.
+     * If userData.username is empty, we will use the username from localStorage.
+     * If userData.username value is returned by the API we can clean the localStorage.
+     */
+    const username = localStorage.getItem(`sigle-username-${address}`);
+    if (username) {
+      if (username === userData.username) {
+        localStorage.removeItem(`sigle-username-${address}`);
+      } else {
+        userData.username = username;
+      }
+    }
+
     setState({
       loggingIn: false,
-      user: userSession.loadUserData(),
+      user: userData,
     });
+  };
+
+  const appDetails = {
+    name: 'Sigle',
+    icon: 'https://app.sigle.io/icon-192x192.png',
   };
 
   const authOptions: AuthOptions = {
     redirectTo: '/',
-    registerSubdomain: true,
-    appDetails: {
-      name: 'Sigle',
-      icon: 'https://app.sigle.io/icon-192x192.png',
-    },
+    appDetails,
     userSession,
-    finished: handleAuthSignIn,
+    onFinish: handleAuthSignIn,
+  };
+
+  const handleSetUsername = useCallback((username: string) => {
+    const userData = userSession.loadUserData();
+
+    setState({
+      loggingIn: false,
+      user: {
+        ...userData,
+        username,
+      },
+    });
+  }, []);
+
+  const userApi = useMemo(() => ({ handleSetUsername }), []);
+
+  const legacyAuthOptions: LegacyAuthOptions = {
+    redirectTo: '/',
+    registerSubdomain: true,
+    appDetails,
+    userSession: legacyUserSession,
+    finished: () => {
+      setState({
+        loggingIn: false,
+        isLegacy: true,
+        user: legacyUserSession.loadUserData(),
+      });
+    },
   };
 
   return (
-    <Connect authOptions={authOptions}>
-      <AuthContext.Provider
-        value={{ user: state.user, loggingIn: state.loggingIn }}
-      >
-        {children}
-      </AuthContext.Provider>
-    </Connect>
+    <LegacyConnect authOptions={legacyAuthOptions}>
+      <Connect authOptions={authOptions}>
+        <AuthContext.Provider
+          value={{
+            user: state.user,
+            loggingIn: state.loggingIn,
+            setUsername: userApi.handleSetUsername,
+          }}
+        >
+          {children}
+        </AuthContext.Provider>
+      </Connect>
+    </LegacyConnect>
   );
 };
 

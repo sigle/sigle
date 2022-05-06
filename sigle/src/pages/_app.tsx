@@ -65,6 +65,11 @@ const GlobalStyle = globalCss({
     height: '100%',
   },
 
+  '#__next': {
+    position: 'relative',
+    zIndex: 0,
+  },
+
   body: {
     fontFamily: '$openSans',
     backgroundColor: '$gray1',

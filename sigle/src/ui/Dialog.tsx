@@ -29,8 +29,10 @@ type DialogProps = React.ComponentProps<typeof DialogPrimitive.Root> & {
 export function Dialog({ children, ...props }: DialogProps) {
   return (
     <DialogPrimitive.Root {...props}>
-      <StyledOverlay />
-      {children}
+      <DialogPrimitive.Portal>
+        <StyledOverlay />
+        {children}
+      </DialogPrimitive.Portal>
     </DialogPrimitive.Root>
   );
 }
