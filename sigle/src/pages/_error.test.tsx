@@ -2,7 +2,7 @@
 import React from 'react';
 import { render } from '@testing-library/react';
 import * as Sentry from '@sentry/nextjs';
-import { MyError } from './_error';
+import { MyError } from './_error.page';
 
 jest.mock('@sentry/nextjs');
 

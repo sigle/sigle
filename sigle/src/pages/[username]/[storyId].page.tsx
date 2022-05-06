@@ -3,7 +3,7 @@ import { GetServerSideProps, NextPage } from 'next';
 import { lookupProfile } from '@stacks/auth';
 import * as Sentry from '@sentry/nextjs';
 import sanitizeHtml from 'sanitize-html';
-import Error from '../../pages/_error';
+import Error from '../_error.page';
 import { PublicStory } from '../../modules/publicStory/PublicStory';
 import { Story, SettingsFile } from '../../types';
 import { migrationStory } from '../../utils/migrations/story';
@@ -169,3 +169,5 @@ export const getServerSideProps: GetServerSideProps<
 
   return { props: { statusCode, errorMessage, file, settings } };
 };
+
+export default PublicStoryPage;

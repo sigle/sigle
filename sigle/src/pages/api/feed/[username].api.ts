@@ -1,7 +1,7 @@
+import * as Sentry from '@sentry/nextjs';
 import { NextApiHandler } from 'next';
 import { lookupProfile } from '@stacks/auth';
 import { Feed } from 'feed';
-import * as Sentry from '@sentry/nextjs';
 import { SettingsFile, StoryFile } from '../../../types';
 import { migrationSettings } from '../../../utils/migrations/settings';
 import { migrationStories } from '../../../utils/migrations/stories';
@@ -127,3 +127,5 @@ export const apiFeed: NextApiHandler = async (req, res) => {
 
   res.end(feed.rss2());
 };
+
+export default Sentry.withSentry(apiFeed);
