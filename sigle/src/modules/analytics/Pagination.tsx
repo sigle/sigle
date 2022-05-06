@@ -1,24 +1,17 @@
 import { ChevronLeftIcon, ChevronRightIcon } from '@radix-ui/react-icons';
-import { SubsetStory } from '../../types';
 import { Flex, IconButton } from '../../ui';
 
 interface PaginationProps {
   currentPage: number;
   onPageChange: (page: number) => void;
-  stories: SubsetStory[];
-  currentStoryItems: SubsetStory[];
+  hasNextPage: boolean;
 }
 
 export const Pagination = ({
   currentPage,
   onPageChange,
-  stories,
-  currentStoryItems,
+  hasNextPage,
 }: PaginationProps) => {
-  const lastPage =
-    currentStoryItems[currentStoryItems.length - 1] ===
-    stories[stories.length - 1];
-
   const onNext = () => onPageChange(currentPage + 1);
   const onPrevious = () => onPageChange(currentPage - 1);
 
@@ -34,11 +27,11 @@ export const Pagination = ({
         }}
         disabled={currentPage === 1}
         onClick={onPrevious}
+        aria-label="previous page"
       >
         <ChevronLeftIcon />
       </IconButton>
       <IconButton
-        onClick={onNext}
         css={{
           '&:disabled': {
             opacity: '50%',
@@ -46,7 +39,9 @@ export const Pagination = ({
             pointerEvents: 'none',
           },
         }}
-        disabled={lastPage}
+        disabled={!hasNextPage}
+        onClick={onNext}
+        aria-label="page"
       >
         <ChevronRightIcon />
       </IconButton>

@@ -22,6 +22,11 @@ export const PublishedStoriesFrame = ({
     return stories.slice(firstPageIndex, lastPageIndex);
   }, [currentPage]);
 
+  const hasNextPage =
+    currentStories[currentStories.length - 1] === stories[stories.length - 1]
+      ? false
+      : true;
+
   return (
     <>
       {currentStories && (
@@ -34,8 +39,7 @@ export const PublishedStoriesFrame = ({
           <Pagination
             currentPage={currentPage}
             onPageChange={(page) => setCurrentPage(page)}
-            stories={stories}
-            currentStoryItems={currentStories}
+            hasNextPage={hasNextPage}
           />
         </>
       )}
