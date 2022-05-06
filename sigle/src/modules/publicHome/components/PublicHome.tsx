@@ -111,7 +111,9 @@ export const PublicHome = ({ file, settings }: PublicHomeProps) => {
                 target="_blank"
                 rel="noreferrer"
               >
-                @{twitterHandle}
+                {twitterHandle?.includes('@')
+                  ? twitterHandle
+                  : `@${twitterHandle}`}
               </Text>
             )}
           </Flex>

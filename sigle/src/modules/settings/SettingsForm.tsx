@@ -129,11 +129,9 @@ export const SettingsForm = ({ settings, username }: SettingsFormProps) => {
       }
       const handle = formik.values.siteTwitterHandle;
       const website = formik.values.siteUrl;
-
       formik.values.siteTwitterHandle = handle.split('/').pop() as string;
 
       formik.values.siteTwitterHandle = handle.replace('@', '');
-      newSettings.siteTwitterHandle = handle.replace('@', '');
 
       formik.values.siteUrl = website.replace(urlRegex, '');
       newSettings.siteUrl = website.replace(urlRegex, '');
