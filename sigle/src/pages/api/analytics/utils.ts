@@ -7,7 +7,6 @@ import { migrationStories } from '../../../utils/migrations/stories';
 export const FATHOM_MAX_FROM_DATE = '2021-04-01';
 
 export const getBucketUrl = async ({
-  req,
   username,
 }: {
   req: NextApiRequest;

@@ -23,8 +23,8 @@ type AnalyticsHistoricalResponse = {
 export const analyticsHistoricalEndpoint: NextApiHandler<
   AnalyticsHistoricalResponseError | AnalyticsHistoricalResponse
 > = async (req, res) => {
-  let { dateFrom, dateGrouping, storyId } =
-    req.query as AnalyticsHistoricalParams;
+  const { dateGrouping, storyId } = req.query as AnalyticsHistoricalParams;
+  let { dateFrom } = req.query as AnalyticsHistoricalParams;
 
   if (!dateFrom) {
     res.status(400).json({ error: 'dateFrom is required' });

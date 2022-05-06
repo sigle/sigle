@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { analyticsHistoricalEndpoint } from './historical.api';
 import { fathomClient } from '../../../external/fathom';
 
