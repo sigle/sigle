@@ -1,4 +1,4 @@
-import { FathomClientParams } from './';
+import { FathomClientParams } from '.';
 
 /**
  * Generic function

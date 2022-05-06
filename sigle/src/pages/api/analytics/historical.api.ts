@@ -85,27 +85,12 @@ export const analyticsHistoricalEndpoint: NextApiHandler<
   storiesPath.push(`/${username}`);
 
   // TODO batch with max concurrent limit
-  const fathomAggregationResult: {
-    pathname: string;
-    date: string;
-    visits: string;
-    pageviews: string;
-  }[][] = await Promise.all(
+  const fathomAggregationResult = await Promise.all(
     storiesPath.map((path) =>
-      fathomClient.aggregate({
-        date_from: dateFrom,
-        entity: 'pageview',
-        aggregates: 'visits,pageviews',
-        date_grouping: dateGrouping,
-        field_grouping: 'pathname',
-        sort_by: 'timestamp:asc',
-        filters: [
-          {
-            property: 'pathname',
-            operator: 'is',
-            value: path,
-          },
-        ],
+      fathomClient.aggregatePath({
+        dateFrom,
+        dateGrouping,
+        path,
       })
     )
   );
