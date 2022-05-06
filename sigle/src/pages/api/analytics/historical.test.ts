@@ -63,3 +63,22 @@ it('Should throw an error if dateGrouping is invalid', async () => {
   expect(status).toBeCalledWith(400);
   expect(json).toBeCalledWith({ error: 'dateGrouping must be day or month' });
 });
+
+it('Respond with a formatted time series', async () => {
+  // Set a fake timer so we can verify the end date
+  jest.useFakeTimers().setSystemTime(new Date('2022-04-04').getTime());
+
+  const json = jest.fn();
+  const status = jest.fn(() => ({
+    json,
+  }));
+
+  await analyticsHistoricalEndpoint(
+    { query: { dateFrom: '2022-02-02', dateGrouping: 'day' } } as any,
+    {
+      status,
+    } as any
+  );
+  expect(status).toBeCalledWith(200);
+  expect(json).toMatchSnapshot();
+});
