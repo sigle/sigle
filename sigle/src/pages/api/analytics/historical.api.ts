@@ -1,7 +1,7 @@
 import { NextApiHandler } from 'next';
 import * as Sentry from '@sentry/nextjs';
 import { addDays, format, isBefore, isValid, parse } from 'date-fns';
-import { getBucketUrl, getPublicStories } from './utils';
+import { FATHOM_MAX_FROM_DATE, getBucketUrl, getPublicStories } from './utils';
 import { fathomClient } from '../../../external/fathom';
 
 interface AnalyticsHistoricalParams {
@@ -19,8 +19,6 @@ type AnalyticsHistoricalResponse = {
   visits: number;
   pageviews: number;
 }[];
-
-// TODO not more than const dateFrom = '2021-04-01';
 
 export const analyticsHistoricalEndpoint: NextApiHandler<
   AnalyticsHistoricalResponseError | AnalyticsHistoricalResponse
@@ -51,6 +49,13 @@ export const analyticsHistoricalEndpoint: NextApiHandler<
   // TODO protect to logged in users
   // TODO take username from session
   const username = 'sigleapp.id.blockstack';
+
+  // Set max date in the past
+  if (isBefore(parsedDateFrom, new Date(FATHOM_MAX_FROM_DATE))) {
+    dateFrom = FATHOM_MAX_FROM_DATE;
+    parsedDateFrom = new Date(FATHOM_MAX_FROM_DATE);
+  }
+
   // TODO test what is happening with a date in the future
   const dateTo = new Date();
 

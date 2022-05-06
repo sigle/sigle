@@ -2,6 +2,10 @@ import { lookupProfile } from '@stacks/auth';
 import { NextApiRequest } from 'next';
 import { migrationStories } from '../../../utils/migrations/stories';
 
+// Fathom started aggregating full data from this date.
+// All queries should start at this date maximum.
+export const FATHOM_MAX_FROM_DATE = '2021-04-01';
+
 export const getBucketUrl = async ({
   req,
   username,
