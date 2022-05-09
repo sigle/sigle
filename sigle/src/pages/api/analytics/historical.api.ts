@@ -1,6 +1,13 @@
 import { NextApiHandler } from 'next';
 import * as Sentry from '@sentry/nextjs';
-import { addDays, format, isBefore, isValid, parse } from 'date-fns';
+import {
+  addDays,
+  differenceInMonths,
+  format,
+  isBefore,
+  isValid,
+  parse,
+} from 'date-fns';
 import { FATHOM_MAX_FROM_DATE, getBucketUrl, getPublicStories } from './utils';
 import { fathomClient } from '../../../external/fathom';
 
@@ -25,6 +32,7 @@ export const analyticsHistoricalEndpoint: NextApiHandler<
 > = async (req, res) => {
   const { dateGrouping, storyId } = req.query as AnalyticsHistoricalParams;
   let { dateFrom } = req.query as AnalyticsHistoricalParams;
+  const dateTo = new Date();
 
   if (!dateFrom) {
     res.status(400).json({ error: 'dateFrom is required' });
@@ -46,6 +54,17 @@ export const analyticsHistoricalEndpoint: NextApiHandler<
     return;
   }
 
+  // Can only request up to 2 month of daily grouping
+  if (
+    differenceInMonths(dateTo, parsedDateFrom) > 2 &&
+    dateGrouping === 'day'
+  ) {
+    res.status(400).json({
+      error: 'dateFrom must be within 2 months when grouping by days',
+    });
+    return;
+  }
+
   // TODO protect to logged in users
   // TODO take username from session
   const username = 'sigleapp.id.blockstack';
@@ -55,8 +74,6 @@ export const analyticsHistoricalEndpoint: NextApiHandler<
     dateFrom = FATHOM_MAX_FROM_DATE;
     parsedDateFrom = new Date(FATHOM_MAX_FROM_DATE);
   }
-
-  const dateTo = new Date();
 
   const historicalResponse: AnalyticsHistoricalResponse = [];
 
