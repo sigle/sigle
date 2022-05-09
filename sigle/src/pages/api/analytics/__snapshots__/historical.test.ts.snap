@@ -187,6 +187,43 @@ exports[`Respond with a formatted time series for days 1`] = `
 }
 `;
 
+exports[`Respond with a formatted time series for months 1`] = `
+[MockFunction] {
+  "calls": Array [
+    Array [
+      Array [
+        Object {
+          "date": "2022-01",
+          "pageviews": 0,
+          "visits": 0,
+        },
+        Object {
+          "date": "2022-02",
+          "pageviews": 0,
+          "visits": 0,
+        },
+        Object {
+          "date": "2022-03",
+          "pageviews": 0,
+          "visits": 0,
+        },
+        Object {
+          "date": "2022-04",
+          "pageviews": 0,
+          "visits": 0,
+        },
+      ],
+    ],
+  ],
+  "results": Array [
+    Object {
+      "type": "return",
+      "value": undefined,
+    },
+  ],
+}
+`;
+
 exports[`Respond with a formatted time series for one story 1`] = `
 [MockFunction] {
   "calls": Array [

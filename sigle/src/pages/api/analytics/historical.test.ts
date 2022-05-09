@@ -114,6 +114,31 @@ it('Respond with a formatted time series for days', async () => {
   (fathomClient.aggregatePath as jest.Mock).mockReset();
 });
 
+it('Respond with a formatted time series for months', async () => {
+  // Set a fake timer so we can verify the end date
+  jest
+    .useFakeTimers()
+    .setSystemTime(new Date('2022-04-04 00:00:00 UTC').getTime());
+  (fathomClient.aggregatePath as jest.Mock).mockResolvedValue([]);
+
+  const json = jest.fn();
+  const status = jest.fn(() => ({
+    json,
+  }));
+
+  await analyticsHistoricalEndpoint(
+    { query: { dateFrom: '2022-01-02', dateGrouping: 'month' } } as any,
+    {
+      status,
+    } as any
+  );
+  expect(fathomClient.aggregatePath).toBeCalledTimes(25);
+  expect(status).toBeCalledWith(200);
+  expect(json).toMatchSnapshot();
+
+  (fathomClient.aggregatePath as jest.Mock).mockReset();
+});
+
 it('Respond with a formatted time series for one story', async () => {
   // Set a fake timer so we can verify the end date
   jest
