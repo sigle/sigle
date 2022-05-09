@@ -7,38 +7,56 @@ const withBundleAnalyzer = require('@next/bundle-analyzer')({
 
 dotenv.config();
 
+const nextConfig = {
+  env: {
+    APP_URL: process.env.APP_URL,
+    FATHOM_SITE_ID: process.env.FATHOM_SITE_ID,
+    NEXT_PUBLIC_SENTRY_DSN: process.env.NEXT_PUBLIC_SENTRY_DSN,
+    NEXT_PUBLIC_POSTHOG_TOKEN: process.env.NEXT_PUBLIC_POSTHOG_TOKEN,
+  },
+  pageExtensions: [
+    // `.page.tsx` for page components
+    'page.tsx',
+    // `.api.ts` for API routes
+    'api.ts',
+  ],
+  headers: async () => {
+    return [
+      {
+        source: '/manifest.json',
+        headers: [
+          {
+            key: 'Access-Control-Allow-Origin',
+            value: '*',
+          },
+          {
+            key: 'Access-Control-Allow-Headers',
+            value: '*',
+          },
+        ],
+      },
+    ];
+  },
+  webpack: (config) => {
+    config.resolve.alias = {
+      ...config.resolve.alias,
+      // alias stacks.js packages to their esm (default prefers /dist/polyfill)
+      '@stacks/auth': '@stacks/auth/dist/esm',
+      '@stacks/common': '@stacks/common/dist/esm',
+      '@stacks/encryption': '@stacks/encryption/dist/esm',
+      '@stacks/keychain': '@stacks/keychain/dist/esm',
+      '@stacks/network': '@stacks/network/dist/esm',
+      '@stacks/profile': '@stacks/profile/dist/esm',
+      '@stacks/storage': '@stacks/storage/dist/esm',
+      '@stacks/transactions': '@stacks/transactions/dist/esm',
+      '@stacks/wallet-sdk': '@stacks/wallet-sdk/dist/esm',
+    };
+    return config;
+  },
+};
+
 module.exports = withSentryConfig(
-  withPlugins([[withBundleAnalyzer]], {
-    env: {
-      APP_URL: process.env.APP_URL,
-      FATHOM_SITE_ID: process.env.FATHOM_SITE_ID,
-      NEXT_PUBLIC_SENTRY_DSN: process.env.NEXT_PUBLIC_SENTRY_DSN,
-      NEXT_PUBLIC_POSTHOG_TOKEN: process.env.NEXT_PUBLIC_POSTHOG_TOKEN,
-    },
-    pageExtensions: [
-      // `.page.tsx` for page components
-      'page.tsx',
-      // `.api.ts` for API routes
-      'api.ts',
-    ],
-    headers: async () => {
-      return [
-        {
-          source: '/manifest.json',
-          headers: [
-            {
-              key: 'Access-Control-Allow-Origin',
-              value: '*',
-            },
-            {
-              key: 'Access-Control-Allow-Headers',
-              value: '*',
-            },
-          ],
-        },
-      ];
-    },
-  }),
+  withPlugins([[withBundleAnalyzer]], nextConfig),
   {
     dryRun: process.env.NEXT_PUBLIC_APP_ENV !== 'production',
   }
