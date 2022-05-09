@@ -71,7 +71,7 @@ it('Should throw an error if dateGrouping is invalid', async () => {
 it('Should throw an error if dateGrouping is day and dateFrom > 2 month', async () => {
   jest
     .useFakeTimers()
-    .setSystemTime(new Date('2022-04-04 00:00:00 UTC').getTime());
+    .setSystemTime(new Date('2022-04-04 12:00:00 UTC').getTime());
   const json = jest.fn();
   const status = jest.fn(() => ({
     json,
@@ -93,7 +93,7 @@ it('Respond with a formatted time series for days', async () => {
   // Set a fake timer so we can verify the end date
   jest
     .useFakeTimers()
-    .setSystemTime(new Date('2022-04-04 00:00:00 UTC').getTime());
+    .setSystemTime(new Date('2022-04-04 12:00:00 UTC').getTime());
   (fathomClient.aggregatePath as jest.Mock).mockResolvedValue([]);
 
   const json = jest.fn();
@@ -118,7 +118,7 @@ it('Respond with a formatted time series for months', async () => {
   // Set a fake timer so we can verify the end date
   jest
     .useFakeTimers()
-    .setSystemTime(new Date('2022-04-04 00:00:00 UTC').getTime());
+    .setSystemTime(new Date('2022-04-04 12:00:00 UTC').getTime());
   (fathomClient.aggregatePath as jest.Mock).mockResolvedValue([]);
 
   const json = jest.fn();
@@ -143,7 +143,7 @@ it('Respond with a formatted time series for one story', async () => {
   // Set a fake timer so we can verify the end date
   jest
     .useFakeTimers()
-    .setSystemTime(new Date('2022-04-04 00:00:00 UTC').getTime());
+    .setSystemTime(new Date('2022-04-04 12:00:00 UTC').getTime());
   (fathomClient.aggregatePath as jest.Mock).mockResolvedValue([]);
 
   const json = jest.fn();
