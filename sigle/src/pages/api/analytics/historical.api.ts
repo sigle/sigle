@@ -2,6 +2,7 @@ import { NextApiHandler } from 'next';
 import * as Sentry from '@sentry/nextjs';
 import {
   addDays,
+  addMonths,
   differenceInMonths,
   format,
   isBefore,
@@ -78,14 +79,22 @@ export const analyticsHistoricalEndpoint: NextApiHandler<
   const historicalResponse: AnalyticsHistoricalResponse = [];
 
   // As fathom does not return data for all the days, we need to add the missing days
+  // When date grouping is day the date is yyyy-MM-dd
+  // When date grouping is month the date is yyyy-MM
   while (isBefore(parsedDateFrom, dateTo)) {
-    const date = format(parsedDateFrom, 'yyyy-MM-dd');
+    const date =
+      dateGrouping === 'day'
+        ? format(parsedDateFrom, 'yyyy-MM-dd')
+        : format(parsedDateFrom, 'yyyy-MM');
     historicalResponse.push({
       date,
       visits: 0,
       pageviews: 0,
     });
-    parsedDateFrom = addDays(parsedDateFrom, 1);
+    parsedDateFrom =
+      dateGrouping === 'day'
+        ? addDays(parsedDateFrom, 1)
+        : addMonths(parsedDateFrom, 1);
   }
 
   const { profile, bucketUrl } = await getBucketUrl({ req, username });

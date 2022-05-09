@@ -89,7 +89,7 @@ it('Should throw an error if dateGrouping is day and dateFrom > 2 month', async 
   });
 });
 
-it('Respond with a formatted time series', async () => {
+it('Respond with a formatted time series for days', async () => {
   // Set a fake timer so we can verify the end date
   jest
     .useFakeTimers()
@@ -102,7 +102,7 @@ it('Respond with a formatted time series', async () => {
   }));
 
   await analyticsHistoricalEndpoint(
-    { query: { dateFrom: '2022-02-02', dateGrouping: 'day' } } as any,
+    { query: { dateFrom: '2022-03-02', dateGrouping: 'day' } } as any,
     {
       status,
     } as any
@@ -128,7 +128,7 @@ it('Respond with a formatted time series for one story', async () => {
 
   await analyticsHistoricalEndpoint(
     {
-      query: { dateFrom: '2022-02-02', dateGrouping: 'day', storyId: 'test' },
+      query: { dateFrom: '2022-03-02', dateGrouping: 'day', storyId: 'test' },
     } as any,
     {
       status,
