@@ -111,9 +111,9 @@ export default class MyApp extends App {
     const { err } = this.props as any;
     const modifiedPageProps = { ...pageProps, err };
 
-    const seoTitle = 'Sigle | Decentralized writing platform';
+    const seoTitle = 'Sigle | Where Web3 stories come to life';
     const seoDescription =
-      'Sigle is a decentralised, open-source platform empowering creators. Write, share, build your audience and earn Bitcoin.';
+      'Sigle is a decentralised open-source platform empowering Web3 creators. Write, share and lock your stories on the blockchain, forever.';
 
     return (
       <React.Fragment>
@@ -134,7 +134,7 @@ export default class MyApp extends App {
             description: seoDescription,
             images: [
               {
-                url: `${sigleConfig.appUrl}/img/illustrations/login.png`,
+                url: `${sigleConfig.appUrl}/img/share.png`,
                 alt: `Sigle hero image`,
                 width: 1200,
                 height: 951,
