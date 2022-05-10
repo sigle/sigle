@@ -111,6 +111,7 @@ export const ReferrersFrame = () => {
   const getPercentage = (views: number) => {
     const percentage = Math.round((100 * views) / total);
     const lessThanTenPercent = percentage < 10;
+    // clamp min value to 10% - see https://github.com/sigle/sigle/issues/451 for context
     return lessThanTenPercent ? percentage + 10 : percentage;
   };
 
