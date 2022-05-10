@@ -1,5 +1,5 @@
 ---
-'@sigle/app': minor
+'@sigle/app': patch
 ---
 
-Create UI with dummy data for referrers on analytics page.
+(Beta) Create UI with dummy data for referrers on analytics page.
