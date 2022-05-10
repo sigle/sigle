@@ -140,7 +140,7 @@ export const analyticsHistoricalEndpoint: NextApiHandler<
   );
 
   /**
-   * Historical aggregated results
+   * Historical aggregated results.
    */
 
   const datesValues: { [key: string]: { visits: number; pageviews: number } } =
@@ -174,7 +174,9 @@ export const analyticsHistoricalEndpoint: NextApiHandler<
   });
 
   /**
-   * Stories aggregated results
+   * Stories aggregated results.
+   * To limit the calls made to Fathom we reuse the data returned in this API endpoint but ideally
+   * once Fathom API is more flexible, this should be moved to it's own endpoint.
    */
 
   historicalResponse.stories = fathomAggregationResult
