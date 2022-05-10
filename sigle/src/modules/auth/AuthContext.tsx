@@ -137,18 +137,51 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
 
   const userApi = useMemo(() => ({ handleSetUsername }), []);
 
+  const handleAuthSignInLegacy = async () => {
+    let userData = legacyUserSession.loadUserData() as LegacyUserData;
+
+    /**
+     * After this issue was fixed on the subdomain registrar https://github.com/stacks-network/subdomain-registrar/issues/66
+     * the database was cleared and usernames with problems were also cleared (eg: subdomain register tx failed as async operation).
+     * Blockstack connect keep the usernames in the cache even tho they were freed.
+     * We manually check if these usernames are taken and if they are, we need to tell the user to re-register it.
+     */
+    let namesJson:
+      | {
+          address: string;
+        }
+      | {
+          status: 'available';
+        };
+    try {
+      const namesResponse = await fetch(
+        `https://stacks-node-api.stacks.co/v1/names/${userData.username}`
+      );
+      namesJson = await namesResponse.json();
+    } catch (e) {
+      namesJson = { address: 'ok' };
+    }
+
+    if ('status' in namesJson && namesJson.status === 'available') {
+      userData = {
+        ...userData,
+        username: undefined as any,
+      };
+    }
+
+    setState({
+      loggingIn: false,
+      isLegacy: true,
+      user: userData,
+    });
+  };
+
   const legacyAuthOptions: LegacyAuthOptions = {
     redirectTo: '/',
     registerSubdomain: true,
     appDetails,
     userSession: legacyUserSession,
-    finished: () => {
-      setState({
-        loggingIn: false,
-        isLegacy: true,
-        user: legacyUserSession.loadUserData(),
-      });
-    },
+    finished: handleAuthSignInLegacy,
   };
 
   return (
