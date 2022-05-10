@@ -150,7 +150,7 @@ const RegisterUsername = () => {
   useEffect(() => {
     // See https://github.com/sigle/sigle/pull/466 for more context on this one.
     if (user && isLegacy) {
-      let userData = legacyUserSession.loadUserData();
+      const userData = legacyUserSession.loadUserData();
       const oldUsername = userData.username.split('.')[0];
 
       setFormState((state) => ({
