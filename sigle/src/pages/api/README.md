@@ -9,37 +9,46 @@
 Sample Response for days grouping:
 
 ```json
-[
-  {
-    "date": "2022-04-29",
-    "visits": 0,
-    "pageviews": 0
-  },
-  {
-    "date": "2022-04-30",
-    "visits": 0,
-    "pageviews": 0
-  }
-  // ...
-]
+{
+  "historical": [
+    {
+      "date": "2022-04-29",
+      "visits": 0,
+      "pageviews": 0
+    },
+    {
+      "date": "2022-04-30",
+      "visits": 0,
+      "pageviews": 0
+    }
+    // ...
+  ],
+  "stories": [
+    { "pathname": "zsoVIi3V6CE", "visits": 0, "pageviews": 0 },
+    { "pathname": "0jE9PPqbxUp", "visits": 0, "pageviews": 0 }
+    // ...
+  ]
+}
 ```
 
 Sample Response for months grouping:
 
 ```json
-[
-  {
-    "date": "2022-03",
-    "visits": 0,
-    "pageviews": 0
-  },
-  {
-    "date": "2022-04",
-    "visits": 0,
-    "pageviews": 0
-  }
-  // ...
-]
+{
+  "historical": [
+    {
+      "date": "2022-03",
+      "visits": 0,
+      "pageviews": 0
+    },
+    {
+      "date": "2022-04",
+      "visits": 0,
+      "pageviews": 0
+    }
+    // ...
+  ]
+}
 ```
 
 #### Parameters

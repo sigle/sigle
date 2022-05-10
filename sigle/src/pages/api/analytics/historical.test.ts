@@ -4,6 +4,10 @@ import { fathomClient } from '../../../external/fathom';
 
 jest.mock('../../../external/fathom');
 
+beforeEach(() => {
+  (fathomClient.aggregatePath as jest.Mock).mockReset();
+});
+
 it('Should throw an error if dateFrom is missing', async () => {
   const json = jest.fn();
   const status = jest.fn(() => ({
@@ -94,6 +98,22 @@ it('Respond with a formatted time series for days', async () => {
   jest
     .useFakeTimers()
     .setSystemTime(new Date('2022-04-04 12:00:00 UTC').getTime());
+  (fathomClient.aggregatePath as jest.Mock).mockResolvedValueOnce([
+    {
+      visits: '5',
+      pageviews: '1',
+      date: '2022-03-20',
+      pathname: '/test.btc/path-test',
+    },
+  ]);
+  (fathomClient.aggregatePath as jest.Mock).mockResolvedValueOnce([
+    {
+      visits: '7',
+      pageviews: '3',
+      date: '2022-03-20',
+      pathname: '/test.btc/path-test-2',
+    },
+  ]);
   (fathomClient.aggregatePath as jest.Mock).mockResolvedValue([]);
 
   const json = jest.fn();
@@ -102,7 +122,7 @@ it('Respond with a formatted time series for days', async () => {
   }));
 
   await analyticsHistoricalEndpoint(
-    { query: { dateFrom: '2022-03-02', dateGrouping: 'day' } } as any,
+    { query: { dateFrom: '2022-03-15', dateGrouping: 'day' } } as any,
     {
       status,
     } as any
@@ -110,8 +130,6 @@ it('Respond with a formatted time series for days', async () => {
   expect(fathomClient.aggregatePath).toBeCalledTimes(25);
   expect(status).toBeCalledWith(200);
   expect(json).toMatchSnapshot();
-
-  (fathomClient.aggregatePath as jest.Mock).mockReset();
 });
 
 it('Respond with a formatted time series for months', async () => {
@@ -119,6 +137,22 @@ it('Respond with a formatted time series for months', async () => {
   jest
     .useFakeTimers()
     .setSystemTime(new Date('2022-04-04 12:00:00 UTC').getTime());
+  (fathomClient.aggregatePath as jest.Mock).mockResolvedValueOnce([
+    {
+      visits: '5',
+      pageviews: '1',
+      date: '2022-03',
+      pathname: '/test.btc/path-test',
+    },
+  ]);
+  (fathomClient.aggregatePath as jest.Mock).mockResolvedValueOnce([
+    {
+      visits: '7',
+      pageviews: '3',
+      date: '2022-03',
+      pathname: '/test.btc/path-test-2',
+    },
+  ]);
   (fathomClient.aggregatePath as jest.Mock).mockResolvedValue([]);
 
   const json = jest.fn();
@@ -135,8 +169,6 @@ it('Respond with a formatted time series for months', async () => {
   expect(fathomClient.aggregatePath).toBeCalledTimes(25);
   expect(status).toBeCalledWith(200);
   expect(json).toMatchSnapshot();
-
-  (fathomClient.aggregatePath as jest.Mock).mockReset();
 });
 
 it('Respond with a formatted time series for one story', async () => {
@@ -144,6 +176,14 @@ it('Respond with a formatted time series for one story', async () => {
   jest
     .useFakeTimers()
     .setSystemTime(new Date('2022-04-04 12:00:00 UTC').getTime());
+  (fathomClient.aggregatePath as jest.Mock).mockResolvedValueOnce([
+    {
+      visits: '5',
+      pageviews: '1',
+      date: '2022-03-20',
+      pathname: '/test.btc/path-test',
+    },
+  ]);
   (fathomClient.aggregatePath as jest.Mock).mockResolvedValue([]);
 
   const json = jest.fn();
@@ -153,7 +193,7 @@ it('Respond with a formatted time series for one story', async () => {
 
   await analyticsHistoricalEndpoint(
     {
-      query: { dateFrom: '2022-03-02', dateGrouping: 'day', storyId: 'test' },
+      query: { dateFrom: '2022-03-15', dateGrouping: 'day', storyId: 'test' },
     } as any,
     {
       status,
