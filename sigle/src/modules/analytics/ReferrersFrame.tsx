@@ -135,7 +135,6 @@ export const ReferrersFrame = () => {
               <Box
                 css={{
                   flex: 1,
-                  width: 180,
                 }}
               >
                 <Box
