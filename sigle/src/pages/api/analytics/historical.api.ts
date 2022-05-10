@@ -177,25 +177,35 @@ export const analyticsHistoricalEndpoint: NextApiHandler<
    * Stories aggregated results
    */
 
-  historicalResponse.stories = fathomAggregationResult.map((result) => {
-    const pathname =
-      result[0].pathname === `/${username}`
-        ? '/'
-        : result[0].pathname.replace(`/${username}/`, '');
-    const totalStats = result.reduce(
-      (acc, curr) => {
-        acc.visits += Number(curr.visits);
-        acc.pageviews += Number(curr.pageviews);
-        return acc;
-      },
-      { pathname, visits: 0, pageviews: 0 }
-    );
-    return {
-      pathname,
-      visits: totalStats.visits,
-      pageviews: totalStats.pageviews,
-    };
-  });
+  historicalResponse.stories = fathomAggregationResult
+    .map((result) => {
+      if (result.length === 0) {
+        return {
+          pathname: '',
+          visits: 0,
+          pageviews: 0,
+        };
+      }
+
+      const pathname =
+        result[0].pathname === `/${username}`
+          ? '/'
+          : result[0].pathname.replace(`/${username}/`, '');
+      const totalStats = result.reduce(
+        (acc, curr) => {
+          acc.visits += Number(curr.visits);
+          acc.pageviews += Number(curr.pageviews);
+          return acc;
+        },
+        { pathname, visits: 0, pageviews: 0 }
+      );
+      return {
+        pathname,
+        visits: totalStats.visits,
+        pageviews: totalStats.pageviews,
+      };
+    })
+    .filter((story) => story.pathname !== '');
 
   res.status(200).json(historicalResponse);
 };
