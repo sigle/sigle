@@ -23,10 +23,17 @@ interface AnalyticsHistoricalResponseError {
 }
 
 type AnalyticsHistoricalResponse = {
-  date: string;
-  visits: number;
-  pageviews: number;
-}[];
+  historical: {
+    date: string;
+    visits: number;
+    pageviews: number;
+  }[];
+  stories: {
+    pathname: string;
+    visits: number;
+    pageviews: number;
+  }[];
+};
 
 export const analyticsHistoricalEndpoint: NextApiHandler<
   AnalyticsHistoricalResponseError | AnalyticsHistoricalResponse
@@ -76,7 +83,10 @@ export const analyticsHistoricalEndpoint: NextApiHandler<
     parsedDateFrom = new Date(FATHOM_MAX_FROM_DATE);
   }
 
-  const historicalResponse: AnalyticsHistoricalResponse = [];
+  const historicalResponse: AnalyticsHistoricalResponse = {
+    historical: [],
+    stories: [],
+  };
 
   // As fathom does not return data for all the days, we need to add the missing days
   // When date grouping is day the date is yyyy-MM-dd
@@ -86,7 +96,7 @@ export const analyticsHistoricalEndpoint: NextApiHandler<
       dateGrouping === 'day'
         ? format(parsedDateFrom, 'yyyy-MM-dd')
         : format(parsedDateFrom, 'yyyy-MM');
-    historicalResponse.push({
+    historicalResponse.historical.push({
       date,
       visits: 0,
       pageviews: 0,
@@ -129,6 +139,10 @@ export const analyticsHistoricalEndpoint: NextApiHandler<
     )
   );
 
+  /**
+   * Historical aggregated results
+   */
+
   const datesValues: { [key: string]: { visits: number; pageviews: number } } =
     {};
 
@@ -145,7 +159,7 @@ export const analyticsHistoricalEndpoint: NextApiHandler<
 
   Object.keys(datesValues).forEach((date) => {
     const dateValues = datesValues[date];
-    const index = historicalResponse.findIndex(
+    const index = historicalResponse.historical.findIndex(
       (historical) => historical.date === date
     );
     if (index === -1) {
@@ -155,8 +169,32 @@ export const analyticsHistoricalEndpoint: NextApiHandler<
       res.status(500).json({ error: `Internal server error: ${errorId}` });
       return;
     }
-    historicalResponse[index].visits = dateValues.visits;
-    historicalResponse[index].pageviews = dateValues.pageviews;
+    historicalResponse.historical[index].visits = dateValues.visits;
+    historicalResponse.historical[index].pageviews = dateValues.pageviews;
+  });
+
+  /**
+   * Stories aggregated results
+   */
+
+  historicalResponse.stories = fathomAggregationResult.map((result) => {
+    const pathname =
+      result[0].pathname === `/${username}`
+        ? '/'
+        : result[0].pathname.replace(`/${username}/`, '');
+    const totalStats = result.reduce(
+      (acc, curr) => {
+        acc.visits += Number(curr.visits);
+        acc.pageviews += Number(curr.pageviews);
+        return acc;
+      },
+      { pathname, visits: 0, pageviews: 0 }
+    );
+    return {
+      pathname,
+      visits: totalStats.visits,
+      pageviews: totalStats.pageviews,
+    };
   });
 
   res.status(200).json(historicalResponse);
