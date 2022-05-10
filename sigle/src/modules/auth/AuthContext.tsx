@@ -155,7 +155,8 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
         };
     try {
       const namesResponse = await fetch(
-        `https://stacks-node-api.stacks.co/v1/names/${userData.username}`
+        // `https://stacks-node-api.stacks.co/v1/names/${userData.username}`
+        `https://stacks-node-api.stacks.co/v1/names/totototo31.id.stx`
       );
       namesJson = await namesResponse.json();
     } catch (e) {
@@ -190,6 +191,7 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
         <AuthContext.Provider
           value={{
             user: state.user,
+            isLegacy: state.isLegacy,
             loggingIn: state.loggingIn,
             setUsername: userApi.handleSetUsername,
           }}

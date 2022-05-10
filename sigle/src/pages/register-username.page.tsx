@@ -13,6 +13,7 @@ import { keyframes, styled } from '../stitches.config';
 import { QuestionMarkCircledIcon } from '@radix-ui/react-icons';
 import { useAuth } from '../modules/auth/AuthContext';
 import { Goals } from '../utils/fathom';
+import { legacyUserSession } from '../utils/blockstack';
 
 interface HubInfo {
   challenge_text?: string;
@@ -127,7 +128,7 @@ const FormInput = styled('input', {
 
 const RegisterUsername = () => {
   const router = useRouter();
-  const { user, loggingIn, setUsername } = useAuth();
+  const { user, loggingIn, setUsername, isLegacy } = useAuth();
   const [formState, setFormState] = useState<FormState>({
     username: '',
     loading: false,
@@ -145,6 +146,19 @@ const RegisterUsername = () => {
       return;
     }
   }, [loggingIn, router, user]);
+
+  useEffect(() => {
+    // See https://github.com/sigle/sigle/pull/466 for more context on this one.
+    if (user && isLegacy) {
+      let userData = legacyUserSession.loadUserData();
+      const oldUsername = userData.username.split('.')[0];
+
+      setFormState((state) => ({
+        ...state,
+        username: oldUsername,
+      }));
+    }
+  }, [user, isLegacy]);
 
   const handleSubmit: React.FormEventHandler<HTMLFormElement> = async (
     event
@@ -283,12 +297,15 @@ const RegisterUsername = () => {
           color: '$gray10',
         }}
       >
-        Choose a .id.stx username
+        {isLegacy
+          ? `Looks like your username registration failed and you need to re-register it`
+          : 'Choose a .id.stx username'}
       </Text>
       <form onSubmit={handleSubmit}>
         <ControlGroup role="group">
           <FormInput
             disabled={formState.loading}
+            value={formState.username}
             placeholder="johndoe.id.stx"
             onChange={(event) =>
               setFormState({ username: event.target.value, loading: false })
