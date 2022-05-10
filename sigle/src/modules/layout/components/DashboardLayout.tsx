@@ -12,6 +12,40 @@ import {
   AccordionTrigger,
 } from '../../../ui/Accordion';
 import { isExperimentalAnalyticsPageEnabled } from '../../../utils/featureFlags';
+import { VariantProps } from '@stitches/react';
+
+const DashboardContainer = styled(Container, {
+  flex: 1,
+  mt: '$10',
+  width: '100%',
+  display: 'grid',
+
+  '@md': {
+    justifyContent: 'center',
+    gridTemplateColumns: '724px',
+  },
+
+  '@lg': {
+    gridTemplateColumns: '834px',
+  },
+
+  variants: {
+    layout: {
+      default: {
+        '@xl': {
+          gridTemplateColumns: '1fr 826px 1fr',
+        },
+      },
+      wide: {
+        gridTemplateColumns: '1fr 5fr',
+      },
+    },
+  },
+
+  defaultVariants: {
+    layout: 'default',
+  },
+});
 
 const FullScreen = styled('div', {
   height: '100vh',
@@ -59,11 +93,14 @@ const NavItem = styled('a', {
   },
 });
 
-interface DashboardLayoutProps {
+interface DashboardLayoutProps extends VariantProps<typeof DashboardContainer> {
   children: React.ReactNode;
 }
 
-export const DashboardLayout = ({ children }: DashboardLayoutProps) => {
+export const DashboardLayout = ({
+  children,
+  ...props
+}: DashboardLayoutProps) => {
   const router = useRouter();
 
   let triggerName;
@@ -89,27 +126,7 @@ export const DashboardLayout = ({ children }: DashboardLayoutProps) => {
   return (
     <FullScreen>
       <AppHeader />
-      <Container
-        css={{
-          display: 'grid',
-          flex: 1,
-          mt: '$10',
-          width: '100%',
-
-          '@md': {
-            justifyContent: 'center',
-            gridTemplateColumns: '724px',
-          },
-
-          '@lg': {
-            gridTemplateColumns: '834px',
-          },
-
-          '@xl': {
-            gridTemplateColumns: '1fr 826px 1fr',
-          },
-        }}
-      >
+      <DashboardContainer {...props}>
         <Sidebar
           css={{
             display: 'none',
@@ -170,10 +187,9 @@ export const DashboardLayout = ({ children }: DashboardLayoutProps) => {
               </AccordionContent>
             </AccordionItem>
           </Accordion>
-
           {children}
         </Box>
-      </Container>
+      </DashboardContainer>
       <AppFooter />
     </FullScreen>
   );
