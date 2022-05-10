@@ -11,6 +11,7 @@ import {
 } from 'date-fns';
 import { FATHOM_MAX_FROM_DATE, getBucketUrl, getPublicStories } from './utils';
 import { fathomClient } from '../../../external/fathom';
+import { redis } from '../../../external/redis';
 
 interface AnalyticsHistoricalParams {
   dateFrom?: string;
@@ -74,6 +75,17 @@ export const analyticsHistoricalEndpoint: NextApiHandler<
   if (isBefore(parsedDateFrom, new Date(FATHOM_MAX_FROM_DATE))) {
     dateFrom = FATHOM_MAX_FROM_DATE;
     parsedDateFrom = new Date(FATHOM_MAX_FROM_DATE);
+  }
+
+  // Caching mechanism to avoid hitting Fathom too often
+  const cacheKey = storyId
+    ? `${username}_${dateFrom}_${dateGrouping}_${storyId}`
+    : `${username}_${dateFrom}_${dateGrouping}`;
+  const cachedResponse = await redis.get(cacheKey);
+  if (cachedResponse) {
+    console.log('cache hit');
+    res.json(JSON.parse(cachedResponse));
+    return;
   }
 
   const historicalResponse: AnalyticsHistoricalResponse = [];
@@ -158,6 +170,9 @@ export const analyticsHistoricalEndpoint: NextApiHandler<
     historicalResponse[index].visits = dateValues.visits;
     historicalResponse[index].pageviews = dateValues.pageviews;
   });
+
+  // Cache response for 1 hour
+  await redis.set(cacheKey, JSON.stringify(historicalResponse), 'EX', 60 * 60);
 
   res.status(200).json(historicalResponse);
 };

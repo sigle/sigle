@@ -72,6 +72,7 @@
     "formik": "2.2.9",
     "highlight.js": "11.5.1",
     "immutable": "4.0.0-rc.12",
+    "ioredis": "5.0.4",
     "lowlight": "2.6.1",
     "motion": "10.8.1",
     "motion-hooks": "0.1.1",

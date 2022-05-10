@@ -117,6 +117,7 @@ importers:
       formik: 2.2.9
       highlight.js: 11.5.1
       immutable: 4.0.0-rc.12
+      ioredis: 5.0.4
       jest: 27.5.1
       lowlight: 2.6.1
       motion: 10.8.1
@@ -200,6 +201,7 @@ importers:
       formik: 2.2.9_react@17.0.2
       highlight.js: 11.5.1
       immutable: 4.0.0-rc.12
+      ioredis: 5.0.4
       lowlight: 2.6.1
       motion: 10.8.1_react-dom@17.0.2+react@17.0.2
       motion-hooks: 0.1.1_67e03ffdb1e1c34d040995bcf645dc1b
@@ -1130,6 +1132,13 @@ packages:
       react: '*'
     dependencies:
       react: 17.0.2
+    dev: false
+
+  /@ioredis/commands/1.1.1:
+    resolution:
+      {
+        integrity: sha512-fsR4P/ROllzf/7lXYyElUJCheWdTJVJvOTps8v9IWKFATxR61ANOlnoPqhH099xYLrJGpc2ZQ28B3rMeUt5VQg==,
+      }
     dev: false
 
   /@istanbuljs/load-nyc-config/1.1.0:
@@ -5516,6 +5525,14 @@ packages:
     engines: { node: '>=6' }
     dev: false
 
+  /cluster-key-slot/1.1.0:
+    resolution:
+      {
+        integrity: sha512-2Nii8p3RwAPiFwsnZvukotvow2rIHM+yQ6ZcBXGHdniadkYGZYiGmkHJIbZPIV9nfv7m/U1IPMVVcAhoWFeklw==,
+      }
+    engines: { node: '>=0.10.0' }
+    dev: false
+
   /co/4.6.0:
     resolution: { integrity: sha1-bqa989hTrlTMuOR7+gvz+QMfsYQ= }
     engines: { iojs: '>= 1.0.0', node: '>= 0.12.0' }
@@ -6076,6 +6093,14 @@ packages:
 
   /delegates/1.0.0:
     resolution: { integrity: sha1-hMbhWbgZBP3KWaDvRM2HDTElD5o= }
+    dev: false
+
+  /denque/2.0.1:
+    resolution:
+      {
+        integrity: sha512-tfiWc6BQLXNLpNiR5iGd0Ocu3P3VpxfzFiqubLgMfhfOw9WyvgJBd46CClNn9k3qfbjvT//0cf7AlYRX/OslMQ==,
+      }
+    engines: { node: '>=0.10' }
     dev: false
 
   /detect-indent/6.1.0:
@@ -7739,6 +7764,26 @@ packages:
       loose-envify: 1.4.0
     dev: false
 
+  /ioredis/5.0.4:
+    resolution:
+      {
+        integrity: sha512-qFJw3MnPNsJF1lcIOP3vztbsasOXK3nDdNAgjQj7t7/Bn/w10PGchTOpqylQNxjzPbLoYDu34LjeJtSWiKBntQ==,
+      }
+    engines: { node: '>=12.22.0' }
+    dependencies:
+      '@ioredis/commands': 1.1.1
+      cluster-key-slot: 1.1.0
+      debug: 4.3.4
+      denque: 2.0.1
+      lodash.defaults: 4.2.0
+      lodash.isarguments: 3.1.0
+      redis-errors: 1.2.0
+      redis-parser: 3.0.0
+      standard-as-callback: 2.1.0
+    transitivePeerDependencies:
+      - supports-color
+    dev: false
+
   /is-arrayish/0.2.1:
     resolution: { integrity: sha1-d8mYQFJ6qOyxqLppe4BkWnqSap0= }
     dev: true
@@ -9005,6 +9050,10 @@ packages:
     resolution: { integrity: sha1-4j8/nE+Pvd6HJSnBBxhXoIblzO8= }
     dev: false
 
+  /lodash.defaults/4.2.0:
+    resolution: { integrity: sha1-0JF4cW/+pN3p5ft7N/bwgCJ0WAw= }
+    dev: false
+
   /lodash.flatmap/4.5.0:
     resolution: { integrity: sha1-74y/QI9uSCaGYzRTBcaswLd4cC4= }
     dev: true
@@ -9012,6 +9061,10 @@ packages:
   /lodash.get/4.4.2:
     resolution: { integrity: sha1-LRd/ZS+jHpObRDjVNBSZ36OCXpk= }
     dev: true
+
+  /lodash.isarguments/3.1.0:
+    resolution: { integrity: sha1-L1c9hcaiQon/AGY7SRwdM4/zRYo= }
+    dev: false
 
   /lodash.isplainobject/4.0.6:
     resolution: { integrity: sha1-fFJqUtibRcRcxpC4gWO+BJf1UMs= }
@@ -9343,6 +9396,12 @@ packages:
     engines: { node: '>=6' }
     dev: true
 
+  /more-entropy/0.0.7:
+    resolution: { integrity: sha1-Z7/G96hvJvvDeqyD/UbYjGHRCbU= }
+    dependencies:
+      iced-runtime: 1.0.4
+    dev: false
+
   /motion-hooks/0.1.1_67e03ffdb1e1c34d040995bcf645dc1b:
     resolution:
       {
@@ -9372,10 +9431,6 @@ packages:
     transitivePeerDependencies:
       - react
       - react-dom
-  /more-entropy/0.0.7:
-    resolution: { integrity: sha1-Z7/G96hvJvvDeqyD/UbYjGHRCbU= }
-    dependencies:
-      iced-runtime: 1.0.4
     dev: false
 
   /mrmime/1.0.0:
@@ -10778,6 +10833,18 @@ packages:
       strip-indent: 3.0.0
     dev: true
 
+  /redis-errors/1.2.0:
+    resolution: { integrity: sha1-62LSrbFeTq9GEMBK/hUpOEJQq60= }
+    engines: { node: '>=4' }
+    dev: false
+
+  /redis-parser/3.0.0:
+    resolution: { integrity: sha1-tm2CjNyv5rS4pCin3vTGvKwxyLQ= }
+    engines: { node: '>=4' }
+    dependencies:
+      redis-errors: 1.2.0
+    dev: false
+
   /reduce-css-calc/2.1.8:
     resolution:
       {
@@ -11401,6 +11468,13 @@ packages:
     dependencies:
       escape-string-regexp: 2.0.0
     dev: true
+
+  /standard-as-callback/2.1.0:
+    resolution:
+      {
+        integrity: sha512-qoRRSyROncaz1z0mvYqIE4lCd9p2R90i6GxW3uZv5ucSu8tU7B5HXUP1gG8pVZsYNVaXjk8ClXHPttLyxAL48A==,
+      }
+    dev: false
 
   /stream-events/1.0.5:
     resolution:
