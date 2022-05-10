@@ -4,6 +4,10 @@ import { fathomClient } from '../../../external/fathom';
 
 jest.mock('../../../external/fathom');
 
+beforeEach(() => {
+  (fathomClient.aggregatePath as jest.Mock).mockReset();
+});
+
 it('Should throw an error if dateFrom is missing', async () => {
   const json = jest.fn();
   const status = jest.fn(() => ({
@@ -126,8 +130,6 @@ it('Respond with a formatted time series for days', async () => {
   expect(fathomClient.aggregatePath).toBeCalledTimes(25);
   expect(status).toBeCalledWith(200);
   expect(json).toMatchSnapshot();
-
-  (fathomClient.aggregatePath as jest.Mock).mockReset();
 });
 
 it('Respond with a formatted time series for months', async () => {
@@ -167,8 +169,6 @@ it('Respond with a formatted time series for months', async () => {
   expect(fathomClient.aggregatePath).toBeCalledTimes(25);
   expect(status).toBeCalledWith(200);
   expect(json).toMatchSnapshot();
-
-  (fathomClient.aggregatePath as jest.Mock).mockReset();
 });
 
 it('Respond with a formatted time series for one story', async () => {
