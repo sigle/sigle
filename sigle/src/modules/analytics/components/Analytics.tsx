@@ -19,7 +19,7 @@ export const Analytics = ({ stories, loading }: AnalyticsProps) => {
       >
         <Box>
           <Heading as="h3" css={{ mb: '$3', fontSize: 15, fontWeight: 600 }}>
-            ={`My published stories (${nbStoriesLabel})`}
+            {`My published stories (${nbStoriesLabel})`}
           </Heading>
           {stories && <PublishedStoriesFrame stories={stories} />}
         </Box>
