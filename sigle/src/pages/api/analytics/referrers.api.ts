@@ -14,7 +14,7 @@ interface AnalyticsReferrersResponseError {
 }
 
 type AnalyticsReferrersResponse = {
-  domain: string;
+  domain: string | null;
   count: number;
 }[];
 
