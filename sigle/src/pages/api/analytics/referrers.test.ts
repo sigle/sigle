@@ -90,7 +90,7 @@ it('Respond with referrers for one story', async () => {
       referrer_hostname: 'https://stacks.co',
     },
   ]);
-  (fathomClient.aggregatePath as jest.Mock).mockResolvedValue([]);
+  (fathomClient.aggregateReferrers as jest.Mock).mockResolvedValue([]);
 
   const json = jest.fn();
   const status = jest.fn(() => ({
