@@ -10,7 +10,7 @@ export const aggregate =
     entity: 'pageview' | 'event';
     aggregates: string;
     date_grouping?: 'day' | 'month';
-    field_grouping?: 'hostname' | 'pathname';
+    field_grouping?: 'hostname' | 'pathname' | 'referrer_hostname';
     sort_by?: 'timestamp:asc' | 'timestamp:desc';
     date_from?: string;
     date_to?: string;
