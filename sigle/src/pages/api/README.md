@@ -66,7 +66,7 @@ Sample Response:
 ```json
 [
   { "domain": "twitter.com", "count": 0 },
-  { "pathname": "google.com", "count": 0 }
+  { "domain": "google.com", "count": 0 }
   // ...
 ]
 ```
