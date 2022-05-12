@@ -104,8 +104,8 @@ export const SettingsForm = ({ settings, username }: SettingsFormProps) => {
       if (values.siteColor && !values.siteColor.match(hexRegex)) {
         errors.siteColor = 'Invalid color, only hexadecimal colors are allowed';
       }
-      if (!isValidUrl(values.siteUrl)) {
-        errors.siteUrl = 'Invalid TLD entered';
+      if (values.siteUrl && !isValidUrl(values.siteUrl)) {
+        errors.siteUrl = 'Invalid website entered';
       }
       return errors;
     },
