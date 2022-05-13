@@ -17,6 +17,11 @@
     ],
     "testEnvironment": "jsdom"
   },
+  "nextBundleAnalysis": {
+    "budget": 512000,
+    "budgetPercentIncreaseRed": 20,
+    "showDetails": true
+  },
   "dependencies": {
     "@radix-ui/colors": "0.1.8",
     "@radix-ui/react-accordion": "0.1.6",
