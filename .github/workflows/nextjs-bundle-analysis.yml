@@ -6,13 +6,12 @@ on:
   pull_request:
     branches: [main]
 
-defaults:
-  run:
-    working-directory: sigle
-
 jobs:
   analyze:
     runs-on: ubuntu-20.04
+    defaults:
+      run:
+        working-directory: sigle
     strategy:
       matrix:
         node-version: [16]
@@ -48,13 +47,14 @@ jobs:
       # Here's the first place where next-bundle-analysis' own script is used
       # This step pulls the raw bundle stats for the current bundle
       - name: Analyze bundle
-        run: npx -p nextjs-bundle-analysis report
+        run: pnpx -y -p nextjs-bundle-analysis report
 
       - name: Upload bundle
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: bundle
-          path: .next/analyze/__bundle_analysis.json
+          path: sigle/.next/analyze/__bundle_analysis.json
+          if-no-files-found: error
 
       - name: Download base branch bundle stats
         uses: dawidd6/action-download-artifact@v2
