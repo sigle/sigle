@@ -38,7 +38,7 @@ jobs:
         env:
           cache-name: cache-next-build-sigle
         with:
-          path: .next/cache
+          path: sigle/.next/cache
           key: ${{ runner.os }}-build-${{ env.cache-name }}
 
       - name: Build next.js app
