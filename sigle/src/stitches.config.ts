@@ -62,7 +62,7 @@ const orangeDark = {
 };
 
 const green = {
-  green11: '#23A77F',
+  green11: '#37C391',
 };
 const greenDark = {
   green11: '#1DD4B4',
@@ -80,6 +80,14 @@ const redDark = {
   red11: '#FF6C6C',
 };
 
+const violet = {
+  violet11: '#770DFF',
+};
+
+const violetDark = {
+  violet11: '#BB92FF',
+};
+
 export const {
   styled,
   css,
@@ -88,6 +96,7 @@ export const {
   getCssText,
   createTheme,
   config,
+  theme,
 } = createStitches({
   theme: {
     colors: {
@@ -95,6 +104,7 @@ export const {
       ...orange,
       ...green,
       ...red,
+      ...violet,
     },
     fonts: {
       openSans: "'Open Sans', sans-serif",
@@ -219,6 +229,7 @@ export const darkTheme = createTheme('dark', {
     ...orangeDark,
     ...greenDark,
     ...redDark,
+    ...violetDark,
   },
 });
 
