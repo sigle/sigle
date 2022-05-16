@@ -103,3 +103,25 @@ export interface SettingsFile {
    */
   siteTwitterHandle?: string;
 }
+
+export interface AnalyticsHistoricalData {
+  date: string;
+  visits: number;
+  pageviews: number;
+}
+
+export interface AnalyticsStoriesData {
+  pathname: string;
+  visits: number;
+  pageviews: number;
+}
+
+export type AnalyticsHistoricalResponse = {
+  historical: AnalyticsHistoricalData[];
+  stories: AnalyticsStoriesData[];
+};
+
+export interface StatsData {
+  value: number;
+  date: string;
+}
