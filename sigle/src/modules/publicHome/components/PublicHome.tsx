@@ -2,12 +2,14 @@ import React from 'react';
 import styled from 'styled-components';
 import tw from 'twin.macro';
 import { useRouter } from 'next/router';
+import { NextSeo } from 'next-seo';
 import { StoryFile, SettingsFile } from '../../../types';
 import { Container } from '../../../components';
 import { PublicStoryItem } from './PublicStoryItem';
 import { PoweredBy } from '../../publicStory/PoweredBy';
 import { AppHeader } from '../../layout/components/AppHeader';
 import { Box, Flex, Text } from '../../../ui';
+import { sigleConfig } from '../../../config';
 
 const StyledContainer = styled(Container)`
   ${tw`pt-4 pb-16`};
@@ -53,8 +55,33 @@ export const PublicHome = ({ file, settings }: PublicHomeProps) => {
     stories.splice(featuredStoryIndex, 1);
   }
 
+  const seoUrl = `${sigleConfig.appUrl}/${username}`;
+  const seoTitle = `${siteName} - Sigle`;
+  const seoDescription = settings.siteDescription?.substring(0, 300) || 'TODO';
+  const seoImage = settings.siteLogo;
+
   return (
     <React.Fragment>
+      <NextSeo
+        title={seoTitle}
+        description={seoDescription}
+        openGraph={{
+          type: 'website',
+          url: seoUrl,
+          title: seoTitle,
+          description: seoDescription,
+          images: [
+            {
+              url: seoImage || `${sigleConfig.appUrl}/static/icon-192x192.png`,
+            },
+          ],
+        }}
+        twitter={{
+          site: '@sigleapp',
+          cardType: 'summary',
+        }}
+      />
+
       <Container>
         <AppHeader />
         <Header>
