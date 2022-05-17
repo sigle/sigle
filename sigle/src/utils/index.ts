@@ -169,11 +169,13 @@ export const saveSettingsFile = async (
   });
 };
 
-export const isValidUrl = (url: string) => {
+export const isValidHttpUrl = (url: string) => {
+  let testUrl: URL;
+
   try {
-    new URL(url);
+    testUrl = new URL(url);
   } catch (e) {
     return false;
   }
-  return true;
+  return testUrl.protocol === 'http:' || testUrl.protocol === 'https:';
 };
