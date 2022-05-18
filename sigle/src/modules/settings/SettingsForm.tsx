@@ -105,7 +105,7 @@ export const SettingsForm = ({ settings, username }: SettingsFormProps) => {
         errors.siteColor = 'Invalid color, only hexadecimal colors are allowed';
       }
       if (values.siteUrl && !isValidHttpUrl(values.siteUrl)) {
-        errors.siteUrl = 'Invalid website entered';
+        errors.siteUrl = 'Invalid website entered (eg: https://example.com)';
       }
       return errors;
     },
