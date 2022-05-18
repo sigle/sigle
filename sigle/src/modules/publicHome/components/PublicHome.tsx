@@ -57,7 +57,9 @@ export const PublicHome = ({ file, settings }: PublicHomeProps) => {
 
   const seoUrl = `${sigleConfig.appUrl}/${username}`;
   const seoTitle = `${siteName} - Sigle`;
-  const seoDescription = settings.siteDescription?.substring(0, 300) || 'TODO';
+  const seoDescription =
+    settings.siteDescription?.substring(0, 300) ||
+    `Read stories from ${siteName} on Sigle, decentralised and open-source platform for Web3 writers`;
   const seoImage = settings.siteLogo;
 
   return (
