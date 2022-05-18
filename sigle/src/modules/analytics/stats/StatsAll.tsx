@@ -9,8 +9,9 @@ import { bisector, extent, max } from 'd3-array';
 import { Bar, Line } from '@visx/shape';
 import { AxisBottom } from '@visx/axis';
 import { styled, theme } from '../../../stitches.config';
-import { defaultStyles, TooltipWithBounds, useTooltip } from '@visx/tooltip';
+import { defaultStyles, useTooltip, useTooltipInPortal } from '@visx/tooltip';
 import { localPoint } from '@visx/event';
+import { FATHOM_MAX_FROM_DATE } from '../../../pages/api/analytics/utils';
 
 interface StatsData {
   value: number;
@@ -98,7 +99,7 @@ const StatsAll = ({
     const baseUrl = window.location.origin;
 
     const statsRes = await fetch(
-      `${baseUrl}/api/analytics/historical?dateFrom=2019-05-13&dateGrouping=month`
+      `${baseUrl}/api/analytics/historical?dateFrom=${FATHOM_MAX_FROM_DATE}&dateGrouping=month`
     );
 
     const statsData: AnalyticsHistoricalResponse = await statsRes.json();
@@ -179,6 +180,11 @@ const StatsAll = ({
     tooltipLeft = 0,
   } = useTooltip<StatsData>();
 
+  const { containerRef, TooltipInPortal } = useTooltipInPortal({
+    detectBounds: true,
+    scroll: true,
+  });
+
   // tooltip handler
   const handleTooltip = useCallback(
     (
@@ -208,7 +214,7 @@ const StatsAll = ({
 
   return (
     <>
-      <svg width={width} height={height}>
+      <svg ref={containerRef} width={width} height={height}>
         <AreaChart
           margin={margin}
           yMax={yMax}
@@ -261,11 +267,22 @@ const StatsAll = ({
           width={width!}
           color="green"
           data={visitData}
-        />
+        >
+          <Bar
+            width={innerWidth}
+            height={innerHeight}
+            fill="transparent"
+            rx={14}
+            onTouchStart={handleTooltip}
+            onTouchMove={handleTooltip}
+            onMouseMove={handleTooltip}
+            onMouseLeave={() => hideTooltip()}
+          />
+        </AreaChart>
       </svg>
       {tooltipData && (
         <div>
-          <TooltipWithBounds
+          <TooltipInPortal
             key={Math.random()}
             top={tooltipTop - 40}
             left={tooltipLeft + 16}
@@ -280,7 +297,7 @@ const StatsAll = ({
             <TooltipText
               css={{ color: '$violet11' }}
             >{`${tooltipData.value} Views`}</TooltipText>
-          </TooltipWithBounds>
+          </TooltipInPortal>
         </div>
       )}
     </>

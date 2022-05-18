@@ -9,7 +9,12 @@ import { bisector, extent, max } from 'd3-array';
 import { Bar, Line } from '@visx/shape';
 import { AxisBottom } from '@visx/axis';
 import { styled, theme } from '../../../stitches.config';
-import { defaultStyles, TooltipWithBounds, useTooltip } from '@visx/tooltip';
+import {
+  defaultStyles,
+  TooltipWithBounds,
+  useTooltip,
+  useTooltipInPortal,
+} from '@visx/tooltip';
 import { localPoint } from '@visx/event';
 
 interface StatsData {
@@ -182,6 +187,11 @@ const StatsMonthly = ({
     tooltipLeft = 0,
   } = useTooltip<StatsData>();
 
+  const { containerRef, TooltipInPortal } = useTooltipInPortal({
+    detectBounds: true,
+    scroll: true,
+  });
+
   // tooltip handler
   const handleTooltip = useCallback(
     (
@@ -211,7 +221,7 @@ const StatsMonthly = ({
 
   return (
     <>
-      <svg width={width} height={height}>
+      <svg ref={containerRef} width={width} height={height}>
         <AreaChart
           margin={margin}
           yMax={yMax}
@@ -264,11 +274,22 @@ const StatsMonthly = ({
           width={width!}
           color="green"
           data={visitData}
-        />
+        >
+          <Bar
+            width={innerWidth}
+            height={innerHeight}
+            fill="transparent"
+            rx={14}
+            onTouchStart={handleTooltip}
+            onTouchMove={handleTooltip}
+            onMouseMove={handleTooltip}
+            onMouseLeave={() => hideTooltip()}
+          />
+        </AreaChart>
       </svg>
       {tooltipData && (
         <div>
-          <TooltipWithBounds
+          <TooltipInPortal
             key={Math.random()}
             top={tooltipTop - 40}
             left={tooltipLeft + 16}
@@ -283,7 +304,7 @@ const StatsMonthly = ({
             <TooltipText
               css={{ color: '$violet11' }}
             >{`${tooltipData.value} Views`}</TooltipText>
-          </TooltipWithBounds>
+          </TooltipInPortal>
         </div>
       )}
     </>
