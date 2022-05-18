@@ -84,11 +84,13 @@ const redDark = {
 
 const violet = {
   violet3: '#EBE2FF',
+  violet5: '#D6C4FF',
   violet11: '#770DFF',
 };
 
 const violetDark = {
   violet3: '#270157',
+  violet5: '#340175',
   violet11: '#BB92FF',
 };
 
