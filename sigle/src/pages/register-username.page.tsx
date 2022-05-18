@@ -216,22 +216,24 @@ const RegisterUsername = () => {
     const profileUrl = `${hubInfo.read_url_prefix}${btcAddress}/profile.json`;
     const zoneFile = makeProfileZoneFile(fullUsername, profileUrl);
 
+    const body = {
+      name: username,
+      owner_address: user.profile.stxAddress.mainnet,
+      zonefile: zoneFile,
+    };
     const response = await fetch(`${registrarUrl}/register`, {
       method: 'POST',
       headers: {
         Accept: 'application/json',
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({
-        name: username,
-        owner_address: user.profile.stxAddress.mainnet,
-        zonefile: zoneFile,
-      }),
+      body: JSON.stringify(body),
     });
 
     const json = await response.json();
 
     if (!response.ok || !json.status) {
+      console.error('Failed to register username', json, body, user);
       posthog.capture('username-registration-error', {
         status: response.status,
         json,
