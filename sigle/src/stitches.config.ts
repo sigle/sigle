@@ -62,9 +62,11 @@ const orangeDark = {
 };
 
 const green = {
+  green3: '#D3F9EC',
   green11: '#37C391',
 };
 const greenDark = {
+  green3: '#003B31',
   green11: '#1DD4B4',
 };
 
@@ -81,10 +83,12 @@ const redDark = {
 };
 
 const violet = {
+  violet3: '#EBE2FF',
   violet11: '#770DFF',
 };
 
 const violetDark = {
+  violet3: '#270157',
   violet11: '#BB92FF',
 };
 
