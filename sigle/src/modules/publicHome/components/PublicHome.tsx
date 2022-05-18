@@ -78,12 +78,6 @@ export const PublicHome = ({ file, settings }: PublicHomeProps) => {
   const { username } = router.query as { username: string };
 
   const siteName = settings.siteName || username;
-  // We prefix with https:// to make sure it's a valid URL
-  const website = settings.siteUrl
-    ? settings.siteUrl.startsWith('http')
-      ? settings.siteUrl
-      : `https://${settings.siteUrl}`
-    : settings.siteUrl;
   const twitterHandle = settings.siteTwitterHandle;
 
   const featuredStoryIndex = file.stories.findIndex((story) => story.featured);
