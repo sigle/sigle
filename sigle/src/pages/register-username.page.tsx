@@ -133,6 +133,8 @@ const RegisterUsername = () => {
     loading: false,
   });
 
+  console.log({ user });
+
   useEffect(() => {
     // If user is not logged him redirect him to the login page
     if (!loggingIn && !user) {
