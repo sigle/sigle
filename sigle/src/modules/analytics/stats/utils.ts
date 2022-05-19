@@ -1,13 +1,6 @@
 import { defaultStyles } from '@visx/tooltip';
 import { styled, theme } from '../../../stitches.config';
 
-export const margin = {
-  top: 20,
-  left: 50,
-  bottom: 40,
-  right: 0,
-};
-
 export const tooltipStyles = {
   ...defaultStyles,
   background: theme.colors.gray1.toString(),

@@ -10,7 +10,7 @@ import { styled, theme } from '../../../stitches.config';
 import { defaultStyles, useTooltip, useTooltipInPortal } from '@visx/tooltip';
 import { localPoint } from '@visx/event';
 import { AreaChart } from './AreaChart';
-import { margin, TooltipDate, tooltipStyles, TooltipText } from './utils';
+import { TooltipDate, tooltipStyles, TooltipText } from './utils';
 
 // prevent flash of no content in graph by initializing range data with a constant value (1)
 const today = new Date();
@@ -69,6 +69,13 @@ const StatsWeekly = ({
     });
 
     setData(stats);
+  };
+
+  const margin = {
+    top: 20,
+    left: 25,
+    bottom: 40,
+    right: 0,
   };
 
   // bounds
@@ -182,7 +189,7 @@ const StatsWeekly = ({
           <TooltipInPortal
             key={Math.random()}
             top={tooltipTop - 40}
-            left={tooltipLeft + 60}
+            left={tooltipLeft + 40}
             style={tooltipStyles}
           >
             <TooltipDate>

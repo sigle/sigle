@@ -11,7 +11,7 @@ import { defaultStyles, useTooltip, useTooltipInPortal } from '@visx/tooltip';
 import { localPoint } from '@visx/event';
 import { AreaChart } from './AreaChart';
 import { FATHOM_MAX_FROM_DATE } from '../../../pages/api/analytics/utils';
-import { margin, TooltipDate, tooltipStyles, TooltipText } from './utils';
+import { TooltipDate, tooltipStyles, TooltipText } from './utils';
 
 export const today = new Date();
 export const fromDate = new Date(`${FATHOM_MAX_FROM_DATE}`);
@@ -67,6 +67,13 @@ const StatsAll = ({
     });
 
     setData(stats);
+  };
+
+  const margin = {
+    top: 20,
+    left: 44,
+    bottom: 40,
+    right: 0,
   };
 
   // bounds
