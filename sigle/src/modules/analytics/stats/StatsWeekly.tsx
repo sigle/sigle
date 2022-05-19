@@ -1,34 +1,16 @@
 import { eachDayOfInterval, format } from 'date-fns';
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import { AnalyticsHistoricalResponse } from '../../../types';
+import { AnalyticsHistoricalResponse, StatsData } from '../../../types';
 import { WithParentSizeProvidedProps } from '@visx/responsive/lib/enhancers/withParentSize';
 import { withParentSize } from '@visx/responsive';
 import { scaleLinear, scaleTime } from '@visx/scale';
 import { bisector, extent, max } from 'd3-array';
-import { AreaClosed, Bar, Line, LinePath } from '@visx/shape';
-import { AxisBottom, AxisLeft } from '@visx/axis';
+import { Bar, Line } from '@visx/shape';
 import { styled, theme } from '../../../stitches.config';
 import { defaultStyles, useTooltip, useTooltipInPortal } from '@visx/tooltip';
 import { localPoint } from '@visx/event';
-import { Group } from '@visx/group';
-import { LinearGradient } from '@visx/gradient';
-import { curveNatural, curveBasis, curveCardinal } from '@visx/curve';
-
-interface StatsData {
-  value: number;
-  date: string;
-  visits: number;
-}
-
-interface ViewsData {
-  value: number;
-  date: string;
-}
-
-interface VisitsData {
-  value: number;
-  date: string;
-}
+import { AreaChart } from './AreaChart';
+import { margin, TooltipDate, tooltipStyles, TooltipText } from './utils';
 
 // prevent flash of no content in graph by initializing range data with a constant value (1)
 const today = new Date();
@@ -46,37 +28,6 @@ const initialRange: StatsData[] = dates.map((date) => {
     visits: 0,
   };
 });
-
-const tooltipStyles = {
-  ...defaultStyles,
-  background: theme.colors.gray1.toString(),
-  border: '1px solid',
-  borderColor: theme.colors.gray7.toString(),
-  color: theme.colors.gray11.toString(),
-  padding: 8,
-  boxShadow: 'none',
-};
-
-const TooltipDate = styled('p', { fontSize: 14 });
-
-const TooltipText = styled('p', { mt: '$2' });
-
-const fontFamily = '"Open Sans", sans-serif';
-const axisColor = theme.colors.gray6.toString();
-const axisLabelColor = theme.colors.gray11.toString();
-const axisBottomTickLabelProps = {
-  textAnchor: 'middle' as const,
-  fontFamily,
-  fontSize: 12,
-  fill: axisLabelColor,
-};
-
-const margin = {
-  top: 20,
-  left: 30,
-  bottom: 20,
-  right: 0,
-};
 
 // accessors
 const getDate = (d: StatsData) => new Date(d.date);
@@ -116,18 +67,12 @@ const StatsWeekly = ({
     setData(stats);
   };
 
-  const tickFormat = (d: any) => {
-    return format(d, 'dd/MM');
-  };
-
   // bounds
   const innerWidth = width! - margin.left - margin.right;
   const innerHeight = height! - margin.top - margin.bottom;
 
   const xMax = Math.max(width! - margin.left - margin.right, 0);
   const yMax = Math.max(innerHeight!, 0);
-
-  console.log({ width, height, innerWidth, innerHeight, xMax, yMax });
 
   // scales
   const dateScale = useMemo(
@@ -162,11 +107,6 @@ const StatsWeekly = ({
     detectBounds: true,
     scroll: true,
   });
-  const violet = theme.colors.violet3.toString();
-  const green = theme.colors.green3.toString();
-
-  const violetStroke = theme.colors.violet11.toString();
-  const greenStroke = theme.colors.green11.toString();
 
   // tooltip handler
   const handleTooltip = useCallback(
@@ -195,67 +135,18 @@ const StatsWeekly = ({
     [showTooltip, charValueScale, dateScale]
   );
 
-  const axisLeftTickLabelProps = {
-    dx: '-0.25em',
-    dy: '0.25em',
-    fontFamily,
-    fontSize: 12,
-    textAnchor: 'end' as const,
-    fill: 'white',
-  };
-
   return (
     <>
-      <svg width={width} height={height}>
-        <Group left={margin?.left} top={margin?.top}>
-          <LinearGradient
-            id={'purple-gradient'}
-            from={violet}
-            fromOpacity={0.7}
-            to={violet}
-            toOpacity={0}
-          />
-          <LinePath
-            data={data}
-            x={(d) => dateScale(getDate(d)) ?? 0}
-            y={(d) => charValueScale(getViews(d)) ?? 0}
-            stroke={violetStroke}
-            strokeWidth={4}
-            curve={curveNatural}
-          />
-          <AreaClosed<StatsData>
-            data={data}
-            x={(d) => dateScale(getDate(d)) ?? 0}
-            y={(d) => charValueScale(getViews(d)) ?? 0}
-            yScale={charValueScale}
-            fill={'url(#purple-gradient)'}
-            curve={curveNatural}
-          />
-
-          <LinearGradient
-            id={'green-gradient'}
-            from={green}
-            fromOpacity={0.7}
-            to={green}
-            toOpacity={0}
-          />
-          <LinePath
-            data={data}
-            x={(d) => dateScale(getDate(d)) ?? 0}
-            y={(d) => charValueScale(getVisits(d)) ?? 0}
-            stroke={greenStroke}
-            strokeWidth={4}
-            curve={curveBasis}
-          />
-          <AreaClosed<StatsData>
-            data={data}
-            x={(d) => dateScale(getDate(d)) ?? 0}
-            y={(d) => charValueScale(getVisits(d)) ?? 0}
-            yScale={charValueScale}
-            fill={'url(#green-gradient)'}
-            curve={curveBasis}
-          />
-
+      <svg ref={containerRef} width={width} height={height}>
+        <AreaChart
+          yScale={charValueScale}
+          xScale={dateScale}
+          yMax={yMax}
+          margin={margin}
+          data={data}
+          width={width!}
+          height={height!}
+        >
           <Bar
             width={innerWidth}
             height={innerHeight}
@@ -266,37 +157,18 @@ const StatsWeekly = ({
             onMouseMove={handleTooltip}
             onMouseLeave={() => hideTooltip()}
           />
-
-          <AxisBottom
-            top={yMax}
-            scale={dateScale}
-            numTicks={7}
-            tickLabelProps={() => axisBottomTickLabelProps}
-            stroke={axisColor}
-            tickStroke={axisColor}
-            tickFormat={tickFormat}
-            hideTicks={true}
-          />
-          <AxisLeft
-            scale={charValueScale}
-            numTicks={5}
-            stroke={axisColor}
-            tickStroke={axisColor}
-            tickLabelProps={() => axisLeftTickLabelProps}
-          />
-
           {tooltipData && (
             <g>
               <Line
                 from={{ x: tooltipLeft, y: margin.top }}
                 to={{ x: tooltipLeft, y: innerHeight + margin.top }}
-                stroke={axisColor}
+                stroke={theme.colors.gray7.toString()}
                 strokeWidth={1}
                 pointerEvents="none"
               />
             </g>
           )}
-        </Group>
+        </AreaChart>
       </svg>
       {tooltipData && (
         <div>

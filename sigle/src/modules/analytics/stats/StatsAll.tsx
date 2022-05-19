@@ -1,44 +1,27 @@
-import { eachDayOfInterval, format } from 'date-fns';
+import { eachDayOfInterval, eachMonthOfInterval, format } from 'date-fns';
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import { AnalyticsHistoricalResponse } from '../../../types';
-import { AreaChart } from './AreaChart';
+import { AnalyticsHistoricalResponse, StatsData } from '../../../types';
 import { WithParentSizeProvidedProps } from '@visx/responsive/lib/enhancers/withParentSize';
 import { withParentSize } from '@visx/responsive';
 import { scaleLinear, scaleTime } from '@visx/scale';
 import { bisector, extent, max } from 'd3-array';
 import { Bar, Line } from '@visx/shape';
-import { AxisBottom } from '@visx/axis';
 import { styled, theme } from '../../../stitches.config';
 import { defaultStyles, useTooltip, useTooltipInPortal } from '@visx/tooltip';
 import { localPoint } from '@visx/event';
+import { AreaChart } from './AreaChart';
 import { FATHOM_MAX_FROM_DATE } from '../../../pages/api/analytics/utils';
+import { margin, TooltipDate, tooltipStyles, TooltipText } from './utils';
 
-interface StatsData {
-  value: number;
-  date: string;
-  visits: number;
-}
+export const today = new Date();
+export const fromDate = new Date(new Date().setDate(today.getDate() - 30));
 
-interface ViewsData {
-  value: number;
-  date: string;
-}
-
-interface VisitsData {
-  value: number;
-  date: string;
-}
-
-// prevent flash of no content in graph by initializing range data with a constant value (1)
-const today = new Date();
-const fromDate = new Date(new Date().setDate(today.getDate() - 7));
-
-const dates = eachDayOfInterval({
+const dates = eachMonthOfInterval({
   start: fromDate,
   end: today,
 });
 
-const initialRange: StatsData[] = dates.map((date) => {
+export const initialRange: StatsData[] = dates.map((date) => {
   return {
     value: 0,
     date: date.toString(),
@@ -46,40 +29,9 @@ const initialRange: StatsData[] = dates.map((date) => {
   };
 });
 
-const tooltipStyles = {
-  ...defaultStyles,
-  background: theme.colors.gray1.toString(),
-  border: '1px solid',
-  borderColor: theme.colors.gray7.toString(),
-  color: theme.colors.gray11.toString(),
-  padding: 8,
-  boxShadow: 'none',
-};
-
-const TooltipDate = styled('p', { fontSize: 14 });
-
-const TooltipText = styled('p', { mt: '$2' });
-
-const fontFamily = '"Open Sans", sans-serif';
-const axisColor = theme.colors.gray6.toString();
-const axisLabelColor = theme.colors.gray11.toString();
-const axisBottomTickLabelProps = {
-  textAnchor: 'middle' as const,
-  fontFamily,
-  fontSize: 12,
-  fill: axisLabelColor,
-};
-
-const margin = {
-  top: 20,
-  left: 0,
-  bottom: 20,
-  right: 0,
-};
-
 // accessors
 const getDate = (d: StatsData) => new Date(d.date);
-const getValue = (d: StatsData) => d.value;
+const getViews = (d: StatsData) => d.value;
 const getVisits = (d: StatsData) => d.visits;
 const bisectDate = bisector<StatsData, Date>((d) => new Date(d.date)).left;
 
@@ -87,12 +39,11 @@ const StatsAll = ({
   parentWidth: width,
   parentHeight: height,
 }: WithParentSizeProvidedProps) => {
-  const [viewData, setViewData] = useState<ViewsData[]>(initialRange);
-  const [visitData, setVisitData] = useState<VisitsData[]>(initialRange);
   const [data, setData] = useState<StatsData[]>(initialRange);
 
   useEffect(() => {
     fetchStats();
+    console.log(fromDate);
   }, []);
 
   const fetchStats = async () => {
@@ -103,21 +54,6 @@ const StatsAll = ({
     );
 
     const statsData: AnalyticsHistoricalResponse = await statsRes.json();
-
-    const views: ViewsData[] = statsData.historical.map((item) => {
-      return {
-        value: item.pageviews,
-        date: item.date,
-      };
-    });
-
-    const visits: VisitsData[] = statsData.historical.map((item) => {
-      return {
-        value: item.visits,
-        date: item.date,
-      };
-    });
-
     const stats: StatsData[] = statsData.historical.map((item) => {
       return {
         value: item.pageviews,
@@ -126,13 +62,7 @@ const StatsAll = ({
       };
     });
 
-    setViewData(views);
-    setVisitData(visits);
     setData(stats);
-  };
-
-  const tickFormat = (d: any) => {
-    return format(d, 'dd/MM');
   };
 
   // bounds
@@ -140,37 +70,28 @@ const StatsAll = ({
   const innerHeight = height! - margin.top - margin.bottom;
 
   const xMax = Math.max(width! - margin.left - margin.right, 0);
-  const yMax = Math.max(innerHeight! - 10, 0);
+  const yMax = Math.max(innerHeight!, 0);
 
   // scales
   const dateScale = useMemo(
     () =>
       scaleTime({
-        range: [margin.left, innerWidth + margin.left],
+        range: [0, xMax],
         domain: extent(data, getDate) as [Date, Date],
       }),
     [xMax, margin.left, data]
   );
 
-  const viewsValueScale = useMemo(
-    () =>
-      scaleLinear({
-        range: [innerHeight + margin.top, margin.top],
-        domain: [0, max(data, getValue) || 0],
-        nice: true,
-      }),
-    [yMax, data]
-  );
+  const charValueScale = useMemo(() => {
+    const maxViews = max(data, getViews) || 0;
+    const maxVisits = max(data, getVisits) || 0;
 
-  const visitsValueScale = useMemo(
-    () =>
-      scaleLinear({
-        range: [innerHeight + margin.top, margin.top],
-        domain: [0, max(data, getVisits) || 0],
-        nice: true,
-      }),
-    [yMax, data]
-  );
+    return scaleLinear({
+      range: [yMax, 0],
+      domain: [0, maxViews > maxVisits ? maxViews : maxVisits],
+      nice: true,
+    });
+  }, [yMax, data]);
 
   const {
     showTooltip,
@@ -206,23 +127,23 @@ const StatsAll = ({
       showTooltip({
         tooltipData: d,
         tooltipLeft: x,
-        tooltipTop: viewsValueScale(getValue(d)),
+        tooltipTop: charValueScale(getViews(d)),
       });
     },
-    [showTooltip, viewsValueScale, dateScale]
+    [showTooltip, charValueScale, dateScale]
   );
 
   return (
     <>
       <svg ref={containerRef} width={width} height={height}>
         <AreaChart
-          margin={margin}
-          yMax={yMax}
+          yScale={charValueScale}
           xScale={dateScale}
-          yScale={viewsValueScale}
+          yMax={yMax}
+          margin={margin}
+          data={data}
           width={width!}
-          color="purple"
-          data={viewData}
+          height={height!}
         >
           <Bar
             width={innerWidth}
@@ -234,50 +155,17 @@ const StatsAll = ({
             onMouseMove={handleTooltip}
             onMouseLeave={() => hideTooltip()}
           />
-
-          <AxisBottom
-            top={yMax}
-            scale={dateScale}
-            numTicks={7}
-            tickLabelProps={() => axisBottomTickLabelProps}
-            stroke={axisColor}
-            tickStroke={axisColor}
-            tickFormat={tickFormat}
-            hideTicks={true}
-          />
-
           {tooltipData && (
             <g>
               <Line
                 from={{ x: tooltipLeft, y: margin.top }}
                 to={{ x: tooltipLeft, y: innerHeight + margin.top }}
-                stroke={axisColor}
+                stroke={theme.colors.gray7.toString()}
                 strokeWidth={1}
                 pointerEvents="none"
               />
             </g>
           )}
-        </AreaChart>
-
-        <AreaChart
-          margin={margin}
-          yMax={yMax}
-          xScale={dateScale}
-          yScale={visitsValueScale}
-          width={width!}
-          color="green"
-          data={visitData}
-        >
-          <Bar
-            width={innerWidth}
-            height={innerHeight}
-            fill="transparent"
-            rx={14}
-            onTouchStart={handleTooltip}
-            onTouchMove={handleTooltip}
-            onMouseMove={handleTooltip}
-            onMouseLeave={() => hideTooltip()}
-          />
         </AreaChart>
       </svg>
       {tooltipData && (

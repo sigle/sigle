@@ -124,4 +124,5 @@ export type AnalyticsHistoricalResponse = {
 export interface StatsData {
   value: number;
   date: string;
+  visits: number;
 }
