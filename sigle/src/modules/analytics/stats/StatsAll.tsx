@@ -173,7 +173,7 @@ const StatsAll = ({
           <TooltipInPortal
             key={Math.random()}
             top={tooltipTop - 40}
-            left={tooltipLeft + 16}
+            left={tooltipLeft + 60}
             style={tooltipStyles}
           >
             <TooltipDate>
