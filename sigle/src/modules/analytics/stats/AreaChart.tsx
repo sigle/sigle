@@ -6,7 +6,6 @@ import { theme } from '../../../stitches.config';
 import { WithParentSizeProps } from '@visx/responsive/lib/enhancers/withParentSizeModern';
 import { Group } from '@visx/group';
 import { StatsData } from '../../../types';
-import { format } from 'date-fns';
 
 const violet = theme.colors.violet5.toString();
 const green = theme.colors.green3.toString();
@@ -29,6 +28,7 @@ interface AreaChartProps extends WithParentSizeProps {
   yMax: number;
   xScale: AxisScale<number>;
   yScale: AxisScale<number>;
+  tickFormat?: (d: any) => string;
   children?: React.ReactNode;
 }
 
@@ -42,13 +42,10 @@ export const AreaChart = ({
   left,
   xScale,
   yScale,
+  tickFormat,
   children,
 }: AreaChartProps) => {
   if (width! < 10) return null;
-
-  const tickFormat = (d: any) => {
-    return format(d, 'dd/MM');
-  };
 
   const fontFamily = '"Open Sans", sans-serif';
   const axisColor = theme.colors.gray6.toString();

@@ -35,6 +35,10 @@ const getViews = (d: StatsData) => d.value;
 const getVisits = (d: StatsData) => d.visits;
 const bisectDate = bisector<StatsData, Date>((d) => new Date(d.date)).left;
 
+const tickFormat = (d: any) => {
+  return format(d, 'dd/MM');
+};
+
 const StatsWeekly = ({
   parentWidth: width,
   parentHeight: height,
@@ -146,6 +150,7 @@ const StatsWeekly = ({
           data={data}
           width={width!}
           height={height!}
+          tickFormat={tickFormat}
         >
           <Bar
             width={innerWidth}

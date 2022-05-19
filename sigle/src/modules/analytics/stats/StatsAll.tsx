@@ -14,7 +14,7 @@ import { FATHOM_MAX_FROM_DATE } from '../../../pages/api/analytics/utils';
 import { margin, TooltipDate, tooltipStyles, TooltipText } from './utils';
 
 export const today = new Date();
-export const fromDate = new Date(new Date().setDate(today.getDate() - 30));
+export const fromDate = new Date(`${FATHOM_MAX_FROM_DATE}`);
 
 const dates = eachMonthOfInterval({
   start: fromDate,
@@ -34,6 +34,10 @@ const getDate = (d: StatsData) => new Date(d.date);
 const getViews = (d: StatsData) => d.value;
 const getVisits = (d: StatsData) => d.visits;
 const bisectDate = bisector<StatsData, Date>((d) => new Date(d.date)).left;
+
+const tickFormat = (d: any) => {
+  return format(d, 'MMM yyyy');
+};
 
 const StatsAll = ({
   parentWidth: width,
@@ -144,6 +148,7 @@ const StatsAll = ({
           data={data}
           width={width!}
           height={height!}
+          tickFormat={tickFormat}
         >
           <Bar
             width={innerWidth}
