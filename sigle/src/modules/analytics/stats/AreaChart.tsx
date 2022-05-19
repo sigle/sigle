@@ -10,9 +10,6 @@ import { StatsData } from '../../../types';
 const violet = theme.colors.violet5.toString();
 const green = theme.colors.green3.toString();
 
-const violetStroke = theme.colors.violet11.toString();
-const greenStroke = theme.colors.green11.toString();
-
 // accessors
 const getDate = (d: StatsData) => new Date(d.date);
 const getViews = (d: StatsData) => d.value;
@@ -74,13 +71,11 @@ export const AreaChart = ({
         to={violet}
         toOpacity={0}
       />
-      <LinePath
-        data={data}
-        x={(d) => xScale(getDate(d)) ?? 0}
-        y={(d) => yScale(getViews(d)) ?? 0}
-        stroke={violetStroke}
-        strokeWidth={4}
-        curve={curveNatural}
+      <LinearGradient
+        id={'purple-line-gradient'}
+        from={theme.colors.violet6.toString()}
+        to={theme.colors.violet11.toString()}
+        gradientTransform="rotate(270)"
       />
       <AreaClosed<StatsData>
         data={data}
@@ -88,6 +83,15 @@ export const AreaChart = ({
         y={(d) => yScale(getViews(d)) ?? 0}
         yScale={yScale}
         fill={'url(#purple-gradient)'}
+        curve={curveNatural}
+      />
+      <LinePath
+        data={data}
+        x={(d) => xScale(getDate(d)) ?? 0}
+        y={(d) => yScale(getViews(d)) ?? 0}
+        stroke={'url(#purple-line-gradient)'}
+        strokeWidth={4}
+        strokeOpacity={1}
         curve={curveNatural}
       />
 
@@ -98,13 +102,11 @@ export const AreaChart = ({
         to={green}
         toOpacity={0}
       />
-      <LinePath
-        data={data}
-        x={(d) => xScale(getDate(d)) ?? 0}
-        y={(d) => yScale(getVisits(d)) ?? 0}
-        stroke={greenStroke}
-        strokeWidth={4}
-        curve={curveBasis}
+      <LinearGradient
+        id={'green-line-gradient'}
+        from={theme.colors.green6.toString()}
+        to={theme.colors.green11.toString()}
+        gradientTransform="rotate(270)"
       />
       <AreaClosed<StatsData>
         data={data}
@@ -112,6 +114,14 @@ export const AreaChart = ({
         y={(d) => yScale(getVisits(d)) ?? 0}
         yScale={yScale}
         fill={'url(#green-gradient)'}
+        curve={curveBasis}
+      />
+      <LinePath
+        data={data}
+        x={(d) => xScale(getDate(d)) ?? 0}
+        y={(d) => yScale(getVisits(d)) ?? 0}
+        stroke={'url(#green-line-gradient)'}
+        strokeWidth={4}
         curve={curveBasis}
       />
       <AxisBottom
