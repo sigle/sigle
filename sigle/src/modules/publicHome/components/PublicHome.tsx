@@ -34,6 +34,40 @@ const HeaderDescription = styled.p`
   ${tw`text-base mt-2 text-center`};
 `;
 
+const PublicHomeSiteUrl = ({ siteUrl }: { siteUrl: string }) => {
+  let displayUrl = siteUrl;
+  let fullUrl = siteUrl;
+  if (siteUrl.startsWith('http://') || siteUrl.startsWith('https://')) {
+    // We strip http | https from the string for better display
+    displayUrl = siteUrl.replace(/^https?:\/\//, '');
+  } else {
+    // We prefix with https:// to make sure it's a valid URL
+    fullUrl = `https://${siteUrl}`;
+  }
+
+  return (
+    <Text
+      css={{
+        color: '$gray9',
+
+        '&:hover': {
+          color: '$gray10',
+        },
+        '&:active': {
+          color: '$gray12',
+        },
+      }}
+      size="sm"
+      as="a"
+      href={fullUrl}
+      target="_blank"
+      rel="noreferrer"
+    >
+      {displayUrl}
+    </Text>
+  );
+};
+
 interface PublicHomeProps {
   file: StoryFile;
   settings: SettingsFile;
@@ -44,7 +78,6 @@ export const PublicHome = ({ file, settings }: PublicHomeProps) => {
   const { username } = router.query as { username: string };
 
   const siteName = settings.siteName || username;
-  const website = settings.siteUrl;
   const twitterHandle = settings.siteTwitterHandle;
 
   const featuredStoryIndex = file.stories.findIndex((story) => story.featured);
@@ -70,25 +103,7 @@ export const PublicHome = ({ file, settings }: PublicHomeProps) => {
               ))}
           <Flex css={{ pt: '$5' }} gap="3">
             {settings.siteUrl && (
-              <Text
-                css={{
-                  color: '$gray9',
-
-                  '&:hover': {
-                    color: '$gray10',
-                  },
-                  '&:active': {
-                    color: '$gray12',
-                  },
-                }}
-                size="sm"
-                as="a"
-                href={`https://${website}`}
-                target="_blank"
-                rel="noreferrer"
-              >
-                {website}
-              </Text>
+              <PublicHomeSiteUrl siteUrl={settings.siteUrl} />
             )}
             {settings.siteUrl && settings.siteTwitterHandle && (
               <Box css={{ width: '1px', backgroundColor: '$gray9' }} />

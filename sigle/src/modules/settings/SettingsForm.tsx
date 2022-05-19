@@ -7,9 +7,9 @@ import { useDropzone } from 'react-dropzone';
 import { CameraIcon, TrashIcon } from '@radix-ui/react-icons';
 import { BlockPicker } from 'react-color';
 import { SettingsFile } from '../../types';
-import { hexRegex, urlRegex } from '../../utils/regex';
+import { hexRegex } from '../../utils/regex';
 import { storage } from '../../utils/blockstack';
-import { getSettingsFile, isValidUrl, saveSettingsFile } from '../../utils';
+import { getSettingsFile, isValidHttpUrl, saveSettingsFile } from '../../utils';
 import { resizeImage } from '../../utils/image';
 import { Button } from '../../components';
 import {
@@ -104,8 +104,8 @@ export const SettingsForm = ({ settings, username }: SettingsFormProps) => {
       if (values.siteColor && !values.siteColor.match(hexRegex)) {
         errors.siteColor = 'Invalid color, only hexadecimal colors are allowed';
       }
-      if (values.siteUrl && !isValidUrl(values.siteUrl)) {
-        errors.siteUrl = 'Invalid website entered';
+      if (values.siteUrl && !isValidHttpUrl(values.siteUrl)) {
+        errors.siteUrl = 'Invalid website entered (eg: https://example.com)';
       }
       return errors;
     },
@@ -127,14 +127,11 @@ export const SettingsForm = ({ settings, username }: SettingsFormProps) => {
         });
         newSettings.siteLogo = coverImageUrl;
       }
-      const handle = formik.values.siteTwitterHandle;
-      const website = formik.values.siteUrl;
-      formik.values.siteTwitterHandle = handle.split('/').pop() as string;
 
+      const handle = formik.values.siteTwitterHandle;
+      formik.values.siteTwitterHandle = handle.split('/').pop() as string;
       formik.values.siteTwitterHandle = handle.replace('@', '');
 
-      formik.values.siteUrl = website.replace(urlRegex, '');
-      newSettings.siteUrl = formik.values.siteUrl;
       newSettings.siteTwitterHandle = formik.values.siteTwitterHandle;
 
       await saveSettingsFile({
