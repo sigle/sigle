@@ -118,7 +118,7 @@ export const AreaChart = ({
         curve={curveBasis}
       />
       <AxisBottom
-        top={yMax}
+        top={yMax + 2}
         scale={xScale}
         numTicks={7}
         tickLabelProps={() => axisBottomTickLabelProps}
