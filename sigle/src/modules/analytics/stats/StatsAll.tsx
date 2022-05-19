@@ -169,25 +169,25 @@ const StatsAll = ({
             onMouseMove={handleTooltip}
             onMouseLeave={() => hideTooltip()}
           />
-          {tooltipData && (
-            <g>
-              <Line
-                from={{ x: tooltipLeft, y: margin.top }}
-                to={{ x: tooltipLeft, y: innerHeight }}
-                stroke={theme.colors.gray7.toString()}
-                strokeWidth={1}
-                pointerEvents="none"
-              />
-            </g>
-          )}
         </AreaChart>
+        {tooltipData && (
+          <g>
+            <Line
+              from={{ x: tooltipLeft, y: margin.top }}
+              to={{ x: tooltipLeft, y: innerHeight + margin.top }}
+              stroke={theme.colors.gray7.toString()}
+              strokeWidth={1}
+              pointerEvents="none"
+            />
+          </g>
+        )}
       </svg>
       {tooltipData && (
         <div>
           <TooltipInPortal
             key={Math.random()}
             top={tooltipTop - 40}
-            left={tooltipLeft + 60}
+            left={tooltipLeft}
             style={tooltipStyles}
           >
             <TooltipDate>

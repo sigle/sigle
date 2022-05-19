@@ -7,7 +7,7 @@ import { scaleLinear, scaleTime } from '@visx/scale';
 import { bisector, extent, max } from 'd3-array';
 import { Bar, Line } from '@visx/shape';
 import { styled, theme } from '../../../stitches.config';
-import { defaultStyles, useTooltip, useTooltipInPortal } from '@visx/tooltip';
+import { useTooltip, useTooltipInPortal } from '@visx/tooltip';
 import { localPoint } from '@visx/event';
 import { AreaChart } from './AreaChart';
 import { TooltipDate, tooltipStyles, TooltipText } from './utils';
@@ -171,25 +171,25 @@ const StatsWeekly = ({
             onMouseMove={handleTooltip}
             onMouseLeave={() => hideTooltip()}
           />
-          {tooltipData && (
-            <g>
-              <Line
-                from={{ x: tooltipLeft, y: margin.top }}
-                to={{ x: tooltipLeft, y: innerHeight }}
-                stroke={theme.colors.gray7.toString()}
-                strokeWidth={1}
-                pointerEvents="none"
-              />
-            </g>
-          )}
         </AreaChart>
+        {tooltipData && (
+          <g>
+            <Line
+              from={{ x: tooltipLeft, y: margin.top }}
+              to={{ x: tooltipLeft, y: innerHeight + margin.top }}
+              stroke={theme.colors.gray7.toString()}
+              strokeWidth={1}
+              pointerEvents="none"
+            />
+          </g>
+        )}
       </svg>
       {tooltipData && (
         <div>
           <TooltipInPortal
             key={Math.random()}
             top={tooltipTop - 40}
-            left={tooltipLeft + 40}
+            left={tooltipLeft}
             style={tooltipStyles}
           >
             <TooltipDate>
