@@ -164,7 +164,7 @@ const StatsAll = ({
             <g>
               <Line
                 from={{ x: tooltipLeft, y: margin.top }}
-                to={{ x: tooltipLeft, y: innerHeight + margin.top }}
+                to={{ x: tooltipLeft, y: innerHeight }}
                 stroke={theme.colors.gray7.toString()}
                 strokeWidth={1}
                 pointerEvents="none"
