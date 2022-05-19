@@ -158,7 +158,6 @@ const StatsMonthly = ({
           margin={margin}
           data={data}
           width={width!}
-          height={height!}
           tickFormat={tickFormat}
         >
           <Bar

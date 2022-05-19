@@ -6,7 +6,7 @@ import { withParentSize } from '@visx/responsive';
 import { scaleLinear, scaleTime } from '@visx/scale';
 import { bisector, extent, max } from 'd3-array';
 import { Bar, Line } from '@visx/shape';
-import { styled, theme } from '../../../stitches.config';
+import { theme } from '../../../stitches.config';
 import { useTooltip, useTooltipInPortal } from '@visx/tooltip';
 import { localPoint } from '@visx/event';
 import { AreaChart } from './AreaChart';
@@ -158,7 +158,6 @@ const StatsWeekly = ({
           margin={margin}
           data={data}
           width={width!}
-          height={height!}
           tickFormat={tickFormat}
         >
           <Bar

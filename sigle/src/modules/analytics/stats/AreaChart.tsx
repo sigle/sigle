@@ -19,7 +19,6 @@ interface AreaChartProps extends WithParentSizeProps {
   data: StatsData[];
   margin: { top: number; right: number; bottom: number; left: number };
   width: number;
-  height: number;
   top?: number;
   left?: number;
   yMax: number;
@@ -33,7 +32,6 @@ export const AreaChart = ({
   margin,
   data,
   width,
-  height,
   yMax,
   top,
   left,
