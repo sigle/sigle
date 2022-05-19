@@ -88,13 +88,15 @@ const StatsWeekly = ({
     [xMax, margin.left, data]
   );
 
-  const charValueScale = useMemo(() => {
-    const maxViews = max(data, getViews) || 0;
-    const maxVisits = max(data, getVisits) || 0;
+  const maxViews = max(data, getViews) || 0;
+  const maxVisits = max(data, getVisits) || 0;
 
+  const maxValue = maxViews > maxVisits ? maxViews : maxVisits;
+
+  const charValueScale = useMemo(() => {
     return scaleLinear({
       range: [yMax, 0],
-      domain: [0, maxViews > maxVisits ? maxViews : maxVisits],
+      domain: [0, maxViews ? maxValue : 10],
       nice: true,
     });
   }, [yMax, data]);
