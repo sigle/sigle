@@ -8,6 +8,7 @@ import {
   TabsContent,
   TabsList,
   TabsTrigger,
+  Text,
 } from '../../../ui';
 import { StatsChart } from './StatsChart';
 import { FATHOM_MAX_FROM_DATE } from '../../../pages/api/analytics/utils';
@@ -32,6 +33,8 @@ const initialRange: StatsData[] = dates.map((date) => {
 
 export const StatsFrame = () => {
   const [data, setData] = useState<StatsData[]>(initialRange);
+  const [totalVisitors, setTotalVisitors] = useState('--');
+  const [totalViews, setTotalViews] = useState('--');
 
   const baseUrl = window.location.origin;
 
@@ -119,8 +122,22 @@ export const StatsFrame = () => {
   };
 
   return (
-    <Box css={{ mb: '$8' }}>
+    <Box css={{ mb: '$8', position: 'relative' }}>
       <Flex>
+        <Flex gap="10" css={{ position: 'absolute' }}>
+          <Box>
+            <Text>Total visitors</Text>
+            <Text css={{ fontSize: 30, fontWeight: 600, color: '$green11' }}>
+              {totalVisitors}
+            </Text>
+          </Box>
+          <Box>
+            <Text>Total views</Text>
+            <Text css={{ fontSize: 30, fontWeight: 600, color: '$violet11' }}>
+              {totalViews}
+            </Text>
+          </Box>
+        </Flex>
         <Tabs
           onValueChange={(value) => fetchStats(value)}
           css={{ width: '100%' }}
@@ -135,13 +152,40 @@ export const StatsFrame = () => {
             <TabsTrigger value="all">All</TabsTrigger>
           </TabsList>
           <TabsContent value="weekly">
-            <StatsChart type="week" data={data} />
+            <Box
+              css={{
+                mb: '$5',
+                position: 'relative',
+                width: '100%',
+                height: 400,
+              }}
+            >
+              <StatsChart type="week" data={data} />
+            </Box>
           </TabsContent>
           <TabsContent value="monthly">
-            <StatsChart type="month" data={data} />
+            <Box
+              css={{
+                mb: '$5',
+                position: 'relative',
+                width: '100%',
+                height: 400,
+              }}
+            >
+              <StatsChart type="month" data={data} />
+            </Box>
           </TabsContent>
           <TabsContent value="all">
-            <StatsChart type="all" data={data} />
+            <Box
+              css={{
+                mb: '$5',
+                position: 'relative',
+                width: '100%',
+                height: 400,
+              }}
+            >
+              <StatsChart type="all" data={data} />
+            </Box>
           </TabsContent>
         </Tabs>
       </Flex>
