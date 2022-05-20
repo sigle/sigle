@@ -13,12 +13,7 @@ import { useTooltip, useTooltipInPortal } from '@visx/tooltip';
 import { localPoint } from '@visx/event';
 import { AreaChart } from './AreaChart';
 import { TooltipDate, tooltipStyles, TooltipText } from './tooltipUtils';
-
-interface StatsData {
-  pageViews: number;
-  date: string;
-  visits: number;
-}
+import { StatsData } from './types';
 
 // accessors
 const getDate = (d: StatsData) => new Date(d.date);

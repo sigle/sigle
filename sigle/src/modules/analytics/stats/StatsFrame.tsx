@@ -11,31 +11,7 @@ import {
 } from '../../../ui';
 import { StatsChart } from './StatsChart';
 import { FATHOM_MAX_FROM_DATE } from '../../../pages/api/analytics/utils';
-
-interface AnalyticsHistoricalData {
-  date: string;
-  visits: number;
-  pageviews: number;
-}
-
-interface AnalyticsStoriesData {
-  pathname: string;
-  visits: number;
-  pageviews: number;
-}
-
-type AnalyticsHistoricalResponse = {
-  historical: AnalyticsHistoricalData[];
-  stories: AnalyticsStoriesData[];
-};
-
-interface StatsData {
-  pageViews: number;
-  date: string;
-  visits: number;
-}
-
-type StatsType = 'weekly' | 'monthly' | 'all';
+import { AnalyticsHistoricalResponse, StatsData, StatsType } from './types';
 
 // prevent flash of no content in graph by initializing range data with a constant value (1)
 const today = new Date();
