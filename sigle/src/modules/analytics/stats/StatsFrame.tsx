@@ -35,6 +35,8 @@ interface StatsData {
   visits: number;
 }
 
+type StatsType = 'weekly' | 'monthly' | 'all';
+
 // prevent flash of no content in graph by initializing range data with a constant value (1)
 const today = new Date();
 const weekFromDate = new Date(new Date().setDate(today.getDate() - 7));
@@ -55,88 +57,54 @@ const initialRange: StatsData[] = dates.map((date) => {
 
 export const StatsFrame = () => {
   const [data, setData] = useState<StatsData[]>(initialRange);
+  const [statType, setStatType] = useState<StatsType>('weekly');
 
   useEffect(() => {
-    fetchWeeklyStats();
+    fetchStats('weekly');
   }, []);
 
-  const fetchWeeklyStats = async () => {
-    setData(initialRange);
+  const fetchStats = async (value: string) => {
+    const weeklyStatsUrl = `/api/analytics/historical?dateFrom=${format(
+      weekFromDate,
+      'yyyy-MM-dd'
+    )}&dateGrouping=day`;
 
-    const statsRes = await fetch(
-      `/api/analytics/historical?dateFrom=${format(
-        weekFromDate,
-        'yyyy-MM-dd'
-      )}&dateGrouping=day`
-    );
+    const monthlyStatsUrl = `/api/analytics/historical?dateFrom=${format(
+      monthFromDate,
+      'yyyy-MM-dd'
+    )}&dateGrouping=day`;
 
-    const statsData: AnalyticsHistoricalResponse = await statsRes.json();
-    const stats: StatsData[] = statsData.historical.map((item) => {
-      return {
-        pageViews: item.pageviews,
-        date: item.date,
-        visits: item.visits,
-      };
-    });
+    const allTimeStatsUrl = `/api/analytics/historical?dateFrom=${FATHOM_MAX_FROM_DATE}&dateGrouping=month`;
+    let url;
 
-    setData(stats);
-  };
-
-  const fetchMonthlyStats = async () => {
-    setData(initialRange);
-
-    const statsRes = await fetch(
-      `/api/analytics/historical?dateFrom=${format(
-        monthFromDate,
-        'yyyy-MM-dd'
-      )}&dateGrouping=day`
-    );
-
-    const statsData: AnalyticsHistoricalResponse = await statsRes.json();
-    const stats: StatsData[] = statsData.historical.map((item) => {
-      return {
-        pageViews: item.pageviews,
-        date: item.date,
-        visits: item.visits,
-      };
-    });
-    setData(stats);
-  };
-
-  const fetchAllTimeStats = async () => {
-    setData(initialRange);
-
-    const statsRes = await fetch(
-      `/api/analytics/historical?dateFrom=${FATHOM_MAX_FROM_DATE}&dateGrouping=month`
-    );
-
-    const statsData: AnalyticsHistoricalResponse = await statsRes.json();
-    const stats: StatsData[] = statsData.historical.map((item) => {
-      return {
-        pageViews: item.pageviews,
-        date: item.date,
-        visits: item.visits,
-      };
-    });
-
-    setData(stats);
-  };
-
-  const fetchStats = (value: string) => {
     switch (value) {
       case 'weekly':
-        fetchWeeklyStats();
+        url = weeklyStatsUrl;
         break;
       case 'monthly':
-        fetchMonthlyStats();
+        url = monthlyStatsUrl;
         break;
       case 'all':
-        fetchAllTimeStats();
+        url = allTimeStatsUrl;
         break;
+
       default:
-        fetchWeeklyStats();
-        break;
+        throw new Error('No value received.');
     }
+
+    const statsRes = await fetch(url);
+
+    const statsData: AnalyticsHistoricalResponse = await statsRes.json();
+    const stats: StatsData[] = statsData.historical.map((item) => {
+      return {
+        pageViews: item.pageviews,
+        date: item.date,
+        visits: item.visits,
+      };
+    });
+
+    setData(stats);
+    setStatType(value);
   };
 
   return (
@@ -155,42 +123,17 @@ export const StatsFrame = () => {
             <TabsTrigger value="monthly">Monthly</TabsTrigger>
             <TabsTrigger value="all">All</TabsTrigger>
           </TabsList>
-          <TabsContent value="weekly">
-            <Box
-              css={{
-                mb: '$5',
-                position: 'relative',
-                width: '100%',
-                height: 400,
-              }}
-            >
-              <StatsChart type="week" data={data} />
-            </Box>
-          </TabsContent>
-          <TabsContent value="monthly">
-            <Box
-              css={{
-                mb: '$5',
-                position: 'relative',
-                width: '100%',
-                height: 400,
-              }}
-            >
-              <StatsChart type="month" data={data} />
-            </Box>
-          </TabsContent>
-          <TabsContent value="all">
-            <Box
-              css={{
-                mb: '$5',
-                position: 'relative',
-                width: '100%',
-                height: 400,
-              }}
-            >
-              <StatsChart type="all" data={data} />
-            </Box>
-          </TabsContent>
+          <TabsContent value="weekly"></TabsContent>
+          <Box
+            css={{
+              mb: '$5',
+              position: 'relative',
+              width: '100%',
+              height: 400,
+            }}
+          >
+            <StatsChart type={statType} data={data} />
+          </Box>
         </Tabs>
       </Flex>
     </Box>

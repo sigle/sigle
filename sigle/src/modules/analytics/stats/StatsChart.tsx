@@ -28,7 +28,7 @@ const bisectDate = bisector<StatsData, Date>((d) => new Date(d.date)).left;
 
 interface StatsChartProps extends WithParentSizeProps {
   data: StatsData[];
-  type: 'week' | 'month' | 'all';
+  type: 'weekly' | 'monthly' | 'all';
 }
 
 const StatsChart = ({
@@ -39,13 +39,13 @@ const StatsChart = ({
 }: StatsChartProps & WithParentSizeProvidedProps) => {
   const margin = {
     top: 20,
-    left: type === 'week' ? 24 : 44,
+    left: type === 'weekly' || type === 'monthly' ? 24 : 44,
     bottom: 40,
     right: 0,
   };
 
   const tickFormat = (d: any) => {
-    if (type === 'week' || type === 'month') {
+    if (type === 'weekly' || type === 'monthly') {
       return format(d, 'dd/MM');
     } else {
       return format(d, 'MMM yyyy');
