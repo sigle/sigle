@@ -1,7 +1,10 @@
-import { eachMonthOfInterval, format } from 'date-fns';
+import { eachDayOfInterval, format } from 'date-fns';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { AnalyticsHistoricalResponse, StatsData } from '../../../types';
-import { WithParentSizeProvidedProps } from '@visx/responsive/lib/enhancers/withParentSize';
+import {
+  WithParentSizeProps,
+  WithParentSizeProvidedProps,
+} from '@visx/responsive/lib/enhancers/withParentSize';
 import { withParentSize } from '@visx/responsive';
 import { scaleLinear, scaleTime } from '@visx/scale';
 import { bisector, extent, max } from 'd3-array';
@@ -10,24 +13,7 @@ import { theme } from '../../../stitches.config';
 import { useTooltip, useTooltipInPortal } from '@visx/tooltip';
 import { localPoint } from '@visx/event';
 import { AreaChart } from './AreaChart';
-import { FATHOM_MAX_FROM_DATE } from '../../../pages/api/analytics/utils';
 import { TooltipDate, tooltipStyles, TooltipText } from './utils';
-
-export const today = new Date();
-export const fromDate = new Date(`${FATHOM_MAX_FROM_DATE}`);
-
-const dates = eachMonthOfInterval({
-  start: fromDate,
-  end: today,
-});
-
-export const initialRange: StatsData[] = dates.map((date) => {
-  return {
-    value: 0,
-    date: date.toString(),
-    visits: 0,
-  };
-});
 
 // accessors
 const getDate = (d: StatsData) => new Date(d.date);
@@ -35,45 +21,30 @@ const getViews = (d: StatsData) => d.value;
 const getVisits = (d: StatsData) => d.visits;
 const bisectDate = bisector<StatsData, Date>((d) => new Date(d.date)).left;
 
-const tickFormat = (d: any) => {
-  return format(d, 'MMM yyyy');
-};
+interface StatsChartProps extends WithParentSizeProps {
+  data: StatsData[];
+  type: 'week' | 'month' | 'all';
+}
 
-const StatsAll = ({
+const StatsChart = ({
   parentWidth: width,
   parentHeight: height,
-}: WithParentSizeProvidedProps) => {
-  const [data, setData] = useState<StatsData[]>(initialRange);
-
-  useEffect(() => {
-    fetchStats();
-    console.log(fromDate);
-  }, []);
-
-  const fetchStats = async () => {
-    const baseUrl = window.location.origin;
-
-    const statsRes = await fetch(
-      `${baseUrl}/api/analytics/historical?dateFrom=${FATHOM_MAX_FROM_DATE}&dateGrouping=month`
-    );
-
-    const statsData: AnalyticsHistoricalResponse = await statsRes.json();
-    const stats: StatsData[] = statsData.historical.map((item) => {
-      return {
-        value: item.pageviews,
-        date: item.date,
-        visits: item.visits,
-      };
-    });
-
-    setData(stats);
-  };
-
+  data,
+  type,
+}: StatsChartProps & WithParentSizeProvidedProps) => {
   const margin = {
     top: 20,
-    left: 44,
+    left: type === 'week' ? 24 : 44,
     bottom: 40,
     right: 0,
+  };
+
+  const tickFormat = (d: any) => {
+    if (type === 'week' || type === 'month') {
+      return format(d, 'dd/MM');
+    } else {
+      return format(d, 'MMM yyyy');
+    }
   };
 
   // bounds
@@ -205,6 +176,6 @@ const StatsAll = ({
   );
 };
 
-const enhancedStatsAll = withParentSize(StatsAll);
+const enhancedStatsChart = withParentSize<StatsChartProps>(StatsChart);
 
-export { enhancedStatsAll as StatsAll };
+export { enhancedStatsChart as StatsChart };

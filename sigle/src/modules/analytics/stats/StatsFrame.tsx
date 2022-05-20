@@ -1,4 +1,6 @@
-import { useEffect } from 'react';
+import { eachDayOfInterval, format } from 'date-fns';
+import { useEffect, useState } from 'react';
+import { AnalyticsHistoricalResponse, StatsData } from '../../../types';
 import {
   Box,
   Flex,
@@ -7,15 +9,112 @@ import {
   TabsList,
   TabsTrigger,
 } from '../../../ui';
-import { StatsAll } from './StatsAll';
-import { StatsMonthly } from './StatsMonthly';
-import { StatsWeekly } from './StatsWeekly';
+import { StatsChart } from './StatsChart';
+import { FATHOM_MAX_FROM_DATE } from '../../../pages/api/analytics/utils';
+
+// prevent flash of no content in graph by initializing range data with a constant value (1)
+const today = new Date();
+const weekFromDate = new Date(new Date().setDate(today.getDate() - 7));
+const monthFromDate = new Date(new Date().setDate(today.getDate() - 30));
+
+const dates = eachDayOfInterval({
+  start: weekFromDate,
+  end: today,
+});
+
+const initialRange: StatsData[] = dates.map((date) => {
+  return {
+    value: 0,
+    date: date.toString(),
+    visits: 0,
+  };
+});
 
 export const StatsFrame = () => {
+  const [data, setData] = useState<StatsData[]>(initialRange);
+
+  const baseUrl = window.location.origin;
+
+  useEffect(() => {
+    fetchWeeklyStats();
+  }, []);
+
+  const fetchWeeklyStats = async () => {
+    setData(initialRange);
+
+    const statsRes = await fetch(
+      `${baseUrl}/api/analytics/historical?dateFrom=${format(
+        weekFromDate,
+        'yyyy-MM-dd'
+      )}&dateGrouping=day`
+    );
+
+    const statsData: AnalyticsHistoricalResponse = await statsRes.json();
+    const stats: StatsData[] = statsData.historical.map((item) => {
+      return {
+        value: item.pageviews,
+        date: item.date,
+        visits: item.visits,
+      };
+    });
+
+    setData(stats);
+  };
+
+  const fetchMonthlyStats = async () => {
+    setData(initialRange);
+
+    const statsRes = await fetch(
+      `${baseUrl}/api/analytics/historical?dateFrom=${format(
+        monthFromDate,
+        'yyyy-MM-dd'
+      )}&dateGrouping=day`
+    );
+
+    const statsData: AnalyticsHistoricalResponse = await statsRes.json();
+    const stats: StatsData[] = statsData.historical.map((item) => {
+      return {
+        value: item.pageviews,
+        date: item.date,
+        visits: item.visits,
+      };
+    });
+    setData(stats);
+  };
+
+  const fetchAllTimeStats = async () => {
+    setData(initialRange);
+
+    const statsRes = await fetch(
+      `${baseUrl}/api/analytics/historical?dateFrom=${FATHOM_MAX_FROM_DATE}&dateGrouping=month`
+    );
+
+    const statsData: AnalyticsHistoricalResponse = await statsRes.json();
+    const stats: StatsData[] = statsData.historical.map((item) => {
+      return {
+        value: item.pageviews,
+        date: item.date,
+        visits: item.visits,
+      };
+    });
+
+    setData(stats);
+  };
+
   return (
     <Box css={{ mb: '$8' }}>
       <Flex>
-        <Tabs css={{ width: '100%' }} defaultValue="weekly">
+        <Tabs
+          onValueChange={(value) => {
+            value === 'monthly'
+              ? fetchMonthlyStats()
+              : value === 'all'
+              ? fetchAllTimeStats()
+              : fetchWeeklyStats();
+          }}
+          css={{ width: '100%' }}
+          defaultValue="weekly"
+        >
           <TabsList
             css={{ alignSelf: 'end' }}
             aria-label="See your total views and visitors"
@@ -33,7 +132,7 @@ export const StatsFrame = () => {
                 height: 400,
               }}
             >
-              <StatsWeekly />
+              <StatsChart type="week" data={data} />
             </Box>
           </TabsContent>
           <TabsContent value="monthly">
@@ -45,7 +144,7 @@ export const StatsFrame = () => {
                 height: 400,
               }}
             >
-              <StatsMonthly />
+              <StatsChart type="month" data={data} />
             </Box>
           </TabsContent>
           <TabsContent value="all">
@@ -57,7 +156,7 @@ export const StatsFrame = () => {
                 height: 400,
               }}
             >
-              <StatsAll />
+              <StatsChart type="all" data={data} />
             </Box>
           </TabsContent>
         </Tabs>
