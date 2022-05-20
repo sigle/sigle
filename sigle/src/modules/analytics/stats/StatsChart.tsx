@@ -1,6 +1,6 @@
-import { eachDayOfInterval, format } from 'date-fns';
-import { useCallback, useEffect, useMemo, useState } from 'react';
-import { AnalyticsHistoricalResponse, StatsData } from '../../../types';
+import { format } from 'date-fns';
+import { useCallback, useMemo } from 'react';
+import { StatsData } from '../../../types';
 import {
   WithParentSizeProps,
   WithParentSizeProvidedProps,

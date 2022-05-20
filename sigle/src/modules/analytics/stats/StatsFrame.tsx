@@ -101,17 +101,28 @@ export const StatsFrame = () => {
     setData(stats);
   };
 
+  const fetchStats = (value: string) => {
+    switch (value) {
+      case 'weekly':
+        fetchWeeklyStats();
+        break;
+      case 'monthly':
+        fetchMonthlyStats();
+        break;
+      case 'all':
+        fetchAllTimeStats();
+        break;
+      default:
+        fetchWeeklyStats();
+        break;
+    }
+  };
+
   return (
     <Box css={{ mb: '$8' }}>
       <Flex>
         <Tabs
-          onValueChange={(value) => {
-            value === 'monthly'
-              ? fetchMonthlyStats()
-              : value === 'all'
-              ? fetchAllTimeStats()
-              : fetchWeeklyStats();
-          }}
+          onValueChange={(value) => fetchStats(value)}
           css={{ width: '100%' }}
           defaultValue="weekly"
         >
