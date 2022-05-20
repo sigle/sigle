@@ -19,8 +19,6 @@ interface AreaChartProps extends WithParentSizeProps {
   data: StatsData[];
   margin: { top: number; right: number; bottom: number; left: number };
   width: number;
-  top?: number;
-  left?: number;
   yMax: number;
   xScale: AxisScale<number>;
   yScale: AxisScale<number>;
@@ -33,8 +31,6 @@ export const AreaChart = ({
   data,
   width,
   yMax,
-  top,
-  left,
   xScale,
   yScale,
   tickFormat,
@@ -61,7 +57,7 @@ export const AreaChart = ({
   };
 
   return (
-    <Group left={left || margin.left} top={top || margin.top}>
+    <>
       <LinearGradient
         id={'purple-gradient'}
         from={violet}
@@ -133,6 +129,7 @@ export const AreaChart = ({
         hideTicks={true}
       />
       <AxisLeft
+        left={margin.left}
         scale={yScale}
         numTicks={5}
         stroke={axisColor}
@@ -140,6 +137,6 @@ export const AreaChart = ({
         tickLabelProps={() => axisLeftTickLabelProps}
       />
       {children}
-    </Group>
+    </>
   );
 };

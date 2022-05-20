@@ -58,7 +58,7 @@ const StatsChart = ({
   const dateScale = useMemo(
     () =>
       scaleTime({
-        range: [0, xMax],
+        range: [margin.left, xMax],
         domain: extent(data, getDate) as [Date, Date],
       }),
     [xMax, margin.left, data]
@@ -130,6 +130,8 @@ const StatsChart = ({
           tickFormat={tickFormat}
         >
           <Bar
+            x={margin.left}
+            y={margin.top}
             width={innerWidth}
             height={innerHeight}
             fill="transparent"
