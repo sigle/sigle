@@ -34,8 +34,6 @@ const initialRange: StatsData[] = dates.map((date) => {
 export const StatsFrame = () => {
   const [data, setData] = useState<StatsData[]>(initialRange);
 
-  const baseUrl = window.location.origin;
-
   useEffect(() => {
     fetchWeeklyStats();
   }, []);
@@ -44,7 +42,7 @@ export const StatsFrame = () => {
     setData(initialRange);
 
     const statsRes = await fetch(
-      `${baseUrl}/api/analytics/historical?dateFrom=${format(
+      `/api/analytics/historical?dateFrom=${format(
         weekFromDate,
         'yyyy-MM-dd'
       )}&dateGrouping=day`
@@ -66,7 +64,7 @@ export const StatsFrame = () => {
     setData(initialRange);
 
     const statsRes = await fetch(
-      `${baseUrl}/api/analytics/historical?dateFrom=${format(
+      `/api/analytics/historical?dateFrom=${format(
         monthFromDate,
         'yyyy-MM-dd'
       )}&dateGrouping=day`
@@ -87,7 +85,7 @@ export const StatsFrame = () => {
     setData(initialRange);
 
     const statsRes = await fetch(
-      `${baseUrl}/api/analytics/historical?dateFrom=${FATHOM_MAX_FROM_DATE}&dateGrouping=month`
+      `/api/analytics/historical?dateFrom=${FATHOM_MAX_FROM_DATE}&dateGrouping=month`
     );
 
     const statsData: AnalyticsHistoricalResponse = await statsRes.json();
