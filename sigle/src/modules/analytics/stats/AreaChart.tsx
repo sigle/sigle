@@ -5,7 +5,12 @@ import { AxisBottom, AxisLeft, AxisScale } from '@visx/axis';
 import { theme } from '../../../stitches.config';
 import { WithParentSizeProps } from '@visx/responsive/lib/enhancers/withParentSizeModern';
 import { Group } from '@visx/group';
-import { StatsData } from '../../../types';
+
+interface StatsData {
+  value: number;
+  date: string;
+  visits: number;
+}
 
 const violet = theme.colors.violet5.toString();
 const green = theme.colors.green3.toString();

@@ -1,6 +1,5 @@
 import { format } from 'date-fns';
 import { useCallback, useMemo } from 'react';
-import { StatsData } from '../../../types';
 import {
   WithParentSizeProps,
   WithParentSizeProvidedProps,
@@ -13,7 +12,13 @@ import { theme } from '../../../stitches.config';
 import { useTooltip, useTooltipInPortal } from '@visx/tooltip';
 import { localPoint } from '@visx/event';
 import { AreaChart } from './AreaChart';
-import { TooltipDate, tooltipStyles, TooltipText } from './utils';
+import { TooltipDate, tooltipStyles, TooltipText } from './tooltipUtils';
+
+interface StatsData {
+  value: number;
+  date: string;
+  visits: number;
+}
 
 // accessors
 const getDate = (d: StatsData) => new Date(d.date);

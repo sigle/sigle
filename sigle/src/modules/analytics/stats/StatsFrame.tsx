@@ -1,6 +1,5 @@
 import { eachDayOfInterval, format } from 'date-fns';
 import { useEffect, useState } from 'react';
-import { AnalyticsHistoricalResponse, StatsData } from '../../../types';
 import {
   Box,
   Flex,
@@ -12,6 +11,29 @@ import {
 } from '../../../ui';
 import { StatsChart } from './StatsChart';
 import { FATHOM_MAX_FROM_DATE } from '../../../pages/api/analytics/utils';
+
+interface AnalyticsHistoricalData {
+  date: string;
+  visits: number;
+  pageviews: number;
+}
+
+interface AnalyticsStoriesData {
+  pathname: string;
+  visits: number;
+  pageviews: number;
+}
+
+type AnalyticsHistoricalResponse = {
+  historical: AnalyticsHistoricalData[];
+  stories: AnalyticsStoriesData[];
+};
+
+interface StatsData {
+  value: number;
+  date: string;
+  visits: number;
+}
 
 // prevent flash of no content in graph by initializing range data with a constant value (1)
 const today = new Date();
