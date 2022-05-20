@@ -33,8 +33,6 @@ const initialRange: StatsData[] = dates.map((date) => {
 
 export const StatsFrame = () => {
   const [data, setData] = useState<StatsData[]>(initialRange);
-  const [totalVisitors, setTotalVisitors] = useState('--');
-  const [totalViews, setTotalViews] = useState('--');
 
   const baseUrl = window.location.origin;
 
@@ -124,20 +122,6 @@ export const StatsFrame = () => {
   return (
     <Box css={{ mb: '$8', position: 'relative' }}>
       <Flex>
-        <Flex gap="10" css={{ position: 'absolute' }}>
-          <Box>
-            <Text>Total visitors</Text>
-            <Text css={{ fontSize: 30, fontWeight: 600, color: '$green11' }}>
-              {totalVisitors}
-            </Text>
-          </Box>
-          <Box>
-            <Text>Total views</Text>
-            <Text css={{ fontSize: 30, fontWeight: 600, color: '$violet11' }}>
-              {totalViews}
-            </Text>
-          </Box>
-        </Flex>
         <Tabs
           onValueChange={(value) => fetchStats(value)}
           css={{ width: '100%' }}
