@@ -71,11 +71,11 @@ const StatsChart = ({
 
   const charValueScale = useMemo(() => {
     return scaleLinear({
-      range: [yMax, 0],
-      domain: [0, maxViews ? maxValue : 10],
+      range: [yMax, margin.top],
+      domain: [0, maxValue ? maxValue : 10],
       nice: true,
     });
-  }, [yMax, data]);
+  }, [yMax, margin.top, data]);
 
   const {
     showTooltip,
