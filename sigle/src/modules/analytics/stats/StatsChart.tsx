@@ -15,14 +15,14 @@ import { AreaChart } from './AreaChart';
 import { TooltipDate, tooltipStyles, TooltipText } from './tooltipUtils';
 
 interface StatsData {
-  value: number;
+  pageViews: number;
   date: string;
   visits: number;
 }
 
 // accessors
 const getDate = (d: StatsData) => new Date(d.date);
-const getViews = (d: StatsData) => d.value;
+const getViews = (d: StatsData) => d.pageViews;
 const getVisits = (d: StatsData) => d.visits;
 const bisectDate = bisector<StatsData, Date>((d) => new Date(d.date)).left;
 
@@ -173,7 +173,7 @@ const StatsChart = ({
             >{`${tooltipData.visits} Visitors`}</TooltipText>
             <TooltipText
               css={{ color: '$violet11' }}
-            >{`${tooltipData.value} Views`}</TooltipText>
+            >{`${tooltipData.pageViews} Views`}</TooltipText>
           </TooltipInPortal>
         </div>
       )}

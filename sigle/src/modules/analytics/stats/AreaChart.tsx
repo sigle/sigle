@@ -7,7 +7,7 @@ import { WithParentSizeProps } from '@visx/responsive/lib/enhancers/withParentSi
 import { Group } from '@visx/group';
 
 interface StatsData {
-  value: number;
+  pageViews: number;
   date: string;
   visits: number;
 }
@@ -17,7 +17,7 @@ const green = theme.colors.green3.toString();
 
 // accessors
 const getDate = (d: StatsData) => new Date(d.date);
-const getViews = (d: StatsData) => d.value;
+const getViews = (d: StatsData) => d.pageViews;
 const getVisits = (d: StatsData) => d.visits;
 
 interface AreaChartProps extends WithParentSizeProps {

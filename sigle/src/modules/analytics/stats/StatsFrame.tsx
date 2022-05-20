@@ -30,7 +30,7 @@ type AnalyticsHistoricalResponse = {
 };
 
 interface StatsData {
-  value: number;
+  pageViews: number;
   date: string;
   visits: number;
 }
@@ -47,7 +47,7 @@ const dates = eachDayOfInterval({
 
 const initialRange: StatsData[] = dates.map((date) => {
   return {
-    value: 0,
+    pageViews: 0,
     date: date.toString(),
     visits: 0,
   };
@@ -73,7 +73,7 @@ export const StatsFrame = () => {
     const statsData: AnalyticsHistoricalResponse = await statsRes.json();
     const stats: StatsData[] = statsData.historical.map((item) => {
       return {
-        value: item.pageviews,
+        pageViews: item.pageviews,
         date: item.date,
         visits: item.visits,
       };
@@ -95,7 +95,7 @@ export const StatsFrame = () => {
     const statsData: AnalyticsHistoricalResponse = await statsRes.json();
     const stats: StatsData[] = statsData.historical.map((item) => {
       return {
-        value: item.pageviews,
+        pageViews: item.pageviews,
         date: item.date,
         visits: item.visits,
       };
@@ -113,7 +113,7 @@ export const StatsFrame = () => {
     const statsData: AnalyticsHistoricalResponse = await statsRes.json();
     const stats: StatsData[] = statsData.historical.map((item) => {
       return {
-        value: item.pageviews,
+        pageViews: item.pageviews,
         date: item.date,
         visits: item.visits,
       };
