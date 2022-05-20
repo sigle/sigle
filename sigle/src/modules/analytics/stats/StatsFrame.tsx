@@ -135,40 +135,13 @@ export const StatsFrame = () => {
             <TabsTrigger value="all">All</TabsTrigger>
           </TabsList>
           <TabsContent value="weekly">
-            <Box
-              css={{
-                mb: '$5',
-                position: 'relative',
-                width: '100%',
-                height: 400,
-              }}
-            >
-              <StatsChart type="week" data={data} />
-            </Box>
+            <StatsChart type="week" data={data} />
           </TabsContent>
           <TabsContent value="monthly">
-            <Box
-              css={{
-                mb: '$5',
-                position: 'relative',
-                width: '100%',
-                height: 400,
-              }}
-            >
-              <StatsChart type="month" data={data} />
-            </Box>
+            <StatsChart type="month" data={data} />
           </TabsContent>
           <TabsContent value="all">
-            <Box
-              css={{
-                mb: '$5',
-                position: 'relative',
-                width: '100%',
-                height: 400,
-              }}
-            >
-              <StatsChart type="all" data={data} />
-            </Box>
+            <StatsChart type="all" data={data} />
           </TabsContent>
         </Tabs>
       </Flex>

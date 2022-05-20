@@ -14,6 +14,7 @@ import { useTooltip, useTooltipInPortal } from '@visx/tooltip';
 import { localPoint } from '@visx/event';
 import { AreaChart } from './AreaChart';
 import { TooltipDate, tooltipStyles, TooltipText } from './utils';
+import { Box } from '../../../ui';
 
 // accessors
 const getDate = (d: StatsData) => new Date(d.date);
@@ -118,7 +119,14 @@ const StatsChart = ({
   );
 
   return (
-    <>
+    <Box
+      css={{
+        mb: '$5',
+        position: 'relative',
+        width: '100%',
+        height: 400,
+      }}
+    >
       <svg ref={containerRef} width={width} height={height}>
         <AreaChart
           yScale={charValueScale}
@@ -172,7 +180,7 @@ const StatsChart = ({
           </TooltipInPortal>
         </div>
       )}
-    </>
+    </Box>
   );
 };
 
