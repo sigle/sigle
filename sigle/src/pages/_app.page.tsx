@@ -8,6 +8,7 @@ import { DefaultSeo } from 'next-seo';
 import { ToastContainer } from 'react-toastify';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import { ReactQueryDevtools } from 'react-query/devtools';
+import { SessionProvider } from 'next-auth/react';
 import NProgress from 'nprogress';
 import 'nprogress/nprogress.css';
 // TODO add tippy.js only on the pages that are using it
@@ -151,13 +152,15 @@ export default class MyApp extends App {
         <QueryClientProvider client={queryClient}>
           <ReactQueryDevtools initialIsOpen={false} />
           <AuthProvider>
-            <ThemeProvider
-              disableTransitionOnChange
-              attribute="class"
-              value={{ light: 'light-theme', dark: darkTheme.toString() }}
-            >
-              <Component {...modifiedPageProps} />
-            </ThemeProvider>
+            <SessionProvider session={pageProps.session} refetchInterval={0}>
+              <ThemeProvider
+                disableTransitionOnChange
+                attribute="class"
+                value={{ light: 'light-theme', dark: darkTheme.toString() }}
+              >
+                <Component {...modifiedPageProps} />
+              </ThemeProvider>
+            </SessionProvider>
           </AuthProvider>
         </QueryClientProvider>
         <ToastContainer autoClose={3000} icon={false} theme="colored" />
