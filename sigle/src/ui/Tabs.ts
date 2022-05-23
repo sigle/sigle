@@ -19,8 +19,13 @@ const StyledTrigger = styled(TabsPrimitive.TabsTrigger, {
   color: '$gray9',
   pb: '$2',
 
+  '&:hover': {
+    color: '$gray10',
+  },
+
   '&[data-state="active"]': {
     color: '$gray12',
+    fontWeight: 600,
     boxShadow: '0 1px 0 0 $colors$gray12',
   },
 });
