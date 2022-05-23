@@ -3,6 +3,7 @@ import { Box, Flex, Heading, Text } from '../../../ui';
 import { DashboardLayout } from '../../layout';
 import { PublishedStoriesFrame } from '../PublishedStoriesFrame';
 import { ReferrersFrame } from '../ReferrersFrame';
+import { StatsFrame } from '../stats/StatsFrame';
 
 interface AnalyticsProps {
   stories: SubsetStory[] | null;
@@ -14,6 +15,7 @@ export const Analytics = ({ stories, loading }: AnalyticsProps) => {
 
   return (
     <DashboardLayout layout="wide">
+      <StatsFrame />
       <Box
         css={{ display: 'grid', gridTemplateColumns: '2fr 1fr', gap: '$10' }}
       >
