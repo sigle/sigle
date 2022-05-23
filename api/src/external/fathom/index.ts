@@ -1,3 +1,4 @@
+import { config } from '../../config';
 import { aggregate } from './aggregate';
 import { aggregatePath } from './aggregatePath';
 import { aggregateReferrers } from './aggregateReferrers';
@@ -16,6 +17,6 @@ export const initFathomClient = (clientParams: FathomClientParams) => {
 };
 
 export const fathomClient = initFathomClient({
-  apiToken: process.env.FATHOM_API_TOKEN!,
-  entityId: process.env.FATHOM_ENTITY_ID!,
+  apiToken: config.FATHOM_API_TOKEN,
+  entityId: config.FATHOM_ENTITY_ID,
 });

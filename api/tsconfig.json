@@ -9,6 +9,7 @@
     "esModuleInterop": true,
     "module": "commonjs",
     "moduleResolution": "node",
+    "useUnknownInCatchVariables": false,
     "resolveJsonModule": true
   },
   "include": ["src/**/*.ts", "__tests__/**/*.ts"],

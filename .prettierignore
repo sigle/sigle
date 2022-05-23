@@ -1,3 +1,4 @@
 .next
 .github/ISSUE_TEMPLATE
 coverage
+dist
