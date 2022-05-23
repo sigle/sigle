@@ -38,8 +38,8 @@ const initialRange: StatsData[] = dates.map((date) => {
 export const StatsFrame = () => {
   const [data, setData] = useState<StatsData[]>(initialRange);
   const [statType, setStatType] = useState<StatsType>('weekly');
-  const [totalVisitors, setTotalVisitors] = useState('--');
-  const [totalViews, setTotalViews] = useState('--');
+  const [totalVisitors, setTotalVisitors] = useState<number>();
+  const [totalViews, setTotalViews] = useState<number>();
 
   useEffect(() => {
     fetchStats('weekly');
@@ -99,8 +99,8 @@ export const StatsFrame = () => {
 
     setData(stats);
     setStatType(value);
-    setTotalViews(viewTotal.toString());
-    setTotalVisitors(visitTotal.toString());
+    setTotalViews(viewTotal);
+    setTotalVisitors(visitTotal);
   };
 
   return (
@@ -112,7 +112,7 @@ export const StatsFrame = () => {
               Total visitors
             </Text>
             <Text css={{ fontSize: 30, fontWeight: 600, color: '$green11' }}>
-              {numberWithCommas(totalVisitors)}
+              {totalViews ? numberWithCommas(totalViews.toString()) : '--'}
             </Text>
           </Box>
           <Box>
@@ -120,7 +120,9 @@ export const StatsFrame = () => {
               Total views
             </Text>
             <Text css={{ fontSize: 30, fontWeight: 600, color: '$violet11' }}>
-              {numberWithCommas(totalViews)}
+              {totalVisitors
+                ? numberWithCommas(totalVisitors.toString())
+                : '--'}
             </Text>
           </Box>
         </Flex>
