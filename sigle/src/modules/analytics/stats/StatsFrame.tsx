@@ -35,11 +35,16 @@ const initialRange: StatsData[] = dates.map((date) => {
   };
 });
 
+interface TotalViewsAndVisitorsProps {
+  pageviews: number;
+  visits: number;
+}
+
 export const StatsFrame = () => {
   const [data, setData] = useState<StatsData[]>(initialRange);
   const [statType, setStatType] = useState<StatsType>('weekly');
-  const [totalVisitors, setTotalVisitors] = useState<number>();
-  const [totalViews, setTotalViews] = useState<number>();
+  const [totalViewsAndVisitors, setTotalViewsAndVisitors] =
+    useState<TotalViewsAndVisitorsProps>();
 
   useEffect(() => {
     fetchStats('weekly');
@@ -85,22 +90,19 @@ export const StatsFrame = () => {
       };
     });
 
-    const viewTotal = statsData.historical
-      .map((item) => item.pageviews)
-      .reduce(function (previousValue, currentValue) {
-        return previousValue + currentValue;
-      }, 0);
-
-    const visitTotal = statsData.historical
-      .map((item) => item.visits)
-      .reduce(function (previousValue, currentValue) {
-        return previousValue + currentValue;
-      }, 0);
+    const viewTotal = statsData.historical.reduce(
+      function (previousValue, currentValue) {
+        return {
+          pageviews: previousValue.pageviews + currentValue.pageviews,
+          visits: previousValue.visits + currentValue.visits,
+        };
+      },
+      { pageviews: 0, visits: 0 }
+    );
 
     setData(stats);
     setStatType(value);
-    setTotalViews(viewTotal);
-    setTotalVisitors(visitTotal);
+    setTotalViewsAndVisitors(viewTotal);
   };
 
   return (
@@ -112,7 +114,9 @@ export const StatsFrame = () => {
               Total visitors
             </Text>
             <Text css={{ fontSize: 30, fontWeight: 600, color: '$green11' }}>
-              {totalViews ? numberWithCommas(totalViews.toString()) : '--'}
+              {totalViewsAndVisitors
+                ? numberWithCommas(totalViewsAndVisitors.pageviews.toString())
+                : '--'}
             </Text>
           </Box>
           <Box>
@@ -120,8 +124,8 @@ export const StatsFrame = () => {
               Total views
             </Text>
             <Text css={{ fontSize: 30, fontWeight: 600, color: '$violet11' }}>
-              {totalVisitors
-                ? numberWithCommas(totalVisitors.toString())
+              {totalViewsAndVisitors
+                ? numberWithCommas(totalViewsAndVisitors.visits.toString())
                 : '--'}
             </Text>
           </Box>
