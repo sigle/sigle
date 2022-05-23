@@ -13,6 +13,10 @@ import { StatsChart } from './StatsChart';
 import { FATHOM_MAX_FROM_DATE } from '../../../pages/api/analytics/utils';
 import { AnalyticsHistoricalResponse, StatsData, StatsType } from './types';
 
+const numberWithCommas = (x: string): string => {
+  return new Intl.NumberFormat('en-US').format(Number(x)).toString();
+};
+
 // prevent flash of no content in graph by initializing range data with a constant value (1)
 const today = new Date();
 const weekFromDate = new Date(new Date().setDate(today.getDate() - 7));
@@ -31,9 +35,16 @@ const initialRange: StatsData[] = dates.map((date) => {
   };
 });
 
+interface TotalViewsAndVisitorsProps {
+  pageviews: number;
+  visits: number;
+}
+
 export const StatsFrame = () => {
   const [data, setData] = useState<StatsData[]>(initialRange);
   const [statType, setStatType] = useState<StatsType>('weekly');
+  const [totalViewsAndVisitors, setTotalViewsAndVisitors] =
+    useState<TotalViewsAndVisitorsProps>();
 
   useEffect(() => {
     fetchStats('weekly');
@@ -79,13 +90,46 @@ export const StatsFrame = () => {
       };
     });
 
+    const viewTotal = statsData.historical.reduce(
+      function (previousValue, currentValue) {
+        return {
+          pageviews: previousValue.pageviews + currentValue.pageviews,
+          visits: previousValue.visits + currentValue.visits,
+        };
+      },
+      { pageviews: 0, visits: 0 }
+    );
+
     setData(stats);
     setStatType(value);
+    setTotalViewsAndVisitors(viewTotal);
   };
 
   return (
     <Box css={{ mb: '$8', position: 'relative' }}>
       <Flex>
+        <Flex gap="10" css={{ position: 'absolute' }}>
+          <Box>
+            <Text css={{ color: '$gray11' }} size="sm">
+              Total visitors
+            </Text>
+            <Text css={{ fontSize: 30, fontWeight: 600, color: '$green11' }}>
+              {totalViewsAndVisitors
+                ? numberWithCommas(totalViewsAndVisitors.pageviews.toString())
+                : '--'}
+            </Text>
+          </Box>
+          <Box>
+            <Text css={{ color: '$gray11' }} size="sm">
+              Total views
+            </Text>
+            <Text css={{ fontSize: 30, fontWeight: 600, color: '$violet11' }}>
+              {totalViewsAndVisitors
+                ? numberWithCommas(totalViewsAndVisitors.visits.toString())
+                : '--'}
+            </Text>
+          </Box>
+        </Flex>
         <Tabs
           onValueChange={(value) => fetchStats(value)}
           css={{ width: '100%' }}
