@@ -13,7 +13,8 @@
 </p>
 
 <p align="center">
-  <img src="https://badgen.net/travis/sigle/sigle" alt="License">
+  <img src="https://badgen.net/github/stars/sigle/sigle" alt="Stars">
+  <img src="https://badgen.net/github/checks/sigle/sigle/main" alt="Checks">
   <img src="https://badgen.net/badge/license/MIT/blue" alt="License">
 </p>
 
