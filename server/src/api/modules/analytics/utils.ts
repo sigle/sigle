@@ -1,11 +1,22 @@
 import { lookupProfile } from '@stacks/auth';
+import { isBefore } from 'date-fns';
 import { fetch } from 'undici';
 import { config } from '../../../config';
 import { migrationStories } from '../../../external/gaia';
 
 // Fathom started aggregating full data from this date.
 // All queries should start at this date maximum.
-export const FATHOM_MAX_FROM_DATE = '2021-04-01';
+const FATHOM_MAX_FROM_DATE = '2021-04-01';
+
+/**
+ * Set max date in the past. Fathom data is not correct before this one.
+ */
+export const maxFathomFromDate = (parsedDateFrom: Date, dateFrom: string) => {
+  if (isBefore(parsedDateFrom, new Date(FATHOM_MAX_FROM_DATE))) {
+    return FATHOM_MAX_FROM_DATE;
+  }
+  return dateFrom;
+};
 
 export const getBucketUrl = async ({ username }: { username: string }) => {
   let userProfile: Record<string, any> | undefined;

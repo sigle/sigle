@@ -1,6 +1,6 @@
 import { FastifyInstance } from 'fastify';
 import { isBefore, isValid, parse } from 'date-fns';
-import { FATHOM_MAX_FROM_DATE, getBucketUrl, getPublicStories } from './utils';
+import { maxFathomFromDate, getBucketUrl, getPublicStories } from './utils';
 import { fathomClient } from '../../../external/fathom';
 
 interface AnalyticsReferrersParams {
@@ -57,16 +57,12 @@ export async function createAnalyticsReferrersEndpoint(
         return;
       }
 
+      // Set max date in the past
+      dateFrom = maxFathomFromDate(parsedDateFrom, dateFrom);
+
       // TODO protect to logged in users
       // TODO take username from session
       const username = 'sigleapp.id.blockstack';
-
-      // Set max date in the past
-      // TODO this could be moved as an analytics utils so it can be reused in other endpoints
-      if (isBefore(parsedDateFrom, new Date(FATHOM_MAX_FROM_DATE))) {
-        dateFrom = FATHOM_MAX_FROM_DATE;
-        parsedDateFrom = new Date(FATHOM_MAX_FROM_DATE);
-      }
 
       const { profile, bucketUrl } = await getBucketUrl({ username });
       if (!profile || !bucketUrl) {
