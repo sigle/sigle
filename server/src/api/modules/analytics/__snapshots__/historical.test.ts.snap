@@ -1,0 +1,283 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Respond with a formatted time series for days 1`] = `
+Object {
+  "historical": Array [
+    Object {
+      "date": "2022-03-15",
+      "pageviews": 0,
+      "visits": 0,
+    },
+    Object {
+      "date": "2022-03-16",
+      "pageviews": 0,
+      "visits": 0,
+    },
+    Object {
+      "date": "2022-03-17",
+      "pageviews": 0,
+      "visits": 0,
+    },
+    Object {
+      "date": "2022-03-18",
+      "pageviews": 0,
+      "visits": 0,
+    },
+    Object {
+      "date": "2022-03-19",
+      "pageviews": 0,
+      "visits": 0,
+    },
+    Object {
+      "date": "2022-03-20",
+      "pageviews": 4,
+      "visits": 12,
+    },
+    Object {
+      "date": "2022-03-21",
+      "pageviews": 0,
+      "visits": 0,
+    },
+    Object {
+      "date": "2022-03-22",
+      "pageviews": 0,
+      "visits": 0,
+    },
+    Object {
+      "date": "2022-03-23",
+      "pageviews": 0,
+      "visits": 0,
+    },
+    Object {
+      "date": "2022-03-24",
+      "pageviews": 0,
+      "visits": 0,
+    },
+    Object {
+      "date": "2022-03-25",
+      "pageviews": 0,
+      "visits": 0,
+    },
+    Object {
+      "date": "2022-03-26",
+      "pageviews": 0,
+      "visits": 0,
+    },
+    Object {
+      "date": "2022-03-27",
+      "pageviews": 0,
+      "visits": 0,
+    },
+    Object {
+      "date": "2022-03-28",
+      "pageviews": 0,
+      "visits": 0,
+    },
+    Object {
+      "date": "2022-03-29",
+      "pageviews": 0,
+      "visits": 0,
+    },
+    Object {
+      "date": "2022-03-30",
+      "pageviews": 0,
+      "visits": 0,
+    },
+    Object {
+      "date": "2022-03-31",
+      "pageviews": 0,
+      "visits": 0,
+    },
+    Object {
+      "date": "2022-04-01",
+      "pageviews": 0,
+      "visits": 0,
+    },
+    Object {
+      "date": "2022-04-02",
+      "pageviews": 0,
+      "visits": 0,
+    },
+    Object {
+      "date": "2022-04-03",
+      "pageviews": 0,
+      "visits": 0,
+    },
+    Object {
+      "date": "2022-04-04",
+      "pageviews": 0,
+      "visits": 0,
+    },
+  ],
+  "stories": Array [
+    Object {
+      "pageviews": 1,
+      "pathname": "/test.btc/path-test",
+      "visits": 5,
+    },
+    Object {
+      "pageviews": 3,
+      "pathname": "/test.btc/path-test-2",
+      "visits": 7,
+    },
+  ],
+}
+`;
+
+exports[`Respond with a formatted time series for months 1`] = `
+Object {
+  "historical": Array [
+    Object {
+      "date": "2022-01",
+      "pageviews": 0,
+      "visits": 0,
+    },
+    Object {
+      "date": "2022-02",
+      "pageviews": 0,
+      "visits": 0,
+    },
+    Object {
+      "date": "2022-03",
+      "pageviews": 4,
+      "visits": 12,
+    },
+    Object {
+      "date": "2022-04",
+      "pageviews": 0,
+      "visits": 0,
+    },
+  ],
+  "stories": Array [
+    Object {
+      "pageviews": 1,
+      "pathname": "/test.btc/path-test",
+      "visits": 5,
+    },
+    Object {
+      "pageviews": 3,
+      "pathname": "/test.btc/path-test-2",
+      "visits": 7,
+    },
+  ],
+}
+`;
+
+exports[`Respond with a formatted time series for one story 1`] = `
+Object {
+  "historical": Array [
+    Object {
+      "date": "2022-03-15",
+      "pageviews": 0,
+      "visits": 0,
+    },
+    Object {
+      "date": "2022-03-16",
+      "pageviews": 0,
+      "visits": 0,
+    },
+    Object {
+      "date": "2022-03-17",
+      "pageviews": 0,
+      "visits": 0,
+    },
+    Object {
+      "date": "2022-03-18",
+      "pageviews": 0,
+      "visits": 0,
+    },
+    Object {
+      "date": "2022-03-19",
+      "pageviews": 0,
+      "visits": 0,
+    },
+    Object {
+      "date": "2022-03-20",
+      "pageviews": 1,
+      "visits": 5,
+    },
+    Object {
+      "date": "2022-03-21",
+      "pageviews": 0,
+      "visits": 0,
+    },
+    Object {
+      "date": "2022-03-22",
+      "pageviews": 0,
+      "visits": 0,
+    },
+    Object {
+      "date": "2022-03-23",
+      "pageviews": 0,
+      "visits": 0,
+    },
+    Object {
+      "date": "2022-03-24",
+      "pageviews": 0,
+      "visits": 0,
+    },
+    Object {
+      "date": "2022-03-25",
+      "pageviews": 0,
+      "visits": 0,
+    },
+    Object {
+      "date": "2022-03-26",
+      "pageviews": 0,
+      "visits": 0,
+    },
+    Object {
+      "date": "2022-03-27",
+      "pageviews": 0,
+      "visits": 0,
+    },
+    Object {
+      "date": "2022-03-28",
+      "pageviews": 0,
+      "visits": 0,
+    },
+    Object {
+      "date": "2022-03-29",
+      "pageviews": 0,
+      "visits": 0,
+    },
+    Object {
+      "date": "2022-03-30",
+      "pageviews": 0,
+      "visits": 0,
+    },
+    Object {
+      "date": "2022-03-31",
+      "pageviews": 0,
+      "visits": 0,
+    },
+    Object {
+      "date": "2022-04-01",
+      "pageviews": 0,
+      "visits": 0,
+    },
+    Object {
+      "date": "2022-04-02",
+      "pageviews": 0,
+      "visits": 0,
+    },
+    Object {
+      "date": "2022-04-03",
+      "pageviews": 0,
+      "visits": 0,
+    },
+    Object {
+      "date": "2022-04-04",
+      "pageviews": 0,
+      "visits": 0,
+    },
+  ],
+  "stories": Array [
+    Object {
+      "pageviews": 1,
+      "pathname": "/test.btc/path-test",
+      "visits": 5,
+    },
+  ],
+}
+`;
