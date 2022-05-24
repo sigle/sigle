@@ -25,7 +25,6 @@ export async function createAnalyticsReferrersEndpoint(
     // TODO schema validation https://www.fastify.io/docs/latest/Reference/Validation-and-Serialization/
     // TODO serialize response https://www.fastify.io/docs/latest/Guides/Getting-Started/#serialize-your-data
     async (req, res) => {
-      console.log('/api/analytics/referrers cqlled');
       const { storyId } = req.query as AnalyticsReferrersParams;
       let { dateFrom } = req.query as AnalyticsReferrersParams;
 
@@ -50,8 +49,6 @@ export async function createAnalyticsReferrersEndpoint(
         dateFrom = FATHOM_MAX_FROM_DATE;
         parsedDateFrom = new Date(FATHOM_MAX_FROM_DATE);
       }
-
-      console.log('call');
 
       const { profile, bucketUrl } = await getBucketUrl({ username });
       if (!profile || !bucketUrl) {
@@ -108,9 +105,7 @@ export async function createAnalyticsReferrersEndpoint(
         })
         .sort((a, b) => b.count - a.count);
 
-      console.log('hey 4', { referrersResponse });
-      res.status(200);
-      return referrersResponse;
+      res.status(200).send(referrersResponse);
     }
   );
 }

@@ -7,16 +7,13 @@ import { migrationStories } from '../../../external/gaia';
 export const FATHOM_MAX_FROM_DATE = '2021-04-01';
 
 export const getBucketUrl = async ({ username }: { username: string }) => {
-  console.log('getBucketUrl called');
   // TODO app url should be coming from config object
   const appUrl = `https://app.sigle.io`;
 
   let userProfile: Record<string, any> | undefined;
   try {
-    console.log('getBucketUrl called 2');
     userProfile = await lookupProfile({ username });
   } catch (error) {
-    console.log('getBucketUrl called 3', error);
     // This will happen if there is no blockstack user with this name
     if (error.message === 'Name not found') {
       userProfile = undefined;
@@ -36,24 +33,17 @@ export const getPublicStories = async ({
 }: {
   bucketUrl: string;
 }) => {
-  console.log('call getPublicStories', `${bucketUrl}publicStories.json`);
-  try {
-    const resPublicStories = await fetch(`${bucketUrl}publicStories.json`, {
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    });
-    console.log('call getPublicStories 2');
-    // This would happen if the user has not published any stories
-    if (resPublicStories.status !== 200) {
-      return [];
-    }
-    const publicStoriesFile = migrationStories(
-      (await resPublicStories.json()) as any
-    );
-    return publicStoriesFile.stories;
-  } catch (error) {
-    console.log('call getPublicStories 3', error);
-    throw error;
+  const resPublicStories = await fetch(`${bucketUrl}publicStories.json`, {
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  });
+  // This would happen if the user has not published any stories
+  if (resPublicStories.status !== 200) {
+    return [];
   }
+  const publicStoriesFile = migrationStories(
+    (await resPublicStories.json()) as any
+  );
+  return publicStoriesFile.stories;
 };
