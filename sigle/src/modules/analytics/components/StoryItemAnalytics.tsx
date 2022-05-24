@@ -20,6 +20,7 @@ import {
 import { FATHOM_MAX_FROM_DATE } from '../../../pages/api/analytics/utils';
 import { SubsetStory } from '../../../types';
 import { PublishedStoryItem } from '../PublishedStoryItem';
+import { ReferrersFrame } from '../ReferrersFrame';
 
 const numberWithCommas = (x: string): string => {
   return new Intl.NumberFormat('en-US').format(Number(x)).toString();
@@ -131,6 +132,7 @@ export const StoryItemAnalytics = ({
     <DashboardLayout layout="wide">
       {story ? (
         <PublishedStoryItem
+          views={totalViewsAndVisitors?.pageviews}
           arrowPlacement="left"
           onClick={() => router.push('/analytics')}
           story={story}
@@ -187,6 +189,7 @@ export const StoryItemAnalytics = ({
       >
         <StatsChart type={statType} data={data} />
       </Box>
+      <ReferrersFrame />
     </DashboardLayout>
   );
 };

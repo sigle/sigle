@@ -36,6 +36,8 @@ export const PublishedStoriesFrame = ({
           <Box css={{ mb: '$3', height: 476 }}>
             {currentStories?.map((story) => (
               <PublishedStoryItem
+                // TODO - replace with API data
+                views={332}
                 onClick={() =>
                   router.push('/analytics/[storyId]', `/analytics/${story.id}`)
                 }

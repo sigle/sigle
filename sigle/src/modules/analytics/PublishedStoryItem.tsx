@@ -20,11 +20,13 @@ interface PublishedStoryItemProps {
   story: SubsetStory;
   onClick: () => void;
   arrowPlacement?: 'left' | 'right';
+  views: number | undefined;
 }
 
 export const PublishedStoryItem = ({
   story,
   onClick,
+  views,
   arrowPlacement = 'right',
 }: PublishedStoryItemProps) => {
   const { play } = useMotionAnimate(
@@ -122,7 +124,7 @@ export const PublishedStoryItem = ({
         </Text>
         <Flex align="center" css={{ gap: '$5', flexShrink: 0 }}>
           {/* To be replaced with actual view metrics */}
-          <Text size="sm">332 views</Text>
+          <Text size="sm">{views} views</Text>
           {arrowPlacement === 'right' && <ArrowRightIcon />}
         </Flex>
       </Flex>
