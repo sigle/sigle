@@ -1,7 +1,7 @@
 # Stage 1: Building the code
 FROM node:16 AS builder
 
-RUN corepack enable && corepack prepare pnpm@6.32.11 --activate
+RUN corepack enable && corepack prepare pnpm@7.1.5 --activate
 
 WORKDIR /app
 
@@ -22,7 +22,7 @@ RUN pnpm install --prod --filter=@sigle/app
 # Stage 2: And then copy over node_modules, etc from that stage to the smaller base image
 FROM node:16 as production
 
-RUN corepack enable && corepack prepare pnpm@6.32.11 --activate
+RUN corepack enable && corepack prepare pnpm@7.1.5 --activate
 
 WORKDIR /app
 

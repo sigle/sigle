@@ -3,7 +3,7 @@
 ## Requirements
 
 - [Node](https://nodejs.org/en/) 16+
-- [pnpm](https://pnpm.io/) 6+
+- [pnpm](https://pnpm.io/) 7+
 - [Docker](https://www.docker.com/)
 
 ## Pull Requests
