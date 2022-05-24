@@ -16,14 +16,30 @@ type AnalyticsReferrersResponse = {
   domain: string | null;
   count: number;
 }[];
+const analyticsReferrersResponseSchema = {
+  type: 'array',
+  items: {
+    type: 'object',
+    properties: {
+      domain: { type: 'string', nullable: true },
+      count: { type: 'number' },
+    },
+  },
+};
 
 export async function createAnalyticsReferrersEndpoint(
   fastify: FastifyInstance
 ) {
   return fastify.get(
     '/api/analytics/referrers',
+    {
+      schema: {
+        response: {
+          200: analyticsReferrersResponseSchema,
+        },
+      },
+    },
     // TODO schema validation https://www.fastify.io/docs/latest/Reference/Validation-and-Serialization/
-    // TODO serialize response https://www.fastify.io/docs/latest/Guides/Getting-Started/#serialize-your-data
     async (req, res) => {
       const { storyId } = req.query as AnalyticsReferrersParams;
       let { dateFrom } = req.query as AnalyticsReferrersParams;
