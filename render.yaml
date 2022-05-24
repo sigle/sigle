@@ -9,7 +9,7 @@ services:
     branch: feature/create-sigle-api-server
     healthCheckPath: /health
     autoDeploy: true
-    buildCommand: cd server; pnpm run build
+    buildCommand: cd server; pnpm install; pnpm run build
     startCommand: cd server; pnpm run start
     buildFilter:
       paths:
