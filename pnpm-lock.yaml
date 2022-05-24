@@ -45,10 +45,12 @@ importers:
       envalid: 7.3.1
       fastify: 3.29.0
       typescript: 4.6.4
+      undici: 5.1.1
     dependencies:
       dotenv: 16.0.0
       envalid: 7.3.1
       fastify: 3.29.0
+      undici: 5.1.1
     devDependencies:
       '@cartable/core': 0.3.0_l47be6km5p57gglrggidw5gsgm
       '@types/node': 17.0.31
@@ -11431,7 +11433,6 @@ packages:
   /undici/5.1.1:
     resolution: {integrity: sha512-CmK9JzLSMGx+2msOao8LhkKn3J7eKo2M50v0KZQ2XbiHcGqLS1HiIj01ceIm3jbUYlspw/FTSb6nMdSNyvVyaQ==}
     engines: {node: '>=12.18'}
-    dev: true
 
   /unique-string/2.0.0:
     resolution: {integrity: sha512-uNaeirEPvpZWSgzwsPGtU2zVSTrn/8L5q/IexZmH0eH6SA73CmAA5U4GwORTxQAZs95TAXLNqeLoPPNO5gZfWg==}
