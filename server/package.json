@@ -10,7 +10,7 @@
   },
   "jest": {
     "setupFiles": [
-      "./src/jest.setup.ts"
+      "./src/jest/jest.setup.ts"
     ]
   },
   "dependencies": {

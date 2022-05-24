@@ -2,13 +2,17 @@
  * All the environment variables are defined here.
  * An error will be thrown if some environment variables are missing or invalid when the server starts.
  */
-import { cleanEnv, str, port } from 'envalid';
+import { cleanEnv, str, port, url } from 'envalid';
 
 export const config = cleanEnv(process.env, {
   NODE_ENV: str({
     choices: ['development', 'test', 'production'],
     desc: 'Node.js environment',
   }),
+  /**
+   * App config variables
+   */
+  APP_URL: url({ desc: 'Frontend application url.' }),
   /**
    * Fastify
    */

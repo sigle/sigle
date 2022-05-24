@@ -1,5 +1,6 @@
 import { lookupProfile } from '@stacks/auth';
 import { fetch } from 'undici';
+import { config } from '../../../config';
 import { migrationStories } from '../../../external/gaia';
 
 // Fathom started aggregating full data from this date.
@@ -7,9 +8,6 @@ import { migrationStories } from '../../../external/gaia';
 export const FATHOM_MAX_FROM_DATE = '2021-04-01';
 
 export const getBucketUrl = async ({ username }: { username: string }) => {
-  // TODO app url should be coming from config object
-  const appUrl = `https://app.sigle.io`;
-
   let userProfile: Record<string, any> | undefined;
   try {
     userProfile = await lookupProfile({ username });
@@ -23,7 +21,7 @@ export const getBucketUrl = async ({ username }: { username: string }) => {
   }
 
   const bucketUrl: string | undefined =
-    userProfile && userProfile.apps && userProfile.apps[appUrl];
+    userProfile && userProfile.apps && userProfile.apps[config.APP_URL];
 
   return { profile: userProfile, bucketUrl };
 };
