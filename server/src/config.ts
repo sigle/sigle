@@ -22,4 +22,8 @@ export const config = cleanEnv(process.env, {
    */
   FATHOM_API_TOKEN: str({ desc: 'Fathom API token.' }),
   FATHOM_ENTITY_ID: str({ desc: 'Fathom entity id.' }),
+  /**
+   * Sentry
+   */
+  SENTRY_DSN: str({ desc: 'Sentry DSN for error reporting.' }),
 });

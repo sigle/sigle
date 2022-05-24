@@ -1,5 +1,4 @@
 import { FastifyInstance } from 'fastify';
-// import * as Sentry from '@sentry/nextjs';
 import {
   addDays,
   addMonths,
@@ -114,11 +113,7 @@ export async function createAnalyticsHistoricalEndpoint(
 
       const { profile, bucketUrl } = await getBucketUrl({ username });
       if (!profile || !bucketUrl) {
-        // const errorId = Sentry.captureMessage(
-        //   `No profile or bucketUrl for ${username}`
-        // );
-        // res.status(500).json({ error: `Internal server error: ${errorId}` });
-        return;
+        throw new Error(`No profile or bucketUrl for ${username}`);
       }
 
       let storiesPath: string[];
@@ -169,11 +164,7 @@ export async function createAnalyticsHistoricalEndpoint(
           (historical) => historical.date === date
         );
         if (index === -1) {
-          // const errorId = Sentry.captureMessage(
-          //   `No index for date ${date} and username ${username}`
-          // );
-          // res.status(500).json({ error: `Internal server error: ${errorId}` });
-          return;
+          throw new Error(`No index for date ${date} and username ${username}`);
         }
         historicalResponse.historical[index].visits = dateValues.visits;
         historicalResponse.historical[index].pageviews = dateValues.pageviews;

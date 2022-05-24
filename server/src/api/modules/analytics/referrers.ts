@@ -52,12 +52,7 @@ export async function createAnalyticsReferrersEndpoint(
 
       const { profile, bucketUrl } = await getBucketUrl({ username });
       if (!profile || !bucketUrl) {
-        // const errorId = Sentry.captureMessage(
-        //   `No profile or bucketUrl for ${username}`
-        // );
-        res.status(500).send({ error: `Internal server error: TODO` });
-        // TODO test to throw an error here and it should be catched by Sentry middleware
-        return;
+        throw new Error(`No profile or bucketUrl for ${username}`);
       }
 
       let storiesPath: string[];
