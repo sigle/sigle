@@ -76,7 +76,6 @@ export async function createAnalyticsHistoricalEndpoint(
         },
       },
     },
-    // TODO schema validation https://www.fastify.io/docs/latest/Reference/Validation-and-Serialization/
     async (req, res) => {
       const { dateGrouping, storyId } = req.query;
       let { dateFrom } = req.query;

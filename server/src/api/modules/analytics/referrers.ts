@@ -42,7 +42,6 @@ export async function createAnalyticsReferrersEndpoint(
         },
       },
     },
-    // TODO schema validation https://www.fastify.io/docs/latest/Reference/Validation-and-Serialization/
     async (req, res) => {
       const { storyId } = req.query;
       let { dateFrom } = req.query;
