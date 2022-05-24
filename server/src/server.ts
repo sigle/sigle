@@ -1,6 +1,6 @@
 import Fastify, { FastifyServerOptions, FastifyLoggerInstance } from 'fastify';
 import { Server } from 'http';
-import { createAnalyticsReferrersEndpoint } from './modules/analytics/referrers';
+import { createAnalyticsReferrersEndpoint } from './api/modules/analytics/referrers';
 
 export const buildFastifyServer = (
   opts: FastifyServerOptions<Server, FastifyLoggerInstance> = {}

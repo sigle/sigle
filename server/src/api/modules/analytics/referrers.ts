@@ -1,7 +1,7 @@
 import { FastifyInstance } from 'fastify';
 import { isBefore, isValid, parse } from 'date-fns';
 import { FATHOM_MAX_FROM_DATE, getBucketUrl, getPublicStories } from './utils';
-import { fathomClient } from '../../external/fathom';
+import { fathomClient } from '../../../external/fathom';
 
 interface AnalyticsReferrersParams {
   dateFrom?: string;

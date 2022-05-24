@@ -1,6 +1,6 @@
 import { lookupProfile } from '@stacks/auth';
 import { fetch } from 'undici';
-import { migrationStories } from '../../external/gaia';
+import { migrationStories } from '../../../external/gaia';
 
 // Fathom started aggregating full data from this date.
 // All queries should start at this date maximum.
