@@ -1,5 +1,5 @@
 {
-  "name": "@sigle/api",
+  "name": "@sigle/server",
   "version": "0.0.0",
   "private": true,
   "scripts": {
