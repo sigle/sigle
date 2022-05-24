@@ -5,11 +5,12 @@ services:
     env: node
     region: oregon
     plan: Starter
-    branch: main
+    # TODO change this before merging
+    branch: feature/create-sigle-api-server
     healthCheckPath: /health
     autoDeploy: true
-    buildCommand: cd api; pnpm run build
-    startCommand: cd api; pnpm run start
+    buildCommand: cd server; pnpm run build
+    startCommand: cd server; pnpm run start
     buildFilter:
       paths:
         # changes to the frontend dir do not match this pattern

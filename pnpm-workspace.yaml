@@ -1,4 +1,4 @@
 packages:
   - 'sigle'
-  - 'api'
+  - 'server'
   - 'packages/**'

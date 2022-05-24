@@ -14,23 +14,6 @@ importers:
       lint-staged: 12.4.1
       prettier: 2.6.2
 
-  api:
-    specifiers:
-      '@cartable/core': 0.3.0
-      '@types/node': 17.0.31
-      dotenv: 16.0.0
-      envalid: 7.3.1
-      fastify: 3.29.0
-      typescript: 4.6.4
-    dependencies:
-      dotenv: 16.0.0
-      envalid: 7.3.1
-      fastify: 3.29.0
-    devDependencies:
-      '@cartable/core': 0.3.0_l47be6km5p57gglrggidw5gsgm
-      '@types/node': 17.0.31
-      typescript: 4.6.4
-
   packages/sitemap-scripts:
     specifiers:
       '@stacks/auth': 3.3.0
@@ -53,6 +36,23 @@ importers:
     devDependencies:
       '@tailwindcss/typography': 0.5.2_tailwindcss@3.0.23
       tailwindcss: 3.0.23
+
+  server:
+    specifiers:
+      '@cartable/core': 0.3.0
+      '@types/node': 17.0.31
+      dotenv: 16.0.0
+      envalid: 7.3.1
+      fastify: 3.29.0
+      typescript: 4.6.4
+    dependencies:
+      dotenv: 16.0.0
+      envalid: 7.3.1
+      fastify: 3.29.0
+    devDependencies:
+      '@cartable/core': 0.3.0_l47be6km5p57gglrggidw5gsgm
+      '@types/node': 17.0.31
+      typescript: 4.6.4
 
   sigle:
     specifiers:
