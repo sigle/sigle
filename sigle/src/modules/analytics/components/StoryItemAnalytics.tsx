@@ -1,13 +1,13 @@
 import { eachDayOfInterval, format } from 'date-fns';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
-import { StatsChart } from '../../modules/analytics/stats/StatsChart';
+import { StatsChart } from '../stats/StatsChart';
 import {
   AnalyticsHistoricalResponse,
   StatsData,
   StatsType,
-} from '../../modules/analytics/stats/types';
-import { DashboardLayout } from '../../modules/layout';
+} from '../stats/types';
+import { DashboardLayout } from '../../layout';
 import {
   Box,
   Flex,
@@ -16,8 +16,9 @@ import {
   TabsList,
   TabsTrigger,
   Text,
-} from '../../ui';
-import { FATHOM_MAX_FROM_DATE } from '../../pages/api/analytics/utils';
+} from '../../../ui';
+import { FATHOM_MAX_FROM_DATE } from '../../../pages/api/analytics/utils';
+import { SubsetStory } from '../../../types';
 
 const numberWithCommas = (x: string): string => {
   return new Intl.NumberFormat('en-US').format(Number(x)).toString();
@@ -48,13 +49,19 @@ interface TotalViewsAndVisitorsProps {
 
 interface StoryAnalyticsPProps {
   storyId: string;
+  stories: SubsetStory[] | null;
 }
 
-export const StoryAnalytics = ({ storyId }: StoryAnalyticsPProps) => {
+export const StoryItemAnalytics = ({
+  storyId,
+  stories,
+}: StoryAnalyticsPProps) => {
   const [data, setData] = useState<StatsData[]>(initialRange);
   const [statType, setStatType] = useState<StatsType>('weekly');
   const [totalViewsAndVisitors, setTotalViewsAndVisitors] =
     useState<TotalViewsAndVisitorsProps>();
+
+  const story = stories && stories[0];
 
   useEffect(() => {
     fetchStats('weekly');

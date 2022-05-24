@@ -1,12 +1,12 @@
 import { GetServerSideProps } from 'next';
-import { StoryAnalytics } from '../../modules/analytics/StoryAnalytics';
+import { StoryItemAnalytics } from '../../modules/analytics/containers/StoryItemAnalytics';
 
 interface StoryAnalyticsPageProps {
   storyId: string;
 }
 
 export const StoryAnalyticsPage = ({ storyId }: StoryAnalyticsPageProps) => {
-  return <StoryAnalytics storyId={storyId} />;
+  return <StoryItemAnalytics storyId={storyId} />;
 };
 
 export const getServerSideProps: GetServerSideProps<
