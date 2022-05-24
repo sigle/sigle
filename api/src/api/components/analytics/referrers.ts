@@ -25,6 +25,7 @@ export async function createAnalyticsReferrersEndpoint(
     // TODO schema validation https://www.fastify.io/docs/latest/Reference/Validation-and-Serialization/
     // TODO serialize response https://www.fastify.io/docs/latest/Guides/Getting-Started/#serialize-your-data
     async (req, res) => {
+      console.log('/api/analytics/referrers cqlled');
       const { storyId } = req.query as AnalyticsReferrersParams;
       let { dateFrom } = req.query as AnalyticsReferrersParams;
 
@@ -50,12 +51,14 @@ export async function createAnalyticsReferrersEndpoint(
         parsedDateFrom = new Date(FATHOM_MAX_FROM_DATE);
       }
 
+      console.log('call');
+
       const { profile, bucketUrl } = await getBucketUrl({ username });
       if (!profile || !bucketUrl) {
         // const errorId = Sentry.captureMessage(
         //   `No profile or bucketUrl for ${username}`
         // );
-        // res.status(500).json({ error: `Internal server error: ${errorId}` });
+        res.status(500).send({ error: `Internal server error: TODO` });
         // TODO test to throw an error here and it should be catched by Sentry middleware
         return;
       }
@@ -105,7 +108,9 @@ export async function createAnalyticsReferrersEndpoint(
         })
         .sort((a, b) => b.count - a.count);
 
-      res.status(200).send(referrersResponse);
+      console.log('hey 4', { referrersResponse });
+      res.status(200);
+      return referrersResponse;
     }
   );
 }
