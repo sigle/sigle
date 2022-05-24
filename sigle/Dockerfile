@@ -15,7 +15,7 @@ COPY . .
 RUN pnpm install -r --offline
 
 # Build the next.js application
-RUN pnpm run build --filter=@sigle/app
+RUN pnpm --filter=@sigle/app run build
 # Install only the production dependencies to reduce the image size
 RUN pnpm install --prod --filter=@sigle/app
 

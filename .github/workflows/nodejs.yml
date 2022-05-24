@@ -36,7 +36,7 @@ jobs:
         run: pnpm install
 
       - name: Build sigle
-        run: pnpm run build --filter=@sigle/app
+        run: pnpm --filter=@sigle/app run build
 
       - name: Run sigle tests
-        run: pnpm run test --filter=@sigle/app
+        run: pnpm --filter=@sigle/app run test
