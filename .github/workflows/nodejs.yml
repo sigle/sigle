@@ -14,11 +14,11 @@ jobs:
         node-version: [16]
 
     steps:
-      - uses: actions/checkout@v1
+      - uses: actions/checkout@v2
 
-      - uses: pnpm/action-setup@v2.0.1
+      - uses: pnpm/action-setup@v2
         with:
-          version: 6.32.11
+          version: 7.1
 
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v2
@@ -36,10 +36,10 @@ jobs:
         run: pnpm install
 
       - name: Build sigle
-        run: pnpm run build --filter=@sigle/app
+        run: pnpm --filter=@sigle/app run build
 
       - name: Run sigle tests
-        run: pnpm run test --filter=@sigle/app
+        run: pnpm --filter=@sigle/app run test
 
   test-api:
     runs-on: ubuntu-20.04
@@ -48,11 +48,11 @@ jobs:
         node-version: [16]
 
     steps:
-      - uses: actions/checkout@v1
+      - uses: actions/checkout@v2
 
-      - uses: pnpm/action-setup@v2.0.1
+      - uses: pnpm/action-setup@v2
         with:
-          version: 6.32.11
+          version: 7.1
 
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v2
@@ -64,7 +64,7 @@ jobs:
         run: pnpm install
 
       - name: Build api
-        run: pnpm run build --filter=@sigle/api
+        run: pnpm --filter=@sigle/api run build
 
       - name: Run api tests
-        run: pnpm run test --filter=@sigle/api
+        run: pnpm --filter=@sigle/api run test
