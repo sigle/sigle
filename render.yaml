@@ -5,8 +5,7 @@ services:
     env: node
     region: oregon
     plan: Starter
-    # TODO change this before merging
-    branch: feature/create-sigle-api-server
+    branch: main
     healthCheckPath: /health
     autoDeploy: true
     buildCommand: cd server; pnpm install --filter=@sigle/api; pnpm run build
