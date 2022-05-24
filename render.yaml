@@ -13,7 +13,7 @@ services:
     buildFilter:
       paths:
         # changes to the frontend dir do not match this pattern
-        - api/**
+        - server/**
       ignoredPaths:
         # Do not deploy if test file changed
-        - api/**/*.test.ts
+        - server/**/*.test.ts
