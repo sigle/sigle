@@ -1,6 +1,7 @@
 import { ArrowRightIcon } from '@radix-ui/react-icons';
 import { stagger } from 'motion';
 import { useMotionAnimate } from 'motion-hooks';
+import { useRouter } from 'next/router';
 import { useEffect } from 'react';
 import { styled } from '../../stitches.config';
 import { SubsetStory } from '../../types';
@@ -17,9 +18,14 @@ const StoryImage = styled('img', {
 
 interface PublishedStoryItemProps {
   story: SubsetStory;
+  onClick: () => void;
 }
 
-export const PublishedStoryItem = ({ story }: PublishedStoryItemProps) => {
+export const PublishedStoryItem = ({
+  story,
+  onClick,
+}: PublishedStoryItemProps) => {
+  const router = useRouter();
   const { play } = useMotionAnimate(
     '.story-item',
     { opacity: 1 },
@@ -74,6 +80,7 @@ export const PublishedStoryItem = ({ story }: PublishedStoryItemProps) => {
           zIndex: 1,
         },
       }}
+      onClick={onClick}
     >
       <Box />
       {story.coverImage && <StoryImage src={story.coverImage} />}
