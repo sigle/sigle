@@ -33,14 +33,47 @@ type AnalyticsHistoricalResponse = {
     pageviews: number;
   }[];
 };
+const analyticsHistoricalResponseSchema = {
+  type: 'object',
+  properties: {
+    historical: {
+      type: 'array',
+      items: {
+        type: 'object',
+        properties: {
+          date: { type: 'string' },
+          visits: { type: 'number' },
+          pageviews: { type: 'number' },
+        },
+      },
+    },
+    stories: {
+      type: 'array',
+      items: {
+        type: 'object',
+        properties: {
+          pathname: { type: 'string' },
+          visits: { type: 'number' },
+          pageviews: { type: 'number' },
+        },
+      },
+    },
+  },
+};
 
 export async function createAnalyticsHistoricalEndpoint(
   fastify: FastifyInstance
 ) {
   return fastify.get(
     '/api/analytics/historical',
+    {
+      schema: {
+        response: {
+          200: analyticsHistoricalResponseSchema,
+        },
+      },
+    },
     // TODO schema validation https://www.fastify.io/docs/latest/Reference/Validation-and-Serialization/
-    // TODO serialize response https://www.fastify.io/docs/latest/Guides/Getting-Started/#serialize-your-data
     async (req, res) => {
       const { dateGrouping, storyId } = req.query as AnalyticsHistoricalParams;
       let { dateFrom } = req.query as AnalyticsHistoricalParams;
