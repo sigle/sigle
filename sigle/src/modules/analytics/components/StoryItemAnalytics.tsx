@@ -19,6 +19,7 @@ import {
 } from '../../../ui';
 import { FATHOM_MAX_FROM_DATE } from '../../../pages/api/analytics/utils';
 import { SubsetStory } from '../../../types';
+import { PublishedStoryItem } from '../PublishedStoryItem';
 
 const numberWithCommas = (x: string): string => {
   return new Intl.NumberFormat('en-US').format(Number(x)).toString();
@@ -56,6 +57,7 @@ export const StoryItemAnalytics = ({
   storyId,
   stories,
 }: StoryAnalyticsPProps) => {
+  const router = useRouter();
   const [data, setData] = useState<StatsData[]>(initialRange);
   const [statType, setStatType] = useState<StatsType>('weekly');
   const [totalViewsAndVisitors, setTotalViewsAndVisitors] =
@@ -127,7 +129,16 @@ export const StoryItemAnalytics = ({
 
   return (
     <DashboardLayout layout="wide">
-      <Flex>
+      {story ? (
+        <PublishedStoryItem
+          arrowPlacement="left"
+          onClick={() => router.push('/analytics')}
+          story={story}
+        />
+      ) : (
+        <Box css={{ height: 68 }} />
+      )}
+      <Flex css={{ mt: '$8' }}>
         <Flex gap="10" css={{ position: 'absolute' }}>
           <Box>
             <Text css={{ color: '$gray11' }} size="sm">

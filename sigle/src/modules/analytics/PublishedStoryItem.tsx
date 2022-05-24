@@ -1,4 +1,4 @@
-import { ArrowRightIcon } from '@radix-ui/react-icons';
+import { ArrowLeftIcon, ArrowRightIcon } from '@radix-ui/react-icons';
 import { stagger } from 'motion';
 import { useMotionAnimate } from 'motion-hooks';
 import { useRouter } from 'next/router';
@@ -19,13 +19,14 @@ const StoryImage = styled('img', {
 interface PublishedStoryItemProps {
   story: SubsetStory;
   onClick: () => void;
+  arrowPlacement?: 'left' | 'right';
 }
 
 export const PublishedStoryItem = ({
   story,
   onClick,
+  arrowPlacement = 'right',
 }: PublishedStoryItemProps) => {
-  const router = useRouter();
   const { play } = useMotionAnimate(
     '.story-item',
     { opacity: 1 },
@@ -46,7 +47,10 @@ export const PublishedStoryItem = ({
       className="story-item"
       align="center"
       css={{
-        borderTop: '1px solid $colors$gray6',
+        borderTop:
+          arrowPlacement === 'right' ? '1px solid $colors$gray6' : 'none',
+        borderBottom:
+          arrowPlacement === 'left' ? '1px solid $colors$gray6' : 'none',
         height: 68,
         cursor: 'pointer',
         position: 'relative',
@@ -59,7 +63,10 @@ export const PublishedStoryItem = ({
         '&:hover': {
           backgroundColor: '$gray2',
           '& svg': {
-            transform: 'translateX(-4px)',
+            transform:
+              arrowPlacement === 'right'
+                ? 'translateX(-4px)'
+                : 'translateX(4px)',
           },
 
           '& div:first-child': {
@@ -82,6 +89,7 @@ export const PublishedStoryItem = ({
       }}
       onClick={onClick}
     >
+      {arrowPlacement === 'left' && <ArrowLeftIcon />}
       <Box />
       {story.coverImage && <StoryImage src={story.coverImage} />}
       <Flex
@@ -115,7 +123,7 @@ export const PublishedStoryItem = ({
         <Flex align="center" css={{ gap: '$5', flexShrink: 0 }}>
           {/* To be replaced with actual view metrics */}
           <Text size="sm">332 views</Text>
-          <ArrowRightIcon />
+          {arrowPlacement === 'right' && <ArrowRightIcon />}
         </Flex>
       </Flex>
     </Flex>
