@@ -13,4 +13,9 @@ export const config = cleanEnv(process.env, {
    * Fastify
    */
   PORT: port({ desc: 'Port to run the server.' }),
+  /**
+   * Fathom
+   */
+  FATHOM_API_TOKEN: str({ desc: 'Fathom API token.' }),
+  FATHOM_ENTITY_ID: str({ desc: 'Fathom entity id.' }),
 });
