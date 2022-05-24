@@ -42,11 +42,7 @@ export const getPublicStories = async ({
 }: {
   bucketUrl: string;
 }) => {
-  const resPublicStories = await fetch(`${bucketUrl}publicStories.json`, {
-    headers: {
-      'Content-Type': 'application/json',
-    },
-  });
+  const resPublicStories = await fetch(`${bucketUrl}publicStories.json`);
   // This would happen if the user has not published any stories
   if (resPublicStories.status !== 200) {
     return [];
