@@ -1,8 +1,8 @@
 import 'dotenv/config';
-import Fastify from 'fastify';
 import { config } from './config';
+import { buildFastifyServer } from './server';
 
-const fastify = Fastify({
+const fastify = buildFastifyServer({
   logger: false,
 });
 
