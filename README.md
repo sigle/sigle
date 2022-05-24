@@ -5,7 +5,7 @@
 </p>
 
 <p align="center">
-  A beautiful decentralized and open source blog maker
+  Where Web3 stories come to life
 </p>
 
 <p align="center">
