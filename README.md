@@ -16,6 +16,7 @@
   <a href="https://twitter.com/sigleapp" target="_blank">
     <img src="https://badgen.net/twitter/follow/sigleapp" alt="Twitter">
   </a>
+  <img src="https://badgen.net/github/stars/sigle/sigle" alt="Stars">
   <img src="https://badgen.net/github/checks/sigle/sigle/main" alt="Checks">
   <img src="https://badgen.net/badge/license/MIT/blue" alt="License">
 </p>
