@@ -6,9 +6,9 @@ const fastify = Fastify({
   logger: false,
 });
 
-fastify.get('/', (_, reply) => {
-  reply.send({
-    message: 'hello world',
+fastify.get('/health', (_, res) => {
+  res.send({
+    success: true,
   });
 });
 
