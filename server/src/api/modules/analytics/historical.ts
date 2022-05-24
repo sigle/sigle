@@ -64,7 +64,10 @@ const analyticsHistoricalResponseSchema = {
 export async function createAnalyticsHistoricalEndpoint(
   fastify: FastifyInstance
 ) {
-  return fastify.get(
+  return fastify.get<{
+    Querystring: AnalyticsHistoricalParams;
+    Reply: AnalyticsHistoricalResponseError | AnalyticsHistoricalResponse;
+  }>(
     '/api/analytics/historical',
     {
       schema: {
@@ -75,8 +78,8 @@ export async function createAnalyticsHistoricalEndpoint(
     },
     // TODO schema validation https://www.fastify.io/docs/latest/Reference/Validation-and-Serialization/
     async (req, res) => {
-      const { dateGrouping, storyId } = req.query as AnalyticsHistoricalParams;
-      let { dateFrom } = req.query as AnalyticsHistoricalParams;
+      const { dateGrouping, storyId } = req.query;
+      let { dateFrom } = req.query;
       const dateTo = new Date();
 
       if (!dateFrom) {

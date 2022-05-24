@@ -30,7 +30,10 @@ const analyticsReferrersResponseSchema = {
 export async function createAnalyticsReferrersEndpoint(
   fastify: FastifyInstance
 ) {
-  return fastify.get(
+  return fastify.get<{
+    Querystring: AnalyticsReferrersParams;
+    Reply: AnalyticsReferrersResponseError | AnalyticsReferrersResponse;
+  }>(
     '/api/analytics/referrers',
     {
       schema: {
@@ -41,8 +44,8 @@ export async function createAnalyticsReferrersEndpoint(
     },
     // TODO schema validation https://www.fastify.io/docs/latest/Reference/Validation-and-Serialization/
     async (req, res) => {
-      const { storyId } = req.query as AnalyticsReferrersParams;
-      let { dateFrom } = req.query as AnalyticsReferrersParams;
+      const { storyId } = req.query;
+      let { dateFrom } = req.query;
 
       if (!dateFrom) {
         res.status(400).send({ error: 'dateFrom is required' });
