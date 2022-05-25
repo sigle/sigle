@@ -14,16 +14,14 @@ export const buildFastifyServer = (
   /**
    * Cors is disabled for local env.
    * Cors is enabled on prod and allowed only for the APP_URL.
-   * Allow the RENDER API to make calls, used to bypass CORS for the health check.
+   * Allow the RENDER API to make calls, used to bypass CORS for the health check, in such case origin will be undefined.
    */
   fastify.register(FastifyCors, {
     origin: (origin, cb) => {
-      console.log({ renderUrl: process.env.RENDER_EXTERNAL_URL, origin });
-
       if (
         config.NODE_ENV === 'development' ||
         origin === config.APP_URL ||
-        origin === process.env.RENDER_EXTERNAL_URL
+        origin === undefined
       ) {
         cb(null, true);
         return;
