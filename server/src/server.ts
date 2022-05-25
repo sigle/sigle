@@ -15,15 +15,15 @@ export const buildFastifyServer = (
    * Cors is disabled for local env.
    * Cors is enabled on prod and allowed only for the APP_URL.
    */
-  // fastify.register(FastifyCors, {
-  //   origin: (origin, cb) => {
-  //     if (config.NODE_ENV === 'development' || origin === config.APP_URL) {
-  //       cb(null, true);
-  //       return;
-  //     }
-  //     cb(new Error('Not allowed'), false);
-  //   },
-  // });
+  fastify.register(FastifyCors, {
+    origin: (origin, cb) => {
+      if (config.NODE_ENV === 'development' || origin === config.APP_URL) {
+        cb(null, true);
+        return;
+      }
+      cb(new Error('Not allowed'), false);
+    },
+  });
 
   /**
    * Catch and report errors with Sentry.
