@@ -128,11 +128,10 @@ export async function createAnalyticsHistoricalEndpoint(
 
       // Caching mechanism to avoid hitting Fathom too often
       const cacheKey = storyId
-        ? `${username}_${dateFrom}_${dateGrouping}_${storyId}`
-        : `${username}_${dateFrom}_${dateGrouping}`;
+        ? `historical:${username}_${dateFrom}_${dateGrouping}_${storyId}`
+        : `historical:${username}_${dateFrom}_${dateGrouping}`;
       const cachedResponse = await redis.get(cacheKey);
       if (cachedResponse) {
-        console.log('cache hit');
         res.status(200).send(JSON.parse(cachedResponse));
         return;
       }
