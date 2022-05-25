@@ -4,7 +4,7 @@
 
 ### Stats historical data
 
-`https://app.sigle.io/api/analytics/historical` - Get the historical statistics.
+`https://api.sigle.io/api/analytics/historical` - Get the historical statistics.
 
 Sample Response for days grouping:
 
