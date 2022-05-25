@@ -1,3 +1,4 @@
+import { fetch } from 'undici';
 import { FathomClientParams } from '.';
 
 /**
@@ -25,6 +26,7 @@ export const aggregate =
       ...params,
       entity_id: entityId,
       filters: JSON.stringify(params.filters),
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } as any).toString();
 
     const response = await fetch(
@@ -41,5 +43,6 @@ export const aggregate =
       throw new Error(`Failed to fetch aggregations: ${response.status}`);
     }
 
-    return response.json();
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    return response.json() as any;
   };
