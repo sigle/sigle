@@ -1,5 +1,4 @@
 import {
-  EyeOpenIcon as EyeOpenIconBase,
   GitHubLogoIcon,
   TwitterLogoIcon,
   DiscordLogoIcon,
@@ -10,6 +9,7 @@ import Image from 'next/image';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
 import { toast } from 'react-toastify';
+import { signOut } from 'next-auth/react';
 import { styled } from '../../../stitches.config';
 import {
   Box,
@@ -35,7 +35,6 @@ import { useAuth } from '../../auth/AuthContext';
 import { Goals } from '../../../utils/fathom';
 import { sigleConfig } from '../../../config';
 import { userSession } from '../../../utils/blockstack';
-import posthog from 'posthog-js';
 import { createSubsetStory } from '../../editor/utils';
 import { useTheme } from 'next-themes';
 
@@ -111,8 +110,7 @@ export const AppHeader = () => {
 
   const handleLogout = () => {
     userSession.signUserOut();
-    window.location.reload();
-    posthog.reset();
+    signOut();
   };
 
   return (
