@@ -1,5 +1,5 @@
 import { FastifyInstance } from 'fastify';
-import { isBefore, isValid, parse } from 'date-fns';
+import { isValid, parse } from 'date-fns';
 import { maxFathomFromDate, getBucketUrl, getPublicStories } from './utils';
 import { fathomClient } from '../../../external/fathom';
 
@@ -50,7 +50,7 @@ export async function createAnalyticsReferrersEndpoint(
         res.status(400).send({ error: 'dateFrom is required' });
         return;
       }
-      let parsedDateFrom = parse(dateFrom, 'yyyy-MM-dd', new Date());
+      const parsedDateFrom = parse(dateFrom, 'yyyy-MM-dd', new Date());
       const isValidDate = isValid(parsedDateFrom);
       if (!isValidDate) {
         res.status(400).send({ error: 'dateFrom is invalid' });
