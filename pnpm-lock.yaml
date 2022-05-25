@@ -202,6 +202,7 @@ importers:
       tippy.js: 6.3.7
       twin.macro: 2.8.2
       typescript: 4.6.4
+      valid-url: 1.0.9
     dependencies:
       '@radix-ui/colors': 0.1.8
       '@radix-ui/react-accordion': 0.1.6_react@17.0.2
@@ -291,6 +292,7 @@ importers:
       sanitize-html: 2.7.0
       styled-components: 5.3.5_sfoxds7t5ydpegc3knd667wn6m
       tippy.js: 6.3.7
+      valid-url: 1.0.9
     devDependencies:
       '@fontsource/open-sans': 4.5.8
       '@next/bundle-analyzer': 12.1.5
@@ -11814,6 +11816,10 @@ packages:
       '@types/istanbul-lib-coverage': 2.0.4
       convert-source-map: 1.8.0
     dev: true
+
+  /valid-url/1.0.9:
+    resolution: {integrity: sha1-HBRHm0DxOXp1eC8RXkCGRHQzogA=}
+    dev: false
 
   /validate-npm-package-license/3.0.4:
     resolution: {integrity: sha512-DpKm2Ui/xN7/HQKCtpZxoRWBhZ9Z0kqtygG8XCgNQ8ZlDnxuQmWhj566j8fN4Cu3/JmbhsDo7fcAJq4s9h27Ew==}

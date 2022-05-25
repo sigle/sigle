@@ -108,6 +108,7 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
     setState({
       loggingIn: false,
       user: userData,
+      isLegacy: address === undefined,
     });
   };
 

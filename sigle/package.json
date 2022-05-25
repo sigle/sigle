@@ -110,7 +110,8 @@
     "reading-time": "1.5.0",
     "sanitize-html": "2.7.0",
     "styled-components": "5.3.5",
-    "tippy.js": "6.3.7"
+    "tippy.js": "6.3.7",
+    "valid-url": "1.0.9"
   },
   "devDependencies": {
     "@fontsource/open-sans": "4.5.8",
