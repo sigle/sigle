@@ -2,13 +2,7 @@ import { NextApiHandler } from 'next';
 import NextAuth from 'next-auth';
 import CredentialsProvider from 'next-auth/providers/credentials';
 import { getCsrfToken } from 'next-auth/react';
-import { hashMessage } from '@stacks/encryption';
-import {
-  createMessageSignature,
-  getAddressFromPublicKey,
-  publicKeyFromSignature,
-} from '@stacks/transactions';
-// import { StacksMessage } from "../../../utils/stacksMessage";
+import { SignInWithStacksMessage } from '../../../modules/auth/sign-in-with-stacks/signInWithStacksMessage';
 
 // For more information on each option (and a full list of options) go to
 // https://next-auth.js.org/configuration/options
@@ -29,24 +23,22 @@ const auth: NextApiHandler = async (req, res) => {
         },
       },
       async authorize(credentials) {
-        console.log({ credentials });
         try {
-          const siwe = new StacksMessage(credentials?.message || '');
-          const nextAuthUrl = new URL(process.env.NEXTAUTH_URL!);
-          if (siwe.domain !== nextAuthUrl.host) {
-            return null;
-          }
-          if (siwe.nonce !== (await getCsrfToken({ req }))) {
-            return null;
-          }
+          const siwe = new SignInWithStacksMessage(credentials?.message || '');
 
-          await siwe.verify({ signature: credentials?.signature || '' });
-          console.log(siwe.address);
-          return {
-            id: siwe.address,
-          };
+          const result = await siwe.verify({
+            signature: credentials?.signature || '',
+            domain: process.env.NEXTAUTH_URL,
+            nonce: await getCsrfToken({ req }),
+          });
+
+          if (result.success) {
+            return {
+              id: siwe.address,
+            };
+          }
+          return null;
         } catch (e) {
-          console.log(e);
           return null;
         }
       },
