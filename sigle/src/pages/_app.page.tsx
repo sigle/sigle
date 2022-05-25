@@ -151,8 +151,8 @@ export default class MyApp extends App {
         <FathomTrack />
         <QueryClientProvider client={queryClient}>
           <ReactQueryDevtools initialIsOpen={false} />
-          <AuthProvider>
-            <SessionProvider session={pageProps.session} refetchInterval={0}>
+          <SessionProvider session={pageProps.session} refetchInterval={0}>
+            <AuthProvider>
               <ThemeProvider
                 disableTransitionOnChange
                 attribute="class"
@@ -160,8 +160,8 @@ export default class MyApp extends App {
               >
                 <Component {...modifiedPageProps} />
               </ThemeProvider>
-            </SessionProvider>
-          </AuthProvider>
+            </AuthProvider>
+          </SessionProvider>
         </QueryClientProvider>
         <ToastContainer autoClose={3000} icon={false} theme="colored" />
       </React.Fragment>
