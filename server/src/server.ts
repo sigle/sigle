@@ -47,6 +47,12 @@ export const buildFastifyServer = (
    * We attach some content to make it easier to debug.
    */
   fastify.setErrorHandler(async (error, request, reply) => {
+    // We don't report rate-limit errors to Sentry.
+    if (reply.statusCode === 429) {
+      reply.send(error);
+      return;
+    }
+
     Sentry.withScope((scope) => {
       scope.setLevel(Sentry.Severity.Error);
       scope.setTag('path', request.url);

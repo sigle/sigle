@@ -18,6 +18,10 @@ export const config = cleanEnv(process.env, {
    */
   PORT: port({ desc: 'Port to run the server.' }),
   /**
+   * Redis
+   */
+  REDIS_DATABASE_URL: str({ desc: 'Redis database url.' }),
+  /**
    * Fathom
    */
   FATHOM_API_TOKEN: str({ desc: 'Fathom API token.' }),
