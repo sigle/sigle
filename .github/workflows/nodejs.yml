@@ -69,10 +69,10 @@ jobs:
         run: pnpm install
 
       - name: Lint api
-        run: pnpm --filter=@sigle/api run lint
+        run: pnpm --filter=@sigle/server run lint
 
       - name: Build api
-        run: pnpm --filter=@sigle/api run build
+        run: pnpm --filter=@sigle/server run build
 
       - name: Run api tests
-        run: pnpm --filter=@sigle/api run test
+        run: pnpm --filter=@sigle/server run test
