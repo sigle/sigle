@@ -63,7 +63,9 @@ export const PublishedStoryItem = ({
         '&:hover': {
           backgroundColor: '$gray2',
           '& svg': {
-            transform: individualStory ? 'translateX(-4px)' : 'translateX(4px)',
+            transform: !individualStory
+              ? 'translateX(-4px)'
+              : 'translateX(4px)',
           },
 
           '& div:first-child': {
