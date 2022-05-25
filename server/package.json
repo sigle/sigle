@@ -11,7 +11,7 @@
   },
   "jest": {
     "setupFiles": [
-      "./src/jest/jest.setup.ts"
+      "./src/jest.setup.ts"
     ]
   },
   "dependencies": {
