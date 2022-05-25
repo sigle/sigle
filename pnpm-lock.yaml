@@ -55,6 +55,7 @@ importers:
       fastify: 3.29.0
       ioredis: 5.0.5
       jest: 28.1.0
+      next-auth: 4.3.4
       typescript: 4.6.4
       undici: 5.1.1
     dependencies:
@@ -67,6 +68,7 @@ importers:
       envalid: 7.3.1
       fastify: 3.29.0
       ioredis: 5.0.5
+      next-auth: 4.3.4
       undici: 5.1.1
     devDependencies:
       '@cartable/core': 0.3.0_l47be6km5p57gglrggidw5gsgm
@@ -9169,6 +9171,28 @@ packages:
   /neo-async/2.6.2:
     resolution: {integrity: sha512-Yd3UES5mWCSqR+qNT93S3UoYUkqAZ9lLg8a7g9rimsWmYGK8cVToA4/sF3RrshdyV3sAGMXVUmpMYOw+dLpOuw==}
     dev: true
+
+  /next-auth/4.3.4:
+    resolution: {integrity: sha512-8dGkNicbxY2BYsJq4uOJIEsGt39wXj5AViTBsVfbRQqtAFmZmXYHutf90VBmobm8rT2+Xl60HDUTkuVVK+x+xw==}
+    engines: {node: ^12.19.0 || ^14.15.0 || ^16.13.0}
+    peerDependencies:
+      nodemailer: ^6.6.5
+      react: ^17.0.2 || ^18
+      react-dom: ^17.0.2 || ^18
+    peerDependenciesMeta:
+      nodemailer:
+        optional: true
+    dependencies:
+      '@babel/runtime': 7.17.9
+      '@panva/hkdf': 1.0.2
+      cookie: 0.4.2
+      jose: 4.8.1
+      oauth: 0.9.15
+      openid-client: 5.1.6
+      preact: 10.7.2
+      preact-render-to-string: 5.2.0_preact@10.7.2
+      uuid: 8.3.2
+    dev: false
 
   /next-auth/4.3.4_sfoxds7t5ydpegc3knd667wn6m:
     resolution: {integrity: sha512-8dGkNicbxY2BYsJq4uOJIEsGt39wXj5AViTBsVfbRQqtAFmZmXYHutf90VBmobm8rT2+Xl60HDUTkuVVK+x+xw==}
