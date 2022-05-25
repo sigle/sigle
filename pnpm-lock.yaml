@@ -40,6 +40,7 @@ importers:
   server:
     specifiers:
       '@cartable/core': 0.3.0
+      '@fastify/cors': 7.0.0
       '@jest/globals': 28.1.0
       '@sentry/node': 6.19.7
       '@stacks/auth': 4.1.0
@@ -55,6 +56,7 @@ importers:
       typescript: 4.6.4
       undici: 5.1.1
     dependencies:
+      '@fastify/cors': 7.0.0
       '@sentry/node': 6.19.7
       '@stacks/auth': 4.1.0
       date-fns: 2.28.0
@@ -978,6 +980,13 @@ packages:
     resolution: {integrity: sha512-gvCOUNpXsWrIQ3A4aXCLIdblL0tDq42BG/2Xw7oxbil9h11uow10ztS2GuFazNBfjbrsZ5nl+nPl5jDSjj5TSg==}
     dependencies:
       ajv: 6.12.6
+    dev: false
+
+  /@fastify/cors/7.0.0:
+    resolution: {integrity: sha512-nlo6ScwagBNJacAZD3KX90xjWLIoV0vN9QqoX1wUE9ZeZMdvkVkMZCGlxEtr00NshV0X5wDge4w5rwox7rRzSg==}
+    dependencies:
+      fastify-plugin: 3.0.1
+      vary: 1.1.2
     dev: false
 
   /@fastify/error/2.0.0:
@@ -6647,6 +6656,10 @@ packages:
       strnum: 1.0.5
     dev: true
 
+  /fastify-plugin/3.0.1:
+    resolution: {integrity: sha512-qKcDXmuZadJqdTm6vlCqioEbyewF60b/0LOFCcYN1B6BIZGlYJumWWOYs70SFYLDAH4YqdE1cxH/RKMG7rFxgA==}
+    dev: false
+
   /fastify/3.29.0:
     resolution: {integrity: sha512-zXSiDTdHJCHcmDrSje1f1RfzTmUTjMtHnPhh6cdokgfHhloQ+gy0Du+KlEjwTbcNC3Djj4GAsBzl6KvfI9Ah2g==}
     dependencies:
@@ -11760,6 +11773,11 @@ packages:
     resolution: {integrity: sha512-4EVb+w4rx+YfVM32HQX42AbbT7/1f5zwAYhIujKXKk8NQK+JfRVl3pqT3hjNn/L+RstigmGGKVwHA/P0wgITZw==}
     dependencies:
       safe-buffer: 5.2.1
+    dev: false
+
+  /vary/1.1.2:
+    resolution: {integrity: sha1-IpnwLG3tMNSllhsLn3RSShj2NPw=}
+    engines: {node: '>= 0.8'}
     dev: false
 
   /w3c-hr-time/1.0.2:
