@@ -98,12 +98,12 @@ importers:
       '@stacks/connect': 6.8.1
       '@stacks/connect-react': 17.0.1
       '@stacks/encryption': 4.1.0
-      '@stacks/keychain': 4.1.0
+      '@stacks/keychain': 4.1.2
       '@stacks/legacy-auth': npm:@stacks/auth@2.0.0-beta.1
       '@stacks/legacy-connect': npm:@stacks/connect@4.3.18
       '@stacks/legacy-connect-react': npm:@stacks/connect-react@2.17.18
       '@stacks/profile': 4.1.0
-      '@stacks/storage': 4.1.0
+      '@stacks/storage': 4.1.2
       '@stacks/transactions': 4.1.0
       '@stitches/react': 1.2.7
       '@tailwindcss/forms': 0.3.4
@@ -218,12 +218,12 @@ importers:
       '@stacks/connect': 6.8.1
       '@stacks/connect-react': 17.0.1_sfoxds7t5ydpegc3knd667wn6m
       '@stacks/encryption': 4.1.0
-      '@stacks/keychain': 4.1.0
+      '@stacks/keychain': 4.1.2
       '@stacks/legacy-auth': /@stacks/auth/2.0.0-beta.1
       '@stacks/legacy-connect': /@stacks/connect/4.3.18
       '@stacks/legacy-connect-react': /@stacks/connect-react/2.17.18_sfoxds7t5ydpegc3knd667wn6m
       '@stacks/profile': 4.1.0
-      '@stacks/storage': 4.1.0
+      '@stacks/storage': 4.1.2
       '@stacks/transactions': 4.1.0
       '@stitches/react': 1.2.7_react@17.0.2
       '@tippyjs/react': 4.2.6_sfoxds7t5ydpegc3knd667wn6m
@@ -2699,8 +2699,8 @@ packages:
       varuint-bitcoin: 1.1.2
     dev: false
 
-  /@stacks/keychain/4.1.0:
-    resolution: {integrity: sha512-TbKa5IQpdFDvrtTn/Pqxf5sor2Uon6+z9Uf/JoX/ZgC/1qzkOI8tCXMJRELzCDweIf2UNcNjgg0AuYsF5Jpq8Q==}
+  /@stacks/keychain/4.1.2:
+    resolution: {integrity: sha512-c+J4/M6ueoEUTgIL07TKR/X8f2Bm3p7U1wPA0vVbVn+iINkTCVZoJFELRd2Yjp85R91ugLZUwiTvmIxBmlerwQ==}
     dependencies:
       '@blockstack/rpc-client': 0.3.0-alpha.22
       '@stacks/auth': 4.1.0
@@ -2708,7 +2708,7 @@ packages:
       '@stacks/encryption': 4.1.0
       '@stacks/network': 4.1.0
       '@stacks/profile': 4.1.0
-      '@stacks/storage': 4.1.0
+      '@stacks/storage': 4.1.2
       '@stacks/transactions': 4.1.0
       '@types/node': 14.18.16
       '@types/triplesec': 3.0.1
@@ -2816,12 +2816,13 @@ packages:
       - encoding
     dev: false
 
-  /@stacks/storage/4.1.0:
-    resolution: {integrity: sha512-B5ZyGGQ122WfLZ8Y7fcXJw1grAWNMiSeLQZ0FRDy6S9XsexXPFn7JmDgfsDN9Qc4vVJPeB6m1iWweXdA/4AXug==}
+  /@stacks/storage/4.1.2:
+    resolution: {integrity: sha512-JwT7LAbaAdDi8BqYzYh8GDCo2TYjJTu04UtwQpMBE6N/qJAAp+ZriiWSa18U0MXwInO3SSVF7SFRLUUAP0tm6Q==}
     dependencies:
       '@stacks/auth': 4.1.0
       '@stacks/common': 4.1.0
       '@stacks/encryption': 4.1.0
+      '@stacks/network': 4.1.0
       jsontokens: 3.0.0
     transitivePeerDependencies:
       - encoding
