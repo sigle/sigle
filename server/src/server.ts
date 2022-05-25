@@ -6,6 +6,7 @@ import * as Sentry from '@sentry/node';
 import { createAnalyticsHistoricalEndpoint } from './api/modules/analytics/historical';
 import { createAnalyticsReferrersEndpoint } from './api/modules/analytics/referrers';
 import { config } from './config';
+import { redis } from './redis';
 
 export const buildFastifyServer = (
   opts: FastifyServerOptions<Server, FastifyLoggerInstance> = {}
@@ -38,6 +39,7 @@ export const buildFastifyServer = (
   fastify.register(FastifyRateLimit, {
     max: 50,
     timeWindow: 60000,
+    redis,
   });
 
   /**

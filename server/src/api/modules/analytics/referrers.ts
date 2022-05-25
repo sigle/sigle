@@ -36,6 +36,12 @@ export async function createAnalyticsReferrersEndpoint(
   }>(
     '/api/analytics/referrers',
     {
+      config: {
+        rateLimit: {
+          max: 10,
+          timeWindow: 60000,
+        },
+      },
       schema: {
         response: {
           200: analyticsReferrersResponseSchema,

@@ -70,6 +70,12 @@ export async function createAnalyticsHistoricalEndpoint(
   }>(
     '/api/analytics/historical',
     {
+      config: {
+        rateLimit: {
+          max: 10,
+          timeWindow: 60000,
+        },
+      },
       schema: {
         response: {
           200: analyticsHistoricalResponseSchema,
