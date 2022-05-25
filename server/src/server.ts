@@ -1,13 +1,29 @@
 import Fastify, { FastifyServerOptions, FastifyLoggerInstance } from 'fastify';
+import FastifyCors from '@fastify/cors';
 import { Server } from 'http';
 import * as Sentry from '@sentry/node';
 import { createAnalyticsHistoricalEndpoint } from './api/modules/analytics/historical';
 import { createAnalyticsReferrersEndpoint } from './api/modules/analytics/referrers';
+import { config } from './config';
 
 export const buildFastifyServer = (
   opts: FastifyServerOptions<Server, FastifyLoggerInstance> = {}
 ) => {
   const fastify = Fastify(opts);
+
+  /**
+   * Cors is disabled for local env.
+   * Cors is enabled on prod and allowed only for the APP_URL.
+   */
+  // fastify.register(FastifyCors, {
+  //   origin: (origin, cb) => {
+  //     if (config.NODE_ENV === 'development' || origin === config.APP_URL) {
+  //       cb(null, true);
+  //       return;
+  //     }
+  //     cb(new Error('Not allowed'), false);
+  //   },
+  // });
 
   /**
    * Catch and report errors with Sentry.

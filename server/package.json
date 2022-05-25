@@ -15,6 +15,7 @@
     ]
   },
   "dependencies": {
+    "@fastify/cors": "7.0.0",
     "@sentry/node": "6.19.7",
     "@stacks/auth": "4.1.0",
     "date-fns": "2.28.0",
