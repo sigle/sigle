@@ -5,7 +5,7 @@
 </p>
 
 <p align="center">
-  A beautiful decentralized and open source blog maker
+  Where Web3 stories come to life
 </p>
 
 <p align="center">
@@ -13,7 +13,11 @@
 </p>
 
 <p align="center">
-  <img src="https://badgen.net/travis/sigle/sigle" alt="License">
+  <a href="https://twitter.com/sigleapp" target="_blank">
+    <img src="https://badgen.net/twitter/follow/sigleapp" alt="Twitter">
+  </a>
+  <img src="https://badgen.net/github/stars/sigle/sigle" alt="Stars">
+  <img src="https://badgen.net/github/checks/sigle/sigle/main" alt="Checks">
   <img src="https://badgen.net/badge/license/MIT/blue" alt="License">
 </p>
 

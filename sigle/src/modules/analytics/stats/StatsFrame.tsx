@@ -10,8 +10,9 @@ import {
   Text,
 } from '../../../ui';
 import { StatsChart } from './StatsChart';
-import { FATHOM_MAX_FROM_DATE } from '../../../pages/api/analytics/utils';
 import { AnalyticsHistoricalResponse, StatsData, StatsType } from './types';
+
+const FATHOM_MAX_FROM_DATE = '2021-04-01';
 
 const numberWithCommas = (x: string): string => {
   return new Intl.NumberFormat('en-US').format(Number(x)).toString();

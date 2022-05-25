@@ -1,0 +1,19 @@
+services:
+  # Sigle api server instance
+  - name: sigle-api
+    type: web
+    env: node
+    region: oregon
+    plan: Starter
+    branch: main
+    healthCheckPath: /health
+    autoDeploy: true
+    buildCommand: cd server; pnpm install --filter=@sigle/api; pnpm run build
+    startCommand: cd server; pnpm run start
+    buildFilter:
+      paths:
+        # changes to the frontend dir do not match this pattern
+        - server/**
+      ignoredPaths:
+        # Do not deploy if test file changed
+        - server/**/*.test.ts
