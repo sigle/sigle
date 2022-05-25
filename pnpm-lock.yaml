@@ -40,18 +40,30 @@ importers:
   server:
     specifiers:
       '@cartable/core': 0.3.0
+      '@jest/globals': 28.1.0
+      '@sentry/node': 6.19.7
+      '@stacks/auth': 4.1.0
       '@types/node': 17.0.31
+      date-fns: 2.28.0
       dotenv: 16.0.0
       envalid: 7.3.1
       fastify: 3.29.0
+      jest: 28.1.0
       typescript: 4.6.4
+      undici: 5.1.1
     dependencies:
+      '@sentry/node': 6.19.7
+      '@stacks/auth': 4.1.0
+      date-fns: 2.28.0
       dotenv: 16.0.0
       envalid: 7.3.1
       fastify: 3.29.0
+      undici: 5.1.1
     devDependencies:
       '@cartable/core': 0.3.0_l47be6km5p57gglrggidw5gsgm
+      '@jest/globals': 28.1.0
       '@types/node': 17.0.31
+      jest: 28.1.0_@types+node@17.0.31
       typescript: 4.6.4
 
   sigle:
@@ -2473,6 +2485,20 @@ packages:
       - encoding
     dev: false
 
+  /@stacks/auth/4.1.0:
+    resolution: {integrity: sha512-IoY/q1HbpPvAekjMn8UG/3WBxkv7tyj2ykRPiacehA62uskG/FYxI4+liuUfuI+Pay+RJQIFLzUp42HH7YMxAg==}
+    dependencies:
+      '@stacks/common': 4.1.0
+      '@stacks/encryption': 4.1.0
+      '@stacks/network': 4.1.0
+      '@stacks/profile': 4.1.0
+      cross-fetch: 3.1.5
+      jsontokens: 3.0.0
+      query-string: 6.14.1
+    transitivePeerDependencies:
+      - encoding
+    dev: false
+
   /@stacks/common/1.2.2:
     resolution: {integrity: sha512-knCqq88EBRCN8AhS7+Sx2PJuRv0EFNChEpqLqCAchCHCQfp5bWad/47Zw+fLP9ccBwFXh4pl1wDtbQLBfDo0+A==}
     dependencies:
@@ -2512,6 +2538,14 @@ packages:
       cross-fetch: 3.1.5
     transitivePeerDependencies:
       - encoding
+    dev: false
+
+  /@stacks/common/4.1.0:
+    resolution: {integrity: sha512-bMgp+AsDfSyPyGuqJxYq7gckaPPI5YY3DJpNS458vEMg0StILh8wdDpL1ASsCxe8RAiuFn+cJdhOClCneppZ1A==}
+    dependencies:
+      '@types/bn.js': 5.1.0
+      '@types/node': 14.18.16
+      buffer: 6.0.3
     dev: false
 
   /@stacks/connect-react/14.0.0_sfoxds7t5ydpegc3knd667wn6m:
@@ -2653,6 +2687,20 @@ packages:
       - encoding
     dev: false
 
+  /@stacks/encryption/4.1.0:
+    resolution: {integrity: sha512-3zbLk1AKShn/+mkSrMS8UXtyd4rXdtr7tjPfJLSF2Q+IfZiPNqP5oQdbXAOp0t8uehno/pOKnttmNIgLZTnwVg==}
+    dependencies:
+      '@noble/hashes': 1.0.0
+      '@noble/secp256k1': 1.5.5
+      '@scure/bip39': 1.0.0
+      '@stacks/common': 4.1.0
+      '@types/node': 14.18.16
+      bs58: 5.0.0
+      ripemd160-min: 0.0.6
+      sha.js: 2.4.11
+      varuint-bitcoin: 1.1.2
+    dev: false
+
   /@stacks/keychain/4.0.0:
     resolution: {integrity: sha512-FgZVlxofqqhQIdXSgejtVw4Iq3Xxqjmzr2llaFpdS5TpbsCwaFksDEE0sFX0RVcnW1+PKpAVpATCb6+OxY/ukA==}
     dependencies:
@@ -2712,6 +2760,15 @@ packages:
       - encoding
     dev: false
 
+  /@stacks/network/4.1.0:
+    resolution: {integrity: sha512-vZoqBkMPUtPqdkW0oluzSQrJFFz2CThpTP2wgJLm3Aps+9TFJ3IXbZiN+8uKVpnd4ebDl9jaLwYZKOtF5ulg1Q==}
+    dependencies:
+      '@stacks/common': 4.1.0
+      cross-fetch: 3.1.5
+    transitivePeerDependencies:
+      - encoding
+    dev: false
+
   /@stacks/prettier-config/0.0.8:
     resolution: {integrity: sha512-WpxCIB2wPk2TT0Zs9oABNQ7Y2wBx2sSqEeFtgJ1lBNY6bKT5B82l/CkbaHPmnUj0KOwauXaSv0rXnxomTNj9xA==}
     dependencies:
@@ -2764,6 +2821,19 @@ packages:
       '@stacks/common': 4.0.0
       '@stacks/network': 4.0.0
       '@stacks/transactions': 4.0.0
+      jsontokens: 3.0.0
+      schema-inspector: 2.0.1
+      zone-file: 2.0.0-beta.3
+    transitivePeerDependencies:
+      - encoding
+    dev: false
+
+  /@stacks/profile/4.1.0:
+    resolution: {integrity: sha512-5dA82v2RcOb8DlfQuX6QowfCzhZvfGiGRGBDL5bbWJXzvA6pZCzcdONAv/9B1SC3xs+Xoz2wt8JWtsLejdjYWQ==}
+    dependencies:
+      '@stacks/common': 4.1.0
+      '@stacks/network': 4.1.0
+      '@stacks/transactions': 4.1.0
       jsontokens: 3.0.0
       schema-inspector: 2.0.1
       zone-file: 2.0.0-beta.3
@@ -2840,6 +2910,24 @@ packages:
       bn.js: 5.2.0
       c32check: 1.1.3
       cross-fetch: 3.1.5
+      lodash.clonedeep: 4.5.0
+      ripemd160-min: 0.0.6
+      sha.js: 2.4.11
+      smart-buffer: 4.2.0
+    transitivePeerDependencies:
+      - encoding
+    dev: false
+
+  /@stacks/transactions/4.1.0:
+    resolution: {integrity: sha512-NS3DkZh8WziUQaze6RY5ft1v5bmq1wHjYEoCMzzhdreJ+Sp74ZADaO38fQQGcEcVdOhcM31k2oh6DgJEmBXVUQ==}
+    dependencies:
+      '@noble/hashes': 1.0.0
+      '@noble/secp256k1': 1.5.5
+      '@stacks/common': 4.1.0
+      '@stacks/network': 4.1.0
+      '@types/node': 14.18.16
+      '@types/sha.js': 2.4.0
+      c32check: 1.1.3
       lodash.clonedeep: 4.5.0
       ripemd160-min: 0.0.6
       sha.js: 2.4.11
@@ -4892,7 +4980,7 @@ packages:
     dev: false
 
   /brorand/1.1.0:
-    resolution: {integrity: sha1-EsJe/kCkXjwyPrhnWgoM5XsiNx8=}
+    resolution: {integrity: sha512-cKV8tMCEpQs4hK/ik71d6LrPOnpkpGBR0wzxqr68g2m/LB2GxVYQroAjMJZRVM1Y4BCjCKc3vAamxSzOY2RP+w==}
     dev: false
 
   /browser-process-hrtime/1.0.0:
@@ -11431,7 +11519,6 @@ packages:
   /undici/5.1.1:
     resolution: {integrity: sha512-CmK9JzLSMGx+2msOao8LhkKn3J7eKo2M50v0KZQ2XbiHcGqLS1HiIj01ceIm3jbUYlspw/FTSb6nMdSNyvVyaQ==}
     engines: {node: '>=12.18'}
-    dev: true
 
   /unique-string/2.0.0:
     resolution: {integrity: sha512-uNaeirEPvpZWSgzwsPGtU2zVSTrn/8L5q/IexZmH0eH6SA73CmAA5U4GwORTxQAZs95TAXLNqeLoPPNO5gZfWg==}

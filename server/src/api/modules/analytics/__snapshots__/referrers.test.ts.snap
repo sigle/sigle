@@ -1,0 +1,23 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Respond with referrers 1`] = `
+Array [
+  Object {
+    "count": 10,
+    "domain": "null",
+  },
+  Object {
+    "count": 6,
+    "domain": "https://stacks.co",
+  },
+]
+`;
+
+exports[`Respond with referrers for one story 1`] = `
+Array [
+  Object {
+    "count": 5,
+    "domain": "https://stacks.co",
+  },
+]
+`;

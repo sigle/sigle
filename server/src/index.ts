@@ -1,15 +1,14 @@
 import 'dotenv/config';
-import Fastify from 'fastify';
+import * as Sentry from '@sentry/node';
 import { config } from './config';
+import { buildFastifyServer } from './server';
 
-const fastify = Fastify({
-  logger: false,
+Sentry.init({
+  dsn: config.SENTRY_DSN,
 });
 
-fastify.get('/health', (_, res) => {
-  res.send({
-    success: true,
-  });
+const fastify = buildFastifyServer({
+  logger: false,
 });
 
 fastify.listen(config.PORT, '0.0.0.0', (err, address) => {
