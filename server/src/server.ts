@@ -35,9 +35,10 @@ export const buildFastifyServer = (
   /**
    * Rate limit is disabled for local env.
    * Max 50 requests per minute.
+   * We increase the limit when we are running tests.
    */
   fastify.register(FastifyRateLimit, {
-    max: 50,
+    max: config.NODE_ENV === 'test' ? 1000 : 50,
     timeWindow: 60000,
     redis,
   });
