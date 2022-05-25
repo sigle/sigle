@@ -46,6 +46,11 @@ jobs:
     strategy:
       matrix:
         node-version: [16]
+    services:
+      redis:
+        image: redis:6.2
+        ports:
+          - 6379:6379
 
     steps:
       - uses: actions/checkout@v2
