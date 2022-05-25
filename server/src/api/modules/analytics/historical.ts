@@ -10,6 +10,7 @@ import {
 } from 'date-fns';
 import { maxFathomFromDate, getBucketUrl, getPublicStories } from './utils';
 import { fathomClient } from '../../../external/fathom';
+import { redis } from '../../../redis';
 
 interface AnalyticsHistoricalParams {
   dateFrom?: string;
@@ -124,6 +125,17 @@ export async function createAnalyticsHistoricalEndpoint(
       // TODO protect to logged in users
       // TODO take username from session
       const username = 'sigleapp.id.blockstack';
+
+      // Caching mechanism to avoid hitting Fathom too often
+      const cacheKey = storyId
+        ? `${username}_${dateFrom}_${dateGrouping}_${storyId}`
+        : `${username}_${dateFrom}_${dateGrouping}`;
+      const cachedResponse = await redis.get(cacheKey);
+      if (cachedResponse) {
+        console.log('cache hit');
+        res.status(200).send(JSON.parse(cachedResponse));
+        return;
+      }
 
       const historicalResponse: AnalyticsHistoricalResponse = {
         historical: [],
@@ -243,6 +255,14 @@ export async function createAnalyticsHistoricalEndpoint(
           };
         })
         .filter((story) => story.pathname !== '');
+
+      // Cache response for 1 hour
+      await redis.set(
+        cacheKey,
+        JSON.stringify(historicalResponse),
+        'EX',
+        60 * 60
+      );
 
       res.status(200).send(historicalResponse);
     }
