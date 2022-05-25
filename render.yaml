@@ -8,8 +8,10 @@ services:
     branch: main
     healthCheckPath: /health
     autoDeploy: true
-    buildCommand: cd server; pnpm install; pnpm run build
+    buildCommand: cd server; pnpm install --filter=@sigle/server; pnpm run build
     startCommand: cd server; pnpm run start
+    domains:
+      - api.sigle.io
     buildFilter:
       paths:
         # changes to the frontend dir do not match this pattern
