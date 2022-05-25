@@ -28,9 +28,10 @@ export const buildFastifyServer = (
 
   /**
    * Rate limit is disabled for local env.
+   * Max 50 requests per minute.
    */
   fastify.register(FastifyRateLimit, {
-    max: 100,
+    max: 50,
     timeWindow: 60000,
   });
 
