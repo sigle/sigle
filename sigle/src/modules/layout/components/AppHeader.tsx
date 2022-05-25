@@ -75,15 +75,11 @@ export const AppHeader = () => {
   let src;
 
   switch (resolvedTheme) {
-    case 'light':
-      src = '/static/img/logo.png';
-      break;
     case 'dark':
       src = '/static/img/logo_white.png';
       break;
     default:
-      src =
-        'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7';
+      src = '/static/img/logo.png';
       break;
   }
 
