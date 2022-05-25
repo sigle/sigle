@@ -2,6 +2,7 @@
 import { FastifyInstance } from 'fastify';
 import { fathomClient } from '../../../external/fathom';
 import { fakeTimerConfigDate } from '../../../jest/utils';
+import { redis } from '../../../redis';
 import { buildFastifyServer } from '../../../server';
 
 jest.mock('../../../external/fathom');
@@ -10,6 +11,10 @@ let server: FastifyInstance;
 
 beforeAll(() => {
   server = buildFastifyServer();
+});
+
+afterAll(async () => {
+  await redis.quit();
 });
 
 beforeEach(() => {

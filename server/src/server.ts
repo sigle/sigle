@@ -1,10 +1,12 @@
 import Fastify, { FastifyServerOptions, FastifyLoggerInstance } from 'fastify';
 import FastifyCors from '@fastify/cors';
+import FastifyRateLimit from '@fastify/rate-limit';
 import { Server } from 'http';
 import * as Sentry from '@sentry/node';
 import { createAnalyticsHistoricalEndpoint } from './api/modules/analytics/historical';
 import { createAnalyticsReferrersEndpoint } from './api/modules/analytics/referrers';
 import { config } from './config';
+import { redis } from './redis';
 
 export const buildFastifyServer = (
   opts: FastifyServerOptions<Server, FastifyLoggerInstance> = {}
@@ -31,10 +33,27 @@ export const buildFastifyServer = (
   });
 
   /**
+   * Rate limit is disabled for local env.
+   * Max 50 requests per minute.
+   * We increase the limit when we are running tests.
+   */
+  fastify.register(FastifyRateLimit, {
+    max: config.NODE_ENV === 'test' ? 1000 : 50,
+    timeWindow: 60000,
+    redis,
+  });
+
+  /**
    * Catch and report errors with Sentry.
    * We attach some content to make it easier to debug.
    */
   fastify.setErrorHandler(async (error, request, reply) => {
+    // We don't report rate-limit errors to Sentry.
+    if (reply.statusCode === 429) {
+      reply.send(error);
+      return;
+    }
+
     Sentry.withScope((scope) => {
       scope.setLevel(Sentry.Severity.Error);
       scope.setTag('path', request.url);
