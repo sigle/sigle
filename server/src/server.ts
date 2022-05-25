@@ -1,5 +1,6 @@
 import Fastify, { FastifyServerOptions, FastifyLoggerInstance } from 'fastify';
 import FastifyCors from '@fastify/cors';
+import FastifyRateLimit from '@fastify/rate-limit';
 import { Server } from 'http';
 import * as Sentry from '@sentry/node';
 import { createAnalyticsHistoricalEndpoint } from './api/modules/analytics/historical';
@@ -23,6 +24,14 @@ export const buildFastifyServer = (
       }
       cb(new Error('Not allowed'), false);
     },
+  });
+
+  /**
+   * Rate limit is disabled for local env.
+   */
+  fastify.register(FastifyRateLimit, {
+    max: 100,
+    timeWindow: 60000,
   });
 
   /**
