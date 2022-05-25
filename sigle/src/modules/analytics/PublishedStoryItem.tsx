@@ -19,15 +19,15 @@ const StoryImage = styled('img', {
 interface PublishedStoryItemProps {
   story: SubsetStory;
   onClick: () => void;
-  arrowPlacement?: 'left' | 'right';
-  views: number | undefined;
+  individualStory?: boolean;
+  views?: number | undefined;
 }
 
 export const PublishedStoryItem = ({
   story,
   onClick,
   views,
-  arrowPlacement = 'right',
+  individualStory = false,
 }: PublishedStoryItemProps) => {
   const { play } = useMotionAnimate(
     '.story-item',
@@ -49,10 +49,8 @@ export const PublishedStoryItem = ({
       className="story-item"
       align="center"
       css={{
-        borderTop:
-          arrowPlacement === 'right' ? '1px solid $colors$gray6' : 'none',
-        borderBottom:
-          arrowPlacement === 'left' ? '1px solid $colors$gray6' : 'none',
+        borderTop: !individualStory ? '1px solid $colors$gray6' : 'none',
+        borderBottom: individualStory ? '1px solid $colors$gray6' : 'none',
         height: 68,
         cursor: 'pointer',
         position: 'relative',
@@ -65,10 +63,7 @@ export const PublishedStoryItem = ({
         '&:hover': {
           backgroundColor: '$gray2',
           '& svg': {
-            transform:
-              arrowPlacement === 'right'
-                ? 'translateX(-4px)'
-                : 'translateX(4px)',
+            transform: individualStory ? 'translateX(-4px)' : 'translateX(4px)',
           },
 
           '& div:first-child': {
@@ -91,7 +86,7 @@ export const PublishedStoryItem = ({
       }}
       onClick={onClick}
     >
-      {arrowPlacement === 'left' && <ArrowLeftIcon />}
+      {individualStory && <ArrowLeftIcon />}
       <Box />
       {story.coverImage && <StoryImage src={story.coverImage} />}
       <Flex
@@ -123,9 +118,12 @@ export const PublishedStoryItem = ({
           {story.title}
         </Text>
         <Flex align="center" css={{ gap: '$5', flexShrink: 0 }}>
-          {/* To be replaced with actual view metrics */}
-          <Text size="sm">{views} views</Text>
-          {arrowPlacement === 'right' && <ArrowRightIcon />}
+          {!individualStory && (
+            <>
+              <Text size="sm">{views} views</Text>
+              <ArrowRightIcon />
+            </>
+          )}
         </Flex>
       </Flex>
     </Flex>

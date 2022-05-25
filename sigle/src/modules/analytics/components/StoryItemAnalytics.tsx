@@ -128,7 +128,7 @@ export const StoryItemAnalytics = ({
     <DashboardLayout layout="wide">
       {story ? (
         <PublishedStoryItem
-          arrowPlacement="left"
+          individualStory={true}
           onClick={() => router.push('/analytics')}
           story={story}
         />
