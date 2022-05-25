@@ -1,5 +1,6 @@
 import { eachDayOfInterval, format } from 'date-fns';
 import { useEffect, useState } from 'react';
+import { useQuery } from 'react-query';
 import {
   Box,
   Flex,
@@ -7,16 +8,12 @@ import {
   TabsContent,
   TabsList,
   TabsTrigger,
-  Text,
 } from '../../../ui';
 import { StatsChart } from './StatsChart';
+import { StatsTotal } from './StatsTotal';
 import { AnalyticsHistoricalResponse, StatsData, StatsType } from './types';
 
 const FATHOM_MAX_FROM_DATE = '2021-04-01';
-
-const numberWithCommas = (x: string): string => {
-  return new Intl.NumberFormat('en-US').format(Number(x)).toString();
-};
 
 // prevent flash of no content in graph by initializing range data with a constant value (1)
 const today = new Date();
@@ -36,33 +33,37 @@ const initialRange: StatsData[] = dates.map((date) => {
   };
 });
 
-interface TotalViewsAndVisitorsProps {
-  pageviews: number;
-  visits: number;
-}
-
 export const StatsFrame = () => {
-  const [data, setData] = useState<StatsData[]>(initialRange);
   const [statType, setStatType] = useState<StatsType>('weekly');
-  const [totalViewsAndVisitors, setTotalViewsAndVisitors] =
-    useState<TotalViewsAndVisitorsProps>();
+  const { data, refetch } = useQuery('fetchStats', () => fetchStats(statType), {
+    select: (data: AnalyticsHistoricalResponse) => {
+      const statsData = data?.historical.map((item) => {
+        return {
+          pageViews: item.pageviews,
+          date: item.date,
+          visits: item.visits,
+        };
+      });
+      return statsData;
+    },
+  });
 
   useEffect(() => {
-    fetchStats('weekly');
-  }, []);
+    refetch();
+  }, [statType]);
 
   const fetchStats = async (value: string) => {
-    const weeklyStatsUrl = `/api/analytics/historical?dateFrom=${format(
+    const weeklyStatsUrl = `http://localhost:3001/api/analytics/historical?dateFrom=${format(
       weekFromDate,
       'yyyy-MM-dd'
     )}&dateGrouping=day`;
 
-    const monthlyStatsUrl = `/api/analytics/historical?dateFrom=${format(
+    const monthlyStatsUrl = `http://localhost:3001/api/analytics/historical?dateFrom=${format(
       monthFromDate,
       'yyyy-MM-dd'
     )}&dateGrouping=day`;
 
-    const allTimeStatsUrl = `/api/analytics/historical?dateFrom=${FATHOM_MAX_FROM_DATE}&dateGrouping=month`;
+    const allTimeStatsUrl = `http://localhost:3001/api/analytics/historical?dateFrom=${FATHOM_MAX_FROM_DATE}&dateGrouping=month`;
     let url;
 
     switch (value) {
@@ -80,59 +81,31 @@ export const StatsFrame = () => {
         throw new Error('No value received.');
     }
 
-    const statsRes = await fetch(url);
+    return fetch(url).then((res) => res.json());
+  };
 
-    const statsData: AnalyticsHistoricalResponse = await statsRes.json();
-    const stats: StatsData[] = statsData.historical.map((item) => {
-      return {
-        pageViews: item.pageviews,
-        date: item.date,
-        visits: item.visits,
-      };
-    });
-
-    const viewTotal = statsData.historical.reduce(
-      function (previousValue, currentValue) {
-        return {
-          pageviews: previousValue.pageviews + currentValue.pageviews,
-          visits: previousValue.visits + currentValue.visits,
-        };
-      },
-      { pageviews: 0, visits: 0 }
-    );
-
-    setData(stats);
-    setStatType(value);
-    setTotalViewsAndVisitors(viewTotal);
+  const checkStatType = (value: string) => {
+    switch (value) {
+      case 'weekly':
+        setStatType('weekly');
+        break;
+      case 'monthly':
+        setStatType('monthly');
+        break;
+      case 'all':
+        setStatType('all');
+        break;
+      default:
+        throw new Error('No value received.');
+    }
   };
 
   return (
     <Box css={{ mb: '$8', position: 'relative' }}>
       <Flex>
-        <Flex gap="10" css={{ position: 'absolute' }}>
-          <Box>
-            <Text css={{ color: '$gray11' }} size="sm">
-              Total visitors
-            </Text>
-            <Text css={{ fontSize: 30, fontWeight: 600, color: '$green11' }}>
-              {totalViewsAndVisitors
-                ? numberWithCommas(totalViewsAndVisitors.pageviews.toString())
-                : '--'}
-            </Text>
-          </Box>
-          <Box>
-            <Text css={{ color: '$gray11' }} size="sm">
-              Total views
-            </Text>
-            <Text css={{ fontSize: 30, fontWeight: 600, color: '$violet11' }}>
-              {totalViewsAndVisitors
-                ? numberWithCommas(totalViewsAndVisitors.visits.toString())
-                : '--'}
-            </Text>
-          </Box>
-        </Flex>
+        <StatsTotal data={data} />
         <Tabs
-          onValueChange={(value) => fetchStats(value)}
+          onValueChange={(value) => checkStatType(value)}
           css={{ width: '100%' }}
           defaultValue="weekly"
         >
@@ -145,16 +118,24 @@ export const StatsFrame = () => {
             <TabsTrigger value="all">All</TabsTrigger>
           </TabsList>
           <TabsContent value="weekly"></TabsContent>
-          <Box
-            css={{
-              mb: '$5',
-              position: 'relative',
-              width: '100%',
-              height: 400,
-            }}
-          >
-            <StatsChart type={statType} data={data} />
-          </Box>
+          {data ? (
+            <Box
+              css={{
+                mb: '$8',
+                position: 'relative',
+                width: '100%',
+                height: 400,
+              }}
+            >
+              <StatsChart type={statType} data={data} />
+            </Box>
+          ) : (
+            <Box
+              css={{
+                height: 400,
+              }}
+            />
+          )}
         </Tabs>
       </Flex>
     </Box>

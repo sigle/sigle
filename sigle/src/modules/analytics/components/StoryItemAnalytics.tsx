@@ -17,14 +17,13 @@ import {
   TabsTrigger,
   Text,
 } from '../../../ui';
-import { FATHOM_MAX_FROM_DATE } from '../../../pages/api/analytics/utils';
 import { SubsetStory } from '../../../types';
 import { PublishedStoryItem } from '../PublishedStoryItem';
 import { ReferrersFrame } from '../ReferrersFrame';
+import { useQuery } from 'react-query';
+import { StatsTotal } from '../stats/StatsTotal';
 
-const numberWithCommas = (x: string): string => {
-  return new Intl.NumberFormat('en-US').format(Number(x)).toString();
-};
+const FATHOM_MAX_FROM_DATE = '2021-04-01';
 
 // prevent flash of no content in graph by initializing range data with a constant value (1)
 const today = new Date();
@@ -44,12 +43,7 @@ const initialRange: StatsData[] = dates.map((date) => {
   };
 });
 
-interface TotalViewsAndVisitorsProps {
-  pageviews: number;
-  visits: number;
-}
-
-interface StoryAnalyticsPProps {
+interface StoryAnalyticsProps {
   storyId: string;
   stories: SubsetStory[] | null;
 }
@@ -57,37 +51,46 @@ interface StoryAnalyticsPProps {
 export const StoryItemAnalytics = ({
   storyId,
   stories,
-}: StoryAnalyticsPProps) => {
+}: StoryAnalyticsProps) => {
   const router = useRouter();
-  const [data, setData] = useState<StatsData[]>(initialRange);
   const [statType, setStatType] = useState<StatsType>('weekly');
-  const [totalViewsAndVisitors, setTotalViewsAndVisitors] =
-    useState<TotalViewsAndVisitorsProps>();
+  const { data, refetch } = useQuery('fetchStats', () => fetchStats(statType), {
+    select: (data: AnalyticsHistoricalResponse) => {
+      const statsData = data?.historical.map((item) => {
+        return {
+          pageViews: item.pageviews,
+          date: item.date,
+          visits: item.visits,
+        };
+      });
+      return statsData;
+    },
+  });
 
   const story = stories && stories[0];
 
   useEffect(() => {
-    fetchStats('weekly');
-  }, []);
+    refetch();
+  }, [statType]);
 
   // testing on stories that already have views to validate things are working as expected
   const testId = 'JA9dBfdPDp7kQhkFkgPdv';
 
-  const fetchStats = async (value: string) => {
-    const weeklyStatsUrl = `/api/analytics/historical?dateFrom=${format(
+  const fetchStats = async (statType: string) => {
+    const weeklyStatsUrl = `http://localhost:3001/api/analytics/historical?dateFrom=${format(
       weekFromDate,
       'yyyy-MM-dd'
     )}&dateGrouping=day&storyId=${testId}`;
 
-    const monthlyStatsUrl = `/api/analytics/historical?dateFrom=${format(
+    const monthlyStatsUrl = `http://localhost:3001/api/analytics/historical?dateFrom=${format(
       monthFromDate,
       'yyyy-MM-dd'
     )}&dateGrouping=day&storyId=${testId}`;
 
-    const allTimeStatsUrl = `/api/analytics/historical?dateFrom=${FATHOM_MAX_FROM_DATE}&dateGrouping=month&storyId=${testId}`;
+    const allTimeStatsUrl = `http://localhost:3001/api/analytics/historical?dateFrom=${FATHOM_MAX_FROM_DATE}&dateGrouping=month&storyId=${testId}`;
     let url;
 
-    switch (value) {
+    switch (statType) {
       case 'weekly':
         url = weeklyStatsUrl;
         break;
@@ -102,37 +105,29 @@ export const StoryItemAnalytics = ({
         throw new Error('No value received.');
     }
 
-    const statsRes = await fetch(url);
-    const statsData: AnalyticsHistoricalResponse = await statsRes.json();
-    console.log(statsData);
-    const stats: StatsData[] = statsData.historical.map((item) => {
-      return {
-        pageViews: item.pageviews,
-        date: item.date,
-        visits: item.visits,
-      };
-    });
+    return fetch(url).then((res) => res.json());
+  };
 
-    const viewTotal = statsData.historical.reduce(
-      function (previousValue, currentValue) {
-        return {
-          pageviews: previousValue.pageviews + currentValue.pageviews,
-          visits: previousValue.visits + currentValue.visits,
-        };
-      },
-      { pageviews: 0, visits: 0 }
-    );
-
-    setData(stats);
-    setStatType(value);
-    setTotalViewsAndVisitors(viewTotal);
+  const checkStatType = (value: string) => {
+    switch (value) {
+      case 'weekly':
+        setStatType('weekly');
+        break;
+      case 'monthly':
+        setStatType('monthly');
+        break;
+      case 'all':
+        setStatType('all');
+        break;
+      default:
+        throw new Error('No value received.');
+    }
   };
 
   return (
     <DashboardLayout layout="wide">
       {story ? (
         <PublishedStoryItem
-          views={totalViewsAndVisitors?.pageviews}
           arrowPlacement="left"
           onClick={() => router.push('/analytics')}
           story={story}
@@ -141,30 +136,9 @@ export const StoryItemAnalytics = ({
         <Box css={{ height: 68 }} />
       )}
       <Flex css={{ mt: '$8' }}>
-        <Flex gap="10" css={{ position: 'absolute' }}>
-          <Box>
-            <Text css={{ color: '$gray11' }} size="sm">
-              Total visitors
-            </Text>
-            <Text css={{ fontSize: 30, fontWeight: 600, color: '$green11' }}>
-              {totalViewsAndVisitors
-                ? numberWithCommas(totalViewsAndVisitors.visits.toString())
-                : '--'}
-            </Text>
-          </Box>
-          <Box>
-            <Text css={{ color: '$gray11' }} size="sm">
-              Total views
-            </Text>
-            <Text css={{ fontSize: 30, fontWeight: 600, color: '$violet11' }}>
-              {totalViewsAndVisitors
-                ? numberWithCommas(totalViewsAndVisitors.pageviews.toString())
-                : '--'}
-            </Text>
-          </Box>
-        </Flex>
+        <StatsTotal data={data} />
         <Tabs
-          onValueChange={(value) => fetchStats(value)}
+          onValueChange={(value) => checkStatType(value)}
           css={{ width: '100%' }}
           defaultValue="weekly"
         >
@@ -177,18 +151,26 @@ export const StoryItemAnalytics = ({
             <TabsTrigger value="all">All</TabsTrigger>
           </TabsList>
           <TabsContent value="weekly"></TabsContent>
+          {data ? (
+            <Box
+              css={{
+                mb: '$8',
+                position: 'relative',
+                width: '100%',
+                height: 400,
+              }}
+            >
+              <StatsChart type={statType} data={data} />
+            </Box>
+          ) : (
+            <Box
+              css={{
+                height: 400,
+              }}
+            />
+          )}
         </Tabs>
       </Flex>
-      <Box
-        css={{
-          mb: '$5',
-          position: 'relative',
-          width: '100%',
-          height: 400,
-        }}
-      >
-        <StatsChart type={statType} data={data} />
-      </Box>
       <ReferrersFrame />
     </DashboardLayout>
   );
