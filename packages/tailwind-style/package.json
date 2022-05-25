@@ -10,7 +10,7 @@
     "dist"
   ],
   "scripts": {
-    "build": "NODE_ENV=production pnpx tailwindcss --no-autoprefixer -i ./src/tailwind.css -o ./dist/tailwind.css"
+    "build": "NODE_ENV=production pnpm tailwindcss --no-autoprefixer -i ./src/tailwind.css -o ./dist/tailwind.css"
   },
   "devDependencies": {
     "@tailwindcss/typography": "0.5.2",
