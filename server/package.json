@@ -6,7 +6,8 @@
     "dev": "cartable",
     "build": "cartable build",
     "test": "cartable test",
-    "start": "node dist/index.js"
+    "start": "node dist/index.js",
+    "lint": "eslint . --ext .ts"
   },
   "jest": {
     "setupFiles": [
@@ -26,6 +27,9 @@
     "@cartable/core": "0.3.0",
     "@jest/globals": "28.1.0",
     "@types/node": "17.0.31",
+    "@typescript-eslint/eslint-plugin": "5.20.0",
+    "@typescript-eslint/parser": "5.26.0",
+    "eslint": "8.14.0",
     "jest": "28.1.0",
     "typescript": "4.6.4"
   }
