@@ -8,8 +8,10 @@ services:
     branch: main
     healthCheckPath: /health
     autoDeploy: true
-    buildCommand: cd server; pnpm install --filter=@sigle/api; pnpm run build
+    buildCommand: cd server; pnpm install --filter=@sigle/server; pnpm run build
     startCommand: cd server; pnpm run start
+    domains:
+      - api.sigle.io
     buildFilter:
       paths:
         # changes to the frontend dir do not match this pattern
@@ -17,3 +19,20 @@ services:
       ignoredPaths:
         # Do not deploy if test file changed
         - server/**/*.test.ts
+    envVars:
+      - key: APP_URL
+        value: 'https://app.sigle.io'
+      # Inject Redis connection url from the redis instance
+      - key: REDIS_DATABASE_URL
+        fromService:
+          type: redis
+          name: sigle-redis
+          property: connectionString
+
+  # Redis database
+  - name: sigle-redis
+    type: redis
+    region: oregon
+    plan: Starter
+    # only allow internal connections
+    ipAllowList: []

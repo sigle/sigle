@@ -1,5 +1,9 @@
 # Sigle API
 
+## Rate limits
+
+We limit API requests to 50 requests per minute.
+
 ## Endpoints
 
 ### Stats historical data
