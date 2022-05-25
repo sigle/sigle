@@ -17,7 +17,8 @@ export const buildFastifyServer = (
    */
   fastify.register(FastifyCors, {
     origin: (origin, cb) => {
-      if (config.NODE_ENV === 'development' || origin === config.APP_URL) {
+      const hostname = new URL(origin).hostname;
+      if (hostname === 'localhost' || origin === config.APP_URL) {
         cb(null, true);
         return;
       }
