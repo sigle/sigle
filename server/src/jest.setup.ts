@@ -1,2 +1,7 @@
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-require('dotenv').config('./env.test');
+import dotenv from 'dotenv';
+
+const result = dotenv.config({ path: './env.test' });
+
+if (result.error) {
+  throw result.error;
+}
