@@ -34,7 +34,7 @@ const StatsChart = ({
 }: StatsChartProps & WithParentSizeProvidedProps) => {
   const margin = {
     top: 20,
-    left: type === 'weekly' || type === 'monthly' ? 24 : 44,
+    left: type === 'weekly' || type === 'monthly' ? 28 : 44,
     bottom: 40,
     right: 0,
   };
