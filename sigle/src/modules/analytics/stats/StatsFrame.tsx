@@ -36,22 +36,22 @@ const initialRange: StatsData[] = dates.map((date) => {
 
 export const StatsFrame = () => {
   const [statType, setStatType] = useState<StatsType>('weekly');
-  const { data, refetch, isError } = useQuery(
-    'fetchStats',
-    () => fetchStats(statType),
-    {
-      select: (data: AnalyticsHistoricalResponse) => {
-        const statsData = data?.historical.map((item) => {
-          return {
-            pageViews: item.pageviews,
-            date: item.date,
-            visits: item.visits,
-          };
-        });
-        return statsData;
-      },
-    }
-  );
+  const { data, refetch, isError } = useQuery<
+    AnalyticsHistoricalResponse,
+    Error,
+    StatsData[]
+  >('fetchStats', () => fetchStats(statType), {
+    select: (data: AnalyticsHistoricalResponse) => {
+      const statsData = data.historical.map((item) => {
+        return {
+          pageViews: item.pageviews,
+          date: item.date,
+          visits: item.visits,
+        };
+      });
+      return statsData;
+    },
+  });
 
   useEffect(() => {
     refetch();

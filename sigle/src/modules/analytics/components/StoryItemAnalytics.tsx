@@ -55,22 +55,22 @@ export const StoryItemAnalytics = ({
 }: StoryAnalyticsProps) => {
   const router = useRouter();
   const [statType, setStatType] = useState<StatsType>('weekly');
-  const { data, refetch, isError } = useQuery<any, Error>(
-    'fetchStats',
-    () => fetchStats(statType),
-    {
-      select: (data: AnalyticsHistoricalResponse) => {
-        const statsData = data.historical.map((item) => {
-          return {
-            pageViews: item.pageviews,
-            date: item.date,
-            visits: item.visits,
-          };
-        });
-        return statsData;
-      },
-    }
-  );
+  const { data, refetch, isError, error } = useQuery<
+    AnalyticsHistoricalResponse,
+    Error,
+    StatsData[]
+  >('fetchStats', () => fetchStats(statType), {
+    select: (data: AnalyticsHistoricalResponse): StatsData[] => {
+      const statsData = data.historical.map((item) => {
+        return {
+          pageViews: item.pageviews,
+          date: item.date,
+          visits: item.visits,
+        };
+      });
+      return statsData;
+    },
+  });
 
   const story = stories && stories[0];
 
@@ -146,12 +146,7 @@ export const StoryItemAnalytics = ({
       ) : (
         <Box css={{ height: 68 }} />
       )}
-      {isError && (
-        <StatsError>
-          An error occurred and no data could be found. Please wait and refresh
-          the page.
-        </StatsError>
-      )}
+      {isError && <StatsError>{error.message}</StatsError>}
       <Flex css={{ mt: '$8' }}>
         <StatsTotal data={data} />
         <Tabs
