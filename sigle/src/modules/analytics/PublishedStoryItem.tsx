@@ -24,7 +24,6 @@ const fetchStoryViews = async (storyId: string) => {
 
   const statsRes = await fetch(url);
   const statsData: AnalyticsHistoricalResponse = await statsRes.json();
-  console.log(statsData);
   let views;
   if (statsData.stories.length > 0) {
     views = statsData.stories[0].pageviews;

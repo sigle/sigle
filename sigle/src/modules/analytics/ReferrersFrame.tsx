@@ -12,7 +12,6 @@ const fetchReferrers = async () => {
 
   const statsRes = await fetch(url);
   const referrerData: ReferrersResponse = await statsRes.json();
-  console.log(referrerData);
   return referrerData;
 };
 
