@@ -1,14 +1,7 @@
 import { format } from 'date-fns';
 import { useState } from 'react';
 import { useQuery } from 'react-query';
-import {
-  Box,
-  Flex,
-  Tabs,
-  TabsContent,
-  TabsList,
-  TabsTrigger,
-} from '../../../ui';
+import { Box, Flex, Tabs, TabsList, TabsTrigger } from '../../../ui';
 import { StatsChart } from './StatsChart';
 import { StatsError } from './StatsError';
 import { StatsTotal } from './StatsTotal';
@@ -106,7 +99,6 @@ export const StatsFrame = () => {
             <TabsTrigger value="monthly">Monthly</TabsTrigger>
             <TabsTrigger value="all">All</TabsTrigger>
           </TabsList>
-          <TabsContent value="weekly"></TabsContent>
           <Box
             css={{
               mb: '$8',

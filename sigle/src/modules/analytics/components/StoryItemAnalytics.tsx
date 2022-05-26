@@ -8,14 +8,7 @@ import {
   StatsType,
 } from '../stats/types';
 import { DashboardLayout } from '../../layout';
-import {
-  Box,
-  Flex,
-  Tabs,
-  TabsContent,
-  TabsList,
-  TabsTrigger,
-} from '../../../ui';
+import { Box, Flex, Tabs, TabsList, TabsTrigger } from '../../../ui';
 import { SubsetStory } from '../../../types';
 import { PublishedStoryItem } from '../PublishedStoryItem';
 import { ReferrersFrame } from '../ReferrersFrame';
@@ -138,7 +131,7 @@ export const StoryItemAnalytics = ({
             <TabsTrigger value="monthly">Monthly</TabsTrigger>
             <TabsTrigger value="all">All</TabsTrigger>
           </TabsList>
-          <TabsContent value="weekly"></TabsContent>
+          ß
           <Box
             css={{
               mb: '$8',
