@@ -145,7 +145,7 @@ export const DashboardLayout = ({
           </Link>
           {isExperimentalAnalyticsPageEnabled && (
             <Link href="/analytics" passHref>
-              <NavItem selected={router.pathname === '/analytics'}>
+              <NavItem selected={router.pathname.includes('/analytics')}>
                 Analytics
               </NavItem>
             </Link>
