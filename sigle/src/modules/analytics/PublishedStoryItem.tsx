@@ -7,7 +7,7 @@ import { styled } from '../../stitches.config';
 import { SubsetStory } from '../../types';
 import { Box, Flex, Text } from '../../ui';
 import { AnalyticsHistoricalResponse } from './stats/types';
-import { FATHOM_MAX_FROM_DATE } from './stats/utils';
+import { baseUrl, FATHOM_MAX_FROM_DATE } from './stats/utils';
 
 const StoryImage = styled('img', {
   objectFit: 'cover',
@@ -20,7 +20,7 @@ const StoryImage = styled('img', {
 const testId = 'JA9dBfdPDp7kQhkFkgPdv';
 
 const fetchStoryViews = async (storyId: string) => {
-  const url = `http://localhost:3001/api/analytics/historical?dateFrom=${FATHOM_MAX_FROM_DATE}&dateGrouping=month&storyId=${storyId}`;
+  const url = `${baseUrl}/api/analytics/historical?dateFrom=${FATHOM_MAX_FROM_DATE}&dateGrouping=month&storyId=${storyId}`;
 
   const statsRes = await fetch(url);
   const statsData: AnalyticsHistoricalResponse = await statsRes.json();

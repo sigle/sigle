@@ -20,3 +20,7 @@ export const initialRange: StatsData[] = dates.map((date) => {
     visits: 0,
   };
 });
+
+export const isDev = process.env.NODE_ENV === 'development' ? true : false;
+
+export const baseUrl = isDev ? 'http://localhost:3001' : 'https://api.sigle.io';

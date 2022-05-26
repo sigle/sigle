@@ -14,6 +14,7 @@ import { StatsError } from './StatsError';
 import { StatsTotal } from './StatsTotal';
 import { AnalyticsHistoricalResponse, StatsData, StatsType } from './types';
 import {
+  baseUrl,
   FATHOM_MAX_FROM_DATE,
   initialRange,
   monthFromDate,
@@ -31,17 +32,17 @@ export const StatsFrame = () => {
   );
 
   const fetchStats = async (value: string) => {
-    const weeklyStatsUrl = `http://localhost:3001/api/analytics/historical?dateFrom=${format(
+    const weeklyStatsUrl = `${baseUrl}/api/analytics/historical?dateFrom=${format(
       weekFromDate,
       'yyyy-MM-dd'
     )}&dateGrouping=day`;
 
-    const monthlyStatsUrl = `http://localhost:3001/api/analytics/historical?dateFrom=${format(
+    const monthlyStatsUrl = `${baseUrl}/api/analytics/historical?dateFrom=${format(
       monthFromDate,
       'yyyy-MM-dd'
     )}&dateGrouping=day`;
 
-    const allTimeStatsUrl = `http://localhost:3001/api/analytics/historical?dateFrom=${FATHOM_MAX_FROM_DATE}&dateGrouping=month`;
+    const allTimeStatsUrl = `${baseUrl}/api/analytics/historical?dateFrom=${FATHOM_MAX_FROM_DATE}&dateGrouping=month`;
     let url;
 
     switch (value) {

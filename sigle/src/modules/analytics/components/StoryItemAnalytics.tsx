@@ -23,6 +23,7 @@ import { useQuery } from 'react-query';
 import { StatsTotal } from '../stats/StatsTotal';
 import { StatsError } from '../stats/StatsError';
 import {
+  baseUrl,
   FATHOM_MAX_FROM_DATE,
   initialRange,
   monthFromDate,
@@ -54,17 +55,17 @@ export const StoryItemAnalytics = ({
   const testId = 'JA9dBfdPDp7kQhkFkgPdv';
 
   const fetchStats = async (statType: string) => {
-    const weeklyStatsUrl = `http://localhost:3001/api/analytics/historical?dateFrom=${format(
+    const weeklyStatsUrl = `${baseUrl}/api/analytics/historical?dateFrom=${format(
       weekFromDate,
       'yyyy-MM-dd'
     )}&dateGrouping=day&storyId=${testId}`;
 
-    const monthlyStatsUrl = `http://localhost:3001/api/analytics/historical?dateFrom=${format(
+    const monthlyStatsUrl = `${baseUrl}/api/analytics/historical?dateFrom=${format(
       monthFromDate,
       'yyyy-MM-dd'
     )}&dateGrouping=day&storyId=${testId}`;
 
-    const allTimeStatsUrl = `http://localhost:3001/api/analytics/historical?dateFrom=${FATHOM_MAX_FROM_DATE}&dateGrouping=month&storyId=${testId}`;
+    const allTimeStatsUrl = `${baseUrl}/api/analytics/historical?dateFrom=${FATHOM_MAX_FROM_DATE}&dateGrouping=month&storyId=${testId}`;
     let url;
 
     switch (statType) {

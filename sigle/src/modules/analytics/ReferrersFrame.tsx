@@ -5,10 +5,10 @@ import { useQuery } from 'react-query';
 import { Box, Flex, Text } from '../../ui';
 import { Pagination } from './Pagination';
 import { ReferrersResponse } from './stats/types';
-import { FATHOM_MAX_FROM_DATE } from './stats/utils';
+import { baseUrl, FATHOM_MAX_FROM_DATE } from './stats/utils';
 
 const fetchReferrers = async () => {
-  const url = `http://localhost:3001/api/analytics/referrers?dateFrom=${FATHOM_MAX_FROM_DATE}`;
+  const url = `${baseUrl}/api/analytics/referrers?dateFrom=${FATHOM_MAX_FROM_DATE}`;
 
   const statsRes = await fetch(url);
   const referrerData: ReferrersResponse = await statsRes.json();
