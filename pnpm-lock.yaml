@@ -40,6 +40,7 @@ importers:
   server:
     specifiers:
       '@cartable/core': 0.3.0
+      '@fastify/cookie': 6.0.0
       '@fastify/cors': 7.0.0
       '@fastify/rate-limit': 6.0.1
       '@jest/globals': 28.1.0
@@ -59,6 +60,7 @@ importers:
       typescript: 4.6.4
       undici: 5.1.1
     dependencies:
+      '@fastify/cookie': 6.0.0
       '@fastify/cors': 7.0.0
       '@fastify/rate-limit': 6.0.1
       '@sentry/node': 6.19.7
@@ -994,6 +996,13 @@ packages:
     resolution: {integrity: sha512-gvCOUNpXsWrIQ3A4aXCLIdblL0tDq42BG/2Xw7oxbil9h11uow10ztS2GuFazNBfjbrsZ5nl+nPl5jDSjj5TSg==}
     dependencies:
       ajv: 6.12.6
+    dev: false
+
+  /@fastify/cookie/6.0.0:
+    resolution: {integrity: sha512-Luy3Po3dOJmqAuPCiPcWsX0tV5+C3AOnULSdlsGjNGOvyE7jqzysp8kT9ICfsUvove+TeUMgTWl1y9XS3ZPPMg==}
+    dependencies:
+      cookie-signature: 1.2.0
+      fastify-plugin: 3.0.1
     dev: false
 
   /@fastify/cors/7.0.0:
@@ -5436,6 +5445,11 @@ packages:
     dependencies:
       safe-buffer: 5.1.2
     dev: true
+
+  /cookie-signature/1.2.0:
+    resolution: {integrity: sha512-R0BOPfLGTitaKhgKROKZQN6iyq2iDQcH1DOF8nJoaWapguX5bC2w+Q/I9NmmM5lfcvEarnLZr+cCvmEYYSXvYA==}
+    engines: {node: '>=6.6.0'}
+    dev: false
 
   /cookie/0.4.2:
     resolution: {integrity: sha512-aSWTXFzaKWkvHO1Ny/s+ePFpvKsPnjc551iI41v3ny/ow6tBG5Vd+FuqGNhh1LxOmVzOlGUriIlOaokOvhaStA==}

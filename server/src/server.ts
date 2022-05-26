@@ -1,6 +1,7 @@
 import Fastify, { FastifyServerOptions, FastifyLoggerInstance } from 'fastify';
 import FastifyCors from '@fastify/cors';
 import FastifyRateLimit from '@fastify/rate-limit';
+import FastifyCookie from '@fastify/cookie';
 import { Server } from 'http';
 import * as Sentry from '@sentry/node';
 import { createAnalyticsHistoricalEndpoint } from './api/modules/analytics/historical';
@@ -19,6 +20,7 @@ export const buildFastifyServer = (
    * Allow the RENDER API to make calls, used to bypass CORS for the health check, in such case origin will be undefined.
    */
   fastify.register(FastifyCors, {
+    // credentials: true,
     origin: (origin, cb) => {
       if (
         config.NODE_ENV === 'development' ||
@@ -41,6 +43,13 @@ export const buildFastifyServer = (
     max: config.NODE_ENV === 'test' ? 1000 : 50,
     timeWindow: 60000,
     redis,
+  });
+
+  /**
+   * Parse the cookies sent by the web app for authentication.
+   */
+  fastify.register(FastifyCookie, {
+    secret: config.NEXTAUTH_SECRET,
   });
 
   /**

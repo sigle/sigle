@@ -1,4 +1,5 @@
 import { eachDayOfInterval, format } from 'date-fns';
+import { useSession } from 'next-auth/react';
 import { useEffect, useState } from 'react';
 import {
   Box,
@@ -42,17 +43,20 @@ interface TotalViewsAndVisitorsProps {
 }
 
 export const StatsFrame = () => {
+  const { data: session } = useSession();
   const [data, setData] = useState<StatsData[]>(initialRange);
   const [statType, setStatType] = useState<StatsType>('weekly');
   const [totalViewsAndVisitors, setTotalViewsAndVisitors] =
     useState<TotalViewsAndVisitorsProps>();
+
+  console.log({ session });
 
   useEffect(() => {
     fetchStats('weekly');
   }, []);
 
   const fetchStats = async (value: string) => {
-    const weeklyStatsUrl = `/api/analytics/historical?dateFrom=${format(
+    const weeklyStatsUrl = `http://localhost:3001/api/analytics/historical?dateFrom=${format(
       weekFromDate,
       'yyyy-MM-dd'
     )}&dateGrouping=day`;
@@ -80,7 +84,7 @@ export const StatsFrame = () => {
         throw new Error('No value received.');
     }
 
-    const statsRes = await fetch(url);
+    const statsRes = await fetch(url, { credentials: 'include' });
 
     const statsData: AnalyticsHistoricalResponse = await statsRes.json();
     const stats: StatsData[] = statsData.historical.map((item) => {
