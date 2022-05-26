@@ -22,6 +22,7 @@ import { PublishedStoryItem } from '../PublishedStoryItem';
 import { ReferrersFrame } from '../ReferrersFrame';
 import { useQuery } from 'react-query';
 import { StatsTotal } from '../stats/StatsTotal';
+import { StatsError } from '../stats/StatsError';
 
 const FATHOM_MAX_FROM_DATE = '2021-04-01';
 
@@ -54,18 +55,22 @@ export const StoryItemAnalytics = ({
 }: StoryAnalyticsProps) => {
   const router = useRouter();
   const [statType, setStatType] = useState<StatsType>('weekly');
-  const { data, refetch } = useQuery('fetchStats', () => fetchStats(statType), {
-    select: (data: AnalyticsHistoricalResponse) => {
-      const statsData = data?.historical.map((item) => {
-        return {
-          pageViews: item.pageviews,
-          date: item.date,
-          visits: item.visits,
-        };
-      });
-      return statsData;
-    },
-  });
+  const { data, refetch, isError } = useQuery<any, Error>(
+    'fetchStats',
+    () => fetchStats(statType),
+    {
+      select: (data: AnalyticsHistoricalResponse) => {
+        const statsData = data.historical.map((item) => {
+          return {
+            pageViews: item.pageviews,
+            date: item.date,
+            visits: item.visits,
+          };
+        });
+        return statsData;
+      },
+    }
+  );
 
   const story = stories && stories[0];
 
@@ -105,7 +110,13 @@ export const StoryItemAnalytics = ({
         throw new Error('No value received.');
     }
 
-    return fetch(url).then((res) => res.json());
+    const data = await fetch(url)
+      .then((res) => res.json())
+      .catch((error) => {
+        throw new Error(error);
+      });
+
+    return data;
   };
 
   const checkStatType = (value: string) => {
@@ -134,6 +145,12 @@ export const StoryItemAnalytics = ({
         />
       ) : (
         <Box css={{ height: 68 }} />
+      )}
+      {isError && (
+        <StatsError>
+          An error occurred and no data could be found. Please wait and refresh
+          the page.
+        </StatsError>
       )}
       <Flex css={{ mt: '$8' }}>
         <StatsTotal data={data} />

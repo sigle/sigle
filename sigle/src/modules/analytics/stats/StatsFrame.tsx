@@ -10,6 +10,7 @@ import {
   TabsTrigger,
 } from '../../../ui';
 import { StatsChart } from './StatsChart';
+import { StatsError } from './StatsError';
 import { StatsTotal } from './StatsTotal';
 import { AnalyticsHistoricalResponse, StatsData, StatsType } from './types';
 
@@ -35,18 +36,22 @@ const initialRange: StatsData[] = dates.map((date) => {
 
 export const StatsFrame = () => {
   const [statType, setStatType] = useState<StatsType>('weekly');
-  const { data, refetch } = useQuery('fetchStats', () => fetchStats(statType), {
-    select: (data: AnalyticsHistoricalResponse) => {
-      const statsData = data?.historical.map((item) => {
-        return {
-          pageViews: item.pageviews,
-          date: item.date,
-          visits: item.visits,
-        };
-      });
-      return statsData;
-    },
-  });
+  const { data, refetch, isError } = useQuery(
+    'fetchStats',
+    () => fetchStats(statType),
+    {
+      select: (data: AnalyticsHistoricalResponse) => {
+        const statsData = data?.historical.map((item) => {
+          return {
+            pageViews: item.pageviews,
+            date: item.date,
+            visits: item.visits,
+          };
+        });
+        return statsData;
+      },
+    }
+  );
 
   useEffect(() => {
     refetch();
@@ -102,6 +107,12 @@ export const StatsFrame = () => {
 
   return (
     <Box css={{ mb: '$8', position: 'relative' }}>
+      {isError && (
+        <StatsError>
+          An error occurred and no data could be found. Please wait and refresh
+          the page.
+        </StatsError>
+      )}
       <Flex>
         <StatsTotal data={data} />
         <Tabs
