@@ -8,7 +8,7 @@ import { ArrowTopRightIcon } from '@radix-ui/react-icons';
 import { getCsrfToken, signIn } from 'next-auth/react';
 import { Goals } from '../utils/fathom';
 import { Box, Button, Heading, Text } from '../ui';
-import { isExperimentalHiroWalletEnabled } from '../utils/featureFlags';
+import { useFeatureFlags } from '../utils/featureFlags';
 import { LoginLayout } from '../modules/layout/components/LoginLayout';
 import { useRouter } from 'next/router';
 import { useAuth } from '../modules/auth/AuthContext';
@@ -20,6 +20,7 @@ const Login = () => {
   const { status } = useSession();
   const { doOpenAuth, sign } = useConnect();
   const { doOpenAuth: legacyDoOpenAuth } = legacyUseConnect();
+  const { isExperimentalHiroWalletEnabled } = useFeatureFlags();
 
   console.log('login', { user, isLegacy, status, test: user && isLegacy });
 

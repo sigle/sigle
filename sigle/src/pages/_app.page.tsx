@@ -23,6 +23,7 @@ import { colors } from '../utils/colors';
 import { AuthProvider } from '../modules/auth/AuthContext';
 import { darkTheme, globalCss } from '../stitches.config';
 import { ThemeProvider } from 'next-themes';
+import { FeatureFlagsProvider } from '../utils/featureFlags';
 
 const queryClient = new QueryClient();
 
@@ -151,17 +152,19 @@ export default class MyApp extends App {
         <FathomTrack />
         <QueryClientProvider client={queryClient}>
           <ReactQueryDevtools initialIsOpen={false} />
-          <SessionProvider session={pageProps.session} refetchInterval={0}>
-            <AuthProvider>
-              <ThemeProvider
-                disableTransitionOnChange
-                attribute="class"
-                value={{ light: 'light-theme', dark: darkTheme.toString() }}
-              >
-                <Component {...modifiedPageProps} />
-              </ThemeProvider>
-            </AuthProvider>
-          </SessionProvider>
+          <FeatureFlagsProvider>
+            <SessionProvider session={pageProps.session} refetchInterval={0}>
+              <AuthProvider>
+                <ThemeProvider
+                  disableTransitionOnChange
+                  attribute="class"
+                  value={{ light: 'light-theme', dark: darkTheme.toString() }}
+                >
+                  <Component {...modifiedPageProps} />
+                </ThemeProvider>
+              </AuthProvider>
+            </SessionProvider>
+          </FeatureFlagsProvider>
         </QueryClientProvider>
         <ToastContainer autoClose={3000} icon={false} theme="colored" />
       </React.Fragment>
