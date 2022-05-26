@@ -5,8 +5,7 @@ import { useQuery } from 'react-query';
 import { Box, Flex, Text } from '../../ui';
 import { Pagination } from './Pagination';
 import { ReferrersResponse } from './stats/types';
-
-const FATHOM_MAX_FROM_DATE = '2021-04-01';
+import { FATHOM_MAX_FROM_DATE } from './stats/utils';
 
 const fetchReferrers = async () => {
   const url = `http://localhost:3001/api/analytics/referrers?dateFrom=${FATHOM_MAX_FROM_DATE}`;

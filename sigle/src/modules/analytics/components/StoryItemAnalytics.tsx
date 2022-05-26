@@ -1,4 +1,4 @@
-import { eachDayOfInterval, format } from 'date-fns';
+import { format } from 'date-fns';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
 import { StatsChart } from '../stats/StatsChart';
@@ -22,26 +22,12 @@ import { ReferrersFrame } from '../ReferrersFrame';
 import { useQuery } from 'react-query';
 import { StatsTotal } from '../stats/StatsTotal';
 import { StatsError } from '../stats/StatsError';
-
-const FATHOM_MAX_FROM_DATE = '2021-04-01';
-
-// prevent flash of no content in graph by initializing range data with a constant value (1)
-const today = new Date();
-const weekFromDate = new Date(new Date().setDate(today.getDate() - 7));
-const monthFromDate = new Date(new Date().setDate(today.getDate() - 30));
-
-const dates = eachDayOfInterval({
-  start: weekFromDate,
-  end: today,
-});
-
-const initialRange: StatsData[] = dates.map((date) => {
-  return {
-    pageViews: 0,
-    date: date.toString(),
-    visits: 0,
-  };
-});
+import {
+  FATHOM_MAX_FROM_DATE,
+  initialRange,
+  monthFromDate,
+  weekFromDate,
+} from '../stats/utils';
 
 interface StoryAnalyticsProps {
   storyId: string;

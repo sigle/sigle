@@ -7,8 +7,7 @@ import { styled } from '../../stitches.config';
 import { SubsetStory } from '../../types';
 import { Box, Flex, Text } from '../../ui';
 import { AnalyticsHistoricalResponse } from './stats/types';
-
-const FATHOM_MAX_FROM_DATE = '2021-04-01';
+import { FATHOM_MAX_FROM_DATE } from './stats/utils';
 
 const StoryImage = styled('img', {
   objectFit: 'cover',
