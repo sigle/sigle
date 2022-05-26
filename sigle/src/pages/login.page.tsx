@@ -6,7 +6,7 @@ import { useConnect as legacyUseConnect } from '@stacks/legacy-connect-react';
 import { ArrowTopRightIcon } from '@radix-ui/react-icons';
 import { Goals } from '../utils/fathom';
 import { Box, Button, Heading, Text } from '../ui';
-import { isExperimentalHiroWalletEnabled } from '../utils/featureFlags';
+import { useFeatureFlags } from '../utils/featureFlags';
 import { LoginLayout } from '../modules/layout/components/LoginLayout';
 import { useRouter } from 'next/router';
 import { useAuth } from '../modules/auth/AuthContext';
@@ -16,6 +16,7 @@ const Login = () => {
   const { user } = useAuth();
   const { doOpenAuth } = useConnect();
   const { doOpenAuth: legacyDoOpenAuth } = legacyUseConnect();
+  const { isExperimentalHiroWalletEnabled } = useFeatureFlags();
 
   useEffect(() => {
     // If user is already logged in or has a username we redirect him to the homepage

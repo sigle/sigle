@@ -11,7 +11,7 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from '../../../ui/Accordion';
-import { isExperimentalAnalyticsPageEnabled } from '../../../utils/featureFlags';
+import { useFeatureFlags } from '../../../utils/featureFlags';
 import { VariantProps } from '@stitches/react';
 
 const DashboardContainer = styled(Container, {
@@ -102,6 +102,7 @@ export const DashboardLayout = ({
   ...props
 }: DashboardLayoutProps) => {
   const router = useRouter();
+  const { isExperimentalAnalyticsPageEnabled } = useFeatureFlags();
 
   let triggerName;
 
