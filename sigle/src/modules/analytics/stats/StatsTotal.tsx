@@ -8,7 +8,7 @@ interface TotalViewsAndVisitorsProps {
 }
 
 interface StatsTotalProps {
-  data: StatsData[] | undefined;
+  data: StatsData[];
 }
 
 const numberWithCommas = (x: string): string => {
@@ -20,7 +20,7 @@ export const StatsTotal = ({ data }: StatsTotalProps) => {
     useState<TotalViewsAndVisitorsProps>();
 
   useEffect(() => {
-    const total = data?.reduce(
+    const total = data.reduce(
       function (previousValue, currentValue) {
         return {
           pageviews: previousValue.pageviews + currentValue.pageViews,
@@ -39,9 +39,9 @@ export const StatsTotal = ({ data }: StatsTotalProps) => {
           Total visitors
         </Text>
         <Text css={{ fontSize: 30, fontWeight: 600, color: '$green11' }}>
-          {totalViewsAndVisitors
-            ? numberWithCommas(totalViewsAndVisitors.visits.toString())
-            : '--'}
+          {!totalViewsAndVisitors || totalViewsAndVisitors.visits === 0
+            ? '--'
+            : numberWithCommas(totalViewsAndVisitors.visits.toString())}
         </Text>
       </Box>
       <Box>
@@ -49,9 +49,9 @@ export const StatsTotal = ({ data }: StatsTotalProps) => {
           Total views
         </Text>
         <Text css={{ fontSize: 30, fontWeight: 600, color: '$violet11' }}>
-          {totalViewsAndVisitors
-            ? numberWithCommas(totalViewsAndVisitors.pageviews.toString())
-            : '--'}
+          {!totalViewsAndVisitors || totalViewsAndVisitors.pageviews === 0
+            ? '--'
+            : numberWithCommas(totalViewsAndVisitors.pageviews.toString())}
         </Text>
       </Box>
     </Flex>
