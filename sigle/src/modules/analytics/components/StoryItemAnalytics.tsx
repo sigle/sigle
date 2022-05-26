@@ -55,16 +55,15 @@ export const StoryItemAnalytics = ({
 }: StoryAnalyticsProps) => {
   const router = useRouter();
   const [statType, setStatType] = useState<StatsType>('weekly');
-  const { data, refetch, isError, error } = useQuery<StatsData[], Error>(
+  const { data, isError, error } = useQuery<StatsData[], Error>(
     ['fetchStoryItemStats', statType],
-    () => fetchStats(statType)
+    () => fetchStats(statType),
+    {
+      placeholderData: initialRange,
+    }
   );
 
   const story = stories && stories[0];
-
-  useEffect(() => {
-    refetch();
-  }, [statType]);
 
   // testing on stories that already have views to validate things are working as expected
   const testId = 'JA9dBfdPDp7kQhkFkgPdv';
@@ -154,24 +153,16 @@ export const StoryItemAnalytics = ({
             <TabsTrigger value="all">All</TabsTrigger>
           </TabsList>
           <TabsContent value="weekly"></TabsContent>
-          {data ? (
-            <Box
-              css={{
-                mb: '$8',
-                position: 'relative',
-                width: '100%',
-                height: 400,
-              }}
-            >
-              <StatsChart type={statType} data={data} />
-            </Box>
-          ) : (
-            <Box
-              css={{
-                height: 400,
-              }}
-            />
-          )}
+          <Box
+            css={{
+              mb: '$8',
+              position: 'relative',
+              width: '100%',
+              height: 400,
+            }}
+          >
+            <StatsChart type={statType} data={data!} />
+          </Box>
         </Tabs>
       </Flex>
       <ReferrersFrame />

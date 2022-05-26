@@ -38,7 +38,10 @@ export const StatsFrame = () => {
   const [statType, setStatType] = useState<StatsType>('weekly');
   const { data, isError, error } = useQuery<StatsData[], Error>(
     ['fetchStats', statType],
-    () => fetchStats(statType)
+    () => fetchStats(statType),
+    {
+      placeholderData: initialRange,
+    }
   );
 
   const fetchStats = async (value: string) => {
