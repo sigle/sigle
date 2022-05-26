@@ -138,7 +138,7 @@ export const StoryItemAnalytics = ({
       )}
       {isError && <StatsError>{error.message}</StatsError>}
       <Flex css={{ mt: '$8' }}>
-        <StatsTotal data={data} />
+        <StatsTotal data={data!} />
         <Tabs
           onValueChange={(value) => checkStatType(value)}
           css={{ width: '100%' }}

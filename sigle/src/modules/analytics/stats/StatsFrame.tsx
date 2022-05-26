@@ -105,7 +105,7 @@ export const StatsFrame = () => {
     <Box css={{ mb: '$8', position: 'relative' }}>
       {isError && <StatsError>{error.message}</StatsError>}
       <Flex>
-        <StatsTotal data={data} />
+        <StatsTotal data={data!} />
         <Tabs
           onValueChange={(value) => checkStatType(value)}
           css={{ width: '100%' }}
@@ -120,24 +120,16 @@ export const StatsFrame = () => {
             <TabsTrigger value="all">All</TabsTrigger>
           </TabsList>
           <TabsContent value="weekly"></TabsContent>
-          {data ? (
-            <Box
-              css={{
-                mb: '$8',
-                position: 'relative',
-                width: '100%',
-                height: 400,
-              }}
-            >
-              <StatsChart type={statType} data={data} />
-            </Box>
-          ) : (
-            <Box
-              css={{
-                height: 400,
-              }}
-            />
-          )}
+          <Box
+            css={{
+              mb: '$8',
+              position: 'relative',
+              width: '100%',
+              height: 400,
+            }}
+          >
+            <StatsChart type={statType} data={data!} />
+          </Box>
         </Tabs>
       </Flex>
     </Box>
