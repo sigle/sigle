@@ -13,7 +13,6 @@ const StoryImage = styled('img', {
   width: 60,
   height: 43,
   br: '$1',
-  ml: '$2',
 });
 
 interface PublishedStoryItemProps {
@@ -90,7 +89,12 @@ export const PublishedStoryItem = ({
     >
       {individualStory && <ArrowLeftIcon />}
       <Box />
-      {story.coverImage && <StoryImage src={story.coverImage} />}
+      {story.coverImage && (
+        <StoryImage
+          css={{ ml: individualStory ? '$5' : '$2' }}
+          src={story.coverImage}
+        />
+      )}
       <Flex
         align="center"
         css={{
