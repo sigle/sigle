@@ -3,9 +3,17 @@ import { stagger } from 'motion';
 import { useMotionAnimate } from 'motion-hooks';
 import { useRouter } from 'next/router';
 import { useEffect } from 'react';
+import { useQuery } from 'react-query';
 import { styled } from '../../stitches.config';
 import { SubsetStory } from '../../types';
 import { Box, Flex, Text } from '../../ui';
+import {
+  AnalyticsHistoricalData,
+  AnalyticsHistoricalResponse,
+  StatsData,
+} from './stats/types';
+
+const FATHOM_MAX_FROM_DATE = '2021-04-01';
 
 const StoryImage = styled('img', {
   objectFit: 'cover',
@@ -15,19 +23,37 @@ const StoryImage = styled('img', {
   br: '$1',
 });
 
+const testId = 'JA9dBfdPDp7kQhkFkgPdv';
+
+const fetchStoryViews = async (storyId: string) => {
+  const url = `http://localhost:3001/api/analytics/historical?dateFrom=${FATHOM_MAX_FROM_DATE}&dateGrouping=month&storyId=${storyId}`;
+
+  const statsRes = await fetch(url);
+  const statsData: AnalyticsHistoricalResponse = await statsRes.json();
+  console.log(statsData);
+  let views;
+  if (statsData.stories.length > 0) {
+    views = statsData.stories[0].pageviews;
+  } else {
+    views = 0;
+  }
+  return views;
+};
+
 interface PublishedStoryItemProps {
   story: SubsetStory;
   onClick: () => void;
   individualStory?: boolean;
-  views?: number | undefined;
 }
 
 export const PublishedStoryItem = ({
   story,
   onClick,
-  views,
   individualStory = false,
 }: PublishedStoryItemProps) => {
+  const { data } = useQuery<number, Error>(['fetchStoryViews'], () =>
+    fetchStoryViews(story.id)
+  );
   const { play } = useMotionAnimate(
     '.story-item',
     { opacity: 1 },
@@ -126,7 +152,7 @@ export const PublishedStoryItem = ({
         <Flex align="center" css={{ gap: '$5', flexShrink: 0 }}>
           {!individualStory && (
             <>
-              <Text size="sm">{views} views</Text>
+              <Text size="sm">{data} views</Text>
               <ArrowRightIcon />
             </>
           )}
