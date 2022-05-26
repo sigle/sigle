@@ -55,22 +55,10 @@ export const StoryItemAnalytics = ({
 }: StoryAnalyticsProps) => {
   const router = useRouter();
   const [statType, setStatType] = useState<StatsType>('weekly');
-  const { data, refetch, isError, error } = useQuery<
-    AnalyticsHistoricalResponse,
-    Error,
-    StatsData[]
-  >('fetchStats', () => fetchStats(statType), {
-    select: (data: AnalyticsHistoricalResponse): StatsData[] => {
-      const statsData = data.historical.map((item) => {
-        return {
-          pageViews: item.pageviews,
-          date: item.date,
-          visits: item.visits,
-        };
-      });
-      return statsData;
-    },
-  });
+  const { data, refetch, isError, error } = useQuery<StatsData[], Error>(
+    ['fetchStoryItemStats', statType],
+    () => fetchStats(statType)
+  );
 
   const story = stories && stories[0];
 
@@ -110,13 +98,16 @@ export const StoryItemAnalytics = ({
         throw new Error('No value received.');
     }
 
-    const data = await fetch(url)
-      .then((res) => res.json())
-      .catch((error) => {
-        throw new Error(error);
-      });
-
-    return data;
+    const statsRes = await fetch(url);
+    const statsData: AnalyticsHistoricalResponse = await statsRes.json();
+    const stats: StatsData[] = statsData.historical.map((item) => {
+      return {
+        pageViews: item.pageviews,
+        date: item.date,
+        visits: item.visits,
+      };
+    });
+    return stats;
   };
 
   const checkStatType = (value: string) => {

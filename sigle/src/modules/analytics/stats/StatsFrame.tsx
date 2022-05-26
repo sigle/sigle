@@ -36,26 +36,10 @@ const initialRange: StatsData[] = dates.map((date) => {
 
 export const StatsFrame = () => {
   const [statType, setStatType] = useState<StatsType>('weekly');
-  const { data, refetch, isError } = useQuery<
-    AnalyticsHistoricalResponse,
-    Error,
-    StatsData[]
-  >('fetchStats', () => fetchStats(statType), {
-    select: (data: AnalyticsHistoricalResponse) => {
-      const statsData = data.historical.map((item) => {
-        return {
-          pageViews: item.pageviews,
-          date: item.date,
-          visits: item.visits,
-        };
-      });
-      return statsData;
-    },
-  });
-
-  useEffect(() => {
-    refetch();
-  }, [statType]);
+  const { data, isError, error } = useQuery<StatsData[], Error>(
+    ['fetchStats', statType],
+    () => fetchStats(statType)
+  );
 
   const fetchStats = async (value: string) => {
     const weeklyStatsUrl = `http://localhost:3001/api/analytics/historical?dateFrom=${format(
@@ -86,7 +70,16 @@ export const StatsFrame = () => {
         throw new Error('No value received.');
     }
 
-    return fetch(url).then((res) => res.json());
+    const statsRes = await fetch(url);
+    const statsData: AnalyticsHistoricalResponse = await statsRes.json();
+    const stats: StatsData[] = statsData.historical.map((item) => {
+      return {
+        pageViews: item.pageviews,
+        date: item.date,
+        visits: item.visits,
+      };
+    });
+    return stats;
   };
 
   const checkStatType = (value: string) => {
@@ -107,12 +100,7 @@ export const StatsFrame = () => {
 
   return (
     <Box css={{ mb: '$8', position: 'relative' }}>
-      {isError && (
-        <StatsError>
-          An error occurred and no data could be found. Please wait and refresh
-          the page.
-        </StatsError>
-      )}
+      {isError && <StatsError>{error.message}</StatsError>}
       <Flex>
         <StatsTotal data={data} />
         <Tabs
