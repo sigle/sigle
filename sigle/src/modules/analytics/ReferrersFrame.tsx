@@ -4,7 +4,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { useQuery } from 'react-query';
 import { Box, Flex, Text } from '../../ui';
 import { Pagination } from './Pagination';
-import { ReferrersItemProps, ReferrersResponse } from './stats/types';
+import { ReferrersResponse } from './stats/types';
 
 const FATHOM_MAX_FROM_DATE = '2021-04-01';
 

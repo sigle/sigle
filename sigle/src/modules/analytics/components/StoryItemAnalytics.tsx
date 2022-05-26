@@ -1,6 +1,6 @@
 import { eachDayOfInterval, format } from 'date-fns';
 import { useRouter } from 'next/router';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { StatsChart } from '../stats/StatsChart';
 import {
   AnalyticsHistoricalResponse,
@@ -15,7 +15,6 @@ import {
   TabsContent,
   TabsList,
   TabsTrigger,
-  Text,
 } from '../../../ui';
 import { SubsetStory } from '../../../types';
 import { PublishedStoryItem } from '../PublishedStoryItem';

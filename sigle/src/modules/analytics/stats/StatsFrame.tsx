@@ -1,5 +1,5 @@
 import { eachDayOfInterval, format } from 'date-fns';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useQuery } from 'react-query';
 import {
   Box,

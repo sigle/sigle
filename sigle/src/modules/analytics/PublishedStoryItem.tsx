@@ -1,17 +1,12 @@
 import { ArrowLeftIcon, ArrowRightIcon } from '@radix-ui/react-icons';
 import { stagger } from 'motion';
 import { useMotionAnimate } from 'motion-hooks';
-import { useRouter } from 'next/router';
 import { useEffect } from 'react';
 import { useQuery } from 'react-query';
 import { styled } from '../../stitches.config';
 import { SubsetStory } from '../../types';
 import { Box, Flex, Text } from '../../ui';
-import {
-  AnalyticsHistoricalData,
-  AnalyticsHistoricalResponse,
-  StatsData,
-} from './stats/types';
+import { AnalyticsHistoricalResponse } from './stats/types';
 
 const FATHOM_MAX_FROM_DATE = '2021-04-01';
 
