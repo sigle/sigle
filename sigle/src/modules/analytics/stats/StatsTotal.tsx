@@ -39,7 +39,7 @@ export const StatsTotal = ({ data }: StatsTotalProps) => {
           Total visitors
         </Text>
         <Text css={{ fontSize: 30, fontWeight: 600, color: '$green11' }}>
-          {!totalViewsAndVisitors || totalViewsAndVisitors.visits === 0
+          {!totalViewsAndVisitors
             ? '--'
             : numberWithCommas(totalViewsAndVisitors.visits.toString())}
         </Text>
@@ -49,7 +49,7 @@ export const StatsTotal = ({ data }: StatsTotalProps) => {
           Total views
         </Text>
         <Text css={{ fontSize: 30, fontWeight: 600, color: '$violet11' }}>
-          {!totalViewsAndVisitors || totalViewsAndVisitors.pageviews === 0
+          {!totalViewsAndVisitors
             ? '--'
             : numberWithCommas(totalViewsAndVisitors.pageviews.toString())}
         </Text>
