@@ -24,7 +24,7 @@ export const StatsFrame = () => {
     }
   );
 
-  const fetchStats = async (value: string) => {
+  const fetchStats = async (value: StatsType) => {
     const weeklyStatsUrl = `${baseUrl}/api/analytics/historical?dateFrom=${format(
       weekFromDate,
       'yyyy-MM-dd'
@@ -65,7 +65,7 @@ export const StatsFrame = () => {
     return stats;
   };
 
-  const checkStatType = (value: string) => {
+  const checkStatType = (value: StatsType) => {
     switch (value) {
       case 'weekly':
         setStatType('weekly');
@@ -87,7 +87,7 @@ export const StatsFrame = () => {
       <Flex>
         <StatsTotal data={data!} />
         <Tabs
-          onValueChange={(value) => checkStatType(value)}
+          onValueChange={(value) => checkStatType(value as StatsType)}
           css={{ width: '100%' }}
           defaultValue="weekly"
         >
