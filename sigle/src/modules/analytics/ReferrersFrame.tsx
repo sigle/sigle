@@ -83,18 +83,34 @@ export const ReferrersFrame = () => {
               <Box
                 css={{
                   flex: 1,
+                  position: 'relative',
+                  p: '$1',
+                  br: '$1',
                 }}
               >
                 <Box
                   css={{
-                    p: '$1',
-                    br: '$1',
+                    position: 'absolute',
+                    top: 0,
+                    bottom: 0,
+                    left: 0,
+                    zIndex: -1,
                     backgroundColor: '$gray3',
                     width: `${getPercentage(referrer.count)}%`,
                   }}
+                />
+                <Text
+                  css={{
+                    overflow: 'hidden',
+                    display: '-webkit-box',
+                    '-webkit-line-clamp': 1,
+                    '-webkit-box-orient': 'vertical',
+                    textOverflow: 'ellipsis',
+                  }}
+                  size="sm"
                 >
-                  <Text size="sm">{referrer.domain}</Text>
-                </Box>
+                  {referrer.domain}
+                </Text>
               </Box>
               <Text size="sm">{referrer.count}</Text>
             </Flex>
