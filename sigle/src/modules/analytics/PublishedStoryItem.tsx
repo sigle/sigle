@@ -44,7 +44,7 @@ export const PublishedStoryItem = ({
   onClick,
   individualStory = false,
 }: PublishedStoryItemProps) => {
-  const { data } = useQuery<number, Error>(['fetchStoryViews'], () =>
+  const { data } = useQuery<number, Error>(['fetchStoryStats'], () =>
     fetchStoryViews(story.id)
   );
   const { play } = useMotionAnimate(

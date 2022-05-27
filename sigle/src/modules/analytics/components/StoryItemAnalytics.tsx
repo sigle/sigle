@@ -31,7 +31,7 @@ export const StoryItemAnalytics = ({ story }: StoryAnalyticsProps) => {
   const router = useRouter();
   const [statType, setStatType] = useState<StatsType>('weekly');
   const { data, isError, error } = useQuery<StatsData[], Error>(
-    ['fetchStats', statType],
+    ['fetchStoryStats', statType],
     () => fetchStats(statType),
     {
       placeholderData: initialRange,
