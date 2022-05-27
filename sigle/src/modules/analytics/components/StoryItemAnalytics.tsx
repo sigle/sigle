@@ -31,7 +31,7 @@ export const StoryItemAnalytics = ({ story }: StoryAnalyticsProps) => {
   const router = useRouter();
   const [statType, setStatType] = useState<StatsType>('weekly');
   const { data, isError, error } = useQuery<StatsData[], Error>(
-    ['fetchStoryItemStats', statType],
+    ['fetchStats', statType],
     () => fetchStats(statType),
     {
       placeholderData: initialRange,
@@ -41,7 +41,7 @@ export const StoryItemAnalytics = ({ story }: StoryAnalyticsProps) => {
   // testing on stories that already have views to validate things are working as expected
   const testId = 'JA9dBfdPDp7kQhkFkgPdv';
 
-  const fetchStats = async (statType: string) => {
+  const fetchStats = async (statType: StatsType) => {
     const weeklyStatsUrl = `${baseUrl}/api/analytics/historical?dateFrom=${format(
       weekFromDate,
       'yyyy-MM-dd'
@@ -87,7 +87,7 @@ export const StoryItemAnalytics = ({ story }: StoryAnalyticsProps) => {
     return stats;
   };
 
-  const checkStatType = (value: string) => {
+  const checkStatType = (value: StatsType) => {
     switch (value) {
       case 'weekly':
         setStatType('weekly');
@@ -118,7 +118,7 @@ export const StoryItemAnalytics = ({ story }: StoryAnalyticsProps) => {
       <Flex css={{ mt: '$8' }}>
         <StatsTotal data={data!} />
         <Tabs
-          onValueChange={(value) => checkStatType(value)}
+          onValueChange={(value) => checkStatType(value as StatsType)}
           css={{ width: '100%' }}
           defaultValue="weekly"
         >
