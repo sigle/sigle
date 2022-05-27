@@ -1,11 +1,6 @@
-import { useEffect, useState } from 'react';
+import { useMemo } from 'react';
 import { Box, Flex, Text } from '../../../ui';
 import { StatsData } from './types';
-
-interface TotalViewsAndVisitorsProps {
-  pageviews: number;
-  visits: number;
-}
 
 interface StatsTotalProps {
   data: StatsData[];
@@ -16,10 +11,7 @@ const numberWithCommas = (x: string): string => {
 };
 
 export const StatsTotal = ({ data }: StatsTotalProps) => {
-  const [totalViewsAndVisitors, setTotalViewsAndVisitors] =
-    useState<TotalViewsAndVisitorsProps>();
-
-  useEffect(() => {
+  const totalViewsAndVisitors = useMemo(() => {
     const total = data.reduce(
       function (previousValue, currentValue) {
         return {
@@ -29,7 +21,7 @@ export const StatsTotal = ({ data }: StatsTotalProps) => {
       },
       { pageviews: 0, visits: 0 }
     );
-    setTotalViewsAndVisitors(total);
+    return total;
   }, [data]);
 
   return (
