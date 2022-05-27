@@ -8,7 +8,7 @@ import {
   StatsType,
 } from '../stats/types';
 import { DashboardLayout } from '../../layout';
-import { Box, Flex, Tabs, TabsList, TabsTrigger } from '../../../ui';
+import { Box, Flex, Heading, Tabs, TabsList, TabsTrigger } from '../../../ui';
 import { SubsetStory } from '../../../types';
 import { PublishedStoryItem } from '../PublishedStoryItem';
 import { ReferrersFrame } from '../ReferrersFrame';
@@ -143,6 +143,14 @@ export const StoryItemAnalytics = ({ story }: StoryAnalyticsProps) => {
             <StatsChart type={statType} data={data!} />
           </Box>
         </Tabs>
+      </Flex>
+      <Flex css={{ mb: '$5' }} justify="between">
+        <Heading as="h3" css={{ fontSize: 15, fontWeight: 600 }}>
+          Referrers
+        </Heading>
+        <Heading as="h3" css={{ fontSize: 15, fontWeight: 600 }}>
+          Views
+        </Heading>
       </Flex>
       <ReferrersFrame />
     </DashboardLayout>
