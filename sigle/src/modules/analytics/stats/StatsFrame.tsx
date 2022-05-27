@@ -1,13 +1,13 @@
 import { format } from 'date-fns';
 import { useState } from 'react';
 import { useQuery } from 'react-query';
+import { sigleConfig } from '../../../config';
 import { Box, Flex, Tabs, TabsList, TabsTrigger } from '../../../ui';
 import { StatsChart } from './StatsChart';
 import { StatsError } from './StatsError';
 import { StatsTotal } from './StatsTotal';
 import { AnalyticsHistoricalResponse, StatsData, StatsType } from './types';
 import {
-  baseUrl,
   FATHOM_MAX_FROM_DATE,
   initialRange,
   monthFromDate,
@@ -23,6 +23,8 @@ export const StatsFrame = () => {
       placeholderData: initialRange,
     }
   );
+
+  const baseUrl = sigleConfig.baseUrl;
 
   const fetchStats = async (value: StatsType) => {
     const weeklyStatsUrl = `${baseUrl}/api/analytics/historical?dateFrom=${format(

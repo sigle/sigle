@@ -16,12 +16,12 @@ import { useQuery } from 'react-query';
 import { StatsTotal } from '../stats/StatsTotal';
 import { StatsError } from '../stats/StatsError';
 import {
-  baseUrl,
   FATHOM_MAX_FROM_DATE,
   initialRange,
   monthFromDate,
   weekFromDate,
 } from '../stats/utils';
+import { sigleConfig } from '../../../config';
 
 interface StoryAnalyticsProps {
   story: SubsetStory | undefined;
@@ -37,6 +37,8 @@ export const StoryItemAnalytics = ({ story }: StoryAnalyticsProps) => {
       placeholderData: initialRange,
     }
   );
+
+  const baseUrl = sigleConfig.baseUrl;
 
   // testing on stories that already have views to validate things are working as expected
   const testId = 'JA9dBfdPDp7kQhkFkgPdv';

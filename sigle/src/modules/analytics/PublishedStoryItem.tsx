@@ -3,11 +3,12 @@ import { stagger } from 'motion';
 import { useMotionAnimate } from 'motion-hooks';
 import { useEffect } from 'react';
 import { useQuery } from 'react-query';
+import { sigleConfig } from '../../config';
 import { styled } from '../../stitches.config';
 import { SubsetStory } from '../../types';
 import { Box, Flex, Text } from '../../ui';
 import { AnalyticsHistoricalResponse } from './stats/types';
-import { baseUrl, FATHOM_MAX_FROM_DATE } from './stats/utils';
+import { FATHOM_MAX_FROM_DATE } from './stats/utils';
 
 const StoryImage = styled('img', {
   objectFit: 'cover',
@@ -17,7 +18,7 @@ const StoryImage = styled('img', {
   br: '$1',
 });
 
-const testId = 'JA9dBfdPDp7kQhkFkgPdv';
+const baseUrl = sigleConfig.baseUrl;
 
 const fetchStoryViews = async (storyId: string) => {
   const url = `${baseUrl}/api/analytics/historical?dateFrom=${FATHOM_MAX_FROM_DATE}&dateGrouping=month&storyId=${storyId}`;

@@ -2,12 +2,15 @@ import { stagger } from 'motion';
 import { useMotionAnimate } from 'motion-hooks';
 import { useEffect, useMemo, useState } from 'react';
 import { useQuery } from 'react-query';
+import { sigleConfig } from '../../config';
 import { Box, Flex, Text } from '../../ui';
 import { Pagination } from './Pagination';
 import { ReferrersResponse } from './stats/types';
-import { baseUrl, FATHOM_MAX_FROM_DATE } from './stats/utils';
+import { FATHOM_MAX_FROM_DATE } from './stats/utils';
 
 const fetchReferrers = async () => {
+  const baseUrl = sigleConfig.baseUrl;
+
   const url = `${baseUrl}/api/analytics/referrers?dateFrom=${FATHOM_MAX_FROM_DATE}`;
 
   const statsRes = await fetch(url);
