@@ -24,14 +24,10 @@ import {
 } from '../stats/utils';
 
 interface StoryAnalyticsProps {
-  storyId: string;
-  stories: SubsetStory[] | null;
+  story: SubsetStory | undefined;
 }
 
-export const StoryItemAnalytics = ({
-  storyId,
-  stories,
-}: StoryAnalyticsProps) => {
+export const StoryItemAnalytics = ({ story }: StoryAnalyticsProps) => {
   const router = useRouter();
   const [statType, setStatType] = useState<StatsType>('weekly');
   const { data, isError, error } = useQuery<StatsData[], Error>(
@@ -41,8 +37,6 @@ export const StoryItemAnalytics = ({
       placeholderData: initialRange,
     }
   );
-
-  const story = stories && stories[0];
 
   // testing on stories that already have views to validate things are working as expected
   const testId = 'JA9dBfdPDp7kQhkFkgPdv';
@@ -131,7 +125,6 @@ export const StoryItemAnalytics = ({
             <TabsTrigger value="monthly">Monthly</TabsTrigger>
             <TabsTrigger value="all">All</TabsTrigger>
           </TabsList>
-          ß
           <Box
             css={{
               mb: '$8',
