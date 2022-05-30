@@ -19,8 +19,6 @@ const Login = () => {
   const { doOpenAuth: legacyDoOpenAuth } = legacyUseConnect();
   let { isExperimentalHiroWalletEnabled } = useFeatureFlags();
 
-  isExperimentalHiroWalletEnabled = false;
-
   useEffect(() => {
     // If user is already logged in or has a username we redirect him to the homepage
     if (user) {
