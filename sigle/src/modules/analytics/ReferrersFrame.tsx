@@ -5,6 +5,7 @@ import { useQuery } from 'react-query';
 import { sigleConfig } from '../../config';
 import { Box, Flex, Text } from '../../ui';
 import { Pagination } from './Pagination';
+import { StatsError } from './stats/StatsError';
 import { ReferrersResponse } from './stats/types';
 import { FATHOM_MAX_FROM_DATE } from './stats/utils';
 
@@ -25,10 +26,11 @@ const fetchReferrers = async () => {
 
 export const ReferrersFrame = () => {
   const [currentPage, setCurrentPage] = useState<number>(1);
-  const { data: referrers } = useQuery<ReferrersResponse, Error>(
-    ['fetchReferrers'],
-    fetchReferrers
-  );
+  const {
+    data: referrers,
+    isError,
+    error,
+  } = useQuery<ReferrersResponse, Error>(['fetchReferrers'], fetchReferrers);
   const { play } = useMotionAnimate(
     '.referrer-item',
     { opacity: 1 },
@@ -73,6 +75,7 @@ export const ReferrersFrame = () => {
 
   return (
     <>
+      {isError && <StatsError>{error.message}</StatsError>}
       {currentReferrers ? (
         <Flex
           css={{ flexShrink: 0, mb: '$4', height: 464 }}
@@ -125,7 +128,7 @@ export const ReferrersFrame = () => {
           ))}
         </Flex>
       ) : (
-        <Box css={{ display: 'grid', placeItems: 'center', height: '100%' }}>
+        <Box css={{ display: 'grid', placeItems: 'center' }}>
           <Text>No data to display</Text>
         </Box>
       )}
