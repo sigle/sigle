@@ -1,5 +1,5 @@
 ---
-'@sigle/app': patch
+'@sigle/app': minor
 ---
 
-(Beta) Change login for new login flow, step 1.
+Enable Hiro wallet login for everyone and change login for new login flow, step 1.
