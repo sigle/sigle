@@ -130,44 +130,6 @@ const Login = () => {
           </Typography>
         </Flex>
       </Flex>
-      {/*
-      {isExperimentalHiroWalletEnabled ? null : (
-        <Text
-          color="orange"
-          size="action"
-          as="a"
-          target="_blank"
-          rel="noreferrer"
-          href="https://www.stacks.co/what-is-stacks"
-          css={{ mt: '$5', display: 'flex', alignItems: 'center' }}
-        >
-          What is Stacks?
-          <Box as="span" css={{ ml: '$2' }}>
-            <ArrowTopRightIcon height={16} width={16} />
-          </Box>
-        </Text>
-      )}
-      <Button
-        color="orange"
-        size="lg"
-        onClick={
-          isExperimentalHiroWalletEnabled ? handleLogin : handleLoginLegacy
-        }
-        css={{ mt: '$7' }}
-      >
-        {isExperimentalHiroWalletEnabled ? 'Connect Wallet' : 'Start Writing'}
-      </Button>
-      {isExperimentalHiroWalletEnabled ? (
-        <Button
-          variant="ghost"
-          color="gray"
-          size="lg"
-          onClick={handleLoginLegacy}
-          css={{ mt: '$3' }}
-        >
-          Legacy login
-        </Button>
-      ) : null} */}
     </LoginLayout>
   );
 };
