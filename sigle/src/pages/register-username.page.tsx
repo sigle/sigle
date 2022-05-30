@@ -7,7 +7,7 @@ import {
 import { makeProfileZoneFile } from '@stacks/profile';
 import posthog from 'posthog-js';
 import * as Fathom from 'fathom-client';
-import { Button, Flex, Heading, Text } from '../ui';
+import { Button, Flex, Typography } from '../ui';
 import { LoginLayout } from '../modules/layout/components/LoginLayout';
 import { keyframes, styled } from '../stitches.config';
 import { QuestionMarkCircledIcon } from '@radix-ui/react-icons';
@@ -127,7 +127,7 @@ const FormInput = styled('input', {
 
 const RegisterUsername = () => {
   const router = useRouter();
-  const { user, loggingIn, setUsername } = useAuth();
+  const { user, loggingIn, isLegacy, setUsername } = useAuth();
   const [formState, setFormState] = useState<FormState>({
     username: '',
     loading: false,
@@ -268,85 +268,96 @@ const RegisterUsername = () => {
 
   return (
     <LoginLayout>
-      <Heading
-        as="h1"
-        size="2xl"
-        css={{
-          mt: '$5',
-          fontWeight: '600',
-        }}
-      >
-        One last step
-      </Heading>
-      <Text
-        css={{
-          mt: '$2',
-          mb: '$3',
-          color: '$gray10',
-        }}
-      >
-        Choose a .id.stx username
-      </Text>
-      <form onSubmit={handleSubmit}>
-        <ControlGroup role="group">
-          <FormInput
-            disabled={formState.loading}
-            placeholder="johndoe.id.stx"
-            onChange={(event) =>
-              setFormState({ username: event.target.value, loading: false })
-            }
-          />
-          <Button
-            disabled={formState.loading}
-            variant={formState.loading ? 'ghost' : 'solid'}
-            color="orange"
+      {isLegacy ? (
+        <Typography>
+          Looks like there was an issue with your account (Blockstack connect)
+          and no username are found.
+        </Typography>
+      ) : (
+        <>
+          <Typography
+            as="h1"
+            size="h2"
             css={{
-              display: formState.loading ? 'flex' : 'block',
-              justifyContent: 'space-between',
-              pointerEvents: formState.loading ? 'none' : 'auto',
+              mt: '$5',
+              fontWeight: '600',
             }}
           >
-            {formState.loading ? <LoadingSpinner /> : 'Submit'}
-          </Button>
-        </ControlGroup>
-      </form>
-      <Flex css={{ mb: '$5' }} align="center" gap="5">
-        {!formState.loading && !formState.errorMessage ? (
-          <>
-            <Text
-              css={{
-                color: '$orange11',
-                '&:hover': { boxShadow: '0 1px 0 0' },
-              }}
-              size="sm"
-              as="a"
-              href="https://btc.us/"
-              target="_blank"
-              rel="noreferrer"
-            >
-              Or buy a .BTC domain instead
-            </Text>
-            <Text
-              as="a"
-              color="orange"
-              href="https://docs.sigle.io/"
-              target="_blank"
-              rel="noreferrer"
-              aria-label="Learn more"
-            >
-              <QuestionMarkCircledIcon />
-            </Text>
-          </>
-        ) : null}
-        {formState.loading ? (
-          <Text size="sm">Your username is being created. Please wait...</Text>
-        ) : null}
-        {formState.errorMessage ? (
-          <Text size="sm" color="orange">
-            {formState.errorMessage}
-          </Text>
-        ) : null}
-      </Flex>
+            One last step
+          </Typography>
+          <Typography
+            css={{
+              mt: '$2',
+              mb: '$3',
+              color: '$gray10',
+            }}
+          >
+            Choose a .id.stx username
+          </Typography>
+          <form onSubmit={handleSubmit}>
+            <ControlGroup role="group">
+              <FormInput
+                disabled={formState.loading}
+                placeholder="johndoe.id.stx"
+                onChange={(event) =>
+                  setFormState({ username: event.target.value, loading: false })
+                }
+              />
+              <Button
+                disabled={formState.loading}
+                variant={formState.loading ? 'ghost' : 'solid'}
+                color="orange"
+                css={{
+                  display: formState.loading ? 'flex' : 'block',
+                  justifyContent: 'space-between',
+                  pointerEvents: formState.loading ? 'none' : 'auto',
+                }}
+              >
+                {formState.loading ? <LoadingSpinner /> : 'Submit'}
+              </Button>
+            </ControlGroup>
+          </form>
+          <Flex css={{ mb: '$5' }} align="center" gap="5">
+            {!formState.loading && !formState.errorMessage ? (
+              <>
+                <Typography
+                  css={{
+                    color: '$orange11',
+                    '&:hover': { boxShadow: '0 1px 0 0' },
+                  }}
+                  size="subheading"
+                  as="a"
+                  href="https://btc.us/"
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  Or buy a .BTC domain instead
+                </Typography>
+                <Typography
+                  as="a"
+                  color="orange"
+                  href="https://docs.sigle.io/"
+                  target="_blank"
+                  rel="noreferrer"
+                  aria-label="Learn more"
+                >
+                  <QuestionMarkCircledIcon />
+                </Typography>
+              </>
+            ) : null}
+            {formState.loading ? (
+              <Typography size="subheading">
+                Your username is being created. Please wait...
+              </Typography>
+            ) : null}
+            {formState.errorMessage ? (
+              <Typography size="subheading" color="orange">
+                {formState.errorMessage}
+              </Typography>
+            ) : null}
+          </Flex>
+        </>
+      )}
     </LoginLayout>
   );
 };

@@ -46,8 +46,17 @@ export const Typography = styled('p', {
         letterSpacing: '0.2px',
       },
     },
+    color: {
+      gray: {
+        color: '$gray10',
+      },
+      orange: {
+        color: '$orange11',
+      },
+    },
   },
   defaultVariants: {
     size: 'paragraph',
+    color: 'gray',
   },
 });
