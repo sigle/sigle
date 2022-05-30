@@ -4,8 +4,8 @@ export const sigleConfig = {
   appUrl: process.env.APP_URL as string,
   baseUrl:
     process.env.NODE_ENV === 'development'
-      ? 'http://localhost:3001'
-      : 'https://api.sigle.io',
+      ? process.env.API_URL_DEV
+      : process.env.API_URL_PROD,
   landingUrl: 'https://www.sigle.io',
   sentryDsn: process.env.NEXT_PUBLIC_SENTRY_DSN,
   fathomSiteId: process.env.FATHOM_SITE_ID,
