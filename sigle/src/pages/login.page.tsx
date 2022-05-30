@@ -11,8 +11,6 @@ import { useRouter } from 'next/router';
 import { useAuth } from '../modules/auth/AuthContext';
 import { sigleConfig } from '../config';
 
-// TODO hide register username for legacy login
-
 const Login = () => {
   const router = useRouter();
   const { user } = useAuth();
