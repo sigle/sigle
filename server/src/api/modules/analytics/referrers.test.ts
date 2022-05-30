@@ -69,7 +69,7 @@ it('Respond with referrers', async () => {
     url: '/api/analytics/referrers?dateFrom=2022-03-15',
   });
 
-  expect(fathomClient.aggregateReferrers).toBeCalledTimes(25);
+  expect(fathomClient.aggregateReferrers).toBeCalledTimes(26);
   expect(response.statusCode).toBe(200);
   expect(response.json()).toMatchSnapshot();
 });

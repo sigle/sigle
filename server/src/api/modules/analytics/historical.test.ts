@@ -107,7 +107,7 @@ it('Respond with a formatted time series for days', async () => {
     url: '/api/analytics/historical?dateFrom=2022-03-15&dateGrouping=day',
   });
 
-  expect(fathomClient.aggregatePath).toBeCalledTimes(25);
+  expect(fathomClient.aggregatePath).toBeCalledTimes(26);
   expect(response.statusCode).toBe(200);
   expect(response.json()).toMatchSnapshot();
 });
@@ -140,7 +140,7 @@ it('Respond with a formatted time series for months', async () => {
     url: '/api/analytics/historical?dateFrom=2022-01-02&dateGrouping=month',
   });
 
-  expect(fathomClient.aggregatePath).toBeCalledTimes(25);
+  expect(fathomClient.aggregatePath).toBeCalledTimes(26);
   expect(response.statusCode).toBe(200);
   expect(response.json()).toMatchSnapshot();
 });
