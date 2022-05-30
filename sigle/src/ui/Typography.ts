@@ -33,6 +33,7 @@ export const Typography = styled('p', {
       },
       subheading: {
         fontSize: '15px',
+        lineHeight: '20px',
       },
       paragraph: {
         fontSize: '18px',
