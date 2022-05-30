@@ -1,5 +1,8 @@
 import { styled } from '../stitches.config';
 
+/**
+ * @deprecated Use `Typography` instead.
+ */
 export const Text = styled('p', {
   variants: {
     size: {

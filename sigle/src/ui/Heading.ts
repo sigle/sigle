@@ -1,5 +1,8 @@
 import { styled } from '../stitches.config';
 
+/**
+ * @deprecated Use `Typography` instead.
+ */
 export const Heading = styled('p', {
   fontWeight: 700,
   color: '$gray11',
