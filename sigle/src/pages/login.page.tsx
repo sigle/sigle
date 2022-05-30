@@ -3,20 +3,19 @@ import * as Fathom from 'fathom-client';
 import posthog from 'posthog-js';
 import { useConnect } from '@stacks/connect-react';
 import { useConnect as legacyUseConnect } from '@stacks/legacy-connect-react';
-import { ArrowTopRightIcon } from '@radix-ui/react-icons';
+import { EyeOpenIcon, FaceIcon, RocketIcon } from '@radix-ui/react-icons';
 import { Goals } from '../utils/fathom';
-import { Box, Button, Heading, Text } from '../ui';
-import { useFeatureFlags } from '../utils/featureFlags';
+import { Box, Button, Flex, Typography } from '../ui';
 import { LoginLayout } from '../modules/layout/components/LoginLayout';
 import { useRouter } from 'next/router';
 import { useAuth } from '../modules/auth/AuthContext';
+import { sigleConfig } from '../config';
 
 const Login = () => {
   const router = useRouter();
   const { user } = useAuth();
   const { doOpenAuth } = useConnect();
   const { doOpenAuth: legacyDoOpenAuth } = legacyUseConnect();
-  const { isExperimentalHiroWalletEnabled } = useFeatureFlags();
 
   useEffect(() => {
     // If user is already logged in or has a username we redirect him to the homepage
@@ -39,78 +38,79 @@ const Login = () => {
 
   return (
     <LoginLayout>
-      {isExperimentalHiroWalletEnabled ? (
-        <Heading
-          as="h1"
-          size="lg"
-          css={{
-            mt: '$3',
-            fontWeight: 600,
-            fontSize: 22,
-          }}
-        >
-          Where Web3 stories come to life
-        </Heading>
-      ) : (
-        <Heading
-          as="h1"
-          size="2xl"
-          css={{
-            mt: '$15',
-          }}
-        >
-          Welcome!
-        </Heading>
-      )}
-
-      {isExperimentalHiroWalletEnabled ? null : (
-        <Text
-          css={{
-            mt: '$7',
-            color: '$gray10',
-          }}
-        >
-          Sigle is a web 3.0 open source blogging platform focused on{' '}
-          <strong>protecting your privacy</strong>, built on top of Stacks.
-        </Text>
-      )}
-      {isExperimentalHiroWalletEnabled ? null : (
-        <Text
-          color="orange"
-          size="action"
+      <Typography>Sigle is a decentralised platform.</Typography>
+      <Typography>
+        To access Sigle, you need to connect your{' '}
+        <Box
           as="a"
+          css={{ color: '$orange11', boxShadow: '0 1px 0 0' }}
+          href="https://www.hiro.so/wallet/install-web"
           target="_blank"
           rel="noreferrer"
-          href="https://www.stacks.co/what-is-stacks"
-          css={{ mt: '$5', display: 'flex', alignItems: 'center' }}
         >
-          What is Stacks?
-          <Box as="span" css={{ ml: '$2' }}>
-            <ArrowTopRightIcon height={16} width={16} />
-          </Box>
-        </Text>
-      )}
-      <Button
-        color="orange"
-        size="lg"
-        onClick={
-          isExperimentalHiroWalletEnabled ? handleLogin : handleLoginLegacy
-        }
-        css={{ mt: '$7' }}
-      >
-        {isExperimentalHiroWalletEnabled ? 'Connect Wallet' : 'Start Writing'}
-      </Button>
-      {isExperimentalHiroWalletEnabled ? (
+          Hiro wallet.
+        </Box>
+      </Typography>
+      <Flex gap="3" justify="end" css={{ mt: '$7' }}>
         <Button
           variant="ghost"
           color="gray"
           size="lg"
           onClick={handleLoginLegacy}
-          css={{ mt: '$3' }}
         >
-          Legacy login
+          Blockstack connect
         </Button>
-      ) : null}
+        <Button color="orange" size="lg" onClick={handleLogin}>
+          Connect Wallet
+        </Button>
+      </Flex>
+      <Box as="hr" css={{ mt: '$3', color: '$gray6' }} />
+      <Flex direction="column" gap="3" css={{ mt: '$3', color: '$gray9' }}>
+        <Flex css={{ gap: '$3' }} align="center">
+          <div>
+            <EyeOpenIcon width={15} height={15} />
+          </div>
+          <Typography size="subheading">
+            We will never do anything without your approval and we only need
+            view only permissions.
+          </Typography>
+        </Flex>
+        <Flex css={{ gap: '$3' }} align="center">
+          <div>
+            <FaceIcon width={15} height={15} />
+          </div>
+          <Typography size="subheading">
+            Code is{' '}
+            <Box
+              as="a"
+              css={{ boxShadow: '0 1px 0 0' }}
+              href={sigleConfig.githubUrl}
+              target="_blank"
+              rel="noreferrer"
+            >
+              open-source.
+            </Box>
+          </Typography>
+        </Flex>
+        <Flex css={{ gap: '$3' }} align="center">
+          <div>
+            <RocketIcon width={15} height={15} />
+          </div>
+          <Typography size="subheading">
+            Sigle was part of the{' '}
+            <Box
+              as="a"
+              css={{ boxShadow: '0 1px 0 0' }}
+              href="https://stacks.ac/teams"
+              target="_blank"
+              rel="noreferrer"
+            >
+              #1 cohort
+            </Box>{' '}
+            of the Stacks accelerator program.
+          </Typography>
+        </Flex>
+      </Flex>
     </LoginLayout>
   );
 };
