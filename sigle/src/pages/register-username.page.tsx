@@ -271,7 +271,7 @@ const RegisterUsername = () => {
       <LoginLayout>
         <Typography>
           Looks like there was an issue with your account (Blockstack connect)
-          and no username are found.
+          and no username were found.
         </Typography>
       </LoginLayout>
     );
