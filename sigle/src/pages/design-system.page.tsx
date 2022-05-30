@@ -3,14 +3,14 @@ import { styled } from '../stitches.config';
 import {
   Box,
   Container,
-  Heading,
-  Text,
   Button,
   IconButton,
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuTrigger,
   DropdownMenuItem,
+  Typography,
+  Flex,
 } from '../ui';
 
 const Separator = styled('div', {
@@ -19,9 +19,10 @@ const Separator = styled('div', {
   mb: '$4',
 });
 
-const SectionHeading = styled(Heading, {
+const SectionHeading = styled(Typography, {
   mt: '$10',
   textAlign: 'right',
+  fontWeight: 600,
 });
 
 const DesignSystem = () => {
@@ -29,34 +30,23 @@ const DesignSystem = () => {
 
   return (
     <Container>
-      <SectionHeading size="4xl">Heading</SectionHeading>
+      <SectionHeading size="h1">Typography</SectionHeading>
       <Separator />
+      <Flex direction="column" gap="2">
+        <Typography size="display1">(display1) {typographyText}</Typography>
+        <Typography size="display2">(display2) {typographyText}</Typography>
+        <Typography size="h1">(h1) {typographyText}</Typography>
+        <Typography size="h2">(h2) {typographyText}</Typography>
+        <Typography size="h3">(h3) {typographyText}</Typography>
+        <Typography size="h4">(h4) {typographyText}</Typography>
+        <Typography size="subheading">(subheading) {typographyText}</Typography>
+        <Typography size="paragraph">(paragraph) {typographyText}</Typography>
+        <Typography size="subparagraph">
+          (subparagraph) {typographyText}
+        </Typography>
+      </Flex>
 
-      <Heading size="5xl">(5xl) {typographyText}</Heading>
-      <Heading size="4xl" css={{ mt: '$2' }}>
-        (4xl) {typographyText}
-      </Heading>
-      <Heading size="3xl" css={{ mt: '$2' }}>
-        (3xl) {typographyText}
-      </Heading>
-      <Heading size="2xl" css={{ mt: '$2' }}>
-        (2xl) {typographyText}
-      </Heading>
-      <Heading size="xl" css={{ mt: '$2' }}>
-        (xl) {typographyText}
-      </Heading>
-
-      <SectionHeading size="4xl">Text</SectionHeading>
-      <Separator />
-      <Text size="md">(md) {typographyText}</Text>
-      <Text size="sm" css={{ mt: '$2' }}>
-        (sm) {typographyText}
-      </Text>
-      <Text size="xs" css={{ mt: '$2' }}>
-        (xs) {typographyText}
-      </Text>
-
-      <SectionHeading size="4xl">DropdownMenu</SectionHeading>
+      <SectionHeading size="h1">DropdownMenu</SectionHeading>
       <Separator />
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
@@ -70,10 +60,10 @@ const DesignSystem = () => {
         </DropdownMenuContent>
       </DropdownMenu>
 
-      <SectionHeading size="4xl">Button</SectionHeading>
+      <SectionHeading size="h1">Button</SectionHeading>
       <Separator />
       <Box css={{ display: 'flex', alignItems: 'center', gap: '$6' }}>
-        <Text size="sm">Sizes:</Text>
+        <Typography size="subparagraph">Sizes:</Typography>
         <Button size="md" color="gray">
           (md) Button
         </Button>
@@ -82,23 +72,23 @@ const DesignSystem = () => {
         </Button>
       </Box>
       <Box css={{ display: 'flex', alignItems: 'center', gap: '$6', mt: '$4' }}>
-        <Text size="sm">Colors:</Text>
+        <Typography size="subparagraph">Colors:</Typography>
         <Button color="gray">(gray) Button</Button>
         <Button color="orange">(orange) Button</Button>
       </Box>
       <Box css={{ display: 'flex', alignItems: 'center', gap: '$6', mt: '$4' }}>
-        <Text size="sm">Variants:</Text>
+        <Typography size="subparagraph">Variants:</Typography>
         <Button variant="solid">(solid) Button</Button>
         <Button variant="ghost">(ghost) Button</Button>
       </Box>
       <Box css={{ display: 'flex', alignItems: 'center', gap: '$6', mt: '$4' }}>
-        <Text size="sm">Some examples mixed:</Text>
+        <Typography size="subparagraph">Some examples mixed:</Typography>
         <Button size="lg" variant="ghost" color="orange">
           (lg, ghost, orange) Button
         </Button>
       </Box>
 
-      <SectionHeading size="4xl">IconButton</SectionHeading>
+      <SectionHeading size="h1">IconButton</SectionHeading>
       <Separator />
       <Box css={{ display: 'flex', alignItems: 'center', gap: '$6' }}>
         <IconButton>
