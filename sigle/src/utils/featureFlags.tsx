@@ -1,17 +1,13 @@
 import { createContext, useContext, useEffect, useState } from 'react';
 
-const experimentalHiroWalletKey = 'sigle-experimental-hiro-wallet';
-const experimentalHiroWalletParam = 'experimentalHiroWallet';
 const experimentalAnalyticsPageKey = 'sigle-experimental-analytics-page';
 const experimentalAnalyticsParam = 'experimentalAnalyticsPage';
 
 interface FeatureFlagsOptions {
-  isExperimentalHiroWalletEnabled: boolean;
   isExperimentalAnalyticsPageEnabled: boolean;
 }
 
 const FeatureFlagsContext = createContext<FeatureFlagsOptions>({
-  isExperimentalHiroWalletEnabled: false,
   isExperimentalAnalyticsPageEnabled: false,
 });
 
@@ -21,7 +17,6 @@ interface FeatureFlagsProviderProps {
 
 export function FeatureFlagsProvider({ children }: FeatureFlagsProviderProps) {
   const [featureToggles, setFeatureToggles] = useState<FeatureFlagsOptions>({
-    isExperimentalHiroWalletEnabled: false,
     isExperimentalAnalyticsPageEnabled: false,
   });
 
@@ -30,8 +25,6 @@ export function FeatureFlagsProvider({ children }: FeatureFlagsProviderProps) {
    * an ssr missmatch.
    */
   useEffect(() => {
-    let isExperimentalHiroWalletEnabled =
-      localStorage.getItem(experimentalHiroWalletKey) === 'true';
     let isExperimentalAnalyticsPageEnabled =
       localStorage.getItem(experimentalAnalyticsPageKey) === 'true';
 
@@ -39,18 +32,12 @@ export function FeatureFlagsProvider({ children }: FeatureFlagsProviderProps) {
     const query = new URL(window.location.href).searchParams;
     const entries = Object.fromEntries(new URLSearchParams(query));
 
-    if (entries[experimentalHiroWalletParam] === 'true') {
-      localStorage.setItem(experimentalHiroWalletKey, 'true');
-      isExperimentalHiroWalletEnabled = true;
-    }
-
     if (entries[experimentalAnalyticsParam] === 'true') {
       localStorage.setItem(experimentalAnalyticsPageKey, 'true');
       isExperimentalAnalyticsPageEnabled = true;
     }
 
     setFeatureToggles({
-      isExperimentalHiroWalletEnabled,
       isExperimentalAnalyticsPageEnabled,
     });
   }, []);

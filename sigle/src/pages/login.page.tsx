@@ -6,18 +6,18 @@ import { useConnect as legacyUseConnect } from '@stacks/legacy-connect-react';
 import { EyeOpenIcon, FaceIcon, RocketIcon } from '@radix-ui/react-icons';
 import { Goals } from '../utils/fathom';
 import { Box, Button, Flex, Typography } from '../ui';
-import { useFeatureFlags } from '../utils/featureFlags';
 import { LoginLayout } from '../modules/layout/components/LoginLayout';
 import { useRouter } from 'next/router';
 import { useAuth } from '../modules/auth/AuthContext';
 import { sigleConfig } from '../config';
+
+// TODO hide register username for legacy login
 
 const Login = () => {
   const router = useRouter();
   const { user } = useAuth();
   const { doOpenAuth } = useConnect();
   const { doOpenAuth: legacyDoOpenAuth } = legacyUseConnect();
-  const { isExperimentalHiroWalletEnabled } = useFeatureFlags();
 
   useEffect(() => {
     // If user is already logged in or has a username we redirect him to the homepage
@@ -40,48 +40,31 @@ const Login = () => {
 
   return (
     <LoginLayout>
-      {isExperimentalHiroWalletEnabled ? (
-        <>
-          <Typography>Sigle is a decentralised platform.</Typography>
-          <Typography>
-            To access Sigle, you need to connect your{' '}
-            <Box
-              as="a"
-              css={{ color: '$orange11', boxShadow: '0 1px 0 0' }}
-              href="https://www.hiro.so/wallet/install-web"
-              target="_blank"
-              rel="noreferrer"
-            >
-              Hiro wallet.
-            </Box>
-          </Typography>
-        </>
-      ) : (
-        <Typography>
-          Sigle is a web 3.0 open source blogging platform focused on protecting
-          your privacy, built on top of Stacks.
-        </Typography>
-      )}
+      <Typography>Sigle is a decentralised platform.</Typography>
+      <Typography>
+        To access Sigle, you need to connect your{' '}
+        <Box
+          as="a"
+          css={{ color: '$orange11', boxShadow: '0 1px 0 0' }}
+          href="https://www.hiro.so/wallet/install-web"
+          target="_blank"
+          rel="noreferrer"
+        >
+          Hiro wallet.
+        </Box>
+      </Typography>
       <Flex gap="3" justify="end" css={{ mt: '$7' }}>
-        {isExperimentalHiroWalletEnabled ? (
-          <>
-            <Button
-              variant="ghost"
-              color="gray"
-              size="lg"
-              onClick={handleLoginLegacy}
-            >
-              Legacy login
-            </Button>
-            <Button color="orange" size="lg" onClick={handleLogin}>
-              Connect Wallet
-            </Button>
-          </>
-        ) : (
-          <Button color="orange" size="lg" onClick={handleLoginLegacy}>
-            Start Writing
-          </Button>
-        )}
+        <Button
+          variant="ghost"
+          color="gray"
+          size="lg"
+          onClick={handleLoginLegacy}
+        >
+          Blockstack connect
+        </Button>
+        <Button color="orange" size="lg" onClick={handleLogin}>
+          Connect Wallet
+        </Button>
       </Flex>
       <Box as="hr" css={{ mt: '$3', color: '$gray6' }} />
       <Flex direction="column" gap="3" css={{ mt: '$3', color: '$gray9' }}>
