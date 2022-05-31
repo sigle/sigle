@@ -2,11 +2,8 @@ import { NextApiHandler } from 'next';
 import NextAuth from 'next-auth';
 import CredentialsProvider from 'next-auth/providers/credentials';
 import { getCsrfToken } from 'next-auth/react';
-import { sigleConfig } from '../../../config';
 import { SignInWithStacksMessage } from '../../../modules/auth/sign-in-with-stacks/signInWithStacksMessage';
 
-// For more information on each option (and a full list of options) go to
-// https://next-auth.js.org/configuration/options
 const auth: NextApiHandler = async (req, res) => {
   const providers = [
     CredentialsProvider({
