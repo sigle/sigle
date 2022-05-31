@@ -3,7 +3,7 @@ import { Box, Flex, Text } from '../../../ui';
 import { StatsData } from './types';
 
 interface StatsTotalProps {
-  data: StatsData[];
+  data: StatsData[] | undefined;
 }
 
 const numberWithCommas = (x: string): string => {
@@ -12,7 +12,7 @@ const numberWithCommas = (x: string): string => {
 
 export const StatsTotal = ({ data }: StatsTotalProps) => {
   const totalViewsAndVisitors = useMemo(() => {
-    const total = data.reduce(
+    const total = data?.reduce(
       function (previousValue, currentValue) {
         return {
           pageviews: previousValue.pageviews + currentValue.pageViews,

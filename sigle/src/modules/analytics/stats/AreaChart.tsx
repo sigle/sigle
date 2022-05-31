@@ -15,7 +15,7 @@ const getViews = (d: StatsData) => d.pageViews;
 const getVisits = (d: StatsData) => d.visits;
 
 interface AreaChartProps extends WithParentSizeProps {
-  data: StatsData[];
+  data: StatsData[] | undefined;
   margin: { top: number; right: number; bottom: number; left: number };
   width: number;
   yMax: number;

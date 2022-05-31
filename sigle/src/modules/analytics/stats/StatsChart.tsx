@@ -22,7 +22,7 @@ const getVisits = (d: StatsData) => d.visits;
 const bisectDate = bisector<StatsData, Date>((d) => new Date(d.date)).left;
 
 interface StatsChartProps extends WithParentSizeProps {
-  data: StatsData[];
+  data: StatsData[] | undefined;
   type: 'weekly' | 'monthly' | 'all';
 }
 
@@ -59,13 +59,13 @@ const StatsChart = ({
     () =>
       scaleTime({
         range: [margin.left, xMax],
-        domain: extent(data, getDate) as [Date, Date],
+        domain: data && (extent(data, getDate) as [Date, Date]),
       }),
     [xMax, margin.left, data]
   );
 
-  const maxViews = max(data, getViews) || 0;
-  const maxVisits = max(data, getVisits) || 0;
+  const maxViews = (data && max(data, getViews)) || 0;
+  const maxVisits = (data && max(data, getVisits)) || 0;
 
   const maxValue = maxViews > maxVisits ? maxViews : maxVisits;
 
@@ -97,11 +97,11 @@ const StatsChart = ({
     ) => {
       const { x } = localPoint(event) || { x: 0 };
       const x0 = dateScale.invert(x);
-      const index = bisectDate(data, x0, 1);
-      const d0 = data[index - 1];
-      const d1 = data[index];
+      const index = data && bisectDate(data, x0, 1);
+      const d0 = data && data[index! - 1];
+      const d1 = data && data[index!];
       let d = d0;
-      if (d1 && getDate(d1)) {
+      if (d1 && d0 && getDate(d1)) {
         d =
           x0.valueOf() - getDate(d0).valueOf() >
           getDate(d1).valueOf() - x0.valueOf()
@@ -111,7 +111,7 @@ const StatsChart = ({
       showTooltip({
         tooltipData: d,
         tooltipLeft: x,
-        tooltipTop: charValueScale(getViews(d)),
+        tooltipTop: d && charValueScale(getViews(d)),
       });
     },
     [showTooltip, charValueScale, dateScale]

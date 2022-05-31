@@ -87,7 +87,7 @@ export const StatsFrame = () => {
     <Box css={{ mb: '$8', position: 'relative' }}>
       {isError && <StatsError>{error.message}</StatsError>}
       <Flex>
-        <StatsTotal data={data!} />
+        <StatsTotal data={data} />
         <Tabs
           onValueChange={(value) => checkStatType(value as StatsType)}
           css={{ width: '100%' }}
@@ -109,7 +109,7 @@ export const StatsFrame = () => {
               height: 400,
             }}
           >
-            <StatsChart type={statType} data={data!} />
+            <StatsChart type={statType} data={data} />
           </Box>
         </Tabs>
       </Flex>
