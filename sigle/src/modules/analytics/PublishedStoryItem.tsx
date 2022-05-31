@@ -24,6 +24,11 @@ const fetchStoryViews = async (storyId: string) => {
   const url = `${baseUrl}/api/analytics/historical?dateFrom=${FATHOM_MAX_FROM_DATE}&dateGrouping=month&storyId=${storyId}`;
 
   const statsRes = await fetch(url);
+
+  if (!statsRes.ok) {
+    throw new Error(`Error: ${statsRes.status} - ${statsRes.statusText}`);
+  }
+
   const statsData: AnalyticsHistoricalResponse = await statsRes.json();
   let views;
   if (statsData.stories.length > 0) {

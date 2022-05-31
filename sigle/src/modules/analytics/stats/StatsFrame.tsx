@@ -56,6 +56,11 @@ export const StatsFrame = () => {
     }
 
     const statsRes = await fetch(url);
+
+    if (!statsRes.ok) {
+      throw new Error(`Error: ${statsRes.status} - ${statsRes.statusText}`);
+    }
+
     const statsData: AnalyticsHistoricalResponse = await statsRes.json();
     const stats: StatsData[] = statsData.historical.map((item) => {
       return {
