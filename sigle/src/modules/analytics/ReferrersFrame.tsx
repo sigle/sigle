@@ -74,14 +74,10 @@ export const ReferrersFrame = () => {
   };
 
   return (
-    <>
+    <Flex direction="column" justify="between" css={{ height: '100%' }}>
       {isError && <StatsError>{error.message}</StatsError>}
       {currentReferrers ? (
-        <Flex
-          css={{ flexShrink: 0, mb: '$4', height: 464 }}
-          direction="column"
-          gap="5"
-        >
+        <Flex css={{ flexShrink: 0, mb: '$4' }} direction="column" gap="5">
           {currentReferrers.map((referrer) => (
             <Flex
               className="referrer-item"
@@ -137,6 +133,6 @@ export const ReferrersFrame = () => {
         onPageChange={(page) => setCurrentPage(page)}
         hasNextPage={hasNextPage}
       />
-    </>
+    </Flex>
   );
 };
