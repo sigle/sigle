@@ -10,7 +10,7 @@ interface Props {
 
 export const Protected = ({ children }: Props) => {
   const router = useRouter();
-  const { user, isLegacy, loggingIn } = useAuth();
+  const { user, loggingIn } = useAuth();
   const { status } = useSession();
 
   useEffect(() => {
