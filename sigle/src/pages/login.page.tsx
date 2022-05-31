@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { getCsrfToken, signIn } from 'next-auth/react';
+import { getCsrfToken, signIn, useSession } from 'next-auth/react';
 import * as Fathom from 'fathom-client';
 import posthog from 'posthog-js';
 import { useConnect } from '@stacks/connect-react';
@@ -12,19 +12,31 @@ import { useRouter } from 'next/router';
 import { useAuth } from '../modules/auth/AuthContext';
 import { SignInWithStacksMessage } from '../modules/auth/sign-in-with-stacks/signInWithStacksMessage';
 import { sigleConfig } from '../config';
+import { useFeatureFlags } from '../utils/featureFlags';
 
 const Login = () => {
   const router = useRouter();
-  const { user } = useAuth();
+  const { user, isLegacy } = useAuth();
+  const { status } = useSession();
   const { doOpenAuth, sign } = useConnect();
   const { doOpenAuth: legacyDoOpenAuth } = legacyUseConnect();
+  const { isExperimentalAnalyticsPageEnabled } = useFeatureFlags();
 
   useEffect(() => {
-    // If user is already logged in or has a username we redirect him to the homepage
+    // We keep the user on the login page so he can sign the message
+    if (
+      isExperimentalAnalyticsPageEnabled &&
+      user &&
+      status !== 'authenticated'
+    ) {
+      return;
+    }
+
+    // If user is already logged in we redirect him to the homepage
     if (user) {
       router.push(`/`);
     }
-  }, [router, user]);
+  }, [router, user, isLegacy, status, isExperimentalAnalyticsPageEnabled]);
 
   const handleLogin = () => {
     Fathom.trackGoal(Goals.LOGIN, 0);
@@ -95,8 +107,18 @@ const Login = () => {
         >
           Blockstack connect
         </Button>
-        <Button color="orange" size="lg" onClick={handleLogin}>
-          Connect Wallet
+        <Button
+          color="orange"
+          size="lg"
+          onClick={
+            isExperimentalAnalyticsPageEnabled && user
+              ? handleSignMessage
+              : handleLogin
+          }
+        >
+          {isExperimentalAnalyticsPageEnabled && user
+            ? 'Sign message'
+            : 'Connect Wallet'}
         </Button>
       </Flex>
       <Box as="hr" css={{ mt: '$3', color: '$gray6' }} />
