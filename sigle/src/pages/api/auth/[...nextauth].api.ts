@@ -55,25 +55,11 @@ const auth: NextApiHandler = async (req, res) => {
   }
 
   return await NextAuth(req, res, {
-    // https://next-auth.js.org/configuration/providers/oauth
     providers,
     session: {
       strategy: 'jwt',
     },
     secret: process.env.NEXTAUTH_SECRET,
-    // cookies: {
-    //   sessionToken: {
-    //     name: `sigle.session-token`,
-    //     options: {
-    //       // TODO prod value should be undefined only on dev
-    //       domain: undefined,
-    //       httpOnly: true,
-    //       sameSite: 'lax',
-    //       path: '/',
-    //       secure: sigleConfig.env === 'development',
-    //     },
-    //   },
-    // },
     callbacks: {
       async session({ session, token }) {
         session.address = token.sub;
