@@ -7,7 +7,7 @@ import {
 import { makeProfileZoneFile } from '@stacks/profile';
 import posthog from 'posthog-js';
 import * as Fathom from 'fathom-client';
-import { Button, Flex, Heading, Text } from '../ui';
+import { Button, Flex, Typography } from '../ui';
 import { LoginLayout } from '../modules/layout/components/LoginLayout';
 import { keyframes, styled } from '../stitches.config';
 import { QuestionMarkCircledIcon } from '@radix-ui/react-icons';
@@ -127,7 +127,7 @@ const FormInput = styled('input', {
 
 const RegisterUsername = () => {
   const router = useRouter();
-  const { user, loggingIn, setUsername } = useAuth();
+  const { user, loggingIn, isLegacy, setUsername } = useAuth();
   const [formState, setFormState] = useState<FormState>({
     username: '',
     loading: false,
@@ -266,19 +266,30 @@ const RegisterUsername = () => {
     router.push(`/`);
   };
 
+  if (isLegacy) {
+    return (
+      <LoginLayout>
+        <Typography>
+          Looks like there was an issue with your account (Blockstack connect)
+          and no username were found.
+        </Typography>
+      </LoginLayout>
+    );
+  }
+
   return (
     <LoginLayout>
-      <Heading
+      <Typography
         as="h1"
-        size="2xl"
+        size="h2"
         css={{
           mt: '$5',
           fontWeight: '600',
         }}
       >
         One last step
-      </Heading>
-      <Text
+      </Typography>
+      <Typography
         css={{
           mt: '$2',
           mb: '$3',
@@ -286,7 +297,7 @@ const RegisterUsername = () => {
         }}
       >
         Choose a .id.stx username
-      </Text>
+      </Typography>
       <form onSubmit={handleSubmit}>
         <ControlGroup role="group">
           <FormInput
@@ -313,20 +324,20 @@ const RegisterUsername = () => {
       <Flex css={{ mb: '$5' }} align="center" gap="5">
         {!formState.loading && !formState.errorMessage ? (
           <>
-            <Text
+            <Typography
               css={{
                 color: '$orange11',
                 '&:hover': { boxShadow: '0 1px 0 0' },
               }}
-              size="sm"
+              size="subheading"
               as="a"
               href="https://btc.us/"
               target="_blank"
               rel="noreferrer"
             >
               Or buy a .BTC domain instead
-            </Text>
-            <Text
+            </Typography>
+            <Typography
               as="a"
               color="orange"
               href="https://docs.sigle.io/"
@@ -335,16 +346,18 @@ const RegisterUsername = () => {
               aria-label="Learn more"
             >
               <QuestionMarkCircledIcon />
-            </Text>
+            </Typography>
           </>
         ) : null}
         {formState.loading ? (
-          <Text size="sm">Your username is being created. Please wait...</Text>
+          <Typography size="subheading">
+            Your username is being created. Please wait...
+          </Typography>
         ) : null}
         {formState.errorMessage ? (
-          <Text size="sm" color="orange">
+          <Typography size="subheading" color="orange">
             {formState.errorMessage}
-          </Text>
+          </Typography>
         ) : null}
       </Flex>
     </LoginLayout>

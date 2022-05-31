@@ -1,23 +1,37 @@
 import { format } from 'date-fns';
+import { useRouter } from 'next/router';
 import { useState } from 'react';
+import { StatsChart } from '../stats/StatsChart';
+import {
+  AnalyticsHistoricalResponse,
+  StatsData,
+  StatsType,
+} from '../stats/types';
+import { DashboardLayout } from '../../layout';
+import { Box, Flex, Heading, Tabs, TabsList, TabsTrigger } from '../../../ui';
+import { SubsetStory } from '../../../types';
+import { PublishedStoryItem } from '../PublishedStoryItem';
+import { ReferrersFrame } from '../ReferrersFrame';
 import { useQuery } from 'react-query';
-import { sigleConfig } from '../../../config';
-import { Box, Flex, Tabs, TabsList, TabsTrigger } from '../../../ui';
-import { StatsChart } from './StatsChart';
-import { StatsError } from './StatsError';
-import { StatsTotal } from './StatsTotal';
-import { AnalyticsHistoricalResponse, StatsData, StatsType } from './types';
+import { StatsTotal } from '../stats/StatsTotal';
+import { StatsError } from '../stats/StatsError';
 import {
   FATHOM_MAX_FROM_DATE,
   initialRange,
   monthFromDate,
   weekFromDate,
-} from './utils';
+} from '../stats/utils';
+import { sigleConfig } from '../../../config';
 
-export const StatsFrame = () => {
+interface StoryAnalyticsProps {
+  story: SubsetStory | undefined;
+}
+
+export const StoryItemAnalytics = ({ story }: StoryAnalyticsProps) => {
+  const router = useRouter();
   const [statType, setStatType] = useState<StatsType>('weekly');
   const { data, isError, error } = useQuery<StatsData[], Error>(
-    ['fetchStats', statType],
+    ['fetchStoryStats', statType],
     () => fetchStats(statType),
     {
       placeholderData: initialRange,
@@ -26,21 +40,24 @@ export const StatsFrame = () => {
 
   const baseUrl = sigleConfig.baseUrl;
 
-  const fetchStats = async (value: StatsType) => {
+  // testing on stories that already have views to validate things are working as expected
+  const testId = 'JA9dBfdPDp7kQhkFkgPdv';
+
+  const fetchStats = async (statType: StatsType) => {
     const weeklyStatsUrl = `${baseUrl}/api/analytics/historical?dateFrom=${format(
       weekFromDate,
       'yyyy-MM-dd'
-    )}&dateGrouping=day`;
+    )}&dateGrouping=day&storyId=${testId}`;
 
     const monthlyStatsUrl = `${baseUrl}/api/analytics/historical?dateFrom=${format(
       monthFromDate,
       'yyyy-MM-dd'
-    )}&dateGrouping=day`;
+    )}&dateGrouping=day&storyId=${testId}`;
 
-    const allTimeStatsUrl = `${baseUrl}/api/analytics/historical?dateFrom=${FATHOM_MAX_FROM_DATE}&dateGrouping=month`;
+    const allTimeStatsUrl = `${baseUrl}/api/analytics/historical?dateFrom=${FATHOM_MAX_FROM_DATE}&dateGrouping=month&storyId=${testId}`;
     let url;
 
-    switch (value) {
+    switch (statType) {
       case 'weekly':
         url = weeklyStatsUrl;
         break;
@@ -89,10 +106,19 @@ export const StatsFrame = () => {
   };
 
   return (
-    <Box css={{ mb: '$8', position: 'relative' }}>
+    <DashboardLayout layout="wide">
+      {story ? (
+        <PublishedStoryItem
+          individualStory={true}
+          onClick={() => router.push('/analytics')}
+          story={story}
+        />
+      ) : (
+        <Box css={{ height: 68 }} />
+      )}
       {isError && <StatsError>{error.message}</StatsError>}
-      <Flex>
-        <StatsTotal data={data} />
+      <Flex css={{ mt: '$8' }}>
+        <StatsTotal data={data!} />
         <Tabs
           onValueChange={(value) => checkStatType(value as StatsType)}
           css={{ width: '100%' }}
@@ -114,10 +140,19 @@ export const StatsFrame = () => {
               height: 400,
             }}
           >
-            <StatsChart type={statType} data={data} />
+            <StatsChart type={statType} data={data!} />
           </Box>
         </Tabs>
       </Flex>
-    </Box>
+      <Flex css={{ mb: '$5' }} justify="between">
+        <Heading as="h3" css={{ fontSize: 15, fontWeight: 600 }}>
+          Referrers
+        </Heading>
+        <Heading as="h3" css={{ fontSize: 15, fontWeight: 600 }}>
+          Views
+        </Heading>
+      </Flex>
+      <ReferrersFrame />
+    </DashboardLayout>
   );
 };

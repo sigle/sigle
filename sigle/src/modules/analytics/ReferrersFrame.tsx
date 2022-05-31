@@ -1,80 +1,36 @@
 import { stagger } from 'motion';
 import { useMotionAnimate } from 'motion-hooks';
 import { useEffect, useMemo, useState } from 'react';
+import { useQuery } from 'react-query';
+import { sigleConfig } from '../../config';
 import { Box, Flex, Text } from '../../ui';
 import { Pagination } from './Pagination';
+import { StatsError } from './stats/StatsError';
+import { ReferrersResponse } from './stats/types';
+import { FATHOM_MAX_FROM_DATE } from './stats/utils';
 
-interface ReferrersItemProps {
-  name: string;
-  views: number;
-  id: number;
-}
+const fetchReferrers = async () => {
+  const baseUrl = sigleConfig.baseUrl;
 
-const referrersMock: ReferrersItemProps[] = [
-  {
-    name: 'app.blockstack.org',
-    views: 832,
-    id: 1,
-  },
-  {
-    name: 'Facebook',
-    views: 421,
-    id: 2,
-  },
-  {
-    name: 'Twitter',
-    views: 124,
-    id: 3,
-  },
-  {
-    name: 'Instagram',
-    views: 92,
-    id: 4,
-  },
-  {
-    name: 'Medium',
-    views: 85,
-    id: 5,
-  },
-  {
-    name: 'Google',
-    views: 63,
-    id: 6,
-  },
-  {
-    name: 'linktr.ee',
-    views: 60,
-    id: 7,
-  },
-  {
-    name: 'DuckDuckGo',
-    views: 42,
-    id: 8,
-  },
-  {
-    name: 'Linkedin',
-    views: 39,
-    id: 9,
-  },
-  {
-    name: 'Reddit',
-    views: 12,
-    id: 10,
-  },
-  {
-    name: 'Substack',
-    views: 10,
-    id: 11,
-  },
-  {
-    name: 'Yahoo!',
-    views: 6,
-    id: 12,
-  },
-];
+  const url = `${baseUrl}/api/analytics/referrers?dateFrom=${FATHOM_MAX_FROM_DATE}`;
+
+  const statsRes = await fetch(url, { credentials: 'include' });
+
+  if (!statsRes.ok) {
+    throw new Error(`Error: ${statsRes.status} - ${statsRes.statusText}`);
+  }
+
+  const referrerData: ReferrersResponse = await statsRes.json();
+  return referrerData;
+};
 
 export const ReferrersFrame = () => {
   const [currentPage, setCurrentPage] = useState<number>(1);
+  const {
+    data: referrers,
+    isError,
+    error,
+  } = useQuery<ReferrersResponse, Error>(['fetchReferrers'], fetchReferrers);
   const { play } = useMotionAnimate(
     '.referrer-item',
     { opacity: 1 },
@@ -95,18 +51,20 @@ export const ReferrersFrame = () => {
   const currentReferrers = useMemo(() => {
     const firstPageIndex = (currentPage - 1) * itemSize;
     const lastPageIndex = firstPageIndex + itemSize;
-    return referrersMock.slice(firstPageIndex, lastPageIndex);
+    return referrers?.slice(firstPageIndex, lastPageIndex);
   }, [currentPage]);
 
-  const hasNextPage =
-    currentReferrers[currentReferrers.length - 1] ===
-    referrersMock[referrersMock.length - 1]
-      ? false
-      : true;
+  const currentReferrerLastItem =
+    currentReferrers && currentReferrers[currentReferrers.length - 1];
 
-  const total =
-    referrersMock &&
-    referrersMock.map((item) => item.views).reduce((a, b) => a + b);
+  const referrerLastItem = referrers && referrers[referrers.length - 1];
+
+  const hasNextPage =
+    currentReferrerLastItem === referrerLastItem ? false : true;
+
+  const total = referrers
+    ? referrers.map((item) => item.count).reduce((a, b) => a + b)
+    : 0;
 
   const getPercentage = (views: number) => {
     const percentage = Math.round((100 * views) / total);
@@ -116,10 +74,11 @@ export const ReferrersFrame = () => {
   };
 
   return (
-    <>
+    <Flex direction="column" justify="between">
+      {isError && <StatsError>{error.message}</StatsError>}
       {currentReferrers ? (
         <Flex
-          css={{ flexShrink: 0, mb: '$4', height: 464 }}
+          css={{ flexShrink: 0, mb: '$4', height: 476 }}
           direction="column"
           gap="5"
         >
@@ -127,7 +86,7 @@ export const ReferrersFrame = () => {
             <Flex
               className="referrer-item"
               css={{ opacity: 0 }}
-              key={referrer.id}
+              key={referrer.domain}
               gap="5"
               justify="between"
               align="center"
@@ -135,25 +94,41 @@ export const ReferrersFrame = () => {
               <Box
                 css={{
                   flex: 1,
+                  position: 'relative',
+                  p: '$1',
+                  br: '$1',
                 }}
               >
                 <Box
                   css={{
-                    p: '$1',
-                    br: '$1',
+                    position: 'absolute',
+                    top: 0,
+                    bottom: 0,
+                    left: 0,
+                    zIndex: -1,
                     backgroundColor: '$gray3',
-                    width: `${getPercentage(referrer.views)}%`,
+                    width: `${getPercentage(referrer.count)}%`,
                   }}
+                />
+                <Text
+                  css={{
+                    overflow: 'hidden',
+                    display: '-webkit-box',
+                    '-webkit-line-clamp': 1,
+                    '-webkit-box-orient': 'vertical',
+                    textOverflow: 'ellipsis',
+                  }}
+                  size="sm"
                 >
-                  <Text size="sm">{referrer.name}</Text>
-                </Box>
+                  {referrer.domain}
+                </Text>
               </Box>
-              <Text size="sm">{referrer.views}</Text>
+              <Text size="sm">{referrer.count}</Text>
             </Flex>
           ))}
         </Flex>
       ) : (
-        <Box css={{ display: 'grid', placeItems: 'center', height: '100%' }}>
+        <Box css={{ display: 'grid', placeItems: 'center' }}>
           <Text>No data to display</Text>
         </Box>
       )}
@@ -162,6 +137,6 @@ export const ReferrersFrame = () => {
         onPageChange={(page) => setCurrentPage(page)}
         hasNextPage={hasNextPage}
       />
-    </>
+    </Flex>
   );
 };
