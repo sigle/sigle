@@ -22,3 +22,10 @@ export interface StatsData {
 }
 
 export type StatsType = 'weekly' | 'monthly' | 'all';
+
+export interface ReferrersItemProps {
+  domain: string;
+  count: number;
+}
+
+export type ReferrersResponse = ReferrersItemProps[];

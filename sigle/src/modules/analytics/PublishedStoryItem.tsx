@@ -1,10 +1,14 @@
-import { ArrowRightIcon } from '@radix-ui/react-icons';
+import { ArrowLeftIcon, ArrowRightIcon } from '@radix-ui/react-icons';
 import { stagger } from 'motion';
 import { useMotionAnimate } from 'motion-hooks';
 import { useEffect } from 'react';
+import { useQuery } from 'react-query';
+import { sigleConfig } from '../../config';
 import { styled } from '../../stitches.config';
 import { SubsetStory } from '../../types';
 import { Box, Flex, Text } from '../../ui';
+import { AnalyticsHistoricalResponse } from './stats/types';
+import { FATHOM_MAX_FROM_DATE } from './stats/utils';
 
 const StoryImage = styled('img', {
   objectFit: 'cover',
@@ -12,14 +16,43 @@ const StoryImage = styled('img', {
   width: 60,
   height: 43,
   br: '$1',
-  ml: '$2',
 });
+
+const baseUrl = sigleConfig.baseUrl;
+
+const fetchStoryViews = async (storyId: string) => {
+  const url = `${baseUrl}/api/analytics/historical?dateFrom=${FATHOM_MAX_FROM_DATE}&dateGrouping=month&storyId=${storyId}`;
+
+  const statsRes = await fetch(url);
+
+  if (!statsRes.ok) {
+    throw new Error(`Error: ${statsRes.status} - ${statsRes.statusText}`);
+  }
+
+  const statsData: AnalyticsHistoricalResponse = await statsRes.json();
+  let views;
+  if (statsData.stories.length > 0) {
+    views = statsData.stories[0].pageviews;
+  } else {
+    views = 0;
+  }
+  return views;
+};
 
 interface PublishedStoryItemProps {
   story: SubsetStory;
+  onClick: () => void;
+  individualStory?: boolean;
 }
 
-export const PublishedStoryItem = ({ story }: PublishedStoryItemProps) => {
+export const PublishedStoryItem = ({
+  story,
+  onClick,
+  individualStory = false,
+}: PublishedStoryItemProps) => {
+  const { data } = useQuery<number, Error>(['fetchStoryStats'], () =>
+    fetchStoryViews(story.id)
+  );
   const { play } = useMotionAnimate(
     '.story-item',
     { opacity: 1 },
@@ -40,7 +73,8 @@ export const PublishedStoryItem = ({ story }: PublishedStoryItemProps) => {
       className="story-item"
       align="center"
       css={{
-        borderTop: '1px solid $colors$gray6',
+        borderTop: !individualStory ? '1px solid $colors$gray6' : 'none',
+        borderBottom: individualStory ? '1px solid $colors$gray6' : 'none',
         height: 68,
         cursor: 'pointer',
         position: 'relative',
@@ -53,7 +87,9 @@ export const PublishedStoryItem = ({ story }: PublishedStoryItemProps) => {
         '&:hover': {
           backgroundColor: '$gray2',
           '& svg': {
-            transform: 'translateX(-4px)',
+            transform: !individualStory
+              ? 'translateX(-4px)'
+              : 'translateX(4px)',
           },
 
           '& div:first-child': {
@@ -74,9 +110,16 @@ export const PublishedStoryItem = ({ story }: PublishedStoryItemProps) => {
           zIndex: 1,
         },
       }}
+      onClick={onClick}
     >
+      {individualStory && <ArrowLeftIcon />}
       <Box />
-      {story.coverImage && <StoryImage src={story.coverImage} />}
+      {story.coverImage && (
+        <StoryImage
+          css={{ ml: individualStory ? '$5' : '$2' }}
+          src={story.coverImage}
+        />
+      )}
       <Flex
         align="center"
         css={{
@@ -106,9 +149,12 @@ export const PublishedStoryItem = ({ story }: PublishedStoryItemProps) => {
           {story.title}
         </Text>
         <Flex align="center" css={{ gap: '$5', flexShrink: 0 }}>
-          {/* To be replaced with actual view metrics */}
-          <Text size="sm">332 views</Text>
-          <ArrowRightIcon />
+          {!individualStory && (
+            <>
+              <Text size="sm">{data} views</Text>
+              <ArrowRightIcon />
+            </>
+          )}
         </Flex>
       </Flex>
     </Flex>

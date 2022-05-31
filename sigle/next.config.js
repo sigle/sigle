@@ -13,6 +13,7 @@ const nextConfig = {
     FATHOM_SITE_ID: process.env.FATHOM_SITE_ID,
     NEXT_PUBLIC_SENTRY_DSN: process.env.NEXT_PUBLIC_SENTRY_DSN,
     NEXT_PUBLIC_POSTHOG_TOKEN: process.env.NEXT_PUBLIC_POSTHOG_TOKEN,
+    API_URL: process.env.API_URL,
   },
   pageExtensions: [
     // `.page.tsx` for page components
