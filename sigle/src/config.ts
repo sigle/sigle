@@ -14,6 +14,7 @@ export const sigleConfig = {
   documentationUrl: 'https://docs.sigle.io',
   feedbackUrl: 'https://sigle.canny.io/feature-requests',
   blogUrl: 'https://app.sigle.io/sigleapp.id.blockstack',
+  gammaUrl: 'https://gamma.io/collections/the-explorer-guild',
   email: 'sigle@protonmail.com',
   // This reflect the tailwindcss config
   breakpoints: {

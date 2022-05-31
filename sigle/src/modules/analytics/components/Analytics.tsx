@@ -1,6 +1,7 @@
 import { SubsetStory } from '../../../types';
 import { Box, Flex, Heading, Text } from '../../../ui';
 import { DashboardLayout } from '../../layout';
+import { NftLockedView } from '../NftLockedView';
 import { PublishedStoriesFrame } from '../PublishedStoriesFrame';
 import { ReferrersFrame } from '../ReferrersFrame';
 import { StatsFrame } from '../stats/StatsFrame';
