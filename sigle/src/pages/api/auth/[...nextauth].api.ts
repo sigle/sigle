@@ -1,8 +1,23 @@
 import { NextApiHandler } from 'next';
 import NextAuth from 'next-auth';
+import { defaultCookies } from 'next-auth/core/lib/cookie';
 import CredentialsProvider from 'next-auth/providers/credentials';
 import { getCsrfToken } from 'next-auth/react';
 import { SignInWithStacksMessage } from '../../../modules/auth/sign-in-with-stacks/signInWithStacksMessage';
+
+/**
+ * We take the default cookies from NextAuth and add our own
+ * domain to allow cookies to be shared between subdomains.
+ * Eg: https://app.sigle.io needs to be set to .sigle.io
+ */
+let cookieRootDomain = process.env.NEXTAUTH_URL;
+if (!cookieRootDomain) {
+  throw new Error('NEXTAUTH_URL is not set');
+}
+const hostname = new URL(cookieRootDomain).hostname;
+const rootDomain = hostname.split('.').slice(-2).join('.');
+// add a . in front so that subdomains are included
+cookieRootDomain = hostname == 'localhost' ? hostname : '.' + rootDomain;
 
 const auth: NextApiHandler = async (req, res) => {
   const providers = [
@@ -51,6 +66,12 @@ const auth: NextApiHandler = async (req, res) => {
     providers.pop();
   }
 
+  const cookies = defaultCookies(
+    process.env.NEXTAUTH_URL
+      ? process.env.NEXTAUTH_URL.startsWith('https://')
+      : false
+  );
+
   return await NextAuth(req, res, {
     providers,
     session: {
@@ -61,6 +82,23 @@ const auth: NextApiHandler = async (req, res) => {
       async session({ session, token }) {
         session.address = token.sub;
         return session;
+      },
+    },
+    cookies: {
+      ...cookies,
+      sessionToken: {
+        name: cookies.sessionToken.name,
+        options: {
+          ...cookies.sessionToken.options,
+          domain: cookieRootDomain,
+        },
+      },
+      csrfToken: {
+        name: cookies.csrfToken.name,
+        options: {
+          ...cookies.csrfToken.options,
+          domain: cookieRootDomain,
+        },
       },
     },
   });
