@@ -15,6 +15,7 @@
     ]
   },
   "dependencies": {
+    "@fastify/cookie": "6.0.0",
     "@fastify/cors": "7.0.0",
     "@fastify/rate-limit": "6.0.1",
     "@sentry/node": "6.19.7",
@@ -24,6 +25,7 @@
     "envalid": "7.3.1",
     "fastify": "3.29.0",
     "ioredis": "5.0.5",
+    "next-auth": "4.3.4",
     "undici": "5.1.1"
   },
   "devDependencies": {

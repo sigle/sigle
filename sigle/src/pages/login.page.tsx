@@ -1,4 +1,5 @@
 import React, { useEffect } from 'react';
+import { getCsrfToken, signIn, useSession } from 'next-auth/react';
 import * as Fathom from 'fathom-client';
 import posthog from 'posthog-js';
 import { useConnect } from '@stacks/connect-react';
@@ -9,20 +10,33 @@ import { Box, Button, Flex, Typography } from '../ui';
 import { LoginLayout } from '../modules/layout/components/LoginLayout';
 import { useRouter } from 'next/router';
 import { useAuth } from '../modules/auth/AuthContext';
+import { SignInWithStacksMessage } from '../modules/auth/sign-in-with-stacks/signInWithStacksMessage';
 import { sigleConfig } from '../config';
+import { useFeatureFlags } from '../utils/featureFlags';
 
 const Login = () => {
   const router = useRouter();
-  const { user } = useAuth();
-  const { doOpenAuth } = useConnect();
+  const { user, isLegacy } = useAuth();
+  const { status } = useSession();
+  const { doOpenAuth, sign } = useConnect();
   const { doOpenAuth: legacyDoOpenAuth } = legacyUseConnect();
+  const { isExperimentalAnalyticsPageEnabled } = useFeatureFlags();
 
   useEffect(() => {
-    // If user is already logged in or has a username we redirect him to the homepage
+    // We keep the user on the login page so he can sign the message
+    if (
+      isExperimentalAnalyticsPageEnabled &&
+      user &&
+      status !== 'authenticated'
+    ) {
+      return;
+    }
+
+    // If user is already logged in we redirect him to the homepage
     if (user) {
       router.push(`/`);
     }
-  }, [router, user]);
+  }, [router, user, isLegacy, status, isExperimentalAnalyticsPageEnabled]);
 
   const handleLogin = () => {
     Fathom.trackGoal(Goals.LOGIN, 0);
@@ -30,8 +44,41 @@ const Login = () => {
     doOpenAuth();
   };
 
+  const handleSignMessage = async () => {
+    if (!user) return;
+
+    Fathom.trackGoal(Goals.LOGIN_SIGN_MESSAGE, 0);
+
+    const callbackUrl = '/protected';
+    const stacksMessage = new SignInWithStacksMessage({
+      domain: `${window.location.protocol}//${window.location.host}`,
+      address: user.profile.stxAddress.mainnet,
+      statement: 'Sign in with Stacks to the app.',
+      uri: window.location.origin,
+      version: '1',
+      chainId: 1,
+      nonce: (await getCsrfToken()) as string,
+    });
+
+    const message = stacksMessage.prepareMessage();
+
+    // TODO handle close modal
+    sign({
+      message,
+      onFinish: ({ signature }) => {
+        signIn('credentials', {
+          message: message,
+          redirect: false,
+          signature,
+          callbackUrl,
+        });
+      },
+    });
+  };
+
   const handleLoginLegacy = () => {
     Fathom.trackGoal(Goals.LOGIN, 0);
+    Fathom.trackGoal(Goals.LEGACY_LOGIN, 0);
     posthog.capture('start-login-legacy');
     legacyDoOpenAuth();
   };
@@ -60,8 +107,18 @@ const Login = () => {
         >
           Blockstack connect
         </Button>
-        <Button color="orange" size="lg" onClick={handleLogin}>
-          Connect Wallet
+        <Button
+          color="orange"
+          size="lg"
+          onClick={
+            isExperimentalAnalyticsPageEnabled && user
+              ? handleSignMessage
+              : handleLogin
+          }
+        >
+          {isExperimentalAnalyticsPageEnabled && user
+            ? 'Sign message'
+            : 'Connect Wallet'}
         </Button>
       </Flex>
       <Box as="hr" css={{ mt: '$3', color: '$gray6' }} />

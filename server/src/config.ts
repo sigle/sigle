@@ -30,4 +30,10 @@ export const config = cleanEnv(process.env, {
    * Sentry
    */
   SENTRY_DSN: str({ desc: 'Sentry DSN for error reporting.' }),
+  /**
+   * User authentication
+   */
+  NEXTAUTH_SECRET: str({
+    desc: 'NextAuth.js secret. Should be the same value as the frontend.',
+  }),
 });

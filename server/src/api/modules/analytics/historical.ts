@@ -8,9 +8,11 @@ import {
   isValid,
   parse,
 } from 'date-fns';
+import { getToken } from 'next-auth/jwt';
 import { maxFathomFromDate, getBucketUrl, getPublicStories } from './utils';
 import { fathomClient } from '../../../external/fathom';
 import { redis } from '../../../redis';
+import { config } from '../../../config';
 
 interface AnalyticsHistoricalParams {
   dateFrom?: string;
@@ -84,6 +86,15 @@ export async function createAnalyticsHistoricalEndpoint(
       },
     },
     async (req, res) => {
+      const token = await getToken({
+        req: req as any,
+        secret: config.NEXTAUTH_SECRET,
+      });
+      if (token) {
+        // Signed in
+        console.log('JSON Web Token', JSON.stringify(token, null, 2));
+      }
+
       const { dateGrouping, storyId } = req.query;
       let { dateFrom } = req.query;
       const dateTo = new Date();

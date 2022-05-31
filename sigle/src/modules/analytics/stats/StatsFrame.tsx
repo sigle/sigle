@@ -55,7 +55,7 @@ export const StatsFrame = () => {
         throw new Error('No value received.');
     }
 
-    const statsRes = await fetch(url);
+    const statsRes = await fetch(url, { credentials: 'include' });
 
     if (!statsRes.ok) {
       throw new Error(`Error: ${statsRes.status} - ${statsRes.statusText}`);
