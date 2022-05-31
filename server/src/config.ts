@@ -33,5 +33,7 @@ export const config = cleanEnv(process.env, {
   /**
    * User authentication
    */
-  NEXTAUTH_SECRET: str({ desc: 'NextAuth.js secret.' }),
+  NEXTAUTH_SECRET: str({
+    desc: 'NextAuth.js secret. Should be the same value as the frontend.',
+  }),
 });
