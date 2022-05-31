@@ -17,7 +17,15 @@ export const Analytics = ({ stories, loading }: AnalyticsProps) => {
     <DashboardLayout layout="wide">
       <StatsFrame />
       <Box
-        css={{ display: 'grid', gridTemplateColumns: '2fr 1fr', gap: '$10' }}
+        css={{
+          display: 'flex',
+          flexDirection: 'column',
+          gap: '$10',
+          '@xl': {
+            display: 'grid',
+            gridTemplateColumns: '2fr 1fr',
+          },
+        }}
       >
         <Box>
           <Heading as="h3" css={{ mb: '$3', fontSize: 15, fontWeight: 600 }}>
