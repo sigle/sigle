@@ -127,7 +127,7 @@ const Login = () => {
           <div>
             <EyeOpenIcon width={15} height={15} />
           </div>
-          <Typography size="subheading">
+          <Typography size="subheading" css={{ color: '$gray9' }}>
             We will never do anything without your approval and we only need
             view only permissions.
           </Typography>
@@ -136,7 +136,7 @@ const Login = () => {
           <div>
             <FaceIcon width={15} height={15} />
           </div>
-          <Typography size="subheading">
+          <Typography size="subheading" css={{ color: '$gray9' }}>
             Code is{' '}
             <Box
               as="a"
@@ -153,7 +153,7 @@ const Login = () => {
           <div>
             <RocketIcon width={15} height={15} />
           </div>
-          <Typography size="subheading">
+          <Typography size="subheading" css={{ color: '$gray9' }}>
             Sigle was part of the{' '}
             <Box
               as="a"
