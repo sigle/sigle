@@ -38,20 +38,12 @@ export const Protected = ({ children }: Props) => {
     return <FullScreenLoading />;
   }
 
-  /**
-   * Legacy users are allowed connect without a real session.
-   * Users that used Hiro wallet needs to sign a message to create a session first.
-   */
-  if (!user || (user && !isLegacy && status === 'unauthenticated')) {
+  if (!user) {
     router.push('/login');
     return null;
   }
 
-  /**
-   * We can't register usernames for legacy users.
-   * They need to be created using blockstack connect.
-   */
-  if (!isLegacy && !user.username) {
+  if (!user.username) {
     router.push('/register-username');
     return null;
   }
