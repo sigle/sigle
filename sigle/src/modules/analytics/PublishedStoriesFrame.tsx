@@ -1,3 +1,4 @@
+import { useRouter } from 'next/router';
 import { useMemo, useState } from 'react';
 import { SubsetStory } from '../../types';
 import { Box } from '../../ui';
@@ -11,6 +12,7 @@ interface PublishedStoriesFrameProps {
 export const PublishedStoriesFrame = ({
   stories,
 }: PublishedStoriesFrameProps) => {
+  const router = useRouter();
   const [currentPage, setCurrentPage] = useState<number>(1);
 
   // how many stories we should show on each page
@@ -33,7 +35,13 @@ export const PublishedStoriesFrame = ({
         <>
           <Box css={{ mb: '$3', height: 476 }}>
             {currentStories?.map((story) => (
-              <PublishedStoryItem key={story.id} story={story} />
+              <PublishedStoryItem
+                onClick={() =>
+                  router.push('/analytics/[storyId]', `/analytics/${story.id}`)
+                }
+                key={story.id}
+                story={story}
+              />
             ))}
           </Box>
           <Pagination

@@ -37,7 +37,13 @@ const DashboardContainer = styled(Container, {
         },
       },
       wide: {
-        gridTemplateColumns: '1fr 5fr',
+        gridTemplateColumns: '100%',
+        '@lg': {
+          gridTemplateColumns: '834px',
+        },
+        '@xl': {
+          gridTemplateColumns: '1fr 5fr',
+        },
       },
     },
   },
@@ -146,7 +152,7 @@ export const DashboardLayout = ({
           </Link>
           {isExperimentalAnalyticsPageEnabled && (
             <Link href="/analytics" passHref>
-              <NavItem selected={router.pathname === '/analytics'}>
+              <NavItem selected={router.pathname.includes('/analytics')}>
                 Analytics
               </NavItem>
             </Link>
@@ -178,6 +184,11 @@ export const DashboardLayout = ({
                 {router.pathname !== '/published' ? (
                   <Link href="/published" passHref>
                     <NavItem variant="accordion">Published</NavItem>
+                  </Link>
+                ) : null}
+                {router.pathname !== '/analytics' ? (
+                  <Link href="/analytics" passHref>
+                    <NavItem variant="accordion">Analytics</NavItem>
                   </Link>
                 ) : null}
                 {router.pathname !== '/settings' ? (

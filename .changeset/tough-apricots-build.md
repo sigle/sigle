@@ -1,5 +1,5 @@
 ---
-'@sigle/app': minor
+'@sigle/app': patch
 ---
 
-Add analytics page containing a paginated frame for published stories.
+(Beta) Add analytics page containing a paginated frame for published stories.
