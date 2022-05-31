@@ -37,6 +37,7 @@ export async function createAnalyticsReferrersEndpoint(
   }>(
     '/api/analytics/referrers',
     {
+      onRequest: [fastify.authenticate],
       config: {
         rateLimit: {
           max: 10,

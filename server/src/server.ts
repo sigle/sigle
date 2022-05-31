@@ -8,6 +8,7 @@ import { createAnalyticsHistoricalEndpoint } from './api/modules/analytics/histo
 import { createAnalyticsReferrersEndpoint } from './api/modules/analytics/referrers';
 import { config } from './config';
 import { redis } from './redis';
+import { fastifyAuthPlugin } from './api/plugins/auth';
 
 export const buildFastifyServer = (
   opts: FastifyServerOptions<Server, FastifyLoggerInstance> = {}
@@ -53,6 +54,11 @@ export const buildFastifyServer = (
   });
 
   /**
+   * Authentication
+   */
+  fastify.register(fastifyAuthPlugin);
+
+  /**
    * Catch and report errors with Sentry.
    * We attach some content to make it easier to debug.
    */
@@ -91,10 +97,15 @@ export const buildFastifyServer = (
   });
 
   /**
-   * Analytics routes
+   * All the protected routes must be placed there.
    */
-  createAnalyticsReferrersEndpoint(fastify);
-  createAnalyticsHistoricalEndpoint(fastify);
+  fastify.after(() => {
+    /**
+     * Analytics routes
+     */
+    createAnalyticsReferrersEndpoint(fastify);
+    createAnalyticsHistoricalEndpoint(fastify);
+  });
 
   return fastify;
 };
