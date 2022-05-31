@@ -86,6 +86,8 @@ export async function createAnalyticsHistoricalEndpoint(
       },
     },
     async (req, res) => {
+      console.log('cookies', { cookies: req.cookies });
+
       const token = await getToken({
         req: req as any,
         secret: config.NEXTAUTH_SECRET,
