@@ -108,6 +108,7 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
     setState({
       loggingIn: false,
       user: userData,
+      isLegacy: address === undefined,
     });
   };
 
@@ -158,6 +159,7 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
           value={{
             user: state.user,
             loggingIn: state.loggingIn,
+            isLegacy: state.isLegacy,
             setUsername: userApi.handleSetUsername,
           }}
         >
