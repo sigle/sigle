@@ -14,7 +14,7 @@ const fetchReferrers = async () => {
 
   const url = `${baseUrl}/api/analytics/referrers?dateFrom=${FATHOM_MAX_FROM_DATE}`;
 
-  const statsRes = await fetch(url);
+  const statsRes = await fetch(url, { credentials: 'include' });
 
   if (!statsRes.ok) {
     throw new Error(`Error: ${statsRes.status} - ${statsRes.statusText}`);

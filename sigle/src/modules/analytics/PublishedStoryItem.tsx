@@ -23,7 +23,7 @@ const baseUrl = sigleConfig.baseUrl;
 const fetchStoryViews = async (storyId: string) => {
   const url = `${baseUrl}/api/analytics/historical?dateFrom=${FATHOM_MAX_FROM_DATE}&dateGrouping=month&storyId=${storyId}`;
 
-  const statsRes = await fetch(url);
+  const statsRes = await fetch(url, { credentials: 'include' });
 
   if (!statsRes.ok) {
     throw new Error(`Error: ${statsRes.status} - ${statsRes.statusText}`);
