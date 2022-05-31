@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { getCsrfToken, useSession } from 'next-auth/react';
+import { getCsrfToken, signIn } from 'next-auth/react';
 import * as Fathom from 'fathom-client';
 import posthog from 'posthog-js';
 import { useConnect } from '@stacks/connect-react';
@@ -15,12 +15,9 @@ import { sigleConfig } from '../config';
 
 const Login = () => {
   const router = useRouter();
-  const { user, isLegacy } = useAuth();
-  const { status, signIn } = useSession();
+  const { user } = useAuth();
   const { doOpenAuth, sign } = useConnect();
   const { doOpenAuth: legacyDoOpenAuth } = legacyUseConnect();
-
-  console.log('login', { user, isLegacy, status, test: user && isLegacy });
 
   useEffect(() => {
     // If user is already logged in or has a username we redirect him to the homepage

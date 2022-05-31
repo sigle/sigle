@@ -20,7 +20,7 @@ export const buildFastifyServer = (
    * Allow the RENDER API to make calls, used to bypass CORS for the health check, in such case origin will be undefined.
    */
   fastify.register(FastifyCors, {
-    // credentials: true,
+    credentials: true,
     origin: (origin, cb) => {
       if (
         config.NODE_ENV === 'development' ||
