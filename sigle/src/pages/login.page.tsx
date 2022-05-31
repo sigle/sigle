@@ -121,7 +121,7 @@ const Login = () => {
             : 'Connect Wallet'}
         </Button>
       </Flex>
-      <Box as="hr" css={{ mt: '$3', color: '$gray6' }} />
+      <Box as="hr" css={{ mt: '$3', borderColor: '$gray6' }} />
       <Flex direction="column" gap="3" css={{ mt: '$3', color: '$gray9' }}>
         <Flex css={{ gap: '$3' }} align="center">
           <div>
