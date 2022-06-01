@@ -15,6 +15,10 @@ declare module 'fastify' {
   interface FastifyInstance {
     authenticate: onRequestHookHandler;
   }
+
+  interface FastifyRequest {
+    address: string;
+  }
 }
 
 const plugin: FastifyPluginAsync = async (fastify) => {
@@ -36,14 +40,13 @@ const plugin: FastifyPluginAsync = async (fastify) => {
         req: req as any,
         secret: config.NEXTAUTH_SECRET,
       });
-      if (!token) {
+      if (!token || !token.sub) {
         res.status(401).send('Unauthorized');
         return;
       }
-      if (token) {
-        // Signed in
-        console.log('JSON Web Token', JSON.stringify(token, null, 2));
-      }
+
+      // Inject the user address so it can be used in subsequent requests.
+      req.address = token.sub;
     }
   );
 };
