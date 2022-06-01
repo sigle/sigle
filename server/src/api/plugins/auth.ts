@@ -17,11 +17,12 @@ declare module 'fastify' {
   }
 }
 
-const plugin: FastifyPluginAsync = async (fastify, options) => {
+const plugin: FastifyPluginAsync = async (fastify) => {
   fastify.decorate(
     'authenticate',
     async (req: FastifyRequest, res: FastifyReply) => {
       const token = await getToken({
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         req: req as any,
         secret: config.NEXTAUTH_SECRET,
       });
