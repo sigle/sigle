@@ -62,14 +62,18 @@ const orangeDark = {
 };
 
 const green = {
+  green2: '#DDFBF1',
   green3: '#D3F9EC',
   green6: '#ADF0D8',
   green11: '#37C391',
+  green12: '#1EA977',
 };
 const greenDark = {
+  green2: '#002A23',
   green3: '#003B31',
   green6: '#006C59',
   green11: '#1DD4B4',
+  green12: '#70E1CD',
 };
 
 const red = {
