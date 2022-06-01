@@ -11,6 +11,7 @@ import {
 import { maxFathomFromDate, getBucketUrl, getPublicStories } from './utils';
 import { fathomClient } from '../../../external/fathom';
 import { redis } from '../../../redis';
+import { config } from '../../../config';
 
 interface AnalyticsHistoricalParams {
   dateFrom?: string;
@@ -132,7 +133,7 @@ export async function createAnalyticsHistoricalEndpoint(
         ? `historical:${username}_${dateFrom}_${dateGrouping}_${storyId}`
         : `historical:${username}_${dateFrom}_${dateGrouping}`;
       const cachedResponse = await redis.get(cacheKey);
-      if (cachedResponse) {
+      if (cachedResponse && config.NODE_ENV !== 'test') {
         res.status(200).send(JSON.parse(cachedResponse));
         return;
       }
