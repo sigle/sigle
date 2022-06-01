@@ -11,6 +11,8 @@ datasource db {
 }
 
 model User {
-  id            Int    @id @default(autoincrement())
-  stacksAddress String @unique
+  id            String   @id @default(uuid())
+  stacksAddress String   @unique
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
 }
