@@ -41,6 +41,7 @@ export const Button = styled('button', {
         backgroundColor: 'transparent',
         boxShadow: 'none',
       },
+      subtle: {},
     },
   },
   compoundVariants: [
@@ -69,6 +70,20 @@ export const Button = styled('button', {
         },
         '&:active': {
           backgroundColor: '$orange5',
+        },
+      },
+    },
+    {
+      color: 'gray',
+      variant: 'subtle',
+      css: {
+        backgroundColor: '$gray3',
+        color: '$gray11',
+        '&:hover': {
+          backgroundColor: '$gray4',
+        },
+        '&:active': {
+          backgroundColor: '$gray5',
         },
       },
     },
