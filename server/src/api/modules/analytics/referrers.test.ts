@@ -25,6 +25,9 @@ it('Should throw an error if dateFrom is missing', async () => {
   const response = await server.inject({
     method: 'GET',
     url: '/api/analytics/referrers',
+    cookies: {
+      'next-auth.session-token': '0x123',
+    },
   });
 
   expect(response.statusCode).toBe(400);
@@ -35,6 +38,9 @@ it('Should throw an error if dateFrom is invalid', async () => {
   const response = await server.inject({
     method: 'GET',
     url: '/api/analytics/referrers?dateFrom=invalid',
+    cookies: {
+      'next-auth.session-token': '0x123',
+    },
   });
 
   expect(response.statusCode).toBe(400);
@@ -67,11 +73,14 @@ it('Respond with referrers', async () => {
   const response = await server.inject({
     method: 'GET',
     url: '/api/analytics/referrers?dateFrom=2022-03-15',
+    cookies: {
+      'next-auth.session-token': '0x123',
+    },
   });
 
-  expect(fathomClient.aggregateReferrers).toBeCalledTimes(26);
   expect(response.statusCode).toBe(200);
   expect(response.json()).toMatchSnapshot();
+  expect(fathomClient.aggregateReferrers).toBeCalledTimes(26);
 });
 
 it('Respond with referrers for one story', async () => {
@@ -90,9 +99,12 @@ it('Respond with referrers for one story', async () => {
   const response = await server.inject({
     method: 'GET',
     url: '/api/analytics/referrers?dateFrom=2022-03-15&storyId=test',
+    cookies: {
+      'next-auth.session-token': '0x123',
+    },
   });
 
-  expect(fathomClient.aggregateReferrers).toBeCalledTimes(1);
   expect(response.statusCode).toBe(200);
   expect(response.json()).toMatchSnapshot();
+  expect(fathomClient.aggregateReferrers).toBeCalledTimes(1);
 });

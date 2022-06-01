@@ -25,6 +25,9 @@ it('Should throw an error if dateFrom is missing', async () => {
   const response = await server.inject({
     method: 'GET',
     url: '/api/analytics/historical',
+    cookies: {
+      'next-auth.session-token': '0x123',
+    },
   });
 
   expect(response.statusCode).toBe(400);
@@ -35,6 +38,9 @@ it('Should throw an error if dateFrom is invalid', async () => {
   const response = await server.inject({
     method: 'GET',
     url: '/api/analytics/historical?dateFrom=invalid',
+    cookies: {
+      'next-auth.session-token': '0x123',
+    },
   });
 
   expect(response.statusCode).toBe(400);
@@ -45,6 +51,9 @@ it('Should throw an error if dateGrouping is missing', async () => {
   const response = await server.inject({
     method: 'GET',
     url: '/api/analytics/historical?dateFrom=2022-05-04',
+    cookies: {
+      'next-auth.session-token': '0x123',
+    },
   });
 
   expect(response.statusCode).toBe(400);
@@ -55,6 +64,9 @@ it('Should throw an error if dateGrouping is invalid', async () => {
   const response = await server.inject({
     method: 'GET',
     url: '/api/analytics/historical?dateFrom=2022-05-04&dateGrouping=invalid',
+    cookies: {
+      'next-auth.session-token': '0x123',
+    },
   });
 
   expect(response.statusCode).toBe(400);
@@ -71,6 +83,9 @@ it('Should throw an error if dateGrouping is day and dateFrom > 2 month', async 
   const response = await server.inject({
     method: 'GET',
     url: '/api/analytics/historical?dateFrom=2022-01-04&dateGrouping=day',
+    cookies: {
+      'next-auth.session-token': '0x123',
+    },
   });
 
   expect(response.statusCode).toBe(400);
@@ -105,11 +120,14 @@ it('Respond with a formatted time series for days', async () => {
   const response = await server.inject({
     method: 'GET',
     url: '/api/analytics/historical?dateFrom=2022-03-15&dateGrouping=day',
+    cookies: {
+      'next-auth.session-token': '0x123',
+    },
   });
 
-  expect(fathomClient.aggregatePath).toBeCalledTimes(26);
   expect(response.statusCode).toBe(200);
   expect(response.json()).toMatchSnapshot();
+  expect(fathomClient.aggregatePath).toBeCalledTimes(26);
 });
 
 it('Respond with a formatted time series for months', async () => {
@@ -138,11 +156,14 @@ it('Respond with a formatted time series for months', async () => {
   const response = await server.inject({
     method: 'GET',
     url: '/api/analytics/historical?dateFrom=2022-01-02&dateGrouping=month',
+    cookies: {
+      'next-auth.session-token': '0x123',
+    },
   });
 
-  expect(fathomClient.aggregatePath).toBeCalledTimes(26);
   expect(response.statusCode).toBe(200);
   expect(response.json()).toMatchSnapshot();
+  expect(fathomClient.aggregatePath).toBeCalledTimes(26);
 });
 
 it('Respond with a formatted time series for one story', async () => {
@@ -163,9 +184,12 @@ it('Respond with a formatted time series for one story', async () => {
   const response = await server.inject({
     method: 'GET',
     url: '/api/analytics/historical?dateFrom=2022-03-15&dateGrouping=day&storyId=test',
+    cookies: {
+      'next-auth.session-token': '0x123',
+    },
   });
 
-  expect(fathomClient.aggregatePath).toBeCalledTimes(1);
   expect(response.statusCode).toBe(200);
   expect(response.json()).toMatchSnapshot();
+  expect(fathomClient.aggregatePath).toBeCalledTimes(1);
 });

@@ -3,6 +3,7 @@ import { isValid, parse } from 'date-fns';
 import { maxFathomFromDate, getBucketUrl, getPublicStories } from './utils';
 import { fathomClient } from '../../../external/fathom';
 import { redis } from '../../../redis';
+import { config } from '../../../config';
 
 interface AnalyticsReferrersParams {
   dateFrom?: string;
@@ -37,6 +38,7 @@ export async function createAnalyticsReferrersEndpoint(
   }>(
     '/api/analytics/referrers',
     {
+      onRequest: [fastify.authenticate],
       config: {
         rateLimit: {
           max: 10,
@@ -76,7 +78,7 @@ export async function createAnalyticsReferrersEndpoint(
         ? `referrers:${username}_${dateFrom}_${storyId}`
         : `referrers:${username}_${dateFrom}`;
       const cachedResponse = await redis.get(cacheKey);
-      if (cachedResponse) {
+      if (cachedResponse && config.NODE_ENV !== 'test') {
         res.status(200).send(JSON.parse(cachedResponse));
         return;
       }

@@ -8,7 +8,6 @@ import {
   isValid,
   parse,
 } from 'date-fns';
-import { getToken } from 'next-auth/jwt';
 import { maxFathomFromDate, getBucketUrl, getPublicStories } from './utils';
 import { fathomClient } from '../../../external/fathom';
 import { redis } from '../../../redis';
@@ -73,6 +72,7 @@ export async function createAnalyticsHistoricalEndpoint(
   }>(
     '/api/analytics/historical',
     {
+      onRequest: [fastify.authenticate],
       config: {
         rateLimit: {
           max: 10,
@@ -86,15 +86,6 @@ export async function createAnalyticsHistoricalEndpoint(
       },
     },
     async (req, res) => {
-      const token = await getToken({
-        req: req as any,
-        secret: config.NEXTAUTH_SECRET,
-      });
-      if (token) {
-        // Signed in
-        console.log('JSON Web Token', JSON.stringify(token, null, 2));
-      }
-
       const { dateGrouping, storyId } = req.query;
       let { dateFrom } = req.query;
       const dateTo = new Date();
@@ -142,7 +133,7 @@ export async function createAnalyticsHistoricalEndpoint(
         ? `historical:${username}_${dateFrom}_${dateGrouping}_${storyId}`
         : `historical:${username}_${dateFrom}_${dateGrouping}`;
       const cachedResponse = await redis.get(cacheKey);
-      if (cachedResponse) {
+      if (cachedResponse && config.NODE_ENV !== 'test') {
         res.status(200).send(JSON.parse(cachedResponse));
         return;
       }
