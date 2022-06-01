@@ -21,6 +21,16 @@ const plugin: FastifyPluginAsync = async (fastify) => {
   fastify.decorate(
     'authenticate',
     async (req: FastifyRequest, res: FastifyReply) => {
+      /**
+       * Allow tests to bypass the authentication.
+       */
+      if (
+        config.NODE_ENV === 'test' &&
+        req.cookies['next-auth.session-token']
+      ) {
+        return;
+      }
+
       const token = await getToken({
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         req: req as any,
