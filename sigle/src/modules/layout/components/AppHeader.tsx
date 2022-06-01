@@ -23,6 +23,7 @@ import {
   Flex,
   IconButton,
   Text,
+  Typography,
 } from '../../../ui';
 import {
   createNewEmptyStory,
@@ -37,6 +38,7 @@ import { sigleConfig } from '../../../config';
 import { userSession } from '../../../utils/blockstack';
 import { createSubsetStory } from '../../editor/utils';
 import { useTheme } from 'next-themes';
+import { StyledChevron } from '../../../ui/Accordion';
 
 const Header = styled('header', Container, {
   display: 'flex',
@@ -155,12 +157,24 @@ export const AppHeader = () => {
         {user ? (
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button size="lg" variant="ghost">
+              <Button
+                css={{ display: 'flex', gap: '$2' }}
+                size="lg"
+                variant="ghost"
+              >
                 <StatusDot />
-                <Text size="sm">{user.username}</Text>
+                <Typography size="subheading">{user.username}</Typography>
+                <StyledChevron css={{ color: '$gray11' }} />
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent sideOffset={8}>
+              <Button
+                disabled={loadingCreate}
+                onClick={handleCreateNewPrivateStory}
+                size="lg"
+              >
+                {!loadingCreate ? `Write a story` : `Creating new story...`}
+              </Button>
               <DropdownMenuItem
                 selected={router.pathname === `/${user.username}`}
                 as="a"
@@ -224,25 +238,17 @@ export const AppHeader = () => {
             </IconButton>
           </Flex>
         )}
-        {user ? (
-          <Button
-            disabled={loadingCreate}
-            onClick={handleCreateNewPrivateStory}
-            size="lg"
-          >
-            {!loadingCreate ? `Write a story` : `Creating new story...`}
-          </Button>
-        ) : (
-          <Link href="/" passHref>
-            <Button as="a" size="lg">
-              Enter App
-            </Button>
-          </Link>
-        )}
         {!user && (
-          <IconButton as="button" onClick={toggleTheme}>
-            <SunIcon />
-          </IconButton>
+          <>
+            <Link href="/" passHref>
+              <Button as="a" size="lg">
+                Enter App
+              </Button>
+            </Link>
+            <IconButton as="button" onClick={toggleTheme}>
+              <SunIcon />
+            </IconButton>
+          </>
         )}
       </Flex>
     </Header>

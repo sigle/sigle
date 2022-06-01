@@ -49,7 +49,7 @@ const StyledContent = styled(AccordionPrimitive.Content, {
   },
 });
 
-const StyledChevron = styled(ChevronDownIcon, {
+export const StyledChevron = styled(ChevronDownIcon, {
   color: '$gray9',
   transition: 'transform 300ms cubic-bezier(0.87, 0, 0.13, 1)',
   '[data-state=open] &': { transform: 'rotate(180deg)' },

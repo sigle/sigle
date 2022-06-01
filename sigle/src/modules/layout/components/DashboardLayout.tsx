@@ -1,7 +1,7 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Link from 'next/link';
 import { AppHeader } from './AppHeader';
-import { Box, Container } from '../../../ui';
+import { Box, Button, Container } from '../../../ui';
 import { styled } from '../../../stitches.config';
 import { AppFooter } from './AppFooter';
 import { useRouter } from 'next/router';
@@ -13,6 +13,16 @@ import {
 } from '../../../ui/Accordion';
 import { useFeatureFlags } from '../../../utils/featureFlags';
 import { VariantProps } from '@stitches/react';
+import {
+  createNewEmptyStory,
+  getStoriesFile,
+  saveStoriesFile,
+  saveStoryFile,
+} from '../../../utils';
+import * as Fathom from 'fathom-client';
+import { Goals } from '../../../utils/fathom';
+import { createSubsetStory } from '../../editor/utils';
+import { toast } from 'react-toastify';
 
 const DashboardContainer = styled(Container, {
   flex: 1,
@@ -109,6 +119,7 @@ export const DashboardLayout = ({
 }: DashboardLayoutProps) => {
   const router = useRouter();
   const { isExperimentalAnalyticsPageEnabled } = useFeatureFlags();
+  const [loadingCreate, setLoadingCreate] = useState(false);
 
   let triggerName;
 
@@ -129,6 +140,28 @@ export const DashboardLayout = ({
       triggerName = 'Drafts';
       break;
   }
+
+  const handleCreateNewPrivateStory = async () => {
+    setLoadingCreate(true);
+    try {
+      const storiesFile = await getStoriesFile();
+      const story = createNewEmptyStory();
+
+      storiesFile.stories.unshift(
+        createSubsetStory(story, { plainContent: '' })
+      );
+
+      await saveStoriesFile(storiesFile);
+      await saveStoryFile(story);
+
+      Fathom.trackGoal(Goals.CREATE_NEW_STORY, 0);
+      router.push('/stories/[storyId]', `/stories/${story.id}`);
+    } catch (error) {
+      console.error(error);
+      toast.error(error.message);
+      setLoadingCreate(false);
+    }
+  };
 
   return (
     <FullScreen>
@@ -162,6 +195,14 @@ export const DashboardLayout = ({
               Settings
             </NavItem>
           </Link>
+          <Button
+            css={{ mt: '$5', alignSelf: 'start' }}
+            disabled={loadingCreate}
+            onClick={handleCreateNewPrivateStory}
+            size="lg"
+          >
+            {!loadingCreate ? `Write a story` : `Creating new story...`}
+          </Button>
         </Sidebar>
         <Box
           css={{
