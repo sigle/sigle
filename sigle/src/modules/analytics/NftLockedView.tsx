@@ -39,7 +39,6 @@ export const NftLockedView = () => {
             gap="3"
           >
             <Typography size="subheading" as="li">
-              {' '}
               <span>✅</span> Analytics page
             </Typography>
             <Typography size="subheading" as="li">
