@@ -65,9 +65,6 @@ export const AppHeader = () => {
   const { user } = useAuth();
   const router = useRouter();
   const [loadingCreate, setLoadingCreate] = useState(false);
-  const { username } = router.query as {
-    username: string;
-  };
 
   const toggleTheme = () => {
     resolvedTheme === 'dark' ? setTheme('light') : setTheme('dark');
@@ -120,7 +117,7 @@ export const AppHeader = () => {
         as="nav"
         align="center"
       >
-        <Link href="/[username]" as={`/${username}`} passHref>
+        <Link href="/[username]" as={`/`} passHref>
           <Flex as="a" css={{ '@lg': { display: 'none' } }}>
             <Image
               width={93}
