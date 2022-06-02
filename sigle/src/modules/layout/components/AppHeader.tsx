@@ -22,7 +22,6 @@ import {
   DropdownMenuTrigger,
   Flex,
   IconButton,
-  Text,
   Typography,
 } from '../../../ui';
 import {
@@ -65,9 +64,6 @@ export const AppHeader = () => {
   const { user } = useAuth();
   const router = useRouter();
   const [loadingCreate, setLoadingCreate] = useState(false);
-  const { username } = router.query as {
-    username: string;
-  };
 
   const toggleTheme = () => {
     resolvedTheme === 'dark' ? setTheme('light') : setTheme('dark');
@@ -120,7 +116,7 @@ export const AppHeader = () => {
         as="nav"
         align="center"
       >
-        <Link href="/[username]" as={`/${username}`} passHref>
+        <Link href="/[username]" as={`/`} passHref>
           <Flex as="a" css={{ '@lg': { display: 'none' } }}>
             <Image
               width={93}
@@ -183,20 +179,19 @@ export const AppHeader = () => {
               >
                 My blog
               </DropdownMenuItem>
-              <DropdownMenuItem
-                selected={router.pathname === '/'}
-                as="a"
-                href="/"
-              >
-                Dashboard
-              </DropdownMenuItem>
-              <DropdownMenuItem
-                selected={router.pathname === '/settings'}
-                as="a"
-                href="/settings"
-              >
-                Settings
-              </DropdownMenuItem>
+              <Link href="/" passHref>
+                <DropdownMenuItem selected={router.pathname === '/'} as="a">
+                  Dashboard
+                </DropdownMenuItem>
+              </Link>
+              <Link href="/settings" passHref>
+                <DropdownMenuItem
+                  selected={router.pathname === '/settings'}
+                  as="a"
+                >
+                  Settings
+                </DropdownMenuItem>
+              </Link>
               <DropdownMenuSeparator />
               <DropdownMenuItem onClick={toggleTheme}>
                 Switch theme
