@@ -75,34 +75,6 @@ export const SettingsLayout = ({
                       </DashboardSidebarNavItem>
                     </Link>
                   ))}
-                {/* {router.pathname !== '/' ? (
-                  <Link href="/" passHref>
-                    <DashboardSidebarNavItem variant="accordion">
-                      Public profile
-                    </DashboardSidebarNavItem>
-                  </Link>
-                ) : null}
-                {router.pathname !== '/published' ? (
-                  <Link href="/published" passHref>
-                    <DashboardSidebarNavItem variant="accordion">
-                      Published
-                    </DashboardSidebarNavItem>
-                  </Link>
-                ) : null}
-                {router.pathname !== '/analytics' ? (
-                  <Link href="/analytics" passHref>
-                    <DashboardSidebarNavItem variant="accordion">
-                      Analytics
-                    </DashboardSidebarNavItem>
-                  </Link>
-                ) : null}
-                {router.pathname !== '/settings' ? (
-                  <Link href="/settings" passHref>
-                    <DashboardSidebarNavItem variant="accordion">
-                      Settings
-                    </DashboardSidebarNavItem>
-                  </Link>
-                ) : null} */}
               </AccordionContent>
             </AccordionItem>
           </Accordion>
