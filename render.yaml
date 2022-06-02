@@ -45,6 +45,7 @@ services:
     # only allow internal connections
     ipAllowList: []
 
+databases:
   # Postgres database
   - name: sigle-postgres
     region: oregon
