@@ -1,3 +1,4 @@
+import Image from 'next/image';
 import { Box, Button, Flex, Typography } from '../../../ui';
 import { SettingsLayout } from '../SettingsLayout';
 
@@ -14,7 +15,9 @@ export const CurrentPlan = () => {
       </Flex>
 
       <Box css={{ mt: '$2', borderRadius: '$3', border: '1px solid $gray7' }}>
-        <Box
+        <Flex
+          align="center"
+          gap="5"
           css={{
             background: '$gray2',
             borderBottom: '1px solid $gray7',
@@ -23,6 +26,7 @@ export const CurrentPlan = () => {
             borderTopRightRadius: '$3',
           }}
         >
+          <Image width={70} height={63} src="/img/illustrations/backpack.png" />
           <Flex direction="column" gap="1">
             <Typography size="h4" css={{ fontWeight: 600 }}>
               You’re a Starter member!
@@ -31,7 +35,7 @@ export const CurrentPlan = () => {
               All the basics for casual writers
             </Typography>
           </Flex>
-        </Box>
+        </Flex>
         <Flex gap="2" direction="column" css={{ padding: '$3' }}>
           <Typography size="subheading">
             <Box as="span" css={{ marginRight: '$2' }}>
