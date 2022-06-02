@@ -18,7 +18,7 @@ const StoryImage = styled('img', {
   br: '$1',
 });
 
-const baseUrl = sigleConfig.baseUrl;
+const baseUrl = sigleConfig.apiUrl;
 
 const fetchStoryViews = async (storyId: string) => {
   const url = `${baseUrl}/api/analytics/historical?dateFrom=${FATHOM_MAX_FROM_DATE}&dateGrouping=month&storyId=${storyId}`;

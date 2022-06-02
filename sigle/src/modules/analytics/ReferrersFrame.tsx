@@ -10,7 +10,7 @@ import { ReferrersResponse } from './stats/types';
 import { FATHOM_MAX_FROM_DATE } from './stats/utils';
 
 const fetchReferrers = async () => {
-  const baseUrl = sigleConfig.baseUrl;
+  const baseUrl = sigleConfig.apiUrl;
 
   const url = `${baseUrl}/api/analytics/referrers?dateFrom=${FATHOM_MAX_FROM_DATE}`;
 
