@@ -1,5 +1,4 @@
 import { FastifyInstance } from 'fastify';
-
 import { uintCV, cvToJSON, callReadOnlyFunction } from '@stacks/transactions';
 
 interface SubscriptionCreatorPlusBody {
@@ -27,7 +26,7 @@ export async function createSubscriptionCreatorPlusEndpoint(
   fastify: FastifyInstance
 ) {
   return fastify.post<{
-    Body: SubscriptionCreatorPlusBody;
+    Body?: SubscriptionCreatorPlusBody;
     Reply:
       | SubscriptionCreatorPlusResponseError
       | SubscriptionCreatorPlusResponse;
@@ -48,12 +47,7 @@ export async function createSubscriptionCreatorPlusEndpoint(
       },
     },
     async (req, res) => {
-      // TODO logic should be to call the Hiro api to check that the wallet do own the NFT
-      // TODO check that the NFT is not linked to another account
-      // TODO create subscription and link it to the NFT id
-      // const nftHoldings = nftApi.getNftHoldings({ principal: req.address });
-
-      const { nftId } = req.body;
+      const nftId = req.body?.nftId;
 
       if (!nftId) {
         res.status(400).send({ error: 'nftId is required' });
@@ -72,10 +66,16 @@ export async function createSubscriptionCreatorPlusEndpoint(
         network: 'mainnet',
         senderAddress: 'SP2X0TZ59D5SZ8ACQ6YMCHHNR2ZN51Z32E2CJ173',
       });
-
       const resultJSON = cvToJSON(result);
+      const nftOwnerAddress = resultJSON.value.value.value;
 
-      console.log(resultJSON);
+      if (nftOwnerAddress !== req.address) {
+        res.status(400).send({ error: `NFT #${nftId} is not owned by user` });
+        return;
+      }
+
+      // TODO check that the NFT is not linked to another account
+      // TODO create subscription and link it to the NFT id
 
       res.status(200).send({});
     }
