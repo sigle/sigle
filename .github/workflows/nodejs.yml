@@ -96,5 +96,8 @@ jobs:
       - name: Build api
         run: pnpm --filter=@sigle/server run build
 
+      - name: Apply prisma migrations
+        run: pnpm prisma migrate dev
+
       - name: Run api tests
         run: pnpm --filter=@sigle/server run test
