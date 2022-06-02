@@ -168,37 +168,36 @@ export const DashboardLayout = ({
     }
   };
 
+  const navItems = [
+    {
+      name: 'Drafts',
+      path: '/',
+    },
+    {
+      name: 'Published',
+      path: '/published',
+    },
+  ];
+
+  if (isExperimentalAnalyticsPageEnabled) {
+    navItems.push({
+      name: 'Analytics',
+      path: '/analytics',
+    });
+  }
+
   return (
     <FullScreen>
       <AppHeader />
       <DashboardContainer {...props}>
         <DashboardSidebar>
-          <Link href="/" passHref>
-            <DashboardSidebarNavItem selected={router.pathname === '/'}>
-              Drafts
-            </DashboardSidebarNavItem>
-          </Link>
-          <Link href="/published" passHref>
-            <DashboardSidebarNavItem
-              selected={router.pathname === '/published'}
-            >
-              Published
-            </DashboardSidebarNavItem>
-          </Link>
-          {isExperimentalAnalyticsPageEnabled && (
-            <Link href="/analytics" passHref>
-              <DashboardSidebarNavItem
-                selected={router.pathname.includes('/analytics')}
-              >
-                Analytics
+          {navItems.map((item) => (
+            <Link key={item.path} href={item.path} passHref>
+              <DashboardSidebarNavItem selected={router.pathname === item.path}>
+                {item.name}
               </DashboardSidebarNavItem>
             </Link>
-          )}
-          <Link href="/settings" passHref>
-            <DashboardSidebarNavItem selected={router.pathname === '/settings'}>
-              Settings
-            </DashboardSidebarNavItem>
-          </Link>
+          ))}
           <Button
             css={{ mt: '$5', alignSelf: 'start' }}
             disabled={loadingCreate}
@@ -219,36 +218,19 @@ export const DashboardLayout = ({
             type="single"
           >
             <AccordionItem value="item1">
-              <AccordionTrigger>{triggerName}</AccordionTrigger>
+              <AccordionTrigger>
+                {navItems.find((item) => item.path === router.pathname)?.name}
+              </AccordionTrigger>
               <AccordionContent>
-                {router.pathname !== '/' ? (
-                  <Link href="/" passHref>
-                    <DashboardSidebarNavItem variant="accordion">
-                      Drafts
-                    </DashboardSidebarNavItem>
-                  </Link>
-                ) : null}
-                {router.pathname !== '/published' ? (
-                  <Link href="/published" passHref>
-                    <DashboardSidebarNavItem variant="accordion">
-                      Published
-                    </DashboardSidebarNavItem>
-                  </Link>
-                ) : null}
-                {router.pathname !== '/analytics' ? (
-                  <Link href="/analytics" passHref>
-                    <DashboardSidebarNavItem variant="accordion">
-                      Analytics
-                    </DashboardSidebarNavItem>
-                  </Link>
-                ) : null}
-                {router.pathname !== '/settings' ? (
-                  <Link href="/settings" passHref>
-                    <DashboardSidebarNavItem variant="accordion">
-                      Settings
-                    </DashboardSidebarNavItem>
-                  </Link>
-                ) : null}
+                {navItems
+                  .filter((item) => item.path !== router.pathname)
+                  .map((item) => (
+                    <Link key={item.path} href={item.path} passHref>
+                      <DashboardSidebarNavItem variant="accordion">
+                        {item.name}
+                      </DashboardSidebarNavItem>
+                    </Link>
+                  ))}
               </AccordionContent>
             </AccordionItem>
           </Accordion>
