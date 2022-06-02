@@ -33,7 +33,7 @@ services:
           property: connectionString
       # Inject Postgres connection url from the redis instance
       - key: PG_DATABASE_URL
-        fromService:
+        fromDatabase:
           name: sigle-postgres
           property: connectionString
 
@@ -45,6 +45,7 @@ services:
     # only allow internal connections
     ipAllowList: []
 
+  # Postgres database
   - name: sigle-postgres
     region: oregon
     plan: Starter
