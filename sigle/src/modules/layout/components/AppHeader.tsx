@@ -22,7 +22,6 @@ import {
   DropdownMenuTrigger,
   Flex,
   IconButton,
-  Text,
   Typography,
 } from '../../../ui';
 import {
