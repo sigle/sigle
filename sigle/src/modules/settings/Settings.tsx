@@ -6,8 +6,8 @@ import { DashboardPageTitle } from '../layout/components/DashboardHeader';
 import { useAuth } from '../auth/AuthContext';
 import { getSettingsFile } from '../../utils';
 import { SettingsForm } from './SettingsForm';
-import { DashboardLayout } from '../layout/components/DashboardLayout';
 import { Box } from '../../ui';
+import { SettingsLayout } from './SettingsLayout';
 
 export const Settings = () => {
   const { user } = useAuth();
@@ -25,13 +25,13 @@ export const Settings = () => {
   );
 
   return (
-    <DashboardLayout>
+    <SettingsLayout>
       <DashboardPageTitle title="Settings" />
       <Box css={{ width: '100%' }}>
         {user && settingsFile && (
           <SettingsForm settings={settingsFile} username={user.username} />
         )}
       </Box>
-    </DashboardLayout>
+    </SettingsLayout>
   );
 };

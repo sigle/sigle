@@ -1,16 +1,18 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 import { AppHeader } from './AppHeader';
-import { Box, Button, Container } from '../../../ui';
-import { styled } from '../../../stitches.config';
-import { AppFooter } from './AppFooter';
-import { useRouter } from 'next/router';
 import {
+  Box,
+  Button,
+  Container,
   Accordion,
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
-} from '../../../ui/Accordion';
+} from '../../../ui';
+import { styled } from '../../../stitches.config';
+import { AppFooter } from './AppFooter';
+import { useRouter } from 'next/router';
 import { useFeatureFlags } from '../../../utils/featureFlags';
 import { VariantProps } from '@stitches/react';
 import {
@@ -24,7 +26,7 @@ import { Goals } from '../../../utils/fathom';
 import { createSubsetStory } from '../../editor/utils';
 import { toast } from 'react-toastify';
 
-const DashboardContainer = styled(Container, {
+export const DashboardContainer = styled(Container, {
   flex: 1,
   mt: '$10',
   width: '100%',
@@ -63,7 +65,7 @@ const DashboardContainer = styled(Container, {
   },
 });
 
-const FullScreen = styled('div', {
+export const FullScreen = styled('div', {
   height: '100vh',
   display: 'flex',
   flexDirection: 'column',
@@ -71,13 +73,16 @@ const FullScreen = styled('div', {
   justifyContent: 'space-between',
 });
 
-const Sidebar = styled('div', {
-  display: 'flex',
+export const DashboardSidebar = styled('div', {
+  display: 'none',
   flexDirection: 'column',
   gap: '$3',
+  '@xl': {
+    display: 'flex',
+  },
 });
 
-const NavItem = styled('a', {
+export const DashboardSidebarNavItem = styled('a', {
   py: '$3',
   px: '$3',
   br: '$2',
@@ -167,33 +172,32 @@ export const DashboardLayout = ({
     <FullScreen>
       <AppHeader />
       <DashboardContainer {...props}>
-        <Sidebar
-          css={{
-            display: 'none',
-            '@xl': {
-              display: 'flex',
-            },
-          }}
-        >
+        <DashboardSidebar>
           <Link href="/" passHref>
-            <NavItem selected={router.pathname === '/'}>Drafts</NavItem>
+            <DashboardSidebarNavItem selected={router.pathname === '/'}>
+              Drafts
+            </DashboardSidebarNavItem>
           </Link>
           <Link href="/published" passHref>
-            <NavItem selected={router.pathname === '/published'}>
+            <DashboardSidebarNavItem
+              selected={router.pathname === '/published'}
+            >
               Published
-            </NavItem>
+            </DashboardSidebarNavItem>
           </Link>
           {isExperimentalAnalyticsPageEnabled && (
             <Link href="/analytics" passHref>
-              <NavItem selected={router.pathname.includes('/analytics')}>
+              <DashboardSidebarNavItem
+                selected={router.pathname.includes('/analytics')}
+              >
                 Analytics
-              </NavItem>
+              </DashboardSidebarNavItem>
             </Link>
           )}
           <Link href="/settings" passHref>
-            <NavItem selected={router.pathname === '/settings'}>
+            <DashboardSidebarNavItem selected={router.pathname === '/settings'}>
               Settings
-            </NavItem>
+            </DashboardSidebarNavItem>
           </Link>
           <Button
             css={{ mt: '$5', alignSelf: 'start' }}
@@ -203,7 +207,7 @@ export const DashboardLayout = ({
           >
             {!loadingCreate ? `Write a story` : `Creating new story...`}
           </Button>
-        </Sidebar>
+        </DashboardSidebar>
         <Box
           css={{
             mb: '$5',
@@ -219,22 +223,30 @@ export const DashboardLayout = ({
               <AccordionContent>
                 {router.pathname !== '/' ? (
                   <Link href="/" passHref>
-                    <NavItem variant="accordion">Drafts</NavItem>
+                    <DashboardSidebarNavItem variant="accordion">
+                      Drafts
+                    </DashboardSidebarNavItem>
                   </Link>
                 ) : null}
                 {router.pathname !== '/published' ? (
                   <Link href="/published" passHref>
-                    <NavItem variant="accordion">Published</NavItem>
+                    <DashboardSidebarNavItem variant="accordion">
+                      Published
+                    </DashboardSidebarNavItem>
                   </Link>
                 ) : null}
                 {router.pathname !== '/analytics' ? (
                   <Link href="/analytics" passHref>
-                    <NavItem variant="accordion">Analytics</NavItem>
+                    <DashboardSidebarNavItem variant="accordion">
+                      Analytics
+                    </DashboardSidebarNavItem>
                   </Link>
                 ) : null}
                 {router.pathname !== '/settings' ? (
                   <Link href="/settings" passHref>
-                    <NavItem variant="accordion">Settings</NavItem>
+                    <DashboardSidebarNavItem variant="accordion">
+                      Settings
+                    </DashboardSidebarNavItem>
                   </Link>
                 ) : null}
               </AccordionContent>
