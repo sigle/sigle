@@ -1,5 +1,7 @@
 import { FastifyInstance } from 'fastify';
 import { uintCV, cvToJSON, callReadOnlyFunction } from '@stacks/transactions';
+import { prisma } from '../../../prisma';
+import { config } from '../../../config';
 
 interface SubscriptionCreatorPlusBody {
   nftId?: number;
@@ -9,16 +11,13 @@ interface SubscriptionCreatorPlusResponseError {
   error: string;
 }
 
-// TODO
-type SubscriptionCreatorPlusResponse = {};
+type SubscriptionCreatorPlusResponse = {
+  success: true;
+};
 const analyticsReferrersResponseSchema = {
-  type: 'array',
-  items: {
-    type: 'object',
-    properties: {
-      domain: { type: 'string', nullable: true },
-      count: { type: 'number' },
-    },
+  type: 'object',
+  properties: {
+    success: { type: 'boolean' },
   },
 };
 
@@ -36,7 +35,7 @@ export async function createSubscriptionCreatorPlusEndpoint(
       onRequest: [fastify.authenticate],
       config: {
         rateLimit: {
-          max: 5,
+          max: config.NODE_ENV === 'test' ? 1000 : 5,
           timeWindow: 60000,
         },
       },
@@ -74,10 +73,35 @@ export async function createSubscriptionCreatorPlusEndpoint(
         return;
       }
 
-      // TODO check that the NFT is not linked to another account
-      // TODO create subscription and link it to the NFT id
+      const user = await prisma.user.findUnique({
+        where: { stacksAddress: req.address },
+      });
+      if (!user) {
+        throw new Error(`User with address ${req.address} not found`);
+      }
 
-      res.status(200).send({});
+      const activeSubscription = await prisma.subscription.findFirst({
+        where: {
+          userId: user.id,
+          status: 'ACTIVE',
+        },
+      });
+      if (activeSubscription) {
+        res.status(400).send({
+          error: `User already has an active subscription`,
+        });
+        return;
+      }
+
+      await prisma.subscription.create({
+        data: {
+          userId: user.id,
+          status: 'ACTIVE',
+          nftId,
+        },
+      });
+
+      res.status(200).send({ success: true });
     }
   );
 }
