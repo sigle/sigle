@@ -35,6 +35,7 @@
     "@sentry/nextjs": "6.19.7",
     "@sigle/slate-to-html": "1.0.0",
     "@stacks/auth": "4.1.0",
+    "@stacks/blockchain-api-client": "4.0.1",
     "@stacks/connect": "6.8.1",
     "@stacks/connect-react": "17.0.1",
     "@stacks/encryption": "4.1.0",

@@ -1,3 +1,4 @@
+import { forwardRef } from 'react';
 import * as DialogPrimitive from '@radix-ui/react-dialog';
 import { Cross1Icon } from '@radix-ui/react-icons';
 import { CSS, darkTheme, keyframes, styled } from '../stitches.config';
@@ -75,18 +76,19 @@ type DialogContentProps = React.ComponentProps<
   typeof DialogPrimitive.Content
 > & { css?: CSS };
 
-export function DialogContent({ children, ...props }: DialogContentProps) {
-  return (
-    <StyledContent {...props}>
-      {children}
-      <StyledCloseButton asChild>
-        <IconButton>
-          <Cross1Icon width={15} height={15} />
-        </IconButton>
-      </StyledCloseButton>
-    </StyledContent>
-  );
-}
+export const DialogContent = forwardRef<
+  React.ElementRef<typeof StyledContent>,
+  DialogContentProps
+>(({ children, ...props }, forwardedRef) => (
+  <StyledContent {...props} ref={forwardedRef}>
+    {children}
+    <StyledCloseButton asChild>
+      <IconButton>
+        <Cross1Icon width={15} height={15} />
+      </IconButton>
+    </StyledCloseButton>
+  </StyledContent>
+));
 
 export const DialogTrigger = DialogPrimitive.Trigger;
 export const DialogClose = DialogPrimitive.Close;

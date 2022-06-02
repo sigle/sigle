@@ -2,7 +2,9 @@ export const sigleConfig = {
   env: process.env.NODE_ENV,
   isServer: typeof window === 'undefined',
   appUrl: process.env.APP_URL as string,
+  // TODO change part using this code
   baseUrl: process.env.API_URL,
+  apiUrl: process.env.API_URL,
   landingUrl: 'https://www.sigle.io',
   sentryDsn: process.env.NEXT_PUBLIC_SENTRY_DSN,
   fathomSiteId: process.env.FATHOM_SITE_ID,
