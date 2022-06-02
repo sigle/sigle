@@ -9,6 +9,7 @@ import { createAnalyticsReferrersEndpoint } from './api/modules/analytics/referr
 import { config } from './config';
 import { redis } from './redis';
 import { fastifyAuthPlugin } from './api/plugins/auth';
+import { createSubscriptionCreatorPlusEndpoint } from './api/modules/subscriptions/creatorPlus';
 
 export const buildFastifyServer = (
   opts: FastifyServerOptions<Server, FastifyLoggerInstance> = {}
@@ -100,6 +101,10 @@ export const buildFastifyServer = (
    * All the protected routes must be placed there.
    */
   fastify.after(() => {
+    /**
+     * Subscriptions routes
+     */
+    createSubscriptionCreatorPlusEndpoint(fastify);
     /**
      * Analytics routes
      */

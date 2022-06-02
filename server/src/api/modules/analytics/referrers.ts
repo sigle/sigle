@@ -41,7 +41,7 @@ export async function createAnalyticsReferrersEndpoint(
       onRequest: [fastify.authenticate],
       config: {
         rateLimit: {
-          max: 10,
+          max: config.NODE_ENV === 'test' ? 1000 : 10,
           timeWindow: 60000,
         },
       },

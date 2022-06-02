@@ -13,6 +13,22 @@ datasource db {
 model User {
   id            String   @id @default(uuid())
   stacksAddress String   @unique
+  subscriptions Subscription[]
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+}
+
+enum SubscriptionStatus {
+  INACTIVE
+  ACTIVE
+}
+
+model Subscription {
+  id            String   @id @default(uuid())
+  status        SubscriptionStatus
+  nftId         Int      @unique
+  user          User     @relation(fields: [userId], references: [id])
+  userId        String
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
 }

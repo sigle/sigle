@@ -32,6 +32,7 @@ const plugin: FastifyPluginAsync = async (fastify) => {
         config.NODE_ENV === 'test' &&
         req.cookies['next-auth.session-token']
       ) {
+        req.address = req.cookies['next-auth.session-token'];
         return;
       }
 
