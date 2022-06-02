@@ -2,7 +2,6 @@ import React from 'react';
 import { toast } from 'react-toastify';
 import { useQuery } from 'react-query';
 import * as Sentry from '@sentry/nextjs';
-import { DashboardPageTitle } from '../layout/components/DashboardHeader';
 import { useAuth } from '../auth/AuthContext';
 import { getSettingsFile } from '../../utils';
 import { SettingsForm } from './SettingsForm';
@@ -26,7 +25,6 @@ export const Settings = () => {
 
   return (
     <SettingsLayout>
-      <DashboardPageTitle title="Settings" />
       <Box css={{ width: '100%' }}>
         {user && settingsFile && (
           <SettingsForm settings={settingsFile} username={user.username} />
