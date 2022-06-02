@@ -1,6 +1,7 @@
 import Image from 'next/image';
 import { Box, Button, Flex, Typography } from '../../../ui';
 import { SettingsLayout } from '../SettingsLayout';
+import backpackImage from '../../../../public/img/illustrations/backpack.png';
 
 export const CurrentPlan = () => {
   return (
@@ -26,7 +27,7 @@ export const CurrentPlan = () => {
             borderTopRightRadius: '$3',
           }}
         >
-          <Image width={70} height={63} src="/img/illustrations/backpack.png" />
+          <Image src={backpackImage} width={70} height={70} quality={100} />
           <Flex direction="column" gap="1">
             <Typography size="h4" css={{ fontWeight: 600 }}>
               You’re a Starter member!
