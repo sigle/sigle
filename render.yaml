@@ -31,11 +31,23 @@ services:
           type: redis
           name: sigle-redis
           property: connectionString
+      # Inject Postgres connection url from the redis instance
+      - key: PG_DATABASE_URL
+        fromService:
+          name: sigle-postgres
+          property: connectionString
 
   # Redis database
   - name: sigle-redis
     type: redis
     region: oregon
     plan: Starter
+    # only allow internal connections
+    ipAllowList: []
+
+  - name: sigle-postgres
+    region: oregon
+    plan: Starter
+    postgresMajorVersion: 14
     # only allow internal connections
     ipAllowList: []

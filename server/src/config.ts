@@ -22,6 +22,10 @@ export const config = cleanEnv(process.env, {
    */
   REDIS_DATABASE_URL: str({ desc: 'Redis database url.' }),
   /**
+   * Postgres
+   */
+  PG_DATABASE_URL: str({ desc: 'Postgres database url.' }),
+  /**
    * Fathom
    */
   FATHOM_API_TOKEN: str({ desc: 'Fathom API token.' }),
