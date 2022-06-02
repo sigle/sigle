@@ -8,8 +8,12 @@ services:
     branch: main
     healthCheckPath: /health
     autoDeploy: true
-    buildCommand: cd server; pnpm install --filter=@sigle/server; pnpm run build
-    startCommand: cd server; pnpm run start
+    buildCommand: cd server &&
+      pnpm install --filter=@sigle/server &&
+      pnpm run build &&
+      pnpm prisma migrate deploy
+    startCommand: cd server &&
+      pnpm run start
     domains:
       - api.sigle.io
     buildFilter:

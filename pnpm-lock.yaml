@@ -47,6 +47,7 @@ importers:
       '@prisma/client': 3.14.0
       '@sentry/node': 6.19.7
       '@stacks/auth': 4.1.0
+      '@stacks/transactions': 4.1.0
       '@types/node': 17.0.31
       '@typescript-eslint/eslint-plugin': 5.20.0
       '@typescript-eslint/parser': 5.26.0
@@ -69,6 +70,7 @@ importers:
       '@prisma/client': 3.14.0_prisma@3.14.0
       '@sentry/node': 6.19.7
       '@stacks/auth': 4.1.0
+      '@stacks/transactions': 4.1.0
       date-fns: 2.28.0
       dotenv: 16.0.0
       envalid: 7.3.1
@@ -8870,7 +8872,7 @@ packages:
     dev: true
 
   /lodash.clonedeep/4.5.0:
-    resolution: {integrity: sha1-4j8/nE+Pvd6HJSnBBxhXoIblzO8=}
+    resolution: {integrity: sha512-H5ZhCF25riFd9uB5UCkVKo61m3S/xZk1x4wA6yp/L3RFP6Z/eHH1ymQcGLo7J3GMPfm0V/7m1tryHuGVxpqEBQ==}
     dev: false
 
   /lodash.defaults/4.2.0:
