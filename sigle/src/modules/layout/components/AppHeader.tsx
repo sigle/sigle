@@ -180,20 +180,19 @@ export const AppHeader = () => {
               >
                 My blog
               </DropdownMenuItem>
-              <DropdownMenuItem
-                selected={router.pathname === '/'}
-                as="a"
-                href="/"
-              >
-                Dashboard
-              </DropdownMenuItem>
-              <DropdownMenuItem
-                selected={router.pathname === '/settings'}
-                as="a"
-                href="/settings"
-              >
-                Settings
-              </DropdownMenuItem>
+              <Link href="/" passHref>
+                <DropdownMenuItem selected={router.pathname === '/'} as="a">
+                  Dashboard
+                </DropdownMenuItem>
+              </Link>
+              <Link href="/settings" passHref>
+                <DropdownMenuItem
+                  selected={router.pathname === '/settings'}
+                  as="a"
+                >
+                  Settings
+                </DropdownMenuItem>
+              </Link>
               <DropdownMenuSeparator />
               <DropdownMenuItem onClick={toggleTheme}>
                 Switch theme
