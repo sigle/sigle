@@ -2,23 +2,31 @@
 import React from 'react';
 import { render } from '@testing-library/react';
 import * as Sentry from '@sentry/nextjs';
+import { QueryClient, QueryClientProvider } from 'react-query';
 import { MyError } from './_error.page';
 
 jest.mock('@sentry/nextjs');
 
 // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 const getInitialProps = MyError.getInitialProps!;
+const queryClient = new QueryClient();
 
 describe('MyError', () => {
   it('should display statusCode in title', async () => {
-    const { getByTestId } = render(<MyError statusCode={404} />);
+    const { getByTestId } = render(
+      <QueryClientProvider client={queryClient}>
+        <MyError statusCode={404} />
+      </QueryClientProvider>
+    );
 
     expect(getByTestId('error-title')).toHaveTextContent('404');
   });
 
   it('should display errorMessage in sub title', async () => {
     const { getByTestId } = render(
-      <MyError statusCode={404} errorMessage="Custom error message" />
+      <QueryClientProvider client={queryClient}>
+        <MyError statusCode={404} errorMessage="Custom error message" />
+      </QueryClientProvider>
     );
 
     expect(getByTestId('error-sub-title')).toHaveTextContent(
@@ -99,11 +107,13 @@ describe('Sentry ID', () => {
   it('should display server error Sentry ID', async () => {
     const sentryID = '737H3RJA3RRH237';
     const { getByTestId } = render(
-      <MyError
-        sentryErrorId={sentryID}
-        statusCode={500}
-        errorMessage="Custom error message"
-      />
+      <QueryClientProvider client={queryClient}>
+        <MyError
+          sentryErrorId={sentryID}
+          statusCode={500}
+          errorMessage="Custom error message"
+        />
+      </QueryClientProvider>
     );
     expect(getByTestId('error-id')).toBeInTheDocument();
     expect(getByTestId('error-id')).toHaveTextContent(/737H3RJA3RRH237/);

@@ -10,6 +10,8 @@ import { useRouter } from 'next/router';
 import { useState } from 'react';
 import { toast } from 'react-toastify';
 import { signOut } from 'next-auth/react';
+import { useQueryClient } from 'react-query';
+import { useTheme } from 'next-themes';
 import { styled } from '../../../stitches.config';
 import {
   Box,
@@ -36,7 +38,6 @@ import { Goals } from '../../../utils/fathom';
 import { sigleConfig } from '../../../config';
 import { userSession } from '../../../utils/blockstack';
 import { createSubsetStory } from '../../editor/utils';
-import { useTheme } from 'next-themes';
 import { StyledChevron } from '../../../ui/Accordion';
 
 const Header = styled('header', Container, {
@@ -63,6 +64,7 @@ export const AppHeader = () => {
   const { resolvedTheme, setTheme } = useTheme();
   const { user } = useAuth();
   const router = useRouter();
+  const queryClient = useQueryClient();
   const [loadingCreate, setLoadingCreate] = useState(false);
 
   const toggleTheme = () => {
@@ -103,6 +105,7 @@ export const AppHeader = () => {
   };
 
   const handleLogout = () => {
+    queryClient.removeQueries();
     userSession.signUserOut();
     signOut();
   };
