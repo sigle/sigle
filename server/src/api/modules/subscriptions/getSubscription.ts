@@ -9,6 +9,7 @@ type GetSubscriptionResponse = {
 } | null;
 const analyticsReferrersResponseSchema = {
   type: 'object',
+  nullable: true,
   properties: {
     id: { type: 'string' },
     nftId: { type: 'number' },
