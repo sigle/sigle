@@ -123,5 +123,14 @@ it('Should create an active subscription linked to the nft', async () => {
   });
   expect(
     await prisma.subscription.findMany({ where: { userId: user.id } })
-  ).toMatchObject([{ nftId, status: 'ACTIVE', userId: user.id }]);
+  ).toMatchObject([
+    {
+      id: expect.any(String),
+      nftId,
+      status: 'ACTIVE',
+      userId: user.id,
+      createdAt: expect.any(Date),
+      updatedAt: expect.any(Date),
+    },
+  ]);
 });
