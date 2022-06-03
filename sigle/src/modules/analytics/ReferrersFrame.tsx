@@ -2,7 +2,7 @@ import { stagger } from 'motion';
 import { useMotionAnimate } from 'motion-hooks';
 import { useEffect, useMemo, useState } from 'react';
 import { useGetReferrers } from '../../hooks/analytics';
-import { Box, Flex, Text, Typography } from '../../ui';
+import { Box, Flex, Typography } from '../../ui';
 import { Pagination } from './Pagination';
 import { StatsError } from './stats/StatsError';
 
@@ -52,7 +52,7 @@ export const ReferrersFrame = () => {
   };
 
   return (
-    <div>
+    <Flex direction="column" justify="between">
       <Flex css={{ mb: '$5' }} justify="between">
         <Typography
           as="h3"
@@ -69,70 +69,68 @@ export const ReferrersFrame = () => {
           Views
         </Typography>
       </Flex>
-      <Flex direction="column" justify="between">
-        {isError && <StatsError>{error.message}</StatsError>}
-        {currentReferrers ? (
-          <Flex
-            css={{ flexShrink: 0, mb: '$4', height: 476 }}
-            direction="column"
-            gap="5"
-          >
-            {currentReferrers.map((referrer) => (
-              <Flex
-                className="referrer-item"
-                css={{ opacity: 0 }}
-                key={referrer.domain}
-                gap="5"
-                justify="between"
-                align="center"
+      {isError && <StatsError>{error.message}</StatsError>}
+      {currentReferrers ? (
+        <Flex
+          css={{ flexShrink: 0, mb: '$4', height: 476 }}
+          direction="column"
+          gap="5"
+        >
+          {currentReferrers.map((referrer) => (
+            <Flex
+              className="referrer-item"
+              css={{ opacity: 0 }}
+              key={referrer.domain}
+              gap="5"
+              justify="between"
+              align="center"
+            >
+              <Box
+                css={{
+                  flex: 1,
+                  position: 'relative',
+                  p: '$1',
+                  br: '$1',
+                }}
               >
                 <Box
                   css={{
-                    flex: 1,
-                    position: 'relative',
-                    p: '$1',
-                    br: '$1',
+                    position: 'absolute',
+                    top: 0,
+                    bottom: 0,
+                    left: 0,
+                    zIndex: -1,
+                    backgroundColor: '$gray3',
+                    width: `${getPercentage(referrer.count)}%`,
                   }}
+                />
+                <Typography
+                  css={{
+                    overflow: 'hidden',
+                    display: '-webkit-box',
+                    '-webkit-line-clamp': 1,
+                    '-webkit-box-orient': 'vertical',
+                    textOverflow: 'ellipsis',
+                  }}
+                  size="subheading"
                 >
-                  <Box
-                    css={{
-                      position: 'absolute',
-                      top: 0,
-                      bottom: 0,
-                      left: 0,
-                      zIndex: -1,
-                      backgroundColor: '$gray3',
-                      width: `${getPercentage(referrer.count)}%`,
-                    }}
-                  />
-                  <Text
-                    css={{
-                      overflow: 'hidden',
-                      display: '-webkit-box',
-                      '-webkit-line-clamp': 1,
-                      '-webkit-box-orient': 'vertical',
-                      textOverflow: 'ellipsis',
-                    }}
-                    size="sm"
-                  >
-                    {referrer.domain}
-                  </Text>
-                </Box>
-                <Text size="sm">{referrer.count}</Text>
-              </Flex>
-            ))}
-          </Flex>
-        ) : (
-          <Box css={{ display: 'grid', placeItems: 'center' }}>
-            <Text>No data to display</Text>
-          </Box>
-        )}
-        <Pagination
-          currentPage={currentPage}
-          onPageChange={(page) => setCurrentPage(page)}
-          hasNextPage={hasNextPage}
-        />
-      </Flex>
-    </div>
+                  {referrer.domain}
+                </Typography>
+              </Box>
+              <Typography size="subheading">{referrer.count}</Typography>
+            </Flex>
+          ))}
+        </Flex>
+      ) : (
+        <Box css={{ display: 'grid', placeItems: 'center' }}>
+          <Typography size="subheading">No data to display</Typography>
+        </Box>
+      )}
+      <Pagination
+        currentPage={currentPage}
+        onPageChange={(page) => setCurrentPage(page)}
+        hasNextPage={hasNextPage}
+      />
+    </Flex>
   );
 };
