@@ -10,7 +10,7 @@ export const CurrentPlan = () => {
   const { isExperimentalAnalyticsPageEnabled } = useFeatureFlags();
   const [isSelectNFTDialogOpen, setIsSelectNFTDialogOpen] = useState(false);
 
-  const currentPlan: 'starter' | 'creatorPlus' = 'creatorPlus';
+  const currentPlan = 'creatorPlus' as 'starter' | 'creatorPlus';
 
   const plans = {
     starter: {
