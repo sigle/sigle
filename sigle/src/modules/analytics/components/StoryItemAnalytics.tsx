@@ -81,7 +81,7 @@ export const StoryItemAnalytics = ({ story }: StoryAnalyticsProps) => {
     const statsData: AnalyticsHistoricalResponse = await statsRes.json();
     const stats: StatsData[] = statsData.historical.map((item) => {
       return {
-        pageViews: item.pageviews,
+        pageviews: item.pageviews,
         date: item.date,
         visits: item.visits,
       };

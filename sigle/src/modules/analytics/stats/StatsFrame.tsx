@@ -2,6 +2,7 @@ import { format } from 'date-fns';
 import { useState } from 'react';
 import { useQuery } from 'react-query';
 import { sigleConfig } from '../../../config';
+import { useGetHistorical } from '../../../hooks/analytics';
 import { Box, Flex, Tabs, TabsList, TabsTrigger } from '../../../ui';
 import { StatsChart } from './StatsChart';
 import { StatsError } from './StatsError';
@@ -15,73 +16,46 @@ import {
 } from './utils';
 
 export const StatsFrame = () => {
-  const [statType, setStatType] = useState<StatsType>('weekly');
-  const { data, isError, error } = useQuery<StatsData[], Error>(
-    ['fetchStats', statType],
-    () => fetchStats(statType),
-    {
-      placeholderData: initialRange,
-    }
-  );
-
-  const baseUrl = sigleConfig.apiUrl;
-
-  const fetchStats = async (value: StatsType) => {
-    const weeklyStatsUrl = `${baseUrl}/api/analytics/historical?dateFrom=${format(
-      weekFromDate,
-      'yyyy-MM-dd'
-    )}&dateGrouping=day`;
-
-    const monthlyStatsUrl = `${baseUrl}/api/analytics/historical?dateFrom=${format(
-      monthFromDate,
-      'yyyy-MM-dd'
-    )}&dateGrouping=day`;
-
-    const allTimeStatsUrl = `${baseUrl}/api/analytics/historical?dateFrom=${FATHOM_MAX_FROM_DATE}&dateGrouping=month`;
-    let url;
-
-    switch (value) {
-      case 'weekly':
-        url = weeklyStatsUrl;
-        break;
-      case 'monthly':
-        url = monthlyStatsUrl;
-        break;
-      case 'all':
-        url = allTimeStatsUrl;
-        break;
-
-      default:
-        throw new Error('No value received.');
-    }
-
-    const statsRes = await fetch(url, { credentials: 'include' });
-
-    if (!statsRes.ok) {
-      throw new Error(`Error: ${statsRes.status} - ${statsRes.statusText}`);
-    }
-
-    const statsData: AnalyticsHistoricalResponse = await statsRes.json();
-    const stats: StatsData[] = statsData.historical.map((item) => {
-      return {
-        pageViews: item.pageviews,
-        date: item.date,
-        visits: item.visits,
-      };
-    });
-    return stats;
-  };
+  const [historicalParams, setHistoricalParams] = useState<{
+    dateFrom: string;
+    dateGrouping: 'day' | 'month';
+    statType: 'all' | 'weekly' | 'monthly';
+  }>(() => ({
+    dateFrom: format(weekFromDate, 'yyyy-MM-dd'),
+    dateGrouping: 'day',
+    statType: 'weekly',
+  }));
+  const {
+    data: historicalData,
+    isError,
+    error,
+  } = useGetHistorical(historicalParams, {
+    placeholderData: { historical: initialRange, stories: [] },
+  });
+  const data = historicalData?.historical;
 
   const checkStatType = (value: StatsType) => {
     switch (value) {
       case 'weekly':
-        setStatType('weekly');
+        setHistoricalParams({
+          dateFrom: format(weekFromDate, 'yyyy-MM-dd'),
+          dateGrouping: 'day',
+          statType: 'weekly',
+        });
         break;
       case 'monthly':
-        setStatType('monthly');
+        setHistoricalParams({
+          dateFrom: format(monthFromDate, 'yyyy-MM-dd'),
+          dateGrouping: 'day',
+          statType: 'monthly',
+        });
         break;
       case 'all':
-        setStatType('all');
+        setHistoricalParams({
+          dateFrom: FATHOM_MAX_FROM_DATE,
+          dateGrouping: 'month',
+          statType: 'all',
+        });
         break;
       default:
         throw new Error('No value received.');
@@ -114,7 +88,7 @@ export const StatsFrame = () => {
               height: 400,
             }}
           >
-            <StatsChart type={statType} data={data} />
+            <StatsChart type={historicalParams.statType} data={data} />
           </Box>
         </Tabs>
       </Flex>

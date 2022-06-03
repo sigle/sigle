@@ -17,7 +17,7 @@ import { StatsData } from './types';
 
 // accessors
 const getDate = (d: StatsData) => new Date(d.date);
-const getViews = (d: StatsData) => d.pageViews;
+const getViews = (d: StatsData) => d.pageviews;
 const getVisits = (d: StatsData) => d.visits;
 const bisectDate = bisector<StatsData, Date>((d) => new Date(d.date)).left;
 
@@ -170,7 +170,7 @@ const StatsChart = ({
             >{`${tooltipData.visits} Visitors`}</TooltipText>
             <TooltipText
               css={{ color: '$violet11' }}
-            >{`${tooltipData.pageViews} Views`}</TooltipText>
+            >{`${tooltipData.pageviews} Views`}</TooltipText>
           </TooltipInPortal>
         </div>
       )}

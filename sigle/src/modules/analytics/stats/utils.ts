@@ -15,7 +15,7 @@ export const dates = eachDayOfInterval({
 
 export const initialRange: StatsData[] = dates.map((date) => {
   return {
-    pageViews: 0,
+    pageviews: 0,
     date: date.toString(),
     visits: 0,
   };
