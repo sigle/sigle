@@ -7,6 +7,7 @@ import backpackImage from '../../../../public/img/illustrations/backpack.png';
 import { useFeatureFlags } from '../../../utils/featureFlags';
 import { SelectNFTDialog } from './SelectNFTDialog';
 import { sigleConfig } from '../../../config';
+import { useGetUserSubscription } from '../../../hooks/subscriptions';
 
 const plans = {
   starter: {
@@ -72,26 +73,7 @@ export const CurrentPlan = () => {
     isLoading,
     isError,
     data: userSubscription,
-  } = useQuery(
-    'get-user-subscription',
-    () =>
-      fetch(`${sigleConfig.apiUrl}/api/subscriptions`, {
-        method: 'GET',
-        credentials: 'include',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      }).then(async (res) => {
-        const json = await res.json();
-        if (!res.ok) {
-          throw json;
-        }
-        return json as { id: string; nftId: number } | null;
-      }),
-    {
-      retry: false,
-    }
-  );
+  } = useGetUserSubscription();
 
   const currentPlan: 'starter' | 'creatorPlus' = userSubscription
     ? 'creatorPlus'
