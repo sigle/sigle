@@ -34,17 +34,7 @@ export const Analytics = ({ stories, loading }: AnalyticsProps) => {
           </Heading>
           {stories && <PublishedStoriesFrame stories={stories} />}
         </Box>
-        <Box css={{ flexGrow: 1 }}>
-          <Flex css={{ mb: '$5' }} justify="between">
-            <Heading as="h3" css={{ fontSize: 15, fontWeight: 600 }}>
-              Referrers
-            </Heading>
-            <Heading as="h3" css={{ fontSize: 15, fontWeight: 600 }}>
-              Views
-            </Heading>
-          </Flex>
-          <ReferrersFrame />
-        </Box>
+        <ReferrersFrame />
       </Box>
     </DashboardLayout>
   );

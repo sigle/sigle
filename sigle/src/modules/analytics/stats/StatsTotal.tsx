@@ -15,7 +15,7 @@ export const StatsTotal = ({ data }: StatsTotalProps) => {
     const total = data?.reduce(
       function (previousValue, currentValue) {
         return {
-          pageviews: previousValue.pageviews + currentValue.pageViews,
+          pageviews: previousValue.pageviews + currentValue.pageviews,
           visits: previousValue.visits + currentValue.visits,
         };
       },

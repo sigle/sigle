@@ -11,7 +11,7 @@ const green = theme.colors.green3.toString();
 
 // accessors
 const getDate = (d: StatsData) => new Date(d.date);
-const getViews = (d: StatsData) => d.pageViews;
+const getViews = (d: StatsData) => d.pageviews;
 const getVisits = (d: StatsData) => d.visits;
 
 interface AreaChartProps extends WithParentSizeProps {
