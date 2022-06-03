@@ -10,6 +10,64 @@ export const CurrentPlan = () => {
   const { isExperimentalAnalyticsPageEnabled } = useFeatureFlags();
   const [isSelectNFTDialogOpen, setIsSelectNFTDialogOpen] = useState(false);
 
+  const currentPlan: 'starter' | 'creatorPlus' = 'creatorPlus';
+
+  const plans = {
+    starter: {
+      title: "You're a Starter member!",
+      description: 'All the basics for casual writers',
+      features: [
+        {
+          title: 'Write unlimited stories',
+          status: 'done',
+        },
+        {
+          title: 'Data stored on Gaïa',
+          status: 'done',
+        },
+        {
+          title: 'Monetise your stories',
+          status: 'progress',
+        },
+        {
+          title: 'Send newsletters',
+          status: 'progress',
+        },
+      ],
+    },
+    creatorPlus: {
+      title: "You're a Creator + member!",
+      description:
+        'Hold your NFT and get lifetime access to the premium features',
+      features: [
+        {
+          title: 'Write unlimited stories',
+          status: 'done',
+        },
+        {
+          title: 'Data stored on Gaïa',
+          status: 'done',
+        },
+        {
+          title: 'Analytics',
+          status: 'done',
+        },
+        {
+          title: 'Monetise your stories',
+          status: 'progress',
+        },
+        {
+          title: 'Send newsletters',
+          status: 'progress',
+        },
+        {
+          title: 'And more...',
+          status: 'progress',
+        },
+      ],
+    },
+  };
+
   return (
     <SettingsLayout>
       <Flex align="center" justify="between">
@@ -17,9 +75,16 @@ export const CurrentPlan = () => {
           Current plan
         </Typography>
         {isExperimentalAnalyticsPageEnabled ? (
-          <Button color="orange" onClick={() => setIsSelectNFTDialogOpen(true)}>
-            Upgrade
-          </Button>
+          currentPlan === 'starter' ? (
+            <Button
+              color="orange"
+              onClick={() => setIsSelectNFTDialogOpen(true)}
+            >
+              Upgrade
+            </Button>
+          ) : (
+            <Button variant="subtle">Change plan</Button>
+          )
         ) : (
           <Button disabled color="orange">
             Upgrade (coming soon)
@@ -39,41 +104,34 @@ export const CurrentPlan = () => {
             borderTopRightRadius: '$3',
           }}
         >
-          <Image src={backpackImage} width={70} height={70} quality={100} />
+          {currentPlan === 'starter' ? (
+            <Image src={backpackImage} width={70} height={70} quality={100} />
+          ) : (
+            <Image
+              src="/static/img/nft_locked.gif"
+              width={70}
+              height={64}
+              quality={100}
+            />
+          )}
           <Flex direction="column" gap="1">
             <Typography size="h4" css={{ fontWeight: 600 }}>
-              You’re a Starter member!
+              {plans[currentPlan].title}
             </Typography>
             <Typography size="subheading">
-              All the basics for casual writers
+              {plans[currentPlan].description}
             </Typography>
           </Flex>
         </Flex>
         <Flex gap="2" direction="column" css={{ padding: '$3' }}>
-          <Typography size="subheading">
-            <Box as="span" css={{ marginRight: '$2' }}>
-              ✅
-            </Box>
-            Write unlimited stories
-          </Typography>
-          <Typography size="subheading">
-            <Box as="span" css={{ marginRight: '$2' }}>
-              ✅
-            </Box>
-            Data stored on Gaïa
-          </Typography>
-          <Typography size="subheading">
-            <Box as="span" css={{ marginRight: '$2' }}>
-              ⚙️
-            </Box>
-            Monetise your stories
-          </Typography>
-          <Typography size="subheading">
-            <Box as="span" css={{ marginRight: '$2' }}>
-              ⚙️
-            </Box>
-            Send newsletters
-          </Typography>
+          {plans[currentPlan].features.map(({ title, status }, index) => (
+            <Typography key={`${currentPlan}-${index}`} size="subheading">
+              <Box as="span" css={{ marginRight: '$2' }}>
+                {status === 'done' ? '✅' : '⚙️'}
+              </Box>
+              {title}
+            </Typography>
+          ))}
         </Flex>
       </Box>
 
