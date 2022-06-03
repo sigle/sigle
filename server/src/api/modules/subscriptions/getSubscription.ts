@@ -1,7 +1,5 @@
 import { FastifyInstance } from 'fastify';
-import { uintCV, cvToJSON, callReadOnlyFunction } from '@stacks/transactions';
 import { prisma } from '../../../prisma';
-import { config } from '../../../config';
 
 type GetSubscriptionResponse = {
   id: string;
