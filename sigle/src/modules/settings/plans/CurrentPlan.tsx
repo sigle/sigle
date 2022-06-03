@@ -1,72 +1,87 @@
 import { useState } from 'react';
 import Image from 'next/image';
+import { useQuery } from 'react-query';
 import { Box, Button, Flex, Typography } from '../../../ui';
 import { SettingsLayout } from '../SettingsLayout';
 import backpackImage from '../../../../public/img/illustrations/backpack.png';
 import { useFeatureFlags } from '../../../utils/featureFlags';
 import { SelectNFTDialog } from './SelectNFTDialog';
+import { sigleConfig } from '../../../config';
+
+const plans = {
+  starter: {
+    title: "You're a Starter member!",
+    description: 'All the basics for casual writers',
+    features: [
+      {
+        title: 'Write unlimited stories',
+        status: 'done',
+      },
+      {
+        title: 'Data stored on Gaïa',
+        status: 'done',
+      },
+      {
+        title: 'Monetise your stories',
+        status: 'progress',
+      },
+      {
+        title: 'Send newsletters',
+        status: 'progress',
+      },
+    ],
+  },
+  creatorPlus: {
+    title: "You're a Creator + member!",
+    description:
+      'Hold your NFT and get lifetime access to the premium features',
+    features: [
+      {
+        title: 'Write unlimited stories',
+        status: 'done',
+      },
+      {
+        title: 'Data stored on Gaïa',
+        status: 'done',
+      },
+      {
+        title: 'Analytics',
+        status: 'done',
+      },
+      {
+        title: 'Monetise your stories',
+        status: 'progress',
+      },
+      {
+        title: 'Send newsletters',
+        status: 'progress',
+      },
+      {
+        title: 'And more...',
+        status: 'progress',
+      },
+    ],
+  },
+};
 
 export const CurrentPlan = () => {
   const { isExperimentalAnalyticsPageEnabled } = useFeatureFlags();
   const [isSelectNFTDialogOpen, setIsSelectNFTDialogOpen] = useState(false);
 
-  const currentPlan = 'creatorPlus' as 'starter' | 'creatorPlus';
+  const { isLoading, isError } = useQuery(
+    'get-user-subscription',
+    () =>
+      fetch(`${sigleConfig.apiUrl}/api/subscriptions`, {
+        method: 'GET',
+        credentials: 'include',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      }).then((res) => res.json()),
+    {}
+  );
 
-  const plans = {
-    starter: {
-      title: "You're a Starter member!",
-      description: 'All the basics for casual writers',
-      features: [
-        {
-          title: 'Write unlimited stories',
-          status: 'done',
-        },
-        {
-          title: 'Data stored on Gaïa',
-          status: 'done',
-        },
-        {
-          title: 'Monetise your stories',
-          status: 'progress',
-        },
-        {
-          title: 'Send newsletters',
-          status: 'progress',
-        },
-      ],
-    },
-    creatorPlus: {
-      title: "You're a Creator + member!",
-      description:
-        'Hold your NFT and get lifetime access to the premium features',
-      features: [
-        {
-          title: 'Write unlimited stories',
-          status: 'done',
-        },
-        {
-          title: 'Data stored on Gaïa',
-          status: 'done',
-        },
-        {
-          title: 'Analytics',
-          status: 'done',
-        },
-        {
-          title: 'Monetise your stories',
-          status: 'progress',
-        },
-        {
-          title: 'Send newsletters',
-          status: 'progress',
-        },
-        {
-          title: 'And more...',
-          status: 'progress',
-        },
-      ],
-    },
-  };
+  const currentPlan = 'creatorPlus' as 'starter' | 'creatorPlus';
 
   return (
     <SettingsLayout>
