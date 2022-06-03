@@ -8,6 +8,7 @@ import {
   isValid,
   parse,
 } from 'date-fns';
+import { fetch } from 'undici';
 import { maxFathomFromDate, getBucketUrl, getPublicStories } from './utils';
 import { fathomClient } from '../../../external/fathom';
 import { redis } from '../../../redis';
@@ -139,9 +140,17 @@ export async function createAnalyticsHistoricalEndpoint(
         return;
       }
 
-      // TODO protect to logged in users
-      // TODO take username from session
-      const username = 'sigleapp.id.blockstack';
+      // TODO change this as it's not the best way to do this
+      let username: string;
+      const namesResponse = await fetch(
+        `https://stacks-node-api.stacks.co/v1/addresses/stacks/${req.address}`
+      );
+      const namesJson = (await namesResponse.json()) as any;
+      if ((namesJson.names.length || 0) > 0) {
+        username = namesJson.names[0];
+      } else {
+        throw new Error(`No username found for ${req.address}`);
+      }
 
       // Caching mechanism to avoid hitting Fathom too often
       const cacheKey = storyId
