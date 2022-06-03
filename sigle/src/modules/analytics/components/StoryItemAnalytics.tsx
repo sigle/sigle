@@ -2,17 +2,19 @@ import { format } from 'date-fns';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
 import { StatsChart } from '../stats/StatsChart';
-import {
-  AnalyticsHistoricalResponse,
-  StatsData,
-  StatsType,
-} from '../stats/types';
+import { StatsType } from '../stats/types';
 import { DashboardLayout } from '../../layout';
-import { Box, Flex, Heading, Tabs, TabsList, TabsTrigger } from '../../../ui';
+import {
+  Box,
+  Flex,
+  Tabs,
+  TabsList,
+  TabsTrigger,
+  Typography,
+} from '../../../ui';
 import { SubsetStory } from '../../../types';
 import { PublishedStoryItem } from '../PublishedStoryItem';
 import { ReferrersFrame } from '../ReferrersFrame';
-import { useQuery } from 'react-query';
 import { StatsTotal } from '../stats/StatsTotal';
 import { StatsError } from '../stats/StatsError';
 import {
@@ -21,7 +23,6 @@ import {
   monthFromDate,
   weekFromDate,
 } from '../stats/utils';
-import { sigleConfig } from '../../../config';
 import { useGetHistorical } from '../../../hooks/analytics';
 
 interface StoryAnalyticsProps {
@@ -124,12 +125,20 @@ export const StoryItemAnalytics = ({ story }: StoryAnalyticsProps) => {
         </Tabs>
       </Flex>
       <Flex css={{ mb: '$5' }} justify="between">
-        <Heading as="h3" css={{ fontSize: 15, fontWeight: 600 }}>
+        <Typography
+          as="h3"
+          size="subheading"
+          css={{ fontWeight: 600, color: '$gray11' }}
+        >
           Referrers
-        </Heading>
-        <Heading as="h3" css={{ fontSize: 15, fontWeight: 600 }}>
+        </Typography>
+        <Typography
+          as="h3"
+          size="subheading"
+          css={{ fontWeight: 600, color: '$gray11' }}
+        >
           Views
-        </Heading>
+        </Typography>
       </Flex>
       <ReferrersFrame />
     </DashboardLayout>
