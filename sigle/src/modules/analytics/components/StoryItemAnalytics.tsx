@@ -124,22 +124,6 @@ export const StoryItemAnalytics = ({ story }: StoryAnalyticsProps) => {
           </Box>
         </Tabs>
       </Flex>
-      <Flex css={{ mb: '$5' }} justify="between">
-        <Typography
-          as="h3"
-          size="subheading"
-          css={{ fontWeight: 600, color: '$gray11' }}
-        >
-          Referrers
-        </Typography>
-        <Typography
-          as="h3"
-          size="subheading"
-          css={{ fontWeight: 600, color: '$gray11' }}
-        >
-          Views
-        </Typography>
-      </Flex>
       <ReferrersFrame />
     </DashboardLayout>
   );
