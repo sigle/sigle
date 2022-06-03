@@ -7,7 +7,7 @@ import { ReferrersFrame } from '../ReferrersFrame';
 import { StatsFrame } from '../stats/StatsFrame';
 
 interface AnalyticsProps {
-  stories: SubsetStory[] | null;
+  stories?: SubsetStory[] | null;
   loading: boolean;
 }
 
