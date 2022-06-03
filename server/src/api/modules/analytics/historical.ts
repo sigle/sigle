@@ -12,6 +12,7 @@ import { maxFathomFromDate, getBucketUrl, getPublicStories } from './utils';
 import { fathomClient } from '../../../external/fathom';
 import { redis } from '../../../redis';
 import { config } from '../../../config';
+import { prisma } from '../../../prisma';
 
 interface AnalyticsHistoricalParams {
   dateFrom?: string;
@@ -123,6 +124,20 @@ export async function createAnalyticsHistoricalEndpoint(
 
       // Set max date in the past
       dateFrom = maxFathomFromDate(parsedDateFrom, dateFrom);
+
+      const activeSubscription = await prisma.subscription.findFirst({
+        where: {
+          user: { stacksAddress: req.address },
+          status: 'ACTIVE',
+        },
+        select: {
+          id: true,
+        },
+      });
+      if (!activeSubscription) {
+        res.status(401).send({ error: 'No active subscription' });
+        return;
+      }
 
       // TODO protect to logged in users
       // TODO take username from session
