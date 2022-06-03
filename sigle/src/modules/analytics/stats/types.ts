@@ -16,7 +16,7 @@ export type AnalyticsHistoricalResponse = {
 };
 
 export interface StatsData {
-  pageViews: number;
+  pageviews: number;
   date: string;
   visits: number;
 }

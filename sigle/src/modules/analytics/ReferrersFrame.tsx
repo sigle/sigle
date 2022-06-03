@@ -2,7 +2,7 @@ import { stagger } from 'motion';
 import { useMotionAnimate } from 'motion-hooks';
 import { useEffect, useMemo, useState } from 'react';
 import { useGetReferrers } from '../../hooks/analytics';
-import { Box, Flex, Text } from '../../ui';
+import { Box, Flex, Typography } from '../../ui';
 import { Pagination } from './Pagination';
 import { StatsError } from './stats/StatsError';
 
@@ -53,6 +53,22 @@ export const ReferrersFrame = () => {
 
   return (
     <Flex direction="column" justify="between">
+      <Flex css={{ mb: '$5' }} justify="between">
+        <Typography
+          as="h3"
+          size="subheading"
+          css={{ fontWeight: 600, color: '$gray11' }}
+        >
+          Referrers
+        </Typography>
+        <Typography
+          as="h3"
+          size="subheading"
+          css={{ fontWeight: 600, color: '$gray11' }}
+        >
+          Views
+        </Typography>
+      </Flex>
       {isError && <StatsError>{error.message}</StatsError>}
       {currentReferrers ? (
         <Flex
@@ -88,7 +104,7 @@ export const ReferrersFrame = () => {
                     width: `${getPercentage(referrer.count)}%`,
                   }}
                 />
-                <Text
+                <Typography
                   css={{
                     overflow: 'hidden',
                     display: '-webkit-box',
@@ -96,18 +112,18 @@ export const ReferrersFrame = () => {
                     '-webkit-box-orient': 'vertical',
                     textOverflow: 'ellipsis',
                   }}
-                  size="sm"
+                  size="subheading"
                 >
                   {referrer.domain}
-                </Text>
+                </Typography>
               </Box>
-              <Text size="sm">{referrer.count}</Text>
+              <Typography size="subheading">{referrer.count}</Typography>
             </Flex>
           ))}
         </Flex>
       ) : (
         <Box css={{ display: 'grid', placeItems: 'center' }}>
-          <Text>No data to display</Text>
+          <Typography size="subheading">No data to display</Typography>
         </Box>
       )}
       <Pagination

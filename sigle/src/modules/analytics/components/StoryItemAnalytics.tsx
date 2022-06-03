@@ -81,7 +81,7 @@ export const StoryItemAnalytics = ({ story }: StoryAnalyticsProps) => {
     const statsData: AnalyticsHistoricalResponse = await statsRes.json();
     const stats: StatsData[] = statsData.historical.map((item) => {
       return {
-        pageViews: item.pageviews,
+        pageviews: item.pageviews,
         date: item.date,
         visits: item.visits,
       };
@@ -143,14 +143,6 @@ export const StoryItemAnalytics = ({ story }: StoryAnalyticsProps) => {
             <StatsChart type={statType} data={data!} />
           </Box>
         </Tabs>
-      </Flex>
-      <Flex css={{ mb: '$5' }} justify="between">
-        <Heading as="h3" css={{ fontSize: 15, fontWeight: 600 }}>
-          Referrers
-        </Heading>
-        <Heading as="h3" css={{ fontSize: 15, fontWeight: 600 }}>
-          Views
-        </Heading>
       </Flex>
       <ReferrersFrame />
     </DashboardLayout>
