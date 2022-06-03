@@ -1,6 +1,5 @@
 import { useRouter } from 'next/router';
 import React, { useEffect } from 'react';
-import { Analytics } from '../../modules/analytics/containers/Analytics';
 import { NftLockedView } from '../../modules/analytics/NftLockedView';
 import { Protected } from '../../modules/auth/Protected';
 import { useFeatureFlags } from '../../utils/featureFlags';
@@ -17,7 +16,7 @@ const AnalyticsPage = () => {
 
   return (
     <Protected>
-      <Analytics />
+      <NftLockedView />
     </Protected>
   );
 };
