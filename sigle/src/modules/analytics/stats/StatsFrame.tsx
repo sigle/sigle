@@ -24,7 +24,7 @@ export const StatsFrame = () => {
     }
   );
 
-  const baseUrl = sigleConfig.baseUrl;
+  const baseUrl = sigleConfig.apiUrl;
 
   const fetchStats = async (value: StatsType) => {
     const weeklyStatsUrl = `${baseUrl}/api/analytics/historical?dateFrom=${format(

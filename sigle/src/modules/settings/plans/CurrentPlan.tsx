@@ -1,18 +1,30 @@
+import { useState } from 'react';
 import Image from 'next/image';
 import { Box, Button, Flex, Typography } from '../../../ui';
 import { SettingsLayout } from '../SettingsLayout';
 import backpackImage from '../../../../public/img/illustrations/backpack.png';
+import { useFeatureFlags } from '../../../utils/featureFlags';
+import { SelectNFTDialog } from './SelectNFTDialog';
 
 export const CurrentPlan = () => {
+  const { isExperimentalAnalyticsPageEnabled } = useFeatureFlags();
+  const [isSelectNFTDialogOpen, setIsSelectNFTDialogOpen] = useState(false);
+
   return (
     <SettingsLayout>
       <Flex align="center" justify="between">
         <Typography size="h4" css={{ fontWeight: 600 }}>
           Current plan
         </Typography>
-        <Button disabled color="orange">
-          Upgrade (coming soon)
-        </Button>
+        {isExperimentalAnalyticsPageEnabled ? (
+          <Button color="orange" onClick={() => setIsSelectNFTDialogOpen(true)}>
+            Upgrade
+          </Button>
+        ) : (
+          <Button disabled color="orange">
+            Upgrade (coming soon)
+          </Button>
+        )}
       </Flex>
 
       <Box css={{ mt: '$2', borderRadius: '$3', border: '1px solid $gray7' }}>
@@ -64,6 +76,11 @@ export const CurrentPlan = () => {
           </Typography>
         </Flex>
       </Box>
+
+      <SelectNFTDialog
+        open={isSelectNFTDialogOpen}
+        onOpenChange={() => setIsSelectNFTDialogOpen(false)}
+      />
     </SettingsLayout>
   );
 };

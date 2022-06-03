@@ -38,7 +38,7 @@ export const StoryItemAnalytics = ({ story }: StoryAnalyticsProps) => {
     }
   );
 
-  const baseUrl = sigleConfig.baseUrl;
+  const baseUrl = sigleConfig.apiUrl;
 
   // testing on stories that already have views to validate things are working as expected
   const testId = 'JA9dBfdPDp7kQhkFkgPdv';
