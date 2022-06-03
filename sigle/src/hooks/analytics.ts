@@ -29,17 +29,23 @@ export const useGetHistorical = (
   {
     dateFrom,
     dateGrouping,
+    storyId,
   }: {
     dateFrom: string;
     dateGrouping: 'day' | 'month';
+    storyId?: string;
   },
   options: UseQueryOptions<AnalyticsHistoricalResponse, Error>
 ) =>
   useQuery<AnalyticsHistoricalResponse, Error>(
-    ['get-analytics-historical', dateFrom, dateGrouping],
+    storyId
+      ? ['get-analytics-historical', dateFrom, dateGrouping, storyId]
+      : ['get-analytics-historical', dateFrom, dateGrouping],
     async () => {
       const res = await fetch(
-        `${sigleConfig.apiUrl}/api/analytics/historical?dateFrom=${dateFrom}&dateGrouping=${dateGrouping}`,
+        storyId
+          ? `${sigleConfig.apiUrl}/api/analytics/historical?dateFrom=${dateFrom}&dateGrouping=${dateGrouping}&storyId=${storyId}`
+          : `${sigleConfig.apiUrl}/api/analytics/historical?dateFrom=${dateFrom}&dateGrouping=${dateGrouping}`,
         {
           method: 'GET',
           credentials: 'include',
