@@ -1,6 +1,7 @@
 import { DialogDescription } from '@radix-ui/react-dialog';
 import { useMutation, useQuery } from 'react-query';
 import { NonFungibleTokensApi } from '@stacks/blockchain-api-client';
+import { cvToValue } from '@stacks/transactions';
 import { styled } from '../../../stitches.config';
 import {
   Button,
@@ -11,12 +12,6 @@ import {
 } from '../../../ui';
 import { useAuth } from '../../auth/AuthContext';
 import { sigleConfig } from '../../../config';
-
-// TODO ask Quentin for zero data view in case user does not own any NFT
-// TODO ask Quentin for loading state
-// TODO ask Quentin for error state
-// TODO in the list display the NFT number?
-// TODO get the NFT metadata and display the image
 
 const SelectNFTDialogContent = styled(DialogContent, {
   textAlign: 'center',
@@ -77,7 +72,9 @@ export const SelectNFTDialog = ({
   console.log(data, error, isErrorUserNFT, isLoadingUserNFT);
 
   const handleSubmit = () => {
-    mutate(1212);
+    if (!data) return;
+    const nftId = Number((data.results[0] as any).value.repr.replace('u', ''));
+    mutate(nftId);
   };
 
   return (
