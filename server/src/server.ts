@@ -10,6 +10,7 @@ import { config } from './config';
 import { redis } from './redis';
 import { fastifyAuthPlugin } from './api/plugins/auth';
 import { createSubscriptionCreatorPlusEndpoint } from './api/modules/subscriptions/creatorPlus';
+import { createGetSubscriptionEndpoint } from './api/modules/subscriptions/getSubscription';
 
 export const buildFastifyServer = (
   opts: FastifyServerOptions<Server, FastifyLoggerInstance> = {}
@@ -105,6 +106,8 @@ export const buildFastifyServer = (
      * Subscriptions routes
      */
     createSubscriptionCreatorPlusEndpoint(fastify);
+    createGetSubscriptionEndpoint(fastify);
+
     /**
      * Analytics routes
      */
