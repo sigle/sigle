@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import Image from 'next/image';
 import { useQuery } from 'react-query';
-import { Box, Button, Flex, Typography } from '../../../ui';
+import { Box, Button, Flex, Typography, LoadingSpinner } from '../../../ui';
 import { SettingsLayout } from '../SettingsLayout';
 import backpackImage from '../../../../public/img/illustrations/backpack.png';
 import { useFeatureFlags } from '../../../utils/featureFlags';
@@ -68,7 +68,11 @@ export const CurrentPlan = () => {
   const { isExperimentalAnalyticsPageEnabled } = useFeatureFlags();
   const [isSelectNFTDialogOpen, setIsSelectNFTDialogOpen] = useState(false);
 
-  const { isLoading, isError } = useQuery(
+  const {
+    isLoading,
+    isError,
+    data: userSubscription,
+  } = useQuery(
     'get-user-subscription',
     () =>
       fetch(`${sigleConfig.apiUrl}/api/subscriptions`, {
@@ -77,11 +81,21 @@ export const CurrentPlan = () => {
         headers: {
           'Content-Type': 'application/json',
         },
-      }).then((res) => res.json()),
-    {}
+      }).then(async (res) => {
+        const json = await res.json();
+        if (!res.ok) {
+          throw json;
+        }
+        return json as { id: string; nftId: number } | null;
+      }),
+    {
+      retry: false,
+    }
   );
 
-  const currentPlan = 'creatorPlus' as 'starter' | 'creatorPlus';
+  const currentPlan: 'starter' | 'creatorPlus' = userSubscription
+    ? 'creatorPlus'
+    : 'starter';
 
   return (
     <SettingsLayout>
@@ -89,68 +103,78 @@ export const CurrentPlan = () => {
         <Typography size="h4" css={{ fontWeight: 600 }}>
           Current plan
         </Typography>
-        {isExperimentalAnalyticsPageEnabled ? (
-          currentPlan === 'starter' ? (
-            <Button
-              color="orange"
-              onClick={() => setIsSelectNFTDialogOpen(true)}
-            >
-              Upgrade
-            </Button>
+        {!isLoading && !isError ? (
+          isExperimentalAnalyticsPageEnabled ? (
+            currentPlan === 'starter' ? (
+              <Button
+                color="orange"
+                onClick={() => setIsSelectNFTDialogOpen(true)}
+              >
+                Upgrade
+              </Button>
+            ) : (
+              <Button variant="subtle">Change plan</Button>
+            )
           ) : (
-            <Button variant="subtle">Change plan</Button>
+            <Button disabled color="orange">
+              Upgrade (coming soon)
+            </Button>
           )
-        ) : (
-          <Button disabled color="orange">
-            Upgrade (coming soon)
-          </Button>
-        )}
+        ) : null}
       </Flex>
 
-      <Box css={{ mt: '$2', borderRadius: '$3', border: '1px solid $gray7' }}>
-        <Flex
-          align="center"
-          gap="5"
-          css={{
-            background: '$gray2',
-            borderBottom: '1px solid $gray7',
-            padding: '$3',
-            borderTopLeftRadius: '$3',
-            borderTopRightRadius: '$3',
-          }}
-        >
-          {currentPlan === 'starter' ? (
-            <Image src={backpackImage} width={70} height={70} quality={100} />
-          ) : (
-            <Image
-              src="/static/img/nft_locked.gif"
-              width={70}
-              height={64}
-              quality={100}
-            />
-          )}
-          <Flex direction="column" gap="1">
-            <Typography size="h4" css={{ fontWeight: 600 }}>
-              {plans[currentPlan].title}
-            </Typography>
-            <Typography size="subheading">
-              {plans[currentPlan].description}
-            </Typography>
-          </Flex>
-        </Flex>
-        <Flex gap="2" direction="column" css={{ padding: '$3' }}>
-          {plans[currentPlan].features.map(({ title, status }, index) => (
-            <Typography key={`${currentPlan}-${index}`} size="subheading">
-              <Box as="span" css={{ marginRight: '$2' }}>
-                {status === 'done' ? '✅' : '⚙️'}
-              </Box>
-              {title}
-            </Typography>
-          ))}
-        </Flex>
-      </Box>
+      {isLoading ? (
+        <Box css={{ py: '$10' }}>
+          <LoadingSpinner />
+        </Box>
+      ) : null}
 
-      {currentPlan === 'creatorPlus' ? (
+      {!isLoading && !isError ? (
+        <Box css={{ mt: '$2', borderRadius: '$3', border: '1px solid $gray7' }}>
+          <Flex
+            align="center"
+            gap="5"
+            css={{
+              background: '$gray2',
+              borderBottom: '1px solid $gray7',
+              padding: '$3',
+              borderTopLeftRadius: '$3',
+              borderTopRightRadius: '$3',
+            }}
+          >
+            {currentPlan === 'starter' ? (
+              <Image src={backpackImage} width={70} height={70} quality={100} />
+            ) : (
+              <Image
+                src="/static/img/nft_locked.gif"
+                width={70}
+                height={64}
+                quality={100}
+              />
+            )}
+            <Flex direction="column" gap="1">
+              <Typography size="h4" css={{ fontWeight: 600 }}>
+                {plans[currentPlan].title}
+              </Typography>
+              <Typography size="subheading">
+                {plans[currentPlan].description}
+              </Typography>
+            </Flex>
+          </Flex>
+          <Flex gap="2" direction="column" css={{ padding: '$3' }}>
+            {plans[currentPlan].features.map(({ title, status }, index) => (
+              <Typography key={`${currentPlan}-${index}`} size="subheading">
+                <Box as="span" css={{ marginRight: '$2' }}>
+                  {status === 'done' ? '✅' : '⚙️'}
+                </Box>
+                {title}
+              </Typography>
+            ))}
+          </Flex>
+        </Box>
+      ) : null}
+
+      {!isLoading && currentPlan === 'creatorPlus' ? (
         <>
           <Typography size="h4" css={{ fontWeight: 600, mt: '$5' }}>
             Manage your Creator + NFT
@@ -174,7 +198,7 @@ export const CurrentPlan = () => {
               />
               <Flex direction="column" gap="1" css={{ ml: '$5' }}>
                 <Typography size="h4" css={{ fontWeight: 600 }}>
-                  You picked Explorer #2123
+                  You picked Explorer #{userSubscription?.nftId}
                 </Typography>
                 <Typography size="subheading">
                   This NFT is currently linked to your Creator + plan.
