@@ -135,6 +135,45 @@ export const CurrentPlan = () => {
         </Flex>
       </Box>
 
+      {currentPlan === 'creatorPlus' ? (
+        <>
+          <Typography size="h4" css={{ fontWeight: 600, mt: '$5' }}>
+            Manage your Creator + NFT
+          </Typography>
+          <Flex
+            align="center"
+            justify="between"
+            css={{
+              mt: '$2',
+              borderRadius: '$3',
+              border: '1px solid $gray7',
+              background: '$gray2',
+              padding: '$3',
+            }}
+          >
+            <Flex align="center">
+              <Box
+                as="img"
+                src="https://images.stxnft.space/https://storage.googleapis.com/the-explorer-guild/7ee9aa5bfb3645c991ab0af5a36b42c0697be09ce7abdbed02cbd91e303eb681.png?auto=format&fit=max&w=460&q=100&cs=srgb"
+                css={{ width: 92, height: 92, borderRadius: '$3' }}
+              />
+              <Flex direction="column" gap="1" css={{ ml: '$5' }}>
+                <Typography size="h4" css={{ fontWeight: 600 }}>
+                  You picked Explorer #2123
+                </Typography>
+                <Typography size="subheading">
+                  This NFT is currently linked to your Creator + plan.
+                </Typography>
+                <Typography size="subheading">
+                  Listing or selling it will downgrade you to Starter plan.
+                </Typography>
+              </Flex>
+            </Flex>
+            <Button size="lg">Change</Button>
+          </Flex>
+        </>
+      ) : null}
+
       <SelectNFTDialog
         open={isSelectNFTDialogOpen}
         onOpenChange={() => setIsSelectNFTDialogOpen(false)}
