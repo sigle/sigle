@@ -1,36 +1,14 @@
 import { stagger } from 'motion';
 import { useMotionAnimate } from 'motion-hooks';
 import { useEffect, useMemo, useState } from 'react';
-import { useQuery } from 'react-query';
-import { sigleConfig } from '../../config';
+import { useGetReferrers } from '../../hooks/analytics';
 import { Box, Flex, Text } from '../../ui';
 import { Pagination } from './Pagination';
 import { StatsError } from './stats/StatsError';
-import { ReferrersResponse } from './stats/types';
-import { FATHOM_MAX_FROM_DATE } from './stats/utils';
-
-const fetchReferrers = async () => {
-  const baseUrl = sigleConfig.apiUrl;
-
-  const url = `${baseUrl}/api/analytics/referrers?dateFrom=${FATHOM_MAX_FROM_DATE}`;
-
-  const statsRes = await fetch(url, { credentials: 'include' });
-
-  if (!statsRes.ok) {
-    throw new Error(`Error: ${statsRes.status} - ${statsRes.statusText}`);
-  }
-
-  const referrerData: ReferrersResponse = await statsRes.json();
-  return referrerData;
-};
 
 export const ReferrersFrame = () => {
   const [currentPage, setCurrentPage] = useState<number>(1);
-  const {
-    data: referrers,
-    isError,
-    error,
-  } = useQuery<ReferrersResponse, Error>(['fetchReferrers'], fetchReferrers);
+  const { data: referrers, isError, error } = useGetReferrers();
   const { play } = useMotionAnimate(
     '.referrer-item',
     { opacity: 1 },
