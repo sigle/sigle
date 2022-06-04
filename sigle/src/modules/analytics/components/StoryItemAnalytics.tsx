@@ -4,14 +4,7 @@ import { useState } from 'react';
 import { StatsChart } from '../stats/StatsChart';
 import { StatsType } from '../stats/types';
 import { DashboardLayout } from '../../layout';
-import {
-  Box,
-  Flex,
-  Tabs,
-  TabsList,
-  TabsTrigger,
-  Typography,
-} from '../../../ui';
+import { Box, Flex, Tabs, TabsList, TabsTrigger } from '../../../ui';
 import { SubsetStory } from '../../../types';
 import { PublishedStoryItem } from '../PublishedStoryItem';
 import { ReferrersFrame } from '../ReferrersFrame';
