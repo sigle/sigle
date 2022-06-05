@@ -6,10 +6,19 @@ import { Box, Flex, Typography } from '../../ui';
 import { Pagination } from './Pagination';
 import { StatsError } from './stats/StatsError';
 
-export const ReferrersFrame = () => {
+interface ReferrersFrameProps {
+  historicalParams: {
+    dateFrom: string;
+  };
+}
+
+export const ReferrersFrame = ({ historicalParams }: ReferrersFrameProps) => {
   const [currentPage, setCurrentPage] = useState<number>(1);
-  // TODO should use weekly, monthly, all selection
-  const { data: referrers, isError, error } = useGetReferrers();
+  const {
+    data: referrers,
+    isError,
+    error,
+  } = useGetReferrers({ dateFrom: historicalParams.dateFrom });
   const { play } = useMotionAnimate(
     '.referrer-item',
     { opacity: 1 },

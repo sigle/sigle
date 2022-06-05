@@ -77,7 +77,7 @@ export const Analytics = ({ stories, loading }: AnalyticsProps) => {
         {stories && (
           <PublishedStoriesFrame loading={loading} stories={stories} />
         )}
-        <ReferrersFrame />
+        <ReferrersFrame historicalParams={historicalParams} />
       </Box>
     </DashboardLayout>
   );
