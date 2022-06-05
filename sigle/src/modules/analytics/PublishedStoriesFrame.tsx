@@ -29,8 +29,6 @@ export const PublishedStoriesFrame = ({
     error,
   } = useGetHistorical(historicalParams, {});
 
-  console.log({ historicalData });
-
   const nbStoriesLabel = loading ? '...' : stories ? stories.length : 0;
   // how many stories we should show on each page
   const itemSize = 7;
