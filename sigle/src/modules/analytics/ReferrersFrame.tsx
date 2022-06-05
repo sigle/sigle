@@ -8,6 +8,7 @@ import { StatsError } from './stats/StatsError';
 
 export const ReferrersFrame = () => {
   const [currentPage, setCurrentPage] = useState<number>(1);
+  // TODO should use weekly, monthly, all selection
   const { data: referrers, isError, error } = useGetReferrers();
   const { play } = useMotionAnimate(
     '.referrer-item',

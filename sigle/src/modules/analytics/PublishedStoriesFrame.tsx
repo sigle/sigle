@@ -1,20 +1,23 @@
 import { useRouter } from 'next/router';
 import { useMemo, useState } from 'react';
 import { SubsetStory } from '../../types';
-import { Box } from '../../ui';
+import { Box, Typography } from '../../ui';
 import { Pagination } from './Pagination';
 import { PublishedStoryItem } from './PublishedStoryItem';
 
 interface PublishedStoriesFrameProps {
   stories: SubsetStory[];
+  loading: boolean;
 }
 
 export const PublishedStoriesFrame = ({
   stories,
+  loading,
 }: PublishedStoriesFrameProps) => {
   const router = useRouter();
   const [currentPage, setCurrentPage] = useState<number>(1);
 
+  const nbStoriesLabel = loading ? '...' : stories ? stories.length : 0;
   // how many stories we should show on each page
   let itemSize = 7;
 
@@ -30,7 +33,14 @@ export const PublishedStoriesFrame = ({
       : true;
 
   return (
-    <>
+    <Box>
+      <Typography
+        as="h3"
+        size="subheading"
+        css={{ fontWeight: 600, color: '$gray11', mb: '$3' }}
+      >
+        My published stories ({nbStoriesLabel})
+      </Typography>
       {currentStories && (
         <>
           <Box css={{ mb: '$3', height: 476 }}>
@@ -51,6 +61,6 @@ export const PublishedStoriesFrame = ({
           />
         </>
       )}
-    </>
+    </Box>
   );
 };
