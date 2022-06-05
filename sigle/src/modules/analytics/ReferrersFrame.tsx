@@ -30,8 +30,10 @@ export const ReferrersFrame = ({ historicalParams }: ReferrersFrameProps) => {
   );
 
   useEffect(() => {
-    play();
-  }, [currentPage]);
+    if (referrers) {
+      play();
+    }
+  }, [referrers, currentPage]);
 
   // amount of referres per page
   let itemSize = 10;
@@ -40,7 +42,7 @@ export const ReferrersFrame = ({ historicalParams }: ReferrersFrameProps) => {
     const firstPageIndex = (currentPage - 1) * itemSize;
     const lastPageIndex = firstPageIndex + itemSize;
     return referrers?.slice(firstPageIndex, lastPageIndex);
-  }, [currentPage]);
+  }, [referrers, currentPage]);
 
   const currentReferrerLastItem =
     currentReferrers && currentReferrers[currentReferrers.length - 1];
@@ -50,9 +52,7 @@ export const ReferrersFrame = ({ historicalParams }: ReferrersFrameProps) => {
   const hasNextPage =
     currentReferrerLastItem === referrerLastItem ? false : true;
 
-  const total = referrers
-    ? referrers.map((item) => item.count).reduce((a, b) => a + b)
-    : 0;
+  const total = referrers?.reduce((a, b) => a + b.count, 0) ?? 0;
 
   const getPercentage = (views: number) => {
     const percentage = Math.round((100 * views) / total);
@@ -90,7 +90,7 @@ export const ReferrersFrame = ({ historicalParams }: ReferrersFrameProps) => {
             <Flex
               className="referrer-item"
               css={{ opacity: 0 }}
-              key={referrer.domain}
+              key={`${referrer.domain}-${referrer.count}`}
               gap="5"
               justify="between"
               align="center"
