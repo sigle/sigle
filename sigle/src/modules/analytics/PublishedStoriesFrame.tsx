@@ -23,7 +23,6 @@ export const PublishedStoriesFrame = ({
 }: PublishedStoriesFrameProps) => {
   const router = useRouter();
   const [currentPage, setCurrentPage] = useState<number>(1);
-  // TODO load stories from there instead of taking it from props?
   const {
     data: historicalData,
     isError,
