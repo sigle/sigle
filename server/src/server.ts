@@ -75,6 +75,9 @@ export const buildFastifyServer = (
       scope.setLevel(Sentry.Severity.Error);
       scope.setTag('path', request.url);
       scope.setExtra('headers', request.headers);
+      if (request.address) {
+        scope.setUser({ stacksAddress: request.address });
+      }
       if (
         request.headers['content-type'] === 'application/json' &&
         request.body
