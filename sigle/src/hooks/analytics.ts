@@ -5,12 +5,20 @@ import {
   ReferrersResponse,
 } from '../modules/analytics/stats/types';
 
-export const useGetReferrers = ({ dateFrom }: { dateFrom: string }) =>
+export const useGetReferrers = ({
+  dateFrom,
+  storyId,
+}: {
+  dateFrom: string;
+  storyId?: string;
+}) =>
   useQuery<ReferrersResponse, Error>(
-    ['get-analytics-referrer', dateFrom],
+    ['get-analytics-referrer', dateFrom, storyId],
     async () => {
       const res = await fetch(
-        `${sigleConfig.apiUrl}/api/analytics/referrers?dateFrom=${dateFrom}`,
+        storyId
+          ? `${sigleConfig.apiUrl}/api/analytics/referrers?dateFrom=${dateFrom}&storyId=${storyId}`
+          : `${sigleConfig.apiUrl}/api/analytics/referrers?dateFrom=${dateFrom}`,
         {
           method: 'GET',
           credentials: 'include',

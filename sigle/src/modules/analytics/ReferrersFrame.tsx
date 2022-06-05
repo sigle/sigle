@@ -7,18 +7,22 @@ import { Pagination } from './Pagination';
 import { StatsError } from './stats/StatsError';
 
 interface ReferrersFrameProps {
+  storyId?: string;
   historicalParams: {
     dateFrom: string;
   };
 }
 
-export const ReferrersFrame = ({ historicalParams }: ReferrersFrameProps) => {
+export const ReferrersFrame = ({
+  historicalParams,
+  storyId,
+}: ReferrersFrameProps) => {
   const [currentPage, setCurrentPage] = useState<number>(1);
   const {
     data: referrers,
     isError,
     error,
-  } = useGetReferrers({ dateFrom: historicalParams.dateFrom });
+  } = useGetReferrers({ dateFrom: historicalParams.dateFrom, storyId });
   const { play } = useMotionAnimate(
     '.referrer-item',
     { opacity: 1 },

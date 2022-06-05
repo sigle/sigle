@@ -51,7 +51,7 @@ export const StoryItemAnalytics = ({ story }: StoryAnalyticsProps) => {
   );
   const data = historicalData?.historical;
 
-  const checkStatType = (value: StatsType) => {
+  const changeHistoricalParams = (value: StatsType) => {
     switch (value) {
       case 'weekly':
         setHistoricalParams({
@@ -59,6 +59,7 @@ export const StoryItemAnalytics = ({ story }: StoryAnalyticsProps) => {
           dateGrouping: 'day',
           statType: 'weekly',
         });
+        break;
       case 'monthly':
         setHistoricalParams({
           dateFrom: format(monthFromDate, 'yyyy-MM-dd'),
@@ -93,7 +94,7 @@ export const StoryItemAnalytics = ({ story }: StoryAnalyticsProps) => {
       <Flex css={{ mt: '$8' }}>
         <StatsTotal data={data!} />
         <Tabs
-          onValueChange={(value) => checkStatType(value as StatsType)}
+          onValueChange={(value) => changeHistoricalParams(value as StatsType)}
           css={{ width: '100%' }}
           defaultValue="weekly"
         >
@@ -117,7 +118,7 @@ export const StoryItemAnalytics = ({ story }: StoryAnalyticsProps) => {
           </Box>
         </Tabs>
       </Flex>
-      <ReferrersFrame />
+      <ReferrersFrame storyId={story?.id} historicalParams={historicalParams} />
     </DashboardLayout>
   );
 };
