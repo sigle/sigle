@@ -3,6 +3,7 @@ import App from 'next/app';
 import Router from 'next/router';
 import Head from 'next/head';
 import * as Fathom from 'fathom-client';
+import PlausibleProvider from 'next-plausible';
 import posthog from 'posthog-js';
 import { DefaultSeo } from 'next-seo';
 import { ToastContainer } from 'react-toastify';
@@ -157,23 +158,27 @@ export default class MyApp extends App {
           }}
         />
         <FathomTrack />
-        <QueryClientProvider client={queryClient}>
-          <ReactQueryDevtools initialIsOpen={false} />
-          <FeatureFlagsProvider>
-            <SessionProvider session={pageProps.session} refetchInterval={0}>
-              <AuthProvider>
-                <ThemeProvider
-                  disableTransitionOnChange
-                  attribute="class"
-                  value={{ light: 'light-theme', dark: darkTheme.toString() }}
-                >
-                  <Component {...modifiedPageProps} />
-                </ThemeProvider>
-              </AuthProvider>
-            </SessionProvider>
-          </FeatureFlagsProvider>
-        </QueryClientProvider>
-        <ToastContainer autoClose={3000} icon={false} theme="colored" />
+        {/* TODO setup custom domain */}
+        {/* TODO remove enabled */}
+        <PlausibleProvider domain="app.sigle.io" enabled trackLocalhost>
+          <QueryClientProvider client={queryClient}>
+            <ReactQueryDevtools initialIsOpen={false} />
+            <FeatureFlagsProvider>
+              <SessionProvider session={pageProps.session} refetchInterval={0}>
+                <AuthProvider>
+                  <ThemeProvider
+                    disableTransitionOnChange
+                    attribute="class"
+                    value={{ light: 'light-theme', dark: darkTheme.toString() }}
+                  >
+                    <Component {...modifiedPageProps} />
+                  </ThemeProvider>
+                </AuthProvider>
+              </SessionProvider>
+            </FeatureFlagsProvider>
+          </QueryClientProvider>
+          <ToastContainer autoClose={3000} icon={false} theme="colored" />
+        </PlausibleProvider>
       </React.Fragment>
     );
   }
