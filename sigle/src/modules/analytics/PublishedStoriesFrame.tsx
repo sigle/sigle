@@ -41,26 +41,22 @@ export const PublishedStoriesFrame = ({
       >
         My published stories ({nbStoriesLabel})
       </Typography>
-      {currentStories && (
-        <>
-          <Box css={{ mb: '$3', height: 476 }}>
-            {currentStories?.map((story) => (
-              <PublishedStoryItem
-                onClick={() =>
-                  router.push('/analytics/[storyId]', `/analytics/${story.id}`)
-                }
-                key={story.id}
-                story={story}
-              />
-            ))}
-          </Box>
-          <Pagination
-            currentPage={currentPage}
-            onPageChange={(page) => setCurrentPage(page)}
-            hasNextPage={hasNextPage}
+      <Box css={{ mb: '$3', height: 476 }}>
+        {currentStories?.map((story) => (
+          <PublishedStoryItem
+            onClick={() =>
+              router.push('/analytics/[storyId]', `/analytics/${story.id}`)
+            }
+            key={story.id}
+            story={story}
           />
-        </>
-      )}
+        ))}
+      </Box>
+      <Pagination
+        currentPage={currentPage}
+        onPageChange={(page) => setCurrentPage(page)}
+        hasNextPage={hasNextPage}
+      />
     </Box>
   );
 };

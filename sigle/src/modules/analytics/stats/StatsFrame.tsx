@@ -1,28 +1,24 @@
-import { format } from 'date-fns';
-import { useState } from 'react';
 import { useGetHistorical } from '../../../hooks/analytics';
 import { Box, Flex, Tabs, TabsList, TabsTrigger } from '../../../ui';
 import { StatsChart } from './StatsChart';
 import { StatsError } from './StatsError';
 import { StatsTotal } from './StatsTotal';
 import { StatsType } from './types';
-import {
-  FATHOM_MAX_FROM_DATE,
-  initialRange,
-  monthFromDate,
-  weekFromDate,
-} from './utils';
+import { initialRange } from './utils';
 
-export const StatsFrame = () => {
-  const [historicalParams, setHistoricalParams] = useState<{
+interface StatsFrameProps {
+  historicalParams: {
     dateFrom: string;
     dateGrouping: 'day' | 'month';
     statType: 'all' | 'weekly' | 'monthly';
-  }>(() => ({
-    dateFrom: format(weekFromDate, 'yyyy-MM-dd'),
-    dateGrouping: 'day',
-    statType: 'weekly',
-  }));
+  };
+  changeHistoricalParams(value: StatsType): void;
+}
+
+export const StatsFrame = ({
+  historicalParams,
+  changeHistoricalParams,
+}: StatsFrameProps) => {
   const {
     data: historicalData,
     isError,
@@ -32,41 +28,13 @@ export const StatsFrame = () => {
   });
   const data = historicalData?.historical;
 
-  const checkStatType = (value: StatsType) => {
-    switch (value) {
-      case 'weekly':
-        setHistoricalParams({
-          dateFrom: format(weekFromDate, 'yyyy-MM-dd'),
-          dateGrouping: 'day',
-          statType: 'weekly',
-        });
-        break;
-      case 'monthly':
-        setHistoricalParams({
-          dateFrom: format(monthFromDate, 'yyyy-MM-dd'),
-          dateGrouping: 'day',
-          statType: 'monthly',
-        });
-        break;
-      case 'all':
-        setHistoricalParams({
-          dateFrom: FATHOM_MAX_FROM_DATE,
-          dateGrouping: 'month',
-          statType: 'all',
-        });
-        break;
-      default:
-        throw new Error('No value received.');
-    }
-  };
-
   return (
     <Box css={{ mb: '$8', position: 'relative' }}>
       {isError && <StatsError>{error.message}</StatsError>}
       <Flex>
         <StatsTotal data={data} />
         <Tabs
-          onValueChange={(value) => checkStatType(value as StatsType)}
+          onValueChange={(value) => changeHistoricalParams(value as StatsType)}
           css={{ width: '100%' }}
           defaultValue="weekly"
         >
