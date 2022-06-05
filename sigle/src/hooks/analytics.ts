@@ -38,9 +38,7 @@ export const useGetHistorical = (
   options: UseQueryOptions<AnalyticsHistoricalResponse, Error>
 ) =>
   useQuery<AnalyticsHistoricalResponse, Error>(
-    storyId
-      ? ['get-analytics-historical', dateFrom, dateGrouping, storyId]
-      : ['get-analytics-historical', dateFrom, dateGrouping],
+    ['get-analytics-historical', dateFrom, dateGrouping, storyId],
     async () => {
       const res = await fetch(
         storyId
