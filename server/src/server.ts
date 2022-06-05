@@ -86,7 +86,8 @@ export const buildFastifyServer = (
       // Also log to the console in case it's not reported to sentry
       console.error(sentryId, error);
       reply.status(500).send({
-        error: 'Something went wrong please try again after some time',
+        error: 'Internal server error',
+        message: 'Something went wrong please try again after some time',
         errorId: sentryId,
       });
     });
