@@ -19,7 +19,7 @@ export const StacksService = {
     const namesResponse = await fetch(
       `https://stacks-node-api.stacks.co/v1/addresses/stacks/${address}`
     );
-    const namesJson = (await namesResponse.json()) as any;
+    const namesJson = (await namesResponse.json()) as { names: string[] };
     if ((namesJson.names.length || 0) > 0) {
       username = namesJson.names[0];
     } else {

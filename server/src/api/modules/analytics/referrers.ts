@@ -5,7 +5,6 @@ import { fathomClient } from '../../../external/fathom';
 import { redis } from '../../../redis';
 import { config } from '../../../config';
 import { StacksService } from '../stacks/service';
-import { prisma } from '../../../prisma';
 import { SubscriptionService } from '../subscriptions/service';
 
 interface AnalyticsReferrersParams {
