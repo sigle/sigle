@@ -20,7 +20,7 @@ export const StoryItemAnalytics = () => {
   const router = useRouter();
   const { storyId } = router.query;
   const { data: story } = useQuery<SubsetStory>(
-    ['loadStoryItem'],
+    ['loadStoryItem', storyId],
     () => loadStoryFile(storyId as string),
     {}
   );
