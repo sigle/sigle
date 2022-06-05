@@ -1,92 +1,32 @@
-import { format } from 'date-fns';
-import { useState } from 'react';
-import { useQuery } from 'react-query';
-import { sigleConfig } from '../../../config';
+import { useGetHistorical } from '../../../hooks/analytics';
 import { Box, Flex, Tabs, TabsList, TabsTrigger } from '../../../ui';
 import { StatsChart } from './StatsChart';
 import { StatsError } from './StatsError';
 import { StatsTotal } from './StatsTotal';
-import { AnalyticsHistoricalResponse, StatsData, StatsType } from './types';
-import {
-  FATHOM_MAX_FROM_DATE,
-  initialRange,
-  monthFromDate,
-  weekFromDate,
-} from './utils';
+import { StatsType } from './types';
+import { initialRange } from './utils';
 
-export const StatsFrame = () => {
-  const [statType, setStatType] = useState<StatsType>('weekly');
-  const { data, isError, error } = useQuery<StatsData[], Error>(
-    ['fetchStats', statType],
-    () => fetchStats(statType),
-    {
-      placeholderData: initialRange,
-    }
-  );
-
-  const baseUrl = sigleConfig.apiUrl;
-
-  const fetchStats = async (value: StatsType) => {
-    const weeklyStatsUrl = `${baseUrl}/api/analytics/historical?dateFrom=${format(
-      weekFromDate,
-      'yyyy-MM-dd'
-    )}&dateGrouping=day`;
-
-    const monthlyStatsUrl = `${baseUrl}/api/analytics/historical?dateFrom=${format(
-      monthFromDate,
-      'yyyy-MM-dd'
-    )}&dateGrouping=day`;
-
-    const allTimeStatsUrl = `${baseUrl}/api/analytics/historical?dateFrom=${FATHOM_MAX_FROM_DATE}&dateGrouping=month`;
-    let url;
-
-    switch (value) {
-      case 'weekly':
-        url = weeklyStatsUrl;
-        break;
-      case 'monthly':
-        url = monthlyStatsUrl;
-        break;
-      case 'all':
-        url = allTimeStatsUrl;
-        break;
-
-      default:
-        throw new Error('No value received.');
-    }
-
-    const statsRes = await fetch(url, { credentials: 'include' });
-
-    if (!statsRes.ok) {
-      throw new Error(`Error: ${statsRes.status} - ${statsRes.statusText}`);
-    }
-
-    const statsData: AnalyticsHistoricalResponse = await statsRes.json();
-    const stats: StatsData[] = statsData.historical.map((item) => {
-      return {
-        pageviews: item.pageviews,
-        date: item.date,
-        visits: item.visits,
-      };
-    });
-    return stats;
+interface StatsFrameProps {
+  historicalParams: {
+    dateFrom: string;
+    dateGrouping: 'day' | 'month';
+    statType: 'all' | 'weekly' | 'monthly';
   };
+  changeHistoricalParams(value: StatsType): void;
+}
 
-  const checkStatType = (value: StatsType) => {
-    switch (value) {
-      case 'weekly':
-        setStatType('weekly');
-        break;
-      case 'monthly':
-        setStatType('monthly');
-        break;
-      case 'all':
-        setStatType('all');
-        break;
-      default:
-        throw new Error('No value received.');
-    }
-  };
+export const StatsFrame = ({
+  historicalParams,
+  changeHistoricalParams,
+}: StatsFrameProps) => {
+  const {
+    data: historicalData,
+    isError,
+    error,
+  } = useGetHistorical(historicalParams, {
+    placeholderData: { historical: initialRange, stories: [] },
+  });
+  const data = historicalData?.historical;
 
   return (
     <Box css={{ mb: '$8', position: 'relative' }}>
@@ -94,7 +34,7 @@ export const StatsFrame = () => {
       <Flex>
         <StatsTotal data={data} />
         <Tabs
-          onValueChange={(value) => checkStatType(value as StatsType)}
+          onValueChange={(value) => changeHistoricalParams(value as StatsType)}
           css={{ width: '100%' }}
           defaultValue="weekly"
         >
@@ -114,7 +54,7 @@ export const StatsFrame = () => {
               height: 400,
             }}
           >
-            <StatsChart type={statType} data={data} />
+            <StatsChart type={historicalParams.statType} data={data} />
           </Box>
         </Tabs>
       </Flex>
