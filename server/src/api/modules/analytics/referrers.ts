@@ -4,6 +4,7 @@ import { maxFathomFromDate, getBucketUrl, getPublicStories } from './utils';
 import { fathomClient } from '../../../external/fathom';
 import { redis } from '../../../redis';
 import { config } from '../../../config';
+import { StacksService } from '../stacks/service';
 
 interface AnalyticsReferrersParams {
   dateFrom?: string;
@@ -69,9 +70,7 @@ export async function createAnalyticsReferrersEndpoint(
       // Set max date in the past
       dateFrom = maxFathomFromDate(parsedDateFrom, dateFrom);
 
-      // TODO protect to logged in users
-      // TODO take username from session
-      const username = 'sigleapp.id.blockstack';
+      const username = await StacksService.getUsernameByAddress(req.address);
 
       // Caching mechanism to avoid hitting Fathom too often
       const cacheKey = storyId
