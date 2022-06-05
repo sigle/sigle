@@ -2,13 +2,9 @@ import { ArrowLeftIcon, ArrowRightIcon } from '@radix-ui/react-icons';
 import { stagger } from 'motion';
 import { useMotionAnimate } from 'motion-hooks';
 import { useEffect } from 'react';
-import { useQuery } from 'react-query';
-import { sigleConfig } from '../../config';
 import { styled } from '../../stitches.config';
 import { SubsetStory } from '../../types';
 import { Box, Flex, Text } from '../../ui';
-import { AnalyticsHistoricalResponse } from './stats/types';
-import { FATHOM_MAX_FROM_DATE } from './stats/utils';
 
 const StoryImage = styled('img', {
   objectFit: 'cover',
@@ -18,41 +14,19 @@ const StoryImage = styled('img', {
   br: '$1',
 });
 
-const baseUrl = sigleConfig.apiUrl;
-
-const fetchStoryViews = async (storyId: string) => {
-  const url = `${baseUrl}/api/analytics/historical?dateFrom=${FATHOM_MAX_FROM_DATE}&dateGrouping=month&storyId=${storyId}`;
-
-  const statsRes = await fetch(url, { credentials: 'include' });
-
-  if (!statsRes.ok) {
-    throw new Error(`Error: ${statsRes.status} - ${statsRes.statusText}`);
-  }
-
-  const statsData: AnalyticsHistoricalResponse = await statsRes.json();
-  let views;
-  if (statsData.stories.length > 0) {
-    views = statsData.stories[0].pageviews;
-  } else {
-    views = 0;
-  }
-  return views;
-};
-
 interface PublishedStoryItemProps {
   story: SubsetStory;
   onClick: () => void;
   individualStory?: boolean;
+  pageviews?: number;
 }
 
 export const PublishedStoryItem = ({
   story,
   onClick,
   individualStory = false,
+  pageviews,
 }: PublishedStoryItemProps) => {
-  const { data } = useQuery<number, Error>(['fetchStoryStats'], () =>
-    fetchStoryViews(story.id)
-  );
   const { play } = useMotionAnimate(
     '.story-item',
     { opacity: 1 },
@@ -151,7 +125,7 @@ export const PublishedStoryItem = ({
         <Flex align="center" css={{ gap: '$5', flexShrink: 0 }}>
           {!individualStory && (
             <>
-              <Text size="sm">{data} views</Text>
+              <Text size="sm">{pageviews} views</Text>
               <ArrowRightIcon />
             </>
           )}

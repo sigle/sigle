@@ -4,26 +4,36 @@ import {
   AnalyticsHistoricalResponse,
   ReferrersResponse,
 } from '../modules/analytics/stats/types';
-import { FATHOM_MAX_FROM_DATE } from '../modules/analytics/stats/utils';
 
-export const useGetReferrers = () =>
-  useQuery<ReferrersResponse, Error>('get-analytics-referrer', async () => {
-    const res = await fetch(
-      `${sigleConfig.apiUrl}/api/analytics/referrers?dateFrom=${FATHOM_MAX_FROM_DATE}`,
-      {
-        method: 'GET',
-        credentials: 'include',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+export const useGetReferrers = ({
+  dateFrom,
+  storyId,
+}: {
+  dateFrom: string;
+  storyId?: string;
+}) =>
+  useQuery<ReferrersResponse, Error>(
+    ['get-analytics-referrer', dateFrom, storyId],
+    async () => {
+      const res = await fetch(
+        storyId
+          ? `${sigleConfig.apiUrl}/api/analytics/referrers?dateFrom=${dateFrom}&storyId=${storyId}`
+          : `${sigleConfig.apiUrl}/api/analytics/referrers?dateFrom=${dateFrom}`,
+        {
+          method: 'GET',
+          credentials: 'include',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        }
+      );
+      const json = await res.json();
+      if (!res.ok) {
+        throw json;
       }
-    );
-    const json = await res.json();
-    if (!res.ok) {
-      throw json;
+      return json;
     }
-    return json;
-  });
+  );
 
 export const useGetHistorical = (
   {

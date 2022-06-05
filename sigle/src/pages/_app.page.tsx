@@ -25,7 +25,14 @@ import { darkTheme, globalCss } from '../stitches.config';
 import { ThemeProvider } from 'next-themes';
 import { FeatureFlagsProvider } from '../utils/featureFlags';
 
-const queryClient = new QueryClient();
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      refetchOnWindowFocus: false,
+      retry: false,
+    },
+  },
+});
 
 /**
  * Fathom
