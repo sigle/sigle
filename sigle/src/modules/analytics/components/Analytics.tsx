@@ -75,7 +75,11 @@ export const Analytics = ({ stories, loading }: AnalyticsProps) => {
         }}
       >
         {stories && (
-          <PublishedStoriesFrame loading={loading} stories={stories} />
+          <PublishedStoriesFrame
+            historicalParams={historicalParams}
+            loading={loading}
+            stories={stories}
+          />
         )}
         <ReferrersFrame historicalParams={historicalParams} />
       </Box>
