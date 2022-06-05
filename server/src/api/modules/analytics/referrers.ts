@@ -5,6 +5,8 @@ import { fathomClient } from '../../../external/fathom';
 import { redis } from '../../../redis';
 import { config } from '../../../config';
 import { StacksService } from '../stacks/service';
+import { prisma } from '../../../prisma';
+import { SubscriptionService } from '../subscriptions/service';
 
 interface AnalyticsReferrersParams {
   dateFrom?: string;
@@ -69,6 +71,15 @@ export async function createAnalyticsReferrersEndpoint(
 
       // Set max date in the past
       dateFrom = maxFathomFromDate(parsedDateFrom, dateFrom);
+
+      const activeSubscription =
+        await SubscriptionService.getActiveSubscriptionByAddress({
+          address: req.address,
+        });
+      if (!activeSubscription) {
+        res.status(401).send({ error: 'No active subscription' });
+        return;
+      }
 
       const username = await StacksService.getUsernameByAddress(req.address);
 
