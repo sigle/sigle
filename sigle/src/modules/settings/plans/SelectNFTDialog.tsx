@@ -12,6 +12,7 @@ import {
 } from '../../../ui';
 import { useAuth } from '../../auth/AuthContext';
 import { sigleConfig } from '../../../config';
+import { useCreateSubscription } from '../../../hooks/subscriptions';
 
 const SelectNFTDialogContent = styled(DialogContent, {
   textAlign: 'center',
@@ -48,26 +49,7 @@ export const SelectNFTDialog = ({
     { cacheTime: 0, enabled: open }
   );
 
-  const { isLoading, isError, isSuccess, mutate } = useMutation(
-    (nftId: number) =>
-      fetch(`${sigleConfig.apiUrl}/api/subscriptions/creatorPlus`, {
-        method: 'POST',
-        credentials: 'include',
-        body: JSON.stringify({ nftId }),
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      }).then((res) => res.json()),
-    {
-      onSuccess: (data) => {
-        // TODO toast success
-        // TODO for now errors triggers onSuccess
-        console.log(data);
-
-        onOpenChange();
-      },
-    }
-  );
+  const { isLoading, isError, isSuccess, mutate } = useCreateSubscription();
 
   console.log(data, error, isErrorUserNFT, isLoadingUserNFT);
 
