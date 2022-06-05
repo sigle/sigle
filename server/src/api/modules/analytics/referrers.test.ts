@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { differenceInBusinessDays } from 'date-fns';
 import { FastifyInstance } from 'fastify';
 import { fathomClient } from '../../../external/fathom';
 import { fakeTimerConfigDate } from '../../../jest/utils';
+import { TestBaseDB, TestDBUser } from '../../../jest/db';
 import { prisma } from '../../../prisma';
 import { redis } from '../../../redis';
 import { buildFastifyServer } from '../../../server';
@@ -16,6 +16,7 @@ beforeAll(() => {
 });
 
 afterAll(async () => {
+  await TestBaseDB.cleanup();
   await redis.quit();
   await prisma.$disconnect();
 });
@@ -31,18 +32,7 @@ beforeEach(() => {
 
 it('Respond with referrers', async () => {
   const stacksAddress = 'SP2BKHGRV8H2YDJK16FP5VASYFDGYN4BPTNFWDKYJ';
-  const nftId = 2123;
-  await prisma.user.create({
-    data: {
-      stacksAddress,
-      subscriptions: {
-        create: {
-          nftId,
-          status: 'ACTIVE',
-        },
-      },
-    },
-  });
+  await TestDBUser.seedUserWithSubscription({ stacksAddress });
 
   // Set a fake timer so we can verify the end date
   jest
@@ -81,18 +71,7 @@ it('Respond with referrers', async () => {
 
 it('Respond with referrers for one story', async () => {
   const stacksAddress = 'SP2BKHGRV8H2YDJK16FP5VASYFDGYN4BPTNFWDKYJ';
-  const nftId = 2123;
-  await prisma.user.create({
-    data: {
-      stacksAddress,
-      subscriptions: {
-        create: {
-          nftId,
-          status: 'ACTIVE',
-        },
-      },
-    },
-  });
+  await TestDBUser.seedUserWithSubscription({ stacksAddress });
 
   // Set a fake timer so we can verify the end date
   jest

@@ -1,7 +1,9 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { FastifyInstance } from 'fastify';
 import { fathomClient } from '../../../external/fathom';
+import { TestBaseDB, TestDBUser } from '../../../jest/db';
 import { fakeTimerConfigDate } from '../../../jest/utils';
+import { prisma } from '../../../prisma';
 import { redis } from '../../../redis';
 import { buildFastifyServer } from '../../../server';
 
@@ -14,7 +16,14 @@ beforeAll(() => {
 });
 
 afterAll(async () => {
+  await TestBaseDB.cleanup();
   await redis.quit();
+  await prisma.$disconnect();
+});
+
+beforeEach(async () => {
+  await prisma.subscription.deleteMany({});
+  await prisma.user.deleteMany({});
 });
 
 beforeEach(() => {
@@ -95,6 +104,9 @@ it('Should throw an error if dateGrouping is day and dateFrom > 2 month', async 
 });
 
 it('Respond with a formatted time series for days', async () => {
+  const stacksAddress = 'SP2BKHGRV8H2YDJK16FP5VASYFDGYN4BPTNFWDKYJ';
+  await TestDBUser.seedUserWithSubscription({ stacksAddress });
+
   // Set a fake timer so we can verify the end date
   jest
     .useFakeTimers(fakeTimerConfigDate)
@@ -121,7 +133,7 @@ it('Respond with a formatted time series for days', async () => {
     method: 'GET',
     url: '/api/analytics/historical?dateFrom=2022-03-15&dateGrouping=day',
     cookies: {
-      'next-auth.session-token': '0x123',
+      'next-auth.session-token': stacksAddress,
     },
   });
 
@@ -131,6 +143,9 @@ it('Respond with a formatted time series for days', async () => {
 });
 
 it('Respond with a formatted time series for months', async () => {
+  const stacksAddress = 'SP2BKHGRV8H2YDJK16FP5VASYFDGYN4BPTNFWDKYJ';
+  await TestDBUser.seedUserWithSubscription({ stacksAddress });
+
   // Set a fake timer so we can verify the end date
   jest
     .useFakeTimers(fakeTimerConfigDate)
@@ -157,7 +172,7 @@ it('Respond with a formatted time series for months', async () => {
     method: 'GET',
     url: '/api/analytics/historical?dateFrom=2022-01-02&dateGrouping=month',
     cookies: {
-      'next-auth.session-token': '0x123',
+      'next-auth.session-token': stacksAddress,
     },
   });
 
@@ -167,6 +182,9 @@ it('Respond with a formatted time series for months', async () => {
 });
 
 it('Respond with a formatted time series for one story', async () => {
+  const stacksAddress = 'SP2BKHGRV8H2YDJK16FP5VASYFDGYN4BPTNFWDKYJ';
+  await TestDBUser.seedUserWithSubscription({ stacksAddress });
+
   // Set a fake timer so we can verify the end date
   jest
     .useFakeTimers(fakeTimerConfigDate)
@@ -185,7 +203,7 @@ it('Respond with a formatted time series for one story', async () => {
     method: 'GET',
     url: '/api/analytics/historical?dateFrom=2022-03-15&dateGrouping=day&storyId=test',
     cookies: {
-      'next-auth.session-token': '0x123',
+      'next-auth.session-token': stacksAddress,
     },
   });
 

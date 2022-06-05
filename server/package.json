@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "cartable",
     "build": "cartable build",
-    "test": "cartable test",
+    "test": "cartable test --runInBand",
     "start": "node dist/index.js",
     "lint": "eslint . --ext .ts",
     "postinstall": "prisma generate"
