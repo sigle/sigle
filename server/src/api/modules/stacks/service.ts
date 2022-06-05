@@ -14,7 +14,6 @@ export const StacksService = {
       return cachedResponse;
     }
 
-    // TODO implement caching mechanism
     let username: string;
     const namesResponse = await fetch(
       `https://stacks-node-api.stacks.co/v1/addresses/stacks/${address}`
