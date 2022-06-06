@@ -2,11 +2,10 @@ import React from 'react';
 import { useRouter } from 'next/router';
 import { NextSeo } from 'next-seo';
 import { StoryFile, SettingsFile } from '../../../types';
-import { Container } from '../../../components';
 import { PublicStoryItem } from './PublicStoryItem';
 import { PoweredBy } from '../../publicStory/PoweredBy';
 import { AppHeader } from '../../layout/components/AppHeader';
-import { Box, Flex, Typography } from '../../../ui';
+import { Box, Container, Flex, Typography } from '../../../ui';
 import { sigleConfig } from '../../../config';
 import { styled } from '../../../stitches.config';
 
