@@ -106,54 +106,58 @@ export const PublicHome = ({ file, settings }: PublicHomeProps) => {
           cardType: 'summary',
         }}
       />
-      <AppHeader />
-      <Header>
-        {settings.siteLogo && (
-          <HeaderLogo src={settings.siteLogo} alt={`${siteName} logo`} />
-        )}
-        <Typography css={{ fontWeight: 700 }} as="h1" size="h2">
-          {siteName}
-        </Typography>
-        {settings.siteDescription &&
-          settings.siteDescription.split('\n').map((text, index) => (
-            <Typography
-              size="subheading"
-              css={{ mt: '$2', textAlign: 'center' }}
-              key={index}
-            >
-              {text}
-            </Typography>
-          ))}
-        <Flex css={{ pt: '$5' }} gap="3">
-          {settings.siteUrl && <PublicHomeSiteUrl siteUrl={settings.siteUrl} />}
-          {settings.siteUrl && settings.siteTwitterHandle && (
-            <Box css={{ width: '1px', backgroundColor: '$gray9' }} />
+      <Container>
+        <AppHeader />
+        <Header>
+          {settings.siteLogo && (
+            <HeaderLogo src={settings.siteLogo} alt={`${siteName} logo`} />
           )}
-          {settings.siteTwitterHandle && (
-            <Typography
-              css={{
-                color: '$gray9',
+          <Typography css={{ fontWeight: 700 }} as="h1" size="h2">
+            {siteName}
+          </Typography>
+          {settings.siteDescription &&
+            settings.siteDescription.split('\n').map((text, index) => (
+              <Typography
+                size="subheading"
+                css={{ mt: '$2', textAlign: 'center' }}
+                key={index}
+              >
+                {text}
+              </Typography>
+            ))}
+          <Flex css={{ pt: '$5' }} gap="3">
+            {settings.siteUrl && (
+              <PublicHomeSiteUrl siteUrl={settings.siteUrl} />
+            )}
+            {settings.siteUrl && settings.siteTwitterHandle && (
+              <Box css={{ width: '1px', backgroundColor: '$gray9' }} />
+            )}
+            {settings.siteTwitterHandle && (
+              <Typography
+                css={{
+                  color: '$gray9',
 
-                '&:hover': {
-                  color: '$gray10',
-                },
-                '&:active': {
-                  color: '$gray12',
-                },
-              }}
-              size="subheading"
-              as="a"
-              href={`https://twitter.com/${twitterHandle}`}
-              target="_blank"
-              rel="noreferrer"
-            >
-              {twitterHandle?.includes('@')
-                ? twitterHandle
-                : `@${twitterHandle}`}
-            </Typography>
-          )}
-        </Flex>
-      </Header>
+                  '&:hover': {
+                    color: '$gray10',
+                  },
+                  '&:active': {
+                    color: '$gray12',
+                  },
+                }}
+                size="subheading"
+                as="a"
+                href={`https://twitter.com/${twitterHandle}`}
+                target="_blank"
+                rel="noreferrer"
+              >
+                {twitterHandle?.includes('@')
+                  ? twitterHandle
+                  : `@${twitterHandle}`}
+              </Typography>
+            )}
+          </Flex>
+        </Header>
+      </Container>
 
       <StyledContainer>
         {file.stories.length === 0 && (
