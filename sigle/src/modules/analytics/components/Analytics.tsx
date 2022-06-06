@@ -14,7 +14,7 @@ import {
 import { StatsType } from '../stats/types';
 
 interface AnalyticsProps {
-  stories: SubsetStory[] | null;
+  stories?: SubsetStory[] | null;
   loading: boolean;
 }
 

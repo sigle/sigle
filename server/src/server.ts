@@ -75,6 +75,9 @@ export const buildFastifyServer = (
       scope.setLevel(Sentry.Severity.Error);
       scope.setTag('path', request.url);
       scope.setExtra('headers', request.headers);
+      if (request.address) {
+        scope.setUser({ stacksAddress: request.address });
+      }
       if (
         request.headers['content-type'] === 'application/json' &&
         request.body
@@ -86,7 +89,8 @@ export const buildFastifyServer = (
       // Also log to the console in case it's not reported to sentry
       console.error(sentryId, error);
       reply.status(500).send({
-        error: 'Something went wrong please try again after some time',
+        error: 'Internal server error',
+        message: 'Something went wrong please try again after some time',
         errorId: sentryId,
       });
     });

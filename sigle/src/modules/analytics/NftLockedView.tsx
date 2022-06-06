@@ -1,6 +1,6 @@
 import Image from 'next/image';
-import { sigleConfig } from '../../config';
-import { Box, Button, Flex, Heading, Text, Typography } from '../../ui';
+import Link from 'next/link';
+import { Box, Button, Flex, Typography } from '../../ui';
 import { DashboardLayout } from '../layout';
 
 export const NftLockedView = () => {
@@ -64,18 +64,18 @@ export const NftLockedView = () => {
             >
               Unlock the creator plan with your Explorer Guild NFT
             </Typography>
-            <Button
-              as="a"
-              href={sigleConfig.gammaUrl}
-              target="_blank"
-              rel="noreferrer"
-              size="lg"
-              css={{
-                alignSelf: 'center',
-              }}
-            >
-              Get the NFT
-            </Button>
+            <Link href="/settings/plans" passHref>
+              <Button
+                as="a"
+                size="lg"
+                color="orange"
+                css={{
+                  alignSelf: 'center',
+                }}
+              >
+                Upgrade
+              </Button>
+            </Link>
           </Flex>
         </Flex>
       </Box>

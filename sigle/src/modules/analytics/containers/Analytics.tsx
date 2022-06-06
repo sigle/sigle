@@ -1,29 +1,35 @@
-import { useEffect, useState } from 'react';
+import { useQuery } from 'react-query';
 import { toast } from 'react-toastify';
-import { SubsetStory } from '../../../types';
+import { useGetUserSubscription } from '../../../hooks/subscriptions';
 import { getStoriesFile } from '../../../utils';
+import { DashboardLayout } from '../../layout';
 import { Analytics as Component } from '../components/Analytics';
+import { NftLockedView } from '../NftLockedView';
 
 export const Analytics = () => {
-  const [loading, setLoading] = useState(true);
-  const [stories, setStories] = useState<SubsetStory[] | null>(null);
-
-  const loadStoryFile = async () => {
-    try {
+  const { isLoading, data: userSubscription } = useGetUserSubscription();
+  const { isLoading: isStoriesLoading, data: stories } = useQuery(
+    'get-user-stories',
+    async () => {
       const file = await getStoriesFile();
       const fileStories = file.stories.filter((s) => s.type === 'public');
-      setStories(fileStories);
-    } catch (error) {
-      console.error(error);
-      toast.error(error.message);
-    } finally {
-      setLoading(false);
+      return fileStories;
+    },
+    {
+      onError: (error: Error) => {
+        console.error(error);
+        toast.error(error.message);
+      },
     }
-  };
+  );
 
-  useEffect(() => {
-    loadStoryFile();
-  }, []);
+  if (isLoading) {
+    return <DashboardLayout layout="wide">Loading...</DashboardLayout>;
+  }
 
-  return <Component loading={loading} stories={stories} />;
+  if (!isLoading && !userSubscription) {
+    return <NftLockedView />;
+  }
+
+  return <Component loading={isStoriesLoading} stories={stories} />;
 };

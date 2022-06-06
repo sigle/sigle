@@ -2,6 +2,8 @@
 import { FastifyInstance } from 'fastify';
 import { fathomClient } from '../../../external/fathom';
 import { fakeTimerConfigDate } from '../../../jest/utils';
+import { TestBaseDB, TestDBUser } from '../../../jest/db';
+import { prisma } from '../../../prisma';
 import { redis } from '../../../redis';
 import { buildFastifyServer } from '../../../server';
 
@@ -14,40 +16,24 @@ beforeAll(() => {
 });
 
 afterAll(async () => {
+  await TestBaseDB.cleanup();
   await redis.quit();
+  await prisma.$disconnect();
+});
+
+beforeEach(async () => {
+  await prisma.subscription.deleteMany({});
+  await prisma.user.deleteMany({});
 });
 
 beforeEach(() => {
   (fathomClient.aggregateReferrers as jest.Mock).mockReset();
 });
 
-it('Should throw an error if dateFrom is missing', async () => {
-  const response = await server.inject({
-    method: 'GET',
-    url: '/api/analytics/referrers',
-    cookies: {
-      'next-auth.session-token': '0x123',
-    },
-  });
-
-  expect(response.statusCode).toBe(400);
-  expect(response.json()).toEqual({ error: 'dateFrom is required' });
-});
-
-it('Should throw an error if dateFrom is invalid', async () => {
-  const response = await server.inject({
-    method: 'GET',
-    url: '/api/analytics/referrers?dateFrom=invalid',
-    cookies: {
-      'next-auth.session-token': '0x123',
-    },
-  });
-
-  expect(response.statusCode).toBe(400);
-  expect(response.json()).toEqual({ error: 'dateFrom is invalid' });
-});
-
 it('Respond with referrers', async () => {
+  const stacksAddress = 'SP2BKHGRV8H2YDJK16FP5VASYFDGYN4BPTNFWDKYJ';
+  await TestDBUser.seedUserWithSubscription({ stacksAddress });
+
   // Set a fake timer so we can verify the end date
   jest
     .useFakeTimers(fakeTimerConfigDate)
@@ -74,7 +60,7 @@ it('Respond with referrers', async () => {
     method: 'GET',
     url: '/api/analytics/referrers?dateFrom=2022-03-15',
     cookies: {
-      'next-auth.session-token': '0x123',
+      'next-auth.session-token': stacksAddress,
     },
   });
 
@@ -84,6 +70,9 @@ it('Respond with referrers', async () => {
 });
 
 it('Respond with referrers for one story', async () => {
+  const stacksAddress = 'SP2BKHGRV8H2YDJK16FP5VASYFDGYN4BPTNFWDKYJ';
+  await TestDBUser.seedUserWithSubscription({ stacksAddress });
+
   // Set a fake timer so we can verify the end date
   jest
     .useFakeTimers(fakeTimerConfigDate)
@@ -100,7 +89,7 @@ it('Respond with referrers for one story', async () => {
     method: 'GET',
     url: '/api/analytics/referrers?dateFrom=2022-03-15&storyId=test',
     cookies: {
-      'next-auth.session-token': '0x123',
+      'next-auth.session-token': stacksAddress,
     },
   });
 

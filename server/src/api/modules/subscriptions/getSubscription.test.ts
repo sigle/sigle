@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { FastifyInstance } from 'fastify';
+import { TestBaseDB, TestDBUser } from '../../../jest/db';
 import { prisma } from '../../../prisma';
 import { redis } from '../../../redis';
 import { buildFastifyServer } from '../../../server';
@@ -11,6 +12,7 @@ beforeAll(() => {
 });
 
 afterAll(async () => {
+  await TestBaseDB.cleanup();
   await redis.quit();
   await prisma.$disconnect();
 });
@@ -36,16 +38,9 @@ it('Should return null if user has no active subscription', async () => {
 it('Should return the current logged in user active subscription', async () => {
   const stacksAddress = 'SP3VCX5NFQ8VCHFS9M6N40ZJNVTRT4HZ62WFH5C4Q';
   const nftId = 2123;
-  await prisma.user.create({
-    data: {
-      stacksAddress,
-      subscriptions: {
-        create: {
-          nftId,
-          status: 'ACTIVE',
-        },
-      },
-    },
+  await TestDBUser.seedUserWithSubscription({
+    stacksAddress,
+    subscription: { nftId },
   });
 
   const response = await server.inject({
