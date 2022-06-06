@@ -17,9 +17,12 @@ const StyledContainer = styled(Container, {
 
 const Header = styled('div', {
   py: '$10',
+  px: '$4',
+  maxWidth: 960,
   display: 'flex',
   flexDirection: 'column',
   placeItems: 'center',
+  mx: 'auto',
 });
 
 const HeaderLogo = styled('img', {
