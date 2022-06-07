@@ -8,6 +8,7 @@ import { useFeatureFlags } from '../../../utils/featureFlags';
 import { SelectNFTDialog } from './SelectNFTDialog';
 import { sigleConfig } from '../../../config';
 import { useGetUserSubscription } from '../../../hooks/subscriptions';
+import Link from 'next/link';
 
 const plans = {
   starter: {
@@ -88,12 +89,15 @@ export const CurrentPlan = () => {
         {!isLoading && !isError ? (
           isExperimentalAnalyticsPageEnabled ? (
             currentPlan === 'starter' ? (
-              <Button
-                color="orange"
-                onClick={() => setIsSelectNFTDialogOpen(true)}
-              >
-                Upgrade
-              </Button>
+              <Link href="/settings/plans/compare" passHref>
+                <Button
+                  color="orange"
+                  onClick={() => setIsSelectNFTDialogOpen(true)}
+                  as="a"
+                >
+                  Upgrade
+                </Button>
+              </Link>
             ) : (
               <Button variant="subtle">Change plan</Button>
             )
