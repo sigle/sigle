@@ -5,7 +5,6 @@ import { Box, Button, Flex, Typography, LoadingSpinner } from '../../../ui';
 import { SettingsLayout } from '../SettingsLayout';
 import backpackImage from '../../../../public/img/illustrations/backpack.png';
 import { useFeatureFlags } from '../../../utils/featureFlags';
-import { SelectNFTDialog } from './SelectNFTDialog';
 import { sigleConfig } from '../../../config';
 import { useGetUserSubscription } from '../../../hooks/subscriptions';
 import Link from 'next/link';
@@ -68,7 +67,6 @@ const plans = {
 
 export const CurrentPlan = () => {
   const { isExperimentalAnalyticsPageEnabled } = useFeatureFlags();
-  const [isSelectNFTDialogOpen, setIsSelectNFTDialogOpen] = useState(false);
 
   const {
     isLoading,
@@ -90,11 +88,7 @@ export const CurrentPlan = () => {
           isExperimentalAnalyticsPageEnabled ? (
             currentPlan === 'starter' ? (
               <Link href="/settings/plans/compare" passHref>
-                <Button
-                  color="orange"
-                  onClick={() => setIsSelectNFTDialogOpen(true)}
-                  as="a"
-                >
+                <Button color="orange" as="a">
                   Upgrade
                 </Button>
               </Link>
@@ -198,11 +192,6 @@ export const CurrentPlan = () => {
           </Flex>
         </>
       ) : null}
-
-      <SelectNFTDialog
-        open={isSelectNFTDialogOpen}
-        onOpenChange={() => setIsSelectNFTDialogOpen(false)}
-      />
     </SettingsLayout>
   );
 };

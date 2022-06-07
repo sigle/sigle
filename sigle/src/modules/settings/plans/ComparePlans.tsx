@@ -4,6 +4,7 @@ import {
   QuestionMarkCircledIcon,
 } from '@radix-ui/react-icons';
 import Link from 'next/link';
+import { Dispatch, SetStateAction, useState } from 'react';
 import { styled } from '../../../stitches.config';
 import {
   Box,
@@ -15,6 +16,7 @@ import {
   Typography,
 } from '../../../ui';
 import { SettingsLayout } from '../SettingsLayout';
+import { SelectNFTDialog } from './SelectNFTDialog';
 
 type PlanStatus = 'active' | 'inactive' | 'progress';
 
@@ -107,9 +109,10 @@ const Td = styled('td', {
 
 interface TableProps {
   children: React.ReactNode;
+  setIsSelectNFTDialogOpen: Dispatch<SetStateAction<boolean>>;
 }
 
-const Table = ({ children }: TableProps) => (
+const Table = ({ children, setIsSelectNFTDialogOpen }: TableProps) => (
   <StyledTable>
     <thead>
       <Tr css={{ boxShadow: '0 1px 0 0 $colors$gray12' }}>
@@ -178,7 +181,11 @@ const Table = ({ children }: TableProps) => (
           <Typography size="h4" css={{ fontWeight: 600 }}>
             Free
           </Typography>
-          <Button size="lg" color="violet">
+          <Button
+            onClick={() => setIsSelectNFTDialogOpen(true)}
+            size="lg"
+            color="violet"
+          >
             Link your NFT
           </Button>
         </Th>
@@ -189,6 +196,8 @@ const Table = ({ children }: TableProps) => (
 );
 
 export const ComparePlans = () => {
+  const [isSelectNFTDialogOpen, setIsSelectNFTDialogOpen] = useState(false);
+
   const getFeatureStatus = (value: PlanStatus) => {
     switch (value) {
       case 'active':
@@ -210,7 +219,7 @@ export const ComparePlans = () => {
           Go back to your current plan
         </Button>
       </Link>
-      <Table>
+      <Table setIsSelectNFTDialogOpen={setIsSelectNFTDialogOpen}>
         {features.map((feature) => (
           <Tr
             css={{
@@ -272,6 +281,10 @@ export const ComparePlans = () => {
           </Tr>
         ))}
       </Table>
+      <SelectNFTDialog
+        open={isSelectNFTDialogOpen}
+        onOpenChange={() => setIsSelectNFTDialogOpen(false)}
+      />
     </SettingsLayout>
   );
 };
