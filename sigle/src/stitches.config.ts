@@ -64,6 +64,7 @@ const orangeDark = {
 const green = {
   green2: '#DDFBF1',
   green3: '#D3F9EC',
+  green5: '#B9F3DE',
   green6: '#ADF0D8',
   green11: '#37C391',
   green12: '#1EA977',
@@ -71,6 +72,7 @@ const green = {
 const greenDark = {
   green2: '#002A23',
   green3: '#003B31',
+  green5: '#005B4B',
   green6: '#006C59',
   green11: '#1DD4B4',
   green12: '#70E1CD',
@@ -93,6 +95,7 @@ const violet = {
   violet5: '#D6C4FF',
   violet6: '#CDB5FF',
   violet11: '#770DFF',
+  violet12: '#6100DD',
 };
 
 const violetDark = {
@@ -100,6 +103,7 @@ const violetDark = {
   violet5: '#340175',
   violet6: '#3C0188',
   violet11: '#BB92FF',
+  violet12: '#C8A7FF',
 };
 
 export const {
