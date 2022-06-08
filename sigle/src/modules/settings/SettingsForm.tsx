@@ -11,7 +11,6 @@ import { hexRegex } from '../../utils/regex';
 import { storage } from '../../utils/blockstack';
 import { getSettingsFile, isValidHttpUrl, saveSettingsFile } from '../../utils';
 import { resizeImage } from '../../utils/image';
-import { Button } from '../../components';
 import {
   FormRow,
   FormLabel,
@@ -21,6 +20,7 @@ import {
   FormHelper,
 } from '../../components/Form';
 import { colors } from '../../utils/colors';
+import { Button } from '../../ui';
 
 const StyledFormRow = styled(FormRow)`
   ${tw`xl:w-1/2`};
@@ -314,7 +314,12 @@ export const SettingsForm = ({ settings, username }: SettingsFormProps) => {
         </StyledFormHelper>
       </StyledFormRow>
 
-      <Button disabled={formik.isSubmitting} type="submit">
+      <Button
+        disabled={formik.isSubmitting}
+        type="submit"
+        size="lg"
+        color="orange"
+      >
         {formik.isSubmitting ? 'Saving...' : 'Save'}
       </Button>
     </form>
