@@ -82,6 +82,7 @@ const StyledTable = styled('table', {
 const Tr = styled('tr', {
   display: 'flex',
   justifyContent: 'space-between',
+  gap: '$10',
 
   '&:last-of-type': {
     boxShadow: 'none',
@@ -97,7 +98,7 @@ const Th = styled('th', {
 });
 
 const Td = styled('td', {
-  py: '$8',
+  pt: '$8',
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'center',
@@ -116,7 +117,7 @@ const Table = ({ children, setIsSelectNFTDialogOpen }: TableProps) => (
   <StyledTable>
     <thead>
       <Tr css={{ boxShadow: '0 1px 0 0 $colors$gray12' }}>
-        <Th scope="col">
+        <Th css={{ maxWidth: 335 }} scope="col">
           <Typography css={{ fontWeight: 600 }}>Compare plans</Typography>
         </Th>
         <Th
@@ -127,6 +128,7 @@ const Table = ({ children, setIsSelectNFTDialogOpen }: TableProps) => (
             alignItems: 'center',
             position: 'relative',
             backgroundColor: '$gray2',
+            maxWidth: 220,
           }}
           scope="col"
         >
@@ -161,6 +163,7 @@ const Table = ({ children, setIsSelectNFTDialogOpen }: TableProps) => (
             gap: '$2',
             alignItems: 'center',
             backgroundColor: '$gray2',
+            maxWidth: 220,
           }}
           scope="col"
         >
@@ -185,6 +188,7 @@ const Table = ({ children, setIsSelectNFTDialogOpen }: TableProps) => (
             onClick={() => setIsSelectNFTDialogOpen(true)}
             size="lg"
             color="violet"
+            css={{ width: 'calc(100% - $6)' }}
           >
             Link your NFT
           </Button>
@@ -226,6 +230,7 @@ export const ComparePlans = () => {
               '&:last-of-type': {
                 '& td': {
                   br: '0 0 20px 20px',
+                  pb: '$8',
                 },
               },
             }}
@@ -236,10 +241,11 @@ export const ComparePlans = () => {
                 display: 'flex',
                 flexDirection: 'column',
                 justifyContent: 'center',
+                maxWidth: 335,
               }}
               scope="row"
             >
-              <Flex justify="between" align="center">
+              <Flex gap="10" justify="between" align="center">
                 <Typography size="subheading">{feature.name}</Typography>
                 <Tooltip>
                   <TooltipTrigger>
@@ -266,6 +272,7 @@ export const ComparePlans = () => {
               css={{
                 backgroundColor: '$gray2',
                 '& svg': { width: 22, height: 22 },
+                maxWidth: 220,
               }}
             >
               {getFeatureStatus(feature.starterPlan)}
@@ -274,6 +281,7 @@ export const ComparePlans = () => {
               css={{
                 backgroundColor: '$gray2',
                 '& svg': { width: 22, height: 22, color: '$violet11' },
+                maxWidth: 220,
               }}
             >
               {getFeatureStatus(feature.creatorPlan)}
