@@ -35,7 +35,7 @@ export const Button = styled('button', {
         },
       },
       violet: {
-        color: 'white',
+        color: '$gray1',
         backgroundColor: '$violet11',
         '&:hover': {
           backgroundColor: '$violet12',
