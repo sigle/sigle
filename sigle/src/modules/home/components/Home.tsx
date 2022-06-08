@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { StoryItem } from '../';
 import { SubsetStory, BlockstackUser } from '../../../types';
-import { DashboardPageTitle } from '../../layout/components/DashboardHeader';
 import { DashboardLayout } from '../../layout/components/DashboardLayout';
 import Image from 'next/image';
 import { styled } from '../../../stitches.config';
@@ -126,14 +125,19 @@ export const Home = ({
 
   return (
     <DashboardLayout>
-      <DashboardPageTitle
-        title={
-          selectedTab === 'published'
-            ? `Published stories (${nbStoriesLabel})`
-            : `Drafts stories (${nbStoriesLabel})`
-        }
-      />
-
+      <Typography
+        size="h4"
+        css={{
+          fontWeight: 600,
+          pb: '$8',
+          mb: '$2',
+          borderBottom: '1px solid $colors$gray4',
+        }}
+      >
+        {selectedTab === 'published'
+          ? `Published stories (${nbStoriesLabel})`
+          : `Drafts stories (${nbStoriesLabel})`}
+      </Typography>
       {showIllu && (
         <Flex css={{ mt: '$10' }} align="center" direction="column">
           {selectedTab === 'drafts' && (
