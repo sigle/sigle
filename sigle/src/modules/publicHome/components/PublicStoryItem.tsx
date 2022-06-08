@@ -69,18 +69,6 @@ const StoryContainerContent = styledC.div<{
     `}
 `;
 
-const StoryTitle = styledC.div`
-  ${tw`text-2xl font-bold no-underline transition-colors duration-200 ease-in-out`};
-`;
-
-const StoryDate = styledC.div`
-  ${tw`mt-1 text-sm text-grey-dark`};
-`;
-
-const StoryText = styledC.div`
-  ${tw`mt-4 text-grey-darker leading-tight`};
-`;
-
 interface Props {
   username: string;
   story: SubsetStory;
