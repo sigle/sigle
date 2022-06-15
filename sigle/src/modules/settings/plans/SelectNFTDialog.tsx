@@ -1,22 +1,52 @@
 import { DialogDescription } from '@radix-ui/react-dialog';
-import { useMutation, useQuery } from 'react-query';
+import { useQuery } from 'react-query';
 import { NonFungibleTokensApi } from '@stacks/blockchain-api-client';
-import { cvToValue } from '@stacks/transactions';
 import { styled } from '../../../stitches.config';
 import {
+  Box,
   Button,
   Dialog,
   DialogContent,
   DialogTitle,
+  Flex,
+  IconButton,
+  LoadingSpinner,
   Typography,
 } from '../../../ui';
 import { useAuth } from '../../auth/AuthContext';
 import { sigleConfig } from '../../../config';
 import { useCreateSubscription } from '../../../hooks/subscriptions';
+import Image from 'next/image';
+import { useState } from 'react';
+import { ErrorMessage } from '../../../ui/ErrorMessage';
+import {
+  ArrowLeftIcon,
+  ArrowRightIcon,
+  CheckIcon,
+  ReloadIcon,
+} from '@radix-ui/react-icons';
+import Link from 'next/link';
+
+interface NonFungibleTokensHoldings {
+  asset_identifier?: string;
+  block_height?: number;
+  tx_id?: string;
+  value?: { hex: string; repr: string };
+}
+
+const NFTPlaceholder = styled('div', {
+  width: 92,
+  height: 92,
+  backgroundColor: '$gray2',
+  br: '$1',
+});
 
 const SelectNFTDialogContent = styled(DialogContent, {
+  display: 'grid',
+  placeItems: 'center',
   textAlign: 'center',
   minWidth: 690,
+  height: 475,
 });
 
 interface SelectNFTDialogProps {
@@ -48,10 +78,20 @@ export const SelectNFTDialog = ({
     },
     { cacheTime: 0, enabled: open }
   );
+  const {
+    isLoading,
+    isError,
+    error: createError,
+    isSuccess,
+    mutate,
+  } = useCreateSubscription();
+  const [selectedNFT, setSelectedNFT] = useState<string>();
 
-  const { isLoading, isError, isSuccess, mutate } = useCreateSubscription();
+  console.log(data, error, isErrorUserNFT, isLoadingUserNFT, createError);
 
-  console.log(data, error, isErrorUserNFT, isLoadingUserNFT);
+  const NFTImageURL = `${sigleConfig.explorerGuildUrl}/nft-images/?image=ar://Z4ygyXm-fERGzKEB2bvE7gx98SHcoaP8qdZQo0Kxm6Y`;
+
+  const subscriptionCreateError: any = createError as Error;
 
   const handleSubmit = () => {
     if (!data) return;
@@ -59,23 +99,232 @@ export const SelectNFTDialog = ({
     mutate(nftId);
   };
 
+  const handleClick = (nftId: string) => {
+    if (nftId === selectedNFT) {
+      setSelectedNFT('');
+      return;
+    }
+
+    setSelectedNFT(nftId);
+  };
+
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <SelectNFTDialogContent>
-        <DialogTitle asChild>
-          <Typography size="h2" as="h2" css={{ fontWeight: 600 }}>
-            Choose an NFT
-          </Typography>
-        </DialogTitle>
-        <DialogDescription asChild>
-          <Typography size="subheading">
-            Choose the Explorer Guild NFT you want to link to your Creator +
-            plan
-          </Typography>
-        </DialogDescription>
-        <Button size="lg" onClick={handleSubmit}>
-          Let's go!
-        </Button>
+        {isSuccess ? (
+          <Flex direction="column" align="center" gap="5">
+            <Image src="/static/img/success.gif" width={92} height={92} />
+            <Box>
+              <DialogTitle asChild>
+                <Typography
+                  size="h2"
+                  as="h2"
+                  css={{ fontWeight: 600, mb: '$1' }}
+                >
+                  You just upgraded!
+                </Typography>
+              </DialogTitle>
+              <DialogDescription asChild>
+                <Typography size="subheading">
+                  Congratulations, you've unlocked the full potential of
+                  Sigle... <br /> Make good use of it!
+                </Typography>
+              </DialogDescription>
+            </Box>
+            <Link href="/" passHref>
+              <Button variant="subtle">Go to dashboard</Button>
+            </Link>
+          </Flex>
+        ) : (
+          <Flex
+            css={{
+              height: '100%',
+              width: '100%',
+            }}
+            justify="between"
+            align="center"
+          >
+            <IconButton variant="ghost">
+              <ArrowLeftIcon />
+            </IconButton>
+            <Flex
+              css={{
+                height: '100%',
+              }}
+              direction="column"
+              justify="between"
+              align="center"
+            >
+              {!data?.results[0] ? (
+                <Box>
+                  <DialogTitle asChild>
+                    <Typography size="h2" as="h2" css={{ fontWeight: 600 }}>
+                      Oh! No NFT Found
+                    </Typography>
+                  </DialogTitle>
+                  <DialogDescription asChild>
+                    <Typography size="subheading">
+                      No Explorer Guild NFTs were found in your wallet
+                    </Typography>
+                  </DialogDescription>
+                </Box>
+              ) : (
+                <Box>
+                  <DialogTitle asChild>
+                    <Typography size="h2" as="h2" css={{ fontWeight: 600 }}>
+                      Choose an NFT
+                    </Typography>
+                  </DialogTitle>
+                  <DialogDescription asChild>
+                    <Typography size="subheading">
+                      Choose the Explorer Guild NFT you want to link to your
+                      Creator + plan
+                    </Typography>
+                  </DialogDescription>
+                </Box>
+              )}
+
+              <Flex gap="6" wrap="wrap">
+                {data?.results && !isError && (
+                  <>
+                    {data?.results.map((item: NonFungibleTokensHoldings) => (
+                      <Box
+                        key={item.tx_id}
+                        onClick={() =>
+                          handleClick(
+                            item.value?.repr.replace('u', '') as string
+                          )
+                        }
+                        css={{
+                          position: 'relative',
+                          br: '$1',
+                          cursor: 'pointer',
+                          overflow: 'hidden',
+                          width: 92,
+                          height: 92,
+                          boxShadow:
+                            selectedNFT === item.value?.repr.replace('u', '')
+                              ? '0 0 0 2px $colors$green11'
+                              : 'none',
+                        }}
+                      >
+                        {selectedNFT === item.value?.repr.replace('u', '') && (
+                          <Box
+                            as="span"
+                            css={{
+                              display: 'grid',
+                              placeItems: 'center',
+                              overflow: 'hidden',
+                              borderRadius: '$1',
+                              height: '100%',
+
+                              '&::before': {
+                                content: '',
+                                position: 'absolute',
+                                left: 0,
+                                top: 0,
+                                width: '100%',
+                                height: '100%',
+                                backgroundColor: '$gray11',
+                                opacity: 0.4,
+                                zIndex: 1,
+                                transition: '.2s',
+                              },
+                            }}
+                          >
+                            <Box
+                              css={{
+                                zIndex: 1,
+                                color: '$gray1',
+                              }}
+                            >
+                              <CheckIcon />
+                            </Box>
+                          </Box>
+                        )}
+                        <Image
+                          loader={({ src }) =>
+                            `${NFTImageURL}/${item.value?.repr.replace(
+                              'u',
+                              ''
+                            )}.png&size=170`
+                          }
+                          layout="fill"
+                          src={`${NFTImageURL}/${item.value?.repr.replace(
+                            'u',
+                            ''
+                          )}.png&size=170`}
+                          objectFit="cover"
+                        />
+                      </Box>
+                    ))}
+                  </>
+                )}
+
+                {isLoadingUserNFT || isLoading ? (
+                  <Box>
+                    <LoadingSpinner />
+                  </Box>
+                ) : null}
+
+                {!data?.results[0] && !isError && !isLoadingUserNFT && (
+                  <>
+                    <NFTPlaceholder />
+                    <NFTPlaceholder />
+                    <NFTPlaceholder />
+                    <NFTPlaceholder />
+                    <NFTPlaceholder />
+                  </>
+                )}
+              </Flex>
+
+              {!isLoadingUserNFT && isError ? (
+                <ErrorMessage>
+                  {subscriptionCreateError.message
+                    ? subscriptionCreateError.message
+                    : subscriptionCreateError.error}
+                </ErrorMessage>
+              ) : null}
+
+              {data?.results[0] || isLoadingUserNFT ? (
+                isError ? (
+                  <Button
+                    css={{ gap: '$2' }}
+                    disabled={isLoadingUserNFT || !selectedNFT}
+                    size="lg"
+                    onClick={handleSubmit}
+                  >
+                    Retry
+                    <span>
+                      <ReloadIcon />
+                    </span>
+                  </Button>
+                ) : (
+                  <Button
+                    disabled={isLoadingUserNFT || !selectedNFT}
+                    size="lg"
+                    onClick={handleSubmit}
+                  >
+                    Let's go!
+                  </Button>
+                )
+              ) : (
+                <Button
+                  as="a"
+                  href={sigleConfig.gammaUrl}
+                  target="_blank"
+                  rel="noreferrer"
+                  size="lg"
+                >
+                  Buy on Gamma.io
+                </Button>
+              )}
+            </Flex>
+            <IconButton variant="ghost">
+              <ArrowRightIcon />
+            </IconButton>
+          </Flex>
+        )}
       </SelectNFTDialogContent>
     </Dialog>
   );
