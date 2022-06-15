@@ -185,7 +185,6 @@ export default class MyApp extends App {
           }}
         />
         <FathomTrack />
-        {/* TODO setup custom domain */}
         <PlausibleProvider
           domain="app.sigle.io"
           customDomain="app.sigle.io"
