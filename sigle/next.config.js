@@ -4,6 +4,7 @@ const { withSentryConfig } = require('@sentry/nextjs');
 const withBundleAnalyzer = require('@next/bundle-analyzer')({
   enabled: process.env.ANALYZE === 'true',
 });
+const { withPlausibleProxy } = require('next-plausible');
 
 dotenv.config();
 
@@ -57,7 +58,17 @@ const nextConfig = {
 };
 
 module.exports = withSentryConfig(
-  withPlugins([[withBundleAnalyzer]], nextConfig),
+  withPlugins(
+    [
+      [
+        withPlausibleProxy({
+          scriptName: 'index',
+        }),
+      ],
+      [withBundleAnalyzer],
+    ],
+    nextConfig
+  ),
   {
     dryRun: process.env.NEXT_PUBLIC_APP_ENV !== 'production',
   }

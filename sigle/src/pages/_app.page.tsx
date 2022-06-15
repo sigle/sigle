@@ -3,6 +3,7 @@ import App from 'next/app';
 import Router from 'next/router';
 import Head from 'next/head';
 import * as Fathom from 'fathom-client';
+import PlausibleProvider, { usePlausible } from 'next-plausible';
 import posthog from 'posthog-js';
 import { DefaultSeo } from 'next-seo';
 import { ToastContainer } from 'react-toastify';
@@ -54,6 +55,33 @@ const FathomTrack = () => {
         ip: false,
       });
     }
+  }, []);
+
+  return <React.Fragment />;
+};
+
+type EventsPlausible = {
+  pageview: {
+    u: string;
+  };
+};
+
+// Track when page is loaded
+const PlausibleTrack = () => {
+  const plausible = usePlausible<EventsPlausible>();
+
+  useEffect(() => {
+    const trackPlausible = () => {
+      plausible('pageview', { props: { u: window.location.href } });
+    };
+
+    // Track pageview on mount
+    trackPlausible();
+    Router.events.on('routeChangeComplete', trackPlausible);
+
+    return () => {
+      Router.events.off('routeChangeComplete', trackPlausible);
+    };
   }, []);
 
   return <React.Fragment />;
@@ -157,23 +185,30 @@ export default class MyApp extends App {
           }}
         />
         <FathomTrack />
-        <QueryClientProvider client={queryClient}>
-          <ReactQueryDevtools initialIsOpen={false} />
-          <FeatureFlagsProvider>
-            <SessionProvider session={pageProps.session} refetchInterval={0}>
-              <AuthProvider>
-                <ThemeProvider
-                  disableTransitionOnChange
-                  attribute="class"
-                  value={{ light: 'light-theme', dark: darkTheme.toString() }}
-                >
-                  <Component {...modifiedPageProps} />
-                </ThemeProvider>
-              </AuthProvider>
-            </SessionProvider>
-          </FeatureFlagsProvider>
-        </QueryClientProvider>
-        <ToastContainer autoClose={3000} icon={false} theme="colored" />
+        <PlausibleProvider
+          domain="app.sigle.io"
+          customDomain="app.sigle.io"
+          manualPageviews
+        >
+          <PlausibleTrack />
+          <QueryClientProvider client={queryClient}>
+            <ReactQueryDevtools initialIsOpen={false} />
+            <FeatureFlagsProvider>
+              <SessionProvider session={pageProps.session} refetchInterval={0}>
+                <AuthProvider>
+                  <ThemeProvider
+                    disableTransitionOnChange
+                    attribute="class"
+                    value={{ light: 'light-theme', dark: darkTheme.toString() }}
+                  >
+                    <Component {...modifiedPageProps} />
+                  </ThemeProvider>
+                </AuthProvider>
+              </SessionProvider>
+            </FeatureFlagsProvider>
+          </QueryClientProvider>
+          <ToastContainer autoClose={3000} icon={false} theme="colored" />
+        </PlausibleProvider>
       </React.Fragment>
     );
   }
