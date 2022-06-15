@@ -195,7 +195,7 @@ importers:
       next: 12.1.5
       next-auth: 4.3.4
       next-compose-plugins: 2.2.1
-      next-plausible: 3.1.9
+      next-plausible: 3.2.0
       next-seo: 5.4.0
       next-sitemap: 2.5.20
       next-themes: 0.1.1
@@ -293,7 +293,7 @@ importers:
       nanoid: 3.3.3
       next: 12.1.5_uuvr7bxmtz7rpcgjlhbem5zdhe
       next-auth: 4.3.4_sfoxds7t5ydpegc3knd667wn6m
-      next-plausible: 3.1.9_o4i27axobvqklq47h4i5u4k3jq
+      next-plausible: 3.2.0_o4i27axobvqklq47h4i5u4k3jq
       next-seo: 5.4.0_o4i27axobvqklq47h4i5u4k3jq
       next-themes: 0.1.1_o4i27axobvqklq47h4i5u4k3jq
       nprogress: 0.2.0
@@ -9335,8 +9335,8 @@ packages:
     resolution: {integrity: sha512-OjJ+fV15FXO2uQXQagLD4C0abYErBjyjE0I0FHpOEIB8upw0hg1ldFP6cqHTJBH1cZqy96OeR3u1dJ+Ez2D4Bg==}
     dev: true
 
-  /next-plausible/3.1.9_o4i27axobvqklq47h4i5u4k3jq:
-    resolution: {integrity: sha512-6Ro6lVnuXAtqbbBQfuKuu0cpZHWWvJWbOE1G+Rx6i42T6lLYtbQzbu09Cutv3vc/wD/4ySHzJkuTnxsqnlArGA==}
+  /next-plausible/3.2.0_o4i27axobvqklq47h4i5u4k3jq:
+    resolution: {integrity: sha512-OlYcLXBG3kKd/fKMpm8SZ5IkUKSFm1/8t7cv6e5bewIqlpdZpdWuSrjbdJpbmutb2KPLXHzilKp09zmDGjy9KQ==}
     peerDependencies:
       next: ^11.1.0 || ^12.0.0
       react: ^16.8.0 || ^17.0.0 || ^18.0.0

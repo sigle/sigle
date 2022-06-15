@@ -4,6 +4,7 @@ const { withSentryConfig } = require('@sentry/nextjs');
 const withBundleAnalyzer = require('@next/bundle-analyzer')({
   enabled: process.env.ANALYZE === 'true',
 });
+const { withPlausibleProxy } = require('next-plausible');
 
 dotenv.config();
 
@@ -38,21 +39,6 @@ const nextConfig = {
       },
     ];
   },
-  async rewrites() {
-    /**
-     * Plausible rewrites
-     */
-    return [
-      {
-        source: '/js/script.js',
-        destination: 'https://plausible.io/js/script.js',
-      },
-      {
-        source: '/api/event', // Or '/api/event/' if you have `trailingSlash: true` in this config
-        destination: 'https://plausible.io/api/event',
-      },
-    ];
-  },
   webpack: (config) => {
     config.resolve.alias = {
       ...config.resolve.alias,
@@ -72,7 +58,17 @@ const nextConfig = {
 };
 
 module.exports = withSentryConfig(
-  withPlugins([[withBundleAnalyzer]], nextConfig),
+  withPlugins(
+    [
+      [
+        withPlausibleProxy({
+          scriptName: 'index',
+        }),
+      ],
+      [withBundleAnalyzer],
+    ],
+    nextConfig
+  ),
   {
     dryRun: process.env.NEXT_PUBLIC_APP_ENV !== 'production',
   }
