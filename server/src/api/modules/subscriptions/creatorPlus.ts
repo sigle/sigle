@@ -90,20 +90,25 @@ export async function createSubscriptionCreatorPlusEndpoint(
           status: 'ACTIVE',
         },
       });
+      // When an active subscription is found, we just update the NFT linked to it.
       if (activeSubscription) {
-        res.status(400).send({
-          error: `User already has an active subscription`,
+        await prisma.subscription.update({
+          where: {
+            id: activeSubscription.id,
+          },
+          data: {
+            nftId,
+          },
         });
-        return;
+      } else {
+        await prisma.subscription.create({
+          data: {
+            userId: user.id,
+            status: 'ACTIVE',
+            nftId,
+          },
+        });
       }
-
-      await prisma.subscription.create({
-        data: {
-          userId: user.id,
-          status: 'ACTIVE',
-          nftId,
-        },
-      });
 
       res.status(200).send({ success: true });
     }
