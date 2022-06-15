@@ -184,8 +184,8 @@ export const SelectNFTDialog = ({
                 </Box>
               )}
 
-              <Flex gap="6" wrap="wrap">
-                {data?.results && !isError && (
+              <Flex justify="center" gap="6" wrap="wrap">
+                {data?.results && !isError && isLoading && (
                   <>
                     {data?.results.map((item: NonFungibleTokensHoldings) => (
                       <Box
