@@ -14,6 +14,7 @@ import { redis } from '../../../redis';
 import { config } from '../../../config';
 import { StacksService } from '../stacks/service';
 import { SubscriptionService } from '../subscriptions/service';
+import { plausibleClient } from '../../../external/plausible';
 
 interface AnalyticsHistoricalParams {
   dateFrom?: string;
@@ -138,14 +139,14 @@ export async function createAnalyticsHistoricalEndpoint(
       const username = await StacksService.getUsernameByAddress(req.address);
 
       // Caching mechanism to avoid hitting Fathom too often
-      const cacheKey = storyId
-        ? `historical:${username}_${dateFrom}_${dateGrouping}_${storyId}`
-        : `historical:${username}_${dateFrom}_${dateGrouping}`;
-      const cachedResponse = await redis.get(cacheKey);
-      if (cachedResponse && config.NODE_ENV !== 'test') {
-        res.status(200).send(JSON.parse(cachedResponse));
-        return;
-      }
+      // const cacheKey = storyId
+      //   ? `historical:${username}_${dateFrom}_${dateGrouping}_${storyId}`
+      //   : `historical:${username}_${dateFrom}_${dateGrouping}`;
+      // const cachedResponse = await redis.get(cacheKey);
+      // if (cachedResponse && config.NODE_ENV !== 'test') {
+      //   res.status(200).send(JSON.parse(cachedResponse));
+      //   return;
+      // }
 
       const historicalResponse: AnalyticsHistoricalResponse = {
         historical: [],
@@ -187,6 +188,17 @@ export async function createAnalyticsHistoricalEndpoint(
         // Add the root path to the list of paths
         storiesPath.push(`/${username}`);
       }
+
+      console.log(storiesPath);
+
+      const plausibleResults = await plausibleClient.timeseries({
+        dateFrom,
+        dateGrouping,
+        dateTo: format(dateTo, 'yyyy-MM-dd'),
+        paths: storiesPath,
+      });
+
+      console.log(JSON.stringify(plausibleResults, null, 2));
 
       // TODO batch with max concurrent limit
       const fathomAggregationResult = await Promise.all(
@@ -267,12 +279,12 @@ export async function createAnalyticsHistoricalEndpoint(
         .filter((story) => story.pathname !== '');
 
       // Cache response for 1 hour
-      await redis.set(
-        cacheKey,
-        JSON.stringify(historicalResponse),
-        'EX',
-        60 * 60
-      );
+      // await redis.set(
+      //   cacheKey,
+      //   JSON.stringify(historicalResponse),
+      //   'EX',
+      //   60 * 60
+      // );
 
       res.status(200).send(historicalResponse);
     }
