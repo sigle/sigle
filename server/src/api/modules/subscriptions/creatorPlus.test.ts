@@ -67,31 +67,6 @@ it('Should throw an error if user is not the owner', async () => {
   expect(response.json()).toEqual({ error: 'NFT #1 is not owned by user' });
 });
 
-it('Should throw an error if user has an active subscription', async () => {
-  const stacksAddress = 'SP3VCX5NFQ8VCHFS9M6N40ZJNVTRT4HZ62WFH5C4Q';
-  const nftId = 2123;
-  await TestDBUser.seedUserWithSubscription({
-    stacksAddress,
-    subscription: { nftId },
-  });
-
-  const response = await server.inject({
-    method: 'POST',
-    url: '/api/subscriptions/creatorPlus',
-    cookies: {
-      'next-auth.session-token': 'SP3VCX5NFQ8VCHFS9M6N40ZJNVTRT4HZ62WFH5C4Q',
-    },
-    payload: {
-      nftId,
-    },
-  });
-
-  expect(response.statusCode).toBe(400);
-  expect(response.json()).toEqual({
-    error: 'User already has an active subscription',
-  });
-});
-
 it('Should create an active subscription linked to the nft', async () => {
   const stacksAddress = 'SP3VCX5NFQ8VCHFS9M6N40ZJNVTRT4HZ62WFH5C4Q';
   const nftId = 2123;
@@ -124,6 +99,39 @@ it('Should create an active subscription linked to the nft', async () => {
       userId: user.id,
       createdAt: expect.any(Date),
       updatedAt: expect.any(Date),
+    },
+  ]);
+});
+
+it('Should change the NFT if user has an active subscription', async () => {
+  const stacksAddress = 'SP3VCX5NFQ8VCHFS9M6N40ZJNVTRT4HZ62WFH5C4Q';
+  const nftId = 2123;
+  const user = await TestDBUser.seedUserWithSubscription({
+    stacksAddress,
+    subscription: { nftId: 1 },
+  });
+
+  const response = await server.inject({
+    method: 'POST',
+    url: '/api/subscriptions/creatorPlus',
+    cookies: {
+      'next-auth.session-token': 'SP3VCX5NFQ8VCHFS9M6N40ZJNVTRT4HZ62WFH5C4Q',
+    },
+    payload: {
+      nftId,
+    },
+  });
+
+  expect(response.statusCode).toBe(200);
+  expect(response.json()).toEqual({
+    success: true,
+  });
+  expect(
+    await prisma.subscription.findMany({ where: { userId: user.id } })
+  ).toMatchObject([
+    {
+      id: expect.any(String),
+      nftId,
     },
   ]);
 });
