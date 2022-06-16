@@ -13,6 +13,7 @@ export const sigleConfig = {
   discordUrl: 'https://discord.gg/X2Dbz3xbrs',
   messengerUrl: 'https://m.me/sigleapp',
   documentationUrl: 'https://docs.sigle.io',
+  explorerGuildUrl: 'https://www.explorerguild.io',
   feedbackUrl: 'https://sigle.canny.io/feature-requests',
   blogUrl: 'https://app.sigle.io/sigleapp.id.blockstack',
   gammaUrl: 'https://gamma.io/collections/the-explorer-guild',

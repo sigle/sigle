@@ -1,8 +1,10 @@
 import { useMutation, useQuery, useQueryClient } from 'react-query';
 import { sigleConfig } from '../config';
 
+type SubscriptionResponse = { id: string; nftId: number } | null;
+
 export const useGetUserSubscription = () =>
-  useQuery('get-user-subscription', () =>
+  useQuery<SubscriptionResponse, Error>('get-user-subscription', () =>
     fetch(`${sigleConfig.apiUrl}/api/subscriptions`, {
       method: 'GET',
       credentials: 'include',
