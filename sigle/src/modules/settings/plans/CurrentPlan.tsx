@@ -1,11 +1,8 @@
-import { useState } from 'react';
 import Image from 'next/image';
-import { useQuery } from 'react-query';
 import { Box, Button, Flex, Typography, LoadingSpinner } from '../../../ui';
 import { SettingsLayout } from '../SettingsLayout';
 import backpackImage from '../../../../public/img/illustrations/backpack.png';
 import { useFeatureFlags } from '../../../utils/featureFlags';
-import { sigleConfig } from '../../../config';
 import { useGetUserSubscription } from '../../../hooks/subscriptions';
 import Link from 'next/link';
 

@@ -35,6 +35,27 @@ interface NonFungibleTokensHoldings {
   value?: { hex: string; repr: string };
 }
 
+const NftOverlay = styled('span', {
+  display: 'grid',
+  placeItems: 'center',
+  overflow: 'hidden',
+  borderRadius: '$1',
+  height: '100%',
+
+  '&::before': {
+    content: '',
+    position: 'absolute',
+    left: 0,
+    top: 0,
+    width: '100%',
+    height: '100%',
+    backgroundColor: '$gray11',
+    opacity: 0.4,
+    zIndex: 1,
+    transition: '.2s',
+  },
+});
+
 const NFTPlaceholder = styled('div', {
   width: 92,
   height: 92,
@@ -89,8 +110,6 @@ export const SelectNFTDialog = ({
   const [selectedNFT, setSelectedNFT] = useState<string>();
   const [unSelectedNFT, setUnselectedNFT] = useState<string | null>(null);
   const [currentPage, setCurrentPage] = useState<number>(1);
-
-  console.log(data, error, isErrorUserNFT, isLoadingUserNFT, createError);
 
   const maxItemsPerPage = 10;
 
@@ -268,29 +287,7 @@ export const SelectNFTDialog = ({
                         }}
                       >
                         {selectedNFT === item.value?.repr.replace('u', '') && (
-                          <Box
-                            as="span"
-                            css={{
-                              display: 'grid',
-                              placeItems: 'center',
-                              overflow: 'hidden',
-                              borderRadius: '$1',
-                              height: '100%',
-
-                              '&::before': {
-                                content: '',
-                                position: 'absolute',
-                                left: 0,
-                                top: 0,
-                                width: '100%',
-                                height: '100%',
-                                backgroundColor: '$gray11',
-                                opacity: 0.4,
-                                zIndex: 1,
-                                transition: '.2s',
-                              },
-                            }}
-                          >
+                          <NftOverlay>
                             <Box
                               css={{
                                 zIndex: 1,
@@ -299,33 +296,11 @@ export const SelectNFTDialog = ({
                             >
                               <CheckIcon />
                             </Box>
-                          </Box>
+                          </NftOverlay>
                         )}
                         {unSelectedNFT ===
                           item.value?.repr.replace('u', '') && (
-                          <Box
-                            as="span"
-                            css={{
-                              display: 'grid',
-                              placeItems: 'center',
-                              overflow: 'hidden',
-                              borderRadius: '$1',
-                              height: '100%',
-
-                              '&::before': {
-                                content: '',
-                                position: 'absolute',
-                                left: 0,
-                                top: 0,
-                                width: '100%',
-                                height: '100%',
-                                backgroundColor: '$gray11',
-                                opacity: 0.4,
-                                zIndex: 1,
-                                transition: '.2s',
-                              },
-                            }}
-                          >
+                          <NftOverlay>
                             <Box
                               css={{
                                 zIndex: 1,
@@ -334,7 +309,7 @@ export const SelectNFTDialog = ({
                             >
                               <Cross1Icon />
                             </Box>
-                          </Box>
+                          </NftOverlay>
                         )}
                         <Image
                           loader={({ src }) =>
