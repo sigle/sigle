@@ -1,7 +1,7 @@
 import { DialogDescription } from '@radix-ui/react-dialog';
 import { useQuery } from 'react-query';
 import { NonFungibleTokensApi } from '@stacks/blockchain-api-client';
-import { styled } from '../../../stitches.config';
+import { darkTheme, styled } from '../../../stitches.config';
 import {
   Box,
   Button,
@@ -23,6 +23,7 @@ import {
   ArrowLeftIcon,
   ArrowRightIcon,
   CheckIcon,
+  Cross1Icon,
   ReloadIcon,
 } from '@radix-ui/react-icons';
 import Link from 'next/link';
@@ -86,6 +87,7 @@ export const SelectNFTDialog = ({
     mutate,
   } = useCreateSubscription();
   const [selectedNFT, setSelectedNFT] = useState<string>();
+  const [unSelectedNFT, setUnselectedNFT] = useState<string | null>(null);
 
   console.log(data, error, isErrorUserNFT, isLoadingUserNFT, createError);
 
@@ -100,8 +102,10 @@ export const SelectNFTDialog = ({
   };
 
   const handleClick = (nftId: string) => {
+    setUnselectedNFT('');
     if (nftId === selectedNFT) {
       setSelectedNFT('');
+      setUnselectedNFT(nftId);
       return;
     }
 
@@ -184,8 +188,8 @@ export const SelectNFTDialog = ({
                 </Box>
               )}
 
-              <Flex justify="center" gap="6" wrap="wrap">
-                {data?.results && !isError && isLoading && (
+              <Flex css={{ mb: '$3' }} justify="center" gap="6" wrap="wrap">
+                {data?.results && !isError && !isLoading && (
                   <>
                     {data?.results.map((item: NonFungibleTokensHoldings) => (
                       <Box
@@ -197,13 +201,48 @@ export const SelectNFTDialog = ({
                         }
                         css={{
                           position: 'relative',
-                          br: '$1',
+                          br: '$2',
                           cursor: 'pointer',
                           overflow: 'hidden',
                           width: 92,
                           height: 92,
+                          color: '$gray1',
+
+                          '&:hover':
+                            selectedNFT === item.value?.repr.replace('u', '') ||
+                            unSelectedNFT === item.value?.repr.replace('u', '')
+                              ? {}
+                              : {
+                                  '&::before': {
+                                    display: 'grid',
+                                    placeItems: 'center',
+                                    color: '$gray1',
+                                    content: `#${
+                                      item.value?.repr.replace(
+                                        'u',
+                                        ''
+                                      ) as string
+                                    }`,
+                                    position: 'absolute',
+                                    left: 0,
+                                    top: 0,
+                                    width: '100%',
+                                    height: '100%',
+                                    backgroundColor: 'rgba(22,22,22, 0.6)',
+                                    zIndex: 1,
+                                    transition: '.2s',
+
+                                    [`.${darkTheme} &`]: {
+                                      backgroundColor: 'rgba(252,225,225, 0.6)',
+                                    },
+                                  },
+                                },
+
                           boxShadow:
-                            selectedNFT === item.value?.repr.replace('u', '')
+                            unSelectedNFT === item.value?.repr.replace('u', '')
+                              ? '0 0 0 2px $colors$red11'
+                              : selectedNFT ===
+                                item.value?.repr.replace('u', '')
                               ? '0 0 0 2px $colors$green11'
                               : 'none',
                         }}
@@ -242,6 +281,41 @@ export const SelectNFTDialog = ({
                             </Box>
                           </Box>
                         )}
+                        {unSelectedNFT ===
+                          item.value?.repr.replace('u', '') && (
+                          <Box
+                            as="span"
+                            css={{
+                              display: 'grid',
+                              placeItems: 'center',
+                              overflow: 'hidden',
+                              borderRadius: '$1',
+                              height: '100%',
+
+                              '&::before': {
+                                content: '',
+                                position: 'absolute',
+                                left: 0,
+                                top: 0,
+                                width: '100%',
+                                height: '100%',
+                                backgroundColor: '$gray11',
+                                opacity: 0.4,
+                                zIndex: 1,
+                                transition: '.2s',
+                              },
+                            }}
+                          >
+                            <Box
+                              css={{
+                                zIndex: 1,
+                                color: '$gray1',
+                              }}
+                            >
+                              <Cross1Icon />
+                            </Box>
+                          </Box>
+                        )}
                         <Image
                           loader={({ src }) =>
                             `${NFTImageURL}/${item.value?.repr.replace(
@@ -276,15 +350,15 @@ export const SelectNFTDialog = ({
                     <NFTPlaceholder />
                   </>
                 )}
-              </Flex>
 
-              {!isLoadingUserNFT && isError ? (
-                <ErrorMessage>
-                  {subscriptionCreateError.message
-                    ? subscriptionCreateError.message
-                    : subscriptionCreateError.error}
-                </ErrorMessage>
-              ) : null}
+                {!isLoadingUserNFT && isError ? (
+                  <ErrorMessage>
+                    {subscriptionCreateError.message
+                      ? subscriptionCreateError.message
+                      : subscriptionCreateError.error}
+                  </ErrorMessage>
+                ) : null}
+              </Flex>
 
               {data?.results[0] || isLoadingUserNFT ? (
                 isError ? (

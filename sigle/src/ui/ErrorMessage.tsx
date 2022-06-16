@@ -17,7 +17,6 @@ export const ErrorMessage = ({ children, ...props }: ErrorProps) => {
       css={{
         color: '$red11',
         backgroundColor: '$red5',
-        mb: '$8',
         py: '$3',
         px: '$5',
         br: '$2',
