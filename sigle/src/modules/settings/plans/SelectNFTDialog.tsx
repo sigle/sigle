@@ -17,7 +17,7 @@ import { useAuth } from '../../auth/AuthContext';
 import { sigleConfig } from '../../../config';
 import { useCreateSubscription } from '../../../hooks/subscriptions';
 import Image from 'next/image';
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { ErrorMessage } from '../../../ui/ErrorMessage';
 import {
   ArrowLeftIcon,
@@ -88,8 +88,23 @@ export const SelectNFTDialog = ({
   } = useCreateSubscription();
   const [selectedNFT, setSelectedNFT] = useState<string>();
   const [unSelectedNFT, setUnselectedNFT] = useState<string | null>(null);
+  const [currentPage, setCurrentPage] = useState<number>(1);
 
   console.log(data, error, isErrorUserNFT, isLoadingUserNFT, createError);
+
+  const maxItemsPerPage = 10;
+
+  const currentNfts = useMemo(() => {
+    const firstPageIndex = (currentPage - 1) * maxItemsPerPage;
+    const lastPageIndex = firstPageIndex + maxItemsPerPage;
+    return data?.results.slice(firstPageIndex, lastPageIndex);
+  }, [data, currentPage]);
+
+  const currentLastNftItem = currentNfts && currentNfts[currentNfts.length - 1];
+
+  const lastNftItem = data && data.results[data.results.length - 1];
+
+  const hasNextPage = currentLastNftItem === lastNftItem ? false : true;
 
   const NFTImageURL = `${sigleConfig.explorerGuildUrl}/nft-images/?image=ar://Z4ygyXm-fERGzKEB2bvE7gx98SHcoaP8qdZQo0Kxm6Y`;
 
@@ -148,7 +163,12 @@ export const SelectNFTDialog = ({
             justify="between"
             align="center"
           >
-            <IconButton variant="ghost">
+            <IconButton
+              disabled={currentPage === 1}
+              onClick={() => setCurrentPage(currentPage - 1)}
+              aria-label="previous page"
+              variant="ghost"
+            >
               <ArrowLeftIcon />
             </IconButton>
             <Flex
@@ -191,7 +211,7 @@ export const SelectNFTDialog = ({
               <Flex css={{ mb: '$3' }} justify="center" gap="6" wrap="wrap">
                 {data?.results && !isError && !isLoading && (
                   <>
-                    {data?.results.map((item: NonFungibleTokensHoldings) => (
+                    {currentNfts?.map((item: NonFungibleTokensHoldings) => (
                       <Box
                         key={item.tx_id}
                         onClick={() =>
@@ -387,14 +407,19 @@ export const SelectNFTDialog = ({
                   as="a"
                   href={sigleConfig.gammaUrl}
                   target="_blank"
-                  rel="noreferrer"
+                  rel="nodata"
                   size="lg"
                 >
                   Buy on Gamma.io
                 </Button>
               )}
             </Flex>
-            <IconButton variant="ghost">
+            <IconButton
+              disabled={!hasNextPage}
+              onClick={() => setCurrentPage(currentPage + 1)}
+              aria-label="page"
+              variant="ghost"
+            >
               <ArrowRightIcon />
             </IconButton>
           </Flex>
