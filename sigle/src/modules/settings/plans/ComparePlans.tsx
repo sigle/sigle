@@ -98,7 +98,7 @@ const Th = styled('th', {
 });
 
 const Td = styled('td', {
-  pt: '$8',
+  py: '$4',
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'center',
