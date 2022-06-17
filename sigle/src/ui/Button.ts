@@ -6,6 +6,11 @@ export const Button = styled('button', {
   alignItems: 'center',
   fontSize: '$2',
 
+  '&:disabled': {
+    opacity: 0.5,
+    pointerEvents: 'none',
+  },
+
   variants: {
     size: {
       md: {
