@@ -389,7 +389,7 @@ export const SelectNFTDialog = ({
                   as="a"
                   href={sigleConfig.gammaUrl}
                   target="_blank"
-                  rel="nodata"
+                  rel="noreferrer"
                   size="lg"
                 >
                   Buy on Gamma.io
