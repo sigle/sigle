@@ -79,7 +79,7 @@ const features: Feature[] = [
   {
     name: 'Access community Discord channel & special giveaway',
     starterPlan: 'inactive',
-    creatorPlan: 'progress',
+    creatorPlan: 'active',
     info: 'Explorer Guild NFT holders can access the community chat and many giveaways from our partners on Discord.',
   },
 ];
