@@ -15,9 +15,12 @@ import {
 } from '../../../ui';
 import { useAuth } from '../../auth/AuthContext';
 import { sigleConfig } from '../../../config';
-import { useCreateSubscription } from '../../../hooks/subscriptions';
+import {
+  useCreateSubscription,
+  useGetUserSubscription,
+} from '../../../hooks/subscriptions';
 import Image from 'next/image';
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { ErrorMessage } from '../../../ui/ErrorMessage';
 import {
   ArrowLeftIcon,
@@ -107,9 +110,17 @@ export const SelectNFTDialog = ({
     isSuccess,
     mutate,
   } = useCreateSubscription();
+  const { data: subscriptionData, isError: isSubscriptionError } =
+    useGetUserSubscription();
   const [selectedNFT, setSelectedNFT] = useState<string>();
   const [unSelectedNFT, setUnselectedNFT] = useState<string | null>(null);
   const [currentPage, setCurrentPage] = useState<number>(1);
+
+  console.log(subscriptionData, isSubscriptionError, selectedNFT);
+
+  useEffect(() => {
+    setSelectedNFT(subscriptionData?.nftId.toString());
+  }, [subscriptionData]);
 
   const maxItemsPerPage = 10;
 
@@ -131,8 +142,7 @@ export const SelectNFTDialog = ({
 
   const handleSubmit = () => {
     if (!data) return;
-    const nftId = Number((data.results[0] as any).value.repr.replace('u', ''));
-    mutate(nftId);
+    mutate(Number(selectedNFT));
   };
 
   const handleClick = (nftId: string) => {
@@ -312,6 +322,7 @@ export const SelectNFTDialog = ({
                           </NftOverlay>
                         )}
                         <Image
+                          unoptimized
                           loader={({ src }) =>
                             `${NFTImageURL}/${item.value?.repr.replace(
                               'u',
