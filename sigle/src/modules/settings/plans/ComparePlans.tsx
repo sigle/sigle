@@ -24,6 +24,7 @@ interface Feature {
   name: string;
   starterPlan: PlanStatus;
   creatorPlan: PlanStatus;
+  info: string;
 }
 
 const features: Feature[] = [
@@ -31,46 +32,55 @@ const features: Feature[] = [
     name: 'Write unlimited stories',
     starterPlan: 'active',
     creatorPlan: 'active',
+    info: 'On Sigle, you can write as many stories as you want, whatever plan you choose.',
   },
   {
     name: 'Data stored on Gaïa',
     starterPlan: 'active',
     creatorPlan: 'active',
+    info: 'Gaia is an off-chain storage solution. All your stories are truly yours and only you can edit and delete them.',
   },
   {
     name: 'Analytics',
     starterPlan: 'inactive',
     creatorPlan: 'active',
+    info: 'In-depth analysis of your stories to maximize your views and visits on your blog.',
   },
   {
     name: 'Monetise your stories',
     starterPlan: 'progress',
     creatorPlan: 'progress',
+    info: 'Get subscribers, monetise your stories and newsletters in crypto or fiat.',
   },
   {
     name: 'Send newsletters',
     starterPlan: 'progress',
     creatorPlan: 'progress',
+    info: 'Create your community on web3 and send newsletters (paid or free) to your subscribers!',
   },
   {
-    name: 'Get named in the Discover page',
+    name: 'Get featured in the Discover page',
     starterPlan: 'inactive',
     creatorPlan: 'progress',
+    info: 'Grow your community faster by reaching more people on the Discover page.',
   },
   {
     name: 'Create NFT gating for your stories',
     starterPlan: 'inactive',
     creatorPlan: 'progress',
+    info: 'Give your community access to your paid stories with your own NFT collection!',
   },
   {
     name: 'Personal domain',
     starterPlan: 'inactive',
     creatorPlan: 'progress',
+    info: 'Use your own domain to match your brand and make your blog stand out.',
   },
   {
     name: 'Access community Discord channel & special giveaway',
     starterPlan: 'inactive',
     creatorPlan: 'progress',
+    info: 'Explorer Guild NFT holders can access the community chat and many giveaways from our partners on Discord.',
   },
 ];
 
@@ -262,8 +272,7 @@ export const ComparePlans = () => {
                       width: 240,
                     }}
                   >
-                    On Sigle, you can write as many stories as you want,
-                    whatever plan you choose.
+                    {feature.info}
                   </TooltipContent>
                 </Tooltip>
               </Flex>
