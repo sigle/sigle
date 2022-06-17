@@ -163,13 +163,20 @@ export const SelectNFTDialog = ({
                   as="h2"
                   css={{ fontWeight: 600, mb: '$1' }}
                 >
-                  You just upgraded!
+                  {!subscriptionData ? 'You just upgraded!' : 'Success!'}
                 </Typography>
               </DialogTitle>
               <DialogDescription asChild>
                 <Typography size="subheading">
-                  Congratulations, you've unlocked the full potential of
-                  Sigle... <br /> Make good use of it!
+                  {!subscriptionData ? (
+                    <span>
+                      Congratulations, you've unlocked the full potential of
+                      Sigle... <br />
+                      Make good use of it!
+                    </span>
+                  ) : (
+                    'You just changed your Creator + plan NFT!'
+                  )}
                 </Typography>
               </DialogDescription>
             </Box>
