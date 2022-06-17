@@ -110,13 +110,10 @@ export const SelectNFTDialog = ({
     isSuccess,
     mutate,
   } = useCreateSubscription();
-  const { data: subscriptionData, isError: isSubscriptionError } =
-    useGetUserSubscription();
+  const { data: subscriptionData } = useGetUserSubscription();
   const [selectedNFT, setSelectedNFT] = useState<string>();
   const [unSelectedNFT, setUnselectedNFT] = useState<string | null>(null);
   const [currentPage, setCurrentPage] = useState<number>(1);
-
-  console.log(subscriptionData, isSubscriptionError, selectedNFT);
 
   useEffect(() => {
     setSelectedNFT(subscriptionData?.nftId.toString());
@@ -321,20 +318,17 @@ export const SelectNFTDialog = ({
                             </Box>
                           </NftOverlay>
                         )}
-                        <Image
-                          unoptimized
-                          loader={({ src }) =>
-                            `${NFTImageURL}/${item.value?.repr.replace(
-                              'u',
-                              ''
-                            )}.png&size=170`
-                          }
-                          layout="fill"
+                        <Box
+                          as="img"
                           src={`${NFTImageURL}/${item.value?.repr.replace(
                             'u',
                             ''
                           )}.png&size=170`}
-                          objectFit="cover"
+                          css={{
+                            position: 'absolute',
+                            top: 0,
+                            left: 0,
+                          }}
                         />
                       </Box>
                     ))}
