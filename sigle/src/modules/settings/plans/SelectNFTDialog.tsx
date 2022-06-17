@@ -111,12 +111,11 @@ export const SelectNFTDialog = ({
     mutate,
   } = useCreateSubscription();
   const { data: subscriptionData } = useGetUserSubscription();
-  const [selectedNFT, setSelectedNFT] = useState<string>();
-  const [unSelectedNFT, setUnselectedNFT] = useState<string | null>(null);
+  const [activeNFT, setActiveNFT] = useState<string>();
   const [currentPage, setCurrentPage] = useState<number>(1);
 
   useEffect(() => {
-    setSelectedNFT(subscriptionData?.nftId.toString());
+    setActiveNFT(subscriptionData?.nftId.toString());
   }, [subscriptionData]);
 
   const maxItemsPerPage = 10;
@@ -139,18 +138,16 @@ export const SelectNFTDialog = ({
 
   const handleSubmit = () => {
     if (!data) return;
-    mutate(Number(selectedNFT));
+    mutate(Number(activeNFT));
   };
 
   const handleClick = (nftId: string) => {
-    setUnselectedNFT('');
-    if (nftId === selectedNFT) {
-      setSelectedNFT('');
-      setUnselectedNFT(nftId);
+    if (nftId === activeNFT) {
+      setActiveNFT('');
       return;
     }
 
-    setSelectedNFT(nftId);
+    setActiveNFT(nftId);
   };
 
   return (
@@ -255,9 +252,18 @@ export const SelectNFTDialog = ({
                           color: '$gray1',
 
                           '&:hover':
-                            selectedNFT === item.value?.repr.replace('u', '') ||
-                            unSelectedNFT === item.value?.repr.replace('u', '')
-                              ? {}
+                            activeNFT === item.value?.repr.replace('u', '')
+                              ? {
+                                  boxShadow: '0 0 0 2px $colors$red11',
+
+                                  '& svg:first-of-type': {
+                                    display: 'none',
+                                  },
+
+                                  '& svg:last-of-type': {
+                                    display: 'block',
+                                  },
+                                }
                               : {
                                   '&::before': {
                                     display: 'grid',
@@ -285,35 +291,24 @@ export const SelectNFTDialog = ({
                                 },
 
                           boxShadow:
-                            unSelectedNFT === item.value?.repr.replace('u', '')
-                              ? '0 0 0 2px $colors$red11'
-                              : selectedNFT ===
-                                item.value?.repr.replace('u', '')
+                            activeNFT === item.value?.repr.replace('u', '')
                               ? '0 0 0 2px $colors$green11'
                               : 'none',
                         }}
                       >
-                        {selectedNFT === item.value?.repr.replace('u', '') && (
+                        {activeNFT === item.value?.repr.replace('u', '') && (
                           <NftOverlay>
                             <Box
                               css={{
                                 zIndex: 1,
                                 color: '$gray1',
+
+                                '& svg:last-of-type': {
+                                  display: 'none',
+                                },
                               }}
                             >
                               <CheckIcon />
-                            </Box>
-                          </NftOverlay>
-                        )}
-                        {unSelectedNFT ===
-                          item.value?.repr.replace('u', '') && (
-                          <NftOverlay>
-                            <Box
-                              css={{
-                                zIndex: 1,
-                                color: '$gray1',
-                              }}
-                            >
                               <Cross1Icon />
                             </Box>
                           </NftOverlay>
@@ -364,7 +359,7 @@ export const SelectNFTDialog = ({
                 isError ? (
                   <Button
                     css={{ gap: '$2' }}
-                    disabled={isLoadingUserNFT || !selectedNFT}
+                    disabled={isLoadingUserNFT || !activeNFT}
                     size="lg"
                     onClick={handleSubmit}
                   >
@@ -375,7 +370,7 @@ export const SelectNFTDialog = ({
                   </Button>
                 ) : (
                   <Button
-                    disabled={isLoadingUserNFT || !selectedNFT}
+                    disabled={isLoadingUserNFT || !activeNFT}
                     size="lg"
                     onClick={handleSubmit}
                   >
