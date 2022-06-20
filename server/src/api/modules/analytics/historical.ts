@@ -129,15 +129,15 @@ export async function createAnalyticsHistoricalEndpoint(
 
       const username = await StacksService.getUsernameByAddress(req.address);
 
-      // Caching mechanism to avoid hitting Fathom too often
-      // const cacheKey = storyId
-      //   ? `historical:${username}_${dateFrom}_${dateGrouping}_${storyId}`
-      //   : `historical:${username}_${dateFrom}_${dateGrouping}`;
-      // const cachedResponse = await redis.get(cacheKey);
-      // if (cachedResponse && config.NODE_ENV !== 'test') {
-      //   res.status(200).send(JSON.parse(cachedResponse));
-      //   return;
-      // }
+      // Caching mechanism to avoid hitting Plausible too often
+      const cacheKey = storyId
+        ? `historical:${username}_${dateFrom}_${dateGrouping}_${storyId}`
+        : `historical:${username}_${dateFrom}_${dateGrouping}`;
+      const cachedResponse = await redis.get(cacheKey);
+      if (cachedResponse && config.NODE_ENV !== 'test') {
+        res.status(200).send(JSON.parse(cachedResponse));
+        return;
+      }
 
       const historicalResponse: AnalyticsHistoricalResponse = {
         historical: [],
@@ -203,12 +203,12 @@ export async function createAnalyticsHistoricalEndpoint(
       }));
 
       // Cache response for 1 hour
-      // await redis.set(
-      //   cacheKey,
-      //   JSON.stringify(historicalResponse),
-      //   'EX',
-      //   60 * 60
-      // );
+      await redis.set(
+        cacheKey,
+        JSON.stringify(historicalResponse),
+        'EX',
+        60 * 60
+      );
 
       res.status(200).send(historicalResponse);
     }
