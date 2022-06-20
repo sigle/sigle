@@ -5,11 +5,13 @@ import {
 } from '@radix-ui/react-icons';
 import Link from 'next/link';
 import { Dispatch, SetStateAction, useState } from 'react';
+import { useGetUserSubscription } from '../../../hooks/subscriptions';
 import { styled } from '../../../stitches.config';
 import {
   Box,
   Button,
   Flex,
+  LoadingSpinner,
   Tooltip,
   TooltipContent,
   TooltipTrigger,
@@ -121,9 +123,14 @@ const Td = styled('td', {
 interface TableProps {
   children: React.ReactNode;
   setIsSelectNFTDialogOpen: Dispatch<SetStateAction<boolean>>;
+  activeSubscription?: boolean;
 }
 
-const Table = ({ children, setIsSelectNFTDialogOpen }: TableProps) => (
+const Table = ({
+  children,
+  setIsSelectNFTDialogOpen,
+  activeSubscription,
+}: TableProps) => (
   <StyledTable>
     <thead>
       <Tr css={{ boxShadow: '0 1px 0 0 $colors$gray12' }}>
@@ -159,12 +166,14 @@ const Table = ({ children, setIsSelectNFTDialogOpen }: TableProps) => (
           <Typography size="h4" css={{ fontWeight: 600 }}>
             Free
           </Typography>
-          <Typography
-            size="subheading"
-            css={{ backgroundColor: '$green5', px: '$3', py: '$1', br: '$2' }}
-          >
-            Current plan
-          </Typography>
+          {!activeSubscription && (
+            <Typography
+              size="subheading"
+              css={{ backgroundColor: '$green5', px: '$3', py: '$1', br: '$2' }}
+            >
+              Current plan
+            </Typography>
+          )}
         </Th>
         <Th
           css={{
@@ -194,14 +203,23 @@ const Table = ({ children, setIsSelectNFTDialogOpen }: TableProps) => (
           <Typography size="h4" css={{ fontWeight: 600 }}>
             Free
           </Typography>
-          <Button
-            onClick={() => setIsSelectNFTDialogOpen(true)}
-            size="lg"
-            color="violet"
-            css={{ width: 'calc(100% - $6)' }}
-          >
-            Link your NFT
-          </Button>
+          {!activeSubscription ? (
+            <Button
+              onClick={() => setIsSelectNFTDialogOpen(true)}
+              size="lg"
+              color="violet"
+              css={{ width: 'calc(100% - $6)' }}
+            >
+              Link your NFT
+            </Button>
+          ) : (
+            <Typography
+              size="subheading"
+              css={{ backgroundColor: '$green5', px: '$3', py: '$1', br: '$2' }}
+            >
+              Current plan
+            </Typography>
+          )}
         </Th>
       </Tr>
     </thead>
@@ -210,6 +228,7 @@ const Table = ({ children, setIsSelectNFTDialogOpen }: TableProps) => (
 );
 
 export const ComparePlans = () => {
+  const { data: subscriptionData, isLoading } = useGetUserSubscription();
   const [isSelectNFTDialogOpen, setIsSelectNFTDialogOpen] = useState(false);
 
   const getFeatureStatus = (value: PlanStatus) => {
@@ -233,71 +252,84 @@ export const ComparePlans = () => {
           Go back to your current plan
         </Button>
       </Link>
-      <Table setIsSelectNFTDialogOpen={setIsSelectNFTDialogOpen}>
-        {features.map((feature) => (
-          <Tr
-            css={{
-              '&:last-of-type': {
-                '& td': {
-                  br: '0 0 20px 20px',
-                  pb: '$8',
+
+      {isLoading ? (
+        <Box css={{ py: '$10' }}>
+          <LoadingSpinner />
+        </Box>
+      ) : null}
+
+      {!isLoading ? (
+        <Table
+          activeSubscription={!!subscriptionData}
+          setIsSelectNFTDialogOpen={setIsSelectNFTDialogOpen}
+        >
+          {features.map((feature) => (
+            <Tr
+              css={{
+                '&:last-of-type': {
+                  '& td': {
+                    br: '0 0 20px 20px',
+                    pb: '$8',
+                  },
                 },
-              },
-            }}
-            key={feature.name}
-          >
-            <Th
-              css={{
-                display: 'flex',
-                flexDirection: 'column',
-                justifyContent: 'center',
-                maxWidth: 335,
               }}
-              scope="row"
+              key={feature.name}
             >
-              <Flex gap="10" justify="between" align="center">
-                <Typography size="subheading">{feature.name}</Typography>
-                <Tooltip>
-                  <TooltipTrigger>
-                    <QuestionMarkCircledIcon />
-                  </TooltipTrigger>
-                  <TooltipContent
-                    side="top"
-                    sideOffset={4}
-                    css={{
-                      textAlign: 'center',
-                      boxShadow: 'none',
-                      backgroundColor: '$gray10',
-                      color: '$gray2',
-                      width: 240,
-                    }}
-                  >
-                    {feature.info}
-                  </TooltipContent>
-                </Tooltip>
-              </Flex>
-            </Th>
-            <Td
-              css={{
-                backgroundColor: '$gray2',
-                '& svg': { width: 22, height: 22 },
-                maxWidth: 220,
-              }}
-            >
-              {getFeatureStatus(feature.starterPlan)}
-            </Td>
-            <Td
-              css={{
-                backgroundColor: '$gray2',
-                '& svg': { width: 22, height: 22, color: '$violet11' },
-                maxWidth: 220,
-              }}
-            >
-              {getFeatureStatus(feature.creatorPlan)}
-            </Td>
-          </Tr>
-        ))}
-      </Table>
+              <Th
+                css={{
+                  display: 'flex',
+                  flexDirection: 'column',
+                  justifyContent: 'center',
+                  maxWidth: 335,
+                }}
+                scope="row"
+              >
+                <Flex gap="10" justify="between" align="center">
+                  <Typography size="subheading">{feature.name}</Typography>
+                  <Tooltip>
+                    <TooltipTrigger>
+                      <QuestionMarkCircledIcon />
+                    </TooltipTrigger>
+                    <TooltipContent
+                      side="top"
+                      sideOffset={4}
+                      css={{
+                        textAlign: 'center',
+                        boxShadow: 'none',
+                        backgroundColor: '$gray10',
+                        color: '$gray2',
+                        width: 240,
+                      }}
+                    >
+                      {feature.info}
+                    </TooltipContent>
+                  </Tooltip>
+                </Flex>
+              </Th>
+              <Td
+                css={{
+                  backgroundColor: '$gray2',
+                  '& svg': { width: 22, height: 22 },
+                  maxWidth: 220,
+                }}
+              >
+                {getFeatureStatus(feature.starterPlan)}
+              </Td>
+              <Td
+                css={{
+                  backgroundColor: '$gray2',
+                  '& svg': { width: 22, height: 22, color: '$violet11' },
+                  maxWidth: 220,
+                }}
+              >
+                {getFeatureStatus(feature.creatorPlan)}
+              </Td>
+            </Tr>
+          ))}
+        </Table>
+      ) : null}
+
       <SelectNFTDialog
         open={isSelectNFTDialogOpen}
         onOpenChange={() => setIsSelectNFTDialogOpen(false)}

@@ -1,5 +1,5 @@
 import { DialogDescription } from '@radix-ui/react-dialog';
-import { useQuery } from 'react-query';
+import { useQuery, useQueryClient } from 'react-query';
 import { NonFungibleTokensApi } from '@stacks/blockchain-api-client';
 import { darkTheme, styled } from '../../../stitches.config';
 import {
@@ -84,12 +84,8 @@ export const SelectNFTDialog = ({
   onOpenChange,
 }: SelectNFTDialogProps) => {
   const { user } = useAuth();
-  const {
-    isLoading: isLoadingUserNFT,
-    error,
-    isError: isErrorUserNFT,
-    data,
-  } = useQuery(
+  const cache = useQueryClient();
+  const { isLoading: isLoadingUserNFT, data } = useQuery(
     'get-user-nft',
     () => {
       const address = user?.profile.stxAddress.mainnet;
@@ -138,7 +134,15 @@ export const SelectNFTDialog = ({
 
   const handleSubmit = () => {
     if (!data) return;
-    mutate(Number(activeNFT));
+    mutate(Number(activeNFT), {
+      /**
+       * When the subscription is active we rerun the user subscription query
+       * So the elements behind the modal can change.
+       */
+      onSuccess: () => {
+        cache.invalidateQueries('get-user-subscription');
+      },
+    });
   };
 
   const handleClick = (nftId: string) => {

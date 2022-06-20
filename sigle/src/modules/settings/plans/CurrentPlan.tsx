@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import Image from 'next/image';
 import { Box, Button, Flex, Typography, LoadingSpinner } from '../../../ui';
 import { SettingsLayout } from '../SettingsLayout';
@@ -6,6 +7,7 @@ import { useFeatureFlags } from '../../../utils/featureFlags';
 import { useGetUserSubscription } from '../../../hooks/subscriptions';
 import Link from 'next/link';
 import { sigleConfig } from '../../../config';
+import { SelectNFTDialog } from './SelectNFTDialog';
 
 const plans = {
   starter: {
@@ -65,12 +67,12 @@ const plans = {
 
 export const CurrentPlan = () => {
   const { isExperimentalAnalyticsPageEnabled } = useFeatureFlags();
-
   const {
     isLoading,
     isError,
     data: userSubscription,
   } = useGetUserSubscription();
+  const [isSelectNFTDialogOpen, setIsSelectNFTDialogOpen] = useState(false);
 
   const currentPlan: 'starter' | 'creatorPlus' = userSubscription
     ? 'creatorPlus'
@@ -190,10 +192,17 @@ export const CurrentPlan = () => {
                 </Typography>
               </Flex>
             </Flex>
-            <Button size="lg">Change</Button>
+            <Button size="lg" onClick={() => setIsSelectNFTDialogOpen(true)}>
+              Change
+            </Button>
           </Flex>
         </>
       ) : null}
+
+      <SelectNFTDialog
+        open={isSelectNFTDialogOpen}
+        onOpenChange={() => setIsSelectNFTDialogOpen(false)}
+      />
     </SettingsLayout>
   );
 };
