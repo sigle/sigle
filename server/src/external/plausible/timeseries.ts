@@ -10,10 +10,9 @@ export const timeseries =
     paths: string[];
   }): Promise<
     {
-      pathname: string;
       date: string;
-      visits: string;
-      pageviews: string;
+      pageviews: number;
+      visitors: number;
     }[]
   > => {
     const urlParams = new URLSearchParams({
@@ -24,5 +23,9 @@ export const timeseries =
       metrics: 'visitors,pageviews',
     });
 
-    return plausibleFetch(clientParams)('/stats/timeseries', urlParams);
+    const data = await plausibleFetch(clientParams)(
+      '/stats/timeseries',
+      urlParams
+    );
+    return data.results;
   };

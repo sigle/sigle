@@ -23,5 +23,9 @@ export const referrers =
       metrics: 'visitors,pageviews',
     });
 
-    return plausibleFetch(clientParams)('/stats/breakdown', urlParams);
+    const data = await plausibleFetch(clientParams)(
+      '/stats/breakdown',
+      urlParams
+    );
+    return data.results;
   };

@@ -1,15 +1,6 @@
 import { FastifyInstance } from 'fastify';
-import {
-  addDays,
-  addMonths,
-  differenceInMonths,
-  format,
-  isBefore,
-  isValid,
-  parse,
-} from 'date-fns';
+import { differenceInMonths, format, isValid, parse } from 'date-fns';
 import { maxFathomFromDate, getBucketUrl, getPublicStories } from './utils';
-import { fathomClient } from '../../../external/fathom';
 import { redis } from '../../../redis';
 import { config } from '../../../config';
 import { StacksService } from '../stacks/service';
@@ -153,25 +144,6 @@ export async function createAnalyticsHistoricalEndpoint(
         stories: [],
       };
 
-      // As fathom does not return data for all the days, we need to add the missing days
-      // When date grouping is day the date is yyyy-MM-dd
-      // When date grouping is month the date is yyyy-MM
-      while (isBefore(parsedDateFrom, dateTo)) {
-        const date =
-          dateGrouping === 'day'
-            ? format(parsedDateFrom, 'yyyy-MM-dd')
-            : format(parsedDateFrom, 'yyyy-MM');
-        historicalResponse.historical.push({
-          date,
-          visits: 0,
-          pageviews: 0,
-        });
-        parsedDateFrom =
-          dateGrouping === 'day'
-            ? addDays(parsedDateFrom, 1)
-            : addMonths(parsedDateFrom, 1);
-      }
-
       const { profile, bucketUrl } = await getBucketUrl({ username });
       if (!profile || !bucketUrl) {
         throw new Error(`No profile or bucketUrl for ${username}`);
@@ -189,15 +161,18 @@ export async function createAnalyticsHistoricalEndpoint(
         storiesPath.push(`/${username}`);
       }
 
-      console.log(storiesPath);
+      const plausibleResults = await plausibleClient.timeseries({
+        dateFrom,
+        dateGrouping,
+        dateTo: format(dateTo, 'yyyy-MM-dd'),
+        paths: storiesPath,
+      });
 
-      // const plausibleResults = await plausibleClient.timeseries({
-      //   dateFrom,
-      //   dateGrouping,
-      //   dateTo: format(dateTo, 'yyyy-MM-dd'),
-      //   paths: storiesPath,
-      // });
-      // console.log(JSON.stringify(plausibleResults, null, 2));
+      historicalResponse.historical = plausibleResults.map((result) => ({
+        date: result.date,
+        pageviews: result.pageviews,
+        visits: result.visitors,
+      }));
 
       // const plausibleReferrers = await plausibleClient.referrers({
       //   dateFrom,
@@ -206,90 +181,26 @@ export async function createAnalyticsHistoricalEndpoint(
       // });
       // console.log(JSON.stringify(plausibleReferrers, null, 2));
 
-      const plausiblePages = await plausibleClient.pages({
-        dateFrom,
-        dateTo: format(dateTo, 'yyyy-MM-dd'),
-        paths: storiesPath,
-      });
-      console.log(JSON.stringify(plausiblePages, null, 2));
-
-      // TODO batch with max concurrent limit
-      const fathomAggregationResult = await Promise.all(
-        storiesPath.map((path) =>
-          fathomClient.aggregatePath({
-            dateFrom,
-            dateGrouping,
-            path,
-          })
-        )
-      );
-
-      /**
-       * Historical aggregated results.
-       */
-
-      const datesValues: {
-        [key: string]: { visits: number; pageviews: number };
-      } = {};
-
-      // Aggregate the results from fathom and sum the values by date
-      fathomAggregationResult.forEach((aggregationResult) => {
-        aggregationResult.forEach((result) => {
-          if (!datesValues[result.date]) {
-            datesValues[result.date] = { visits: 0, pageviews: 0 };
-          }
-          datesValues[result.date].visits += parseInt(result.visits, 10);
-          datesValues[result.date].pageviews += parseInt(result.pageviews, 10);
-        });
-      });
-
-      Object.keys(datesValues).forEach((date) => {
-        const dateValues = datesValues[date];
-        const index = historicalResponse.historical.findIndex(
-          (historical) => historical.date === date
-        );
-        if (index === -1) {
-          throw new Error(`No index for date ${date} and username ${username}`);
-        }
-        historicalResponse.historical[index].visits = dateValues.visits;
-        historicalResponse.historical[index].pageviews = dateValues.pageviews;
-      });
-
       /**
        * Stories aggregated results.
        * To limit the calls made to Fathom we reuse the data returned in this API endpoint but ideally
        * once Fathom API is more flexible, this should be moved to it's own endpoint.
        */
 
-      historicalResponse.stories = fathomAggregationResult
-        .map((result) => {
-          if (result.length === 0) {
-            return {
-              pathname: '',
-              visits: 0,
-              pageviews: 0,
-            };
-          }
+      const plausiblePages = await plausibleClient.pages({
+        dateFrom,
+        dateTo: format(dateTo, 'yyyy-MM-dd'),
+        paths: storiesPath,
+      });
 
-          const pathname =
-            result[0].pathname === `/${username}`
-              ? '/'
-              : result[0].pathname.replace(`/${username}/`, '');
-          const totalStats = result.reduce(
-            (acc, curr) => {
-              acc.visits += Number(curr.visits);
-              acc.pageviews += Number(curr.pageviews);
-              return acc;
-            },
-            { pathname, visits: 0, pageviews: 0 }
-          );
-          return {
-            pathname,
-            visits: totalStats.visits,
-            pageviews: totalStats.pageviews,
-          };
-        })
-        .filter((story) => story.pathname !== '');
+      historicalResponse.stories = plausiblePages.map((result) => ({
+        pathname:
+          result.page === `/${username}`
+            ? '/'
+            : result.page.replace(`/${username}/`, ''),
+        pageviews: result.pageviews,
+        visits: result.visitors,
+      }));
 
       // Cache response for 1 hour
       // await redis.set(

@@ -9,10 +9,9 @@ export const pages =
     paths: string[];
   }): Promise<
     {
-      pathname: string;
-      date: string;
-      visits: string;
-      pageviews: string;
+      page: string;
+      pageviews: number;
+      visitors: number;
     }[]
   > => {
     const urlParams = new URLSearchParams({
@@ -23,5 +22,9 @@ export const pages =
       metrics: 'visitors,pageviews',
     });
 
-    return plausibleFetch(clientParams)('/stats/breakdown', urlParams);
+    const data = await plausibleFetch(clientParams)(
+      '/stats/breakdown',
+      urlParams
+    );
+    return data.results;
   };
