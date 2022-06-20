@@ -7,7 +7,7 @@ import { PublishedStoriesFrame } from '../PublishedStoriesFrame';
 import { ReferrersFrame } from '../ReferrersFrame';
 import { StatsFrame } from '../stats/StatsFrame';
 import {
-  FATHOM_MAX_FROM_DATE,
+  STATS_MAX_FROM_DATE,
   monthFromDate,
   weekFromDate,
 } from '../stats/utils';
@@ -47,7 +47,7 @@ export const Analytics = ({ stories, loading }: AnalyticsProps) => {
         break;
       case 'all':
         setHistoricalParams({
-          dateFrom: FATHOM_MAX_FROM_DATE,
+          dateFrom: STATS_MAX_FROM_DATE,
           dateGrouping: 'month',
           statType: 'all',
         });

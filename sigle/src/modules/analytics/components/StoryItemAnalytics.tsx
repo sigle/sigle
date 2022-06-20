@@ -11,7 +11,7 @@ import { ReferrersFrame } from '../ReferrersFrame';
 import { StatsTotal } from '../stats/StatsTotal';
 import { StatsError } from '../stats/StatsError';
 import {
-  FATHOM_MAX_FROM_DATE,
+  STATS_MAX_FROM_DATE,
   initialRange,
   monthFromDate,
   weekFromDate,
@@ -64,7 +64,7 @@ export const StoryItemAnalytics = ({ story }: StoryAnalyticsProps) => {
         break;
       case 'all':
         setHistoricalParams({
-          dateFrom: FATHOM_MAX_FROM_DATE,
+          dateFrom: STATS_MAX_FROM_DATE,
           dateGrouping: 'month',
           statType: 'all',
         });
