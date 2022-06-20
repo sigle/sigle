@@ -116,39 +116,12 @@ export async function createAnalyticsReferrersEndpoint(
         dateTo: format(dateTo, 'yyyy-MM-dd'),
         paths: storiesPath,
       });
-      console.log(JSON.stringify(plausibleReferrers, null, 2));
 
-      // TODO batch with max concurrent limit
-      const fathomAggregationResult = await Promise.all(
-        storiesPath.map((path) =>
-          fathomClient.aggregateReferrers({
-            dateFrom,
-            path,
-          })
-        )
-      );
-
-      const domainsValues: { [key: string]: { count: number } } = {};
-
-      fathomAggregationResult.forEach((aggregationResult) => {
-        aggregationResult.forEach((result) => {
-          if (!domainsValues[result.referrer_hostname]) {
-            domainsValues[result.referrer_hostname] = { count: 0 };
-          }
-          domainsValues[result.referrer_hostname].count += parseInt(
-            result.uniques,
-            10
-          );
-        });
-      });
-
-      const referrersResponse: AnalyticsReferrersResponse = Object.keys(
-        domainsValues
-      )
-        .map((domain) => {
-          const domainValues = domainsValues[domain];
-          return { domain, count: domainValues.count };
-        })
+      const referrersResponse: AnalyticsReferrersResponse = plausibleReferrers
+        .map((result) => ({
+          domain: result.source,
+          count: result.pageviews,
+        }))
         .sort((a, b) => b.count - a.count);
 
       // Cache response for 1 hour

@@ -4,10 +4,10 @@ exports[`Respond with referrers 1`] = `
 Array [
   Object {
     "count": 10,
-    "domain": "null",
+    "domain": "Direct / None",
   },
   Object {
-    "count": 6,
+    "count": 1,
     "domain": "https://stacks.co",
   },
 ]

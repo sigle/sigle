@@ -9,10 +9,9 @@ export const referrers =
     paths: string[];
   }): Promise<
     {
-      pathname: string;
-      date: string;
-      visits: string;
-      pageviews: string;
+      source: string;
+      pageviews: number;
+      visitors: number;
     }[]
   > => {
     const urlParams = new URLSearchParams({
