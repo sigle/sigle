@@ -25,11 +25,6 @@ interface StoryAnalyticsProps {
 export const StoryItemAnalytics = ({ story }: StoryAnalyticsProps) => {
   const router = useRouter();
 
-  // TODO remove after testing
-  if (story) {
-    story.id = 'JA9dBfdPDp7kQhkFkgPdv';
-  }
-
   const [historicalParams, setHistoricalParams] = useState<{
     dateFrom: string;
     dateGrouping: 'day' | 'month';
