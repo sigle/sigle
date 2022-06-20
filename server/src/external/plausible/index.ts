@@ -1,4 +1,5 @@
 import { config } from '../../config';
+import { referrers } from './referrers';
 import { timeseries } from './timeseries';
 
 export interface PlausibleClientParams {
@@ -9,6 +10,7 @@ export interface PlausibleClientParams {
 export const initPlausibleClient = (clientParams: PlausibleClientParams) => {
   return {
     timeseries: timeseries(clientParams),
+    referrers: referrers(clientParams),
   };
 };
 

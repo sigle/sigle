@@ -197,8 +197,14 @@ export async function createAnalyticsHistoricalEndpoint(
         dateTo: format(dateTo, 'yyyy-MM-dd'),
         paths: storiesPath,
       });
-
       console.log(JSON.stringify(plausibleResults, null, 2));
+
+      const plausibleReferrers = await plausibleClient.referrers({
+        dateFrom,
+        dateTo: format(dateTo, 'yyyy-MM-dd'),
+        paths: storiesPath,
+      });
+      console.log(JSON.stringify(plausibleReferrers, null, 2));
 
       // TODO batch with max concurrent limit
       const fathomAggregationResult = await Promise.all(
