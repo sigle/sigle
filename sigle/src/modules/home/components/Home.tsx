@@ -131,7 +131,7 @@ export const Home = ({
           fontWeight: 600,
           pb: '$8',
           mb: '$2',
-          borderBottom: '1px solid $colors$gray4',
+          borderBottom: '1px solid $colors$gray6',
         }}
       >
         {selectedTab === 'published'
