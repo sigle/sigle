@@ -99,7 +99,7 @@ const Login = () => {
       {user ? (
         <Typography>
           In order to prove the ownership of your address and to verify your
-          identity, we need you to sign a message.{' '}
+          identity, we need you to sign a message.
         </Typography>
       ) : (
         <>
