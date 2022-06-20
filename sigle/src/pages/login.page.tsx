@@ -4,7 +4,12 @@ import * as Fathom from 'fathom-client';
 import posthog from 'posthog-js';
 import { useConnect } from '@stacks/connect-react';
 import { useConnect as legacyUseConnect } from '@stacks/legacy-connect-react';
-import { EyeOpenIcon, FaceIcon, RocketIcon } from '@radix-ui/react-icons';
+import {
+  EyeOpenIcon,
+  FaceIcon,
+  RocketIcon,
+  SunIcon,
+} from '@radix-ui/react-icons';
 import { Goals } from '../utils/fathom';
 import { Box, Button, Flex, Typography } from '../ui';
 import { LoginLayout } from '../modules/layout/components/LoginLayout';
@@ -85,19 +90,33 @@ const Login = () => {
 
   return (
     <LoginLayout>
-      <Typography>Sigle is a decentralised platform.</Typography>
-      <Typography>
-        To access Sigle, you need to connect your{' '}
-        <Box
-          as="a"
-          css={{ color: '$orange11', boxShadow: '0 1px 0 0' }}
-          href="https://www.hiro.so/wallet/install-web"
-          target="_blank"
-          rel="noreferrer"
-        >
-          Hiro wallet.
-        </Box>
-      </Typography>
+      {isExperimentalAnalyticsPageEnabled ? (
+        <Typography size="h3" as="h3" css={{ mb: '$1', fontWeight: 600 }}>
+          {!user ? 'Step 1' : 'Step 2'}
+        </Typography>
+      ) : null}
+      {user ? (
+        <Typography>
+          In order to prove the ownership of your address and to verify your
+          identity, we need you to sign a message.{' '}
+        </Typography>
+      ) : (
+        <>
+          <Typography>Sigle is a decentralised platform.</Typography>
+          <Typography>
+            To access Sigle, you need to connect your{' '}
+            <Box
+              as="a"
+              css={{ color: '$orange11', boxShadow: '0 1px 0 0' }}
+              href="https://www.hiro.so/wallet/install-web"
+              target="_blank"
+              rel="noreferrer"
+            >
+              Hiro wallet.
+            </Box>
+          </Typography>
+        </>
+      )}
       <Flex gap="3" justify="end" css={{ mt: '$7' }}>
         <Button
           variant="ghost"
@@ -123,50 +142,63 @@ const Login = () => {
       </Flex>
       <Box as="hr" css={{ mt: '$3', borderColor: '$gray6' }} />
       <Flex direction="column" gap="3" css={{ mt: '$3', color: '$gray9' }}>
-        <Flex css={{ gap: '$3' }} align="center">
-          <div>
-            <EyeOpenIcon width={15} height={15} />
-          </div>
-          <Typography size="subheading" css={{ color: '$gray9' }}>
-            We will never do anything without your approval and we only need
-            view only permissions.
-          </Typography>
-        </Flex>
-        <Flex css={{ gap: '$3' }} align="center">
-          <div>
-            <FaceIcon width={15} height={15} />
-          </div>
-          <Typography size="subheading" css={{ color: '$gray9' }}>
-            Code is{' '}
-            <Box
-              as="a"
-              css={{ boxShadow: '0 1px 0 0' }}
-              href={sigleConfig.githubUrl}
-              target="_blank"
-              rel="noreferrer"
-            >
-              open-source.
-            </Box>
-          </Typography>
-        </Flex>
-        <Flex css={{ gap: '$3' }} align="center">
-          <div>
-            <RocketIcon width={15} height={15} />
-          </div>
-          <Typography size="subheading" css={{ color: '$gray9' }}>
-            Sigle was part of the{' '}
-            <Box
-              as="a"
-              css={{ boxShadow: '0 1px 0 0' }}
-              href="https://stacks.ac/teams"
-              target="_blank"
-              rel="noreferrer"
-            >
-              #1 cohort
-            </Box>{' '}
-            of the Stacks accelerator program.
-          </Typography>
-        </Flex>
+        {!user ? (
+          <>
+            <Flex css={{ gap: '$3' }} align="center">
+              <div>
+                <EyeOpenIcon width={15} height={15} />
+              </div>
+              <Typography size="subheading" css={{ color: '$gray9' }}>
+                We will never do anything without your approval and we only need
+                view only permissions.
+              </Typography>
+            </Flex>
+            <Flex css={{ gap: '$3' }} align="center">
+              <div>
+                <FaceIcon width={15} height={15} />
+              </div>
+              <Typography size="subheading" css={{ color: '$gray9' }}>
+                Code is{' '}
+                <Box
+                  as="a"
+                  css={{ boxShadow: '0 1px 0 0' }}
+                  href={sigleConfig.githubUrl}
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  open-source.
+                </Box>
+              </Typography>
+            </Flex>
+            <Flex css={{ gap: '$3' }} align="center">
+              <div>
+                <RocketIcon width={15} height={15} />
+              </div>
+              <Typography size="subheading" css={{ color: '$gray9' }}>
+                Sigle was part of the{' '}
+                <Box
+                  as="a"
+                  css={{ boxShadow: '0 1px 0 0' }}
+                  href="https://stacks.ac/teams"
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  #1 cohort
+                </Box>{' '}
+                of the Stacks accelerator program.
+              </Typography>
+            </Flex>
+          </>
+        ) : (
+          <Flex css={{ gap: '$3' }} align="center">
+            <div>
+              <SunIcon width={15} height={15} />
+            </div>
+            <Typography size="subheading" css={{ color: '$gray9' }}>
+              This signature won’t cost you any Stacks (STX).
+            </Typography>
+          </Flex>
+        )}
       </Flex>
     </LoginLayout>
   );
