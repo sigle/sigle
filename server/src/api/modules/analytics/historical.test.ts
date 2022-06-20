@@ -148,13 +148,13 @@ it('Respond with a formatted time series for days', async () => {
   expect(response.statusCode).toBe(200);
   expect(response.json()).toMatchSnapshot();
   expect(plausibleClient.timeseries).toBeCalledWith({
-    dateFrom: '2022-03-15',
+    dateFrom: '2022-05-01',
     dateGrouping: 'day',
     dateTo: '2022-04-04',
     paths: expect.any(Array),
   });
   expect(plausibleClient.pages).toBeCalledWith({
-    dateFrom: '2022-03-15',
+    dateFrom: '2022-05-01',
     dateTo: '2022-04-04',
     paths: expect.any(Array),
   });
@@ -199,13 +199,13 @@ it('Respond with a formatted time series for months', async () => {
   expect(response.statusCode).toBe(200);
   expect(response.json()).toMatchSnapshot();
   expect(plausibleClient.timeseries).toBeCalledWith({
-    dateFrom: '2022-01-02',
+    dateFrom: '2022-05-01',
     dateGrouping: 'month',
     dateTo: '2022-04-04',
     paths: expect.any(Array),
   });
   expect(plausibleClient.pages).toBeCalledWith({
-    dateFrom: '2022-01-02',
+    dateFrom: '2022-05-01',
     dateTo: '2022-04-04',
     paths: expect.any(Array),
   });
@@ -245,13 +245,13 @@ it('Respond with a formatted time series for one story', async () => {
   expect(response.statusCode).toBe(200);
   expect(response.json()).toMatchSnapshot();
   expect(plausibleClient.timeseries).toBeCalledWith({
-    dateFrom: '2022-03-15',
+    dateFrom: '2022-05-01',
     dateGrouping: 'day',
     dateTo: '2022-04-04',
     paths: expect.any(Array),
   });
   expect(plausibleClient.pages).toBeCalledWith({
-    dateFrom: '2022-03-15',
+    dateFrom: '2022-05-01',
     dateTo: '2022-04-04',
     paths: expect.any(Array),
   });

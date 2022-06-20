@@ -60,7 +60,7 @@ it('Respond with referrers', async () => {
   expect(response.statusCode).toBe(200);
   expect(response.json()).toMatchSnapshot();
   expect(plausibleClient.referrers).toBeCalledWith({
-    dateFrom: '2022-03-15',
+    dateFrom: '2022-05-01',
     dateTo: '2022-04-04',
     paths: expect.any(Array),
   });
@@ -92,7 +92,7 @@ it('Respond with referrers for one story', async () => {
   expect(response.statusCode).toBe(200);
   expect(response.json()).toMatchSnapshot();
   expect(plausibleClient.referrers).toBeCalledWith({
-    dateFrom: '2022-03-15',
+    dateFrom: '2022-05-01',
     dateTo: '2022-04-04',
     paths: ['/sigleapp.id.blockstack/test'],
   });
