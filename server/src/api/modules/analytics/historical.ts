@@ -174,13 +174,6 @@ export async function createAnalyticsHistoricalEndpoint(
         visits: result.visitors,
       }));
 
-      // const plausibleReferrers = await plausibleClient.referrers({
-      //   dateFrom,
-      //   dateTo: format(dateTo, 'yyyy-MM-dd'),
-      //   paths: storiesPath,
-      // });
-      // console.log(JSON.stringify(plausibleReferrers, null, 2));
-
       /**
        * Stories aggregated results.
        * To limit the calls made to Fathom we reuse the data returned in this API endpoint but ideally

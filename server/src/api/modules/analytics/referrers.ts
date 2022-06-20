@@ -1,11 +1,12 @@
 import { FastifyInstance } from 'fastify';
-import { isValid, parse } from 'date-fns';
+import { format, isValid, parse } from 'date-fns';
 import { maxFathomFromDate, getBucketUrl, getPublicStories } from './utils';
 import { fathomClient } from '../../../external/fathom';
 import { redis } from '../../../redis';
 import { config } from '../../../config';
 import { StacksService } from '../stacks/service';
 import { SubscriptionService } from '../subscriptions/service';
+import { plausibleClient } from '../../../external/plausible';
 
 interface AnalyticsReferrersParams {
   dateFrom?: string;
@@ -56,6 +57,7 @@ export async function createAnalyticsReferrersEndpoint(
     async (req, res) => {
       const { storyId } = req.query;
       let { dateFrom } = req.query;
+      const dateTo = new Date();
 
       if (!dateFrom) {
         res.status(400).send({ error: 'dateFrom is required' });
@@ -86,11 +88,11 @@ export async function createAnalyticsReferrersEndpoint(
       const cacheKey = storyId
         ? `referrers:${username}_${dateFrom}_${storyId}`
         : `referrers:${username}_${dateFrom}`;
-      const cachedResponse = await redis.get(cacheKey);
-      if (cachedResponse && config.NODE_ENV !== 'test') {
-        res.status(200).send(JSON.parse(cachedResponse));
-        return;
-      }
+      // const cachedResponse = await redis.get(cacheKey);
+      // if (cachedResponse && config.NODE_ENV !== 'test') {
+      //   res.status(200).send(JSON.parse(cachedResponse));
+      //   return;
+      // }
 
       const { profile, bucketUrl } = await getBucketUrl({ username });
       if (!profile || !bucketUrl) {
@@ -108,6 +110,13 @@ export async function createAnalyticsReferrersEndpoint(
         // Add the root path to the list of paths
         storiesPath.push(`/${username}`);
       }
+
+      const plausibleReferrers = await plausibleClient.referrers({
+        dateFrom,
+        dateTo: format(dateTo, 'yyyy-MM-dd'),
+        paths: storiesPath,
+      });
+      console.log(JSON.stringify(plausibleReferrers, null, 2));
 
       // TODO batch with max concurrent limit
       const fathomAggregationResult = await Promise.all(
