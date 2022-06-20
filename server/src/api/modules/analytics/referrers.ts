@@ -1,11 +1,11 @@
 import { FastifyInstance } from 'fastify';
-import { isValid, parse } from 'date-fns';
+import { format, isValid, parse } from 'date-fns';
 import { maxFathomFromDate, getBucketUrl, getPublicStories } from './utils';
-import { fathomClient } from '../../../external/fathom';
 import { redis } from '../../../redis';
 import { config } from '../../../config';
 import { StacksService } from '../stacks/service';
 import { SubscriptionService } from '../subscriptions/service';
+import { plausibleClient } from '../../../external/plausible';
 
 interface AnalyticsReferrersParams {
   dateFrom?: string;
@@ -56,6 +56,7 @@ export async function createAnalyticsReferrersEndpoint(
     async (req, res) => {
       const { storyId } = req.query;
       let { dateFrom } = req.query;
+      const dateTo = new Date();
 
       if (!dateFrom) {
         res.status(400).send({ error: 'dateFrom is required' });
@@ -109,37 +110,17 @@ export async function createAnalyticsReferrersEndpoint(
         storiesPath.push(`/${username}`);
       }
 
-      // TODO batch with max concurrent limit
-      const fathomAggregationResult = await Promise.all(
-        storiesPath.map((path) =>
-          fathomClient.aggregateReferrers({
-            dateFrom,
-            path,
-          })
-        )
-      );
-
-      const domainsValues: { [key: string]: { count: number } } = {};
-
-      fathomAggregationResult.forEach((aggregationResult) => {
-        aggregationResult.forEach((result) => {
-          if (!domainsValues[result.referrer_hostname]) {
-            domainsValues[result.referrer_hostname] = { count: 0 };
-          }
-          domainsValues[result.referrer_hostname].count += parseInt(
-            result.uniques,
-            10
-          );
-        });
+      const plausibleReferrers = await plausibleClient.referrers({
+        dateFrom,
+        dateTo: format(dateTo, 'yyyy-MM-dd'),
+        paths: storiesPath,
       });
 
-      const referrersResponse: AnalyticsReferrersResponse = Object.keys(
-        domainsValues
-      )
-        .map((domain) => {
-          const domainValues = domainsValues[domain];
-          return { domain, count: domainValues.count };
-        })
+      const referrersResponse: AnalyticsReferrersResponse = plausibleReferrers
+        .map((result) => ({
+          domain: result.source,
+          count: result.pageviews,
+        }))
         .sort((a, b) => b.count - a.count);
 
       // Cache response for 1 hour
