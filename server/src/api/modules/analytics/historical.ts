@@ -88,7 +88,7 @@ export async function createAnalyticsHistoricalEndpoint(
         res.status(400).send({ error: 'dateFrom is required' });
         return;
       }
-      let parsedDateFrom = parse(dateFrom, 'yyyy-MM-dd', new Date());
+      const parsedDateFrom = parse(dateFrom, 'yyyy-MM-dd', new Date());
       const isValidDate = isValid(parsedDateFrom);
       if (!isValidDate) {
         res.status(400).send({ error: 'dateFrom is invalid' });
