@@ -1,13 +1,13 @@
 import { useState } from 'react';
 import Image from 'next/image';
-import { useQuery } from 'react-query';
 import { Box, Button, Flex, Typography, LoadingSpinner } from '../../../ui';
 import { SettingsLayout } from '../SettingsLayout';
 import backpackImage from '../../../../public/img/illustrations/backpack.png';
 import { useFeatureFlags } from '../../../utils/featureFlags';
-import { sigleConfig } from '../../../config';
 import { useGetUserSubscription } from '../../../hooks/subscriptions';
 import Link from 'next/link';
+import { sigleConfig } from '../../../config';
+import { SelectNFTDialog } from './SelectNFTDialog';
 
 const plans = {
   starter: {
@@ -67,16 +67,18 @@ const plans = {
 
 export const CurrentPlan = () => {
   const { isExperimentalAnalyticsPageEnabled } = useFeatureFlags();
-
   const {
     isLoading,
     isError,
     data: userSubscription,
   } = useGetUserSubscription();
+  const [isSelectNFTDialogOpen, setIsSelectNFTDialogOpen] = useState(false);
 
   const currentPlan: 'starter' | 'creatorPlus' = userSubscription
     ? 'creatorPlus'
     : 'starter';
+
+  const NFTImageURL = `${sigleConfig.explorerGuildUrl}/nft-images/?image=ar://Z4ygyXm-fERGzKEB2bvE7gx98SHcoaP8qdZQo0Kxm6Y`;
 
   return (
     <SettingsLayout>
@@ -93,7 +95,9 @@ export const CurrentPlan = () => {
                 </Button>
               </Link>
             ) : (
-              <Button variant="subtle">Change plan</Button>
+              <Link href="/settings/plans/compare" passHref>
+                <Button variant="subtle">Change plan</Button>
+              </Link>
             )
           ) : (
             <Button disabled color="orange">
@@ -173,7 +177,7 @@ export const CurrentPlan = () => {
             <Flex align="center">
               <Box
                 as="img"
-                src="https://images.stxnft.space/https://storage.googleapis.com/the-explorer-guild/7ee9aa5bfb3645c991ab0af5a36b42c0697be09ce7abdbed02cbd91e303eb681.png?auto=format&fit=max&w=460&q=100&cs=srgb"
+                src={`${NFTImageURL}/${userSubscription?.nftId}.png&size=170`}
                 css={{ width: 92, height: 92, borderRadius: '$3' }}
               />
               <Flex direction="column" gap="1" css={{ ml: '$5' }}>
@@ -188,10 +192,17 @@ export const CurrentPlan = () => {
                 </Typography>
               </Flex>
             </Flex>
-            <Button size="lg">Change</Button>
+            <Button size="lg" onClick={() => setIsSelectNFTDialogOpen(true)}>
+              Change
+            </Button>
           </Flex>
         </>
       ) : null}
+
+      <SelectNFTDialog
+        open={isSelectNFTDialogOpen}
+        onOpenChange={() => setIsSelectNFTDialogOpen(false)}
+      />
     </SettingsLayout>
   );
 };
