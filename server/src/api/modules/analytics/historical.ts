@@ -191,20 +191,27 @@ export async function createAnalyticsHistoricalEndpoint(
 
       console.log(storiesPath);
 
-      const plausibleResults = await plausibleClient.timeseries({
-        dateFrom,
-        dateGrouping,
-        dateTo: format(dateTo, 'yyyy-MM-dd'),
-        paths: storiesPath,
-      });
-      console.log(JSON.stringify(plausibleResults, null, 2));
+      // const plausibleResults = await plausibleClient.timeseries({
+      //   dateFrom,
+      //   dateGrouping,
+      //   dateTo: format(dateTo, 'yyyy-MM-dd'),
+      //   paths: storiesPath,
+      // });
+      // console.log(JSON.stringify(plausibleResults, null, 2));
 
-      const plausibleReferrers = await plausibleClient.referrers({
+      // const plausibleReferrers = await plausibleClient.referrers({
+      //   dateFrom,
+      //   dateTo: format(dateTo, 'yyyy-MM-dd'),
+      //   paths: storiesPath,
+      // });
+      // console.log(JSON.stringify(plausibleReferrers, null, 2));
+
+      const plausiblePages = await plausibleClient.pages({
         dateFrom,
         dateTo: format(dateTo, 'yyyy-MM-dd'),
         paths: storiesPath,
       });
-      console.log(JSON.stringify(plausibleReferrers, null, 2));
+      console.log(JSON.stringify(plausiblePages, null, 2));
 
       // TODO batch with max concurrent limit
       const fathomAggregationResult = await Promise.all(
