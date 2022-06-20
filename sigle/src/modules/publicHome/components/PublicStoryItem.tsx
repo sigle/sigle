@@ -1,20 +1,17 @@
 import React from 'react';
 import Link from 'next/link';
-import styledC, { css } from 'styled-components';
-import tw from 'twin.macro';
 import format from 'date-fns/format';
 import { SubsetStory, SettingsFile } from '../../../types';
-import { sigleConfig } from '../../../config';
 import { sanitizeHexColor } from '../../../utils/security';
-import { Box, Container, Flex, Typography } from '../../../ui';
+import { Box, Flex, Typography } from '../../../ui';
 import { darkTheme, styled } from '../../../stitches.config';
-import { StarFilledIcon } from '@radix-ui/react-icons';
 
 const StoryContainer = styled('div', {
   display: 'flex',
   borderBottom: '1px solid $colors$gray6',
   py: '$7',
   gap: '$5',
+  alignItems: 'center',
 
   '& img': {
     transform: 'none',
@@ -60,24 +57,12 @@ export const PublicStoryItem = ({ username, story, settings }: Props) => {
     <>
       <StoryContainer
         css={{
-          display: story.featured ? 'block' : 'flex',
+          flexDirection: story.featured ? 'column' : 'row',
           '@md': {
             gap: !story.coverImage && story.featured ? '$5' : '$7',
           },
         }}
       >
-        {/* {!story.coverImage && story.featured && (
-          <Box
-            css={{
-              p: '$2',
-              backgroundColor: '$gray1',
-              br: '$round',
-              color: '$orange10',
-            }}
-          >
-            <StarFilledIcon />
-          </Box>
-        )} */}
         {story.coverImage && (
           <Link href="/stories/[storyId]" as={`/stories/${story.id}`} passHref>
             <Box
@@ -121,21 +106,6 @@ export const PublicStoryItem = ({ username, story, settings }: Props) => {
                   },
                 }}
               >
-                {/* {story.featured && (
-                  <Box
-                    css={{
-                      p: '$2',
-                      backgroundColor: '$gray1',
-                      br: '$round',
-                      color: '$orange10',
-                      position: 'absolute',
-                      top: '-$2',
-                      right: '-$2',
-                    }}
-                  >
-                    <StarFilledIcon />
-                  </Box>
-                )} */}
                 <StoryImage
                   css={{
                     width: story.featured ? 420 : 80,
@@ -171,9 +141,11 @@ export const PublicStoryItem = ({ username, story, settings }: Props) => {
               >
                 <a>
                   <Typography
+                    size={{
+                      '@initial': 'subheading',
+                      '@md': 'h4',
+                    }}
                     css={{
-                      fontSize: '$2',
-                      lineHeight: '20.4px',
                       alignSelf: 'center',
                       fontWeight: 600,
                       overflow: 'hidden',
@@ -183,8 +155,6 @@ export const PublicStoryItem = ({ username, story, settings }: Props) => {
                       typographyOverflow: 'ellipsis',
 
                       '@md': {
-                        fontSize: '18px',
-                        lineHeight: '1.5rem',
                         '-webkit-line-clamp': 2,
                       },
                     }}
@@ -205,7 +175,7 @@ export const PublicStoryItem = ({ username, story, settings }: Props) => {
                 <Box
                   css={{
                     display: 'none',
-                    '@md': { display: 'block' },
+                    '@md': { display: 'inline-block' },
                   }}
                   as="span"
                 >
