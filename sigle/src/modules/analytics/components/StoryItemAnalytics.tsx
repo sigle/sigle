@@ -9,7 +9,7 @@ import { SubsetStory } from '../../../types';
 import { PublishedStoryItem } from '../PublishedStoryItem';
 import { ReferrersFrame } from '../ReferrersFrame';
 import { StatsTotal } from '../stats/StatsTotal';
-import { StatsError } from '../stats/StatsError';
+import { ErrorMessage } from '../../../ui/ErrorMessage';
 import {
   STATS_MAX_FROM_DATE,
   initialRange,
@@ -85,7 +85,7 @@ export const StoryItemAnalytics = ({ story }: StoryAnalyticsProps) => {
       ) : (
         <Box css={{ height: 68 }} />
       )}
-      {isError && <StatsError>{error.message}</StatsError>}
+      {isError && <ErrorMessage>{error.message}</ErrorMessage>}
       <Flex css={{ mt: '$8' }}>
         <StatsTotal data={data!} />
         <Tabs
