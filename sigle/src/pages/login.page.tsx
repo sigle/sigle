@@ -9,6 +9,7 @@ import {
   FaceIcon,
   RocketIcon,
   SunIcon,
+  ArrowLeftIcon,
 } from '@radix-ui/react-icons';
 import { Goals } from '../utils/fathom';
 import { Box, Button, Flex, Typography } from '../ui';
@@ -21,7 +22,7 @@ import { useFeatureFlags } from '../utils/featureFlags';
 
 const Login = () => {
   const router = useRouter();
-  const { user, isLegacy } = useAuth();
+  const { user, isLegacy, logout } = useAuth();
   const { status } = useSession();
   const { doOpenAuth, sign } = useConnect();
   const { doOpenAuth: legacyDoOpenAuth } = legacyUseConnect();
@@ -118,14 +119,27 @@ const Login = () => {
         </>
       )}
       <Flex gap="3" justify="end" css={{ mt: '$7' }}>
-        <Button
-          variant="ghost"
-          color="gray"
-          size="lg"
-          onClick={handleLoginLegacy}
-        >
-          Blockstack connect
-        </Button>
+        {!user ? (
+          <Button
+            variant="ghost"
+            color="gray"
+            size="lg"
+            onClick={handleLoginLegacy}
+          >
+            Blockstack connect
+          </Button>
+        ) : (
+          <Button
+            variant="ghost"
+            color="gray"
+            size="lg"
+            css={{ gap: '$2' }}
+            onClick={logout}
+          >
+            <ArrowLeftIcon width={15} height={15} />
+            Change account
+          </Button>
+        )}
         <Button
           color="orange"
           size="lg"
