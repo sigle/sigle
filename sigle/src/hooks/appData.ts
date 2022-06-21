@@ -1,6 +1,5 @@
 import {
   useMutation,
-  UseMutationOptions,
   useQuery,
   useQueryClient,
   UseQueryOptions,

@@ -166,7 +166,7 @@ export const PublicHome = ({ file, settings }: PublicHomeProps) => {
                 </Button>
               ) : (
                 <Button
-                  color="orange"
+                  variant="subtle"
                   css={{ ml: '$5' }}
                   onClick={handleUnfollow}
                 >
