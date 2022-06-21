@@ -1,7 +1,7 @@
 import { useGetHistorical } from '../../../hooks/analytics';
 import { Box, Flex, Tabs, TabsList, TabsTrigger } from '../../../ui';
 import { StatsChart } from './StatsChart';
-import { StatsError } from './StatsError';
+import { ErrorMessage } from '../../../ui/ErrorMessage';
 import { StatsTotal } from './StatsTotal';
 import { StatsType } from './types';
 import { initialRange } from './utils';
@@ -30,7 +30,7 @@ export const StatsFrame = ({
 
   return (
     <Box css={{ mb: '$8', position: 'relative' }}>
-      {isError && <StatsError>{error.message}</StatsError>}
+      {isError && <ErrorMessage>{error.message}</ErrorMessage>}
       <Flex>
         <StatsTotal data={data} />
         <Tabs

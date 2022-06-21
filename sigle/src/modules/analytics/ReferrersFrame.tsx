@@ -4,7 +4,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { useGetReferrers } from '../../hooks/analytics';
 import { Box, Flex, Typography } from '../../ui';
 import { Pagination } from './Pagination';
-import { StatsError } from './stats/StatsError';
+import { ErrorMessage } from '../../ui/ErrorMessage';
 
 interface ReferrersFrameProps {
   storyId?: string;
@@ -83,7 +83,7 @@ export const ReferrersFrame = ({
           Views
         </Typography>
       </Flex>
-      {isError && <StatsError>{error.message}</StatsError>}
+      {isError && <ErrorMessage>{error.message}</ErrorMessage>}
       {currentReferrers ? (
         <Flex
           css={{ flexShrink: 0, mb: '$4', height: 476 }}

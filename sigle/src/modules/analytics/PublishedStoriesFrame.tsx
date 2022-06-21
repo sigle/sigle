@@ -5,7 +5,7 @@ import { SubsetStory } from '../../types';
 import { Box, Typography } from '../../ui';
 import { Pagination } from './Pagination';
 import { PublishedStoryItem } from './PublishedStoryItem';
-import { StatsError } from './stats/StatsError';
+import { ErrorMessage } from '../../ui/ErrorMessage';
 
 interface PublishedStoriesFrameProps {
   historicalParams: {
@@ -53,7 +53,7 @@ export const PublishedStoriesFrame = ({
       >
         My published stories ({nbStoriesLabel})
       </Typography>
-      {isError && <StatsError>{error.message}</StatsError>}
+      {isError && <ErrorMessage>{error.message}</ErrorMessage>}
       <Box css={{ mb: '$3', height: 476 }}>
         {currentStories?.map((story) => (
           <PublishedStoryItem
