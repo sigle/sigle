@@ -54,173 +54,163 @@ export const PublicStoryItem = ({ username, story, settings }: Props) => {
     settings.siteColor && sanitizeHexColor(settings.siteColor);
 
   return (
-    <>
-      <StoryContainer
-        css={{
-          flexDirection: story.featured ? 'column' : 'row',
-          '@md': {
-            gap: !story.coverImage && story.featured ? '$5' : '$7',
-          },
-        }}
-      >
-        {story.coverImage && (
-          <Link href="/stories/[storyId]" as={`/stories/${story.id}`} passHref>
-            <Box
-              css={{
-                lineHeight: 0,
-                position: 'relative',
-              }}
-              as="a"
-            >
-              <Box
-                as="span"
-                css={{
-                  mb: story.featured ? '$4' : 'none',
-                  display: 'inline-block',
-                  position: 'relative',
-                  overflow: 'hidden',
-                  borderRadius: story.featured ? '$2' : '$1',
-
-                  '&::before': {
-                    content: '',
-                    position: 'absolute',
-                    left: 0,
-                    top: 0,
-                    width: '100%',
-                    height: '100%',
-                    backgroundColor: '$gray11',
-                    opacity: 0,
-                    transition: '.2s',
-
-                    [`.${darkTheme} &`]: {
-                      backgroundColor: '$colors$gray1',
-                    },
-                  },
-
-                  '&:hover::before': {
-                    opacity: 0.1,
-                  },
-
-                  '@md': {
-                    mb: story.featured ? '$5' : 'none',
-                  },
-                }}
-              >
-                <StoryImage
-                  css={{
-                    width: story.featured ? 420 : 80,
-                    height: story.featured ? 214 : 58,
-
-                    '@md': {
-                      width: story.featured ? 826 : 180,
-                      height: story.featured ? 420 : 130,
-                    },
-                  }}
-                  data-testid="story-cover-image"
-                  src={story.coverImage}
-                />
-              </Box>
-            </Box>
-          </Link>
-        )}
-        <Flex direction="column" css={{ flex: 1 }}>
+    <StoryContainer
+      css={{
+        flexDirection: story.featured ? 'column' : 'row',
+        '@md': {
+          gap: !story.coverImage && story.featured ? '$5' : '$7',
+        },
+      }}
+    >
+      {story.coverImage && (
+        <Link
+          href="/[username]/[storyId]"
+          as={`/${username}/${story.id}`}
+          passHref
+        >
           <Box
             css={{
-              '@md': {
-                mb: '$5',
-              },
+              lineHeight: 0,
+              position: 'relative',
             }}
+            as="a"
           >
-            <Flex
-              justify="between"
-              css={{ gap: '$5', mb: '$1', '@md': { mb: '$2' } }}
-            >
-              <Link
-                href="/stories/[storyId]"
-                as={`/stories/${story.id}`}
-                passHref
-              >
-                <a>
-                  <Typography
-                    size={{
-                      '@initial': 'subheading',
-                      '@md': 'h4',
-                    }}
-                    css={{
-                      alignSelf: 'center',
-                      fontWeight: 600,
-                      overflow: 'hidden',
-                      display: '-webkit-box',
-                      '-webkit-line-clamp': 3,
-                      '-webkit-box-orient': 'vertical',
-                      typographyOverflow: 'ellipsis',
+            <Box
+              as="span"
+              css={{
+                mb: story.featured ? '$4' : 'none',
+                display: 'inline-block',
+                position: 'relative',
+                overflow: 'hidden',
+                borderRadius: story.featured ? '$2' : '$1',
 
-                      '@md': {
-                        '-webkit-line-clamp': 2,
-                      },
-                    }}
-                    as="h4"
-                    data-testid="story-title"
-                  >
-                    {story.title}
-                  </Typography>
-                </a>
-              </Link>
-            </Flex>
-            <Link
-              href="/stories/[storyId]"
-              as={`/stories/${story.id}`}
-              passHref
+                '&::before': {
+                  content: '',
+                  position: 'absolute',
+                  left: 0,
+                  top: 0,
+                  width: '100%',
+                  height: '100%',
+                  backgroundColor: '$gray11',
+                  opacity: 0,
+                  transition: '.2s',
+
+                  [`.${darkTheme} &`]: {
+                    backgroundColor: '$colors$gray1',
+                  },
+                },
+
+                '&:hover::before': {
+                  opacity: 0.1,
+                },
+
+                '@md': {
+                  mb: story.featured ? '$5' : 'none',
+                },
+              }}
             >
-              <Typography
-                data-testid="story-date"
-                css={{ color: '$gray9' }}
-                size="subparagraph"
-                as="a"
-              >
-                {format(story.createdAt, 'MMMM dd, yyyy ')}
-                <Box
-                  css={{
-                    display: 'none',
-                    '@md': { display: 'inline-block' },
-                  }}
-                  as="span"
-                >
-                  at
-                  {format(story.createdAt, ' hh:mmaaa')}
-                </Box>
-              </Typography>
-            </Link>
-          </Box>
-          <Box css={{ flex: 1 }}>
-            <Link
-              href="/stories/[storyId]"
-              as={`/stories/${story.id}`}
-              passHref
-            >
-              <Typography
-                as="a"
-                data-testid="story-content"
-                size="subheading"
+              <StoryImage
                 css={{
-                  display: 'none',
+                  width: story.featured ? 420 : 80,
+                  height: story.featured ? 214 : 58,
 
                   '@md': {
-                    overflow: 'hidden',
-                    display: '-webkit-box',
-                    '-webkit-line-clamp': 2,
-                    '-webkit-box-orient': 'vertical',
-                    typographyOverflow: 'ellipsis',
-                    color: '$gray10',
+                    width: story.featured ? 826 : 180,
+                    height: story.featured ? 420 : 130,
                   },
                 }}
-              >
-                {story.content}
-              </Typography>
-            </Link>
+                data-testid="story-cover-image"
+                src={story.coverImage}
+              />
+            </Box>
           </Box>
-        </Flex>
-      </StoryContainer>
-    </>
+        </Link>
+      )}
+      <Flex direction="column" css={{ flex: 1 }}>
+        <Box
+          css={{
+            '@md': {
+              mb: '$5',
+            },
+          }}
+        >
+          <Flex
+            justify="between"
+            css={{ gap: '$5', mb: '$1', '@md': { mb: '$2' } }}
+          >
+            <Link href={`/${username}/${story.id}`} passHref>
+              <a>
+                <Typography
+                  size={{
+                    '@initial': 'subheading',
+                    '@md': 'h4',
+                  }}
+                  css={{
+                    alignSelf: 'center',
+                    fontWeight: 600,
+                    overflow: 'hidden',
+                    display: '-webkit-box',
+                    '-webkit-line-clamp': 3,
+                    '-webkit-box-orient': 'vertical',
+                    typographyOverflow: 'ellipsis',
+
+                    '@md': {
+                      '-webkit-line-clamp': 2,
+                    },
+                  }}
+                  as="h4"
+                  data-testid="story-title"
+                >
+                  {story.title}
+                </Typography>
+              </a>
+            </Link>
+          </Flex>
+          <Link href={`/${username}/${story.id}`} passHref>
+            <Typography
+              data-testid="story-date"
+              css={{ color: '$gray9' }}
+              size="subparagraph"
+              as="a"
+            >
+              {format(story.createdAt, 'MMMM dd, yyyy ')}
+              <Box
+                css={{
+                  display: 'none',
+                  '@md': { display: 'inline-block' },
+                }}
+                as="span"
+              >
+                at
+                {format(story.createdAt, ' hh:mmaaa')}
+              </Box>
+            </Typography>
+          </Link>
+        </Box>
+        <Box css={{ flex: 1 }}>
+          <Link href={`/${username}/${story.id}`} passHref>
+            <Typography
+              as="a"
+              data-testid="story-content"
+              size="subheading"
+              css={{
+                display: 'none',
+
+                '@md': {
+                  overflow: 'hidden',
+                  display: '-webkit-box',
+                  '-webkit-line-clamp': 2,
+                  '-webkit-box-orient': 'vertical',
+                  typographyOverflow: 'ellipsis',
+                  color: '$gray10',
+                },
+              }}
+            >
+              {story.content}
+            </Typography>
+          </Link>
+        </Box>
+      </Flex>
+    </StoryContainer>
   );
 };
