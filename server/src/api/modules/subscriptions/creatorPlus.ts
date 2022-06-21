@@ -46,7 +46,7 @@ export async function createSubscriptionCreatorPlusEndpoint(
       },
     },
     async (req, res) => {
-      const { nftId } = ({} = req.body as SubscriptionCreatorPlusBody);
+      const { nftId } = (req.body as SubscriptionCreatorPlusBody) || {};
 
       if (!nftId) {
         res.status(400).send({ error: 'nftId is required' });
