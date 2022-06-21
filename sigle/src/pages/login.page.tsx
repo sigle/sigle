@@ -19,6 +19,7 @@ import { useAuth } from '../modules/auth/AuthContext';
 import { SignInWithStacksMessage } from '../modules/auth/sign-in-with-stacks/signInWithStacksMessage';
 import { sigleConfig } from '../config';
 import { useFeatureFlags } from '../utils/featureFlags';
+import { toast } from 'react-toastify';
 
 const Login = () => {
   const router = useRouter();
@@ -52,6 +53,7 @@ const Login = () => {
 
   const handleSignMessage = async () => {
     if (!user) return;
+    // TODO as this can take some time add a loading state to the button
 
     Fathom.trackGoal(Goals.LOGIN_SIGN_MESSAGE, 0);
 
@@ -68,18 +70,22 @@ const Login = () => {
 
     const message = stacksMessage.prepareMessage();
 
-    // TODO handle close modal
-    sign({
-      message,
-      onFinish: ({ signature }) => {
-        signIn('credentials', {
-          message: message,
-          redirect: false,
-          signature,
-          callbackUrl,
-        });
-      },
-    });
+    try {
+      await sign({
+        message,
+        onFinish: ({ signature }) => {
+          signIn('credentials', {
+            message: message,
+            redirect: false,
+            signature,
+            callbackUrl,
+          });
+        },
+      });
+    } catch (error) {
+      console.error(error);
+      toast.error(error.message);
+    }
   };
 
   const handleLoginLegacy = () => {
