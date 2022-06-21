@@ -91,8 +91,6 @@ export const UserFeed = () => {
     { enabled: !!userFollowing }
   );
 
-  console.log(feedStories);
-
   return (
     <DashboardLayout>
       <Typography size="h4" css={{ fontWeight: 600 }}>
