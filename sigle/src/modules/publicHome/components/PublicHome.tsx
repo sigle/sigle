@@ -5,9 +5,16 @@ import { StoryFile, SettingsFile } from '../../../types';
 import { PublicStoryItem } from './PublicStoryItem';
 import { PoweredBy } from '../../publicStory/PoweredBy';
 import { AppHeader } from '../../layout/components/AppHeader';
-import { Box, Container, Flex, Typography } from '../../../ui';
+import { Box, Button, Container, Flex, Typography } from '../../../ui';
 import { sigleConfig } from '../../../config';
 import { styled } from '../../../stitches.config';
+import { useAuth } from '../../auth/AuthContext';
+import {
+  useGetUserFollowing,
+  useUserFollow,
+  useUserUnfollow,
+} from '../../../hooks/appData';
+import { useGetStacksApiNameInfo } from '../../../hooks/stacksApi';
 
 const StyledContainer = styled(Container, {
   pt: '$4',
@@ -70,7 +77,31 @@ interface PublicHomeProps {
 
 export const PublicHome = ({ file, settings }: PublicHomeProps) => {
   const router = useRouter();
+  const { user } = useAuth();
   const { username } = router.query as { username: string };
+
+  const { data: userFollowing } = useGetUserFollowing({
+    enabled: !!user && username !== user.username,
+  });
+  const { data: stacksApiNameInfo } = useGetStacksApiNameInfo(username, {
+    enabled: !!user && username !== user.username,
+  });
+  const { mutate: followUser } = useUserFollow();
+  const { mutate: unfollowUser } = useUserUnfollow();
+
+  const handleFollow = async () => {
+    if (!userFollowing || !stacksApiNameInfo) return;
+    const address = stacksApiNameInfo.address;
+    followUser({ userFollowing, address });
+  };
+
+  const handleUnfollow = async () => {
+    if (!userFollowing || !stacksApiNameInfo) {
+      return;
+    }
+    const address = stacksApiNameInfo.address;
+    unfollowUser({ userFollowing, address });
+  };
 
   const siteName = settings.siteName || username;
   const twitterHandle = settings.siteTwitterHandle;
@@ -87,6 +118,11 @@ export const PublicHome = ({ file, settings }: PublicHomeProps) => {
     settings.siteDescription?.substring(0, 300) ||
     `Read stories from ${siteName} on Sigle, decentralised and open-source platform for Web3 writers`;
   const seoImage = settings.siteLogo;
+
+  const isFollowingUser =
+    userFollowing &&
+    stacksApiNameInfo &&
+    !!userFollowing.following[stacksApiNameInfo.address];
 
   return (
     <React.Fragment>
@@ -115,9 +151,30 @@ export const PublicHome = ({ file, settings }: PublicHomeProps) => {
           {settings.siteLogo && (
             <HeaderLogo src={settings.siteLogo} alt={`${siteName} logo`} />
           )}
-          <Typography css={{ fontWeight: 700 }} as="h1" size="h2">
-            {siteName}
-          </Typography>
+          <Flex>
+            <Typography css={{ fontWeight: 700 }} as="h1" size="h2">
+              {siteName}
+            </Typography>
+            {user && user.username !== username && userFollowing ? (
+              !isFollowingUser ? (
+                <Button
+                  color="orange"
+                  css={{ ml: '$5' }}
+                  onClick={handleFollow}
+                >
+                  Follow
+                </Button>
+              ) : (
+                <Button
+                  color="orange"
+                  css={{ ml: '$5' }}
+                  onClick={handleUnfollow}
+                >
+                  Unfollow
+                </Button>
+              )
+            ) : null}
+          </Flex>
           {settings.siteDescription &&
             settings.siteDescription.split('\n').map((text, index) => (
               <Typography

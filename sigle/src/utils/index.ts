@@ -179,3 +179,44 @@ export const isValidHttpUrl = (url: string) => {
   }
   return testUrl.protocol === 'http:' || testUrl.protocol === 'https:';
 };
+
+/**
+ * Following File
+ */
+const followingFileName = 'app-data/following.json';
+
+export interface GaiaUserFollowing {
+  following: { [key: string]: { createdAt: number } };
+  updatedAt: number;
+}
+
+export const getFollowingFile = async (): Promise<GaiaUserFollowing> => {
+  let originalFile: string | null = null;
+  try {
+    originalFile = (await storage.getFile(followingFileName, {
+      decrypt: false,
+    })) as string;
+  } catch (error) {
+    if (error.code !== 'does_not_exist') {
+      throw error;
+    }
+  }
+  let file: GaiaUserFollowing;
+  if (originalFile) {
+    file = JSON.parse(originalFile);
+  } else {
+    file = {
+      following: {},
+      updatedAt: Date.now(),
+    };
+  }
+  return file;
+};
+
+export const saveFollowingFile = async (
+  file: GaiaUserFollowing
+): Promise<void> => {
+  await storage.putFile(followingFileName, JSON.stringify(file), {
+    encrypt: false,
+  });
+};
