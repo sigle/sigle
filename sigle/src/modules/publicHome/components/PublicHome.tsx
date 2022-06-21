@@ -12,7 +12,7 @@ import { styled } from '../../../stitches.config';
 const StyledContainer = styled(Container, {
   pt: '$4',
   pb: '$15',
-  maxWidth: 768,
+  maxWidth: 826,
 });
 
 const Header = styled('div', {

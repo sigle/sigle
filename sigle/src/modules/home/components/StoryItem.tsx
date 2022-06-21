@@ -29,6 +29,7 @@ const StoryContainer = styled('div', {
   borderBottom: '1px solid $colors$gray6',
   py: '$7',
   gap: '$5',
+  alignItems: 'center',
 
   '& img': {
     transform: 'none',

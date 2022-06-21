@@ -1,73 +1,47 @@
 import React from 'react';
 import Link from 'next/link';
-import styledC, { css } from 'styled-components';
-import tw from 'twin.macro';
 import format from 'date-fns/format';
 import { SubsetStory, SettingsFile } from '../../../types';
-import { sigleConfig } from '../../../config';
 import { sanitizeHexColor } from '../../../utils/security';
-import { Heading, Text } from '../../../ui';
-import { styled } from '../../../stitches.config';
+import { Box, Flex, Typography } from '../../../ui';
+import { darkTheme, styled } from '../../../stitches.config';
 
-const Container = styled('div', {
-  py: '$8',
+const StoryContainer = styled('div', {
+  display: 'flex',
   borderBottom: '1px solid $colors$gray6',
+  py: '$7',
+  gap: '$5',
+  alignItems: 'center',
+
+  '& img': {
+    transform: 'none',
+    transition: 'transform .5s .1s',
+  },
+
+  '&:hover': {
+    '& img': {
+      transform: 'scale(1.1)',
+      transition: 'transform .5s .1s',
+    },
+    '& h4': {
+      color: '$gray12',
+    },
+  },
 });
 
-const StoryContainer = styledC.div<{ siteColor?: string; featured?: boolean }>`
-  ${tw`cursor-pointer`};
+const StoryImage = styled('img', {
+  objectFit: 'cover',
+  objectPosition: 'center',
+  width: 80,
+  height: 58,
+  zIndex: -1,
+  position: 'relative',
 
-  ${(props) =>
-    !props.featured &&
-    css`
-      @media (min-width: ${sigleConfig.breakpoints.md}px) {
-        ${tw`flex`};
-      }
-    `}
-
-  ${(props) =>
-    props.featured &&
-    css`
-      @media (min-width: ${sigleConfig.breakpoints.xl}px) {
-        ${tw`-ml-20 -mr-20`};
-      }
-    `}
-
-  &:hover .sigle-story-title {
-    ${({ siteColor }) => (siteColor ? `color: ${siteColor}` : tw`text-pink`)}
-  }
-`;
-
-const StoryContainerImage = styledC.div<{ featured?: boolean }>`
-  ${tw`mb-4`};
-
-  ${(props) =>
-    !props.featured &&
-    css`
-      @media (min-width: ${sigleConfig.breakpoints.md}px) {
-        ${tw`w-1/3 mb-0`};
-      }
-    `}
-`;
-
-const StoryImage = styledC.img`
-  display: block;
-  max-width: 100%;
-`;
-
-const StoryContainerContent = styledC.div<{
-  hasCover: boolean;
-  featured?: boolean;
-}>`
-  ${(props) =>
-    props.hasCover &&
-    !props.featured &&
-    css`
-      @media (min-width: ${sigleConfig.breakpoints.md}px) {
-        ${tw`w-2/3 pl-4`};
-      }
-    `}
-`;
+  '@md': {
+    width: 180,
+    height: 130,
+  },
+});
 
 interface Props {
   username: string;
@@ -80,38 +54,153 @@ export const PublicStoryItem = ({ username, story, settings }: Props) => {
     settings.siteColor && sanitizeHexColor(settings.siteColor);
 
   return (
-    <Container>
-      <Link href="/[username]/[storyId]" as={`/${username}/${story.id}`}>
-        <StoryContainer siteColor={safeSiteColor} featured={story.featured}>
-          {story.coverImage && (
-            <StoryContainerImage featured={story.featured}>
+    <StoryContainer
+      css={{
+        flexDirection: story.featured ? 'column' : 'row',
+        '@md': {
+          gap: !story.coverImage && story.featured ? '$5' : '$7',
+        },
+      }}
+    >
+      {story.coverImage && (
+        <Link
+          href="/[username]/[storyId]"
+          as={`/${username}/${story.id}`}
+          passHref
+        >
+          <Box
+            css={{
+              lineHeight: 0,
+              position: 'relative',
+            }}
+            as="a"
+          >
+            <Box
+              as="span"
+              css={{
+                mb: story.featured ? '$4' : 'none',
+                display: 'inline-block',
+                position: 'relative',
+                overflow: 'hidden',
+                borderRadius: story.featured ? '$2' : '$1',
+
+                '&::before': {
+                  content: '',
+                  position: 'absolute',
+                  left: 0,
+                  top: 0,
+                  width: '100%',
+                  height: '100%',
+                  backgroundColor: '$gray11',
+                  opacity: 0,
+                  transition: '.2s',
+
+                  [`.${darkTheme} &`]: {
+                    backgroundColor: '$colors$gray1',
+                  },
+                },
+
+                '&:hover::before': {
+                  opacity: 0.1,
+                },
+
+                '@md': {
+                  mb: story.featured ? '$5' : 'none',
+                },
+              }}
+            >
               <StoryImage
+                css={{
+                  width: story.featured ? 420 : 80,
+                  height: story.featured ? 214 : 58,
+
+                  '@md': {
+                    width: story.featured ? 826 : 180,
+                    height: story.featured ? 420 : 130,
+                  },
+                }}
                 data-testid="story-cover-image"
-                className="sigle-story-cover-image"
                 src={story.coverImage}
               />
-            </StoryContainerImage>
-          )}
-          <StoryContainerContent
-            hasCover={!!story.coverImage}
-            featured={story.featured}
+            </Box>
+          </Box>
+        </Link>
+      )}
+      <Flex direction="column" css={{ flex: 1 }}>
+        <Box
+          css={{
+            '@md': {
+              mb: '$5',
+            },
+          }}
+        >
+          <Flex
+            justify="between"
+            css={{ gap: '$5', mb: '$1', '@md': { mb: '$2' } }}
           >
-            <Heading size="xl" data-testid="story-title">
-              {story.title}
-            </Heading>
-            <Text size="sm" data-testid="story-date">
-              {format(story.createdAt, 'dd MMMM yyyy')}
-            </Text>
-            <Text
-              css={{ mt: '$4', color: '$gray10' }}
-              size="sm"
+            <Link href={`/${username}/${story.id}`} passHref>
+              <a>
+                <Typography
+                  size={{
+                    '@initial': 'subheading',
+                    '@md': 'h4',
+                  }}
+                  css={{
+                    alignSelf: 'center',
+                    fontWeight: 600,
+                    overflow: 'hidden',
+                    display: '-webkit-box',
+                    '-webkit-line-clamp': 3,
+                    '-webkit-box-orient': 'vertical',
+                    typographyOverflow: 'ellipsis',
+
+                    '@md': {
+                      '-webkit-line-clamp': 2,
+                    },
+                  }}
+                  as="h4"
+                  data-testid="story-title"
+                >
+                  {story.title}
+                </Typography>
+              </a>
+            </Link>
+          </Flex>
+          <Link href={`/${username}/${story.id}`} passHref>
+            <Typography
+              data-testid="story-date"
+              css={{ color: '$gray9' }}
+              size="subparagraph"
+              as="a"
+            >
+              {format(story.createdAt, 'MMMM dd, yyyy ')}
+            </Typography>
+          </Link>
+        </Box>
+        <Box css={{ flex: 1 }}>
+          <Link href={`/${username}/${story.id}`} passHref>
+            <Typography
+              as="a"
               data-testid="story-content"
+              size="subheading"
+              css={{
+                display: 'none',
+
+                '@md': {
+                  overflow: 'hidden',
+                  display: '-webkit-box',
+                  '-webkit-line-clamp': 2,
+                  '-webkit-box-orient': 'vertical',
+                  typographyOverflow: 'ellipsis',
+                  color: '$gray10',
+                },
+              }}
             >
               {story.content}
-            </Text>
-          </StoryContainerContent>
-        </StoryContainer>
-      </Link>
-    </Container>
+            </Typography>
+          </Link>
+        </Box>
+      </Flex>
+    </StoryContainer>
   );
 };
