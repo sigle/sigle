@@ -6,7 +6,7 @@ The Sigle monorepo is composed of the following components:
 
 - [Vercel](https://vercel.com/) - Hosting for the next.js application.
 - [Render](https://render.com/) - Hosting for the Node.js application and databases.
-- [Fathom](https://usefathom.com/) - Privacy protecting analytics.
+- [Plausible](https://plausible.io/) - Privacy protecting analytics.
 - [Sentry](https://sentry.io/) - Track errors.
 
 ## Client

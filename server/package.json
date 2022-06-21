@@ -31,7 +31,7 @@
     "ioredis": "5.0.5",
     "next-auth": "4.3.4",
     "prisma": "3.14.0",
-    "undici": "5.1.1"
+    "undici": "5.5.1"
   },
   "devDependencies": {
     "@cartable/core": "0.3.0",

@@ -1,13 +1,13 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { FastifyInstance } from 'fastify';
-import { fathomClient } from '../../../external/fathom';
+import { plausibleClient } from '../../../external/plausible';
 import { fakeTimerConfigDate } from '../../../jest/utils';
 import { TestBaseDB, TestDBUser } from '../../../jest/db';
 import { prisma } from '../../../prisma';
 import { redis } from '../../../redis';
 import { buildFastifyServer } from '../../../server';
 
-jest.mock('../../../external/fathom');
+jest.mock('../../../external/plausible');
 
 let server: FastifyInstance;
 
@@ -27,7 +27,7 @@ beforeEach(async () => {
 });
 
 beforeEach(() => {
-  (fathomClient.aggregateReferrers as jest.Mock).mockReset();
+  (plausibleClient.referrers as jest.Mock).mockReset();
 });
 
 it('Respond with referrers', async () => {
@@ -38,23 +38,16 @@ it('Respond with referrers', async () => {
   jest
     .useFakeTimers(fakeTimerConfigDate)
     .setSystemTime(new Date('2022-04-04 12:00:00 UTC').getTime());
-  (fathomClient.aggregateReferrers as jest.Mock).mockResolvedValueOnce([
+  (plausibleClient.referrers as jest.Mock).mockResolvedValueOnce([
     {
-      uniques: '1',
-      referrer_hostname: 'https://stacks.co',
+      pageviews: '1',
+      source: 'https://stacks.co',
     },
     {
-      uniques: '10',
-      referrer_hostname: null,
-    },
-  ]);
-  (fathomClient.aggregateReferrers as jest.Mock).mockResolvedValueOnce([
-    {
-      uniques: '5',
-      referrer_hostname: 'https://stacks.co',
+      pageviews: '10',
+      source: 'Direct / None',
     },
   ]);
-  (fathomClient.aggregateReferrers as jest.Mock).mockResolvedValue([]);
 
   const response = await server.inject({
     method: 'GET',
@@ -66,7 +59,11 @@ it('Respond with referrers', async () => {
 
   expect(response.statusCode).toBe(200);
   expect(response.json()).toMatchSnapshot();
-  expect(fathomClient.aggregateReferrers).toBeCalledTimes(26);
+  expect(plausibleClient.referrers).toBeCalledWith({
+    dateFrom: '2022-05-01',
+    dateTo: '2022-04-04',
+    paths: expect.any(Array),
+  });
 });
 
 it('Respond with referrers for one story', async () => {
@@ -77,13 +74,12 @@ it('Respond with referrers for one story', async () => {
   jest
     .useFakeTimers(fakeTimerConfigDate)
     .setSystemTime(new Date('2022-04-04 12:00:00 UTC').getTime());
-  (fathomClient.aggregateReferrers as jest.Mock).mockResolvedValueOnce([
+  (plausibleClient.referrers as jest.Mock).mockResolvedValueOnce([
     {
-      uniques: '5',
-      referrer_hostname: 'https://stacks.co',
+      pageviews: '5',
+      source: 'https://stacks.co',
     },
   ]);
-  (fathomClient.aggregateReferrers as jest.Mock).mockResolvedValue([]);
 
   const response = await server.inject({
     method: 'GET',
@@ -95,5 +91,9 @@ it('Respond with referrers for one story', async () => {
 
   expect(response.statusCode).toBe(200);
   expect(response.json()).toMatchSnapshot();
-  expect(fathomClient.aggregateReferrers).toBeCalledTimes(1);
+  expect(plausibleClient.referrers).toBeCalledWith({
+    dateFrom: '2022-05-01',
+    dateTo: '2022-04-04',
+    paths: ['/sigleapp.id.blockstack/test'],
+  });
 });

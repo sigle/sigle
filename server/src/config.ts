@@ -26,10 +26,10 @@ export const config = cleanEnv(process.env, {
    */
   PG_DATABASE_URL: str({ desc: 'Postgres database url.' }),
   /**
-   * Fathom
+   * Plausible
    */
-  FATHOM_API_TOKEN: str({ desc: 'Fathom API token.' }),
-  FATHOM_ENTITY_ID: str({ desc: 'Fathom entity id.' }),
+  PLAUSIBLE_API_TOKEN: str({ desc: 'Plausible API token.' }),
+  PLAUSIBLE_SITE_ID: str({ desc: 'Plausible site id.' }),
   /**
    * Sentry
    */

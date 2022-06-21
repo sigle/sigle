@@ -1,8 +1,10 @@
-import { useMutation, useQuery, useQueryClient } from 'react-query';
+import { useMutation, UseMutationOptions, useQuery } from 'react-query';
 import { sigleConfig } from '../config';
 
+type SubscriptionResponse = { id: string; nftId: number } | null;
+
 export const useGetUserSubscription = () =>
-  useQuery('get-user-subscription', () =>
+  useQuery<SubscriptionResponse, Error>('get-user-subscription', () =>
     fetch(`${sigleConfig.apiUrl}/api/subscriptions`, {
       method: 'GET',
       credentials: 'include',
@@ -18,11 +20,13 @@ export const useGetUserSubscription = () =>
     })
   );
 
-export const useCreateSubscription = () => {
-  const cache = useQueryClient();
+type CreateSubscriptionResponse = { id: string; nftId: number } | null;
 
-  return useMutation(
-    (nftId: number) =>
+export const useCreateSubscription = (
+  options: UseMutationOptions<CreateSubscriptionResponse, Error, number> = {}
+) =>
+  useMutation<CreateSubscriptionResponse, Error, number>(
+    (nftId) =>
       fetch(`${sigleConfig.apiUrl}/api/subscriptions/creatorPlus`, {
         method: 'POST',
         credentials: 'include',
@@ -35,12 +39,7 @@ export const useCreateSubscription = () => {
         if (!res.ok) {
           throw json;
         }
-        return json as { id: string; nftId: number } | null;
-      })
-    // {
-    //   onSuccess: () => {
-    //     cache.invalidateQueries('get-user-subscription');
-    //   },
-    // }
+        return json as any;
+      }),
+    options
   );
-};

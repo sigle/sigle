@@ -23,7 +23,8 @@ const AuthContext = React.createContext<{
   isLegacy?: boolean;
   loggingIn: boolean;
   setUsername: (username: string) => void;
-}>({ loggingIn: false, setUsername: () => {} });
+  logout: () => void;
+}>({ loggingIn: false, setUsername: () => {}, logout: () => {} });
 
 interface AuthProviderProps {
   children: React.ReactNode;
@@ -136,7 +137,16 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
     });
   }, []);
 
-  const userApi = useMemo(() => ({ handleSetUsername }), []);
+  const handleLogout = useCallback(() => {
+    userSession.signUserOut();
+
+    setState({
+      loggingIn: false,
+      user: undefined,
+    });
+  }, []);
+
+  const userApi = useMemo(() => ({ handleSetUsername, handleLogout }), []);
 
   const legacyAuthOptions: LegacyAuthOptions = {
     redirectTo: '/',
@@ -161,6 +171,7 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
             loggingIn: state.loggingIn,
             isLegacy: state.isLegacy,
             setUsername: userApi.handleSetUsername,
+            logout: userApi.handleLogout,
           }}
         >
           {children}

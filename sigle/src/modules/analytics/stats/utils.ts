@@ -1,7 +1,7 @@
 import { eachDayOfInterval } from 'date-fns';
 import { StatsData } from './types';
 
-export const FATHOM_MAX_FROM_DATE = '2021-04-01';
+export const STATS_MAX_FROM_DATE = '2022-05-01';
 
 // prevent flash of no content in graph by initializing range data with a constant value (1)
 export const today = new Date();

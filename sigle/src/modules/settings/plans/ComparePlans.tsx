@@ -5,11 +5,13 @@ import {
 } from '@radix-ui/react-icons';
 import Link from 'next/link';
 import { Dispatch, SetStateAction, useState } from 'react';
+import { useGetUserSubscription } from '../../../hooks/subscriptions';
 import { styled } from '../../../stitches.config';
 import {
   Box,
   Button,
   Flex,
+  LoadingSpinner,
   Tooltip,
   TooltipContent,
   TooltipTrigger,
@@ -24,6 +26,7 @@ interface Feature {
   name: string;
   starterPlan: PlanStatus;
   creatorPlan: PlanStatus;
+  info: string;
 }
 
 const features: Feature[] = [
@@ -31,46 +34,55 @@ const features: Feature[] = [
     name: 'Write unlimited stories',
     starterPlan: 'active',
     creatorPlan: 'active',
+    info: 'On Sigle, you can write as many stories as you want, whatever plan you choose.',
   },
   {
     name: 'Data stored on Gaïa',
     starterPlan: 'active',
     creatorPlan: 'active',
+    info: 'Gaia is an off-chain storage solution. All your stories are truly yours and only you can edit and delete them.',
   },
   {
     name: 'Analytics',
     starterPlan: 'inactive',
     creatorPlan: 'active',
+    info: 'In-depth analysis of your stories to maximize your views and visits on your blog.',
   },
   {
     name: 'Monetise your stories',
     starterPlan: 'progress',
     creatorPlan: 'progress',
+    info: 'Get subscribers, monetise your stories and newsletters in crypto or fiat.',
   },
   {
     name: 'Send newsletters',
     starterPlan: 'progress',
     creatorPlan: 'progress',
+    info: 'Create your community on web3 and send newsletters (paid or free) to your subscribers!',
   },
   {
-    name: 'Get named in the Discover page',
+    name: 'Get featured in the Discover page',
     starterPlan: 'inactive',
     creatorPlan: 'progress',
+    info: 'Grow your community faster by reaching more people on the Discover page.',
   },
   {
     name: 'Create NFT gating for your stories',
     starterPlan: 'inactive',
     creatorPlan: 'progress',
+    info: 'Give your community access to your paid stories with your own NFT collection!',
   },
   {
     name: 'Personal domain',
     starterPlan: 'inactive',
     creatorPlan: 'progress',
+    info: 'Use your own domain to match your brand and make your blog stand out.',
   },
   {
     name: 'Access community Discord channel & special giveaway',
     starterPlan: 'inactive',
-    creatorPlan: 'progress',
+    creatorPlan: 'active',
+    info: 'Explorer Guild NFT holders can access the community chat and many giveaways from our partners on Discord.',
   },
 ];
 
@@ -98,7 +110,7 @@ const Th = styled('th', {
 });
 
 const Td = styled('td', {
-  pt: '$8',
+  py: '$4',
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'center',
@@ -111,9 +123,14 @@ const Td = styled('td', {
 interface TableProps {
   children: React.ReactNode;
   setIsSelectNFTDialogOpen: Dispatch<SetStateAction<boolean>>;
+  activeSubscription?: boolean;
 }
 
-const Table = ({ children, setIsSelectNFTDialogOpen }: TableProps) => (
+const Table = ({
+  children,
+  setIsSelectNFTDialogOpen,
+  activeSubscription,
+}: TableProps) => (
   <StyledTable>
     <thead>
       <Tr css={{ boxShadow: '0 1px 0 0 $colors$gray12' }}>
@@ -149,12 +166,14 @@ const Table = ({ children, setIsSelectNFTDialogOpen }: TableProps) => (
           <Typography size="h4" css={{ fontWeight: 600 }}>
             Free
           </Typography>
-          <Typography
-            size="subheading"
-            css={{ backgroundColor: '$green5', px: '$3', py: '$1', br: '$2' }}
-          >
-            Current plan
-          </Typography>
+          {!activeSubscription && (
+            <Typography
+              size="subheading"
+              css={{ backgroundColor: '$green5', px: '$3', py: '$1', br: '$2' }}
+            >
+              Current plan
+            </Typography>
+          )}
         </Th>
         <Th
           css={{
@@ -184,14 +203,23 @@ const Table = ({ children, setIsSelectNFTDialogOpen }: TableProps) => (
           <Typography size="h4" css={{ fontWeight: 600 }}>
             Free
           </Typography>
-          <Button
-            onClick={() => setIsSelectNFTDialogOpen(true)}
-            size="lg"
-            color="violet"
-            css={{ width: 'calc(100% - $6)' }}
-          >
-            Link your NFT
-          </Button>
+          {!activeSubscription ? (
+            <Button
+              onClick={() => setIsSelectNFTDialogOpen(true)}
+              size="lg"
+              color="violet"
+              css={{ width: 'calc(100% - $6)' }}
+            >
+              Link your NFT
+            </Button>
+          ) : (
+            <Typography
+              size="subheading"
+              css={{ backgroundColor: '$green5', px: '$3', py: '$1', br: '$2' }}
+            >
+              Current plan
+            </Typography>
+          )}
         </Th>
       </Tr>
     </thead>
@@ -200,6 +228,7 @@ const Table = ({ children, setIsSelectNFTDialogOpen }: TableProps) => (
 );
 
 export const ComparePlans = () => {
+  const { data: subscriptionData, isLoading } = useGetUserSubscription();
   const [isSelectNFTDialogOpen, setIsSelectNFTDialogOpen] = useState(false);
 
   const getFeatureStatus = (value: PlanStatus) => {
@@ -223,72 +252,84 @@ export const ComparePlans = () => {
           Go back to your current plan
         </Button>
       </Link>
-      <Table setIsSelectNFTDialogOpen={setIsSelectNFTDialogOpen}>
-        {features.map((feature) => (
-          <Tr
-            css={{
-              '&:last-of-type': {
-                '& td': {
-                  br: '0 0 20px 20px',
-                  pb: '$8',
+
+      {isLoading ? (
+        <Box css={{ py: '$10' }}>
+          <LoadingSpinner />
+        </Box>
+      ) : null}
+
+      {!isLoading ? (
+        <Table
+          activeSubscription={!!subscriptionData}
+          setIsSelectNFTDialogOpen={setIsSelectNFTDialogOpen}
+        >
+          {features.map((feature) => (
+            <Tr
+              css={{
+                '&:last-of-type': {
+                  '& td': {
+                    br: '0 0 20px 20px',
+                    pb: '$8',
+                  },
                 },
-              },
-            }}
-            key={feature.name}
-          >
-            <Th
-              css={{
-                display: 'flex',
-                flexDirection: 'column',
-                justifyContent: 'center',
-                maxWidth: 335,
               }}
-              scope="row"
+              key={feature.name}
             >
-              <Flex gap="10" justify="between" align="center">
-                <Typography size="subheading">{feature.name}</Typography>
-                <Tooltip>
-                  <TooltipTrigger>
-                    <QuestionMarkCircledIcon />
-                  </TooltipTrigger>
-                  <TooltipContent
-                    side="top"
-                    sideOffset={4}
-                    css={{
-                      textAlign: 'center',
-                      boxShadow: 'none',
-                      backgroundColor: '$gray10',
-                      color: '$gray2',
-                      width: 240,
-                    }}
-                  >
-                    On Sigle, you can write as many stories as you want,
-                    whatever plan you choose.
-                  </TooltipContent>
-                </Tooltip>
-              </Flex>
-            </Th>
-            <Td
-              css={{
-                backgroundColor: '$gray2',
-                '& svg': { width: 22, height: 22 },
-                maxWidth: 220,
-              }}
-            >
-              {getFeatureStatus(feature.starterPlan)}
-            </Td>
-            <Td
-              css={{
-                backgroundColor: '$gray2',
-                '& svg': { width: 22, height: 22, color: '$violet11' },
-                maxWidth: 220,
-              }}
-            >
-              {getFeatureStatus(feature.creatorPlan)}
-            </Td>
-          </Tr>
-        ))}
-      </Table>
+              <Th
+                css={{
+                  display: 'flex',
+                  flexDirection: 'column',
+                  justifyContent: 'center',
+                  maxWidth: 335,
+                }}
+                scope="row"
+              >
+                <Flex gap="10" justify="between" align="center">
+                  <Typography size="subheading">{feature.name}</Typography>
+                  <Tooltip>
+                    <TooltipTrigger>
+                      <QuestionMarkCircledIcon />
+                    </TooltipTrigger>
+                    <TooltipContent
+                      side="top"
+                      sideOffset={4}
+                      css={{
+                        textAlign: 'center',
+                        boxShadow: 'none',
+                        backgroundColor: '$gray10',
+                        color: '$gray2',
+                        width: 240,
+                      }}
+                    >
+                      {feature.info}
+                    </TooltipContent>
+                  </Tooltip>
+                </Flex>
+              </Th>
+              <Td
+                css={{
+                  backgroundColor: '$gray2',
+                  '& svg': { width: 22, height: 22 },
+                  maxWidth: 220,
+                }}
+              >
+                {getFeatureStatus(feature.starterPlan)}
+              </Td>
+              <Td
+                css={{
+                  backgroundColor: '$gray2',
+                  '& svg': { width: 22, height: 22, color: '$violet11' },
+                  maxWidth: 220,
+                }}
+              >
+                {getFeatureStatus(feature.creatorPlan)}
+              </Td>
+            </Tr>
+          ))}
+        </Table>
+      ) : null}
+
       <SelectNFTDialog
         open={isSelectNFTDialogOpen}
         onOpenChange={() => setIsSelectNFTDialogOpen(false)}
