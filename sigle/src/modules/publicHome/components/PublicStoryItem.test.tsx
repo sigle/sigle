@@ -22,7 +22,9 @@ describe('PublicStoryItem', () => {
     );
 
     expect(getByTestId('story-title')).toHaveTextContent(story.title);
-    expect(getByTestId('story-date')).toHaveTextContent('06 November 2019');
+    expect(getByTestId('story-date')).toHaveTextContent(
+      'November 06, 2019 at 12:00am'
+    );
     expect(getByTestId('story-content')).toHaveTextContent(story.content);
   });
 

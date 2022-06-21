@@ -116,6 +116,7 @@ export const PublicStoryItem = ({ username, story, settings }: Props) => {
                       height: story.featured ? 420 : 130,
                     },
                   }}
+                  data-testid="story-cover-image"
                   src={story.coverImage}
                 />
               </Box>
@@ -159,6 +160,7 @@ export const PublicStoryItem = ({ username, story, settings }: Props) => {
                       },
                     }}
                     as="h4"
+                    data-testid="story-title"
                   >
                     {story.title}
                   </Typography>
@@ -170,7 +172,12 @@ export const PublicStoryItem = ({ username, story, settings }: Props) => {
               as={`/stories/${story.id}`}
               passHref
             >
-              <Typography css={{ color: '$gray9' }} size="subparagraph" as="a">
+              <Typography
+                data-testid="story-date"
+                css={{ color: '$gray9' }}
+                size="subparagraph"
+                as="a"
+              >
                 {format(story.createdAt, 'MMMM dd, yyyy ')}
                 <Box
                   css={{
@@ -193,6 +200,7 @@ export const PublicStoryItem = ({ username, story, settings }: Props) => {
             >
               <Typography
                 as="a"
+                data-testid="story-content"
                 size="subheading"
                 css={{
                   display: 'none',
