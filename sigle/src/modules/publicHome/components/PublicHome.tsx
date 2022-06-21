@@ -151,7 +151,7 @@ export const PublicHome = ({ file, settings }: PublicHomeProps) => {
           {settings.siteLogo && (
             <HeaderLogo src={settings.siteLogo} alt={`${siteName} logo`} />
           )}
-          <Flex>
+          <Flex align="center">
             <Typography css={{ fontWeight: 700 }} as="h1" size="h2">
               {siteName}
             </Typography>
