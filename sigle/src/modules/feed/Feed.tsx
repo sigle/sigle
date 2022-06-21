@@ -77,8 +77,6 @@ export const UserFeed = () => {
             },
           });
         });
-
-        console.log(userProfile, bucketUrl, dataPublicStories, dataSettings);
       }
 
       // After all the users are processed, we sort the stories by date
