@@ -174,16 +174,6 @@ export const PublicStoryItem = ({ username, story, settings }: Props) => {
               as="a"
             >
               {format(story.createdAt, 'MMMM dd, yyyy ')}
-              <Box
-                css={{
-                  display: 'none',
-                  '@md': { display: 'inline-block' },
-                }}
-                as="span"
-              >
-                at
-                {format(story.createdAt, ' hh:mmaaa')}
-              </Box>
             </Typography>
           </Link>
         </Box>
