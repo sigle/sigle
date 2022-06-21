@@ -1,5 +1,5 @@
 ---
-'@sigle/app': patch
+'@sigle/app': minor
 ---
 
-Update story cards on public profile page.
+Redesign the story cards on the public profile page.
