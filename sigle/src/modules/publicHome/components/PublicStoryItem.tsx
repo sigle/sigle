@@ -50,9 +50,6 @@ interface Props {
 }
 
 export const PublicStoryItem = ({ username, story, settings }: Props) => {
-  const safeSiteColor =
-    settings.siteColor && sanitizeHexColor(settings.siteColor);
-
   return (
     <StoryContainer
       css={{

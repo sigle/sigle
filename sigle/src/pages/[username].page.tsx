@@ -27,7 +27,7 @@ export const PublicHomePage: NextPage<PublicHomePageProps> = ({
   return <PublicHome file={file} settings={settings} />;
 };
 
-const fetchPublicStories = async (bucketUrl: string) => {
+export const fetchPublicStories = async (bucketUrl: string) => {
   let file;
   let statusCode: false | number = false;
   const data = await fetch(`${bucketUrl}publicStories.json`);
@@ -42,7 +42,7 @@ const fetchPublicStories = async (bucketUrl: string) => {
   return { file, statusCode };
 };
 
-const fetchSettings = async (bucketUrl: string) => {
+export const fetchSettings = async (bucketUrl: string) => {
   let file;
   let statusCode: false | number = false;
   const data = await fetch(`${bucketUrl}settings.json`);
