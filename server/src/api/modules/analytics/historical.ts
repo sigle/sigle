@@ -163,7 +163,10 @@ export async function createAnalyticsHistoricalEndpoint(
 
       const plausibleResults = await plausibleClient.timeseries({
         dateFrom,
-        dateGrouping,
+        // TODO enable this part again once we start having more data in
+        // For now we always default to day grouping for a few months
+        // dateGrouping,
+        dateGrouping: 'day',
         dateTo: format(dateTo, 'yyyy-MM-dd'),
         paths: storiesPath,
       });
