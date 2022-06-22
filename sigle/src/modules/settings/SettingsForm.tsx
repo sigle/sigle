@@ -74,6 +74,11 @@ const ImageEmptyIconAdd = styled('div', {
   bottom: 0,
   right: 0,
   p: '$2',
+  color: '$gray1',
+
+  [`.${darkTheme} &`]: {
+    color: '$gray11',
+  },
 });
 
 const ImageEmptyIconUpdate = styled('div', {
@@ -84,11 +89,18 @@ const ImageEmptyIconUpdate = styled('div', {
   height: '100%',
   display: 'grid',
   placeItems: 'center',
+  color: '$gray1',
+
+  [`.${darkTheme} &`]: {
+    color: '$gray11',
+  },
 });
 
 const Image = styled('img', {
   width: 'auto',
-  height: 24,
+  height: 'auto',
+  maxWidth: 92,
+  maxHeight: 92,
   objectFit: 'contain',
   cursor: 'pointer',
 });
@@ -221,7 +233,9 @@ export const SettingsForm = ({ settings, username }: SettingsFormProps) => {
           {coverImageUrl && (
             <ImageEmptyIconUpdate
               css={{
-                '& svg': { display: 'none' },
+                '& svg': {
+                  display: 'none',
+                },
                 '&:hover': {
                   '& svg': {
                     display: 'block',
