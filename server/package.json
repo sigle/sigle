@@ -29,7 +29,7 @@
     "fastify": "4.1.0",
     "fastify-plugin": "3.0.1",
     "ioredis": "5.0.6",
-    "next-auth": "4.3.4",
+    "next-auth": "4.5.0",
     "prisma": "3.15.2",
     "undici": "5.5.1"
   },
