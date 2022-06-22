@@ -1,5 +1,5 @@
 import 'highlight.js/styles/night-owl.css';
-import { forwardRef, useImperativeHandle } from 'react';
+import { forwardRef, useImperativeHandle, useState } from 'react';
 import {
   useEditor,
   EditorContent,
@@ -36,9 +36,10 @@ import { styled, globalCss, keyframes, darkTheme } from '../../stitches.config';
 import { CodeBlockComponent } from './extensions/CodeBlock';
 import { Story } from '../../types';
 import CharacterCount from '@tiptap/extension-character-count';
-import { Container, Text } from '../../ui';
+import { Container, IconButton, Text, Typography } from '../../ui';
 import { ShortcutsDialog } from './EditorShortcuts/ShortcutsDialog';
 import { clarity } from './utils/clarity-syntax';
+import { KeyboardIcon } from '@radix-ui/react-icons';
 
 const fadeInAnimation = keyframes({
   '0%': { opacity: '0' },
@@ -103,8 +104,13 @@ export const TipTapEditor = forwardRef<
   },
   TipTapEditorProps
 >(({ story, editable = true }, ref) => {
+  const [showShortcutsDialog, setShowShortcutsDialog] = useState(false);
   // TODO is story really needed? Could it be just the content prop?
   globalStylesCustomEditor();
+
+  const handleCancelShortcuts = () => {
+    setShowShortcutsDialog(false);
+  };
 
   const editor = useEditor({
     editable,
@@ -201,7 +207,7 @@ export const TipTapEditor = forwardRef<
         css={{
           display: 'flex',
           alignItems: 'center',
-          gap: '$10',
+          gap: '$3',
           position: 'fixed',
           bottom: 0,
           right: 0,
@@ -212,12 +218,21 @@ export const TipTapEditor = forwardRef<
       >
         {editable && (
           <>
-            <Text size="sm">
+            <Typography size="subheading">
               {editor?.storage.characterCount.words()} words
-            </Text>
-            <ShortcutsDialog />
+            </Typography>
+            <IconButton
+              onClick={() => setShowShortcutsDialog(true)}
+              aria-label="Open keyboard shortcuts and hints"
+            >
+              <KeyboardIcon />
+            </IconButton>
           </>
         )}
+        <ShortcutsDialog
+          open={showShortcutsDialog}
+          onOpenChange={handleCancelShortcuts}
+        />
       </Container>
     </>
   );
