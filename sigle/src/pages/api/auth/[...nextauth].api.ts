@@ -103,4 +103,4 @@ const auth: NextApiHandler = async (req, res) => {
   });
 };
 
-export default auth;
+export default Sentry.withSentry(auth);
