@@ -11,7 +11,7 @@ const fastify = buildFastifyServer({
   logger: false,
 });
 
-fastify.listen(config.PORT, '0.0.0.0', (err, address) => {
+fastify.listen({ port: config.PORT, host: '0.0.0.0' }, (err, address) => {
   if (err) throw err;
   console.log(`Server is now listening on ${address}`);
 });
