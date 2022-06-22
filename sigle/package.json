@@ -32,7 +32,7 @@
     "@radix-ui/react-scroll-area": "0.1.4",
     "@radix-ui/react-tabs": "0.1.5",
     "@radix-ui/react-tooltip": "0.1.7",
-    "@sentry/nextjs": "6.19.7",
+    "@sentry/nextjs": "7.2.0",
     "@sigle/slate-to-html": "1.0.0",
     "@stacks/auth": "4.1.0",
     "@stacks/blockchain-api-client": "4.0.1",

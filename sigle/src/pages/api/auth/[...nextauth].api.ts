@@ -43,7 +43,8 @@ const auth: NextApiHandler = async (req, res) => {
         } catch (error) {
           Sentry.withScope((scope) => {
             scope.setExtras({
-              credentials,
+              message: credentials?.message,
+              signature: credentials?.signature,
             });
             Sentry.captureException(error);
           });
@@ -61,11 +62,6 @@ const auth: NextApiHandler = async (req, res) => {
     providers.pop();
   }
 
-  // const cookies = defaultCookies(
-  //   process.env.NEXTAUTH_URL
-  //     ? process.env.NEXTAUTH_URL.startsWith('https://')
-  //     : false
-  // );
   const useSecureCookies = process.env.NEXTAUTH_URL
     ? process.env.NEXTAUTH_URL.startsWith('https://')
     : false;
@@ -103,4 +99,4 @@ const auth: NextApiHandler = async (req, res) => {
   });
 };
 
-export default auth;
+export default Sentry.withSentry(auth);
