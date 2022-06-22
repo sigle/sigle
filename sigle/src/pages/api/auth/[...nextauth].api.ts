@@ -62,11 +62,6 @@ const auth: NextApiHandler = async (req, res) => {
     providers.pop();
   }
 
-  // const cookies = defaultCookies(
-  //   process.env.NEXTAUTH_URL
-  //     ? process.env.NEXTAUTH_URL.startsWith('https://')
-  //     : false
-  // );
   const useSecureCookies = process.env.NEXTAUTH_URL
     ? process.env.NEXTAUTH_URL.startsWith('https://')
     : false;
