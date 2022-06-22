@@ -10,7 +10,7 @@ import { useRouter } from 'next/router';
 import { useState } from 'react';
 import { toast } from 'react-toastify';
 import { signOut } from 'next-auth/react';
-import { useQueryClient } from 'react-query';
+import { useQuery, useQueryClient } from 'react-query';
 import { useTheme } from 'next-themes';
 import { styled } from '../../../stitches.config';
 import {
@@ -28,6 +28,7 @@ import {
 } from '../../../ui';
 import {
   createNewEmptyStory,
+  getSettingsFile,
   getStoriesFile,
   saveStoriesFile,
   saveStoryFile,
@@ -39,6 +40,7 @@ import { sigleConfig } from '../../../config';
 import { userSession } from '../../../utils/blockstack';
 import { createSubsetStory } from '../../editor/utils';
 import { StyledChevron } from '../../../ui/Accordion';
+import * as Sentry from '@sentry/nextjs';
 
 const Header = styled('header', Container, {
   display: 'flex',
@@ -110,6 +112,19 @@ export const AppHeader = () => {
     signOut();
   };
 
+  const { data: settingsFile, isLoading } = useQuery(
+    'user-settings',
+    () => getSettingsFile(),
+    {
+      // cacheTime: 0,
+      initialData: undefined,
+      onError: (error: Error) => {
+        Sentry.captureException(error);
+        toast.error(error.message || error);
+      },
+    }
+  );
+
   return (
     <Header>
       <Flex
@@ -157,11 +172,26 @@ export const AppHeader = () => {
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button
-                css={{ display: 'flex', gap: '$2' }}
+                css={{ display: 'flex', gap: '$2', alignItems: 'center' }}
                 size="lg"
                 variant="ghost"
               >
-                <StatusDot />
+                <Box
+                  as="img"
+                  src={
+                    settingsFile?.siteLogo
+                      ? settingsFile.siteLogo
+                      : sigleConfig.boringAvatarUrl
+                  }
+                  css={{
+                    width: 'auto',
+                    height: 'auto',
+                    maxWidth: 24,
+                    maxHeight: 24,
+                    br: '$1',
+                    objectFit: 'contain',
+                  }}
+                />
                 <Typography size="subheading">{user.username}</Typography>
                 <StyledChevron css={{ color: '$gray11' }} />
               </Button>

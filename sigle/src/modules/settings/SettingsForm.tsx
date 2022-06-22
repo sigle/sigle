@@ -1,10 +1,10 @@
 import React, { useState, useCallback } from 'react';
-import styled, { css } from 'styled-components';
+import styledC, { css } from 'styled-components';
 import tw from 'twin.macro';
 import { toast } from 'react-toastify';
 import { useFormik, FormikErrors } from 'formik';
 import { useDropzone } from 'react-dropzone';
-import { CameraIcon, TrashIcon } from '@radix-ui/react-icons';
+import { CameraIcon, UpdateIcon } from '@radix-ui/react-icons';
 import { BlockPicker } from 'react-color';
 import { SettingsFile } from '../../types';
 import { hexRegex } from '../../utils/regex';
@@ -21,16 +21,18 @@ import {
 } from '../../components/Form';
 import { colors } from '../../utils/colors';
 import { Button } from '../../ui';
+import { darkTheme, styled } from '../../stitches.config';
+import { sigleConfig } from '../../config';
 
-const StyledFormRow = styled(FormRow)`
+const StyledFormRow = styledC(FormRow)`
   ${tw`xl:w-1/2`};
 `;
 
-const StyledFormHelper = styled(FormHelper)`
+const StyledFormHelper = styledC(FormHelper)`
   ${tw`mt-2`};
 `;
 
-const FormColor = styled.div<{ color: string }>`
+const FormColor = styledC.div<{ color: string }>`
   ${tw`py-2 text-white rounded cursor-pointer relative inline-block text-center`};
   width: 170px;
   ${(props) =>
@@ -39,31 +41,57 @@ const FormColor = styled.div<{ color: string }>`
     `}
 `;
 
-const ImageEmpty = styled.div<{ haveImage: boolean }>`
-  ${tw`flex items-center justify-center bg-grey py-8 cursor-pointer rounded-lg relative border border-solid border-grey focus:outline-none`};
+const ImageContainer = styled('div', {
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+  cursor: 'pointer',
+  br: '$3',
+  overflow: 'hidden',
+  position: 'relative',
+  width: 92,
+  height: 92,
 
-  ${(props) =>
-    props.haveImage &&
-    css`
-      ${tw`py-0 bg-transparent`};
-    `}
+  '&::before': {
+    content: '',
+    position: 'absolute',
+    left: 0,
+    top: 0,
+    width: '100%',
+    height: '100%',
+    backgroundColor: '$gray11',
+    opacity: 0,
+    transition: '.2s',
 
-  span {
-    ${tw`py-1 px-2 text-sm text-grey-darker`};
-  }
-`;
+    [`.${darkTheme} &`]: {
+      backgroundColor: '$colors$gray1',
+    },
+  },
+});
 
-const ImageEmptyIconAdd = styled.div`
-  ${tw`absolute bottom-0 right-0 p-2 flex items-center text-grey-dark`};
-`;
+const ImageEmptyIconAdd = styled('div', {
+  position: 'absolute',
+  bottom: 0,
+  right: 0,
+  p: '$2',
+});
 
-const ImageEmptyIconDelete = styled.div`
-  ${tw`absolute top-0 right-0 p-2 flex items-center text-grey-dark`};
-`;
+const ImageEmptyIconUpdate = styled('div', {
+  position: 'absolute',
+  top: 0,
+  left: 0,
+  width: '100%',
+  height: '100%',
+  display: 'grid',
+  placeItems: 'center',
+});
 
-const Image = styled.img`
-  ${tw`cursor-pointer`};
-`;
+const Image = styled('img', {
+  width: 'auto',
+  height: 24,
+  objectFit: 'contain',
+  cursor: 'pointer',
+});
 
 interface SettingsFormValues {
   siteName: string;
@@ -171,21 +199,50 @@ export const SettingsForm = ({ settings, username }: SettingsFormProps) => {
     multiple: false,
   });
 
-  const handleRemoveCover = (
-    event: React.MouseEvent<HTMLDivElement, MouseEvent>
-  ) => {
-    // We stop the event so it does not trigger react-dropzone
-    event.stopPropagation();
-    setCustomLogo(undefined);
-    formik.setFieldValue('siteLogo', '');
-  };
-
   const coverImageUrl = customLogo
     ? customLogo.preview
     : formik.values.siteLogo;
 
   return (
     <form onSubmit={formik.handleSubmit}>
+      <StyledFormRow>
+        <FormLabel>Profile Image</FormLabel>
+        <ImageContainer
+          css={{
+            '&:hover::before': {
+              opacity: coverImageUrl ? 0.6 : null,
+            },
+            '&:active::before': {
+              opacity: coverImageUrl ? 0.8 : null,
+            },
+          }}
+          {...getRootProps({ tabIndex: undefined })}
+        >
+          {coverImageUrl && (
+            <ImageEmptyIconUpdate
+              css={{
+                '& svg': { display: 'none' },
+                '&:hover': {
+                  '& svg': {
+                    display: 'block',
+                  },
+                },
+              }}
+            >
+              <UpdateIcon />
+            </ImageEmptyIconUpdate>
+          )}
+          <Image
+            src={coverImageUrl ? coverImageUrl : sigleConfig.boringAvatarUrl}
+          />
+          <input {...getInputProps()} />
+          <ImageEmptyIconAdd>
+            <CameraIcon />
+          </ImageEmptyIconAdd>
+        </ImageContainer>
+        <StyledFormHelper>Recommended size: 92x92px</StyledFormHelper>
+      </StyledFormRow>
+
       <StyledFormRow>
         <FormLabel>Name</FormLabel>
         <FormInput
@@ -289,29 +346,6 @@ export const SettingsForm = ({ settings, username }: SettingsFormProps) => {
         {formik.errors.siteColor && (
           <FormHelperError>{formik.errors.siteColor}</FormHelperError>
         )}
-      </StyledFormRow>
-
-      <StyledFormRow>
-        <FormLabel>Logo or profile picture</FormLabel>
-        <ImageEmpty
-          {...getRootProps({ tabIndex: undefined })}
-          haveImage={!!coverImageUrl}
-        >
-          {coverImageUrl && (
-            <ImageEmptyIconDelete onClick={handleRemoveCover}>
-              <TrashIcon width={18} height={18} />
-            </ImageEmptyIconDelete>
-          )}
-          {coverImageUrl && <Image src={coverImageUrl} />}
-          {!coverImageUrl && <span>Upload cover image</span>}
-          <input {...getInputProps()} />
-          <ImageEmptyIconAdd>
-            <CameraIcon width={18} height={18} />
-          </ImageEmptyIconAdd>
-        </ImageEmpty>
-        <StyledFormHelper>
-          Resize manually your image to get the result you want
-        </StyledFormHelper>
       </StyledFormRow>
 
       <Button

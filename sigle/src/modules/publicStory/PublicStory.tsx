@@ -7,13 +7,17 @@ import { sanitizeHexColor } from '../../utils/security';
 import { sigleConfig } from '../../config';
 import { TipTapEditor } from '../editor/TipTapEditor';
 import { styled } from '../../stitches.config';
-import { Box, Container, Flex, Text } from '../../ui';
+import { Box, Container, Flex, Text, Typography } from '../../ui';
 import { PoweredBy } from './PoweredBy';
 import { getTextFromHtml } from '../editor/utils/getTextFromHtml';
 import { AppHeader } from '../layout/components/AppHeader';
 import format from 'date-fns/format';
 import Link from 'next/link';
 import { ShareButtons } from './ShareButtons';
+import { useQuery } from 'react-query';
+import { getSettingsFile } from '../../utils';
+import { toast } from 'react-toastify';
+import * as Sentry from '@sentry/nextjs';
 
 const PublicStoryContainer = styled('div', {
   margin: '0 auto',
@@ -105,6 +109,18 @@ export const PublicStory = ({ story, settings }: PublicStoryProps) => {
   const seoDescription = story.metaDescription;
   const seoImage = story.metaImage || story.coverImage;
 
+  const { data: settingsFile } = useQuery(
+    'user-settings',
+    () => getSettingsFile(),
+    {
+      cacheTime: 0,
+      onError: (error: Error) => {
+        Sentry.captureException(error);
+        toast.error(error.message || error);
+      },
+    }
+  );
+
   return (
     <>
       <NextSeo
@@ -147,22 +163,33 @@ export const PublicStory = ({ story, settings }: PublicStoryProps) => {
           className="not-prose"
         >
           <Link href="/[username]" as={`/${username}`} passHref>
-            <a>
-              <Text size="action">{siteName}</Text>
-              <Text
-                size="action"
-                css={{
-                  display: 'flex',
-                  gap: '$2',
-                  color: '$gray9',
-                  mt: '$1',
-                }}
-              >
-                {format(story.createdAt, 'MMM dd')}
-                <span>•</span>
-                <span>{storyReadingTime?.text}</span>
-              </Text>
-            </a>
+            <Flex as="a" align="center" gap="3">
+              <Box
+                as="img"
+                src={
+                  settingsFile?.siteLogo
+                    ? settingsFile.siteLogo
+                    : sigleConfig.boringAvatarUrl
+                }
+                css={{ width: 48, height: 48, br: '$1' }}
+              />
+              <Box>
+                <Typography size="subheading">{siteName}</Typography>
+                <Typography
+                  size="subheading"
+                  css={{
+                    display: 'flex',
+                    gap: '$2',
+                    color: '$gray9',
+                    mt: '$1',
+                  }}
+                >
+                  {format(story.createdAt, 'MMM dd')}
+                  <span>•</span>
+                  <span>{storyReadingTime?.text}</span>
+                </Typography>
+              </Box>
+            </Flex>
           </Link>
           <ShareButtons username={username} story={story} settings={settings} />
         </Flex>

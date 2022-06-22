@@ -14,6 +14,8 @@ export const sigleConfig = {
   messengerUrl: 'https://m.me/sigleapp',
   documentationUrl: 'https://docs.sigle.io',
   explorerGuildUrl: 'https://www.explorerguild.io',
+  boringAvatarUrl:
+    'https://source.boringavatars.com/marble/120/Maria%20Mitchell?square&colors=da3a00,fa8158,ffa835,37c391,7c456cf',
   feedbackUrl: 'https://sigle.canny.io/feature-requests',
   blogUrl: 'https://app.sigle.io/sigleapp.id.blockstack',
   gammaUrl: 'https://gamma.io/collections/the-explorer-guild',
