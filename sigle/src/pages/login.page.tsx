@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
 import { getCsrfToken, signIn, useSession } from 'next-auth/react';
+import type { RedirectableProviderType } from 'next-auth/providers';
 import * as Fathom from 'fathom-client';
 import posthog from 'posthog-js';
 import { useConnect } from '@stacks/connect-react';
@@ -11,6 +12,7 @@ import {
   SunIcon,
   ArrowLeftIcon,
 } from '@radix-ui/react-icons';
+import { toast } from 'react-toastify';
 import { Goals } from '../utils/fathom';
 import { Box, Button, Flex, Typography } from '../ui';
 import { LoginLayout } from '../modules/layout/components/LoginLayout';
@@ -19,7 +21,6 @@ import { useAuth } from '../modules/auth/AuthContext';
 import { SignInWithStacksMessage } from '../modules/auth/sign-in-with-stacks/signInWithStacksMessage';
 import { sigleConfig } from '../config';
 import { useFeatureFlags } from '../utils/featureFlags';
-import { toast } from 'react-toastify';
 
 const Login = () => {
   const router = useRouter();
@@ -70,22 +71,23 @@ const Login = () => {
 
     const message = stacksMessage.prepareMessage();
 
-    try {
-      await sign({
-        message,
-        onFinish: ({ signature }) => {
-          signIn('credentials', {
+    await sign({
+      message,
+      onFinish: async ({ signature }) => {
+        const signInResult = await signIn<RedirectableProviderType>(
+          'credentials',
+          {
             message: message,
             redirect: false,
             signature,
             callbackUrl,
-          });
-        },
-      });
-    } catch (error) {
-      console.error(error);
-      toast.error(error.message);
-    }
+          }
+        );
+        if (signInResult && signInResult.error) {
+          toast.error('Failed to login');
+        }
+      },
+    });
   };
 
   const handleLoginLegacy = () => {

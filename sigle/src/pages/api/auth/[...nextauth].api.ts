@@ -2,6 +2,7 @@ import { NextApiHandler } from 'next';
 import NextAuth from 'next-auth';
 import CredentialsProvider from 'next-auth/providers/credentials';
 import { getCsrfToken } from 'next-auth/react';
+import * as Sentry from '@sentry/nextjs';
 import { SignInWithStacksMessage } from '../../../modules/auth/sign-in-with-stacks/signInWithStacksMessage';
 
 const hostname = new URL(process.env.NEXTAUTH_URL || '').hostname;
@@ -39,7 +40,13 @@ const auth: NextApiHandler = async (req, res) => {
             };
           }
           return null;
-        } catch (e) {
+        } catch (error) {
+          Sentry.withScope((scope) => {
+            scope.setExtras({
+              credentials,
+            });
+            Sentry.captureException(error);
+          });
           return null;
         }
       },
