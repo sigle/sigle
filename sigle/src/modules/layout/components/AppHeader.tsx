@@ -42,6 +42,7 @@ import { createSubsetStory } from '../../editor/utils';
 import { StyledChevron } from '../../../ui/Accordion';
 import * as Sentry from '@sentry/nextjs';
 import { generateAvatar } from '../../../utils/boringAvatar';
+import { useGetUserSettings } from '../../../hooks/appData/settings';
 
 const ImageContainer = styled('div', {
   display: 'flex',
@@ -75,17 +76,7 @@ const StatusDot = styled('div', {
 });
 
 export const AppHeader = () => {
-  const { data: settingsFile } = useQuery(
-    'user-settings',
-    () => getSettingsFile(),
-    {
-      cacheTime: 0,
-      onError: (error: Error) => {
-        Sentry.captureException(error);
-        toast.error(error.message || error);
-      },
-    }
-  );
+  const { data: settings } = useGetUserSettings();
   const { resolvedTheme, setTheme } = useTheme();
   const { user } = useAuth();
   const router = useRouter();
@@ -190,8 +181,8 @@ export const AppHeader = () => {
                   <Box
                     as="img"
                     src={
-                      settingsFile?.siteLogo
-                        ? settingsFile.siteLogo
+                      settings?.siteLogo
+                        ? settings.siteLogo
                         : generateAvatar(user?.profile.stxAddress)
                     }
                     css={{
