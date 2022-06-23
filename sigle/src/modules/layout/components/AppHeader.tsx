@@ -41,6 +41,7 @@ import { userSession } from '../../../utils/blockstack';
 import { createSubsetStory } from '../../editor/utils';
 import { StyledChevron } from '../../../ui/Accordion';
 import * as Sentry from '@sentry/nextjs';
+import { generateAvatar } from '../../../utils/boringAvatar';
 
 const ImageContainer = styled('div', {
   display: 'flex',
@@ -191,7 +192,7 @@ export const AppHeader = () => {
                     src={
                       settingsFile?.siteLogo
                         ? settingsFile.siteLogo
-                        : sigleConfig.boringAvatarUrl
+                        : generateAvatar(user?.profile.stxAddress)
                     }
                     css={{
                       width: 'auto',

@@ -24,6 +24,8 @@ import { Button } from '../../ui';
 import { darkTheme, styled } from '../../stitches.config';
 import { sigleConfig } from '../../config';
 import { useQueryClient } from 'react-query';
+import { generateAvatar } from '../../utils/boringAvatar';
+import { useAuth } from '../auth/AuthContext';
 
 const StyledFormRow = styledC(FormRow)`
   ${tw`xl:w-1/2`};
@@ -122,6 +124,7 @@ interface SettingsFormProps {
 
 export const SettingsForm = ({ settings, username }: SettingsFormProps) => {
   const queryClient = useQueryClient();
+  const { user } = useAuth();
   const [colorOpen, setColorOpen] = useState(false);
   const [customLogo, setCustomLogo] = useState<
     (Blob & { preview: string; name: string }) | undefined
@@ -248,7 +251,11 @@ export const SettingsForm = ({ settings, username }: SettingsFormProps) => {
             <UpdateIcon />
           </ImageEmptyIconUpdate>
           <Image
-            src={coverImageUrl ? coverImageUrl : sigleConfig.boringAvatarUrl}
+            src={
+              coverImageUrl
+                ? coverImageUrl
+                : generateAvatar(user?.profile.stxAddress)
+            }
           />
           <input {...getInputProps()} />
           <ImageEmptyIconAdd>

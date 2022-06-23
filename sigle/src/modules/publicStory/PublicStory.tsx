@@ -18,6 +18,8 @@ import { useQuery } from 'react-query';
 import { getSettingsFile } from '../../utils';
 import { toast } from 'react-toastify';
 import * as Sentry from '@sentry/nextjs';
+import { useAuth } from '../auth/AuthContext';
+import { generateAvatar } from '../../utils/boringAvatar';
 
 const ProfileImageContainer = styled('div', {
   display: 'flex',
@@ -92,9 +94,12 @@ const ShareButtonsOnScroll = ({
       }}
     >
       <Box>
-        <Text size="sm" css={{ mt: 0, mb: '$3', color: '$gray11' }}>
+        <Typography
+          size="subheading"
+          css={{ mt: 0, mb: '$3', color: '$gray11' }}
+        >
           Share this story
-        </Text>
+        </Typography>
         <ShareButtons username={username} story={story} settings={settings} />
       </Box>
     </Container>
@@ -107,6 +112,7 @@ interface PublicStoryProps {
 }
 
 export const PublicStory = ({ story, settings }: PublicStoryProps) => {
+  const { user } = useAuth();
   const router = useRouter();
   const { username, storyId } = router.query as {
     username: string;
@@ -126,18 +132,6 @@ export const PublicStory = ({ story, settings }: PublicStoryProps) => {
   const seoTitle = story.metaTitle || `${story.title} | Sigle`;
   const seoDescription = story.metaDescription;
   const seoImage = story.metaImage || story.coverImage;
-
-  const { data: settingsFile } = useQuery(
-    'user-settings',
-    () => getSettingsFile(),
-    {
-      cacheTime: 0,
-      onError: (error: Error) => {
-        Sentry.captureException(error);
-        toast.error(error.message || error);
-      },
-    }
-  );
 
   return (
     <>
@@ -185,9 +179,9 @@ export const PublicStory = ({ story, settings }: PublicStoryProps) => {
               <ProfileImageContainer>
                 <ProfileImage
                   src={
-                    settingsFile?.siteLogo
-                      ? settingsFile.siteLogo
-                      : sigleConfig.boringAvatarUrl
+                    settings?.siteLogo
+                      ? settings.siteLogo
+                      : generateAvatar(user?.profile.stxAddress)
                   }
                 />
               </ProfileImageContainer>
