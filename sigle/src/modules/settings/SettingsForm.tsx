@@ -22,7 +22,6 @@ import {
 import { colors } from '../../utils/colors';
 import { Button } from '../../ui';
 import { darkTheme, styled } from '../../stitches.config';
-import { sigleConfig } from '../../config';
 import { useQueryClient } from 'react-query';
 import { generateAvatar } from '../../utils/boringAvatar';
 import { useAuth } from '../auth/AuthContext';

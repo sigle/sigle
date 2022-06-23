@@ -10,7 +10,7 @@ import { useRouter } from 'next/router';
 import { useState } from 'react';
 import { toast } from 'react-toastify';
 import { signOut } from 'next-auth/react';
-import { useQuery, useQueryClient } from 'react-query';
+import { useQueryClient } from 'react-query';
 import { useTheme } from 'next-themes';
 import { styled } from '../../../stitches.config';
 import {
@@ -40,7 +40,6 @@ import { sigleConfig } from '../../../config';
 import { userSession } from '../../../utils/blockstack';
 import { createSubsetStory } from '../../editor/utils';
 import { StyledChevron } from '../../../ui/Accordion';
-import * as Sentry from '@sentry/nextjs';
 import { generateAvatar } from '../../../utils/boringAvatar';
 import { useGetUserSettings } from '../../../hooks/appData/settings';
 
@@ -49,7 +48,6 @@ const ImageContainer = styled('div', {
   alignItems: 'center',
   justifyContent: 'center',
   overflow: 'hidden',
-  position: 'relative',
   width: 24,
   height: 24,
   br: '$1',
@@ -65,14 +63,6 @@ const Header = styled('header', Container, {
   '@md': {
     mt: '$10',
   },
-});
-
-const StatusDot = styled('div', {
-  backgroundColor: '#37C391',
-  width: '$2',
-  height: '$2',
-  borderRadius: '$round',
-  mr: '$2',
 });
 
 export const AppHeader = () => {

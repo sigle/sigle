@@ -14,10 +14,6 @@ import { AppHeader } from '../layout/components/AppHeader';
 import format from 'date-fns/format';
 import Link from 'next/link';
 import { ShareButtons } from './ShareButtons';
-import { useQuery } from 'react-query';
-import { getSettingsFile } from '../../utils';
-import { toast } from 'react-toastify';
-import * as Sentry from '@sentry/nextjs';
 import { useAuth } from '../auth/AuthContext';
 import { generateAvatar } from '../../utils/boringAvatar';
 
