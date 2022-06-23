@@ -63,6 +63,18 @@ const StatusDot = styled('div', {
 });
 
 export const AppHeader = () => {
+  const { data: settingsFile, isLoading } = useQuery(
+    'user-settings',
+    () => getSettingsFile(),
+    {
+      cacheTime: 0,
+      onError: (error: Error) => {
+        Sentry.captureException(error);
+        toast.error(error.message || error);
+      },
+      refetchInterval: 1000,
+    }
+  );
   const { resolvedTheme, setTheme } = useTheme();
   const { user } = useAuth();
   const router = useRouter();
@@ -111,19 +123,6 @@ export const AppHeader = () => {
     userSession.signUserOut();
     signOut();
   };
-
-  const { data: settingsFile, isLoading } = useQuery(
-    'user-settings',
-    () => getSettingsFile(),
-    {
-      // cacheTime: 0,
-      initialData: undefined,
-      onError: (error: Error) => {
-        Sentry.captureException(error);
-        toast.error(error.message || error);
-      },
-    }
-  );
 
   return (
     <Header>
