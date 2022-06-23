@@ -8,6 +8,8 @@ import { AppHeader } from '../../layout/components/AppHeader';
 import { Box, Container, Flex, Typography } from '../../../ui';
 import { sigleConfig } from '../../../config';
 import { styled } from '../../../stitches.config';
+import { generateAvatar } from '../../../utils/boringAvatar';
+import { useAuth } from '../../auth/AuthContext';
 
 const StyledContainer = styled(Container, {
   pt: '$4',
@@ -25,8 +27,23 @@ const Header = styled('div', {
   mx: 'auto',
 });
 
-const HeaderLogo = styled('img', {
+const HeaderLogoContainer = styled('div', {
+  width: 92,
+  height: 92,
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+  br: '$1',
+  overflow: 'hidden',
   mb: '$4',
+});
+
+const HeaderLogo = styled('img', {
+  width: 'auto',
+  height: '100%',
+  maxWidth: 92,
+  maxHeight: 92,
+  objectFit: 'cover',
 });
 
 const PublicHomeSiteUrl = ({ siteUrl }: { siteUrl: string }) => {
@@ -69,6 +86,7 @@ interface PublicHomeProps {
 }
 
 export const PublicHome = ({ file, settings }: PublicHomeProps) => {
+  const { user } = useAuth();
   const router = useRouter();
   const { username } = router.query as { username: string };
 
@@ -112,9 +130,16 @@ export const PublicHome = ({ file, settings }: PublicHomeProps) => {
       <Container>
         <AppHeader />
         <Header>
-          {settings.siteLogo && (
-            <HeaderLogo src={settings.siteLogo} alt={`${siteName} logo`} />
-          )}
+          <HeaderLogoContainer>
+            <HeaderLogo
+              src={
+                settings.siteLogo
+                  ? settings.siteLogo
+                  : generateAvatar(user?.profile.stxAddress)
+              }
+              alt={`${siteName} logo`}
+            />
+          </HeaderLogoContainer>
           <Typography css={{ fontWeight: 700 }} as="h1" size="h2">
             {siteName}
           </Typography>
