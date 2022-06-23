@@ -63,7 +63,7 @@ const StatusDot = styled('div', {
 });
 
 export const AppHeader = () => {
-  const { data: settingsFile, isLoading } = useQuery(
+  const { data: settingsFile } = useQuery(
     'user-settings',
     () => getSettingsFile(),
     {
@@ -72,7 +72,6 @@ export const AppHeader = () => {
         Sentry.captureException(error);
         toast.error(error.message || error);
       },
-      refetchInterval: 1000,
     }
   );
   const { resolvedTheme, setTheme } = useTheme();

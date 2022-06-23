@@ -23,6 +23,7 @@ import { colors } from '../../utils/colors';
 import { Button } from '../../ui';
 import { darkTheme, styled } from '../../stitches.config';
 import { sigleConfig } from '../../config';
+import { useQueryClient } from 'react-query';
 
 const StyledFormRow = styledC(FormRow)`
   ${tw`xl:w-1/2`};
@@ -120,6 +121,7 @@ interface SettingsFormProps {
 }
 
 export const SettingsForm = ({ settings, username }: SettingsFormProps) => {
+  const queryClient = useQueryClient();
   const [colorOpen, setColorOpen] = useState(false);
   const [customLogo, setCustomLogo] = useState<
     (Blob & { preview: string; name: string }) | undefined
@@ -184,6 +186,7 @@ export const SettingsForm = ({ settings, username }: SettingsFormProps) => {
         setCustomLogo(undefined);
       }
 
+      await queryClient.invalidateQueries('user-settings');
       toast.success('Settings saved');
       setSubmitting(false);
     },
