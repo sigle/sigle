@@ -42,6 +42,17 @@ import { createSubsetStory } from '../../editor/utils';
 import { StyledChevron } from '../../../ui/Accordion';
 import * as Sentry from '@sentry/nextjs';
 
+const ImageContainer = styled('div', {
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+  overflow: 'hidden',
+  position: 'relative',
+  width: 24,
+  height: 24,
+  br: '$1',
+});
+
 const Header = styled('header', Container, {
   display: 'flex',
   alignItems: 'center',
@@ -174,22 +185,23 @@ export const AppHeader = () => {
                 size="lg"
                 variant="ghost"
               >
-                <Box
-                  as="img"
-                  src={
-                    settingsFile?.siteLogo
-                      ? settingsFile.siteLogo
-                      : sigleConfig.boringAvatarUrl
-                  }
-                  css={{
-                    width: 'auto',
-                    height: 'auto',
-                    maxWidth: 24,
-                    maxHeight: 24,
-                    br: '$1',
-                    objectFit: 'contain',
-                  }}
-                />
+                <ImageContainer>
+                  <Box
+                    as="img"
+                    src={
+                      settingsFile?.siteLogo
+                        ? settingsFile.siteLogo
+                        : sigleConfig.boringAvatarUrl
+                    }
+                    css={{
+                      width: 'auto',
+                      height: '100%',
+                      maxWidth: 24,
+                      maxHeight: 24,
+                      objectFit: 'cover',
+                    }}
+                  />
+                </ImageContainer>
                 <Typography size="subheading">{user.username}</Typography>
                 <StyledChevron css={{ color: '$gray11' }} />
               </Button>

@@ -19,6 +19,24 @@ import { getSettingsFile } from '../../utils';
 import { toast } from 'react-toastify';
 import * as Sentry from '@sentry/nextjs';
 
+const ProfileImageContainer = styled('div', {
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+  br: '$1',
+  overflow: 'hidden',
+  width: 48,
+  height: 48,
+});
+
+const ProfileImage = styled('img', {
+  width: 'auto',
+  height: '100%',
+  maxWidth: 48,
+  maxHeight: 48,
+  objectFit: 'cover',
+});
+
 const PublicStoryContainer = styled('div', {
   margin: '0 auto',
   paddingTop: '$15',
@@ -164,15 +182,15 @@ export const PublicStory = ({ story, settings }: PublicStoryProps) => {
         >
           <Link href="/[username]" as={`/${username}`} passHref>
             <Flex as="a" align="center" gap="3">
-              <Box
-                as="img"
-                src={
-                  settingsFile?.siteLogo
-                    ? settingsFile.siteLogo
-                    : sigleConfig.boringAvatarUrl
-                }
-                css={{ width: 48, height: 48, br: '$1' }}
-              />
+              <ProfileImageContainer>
+                <ProfileImage
+                  src={
+                    settingsFile?.siteLogo
+                      ? settingsFile.siteLogo
+                      : sigleConfig.boringAvatarUrl
+                  }
+                />
+              </ProfileImageContainer>
               <Box>
                 <Typography size="subheading">{siteName}</Typography>
                 <Typography

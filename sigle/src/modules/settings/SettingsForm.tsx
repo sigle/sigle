@@ -99,10 +99,10 @@ const ImageEmptyIconUpdate = styled('div', {
 
 const Image = styled('img', {
   width: 'auto',
-  height: 'auto',
+  height: '100%',
   maxWidth: 92,
   maxHeight: 92,
-  objectFit: 'contain',
+  objectFit: 'cover',
   cursor: 'pointer',
 });
 
@@ -225,30 +225,28 @@ export const SettingsForm = ({ settings, username }: SettingsFormProps) => {
         <ImageContainer
           css={{
             '&:hover::before': {
-              opacity: coverImageUrl ? 0.6 : null,
+              opacity: 0.6,
             },
             '&:active::before': {
-              opacity: coverImageUrl ? 0.8 : null,
+              opacity: 0.8,
             },
           }}
           {...getRootProps({ tabIndex: undefined })}
         >
-          {coverImageUrl && (
-            <ImageEmptyIconUpdate
-              css={{
+          <ImageEmptyIconUpdate
+            css={{
+              '& svg': {
+                display: 'none',
+              },
+              '&:hover': {
                 '& svg': {
-                  display: 'none',
+                  display: 'block',
                 },
-                '&:hover': {
-                  '& svg': {
-                    display: 'block',
-                  },
-                },
-              }}
-            >
-              <UpdateIcon />
-            </ImageEmptyIconUpdate>
-          )}
+              },
+            }}
+          >
+            <UpdateIcon />
+          </ImageEmptyIconUpdate>
           <Image
             src={coverImageUrl ? coverImageUrl : sigleConfig.boringAvatarUrl}
           />
