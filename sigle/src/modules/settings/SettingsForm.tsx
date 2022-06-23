@@ -48,7 +48,7 @@ const ImageContainer = styled('div', {
   alignItems: 'center',
   justifyContent: 'center',
   cursor: 'pointer',
-  br: '$3',
+  br: '$4',
   overflow: 'hidden',
   position: 'relative',
   width: 92,

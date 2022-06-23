@@ -33,7 +33,7 @@ const HeaderLogoContainer = styled('div', {
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'center',
-  br: '$1',
+  br: '$4',
   overflow: 'hidden',
   mb: '$4',
 });
