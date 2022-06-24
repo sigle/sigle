@@ -41,7 +41,7 @@ import { userSession } from '../../../utils/blockstack';
 import { createSubsetStory } from '../../editor/utils';
 import { StyledChevron } from '../../../ui/Accordion';
 import { generateAvatar } from '../../../utils/boringAvatar';
-import { useGetUserSettings } from '../../../hooks/appData/settings';
+import { useGetUserSettings } from '../../../hooks/appData';
 
 const ImageContainer = styled('div', {
   display: 'flex',

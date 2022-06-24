@@ -14,8 +14,8 @@ import { AppHeader } from '../layout/components/AppHeader';
 import format from 'date-fns/format';
 import Link from 'next/link';
 import { ShareButtons } from './ShareButtons';
-import { useAuth } from '../auth/AuthContext';
 import { generateAvatar } from '../../utils/boringAvatar';
+import { useGetStacksApiNameInfo } from '../../hooks/stacksApi';
 
 const ProfileImageContainer = styled('div', {
   display: 'flex',
@@ -108,7 +108,6 @@ interface PublicStoryProps {
 }
 
 export const PublicStory = ({ story, settings }: PublicStoryProps) => {
-  const { user } = useAuth();
   const router = useRouter();
   const { username, storyId } = router.query as {
     username: string;
@@ -119,6 +118,7 @@ export const PublicStory = ({ story, settings }: PublicStoryProps) => {
       story.content ? readingTime(getTextFromHtml(story.content)) : undefined,
     [story.content]
   );
+  const { data: stacksApiNameInfo } = useGetStacksApiNameInfo(username);
 
   const siteName = settings.siteName || username;
   const safeSiteColor =
@@ -177,7 +177,7 @@ export const PublicStory = ({ story, settings }: PublicStoryProps) => {
                   src={
                     settings?.siteLogo
                       ? settings.siteLogo
-                      : generateAvatar(user?.profile.stxAddress)
+                      : generateAvatar(stacksApiNameInfo?.address as string)
                   }
                 />
               </ProfileImageContainer>

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useRouter } from 'next/router';
 import { NextSeo } from 'next-seo';
 import { StoryFile, SettingsFile } from '../../../types';
@@ -9,7 +9,7 @@ import { Box, Container, Flex, Typography } from '../../../ui';
 import { sigleConfig } from '../../../config';
 import { styled } from '../../../stitches.config';
 import { generateAvatar } from '../../../utils/boringAvatar';
-import { useAuth } from '../../auth/AuthContext';
+import { useGetStacksApiNameInfo } from '../../../hooks/stacksApi';
 
 const StyledContainer = styled(Container, {
   pt: '$4',
@@ -86,9 +86,9 @@ interface PublicHomeProps {
 }
 
 export const PublicHome = ({ file, settings }: PublicHomeProps) => {
-  const { user } = useAuth();
   const router = useRouter();
   const { username } = router.query as { username: string };
+  const { data: stacksApiNameInfo } = useGetStacksApiNameInfo(username);
 
   const siteName = settings.siteName || username;
   const twitterHandle = settings.siteTwitterHandle;
@@ -135,7 +135,7 @@ export const PublicHome = ({ file, settings }: PublicHomeProps) => {
               src={
                 settings.siteLogo
                   ? settings.siteLogo
-                  : generateAvatar(user?.profile.stxAddress)
+                  : generateAvatar(stacksApiNameInfo?.address as string)
               }
               alt={`${siteName} logo`}
             />
