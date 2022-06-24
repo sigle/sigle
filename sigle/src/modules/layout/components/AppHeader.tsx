@@ -7,7 +7,7 @@ import {
 import Link from 'next/link';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 import { signOut } from 'next-auth/react';
 import { useQueryClient } from 'react-query';
@@ -116,6 +116,9 @@ export const AppHeader = () => {
     signOut();
   };
 
+  const userAddress =
+    user?.profile.stxAddress.mainnet || user?.profile.stxAddress;
+
   return (
     <Header>
       <Flex
@@ -173,7 +176,7 @@ export const AppHeader = () => {
                     src={
                       settings?.siteLogo
                         ? settings.siteLogo
-                        : generateAvatar(user?.profile.stxAddress)
+                        : generateAvatar(userAddress)
                     }
                     css={{
                       width: 'auto',

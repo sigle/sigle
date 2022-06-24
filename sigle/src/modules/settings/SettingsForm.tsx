@@ -220,6 +220,9 @@ export const SettingsForm = ({ settings, username }: SettingsFormProps) => {
     ? customLogo.preview
     : formik.values.siteLogo;
 
+  const userAddress =
+    user?.profile.stxAddress.mainnet || user?.profile.stxAddress;
+
   return (
     <form onSubmit={formik.handleSubmit}>
       <StyledFormRow>
@@ -250,11 +253,7 @@ export const SettingsForm = ({ settings, username }: SettingsFormProps) => {
             <UpdateIcon />
           </ImageEmptyIconUpdate>
           <Image
-            src={
-              coverImageUrl
-                ? coverImageUrl
-                : generateAvatar(user?.profile.stxAddress)
-            }
+            src={coverImageUrl ? coverImageUrl : generateAvatar(userAddress)}
           />
           <input {...getInputProps()} />
           <ImageEmptyIconAdd>
