@@ -1,5 +1,4 @@
 import React from 'react';
-import { useRouter } from 'next/router';
 import { NextSeo } from 'next-seo';
 import { StoryFile, SettingsFile } from '../../../types';
 import { PublicStoryItem } from './PublicStoryItem';
@@ -66,13 +65,11 @@ const PublicHomeSiteUrl = ({ siteUrl }: { siteUrl: string }) => {
 interface PublicHomeProps {
   file: StoryFile;
   settings: SettingsFile;
+  userInfo: { username: string; address: string };
 }
 
-export const PublicHome = ({ file, settings }: PublicHomeProps) => {
-  const router = useRouter();
-  const { username } = router.query as { username: string };
-
-  const siteName = settings.siteName || username;
+export const PublicHome = ({ file, settings, userInfo }: PublicHomeProps) => {
+  const siteName = settings.siteName || userInfo.username;
   const twitterHandle = settings.siteTwitterHandle;
 
   const featuredStoryIndex = file.stories.findIndex((story) => story.featured);
@@ -81,7 +78,7 @@ export const PublicHome = ({ file, settings }: PublicHomeProps) => {
     stories.splice(featuredStoryIndex, 1);
   }
 
-  const seoUrl = `${sigleConfig.appUrl}/${username}`;
+  const seoUrl = `${sigleConfig.appUrl}/${userInfo.username}`;
   const seoTitle = `${siteName} - Sigle`;
   const seoDescription =
     settings.siteDescription?.substring(0, 300) ||
@@ -170,7 +167,7 @@ export const PublicHome = ({ file, settings }: PublicHomeProps) => {
         )}
         {featuredStoryIndex !== -1 && (
           <PublicStoryItem
-            username={username}
+            username={userInfo.username}
             story={file.stories[featuredStoryIndex]}
             settings={settings}
           />
@@ -178,7 +175,7 @@ export const PublicHome = ({ file, settings }: PublicHomeProps) => {
         {stories.map((story) => (
           <PublicStoryItem
             key={story.id}
-            username={username}
+            username={userInfo.username}
             story={story}
             settings={settings}
           />
