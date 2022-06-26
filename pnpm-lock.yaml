@@ -47,6 +47,7 @@ importers:
       '@prisma/client': 3.15.2
       '@sentry/node': 7.2.0
       '@stacks/auth': 4.1.0
+      '@stacks/blockchain-api-client': 4.0.1
       '@stacks/transactions': 4.1.0
       '@types/node': 17.0.31
       '@typescript-eslint/eslint-plugin': 5.20.0
@@ -70,6 +71,7 @@ importers:
       '@prisma/client': 3.15.2_prisma@3.15.2
       '@sentry/node': 7.2.0
       '@stacks/auth': 4.1.0
+      '@stacks/blockchain-api-client': 4.0.1
       '@stacks/transactions': 4.1.0
       date-fns: 2.28.0
       dotenv: 16.0.1
