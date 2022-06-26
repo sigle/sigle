@@ -39,12 +39,14 @@ const StatsChart = ({
     right: 0,
   };
 
-  const tickFormat = (d: any) => {
-    if (type === 'weekly' || type === 'monthly') {
-      return format(d, 'dd/MM');
-    } else {
-      return format(d, 'MMM yyyy');
-    }
+  const tickFormat = (d: Date) => {
+    return format(d, 'dd/MM');
+    // TODO enable this part again once we start having more data in
+    // if (type === 'weekly' || type === 'monthly') {
+    //   return format(d, 'dd/MM');
+    // } else {
+    //   return format(d, 'MMM yyyy');
+    // }
   };
 
   // bounds
@@ -73,7 +75,6 @@ const StatsChart = ({
     return scaleLinear({
       range: [yMax, margin.top],
       domain: [0, maxValue ? maxValue : 10],
-      nice: true,
     });
   }, [yMax, margin.top, data]);
 

@@ -82,6 +82,7 @@ const ShareButtonsOnScroll = ({
 interface PublicStoryProps {
   story: Story;
   settings: SettingsFile;
+  userInfo: { username: string; address: string };
 }
 
 export const PublicStory = ({ story, settings }: PublicStoryProps) => {

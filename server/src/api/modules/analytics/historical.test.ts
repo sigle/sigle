@@ -200,7 +200,7 @@ it('Respond with a formatted time series for months', async () => {
   expect(response.json()).toMatchSnapshot();
   expect(plausibleClient.timeseries).toBeCalledWith({
     dateFrom: '2022-05-01',
-    dateGrouping: 'month',
+    dateGrouping: 'day',
     dateTo: '2022-04-04',
     paths: expect.any(Array),
   });

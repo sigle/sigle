@@ -53,6 +53,6 @@ const plugin: FastifyPluginAsync = async (fastify) => {
 };
 
 export const fastifyAuthPlugin = FastifyPlugin(plugin, {
-  fastify: '3.x',
+  fastify: '4.x',
   name: '@sigle/fastify-auth',
 });

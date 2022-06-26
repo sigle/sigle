@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
 import { getCsrfToken, signIn, useSession } from 'next-auth/react';
+import type { RedirectableProviderType } from 'next-auth/providers';
 import * as Fathom from 'fathom-client';
 import posthog from 'posthog-js';
 import { useConnect } from '@stacks/connect-react';
@@ -11,6 +12,7 @@ import {
   SunIcon,
   ArrowLeftIcon,
 } from '@radix-ui/react-icons';
+import { toast } from 'react-toastify';
 import { Goals } from '../utils/fathom';
 import { Box, Button, Flex, Typography } from '../ui';
 import { LoginLayout } from '../modules/layout/components/LoginLayout';
@@ -52,6 +54,7 @@ const Login = () => {
 
   const handleSignMessage = async () => {
     if (!user) return;
+    // TODO as this can take some time add a loading state to the button
 
     Fathom.trackGoal(Goals.LOGIN_SIGN_MESSAGE, 0);
 
@@ -68,16 +71,21 @@ const Login = () => {
 
     const message = stacksMessage.prepareMessage();
 
-    // TODO handle close modal
-    sign({
+    await sign({
       message,
-      onFinish: ({ signature }) => {
-        signIn('credentials', {
-          message: message,
-          redirect: false,
-          signature,
-          callbackUrl,
-        });
+      onFinish: async ({ signature }) => {
+        const signInResult = await signIn<RedirectableProviderType>(
+          'credentials',
+          {
+            message: message,
+            redirect: false,
+            signature,
+            callbackUrl,
+          }
+        );
+        if (signInResult && signInResult.error) {
+          toast.error('Failed to login');
+        }
       },
     });
   };
