@@ -67,11 +67,12 @@ export const getServerSideProps: GetServerSideProps<
   PublicHomePageProps
 > = async ({ req, res, params }) => {
   const username = params?.username as string;
+
   let file: StoryFile | undefined;
   let settings: SettingsFile | undefined;
   let statusCode: boolean | number = false;
   let errorMessage: string | null = null;
-  let userProfile;
+  let userProfile: undefined | { apps?: Record<string, string> };
   let nameInfo: BnsGetNameInfoResponse | null = null;
   try {
     const stacksNamesApi = new NamesApi();
@@ -118,7 +119,7 @@ export const getServerSideProps: GetServerSideProps<
     ? 'http://localhost:3000'
     : sigleConfig.appUrl;
 
-  const bucketUrl = userProfile && userProfile.apps && userProfile.apps[appUrl];
+  const bucketUrl = userProfile?.apps?.[appUrl];
   // If the user already used the app we try to get the public list
   if (bucketUrl) {
     const [dataPublicStories, dataSettings] = await Promise.all([

@@ -36,5 +36,6 @@ describe('getServerSideProps', () => {
     expect(data.props.errorMessage).toBeNull();
     expect(data.props.file).toBeTruthy();
     expect(data.props.settings).toBeTruthy();
+    expect(data.props.userInfo).toBeTruthy();
   });
 });
