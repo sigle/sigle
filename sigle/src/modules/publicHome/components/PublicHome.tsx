@@ -13,7 +13,6 @@ import {
   useUserFollow,
   useUserUnfollow,
 } from '../../../hooks/appData';
-import { useGetStacksApiNameInfo } from '../../../hooks/stacksApi';
 
 const StyledContainer = styled(Container, {
   pt: '$4',
@@ -80,27 +79,19 @@ export const PublicHome = ({ file, settings, userInfo }: PublicHomeProps) => {
   const { data: userFollowing } = useGetUserFollowing({
     enabled: !!user && userInfo.username !== user.username,
   });
-  const { data: stacksApiNameInfo } = useGetStacksApiNameInfo(
-    userInfo.username,
-    {
-      enabled: !!user && userInfo.username !== user.username,
-    }
-  );
   const { mutate: followUser } = useUserFollow();
   const { mutate: unfollowUser } = useUserUnfollow();
 
   const handleFollow = async () => {
-    if (!userFollowing || !stacksApiNameInfo) return;
-    const address = stacksApiNameInfo.address;
-    followUser({ userFollowing, address });
+    if (!userFollowing) return;
+    followUser({ userFollowing, address: userInfo.address });
   };
 
   const handleUnfollow = async () => {
-    if (!userFollowing || !stacksApiNameInfo) {
+    if (!userFollowing) {
       return;
     }
-    const address = stacksApiNameInfo.address;
-    unfollowUser({ userFollowing, address });
+    unfollowUser({ userFollowing, address: userInfo.address });
   };
 
   const siteName = settings.siteName || userInfo.username;
@@ -120,9 +111,7 @@ export const PublicHome = ({ file, settings, userInfo }: PublicHomeProps) => {
   const seoImage = settings.siteLogo;
 
   const isFollowingUser =
-    userFollowing &&
-    stacksApiNameInfo &&
-    !!userFollowing.following[stacksApiNameInfo.address];
+    userFollowing && !!userFollowing.following[userInfo.address];
 
   return (
     <React.Fragment>
