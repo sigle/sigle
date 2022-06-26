@@ -1,7 +1,11 @@
 import React from 'react';
 import { GetServerSideProps, NextPage } from 'next';
-import { lookupProfile } from '@stacks/auth';
+import { resolveZoneFileToProfile } from '@stacks/profile';
 import * as Sentry from '@sentry/nextjs';
+import {
+  BnsGetNameInfoResponse,
+  NamesApi,
+} from '@stacks/blockchain-api-client';
 import { PublicHome } from '../modules/publicHome';
 import { sigleConfig } from '../config';
 import { StoryFile, SettingsFile } from '../types';
@@ -66,15 +70,17 @@ export const getServerSideProps: GetServerSideProps<
   let statusCode: boolean | number = false;
   let errorMessage: string | null = null;
   let userProfile;
+  let nameInfo: BnsGetNameInfoResponse | null = null;
   try {
-    userProfile = await lookupProfile({ username });
+    const stacksNamesApi = new NamesApi();
+    nameInfo = await stacksNamesApi.getNameInfo({ name: username });
   } catch (error) {
-    // This will happen if there is no blockstack user with this name
-    if (error.message === 'Name not found') {
+    // This will happen if there is no Stacks user with this name
+    if (error.status === 404) {
       statusCode = 404;
     } else {
       statusCode = 500;
-      errorMessage = `Blockstack lookupProfile returned error: ${error.message}`;
+      errorMessage = `Failed to fetch name info: ${error.message}`;
       Sentry.withScope((scope) => {
         scope.setExtras({
           username,
@@ -82,6 +88,24 @@ export const getServerSideProps: GetServerSideProps<
         Sentry.captureException(error);
       });
     }
+  }
+
+  try {
+    if (nameInfo) {
+      userProfile = await resolveZoneFileToProfile(
+        nameInfo.zonefile,
+        nameInfo.address
+      );
+    }
+  } catch (error) {
+    statusCode = 500;
+    errorMessage = `resolveZoneFileToProfile returned error: ${error.message}`;
+    Sentry.withScope((scope) => {
+      scope.setExtras({
+        username,
+      });
+      Sentry.captureException(error);
+    });
   }
 
   // If deployed on vercel we want to get the deployment url to be able to test unmerged pr's
