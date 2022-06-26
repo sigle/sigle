@@ -30,6 +30,7 @@ export const PublicHomePage: NextPage<PublicHomePageProps> = ({
     return <Error statusCode={statusCode} errorMessage={errorMessage} />;
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
   return <PublicHome file={file!} settings={settings!} userInfo={userInfo!} />;
 };
 

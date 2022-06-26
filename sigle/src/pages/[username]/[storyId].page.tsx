@@ -33,6 +33,7 @@ export const PublicStoryPage: NextPage<PublicStoryPageProps> = ({
   }
 
   return (
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     <PublicStory story={file!} settings={settings!} userInfo={userInfo!} />
   );
 };

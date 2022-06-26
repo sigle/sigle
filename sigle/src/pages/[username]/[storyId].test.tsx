@@ -5,12 +5,6 @@ import { getServerSideProps } from './[storyId].page';
 jest.mock('@sentry/nextjs');
 jest.mock('../../modules/publicStory/PublicStory', () => null);
 
-const params = {
-  params: { username: 'usernameTest' },
-  req: { headers: {} },
-  res: {},
-};
-
 describe('getServerSideProps', () => {
   beforeEach(() => {
     jest.clearAllMocks();
