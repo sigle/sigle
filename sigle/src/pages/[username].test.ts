@@ -1,5 +1,4 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-// import { lookupProfile } from '@stacks/auth';
 import * as Sentry from '@sentry/nextjs';
 import { getServerSideProps } from './[username].page';
 

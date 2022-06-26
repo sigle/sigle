@@ -14,8 +14,9 @@ import Error from './_error.page';
 interface PublicHomePageProps {
   statusCode: number | boolean;
   errorMessage: string | null;
-  file: StoryFile;
-  settings: SettingsFile;
+  file?: StoryFile;
+  settings?: SettingsFile;
+  userInfo?: { username: string; address: string };
 }
 
 export const PublicHomePage: NextPage<PublicHomePageProps> = ({
@@ -23,12 +24,13 @@ export const PublicHomePage: NextPage<PublicHomePageProps> = ({
   errorMessage,
   file,
   settings,
+  userInfo,
 }) => {
   if (typeof statusCode === 'number') {
     return <Error statusCode={statusCode} errorMessage={errorMessage} />;
   }
 
-  return <PublicHome file={file} settings={settings} />;
+  return <PublicHome file={file!} settings={settings!} userInfo={userInfo!} />;
 };
 
 const fetchPublicStories = async (bucketUrl: string) => {
@@ -65,8 +67,8 @@ export const getServerSideProps: GetServerSideProps<
   PublicHomePageProps
 > = async ({ req, res, params }) => {
   const username = params?.username as string;
-  let file = null;
-  let settings = null;
+  let file: StoryFile | undefined;
+  let settings: SettingsFile | undefined;
   let statusCode: boolean | number = false;
   let errorMessage: string | null = null;
   let userProfile;
@@ -140,7 +142,13 @@ export const getServerSideProps: GetServerSideProps<
   }
 
   return {
-    props: { statusCode, errorMessage, file, settings },
+    props: {
+      statusCode,
+      errorMessage,
+      file,
+      settings,
+      userInfo: nameInfo ? { address: nameInfo.address, username } : undefined,
+    },
   };
 };
 
