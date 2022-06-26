@@ -1,5 +1,4 @@
 import { FastifyInstance } from 'fastify';
-import { NamesApi } from '@stacks/blockchain-api-client';
 import { prisma } from '../../../prisma';
 
 type GetUserMeResponse = {
@@ -38,16 +37,9 @@ export async function createGetUserMeEndpoint(fastify: FastifyInstance) {
       });
 
       if (!loggedInUser) {
-        const stacksNamesApi = new NamesApi();
-        const userNames = await stacksNamesApi.getNamesOwnedByAddress({
-          address: req.address,
-          blockchain: 'stacks',
-        });
-        const username = userNames.names[0];
         loggedInUser = await prisma.user.create({
           data: {
             stacksAddress: req.address,
-            stacksUsername: username ? username : undefined,
           },
         });
       }
