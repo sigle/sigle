@@ -73,7 +73,7 @@ export async function createSubscriptionCreatorPlusEndpoint(
         return;
       }
 
-      let user = await prisma.user.findUnique({
+      const user = await prisma.user.findUnique({
         where: { stacksAddress: req.address },
       });
       if (!user) {
