@@ -1,5 +1,4 @@
 import React from 'react';
-import { useRouter } from 'next/router';
 import { NextSeo } from 'next-seo';
 import { StoryFile, SettingsFile } from '../../../types';
 import { PublicStoryItem } from './PublicStoryItem';
