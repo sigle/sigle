@@ -121,7 +121,9 @@ export const apiFeed: NextApiHandler = async (req, res) => {
       description: story.content,
       date: new Date(story.createdAt),
       // The url can contains "&", we need to escape it to not have a XML parsing issue.
-      image: story.coverImage ? escapeXml(story.coverImage) : undefined,
+      image: story.coverImage
+        ? encodeURIComponent(escapeXml(story.coverImage))
+        : undefined,
     });
   });
 
