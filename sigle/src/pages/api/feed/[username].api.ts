@@ -7,7 +7,7 @@ import { migrationSettings } from '../../../utils/migrations/settings';
 import { migrationStories } from '../../../utils/migrations/stories';
 
 const escapeXml = (unsafe: string) => {
-  return unsafe.replace(/[<>&'"]/g, (c) => {
+  return unsafe.replace(/[<>&'" ]/g, (c) => {
     switch (c) {
       case '<':
         return '&lt;';
@@ -19,6 +19,8 @@ const escapeXml = (unsafe: string) => {
         return '&apos;';
       case '"':
         return '&quot;';
+      case ' ':
+        return '%20';
       default:
         return c;
     }
@@ -121,9 +123,7 @@ export const apiFeed: NextApiHandler = async (req, res) => {
       description: story.content,
       date: new Date(story.createdAt),
       // The url can contains "&", we need to escape it to not have a XML parsing issue.
-      image: story.coverImage
-        ? encodeURIComponent(escapeXml(story.coverImage))
-        : undefined,
+      image: story.coverImage ? escapeXml(story.coverImage) : undefined,
     });
   });
 
