@@ -7,7 +7,7 @@ import {
 import Link from 'next/link';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { toast } from 'react-toastify';
 import { signOut } from 'next-auth/react';
 import { useQueryClient } from 'react-query';
@@ -28,7 +28,6 @@ import {
 } from '../../../ui';
 import {
   createNewEmptyStory,
-  getSettingsFile,
   getStoriesFile,
   saveStoriesFile,
   saveStoryFile,
