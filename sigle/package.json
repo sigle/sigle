@@ -46,7 +46,7 @@
     "@stacks/profile": "4.1.0",
     "@stacks/storage": "4.1.2",
     "@stacks/transactions": "4.1.0",
-    "@stitches/react": "1.2.7",
+    "@stitches/react": "1.2.8",
     "@tippyjs/react": "4.2.6",
     "@tiptap/core": "2.0.0-beta.174",
     "@tiptap/extension-blockquote": "2.0.0-beta.26",

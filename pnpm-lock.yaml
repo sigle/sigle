@@ -120,7 +120,7 @@ importers:
       '@stacks/profile': 4.1.0
       '@stacks/storage': 4.1.2
       '@stacks/transactions': 4.1.0
-      '@stitches/react': 1.2.7
+      '@stitches/react': 1.2.8
       '@tailwindcss/forms': 0.3.4
       '@tailwindcss/typography': 0.4.1
       '@testing-library/jest-dom': 5.16.2
@@ -244,7 +244,7 @@ importers:
       '@stacks/profile': 4.1.0
       '@stacks/storage': 4.1.2
       '@stacks/transactions': 4.1.0
-      '@stitches/react': 1.2.7_react@17.0.2
+      '@stitches/react': 1.2.8_react@17.0.2
       '@tippyjs/react': 4.2.6_sfoxds7t5ydpegc3knd667wn6m
       '@tiptap/core': 2.0.0-beta.174
       '@tiptap/extension-blockquote': 2.0.0-beta.26_dnmi3l4cmhcjsyva7fhnxwdlza
@@ -2983,8 +2983,8 @@ packages:
     hasBin: true
     dev: false
 
-  /@stitches/react/1.2.7_react@17.0.2:
-    resolution: {integrity: sha512-6AxpUag7OW55ANzRnuy7R15FEyQeZ66fytVo3BBilFIU0mfo3t49CAMcEAL/A1SbhSj/FCdWkn/XrbjGBTJTzg==}
+  /@stitches/react/1.2.8_react@17.0.2:
+    resolution: {integrity: sha512-9g9dWI4gsSVe8bNLlb+lMkBYsnIKCZTmvqvDG+Avnn69XfmHZKiaMrx7cgTaddq7aTPPmXiTsbFcUy0xgI4+wA==}
     peerDependencies:
       react: '>= 16.3.0'
     dependencies:
