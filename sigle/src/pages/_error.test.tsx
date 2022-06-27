@@ -3,9 +3,11 @@ import React from 'react';
 import { render } from '@testing-library/react';
 import * as Sentry from '@sentry/nextjs';
 import { QueryClient, QueryClientProvider } from 'react-query';
+import { useSession } from 'next-auth/react';
 import { MyError } from './_error.page';
 
 jest.mock('@sentry/nextjs');
+jest.mock('next-auth/react');
 
 // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 const getInitialProps = MyError.getInitialProps!;
@@ -13,6 +15,7 @@ const queryClient = new QueryClient();
 
 describe('MyError', () => {
   it('should display statusCode in title', async () => {
+    (useSession as jest.Mock).mockReturnValue({ status: 'unauthenticated' });
     const { getByTestId } = render(
       <QueryClientProvider client={queryClient}>
         <MyError statusCode={404} />
@@ -23,6 +26,7 @@ describe('MyError', () => {
   });
 
   it('should display errorMessage in sub title', async () => {
+    (useSession as jest.Mock).mockReturnValue({ status: 'unauthenticated' });
     const { getByTestId } = render(
       <QueryClientProvider client={queryClient}>
         <MyError statusCode={404} errorMessage="Custom error message" />
@@ -105,6 +109,7 @@ describe('getInitialProps', () => {
 
 describe('Sentry ID', () => {
   it('should display server error Sentry ID', async () => {
+    (useSession as jest.Mock).mockReturnValue({ status: 'unauthenticated' });
     const sentryID = '737H3RJA3RRH237';
     const { getByTestId } = render(
       <QueryClientProvider client={queryClient}>

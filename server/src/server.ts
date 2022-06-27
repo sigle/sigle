@@ -11,6 +11,7 @@ import { redis } from './redis';
 import { fastifyAuthPlugin } from './api/plugins/auth';
 import { createSubscriptionCreatorPlusEndpoint } from './api/modules/subscriptions/creatorPlus';
 import { createGetSubscriptionEndpoint } from './api/modules/subscriptions/getSubscription';
+import { createGetUserMeEndpoint } from './api/modules/users/me';
 
 export const buildFastifyServer = (
   opts: FastifyServerOptions<Server, FastifyLoggerInstance> = {}
@@ -106,6 +107,10 @@ export const buildFastifyServer = (
    * All the protected routes must be placed there.
    */
   fastify.after(() => {
+    /**
+     * Users routes
+     */
+    createGetUserMeEndpoint(fastify);
     /**
      * Subscriptions routes
      */
