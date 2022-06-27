@@ -7,7 +7,7 @@ import { sanitizeHexColor } from '../../utils/security';
 import { sigleConfig } from '../../config';
 import { TipTapEditor } from '../editor/TipTapEditor';
 import { styled } from '../../stitches.config';
-import { Box, Container, Flex, Text, Typography } from '../../ui';
+import { Box, Container, Flex, Typography } from '../../ui';
 import { PoweredBy } from './PoweredBy';
 import { getTextFromHtml } from '../editor/utils/getTextFromHtml';
 import { AppHeader } from '../layout/components/AppHeader';
@@ -15,7 +15,6 @@ import format from 'date-fns/format';
 import Link from 'next/link';
 import { ShareButtons } from './ShareButtons';
 import { generateAvatar } from '../../utils/boringAvatar';
-import { useGetStacksApiNameInfo } from '../../hooks/stacksApi';
 
 const ProfileImageContainer = styled('div', {
   display: 'flex',
@@ -108,7 +107,11 @@ interface PublicStoryProps {
   userInfo: { username: string; address: string };
 }
 
-export const PublicStory = ({ story, settings }: PublicStoryProps) => {
+export const PublicStory = ({
+  story,
+  settings,
+  userInfo,
+}: PublicStoryProps) => {
   const router = useRouter();
   const { username, storyId } = router.query as {
     username: string;
@@ -119,7 +122,6 @@ export const PublicStory = ({ story, settings }: PublicStoryProps) => {
       story.content ? readingTime(getTextFromHtml(story.content)) : undefined,
     [story.content]
   );
-  const { data: stacksApiNameInfo } = useGetStacksApiNameInfo(username);
 
   const siteName = settings.siteName || username;
   const safeSiteColor =
@@ -178,7 +180,7 @@ export const PublicStory = ({ story, settings }: PublicStoryProps) => {
                   src={
                     settings?.siteLogo
                       ? settings.siteLogo
-                      : generateAvatar(stacksApiNameInfo?.address as string)
+                      : generateAvatar(userInfo.address)
                   }
                 />
               </ProfileImageContainer>
