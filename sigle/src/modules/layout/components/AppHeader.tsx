@@ -9,7 +9,7 @@ import Image from 'next/image';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
 import { toast } from 'react-toastify';
-import { signOut } from 'next-auth/react';
+import { signOut, useSession } from 'next-auth/react';
 import { useQueryClient } from 'react-query';
 import { useTheme } from 'next-themes';
 import { styled } from '../../../stitches.config';
@@ -41,6 +41,7 @@ import { createSubsetStory } from '../../editor/utils';
 import { StyledChevron } from '../../../ui/Accordion';
 import { generateAvatar } from '../../../utils/boringAvatar';
 import { useGetUserSettings } from '../../../hooks/appData';
+import { useGetUserMe } from '../../../hooks/users';
 
 const ImageContainer = styled('div', {
   display: 'flex',
@@ -68,9 +69,20 @@ export const AppHeader = () => {
   const { data: settings } = useGetUserSettings();
   const { resolvedTheme, setTheme } = useTheme();
   const { user } = useAuth();
+  const { status } = useSession();
   const router = useRouter();
   const queryClient = useQueryClient();
   const [loadingCreate, setLoadingCreate] = useState(false);
+
+  /**
+   * This query is used to register the user in the DB. As the header is part of all the
+   * pages we know this query will run before any operation.
+   */
+  useGetUserMe({
+    enabled: status === 'authenticated',
+    staleTime: 0,
+    refetchOnMount: false,
+  });
 
   const toggleTheme = () => {
     resolvedTheme === 'dark' ? setTheme('light') : setTheme('dark');
