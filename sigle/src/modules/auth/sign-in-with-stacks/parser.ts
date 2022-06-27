@@ -4,7 +4,7 @@ import { validateStacksAddress } from '@stacks/transactions';
 
 const DOMAIN =
   '(?<domain>([^?#]*)) wants you to sign in with your Stacks account:';
-const ADDRESS = '\\n(?<address>S[A-Z0-9]{40})\\n\\n';
+const ADDRESS = '\\n(?<address>S[A-Z0-9]{39,40})\\n\\n';
 const STATEMENT = '((?<statement>[^\\n]+)\\n)?';
 const URI = '(([^:?#]+):)?(([^?#]*))?([^?#]*)(\\?([^#]*))?(#(.*))?';
 const URI_LINE = `\\nURI: (?<uri>${URI}?)`;

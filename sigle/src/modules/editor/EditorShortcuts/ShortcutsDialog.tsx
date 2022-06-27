@@ -12,6 +12,11 @@ import { styled } from '../../../stitches.config';
 import { KeyboardIcon } from '@radix-ui/react-icons';
 import { HintsCarousel } from './HintsCarousel';
 
+interface ShortcutsDialogProps {
+  open: boolean;
+  onOpenChange: () => void;
+}
+
 const essentials = [
   {
     action: 'Copy',
@@ -223,14 +228,12 @@ const Kbd = styled('kbd', {
   fontSize: '$2',
 });
 
-export const ShortcutsDialog = () => {
+export const ShortcutsDialog = ({
+  open,
+  onOpenChange,
+}: ShortcutsDialogProps) => {
   return (
-    <Dialog>
-      <DialogTrigger asChild>
-        <IconButton aria-label="Open keyboard shortcuts and hints">
-          <KeyboardIcon />
-        </IconButton>
-      </DialogTrigger>
+    <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent
         css={{
           backgroundColor: '$gray1',

@@ -1,5 +1,4 @@
-import React, { useEffect } from 'react';
-import { useRouter } from 'next/router';
+import React from 'react';
 import { NextSeo } from 'next-seo';
 import { StoryFile, SettingsFile } from '../../../types';
 import { PublicStoryItem } from './PublicStoryItem';
@@ -9,7 +8,6 @@ import { Box, Container, Flex, Typography } from '../../../ui';
 import { sigleConfig } from '../../../config';
 import { styled } from '../../../stitches.config';
 import { generateAvatar } from '../../../utils/boringAvatar';
-import { useGetStacksApiNameInfo } from '../../../hooks/stacksApi';
 
 const StyledContainer = styled(Container, {
   pt: '$4',
@@ -83,14 +81,11 @@ const PublicHomeSiteUrl = ({ siteUrl }: { siteUrl: string }) => {
 interface PublicHomeProps {
   file: StoryFile;
   settings: SettingsFile;
+  userInfo: { username: string; address: string };
 }
 
-export const PublicHome = ({ file, settings }: PublicHomeProps) => {
-  const router = useRouter();
-  const { username } = router.query as { username: string };
-  const { data: stacksApiNameInfo } = useGetStacksApiNameInfo(username);
-
-  const siteName = settings.siteName || username;
+export const PublicHome = ({ file, settings, userInfo }: PublicHomeProps) => {
+  const siteName = settings.siteName || userInfo.username;
   const twitterHandle = settings.siteTwitterHandle;
 
   const featuredStoryIndex = file.stories.findIndex((story) => story.featured);
@@ -99,7 +94,7 @@ export const PublicHome = ({ file, settings }: PublicHomeProps) => {
     stories.splice(featuredStoryIndex, 1);
   }
 
-  const seoUrl = `${sigleConfig.appUrl}/${username}`;
+  const seoUrl = `${sigleConfig.appUrl}/${userInfo.username}`;
   const seoTitle = `${siteName} - Sigle`;
   const seoDescription =
     settings.siteDescription?.substring(0, 300) ||
@@ -135,7 +130,7 @@ export const PublicHome = ({ file, settings }: PublicHomeProps) => {
               src={
                 settings.siteLogo
                   ? settings.siteLogo
-                  : generateAvatar(stacksApiNameInfo?.address as string)
+                  : generateAvatar(userInfo.address)
               }
               alt={`${siteName} logo`}
             />
@@ -195,7 +190,7 @@ export const PublicHome = ({ file, settings }: PublicHomeProps) => {
         )}
         {featuredStoryIndex !== -1 && (
           <PublicStoryItem
-            username={username}
+            username={userInfo.username}
             story={file.stories[featuredStoryIndex]}
             settings={settings}
           />
@@ -203,7 +198,7 @@ export const PublicHome = ({ file, settings }: PublicHomeProps) => {
         {stories.map((story) => (
           <PublicStoryItem
             key={story.id}
-            username={username}
+            username={userInfo.username}
             story={story}
             settings={settings}
           />

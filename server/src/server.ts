@@ -72,7 +72,7 @@ export const buildFastifyServer = (
     }
 
     Sentry.withScope((scope) => {
-      scope.setLevel(Sentry.Severity.Error);
+      scope.setLevel('error');
       scope.setTag('path', request.url);
       scope.setExtra('headers', request.headers);
       if (request.address) {
