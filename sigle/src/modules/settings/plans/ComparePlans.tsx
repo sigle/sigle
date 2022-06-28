@@ -287,7 +287,7 @@ export const ComparePlans = () => {
               >
                 <Flex gap="10" justify="between" align="center">
                   <Typography size="subheading">{feature.name}</Typography>
-                  <Tooltip>
+                  <Tooltip delayDuration={100}>
                     <TooltipTrigger>
                       <QuestionMarkCircledIcon />
                     </TooltipTrigger>
