@@ -154,33 +154,33 @@ export const SettingsForm = ({ settings, username }: SettingsFormProps) => {
       setUnsavedChanges(false);
 
       if (values.siteName && values.siteName !== settings.siteName) {
-        checkUnsavedChanges();
+        setUnsavedChanges(true);
       }
 
       if (
         values.siteDescription &&
         values.siteDescription !== settings.siteDescription
       ) {
-        checkUnsavedChanges();
+        setUnsavedChanges(true);
       }
 
       if (values.siteLogo && values.siteLogo !== settings.siteLogo) {
-        checkUnsavedChanges();
+        setUnsavedChanges(true);
       }
 
       if (values.siteUrl && values.siteUrl !== settings.siteUrl) {
-        checkUnsavedChanges();
+        setUnsavedChanges(true);
       }
 
       if (
         values.siteTwitterHandle &&
         values.siteTwitterHandle !== settings.siteTwitterHandle
       ) {
-        checkUnsavedChanges();
+        setUnsavedChanges(true);
       }
 
       if (values.siteColor && values.siteColor !== settings.siteColor) {
-        checkUnsavedChanges();
+        setUnsavedChanges(true);
       }
 
       if (values.siteName && values.siteName.length > 50) {
@@ -238,14 +238,6 @@ export const SettingsForm = ({ settings, username }: SettingsFormProps) => {
       setSubmitting(false);
     },
   });
-
-  const checkUnsavedChanges = () => {
-    if (unsavedChanges) {
-      return;
-    }
-
-    setUnsavedChanges(true);
-  };
 
   const onDrop = useCallback(async (acceptedFiles: File[]) => {
     const file = acceptedFiles[0];
