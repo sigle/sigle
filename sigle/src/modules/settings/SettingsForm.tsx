@@ -1,6 +1,4 @@
 import React, { useState, useCallback } from 'react';
-import styledC, { css } from 'styled-components';
-import tw from 'twin.macro';
 import { toast } from 'react-toastify';
 import { useFormik, FormikErrors } from 'formik';
 import { useDropzone } from 'react-dropzone';
@@ -20,20 +18,41 @@ import {
   FormHelper,
 } from '../../ui/Form';
 import { colors } from '../../utils/colors';
-import { Button } from '../../ui';
+import { Box, Button, Flex, Typography } from '../../ui';
 import { darkTheme, styled } from '../../stitches.config';
 import { useQueryClient } from 'react-query';
 import { generateAvatar } from '../../utils/boringAvatar';
 import { useAuth } from '../auth/AuthContext';
 
-const FormColor = styledC.div<{ color: string }>`
-  ${tw`py-2 text-white rounded cursor-pointer relative inline-block text-center`};
-  width: 170px;
-  ${(props) =>
-    css`
-      background-color: ${props.color};
-    `}
-`;
+const UnsavedChangesContainer = styled('div', {
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'space-between',
+  br: '$2',
+  boxShadow:
+    '0px 8px 20px rgba(8, 8, 8, 0.06), 0px 10px 18px rgba(8, 8, 8, 0.04), 0px 5px 14px rgba(8, 8, 8, 0.04), 0px 3px 8px rgba(8, 8, 8, 0.04), 0px 1px 5px rgba(8, 8, 8, 0.03), 0px 1px 2px rgba(8, 8, 8, 0.02), 0px 0.2px 1px rgba(8, 8, 8, 0.01)',
+  position: 'sticky',
+  bottom: '$5',
+  px: '$5',
+  py: '$3',
+  overflow: 'hidden',
+
+  [`.${darkTheme} &`]: {
+    boxShadow:
+      '0px 8px 20px rgba(8, 8, 8, 0.4), 0px 10px 18px rgba(8, 8, 8, 0.35), 0px 5px 14px rgba(8, 8, 8, 0.3), 0px 3px 8px rgba(8, 8, 8, 0.2), 0px 1px 5px rgba(8, 8, 8, 0.18), 0px 1px 2px rgba(8, 8, 8, 0.16), 0px 0.2px 1px rgba(8, 8, 8, 0.08)',
+  },
+});
+
+const FormColor = styled('div', {
+  py: '$1',
+  color: 'white',
+  br: '$1',
+  cursor: 'pointer',
+  position: 'relative',
+  display: 'inline-block',
+  textAlign: 'center',
+  width: 150,
+});
 
 const ImageContainer = styled('div', {
   display: 'flex',
@@ -116,6 +135,7 @@ interface SettingsFormProps {
 export const SettingsForm = ({ settings, username }: SettingsFormProps) => {
   const queryClient = useQueryClient();
   const { user } = useAuth();
+  const [unsavedChanges, setUnsavedChanges] = useState(false);
   const [colorOpen, setColorOpen] = useState(false);
   const [customLogo, setCustomLogo] = useState<
     (Blob & { preview: string; name: string }) | undefined
@@ -131,6 +151,38 @@ export const SettingsForm = ({ settings, username }: SettingsFormProps) => {
     },
     validate: (values) => {
       const errors: FormikErrors<SettingsFormValues> = {};
+      setUnsavedChanges(false);
+
+      if (values.siteName && values.siteName !== settings.siteName) {
+        checkUnsavedChanges();
+      }
+
+      if (
+        values.siteDescription &&
+        values.siteDescription !== settings.siteDescription
+      ) {
+        checkUnsavedChanges();
+      }
+
+      if (values.siteLogo && values.siteLogo !== settings.siteLogo) {
+        checkUnsavedChanges();
+      }
+
+      if (values.siteUrl && values.siteUrl !== settings.siteUrl) {
+        checkUnsavedChanges();
+      }
+
+      if (
+        values.siteTwitterHandle &&
+        values.siteTwitterHandle !== settings.siteTwitterHandle
+      ) {
+        checkUnsavedChanges();
+      }
+
+      if (values.siteColor && values.siteColor !== settings.siteColor) {
+        checkUnsavedChanges();
+      }
+
       if (values.siteName && values.siteName.length > 50) {
         errors.siteName = 'Name too long';
       }
@@ -180,11 +232,20 @@ export const SettingsForm = ({ settings, username }: SettingsFormProps) => {
         setCustomLogo(undefined);
       }
 
+      setUnsavedChanges(false);
       await queryClient.invalidateQueries('user-settings');
       toast.success('Settings saved');
       setSubmitting(false);
     },
   });
+
+  const checkUnsavedChanges = () => {
+    if (unsavedChanges) {
+      return;
+    }
+
+    setUnsavedChanges(true);
+  };
 
   const onDrop = useCallback(async (acceptedFiles: File[]) => {
     const file = acceptedFiles[0];
@@ -324,7 +385,7 @@ export const SettingsForm = ({ settings, username }: SettingsFormProps) => {
       <FormRow>
         <FormLabel>Primary color</FormLabel>
         <FormColor
-          color={formik.values.siteColor || colors.pink}
+          css={{ backgroundColor: formik.values.siteColor || colors.pink }}
           onClick={() => setColorOpen(true)}
         >
           {formik.values.siteColor || colors.pink}
@@ -358,16 +419,32 @@ export const SettingsForm = ({ settings, username }: SettingsFormProps) => {
           <FormHelperError>{formik.errors.siteColor}</FormHelperError>
         )}
       </FormRow>
-
-      <Button
-        css={{ mt: '$5' }}
-        disabled={formik.isSubmitting}
-        type="submit"
-        size="lg"
-        color="orange"
-      >
-        {formik.isSubmitting ? 'Saving...' : 'Save Settings'}
-      </Button>
+      {unsavedChanges && (
+        <UnsavedChangesContainer>
+          <Box
+            css={{
+              position: 'absolute',
+              width: '100%',
+              height: '100%',
+              left: 0,
+              zIndex: -1,
+              backgroundColor: '$gray1',
+              opacity: 0.95,
+            }}
+          />
+          <Typography size="subheading" css={{ fontWeight: 600 }}>
+            You have unsaved changes
+          </Typography>
+          <Button
+            disabled={formik.isSubmitting}
+            type="submit"
+            size="md"
+            color="orange"
+          >
+            {formik.isSubmitting ? 'Saving...' : 'Save changes'}
+          </Button>
+        </UnsavedChangesContainer>
+      )}
     </form>
   );
 };
