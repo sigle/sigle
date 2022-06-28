@@ -175,7 +175,7 @@ export const AppHeader = () => {
         align="center"
         gap="10"
       >
-        {isExperimentalFollowEnabled ? (
+        {isExperimentalFollowEnabled && user ? (
           <Link href="/feed" passHref>
             <Button variant="ghost" as="a">
               Feed
