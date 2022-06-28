@@ -153,17 +153,17 @@ export const PublicHome = ({ file, settings, userInfo }: PublicHomeProps) => {
       <Container>
         <AppHeader />
         <Header>
+          <HeaderLogoContainer>
+            <HeaderLogo
+              src={
+                settings.siteLogo
+                  ? settings.siteLogo
+                  : generateAvatar(userInfo.address)
+              }
+              alt={`${siteName} logo`}
+            />
+          </HeaderLogoContainer>
           <Flex align="center">
-            <HeaderLogoContainer>
-              <HeaderLogo
-                src={
-                  settings.siteLogo
-                    ? settings.siteLogo
-                    : generateAvatar(userInfo.address)
-                }
-                alt={`${siteName} logo`}
-              />
-            </HeaderLogoContainer>
             <Typography css={{ fontWeight: 700 }} as="h1" size="h2">
               {siteName}
             </Typography>
