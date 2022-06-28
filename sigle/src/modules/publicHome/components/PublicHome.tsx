@@ -1,13 +1,20 @@
 import React from 'react';
 import { NextSeo } from 'next-seo';
 import { StoryFile, SettingsFile } from '../../../types';
-import { PublicStoryItem } from './PublicStoryItem';
 import { PoweredBy } from '../../publicStory/PoweredBy';
 import { AppHeader } from '../../layout/components/AppHeader';
-import { Box, Container, Flex, Typography } from '../../../ui';
+import { Box, Button, Container, Flex, Typography } from '../../../ui';
 import { sigleConfig } from '../../../config';
 import { styled } from '../../../stitches.config';
+import { useAuth } from '../../auth/AuthContext';
+import {
+  useGetUserFollowing,
+  useUserFollow,
+  useUserUnfollow,
+} from '../../../hooks/appData';
 import { generateAvatar } from '../../../utils/boringAvatar';
+import { useFeatureFlags } from '../../../utils/featureFlags';
+import { StoryCard } from '../../storyCard/StoryCard';
 
 const StyledContainer = styled(Container, {
   pt: '$4',
@@ -85,6 +92,26 @@ interface PublicHomeProps {
 }
 
 export const PublicHome = ({ file, settings, userInfo }: PublicHomeProps) => {
+  const { user } = useAuth();
+  const { isExperimentalFollowEnabled } = useFeatureFlags();
+  const { data: userFollowing } = useGetUserFollowing({
+    enabled: !!user && userInfo.username !== user.username,
+  });
+  const { mutate: followUser } = useUserFollow();
+  const { mutate: unfollowUser } = useUserUnfollow();
+
+  const handleFollow = async () => {
+    if (!userFollowing) return;
+    followUser({ userFollowing, address: userInfo.address });
+  };
+
+  const handleUnfollow = async () => {
+    if (!userFollowing) {
+      return;
+    }
+    unfollowUser({ userFollowing, address: userInfo.address });
+  };
+
   const siteName = settings.siteName || userInfo.username;
   const twitterHandle = settings.siteTwitterHandle;
 
@@ -100,6 +127,9 @@ export const PublicHome = ({ file, settings, userInfo }: PublicHomeProps) => {
     settings.siteDescription?.substring(0, 300) ||
     `Read stories from ${siteName} on Sigle, decentralised and open-source platform for Web3 writers`;
   const seoImage = settings.siteLogo;
+
+  const isFollowingUser =
+    userFollowing && !!userFollowing.following[userInfo.address];
 
   return (
     <React.Fragment>
@@ -135,9 +165,33 @@ export const PublicHome = ({ file, settings, userInfo }: PublicHomeProps) => {
               alt={`${siteName} logo`}
             />
           </HeaderLogoContainer>
-          <Typography css={{ fontWeight: 700 }} as="h1" size="h2">
-            {siteName}
-          </Typography>
+          <Flex align="center">
+            <Typography css={{ fontWeight: 700 }} as="h1" size="h2">
+              {siteName}
+            </Typography>
+            {isExperimentalFollowEnabled &&
+            user &&
+            user.username !== userInfo.username &&
+            userFollowing ? (
+              !isFollowingUser ? (
+                <Button
+                  color="orange"
+                  css={{ ml: '$5' }}
+                  onClick={handleFollow}
+                >
+                  Follow
+                </Button>
+              ) : (
+                <Button
+                  variant="subtle"
+                  css={{ ml: '$5' }}
+                  onClick={handleUnfollow}
+                >
+                  Unfollow
+                </Button>
+              )
+            ) : null}
+          </Flex>
           {settings.siteDescription &&
             settings.siteDescription.split('\n').map((text, index) => (
               <Typography
@@ -189,16 +243,17 @@ export const PublicHome = ({ file, settings, userInfo }: PublicHomeProps) => {
           </Typography>
         )}
         {featuredStoryIndex !== -1 && (
-          <PublicStoryItem
-            username={userInfo.username}
+          <StoryCard
+            userInfo={userInfo}
             story={file.stories[featuredStoryIndex]}
             settings={settings}
+            featured
           />
         )}
         {stories.map((story) => (
-          <PublicStoryItem
+          <StoryCard
             key={story.id}
-            username={userInfo.username}
+            userInfo={userInfo}
             story={story}
             settings={settings}
           />

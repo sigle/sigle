@@ -1,9 +1,12 @@
 import React from 'react';
 import { render } from '@testing-library/react';
-import { PublicStoryItem } from './PublicStoryItem';
-import { SubsetStory } from '../../../types';
+import { StoryCard } from './StoryCard';
+import { SubsetStory } from '../../types';
 
-const username = 'sigleapp.id.blockstack';
+const userInfo = {
+  username: 'sigleapp.id.blockstack',
+  address: 'SPXXXX',
+};
 const story: SubsetStory = {
   id: 'Qk5y5A0yvSXOwIbB6SlMc',
   title: 'Introducing Meta Data',
@@ -18,7 +21,7 @@ const settings = {};
 describe('PublicStoryItem', () => {
   it('should display the subset story', async () => {
     const { getByTestId } = render(
-      <PublicStoryItem username={username} story={story} settings={settings} />
+      <StoryCard userInfo={userInfo} story={story} settings={settings} />
     );
 
     expect(getByTestId('story-title')).toHaveTextContent(story.title);
@@ -28,8 +31,8 @@ describe('PublicStoryItem', () => {
 
   it('should display cover image', async () => {
     const { getByTestId } = render(
-      <PublicStoryItem
-        username={username}
+      <StoryCard
+        userInfo={userInfo}
         story={{ ...story, coverImage: 'https://i.goopics.net/9OW4l.jpg' }}
         settings={settings}
       />
