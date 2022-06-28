@@ -14,6 +14,7 @@ import {
   useUserUnfollow,
 } from '../../../hooks/appData';
 import { generateAvatar } from '../../../utils/boringAvatar';
+import { useFeatureFlags } from '../../../utils/featureFlags';
 
 const StyledContainer = styled(Container, {
   pt: '$4',
@@ -92,6 +93,7 @@ interface PublicHomeProps {
 
 export const PublicHome = ({ file, settings, userInfo }: PublicHomeProps) => {
   const { user } = useAuth();
+  const { isExperimentalFollowEnabled } = useFeatureFlags();
   const { data: userFollowing } = useGetUserFollowing({
     enabled: !!user && userInfo.username !== user.username,
   });
@@ -167,7 +169,10 @@ export const PublicHome = ({ file, settings, userInfo }: PublicHomeProps) => {
             <Typography css={{ fontWeight: 700 }} as="h1" size="h2">
               {siteName}
             </Typography>
-            {user && user.username !== userInfo.username && userFollowing ? (
+            {isExperimentalFollowEnabled &&
+            user &&
+            user.username !== userInfo.username &&
+            userFollowing ? (
               !isFollowingUser ? (
                 <Button
                   color="orange"

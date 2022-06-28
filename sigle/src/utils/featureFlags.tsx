@@ -2,13 +2,17 @@ import { createContext, useContext, useEffect, useState } from 'react';
 
 const experimentalAnalyticsPageKey = 'sigle-experimental-analytics-page';
 const experimentalAnalyticsParam = 'experimentalAnalyticsPage';
+const experimentalFollowKey = 'sigle-experimental-follow';
+const experimentalFollowParam = 'experimentalFollow';
 
 interface FeatureFlagsOptions {
   isExperimentalAnalyticsPageEnabled: boolean;
+  isExperimentalFollowEnabled: boolean;
 }
 
 const FeatureFlagsContext = createContext<FeatureFlagsOptions>({
   isExperimentalAnalyticsPageEnabled: false,
+  isExperimentalFollowEnabled: false,
 });
 
 interface FeatureFlagsProviderProps {
@@ -18,6 +22,7 @@ interface FeatureFlagsProviderProps {
 export function FeatureFlagsProvider({ children }: FeatureFlagsProviderProps) {
   const [featureToggles, setFeatureToggles] = useState<FeatureFlagsOptions>({
     isExperimentalAnalyticsPageEnabled: false,
+    isExperimentalFollowEnabled: false,
   });
 
   /**
@@ -27,6 +32,8 @@ export function FeatureFlagsProvider({ children }: FeatureFlagsProviderProps) {
   useEffect(() => {
     let isExperimentalAnalyticsPageEnabled =
       localStorage.getItem(experimentalAnalyticsPageKey) === 'true';
+    let isExperimentalFollowEnabled =
+      localStorage.getItem(experimentalFollowKey) === 'true';
 
     // Enable feature flags from the url params
     const query = new URL(window.location.href).searchParams;
@@ -36,9 +43,14 @@ export function FeatureFlagsProvider({ children }: FeatureFlagsProviderProps) {
       localStorage.setItem(experimentalAnalyticsPageKey, 'true');
       isExperimentalAnalyticsPageEnabled = true;
     }
+    if (entries[experimentalFollowParam] === 'true') {
+      localStorage.setItem(experimentalFollowKey, 'true');
+      isExperimentalFollowEnabled = true;
+    }
 
     setFeatureToggles({
       isExperimentalAnalyticsPageEnabled,
+      isExperimentalFollowEnabled,
     });
   }, []);
 
