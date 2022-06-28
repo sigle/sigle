@@ -16,9 +16,9 @@ import { sigleConfig } from '../../config';
 interface PublicStoryPageProps {
   statusCode: number | boolean;
   errorMessage: string | null;
-  file?: Story;
-  settings?: SettingsFile;
-  userInfo?: { username: string; address: string };
+  file: Story | null;
+  settings: SettingsFile | null;
+  userInfo: { username: string; address: string } | null;
 }
 
 export const PublicStoryPage: NextPage<PublicStoryPageProps> = ({
@@ -76,8 +76,8 @@ export const getServerSideProps: GetServerSideProps<
   const username = params?.username as string;
   const storyId = params?.storyId as string;
 
-  let file: Story | undefined;
-  let settings: SettingsFile | undefined;
+  let file: Story | null = null;
+  let settings: SettingsFile | null = null;
   let statusCode: boolean | number = false;
   let errorMessage: string | null = null;
   let userProfile: undefined | { apps?: Record<string, string> };
@@ -204,7 +204,7 @@ export const getServerSideProps: GetServerSideProps<
       errorMessage,
       file,
       settings,
-      userInfo: nameInfo ? { address: nameInfo.address, username } : undefined,
+      userInfo: nameInfo ? { address: nameInfo.address, username } : null,
     },
   };
 };

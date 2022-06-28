@@ -73,15 +73,11 @@ export async function createSubscriptionCreatorPlusEndpoint(
         return;
       }
 
-      let user = await prisma.user.findUnique({
+      const user = await prisma.user.findUnique({
         where: { stacksAddress: req.address },
       });
-      // For now we create the user when they enable their subscription.
-      // Later this part will be moved on login after beta testing is done.
       if (!user) {
-        user = await prisma.user.create({
-          data: { stacksAddress: req.address },
-        });
+        throw new Error(`User not found for address ${req.address}`);
       }
 
       const activeSubscription = await prisma.subscription.findFirst({

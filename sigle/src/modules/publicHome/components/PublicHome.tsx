@@ -13,6 +13,7 @@ import {
   useUserFollow,
   useUserUnfollow,
 } from '../../../hooks/appData';
+import { generateAvatar } from '../../../utils/boringAvatar';
 
 const StyledContainer = styled(Container, {
   pt: '$4',
@@ -30,8 +31,23 @@ const Header = styled('div', {
   mx: 'auto',
 });
 
-const HeaderLogo = styled('img', {
+const HeaderLogoContainer = styled('div', {
+  width: 92,
+  height: 92,
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+  br: '$4',
+  overflow: 'hidden',
   mb: '$4',
+});
+
+const HeaderLogo = styled('img', {
+  width: 'auto',
+  height: '100%',
+  maxWidth: 92,
+  maxHeight: 92,
+  objectFit: 'cover',
 });
 
 const PublicHomeSiteUrl = ({ siteUrl }: { siteUrl: string }) => {
@@ -141,6 +157,16 @@ export const PublicHome = ({ file, settings, userInfo }: PublicHomeProps) => {
             <HeaderLogo src={settings.siteLogo} alt={`${siteName} logo`} />
           )}
           <Flex align="center">
+            <HeaderLogoContainer>
+              <HeaderLogo
+                src={
+                  settings.siteLogo
+                    ? settings.siteLogo
+                    : generateAvatar(userInfo.address)
+                }
+                alt={`${siteName} logo`}
+              />
+            </HeaderLogoContainer>
             <Typography css={{ fontWeight: 700 }} as="h1" size="h2">
               {siteName}
             </Typography>

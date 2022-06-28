@@ -9,7 +9,7 @@ import Image from 'next/image';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
 import { toast } from 'react-toastify';
-import { signOut } from 'next-auth/react';
+import { signOut, useSession } from 'next-auth/react';
 import { useQueryClient } from 'react-query';
 import { useTheme } from 'next-themes';
 import { styled } from '../../../stitches.config';
@@ -39,6 +39,19 @@ import { sigleConfig } from '../../../config';
 import { userSession } from '../../../utils/blockstack';
 import { createSubsetStory } from '../../editor/utils';
 import { StyledChevron } from '../../../ui/Accordion';
+import { generateAvatar } from '../../../utils/boringAvatar';
+import { useGetUserSettings } from '../../../hooks/appData';
+import { useGetUserMe } from '../../../hooks/users';
+
+const ImageContainer = styled('div', {
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+  overflow: 'hidden',
+  width: 24,
+  height: 24,
+  br: '$1',
+});
 
 const Header = styled('header', Container, {
   display: 'flex',
@@ -52,20 +65,24 @@ const Header = styled('header', Container, {
   },
 });
 
-const StatusDot = styled('div', {
-  backgroundColor: '#37C391',
-  width: '$2',
-  height: '$2',
-  borderRadius: '$round',
-  mr: '$2',
-});
-
 export const AppHeader = () => {
+  const { data: settings } = useGetUserSettings();
   const { resolvedTheme, setTheme } = useTheme();
   const { user } = useAuth();
+  const { status } = useSession();
   const router = useRouter();
   const queryClient = useQueryClient();
   const [loadingCreate, setLoadingCreate] = useState(false);
+
+  /**
+   * This query is used to register the user in the DB. As the header is part of all the
+   * pages we know this query will run before any operation.
+   */
+  useGetUserMe({
+    enabled: status === 'authenticated',
+    staleTime: 0,
+    refetchOnMount: false,
+  });
 
   const toggleTheme = () => {
     resolvedTheme === 'dark' ? setTheme('light') : setTheme('dark');
@@ -109,6 +126,9 @@ export const AppHeader = () => {
     userSession.signUserOut();
     signOut();
   };
+
+  const userAddress =
+    user?.profile.stxAddress.mainnet || user?.profile.stxAddress;
 
   return (
     <Header>
@@ -157,11 +177,27 @@ export const AppHeader = () => {
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button
-                css={{ display: 'flex', gap: '$2' }}
+                css={{ display: 'flex', gap: '$2', alignItems: 'center' }}
                 size="lg"
                 variant="ghost"
               >
-                <StatusDot />
+                <ImageContainer>
+                  <Box
+                    as="img"
+                    src={
+                      settings?.siteLogo
+                        ? settings.siteLogo
+                        : generateAvatar(userAddress)
+                    }
+                    css={{
+                      width: 'auto',
+                      height: '100%',
+                      maxWidth: 24,
+                      maxHeight: 24,
+                      objectFit: 'cover',
+                    }}
+                  />
+                </ImageContainer>
                 <Typography size="subheading">{user.username}</Typography>
                 <StyledChevron css={{ color: '$gray11' }} />
               </Button>

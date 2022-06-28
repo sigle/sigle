@@ -5,6 +5,7 @@ import {
   UseQueryOptions,
 } from 'react-query';
 import {
+  getSettingsFile,
   GaiaUserFollowing,
   getFollowingFile,
   saveFollowingFile,
@@ -57,3 +58,6 @@ export const useUserUnfollow = () => {
     await saveFollowingFile(userFollowing);
   });
 };
+
+export const useGetUserSettings = () =>
+  useQuery('user-settings', () => getSettingsFile());

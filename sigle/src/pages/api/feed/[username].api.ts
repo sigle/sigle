@@ -7,7 +7,7 @@ import { migrationSettings } from '../../../utils/migrations/settings';
 import { migrationStories } from '../../../utils/migrations/stories';
 
 const escapeXml = (unsafe: string) => {
-  return unsafe.replace(/[<>&'"]/g, (c) => {
+  return unsafe.replace(/[<>&'" ]/g, (c) => {
     switch (c) {
       case '<':
         return '&lt;';
@@ -19,6 +19,8 @@ const escapeXml = (unsafe: string) => {
         return '&apos;';
       case '"':
         return '&quot;';
+      case ' ':
+        return '%20';
       default:
         return c;
     }

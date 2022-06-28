@@ -22,6 +22,7 @@
     "@prisma/client": "3.15.2",
     "@sentry/node": "7.2.0",
     "@stacks/auth": "4.1.0",
+    "@stacks/blockchain-api-client": "4.0.1",
     "@stacks/transactions": "4.1.0",
     "date-fns": "2.28.0",
     "dotenv": "16.0.1",
@@ -41,6 +42,6 @@
     "@typescript-eslint/parser": "5.26.0",
     "eslint": "8.14.0",
     "jest": "28.1.0",
-    "typescript": "4.6.4"
+    "typescript": "4.7.4"
   }
 }

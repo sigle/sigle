@@ -19,39 +19,38 @@ afterAll(async () => {
 });
 
 beforeEach(async () => {
-  await prisma.subscription.deleteMany({});
   await prisma.user.deleteMany({});
 });
 
-it('Should return null if user has no active subscription', async () => {
-  const response = await server.inject({
-    method: 'GET',
-    url: '/api/subscriptions',
-    cookies: {
-      'next-auth.session-token': '0x123',
-    },
-  });
-
-  expect(response.statusCode).toBe(200);
-  expect(response.json()).toEqual(null);
-});
-
-it('Should return the current logged in user active subscription', async () => {
+it('Should create a new user and return it', async () => {
   const stacksAddress = 'SP3VCX5NFQ8VCHFS9M6N40ZJNVTRT4HZ62WFH5C4Q';
-  const nftId = 2123;
-  await TestDBUser.seedUserWithSubscription({
-    stacksAddress,
-    subscription: { nftId },
-  });
 
   const response = await server.inject({
     method: 'GET',
-    url: '/api/subscriptions',
+    url: '/api/users/me',
     cookies: {
       'next-auth.session-token': stacksAddress,
     },
   });
 
   expect(response.statusCode).toBe(200);
-  expect(response.json()).toMatchObject({ id: expect.any(String), nftId });
+  expect(response.json()).toEqual({ id: expect.any(String), stacksAddress });
+});
+
+it('Should return an existing user', async () => {
+  const stacksAddress = 'SP3VCX5NFQ8VCHFS9M6N40ZJNVTRT4HZ62WFH5C4Q';
+  const user = await TestDBUser.seedUser({
+    stacksAddress,
+  });
+
+  const response = await server.inject({
+    method: 'GET',
+    url: '/api/users/me',
+    cookies: {
+      'next-auth.session-token': stacksAddress,
+    },
+  });
+
+  expect(response.statusCode).toBe(200);
+  expect(response.json()).toEqual({ id: user.id, stacksAddress });
 });

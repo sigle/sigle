@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import { beforeAll, afterAll, beforeEach, it, expect } from '@jest/globals';
 import { FastifyInstance } from 'fastify';
 import { plausibleClient } from '../../../external/plausible';
 import { fakeTimerConfigDate } from '../../../jest/utils';
