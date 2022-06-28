@@ -153,9 +153,6 @@ export const PublicHome = ({ file, settings, userInfo }: PublicHomeProps) => {
       <Container>
         <AppHeader />
         <Header>
-          {settings.siteLogo && (
-            <HeaderLogo src={settings.siteLogo} alt={`${siteName} logo`} />
-          )}
           <Flex align="center">
             <HeaderLogoContainer>
               <HeaderLogo
