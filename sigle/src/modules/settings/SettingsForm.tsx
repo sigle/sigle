@@ -134,8 +134,8 @@ interface SettingsFormProps {
 
 export const SettingsForm = ({ settings, username }: SettingsFormProps) => {
   const queryClient = useQueryClient();
+
   const { user } = useAuth();
-  const [unsavedChanges, setUnsavedChanges] = useState(false);
   const [colorOpen, setColorOpen] = useState(false);
   const [customLogo, setCustomLogo] = useState<
     (Blob & { preview: string; name: string }) | undefined
@@ -151,37 +151,6 @@ export const SettingsForm = ({ settings, username }: SettingsFormProps) => {
     },
     validate: (values) => {
       const errors: FormikErrors<SettingsFormValues> = {};
-      setUnsavedChanges(false);
-
-      if (values.siteName && values.siteName !== settings.siteName) {
-        setUnsavedChanges(true);
-      }
-
-      if (
-        values.siteDescription &&
-        values.siteDescription !== settings.siteDescription
-      ) {
-        setUnsavedChanges(true);
-      }
-
-      if (values.siteLogo && values.siteLogo !== settings.siteLogo) {
-        setUnsavedChanges(true);
-      }
-
-      if (values.siteUrl && values.siteUrl !== settings.siteUrl) {
-        setUnsavedChanges(true);
-      }
-
-      if (
-        values.siteTwitterHandle &&
-        values.siteTwitterHandle !== settings.siteTwitterHandle
-      ) {
-        setUnsavedChanges(true);
-      }
-
-      if (values.siteColor && values.siteColor !== settings.siteColor) {
-        setUnsavedChanges(true);
-      }
 
       if (values.siteName && values.siteName.length > 50) {
         errors.siteName = 'Name too long';
@@ -232,7 +201,6 @@ export const SettingsForm = ({ settings, username }: SettingsFormProps) => {
         setCustomLogo(undefined);
       }
 
-      setUnsavedChanges(false);
       await queryClient.invalidateQueries('user-settings');
       toast.success('Settings saved');
       setSubmitting(false);
@@ -411,7 +379,7 @@ export const SettingsForm = ({ settings, username }: SettingsFormProps) => {
           <FormHelperError>{formik.errors.siteColor}</FormHelperError>
         )}
       </FormRow>
-      {unsavedChanges && (
+      {formik.dirty && (
         <UnsavedChangesContainer>
           <Box
             css={{
