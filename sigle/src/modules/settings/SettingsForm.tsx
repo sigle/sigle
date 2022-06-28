@@ -18,21 +18,13 @@ import {
   FormTextarea,
   FormHelperError,
   FormHelper,
-} from '../../components/Form';
+} from '../../ui/Form';
 import { colors } from '../../utils/colors';
 import { Button } from '../../ui';
 import { darkTheme, styled } from '../../stitches.config';
 import { useQueryClient } from 'react-query';
 import { generateAvatar } from '../../utils/boringAvatar';
 import { useAuth } from '../auth/AuthContext';
-
-const StyledFormRow = styledC(FormRow)`
-  ${tw`xl:w-1/2`};
-`;
-
-const StyledFormHelper = styledC(FormHelper)`
-  ${tw`mt-2`};
-`;
 
 const FormColor = styledC.div<{ color: string }>`
   ${tw`py-2 text-white rounded cursor-pointer relative inline-block text-center`};
@@ -225,7 +217,7 @@ export const SettingsForm = ({ settings, username }: SettingsFormProps) => {
 
   return (
     <form onSubmit={formik.handleSubmit}>
-      <StyledFormRow>
+      <FormRow>
         <FormLabel>Profile Image</FormLabel>
         <ImageContainer
           css={{
@@ -260,10 +252,10 @@ export const SettingsForm = ({ settings, username }: SettingsFormProps) => {
             <CameraIcon />
           </ImageEmptyIconAdd>
         </ImageContainer>
-        <StyledFormHelper>Recommended size: 92x92px</StyledFormHelper>
-      </StyledFormRow>
+        <FormHelper>Recommended size: 92x92px</FormHelper>
+      </FormRow>
 
-      <StyledFormRow>
+      <FormRow>
         <FormLabel>Name</FormLabel>
         <FormInput
           name="siteName"
@@ -273,15 +265,15 @@ export const SettingsForm = ({ settings, username }: SettingsFormProps) => {
           value={formik.values.siteName}
           onChange={formik.handleChange}
         />
-        <StyledFormHelper>
-          We will show your Blockstack ID if you leave this input empty
-        </StyledFormHelper>
+        <FormHelper>
+          This name will be displayed on your profile page
+        </FormHelper>
         {formik.errors.siteName && (
           <FormHelperError>{formik.errors.siteName}</FormHelperError>
         )}
-      </StyledFormRow>
+      </FormRow>
 
-      <StyledFormRow>
+      <FormRow>
         <FormLabel>Description</FormLabel>
         <FormTextarea
           name="siteDescription"
@@ -289,31 +281,31 @@ export const SettingsForm = ({ settings, username }: SettingsFormProps) => {
           maxLength={350}
           value={formik.values.siteDescription}
           onChange={formik.handleChange}
+          placeholder="Describe yourself in a few words..."
         />
+        <FormHelper>Max. 350 characters</FormHelper>
         {formik.errors.siteDescription && (
           <FormHelperError>{formik.errors.siteDescription}</FormHelperError>
         )}
-      </StyledFormRow>
+      </FormRow>
 
-      <StyledFormRow>
+      <FormRow>
         <FormLabel>Website</FormLabel>
         <FormInput
           name="siteUrl"
           type="text"
           maxLength={50}
-          placeholder="https://example.com"
+          placeholder="https://"
           value={formik.values.siteUrl}
           onChange={formik.handleChange}
         />
-        <StyledFormHelper>
-          Add a link to your personal website.
-        </StyledFormHelper>
+        <FormHelper>Max. 100 characters</FormHelper>
         {formik.errors.siteUrl && (
           <FormHelperError>{formik.errors.siteUrl}</FormHelperError>
         )}
-      </StyledFormRow>
+      </FormRow>
 
-      <StyledFormRow>
+      <FormRow>
         <FormLabel>Twitter Handle</FormLabel>
         <FormInput
           name="siteTwitterHandle"
@@ -321,14 +313,15 @@ export const SettingsForm = ({ settings, username }: SettingsFormProps) => {
           maxLength={50}
           value={formik.values.siteTwitterHandle}
           onChange={formik.handleChange}
+          placeholder="@"
         />
-        <StyledFormHelper>Add your twitter handle.</StyledFormHelper>
+        <FormHelper>Enter your Twitter handle</FormHelper>
         {formik.errors.siteTwitterHandle && (
           <FormHelperError>{formik.errors.siteTwitterHandle}</FormHelperError>
         )}
-      </StyledFormRow>
+      </FormRow>
 
-      <StyledFormRow>
+      <FormRow>
         <FormLabel>Primary color</FormLabel>
         <FormColor
           color={formik.values.siteColor || colors.pink}
@@ -360,21 +353,20 @@ export const SettingsForm = ({ settings, username }: SettingsFormProps) => {
             </div>
           )}
         </FormColor>
-        <StyledFormHelper>
-          This will change the color of links on your blog
-        </StyledFormHelper>
+        <FormHelper>Choose a custom color for your links</FormHelper>
         {formik.errors.siteColor && (
           <FormHelperError>{formik.errors.siteColor}</FormHelperError>
         )}
-      </StyledFormRow>
+      </FormRow>
 
       <Button
+        css={{ mt: '$5' }}
         disabled={formik.isSubmitting}
         type="submit"
         size="lg"
         color="orange"
       >
-        {formik.isSubmitting ? 'Saving...' : 'Save'}
+        {formik.isSubmitting ? 'Saving...' : 'Save Settings'}
       </Button>
     </form>
   );
