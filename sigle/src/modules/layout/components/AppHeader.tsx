@@ -173,7 +173,7 @@ export const AppHeader = () => {
           },
         }}
         align="center"
-        gap="10"
+        gap="9"
       >
         {isExperimentalFollowEnabled && user ? (
           <Link href="/feed" passHref>
