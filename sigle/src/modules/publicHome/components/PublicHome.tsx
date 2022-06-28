@@ -244,15 +244,16 @@ export const PublicHome = ({ file, settings, userInfo }: PublicHomeProps) => {
         )}
         {featuredStoryIndex !== -1 && (
           <PublicStoryItem
-            username={userInfo.username}
+            userInfo={userInfo}
             story={file.stories[featuredStoryIndex]}
             settings={settings}
+            featured
           />
         )}
         {stories.map((story) => (
           <PublicStoryItem
             key={story.id}
-            username={userInfo.username}
+            userInfo={userInfo}
             story={story}
             settings={settings}
           />

@@ -2,7 +2,6 @@ import React from 'react';
 import Link from 'next/link';
 import format from 'date-fns/format';
 import { SubsetStory, SettingsFile } from '../../../types';
-import { sanitizeHexColor } from '../../../utils/security';
 import { Box, Flex, Typography } from '../../../ui';
 import { darkTheme, styled } from '../../../stitches.config';
 import { generateAvatar } from '../../../utils/boringAvatar';
@@ -73,7 +72,7 @@ interface Props {
   /**
    * Display the user name in the card
    */
-  displayUser: boolean;
+  displayUser?: boolean;
 }
 
 export const PublicStoryItem = ({
