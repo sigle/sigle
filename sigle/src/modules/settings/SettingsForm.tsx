@@ -136,7 +136,6 @@ interface SettingsFormProps {
 
 export const SettingsForm = ({ settings, username }: SettingsFormProps) => {
   const queryClient = useQueryClient();
-
   const { user } = useAuth();
   const [colorOpen, setColorOpen] = useState(false);
   const [customLogo, setCustomLogo] = useState<
