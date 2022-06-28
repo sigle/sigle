@@ -9,16 +9,18 @@ import { hexRegex } from '../../utils/regex';
 import { storage } from '../../utils/blockstack';
 import { getSettingsFile, isValidHttpUrl, saveSettingsFile } from '../../utils';
 import { resizeImage } from '../../utils/image';
+import { colors } from '../../utils/colors';
 import {
+  Box,
+  Button,
+  Typography,
   FormRow,
   FormLabel,
   FormInput,
   FormTextarea,
   FormHelperError,
   FormHelper,
-} from '../../ui/Form';
-import { colors } from '../../utils/colors';
-import { Box, Button, Flex, Typography } from '../../ui';
+} from '../../ui';
 import { darkTheme, styled } from '../../stitches.config';
 import { useQueryClient } from 'react-query';
 import { generateAvatar } from '../../utils/boringAvatar';
@@ -315,7 +317,7 @@ export const SettingsForm = ({ settings, username }: SettingsFormProps) => {
         <FormInput
           name="siteUrl"
           type="text"
-          maxLength={50}
+          maxLength={100}
           placeholder="https://"
           value={formik.values.siteUrl}
           onChange={formik.handleChange}
