@@ -176,11 +176,18 @@ export const AppHeader = () => {
         gap="9"
       >
         {isExperimentalFollowEnabled && user ? (
-          <Link href="/feed" passHref>
-            <Button variant="ghost" as="a">
-              Feed
-            </Button>
-          </Link>
+          <>
+            <Link href="/feed" passHref>
+              <Button variant="ghost" as="a">
+                Feed
+              </Button>
+            </Link>
+            <Link href="/explore" passHref>
+              <Button variant="ghost" as="a">
+                Explore
+              </Button>
+            </Link>
+          </>
         ) : null}
         {user ? (
           <DropdownMenu>
