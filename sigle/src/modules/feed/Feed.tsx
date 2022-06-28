@@ -105,7 +105,8 @@ export const UserFeed = () => {
         feedStories.map((story, index) => (
           <PublicStoryItem
             key={index}
-            username={story.user.username}
+            displayUser={true}
+            userInfo={story.user}
             settings={story.user.settings}
             story={story}
           />

@@ -5,6 +5,7 @@ import { SubsetStory, SettingsFile } from '../../../types';
 import { sanitizeHexColor } from '../../../utils/security';
 import { Box, Flex, Typography } from '../../../ui';
 import { darkTheme, styled } from '../../../stitches.config';
+import { generateAvatar } from '../../../utils/boringAvatar';
 
 const StoryContainer = styled('div', {
   display: 'flex',
@@ -43,13 +44,39 @@ const StoryImage = styled('img', {
   },
 });
 
+const ProfileImageContainer = styled('div', {
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+  br: '$1',
+  overflow: 'hidden',
+  width: 18,
+  height: 18,
+});
+
+const ProfileImage = styled('img', {
+  width: 'auto',
+  height: '100%',
+  maxWidth: 18,
+  maxHeight: 18,
+  objectFit: 'cover',
+});
+
 interface Props {
-  username: string;
+  displayUser: boolean;
+  userInfo: { username: string; address: string };
   story: SubsetStory;
   settings: SettingsFile;
 }
 
-export const PublicStoryItem = ({ username, story, settings }: Props) => {
+export const PublicStoryItem = ({
+  displayUser,
+  userInfo,
+  story,
+  settings,
+}: Props) => {
+  const storyPath = `/${userInfo.username}/${story.id}`;
+
   return (
     <StoryContainer
       css={{
@@ -60,11 +87,7 @@ export const PublicStoryItem = ({ username, story, settings }: Props) => {
       }}
     >
       {story.coverImage && (
-        <Link
-          href="/[username]/[storyId]"
-          as={`/${username}/${story.id}`}
-          passHref
-        >
+        <Link href="/[username]/[storyId]" as={storyPath} passHref>
           <Box
             css={{
               lineHeight: 0,
@@ -135,7 +158,7 @@ export const PublicStoryItem = ({ username, story, settings }: Props) => {
             justify="between"
             css={{ gap: '$5', mb: '$1', '@md': { mb: '$2' } }}
           >
-            <Link href={`/${username}/${story.id}`} passHref>
+            <Link href={storyPath} passHref>
               <a>
                 <Typography
                   size={{
@@ -163,19 +186,32 @@ export const PublicStoryItem = ({ username, story, settings }: Props) => {
               </a>
             </Link>
           </Flex>
-          <Link href={`/${username}/${story.id}`} passHref>
-            <Typography
-              data-testid="story-date"
-              css={{ color: '$gray9' }}
-              size="subparagraph"
-              as="a"
-            >
-              {format(story.createdAt, 'MMMM dd, yyyy ')}
-            </Typography>
+          <Link href={storyPath} passHref>
+            <Flex as="a" gap="1" align="center">
+              {displayUser ? (
+                <ProfileImageContainer>
+                  <ProfileImage
+                    src={
+                      settings.siteLogo
+                        ? settings.siteLogo
+                        : generateAvatar(userInfo.address)
+                    }
+                  />
+                </ProfileImageContainer>
+              ) : null}
+              <Typography
+                data-testid="story-date"
+                css={{ color: '$gray9' }}
+                size="subparagraph"
+              >
+                {displayUser ? `${userInfo.username} · ` : ''}
+                {format(story.createdAt, 'MMMM dd, yyyy ')}
+              </Typography>
+            </Flex>
           </Link>
         </Box>
         <Box css={{ flex: 1 }}>
-          <Link href={`/${username}/${story.id}`} passHref>
+          <Link href={storyPath} passHref>
             <Typography
               as="a"
               data-testid="story-content"
