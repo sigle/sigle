@@ -63,15 +63,23 @@ const ProfileImage = styled('img', {
 });
 
 interface Props {
-  displayUser: boolean;
   userInfo: { username: string; address: string };
   story: SubsetStory;
   settings: SettingsFile;
+  /**
+   * Options to change the card look
+   */
+  featured?: boolean;
+  /**
+   * Display the user name in the card
+   */
+  displayUser: boolean;
 }
 
 export const PublicStoryItem = ({
   displayUser,
   userInfo,
+  featured,
   story,
   settings,
 }: Props) => {
@@ -80,9 +88,9 @@ export const PublicStoryItem = ({
   return (
     <StoryContainer
       css={{
-        flexDirection: story.featured ? 'column' : 'row',
+        flexDirection: featured ? 'column' : 'row',
         '@md': {
-          gap: !story.coverImage && story.featured ? '$5' : '$7',
+          gap: !story.coverImage && featured ? '$5' : '$7',
         },
       }}
     >
@@ -98,11 +106,11 @@ export const PublicStoryItem = ({
             <Box
               as="span"
               css={{
-                mb: story.featured ? '$4' : 'none',
+                mb: featured ? '$4' : 'none',
                 display: 'inline-block',
                 position: 'relative',
                 overflow: 'hidden',
-                borderRadius: story.featured ? '$2' : '$1',
+                borderRadius: featured ? '$2' : '$1',
 
                 '&::before': {
                   content: '',
@@ -125,18 +133,18 @@ export const PublicStoryItem = ({
                 },
 
                 '@md': {
-                  mb: story.featured ? '$5' : 'none',
+                  mb: featured ? '$5' : 'none',
                 },
               }}
             >
               <StoryImage
                 css={{
-                  width: story.featured ? 420 : 80,
-                  height: story.featured ? 214 : 58,
+                  width: featured ? 420 : 80,
+                  height: featured ? 214 : 58,
 
                   '@md': {
-                    width: story.featured ? 826 : 180,
-                    height: story.featured ? 420 : 130,
+                    width: featured ? 826 : 180,
+                    height: featured ? 420 : 130,
                   },
                 }}
                 data-testid="story-cover-image"
