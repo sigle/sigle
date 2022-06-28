@@ -1,7 +1,6 @@
 import React from 'react';
 import { NextSeo } from 'next-seo';
 import { StoryFile, SettingsFile } from '../../../types';
-import { PublicStoryItem } from './PublicStoryItem';
 import { PoweredBy } from '../../publicStory/PoweredBy';
 import { AppHeader } from '../../layout/components/AppHeader';
 import { Box, Button, Container, Flex, Typography } from '../../../ui';
@@ -15,6 +14,7 @@ import {
 } from '../../../hooks/appData';
 import { generateAvatar } from '../../../utils/boringAvatar';
 import { useFeatureFlags } from '../../../utils/featureFlags';
+import { StoryCard } from '../../storyCard/StoryCard';
 
 const StyledContainer = styled(Container, {
   pt: '$4',
@@ -243,7 +243,7 @@ export const PublicHome = ({ file, settings, userInfo }: PublicHomeProps) => {
           </Typography>
         )}
         {featuredStoryIndex !== -1 && (
-          <PublicStoryItem
+          <StoryCard
             userInfo={userInfo}
             story={file.stories[featuredStoryIndex]}
             settings={settings}
@@ -251,7 +251,7 @@ export const PublicHome = ({ file, settings, userInfo }: PublicHomeProps) => {
           />
         )}
         {stories.map((story) => (
-          <PublicStoryItem
+          <StoryCard
             key={story.id}
             userInfo={userInfo}
             story={story}

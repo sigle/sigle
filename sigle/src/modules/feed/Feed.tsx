@@ -7,7 +7,7 @@ import { lookupProfile } from '@stacks/auth';
 import { sigleConfig } from '../../config';
 import { fetchPublicStories, fetchSettings } from '../../pages/[username].page';
 import { SettingsFile, SubsetStory } from '../../types';
-import { PublicStoryItem } from '../publicHome/components/PublicStoryItem';
+import { StoryCard } from '../storyCard/StoryCard';
 
 interface StoriesWithUser extends SubsetStory {
   user: {
@@ -103,7 +103,7 @@ export const UserFeed = () => {
 
       {feedStories &&
         feedStories.map((story, index) => (
-          <PublicStoryItem
+          <StoryCard
             key={index}
             displayUser={true}
             userInfo={story.user}
