@@ -29,8 +29,12 @@ export const ExploreUsers = () => {
       ) : null}
 
       {userFollowing &&
-        Object.keys(userFollowing.following).map((user, index) => (
-          <UserCard key={index} address={user} />
+        Object.keys(userFollowing.following).map((address, index) => (
+          <UserCard
+            key={index}
+            address={address}
+            following={!!userFollowing.following[address]}
+          />
         ))}
     </DashboardLayout>
   );

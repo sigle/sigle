@@ -1,6 +1,11 @@
+import { lookupProfile } from '@stacks/auth';
+import { NamesApi } from '@stacks/blockchain-api-client';
+import { useQuery } from 'react-query';
+import { sigleConfig } from '../../config';
 import { styled } from '../../stitches.config';
 import { Button, Flex, Typography } from '../../ui';
 import { generateAvatar } from '../../utils/boringAvatar';
+import { fetchSettings } from '../../utils/gaia/fetch';
 
 const UserCardContainer = styled('div', {
   display: 'flex',
@@ -40,15 +45,63 @@ const UserCardDescription = styled(Typography, {
 
 interface UserCardProps {
   address: string;
+  following: boolean;
 }
 
-export const UserCard = ({ address }: UserCardProps) => {
-  // TODO fetch info from stacks api
+export const UserCard = ({ address, following }: UserCardProps) => {
+  const { isLoading: isLoadingUsername, data: username } = useQuery(
+    ['get-username-user', address],
+    async () => {
+      const stacksNamesApi = new NamesApi();
+      const names = await stacksNamesApi.getNamesOwnedByAddress({
+        address,
+        blockchain: 'stacks',
+      });
+      return names.names[0];
+    }
+  );
+
+  const { data: userSettings } = useQuery(
+    ['get-user-settings-with-username', username],
+    async () => {
+      if (!username) return null;
+
+      // Then we get the user profile and bucket url
+      let userProfile;
+      try {
+        userProfile = await lookupProfile({ username });
+      } catch (error) {
+        // This will happen if there is no blockstack user with this name
+        if (error.message === 'Name not found') {
+          return null;
+        } else {
+          console.error(error);
+          return null;
+        }
+      }
+      const bucketUrl =
+        userProfile && userProfile.apps && userProfile.apps[sigleConfig.appUrl];
+      if (!bucketUrl) {
+        return null;
+      }
+
+      // Then we get the stories and settings
+      const dataSettings = await fetchSettings(bucketUrl);
+      return dataSettings;
+    },
+    { enabled: !!username }
+  );
 
   return (
     <UserCardContainer>
       <ProfileImageContainer>
-        <ProfileImage src={generateAvatar(address)} />
+        <ProfileImage
+          src={
+            userSettings && userSettings.file.siteLogo
+              ? userSettings.file.siteLogo
+              : generateAvatar(address)
+          }
+        />
       </ProfileImageContainer>
       <Flex css={{ width: '100%' }} direction="column">
         <Flex justify="between" align="center">
@@ -58,18 +111,20 @@ export const UserCard = ({ address }: UserCardProps) => {
               fontWeight: 600,
             }}
           >
-            {address}
+            {isLoadingUsername ? '...' : username}
           </Typography>
-          <Button color="orange" css={{ ml: '$5' }}>
-            Follow
-          </Button>
+          {!following ? (
+            <Button color="orange" css={{ ml: '$5' }}>
+              Follow
+            </Button>
+          ) : (
+            <Button variant="subtle" css={{ ml: '$5' }}>
+              Unfollow
+            </Button>
+          )}
         </Flex>
         <UserCardDescription size="subheading" css={{ color: '$gray9' }}>
-          Lawyer. Civil rights. Mediator. Member in different associations.
-          Speaker. Startup Advisor. Lawyer. Civil rights. Mediator. Member in
-          different associations. Speaker. Startup Advisor. Lawyer. Civil
-          rights. Mediator. Member in different associations. Speaker. Startup
-          Advisor.
+          {userSettings && userSettings.file.siteDescription}
         </UserCardDescription>
       </Flex>
     </UserCardContainer>
