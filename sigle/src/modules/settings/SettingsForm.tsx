@@ -199,13 +199,13 @@ export const SettingsForm = ({ settings, username }: SettingsFormProps) => {
         ...newSettings,
       });
 
+      queryClient.setQueriesData('user-settings', newSettings);
+
       if (customLogo) {
-        formik.setFieldValue('siteLogo', newSettings.siteLogo);
         setCustomLogo(undefined);
       }
 
       formik.resetForm({ values });
-      await queryClient.invalidateQueries('user-settings');
       toast.success('Settings saved');
       setSubmitting(false);
     },
