@@ -1,13 +1,6 @@
-import { useQuery } from 'react-query';
-import { NamesApi } from '@stacks/blockchain-api-client';
 import { useGetUserFollowing } from '../../hooks/appData';
 import { Box, LoadingSpinner, Typography } from '../../ui';
 import { DashboardLayout } from '../layout';
-import { lookupProfile } from '@stacks/auth';
-import { sigleConfig } from '../../config';
-import { fetchPublicStories, fetchSettings } from '../../pages/[username].page';
-import { SettingsFile, SubsetStory } from '../../types';
-import { StoryCard } from '../storyCard/StoryCard';
 import { UserCard } from '../userCard/UserCard';
 
 export const ExploreUsers = () => {
