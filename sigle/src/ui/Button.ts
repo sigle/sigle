@@ -5,6 +5,7 @@ export const Button = styled('button', {
   justifyContent: 'center',
   alignItems: 'center',
   fontSize: '$2',
+  lineHeight: '20.4px',
 
   '&:disabled': {
     opacity: 0.5,
