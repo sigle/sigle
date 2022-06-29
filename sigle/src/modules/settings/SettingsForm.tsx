@@ -199,7 +199,10 @@ export const SettingsForm = ({ settings, username }: SettingsFormProps) => {
         ...newSettings,
       });
 
-      queryClient.setQueriesData('user-settings', newSettings);
+      queryClient.setQueriesData('user-settings', {
+        ...settingsFile,
+        ...newSettings,
+      });
 
       if (customLogo) {
         setCustomLogo(undefined);
@@ -383,33 +386,32 @@ export const SettingsForm = ({ settings, username }: SettingsFormProps) => {
           <FormHelperError>{formik.errors.siteColor}</FormHelperError>
         )}
       </FormRow>
-      {formik.dirty ||
-        (customLogo && (
-          <UnsavedChangesContainer>
-            <Box
-              css={{
-                position: 'absolute',
-                width: '100%',
-                height: '100%',
-                left: 0,
-                zIndex: -1,
-                backgroundColor: '$gray1',
-                opacity: 0.95,
-              }}
-            />
-            <Typography size="subheading" css={{ fontWeight: 600 }}>
-              You have unsaved changes
-            </Typography>
-            <Button
-              disabled={formik.isSubmitting}
-              type="submit"
-              size="md"
-              color="orange"
-            >
-              {formik.isSubmitting ? 'Saving...' : 'Save changes'}
-            </Button>
-          </UnsavedChangesContainer>
-        ))}
+      {(formik.dirty || customLogo) && (
+        <UnsavedChangesContainer>
+          <Box
+            css={{
+              position: 'absolute',
+              width: '100%',
+              height: '100%',
+              left: 0,
+              zIndex: -1,
+              backgroundColor: '$gray1',
+              opacity: 0.95,
+            }}
+          />
+          <Typography size="subheading" css={{ fontWeight: 600 }}>
+            You have unsaved changes
+          </Typography>
+          <Button
+            disabled={formik.isSubmitting}
+            type="submit"
+            size="md"
+            color="orange"
+          >
+            {formik.isSubmitting ? 'Saving...' : 'Save changes'}
+          </Button>
+        </UnsavedChangesContainer>
+      )}
     </form>
   );
 };
