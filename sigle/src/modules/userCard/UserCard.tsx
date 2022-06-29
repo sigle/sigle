@@ -5,8 +5,8 @@ import { generateAvatar } from '../../utils/boringAvatar';
 const UserCardContainer = styled('div', {
   display: 'flex',
   borderBottom: '1px solid $colors$gray6',
-  px: '$2',
   py: '$3',
+  gap: '$5',
 });
 
 const ProfileImageContainer = styled('div', {
@@ -28,46 +28,49 @@ const ProfileImage = styled('img', {
   objectFit: 'cover',
 });
 
+const UserCardDescription = styled(Typography, {
+  mt: '$1',
+  overflow: 'hidden',
+  display: '-webkit-box',
+  '-webkit-line-clamp': 2,
+  '-webkit-box-orient': 'vertical',
+  typographyOverflow: 'ellipsis',
+  maxWidth: 600,
+});
+
 interface UserCardProps {
-  userInfo: {
-    username: string;
-    address: string;
-  };
+  address: string;
 }
 
-export const UserCard = ({ userInfo }: UserCardProps) => {
+export const UserCard = ({ address }: UserCardProps) => {
+  // TODO fetch info from stacks api
+
   return (
     <UserCardContainer>
       <ProfileImageContainer>
-        <ProfileImage src={generateAvatar(userInfo.address)} />
+        <ProfileImage src={generateAvatar(address)} />
       </ProfileImageContainer>
-      <Flex css={{ ml: '$5' }} justify="between" align="start">
-        <Flex direction="column">
-          <Typography size="subheading" css={{ fontWeight: 600 }}>
-            {userInfo.address}
-          </Typography>
+      <Flex css={{ width: '100%' }} direction="column">
+        <Flex justify="between" align="center">
           <Typography
-            css={{
-              color: '$gray9',
-              mt: '$1',
-              overflow: 'hidden',
-              display: '-webkit-box',
-              '-webkit-line-clamp': 2,
-              '-webkit-box-orient': 'vertical',
-              typographyOverflow: 'ellipsis',
-            }}
             size="subheading"
+            css={{
+              fontWeight: 600,
+            }}
           >
-            Lawyer. Civil rights. Mediator. Member in different associations.
-            Speaker. Startup Advisor. Lawyer. Civil rights. Mediator. Member in
-            different associations. Speaker. Startup Advisor. Lawyer. Civil
-            rights. Mediator. Member in different associations. Speaker. Startup
-            Advisor.
+            {address}
           </Typography>
+          <Button color="orange" css={{ ml: '$5' }}>
+            Follow
+          </Button>
         </Flex>
-        <Button color="orange" css={{ ml: '$5' }}>
-          Follow
-        </Button>
+        <UserCardDescription size="subheading" css={{ color: '$gray9' }}>
+          Lawyer. Civil rights. Mediator. Member in different associations.
+          Speaker. Startup Advisor. Lawyer. Civil rights. Mediator. Member in
+          different associations. Speaker. Startup Advisor. Lawyer. Civil
+          rights. Mediator. Member in different associations. Speaker. Startup
+          Advisor.
+        </UserCardDescription>
       </Flex>
     </UserCardContainer>
   );

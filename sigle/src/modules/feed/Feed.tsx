@@ -91,7 +91,7 @@ export const UserFeed = () => {
 
   return (
     <DashboardLayout>
-      <Typography size="h4" css={{ fontWeight: 600 }}>
+      <Typography size="h4" css={{ fontWeight: 600, mb: '$5' }}>
         Feed
       </Typography>
 

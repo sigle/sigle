@@ -18,7 +18,7 @@ export const ExploreUsers = () => {
 
   return (
     <DashboardLayout>
-      <Typography size="h4" css={{ fontWeight: 600 }}>
+      <Typography size="h4" css={{ fontWeight: 600, mb: '$7' }}>
         Explore
       </Typography>
 
@@ -30,7 +30,7 @@ export const ExploreUsers = () => {
 
       {userFollowing &&
         Object.keys(userFollowing.following).map((user, index) => (
-          <UserCard key={index} userInfo={{ username: '', address: user }} />
+          <UserCard key={index} address={user} />
         ))}
     </DashboardLayout>
   );
