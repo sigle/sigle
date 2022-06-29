@@ -10,8 +10,6 @@ export const ExploreUsers = () => {
   const { isLoading: isLoadingExplore, data: userExplore } =
     useGetUserExplore();
 
-  // TODO get data from the API
-
   return (
     <DashboardLayout>
       <Typography size="h4" css={{ fontWeight: 600, mb: '$7' }}>
