@@ -202,6 +202,7 @@ export const SettingsForm = ({ settings, username }: SettingsFormProps) => {
         setCustomLogo(undefined);
       }
 
+      formik.resetForm({ values });
       await queryClient.invalidateQueries('user-settings');
       toast.success('Settings saved');
       setSubmitting(false);
