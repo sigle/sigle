@@ -1,0 +1,29 @@
+export const fetchPublicStories = async (bucketUrl: string) => {
+  let file;
+  let statusCode: false | number = false;
+  const data = await fetch(`${bucketUrl}publicStories.json`);
+  if (data.status === 200) {
+    file = await data.json();
+  } else if (data.status === 404) {
+    // If file is not found we set an empty array to show an empty list
+    file = { stories: [] };
+  } else {
+    statusCode = data.status;
+  }
+  return { file, statusCode };
+};
+
+export const fetchSettings = async (bucketUrl: string) => {
+  let file;
+  let statusCode: false | number = false;
+  const data = await fetch(`${bucketUrl}settings.json`);
+  if (data.status === 200) {
+    file = await data.json();
+  } else if (data.status === 404) {
+    // If file is not found we set an empty object
+    file = {};
+  } else {
+    statusCode = data.status;
+  }
+  return { file, statusCode };
+};
