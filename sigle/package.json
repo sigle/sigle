@@ -11,12 +11,6 @@
     "test": "pnpm run test:only",
     "test:only": "jest"
   },
-  "jest": {
-    "setupFilesAfterEnv": [
-      "./src/jest.setup.ts"
-    ],
-    "testEnvironment": "jsdom"
-  },
   "nextBundleAnalysis": {
     "budget": 512000,
     "budgetPercentIncreaseRed": 20,
