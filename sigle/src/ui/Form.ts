@@ -41,6 +41,11 @@ export const FormInput = styled('input', {
       boxShadow: '0 0 0 1px $colors$gray8',
     },
 
+    '&:focus': {
+      backgroundColor: '$gray4',
+      boxShadow: '0 0 0 1px $colors$gray8',
+    },
+
     '&::placeholder': {
       color: '$gray9',
     },
@@ -68,8 +73,8 @@ export const FormTextarea = styled('textarea', {
   },
 
   '&:focus': {
-    backgroundColor: '$gray5',
-    boxShadow: '0 0 0 2px $colors$gray8',
+    backgroundColor: '$gray4',
+    boxShadow: '0 0 0 1px $colors$gray8',
   },
 
   '&::placeholder': {
