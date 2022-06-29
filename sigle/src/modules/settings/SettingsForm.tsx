@@ -25,6 +25,7 @@ import { darkTheme, styled } from '../../stitches.config';
 import { useQueryClient } from 'react-query';
 import { generateAvatar } from '../../utils/boringAvatar';
 import { useAuth } from '../auth/AuthContext';
+import { useGetUserSettings } from '../../hooks/appData';
 
 const UnsavedChangesContainer = styled('div', {
   display: 'flex',
@@ -135,6 +136,7 @@ interface SettingsFormProps {
 }
 
 export const SettingsForm = ({ settings, username }: SettingsFormProps) => {
+  const { data: userSettings } = useGetUserSettings();
   const queryClient = useQueryClient();
   const { user } = useAuth();
   const [colorOpen, setColorOpen] = useState(false);
@@ -233,7 +235,7 @@ export const SettingsForm = ({ settings, username }: SettingsFormProps) => {
 
   const coverImageUrl = customLogo
     ? customLogo.preview
-    : formik.values.siteLogo;
+    : userSettings?.siteLogo;
 
   const userAddress =
     user?.profile.stxAddress.mainnet || user?.profile.stxAddress;
@@ -381,32 +383,33 @@ export const SettingsForm = ({ settings, username }: SettingsFormProps) => {
           <FormHelperError>{formik.errors.siteColor}</FormHelperError>
         )}
       </FormRow>
-      {formik.dirty && (
-        <UnsavedChangesContainer>
-          <Box
-            css={{
-              position: 'absolute',
-              width: '100%',
-              height: '100%',
-              left: 0,
-              zIndex: -1,
-              backgroundColor: '$gray1',
-              opacity: 0.95,
-            }}
-          />
-          <Typography size="subheading" css={{ fontWeight: 600 }}>
-            You have unsaved changes
-          </Typography>
-          <Button
-            disabled={formik.isSubmitting}
-            type="submit"
-            size="md"
-            color="orange"
-          >
-            {formik.isSubmitting ? 'Saving...' : 'Save changes'}
-          </Button>
-        </UnsavedChangesContainer>
-      )}
+      {formik.dirty ||
+        (customLogo && (
+          <UnsavedChangesContainer>
+            <Box
+              css={{
+                position: 'absolute',
+                width: '100%',
+                height: '100%',
+                left: 0,
+                zIndex: -1,
+                backgroundColor: '$gray1',
+                opacity: 0.95,
+              }}
+            />
+            <Typography size="subheading" css={{ fontWeight: 600 }}>
+              You have unsaved changes
+            </Typography>
+            <Button
+              disabled={formik.isSubmitting}
+              type="submit"
+              size="md"
+              color="orange"
+            >
+              {formik.isSubmitting ? 'Saving...' : 'Save changes'}
+            </Button>
+          </UnsavedChangesContainer>
+        ))}
     </form>
   );
 };
