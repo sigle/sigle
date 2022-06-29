@@ -5,9 +5,9 @@ import { Box, LoadingSpinner, Typography } from '../../ui';
 import { DashboardLayout } from '../layout';
 import { lookupProfile } from '@stacks/auth';
 import { sigleConfig } from '../../config';
-import { fetchPublicStories, fetchSettings } from '../../pages/[username].page';
 import { SettingsFile, SubsetStory } from '../../types';
 import { StoryCard } from '../storyCard/StoryCard';
+import { fetchPublicStories, fetchSettings } from '../../utils/gaia/fetch';
 
 interface StoriesWithUser extends SubsetStory {
   user: {
