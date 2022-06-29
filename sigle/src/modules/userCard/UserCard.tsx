@@ -1,5 +1,6 @@
 import { lookupProfile } from '@stacks/auth';
 import { NamesApi } from '@stacks/blockchain-api-client';
+import Link from 'next/link';
 import { useQuery } from 'react-query';
 import { sigleConfig } from '../../config';
 import { styled } from '../../stitches.config';
@@ -14,7 +15,7 @@ const UserCardContainer = styled('div', {
   gap: '$5',
 });
 
-const ProfileImageContainer = styled('div', {
+const ProfileImageContainer = styled('a', {
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'center',
@@ -92,27 +93,34 @@ export const UserCard = ({ address, following }: UserCardProps) => {
     { enabled: !!username }
   );
 
+  const userPath = `/${username}`;
+
   return (
     <UserCardContainer>
-      <ProfileImageContainer>
-        <ProfileImage
-          src={
-            userSettings && userSettings.file.siteLogo
-              ? userSettings.file.siteLogo
-              : generateAvatar(address)
-          }
-        />
-      </ProfileImageContainer>
+      <Link href="/[username]" as={userPath} passHref>
+        <ProfileImageContainer>
+          <ProfileImage
+            src={
+              userSettings && userSettings.file.siteLogo
+                ? userSettings.file.siteLogo
+                : generateAvatar(address)
+            }
+          />
+        </ProfileImageContainer>
+      </Link>
       <Flex css={{ width: '100%' }} direction="column">
         <Flex justify="between" align="center">
-          <Typography
-            size="subheading"
-            css={{
-              fontWeight: 600,
-            }}
-          >
-            {isLoadingUsername ? '...' : username}
-          </Typography>
+          <Link href="/[username]" as={userPath} passHref>
+            <Typography
+              as="a"
+              size="subheading"
+              css={{
+                fontWeight: 600,
+              }}
+            >
+              {isLoadingUsername ? '...' : username}
+            </Typography>
+          </Link>
           {!following ? (
             <Button color="orange" css={{ ml: '$5' }}>
               Follow
