@@ -41,7 +41,7 @@ const UnsavedChangesContainer = styled('div', {
 
   [`.${darkTheme} &`]: {
     boxShadow:
-      '0px 8px 20px rgba(8, 8, 8, 0.4), 0px 10px 18px rgba(8, 8, 8, 0.35), 0px 5px 14px rgba(8, 8, 8, 0.3), 0px 3px 8px rgba(8, 8, 8, 0.2), 0px 1px 5px rgba(8, 8, 8, 0.18), 0px 1px 2px rgba(8, 8, 8, 0.16), 0px 0.2px 1px rgba(8, 8, 8, 0.08)',
+      '0px 8px 20px rgba(8, 8, 8, 0.32), 0px 10px 18px rgba(8, 8, 8, 0.28), 0px 5px 14px rgba(8, 8, 8, 0.26), 0px 3px 8px rgba(8, 8, 8, 0.16), 0px 1px 5px rgba(8, 8, 8, 0.14), 0px 1px 2px rgba(8, 8, 8, 0.12), 0px 0.2px 1px rgba(8, 8, 8, 0.08)',
   },
 });
 
