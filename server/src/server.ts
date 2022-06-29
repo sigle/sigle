@@ -12,6 +12,7 @@ import { fastifyAuthPlugin } from './api/plugins/auth';
 import { createSubscriptionCreatorPlusEndpoint } from './api/modules/subscriptions/creatorPlus';
 import { createGetSubscriptionEndpoint } from './api/modules/subscriptions/getSubscription';
 import { createGetUserMeEndpoint } from './api/modules/users/me';
+import { createGetUserExploreEndpoint } from './api/modules/users/explore';
 
 export const buildFastifyServer = (
   opts: FastifyServerOptions<Server, FastifyLoggerInstance> = {}
@@ -111,6 +112,8 @@ export const buildFastifyServer = (
      * Users routes
      */
     createGetUserMeEndpoint(fastify);
+    createGetUserExploreEndpoint(fastify);
+
     /**
      * Subscriptions routes
      */

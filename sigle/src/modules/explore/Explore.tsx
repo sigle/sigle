@@ -1,4 +1,5 @@
 import { useGetUserFollowing } from '../../hooks/appData';
+import { useGetUserExplore } from '../../hooks/users';
 import { Box, LoadingSpinner, Typography } from '../../ui';
 import { DashboardLayout } from '../layout';
 import { UserCard } from '../userCard/UserCard';
@@ -6,6 +7,8 @@ import { UserCard } from '../userCard/UserCard';
 export const ExploreUsers = () => {
   const { isLoading: isLoadingUserFollowing, data: userFollowing } =
     useGetUserFollowing();
+  const { isLoading: isLoadingExplore, data: userExplore } =
+    useGetUserExplore();
 
   // TODO get data from the API
 
@@ -15,18 +18,19 @@ export const ExploreUsers = () => {
         Explore
       </Typography>
 
-      {isLoadingUserFollowing ? (
+      {isLoadingUserFollowing || isLoadingExplore ? (
         <Box css={{ mt: '$10' }}>
           <LoadingSpinner />
         </Box>
       ) : null}
 
       {userFollowing &&
-        Object.keys(userFollowing.following).map((address, index) => (
+        userExplore &&
+        userExplore.map((user, index) => (
           <UserCard
             key={index}
-            address={address}
-            following={!!userFollowing.following[address]}
+            address={user.stacksAddress}
+            following={!!userFollowing.following[user.stacksAddress]}
           />
         ))}
     </DashboardLayout>

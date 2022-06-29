@@ -27,3 +27,30 @@ export const useGetUserMe = (
     },
     options
   );
+
+type UserExploreResponse = {
+  id: string;
+  stacksAddress: string;
+}[];
+
+export const useGetUserExplore = (
+  options: UseQueryOptions<UserExploreResponse, Error> = {}
+) =>
+  useQuery<UserExploreResponse, Error>(
+    'get-user-explore',
+    async () => {
+      const res = await fetch(`${sigleConfig.apiUrl}/api/users/explore`, {
+        method: 'GET',
+        credentials: 'include',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+      const json = await res.json();
+      if (!res.ok) {
+        throw json;
+      }
+      return json;
+    },
+    options
+  );
