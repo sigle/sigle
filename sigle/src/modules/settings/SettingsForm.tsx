@@ -25,6 +25,7 @@ import { darkTheme, styled } from '../../stitches.config';
 import { useQueryClient } from 'react-query';
 import { generateAvatar } from '../../utils/boringAvatar';
 import { useAuth } from '../auth/AuthContext';
+import { useGetUserSettings } from '../../hooks/appData';
 
 const UnsavedChangesContainer = styled('div', {
   display: 'flex',
@@ -135,6 +136,7 @@ interface SettingsFormProps {
 }
 
 export const SettingsForm = ({ settings, username }: SettingsFormProps) => {
+  const { data: userSettings } = useGetUserSettings();
   const queryClient = useQueryClient();
   const { user } = useAuth();
   const [colorOpen, setColorOpen] = useState(false);
@@ -192,18 +194,18 @@ export const SettingsForm = ({ settings, username }: SettingsFormProps) => {
 
       newSettings.siteTwitterHandle = formik.values.siteTwitterHandle;
 
-      await saveSettingsFile({
+      const mergedSettings = {
         ...settingsFile,
         ...newSettings,
-      });
+      };
+      await saveSettingsFile(mergedSettings);
+      queryClient.setQueriesData('user-settings', mergedSettings);
 
       if (customLogo) {
-        formik.setFieldValue('siteLogo', newSettings.siteLogo);
         setCustomLogo(undefined);
       }
 
-      formik.resetForm({ values });
-      await queryClient.invalidateQueries('user-settings');
+      formik.resetForm({ values: { ...values, ...newSettings } });
       toast.success('Settings saved');
       setSubmitting(false);
     },
@@ -233,7 +235,7 @@ export const SettingsForm = ({ settings, username }: SettingsFormProps) => {
 
   const coverImageUrl = customLogo
     ? customLogo.preview
-    : formik.values.siteLogo;
+    : userSettings?.siteLogo;
 
   const userAddress =
     user?.profile.stxAddress.mainnet || user?.profile.stxAddress;
@@ -381,7 +383,7 @@ export const SettingsForm = ({ settings, username }: SettingsFormProps) => {
           <FormHelperError>{formik.errors.siteColor}</FormHelperError>
         )}
       </FormRow>
-      {formik.dirty && (
+      {(formik.dirty || customLogo) && (
         <UnsavedChangesContainer>
           <Box
             css={{
