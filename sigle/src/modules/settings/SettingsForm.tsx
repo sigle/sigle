@@ -194,20 +194,18 @@ export const SettingsForm = ({ settings, username }: SettingsFormProps) => {
 
       newSettings.siteTwitterHandle = formik.values.siteTwitterHandle;
 
-      await saveSettingsFile({
+      const mergedSettings = {
         ...settingsFile,
         ...newSettings,
-      });
+      };
+      await saveSettingsFile(mergedSettings);
+      queryClient.setQueriesData('user-settings', mergedSettings);
 
       if (customLogo) {
-        queryClient.setQueriesData('user-settings', {
-          ...settingsFile,
-          ...newSettings,
-        });
         setCustomLogo(undefined);
       }
 
-      formik.resetForm({ values });
+      formik.resetForm({ values: { ...values, ...newSettings } });
       toast.success('Settings saved');
       setSubmitting(false);
     },
