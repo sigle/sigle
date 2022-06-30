@@ -199,12 +199,11 @@ export const SettingsForm = ({ settings, username }: SettingsFormProps) => {
         ...newSettings,
       });
 
-      queryClient.setQueriesData('user-settings', {
-        ...settingsFile,
-        ...newSettings,
-      });
-
       if (customLogo) {
+        queryClient.setQueriesData('user-settings', {
+          ...settingsFile,
+          ...newSettings,
+        });
         setCustomLogo(undefined);
       }
 
