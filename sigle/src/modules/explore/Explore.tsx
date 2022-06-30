@@ -12,7 +12,7 @@ export const ExploreUsers = () => {
 
   return (
     <DashboardLayout>
-      <Typography size="h4" css={{ fontWeight: 600, mb: '$7' }}>
+      <Typography size="h2" css={{ fontWeight: 600, mb: '$7' }}>
         Explore
       </Typography>
 
