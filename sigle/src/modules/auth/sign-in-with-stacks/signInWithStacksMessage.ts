@@ -298,13 +298,16 @@ export class SignInWithStacksMessage {
           message: EIP4361Message,
           publicKey,
         });
+        console.log(isValid);
         if (isValid) {
           addr = getAddressFromPublicKey(publicKey);
         }
       } catch (_) {
+        console.log(_);
       } finally {
         /** Match signature with message's address */
         if (addr !== this.address) {
+          console.log(addr, this.address);
           assert({
             success: false,
             data: this,
