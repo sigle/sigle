@@ -20,12 +20,14 @@ import {
   FormTextarea,
   FormHelperError,
   FormHelper,
+  Flex,
 } from '../../ui';
 import { darkTheme, styled } from '../../stitches.config';
 import { useQueryClient } from 'react-query';
 import { generateAvatar } from '../../utils/boringAvatar';
 import { useAuth } from '../auth/AuthContext';
 import { useGetUserSettings } from '../../hooks/appData';
+import { ChooseNFTDialog } from './SelectNFTforPFPDialog';
 
 const UnsavedChangesContainer = styled('div', {
   display: 'flex',
@@ -139,6 +141,7 @@ export const SettingsForm = ({ settings, username }: SettingsFormProps) => {
   const { data: userSettings } = useGetUserSettings();
   const queryClient = useQueryClient();
   const { user } = useAuth();
+  const [showChooseNFTDialog, setShowChooseNFTDialog] = useState(false);
   const [colorOpen, setColorOpen] = useState(false);
   const [customLogo, setCustomLogo] = useState<
     (Blob & { preview: string; name: string }) | undefined
@@ -185,6 +188,8 @@ export const SettingsForm = ({ settings, username }: SettingsFormProps) => {
           encrypt: false,
           contentType: customLogo.type,
         });
+        console.log(coverImageUrl);
+
         newSettings.siteLogo = coverImageUrl;
       }
 
@@ -240,43 +245,58 @@ export const SettingsForm = ({ settings, username }: SettingsFormProps) => {
   const userAddress =
     user?.profile.stxAddress.mainnet || user?.profile.stxAddress;
 
+  const handleCancelChooseNFT = () => {
+    setShowChooseNFTDialog(false);
+  };
+
   return (
     <form onSubmit={formik.handleSubmit}>
       <FormRow>
         <FormLabel>Profile Image</FormLabel>
-        <ImageContainer
-          css={{
-            '&:hover::before': {
-              opacity: 0.6,
-            },
-            '&:active::before': {
-              opacity: 0.8,
-            },
-          }}
-          {...getRootProps({ tabIndex: undefined })}
-        >
-          <ImageEmptyIconUpdate
+        <Flex align="end" gap="2">
+          <ImageContainer
             css={{
-              '& svg': {
-                display: 'none',
+              '&:hover::before': {
+                opacity: 0.6,
               },
-              '&:hover': {
-                '& svg': {
-                  display: 'block',
-                },
+              '&:active::before': {
+                opacity: 0.8,
               },
             }}
+            {...getRootProps({ tabIndex: undefined })}
           >
-            <UpdateIcon />
-          </ImageEmptyIconUpdate>
-          <Image
-            src={coverImageUrl ? coverImageUrl : generateAvatar(userAddress)}
-          />
-          <input {...getInputProps()} />
-          <ImageEmptyIconAdd>
-            <CameraIcon />
-          </ImageEmptyIconAdd>
-        </ImageContainer>
+            <ImageEmptyIconUpdate
+              css={{
+                '& svg': {
+                  display: 'none',
+                },
+                '&:hover': {
+                  '& svg': {
+                    display: 'block',
+                  },
+                },
+              }}
+            >
+              <UpdateIcon />
+            </ImageEmptyIconUpdate>
+            <Image
+              src={coverImageUrl ? coverImageUrl : generateAvatar(userAddress)}
+            />
+            <input {...getInputProps()} />
+            <ImageEmptyIconAdd>
+              <CameraIcon />
+            </ImageEmptyIconAdd>
+          </ImageContainer>
+          <Typography>or</Typography>
+          <Button
+            onClick={() => setShowChooseNFTDialog(true)}
+            type="button"
+            variant="subtle"
+            size="md"
+          >
+            Select an NFT
+          </Button>
+        </Flex>
         <FormHelper>Recommended size: 92x92px</FormHelper>
       </FormRow>
 
@@ -409,6 +429,12 @@ export const SettingsForm = ({ settings, username }: SettingsFormProps) => {
           </Button>
         </UnsavedChangesContainer>
       )}
+
+      <ChooseNFTDialog
+        open={showChooseNFTDialog}
+        onOpenChange={handleCancelChooseNFT}
+        setCustomLogo={setCustomLogo}
+      />
     </form>
   );
 };
