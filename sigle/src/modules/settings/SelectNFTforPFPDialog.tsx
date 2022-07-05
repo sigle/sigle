@@ -138,14 +138,9 @@ export const ChooseNFTDialog = ({
     }
 
     if (activeNFTImageUrl) {
-      const response = await fetch(activeNFTImageUrl).catch((err) => {
-        throw new Error(err);
-      });
+      const response = await fetch(activeNFTImageUrl);
 
       const blob = await response.blob();
-
-      const file = new File([blob], activeNFT, { type: blob.type });
-      // console.log(file);
 
       setCustomLogo(
         Object.assign(blob, {
@@ -269,18 +264,6 @@ export const ChooseNFTDialog = ({
                             </Box>
                           </NftOverlay>
                         )}
-                        {/* <Box
-                        as="img"
-                        src={`${NFTImageURL}/${item.value?.repr.replace(
-                          'u',
-                          ''
-                        )}.png&size=170`}
-                        css={{
-                          position: 'absolute',
-                          top: 0,
-                          left: 0,
-                        }}
-                      /> */}
                         <NFTImage
                           assetIndentifier={item.asset_identifier}
                           nftId={item.value?.repr.replace('u', '')}

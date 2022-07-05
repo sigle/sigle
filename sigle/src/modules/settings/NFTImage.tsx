@@ -33,7 +33,6 @@ export const NFTImage = ({
     if (assetIndentifier && nftId) {
       const fetchImageUrl = async () => {
         const assetIdentifierSplit = assetIndentifier.split('::');
-        console.log(assetIdentifierSplit);
         const nftImageUrl = await getNftImageUrl(
           assetIdentifierSplit[0],
           nftId
@@ -49,11 +48,14 @@ export const NFTImage = ({
       as="img"
       src={imageUrl}
       css={{
+        position: 'absolute',
         width: 92,
         height: 92,
         imageRendering: assetIndentifier?.includes('free-punks')
           ? 'pixelated'
           : 'auto',
+        top: 0,
+        left: 0,
       }}
     />
   );
