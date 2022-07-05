@@ -19,7 +19,7 @@
     "@fastify/cookie": "7.0.0",
     "@fastify/cors": "8.0.0",
     "@fastify/rate-limit": "7.0.0",
-    "@prisma/client": "3.15.2",
+    "@prisma/client": "4.0.0",
     "@sentry/node": "7.2.0",
     "@stacks/auth": "4.1.0",
     "@stacks/blockchain-api-client": "4.0.1",
@@ -31,7 +31,7 @@
     "fastify-plugin": "3.0.1",
     "ioredis": "5.0.6",
     "next-auth": "4.7.0",
-    "prisma": "3.15.2",
+    "prisma": "4.0.0",
     "undici": "5.5.1"
   },
   "devDependencies": {
