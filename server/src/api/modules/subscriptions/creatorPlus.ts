@@ -73,12 +73,9 @@ export async function createSubscriptionCreatorPlusEndpoint(
         return;
       }
 
-      const user = await prisma.user.findUnique({
+      const user = await prisma.user.findUniqueOrThrow({
         where: { stacksAddress: req.address },
       });
-      if (!user) {
-        throw new Error(`User not found for address ${req.address}`);
-      }
 
       const activeSubscription = await prisma.subscription.findFirst({
         where: {

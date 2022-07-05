@@ -1,6 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -11,24 +8,25 @@ datasource db {
 }
 
 model User {
-  id            String         @id @default(uuid())
-  stacksAddress String         @unique
-  subscriptions Subscription[]
-  createdAt     DateTime       @default(now())
-  updatedAt     DateTime       @updatedAt
-}
-
-enum SubscriptionStatus {
-  INACTIVE
-  ACTIVE
+  id             String         @id @default(uuid())
+  stacksAddress  String         @unique
+  createdAt      DateTime       @default(now())
+  updatedAt      DateTime       @updatedAt
+  stacksUsername String?        @unique
+  subscriptions  Subscription[]
 }
 
 model Subscription {
   id        String             @id @default(uuid())
   status    SubscriptionStatus
   nftId     Int                @unique
-  user      User               @relation(fields: [userId], references: [id])
   userId    String
   createdAt DateTime           @default(now())
   updatedAt DateTime           @updatedAt
+  user      User               @relation(fields: [userId], references: [id])
+}
+
+enum SubscriptionStatus {
+  INACTIVE
+  ACTIVE
 }
