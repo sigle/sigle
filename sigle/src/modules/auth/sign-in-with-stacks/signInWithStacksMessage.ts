@@ -4,7 +4,7 @@ import * as uri from 'valid-url';
 import {
   createMessageSignature,
   getAddressFromPublicKey,
-  publicKeyFromSignature,
+  publicKeyFromSignatureRsv,
   validateStacksAddress,
 } from '@stacks/transactions';
 import { ParsedMessage } from './parser';
@@ -15,7 +15,7 @@ import {
   VerifyParams,
   VerifyParamsKeys,
 } from './types';
-import { hashMessage, verifyMessageSignature } from '@stacks/encryption';
+import { hashMessage, verifyMessageSignatureRsv } from '@stacks/encryption';
 
 // https://github.com/stacksgov/sips/blob/22f964ca9beddf9fd750d466b4a20568435f3911/sips/sip-x%20sign-in-with-stacks/sip-x-sign-in-with-stacks.md
 
@@ -289,11 +289,11 @@ export class SignInWithStacksMessage {
       /** Recover address from signature */
       let addr;
       try {
-        const publicKey = publicKeyFromSignature(
+        const publicKey = publicKeyFromSignatureRsv(
           hashMessage(EIP4361Message).toString('hex'),
           createMessageSignature(signature)
         );
-        const isValid = verifyMessageSignature({
+        const isValid = verifyMessageSignatureRsv({
           signature,
           message: EIP4361Message,
           publicKey,

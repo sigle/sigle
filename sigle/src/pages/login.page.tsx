@@ -3,6 +3,7 @@ import { getCsrfToken, signIn, useSession } from 'next-auth/react';
 import type { RedirectableProviderType } from 'next-auth/providers';
 import * as Fathom from 'fathom-client';
 import posthog from 'posthog-js';
+import { StacksMainnet } from '@stacks/network';
 import { useConnect } from '@stacks/connect-react';
 import { useConnect as legacyUseConnect } from '@stacks/legacy-connect-react';
 import {
@@ -72,6 +73,7 @@ const Login = () => {
     const message = stacksMessage.prepareMessage();
 
     await sign({
+      network: new StacksMainnet(),
       message,
       onFinish: async ({ signature }) => {
         const signInResult = await signIn<RedirectableProviderType>(
