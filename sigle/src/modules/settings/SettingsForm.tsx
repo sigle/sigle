@@ -1,69 +1,125 @@
 import React, { useState, useCallback } from 'react';
-import styled, { css } from 'styled-components';
-import tw from 'twin.macro';
 import { toast } from 'react-toastify';
 import { useFormik, FormikErrors } from 'formik';
 import { useDropzone } from 'react-dropzone';
-import { CameraIcon, TrashIcon } from '@radix-ui/react-icons';
+import { CameraIcon, UpdateIcon } from '@radix-ui/react-icons';
 import { BlockPicker } from 'react-color';
 import { SettingsFile } from '../../types';
 import { hexRegex } from '../../utils/regex';
 import { storage } from '../../utils/blockstack';
 import { getSettingsFile, isValidHttpUrl, saveSettingsFile } from '../../utils';
 import { resizeImage } from '../../utils/image';
-import { Button } from '../../components';
+import { colors } from '../../utils/colors';
 import {
+  Box,
+  Button,
+  Typography,
   FormRow,
   FormLabel,
   FormInput,
   FormTextarea,
   FormHelperError,
   FormHelper,
-} from '../../components/Form';
-import { colors } from '../../utils/colors';
+} from '../../ui';
+import { darkTheme, styled } from '../../stitches.config';
+import { useQueryClient } from 'react-query';
+import { generateAvatar } from '../../utils/boringAvatar';
+import { useAuth } from '../auth/AuthContext';
+import { useGetUserSettings } from '../../hooks/appData';
 
-const StyledFormRow = styled(FormRow)`
-  ${tw`xl:w-1/2`};
-`;
+const UnsavedChangesContainer = styled('div', {
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'space-between',
+  br: '$2',
+  boxShadow:
+    '0px 8px 20px rgba(8, 8, 8, 0.06), 0px 10px 18px rgba(8, 8, 8, 0.04), 0px 5px 14px rgba(8, 8, 8, 0.04), 0px 3px 8px rgba(8, 8, 8, 0.04), 0px 1px 5px rgba(8, 8, 8, 0.03), 0px 1px 2px rgba(8, 8, 8, 0.02), 0px 0.2px 1px rgba(8, 8, 8, 0.01)',
+  position: 'sticky',
+  bottom: '$5',
+  px: '$5',
+  py: '$3',
+  overflow: 'hidden',
 
-const StyledFormHelper = styled(FormHelper)`
-  ${tw`mt-2`};
-`;
+  [`.${darkTheme} &`]: {
+    boxShadow:
+      '0px 8px 20px rgba(8, 8, 8, 0.32), 0px 10px 18px rgba(8, 8, 8, 0.28), 0px 5px 14px rgba(8, 8, 8, 0.26), 0px 3px 8px rgba(8, 8, 8, 0.16), 0px 1px 5px rgba(8, 8, 8, 0.14), 0px 1px 2px rgba(8, 8, 8, 0.12), 0px 0.2px 1px rgba(8, 8, 8, 0.08)',
+  },
+});
 
-const FormColor = styled.div<{ color: string }>`
-  ${tw`py-2 text-white rounded cursor-pointer relative inline-block text-center`};
-  width: 170px;
-  ${(props) =>
-    css`
-      background-color: ${props.color};
-    `}
-`;
+const FormColor = styled('div', {
+  py: '$1',
+  color: 'white',
+  br: '$1',
+  cursor: 'pointer',
+  position: 'relative',
+  display: 'inline-block',
+  textAlign: 'center',
+  width: 150,
+});
 
-const ImageEmpty = styled.div<{ haveImage: boolean }>`
-  ${tw`flex items-center justify-center bg-grey py-8 cursor-pointer rounded-lg relative border border-solid border-grey focus:outline-none`};
+const ImageContainer = styled('div', {
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+  cursor: 'pointer',
+  br: '$4',
+  overflow: 'hidden',
+  position: 'relative',
+  width: 92,
+  height: 92,
 
-  ${(props) =>
-    props.haveImage &&
-    css`
-      ${tw`py-0 bg-transparent`};
-    `}
+  '&::before': {
+    content: '',
+    position: 'absolute',
+    left: 0,
+    top: 0,
+    width: '100%',
+    height: '100%',
+    backgroundColor: '$gray11',
+    opacity: 0,
+    transition: '.2s',
 
-  span {
-    ${tw`py-1 px-2 text-sm text-grey-darker`};
-  }
-`;
+    [`.${darkTheme} &`]: {
+      backgroundColor: '$colors$gray1',
+    },
+  },
+});
 
-const ImageEmptyIconAdd = styled.div`
-  ${tw`absolute bottom-0 right-0 p-2 flex items-center text-grey-dark`};
-`;
+const ImageEmptyIconAdd = styled('div', {
+  position: 'absolute',
+  bottom: 0,
+  right: 0,
+  p: '$2',
+  color: '$gray1',
 
-const ImageEmptyIconDelete = styled.div`
-  ${tw`absolute top-0 right-0 p-2 flex items-center text-grey-dark`};
-`;
+  [`.${darkTheme} &`]: {
+    color: '$gray11',
+  },
+});
 
-const Image = styled.img`
-  ${tw`cursor-pointer`};
-`;
+const ImageEmptyIconUpdate = styled('div', {
+  position: 'absolute',
+  top: 0,
+  left: 0,
+  width: '100%',
+  height: '100%',
+  display: 'grid',
+  placeItems: 'center',
+  color: '$gray1',
+
+  [`.${darkTheme} &`]: {
+    color: '$gray11',
+  },
+});
+
+const Image = styled('img', {
+  width: 'auto',
+  height: '100%',
+  maxWidth: 92,
+  maxHeight: 92,
+  objectFit: 'cover',
+  cursor: 'pointer',
+});
 
 interface SettingsFormValues {
   siteName: string;
@@ -80,6 +136,9 @@ interface SettingsFormProps {
 }
 
 export const SettingsForm = ({ settings, username }: SettingsFormProps) => {
+  const { data: userSettings } = useGetUserSettings();
+  const queryClient = useQueryClient();
+  const { user } = useAuth();
   const [colorOpen, setColorOpen] = useState(false);
   const [customLogo, setCustomLogo] = useState<
     (Blob & { preview: string; name: string }) | undefined
@@ -95,6 +154,7 @@ export const SettingsForm = ({ settings, username }: SettingsFormProps) => {
     },
     validate: (values) => {
       const errors: FormikErrors<SettingsFormValues> = {};
+
       if (values.siteName && values.siteName.length > 50) {
         errors.siteName = 'Name too long';
       }
@@ -134,16 +194,18 @@ export const SettingsForm = ({ settings, username }: SettingsFormProps) => {
 
       newSettings.siteTwitterHandle = formik.values.siteTwitterHandle;
 
-      await saveSettingsFile({
+      const mergedSettings = {
         ...settingsFile,
         ...newSettings,
-      });
+      };
+      await saveSettingsFile(mergedSettings);
+      queryClient.setQueriesData('user-settings', mergedSettings);
 
       if (customLogo) {
-        formik.setFieldValue('siteLogo', newSettings.siteLogo);
         setCustomLogo(undefined);
       }
 
+      formik.resetForm({ values: { ...values, ...newSettings } });
       toast.success('Settings saved');
       setSubmitting(false);
     },
@@ -171,22 +233,54 @@ export const SettingsForm = ({ settings, username }: SettingsFormProps) => {
     multiple: false,
   });
 
-  const handleRemoveCover = (
-    event: React.MouseEvent<HTMLDivElement, MouseEvent>
-  ) => {
-    // We stop the event so it does not trigger react-dropzone
-    event.stopPropagation();
-    setCustomLogo(undefined);
-    formik.setFieldValue('siteLogo', '');
-  };
-
   const coverImageUrl = customLogo
     ? customLogo.preview
-    : formik.values.siteLogo;
+    : userSettings?.siteLogo;
+
+  const userAddress =
+    user?.profile.stxAddress.mainnet || user?.profile.stxAddress;
 
   return (
     <form onSubmit={formik.handleSubmit}>
-      <StyledFormRow>
+      <FormRow>
+        <FormLabel>Profile Image</FormLabel>
+        <ImageContainer
+          css={{
+            '&:hover::before': {
+              opacity: 0.6,
+            },
+            '&:active::before': {
+              opacity: 0.8,
+            },
+          }}
+          {...getRootProps({ tabIndex: undefined })}
+        >
+          <ImageEmptyIconUpdate
+            css={{
+              '& svg': {
+                display: 'none',
+              },
+              '&:hover': {
+                '& svg': {
+                  display: 'block',
+                },
+              },
+            }}
+          >
+            <UpdateIcon />
+          </ImageEmptyIconUpdate>
+          <Image
+            src={coverImageUrl ? coverImageUrl : generateAvatar(userAddress)}
+          />
+          <input {...getInputProps()} />
+          <ImageEmptyIconAdd>
+            <CameraIcon />
+          </ImageEmptyIconAdd>
+        </ImageContainer>
+        <FormHelper>Recommended size: 92x92px</FormHelper>
+      </FormRow>
+
+      <FormRow>
         <FormLabel>Name</FormLabel>
         <FormInput
           name="siteName"
@@ -196,15 +290,15 @@ export const SettingsForm = ({ settings, username }: SettingsFormProps) => {
           value={formik.values.siteName}
           onChange={formik.handleChange}
         />
-        <StyledFormHelper>
-          We will show your Blockstack ID if you leave this input empty
-        </StyledFormHelper>
+        <FormHelper>
+          This name will be displayed on your profile page
+        </FormHelper>
         {formik.errors.siteName && (
           <FormHelperError>{formik.errors.siteName}</FormHelperError>
         )}
-      </StyledFormRow>
+      </FormRow>
 
-      <StyledFormRow>
+      <FormRow>
         <FormLabel>Description</FormLabel>
         <FormTextarea
           name="siteDescription"
@@ -212,31 +306,31 @@ export const SettingsForm = ({ settings, username }: SettingsFormProps) => {
           maxLength={350}
           value={formik.values.siteDescription}
           onChange={formik.handleChange}
+          placeholder="Describe yourself in a few words..."
         />
+        <FormHelper>Max. 350 characters</FormHelper>
         {formik.errors.siteDescription && (
           <FormHelperError>{formik.errors.siteDescription}</FormHelperError>
         )}
-      </StyledFormRow>
+      </FormRow>
 
-      <StyledFormRow>
+      <FormRow>
         <FormLabel>Website</FormLabel>
         <FormInput
           name="siteUrl"
           type="text"
-          maxLength={50}
-          placeholder="https://example.com"
+          maxLength={100}
+          placeholder="https://"
           value={formik.values.siteUrl}
           onChange={formik.handleChange}
         />
-        <StyledFormHelper>
-          Add a link to your personal website.
-        </StyledFormHelper>
+        <FormHelper>Max. 100 characters</FormHelper>
         {formik.errors.siteUrl && (
           <FormHelperError>{formik.errors.siteUrl}</FormHelperError>
         )}
-      </StyledFormRow>
+      </FormRow>
 
-      <StyledFormRow>
+      <FormRow>
         <FormLabel>Twitter Handle</FormLabel>
         <FormInput
           name="siteTwitterHandle"
@@ -244,17 +338,18 @@ export const SettingsForm = ({ settings, username }: SettingsFormProps) => {
           maxLength={50}
           value={formik.values.siteTwitterHandle}
           onChange={formik.handleChange}
+          placeholder="@"
         />
-        <StyledFormHelper>Add your twitter handle.</StyledFormHelper>
+        <FormHelper>Enter your Twitter handle</FormHelper>
         {formik.errors.siteTwitterHandle && (
           <FormHelperError>{formik.errors.siteTwitterHandle}</FormHelperError>
         )}
-      </StyledFormRow>
+      </FormRow>
 
-      <StyledFormRow>
+      <FormRow>
         <FormLabel>Primary color</FormLabel>
         <FormColor
-          color={formik.values.siteColor || colors.pink}
+          css={{ backgroundColor: formik.values.siteColor || colors.pink }}
           onClick={() => setColorOpen(true)}
         >
           {formik.values.siteColor || colors.pink}
@@ -283,40 +378,37 @@ export const SettingsForm = ({ settings, username }: SettingsFormProps) => {
             </div>
           )}
         </FormColor>
-        <StyledFormHelper>
-          This will change the color of links on your blog
-        </StyledFormHelper>
+        <FormHelper>Choose a custom color for your links</FormHelper>
         {formik.errors.siteColor && (
           <FormHelperError>{formik.errors.siteColor}</FormHelperError>
         )}
-      </StyledFormRow>
-
-      <StyledFormRow>
-        <FormLabel>Logo or profile picture</FormLabel>
-        <ImageEmpty
-          {...getRootProps({ tabIndex: undefined })}
-          haveImage={!!coverImageUrl}
-        >
-          {coverImageUrl && (
-            <ImageEmptyIconDelete onClick={handleRemoveCover}>
-              <TrashIcon width={18} height={18} />
-            </ImageEmptyIconDelete>
-          )}
-          {coverImageUrl && <Image src={coverImageUrl} />}
-          {!coverImageUrl && <span>Upload cover image</span>}
-          <input {...getInputProps()} />
-          <ImageEmptyIconAdd>
-            <CameraIcon width={18} height={18} />
-          </ImageEmptyIconAdd>
-        </ImageEmpty>
-        <StyledFormHelper>
-          Resize manually your image to get the result you want
-        </StyledFormHelper>
-      </StyledFormRow>
-
-      <Button disabled={formik.isSubmitting} type="submit">
-        {formik.isSubmitting ? 'Saving...' : 'Save'}
-      </Button>
+      </FormRow>
+      {(formik.dirty || customLogo) && (
+        <UnsavedChangesContainer>
+          <Box
+            css={{
+              position: 'absolute',
+              width: '100%',
+              height: '100%',
+              left: 0,
+              zIndex: -1,
+              backgroundColor: '$gray1',
+              opacity: 0.95,
+            }}
+          />
+          <Typography size="subheading" css={{ fontWeight: 600 }}>
+            You have unsaved changes
+          </Typography>
+          <Button
+            disabled={formik.isSubmitting}
+            type="submit"
+            size="md"
+            color="orange"
+          >
+            {formik.isSubmitting ? 'Saving...' : 'Save changes'}
+          </Button>
+        </UnsavedChangesContainer>
+      )}
     </form>
   );
 };

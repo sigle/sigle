@@ -1,8 +1,11 @@
 import { FastifyInstance } from 'fastify';
-import { isValid, parse } from 'date-fns';
+import { format, isValid, parse } from 'date-fns';
 import { maxFathomFromDate, getBucketUrl, getPublicStories } from './utils';
-import { fathomClient } from '../../../external/fathom';
 import { redis } from '../../../redis';
+import { config } from '../../../config';
+import { StacksService } from '../stacks/service';
+import { SubscriptionService } from '../subscriptions/service';
+import { plausibleClient } from '../../../external/plausible';
 
 interface AnalyticsReferrersParams {
   dateFrom?: string;
@@ -37,9 +40,10 @@ export async function createAnalyticsReferrersEndpoint(
   }>(
     '/api/analytics/referrers',
     {
+      onRequest: [fastify.authenticate],
       config: {
         rateLimit: {
-          max: 10,
+          max: config.NODE_ENV === 'test' ? 1000 : 10,
           timeWindow: 60000,
         },
       },
@@ -52,6 +56,7 @@ export async function createAnalyticsReferrersEndpoint(
     async (req, res) => {
       const { storyId } = req.query;
       let { dateFrom } = req.query;
+      const dateTo = new Date();
 
       if (!dateFrom) {
         res.status(400).send({ error: 'dateFrom is required' });
@@ -67,16 +72,23 @@ export async function createAnalyticsReferrersEndpoint(
       // Set max date in the past
       dateFrom = maxFathomFromDate(parsedDateFrom, dateFrom);
 
-      // TODO protect to logged in users
-      // TODO take username from session
-      const username = 'sigleapp.id.blockstack';
+      const activeSubscription =
+        await SubscriptionService.getActiveSubscriptionByAddress({
+          address: req.address,
+        });
+      if (!activeSubscription) {
+        res.status(401).send({ error: 'No active subscription' });
+        return;
+      }
+
+      const username = await StacksService.getUsernameByAddress(req.address);
 
       // Caching mechanism to avoid hitting Fathom too often
       const cacheKey = storyId
         ? `referrers:${username}_${dateFrom}_${storyId}`
         : `referrers:${username}_${dateFrom}`;
       const cachedResponse = await redis.get(cacheKey);
-      if (cachedResponse) {
+      if (cachedResponse && config.NODE_ENV !== 'test') {
         res.status(200).send(JSON.parse(cachedResponse));
         return;
       }
@@ -98,37 +110,17 @@ export async function createAnalyticsReferrersEndpoint(
         storiesPath.push(`/${username}`);
       }
 
-      // TODO batch with max concurrent limit
-      const fathomAggregationResult = await Promise.all(
-        storiesPath.map((path) =>
-          fathomClient.aggregateReferrers({
-            dateFrom,
-            path,
-          })
-        )
-      );
-
-      const domainsValues: { [key: string]: { count: number } } = {};
-
-      fathomAggregationResult.forEach((aggregationResult) => {
-        aggregationResult.forEach((result) => {
-          if (!domainsValues[result.referrer_hostname]) {
-            domainsValues[result.referrer_hostname] = { count: 0 };
-          }
-          domainsValues[result.referrer_hostname].count += parseInt(
-            result.uniques,
-            10
-          );
-        });
+      const plausibleReferrers = await plausibleClient.referrers({
+        dateFrom,
+        dateTo: format(dateTo, 'yyyy-MM-dd'),
+        paths: storiesPath,
       });
 
-      const referrersResponse: AnalyticsReferrersResponse = Object.keys(
-        domainsValues
-      )
-        .map((domain) => {
-          const domainValues = domainsValues[domain];
-          return { domain, count: domainValues.count };
-        })
+      const referrersResponse: AnalyticsReferrersResponse = plausibleReferrers
+        .map((result) => ({
+          domain: result.source,
+          count: result.pageviews,
+        }))
         .sort((a, b) => b.count - a.count);
 
       // Cache response for 1 hour

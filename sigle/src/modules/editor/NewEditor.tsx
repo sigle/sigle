@@ -23,7 +23,6 @@ const TitleInput = styled('input', {
   outline: 'transparent',
   background: 'transparent',
   width: '100%',
-  // Replicate style of packages/tailwind-style/tailwind.config.js for h1
   fontWeight: '700',
   fontSize: '36px',
   lineHeight: '46px',

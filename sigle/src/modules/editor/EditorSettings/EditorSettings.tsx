@@ -19,14 +19,13 @@ import {
   Dialog,
   DialogTitle,
   Flex,
-  Heading,
   IconButton,
   ScrollArea,
   ScrollAreaCorner,
   ScrollAreaScrollbar,
   ScrollAreaThumb,
   ScrollAreaViewport,
-  Text,
+  Typography,
 } from '../../../ui';
 import { keyframes, styled } from '../../../stitches.config';
 import { resizeImage } from '../../../utils/image';
@@ -36,96 +35,24 @@ import {
   getStoriesFile,
   saveStoriesFile,
 } from '../../../utils';
+import {
+  FormHelper,
+  FormHelperError,
+  FormInput,
+  FormLabel,
+  FormRow,
+  FormTextarea,
+} from '../../../ui/Form';
 
 // TODO - migrate hideCoverImage from old articles
 // TODO - use twitter card preview component in settings?
 
-export const FormRow = styled('div', {
-  mb: '$5',
-});
-
-export const FormLabel = styled('label', {
+const StyledFormInput = styled(FormInput, {
   width: '100%',
-  display: 'block',
-  fontSize: '$2',
-  color: '$gray11',
-  mb: '$3',
 });
 
-export const FormInput = styled('input', {
-  '&[type]': {
-    appearance: 'none',
-    borderWidth: '0',
-    boxSizing: 'border-box',
-    fontFamily: 'inherit',
-    margin: '0',
-    outline: 'none',
-    padding: '0',
-    width: '100%',
-    WebkitTapHighlightColor: 'rgba(0,0,0,0)',
-    backgroundColor: '$gray3',
-    boxShadow: '0 0 0 1px $colors$gray7',
-    borderRadius: '$1',
-    px: '$2',
-    py: '$1',
-    fontSize: '$1',
-    color: '$gray11',
-
-    '&:hover': {
-      backgroundColor: '$gray4',
-      boxShadow: '0 0 0 1px $colors$gray8',
-    },
-
-    '&:focus': {
-      backgroundColor: '$gray5',
-      boxShadow: '0 0 0 2px $colors$gray8',
-    },
-
-    '&::placeholder': {
-      color: '$gray9',
-    },
-  },
-
-  '&[type="date"]::-webkit-calendar-picker-indicator': {
-    background: 'url(/static/img/Calendar.svg) no-repeat',
-    mt: '$1',
-  },
-});
-
-const FormTextarea = styled('textarea', {
-  outline: 'none',
+const StyledFormTextarea = styled(FormTextarea, {
   width: '100%',
-  backgroundColor: '$gray3',
-  boxShadow: '0 0 0 1px $colors$gray7',
-  borderRadius: '$1',
-  py: '$2',
-  px: '$2',
-  fontSize: '$1',
-
-  '&:hover': {
-    backgroundColor: '$gray4',
-    boxShadow: '0 0 0 1px $colors$gray8',
-  },
-
-  '&:focus': {
-    backgroundColor: '$gray5',
-    boxShadow: '0 0 0 2px $colors$gray8',
-  },
-
-  '&::placeholder': {
-    color: '$gray9',
-  },
-});
-
-const FormHelper = styled('p', {
-  mt: '$2',
-  color: '$gray9',
-  fontSize: '$1',
-});
-
-const FormHelperError = styled('p', {
-  mt: '$1',
-  color: '$orange11',
 });
 
 const ImageEmpty = styled('div', {
@@ -369,13 +296,13 @@ export const EditorSettings = ({
     <Dialog open={open} onOpenChange={onClose}>
       <StyledDialogContent aria-label="Story settings">
         <DialogTitle asChild>
-          <Heading
+          <Typography
             as="h2"
-            size="lg"
+            size="h3"
             css={{ ml: '$8', mt: '$10', pb: '$4', fontWeight: 'normal' }}
           >
             Story settings
-          </Heading>
+          </Typography>
         </DialogTitle>
 
         <Box
@@ -395,7 +322,7 @@ export const EditorSettings = ({
               >
                 <FormRow>
                   <FormLabel>Created on</FormLabel>
-                  <FormInput
+                  <StyledFormInput
                     type="date"
                     name="createdAt"
                     value={formik.values.createdAt}
@@ -413,6 +340,7 @@ export const EditorSettings = ({
                     css={{
                       py: !!formik.values.metaImage ? 0 : undefined,
                       height: !!formik.values.metaImage ? undefined : 178,
+                      width: '100%',
                     }}
                   >
                     {formik.values.metaImage && (
@@ -425,9 +353,9 @@ export const EditorSettings = ({
                     {!formik.values.metaImage && (
                       <Flex align="center" gap="1" css={{ color: '$gray9' }}>
                         <CameraIcon />
-                        <Text size="action" css={{ color: '$gray9' }}>
+                        <Typography size="subheading" css={{ color: '$gray9' }}>
                           Add a custom meta image
-                        </Text>
+                        </Typography>
                       </Flex>
                     )}
                     <input {...getInputProps()} />
@@ -447,7 +375,7 @@ export const EditorSettings = ({
 
                 <FormRow>
                   <FormLabel>Meta title</FormLabel>
-                  <FormInput
+                  <StyledFormInput
                     placeholder="Type here..."
                     name="metaTitle"
                     type="text"
@@ -466,7 +394,7 @@ export const EditorSettings = ({
 
                 <FormRow>
                   <FormLabel>Meta description</FormLabel>
-                  <FormTextarea
+                  <StyledFormTextarea
                     placeholder="Type here..."
                     name="metaDescription"
                     value={formik.values.metaDescription}
@@ -485,7 +413,7 @@ export const EditorSettings = ({
                   )}
                 </FormRow>
 
-                <Text css={{ mb: '$3' }}>Preview</Text>
+                <Typography css={{ mb: '$3' }}>Preview</Typography>
                 {formik.values.metaImage || story.coverImage ? (
                   <PreviewCard>
                     <Image
@@ -493,18 +421,21 @@ export const EditorSettings = ({
                       alt="Meta image"
                     />
                     <Box css={{ p: '$2' }}>
-                      <Text size="xs" css={{ display: 'flex', gap: '$1' }}>
+                      <Typography
+                        size="subparagraph"
+                        css={{ display: 'flex', gap: '$1' }}
+                      >
                         app.sigle.io
-                      </Text>
-                      <Text as="h3" css={{ fontWeight: 600 }}>
+                      </Typography>
+                      <Typography as="h3" css={{ fontWeight: 600 }}>
                         {story.metaTitle
                           ? story.metaTitle
                           : story.title + ' | Sigle'}
-                      </Text>
+                      </Typography>
                       {story.metaDescription && (
-                        <Text size="xs" css={{ mb: '$1' }}>
+                        <Typography size="subparagraph" css={{ mb: '$1' }}>
                           {story.metaDescription}
-                        </Text>
+                        </Typography>
                       )}
                     </Box>
                   </PreviewCard>
@@ -526,18 +457,21 @@ export const EditorSettings = ({
                       <FileTextIcon />
                     </Box>
                     <Flex direction="column" justify="center" css={{ p: '$2' }}>
-                      <Text size="xs" css={{ display: 'flex', gap: '$1' }}>
+                      <Typography
+                        size="subparagraph"
+                        css={{ display: 'flex', gap: '$1' }}
+                      >
                         app.sigle.io
-                      </Text>
-                      <Text as="h3" css={{ fontWeight: 600 }}>
+                      </Typography>
+                      <Typography as="h3" css={{ fontWeight: 600 }}>
                         {story.metaTitle
                           ? story.metaTitle
                           : story.title + ' | Sigle'}
-                      </Text>
+                      </Typography>
                       {story.metaDescription && (
-                        <Text size="xs" css={{ mb: '$1' }}>
+                        <Typography size="subparagraph" css={{ mb: '$1' }}>
                           {story.metaDescription}
-                        </Text>
+                        </Typography>
                       )}
                     </Flex>
                   </PreviewCardNoImage>

@@ -17,12 +17,12 @@ import { StatsData } from './types';
 
 // accessors
 const getDate = (d: StatsData) => new Date(d.date);
-const getViews = (d: StatsData) => d.pageViews;
+const getViews = (d: StatsData) => d.pageviews;
 const getVisits = (d: StatsData) => d.visits;
 const bisectDate = bisector<StatsData, Date>((d) => new Date(d.date)).left;
 
 interface StatsChartProps extends WithParentSizeProps {
-  data: StatsData[];
+  data: StatsData[] | undefined;
   type: 'weekly' | 'monthly' | 'all';
 }
 
@@ -34,17 +34,19 @@ const StatsChart = ({
 }: StatsChartProps & WithParentSizeProvidedProps) => {
   const margin = {
     top: 20,
-    left: type === 'weekly' || type === 'monthly' ? 24 : 44,
+    left: type === 'weekly' || type === 'monthly' ? 28 : 44,
     bottom: 40,
     right: 0,
   };
 
-  const tickFormat = (d: any) => {
-    if (type === 'weekly' || type === 'monthly') {
-      return format(d, 'dd/MM');
-    } else {
-      return format(d, 'MMM yyyy');
-    }
+  const tickFormat = (d: Date) => {
+    return format(d, 'dd/MM');
+    // TODO enable this part again once we start having more data in
+    // if (type === 'weekly' || type === 'monthly') {
+    //   return format(d, 'dd/MM');
+    // } else {
+    //   return format(d, 'MMM yyyy');
+    // }
   };
 
   // bounds
@@ -59,13 +61,13 @@ const StatsChart = ({
     () =>
       scaleTime({
         range: [margin.left, xMax],
-        domain: extent(data, getDate) as [Date, Date],
+        domain: data && (extent(data, getDate) as [Date, Date]),
       }),
     [xMax, margin.left, data]
   );
 
-  const maxViews = max(data, getViews) || 0;
-  const maxVisits = max(data, getVisits) || 0;
+  const maxViews = (data && max(data, getViews)) || 0;
+  const maxVisits = (data && max(data, getVisits)) || 0;
 
   const maxValue = maxViews > maxVisits ? maxViews : maxVisits;
 
@@ -73,7 +75,6 @@ const StatsChart = ({
     return scaleLinear({
       range: [yMax, margin.top],
       domain: [0, maxValue ? maxValue : 10],
-      nice: true,
     });
   }, [yMax, margin.top, data]);
 
@@ -97,11 +98,11 @@ const StatsChart = ({
     ) => {
       const { x } = localPoint(event) || { x: 0 };
       const x0 = dateScale.invert(x);
-      const index = bisectDate(data, x0, 1);
-      const d0 = data[index - 1];
-      const d1 = data[index];
+      const index = data && bisectDate(data, x0, 1);
+      const d0 = data && data[index! - 1];
+      const d1 = data && data[index!];
       let d = d0;
-      if (d1 && getDate(d1)) {
+      if (d1 && d0 && getDate(d1)) {
         d =
           x0.valueOf() - getDate(d0).valueOf() >
           getDate(d1).valueOf() - x0.valueOf()
@@ -111,7 +112,7 @@ const StatsChart = ({
       showTooltip({
         tooltipData: d,
         tooltipLeft: x,
-        tooltipTop: charValueScale(getViews(d)),
+        tooltipTop: d && charValueScale(getViews(d)),
       });
     },
     [showTooltip, charValueScale, dateScale]
@@ -170,7 +171,7 @@ const StatsChart = ({
             >{`${tooltipData.visits} Visitors`}</TooltipText>
             <TooltipText
               css={{ color: '$violet11' }}
-            >{`${tooltipData.pageViews} Views`}</TooltipText>
+            >{`${tooltipData.pageviews} Views`}</TooltipText>
           </TooltipInPortal>
         </div>
       )}

@@ -1,5 +1,4 @@
 import {
-  EyeOpenIcon as EyeOpenIconBase,
   GitHubLogoIcon,
   TwitterLogoIcon,
   DiscordLogoIcon,
@@ -10,6 +9,9 @@ import Image from 'next/image';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
 import { toast } from 'react-toastify';
+import { signOut, useSession } from 'next-auth/react';
+import { useQueryClient } from 'react-query';
+import { useTheme } from 'next-themes';
 import { styled } from '../../../stitches.config';
 import {
   Box,
@@ -22,7 +24,7 @@ import {
   DropdownMenuTrigger,
   Flex,
   IconButton,
-  Text,
+  Typography,
 } from '../../../ui';
 import {
   createNewEmptyStory,
@@ -35,9 +37,22 @@ import { useAuth } from '../../auth/AuthContext';
 import { Goals } from '../../../utils/fathom';
 import { sigleConfig } from '../../../config';
 import { userSession } from '../../../utils/blockstack';
-import posthog from 'posthog-js';
 import { createSubsetStory } from '../../editor/utils';
-import { useTheme } from 'next-themes';
+import { StyledChevron } from '../../../ui/Accordion';
+import { generateAvatar } from '../../../utils/boringAvatar';
+import { useGetUserSettings } from '../../../hooks/appData';
+import { useGetUserMe } from '../../../hooks/users';
+import { useFeatureFlags } from '../../../utils/featureFlags';
+
+const ImageContainer = styled('div', {
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+  overflow: 'hidden',
+  width: 24,
+  height: 24,
+  br: '$1',
+});
 
 const Header = styled('header', Container, {
   display: 'flex',
@@ -51,22 +66,25 @@ const Header = styled('header', Container, {
   },
 });
 
-const StatusDot = styled('div', {
-  backgroundColor: '#37C391',
-  width: '$2',
-  height: '$2',
-  borderRadius: '$round',
-  mr: '$2',
-});
-
 export const AppHeader = () => {
+  const { data: settings } = useGetUserSettings();
   const { resolvedTheme, setTheme } = useTheme();
   const { user } = useAuth();
+  const { status } = useSession();
   const router = useRouter();
+  const queryClient = useQueryClient();
+  const { isExperimentalFollowEnabled } = useFeatureFlags();
   const [loadingCreate, setLoadingCreate] = useState(false);
-  const { username } = router.query as {
-    username: string;
-  };
+
+  /**
+   * This query is used to register the user in the DB. As the header is part of all the
+   * pages we know this query will run before any operation.
+   */
+  useGetUserMe({
+    enabled: status === 'authenticated',
+    staleTime: 0,
+    refetchOnMount: false,
+  });
 
   const toggleTheme = () => {
     resolvedTheme === 'dark' ? setTheme('light') : setTheme('dark');
@@ -75,15 +93,11 @@ export const AppHeader = () => {
   let src;
 
   switch (resolvedTheme) {
-    case 'light':
-      src = '/static/img/logo.png';
-      break;
     case 'dark':
       src = '/static/img/logo_white.png';
       break;
     default:
-      src =
-        'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7';
+      src = '/static/img/logo.png';
       break;
   }
 
@@ -110,10 +124,13 @@ export const AppHeader = () => {
   };
 
   const handleLogout = () => {
+    queryClient.removeQueries();
     userSession.signUserOut();
-    window.location.reload();
-    posthog.reset();
+    signOut();
   };
+
+  const userAddress =
+    user?.profile.stxAddress.mainnet || user?.profile.stxAddress;
 
   return (
     <Header>
@@ -124,7 +141,7 @@ export const AppHeader = () => {
         as="nav"
         align="center"
       >
-        <Link href="/[username]" as={`/${username}`} passHref>
+        <Link href="/[username]" as={`/`} passHref>
           <Flex as="a" css={{ '@lg': { display: 'none' } }}>
             <Image
               width={93}
@@ -156,17 +173,52 @@ export const AppHeader = () => {
           },
         }}
         align="center"
-        gap="10"
+        gap="9"
       >
+        {isExperimentalFollowEnabled && user ? (
+          <Link href="/feed" passHref>
+            <Button variant="ghost" as="a">
+              Feed
+            </Button>
+          </Link>
+        ) : null}
         {user ? (
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button size="lg" variant="ghost">
-                <StatusDot />
-                <Text size="sm">{user.username}</Text>
+              <Button
+                css={{ display: 'flex', gap: '$2', alignItems: 'center' }}
+                size="lg"
+                variant="ghost"
+              >
+                <ImageContainer>
+                  <Box
+                    as="img"
+                    src={
+                      settings?.siteLogo
+                        ? settings.siteLogo
+                        : generateAvatar(userAddress)
+                    }
+                    css={{
+                      width: 'auto',
+                      height: '100%',
+                      maxWidth: 24,
+                      maxHeight: 24,
+                      objectFit: 'cover',
+                    }}
+                  />
+                </ImageContainer>
+                <Typography size="subheading">{user.username}</Typography>
+                <StyledChevron css={{ color: '$gray11' }} />
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent sideOffset={8}>
+              <Button
+                disabled={loadingCreate}
+                onClick={handleCreateNewPrivateStory}
+                size="lg"
+              >
+                {!loadingCreate ? `Write a story` : `Creating new story...`}
+              </Button>
               <DropdownMenuItem
                 selected={router.pathname === `/${user.username}`}
                 as="a"
@@ -175,20 +227,19 @@ export const AppHeader = () => {
               >
                 My blog
               </DropdownMenuItem>
-              <DropdownMenuItem
-                selected={router.pathname === '/'}
-                as="a"
-                href="/"
-              >
-                Dashboard
-              </DropdownMenuItem>
-              <DropdownMenuItem
-                selected={router.pathname === '/settings'}
-                as="a"
-                href="/settings"
-              >
-                Settings
-              </DropdownMenuItem>
+              <Link href="/" passHref>
+                <DropdownMenuItem selected={router.pathname === '/'} as="a">
+                  Dashboard
+                </DropdownMenuItem>
+              </Link>
+              <Link href="/settings" passHref>
+                <DropdownMenuItem
+                  selected={router.pathname === '/settings'}
+                  as="a"
+                >
+                  Settings
+                </DropdownMenuItem>
+              </Link>
               <DropdownMenuSeparator />
               <DropdownMenuItem onClick={toggleTheme}>
                 Switch theme
@@ -230,25 +281,17 @@ export const AppHeader = () => {
             </IconButton>
           </Flex>
         )}
-        {user ? (
-          <Button
-            disabled={loadingCreate}
-            onClick={handleCreateNewPrivateStory}
-            size="lg"
-          >
-            {!loadingCreate ? `Write a story` : `Creating new story...`}
-          </Button>
-        ) : (
-          <Link href="/" passHref>
-            <Button as="a" size="lg">
-              Enter App
-            </Button>
-          </Link>
-        )}
         {!user && (
-          <IconButton as="button" onClick={toggleTheme}>
-            <SunIcon />
-          </IconButton>
+          <>
+            <Link href="/" passHref>
+              <Button as="a" size="lg">
+                Enter App
+              </Button>
+            </Link>
+            <IconButton as="button" onClick={toggleTheme}>
+              <SunIcon />
+            </IconButton>
+          </>
         )}
       </Flex>
     </Header>

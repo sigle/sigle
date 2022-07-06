@@ -4,15 +4,18 @@ const { withSentryConfig } = require('@sentry/nextjs');
 const withBundleAnalyzer = require('@next/bundle-analyzer')({
   enabled: process.env.ANALYZE === 'true',
 });
+const { withPlausibleProxy } = require('next-plausible');
 
 dotenv.config();
 
 const nextConfig = {
+  swcMinify: true,
   env: {
     APP_URL: process.env.APP_URL,
     FATHOM_SITE_ID: process.env.FATHOM_SITE_ID,
     NEXT_PUBLIC_SENTRY_DSN: process.env.NEXT_PUBLIC_SENTRY_DSN,
     NEXT_PUBLIC_POSTHOG_TOKEN: process.env.NEXT_PUBLIC_POSTHOG_TOKEN,
+    API_URL: process.env.API_URL,
   },
   pageExtensions: [
     // `.page.tsx` for page components
@@ -56,7 +59,17 @@ const nextConfig = {
 };
 
 module.exports = withSentryConfig(
-  withPlugins([[withBundleAnalyzer]], nextConfig),
+  withPlugins(
+    [
+      [
+        withPlausibleProxy({
+          scriptName: 'index',
+        }),
+      ],
+      [withBundleAnalyzer],
+    ],
+    nextConfig
+  ),
   {
     dryRun: process.env.NEXT_PUBLIC_APP_ENV !== 'production',
   }

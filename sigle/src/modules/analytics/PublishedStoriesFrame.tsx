@@ -1,20 +1,37 @@
+import { useRouter } from 'next/router';
 import { useMemo, useState } from 'react';
+import { useGetHistorical } from '../../hooks/analytics';
 import { SubsetStory } from '../../types';
-import { Box } from '../../ui';
+import { Box, Typography } from '../../ui';
 import { Pagination } from './Pagination';
 import { PublishedStoryItem } from './PublishedStoryItem';
+import { ErrorMessage } from '../../ui/ErrorMessage';
 
 interface PublishedStoriesFrameProps {
+  historicalParams: {
+    dateFrom: string;
+    dateGrouping: 'day' | 'month';
+  };
   stories: SubsetStory[];
+  loading: boolean;
 }
 
 export const PublishedStoriesFrame = ({
+  historicalParams,
   stories,
+  loading,
 }: PublishedStoriesFrameProps) => {
+  const router = useRouter();
   const [currentPage, setCurrentPage] = useState<number>(1);
+  const {
+    data: historicalData,
+    isError,
+    error,
+  } = useGetHistorical(historicalParams, {});
 
+  const nbStoriesLabel = loading ? '...' : stories ? stories.length : 0;
   // how many stories we should show on each page
-  let itemSize = 7;
+  const itemSize = 7;
 
   const currentStories = useMemo(() => {
     const firstPageIndex = (currentPage - 1) * itemSize;
@@ -28,21 +45,35 @@ export const PublishedStoriesFrame = ({
       : true;
 
   return (
-    <>
-      {currentStories && (
-        <>
-          <Box css={{ mb: '$3', height: 476 }}>
-            {currentStories?.map((story) => (
-              <PublishedStoryItem key={story.id} story={story} />
-            ))}
-          </Box>
-          <Pagination
-            currentPage={currentPage}
-            onPageChange={(page) => setCurrentPage(page)}
-            hasNextPage={hasNextPage}
+    <Box>
+      <Typography
+        as="h3"
+        size="subheading"
+        css={{ fontWeight: 600, color: '$gray11', mb: '$3' }}
+      >
+        My published stories ({nbStoriesLabel})
+      </Typography>
+      {isError && <ErrorMessage>{error.message}</ErrorMessage>}
+      <Box css={{ mb: '$3', height: 476 }}>
+        {currentStories?.map((story) => (
+          <PublishedStoryItem
+            onClick={() =>
+              router.push('/analytics/[storyId]', `/analytics/${story.id}`)
+            }
+            key={story.id}
+            story={story}
+            pageviews={
+              historicalData?.stories.find((d) => d.pathname === story.id)
+                ?.pageviews || 0
+            }
           />
-        </>
-      )}
-    </>
+        ))}
+      </Box>
+      <Pagination
+        currentPage={currentPage}
+        onPageChange={(page) => setCurrentPage(page)}
+        hasNextPage={hasNextPage}
+      />
+    </Box>
   );
 };

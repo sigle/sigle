@@ -22,12 +22,25 @@ export const config = cleanEnv(process.env, {
    */
   REDIS_DATABASE_URL: str({ desc: 'Redis database url.' }),
   /**
-   * Fathom
+   * Postgres
    */
-  FATHOM_API_TOKEN: str({ desc: 'Fathom API token.' }),
-  FATHOM_ENTITY_ID: str({ desc: 'Fathom entity id.' }),
+  PG_DATABASE_URL: str({ desc: 'Postgres database url.' }),
+  /**
+   * Plausible
+   */
+  PLAUSIBLE_API_TOKEN: str({ desc: 'Plausible API token.' }),
+  PLAUSIBLE_SITE_ID: str({ desc: 'Plausible site id.' }),
   /**
    * Sentry
    */
   SENTRY_DSN: str({ desc: 'Sentry DSN for error reporting.' }),
+  /**
+   * User authentication
+   */
+  NEXTAUTH_URL: str({
+    desc: 'NextAuth.js frontend url.',
+  }),
+  NEXTAUTH_SECRET: str({
+    desc: 'NextAuth.js secret. Should be the same value as the frontend.',
+  }),
 });

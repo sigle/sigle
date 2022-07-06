@@ -1,40 +1,55 @@
 import React from 'react';
-import styled from 'styled-components';
-import tw from 'twin.macro';
-import { useRouter } from 'next/router';
 import { NextSeo } from 'next-seo';
 import { StoryFile, SettingsFile } from '../../../types';
-import { Container } from '../../../components';
-import { PublicStoryItem } from './PublicStoryItem';
 import { PoweredBy } from '../../publicStory/PoweredBy';
 import { AppHeader } from '../../layout/components/AppHeader';
-import { Box, Flex, Text } from '../../../ui';
+import { Box, Button, Container, Flex, Typography } from '../../../ui';
 import { sigleConfig } from '../../../config';
+import { styled } from '../../../stitches.config';
+import { useAuth } from '../../auth/AuthContext';
+import {
+  useGetUserFollowing,
+  useUserFollow,
+  useUserUnfollow,
+} from '../../../hooks/appData';
+import { generateAvatar } from '../../../utils/boringAvatar';
+import { useFeatureFlags } from '../../../utils/featureFlags';
+import { StoryCard } from '../../storyCard/StoryCard';
 
-const StyledContainer = styled(Container)`
-  ${tw`pt-4 pb-16`};
-  max-width: 768px;
-`;
+const StyledContainer = styled(Container, {
+  pt: '$4',
+  pb: '$15',
+  maxWidth: 826,
+});
 
-const NoStories = styled.p`
-  ${tw`mt-8 text-center`};
-`;
+const Header = styled('div', {
+  py: '$10',
+  px: '$4',
+  maxWidth: 960,
+  display: 'flex',
+  flexDirection: 'column',
+  placeItems: 'center',
+  mx: 'auto',
+});
 
-const Header = styled(Container)`
-  ${tw`py-12 flex flex-col items-center`};
-`;
+const HeaderLogoContainer = styled('div', {
+  width: 92,
+  height: 92,
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+  br: '$4',
+  overflow: 'hidden',
+  mb: '$4',
+});
 
-const HeaderLogo = styled.img`
-  ${tw`mb-4`};
-`;
-
-const HeaderName = styled.div`
-  ${tw`text-3xl font-bold text-center`};
-`;
-
-const HeaderDescription = styled.p`
-  ${tw`text-base mt-2 text-center`};
-`;
+const HeaderLogo = styled('img', {
+  width: 'auto',
+  height: '100%',
+  maxWidth: 92,
+  maxHeight: 92,
+  objectFit: 'cover',
+});
 
 const PublicHomeSiteUrl = ({ siteUrl }: { siteUrl: string }) => {
   let displayUrl = siteUrl;
@@ -48,7 +63,7 @@ const PublicHomeSiteUrl = ({ siteUrl }: { siteUrl: string }) => {
   }
 
   return (
-    <Text
+    <Typography
       css={{
         color: '$gray9',
 
@@ -59,27 +74,45 @@ const PublicHomeSiteUrl = ({ siteUrl }: { siteUrl: string }) => {
           color: '$gray12',
         },
       }}
-      size="sm"
+      size="subheading"
       as="a"
       href={fullUrl}
       target="_blank"
       rel="noreferrer"
     >
       {displayUrl}
-    </Text>
+    </Typography>
   );
 };
 
 interface PublicHomeProps {
   file: StoryFile;
   settings: SettingsFile;
+  userInfo: { username: string; address: string };
 }
 
-export const PublicHome = ({ file, settings }: PublicHomeProps) => {
-  const router = useRouter();
-  const { username } = router.query as { username: string };
+export const PublicHome = ({ file, settings, userInfo }: PublicHomeProps) => {
+  const { user } = useAuth();
+  const { isExperimentalFollowEnabled } = useFeatureFlags();
+  const { data: userFollowing } = useGetUserFollowing({
+    enabled: !!user && userInfo.username !== user.username,
+  });
+  const { mutate: followUser } = useUserFollow();
+  const { mutate: unfollowUser } = useUserUnfollow();
 
-  const siteName = settings.siteName || username;
+  const handleFollow = async () => {
+    if (!userFollowing) return;
+    followUser({ userFollowing, address: userInfo.address });
+  };
+
+  const handleUnfollow = async () => {
+    if (!userFollowing) {
+      return;
+    }
+    unfollowUser({ userFollowing, address: userInfo.address });
+  };
+
+  const siteName = settings.siteName || userInfo.username;
   const twitterHandle = settings.siteTwitterHandle;
 
   const featuredStoryIndex = file.stories.findIndex((story) => story.featured);
@@ -88,12 +121,15 @@ export const PublicHome = ({ file, settings }: PublicHomeProps) => {
     stories.splice(featuredStoryIndex, 1);
   }
 
-  const seoUrl = `${sigleConfig.appUrl}/${username}`;
+  const seoUrl = `${sigleConfig.appUrl}/${userInfo.username}`;
   const seoTitle = `${siteName} - Sigle`;
   const seoDescription =
     settings.siteDescription?.substring(0, 300) ||
     `Read stories from ${siteName} on Sigle, decentralised and open-source platform for Web3 writers`;
   const seoImage = settings.siteLogo;
+
+  const isFollowingUser =
+    userFollowing && !!userFollowing.following[userInfo.address];
 
   return (
     <React.Fragment>
@@ -116,20 +152,56 @@ export const PublicHome = ({ file, settings }: PublicHomeProps) => {
           cardType: 'summary',
         }}
       />
-
       <Container>
         <AppHeader />
         <Header>
-          {settings.siteLogo && (
-            <HeaderLogo src={settings.siteLogo} alt={`${siteName} logo`} />
-          )}
-          <HeaderName>{siteName}</HeaderName>
+          <HeaderLogoContainer>
+            <HeaderLogo
+              src={
+                settings.siteLogo
+                  ? settings.siteLogo
+                  : generateAvatar(userInfo.address)
+              }
+              alt={`${siteName} logo`}
+            />
+          </HeaderLogoContainer>
+          <Flex align="center">
+            <Typography css={{ fontWeight: 700 }} as="h1" size="h2">
+              {siteName}
+            </Typography>
+            {isExperimentalFollowEnabled &&
+            user &&
+            user.username !== userInfo.username &&
+            userFollowing ? (
+              !isFollowingUser ? (
+                <Button
+                  color="orange"
+                  css={{ ml: '$5' }}
+                  onClick={handleFollow}
+                >
+                  Follow
+                </Button>
+              ) : (
+                <Button
+                  variant="subtle"
+                  css={{ ml: '$5' }}
+                  onClick={handleUnfollow}
+                >
+                  Unfollow
+                </Button>
+              )
+            ) : null}
+          </Flex>
           {settings.siteDescription &&
-            settings.siteDescription
-              .split('\n')
-              .map((text, index) => (
-                <HeaderDescription key={index}>{text}</HeaderDescription>
-              ))}
+            settings.siteDescription.split('\n').map((text, index) => (
+              <Typography
+                size="subheading"
+                css={{ mt: '$2', textAlign: 'center' }}
+                key={index}
+              >
+                {text}
+              </Typography>
+            ))}
           <Flex css={{ pt: '$5' }} gap="3">
             {settings.siteUrl && (
               <PublicHomeSiteUrl siteUrl={settings.siteUrl} />
@@ -138,7 +210,7 @@ export const PublicHome = ({ file, settings }: PublicHomeProps) => {
               <Box css={{ width: '1px', backgroundColor: '$gray9' }} />
             )}
             {settings.siteTwitterHandle && (
-              <Text
+              <Typography
                 css={{
                   color: '$gray9',
 
@@ -149,7 +221,7 @@ export const PublicHome = ({ file, settings }: PublicHomeProps) => {
                     color: '$gray12',
                   },
                 }}
-                size="sm"
+                size="subheading"
                 as="a"
                 href={`https://twitter.com/${twitterHandle}`}
                 target="_blank"
@@ -158,25 +230,30 @@ export const PublicHome = ({ file, settings }: PublicHomeProps) => {
                 {twitterHandle?.includes('@')
                   ? twitterHandle
                   : `@${twitterHandle}`}
-              </Text>
+              </Typography>
             )}
           </Flex>
         </Header>
       </Container>
 
       <StyledContainer>
-        {file.stories.length === 0 && <NoStories>No stories yet</NoStories>}
+        {file.stories.length === 0 && (
+          <Typography css={{ mt: '$8', textAlign: 'center' }}>
+            No stories yet
+          </Typography>
+        )}
         {featuredStoryIndex !== -1 && (
-          <PublicStoryItem
-            username={username}
+          <StoryCard
+            userInfo={userInfo}
             story={file.stories[featuredStoryIndex]}
             settings={settings}
+            featured
           />
         )}
         {stories.map((story) => (
-          <PublicStoryItem
+          <StoryCard
             key={story.id}
-            username={username}
+            userInfo={userInfo}
             story={story}
             settings={settings}
           />

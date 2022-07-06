@@ -1,12 +1,17 @@
 import Fastify, { FastifyServerOptions, FastifyLoggerInstance } from 'fastify';
 import FastifyCors from '@fastify/cors';
 import FastifyRateLimit from '@fastify/rate-limit';
+import FastifyCookie from '@fastify/cookie';
 import { Server } from 'http';
 import * as Sentry from '@sentry/node';
 import { createAnalyticsHistoricalEndpoint } from './api/modules/analytics/historical';
 import { createAnalyticsReferrersEndpoint } from './api/modules/analytics/referrers';
 import { config } from './config';
 import { redis } from './redis';
+import { fastifyAuthPlugin } from './api/plugins/auth';
+import { createSubscriptionCreatorPlusEndpoint } from './api/modules/subscriptions/creatorPlus';
+import { createGetSubscriptionEndpoint } from './api/modules/subscriptions/getSubscription';
+import { createGetUserMeEndpoint } from './api/modules/users/me';
 
 export const buildFastifyServer = (
   opts: FastifyServerOptions<Server, FastifyLoggerInstance> = {}
@@ -19,6 +24,7 @@ export const buildFastifyServer = (
    * Allow the RENDER API to make calls, used to bypass CORS for the health check, in such case origin will be undefined.
    */
   fastify.register(FastifyCors, {
+    credentials: true,
     origin: (origin, cb) => {
       if (
         config.NODE_ENV === 'development' ||
@@ -44,6 +50,18 @@ export const buildFastifyServer = (
   });
 
   /**
+   * Parse the cookies sent by the web app for authentication.
+   */
+  fastify.register(FastifyCookie, {
+    secret: config.NEXTAUTH_SECRET,
+  });
+
+  /**
+   * Authentication
+   */
+  fastify.register(fastifyAuthPlugin);
+
+  /**
    * Catch and report errors with Sentry.
    * We attach some content to make it easier to debug.
    */
@@ -55,9 +73,12 @@ export const buildFastifyServer = (
     }
 
     Sentry.withScope((scope) => {
-      scope.setLevel(Sentry.Severity.Error);
+      scope.setLevel('error');
       scope.setTag('path', request.url);
       scope.setExtra('headers', request.headers);
+      if (request.address) {
+        scope.setUser({ stacksAddress: request.address });
+      }
       if (
         request.headers['content-type'] === 'application/json' &&
         request.body
@@ -69,7 +90,8 @@ export const buildFastifyServer = (
       // Also log to the console in case it's not reported to sentry
       console.error(sentryId, error);
       reply.status(500).send({
-        error: 'Something went wrong please try again after some time',
+        error: 'Internal server error',
+        message: 'Something went wrong please try again after some time',
         errorId: sentryId,
       });
     });
@@ -82,10 +104,25 @@ export const buildFastifyServer = (
   });
 
   /**
-   * Analytics routes
+   * All the protected routes must be placed there.
    */
-  createAnalyticsReferrersEndpoint(fastify);
-  createAnalyticsHistoricalEndpoint(fastify);
+  fastify.after(() => {
+    /**
+     * Users routes
+     */
+    createGetUserMeEndpoint(fastify);
+    /**
+     * Subscriptions routes
+     */
+    createSubscriptionCreatorPlusEndpoint(fastify);
+    createGetSubscriptionEndpoint(fastify);
+
+    /**
+     * Analytics routes
+     */
+    createAnalyticsReferrersEndpoint(fastify);
+    createAnalyticsHistoricalEndpoint(fastify);
+  });
 
   return fastify;
 };

@@ -1,11 +1,13 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { FastifyInstance } from 'fastify';
-import { fathomClient } from '../../../external/fathom';
+import { plausibleClient } from '../../../external/plausible';
+import { TestBaseDB, TestDBUser } from '../../../jest/db';
 import { fakeTimerConfigDate } from '../../../jest/utils';
+import { prisma } from '../../../prisma';
 import { redis } from '../../../redis';
 import { buildFastifyServer } from '../../../server';
 
-jest.mock('../../../external/fathom');
+jest.mock('../../../external/plausible');
 
 let server: FastifyInstance;
 
@@ -14,17 +16,28 @@ beforeAll(() => {
 });
 
 afterAll(async () => {
+  await TestBaseDB.cleanup();
   await redis.quit();
+  await prisma.$disconnect();
+});
+
+beforeEach(async () => {
+  await prisma.subscription.deleteMany({});
+  await prisma.user.deleteMany({});
 });
 
 beforeEach(() => {
-  (fathomClient.aggregatePath as jest.Mock).mockReset();
+  (plausibleClient.timeseries as jest.Mock).mockReset();
+  (plausibleClient.pages as jest.Mock).mockReset();
 });
 
 it('Should throw an error if dateFrom is missing', async () => {
   const response = await server.inject({
     method: 'GET',
     url: '/api/analytics/historical',
+    cookies: {
+      'next-auth.session-token': '0x123',
+    },
   });
 
   expect(response.statusCode).toBe(400);
@@ -35,6 +48,9 @@ it('Should throw an error if dateFrom is invalid', async () => {
   const response = await server.inject({
     method: 'GET',
     url: '/api/analytics/historical?dateFrom=invalid',
+    cookies: {
+      'next-auth.session-token': '0x123',
+    },
   });
 
   expect(response.statusCode).toBe(400);
@@ -45,6 +61,9 @@ it('Should throw an error if dateGrouping is missing', async () => {
   const response = await server.inject({
     method: 'GET',
     url: '/api/analytics/historical?dateFrom=2022-05-04',
+    cookies: {
+      'next-auth.session-token': '0x123',
+    },
   });
 
   expect(response.statusCode).toBe(400);
@@ -55,6 +74,9 @@ it('Should throw an error if dateGrouping is invalid', async () => {
   const response = await server.inject({
     method: 'GET',
     url: '/api/analytics/historical?dateFrom=2022-05-04&dateGrouping=invalid',
+    cookies: {
+      'next-auth.session-token': '0x123',
+    },
   });
 
   expect(response.statusCode).toBe(400);
@@ -71,6 +93,9 @@ it('Should throw an error if dateGrouping is day and dateFrom > 2 month', async 
   const response = await server.inject({
     method: 'GET',
     url: '/api/analytics/historical?dateFrom=2022-01-04&dateGrouping=day',
+    cookies: {
+      'next-auth.session-token': '0x123',
+    },
   });
 
   expect(response.statusCode).toBe(400);
@@ -80,92 +105,154 @@ it('Should throw an error if dateGrouping is day and dateFrom > 2 month', async 
 });
 
 it('Respond with a formatted time series for days', async () => {
+  const stacksAddress = 'SP2BKHGRV8H2YDJK16FP5VASYFDGYN4BPTNFWDKYJ';
+  await TestDBUser.seedUserWithSubscription({ stacksAddress });
+
   // Set a fake timer so we can verify the end date
   jest
     .useFakeTimers(fakeTimerConfigDate)
     .setSystemTime(new Date('2022-04-04 12:00:00 UTC').getTime());
-  (fathomClient.aggregatePath as jest.Mock).mockResolvedValueOnce([
+  (plausibleClient.timeseries as jest.Mock).mockResolvedValueOnce([
     {
-      visits: '5',
+      visitors: '5',
       pageviews: '1',
       date: '2022-03-20',
-      pathname: '/test.btc/path-test',
     },
-  ]);
-  (fathomClient.aggregatePath as jest.Mock).mockResolvedValueOnce([
     {
-      visits: '7',
+      visitors: '7',
       pageviews: '3',
       date: '2022-03-20',
-      pathname: '/test.btc/path-test-2',
     },
   ]);
-  (fathomClient.aggregatePath as jest.Mock).mockResolvedValue([]);
+  (plausibleClient.pages as jest.Mock).mockResolvedValueOnce([
+    {
+      visitors: '5',
+      pageviews: '1',
+      page: '/test.btc/path-test',
+    },
+    {
+      visitors: '7',
+      pageviews: '3',
+      page: '/test.btc/path-test-2',
+    },
+  ]);
 
   const response = await server.inject({
     method: 'GET',
     url: '/api/analytics/historical?dateFrom=2022-03-15&dateGrouping=day',
+    cookies: {
+      'next-auth.session-token': stacksAddress,
+    },
   });
 
-  expect(fathomClient.aggregatePath).toBeCalledTimes(25);
   expect(response.statusCode).toBe(200);
   expect(response.json()).toMatchSnapshot();
+  expect(plausibleClient.timeseries).toBeCalledWith({
+    dateFrom: '2022-05-01',
+    dateGrouping: 'day',
+    dateTo: '2022-04-04',
+    paths: expect.any(Array),
+  });
+  expect(plausibleClient.pages).toBeCalledWith({
+    dateFrom: '2022-05-01',
+    dateTo: '2022-04-04',
+    paths: expect.any(Array),
+  });
 });
 
 it('Respond with a formatted time series for months', async () => {
+  const stacksAddress = 'SP2BKHGRV8H2YDJK16FP5VASYFDGYN4BPTNFWDKYJ';
+  await TestDBUser.seedUserWithSubscription({ stacksAddress });
+
   // Set a fake timer so we can verify the end date
   jest
     .useFakeTimers(fakeTimerConfigDate)
     .setSystemTime(new Date('2022-04-04 12:00:00 UTC').getTime());
-  (fathomClient.aggregatePath as jest.Mock).mockResolvedValueOnce([
+  (plausibleClient.timeseries as jest.Mock).mockResolvedValueOnce([
     {
-      visits: '5',
+      visitors: '5',
       pageviews: '1',
-      date: '2022-03',
-      pathname: '/test.btc/path-test',
+      date: '2022-03-01',
     },
   ]);
-  (fathomClient.aggregatePath as jest.Mock).mockResolvedValueOnce([
+  (plausibleClient.pages as jest.Mock).mockResolvedValueOnce([
     {
-      visits: '7',
+      visitors: '5',
+      pageviews: '1',
+      page: '/test.btc/path-test',
+    },
+    {
+      visitors: '7',
       pageviews: '3',
-      date: '2022-03',
-      pathname: '/test.btc/path-test-2',
+      page: '/test.btc/path-test-2',
     },
   ]);
-  (fathomClient.aggregatePath as jest.Mock).mockResolvedValue([]);
 
   const response = await server.inject({
     method: 'GET',
     url: '/api/analytics/historical?dateFrom=2022-01-02&dateGrouping=month',
+    cookies: {
+      'next-auth.session-token': stacksAddress,
+    },
   });
 
-  expect(fathomClient.aggregatePath).toBeCalledTimes(25);
   expect(response.statusCode).toBe(200);
   expect(response.json()).toMatchSnapshot();
+  expect(plausibleClient.timeseries).toBeCalledWith({
+    dateFrom: '2022-05-01',
+    dateGrouping: 'day',
+    dateTo: '2022-04-04',
+    paths: expect.any(Array),
+  });
+  expect(plausibleClient.pages).toBeCalledWith({
+    dateFrom: '2022-05-01',
+    dateTo: '2022-04-04',
+    paths: expect.any(Array),
+  });
 });
 
 it('Respond with a formatted time series for one story', async () => {
+  const stacksAddress = 'SP2BKHGRV8H2YDJK16FP5VASYFDGYN4BPTNFWDKYJ';
+  await TestDBUser.seedUserWithSubscription({ stacksAddress });
+
   // Set a fake timer so we can verify the end date
   jest
     .useFakeTimers(fakeTimerConfigDate)
     .setSystemTime(new Date('2022-04-04 12:00:00 UTC').getTime());
-  (fathomClient.aggregatePath as jest.Mock).mockResolvedValueOnce([
+  (plausibleClient.timeseries as jest.Mock).mockResolvedValueOnce([
     {
-      visits: '5',
+      visitors: '5',
       pageviews: '1',
-      date: '2022-03-20',
-      pathname: '/test.btc/path-test',
+      date: '2022-03-01',
     },
   ]);
-  (fathomClient.aggregatePath as jest.Mock).mockResolvedValue([]);
+  (plausibleClient.pages as jest.Mock).mockResolvedValueOnce([
+    {
+      visitors: '5',
+      pageviews: '1',
+      page: '/test.btc/path-test',
+    },
+  ]);
 
   const response = await server.inject({
     method: 'GET',
     url: '/api/analytics/historical?dateFrom=2022-03-15&dateGrouping=day&storyId=test',
+    cookies: {
+      'next-auth.session-token': stacksAddress,
+    },
   });
 
-  expect(fathomClient.aggregatePath).toBeCalledTimes(1);
   expect(response.statusCode).toBe(200);
   expect(response.json()).toMatchSnapshot();
+  expect(plausibleClient.timeseries).toBeCalledWith({
+    dateFrom: '2022-05-01',
+    dateGrouping: 'day',
+    dateTo: '2022-04-04',
+    paths: expect.any(Array),
+  });
+  expect(plausibleClient.pages).toBeCalledWith({
+    dateFrom: '2022-05-01',
+    dateTo: '2022-04-04',
+    paths: expect.any(Array),
+  });
 });

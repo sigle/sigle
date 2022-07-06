@@ -1,41 +1,87 @@
+import { useState } from 'react';
+import { format } from 'date-fns';
 import { SubsetStory } from '../../../types';
-import { Box, Flex, Heading, Text } from '../../../ui';
+import { Box } from '../../../ui';
 import { DashboardLayout } from '../../layout';
 import { PublishedStoriesFrame } from '../PublishedStoriesFrame';
 import { ReferrersFrame } from '../ReferrersFrame';
 import { StatsFrame } from '../stats/StatsFrame';
+import {
+  STATS_MAX_FROM_DATE,
+  monthFromDate,
+  weekFromDate,
+} from '../stats/utils';
+import { StatsType } from '../stats/types';
 
 interface AnalyticsProps {
-  stories: SubsetStory[] | null;
+  stories?: SubsetStory[] | null;
   loading: boolean;
 }
 
 export const Analytics = ({ stories, loading }: AnalyticsProps) => {
-  const nbStoriesLabel = loading ? '...' : stories ? stories.length : 0;
+  const [historicalParams, setHistoricalParams] = useState<{
+    dateFrom: string;
+    dateGrouping: 'day' | 'month';
+    statType: 'all' | 'weekly' | 'monthly';
+  }>(() => ({
+    dateFrom: format(weekFromDate, 'yyyy-MM-dd'),
+    dateGrouping: 'day',
+    statType: 'weekly',
+  }));
+
+  const changeHistoricalParams = (value: StatsType) => {
+    switch (value) {
+      case 'weekly':
+        setHistoricalParams({
+          dateFrom: format(weekFromDate, 'yyyy-MM-dd'),
+          dateGrouping: 'day',
+          statType: 'weekly',
+        });
+        break;
+      case 'monthly':
+        setHistoricalParams({
+          dateFrom: format(monthFromDate, 'yyyy-MM-dd'),
+          dateGrouping: 'day',
+          statType: 'monthly',
+        });
+        break;
+      case 'all':
+        setHistoricalParams({
+          dateFrom: STATS_MAX_FROM_DATE,
+          dateGrouping: 'month',
+          statType: 'all',
+        });
+        break;
+      default:
+        throw new Error('No value received.');
+    }
+  };
 
   return (
     <DashboardLayout layout="wide">
-      <StatsFrame />
+      <StatsFrame
+        historicalParams={historicalParams}
+        changeHistoricalParams={changeHistoricalParams}
+      />
       <Box
-        css={{ display: 'grid', gridTemplateColumns: '2fr 1fr', gap: '$10' }}
+        css={{
+          display: 'flex',
+          flexDirection: 'column',
+          gap: '$10',
+          '@xl': {
+            display: 'grid',
+            gridTemplateColumns: '2fr 1fr',
+          },
+        }}
       >
-        <Box>
-          <Heading as="h3" css={{ mb: '$3', fontSize: 15, fontWeight: 600 }}>
-            {`My published stories (${nbStoriesLabel})`}
-          </Heading>
-          {stories && <PublishedStoriesFrame stories={stories} />}
-        </Box>
-        <Box css={{ flexGrow: 1 }}>
-          <Flex css={{ mb: '$5' }} justify="between">
-            <Heading as="h3" css={{ fontSize: 15, fontWeight: 600 }}>
-              Referrers
-            </Heading>
-            <Heading as="h3" css={{ fontSize: 15, fontWeight: 600 }}>
-              Views
-            </Heading>
-          </Flex>
-          <ReferrersFrame />
-        </Box>
+        {stories && (
+          <PublishedStoriesFrame
+            historicalParams={historicalParams}
+            loading={loading}
+            stories={stories}
+          />
+        )}
+        <ReferrersFrame historicalParams={historicalParams} />
       </Box>
     </DashboardLayout>
   );

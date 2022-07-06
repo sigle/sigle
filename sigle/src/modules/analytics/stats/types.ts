@@ -16,9 +16,16 @@ export type AnalyticsHistoricalResponse = {
 };
 
 export interface StatsData {
-  pageViews: number;
+  pageviews: number;
   date: string;
   visits: number;
 }
 
 export type StatsType = 'weekly' | 'monthly' | 'all';
+
+export interface ReferrersItemProps {
+  domain: string;
+  count: number;
+}
+
+export type ReferrersResponse = ReferrersItemProps[];

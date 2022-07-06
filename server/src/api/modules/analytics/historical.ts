@@ -1,16 +1,11 @@
 import { FastifyInstance } from 'fastify';
-import {
-  addDays,
-  addMonths,
-  differenceInMonths,
-  format,
-  isBefore,
-  isValid,
-  parse,
-} from 'date-fns';
+import { differenceInMonths, format, isValid, parse } from 'date-fns';
 import { maxFathomFromDate, getBucketUrl, getPublicStories } from './utils';
-import { fathomClient } from '../../../external/fathom';
 import { redis } from '../../../redis';
+import { config } from '../../../config';
+import { StacksService } from '../stacks/service';
+import { SubscriptionService } from '../subscriptions/service';
+import { plausibleClient } from '../../../external/plausible';
 
 interface AnalyticsHistoricalParams {
   dateFrom?: string;
@@ -71,9 +66,10 @@ export async function createAnalyticsHistoricalEndpoint(
   }>(
     '/api/analytics/historical',
     {
+      onRequest: [fastify.authenticate],
       config: {
         rateLimit: {
-          max: 10,
+          max: config.NODE_ENV === 'test' ? 1000 : 10,
           timeWindow: 60000,
         },
       },
@@ -92,7 +88,7 @@ export async function createAnalyticsHistoricalEndpoint(
         res.status(400).send({ error: 'dateFrom is required' });
         return;
       }
-      let parsedDateFrom = parse(dateFrom, 'yyyy-MM-dd', new Date());
+      const parsedDateFrom = parse(dateFrom, 'yyyy-MM-dd', new Date());
       const isValidDate = isValid(parsedDateFrom);
       if (!isValidDate) {
         res.status(400).send({ error: 'dateFrom is invalid' });
@@ -122,16 +118,23 @@ export async function createAnalyticsHistoricalEndpoint(
       // Set max date in the past
       dateFrom = maxFathomFromDate(parsedDateFrom, dateFrom);
 
-      // TODO protect to logged in users
-      // TODO take username from session
-      const username = 'sigleapp.id.blockstack';
+      const activeSubscription =
+        await SubscriptionService.getActiveSubscriptionByAddress({
+          address: req.address,
+        });
+      if (!activeSubscription) {
+        res.status(401).send({ error: 'No active subscription' });
+        return;
+      }
 
-      // Caching mechanism to avoid hitting Fathom too often
+      const username = await StacksService.getUsernameByAddress(req.address);
+
+      // Caching mechanism to avoid hitting Plausible too often
       const cacheKey = storyId
         ? `historical:${username}_${dateFrom}_${dateGrouping}_${storyId}`
         : `historical:${username}_${dateFrom}_${dateGrouping}`;
       const cachedResponse = await redis.get(cacheKey);
-      if (cachedResponse) {
+      if (cachedResponse && config.NODE_ENV !== 'test') {
         res.status(200).send(JSON.parse(cachedResponse));
         return;
       }
@@ -140,25 +143,6 @@ export async function createAnalyticsHistoricalEndpoint(
         historical: [],
         stories: [],
       };
-
-      // As fathom does not return data for all the days, we need to add the missing days
-      // When date grouping is day the date is yyyy-MM-dd
-      // When date grouping is month the date is yyyy-MM
-      while (isBefore(parsedDateFrom, dateTo)) {
-        const date =
-          dateGrouping === 'day'
-            ? format(parsedDateFrom, 'yyyy-MM-dd')
-            : format(parsedDateFrom, 'yyyy-MM');
-        historicalResponse.historical.push({
-          date,
-          visits: 0,
-          pageviews: 0,
-        });
-        parsedDateFrom =
-          dateGrouping === 'day'
-            ? addDays(parsedDateFrom, 1)
-            : addMonths(parsedDateFrom, 1);
-      }
 
       const { profile, bucketUrl } = await getBucketUrl({ username });
       if (!profile || !bucketUrl) {
@@ -177,47 +161,21 @@ export async function createAnalyticsHistoricalEndpoint(
         storiesPath.push(`/${username}`);
       }
 
-      // TODO batch with max concurrent limit
-      const fathomAggregationResult = await Promise.all(
-        storiesPath.map((path) =>
-          fathomClient.aggregatePath({
-            dateFrom,
-            dateGrouping,
-            path,
-          })
-        )
-      );
-
-      /**
-       * Historical aggregated results.
-       */
-
-      const datesValues: {
-        [key: string]: { visits: number; pageviews: number };
-      } = {};
-
-      // Aggregate the results from fathom and sum the values by date
-      fathomAggregationResult.forEach((aggregationResult) => {
-        aggregationResult.forEach((result) => {
-          if (!datesValues[result.date]) {
-            datesValues[result.date] = { visits: 0, pageviews: 0 };
-          }
-          datesValues[result.date].visits += parseInt(result.visits, 10);
-          datesValues[result.date].pageviews += parseInt(result.pageviews, 10);
-        });
+      const plausibleResults = await plausibleClient.timeseries({
+        dateFrom,
+        // TODO enable this part again once we start having more data in
+        // For now we always default to day grouping for a few months
+        // dateGrouping,
+        dateGrouping: 'day',
+        dateTo: format(dateTo, 'yyyy-MM-dd'),
+        paths: storiesPath,
       });
 
-      Object.keys(datesValues).forEach((date) => {
-        const dateValues = datesValues[date];
-        const index = historicalResponse.historical.findIndex(
-          (historical) => historical.date === date
-        );
-        if (index === -1) {
-          throw new Error(`No index for date ${date} and username ${username}`);
-        }
-        historicalResponse.historical[index].visits = dateValues.visits;
-        historicalResponse.historical[index].pageviews = dateValues.pageviews;
-      });
+      historicalResponse.historical = plausibleResults.map((result) => ({
+        date: result.date,
+        pageviews: result.pageviews,
+        visits: result.visitors,
+      }));
 
       /**
        * Stories aggregated results.
@@ -225,35 +183,20 @@ export async function createAnalyticsHistoricalEndpoint(
        * once Fathom API is more flexible, this should be moved to it's own endpoint.
        */
 
-      historicalResponse.stories = fathomAggregationResult
-        .map((result) => {
-          if (result.length === 0) {
-            return {
-              pathname: '',
-              visits: 0,
-              pageviews: 0,
-            };
-          }
+      const plausiblePages = await plausibleClient.pages({
+        dateFrom,
+        dateTo: format(dateTo, 'yyyy-MM-dd'),
+        paths: storiesPath,
+      });
 
-          const pathname =
-            result[0].pathname === `/${username}`
-              ? '/'
-              : result[0].pathname.replace(`/${username}/`, '');
-          const totalStats = result.reduce(
-            (acc, curr) => {
-              acc.visits += Number(curr.visits);
-              acc.pageviews += Number(curr.pageviews);
-              return acc;
-            },
-            { pathname, visits: 0, pageviews: 0 }
-          );
-          return {
-            pathname,
-            visits: totalStats.visits,
-            pageviews: totalStats.pageviews,
-          };
-        })
-        .filter((story) => story.pathname !== '');
+      historicalResponse.stories = plausiblePages.map((result) => ({
+        pathname:
+          result.page === `/${username}`
+            ? '/'
+            : result.page.replace(`/${username}/`, ''),
+        pageviews: result.pageviews,
+        visits: result.visitors,
+      }));
 
       // Cache response for 1 hour
       await redis.set(

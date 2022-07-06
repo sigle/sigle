@@ -4,3 +4,19 @@ services:
     image: 'redis:6.2'
     ports:
       - '6379:6379'
+
+  postgres:
+    image: postgres:14
+    restart: always
+    ports:
+      - '5432:5432'
+    volumes:
+      - pg_db_data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_USER: postgresuser
+      POSTGRES_PASSWORD: postgrespassword
+      POSTGRES_DB: postgresdb
+      POSTGRES_PORT: 5432
+
+volumes:
+  pg_db_data:

@@ -1,4 +1,4 @@
-import { ArrowRightIcon } from '@radix-ui/react-icons';
+import { ArrowLeftIcon, ArrowRightIcon } from '@radix-ui/react-icons';
 import { stagger } from 'motion';
 import { useMotionAnimate } from 'motion-hooks';
 import { useEffect } from 'react';
@@ -12,14 +12,21 @@ const StoryImage = styled('img', {
   width: 60,
   height: 43,
   br: '$1',
-  ml: '$2',
 });
 
 interface PublishedStoryItemProps {
   story: SubsetStory;
+  onClick: () => void;
+  individualStory?: boolean;
+  pageviews?: number;
 }
 
-export const PublishedStoryItem = ({ story }: PublishedStoryItemProps) => {
+export const PublishedStoryItem = ({
+  story,
+  onClick,
+  individualStory = false,
+  pageviews,
+}: PublishedStoryItemProps) => {
   const { play } = useMotionAnimate(
     '.story-item',
     { opacity: 1 },
@@ -40,7 +47,8 @@ export const PublishedStoryItem = ({ story }: PublishedStoryItemProps) => {
       className="story-item"
       align="center"
       css={{
-        borderTop: '1px solid $colors$gray6',
+        borderTop: !individualStory ? '1px solid $colors$gray6' : 'none',
+        borderBottom: individualStory ? '1px solid $colors$gray6' : 'none',
         height: 68,
         cursor: 'pointer',
         position: 'relative',
@@ -53,7 +61,9 @@ export const PublishedStoryItem = ({ story }: PublishedStoryItemProps) => {
         '&:hover': {
           backgroundColor: '$gray2',
           '& svg': {
-            transform: 'translateX(-4px)',
+            transform: !individualStory
+              ? 'translateX(-4px)'
+              : 'translateX(4px)',
           },
 
           '& div:first-child': {
@@ -74,9 +84,16 @@ export const PublishedStoryItem = ({ story }: PublishedStoryItemProps) => {
           zIndex: 1,
         },
       }}
+      onClick={onClick}
     >
+      {individualStory && <ArrowLeftIcon />}
       <Box />
-      {story.coverImage && <StoryImage src={story.coverImage} />}
+      {story.coverImage && (
+        <StoryImage
+          css={{ ml: individualStory ? '$5' : '$2' }}
+          src={story.coverImage}
+        />
+      )}
       <Flex
         align="center"
         css={{
@@ -106,9 +123,12 @@ export const PublishedStoryItem = ({ story }: PublishedStoryItemProps) => {
           {story.title}
         </Text>
         <Flex align="center" css={{ gap: '$5', flexShrink: 0 }}>
-          {/* To be replaced with actual view metrics */}
-          <Text size="sm">332 views</Text>
-          <ArrowRightIcon />
+          {!individualStory && (
+            <>
+              <Text size="sm">{pageviews} views</Text>
+              <ArrowRightIcon />
+            </>
+          )}
         </Flex>
       </Flex>
     </Flex>

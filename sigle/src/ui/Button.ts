@@ -6,6 +6,11 @@ export const Button = styled('button', {
   alignItems: 'center',
   fontSize: '$2',
 
+  '&:disabled': {
+    opacity: 0.5,
+    pointerEvents: 'none',
+  },
+
   variants: {
     size: {
       md: {
@@ -34,6 +39,13 @@ export const Button = styled('button', {
           backgroundColor: '$orange12',
         },
       },
+      violet: {
+        color: '$gray1',
+        backgroundColor: '$violet11',
+        '&:hover': {
+          backgroundColor: '$violet12',
+        },
+      },
     },
     variant: {
       solid: {},
@@ -41,6 +53,7 @@ export const Button = styled('button', {
         backgroundColor: 'transparent',
         boxShadow: 'none',
       },
+      subtle: {},
     },
   },
   compoundVariants: [
@@ -69,6 +82,20 @@ export const Button = styled('button', {
         },
         '&:active': {
           backgroundColor: '$orange5',
+        },
+      },
+    },
+    {
+      color: 'gray',
+      variant: 'subtle',
+      css: {
+        backgroundColor: '$gray3',
+        color: '$gray11',
+        '&:hover': {
+          backgroundColor: '$gray4',
+        },
+        '&:active': {
+          backgroundColor: '$gray5',
         },
       },
     },

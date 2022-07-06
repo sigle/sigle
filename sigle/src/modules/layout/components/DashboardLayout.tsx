@@ -1,20 +1,32 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Link from 'next/link';
 import { AppHeader } from './AppHeader';
-import { Box, Container } from '../../../ui';
-import { styled } from '../../../stitches.config';
-import { AppFooter } from './AppFooter';
-import { useRouter } from 'next/router';
 import {
+  Box,
+  Button,
+  Container,
   Accordion,
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
-} from '../../../ui/Accordion';
-import { isExperimentalAnalyticsPageEnabled } from '../../../utils/featureFlags';
+} from '../../../ui';
+import { styled } from '../../../stitches.config';
+import { AppFooter } from './AppFooter';
+import { useRouter } from 'next/router';
+import { useFeatureFlags } from '../../../utils/featureFlags';
 import { VariantProps } from '@stitches/react';
+import {
+  createNewEmptyStory,
+  getStoriesFile,
+  saveStoriesFile,
+  saveStoryFile,
+} from '../../../utils';
+import * as Fathom from 'fathom-client';
+import { Goals } from '../../../utils/fathom';
+import { createSubsetStory } from '../../editor/utils';
+import { toast } from 'react-toastify';
 
-const DashboardContainer = styled(Container, {
+export const DashboardContainer = styled(Container, {
   flex: 1,
   mt: '$10',
   width: '100%',
@@ -37,7 +49,13 @@ const DashboardContainer = styled(Container, {
         },
       },
       wide: {
-        gridTemplateColumns: '1fr 5fr',
+        gridTemplateColumns: '100%',
+        '@lg': {
+          gridTemplateColumns: '834px',
+        },
+        '@xl': {
+          gridTemplateColumns: '1fr 5fr',
+        },
       },
     },
   },
@@ -47,7 +65,7 @@ const DashboardContainer = styled(Container, {
   },
 });
 
-const FullScreen = styled('div', {
+export const FullScreen = styled('div', {
   height: '100vh',
   display: 'flex',
   flexDirection: 'column',
@@ -55,13 +73,16 @@ const FullScreen = styled('div', {
   justifyContent: 'space-between',
 });
 
-const Sidebar = styled('div', {
-  display: 'flex',
+export const DashboardSidebar = styled('div', {
+  display: 'none',
   flexDirection: 'column',
   gap: '$3',
+  '@xl': {
+    display: 'flex',
+  },
 });
 
-const NavItem = styled('a', {
+export const DashboardSidebarNavItem = styled('a', {
   py: '$3',
   px: '$3',
   br: '$2',
@@ -102,6 +123,8 @@ export const DashboardLayout = ({
   ...props
 }: DashboardLayoutProps) => {
   const router = useRouter();
+  const { isExperimentalAnalyticsPageEnabled } = useFeatureFlags();
+  const [loadingCreate, setLoadingCreate] = useState(false);
 
   let triggerName;
 
@@ -123,39 +146,67 @@ export const DashboardLayout = ({
       break;
   }
 
+  const handleCreateNewPrivateStory = async () => {
+    setLoadingCreate(true);
+    try {
+      const storiesFile = await getStoriesFile();
+      const story = createNewEmptyStory();
+
+      storiesFile.stories.unshift(
+        createSubsetStory(story, { plainContent: '' })
+      );
+
+      await saveStoriesFile(storiesFile);
+      await saveStoryFile(story);
+
+      Fathom.trackGoal(Goals.CREATE_NEW_STORY, 0);
+      router.push('/stories/[storyId]', `/stories/${story.id}`);
+    } catch (error) {
+      console.error(error);
+      toast.error(error.message);
+      setLoadingCreate(false);
+    }
+  };
+
+  const navItems = [
+    {
+      name: 'Drafts',
+      path: '/',
+    },
+    {
+      name: 'Published',
+      path: '/published',
+    },
+  ];
+
+  if (isExperimentalAnalyticsPageEnabled) {
+    navItems.push({
+      name: 'Analytics',
+      path: '/analytics',
+    });
+  }
+
   return (
     <FullScreen>
       <AppHeader />
       <DashboardContainer {...props}>
-        <Sidebar
-          css={{
-            display: 'none',
-            '@xl': {
-              display: 'flex',
-            },
-          }}
-        >
-          <Link href="/" passHref>
-            <NavItem selected={router.pathname === '/'}>Drafts</NavItem>
-          </Link>
-          <Link href="/published" passHref>
-            <NavItem selected={router.pathname === '/published'}>
-              Published
-            </NavItem>
-          </Link>
-          {isExperimentalAnalyticsPageEnabled && (
-            <Link href="/analytics" passHref>
-              <NavItem selected={router.pathname === '/analytics'}>
-                Analytics
-              </NavItem>
+        <DashboardSidebar>
+          {navItems.map((item) => (
+            <Link key={item.path} href={item.path} passHref>
+              <DashboardSidebarNavItem selected={router.pathname === item.path}>
+                {item.name}
+              </DashboardSidebarNavItem>
             </Link>
-          )}
-          <Link href="/settings" passHref>
-            <NavItem selected={router.pathname === '/settings'}>
-              Settings
-            </NavItem>
-          </Link>
-        </Sidebar>
+          ))}
+          <Button
+            css={{ mt: '$5', alignSelf: 'start' }}
+            disabled={loadingCreate}
+            onClick={handleCreateNewPrivateStory}
+            size="lg"
+          >
+            {!loadingCreate ? `Write a story` : `Creating new story...`}
+          </Button>
+        </DashboardSidebar>
         <Box
           css={{
             mb: '$5',
@@ -167,23 +218,19 @@ export const DashboardLayout = ({
             type="single"
           >
             <AccordionItem value="item1">
-              <AccordionTrigger>{triggerName}</AccordionTrigger>
+              <AccordionTrigger>
+                {navItems.find((item) => item.path === router.pathname)?.name}
+              </AccordionTrigger>
               <AccordionContent>
-                {router.pathname !== '/' ? (
-                  <Link href="/" passHref>
-                    <NavItem variant="accordion">Drafts</NavItem>
-                  </Link>
-                ) : null}
-                {router.pathname !== '/published' ? (
-                  <Link href="/published" passHref>
-                    <NavItem variant="accordion">Published</NavItem>
-                  </Link>
-                ) : null}
-                {router.pathname !== '/settings' ? (
-                  <Link href="/settings" passHref>
-                    <NavItem variant="accordion">Settings</NavItem>
-                  </Link>
-                ) : null}
+                {navItems
+                  .filter((item) => item.path !== router.pathname)
+                  .map((item) => (
+                    <Link key={item.path} href={item.path} passHref>
+                      <DashboardSidebarNavItem variant="accordion">
+                        {item.name}
+                      </DashboardSidebarNavItem>
+                    </Link>
+                  ))}
               </AccordionContent>
             </AccordionItem>
           </Accordion>

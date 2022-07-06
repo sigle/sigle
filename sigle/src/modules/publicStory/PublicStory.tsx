@@ -7,13 +7,32 @@ import { sanitizeHexColor } from '../../utils/security';
 import { sigleConfig } from '../../config';
 import { TipTapEditor } from '../editor/TipTapEditor';
 import { styled } from '../../stitches.config';
-import { Box, Container, Flex, Text } from '../../ui';
+import { Box, Container, Flex, Typography } from '../../ui';
 import { PoweredBy } from './PoweredBy';
 import { getTextFromHtml } from '../editor/utils/getTextFromHtml';
 import { AppHeader } from '../layout/components/AppHeader';
 import format from 'date-fns/format';
 import Link from 'next/link';
 import { ShareButtons } from './ShareButtons';
+import { generateAvatar } from '../../utils/boringAvatar';
+
+const ProfileImageContainer = styled('div', {
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+  br: '$1',
+  overflow: 'hidden',
+  width: 48,
+  height: 48,
+});
+
+const ProfileImage = styled('img', {
+  width: 'auto',
+  height: '100%',
+  maxWidth: 48,
+  maxHeight: 48,
+  objectFit: 'cover',
+});
 
 const PublicStoryContainer = styled('div', {
   margin: '0 auto',
@@ -70,9 +89,12 @@ const ShareButtonsOnScroll = ({
       }}
     >
       <Box>
-        <Text size="sm" css={{ mt: 0, mb: '$3', color: '$gray11' }}>
+        <Typography
+          size="subheading"
+          css={{ mt: 0, mb: '$3', color: '$gray11' }}
+        >
           Share this story
-        </Text>
+        </Typography>
         <ShareButtons username={username} story={story} settings={settings} />
       </Box>
     </Container>
@@ -82,9 +104,14 @@ const ShareButtonsOnScroll = ({
 interface PublicStoryProps {
   story: Story;
   settings: SettingsFile;
+  userInfo: { username: string; address: string };
 }
 
-export const PublicStory = ({ story, settings }: PublicStoryProps) => {
+export const PublicStory = ({
+  story,
+  settings,
+  userInfo,
+}: PublicStoryProps) => {
   const router = useRouter();
   const { username, storyId } = router.query as {
     username: string;
@@ -147,22 +174,33 @@ export const PublicStory = ({ story, settings }: PublicStoryProps) => {
           className="not-prose"
         >
           <Link href="/[username]" as={`/${username}`} passHref>
-            <a>
-              <Text size="action">{siteName}</Text>
-              <Text
-                size="action"
-                css={{
-                  display: 'flex',
-                  gap: '$2',
-                  color: '$gray9',
-                  mt: '$1',
-                }}
-              >
-                {format(story.createdAt, 'MMM dd')}
-                <span>•</span>
-                <span>{storyReadingTime?.text}</span>
-              </Text>
-            </a>
+            <Flex as="a" align="center" gap="3">
+              <ProfileImageContainer>
+                <ProfileImage
+                  src={
+                    settings?.siteLogo
+                      ? settings.siteLogo
+                      : generateAvatar(userInfo.address)
+                  }
+                />
+              </ProfileImageContainer>
+              <Box>
+                <Typography size="subheading">{siteName}</Typography>
+                <Typography
+                  size="subheading"
+                  css={{
+                    display: 'flex',
+                    gap: '$2',
+                    color: '$gray9',
+                    mt: '$1',
+                  }}
+                >
+                  {format(story.createdAt, 'MMM dd')}
+                  <span>•</span>
+                  <span>{storyReadingTime?.text}</span>
+                </Typography>
+              </Box>
+            </Flex>
           </Link>
           <ShareButtons username={username} story={story} settings={settings} />
         </Flex>

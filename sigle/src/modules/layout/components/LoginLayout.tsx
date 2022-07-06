@@ -1,7 +1,7 @@
 import React from 'react';
 import Image from 'next/image';
 import { styled } from '../../../stitches.config';
-import { Container } from '../../../ui';
+import { Box, Container } from '../../../ui';
 import { sigleConfig } from '../../../config';
 import { useTheme } from 'next-themes';
 import { AppFooter } from './AppFooter';
@@ -33,8 +33,6 @@ const BlockText = styled('div', {
   display: 'flex',
   flexDirection: 'column',
   justifyContent: 'center',
-  alignItems: 'center',
-  textAlign: 'center',
 });
 
 const BlockIllustration = styled('div', {
@@ -54,15 +52,11 @@ export const LoginLayout = ({ children }: LoginLayoutProps) => {
   let src;
 
   switch (resolvedTheme) {
-    case 'light':
-      src = '/static/img/logo.png';
-      break;
     case 'dark':
       src = '/static/img/logo_white.png';
       break;
     default:
-      src =
-        'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7';
+      src = '/static/img/logo.png';
       break;
   }
 
@@ -71,9 +65,15 @@ export const LoginLayout = ({ children }: LoginLayoutProps) => {
       <LoginContainer>
         <Grid>
           <BlockText>
-            <a href={sigleConfig.landingUrl} target="_blank" rel="noreferrer">
+            <Box
+              as="a"
+              css={{ mb: '$15' }}
+              href={sigleConfig.landingUrl}
+              target="_blank"
+              rel="noreferrer"
+            >
               <Image src={src} alt="Logo" width={123} height={45} />
-            </a>
+            </Box>
             {children}
           </BlockText>
           <BlockIllustration>
@@ -82,6 +82,7 @@ export const LoginLayout = ({ children }: LoginLayoutProps) => {
               alt="Login illustration"
               width={600}
               height={476}
+              priority
             />
           </BlockIllustration>
         </Grid>

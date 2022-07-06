@@ -1,10 +1,9 @@
 import { AreaClosed, LinePath } from '@visx/shape';
 import { LinearGradient } from '@visx/gradient';
-import { curveBasis, curveNatural } from '@visx/curve';
+import { curveMonotoneX } from '@visx/curve';
 import { AxisBottom, AxisLeft, AxisScale } from '@visx/axis';
 import { theme } from '../../../stitches.config';
 import { WithParentSizeProps } from '@visx/responsive/lib/enhancers/withParentSizeModern';
-import { Group } from '@visx/group';
 import { StatsData } from './types';
 
 const violet = theme.colors.violet5.toString();
@@ -12,11 +11,11 @@ const green = theme.colors.green3.toString();
 
 // accessors
 const getDate = (d: StatsData) => new Date(d.date);
-const getViews = (d: StatsData) => d.pageViews;
+const getViews = (d: StatsData) => d.pageviews;
 const getVisits = (d: StatsData) => d.visits;
 
 interface AreaChartProps extends WithParentSizeProps {
-  data: StatsData[];
+  data: StatsData[] | undefined;
   margin: { top: number; right: number; bottom: number; left: number };
   width: number;
   yMax: number;
@@ -77,7 +76,7 @@ export const AreaChart = ({
         y={(d) => yScale(getViews(d)) ?? 0}
         yScale={yScale}
         fill={'url(#purple-gradient)'}
-        curve={curveNatural}
+        curve={curveMonotoneX}
       />
       <LinePath
         data={data}
@@ -86,7 +85,7 @@ export const AreaChart = ({
         stroke={'url(#purple-line-gradient)'}
         strokeWidth={4}
         strokeOpacity={1}
-        curve={curveNatural}
+        curve={curveMonotoneX}
       />
 
       <LinearGradient
@@ -108,7 +107,7 @@ export const AreaChart = ({
         y={(d) => yScale(getVisits(d)) ?? 0}
         yScale={yScale}
         fill={'url(#green-gradient)'}
-        curve={curveBasis}
+        curve={curveMonotoneX}
       />
       <LinePath
         data={data}
@@ -116,7 +115,7 @@ export const AreaChart = ({
         y={(d) => yScale(getVisits(d)) ?? 0}
         stroke={'url(#green-line-gradient)'}
         strokeWidth={4}
-        curve={curveBasis}
+        curve={curveMonotoneX}
       />
       <AxisBottom
         top={yMax + 2}

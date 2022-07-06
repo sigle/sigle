@@ -1,11 +1,10 @@
 import React, { useState } from 'react';
 import { StoryItem } from '../';
 import { SubsetStory, BlockstackUser } from '../../../types';
-import { DashboardPageTitle } from '../../layout/components/DashboardHeader';
 import { DashboardLayout } from '../../layout/components/DashboardLayout';
 import Image from 'next/image';
 import { styled } from '../../../stitches.config';
-import { Box, Button, Flex, Text } from '../../../ui';
+import { Box, Button, Flex, Typography } from '../../../ui';
 import {
   createNewEmptyStory,
   getStoriesFile,
@@ -126,16 +125,21 @@ export const Home = ({
 
   return (
     <DashboardLayout>
-      <DashboardPageTitle
-        title={
-          selectedTab === 'published'
-            ? `Published stories (${nbStoriesLabel})`
-            : `Drafts stories (${nbStoriesLabel})`
-        }
-      />
-
+      <Typography
+        size="h4"
+        css={{
+          fontWeight: 600,
+          pb: '$8',
+          mb: '$2',
+          borderBottom: '1px solid $colors$gray6',
+        }}
+      >
+        {selectedTab === 'published'
+          ? `Published stories (${nbStoriesLabel})`
+          : `Drafts stories (${nbStoriesLabel})`}
+      </Typography>
       {showIllu && (
-        <Flex css={{ mt: '$10' }} align="center" direction="column" gap="5">
+        <Flex css={{ mt: '$10' }} align="center" direction="column">
           {selectedTab === 'drafts' && (
             <ImgWrapper>
               <Image
@@ -146,16 +150,19 @@ export const Home = ({
               />
             </ImgWrapper>
           )}
-          <Text>{`You currently have no ${
+          <Typography
+            size="subheading"
+            css={{ mt: '$5', mb: '$3' }}
+          >{`You currently have no ${
             selectedTab === 'published' ? 'published stories' : 'drafts'
-          }`}</Text>
+          }`}</Typography>
           {selectedTab === 'drafts' && (
             <Button
+              variant="subtle"
               disabled={loadingCreate}
               onClick={handleCreateNewPrivateStory}
-              size="lg"
             >
-              {!loadingCreate ? `Write a story` : `Creating new story...`}
+              {!loadingCreate ? `Start writing` : `Creating new story...`}
             </Button>
           )}
           <StoryCardSkeleton />

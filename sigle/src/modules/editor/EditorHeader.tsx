@@ -9,6 +9,7 @@ import { Box, Button, Flex, IconButton, Text } from '../../ui';
 import { Story } from '../../types';
 import { useAuth } from '../auth/AuthContext';
 import { useEffect, useState } from 'react';
+import { Typography } from '../../ui';
 
 interface EditorHeaderProps {
   story: Story | false;
@@ -96,7 +97,7 @@ export const EditorHeader = ({
             target="_blank"
             as="a"
           >
-            <Text size="action">See your story</Text>
+            <Typography size="subheading">See your story</Typography>
             <EyeOpenIcon />
           </Button>
         )}

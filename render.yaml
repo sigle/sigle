@@ -8,8 +8,12 @@ services:
     branch: main
     healthCheckPath: /health
     autoDeploy: true
-    buildCommand: cd server; pnpm install --filter=@sigle/server; pnpm run build
-    startCommand: cd server; pnpm run start
+    buildCommand: cd server &&
+      pnpm install --filter=@sigle/server &&
+      pnpm run build &&
+      pnpm prisma migrate deploy
+    startCommand: cd server &&
+      pnpm run start
     domains:
       - api.sigle.io
     buildFilter:
@@ -22,11 +26,19 @@ services:
     envVars:
       - key: APP_URL
         value: 'https://app.sigle.io'
+      # Value used to decode the cookies
+      - key: NEXTAUTH_URL
+        value: 'https://app.sigle.io'
       # Inject Redis connection url from the redis instance
       - key: REDIS_DATABASE_URL
         fromService:
           type: redis
           name: sigle-redis
+          property: connectionString
+      # Inject Postgres connection url from the redis instance
+      - key: PG_DATABASE_URL
+        fromDatabase:
+          name: sigle-postgres
           property: connectionString
 
   # Redis database
@@ -34,5 +46,14 @@ services:
     type: redis
     region: oregon
     plan: Starter
+    # only allow internal connections
+    ipAllowList: []
+
+databases:
+  # Postgres database
+  - name: sigle-postgres
+    region: oregon
+    plan: Starter
+    postgresMajorVersion: 14
     # only allow internal connections
     ipAllowList: []
