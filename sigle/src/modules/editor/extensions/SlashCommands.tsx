@@ -3,7 +3,8 @@
 import React from 'react';
 import { Extension } from '@tiptap/core';
 import Suggestion, { SuggestionOptions } from '@tiptap/suggestion';
-import { Editor, ReactRenderer, Range } from '@tiptap/react';
+import { Editor } from '@tiptap/core';
+import { ReactRenderer, Range } from '@tiptap/react';
 import tippy, { Instance } from 'tippy.js';
 import { IconProps } from '@radix-ui/react-icons/dist/types';
 
