@@ -21,7 +21,7 @@ export const Editor = () => {
       cacheTime: 0,
       onError: (error: Error) => {
         Sentry.captureException(error);
-        toast.error(error.message || error);
+        toast.error(error.message);
       },
     }
   );
