@@ -88,7 +88,7 @@ export const StoryCard = ({
       css={{
         flexDirection: featured ? 'column' : 'row',
         '@md': {
-          gap: !story.coverImage && featured ? '$5' : '$7',
+          gap: story.coverImage && featured ? 0 : '$7',
         },
       }}
     >

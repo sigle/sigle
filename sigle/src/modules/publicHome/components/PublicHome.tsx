@@ -1,9 +1,23 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { NextSeo } from 'next-seo';
 import { StoryFile, SettingsFile } from '../../../types';
 import { PoweredBy } from '../../publicStory/PoweredBy';
 import { AppHeader } from '../../layout/components/AppHeader';
-import { Box, Button, Container, Flex, Typography } from '../../../ui';
+import {
+  Box,
+  Button,
+  Container,
+  Flex,
+  Tabs,
+  TabsTrigger,
+  TabsContent,
+  TabsList,
+  Typography,
+  Tooltip,
+  TooltipTrigger,
+  IconButton,
+  TooltipContent,
+} from '../../../ui';
 import { sigleConfig } from '../../../config';
 import { styled } from '../../../stitches.config';
 import { useAuth } from '../../auth/AuthContext';
@@ -15,9 +29,9 @@ import {
 import { generateAvatar } from '../../../utils/boringAvatar';
 import { useFeatureFlags } from '../../../utils/featureFlags';
 import { StoryCard } from '../../storyCard/StoryCard';
+import { CopyIcon } from '@radix-ui/react-icons';
 
 const StyledContainer = styled(Container, {
-  pt: '$4',
   pb: '$15',
   maxWidth: 826,
 });
@@ -25,10 +39,9 @@ const StyledContainer = styled(Container, {
 const Header = styled('div', {
   py: '$10',
   px: '$4',
-  maxWidth: 960,
+  maxWidth: 826,
   display: 'flex',
   flexDirection: 'column',
-  placeItems: 'center',
   mx: 'auto',
 });
 
@@ -36,11 +49,11 @@ const HeaderLogoContainer = styled('div', {
   width: 92,
   height: 92,
   display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'center',
+  // alignItems: 'center',
+  justifyContent: 'between',
   br: '$4',
   overflow: 'hidden',
-  mb: '$4',
+  mb: '$2',
 });
 
 const HeaderLogo = styled('img', {
@@ -50,6 +63,13 @@ const HeaderLogo = styled('img', {
   maxHeight: 92,
   objectFit: 'cover',
 });
+
+const abbreviateAddress = (address: string) => {
+  if (!address) return address;
+  const firstFour = address.substring(0, 4);
+  const lastFour = address.substring(address.length - 4);
+  return `${firstFour}...${lastFour}`;
+};
 
 const PublicHomeSiteUrl = ({ siteUrl }: { siteUrl: string }) => {
   let displayUrl = siteUrl;
@@ -99,6 +119,8 @@ export const PublicHome = ({ file, settings, userInfo }: PublicHomeProps) => {
   });
   const { mutate: followUser } = useUserFollow();
   const { mutate: unfollowUser } = useUserUnfollow();
+  const [isCopied, setIsCopied] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
 
   const handleFollow = async () => {
     if (!userFollowing) return;
@@ -110,6 +132,16 @@ export const PublicHome = ({ file, settings, userInfo }: PublicHomeProps) => {
       return;
     }
     unfollowUser({ userFollowing, address: userInfo.address });
+  };
+
+  const handleClick = () => {
+    navigator.clipboard.writeText(userInfo.address).then(() => {
+      setIsCopied(true);
+      setTimeout(() => {
+        setIsCopied(false);
+      }, 2000);
+      setIsOpen(true);
+    });
   };
 
   const siteName = settings.siteName || userInfo.username;
@@ -155,20 +187,17 @@ export const PublicHome = ({ file, settings, userInfo }: PublicHomeProps) => {
       <Container>
         <AppHeader />
         <Header>
-          <HeaderLogoContainer>
-            <HeaderLogo
-              src={
-                settings.siteLogo
-                  ? settings.siteLogo
-                  : generateAvatar(userInfo.address)
-              }
-              alt={`${siteName} logo`}
-            />
-          </HeaderLogoContainer>
-          <Flex align="center">
-            <Typography css={{ fontWeight: 700 }} as="h1" size="h2">
-              {siteName}
-            </Typography>
+          <Flex align="start" justify="between">
+            <HeaderLogoContainer>
+              <HeaderLogo
+                src={
+                  settings.siteLogo
+                    ? settings.siteLogo
+                    : generateAvatar(userInfo.address)
+                }
+                alt={`${siteName} logo`}
+              />
+            </HeaderLogoContainer>
             {isExperimentalFollowEnabled &&
             user &&
             user.username !== userInfo.username &&
@@ -192,22 +221,28 @@ export const PublicHome = ({ file, settings, userInfo }: PublicHomeProps) => {
               )
             ) : null}
           </Flex>
-          {settings.siteDescription &&
-            settings.siteDescription.split('\n').map((text, index) => (
-              <Typography
-                size="subheading"
-                css={{ mt: '$2', textAlign: 'center' }}
-                key={index}
-              >
-                {text}
-              </Typography>
-            ))}
-          <Flex css={{ pt: '$5' }} gap="3">
+          <Flex align="center" gap="5">
+            <Typography css={{ fontWeight: 700 }} as="h1" size="h2">
+              {siteName}
+            </Typography>
+            <Box
+              css={{ backgroundColor: '$gray4', py: '$1', px: '$3', br: '$2' }}
+            >
+              {userInfo.username}
+            </Box>
+          </Flex>
+          <Flex css={{ pt: '$3' }} gap="3" align="center">
             {settings.siteUrl && (
               <PublicHomeSiteUrl siteUrl={settings.siteUrl} />
             )}
             {settings.siteUrl && settings.siteTwitterHandle && (
-              <Box css={{ width: '1px', backgroundColor: '$gray9' }} />
+              <Box
+                css={{
+                  width: '1px',
+                  height: '$4',
+                  backgroundColor: '$gray9',
+                }}
+              />
             )}
             {settings.siteTwitterHandle && (
               <Typography
@@ -232,32 +267,109 @@ export const PublicHome = ({ file, settings, userInfo }: PublicHomeProps) => {
                   : `@${twitterHandle}`}
               </Typography>
             )}
+            <Box
+              css={{ width: '1px', height: '$4', backgroundColor: '$gray9' }}
+            />
+            <Flex
+              align="center"
+              gap="2"
+              css={{
+                '&:hover': {
+                  '& button': {
+                    display: 'block',
+                  },
+                },
+              }}
+            >
+              <Typography
+                size="subheading"
+                css={{
+                  color: '$gray9',
+
+                  '&:hover': {
+                    color: '$gray10',
+                  },
+                  '&:active': {
+                    color: '$gray12',
+                  },
+                }}
+              >
+                {abbreviateAddress(userInfo.address)}
+              </Typography>
+              <Tooltip
+                open={isOpen}
+                onOpenChange={() => setIsOpen(!isOpen)}
+                delayDuration={200}
+              >
+                <TooltipTrigger asChild>
+                  <IconButton
+                    disabled={isCopied}
+                    css={{
+                      display: 'none',
+                      p: 0,
+                      '&:hover': { backgroundColor: 'transparent' },
+                      '&:active': { backgroundColor: 'transparent' },
+                    }}
+                    onClick={handleClick}
+                  >
+                    <CopyIcon />
+                  </IconButton>
+                </TooltipTrigger>
+                <TooltipContent
+                  css={{
+                    boxShadow: 'none',
+                    backgroundColor: isCopied ? '$green11' : '$gray3',
+                    color: isCopied ? '$gray1' : '$gray11',
+                  }}
+                  side="top"
+                  sideOffset={8}
+                >
+                  {isCopied ? 'Copied!' : 'Copy link'}
+                </TooltipContent>
+              </Tooltip>
+            </Flex>
           </Flex>
+          {settings.siteDescription &&
+            settings.siteDescription.split('\n').map((text, index) => (
+              <Typography size="subheading" css={{ mt: '$2' }} key={index}>
+                {text}
+              </Typography>
+            ))}
         </Header>
       </Container>
 
       <StyledContainer>
-        {file.stories.length === 0 && (
-          <Typography css={{ mt: '$8', textAlign: 'center' }}>
-            No stories yet
-          </Typography>
-        )}
-        {featuredStoryIndex !== -1 && (
-          <StoryCard
-            userInfo={userInfo}
-            story={file.stories[featuredStoryIndex]}
-            settings={settings}
-            featured
-          />
-        )}
-        {stories.map((story) => (
-          <StoryCard
-            key={story.id}
-            userInfo={userInfo}
-            story={story}
-            settings={settings}
-          />
-        ))}
+        <Tabs defaultValue="stories">
+          <TabsList
+            css={{ boxShadow: '0 1px 0 0 $colors$gray6', mb: 0 }}
+            aria-label="See your draft"
+          >
+            <TabsTrigger value="stories">{`Stories (${file.stories.length})`}</TabsTrigger>
+          </TabsList>
+          <TabsContent value="stories">
+            {file.stories.length === 0 && (
+              <Typography css={{ mt: '$8', textAlign: 'center' }}>
+                No stories yet
+              </Typography>
+            )}
+            {featuredStoryIndex !== -1 && (
+              <StoryCard
+                userInfo={userInfo}
+                story={file.stories[featuredStoryIndex]}
+                settings={settings}
+                featured
+              />
+            )}
+            {stories.map((story) => (
+              <StoryCard
+                key={story.id}
+                userInfo={userInfo}
+                story={story}
+                settings={settings}
+              />
+            ))}
+          </TabsContent>
+        </Tabs>
 
         <PoweredBy />
       </StyledContainer>
