@@ -49,7 +49,6 @@ const HeaderLogoContainer = styled('div', {
   width: 92,
   height: 92,
   display: 'flex',
-  // alignItems: 'center',
   justifyContent: 'between',
   br: '$4',
   overflow: 'hidden',

@@ -11,8 +11,6 @@ const StoryContainer = styled('div', {
   display: 'flex',
   borderBottom: '1px solid $colors$gray6',
   py: '$7',
-  gap: '$5',
-  alignItems: 'center',
 
   '& img': {
     transform: 'none',
@@ -87,7 +85,10 @@ export const StoryCard = ({
     <StoryContainer
       css={{
         flexDirection: featured ? 'column' : 'row',
+        alignItems: featured ? 'start' : 'center',
+        gap: story.coverImage && featured ? 0 : '$5',
         '@md': {
+          alignItems: 'center',
           gap: story.coverImage && featured ? 0 : '$7',
         },
       }}
