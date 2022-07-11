@@ -3,7 +3,8 @@
 import React from 'react';
 import { Extension } from '@tiptap/core';
 import Suggestion, { SuggestionOptions } from '@tiptap/suggestion';
-import { Editor, ReactRenderer, Range } from '@tiptap/react';
+import { Editor } from '@tiptap/core';
+import { ReactRenderer, Range } from '@tiptap/react';
 import tippy, { Instance } from 'tippy.js';
 import { IconProps } from '@radix-ui/react-icons/dist/types';
 
@@ -64,8 +65,8 @@ export const SlashCommands = Extension.create<{
                 props: { ...props, component: this.options.component },
               });
 
-              popup = tippy('body', {
-                getReferenceClientRect: props.clientRect,
+              popup = tippy('body' as any, {
+                getReferenceClientRect: props.clientRect as any,
                 appendTo: () => document.body,
                 content: component.element,
                 showOnCreate: true,
@@ -83,7 +84,7 @@ export const SlashCommands = Extension.create<{
               });
 
               popup[0].setProps({
-                getReferenceClientRect: props.clientRect,
+                getReferenceClientRect: props.clientRect as any,
               });
             },
             onKeyDown(props) {
