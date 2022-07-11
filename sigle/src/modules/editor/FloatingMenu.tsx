@@ -54,7 +54,7 @@ export const FloatingMenu = ({ editor, storyId }: FloatingMenuProps) => {
   };
 
   const handleSelect = useCallback(
-    ({ command }: any) => {
+    ({ command }) => {
       command({ editor });
       setIsOpen(false);
     },
