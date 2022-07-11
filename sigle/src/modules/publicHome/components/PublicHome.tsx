@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { NextSeo } from 'next-seo';
 import { StoryFile, SettingsFile } from '../../../types';
 import { PoweredBy } from '../../publicStory/PoweredBy';
@@ -13,10 +13,6 @@ import {
   TabsContent,
   TabsList,
   Typography,
-  Tooltip,
-  TooltipTrigger,
-  IconButton,
-  TooltipContent,
 } from '../../../ui';
 import { sigleConfig } from '../../../config';
 import { styled } from '../../../stitches.config';
@@ -29,7 +25,18 @@ import {
 import { generateAvatar } from '../../../utils/boringAvatar';
 import { useFeatureFlags } from '../../../utils/featureFlags';
 import { StoryCard } from '../../storyCard/StoryCard';
-import { CopyIcon } from '@radix-ui/react-icons';
+
+const ExtraInfoLink = styled('a', {
+  color: '$gray9',
+  fontSize: '$2',
+
+  '&:hover': {
+    color: '$gray10',
+  },
+  '&:active': {
+    color: '$gray12',
+  },
+});
 
 const StyledContainer = styled(Container, {
   pb: '$15',
@@ -82,25 +89,9 @@ const PublicHomeSiteUrl = ({ siteUrl }: { siteUrl: string }) => {
   }
 
   return (
-    <Typography
-      css={{
-        color: '$gray9',
-
-        '&:hover': {
-          color: '$gray10',
-        },
-        '&:active': {
-          color: '$gray12',
-        },
-      }}
-      size="subheading"
-      as="a"
-      href={fullUrl}
-      target="_blank"
-      rel="noreferrer"
-    >
+    <ExtraInfoLink href={fullUrl} target="_blank" rel="noreferrer">
       {displayUrl}
-    </Typography>
+    </ExtraInfoLink>
   );
 };
 
@@ -118,8 +109,6 @@ export const PublicHome = ({ file, settings, userInfo }: PublicHomeProps) => {
   });
   const { mutate: followUser } = useUserFollow();
   const { mutate: unfollowUser } = useUserUnfollow();
-  const [isCopied, setIsCopied] = useState(false);
-  const [isOpen, setIsOpen] = useState(false);
 
   const handleFollow = async () => {
     if (!userFollowing) return;
@@ -131,16 +120,6 @@ export const PublicHome = ({ file, settings, userInfo }: PublicHomeProps) => {
       return;
     }
     unfollowUser({ userFollowing, address: userInfo.address });
-  };
-
-  const handleClick = () => {
-    navigator.clipboard.writeText(userInfo.address).then(() => {
-      setIsCopied(true);
-      setTimeout(() => {
-        setIsCopied(false);
-      }, 2000);
-      setIsOpen(true);
-    });
   };
 
   const siteName = settings.siteName || userInfo.username;
@@ -244,19 +223,7 @@ export const PublicHome = ({ file, settings, userInfo }: PublicHomeProps) => {
               />
             )}
             {settings.siteTwitterHandle && (
-              <Typography
-                css={{
-                  color: '$gray9',
-
-                  '&:hover': {
-                    color: '$gray10',
-                  },
-                  '&:active': {
-                    color: '$gray12',
-                  },
-                }}
-                size="subheading"
-                as="a"
+              <ExtraInfoLink
                 href={`https://twitter.com/${twitterHandle}`}
                 target="_blank"
                 rel="noreferrer"
@@ -264,11 +231,17 @@ export const PublicHome = ({ file, settings, userInfo }: PublicHomeProps) => {
                 {twitterHandle?.includes('@')
                   ? twitterHandle
                   : `@${twitterHandle}`}
-              </Typography>
+              </ExtraInfoLink>
             )}
-            <Box
-              css={{ width: '1px', height: '$4', backgroundColor: '$gray9' }}
-            />
+            {settings.siteTwitterHandle && (
+              <Box
+                css={{
+                  width: '1px',
+                  height: '$4',
+                  backgroundColor: '$gray9',
+                }}
+              />
+            )}
             <Flex
               align="center"
               gap="2"
@@ -280,52 +253,13 @@ export const PublicHome = ({ file, settings, userInfo }: PublicHomeProps) => {
                 },
               }}
             >
-              <Typography
-                size="subheading"
-                css={{
-                  color: '$gray9',
-
-                  '&:hover': {
-                    color: '$gray10',
-                  },
-                  '&:active': {
-                    color: '$gray12',
-                  },
-                }}
+              <ExtraInfoLink
+                href={`https://explorer.stacks.co/address/${userInfo.address}?chain=mainnet`}
+                target="_blank"
+                rel="noreferrer"
               >
                 {abbreviateAddress(userInfo.address)}
-              </Typography>
-              <Tooltip
-                open={isOpen}
-                onOpenChange={() => setIsOpen(!isOpen)}
-                delayDuration={200}
-              >
-                <TooltipTrigger asChild>
-                  <IconButton
-                    disabled={isCopied}
-                    css={{
-                      display: 'none',
-                      p: 0,
-                      '&:hover': { backgroundColor: 'transparent' },
-                      '&:active': { backgroundColor: 'transparent' },
-                    }}
-                    onClick={handleClick}
-                  >
-                    <CopyIcon />
-                  </IconButton>
-                </TooltipTrigger>
-                <TooltipContent
-                  css={{
-                    boxShadow: 'none',
-                    backgroundColor: isCopied ? '$green11' : '$gray3',
-                    color: isCopied ? '$gray1' : '$gray11',
-                  }}
-                  side="top"
-                  sideOffset={8}
-                >
-                  {isCopied ? 'Copied!' : 'Copy link'}
-                </TooltipContent>
-              </Tooltip>
+              </ExtraInfoLink>
             </Flex>
           </Flex>
           {settings.siteDescription &&
