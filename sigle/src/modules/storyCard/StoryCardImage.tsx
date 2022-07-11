@@ -4,7 +4,7 @@ const StoryImageContainer = styled('span', {
   display: 'inline-block',
   position: 'relative',
   overflow: 'hidden',
-  br: '$2',
+  br: '$1',
 
   '&::before': {
     content: '',
@@ -30,7 +30,7 @@ const StoryImageContainer = styled('span', {
     featured: {
       true: {
         mb: '$4',
-        borderRadius: '$2',
+        borderRadius: '$3',
 
         '@md': {
           mb: '$5',
