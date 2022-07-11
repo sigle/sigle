@@ -6,13 +6,6 @@ import { useFeatureFlags } from '../../utils/featureFlags';
 
 const AnalyticsPage = () => {
   const router = useRouter();
-  const { isExperimentalAnalyticsPageEnabled } = useFeatureFlags();
-
-  useEffect(() => {
-    if (!isExperimentalAnalyticsPageEnabled) {
-      router.push('/');
-    }
-  }, []);
 
   return (
     <Protected>

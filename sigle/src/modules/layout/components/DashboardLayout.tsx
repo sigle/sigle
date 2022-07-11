@@ -123,28 +123,7 @@ export const DashboardLayout = ({
   ...props
 }: DashboardLayoutProps) => {
   const router = useRouter();
-  const { isExperimentalAnalyticsPageEnabled } = useFeatureFlags();
   const [loadingCreate, setLoadingCreate] = useState(false);
-
-  let triggerName;
-
-  switch (router.pathname) {
-    case '/':
-      triggerName = 'Drafts';
-      break;
-    case '/published':
-      triggerName = 'Published';
-      break;
-    case '/analytics':
-      triggerName = 'Analytics';
-      break;
-    case '/settings':
-      triggerName = 'Settings';
-      break;
-    default:
-      triggerName = 'Drafts';
-      break;
-  }
 
   const handleCreateNewPrivateStory = async () => {
     setLoadingCreate(true);
@@ -177,14 +156,11 @@ export const DashboardLayout = ({
       name: 'Published',
       path: '/published',
     },
-  ];
-
-  if (isExperimentalAnalyticsPageEnabled) {
-    navItems.push({
+    {
       name: 'Analytics',
       path: '/analytics',
-    });
-  }
+    },
+  ];
 
   return (
     <FullScreen>
