@@ -152,6 +152,15 @@ export const PublicStory = ({
           site: '@sigleapp',
           cardType: seoImage ? 'summary_large_image' : 'summary',
         }}
+        additionalLinkTags={[
+          {
+            rel: 'alternate',
+            type: 'application/rss+xml',
+            // @ts-expect-error title is missing in next-seo
+            title: seoTitle,
+            href: `https://app.sigle.io/api/feed/${userInfo.username}`,
+          },
+        ]}
       />
 
       <AppHeader />
