@@ -42,7 +42,7 @@ export async function createGetUserByAddressEndpoint(fastify: FastifyInstance) {
     async (req, res) => {
       const { userAddress } = req.params;
 
-      let user = await prisma.user.findUnique({
+      const user = await prisma.user.findUnique({
         where: { stacksAddress: userAddress },
         select: {
           id: true,
