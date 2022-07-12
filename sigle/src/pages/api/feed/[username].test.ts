@@ -51,7 +51,7 @@ describe('test feed api', () => {
       item: expect.any(Array),
       lastBuildDate: expect.any(String),
       link: 'https://app.sigle.io/sigleapp.id.blockstack',
-      title: 'Sigle official blog',
+      title: 'Sigle',
     });
     // Last items should never change
     expect(
