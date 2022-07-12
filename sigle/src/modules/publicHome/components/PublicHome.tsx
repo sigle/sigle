@@ -1,6 +1,7 @@
 import React from 'react';
 import { NextSeo } from 'next-seo';
 import Image from 'next/future/image';
+import { useTheme } from 'next-themes';
 import { StoryFile, SettingsFile } from '../../../types';
 import { PoweredBy } from '../../publicStory/PoweredBy';
 import { AppHeader } from '../../layout/components/AppHeader';
@@ -29,7 +30,6 @@ import {
 import { generateAvatar } from '../../../utils/boringAvatar';
 import { useFeatureFlags } from '../../../utils/featureFlags';
 import { StoryCard } from '../../storyCard/StoryCard';
-import { useTheme } from 'next-themes';
 import { useGetUserByAddress } from '../../../hooks/users';
 
 const ExtraInfoLink = styled('a', {
