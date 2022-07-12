@@ -66,7 +66,6 @@ const plans = {
 };
 
 export const CurrentPlan = () => {
-  const { isExperimentalAnalyticsPageEnabled } = useFeatureFlags();
   const {
     isLoading,
     isError,
@@ -87,22 +86,16 @@ export const CurrentPlan = () => {
           Current plan
         </Typography>
         {!isLoading && !isError ? (
-          isExperimentalAnalyticsPageEnabled ? (
-            currentPlan === 'starter' ? (
-              <Link href="/settings/plans/compare" passHref>
-                <Button color="orange" as="a">
-                  Upgrade
-                </Button>
-              </Link>
-            ) : (
-              <Link href="/settings/plans/compare" passHref>
-                <Button variant="subtle">Change plan</Button>
-              </Link>
-            )
+          currentPlan === 'starter' ? (
+            <Link href="/settings/plans/compare" passHref>
+              <Button color="orange" as="a">
+                Upgrade
+              </Button>
+            </Link>
           ) : (
-            <Button disabled color="orange">
-              Upgrade (coming soon)
-            </Button>
+            <Link href="/settings/plans/compare" passHref>
+              <Button variant="subtle">Change plan</Button>
+            </Link>
           )
         ) : null}
       </Flex>
