@@ -220,7 +220,7 @@ export const PublicHome = ({ file, settings, userInfo }: PublicHomeProps) => {
               <Tooltip delayDuration={200}>
                 <TooltipTrigger asChild>
                   <a
-                    href={`https://gamma.io/collections/the-explorer-guild/${userInfoByAddress.subscription.nftId}`}
+                    href={`${sigleConfig.gammaUrl}/${userInfoByAddress.subscription.nftId}`}
                     target="_blank"
                     rel="noreferrer"
                   >
