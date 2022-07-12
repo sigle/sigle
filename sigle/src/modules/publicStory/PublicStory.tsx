@@ -158,7 +158,7 @@ export const PublicStory = ({
             type: 'application/rss+xml',
             // @ts-expect-error title is missing in next-seo
             title: seoTitle,
-            href: `https://app.sigle.io/api/feed/${userInfo.username}`,
+            href: `${sigleConfig.appUrl}/api/feed/${userInfo.username}`,
           },
         ]}
       />
