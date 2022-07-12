@@ -8,7 +8,7 @@ export const IconButton = styled('button', {
 
   '&:disabled': {
     opacity: 0.5,
-    pointerEvents: 'none',
+    cursor: 'not-allowed',
   },
 
   variants: {
