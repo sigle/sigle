@@ -1,5 +1,6 @@
 import React from 'react';
 import { NextSeo } from 'next-seo';
+import Image from 'next/future/image';
 import { StoryFile, SettingsFile } from '../../../types';
 import { PoweredBy } from '../../publicStory/PoweredBy';
 import { AppHeader } from '../../layout/components/AppHeader';
@@ -13,6 +14,9 @@ import {
   TabsContent,
   TabsList,
   Typography,
+  Tooltip,
+  TooltipTrigger,
+  TooltipContent,
 } from '../../../ui';
 import { sigleConfig } from '../../../config';
 import { styled } from '../../../stitches.config';
@@ -25,6 +29,7 @@ import {
 import { generateAvatar } from '../../../utils/boringAvatar';
 import { useFeatureFlags } from '../../../utils/featureFlags';
 import { StoryCard } from '../../storyCard/StoryCard';
+import { useTheme } from 'next-themes';
 
 const ExtraInfoLink = styled('a', {
   color: '$gray9',
@@ -102,6 +107,7 @@ interface PublicHomeProps {
 }
 
 export const PublicHome = ({ file, settings, userInfo }: PublicHomeProps) => {
+  const { resolvedTheme } = useTheme();
   const { user } = useAuth();
   const { isExperimentalFollowEnabled } = useFeatureFlags();
   const { data: userFollowing } = useGetUserFollowing({
@@ -140,6 +146,8 @@ export const PublicHome = ({ file, settings, userInfo }: PublicHomeProps) => {
 
   const isFollowingUser =
     userFollowing && !!userFollowing.following[userInfo.address];
+
+  const explorer = 2121;
 
   return (
     <React.Fragment>
@@ -208,6 +216,33 @@ export const PublicHome = ({ file, settings, userInfo }: PublicHomeProps) => {
             >
               {userInfo.username}
             </Box>
+            <Tooltip delayDuration={200}>
+              <TooltipTrigger asChild>
+                <a
+                  href={`https://gamma.io/collections/the-explorer-guild/${explorer}`}
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  <Image
+                    src={
+                      resolvedTheme === 'dark'
+                        ? '/img/badges/creatorPlusDark.svg'
+                        : '/img/badges/creatorPlusLight.svg'
+                    }
+                    alt="Creator + badge"
+                    width={20}
+                    height={20}
+                  />
+                </a>
+              </TooltipTrigger>
+              <TooltipContent
+                css={{ boxShadow: 'none' }}
+                side="right"
+                sideOffset={8}
+              >
+                Creator + Explorer #{explorer}
+              </TooltipContent>
+            </Tooltip>
           </Flex>
           <Flex css={{ pt: '$3' }} gap="3" align="center">
             {settings.siteUrl && (
