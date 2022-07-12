@@ -2457,7 +2457,7 @@ packages:
       '@stacks/network': 4.3.0
       '@stacks/profile': 4.1.0
       cross-fetch: 3.1.5
-      jsontokens: 3.0.0
+      jsontokens: 3.1.1
       query-string: 6.14.1
     transitivePeerDependencies:
       - encoding
@@ -2812,8 +2812,8 @@ packages:
     dependencies:
       '@stacks/common': 4.3.0
       '@stacks/network': 4.3.0
-      '@stacks/transactions': 4.1.0
-      jsontokens: 3.0.0
+      '@stacks/transactions': 4.3.1
+      jsontokens: 3.1.1
       schema-inspector: 2.0.1
       zone-file: 2.0.0-beta.3
     transitivePeerDependencies:
@@ -4561,7 +4561,7 @@ packages:
     dev: true
 
   /argv/0.0.2:
-    resolution: {integrity: sha1-7L0W+JSbFXGDcRsb2jNPN4QBhas=}
+    resolution: {integrity: sha512-dEamhpPEwRUBpLNHeuCm/v+g0anFByHahxodVO/BbAarHVBBg2MccCwf9K+o1Pof+2btdnkJelYVUWjW/VrATw==}
     engines: {node: '>=0.6.10'}
     dev: false
 
