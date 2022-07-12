@@ -30,6 +30,7 @@ import { generateAvatar } from '../../../utils/boringAvatar';
 import { useFeatureFlags } from '../../../utils/featureFlags';
 import { StoryCard } from '../../storyCard/StoryCard';
 import { useTheme } from 'next-themes';
+import { useGetUserByAddress } from '../../../hooks/users';
 
 const ExtraInfoLink = styled('a', {
   color: '$gray9',
@@ -110,6 +111,7 @@ export const PublicHome = ({ file, settings, userInfo }: PublicHomeProps) => {
   const { resolvedTheme } = useTheme();
   const { user } = useAuth();
   const { isExperimentalFollowEnabled } = useFeatureFlags();
+  const { data: userInfoByAddress } = useGetUserByAddress(userInfo.address);
   const { data: userFollowing } = useGetUserFollowing({
     enabled: !!user && userInfo.username !== user.username,
   });
@@ -146,8 +148,6 @@ export const PublicHome = ({ file, settings, userInfo }: PublicHomeProps) => {
 
   const isFollowingUser =
     userFollowing && !!userFollowing.following[userInfo.address];
-
-  const explorer = 2121;
 
   return (
     <React.Fragment>
@@ -216,33 +216,35 @@ export const PublicHome = ({ file, settings, userInfo }: PublicHomeProps) => {
             >
               {userInfo.username}
             </Box>
-            <Tooltip delayDuration={200}>
-              <TooltipTrigger asChild>
-                <a
-                  href={`https://gamma.io/collections/the-explorer-guild/${explorer}`}
-                  target="_blank"
-                  rel="noreferrer"
+            {userInfoByAddress?.subscription && (
+              <Tooltip delayDuration={200}>
+                <TooltipTrigger asChild>
+                  <a
+                    href={`https://gamma.io/collections/the-explorer-guild/${userInfoByAddress.subscription.nftId}`}
+                    target="_blank"
+                    rel="noreferrer"
+                  >
+                    <Image
+                      src={
+                        resolvedTheme === 'dark'
+                          ? '/img/badges/creatorPlusDark.svg'
+                          : '/img/badges/creatorPlusLight.svg'
+                      }
+                      alt="Creator + badge"
+                      width={20}
+                      height={20}
+                    />
+                  </a>
+                </TooltipTrigger>
+                <TooltipContent
+                  css={{ boxShadow: 'none' }}
+                  side="right"
+                  sideOffset={8}
                 >
-                  <Image
-                    src={
-                      resolvedTheme === 'dark'
-                        ? '/img/badges/creatorPlusDark.svg'
-                        : '/img/badges/creatorPlusLight.svg'
-                    }
-                    alt="Creator + badge"
-                    width={20}
-                    height={20}
-                  />
-                </a>
-              </TooltipTrigger>
-              <TooltipContent
-                css={{ boxShadow: 'none' }}
-                side="right"
-                sideOffset={8}
-              >
-                Creator + Explorer #{explorer}
-              </TooltipContent>
-            </Tooltip>
+                  Creator + Explorer #{userInfoByAddress.subscription.nftId}
+                </TooltipContent>
+              </Tooltip>
+            )}
           </Flex>
           <Flex css={{ pt: '$3' }} gap="3" align="center">
             {settings.siteUrl && (
