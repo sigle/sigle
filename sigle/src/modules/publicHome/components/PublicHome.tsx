@@ -199,7 +199,7 @@ export const PublicHome = ({ file, settings, userInfo }: PublicHomeProps) => {
               )
             ) : null}
           </Flex>
-          <Flex align="center" gap="5">
+          <Flex align="center" gap="3">
             <Typography css={{ fontWeight: 700 }} as="h1" size="h2">
               {siteName}
             </Typography>
