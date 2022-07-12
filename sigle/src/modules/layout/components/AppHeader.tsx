@@ -207,7 +207,9 @@ export const AppHeader = () => {
                     }}
                   />
                 </ImageContainer>
-                <Typography size="subheading">{user.username}</Typography>
+                <Typography size="subheading">
+                  {settings?.siteName ? settings.siteName : user.username}
+                </Typography>
                 <StyledChevron css={{ color: '$gray11' }} />
               </Button>
             </DropdownMenuTrigger>

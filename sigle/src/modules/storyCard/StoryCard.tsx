@@ -61,7 +61,7 @@ interface StoryCardProps {
     SubsetStory,
     'id' | 'coverImage' | 'title' | 'createdAt' | 'content'
   >;
-  settings: Pick<SettingsFile, 'siteLogo'>;
+  settings: Pick<SettingsFile, 'siteLogo' | 'siteName'>;
   /**
    * Options to change the card look
    */
@@ -80,6 +80,8 @@ export const StoryCard = ({
   displayUser,
 }: StoryCardProps) => {
   const storyPath = `/${userInfo.username}/${story.id}`;
+
+  const displayName = settings.siteName ? settings.siteName : userInfo.username;
 
   return (
     <StoryContainer
@@ -149,7 +151,7 @@ export const StoryCard = ({
                 css={{ color: '$gray9' }}
                 size="subparagraph"
               >
-                {displayUser ? `${userInfo.username} · ` : ''}
+                {displayUser ? `${displayName} · ` : ''}
                 {format(story.createdAt, 'MMMM dd, yyyy ')}
               </Typography>
             </Flex>
