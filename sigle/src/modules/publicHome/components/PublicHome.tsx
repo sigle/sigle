@@ -169,6 +169,15 @@ export const PublicHome = ({ file, settings, userInfo }: PublicHomeProps) => {
           site: '@sigleapp',
           cardType: 'summary',
         }}
+        additionalLinkTags={[
+          {
+            rel: 'alternate',
+            type: 'application/rss+xml',
+            // @ts-expect-error title is missing in next-seo
+            title: seoTitle,
+            href: `${sigleConfig.appUrl}/api/feed/${userInfo.username}`,
+          },
+        ]}
       />
       <Container>
         <AppHeader />
