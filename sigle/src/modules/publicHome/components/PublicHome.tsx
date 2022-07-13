@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { NextSeo } from 'next-seo';
 import Image from 'next/future/image';
 import { useTheme } from 'next-themes';
@@ -31,6 +31,7 @@ import { generateAvatar } from '../../../utils/boringAvatar';
 import { useFeatureFlags } from '../../../utils/featureFlags';
 import { StoryCard } from '../../storyCard/StoryCard';
 import { useGetUserByAddress } from '../../../hooks/users';
+import { FixedHeader } from './FixedHeader';
 
 const ExtraInfoLink = styled('a', {
   color: '$gray9',
@@ -117,6 +118,28 @@ export const PublicHome = ({ file, settings, userInfo }: PublicHomeProps) => {
   });
   const { mutate: followUser } = useUserFollow();
   const { mutate: unfollowUser } = useUserUnfollow();
+  const [isScrolled, setIsScrolled] = useState(false);
+
+  useEffect(() => {
+    window.addEventListener('scroll', handleScroll);
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+    };
+  }, []);
+
+  const handleScroll = () => {
+    setIsScrolled((isScrolled) => {
+      if (!isScrolled && window.scrollY > 40) {
+        return true;
+      }
+
+      if (isScrolled && window.scrollY < 40) {
+        return false;
+      }
+
+      return isScrolled;
+    });
+  };
 
   const handleFollow = async () => {
     if (!userFollowing) return;
@@ -180,7 +203,12 @@ export const PublicHome = ({ file, settings, userInfo }: PublicHomeProps) => {
         ]}
       />
       <Container>
-        <AppHeader />
+        <FixedHeader
+          isScrolled={isScrolled}
+          settings={settings}
+          userInfo={userInfo}
+        />
+        {/* <AppHeader /> */}
         <Header>
           <Flex align="start" justify="between">
             <HeaderLogoContainer>
@@ -221,7 +249,12 @@ export const PublicHome = ({ file, settings, userInfo }: PublicHomeProps) => {
               {siteName}
             </Typography>
             <Box
-              css={{ backgroundColor: '$gray4', py: '$1', px: '$3', br: '$2' }}
+              css={{
+                backgroundColor: '$gray4',
+                py: '$1',
+                px: '$3',
+                br: '$2',
+              }}
             >
               {userInfo.username}
             </Box>
@@ -315,10 +348,10 @@ export const PublicHome = ({ file, settings, userInfo }: PublicHomeProps) => {
               </Typography>
             ))}
         </Header>
-      </Container>
+        {/* </Container> */}
 
-      <StyledContainer>
-        <Tabs defaultValue="stories">
+        {/* <StyledContainer> */}
+        <Tabs css={{ maxWidth: 826, mx: 'auto' }} defaultValue="stories">
           <TabsList
             css={{ boxShadow: '0 1px 0 0 $colors$gray6', mb: 0 }}
             aria-label="See your draft"
@@ -351,7 +384,8 @@ export const PublicHome = ({ file, settings, userInfo }: PublicHomeProps) => {
         </Tabs>
 
         <PoweredBy />
-      </StyledContainer>
+        {/* </StyledContainer> */}
+      </Container>
     </React.Fragment>
   );
 };
