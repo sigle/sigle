@@ -9,6 +9,11 @@ const { withPlausibleProxy } = require('next-plausible');
 dotenv.config();
 
 const nextConfig = {
+  experimental: {
+    images: {
+      allowFutureImage: true,
+    },
+  },
   swcMinify: true,
   env: {
     APP_URL: process.env.APP_URL,
