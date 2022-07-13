@@ -7,7 +7,6 @@ type GetUserMeResponse = {
 };
 const getUserMeResponseSchema = {
   type: 'object',
-  nullable: true,
   properties: {
     id: { type: 'string' },
     stacksAddress: { type: 'string' },

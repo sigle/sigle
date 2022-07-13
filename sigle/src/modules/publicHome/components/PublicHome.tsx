@@ -1,5 +1,7 @@
 import React from 'react';
 import { NextSeo } from 'next-seo';
+import Image from 'next/future/image';
+import { useTheme } from 'next-themes';
 import { StoryFile, SettingsFile } from '../../../types';
 import { PoweredBy } from '../../publicStory/PoweredBy';
 import { AppHeader } from '../../layout/components/AppHeader';
@@ -13,6 +15,9 @@ import {
   TabsContent,
   TabsList,
   Typography,
+  Tooltip,
+  TooltipTrigger,
+  TooltipContent,
 } from '../../../ui';
 import { sigleConfig } from '../../../config';
 import { styled } from '../../../stitches.config';
@@ -25,6 +30,7 @@ import {
 import { generateAvatar } from '../../../utils/boringAvatar';
 import { useFeatureFlags } from '../../../utils/featureFlags';
 import { StoryCard } from '../../storyCard/StoryCard';
+import { useGetUserByAddress } from '../../../hooks/users';
 
 const ExtraInfoLink = styled('a', {
   color: '$gray9',
@@ -102,8 +108,10 @@ interface PublicHomeProps {
 }
 
 export const PublicHome = ({ file, settings, userInfo }: PublicHomeProps) => {
+  const { resolvedTheme } = useTheme();
   const { user } = useAuth();
   const { isExperimentalFollowEnabled } = useFeatureFlags();
+  const { data: userInfoByAddress } = useGetUserByAddress(userInfo.address);
   const { data: userFollowing } = useGetUserFollowing({
     enabled: !!user && userInfo.username !== user.username,
   });
@@ -208,6 +216,35 @@ export const PublicHome = ({ file, settings, userInfo }: PublicHomeProps) => {
             >
               {userInfo.username}
             </Box>
+            {userInfoByAddress?.subscription && (
+              <Tooltip delayDuration={200}>
+                <TooltipTrigger asChild>
+                  <a
+                    href={`${sigleConfig.gammaUrl}/${userInfoByAddress.subscription.nftId}`}
+                    target="_blank"
+                    rel="noreferrer"
+                  >
+                    <Image
+                      src={
+                        resolvedTheme === 'dark'
+                          ? '/img/badges/creatorPlusDark.svg'
+                          : '/img/badges/creatorPlusLight.svg'
+                      }
+                      alt="Creator + badge"
+                      width={20}
+                      height={20}
+                    />
+                  </a>
+                </TooltipTrigger>
+                <TooltipContent
+                  css={{ boxShadow: 'none' }}
+                  side="right"
+                  sideOffset={8}
+                >
+                  Creator + Explorer #{userInfoByAddress.subscription.nftId}
+                </TooltipContent>
+              </Tooltip>
+            )}
           </Flex>
           <Flex css={{ pt: '$3' }} gap="3" align="center">
             {settings.siteUrl && (
