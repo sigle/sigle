@@ -76,6 +76,6 @@ module.exports = withSentryConfig(
     nextConfig
   ),
   {
-    dryRun: process.env.NEXT_PUBLIC_APP_ENV !== 'production',
+    dryRun: !process.env.SENTRY_AUTH_TOKEN,
   }
 );
