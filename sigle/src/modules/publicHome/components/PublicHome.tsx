@@ -32,7 +32,6 @@ import { useFeatureFlags } from '../../../utils/featureFlags';
 import { StoryCard } from '../../storyCard/StoryCard';
 import { useGetUserByAddress } from '../../../hooks/users';
 import { FixedHeader } from './FixedHeader';
-import { useMotionAnimate } from 'motion-hooks';
 
 const ExtraInfoLink = styled('a', {
   color: '$gray9',
@@ -44,11 +43,6 @@ const ExtraInfoLink = styled('a', {
   '&:active': {
     color: '$gray12',
   },
-});
-
-const StyledContainer = styled(Container, {
-  pb: '$15',
-  maxWidth: 826,
 });
 
 const Header = styled('div', {
@@ -350,9 +344,7 @@ export const PublicHome = ({ file, settings, userInfo }: PublicHomeProps) => {
               </Typography>
             ))}
         </Header>
-        {/* </Container> */}
 
-        {/* <StyledContainer> */}
         <Tabs css={{ maxWidth: 826, mx: 'auto' }} defaultValue="stories">
           <TabsList
             css={{ boxShadow: '0 1px 0 0 $colors$gray6', mb: 0 }}
@@ -386,7 +378,6 @@ export const PublicHome = ({ file, settings, userInfo }: PublicHomeProps) => {
         </Tabs>
 
         <PoweredBy />
-        {/* </StyledContainer> */}
       </Container>
     </React.Fragment>
   );

@@ -4,7 +4,6 @@ import {
   Button,
   Container,
   Dialog,
-  DialogClose,
   DialogContent,
   DialogDescription,
   DialogTitle,
