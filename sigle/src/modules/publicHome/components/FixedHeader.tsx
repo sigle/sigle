@@ -43,14 +43,14 @@ const ImageContainer = styled('div', {
 interface FixedHeaderProps {
   userInfo: { username: string; address: string };
   settings: SettingsFile;
-  // scrollY: number;
+  scrollY: number;
 }
 
 export const FixedHeader = ({
   userInfo,
   settings,
-}: // scrollY,
-FixedHeaderProps) => {
+  scrollY,
+}: FixedHeaderProps) => {
   const { user } = useAuth();
   const { isExperimentalFollowEnabled } = useFeatureFlags();
   const { data: userFollowing } = useGetUserFollowing({
@@ -80,8 +80,6 @@ FixedHeaderProps) => {
 
   const isFollowingUser =
     userFollowing && !!userFollowing.following[userInfo.address];
-
-  const scrollY = typeof window !== 'undefined' ? window.scrollY : 0;
 
   return (
     <Header

@@ -117,10 +117,7 @@ export const PublicHome = ({ file, settings, userInfo }: PublicHomeProps) => {
   });
   const { mutate: followUser } = useUserFollow();
   const { mutate: unfollowUser } = useUserUnfollow();
-  const [scroll, setScroll] = useState<ScrollDirection>({
-    direction: null,
-    prevOffset: 0,
-  });
+  const [scroll, setScroll] = useState<number>(0);
 
   useEffect(() => {
     window.addEventListener('scroll', handleScroll);
@@ -129,17 +126,7 @@ export const PublicHome = ({ file, settings, userInfo }: PublicHomeProps) => {
     };
   }, []);
 
-  const handleScroll = () => {
-    let scrollY = window.scrollY;
-    if (scrollY === 0) {
-      setScroll({ direction: null, prevOffset: scrollY });
-    }
-    if (scrollY > scroll.prevOffset) {
-      setScroll({ direction: 'down', prevOffset: scrollY });
-    } else if (scrollY < scroll.prevOffset) {
-      setScroll({ direction: 'up', prevOffset: scrollY });
-    }
-  };
+  const handleScroll = () => setScroll(window.scrollY);
 
   const handleFollow = async () => {
     if (!userFollowing) return;
@@ -204,7 +191,7 @@ export const PublicHome = ({ file, settings, userInfo }: PublicHomeProps) => {
       />
       <Container>
         <AppHeader />
-        <FixedHeader settings={settings} userInfo={userInfo} />
+        <FixedHeader scrollY={scroll} settings={settings} userInfo={userInfo} />
         <Header>
           <Flex align="start" justify="between">
             <HeaderLogoContainer>
