@@ -96,11 +96,6 @@ const PublicHomeSiteUrl = ({ siteUrl }: { siteUrl: string }) => {
   );
 };
 
-interface ScrollDirection {
-  direction: 'up' | 'down' | null;
-  prevOffset: number;
-}
-
 interface PublicHomeProps {
   file: StoryFile;
   settings: SettingsFile;
