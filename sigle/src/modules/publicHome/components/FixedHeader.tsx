@@ -3,62 +3,32 @@ import {
   Box,
   Button,
   Container,
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogDescription,
+  DialogTitle,
   Flex,
-  IconButton,
-  StyledChevron,
   Typography,
 } from '../../../ui';
-import { userSession } from '../../../utils/blockstack';
-import { createSubsetStory } from '../../editor/utils';
-import {
-  createNewEmptyStory,
-  getStoriesFile,
-  saveStoriesFile,
-  saveStoryFile,
-} from '../../../utils';
 import {
   useGetUserFollowing,
-  useGetUserSettings,
   useUserFollow,
   useUserUnfollow,
 } from '../../../hooks/appData';
 import { useFeatureFlags } from '../../../utils/featureFlags';
 import { useAuth } from '../../auth/AuthContext';
-import { useQueryClient } from 'react-query';
-import { signOut, useSession } from 'next-auth/react';
-import { useEffect, useState } from 'react';
-import Link from 'next/link';
-import { useRouter } from 'next/router';
-import { Goals } from '../../../utils/fathom';
-import {
-  GitHubLogoIcon,
-  TwitterLogoIcon,
-  DiscordLogoIcon,
-  SunIcon,
-} from '@radix-ui/react-icons';
-import { useTheme } from 'next-themes';
-import { toast } from 'react-toastify';
-import * as Fathom from 'fathom-client';
 import { generateAvatar } from '../../../utils/boringAvatar';
-import { sigleConfig } from '../../../config';
 import { SettingsFile } from '../../../types';
+import { HeaderDropdown } from '../../layout/components/HeaderDropdown';
+import { useState } from 'react';
+import Link from 'next/link';
 
 const Header = styled('header', Container, {
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'space-between',
-  mt: '$4',
   width: '100%',
-  boxShadow: '0 1px 0 0 $colors$gray6',
-
-  '@md': {
-    mt: '$10',
-  },
 });
 
 const ImageContainer = styled('div', {
@@ -74,26 +44,25 @@ const ImageContainer = styled('div', {
 interface FixedHeaderProps {
   userInfo: { username: string; address: string };
   settings: SettingsFile;
-  isScrolled: boolean;
+  // scrollY: number;
 }
 
 export const FixedHeader = ({
   userInfo,
   settings,
-  isScrolled,
-}: FixedHeaderProps) => {
-  const { data: userSettings } = useGetUserSettings();
-  const { resolvedTheme, setTheme } = useTheme();
+}: // scrollY,
+FixedHeaderProps) => {
   const { user } = useAuth();
-  const router = useRouter();
-  const queryClient = useQueryClient();
   const { isExperimentalFollowEnabled } = useFeatureFlags();
-  const [loadingCreate, setLoadingCreate] = useState(false);
   const { data: userFollowing } = useGetUserFollowing({
     enabled: !!user && userInfo.username !== user.username,
   });
   const { mutate: followUser } = useUserFollow();
   const { mutate: unfollowUser } = useUserUnfollow();
+  const [showLoginPromptDialog, setShowLoginPromptDialog] = useState(false);
+
+  const handleShowLoginPrompt = () => setShowLoginPromptDialog(true);
+  const handleCloseLoginPrompt = () => setShowLoginPromptDialog(false);
 
   const handleFollow = async () => {
     if (!userFollowing) return;
@@ -107,68 +76,29 @@ export const FixedHeader = ({
     unfollowUser({ userFollowing, address: userInfo.address });
   };
 
-  const toggleTheme = () => {
-    resolvedTheme === 'dark' ? setTheme('light') : setTheme('dark');
-  };
-
-  let src;
-
-  switch (resolvedTheme) {
-    case 'dark':
-      src = '/static/img/logo_white.png';
-      break;
-    default:
-      src = '/static/img/logo.png';
-      break;
-  }
-
-  const handleCreateNewPrivateStory = async () => {
-    setLoadingCreate(true);
-    try {
-      const storiesFile = await getStoriesFile();
-      const story = createNewEmptyStory();
-
-      storiesFile.stories.unshift(
-        createSubsetStory(story, { plainContent: '' })
-      );
-
-      await saveStoriesFile(storiesFile);
-      await saveStoryFile(story);
-
-      Fathom.trackGoal(Goals.CREATE_NEW_STORY, 0);
-      router.push('/stories/[storyId]', `/stories/${story.id}`);
-    } catch (error) {
-      console.error(error);
-      toast.error(error.message);
-      setLoadingCreate(false);
-    }
-  };
-
-  const handleLogout = () => {
-    queryClient.removeQueries();
-    userSession.signUserOut();
-    signOut();
-  };
-
   const userAddress =
     user?.profile.stxAddress.mainnet || user?.profile.stxAddress;
 
   const isFollowingUser =
     userFollowing && !!userFollowing.following[userInfo.address];
 
+  const scrollY = typeof window !== 'undefined' ? window.scrollY : 0;
+
   return (
     <Header
       css={{
         backgroundColor: '$gray1',
-        position: isScrolled ? 'sticky' : 'relative',
-        top: isScrolled ? 0 : 'auto',
-        zIndex: 1,
+        position: 'sticky',
+        top: 0,
+        transform: scrollY > 228 ? 'none' : 'translateY(-200px)',
+        // the check below reduces the delayed effect of the exiting fixed header when scrolling up fast - temp solution
+        transition: scrollY > 1 ? 'transform 0.5s ease-in-out' : 'none',
+        boxShadow: scrollY < 228 ? 'none' : '0 1px 0 0 $colors$gray6',
         py: '$2',
+        height: scrollY > 228 ? '100%' : 0,
       }}
     >
-      {isExperimentalFollowEnabled &&
-      user &&
-      user.username !== userInfo.username ? (
+      {isExperimentalFollowEnabled && user?.username !== userInfo.username ? (
         <Flex
           css={{
             alignItems: 'center',
@@ -198,9 +128,12 @@ export const FixedHeader = ({
               }}
             />
           </ImageContainer>
-          {userFollowing ? (
+          {!user || userFollowing ? (
             !isFollowingUser ? (
-              <Button color="orange" onClick={handleFollow}>
+              <Button
+                color="orange"
+                onClick={user ? handleFollow : handleShowLoginPrompt}
+              >
                 Follow
               </Button>
             ) : (
@@ -213,130 +146,44 @@ export const FixedHeader = ({
       ) : (
         <Box />
       )}
-      <Flex
-        css={{
-          display: 'none',
-          '@md': {
-            display: 'flex',
-          },
-        }}
-        align="center"
-        gap="9"
+      {user ? <HeaderDropdown /> : null}
+      <Dialog
+        open={showLoginPromptDialog}
+        onOpenChange={handleCloseLoginPrompt}
       >
-        {user ? (
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button
-                css={{ display: 'flex', gap: '$2', alignItems: 'center' }}
-                size="lg"
-                variant="ghost"
-              >
-                <ImageContainer>
-                  <Box
-                    as="img"
-                    src={
-                      userSettings?.siteLogo
-                        ? userSettings.siteLogo
-                        : generateAvatar(userAddress)
-                    }
-                    css={{
-                      width: 'auto',
-                      height: '100%',
-                      maxWidth: 24,
-                      maxHeight: 24,
-                      objectFit: 'cover',
-                    }}
-                  />
-                </ImageContainer>
-                <Typography size="subheading">
-                  {settings?.siteName ? settings.siteName : user.username}
-                </Typography>
-                <StyledChevron css={{ color: '$gray11' }} />
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent sideOffset={8}>
-              <Button
-                disabled={loadingCreate}
-                onClick={handleCreateNewPrivateStory}
-                size="lg"
-              >
-                {!loadingCreate ? `Write a story` : `Creating new story...`}
-              </Button>
-              <DropdownMenuItem
-                selected={router.pathname === `/${user.username}`}
-                as="a"
-                href={`/${user.username}`}
-                target="_blank"
-              >
-                My blog
-              </DropdownMenuItem>
-              <Link href="/" passHref>
-                <DropdownMenuItem selected={router.pathname === '/'} as="a">
-                  Dashboard
-                </DropdownMenuItem>
-              </Link>
-              <Link href="/settings" passHref>
-                <DropdownMenuItem
-                  selected={router.pathname === '/settings'}
-                  as="a"
-                >
-                  Settings
-                </DropdownMenuItem>
-              </Link>
-              <DropdownMenuSeparator />
-              <DropdownMenuItem onClick={toggleTheme}>
-                Switch theme
-                <IconButton css={{ p: 0 }} as="button">
-                  <SunIcon />
-                </IconButton>
-              </DropdownMenuItem>
-              <DropdownMenuSeparator />
-              <DropdownMenuItem color="red" onClick={handleLogout}>
-                Logout
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
-        ) : (
-          <Flex gap="6">
-            <IconButton
-              as="a"
-              href={sigleConfig.twitterUrl}
-              target="_blank"
-              rel="noreferrer"
-            >
-              <TwitterLogoIcon />
-            </IconButton>
-            <IconButton
-              as="a"
-              href={sigleConfig.discordUrl}
-              target="_blank"
-              rel="noreferrer"
-            >
-              <DiscordLogoIcon />
-            </IconButton>
-            <IconButton
-              as="a"
-              href={sigleConfig.githubUrl}
-              target="_blank"
-              rel="noreferrer"
-            >
-              <GitHubLogoIcon />
-            </IconButton>
+        <DialogContent
+          css={{
+            display: 'flex',
+            flexDirection: 'column',
+            p: '$8',
+            gap: '$8',
+            maxWidth: 514,
+            br: '$3',
+          }}
+        >
+          <Flex direction="column" gap="3">
+            <DialogTitle asChild>
+              <Typography size="h3" css={{ fontWeight: 600, mt: '$8' }}>
+                Login to continue
+              </Typography>
+            </DialogTitle>
+            <DialogDescription>
+              To follow writers on Sigle, you must first be connected. <br /> Go
+              to the login page?
+            </DialogDescription>
           </Flex>
-        )}
-        {!user && (
-          <>
-            <Link href="/" passHref>
-              <Button as="a" size="lg">
-                Enter App
+          <Flex justify="end" gap="5">
+            <Button variant="ghost" size="lg" onClick={handleCloseLoginPrompt}>
+              Cancel
+            </Button>
+            <Link href="/login" passHref>
+              <Button color="orange" size="lg" as="a">
+                Yes, go to login page
               </Button>
             </Link>
-            <IconButton as="button" onClick={toggleTheme}>
-              <SunIcon />
-            </IconButton>
-          </>
-        )}
-      </Flex>
+          </Flex>
+        </DialogContent>
+      </Dialog>
     </Header>
   );
 };

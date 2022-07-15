@@ -32,6 +32,7 @@ import { useFeatureFlags } from '../../../utils/featureFlags';
 import { StoryCard } from '../../storyCard/StoryCard';
 import { useGetUserByAddress } from '../../../hooks/users';
 import { FixedHeader } from './FixedHeader';
+import { useMotionAnimate } from 'motion-hooks';
 
 const ExtraInfoLink = styled('a', {
   color: '$gray9',
@@ -52,7 +53,6 @@ const StyledContainer = styled(Container, {
 
 const Header = styled('div', {
   py: '$10',
-  px: '$4',
   maxWidth: 826,
   display: 'flex',
   flexDirection: 'column',
@@ -102,6 +102,11 @@ const PublicHomeSiteUrl = ({ siteUrl }: { siteUrl: string }) => {
   );
 };
 
+interface ScrollDirection {
+  direction: 'up' | 'down' | null;
+  prevOffset: number;
+}
+
 interface PublicHomeProps {
   file: StoryFile;
   settings: SettingsFile;
@@ -118,7 +123,10 @@ export const PublicHome = ({ file, settings, userInfo }: PublicHomeProps) => {
   });
   const { mutate: followUser } = useUserFollow();
   const { mutate: unfollowUser } = useUserUnfollow();
-  const [isScrolled, setIsScrolled] = useState(false);
+  const [scroll, setScroll] = useState<ScrollDirection>({
+    direction: null,
+    prevOffset: 0,
+  });
 
   useEffect(() => {
     window.addEventListener('scroll', handleScroll);
@@ -128,17 +136,15 @@ export const PublicHome = ({ file, settings, userInfo }: PublicHomeProps) => {
   }, []);
 
   const handleScroll = () => {
-    setIsScrolled((isScrolled) => {
-      if (!isScrolled && window.scrollY > 40) {
-        return true;
-      }
-
-      if (isScrolled && window.scrollY < 40) {
-        return false;
-      }
-
-      return isScrolled;
-    });
+    let scrollY = window.scrollY;
+    if (scrollY === 0) {
+      setScroll({ direction: null, prevOffset: scrollY });
+    }
+    if (scrollY > scroll.prevOffset) {
+      setScroll({ direction: 'down', prevOffset: scrollY });
+    } else if (scrollY < scroll.prevOffset) {
+      setScroll({ direction: 'up', prevOffset: scrollY });
+    }
   };
 
   const handleFollow = async () => {
@@ -203,12 +209,8 @@ export const PublicHome = ({ file, settings, userInfo }: PublicHomeProps) => {
         ]}
       />
       <Container>
-        <FixedHeader
-          isScrolled={isScrolled}
-          settings={settings}
-          userInfo={userInfo}
-        />
-        {/* <AppHeader /> */}
+        <AppHeader />
+        <FixedHeader settings={settings} userInfo={userInfo} />
         <Header>
           <Flex align="start" justify="between">
             <HeaderLogoContainer>
