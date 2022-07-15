@@ -19,6 +19,7 @@
     "@fastify/cookie": "7.0.0",
     "@fastify/cors": "8.0.0",
     "@fastify/rate-limit": "7.0.0",
+    "@fastify/swagger": "7.4.1",
     "@prisma/client": "4.0.0",
     "@sentry/node": "7.2.0",
     "@stacks/auth": "4.3.0",

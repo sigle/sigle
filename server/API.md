@@ -6,18 +6,6 @@ We limit API requests to 50 requests per minute.
 
 ## Endpoints
 
-### Create a creator plus subscription
-
-`https://api.sigle.io/api/subscription/creatorPlus` - POST - Create a creator plus subscription on the current logged in user. A user can only have one active subscription at a time.
-
-Sample Response:
-
-```json
-{
-  "success": "true"
-}
-```
-
 ### Get current active subscription
 
 `https://api.sigle.io/api/subscription` - Return the current active subscription of the current logged in user.

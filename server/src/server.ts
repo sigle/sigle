@@ -2,6 +2,7 @@ import Fastify, { FastifyServerOptions, FastifyLoggerInstance } from 'fastify';
 import FastifyCors from '@fastify/cors';
 import FastifyRateLimit from '@fastify/rate-limit';
 import FastifyCookie from '@fastify/cookie';
+import FastifySwagger from '@fastify/swagger';
 import { Server } from 'http';
 import * as Sentry from '@sentry/node';
 import { createAnalyticsHistoricalEndpoint } from './api/modules/analytics/historical';
@@ -61,6 +62,30 @@ export const buildFastifyServer = (
    * Authentication
    */
   fastify.register(fastifyAuthPlugin);
+
+  /**
+   * Swagger
+   */
+  fastify.register(FastifySwagger, {
+    routePrefix: '/api/documentation',
+    exposeRoute: true,
+    swagger: {
+      tags: [
+        { name: 'user', description: 'User related end-points' },
+        {
+          name: 'subscription',
+          description: 'Subscription related end-points',
+        },
+      ],
+      securityDefinitions: {
+        session: {
+          type: 'apiKey',
+          name: '__Secure-next-auth.session-token',
+          in: 'cookie',
+        },
+      },
+    },
+  });
 
   /**
    * Catch and report errors with Sentry.
