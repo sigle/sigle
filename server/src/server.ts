@@ -14,6 +14,7 @@ import { createSubscriptionCreatorPlusEndpoint } from './api/modules/subscriptio
 import { createGetSubscriptionEndpoint } from './api/modules/subscriptions/getSubscription';
 import { createGetUserMeEndpoint } from './api/modules/users/me';
 import { createGetUserByAddressEndpoint } from './api/modules/users/[userId]';
+import { createGetUserFollowersEndpoint } from './api/modules/users/follows/getFollowers';
 
 export const buildFastifyServer = (
   opts: FastifyServerOptions<Server, FastifyLoggerInstance> = {}
@@ -142,8 +143,6 @@ export const buildFastifyServer = (
     });
   });
 
-  createGetUserByAddressEndpoint(fastify);
-
   /**
    * All the protected routes must be placed there.
    */
@@ -151,6 +150,8 @@ export const buildFastifyServer = (
     /**
      * Users routes
      */
+    createGetUserByAddressEndpoint(fastify);
+    createGetUserFollowersEndpoint(fastify);
     createGetUserMeEndpoint(fastify);
     /**
      * Subscriptions routes
