@@ -24,13 +24,13 @@ export interface ApiSubscriptionsCreatorPlusPost200Response {
    * @type {string}
    * @memberof ApiSubscriptionsCreatorPlusPost200Response
    */
-  id?: string;
+  id: string;
   /**
    *
    * @type {number}
    * @memberof ApiSubscriptionsCreatorPlusPost200Response
    */
-  nftId?: number;
+  nftId: number;
 }
 
 /**
@@ -40,6 +40,8 @@ export function instanceOfApiSubscriptionsCreatorPlusPost200Response(
   value: object
 ): boolean {
   let isInstance = true;
+  isInstance = isInstance && 'id' in value;
+  isInstance = isInstance && 'nftId' in value;
 
   return isInstance;
 }
@@ -58,8 +60,8 @@ export function ApiSubscriptionsCreatorPlusPost200ResponseFromJSONTyped(
     return json;
   }
   return {
-    id: !exists(json, 'id') ? undefined : json['id'],
-    nftId: !exists(json, 'nftId') ? undefined : json['nftId'],
+    id: json['id'],
+    nftId: json['nftId'],
   };
 }
 

@@ -18,6 +18,7 @@ type SubscriptionCreatorPlusResponse = {
 const analyticsReferrersResponseSchema = {
   description: 'Returns the newly created subscription object.',
   type: 'object',
+  required: ['id', 'nftId'],
   properties: {
     id: { type: 'string' },
     nftId: { type: 'number' },
