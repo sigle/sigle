@@ -12,8 +12,8 @@ export class UserService {
    * @throws ApiError
    */
   public static getApiUsersMe(): CancelablePromise<{
-    id?: string;
-    stacksAddress?: string;
+    id: string;
+    stacksAddress: string;
   }> {
     return __request(OpenAPI, {
       method: 'GET',
