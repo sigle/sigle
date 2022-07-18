@@ -12,12 +12,14 @@ type GetUserByAddressResponse = {
 const getUserByAddressResponseSchema = {
   type: 'object',
   nullable: true,
+  required: ['id', 'stacksAddress'],
   properties: {
     id: { type: 'string' },
     stacksAddress: { type: 'string' },
     subscription: {
       type: 'object',
       nullable: true,
+      required: ['id', 'nftId'],
       properties: {
         id: { type: 'string' },
         nftId: { type: 'number' },
@@ -34,6 +36,15 @@ export async function createGetUserByAddressEndpoint(fastify: FastifyInstance) {
     '/api/users/:userAddress',
     {
       schema: {
+        description: 'Return a user for a given stacks address.',
+        tags: ['user'],
+        params: {
+          type: 'object',
+          required: ['userAddress'],
+          properties: {
+            userAddress: { type: 'string' },
+          },
+        },
         response: {
           200: getUserByAddressResponseSchema,
         },

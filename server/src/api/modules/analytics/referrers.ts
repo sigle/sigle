@@ -24,6 +24,7 @@ const analyticsReferrersResponseSchema = {
   type: 'array',
   items: {
     type: 'object',
+    required: ['domain', 'count'],
     properties: {
       domain: { type: 'string', nullable: true },
       count: { type: 'number' },
