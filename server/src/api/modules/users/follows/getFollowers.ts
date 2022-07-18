@@ -30,22 +30,14 @@ export async function createGetUserFollowersEndpoint(fastify: FastifyInstance) {
 
       const followers = await prisma.follows.findMany({
         where: {
-          follower: {
-            stacksAddress: userAddress,
-          },
+          followerAddress: userAddress,
         },
         select: {
-          follower: {
-            select: {
-              stacksAddress: true,
-            },
-          },
+          followingAddress: true,
         },
       });
 
-      return res.send(
-        followers.map((follower) => follower.follower.stacksAddress)
-      );
+      return res.send(followers.map((follower) => follower.followingAddress));
     }
   );
 }
