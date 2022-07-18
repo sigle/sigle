@@ -2,6 +2,7 @@ import Fastify, { FastifyServerOptions, FastifyLoggerInstance } from 'fastify';
 import FastifyCors from '@fastify/cors';
 import FastifyRateLimit from '@fastify/rate-limit';
 import FastifyCookie from '@fastify/cookie';
+import FastifySwagger from '@fastify/swagger';
 import { Server } from 'http';
 import * as Sentry from '@sentry/node';
 import { createAnalyticsHistoricalEndpoint } from './api/modules/analytics/historical';
@@ -63,6 +64,35 @@ export const buildFastifyServer = (
   fastify.register(fastifyAuthPlugin);
 
   /**
+   * Swagger
+   */
+  fastify.register(FastifySwagger, {
+    routePrefix: '/api/documentation',
+    exposeRoute: true,
+    swagger: {
+      info: {
+        title: 'Sigle API',
+        version: '0.1.0',
+      },
+      tags: [
+        { name: 'user', description: 'User related end-points' },
+        {
+          name: 'subscription',
+          description: 'Subscription related end-points',
+        },
+        { name: 'analytics', description: 'Analytics related end-points' },
+      ],
+      securityDefinitions: {
+        session: {
+          type: 'apiKey',
+          name: '__Secure-next-auth.session-token',
+          in: 'cookie',
+        },
+      },
+    },
+  });
+
+  /**
    * Catch and report errors with Sentry.
    * We attach some content to make it easier to debug.
    */
@@ -70,6 +100,14 @@ export const buildFastifyServer = (
     // We don't report rate-limit errors to Sentry.
     if (reply.statusCode === 429) {
       reply.send(error);
+      return;
+    }
+
+    /**
+     * If there is a schema validation error, we return it directly to the user.
+     */
+    if (error.validation) {
+      reply.code(400).send(error);
       return;
     }
 

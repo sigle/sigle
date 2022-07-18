@@ -21,6 +21,8 @@ export async function createGetUserMeEndpoint(fastify: FastifyInstance) {
     {
       onRequest: [fastify.authenticate],
       schema: {
+        description: 'Return the current logged in user.',
+        tags: ['user'],
         response: {
           200: getUserMeResponseSchema,
         },
