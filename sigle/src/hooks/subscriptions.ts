@@ -1,23 +1,12 @@
 import { useMutation, UseMutationOptions, useQuery } from 'react-query';
 import { sigleConfig } from '../config';
+import { SubscriptionService } from '../external/api';
 
 type SubscriptionResponse = { id: string; nftId: number } | null;
 
 export const useGetUserSubscription = () =>
   useQuery<SubscriptionResponse, Error>('get-user-subscription', () =>
-    fetch(`${sigleConfig.apiUrl}/api/subscriptions`, {
-      method: 'GET',
-      credentials: 'include',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    }).then(async (res) => {
-      const json = await res.json();
-      if (!res.ok) {
-        throw json;
-      }
-      return json as { id: string; nftId: number } | null;
-    })
+    SubscriptionService.getApiSubscriptions()
   );
 
 type CreateSubscriptionResponse = { id: string; nftId: number } | null;
