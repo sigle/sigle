@@ -1,34 +1,32 @@
 import { useMutation, UseMutationOptions, useQuery } from 'react-query';
 import { sigleConfig } from '../config';
-import { SubscriptionService } from '../external/api';
+import {
+  Configuration,
+  ApiSubscriptionsGet200Response,
+  SubscriptionApi,
+  ApiSubscriptionsCreatorPlusPost200Response,
+} from '../external/api';
 
-type SubscriptionResponse = { id: string; nftId: number } | null;
+const configuration = new Configuration({
+  basePath: sigleConfig.apiUrl,
+  credentials: 'include',
+});
+const subscriptionApi = new SubscriptionApi(configuration);
 
 export const useGetUserSubscription = () =>
-  useQuery<SubscriptionResponse, Error>('get-user-subscription', () =>
-    SubscriptionService.getApiSubscriptions()
+  useQuery<ApiSubscriptionsGet200Response, Error>('get-user-subscription', () =>
+    subscriptionApi.apiSubscriptionsGet()
   );
 
-type CreateSubscriptionResponse = { id: string; nftId: number } | null;
-
 export const useCreateSubscription = (
-  options: UseMutationOptions<CreateSubscriptionResponse, Error, number> = {}
+  options: UseMutationOptions<
+    ApiSubscriptionsCreatorPlusPost200Response,
+    Error,
+    number
+  > = {}
 ) =>
-  useMutation<CreateSubscriptionResponse, Error, number>(
+  useMutation<ApiSubscriptionsCreatorPlusPost200Response, Error, number>(
     (nftId) =>
-      fetch(`${sigleConfig.apiUrl}/api/subscriptions/creatorPlus`, {
-        method: 'POST',
-        credentials: 'include',
-        body: JSON.stringify({ nftId }),
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      }).then(async (res) => {
-        const json = await res.json();
-        if (!res.ok) {
-          throw json;
-        }
-        return json as any;
-      }),
+      subscriptionApi.apiSubscriptionsCreatorPlusPost({ body: { nftId } }),
     options
   );

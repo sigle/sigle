@@ -1,0 +1,16 @@
+.openapi-generator-ignore
+apis/AnalyticsApi.ts
+apis/SubscriptionApi.ts
+apis/UserApi.ts
+apis/index.ts
+index.ts
+models/ApiAnalyticsHistoricalGet200Response.ts
+models/ApiAnalyticsHistoricalGet200ResponseHistoricalInner.ts
+models/ApiAnalyticsHistoricalGet200ResponseStoriesInner.ts
+models/ApiAnalyticsReferrersGet200ResponseInner.ts
+models/ApiSubscriptionsCreatorPlusPost200Response.ts
+models/ApiSubscriptionsCreatorPlusPostRequest.ts
+models/ApiSubscriptionsGet200Response.ts
+models/ApiUsersMeGet200Response.ts
+models/index.ts
+runtime.ts
