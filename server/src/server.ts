@@ -142,8 +142,6 @@ export const buildFastifyServer = (
     });
   });
 
-  createGetUserByAddressEndpoint(fastify);
-
   /**
    * All the protected routes must be placed there.
    */
@@ -152,6 +150,8 @@ export const buildFastifyServer = (
      * Users routes
      */
     createGetUserMeEndpoint(fastify);
+    createGetUserByAddressEndpoint(fastify);
+
     /**
      * Subscriptions routes
      */

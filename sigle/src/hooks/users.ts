@@ -1,6 +1,5 @@
 import { UseQueryOptions, useQuery } from 'react-query';
 import { UserService } from '../external/api';
-import { sigleConfig } from '../config';
 
 type GetApiUsersMeReturnType = Awaited<
   ReturnType<typeof UserService.getApiUsersMe>
@@ -14,33 +13,15 @@ export const useGetUserMe = (
     options
   );
 
-type UserByAddressResponse = {
-  id: string;
-  stacksAddress: string;
-  subscription?: {
-    id: string;
-    nftId: number;
-  };
-} | null;
-
+type GetApiUsersReturnType = Awaited<
+  ReturnType<typeof UserService.getApiUsers>
+>;
 export const useGetUserByAddress = (
   stacksAddress: string,
-  options: UseQueryOptions<UserByAddressResponse, Error> = {}
+  options: UseQueryOptions<GetApiUsersReturnType, Error> = {}
 ) =>
-  useQuery<UserByAddressResponse, Error>(
+  useQuery<GetApiUsersReturnType, Error>(
     ['get-user-by-address', stacksAddress],
-    async () => {
-      const res = await fetch(
-        `${sigleConfig.apiUrl}/api/users/${stacksAddress}`,
-        {
-          method: 'GET',
-        }
-      );
-      const json = await res.json();
-      if (!res.ok) {
-        throw json;
-      }
-      return json;
-    },
+    () => UserService.getApiUsers({ userAddress: stacksAddress }),
     options
   );
