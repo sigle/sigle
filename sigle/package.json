@@ -7,7 +7,7 @@
     "start": "next start",
     "build": "next build",
     "generate-sitemap": "next-sitemap",
-    "generate-openapi-light": "pnpm openapi --input http://0.0.0.0:3001/api/documentation/json --output ./src/external/api",
+    "generate-openapi-light": "rm -rf src/external/api && pnpm openapi --input http://0.0.0.0:3001/api/documentation/json --output ./src/external/api",
     "generate-openapi": "rm -rf src/external/api && openapi-generator-cli generate -g typescript-fetch -i http://0.0.0.0:3001/api/documentation/json -o ./src/external/api --skip-validate-spec --additional-properties=withInterfaces=true,typescriptThreePlus=true,supportsES6=true,legacyDiscriminatorBehavior=false,enumPropertyNaming=original,modelPropertyNaming=original",
     "analyze": "ANALYZE=true pnpm run build",
     "test": "pnpm run test:only",
