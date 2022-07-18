@@ -14,6 +14,7 @@ const analyticsReferrersResponseSchema = {
     id: { type: 'string' },
     nftId: { type: 'number' },
   },
+  example: { id: 'XXX', nftId: 420 },
 };
 
 export async function createGetSubscriptionEndpoint(fastify: FastifyInstance) {
