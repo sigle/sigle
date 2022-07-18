@@ -6,15 +6,20 @@ interface AddFollowBody {
   createdAt: number;
 }
 
+interface AddFollowResponseError {
+  error: string;
+  message: string;
+}
+
 type AddFollowResponse = true;
-const AddFollowResponseSchema = {
+const addFollowResponseSchema = {
   type: 'boolean',
 };
 
 export async function createAddFollowEndpoint(fastify: FastifyInstance) {
   return fastify.post<{
     body: AddFollowBody;
-    Reply: AddFollowResponse;
+    Reply: AddFollowResponseError | AddFollowResponse;
   }>(
     '/api/users/me/following',
     {
@@ -31,7 +36,7 @@ export async function createAddFollowEndpoint(fastify: FastifyInstance) {
           },
         },
         response: {
-          200: AddFollowResponseSchema,
+          200: addFollowResponseSchema,
         },
       },
     },
@@ -39,6 +44,12 @@ export async function createAddFollowEndpoint(fastify: FastifyInstance) {
       const body = req.body as AddFollowBody;
       // TODO validate stacksAddress format
       // TODO validate createdAt format
+      if (body.stacksAddress === req.address) {
+        res.code(400).send({
+          error: 'Bad Request',
+          message: 'You cannot follow yourself.',
+        });
+      }
 
       const createdAt = new Date(body.createdAt);
 

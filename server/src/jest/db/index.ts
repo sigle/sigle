@@ -8,6 +8,7 @@ export const TestBaseDB = {
    */
   cleanup: async () => {
     await prisma.subscription.deleteMany({});
+    await prisma.follows.deleteMany({});
     await prisma.user.deleteMany({});
   },
 };
