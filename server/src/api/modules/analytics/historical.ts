@@ -31,11 +31,13 @@ type AnalyticsHistoricalResponse = {
 };
 const analyticsHistoricalResponseSchema = {
   type: 'object',
+  required: ['historical', 'stories'],
   properties: {
     historical: {
       type: 'array',
       items: {
         type: 'object',
+        required: ['date', 'visits', 'pageviews'],
         properties: {
           date: { type: 'string' },
           visits: { type: 'number' },
@@ -47,6 +49,7 @@ const analyticsHistoricalResponseSchema = {
       type: 'array',
       items: {
         type: 'object',
+        required: ['pathname', 'visits', 'pageviews'],
         properties: {
           pathname: { type: 'string' },
           visits: { type: 'number' },

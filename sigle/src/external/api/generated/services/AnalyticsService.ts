@@ -25,8 +25,8 @@ export class AnalyticsService {
     storyId?: string;
   }): CancelablePromise<
     Array<{
-      domain?: string;
-      count?: number;
+      domain: string;
+      count: number;
     }>
   > {
     return __request(OpenAPI, {
@@ -62,15 +62,15 @@ export class AnalyticsService {
      */
     storyId?: string;
   }): CancelablePromise<{
-    historical?: Array<{
-      date?: string;
-      visits?: number;
-      pageviews?: number;
+    historical: Array<{
+      date: string;
+      visits: number;
+      pageviews: number;
     }>;
-    stories?: Array<{
-      pathname?: string;
-      visits?: number;
-      pageviews?: number;
+    stories: Array<{
+      pathname: string;
+      visits: number;
+      pageviews: number;
     }>;
   }> {
     return __request(OpenAPI, {

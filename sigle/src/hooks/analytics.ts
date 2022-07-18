@@ -1,10 +1,9 @@
 import { useQuery, UseQueryOptions } from 'react-query';
-import { sigleConfig } from '../config';
-import {
-  AnalyticsHistoricalResponse,
-  ReferrersResponse,
-} from '../modules/analytics/stats/types';
+import { AnalyticsService } from '../external/api';
 
+type GetApiAnalyticsReferrersReturnType = Awaited<
+  ReturnType<typeof AnalyticsService.getApiAnalyticsReferrers>
+>;
 export const useGetReferrers = ({
   dateFrom,
   storyId,
@@ -12,29 +11,14 @@ export const useGetReferrers = ({
   dateFrom: string;
   storyId?: string;
 }) =>
-  useQuery<ReferrersResponse, Error>(
+  useQuery<GetApiAnalyticsReferrersReturnType, Error>(
     ['get-analytics-referrer', dateFrom, storyId],
-    async () => {
-      const res = await fetch(
-        storyId
-          ? `${sigleConfig.apiUrl}/api/analytics/referrers?dateFrom=${dateFrom}&storyId=${storyId}`
-          : `${sigleConfig.apiUrl}/api/analytics/referrers?dateFrom=${dateFrom}`,
-        {
-          method: 'GET',
-          credentials: 'include',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        }
-      );
-      const json = await res.json();
-      if (!res.ok) {
-        throw json;
-      }
-      return json;
-    }
+    () => AnalyticsService.getApiAnalyticsReferrers({ dateFrom, storyId })
   );
 
+type GetApiAnalyticsHistoricalReturnType = Awaited<
+  ReturnType<typeof AnalyticsService.getApiAnalyticsHistorical>
+>;
 export const useGetHistorical = (
   {
     dateFrom,
@@ -45,28 +29,15 @@ export const useGetHistorical = (
     dateGrouping: 'day' | 'month';
     storyId?: string;
   },
-  options: UseQueryOptions<AnalyticsHistoricalResponse, Error>
+  options: UseQueryOptions<GetApiAnalyticsHistoricalReturnType, Error>
 ) =>
-  useQuery<AnalyticsHistoricalResponse, Error>(
+  useQuery<GetApiAnalyticsHistoricalReturnType, Error>(
     ['get-analytics-historical', dateFrom, dateGrouping, storyId],
-    async () => {
-      const res = await fetch(
-        storyId
-          ? `${sigleConfig.apiUrl}/api/analytics/historical?dateFrom=${dateFrom}&dateGrouping=${dateGrouping}&storyId=${storyId}`
-          : `${sigleConfig.apiUrl}/api/analytics/historical?dateFrom=${dateFrom}&dateGrouping=${dateGrouping}`,
-        {
-          method: 'GET',
-          credentials: 'include',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        }
-      );
-      const json = await res.json();
-      if (!res.ok) {
-        throw json;
-      }
-      return json;
-    },
+    () =>
+      AnalyticsService.getApiAnalyticsHistorical({
+        dateFrom,
+        dateGrouping,
+        storyId,
+      }),
     options
   );
