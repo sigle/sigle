@@ -6,23 +6,6 @@ We limit API requests to 50 requests per minute.
 
 ## Endpoints
 
-### Get current active subscription
-
-`https://api.sigle.io/api/subscription` - Return the current active subscription of the current logged in user.
-
-Sample Response:
-
-```json
-{
-  "id": "17de416e-c63d-422b-8ad9-8a3d3c845996",
-  "nftId": 12
-}
-```
-
-#### Parameters
-
-- **`nftId`** - The nft id to link the subscription to.
-
 ### Stats historical data
 
 `https://api.sigle.io/api/analytics/historical` - Get the historical statistics.

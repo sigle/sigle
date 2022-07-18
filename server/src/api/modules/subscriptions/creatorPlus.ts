@@ -4,7 +4,7 @@ import { prisma } from '../../../prisma';
 import { config } from '../../../config';
 
 interface SubscriptionCreatorPlusBody {
-  nftId?: number;
+  nftId: number;
 }
 
 interface SubscriptionCreatorPlusResponseError {
@@ -47,7 +47,11 @@ export async function createSubscriptionCreatorPlusEndpoint(
           'Create a creator plus subscription on the current logged in user. A user can only have one active subscription at a time.',
         tags: ['subscription'],
         body: {
-          nftId: { type: 'number' },
+          type: 'object',
+          required: ['nftId'],
+          properties: {
+            nftId: { type: 'number' },
+          },
         },
         response: {
           200: analyticsReferrersResponseSchema,
@@ -60,13 +64,9 @@ export async function createSubscriptionCreatorPlusEndpoint(
       },
     },
     async (req, res) => {
-      const { nftId } = (req.body as SubscriptionCreatorPlusBody) || {};
+      const { nftId } = req.body as SubscriptionCreatorPlusBody;
 
-      if (!nftId) {
-        res.status(400).send({ error: 'nftId is required' });
-        return;
-      }
-      if (typeof nftId !== 'number' || nftId < 0 || nftId > 3000) {
+      if (nftId < 0 || nftId > 3000) {
         res.status(400).send({ error: 'nftId is invalid' });
         return;
       }
