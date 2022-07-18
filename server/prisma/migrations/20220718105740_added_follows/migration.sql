@@ -2,6 +2,7 @@
 CREATE TABLE "Follows" (
     "followerAddress" TEXT NOT NULL,
     "followingAddress" TEXT NOT NULL,
+    "createdAt" TIMESTAMP(3) NOT NULL,
 
     CONSTRAINT "Follows_pkey" PRIMARY KEY ("followerAddress","followingAddress")
 );
