@@ -70,12 +70,17 @@ export const buildFastifyServer = (
     routePrefix: '/api/documentation',
     exposeRoute: true,
     swagger: {
+      info: {
+        title: 'Sigle API',
+        version: '0.1.0',
+      },
       tags: [
         { name: 'user', description: 'User related end-points' },
         {
           name: 'subscription',
           description: 'Subscription related end-points',
         },
+        { name: 'analytics', description: 'Analytics related end-points' },
       ],
       securityDefinitions: {
         session: {
@@ -95,6 +100,14 @@ export const buildFastifyServer = (
     // We don't report rate-limit errors to Sentry.
     if (reply.statusCode === 429) {
       reply.send(error);
+      return;
+    }
+
+    /**
+     * If there is a schema validation error, we return it directly to the user.
+     */
+    if (error.validation) {
+      reply.code(400).send(error);
       return;
     }
 
