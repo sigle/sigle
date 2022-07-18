@@ -153,6 +153,7 @@ export const buildFastifyServer = (
     createGetUserByAddressEndpoint(fastify);
     createGetUserFollowersEndpoint(fastify);
     createGetUserMeEndpoint(fastify);
+
     /**
      * Subscriptions routes
      */
