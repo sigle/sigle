@@ -7,8 +7,7 @@
     "start": "next start",
     "build": "next build",
     "generate-sitemap": "next-sitemap",
-    "generate-openapi-light": "rm -rf src/external/api && pnpm openapi --input http://0.0.0.0:3001/api/documentation/json --output ./src/external/api",
-    "generate-openapi": "rm -rf src/external/api && openapi-generator-cli generate -g typescript-fetch -i http://0.0.0.0:3001/api/documentation/json -o ./src/external/api --skip-validate-spec --additional-properties=withInterfaces=true,typescriptThreePlus=true,supportsES6=true,legacyDiscriminatorBehavior=false,enumPropertyNaming=original,modelPropertyNaming=original",
+    "generate-openapi": "rm -rf src/external/api && pnpm openapi --input http://0.0.0.0:3001/api/documentation/json --output ./src/external/api/generated --useOptions",
     "analyze": "ANALYZE=true pnpm run build",
     "test": "pnpm run test:only",
     "test:only": "jest"
@@ -19,7 +18,6 @@
     "showDetails": true
   },
   "dependencies": {
-    "@openapitools/openapi-generator-cli": "2.5.1",
     "@radix-ui/colors": "0.1.8",
     "@radix-ui/react-accordion": "0.1.6",
     "@radix-ui/react-dialog": "0.1.7",

@@ -1,11 +1,7 @@
-/* istanbul ignore file */
-/* tslint:disable */
-/* eslint-disable */
-export { ApiError } from './core/ApiError';
-export { CancelablePromise, CancelError } from './core/CancelablePromise';
-export { OpenAPI } from './core/OpenAPI';
-export type { OpenAPIConfig } from './core/OpenAPI';
+import { sigleConfig } from '../../config';
+import { OpenAPI } from './generated';
 
-export { AnalyticsService } from './services/AnalyticsService';
-export { SubscriptionService } from './services/SubscriptionService';
-export { UserService } from './services/UserService';
+OpenAPI.BASE = sigleConfig.apiUrl!;
+OpenAPI.WITH_CREDENTIALS = true;
+
+export * from './generated';
