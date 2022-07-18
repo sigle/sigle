@@ -10,6 +10,7 @@ const analyticsReferrersResponseSchema = {
     'Returns the current active subscription object. If no active subscription is found, null is returned.',
   type: 'object',
   nullable: true,
+  required: ['id', 'nftId'],
   properties: {
     id: { type: 'string' },
     nftId: { type: 'number' },

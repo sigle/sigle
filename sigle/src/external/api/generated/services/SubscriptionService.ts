@@ -34,8 +34,8 @@ export class SubscriptionService {
    * @throws ApiError
    */
   public static getApiSubscriptions(): CancelablePromise<{
-    id?: string;
-    nftId?: number;
+    id: string;
+    nftId: number;
   }> {
     return __request(OpenAPI, {
       method: 'GET',
