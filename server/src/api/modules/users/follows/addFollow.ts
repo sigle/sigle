@@ -1,4 +1,5 @@
 import { FastifyInstance } from 'fastify';
+import { validateStacksAddress } from '@stacks/transactions';
 import { prisma } from '../../../../prisma';
 
 interface AddFollowBody {
@@ -42,10 +43,16 @@ export async function createAddFollowEndpoint(fastify: FastifyInstance) {
     },
     async (req, res) => {
       const body = req.body as AddFollowBody;
-      // TODO validate stacksAddress format
-      // TODO validate createdAt format
+
+      if (!validateStacksAddress(body.stacksAddress)) {
+        return res.code(400).send({
+          error: 'Bad Request',
+          message: 'stacksAddress is not a valid Stacks address.',
+        });
+      }
+
       if (body.stacksAddress === req.address) {
-        res.code(400).send({
+        return res.code(400).send({
           error: 'Bad Request',
           message: 'You cannot follow yourself.',
         });
