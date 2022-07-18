@@ -35,6 +35,9 @@ export async function createGetUserFollowersEndpoint(fastify: FastifyInstance) {
         select: {
           followingAddress: true,
         },
+        orderBy: {
+          createdAt: 'desc',
+        },
       });
 
       return res.send(followers.map((follower) => follower.followingAddress));
