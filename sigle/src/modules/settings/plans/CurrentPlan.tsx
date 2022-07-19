@@ -3,7 +3,6 @@ import Image from 'next/image';
 import { Box, Button, Flex, Typography, LoadingSpinner } from '../../../ui';
 import { SettingsLayout } from '../SettingsLayout';
 import backpackImage from '../../../../public/img/illustrations/backpack.png';
-import { useFeatureFlags } from '../../../utils/featureFlags';
 import { useGetUserSubscription } from '../../../hooks/subscriptions';
 import Link from 'next/link';
 import { sigleConfig } from '../../../config';

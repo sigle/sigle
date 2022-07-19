@@ -1,60 +1,27 @@
 import { UseQueryOptions, useQuery } from 'react-query';
-import { sigleConfig } from '../config';
+import { UserService } from '../external/api';
 
-interface UserMeResponse {
-  id: string;
-  stacksAddress: string;
-}
-
+type GetApiUsersMeReturnType = Awaited<
+  ReturnType<typeof UserService.getApiUsersMe>
+>;
 export const useGetUserMe = (
-  options: UseQueryOptions<UserMeResponse, Error> = {}
+  options: UseQueryOptions<GetApiUsersMeReturnType, Error> = {}
 ) =>
-  useQuery<UserMeResponse, Error>(
+  useQuery<GetApiUsersMeReturnType, Error>(
     'get-user-me',
-    async () => {
-      const res = await fetch(`${sigleConfig.apiUrl}/api/users/me`, {
-        method: 'GET',
-        credentials: 'include',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
-      const json = await res.json();
-      if (!res.ok) {
-        throw json;
-      }
-      return json;
-    },
+    () => UserService.getApiUsersMe(),
     options
   );
 
-type UserByAddressResponse = {
-  id: string;
-  stacksAddress: string;
-  subscription?: {
-    id: string;
-    nftId: number;
-  };
-} | null;
-
+type GetApiUsersReturnType = Awaited<
+  ReturnType<typeof UserService.getApiUsers>
+>;
 export const useGetUserByAddress = (
   stacksAddress: string,
-  options: UseQueryOptions<UserByAddressResponse, Error> = {}
+  options: UseQueryOptions<GetApiUsersReturnType, Error> = {}
 ) =>
-  useQuery<UserByAddressResponse, Error>(
+  useQuery<GetApiUsersReturnType, Error>(
     ['get-user-by-address', stacksAddress],
-    async () => {
-      const res = await fetch(
-        `${sigleConfig.apiUrl}/api/users/${stacksAddress}`,
-        {
-          method: 'GET',
-        }
-      );
-      const json = await res.json();
-      if (!res.ok) {
-        throw json;
-      }
-      return json;
-    },
+    () => UserService.getApiUsers({ userAddress: stacksAddress }),
     options
   );

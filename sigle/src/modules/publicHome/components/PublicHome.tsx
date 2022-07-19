@@ -114,8 +114,8 @@ const ProfilePageContent = ({
   userInfo,
 }: ProfilePageContentProps) => {
   const { resolvedTheme } = useTheme();
+  const { user, isLegacy } = useAuth();
   const { isExperimentalFollowEnabled } = useFeatureFlags();
-  const { user } = useAuth();
   const { data: userInfoByAddress } = useGetUserByAddress(userInfo.address);
   const { data: userFollowing } = useGetUserFollowing({
     enabled: !!user && userInfo.username !== user.username,
@@ -169,6 +169,7 @@ const ProfilePageContent = ({
           {isExperimentalFollowEnabled &&
           user &&
           user.username !== userInfo.username &&
+          !isLegacy &&
           userFollowing ? (
             !isFollowingUser ? (
               <Button color="orange" css={{ ml: '$5' }} onClick={handleFollow}>
