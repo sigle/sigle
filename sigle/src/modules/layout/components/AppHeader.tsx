@@ -69,7 +69,7 @@ const Header = styled('header', Container, {
 export const AppHeader = () => {
   const { data: settings } = useGetUserSettings();
   const { resolvedTheme, setTheme } = useTheme();
-  const { user } = useAuth();
+  const { user, isLegacy } = useAuth();
   const { status } = useSession();
   const router = useRouter();
   const queryClient = useQueryClient();
@@ -175,7 +175,7 @@ export const AppHeader = () => {
         align="center"
         gap="9"
       >
-        {isExperimentalFollowEnabled && user ? (
+        {isExperimentalFollowEnabled && user && !isLegacy ? (
           <Link href="/feed" passHref>
             <Button variant="ghost" as="a">
               Feed

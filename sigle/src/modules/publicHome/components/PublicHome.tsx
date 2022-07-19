@@ -109,7 +109,7 @@ interface PublicHomeProps {
 
 export const PublicHome = ({ file, settings, userInfo }: PublicHomeProps) => {
   const { resolvedTheme } = useTheme();
-  const { user } = useAuth();
+  const { user, isLegacy } = useAuth();
   const { isExperimentalFollowEnabled } = useFeatureFlags();
   const { data: userInfoByAddress } = useGetUserByAddress(userInfo.address);
   const { data: userFollowing } = useGetUserFollowing({
@@ -196,6 +196,7 @@ export const PublicHome = ({ file, settings, userInfo }: PublicHomeProps) => {
             {isExperimentalFollowEnabled &&
             user &&
             user.username !== userInfo.username &&
+            !isLegacy &&
             userFollowing ? (
               !isFollowingUser ? (
                 <Button

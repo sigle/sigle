@@ -13,7 +13,6 @@ import {
 import { styled } from '../../../stitches.config';
 import { AppFooter } from './AppFooter';
 import { useRouter } from 'next/router';
-import { useFeatureFlags } from '../../../utils/featureFlags';
 import { VariantProps } from '@stitches/react';
 import {
   createNewEmptyStory,
