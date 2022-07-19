@@ -2,4 +2,5 @@
 '@sigle/app': minor
 ---
 
-Redesign dropdown menu in the header.
+Redesign the header dropdown menu.
+Add profile page to the dashboard.
