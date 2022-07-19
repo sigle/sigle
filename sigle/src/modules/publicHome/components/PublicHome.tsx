@@ -31,6 +31,7 @@ import { generateAvatar } from '../../../utils/boringAvatar';
 import { useFeatureFlags } from '../../../utils/featureFlags';
 import { StoryCard } from '../../storyCard/StoryCard';
 import { useGetUserByAddress } from '../../../hooks/users';
+import { DashboardLayout } from '../../layout';
 
 const ExtraInfoLink = styled('a', {
   color: '$gray9',
@@ -50,7 +51,7 @@ const StyledContainer = styled(Container, {
 });
 
 const Header = styled('div', {
-  py: '$10',
+  pb: '$10',
   px: '$4',
   maxWidth: 826,
   display: 'flex',
@@ -101,22 +102,30 @@ const PublicHomeSiteUrl = ({ siteUrl }: { siteUrl: string }) => {
   );
 };
 
-interface PublicHomeProps {
+interface ProfilePageContentProps {
   file: StoryFile;
   settings: SettingsFile;
   userInfo: { username: string; address: string };
 }
 
-export const PublicHome = ({ file, settings, userInfo }: PublicHomeProps) => {
+const ProfilePageContent = ({
+  file,
+  settings,
+  userInfo,
+}: ProfilePageContentProps) => {
   const { resolvedTheme } = useTheme();
-  const { user } = useAuth();
   const { isExperimentalFollowEnabled } = useFeatureFlags();
+  const { user } = useAuth();
   const { data: userInfoByAddress } = useGetUserByAddress(userInfo.address);
   const { data: userFollowing } = useGetUserFollowing({
     enabled: !!user && userInfo.username !== user.username,
   });
   const { mutate: followUser } = useUserFollow();
   const { mutate: unfollowUser } = useUserUnfollow();
+
+  const twitterHandle = settings.siteTwitterHandle;
+  const isFollowingUser =
+    userFollowing && !!userFollowing.following[userInfo.address];
 
   const handleFollow = async () => {
     if (!userFollowing) return;
@@ -131,7 +140,6 @@ export const PublicHome = ({ file, settings, userInfo }: PublicHomeProps) => {
   };
 
   const siteName = settings.siteName || userInfo.username;
-  const twitterHandle = settings.siteTwitterHandle;
 
   const featuredStoryIndex = file.stories.findIndex((story) => story.featured);
   const stories = [...file.stories];
@@ -139,183 +147,146 @@ export const PublicHome = ({ file, settings, userInfo }: PublicHomeProps) => {
     stories.splice(featuredStoryIndex, 1);
   }
 
-  const seoUrl = `${sigleConfig.appUrl}/${userInfo.username}`;
-  const seoTitle = `${siteName} - Sigle`;
-  const seoDescription =
-    settings.siteDescription?.substring(0, 300) ||
-    `Read stories from ${siteName} on Sigle, decentralised and open-source platform for Web3 writers`;
-  const seoImage = settings.siteLogo;
-
-  const isFollowingUser =
-    userFollowing && !!userFollowing.following[userInfo.address];
-
   return (
-    <React.Fragment>
-      <NextSeo
-        title={seoTitle}
-        description={seoDescription}
-        openGraph={{
-          type: 'website',
-          url: seoUrl,
-          title: seoTitle,
-          description: seoDescription,
-          images: [
-            {
-              url: seoImage || `${sigleConfig.appUrl}/static/icon-192x192.png`,
-            },
-          ],
+    <>
+      {userInfo.username !== user?.username && <AppHeader />}
+      <Header
+        css={{
+          pt: userInfo.username !== user?.username ? '$10' : 0,
         }}
-        twitter={{
-          site: '@sigleapp',
-          cardType: 'summary',
-        }}
-        additionalLinkTags={[
-          {
-            rel: 'alternate',
-            type: 'application/rss+xml',
-            // @ts-expect-error title is missing in next-seo
-            title: seoTitle,
-            href: `${sigleConfig.appUrl}/api/feed/${userInfo.username}`,
-          },
-        ]}
-      />
-      <Container>
-        <AppHeader />
-        <Header>
-          <Flex align="start" justify="between">
-            <HeaderLogoContainer>
-              <HeaderLogo
-                src={
-                  settings.siteLogo
-                    ? settings.siteLogo
-                    : generateAvatar(userInfo.address)
-                }
-                alt={`${siteName} logo`}
-              />
-            </HeaderLogoContainer>
-            {isExperimentalFollowEnabled &&
-            user &&
-            user.username !== userInfo.username &&
-            userFollowing ? (
-              !isFollowingUser ? (
-                <Button
-                  color="orange"
-                  css={{ ml: '$5' }}
-                  onClick={handleFollow}
+      >
+        <Flex align="start" justify="between">
+          <HeaderLogoContainer>
+            <HeaderLogo
+              src={
+                settings.siteLogo
+                  ? settings.siteLogo
+                  : generateAvatar(userInfo.address)
+              }
+              alt={`${siteName} logo`}
+            />
+          </HeaderLogoContainer>
+          {isExperimentalFollowEnabled &&
+          user &&
+          user.username !== userInfo.username &&
+          userFollowing ? (
+            !isFollowingUser ? (
+              <Button color="orange" css={{ ml: '$5' }} onClick={handleFollow}>
+                Follow
+              </Button>
+            ) : (
+              <Button
+                variant="subtle"
+                css={{ ml: '$5' }}
+                onClick={handleUnfollow}
+              >
+                Unfollow
+              </Button>
+            )
+          ) : null}
+        </Flex>
+        <Flex align="center" gap="3">
+          <Typography css={{ fontWeight: 700 }} as="h1" size="h2">
+            {siteName}
+          </Typography>
+          <Box
+            css={{
+              backgroundColor: '$gray4',
+              py: '$1',
+              px: '$3',
+              br: '$2',
+            }}
+          >
+            {userInfo.username}
+          </Box>
+          {userInfoByAddress?.subscription && (
+            <Tooltip delayDuration={200}>
+              <TooltipTrigger asChild>
+                <a
+                  href={`${sigleConfig.gammaUrl}/${userInfoByAddress.subscription.nftId}`}
+                  target="_blank"
+                  rel="noreferrer"
                 >
-                  Follow
-                </Button>
-              ) : (
-                <Button
-                  variant="subtle"
-                  css={{ ml: '$5' }}
-                  onClick={handleUnfollow}
-                >
-                  Unfollow
-                </Button>
-              )
-            ) : null}
-          </Flex>
-          <Flex align="center" gap="3">
-            <Typography css={{ fontWeight: 700 }} as="h1" size="h2">
-              {siteName}
-            </Typography>
+                  <Image
+                    src={
+                      resolvedTheme === 'dark'
+                        ? '/img/badges/creatorPlusDark.svg'
+                        : '/img/badges/creatorPlusLight.svg'
+                    }
+                    alt="Creator + badge"
+                    width={20}
+                    height={20}
+                  />
+                </a>
+              </TooltipTrigger>
+              <TooltipContent
+                css={{ boxShadow: 'none' }}
+                side="right"
+                sideOffset={8}
+              >
+                Creator + Explorer #{userInfoByAddress.subscription.nftId}
+              </TooltipContent>
+            </Tooltip>
+          )}
+        </Flex>
+        <Flex css={{ pt: '$3' }} gap="3" align="center">
+          {settings.siteUrl && <PublicHomeSiteUrl siteUrl={settings.siteUrl} />}
+          {settings.siteUrl && settings.siteTwitterHandle && (
             <Box
-              css={{ backgroundColor: '$gray4', py: '$1', px: '$3', br: '$2' }}
-            >
-              {userInfo.username}
-            </Box>
-            {userInfoByAddress?.subscription && (
-              <Tooltip delayDuration={200}>
-                <TooltipTrigger asChild>
-                  <a
-                    href={`${sigleConfig.gammaUrl}/${userInfoByAddress.subscription.nftId}`}
-                    target="_blank"
-                    rel="noreferrer"
-                  >
-                    <Image
-                      src={
-                        resolvedTheme === 'dark'
-                          ? '/img/badges/creatorPlusDark.svg'
-                          : '/img/badges/creatorPlusLight.svg'
-                      }
-                      alt="Creator + badge"
-                      width={20}
-                      height={20}
-                    />
-                  </a>
-                </TooltipTrigger>
-                <TooltipContent
-                  css={{ boxShadow: 'none' }}
-                  side="right"
-                  sideOffset={8}
-                >
-                  Creator + Explorer #{userInfoByAddress.subscription.nftId}
-                </TooltipContent>
-              </Tooltip>
-            )}
-          </Flex>
-          <Flex css={{ pt: '$3' }} gap="3" align="center">
-            {settings.siteUrl && (
-              <PublicHomeSiteUrl siteUrl={settings.siteUrl} />
-            )}
-            {settings.siteUrl && settings.siteTwitterHandle && (
-              <Box
-                css={{
-                  width: '1px',
-                  height: '$4',
-                  backgroundColor: '$gray9',
-                }}
-              />
-            )}
-            {settings.siteTwitterHandle && (
-              <ExtraInfoLink
-                href={`https://twitter.com/${twitterHandle}`}
-                target="_blank"
-                rel="noreferrer"
-              >
-                {twitterHandle?.includes('@')
-                  ? twitterHandle
-                  : `@${twitterHandle}`}
-              </ExtraInfoLink>
-            )}
-            {settings.siteTwitterHandle && (
-              <Box
-                css={{
-                  width: '1px',
-                  height: '$4',
-                  backgroundColor: '$gray9',
-                }}
-              />
-            )}
-            <Flex
-              align="center"
-              gap="2"
               css={{
-                '&:hover': {
-                  '& button': {
-                    display: 'block',
-                  },
-                },
+                width: '1px',
+                height: '$4',
+                backgroundColor: '$gray9',
               }}
+            />
+          )}
+          {settings.siteTwitterHandle && (
+            <ExtraInfoLink
+              href={`https://twitter.com/${twitterHandle}`}
+              target="_blank"
+              rel="noreferrer"
             >
-              <ExtraInfoLink
-                href={`https://explorer.stacks.co/address/${userInfo.address}?chain=mainnet`}
-                target="_blank"
-                rel="noreferrer"
-              >
-                {abbreviateAddress(userInfo.address)}
-              </ExtraInfoLink>
-            </Flex>
+              {twitterHandle?.includes('@')
+                ? twitterHandle
+                : `@${twitterHandle}`}
+            </ExtraInfoLink>
+          )}
+          {settings.siteTwitterHandle && (
+            <Box
+              css={{
+                width: '1px',
+                height: '$4',
+                backgroundColor: '$gray9',
+              }}
+            />
+          )}
+          <Flex
+            align="center"
+            gap="2"
+            css={{
+              '&:hover': {
+                '& button': {
+                  display: 'block',
+                },
+              },
+            }}
+          >
+            <ExtraInfoLink
+              href={`https://explorer.stacks.co/address/${userInfo.address}?chain=mainnet`}
+              target="_blank"
+              rel="noreferrer"
+            >
+              {abbreviateAddress(userInfo.address)}
+            </ExtraInfoLink>
           </Flex>
-          {settings.siteDescription &&
-            settings.siteDescription.split('\n').map((text, index) => (
-              <Typography size="subheading" css={{ mt: '$2' }} key={index}>
-                {text}
-              </Typography>
-            ))}
-        </Header>
-      </Container>
+        </Flex>
+        {settings.siteDescription &&
+          settings.siteDescription.split('\n').map((text, index) => (
+            <Typography size="subheading" css={{ mt: '$2' }} key={index}>
+              {text}
+            </Typography>
+          ))}
+      </Header>
 
       <StyledContainer>
         <Tabs defaultValue="stories">
@@ -350,8 +321,74 @@ export const PublicHome = ({ file, settings, userInfo }: PublicHomeProps) => {
           </TabsContent>
         </Tabs>
 
-        <PoweredBy />
+        {userInfo.username !== user?.username && <PoweredBy />}
       </StyledContainer>
+    </>
+  );
+};
+
+interface PublicHomeProps {
+  file: StoryFile;
+  settings: SettingsFile;
+  userInfo: { username: string; address: string };
+}
+
+export const PublicHome = ({ file, settings, userInfo }: PublicHomeProps) => {
+  const { user } = useAuth();
+  const siteName = settings.siteName || userInfo.username;
+
+  const seoUrl = `${sigleConfig.appUrl}/${userInfo.username}`;
+  const seoTitle = `${siteName} - Sigle`;
+  const seoDescription =
+    settings.siteDescription?.substring(0, 300) ||
+    `Read stories from ${siteName} on Sigle, decentralised and open-source platform for Web3 writers`;
+  const seoImage = settings.siteLogo;
+
+  return (
+    <React.Fragment>
+      <NextSeo
+        title={seoTitle}
+        description={seoDescription}
+        openGraph={{
+          type: 'website',
+          url: seoUrl,
+          title: seoTitle,
+          description: seoDescription,
+          images: [
+            {
+              url: seoImage || `${sigleConfig.appUrl}/static/icon-192x192.png`,
+            },
+          ],
+        }}
+        twitter={{
+          site: '@sigleapp',
+          cardType: 'summary',
+        }}
+        additionalLinkTags={[
+          {
+            rel: 'alternate',
+            type: 'application/rss+xml',
+            // @ts-expect-error title is missing in next-seo
+            title: seoTitle,
+            href: `${sigleConfig.appUrl}/api/feed/${userInfo.username}`,
+          },
+        ]}
+      />
+      {userInfo.username !== user?.username ? (
+        <ProfilePageContent
+          file={file}
+          settings={settings}
+          userInfo={userInfo}
+        />
+      ) : (
+        <DashboardLayout>
+          <ProfilePageContent
+            file={file}
+            settings={settings}
+            userInfo={userInfo}
+          />
+        </DashboardLayout>
+      )}
     </React.Fragment>
   );
 };

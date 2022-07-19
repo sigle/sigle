@@ -153,44 +153,44 @@ export const HeaderDropdown = () => {
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent sideOffset={8}>
-        <DropdownMenuItem
-          css={{ py: '$1', px: '$2' }}
-          selected={router.pathname === `/${user?.username}`}
-          as="a"
-          href={`/${user?.username}`}
-          target="_blank"
-        >
-          <ImageContainer
-            css={{
-              width: 38,
-              height: 38,
-            }}
+        <Link href={`/${user?.username}`} passHref>
+          <DropdownMenuItem
+            css={{ py: '$1', px: '$2' }}
+            selected={router.pathname === user?.username}
+            as="a"
           >
-            <Box
-              as="img"
-              src={
-                settings?.siteLogo
-                  ? settings.siteLogo
-                  : generateAvatar(userAddress)
-              }
+            <ImageContainer
               css={{
-                width: 'auto',
-                height: '100%',
-                maxWidth: 38,
-                maxHeight: 38,
-                objectFit: 'cover',
+                width: 38,
+                height: 38,
               }}
-            />
-          </ImageContainer>
-          <Flex direction="column" align="start" justify="center">
-            <Typography size="subheading" css={{ color: '$gray11' }}>
-              {settings?.siteName ? settings.siteName : user?.username}
-            </Typography>
-            <Typography size="subheading" css={{ color: '$gray9' }}>
-              {user?.username}
-            </Typography>
-          </Flex>
-        </DropdownMenuItem>
+            >
+              <Box
+                as="img"
+                src={
+                  settings?.siteLogo
+                    ? settings.siteLogo
+                    : generateAvatar(userAddress)
+                }
+                css={{
+                  width: 'auto',
+                  height: '100%',
+                  maxWidth: 38,
+                  maxHeight: 38,
+                  objectFit: 'cover',
+                }}
+              />
+            </ImageContainer>
+            <Flex direction="column" align="start" justify="center">
+              <Typography size="subheading" css={{ color: '$gray11' }}>
+                {settings?.siteName ? settings.siteName : user?.username}
+              </Typography>
+              <Typography size="subheading" css={{ color: '$gray9' }}>
+                {user?.username}
+              </Typography>
+            </Flex>
+          </DropdownMenuItem>
+        </Link>
         <DropdownMenuSeparator />
         <DropdownMenuItem
           css={{ color: '$gray11' }}

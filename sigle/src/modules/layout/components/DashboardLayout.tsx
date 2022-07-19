@@ -13,7 +13,6 @@ import {
 import { styled } from '../../../stitches.config';
 import { AppFooter } from './AppFooter';
 import { useRouter } from 'next/router';
-import { useFeatureFlags } from '../../../utils/featureFlags';
 import { VariantProps } from '@stitches/react';
 import {
   createNewEmptyStory,
@@ -25,6 +24,7 @@ import * as Fathom from 'fathom-client';
 import { Goals } from '../../../utils/fathom';
 import { createSubsetStory } from '../../editor/utils';
 import { toast } from 'react-toastify';
+import { useAuth } from '../../auth/AuthContext';
 
 export const DashboardContainer = styled(Container, {
   flex: 1,
@@ -124,6 +124,7 @@ export const DashboardLayout = ({
 }: DashboardLayoutProps) => {
   const router = useRouter();
   const [loadingCreate, setLoadingCreate] = useState(false);
+  const { user } = useAuth();
 
   const handleCreateNewPrivateStory = async () => {
     setLoadingCreate(true);
@@ -146,6 +147,9 @@ export const DashboardLayout = ({
       setLoadingCreate(false);
     }
   };
+
+  const pathname =
+    typeof window !== 'undefined' && window.location.pathname.split('/');
 
   const navItems = [
     {
@@ -174,6 +178,13 @@ export const DashboardLayout = ({
               </DashboardSidebarNavItem>
             </Link>
           ))}
+          <Link href={`/${user?.username}`} passHref>
+            <DashboardSidebarNavItem
+              selected={pathname && pathname[1] === user?.username}
+            >
+              Profile
+            </DashboardSidebarNavItem>
+          </Link>
           <Button
             css={{ mt: '$5', alignSelf: 'start' }}
             disabled={loadingCreate}
