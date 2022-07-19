@@ -58,16 +58,8 @@ export async function createDeleteFollowEndpoint(fastify: FastifyInstance) {
 
       await prisma.follows.deleteMany({
         where: {
-          OR: [
-            {
-              followerAddress: req.address,
-              followingAddress: body.stacksAddress,
-            },
-            {
-              followerAddress: body.stacksAddress,
-              followingAddress: req.address,
-            },
-          ],
+          followerAddress: req.address,
+          followingAddress: body.stacksAddress,
         },
       });
 

@@ -1,24 +1,23 @@
 import { FastifyInstance } from 'fastify';
 import { prisma } from '../../../../prisma';
 
-type GetUserFollowersResponse = string[];
-const getUserFollowersResponseSchema = {
+type GetUserFollowingResponse = string[];
+const getUserFollowingResponseSchema = {
   type: 'array',
   items: {
     type: 'string',
   },
 };
 
-export async function createGetUserFollowersEndpoint(fastify: FastifyInstance) {
+export async function createGetUserFollowingEndpoint(fastify: FastifyInstance) {
   return fastify.get<{
-    Reply: GetUserFollowersResponse;
+    Reply: GetUserFollowingResponse;
     Params: { userAddress: string };
   }>(
-    '/api/users/:userAddress/followers',
+    '/api/users/:userAddress/following',
     {
       schema: {
-        description:
-          'Returns a list of users who are followers of the specified user.',
+        description: 'Returns a list of users the specified user is following.',
         tags: ['user'],
         params: {
           type: 'object',
@@ -28,7 +27,7 @@ export async function createGetUserFollowersEndpoint(fastify: FastifyInstance) {
           },
         },
         response: {
-          200: getUserFollowersResponseSchema,
+          200: getUserFollowingResponseSchema,
         },
       },
     },
@@ -37,17 +36,17 @@ export async function createGetUserFollowersEndpoint(fastify: FastifyInstance) {
 
       const followers = await prisma.follows.findMany({
         where: {
-          followingAddress: userAddress,
+          followerAddress: userAddress,
         },
         select: {
-          followerAddress: true,
+          followingAddress: true,
         },
         orderBy: {
           createdAt: 'desc',
         },
       });
 
-      return res.send(followers.map((follower) => follower.followerAddress));
+      return res.send(followers.map((follower) => follower.followingAddress));
     }
   );
 }

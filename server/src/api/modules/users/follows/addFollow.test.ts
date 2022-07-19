@@ -91,10 +91,5 @@ it('Should create follow', async () => {
       followerAddress: stacksAddress,
       followingAddress: stacksAddress2,
     },
-    {
-      createdAt: expect.any(Date),
-      followerAddress: stacksAddress2,
-      followingAddress: stacksAddress,
-    },
   ]);
 });

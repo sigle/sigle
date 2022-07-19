@@ -17,6 +17,7 @@ import { createGetUserByAddressEndpoint } from './api/modules/users/[userId]';
 import { createGetUserFollowersEndpoint } from './api/modules/users/follows/getFollowers';
 import { createAddFollowEndpoint } from './api/modules/users/follows/addFollow';
 import { createDeleteFollowEndpoint } from './api/modules/users/follows/deleteFollow';
+import { createGetUserFollowingEndpoint } from './api/modules/users/follows/getFollowing';
 
 export const buildFastifyServer = (
   opts: FastifyServerOptions<Server, FastifyLoggerInstance> = {}
@@ -161,6 +162,7 @@ export const buildFastifyServer = (
     createAddFollowEndpoint(fastify);
     createDeleteFollowEndpoint(fastify);
     createGetUserFollowersEndpoint(fastify);
+    createGetUserFollowingEndpoint(fastify);
 
     /**
      * Subscriptions routes

@@ -58,21 +58,12 @@ export async function createAddFollowEndpoint(fastify: FastifyInstance) {
         });
       }
 
-      const createdAt = new Date(body.createdAt);
-
-      await prisma.follows.createMany({
-        data: [
-          {
-            followerAddress: req.address,
-            followingAddress: body.stacksAddress,
-            createdAt,
-          },
-          {
-            followerAddress: body.stacksAddress,
-            followingAddress: req.address,
-            createdAt,
-          },
-        ],
+      await prisma.follows.create({
+        data: {
+          followerAddress: req.address,
+          followingAddress: body.stacksAddress,
+          createdAt: new Date(body.createdAt),
+        },
       });
 
       res.send(true);
