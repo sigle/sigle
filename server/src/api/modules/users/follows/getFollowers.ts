@@ -20,6 +20,13 @@ export async function createGetUserFollowersEndpoint(fastify: FastifyInstance) {
         description:
           'Returns a list of users who are followers of the specified user.',
         tags: ['user'],
+        params: {
+          type: 'object',
+          required: ['userAddress'],
+          properties: {
+            userAddress: { type: 'string' },
+          },
+        },
         response: {
           200: getUserFollowersResponseSchema,
         },
