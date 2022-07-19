@@ -1,4 +1,6 @@
 import { FastifyInstance } from 'fastify';
+import { getToken } from 'next-auth/jwt';
+import { config } from '../../../config';
 import { prisma } from '../../../prisma';
 
 type GetUserByAddressResponse = {
@@ -70,6 +72,28 @@ export async function createGetUserByAddressEndpoint(fastify: FastifyInstance) {
           },
         },
       });
+
+      /**
+       * If user is not found in database, it means it's a legacy user using blockstack connect.
+       * As we can't create sessions for these kind of users, we check if the current user is logged in
+       * and add the legacy user to the database if it's the case.
+       */
+      if (!user) {
+        const token = await getToken({
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          req: req as any,
+          secret: config.NEXTAUTH_SECRET,
+        });
+        if (token && token.sub) {
+          const newUser = await prisma.user.create({
+            data: {
+              stacksAddress: userAddress,
+              isLegacy: true,
+            },
+          });
+          return newUser;
+        }
+      }
 
       return res.send(
         user

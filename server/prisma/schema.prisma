@@ -8,11 +8,12 @@ datasource db {
 }
 
 model User {
-  id             String         @id @default(uuid())
-  stacksAddress  String         @unique
-  createdAt      DateTime       @default(now())
-  updatedAt      DateTime       @updatedAt
-  subscriptions  Subscription[]
+  id            String         @id @default(uuid())
+  stacksAddress String         @unique
+  isLegacy      Boolean        @default(false)
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+  subscriptions Subscription[]
 }
 
 model Subscription {
