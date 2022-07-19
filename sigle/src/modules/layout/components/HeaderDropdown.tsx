@@ -1,0 +1,238 @@
+import Link from 'next/link';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+  Button,
+  Box,
+  Typography,
+  StyledChevron,
+  Flex,
+} from '../../../ui';
+import { generateAvatar } from '../../../utils/boringAvatar';
+import {
+  createNewEmptyStory,
+  getStoriesFile,
+  saveStoriesFile,
+  saveStoryFile,
+} from '../../../utils';
+import { useRouter } from 'next/router';
+import { useState } from 'react';
+import { toast } from 'react-toastify';
+import { useQueryClient } from 'react-query';
+import { useGetUserSettings } from '../../../hooks/appData';
+import * as Fathom from 'fathom-client';
+import { Goals } from '../../../utils/fathom';
+import { userSession } from '../../../utils/blockstack';
+import { createSubsetStory } from '../../editor/utils';
+import { styled } from '../../../stitches.config';
+import { useAuth } from '../../auth/AuthContext';
+import { signOut } from 'next-auth/react';
+import {
+  ArchiveIcon,
+  CrumpledPaperIcon,
+  FileTextIcon,
+  MixIcon,
+} from '@radix-ui/react-icons';
+import { useTheme } from 'next-themes';
+import { Switch, SwitchThumb } from '../../../ui/Switch';
+
+const ImageContainer = styled('div', {
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+  overflow: 'hidden',
+  width: 24,
+  height: 24,
+  br: '$1',
+});
+
+export const HeaderDropdown = () => {
+  const { data: settings } = useGetUserSettings();
+  const router = useRouter();
+  const { user } = useAuth();
+  const queryClient = useQueryClient();
+  const [loadingCreate, setLoadingCreate] = useState(false);
+  const { resolvedTheme, setTheme } = useTheme();
+
+  const handleCreateNewPrivateStory = async () => {
+    setLoadingCreate(true);
+    try {
+      const storiesFile = await getStoriesFile();
+      const story = createNewEmptyStory();
+
+      storiesFile.stories.unshift(
+        createSubsetStory(story, { plainContent: '' })
+      );
+
+      await saveStoriesFile(storiesFile);
+      await saveStoryFile(story);
+
+      Fathom.trackGoal(Goals.CREATE_NEW_STORY, 0);
+      router.push('/stories/[storyId]', `/stories/${story.id}`);
+    } catch (error) {
+      console.error(error);
+      toast.error(error.message);
+      setLoadingCreate(false);
+    }
+  };
+
+  const handleLogout = () => {
+    queryClient.removeQueries();
+    userSession.signUserOut();
+    signOut();
+  };
+
+  const toggleTheme = () => {
+    resolvedTheme === 'dark' ? setTheme('light') : setTheme('dark');
+  };
+
+  const userAddress =
+    user?.profile.stxAddress.mainnet || user?.profile.stxAddress;
+
+  const upperNavItems = [
+    {
+      name: 'Drafts',
+      path: '/',
+      icon: <CrumpledPaperIcon />,
+    },
+    {
+      name: 'Published',
+      path: '/published',
+      icon: <ArchiveIcon />,
+    },
+    {
+      name: 'Analytics',
+      path: '/analytics',
+      icon: <MixIcon />,
+    },
+  ];
+
+  const lowerNavItems = [
+    {
+      name: 'Settings',
+      path: '/settings',
+    },
+    {
+      name: 'Upgrade',
+      path: '/settings/plans',
+    },
+  ];
+
+  return (
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild>
+        <Button
+          css={{ display: 'flex', gap: '$2', alignItems: 'center' }}
+          size="lg"
+          variant="ghost"
+        >
+          <ImageContainer>
+            <Box
+              as="img"
+              src={
+                settings?.siteLogo
+                  ? settings.siteLogo
+                  : generateAvatar(userAddress)
+              }
+              css={{
+                width: 'auto',
+                height: '100%',
+                maxWidth: 24,
+                maxHeight: 24,
+                objectFit: 'cover',
+              }}
+            />
+          </ImageContainer>
+          <Typography size="subheading">
+            {settings?.siteName ? settings.siteName : user?.username}
+          </Typography>
+          <StyledChevron css={{ color: '$gray11' }} />
+        </Button>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent sideOffset={8}>
+        <DropdownMenuItem
+          css={{ py: '$1', px: '$2' }}
+          selected={router.pathname === `/${user?.username}`}
+          as="a"
+          href={`/${user?.username}`}
+          target="_blank"
+        >
+          <ImageContainer
+            css={{
+              width: 38,
+              height: 38,
+            }}
+          >
+            <Box
+              as="img"
+              src={
+                settings?.siteLogo
+                  ? settings.siteLogo
+                  : generateAvatar(userAddress)
+              }
+              css={{
+                width: 'auto',
+                height: '100%',
+                maxWidth: 38,
+                maxHeight: 38,
+                objectFit: 'cover',
+              }}
+            />
+          </ImageContainer>
+          <Flex direction="column" align="start" justify="center">
+            <Typography size="subheading" css={{ color: '$gray11' }}>
+              {settings?.siteName ? settings.siteName : user?.username}
+            </Typography>
+            <Typography size="subheading" css={{ color: '$gray9' }}>
+              {user?.username}
+            </Typography>
+          </Flex>
+        </DropdownMenuItem>
+        <DropdownMenuSeparator />
+        <DropdownMenuItem
+          css={{ color: '$gray11' }}
+          disabled={loadingCreate}
+          onClick={handleCreateNewPrivateStory}
+          onSelect={(e) => e.preventDefault()}
+        >
+          <FileTextIcon />
+          {!loadingCreate ? `Write a story` : `Creating new story...`}
+        </DropdownMenuItem>
+        {upperNavItems.map((item) => (
+          <Link href={item.path} passHref>
+            <DropdownMenuItem
+              css={{ color: '$gray11' }}
+              selected={router.pathname === item.path}
+              as="a"
+            >
+              {item.icon}
+              {item.name}
+            </DropdownMenuItem>
+          </Link>
+        ))}
+        <DropdownMenuSeparator />
+        {lowerNavItems.map((item) => (
+          <Link href={item.path} passHref>
+            <DropdownMenuItem selected={router.pathname === item.path} as="a">
+              {item.name}
+            </DropdownMenuItem>
+          </Link>
+        ))}
+        <DropdownMenuItem
+          css={{ width: 231, justifyContent: 'space-between' }}
+          onSelect={(e) => e.preventDefault()}
+        >
+          Dark mode
+          <Switch onClick={toggleTheme} checked={resolvedTheme === 'dark'}>
+            <SwitchThumb />
+          </Switch>
+        </DropdownMenuItem>
+        <DropdownMenuSeparator />
+        <DropdownMenuItem onClick={handleLogout}>Logout</DropdownMenuItem>
+      </DropdownMenuContent>
+    </DropdownMenu>
+  );
+};

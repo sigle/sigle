@@ -59,7 +59,7 @@ export const DropdownMenuItem = styled(DropdownMenuPrimitive.Item, {
   display: 'flex',
   gap: '$2',
   alignItems: 'center',
-  justifyContent: 'space-between',
+  // justifyContent: 'space-between',
   whiteSpace: 'nowrap',
   py: '$2',
   pl: '$2',

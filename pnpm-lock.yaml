@@ -107,6 +107,7 @@ importers:
       '@radix-ui/react-hover-card': 0.1.5
       '@radix-ui/react-icons': 1.1.0
       '@radix-ui/react-scroll-area': 0.1.4
+      '@radix-ui/react-switch': 0.1.5
       '@radix-ui/react-tabs': 0.1.5
       '@radix-ui/react-tooltip': 0.1.7
       '@sentry/nextjs': 7.2.0
@@ -224,6 +225,7 @@ importers:
       '@radix-ui/react-hover-card': 0.1.5_sfoxds7t5ydpegc3knd667wn6m
       '@radix-ui/react-icons': 1.1.0_react@17.0.2
       '@radix-ui/react-scroll-area': 0.1.4_react@17.0.2
+      '@radix-ui/react-switch': 0.1.5_react@17.0.2
       '@radix-ui/react-tabs': 0.1.5_react@17.0.2
       '@radix-ui/react-tooltip': 0.1.7_sfoxds7t5ydpegc3knd667wn6m
       '@sentry/nextjs': 7.2.0_next@12.2.0+react@17.0.2
@@ -1946,6 +1948,19 @@ packages:
       react: 17.0.2
     dev: false
 
+  /@radix-ui/react-label/0.1.5_react@17.0.2:
+    resolution: {integrity: sha512-Au9+n4/DhvjR0IHhvZ1LPdx/OW+3CGDie30ZyCkbSHIuLp4/CV4oPPGBwJ1vY99Jog3zyQhsGww9MXj8O9Aj/A==}
+    peerDependencies:
+      react: ^16.8 || ^17.0
+    dependencies:
+      '@babel/runtime': 7.17.9
+      '@radix-ui/react-compose-refs': 0.1.0_react@17.0.2
+      '@radix-ui/react-context': 0.1.1_react@17.0.2
+      '@radix-ui/react-id': 0.1.5_react@17.0.2
+      '@radix-ui/react-primitive': 0.1.4_react@17.0.2
+      react: 17.0.2
+    dev: false
+
   /@radix-ui/react-menu/0.1.6_x5eodlisouwznpi4y2wdaadbie:
     resolution: {integrity: sha512-ho3+bhpr3oAFkOBJ8VkUb1BcGoiZBB3OmcWPqa6i5RTUKrzNX/d6rauochu2xDlWjiRtpVuiAcsTVOeIC4FbYQ==}
     peerDependencies:
@@ -2069,6 +2084,23 @@ packages:
     dependencies:
       '@babel/runtime': 7.17.9
       '@radix-ui/react-compose-refs': 0.1.0_react@17.0.2
+      react: 17.0.2
+    dev: false
+
+  /@radix-ui/react-switch/0.1.5_react@17.0.2:
+    resolution: {integrity: sha512-ITtslJPK+Yi34iNf7K9LtsPaLD76oRIVzn0E8JpEO5HW8gpRBGb2NNI9mxKtEB30TVqIcdjdL10AmuIfOMwjtg==}
+    peerDependencies:
+      react: ^16.8 || ^17.0
+    dependencies:
+      '@babel/runtime': 7.17.9
+      '@radix-ui/primitive': 0.1.0
+      '@radix-ui/react-compose-refs': 0.1.0_react@17.0.2
+      '@radix-ui/react-context': 0.1.1_react@17.0.2
+      '@radix-ui/react-label': 0.1.5_react@17.0.2
+      '@radix-ui/react-primitive': 0.1.4_react@17.0.2
+      '@radix-ui/react-use-controllable-state': 0.1.0_react@17.0.2
+      '@radix-ui/react-use-previous': 0.1.1_react@17.0.2
+      '@radix-ui/react-use-size': 0.1.1_react@17.0.2
       react: 17.0.2
     dev: false
 
@@ -4589,7 +4621,7 @@ packages:
     resolution: {integrity: sha512-8+9WqebbFzpX9OR+Wa6O29asIogeRMzcGtAINdpMHHyAg10f05aSFVBbcEqGf/PXw1EjAZ+q2/bEBg3DvurK3Q==}
 
   /argv/0.0.2:
-    resolution: {integrity: sha512-dEamhpPEwRUBpLNHeuCm/v+g0anFByHahxodVO/BbAarHVBBg2MccCwf9K+o1Pof+2btdnkJelYVUWjW/VrATw==}
+    resolution: {integrity: sha1-7L0W+JSbFXGDcRsb2jNPN4QBhas=}
     engines: {node: '>=0.6.10'}
     dev: false
 
