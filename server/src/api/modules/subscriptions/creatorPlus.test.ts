@@ -1,5 +1,4 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { beforeAll, afterAll, beforeEach, it, expect } from '@jest/globals';
 import { FastifyInstance } from 'fastify';
 import { TestBaseDB, TestDBUser } from '../../../jest/db';
 import { prisma } from '../../../prisma';
@@ -30,10 +29,15 @@ it('Should throw an error if nftId is missing', async () => {
     cookies: {
       'next-auth.session-token': '0x123',
     },
+    payload: {},
   });
 
   expect(response.statusCode).toBe(400);
-  expect(response.json()).toEqual({ error: 'nftId is required' });
+  expect(response.json()).toEqual({
+    error: 'Bad Request',
+    message: "body must have required property 'nftId'",
+    statusCode: 400,
+  });
 });
 
 it('Should throw an error if nftId is invalid', async () => {
@@ -49,7 +53,11 @@ it('Should throw an error if nftId is invalid', async () => {
   });
 
   expect(response.statusCode).toBe(400);
-  expect(response.json()).toEqual({ error: 'nftId is invalid' });
+  expect(response.json()).toEqual({
+    error: 'Bad Request',
+    message: 'body/nftId must be number',
+    statusCode: 400,
+  });
 });
 
 it('Should throw an error if user is not the owner', async () => {
@@ -88,7 +96,8 @@ it('Should create an active subscription linked to the nft', async () => {
 
   expect(response.statusCode).toBe(200);
   expect(response.json()).toEqual({
-    success: true,
+    id: expect.any(String),
+    nftId,
   });
   expect(
     await prisma.subscription.findMany({ where: { userId: user.id } })
@@ -125,7 +134,8 @@ it('Should change the NFT if user has an active subscription', async () => {
 
   expect(response.statusCode).toBe(200);
   expect(response.json()).toEqual({
-    success: true,
+    id: expect.any(String),
+    nftId,
   });
   expect(
     await prisma.subscription.findMany({ where: { userId: user.id } })

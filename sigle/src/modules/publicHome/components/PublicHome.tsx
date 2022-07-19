@@ -1,9 +1,24 @@
 import React from 'react';
 import { NextSeo } from 'next-seo';
+import Image from 'next/future/image';
+import { useTheme } from 'next-themes';
 import { StoryFile, SettingsFile } from '../../../types';
 import { PoweredBy } from '../../publicStory/PoweredBy';
 import { AppHeader } from '../../layout/components/AppHeader';
-import { Box, Button, Container, Flex, Typography } from '../../../ui';
+import {
+  Box,
+  Button,
+  Container,
+  Flex,
+  Tabs,
+  TabsTrigger,
+  TabsContent,
+  TabsList,
+  Typography,
+  Tooltip,
+  TooltipTrigger,
+  TooltipContent,
+} from '../../../ui';
 import { sigleConfig } from '../../../config';
 import { styled } from '../../../stitches.config';
 import { useAuth } from '../../auth/AuthContext';
@@ -15,9 +30,21 @@ import {
 import { generateAvatar } from '../../../utils/boringAvatar';
 import { useFeatureFlags } from '../../../utils/featureFlags';
 import { StoryCard } from '../../storyCard/StoryCard';
+import { useGetUserByAddress } from '../../../hooks/users';
+
+const ExtraInfoLink = styled('a', {
+  color: '$gray9',
+  fontSize: '$2',
+
+  '&:hover': {
+    color: '$gray10',
+  },
+  '&:active': {
+    color: '$gray12',
+  },
+});
 
 const StyledContainer = styled(Container, {
-  pt: '$4',
   pb: '$15',
   maxWidth: 826,
 });
@@ -25,10 +52,9 @@ const StyledContainer = styled(Container, {
 const Header = styled('div', {
   py: '$10',
   px: '$4',
-  maxWidth: 960,
+  maxWidth: 826,
   display: 'flex',
   flexDirection: 'column',
-  placeItems: 'center',
   mx: 'auto',
 });
 
@@ -36,11 +62,10 @@ const HeaderLogoContainer = styled('div', {
   width: 92,
   height: 92,
   display: 'flex',
-  alignItems: 'center',
   justifyContent: 'center',
   br: '$4',
   overflow: 'hidden',
-  mb: '$4',
+  mb: '$2',
 });
 
 const HeaderLogo = styled('img', {
@@ -50,6 +75,13 @@ const HeaderLogo = styled('img', {
   maxHeight: 92,
   objectFit: 'cover',
 });
+
+const abbreviateAddress = (address: string) => {
+  if (!address) return address;
+  const firstFour = address.substring(0, 4);
+  const lastFour = address.substring(address.length - 4);
+  return `${firstFour}...${lastFour}`;
+};
 
 const PublicHomeSiteUrl = ({ siteUrl }: { siteUrl: string }) => {
   let displayUrl = siteUrl;
@@ -63,25 +95,9 @@ const PublicHomeSiteUrl = ({ siteUrl }: { siteUrl: string }) => {
   }
 
   return (
-    <Typography
-      css={{
-        color: '$gray9',
-
-        '&:hover': {
-          color: '$gray10',
-        },
-        '&:active': {
-          color: '$gray12',
-        },
-      }}
-      size="subheading"
-      as="a"
-      href={fullUrl}
-      target="_blank"
-      rel="noreferrer"
-    >
+    <ExtraInfoLink href={fullUrl} target="_blank" rel="noreferrer">
       {displayUrl}
-    </Typography>
+    </ExtraInfoLink>
   );
 };
 
@@ -92,8 +108,10 @@ interface PublicHomeProps {
 }
 
 export const PublicHome = ({ file, settings, userInfo }: PublicHomeProps) => {
-  const { user } = useAuth();
+  const { resolvedTheme } = useTheme();
+  const { user, isLegacy } = useAuth();
   const { isExperimentalFollowEnabled } = useFeatureFlags();
+  const { data: userInfoByAddress } = useGetUserByAddress(userInfo.address);
   const { data: userFollowing } = useGetUserFollowing({
     enabled: !!user && userInfo.username !== user.username,
   });
@@ -151,27 +169,34 @@ export const PublicHome = ({ file, settings, userInfo }: PublicHomeProps) => {
           site: '@sigleapp',
           cardType: 'summary',
         }}
+        additionalLinkTags={[
+          {
+            rel: 'alternate',
+            type: 'application/rss+xml',
+            // @ts-expect-error title is missing in next-seo
+            title: seoTitle,
+            href: `${sigleConfig.appUrl}/api/feed/${userInfo.username}`,
+          },
+        ]}
       />
       <Container>
         <AppHeader />
         <Header>
-          <HeaderLogoContainer>
-            <HeaderLogo
-              src={
-                settings.siteLogo
-                  ? settings.siteLogo
-                  : generateAvatar(userInfo.address)
-              }
-              alt={`${siteName} logo`}
-            />
-          </HeaderLogoContainer>
-          <Flex align="center">
-            <Typography css={{ fontWeight: 700 }} as="h1" size="h2">
-              {siteName}
-            </Typography>
+          <Flex align="start" justify="between">
+            <HeaderLogoContainer>
+              <HeaderLogo
+                src={
+                  settings.siteLogo
+                    ? settings.siteLogo
+                    : generateAvatar(userInfo.address)
+                }
+                alt={`${siteName} logo`}
+              />
+            </HeaderLogoContainer>
             {isExperimentalFollowEnabled &&
             user &&
             user.username !== userInfo.username &&
+            !isLegacy &&
             userFollowing ? (
               !isFollowingUser ? (
                 <Button
@@ -192,37 +217,60 @@ export const PublicHome = ({ file, settings, userInfo }: PublicHomeProps) => {
               )
             ) : null}
           </Flex>
-          {settings.siteDescription &&
-            settings.siteDescription.split('\n').map((text, index) => (
-              <Typography
-                size="subheading"
-                css={{ mt: '$2', textAlign: 'center' }}
-                key={index}
-              >
-                {text}
-              </Typography>
-            ))}
-          <Flex css={{ pt: '$5' }} gap="3">
+          <Flex align="center" gap="3">
+            <Typography css={{ fontWeight: 700 }} as="h1" size="h2">
+              {siteName}
+            </Typography>
+            <Box
+              css={{ backgroundColor: '$gray4', py: '$1', px: '$3', br: '$2' }}
+            >
+              {userInfo.username}
+            </Box>
+            {userInfoByAddress?.subscription && (
+              <Tooltip delayDuration={200}>
+                <TooltipTrigger asChild>
+                  <a
+                    href={`${sigleConfig.gammaUrl}/${userInfoByAddress.subscription.nftId}`}
+                    target="_blank"
+                    rel="noreferrer"
+                  >
+                    <Image
+                      src={
+                        resolvedTheme === 'dark'
+                          ? '/img/badges/creatorPlusDark.svg'
+                          : '/img/badges/creatorPlusLight.svg'
+                      }
+                      alt="Creator + badge"
+                      width={20}
+                      height={20}
+                    />
+                  </a>
+                </TooltipTrigger>
+                <TooltipContent
+                  css={{ boxShadow: 'none' }}
+                  side="right"
+                  sideOffset={8}
+                >
+                  Creator + Explorer #{userInfoByAddress.subscription.nftId}
+                </TooltipContent>
+              </Tooltip>
+            )}
+          </Flex>
+          <Flex css={{ pt: '$3' }} gap="3" align="center">
             {settings.siteUrl && (
               <PublicHomeSiteUrl siteUrl={settings.siteUrl} />
             )}
             {settings.siteUrl && settings.siteTwitterHandle && (
-              <Box css={{ width: '1px', backgroundColor: '$gray9' }} />
+              <Box
+                css={{
+                  width: '1px',
+                  height: '$4',
+                  backgroundColor: '$gray9',
+                }}
+              />
             )}
             {settings.siteTwitterHandle && (
-              <Typography
-                css={{
-                  color: '$gray9',
-
-                  '&:hover': {
-                    color: '$gray10',
-                  },
-                  '&:active': {
-                    color: '$gray12',
-                  },
-                }}
-                size="subheading"
-                as="a"
+              <ExtraInfoLink
                 href={`https://twitter.com/${twitterHandle}`}
                 target="_blank"
                 rel="noreferrer"
@@ -230,34 +278,78 @@ export const PublicHome = ({ file, settings, userInfo }: PublicHomeProps) => {
                 {twitterHandle?.includes('@')
                   ? twitterHandle
                   : `@${twitterHandle}`}
-              </Typography>
+              </ExtraInfoLink>
             )}
+            {settings.siteTwitterHandle && (
+              <Box
+                css={{
+                  width: '1px',
+                  height: '$4',
+                  backgroundColor: '$gray9',
+                }}
+              />
+            )}
+            <Flex
+              align="center"
+              gap="2"
+              css={{
+                '&:hover': {
+                  '& button': {
+                    display: 'block',
+                  },
+                },
+              }}
+            >
+              <ExtraInfoLink
+                href={`https://explorer.stacks.co/address/${userInfo.address}?chain=mainnet`}
+                target="_blank"
+                rel="noreferrer"
+              >
+                {abbreviateAddress(userInfo.address)}
+              </ExtraInfoLink>
+            </Flex>
           </Flex>
+          {settings.siteDescription &&
+            settings.siteDescription.split('\n').map((text, index) => (
+              <Typography size="subheading" css={{ mt: '$2' }} key={index}>
+                {text}
+              </Typography>
+            ))}
         </Header>
       </Container>
 
       <StyledContainer>
-        {file.stories.length === 0 && (
-          <Typography css={{ mt: '$8', textAlign: 'center' }}>
-            No stories yet
-          </Typography>
-        )}
-        {featuredStoryIndex !== -1 && (
-          <StoryCard
-            userInfo={userInfo}
-            story={file.stories[featuredStoryIndex]}
-            settings={settings}
-            featured
-          />
-        )}
-        {stories.map((story) => (
-          <StoryCard
-            key={story.id}
-            userInfo={userInfo}
-            story={story}
-            settings={settings}
-          />
-        ))}
+        <Tabs defaultValue="stories">
+          <TabsList
+            css={{ boxShadow: '0 1px 0 0 $colors$gray6', mb: 0 }}
+            aria-label="See your draft"
+          >
+            <TabsTrigger value="stories">{`Stories (${file.stories.length})`}</TabsTrigger>
+          </TabsList>
+          <TabsContent value="stories">
+            {file.stories.length === 0 && (
+              <Typography css={{ mt: '$8', textAlign: 'center' }}>
+                No stories yet
+              </Typography>
+            )}
+            {featuredStoryIndex !== -1 && (
+              <StoryCard
+                userInfo={userInfo}
+                story={file.stories[featuredStoryIndex]}
+                settings={settings}
+                featured
+              />
+            )}
+            {stories.map((story) => (
+              <StoryCard
+                key={story.id}
+                userInfo={userInfo}
+                story={story}
+                settings={settings}
+              />
+            ))}
+          </TabsContent>
+        </Tabs>
 
         <PoweredBy />
       </StyledContainer>

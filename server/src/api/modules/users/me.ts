@@ -7,7 +7,7 @@ type GetUserMeResponse = {
 };
 const getUserMeResponseSchema = {
   type: 'object',
-  nullable: true,
+  required: ['id', 'stacksAddress'],
   properties: {
     id: { type: 'string' },
     stacksAddress: { type: 'string' },
@@ -22,6 +22,8 @@ export async function createGetUserMeEndpoint(fastify: FastifyInstance) {
     {
       onRequest: [fastify.authenticate],
       schema: {
+        description: 'Return the current logged in user.',
+        tags: ['user'],
         response: {
           200: getUserMeResponseSchema,
         },

@@ -4,6 +4,7 @@ import {
   useQueryClient,
   UseQueryOptions,
 } from 'react-query';
+import { UserService } from '../external/api';
 import {
   getSettingsFile,
   GaiaUserFollowing,
@@ -39,6 +40,9 @@ export const useUserFollow = () => {
     // optimistic update
     queryClient.setQueriesData('get-user-following', userFollowing);
     await saveFollowingFile(userFollowing);
+    await UserService.postApiUsersMeFollowing({
+      body: { stacksAddress: address, createdAt: now },
+    });
   });
 };
 
@@ -56,6 +60,9 @@ export const useUserUnfollow = () => {
     // optimistic update
     queryClient.setQueriesData('get-user-following', userFollowing);
     await saveFollowingFile(userFollowing);
+    await UserService.deleteApiUsersMeFollowing({
+      body: { stacksAddress: address },
+    });
   });
 };
 

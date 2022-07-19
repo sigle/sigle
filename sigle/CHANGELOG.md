@@ -1,5 +1,67 @@
 # @sigle/app
 
+## 1.3.0
+
+### Minor Changes
+
+- 6764f3b: Add analytics, you can now track how your content performs.
+- 47eff66: New settings layout and first version of the plan page.
+- dea06e3: Allow users to add their website link and twitter handle in the settings, to be shown on the new profile pages.
+- 1cb8aa1: Enable Hiro wallet login for everyone and change login for new login flow, step 1.
+- 3c0b423: Redesign the story cards on the public profile page.
+- fa801a0: Update profile image upload component in settings.
+  Update App header to include a pfp next to username in the dropdown trigger.
+  Update public story to have pfp alongside username and date.
+- 84bf1ac: Redesign the public profile page by adding a new stories tab and a copyable stx address to bio.
+- 1fe1fc1: Custom SEO when sharing profile pages.
+
+### Patch Changes
+
+- e8cdf22: (Beta) Compare plans page with table including features and tiers.
+- cfee6cc: (Beta) Create the analytics referrer API.
+- e20417c: Create new Typography UI component.
+- a13149f: Fix a react ssr hydratation issue when using feature flags.
+- fc5c542: Fix issue when selecting all in the stats view.
+- e1a904a: Upgrade stacks.js dependencies to v4.3.0.
+- 134aa5a: Update the delay duration of the Tooltip on the Compare Plans page.
+- e087b2c: Fix the dialog trigger no longer appearing on the editor.
+- cdf1e4d: Fix invalid website issue in the settings when saving.
+- e84890e: (Beta) Create the analytics historical API.
+- bdc959e: Fix chart issue when values are close by changing the curve.
+- 9ccdf5a: (Beta) Fix height issues with referrers frame.
+- b2a8c4c: Fix image not updating properly when saving.
+- 693a6f9: (Beta) Allow user to sign a message to authenticate requests sent to the server.
+- 725ac37: Remove babel and styled components and use swc as a compiler.
+- 2459689: (Beta) Show real analytics data.
+- 53a16fc: Return user stacks info for the user public pages.
+- 03eda89: Add steps to the login page for signing the message.
+- 6e6fe0d: (Beta) Users can now decide to login with the Hiro web wallet.
+- 269dc65: (Beta) Replace error component in analytics with design system component.
+- f49423b: Move `Write a story` CTA to sidebar menu.
+- 3883a37: (Beta) Create analytics story performance API.
+- ce01fde: (Beta) Creator plus plan page in the plans.
+- 5305860: (Beta) Add compare plans page containing a modal where users can link their NFTs to access the creator plus plan.
+- bf2bb5a: Migrate analytics API to server.
+- 0a16488: (Beta) Add tabbable graph views to display views and visits stats for a user's blog.
+- a91dcd2: Update settings form components.
+- 6f9a2ce: (Beta) Add locked view for if a user doesn't have an Explorer Guild NFT in their wallet.
+- 0fcf76a: Display custom username in the header and on stories, or fallback to default username.
+- 124ff13: Show error for Blockstack connect without usernames.
+- ccc1bd4: (Beta) Display total views and visitors for the different time periods.
+- 119f119: Refactor pages testing structure.
+- 2b1c0ca: Improve Stacks next.js config to remove polyfills from bundle size.
+- c0a5720: (Beta) Create UI with dummy data for referrers on analytics page.
+- ffbe6c2: Fix message signature broken by new Hiro release.
+- 826a78e: Fix source of the issue with editor header appearing over settings dialog.
+- b739e8c: Fix validation when website field is empty in the settings.
+- 808c04e: (Beta) Add analytics page for individual stories.
+  (Beta) Replace placeholder data with data coming from API for story views and referrers.
+- 566e76b: Fix image issue in the rss feed.
+- 50753f2: Fix header width on profile page.
+- 88348ca: (Beta) Add analytics page containing a paginated frame for published stories.
+- f6e01e8: Update SEO meta tags.
+- 1f1d696: Detect and show guide when BNS missconfiguration is detected.
+
 ## 1.2.0
 
 ### Minor Changes

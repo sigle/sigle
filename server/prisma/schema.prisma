@@ -1,6 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -13,9 +10,22 @@ datasource db {
 model User {
   id            String         @id @default(uuid())
   stacksAddress String         @unique
-  subscriptions Subscription[]
+  isLegacy      Boolean        @default(false)
   createdAt     DateTime       @default(now())
   updatedAt     DateTime       @updatedAt
+  subscriptions Subscription[]
+  followers     Follows[]      @relation("following")
+  following     Follows[]      @relation("follower")
+}
+
+model Subscription {
+  id        String             @id @default(uuid())
+  status    SubscriptionStatus
+  nftId     Int                @unique
+  userId    String
+  createdAt DateTime           @default(now())
+  updatedAt DateTime           @updatedAt
+  user      User               @relation(fields: [userId], references: [id])
 }
 
 enum SubscriptionStatus {
@@ -23,12 +33,14 @@ enum SubscriptionStatus {
   ACTIVE
 }
 
-model Subscription {
-  id        String             @id @default(uuid())
-  status    SubscriptionStatus
-  nftId     Int                @unique
-  user      User               @relation(fields: [userId], references: [id])
-  userId    String
-  createdAt DateTime           @default(now())
-  updatedAt DateTime           @updatedAt
+// Gaia data
+// File: app-data/following.json
+model Follows {
+  followerAddress  String
+  follower         User     @relation("follower", fields: [followerAddress], references: [stacksAddress])
+  followingAddress String
+  following        User     @relation("following", fields: [followingAddress], references: [stacksAddress])
+  createdAt        DateTime
+
+  @@id([followerAddress, followingAddress])
 }

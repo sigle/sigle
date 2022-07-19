@@ -8,7 +8,7 @@ import { SubscriptionService } from '../subscriptions/service';
 import { plausibleClient } from '../../../external/plausible';
 
 interface AnalyticsReferrersParams {
-  dateFrom?: string;
+  dateFrom: string;
   storyId?: string;
 }
 
@@ -24,11 +24,16 @@ const analyticsReferrersResponseSchema = {
   type: 'array',
   items: {
     type: 'object',
+    required: ['domain', 'count'],
     properties: {
       domain: { type: 'string', nullable: true },
       count: { type: 'number' },
     },
   },
+  example: [
+    { domain: 'twitter.com', count: 5 },
+    { domain: 'google.com', count: 2 },
+  ],
 };
 
 export async function createAnalyticsReferrersEndpoint(
@@ -48,9 +53,31 @@ export async function createAnalyticsReferrersEndpoint(
         },
       },
       schema: {
+        description: 'Return the referrer statistics.',
+        tags: ['analytics'],
+        querystring: {
+          type: 'object',
+          required: ['dateFrom'],
+          properties: {
+            dateFrom: {
+              type: 'string',
+              description:
+                'The date from which to get the statistics (e.g. 2022-04-01).',
+            },
+            storyId: {
+              type: 'string',
+              description: 'The story id to get the statistics for.',
+            },
+          },
+        },
         response: {
           200: analyticsReferrersResponseSchema,
         },
+        security: [
+          {
+            session: [],
+          },
+        ],
       },
     },
     async (req, res) => {
@@ -58,10 +85,6 @@ export async function createAnalyticsReferrersEndpoint(
       let { dateFrom } = req.query;
       const dateTo = new Date();
 
-      if (!dateFrom) {
-        res.status(400).send({ error: 'dateFrom is required' });
-        return;
-      }
       const parsedDateFrom = parse(dateFrom, 'yyyy-MM-dd', new Date());
       const isValidDate = isValid(parsedDateFrom);
       if (!isValidDate) {

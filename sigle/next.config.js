@@ -9,6 +9,11 @@ const { withPlausibleProxy } = require('next-plausible');
 dotenv.config();
 
 const nextConfig = {
+  experimental: {
+    images: {
+      allowFutureImage: true,
+    },
+  },
   swcMinify: true,
   env: {
     APP_URL: process.env.APP_URL,
@@ -71,6 +76,6 @@ module.exports = withSentryConfig(
     nextConfig
   ),
   {
-    dryRun: process.env.NEXT_PUBLIC_APP_ENV !== 'production',
+    dryRun: !process.env.SENTRY_AUTH_TOKEN,
   }
 );

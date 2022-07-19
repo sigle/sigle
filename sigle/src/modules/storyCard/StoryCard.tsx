@@ -11,8 +11,6 @@ const StoryContainer = styled('div', {
   display: 'flex',
   borderBottom: '1px solid $colors$gray6',
   py: '$7',
-  gap: '$5',
-  alignItems: 'center',
 
   '& img': {
     transform: 'none',
@@ -63,7 +61,7 @@ interface StoryCardProps {
     SubsetStory,
     'id' | 'coverImage' | 'title' | 'createdAt' | 'content'
   >;
-  settings: Pick<SettingsFile, 'siteLogo'>;
+  settings: Pick<SettingsFile, 'siteLogo' | 'siteName'>;
   /**
    * Options to change the card look
    */
@@ -83,12 +81,17 @@ export const StoryCard = ({
 }: StoryCardProps) => {
   const storyPath = `/${userInfo.username}/${story.id}`;
 
+  const displayName = settings.siteName ? settings.siteName : userInfo.username;
+
   return (
     <StoryContainer
       css={{
         flexDirection: featured ? 'column' : 'row',
+        alignItems: featured ? 'start' : 'center',
+        gap: story.coverImage && featured ? 0 : '$5',
         '@md': {
-          gap: !story.coverImage && featured ? '$5' : '$7',
+          alignItems: 'center',
+          gap: story.coverImage && featured ? 0 : '$7',
         },
       }}
     >
@@ -148,7 +151,7 @@ export const StoryCard = ({
                 css={{ color: '$gray9' }}
                 size="subparagraph"
               >
-                {displayUser ? `${userInfo.username} · ` : ''}
+                {displayUser ? `${displayName} · ` : ''}
                 {format(story.createdAt, 'MMMM dd, yyyy ')}
               </Typography>
             </Flex>
