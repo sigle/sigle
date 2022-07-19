@@ -202,7 +202,7 @@ export const HeaderDropdown = () => {
           {!loadingCreate ? `Write a story` : `Creating new story...`}
         </DropdownMenuItem>
         {upperNavItems.map((item) => (
-          <Link href={item.path} passHref>
+          <Link key={item.path} href={item.path} passHref>
             <DropdownMenuItem
               css={{ color: '$gray11' }}
               selected={router.pathname === item.path}
@@ -215,7 +215,7 @@ export const HeaderDropdown = () => {
         ))}
         <DropdownMenuSeparator />
         {lowerNavItems.map((item) => (
-          <Link href={item.path} passHref>
+          <Link key={item.path} href={item.path} passHref>
             <DropdownMenuItem selected={router.pathname === item.path} as="a">
               {item.name}
             </DropdownMenuItem>
