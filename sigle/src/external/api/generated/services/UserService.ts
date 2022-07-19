@@ -68,6 +68,25 @@ export class UserService {
   }
 
   /**
+   * Allows a user to unfollow another user.
+   * @returns boolean Default Response
+   * @throws ApiError
+   */
+  public static deleteApiUsersMeFollowing({
+    body,
+  }: {
+    body?: {
+      stacksAddress: string;
+    };
+  }): CancelablePromise<boolean> {
+    return __request(OpenAPI, {
+      method: 'DELETE',
+      url: '/api/users/me/following',
+      body: body,
+    });
+  }
+
+  /**
    * Returns a list of users who are followers of the specified user.
    * @returns string Default Response
    * @throws ApiError

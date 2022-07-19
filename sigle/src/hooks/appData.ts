@@ -60,6 +60,9 @@ export const useUserUnfollow = () => {
     // optimistic update
     queryClient.setQueriesData('get-user-following', userFollowing);
     await saveFollowingFile(userFollowing);
+    await UserService.deleteApiUsersMeFollowing({
+      body: { stacksAddress: address },
+    });
   });
 };
 
