@@ -87,7 +87,7 @@ export async function createGetUserByAddressEndpoint(fastify: FastifyInstance) {
         if (token && token.sub) {
           const newUser = await prisma.user.create({
             data: {
-              stacksAddress: req.address,
+              stacksAddress: userAddress,
               isLegacy: true,
             },
           });
