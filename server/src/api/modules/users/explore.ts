@@ -37,7 +37,7 @@ export async function createGetUserExploreEndpoint(fastify: FastifyInstance) {
         // Remove the current logged in user from the list
         where: { stacksAddress: { not: req.address } },
         orderBy: { followers: { _count: 'desc' } },
-        take: 50,
+        take: 150,
       });
       return res.send(users);
     }
