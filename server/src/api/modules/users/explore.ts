@@ -33,11 +33,10 @@ export async function createGetUserExploreEndpoint(fastify: FastifyInstance) {
       },
     },
     async (req, res) => {
-      // TODO
       const users = await prisma.user.findMany({
         // Remove the current logged in user from the list
         where: { stacksAddress: { not: req.address } },
-        orderBy: { createdAt: 'desc' },
+        orderBy: { followers: { _count: 'desc' } },
         take: 50,
       });
       return res.send(users);
