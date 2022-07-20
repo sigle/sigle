@@ -42,7 +42,6 @@ import { StyledChevron } from '../../../ui/Accordion';
 import { generateAvatar } from '../../../utils/boringAvatar';
 import { useGetUserSettings } from '../../../hooks/appData';
 import { useGetUserMe } from '../../../hooks/users';
-import { useFeatureFlags } from '../../../utils/featureFlags';
 
 const ImageContainer = styled('div', {
   display: 'flex',
@@ -73,7 +72,6 @@ export const AppHeader = () => {
   const { status } = useSession();
   const router = useRouter();
   const queryClient = useQueryClient();
-  const { isExperimentalFollowEnabled } = useFeatureFlags();
   const [loadingCreate, setLoadingCreate] = useState(false);
 
   /**
@@ -175,7 +173,7 @@ export const AppHeader = () => {
         align="center"
         gap="9"
       >
-        {isExperimentalFollowEnabled && user && !isLegacy ? (
+        {user && !isLegacy ? (
           <>
             <Link href="/feed" passHref>
               <Button variant="ghost" as="a">

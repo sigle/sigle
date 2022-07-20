@@ -28,7 +28,6 @@ import {
   useUserUnfollow,
 } from '../../../hooks/appData';
 import { generateAvatar } from '../../../utils/boringAvatar';
-import { useFeatureFlags } from '../../../utils/featureFlags';
 import { StoryCard } from '../../storyCard/StoryCard';
 import { useGetUserByAddress } from '../../../hooks/users';
 
@@ -110,7 +109,6 @@ interface PublicHomeProps {
 export const PublicHome = ({ file, settings, userInfo }: PublicHomeProps) => {
   const { resolvedTheme } = useTheme();
   const { user, isLegacy } = useAuth();
-  const { isExperimentalFollowEnabled } = useFeatureFlags();
   const { data: userInfoByAddress } = useGetUserByAddress(userInfo.address);
   const { data: userFollowing } = useGetUserFollowing({
     enabled: !!user && userInfo.username !== user.username,
@@ -193,8 +191,7 @@ export const PublicHome = ({ file, settings, userInfo }: PublicHomeProps) => {
                 alt={`${siteName} logo`}
               />
             </HeaderLogoContainer>
-            {isExperimentalFollowEnabled &&
-            user &&
+            {user &&
             user.username !== userInfo.username &&
             !isLegacy &&
             userFollowing ? (
