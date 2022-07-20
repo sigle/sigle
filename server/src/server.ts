@@ -13,6 +13,7 @@ import { fastifyAuthPlugin } from './api/plugins/auth';
 import { createSubscriptionCreatorPlusEndpoint } from './api/modules/subscriptions/creatorPlus';
 import { createGetSubscriptionEndpoint } from './api/modules/subscriptions/getSubscription';
 import { createGetUserMeEndpoint } from './api/modules/users/me';
+import { createGetUserExploreEndpoint } from './api/modules/users/explore';
 import { createGetUserByAddressEndpoint } from './api/modules/users/[userId]';
 import { createGetUserFollowersEndpoint } from './api/modules/users/follows/getFollowers';
 import { createAddFollowEndpoint } from './api/modules/users/follows/addFollow';
@@ -155,6 +156,7 @@ export const buildFastifyServer = (
      */
     createGetUserByAddressEndpoint(fastify);
     createGetUserMeEndpoint(fastify);
+    createGetUserExploreEndpoint(fastify);
 
     /**
      * Users follows routes

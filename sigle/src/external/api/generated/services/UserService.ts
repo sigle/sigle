@@ -48,6 +48,23 @@ export class UserService {
   }
 
   /**
+   * Return a list of users using Sigle.
+   * @returns any Default Response
+   * @throws ApiError
+   */
+  public static getApiUsersExplore(): CancelablePromise<
+    Array<{
+      id: string;
+      stacksAddress: string;
+    }>
+  > {
+    return __request(OpenAPI, {
+      method: 'GET',
+      url: '/api/users/explore',
+    });
+  }
+
+  /**
    * Allows a user to follow another user.
    * @returns boolean Default Response
    * @throws ApiError
@@ -99,6 +116,25 @@ export class UserService {
     return __request(OpenAPI, {
       method: 'GET',
       url: '/api/users/{userAddress}/followers',
+      path: {
+        userAddress: userAddress,
+      },
+    });
+  }
+
+  /**
+   * Returns a list of users the specified user is following.
+   * @returns string Default Response
+   * @throws ApiError
+   */
+  public static getApiUsersFollowing({
+    userAddress,
+  }: {
+    userAddress: string;
+  }): CancelablePromise<Array<string>> {
+    return __request(OpenAPI, {
+      method: 'GET',
+      url: '/api/users/{userAddress}/following',
       path: {
         userAddress: userAddress,
       },

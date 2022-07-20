@@ -1,3 +1,5 @@
+import { SettingsFile } from '../../types';
+
 export const fetchPublicStories = async (bucketUrl: string) => {
   let file;
   let statusCode: false | number = false;
@@ -13,7 +15,9 @@ export const fetchPublicStories = async (bucketUrl: string) => {
   return { file, statusCode };
 };
 
-export const fetchSettings = async (bucketUrl: string) => {
+export const fetchSettings = async (
+  bucketUrl: string
+): Promise<{ statusCode: false | number; file: SettingsFile }> => {
   let file;
   let statusCode: false | number = false;
   const data = await fetch(`${bucketUrl}settings.json`);
