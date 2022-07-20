@@ -1,0 +1,23 @@
+{
+  "name": "@sigle/static-sigle",
+  "version": "0.0.0",
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build && next export",
+    "lint": "next lint"
+  },
+  "dependencies": {
+    "next": "12.2.2",
+    "react": "18.2.0",
+    "react-dom": "18.2.0"
+  },
+  "devDependencies": {
+    "@types/node": "18.0.6",
+    "@types/react": "18.0.15",
+    "@types/react-dom": "18.0.6",
+    "eslint": "8.20.0",
+    "eslint-config-next": "12.2.2",
+    "typescript": "4.7.4",
+    "@sigle/tailwind-style": "workspace:^1.1.0"
+  }
+}
