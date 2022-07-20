@@ -13,7 +13,7 @@ import { fetchSettings } from '../../utils/gaia/fetch';
 const UserCardContainer = styled('div', {
   display: 'flex',
   borderBottom: '1px solid $colors$gray6',
-  py: '$3',
+  py: '$5',
   gap: '$5',
 });
 
@@ -108,6 +108,11 @@ export const UserCard = ({ address, userFollowing }: UserCardProps) => {
     }
     unfollowUser({ userFollowing, address: address });
   };
+
+  // We hide users without a username
+  if (!isLoadingUsername && !username) {
+    return null;
+  }
 
   const userPath = `/${username}`;
   const following = !!userFollowing.following[address];
