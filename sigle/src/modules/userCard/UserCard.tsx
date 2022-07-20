@@ -3,8 +3,10 @@ import { NamesApi } from '@stacks/blockchain-api-client';
 import Link from 'next/link';
 import { useQuery } from 'react-query';
 import { sigleConfig } from '../../config';
+import { useUserFollow, useUserUnfollow } from '../../hooks/appData';
 import { styled } from '../../stitches.config';
 import { Button, Flex, Typography } from '../../ui';
+import { GaiaUserFollowing } from '../../utils';
 import { generateAvatar } from '../../utils/boringAvatar';
 import { fetchSettings } from '../../utils/gaia/fetch';
 
@@ -46,10 +48,12 @@ const UserCardDescription = styled(Typography, {
 
 interface UserCardProps {
   address: string;
-  following: boolean;
+  userFollowing: GaiaUserFollowing;
 }
 
-export const UserCard = ({ address, following }: UserCardProps) => {
+export const UserCard = ({ address, userFollowing }: UserCardProps) => {
+  const { mutate: followUser } = useUserFollow();
+  const { mutate: unfollowUser } = useUserUnfollow();
   const { isLoading: isLoadingUsername, data: username } = useQuery(
     ['get-username-user', address],
     async () => {
@@ -93,7 +97,20 @@ export const UserCard = ({ address, following }: UserCardProps) => {
     { enabled: !!username }
   );
 
+  const handleFollow = async () => {
+    if (!userFollowing) return;
+    followUser({ userFollowing, address: address });
+  };
+
+  const handleUnfollow = async () => {
+    if (!userFollowing) {
+      return;
+    }
+    unfollowUser({ userFollowing, address: address });
+  };
+
   const userPath = `/${username}`;
+  const following = !!userFollowing.following[address];
 
   return (
     <UserCardContainer>
@@ -122,11 +139,15 @@ export const UserCard = ({ address, following }: UserCardProps) => {
             </Typography>
           </Link>
           {!following ? (
-            <Button color="orange" css={{ ml: '$5' }}>
+            <Button color="orange" css={{ ml: '$5' }} onClick={handleFollow}>
               Follow
             </Button>
           ) : (
-            <Button variant="subtle" css={{ ml: '$5' }}>
+            <Button
+              variant="subtle"
+              css={{ ml: '$5' }}
+              onClick={handleUnfollow}
+            >
               Unfollow
             </Button>
           )}

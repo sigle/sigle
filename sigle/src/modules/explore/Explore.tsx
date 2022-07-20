@@ -28,7 +28,7 @@ export const ExploreUsers = () => {
           <UserCard
             key={index}
             address={user.stacksAddress}
-            following={!!userFollowing.following[user.stacksAddress]}
+            userFollowing={userFollowing}
           />
         ))}
     </DashboardLayout>
