@@ -9,6 +9,7 @@ const getUserExploreResponseSchema = {
   type: 'array',
   items: {
     type: 'object',
+    required: ['id', 'stacksAddress'],
     properties: {
       id: { type: 'string' },
       stacksAddress: { type: 'string' },
@@ -24,12 +25,15 @@ export async function createGetUserExploreEndpoint(fastify: FastifyInstance) {
     {
       onRequest: [fastify.authenticate],
       schema: {
+        description: 'Return a list of users using Sigle.',
+        tags: ['user'],
         response: {
           200: getUserExploreResponseSchema,
         },
       },
     },
     async (req, res) => {
+      // TODO
       const users = await prisma.user.findMany({
         // Remove the current logged in user from the list
         where: { stacksAddress: { not: req.address } },
