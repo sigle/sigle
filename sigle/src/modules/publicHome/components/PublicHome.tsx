@@ -28,7 +28,6 @@ import {
   useUserUnfollow,
 } from '../../../hooks/appData';
 import { generateAvatar } from '../../../utils/boringAvatar';
-import { useFeatureFlags } from '../../../utils/featureFlags';
 import { StoryCard } from '../../storyCard/StoryCard';
 import { useGetUserByAddress } from '../../../hooks/users';
 import { DashboardLayout } from '../../layout';
@@ -115,7 +114,6 @@ const ProfilePageContent = ({
 }: ProfilePageContentProps) => {
   const { resolvedTheme } = useTheme();
   const { user, isLegacy } = useAuth();
-  const { isExperimentalFollowEnabled } = useFeatureFlags();
   const { data: userInfoByAddress } = useGetUserByAddress(userInfo.address);
   const { data: userFollowing } = useGetUserFollowing({
     enabled: !!user && userInfo.username !== user.username,
@@ -166,8 +164,7 @@ const ProfilePageContent = ({
               alt={`${siteName} logo`}
             />
           </HeaderLogoContainer>
-          {isExperimentalFollowEnabled &&
-          user &&
+          {user &&
           user.username !== userInfo.username &&
           !isLegacy &&
           userFollowing ? (

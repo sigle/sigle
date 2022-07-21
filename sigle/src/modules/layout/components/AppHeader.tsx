@@ -102,12 +102,21 @@ export const AppHeader = () => {
         align="center"
         gap="9"
       >
-        {isExperimentalFollowEnabled && user && !isLegacy ? (
-          <Link href="/feed" passHref>
-            <Button variant="ghost" as="a">
-              Feed
-            </Button>
-          </Link>
+        {user && !isLegacy ? (
+          <>
+            <Link href="/feed" passHref>
+              <Button variant="ghost" as="a">
+                Feed
+              </Button>
+            </Link>
+            {isExperimentalFollowEnabled ? (
+              <Link href="/explore" passHref>
+                <Button variant="ghost" as="a">
+                  Explore
+                </Button>
+              </Link>
+            ) : null}
+          </>
         ) : null}
         {user ? (
           <HeaderDropdown />
