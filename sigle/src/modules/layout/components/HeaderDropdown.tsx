@@ -187,7 +187,7 @@ export const HeaderDropdown = () => {
                   {settings.siteName}
                 </Typography>
               )}
-              <Typography size="subheading" css={{ color: '$gray9' }}>
+              <Typography size="subparagraph" css={{ color: '$gray9' }}>
                 {user?.username}
               </Typography>
             </Flex>
@@ -224,7 +224,7 @@ export const HeaderDropdown = () => {
           </Link>
         ))}
         <DropdownMenuItem
-          css={{ width: 231, justifyContent: 'space-between' }}
+          css={{ minWidth: 231, justifyContent: 'space-between' }}
           onSelect={(e) => e.preventDefault()}
         >
           Dark mode
