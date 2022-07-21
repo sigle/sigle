@@ -224,7 +224,7 @@ export const HeaderDropdown = () => {
           </Link>
         ))}
         <DropdownMenuItem
-          css={{ minWidth: 231, justifyContent: 'space-between' }}
+          css={{ minWidth: 231, justifyContent: 'space-between', pr: '$2' }}
           onSelect={(e) => e.preventDefault()}
         >
           Dark mode
