@@ -182,9 +182,11 @@ export const HeaderDropdown = () => {
               />
             </ImageContainer>
             <Flex direction="column" align="start" justify="center">
-              <Typography size="subheading" css={{ color: '$gray11' }}>
-                {settings?.siteName ? settings.siteName : user?.username}
-              </Typography>
+              {settings?.siteName && (
+                <Typography size="subheading" css={{ color: '$gray11' }}>
+                  {settings.siteName}
+                </Typography>
+              )}
               <Typography size="subheading" css={{ color: '$gray9' }}>
                 {user?.username}
               </Typography>
