@@ -10,6 +10,9 @@
     "lint": "eslint . --ext .ts",
     "postinstall": "prisma generate"
   },
+  "prisma": {
+    "seed": "ts-node prisma/seed.ts"
+  },
   "jest": {
     "setupFiles": [
       "./src/jest.setup.ts"
@@ -20,7 +23,7 @@
     "@fastify/cors": "8.0.0",
     "@fastify/rate-limit": "7.2.0",
     "@fastify/swagger": "7.4.1",
-    "@prisma/client": "4.0.0",
+    "@prisma/client": "4.1.0",
     "@sentry/node": "7.2.0",
     "@stacks/auth": "4.3.0",
     "@stacks/blockchain-api-client": "4.0.1",
@@ -32,7 +35,8 @@
     "fastify-plugin": "4.0.0",
     "ioredis": "5.0.6",
     "next-auth": "4.9.0",
-    "prisma": "4.0.0",
+    "prisma": "4.1.0",
+    "ts-node": "10.7.0",
     "undici": "5.5.1"
   },
   "devDependencies": {
