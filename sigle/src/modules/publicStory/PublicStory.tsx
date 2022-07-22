@@ -225,151 +225,153 @@ export const PublicStory = ({
           css={{ mb: '$7' }}
           className="not-prose"
         >
-          <Link href="/[username]" as={`/${username}`} passHref>
-            <Flex as="a" align="center" gap="3">
-              <ProfileImageContainer>
-                <ProfileImage
-                  css={{
-                    maxWidth: 48,
-                    maxHeight: 48,
-                  }}
-                  src={
-                    settings?.siteLogo
-                      ? settings.siteLogo
-                      : generateAvatar(userInfo.address)
-                  }
-                />
-              </ProfileImageContainer>
-              <Box>
-                <HoverCard openDelay={300}>
-                  <Link href={`/${username}`} passHref>
-                    <HoverCardTrigger asChild>
-                      <Typography as="a" size="subheading">
-                        {siteName}
-                      </Typography>
-                    </HoverCardTrigger>
-                  </Link>
-                  <HoverCardContent
-                    sideOffset={40}
-                    css={{
-                      display: 'flex',
-                      gap: '$2',
-                      flexDirection: 'column',
-                      width: 280,
-                    }}
-                  >
-                    <Flex justify="between">
-                      <ProfileImageContainer
-                        css={{
-                          width: 56,
-                          height: 56,
-                        }}
-                      >
-                        <ProfileImage
-                          css={{
-                            maxWidth: 56,
-                            maxHeight: 56,
-                          }}
-                          src={
-                            settings?.siteLogo
-                              ? settings.siteLogo
-                              : generateAvatar(userInfo.address)
-                          }
-                        />
-                      </ProfileImageContainer>
-                      {user &&
-                      user.username !== userInfo.username &&
-                      !isLegacy &&
-                      userFollowing ? (
-                        !isFollowingUser ? (
-                          <Button
-                            color="orange"
-                            css={{ ml: '$5', alignSelf: 'start' }}
-                            onClick={handleFollow}
-                          >
-                            Follow
-                          </Button>
-                        ) : (
-                          <Button
-                            variant="subtle"
-                            css={{ ml: '$5', alignSelf: 'start' }}
-                            onClick={handleUnfollow}
-                          >
-                            Unfollow
-                          </Button>
-                        )
-                      ) : null}
-                    </Flex>
-                    <Flex gap="1" align="center">
-                      <Typography css={{ fontWeight: 600 }} size="subheading">
-                        {siteName}
-                      </Typography>
-                      {userInfoByAddress?.subscription && (
-                        <Tooltip delayDuration={200}>
-                          <TooltipTrigger asChild>
-                            <a
-                              href={`${sigleConfig.gammaUrl}/${userInfoByAddress.subscription.nftId}`}
-                              target="_blank"
-                              rel="noreferrer"
-                            >
-                              <Image
-                                src={
-                                  resolvedTheme === 'dark'
-                                    ? '/img/badges/creatorPlusDark.svg'
-                                    : '/img/badges/creatorPlusLight.svg'
-                                }
-                                alt="Creator + badge"
-                                width={12}
-                                height={12}
-                              />
-                            </a>
-                          </TooltipTrigger>
-                          <TooltipContent
-                            css={{ boxShadow: 'none' }}
-                            side="right"
-                            sideOffset={8}
-                          >
-                            Creator + Explorer #
-                            {userInfoByAddress.subscription.nftId}
-                          </TooltipContent>
-                        </Tooltip>
-                      )}
-                    </Flex>
-                    <Typography css={{ color: '$gray9' }} size="subheading">
-                      {settings.siteDescription}
+          <Flex align="center" gap="3">
+            <ProfileImageContainer>
+              <ProfileImage
+                css={{
+                  maxWidth: 48,
+                  maxHeight: 48,
+                }}
+                src={
+                  settings?.siteLogo
+                    ? settings.siteLogo
+                    : generateAvatar(userInfo.address)
+                }
+              />
+            </ProfileImageContainer>
+            <Box>
+              <HoverCard openDelay={300}>
+                <Link href="/[username]" as={`/${username}`} passHref>
+                  <HoverCardTrigger asChild>
+                    <Typography
+                      css={{ fontWeight: 600 }}
+                      as="a"
+                      size="subheading"
+                    >
+                      {siteName}
                     </Typography>
-                    <Flex gap="3">
-                      <Typography size="subheading" css={{ color: '$gray9' }}>
-                        <Box css={{ color: '$gray11', mr: 2 }} as="span">
-                          0
-                        </Box>
-                        Followers
-                      </Typography>
-                      <Typography size="subheading" css={{ color: '$gray9' }}>
-                        <Box css={{ color: '$gray11', mr: 2 }} as="span">
-                          1
-                        </Box>
-                        Following
-                      </Typography>
-                    </Flex>
-                  </HoverCardContent>
-                </HoverCard>
-                <Typography
-                  size="subheading"
+                  </HoverCardTrigger>
+                </Link>
+                <HoverCardContent
+                  sideOffset={40}
                   css={{
                     display: 'flex',
                     gap: '$2',
-                    color: '$gray9',
-                    mt: '$1',
+                    flexDirection: 'column',
+                    width: 280,
                   }}
                 >
-                  {format(story.createdAt, 'MMM dd')}
-                  <span>•</span>
-                  <span>{storyReadingTime?.text}</span>
-                </Typography>
-              </Box>
-            </Flex>
-          </Link>
+                  <Flex justify="between">
+                    <ProfileImageContainer
+                      css={{
+                        width: 56,
+                        height: 56,
+                      }}
+                    >
+                      <ProfileImage
+                        css={{
+                          maxWidth: 56,
+                          maxHeight: 56,
+                        }}
+                        src={
+                          settings?.siteLogo
+                            ? settings.siteLogo
+                            : generateAvatar(userInfo.address)
+                        }
+                      />
+                    </ProfileImageContainer>
+                    {user &&
+                    user.username !== userInfo.username &&
+                    !isLegacy &&
+                    userFollowing ? (
+                      !isFollowingUser ? (
+                        <Button
+                          color="orange"
+                          css={{ ml: '$5', alignSelf: 'start' }}
+                          onClick={handleFollow}
+                        >
+                          Follow
+                        </Button>
+                      ) : (
+                        <Button
+                          variant="subtle"
+                          css={{ ml: '$5', alignSelf: 'start' }}
+                          onClick={handleUnfollow}
+                        >
+                          Unfollow
+                        </Button>
+                      )
+                    ) : null}
+                  </Flex>
+                  <Flex gap="1" align="center">
+                    <Typography css={{ fontWeight: 600 }} size="subheading">
+                      {siteName}
+                    </Typography>
+                    {userInfoByAddress?.subscription && (
+                      <Tooltip delayDuration={200}>
+                        <TooltipTrigger asChild>
+                          <a
+                            href={`${sigleConfig.gammaUrl}/${userInfoByAddress.subscription.nftId}`}
+                            target="_blank"
+                            rel="noreferrer"
+                          >
+                            <Image
+                              src={
+                                resolvedTheme === 'dark'
+                                  ? '/img/badges/creatorPlusDark.svg'
+                                  : '/img/badges/creatorPlusLight.svg'
+                              }
+                              alt="Creator + badge"
+                              width={12}
+                              height={12}
+                            />
+                          </a>
+                        </TooltipTrigger>
+                        <TooltipContent
+                          css={{ boxShadow: 'none' }}
+                          side="right"
+                          sideOffset={8}
+                        >
+                          Creator + Explorer #
+                          {userInfoByAddress.subscription.nftId}
+                        </TooltipContent>
+                      </Tooltip>
+                    )}
+                  </Flex>
+                  <Typography css={{ color: '$gray9' }} size="subheading">
+                    {settings.siteDescription}
+                  </Typography>
+                  <Flex gap="3">
+                    <Typography size="subheading" css={{ color: '$gray9' }}>
+                      <Box css={{ color: '$gray11', mr: 2 }} as="span">
+                        0
+                      </Box>
+                      Followers
+                    </Typography>
+                    <Typography size="subheading" css={{ color: '$gray9' }}>
+                      <Box css={{ color: '$gray11', mr: 2 }} as="span">
+                        1
+                      </Box>
+                      Following
+                    </Typography>
+                  </Flex>
+                </HoverCardContent>
+              </HoverCard>
+              <Typography
+                size="subheading"
+                css={{
+                  display: 'flex',
+                  gap: '$2',
+                  color: '$gray9',
+                  mt: '$1',
+                }}
+              >
+                {format(story.createdAt, 'MMM dd')}
+                <span>•</span>
+                <span>{storyReadingTime?.text}</span>
+              </Typography>
+            </Box>
+          </Flex>
           <ShareButtons username={username} story={story} settings={settings} />
         </Flex>
         <h1 className="sigle-title">{story.title}</h1>
