@@ -19,9 +19,9 @@ export const Editor = () => {
     {
       enabled: Boolean(storyId),
       cacheTime: 0,
-      onError: (error: Error) => {
+      onError: (error: Error | string) => {
         Sentry.captureException(error);
-        toast.error(error.message || error);
+        toast.error(typeof error === 'string' ? error : error.message);
       },
     }
   );
