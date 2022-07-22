@@ -20,14 +20,14 @@ importers:
       '@types/node': 17.0.31
       ts-node: 10.7.0
       typescript: 4.7.4
-      undici: 5.5.1
+      undici: 5.8.0
     dependencies:
       '@stacks/auth': 4.3.3
     devDependencies:
       '@types/node': 17.0.31
       ts-node: 10.7.0_6bd4jfip3gnofjnkq5lqqdbk4m
       typescript: 4.7.4
-      undici: 5.5.1
+      undici: 5.8.0
 
   packages/tailwind-style:
     specifiers:
@@ -66,7 +66,7 @@ importers:
       prisma: 4.1.0
       ts-node: 10.7.0
       typescript: 4.7.4
-      undici: 5.5.1
+      undici: 5.8.0
     dependencies:
       '@fastify/cookie': 7.2.0
       '@fastify/cors': 8.0.0
@@ -86,7 +86,7 @@ importers:
       next-auth: 4.9.0
       prisma: 4.1.0
       ts-node: 10.7.0_6bd4jfip3gnofjnkq5lqqdbk4m
-      undici: 5.5.1
+      undici: 5.8.0
     devDependencies:
       '@cartable/core': 0.3.0_ost7g44qxkza6lfnbtijybzina
       '@jest/globals': 28.1.3
@@ -11196,8 +11196,8 @@ packages:
     resolution: {integrity: sha512-WxONCrssBM8TSPRqN5EmsjVrsv4A8X12J4ArBiiayv3DyyG3ZlIg6yysuuSYdZsVz3TKcTg2fd//Ujd4CHV1iA==}
     dev: true
 
-  /undici/5.5.1:
-    resolution: {integrity: sha512-MEvryPLf18HvlCbLSzCW0U00IMftKGI5udnjrQbC5D4P0Hodwffhv+iGfWuJwg16Y/TK11ZFK8i+BPVW2z/eAw==}
+  /undici/5.8.0:
+    resolution: {integrity: sha512-1F7Vtcez5w/LwH2G2tGnFIihuWUlc58YidwLiCv+jR2Z50x0tNXpRRw7eOIJ+GvqCqIkg9SB7NWAJ/T9TLfv8Q==}
     engines: {node: '>=12.18'}
 
   /unique-string/2.0.0:
