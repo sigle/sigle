@@ -1,5 +1,6 @@
 import * as DropdownMenuPrimitive from '@radix-ui/react-dropdown-menu';
-import { keyframes, styled } from '../stitches.config';
+import { forwardRef } from 'react';
+import { CSS, keyframes, styled } from '../stitches.config';
 
 export const DropdownMenu = DropdownMenuPrimitive.Root;
 export const DropdownMenuTrigger = DropdownMenuPrimitive.Trigger;
@@ -29,7 +30,7 @@ const slideLeftAndFade = keyframes({
   '100%': { opacity: 1, transform: 'translateX(0)' },
 });
 
-export const DropdownMenuContent = styled(DropdownMenuPrimitive.Content, {
+const StyledContent = styled(DropdownMenuPrimitive.Content, {
   minWidth: 80,
   backgroundColor: '$gray1',
   br: '$1',
@@ -51,6 +52,21 @@ export const DropdownMenuContent = styled(DropdownMenuPrimitive.Content, {
     },
   },
 });
+
+type DropdownMenuContentPrimitiveProps = React.ComponentProps<
+  typeof DropdownMenuPrimitive.Content
+>;
+type DropdownMenuContentProps = DropdownMenuContentPrimitiveProps & {
+  css?: CSS;
+};
+export const DropdownMenuContent = forwardRef<
+  React.ElementRef<typeof StyledContent>,
+  DropdownMenuContentProps
+>((props, forwardedRef) => (
+  <DropdownMenuPrimitive.Portal>
+    <StyledContent {...props} ref={forwardedRef} />
+  </DropdownMenuPrimitive.Portal>
+));
 
 export const DropdownMenuItem = styled(DropdownMenuPrimitive.Item, {
   unset: 'all',

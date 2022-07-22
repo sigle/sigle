@@ -54,6 +54,14 @@ We use docker to manage the local postgres database.
 docker-compose start
 ```
 
+### Setup the database
+
+To apply the schemas and seed the database with some data, run the following command:
+
+```sh
+pnpm prisma migrate reset
+```
+
 ### Run the server in development mode
 
 To start the project in development/watch mode run:
