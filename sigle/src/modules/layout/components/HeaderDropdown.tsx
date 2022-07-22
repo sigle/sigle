@@ -38,6 +38,7 @@ import {
 } from '@radix-ui/react-icons';
 import { useTheme } from 'next-themes';
 import { Switch, SwitchThumb } from '../../../ui/Switch';
+import { useGetUserSubscription } from '../../../hooks/subscriptions';
 
 const ImageContainer = styled('div', {
   display: 'flex',
@@ -56,6 +57,7 @@ export const HeaderDropdown = () => {
   const queryClient = useQueryClient();
   const [loadingCreate, setLoadingCreate] = useState(false);
   const { resolvedTheme, setTheme } = useTheme();
+  const { data: userSubscription } = useGetUserSubscription();
 
   const handleCreateNewPrivateStory = async () => {
     setLoadingCreate(true);
@@ -114,10 +116,6 @@ export const HeaderDropdown = () => {
     {
       name: 'Settings',
       path: '/settings',
-    },
-    {
-      name: 'Upgrade',
-      path: '/settings/plans',
     },
   ];
 
@@ -223,6 +221,16 @@ export const HeaderDropdown = () => {
             </DropdownMenuItem>
           </Link>
         ))}
+        {!userSubscription && (
+          <Link href="/settings/plans" passHref>
+            <DropdownMenuItem
+              selected={router.pathname === '/settings/plans'}
+              as="a"
+            >
+              Upgrade
+            </DropdownMenuItem>
+          </Link>
+        )}
         <DropdownMenuItem
           css={{ minWidth: 231, justifyContent: 'space-between', pr: '$2' }}
           onSelect={(e) => e.preventDefault()}
