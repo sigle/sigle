@@ -1,5 +1,5 @@
 import * as HoverCardPrimitive from '@radix-ui/react-hover-card';
-import { keyframes, styled } from '../stitches.config';
+import { darkTheme, keyframes, styled } from '../stitches.config';
 
 const slideUpAndFade = keyframes({
   '0%': { opacity: 0, transform: 'translateY(2px)' },
@@ -23,11 +23,17 @@ const slideLeftAndFade = keyframes({
 
 const StyledContent = styled(HoverCardPrimitive.Content, {
   cursor: 'pointer',
-  borderRadius: '$1',
-  py: '$2',
-  px: '$5',
-  backgroundColor: '$gray3',
+  borderRadius: '$3',
+  p: '$5',
+  backgroundColor: '$gray1',
   color: '$gray11',
+  boxShadow:
+    '0px 8px 20px rgba(8, 8, 8, 0.06), 0px 10px 18px rgba(8, 8, 8, 0.04), 0px 5px 14px rgba(8, 8, 8, 0.04), 0px 3px 8px rgba(8, 8, 8, 0.04), 0px 1px 5px rgba(8, 8, 8, 0.03), 0px 1px 2px rgba(8, 8, 8, 0.02), 0px 0.2px 1px rgba(8, 8, 8, 0.01)',
+
+  [`.${darkTheme} &`]: {
+    boxShadow:
+      '0px 8px 20px rgba(8, 8, 8, 0.32), 0px 10px 18px rgba(8, 8, 8, 0.28), 0px 5px 14px rgba(8, 8, 8, 0.26), 0px 3px 8px rgba(8, 8, 8, 0.16), 0px 1px 5px rgba(8, 8, 8, 0.14), 0px 1px 2px rgba(8, 8, 8, 0.12), 0px 0.2px 1px rgba(8, 8, 8, 0.08)',
+  },
 
   '&:hover': {
     color: '$orange11',
