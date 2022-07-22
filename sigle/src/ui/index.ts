@@ -2,6 +2,7 @@ export * from './Accordion';
 export * from './Box';
 export * from './Button';
 export * from './Container';
+export * from './DesignSystemProvider';
 export * from './Dialog';
 export * from './DropdownMenu';
 export * from './Flex';
