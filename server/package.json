@@ -37,7 +37,7 @@
     "next-auth": "4.9.0",
     "prisma": "4.1.0",
     "ts-node": "10.7.0",
-    "undici": "5.5.1"
+    "undici": "5.8.0"
   },
   "devDependencies": {
     "@cartable/core": "0.3.0",
