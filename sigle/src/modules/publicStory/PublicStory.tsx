@@ -241,7 +241,7 @@ export const PublicStory = ({
                 />
               </ProfileImageContainer>
               <Box>
-                <HoverCard open openDelay={200}>
+                <HoverCard openDelay={300}>
                   <Link href={`/${username}`} passHref>
                     <HoverCardTrigger asChild>
                       <Typography as="a" size="subheading">
