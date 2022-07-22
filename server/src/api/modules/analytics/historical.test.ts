@@ -41,13 +41,17 @@ it('Should throw an error if dateFrom is missing', async () => {
   });
 
   expect(response.statusCode).toBe(400);
-  expect(response.json()).toEqual({ error: 'dateFrom is required' });
+  expect(response.json()).toEqual({
+    error: 'Bad Request',
+    message: "querystring must have required property 'dateFrom'",
+    statusCode: 400,
+  });
 });
 
 it('Should throw an error if dateFrom is invalid', async () => {
   const response = await server.inject({
     method: 'GET',
-    url: '/api/analytics/historical?dateFrom=invalid',
+    url: '/api/analytics/historical?dateFrom=invalid&dateGrouping=day',
     cookies: {
       'next-auth.session-token': '0x123',
     },
@@ -67,7 +71,11 @@ it('Should throw an error if dateGrouping is missing', async () => {
   });
 
   expect(response.statusCode).toBe(400);
-  expect(response.json()).toEqual({ error: 'dateGrouping is required' });
+  expect(response.json()).toEqual({
+    error: 'Bad Request',
+    message: "querystring must have required property 'dateGrouping'",
+    statusCode: 400,
+  });
 });
 
 it('Should throw an error if dateGrouping is invalid', async () => {

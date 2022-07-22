@@ -8,11 +8,14 @@ datasource db {
 }
 
 model User {
-  id             String         @id @default(uuid())
-  stacksAddress  String         @unique
-  createdAt      DateTime       @default(now())
-  updatedAt      DateTime       @updatedAt
-  subscriptions  Subscription[]
+  id            String         @id @default(uuid())
+  stacksAddress String         @unique
+  isLegacy      Boolean        @default(false)
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+  subscriptions Subscription[]
+  followers     Follows[]      @relation("following")
+  following     Follows[]      @relation("follower")
 }
 
 model Subscription {
@@ -28,4 +31,16 @@ model Subscription {
 enum SubscriptionStatus {
   INACTIVE
   ACTIVE
+}
+
+// Gaia data
+// File: app-data/following.json
+model Follows {
+  followerAddress  String
+  follower         User     @relation("follower", fields: [followerAddress], references: [stacksAddress])
+  followingAddress String
+  following        User     @relation("following", fields: [followingAddress], references: [stacksAddress])
+  createdAt        DateTime
+
+  @@id([followerAddress, followingAddress])
 }

@@ -8,8 +8,8 @@ import { SubscriptionService } from '../subscriptions/service';
 import { plausibleClient } from '../../../external/plausible';
 
 interface AnalyticsHistoricalParams {
-  dateFrom?: string;
-  dateGrouping?: 'day' | 'month';
+  dateFrom: string;
+  dateGrouping: 'day' | 'month';
   storyId?: string;
 }
 
@@ -31,11 +31,13 @@ type AnalyticsHistoricalResponse = {
 };
 const analyticsHistoricalResponseSchema = {
   type: 'object',
+  required: ['historical', 'stories'],
   properties: {
     historical: {
       type: 'array',
       items: {
         type: 'object',
+        required: ['date', 'visits', 'pageviews'],
         properties: {
           date: { type: 'string' },
           visits: { type: 'number' },
@@ -47,6 +49,7 @@ const analyticsHistoricalResponseSchema = {
       type: 'array',
       items: {
         type: 'object',
+        required: ['pathname', 'visits', 'pageviews'],
         properties: {
           pathname: { type: 'string' },
           visits: { type: 'number' },
@@ -54,6 +57,24 @@ const analyticsHistoricalResponseSchema = {
         },
       },
     },
+  },
+  example: {
+    historical: [
+      {
+        date: '2022-03',
+        visits: 0,
+        pageviews: 0,
+      },
+      {
+        date: '2022-04',
+        visits: 0,
+        pageviews: 0,
+      },
+    ],
+    stories: [
+      { pathname: 'zsoVIi3V6CE', visits: 0, pageviews: 0 },
+      { pathname: '0jE9PPqbxUp', visits: 0, pageviews: 0 },
+    ],
   },
 };
 
@@ -74,6 +95,28 @@ export async function createAnalyticsHistoricalEndpoint(
         },
       },
       schema: {
+        description: 'Return the historical statistics.',
+        tags: ['analytics'],
+        querystring: {
+          type: 'object',
+          required: ['dateFrom', 'dateGrouping'],
+          properties: {
+            dateFrom: {
+              type: 'string',
+              description:
+                'The date from which to get the statistics (e.g. 2022-04-01).',
+            },
+            dateGrouping: {
+              type: 'string',
+              description:
+                'The date grouping (e.g. day, month). When day is set the date format is YYYY-MM-DD. When month is set the date format is YYYY-MM.',
+            },
+            storyId: {
+              type: 'string',
+              description: 'The story id to get the statistics for.',
+            },
+          },
+        },
         response: {
           200: analyticsHistoricalResponseSchema,
         },
@@ -84,10 +127,6 @@ export async function createAnalyticsHistoricalEndpoint(
       let { dateFrom } = req.query;
       const dateTo = new Date();
 
-      if (!dateFrom) {
-        res.status(400).send({ error: 'dateFrom is required' });
-        return;
-      }
       const parsedDateFrom = parse(dateFrom, 'yyyy-MM-dd', new Date());
       const isValidDate = isValid(parsedDateFrom);
       if (!isValidDate) {
@@ -95,10 +134,6 @@ export async function createAnalyticsHistoricalEndpoint(
         return;
       }
 
-      if (!dateGrouping) {
-        res.status(400).send({ error: 'dateGrouping is required' });
-        return;
-      }
       if (dateGrouping !== 'day' && dateGrouping !== 'month') {
         res.status(400).send({ error: 'dateGrouping must be day or month' });
         return;

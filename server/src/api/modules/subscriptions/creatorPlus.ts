@@ -4,7 +4,7 @@ import { prisma } from '../../../prisma';
 import { config } from '../../../config';
 
 interface SubscriptionCreatorPlusBody {
-  nftId?: number;
+  nftId: number;
 }
 
 interface SubscriptionCreatorPlusResponseError {
@@ -12,12 +12,16 @@ interface SubscriptionCreatorPlusResponseError {
 }
 
 type SubscriptionCreatorPlusResponse = {
-  success: true;
+  id: string;
+  nftId: number;
 };
 const analyticsReferrersResponseSchema = {
+  description: 'Returns the newly created subscription object.',
   type: 'object',
+  required: ['id', 'nftId'],
   properties: {
-    success: { type: 'boolean' },
+    id: { type: 'string' },
+    nftId: { type: 'number' },
   },
 };
 
@@ -40,19 +44,30 @@ export async function createSubscriptionCreatorPlusEndpoint(
         },
       },
       schema: {
+        description:
+          'Create a creator plus subscription on the current logged in user. A user can only have one active subscription at a time.',
+        tags: ['subscription'],
+        body: {
+          type: 'object',
+          required: ['nftId'],
+          properties: {
+            nftId: { type: 'number' },
+          },
+        },
         response: {
           200: analyticsReferrersResponseSchema,
         },
+        security: [
+          {
+            session: [],
+          },
+        ],
       },
     },
     async (req, res) => {
-      const { nftId } = (req.body as SubscriptionCreatorPlusBody) || {};
+      const { nftId } = req.body as SubscriptionCreatorPlusBody;
 
-      if (!nftId) {
-        res.status(400).send({ error: 'nftId is required' });
-        return;
-      }
-      if (typeof nftId !== 'number' || nftId < 0 || nftId > 3000) {
+      if (nftId < 0 || nftId > 3000) {
         res.status(400).send({ error: 'nftId is invalid' });
         return;
       }
@@ -77,7 +92,11 @@ export async function createSubscriptionCreatorPlusEndpoint(
         where: { stacksAddress: req.address },
       });
 
-      const activeSubscription = await prisma.subscription.findFirst({
+      let activeSubscription = await prisma.subscription.findFirst({
+        select: {
+          id: true,
+          nftId: true,
+        },
         where: {
           userId: user.id,
           status: 'ACTIVE',
@@ -85,7 +104,7 @@ export async function createSubscriptionCreatorPlusEndpoint(
       });
       // When an active subscription is found, we just update the NFT linked to it.
       if (activeSubscription) {
-        await prisma.subscription.update({
+        activeSubscription = await prisma.subscription.update({
           where: {
             id: activeSubscription.id,
           },
@@ -94,7 +113,7 @@ export async function createSubscriptionCreatorPlusEndpoint(
           },
         });
       } else {
-        await prisma.subscription.create({
+        activeSubscription = await prisma.subscription.create({
           data: {
             userId: user.id,
             status: 'ACTIVE',
@@ -103,7 +122,7 @@ export async function createSubscriptionCreatorPlusEndpoint(
         });
       }
 
-      res.status(200).send({ success: true });
+      res.status(200).send(activeSubscription);
     }
   );
 }

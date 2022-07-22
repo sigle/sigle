@@ -6,12 +6,16 @@ type GetSubscriptionResponse = {
   nftId: number;
 } | null;
 const analyticsReferrersResponseSchema = {
+  description:
+    'Returns the current active subscription object. If no active subscription is found, null is returned.',
   type: 'object',
   nullable: true,
+  required: ['id', 'nftId'],
   properties: {
     id: { type: 'string' },
     nftId: { type: 'number' },
   },
+  example: { id: 'XXX', nftId: 420 },
 };
 
 export async function createGetSubscriptionEndpoint(fastify: FastifyInstance) {
@@ -22,9 +26,17 @@ export async function createGetSubscriptionEndpoint(fastify: FastifyInstance) {
     {
       onRequest: [fastify.authenticate],
       schema: {
+        description:
+          'Return the current active subscription of the current logged in user.',
+        tags: ['subscription'],
         response: {
           200: analyticsReferrersResponseSchema,
         },
+        security: [
+          {
+            session: [],
+          },
+        ],
       },
     },
     async (req, res) => {
