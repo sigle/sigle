@@ -208,6 +208,7 @@ importers:
       posthog-js: 1.20.4
       react: 17.0.2
       react-color: 2.19.3
+      react-cool-inview: 3.0.1
       react-div-100vh: 0.6.0
       react-dom: 17.0.2
       react-dropzone: 11.4.2
@@ -303,6 +304,7 @@ importers:
       posthog-js: 1.20.4
       react: 17.0.2
       react-color: 2.19.3_react@17.0.2
+      react-cool-inview: 3.0.1_react@17.0.2
       react-div-100vh: 0.6.0_react@17.0.2
       react-dom: 17.0.2_react@17.0.2
       react-dropzone: 11.4.2_react@17.0.2
@@ -9822,6 +9824,14 @@ packages:
       react: 17.0.2
       reactcss: 1.2.3_react@17.0.2
       tinycolor2: 1.4.2
+    dev: false
+
+  /react-cool-inview/3.0.1_react@17.0.2:
+    resolution: {integrity: sha512-ly6i3Pv5p0fvm12NmJGfKS34eOhA+iU43Th+gZ6t3G6UwsxQsWoITHTHzA9pdkOc/3VmnReqvC/hJkQUDGhQFA==}
+    peerDependencies:
+      react: '>= 16.8.0'
+    dependencies:
+      react: 17.0.2
     dev: false
 
   /react-div-100vh/0.6.0_react@17.0.2:

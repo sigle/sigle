@@ -56,12 +56,13 @@ export class UserService {
     page,
   }: {
     page?: number;
-  }): CancelablePromise<
-    Array<{
+  }): CancelablePromise<{
+    nextPage?: number;
+    data: Array<{
       id: string;
       stacksAddress: string;
-    }>
-  > {
+    }>;
+  }> {
     return __request(OpenAPI, {
       method: 'GET',
       url: '/api/users/explore',

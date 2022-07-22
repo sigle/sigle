@@ -48,8 +48,7 @@ export async function createGetUserExploreEndpoint(fastify: FastifyInstance) {
       if (!page || page === 0) {
         page = 1;
       }
-      // TODO set to 50 before merging
-      const pageSize = 20;
+      const pageSize = 50;
       const where = { stacksAddress: { not: req.address } };
 
       const users = await prisma.user.findMany({

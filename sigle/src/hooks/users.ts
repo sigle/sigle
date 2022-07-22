@@ -25,15 +25,3 @@ export const useGetUserByAddress = (
     () => UserService.getApiUsers({ userAddress: stacksAddress }),
     options
   );
-
-type GetApiUsersExploreReturnType = Awaited<
-  ReturnType<typeof UserService.getApiUsersExplore>
->;
-export const useGetUserExplore = (
-  options: UseQueryOptions<GetApiUsersExploreReturnType, Error> = {}
-) =>
-  useQuery<GetApiUsersExploreReturnType, Error>(
-    'get-user-explore',
-    () => UserService.getApiUsersExplore(),
-    options
-  );
