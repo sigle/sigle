@@ -52,7 +52,11 @@ export class UserService {
    * @returns any Default Response
    * @throws ApiError
    */
-  public static getApiUsersExplore(): CancelablePromise<
+  public static getApiUsersExplore({
+    page,
+  }: {
+    page?: number;
+  }): CancelablePromise<
     Array<{
       id: string;
       stacksAddress: string;
@@ -61,6 +65,9 @@ export class UserService {
     return __request(OpenAPI, {
       method: 'GET',
       url: '/api/users/explore',
+      query: {
+        page: page,
+      },
     });
   }
 

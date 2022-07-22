@@ -20,7 +20,7 @@ const getUserExploreResponseSchema = {
 export async function createGetUserExploreEndpoint(fastify: FastifyInstance) {
   return fastify.get<{
     Reply: GetUserExploreResponse;
-    Params: { page?: number };
+    Querystring: { page?: number };
   }>(
     '/api/users/explore',
     {
@@ -28,7 +28,7 @@ export async function createGetUserExploreEndpoint(fastify: FastifyInstance) {
       schema: {
         description: 'Return a list of users using Sigle.',
         tags: ['user'],
-        params: {
+        querystring: {
           page: { type: 'number' },
         },
         response: {
@@ -37,7 +37,7 @@ export async function createGetUserExploreEndpoint(fastify: FastifyInstance) {
       },
     },
     async (req, res) => {
-      let { page } = req.params;
+      let { page } = req.query;
       if (!page || page === 0) {
         page = 1;
       }
