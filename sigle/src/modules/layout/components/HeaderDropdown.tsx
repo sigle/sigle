@@ -226,9 +226,10 @@ export const HeaderDropdown = () => {
         <DropdownMenuItem
           css={{ minWidth: 231, justifyContent: 'space-between', pr: '$2' }}
           onSelect={(e) => e.preventDefault()}
+          onClick={toggleTheme}
         >
           Dark mode
-          <Switch onClick={toggleTheme} checked={resolvedTheme === 'dark'}>
+          <Switch checked={resolvedTheme === 'dark'}>
             <SwitchThumb />
           </Switch>
         </DropdownMenuItem>
