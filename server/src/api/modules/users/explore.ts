@@ -2,17 +2,24 @@ import { FastifyInstance } from 'fastify';
 import { prisma } from '../../../prisma';
 
 type GetUserExploreResponse = {
-  id: string;
-  stacksAddress: string;
-}[];
+  nextPage: number | null;
+  data: { id: string; stacksAddress: string }[];
+};
 const getUserExploreResponseSchema = {
-  type: 'array',
-  items: {
-    type: 'object',
-    required: ['id', 'stacksAddress'],
-    properties: {
-      id: { type: 'string' },
-      stacksAddress: { type: 'string' },
+  type: 'object',
+  required: ['data'],
+  properties: {
+    nextPage: { type: 'number', nullable: true },
+    data: {
+      type: 'array',
+      items: {
+        type: 'object',
+        required: ['id', 'stacksAddress'],
+        properties: {
+          id: { type: 'string' },
+          stacksAddress: { type: 'string' },
+        },
+      },
     },
   },
 };
@@ -43,15 +50,22 @@ export async function createGetUserExploreEndpoint(fastify: FastifyInstance) {
       }
       // TODO set to 50 before merging
       const pageSize = 20;
+      const where = { stacksAddress: { not: req.address } };
 
       const users = await prisma.user.findMany({
         // Remove the current logged in user from the list
-        where: { stacksAddress: { not: req.address } },
+        where,
         orderBy: { followers: { _count: 'desc' } },
-        skip: pageSize * page,
+        skip: pageSize * (page - 1),
         take: pageSize,
+        include: {
+          _count: true,
+        },
       });
-      return res.send(users);
+      const usersCount = await prisma.user.count({ where });
+      const nextPage = usersCount > pageSize * page ? page + 1 : null;
+
+      return res.send({ data: users, nextPage });
     }
   );
 }
