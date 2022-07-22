@@ -164,6 +164,10 @@ export const DashboardLayout = ({
       name: 'Analytics',
       path: '/analytics',
     },
+    {
+      name: 'Profile',
+      path: '/[username]',
+    },
   ];
 
   return (
@@ -178,13 +182,6 @@ export const DashboardLayout = ({
               </DashboardSidebarNavItem>
             </Link>
           ))}
-          <Link href={`/${user?.username}`} passHref>
-            <DashboardSidebarNavItem
-              selected={pathname && pathname[1] === user?.username}
-            >
-              Profile
-            </DashboardSidebarNavItem>
-          </Link>
           <Button
             css={{ mt: '$5', alignSelf: 'start' }}
             disabled={loadingCreate}

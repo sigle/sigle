@@ -30,6 +30,7 @@ import { generateAvatar } from '../../../utils/boringAvatar';
 import { StoryCard } from '../../storyCard/StoryCard';
 import { useGetUserByAddress } from '../../../hooks/users';
 import { DashboardLayout } from '../../layout';
+import { AppHeader } from '../../layout/components/AppHeader';
 
 const ExtraInfoLink = styled('a', {
   color: '$gray9',
@@ -50,7 +51,7 @@ const StyledContainer = styled(Container, {
 
 const Header = styled('div', {
   pb: '$10',
-  px: '$4',
+  px: '$5',
   maxWidth: 826,
   display: 'flex',
   flexDirection: 'column',
@@ -147,6 +148,9 @@ export const PublicHome = ({ file, settings, userInfo }: PublicHomeProps) => {
     `Read stories from ${siteName} on Sigle, decentralised and open-source platform for Web3 writers`;
   const seoImage = settings.siteLogo;
 
+  const Layout =
+    userInfo.username !== user?.username ? React.Fragment : DashboardLayout;
+
   return (
     <React.Fragment>
       <NextSeo
@@ -177,7 +181,8 @@ export const PublicHome = ({ file, settings, userInfo }: PublicHomeProps) => {
           },
         ]}
       />
-      <DashboardLayout>
+      <Layout>
+        {userInfo.username !== user?.username && <AppHeader />}
         <Header
           css={{
             pt: userInfo.username !== user?.username ? '$10' : 0,
@@ -357,7 +362,7 @@ export const PublicHome = ({ file, settings, userInfo }: PublicHomeProps) => {
 
           {userInfo.username !== user?.username && <PoweredBy />}
         </StyledContainer>
-      </DashboardLayout>
+      </Layout>
     </React.Fragment>
   );
 };
