@@ -52,13 +52,13 @@ const StyledContent = styled(DropdownMenuPrimitive.Content, {
     },
   },
 });
+
 type DropdownMenuContentPrimitiveProps = React.ComponentProps<
   typeof DropdownMenuPrimitive.Content
 >;
 type DropdownMenuContentProps = DropdownMenuContentPrimitiveProps & {
   css?: CSS;
 };
-
 export const DropdownMenuContent = forwardRef<
   React.ElementRef<typeof StyledContent>,
   DropdownMenuContentProps
