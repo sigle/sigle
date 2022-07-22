@@ -21,7 +21,6 @@ import { useRouter } from 'next/router';
 import { useAuth } from '../modules/auth/AuthContext';
 import { SignInWithStacksMessage } from '../modules/auth/sign-in-with-stacks/signInWithStacksMessage';
 import { sigleConfig } from '../config';
-import { useFeatureFlags } from '../utils/featureFlags';
 
 const Login = () => {
   const router = useRouter();
@@ -29,15 +28,11 @@ const Login = () => {
   const { status } = useSession();
   const { doOpenAuth, sign } = useConnect();
   const { doOpenAuth: legacyDoOpenAuth } = legacyUseConnect();
-  const { isExperimentalAnalyticsPageEnabled } = useFeatureFlags();
 
   useEffect(() => {
     // We keep the user on the login page so he can sign the message
-    if (
-      isExperimentalAnalyticsPageEnabled &&
-      user &&
-      status !== 'authenticated'
-    ) {
+    // Legacy users don't have to sign the message
+    if (user && !isLegacy && status !== 'authenticated') {
       return;
     }
 
@@ -45,7 +40,7 @@ const Login = () => {
     if (user) {
       router.push(`/`);
     }
-  }, [router, user, isLegacy, status, isExperimentalAnalyticsPageEnabled]);
+  }, [router, user, isLegacy, status]);
 
   const handleLogin = () => {
     Fathom.trackGoal(Goals.LOGIN, 0);
@@ -101,11 +96,9 @@ const Login = () => {
 
   return (
     <LoginLayout>
-      {isExperimentalAnalyticsPageEnabled ? (
-        <Typography size="h3" as="h3" css={{ mb: '$1', fontWeight: 600 }}>
-          {!user ? 'Step 1' : 'Step 2'}
-        </Typography>
-      ) : null}
+      <Typography size="h3" as="h3" css={{ mb: '$1', fontWeight: 600 }}>
+        {!user ? 'Step 1' : 'Step 2'}
+      </Typography>
       {user ? (
         <Typography>
           In order to prove the ownership of your address and to verify your
@@ -153,15 +146,9 @@ const Login = () => {
         <Button
           color="orange"
           size="lg"
-          onClick={
-            isExperimentalAnalyticsPageEnabled && user
-              ? handleSignMessage
-              : handleLogin
-          }
+          onClick={user ? handleSignMessage : handleLogin}
         >
-          {isExperimentalAnalyticsPageEnabled && user
-            ? 'Sign message'
-            : 'Connect Wallet'}
+          {user ? 'Sign message' : 'Connect Wallet'}
         </Button>
       </Flex>
       <Box as="hr" css={{ mt: '$3', borderColor: '$gray6' }} />

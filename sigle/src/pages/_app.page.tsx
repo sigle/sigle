@@ -25,6 +25,7 @@ import { AuthProvider } from '../modules/auth/AuthContext';
 import { darkTheme, globalCss } from '../stitches.config';
 import { ThemeProvider } from 'next-themes';
 import { FeatureFlagsProvider } from '../utils/featureFlags';
+import { DesignSystemProvider } from '../ui';
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -201,7 +202,9 @@ export default class MyApp extends App {
                     attribute="class"
                     value={{ light: 'light-theme', dark: darkTheme.toString() }}
                   >
-                    <Component {...modifiedPageProps} />
+                    <DesignSystemProvider>
+                      <Component {...modifiedPageProps} />
+                    </DesignSystemProvider>
                   </ThemeProvider>
                 </AuthProvider>
               </SessionProvider>

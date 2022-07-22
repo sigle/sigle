@@ -69,7 +69,7 @@ const Header = styled('header', Container, {
 export const AppHeader = () => {
   const { data: settings } = useGetUserSettings();
   const { resolvedTheme, setTheme } = useTheme();
-  const { user } = useAuth();
+  const { user, isLegacy } = useAuth();
   const { status } = useSession();
   const router = useRouter();
   const queryClient = useQueryClient();
@@ -175,12 +175,21 @@ export const AppHeader = () => {
         align="center"
         gap="9"
       >
-        {isExperimentalFollowEnabled && user ? (
-          <Link href="/feed" passHref>
-            <Button variant="ghost" as="a">
-              Feed
-            </Button>
-          </Link>
+        {user && !isLegacy ? (
+          <>
+            <Link href="/feed" passHref>
+              <Button variant="ghost" as="a">
+                Feed
+              </Button>
+            </Link>
+            {isExperimentalFollowEnabled ? (
+              <Link href="/explore" passHref>
+                <Button variant="ghost" as="a">
+                  Explore
+                </Button>
+              </Link>
+            ) : null}
+          </>
         ) : null}
         {user ? (
           <DropdownMenu>
@@ -207,7 +216,9 @@ export const AppHeader = () => {
                     }}
                   />
                 </ImageContainer>
-                <Typography size="subheading">{user.username}</Typography>
+                <Typography size="subheading">
+                  {settings?.siteName ? settings.siteName : user.username}
+                </Typography>
                 <StyledChevron css={{ color: '$gray11' }} />
               </Button>
             </DropdownMenuTrigger>
