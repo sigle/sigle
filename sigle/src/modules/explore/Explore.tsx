@@ -31,7 +31,6 @@ export const ExploreUsers = () => {
   const { observe, inView } = useInView({
     // For better UX, we can grow the root margin so the data will be loaded earlier
     rootMargin: '50px 0px',
-    // When the last item comes to the viewport
     onEnter: async ({ unobserve, observe }) => {
       // Pause observe when loading data
       unobserve();
@@ -53,8 +52,6 @@ export const ExploreUsers = () => {
           page.data.map((user) => (
             <UserCard
               key={user.stacksAddress}
-              // Only the last item should have the observer
-              // ref={isLastItem ? observe : null}
               address={user.stacksAddress}
               userFollowing={userFollowing}
             />
