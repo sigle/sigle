@@ -95,6 +95,93 @@ const main = async () => {
       {
         stacksAddress: 'SP398XE371G08T84A99TCBD8XKWY3S7VVX6JKJWKY',
       },
+      {
+        stacksAddress: 'SP371YM2NGDYBKJ30YVYPK66WW5DXYD18Q9AB0QCQ',
+      },
+      {
+        stacksAddress: 'SP3ZMEFW7VH796ZQAH1JMAJT4WC4VPEZZFB6W5CAD',
+      },
+      {
+        stacksAddress: 'SP2VYX11YTQHRQX26A1Z2MR4PJ3ZY232Q16AAP92B',
+      },
+      {
+        stacksAddress: 'SPE6KAAKXSC0QSGG17SWYPX5R2KP3Q56V9KD88TP',
+      },
+      {
+        stacksAddress: 'SP1E7DEJG95E0EBZFFGEFGE0QX6Y0CR5V79615FB2',
+      },
+      {
+        stacksAddress: 'SP1TY00PDWJVNVEX7H7KJGS2K2YXHTQMY8C0G1NVP',
+      },
+      {
+        stacksAddress: 'SPAA2NPKN1DN7A8TQWQH6P72V4HMDASVTY1NS1MN',
+      },
+      {
+        stacksAddress: 'SP3W40MRS2BYEK9DEXAZQD5P08F4XR521621HMHTS',
+      },
+      {
+        stacksAddress: 'SP1NGMS9Z48PRXFAG2MKBSP0PWERF07C0KV9SPJ66',
+      },
+      {
+        stacksAddress: 'SP2NBCT6WVMD8PX46VTNRT4ENTQBZZ8ZYYYZY65RB',
+      },
+      {
+        stacksAddress: 'SPZTTWJ2DFJTQWV2THMY55W2ZVD7T7G9CCBNDCQ7',
+      },
+      {
+        stacksAddress: 'SPPWE0WMA4RM3XQG6VJHFFR0K6YAJ1BGW2A15EBN',
+      },
+      {
+        stacksAddress: 'SP1DMPD0JNAVDRCTY17S2MNHX8F6502NB0Z25RVR',
+      },
+      {
+        stacksAddress: 'SP2JQKHDV4N3FH86S52G4DH8HRG93DE1X39YHNSN',
+      },
+      {
+        stacksAddress: 'SP2ZSNX2EXYCJ1C52BYD4S7MX3YJQN8574YY49FBA',
+      },
+      {
+        stacksAddress: 'SP30B6BG1J76HWDYGXPNGSNY8H1KR98WGG4EA1A6G',
+      },
+      {
+        stacksAddress: 'SP1A6PK0YCS4MHYK36WPV0C3HH5HMM1FS88H8YDDX',
+      },
+      {
+        stacksAddress: 'SP2BFCYNDH360M5T5Q9TS6A3NSHAC8EPF1VVK9W9Z',
+      },
+      {
+        stacksAddress: 'SP26BGW8S8J4PZRWAR0YFDPY21T1EFZ39FBMKTHC9',
+      },
+      {
+        stacksAddress: 'SP1F48HCD4SP4HT8BHQPXZ35615764KC80ACNMBDZ',
+      },
+      {
+        stacksAddress: 'SP3HAX2ZKY8CEG53VZDZEERS3HFWN76HJZ2XNJ41F',
+      },
+      {
+        stacksAddress: 'SP223836JN8GCFV83KH2CP7Q9ZF0MVMF94WQ9528T',
+      },
+      {
+        stacksAddress: 'SP21XGA9DKVQSPSDKXT6X3QM9K9BGTVER5EF76G2P',
+      },
+      {
+        stacksAddress: 'SP2YG90T7GPVJDGXQAJ40Y08NB5ZBV4KVASSAQNE8',
+      },
+      {
+        stacksAddress: 'SP2ADG26CEZ9B8J8YXQAHSHTXDAS9FGCPB7S930B',
+      },
+      {
+        stacksAddress: 'SPVVB6WRVE757VKEB2T0X5ZY4DMFJAX248XXQHHW',
+      },
+      {
+        stacksAddress: 'SP30H00CZ9GWTC9HREZX998TSDAF4V59PJG5GS279',
+      },
+      {
+        stacksAddress: 'SPYF9PC72BSWS0DGA33FR24GCG81MG1Z96463H68',
+      },
+      {
+        stacksAddress: 'SP3R7Q3QMTYC4QR0RFDR9HZBWNBNBNDA7S549CR6Y',
+      },
     ],
   });
 
