@@ -16,13 +16,13 @@ importers:
 
   packages/sitemap-scripts:
     specifiers:
-      '@stacks/auth': 3.3.0
+      '@stacks/auth': 4.3.3
       '@types/node': 17.0.31
       ts-node: 10.7.0
       typescript: 4.7.4
       undici: 5.5.1
     dependencies:
-      '@stacks/auth': 3.3.0
+      '@stacks/auth': 4.3.3
     devDependencies:
       '@types/node': 17.0.31
       ts-node: 10.7.0_6bd4jfip3gnofjnkq5lqqdbk4m
@@ -47,9 +47,9 @@ importers:
       '@jest/globals': 28.1.3
       '@prisma/client': 4.1.0
       '@sentry/node': 7.2.0
-      '@stacks/auth': 4.3.0
-      '@stacks/blockchain-api-client': 4.0.1
-      '@stacks/transactions': 4.3.1
+      '@stacks/auth': 4.3.3
+      '@stacks/blockchain-api-client': 4.1.0
+      '@stacks/transactions': 4.3.3
       '@types/jest': 28.1.6
       '@types/node': 17.0.31
       '@typescript-eslint/eslint-plugin': 5.20.0
@@ -74,9 +74,9 @@ importers:
       '@fastify/swagger': 7.4.1
       '@prisma/client': 4.1.0_prisma@4.1.0
       '@sentry/node': 7.2.0
-      '@stacks/auth': 4.3.0
-      '@stacks/blockchain-api-client': 4.0.1
-      '@stacks/transactions': 4.3.1
+      '@stacks/auth': 4.3.3
+      '@stacks/blockchain-api-client': 4.1.0
+      '@stacks/transactions': 4.3.3
       date-fns: 2.28.0
       dotenv: 16.0.1
       envalid: 7.3.1
@@ -114,19 +114,19 @@ importers:
       '@sentry/nextjs': 7.2.0
       '@sigle/slate-to-html': 1.0.0
       '@sigle/tailwind-style': workspace:^1.1.0
-      '@stacks/auth': 4.3.1
-      '@stacks/blockchain-api-client': 4.0.1
-      '@stacks/connect': 6.8.1
-      '@stacks/connect-react': 17.0.1
-      '@stacks/encryption': 4.3.1
-      '@stacks/keychain': 4.3.1
+      '@stacks/auth': 4.3.3
+      '@stacks/blockchain-api-client': 4.1.0
+      '@stacks/connect': 6.9.1
+      '@stacks/connect-react': 18.0.1
+      '@stacks/encryption': 4.3.3
+      '@stacks/keychain': 4.3.3
       '@stacks/legacy-auth': npm:@stacks/auth@2.0.0-beta.1
       '@stacks/legacy-connect': npm:@stacks/connect@4.3.18
       '@stacks/legacy-connect-react': npm:@stacks/connect-react@2.17.18
-      '@stacks/network': 4.3.0
-      '@stacks/profile': 4.3.1
-      '@stacks/storage': 4.3.1
-      '@stacks/transactions': 4.3.1
+      '@stacks/network': 4.3.2
+      '@stacks/profile': 4.3.3
+      '@stacks/storage': 4.3.3
+      '@stacks/transactions': 4.3.3
       '@stitches/react': 1.2.8
       '@testing-library/jest-dom': 5.16.2
       '@testing-library/react': 12.1.3
@@ -231,19 +231,19 @@ importers:
       '@radix-ui/react-tooltip': 1.0.0_x5eodlisouwznpi4y2wdaadbie
       '@sentry/nextjs': 7.2.0_next@12.2.0+react@17.0.2
       '@sigle/slate-to-html': 1.0.0_3cc2otkwovrf77l6bev3a72a7a
-      '@stacks/auth': 4.3.1
-      '@stacks/blockchain-api-client': 4.0.1
-      '@stacks/connect': 6.8.1
-      '@stacks/connect-react': 17.0.1_sfoxds7t5ydpegc3knd667wn6m
-      '@stacks/encryption': 4.3.1
-      '@stacks/keychain': 4.3.1
+      '@stacks/auth': 4.3.3
+      '@stacks/blockchain-api-client': 4.1.0
+      '@stacks/connect': 6.9.1
+      '@stacks/connect-react': 18.0.1_sfoxds7t5ydpegc3knd667wn6m
+      '@stacks/encryption': 4.3.3
+      '@stacks/keychain': 4.3.3
       '@stacks/legacy-auth': /@stacks/auth/2.0.0-beta.1
       '@stacks/legacy-connect': /@stacks/connect/4.3.18
       '@stacks/legacy-connect-react': /@stacks/connect-react/2.17.18_sfoxds7t5ydpegc3knd667wn6m
-      '@stacks/network': 4.3.0
-      '@stacks/profile': 4.3.1
-      '@stacks/storage': 4.3.1
-      '@stacks/transactions': 4.3.1
+      '@stacks/network': 4.3.2
+      '@stacks/profile': 4.3.3
+      '@stacks/storage': 4.3.3
+      '@stacks/transactions': 4.3.3
       '@stitches/react': 1.2.8_react@17.0.2
       '@tippyjs/react': 4.2.6_sfoxds7t5ydpegc3knd667wn6m
       '@tiptap/core': 2.0.0-beta.174
@@ -1669,6 +1669,10 @@ packages:
     resolution: {integrity: sha512-DZVbtY62kc3kkBtMHqwCOfXrT/hnoORy5BJ4+HU1IR59X0KWAOqsfzQPcUl/lQLlG7qXbe/fZ3r/emxtAl+sqg==}
     dev: false
 
+  /@noble/hashes/1.1.2:
+    resolution: {integrity: sha512-KYRCASVTv6aeUi1tsF8/vpyR7zpfs3FUzy2Jqm+MU+LmUKhQ0y2FpfwqkCcxSg2ua4GALJd8k2R76WxwZGbQpA==}
+    dev: false
+
   /@noble/secp256k1/1.5.5:
     resolution: {integrity: sha512-sZ1W6gQzYnu45wPrWx8D3kwI2/U29VYTx9OjbDAd7jwRItJ0cSTMPRL/C8AWZFn9kWFLQGqEXVEE86w4Z8LpIQ==}
     dev: false
@@ -2227,15 +2231,15 @@ packages:
     resolution: {integrity: sha512-LwzQKA4vzIct1zNZzBmRKI9QuNpLgTQMEjsQLf3BXuGYb3QPTP4Yjf6mkdX+X1mYttZ808QpOwAzZjv28kq7DA==}
     dev: true
 
-  /@scure/base/1.0.0:
-    resolution: {integrity: sha512-gIVaYhUsy+9s58m/ETjSJVKHhKTBMmcRb9cEV5/5dwvfDlfORjKrFsDeDHWRrm6RjcPvCLZFwGJjAjLj1gg4HA==}
+  /@scure/base/1.1.1:
+    resolution: {integrity: sha512-ZxOhsSyxYwLJj3pLZCefNitxsj093tb2vq90mp2txoYeBqbcjDjqFhyM8eUjq/uFm6zJ+mUuqxlS2FkuSY1MTA==}
     dev: false
 
-  /@scure/bip39/1.0.0:
-    resolution: {integrity: sha512-HrtcikLbd58PWOkl02k9V6nXWQyoa7A0+Ek9VF7z17DDk9XZAFUcIdqfh0jJXLypmizc5/8P6OxoUeKliiWv4w==}
+  /@scure/bip39/1.1.0:
+    resolution: {integrity: sha512-pwrPOS16VeTKg98dYXQyIjJEcWfz7/1YJIwxUEPFfQPtc86Ym/1sVgQ2RLoD43AazMk2l/unK4ITySSpW2+82w==}
     dependencies:
-      '@noble/hashes': 1.0.0
-      '@scure/base': 1.0.0
+      '@noble/hashes': 1.1.2
+      '@scure/base': 1.1.1
     dev: false
 
   /@sentry/browser/7.2.0:
@@ -2428,8 +2432,8 @@ packages:
       '@sinonjs/commons': 1.8.3
     dev: true
 
-  /@socket.io/component-emitter/3.1.0:
-    resolution: {integrity: sha512-+9jVqKhRSpsc591z5vX+X5Yyw+he/HCB4iQ/RYxw35CEPaY1gnsNE43nf9n9AaYjAQrTiI/mOwKUKdUs9vf7Xg==}
+  /@socket.io/component-emitter/3.0.0:
+    resolution: {integrity: sha512-2pTGuibAXJswAPJjaKisthqS/NOK5ypG4LYT6tEAV0S/mxW0zOIvYvGK0V8w8+SHxAm6vRMSjqSalFXeBAqs+Q==}
     dev: false
 
   /@soda/friendly-errors-webpack-plugin/1.8.1_webpack@5.72.1:
@@ -2477,56 +2481,13 @@ packages:
       - encoding
     dev: false
 
-  /@stacks/auth/3.3.0:
-    resolution: {integrity: sha512-jt/NZHs46o+UdMAp4rP+GJhSy5dj1HzXtKDnGaGvXLY4mhecSb+JnCi0Jiwyea1cU0jcq7nHbkEOydxDFe+/Gw==}
-    dependencies:
-      '@stacks/common': 3.5.0
-      '@stacks/encryption': 3.5.0
-      '@stacks/network': 3.5.0
-      '@stacks/profile': 3.5.0
-      c32check: 1.1.3
-      cross-fetch: 3.1.5
-      jsontokens: 3.0.0
-      query-string: 6.14.1
-    transitivePeerDependencies:
-      - encoding
-    dev: false
-
-  /@stacks/auth/4.1.0:
-    resolution: {integrity: sha512-IoY/q1HbpPvAekjMn8UG/3WBxkv7tyj2ykRPiacehA62uskG/FYxI4+liuUfuI+Pay+RJQIFLzUp42HH7YMxAg==}
-    dependencies:
-      '@stacks/common': 4.3.0
-      '@stacks/encryption': 4.1.0
-      '@stacks/network': 4.3.0
-      '@stacks/profile': 4.1.0
-      cross-fetch: 3.1.5
-      jsontokens: 3.1.1
-      query-string: 6.14.1
-    transitivePeerDependencies:
-      - encoding
-    dev: false
-
-  /@stacks/auth/4.3.0:
-    resolution: {integrity: sha512-Jo9A6mfb1VGpLZptMMQbWen9wqcCKHy6s1RUaMLnbzYiwQbYJ39cLbxPQudMabNJW0LrXQGSI5gy/kAehavDaw==}
-    dependencies:
-      '@stacks/common': 4.3.0
-      '@stacks/encryption': 4.3.1
-      '@stacks/network': 4.3.0
-      '@stacks/profile': 4.3.1
-      cross-fetch: 3.1.5
-      jsontokens: 3.1.1
-      query-string: 6.14.1
-    transitivePeerDependencies:
-      - encoding
-    dev: false
-
   /@stacks/auth/4.3.1:
     resolution: {integrity: sha512-iaJhBSp3YfVWQYlE+MnQ52f8hFtBZ4rfOkG/n3X0Q5OdltZ7t7EGwZD39FYb5yg/PG575IfOAq6dHdYbxhz5LA==}
     dependencies:
-      '@stacks/common': 4.3.0
-      '@stacks/encryption': 4.3.1
-      '@stacks/network': 4.3.0
-      '@stacks/profile': 4.3.1
+      '@stacks/common': 4.3.2
+      '@stacks/encryption': 4.3.3
+      '@stacks/network': 4.3.2
+      '@stacks/profile': 4.3.3
       cross-fetch: 3.1.5
       jsontokens: 3.1.1
       query-string: 6.14.1
@@ -2534,19 +2495,32 @@ packages:
       - encoding
     dev: false
 
-  /@stacks/blockchain-api-client/4.0.1:
-    resolution: {integrity: sha512-RK8Nffx9ny+XV1dZBnC1tpJyAIKuPrw14NTTkQpMwLsY/nqXh1bQ0OKztMsqT2jMRFvb8I1me9I6pcSbu7LE2A==}
+  /@stacks/auth/4.3.3:
+    resolution: {integrity: sha512-TigigNoLi8qljNC3i+g6ryeNshXldLAKABV4uYgUXpDQBe02JFLsNlDoVzWqBhRtaV7wlumhMr36nrqQN48Ogw==}
+    dependencies:
+      '@stacks/common': 4.3.2
+      '@stacks/encryption': 4.3.3
+      '@stacks/network': 4.3.2
+      '@stacks/profile': 4.3.3
+      cross-fetch: 3.1.5
+      jsontokens: 3.1.1
+      query-string: 6.14.1
+    transitivePeerDependencies:
+      - encoding
+    dev: false
+
+  /@stacks/blockchain-api-client/4.1.0:
+    resolution: {integrity: sha512-T2GBJupXJ8SGE95QJ8kA5mZLn45OY8fCdTXEUundMbD7Sqg42dF+PAtqciw1hgRFQk6+RoqtYpMMTpyilCK5aw==}
     dependencies:
       '@stacks/stacks-blockchain-api-types': 4.0.1
       '@types/ws': 7.4.7
-      cross-fetch: 3.1.5
+      cross-fetch: 3.1.4
       eventemitter3: 4.0.7
       jsonrpc-lite: 2.2.0
-      socket.io-client: 4.5.1
-      ws: 7.5.7
+      socket.io-client: 4.4.0
+      ws: 7.5.6
     transitivePeerDependencies:
       - bufferutil
-      - encoding
       - supports-color
       - utf-8-validate
     dev: false
@@ -2570,34 +2544,23 @@ packages:
       - encoding
     dev: false
 
-  /@stacks/common/3.5.0:
-    resolution: {integrity: sha512-ipkBg4smtMURuPugIlFRaDhGw33fxpwqvqPyPSZ38CCuHgaQDQLqBO49ml0IlOXLQa854UI8ZUbyy5GBU+DrsA==}
-    dependencies:
-      '@types/node': 14.18.16
-      bn.js: 5.2.0
-      buffer: 6.0.3
-      cross-fetch: 3.1.5
-    transitivePeerDependencies:
-      - encoding
-    dev: false
-
-  /@stacks/common/4.3.0:
-    resolution: {integrity: sha512-3/n3E9VGoE/cTPfdBUmFHNer33UZtCiugV0uodXfdUfNbHfILLgk0acTVMI04FufFkglhS3seiOD+R5Z2pBUYA==}
+  /@stacks/common/4.3.2:
+    resolution: {integrity: sha512-6L4P4gqPj8ubtasx1Ac7Bf2hSscymSkshN2vFrfVaww9G/xWsknfaJSLLnv/w/B1AR8cIYM/HmAPYJmHc3EHvw==}
     dependencies:
       '@types/bn.js': 5.1.0
       '@types/node': 14.18.16
       buffer: 6.0.3
     dev: false
 
-  /@stacks/connect-react/17.0.1_sfoxds7t5ydpegc3knd667wn6m:
-    resolution: {integrity: sha512-aiGJSttnrx7Da5hlL+8q8NwYNei28bBTYUAR0Z18x4Birrqu0BKrrskoNy6EUFcwqWKUnoWtRv+Z3obW1cp48Q==}
+  /@stacks/connect-react/18.0.1_sfoxds7t5ydpegc3knd667wn6m:
+    resolution: {integrity: sha512-Rr/YzwyGlUFF1SXkfevpT5AGb5eSxcIu1Q+3GtRNcAGAniaHxJ0xafa4gHItSuY5fZh2IJkWI+eStpnee4NtBA==}
     peerDependencies:
       react: ^16.x || 17.x || 18.x
       react-dom: ^16.x || 17.x || 18.x
     dependencies:
-      '@stacks/auth': 4.1.0
-      '@stacks/connect': 6.8.1
-      jsontokens: 3.0.0
+      '@stacks/auth': 4.3.1
+      '@stacks/connect': 6.9.1
+      jsontokens: 3.1.1
       react: 17.0.2
       react-dom: 17.0.2_react@17.0.2
     transitivePeerDependencies:
@@ -2626,8 +2589,8 @@ packages:
       '@stencil/core': 1.17.4
     dev: false
 
-  /@stacks/connect-ui/5.5.0:
-    resolution: {integrity: sha512-SGSyAx43eS4CwcJ+iT4mdbRuAEk7tLrQDBLSm9XsipNu3f1nCbcQKxYYUNEpEmVhiQJPBMMeyQaOChFv8LS4Jw==}
+  /@stacks/connect-ui/5.5.2:
+    resolution: {integrity: sha512-Tgv1GZz9sXrGkx0MDoF6Y4tmje+8vUVs133nx2GoSs2ZLPzjbsQKv9ksIUMIfzNX+doErDoEw1+xXPbi40InUQ==}
     dependencies:
       '@stencil/core': 2.15.0
     dev: false
@@ -2644,17 +2607,17 @@ packages:
       - supports-color
     dev: false
 
-  /@stacks/connect/6.8.1:
-    resolution: {integrity: sha512-GxfMkgaDnT2Qwn5Afs3gnu4Aj+1egifkmvIcDN5ED50ksdIaOh/KLrsguqIf5j9Eg/VllgpjifGWdvnrWClW8A==}
+  /@stacks/connect/6.9.1:
+    resolution: {integrity: sha512-BAhvYD7poWaTRx7skAITfNUTM+0qZjKCjr1abzd8DMboV6XIOVKEVqiJkDsIN+2k4SnpnJNZ2k0fubA9kDdgHg==}
     dependencies:
-      '@stacks/auth': 4.1.0
-      '@stacks/connect-ui': 5.5.0
-      '@stacks/network': 4.1.0
+      '@stacks/auth': 4.3.1
+      '@stacks/connect-ui': 5.5.2
+      '@stacks/network': 4.2.1
       '@stacks/prettier-config': 0.0.8
-      '@stacks/transactions': 4.1.0
+      '@stacks/transactions': 4.3.1
       bn.js: 5.2.0
       buffer: 6.0.3
-      jsontokens: 3.0.0
+      jsontokens: 3.1.1
       readable-stream: 3.6.0
       url: 0.11.0
     transitivePeerDependencies:
@@ -2693,61 +2656,30 @@ packages:
       - encoding
     dev: false
 
-  /@stacks/encryption/3.5.0:
-    resolution: {integrity: sha512-pMGT3yRp65P1wye/L3IX2tJaXzyiyQ0bHRAuO99EuO/iW2Ojbih/d73dMPucMiE2gYN4Cl6SVzhV0eXB1h2elA==}
+  /@stacks/encryption/4.3.3:
+    resolution: {integrity: sha512-S0gSNrd/PQ+TYFKh07FpjiXUuk/rzQRp3w/9xxH6NQIodG3/1NpLQSbcsXWSnmqOWDXj//eC2ZqHEgzQSUMdSg==}
     dependencies:
       '@noble/hashes': 1.0.0
       '@noble/secp256k1': 1.5.5
-      '@stacks/common': 3.5.0
-      '@types/bn.js': 4.11.6
-      '@types/node': 14.18.16
-      bip39: 3.0.4
-      bitcoinjs-lib: 5.2.0
-      bn.js: 5.2.0
-      ripemd160-min: 0.0.6
-      sha.js: 2.4.11
-    transitivePeerDependencies:
-      - encoding
-    dev: false
-
-  /@stacks/encryption/4.1.0:
-    resolution: {integrity: sha512-3zbLk1AKShn/+mkSrMS8UXtyd4rXdtr7tjPfJLSF2Q+IfZiPNqP5oQdbXAOp0t8uehno/pOKnttmNIgLZTnwVg==}
-    dependencies:
-      '@noble/hashes': 1.0.0
-      '@noble/secp256k1': 1.5.5
-      '@scure/bip39': 1.0.0
-      '@stacks/common': 4.3.0
-      '@types/node': 14.18.16
-      bs58: 5.0.0
-      ripemd160-min: 0.0.6
-      sha.js: 2.4.11
-      varuint-bitcoin: 1.1.2
-    dev: false
-
-  /@stacks/encryption/4.3.1:
-    resolution: {integrity: sha512-2DjqTNJsmYth08EKq6rnnug7Y/wHXvkKiUWHwzCikUNVEKfYdcyv565tnURYywvbT8tMX8peF5vXpu+0L4HQKA==}
-    dependencies:
-      '@noble/hashes': 1.0.0
-      '@noble/secp256k1': 1.5.5
-      '@scure/bip39': 1.0.0
-      '@stacks/common': 4.3.0
+      '@scure/bip39': 1.1.0
+      '@stacks/common': 4.3.2
       '@types/node': 14.18.16
       bs58: 5.0.0
       ripemd160-min: 0.0.6
       varuint-bitcoin: 1.1.2
     dev: false
 
-  /@stacks/keychain/4.3.1:
-    resolution: {integrity: sha512-v6rEmrHadK9O3KlFdLQWMDH1UQvR8XU/I8bZoxxlvbNLmLKoxjNPSzrlBPc8QNJVwTaX6GWCsgQHz602tVhheg==}
+  /@stacks/keychain/4.3.3:
+    resolution: {integrity: sha512-Jyuig55pyYdYkTu9LWwBvLyT8XC0csWn1lToI8gFNCz6wRE+gRE5Ph76DLcKVdTZiZBxx0qrVTZeQMvpU3j8yQ==}
     dependencies:
       '@blockstack/rpc-client': 0.3.0-alpha.22
-      '@stacks/auth': 4.3.1
-      '@stacks/common': 4.3.0
-      '@stacks/encryption': 4.3.1
-      '@stacks/network': 4.3.0
-      '@stacks/profile': 4.3.1
-      '@stacks/storage': 4.3.1
-      '@stacks/transactions': 4.3.1
+      '@stacks/auth': 4.3.3
+      '@stacks/common': 4.3.2
+      '@stacks/encryption': 4.3.3
+      '@stacks/network': 4.3.2
+      '@stacks/profile': 4.3.3
+      '@stacks/storage': 4.3.3
+      '@stacks/transactions': 4.3.3
       '@types/node': 14.18.16
       '@types/triplesec': 3.0.1
       bip32: 2.0.6
@@ -2778,27 +2710,19 @@ packages:
       - encoding
     dev: false
 
-  /@stacks/network/3.5.0:
-    resolution: {integrity: sha512-qSj2fe7cmB8fLKKEnpeiYoKSLZ8kqwlpV+dC9xhg6izMYl9Zpe4F27WVAbsqf5dU7q2oXRFWQ8xiSIv/8Ha6ng==}
+  /@stacks/network/4.2.1:
+    resolution: {integrity: sha512-Rb0Cj4/wwdL3tLngkGEOQvmpsvALFf4z704xRC6P682wkjgsXSDCaq/IlQ0tc7VDLuY/W6kMcIDM/aI5ZmeH6w==}
     dependencies:
-      '@stacks/common': 3.5.0
-    transitivePeerDependencies:
-      - encoding
-    dev: false
-
-  /@stacks/network/4.1.0:
-    resolution: {integrity: sha512-vZoqBkMPUtPqdkW0oluzSQrJFFz2CThpTP2wgJLm3Aps+9TFJ3IXbZiN+8uKVpnd4ebDl9jaLwYZKOtF5ulg1Q==}
-    dependencies:
-      '@stacks/common': 4.3.0
+      '@stacks/common': 4.3.2
       cross-fetch: 3.1.5
     transitivePeerDependencies:
       - encoding
     dev: false
 
-  /@stacks/network/4.3.0:
-    resolution: {integrity: sha512-X97IFfhJe5aZu8F1tOvYCzoIxPD5PH/NB24/WDZ+JH5Loho1D7zk1zZ6bOtQknaSfezDyi6wsZwKC/7Mxg959A==}
+  /@stacks/network/4.3.2:
+    resolution: {integrity: sha512-8QgsGjAHwRwCDIzbE+nmqD2Kk589svmDLHNm1PJWL5EGpZyJK5su/y36ZgmTMVDvQwNfr9/8GFoaAbBlArvZyw==}
     dependencies:
-      '@stacks/common': 4.3.0
+      '@stacks/common': 4.3.2
       cross-fetch: 3.1.5
     transitivePeerDependencies:
       - encoding
@@ -2837,38 +2761,12 @@ packages:
       - encoding
     dev: false
 
-  /@stacks/profile/3.5.0:
-    resolution: {integrity: sha512-Ygh3aSpM4PQU3NPCfuoSGVODu5qXBc8Su69HkjEMcli7qHH95vVx9dQESnqKWNxvP0vAmZ3Dekk6zZt04E3lVw==}
+  /@stacks/profile/4.3.3:
+    resolution: {integrity: sha512-s07wMp1UG0LHwScJZ8YDDtneUttfi4S65JfUuKYR6GCnNoNj6PBOfTZEcKAnrFAnv0AY3kzexTIs6HyooVcZog==}
     dependencies:
-      '@stacks/common': 3.5.0
-      '@stacks/network': 3.5.0
-      '@stacks/transactions': 3.5.0
-      jsontokens: 3.0.0
-      schema-inspector: 2.0.1
-      zone-file: 2.0.0-beta.3
-    transitivePeerDependencies:
-      - encoding
-    dev: false
-
-  /@stacks/profile/4.1.0:
-    resolution: {integrity: sha512-5dA82v2RcOb8DlfQuX6QowfCzhZvfGiGRGBDL5bbWJXzvA6pZCzcdONAv/9B1SC3xs+Xoz2wt8JWtsLejdjYWQ==}
-    dependencies:
-      '@stacks/common': 4.3.0
-      '@stacks/network': 4.3.0
-      '@stacks/transactions': 4.3.1
-      jsontokens: 3.1.1
-      schema-inspector: 2.0.1
-      zone-file: 2.0.0-beta.3
-    transitivePeerDependencies:
-      - encoding
-    dev: false
-
-  /@stacks/profile/4.3.1:
-    resolution: {integrity: sha512-sX5YL87sVdJzu2hC7fzzX63cyG+YVC3ICHGBfmqPHNxNHMnK9uFr/cvfo2tFF2k7XpxL+0vs4TjsUSRyEIWl8w==}
-    dependencies:
-      '@stacks/common': 4.3.0
-      '@stacks/network': 4.3.0
-      '@stacks/transactions': 4.3.1
+      '@stacks/common': 4.3.2
+      '@stacks/network': 4.3.2
+      '@stacks/transactions': 4.3.3
       jsontokens: 3.1.1
       schema-inspector: 2.0.1
       zone-file: 2.0.0-beta.3
@@ -2880,13 +2778,13 @@ packages:
     resolution: {integrity: sha512-HVG/AuXyk1J25t5bKwVokSrsZy8E3G+edOgPzIoyfsX7ELgl7EN+ddmboHxktE6K2aCOWPwQgAUG50s8DAzD+A==}
     dev: false
 
-  /@stacks/storage/4.3.1:
-    resolution: {integrity: sha512-Wc6OVRCXZIeFPMoYAy/NjJAjAS6csJmThM71Zg3CDxiCnQJyznMC9q68x0yk0XWNNxibP9w/RLhLwjTIO6iyAg==}
+  /@stacks/storage/4.3.3:
+    resolution: {integrity: sha512-FnQNrVGNgR07Yaab44DBo2eXoEe124/FZQJpPhYS4qJ5Y6R7kDLH7FA5ZDwk7U2K0HMowdBZFUtekL8kc5PhNw==}
     dependencies:
-      '@stacks/auth': 4.3.1
-      '@stacks/common': 4.3.0
-      '@stacks/encryption': 4.3.1
-      '@stacks/network': 4.3.0
+      '@stacks/auth': 4.3.3
+      '@stacks/common': 4.3.2
+      '@stacks/encryption': 4.3.3
+      '@stacks/network': 4.3.2
       jsontokens: 3.1.1
     transitivePeerDependencies:
       - encoding
@@ -2915,52 +2813,31 @@ packages:
       - encoding
     dev: false
 
-  /@stacks/transactions/3.5.0:
-    resolution: {integrity: sha512-uV/lenqHZ1VPY1TU7rCZ1fy1QBK4nGcCa6A6BTfvzd3XsHRp+WUo95dLHqfuy9EcdEClGE8yVklbzr7sSCuAig==}
-    dependencies:
-      '@noble/hashes': 1.0.0
-      '@noble/secp256k1': 1.5.5
-      '@stacks/common': 3.5.0
-      '@stacks/network': 3.5.0
-      '@types/bn.js': 4.11.6
-      '@types/node': 14.18.16
-      '@types/sha.js': 2.4.0
-      bn.js: 5.2.0
-      c32check: 1.1.3
-      cross-fetch: 3.1.5
-      lodash.clonedeep: 4.5.0
-      ripemd160-min: 0.0.6
-      sha.js: 2.4.11
-      smart-buffer: 4.2.0
-    transitivePeerDependencies:
-      - encoding
-    dev: false
-
-  /@stacks/transactions/4.1.0:
-    resolution: {integrity: sha512-NS3DkZh8WziUQaze6RY5ft1v5bmq1wHjYEoCMzzhdreJ+Sp74ZADaO38fQQGcEcVdOhcM31k2oh6DgJEmBXVUQ==}
-    dependencies:
-      '@noble/hashes': 1.0.0
-      '@noble/secp256k1': 1.5.5
-      '@stacks/common': 4.3.0
-      '@stacks/network': 4.3.0
-      '@types/node': 14.18.16
-      '@types/sha.js': 2.4.0
-      c32check: 1.1.3
-      lodash.clonedeep: 4.5.0
-      ripemd160-min: 0.0.6
-      sha.js: 2.4.11
-      smart-buffer: 4.2.0
-    transitivePeerDependencies:
-      - encoding
-    dev: false
-
   /@stacks/transactions/4.3.1:
     resolution: {integrity: sha512-WsT/+h/MKGMsHCtjMszh1+ezyhGQWwDfK1TVeZxmm/LTQDYnDdKtE8Eq67icHsmvluziWTLqclge4JWCrzdzPg==}
     dependencies:
       '@noble/hashes': 1.0.0
       '@noble/secp256k1': 1.5.5
-      '@stacks/common': 4.3.0
-      '@stacks/network': 4.3.0
+      '@stacks/common': 4.3.2
+      '@stacks/network': 4.3.2
+      '@types/node': 14.18.16
+      '@types/sha.js': 2.4.0
+      c32check: 1.1.3
+      lodash.clonedeep: 4.5.0
+      ripemd160-min: 0.0.6
+      sha.js: 2.4.11
+      smart-buffer: 4.2.0
+    transitivePeerDependencies:
+      - encoding
+    dev: false
+
+  /@stacks/transactions/4.3.3:
+    resolution: {integrity: sha512-xI0MreVB66lyAXJ8ORZKWiEDJ4UiCBaESjXLZ6vmitMHYdkeNSYRJCfsWpW4YRI1yAQgjwfbKLaOkPkkKz1VEQ==}
+    dependencies:
+      '@noble/hashes': 1.0.0
+      '@noble/secp256k1': 1.5.5
+      '@stacks/common': 4.3.2
+      '@stacks/network': 4.3.2
       '@types/node': 14.18.16
       '@types/sha.js': 2.4.0
       c32check: 1.1.3
@@ -4671,15 +4548,6 @@ packages:
     engines: {node: '>=0.10.0'}
     dev: true
 
-  /asn1.js/5.4.1:
-    resolution: {integrity: sha512-+I//4cYPccV8LdmBLiX8CYvf9Sp3vQsrqu2QNXRcrbiWvcx/UdlFiqUJJzxRQxgsZmvhXhn4cSKeSmoFjVdupA==}
-    dependencies:
-      bn.js: 4.12.0
-      inherits: 2.0.4
-      minimalistic-assert: 1.0.1
-      safer-buffer: 2.1.2
-    dev: false
-
   /ast-types-flow/0.0.7:
     resolution: {integrity: sha512-eBvWn1lvIApYMhzQMsu9ciLfkBY499mFZlNqG+/9WR7PVlroQw0vG30cOQQbaKz3sCEc44TAOu2ykzqXSNnwag==}
     dev: true
@@ -4807,6 +4675,10 @@ packages:
       babel-preset-current-node-syntax: 1.0.1_@babel+core@7.17.10
     dev: true
 
+  /backo2/1.0.2:
+    resolution: {integrity: sha512-zj6Z6M7Eq+PBZ7PQxl5NT665MvJdAkzp0f60nAJ+sLaSCBPMwVak5ZegFbgVCzFcCJTKFoMizvM5Ld7+JrRJHA==}
+    dev: false
+
   /balanced-match/0.4.2:
     resolution: {integrity: sha1-yz8+PHMtwPAe5wtAPzAuYddwmDg=}
     dev: false
@@ -4887,7 +4759,7 @@ packages:
     dev: false
 
   /bip66/1.1.5:
-    resolution: {integrity: sha1-AfqHSHhcpwlV1QESF9GzE5lpyiI=}
+    resolution: {integrity: sha512-nemMHz95EmS38a26XbbdxIYj5csHd3RMP3H5bwQknX0WYHF01qhpufP42mLOwVICuH2JmhIhXiWs89MfUGL7Xw==}
     dependencies:
       safe-buffer: 5.2.1
     dev: false
@@ -5432,6 +5304,12 @@ packages:
   /create-require/1.1.1:
     resolution: {integrity: sha512-dcKFX3jn0MpIaXjisoRvexIJVEKzaq7z2rZKxf+MSr9TkdmHmsU4m2lcLojrj/FHl8mk5VxMmYA+ftRkP/3oKQ==}
 
+  /cross-fetch/3.1.4:
+    resolution: {integrity: sha512-1eAtFWdIubi6T4XPy6ei9iUFoKpUkIF971QLN8lIvvvwueI65+Nw5haMNKUwfJxabqlIIDODJKGrQ66gxC0PbQ==}
+    dependencies:
+      node-fetch: 2.6.1
+    dev: false
+
   /cross-fetch/3.1.5:
     resolution: {integrity: sha512-lvb1SBsI0Z7GDwmuid+mU3kWVBwTVUbe7S0H52yaaAdQOXq2YktTCZdlAcNKFzE6QtRz0snpw9bNiPeOIkkQvw==}
     dependencies:
@@ -5964,14 +5842,18 @@ packages:
     dependencies:
       once: 1.4.0
 
-  /engine.io-client/6.2.2:
-    resolution: {integrity: sha512-8ZQmx0LQGRTYkHuogVZuGSpDqYZtCM/nv8zQ68VZ+JkOpazJ7ICdsSpaO6iXwvaU30oFg5QJOJWj8zWqhbKjkQ==}
+  /engine.io-client/6.1.1:
+    resolution: {integrity: sha512-V05mmDo4gjimYW+FGujoGmmmxRaDsrVr7AXA3ZIfa04MWM1jOfZfUwou0oNqhNwy/votUDvGDt4JA4QF4e0b4g==}
     dependencies:
-      '@socket.io/component-emitter': 3.1.0
+      '@socket.io/component-emitter': 3.0.0
       debug: 4.3.4
       engine.io-parser: 5.0.4
+      has-cors: 1.1.0
+      parseqs: 0.0.6
+      parseuri: 0.0.6
       ws: 8.2.3
       xmlhttprequest-ssl: 2.0.0
+      yeast: 0.1.2
     transitivePeerDependencies:
       - bufferutil
       - supports-color
@@ -7003,6 +6885,10 @@ packages:
   /has-bigints/1.0.2:
     resolution: {integrity: sha512-tSvCKtBr9lkF0Ex0aQiP9N+OpV4zi2r/Nee5VkRDbaqv35RLYMzbwQfFSZZH0kR+Rd6302UJZ2p/bJCEoR3VoQ==}
     dev: true
+
+  /has-cors/1.1.0:
+    resolution: {integrity: sha1-XkdHk/fqmEPRu5nCPu9J/xJv/zk=}
+    dev: false
 
   /has-flag/3.0.0:
     resolution: {integrity: sha1-tdRU3CGZriJWmfNGfloH87lVuv0=}
@@ -8270,17 +8156,6 @@ packages:
     resolution: {integrity: sha512-/cbbSxtZWs1O7R4tWqabrCM/t3N8qKUZMAg9IUqpPvUs6UyRvm6pCNYkskyKN/XU0UgffW+NY2ZRr8t0AknX7g==}
     dev: false
 
-  /jsontokens/3.0.0:
-    resolution: {integrity: sha512-P0QZC5AjOkn3t1ej6OuI7+XqoEctYj83UK4pw0WpHY4/z6a5PpZCJSpp5NZodq94GFkw2PfB9DPFoDM5qpyp/g==}
-    dependencies:
-      '@types/elliptic': 6.4.14
-      asn1.js: 5.4.1
-      base64url: 3.0.1
-      ecdsa-sig-formatter: 1.0.11
-      elliptic: 6.5.4
-      sha.js: 2.4.11
-    dev: false
-
   /jsontokens/3.1.1:
     resolution: {integrity: sha512-qABuRXXrDP1XQrUm0/59h3kEBWtbyk/lS24t98iHvuAq7gyNA2lxqSQgATsbx8DzbMfOJmkmfjwLodd96lD/kw==}
     dependencies:
@@ -8655,7 +8530,7 @@ packages:
     dev: true
 
   /merkle-lib/2.0.10:
-    resolution: {integrity: sha1-grjbrnXieneFOItz+ddyXQ9vMyY=}
+    resolution: {integrity: sha512-XrNQvUbn1DL5hKNe46Ccs+Tu3/PYOlrcZILuGUhb95oKBPjc/nmIC8D462PQkipVDGKRvwhn+QFg2cCdIvmDJA==}
     dev: false
 
   /micromatch/4.0.5:
@@ -8956,6 +8831,11 @@ packages:
     transitivePeerDependencies:
       - '@babel/core'
       - babel-plugin-macros
+
+  /node-fetch/2.6.1:
+    resolution: {integrity: sha512-V4aYg89jEoVRxRb2fJdAg8FHvI7cEyYdVAh94HH0UIK8oJxUfkjlDQN9RbMx+bEjP7+ggMiFRprSti032Oipxw==}
+    engines: {node: 4.x || >=6.0.0}
+    dev: false
 
   /node-fetch/2.6.7:
     resolution: {integrity: sha512-ZjMPFEfVx5j+y2yF35Kzx5sF7kDzxuDj6ziH4FFbOp87zKDZNx8yExJIb05OGF4Nlt9IHFIMBkRl41VdvcNdbQ==}
@@ -9351,6 +9231,14 @@ packages:
   /parse5/6.0.1:
     resolution: {integrity: sha512-Ofn/CTFzRGTTxwpNEs9PP93gXShHcTq255nzRYSKe8AkVpZY7e1fpmTfOyoIvjP5HG7Z2ZM7VS9PPhQGW2pOpw==}
     dev: true
+
+  /parseqs/0.0.6:
+    resolution: {integrity: sha512-jeAGzMDbfSHHA091hr0r31eYfTig+29g3GKKE/PPbEQ65X0lmMwlEoqmhzu0iztID5uJpZsFlUPDP8ThPL7M8w==}
+    dev: false
+
+  /parseuri/0.0.6:
+    resolution: {integrity: sha512-AUjen8sAkGgao7UyCX6Ahv0gIK2fABKmYjvP4xmy5JaKvcbTRueIqIPHLAfq30xJddqSE033IOMUSOMCcK3Sow==}
+    dev: false
 
   /path-exists/3.0.0:
     resolution: {integrity: sha512-bpC7GYwiDYQ4wYLe+FA8lhRjhQCMcQGuSgGGqDkg/QerRWw9CmGRT0iSOVRSZJ29NMLZgIzqaljJ63oaL4NIJQ==}
@@ -9764,7 +9652,7 @@ packages:
     dev: true
 
   /punycode/1.3.2:
-    resolution: {integrity: sha1-llOgNvt8HuQjQvIyXM7v6jkmxI0=}
+    resolution: {integrity: sha512-RofWgt/7fL5wP1Y7fxE7/EmTLzQVnB0ycyibJ0OOHIlJqTNzglYFxVwETOcIoJqJmpDXJ9xImDv+Fq34F/d4Dw==}
     dev: false
 
   /punycode/1.4.1:
@@ -9783,7 +9671,7 @@ packages:
     dev: true
 
   /pushdata-bitcoin/1.0.1:
-    resolution: {integrity: sha1-FZMdPNlnreUiBvUjqnMxrvfUOvc=}
+    resolution: {integrity: sha512-hw7rcYTJRAl4olM8Owe8x0fBuJJ+WGbMhQuLWOXEMN3PxPCKQHRkhfL+XG0+iXUmSHjkMmb3Ba55Mt21cZc9kQ==}
     dependencies:
       bitcoin-ops: 1.4.1
     dev: false
@@ -9799,7 +9687,7 @@ packages:
     dev: false
 
   /querystring/0.2.0:
-    resolution: {integrity: sha1-sgmEkgO7Jd+CDadW50cAWHhSFiA=}
+    resolution: {integrity: sha512-X/xY82scca2tau62i9mDyU9K+I+djTMUsvwf7xnUX5GLvVzgJybOJf4Y6o9Zx3oJK/LSXg5tTZBjwzqVPaPO2g==}
     engines: {node: '>=0.4.x'}
     deprecated: The querystring API is considered Legacy. new code should use the URLSearchParams API instead.
     dev: false
@@ -10279,6 +10167,7 @@ packages:
 
   /safer-buffer/2.1.2:
     resolution: {integrity: sha512-YZo3K82SD7Riyi0E1EQPojLz7kpepnSQI9IyPbHHg1XXXevb5dJI7tpyN2ADxGcQbHG7vcyRHk0cbwqcQriUtg==}
+    dev: true
 
   /sanitize-html/2.7.0:
     resolution: {integrity: sha512-jfQelabOn5voO7FAfnQF7v+jsA6z9zC/O4ec0z3E35XPEtHYJT/OdUziVWlKW4irCr2kXaQAyXTXDHWAibg1tA==}
@@ -10541,25 +10430,27 @@ packages:
       yargs: 15.4.1
     dev: true
 
-  /socket.io-client/4.5.1:
-    resolution: {integrity: sha512-e6nLVgiRYatS+AHXnOnGi4ocOpubvOUCGhyWw8v+/FxW8saHkinG6Dfhi9TU0Kt/8mwJIAASxvw6eujQmjdZVA==}
+  /socket.io-client/4.4.0:
+    resolution: {integrity: sha512-g7riSEJXi7qCFImPow98oT8X++MSsHz6MMFRXkWNJ6uEROSHOa3kxdrsYWMq85dO+09CFMkcqlpjvbVXQl4z6g==}
     engines: {node: '>=10.0.0'}
     dependencies:
-      '@socket.io/component-emitter': 3.1.0
+      '@socket.io/component-emitter': 3.0.0
+      backo2: 1.0.2
       debug: 4.3.4
-      engine.io-client: 6.2.2
-      socket.io-parser: 4.2.0
+      engine.io-client: 6.1.1
+      parseuri: 0.0.6
+      socket.io-parser: 4.1.2
     transitivePeerDependencies:
       - bufferutil
       - supports-color
       - utf-8-validate
     dev: false
 
-  /socket.io-parser/4.2.0:
-    resolution: {integrity: sha512-tLfmEwcEwnlQTxFB7jibL/q2+q8dlVQzj4JdRLJ/W/G1+Fu9VSxCx1Lo+n1HvXxKnM//dUuD0xgiA7tQf57Vng==}
+  /socket.io-parser/4.1.2:
+    resolution: {integrity: sha512-j3kk71QLJuyQ/hh5F/L2t1goqzdTL0gvDzuhTuNSwihfuFUrcSji0qFZmJJPtG6Rmug153eOPsUizeirf1IIog==}
     engines: {node: '>=10.0.0'}
     dependencies:
-      '@socket.io/component-emitter': 3.1.0
+      '@socket.io/component-emitter': 3.0.0
       debug: 4.3.4
     transitivePeerDependencies:
       - supports-color
@@ -11365,7 +11256,7 @@ packages:
     dev: true
 
   /url/0.11.0:
-    resolution: {integrity: sha1-ODjpfPxgUh63PFJajlW/3Z4uKPE=}
+    resolution: {integrity: sha512-kbailJa29QrtXnxgq+DdCEGlbTeYM2eJUxsz6vjZavrCYPMIFHMKQmSKYAIuUK2i7hgPm28a8piX5NTUtM/LKQ==}
     dependencies:
       punycode: 1.3.2
       querystring: 0.2.0
@@ -11738,6 +11629,19 @@ packages:
       signal-exit: 3.0.7
     dev: true
 
+  /ws/7.5.6:
+    resolution: {integrity: sha512-6GLgCqo2cy2A2rjCNFlxQS6ZljG/coZfZXclldI8FB/1G3CCI36Zd8xy2HrFVACi8tfk5XrgLQEk+P0Tnz9UcA==}
+    engines: {node: '>=8.3.0'}
+    peerDependencies:
+      bufferutil: ^4.0.1
+      utf-8-validate: ^5.0.2
+    peerDependenciesMeta:
+      bufferutil:
+        optional: true
+      utf-8-validate:
+        optional: true
+    dev: false
+
   /ws/7.5.7:
     resolution: {integrity: sha512-KMvVuFzpKBuiIXW3E4u3mySRO2/mCHSyZDJQM5NQ9Q9KHWHWh0NHgfbRMLLrceUK5qAL4ytALJbpRMjixFZh8A==}
     engines: {node: '>=8.3.0'}
@@ -11749,6 +11653,7 @@ packages:
         optional: true
       utf-8-validate:
         optional: true
+    dev: true
 
   /ws/8.2.3:
     resolution: {integrity: sha512-wBuoj1BDpC6ZQ1B7DWQBYVLphPWkm8i9Y0/3YdHjHKHiohOJ1ws+3OccDWtH+PoC9DZD5WOTrJvNbWvjS6JWaA==}
@@ -11856,6 +11761,10 @@ packages:
       y18n: 5.0.8
       yargs-parser: 21.0.1
     dev: true
+
+  /yeast/0.1.2:
+    resolution: {integrity: sha1-AI4G2AlDIMNy28L47XagymyKxBk=}
+    dev: false
 
   /yn/3.1.1:
     resolution: {integrity: sha512-Ux4ygGWsu2c7isFWe8Yu1YluJmqVhxqK2cLXNQA5AcC3QfbGNpM7fu0Y8b/z16pXLnFxZYvWhd3fhBY9DLmC6Q==}
