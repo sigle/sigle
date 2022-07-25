@@ -13,7 +13,6 @@ import { Box, Button, Container, Flex, IconButton } from '../../../ui';
 import { useAuth } from '../../auth/AuthContext';
 import { sigleConfig } from '../../../config';
 import { useGetUserMe } from '../../../hooks/users';
-import { useFeatureFlags } from '../../../utils/featureFlags';
 import { HeaderDropdown } from './HeaderDropdown';
 
 const Header = styled('header', Container, {
@@ -32,7 +31,6 @@ export const AppHeader = () => {
   const { resolvedTheme, setTheme } = useTheme();
   const { user, isLegacy } = useAuth();
   const { status } = useSession();
-  const { isExperimentalFollowEnabled } = useFeatureFlags();
 
   /**
    * This query is used to register the user in the DB. As the header is part of all the
@@ -103,21 +101,17 @@ export const AppHeader = () => {
         gap="9"
       >
         {user && !isLegacy ? (
-          <>
-            <Link href="/feed" passHref>
-              <Button variant="ghost" as="a">
-                Feed
-              </Button>
-            </Link>
-            {isExperimentalFollowEnabled ? (
-              <Link href="/explore" passHref>
-                <Button variant="ghost" as="a">
-                  Explore
-                </Button>
-              </Link>
-            ) : null}
-          </>
+          <Link href="/feed" passHref>
+            <Button variant="ghost" as="a">
+              Feed
+            </Button>
+          </Link>
         ) : null}
+        <Link href="/explore" passHref>
+          <Button variant="ghost" as="a">
+            Explore
+          </Button>
+        </Link>
         {user ? (
           <HeaderDropdown />
         ) : (

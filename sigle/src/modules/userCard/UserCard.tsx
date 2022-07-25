@@ -9,6 +9,7 @@ import { Button, Flex, Typography } from '../../ui';
 import { GaiaUserFollowing } from '../../utils';
 import { generateAvatar } from '../../utils/boringAvatar';
 import { fetchSettings } from '../../utils/gaia/fetch';
+import { useAuth } from '../auth/AuthContext';
 
 const UserCardContainer = styled('div', {
   display: 'flex',
@@ -48,10 +49,11 @@ const UserCardDescription = styled(Typography, {
 
 interface UserCardProps {
   address: string;
-  userFollowing: GaiaUserFollowing;
+  userFollowing?: GaiaUserFollowing;
 }
 
 export const UserCard = ({ address, userFollowing }: UserCardProps) => {
+  const { user } = useAuth();
   const { mutate: followUser } = useUserFollow();
   const { mutate: unfollowUser } = useUserUnfollow();
   const { isLoading: isLoadingUsername, data: username } = useQuery(
@@ -115,7 +117,7 @@ export const UserCard = ({ address, userFollowing }: UserCardProps) => {
   }
 
   const userPath = `/${username}`;
-  const following = !!userFollowing.following[address];
+  const following = !!userFollowing?.following[address];
 
   return (
     <UserCardContainer>
@@ -143,11 +145,12 @@ export const UserCard = ({ address, userFollowing }: UserCardProps) => {
               {isLoadingUsername ? '...' : username}
             </Typography>
           </Link>
-          {!following ? (
+          {user && !following && (
             <Button color="orange" css={{ ml: '$5' }} onClick={handleFollow}>
               Follow
             </Button>
-          ) : (
+          )}
+          {user && following && (
             <Button
               variant="subtle"
               css={{ ml: '$5' }}
