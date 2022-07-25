@@ -130,7 +130,6 @@ export const SelectNFTDialog = ({
 
   const NFTImageURL = `${sigleConfig.explorerGuildUrl}/nft-images/?image=ar://Z4ygyXm-fERGzKEB2bvE7gx98SHcoaP8qdZQo0Kxm6Y`;
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const subscriptionCreateError: any = createError as Error;
 
   const handleSubmit = () => {
@@ -160,12 +159,7 @@ export const SelectNFTDialog = ({
       <SelectNFTDialogContent>
         {isSuccess ? (
           <Flex direction="column" align="center" gap="5">
-            <Image
-              src="/static/img/success.gif"
-              alt="Success"
-              width={92}
-              height={92}
-            />
+            <Image src="/static/img/success.gif" width={92} height={92} />
             <Box>
               <DialogTitle asChild>
                 <Typography

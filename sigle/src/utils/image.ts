@@ -25,7 +25,6 @@ export const resizeImage = (
         canvas.toBlob(
           (blob) => {
             resolve(
-              // eslint-disable-next-line @typescript-eslint/no-non-null-assertion -- blob is not null
               Object.assign(blob!, {
                 preview: dataurl,
               })

@@ -49,11 +49,11 @@ const MetaLink = styled('div', {
   alignItems: 'center',
 });
 
-interface TwitterCardPreviewProps {
+interface TwitterCardPreview {
   story: Story;
 }
 
-export const TwitterCardPreview = ({ story }: TwitterCardPreviewProps) => {
+export const TwitterCardPreview = ({ story }: TwitterCardPreview) => {
   const seoTitle = story.metaTitle || `${story.title} | Sigle`;
   const seoDescription = story.metaDescription;
   const seoImage = story.metaImage || story.coverImage;

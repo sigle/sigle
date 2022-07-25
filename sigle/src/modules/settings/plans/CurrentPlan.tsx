@@ -119,17 +119,10 @@ export const CurrentPlan = () => {
             }}
           >
             {currentPlan === 'starter' ? (
-              <Image
-                src={backpackImage}
-                alt="Backpack"
-                width={70}
-                height={70}
-                quality={100}
-              />
+              <Image src={backpackImage} width={70} height={70} quality={100} />
             ) : (
               <Image
                 src="/static/img/nft_locked.gif"
-                alt="NFT Locked"
                 width={70}
                 height={64}
                 quality={100}

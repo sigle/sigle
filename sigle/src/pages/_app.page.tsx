@@ -83,7 +83,7 @@ const PlausibleTrack = () => {
     return () => {
       Router.events.off('routeChangeComplete', trackPlausible);
     };
-  }, [plausible]);
+  }, []);
 
   return <React.Fragment />;
 };

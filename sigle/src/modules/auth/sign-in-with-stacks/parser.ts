@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-non-null-asserted-optional-chain, @typescript-eslint/no-non-null-assertion */
 // siwe port of https://github.com/spruceid/siwe/blob/main/packages/siwe-parser/lib/regex.ts
 import * as uri from 'valid-url';
 import { validateStacksAddress } from '@stacks/transactions';
@@ -40,7 +39,7 @@ export class ParsedMessage {
   constructor(msg: string) {
     const REGEX = new RegExp(MESSAGE, 'g');
 
-    const match = REGEX.exec(msg);
+    let match = REGEX.exec(msg);
     if (!match) {
       throw new Error('Message did not match the regular expression.');
     }

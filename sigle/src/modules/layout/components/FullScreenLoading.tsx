@@ -1,5 +1,5 @@
 import { styled } from '../../../stitches.config';
-import { Heading } from '../../../ui';
+import { Heading, Text } from '../../../ui';
 
 const FullScreenLoadingContainer = styled('div', {
   height: '100vh',
