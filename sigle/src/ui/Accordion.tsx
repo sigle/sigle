@@ -1,6 +1,6 @@
 import * as AccordionPrimitive from '@radix-ui/react-accordion';
-import { ChevronDownIcon } from '@radix-ui/react-icons';
-import { styled, keyframes } from '../stitches.config';
+import { ArrowDownIcon, ChevronDownIcon } from '@radix-ui/react-icons';
+import { styled, keyframes, darkTheme } from '../stitches.config';
 
 const slideDown = keyframes({
   from: { height: 0 },
@@ -57,6 +57,9 @@ export const StyledChevron = styled(ChevronDownIcon, {
 
 type AccordionTriggerProps = React.ComponentProps<
   typeof AccordionPrimitive.Trigger
+>;
+type AccordionContentProps = React.ComponentProps<
+  typeof AccordionPrimitive.Content
 >;
 
 export const AccordionTrigger = ({

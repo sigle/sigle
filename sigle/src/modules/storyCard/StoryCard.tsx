@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import format from 'date-fns/format';
-import { styled } from '../../stitches.config';
+import { darkTheme, styled } from '../../stitches.config';
 import { SettingsFile, SubsetStory } from '../../types';
 import { Box, Flex, Typography } from '../../ui';
 import { generateAvatar } from '../../utils/boringAvatar';

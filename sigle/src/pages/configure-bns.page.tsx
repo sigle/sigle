@@ -34,7 +34,7 @@ const ConfigureBNS = () => {
 
     const interval = setInterval(checkBnsConfiguration, 1000 * 10);
     return () => clearInterval(interval);
-  }, [user, router]);
+  }, [user]);
 
   return (
     <Protected>

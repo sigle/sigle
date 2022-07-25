@@ -1,12 +1,15 @@
 import {
   Dialog,
   DialogContent,
+  DialogTrigger,
+  IconButton,
   Tabs,
   TabsContent,
   TabsList,
   TabsTrigger,
 } from '../../../ui';
 import { styled } from '../../../stitches.config';
+import { KeyboardIcon } from '@radix-ui/react-icons';
 import { HintsCarousel } from './HintsCarousel';
 
 interface ShortcutsDialogProps {

@@ -24,13 +24,7 @@ const AuthContext = React.createContext<{
   loggingIn: boolean;
   setUsername: (username: string) => void;
   logout: () => void;
-}>({
-  loggingIn: false,
-  // eslint-disable-next-line @typescript-eslint/no-empty-function
-  setUsername: () => {},
-  // eslint-disable-next-line @typescript-eslint/no-empty-function
-  logout: () => {},
-});
+}>({ loggingIn: false, setUsername: () => {}, logout: () => {} });
 
 interface AuthProviderProps {
   children: React.ReactNode;

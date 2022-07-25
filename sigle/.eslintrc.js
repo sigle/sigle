@@ -12,7 +12,5 @@ module.exports = {
     '@typescript-eslint/explicit-module-boundary-types': 'off',
     '@typescript-eslint/no-unused-vars': 2,
     '@typescript-eslint/no-use-before-define': 'off',
-    'react/display-name': 'off',
-    'react/no-unescaped-entities': ['error', { forbid: ['>', '}'] }],
   },
 };
