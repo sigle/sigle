@@ -33,7 +33,11 @@ import {
   useUserUnfollow,
 } from '../../hooks/appData';
 import { useAuth } from '../auth/AuthContext';
-import { useGetUserByAddress } from '../../hooks/users';
+import {
+  useGetUserByAddress,
+  useGetUsersFollowers,
+  useGetUsersFollowing,
+} from '../../hooks/users';
 import Image from 'next/future/image';
 import { useTheme } from 'next-themes';
 
@@ -140,6 +144,8 @@ export const PublicStory = ({
   const { data: userInfoByAddress } = useGetUserByAddress(userInfo.address);
   const { mutate: followUser } = useUserFollow();
   const { mutate: unfollowUser } = useUserUnfollow();
+  const { data: following } = useGetUsersFollowing(userInfo.address);
+  const { data: followers } = useGetUsersFollowers(userInfo.address);
   const { username, storyId } = router.query as {
     username: string;
     storyId: string;
@@ -344,13 +350,13 @@ export const PublicStory = ({
                   <Flex gap="3">
                     <Typography size="subheading" css={{ color: '$gray9' }}>
                       <Box css={{ color: '$gray11', mr: 2 }} as="span">
-                        0
+                        {followers?.length}
                       </Box>
                       Followers
                     </Typography>
                     <Typography size="subheading" css={{ color: '$gray9' }}>
                       <Box css={{ color: '$gray11', mr: 2 }} as="span">
-                        1
+                        {following?.length}
                       </Box>
                       Following
                     </Typography>
