@@ -53,11 +53,13 @@ const ImageContainer = styled('div', {
 export const HeaderDropdown = () => {
   const { data: settings } = useGetUserSettings();
   const router = useRouter();
-  const { user } = useAuth();
+  const { user, isLegacy } = useAuth();
   const queryClient = useQueryClient();
   const [loadingCreate, setLoadingCreate] = useState(false);
   const { resolvedTheme, setTheme } = useTheme();
-  const { data: userSubscription } = useGetUserSubscription();
+  const { data: userSubscription } = useGetUserSubscription({
+    enabled: !isLegacy,
+  });
 
   const handleCreateNewPrivateStory = async () => {
     setLoadingCreate(true);
@@ -124,7 +126,7 @@ export const HeaderDropdown = () => {
     },
   ];
 
-  !userSubscription && lowerNavItems.push(upgradeItem);
+  !userSubscription && !isLegacy && lowerNavItems.push(upgradeItem);
 
   return (
     <DropdownMenu>
