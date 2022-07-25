@@ -202,7 +202,7 @@ importers:
       next-plausible: 3.2.0
       next-seo: 5.4.0
       next-sitemap: 2.5.20
-      next-themes: 0.1.1
+      next-themes: 0.2.0
       nprogress: 0.2.0
       openapi-typescript-codegen: 0.23.0
       posthog-js: 1.20.4
@@ -298,7 +298,7 @@ importers:
       next-auth: 4.9.0_biqbaboplfbrettd7655fr4n2y
       next-plausible: 3.2.0_24lkarzjpo3wcmj2o6qyrkug4y
       next-seo: 5.4.0_24lkarzjpo3wcmj2o6qyrkug4y
-      next-themes: 0.1.1_24lkarzjpo3wcmj2o6qyrkug4y
+      next-themes: 0.2.0_24lkarzjpo3wcmj2o6qyrkug4y
       nprogress: 0.2.0
       openapi-typescript-codegen: 0.23.0
       posthog-js: 1.20.4
@@ -8960,10 +8960,10 @@ packages:
       next: 12.2.0_b7sksnfkdyiidz7vzaadim75qm
     dev: true
 
-  /next-themes/0.1.1_24lkarzjpo3wcmj2o6qyrkug4y:
-    resolution: {integrity: sha512-Iqxt6rhS/KfK/iHJ0tfFjTcdLEAI0AgwFuAFrMwLOPK5e+MI3I+fzyvBoS+VaOS+NldUiazurhgwYhrfV0VXsQ==}
+  /next-themes/0.2.0_24lkarzjpo3wcmj2o6qyrkug4y:
+    resolution: {integrity: sha512-myhpDL4vadBD9YDSHiewqvzorGzB03N84e+3LxCwHRlM/hiBOaW+UsKsQojQAzC7fdcJA0l2ppveXcYaVV+hxQ==}
     peerDependencies:
-      next: '>=11.1.1'
+      next: '*'
       react: '*'
       react-dom: '*'
     dependencies:
