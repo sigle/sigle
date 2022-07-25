@@ -39,7 +39,7 @@ export class ParsedMessage {
   constructor(msg: string) {
     const REGEX = new RegExp(MESSAGE, 'g');
 
-    let match = REGEX.exec(msg);
+    const match = REGEX.exec(msg);
     if (!match) {
       throw new Error('Message did not match the regular expression.');
     }
