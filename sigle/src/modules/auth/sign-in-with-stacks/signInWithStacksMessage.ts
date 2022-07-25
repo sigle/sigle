@@ -165,7 +165,7 @@ export class SignInWithStacksMessage {
       );
     }
 
-    let suffix = suffixArray.join('\n');
+    const suffix = suffixArray.join('\n');
     prefix = [prefix, this.statement].join('\n\n');
     if (this.statement) {
       prefix += '\n';
