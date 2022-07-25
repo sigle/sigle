@@ -8,10 +8,10 @@ import { UserCard } from '../userCard/UserCard';
 import { useAuth } from '../auth/AuthContext';
 
 export const ExploreUsers = () => {
-  const { user } = useAuth();
+  const { user, isLegacy } = useAuth();
   const { isLoading: isLoadingUserFollowing, data: userFollowing } =
     useGetUserFollowing({
-      enabled: !!user,
+      enabled: !!user && !isLegacy,
     });
 
   const {

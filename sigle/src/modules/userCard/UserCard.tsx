@@ -53,7 +53,7 @@ interface UserCardProps {
 }
 
 export const UserCard = ({ address, userFollowing }: UserCardProps) => {
-  const { user } = useAuth();
+  const { user, isLegacy } = useAuth();
   const { mutate: followUser } = useUserFollow();
   const { mutate: unfollowUser } = useUserUnfollow();
   const { isLoading: isLoadingUsername, data: username } = useQuery(
@@ -145,12 +145,12 @@ export const UserCard = ({ address, userFollowing }: UserCardProps) => {
               {isLoadingUsername ? '...' : username}
             </Typography>
           </Link>
-          {user && !following && (
+          {user && !isLegacy && !following && (
             <Button color="orange" css={{ ml: '$5' }} onClick={handleFollow}>
               Follow
             </Button>
           )}
-          {user && following && (
+          {user && !isLegacy && following && (
             <Button
               variant="subtle"
               css={{ ml: '$5' }}
