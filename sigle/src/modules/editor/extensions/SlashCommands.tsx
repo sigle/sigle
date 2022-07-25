@@ -105,6 +105,7 @@ export class CommandsListController extends React.Component<
   { selectedIndex: number }
 > {
   constructor() {
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
     super();
     this.state = {
@@ -158,7 +159,7 @@ export class CommandsListController extends React.Component<
     }
   }
 
-  componentDidUpdate(prevProps: any, prevState: any) {
+  componentDidUpdate(prevProps: any) {
     if (prevProps.items.length !== this.props.items.length) {
       this.setState({ selectedIndex: 0 });
     }

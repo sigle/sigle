@@ -47,7 +47,7 @@ export const EditorHeader = ({
   });
 
   const handleScroll = () => {
-    let scrollY = window.scrollY;
+    const scrollY = window.scrollY;
     if (scrollY === 0) {
       setScroll({ direction: null, prevOffset: scrollY });
     }
