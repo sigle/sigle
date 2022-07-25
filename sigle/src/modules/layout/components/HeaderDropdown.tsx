@@ -112,12 +112,19 @@ export const HeaderDropdown = () => {
     },
   ];
 
+  const upgradeItem = {
+    name: 'Upgrade',
+    path: '/settings/plans',
+  };
+
   const lowerNavItems = [
     {
       name: 'Settings',
       path: '/settings',
     },
   ];
+
+  !userSubscription && lowerNavItems.push(upgradeItem);
 
   return (
     <DropdownMenu>
@@ -221,16 +228,6 @@ export const HeaderDropdown = () => {
             </DropdownMenuItem>
           </Link>
         ))}
-        {!userSubscription && (
-          <Link href="/settings/plans" passHref>
-            <DropdownMenuItem
-              selected={router.pathname === '/settings/plans'}
-              as="a"
-            >
-              Upgrade
-            </DropdownMenuItem>
-          </Link>
-        )}
         <DropdownMenuItem
           css={{ minWidth: 231, justifyContent: 'space-between', pr: '$2' }}
           onSelect={(e) => e.preventDefault()}
