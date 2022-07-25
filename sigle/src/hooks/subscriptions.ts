@@ -1,12 +1,21 @@
-import { useMutation, UseMutationOptions, useQuery } from 'react-query';
+import {
+  useMutation,
+  UseMutationOptions,
+  useQuery,
+  UseQueryOptions,
+} from 'react-query';
 import { SubscriptionService } from '../external/api';
 
 type GetApiSubscriptionsReturnType = Awaited<
   ReturnType<typeof SubscriptionService.getApiSubscriptions>
 >;
-export const useGetUserSubscription = () =>
-  useQuery<GetApiSubscriptionsReturnType, Error>('get-user-subscription', () =>
-    SubscriptionService.getApiSubscriptions()
+export const useGetUserSubscription = (
+  options: UseQueryOptions<GetApiSubscriptionsReturnType, Error> = {}
+) =>
+  useQuery<GetApiSubscriptionsReturnType, Error>(
+    'get-user-subscription',
+    () => SubscriptionService.getApiSubscriptions(),
+    options
   );
 
 type PostApiSubscriptionsCreatorPlusReturnType = Awaited<

@@ -24,6 +24,7 @@ import * as Fathom from 'fathom-client';
 import { Goals } from '../../../utils/fathom';
 import { createSubsetStory } from '../../editor/utils';
 import { toast } from 'react-toastify';
+import { useAuth } from '../../auth/AuthContext';
 
 export const DashboardContainer = styled(Container, {
   flex: 1,
@@ -123,6 +124,7 @@ export const DashboardLayout = ({
 }: DashboardLayoutProps) => {
   const router = useRouter();
   const [loadingCreate, setLoadingCreate] = useState(false);
+  const { user } = useAuth();
 
   const handleCreateNewPrivateStory = async () => {
     setLoadingCreate(true);
@@ -158,6 +160,10 @@ export const DashboardLayout = ({
     {
       name: 'Analytics',
       path: '/analytics',
+    },
+    {
+      name: 'Profile',
+      path: '/[username]',
     },
   ];
 
