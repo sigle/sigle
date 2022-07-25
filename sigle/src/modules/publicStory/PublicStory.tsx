@@ -7,39 +7,14 @@ import { sanitizeHexColor } from '../../utils/security';
 import { sigleConfig } from '../../config';
 import { TipTapEditor } from '../editor/TipTapEditor';
 import { styled } from '../../stitches.config';
-import {
-  Box,
-  Button,
-  Container,
-  Flex,
-  Typography,
-  HoverCard,
-  HoverCardContent,
-  HoverCardTrigger,
-  Tooltip,
-  TooltipTrigger,
-  TooltipContent,
-} from '../../ui';
+import { Box, Container, Flex, Typography } from '../../ui';
 import { PoweredBy } from './PoweredBy';
 import { getTextFromHtml } from '../editor/utils/getTextFromHtml';
 import { AppHeader } from '../layout/components/AppHeader';
 import format from 'date-fns/format';
-import Link from 'next/link';
 import { ShareButtons } from './ShareButtons';
 import { generateAvatar } from '../../utils/boringAvatar';
-import {
-  useGetUserFollowing,
-  useUserFollow,
-  useUserUnfollow,
-} from '../../hooks/appData';
-import { useAuth } from '../auth/AuthContext';
-import {
-  useGetUserByAddress,
-  useGetUsersFollowers,
-  useGetUsersFollowing,
-} from '../../hooks/users';
-import Image from 'next/future/image';
-import { useTheme } from 'next-themes';
+import { ProfileCard } from '../profileCard/ProfileCard';
 
 const ProfileImageContainer = styled('div', {
   display: 'flex',
@@ -136,34 +111,9 @@ export const PublicStory = ({
   userInfo,
 }: PublicStoryProps) => {
   const router = useRouter();
-  const { resolvedTheme } = useTheme();
-  const { user, isLegacy } = useAuth();
-  const { data: userFollowing } = useGetUserFollowing({
-    enabled: !!user && userInfo.username !== user.username,
-  });
-  const { data: userInfoByAddress } = useGetUserByAddress(userInfo.address);
-  const { mutate: followUser } = useUserFollow();
-  const { mutate: unfollowUser } = useUserUnfollow();
-  const { data: following } = useGetUsersFollowing(userInfo.address);
-  const { data: followers } = useGetUsersFollowers(userInfo.address);
   const { username, storyId } = router.query as {
     username: string;
     storyId: string;
-  };
-
-  const isFollowingUser =
-    userFollowing && !!userFollowing.following[userInfo.address];
-
-  const handleFollow = async () => {
-    if (!userFollowing) return;
-    followUser({ userFollowing, address: userInfo.address });
-  };
-
-  const handleUnfollow = async () => {
-    if (!userFollowing) {
-      return;
-    }
-    unfollowUser({ userFollowing, address: userInfo.address });
   };
 
   const storyReadingTime = useMemo(
@@ -246,123 +196,11 @@ export const PublicStory = ({
               />
             </ProfileImageContainer>
             <Box>
-              <HoverCard openDelay={300}>
-                <Link href="/[username]" as={`/${username}`} passHref>
-                  <HoverCardTrigger asChild>
-                    <Typography
-                      css={{ fontWeight: 600 }}
-                      as="a"
-                      size="subheading"
-                    >
-                      {siteName}
-                    </Typography>
-                  </HoverCardTrigger>
-                </Link>
-                <HoverCardContent
-                  sideOffset={40}
-                  css={{
-                    display: 'flex',
-                    gap: '$2',
-                    flexDirection: 'column',
-                    width: 280,
-                  }}
-                >
-                  <Flex justify="between">
-                    <ProfileImageContainer
-                      css={{
-                        width: 56,
-                        height: 56,
-                      }}
-                    >
-                      <ProfileImage
-                        css={{
-                          maxWidth: 56,
-                          maxHeight: 56,
-                        }}
-                        src={
-                          settings?.siteLogo
-                            ? settings.siteLogo
-                            : generateAvatar(userInfo.address)
-                        }
-                      />
-                    </ProfileImageContainer>
-                    {user &&
-                    user.username !== userInfo.username &&
-                    !isLegacy &&
-                    userFollowing ? (
-                      !isFollowingUser ? (
-                        <Button
-                          color="orange"
-                          css={{ ml: '$5', alignSelf: 'start' }}
-                          onClick={handleFollow}
-                        >
-                          Follow
-                        </Button>
-                      ) : (
-                        <Button
-                          variant="subtle"
-                          css={{ ml: '$5', alignSelf: 'start' }}
-                          onClick={handleUnfollow}
-                        >
-                          Unfollow
-                        </Button>
-                      )
-                    ) : null}
-                  </Flex>
-                  <Flex gap="1" align="center">
-                    <Typography css={{ fontWeight: 600 }} size="subheading">
-                      {siteName}
-                    </Typography>
-                    {userInfoByAddress?.subscription && (
-                      <Tooltip delayDuration={200}>
-                        <TooltipTrigger asChild>
-                          <a
-                            href={`${sigleConfig.gammaUrl}/${userInfoByAddress.subscription.nftId}`}
-                            target="_blank"
-                            rel="noreferrer"
-                          >
-                            <Image
-                              src={
-                                resolvedTheme === 'dark'
-                                  ? '/img/badges/creatorPlusDark.svg'
-                                  : '/img/badges/creatorPlusLight.svg'
-                              }
-                              alt="Creator + badge"
-                              width={12}
-                              height={12}
-                            />
-                          </a>
-                        </TooltipTrigger>
-                        <TooltipContent
-                          css={{ boxShadow: 'none' }}
-                          side="right"
-                          sideOffset={8}
-                        >
-                          Creator + Explorer #
-                          {userInfoByAddress.subscription.nftId}
-                        </TooltipContent>
-                      </Tooltip>
-                    )}
-                  </Flex>
-                  <Typography css={{ color: '$gray9' }} size="subheading">
-                    {settings.siteDescription}
-                  </Typography>
-                  <Flex gap="3">
-                    <Typography size="subheading" css={{ color: '$gray9' }}>
-                      <Box css={{ color: '$gray11', mr: 2 }} as="span">
-                        {followers?.length}
-                      </Box>
-                      Followers
-                    </Typography>
-                    <Typography size="subheading" css={{ color: '$gray9' }}>
-                      <Box css={{ color: '$gray11', mr: 2 }} as="span">
-                        {following?.length}
-                      </Box>
-                      Following
-                    </Typography>
-                  </Flex>
-                </HoverCardContent>
-              </HoverCard>
+              <ProfileCard settings={settings} userInfo={userInfo}>
+                <Typography css={{ fontWeight: 600 }} as="a" size="subheading">
+                  {siteName}
+                </Typography>
+              </ProfileCard>
               <Typography
                 size="subheading"
                 css={{
