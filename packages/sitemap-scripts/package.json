@@ -11,8 +11,8 @@
     "@stacks/auth": "4.3.3"
   },
   "devDependencies": {
-    "@types/node": "17.0.31",
-    "ts-node": "10.7.0",
+    "@types/node": "18.0.3",
+    "ts-node": "10.8.2",
     "typescript": "4.7.4",
     "undici": "5.8.0"
   }
