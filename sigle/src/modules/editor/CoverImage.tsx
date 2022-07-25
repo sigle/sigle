@@ -30,8 +30,8 @@ export const CoverImage = ({ story, setStoryFile }: CoverImageProps) => {
   };
 
   const onDrop = useCallback(
-    async (acceptedFiles) => {
-      const file: File | undefined = acceptedFiles[0];
+    async (acceptedFiles: File[]) => {
+      const file = acceptedFiles[0];
       if (!file) return;
       const [mime] = file.type.split('/');
       if (mime !== 'image') return;
