@@ -195,7 +195,7 @@ export const PublicStory = ({
                 }
               />
             </ProfileImageContainer>
-            <Box>
+            <Flex direction="column">
               <ProfileCard settings={settings} userInfo={userInfo}>
                 <Typography css={{ fontWeight: 600 }} as="a" size="subheading">
                   {siteName}
@@ -214,7 +214,7 @@ export const PublicStory = ({
                 <span>•</span>
                 <span>{storyReadingTime?.text}</span>
               </Typography>
-            </Box>
+            </Flex>
           </Flex>
           <ShareButtons username={username} story={story} settings={settings} />
         </Flex>
