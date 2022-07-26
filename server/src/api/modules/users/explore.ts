@@ -31,7 +31,6 @@ export async function createGetUserExploreEndpoint(fastify: FastifyInstance) {
   }>(
     '/api/users/explore',
     {
-      onRequest: [fastify.authenticate],
       schema: {
         description: 'Return a list of users using Sigle.',
         tags: ['user'],
@@ -49,11 +48,8 @@ export async function createGetUserExploreEndpoint(fastify: FastifyInstance) {
         page = 1;
       }
       const pageSize = 50;
-      const where = { stacksAddress: { not: req.address } };
 
       const users = await prisma.user.findMany({
-        // Remove the current logged in user from the list
-        where,
         orderBy: { followers: { _count: 'desc' } },
         skip: pageSize * (page - 1),
         take: pageSize,
@@ -61,7 +57,7 @@ export async function createGetUserExploreEndpoint(fastify: FastifyInstance) {
           _count: true,
         },
       });
-      const usersCount = await prisma.user.count({ where });
+      const usersCount = await prisma.user.count({});
       const nextPage = usersCount > pageSize * page ? page + 1 : null;
 
       return res.send({ data: users, nextPage });
