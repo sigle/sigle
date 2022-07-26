@@ -140,9 +140,11 @@ export const ProfileCard = ({
           ) : null}
         </Flex>
         <Flex gap="1" align="center">
-          <Typography css={{ fontWeight: 600 }} size="subheading">
-            {siteName}
-          </Typography>
+          <Link href="/[username]" as={`/${userInfo.username}`} passHref>
+            <Typography as="a" css={{ fontWeight: 600 }} size="subheading">
+              {siteName}
+            </Typography>
+          </Link>
           {userInfoByAddress?.subscription && (
             <Tooltip delayDuration={200}>
               <TooltipTrigger asChild>
