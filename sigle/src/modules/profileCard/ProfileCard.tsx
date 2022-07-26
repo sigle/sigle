@@ -28,6 +28,7 @@ import {
 } from '../../hooks/appData';
 import { useTheme } from 'next-themes';
 import { sigleConfig } from '../../config';
+import { useState } from 'react';
 
 const ProfileImageContainer = styled('div', {
   display: 'flex',
@@ -60,12 +61,17 @@ export const ProfileCard = ({
 }: ProfileCardProps) => {
   const { user, isLegacy } = useAuth();
   const { resolvedTheme } = useTheme();
+  const [isOpen, setIsOpen] = useState(false);
   const { data: userFollowing } = useGetUserFollowing({
-    enabled: !!user && userInfo.username !== user.username,
+    enabled: isOpen && !!user && userInfo.username !== user.username,
   });
   const { data: userInfoByAddress } = useGetUserByAddress(userInfo.address);
-  const { data: following } = useGetUsersFollowing(userInfo.address);
-  const { data: followers } = useGetUsersFollowers(userInfo.address);
+  const { data: following } = useGetUsersFollowing(userInfo.address, {
+    enabled: isOpen,
+  });
+  const { data: followers } = useGetUsersFollowers(userInfo.address, {
+    enabled: isOpen,
+  });
   const { mutate: followUser } = useUserFollow();
   const { mutate: unfollowUser } = useUserUnfollow();
 
@@ -87,7 +93,7 @@ export const ProfileCard = ({
   const siteName = settings.siteName || userInfo.username;
 
   return (
-    <HoverCard openDelay={300}>
+    <HoverCard onOpenChange={(open) => setIsOpen(open)} openDelay={300}>
       <Link href="/[username]" as={`/${userInfo.username}`} passHref>
         <HoverCardTrigger asChild>{children}</HoverCardTrigger>
       </Link>
