@@ -4,7 +4,6 @@ import Image from 'next/future/image';
 import { useTheme } from 'next-themes';
 import { StoryFile, SettingsFile } from '../../../types';
 import { PoweredBy } from '../../publicStory/PoweredBy';
-import { AppHeader } from '../../layout/components/AppHeader';
 import {
   Box,
   Button,
@@ -30,6 +29,8 @@ import {
 import { generateAvatar } from '../../../utils/boringAvatar';
 import { StoryCard } from '../../storyCard/StoryCard';
 import { useGetUserByAddress } from '../../../hooks/users';
+import { DashboardLayout } from '../../layout';
+import { AppHeader } from '../../layout/components/AppHeader';
 
 const ExtraInfoLink = styled('a', {
   color: '$gray9',
@@ -49,8 +50,8 @@ const StyledContainer = styled(Container, {
 });
 
 const Header = styled('div', {
-  py: '$10',
-  px: '$4',
+  pb: '$10',
+  px: '$5',
   maxWidth: 826,
   display: 'flex',
   flexDirection: 'column',
@@ -116,6 +117,10 @@ export const PublicHome = ({ file, settings, userInfo }: PublicHomeProps) => {
   const { mutate: followUser } = useUserFollow();
   const { mutate: unfollowUser } = useUserUnfollow();
 
+  const twitterHandle = settings.siteTwitterHandle;
+  const isFollowingUser =
+    userFollowing && !!userFollowing.following[userInfo.address];
+
   const handleFollow = async () => {
     if (!userFollowing) return;
     followUser({ userFollowing, address: userInfo.address });
@@ -128,14 +133,13 @@ export const PublicHome = ({ file, settings, userInfo }: PublicHomeProps) => {
     unfollowUser({ userFollowing, address: userInfo.address });
   };
 
-  const siteName = settings.siteName || userInfo.username;
-  const twitterHandle = settings.siteTwitterHandle;
-
   const featuredStoryIndex = file.stories.findIndex((story) => story.featured);
   const stories = [...file.stories];
   if (featuredStoryIndex !== -1) {
     stories.splice(featuredStoryIndex, 1);
   }
+
+  const siteName = settings.siteName || userInfo.username;
 
   const seoUrl = `${sigleConfig.appUrl}/${userInfo.username}`;
   const seoTitle = `${siteName} - Sigle`;
@@ -144,8 +148,8 @@ export const PublicHome = ({ file, settings, userInfo }: PublicHomeProps) => {
     `Read stories from ${siteName} on Sigle, decentralised and open-source platform for Web3 writers`;
   const seoImage = settings.siteLogo;
 
-  const isFollowingUser =
-    userFollowing && !!userFollowing.following[userInfo.address];
+  const Layout =
+    userInfo.username !== user?.username ? React.Fragment : DashboardLayout;
 
   return (
     <React.Fragment>
@@ -177,9 +181,13 @@ export const PublicHome = ({ file, settings, userInfo }: PublicHomeProps) => {
           },
         ]}
       />
-      <Container>
-        <AppHeader />
-        <Header>
+      <Layout>
+        {userInfo.username !== user?.username && <AppHeader />}
+        <Header
+          css={{
+            pt: userInfo.username !== user?.username ? '$10' : 0,
+          }}
+        >
           <Flex align="start" justify="between">
             <HeaderLogoContainer>
               <HeaderLogo
@@ -219,7 +227,12 @@ export const PublicHome = ({ file, settings, userInfo }: PublicHomeProps) => {
               {siteName}
             </Typography>
             <Box
-              css={{ backgroundColor: '$gray4', py: '$1', px: '$3', br: '$2' }}
+              css={{
+                backgroundColor: '$gray4',
+                py: '$1',
+                px: '$3',
+                br: '$2',
+              }}
             >
               {userInfo.username}
             </Box>
@@ -313,43 +326,43 @@ export const PublicHome = ({ file, settings, userInfo }: PublicHomeProps) => {
               </Typography>
             ))}
         </Header>
-      </Container>
 
-      <StyledContainer>
-        <Tabs defaultValue="stories">
-          <TabsList
-            css={{ boxShadow: '0 1px 0 0 $colors$gray6', mb: 0 }}
-            aria-label="See your draft"
-          >
-            <TabsTrigger value="stories">{`Stories (${file.stories.length})`}</TabsTrigger>
-          </TabsList>
-          <TabsContent value="stories">
-            {file.stories.length === 0 && (
-              <Typography css={{ mt: '$8', textAlign: 'center' }}>
-                No stories yet
-              </Typography>
-            )}
-            {featuredStoryIndex !== -1 && (
-              <StoryCard
-                userInfo={userInfo}
-                story={file.stories[featuredStoryIndex]}
-                settings={settings}
-                featured
-              />
-            )}
-            {stories.map((story) => (
-              <StoryCard
-                key={story.id}
-                userInfo={userInfo}
-                story={story}
-                settings={settings}
-              />
-            ))}
-          </TabsContent>
-        </Tabs>
+        <StyledContainer>
+          <Tabs defaultValue="stories">
+            <TabsList
+              css={{ boxShadow: '0 1px 0 0 $colors$gray6', mb: 0 }}
+              aria-label="See your draft"
+            >
+              <TabsTrigger value="stories">{`Stories (${file.stories.length})`}</TabsTrigger>
+            </TabsList>
+            <TabsContent value="stories">
+              {file.stories.length === 0 && (
+                <Typography css={{ mt: '$8', textAlign: 'center' }}>
+                  No stories yet
+                </Typography>
+              )}
+              {featuredStoryIndex !== -1 && (
+                <StoryCard
+                  userInfo={userInfo}
+                  story={file.stories[featuredStoryIndex]}
+                  settings={settings}
+                  featured
+                />
+              )}
+              {stories.map((story) => (
+                <StoryCard
+                  key={story.id}
+                  userInfo={userInfo}
+                  story={story}
+                  settings={settings}
+                />
+              ))}
+            </TabsContent>
+          </Tabs>
 
-        <PoweredBy />
-      </StyledContainer>
+          {userInfo.username !== user?.username && <PoweredBy />}
+        </StyledContainer>
+      </Layout>
     </React.Fragment>
   );
 };

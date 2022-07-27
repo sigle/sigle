@@ -159,6 +159,10 @@ export const DashboardLayout = ({
       name: 'Analytics',
       path: '/analytics',
     },
+    {
+      name: 'Profile',
+      path: '/[username]',
+    },
   ];
 
   return (

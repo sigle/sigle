@@ -36,7 +36,7 @@ import { styled, globalCss, keyframes, darkTheme } from '../../stitches.config';
 import { CodeBlockComponent } from './extensions/CodeBlock';
 import { Story } from '../../types';
 import CharacterCount from '@tiptap/extension-character-count';
-import { Container, IconButton, Text, Typography } from '../../ui';
+import { Container, IconButton, Typography } from '../../ui';
 import { ShortcutsDialog } from './EditorShortcuts/ShortcutsDialog';
 import { clarity } from './utils/clarity-syntax';
 import { KeyboardIcon } from '@radix-ui/react-icons';

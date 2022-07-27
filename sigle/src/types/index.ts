@@ -22,6 +22,7 @@ export interface Story {
   /**
    * JSON representing the slate.js structure of the story
    */
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   content: any;
   /**
    * Version representing the format of the content

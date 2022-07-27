@@ -1,5 +1,10 @@
 import { createContext, useContext, useEffect, useState } from 'react';
 
+/**
+ * Usage: https://app.sigle.io?<nameFeatureFlag>=true
+ * Usage example: https://app.sigle.io?experimentalFollow=true
+ */
+
 const experimentalFollowKey = 'sigle-experimental-follow';
 const experimentalFollowParam = 'experimentalFollow';
 

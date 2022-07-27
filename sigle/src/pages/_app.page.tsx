@@ -83,7 +83,7 @@ const PlausibleTrack = () => {
     return () => {
       Router.events.off('routeChangeComplete', trackPlausible);
     };
-  }, []);
+  }, [plausible]);
 
   return <React.Fragment />;
 };
@@ -195,7 +195,10 @@ export default class MyApp extends App {
           <QueryClientProvider client={queryClient}>
             <ReactQueryDevtools initialIsOpen={false} />
             <FeatureFlagsProvider>
-              <SessionProvider session={pageProps.session} refetchInterval={0}>
+              <SessionProvider
+                session={modifiedPageProps.session}
+                refetchInterval={0}
+              >
                 <AuthProvider>
                   <ThemeProvider
                     disableTransitionOnChange
