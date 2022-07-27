@@ -104,7 +104,7 @@ export const getServerSideProps: GetServerSideProps<
     if (nameInfo) {
       userProfile = await resolveZoneFileToProfile(
         nameInfo.zonefile,
-        nameInfo.address
+        '029e4f662047ae53319fcfe393d3a2c41147e606efda3e192ac7f9d4c8d505602a'
       );
     }
   } catch (error) {
