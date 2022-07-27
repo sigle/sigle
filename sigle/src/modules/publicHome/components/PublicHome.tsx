@@ -28,7 +28,12 @@ import {
 } from '../../../hooks/appData';
 import { generateAvatar } from '../../../utils/boringAvatar';
 import { StoryCard } from '../../storyCard/StoryCard';
-import { useGetUserByAddress } from '../../../hooks/users';
+import {
+  useGetUserByAddress,
+  useGetUsersFollowers,
+  useGetUsersFollowing,
+} from '../../../hooks/users';
+import { UserCard } from '../../userCard/UserCard';
 import { DashboardLayout } from '../../layout';
 import { AppHeader } from '../../layout/components/AppHeader';
 
@@ -116,18 +121,21 @@ export const PublicHome = ({ file, settings, userInfo }: PublicHomeProps) => {
   });
   const { mutate: followUser } = useUserFollow();
   const { mutate: unfollowUser } = useUserUnfollow();
+  const { data: following } = useGetUsersFollowing(userInfo.address);
+  const { data: followers } = useGetUsersFollowers(userInfo.address);
 
   const twitterHandle = settings.siteTwitterHandle;
   const isFollowingUser =
     userFollowing && !!userFollowing.following[userInfo.address];
 
   const handleFollow = async () => {
-    if (!userFollowing) return;
+    if (!userFollowing || (!!user && userInfo.username !== user.username))
+      return;
     followUser({ userFollowing, address: userInfo.address });
   };
 
   const handleUnfollow = async () => {
-    if (!userFollowing) {
+    if (!userFollowing || (!!user && userInfo.username !== user.username)) {
       return;
     }
     unfollowUser({ userFollowing, address: userInfo.address });
@@ -331,9 +339,15 @@ export const PublicHome = ({ file, settings, userInfo }: PublicHomeProps) => {
           <Tabs defaultValue="stories">
             <TabsList
               css={{ boxShadow: '0 1px 0 0 $colors$gray6', mb: 0 }}
-              aria-label="See your draft"
+              aria-label="See your stories, other users that you follow, or, other users that follow you."
             >
               <TabsTrigger value="stories">{`Stories (${file.stories.length})`}</TabsTrigger>
+              <TabsTrigger value="following">{`Following (${
+                following ? following?.length : 0
+              })`}</TabsTrigger>
+              <TabsTrigger value="followers">{`Followers (${
+                followers ? followers?.length : 0
+              })`}</TabsTrigger>
             </TabsList>
             <TabsContent value="stories">
               {file.stories.length === 0 && (
@@ -356,6 +370,16 @@ export const PublicHome = ({ file, settings, userInfo }: PublicHomeProps) => {
                   story={story}
                   settings={settings}
                 />
+              ))}
+            </TabsContent>
+            <TabsContent value="following">
+              {following?.map((stxAddress) => (
+                <UserCard key={stxAddress} address={stxAddress} />
+              ))}
+            </TabsContent>
+            <TabsContent value="followers">
+              {followers?.map((stxAddress) => (
+                <UserCard key={stxAddress} address={stxAddress} />
               ))}
             </TabsContent>
           </Tabs>
