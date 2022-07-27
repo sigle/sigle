@@ -24,6 +24,7 @@ import * as Fathom from 'fathom-client';
 import { Goals } from '../../../utils/fathom';
 import { createSubsetStory } from '../../editor/utils';
 import { toast } from 'react-toastify';
+import { useAuth } from '../../auth/AuthContext';
 
 export const DashboardContainer = styled(Container, {
   flex: 1,
@@ -122,6 +123,7 @@ export const DashboardLayout = ({
   ...props
 }: DashboardLayoutProps) => {
   const router = useRouter();
+  const { user } = useAuth();
   const [loadingCreate, setLoadingCreate] = useState(false);
 
   const handleCreateNewPrivateStory = async () => {
@@ -171,7 +173,14 @@ export const DashboardLayout = ({
       <DashboardContainer {...props}>
         <DashboardSidebar>
           {navItems.map((item) => (
-            <Link key={item.path} href={item.path} passHref>
+            <Link
+              key={item.path}
+              href={item.path}
+              as={
+                item.path === '/[username]' ? `/${user?.username}` : undefined
+              }
+              passHref
+            >
               <DashboardSidebarNavItem selected={router.pathname === item.path}>
                 {item.name}
               </DashboardSidebarNavItem>
