@@ -1,7 +1,7 @@
 import { useInfiniteQuery } from 'react-query';
 import { useInView } from 'react-cool-inview';
 import { UserService } from '../../external/api';
-import { useGetUserFollowing } from '../../hooks/appData';
+import { useGetGaiaUserFollowing } from '../../hooks/appData';
 import { Box, LoadingSpinner, Typography } from '../../ui';
 import { DashboardLayout } from '../layout';
 import { UserCard } from '../userCard/UserCard';
@@ -10,7 +10,7 @@ import { useAuth } from '../auth/AuthContext';
 export const ExploreUsers = () => {
   const { user, isLegacy } = useAuth();
   const { isLoading: isLoadingUserFollowing, data: userFollowing } =
-    useGetUserFollowing({
+    useGetGaiaUserFollowing({
       enabled: !!user && !isLegacy,
     });
 

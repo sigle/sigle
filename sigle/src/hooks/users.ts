@@ -25,3 +25,29 @@ export const useGetUserByAddress = (
     () => UserService.getApiUsers({ userAddress: stacksAddress }),
     options
   );
+
+type GetApiUsersFollowingReturnType = Awaited<
+  ReturnType<typeof UserService.getApiUsersFollowing>
+>;
+export const useGetUsersFollowing = (
+  userAddress: string,
+  options: UseQueryOptions<GetApiUsersFollowingReturnType, Error> = {}
+) =>
+  useQuery<GetApiUsersFollowingReturnType, Error>(
+    'get-users-following',
+    () => UserService.getApiUsersFollowing({ userAddress }),
+    options
+  );
+
+type GetApiUsersFollowersReturnType = Awaited<
+  ReturnType<typeof UserService.getApiUsersFollowing>
+>;
+export const useGetUsersFollowers = (
+  userAddress: string,
+  options: UseQueryOptions<GetApiUsersFollowersReturnType, Error> = {}
+) =>
+  useQuery<GetApiUsersFollowersReturnType, Error>(
+    'get-users-followers',
+    () => UserService.getApiUsersFollowers({ userAddress }),
+    options
+  );

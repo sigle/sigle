@@ -22,7 +22,7 @@ import { sigleConfig } from '../../../config';
 import { styled } from '../../../stitches.config';
 import { useAuth } from '../../auth/AuthContext';
 import {
-  useGetUserFollowing,
+  useGetGaiaUserFollowing,
   useUserFollow,
   useUserUnfollow,
 } from '../../../hooks/appData';
@@ -111,7 +111,7 @@ export const PublicHome = ({ file, settings, userInfo }: PublicHomeProps) => {
   const { resolvedTheme } = useTheme();
   const { user, isLegacy } = useAuth();
   const { data: userInfoByAddress } = useGetUserByAddress(userInfo.address);
-  const { data: userFollowing } = useGetUserFollowing({
+  const { data: userFollowing } = useGetGaiaUserFollowing({
     enabled: !!user && userInfo.username !== user.username,
   });
   const { mutate: followUser } = useUserFollow();

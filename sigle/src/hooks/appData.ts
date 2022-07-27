@@ -15,7 +15,7 @@ import {
 /**
  * Get the app user following from Gaia.
  */
-export const useGetUserFollowing = (
+export const useGetGaiaUserFollowing = (
   options: UseQueryOptions<GaiaUserFollowing, Error> = {}
 ) =>
   useQuery<GaiaUserFollowing, Error>(
@@ -43,6 +43,7 @@ export const useUserFollow = () => {
     await UserService.postApiUsersMeFollowing({
       body: { stacksAddress: address, createdAt: now },
     });
+    await queryClient.invalidateQueries('get-users-followers');
   });
 };
 
@@ -63,6 +64,7 @@ export const useUserUnfollow = () => {
     await UserService.deleteApiUsersMeFollowing({
       body: { stacksAddress: address },
     });
+    await queryClient.invalidateQueries('get-users-followers');
   });
 };
 
