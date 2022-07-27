@@ -65,7 +65,9 @@ export const ProfileCard = ({
   const { data: userFollowing } = useGetGaiaUserFollowing({
     enabled: isOpen && !!user && userInfo.username !== user.username,
   });
-  const { data: userInfoByAddress } = useGetUserByAddress(userInfo.address);
+  const { data: userInfoByAddress } = useGetUserByAddress(userInfo.address, {
+    enabled: isOpen,
+  });
   const { data: following } = useGetUsersFollowing(userInfo.address, {
     enabled: isOpen,
   });
