@@ -17,6 +17,7 @@ import { generateAvatar } from '../../utils/boringAvatar';
 import { ProfileCard } from '../profileCard/ProfileCard';
 
 const ProfileImageContainer = styled('div', {
+  cursor: 'pointer',
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'center',
@@ -182,19 +183,21 @@ export const PublicStory = ({
           className="not-prose"
         >
           <Flex align="center" gap="3">
-            <ProfileImageContainer>
-              <ProfileImage
-                css={{
-                  maxWidth: 48,
-                  maxHeight: 48,
-                }}
-                src={
-                  settings?.siteLogo
-                    ? settings.siteLogo
-                    : generateAvatar(userInfo.address)
-                }
-              />
-            </ProfileImageContainer>
+            <ProfileCard settings={settings} userInfo={userInfo}>
+              <ProfileImageContainer>
+                <ProfileImage
+                  css={{
+                    maxWidth: 48,
+                    maxHeight: 48,
+                  }}
+                  src={
+                    settings?.siteLogo
+                      ? settings.siteLogo
+                      : generateAvatar(userInfo.address)
+                  }
+                />
+              </ProfileImageContainer>
+            </ProfileCard>
             <Flex direction="column">
               <ProfileCard settings={settings} userInfo={userInfo}>
                 <Typography css={{ fontWeight: 600 }} as="a" size="subheading">
