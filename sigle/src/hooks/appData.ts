@@ -15,7 +15,7 @@ import {
 /**
  * Get the app user following from Gaia.
  */
-export const useGetUserFollowing = (
+export const useGetGaiaUserFollowing = (
   options: UseQueryOptions<GaiaUserFollowing, Error> = {}
 ) =>
   useQuery<GaiaUserFollowing, Error>(
