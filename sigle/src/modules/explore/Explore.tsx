@@ -1,14 +1,14 @@
 import { useInfiniteQuery } from 'react-query';
 import { useInView } from 'react-cool-inview';
 import { UserService } from '../../external/api';
-import { useGetUserFollowing } from '../../hooks/appData';
+import { useGetGaiaUserFollowing } from '../../hooks/appData';
 import { Box, LoadingSpinner, Typography } from '../../ui';
 import { DashboardLayout } from '../layout';
 import { UserCard } from '../userCard/UserCard';
 
 export const ExploreUsers = () => {
   const { isLoading: isLoadingUserFollowing, data: userFollowing } =
-    useGetUserFollowing();
+    useGetGaiaUserFollowing();
 
   const {
     isLoading: isLoadingExplore,

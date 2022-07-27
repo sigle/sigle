@@ -22,7 +22,7 @@ import {
   useGetUsersFollowing,
 } from '../../hooks/users';
 import {
-  useGetUserFollowing,
+  useGetGaiaUserFollowing,
   useUserFollow,
   useUserUnfollow,
 } from '../../hooks/appData';
@@ -62,7 +62,7 @@ export const ProfileCard = ({
   const { user, isLegacy } = useAuth();
   const { resolvedTheme } = useTheme();
   const [isOpen, setIsOpen] = useState(false);
-  const { data: userFollowing } = useGetUserFollowing({
+  const { data: userFollowing } = useGetGaiaUserFollowing({
     enabled: isOpen && !!user && userInfo.username !== user.username,
   });
   const { data: userInfoByAddress } = useGetUserByAddress(userInfo.address);
