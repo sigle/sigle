@@ -64,15 +64,19 @@ export const ProfileCard = ({
   const [isOpen, setIsOpen] = useState(false);
   const { data: userFollowing } = useGetGaiaUserFollowing({
     enabled: isOpen && !!user && userInfo.username !== user.username,
+    staleTime: Infinity,
   });
   const { data: userInfoByAddress } = useGetUserByAddress(userInfo.address, {
     enabled: isOpen,
+    staleTime: Infinity,
   });
   const { data: following } = useGetUsersFollowing(userInfo.address, {
     enabled: isOpen,
+    staleTime: Infinity,
   });
   const { data: followers } = useGetUsersFollowers(userInfo.address, {
     enabled: isOpen,
+    staleTime: Infinity,
   });
   const { mutate: followUser } = useUserFollow();
   const { mutate: unfollowUser } = useUserUnfollow();
