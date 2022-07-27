@@ -11,7 +11,6 @@ import Error from '../_error.page';
 import { PublicStory } from '../../modules/publicStory/PublicStory';
 import { Story, SettingsFile } from '../../types';
 import { migrationStory } from '../../utils/migrations/story';
-import { sigleConfig } from '../../config';
 
 interface PublicStoryPageProps {
   statusCode: number | boolean;
@@ -105,7 +104,7 @@ export const getServerSideProps: GetServerSideProps<
     if (nameInfo) {
       userProfile = await resolveZoneFileToProfile(
         nameInfo.zonefile,
-        '029e4f662047ae53319fcfe393d3a2c41147e606efda3e192ac7f9d4c8d505602a'
+        nameInfo.address
       );
     }
   } catch (error) {
