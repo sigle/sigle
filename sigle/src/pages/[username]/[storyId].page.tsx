@@ -71,7 +71,7 @@ const fetchSettings = async (
 
 export const getServerSideProps: GetServerSideProps<
   PublicStoryPageProps
-> = async ({ req, res, params }) => {
+> = async ({ res, params }) => {
   const username = params?.username as string;
   const storyId = params?.storyId as string;
 
