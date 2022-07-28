@@ -31,6 +31,8 @@ import { StoryCard } from '../../storyCard/StoryCard';
 import { useGetUserByAddress } from '../../../hooks/users';
 import { DashboardLayout } from '../../layout';
 import { AppHeader } from '../../layout/components/AppHeader';
+import { Pencil1Icon } from '@radix-ui/react-icons';
+import Link from 'next/link';
 
 const ExtraInfoLink = styled('a', {
   color: '$gray9',
@@ -221,6 +223,14 @@ export const PublicHome = ({ file, settings, userInfo }: PublicHomeProps) => {
                 </Button>
               )
             ) : null}
+            {user && user.username === userInfo.username && (
+              <Link href="/settings" passHref>
+                <Button as="a" css={{ gap: '$2' }} variant="subtle">
+                  Edit profile
+                  <Pencil1Icon />
+                </Button>
+              </Link>
+            )}
           </Flex>
           <Flex align="center" gap="3">
             <Typography css={{ fontWeight: 700 }} as="h1" size="h2">
