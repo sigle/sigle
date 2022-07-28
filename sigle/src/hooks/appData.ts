@@ -44,6 +44,7 @@ export const useUserFollow = () => {
       body: { stacksAddress: address, createdAt: now },
     });
     await queryClient.invalidateQueries('get-users-followers');
+    await queryClient.invalidateQueries('get-users-following');
   });
 };
 
@@ -65,6 +66,7 @@ export const useUserUnfollow = () => {
       body: { stacksAddress: address },
     });
     await queryClient.invalidateQueries('get-users-followers');
+    await queryClient.invalidateQueries('get-users-following');
   });
 };
 
