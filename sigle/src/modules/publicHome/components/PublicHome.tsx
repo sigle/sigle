@@ -139,13 +139,12 @@ export const PublicHome = ({ file, settings, userInfo }: PublicHomeProps) => {
     userFollowing && !!userFollowing.following[userInfo.address];
 
   const handleFollow = async () => {
-    if (!userFollowing || (!!user && userInfo.username !== user.username))
-      return;
+    if (!userFollowing) return;
     followUser({ userFollowing, address: userInfo.address });
   };
 
   const handleUnfollow = async () => {
-    if (!userFollowing || (!!user && userInfo.username !== user.username)) {
+    if (!userFollowing) {
       return;
     }
     unfollowUser({ userFollowing, address: userInfo.address });
