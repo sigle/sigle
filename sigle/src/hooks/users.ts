@@ -34,7 +34,7 @@ export const useGetUsersFollowing = (
   options: UseQueryOptions<GetApiUsersFollowingReturnType, Error> = {}
 ) =>
   useQuery<GetApiUsersFollowingReturnType, Error>(
-    'get-users-following',
+    ['get-users-following', userAddress],
     () => UserService.getApiUsersFollowing({ userAddress }),
     options
   );
@@ -47,7 +47,7 @@ export const useGetUsersFollowers = (
   options: UseQueryOptions<GetApiUsersFollowersReturnType, Error> = {}
 ) =>
   useQuery<GetApiUsersFollowersReturnType, Error>(
-    'get-users-followers',
+    ['get-users-followers', userAddress],
     () => UserService.getApiUsersFollowers({ userAddress }),
     options
   );
