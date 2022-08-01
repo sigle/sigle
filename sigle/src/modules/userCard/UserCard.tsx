@@ -1,7 +1,6 @@
 import { lookupProfile } from '@stacks/auth';
 import { NamesApi } from '@stacks/blockchain-api-client';
 import Link from 'next/link';
-import { useRouter } from 'next/router';
 import { useQuery } from 'react-query';
 import { sigleConfig } from '../../config';
 import {
