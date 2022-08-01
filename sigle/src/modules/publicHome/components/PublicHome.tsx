@@ -127,14 +127,12 @@ export const PublicHome = ({ file, settings, userInfo }: PublicHomeProps) => {
   });
   const { mutate: followUser } = useUserFollow();
   const { mutate: unfollowUser } = useUserUnfollow();
-  const { data: following, isFetching: isFetchingFollowing } =
-    useGetUsersFollowing(userInfo.address, {
-      enabled: router.query.tab === 'following',
-    });
-  const { data: followers, isFetching: isFetchingFollowers } =
-    useGetUsersFollowers(userInfo.address, {
-      enabled: router.query.tab === 'followers',
-    });
+  const { data: following } = useGetUsersFollowing(userInfo.address, {
+    enabled: router.query.tab === 'following',
+  });
+  const { data: followers } = useGetUsersFollowers(userInfo.address, {
+    enabled: router.query.tab === 'followers',
+  });
 
   const twitterHandle = settings.siteTwitterHandle;
   const isFollowingUser =

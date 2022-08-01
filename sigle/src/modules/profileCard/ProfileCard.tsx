@@ -61,7 +61,6 @@ export const ProfileCard = ({
   userInfo,
 }: ProfileCardProps) => {
   const { user, isLegacy } = useAuth();
-  const router = useRouter();
   const { resolvedTheme } = useTheme();
   const [isOpen, setIsOpen] = useState(false);
   const { data: userFollowing } = useGetGaiaUserFollowing({
