@@ -278,7 +278,7 @@ const RegisterUsername = () => {
   }
 
   return (
-    <LoginLayout>
+    <LoginLayout centered>
       <Typography
         as="h1"
         size="h2"
@@ -350,8 +350,9 @@ const RegisterUsername = () => {
           </>
         ) : null}
         {formState.loading ? (
-          <Typography size="subheading">
-            Your username is being created. Please wait...
+          <Typography css={{ textAlign: 'center' }} size="subheading">
+            Your username is being created. <br />
+            Please be patient, this may take some time...
           </Typography>
         ) : null}
         {formState.errorMessage ? (
