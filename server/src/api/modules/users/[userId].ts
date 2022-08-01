@@ -6,6 +6,8 @@ import { prisma } from '../../../prisma';
 type GetUserByAddressResponse = {
   id: string;
   stacksAddress: string;
+  followersCount: number;
+  followingCount: number;
   subscription?: {
     id: string;
     nftId: number;
@@ -14,10 +16,12 @@ type GetUserByAddressResponse = {
 const getUserByAddressResponseSchema = {
   type: 'object',
   nullable: true,
-  required: ['id', 'stacksAddress'],
+  required: ['id', 'stacksAddress', 'followersCount', 'followingCount'],
   properties: {
     id: { type: 'string' },
     stacksAddress: { type: 'string' },
+    followersCount: { type: 'number' },
+    followingCount: { type: 'number' },
     subscription: {
       type: 'object',
       nullable: true,
@@ -60,6 +64,12 @@ export async function createGetUserByAddressEndpoint(fastify: FastifyInstance) {
         select: {
           id: true,
           stacksAddress: true,
+          _count: {
+            select: {
+              followers: true,
+              following: true,
+            },
+          },
           subscriptions: {
             select: {
               id: true,
@@ -91,7 +101,7 @@ export async function createGetUserByAddressEndpoint(fastify: FastifyInstance) {
               isLegacy: true,
             },
           });
-          return newUser;
+          return { ...newUser, followersCount: 0, followingCount: 0 };
         }
       }
 
@@ -101,6 +111,8 @@ export async function createGetUserByAddressEndpoint(fastify: FastifyInstance) {
               id: user.id,
               stacksAddress: user.stacksAddress,
               subscription: user.subscriptions[0],
+              followersCount: user._count.followers,
+              followingCount: user._count.following,
             }
           : null
       );

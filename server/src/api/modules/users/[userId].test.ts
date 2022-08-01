@@ -34,7 +34,12 @@ it('Should return public user without subscription', async () => {
   });
 
   expect(response.statusCode).toBe(200);
-  expect(response.json()).toEqual({ id: user.id, stacksAddress });
+  expect(response.json()).toEqual({
+    id: user.id,
+    stacksAddress,
+    followersCount: 0,
+    followingCount: 0,
+  });
 });
 
 it('Should return public user with subscription', async () => {
@@ -52,6 +57,8 @@ it('Should return public user with subscription', async () => {
   expect(response.json()).toEqual({
     id: user.id,
     stacksAddress,
+    followersCount: 0,
+    followingCount: 0,
     subscription: {
       id: expect.any(String),
       nftId: expect.any(Number),
