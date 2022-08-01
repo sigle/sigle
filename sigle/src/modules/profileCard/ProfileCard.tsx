@@ -29,6 +29,7 @@ import {
 import { useTheme } from 'next-themes';
 import { sigleConfig } from '../../config';
 import { useState } from 'react';
+import { useRouter } from 'next/router';
 
 const ProfileImageContainer = styled('div', {
   display: 'flex',
@@ -60,6 +61,7 @@ export const ProfileCard = ({
   userInfo,
 }: ProfileCardProps) => {
   const { user, isLegacy } = useAuth();
+  const router = useRouter();
   const { resolvedTheme } = useTheme();
   const [isOpen, setIsOpen] = useState(false);
   const { data: userFollowing } = useGetGaiaUserFollowing({
@@ -181,18 +183,40 @@ export const ProfileCard = ({
           {settings.siteDescription}
         </Typography>
         <Flex gap="3">
-          <Typography size="subheading" css={{ color: '$gray9' }}>
-            <Box css={{ color: '$gray11', mr: 2 }} as="span">
-              {followers ? followers?.length : 0}
-            </Box>
-            Followers
-          </Typography>
-          <Typography size="subheading" css={{ color: '$gray9' }}>
-            <Box css={{ color: '$gray11', mr: 2 }} as="span">
-              {following ? following?.length : 0}
-            </Box>
-            Following
-          </Typography>
+          <Link
+            href={{
+              pathname: `/${userInfo.username}`,
+              query: { tab: 'followers' },
+            }}
+            passHref
+          >
+            <Typography
+              size="subheading"
+              css={{ color: '$gray9', cursor: 'pointer' }}
+            >
+              <Box css={{ color: '$gray11', mr: 2 }} as="span">
+                {followers ? followers?.length : 0}
+              </Box>
+              Followers
+            </Typography>
+          </Link>
+          <Link
+            href={{
+              pathname: `/${userInfo.username}`,
+              query: { tab: 'following' },
+            }}
+            passHref
+          >
+            <Typography
+              size="subheading"
+              css={{ color: '$gray9', cursor: 'pointer' }}
+            >
+              <Box css={{ color: '$gray11', mr: 2 }} as="span">
+                {following ? following?.length : 0}
+              </Box>
+              Following
+            </Typography>
+          </Link>
         </Flex>
       </HoverCardContent>
     </HoverCard>
