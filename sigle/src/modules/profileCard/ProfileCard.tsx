@@ -29,7 +29,6 @@ import {
 import { useTheme } from 'next-themes';
 import { sigleConfig } from '../../config';
 import { useState } from 'react';
-import { useRouter } from 'next/router';
 
 const ProfileImageContainer = styled('div', {
   display: 'flex',
