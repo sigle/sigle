@@ -18,6 +18,8 @@ export class UserService {
   }): CancelablePromise<{
     id: string;
     stacksAddress: string;
+    followersCount: number;
+    followingCount: number;
     subscription?: {
       id: string;
       nftId: number;
