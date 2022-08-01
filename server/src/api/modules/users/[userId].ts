@@ -6,6 +6,8 @@ import { prisma } from '../../../prisma';
 type GetUserByAddressResponse = {
   id: string;
   stacksAddress: string;
+  followersCount: number;
+  followingCount: number;
   subscription?: {
     id: string;
     nftId: number;
@@ -99,7 +101,7 @@ export async function createGetUserByAddressEndpoint(fastify: FastifyInstance) {
               isLegacy: true,
             },
           });
-          return { ...newUser };
+          return { ...newUser, followersCount: 0, followingCount: 0 };
         }
       }
 
