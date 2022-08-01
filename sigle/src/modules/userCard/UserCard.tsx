@@ -1,6 +1,7 @@
 import { lookupProfile } from '@stacks/auth';
 import { NamesApi } from '@stacks/blockchain-api-client';
 import Link from 'next/link';
+import { useRouter } from 'next/router';
 import { useQuery } from 'react-query';
 import { sigleConfig } from '../../config';
 import {
@@ -71,6 +72,7 @@ export const UserCard = ({ address }: UserCardProps) => {
   );
   const { data: userFollowing } = useGetGaiaUserFollowing({
     enabled: !!user && username !== user.username,
+    staleTime: Infinity,
   });
 
   const { data: userSettings } = useQuery(
