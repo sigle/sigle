@@ -378,10 +378,10 @@ export const PublicHome = ({ file, settings, userInfo }: PublicHomeProps) => {
             >
               <TabsTrigger value="stories">{`Stories (${file.stories.length})`}</TabsTrigger>
               <TabsTrigger value="following">{`Following (${
-                following ? following?.length : 0
+                userInfoByAddress ? userInfoByAddress.followingCount : 0
               })`}</TabsTrigger>
               <TabsTrigger value="followers">{`Followers (${
-                followers ? followers?.length : 0
+                userInfoByAddress ? userInfoByAddress.followersCount : 0
               })`}</TabsTrigger>
             </TabsList>
             <TabsContent value="stories">
