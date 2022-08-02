@@ -187,12 +187,14 @@ export const ProfileCard = ({
         <Flex gap="3">
           <Link
             href={{
-              pathname: `/${userInfo.username}`,
+              pathname: `/[username]`,
               query: { tab: 'followers' },
             }}
+            as={`/${userInfo.username}`}
             passHref
           >
             <Typography
+              as="a"
               size="subheading"
               css={{ color: '$gray9', cursor: 'pointer' }}
             >
@@ -204,12 +206,14 @@ export const ProfileCard = ({
           </Link>
           <Link
             href={{
-              pathname: `/${userInfo.username}`,
+              pathname: `/[username]`,
               query: { tab: 'following' },
             }}
+            as={`/${userInfo.username}`}
             passHref
           >
             <Typography
+              as="a"
               size="subheading"
               css={{ color: '$gray9', cursor: 'pointer' }}
             >
