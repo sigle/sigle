@@ -5,11 +5,10 @@ import {
   MixerHorizontalIcon,
 } from '@radix-ui/react-icons';
 import Tippy from '@tippyjs/react';
-import { Box, Button, Flex, IconButton, Text } from '../../ui';
+import { Box, Button, Flex, IconButton, Typography } from '../../ui';
 import { Story } from '../../types';
 import { useAuth } from '../auth/AuthContext';
 import { useEffect, useState } from 'react';
-import { Typography } from '../../ui';
 
 interface EditorHeaderProps {
   story: Story | false;
@@ -75,34 +74,62 @@ export const EditorHeader = ({
       justify="between"
       align="center"
     >
-      <Flex gap="10" align="center">
+      <Flex gap={{ '@initial': '5', '@md': '10' }} align="center">
         <Link href="/" passHref>
           <IconButton as="a" aria-label="Go back to the dashboard">
             <ArrowLeftIcon />
           </IconButton>
         </Link>
-        <Text css={{ color: '$gray11' }} size="sm">
-          <Box as="span" css={{ fontWeight: 'bold', fontSize: '$3' }}>
+        <Typography css={{ color: '$gray11' }} size="subheading">
+          <Box
+            as="span"
+            css={{
+              fontWeight: 'bold',
+              fontSize: '$3',
+              display: 'none',
+              '@md': { display: 'inline' },
+            }}
+          >
             {user?.username}
+            <Box as="span" css={{ fontWeight: 400 }}>
+              {' '}
+              |{' '}
+            </Box>
           </Box>
           {story ? (
-            <span>{story.type === 'public' ? ' | Published' : ' | Draft'}</span>
+            <span>{story.type === 'public' ? 'Published' : 'Draft'}</span>
           ) : null}
-        </Text>
+        </Typography>
         {story && story.type === 'public' && (
-          <Button
-            css={{ display: 'flex', alignItems: 'center', gap: '$2' }}
-            variant="ghost"
-            href={`/${user?.username}/${story.id}`}
-            target="_blank"
-            as="a"
-          >
-            <Typography size="subheading">See your story</Typography>
-            <EyeOpenIcon />
-          </Button>
+          <>
+            <Button
+              css={{
+                display: 'none',
+                alignItems: 'center',
+                gap: '$2',
+                '@md': { display: 'flex' },
+              }}
+              variant="ghost"
+              href={`/${user?.username}/${story.id}`}
+              target="_blank"
+              as="a"
+            >
+              <Typography size="subheading">See your story</Typography>
+              <EyeOpenIcon />
+            </Button>
+
+            <IconButton
+              href={`/${user?.username}/${story.id}`}
+              target="_blank"
+              as="a"
+              css={{ display: 'inline', '@md': { display: 'none' } }}
+            >
+              <EyeOpenIcon />
+            </IconButton>
+          </>
         )}
       </Flex>
-      <Flex gap="10">
+      <Flex gap={{ '@initial': '5', '@md': '10' }}>
         {loadingSave && (
           <Button disabled variant="ghost">
             Saving ...
