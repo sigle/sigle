@@ -30,6 +30,7 @@ const ProgressCircle = styled('div', {
   width: '$8',
   height: '$8',
   br: '$round',
+  color: '$gray1',
 
   variants: {
     variant: {
@@ -152,6 +153,7 @@ const Login = () => {
           <StepsText variant={user ? 'complete' : 'active'} size="subheading">
             <StepsText
               variant={user ? 'complete' : 'active'}
+              css={{ fontWeight: 600 }}
               size="h3"
               as="span"
             >
@@ -167,15 +169,23 @@ const Login = () => {
               css={{
                 height: 1,
                 width: 143,
-                backgroundColor: user ? '$green12' : '$gray8',
+                backgroundColor: user ? '$green11' : '$gray8',
               }}
             />
           </Flex>
         </Box>
         <Box>
-          <StepsText variant={signingState && signingState} size="subheading">
+          <StepsText
+            variant={
+              user && signingState !== 'complete' ? 'active' : signingState
+            }
+            size="subheading"
+          >
             <StepsText
-              variant={signingState && signingState}
+              variant={
+                user && signingState !== 'complete' ? 'active' : signingState
+              }
+              css={{ fontWeight: 600 }}
               size="h3"
               as="span"
             >
@@ -185,7 +195,9 @@ const Login = () => {
           </StepsText>
           <ProgressCircle
             css={{ mt: '$2' }}
-            variant={signingState && signingState}
+            variant={
+              user && signingState !== 'complete' ? 'active' : signingState
+            }
           >
             {signingState === 'complete' && <CheckIcon />}
           </ProgressCircle>
