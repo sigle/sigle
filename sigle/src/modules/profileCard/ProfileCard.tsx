@@ -16,11 +16,7 @@ import { generateAvatar } from '../../utils/boringAvatar';
 import { SettingsFile } from '../../types';
 import { styled } from '../../stitches.config';
 import { useAuth } from '../auth/AuthContext';
-import {
-  useGetUserByAddress,
-  useGetUsersFollowers,
-  useGetUsersFollowing,
-} from '../../hooks/users';
+import { useGetUserByAddress } from '../../hooks/users';
 import {
   useGetGaiaUserFollowing,
   useUserFollow,
@@ -67,14 +63,6 @@ export const ProfileCard = ({
     staleTime: Infinity,
   });
   const { data: userInfoByAddress } = useGetUserByAddress(userInfo.address, {
-    enabled: isOpen,
-    staleTime: Infinity,
-  });
-  const { data: following } = useGetUsersFollowing(userInfo.address, {
-    enabled: isOpen,
-    staleTime: Infinity,
-  });
-  const { data: followers } = useGetUsersFollowers(userInfo.address, {
     enabled: isOpen,
     staleTime: Infinity,
   });
@@ -185,18 +173,44 @@ export const ProfileCard = ({
           {settings.siteDescription}
         </Typography>
         <Flex gap="3">
-          <Typography size="subheading" css={{ color: '$gray9' }}>
-            <Box css={{ color: '$gray11', mr: 2 }} as="span">
-              {followers ? followers?.length : 0}
-            </Box>
-            Followers
-          </Typography>
-          <Typography size="subheading" css={{ color: '$gray9' }}>
-            <Box css={{ color: '$gray11', mr: 2 }} as="span">
-              {following ? following?.length : 0}
-            </Box>
-            Following
-          </Typography>
+          <Link
+            href={{
+              pathname: `/[username]`,
+              query: { tab: 'followers' },
+            }}
+            as={`/${userInfo.username}`}
+            passHref
+          >
+            <Typography
+              as="a"
+              size="subheading"
+              css={{ color: '$gray9', cursor: 'pointer' }}
+            >
+              <Box css={{ color: '$gray11', mr: 2 }} as="span">
+                {userInfoByAddress ? userInfoByAddress.followersCount : 0}
+              </Box>
+              Followers
+            </Typography>
+          </Link>
+          <Link
+            href={{
+              pathname: `/[username]`,
+              query: { tab: 'following' },
+            }}
+            as={`/${userInfo.username}`}
+            passHref
+          >
+            <Typography
+              as="a"
+              size="subheading"
+              css={{ color: '$gray9', cursor: 'pointer' }}
+            >
+              <Box css={{ color: '$gray11', mr: 2 }} as="span">
+                {userInfoByAddress ? userInfoByAddress.followingCount : 0}
+              </Box>
+              Following
+            </Typography>
+          </Link>
         </Flex>
       </HoverCardContent>
     </HoverCard>
