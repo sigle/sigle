@@ -45,6 +45,7 @@ export const useUserFollow = () => {
     });
     await queryClient.invalidateQueries('get-users-followers');
     await queryClient.invalidateQueries('get-users-following');
+    await queryClient.invalidateQueries('get-user-by-address');
   });
 };
 
@@ -67,6 +68,7 @@ export const useUserUnfollow = () => {
     });
     await queryClient.invalidateQueries('get-users-followers');
     await queryClient.invalidateQueries('get-users-following');
+    await queryClient.invalidateQueries('get-user-by-address');
   });
 };
 
