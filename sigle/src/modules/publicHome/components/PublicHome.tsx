@@ -369,7 +369,7 @@ export const PublicHome = ({ file, settings, userInfo }: PublicHomeProps) => {
         <StyledContainer>
           <Tabs
             onValueChange={(value) => handleTabValueChange(value as ActiveTab)}
-            value={router.query.tab as string}
+            value={router.query.tab ? (router.query.tab as string) : 'stories'}
             defaultValue="stories"
           >
             <TabsList
