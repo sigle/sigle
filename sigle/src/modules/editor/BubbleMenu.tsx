@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import { Editor, BubbleMenu as TipTapBubbleMenu } from '@tiptap/react';
 import { isTextSelection } from '@tiptap/core';
 import { globalCss, styled } from '../../stitches.config';
