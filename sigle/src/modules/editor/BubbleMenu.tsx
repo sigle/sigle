@@ -71,21 +71,21 @@ export const BubbleMenu = ({
   defaultOpen = false,
 }: BubbleMenuProps) => {
   globalStylesCustomEditor();
-  const [linkState, setLinkState] = useState({ open: false, value: '' });
+  // const [linkState, setLinkState] = useState({ open: false, value: '' });
 
-  const resetLink = () => {
-    setLinkState({
-      open: false,
-      value: '',
-    });
-  };
+  // const resetLink = () => {
+  //   setLinkState({
+  //     open: false,
+  //     value: '',
+  //   });
+  // };
 
   return (
     <StyledBubbleMenu
       tippyOptions={{
         duration: 100,
         theme: 'sigle-editor-bubble-menu',
-        onHidden: () => resetLink(),
+        // onHidden: () => resetLink(),
       }}
       shouldShow={({ editor, state, from, to, view }) => {
         if (defaultOpen) {
