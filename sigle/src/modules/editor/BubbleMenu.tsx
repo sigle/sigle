@@ -66,10 +66,7 @@ export const BubbleMenu = ({
       tippyOptions={{
         duration: 100,
         theme: 'sigle-editor-bubble-menu',
-        onHidden: () => {
-          console.log('hidden');
-          bubbleItemsRef.current?.resetLink();
-        },
+        onHidden: () => bubbleItemsRef.current?.resetLink(),
       }}
       shouldShow={({ editor, state, from, to, view }) => {
         if (defaultOpen) {
