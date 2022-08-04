@@ -36,10 +36,11 @@ import { styled, globalCss, keyframes, darkTheme } from '../../stitches.config';
 import { CodeBlockComponent } from './extensions/CodeBlock';
 import { Story } from '../../types';
 import CharacterCount from '@tiptap/extension-character-count';
-import { Container, IconButton, Typography } from '../../ui';
+import { Box, Container, Flex, IconButton, Typography } from '../../ui';
 import { ShortcutsDialog } from './EditorShortcuts/ShortcutsDialog';
 import { clarity } from './utils/clarity-syntax';
 import { KeyboardIcon } from '@radix-ui/react-icons';
+import { BubbleMenuItems } from './BubbleMenuItems';
 
 const fadeInAnimation = keyframes({
   '0%': { opacity: '0' },
@@ -207,21 +208,55 @@ export const TipTapEditor = forwardRef<
         css={{
           display: 'flex',
           alignItems: 'center',
-          gap: '$3',
+          gap: '$5',
           position: 'fixed',
           bottom: 0,
           right: 0,
           left: 0,
           zIndex: 0,
-          justifyContent: 'end',
+          justifyContent: 'center',
+          backgroundColor: '$gray1',
+          borderTop: '1px solid $colors$gray6',
+          py: '$3',
+
+          '@xl': {
+            justifyContent: 'end',
+            gap: '$3',
+            borderTop: 'none',
+          },
         }}
       >
         {editable && (
           <>
-            <Typography size="subheading">
+            {editor && (
+              <Flex
+                css={{
+                  display: 'flex',
+
+                  '@xl': { display: 'none' },
+                }}
+                gap="5"
+              >
+                <BubbleMenuItems iconSize={15} editor={editor} />
+                <Box
+                  css={{
+                    width: 2,
+                    backgroundColor: '$gray6',
+                  }}
+                />
+              </Flex>
+            )}
+            <Typography css={{ m: 0 }} size="subheading">
               {editor?.storage.characterCount.words()} words
             </Typography>
             <IconButton
+              css={{
+                display: 'none',
+
+                '@xl': {
+                  display: 'block',
+                },
+              }}
               onClick={() => setShowShortcutsDialog(true)}
               aria-label="Open keyboard shortcuts and hints"
             >
