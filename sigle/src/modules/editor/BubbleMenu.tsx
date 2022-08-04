@@ -2,6 +2,7 @@ import { Editor, BubbleMenu as TipTapBubbleMenu } from '@tiptap/react';
 import { isTextSelection } from '@tiptap/core';
 import { globalCss, styled } from '../../stitches.config';
 import { BubbleMenuItems } from './BubbleMenuItems';
+import { useRef } from 'react';
 
 // Tippyjs theme used by the bubble menu
 const globalStylesCustomEditor = globalCss({
@@ -10,35 +11,19 @@ const globalStylesCustomEditor = globalCss({
   },
   ".tippy-box[data-theme~='sigle-editor-bubble-menu'][data-placement^='top'] > .tippy-arrow::before":
     {
-      display: 'none',
       borderTopColor: '$gray11',
-      '@xl': {
-        display: 'block',
-      },
     },
   ".tippy-box[data-theme~='sigle-editor-bubble-menu'][data-placement^='bottom'] > .tippy-arrow::before":
     {
-      display: 'none',
       borderBottomColor: '$gray11',
-      '@xl': {
-        display: 'block',
-      },
     },
   ".tippy-box[data-theme~='sigle-editor-bubble-menu'][data-placement^='left'] > .tippy-arrow::before":
     {
-      display: 'none',
       borderLeftColor: '$gray11',
-      '@xl': {
-        display: 'block',
-      },
     },
   ".tippy-box[data-theme~='sigle-editor-bubble-menu'][data-placement^='right'] > .tippy-arrow::before":
     {
-      display: 'none',
       borderRightColor: '$gray11',
-      '@xl': {
-        display: 'block',
-      },
     },
   ".tippy-box[data-theme~='sigle-editor-bubble-menu'] .tippy-content": {
     padding: 0,
@@ -60,6 +45,10 @@ const StyledBubbleMenu = styled(TipTapBubbleMenu, {
 
 // Maybe can be used on clicks https://github.com/ueberdosis/tiptap/issues/104#issuecomment-912794709
 
+interface ResetLink {
+  resetLink: () => void;
+}
+
 interface BubbleMenuProps {
   editor: Editor;
   defaultOpen?: boolean;
@@ -70,21 +59,17 @@ export const BubbleMenu = ({
   defaultOpen = false,
 }: BubbleMenuProps) => {
   globalStylesCustomEditor();
-  // const [linkState, setLinkState] = useState({ open: false, value: '' });
-
-  // const resetLink = () => {
-  //   setLinkState({
-  //     open: false,
-  //     value: '',
-  //   });
-  // };
+  const bubbleItemsRef = useRef<ResetLink>(null);
 
   return (
     <StyledBubbleMenu
       tippyOptions={{
         duration: 100,
         theme: 'sigle-editor-bubble-menu',
-        // onHidden: () => resetLink(),
+        onHidden: () => {
+          console.log('hidden');
+          bubbleItemsRef.current?.resetLink();
+        },
       }}
       shouldShow={({ editor, state, from, to, view }) => {
         if (defaultOpen) {
@@ -124,7 +109,7 @@ export const BubbleMenu = ({
       }}
       editor={editor}
     >
-      <BubbleMenuItems editor={editor} />
+      <BubbleMenuItems ref={bubbleItemsRef} editor={editor} />
     </StyledBubbleMenu>
   );
 };
