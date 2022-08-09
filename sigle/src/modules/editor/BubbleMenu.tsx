@@ -11,19 +11,35 @@ const globalStylesCustomEditor = globalCss({
   },
   ".tippy-box[data-theme~='sigle-editor-bubble-menu'][data-placement^='top'] > .tippy-arrow::before":
     {
+      display: 'none',
       borderTopColor: '$gray11',
+      '@xl': {
+        display: 'block',
+      },
     },
   ".tippy-box[data-theme~='sigle-editor-bubble-menu'][data-placement^='bottom'] > .tippy-arrow::before":
     {
+      display: 'none',
       borderBottomColor: '$gray11',
+      '@xl': {
+        display: 'block',
+      },
     },
   ".tippy-box[data-theme~='sigle-editor-bubble-menu'][data-placement^='left'] > .tippy-arrow::before":
     {
+      display: 'none',
       borderLeftColor: '$gray11',
+      '@xl': {
+        display: 'block',
+      },
     },
   ".tippy-box[data-theme~='sigle-editor-bubble-menu'][data-placement^='right'] > .tippy-arrow::before":
     {
+      display: 'none',
       borderRightColor: '$gray11',
+      '@xl': {
+        display: 'block',
+      },
     },
   ".tippy-box[data-theme~='sigle-editor-bubble-menu'] .tippy-content": {
     padding: 0,
