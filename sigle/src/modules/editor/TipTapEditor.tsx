@@ -1,5 +1,5 @@
 import 'highlight.js/styles/night-owl.css';
-import { forwardRef, useImperativeHandle, useState } from 'react';
+import { forwardRef, useEffect, useImperativeHandle, useState } from 'react';
 import {
   useEditor,
   EditorContent,
@@ -106,6 +106,8 @@ export const TipTapEditor = forwardRef<
   TipTapEditorProps
 >(({ story, editable = true }, ref) => {
   const [showShortcutsDialog, setShowShortcutsDialog] = useState(false);
+  const [pendingUpdate, setPendingUpdate] = useState(false);
+  const [toolbarPos, setToolbarPos] = useState(0);
   // TODO is story really needed? Could it be just the content prop?
   globalStylesCustomEditor();
 
@@ -198,6 +200,34 @@ export const TipTapEditor = forwardRef<
     [editor]
   );
 
+  useEffect(() => {
+    window.visualViewport.addEventListener('resize', handleViewport);
+    window.visualViewport.addEventListener('scroll', handleViewport);
+  });
+
+  const handleViewport = () => {
+    if (pendingUpdate) {
+      return;
+    }
+
+    setPendingUpdate(true);
+
+    requestAnimationFrame(() => {
+      setPendingUpdate(false);
+
+      if (window.visualViewport.offsetTop >= 0) {
+        setToolbarPos(
+          Math.max(
+            0,
+            window.innerHeight -
+              window.visualViewport.height -
+              window.visualViewport.offsetTop
+          )
+        );
+      }
+    });
+  };
+
   return (
     <>
       {editor && <BubbleMenu editor={editor} />}
@@ -210,6 +240,7 @@ export const TipTapEditor = forwardRef<
           alignItems: 'center',
           gap: '$5',
           position: 'fixed',
+          transform: `translateY(-${toolbarPos}px)`,
           bottom: 0,
           right: 0,
           left: 0,
@@ -231,7 +262,14 @@ export const TipTapEditor = forwardRef<
             {editor && (
               <Flex
                 css={{
-                  display: 'flex',
+                  '@supports (-webkit-touch-callout: none) and (not (translate: none))':
+                    {
+                      '& button': {
+                        mr: '$5',
+                      },
+                      mr: '$5',
+                    },
+                  display: '-webkit-flex',
 
                   '@xl': { display: 'none' },
                 }}
