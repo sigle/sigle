@@ -205,27 +205,35 @@ export const TipTapEditor = forwardRef<
     window.visualViewport.addEventListener('scroll', handleViewport);
   });
 
+  let isScrolling: ReturnType<typeof setTimeout>;
+
   const handleViewport = () => {
     if (pendingUpdate) {
       return;
     }
 
-    setPendingUpdate(true);
+    window.clearTimeout(isScrolling);
 
-    requestAnimationFrame(() => {
-      setPendingUpdate(false);
+    isScrolling = setTimeout(() => {
+      setPendingUpdate(true);
 
-      if (window.visualViewport.offsetTop >= 0) {
-        setToolbarPos(
-          Math.max(
-            0,
-            window.innerHeight -
-              window.visualViewport.height -
-              window.visualViewport.offsetTop
-          )
-        );
-      }
-    });
+      requestAnimationFrame(() => {
+        setPendingUpdate(false);
+
+        const topOffset = window.visualViewport.offsetTop;
+
+        if (topOffset >= 0) {
+          setToolbarPos(
+            Math.max(
+              0,
+              window.innerHeight -
+                window.visualViewport.height -
+                window.visualViewport.offsetTop
+            )
+          );
+        }
+      });
+    }, 150);
   };
 
   return (
@@ -241,14 +249,16 @@ export const TipTapEditor = forwardRef<
           gap: '$5',
           position: 'fixed',
           transform: `translateY(-${toolbarPos}px)`,
+          transition: 'transform .25s',
           bottom: 0,
           right: 0,
           left: 0,
           zIndex: 0,
           justifyContent: 'center',
+          overflow: 'scroll',
           backgroundColor: '$gray1',
           borderTop: '1px solid $colors$gray6',
-          py: '$3',
+          p: '$3',
 
           '@xl': {
             justifyContent: 'end',
@@ -284,7 +294,7 @@ export const TipTapEditor = forwardRef<
                 />
               </Flex>
             )}
-            <Typography css={{ m: 0 }} size="subheading">
+            <Typography css={{ m: 0, whiteSpace: 'nowrap ' }} size="subheading">
               {editor?.storage.characterCount.words()} words
             </Typography>
             <IconButton
