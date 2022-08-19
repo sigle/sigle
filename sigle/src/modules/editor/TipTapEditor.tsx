@@ -396,13 +396,13 @@ export const TipTapEditor = forwardRef<
               {editor?.storage.characterCount.words()} words
             </Typography>
             <IconButton
-              // css={{
-              //   display: 'none',
+              css={{
+                display: 'none',
 
-              //   '@xl': {
-              //     display: 'block',
-              //   },
-              // }}
+                '@xl': {
+                  display: 'block',
+                },
+              }}
               onClick={() => setShowShortcutsDialog(true)}
               aria-label="Open keyboard shortcuts and hints"
             >
