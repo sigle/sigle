@@ -1,5 +1,11 @@
 import 'highlight.js/styles/night-owl.css';
-import { forwardRef, useEffect, useImperativeHandle, useState } from 'react';
+import {
+  forwardRef,
+  useCallback,
+  useEffect,
+  useImperativeHandle,
+  useState,
+} from 'react';
 import {
   useEditor,
   EditorContent,
@@ -28,7 +34,10 @@ import TipTapText from '@tiptap/extension-text';
 import TipTapUnderline from '@tiptap/extension-underline';
 import TipTapCodeBlockLowlight from '@tiptap/extension-code-block-lowlight';
 import { lowlight } from 'lowlight/lib/common.js';
-import { SlashCommands } from './extensions/SlashCommands';
+import {
+  CommandsListController,
+  SlashCommands,
+} from './extensions/SlashCommands';
 import { BubbleMenu } from './BubbleMenu';
 import { slashCommands, SlashCommandsList } from './InlineMenu';
 import { FloatingMenu } from './FloatingMenu';
@@ -36,11 +45,71 @@ import { styled, globalCss, keyframes, darkTheme } from '../../stitches.config';
 import { CodeBlockComponent } from './extensions/CodeBlock';
 import { Story } from '../../types';
 import CharacterCount from '@tiptap/extension-character-count';
-import { Box, Container, Flex, IconButton, Typography } from '../../ui';
+import {
+  Box,
+  Button,
+  Container,
+  Dialog,
+  DialogContent,
+  DialogTitle,
+  Flex,
+  IconButton,
+  Typography,
+} from '../../ui';
 import { ShortcutsDialog } from './EditorShortcuts/ShortcutsDialog';
 import { clarity } from './utils/clarity-syntax';
-import { KeyboardIcon } from '@radix-ui/react-icons';
+import { KeyboardIcon, TextIcon } from '@radix-ui/react-icons';
 import { BubbleMenuItems } from './BubbleMenuItems';
+
+const ToolbarContainer = styled(Container, {
+  display: 'flex',
+  alignItems: 'center',
+  gap: '$5',
+  position: 'fixed',
+  bottom: 0,
+  right: 0,
+  left: 0,
+  zIndex: 0,
+  justifyContent: 'start',
+  overflow: 'scroll',
+  backgroundColor: '$gray1',
+  borderTop: '1px solid $colors$gray6',
+  p: '$3',
+
+  '@supports (-webkit-touch-callout: none) and (not (translate: none))': {
+    '& button': {
+      mr: '$5',
+    },
+  },
+
+  '@xl': {
+    justifyContent: 'end',
+    gap: '$3',
+    borderTop: 'none',
+    transform: `none`,
+    transition: 'none',
+  },
+});
+
+const StyledDialogContent = styled(DialogContent, {
+  display: 'flex',
+  flexDirection: 'column',
+  gap: '$6',
+  top: 'auto',
+  p: '$5',
+  pb: 0,
+  width: '100%',
+  borderTopLeftRadius: 40,
+  borderTopRightRadius: 40,
+  borderBottomLeftRadius: 0,
+  borderBottomRightRadius: 0,
+
+  '@supports (-webkit-touch-callout: none) and (not (translate: none))': {
+    '&:first-child': {
+      mb: '$6',
+    },
+  },
+});
 
 const fadeInAnimation = keyframes({
   '0%': { opacity: '0' },
@@ -108,6 +177,8 @@ export const TipTapEditor = forwardRef<
   const [showShortcutsDialog, setShowShortcutsDialog] = useState(false);
   const [pendingUpdate, setPendingUpdate] = useState(false);
   const [toolbarPos, setToolbarPos] = useState(0);
+  const [softKeyboardIsOpen, setSoftKeyboardIsOpen] = useState(false);
+  const [showFloatingMenuDialog, setShowFloatingMenuDialog] = useState(false);
   // TODO is story really needed? Could it be just the content prop?
   globalStylesCustomEditor();
 
@@ -201,7 +272,10 @@ export const TipTapEditor = forwardRef<
   );
 
   useEffect(() => {
-    window.visualViewport.addEventListener('resize', handleViewport);
+    window.visualViewport.addEventListener('resize', () => {
+      setSoftKeyboardIsOpen(!softKeyboardIsOpen);
+      handleViewport();
+    });
     window.visualViewport.addEventListener('scroll', handleViewport);
   });
 
@@ -236,39 +310,63 @@ export const TipTapEditor = forwardRef<
     }, 150);
   };
 
+  const handleSelect = useCallback(
+    ({ command }: any) => {
+      command({ editor });
+    },
+    [editor]
+  );
+
   return (
     <>
       {editor && <BubbleMenu editor={editor} />}
       {editor && <FloatingMenu editor={editor} storyId={story.id} />}
 
       <StyledEditorContent editor={editor} />
-      <Container
+      <ToolbarContainer
         css={{
-          display: 'flex',
-          alignItems: 'center',
-          gap: '$5',
-          position: 'fixed',
           transform: `translateY(-${toolbarPos}px)`,
           transition: 'transform .25s',
-          bottom: 0,
-          right: 0,
-          left: 0,
-          zIndex: 0,
-          justifyContent: 'center',
-          overflow: 'scroll',
-          backgroundColor: '$gray1',
-          borderTop: '1px solid $colors$gray6',
-          p: '$3',
-
-          '@xl': {
-            justifyContent: 'end',
-            gap: '$3',
-            borderTop: 'none',
-          },
         }}
       >
         {editable && (
           <>
+            <Button
+              disabled={!softKeyboardIsOpen}
+              onClick={() => setShowFloatingMenuDialog(true)}
+              variant="subtle"
+              size="md"
+            >
+              <Box
+                as="span"
+                css={{
+                  p: '$1',
+                  backgroundColor: '$gray12',
+                  color: '$gray1',
+                  mr: '$2',
+                  br: '$1',
+                }}
+              >
+                <TextIcon />
+              </Box>
+              Plain Text
+            </Button>
+            <Dialog
+              open={showFloatingMenuDialog}
+              onOpenChange={() => setShowFloatingMenuDialog(false)}
+            >
+              <StyledDialogContent
+                closeButton={false}
+                onClick={() => setShowFloatingMenuDialog(false)}
+              >
+                <DialogTitle>Paragraph Style</DialogTitle>
+                <CommandsListController
+                  component={SlashCommandsList}
+                  items={slashCommands({ storyId: story.id })}
+                  command={handleSelect}
+                />
+              </StyledDialogContent>
+            </Dialog>
             {editor && (
               <Flex
                 css={{
@@ -298,13 +396,13 @@ export const TipTapEditor = forwardRef<
               {editor?.storage.characterCount.words()} words
             </Typography>
             <IconButton
-              css={{
-                display: 'none',
+              // css={{
+              //   display: 'none',
 
-                '@xl': {
-                  display: 'block',
-                },
-              }}
+              //   '@xl': {
+              //     display: 'block',
+              //   },
+              // }}
               onClick={() => setShowShortcutsDialog(true)}
               aria-label="Open keyboard shortcuts and hints"
             >
@@ -316,7 +414,7 @@ export const TipTapEditor = forwardRef<
           open={showShortcutsDialog}
           onOpenChange={handleCancelShortcuts}
         />
-      </Container>
+      </ToolbarContainer>
     </>
   );
 });

@@ -6,6 +6,7 @@ export const Button = styled('button', {
   alignItems: 'center',
   fontSize: '$2',
   lineHeight: '20.4px',
+  whiteSpace: 'nowrap',
 
   '&:disabled': {
     opacity: 0.5,
