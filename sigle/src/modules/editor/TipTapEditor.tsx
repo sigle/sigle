@@ -273,6 +273,7 @@ export const TipTapEditor = forwardRef<
 
   useEffect(() => {
     window.visualViewport.addEventListener('resize', () => {
+      // detects if virtual keyboard has opened, however an imperfect solution but the best option for iOS browsers currently as it does not yet support Virtual Keyboard API
       setSoftKeyboardIsOpen(!softKeyboardIsOpen);
       handleViewport();
     });
@@ -288,6 +289,7 @@ export const TipTapEditor = forwardRef<
 
     window.clearTimeout(isScrolling);
 
+    // debounce update to toolbar position on scroll
     isScrolling = setTimeout(() => {
       setPendingUpdate(true);
 
@@ -355,16 +357,18 @@ export const TipTapEditor = forwardRef<
               open={showFloatingMenuDialog}
               onOpenChange={() => setShowFloatingMenuDialog(false)}
             >
-              <StyledDialogContent
-                closeButton={false}
-                onClick={() => setShowFloatingMenuDialog(false)}
-              >
+              <StyledDialogContent closeButton={false}>
                 <DialogTitle>Paragraph Style</DialogTitle>
-                <CommandsListController
-                  component={SlashCommandsList}
-                  items={slashCommands({ storyId: story.id })}
-                  command={handleSelect}
-                />
+                <Box
+                  // uses event bubbling to close dialog when selecting an item as would be expected
+                  onClick={() => setShowFloatingMenuDialog(false)}
+                >
+                  <CommandsListController
+                    component={SlashCommandsList}
+                    items={slashCommands({ storyId: story.id })}
+                    command={handleSelect}
+                  />
+                </Box>
               </StyledDialogContent>
             </Dialog>
             {editor && (
