@@ -396,7 +396,7 @@ export const TipTapEditor = forwardRef<
                 />
               </Flex>
             )}
-            <Typography css={{ m: 0, whiteSpace: 'nowrap ' }} size="subheading">
+            <Typography css={{ m: 0, whiteSpace: 'nowrap' }} size="subheading">
               {editor?.storage.characterCount.words()} words
             </Typography>
             <IconButton
