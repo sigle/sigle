@@ -278,7 +278,12 @@ export const TipTapEditor = forwardRef<
       handleViewport();
     });
     window.visualViewport.addEventListener('scroll', handleViewport);
-  });
+
+    return () => {
+      window.visualViewport.removeEventListener('resize', () => handleViewport);
+      window.visualViewport.removeEventListener('scroll', handleViewport);
+    };
+  }, []);
 
   let isScrolling: ReturnType<typeof setTimeout>;
 
