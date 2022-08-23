@@ -4,6 +4,7 @@ import {
   useCallback,
   useEffect,
   useImperativeHandle,
+  useRef,
   useState,
 } from 'react';
 import {
@@ -179,6 +180,7 @@ export const TipTapEditor = forwardRef<
   const [toolbarPos, setToolbarPos] = useState(0);
   const [softKeyboardIsOpen, setSoftKeyboardIsOpen] = useState(false);
   const [showFloatingMenuDialog, setShowFloatingMenuDialog] = useState(false);
+  const scrollRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   // TODO is story really needed? Could it be just the content prop?
   globalStylesCustomEditor();
 
@@ -285,36 +287,36 @@ export const TipTapEditor = forwardRef<
     };
   }, []);
 
-  let isScrolling: ReturnType<typeof setTimeout>;
-
   const handleViewport = () => {
     if (pendingUpdate) {
       return;
     }
 
-    window.clearTimeout(isScrolling);
+    if (scrollRef && scrollRef.current) {
+      window.clearTimeout(scrollRef.current);
 
-    // debounce update to toolbar position on scroll
-    isScrolling = setTimeout(() => {
-      setPendingUpdate(true);
+      // debounce update to toolbar position on scroll
+      scrollRef.current = setTimeout(() => {
+        setPendingUpdate(true);
 
-      requestAnimationFrame(() => {
-        setPendingUpdate(false);
+        requestAnimationFrame(() => {
+          setPendingUpdate(false);
 
-        const topOffset = window.visualViewport.offsetTop;
+          const topOffset = window.visualViewport.offsetTop;
 
-        if (topOffset >= 0) {
-          setToolbarPos(
-            Math.max(
-              0,
-              window.innerHeight -
-                window.visualViewport.height -
-                window.visualViewport.offsetTop
-            )
-          );
-        }
-      });
-    }, 150);
+          if (topOffset >= 0) {
+            setToolbarPos(
+              Math.max(
+                0,
+                window.innerHeight -
+                  window.visualViewport.height -
+                  window.visualViewport.offsetTop
+              )
+            );
+          }
+        });
+      }, 150);
+    }
   };
 
   const handleSelect = useCallback(
