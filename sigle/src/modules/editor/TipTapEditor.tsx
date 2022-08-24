@@ -1,7 +1,6 @@
 import 'highlight.js/styles/night-owl.css';
 import {
   forwardRef,
-  useCallback,
   useEffect,
   useImperativeHandle,
   useRef,
