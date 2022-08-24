@@ -66,6 +66,11 @@ export const MobileFloatingMenu = ({
                 color: '$gray1',
                 mr: '$2',
                 br: '$1',
+
+                '& svg': {
+                  width: 15,
+                  height: 15,
+                },
               }}
             >
               {activeNode(editor).icon}

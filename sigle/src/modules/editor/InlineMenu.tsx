@@ -274,7 +274,7 @@ export const SlashCommandsList = (props: {
           className={selectedIndex === idx ? 'is-selected' : ''}
           onClick={() => selectItem(idx)}
         >
-          <Flex>
+          <Flex align="center">
             <Icon width={35} height={35} />
             <Flex direction="column" css={{ ml: '$2' }}>
               <Typography>{title}</Typography>
