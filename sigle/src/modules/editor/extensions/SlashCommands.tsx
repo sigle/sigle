@@ -68,7 +68,7 @@ export const SlashCommands = Extension.create<{
                 getReferenceClientRect: props.clientRect,
                 appendTo: () => document.body,
                 content: component.element,
-                showOnCreate: true,
+                showOnCreate: window.innerWidth > 1024 ? true : false,
                 interactive: true,
                 trigger: 'manual',
                 placement: 'bottom-start',
