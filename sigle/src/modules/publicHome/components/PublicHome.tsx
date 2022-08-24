@@ -28,9 +28,15 @@ import {
 } from '../../../hooks/appData';
 import { generateAvatar } from '../../../utils/boringAvatar';
 import { StoryCard } from '../../storyCard/StoryCard';
-import { useGetUserByAddress } from '../../../hooks/users';
+import {
+  useGetUserByAddress,
+  useGetUsersFollowers,
+  useGetUsersFollowing,
+} from '../../../hooks/users';
+import { UserCard } from '../../userCard/UserCard';
 import { DashboardLayout } from '../../layout';
 import { AppHeader } from '../../layout/components/AppHeader';
+import { useRouter } from 'next/router';
 import { Pencil1Icon } from '@radix-ui/react-icons';
 import Link from 'next/link';
 
@@ -103,6 +109,8 @@ const PublicHomeSiteUrl = ({ siteUrl }: { siteUrl: string }) => {
   );
 };
 
+type ActiveTab = 'stories' | 'following' | 'followers';
+
 interface PublicHomeProps {
   file: StoryFile;
   settings: SettingsFile;
@@ -112,12 +120,19 @@ interface PublicHomeProps {
 export const PublicHome = ({ file, settings, userInfo }: PublicHomeProps) => {
   const { resolvedTheme } = useTheme();
   const { user, isLegacy } = useAuth();
+  const router = useRouter();
   const { data: userInfoByAddress } = useGetUserByAddress(userInfo.address);
   const { data: userFollowing } = useGetGaiaUserFollowing({
     enabled: !!user && userInfo.username !== user.username,
   });
   const { mutate: followUser } = useUserFollow();
   const { mutate: unfollowUser } = useUserUnfollow();
+  const { data: following } = useGetUsersFollowing(userInfo.address, {
+    enabled: router.query.tab === 'following',
+  });
+  const { data: followers } = useGetUsersFollowers(userInfo.address, {
+    enabled: router.query.tab === 'followers',
+  });
 
   const twitterHandle = settings.siteTwitterHandle;
   const isFollowingUser =
@@ -152,6 +167,20 @@ export const PublicHome = ({ file, settings, userInfo }: PublicHomeProps) => {
 
   const Layout =
     userInfo.username !== user?.username ? React.Fragment : DashboardLayout;
+
+  const handleTabValueChange = (value: ActiveTab) => {
+    if (!value) {
+      return;
+    }
+
+    router.replace(
+      {
+        query: { ...router.query, tab: value },
+      },
+      undefined,
+      { shallow: true }
+    );
+  };
 
   return (
     <React.Fragment>
@@ -338,12 +367,22 @@ export const PublicHome = ({ file, settings, userInfo }: PublicHomeProps) => {
         </Header>
 
         <StyledContainer>
-          <Tabs defaultValue="stories">
+          <Tabs
+            onValueChange={(value) => handleTabValueChange(value as ActiveTab)}
+            value={router.query.tab ? (router.query.tab as string) : 'stories'}
+            defaultValue="stories"
+          >
             <TabsList
               css={{ boxShadow: '0 1px 0 0 $colors$gray6', mb: 0 }}
-              aria-label="See your draft"
+              aria-label="See your stories, other users that you follow, or, other users that follow you."
             >
               <TabsTrigger value="stories">{`Stories (${file.stories.length})`}</TabsTrigger>
+              <TabsTrigger value="following">{`Following (${
+                userInfoByAddress ? userInfoByAddress.followingCount : 0
+              })`}</TabsTrigger>
+              <TabsTrigger value="followers">{`Followers (${
+                userInfoByAddress ? userInfoByAddress.followersCount : 0
+              })`}</TabsTrigger>
             </TabsList>
             <TabsContent value="stories">
               {file.stories.length === 0 && (
@@ -368,6 +407,22 @@ export const PublicHome = ({ file, settings, userInfo }: PublicHomeProps) => {
                 />
               ))}
             </TabsContent>
+
+            {router.query.tab === 'following' && (
+              <>
+                {following?.map((stxAddress) => (
+                  <UserCard key={stxAddress} address={stxAddress} />
+                ))}
+              </>
+            )}
+
+            {router.query.tab === 'followers' && (
+              <>
+                {followers?.map((stxAddress) => (
+                  <UserCard key={stxAddress} address={stxAddress} />
+                ))}
+              </>
+            )}
           </Tabs>
 
           {userInfo.username !== user?.username && <PoweredBy />}

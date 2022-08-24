@@ -53,11 +53,7 @@ export const ExploreUsers = () => {
       {userExplore &&
         userExplore.pages.map((page) =>
           page.data.map((user) => (
-            <UserCard
-              key={user.stacksAddress}
-              address={user.stacksAddress}
-              userFollowing={userFollowing}
-            />
+            <UserCard key={user.stacksAddress} address={user.stacksAddress} />
           ))
         )}
 
