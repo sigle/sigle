@@ -73,7 +73,6 @@ const ToolbarContainer = styled(Container, {
   zIndex: 0,
   justifyContent: 'start',
   overflow: 'scroll',
-  backgroundColor: '$gray1',
   borderTop: '1px solid $colors$gray6',
   p: '$3',
 
@@ -181,6 +180,7 @@ export const TipTapEditor = forwardRef<
   const [softKeyboardIsOpen, setSoftKeyboardIsOpen] = useState(false);
   const [showFloatingMenuDialog, setShowFloatingMenuDialog] = useState(false);
   const scrollRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const [width, setWidth] = useState(window.innerWidth);
   // TODO is story really needed? Could it be just the content prop?
   globalStylesCustomEditor();
 
@@ -273,6 +273,15 @@ export const TipTapEditor = forwardRef<
     [editor]
   );
 
+  const isMobile = width < 1024;
+
+  useEffect(() => {
+    window.addEventListener('resize', () => setWidth(window.innerWidth));
+    return () => {
+      window.removeEventListener('resize', () => setWidth(window.innerWidth));
+    };
+  }, []);
+
   useEffect(() => {
     window.visualViewport.addEventListener('resize', () => {
       // detects if virtual keyboard has opened, however an imperfect solution but the best option for iOS browsers currently as it does not yet support Virtual Keyboard API
@@ -282,7 +291,7 @@ export const TipTapEditor = forwardRef<
     window.visualViewport.addEventListener('scroll', handleViewport);
 
     return () => {
-      window.visualViewport.removeEventListener('resize', () => handleViewport);
+      window.visualViewport.removeEventListener('resize', handleViewport);
       window.visualViewport.removeEventListener('scroll', handleViewport);
     };
   }, []);
@@ -292,8 +301,8 @@ export const TipTapEditor = forwardRef<
       return;
     }
 
-    if (scrollRef && scrollRef.current) {
-      window.clearTimeout(scrollRef.current);
+    if (scrollRef) {
+      window.clearTimeout(scrollRef.current as ReturnType<typeof setTimeout>);
 
       // debounce update to toolbar position on scroll
       scrollRef.current = setTimeout(() => {
@@ -332,78 +341,84 @@ export const TipTapEditor = forwardRef<
       {editor && <FloatingMenu editor={editor} storyId={story.id} />}
 
       <StyledEditorContent editor={editor} />
+
       <ToolbarContainer
         css={{
+          backgroundColor: isMobile ? '$gray1' : 'transparent',
           transform: `translateY(-${toolbarPos}px)`,
           transition: 'transform .25s',
         }}
       >
         {editable && (
           <>
-            <Button
-              disabled={!softKeyboardIsOpen}
-              onClick={() => setShowFloatingMenuDialog(true)}
-              variant="subtle"
-              size="md"
-            >
-              <Box
-                as="span"
-                css={{
-                  p: '$1',
-                  backgroundColor: '$gray12',
-                  color: '$gray1',
-                  mr: '$2',
-                  br: '$1',
-                }}
-              >
-                <TextIcon />
-              </Box>
-              Plain Text
-            </Button>
-            <Dialog
-              open={showFloatingMenuDialog}
-              onOpenChange={() => setShowFloatingMenuDialog(false)}
-            >
-              <StyledDialogContent closeButton={false}>
-                <DialogTitle>Paragraph Style</DialogTitle>
-                <Box
-                  // uses event bubbling to close dialog when selecting an item as would be expected
-                  onClick={() => setShowFloatingMenuDialog(false)}
+            {isMobile && (
+              <>
+                <Button
+                  disabled={!softKeyboardIsOpen}
+                  onClick={() => setShowFloatingMenuDialog(true)}
+                  variant="subtle"
+                  size="md"
                 >
-                  <CommandsListController
-                    component={SlashCommandsList}
-                    items={slashCommands({ storyId: story.id })}
-                    command={handleSelect}
-                  />
-                </Box>
-              </StyledDialogContent>
-            </Dialog>
-            {editor && (
-              <Flex
-                css={{
-                  '@supports (-webkit-touch-callout: none) and (not (translate: none))':
-                    {
-                      '& button': {
-                        mr: '$5',
-                      },
-                      mr: '$5',
-                    },
-                  display: '-webkit-flex',
+                  <Box
+                    as="span"
+                    css={{
+                      p: '$1',
+                      backgroundColor: '$gray12',
+                      color: '$gray1',
+                      mr: '$2',
+                      br: '$1',
+                    }}
+                  >
+                    <TextIcon />
+                  </Box>
+                  Plain Text
+                </Button>
+                <Dialog
+                  open={showFloatingMenuDialog}
+                  onOpenChange={() => setShowFloatingMenuDialog(false)}
+                >
+                  <StyledDialogContent closeButton={false}>
+                    <DialogTitle>Paragraph Style</DialogTitle>
+                    <Box
+                      // uses event bubbling to close dialog when selecting an item as would be expected
+                      onClick={() => setShowFloatingMenuDialog(false)}
+                    >
+                      <CommandsListController
+                        component={SlashCommandsList}
+                        items={slashCommands({ storyId: story.id })}
+                        command={handleSelect}
+                      />
+                    </Box>
+                  </StyledDialogContent>
+                </Dialog>
+                {editor && (
+                  <Flex
+                    css={{
+                      '@supports (-webkit-touch-callout: none) and (not (translate: none))':
+                        {
+                          '& button': {
+                            mr: '$5',
+                          },
+                          mr: '$5',
+                        },
+                      display: '-webkit-flex',
 
-                  '@xl': { display: 'none' },
-                }}
-                gap="5"
-              >
-                <BubbleMenuItems iconSize={15} editor={editor} />
-                <Box
-                  css={{
-                    width: 2,
-                    backgroundColor: '$gray6',
-                  }}
-                />
-              </Flex>
+                      '@xl': { display: 'none' },
+                    }}
+                    gap="5"
+                  >
+                    <BubbleMenuItems iconSize={15} editor={editor} />
+                    <Box
+                      css={{
+                        width: 2,
+                        backgroundColor: '$gray6',
+                      }}
+                    />
+                  </Flex>
+                )}
+              </>
             )}
-            <Typography css={{ m: 0, whiteSpace: 'nowrap ' }} size="subheading">
+            <Typography css={{ m: 0, whiteSpace: 'nowrap' }} size="subheading">
               {editor?.storage.characterCount.words()} words
             </Typography>
             <IconButton
