@@ -101,7 +101,12 @@ export const SlashCommands = Extension.create<{
 });
 
 export class CommandsListController extends React.Component<
-  { items: any[]; command: (item: any) => void; component: any },
+  {
+    items: any[];
+    command: (item: any) => void;
+    component: any;
+    editor?: Editor;
+  },
   { selectedIndex: number }
 > {
   constructor() {
@@ -166,11 +171,12 @@ export class CommandsListController extends React.Component<
   }
 
   render() {
-    const { items, component: Component } = this.props;
+    const { items, component: Component, editor } = this.props;
     const { selectedIndex } = this.state;
 
     return (
       <Component
+        editor={editor}
         items={items}
         selectedIndex={selectedIndex}
         selectItem={this.selectItem}

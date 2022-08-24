@@ -11,10 +11,12 @@ import {
 } from '../../icons';
 import { SlashCommandsCommand } from './extensions/SlashCommands';
 import { styled } from '../../stitches.config';
-import { Flex, Text } from '../../ui';
+import { Box, Flex, Typography } from '../../ui';
 import { resizeImage } from '../../utils/image';
 import { storage } from '../../utils/blockstack';
 import { generateRandomId } from '../../utils';
+import { Editor } from '@tiptap/react';
+import { activeNode } from './ActiveNode';
 
 const resizeAndUploadImage = async (
   image: File,
@@ -50,7 +52,7 @@ export const slashCommands = ({
 }): SlashCommandsCommand[] => [
   {
     icon: Heading2Light,
-    title: 'Big Heading',
+    title: 'Heading 2',
     description: 'Big section Heading',
     command: ({ editor, range }) => {
       if (!range) {
@@ -68,7 +70,7 @@ export const slashCommands = ({
   },
   {
     icon: Heading3Light,
-    title: 'Small Heading',
+    title: 'Heading 3',
     description: 'Small section Heading',
     command: ({ editor, range }) => {
       if (!range) {
@@ -247,6 +249,7 @@ const CommandsListItem = styled('li', {
   cursor: 'pointer',
   display: 'flex',
   alignItems: 'center',
+  justifyContent: 'space-between',
   width: '100%',
   py: '$1',
   px: '$3',
@@ -259,8 +262,9 @@ export const SlashCommandsList = (props: {
   items: SlashCommandsCommand[];
   selectedIndex: number;
   selectItem: (index: number) => void;
+  editor?: Editor;
 }) => {
-  const { items, selectedIndex, selectItem } = props;
+  const { items, selectedIndex, selectItem, editor } = props;
 
   return (
     <Flex gap="2" direction="column" css={{ maxHeight: 360, overflow: 'auto' }}>
@@ -270,11 +274,25 @@ export const SlashCommandsList = (props: {
           className={selectedIndex === idx ? 'is-selected' : ''}
           onClick={() => selectItem(idx)}
         >
-          <Icon width={35} height={35} />
-          <Flex direction="column" css={{ ml: '$2' }}>
-            <Text>{title}</Text>
-            <Text css={{ color: '$gray9', mt: '-8px' }}>{description}</Text>
+          <Flex>
+            <Icon width={35} height={35} />
+            <Flex direction="column" css={{ ml: '$2' }}>
+              <Typography>{title}</Typography>
+              <Typography css={{ color: '$gray9', mt: '-8px' }}>
+                {description}
+              </Typography>
+            </Flex>
           </Flex>
+          {editor && activeNode(editor).name === title && (
+            <Box
+              css={{
+                backgroundColor: '$green11',
+                width: 8,
+                height: 8,
+                br: '$round',
+              }}
+            />
+          )}
         </CommandsListItem>
       ))}
     </Flex>
