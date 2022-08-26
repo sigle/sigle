@@ -28,6 +28,7 @@ export const Placeholder = TipTapPlaceholder.configure({
       }
 
       if (parentNode.type.name === 'blockquote') {
+        // If there is more than one child in the quote, explain what to do next
         if (parentNode.content.childCount > 1) {
           return 'Type or hit enter to exit quote';
         }
