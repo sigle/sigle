@@ -57,7 +57,7 @@ const StyledContent = styled(DialogPrimitive.Content, {
   my: 'auto',
   width: '90vw',
   maxWidth: '550px',
-  maxHeight: '80vh',
+  maxHeight: 'max-content',
   px: '$6',
   pt: 48,
   pb: '$5',
