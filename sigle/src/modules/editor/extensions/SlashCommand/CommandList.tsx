@@ -35,7 +35,6 @@ interface CommandListProps {
 
 export const CommandList = forwardRef<CommandListRef, CommandListProps>(
   ({ items, command }, ref) => {
-    console.log({ items });
     const containerRef = useRef<HTMLDivElement>(null);
     const [selectedIndex, setSelectedIndex] = useState(0);
 
@@ -63,29 +62,31 @@ export const CommandList = forwardRef<CommandListRef, CommandListProps>(
       },
     }));
 
-    // useEffect(() => {
-    //   let $div = containerRef.current;
-    //   if (!$div) {
-    //     return;
-    //   }
-    //   let $ele = $div.querySelector(`[data-index="${selectedIndex}"]`) as HTMLButtonElement;
-    //   if (!$ele) {
-    //     return;
-    //   }
-    //   let top = $div.scrollTop;
+    useEffect(() => {
+      let $div = containerRef.current;
+      if (!$div) {
+        return;
+      }
+      let $ele = $div.querySelector(
+        `[data-index="${selectedIndex}"]`
+      ) as HTMLButtonElement;
+      if (!$ele) {
+        return;
+      }
+      let top = $div.scrollTop;
 
-    //   let min = $ele.offsetTop;
-    //   if (min < top) {
-    //     $div.scrollTop = min;
-    //     return;
-    //   }
-    //   let max = min + $ele.clientHeight;
-    //   let h = $div.clientHeight;
-    //   if (max > top + h) {
-    //     $div.scrollTop = max - h;
-    //     return;
-    //   }
-    // }, [selectedIndex]);
+      let min = $ele.offsetTop;
+      if (min < top) {
+        $div.scrollTop = min;
+        return;
+      }
+      let max = min + $ele.clientHeight;
+      let h = $div.clientHeight;
+      if (max > top + h) {
+        $div.scrollTop = max - h;
+        return;
+      }
+    }, [selectedIndex]);
 
     const selectItem = (index: number) => {
       const item = items[index];
