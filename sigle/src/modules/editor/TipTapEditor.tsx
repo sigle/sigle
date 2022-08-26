@@ -342,8 +342,9 @@ export const TipTapEditor = forwardRef<
                     />
                     {slashCommands({ storyId: story.id })
                       .filter((item) => item.title === 'Image')
-                      .map(({ icon: Icon, command }) => (
+                      .map(({ icon: Icon, command }, idx) => (
                         <IconButton
+                          key={idx}
                           css={{
                             p: 0,
 
