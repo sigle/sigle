@@ -340,6 +340,28 @@ export const TipTapEditor = forwardRef<
                         backgroundColor: '$gray6',
                       }}
                     />
+                    {slashCommands({ storyId: story.id })
+                      .filter((item) => item.title === 'Image')
+                      .map(({ icon: Icon, command }) => (
+                        <IconButton
+                          css={{
+                            p: 0,
+
+                            '& svg': {
+                              filter: 'invert(1)',
+                            },
+                          }}
+                          onClick={() => command({ editor: editor })}
+                        >
+                          <Icon width={20} height={20} />
+                        </IconButton>
+                      ))}
+                    <Box
+                      css={{
+                        width: 2,
+                        backgroundColor: '$gray6',
+                      }}
+                    />
                   </Flex>
                 )}
               </>
