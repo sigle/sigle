@@ -45,7 +45,7 @@ export const activeNode = (editor: Editor) => {
     };
   }
 
-  if (editor.isActive('code')) {
+  if (editor.isActive('codeBlock')) {
     return {
       name: 'Code',
       icon: <CodeLight />,
