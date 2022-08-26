@@ -174,7 +174,6 @@ export const TipTapEditor = forwardRef<
       // Custom extensions
       SlashCommands.configure({
         commands: slashCommands({ storyId: story.id }),
-        component: SlashCommandsList,
       }),
     ],
     content: story.contentVersion === '2' ? story.content : '',
