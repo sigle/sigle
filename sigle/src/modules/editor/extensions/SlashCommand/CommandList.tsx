@@ -63,25 +63,25 @@ export const CommandList = forwardRef<CommandListRef, CommandListProps>(
     }));
 
     useEffect(() => {
-      let $div = containerRef.current;
+      const $div = containerRef.current;
       if (!$div) {
         return;
       }
-      let $ele = $div.querySelector(
+      const $ele = $div.querySelector(
         `[data-index="${selectedIndex}"]`
       ) as HTMLButtonElement;
       if (!$ele) {
         return;
       }
-      let top = $div.scrollTop;
+      const top = $div.scrollTop;
 
-      let min = $ele.offsetTop;
+      const min = $ele.offsetTop;
       if (min < top) {
         $div.scrollTop = min;
         return;
       }
-      let max = min + $ele.clientHeight;
-      let h = $div.clientHeight;
+      const max = min + $ele.clientHeight;
+      const h = $div.clientHeight;
       if (max > top + h) {
         $div.scrollTop = max - h;
         return;

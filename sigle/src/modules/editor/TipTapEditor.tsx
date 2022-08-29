@@ -192,7 +192,7 @@ export const TipTapEditor = forwardRef<
   return (
     <>
       {editor && <BubbleMenu editor={editor} />}
-      {editor && <FloatingMenu editor={editor} storyId={story.id} />}
+      {editor && <FloatingMenu editor={editor} />}
 
       <StyledEditorContent editor={editor} />
       <Container

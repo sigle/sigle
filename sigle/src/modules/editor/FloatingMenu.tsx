@@ -1,8 +1,6 @@
 import { Editor, FloatingMenu as TipTapFloatingMenu } from '@tiptap/react';
 import { globalCss, styled } from '../../stitches.config';
 import { PlusIcon } from '@radix-ui/react-icons';
-import { RoundPlus } from '../../icons';
-import { IconButton } from '../../ui';
 
 // Tippyjs theme used by the slash command menu
 const globalStylesCustomEditor = globalCss({
