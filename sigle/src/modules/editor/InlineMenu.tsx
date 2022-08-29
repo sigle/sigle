@@ -229,6 +229,27 @@ export const slashCommands = ({
     },
   },
   {
+    icon: DividerLight,
+    title: 'Video',
+    description: 'Embed from YouTube, Vimeo...',
+    command: ({ editor, range }) => {
+      // let chainCommands = editor.chain().focus();
+      // if (range) {
+      //   chainCommands = chainCommands.deleteRange(range);
+      // }
+      // chainCommands
+      //   .setHorizontalRule()
+      //   // Here we insert a paragraph after the divider that will be removed directly to fix
+      //   // an issue with TipTap where the isActive('paragraph') function is returning
+      //   // false. The "plus" menu on the left is not showing without this fix.
+      //   .insertContent({
+      //     type: 'paragraph',
+      //   })
+      //   .deleteNode('paragraph')
+      //   .run();
+    },
+  },
+  {
     icon: CodeLight,
     title: 'Code',
     description: 'Create a code snippet',
