@@ -4,7 +4,6 @@ import Image from 'next/future/image';
 import { useTheme } from 'next-themes';
 import { StoryFile, SettingsFile } from '../../../types';
 import { PoweredBy } from '../../publicStory/PoweredBy';
-import { AppHeader } from '../../layout/components/AppHeader';
 import {
   Box,
   Button,
@@ -23,13 +22,23 @@ import { sigleConfig } from '../../../config';
 import { styled } from '../../../stitches.config';
 import { useAuth } from '../../auth/AuthContext';
 import {
-  useGetUserFollowing,
+  useGetGaiaUserFollowing,
   useUserFollow,
   useUserUnfollow,
 } from '../../../hooks/appData';
 import { generateAvatar } from '../../../utils/boringAvatar';
 import { StoryCard } from '../../storyCard/StoryCard';
-import { useGetUserByAddress } from '../../../hooks/users';
+import {
+  useGetUserByAddress,
+  useGetUsersFollowers,
+  useGetUsersFollowing,
+} from '../../../hooks/users';
+import { UserCard } from '../../userCard/UserCard';
+import { DashboardLayout } from '../../layout';
+import { AppHeader } from '../../layout/components/AppHeader';
+import { useRouter } from 'next/router';
+import { Pencil1Icon } from '@radix-ui/react-icons';
+import Link from 'next/link';
 
 const ExtraInfoLink = styled('a', {
   color: '$gray9',
@@ -49,8 +58,8 @@ const StyledContainer = styled(Container, {
 });
 
 const Header = styled('div', {
-  py: '$10',
-  px: '$4',
+  pb: '$10',
+  px: '$5',
   maxWidth: 826,
   display: 'flex',
   flexDirection: 'column',
@@ -100,6 +109,8 @@ const PublicHomeSiteUrl = ({ siteUrl }: { siteUrl: string }) => {
   );
 };
 
+type ActiveTab = 'stories' | 'following' | 'followers';
+
 interface PublicHomeProps {
   file: StoryFile;
   settings: SettingsFile;
@@ -109,12 +120,23 @@ interface PublicHomeProps {
 export const PublicHome = ({ file, settings, userInfo }: PublicHomeProps) => {
   const { resolvedTheme } = useTheme();
   const { user, isLegacy } = useAuth();
+  const router = useRouter();
   const { data: userInfoByAddress } = useGetUserByAddress(userInfo.address);
-  const { data: userFollowing } = useGetUserFollowing({
+  const { data: userFollowing } = useGetGaiaUserFollowing({
     enabled: !!user && userInfo.username !== user.username,
   });
   const { mutate: followUser } = useUserFollow();
   const { mutate: unfollowUser } = useUserUnfollow();
+  const { data: following } = useGetUsersFollowing(userInfo.address, {
+    enabled: router.query.tab === 'following',
+  });
+  const { data: followers } = useGetUsersFollowers(userInfo.address, {
+    enabled: router.query.tab === 'followers',
+  });
+
+  const twitterHandle = settings.siteTwitterHandle;
+  const isFollowingUser =
+    userFollowing && !!userFollowing.following[userInfo.address];
 
   const handleFollow = async () => {
     if (!userFollowing) return;
@@ -128,14 +150,13 @@ export const PublicHome = ({ file, settings, userInfo }: PublicHomeProps) => {
     unfollowUser({ userFollowing, address: userInfo.address });
   };
 
-  const siteName = settings.siteName || userInfo.username;
-  const twitterHandle = settings.siteTwitterHandle;
-
   const featuredStoryIndex = file.stories.findIndex((story) => story.featured);
   const stories = [...file.stories];
   if (featuredStoryIndex !== -1) {
     stories.splice(featuredStoryIndex, 1);
   }
+
+  const siteName = settings.siteName || userInfo.username;
 
   const seoUrl = `${sigleConfig.appUrl}/${userInfo.username}`;
   const seoTitle = `${siteName} - Sigle`;
@@ -144,8 +165,22 @@ export const PublicHome = ({ file, settings, userInfo }: PublicHomeProps) => {
     `Read stories from ${siteName} on Sigle, decentralised and open-source platform for Web3 writers`;
   const seoImage = settings.siteLogo;
 
-  const isFollowingUser =
-    userFollowing && !!userFollowing.following[userInfo.address];
+  const Layout =
+    userInfo.username !== user?.username ? React.Fragment : DashboardLayout;
+
+  const handleTabValueChange = (value: ActiveTab) => {
+    if (!value) {
+      return;
+    }
+
+    router.replace(
+      {
+        query: { ...router.query, tab: value },
+      },
+      undefined,
+      { shallow: true }
+    );
+  };
 
   return (
     <React.Fragment>
@@ -177,9 +212,13 @@ export const PublicHome = ({ file, settings, userInfo }: PublicHomeProps) => {
           },
         ]}
       />
-      <Container>
-        <AppHeader />
-        <Header>
+      <Layout>
+        {userInfo.username !== user?.username && <AppHeader />}
+        <Header
+          css={{
+            pt: userInfo.username !== user?.username ? '$10' : 0,
+          }}
+        >
           <Flex align="start" justify="between">
             <HeaderLogoContainer>
               <HeaderLogo
@@ -213,13 +252,26 @@ export const PublicHome = ({ file, settings, userInfo }: PublicHomeProps) => {
                 </Button>
               )
             ) : null}
+            {user && user.username === userInfo.username && (
+              <Link href="/settings" passHref>
+                <Button as="a" css={{ gap: '$2' }} variant="subtle">
+                  Edit profile
+                  <Pencil1Icon />
+                </Button>
+              </Link>
+            )}
           </Flex>
           <Flex align="center" gap="3">
             <Typography css={{ fontWeight: 700 }} as="h1" size="h2">
               {siteName}
             </Typography>
             <Box
-              css={{ backgroundColor: '$gray4', py: '$1', px: '$3', br: '$2' }}
+              css={{
+                backgroundColor: '$gray4',
+                py: '$1',
+                px: '$3',
+                br: '$2',
+              }}
             >
               {userInfo.username}
             </Box>
@@ -313,43 +365,69 @@ export const PublicHome = ({ file, settings, userInfo }: PublicHomeProps) => {
               </Typography>
             ))}
         </Header>
-      </Container>
 
-      <StyledContainer>
-        <Tabs defaultValue="stories">
-          <TabsList
-            css={{ boxShadow: '0 1px 0 0 $colors$gray6', mb: 0 }}
-            aria-label="See your draft"
+        <StyledContainer>
+          <Tabs
+            onValueChange={(value) => handleTabValueChange(value as ActiveTab)}
+            value={router.query.tab ? (router.query.tab as string) : 'stories'}
+            defaultValue="stories"
           >
-            <TabsTrigger value="stories">{`Stories (${file.stories.length})`}</TabsTrigger>
-          </TabsList>
-          <TabsContent value="stories">
-            {file.stories.length === 0 && (
-              <Typography css={{ mt: '$8', textAlign: 'center' }}>
-                No stories yet
-              </Typography>
-            )}
-            {featuredStoryIndex !== -1 && (
-              <StoryCard
-                userInfo={userInfo}
-                story={file.stories[featuredStoryIndex]}
-                settings={settings}
-                featured
-              />
-            )}
-            {stories.map((story) => (
-              <StoryCard
-                key={story.id}
-                userInfo={userInfo}
-                story={story}
-                settings={settings}
-              />
-            ))}
-          </TabsContent>
-        </Tabs>
+            <TabsList
+              css={{ boxShadow: '0 1px 0 0 $colors$gray6', mb: 0 }}
+              aria-label="See your stories, other users that you follow, or, other users that follow you."
+            >
+              <TabsTrigger value="stories">{`Stories (${file.stories.length})`}</TabsTrigger>
+              <TabsTrigger value="following">{`Following (${
+                userInfoByAddress ? userInfoByAddress.followingCount : 0
+              })`}</TabsTrigger>
+              <TabsTrigger value="followers">{`Followers (${
+                userInfoByAddress ? userInfoByAddress.followersCount : 0
+              })`}</TabsTrigger>
+            </TabsList>
+            <TabsContent value="stories">
+              {file.stories.length === 0 && (
+                <Typography css={{ mt: '$8', textAlign: 'center' }}>
+                  No stories yet
+                </Typography>
+              )}
+              {featuredStoryIndex !== -1 && (
+                <StoryCard
+                  userInfo={userInfo}
+                  story={file.stories[featuredStoryIndex]}
+                  settings={settings}
+                  featured
+                />
+              )}
+              {stories.map((story) => (
+                <StoryCard
+                  key={story.id}
+                  userInfo={userInfo}
+                  story={story}
+                  settings={settings}
+                />
+              ))}
+            </TabsContent>
 
-        <PoweredBy />
-      </StyledContainer>
+            {router.query.tab === 'following' && (
+              <>
+                {following?.map((stxAddress) => (
+                  <UserCard key={stxAddress} address={stxAddress} />
+                ))}
+              </>
+            )}
+
+            {router.query.tab === 'followers' && (
+              <>
+                {followers?.map((stxAddress) => (
+                  <UserCard key={stxAddress} address={stxAddress} />
+                ))}
+              </>
+            )}
+          </Tabs>
+
+          {userInfo.username !== user?.username && <PoweredBy />}
+        </StyledContainer>
+      </Layout>
     </React.Fragment>
   );
 };

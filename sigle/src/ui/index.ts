@@ -15,3 +15,4 @@ export * from './Tooltip';
 export * from './Tabs';
 export * from './Typography';
 export * from './Form';
+export * from './HoverCard';

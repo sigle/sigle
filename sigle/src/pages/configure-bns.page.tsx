@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { useRouter } from 'next/router';
-import { Button, Heading, Text } from '../ui';
+import { Button, Typography } from '../ui';
 import { LoginLayout } from '../modules/layout/components/LoginLayout';
 import { RocketIcon } from '@radix-ui/react-icons';
 import { Protected } from '../modules/auth/Protected';
@@ -34,40 +34,41 @@ const ConfigureBNS = () => {
 
     const interval = setInterval(checkBnsConfiguration, 1000 * 10);
     return () => clearInterval(interval);
-  }, [user]);
+  }, [user, router]);
 
   return (
     <Protected>
-      <LoginLayout>
-        <Heading
+      <LoginLayout centered>
+        <Typography
           as="h1"
-          size="2xl"
+          size="h2"
           css={{
             mt: '$5',
             fontWeight: '600',
           }}
         >
           One last step
-        </Heading>
-        <Text
+        </Typography>
+        <Typography
           css={{
             mt: '$2',
             mb: '$3',
             color: '$gray10',
+            textAlign: 'center',
           }}
         >
-          Looks like your .btc name is not properly configured, follow the guide
-          to update it.
-        </Text>
-        <Text
+          Looks like your .btc name is not properly <br /> configured, follow
+          the guide to update it.
+        </Typography>
+        <Typography
           css={{
             mt: '$2',
-            mb: '$3',
+            mb: '$5',
             color: '$gray10',
           }}
         >
           Don’t worry, it’s easy!
-        </Text>
+        </Typography>
         <Button
           size="lg"
           color="orange"

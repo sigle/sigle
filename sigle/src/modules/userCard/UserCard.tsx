@@ -3,12 +3,16 @@ import { NamesApi } from '@stacks/blockchain-api-client';
 import Link from 'next/link';
 import { useQuery } from 'react-query';
 import { sigleConfig } from '../../config';
-import { useUserFollow, useUserUnfollow } from '../../hooks/appData';
+import {
+  useGetGaiaUserFollowing,
+  useUserFollow,
+  useUserUnfollow,
+} from '../../hooks/appData';
 import { styled } from '../../stitches.config';
 import { Button, Flex, Typography } from '../../ui';
-import { GaiaUserFollowing } from '../../utils';
 import { generateAvatar } from '../../utils/boringAvatar';
 import { fetchSettings } from '../../utils/gaia/fetch';
+import { useAuth } from '../auth/AuthContext';
 
 const UserCardContainer = styled('div', {
   display: 'flex',
@@ -48,10 +52,10 @@ const UserCardDescription = styled(Typography, {
 
 interface UserCardProps {
   address: string;
-  userFollowing: GaiaUserFollowing;
 }
 
-export const UserCard = ({ address, userFollowing }: UserCardProps) => {
+export const UserCard = ({ address }: UserCardProps) => {
+  const { user, isLegacy } = useAuth();
   const { mutate: followUser } = useUserFollow();
   const { mutate: unfollowUser } = useUserUnfollow();
   const { isLoading: isLoadingUsername, data: username } = useQuery(
@@ -65,6 +69,10 @@ export const UserCard = ({ address, userFollowing }: UserCardProps) => {
       return names.names[0];
     }
   );
+  const { data: userFollowing } = useGetGaiaUserFollowing({
+    enabled: !!user && username !== user.username,
+    staleTime: Infinity,
+  });
 
   const { data: userSettings } = useQuery(
     ['get-user-settings-with-username', username],
@@ -115,7 +123,7 @@ export const UserCard = ({ address, userFollowing }: UserCardProps) => {
   }
 
   const userPath = `/${username}`;
-  const following = !!userFollowing.following[address];
+  const following = !!userFollowing?.following[address];
 
   return (
     <UserCardContainer>
@@ -143,11 +151,12 @@ export const UserCard = ({ address, userFollowing }: UserCardProps) => {
               {isLoadingUsername ? '...' : username}
             </Typography>
           </Link>
-          {!following ? (
+          {user && user?.username !== username && !isLegacy && !following && (
             <Button color="orange" css={{ ml: '$5' }} onClick={handleFollow}>
               Follow
             </Button>
-          ) : (
+          )}
+          {user && user?.username !== username && !isLegacy && following && (
             <Button
               variant="subtle"
               css={{ ml: '$5' }}

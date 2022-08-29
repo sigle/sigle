@@ -16,13 +16,17 @@ const FullScreen = styled('div', {
 
 const LoginContainer = styled(Container, {
   my: 'auto',
+  '@lg': {
+    py: '$10',
+  },
   '@xl': {
-    maxWidth: '1024px',
+    maxWidth: '1440px',
   },
 });
 
 const Grid = styled('div', {
   display: 'grid',
+  placeItems: 'center',
   '@lg': {
     gridTemplateColumns: '2fr 3fr',
     gridGap: '$15',
@@ -33,6 +37,7 @@ const BlockText = styled('div', {
   display: 'flex',
   flexDirection: 'column',
   justifyContent: 'center',
+  maxWidth: 500,
 });
 
 const BlockIllustration = styled('div', {
@@ -44,9 +49,13 @@ const BlockIllustration = styled('div', {
 
 interface LoginLayoutProps {
   children: React.ReactNode;
+  centered?: boolean;
 }
 
-export const LoginLayout = ({ children }: LoginLayoutProps) => {
+export const LoginLayout = ({
+  children,
+  centered = false,
+}: LoginLayoutProps) => {
   const { resolvedTheme } = useTheme();
 
   let src;
@@ -64,10 +73,13 @@ export const LoginLayout = ({ children }: LoginLayoutProps) => {
     <FullScreen>
       <LoginContainer>
         <Grid>
-          <BlockText>
+          <BlockText
+            css={{
+              alignItems: centered ? 'center' : 'start',
+            }}
+          >
             <Box
               as="a"
-              css={{ mb: '$15' }}
               href={sigleConfig.landingUrl}
               target="_blank"
               rel="noreferrer"

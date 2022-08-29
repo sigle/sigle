@@ -1,6 +1,6 @@
 import { useQuery } from 'react-query';
 import { NamesApi } from '@stacks/blockchain-api-client';
-import { useGetUserFollowing } from '../../hooks/appData';
+import { useGetGaiaUserFollowing } from '../../hooks/appData';
 import { Box, LoadingSpinner, Typography } from '../../ui';
 import { DashboardLayout } from '../layout';
 import { lookupProfile } from '@stacks/auth';
@@ -19,7 +19,7 @@ interface StoriesWithUser extends SubsetStory {
 
 export const UserFeed = () => {
   const { isLoading: isLoadingUserFollowing, data: userFollowing } =
-    useGetUserFollowing();
+    useGetGaiaUserFollowing();
   const { isLoading: isLoadingFeed, data: feedStories } = useQuery(
     ['feed-activity', userFollowing],
     async () => {

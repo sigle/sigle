@@ -40,7 +40,7 @@ export const ReferrersFrame = ({
   }, [referrers, currentPage]);
 
   // amount of referres per page
-  let itemSize = 10;
+  const itemSize = 10;
 
   const currentReferrers = useMemo(() => {
     const firstPageIndex = (currentPage - 1) * itemSize;
