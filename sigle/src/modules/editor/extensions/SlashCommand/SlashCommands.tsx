@@ -63,8 +63,8 @@ export const SlashCommands = Extension.create<{
                 editor: props.editor,
               });
 
-              popup = tippy('body' as any, {
-                getReferenceClientRect: props.clientRect as any,
+              popup = tippy('body', {
+                getReferenceClientRect: props.clientRect,
                 appendTo: () => document.body,
                 content: reactRenderer.element,
                 showOnCreate: true,
@@ -79,7 +79,7 @@ export const SlashCommands = Extension.create<{
               reactRenderer.updateProps(props);
 
               popup[0].setProps({
-                getReferenceClientRect: props.clientRect as any,
+                getReferenceClientRect: props.clientRect,
               });
             },
             onKeyDown(props) {
