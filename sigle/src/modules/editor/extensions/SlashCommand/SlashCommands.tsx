@@ -57,7 +57,6 @@ export const SlashCommands = Extension.create<{
 
           return {
             onStart: (props) => {
-              console.log(props);
               reactRenderer = new ReactRenderer(CommandList, {
                 props,
                 editor: props.editor,
