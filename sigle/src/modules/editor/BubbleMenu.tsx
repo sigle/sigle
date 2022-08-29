@@ -128,7 +128,7 @@ export const BubbleMenu = ({ editor }: BubbleMenuProps) => {
         // that way user can continue to type easily
         .setTextSelection(pos.end())
         // Unset link selection se when the user continues to type it won't be a link
-        // We are using `unsetLink` instead of unsetLink to avoid the full selection to be unlinked
+        // We are using `unsetMark` instead of `unsetLink` to avoid the full selection to be unlinked
         .unsetMark('link')
         .run();
     } else {
