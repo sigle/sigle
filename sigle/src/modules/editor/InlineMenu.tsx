@@ -9,7 +9,7 @@ import {
   ImageLight,
   QuoteLight,
 } from '../../icons';
-import { SlashCommandsCommand } from './extensions/SlashCommands';
+import { SlashCommandsCommand } from './extensions/SlashCommand/SlashCommands';
 import { styled } from '../../stitches.config';
 import { Flex, Text } from '../../ui';
 import { resizeImage } from '../../utils/image';

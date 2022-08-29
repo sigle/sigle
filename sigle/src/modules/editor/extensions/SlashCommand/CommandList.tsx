@@ -7,7 +7,7 @@ import {
 } from 'react';
 import { styled } from '../../../../stitches.config';
 import { Flex, Text } from '../../../../ui';
-import { SlashCommandsCommand } from '../SlashCommands';
+import { SlashCommandsCommand } from './SlashCommands';
 
 // TODO stop using Text
 

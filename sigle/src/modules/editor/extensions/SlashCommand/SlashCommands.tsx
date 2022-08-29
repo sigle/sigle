@@ -5,7 +5,7 @@ import Suggestion, { SuggestionOptions } from '@tiptap/suggestion';
 import { Editor, ReactRenderer, Range } from '@tiptap/react';
 import tippy, { Instance } from 'tippy.js';
 import { IconProps } from '@radix-ui/react-icons/dist/types';
-import { CommandList, CommandListRef } from './SlashCommand/CommandList';
+import { CommandList, CommandListRef } from './CommandList';
 
 export interface SlashCommandsCommand {
   title: string;
