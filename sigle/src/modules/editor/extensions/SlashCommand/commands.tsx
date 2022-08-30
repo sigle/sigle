@@ -8,13 +8,11 @@ import {
   Heading3Light,
   ImageLight,
   QuoteLight,
-} from '../../icons';
-import { SlashCommandsCommand } from './extensions/SlashCommands';
-import { styled } from '../../stitches.config';
-import { Flex, Text } from '../../ui';
-import { resizeImage } from '../../utils/image';
-import { storage } from '../../utils/blockstack';
-import { generateRandomId } from '../../utils';
+} from '../../../../icons';
+import { SlashCommandsCommand } from './SlashCommands';
+import { resizeImage } from '../../../../utils/image';
+import { storage } from '../../../../utils/blockstack';
+import { generateRandomId } from '../../../../utils';
 
 const resizeAndUploadImage = async (
   image: File,
@@ -263,41 +261,3 @@ export const slashCommands = ({
     },
   },
 ];
-
-const CommandsListItem = styled('li', {
-  cursor: 'pointer',
-  display: 'flex',
-  alignItems: 'center',
-  width: '100%',
-  py: '$1',
-  px: '$3',
-  '&.is-selected,&:hover': {
-    backgroundColor: '$gray3',
-  },
-});
-
-export const SlashCommandsList = (props: {
-  items: SlashCommandsCommand[];
-  selectedIndex: number;
-  selectItem: (index: number) => void;
-}) => {
-  const { items, selectedIndex, selectItem } = props;
-
-  return (
-    <Flex gap="2" direction="column" css={{ maxHeight: 360, overflow: 'auto' }}>
-      {items.map(({ title, description, icon: Icon }, idx) => (
-        <CommandsListItem
-          key={idx}
-          className={selectedIndex === idx ? 'is-selected' : ''}
-          onClick={() => selectItem(idx)}
-        >
-          <Icon width={35} height={35} />
-          <Flex direction="column" css={{ ml: '$2' }}>
-            <Text>{title}</Text>
-            <Text css={{ color: '$gray9', mt: '-8px' }}>{description}</Text>
-          </Flex>
-        </CommandsListItem>
-      ))}
-    </Flex>
-  );
-};

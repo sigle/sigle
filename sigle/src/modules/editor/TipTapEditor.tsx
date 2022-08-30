@@ -28,9 +28,9 @@ import TipTapText from '@tiptap/extension-text';
 import TipTapUnderline from '@tiptap/extension-underline';
 import TipTapCodeBlockLowlight from '@tiptap/extension-code-block-lowlight';
 import { lowlight } from 'lowlight/lib/common.js';
-import { SlashCommands } from './extensions/SlashCommands';
+import { SlashCommands } from './extensions/SlashCommand/SlashCommands';
 import { BubbleMenu } from './BubbleMenu';
-import { slashCommands, SlashCommandsList } from './InlineMenu';
+import { slashCommands } from './extensions/SlashCommand/commands';
 import { FloatingMenu } from './FloatingMenu';
 import { styled, globalCss, keyframes, darkTheme } from '../../stitches.config';
 import { CodeBlockComponent } from './extensions/CodeBlock';
@@ -174,7 +174,6 @@ export const TipTapEditor = forwardRef<
       // Custom extensions
       SlashCommands.configure({
         commands: slashCommands({ storyId: story.id }),
-        component: SlashCommandsList,
       }),
     ],
     content: story.contentVersion === '2' ? story.content : '',
@@ -193,7 +192,7 @@ export const TipTapEditor = forwardRef<
   return (
     <>
       {editor && <BubbleMenu editor={editor} />}
-      {editor && <FloatingMenu editor={editor} storyId={story.id} />}
+      {editor && <FloatingMenu editor={editor} />}
 
       <StyledEditorContent editor={editor} />
       <Container
