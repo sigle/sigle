@@ -2,7 +2,8 @@
 
 import { Extension } from '@tiptap/core';
 import Suggestion, { SuggestionOptions } from '@tiptap/suggestion';
-import { Editor, ReactRenderer, Range } from '@tiptap/react';
+import { Editor } from '@tiptap/core';
+import { ReactRenderer, Range } from '@tiptap/react';
 import tippy, { Instance } from 'tippy.js';
 import { IconProps } from '@radix-ui/react-icons/dist/types';
 import { CommandList, CommandListRef } from './CommandList';
@@ -63,7 +64,7 @@ export const SlashCommands = Extension.create<{
               });
 
               popup = tippy('body', {
-                getReferenceClientRect: props.clientRect,
+                getReferenceClientRect: props.clientRect as any,
                 appendTo: () => document.body,
                 content: reactRenderer.element,
                 showOnCreate: true,
@@ -78,7 +79,7 @@ export const SlashCommands = Extension.create<{
               reactRenderer.updateProps(props);
 
               popup[0].setProps({
-                getReferenceClientRect: props.clientRect,
+                getReferenceClientRect: props.clientRect as any,
               });
             },
             onKeyDown(props) {
