@@ -12,14 +12,14 @@ import { TextIcon } from '@radix-ui/react-icons';
 export const activeNode = (editor: Editor) => {
   if (editor.isActive('heading', { level: 2 })) {
     return {
-      name: 'Heading 2',
+      name: 'Big Heading',
       icon: <Heading2Light />,
     };
   }
 
   if (editor.isActive('heading', { level: 3 })) {
     return {
-      name: 'Heading 3',
+      name: 'Small Heading',
       icon: <Heading3Light />,
     };
   }

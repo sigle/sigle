@@ -3,9 +3,9 @@ import { useCallback, useState } from 'react';
 import { styled } from '../../stitches.config';
 import { Story } from '../../types';
 import { Box, Button, Dialog, DialogContent, DialogTitle } from '../../ui';
-import { CommandsListController } from './extensions/SlashCommands';
+import { CommandList } from './extensions/SlashCommand/CommandList';
 import { activeNode } from './ActiveNode';
-import { slashCommands, SlashCommandsList } from './InlineMenu';
+import { slashCommands } from './extensions/SlashCommand/commands';
 
 const StyledDialogContent = styled(DialogContent, {
   display: 'flex',
@@ -87,9 +87,8 @@ export const MobileFloatingMenu = ({
                 // uses event bubbling to close dialog when selecting an item as would be expected
                 onClick={() => setShowFloatingMenuDialog(false)}
               >
-                <CommandsListController
+                <CommandList
                   editor={editor}
-                  component={SlashCommandsList}
                   items={slashCommands({ storyId: story.id })}
                   command={handleSelect}
                 />

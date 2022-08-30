@@ -1,8 +1,8 @@
+import { useRef } from 'react';
 import { Editor, BubbleMenu as TipTapBubbleMenu } from '@tiptap/react';
 import { isTextSelection } from '@tiptap/core';
 import { globalCss, styled } from '../../stitches.config';
 import { BubbleMenuItems } from './BubbleMenuItems';
-import { useRef } from 'react';
 
 // Tippyjs theme used by the bubble menu
 const globalStylesCustomEditor = globalCss({
@@ -11,35 +11,19 @@ const globalStylesCustomEditor = globalCss({
   },
   ".tippy-box[data-theme~='sigle-editor-bubble-menu'][data-placement^='top'] > .tippy-arrow::before":
     {
-      display: 'none',
       borderTopColor: '$gray11',
-      '@xl': {
-        display: 'block',
-      },
     },
   ".tippy-box[data-theme~='sigle-editor-bubble-menu'][data-placement^='bottom'] > .tippy-arrow::before":
     {
-      display: 'none',
       borderBottomColor: '$gray11',
-      '@xl': {
-        display: 'block',
-      },
     },
   ".tippy-box[data-theme~='sigle-editor-bubble-menu'][data-placement^='left'] > .tippy-arrow::before":
     {
-      display: 'none',
       borderLeftColor: '$gray11',
-      '@xl': {
-        display: 'block',
-      },
     },
   ".tippy-box[data-theme~='sigle-editor-bubble-menu'][data-placement^='right'] > .tippy-arrow::before":
     {
-      display: 'none',
       borderRightColor: '$gray11',
-      '@xl': {
-        display: 'block',
-      },
     },
   ".tippy-box[data-theme~='sigle-editor-bubble-menu'] .tippy-content": {
     padding: 0,
@@ -48,15 +32,11 @@ const globalStylesCustomEditor = globalCss({
 });
 
 const StyledBubbleMenu = styled(TipTapBubbleMenu, {
-  display: 'none',
+  display: 'flex',
   gap: '$3',
   br: '$1',
   py: '$3',
   px: '$4',
-
-  '@xl': {
-    display: 'flex',
-  },
 });
 
 // Maybe can be used on clicks https://github.com/ueberdosis/tiptap/issues/104#issuecomment-912794709
@@ -67,13 +47,9 @@ interface ResetLink {
 
 interface BubbleMenuProps {
   editor: Editor;
-  defaultOpen?: boolean;
 }
 
-export const BubbleMenu = ({
-  editor,
-  defaultOpen = false,
-}: BubbleMenuProps) => {
+export const BubbleMenu = ({ editor }: BubbleMenuProps) => {
   globalStylesCustomEditor();
   const bubbleItemsRef = useRef<ResetLink>(null);
 
@@ -85,9 +61,6 @@ export const BubbleMenu = ({
         onHidden: () => bubbleItemsRef.current?.resetLink(),
       }}
       shouldShow={({ editor, state, from, to, view }) => {
-        if (defaultOpen) {
-          return true;
-        }
         // Take the initial implementation of the plugin and extends it
         // https://github.com/ueberdosis/tiptap/blob/main/packages/extension-bubble-menu/src/bubble-menu-plugin.ts#L43
         const { doc, selection } = state;
