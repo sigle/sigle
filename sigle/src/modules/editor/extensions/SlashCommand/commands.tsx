@@ -231,20 +231,22 @@ export const slashCommands = ({
     title: 'Video',
     description: 'Embed from YouTube, Vimeo...',
     command: ({ editor, range }) => {
-      // let chainCommands = editor.chain().focus();
-      // if (range) {
-      //   chainCommands = chainCommands.deleteRange(range);
-      // }
-      // chainCommands
-      //   .setHorizontalRule()
-      //   // Here we insert a paragraph after the divider that will be removed directly to fix
-      //   // an issue with TipTap where the isActive('paragraph') function is returning
-      //   // false. The "plus" menu on the left is not showing without this fix.
-      //   .insertContent({
-      //     type: 'paragraph',
-      //   })
-      //   .deleteNode('paragraph')
-      //   .run();
+      if (!range) {
+        editor.commands.setVideoEmbed({
+          src: 'https://www.youtube.com/watch?v=mu_nCBU60pE',
+        });
+        return;
+      }
+
+      editor
+        .chain()
+        .focus()
+        // Use deleteRange to clear the text from command chars "/q" etc..
+        .deleteRange(range)
+        .run();
+      editor.commands.setVideoEmbed({
+        src: 'https://www.youtube.com/watch?v=mu_nCBU60pE',
+      });
     },
   },
   {

@@ -6,24 +6,21 @@ import {
   YOUTUBE_REGEX_GLOBAL,
 } from './youtube';
 
-export interface YoutubeOptions {
-  addPasteHandler: boolean;
+export interface VideoEmbedOptions {
   allowFullscreen: boolean;
   controls: boolean;
   height: number;
   HTMLAttributes: Record<string, any>;
-  inline: boolean;
-  nocookie: boolean;
   width: number;
 }
 
 declare module '@tiptap/core' {
   interface Commands<ReturnType> {
-    youtube: {
+    videoEmbed: {
       /**
-       * Insert a youtube video
+       * Insert a video embed
        */
-      setYoutubeVideo: (options: {
+      setVideoEmbed: (options: {
         src: string;
         width?: number;
         height?: number;
@@ -33,31 +30,21 @@ declare module '@tiptap/core' {
   }
 }
 
-export const Youtube = Node.create<YoutubeOptions>({
-  name: 'youtube',
+export const VideoEmbed = Node.create<VideoEmbedOptions>({
+  name: 'video-embed',
+  group: 'block',
+  draggable: true,
+  selectable: true,
 
   addOptions() {
     return {
-      addPasteHandler: true,
       allowFullscreen: false,
       controls: true,
       height: 480,
       HTMLAttributes: {},
-      inline: false,
-      nocookie: false,
       width: 640,
     };
   },
-
-  inline() {
-    return this.options.inline;
-  },
-
-  group() {
-    return this.options.inline ? 'inline' : 'block';
-  },
-
-  draggable: true,
 
   addAttributes() {
     return {
@@ -79,14 +66,14 @@ export const Youtube = Node.create<YoutubeOptions>({
   parseHTML() {
     return [
       {
-        tag: 'div[data-youtube-video] iframe',
+        tag: 'div[data-video-embed] iframe',
       },
     ];
   },
 
   addCommands() {
     return {
-      setYoutubeVideo:
+      setVideoEmbed:
         (options) =>
         ({ commands }) => {
           if (!isValidYoutubeUrl(options.src)) {
@@ -102,10 +89,6 @@ export const Youtube = Node.create<YoutubeOptions>({
   },
 
   addPasteRules() {
-    if (!this.options.addPasteHandler) {
-      return [];
-    }
-
     return [
       nodePasteRule({
         find: YOUTUBE_REGEX_GLOBAL,
@@ -121,15 +104,16 @@ export const Youtube = Node.create<YoutubeOptions>({
     const embedUrl = getEmbedURLFromYoutubeURL({
       url: HTMLAttributes.src,
       controls: this.options.controls,
-      nocookie: this.options.nocookie,
       startAt: HTMLAttributes.start || 0,
     });
+
+    console.log({ HTMLAttributes });
 
     HTMLAttributes.src = embedUrl;
 
     return [
       'div',
-      { 'data-youtube-video': '' },
+      { 'data-video-embed': '' },
       [
         'iframe',
         mergeAttributes(
