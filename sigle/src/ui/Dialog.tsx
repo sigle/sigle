@@ -49,20 +49,35 @@ const StyledContent = styled(DialogPrimitive.Content, {
   br: '$2',
   boxShadow: '0px 0px 33px rgba(0, 0, 0, 0.08)',
   position: 'fixed',
-  top: '50%',
-  left: '50%',
-  transform: 'translate(-50%, -50%)',
+  top: 0,
+  bottom: 0,
+  right: 0,
+  left: 0,
+  mx: 'auto',
+  my: 'auto',
   width: '90vw',
   maxWidth: '550px',
-  maxHeight: '85vh',
+  maxHeight: 'max-content',
   px: '$6',
   pt: 48,
   pb: '$5',
   overflow: 'scroll',
-  '@media (prefers-reduced-motion: no-preference)': {
-    animation: `${contentShow} 150ms cubic-bezier(0.16, 1, 0.3, 1)`,
-    willChange: 'transform',
+  transform: 'none',
+
+  '@xl': {
+    maxHeight: '85vh',
+    top: '50%',
+    left: '50%',
+    right: 'auto',
+    bottom: 'auto',
+    transform: 'translate(-50%, -50%)',
+
+    '@media (prefers-reduced-motion: no-preference)': {
+      animation: `${contentShow} 150ms cubic-bezier(0.16, 1, 0.3, 1)`,
+      willChange: 'transform',
+    },
   },
+
   '&:focus': { outline: 'none' },
 });
 
@@ -74,19 +89,21 @@ const StyledCloseButton = styled(DialogPrimitive.Close, {
 
 type DialogContentProps = React.ComponentProps<
   typeof DialogPrimitive.Content
-> & { css?: CSS };
+> & { css?: CSS; closeButton?: boolean };
 
 export const DialogContent = forwardRef<
   React.ElementRef<typeof StyledContent>,
   DialogContentProps
->(({ children, ...props }, forwardedRef) => (
+>(({ children, closeButton = true, ...props }, forwardedRef) => (
   <StyledContent {...props} ref={forwardedRef}>
     {children}
-    <StyledCloseButton asChild>
-      <IconButton>
-        <Cross1Icon width={15} height={15} />
-      </IconButton>
-    </StyledCloseButton>
+    {closeButton && (
+      <StyledCloseButton asChild>
+        <IconButton>
+          <Cross1Icon width={15} height={15} />
+        </IconButton>
+      </StyledCloseButton>
+    )}
   </StyledContent>
 ));
 

@@ -212,6 +212,7 @@ importers:
       react-cool-inview: 3.0.1
       react-div-100vh: 0.6.0
       react-dom: 18.2.0
+      react-draggable: 4.4.5
       react-dropzone: 11.4.2
       react-query: 3.39.1
       react-toastify: 8.2.0
@@ -309,6 +310,7 @@ importers:
       react-cool-inview: 3.0.1_react@18.2.0
       react-div-100vh: 0.6.0_react@18.2.0
       react-dom: 18.2.0_react@18.2.0
+      react-draggable: 4.4.5_biqbaboplfbrettd7655fr4n2y
       react-dropzone: 11.4.2_react@18.2.0
       react-query: 3.39.1_biqbaboplfbrettd7655fr4n2y
       react-toastify: 8.2.0_biqbaboplfbrettd7655fr4n2y
@@ -9128,7 +9130,7 @@ packages:
     dev: false
 
   /object-assign/4.1.1:
-    resolution: {integrity: sha1-IQmtx5ZYh8/AXLvUQsrIv7s2CGM=}
+    resolution: {integrity: sha512-rJgTQnkUnH1sFw8yT6VSU3zD3sWmu6sZhIseY8VX+GRu3P6F7Fu+JNDoXfklElbLJSnc3FUQHVe4cU5hj+BcUg==}
     engines: {node: '>=0.10.0'}
 
   /object-hash/2.2.0:
@@ -9933,6 +9935,18 @@ packages:
       loose-envify: 1.4.0
       react: 18.2.0
       scheduler: 0.23.0
+
+  /react-draggable/4.4.5_biqbaboplfbrettd7655fr4n2y:
+    resolution: {integrity: sha512-OMHzJdyJbYTZo4uQE393fHcqqPYsEtkjfMgvCHr6rejT+Ezn4OZbNyGH50vv+SunC1RMvwOTSWkEODQLzw1M9g==}
+    peerDependencies:
+      react: '>= 16.3.0'
+      react-dom: '>= 16.3.0'
+    dependencies:
+      clsx: 1.1.1
+      prop-types: 15.8.1
+      react: 18.2.0
+      react-dom: 18.2.0_react@18.2.0
+    dev: false
 
   /react-dropzone/11.4.2_react@18.2.0:
     resolution: {integrity: sha512-ocYzYn7Qgp0tFc1gQtUTOaHHSzVTwhWHxxY+r7cj2jJTPfMTZB5GWSJHdIVoxsl+EQENpjJ/6Zvcw0BqKZQ+Eg==}
