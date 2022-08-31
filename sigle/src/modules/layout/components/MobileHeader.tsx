@@ -65,11 +65,6 @@ interface MobileHeaderProps {
   onClose: () => void;
 }
 
-interface DragPosProps {
-  x: number;
-  y: number;
-}
-
 export const MobileHeader = ({ open, onClose }: MobileHeaderProps) => {
   const { resolvedTheme, setTheme } = useTheme();
   const queryClient = useQueryClient();
