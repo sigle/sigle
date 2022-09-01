@@ -7,7 +7,7 @@ import { Switch, SwitchThumb } from '../../../ui/Switch';
 import { userSession } from '../../../utils/blockstack';
 import { useQueryClient } from 'react-query';
 import Draggable, { DraggableData, DraggableEvent } from 'react-draggable';
-import { useRef } from 'react';
+import { useRef, useState } from 'react';
 import { useMotionAnimate } from 'motion-hooks';
 
 const DragHandleArea = styled('div', {
@@ -70,6 +70,10 @@ export const MobileHeader = ({ open, onClose }: MobileHeaderProps) => {
   const queryClient = useQueryClient();
   // give target element a ref to avoid 'findDOMNode' deprecation error - https://blog.logrocket.com/create-draggable-components-react-draggable/#:~:text=Handling%20the%C2%A0findDOMNode%20deprecation%20error
   const nodeRef = useRef(null);
+  const [dragPos, setDragPos] = useState<{ x: number; y: number } | undefined>({
+    x: 0,
+    y: 0,
+  });
   const { play: exitAnimation } = useMotionAnimate(
     nodeRef,
     {
@@ -104,7 +108,21 @@ export const MobileHeader = ({ open, onClose }: MobileHeaderProps) => {
     signOut();
   };
 
+  const handleWhilstDragging = (e: DraggableEvent, data: DraggableData) => {
+    setDragPos({ x: data.x, y: data.y });
+  };
+
+  const handleDragStart = (e: DraggableEvent, data: DraggableData) => {
+    // reset values to start position when dragging begins
+    // handles edge case where user releases drag before threshold, but the values are still reading from the previous position when dragging begins again
+    if (data.y !== 0) {
+      setDragPos({ x: 0, y: 0 });
+    }
+  };
+
   const handleDragStop = (e: DraggableEvent, data: DraggableData) => {
+    // reset values
+    setDragPos(undefined);
     if (data.y >= 200) {
       exitAnimation();
       setTimeout(onClose, 300);
@@ -136,11 +154,14 @@ export const MobileHeader = ({ open, onClose }: MobileHeaderProps) => {
       {/* wrapper div here prevents radix 'getComputedStyle' TypeError */}
       <Box>
         <Draggable
+          position={dragPos ? dragPos : undefined}
           nodeRef={nodeRef}
           axis="y"
           handle=".drag-handle"
           bounds={{ left: 0, top: 0, right: 0, bottom: 400 }}
           onStop={handleDragStop}
+          onStart={handleDragStart}
+          onDrag={handleWhilstDragging}
         >
           <StyledDialogContent
             css={{
