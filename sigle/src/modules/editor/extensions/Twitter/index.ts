@@ -67,25 +67,4 @@ export const Twitter = Node.create({
   addNodeView() {
     return ReactNodeViewRenderer(TwitterComponent);
   },
-
-  //   addNodeView() {
-  //     return ({ editor, node }) => {
-  //       const div = document.createElement('div');
-  //       div.className =
-  //         'aspect-w-16 aspect-h-9' + (editor.isEditable ? ' cursor-pointer' : '');
-  //       const iframe = document.createElement('iframe');
-  //       if (editor.isEditable) {
-  //         iframe.className = 'pointer-events-none';
-  //       }
-  //       iframe.width = '640';
-  //       iframe.height = '360';
-  //       iframe.frameborder = '0';
-  //       iframe.allowfullscreen = '';
-  //       iframe.src = node.attrs.src;
-  //       div.append(iframe);
-  //       return {
-  //         dom: div,
-  //       };
-  //     };
-  //   },
 });
