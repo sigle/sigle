@@ -227,6 +227,29 @@ export const slashCommands = ({
     },
   },
   {
+    icon: ImageLight,
+    title: 'Twitter',
+    description: 'Upload from your computer',
+    command: ({ editor, range }) => {
+      if (!range) {
+        editor.commands.setTweet({
+          url: 'https://twitter.com/sigleapp/status/1562113780519141376',
+        });
+        return;
+      }
+
+      editor
+        .chain()
+        .focus()
+        // Use deleteRange to clear the text from command chars "/q" etc..
+        .deleteRange(range)
+        .run();
+      editor.commands.setTweet({
+        url: 'https://twitter.com/sigleapp/status/1562113780519141376',
+      });
+    },
+  },
+  {
     icon: CodeLight,
     title: 'Code',
     description: 'Create a code snippet',
