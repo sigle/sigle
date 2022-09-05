@@ -9,7 +9,6 @@ import { useQueryClient } from 'react-query';
 import Draggable from 'react-draggable';
 import { TouchEvent, useRef, useState } from 'react';
 import { useMotionAnimate } from 'motion-hooks';
-import { use100vh } from 'react-div-100vh';
 
 const overlayShow = keyframes({
   '0%': { transform: `matrix(1, 0, 0, 1, 0, 300)` },
@@ -90,7 +89,6 @@ export const MobileHeader = ({ open, onClose }: MobileHeaderProps) => {
   });
   const initPos = useRef<number | null>(null);
   const currentPos = useRef<number | null>(null);
-  const height = use100vh();
   const { play: exitAnimation } = useMotionAnimate(
     nodeRef,
     {
