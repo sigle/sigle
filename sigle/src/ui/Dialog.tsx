@@ -9,7 +9,7 @@ const overlayShow = keyframes({
   '100%': { opacity: 1 },
 });
 
-const StyledOverlay = styled(DialogPrimitive.Overlay, {
+export const StyledOverlay = styled(DialogPrimitive.Overlay, {
   backgroundColor: 'rgba(8, 8, 8, 0.7)',
   position: 'fixed',
   inset: 0,
@@ -25,13 +25,14 @@ const StyledOverlay = styled(DialogPrimitive.Overlay, {
 
 type DialogProps = React.ComponentProps<typeof DialogPrimitive.Root> & {
   children: React.ReactNode;
+  overlay?: boolean;
 };
 
-export function Dialog({ children, ...props }: DialogProps) {
+export function Dialog({ children, overlay = true, ...props }: DialogProps) {
   return (
     <DialogPrimitive.Root {...props}>
       <DialogPrimitive.Portal>
-        <StyledOverlay />
+        {overlay && <StyledOverlay />}
         {children}
       </DialogPrimitive.Portal>
     </DialogPrimitive.Root>

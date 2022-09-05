@@ -2,24 +2,30 @@ import { signOut } from 'next-auth/react';
 import { useTheme } from 'next-themes';
 import Link from 'next/link';
 import { keyframes, styled } from '../../../stitches.config';
-import { Box, Dialog, DialogContent } from '../../../ui';
+import { Box, Dialog, DialogContent, StyledOverlay } from '../../../ui';
 import { Switch, SwitchThumb } from '../../../ui/Switch';
 import { userSession } from '../../../utils/blockstack';
 import { useQueryClient } from 'react-query';
-import Draggable, { DraggableData, DraggableEvent } from 'react-draggable';
-import { useRef, useState } from 'react';
+import Draggable from 'react-draggable';
+import { TouchEvent, useRef, useState } from 'react';
 import { useMotionAnimate } from 'motion-hooks';
+import { use100vh } from 'react-div-100vh';
+
+const overlayShow = keyframes({
+  '0%': { transform: `matrix(1, 0, 0, 1, 0, 300)` },
+  '100%': { transform: `matrix(1, 0, 0, 1, 0, 0)` },
+});
 
 const DragHandleArea = styled('div', {
-  width: 128,
-  position: 'absolute',
+  width: '100%',
+  position: 'fixed',
   display: 'grid',
   placeItems: 'center',
   top: 0,
   left: 0,
   right: 0,
   mx: 'auto',
-  p: '$5',
+  py: '$5',
 });
 
 const DragHandleBar = styled('div', {
@@ -36,6 +42,11 @@ const StyledDialogItem = styled('div', {
   justifyContent: 'space-between',
   userSelect: 'none',
   cursor: 'pointer',
+  textDecorationColor: '$gray9',
+
+  '&:active': {
+    color: '$gray9',
+  },
 
   variants: {
     color: {
@@ -53,11 +64,14 @@ const StyledDialogContent = styled(DialogContent, {
   top: 'auto',
   transform: 'none',
   width: '100%',
-  maxHeight: 'fit-content',
+  maxHeight: '100%',
   borderBottomLeftRadius: 0,
   borderBottomRightRadius: 0,
   borderTopLeftRadius: 20,
   borderTopRightRadius: 20,
+  '@media (prefers-reduced-motion: no-preference)': {
+    animation: `${overlayShow} 500ms cubic-bezier(0.16, 1, 0.3, 1)`,
+  },
 });
 
 interface MobileHeaderProps {
@@ -69,11 +83,14 @@ export const MobileHeader = ({ open, onClose }: MobileHeaderProps) => {
   const { resolvedTheme, setTheme } = useTheme();
   const queryClient = useQueryClient();
   // give target element a ref to avoid 'findDOMNode' deprecation error - https://blog.logrocket.com/create-draggable-components-react-draggable/#:~:text=Handling%20the%C2%A0findDOMNode%20deprecation%20error
-  const nodeRef = useRef(null);
+  const nodeRef = useRef<HTMLDivElement | null>(null);
   const [dragPos, setDragPos] = useState<{ x: number; y: number } | undefined>({
     x: 0,
     y: 0,
   });
+  const initPos = useRef<number | null>(null);
+  const currentPos = useRef<number | null>(null);
+  const height = use100vh();
   const { play: exitAnimation } = useMotionAnimate(
     nodeRef,
     {
@@ -93,11 +110,6 @@ export const MobileHeader = ({ open, onClose }: MobileHeaderProps) => {
     }
   );
 
-  const overlayShow = keyframes({
-    '0%': { transform: `matrix(1, 0, 0, 1, 0, 300)` },
-    '100%': { transform: `matrix(1, 0, 0, 1, 0, 0)` },
-  });
-
   const handleThemeToggle = () => {
     resolvedTheme === 'dark' ? setTheme('light') : setTheme('dark');
   };
@@ -108,22 +120,32 @@ export const MobileHeader = ({ open, onClose }: MobileHeaderProps) => {
     signOut();
   };
 
-  const handleWhilstDragging = (e: DraggableEvent, data: DraggableData) => {
-    setDragPos({ x: data.x, y: data.y });
+  const handleDragStart = (e: TouchEvent) => {
+    const touch = e.touches[0];
+
+    initPos.current = touch.clientY;
   };
 
-  const handleDragStart = (e: DraggableEvent, data: DraggableData) => {
-    // reset values to start position when dragging begins
-    // handles edge case where user releases drag before threshold, but the values are still reading from the previous position when dragging begins again
-    if (data.y !== 0) {
-      setDragPos({ x: 0, y: 0 });
+  const handleDraggingg = (e: TouchEvent) => {
+    const touch = e.touches[0];
+
+    currentPos.current = touch.clientY;
+
+    const difference = initPos.current
+      ? currentPos.current - initPos.current
+      : 0;
+
+    if (difference > 0) {
+      setDragPos({ x: 0, y: difference });
+    } else {
+      // slow down acceleration if user drags up
+      setDragPos({ x: 0, y: difference / 10 });
     }
   };
 
-  const handleDragStop = (e: DraggableEvent, data: DraggableData) => {
-    // reset values
+  const handleDragEnd = () => {
     setDragPos(undefined);
-    if (data.y >= 200) {
+    if (dragPos && dragPos.y >= 100) {
       exitAnimation();
       setTimeout(onClose, 300);
     } else {
@@ -150,8 +172,13 @@ export const MobileHeader = ({ open, onClose }: MobileHeaderProps) => {
   ];
 
   return (
-    <Dialog open={open} onOpenChange={onClose}>
+    <Dialog overlay={false} open={open} onOpenChange={onClose}>
       {/* wrapper div here prevents radix 'getComputedStyle' TypeError */}
+      <StyledOverlay
+        onTouchStart={handleDragStart}
+        onTouchEnd={handleDragEnd}
+        onTouchMove={handleDraggingg}
+      />
       <Box>
         <Draggable
           position={dragPos ? dragPos : undefined}
@@ -159,15 +186,12 @@ export const MobileHeader = ({ open, onClose }: MobileHeaderProps) => {
           axis="y"
           handle=".drag-handle"
           bounds={{ left: 0, top: 0, right: 0, bottom: 400 }}
-          onStop={handleDragStop}
-          onStart={handleDragStart}
-          onDrag={handleWhilstDragging}
         >
           <StyledDialogContent
             css={{
-              '@media (prefers-reduced-motion: no-preference)': {
-                animation: `${overlayShow} 500ms cubic-bezier(0.16, 1, 0.3, 1)`,
-              },
+              pb: '$20',
+              bottom: '-$20',
+              overflowY: 'hidden',
             }}
             className="dialog-content"
             ref={nodeRef}
@@ -178,25 +202,51 @@ export const MobileHeader = ({ open, onClose }: MobileHeaderProps) => {
             </DragHandleArea>
             {upperNavItems.map((item) => (
               <Link key={item.name} href={item.path} passHref>
-                <StyledDialogItem as="a">{item.name}</StyledDialogItem>
+                <StyledDialogItem
+                  onTouchStart={handleDragStart}
+                  onTouchEnd={handleDragEnd}
+                  onTouchMove={handleDraggingg}
+                  as="a"
+                >
+                  {item.name}
+                </StyledDialogItem>
               </Link>
             ))}
             <Box css={{ height: 1, backgroundColor: '$gray6', mx: '-$5' }} />
             {lowerNavItems.map((item) => (
               <Link key={item.name} href={item.path} passHref>
-                <StyledDialogItem color="gray" as="a">
+                <StyledDialogItem
+                  onTouchStart={handleDragStart}
+                  onTouchEnd={handleDragEnd}
+                  onTouchMove={handleDraggingg}
+                  className="dialog-item"
+                  color="gray"
+                  as="a"
+                >
                   {item.name}
                 </StyledDialogItem>
               </Link>
             ))}
-            <StyledDialogItem color="gray" onClick={handleThemeToggle}>
+            <StyledDialogItem
+              onTouchStart={handleDragStart}
+              onTouchEnd={handleDragEnd}
+              onTouchMove={handleDraggingg}
+              color="gray"
+              onClick={handleThemeToggle}
+            >
               Dark mode
               <Switch checked={resolvedTheme === 'dark'}>
                 <SwitchThumb />
               </Switch>
             </StyledDialogItem>
             <Box css={{ height: 1, backgroundColor: '$gray6', mx: '-$5' }} />
-            <StyledDialogItem color="gray" onClick={handleLogout}>
+            <StyledDialogItem
+              onTouchStart={handleDragStart}
+              onTouchEnd={handleDragEnd}
+              onTouchMove={handleDraggingg}
+              color="gray"
+              onClick={handleLogout}
+            >
               Logout
             </StyledDialogItem>
           </StyledDialogContent>

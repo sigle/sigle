@@ -10,17 +10,7 @@ import Image from 'next/image';
 import { useSession } from 'next-auth/react';
 import { useTheme } from 'next-themes';
 import { styled } from '../../../stitches.config';
-import {
-  Box,
-  Button,
-  Container,
-  Dialog,
-  DialogContent,
-  DialogTrigger,
-  Flex,
-  IconButton,
-  Typography,
-} from '../../../ui';
+import { Box, Button, Container, Flex, IconButton } from '../../../ui';
 import { useAuth } from '../../auth/AuthContext';
 import { sigleConfig } from '../../../config';
 import { useGetUserMe } from '../../../hooks/users';
@@ -145,13 +135,6 @@ export const AppHeader = () => {
       </Flex>
 
       <Flex gap="2">
-        <Dialog>
-          <DialogTrigger>
-            <Typography>Trigger</Typography>
-          </DialogTrigger>
-          <DialogContent>Dialog Content</DialogContent>
-        </Dialog>
-
         <Flex
           css={{
             display: 'flex',
@@ -167,7 +150,14 @@ export const AppHeader = () => {
           >
             {!loadingCreate ? 'Write' : 'Creating...'}
           </Button>
-          <IconButton onClick={handleShowMobileHeader}>
+          <IconButton
+            css={{
+              '&:hover': {
+                backgroundColor: 'transparent',
+              },
+            }}
+            onClick={handleShowMobileHeader}
+          >
             <HamburgerMenuIcon />
           </IconButton>
 
