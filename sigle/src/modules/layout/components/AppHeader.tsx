@@ -138,7 +138,7 @@ export const AppHeader = () => {
         <Flex
           css={{
             display: 'flex',
-            '@xl': {
+            '@md': {
               display: 'none',
             },
           }}
