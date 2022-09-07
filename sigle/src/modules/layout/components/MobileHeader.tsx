@@ -2,13 +2,21 @@ import { signOut } from 'next-auth/react';
 import { useTheme } from 'next-themes';
 import Link from 'next/link';
 import { keyframes, styled } from '../../../stitches.config';
-import { Box, Dialog, DialogContent, StyledOverlay } from '../../../ui';
+import { Box, Dialog, DialogContent, Flex, StyledOverlay } from '../../../ui';
 import { Switch, SwitchThumb } from '../../../ui/Switch';
 import { userSession } from '../../../utils/blockstack';
 import { useQueryClient } from 'react-query';
 import Draggable from 'react-draggable';
 import { TouchEvent, useRef, useState } from 'react';
-import { useMotionAnimate } from 'motion-hooks';
+import { useMotionAnimate, useMotionTimeline } from 'motion-hooks';
+import {
+  ArchiveIcon,
+  CrumpledPaperIcon,
+  EyeOpenIcon,
+  HomeIcon,
+  LightningBoltIcon,
+  MixIcon,
+} from '@radix-ui/react-icons';
 
 const overlayShow = keyframes({
   '0%': { transform: `matrix(1, 0, 0, 1, 0, 300)` },
@@ -28,14 +36,16 @@ const DragHandleArea = styled('div', {
 });
 
 const DragHandleBar = styled('div', {
-  width: 64,
-  height: 6,
+  position: 'absolute',
+  width: 32,
+  height: 4,
   br: '$1',
   backgroundColor: '$gray8',
+  transition: 'rotate 0.5s ease',
 });
 
 const StyledDialogItem = styled('div', {
-  p: '$5',
+  p: '$4',
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'space-between',
@@ -107,6 +117,23 @@ export const MobileHeader = ({ open, onClose }: MobileHeaderProps) => {
       duration: 0.5,
     }
   );
+  const { play: growAnimation } = useMotionTimeline(
+    [
+      [
+        nodeRef,
+        {
+          bottom: 0,
+          borderRadius: 0,
+          height: '100%',
+        },
+      ],
+      ['.handleLeft', { rotate: [-15, 15] }, { at: 0.25 }],
+      ['.handleRight', { rotate: [15, -15] }, { at: 0.25 }],
+    ],
+    {
+      duration: 0.5,
+    }
+  );
 
   const handleThemeToggle = () => {
     resolvedTheme === 'dark' ? setTheme('light') : setTheme('dark');
@@ -124,7 +151,7 @@ export const MobileHeader = ({ open, onClose }: MobileHeaderProps) => {
     initPos.current = touch.clientY;
   };
 
-  const handleDraggingg = (e: TouchEvent) => {
+  const handleDragging = (e: TouchEvent) => {
     const touch = e.touches[0];
 
     currentPos.current = touch.clientY;
@@ -137,7 +164,8 @@ export const MobileHeader = ({ open, onClose }: MobileHeaderProps) => {
       setDragPos({ x: 0, y: difference });
     } else {
       // slow down acceleration if user drags up
-      setDragPos({ x: 0, y: difference / 10 });
+      setDragPos({ x: 0, y: difference / 5 });
+      setTimeout(growAnimation, 200);
     }
   };
 
@@ -153,12 +181,34 @@ export const MobileHeader = ({ open, onClose }: MobileHeaderProps) => {
 
   const upperNavItems = [
     {
+      name: 'Drafts',
+      path: '/',
+      icon: CrumpledPaperIcon,
+    },
+    {
+      name: 'Published',
+      path: '/published',
+      icon: ArchiveIcon,
+    },
+    {
+      name: 'Analytics',
+      path: '/analytics',
+      icon: MixIcon,
+    },
+    {
       name: 'Feed',
       path: '/feed',
+      icon: LightningBoltIcon,
     },
     {
       name: 'Explore',
       path: '/explore',
+      icon: EyeOpenIcon,
+    },
+    {
+      name: 'Profile',
+      path: '/[username]',
+      icon: HomeIcon,
     },
   ];
 
@@ -175,7 +225,7 @@ export const MobileHeader = ({ open, onClose }: MobileHeaderProps) => {
       <StyledOverlay
         onTouchStart={handleDragStart}
         onTouchEnd={handleDragEnd}
-        onTouchMove={handleDraggingg}
+        onTouchMove={handleDragging}
       />
       <Box>
         <Draggable
@@ -187,26 +237,48 @@ export const MobileHeader = ({ open, onClose }: MobileHeaderProps) => {
         >
           <StyledDialogContent
             css={{
-              pb: '$20',
-              bottom: '-$20',
+              overflowX: 'hidden',
+              px: 0,
+              paddingBottom: 0,
+              bottom: '-25%',
               overflowY: 'hidden',
             }}
             className="dialog-content"
             ref={nodeRef}
             closeButton={false}
           >
-            <DragHandleArea className="drag-handle">
-              <DragHandleBar />
+            <DragHandleArea
+              onTouchStart={handleDragStart}
+              onTouchEnd={handleDragEnd}
+              onTouchMove={handleDragging}
+            >
+              <DragHandleBar
+                className="handleLeft"
+                css={{
+                  mr: 27,
+                  transform: 'rotate(-15deg)',
+                }}
+              />
+              <DragHandleBar
+                className="handleRight"
+                css={{
+                  ml: 27,
+                  transform: 'rotate(15deg)',
+                }}
+              />
             </DragHandleArea>
-            {upperNavItems.map((item) => (
-              <Link key={item.name} href={item.path} passHref>
+            {upperNavItems.map(({ name, path, icon: Icon }) => (
+              <Link key={name} href={path} passHref>
                 <StyledDialogItem
                   onTouchStart={handleDragStart}
                   onTouchEnd={handleDragEnd}
-                  onTouchMove={handleDraggingg}
+                  onTouchMove={handleDragging}
                   as="a"
                 >
-                  {item.name}
+                  <Flex align="center" gap="2">
+                    <Icon />
+                    {name}
+                  </Flex>
                 </StyledDialogItem>
               </Link>
             ))}
@@ -216,7 +288,7 @@ export const MobileHeader = ({ open, onClose }: MobileHeaderProps) => {
                 <StyledDialogItem
                   onTouchStart={handleDragStart}
                   onTouchEnd={handleDragEnd}
-                  onTouchMove={handleDraggingg}
+                  onTouchMove={handleDragging}
                   className="dialog-item"
                   color="gray"
                   as="a"
@@ -228,7 +300,7 @@ export const MobileHeader = ({ open, onClose }: MobileHeaderProps) => {
             <StyledDialogItem
               onTouchStart={handleDragStart}
               onTouchEnd={handleDragEnd}
-              onTouchMove={handleDraggingg}
+              onTouchMove={handleDragging}
               color="gray"
               onClick={handleThemeToggle}
             >
@@ -241,7 +313,7 @@ export const MobileHeader = ({ open, onClose }: MobileHeaderProps) => {
             <StyledDialogItem
               onTouchStart={handleDragStart}
               onTouchEnd={handleDragEnd}
-              onTouchMove={handleDraggingg}
+              onTouchMove={handleDragging}
               color="gray"
               onClick={handleLogout}
             >
