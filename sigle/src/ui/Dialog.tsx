@@ -65,7 +65,7 @@ const StyledContent = styled(DialogPrimitive.Content, {
   overflow: 'scroll',
   transform: 'none',
 
-  '@xl': {
+  '@md': {
     maxHeight: '85vh',
     top: '50%',
     left: '50%',
