@@ -74,6 +74,14 @@ const auth: NextApiHandler = async (req, res) => {
     session: {
       strategy: 'jwt',
     },
+    logger: {
+      error(code, metadata) {
+        console.error(code, metadata);
+      },
+      warn(code) {
+        console.warn(code);
+      },
+    },
     secret: process.env.NEXTAUTH_SECRET,
     callbacks: {
       async session({ session, token }) {
