@@ -5,6 +5,8 @@ import { getCsrfToken } from 'next-auth/react';
 import * as Sentry from '@sentry/nextjs';
 import { SignInWithStacksMessage } from '../../../modules/auth/sign-in-with-stacks/signInWithStacksMessage';
 
+console.log('process.env.NEXTAUTH_URL', process.env.NEXTAUTH_URL);
+
 const hostname = new URL(process.env.NEXTAUTH_URL || '').hostname;
 const rootDomain = hostname.split('.').slice(-2).join('.');
 
