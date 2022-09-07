@@ -22,15 +22,15 @@ import TipTapLink from '@tiptap/extension-link';
 import TipTapListItem from '@tiptap/extension-list-item';
 import TipTapOrderedList from '@tiptap/extension-ordered-list';
 import TipTapParagraph from '@tiptap/extension-paragraph';
-import TipTapPlaceholder from '@tiptap/extension-placeholder';
+import { Placeholder as TipTapPlaceholder } from './extensions/Placeholder';
 import TipTapStrike from '@tiptap/extension-strike';
 import TipTapText from '@tiptap/extension-text';
 import TipTapUnderline from '@tiptap/extension-underline';
 import TipTapCodeBlockLowlight from '@tiptap/extension-code-block-lowlight';
 import { lowlight } from 'lowlight/lib/common.js';
-import { SlashCommands } from './extensions/SlashCommands';
+import { SlashCommands } from './extensions/SlashCommand/SlashCommands';
 import { BubbleMenu } from './BubbleMenu';
-import { slashCommands, SlashCommandsList } from './InlineMenu';
+import { slashCommands } from './extensions/SlashCommand/commands';
 import { FloatingMenu } from './FloatingMenu';
 import { styled, globalCss, keyframes, darkTheme } from '../../stitches.config';
 import { CodeBlockComponent } from './extensions/CodeBlock';
@@ -54,7 +54,7 @@ const StyledEditorContent = styled(EditorContent, {
     outline: 'none',
   },
   // Placeholder plugin style
-  '& .ProseMirror p.is-empty::before': {
+  '& .ProseMirror .is-empty::before': {
     content: 'attr(data-placeholder)',
     float: 'left',
     color: '$gray8',
@@ -170,18 +170,10 @@ export const TipTapEditor = forwardRef<
       // Extensions
       TipTapDropcursor,
       TipTapHistory,
-      TipTapPlaceholder.configure({
-        placeholder: ({ editor }) => {
-          const currentPos = editor.state.selection.$anchor.pos;
-          return currentPos === 1
-            ? 'Start your story here...'
-            : "Type '/' for commands";
-        },
-      }),
+      TipTapPlaceholder,
       // Custom extensions
       SlashCommands.configure({
         commands: slashCommands({ storyId: story.id }),
-        component: SlashCommandsList,
       }),
     ],
     content: story.contentVersion === '2' ? story.content : '',
@@ -200,7 +192,7 @@ export const TipTapEditor = forwardRef<
   return (
     <>
       {editor && <BubbleMenu editor={editor} />}
-      {editor && <FloatingMenu editor={editor} storyId={story.id} />}
+      {editor && <FloatingMenu editor={editor} />}
 
       <StyledEditorContent editor={editor} />
       <Container
