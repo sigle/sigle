@@ -31,7 +31,12 @@ const auth: NextApiHandler = async (req, res) => {
           const result = await siwe.verify({
             signature: credentials?.signature || '',
             domain: process.env.NEXTAUTH_URL,
-            nonce: await getCsrfToken({ req }),
+            nonce:
+              // In preview env, a different nonce is returned, to bypass this issue
+              // we disable nonce check on preview pr
+              process.env.VERCEL_ENV === 'preview'
+                ? undefined
+                : await getCsrfToken({ req }),
           });
 
           if (result.success) {
