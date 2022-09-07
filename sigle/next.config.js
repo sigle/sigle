@@ -90,9 +90,7 @@ const nextPlugins = [
   ],
   [withBundleAnalyzer],
   (nextConfig) =>
-    withSentryConfig(nextConfig, {
-      dryRun: !process.env.SENTRY_AUTH_TOKEN,
-    }),
+    process.env.SENTRY_AUTH_TOKEN ? withSentryConfig(nextConfig) : nextConfig,
 ];
 
 module.exports = (phase, { defaultConfig }) => {
