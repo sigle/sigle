@@ -91,8 +91,12 @@ const auth: NextApiHandler = async (req, res) => {
            * We take the default cookies from NextAuth and add our own
            * domain to allow cookies to be shared between subdomains.
            * Eg: https://app.sigle.io needs to be set to .sigle.io
+           * Localhost and vercel preview env just use the hostname directly.
            */
-          domain: hostname == 'localhost' ? hostname : '.' + rootDomain,
+          domain:
+            hostname == 'localhost' || process.env.VERCEL_ENV === 'preview'
+              ? hostname
+              : '.' + rootDomain,
         },
       },
     },
