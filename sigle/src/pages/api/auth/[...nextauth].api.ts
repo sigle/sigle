@@ -41,7 +41,7 @@ const auth: NextApiHandler = async (req, res) => {
           }
           return null;
         } catch (error) {
-          console.showReportDialog(errors);
+          console.log(errors);
           Sentry.withScope((scope) => {
             scope.setExtras({
               message: credentials?.message,
