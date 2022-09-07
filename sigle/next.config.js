@@ -90,18 +90,25 @@ const nextPlugins = [
   ],
   [withBundleAnalyzer],
   (nextConfig) =>
-    process.env.SENTRY_AUTH_TOKEN ? withSentryConfig(nextConfig) : nextConfig,
+    withSentryConfig(
+      {
+        ...nextConfig,
+        sentry: {
+          // Use `hidden-source-map` rather than `source-map` as the Webpack `devtool`
+          // for client-side builds. (This will be the default starting in
+          // `@sentry/nextjs` version 8.0.0.) See
+          // https://webpack.js.org/configuration/devtool/ and
+          // https://docs.sentry.io/platforms/javascript/guides/nextjs/manual-setup/#use-hidden-source-map
+          // for more information.
+          hideSourceMaps: true,
+        },
+      },
+      {
+        dryRun: !process.env.SENTRY_AUTH_TOKEN,
+      }
+    ),
 ];
 
-module.exports = (phase, { defaultConfig }) => {
-  // The following properties are injected by next.js and create a warning, we delete them
-  // manually to suppress them. To revisit in the next major release of next.js to see if the issue persist.
-  delete defaultConfig.webpackDevMiddleware;
-  delete defaultConfig.configOrigin;
-  delete defaultConfig.target;
-  delete defaultConfig.webpack5;
-  delete defaultConfig.i18n;
-  delete defaultConfig.amp;
-
-  return withPlugins(nextPlugins, nextConfig)(phase, { defaultConfig });
+module.exports = (phase) => {
+  return withPlugins(nextPlugins, nextConfig)(phase, {});
 };
