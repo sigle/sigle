@@ -32,7 +32,10 @@ const auth: NextApiHandler = async (req, res) => {
 
           const result = await siwe.verify({
             signature: credentials?.signature || '',
-            domain: process.env.NEXTAUTH_URL,
+            domain:
+              process.env.VERCEL_ENV === 'preview'
+                ? `https://${process.env.NEXTAUTH_URL}`
+                : process.env.NEXTAUTH_URL,
             nonce: await getCsrfToken({ req }),
           });
 
@@ -43,6 +46,7 @@ const auth: NextApiHandler = async (req, res) => {
           }
           return null;
         } catch (error) {
+          console.error(error);
           Sentry.withScope((scope) => {
             scope.setExtras({
               message: credentials?.message,
