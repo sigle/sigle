@@ -2,7 +2,7 @@
   "name": "sigle",
   "version": 2,
   "github": {
-    "silent": true
+    "silent": false
   },
   "build": {
     "env": {
