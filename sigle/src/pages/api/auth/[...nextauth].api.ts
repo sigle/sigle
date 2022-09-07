@@ -5,10 +5,8 @@ import { getCsrfToken } from 'next-auth/react';
 import * as Sentry from '@sentry/nextjs';
 import { SignInWithStacksMessage } from '../../../modules/auth/sign-in-with-stacks/signInWithStacksMessage';
 
-console.log('process.env.NEXTAUTH_URL', process.env.NEXTAUTH_URL);
-
-// const hostname = new URL(process.env.NEXTAUTH_URL || '').hostname;
-// const rootDomain = hostname.split('.').slice(-2).join('.');
+const hostname = new URL(process.env.NEXTAUTH_URL || '').hostname;
+const rootDomain = hostname.split('.').slice(-2).join('.');
 
 const auth: NextApiHandler = async (req, res) => {
   const providers = [
@@ -47,7 +45,6 @@ const auth: NextApiHandler = async (req, res) => {
           }
           return null;
         } catch (error) {
-          console.error(error);
           Sentry.withScope((scope) => {
             scope.setExtras({
               message: credentials?.message,
@@ -79,14 +76,6 @@ const auth: NextApiHandler = async (req, res) => {
     session: {
       strategy: 'jwt',
     },
-    logger: {
-      error(code, metadata) {
-        console.error(code, metadata);
-      },
-      warn(code) {
-        console.warn(code);
-      },
-    },
     secret: process.env.NEXTAUTH_SECRET,
     callbacks: {
       async session({ session, token }) {
@@ -107,7 +96,10 @@ const auth: NextApiHandler = async (req, res) => {
            * domain to allow cookies to be shared between subdomains.
            * Eg: https://app.sigle.io needs to be set to .sigle.io
            */
-          // domain: hostname == 'localhost' ? hostname : '.' + rootDomain,
+          domain:
+            hostname == 'localhost' || process.env.VERCEL_ENV === 'preview'
+              ? hostname
+              : '.' + rootDomain,
         },
       },
     },
