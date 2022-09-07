@@ -218,7 +218,6 @@ MyError.getInitialProps = async (props: NextPageContext) => {
     return { statusCode: 404 };
   }
   if (err) {
-    console.error(err);
     errorInitialProps.sentryErrorId = Sentry.captureException(err);
 
     // Flushing before returning is necessary if deploying to Vercel, see
