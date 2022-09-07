@@ -82,19 +82,28 @@ const nextConfig = {
   },
 };
 
-module.exports = withSentryConfig(
-  withPlugins(
-    [
-      [
-        withPlausibleProxy({
-          scriptName: 'index',
-        }),
-      ],
-      [withBundleAnalyzer],
-    ],
-    nextConfig
-  ),
-  {
-    dryRun: !process.env.SENTRY_AUTH_TOKEN,
-  }
-);
+const nextPlugins = [
+  [
+    withPlausibleProxy({
+      scriptName: 'index',
+    }),
+  ],
+  [withBundleAnalyzer],
+  (nextConfig) =>
+    withSentryConfig(nextConfig, {
+      dryRun: !process.env.SENTRY_AUTH_TOKEN,
+    }),
+];
+
+module.exports = (phase, { defaultConfig }) => {
+  // The following properties are injected by next.js and create a warning, we delete them
+  // manually to suppress them. To revisit in the next major release of next.js to see if the issue persist.
+  delete defaultConfig.webpackDevMiddleware;
+  delete defaultConfig.configOrigin;
+  delete defaultConfig.target;
+  delete defaultConfig.webpack5;
+  delete defaultConfig.i18n;
+  delete defaultConfig.amp;
+
+  return withPlugins(nextPlugins, nextConfig)(phase, { defaultConfig });
+};
