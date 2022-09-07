@@ -17,6 +17,7 @@ import {
   LightningBoltIcon,
   MixIcon,
 } from '@radix-ui/react-icons';
+import { useAuth } from '../../auth/AuthContext';
 
 const overlayShow = keyframes({
   '0%': { transform: `matrix(1, 0, 0, 1, 0, 300)` },
@@ -91,6 +92,7 @@ interface MobileHeaderProps {
 export const MobileHeader = ({ open, onClose }: MobileHeaderProps) => {
   const { resolvedTheme, setTheme } = useTheme();
   const queryClient = useQueryClient();
+  const { user } = useAuth();
   // give target element a ref to avoid 'findDOMNode' deprecation error - https://blog.logrocket.com/create-draggable-components-react-draggable/#:~:text=Handling%20the%C2%A0findDOMNode%20deprecation%20error
   const nodeRef = useRef<HTMLDivElement | null>(null);
   const [dragPos, setDragPos] = useState<{ x: number; y: number } | undefined>({
@@ -268,7 +270,12 @@ export const MobileHeader = ({ open, onClose }: MobileHeaderProps) => {
               />
             </DragHandleArea>
             {upperNavItems.map(({ name, path, icon: Icon }) => (
-              <Link key={name} href={path} passHref>
+              <Link
+                key={name}
+                href={path}
+                as={path === '/[username]' ? `/${user?.username}` : undefined}
+                passHref
+              >
                 <StyledDialogItem
                   onTouchStart={handleDragStart}
                   onTouchEnd={handleDragEnd}
