@@ -102,7 +102,7 @@ const auth: NextApiHandler = async (req, res) => {
            * domain to allow cookies to be shared between subdomains.
            * Eg: https://app.sigle.io needs to be set to .sigle.io
            */
-          domain: hostname == 'localhost' ? hostname : '.' + rootDomain,
+          // domain: hostname == 'localhost' ? hostname : '.' + rootDomain,
         },
       },
     },
