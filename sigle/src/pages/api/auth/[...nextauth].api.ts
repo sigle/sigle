@@ -30,11 +30,7 @@ const auth: NextApiHandler = async (req, res) => {
 
           const result = await siwe.verify({
             signature: credentials?.signature || '',
-            domain:
-              // NEXTAUTH_URL in vercel preview does not contain the https
-              process.env.VERCEL_ENV === 'preview'
-                ? `https://${process.env.NEXTAUTH_URL}`
-                : process.env.NEXTAUTH_URL,
+            domain: process.env.NEXTAUTH_URL,
             nonce: await getCsrfToken({ req }),
           });
 
