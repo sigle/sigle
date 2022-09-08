@@ -1,4 +1,4 @@
-import { UseQueryOptions, useQuery } from 'react-query';
+import { UseQueryOptions, useQuery } from '@tanstack/react-query';
 import { UserService } from '../external/api';
 
 type GetApiUsersMeReturnType = Awaited<
@@ -8,7 +8,7 @@ export const useGetUserMe = (
   options: UseQueryOptions<GetApiUsersMeReturnType, Error> = {}
 ) =>
   useQuery<GetApiUsersMeReturnType, Error>(
-    'get-user-me',
+    ['get-user-me'],
     () => UserService.getApiUsersMe(),
     options
   );

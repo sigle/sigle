@@ -1,4 +1,4 @@
-import { useQuery } from 'react-query';
+import { useQuery } from '@tanstack/react-query';
 import { NamesApi } from '@stacks/blockchain-api-client';
 import { useGetGaiaUserFollowing } from '../../hooks/appData';
 import { Box, LoadingSpinner, Typography } from '../../ui';
