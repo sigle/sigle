@@ -1,7 +1,7 @@
 import { Editor } from '@tiptap/react';
 import { styled } from '../../../stitches.config';
 import { Story } from '../../../types';
-import { Box, Container, Flex, IconButton } from '../../../ui';
+import { Box, Container, Flex, IconButton, Typography } from '../../../ui';
 import { ToolbarBubbleMenu } from './ToolbarBubbleMenu';
 import { slashCommands } from '../extensions/SlashCommand/commands';
 import { MobileFloatingMenu } from './ToolbarFloatingMenu';
@@ -100,6 +100,9 @@ export const Toolbar = ({
               backgroundColor: '$gray6',
             }}
           />
+          <Typography css={{ m: 0, whiteSpace: 'nowrap' }} size="subheading">
+            {editor.storage.characterCount.words()} words
+          </Typography>
         </Flex>
       )}
     </ToolbarContainer>
