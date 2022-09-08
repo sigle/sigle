@@ -1,11 +1,5 @@
 import 'highlight.js/styles/night-owl.css';
-import {
-  forwardRef,
-  useEffect,
-  useImperativeHandle,
-  useRef,
-  useState,
-} from 'react';
+import { forwardRef, useEffect, useImperativeHandle, useState } from 'react';
 import {
   useEditor,
   EditorContent,
@@ -112,11 +106,10 @@ export const TipTapEditor = forwardRef<
   TipTapEditorProps
 >(({ story, editable = true }, ref) => {
   const [showShortcutsDialog, setShowShortcutsDialog] = useState(false);
-  const [pendingUpdate, setPendingUpdate] = useState(false);
-  const [toolbarPos, setToolbarPos] = useState<number>();
-  const [softKeyboardIsOpen, setSoftKeyboardIsOpen] = useState(false);
-  const editorContentHeight = useRef<number | null>(null);
-  const scrollRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  // const [pendingUpdate, setPendingUpdate] = useState(false);
+  // const [toolbarPos, setToolbarPos] = useState<number>();
+  // const [softKeyboardIsOpen, setSoftKeyboardIsOpen] = useState(false);
+  // const scrollRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const [width, setWidth] = useState(window.innerWidth);
   // TODO is story really needed? Could it be just the content prop?
   globalStylesCustomEditor();
@@ -211,52 +204,6 @@ export const TipTapEditor = forwardRef<
     };
   }, []);
 
-  useEffect(() => {
-    window.visualViewport.addEventListener('resize', () => {
-      // detects if virtual keyboard has opened, however an imperfect solution but the best option for iOS browsers currently as it does not yet support Virtual Keyboard API
-      setSoftKeyboardIsOpen(!softKeyboardIsOpen);
-      handleViewport();
-    });
-    window.visualViewport.addEventListener('scroll', handleViewport);
-
-    return () => {
-      window.visualViewport.removeEventListener('resize', handleViewport);
-      window.visualViewport.removeEventListener('scroll', handleViewport);
-    };
-  }, []);
-
-  const handleViewport = () => {
-    if (pendingUpdate) {
-      return;
-    }
-
-    if (scrollRef) {
-      window.clearTimeout(scrollRef.current as ReturnType<typeof setTimeout>);
-
-      // debounce update to toolbar position on scroll
-      scrollRef.current = setTimeout(() => {
-        setPendingUpdate(true);
-
-        requestAnimationFrame(() => {
-          setPendingUpdate(false);
-
-          const topOffset = window.visualViewport.offsetTop;
-
-          if (topOffset >= 0) {
-            setToolbarPos(
-              Math.max(
-                0,
-                window.innerHeight -
-                  window.visualViewport.height -
-                  window.visualViewport.offsetTop
-              )
-            );
-          }
-        });
-      }, 150);
-    }
-  };
-
   return (
     <>
       {editor && !isMobile && <BubbleMenu editor={editor} />}
@@ -267,12 +214,7 @@ export const TipTapEditor = forwardRef<
       {editable && (
         <>
           {isMobile ? (
-            <Toolbar
-              editor={editor}
-              story={story}
-              position={toolbarPos}
-              softKeyboardIsOpen={softKeyboardIsOpen}
-            />
+            <Toolbar editor={editor} story={story} />
           ) : (
             <Container
               css={{

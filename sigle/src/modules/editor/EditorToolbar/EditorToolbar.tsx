@@ -1,3 +1,4 @@
+import { useEffect, useRef, useState } from 'react';
 import { Editor } from '@tiptap/react';
 import { styled } from '../../../stitches.config';
 import { Story } from '../../../types';
@@ -32,19 +33,63 @@ const ToolbarContainer = styled(Container, {
 interface ToolbarProps {
   editor: Editor | null;
   story: Story;
-  position: number | undefined;
-  softKeyboardIsOpen: boolean;
 }
 
-export const Toolbar = ({
-  editor,
-  story,
-  position,
-  softKeyboardIsOpen,
-}: ToolbarProps) => {
+export const Toolbar = ({ editor, story }: ToolbarProps) => {
+  const [pendingUpdate, setPendingUpdate] = useState(false);
+  const [position, setPosition] = useState<number>();
+  const [softKeyboardIsOpen, setSoftKeyboardIsOpen] = useState(false);
+  const scrollRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
   const image = slashCommands({ storyId: story.id }).find(
     (item) => item.title === 'Image'
   );
+
+  useEffect(() => {
+    window.visualViewport.addEventListener('resize', () => {
+      // detects if virtual keyboard has opened, however an imperfect solution but the best option for iOS browsers currently as it does not yet support Virtual Keyboard API
+      setSoftKeyboardIsOpen(!softKeyboardIsOpen);
+      handleSetPosition();
+    });
+    window.visualViewport.addEventListener('scroll', handleSetPosition);
+
+    return () => {
+      window.visualViewport.removeEventListener('resize', handleSetPosition);
+      window.visualViewport.removeEventListener('scroll', handleSetPosition);
+    };
+  }, []);
+
+  const handleSetPosition = () => {
+    if (pendingUpdate) {
+      return;
+    }
+
+    if (scrollRef) {
+      window.clearTimeout(scrollRef.current as ReturnType<typeof setTimeout>);
+
+      // debounce update to toolbar position on scroll
+      scrollRef.current = setTimeout(() => {
+        setPendingUpdate(true);
+
+        requestAnimationFrame(() => {
+          setPendingUpdate(false);
+
+          const topOffset = window.visualViewport.offsetTop;
+
+          if (topOffset >= 0) {
+            setPosition(
+              Math.max(
+                0,
+                window.innerHeight -
+                  window.visualViewport.height -
+                  window.visualViewport.offsetTop
+              )
+            );
+          }
+        });
+      }, 150);
+    }
+  };
 
   return (
     <ToolbarContainer
