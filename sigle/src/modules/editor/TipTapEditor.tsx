@@ -106,10 +106,6 @@ export const TipTapEditor = forwardRef<
   TipTapEditorProps
 >(({ story, editable = true }, ref) => {
   const [showShortcutsDialog, setShowShortcutsDialog] = useState(false);
-  // const [pendingUpdate, setPendingUpdate] = useState(false);
-  // const [toolbarPos, setToolbarPos] = useState<number>();
-  // const [softKeyboardIsOpen, setSoftKeyboardIsOpen] = useState(false);
-  // const scrollRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const [width, setWidth] = useState(window.innerWidth);
   // TODO is story really needed? Could it be just the content prop?
   globalStylesCustomEditor();
