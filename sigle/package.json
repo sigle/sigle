@@ -105,6 +105,7 @@
     "react-cool-inview": "3.0.1",
     "react-div-100vh": "0.6.0",
     "react-dom": "18.2.0",
+    "react-draggable": "4.4.5",
     "react-dropzone": "11.4.2",
     "react-query": "3.39.1",
     "react-toastify": "8.2.0",

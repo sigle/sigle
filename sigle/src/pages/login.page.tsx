@@ -148,7 +148,7 @@ const Login = () => {
 
   return (
     <LoginLayout>
-      <Flex gap="1" css={{ my: '$15' }} align="center">
+      <Flex gap="1" css={{ my: '$10', '@md': { my: '$15' } }} align="center">
         <Box>
           <StepsText variant={user ? 'complete' : 'active'} size="subheading">
             <StepsText

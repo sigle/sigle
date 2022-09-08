@@ -3,6 +3,7 @@ import {
   TwitterLogoIcon,
   DiscordLogoIcon,
   SunIcon,
+  HamburgerMenuIcon,
 } from '@radix-ui/react-icons';
 import Link from 'next/link';
 import Image from 'next/image';
@@ -14,6 +15,19 @@ import { useAuth } from '../../auth/AuthContext';
 import { sigleConfig } from '../../../config';
 import { useGetUserMe } from '../../../hooks/users';
 import { HeaderDropdown } from './HeaderDropdown';
+import { MobileHeader } from './MobileHeader';
+import { useState } from 'react';
+import {
+  createNewEmptyStory,
+  getStoriesFile,
+  saveStoriesFile,
+  saveStoryFile,
+} from '../../../utils';
+import { createSubsetStory } from '../../editor/utils';
+import * as Fathom from 'fathom-client';
+import { Goals } from '../../../utils/fathom';
+import { toast } from 'react-toastify';
+import { useRouter } from 'next/router';
 
 const Header = styled('header', Container, {
   display: 'flex',
@@ -31,6 +45,31 @@ export const AppHeader = () => {
   const { resolvedTheme, setTheme } = useTheme();
   const { user, isLegacy } = useAuth();
   const { status } = useSession();
+  const [showMobileHeaderDialog, setShowMobileHeaderDialog] = useState(false);
+  const [loadingCreate, setLoadingCreate] = useState(false);
+  const router = useRouter();
+
+  const handleCreateNewPrivateStory = async () => {
+    setLoadingCreate(true);
+    try {
+      const storiesFile = await getStoriesFile();
+      const story = createNewEmptyStory();
+
+      storiesFile.stories.unshift(
+        createSubsetStory(story, { plainContent: '' })
+      );
+
+      await saveStoriesFile(storiesFile);
+      await saveStoryFile(story);
+
+      Fathom.trackGoal(Goals.CREATE_NEW_STORY, 0);
+      router.push('/stories/[storyId]', `/stories/${story.id}`);
+    } catch (error) {
+      console.error(error);
+      toast.error(error.message);
+      setLoadingCreate(false);
+    }
+  };
 
   /**
    * This query is used to register the user in the DB. As the header is part of all the
@@ -56,6 +95,10 @@ export const AppHeader = () => {
       src = '/static/img/logo.png';
       break;
   }
+
+  const handleShowMobileHeader = () => setShowMobileHeaderDialog(true);
+
+  const handleCloseMobileHeader = () => setShowMobileHeaderDialog(false);
 
   return (
     <Header>
@@ -90,6 +133,41 @@ export const AppHeader = () => {
           </Box>
         </Link>
       </Flex>
+
+      <Flex gap="2">
+        <Flex
+          css={{
+            display: 'flex',
+            '@md': {
+              display: 'none',
+            },
+          }}
+          gap="5"
+        >
+          <Button
+            disabled={loadingCreate}
+            onClick={handleCreateNewPrivateStory}
+          >
+            {!loadingCreate ? 'Write' : 'Creating...'}
+          </Button>
+          <IconButton
+            css={{
+              '&:hover': {
+                backgroundColor: 'transparent',
+              },
+            }}
+            onClick={handleShowMobileHeader}
+          >
+            <HamburgerMenuIcon />
+          </IconButton>
+
+          <MobileHeader
+            open={showMobileHeaderDialog}
+            onClose={handleCloseMobileHeader}
+          />
+        </Flex>
+      </Flex>
+
       <Flex
         css={{
           display: 'none',

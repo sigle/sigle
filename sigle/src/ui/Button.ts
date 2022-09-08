@@ -20,9 +20,13 @@ export const Button = styled('button', {
         br: '$1',
       },
       lg: {
-        px: '$4',
-        py: '$3',
+        px: '$3',
+        py: '$2',
         br: '$1',
+        '@lg': {
+          px: '$4',
+          py: '$3',
+        },
       },
     },
     color: {
