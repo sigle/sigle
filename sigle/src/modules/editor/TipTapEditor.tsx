@@ -125,6 +125,8 @@ export const TipTapEditor = forwardRef<
     setShowShortcutsDialog(false);
   };
 
+  const isMobile = width < 1024;
+
   const editor = useEditor({
     editable,
     extensions: [
@@ -186,7 +188,7 @@ export const TipTapEditor = forwardRef<
       TipTapPlaceholder,
       // Custom extensions
       SlashCommands.configure({
-        commands: slashCommands({ storyId: story.id }),
+        commands: !isMobile ? slashCommands({ storyId: story.id }) : undefined,
       }),
     ],
     content: story.contentVersion === '2' ? story.content : '',
@@ -201,8 +203,6 @@ export const TipTapEditor = forwardRef<
     }),
     [editor]
   );
-
-  const isMobile = width < 1024;
 
   useEffect(() => {
     window.addEventListener('resize', () => setWidth(window.innerWidth));
