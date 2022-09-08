@@ -220,35 +220,6 @@ export const TipTapEditor = forwardRef<
       }),
     ],
     content: story.contentVersion === '2' ? story.content : '',
-    onUpdate: () => {
-      const editorContent = document.querySelector('.ProseMirror');
-
-      if (!editorContent) {
-        return;
-      }
-      // we only want to check to scroll when there is a new line so we check if the height of the editor content changes.
-      if (
-        editorContentHeight.current &&
-        editorContentHeight.current < editorContent.clientHeight
-      ) {
-        // increase scroll amount here as in some cases when starting a newline within pre-written content, new line is still out of view
-        window.scrollBy({ top: 100, left: 0, behavior: 'smooth' });
-      }
-
-      editorContentHeight.current = editorContent?.clientHeight;
-    },
-    onFocus: () => {
-      const editorContent = document.querySelector('.ProseMirror');
-
-      if (!editorContent) {
-        return;
-      }
-
-      editorContentHeight.current = editorContent?.clientHeight;
-
-      // prevents selected text being masked by toolbar on initial focus of the editor
-      window.scrollBy({ top: 56, left: 0, behavior: 'smooth' });
-    },
   });
 
   // Here we extend the received ref so the parent can get the editor content at any time
