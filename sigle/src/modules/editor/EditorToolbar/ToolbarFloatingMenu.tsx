@@ -48,6 +48,8 @@ export const MobileFloatingMenu = ({
     [editor]
   );
 
+  const currentNode = editor && activeNode(editor);
+
   return (
     <>
       {editor && (
@@ -73,9 +75,9 @@ export const MobileFloatingMenu = ({
                 },
               }}
             >
-              {activeNode(editor).icon}
+              {currentNode?.icon}
             </Box>
-            {activeNode(editor).name}
+            {currentNode?.name}
           </Button>
           <Dialog
             open={showFloatingMenuDialog}

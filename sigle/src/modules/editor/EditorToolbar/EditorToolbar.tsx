@@ -21,6 +21,7 @@ const ToolbarContainer = styled(Container, {
   p: '$3',
   backgroundColor: '$gray1',
 
+  // workaround for iOS issue where flex gap is not acknowledged
   '@supports (-webkit-touch-callout: none) and (not (translate: none))': {
     '& button': {
       mr: '$5',
@@ -41,6 +42,10 @@ export const Toolbar = ({
   position,
   softKeyboardIsOpen,
 }: ToolbarProps) => {
+  const image = slashCommands({ storyId: story.id }).find(
+    (item) => item.title === 'Image'
+  );
+
   return (
     <ToolbarContainer
       css={{
@@ -56,6 +61,7 @@ export const Toolbar = ({
       {editor && (
         <Flex
           css={{
+            // workaround for iOS issue where flex gap is not acknowledged
             '@supports (-webkit-touch-callout: none) and (not (translate: none))':
               {
                 '& button': {
@@ -74,23 +80,20 @@ export const Toolbar = ({
               backgroundColor: '$gray6',
             }}
           />
-          {slashCommands({ storyId: story.id })
-            .filter((item) => item.title === 'Image')
-            .map(({ icon: Icon, command }, idx) => (
-              <IconButton
-                key={idx}
-                css={{
-                  p: 0,
+          {image && (
+            <IconButton
+              css={{
+                p: 0,
 
-                  '& svg': {
-                    filter: 'invert(1)',
-                  },
-                }}
-                onClick={() => command({ editor: editor })}
-              >
-                <Icon width={20} height={20} />
-              </IconButton>
-            ))}
+                '& svg': {
+                  filter: 'invert(1)',
+                },
+              }}
+              onClick={() => image.command({ editor: editor })}
+            >
+              <image.icon width={20} height={20} />
+            </IconButton>
+          )}
           <Box
             css={{
               width: 2,
