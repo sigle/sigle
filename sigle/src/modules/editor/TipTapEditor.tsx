@@ -125,7 +125,7 @@ export const TipTapEditor = forwardRef<
     setShowShortcutsDialog(false);
   };
 
-  const isMobile = width < 1024;
+  const isMobile = width < 768;
 
   const editor = useEditor({
     editable,
