@@ -43,9 +43,11 @@ export const useUserFollow = () => {
     await UserService.postApiUsersMeFollowing({
       body: { stacksAddress: address, createdAt: now },
     });
-    await queryClient.invalidateQueries(['get-users-followers']);
-    await queryClient.invalidateQueries(['get-users-following']);
-    await queryClient.invalidateQueries(['get-user-by-address']);
+    await queryClient.invalidateQueries([
+      'get-users-followers',
+      'get-users-following',
+      'get-user-by-address',
+    ]);
   });
 };
 
@@ -66,9 +68,11 @@ export const useUserUnfollow = () => {
     await UserService.deleteApiUsersMeFollowing({
       body: { stacksAddress: address },
     });
-    await queryClient.invalidateQueries(['get-users-followers']);
-    await queryClient.invalidateQueries(['get-users-following']);
-    await queryClient.invalidateQueries(['get-user-by-address']);
+    await queryClient.invalidateQueries([
+      'get-users-followers',
+      'get-users-following',
+      'get-user-by-address',
+    ]);
   });
 };
 
