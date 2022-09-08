@@ -1,11 +1,11 @@
 import { Editor } from '@tiptap/react';
 import { useCallback, useState } from 'react';
-import { styled } from '../../stitches.config';
-import { Story } from '../../types';
-import { Box, Button, Dialog, DialogContent, DialogTitle } from '../../ui';
-import { CommandList } from './extensions/SlashCommand/CommandList';
-import { activeNode } from './ActiveNode';
-import { slashCommands } from './extensions/SlashCommand/commands';
+import { styled } from '../../../stitches.config';
+import { Story } from '../../../types';
+import { Box, Button, Dialog, DialogContent, DialogTitle } from '../../../ui';
+import { CommandList } from '../extensions/SlashCommand/CommandList';
+import { activeNode } from '../ActiveNode';
+import { slashCommands } from '../extensions/SlashCommand/commands';
 
 const StyledDialogContent = styled(DialogContent, {
   display: 'flex',

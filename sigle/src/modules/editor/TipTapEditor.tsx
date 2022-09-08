@@ -42,41 +42,11 @@ import { styled, globalCss, keyframes, darkTheme } from '../../stitches.config';
 import { CodeBlockComponent } from './extensions/CodeBlock';
 import { Story } from '../../types';
 import CharacterCount from '@tiptap/extension-character-count';
-import { Box, Container, Flex, IconButton, Typography } from '../../ui';
+import { Container, IconButton, Typography } from '../../ui';
 import { ShortcutsDialog } from './EditorShortcuts/ShortcutsDialog';
 import { clarity } from './utils/clarity-syntax';
 import { KeyboardIcon } from '@radix-ui/react-icons';
-import { BubbleMenuItems } from './BubbleMenuItems';
-import { MobileFloatingMenu } from './MobileFloatingMenu';
-
-const ToolbarContainer = styled(Container, {
-  display: 'flex',
-  alignItems: 'center',
-  gap: '$5',
-  position: 'fixed',
-  bottom: 0,
-  right: 0,
-  left: 0,
-  zIndex: 0,
-  justifyContent: 'start',
-  overflow: 'scroll',
-  borderTop: '1px solid $colors$gray6',
-  p: '$3',
-
-  '@supports (-webkit-touch-callout: none) and (not (translate: none))': {
-    '& button': {
-      mr: '$5',
-    },
-  },
-
-  '@xl': {
-    justifyContent: 'end',
-    gap: '$3',
-    borderTop: 'none',
-    transform: `none`,
-    transition: 'none',
-  },
-});
+import { Toolbar } from './EditorToolbar/EditorToolbar';
 
 const fadeInAnimation = keyframes({
   '0%': { opacity: '0' },
@@ -294,95 +264,56 @@ export const TipTapEditor = forwardRef<
 
       <StyledEditorContent editor={editor} />
 
-      <ToolbarContainer
-        css={{
-          backgroundColor: isMobile ? '$gray1' : 'transparent',
-          transform: `translateY(-${toolbarPos}px)`,
-          transition: 'transform .25s',
-        }}
-      >
-        {editable && (
-          <>
-            {isMobile && (
-              <>
-                <MobileFloatingMenu
-                  editor={editor}
-                  story={story}
-                  triggerDisabled={!softKeyboardIsOpen}
-                />
-                {editor && (
-                  <Flex
-                    css={{
-                      '@supports (-webkit-touch-callout: none) and (not (translate: none))':
-                        {
-                          '& button': {
-                            mr: '$5',
-                          },
-                          mr: '$5',
-                        },
-                      display: '-webkit-flex',
-
-                      '@xl': { display: 'none' },
-                    }}
-                    gap="5"
-                  >
-                    <BubbleMenuItems iconSize={15} editor={editor} />
-                    <Box
-                      css={{
-                        width: 2,
-                        backgroundColor: '$gray6',
-                      }}
-                    />
-                    {slashCommands({ storyId: story.id })
-                      .filter((item) => item.title === 'Image')
-                      .map(({ icon: Icon, command }, idx) => (
-                        <IconButton
-                          key={idx}
-                          css={{
-                            p: 0,
-
-                            '& svg': {
-                              filter: 'invert(1)',
-                            },
-                          }}
-                          onClick={() => command({ editor: editor })}
-                        >
-                          <Icon width={20} height={20} />
-                        </IconButton>
-                      ))}
-                    <Box
-                      css={{
-                        width: 2,
-                        backgroundColor: '$gray6',
-                      }}
-                    />
-                  </Flex>
-                )}
-              </>
-            )}
-            <Typography css={{ m: 0, whiteSpace: 'nowrap' }} size="subheading">
-              {editor?.storage.characterCount.words()} words
-            </Typography>
-            <IconButton
+      {editable && (
+        <>
+          {isMobile ? (
+            <Toolbar
+              editor={editor}
+              story={story}
+              position={toolbarPos}
+              softKeyboardIsOpen={softKeyboardIsOpen}
+            />
+          ) : (
+            <Container
               css={{
-                display: 'none',
-
-                '@xl': {
-                  display: 'block',
-                },
+                display: 'flex',
+                alignItems: 'center',
+                gap: '$3',
+                position: 'fixed',
+                bottom: 0,
+                right: 0,
+                left: 0,
+                zIndex: 0,
+                justifyContent: 'end',
               }}
-              onClick={() => setShowShortcutsDialog(true)}
-              aria-label="Open keyboard shortcuts and hints"
             >
-              <KeyboardIcon />
-            </IconButton>
-          </>
-        )}
-        <ShortcutsDialog
-          open={showShortcutsDialog}
-          onOpenChange={handleCancelShortcuts}
-        />
-      </ToolbarContainer>
+              <Typography
+                css={{ m: 0, whiteSpace: 'nowrap' }}
+                size="subheading"
+              >
+                {editor?.storage.characterCount.words()} words
+              </Typography>
+              <IconButton
+                css={{
+                  display: 'none',
+
+                  '@xl': {
+                    display: 'block',
+                  },
+                }}
+                onClick={() => setShowShortcutsDialog(true)}
+                aria-label="Open keyboard shortcuts and hints"
+              >
+                <KeyboardIcon />
+              </IconButton>
+              <ShortcutsDialog
+                open={showShortcutsDialog}
+                onOpenChange={handleCancelShortcuts}
+              />
+            </Container>
+          )}
+        </>
+      )}
     </>
   );
 });
