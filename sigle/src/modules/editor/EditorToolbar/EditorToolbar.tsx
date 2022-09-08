@@ -2,7 +2,7 @@ import { Editor } from '@tiptap/react';
 import { styled } from '../../../stitches.config';
 import { Story } from '../../../types';
 import { Box, Container, Flex, IconButton } from '../../../ui';
-import { BubbleMenuItems } from '../BubbleMenuItems';
+import { ToolbarBubbleMenu } from './ToolbarBubbleMenu';
 import { slashCommands } from '../extensions/SlashCommand/commands';
 import { MobileFloatingMenu } from './ToolbarFloatingMenu';
 
@@ -64,12 +64,10 @@ export const Toolbar = ({
                 mr: '$5',
               },
             display: '-webkit-flex',
-
-            '@xl': { display: 'none' },
           }}
           gap="5"
         >
-          <BubbleMenuItems iconSize={15} editor={editor} />
+          <ToolbarBubbleMenu editor={editor} />
           <Box
             css={{
               width: 2,
