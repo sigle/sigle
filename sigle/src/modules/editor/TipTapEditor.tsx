@@ -181,7 +181,7 @@ export const TipTapEditor = forwardRef<
       TipTapPlaceholder,
       // Custom extensions
       SlashCommands.configure({
-        commands: !isMobile ? slashCommands({ storyId: story.id }) : undefined,
+        commands: !isMobile ? slashCommands({ storyId: story.id }) : [],
       }),
     ],
     content: story.contentVersion === '2' ? story.content : '',
