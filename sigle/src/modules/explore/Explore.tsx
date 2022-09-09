@@ -1,4 +1,4 @@
-import { useInfiniteQuery } from 'react-query';
+import { useInfiniteQuery } from '@tanstack/react-query';
 import { useInView } from 'react-cool-inview';
 import { UserService } from '../../external/api';
 import { useGetGaiaUserFollowing } from '../../hooks/appData';
@@ -21,7 +21,7 @@ export const ExploreUsers = () => {
     hasNextPage,
     isFetchingNextPage,
   } = useInfiniteQuery(
-    'get-user-explore',
+    ['get-user-explore'],
     ({ pageParam }) => {
       return UserService.getApiUsersExplore({
         page: pageParam ? pageParam : 1,
