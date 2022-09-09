@@ -1,4 +1,3 @@
-import { Editor } from '@tiptap/react';
 import {
   forwardRef,
   useEffect,
@@ -8,7 +7,6 @@ import {
 } from 'react';
 import { styled } from '../../../../stitches.config';
 import { Box, Flex, Typography } from '../../../../ui';
-import { activeNode } from '../../ActiveNode';
 import { SlashCommandsCommand } from './SlashCommands';
 
 // TODO stop using Text
@@ -34,11 +32,11 @@ interface CommandListProps {
   // TODO change SlashCommandsCommand name
   items: SlashCommandsCommand[];
   command(item: SlashCommandsCommand): void;
-  editor?: Editor;
+  currentNodeName?: string;
 }
 
 export const CommandList = forwardRef<CommandListRef, CommandListProps>(
-  ({ items, command, editor }, ref) => {
+  ({ items, command, currentNodeName }, ref) => {
     const containerRef = useRef<HTMLDivElement>(null);
     const [selectedIndex, setSelectedIndex] = useState(0);
 
@@ -123,7 +121,7 @@ export const CommandList = forwardRef<CommandListRef, CommandListProps>(
                 </Typography>
               </Flex>
             </Flex>
-            {editor && activeNode(editor).name === title && (
+            {currentNodeName === title && (
               <Box
                 css={{
                   backgroundColor: '$green11',

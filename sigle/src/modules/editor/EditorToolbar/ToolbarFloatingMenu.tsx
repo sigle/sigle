@@ -90,7 +90,7 @@ export const MobileFloatingMenu = ({
                 onClick={() => setShowFloatingMenuDialog(false)}
               >
                 <CommandList
-                  editor={editor}
+                  currentNodeName={currentNode?.name}
                   items={slashCommands({ storyId: story.id })}
                   command={handleSelect}
                 />

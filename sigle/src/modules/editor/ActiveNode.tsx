@@ -38,7 +38,7 @@ export const activeNode = (editor: Editor, storyId: string) => {
 
   if (editor.isActive('orderedList')) {
     const numberedList = slashCommands({ storyId }).filter(
-      (item) => item.title === 'Numbered List'
+      (item) => item.title === 'Numbered list'
     );
     const Icon = numberedList[0].icon;
     return {
