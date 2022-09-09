@@ -83,6 +83,7 @@ export const LoginLayout = ({
               href={sigleConfig.landingUrl}
               target="_blank"
               rel="noreferrer"
+              css={{ pt: '$5', '@md': { pt: 0 } }}
             >
               <Image src={src} alt="Logo" width={123} height={45} />
             </Box>

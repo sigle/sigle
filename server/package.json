@@ -24,7 +24,7 @@
     "@fastify/rate-limit": "7.2.0",
     "@fastify/swagger": "7.4.1",
     "@prisma/client": "4.1.0",
-    "@sentry/node": "7.7.0",
+    "@sentry/node": "7.12.1",
     "@stacks/auth": "4.3.3",
     "@stacks/blockchain-api-client": "4.1.0",
     "@stacks/transactions": "4.3.3",
@@ -34,10 +34,10 @@
     "fastify": "4.2.1",
     "fastify-plugin": "4.0.0",
     "ioredis": "5.0.6",
-    "next-auth": "4.9.0",
+    "next-auth": "4.10.3",
     "prisma": "4.1.0",
     "ts-node": "10.7.0",
-    "undici": "5.8.0"
+    "undici": "5.10.0"
   },
   "devDependencies": {
     "@cartable/core": "0.3.0",

@@ -8,6 +8,19 @@ const { withPlausibleProxy } = require('next-plausible');
 
 dotenv.config();
 
+/**
+ * On vercel preview deployments we overwrite the NEXTAUTH_URL value to the
+ * branch pull request one. The git branch name can contain `/` so we replace them with `-`
+ */
+const getVercelPreviewUrl = () => {
+  return `https://${
+    process.env.VERCEL_GIT_REPO_SLUG
+  }-git-${process.env.VERCEL_GIT_COMMIT_REF.replace(
+    new RegExp('/', 'g'),
+    '-'
+  )}-${process.env.VERCEL_GIT_REPO_OWNER}.vercel.app`;
+};
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   experimental: {
@@ -23,6 +36,10 @@ const nextConfig = {
     NEXT_PUBLIC_SENTRY_DSN: process.env.NEXT_PUBLIC_SENTRY_DSN,
     NEXT_PUBLIC_POSTHOG_TOKEN: process.env.NEXT_PUBLIC_POSTHOG_TOKEN,
     API_URL: process.env.API_URL,
+    NEXTAUTH_URL:
+      process.env.VERCEL_ENV === 'preview'
+        ? getVercelPreviewUrl()
+        : process.env.NEXTAUTH_URL,
   },
   pageExtensions: [
     // `.page.tsx` for page components
@@ -65,19 +82,33 @@ const nextConfig = {
   },
 };
 
-module.exports = withSentryConfig(
-  withPlugins(
-    [
-      [
-        withPlausibleProxy({
-          scriptName: 'index',
-        }),
-      ],
-      [withBundleAnalyzer],
-    ],
-    nextConfig
-  ),
-  {
-    dryRun: !process.env.SENTRY_AUTH_TOKEN,
-  }
-);
+const nextPlugins = [
+  [
+    withPlausibleProxy({
+      scriptName: 'index',
+    }),
+  ],
+  [withBundleAnalyzer],
+  (nextConfig) =>
+    withSentryConfig(
+      {
+        ...nextConfig,
+        sentry: {
+          // Use `hidden-source-map` rather than `source-map` as the Webpack `devtool`
+          // for client-side builds. (This will be the default starting in
+          // `@sentry/nextjs` version 8.0.0.) See
+          // https://webpack.js.org/configuration/devtool/ and
+          // https://docs.sentry.io/platforms/javascript/guides/nextjs/manual-setup/#use-hidden-source-map
+          // for more information.
+          hideSourceMaps: true,
+        },
+      },
+      {
+        dryRun: !process.env.SENTRY_AUTH_TOKEN,
+      }
+    ),
+];
+
+module.exports = (phase) => {
+  return withPlugins(nextPlugins, nextConfig)(phase, {});
+};
