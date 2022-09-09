@@ -40,6 +40,8 @@ import { Container, IconButton, Typography } from '../../ui';
 import { ShortcutsDialog } from './EditorShortcuts/ShortcutsDialog';
 import { clarity } from './utils/clarity-syntax';
 import { KeyboardIcon } from '@radix-ui/react-icons';
+import { ImageDrop } from './extensions/ImageDrop';
+import { useTheme } from 'next-themes';
 
 const fadeInAnimation = keyframes({
   '0%': { opacity: '0' },
@@ -105,6 +107,7 @@ export const TipTapEditor = forwardRef<
   TipTapEditorProps
 >(({ story, editable = true }, ref) => {
   const [showShortcutsDialog, setShowShortcutsDialog] = useState(false);
+  const { resolvedTheme } = useTheme();
   // TODO is story really needed? Could it be just the content prop?
   globalStylesCustomEditor();
 
@@ -168,13 +171,17 @@ export const TipTapEditor = forwardRef<
       TipTapStrike,
       TipTapUnderline,
       // Extensions
-      TipTapDropcursor,
+      TipTapDropcursor.configure({
+        color: resolvedTheme === 'dark' ? '#3e3e3e' : '#dbdbdb',
+        width: 2,
+      }),
       TipTapHistory,
       TipTapPlaceholder,
       // Custom extensions
       SlashCommands.configure({
         commands: slashCommands({ storyId: story.id }),
       }),
+      ImageDrop,
     ],
     content: story.contentVersion === '2' ? story.content : '',
   });
