@@ -48,7 +48,7 @@ export const MobileFloatingMenu = ({
     [editor]
   );
 
-  const currentNode = editor && activeNode(editor);
+  const currentNode = editor && activeNode(editor, story.id);
 
   return (
     <>
