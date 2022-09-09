@@ -27,7 +27,7 @@ export const activeNode = (editor: Editor, storyId: string) => {
 
   if (editor.isActive('bulletList')) {
     const bulletList = slashCommands({ storyId }).filter(
-      (item) => item.title === 'Bulleted List'
+      (item) => item.title === 'Bulleted list'
     );
     const Icon = bulletList[0].icon;
     return {
