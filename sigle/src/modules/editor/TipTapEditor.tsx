@@ -39,9 +39,8 @@ import { Container, IconButton, Typography } from '../../ui';
 import { ShortcutsDialog } from './EditorShortcuts/ShortcutsDialog';
 import { clarity } from './utils/clarity-syntax';
 import { KeyboardIcon } from '@radix-ui/react-icons';
-import { ImageDrop } from './extensions/Image';
 import { useTheme } from 'next-themes';
-import { Image } from './extensions/Image/Extension';
+import { TipTapImage } from './extensions/Image';
 
 const fadeInAnimation = keyframes({
   '0%': { opacity: '0' },
@@ -143,7 +142,7 @@ export const TipTapEditor = forwardRef<
       }).configure({
         lowlight,
       }),
-      Image,
+      TipTapImage,
       // Marks
       TipTapBold,
       TipTapCode,
@@ -161,7 +160,6 @@ export const TipTapEditor = forwardRef<
       SlashCommands.configure({
         commands: slashCommands({ storyId: story.id }),
       }),
-      ImageDrop,
     ],
     content: story.contentVersion === '2' ? story.content : '',
   });

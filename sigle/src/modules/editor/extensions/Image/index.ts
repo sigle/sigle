@@ -1,12 +1,42 @@
-import { Extension, findChildren } from '@tiptap/core';
+import TipTapImageBase from '@tiptap/extension-image';
+import { ReactNodeViewRenderer } from '@tiptap/react';
+import { findChildren } from '@tiptap/core';
 import { Plugin, PluginKey } from 'prosemirror-state';
+import { Component } from './ImageWrapper';
 import { generateRandomId } from '../../../../utils';
 import { resizeAndUploadImage } from '../../utils/image';
 
-export const ImageDrop = Extension.create({
-  name: 'ImageDropHandler',
+export const TipTapImage = TipTapImageBase.extend({
+  addAttributes() {
+    return {
+      ...this.parent?.(),
+      loading: {
+        default: false,
+        renderHTML: (attributes) => {
+          if (attributes.loading) {
+            return {
+              'data-loading': attributes.loading,
+            };
+          }
+        },
+      },
+      id: {
+        default: false,
+        renderHTML: () => ({}),
+      },
+    };
+  },
+
+  draggable: true,
+  selectable: true,
+
+  addNodeView() {
+    return ReactNodeViewRenderer(Component);
+  },
 
   addProseMirrorPlugins() {
+    const { editor } = this;
+
     return [
       new Plugin({
         key: new PluginKey('imageDropHandler'),
@@ -69,7 +99,6 @@ export const ImageDrop = Extension.create({
                     (node) => node.type.name === 'image' && node.attrs.id === id
                   );
                   const image = images[0];
-                  console.log(image);
 
                   if (!image || images.length > 1) {
                     return false;
@@ -84,6 +113,8 @@ export const ImageDrop = Extension.create({
                       loading: false,
                     }
                   );
+
+                  editor.commands.createParagraphNear();
 
                   view.dispatch(loadedImage);
                 };
