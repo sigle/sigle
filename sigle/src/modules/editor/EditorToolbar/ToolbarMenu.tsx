@@ -38,7 +38,7 @@ interface BubbleMenuProps {
   editor: Editor;
 }
 
-export const ToolbarBubbleMenu = ({ editor }: BubbleMenuProps) => {
+export const ToolbarMenu = ({ editor }: BubbleMenuProps) => {
   const [linkState, setLinkState] = useState({ open: false, value: '' });
 
   const onSelectLink = () => {

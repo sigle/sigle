@@ -4,67 +4,85 @@ import { slashCommands } from './extensions/SlashCommand/commands';
 
 export const activeNode = (editor: Editor, storyId: string) => {
   if (editor.isActive('heading', { level: 2 })) {
-    const bigHeading = slashCommands({ storyId }).filter(
+    const bigHeading = slashCommands({ storyId }).find(
       (item) => item.title === 'Big Heading'
     );
-    const Icon = bigHeading[0].icon;
+    if (!bigHeading) {
+      return;
+    }
+    const Icon = bigHeading.icon;
     return {
-      name: bigHeading[0].title,
+      name: bigHeading.title,
       icon: <Icon />,
     };
   }
 
   if (editor.isActive('heading', { level: 3 })) {
-    const smallHeading = slashCommands({ storyId }).filter(
+    const smallHeading = slashCommands({ storyId }).find(
       (item) => item.title === 'Small Heading'
     );
-    const Icon = smallHeading[0].icon;
+    if (!smallHeading) {
+      return;
+    }
+    const Icon = smallHeading.icon;
     return {
-      name: smallHeading[0].title,
+      name: smallHeading.title,
       icon: <Icon />,
     };
   }
 
   if (editor.isActive('bulletList')) {
-    const bulletList = slashCommands({ storyId }).filter(
+    const bulletList = slashCommands({ storyId }).find(
       (item) => item.title === 'Bulleted list'
     );
-    const Icon = bulletList[0].icon;
+    if (!bulletList) {
+      return;
+    }
+    const Icon = bulletList.icon;
     return {
-      name: bulletList[0].title,
+      name: bulletList.title,
       icon: <Icon />,
     };
   }
 
   if (editor.isActive('orderedList')) {
-    const numberedList = slashCommands({ storyId }).filter(
+    const numberedList = slashCommands({ storyId }).find(
       (item) => item.title === 'Numbered list'
     );
-    const Icon = numberedList[0].icon;
+    if (!numberedList) {
+      return;
+    }
+    const Icon = numberedList.icon;
     return {
-      name: numberedList[0].title,
+      name: numberedList.title,
       icon: <Icon />,
     };
   }
 
   if (editor.isActive('blockquote')) {
-    const quote = slashCommands({ storyId }).filter(
+    const quote = slashCommands({ storyId }).find(
       (item) => item.title === 'Quote'
     );
-    const Icon = quote[0].icon;
+    if (!quote) {
+      return;
+    }
+    const Icon = quote.icon;
     return {
-      name: quote[0].title,
+      name: quote.title,
       icon: <Icon />,
     };
   }
 
   if (editor.isActive('codeBlock')) {
-    const code = slashCommands({ storyId }).filter(
+    const code = slashCommands({ storyId }).find(
       (item) => item.title === 'Code'
     );
-    const Icon = code[0].icon;
+    if (!code) {
+      return;
+    }
+    const Icon = code.icon;
     return {
-      name: code[0].title,
+      name: code.title,
       icon: <Icon />,
     };
   }
