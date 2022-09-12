@@ -20,7 +20,8 @@ export const ImageDrop = Extension.create({
             event.preventDefault();
 
             if (!hasFiles) {
-              return true;
+              // returning false ensures already uploaded images can be dragged to reorder
+              return false;
             }
 
             const images = Array.from(event.dataTransfer.files);

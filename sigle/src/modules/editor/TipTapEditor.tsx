@@ -17,7 +17,6 @@ import TipTapHeading from '@tiptap/extension-heading';
 import TipTapHistory from '@tiptap/extension-history';
 import TipTapHorizontalRule from '@tiptap/extension-horizontal-rule';
 import TipTapItalic from '@tiptap/extension-italic';
-import TipTapImage from '@tiptap/extension-image';
 import TipTapLink from '@tiptap/extension-link';
 import TipTapListItem from '@tiptap/extension-list-item';
 import TipTapOrderedList from '@tiptap/extension-ordered-list';
@@ -40,8 +39,9 @@ import { Container, IconButton, Typography } from '../../ui';
 import { ShortcutsDialog } from './EditorShortcuts/ShortcutsDialog';
 import { clarity } from './utils/clarity-syntax';
 import { KeyboardIcon } from '@radix-ui/react-icons';
-import { ImageDrop } from './extensions/ImageDrop';
+import { ImageDrop } from './extensions/Image';
 import { useTheme } from 'next-themes';
+import { Image } from './extensions/Image/Extension';
 
 const fadeInAnimation = keyframes({
   '0%': { opacity: '0' },
@@ -67,7 +67,7 @@ const StyledEditorContent = styled(EditorContent, {
 
   // Image selected style
   '& img.ProseMirror-selectednode': {
-    outline: '1px solid $orange11',
+    outline: '1px solid $green11',
   },
   // Image uploading style
   '& img[data-loading="true"]': {
@@ -143,27 +143,7 @@ export const TipTapEditor = forwardRef<
       }).configure({
         lowlight,
       }),
-      TipTapImage.extend({
-        addAttributes() {
-          return {
-            ...this.parent?.(),
-            loading: {
-              default: false,
-              renderHTML: (attributes) => {
-                if (attributes.loading) {
-                  return {
-                    'data-loading': attributes.loading,
-                  };
-                }
-              },
-            },
-            id: {
-              default: false,
-              renderHTML: () => ({}),
-            },
-          };
-        },
-      }),
+      Image,
       // Marks
       TipTapBold,
       TipTapCode,
