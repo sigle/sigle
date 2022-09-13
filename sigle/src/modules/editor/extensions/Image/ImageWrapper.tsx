@@ -30,6 +30,9 @@ export const Component = ({ ...props }) => {
         }
         css={{
           opacity: props.node.attrs.loading ? 0.25 : 1,
+          '&:hover': {
+            outline: '1px solid $green11',
+          },
         }}
         src={props.node.attrs.src}
         alt={alt ? alt : ''}

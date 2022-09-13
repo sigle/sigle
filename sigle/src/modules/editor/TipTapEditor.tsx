@@ -66,7 +66,7 @@ const StyledEditorContent = styled(EditorContent, {
 
   // Image selected style
   '& img.ProseMirror-selectednode': {
-    outline: '1px solid $green11',
+    outline: '2px solid $green11',
   },
   // Image uploading style
   '& img[data-loading="true"]': {
