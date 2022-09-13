@@ -5,6 +5,7 @@ import {
   EditorContent,
   ReactNodeViewRenderer,
   Editor,
+  Extensions,
 } from '@tiptap/react';
 import TipTapBlockquote from '@tiptap/extension-blockquote';
 import TipTapBold from '@tiptap/extension-bold';
@@ -176,10 +177,12 @@ export const TipTapEditor = forwardRef<
       TipTapHistory,
       TipTapPlaceholder,
       // Custom extensions
-      SlashCommands.configure({
-        commands: !isMobile ? slashCommands({ storyId: story.id }) : [],
-      }),
-    ],
+      !isMobile
+        ? SlashCommands.configure({
+            commands: slashCommands({ storyId: story.id }),
+          })
+        : undefined,
+    ] as Extensions,
     content: story.contentVersion === '2' ? story.content : '',
   });
 
