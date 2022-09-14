@@ -1,5 +1,39 @@
 # @sigle/app
 
+## 1.4.0
+
+### Minor Changes
+
+- 696ef4f: Display The Explorer Guild creator + badge on the profile page of a user.
+- a43d4ed: Redesign the header dropdown menu.
+  Add profile page to the dashboard.
+- c004528: Add social following system, you can follow other users and see their posts in your feed.
+- f17096d: Add explore page to discover writers using the platform.
+- ad2f94f: Add edit button to profile page.
+- 1c8f8dc: Improve the login flow by including steps with progress indicators.
+- 9fdc428: Make editor header responsive for mobile view.
+- 9312e2f: Improve the editor placeholder behavior to give more context.
+- 8e5e096: Improve editor slash command, scroll with keyboard navigation, press escape to close.
+- 361ae92: Add mobile header with drag-to-close functionality.
+- 5a41079: Show card displaying user information when hovering their name or avatar on the article page.
+- 4320ab3: Add RSS auto-discovery for all the blogs. So browser and RSS readers can automatically find the RSS feed of the blog.
+- 4217167: Add following and follower tabs to the profile page.
+
+### Patch Changes
+
+- 0db7bcd: Fix issue with the profile tab not navigating to profile page.
+- fceff6f: Upgrade next-themes to 0.2.0.
+- e2a7843: Upgrade radix packages to v1.
+- 1df1356: Fix vercel preview env.
+- 0d1ae50: Fix profile image not centered on profile page.
+- 074786f: Add infinite loading to explore page.
+- 94326a6: Enable react strict mode.
+- b6c609b: Upgrade react to v18.
+- 41c1a3f: Generate openapi typescript client for type safe calls to the Sigle api.
+- dfae2fc: Update react-query to v4.
+- 1cf7a95: Upgrade tiptap packages.
+- c7a1ccc: Update typography styles for mobile and tablet views.
+
 ## 1.3.0
 
 ### Minor Changes
