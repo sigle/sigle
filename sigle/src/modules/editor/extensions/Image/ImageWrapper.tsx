@@ -23,11 +23,7 @@ export const Component = ({ ...props }) => {
         />
       )}
       <StyledImage
-        className={
-          props.selected
-            ? 'ProseMirror-selectednode ProseMirror-hideselection'
-            : ''
-        }
+        className={props.selected ? 'ProseMirror-selectednode' : ''}
         css={{
           opacity: props.node.attrs.loading ? 0.25 : 1,
           '&:hover': {

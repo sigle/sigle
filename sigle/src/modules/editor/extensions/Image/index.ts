@@ -56,36 +56,35 @@ export const TipTapImage = TipTapImageBase.extend({
 
             const images = Array.from(event.dataTransfer.files);
 
-            const { schema } = view.state;
+            images.forEach((imageFile, idx) => {
+              console.log(imageFile);
 
-            const coordinates = view.posAtCoords({
-              left: event.clientX,
-              top: event.clientY,
-            });
-
-            images.forEach((file) => {
-              const [mime] = file.type.split('/');
+              const [mime] = imageFile.type.split('/');
               if (mime !== 'image') return;
-              const src = URL.createObjectURL(file);
+              const src = URL.createObjectURL(imageFile);
               const id = generateRandomId();
 
-              const node = schema.nodes.image.create({
-                src,
-                id,
-                loading: true,
+              const coordinates = view.posAtCoords({
+                left: event.clientX,
+                top: event.clientY,
               });
 
               if (!coordinates) {
                 return;
               }
 
-              const transaction = view.state.tr.insert(coordinates.pos, node);
-
-              view.dispatch(transaction);
+              editor.commands.insertContentAt(coordinates.pos, {
+                type: 'image',
+                attrs: {
+                  src,
+                  id,
+                  loading: true,
+                },
+              });
 
               const upload = async () => {
-                const name = file.name;
-                const imageUrl = await resizeAndUploadImage(file, name);
+                const name = `photos/${id}-${imageFile.name}`;
+                const imageUrl = await resizeAndUploadImage(imageFile, name);
                 return imageUrl;
               };
 
@@ -93,30 +92,31 @@ export const TipTapImage = TipTapImageBase.extend({
                 const uploadedImage = new Image();
                 uploadedImage.src = url;
                 uploadedImage.onload = () => {
-                  const doc = view.state.tr.doc;
-                  const images = findChildren(
-                    doc,
-                    (node) => node.type.name === 'image' && node.attrs.id === id
-                  );
-                  const image = images[0];
+                  editor.commands.command(({ tr }) => {
+                    const doc = view.state.tr.doc;
+                    const images = findChildren(
+                      doc,
+                      (node) =>
+                        node.type.name === 'image' && node.attrs.id === id
+                    );
+                    const image = images[0];
 
-                  if (!image || images.length > 1) {
-                    return false;
-                  }
+                    if (!image || images.length > 1) {
+                      return false;
+                    }
 
-                  const loadedImage = view.state.tr.setNodeMarkup(
-                    image.pos,
-                    undefined,
-                    {
-                      ...node.attrs,
+                    tr.setNodeMarkup(image.pos, undefined, {
+                      ...image.node.attrs,
                       src: url,
                       loading: false,
-                    }
-                  );
+                    });
 
-                  editor.commands.createParagraphNear();
+                    return true;
+                  });
 
-                  view.dispatch(loadedImage);
+                  if (idx == images.length - 1) {
+                    editor.commands.createParagraphNear();
+                  }
                 };
               });
             });
