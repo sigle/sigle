@@ -57,9 +57,11 @@ export const TipTapImage = TipTapImageBase.extend({
             const images = Array.from(event.dataTransfer.files);
 
             images.forEach((imageFile, idx) => {
-              console.log(imageFile);
-
-              const [mime] = imageFile.type.split('/');
+              const [mime, extension] = imageFile.type.split('/');
+              const accepted = ['jpeg', 'png', 'gif'];
+              if (!accepted.includes(extension)) {
+                return;
+              }
               if (mime !== 'image') return;
               const src = URL.createObjectURL(imageFile);
               const id = generateRandomId();
