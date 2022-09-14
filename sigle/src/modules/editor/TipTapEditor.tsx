@@ -206,6 +206,7 @@ export const TipTapEditor = forwardRef<
           left: 0,
           zIndex: 0,
           justifyContent: 'end',
+          pointerEvents: 'none',
         }}
       >
         {editable && (
@@ -214,6 +215,9 @@ export const TipTapEditor = forwardRef<
               {editor?.storage.characterCount.words()} words
             </Typography>
             <IconButton
+              css={{
+                pointerEvents: 'auto',
+              }}
               onClick={() => setShowShortcutsDialog(true)}
               aria-label="Open keyboard shortcuts and hints"
             >
