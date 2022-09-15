@@ -5,7 +5,14 @@ import { AppService } from './app.service';
 import { validate } from './env.validation';
 
 @Module({
-  imports: [ConfigModule.forRoot({ isGlobal: true, validate, cache: true })],
+  imports: [
+    ConfigModule.forRoot({
+      isGlobal: true,
+      validate,
+      cache: true,
+      envFilePath: process.env.NODE_ENV === 'test' ? '.env.test' : '.env',
+    }),
+  ],
   controllers: [AppController],
   providers: [AppService],
 })
