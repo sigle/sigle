@@ -151,7 +151,7 @@ export const TipTapEditor = forwardRef<
       TipTapUnderline,
       // Extensions
       TipTapDropcursor.configure({
-        color: resolvedTheme === 'dark' ? '#3e3e3e' : '#dbdbdb',
+        color: resolvedTheme === 'dark' ? '#505050' : '#c7c7c7',
         width: 2,
       }),
       TipTapHistory,
