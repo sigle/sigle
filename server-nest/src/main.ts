@@ -1,3 +1,4 @@
+import { ConfigService } from '@nestjs/config';
 import { NestFactory } from '@nestjs/core';
 import {
   FastifyAdapter,
@@ -10,7 +11,8 @@ async function bootstrap() {
     AppModule,
     new FastifyAdapter(),
   );
-  await app.listen(process.env.PORT || 3000);
+  const configService = app.get(ConfigService<{ PORT: string }>);
+  await app.listen(configService.get('PORT') || 3000);
 }
 
 bootstrap();

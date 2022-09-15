@@ -7,12 +7,12 @@ importers:
       '@changesets/cli': 2.23.0
       husky: 8.0.1
       lint-staged: 12.4.1
-      prettier: 2.6.2
+      prettier: 2.7.1
     devDependencies:
       '@changesets/cli': 2.23.0
       husky: 8.0.1
       lint-staged: 12.4.1
-      prettier: 2.6.2
+      prettier: 2.7.1
 
   packages/sitemap-scripts:
     specifiers:
@@ -12504,6 +12504,7 @@ packages:
     resolution: {integrity: sha512-PkUpF+qoXTqhOeWL9fu7As8LXsIUZ1WYaJiY/a7McAQzxjk82OF0tibkFXVCDImZtWxbvojFjerkiLb0/q8mew==}
     engines: {node: '>=10.13.0'}
     hasBin: true
+    dev: false
 
   /prettier/2.7.1:
     resolution: {integrity: sha512-ujppO+MkdPqoVINuDFDRLClm7D78qbDt0/NR+wp5FqEZOoTNAjPHWj17QRhu7geIHJfcNhRk1XVQmF8Bp3ye+g==}
