@@ -10,6 +10,12 @@ enum Environment {
 export class EnvironmentVariables {
   @IsEnum(Environment)
   NODE_ENV: Environment;
+
+  /**
+   * Fastify config
+   */
+  @IsString()
+  PORT: string;
 }
 
 export function validate(config: Record<string, unknown>) {
