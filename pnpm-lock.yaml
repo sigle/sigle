@@ -108,6 +108,7 @@ importers:
       '@nestjs/schematics': 9.0.3
       '@nestjs/swagger': 6.1.2
       '@nestjs/testing': 9.0.11
+      '@prisma/client': 4.1.0
       '@types/express': 4.17.14
       '@types/jest': 29.0.2
       '@types/node': 18.7.18
@@ -121,6 +122,7 @@ importers:
       eslint-plugin-prettier: 4.2.1
       jest: 29.0.3
       prettier: 2.7.1
+      prisma: 4.1.0
       reflect-metadata: 0.1.13
       rimraf: 3.0.2
       rxjs: 7.5.6
@@ -138,8 +140,10 @@ importers:
       '@nestjs/core': 9.0.11_3mdbamkp7cmelffjfexsjo7tau
       '@nestjs/platform-fastify': 9.0.11_khr6mt6ojlxbw7bo55fknouh34
       '@nestjs/swagger': 6.1.2_ivnm4e5qsl7bn6kf5k4o57kelu
+      '@prisma/client': 4.1.0_prisma@4.1.0
       class-transformer: 0.5.1
       class-validator: 0.13.2
+      prisma: 4.1.0
       reflect-metadata: 0.1.13
       rimraf: 3.0.2
       rxjs: 7.5.6
