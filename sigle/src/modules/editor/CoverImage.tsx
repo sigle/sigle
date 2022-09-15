@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useState } from 'react';
 import { CameraIcon, HandIcon, TrashIcon } from '@radix-ui/react-icons';
 import { useDropzone } from 'react-dropzone';
 import { styled } from '../../stitches.config';
@@ -25,7 +25,6 @@ interface CoverImageProps {
 
 export const CoverImage = ({ story, setStoryFile }: CoverImageProps) => {
   const [loadingSave, setLoadingSave] = useState(false);
-  const [draggingOver, setIsDraggingOver] = useState(false);
 
   const handleRemoveCoverImage = () => {
     setStoryFile({ ...story, coverImage: undefined });
@@ -51,24 +50,16 @@ export const CoverImage = ({ story, setStoryFile }: CoverImageProps) => {
         contentType: blob.type,
       });
 
-      setIsDraggingOver(false);
       setLoadingSave(false);
       setStoryFile({ ...story, coverImage: coverImageUrl });
     },
     [story]
   );
-  const { getRootProps, getInputProps, fileRejections } = useDropzone({
-    onDrop,
-    accept: 'image/jpeg,image/png',
-    onDragEnter: () => setIsDraggingOver(true),
-    onDragLeave: () => setIsDraggingOver(false),
-  });
-
-  useEffect(() => {
-    if (fileRejections.length > 0) {
-      setIsDraggingOver(false);
-    }
-  }, [fileRejections]);
+  const { getRootProps, getInputProps, fileRejections, isDragActive } =
+    useDropzone({
+      onDrop,
+      accept: 'image/jpeg,image/png',
+    });
 
   return (
     <>
@@ -79,16 +70,16 @@ export const CoverImage = ({ story, setStoryFile }: CoverImageProps) => {
             variant="ghostMuted"
             css={{
               gap: '$1',
-              flexGrow: draggingOver ? 1 : 0.0001,
-              outline: draggingOver ? '2px dashed $colors$gray7' : 'none',
+              flexGrow: isDragActive ? 1 : 0.0001,
+              outline: isDragActive ? '2px dashed $colors$gray7' : 'none',
               outlineOffset: '2px',
               transition: 'flex-grow .3s ease',
             }}
             type="submit"
           >
-            {!draggingOver && <CameraIcon />}
-            {draggingOver ? `Drop your cover image here` : `Add cover image`}
-            {draggingOver && <HandIcon />}
+            {!isDragActive && <CameraIcon />}
+            {isDragActive ? `Drop your cover image here` : `Add cover image`}
+            {isDragActive && <HandIcon />}
           </Button>
         </Box>
       ) : (
