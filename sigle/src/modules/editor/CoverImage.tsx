@@ -1,11 +1,16 @@
-import { useCallback, useState } from 'react';
-import { CameraIcon, TrashIcon } from '@radix-ui/react-icons';
+import { useCallback, useEffect, useState } from 'react';
+import { CameraIcon, HandIcon, TrashIcon } from '@radix-ui/react-icons';
 import { useDropzone } from 'react-dropzone';
 import { styled } from '../../stitches.config';
-import { Box, Button, IconButton } from '../../ui';
+import { Box, Button, Flex, IconButton } from '../../ui';
 import { resizeImage } from '../../utils/image';
 import { Story } from '../../types';
 import { storage } from '../../utils/blockstack';
+import { ErrorMessage } from '../../ui/ErrorMessage';
+
+const StyledInput = styled('input', {
+  height: '100%',
+});
 
 const StyledImage = styled('img', {
   variants: {
@@ -24,6 +29,7 @@ interface CoverImageProps {
 
 export const CoverImage = ({ story, setStoryFile }: CoverImageProps) => {
   const [loadingSave, setLoadingSave] = useState(false);
+  const [draggingOver, setIsDraggingOver] = useState(false);
 
   const handleRemoveCoverImage = () => {
     setStoryFile({ ...story, coverImage: undefined });
@@ -49,28 +55,49 @@ export const CoverImage = ({ story, setStoryFile }: CoverImageProps) => {
         contentType: blob.type,
       });
 
+      setIsDraggingOver(false);
       setLoadingSave(false);
       setStoryFile({ ...story, coverImage: coverImageUrl });
     },
     [story]
   );
-  const { getRootProps, getInputProps } = useDropzone({
+  const { getRootProps, getInputProps, fileRejections } = useDropzone({
     onDrop,
     accept: 'image/jpeg,image/png',
+    onDragEnter: () => setIsDraggingOver(true),
+    onDragLeave: () => setIsDraggingOver(false),
   });
+
+  useEffect(() => {
+    if (fileRejections.length > 0) {
+      setIsDraggingOver(false);
+    }
+  }, [fileRejections]);
 
   return (
     <>
       {!story.coverImage ? (
-        <Box css={{ mt: '$5' }} {...getRootProps()}>
-          <input {...getInputProps()} />
+        <Box css={{ py: '$5', mb: '-$5', display: 'flex' }} {...getRootProps()}>
+          <StyledInput
+            css={{
+              backgroundColor: '$gray7',
+            }}
+            {...getInputProps()}
+          />
           <Button
-            variant="ghost"
-            css={{ color: '$gray9', gap: '$1' }}
+            variant="ghostMuted"
+            css={{
+              gap: '$1',
+              flexGrow: draggingOver ? 1 : 0.0001,
+              outline: draggingOver ? '2px dashed $colors$gray7' : 'none',
+              outlineOffset: '2px',
+              transition: 'flex-grow .3s ease',
+            }}
             type="submit"
           >
-            <CameraIcon />
-            Add cover image
+            {!draggingOver && <CameraIcon />}
+            {draggingOver ? `Drop your cover image here` : `Add cover image`}
+            {draggingOver && <HandIcon />}
           </Button>
         </Box>
       ) : (
@@ -106,6 +133,14 @@ export const CoverImage = ({ story, setStoryFile }: CoverImageProps) => {
           </Box>
         </Box>
       )}
+      <Box css={{ mt: '$3' }}>
+        {fileRejections.length > 0 && (
+          <ErrorMessage>
+            Wrong file extension. Only Jpegs and PNGs are accepted for cover
+            images.
+          </ErrorMessage>
+        )}
+      </Box>
     </>
   );
 };
