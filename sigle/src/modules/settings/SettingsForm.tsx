@@ -22,7 +22,7 @@ import {
   FormHelper,
 } from '../../ui';
 import { darkTheme, styled } from '../../stitches.config';
-import { useQueryClient } from 'react-query';
+import { useQueryClient } from '@tanstack/react-query';
 import { generateAvatar } from '../../utils/boringAvatar';
 import { useAuth } from '../auth/AuthContext';
 import { useGetUserSettings } from '../../hooks/appData';
@@ -199,7 +199,7 @@ export const SettingsForm = ({ settings, username }: SettingsFormProps) => {
         ...newSettings,
       };
       await saveSettingsFile(mergedSettings);
-      queryClient.setQueriesData('user-settings', mergedSettings);
+      queryClient.setQueriesData(['user-settings'], mergedSettings);
 
       if (customLogo) {
         setCustomLogo(undefined);

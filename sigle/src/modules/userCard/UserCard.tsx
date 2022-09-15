@@ -1,7 +1,7 @@
 import { lookupProfile } from '@stacks/auth';
 import { NamesApi } from '@stacks/blockchain-api-client';
 import Link from 'next/link';
-import { useQuery } from 'react-query';
+import { useQuery } from '@tanstack/react-query';
 import { sigleConfig } from '../../config';
 import {
   useGetGaiaUserFollowing,
