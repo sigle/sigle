@@ -2,15 +2,11 @@ import { useCallback, useEffect, useState } from 'react';
 import { CameraIcon, HandIcon, TrashIcon } from '@radix-ui/react-icons';
 import { useDropzone } from 'react-dropzone';
 import { styled } from '../../stitches.config';
-import { Box, Button, Flex, IconButton } from '../../ui';
+import { Box, Button, IconButton } from '../../ui';
 import { resizeImage } from '../../utils/image';
 import { Story } from '../../types';
 import { storage } from '../../utils/blockstack';
 import { ErrorMessage } from '../../ui/ErrorMessage';
-
-const StyledInput = styled('input', {
-  height: '100%',
-});
 
 const StyledImage = styled('img', {
   variants: {
@@ -78,12 +74,7 @@ export const CoverImage = ({ story, setStoryFile }: CoverImageProps) => {
     <>
       {!story.coverImage ? (
         <Box css={{ py: '$5', mb: '-$5', display: 'flex' }} {...getRootProps()}>
-          <StyledInput
-            css={{
-              backgroundColor: '$gray7',
-            }}
-            {...getInputProps()}
-          />
+          <input {...getInputProps()} />
           <Button
             variant="ghostMuted"
             css={{
