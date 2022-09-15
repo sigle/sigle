@@ -61,7 +61,10 @@ export const EditorHeader = ({
     <Flex
       css={{
         position: 'sticky',
-        transform: scroll.direction === 'down' ? 'translateY(-100%)' : 'none',
+        transform:
+          scroll.direction === 'down' && scroll.prevOffset > 0
+            ? 'translateY(-100%)'
+            : 'none',
         transition: 'transform 0.5s, padding 0.2s',
         backgroundColor: '$gray1',
         top: window.scrollY < 40 ? 'auto' : 0,

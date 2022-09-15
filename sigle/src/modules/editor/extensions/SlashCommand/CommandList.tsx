@@ -6,7 +6,7 @@ import {
   useState,
 } from 'react';
 import { styled } from '../../../../stitches.config';
-import { Flex, Text } from '../../../../ui';
+import { Box, Flex, Typography } from '../../../../ui';
 import { SlashCommandsCommand } from './SlashCommands';
 
 // TODO stop using Text
@@ -15,6 +15,7 @@ const CommandsListItem = styled('li', {
   cursor: 'pointer',
   display: 'flex',
   alignItems: 'center',
+  justifyContent: 'space-between',
   width: '100%',
   py: '$1',
   px: '$3',
@@ -31,10 +32,11 @@ interface CommandListProps {
   // TODO change SlashCommandsCommand name
   items: SlashCommandsCommand[];
   command(item: SlashCommandsCommand): void;
+  currentNodeName?: string;
 }
 
 export const CommandList = forwardRef<CommandListRef, CommandListProps>(
-  ({ items, command }, ref) => {
+  ({ items, command, currentNodeName }, ref) => {
     const containerRef = useRef<HTMLDivElement>(null);
     const [selectedIndex, setSelectedIndex] = useState(0);
 
@@ -110,11 +112,25 @@ export const CommandList = forwardRef<CommandListRef, CommandListProps>(
             className={selectedIndex === index ? 'is-selected' : ''}
             onClick={() => selectItem(index)}
           >
-            <Icon width={35} height={35} />
-            <Flex direction="column" css={{ ml: '$2' }}>
-              <Text>{title}</Text>
-              <Text css={{ color: '$gray9', mt: '-8px' }}>{description}</Text>
+            <Flex align="center">
+              <Icon width={35} height={35} />
+              <Flex direction="column" css={{ ml: '$2' }}>
+                <Typography>{title}</Typography>
+                <Typography css={{ color: '$gray9', mt: '-8px' }}>
+                  {description}
+                </Typography>
+              </Flex>
             </Flex>
+            {currentNodeName === title && (
+              <Box
+                css={{
+                  backgroundColor: '$green11',
+                  width: 8,
+                  height: 8,
+                  br: '$round',
+                }}
+              />
+            )}
           </CommandsListItem>
         ))}
       </Flex>

@@ -6,6 +6,7 @@ export const NumberedListLight = ({ width = 35, height = 35 }: IconProps) => (
     height={height}
     fill="none"
     xmlns="http://www.w3.org/2000/svg"
+    viewBox="0 0 35 35"
   >
     <path
       d="M0 5a5 5 0 0 1 5-5h24a5 5 0 0 1 5 5v24a5 5 0 0 1-5 5H5a5 5 0 0 1-5-5V5Z"
