@@ -16,6 +16,12 @@ export class EnvironmentVariables {
    */
   @IsString()
   PORT: string;
+
+  /**
+   * Postgres
+   */
+  @IsString()
+  PG_DATABASE_URL: string;
 }
 
 export function validate(config: Record<string, unknown>) {
