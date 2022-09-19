@@ -1,3 +1,4 @@
+import { ValidationPipe } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { NestFactory } from '@nestjs/core';
 import {
@@ -24,6 +25,10 @@ async function bootstrap() {
     .build();
   const document = SwaggerModule.createDocument(app, swaggerConfig);
   SwaggerModule.setup('api/docs', app, document);
+
+  // Auto validate schemas in body etc..
+  // https://docs.nestjs.com/techniques/validation#auto-validation
+  app.useGlobalPipes(new ValidationPipe({ whitelist: true }));
 
   // Prisma interferes with NestJS enableShutdownHooks, we shutdown prisma gracefully to avoid side effects
   // https://docs.nestjs.com/recipes/prisma#issues-with-enableshutdownhooks

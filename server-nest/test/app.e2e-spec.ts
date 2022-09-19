@@ -1,5 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { INestApplication } from '@nestjs/common';
+import { INestApplication, ValidationPipe } from '@nestjs/common';
 import {
   FastifyAdapter,
   NestFastifyApplication,
@@ -18,6 +18,14 @@ describe('AppController (e2e)', () => {
     app = moduleFixture.createNestApplication<NestFastifyApplication>(
       new FastifyAdapter(),
     );
+
+    app.useGlobalPipes(
+      new ValidationPipe({
+        whitelist: true,
+        transform: true,
+      }),
+    );
+
     await app.init();
     await app.getHttpAdapter().getInstance().ready();
   });
@@ -30,6 +38,14 @@ describe('AppController (e2e)', () => {
   });
 
   describe('user', () => {
+    it('/api/users/explore (GET)', async () => {
+      const response = await request(app.getHttpServer())
+        .get('/api/users/explore?page=1')
+        .expect(200);
+      expect(response.body.nextPage).toBe(2);
+      expect(response.body.data.length).toBe(50);
+    });
+
     it('/api/users/:userAddress/followers (GET)', () => {
       return request(app.getHttpServer())
         .get('/api/users/SP3VCX5NFQ8VCHFS9M6N40ZJNVTRT4HZ62WFH5C4Q/followers')
