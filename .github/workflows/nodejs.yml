@@ -153,7 +153,7 @@ jobs:
         run: pnpm --filter=@sigle/server-tmp run test
 
       - name: Seed test DB
-        run: cd server-nest && pnpm prisma db seed
+        run: cd server-nest && pnpm prisma migrate deploy && pnpm prisma db seed
         env:
           PG_DATABASE_URL: 'postgres://postgresuser:postgrespassword@localhost:5432/postgresdb'
 
