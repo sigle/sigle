@@ -34,14 +34,17 @@ describe('AppController (e2e)', () => {
       return request(app.getHttpServer())
         .get('/api/users/SP3VCX5NFQ8VCHFS9M6N40ZJNVTRT4HZ62WFH5C4Q/followers')
         .expect(200)
-        .expect([]);
+        .expect([
+          'SP24GYRG3M7T0S6FZE9RVVP9PNNZQJQ614650G590',
+          'SP1Y6ZAD2ZZFKNWN58V8EA42R3VRWFJSGWFAD9C36',
+        ]);
     });
 
     it('/api/users/:userAddress/following (GET)', () => {
       return request(app.getHttpServer())
         .get('/api/users/SP3VCX5NFQ8VCHFS9M6N40ZJNVTRT4HZ62WFH5C4Q/following')
         .expect(200)
-        .expect([]);
+        .expect(['SP24GYRG3M7T0S6FZE9RVVP9PNNZQJQ614650G590']);
     });
   });
 });
