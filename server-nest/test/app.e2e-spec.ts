@@ -22,19 +22,11 @@ describe('AppController (e2e)', () => {
     app.useGlobalPipes(
       new ValidationPipe({
         whitelist: true,
-        transform: true,
       }),
     );
 
     await app.init();
     await app.getHttpAdapter().getInstance().ready();
-  });
-
-  it('/ (GET)', () => {
-    return request(app.getHttpServer())
-      .get('/')
-      .expect(200)
-      .expect('Hello World!');
   });
 
   describe('user', () => {
