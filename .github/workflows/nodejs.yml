@@ -109,6 +109,23 @@ jobs:
     strategy:
       matrix:
         node-version: [16]
+    services:
+      postgres:
+        # Docker Hub image
+        image: postgres:14
+        # Provide the password for postgres
+        env:
+          POSTGRES_USER: postgresuser
+          POSTGRES_PASSWORD: postgrespassword
+          POSTGRES_DB: postgresdb
+        # Set health checks to wait until postgres has started
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 5432:5432
 
     steps:
       - uses: actions/checkout@v2
@@ -134,6 +151,11 @@ jobs:
 
       - name: Run api tests
         run: pnpm --filter=@sigle/server-tmp run test
+
+      - name: Seed test DB
+        run: cd server-nest && pnpm prisma seed
+        env:
+          PG_DATABASE_URL: 'postgres://postgresuser:postgrespassword@localhost:5432/postgresdb'
 
       - name: Run api e2e tests
         run: pnpm --filter=@sigle/server-tmp run test:e2e
