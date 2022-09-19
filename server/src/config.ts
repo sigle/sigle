@@ -5,26 +5,14 @@
 import { cleanEnv, str, port, url } from 'envalid';
 
 export const config = cleanEnv(process.env, {
-  NODE_ENV: str({
-    choices: ['development', 'test', 'production'],
-    desc: 'Node.js environment',
-  }),
   /**
    * App config variables
    */
   APP_URL: url({ desc: 'Frontend application url.' }),
   /**
-   * Fastify
-   */
-  PORT: port({ desc: 'Port to run the server.' }),
-  /**
    * Redis
    */
   REDIS_DATABASE_URL: str({ desc: 'Redis database url.' }),
-  /**
-   * Postgres
-   */
-  PG_DATABASE_URL: str({ desc: 'Postgres database url.' }),
   /**
    * Plausible
    */

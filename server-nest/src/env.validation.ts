@@ -22,6 +22,15 @@ export class EnvironmentVariables {
    */
   @IsString()
   PG_DATABASE_URL: string;
+
+  /**
+   * User authentication
+   */
+  @IsString()
+  NEXTAUTH_URL: string;
+
+  @IsString()
+  NEXTAUTH_SECRET: string;
 }
 
 export function validate(config: Record<string, unknown>) {

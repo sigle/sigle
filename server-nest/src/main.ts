@@ -1,3 +1,4 @@
+import fastifyCookie from '@fastify/cookie';
 import { ValidationPipe } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { NestFactory } from '@nestjs/core';
@@ -15,7 +16,12 @@ async function bootstrap() {
     new FastifyAdapter(),
   );
   const configService = app.get(
-    ConfigService<{ PORT: string; NODE_ENV: string; APP_URL: string }>,
+    ConfigService<{
+      PORT: string;
+      NODE_ENV: string;
+      APP_URL: string;
+      NEXTAUTH_SECRET: string;
+    }>,
   );
 
   // Swagger documentation used to generate the type safe client
@@ -48,6 +54,11 @@ async function bootstrap() {
       }
       cb(new Error('Not allowed'), false);
     },
+  });
+
+  // Parse the cookies sent by the web app for authentication.
+  app.register(fastifyCookie, {
+    secret: configService.get('NEXTAUTH_SECRET'),
   });
 
   // Auto validate schemas in body etc..

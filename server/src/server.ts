@@ -23,26 +23,6 @@ export const buildFastifyServer = (
   const fastify = Fastify(opts);
 
   /**
-   * Cors is disabled for local env.
-   * Cors is enabled on prod and allowed only for the APP_URL.
-   * Allow the RENDER API to make calls, used to bypass CORS for the health check, in such case origin will be undefined.
-   */
-  fastify.register(FastifyCors, {
-    credentials: true,
-    origin: (origin, cb) => {
-      if (
-        config.NODE_ENV === 'development' ||
-        origin === config.APP_URL ||
-        origin === undefined
-      ) {
-        cb(null, true);
-        return;
-      }
-      cb(new Error('Not allowed'), false);
-    },
-  });
-
-  /**
    * Rate limit is disabled for local env.
    * Max 50 requests per minute.
    * We increase the limit when we are running tests.
