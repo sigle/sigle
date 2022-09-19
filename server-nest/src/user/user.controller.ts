@@ -10,10 +10,9 @@ import {
   ApiBearerAuth,
   ApiOkResponse,
   ApiOperation,
-  ApiProperty,
   ApiTags,
 } from '@nestjs/swagger';
-import { AuthGuard } from 'src/auth.guard';
+import { AuthGuard } from '../auth.guard';
 import { ExploreQuery } from './dto/exploreQuery.dto';
 import { ExploreResponse } from './dto/exploreResponse.dto';
 import { ExploreUser } from './dto/exploreUser.dto';
