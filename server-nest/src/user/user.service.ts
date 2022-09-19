@@ -26,6 +26,28 @@ export class UserService {
     return { data: users, nextPage };
   }
 
+  async getUserMe({ stacksAddress }: { stacksAddress: string }) {
+    const userSelectFields = {
+      id: true,
+      stacksAddress: true,
+    };
+    let loggedInUser = await this.prisma.user.findUnique({
+      where: { stacksAddress },
+      select: userSelectFields,
+    });
+
+    if (!loggedInUser) {
+      loggedInUser = await this.prisma.user.create({
+        data: {
+          stacksAddress,
+        },
+        select: userSelectFields,
+      });
+    }
+
+    return loggedInUser;
+  }
+
   async getUserFollowers({ userAddress }: { userAddress: string }) {
     const followers = await this.prisma.follows.findMany({
       where: {

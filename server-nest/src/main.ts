@@ -10,6 +10,11 @@ import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { AppModule } from './app.module';
 import { PrismaService } from './prisma.service';
 
+// next-auth workaround as node.js does not have the global Headers
+// https://github.com/nextauthjs/next-auth/issues/4988
+// @ts-ignore
+globalThis.Headers = class Headers {};
+
 async function bootstrap() {
   const app = await NestFactory.create<NestFastifyApplication>(
     AppModule,
@@ -57,7 +62,7 @@ async function bootstrap() {
   });
 
   // Parse the cookies sent by the web app for authentication.
-  app.register(fastifyCookie, {
+  app.register(fastifyCookie as any, {
     secret: configService.get('NEXTAUTH_SECRET'),
   });
 

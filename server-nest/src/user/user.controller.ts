@@ -1,10 +1,19 @@
-import { Controller, Get, Param, Query } from '@nestjs/common';
 import {
+  Controller,
+  Get,
+  Param,
+  Query,
+  Request,
+  UseGuards,
+} from '@nestjs/common';
+import {
+  ApiBearerAuth,
   ApiOkResponse,
   ApiOperation,
   ApiProperty,
   ApiTags,
 } from '@nestjs/swagger';
+import { AuthGuard } from 'src/auth.guard';
 import { ExploreQuery } from './dto/exploreQuery.dto';
 import { ExploreResponse } from './dto/exploreResponse.dto';
 import { ExploreUser } from './dto/exploreUser.dto';
@@ -25,6 +34,19 @@ export class UserController {
   @Get('/api/users/explore')
   explore(@Query() query: ExploreQuery): Promise<ExploreResponse> {
     return this.userService.explore({ page: query.page });
+  }
+
+  @ApiOperation({
+    description: 'Return the current logged in user.',
+  })
+  @ApiBearerAuth()
+  @ApiOkResponse({
+    type: ExploreUser,
+  })
+  @UseGuards(AuthGuard)
+  @Get('/api/users/me')
+  getUserMe(@Request() req): Promise<ExploreUser> {
+    return this.userService.getUserMe({ stacksAddress: req.address });
   }
 
   @ApiOperation({

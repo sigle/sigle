@@ -122,6 +122,7 @@ importers:
       eslint-config-prettier: 8.5.0
       eslint-plugin-prettier: 4.2.1
       jest: 29.0.3
+      next-auth: 4.10.3
       prettier: 2.7.1
       prisma: 4.3.1
       reflect-metadata: 0.1.13
@@ -145,6 +146,7 @@ importers:
       '@prisma/client': 4.3.1_prisma@4.3.1
       class-transformer: 0.5.1
       class-validator: 0.13.2
+      next-auth: 4.10.3
       prisma: 4.3.1
       reflect-metadata: 0.1.13
       rimraf: 3.0.2
