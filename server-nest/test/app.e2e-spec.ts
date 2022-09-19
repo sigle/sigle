@@ -28,4 +28,20 @@ describe('AppController (e2e)', () => {
       .expect(200)
       .expect('Hello World!');
   });
+
+  describe('user', () => {
+    it('/api/users/:userAddress/followers (GET)', () => {
+      return request(app.getHttpServer())
+        .get('/api/users/SP3VCX5NFQ8VCHFS9M6N40ZJNVTRT4HZ62WFH5C4Q/followers')
+        .expect(200)
+        .expect([]);
+    });
+
+    it('/api/users/:userAddress/following (GET)', () => {
+      return request(app.getHttpServer())
+        .get('/api/users/SP3VCX5NFQ8VCHFS9M6N40ZJNVTRT4HZ62WFH5C4Q/following')
+        .expect(200)
+        .expect([]);
+    });
+  });
 });
