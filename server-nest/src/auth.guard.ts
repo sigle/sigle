@@ -1,7 +1,7 @@
 import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { getToken } from 'next-auth/jwt';
-import { EnvironmentVariables } from './env.validation';
+import { EnvironmentVariables } from './environment/environment.validation';
 
 /**
  * AuthGuard for the application. Require a valid next-auth JWT, the JWT is parsed and
