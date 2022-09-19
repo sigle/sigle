@@ -45,10 +45,10 @@
     "@nestjs/core": "9.0.11",
     "@nestjs/platform-fastify": "9.0.11",
     "@nestjs/swagger": "6.1.2",
-    "@prisma/client": "4.1.0",
+    "@prisma/client": "4.3.1",
     "class-transformer": "0.5.1",
     "class-validator": "0.13.2",
-    "prisma": "4.1.0",
+    "prisma": "4.3.1",
     "reflect-metadata": "0.1.13",
     "rimraf": "3.0.2",
     "rxjs": "7.5.6"
