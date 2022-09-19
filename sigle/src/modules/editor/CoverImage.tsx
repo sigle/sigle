@@ -1,11 +1,12 @@
 import { useCallback, useState } from 'react';
-import { CameraIcon, TrashIcon } from '@radix-ui/react-icons';
+import { CameraIcon, HandIcon, TrashIcon } from '@radix-ui/react-icons';
 import { useDropzone } from 'react-dropzone';
 import { styled } from '../../stitches.config';
 import { Box, Button, IconButton } from '../../ui';
 import { resizeImage } from '../../utils/image';
 import { Story } from '../../types';
 import { storage } from '../../utils/blockstack';
+import { ErrorMessage } from '../../ui/ErrorMessage';
 
 const StyledImage = styled('img', {
   variants: {
@@ -54,23 +55,31 @@ export const CoverImage = ({ story, setStoryFile }: CoverImageProps) => {
     },
     [story]
   );
-  const { getRootProps, getInputProps } = useDropzone({
-    onDrop,
-    accept: 'image/jpeg,image/png',
-  });
+  const { getRootProps, getInputProps, fileRejections, isDragActive } =
+    useDropzone({
+      onDrop,
+      accept: 'image/jpeg,image/png',
+    });
 
   return (
     <>
       {!story.coverImage ? (
-        <Box css={{ mt: '$5' }} {...getRootProps()}>
+        <Box css={{ py: '$5', mb: '-$5', display: 'flex' }} {...getRootProps()}>
           <input {...getInputProps()} />
           <Button
-            variant="ghost"
-            css={{ color: '$gray9', gap: '$1' }}
+            variant="ghostMuted"
+            css={{
+              gap: '$1',
+              flexGrow: isDragActive ? 1 : 0.0001,
+              outline: isDragActive ? '2px dashed $colors$gray7' : 'none',
+              outlineOffset: '2px',
+              transition: 'flex-grow .3s ease',
+            }}
             type="submit"
           >
-            <CameraIcon />
-            Add cover image
+            {!isDragActive && <CameraIcon />}
+            {isDragActive ? `Drop your cover image here` : `Add cover image`}
+            {isDragActive && <HandIcon />}
           </Button>
         </Box>
       ) : (
@@ -106,6 +115,14 @@ export const CoverImage = ({ story, setStoryFile }: CoverImageProps) => {
           </Box>
         </Box>
       )}
+      <Box css={{ mt: '$3' }}>
+        {fileRejections.length > 0 && (
+          <ErrorMessage>
+            Wrong file extension. Only Jpegs and PNGs are accepted for cover
+            images.
+          </ErrorMessage>
+        )}
+      </Box>
     </>
   );
 };
