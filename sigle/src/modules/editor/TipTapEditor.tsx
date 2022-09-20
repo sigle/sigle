@@ -180,7 +180,7 @@ export const TipTapEditor = forwardRef<
       // Extensions
       TipTapDropcursor,
       TipTapHistory,
-      TipTapPlaceholder,
+      TipTapPlaceholder(isMobile),
       // Custom extensions
       !isMobile
         ? SlashCommands.configure({
