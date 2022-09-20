@@ -3,7 +3,7 @@ import {
   UseMutationOptions,
   useQuery,
   UseQueryOptions,
-} from 'react-query';
+} from '@tanstack/react-query';
 import { SubscriptionService } from '../external/api';
 
 type GetApiSubscriptionsReturnType = Awaited<
@@ -13,7 +13,7 @@ export const useGetUserSubscription = (
   options: UseQueryOptions<GetApiSubscriptionsReturnType, Error> = {}
 ) =>
   useQuery<GetApiSubscriptionsReturnType, Error>(
-    'get-user-subscription',
+    ['get-user-subscription'],
     () => SubscriptionService.getApiSubscriptions(),
     options
   );

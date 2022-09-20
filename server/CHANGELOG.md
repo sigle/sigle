@@ -1,5 +1,26 @@
 # @sigle/server
 
+## 0.2.0
+
+### Minor Changes
+
+- 3892db5: Add `followersCount` and `followingCount` info to the user route.
+- e0b8b67: Save legacy users to the indexer.
+- f17096d: New GET `/api/users/explore` route returning a list of users using Sigle.
+- ca6b6a3: Add follows system to the api to index Gaia `app-data/following.json` file:
+
+  - POST `/api/users/me/following` route.
+  - DELETE `/api/users/me/following` route.
+  - GET `/api/users/:userAddress/following` route.
+  - GET `/api/users/:userAddress/followers` route.
+
+- 0ef5743: Setup swagger documentation accessible at `/api/documentation`.
+
+### Patch Changes
+
+- 074786f: Add `page` param to explore route.
+- 91e7a13: Create script to seed the local database.
+
 ## 0.1.0
 
 ### Minor Changes

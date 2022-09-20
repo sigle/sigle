@@ -102,37 +102,17 @@ export const AppHeader = () => {
 
   return (
     <Header>
-      <Flex
-        css={{ width: '100%', '@md': { width: 'auto' } }}
-        justify="between"
-        gap="10"
-        as="nav"
-        align="center"
-      >
-        <Link href="/[username]" as={`/`} passHref>
-          <Flex as="a" css={{ '@lg': { display: 'none' } }}>
-            <Image
-              width={93}
-              height={34}
-              objectFit="cover"
-              src={src}
-              alt="logo"
-            />
-          </Flex>
-        </Link>
-
-        <Link href="/" passHref>
-          <Box as="a" css={{ display: 'none', '@lg': { display: 'flex' } }}>
-            <Image
-              width={93}
-              height={34}
-              objectFit="cover"
-              src={src}
-              alt="logo"
-            />
-          </Box>
-        </Link>
-      </Flex>
+      <Link href="/" passHref>
+        <Box as="a">
+          <Image
+            width={93}
+            height={34}
+            objectFit="cover"
+            src={src}
+            alt="logo"
+          />
+        </Box>
+      </Link>
 
       <Flex gap="2">
         <Flex

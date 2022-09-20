@@ -1,10 +1,11 @@
 import 'highlight.js/styles/night-owl.css';
-import { forwardRef, useImperativeHandle, useState } from 'react';
+import { forwardRef, useEffect, useImperativeHandle, useState } from 'react';
 import {
   useEditor,
   EditorContent,
   ReactNodeViewRenderer,
   Editor,
+  Extensions,
 } from '@tiptap/react';
 import TipTapBlockquote from '@tiptap/extension-blockquote';
 import TipTapBold from '@tiptap/extension-bold';
@@ -41,6 +42,7 @@ import { clarity } from './utils/clarity-syntax';
 import { KeyboardIcon } from '@radix-ui/react-icons';
 import { useTheme } from 'next-themes';
 import { TipTapImage } from './extensions/Image';
+import { Toolbar } from './EditorToolbar/EditorToolbar';
 
 const fadeInAnimation = keyframes({
   '0%': { opacity: '0' },
@@ -107,12 +109,17 @@ export const TipTapEditor = forwardRef<
 >(({ story, editable = true }, ref) => {
   const [showShortcutsDialog, setShowShortcutsDialog] = useState(false);
   const { resolvedTheme } = useTheme();
+  const [width, setWidth] = useState(
+    typeof window !== 'undefined' ? window.innerWidth : 1000
+  );
   // TODO is story really needed? Could it be just the content prop?
   globalStylesCustomEditor();
 
   const handleCancelShortcuts = () => {
     setShowShortcutsDialog(false);
   };
+
+  const isMobile = width < 768;
 
   const editor = useEditor({
     editable,
@@ -157,10 +164,12 @@ export const TipTapEditor = forwardRef<
       TipTapHistory,
       TipTapPlaceholder,
       // Custom extensions
-      SlashCommands.configure({
-        commands: slashCommands({ storyId: story.id }),
-      }),
-    ],
+      !isMobile
+        ? SlashCommands.configure({
+            commands: slashCommands({ storyId: story.id }),
+          })
+        : undefined,
+    ] as Extensions,
     content: story.contentVersion === '2' ? story.content : '',
   });
 
@@ -174,43 +183,62 @@ export const TipTapEditor = forwardRef<
     [editor]
   );
 
+  useEffect(() => {
+    window.addEventListener('resize', () => setWidth(window.innerWidth));
+    return () => {
+      window.removeEventListener('resize', () => setWidth(window.innerWidth));
+    };
+  }, []);
+
   return (
     <>
-      {editor && <BubbleMenu editor={editor} />}
-      {editor && <FloatingMenu editor={editor} />}
+      {editor && !isMobile && <BubbleMenu editor={editor} />}
+      {editor && !isMobile && <FloatingMenu editor={editor} />}
 
       <StyledEditorContent editor={editor} />
-      <Container
-        css={{
-          display: 'flex',
-          alignItems: 'center',
-          gap: '$3',
-          position: 'fixed',
-          bottom: 0,
-          right: 0,
-          left: 0,
-          zIndex: 0,
-          justifyContent: 'end',
-        }}
-      >
-        {editable && (
-          <>
-            <Typography size="subheading">
-              {editor?.storage.characterCount.words()} words
-            </Typography>
-            <IconButton
-              onClick={() => setShowShortcutsDialog(true)}
-              aria-label="Open keyboard shortcuts and hints"
+
+      {editable && (
+        <>
+          {isMobile ? (
+            <Toolbar editor={editor} story={story} />
+          ) : (
+            <Container
+              css={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '$3',
+                position: 'fixed',
+                bottom: 0,
+                right: 0,
+                left: 0,
+                zIndex: 0,
+                justifyContent: 'end',
+                pointerEvents: 'none',
+              }}
             >
-              <KeyboardIcon />
-            </IconButton>
-          </>
-        )}
-        <ShortcutsDialog
-          open={showShortcutsDialog}
-          onOpenChange={handleCancelShortcuts}
-        />
-      </Container>
+              <Typography
+                css={{ m: 0, whiteSpace: 'nowrap' }}
+                size="subheading"
+              >
+                {editor?.storage.characterCount.words()} words
+              </Typography>
+              <IconButton
+                css={{
+                  pointerEvents: 'auto',
+                }}
+                onClick={() => setShowShortcutsDialog(true)}
+                aria-label="Open keyboard shortcuts and hints"
+              >
+                <KeyboardIcon />
+              </IconButton>
+              <ShortcutsDialog
+                open={showShortcutsDialog}
+                onOpenChange={handleCancelShortcuts}
+              />
+            </Container>
+          )}
+        </>
+      )}
     </>
   );
 });

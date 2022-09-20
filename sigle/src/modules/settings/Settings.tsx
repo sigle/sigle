@@ -1,6 +1,6 @@
 import React from 'react';
 import { toast } from 'react-toastify';
-import { useQuery } from 'react-query';
+import { useQuery } from '@tanstack/react-query';
 import * as Sentry from '@sentry/nextjs';
 import { useAuth } from '../auth/AuthContext';
 import { getSettingsFile } from '../../utils';
@@ -12,7 +12,7 @@ export const Settings = () => {
   const { user } = useAuth();
 
   const { data: settingsFile } = useQuery(
-    'user-settings',
+    ['user-settings'],
     () => getSettingsFile(),
     {
       cacheTime: 0,

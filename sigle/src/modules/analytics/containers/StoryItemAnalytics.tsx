@@ -1,5 +1,5 @@
 import { useRouter } from 'next/router';
-import { useQuery } from 'react-query';
+import { useQuery } from '@tanstack/react-query';
 import { toast } from 'react-toastify';
 import { SubsetStory } from '../../../types';
 import { getStoriesFile } from '../../../utils';

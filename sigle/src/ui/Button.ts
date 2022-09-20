@@ -6,6 +6,7 @@ export const Button = styled('button', {
   alignItems: 'center',
   fontSize: '$2',
   lineHeight: '20.4px',
+  whiteSpace: 'nowrap',
 
   '&:disabled': {
     opacity: 0.5,
@@ -59,6 +60,10 @@ export const Button = styled('button', {
         boxShadow: 'none',
       },
       subtle: {},
+      ghostMuted: {
+        backgroundColor: 'transparent',
+        boxShadow: 'none',
+      },
     },
   },
   compoundVariants: [
@@ -73,6 +78,22 @@ export const Button = styled('button', {
         },
         '&:active': {
           backgroundColor: '$gray5',
+        },
+      },
+    },
+    {
+      color: 'gray',
+      variant: 'ghostMuted',
+      css: {
+        backgroundColor: 'transparent',
+        color: '$gray9',
+        '&:hover': {
+          backgroundColor: '$gray4',
+          color: '$gray11',
+        },
+        '&:active': {
+          backgroundColor: '$gray5',
+          color: '$gray11',
         },
       },
     },
