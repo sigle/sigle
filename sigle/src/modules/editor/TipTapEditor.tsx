@@ -236,7 +236,7 @@ export const TipTapEditor = forwardRef<
             >
               <Typography
                 css={{ m: 0, whiteSpace: 'nowrap' }}
-                size="subheading"
+                size="subparagraph"
               >
                 {editor?.storage.characterCount.words()} words
               </Typography>
