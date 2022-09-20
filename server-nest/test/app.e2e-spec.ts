@@ -14,7 +14,7 @@ import fastifyCookie from '@fastify/cookie';
 globalThis.Headers = class Headers {};
 
 describe('AppController (e2e)', () => {
-  let app: INestApplication;
+  let app: NestFastifyApplication;
 
   beforeEach(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
@@ -38,42 +38,59 @@ describe('AppController (e2e)', () => {
     await app.getHttpAdapter().getInstance().ready();
   });
 
+  afterAll(async () => {
+    await app.close();
+  });
+
   describe('user', () => {
     it('/api/users/explore (GET)', async () => {
-      const response = await request(app.getHttpServer())
-        .get('/api/users/explore?page=1')
-        .expect(200);
-      expect(response.body.nextPage).toBe(2);
-      expect(response.body.data.length).toBe(50);
+      const result = await app.inject({
+        method: 'GET',
+        url: '/api/users/explore?page=1',
+      });
+      expect(result.statusCode).toBe(200);
+      const payload = JSON.parse(result.payload);
+      expect(payload.nextPage).toBe(2);
+      expect(payload.data.length).toBe(50);
     });
 
     it('/api/users/me (GET)', async () => {
       const stacksAddress = 'SP3VCX5NFQ8VCHFS9M6N40ZJNVTRT4HZ62WFH5C4Q';
-      const response = await request(app.getHttpServer())
-        .get('/api/users/me')
-        .set('Cookie', `next-auth.session-token=${stacksAddress}`)
-        .expect(200);
-      expect(response.body).toEqual({
+      const result = await app.inject({
+        method: 'GET',
+        url: '/api/users/me',
+        cookies: {
+          'next-auth.session-token': stacksAddress,
+        },
+      });
+      expect(result.statusCode).toBe(200);
+      expect(JSON.parse(result.payload)).toEqual({
         id: expect.any(String),
         stacksAddress,
       });
     });
 
-    it('/api/users/:userAddress/followers (GET)', () => {
-      return request(app.getHttpServer())
-        .get('/api/users/SP3VCX5NFQ8VCHFS9M6N40ZJNVTRT4HZ62WFH5C4Q/followers')
-        .expect(200)
-        .expect([
-          'SP24GYRG3M7T0S6FZE9RVVP9PNNZQJQ614650G590',
-          'SP1Y6ZAD2ZZFKNWN58V8EA42R3VRWFJSGWFAD9C36',
-        ]);
+    it('/api/users/:userAddress/followers (GET)', async () => {
+      const result = await app.inject({
+        method: 'GET',
+        url: '/api/users/SP3VCX5NFQ8VCHFS9M6N40ZJNVTRT4HZ62WFH5C4Q/followers',
+      });
+      expect(result.statusCode).toBe(200);
+      expect(JSON.parse(result.payload)).toEqual([
+        'SP24GYRG3M7T0S6FZE9RVVP9PNNZQJQ614650G590',
+        'SP1Y6ZAD2ZZFKNWN58V8EA42R3VRWFJSGWFAD9C36',
+      ]);
     });
 
-    it('/api/users/:userAddress/following (GET)', () => {
-      return request(app.getHttpServer())
-        .get('/api/users/SP3VCX5NFQ8VCHFS9M6N40ZJNVTRT4HZ62WFH5C4Q/following')
-        .expect(200)
-        .expect(['SP24GYRG3M7T0S6FZE9RVVP9PNNZQJQ614650G590']);
+    it('/api/users/:userAddress/following (GET)', async () => {
+      const result = await app.inject({
+        method: 'GET',
+        url: '/api/users/SP3VCX5NFQ8VCHFS9M6N40ZJNVTRT4HZ62WFH5C4Q/following',
+      });
+      expect(result.statusCode).toBe(200);
+      expect(JSON.parse(result.payload)).toEqual([
+        'SP24GYRG3M7T0S6FZE9RVVP9PNNZQJQ614650G590',
+      ]);
     });
   });
 });
