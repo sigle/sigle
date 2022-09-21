@@ -13,10 +13,12 @@ import { PrismaService } from './prisma.service';
 
 // next-auth workaround as node.js does not have the global Headers
 // https://github.com/nextauthjs/next-auth/issues/4988
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 globalThis.Headers = Headers;
 
 // micro-stacks require a global fetch function
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 globalThis.fetch = fetch;
 

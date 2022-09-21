@@ -9,6 +9,7 @@ import { fetch } from 'undici';
 import { AppModule } from '../../src/app.module';
 
 // micro-stacks require a global fetch function
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 globalThis.fetch = fetch;
 
@@ -24,6 +25,7 @@ describe('SubscriptionController (e2e)', () => {
       new FastifyAdapter(),
     );
 
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore - types are off
     app.register(fastifyCookie);
 

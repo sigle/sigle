@@ -9,6 +9,7 @@ import { AppModule } from '../../src/app.module';
 
 // next-auth workaround as node.js does not have the global Headers
 // https://github.com/nextauthjs/next-auth/issues/4988
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 globalThis.Headers = class Headers {};
 
@@ -24,6 +25,7 @@ describe('UserController (e2e)', () => {
       new FastifyAdapter(),
     );
 
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore - types are off
     app.register(fastifyCookie);
 

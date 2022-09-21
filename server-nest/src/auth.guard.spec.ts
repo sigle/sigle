@@ -35,6 +35,7 @@ describe('AuthGuard', () => {
   });
 
   it('should return false with invalid token', async () => {
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
     process.env.NODE_ENV = 'development';
     const context = {
@@ -54,6 +55,7 @@ describe('AuthGuard', () => {
   });
 
   it('should return true with valid token', async () => {
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
     process.env.NODE_ENV = 'development';
     const context = {
