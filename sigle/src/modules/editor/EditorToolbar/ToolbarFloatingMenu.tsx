@@ -59,7 +59,7 @@ export const MobileFloatingMenu = ({
       {editor && (
         <>
           <Button
-            // disabled={triggerDisabled}
+            disabled={triggerDisabled}
             onClick={() => setShowFloatingMenuDialog(true)}
             variant="subtle"
             size="md"
