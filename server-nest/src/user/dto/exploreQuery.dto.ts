@@ -1,10 +1,10 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
-import { IsNumber } from 'class-validator';
+import { IsInt } from 'class-validator';
 
 export class ExploreQuery {
   @ApiProperty()
-  @IsNumber()
+  @IsInt()
   @Type(() => Number)
   page: number;
 }

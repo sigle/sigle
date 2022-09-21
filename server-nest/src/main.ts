@@ -7,13 +7,18 @@ import {
   NestFastifyApplication,
 } from '@nestjs/platform-fastify';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import { fetch, Headers } from 'undici';
 import { AppModule } from './app.module';
 import { PrismaService } from './prisma.service';
 
 // next-auth workaround as node.js does not have the global Headers
 // https://github.com/nextauthjs/next-auth/issues/4988
 // @ts-ignore
-globalThis.Headers = class Headers {};
+globalThis.Headers = Headers;
+
+// micro-stacks require a global fetch function
+// @ts-ignore
+globalThis.fetch = fetch;
 
 async function bootstrap() {
   const app = await NestFactory.create<NestFastifyApplication>(

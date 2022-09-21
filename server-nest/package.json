@@ -49,11 +49,13 @@
     "@prisma/client": "4.3.1",
     "class-transformer": "0.5.1",
     "class-validator": "0.13.2",
+    "micro-stacks": "1.1.2",
     "next-auth": "4.10.3",
     "prisma": "4.3.1",
     "reflect-metadata": "0.1.13",
     "rimraf": "3.0.2",
-    "rxjs": "7.5.6"
+    "rxjs": "7.5.6",
+    "undici": "5.10.0"
   },
   "devDependencies": {
     "@nestjs/cli": "9.1.3",
