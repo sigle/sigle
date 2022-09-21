@@ -5,7 +5,12 @@ import {
   NestFastifyApplication,
 } from '@nestjs/platform-fastify';
 import fastifyCookie from '@fastify/cookie';
+import { fetch } from 'undici';
 import { AppModule } from '../../src/app.module';
+
+// micro-stacks require a global fetch function
+// @ts-ignore
+globalThis.fetch = fetch;
 
 describe('SubscriptionController (e2e)', () => {
   let app: NestFastifyApplication;
@@ -36,7 +41,7 @@ describe('SubscriptionController (e2e)', () => {
     await app.close();
   });
 
-  it('/api/subscriptions (GET) - return null ', async () => {
+  it('/api/subscriptions (GET) - return null', async () => {
     const stacksAddress = 'SP3VCX5NFQ8VCHFS9M6N40ZJNVTRT4HZ62WFH5C4Q';
     const result = await app.inject({
       method: 'GET',
@@ -49,8 +54,29 @@ describe('SubscriptionController (e2e)', () => {
     expect(JSON.parse(result.payload)).toEqual(null);
   });
 
-  it('/api/subscriptions (GET) - return subscription ', async () => {
+  it('/api/subscriptions/creatorPlus (POST) - create subscription', async () => {
     const stacksAddress = 'SP3VCX5NFQ8VCHFS9M6N40ZJNVTRT4HZ62WFH5C4Q';
+    const nftId = 2123;
+    const result = await app.inject({
+      method: 'POST',
+      url: '/api/subscriptions/creatorPlus',
+      cookies: {
+        'next-auth.session-token': stacksAddress,
+      },
+      payload: {
+        nftId,
+      },
+    });
+    expect(result.statusCode).toBe(200);
+    expect(JSON.parse(result.payload)).toEqual({
+      id: expect.any(String),
+      nftId,
+    });
+  });
+
+  it('/api/subscriptions (GET) - return subscription', async () => {
+    const stacksAddress = 'SP3VCX5NFQ8VCHFS9M6N40ZJNVTRT4HZ62WFH5C4Q';
+    const nftId = 2123;
     const result = await app.inject({
       method: 'GET',
       url: '/api/subscriptions',
@@ -61,7 +87,7 @@ describe('SubscriptionController (e2e)', () => {
     expect(result.statusCode).toBe(200);
     expect(JSON.parse(result.payload)).toEqual({
       id: expect.any(String),
-      nftId: 980,
+      nftId,
     });
   });
 });

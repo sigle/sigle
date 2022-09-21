@@ -41,7 +41,7 @@ describe('UserController (e2e)', () => {
     await app.close();
   });
 
-  it('/api/users/explore (GET)', async () => {
+  it('/api/users/explore (GET) -  get user explore list', async () => {
     const result = await app.inject({
       method: 'GET',
       url: '/api/users/explore?page=1',
@@ -52,7 +52,7 @@ describe('UserController (e2e)', () => {
     expect(payload.data.length).toBe(50);
   });
 
-  it('/api/users/me (GET)', async () => {
+  it('/api/users/me (GET) - get current logged in user', async () => {
     const stacksAddress = 'SP3VCX5NFQ8VCHFS9M6N40ZJNVTRT4HZ62WFH5C4Q';
     const result = await app.inject({
       method: 'GET',
@@ -68,7 +68,7 @@ describe('UserController (e2e)', () => {
     });
   });
 
-  it('/api/users/:userAddress/followers (GET)', async () => {
+  it('/api/users/:userAddress/followers (GET) - get followers list', async () => {
     const result = await app.inject({
       method: 'GET',
       url: '/api/users/SP3VCX5NFQ8VCHFS9M6N40ZJNVTRT4HZ62WFH5C4Q/followers',
@@ -80,7 +80,7 @@ describe('UserController (e2e)', () => {
     ]);
   });
 
-  it('/api/users/:userAddress/following (GET)', async () => {
+  it('/api/users/:userAddress/following (GET) - get following list', async () => {
     const result = await app.inject({
       method: 'GET',
       url: '/api/users/SP3VCX5NFQ8VCHFS9M6N40ZJNVTRT4HZ62WFH5C4Q/following',

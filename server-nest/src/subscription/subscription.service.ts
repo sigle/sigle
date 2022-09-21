@@ -73,6 +73,10 @@ export class SubscriptionService {
       });
     } else {
       activeSubscription = await this.prisma.subscription.create({
+        select: {
+          id: true,
+          nftId: true,
+        },
         data: {
           userId: user.id,
           status: 'ACTIVE',

@@ -2,6 +2,7 @@ import {
   Body,
   Controller,
   Get,
+  HttpCode,
   Post,
   Request,
   UseGuards,
@@ -52,6 +53,7 @@ export class SubscriptionController {
   })
   @UseGuards(AuthGuard)
   @Post('/api/subscriptions/creatorPlus')
+  @HttpCode(200)
   createSubscriptionCreatorPlus(
     @Request() req,
     @Body() createCatDto: CreateSubscriptionCreatorPlusDto,
