@@ -16,6 +16,7 @@ import { AuthGuard } from '../auth.guard';
 import { ExploreQuery } from './dto/exploreQuery.dto';
 import { ExploreResponse } from './dto/exploreResponse.dto';
 import { ExploreUser } from './dto/exploreUser.dto';
+import { UserProfileDto } from './dto/userProfile.dto';
 import { UserService } from './user.service';
 
 @ApiTags('user')
@@ -46,6 +47,20 @@ export class UserController {
   @Get('/api/users/me')
   getUserMe(@Request() req): Promise<ExploreUser> {
     return this.userService.getUserMe({ stacksAddress: req.address });
+  }
+
+  @ApiOperation({
+    description: 'Return a user for a given stacks address.',
+  })
+  @ApiOkResponse({
+    type: UserProfileDto,
+  })
+  @Get('/api/users/:userAddress')
+  getUser(
+    @Request() request,
+    @Param('userAddress') userAddress: string,
+  ): Promise<UserProfileDto> {
+    return this.userService.getUser({ request, userAddress });
   }
 
   @ApiOperation({

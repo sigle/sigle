@@ -70,6 +70,21 @@ describe('UserController (e2e)', () => {
     });
   });
 
+  it('/api/users/:userAddress (GET) - get any user', async () => {
+    const stacksAddress = 'SP3VCX5NFQ8VCHFS9M6N40ZJNVTRT4HZ62WFH5C4Q';
+    const result = await app.inject({
+      method: 'GET',
+      url: `/api/users/${stacksAddress}`,
+    });
+    expect(result.statusCode).toBe(200);
+    expect(JSON.parse(result.payload)).toEqual({
+      id: expect.any(String),
+      stacksAddress,
+      followersCount: 2,
+      followingCount: 1,
+    });
+  });
+
   it('/api/users/:userAddress/followers (GET) - get followers list', async () => {
     const result = await app.inject({
       method: 'GET',
