@@ -27,9 +27,6 @@ const TitleInput = styled('input', {
   fontSize: '36px',
   lineHeight: '46px',
   letterSpacing: '-0.3px',
-  '&::placeholder': {
-    color: '$gray9',
-  },
 });
 
 const EditorContainer = styled('div', {

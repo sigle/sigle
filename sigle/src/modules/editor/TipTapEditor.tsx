@@ -165,7 +165,7 @@ export const TipTapEditor = forwardRef<
         width: 2,
       }),
       TipTapHistory,
-      TipTapPlaceholder(isMobile),
+      TipTapPlaceholder,
       // Custom extensions
       !isMobile
         ? SlashCommands.configure({
@@ -221,7 +221,7 @@ export const TipTapEditor = forwardRef<
             >
               <Typography
                 css={{ m: 0, whiteSpace: 'nowrap' }}
-                size="subparagraph"
+                size="subheading"
               >
                 {editor?.storage.characterCount.words()} words
               </Typography>
