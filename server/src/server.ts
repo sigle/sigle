@@ -9,11 +9,6 @@ import { createAnalyticsHistoricalEndpoint } from './api/modules/analytics/histo
 import { createAnalyticsReferrersEndpoint } from './api/modules/analytics/referrers';
 import { config } from './config';
 import { redis } from './redis';
-import { fastifyAuthPlugin } from './api/plugins/auth';
-import { createSubscriptionCreatorPlusEndpoint } from './api/modules/subscriptions/creatorPlus';
-import { createGetSubscriptionEndpoint } from './api/modules/subscriptions/getSubscription';
-import { createGetUserMeEndpoint } from './api/modules/users/me';
-import { createGetUserByAddressEndpoint } from './api/modules/users/[userId]';
 import { createAddFollowEndpoint } from './api/modules/users/follows/addFollow';
 import { createDeleteFollowEndpoint } from './api/modules/users/follows/deleteFollow';
 
@@ -129,22 +124,10 @@ export const buildFastifyServer = (
    */
   fastify.after(() => {
     /**
-     * Users routes
-     */
-    createGetUserByAddressEndpoint(fastify);
-    createGetUserMeEndpoint(fastify);
-
-    /**
      * Users follows routes
      */
     createAddFollowEndpoint(fastify);
     createDeleteFollowEndpoint(fastify);
-
-    /**
-     * Subscriptions routes
-     */
-    createSubscriptionCreatorPlusEndpoint(fastify);
-    createGetSubscriptionEndpoint(fastify);
 
     /**
      * Analytics routes

@@ -1,5 +1,6 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
+import { validateStacksAddress } from 'micro-stacks/crypto';
 import { getToken } from 'next-auth/jwt';
 import { EnvironmentVariables } from '../environment/environment.validation';
 import { PrismaService } from '../prisma.service';
@@ -91,7 +92,9 @@ export class UserService {
      * and add the legacy user to the database if it's the case.
      */
     if (!user) {
-      // TODO validate address format
+      if (!validateStacksAddress(userAddress)) {
+        throw new BadRequestException('Invalid address');
+      }
       const token = await getToken({
         req: request,
         secret: this.configService.get('NEXTAUTH_SECRET'),
