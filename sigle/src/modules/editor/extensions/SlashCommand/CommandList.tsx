@@ -116,7 +116,7 @@ export const CommandList = forwardRef<CommandListRef, CommandListProps>(
     return (
       <Flex
         direction="column"
-        css={{ maxHeight: 360, overflow: 'auto', position: 'relative', py: 10 }}
+        css={{ maxHeight: 332, overflow: 'auto', position: 'relative', py: 10 }}
         ref={containerRef}
       >
         <CommandsListLabel>Basics</CommandsListLabel>
