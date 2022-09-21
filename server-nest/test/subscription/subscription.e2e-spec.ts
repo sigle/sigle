@@ -90,4 +90,24 @@ describe('SubscriptionController (e2e)', () => {
       nftId,
     });
   });
+
+  it('/api/subscriptions/creatorPlus (POST) - update subscription', async () => {
+    const stacksAddress = 'SP3VCX5NFQ8VCHFS9M6N40ZJNVTRT4HZ62WFH5C4Q';
+    const nftId = 1149;
+    const result = await app.inject({
+      method: 'POST',
+      url: '/api/subscriptions/creatorPlus',
+      cookies: {
+        'next-auth.session-token': stacksAddress,
+      },
+      payload: {
+        nftId,
+      },
+    });
+    expect(result.statusCode).toBe(200);
+    expect(JSON.parse(result.payload)).toEqual({
+      id: expect.any(String),
+      nftId,
+    });
+  });
 });
