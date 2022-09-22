@@ -158,4 +158,30 @@ export class UserService {
 
     return followers.map((follower) => follower.followingAddress);
   }
+
+  async addFollow({
+    followerAddress,
+    followingAddress,
+    createdAt,
+  }: {
+    followerAddress: string;
+    followingAddress: string;
+    createdAt: number;
+  }) {
+    if (!validateStacksAddress(followingAddress)) {
+      throw new BadRequestException('Invalid Stacks address.');
+    }
+
+    if (followerAddress === followingAddress) {
+      throw new BadRequestException('Invalid following address.');
+    }
+
+    await this.prisma.follows.create({
+      data: {
+        followerAddress,
+        followingAddress,
+        createdAt: new Date(createdAt),
+      },
+    });
+  }
 }

@@ -1,7 +1,9 @@
 import {
+  Body,
   Controller,
   Get,
   Param,
+  Post,
   Query,
   Request,
   UseGuards,
@@ -13,6 +15,7 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 import { AuthGuard } from '../auth.guard';
+import { CreateUserFollowDto } from './dto/createUserFollow.dto';
 import { ExploreQuery } from './dto/exploreQuery.dto';
 import { ExploreResponse } from './dto/exploreResponse.dto';
 import { ExploreUser } from './dto/exploreUser.dto';
@@ -92,5 +95,21 @@ export class UserController {
     @Param('userAddress') userAddress: string,
   ): Promise<string[]> {
     return this.userService.getUserFollowing({ userAddress });
+  }
+
+  @ApiOperation({
+    description: 'Allows a user to follow another user.',
+  })
+  @ApiOkResponse({})
+  @Post('/api/users/me/following')
+  addFollow(
+    @Request() req,
+    @Body() createUserFollowDto: CreateUserFollowDto,
+  ): Promise<void> {
+    return this.userService.addFollow({
+      followerAddress: req.address,
+      followingAddress: createUserFollowDto.stacksAddress,
+      createdAt: createUserFollowDto.createdAt,
+    });
   }
 }
