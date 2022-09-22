@@ -12,6 +12,7 @@ import {
 import { SlashCommandsCommand } from './SlashCommands';
 import { generateRandomId } from '../../../../utils';
 import { resizeAndUploadImage } from '../../utils/image';
+import { TwitterLight } from '../../../../icons/TwitterLight';
 
 export const slashCommands = ({
   storyId,
@@ -199,9 +200,22 @@ export const slashCommands = ({
     },
   },
   {
-    icon: ImageLight,
+    icon: CodeLight,
+    title: 'Code',
+    description: 'Create a code snippet',
+    command: ({ editor, range }) => {
+      if (!range) {
+        editor.chain().focus().setCodeBlock().run();
+        return;
+      }
+
+      editor.chain().focus().deleteRange(range).setCodeBlock().run();
+    },
+  },
+  {
+    icon: TwitterLight,
     title: 'Twitter',
-    description: 'Upload from your computer',
+    description: '/Twitter [Tweet URL]',
     command: ({ editor, range }) => {
       if (!range) {
         editor.commands.setTweet({
@@ -219,19 +233,6 @@ export const slashCommands = ({
       editor.commands.setTweet({
         url: 'https://twitter.com/sigleapp/status/1562113780519141376',
       });
-    },
-  },
-  {
-    icon: CodeLight,
-    title: 'Code',
-    description: 'Create a code snippet',
-    command: ({ editor, range }) => {
-      if (!range) {
-        editor.chain().focus().setCodeBlock().run();
-        return;
-      }
-
-      editor.chain().focus().deleteRange(range).setCodeBlock().run();
     },
   },
 ];
