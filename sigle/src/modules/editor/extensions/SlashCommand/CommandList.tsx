@@ -157,26 +157,6 @@ export const CommandList = forwardRef<CommandListRef, CommandListProps>(
             )}
           </CommandsListItem>
         ))}
-        <CommandsListSeparator />
-        <CommandsListLabel>Embeds</CommandsListLabel>
-        <CommandsListItem>
-          <Flex
-            css={{
-              '& svg': {
-                color: '#00ACEE',
-              },
-            }}
-            align="center"
-          >
-            <TwitterLight width={28} height={28} />
-            <Flex direction="column" css={{ ml: '$2' }}>
-              <Typography size="subparagraph">Twitter</Typography>
-              <Typography size="subparagraph" css={{ color: '$gray9' }}>
-                /Twitter [Tweet URL]
-              </Typography>
-            </Flex>
-          </Flex>
-        </CommandsListItem>
       </Flex>
     );
   }
