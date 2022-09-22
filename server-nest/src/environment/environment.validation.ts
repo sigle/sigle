@@ -24,6 +24,12 @@ export class EnvironmentVariables {
   PG_DATABASE_URL: string;
 
   /**
+   * Redis
+   */
+  @IsString()
+  REDIS_DATABASE_URL: string;
+
+  /**
    * User authentication
    */
   @IsString()
