@@ -162,7 +162,7 @@ export const TipTapEditor = forwardRef<
         width: 2,
       }),
       TipTapHistory,
-      TipTapPlaceholder,
+      TipTapPlaceholder(isMobile),
       // Custom extensions
       !isMobile
         ? SlashCommands.configure({
