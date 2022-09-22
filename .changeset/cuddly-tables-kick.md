@@ -3,5 +3,6 @@
 ---
 
 Updates floating menu items font size.
-Adds sections with labels.
-Adds a Twitter embed item.
+Adds label for basic commands section.
+Adds plain text item to menu.
+Reorders menu items.
