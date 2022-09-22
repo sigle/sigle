@@ -9,8 +9,6 @@ import { createAnalyticsHistoricalEndpoint } from './api/modules/analytics/histo
 import { createAnalyticsReferrersEndpoint } from './api/modules/analytics/referrers';
 import { config } from './config';
 import { redis } from './redis';
-import { createAddFollowEndpoint } from './api/modules/users/follows/addFollow';
-import { createDeleteFollowEndpoint } from './api/modules/users/follows/deleteFollow';
 
 export const buildFastifyServer = (
   opts: FastifyServerOptions<Server, FastifyLoggerInstance> = {}
@@ -123,12 +121,6 @@ export const buildFastifyServer = (
    * All the protected routes must be placed there.
    */
   fastify.after(() => {
-    /**
-     * Users follows routes
-     */
-    createAddFollowEndpoint(fastify);
-    createDeleteFollowEndpoint(fastify);
-
     /**
      * Analytics routes
      */
