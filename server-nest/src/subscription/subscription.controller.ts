@@ -13,6 +13,7 @@ import {
   ApiOperation,
   ApiTags,
 } from '@nestjs/swagger';
+import { Throttle } from '@nestjs/throttler';
 import { AuthGuard } from '../auth.guard';
 import { SubscriptionDto } from './dto/subscription.dto';
 import { CreateSubscriptionCreatorPlusDto } from './dto/createSubscriptionCreatorPlus.dto';
@@ -41,7 +42,6 @@ export class SubscriptionController {
     });
   }
 
-  // TODO custom rate limit
   @ApiOperation({
     description:
       'Create or update a creator plus subscription on the current logged in user. A user can only have one active subscription at a time.',
@@ -51,6 +51,7 @@ export class SubscriptionController {
     description: 'Returns the newly created subscription object.',
     type: SubscriptionDto,
   })
+  @Throttle(5, 60)
   @UseGuards(AuthGuard)
   @Post('/api/subscriptions/creatorPlus')
   @HttpCode(200)
