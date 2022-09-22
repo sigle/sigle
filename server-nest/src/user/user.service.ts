@@ -184,4 +184,23 @@ export class UserService {
       },
     });
   }
+
+  async removeFollow({
+    followerAddress,
+    followingAddress,
+  }: {
+    followerAddress: string;
+    followingAddress: string;
+  }) {
+    if (!validateStacksAddress(followingAddress)) {
+      throw new BadRequestException('Invalid Stacks address.');
+    }
+
+    await this.prisma.follows.deleteMany({
+      where: {
+        followerAddress,
+        followingAddress,
+      },
+    });
+  }
 }

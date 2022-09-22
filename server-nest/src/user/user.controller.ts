@@ -1,7 +1,9 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
+  HttpCode,
   Param,
   Post,
   Query,
@@ -16,6 +18,7 @@ import {
 } from '@nestjs/swagger';
 import { AuthGuard } from '../auth.guard';
 import { CreateUserFollowDto } from './dto/createUserFollow.dto';
+import { DeleteUserFollowDto } from './dto/deleteUserFollow.dto';
 import { ExploreQuery } from './dto/exploreQuery.dto';
 import { ExploreResponse } from './dto/exploreResponse.dto';
 import { ExploreUser } from './dto/exploreUser.dto';
@@ -100,8 +103,11 @@ export class UserController {
   @ApiOperation({
     description: 'Allows a user to follow another user.',
   })
+  @ApiBearerAuth()
   @ApiOkResponse({})
+  @UseGuards(AuthGuard)
   @Post('/api/users/me/following')
+  @HttpCode(200)
   addFollow(
     @Request() req,
     @Body() createUserFollowDto: CreateUserFollowDto,
@@ -110,6 +116,23 @@ export class UserController {
       followerAddress: req.address,
       followingAddress: createUserFollowDto.stacksAddress,
       createdAt: createUserFollowDto.createdAt,
+    });
+  }
+
+  @ApiOperation({
+    description: 'Allows a user to unfollow another user.',
+  })
+  @ApiBearerAuth()
+  @ApiOkResponse({})
+  @UseGuards(AuthGuard)
+  @Delete('/api/users/me/following')
+  removeFollow(
+    @Request() req,
+    @Body() deleteUserFollowDto: DeleteUserFollowDto,
+  ): Promise<void> {
+    return this.userService.removeFollow({
+      followerAddress: req.address,
+      followingAddress: deleteUserFollowDto.stacksAddress,
     });
   }
 }
