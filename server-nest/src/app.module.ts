@@ -21,7 +21,7 @@ import { SubscriptionModule } from './subscription/subscription.module';
       inject: [ConfigService],
       useFactory: (config: ConfigService) => ({
         ttl: 60,
-        limit: 50,
+        limit: config.get('NODE_ENV') === 'test' ? 1000 : 50,
         storage: new ThrottlerStorageRedisService(
           new Redis(config.get('REDIS_DATABASE_URL')),
         ),
