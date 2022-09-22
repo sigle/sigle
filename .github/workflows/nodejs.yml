@@ -110,6 +110,16 @@ jobs:
       matrix:
         node-version: [16]
     services:
+      redis:
+        image: redis:6.2
+        # Set health checks to wait until redis has started
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 6379:6379
       postgres:
         # Docker Hub image
         image: postgres:14
