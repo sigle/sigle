@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { Editor } from '@tiptap/react';
-import { styled } from '../../../stitches.config';
+import { darkTheme, styled } from '../../../stitches.config';
 import { Story } from '../../../types';
 import { Box, Container, Flex, IconButton, Typography } from '../../../ui';
 import { ToolbarMenu } from './ToolbarMenu';
@@ -131,7 +131,9 @@ export const Toolbar = ({ editor, story }: ToolbarProps) => {
                 p: 0,
 
                 '& svg': {
-                  filter: 'invert(1)',
+                  [`.${darkTheme} &`]: {
+                    filter: 'invert(1)',
+                  },
                 },
               }}
               onClick={() => image.command({ editor: editor })}
