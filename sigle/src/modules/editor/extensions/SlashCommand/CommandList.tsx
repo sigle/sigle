@@ -5,17 +5,11 @@ import {
   useRef,
   useState,
 } from 'react';
-import { TwitterLight } from '../../../../icons/TwitterLight';
 import { darkTheme, styled } from '../../../../stitches.config';
 import { Box, Flex, Typography } from '../../../../ui';
 import { SlashCommandsCommand } from './SlashCommands';
 
 // TODO stop using Text
-
-const CommandsListSeparator = styled('div', {
-  mt: '$3',
-  borderBottom: '1px solid $colors$gray6',
-});
 
 const CommandsListLabel = styled('p', {
   py: '$2',
