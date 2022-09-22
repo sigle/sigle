@@ -9,6 +9,10 @@ import { storage } from '../../utils/blockstack';
 import { ErrorMessage } from '../../ui/ErrorMessage';
 
 const StyledImage = styled('img', {
+  maxWidth: '100vw',
+  '@md': {
+    maxWidth: '100%',
+  },
   variants: {
     loading: {
       true: {
