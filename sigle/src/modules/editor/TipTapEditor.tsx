@@ -165,13 +165,11 @@ export const TipTapEditor = forwardRef<
       TipTapHistory,
       TipTapPlaceholder,
       // Custom extensions
+      !isMobile ? TipTapTwitter : undefined,
       !isMobile
-        ? [
-            SlashCommands.configure({
-              commands: slashCommands({ storyId: story.id }),
-            }),
-            TipTapTwitter,
-          ]
+        ? SlashCommands.configure({
+            commands: slashCommands({ storyId: story.id }),
+          })
         : undefined,
     ] as Extensions,
     content: story.contentVersion === '2' ? story.content : '',
