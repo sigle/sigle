@@ -6,8 +6,6 @@ import { ThrottlerStorageRedisService } from 'nestjs-throttler-storage-redis';
 import { validate } from './environment/environment.validation';
 import { UserModule } from './user/user.module';
 import { SubscriptionModule } from './subscription/subscription.module';
-import { RedisService } from './redis/redis.service';
-import { RedisModule } from './redis/redis.module';
 
 @Module({
   imports: [
