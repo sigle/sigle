@@ -9,10 +9,7 @@ export const config = cleanEnv(process.env, {
    * App config variables
    */
   APP_URL: url({ desc: 'Frontend application url.' }),
-  /**
-   * Redis
-   */
-  REDIS_DATABASE_URL: str({ desc: 'Redis database url.' }),
+
   /**
    * Plausible
    */
