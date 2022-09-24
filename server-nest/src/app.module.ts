@@ -3,7 +3,6 @@ import { APP_GUARD } from '@nestjs/core';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
 import { ThrottlerStorageRedisService } from 'nestjs-throttler-storage-redis';
-import Redis from 'ioredis';
 import { validate } from './environment/environment.validation';
 import { UserModule } from './user/user.module';
 import { SubscriptionModule } from './subscription/subscription.module';
@@ -23,7 +22,7 @@ import { SubscriptionModule } from './subscription/subscription.module';
         ttl: 60,
         limit: config.get('NODE_ENV') === 'test' ? 1000 : 50,
         storage: new ThrottlerStorageRedisService(
-          new Redis(config.get('REDIS_DATABASE_URL')),
+          config.get('REDIS_DATABASE_URL'),
         ),
       }),
     }),
