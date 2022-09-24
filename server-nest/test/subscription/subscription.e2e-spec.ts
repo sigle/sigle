@@ -25,8 +25,6 @@ describe('SubscriptionController (e2e)', () => {
       new FastifyAdapter(),
     );
 
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-ignore - types are off
     app.register(fastifyCookie);
 
     app.useGlobalPipes(
