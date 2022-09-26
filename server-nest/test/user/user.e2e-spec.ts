@@ -43,68 +43,244 @@ describe('UserController (e2e)', () => {
     await app.close();
   });
 
-  it('/api/users/explore (GET) -  get user explore list', async () => {
-    const result = await app.inject({
-      method: 'GET',
-      url: '/api/users/explore?page=1',
+  describe('GET /api/users/explore', () => {
+    it('should return user list', async () => {
+      const result = await app.inject({
+        method: 'GET',
+        url: '/api/users/explore?page=1',
+      });
+      expect(result.statusCode).toBe(200);
+      const payload = JSON.parse(result.payload);
+      expect(payload.nextPage).toBe(2);
+      expect(payload.data.length).toBe(50);
     });
-    expect(result.statusCode).toBe(200);
-    const payload = JSON.parse(result.payload);
-    expect(payload.nextPage).toBe(2);
-    expect(payload.data.length).toBe(50);
-  });
 
-  it('/api/users/me (GET) - get current logged in user', async () => {
-    const stacksAddress = 'SP3VCX5NFQ8VCHFS9M6N40ZJNVTRT4HZ62WFH5C4Q';
-    const result = await app.inject({
-      method: 'GET',
-      url: '/api/users/me',
-      cookies: {
-        'next-auth.session-token': stacksAddress,
-      },
-    });
-    expect(result.statusCode).toBe(200);
-    expect(JSON.parse(result.payload)).toEqual({
-      id: expect.any(String),
-      stacksAddress,
+    it('should return empty list when end of pages', async () => {
+      const result = await app.inject({
+        method: 'GET',
+        url: '/api/users/explore?page=10',
+      });
+      expect(result.statusCode).toBe(200);
+      const payload = JSON.parse(result.payload);
+      expect(payload.nextPage).toBe(null);
+      expect(payload.data.length).toBe(0);
     });
   });
 
-  it('/api/users/:userAddress (GET) - get any user', async () => {
-    const stacksAddress = 'SP3VCX5NFQ8VCHFS9M6N40ZJNVTRT4HZ62WFH5C4Q';
-    const result = await app.inject({
-      method: 'GET',
-      url: `/api/users/${stacksAddress}`,
+  describe('GET /api/users/me', () => {
+    it('should allow only authenticated users', async () => {
+      const result = await app.inject({
+        method: 'GET',
+        url: '/api/users/me',
+      });
+      expect(result.statusCode).toBe(403);
     });
-    expect(result.statusCode).toBe(200);
-    expect(JSON.parse(result.payload)).toEqual({
-      id: expect.any(String),
-      stacksAddress,
-      followersCount: 2,
-      followingCount: 1,
+
+    it('should return current logged in user', async () => {
+      const stacksAddress = 'SP3VCX5NFQ8VCHFS9M6N40ZJNVTRT4HZ62WFH5C4Q';
+      const result = await app.inject({
+        method: 'GET',
+        url: '/api/users/me',
+        cookies: {
+          'next-auth.session-token': stacksAddress,
+        },
+      });
+      expect(result.statusCode).toBe(200);
+      expect(JSON.parse(result.payload)).toEqual({
+        id: expect.any(String),
+        stacksAddress,
+      });
     });
   });
 
-  it('/api/users/:userAddress/followers (GET) - get followers list', async () => {
-    const result = await app.inject({
-      method: 'GET',
-      url: '/api/users/SP3VCX5NFQ8VCHFS9M6N40ZJNVTRT4HZ62WFH5C4Q/followers',
+  describe('GET /api/users/:userAddress', () => {
+    it('should return null for not found user', async () => {
+      const stacksAddress = 'SP2QDMH88MEZ8FFAYHW4B0BTXJRTHX8XBD54FE7HJ';
+      const result = await app.inject({
+        method: 'GET',
+        url: `/api/users/${stacksAddress}`,
+      });
+      expect(result.statusCode).toBe(200);
+      expect(JSON.parse(result.payload)).toEqual(null);
     });
-    expect(result.statusCode).toBe(200);
-    expect(JSON.parse(result.payload)).toEqual([
-      'SP24GYRG3M7T0S6FZE9RVVP9PNNZQJQ614650G590',
-      'SP1Y6ZAD2ZZFKNWN58V8EA42R3VRWFJSGWFAD9C36',
-    ]);
+
+    it('should return any user', async () => {
+      const stacksAddress = 'SP3VCX5NFQ8VCHFS9M6N40ZJNVTRT4HZ62WFH5C4Q';
+      const result = await app.inject({
+        method: 'GET',
+        url: `/api/users/${stacksAddress}`,
+      });
+      expect(result.statusCode).toBe(200);
+      expect(JSON.parse(result.payload)).toEqual({
+        id: expect.any(String),
+        stacksAddress,
+        followersCount: 2,
+        followingCount: 1,
+      });
+    });
   });
 
-  it('/api/users/:userAddress/following (GET) - get following list', async () => {
-    const result = await app.inject({
-      method: 'GET',
-      url: '/api/users/SP3VCX5NFQ8VCHFS9M6N40ZJNVTRT4HZ62WFH5C4Q/following',
+  describe('GET /api/users/:userAddress/followers', () => {
+    it('should return user followers list', async () => {
+      const result = await app.inject({
+        method: 'GET',
+        url: '/api/users/SP3VCX5NFQ8VCHFS9M6N40ZJNVTRT4HZ62WFH5C4Q/followers',
+      });
+      expect(result.statusCode).toBe(200);
+      expect(JSON.parse(result.payload)).toEqual([
+        'SP24GYRG3M7T0S6FZE9RVVP9PNNZQJQ614650G590',
+        'SP1Y6ZAD2ZZFKNWN58V8EA42R3VRWFJSGWFAD9C36',
+      ]);
     });
-    expect(result.statusCode).toBe(200);
-    expect(JSON.parse(result.payload)).toEqual([
-      'SP24GYRG3M7T0S6FZE9RVVP9PNNZQJQ614650G590',
-    ]);
+  });
+
+  describe('GET /api/users/:userAddress/following', () => {
+    it('should return user following list', async () => {
+      const result = await app.inject({
+        method: 'GET',
+        url: '/api/users/SP3VCX5NFQ8VCHFS9M6N40ZJNVTRT4HZ62WFH5C4Q/following',
+      });
+      expect(result.statusCode).toBe(200);
+      expect(JSON.parse(result.payload)).toEqual([
+        'SP24GYRG3M7T0S6FZE9RVVP9PNNZQJQ614650G590',
+      ]);
+    });
+  });
+
+  describe('POST /api/users/me/following', () => {
+    it('should allow only authenticated users', async () => {
+      const result = await app.inject({
+        method: 'POST',
+        url: '/api/users/me/following',
+      });
+      expect(result.statusCode).toBe(403);
+    });
+
+    it('should throw on missing body', async () => {
+      const stacksAddress = 'SP3VCX5NFQ8VCHFS9M6N40ZJNVTRT4HZ62WFH5C4Q';
+      const result = await app.inject({
+        method: 'POST',
+        url: '/api/users/me/following',
+        cookies: {
+          'next-auth.session-token': stacksAddress,
+        },
+        payload: {},
+      });
+      expect(result.statusCode).toBe(400);
+      expect(JSON.parse(result.payload)).toEqual({
+        error: 'Bad Request',
+        message: [
+          'stacksAddress must be a string',
+          'createdAt must be an integer number',
+        ],
+        statusCode: 400,
+      });
+    });
+
+    it('should create a follow', async () => {
+      const stacksAddress = 'SP3VCX5NFQ8VCHFS9M6N40ZJNVTRT4HZ62WFH5C4Q';
+      const stacksAddressToFollow = 'SP1TY00PDWJVNVEX7H7KJGS2K2YXHTQMY8C0G1NVP';
+      let result = await app.inject({
+        method: 'POST',
+        url: '/api/users/me/following',
+        cookies: {
+          'next-auth.session-token': stacksAddress,
+        },
+        payload: {
+          stacksAddress: stacksAddressToFollow,
+          createdAt: Date.now(),
+        },
+      });
+      expect(result.statusCode).toBe(200);
+
+      result = await app.inject({
+        method: 'GET',
+        url: `/api/users/${stacksAddress}/following`,
+      });
+      expect(result.statusCode).toBe(200);
+      expect(JSON.parse(result.payload)).toEqual([
+        stacksAddressToFollow,
+        'SP24GYRG3M7T0S6FZE9RVVP9PNNZQJQ614650G590',
+      ]);
+
+      // Cleanup
+      result = await app.inject({
+        method: 'DELETE',
+        url: '/api/users/me/following',
+        cookies: {
+          'next-auth.session-token': stacksAddress,
+        },
+        payload: {
+          stacksAddress: stacksAddressToFollow,
+        },
+      });
+      expect(result.statusCode).toBe(200);
+    });
+  });
+
+  describe('DELETE /api/users/me/following', () => {
+    it('should allow only authenticated users', async () => {
+      const result = await app.inject({
+        method: 'DELETE',
+        url: '/api/users/me/following',
+      });
+      expect(result.statusCode).toBe(403);
+    });
+
+    it('should throw on missing body', async () => {
+      const stacksAddress = 'SP3VCX5NFQ8VCHFS9M6N40ZJNVTRT4HZ62WFH5C4Q';
+      const result = await app.inject({
+        method: 'DELETE',
+        url: '/api/users/me/following',
+        cookies: {
+          'next-auth.session-token': stacksAddress,
+        },
+        payload: {},
+      });
+      expect(result.statusCode).toBe(400);
+      expect(JSON.parse(result.payload)).toEqual({
+        error: 'Bad Request',
+        message: ['stacksAddress must be a string'],
+        statusCode: 400,
+      });
+    });
+
+    it('should delete a follow', async () => {
+      const stacksAddress = 'SP3VCX5NFQ8VCHFS9M6N40ZJNVTRT4HZ62WFH5C4Q';
+      const stacksAddressToFollow = 'SP1TY00PDWJVNVEX7H7KJGS2K2YXHTQMY8C0G1NVP';
+      let result = await app.inject({
+        method: 'POST',
+        url: '/api/users/me/following',
+        cookies: {
+          'next-auth.session-token': stacksAddress,
+        },
+        payload: {
+          stacksAddress: stacksAddressToFollow,
+          createdAt: Date.now(),
+        },
+      });
+      expect(result.statusCode).toBe(200);
+
+      result = await app.inject({
+        method: 'DELETE',
+        url: '/api/users/me/following',
+        cookies: {
+          'next-auth.session-token': stacksAddress,
+        },
+        payload: {
+          stacksAddress: stacksAddressToFollow,
+        },
+      });
+      expect(result.statusCode).toBe(200);
+
+      result = await app.inject({
+        method: 'GET',
+        url: `/api/users/${stacksAddress}/following`,
+      });
+      expect(result.statusCode).toBe(200);
+      expect(JSON.parse(result.payload)).toEqual([
+        'SP24GYRG3M7T0S6FZE9RVVP9PNNZQJQ614650G590',
+      ]);
+    });
   });
 });
