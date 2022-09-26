@@ -7,10 +7,14 @@ import { CommandList } from '../extensions/SlashCommand/CommandList';
 import { activeNode } from '../ActiveNode';
 import { slashCommands } from '../extensions/SlashCommand/commands';
 
+const StyledDialogTitle = styled(DialogTitle, {
+  ml: '-$1',
+});
+
 const StyledDialogContent = styled(DialogContent, {
   display: 'flex',
   flexDirection: 'column',
-  gap: '$6',
+  gap: '$2',
   top: 'auto',
   p: '$5',
   pb: 0,
@@ -84,8 +88,15 @@ export const MobileFloatingMenu = ({
             onOpenChange={() => setShowFloatingMenuDialog(false)}
           >
             <StyledDialogContent closeButton={false}>
-              <DialogTitle>Paragraph Style</DialogTitle>
+              <StyledDialogTitle>Paragraph Style</StyledDialogTitle>
               <Box
+                css={{
+                  mx: '-$5',
+                  '& svg': {
+                    width: 20,
+                    height: 20,
+                  },
+                }}
                 // uses event bubbling to close dialog when selecting an item as would be expected
                 onClick={() => setShowFloatingMenuDialog(false)}
               >

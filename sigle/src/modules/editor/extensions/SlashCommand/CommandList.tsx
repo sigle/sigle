@@ -5,11 +5,20 @@ import {
   useRef,
   useState,
 } from 'react';
-import { styled } from '../../../../stitches.config';
+import { darkTheme, styled } from '../../../../stitches.config';
 import { Box, Flex, Typography } from '../../../../ui';
 import { SlashCommandsCommand } from './SlashCommands';
 
 // TODO stop using Text
+
+const CommandsListLabel = styled('p', {
+  py: '$2',
+  px: '$4',
+  color: '$gray9',
+  fontSize: '13px',
+  lineHeight: '18px',
+  letterSpacing: '0.2px',
+});
 
 const CommandsListItem = styled('li', {
   cursor: 'pointer',
@@ -17,8 +26,8 @@ const CommandsListItem = styled('li', {
   alignItems: 'center',
   justifyContent: 'space-between',
   width: '100%',
-  py: '$1',
-  px: '$3',
+  py: '$2',
+  px: '$4',
   '&.is-selected,&:hover': {
     backgroundColor: '$gray3',
   },
@@ -100,11 +109,11 @@ export const CommandList = forwardRef<CommandListRef, CommandListProps>(
 
     return (
       <Flex
-        gap="2"
         direction="column"
-        css={{ maxHeight: 360, overflow: 'auto' }}
+        css={{ maxHeight: 332, overflow: 'auto', position: 'relative', py: 10 }}
         ref={containerRef}
       >
+        <CommandsListLabel>Basics</CommandsListLabel>
         {items.map(({ title, description, icon: Icon }, index) => (
           <CommandsListItem
             key={index}
@@ -112,11 +121,20 @@ export const CommandList = forwardRef<CommandListRef, CommandListProps>(
             className={selectedIndex === index ? 'is-selected' : ''}
             onClick={() => selectItem(index)}
           >
-            <Flex align="center">
-              <Icon width={35} height={35} />
+            <Flex
+              css={{
+                [`.${darkTheme} &`]: {
+                  '& svg': {
+                    filter: 'invert(1)',
+                  },
+                },
+              }}
+              align="center"
+            >
+              <Icon width={28} height={28} />
               <Flex direction="column" css={{ ml: '$2' }}>
-                <Typography>{title}</Typography>
-                <Typography css={{ color: '$gray9', mt: '-8px' }}>
+                <Typography size="subparagraph">{title}</Typography>
+                <Typography size="subparagraph" css={{ color: '$gray9' }}>
                   {description}
                 </Typography>
               </Flex>

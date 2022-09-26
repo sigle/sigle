@@ -80,7 +80,7 @@ export const Typography = styled('p', {
         },
       },
       subparagraph: {
-        fontSize: '14px',
+        fontSize: '13px',
         lineHeight: '18px',
         letterSpacing: '0.2px',
       },

@@ -78,13 +78,15 @@ const StyledEditorContent = styled(EditorContent, {
 
 // Tippyjs theme used by the slash command menu
 const globalStylesCustomEditor = globalCss({
+  '.tippy-box': {
+    br: '$3',
+    backgroundColor: '$gray1',
+  },
   ".tippy-box[data-theme~='sigle-editor'] .tippy-content": {
     overflow: 'hidden',
     padding: 0,
     backgroundColor: '$gray1',
-    boxShadow:
-      '0px 8px 20px rgba(8, 8, 8, 0.09), 0px 10px 18px rgba(8, 8, 8, 0.06), 0px 5px 14px rgba(8, 8, 8, 0.05), 0px 3px 8px rgba(8, 8, 8, 0.05), 0px 1px 5px rgba(8, 8, 8, 0.04), 0px 1px 2px rgba(8, 8, 8, 0.03), 0px 0.2px 1px rgba(8, 8, 8, 0.02)',
-    br: '$1',
+    br: '$3',
     minWidth: '280px',
 
     [`.${darkTheme} &`]: {
