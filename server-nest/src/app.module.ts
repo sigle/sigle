@@ -1,7 +1,8 @@
-import { Module } from '@nestjs/common';
-import { APP_GUARD } from '@nestjs/core';
+import { HttpException, Module } from '@nestjs/common';
+import { APP_GUARD, APP_INTERCEPTOR } from '@nestjs/core';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
+import { SentryInterceptor, SentryModule } from '@ntegral/nestjs-sentry';
 import { ThrottlerStorageRedisService } from 'nestjs-throttler-storage-redis';
 import { validate } from './environment/environment.validation';
 import { UserModule } from './user/user.module';
@@ -14,6 +15,13 @@ import { SubscriptionModule } from './subscription/subscription.module';
       validate,
       cache: true,
       envFilePath: process.env.NODE_ENV === 'test' ? '.env.test' : '.env',
+    }),
+    SentryModule.forRootAsync({
+      imports: [ConfigModule],
+      inject: [ConfigService],
+      useFactory: (config: ConfigService) => ({
+        dsn: config.get('SENTRY_DSN'),
+      }),
     }),
     ThrottlerModule.forRootAsync({
       imports: [ConfigModule],
@@ -34,6 +42,22 @@ import { SubscriptionModule } from './subscription/subscription.module';
     {
       provide: APP_GUARD,
       useClass: ThrottlerGuard,
+    },
+    {
+      // Report the HttpException to sentry
+      // We filter to only send the one that are 500
+      provide: APP_INTERCEPTOR,
+      useFactory: () =>
+        new SentryInterceptor({
+          user: ['stacksAddress'],
+          filters: [
+            {
+              type: HttpException,
+              filter: (exception: HttpException) =>
+                exception.getStatus() === 500,
+            },
+          ],
+        }),
     },
   ],
 })

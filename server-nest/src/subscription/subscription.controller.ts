@@ -38,7 +38,7 @@ export class SubscriptionController {
   @Get('/api/subscriptions')
   getUserMe(@Request() req): Promise<SubscriptionDto> {
     return this.subscriptionService.getUserActiveSubscription({
-      stacksAddress: req.address,
+      stacksAddress: req.user.stacksAddress,
     });
   }
 
@@ -60,7 +60,7 @@ export class SubscriptionController {
     @Body() createCatDto: CreateSubscriptionCreatorPlusDto,
   ): Promise<SubscriptionDto> {
     return this.subscriptionService.createSubscriptionCreatorPlus({
-      stacksAddress: req.address,
+      stacksAddress: req.user.stacksAddress,
       nftId: createCatDto.nftId,
     });
   }

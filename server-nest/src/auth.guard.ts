@@ -22,7 +22,9 @@ export class AuthGuard implements CanActivate {
       this.configService.get('NODE_ENV') === 'test' &&
       request.cookies['next-auth.session-token']
     ) {
-      request.address = request.cookies['next-auth.session-token'];
+      request.user = {
+        stacksAddress: request.cookies['next-auth.session-token'],
+      };
       return true;
     }
 
@@ -36,7 +38,9 @@ export class AuthGuard implements CanActivate {
     }
 
     // Inject the user address so it can be used in subsequent requests.
-    request.address = token.sub;
+    request.user = {
+      stacksAddress: token.sub,
+    };
 
     return true;
   }

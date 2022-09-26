@@ -30,6 +30,12 @@ export class EnvironmentVariables {
   REDIS_DATABASE_URL: string;
 
   /**
+   * Sentry
+   */
+  @IsString()
+  SENTRY_DSN: string;
+
+  /**
    * User authentication
    */
   @IsString()

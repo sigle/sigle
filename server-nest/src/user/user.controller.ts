@@ -52,7 +52,9 @@ export class UserController {
   @UseGuards(AuthGuard)
   @Get('/api/users/me')
   getUserMe(@Request() req): Promise<ExploreUser> {
-    return this.userService.getUserMe({ stacksAddress: req.address });
+    return this.userService.getUserMe({
+      stacksAddress: req.user.stacksAddress,
+    });
   }
 
   @ApiOperation({
@@ -113,7 +115,7 @@ export class UserController {
     @Body() createUserFollowDto: CreateUserFollowDto,
   ): Promise<void> {
     return this.userService.addFollow({
-      followerAddress: req.address,
+      followerAddress: req.user.stacksAddress,
       followingAddress: createUserFollowDto.stacksAddress,
       createdAt: createUserFollowDto.createdAt,
     });
@@ -131,7 +133,7 @@ export class UserController {
     @Body() deleteUserFollowDto: DeleteUserFollowDto,
   ): Promise<void> {
     return this.userService.removeFollow({
-      followerAddress: req.address,
+      followerAddress: req.user.stacksAddress,
       followingAddress: deleteUserFollowDto.stacksAddress,
     });
   }
