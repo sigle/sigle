@@ -15,8 +15,4 @@ export const config = cleanEnv(process.env, {
    */
   PLAUSIBLE_API_TOKEN: str({ desc: 'Plausible API token.' }),
   PLAUSIBLE_SITE_ID: str({ desc: 'Plausible site id.' }),
-  /**
-   * Sentry
-   */
-  SENTRY_DSN: str({ desc: 'Sentry DSN for error reporting.' }),
 });
