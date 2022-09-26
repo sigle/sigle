@@ -43,6 +43,21 @@ export class EnvironmentVariables {
 
   @IsString()
   NEXTAUTH_SECRET: string;
+
+  /**
+   * App config variables
+   */
+  @IsString()
+  APP_URL: string;
+
+  /**
+   * Plausible
+   */
+  @IsString()
+  PLAUSIBLE_API_TOKEN: string;
+
+  @IsString()
+  PLAUSIBLE_SITE_ID: string;
 }
 
 export function validate(config: Record<string, unknown>) {
