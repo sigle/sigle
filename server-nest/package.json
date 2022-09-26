@@ -40,7 +40,7 @@
     "seed": "ts-node prisma/seed.ts"
   },
   "dependencies": {
-    "@fastify/cookie": "8.2.0",
+    "@fastify/cookie": "8.3.0",
     "@fastify/static": "6.5.0",
     "@nestjs/common": "9.1.2",
     "@nestjs/config": "2.2.0",
