@@ -7,6 +7,8 @@ import { ThrottlerStorageRedisService } from 'nestjs-throttler-storage-redis';
 import { validate } from './environment/environment.validation';
 import { UserModule } from './user/user.module';
 import { SubscriptionModule } from './subscription/subscription.module';
+import { PrismaService } from './prisma.service';
+// import { AnalyticsModule } from './analytics/analytics.module';
 
 @Module({
   imports: [
@@ -32,10 +34,13 @@ import { SubscriptionModule } from './subscription/subscription.module';
         storage: new ThrottlerStorageRedisService(
           config.get('REDIS_DATABASE_URL'),
         ),
+        ignoreUserAgents:
+          config.get('NODE_ENV') === 'test' ? [/sigletests/gi] : [],
       }),
     }),
     UserModule,
     SubscriptionModule,
+    // AnalyticsModule,
   ],
   controllers: [],
   providers: [
@@ -59,6 +64,7 @@ import { SubscriptionModule } from './subscription/subscription.module';
           ],
         }),
     },
+    PrismaService,
   ],
 })
 export class AppModule {}
