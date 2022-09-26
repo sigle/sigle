@@ -194,6 +194,9 @@ describe('SubscriptionController (e2e)', () => {
         cookies: {
           'next-auth.session-token': stacksAddress,
         },
+        headers: {
+          'user-agent': 'sigletests',
+        },
         payload: {
           nftId,
         },
