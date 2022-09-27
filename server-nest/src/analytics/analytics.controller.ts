@@ -5,7 +5,7 @@ import {
   ApiOperation,
   ApiTags,
 } from '@nestjs/swagger';
-import { AuthGuard } from 'src/auth.guard';
+import { AuthGuard } from '../auth.guard';
 import { AnalyticsService } from './analytics.service';
 import { HistoricalQueryDto } from './dto/historicalQuery.dto';
 import { ReferrersQueryDto } from './dto/referrersQuery.dto';

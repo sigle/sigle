@@ -6,7 +6,7 @@ import {
 } from '@nestjs/common';
 import { Cache } from 'cache-manager';
 import { differenceInMonths, format, isValid, parse } from 'date-fns';
-import { PlausibleService } from 'src/plausible/plausible.service';
+import { PlausibleService } from '../plausible/plausible.service';
 import { StacksService } from '../stacks/stacks.service';
 import { SubscriptionService } from '../subscription/subscription.service';
 import { getPublicStories, maxFathomFromDate } from './utils';
