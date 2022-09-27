@@ -7,6 +7,7 @@ import {
 } from '@nestjs/swagger';
 import { AuthGuard } from 'src/auth.guard';
 import { AnalyticsService } from './analytics.service';
+import { HistoricalQueryDto } from './dto/historicalQuery.dto';
 import { ReferrersQueryDto } from './dto/referrersQuery.dto';
 
 @ApiTags('analytics')
@@ -31,6 +32,43 @@ export class AnalyticsController {
     return this.analyticsService.referrers({
       stacksAddress: req.user.stacksAddress,
       dateFrom: query.dateFrom,
+      storyId: query.storyId,
+    });
+  }
+
+  @ApiOperation({
+    description: 'Return the historical statistics.',
+  })
+  @ApiBearerAuth()
+  @ApiOkResponse({
+    schema: {
+      example: {
+        historical: [
+          {
+            date: '2022-03',
+            visits: 0,
+            pageviews: 0,
+          },
+          {
+            date: '2022-04',
+            visits: 0,
+            pageviews: 0,
+          },
+        ],
+        stories: [
+          { pathname: 'zsoVIi3V6CE', visits: 0, pageviews: 0 },
+          { pathname: '0jE9PPqbxUp', visits: 0, pageviews: 0 },
+        ],
+      },
+    },
+  })
+  @UseGuards(AuthGuard)
+  @Get('/api/analytics/historical')
+  getHistorical(@Request() req, @Query() query: HistoricalQueryDto) {
+    return this.analyticsService.historical({
+      stacksAddress: req.user.stacksAddress,
+      dateFrom: query.dateFrom,
+      dateGrouping: query.dateGrouping,
       storyId: query.storyId,
     });
   }
