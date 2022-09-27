@@ -1,4 +1,4 @@
-import { HttpException, Module } from '@nestjs/common';
+import { CacheModule, HttpException, Module } from '@nestjs/common';
 import { APP_GUARD, APP_INTERCEPTOR } from '@nestjs/core';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
@@ -8,7 +8,9 @@ import { validate } from './environment/environment.validation';
 import { UserModule } from './user/user.module';
 import { SubscriptionModule } from './subscription/subscription.module';
 import { PrismaService } from './prisma.service';
-// import { AnalyticsModule } from './analytics/analytics.module';
+import { AnalyticsModule } from './analytics/analytics.module';
+import { PlausibleService } from './plausible/plausible.service';
+import { StacksService } from './stacks/stacks.service';
 
 @Module({
   imports: [
@@ -38,9 +40,13 @@ import { PrismaService } from './prisma.service';
           config.get('NODE_ENV') === 'test' ? [/sigletests/gi] : [],
       }),
     }),
+    CacheModule.register(
+      // TODO setup redis store
+      { isGlobal: true },
+    ),
     UserModule,
     SubscriptionModule,
-    // AnalyticsModule,
+    AnalyticsModule,
   ],
   controllers: [],
   providers: [
@@ -65,6 +71,8 @@ import { PrismaService } from './prisma.service';
         }),
     },
     PrismaService,
+    StacksService,
+    PlausibleService,
   ],
 })
 export class AppModule {}

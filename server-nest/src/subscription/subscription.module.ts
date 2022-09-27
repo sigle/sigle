@@ -6,5 +6,6 @@ import { SubscriptionService } from './subscription.service';
 @Module({
   controllers: [SubscriptionController],
   providers: [SubscriptionService, PrismaService],
+  exports: [SubscriptionService],
 })
 export class SubscriptionModule {}
