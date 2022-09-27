@@ -1,10 +1,16 @@
 import { CACHE_MANAGER, Inject, Injectable } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import { Cache } from 'cache-manager';
+import { lookupProfile } from 'micro-stacks/storage';
 import { fetch } from 'undici';
+import { EnvironmentVariables } from '../environment/environment.validation';
 
 @Injectable()
 export class StacksService {
-  constructor(@Inject(CACHE_MANAGER) private cacheManager: Cache) {}
+  constructor(
+    @Inject(CACHE_MANAGER) private readonly cacheManager: Cache,
+    private readonly configService: ConfigService<EnvironmentVariables>,
+  ) {}
   /**
    * Return the username of a stacks address.
    * Cache the result for better performance as the username is not changing often.
@@ -30,5 +36,30 @@ export class StacksService {
     // Cache response for 1 day
     await this.cacheManager.set(cacheKey, username, 24 * 60 * 60);
     return username;
+  }
+
+  async getBucketUrl({
+    username,
+  }: {
+    username: string;
+  }): Promise<{ profile: Record<string, any>; bucketUrl: string }> {
+    let userProfile: Record<string, any> | undefined;
+    try {
+      userProfile = await lookupProfile({ username });
+    } catch (error) {
+      // This will happen if there is no blockstack user with this name
+      if (error.message === 'Name not found') {
+        userProfile = undefined;
+      } else {
+        throw error;
+      }
+    }
+
+    const bucketUrl: string | undefined =
+      userProfile &&
+      userProfile.apps &&
+      userProfile.apps[this.configService.get('APP_URL')];
+
+    return { profile: userProfile, bucketUrl };
   }
 }
