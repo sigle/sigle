@@ -98,6 +98,15 @@ export class AnalyticsService {
       }))
       .sort((a, b) => b.count - a.count);
 
+    // TODO DEBUG to REMOVE
+    if (stacksAddress === 'SP1F48HCD4SP4HT8BHQPXZ35615764KC80ACNMBDZ') {
+      console.log('referrersResponse', referrersResponse);
+      console.log(
+        'referrersResponse',
+        JSON.stringify(referrersResponse, null, 2),
+      );
+    }
+
     // Cache response for 1 hour
     await this.cacheManager.set(
       cacheKey,
@@ -243,8 +252,11 @@ export class AnalyticsService {
 
     // TODO DEBUG to REMOVE
     if (stacksAddress === 'SP1F48HCD4SP4HT8BHQPXZ35615764KC80ACNMBDZ') {
-      console.log(historicalResponse);
-      console.log(JSON.stringify(historicalResponse, null, 2));
+      console.log('historicalResponse', historicalResponse);
+      console.log(
+        'historicalResponse',
+        JSON.stringify(historicalResponse, null, 2),
+      );
     }
 
     // Cache response for 1 hour
