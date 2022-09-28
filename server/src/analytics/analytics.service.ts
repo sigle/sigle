@@ -171,7 +171,14 @@ export class AnalyticsService {
     const cacheKey = storyId
       ? `historical:${username}_${dateFrom}_${dateGrouping}_${storyId}`
       : `historical:${username}_${dateFrom}_${dateGrouping}`;
+    // TODO DEBUG to REMOVE
+    if (stacksAddress === 'SP1F48HCD4SP4HT8BHQPXZ35615764KC80ACNMBDZ') {
+      console.log('cacheKey', cacheKey);
+    }
     const cachedResponse = await this.cacheManager.get<string>(cacheKey);
+    if (stacksAddress === 'SP1F48HCD4SP4HT8BHQPXZ35615764KC80ACNMBDZ') {
+      console.log('cachedResponse', cachedResponse);
+    }
     if (cachedResponse) {
       return JSON.parse(cachedResponse);
     }
