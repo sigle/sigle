@@ -11,6 +11,7 @@ import { PrismaService } from './prisma.service';
 import { AnalyticsModule } from './analytics/analytics.module';
 import { PlausibleService } from './plausible/plausible.service';
 import { StacksService } from './stacks/stacks.service';
+import { AppController } from './app.controller';
 
 @Module({
   imports: [
@@ -48,7 +49,7 @@ import { StacksService } from './stacks/stacks.service';
     SubscriptionModule,
     AnalyticsModule,
   ],
-  controllers: [],
+  controllers: [AppController],
   providers: [
     {
       provide: APP_GUARD,
