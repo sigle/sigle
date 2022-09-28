@@ -1,42 +1,38 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
+import type { CreateSubscriptionCreatorPlusDto } from '../models/CreateSubscriptionCreatorPlusDto';
+import type { SubscriptionDto } from '../models/SubscriptionDto';
+
 import type { CancelablePromise } from '../core/CancelablePromise';
 import { OpenAPI } from '../core/OpenAPI';
 import { request as __request } from '../core/request';
 
 export class SubscriptionService {
   /**
-   * Create a creator plus subscription on the current logged in user. A user can only have one active subscription at a time.
-   * @returns any Returns the newly created subscription object.
+   * Create or update a creator plus subscription on the current logged in user. A user can only have one active subscription at a time.
+   * @returns SubscriptionDto Returns the newly created subscription object.
    * @throws ApiError
    */
-  public static postApiSubscriptionsCreatorPlus({
-    body,
+  public static subscriptionControllerCreateSubscriptionCreatorPlus({
+    requestBody,
   }: {
-    body?: {
-      nftId: number;
-    };
-  }): CancelablePromise<{
-    id: string;
-    nftId: number;
-  }> {
+    requestBody: CreateSubscriptionCreatorPlusDto;
+  }): CancelablePromise<SubscriptionDto> {
     return __request(OpenAPI, {
       method: 'POST',
       url: '/api/subscriptions/creatorPlus',
-      body: body,
+      body: requestBody,
+      mediaType: 'application/json',
     });
   }
 
   /**
    * Return the current active subscription of the current logged in user.
-   * @returns any Returns the current active subscription object. If no active subscription is found, null is returned.
+   * @returns SubscriptionDto Returns the current active subscription object. If no active subscription is found, null is returned.
    * @throws ApiError
    */
-  public static getApiSubscriptions(): CancelablePromise<{
-    id: string;
-    nftId: number;
-  }> {
+  public static subscriptionControllerGetUserMe(): CancelablePromise<SubscriptionDto> {
     return __request(OpenAPI, {
       method: 'GET',
       url: '/api/subscriptions',
