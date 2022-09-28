@@ -8,6 +8,7 @@ import {
 import { Throttle } from '@nestjs/throttler';
 import { AuthGuard } from '../auth.guard';
 import { AnalyticsService } from './analytics.service';
+import { HistoricalDto } from './dto/historical.dto';
 import { HistoricalQueryDto } from './dto/historicalQuery.dto';
 import { ReferrerDto } from './dto/referrers.dto';
 import { ReferrersQueryDto } from './dto/referrersQuery.dto';
@@ -49,6 +50,7 @@ export class AnalyticsController {
   })
   @ApiBearerAuth()
   @ApiOkResponse({
+    type: HistoricalDto,
     schema: {
       example: {
         historical: [
@@ -73,7 +75,10 @@ export class AnalyticsController {
   @Throttle(10, 60)
   @UseGuards(AuthGuard)
   @Get('/api/analytics/historical')
-  getHistorical(@Request() req, @Query() query: HistoricalQueryDto) {
+  getHistorical(
+    @Request() req,
+    @Query() query: HistoricalQueryDto,
+  ): Promise<HistoricalDto> {
     return this.analyticsService.historical({
       stacksAddress: req.user.stacksAddress,
       dateFrom: query.dateFrom,
