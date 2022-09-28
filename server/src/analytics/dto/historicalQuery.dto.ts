@@ -1,4 +1,4 @@
-import { ApiProperty } from '@nestjs/swagger';
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { IsString, IsOptional } from 'class-validator';
 
 export class HistoricalQueryDto {
@@ -15,7 +15,7 @@ export class HistoricalQueryDto {
   @IsString()
   dateGrouping: string;
 
-  @ApiProperty({
+  @ApiPropertyOptional({
     description: 'The story id to get the statistics for.',
   })
   @IsOptional()

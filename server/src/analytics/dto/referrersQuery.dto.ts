@@ -1,4 +1,4 @@
-import { ApiProperty } from '@nestjs/swagger';
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { IsString, IsOptional } from 'class-validator';
 
 export class ReferrersQueryDto {
@@ -8,7 +8,7 @@ export class ReferrersQueryDto {
   @IsString()
   dateFrom: string;
 
-  @ApiProperty({
+  @ApiPropertyOptional({
     description: 'The story id to get the statistics for.',
   })
   @IsOptional()
