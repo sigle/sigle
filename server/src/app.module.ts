@@ -4,6 +4,8 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
 import { SentryInterceptor, SentryModule } from '@ntegral/nestjs-sentry';
 import { ThrottlerStorageRedisService } from 'nestjs-throttler-storage-redis';
+import * as redisStore from 'cache-manager-redis-store';
+import type { ClientOpts } from 'redis';
 import { validate } from './environment/environment.validation';
 import { UserModule } from './user/user.module';
 import { SubscriptionModule } from './subscription/subscription.module';
@@ -41,10 +43,15 @@ import { AppController } from './app.controller';
           config.get('NODE_ENV') === 'test' ? [/sigletests/gi] : [],
       }),
     }),
-    CacheModule.register(
-      // TODO setup redis store
-      { isGlobal: true },
-    ),
+    CacheModule.registerAsync<ClientOpts>({
+      isGlobal: true,
+      imports: [ConfigModule],
+      inject: [ConfigService],
+      useFactory: (config: ConfigService) => ({
+        store: redisStore,
+        url: config.get('REDIS_DATABASE_URL'),
+      }),
+    }),
     UserModule,
     SubscriptionModule,
     AnalyticsModule,
