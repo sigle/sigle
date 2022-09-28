@@ -106,7 +106,7 @@ export class UserController {
     description: 'Allows a user to follow another user.',
   })
   @ApiBearerAuth()
-  @ApiOkResponse({})
+  @ApiOkResponse({ type: Boolean })
   @UseGuards(AuthGuard)
   @Post('/api/users/me/following')
   @HttpCode(200)
@@ -125,7 +125,7 @@ export class UserController {
     description: 'Allows a user to unfollow another user.',
   })
   @ApiBearerAuth()
-  @ApiOkResponse({})
+  @ApiOkResponse({ type: Boolean })
   @UseGuards(AuthGuard)
   @Delete('/api/users/me/following')
   removeFollow(
