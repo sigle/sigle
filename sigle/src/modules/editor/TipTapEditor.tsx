@@ -44,6 +44,7 @@ import { useTheme } from 'next-themes';
 import { TipTapImage } from './extensions/Image';
 import { Toolbar } from './EditorToolbar/EditorToolbar';
 import { Twitter as TipTapTwitter } from './extensions/Twitter';
+import { TwitterLinkInput as TipTapTwitterInput } from './extensions/TwitterLinkInput';
 
 const fadeInAnimation = keyframes({
   '0%': { opacity: '0' },
@@ -120,6 +121,10 @@ export const TipTapEditor = forwardRef<
     setShowShortcutsDialog(false);
   };
 
+  useEffect(() => {
+    console.log(story);
+  }, []);
+
   const isMobile = width < 768;
 
   const editor = useEditor({
@@ -166,6 +171,7 @@ export const TipTapEditor = forwardRef<
       TipTapPlaceholder,
       // Custom extensions
       !isMobile ? TipTapTwitter : undefined,
+      // !isMobile ? TipTapTwitterInput : undefined,
       !isMobile
         ? SlashCommands.configure({
             commands: slashCommands({ storyId: story.id }),
