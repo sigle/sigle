@@ -2,7 +2,7 @@ import { useQuery, UseQueryOptions } from '@tanstack/react-query';
 import { AnalyticsService } from '../external/api';
 
 type GetApiAnalyticsReferrersReturnType = Awaited<
-  ReturnType<typeof AnalyticsService.getApiAnalyticsReferrers>
+  ReturnType<typeof AnalyticsService.analyticsControllerGetReferrers>
 >;
 export const useGetReferrers = ({
   dateFrom,
@@ -13,11 +13,12 @@ export const useGetReferrers = ({
 }) =>
   useQuery<GetApiAnalyticsReferrersReturnType, Error>(
     ['get-analytics-referrer', dateFrom, storyId],
-    () => AnalyticsService.getApiAnalyticsReferrers({ dateFrom, storyId })
+    () =>
+      AnalyticsService.analyticsControllerGetReferrers({ dateFrom, storyId })
   );
 
 type GetApiAnalyticsHistoricalReturnType = Awaited<
-  ReturnType<typeof AnalyticsService.getApiAnalyticsHistorical>
+  ReturnType<typeof AnalyticsService.analyticsControllerGetHistorical>
 >;
 export const useGetHistorical = (
   {
@@ -34,7 +35,7 @@ export const useGetHistorical = (
   useQuery<GetApiAnalyticsHistoricalReturnType, Error>(
     ['get-analytics-historical', dateFrom, dateGrouping, storyId],
     () =>
-      AnalyticsService.getApiAnalyticsHistorical({
+      AnalyticsService.analyticsControllerGetHistorical({
         dateFrom,
         dateGrouping,
         storyId,

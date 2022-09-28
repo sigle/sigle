@@ -185,6 +185,26 @@ const main = async () => {
     ],
   });
 
+  await prisma.follows.createMany({
+    data: [
+      {
+        followerAddress: 'SP3VCX5NFQ8VCHFS9M6N40ZJNVTRT4HZ62WFH5C4Q',
+        followingAddress: 'SP24GYRG3M7T0S6FZE9RVVP9PNNZQJQ614650G590',
+        createdAt: new Date(),
+      },
+      {
+        followerAddress: 'SP24GYRG3M7T0S6FZE9RVVP9PNNZQJQ614650G590',
+        followingAddress: 'SP3VCX5NFQ8VCHFS9M6N40ZJNVTRT4HZ62WFH5C4Q',
+        createdAt: new Date(),
+      },
+      {
+        followerAddress: 'SP1Y6ZAD2ZZFKNWN58V8EA42R3VRWFJSGWFAD9C36',
+        followingAddress: 'SP3VCX5NFQ8VCHFS9M6N40ZJNVTRT4HZ62WFH5C4Q',
+        createdAt: new Date(),
+      },
+    ],
+  });
+
   console.log(`------ SEED DATABASE ------`);
   console.log(`Created ${userResult.count} users`);
 };

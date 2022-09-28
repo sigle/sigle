@@ -40,8 +40,8 @@ export const useUserFollow = () => {
     // optimistic update
     queryClient.setQueriesData(['get-user-following'], userFollowing);
     await saveFollowingFile(userFollowing);
-    await UserService.postApiUsersMeFollowing({
-      body: { stacksAddress: address, createdAt: now },
+    await UserService.userControllerAddFollow({
+      requestBody: { stacksAddress: address, createdAt: now },
     });
     await queryClient.invalidateQueries([
       'get-users-followers',
@@ -65,8 +65,8 @@ export const useUserUnfollow = () => {
     // optimistic update
     queryClient.setQueriesData(['get-user-following'], userFollowing);
     await saveFollowingFile(userFollowing);
-    await UserService.deleteApiUsersMeFollowing({
-      body: { stacksAddress: address },
+    await UserService.userControllerRemoveFollow({
+      requestBody: { stacksAddress: address },
     });
     await queryClient.invalidateQueries([
       'get-users-followers',

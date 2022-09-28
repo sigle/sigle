@@ -96,10 +96,13 @@ jobs:
       - name: Build api
         run: pnpm --filter=@sigle/server run build
 
-      - name: Apply prisma migrations
-        run: cd server && pnpm prisma migrate deploy
+      - name: Run api tests
+        run: pnpm --filter=@sigle/server run test
+
+      - name: Seed test DB
+        run: cd server && pnpm prisma migrate deploy && pnpm prisma db seed
         env:
           PG_DATABASE_URL: 'postgres://postgresuser:postgrespassword@localhost:5432/postgresdb'
 
-      - name: Run api tests
-        run: pnpm --filter=@sigle/server run test
+      - name: Run api e2e tests
+        run: pnpm --filter=@sigle/server run test:e2e

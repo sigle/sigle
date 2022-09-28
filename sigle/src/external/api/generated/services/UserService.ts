@@ -1,70 +1,27 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
+import type { CreateUserFollowDto } from '../models/CreateUserFollowDto';
+import type { DeleteUserFollowDto } from '../models/DeleteUserFollowDto';
+import type { ExploreResponse } from '../models/ExploreResponse';
+import type { ExploreUser } from '../models/ExploreUser';
+import type { UserProfileDto } from '../models/UserProfileDto';
+
 import type { CancelablePromise } from '../core/CancelablePromise';
 import { OpenAPI } from '../core/OpenAPI';
 import { request as __request } from '../core/request';
 
 export class UserService {
   /**
-   * Return a user for a given stacks address.
-   * @returns any Default Response
-   * @throws ApiError
-   */
-  public static getApiUsers({
-    userAddress,
-  }: {
-    userAddress: string;
-  }): CancelablePromise<{
-    id: string;
-    stacksAddress: string;
-    followersCount: number;
-    followingCount: number;
-    subscription?: {
-      id: string;
-      nftId: number;
-    };
-  }> {
-    return __request(OpenAPI, {
-      method: 'GET',
-      url: '/api/users/{userAddress}',
-      path: {
-        userAddress: userAddress,
-      },
-    });
-  }
-
-  /**
-   * Return the current logged in user.
-   * @returns any Default Response
-   * @throws ApiError
-   */
-  public static getApiUsersMe(): CancelablePromise<{
-    id: string;
-    stacksAddress: string;
-  }> {
-    return __request(OpenAPI, {
-      method: 'GET',
-      url: '/api/users/me',
-    });
-  }
-
-  /**
    * Return a list of users using Sigle.
-   * @returns any Default Response
+   * @returns ExploreResponse The users using Sigle.
    * @throws ApiError
    */
-  public static getApiUsersExplore({
+  public static userControllerExplore({
     page,
   }: {
-    page?: number;
-  }): CancelablePromise<{
-    nextPage?: number;
-    data: Array<{
-      id: string;
-      stacksAddress: string;
-    }>;
-  }> {
+    page: number;
+  }): CancelablePromise<ExploreResponse> {
     return __request(OpenAPI, {
       method: 'GET',
       url: '/api/users/explore',
@@ -75,50 +32,42 @@ export class UserService {
   }
 
   /**
-   * Allows a user to follow another user.
-   * @returns boolean Default Response
+   * Return the current logged in user.
+   * @returns ExploreUser
    * @throws ApiError
    */
-  public static postApiUsersMeFollowing({
-    body,
-  }: {
-    body?: {
-      stacksAddress: string;
-      createdAt: number;
-    };
-  }): CancelablePromise<boolean> {
+  public static userControllerGetUserMe(): CancelablePromise<ExploreUser> {
     return __request(OpenAPI, {
-      method: 'POST',
-      url: '/api/users/me/following',
-      body: body,
+      method: 'GET',
+      url: '/api/users/me',
     });
   }
 
   /**
-   * Allows a user to unfollow another user.
-   * @returns boolean Default Response
+   * Return a user for a given stacks address.
+   * @returns UserProfileDto
    * @throws ApiError
    */
-  public static deleteApiUsersMeFollowing({
-    body,
+  public static userControllerGetUser({
+    userAddress,
   }: {
-    body?: {
-      stacksAddress: string;
-    };
-  }): CancelablePromise<boolean> {
+    userAddress: string;
+  }): CancelablePromise<UserProfileDto> {
     return __request(OpenAPI, {
-      method: 'DELETE',
-      url: '/api/users/me/following',
-      body: body,
+      method: 'GET',
+      url: '/api/users/{userAddress}',
+      path: {
+        userAddress: userAddress,
+      },
     });
   }
 
   /**
    * Returns a list of users who are followers of the specified user.
-   * @returns string Default Response
+   * @returns string The users who are following a user.
    * @throws ApiError
    */
-  public static getApiUsersFollowers({
+  public static userControllerGetUserFollowers({
     userAddress,
   }: {
     userAddress: string;
@@ -134,10 +83,10 @@ export class UserService {
 
   /**
    * Returns a list of users the specified user is following.
-   * @returns string Default Response
+   * @returns string The users a user is following.
    * @throws ApiError
    */
-  public static getApiUsersFollowing({
+  public static userControllerGetUserFollowing({
     userAddress,
   }: {
     userAddress: string;
@@ -148,6 +97,42 @@ export class UserService {
       path: {
         userAddress: userAddress,
       },
+    });
+  }
+
+  /**
+   * Allows a user to follow another user.
+   * @returns boolean
+   * @throws ApiError
+   */
+  public static userControllerAddFollow({
+    requestBody,
+  }: {
+    requestBody: CreateUserFollowDto;
+  }): CancelablePromise<boolean> {
+    return __request(OpenAPI, {
+      method: 'POST',
+      url: '/api/users/me/following',
+      body: requestBody,
+      mediaType: 'application/json',
+    });
+  }
+
+  /**
+   * Allows a user to unfollow another user.
+   * @returns boolean
+   * @throws ApiError
+   */
+  public static userControllerRemoveFollow({
+    requestBody,
+  }: {
+    requestBody: DeleteUserFollowDto;
+  }): CancelablePromise<boolean> {
+    return __request(OpenAPI, {
+      method: 'DELETE',
+      url: '/api/users/me/following',
+      body: requestBody,
+      mediaType: 'application/json',
     });
   }
 }
