@@ -23,19 +23,14 @@ describe('AnalyticsService', () => {
         },
         {
           provide: ConfigService,
-          useValue: {
-            get: jest.fn((key: string) => {
-              return null;
-            }),
-          },
+          useValue: {},
         },
         {
           provide: SubscriptionService,
           useValue: {
-            getUserActiveSubscription: () =>
-              jest.fn(() => ({
-                id: 'test',
-              })),
+            getUserActiveSubscription: () => () => ({
+              id: 'test',
+            }),
           },
         },
         {
