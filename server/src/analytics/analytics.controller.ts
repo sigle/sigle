@@ -9,6 +9,7 @@ import { Throttle } from '@nestjs/throttler';
 import { AuthGuard } from '../auth.guard';
 import { AnalyticsService } from './analytics.service';
 import { HistoricalQueryDto } from './dto/historicalQuery.dto';
+import { ReferrerDto } from './dto/referrers.dto';
 import { ReferrersQueryDto } from './dto/referrersQuery.dto';
 
 @ApiTags('analytics')
@@ -20,6 +21,8 @@ export class AnalyticsController {
   })
   @ApiBearerAuth()
   @ApiOkResponse({
+    type: ReferrerDto,
+    isArray: true,
     schema: {
       example: [
         { domain: 'twitter.com', count: 5 },
@@ -30,7 +33,10 @@ export class AnalyticsController {
   @Throttle(10, 60)
   @UseGuards(AuthGuard)
   @Get('/api/analytics/referrers')
-  getReferrers(@Request() req, @Query() query: ReferrersQueryDto) {
+  getReferrers(
+    @Request() req,
+    @Query() query: ReferrersQueryDto,
+  ): Promise<ReferrerDto[]> {
     return this.analyticsService.referrers({
       stacksAddress: req.user.stacksAddress,
       dateFrom: query.dateFrom,

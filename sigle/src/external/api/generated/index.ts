@@ -11,6 +11,7 @@ export type { CreateUserFollowDto } from './models/CreateUserFollowDto';
 export type { DeleteUserFollowDto } from './models/DeleteUserFollowDto';
 export type { ExploreResponse } from './models/ExploreResponse';
 export type { ExploreUser } from './models/ExploreUser';
+export type { ReferrerDto } from './models/ReferrerDto';
 export type { SubscriptionDto } from './models/SubscriptionDto';
 export type { UserProfileDto } from './models/UserProfileDto';
 
