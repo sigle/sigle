@@ -91,13 +91,13 @@ jobs:
         run: pnpm install
 
       - name: Lint api
-        run: pnpm --filter=@sigle/server-tmp run lint
+        run: pnpm --filter=@sigle/server run lint
 
       - name: Build api
-        run: pnpm --filter=@sigle/server-tmp run build
+        run: pnpm --filter=@sigle/server run build
 
       - name: Run api tests
-        run: pnpm --filter=@sigle/server-tmp run test
+        run: pnpm --filter=@sigle/server run test
 
       - name: Seed test DB
         run: cd server-nest && pnpm prisma migrate deploy && pnpm prisma db seed
@@ -105,4 +105,4 @@ jobs:
           PG_DATABASE_URL: 'postgres://postgresuser:postgrespassword@localhost:5432/postgresdb'
 
       - name: Run api e2e tests
-        run: pnpm --filter=@sigle/server-tmp run test:e2e
+        run: pnpm --filter=@sigle/server run test:e2e
