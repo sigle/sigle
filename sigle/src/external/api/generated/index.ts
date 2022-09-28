@@ -6,6 +6,15 @@ export { CancelablePromise, CancelError } from './core/CancelablePromise';
 export { OpenAPI } from './core/OpenAPI';
 export type { OpenAPIConfig } from './core/OpenAPI';
 
+export type { CreateSubscriptionCreatorPlusDto } from './models/CreateSubscriptionCreatorPlusDto';
+export type { CreateUserFollowDto } from './models/CreateUserFollowDto';
+export type { DeleteUserFollowDto } from './models/DeleteUserFollowDto';
+export type { ExploreResponse } from './models/ExploreResponse';
+export type { ExploreUser } from './models/ExploreUser';
+export type { SubscriptionDto } from './models/SubscriptionDto';
+export type { UserProfileDto } from './models/UserProfileDto';
+
 export { AnalyticsService } from './services/AnalyticsService';
+export { DefaultService } from './services/DefaultService';
 export { SubscriptionService } from './services/SubscriptionService';
 export { UserService } from './services/UserService';
