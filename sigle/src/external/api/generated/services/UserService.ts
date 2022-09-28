@@ -13,37 +13,6 @@ import { request as __request } from '../core/request';
 
 export class UserService {
   /**
-   * Return a user for a given stacks address.
-   * @returns UserProfileDto
-   * @throws ApiError
-   */
-  public static userControllerGetUser({
-    userAddress,
-  }: {
-    userAddress: string;
-  }): CancelablePromise<UserProfileDto> {
-    return __request(OpenAPI, {
-      method: 'GET',
-      url: '/api/users/{userAddress}',
-      path: {
-        userAddress: userAddress,
-      },
-    });
-  }
-
-  /**
-   * Return the current logged in user.
-   * @returns ExploreUser
-   * @throws ApiError
-   */
-  public static userControllerGetUserMe(): CancelablePromise<ExploreUser> {
-    return __request(OpenAPI, {
-      method: 'GET',
-      url: '/api/users/me',
-    });
-  }
-
-  /**
    * Return a list of users using Sigle.
    * @returns ExploreResponse The users using Sigle.
    * @throws ApiError
@@ -63,38 +32,33 @@ export class UserService {
   }
 
   /**
-   * Allows a user to follow another user.
-   * @returns boolean
+   * Return the current logged in user.
+   * @returns ExploreUser
    * @throws ApiError
    */
-  public static userControllerAddFollow({
-    requestBody,
-  }: {
-    requestBody: CreateUserFollowDto;
-  }): CancelablePromise<boolean> {
+  public static userControllerGetUserMe(): CancelablePromise<ExploreUser> {
     return __request(OpenAPI, {
-      method: 'POST',
-      url: '/api/users/me/following',
-      body: requestBody,
-      mediaType: 'application/json',
+      method: 'GET',
+      url: '/api/users/me',
     });
   }
 
   /**
-   * Allows a user to unfollow another user.
-   * @returns boolean
+   * Return a user for a given stacks address.
+   * @returns UserProfileDto
    * @throws ApiError
    */
-  public static userControllerRemoveFollow({
-    requestBody,
+  public static userControllerGetUser({
+    userAddress,
   }: {
-    requestBody: DeleteUserFollowDto;
-  }): CancelablePromise<boolean> {
+    userAddress: string;
+  }): CancelablePromise<UserProfileDto> {
     return __request(OpenAPI, {
-      method: 'DELETE',
-      url: '/api/users/me/following',
-      body: requestBody,
-      mediaType: 'application/json',
+      method: 'GET',
+      url: '/api/users/{userAddress}',
+      path: {
+        userAddress: userAddress,
+      },
     });
   }
 
@@ -133,6 +97,42 @@ export class UserService {
       path: {
         userAddress: userAddress,
       },
+    });
+  }
+
+  /**
+   * Allows a user to follow another user.
+   * @returns boolean
+   * @throws ApiError
+   */
+  public static userControllerAddFollow({
+    requestBody,
+  }: {
+    requestBody: CreateUserFollowDto;
+  }): CancelablePromise<boolean> {
+    return __request(OpenAPI, {
+      method: 'POST',
+      url: '/api/users/me/following',
+      body: requestBody,
+      mediaType: 'application/json',
+    });
+  }
+
+  /**
+   * Allows a user to unfollow another user.
+   * @returns boolean
+   * @throws ApiError
+   */
+  public static userControllerRemoveFollow({
+    requestBody,
+  }: {
+    requestBody: DeleteUserFollowDto;
+  }): CancelablePromise<boolean> {
+    return __request(OpenAPI, {
+      method: 'DELETE',
+      url: '/api/users/me/following',
+      body: requestBody,
+      mediaType: 'application/json',
     });
   }
 }
