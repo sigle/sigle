@@ -1,6 +1,4 @@
 import { isBefore } from 'date-fns';
-import { fetch } from 'undici';
-import { migrationStories, SubsetStory } from '../external/gaia';
 
 // All queries should start at this date maximum.
 const STATS_MAX_FROM_DATE = '2022-05-01';
@@ -13,20 +11,4 @@ export const maxFathomFromDate = (parsedDateFrom: Date, dateFrom: string) => {
     return STATS_MAX_FROM_DATE;
   }
   return dateFrom;
-};
-
-export const getPublicStories = async ({
-  bucketUrl,
-}: {
-  bucketUrl: string;
-}): Promise<SubsetStory[]> => {
-  const resPublicStories = await fetch(`${bucketUrl}publicStories.json`);
-  // This would happen if the user has not published any stories
-  if (resPublicStories.status !== 200) {
-    return [];
-  }
-  const publicStoriesFile = migrationStories(
-    (await resPublicStories.json()) as any,
-  );
-  return publicStoriesFile.stories;
 };

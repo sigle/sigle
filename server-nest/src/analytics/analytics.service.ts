@@ -9,7 +9,7 @@ import { differenceInMonths, format, isValid, parse } from 'date-fns';
 import { PlausibleService } from '../plausible/plausible.service';
 import { StacksService } from '../stacks/stacks.service';
 import { SubscriptionService } from '../subscription/subscription.service';
-import { getPublicStories, maxFathomFromDate } from './utils';
+import { maxFathomFromDate } from './utils';
 
 @Injectable()
 export class AnalyticsService {
@@ -72,7 +72,9 @@ export class AnalyticsService {
     if (storyId) {
       storiesPath = [`/${username}/${storyId}`];
     } else {
-      const publicStoriesFile = await getPublicStories({ bucketUrl });
+      const publicStoriesFile = await this.stacksService.getPublicStories({
+        bucketUrl,
+      });
       storiesPath = publicStoriesFile.map(
         (publicStory) => `/${username}/${publicStory.id}`,
       );
@@ -192,7 +194,9 @@ export class AnalyticsService {
     if (storyId) {
       storiesPath = [`/${username}/${storyId}`];
     } else {
-      const publicStoriesFile = await getPublicStories({ bucketUrl });
+      const publicStoriesFile = await this.stacksService.getPublicStories({
+        bucketUrl,
+      });
       storiesPath = publicStoriesFile.map(
         (publicStory) => `/${username}/${publicStory.id}`,
       );

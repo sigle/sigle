@@ -2,6 +2,7 @@ import { CACHE_MANAGER, Inject, Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { Cache } from 'cache-manager';
 import { lookupProfile } from 'micro-stacks/storage';
+import { migrationStories, SubsetStory } from '../external/gaia';
 import { fetch } from 'undici';
 import { EnvironmentVariables } from '../environment/environment.validation';
 
@@ -61,5 +62,21 @@ export class StacksService {
       userProfile.apps[this.configService.get('APP_URL')];
 
     return { profile: userProfile, bucketUrl };
+  }
+
+  async getPublicStories({
+    bucketUrl,
+  }: {
+    bucketUrl: string;
+  }): Promise<SubsetStory[]> {
+    const resPublicStories = await fetch(`${bucketUrl}publicStories.json`);
+    // This would happen if the user has not published any stories
+    if (resPublicStories.status !== 200) {
+      return [];
+    }
+    const publicStoriesFile = migrationStories(
+      (await resPublicStories.json()) as any,
+    );
+    return publicStoriesFile.stories;
   }
 }

@@ -1,0 +1,23 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`AnalyticsService referrers should return referrers 1`] = `
+[
+  {
+    "count": "10",
+    "domain": "Direct / None",
+  },
+  {
+    "count": "1",
+    "domain": "https://stacks.co",
+  },
+]
+`;
+
+exports[`AnalyticsService referrers should return referrers for one story 1`] = `
+[
+  {
+    "count": "5",
+    "domain": "https://stacks.co",
+  },
+]
+`;
