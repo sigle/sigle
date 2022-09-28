@@ -26,6 +26,7 @@ export class AnalyticsController {
       ],
     },
   })
+  // TODO custom rate limit
   @UseGuards(AuthGuard)
   @Get('/api/analytics/referrers')
   getReferrers(@Request() req, @Query() query: ReferrersQueryDto) {
@@ -62,6 +63,7 @@ export class AnalyticsController {
       },
     },
   })
+  // TODO custom rate limit
   @UseGuards(AuthGuard)
   @Get('/api/analytics/historical')
   getHistorical(@Request() req, @Query() query: HistoricalQueryDto) {
