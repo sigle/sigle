@@ -5,6 +5,7 @@ import {
   ApiOperation,
   ApiTags,
 } from '@nestjs/swagger';
+import { Throttle } from '@nestjs/throttler';
 import { AuthGuard } from '../auth.guard';
 import { AnalyticsService } from './analytics.service';
 import { HistoricalQueryDto } from './dto/historicalQuery.dto';
@@ -26,7 +27,7 @@ export class AnalyticsController {
       ],
     },
   })
-  // TODO custom rate limit
+  @Throttle(10, 60)
   @UseGuards(AuthGuard)
   @Get('/api/analytics/referrers')
   getReferrers(@Request() req, @Query() query: ReferrersQueryDto) {
@@ -63,7 +64,7 @@ export class AnalyticsController {
       },
     },
   })
-  // TODO custom rate limit
+  @Throttle(10, 60)
   @UseGuards(AuthGuard)
   @Get('/api/analytics/historical')
   getHistorical(@Request() req, @Query() query: HistoricalQueryDto) {
