@@ -2,7 +2,6 @@ import React, { useEffect, useRef, useState } from 'react';
 import { NodeViewProps } from '@tiptap/core';
 import { NodeViewWrapper } from '@tiptap/react';
 import { Box, LoadingSpinner, Button, Flex, FormInput } from '../../../../ui';
-import Script from 'next/script';
 import { styled } from '../../../../stitches.config';
 import { ErrorMessage } from '../../../../ui/ErrorMessage';
 import { FormikErrors, useFormik } from 'formik';
