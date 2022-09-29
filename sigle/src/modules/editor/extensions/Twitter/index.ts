@@ -41,7 +41,7 @@ export const Twitter = Node.create({
           //   }
 
           console.log({ options });
-          const tweetId = options.url.split('/')[5].split('?')[0];
+          // const tweetId = options.url.split('/')[5].split('?')[0];
 
           return commands.insertContent({
             type: this.name,

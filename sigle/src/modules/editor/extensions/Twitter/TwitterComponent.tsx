@@ -1,19 +1,29 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { NodeViewProps } from '@tiptap/core';
 import { NodeViewWrapper } from '@tiptap/react';
-import {
-  Box,
-  LoadingSpinner,
-  Button,
-  Flex,
-  FormInput,
-  Typography,
-} from '../../../../ui';
+import { Box, LoadingSpinner, Button, Flex, FormInput } from '../../../../ui';
 import Script from 'next/script';
 import { styled } from '../../../../stitches.config';
 import { ErrorMessage } from '../../../../ui/ErrorMessage';
 import { FormikErrors, useFormik } from 'formik';
 import { twitterStatusRegex } from './utils';
+
+const ErrorButton = styled('button', {
+  px: '$2',
+  color: '$red11',
+  backgroundColor: 'transparent',
+  fontSize: '14px',
+  lineHeight: '18px',
+  letterSpacing: '0.2px',
+
+  '&:hover': {
+    backgroundColor: 'transparent',
+  },
+
+  '&:active': {
+    backgroundColor: 'transparent',
+  },
+});
 
 const ErrorMessageContainer = styled('div', {
   display: 'flex',
@@ -54,43 +64,17 @@ interface TweetValues {
 
 export const TwitterComponent = (props: NodeViewProps) => {
   const containerRef = useRef<HTMLDivElement | null>(null);
-  const previousTweetIDRef = useRef<string>();
+  // const previousTweetIDRef = useRef<string>();
   const [isTweetLoading, setIsTweetLoading] = useState(false);
+  const [tweetCreated, setTweetCreated] = useState(false);
 
   const attrTweetId = props.node.attrs['data-twitter-id'];
 
   useEffect(() => {
-    console.log('1', attrTweetId);
+    if (attrTweetId) {
+      setTweetCreated(true);
+    }
   }, []);
-
-  // useEffect(() => {
-  //   if (attrTweetId !== previousTweetIDRef.current) {
-  //     createTweetOnLoad();
-
-  //     if (previousTweetIDRef.current) {
-  //       previousTweetIDRef.current = attrTweetId;
-  //     }
-  //   }
-  // }, [attrTweetId]);
-
-  // useEffect(() => {
-  //   console.log('1', attrTweetId);
-
-  //   if (attrTweetId) {
-  //     console.log('3', attrTweetId);
-
-  //     getTweet(attrTweetId)
-  //       .then(() => {
-  //         formik.setSubmitting(false);
-  //       })
-  //       .catch((errors) => {
-  //         formik.setErrors({ tweetUrl: errors });
-  //         formik.setSubmitting(false);
-  //       });
-  //   }
-
-  //   // props.editor.commands.clearContent();
-  // }, [attrTweetId]);
 
   const formik = useFormik<TweetValues>({
     initialValues: {
@@ -117,14 +101,15 @@ export const TwitterComponent = (props: NodeViewProps) => {
           ['data-twitter-id']: tweetID,
         });
 
-        createTweetOnSubmit(tweetID)
-          .then(() => {
+        createTweetOnSubmit(tweetID).then((value) => {
+          if (!value) {
+            formik.setErrors({ tweetUrl: 'Create tweet error' });
             setSubmitting(false);
-          })
-          .catch((errors) => {
-            formik.setErrors({ tweetUrl: errors });
-            setSubmitting(false);
-          });
+            return;
+          }
+          setSubmitting(false);
+          setTweetCreated(true);
+        });
       });
     },
   });
@@ -138,45 +123,59 @@ export const TwitterComponent = (props: NodeViewProps) => {
   };
 
   const createTweetOnLoad = async () => {
-    setIsTweetLoading(true);
-    // @ts-expect-error Twitter is attached to the window.
-    const tweet = await window.twttr.widgets
-      .createTweet(String(attrTweetId), containerRef.current)
-      .then(() => {
-        setIsTweetLoading(false);
-      });
+    if (attrTweetId) {
+      setIsTweetLoading(true);
+      // @ts-expect-error Twitter is attached to the window.
+      const tweet = await window.twttr.widgets
+        .createTweet(attrTweetId, containerRef.current)
+        .then(() => {
+          setIsTweetLoading(false);
+        });
 
-    return tweet;
+      return tweet;
+    }
+  };
+
+  const retrySubmitTweetID = () => {
+    if (formik.values.tweetUrl) {
+      const tweetID = formik.values.tweetUrl.split('/')[5].split('?')[0];
+      formik.setErrors({ tweetUrl: undefined });
+      formik.setSubmitting(true);
+
+      createTweetOnSubmit(tweetID).then((value) => {
+        if (!value) {
+          formik.setErrors({ tweetUrl: 'Create tweet error' });
+          formik.setSubmitting(false);
+          return;
+        }
+        formik.setSubmitting(false);
+        setTweetCreated(true);
+      });
+    }
   };
 
   return (
     <NodeViewWrapper data-drag-handle data-twitter>
       <Script src={WIDGET_SCRIPT_URL} onLoad={createTweetOnLoad} />
       <>
-        {props.editor.isEditable && !attrTweetId && (
+        {props.editor.isEditable && !tweetCreated && (
           <>
             {formik.errors.tweetUrl && !formik.isSubmitting ? (
               <ErrorMessageContainer>
                 <StyledErrorMessage>
-                  An error occurred while pasting the URL or the link is broken
+                  {formik.errors.tweetUrl === 'Invalid URL'
+                    ? `Invalid URL`
+                    : `An error occurred while pasting the URL or the link is broken`}
                 </StyledErrorMessage>
-                <Flex gap="5">
-                  <Typography
-                    css={{
-                      color: '$red11',
-                      m: 0,
-                      fontWeight: 600,
-                    }}
-                    size="subheading"
-                  >
-                    Retry
-                  </Typography>
-                  <Typography
-                    css={{ color: '$red11', m: 0, fontWeight: 600 }}
-                    size="subheading"
-                  >
+                <Flex>
+                  {formik.errors.tweetUrl !== 'Invalid URL' && (
+                    <ErrorButton onClick={retrySubmitTweetID}>
+                      Retry
+                    </ErrorButton>
+                  )}
+                  <ErrorButton onClick={() => formik.resetForm()}>
                     Paste URL as a link
-                  </Typography>
+                  </ErrorButton>
                 </Flex>
               </ErrorMessageContainer>
             ) : (
