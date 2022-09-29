@@ -58,6 +58,25 @@ const StyledFormInput = styled(FormInput, {
 
 const WIDGET_SCRIPT_URL = 'https://platform.twitter.com/widgets.js';
 
+const loadTwitterWidget = async (): Promise<void> => {
+  // @ts-expect-error Twitter is attached to the window.
+  if (window.twttr) {
+    return;
+  }
+  return new Promise((resolve, reject) => {
+    const script = document.createElement('script');
+    script.src = WIDGET_SCRIPT_URL;
+    script.async = true;
+    document.body?.appendChild(script);
+    script.onload = () => {
+      resolve();
+    };
+    script.onerror = () => {
+      reject();
+    };
+  });
+};
+
 interface TweetValues {
   tweetUrl: string;
 }
@@ -74,6 +93,12 @@ export const TwitterComponent = (props: NodeViewProps) => {
     if (attrTweetId) {
       setTweetCreated(true);
     }
+  }, []);
+
+  useEffect(() => {
+    loadTwitterWidget().then(() => {
+      createTweetOnLoad();
+    });
   }, []);
 
   const formik = useFormik<TweetValues>({
@@ -156,7 +181,6 @@ export const TwitterComponent = (props: NodeViewProps) => {
 
   return (
     <NodeViewWrapper data-drag-handle data-twitter>
-      <Script src={WIDGET_SCRIPT_URL} onLoad={createTweetOnLoad} />
       <>
         {props.editor.isEditable && !tweetCreated && (
           <>
