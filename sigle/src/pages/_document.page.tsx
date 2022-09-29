@@ -30,12 +30,6 @@ export default class MyDocument extends Document {
     return (
       <Html lang="en">
         <Head>
-          <script
-            type="text/javascript"
-            dangerouslySetInnerHTML={{
-              __html: process.env.WIDGET_SCRIPT_URL as string,
-            }}
-          ></script>
           <link
             rel="apple-touch-icon"
             sizes="180x180"

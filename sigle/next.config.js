@@ -40,7 +40,6 @@ const nextConfig = {
       process.env.VERCEL_ENV === 'preview'
         ? getVercelPreviewUrl()
         : process.env.NEXTAUTH_URL,
-    WIDGET_SCRIPT_URL: 'https://platform.twitter.com/widgets.js',
   },
   pageExtensions: [
     // `.page.tsx` for page components
