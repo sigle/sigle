@@ -44,7 +44,6 @@ import { useTheme } from 'next-themes';
 import { TipTapImage } from './extensions/Image';
 import { Toolbar } from './EditorToolbar/EditorToolbar';
 import { Twitter as TipTapTwitter } from './extensions/Twitter';
-import { TwitterLinkInput as TipTapTwitterInput } from './extensions/TwitterLinkInput';
 
 const fadeInAnimation = keyframes({
   '0%': { opacity: '0' },

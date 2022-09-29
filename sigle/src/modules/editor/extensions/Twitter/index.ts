@@ -25,6 +25,8 @@ export const Twitter = Node.create({
     return {
       ['data-twitter-id']: {
         default: null,
+        // force correct id
+        parseHTML: (element) => element.getAttribute('data-twitter-id'),
       },
     };
   },
@@ -39,12 +41,12 @@ export const Twitter = Node.create({
           //   }
 
           console.log({ options });
-          const tweetId = options.url.split('/')[5];
+          const tweetId = options.url.split('/')[5].split('?')[0];
 
           return commands.insertContent({
             type: this.name,
             attrs: {
-              ['data-twitter-id']: tweetId,
+              ['data-twitter-id']: options.url,
             },
           });
         },
@@ -61,6 +63,7 @@ export const Twitter = Node.create({
 
   renderHTML({ HTMLAttributes }) {
     console.log({ HTMLAttributes });
+
     return ['div', mergeAttributes({ 'data-twitter': '' }, HTMLAttributes)];
   },
 
