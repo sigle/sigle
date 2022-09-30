@@ -1,6 +1,7 @@
-import { Node, mergeAttributes } from '@tiptap/core';
+import { Node, mergeAttributes, nodePasteRule } from '@tiptap/core';
 import { ReactNodeViewRenderer } from '@tiptap/react';
 import { TwitterComponent } from './TwitterComponent';
+import { TWITTER_REGEX_GLOBAL } from './utils';
 
 // TODO handle global paste
 
@@ -20,6 +21,12 @@ export const Twitter = Node.create({
   group: 'block',
   selectable: true,
   draggable: true,
+
+  addOptions() {
+    return {
+      addPasteHandler: true,
+    };
+  },
 
   addAttributes() {
     return {
@@ -41,7 +48,6 @@ export const Twitter = Node.create({
           //   }
 
           console.log({ options });
-          // const tweetId = options.url.split('/')[5].split('?')[0];
 
           return commands.insertContent({
             type: this.name,
@@ -51,6 +57,25 @@ export const Twitter = Node.create({
           });
         },
     };
+  },
+
+  addPasteRules() {
+    if (!this.options.addPasteHandler) {
+      return [];
+    }
+
+    const getTweetId = (input: string | undefined) =>
+      input?.split('/')[5].split('?')[0];
+
+    return [
+      nodePasteRule({
+        find: TWITTER_REGEX_GLOBAL,
+        type: this.type,
+        getAttributes: (match) => {
+          return { ['data-twitter-id']: getTweetId(match.input) };
+        },
+      }),
+    ];
   },
 
   parseHTML() {

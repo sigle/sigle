@@ -5,7 +5,7 @@ import { Box, LoadingSpinner, Button, Flex, FormInput } from '../../../../ui';
 import { styled } from '../../../../stitches.config';
 import { ErrorMessage } from '../../../../ui/ErrorMessage';
 import { FormikErrors, useFormik } from 'formik';
-import { twitterStatusRegex } from './utils';
+import { loadTwitterWidget, TWITTER_REGEX } from './utils';
 
 const ErrorButton = styled('button', {
   px: '$2',
@@ -55,27 +55,6 @@ const StyledFormInput = styled(FormInput, {
   },
 });
 
-const WIDGET_SCRIPT_URL = 'https://platform.twitter.com/widgets.js';
-
-const loadTwitterWidget = async (): Promise<void> => {
-  // @ts-expect-error Twitter is attached to the window.
-  if (window.twttr) {
-    return;
-  }
-  return new Promise((resolve, reject) => {
-    const script = document.createElement('script');
-    script.src = WIDGET_SCRIPT_URL;
-    script.async = true;
-    document.body?.appendChild(script);
-    script.onload = () => {
-      resolve();
-    };
-    script.onerror = () => {
-      reject();
-    };
-  });
-};
-
 interface TweetValues {
   tweetUrl: string;
 }
@@ -98,7 +77,7 @@ export const TwitterComponent = (props: NodeViewProps) => {
     loadTwitterWidget().then(() => {
       createTweetOnLoad();
     });
-  }, []);
+  }, [attrTweetId]);
 
   const formik = useFormik<TweetValues>({
     initialValues: {
@@ -107,7 +86,7 @@ export const TwitterComponent = (props: NodeViewProps) => {
     validate: (values) => {
       const errors: FormikErrors<TweetValues> = {};
 
-      if (!values.tweetUrl.match(twitterStatusRegex)) {
+      if (!values.tweetUrl.match(TWITTER_REGEX)) {
         errors.tweetUrl = 'Invalid URL';
       }
 
@@ -123,16 +102,6 @@ export const TwitterComponent = (props: NodeViewProps) => {
         props.editor.commands.updateAttributes('twitter', {
           ...props.node.attrs,
           ['data-twitter-id']: tweetID,
-        });
-
-        createTweetOnSubmit(tweetID).then((value) => {
-          if (!value) {
-            formik.setErrors({ tweetUrl: 'Create tweet error' });
-            setSubmitting(false);
-            return;
-          }
-          setSubmitting(false);
-          setTweetCreated(true);
         });
       });
     },
@@ -153,6 +122,7 @@ export const TwitterComponent = (props: NodeViewProps) => {
       const tweet = await window.twttr.widgets
         .createTweet(attrTweetId, containerRef.current)
         .then(() => {
+          setTweetCreated(true);
           setIsTweetLoading(false);
         });
 
@@ -181,7 +151,7 @@ export const TwitterComponent = (props: NodeViewProps) => {
   return (
     <NodeViewWrapper data-drag-handle data-twitter>
       <>
-        {props.editor.isEditable && !tweetCreated && (
+        {props.editor.isEditable && !attrTweetId && !tweetCreated && (
           <>
             {formik.errors.tweetUrl && !formik.isSubmitting ? (
               <ErrorMessageContainer>
