@@ -25,10 +25,11 @@ export const slashCommands = ({
     description: 'Normal paragraph style',
     command: ({ editor, range }) => {
       if (!range) {
+        editor.chain().focus().setParagraph().run();
         return;
       }
 
-      editor.chain().focus().deleteRange(range).setNode('paragraph').run();
+      editor.chain().focus().deleteRange(range).setParagraph().run();
     },
   },
   {
