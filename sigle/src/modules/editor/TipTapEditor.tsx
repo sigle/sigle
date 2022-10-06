@@ -120,10 +120,6 @@ export const TipTapEditor = forwardRef<
     setShowShortcutsDialog(false);
   };
 
-  useEffect(() => {
-    console.log(story);
-  }, []);
-
   const isMobile = width < 768;
 
   const editor = useEditor({
@@ -169,8 +165,7 @@ export const TipTapEditor = forwardRef<
       TipTapHistory,
       TipTapPlaceholder,
       // Custom extensions
-      !isMobile ? TipTapTwitter : undefined,
-      // !isMobile ? TipTapTwitterInput : undefined,
+      TipTapTwitter,
       !isMobile
         ? SlashCommands.configure({
             commands: slashCommands({ storyId: story.id }),
