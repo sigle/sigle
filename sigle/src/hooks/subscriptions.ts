@@ -7,19 +7,21 @@ import {
 import { SubscriptionService } from '../external/api';
 
 type GetApiSubscriptionsReturnType = Awaited<
-  ReturnType<typeof SubscriptionService.getApiSubscriptions>
+  ReturnType<typeof SubscriptionService.subscriptionControllerGetUserMe>
 >;
 export const useGetUserSubscription = (
   options: UseQueryOptions<GetApiSubscriptionsReturnType, Error> = {}
 ) =>
   useQuery<GetApiSubscriptionsReturnType, Error>(
     ['get-user-subscription'],
-    () => SubscriptionService.getApiSubscriptions(),
+    () => SubscriptionService.subscriptionControllerGetUserMe(),
     options
   );
 
 type PostApiSubscriptionsCreatorPlusReturnType = Awaited<
-  ReturnType<typeof SubscriptionService.postApiSubscriptionsCreatorPlus>
+  ReturnType<
+    typeof SubscriptionService.subscriptionControllerCreateSubscriptionCreatorPlus
+  >
 >;
 export const useCreateSubscription = (
   options: UseMutationOptions<
@@ -30,6 +32,8 @@ export const useCreateSubscription = (
 ) =>
   useMutation<PostApiSubscriptionsCreatorPlusReturnType, Error, number>(
     (nftId) =>
-      SubscriptionService.postApiSubscriptionsCreatorPlus({ body: { nftId } }),
+      SubscriptionService.subscriptionControllerCreateSubscriptionCreatorPlus({
+        requestBody: { nftId },
+      }),
     options
   );

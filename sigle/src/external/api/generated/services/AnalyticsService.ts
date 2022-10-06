@@ -1,6 +1,9 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
+import type { HistoricalDto } from '../models/HistoricalDto';
+import type { ReferrerDto } from '../models/ReferrerDto';
+
 import type { CancelablePromise } from '../core/CancelablePromise';
 import { OpenAPI } from '../core/OpenAPI';
 import { request as __request } from '../core/request';
@@ -8,10 +11,10 @@ import { request as __request } from '../core/request';
 export class AnalyticsService {
   /**
    * Return the referrer statistics.
-   * @returns any Default Response
+   * @returns ReferrerDto
    * @throws ApiError
    */
-  public static getApiAnalyticsReferrers({
+  public static analyticsControllerGetReferrers({
     dateFrom,
     storyId,
   }: {
@@ -23,12 +26,7 @@ export class AnalyticsService {
      * The story id to get the statistics for.
      */
     storyId?: string;
-  }): CancelablePromise<
-    Array<{
-      domain: string;
-      count: number;
-    }>
-  > {
+  }): CancelablePromise<Array<ReferrerDto>> {
     return __request(OpenAPI, {
       method: 'GET',
       url: '/api/analytics/referrers',
@@ -41,10 +39,10 @@ export class AnalyticsService {
 
   /**
    * Return the historical statistics.
-   * @returns any Default Response
+   * @returns HistoricalDto
    * @throws ApiError
    */
-  public static getApiAnalyticsHistorical({
+  public static analyticsControllerGetHistorical({
     dateFrom,
     dateGrouping,
     storyId,
@@ -61,18 +59,7 @@ export class AnalyticsService {
      * The story id to get the statistics for.
      */
     storyId?: string;
-  }): CancelablePromise<{
-    historical: Array<{
-      date: string;
-      visits: number;
-      pageviews: number;
-    }>;
-    stories: Array<{
-      pathname: string;
-      visits: number;
-      pageviews: number;
-    }>;
-  }> {
+  }): CancelablePromise<HistoricalDto> {
     return __request(OpenAPI, {
       method: 'GET',
       url: '/api/analytics/historical',

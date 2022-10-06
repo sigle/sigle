@@ -23,7 +23,7 @@ export const ExploreUsers = () => {
   } = useInfiniteQuery(
     ['get-user-explore'],
     ({ pageParam }) => {
-      return UserService.getApiUsersExplore({
+      return UserService.userControllerExplore({
         page: pageParam ? pageParam : 1,
       });
     },
