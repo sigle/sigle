@@ -78,6 +78,7 @@ export const TwitterComponent = (props: NodeViewProps) => {
   const [isTweetLoading, setIsTweetLoading] = useState(false);
 
   const tweetId = props.node.attrs['data-twitter-id'];
+  const tweetUrl = props.node.attrs.url;
 
   useEffect(() => {
     loadTwitterWidget().then(() => {
@@ -87,7 +88,7 @@ export const TwitterComponent = (props: NodeViewProps) => {
 
   const formik = useFormik<TweetValues>({
     initialValues: {
-      tweetUrl: '',
+      tweetUrl: tweetUrl || '',
     },
     validate: (values) => {
       const errors: FormikErrors<TweetValues> = {};
@@ -256,7 +257,14 @@ export const TwitterComponent = (props: NodeViewProps) => {
                         br: 0,
                       }}
                       onKeyDown={onKeyDown}
-                      onChange={formik.handleChange}
+                      onChange={(e) => {
+                        formik.handleChange(e);
+
+                        props.editor.commands.updateAttributes('twitter', {
+                          ...props.node.attrs,
+                          url: e.currentTarget.value,
+                        });
+                      }}
                       placeholder="Paste tweet URL and press “enter”..."
                       name="tweetUrl"
                       type="text"

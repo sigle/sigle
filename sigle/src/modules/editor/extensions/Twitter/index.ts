@@ -35,6 +35,9 @@ export const Twitter = Node.create({
         // force correct id
         parseHTML: (element) => element.getAttribute('data-twitter-id'),
       },
+      url: {
+        default: null,
+      },
     };
   },
 
@@ -43,10 +46,6 @@ export const Twitter = Node.create({
       setTweet:
         (options) =>
         ({ commands }) => {
-          //   if (!isValidYoutubeUrl(options.url)) {
-          //     return false;
-          //   }
-
           console.log({ options });
 
           return commands.insertContent({
@@ -89,7 +88,11 @@ export const Twitter = Node.create({
   renderHTML({ HTMLAttributes }) {
     console.log({ HTMLAttributes });
 
-    return ['div', mergeAttributes({ 'data-twitter': '' }, HTMLAttributes)];
+    if (HTMLAttributes.url) {
+      return ['div', mergeAttributes({ 'data-twitter': '' }, HTMLAttributes)];
+    } else {
+      return ['span'];
+    }
   },
 
   addNodeView() {
