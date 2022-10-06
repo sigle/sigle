@@ -286,40 +286,51 @@ export class SignInWithStacksMessage {
         return;
       }
 
+      const stacksSignature = createMessageSignature(signature);
+
+      /** Message Signing Prefixes */
+      const prefixes = [
+        '\x18Stacks Message Signing:\n', // Legacy Prefix
+        '\x17Stacks Signed Message:\n', // Future Prefix (for Ledger compatibility)
+      ];
+
       /** Recover address from signature */
-      let addr;
-      try {
-        const publicKey = publicKeyFromSignatureRsv(
-          hashMessage(EIP4361Message).toString('hex'),
-          createMessageSignature(signature)
-        );
-        const isValid = verifyMessageSignatureRsv({
-          signature,
-          message: EIP4361Message,
-          publicKey,
-        });
-        if (isValid) {
-          addr = getAddressFromPublicKey(publicKey);
-        }
-      } catch (_) {
-      } finally {
-        /** Match signature with message's address */
-        if (addr !== this.address) {
-          assert({
-            success: false,
-            data: this,
-            error: new SiweError(
-              SiweErrorType.INVALID_SIGNATURE,
-              addr,
-              `Resolved address to be ${this.address}`
-            ),
+      const potentialAddresses = prefixes
+        .map((prefix) => {
+          const publicKey = publicKeyFromSignatureRsv(
+            hashMessage(EIP4361Message, prefix).toString('hex'),
+            stacksSignature
+          );
+
+          const isValid = verifyMessageSignatureRsv({
+            signature,
+            message: EIP4361Message,
+            publicKey,
           });
-        }
+          if (!isValid) return false;
+
+          return getAddressFromPublicKey(publicKey);
+        })
+        .filter(Boolean) as string[];
+
+      /** Match signature with message's address */
+      if (potentialAddresses.includes(this.address)) {
+        resolve({
+          success: true,
+          data: this,
+        });
+        return;
       }
 
-      resolve({
-        success: true,
+      /** The correct address was NOT in the list of potential addresses */
+      assert({
+        success: false,
         data: this,
+        error: new SiweError(
+          SiweErrorType.INVALID_SIGNATURE,
+          this.address,
+          potentialAddresses[0]
+        ),
       });
     });
   }
