@@ -134,6 +134,7 @@ export const TwitterComponent = (props: NodeViewProps) => {
             setIsTweetLoading(false);
             return;
           }
+          props.editor.commands.createParagraphNear();
           setIsTweetLoading(false);
         });
 
