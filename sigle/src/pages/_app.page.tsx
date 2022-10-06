@@ -147,7 +147,8 @@ export default class MyApp extends App {
     // Workaround for https://github.com/zeit/next.js/issues/8592
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const { err } = this.props as any;
-    const modifiedPageProps = { ...pageProps, err };
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const modifiedPageProps: any = { ...pageProps, err };
 
     const seoTitle = 'Sigle | Where Web3 stories come to life';
     const seoDescription =
