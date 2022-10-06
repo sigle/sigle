@@ -175,6 +175,8 @@ export const TipTapEditor = forwardRef<
     content: story.contentVersion === '2' ? story.content : '',
   });
 
+  console.log(story.content, { isSSR: typeof window === 'undefined' });
+
   // Here we extend the received ref so the parent can get the editor content at any time
   useImperativeHandle(
     ref,
