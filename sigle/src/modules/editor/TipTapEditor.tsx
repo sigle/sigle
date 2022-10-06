@@ -175,8 +175,6 @@ export const TipTapEditor = forwardRef<
     content: story.contentVersion === '2' ? story.content : '',
   });
 
-  console.log(story.content, { isSSR: typeof window === 'undefined' });
-
   // Here we extend the received ref so the parent can get the editor content at any time
   useImperativeHandle(
     ref,
@@ -199,7 +197,16 @@ export const TipTapEditor = forwardRef<
       {editor && !isMobile && <BubbleMenu editor={editor} />}
       {editor && !isMobile && <FloatingMenu editor={editor} />}
 
-      <StyledEditorContent editor={editor} />
+      {/* editor is not set while doing SSR so we render the HTNL as it is for SEO */}
+      {editor ? (
+        <StyledEditorContent editor={editor} />
+      ) : (
+        <div
+          dangerouslySetInnerHTML={{
+            __html: story.contentVersion === '2' ? story.content : '',
+          }}
+        />
+      )}
 
       {editable && (
         <>
