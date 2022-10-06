@@ -76,7 +76,6 @@ interface TweetValues {
 export const TwitterComponent = (props: NodeViewProps) => {
   const containerRef = useRef<HTMLDivElement | null>(null);
   const [isTweetLoading, setIsTweetLoading] = useState(false);
-  const [tweetCreated, setTweetCreated] = useState(false);
 
   const tweetId = props.node.attrs['data-twitter-id'];
 
@@ -134,7 +133,6 @@ export const TwitterComponent = (props: NodeViewProps) => {
             setIsTweetLoading(false);
             return;
           }
-          setTweetCreated(true);
           setIsTweetLoading(false);
         });
 
@@ -155,8 +153,17 @@ export const TwitterComponent = (props: NodeViewProps) => {
           return;
         }
         formik.setSubmitting(false);
-        setTweetCreated(true);
       });
+    }
+  };
+
+  const onKeyDown = (event: React.KeyboardEvent) => {
+    // If user press escape we hide the link input
+    if (
+      (!formik.values.tweetUrl && event.key === 'Backspace') ||
+      event.key === 'Delete'
+    ) {
+      props.deleteNode();
     }
   };
 
@@ -248,6 +255,7 @@ export const TwitterComponent = (props: NodeViewProps) => {
                         boxShadow: 'none',
                         br: 0,
                       }}
+                      onKeyDown={onKeyDown}
                       onChange={formik.handleChange}
                       placeholder="Paste tweet URL and press “enter”..."
                       name="tweetUrl"
