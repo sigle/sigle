@@ -180,6 +180,16 @@ export const CommandList = forwardRef<CommandListRef, CommandListProps>(
                 </Typography>
               </Flex>
             </Flex>
+            {currentNodeName === twitterItem.title && (
+              <Box
+                css={{
+                  backgroundColor: '$green11',
+                  width: 8,
+                  height: 8,
+                  br: '$round',
+                }}
+              />
+            )}
           </CommandsListItem>
         )}
       </Flex>
