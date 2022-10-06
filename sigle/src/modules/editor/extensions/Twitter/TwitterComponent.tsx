@@ -14,6 +14,15 @@ const ErrorButton = styled('button', {
   fontSize: '14px',
   lineHeight: '18px',
   letterSpacing: '0.2px',
+  flexGrow: 1,
+  width: '100%',
+  py: '$3',
+
+  '@md': {
+    flexGrow: 0,
+    width: 'auto',
+    py: 0,
+  },
 
   '&:hover': {
     backgroundColor: 'transparent',
@@ -28,10 +37,15 @@ const ErrorMessageContainer = styled('div', {
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'space-between',
+  flexDirection: 'column',
   backgroundColor: '$red5',
+  boxShadow: '0 0 0 1px $colors$red7',
   color: '$red11',
   br: '$2',
-  pr: '$5',
+
+  '@md': {
+    flexDirection: 'row',
+  },
 });
 
 const StyledErrorMessage = styled(ErrorMessage, {
@@ -61,23 +75,16 @@ interface TweetValues {
 
 export const TwitterComponent = (props: NodeViewProps) => {
   const containerRef = useRef<HTMLDivElement | null>(null);
-  // const previousTweetIDRef = useRef<string>();
   const [isTweetLoading, setIsTweetLoading] = useState(false);
   const [tweetCreated, setTweetCreated] = useState(false);
 
-  const attrTweetId = props.node.attrs['data-twitter-id'];
-
-  useEffect(() => {
-    if (attrTweetId) {
-      setTweetCreated(true);
-    }
-  }, []);
+  const tweetId = props.node.attrs['data-twitter-id'];
 
   useEffect(() => {
     loadTwitterWidget().then(() => {
       createTweetOnLoad();
     });
-  }, [attrTweetId]);
+  }, [tweetId]);
 
   const formik = useFormik<TweetValues>({
     initialValues: {
@@ -116,12 +123,17 @@ export const TwitterComponent = (props: NodeViewProps) => {
   };
 
   const createTweetOnLoad = async () => {
-    if (attrTweetId) {
+    if (tweetId) {
       setIsTweetLoading(true);
       // @ts-expect-error Twitter is attached to the window.
       const tweet = await window.twttr.widgets
-        .createTweet(attrTweetId, containerRef.current)
-        .then(() => {
+        .createTweet(tweetId, containerRef.current)
+        .then((value: any) => {
+          if (!value) {
+            formik.setErrors({ tweetUrl: 'Create tweet error' });
+            setIsTweetLoading(false);
+            return;
+          }
           setTweetCreated(true);
           setIsTweetLoading(false);
         });
@@ -151,79 +163,118 @@ export const TwitterComponent = (props: NodeViewProps) => {
   return (
     <NodeViewWrapper data-drag-handle data-twitter>
       <>
-        {props.editor.isEditable && !attrTweetId && !tweetCreated && (
+        {props.editor.isEditable && (
           <>
-            {formik.errors.tweetUrl && !formik.isSubmitting ? (
+            {formik.errors.tweetUrl ? (
               <ErrorMessageContainer>
                 <StyledErrorMessage>
                   {formik.errors.tweetUrl === 'Invalid URL'
                     ? `Invalid URL`
                     : `An error occurred while pasting the URL or the link is broken`}
                 </StyledErrorMessage>
-                <Flex>
-                  {formik.errors.tweetUrl !== 'Invalid URL' && (
+                <Box
+                  css={{
+                    display: 'box',
+                    height: 1,
+                    width: '100%',
+                    backgroundColor: '$red7',
+                    '@md': { display: 'none' },
+                  }}
+                />
+                <Flex
+                  css={{ width: '100%', '@md': { width: 'auto', pr: '$5' } }}
+                  gap="5"
+                >
+                  {formik.errors.tweetUrl === 'Invalid URL' ? (
+                    <ErrorButton onClick={() => formik.resetForm()}>
+                      Reset
+                    </ErrorButton>
+                  ) : (
                     <ErrorButton onClick={retrySubmitTweetID}>
                       Retry
                     </ErrorButton>
                   )}
-                  <ErrorButton onClick={() => formik.resetForm()}>
+                  <Box
+                    css={{
+                      width: 1,
+                      backgroundColor: '$red7',
+                      '@md': { my: '-$2' },
+                    }}
+                  />
+                  <ErrorButton
+                    onClick={() => {
+                      const editor = props.editor;
+
+                      editor.commands.insertContentAt(
+                        {
+                          from: editor.state.selection.from,
+                          to: editor.state.selection.to,
+                        },
+                        `<a href="${formik.values.tweetUrl}">${formik.values.tweetUrl}</a>`
+                      );
+                    }}
+                  >
                     Paste URL as a link
                   </ErrorButton>
                 </Flex>
               </ErrorMessageContainer>
             ) : (
-              <Flex
-                onSubmit={formik.handleSubmit}
-                as="form"
-                css={{
-                  position: 'relative',
-                  boxShadow: '0 0 0 1px $colors$gray7',
-                  backgroundColor: formik.errors.tweetUrl ? '$red4' : '$gray3',
-                  br: '$1',
-                  pr: '$2',
-
-                  '&:hover': {
-                    backgroundColor: '$gray4',
-                    boxShadow: '0 0 0 1px $colors$gray8',
-                  },
-
-                  '&:focus': {
-                    backgroundColor: '$gray4',
-                    boxShadow: '0 0 0 1px $colors$gray8',
-                  },
-                }}
-              >
-                <StyledFormInput
-                  required
-                  css={{
-                    boxShadow: 'none',
-                    br: 0,
-                  }}
-                  onChange={formik.handleChange}
-                  placeholder="Paste tweet URL and press “enter”..."
-                  name="tweetUrl"
-                  type="text"
-                  value={formik.values.tweetUrl}
-                />
-                {formik.isSubmitting ? (
-                  <LoadingSpinner />
-                ) : (
-                  <Button
-                    color="orange"
-                    disabled={formik.isSubmitting}
-                    size="md"
-                    type="submit"
+              <>
+                {!tweetId && (
+                  <Flex
+                    onSubmit={formik.handleSubmit}
+                    as="form"
                     css={{
-                      visibility: 'hidden',
-                      alignSelf: 'center',
-                      position: 'absolute',
-                      right: '$1',
+                      position: 'relative',
+                      boxShadow: '0 0 0 1px $colors$gray7',
+                      backgroundColor: '$gray3',
+                      br: '$1',
+                      pr: '$2',
+
+                      '&:hover': {
+                        backgroundColor: '$gray4',
+                        boxShadow: '0 0 0 1px $colors$gray8',
+                      },
+
+                      '&:focus': {
+                        backgroundColor: '$gray4',
+                        boxShadow: '0 0 0 1px $colors$gray8',
+                      },
                     }}
                   >
-                    Submit
-                  </Button>
+                    <StyledFormInput
+                      required
+                      css={{
+                        boxShadow: 'none',
+                        br: 0,
+                      }}
+                      onChange={formik.handleChange}
+                      placeholder="Paste tweet URL and press “enter”..."
+                      name="tweetUrl"
+                      type="text"
+                      value={formik.values.tweetUrl}
+                    />
+                    {formik.isSubmitting ? (
+                      <LoadingSpinner />
+                    ) : (
+                      <Button
+                        color="orange"
+                        disabled={formik.isSubmitting}
+                        size="md"
+                        type="submit"
+                        css={{
+                          visibility: 'hidden',
+                          alignSelf: 'center',
+                          position: 'absolute',
+                          right: '$1',
+                        }}
+                      >
+                        Submit
+                      </Button>
+                    )}
+                  </Flex>
                 )}
-              </Flex>
+              </>
             )}
           </>
         )}
