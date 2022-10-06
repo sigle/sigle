@@ -199,7 +199,16 @@ export const TipTapEditor = forwardRef<
       {editor && !isMobile && <BubbleMenu editor={editor} />}
       {editor && !isMobile && <FloatingMenu editor={editor} />}
 
-      <StyledEditorContent editor={editor} />
+      {/* editor is not set while doing SSR so we render the HTNL as it is for SEO */}
+      {editor ? (
+        <StyledEditorContent editor={editor} />
+      ) : (
+        <div
+          dangerouslySetInnerHTML={{
+            __html: story.contentVersion === '2' ? story.content : '',
+          }}
+        />
+      )}
 
       {editable && (
         <>
