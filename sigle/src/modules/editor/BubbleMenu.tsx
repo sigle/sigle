@@ -192,6 +192,11 @@ export const BubbleMenu = ({ editor }: BubbleMenuProps) => {
           return false;
         }
 
+        /// Do not show on twitter embed
+        if (editor.isActive('twitter')) {
+          return false;
+        }
+
         return true;
       }}
       editor={editor}
