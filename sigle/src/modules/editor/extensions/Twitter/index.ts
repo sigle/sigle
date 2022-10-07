@@ -1,7 +1,7 @@
 import { Node, mergeAttributes, nodePasteRule } from '@tiptap/core';
 import { ReactNodeViewRenderer } from '@tiptap/react';
 import { TwitterComponent } from './TwitterComponent';
-import { TWITTER_REGEX_GLOBAL } from './utils';
+import { getTweetIdFromUrl, TWITTER_REGEX_GLOBAL } from './utils';
 
 // TODO handle global paste
 
@@ -38,6 +38,7 @@ export const Twitter = Node.create({
       url: {
         default: null,
       },
+      pasted: false,
     };
   },
 
@@ -63,17 +64,15 @@ export const Twitter = Node.create({
       return [];
     }
 
-    const getTweetId = (input: string | undefined) =>
-      input?.split('/')[5].split('?')[0];
-
     return [
       nodePasteRule({
         find: TWITTER_REGEX_GLOBAL,
         type: this.type,
         getAttributes: (match) => {
           return {
-            ['data-twitter-id']: getTweetId(match.input),
+            ['data-twitter-id']: getTweetIdFromUrl(match.input),
             url: match.input,
+            pasted: true,
           };
         },
       }),
@@ -91,11 +90,11 @@ export const Twitter = Node.create({
   renderHTML({ HTMLAttributes }) {
     console.log({ HTMLAttributes });
 
-    if (HTMLAttributes.url) {
-      return ['div', mergeAttributes({ 'data-twitter': '' }, HTMLAttributes)];
-    } else {
+    if (!HTMLAttributes.url) {
       return ['span'];
     }
+
+    return ['div', mergeAttributes({ 'data-twitter': '' }, HTMLAttributes)];
   },
 
   addNodeView() {

@@ -85,6 +85,7 @@ export const TwitterComponent = (props: NodeViewProps) => {
 
   const tweetId = props.node.attrs['data-twitter-id'];
   const tweetUrl = props.node.attrs.url;
+  const isPasted = props.node.attrs.pasted;
 
   useEffect(() => {
     if (tweetId && !tweetCreated) {
@@ -129,6 +130,13 @@ export const TwitterComponent = (props: NodeViewProps) => {
           formik.setErrors({ tweetUrl: 'Create tweet error' });
           setIsTweetLoading(false);
           return;
+        }
+        if (isPasted) {
+          props.editor.commands.updateAttributes('twitter', {
+            ...props.node.attrs,
+            pasted: false,
+          });
+          props.editor.commands.createParagraphNear();
         }
         setTweetCreated(true);
         setIsTweetLoading(false);
