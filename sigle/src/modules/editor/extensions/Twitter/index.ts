@@ -71,7 +71,10 @@ export const Twitter = Node.create({
         find: TWITTER_REGEX_GLOBAL,
         type: this.type,
         getAttributes: (match) => {
-          return { ['data-twitter-id']: getTweetId(match.input) };
+          return {
+            ['data-twitter-id']: getTweetId(match.input),
+            url: match.input,
+          };
         },
       }),
     ];
