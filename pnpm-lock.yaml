@@ -251,7 +251,7 @@ importers:
       next-themes: 0.2.0
       nprogress: 0.2.0
       openapi-typescript-codegen: 0.23.0
-      posthog-js: 1.20.4
+      posthog-js: 1.32.2
       prosemirror-state: 1.4.1
       react: 18.2.0
       react-color: 2.19.3
@@ -352,7 +352,7 @@ importers:
       next-themes: 0.2.0_azq6kxkn3od7qdylwkyksrwopy
       nprogress: 0.2.0
       openapi-typescript-codegen: 0.23.0
-      posthog-js: 1.20.4
+      posthog-js: 1.32.2
       prosemirror-state: 1.4.1
       react: 18.2.0
       react-color: 2.19.3_react@18.2.0
@@ -3734,11 +3734,6 @@ packages:
       '@sentry/types': 7.12.1
       '@sentry/utils': 7.12.1
       tslib: 1.14.1
-    dev: false
-
-  /@sentry/types/6.19.7:
-    resolution: {integrity: sha512-jH84pDYE+hHIbVnab3Hr+ZXr1v8QABfhx39KknxqKWr2l0oEItzepV0URvbEhB446lk/S/59230dlUUIBGsXbg==}
-    engines: {node: '>=6'}
     dev: false
 
   /@sentry/types/7.12.1:
@@ -11848,10 +11843,10 @@ packages:
       picocolors: 1.0.0
       source-map-js: 1.0.2
 
-  /posthog-js/1.20.4:
-    resolution: {integrity: sha512-z4A7z+OXNmDaBy046SdQR3LlbG+ycFP4puLPArRsQsv5abN2nhDD+RKIO/jnhNaME9d4b59+proDUdCSaEg/tA==}
+  /posthog-js/1.32.2:
+    resolution: {integrity: sha512-1jepbvxUCGJW7pxsiPeioct9+JZJKPur6j0M2+pe2WFmNnkBGlV7qbK/evv1k6jjYpG8SxDZqwU0RAseRyh7rA==}
     dependencies:
-      '@sentry/types': 6.19.7
+      '@sentry/types': 7.12.1
       fflate: 0.4.8
       rrweb-snapshot: 1.1.14
     dev: false
