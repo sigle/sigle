@@ -310,6 +310,14 @@ export const TwitterComponent = (props: NodeViewProps) => {
 
           '& iframe': {
             br: 12,
+            outline:
+              props.editor.isEditable && props.selected
+                ? '2px solid $green11'
+                : 'none',
+
+            '&:hover': {
+              outline: props.editor.isEditable ? '1px solid $green11' : 'none',
+            },
           },
         }}
       ></Box>
