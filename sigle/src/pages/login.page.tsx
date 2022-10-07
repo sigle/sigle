@@ -132,6 +132,7 @@ const Login = () => {
           }
         );
         if (signInResult && signInResult.error) {
+          posthog.capture('start-login-sign-message-error');
           toast.error('Failed to login');
           setSigningState('inactive');
         }
