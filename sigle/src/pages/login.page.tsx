@@ -103,6 +103,7 @@ const Login = () => {
     setSigningState('active');
 
     Fathom.trackGoal(Goals.LOGIN_SIGN_MESSAGE, 0);
+    posthog.capture('start-login-sign-message');
 
     const callbackUrl = '/protected';
     const stacksMessage = new SignInWithStacksMessage({
