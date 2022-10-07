@@ -111,15 +111,13 @@ export const TwitterComponent = (props: NodeViewProps) => {
     validateOnChange: false,
     onSubmit: async (values, { validateForm }) => {
       validateForm().then(() => {
-        formik.setSubmitting(true);
-
         props.editor.commands.updateAttributes('twitter', {
           ...props.node.attrs,
           ['data-twitter-id']: getTweetIdFromUrl(values.tweetUrl),
         });
-
-        submitTweetId();
       });
+
+      submitTweetId();
     },
   });
 
@@ -139,11 +137,13 @@ export const TwitterComponent = (props: NodeViewProps) => {
   };
 
   const submitTweetId = () => {
+    // clear errors if retrying submit
     if (formik.errors) {
       formik.setErrors({ tweetUrl: undefined });
     }
+    formik.setSubmitting(true);
 
-    const id = tweetId ?? getTweetIdFromUrl(formik.values.tweetUrl);
+    const id = tweetId || getTweetIdFromUrl(formik.values.tweetUrl);
 
     if (!id) {
       return;
@@ -155,10 +155,10 @@ export const TwitterComponent = (props: NodeViewProps) => {
         formik.setSubmitting(false);
         return;
       }
+      props.editor.commands.createParagraphNear();
+      setTweetCreated(true);
+      formik.setSubmitting(false);
     });
-    props.editor.commands.createParagraphNear();
-    setTweetCreated(true);
-    formik.setSubmitting(false);
   };
 
   const onKeyDown = (event: React.KeyboardEvent) => {
