@@ -145,7 +145,8 @@ export const TwitterComponent = (props: NodeViewProps) => {
 
     const id = tweetId || getTweetIdFromUrl(formik.values.tweetUrl);
 
-    if (!id) {
+    // @ts-expect-error Twitter is attached to the window.
+    if (!id || !window.twttr) {
       return;
     }
 
@@ -307,17 +308,12 @@ export const TwitterComponent = (props: NodeViewProps) => {
           margin: '0 auto',
           cursor: 'pointer',
           maxWidth: '550px',
+          backgroundColor: '$orange11',
+          my: '$4',
+          px: '$4',
 
           '& iframe': {
             br: 12,
-            outline:
-              props.editor.isEditable && props.selected
-                ? '2px solid $green11'
-                : 'none',
-
-            '&:hover': {
-              outline: props.editor.isEditable ? '1px solid $green11' : 'none',
-            },
           },
         }}
       ></Box>
