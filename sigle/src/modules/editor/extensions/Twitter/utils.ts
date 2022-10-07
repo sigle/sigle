@@ -19,6 +19,17 @@ export const loadTwitterWidget = async (): Promise<void> => {
   });
 };
 
+export const getTweetIdFromUrl = (url: string | undefined) =>
+  url?.split('/')[5].split('?')[0];
+
+export const createTweet = async (
+  tweetId: string,
+  ref: React.MutableRefObject<HTMLDivElement | null>
+) => {
+  // @ts-expect-error Twitter is attached to the window.
+  return await window.twttr.widgets.createTweet(tweetId, ref.current);
+};
+
 export const TWITTER_REGEX =
   /^https?:\/\/twitter\.com\/(?:#!\/)?(\w+)\/status(es)?\/(\d+)/;
 

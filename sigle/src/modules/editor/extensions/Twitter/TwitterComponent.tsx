@@ -5,7 +5,12 @@ import { Box, LoadingSpinner, Button, Flex, FormInput } from '../../../../ui';
 import { styled } from '../../../../stitches.config';
 import { ErrorMessage } from '../../../../ui/ErrorMessage';
 import { FormikErrors, useFormik } from 'formik';
-import { loadTwitterWidget, TWITTER_REGEX } from './utils';
+import {
+  createTweet,
+  getTweetIdFromUrl,
+  loadTwitterWidget,
+  TWITTER_REGEX,
+} from './utils';
 
 const ErrorButton = styled('button', {
   px: '$2',
@@ -76,14 +81,17 @@ interface TweetValues {
 export const TwitterComponent = (props: NodeViewProps) => {
   const containerRef = useRef<HTMLDivElement | null>(null);
   const [isTweetLoading, setIsTweetLoading] = useState(false);
+  const [tweetCreated, setTweetCreated] = useState(false);
 
   const tweetId = props.node.attrs['data-twitter-id'];
   const tweetUrl = props.node.attrs.url;
 
   useEffect(() => {
-    loadTwitterWidget().then(() => {
-      createTweetOnLoad();
-    });
+    if (tweetId && !tweetCreated) {
+      loadTwitterWidget().then(() => {
+        createTweetOnLoad();
+      });
+    }
   }, [tweetId]);
 
   const formik = useFormik<TweetValues>({
@@ -101,66 +109,60 @@ export const TwitterComponent = (props: NodeViewProps) => {
     },
     validateOnBlur: false,
     validateOnChange: false,
-    onSubmit: async (values, { setSubmitting, validateForm }) => {
+    onSubmit: async (values, { validateForm }) => {
       validateForm().then(() => {
-        setSubmitting(true);
-        const tweetID = values.tweetUrl.split('/')[5].split('?')[0];
+        formik.setSubmitting(true);
 
         props.editor.commands.updateAttributes('twitter', {
           ...props.node.attrs,
-          ['data-twitter-id']: tweetID,
+          ['data-twitter-id']: getTweetIdFromUrl(values.tweetUrl),
         });
+
+        submitTweetId();
       });
     },
   });
 
-  const createTweetOnSubmit = async (tweetID: string) => {
-    // @ts-expect-error Twitter is attached to the window.
-    return await window.twttr.widgets.createTweet(
-      tweetID,
-      containerRef.current
-    );
-  };
-
   const createTweetOnLoad = async () => {
     if (tweetId) {
       setIsTweetLoading(true);
-      // @ts-expect-error Twitter is attached to the window.
-      const tweet = await window.twttr.widgets
-        .createTweet(tweetId, containerRef.current)
-        .then((value: any) => {
-          if (!value) {
-            formik.setErrors({ tweetUrl: 'Create tweet error' });
-            setIsTweetLoading(false);
-            return;
-          }
-          props.editor.commands.createParagraphNear();
-          setIsTweetLoading(false);
-        });
-
-      return tweet;
-    }
-  };
-
-  const retrySubmitTweetID = () => {
-    if (formik.values.tweetUrl) {
-      const tweetID = formik.values.tweetUrl.split('/')[5].split('?')[0];
-      formik.setErrors({ tweetUrl: undefined });
-      formik.setSubmitting(true);
-
-      createTweetOnSubmit(tweetID).then((value) => {
+      createTweet(tweetId, containerRef).then((value: any) => {
         if (!value) {
           formik.setErrors({ tweetUrl: 'Create tweet error' });
-          formik.setSubmitting(false);
+          setIsTweetLoading(false);
           return;
         }
-        formik.setSubmitting(false);
+        setTweetCreated(true);
+        setIsTweetLoading(false);
       });
     }
   };
 
+  const submitTweetId = () => {
+    if (formik.errors) {
+      formik.setErrors({ tweetUrl: undefined });
+    }
+
+    const id = tweetId ?? getTweetIdFromUrl(formik.values.tweetUrl);
+
+    if (!id) {
+      return;
+    }
+
+    createTweet(id, containerRef).then((value) => {
+      if (!value) {
+        formik.setErrors({ tweetUrl: 'Create tweet error' });
+        formik.setSubmitting(false);
+        return;
+      }
+    });
+    props.editor.commands.createParagraphNear();
+    setTweetCreated(true);
+    formik.setSubmitting(false);
+  };
+
   const onKeyDown = (event: React.KeyboardEvent) => {
-    // If user press escape we hide the link input
+    // Remove input if empty and user presses backspace or delete key
     if (
       (!formik.values.tweetUrl && event.key === 'Backspace') ||
       event.key === 'Delete'
@@ -199,9 +201,7 @@ export const TwitterComponent = (props: NodeViewProps) => {
                       Reset
                     </ErrorButton>
                   ) : (
-                    <ErrorButton onClick={retrySubmitTweetID}>
-                      Retry
-                    </ErrorButton>
+                    <ErrorButton onClick={submitTweetId}>Retry</ErrorButton>
                   )}
                   <Box
                     css={{
@@ -229,7 +229,7 @@ export const TwitterComponent = (props: NodeViewProps) => {
               </ErrorMessageContainer>
             ) : (
               <>
-                {!tweetId && (
+                {!tweetId && !tweetCreated && (
                   <Flex
                     onSubmit={formik.handleSubmit}
                     as="form"
@@ -296,7 +296,7 @@ export const TwitterComponent = (props: NodeViewProps) => {
           </>
         )}
       </>
-      {isTweetLoading ? (
+      {isTweetLoading || formik.isSubmitting ? (
         <Box css={{ height: 200, display: 'flex', justifyContent: 'center' }}>
           <LoadingSpinner />
         </Box>
