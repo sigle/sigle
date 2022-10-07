@@ -308,9 +308,6 @@ export const TwitterComponent = (props: NodeViewProps) => {
           margin: '0 auto',
           cursor: 'pointer',
           maxWidth: '550px',
-          backgroundColor: '$orange11',
-          my: '$4',
-          px: '$4',
 
           '& iframe': {
             br: 12,
