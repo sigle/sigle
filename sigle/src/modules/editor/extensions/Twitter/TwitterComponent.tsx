@@ -181,7 +181,7 @@ export const TwitterComponent = (props: NodeViewProps) => {
   };
 
   return (
-    <NodeViewWrapper data-drag-handle data-twitter>
+    <NodeViewWrapper data-twitter>
       <>
         {props.editor.isEditable && (
           <>
@@ -194,7 +194,7 @@ export const TwitterComponent = (props: NodeViewProps) => {
                 </StyledErrorMessage>
                 <Box
                   css={{
-                    display: 'box',
+                    display: 'block',
                     height: 1,
                     width: '100%',
                     backgroundColor: '$red7',
