@@ -98,12 +98,22 @@ interface TweetValues {
 
 export const TwitterComponent = (props: NodeViewProps) => {
   const containerRef = useRef<HTMLDivElement | null>(null);
+  const inputRef = useRef<HTMLInputElement | null>(null);
   const [isTweetLoading, setIsTweetLoading] = useState(false);
   const [tweetCreated, setTweetCreated] = useState(false);
 
   const tweetId = props.node.attrs['data-twitter-id'];
   const tweetUrl = props.node.attrs.url;
   const isPasted = props.node.attrs.pasted;
+
+  useEffect(() => {
+    if (!tweetId && inputRef) {
+      // override tiptap focus
+      setTimeout(() => {
+        inputRef.current?.focus();
+      }, 5);
+    }
+  }, []);
 
   useEffect(() => {
     loadTwitterWidget().then(() => {
@@ -182,6 +192,7 @@ export const TwitterComponent = (props: NodeViewProps) => {
         formik.setSubmitting(false);
         return;
       }
+
       props.editor.commands.createParagraphNear();
       setTweetCreated(true);
       formik.setSubmitting(false);
@@ -258,6 +269,7 @@ export const TwitterComponent = (props: NodeViewProps) => {
               {!formik.isSubmitting && !tweetId && !tweetCreated && (
                 <Form onSubmit={formik.handleSubmit}>
                   <StyledFormInput
+                    ref={inputRef}
                     required
                     css={{
                       boxShadow: 'none',

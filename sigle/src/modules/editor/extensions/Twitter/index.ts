@@ -11,7 +11,7 @@ declare module '@tiptap/core' {
       /**
        * Insert a video embed
        */
-      setTweet: (options: { url: string }) => ReturnType;
+      setTweet: () => ReturnType;
     };
   }
 }
@@ -45,16 +45,13 @@ export const Twitter = Node.create({
   addCommands() {
     return {
       setTweet:
-        (options) =>
+        () =>
         ({ commands }) => {
-          console.log({ options });
-
-          return commands.insertContent({
+          commands.insertContent({
             type: this.name,
-            attrs: {
-              ['data-twitter-id']: options.url,
-            },
           });
+          commands.focus();
+          return true;
         },
     };
   },

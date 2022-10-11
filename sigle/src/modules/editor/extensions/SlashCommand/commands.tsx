@@ -232,9 +232,7 @@ export const slashCommands = ({
     description: '/Twitter [Tweet URL]',
     command: ({ editor, range }) => {
       if (!range) {
-        editor.commands.insertContent({
-          type: 'twitter',
-        });
+        editor.commands.setTweet();
         return;
       }
 
@@ -244,9 +242,7 @@ export const slashCommands = ({
         // Use deleteRange to clear the text from command chars "/q" etc..
         .deleteRange(range)
         .run();
-      editor.commands.insertContent({
-        type: 'twitter',
-      });
+      editor.commands.setTweet();
     },
   },
 ];
