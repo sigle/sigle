@@ -295,10 +295,13 @@ export const TwitterComponent = (props: NodeViewProps) => {
                     size="md"
                     type="submit"
                     css={{
-                      visibility: 'hidden',
-                      alignSelf: 'center',
+                      clip: 'rect(0 0 0 0)',
+                      clipPath: 'inset(50%)',
+                      height: 1,
+                      overflow: 'hidden',
                       position: 'absolute',
-                      right: '$1',
+                      whiteSpace: 'nowrap',
+                      width: 1,
                     }}
                   >
                     Submit
