@@ -116,9 +116,11 @@ export const TwitterComponent = (props: NodeViewProps) => {
   }, []);
 
   useEffect(() => {
-    loadTwitterWidget().then(() => {
-      createTweetOnLoad();
-    });
+    if (tweetId) {
+      loadTwitterWidget().then(() => {
+        createTweetOnLoad();
+      });
+    }
   }, [tweetId]);
 
   const formik = useFormik<TweetValues>({
@@ -151,25 +153,23 @@ export const TwitterComponent = (props: NodeViewProps) => {
   });
 
   const createTweetOnLoad = async () => {
-    if (tweetId) {
-      setIsTweetLoading(true);
-      createTweet(tweetId, containerRef).then((value: any) => {
-        if (!value) {
-          formik.setErrors({ tweetUrl: 'Create tweet error' });
-          setIsTweetLoading(false);
-          return;
-        }
-        if (isPasted) {
-          props.editor.commands.updateAttributes('twitter', {
-            ...props.node.attrs,
-            pasted: false,
-          });
-          props.editor.commands.createParagraphNear();
-        }
-        setTweetCreated(true);
+    setIsTweetLoading(true);
+    createTweet(tweetId, containerRef).then((value: any) => {
+      if (!value) {
+        formik.setErrors({ tweetUrl: 'Create tweet error' });
         setIsTweetLoading(false);
-      });
-    }
+        return;
+      }
+      if (isPasted) {
+        props.editor.commands.updateAttributes('twitter', {
+          ...props.node.attrs,
+          pasted: false,
+        });
+        props.editor.commands.createParagraphNear();
+      }
+      setTweetCreated(true);
+      setIsTweetLoading(false);
+    });
   };
 
   const submitTweetId = () => {
@@ -207,6 +207,18 @@ export const TwitterComponent = (props: NodeViewProps) => {
     ) {
       props.deleteNode();
     }
+  };
+
+  const pasteUrlAsLink = () => {
+    const editor = props.editor;
+
+    editor.commands.insertContentAt(
+      {
+        from: editor.state.selection.from,
+        to: editor.state.selection.to,
+      },
+      `<a href="${formik.values.tweetUrl}">${formik.values.tweetUrl}</a>`
+    );
   };
 
   return (
@@ -247,26 +259,14 @@ export const TwitterComponent = (props: NodeViewProps) => {
                     '@md': { my: '-$2' },
                   }}
                 />
-                <ErrorButton
-                  onClick={() => {
-                    const editor = props.editor;
-
-                    editor.commands.insertContentAt(
-                      {
-                        from: editor.state.selection.from,
-                        to: editor.state.selection.to,
-                      },
-                      `<a href="${formik.values.tweetUrl}">${formik.values.tweetUrl}</a>`
-                    );
-                  }}
-                >
+                <ErrorButton onClick={pasteUrlAsLink}>
                   Paste URL as a link
                 </ErrorButton>
               </Flex>
             </ErrorMessageContainer>
           ) : (
             <>
-              {!formik.isSubmitting && !tweetId && !tweetCreated && (
+              {!tweetId && !tweetCreated && (
                 <Form onSubmit={formik.handleSubmit}>
                   <StyledFormInput
                     ref={inputRef}
@@ -289,24 +289,20 @@ export const TwitterComponent = (props: NodeViewProps) => {
                     type="text"
                     value={formik.values.tweetUrl}
                   />
-                  {formik.isSubmitting ? (
-                    <LoadingSpinner />
-                  ) : (
-                    <Button
-                      color="orange"
-                      disabled={formik.isSubmitting}
-                      size="md"
-                      type="submit"
-                      css={{
-                        visibility: 'hidden',
-                        alignSelf: 'center',
-                        position: 'absolute',
-                        right: '$1',
-                      }}
-                    >
-                      Submit
-                    </Button>
-                  )}
+                  <Button
+                    color="orange"
+                    disabled={formik.isSubmitting}
+                    size="md"
+                    type="submit"
+                    css={{
+                      visibility: 'hidden',
+                      alignSelf: 'center',
+                      position: 'absolute',
+                      right: '$1',
+                    }}
+                  >
+                    Submit
+                  </Button>
                 </Form>
               )}
             </>
