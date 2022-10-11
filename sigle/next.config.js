@@ -24,7 +24,7 @@ const getVercelPreviewUrl = () => {
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   experimental: {},
-  reactStrictMode: true,
+  reactStrictMode: false,
   swcMinify: true,
   env: {
     APP_URL: process.env.APP_URL,

@@ -297,8 +297,6 @@ export const ComparePlans = () => {
                       css={{
                         textAlign: 'center',
                         boxShadow: 'none',
-                        backgroundColor: '$gray10',
-                        color: '$gray2',
                         width: 240,
                       }}
                     >

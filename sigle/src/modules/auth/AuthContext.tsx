@@ -68,10 +68,15 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
 
   useEffect(() => {
     if (state.user) {
-      posthog.identify(state.user.profile.stxAddress, {
-        username: state.user.username,
-        isLegacy: state.isLegacy,
-      });
+      posthog.identify(
+        state.user.profile.stxAddress.mainnet
+          ? state.user.profile.stxAddress.mainnet
+          : state.user.profile.stxAddress,
+        {
+          username: state.user.username,
+          isLegacy: state.isLegacy,
+        }
+      );
     }
   }, [state.user, state.isLegacy]);
 
