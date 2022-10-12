@@ -27,7 +27,7 @@ export const MobileScroll = Extension.create({
 
             timeoutScroll && clearTimeout(timeoutScroll);
             timeoutScroll = setTimeout(function () {
-              let top =
+              const top =
                 view.coordsAtPos(view.state.selection.$head.pos).top -
                 (options?.scrollerElement?.getBoundingClientRect().top ?? 0);
 
