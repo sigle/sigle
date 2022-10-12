@@ -69,7 +69,8 @@ export const EditorHeader = ({
         backgroundColor: '$gray1',
         top: window.scrollY < 40 ? 'auto' : 0,
         zIndex: 1,
-        width: '100%',
+        mx: '-$5',
+        px: '$5',
         py: window.scrollY < 40 ? 0 : '$2',
         boxShadow: window.scrollY < 40 ? 'none' : '0 1px 0 0 $colors$gray6',
       }}
