@@ -177,28 +177,6 @@ export const TipTapEditor = forwardRef<
       isMobile ? MobileScroll : undefined,
     ] as Extensions,
     content: story.contentVersion === '2' ? story.content : '',
-    onSelectionUpdate: ({ transaction, editor }) => {
-      // console.log({
-      //   getBoundingClientRect:
-      //     .getBoundingClientRect(),
-      // });
-      // const parent = findParentNode(() => true)(editor.view.state.selection);
-      // const element = editor.view.nodeDOM(parent!.pos);
-      // // console.log(parent);
-      // // console.log({ scrolledIntoView: transaction.selection });
-      // const toolbarSize = 56;
-      // const elementPos = (element as any)?.getBoundingClientRect();
-      // console.log(window.innerHeight);
-      // if (elementPos && elementPos.top > window.innerHeight - toolbarSize) {
-      //   const y =
-      //     elementPos.top -
-      //     document.body.getBoundingClientRect().top -
-      //     toolbarSize;
-      //   console.log(y);
-      //   window.scrollTo({ top: y });
-      //   console.log('should scroll');
-      // }
-    },
   });
 
   // Here we extend the received ref so the parent can get the editor content at any time
