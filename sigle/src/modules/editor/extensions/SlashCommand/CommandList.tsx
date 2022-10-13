@@ -172,7 +172,7 @@ export const CommandList = forwardRef<CommandListRef, CommandListProps>(
             onClick={() => selectItem(twitterItemIndex)}
           >
             <Flex align="center">
-              <twitterItem.icon width={35} height={35} />
+              <twitterItem.icon width={28} height={28} />
               <Flex direction="column" css={{ ml: '$2' }}>
                 <Typography size="subparagraph">{twitterItem.title}</Typography>
                 <Typography size="subparagraph" css={{ color: '$gray9' }}>
