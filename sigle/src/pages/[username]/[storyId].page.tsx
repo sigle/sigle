@@ -156,6 +156,7 @@ export const getServerSideProps: GetServerSideProps<
     file.content = file.content
       ? sanitizeHtml(file.content, {
           allowedTags: [
+            'div',
             'br',
             // Titles
             'h2',
@@ -189,6 +190,7 @@ export const getServerSideProps: GetServerSideProps<
           allowedAttributes: {
             ...sanitizeHtml.defaults.allowedAttributes,
             code: ['class'],
+            div: ['data-twitter', 'data-twitter-id'],
           },
         })
       : '';
