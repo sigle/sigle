@@ -121,7 +121,7 @@ export const TwitterComponent = (props: NodeViewProps) => {
         createTweetOnLoad();
       });
     }
-  }, [tweetId]);
+  }, []);
 
   const formik = useFormik<TweetValues>({
     initialValues: {
@@ -165,14 +165,21 @@ export const TwitterComponent = (props: NodeViewProps) => {
           ...props.node.attrs,
           pasted: false,
         });
-        props.editor.commands.createParagraphNear();
       }
+      if (formik.isSubmitting) {
+        formik.setSubmitting(false);
+      }
+      props.editor.commands.createParagraphNear();
       setTweetCreated(true);
       setIsTweetLoading(false);
     });
   };
 
   const submitTweetId = () => {
+    if (!formik.isSubmitting) {
+      formik.setSubmitting(true);
+    }
+
     // clear errors if retrying submit
     if (formik.errors) {
       formik.setErrors({ tweetUrl: undefined });
