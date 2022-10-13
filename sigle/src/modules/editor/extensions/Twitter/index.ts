@@ -3,14 +3,9 @@ import { ReactNodeViewRenderer } from '@tiptap/react';
 import { TwitterComponent } from './TwitterComponent';
 import { getTweetIdFromUrl, TWITTER_REGEX_GLOBAL } from './utils';
 
-// TODO handle global paste
-
 declare module '@tiptap/core' {
   interface Commands<ReturnType> {
     twitter: {
-      /**
-       * Insert a video embed
-       */
       setTweet: () => ReturnType;
     };
   }
@@ -50,7 +45,6 @@ export const Twitter = Node.create({
           commands.insertContent({
             type: this.name,
           });
-          commands.focus();
           return true;
         },
     };
@@ -86,6 +80,7 @@ export const Twitter = Node.create({
 
   renderHTML({ HTMLAttributes }) {
     if (!HTMLAttributes.url) {
+      // temporary solution as we cannot currently return null
       return ['span'];
     }
 
