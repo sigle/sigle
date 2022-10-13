@@ -85,8 +85,6 @@ export const Twitter = Node.create({
   },
 
   renderHTML({ HTMLAttributes }) {
-    console.log({ HTMLAttributes });
-
     if (!HTMLAttributes.url) {
       return ['span'];
     }
