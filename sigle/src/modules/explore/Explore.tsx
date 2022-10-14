@@ -46,7 +46,14 @@ export const ExploreUsers = () => {
 
   return (
     <DashboardLayout>
-      <Typography size="h2" css={{ fontWeight: 600, mb: '$7' }}>
+      <Typography
+        size="h4"
+        css={{
+          fontWeight: 600,
+          pb: '$5',
+          borderBottom: '1px solid $colors$gray6',
+        }}
+      >
         Explore
       </Typography>
 
