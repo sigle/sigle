@@ -156,6 +156,9 @@ export const PublicHome = ({ file, settings, userInfo }: PublicHomeProps) => {
     stories.splice(featuredStoryIndex, 1);
   }
 
+  const userAddress =
+    user?.profile.stxAddress.mainnet || user?.profile.stxAddress;
+
   const siteName = settings.siteName || userInfo.username;
 
   const seoUrl = `${sigleConfig.appUrl}/${userInfo.username}`;
@@ -194,7 +197,7 @@ export const PublicHome = ({ file, settings, userInfo }: PublicHomeProps) => {
           description: seoDescription,
           images: [
             {
-              url: seoImage || `${sigleConfig.appUrl}/static/icon-192x192.png`,
+              url: seoImage || generateAvatar(userAddress),
             },
           ],
         }}
