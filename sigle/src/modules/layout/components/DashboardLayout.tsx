@@ -2,13 +2,13 @@ import React, { useState } from 'react';
 import Link from 'next/link';
 import { AppHeader } from './AppHeader';
 import {
-  Box,
-  Button,
-  Container,
   Accordion,
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
+  Box,
+  Button,
+  Container,
 } from '../../../ui';
 import { styled } from '../../../stitches.config';
 import { AppFooter } from './AppFooter';
