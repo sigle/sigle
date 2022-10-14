@@ -11,6 +11,7 @@ import {
   loadTwitterWidget,
   TWITTER_REGEX,
 } from './utils';
+import { isValidHttpUrl } from '../../../../utils';
 
 const ErrorButton = styled('button', {
   px: '$2',
@@ -221,12 +222,16 @@ export const TwitterComponent = (props: NodeViewProps) => {
   const pasteUrlAsLink = () => {
     const editor = props.editor;
 
+    const isValid = isValidHttpUrl(formik.values.tweetUrl);
+
     editor.commands.insertContentAt(
       {
         from: editor.state.selection.from,
         to: editor.state.selection.to,
       },
-      `<a href="${formik.values.tweetUrl}">${formik.values.tweetUrl}</a>`
+      isValid
+        ? `<a href="${formik.values.tweetUrl}">${formik.values.tweetUrl}</a>`
+        : `<p>${formik.values.tweetUrl}</p>`
     );
   };
 
