@@ -116,11 +116,9 @@ export const TwitterComponent = (props: NodeViewProps) => {
   }, []);
 
   useEffect(() => {
-    if (tweetId) {
-      loadTwitterWidget().then(() => {
-        createTweetOnLoad();
-      });
-    }
+    loadTwitterWidget().then(() => {
+      createTweetOnLoad();
+    });
   }, []);
 
   const formik = useFormik<TweetValues>({
@@ -153,6 +151,10 @@ export const TwitterComponent = (props: NodeViewProps) => {
   });
 
   const createTweetOnLoad = async () => {
+    if (!tweetId) {
+      return;
+    }
+
     setIsTweetLoading(true);
     createTweet(tweetId, containerRef).then((value: any) => {
       if (!value) {
