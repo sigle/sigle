@@ -1,15 +1,7 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 import { AppHeader } from './AppHeader';
-import {
-  Box,
-  Button,
-  Container,
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from '../../../ui';
+import { Box, Button, Container } from '../../../ui';
 import { styled } from '../../../stitches.config';
 import { AppFooter } from './AppFooter';
 import { useRouter } from 'next/router';
@@ -200,28 +192,6 @@ export const DashboardLayout = ({
             mb: '$5',
           }}
         >
-          <Accordion
-            css={{ '@xl': { display: 'none' } }}
-            collapsible
-            type="single"
-          >
-            <AccordionItem value="item1">
-              <AccordionTrigger>
-                {navItems.find((item) => item.path === router.pathname)?.name}
-              </AccordionTrigger>
-              <AccordionContent>
-                {navItems
-                  .filter((item) => item.path !== router.pathname)
-                  .map((item) => (
-                    <Link key={item.path} href={item.path} passHref>
-                      <DashboardSidebarNavItem variant="accordion">
-                        {item.name}
-                      </DashboardSidebarNavItem>
-                    </Link>
-                  ))}
-              </AccordionContent>
-            </AccordionItem>
-          </Accordion>
           {children}
         </Box>
       </DashboardContainer>
