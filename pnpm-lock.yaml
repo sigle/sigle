@@ -159,6 +159,7 @@ importers:
       '@sigle/tailwind-style': workspace:^1.1.0
       '@stacks/auth': 5.0.1
       '@stacks/blockchain-api-client': 4.1.0
+      '@stacks/common': 5.0.0
       '@stacks/connect': 7.0.0
       '@stacks/connect-react': 20.0.0
       '@stacks/encryption': 5.0.0
@@ -281,6 +282,7 @@ importers:
       '@sigle/slate-to-html': 1.0.0_2wpyb3adm2ew3oavbkchamis5q
       '@stacks/auth': 5.0.1
       '@stacks/blockchain-api-client': 4.1.0
+      '@stacks/common': 5.0.0
       '@stacks/connect': 7.0.0
       '@stacks/connect-react': 20.0.0_biqbaboplfbrettd7655fr4n2y
       '@stacks/encryption': 5.0.0
