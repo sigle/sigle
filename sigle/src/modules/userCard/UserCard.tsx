@@ -10,6 +10,7 @@ import {
 } from '../../hooks/appData';
 import { styled } from '../../stitches.config';
 import {
+  Box,
   Button,
   Flex,
   Tooltip,
@@ -68,9 +69,7 @@ const ProfileImage = styled('img', {
 
 const UserCardTitle = styled(Typography, {
   maxWidth: 160,
-  display: 'flex',
-  alignItems: 'center',
-  gap: '$1',
+  display: 'block',
   overflow: 'hidden',
   textOverflow: 'ellipsis',
   whiteSpace: 'nowrap',
@@ -81,9 +80,9 @@ const UserCardTitle = styled(Typography, {
 });
 
 const UserCardDescription = styled(Typography, {
-  maxWidth: 160,
+  maxWidth: 200,
   mt: '$1',
-  pr: '$5',
+  pr: '$2',
   display: 'block',
   overflow: 'hidden',
   textOverflow: 'ellipsis',
@@ -194,35 +193,44 @@ export const UserCard = ({ address }: UserCardProps) => {
           <Link href="/[username]" as={userPath} passHref>
             <UserCardTitle as="a" size="subheading">
               {isLoadingUsername ? '...' : username}
-              {userInfoByAddress?.subscription && (
-                <Tooltip delayDuration={200}>
-                  <TooltipTrigger asChild>
-                    <a
-                      href={`${sigleConfig.gammaUrl}/${userInfoByAddress.subscription.nftId}`}
-                      target="_blank"
-                      rel="noreferrer"
+              <Box
+                css={{
+                  marginLeft: '$1',
+                  display: 'inline-block',
+                  verticalAlign: 'middle',
+                }}
+                as="span"
+              >
+                {userInfoByAddress?.subscription && (
+                  <Tooltip delayDuration={200}>
+                    <TooltipTrigger asChild>
+                      <a
+                        href={`${sigleConfig.gammaUrl}/${userInfoByAddress.subscription.nftId}`}
+                        target="_blank"
+                        rel="noreferrer"
+                      >
+                        <Image
+                          src={
+                            resolvedTheme === 'dark'
+                              ? '/img/badges/creatorPlusDark.svg'
+                              : '/img/badges/creatorPlusLight.svg'
+                          }
+                          alt="Creator + badge"
+                          width={15}
+                          height={15}
+                        />
+                      </a>
+                    </TooltipTrigger>
+                    <TooltipContent
+                      css={{ boxShadow: 'none' }}
+                      side="right"
+                      sideOffset={8}
                     >
-                      <Image
-                        src={
-                          resolvedTheme === 'dark'
-                            ? '/img/badges/creatorPlusDark.svg'
-                            : '/img/badges/creatorPlusLight.svg'
-                        }
-                        alt="Creator + badge"
-                        width={15}
-                        height={15}
-                      />
-                    </a>
-                  </TooltipTrigger>
-                  <TooltipContent
-                    css={{ boxShadow: 'none' }}
-                    side="right"
-                    sideOffset={8}
-                  >
-                    Creator + Explorer #{userInfoByAddress.subscription.nftId}
-                  </TooltipContent>
-                </Tooltip>
-              )}
+                      Creator + Explorer #{userInfoByAddress.subscription.nftId}
+                    </TooltipContent>
+                  </Tooltip>
+                )}
+              </Box>
             </UserCardTitle>
           </Link>
           {user && user?.username !== username && !isLegacy && !following && (
