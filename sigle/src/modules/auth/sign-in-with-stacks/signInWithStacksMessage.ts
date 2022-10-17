@@ -1,6 +1,7 @@
 // siwe port of https://github.com/spruceid/siwe/blob/main/packages/siwe/lib/client.ts
 
 import * as uri from 'valid-url';
+import { bytesToHex } from '@stacks/common';
 import {
   createMessageSignature,
   getAddressFromPublicKey,
@@ -298,7 +299,7 @@ export class SignInWithStacksMessage {
       const potentialAddresses = prefixes
         .map((prefix) => {
           const publicKey = publicKeyFromSignatureRsv(
-            hashMessage(EIP4361Message, prefix).toString('hex'),
+            bytesToHex(hashMessage(EIP4361Message, prefix)),
             stacksSignature
           );
 
