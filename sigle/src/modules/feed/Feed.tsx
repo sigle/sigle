@@ -1,13 +1,14 @@
 import { useQuery } from '@tanstack/react-query';
 import { NamesApi } from '@stacks/blockchain-api-client';
 import { useGetGaiaUserFollowing } from '../../hooks/appData';
-import { Box, LoadingSpinner, Typography } from '../../ui';
+import { Box, Button, Flex, LoadingSpinner, Typography } from '../../ui';
 import { DashboardLayout } from '../layout';
 import { lookupProfile } from '@stacks/auth';
 import { sigleConfig } from '../../config';
 import { SettingsFile, SubsetStory } from '../../types';
 import { StoryCard } from '../storyCard/StoryCard';
 import { fetchPublicStories, fetchSettings } from '../../utils/gaia/fetch';
+import Link from 'next/link';
 
 interface StoriesWithUser extends SubsetStory {
   user: {
@@ -91,7 +92,14 @@ export const UserFeed = () => {
 
   return (
     <DashboardLayout>
-      <Typography size="h2" css={{ fontWeight: 600, mb: '$5' }}>
+      <Typography
+        size="h4"
+        css={{
+          fontWeight: 600,
+          pb: '$5',
+          borderBottom: '1px solid $colors$gray6',
+        }}
+      >
         Feed
       </Typography>
 
@@ -111,6 +119,18 @@ export const UserFeed = () => {
             story={story}
           />
         ))}
+      {feedStories && feedStories.length <= 0 && (
+        <Flex align="center" direction="column" gap="3">
+          <Typography css={{ mt: '$10' }} size="subheading">
+            You must follow writers to start filling your feed
+          </Typography>
+          <Link href="/explore" passHref>
+            <Button color="orange" as="a">
+              Explore new writers
+            </Button>
+          </Link>
+        </Flex>
+      )}
     </DashboardLayout>
   );
 };
