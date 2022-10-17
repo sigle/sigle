@@ -9,16 +9,31 @@ import {
   useUserUnfollow,
 } from '../../hooks/appData';
 import { styled } from '../../stitches.config';
-import { Button, Flex, Typography } from '../../ui';
+import {
+  Button,
+  Flex,
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+  Typography,
+} from '../../ui';
 import { generateAvatar } from '../../utils/boringAvatar';
 import { fetchSettings } from '../../utils/gaia/fetch';
 import { useAuth } from '../auth/AuthContext';
+import Image from 'next/future/image';
+import { useTheme } from 'next-themes';
+import { useGetUserByAddress } from '../../hooks/users';
 
 const UserCardContainer = styled('div', {
   display: 'flex',
+  alignItems: 'center',
   borderBottom: '1px solid $colors$gray6',
   py: '$5',
   gap: '$5',
+
+  '@md': {
+    alignItems: 'start',
+  },
 });
 
 const ProfileImageContainer = styled('a', {
@@ -27,27 +42,61 @@ const ProfileImageContainer = styled('a', {
   justifyContent: 'center',
   br: '$1',
   overflow: 'hidden',
-  width: 38,
-  height: 38,
+  width: 50,
+  height: 50,
   flex: 'none',
+
+  '@md': {
+    width: 38,
+    height: 38,
+  },
 });
 
 const ProfileImage = styled('img', {
+  maxWidth: 50,
+  maxHeight: 50,
+
   width: 'auto',
   height: '100%',
-  maxWidth: 38,
-  maxHeight: 38,
   objectFit: 'cover',
+
+  '@md': {
+    maxWidth: 38,
+    maxHeight: 38,
+  },
+});
+
+const UserCardTitle = styled(Typography, {
+  maxWidth: 160,
+  display: 'flex',
+  alignItems: 'center',
+  gap: '$1',
+  overflow: 'hidden',
+  textOverflow: 'ellipsis',
+  whiteSpace: 'nowrap',
+
+  '@md': {
+    maxWidth: 600,
+  },
 });
 
 const UserCardDescription = styled(Typography, {
+  maxWidth: 160,
   mt: '$1',
+  pr: '$5',
+  display: 'block',
   overflow: 'hidden',
-  display: '-webkit-box',
-  '-webkit-line-clamp': 2,
-  '-webkit-box-orient': 'vertical',
-  typographyOverflow: 'ellipsis',
-  maxWidth: 600,
+  textOverflow: 'ellipsis',
+  whiteSpace: 'nowrap',
+
+  '@md': {
+    maxWidth: 600,
+    whiteSpace: 'normal',
+    display: '-webkit-box',
+    '-webkit-line-clamp': 2,
+    '-webkit-box-orient': 'vertical',
+    typographyOverflow: 'ellipsis',
+  },
 });
 
 interface UserCardProps {
@@ -55,9 +104,11 @@ interface UserCardProps {
 }
 
 export const UserCard = ({ address }: UserCardProps) => {
+  const { resolvedTheme } = useTheme();
   const { user, isLegacy } = useAuth();
   const { mutate: followUser } = useUserFollow();
   const { mutate: unfollowUser } = useUserUnfollow();
+  const { data: userInfoByAddress } = useGetUserByAddress(address);
   const { isLoading: isLoadingUsername, data: username } = useQuery(
     ['get-username-user', address],
     async () => {
@@ -141,15 +192,38 @@ export const UserCard = ({ address }: UserCardProps) => {
       <Flex css={{ width: '100%' }} direction="column">
         <Flex justify="between" align="center">
           <Link href="/[username]" as={userPath} passHref>
-            <Typography
-              as="a"
-              size="subheading"
-              css={{
-                fontWeight: 600,
-              }}
-            >
+            <UserCardTitle as="a" size="subheading">
               {isLoadingUsername ? '...' : username}
-            </Typography>
+              {userInfoByAddress?.subscription && (
+                <Tooltip delayDuration={200}>
+                  <TooltipTrigger asChild>
+                    <a
+                      href={`${sigleConfig.gammaUrl}/${userInfoByAddress.subscription.nftId}`}
+                      target="_blank"
+                      rel="noreferrer"
+                    >
+                      <Image
+                        src={
+                          resolvedTheme === 'dark'
+                            ? '/img/badges/creatorPlusDark.svg'
+                            : '/img/badges/creatorPlusLight.svg'
+                        }
+                        alt="Creator + badge"
+                        width={15}
+                        height={15}
+                      />
+                    </a>
+                  </TooltipTrigger>
+                  <TooltipContent
+                    css={{ boxShadow: 'none' }}
+                    side="right"
+                    sideOffset={8}
+                  >
+                    Creator + Explorer #{userInfoByAddress.subscription.nftId}
+                  </TooltipContent>
+                </Tooltip>
+              )}
+            </UserCardTitle>
           </Link>
           {user && user?.username !== username && !isLegacy && !following && (
             <Button color="orange" css={{ ml: '$5' }} onClick={handleFollow}>
