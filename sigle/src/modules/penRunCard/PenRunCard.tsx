@@ -72,6 +72,9 @@ export const PenRunCard = () => {
             on Sigle, live now!
           </Typography>
           <Button
+            css={{
+              width: '100%',
+            }}
             color="orange"
             as="a"
             href="https://app.sigle.io/sigleapp.id.blockstack/h8Kxgg9_Ck6f0V-YgB7Gz"
