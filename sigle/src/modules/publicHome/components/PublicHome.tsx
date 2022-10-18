@@ -41,6 +41,13 @@ import { GlobeIcon, Pencil1Icon } from '@radix-ui/react-icons';
 import Link from 'next/link';
 import { TwitterFilledIcon } from '../../../icons';
 
+const StyledTabsTrigger = styled(TabsTrigger, {
+  fontSize: 13,
+  '@xl': {
+    fontSize: 15,
+  },
+});
+
 const ExtraInfoLink = styled('a', {
   color: '$gray9',
   fontSize: '$1',
@@ -485,13 +492,13 @@ export const PublicHome = ({ file, settings, userInfo }: PublicHomeProps) => {
               css={{ boxShadow: '0 1px 0 0 $colors$gray6', mb: 0 }}
               aria-label="See your stories, other users that you follow, or, other users that follow you."
             >
-              <TabsTrigger value="stories">{`Stories (${file.stories.length})`}</TabsTrigger>
-              <TabsTrigger value="following">{`Following (${
+              <StyledTabsTrigger value="stories">{`Stories (${file.stories.length})`}</StyledTabsTrigger>
+              <StyledTabsTrigger value="following">{`Following (${
                 userInfoByAddress ? userInfoByAddress.followingCount : 0
-              })`}</TabsTrigger>
-              <TabsTrigger value="followers">{`Followers (${
+              })`}</StyledTabsTrigger>
+              <StyledTabsTrigger value="followers">{`Followers (${
                 userInfoByAddress ? userInfoByAddress.followersCount : 0
-              })`}</TabsTrigger>
+              })`}</StyledTabsTrigger>
             </TabsList>
             <TabsContent value="stories">
               {file.stories.length === 0 && (
