@@ -1,7 +1,6 @@
 import { styled } from '../stitches.config';
-import { Typography } from './Typography';
 
-export const Button = styled('button', Typography, {
+export const Button = styled('button', {
   display: 'inline-flex',
   justifyContent: 'center',
   alignItems: 'center',
