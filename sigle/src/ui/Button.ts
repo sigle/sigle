@@ -1,10 +1,11 @@
 import { styled } from '../stitches.config';
+import { Typography } from './Typography';
 
-export const Button = styled('button', {
+export const Button = styled('button', Typography, {
   display: 'inline-flex',
   justifyContent: 'center',
   alignItems: 'center',
-  fontSize: '$2',
+  fontSize: '$1',
   lineHeight: '20.4px',
   whiteSpace: 'nowrap',
 
@@ -13,12 +14,17 @@ export const Button = styled('button', {
     pointerEvents: 'none',
   },
 
+  '@xl': {
+    fontSize: '$2',
+  },
+
   variants: {
     size: {
       md: {
         px: '$3',
         py: '$1',
         br: '$1',
+        maxHeight: 28,
       },
       lg: {
         px: '$3',

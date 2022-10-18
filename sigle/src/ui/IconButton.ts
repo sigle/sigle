@@ -5,6 +5,8 @@ export const IconButton = styled('button', {
   justifyContent: 'center',
   alignItems: 'center',
   fontSize: '$2',
+  width: 28,
+  height: 28,
 
   '&:disabled': {
     opacity: 0.5,
@@ -14,7 +16,6 @@ export const IconButton = styled('button', {
   variants: {
     size: {
       md: {
-        p: '$2',
         br: '$1',
       },
     },
