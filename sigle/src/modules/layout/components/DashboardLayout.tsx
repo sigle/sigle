@@ -25,6 +25,7 @@ import { Goals } from '../../../utils/fathom';
 import { createSubsetStory } from '../../editor/utils';
 import { toast } from 'react-toastify';
 import { useAuth } from '../../auth/AuthContext';
+import { PenRunCard } from '../../penRunCard/PenRunCard';
 
 export const DashboardContainer = styled(Container, {
   flex: 1,
@@ -194,6 +195,7 @@ export const DashboardLayout = ({
           >
             {!loadingCreate ? `Write a story` : `Creating new story...`}
           </Button>
+          <PenRunCard />
         </DashboardSidebar>
         <Box
           css={{
