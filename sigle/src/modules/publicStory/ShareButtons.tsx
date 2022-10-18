@@ -63,7 +63,11 @@ export const ShareButtons = ({
           <TooltipTrigger asChild>
             <Box
               as="a"
-              href={`https://twitter.com/intent/tweet?text=${title} by ${handle}&url=${sigleConfig.appUrl}/${username}/${story.id}`}
+              href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(
+                title
+              )} by ${handle}&url=${sigleConfig.appUrl}/${username}/${
+                story.id
+              }`}
               target="_blank"
               rel="noopener"
             >
