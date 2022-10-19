@@ -66,12 +66,7 @@ const ExtraInfoLink = styled('a', {
 
 const StyledContainer = styled(Container, {
   pb: '$15',
-  px: 0,
   maxWidth: 826,
-
-  '@md': {
-    px: '$5',
-  },
 });
 
 const Header = styled('div', {
@@ -79,10 +74,10 @@ const Header = styled('div', {
   display: 'flex',
   flexDirection: 'column',
   mx: 'auto',
+  px: '$5',
 
   '@md': {
     maxWidth: 826,
-    px: '$5',
   },
 });
 
