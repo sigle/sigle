@@ -74,7 +74,6 @@ const Header = styled('div', {
   display: 'flex',
   flexDirection: 'column',
   mx: 'auto',
-  px: '$5',
 
   '@md': {
     maxWidth: 826,
@@ -263,6 +262,7 @@ export const PublicHome = ({ file, settings, userInfo }: PublicHomeProps) => {
         <Header
           css={{
             pt: userInfo.username !== user?.username ? '$10' : 0,
+            px: userInfo.username !== user?.username ? '$5' : 0,
           }}
         >
           <Flex
@@ -477,7 +477,11 @@ export const PublicHome = ({ file, settings, userInfo }: PublicHomeProps) => {
             ))}
         </Header>
 
-        <StyledContainer>
+        <StyledContainer
+          css={{
+            px: userInfo.username !== user?.username ? '$5' : 0,
+          }}
+        >
           <Tabs
             onValueChange={(value) => handleTabValueChange(value as ActiveTab)}
             value={router.query.tab ? (router.query.tab as string) : 'stories'}

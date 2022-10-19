@@ -27,14 +27,12 @@ import { toast } from 'react-toastify';
 import { useAuth } from '../../auth/AuthContext';
 
 export const DashboardContainer = styled(Container, {
-  px: 0,
   flex: 1,
   mt: '$10',
   width: '100%',
   display: 'grid',
 
   '@md': {
-    px: '$5',
     justifyContent: 'center',
     gridTemplateColumns: '724px',
   },
