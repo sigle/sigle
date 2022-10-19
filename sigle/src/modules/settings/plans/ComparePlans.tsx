@@ -102,7 +102,7 @@ const TableContainer = styled('div', {
 });
 
 const StyledTable = styled('table', {
-  mt: '$10',
+  mt: '$15',
   width: '100%',
   minWidth: 700,
   overflowX: 'auto',
