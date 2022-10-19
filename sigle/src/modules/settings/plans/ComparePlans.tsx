@@ -86,9 +86,30 @@ const features: Feature[] = [
   },
 ];
 
+const TableContainer = styled('div', {
+  display: 'block',
+  width: 20,
+  right: 20,
+  height: '100%',
+  position: 'absolute',
+  background:
+    'linear-gradient(90deg, rgb(26, 26, 26, 0) 0%, rgb(26, 26, 26, 0.8) 100%)',
+  zIndex: 1000,
+
+  '@md': {
+    display: 'none',
+  },
+});
+
 const StyledTable = styled('table', {
-  mt: '$5',
+  mt: '$10',
   width: '100%',
+  minWidth: 700,
+  overflowX: 'auto',
+
+  '@md': {
+    mt: '$5',
+  },
 });
 
 const Tr = styled('tr', {
@@ -169,7 +190,12 @@ const Table = ({
           {!activeSubscription && (
             <Typography
               size="subheading"
-              css={{ backgroundColor: '$green5', px: '$3', py: '$1', br: '$2' }}
+              css={{
+                backgroundColor: '$green5',
+                px: '$3',
+                py: '$1',
+                br: '$2',
+              }}
             >
               Current plan
             </Typography>
@@ -215,7 +241,12 @@ const Table = ({
           ) : (
             <Typography
               size="subheading"
-              css={{ backgroundColor: '$green5', px: '$3', py: '$1', br: '$2' }}
+              css={{
+                backgroundColor: '$green5',
+                px: '$3',
+                py: '$1',
+                br: '$2',
+              }}
             >
               Current plan
             </Typography>
@@ -246,8 +277,18 @@ export const ComparePlans = () => {
 
   return (
     <SettingsLayout>
+      <TableContainer />
       <Link href="/settings/plans">
-        <Button css={{ gap: '$2', cursor: 'pointer' }} variant="subtle" as="a">
+        <Button
+          css={{
+            gap: '$2',
+            cursor: 'pointer',
+            position: 'absolute',
+            '@md': { position: 'relative' },
+          }}
+          variant="subtle"
+          as="a"
+        >
           <ArrowLeftIcon />
           Go back to your current plan
         </Button>

@@ -54,30 +54,33 @@ export const SettingsLayout = ({
         <Box
           css={{
             mb: '$5',
+            overflowY: 'hidden',
           }}
         >
-          <Accordion
-            css={{ '@xl': { display: 'none' } }}
-            collapsible
-            type="single"
-          >
-            <AccordionItem value="item1">
-              <AccordionTrigger>
-                {navItems.find((item) => item.path === router.pathname)?.name}
-              </AccordionTrigger>
-              <AccordionContent>
-                {navItems
-                  .filter((item) => item.path !== router.pathname)
-                  .map((item) => (
-                    <Link key={item.path} href={item.path} passHref>
-                      <DashboardSidebarNavItem variant="accordion">
-                        {item.name}
-                      </DashboardSidebarNavItem>
-                    </Link>
-                  ))}
-              </AccordionContent>
-            </AccordionItem>
-          </Accordion>
+          {router.pathname === '/settings' && (
+            <Accordion
+              css={{ '@xl': { display: 'none' } }}
+              collapsible
+              type="single"
+            >
+              <AccordionItem value="item1">
+                <AccordionTrigger>
+                  {navItems.find((item) => item.path === router.pathname)?.name}
+                </AccordionTrigger>
+                <AccordionContent>
+                  {navItems
+                    .filter((item) => item.path !== router.pathname)
+                    .map((item) => (
+                      <Link key={item.path} href={item.path} passHref>
+                        <DashboardSidebarNavItem variant="accordion">
+                          {item.name}
+                        </DashboardSidebarNavItem>
+                      </Link>
+                    ))}
+                </AccordionContent>
+              </AccordionItem>
+            </Accordion>
+          )}
           {children}
         </Box>
       </DashboardContainer>
