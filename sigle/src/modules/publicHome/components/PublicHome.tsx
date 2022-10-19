@@ -37,18 +37,30 @@ import { UserCard } from '../../userCard/UserCard';
 import { DashboardLayout } from '../../layout';
 import { AppHeader } from '../../layout/components/AppHeader';
 import { useRouter } from 'next/router';
-import { Pencil1Icon } from '@radix-ui/react-icons';
+import { GlobeIcon, Pencil1Icon } from '@radix-ui/react-icons';
 import Link from 'next/link';
+import { TwitterFilledIcon } from '../../../icons';
+
+const StyledTabsTrigger = styled(TabsTrigger, {
+  fontSize: 13,
+  '@xl': {
+    fontSize: 15,
+  },
+});
 
 const ExtraInfoLink = styled('a', {
   color: '$gray9',
-  fontSize: '$2',
+  fontSize: '$1',
 
   '&:hover': {
     color: '$gray10',
   },
   '&:active': {
     color: '$gray12',
+  },
+
+  '@md': {
+    fontSize: '$2',
   },
 });
 
@@ -58,30 +70,42 @@ const StyledContainer = styled(Container, {
 });
 
 const Header = styled('div', {
-  pb: '$10',
-  px: '$5',
-  maxWidth: 826,
+  pb: '$8',
   display: 'flex',
   flexDirection: 'column',
   mx: 'auto',
+
+  '@md': {
+    maxWidth: 826,
+  },
 });
 
 const HeaderLogoContainer = styled('div', {
-  width: 92,
-  height: 92,
+  width: 76,
+  height: 76,
   display: 'flex',
   justifyContent: 'center',
   br: '$4',
   overflow: 'hidden',
   mb: '$2',
+
+  '@md': {
+    width: 92,
+    height: 92,
+  },
 });
 
 const HeaderLogo = styled('img', {
   width: 'auto',
   height: '100%',
-  maxWidth: 92,
-  maxHeight: 92,
+  maxWidth: 76,
+  maxHeight: 76,
   objectFit: 'cover',
+
+  '@md': {
+    maxWidth: 92,
+    maxHeight: 92,
+  },
 });
 
 const abbreviateAddress = (address: string) => {
@@ -104,7 +128,28 @@ const PublicHomeSiteUrl = ({ siteUrl }: { siteUrl: string }) => {
 
   return (
     <ExtraInfoLink href={fullUrl} target="_blank" rel="noreferrer">
-      {displayUrl}
+      <Box
+        css={{
+          display: 'block',
+          '@md': {
+            display: 'none',
+          },
+        }}
+        as="span"
+      >
+        <GlobeIcon />
+      </Box>
+      <Box
+        css={{
+          display: 'none',
+          '@md': {
+            display: ' block',
+          },
+        }}
+        as="span"
+      >
+        {displayUrl}
+      </Box>
     </ExtraInfoLink>
   );
 };
@@ -217,9 +262,14 @@ export const PublicHome = ({ file, settings, userInfo }: PublicHomeProps) => {
         <Header
           css={{
             pt: userInfo.username !== user?.username ? '$10' : 0,
+            px: userInfo.username !== user?.username ? '$5' : 0,
           }}
         >
-          <Flex align="start" justify="between">
+          <Flex
+            css={{ mb: '$2', width: '100%' }}
+            align="start"
+            justify="between"
+          >
             <HeaderLogoContainer>
               <HeaderLogo
                 src={
@@ -261,51 +311,91 @@ export const PublicHome = ({ file, settings, userInfo }: PublicHomeProps) => {
               </Link>
             )}
           </Flex>
-          <Flex align="center" gap="3">
-            <Typography css={{ fontWeight: 700 }} as="h1" size="h2">
-              {siteName}
-            </Typography>
-            <Box
+          <Flex
+            css={{
+              mb: '$3',
+
+              '@md': {
+                mb: '$1',
+              },
+            }}
+            direction={{
+              '@initial': 'column',
+              '@md': 'row',
+            }}
+            align={{
+              '@initial': 'start',
+              '@md': 'center',
+            }}
+            gap="1"
+          >
+            <Typography
               css={{
-                backgroundColor: '$gray4',
-                py: '$1',
-                px: '$3',
-                br: '$2',
+                fontWeight: 700,
+                whiteSpace: 'nowrap',
+                overflow: 'hidden',
+                textOverflow: 'ellipsis',
+                maxWidth: 360,
+
+                '@md': {
+                  maxWidth: '100%',
+                  whiteSpace: 'normal',
+                  overflow: 'initial',
+                  textOverflow: 'initial',
+                },
+              }}
+              as="h1"
+              size={{
+                '@initial': 'h4',
+                '@md': 'h2',
               }}
             >
-              {userInfo.username}
-            </Box>
-            {userInfoByAddress?.subscription && (
-              <Tooltip delayDuration={200}>
-                <TooltipTrigger asChild>
-                  <a
-                    href={`${sigleConfig.gammaUrl}/${userInfoByAddress.subscription.nftId}`}
-                    target="_blank"
-                    rel="noreferrer"
+              {siteName}
+            </Typography>
+            <Flex gap="3" align="center">
+              <Typography
+                size="subheading"
+                css={{
+                  backgroundColor: '$gray4',
+                  py: '$1',
+                  px: '$3',
+                  br: '$2',
+                }}
+              >
+                {userInfo.username}
+              </Typography>
+              {userInfoByAddress?.subscription && (
+                <Tooltip delayDuration={200}>
+                  <TooltipTrigger asChild>
+                    <a
+                      href={`${sigleConfig.gammaUrl}/${userInfoByAddress.subscription.nftId}`}
+                      target="_blank"
+                      rel="noreferrer"
+                    >
+                      <Image
+                        src={
+                          resolvedTheme === 'dark'
+                            ? '/img/badges/creatorPlusDark.svg'
+                            : '/img/badges/creatorPlusLight.svg'
+                        }
+                        alt="Creator + badge"
+                        width={20}
+                        height={20}
+                      />
+                    </a>
+                  </TooltipTrigger>
+                  <TooltipContent
+                    css={{ boxShadow: 'none' }}
+                    side="right"
+                    sideOffset={8}
                   >
-                    <Image
-                      src={
-                        resolvedTheme === 'dark'
-                          ? '/img/badges/creatorPlusDark.svg'
-                          : '/img/badges/creatorPlusLight.svg'
-                      }
-                      alt="Creator + badge"
-                      width={20}
-                      height={20}
-                    />
-                  </a>
-                </TooltipTrigger>
-                <TooltipContent
-                  css={{ boxShadow: 'none' }}
-                  side="right"
-                  sideOffset={8}
-                >
-                  Creator + Explorer #{userInfoByAddress.subscription.nftId}
-                </TooltipContent>
-              </Tooltip>
-            )}
+                    Creator + Explorer #{userInfoByAddress.subscription.nftId}
+                  </TooltipContent>
+                </Tooltip>
+              )}
+            </Flex>
           </Flex>
-          <Flex css={{ pt: '$3' }} gap="3" align="center">
+          <Flex gap="3" align="center">
             {settings.siteUrl && (
               <PublicHomeSiteUrl siteUrl={settings.siteUrl} />
             )}
@@ -324,9 +414,30 @@ export const PublicHome = ({ file, settings, userInfo }: PublicHomeProps) => {
                 target="_blank"
                 rel="noreferrer"
               >
-                {twitterHandle?.includes('@')
-                  ? twitterHandle
-                  : `@${twitterHandle}`}
+                <Box
+                  css={{
+                    display: 'block',
+                    '@md': {
+                      display: 'none',
+                    },
+                  }}
+                  as="span"
+                >
+                  <TwitterFilledIcon />
+                </Box>
+                <Box
+                  css={{
+                    display: 'none',
+                    '@md': {
+                      display: 'block',
+                    },
+                  }}
+                  as="span"
+                >
+                  {twitterHandle?.includes('@')
+                    ? twitterHandle
+                    : `@${twitterHandle}`}
+                </Box>
               </ExtraInfoLink>
             )}
             {settings.siteTwitterHandle && (
@@ -366,7 +477,11 @@ export const PublicHome = ({ file, settings, userInfo }: PublicHomeProps) => {
             ))}
         </Header>
 
-        <StyledContainer>
+        <StyledContainer
+          css={{
+            px: userInfo.username !== user?.username ? '$5' : 0,
+          }}
+        >
           <Tabs
             onValueChange={(value) => handleTabValueChange(value as ActiveTab)}
             value={router.query.tab ? (router.query.tab as string) : 'stories'}
@@ -376,13 +491,13 @@ export const PublicHome = ({ file, settings, userInfo }: PublicHomeProps) => {
               css={{ boxShadow: '0 1px 0 0 $colors$gray6', mb: 0 }}
               aria-label="See your stories, other users that you follow, or, other users that follow you."
             >
-              <TabsTrigger value="stories">{`Stories (${file.stories.length})`}</TabsTrigger>
-              <TabsTrigger value="following">{`Following (${
+              <StyledTabsTrigger value="stories">{`Stories (${file.stories.length})`}</StyledTabsTrigger>
+              <StyledTabsTrigger value="following">{`Following (${
                 userInfoByAddress ? userInfoByAddress.followingCount : 0
-              })`}</TabsTrigger>
-              <TabsTrigger value="followers">{`Followers (${
+              })`}</StyledTabsTrigger>
+              <StyledTabsTrigger value="followers">{`Followers (${
                 userInfoByAddress ? userInfoByAddress.followersCount : 0
-              })`}</TabsTrigger>
+              })`}</StyledTabsTrigger>
             </TabsList>
             <TabsContent value="stories">
               {file.stories.length === 0 && (
