@@ -57,7 +57,7 @@ export const SettingsLayout = ({
             overflowY: 'hidden',
           }}
         >
-          {router.pathname === '/settings' && (
+          {router.pathname !== '/settings/plans/compare' && (
             <Accordion
               css={{ '@xl': { display: 'none' } }}
               collapsible
