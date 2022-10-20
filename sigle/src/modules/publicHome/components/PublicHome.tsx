@@ -167,7 +167,9 @@ export const PublicHome = ({ file, settings, userInfo }: PublicHomeProps) => {
     settings.siteDescription?.substring(0, 300) ||
     `Read stories from ${siteName} on Sigle, decentralised and open-source platform for Web3 writers`;
 
-  const seoImage = settings.siteLogo;
+  const seoImage =
+    settings.siteLogo &&
+    encodeURI(settings.siteLogo).replace('(', '%28').replace(')', '%29');
 
   const Layout =
     userInfo.username !== user?.username ? React.Fragment : DashboardLayout;
@@ -186,23 +188,6 @@ export const PublicHome = ({ file, settings, userInfo }: PublicHomeProps) => {
     );
   };
 
-  const encodeImageUrl = (url: string | undefined) => {
-    if (!url) {
-      return;
-    }
-
-    // encode part of url that includes file name which may contain special characters
-    const split = 'settings/';
-    const splitUrl = url.split(split);
-    const encodedUrl =
-      splitUrl &&
-      splitUrl[0] +
-        split +
-        encodeURI(splitUrl[1]).replace('(', '%28').replace(')', '%29');
-
-    return encodedUrl;
-  };
-
   return (
     <React.Fragment>
       <NextSeo
@@ -215,7 +200,7 @@ export const PublicHome = ({ file, settings, userInfo }: PublicHomeProps) => {
           description: seoDescription,
           images: [
             {
-              url: encodeImageUrl(seoImage) || generateAvatar(userAddress),
+              url: seoImage || generateAvatar(userAddress),
             },
           ],
         }}
