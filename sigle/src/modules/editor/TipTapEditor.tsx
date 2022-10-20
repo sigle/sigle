@@ -43,6 +43,7 @@ import { KeyboardIcon } from '@radix-ui/react-icons';
 import { useTheme } from 'next-themes';
 import { TipTapImage } from './extensions/Image';
 import { Toolbar } from './EditorToolbar/EditorToolbar';
+import { Twitter as TipTapTwitter } from './extensions/Twitter';
 import { MobileScroll } from './extensions/MobileScroll';
 
 const fadeInAnimation = keyframes({
@@ -169,6 +170,7 @@ export const TipTapEditor = forwardRef<
       TipTapHistory,
       TipTapPlaceholder(isMobile),
       // Custom extensions
+      TipTapTwitter,
       !isMobile
         ? SlashCommands.configure({
             commands: slashCommands({ storyId: story.id }),

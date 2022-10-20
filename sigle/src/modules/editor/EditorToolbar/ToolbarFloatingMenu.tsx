@@ -53,6 +53,7 @@ export const MobileFloatingMenu = ({
   );
 
   const currentNode = editor && activeNode(editor, story.id);
+  const isTwitter = currentNode?.name === 'Twitter';
 
   return (
     <>
@@ -67,15 +68,15 @@ export const MobileFloatingMenu = ({
             <Box
               as="span"
               css={{
-                p: '$1',
+                p: isTwitter ? 0 : '$1',
                 backgroundColor: '$gray12',
                 color: '$gray1',
                 mr: '$2',
                 br: '$1',
 
                 '& svg': {
-                  width: 15,
-                  height: 15,
+                  width: isTwitter ? 18 : 15,
+                  height: isTwitter ? 18 : 15,
                 },
               }}
             >

@@ -13,6 +13,7 @@ import { SlashCommandsCommand } from './SlashCommands';
 import { generateRandomId } from '../../../../utils';
 import { resizeAndUploadImage } from '../../utils/image';
 import { PlainTextLight } from '../../../../icons/PlainTextLight';
+import { TwitterLight } from '../../../../icons/TwitterLight';
 
 export const slashCommands = ({
   storyId,
@@ -223,6 +224,25 @@ export const slashCommands = ({
       }
 
       editor.chain().focus().deleteRange(range).setCodeBlock().run();
+    },
+  },
+  {
+    icon: TwitterLight,
+    title: 'Twitter',
+    description: '/Twitter [Tweet URL]',
+    command: ({ editor, range }) => {
+      if (!range) {
+        editor.commands.setTweet();
+        return;
+      }
+
+      editor
+        .chain()
+        .focus()
+        // Use deleteRange to clear the text from command chars "/q" etc..
+        .deleteRange(range)
+        .run();
+      editor.commands.setTweet();
     },
   },
 ];

@@ -81,12 +81,14 @@ const greenDark = {
 const red = {
   red4: '#FFEAEA',
   red5: '#FFDBDB',
+  red7: '#FFB6B6',
   red11: '#F43939',
 };
 
 const redDark = {
   red4: '#4C0808',
   red5: '#570909',
+  red7: '#980808',
   red11: '#FF6C6C',
 };
 

@@ -11,6 +11,11 @@ import { SlashCommandsCommand } from './SlashCommands';
 
 // TODO stop using Text
 
+const CommandsListSeparator = styled('div', {
+  mt: '$3',
+  borderBottom: '1px solid $colors$gray6',
+});
+
 const CommandsListLabel = styled('p', {
   py: '$2',
   px: '$4',
@@ -107,6 +112,11 @@ export const CommandList = forwardRef<CommandListRef, CommandListProps>(
       }
     };
 
+    const twitterItemIndex = items.findIndex(
+      (item) => item.title === 'Twitter'
+    );
+    const twitterItem = items[twitterItemIndex];
+
     return (
       <Flex
         direction="column"
@@ -114,32 +124,63 @@ export const CommandList = forwardRef<CommandListRef, CommandListProps>(
         ref={containerRef}
       >
         <CommandsListLabel>Basics</CommandsListLabel>
-        {items.map(({ title, description, icon: Icon }, index) => (
-          <CommandsListItem
-            key={index}
-            data-index={index}
-            className={selectedIndex === index ? 'is-selected' : ''}
-            onClick={() => selectItem(index)}
-          >
-            <Flex
-              css={{
-                [`.${darkTheme} &`]: {
-                  '& svg': {
-                    filter: 'invert(1)',
-                  },
-                },
-              }}
-              align="center"
+        {items
+          .filter((item) => item.title !== 'Twitter')
+          .map(({ title, description, icon: Icon }, index) => (
+            <CommandsListItem
+              key={index}
+              data-index={index}
+              className={selectedIndex === index ? 'is-selected' : ''}
+              onClick={() => selectItem(index)}
             >
-              <Icon width={28} height={28} />
+              <Flex
+                css={{
+                  [`.${darkTheme} &`]: {
+                    '& svg': {
+                      filter: 'invert(1)',
+                    },
+                  },
+                }}
+                align="center"
+              >
+                <Icon width={28} height={28} />
+                <Flex direction="column" css={{ ml: '$2' }}>
+                  <Typography size="subparagraph">{title}</Typography>
+                  <Typography size="subparagraph" css={{ color: '$gray9' }}>
+                    {description}
+                  </Typography>
+                </Flex>
+              </Flex>
+              {currentNodeName === title && (
+                <Box
+                  css={{
+                    backgroundColor: '$green11',
+                    width: 8,
+                    height: 8,
+                    br: '$round',
+                  }}
+                />
+              )}
+            </CommandsListItem>
+          ))}
+        <CommandsListSeparator />
+        <CommandsListLabel>Embeds</CommandsListLabel>
+        {twitterItem && (
+          <CommandsListItem
+            data-index={twitterItemIndex}
+            className={selectedIndex === twitterItemIndex ? 'is-selected' : ''}
+            onClick={() => selectItem(twitterItemIndex)}
+          >
+            <Flex align="center">
+              <twitterItem.icon width={28} height={28} />
               <Flex direction="column" css={{ ml: '$2' }}>
-                <Typography size="subparagraph">{title}</Typography>
+                <Typography size="subparagraph">{twitterItem.title}</Typography>
                 <Typography size="subparagraph" css={{ color: '$gray9' }}>
-                  {description}
+                  {twitterItem.description}
                 </Typography>
               </Flex>
             </Flex>
-            {currentNodeName === title && (
+            {currentNodeName === twitterItem.title && (
               <Box
                 css={{
                   backgroundColor: '$green11',
@@ -150,7 +191,7 @@ export const CommandList = forwardRef<CommandListRef, CommandListProps>(
               />
             )}
           </CommandsListItem>
-        ))}
+        )}
       </Flex>
     );
   }
