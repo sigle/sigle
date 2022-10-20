@@ -9,21 +9,10 @@ import {
   useUserUnfollow,
 } from '../../hooks/appData';
 import { styled } from '../../stitches.config';
-import {
-  Box,
-  Button,
-  Flex,
-  Tooltip,
-  TooltipContent,
-  TooltipTrigger,
-  Typography,
-} from '../../ui';
+import { Button, Flex, Typography } from '../../ui';
 import { generateAvatar } from '../../utils/boringAvatar';
 import { fetchSettings } from '../../utils/gaia/fetch';
 import { useAuth } from '../auth/AuthContext';
-import Image from 'next/future/image';
-import { useTheme } from 'next-themes';
-import { useGetUserByAddress } from '../../hooks/users';
 
 const UserCardContainer = styled('div', {
   display: 'flex',
@@ -103,11 +92,9 @@ interface UserCardProps {
 }
 
 export const UserCard = ({ address }: UserCardProps) => {
-  const { resolvedTheme } = useTheme();
   const { user, isLegacy } = useAuth();
   const { mutate: followUser } = useUserFollow();
   const { mutate: unfollowUser } = useUserUnfollow();
-  const { data: userInfoByAddress } = useGetUserByAddress(address);
   const { isLoading: isLoadingUsername, data: username } = useQuery(
     ['get-username-user', address],
     async () => {
@@ -193,44 +180,6 @@ export const UserCard = ({ address }: UserCardProps) => {
           <Link href="/[username]" as={userPath} passHref>
             <UserCardTitle as="a" size="subheading">
               {isLoadingUsername ? '...' : username}
-              <Box
-                css={{
-                  marginLeft: '$1',
-                  display: 'inline-block',
-                  verticalAlign: 'middle',
-                }}
-                as="span"
-              >
-                {userInfoByAddress?.subscription && (
-                  <Tooltip delayDuration={200}>
-                    <TooltipTrigger asChild>
-                      <a
-                        href={`${sigleConfig.gammaUrl}/${userInfoByAddress.subscription.nftId}`}
-                        target="_blank"
-                        rel="noreferrer"
-                      >
-                        <Image
-                          src={
-                            resolvedTheme === 'dark'
-                              ? '/img/badges/creatorPlusDark.svg'
-                              : '/img/badges/creatorPlusLight.svg'
-                          }
-                          alt="Creator + badge"
-                          width={15}
-                          height={15}
-                        />
-                      </a>
-                    </TooltipTrigger>
-                    <TooltipContent
-                      css={{ boxShadow: 'none' }}
-                      side="right"
-                      sideOffset={8}
-                    >
-                      Creator + Explorer #{userInfoByAddress.subscription.nftId}
-                    </TooltipContent>
-                  </Tooltip>
-                )}
-              </Box>
             </UserCardTitle>
           </Link>
           {user && user?.username !== username && !isLegacy && !following && (
