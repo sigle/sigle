@@ -1,5 +1,47 @@
 # @sigle/app
 
+## 1.5.0
+
+### Minor Changes
+
+- 72227af: Add twitter extension to the editor.
+- 252f151: Add bubble menu to mobile toolbar.
+- 5b4d49a: Updates floating menu items font size.
+  Adds label for basic commands section.
+  Adds plain text item to menu.
+  Reorders menu items.
+- 91f7cea: Improve the experience of drag and drop for story cover image.
+- 98f14ed: Update editor placeholder text on mobile.
+- 58607f4: Add drag and drop to the editor. You can now upload one to many images directly.
+- 09ed2ce: Update user card styles to be more responsive on mobile views.
+
+### Patch Changes
+
+- 010410e: Fix SSR issue when rendering the editor.
+- a6c5f0c: Fix sharing post on Twitter with special chars.
+- bd280d7: Add horizontal scroll on compare plans table for mobile views.
+- f57ba15: Fix Plain Text node not activating on mobile.
+- 2093d2f: Fix cover images exceeding width of the page on mobile.
+  Make editor header full width of the container.
+- 195be81: Fix issue with mobile header logo not navigating back to drafts when on a different route.
+- 57da686: Fix follow counter not updating after follow or unfollow action.
+- 7663f70: Fix missing box shadow for floating menu on light mode.
+- 454bede: Add missing accordion menu to tablet views.
+- ca66a8b: Fix issue with interactive styles still showing on images in public stories.
+- e0ba667: Update plus icon styling.
+- 7e03000: Fix ssr issue where articles where not rendered properly.
+- 6aa23a5: Make profile page responsive on mobile.
+- e8591d5: Add card for pen run contest.
+- a9c081a: Add boring avatar as a fallback option when sharing a profile page without a PFP set by the user.
+  Encode image URL to display images with special characters correctly.
+- c103bf0: Fix editor toolbar scroll issue on mobile.
+- 92c8820: Update tooltip styles.
+  Update subparagraph line height value.
+- 24e60ba: Add prompt to explore and find writers if a user has no content on their feed.
+  Update style of page heading.
+- d0b0aeb: Update word count font size.
+  Update title placeholder color.
+
 ## 1.4.0
 
 ### Minor Changes
