@@ -1,5 +1,11 @@
 # @sigle/server
 
+## 0.3.0
+
+### Minor Changes
+
+- 3e49ab7: Migrate the codebase to nest.js
+
 ## 0.2.0
 
 ### Minor Changes
