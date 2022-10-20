@@ -201,6 +201,9 @@ export const PublicHome = ({ file, settings, userInfo }: PublicHomeProps) => {
     stories.splice(featuredStoryIndex, 1);
   }
 
+  const userAddress =
+    user?.profile.stxAddress.mainnet || user?.profile.stxAddress;
+
   const siteName = settings.siteName || userInfo.username;
 
   const seoUrl = `${sigleConfig.appUrl}/${userInfo.username}`;
@@ -208,7 +211,10 @@ export const PublicHome = ({ file, settings, userInfo }: PublicHomeProps) => {
   const seoDescription =
     settings.siteDescription?.substring(0, 300) ||
     `Read stories from ${siteName} on Sigle, decentralised and open-source platform for Web3 writers`;
-  const seoImage = settings.siteLogo;
+
+  const seoImage =
+    settings.siteLogo &&
+    encodeURI(settings.siteLogo).replace('(', '%28').replace(')', '%29');
 
   const Layout =
     userInfo.username !== user?.username ? React.Fragment : DashboardLayout;
@@ -239,7 +245,7 @@ export const PublicHome = ({ file, settings, userInfo }: PublicHomeProps) => {
           description: seoDescription,
           images: [
             {
-              url: seoImage || `${sigleConfig.appUrl}/static/icon-192x192.png`,
+              url: seoImage || generateAvatar(userAddress),
             },
           ],
         }}
