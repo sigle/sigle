@@ -13,7 +13,7 @@ export const Button = styled('button', {
     pointerEvents: 'none',
   },
 
-  '@xl': {
+  '@md': {
     fontSize: '$2',
   },
 
@@ -23,7 +23,6 @@ export const Button = styled('button', {
         px: '$3',
         py: '$1',
         br: '$1',
-        maxHeight: 28,
       },
       lg: {
         px: '$3',
