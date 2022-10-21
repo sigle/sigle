@@ -51,6 +51,9 @@ export class AnalyticsService {
     const username = await this.stacksService.getUsernameByAddress(
       stacksAddress,
     );
+    if (username === null) {
+      throw new BadRequestException(`No username found for ${stacksAddress}.`);
+    }
 
     // Caching mechanism to avoid hitting Plausible too often
     const cacheKey = storyId
@@ -157,6 +160,9 @@ export class AnalyticsService {
     const username = await this.stacksService.getUsernameByAddress(
       stacksAddress,
     );
+    if (username === null) {
+      throw new BadRequestException(`No username found for ${stacksAddress}.`);
+    }
 
     // Caching mechanism to avoid hitting Plausible too often
     const cacheKey = storyId
