@@ -1,3 +1,4 @@
+import { CheckCircledIcon } from '@radix-ui/react-icons';
 import Link from 'next/link';
 import { styled } from '../../stitches.config';
 import {
@@ -31,24 +32,48 @@ const PromptImage = styled('img', {
 });
 
 export const LoginModal = ({ open, onClose }: LoginModalProps) => {
+  const sigleFeatures = [
+    'Build your community',
+    'Create your feed',
+    'Get insight analytics',
+  ];
+
   return (
     <Dialog open={open} onOpenChange={onClose}>
-      <DialogContent css={{ p: '$5', maxWidth: 490 }} closeButton={false}>
+      <DialogContent css={{ p: '$5' }} closeButton={false}>
         <PromptImageContainer>
-          <PromptImage src="/static/img/prompt_image.png" />
+          <PromptImage src="/static/img/login_to_continue_low_2.png" />
         </PromptImageContainer>
         <DialogTitle asChild>
-          <Typography css={{ fontWeight: 600, my: '$3' }} size="h3">
+          <Typography css={{ fontWeight: 600, mt: '$4' }} size="h3">
             Login to continue
           </Typography>
         </DialogTitle>
         <DialogDescription asChild>
-          <Typography size="subheading">
-            To follow writers on Sigle, you must first be connected. <br /> Go
-            to the login page?
+          <Typography css={{ mt: '$1' }} size="subheading">
+            Connect your wallet and experience the full potential of Sigle.
           </Typography>
         </DialogDescription>
-        <Flex justify="end" gap="5" css={{ mt: '$5' }}>
+        <Flex gap="3" css={{ mt: '$4' }}>
+          {sigleFeatures.map((feature) => (
+            <Typography
+              key={feature}
+              css={{
+                display: 'flex',
+                alignItems: 'center',
+                '& svg': {
+                  color: '$green11',
+                  mr: '$1',
+                },
+              }}
+              size="subheading"
+            >
+              <CheckCircledIcon />
+              {feature}
+            </Typography>
+          ))}
+        </Flex>
+        <Flex justify="end" gap="5" css={{ mt: '$6' }}>
           <Button size="lg" variant="ghost" color="gray" onClick={onClose}>
             Cancel
           </Button>
