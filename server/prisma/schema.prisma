@@ -8,14 +8,29 @@ datasource db {
 }
 
 model User {
-  id            String         @id @default(uuid())
-  stacksAddress String         @unique
-  isLegacy      Boolean        @default(false)
-  createdAt     DateTime       @default(now())
-  updatedAt     DateTime       @updatedAt
-  subscriptions Subscription[]
-  followers     Follows[]      @relation("following")
-  following     Follows[]      @relation("follower")
+  id               String            @id @default(uuid())
+  stacksAddress    String            @unique
+  isLegacy         Boolean           @default(false)
+  createdAt        DateTime          @default(now())
+  updatedAt        DateTime          @updatedAt
+  subscriptions    Subscription[]
+  followers        Follows[]         @relation("following")
+  following        Follows[]         @relation("follower")
+  GaiaUserSettings GaiaUserSettings?
+}
+
+model GaiaUserSettings {
+  id                String  @id @default(uuid())
+  siteName          String?
+  siteDescription   String?
+  siteColor         String?
+  siteLogo          String?
+  siteUrl           String?
+  siteTwitterHandle String?
+  userId    String   @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  user      User     @relation(fields: [userId], references: [id])
 }
 
 model Subscription {
