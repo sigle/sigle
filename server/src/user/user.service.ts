@@ -238,4 +238,43 @@ export class UserService {
       },
     });
   }
+
+  /**
+   * Sync the gaia settings of a user
+   */
+  async syncGaiaSettings({
+    userId,
+    gaiaUrl,
+  }: {
+    userId: string;
+    gaiaUrl: string;
+  }) {
+    const gaiaSettings = await this.stacksService.getSettings({
+      bucketUrl: gaiaUrl,
+    });
+    const upsertData = {
+      siteName: gaiaSettings.siteName,
+      siteDescription: gaiaSettings.siteDescription,
+      siteColor: gaiaSettings.siteColor,
+      siteLogo: gaiaSettings.siteLogo,
+      siteUrl: gaiaSettings.siteUrl,
+      siteTwitterHandle: gaiaSettings.siteTwitterHandle,
+    };
+    const upsertSettings = await this.prisma.gaiaUserSettings.upsert({
+      where: {
+        userId,
+      },
+      update: upsertData,
+      create: { ...upsertData, userId },
+      select: {
+        siteName: true,
+        siteDescription: true,
+        siteColor: true,
+        siteLogo: true,
+        siteUrl: true,
+        siteTwitterHandle: true,
+      },
+    });
+    return upsertSettings;
+  }
 }
