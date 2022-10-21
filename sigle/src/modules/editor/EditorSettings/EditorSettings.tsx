@@ -4,6 +4,7 @@ import {
   CameraIcon,
   Cross1Icon,
   FileTextIcon,
+  QuestionMarkCircledIcon,
   TrashIcon,
 } from '@radix-ui/react-icons';
 import { useFormik, FormikErrors } from 'formik';
@@ -44,6 +45,7 @@ import {
   FormRow,
   FormTextarea,
 } from '../../../ui/Form';
+import Link from 'next/link';
 
 // TODO - migrate hideCoverImage from old articles
 // TODO - use twitter card preview component in settings?
@@ -300,6 +302,9 @@ export const EditorSettings = ({
     }
   };
 
+  const canonicalUrlInfo =
+    'https://developers.google.com/search/docs/crawling-indexing/consolidate-duplicate-urls';
+
   return (
     <Dialog open={open} onOpenChange={onClose}>
       <StyledDialogContent aria-label="Story settings">
@@ -431,7 +436,18 @@ export const EditorSettings = ({
                     onChange={formik.handleChange}
                     maxLength={200}
                   />
-                  <FormHelper>Add a canonical URL</FormHelper>
+                  <Flex gap="1" align="center">
+                    <FormHelper>Add a canonical URL</FormHelper>
+                    <Box
+                      css={{ '& svg': { color: '$gray9' } }}
+                      as="a"
+                      href={canonicalUrlInfo}
+                      target="_blank"
+                      rel="noreferrer"
+                    >
+                      <QuestionMarkCircledIcon />
+                    </Box>
+                  </Flex>
                   {formik.errors.canonicalUrl && (
                     <FormHelperError>
                       {formik.errors.canonicalUrl}
