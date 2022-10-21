@@ -202,7 +202,7 @@ export const UserCard = ({ address }: UserCardProps) => {
             <Button
               variant="subtle"
               css={{ ml: '$5' }}
-              onClick={user ? handleUnfollow : handleShowLoginPrompt}
+              onClick={handleUnfollow}
             >
               Unfollow
             </Button>
