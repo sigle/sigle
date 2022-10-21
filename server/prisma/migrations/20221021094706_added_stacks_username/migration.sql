@@ -5,8 +5,8 @@
 
 */
 -- AlterTable
-ALTER TABLE "User" ADD COLUMN     "stacksBlock" INTEGER,
-ADD COLUMN     "stacksGaiaUrl" TEXT,
+ALTER TABLE "User" ADD COLUMN     "gaiaUrl" TEXT,
+ADD COLUMN     "stacksBlock" INTEGER,
 ADD COLUMN     "stacksUsername" TEXT;
 
 -- CreateIndex

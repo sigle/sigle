@@ -20,14 +20,14 @@ importers:
       '@types/node': 18.0.3
       ts-node: 10.8.2
       typescript: 4.7.4
-      undici: 5.10.0
+      undici: 5.11.0
     dependencies:
       '@stacks/auth': 4.3.3
     devDependencies:
       '@types/node': 18.0.3
       ts-node: 10.8.2_fxk5i3xm3ivo7fjwhcizcinpla
       typescript: 4.7.4
-      undici: 5.10.0
+      undici: 5.11.0
 
   packages/tailwind-style:
     specifiers:
@@ -53,6 +53,7 @@ importers:
       '@ntegral/nestjs-sentry': 4.0.0
       '@prisma/client': 4.3.1
       '@sentry/node': 7.12.1
+      '@stacks/blockchain-api-client': 6.1.0
       '@types/cache-manager': 4.0.2
       '@types/express': 4.17.14
       '@types/jest': 29.0.3
@@ -86,7 +87,7 @@ importers:
       ts-node: 10.9.1
       tsconfig-paths: 4.1.0
       typescript: 4.8.4
-      undici: 5.10.0
+      undici: 5.11.0
       webpack: 5.74.0
     dependencies:
       '@fastify/cookie': 8.3.0
@@ -100,6 +101,7 @@ importers:
       '@ntegral/nestjs-sentry': 4.0.0_ksnmowtjbsc4m3g2nqog4wgltu
       '@prisma/client': 4.3.1_prisma@4.3.1
       '@sentry/node': 7.12.1
+      '@stacks/blockchain-api-client': 6.1.0
       cache-manager: 4.1.0
       cache-manager-redis-store: 2.0.0
       class-transformer: 0.5.1
@@ -114,7 +116,7 @@ importers:
       reflect-metadata: 0.1.13
       rimraf: 3.0.2
       rxjs: 7.5.7
-      undici: 5.10.0
+      undici: 5.11.0
     devDependencies:
       '@nestjs/cli': 9.1.3
       '@nestjs/schematics': 9.0.3_typescript@4.8.4
@@ -2561,8 +2563,8 @@ packages:
     transitivePeerDependencies:
       - encoding
 
-  /@nestjs/graphql/10.1.2_o5ym4ozkuwx4tb6ybx3mgktlhe:
-    resolution: {integrity: sha512-3/przE5h74HI2K5Ft4N6nMgRTa4zgNauUtU2yoemzOb4mgGDkmZiLpCPBzJa+bMbE0gEtQTnnmjXscfoif/fIQ==}
+  /@nestjs/graphql/10.1.3_o5ym4ozkuwx4tb6ybx3mgktlhe:
+    resolution: {integrity: sha512-+dEprdyrTQ0mh2Sr0XLm/Bd4whsvxxJ6ZXDkVHe5fdGa85oN89F4j9r/jTS5e7lBgQLd2hLVqWAkf2+GfZFELg==}
     requiresBuild: true
     peerDependencies:
       '@apollo/subgraph': ^0.1.5 || ^0.3.0 || ^0.4.0 || ^2.0.0
@@ -2582,7 +2584,7 @@ packages:
       '@graphql-tools/utils': 8.12.0
       '@nestjs/common': 9.1.2_mpbqhbv3qeq77ujihdpg6d4hsy
       '@nestjs/core': 9.1.2_e6ar3fodmgi6dfak6o4ayoeihe
-      '@nestjs/mapped-types': 1.1.0_zeb4gyhc74qs6lqbathv6jdp3i
+      '@nestjs/mapped-types': 1.2.0_zeb4gyhc74qs6lqbathv6jdp3i
       chokidar: 3.5.3
       fast-glob: 3.2.12
       graphql-tag: 2.12.6
@@ -2593,7 +2595,7 @@ packages:
       subscriptions-transport-ws: 0.11.0
       tslib: 2.4.0
       uuid: 9.0.0
-      ws: 8.8.1
+      ws: 8.9.0
     transitivePeerDependencies:
       - bufferutil
       - class-transformer
@@ -2620,6 +2622,26 @@ packages:
       class-validator: 0.13.2
       reflect-metadata: 0.1.13
     dev: false
+
+  /@nestjs/mapped-types/1.2.0_zeb4gyhc74qs6lqbathv6jdp3i:
+    resolution: {integrity: sha512-NTFwPZkQWsArQH8QSyFWGZvJ08gR+R4TofglqZoihn/vU+ktHEJjMqsIsADwb7XD97DhiD+TVv5ac+jG33BHrg==}
+    peerDependencies:
+      '@nestjs/common': ^7.0.8 || ^8.0.0 || ^9.0.0
+      class-transformer: ^0.2.0 || ^0.3.0 || ^0.4.0 || ^0.5.0
+      class-validator: ^0.11.1 || ^0.12.0 || ^0.13.0
+      reflect-metadata: ^0.1.12
+    peerDependenciesMeta:
+      class-transformer:
+        optional: true
+      class-validator:
+        optional: true
+    dependencies:
+      '@nestjs/common': 9.1.2_mpbqhbv3qeq77ujihdpg6d4hsy
+      class-transformer: 0.5.1
+      class-validator: 0.13.2
+      reflect-metadata: 0.1.13
+    dev: false
+    optional: true
 
   /@nestjs/platform-fastify/9.1.2_i4tp3onqu6wvmxq7vnpjzu2i3e:
     resolution: {integrity: sha512-BmyFTtScg4sHdFacLLrDEVGRMh+dw8hIBLqsNArerkj3/0k9IUWC2pY6Wv62kfOV27xeUJw0lLfreGptfpvqcQ==}
@@ -2908,7 +2930,7 @@ packages:
       rimraf: 3.0.2
       rxjs: 7.5.7
     optionalDependencies:
-      '@nestjs/graphql': 10.1.2_o5ym4ozkuwx4tb6ybx3mgktlhe
+      '@nestjs/graphql': 10.1.3_o5ym4ozkuwx4tb6ybx3mgktlhe
     transitivePeerDependencies:
       - '@apollo/subgraph'
       - bufferutil
@@ -3820,6 +3842,23 @@ packages:
       - utf-8-validate
     dev: false
 
+  /@stacks/blockchain-api-client/6.1.0:
+    resolution: {integrity: sha512-1FEDo0w+gjlpLayFFkft6OzWyqWU8YZGMbbpos0r3Dx/wpbV4UcgRw7iT1hU6rUqZRJ1Qp0hRiqLhF+qq9gl1A==}
+    dependencies:
+      '@stacks/stacks-blockchain-api-types': 6.1.0
+      '@types/ws': 7.4.7
+      cross-fetch: 3.1.5
+      eventemitter3: 4.0.7
+      jsonrpc-lite: 2.2.0
+      socket.io-client: 4.4.1
+      ws: 7.5.6
+    transitivePeerDependencies:
+      - bufferutil
+      - encoding
+      - supports-color
+      - utf-8-validate
+    dev: false
+
   /@stacks/common/1.2.2:
     resolution: {integrity: sha512-knCqq88EBRCN8AhS7+Sx2PJuRv0EFNChEpqLqCAchCHCQfp5bWad/47Zw+fLP9ccBwFXh4pl1wDtbQLBfDo0+A==}
     dependencies:
@@ -4079,6 +4118,10 @@ packages:
 
   /@stacks/stacks-blockchain-api-types/4.0.1:
     resolution: {integrity: sha512-HVG/AuXyk1J25t5bKwVokSrsZy8E3G+edOgPzIoyfsX7ELgl7EN+ddmboHxktE6K2aCOWPwQgAUG50s8DAzD+A==}
+    dev: false
+
+  /@stacks/stacks-blockchain-api-types/6.1.0:
+    resolution: {integrity: sha512-XfWKLnkCs4UxY+CaY8PW/ZvfXiC7SQmCuirg7YA/J/aL5W9xwmGWJZoM6WicyMNIegoHoxDm2x6nWLYYZ28dJA==}
     dev: false
 
   /@stacks/storage/4.3.8:
@@ -5755,7 +5798,7 @@ packages:
     resolution: {integrity: sha512-8+9WqebbFzpX9OR+Wa6O29asIogeRMzcGtAINdpMHHyAg10f05aSFVBbcEqGf/PXw1EjAZ+q2/bEBg3DvurK3Q==}
 
   /argv/0.0.2:
-    resolution: {integrity: sha512-dEamhpPEwRUBpLNHeuCm/v+g0anFByHahxodVO/BbAarHVBBg2MccCwf9K+o1Pof+2btdnkJelYVUWjW/VrATw==}
+    resolution: {integrity: sha1-7L0W+JSbFXGDcRsb2jNPN4QBhas=}
     engines: {node: '>=0.6.10'}
     dev: false
 
@@ -6310,6 +6353,12 @@ packages:
       base64-js: 1.5.1
       ieee754: 1.2.1
     dev: false
+
+  /busboy/1.6.0:
+    resolution: {integrity: sha512-8SFQbg/0hQ9xy3UNTB0YEnsNBbWfhf7RtnzpL7TkBiTBRfrQ9Fxcnz7VJsleJpyp6rVLvXiuORqjlHi5q+PYuA==}
+    engines: {node: '>=10.16.0'}
+    dependencies:
+      streamsearch: 1.1.0
 
   /c32check/1.1.2:
     resolution: {integrity: sha512-YgmbvOQ9HfoH7ptW80JP6WJdgoHJFGqFjxaFYvwD+bU5i3dJ44a1LI0yxdiA2n/tVKq9W92tYcFjTP5hGlvhcg==}
@@ -12994,6 +13043,22 @@ packages:
       - utf-8-validate
     dev: false
 
+  /socket.io-client/4.4.1:
+    resolution: {integrity: sha512-N5C/L5fLNha5Ojd7Yeb/puKcPWWcoB/A09fEjjNsg91EDVr5twk/OEyO6VT9dlLSUNY85NpW6KBhVMvaLKQ3vQ==}
+    engines: {node: '>=10.0.0'}
+    dependencies:
+      '@socket.io/component-emitter': 3.0.0
+      backo2: 1.0.2
+      debug: 4.3.4
+      engine.io-client: 6.1.1
+      parseuri: 0.0.6
+      socket.io-parser: 4.1.2
+    transitivePeerDependencies:
+      - bufferutil
+      - supports-color
+      - utf-8-validate
+    dev: false
+
   /socket.io-parser/4.1.2:
     resolution: {integrity: sha512-j3kk71QLJuyQ/hh5F/L2t1goqzdTL0gvDzuhTuNSwihfuFUrcSji0qFZmJJPtG6Rmug153eOPsUizeirf1IIog==}
     engines: {node: '>=10.0.0'}
@@ -13153,6 +13218,10 @@ packages:
     dependencies:
       mixme: 0.5.4
     dev: true
+
+  /streamsearch/1.1.0:
+    resolution: {integrity: sha512-Mcc5wHehp9aXz1ax6bZUyY5afg9u2rv5cqQI3mRrYkGC8rW2hM02jWuwjtL++LS5qinSyhj2QfLyNsuc+VsExg==}
+    engines: {node: '>=10.0.0'}
 
   /strict-uri-encode/2.0.0:
     resolution: {integrity: sha512-QwiXZgpRcKkhTj2Scnn++4PKtWsH0kpzZ62L2R6c/LUVYv7hVnZqcg2+sMuT6R7Jusu1vviK/MFsu6kNJfWlEQ==}
@@ -13316,7 +13385,7 @@ packages:
       eventemitter3: 3.1.2
       iterall: 1.3.0
       symbol-observable: 1.2.0
-      ws: 7.5.7
+      ws: 7.5.9
     transitivePeerDependencies:
       - bufferutil
       - utf-8-validate
@@ -13941,9 +14010,11 @@ packages:
       which-boxed-primitive: 1.0.2
     dev: true
 
-  /undici/5.10.0:
-    resolution: {integrity: sha512-c8HsD3IbwmjjbLvoZuRI26TZic+TSEe8FPMLLOkN1AfYRhdjnKBU6yL+IwcSCbdZiX4e5t0lfMDLDCqj4Sq70g==}
+  /undici/5.11.0:
+    resolution: {integrity: sha512-oWjWJHzFet0Ow4YZBkyiJwiK5vWqEYoH7BINzJAJOLedZ++JpAlCbUktW2GQ2DS2FpKmxD/JMtWUUWl1BtghGw==}
     engines: {node: '>=12.18'}
+    dependencies:
+      busboy: 1.6.0
 
   /union-value/1.0.1:
     resolution: {integrity: sha512-tJfXmxMeWYnczCVs7XAEvIV7ieppALdyepWMkHkwciRpZraG/xwT+s2JN8+pr1+8jCRf80FFzvr+MpQeeoF4Xg==}
@@ -14403,6 +14474,21 @@ packages:
         optional: true
       utf-8-validate:
         optional: true
+    dev: true
+
+  /ws/7.5.9:
+    resolution: {integrity: sha512-F+P9Jil7UiSKSkppIiD94dN07AwvFixvLIj1Og1Rl9GGMuNipJnV9JzjD6XuqmAeiswGvUmNLjr5cFuXwNS77Q==}
+    engines: {node: '>=8.3.0'}
+    peerDependencies:
+      bufferutil: ^4.0.1
+      utf-8-validate: ^5.0.2
+    peerDependenciesMeta:
+      bufferutil:
+        optional: true
+      utf-8-validate:
+        optional: true
+    dev: false
+    optional: true
 
   /ws/8.2.3:
     resolution: {integrity: sha512-wBuoj1BDpC6ZQ1B7DWQBYVLphPWkm8i9Y0/3YdHjHKHiohOJ1ws+3OccDWtH+PoC9DZD5WOTrJvNbWvjS6JWaA==}
@@ -14416,8 +14502,8 @@ packages:
       utf-8-validate:
         optional: true
 
-  /ws/8.8.1:
-    resolution: {integrity: sha512-bGy2JzvzkPowEJV++hF07hAD6niYSr0JzBNo/J29WsB57A2r7Wlc1UFcTR9IzrPvuNVO4B8LGqF8qcpsVOhJCA==}
+  /ws/8.9.0:
+    resolution: {integrity: sha512-Ja7nszREasGaYUYCI2k4lCKIRTt+y7XuqVoHR44YpI49TtryyqbqvDMn5eqfW7e6HzTukDRIsXqzVHScqRcafg==}
     engines: {node: '>=10.0.0'}
     peerDependencies:
       bufferutil: ^4.0.1
