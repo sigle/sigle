@@ -431,11 +431,7 @@ export const EditorSettings = ({
                     onChange={formik.handleChange}
                     maxLength={200}
                   />
-                  <FormHelper>
-                    Add a canonical URL
-                    <br />
-                    Max. 200 Characters
-                  </FormHelper>
+                  <FormHelper>Add a canonical URL</FormHelper>
                   {formik.errors.canonicalUrl && (
                     <FormHelperError>
                       {formik.errors.canonicalUrl}
