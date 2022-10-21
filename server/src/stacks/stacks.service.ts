@@ -37,7 +37,7 @@ export class StacksService {
       userProfile = await lookupProfile({ username });
     } catch (error) {
       // This will happen if there is no blockstack user with this name
-      if (error.message === 'Name not found') {
+      if (error?.message === 'Name not found') {
         userProfile = undefined;
       } else {
         throw error;
