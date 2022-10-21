@@ -48,6 +48,7 @@
     "@ntegral/nestjs-sentry": "4.0.0",
     "@prisma/client": "4.3.1",
     "@sentry/node": "7.12.1",
+    "@stacks/blockchain-api-client": "6.1.0",
     "cache-manager": "4.1.0",
     "cache-manager-redis-store": "2.0.0",
     "class-transformer": "0.5.1",
@@ -62,7 +63,7 @@
     "reflect-metadata": "0.1.13",
     "rimraf": "3.0.2",
     "rxjs": "7.5.7",
-    "undici": "5.10.0"
+    "undici": "5.11.0"
   },
   "devDependencies": {
     "@nestjs/cli": "9.1.3",
