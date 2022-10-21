@@ -137,6 +137,7 @@ export const PublicStory = ({
       <NextSeo
         title={seoTitle}
         description={story.metaDescription}
+        canonical={story.canonicalUrl}
         openGraph={{
           type: 'website',
           url: seoUrl,
@@ -216,6 +217,8 @@ export const PublicStory = ({
                 {format(story.createdAt, 'MMM dd')}
                 <span>•</span>
                 <span>{storyReadingTime?.text}</span>
+                <span>•</span>
+                <span>{story.canonicalUrl}</span>
               </Typography>
             </Flex>
           </Flex>
