@@ -7,6 +7,7 @@ import { useGetUserSubscription } from '../../../hooks/subscriptions';
 import Link from 'next/link';
 import { sigleConfig } from '../../../config';
 import { SelectNFTDialog } from './SelectNFTDialog';
+import { useAuth } from '../../auth/AuthContext';
 
 const plans = {
   starter: {
@@ -71,6 +72,7 @@ export const CurrentPlan = () => {
     data: userSubscription,
   } = useGetUserSubscription();
   const [isSelectNFTDialogOpen, setIsSelectNFTDialogOpen] = useState(false);
+  const { user } = useAuth();
 
   const currentPlan: 'starter' | 'creatorPlus' = userSubscription
     ? 'creatorPlus'
@@ -80,8 +82,23 @@ export const CurrentPlan = () => {
 
   return (
     <SettingsLayout>
-      <Flex align="center" justify="between">
-        <Typography size="h4" css={{ fontWeight: 600 }}>
+      <Flex
+        css={{
+          pb: !isLoading && isError ? '$5' : 0,
+          mb: !isLoading && isError ? '$2' : 0,
+          borderBottom:
+            !isLoading && isError ? '1px solid $colors$gray6' : 'none',
+        }}
+        align="center"
+        justify="between"
+      >
+        <Typography
+          size="h4"
+          css={{
+            fontWeight: 600,
+            flexGrow: 1,
+          }}
+        >
           Current plan
         </Typography>
         {!isLoading && !isError ? (
@@ -197,6 +214,19 @@ export const CurrentPlan = () => {
           </Flex>
         </>
       ) : null}
+
+      {!isLoading && isError && (
+        <Flex direction="column" css={{ mt: '$5' }} gap="3" align="center">
+          <Typography size="subheading">
+            This feature is available for Hiro wallet accounts only
+          </Typography>
+          <Link href={`/${user?.username}`} passHref>
+            <Button variant="subtle" as="a">
+              Back to profile
+            </Button>
+          </Link>
+        </Flex>
+      )}
 
       <SelectNFTDialog
         open={isSelectNFTDialogOpen}
