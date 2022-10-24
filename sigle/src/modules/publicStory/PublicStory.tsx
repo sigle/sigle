@@ -137,6 +137,7 @@ export const PublicStory = ({
       <NextSeo
         title={seoTitle}
         description={story.metaDescription}
+        canonical={story.canonicalUrl}
         openGraph={{
           type: 'website',
           url: seoUrl,
