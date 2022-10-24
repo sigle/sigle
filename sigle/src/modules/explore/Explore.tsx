@@ -11,7 +11,7 @@ export const ExploreUsers = () => {
   const { user, isLegacy } = useAuth();
   const { isLoading: isLoadingUserFollowing, data: userFollowing } =
     useGetGaiaUserFollowing({
-      enabled: !!user && !isLegacy,
+      enabled: !!user || !isLegacy,
     });
 
   const {
