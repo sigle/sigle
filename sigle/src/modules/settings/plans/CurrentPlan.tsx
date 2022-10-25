@@ -72,7 +72,7 @@ export const CurrentPlan = () => {
     data: userSubscription,
   } = useGetUserSubscription();
   const [isSelectNFTDialogOpen, setIsSelectNFTDialogOpen] = useState(false);
-  const { user } = useAuth();
+  const { user, isLegacy } = useAuth();
 
   const currentPlan: 'starter' | 'creatorPlus' = userSubscription
     ? 'creatorPlus'
@@ -84,10 +84,9 @@ export const CurrentPlan = () => {
     <SettingsLayout>
       <Flex
         css={{
-          pb: !isLoading && isError ? '$5' : 0,
-          mb: !isLoading && isError ? '$2' : 0,
-          borderBottom:
-            !isLoading && isError ? '1px solid $colors$gray6' : 'none',
+          pb: isLegacy ? '$5' : 0,
+          mb: isLegacy ? '$2' : 0,
+          borderBottom: isLegacy ? '1px solid $colors$gray6' : 'none',
         }}
         align="center"
         justify="between"
@@ -215,7 +214,7 @@ export const CurrentPlan = () => {
         </>
       ) : null}
 
-      {!isLoading && isError && (
+      {isLegacy && (
         <Flex direction="column" css={{ mt: '$5' }} gap="3" align="center">
           <Typography size="subheading">
             This feature is available for Hiro wallet accounts only
