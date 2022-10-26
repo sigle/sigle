@@ -9,10 +9,9 @@ import { useAuth } from '../auth/AuthContext';
 
 export const ExploreUsers = () => {
   const { user, isLegacy } = useAuth();
-  const { isLoading: isLoadingUserFollowing, data: userFollowing } =
-    useGetGaiaUserFollowing({
-      enabled: !!user || !isLegacy,
-    });
+  const { data: userFollowing, fetchStatus } = useGetGaiaUserFollowing({
+    enabled: !!user && !isLegacy,
+  });
 
   const {
     isLoading: isLoadingExplore,
@@ -68,7 +67,7 @@ export const ExploreUsers = () => {
       the view, the client will get the next page from the API */}
       {userFollowing && userExplore && hasNextPage && <div ref={observe} />}
 
-      {isLoadingUserFollowing || isLoadingExplore || isFetchingNextPage ? (
+      {fetchStatus === 'fetching' || isLoadingExplore || isFetchingNextPage ? (
         <Box css={{ mt: '$10' }}>
           <LoadingSpinner />
         </Box>
