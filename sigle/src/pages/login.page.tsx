@@ -136,9 +136,10 @@ const Login = () => {
           toast.error('Failed to login');
           setSigningState('inactive');
         }
+        setSigningState('complete');
       },
+      onCancel: () => setSigningState('active'),
     });
-    setSigningState('complete');
   };
 
   const handleLoginLegacy = () => {
@@ -255,7 +256,10 @@ const Login = () => {
             color="gray"
             size="lg"
             css={{ gap: '$2' }}
-            onClick={logout}
+            onClick={() => {
+              setSigningState('inactive');
+              logout();
+            }}
           >
             <ArrowLeftIcon width={15} height={15} />
             Change account
