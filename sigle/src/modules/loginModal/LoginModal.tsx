@@ -1,6 +1,6 @@
 import { CheckCircledIcon } from '@radix-ui/react-icons';
+import Image from 'next/future/image';
 import Link from 'next/link';
-import { styled } from '../../stitches.config';
 import {
   Button,
   Dialog,
@@ -16,21 +16,6 @@ interface LoginModalProps {
   onClose: () => void;
 }
 
-const PromptImageContainer = styled('div', {
-  br: '$1',
-  overflow: 'hidden',
-  width: '100%',
-  height: '100%',
-});
-
-const PromptImage = styled('img', {
-  width: '100%',
-  height: '100%',
-  maxWidth: '100%',
-  maxHeight: 187,
-  objectFit: 'cover',
-});
-
 export const LoginModal = ({ open, onClose }: LoginModalProps) => {
   const sigleFeatures = [
     'Build your community',
@@ -41,9 +26,12 @@ export const LoginModal = ({ open, onClose }: LoginModalProps) => {
   return (
     <Dialog open={open} onOpenChange={onClose}>
       <DialogContent css={{ p: '$5' }} closeButton={false}>
-        <PromptImageContainer>
-          <PromptImage src="/static/img/login_to_continue_low_2.png" />
-        </PromptImageContainer>
+        <Image
+          width={527}
+          height={187}
+          alt="Illustration of someone using a pencil as a pole vault stick."
+          src="/static/img/login_to_continue_low_2.png"
+        />
         <DialogTitle asChild>
           <Typography css={{ fontWeight: 600, mt: '$4' }} size="h3">
             Login to continue
