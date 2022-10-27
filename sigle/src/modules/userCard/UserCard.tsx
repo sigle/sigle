@@ -13,6 +13,8 @@ import { Button, Flex, Typography } from '../../ui';
 import { generateAvatar } from '../../utils/boringAvatar';
 import { fetchSettings } from '../../utils/gaia/fetch';
 import { useAuth } from '../auth/AuthContext';
+import { LoginModal } from '../loginModal/LoginModal';
+import { useState } from 'react';
 
 const UserCardContainer = styled('div', {
   display: 'flex',
@@ -93,6 +95,7 @@ interface UserCardProps {
 
 export const UserCard = ({ address }: UserCardProps) => {
   const { user, isLegacy } = useAuth();
+  const [showLoginPromptDialog, setShowLoginPromptDialog] = useState(false);
   const { mutate: followUser } = useUserFollow();
   const { mutate: unfollowUser } = useUserUnfollow();
   const { isLoading: isLoadingUsername, data: username } = useQuery(
@@ -162,6 +165,10 @@ export const UserCard = ({ address }: UserCardProps) => {
   const userPath = `/${username}`;
   const following = !!userFollowing?.following[address];
 
+  const handleShowLoginPrompt = () => setShowLoginPromptDialog(true);
+
+  const handleCancelLoginPrompt = () => setShowLoginPromptDialog(false);
+
   return (
     <UserCardContainer>
       <Link href="/[username]" as={userPath} passHref>
@@ -182,12 +189,16 @@ export const UserCard = ({ address }: UserCardProps) => {
               {isLoadingUsername ? '...' : username}
             </UserCardTitle>
           </Link>
-          {user && user?.username !== username && !isLegacy && !following && (
-            <Button color="orange" css={{ ml: '$5' }} onClick={handleFollow}>
+          {user?.username !== username && !isLegacy && !following && (
+            <Button
+              color="orange"
+              css={{ ml: '$5' }}
+              onClick={user ? handleFollow : handleShowLoginPrompt}
+            >
               Follow
             </Button>
           )}
-          {user && user?.username !== username && !isLegacy && following && (
+          {user?.username !== username && !isLegacy && following && (
             <Button
               variant="subtle"
               css={{ ml: '$5' }}
@@ -201,6 +212,11 @@ export const UserCard = ({ address }: UserCardProps) => {
           {userSettings && userSettings.file.siteDescription}
         </UserCardDescription>
       </Flex>
+
+      <LoginModal
+        open={showLoginPromptDialog}
+        onClose={handleCancelLoginPrompt}
+      />
     </UserCardContainer>
   );
 };
