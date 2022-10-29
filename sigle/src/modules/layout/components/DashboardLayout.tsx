@@ -225,7 +225,6 @@ export const DashboardLayout = ({
               alignSelf: 'start',
               backgroundColor: loadingCreate ? '#FFC997' : '$gray11',
               color: loadingCreate ? '$orange11' : '$gray1',
-              // br: loadingCreate ? '9999px' : '$1',
             }}
             disabled={loadingCreate}
             onClick={handleCreateNewPrivateStory}
