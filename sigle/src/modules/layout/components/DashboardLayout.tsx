@@ -26,6 +26,37 @@ import { createSubsetStory } from '../../editor/utils';
 import { toast } from 'react-toastify';
 import { useAuth } from '../../auth/AuthContext';
 import { PenRunCard } from '../../penRunCard/PenRunCard';
+import Image from 'next/future/image';
+
+const ThemedButton = styled(Button, {
+  '& img': {
+    display: 'none',
+  },
+
+  variants: {
+    halloween: {
+      true: {
+        minWidth: 120,
+        backgroundColor: '$gray11',
+
+        '&:hover': {
+          backgroundColor: '#ECA25E',
+
+          '& img': {
+            display: 'block',
+          },
+
+          '& span': {
+            display: 'none',
+          },
+        },
+        '&:active': {
+          backgroundColor: '#FFC997',
+        },
+      },
+    },
+  },
+});
 
 export const DashboardContainer = styled(Container, {
   flex: 1,
@@ -187,14 +218,29 @@ export const DashboardLayout = ({
               </DashboardSidebarNavItem>
             </Link>
           ))}
-          <Button
-            css={{ mt: '$5', alignSelf: 'start' }}
+          <ThemedButton
+            halloween
+            css={{
+              mt: '$5',
+              alignSelf: 'start',
+              backgroundColor: loadingCreate ? '#FFC997' : '$gray11',
+              color: loadingCreate ? '$orange11' : '$gray1',
+              // br: loadingCreate ? '9999px' : '$1',
+            }}
             disabled={loadingCreate}
             onClick={handleCreateNewPrivateStory}
             size="lg"
           >
-            {!loadingCreate ? `Write a story` : `Creating new story...`}
-          </Button>
+            <span>
+              {!loadingCreate ? `Write a story` : `Creating a stor-Hihihi..`}
+            </span>
+            <Image
+              width={24}
+              height={20}
+              alt="Pumpkin Illustration"
+              src="/static/img/pumpkin-illust.svg"
+            />
+          </ThemedButton>
           <PenRunCard />
         </DashboardSidebar>
         <Box
