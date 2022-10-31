@@ -238,4 +238,18 @@ export class UserService {
       },
     });
   }
+
+  async addOrUpdateEmail({
+    stacksAddress,
+    email,
+  }: {
+    stacksAddress: string;
+    email: string;
+  }): Promise<void> {
+    await this.prisma.user.update({
+      select: { id: true },
+      where: { stacksAddress },
+      data: { email, emailVerified: null },
+    });
+  }
 }

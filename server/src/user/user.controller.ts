@@ -155,8 +155,11 @@ export class UserController {
     @Request() req,
     @Body() addEmailDto: AddEmailDto,
   ): Promise<void> {
-    // TODO add email to user object
-    // TODO validate email is valid
+    // TODO validate email is valid - check blocksurvey tools
+    await this.userService.addOrUpdateEmail({
+      stacksAddress: req.user.stacksAddress,
+      email: addEmailDto.email,
+    });
     await this.emailVerificationService.sendVerificationLink({
       email: addEmailDto.email,
     });
