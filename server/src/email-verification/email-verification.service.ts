@@ -71,4 +71,15 @@ export class EmailVerificationService {
       },
     });
   }
+
+  async resendVerificationLink({ stacksAddress }: { stacksAddress: string }) {
+    const user = await this.prisma.user.findUniqueOrThrow({
+      where: { stacksAddress },
+      select: { id: true, email: true, emailVerified: true },
+    });
+    if (user.emailVerified) {
+      throw new BadRequestException('Email already verified');
+    }
+    await this.sendVerificationLink({ email: user.email });
+  }
 }

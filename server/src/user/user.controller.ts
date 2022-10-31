@@ -26,6 +26,7 @@ import { ExploreUser } from './dto/exploreUser.dto';
 import { UserProfileDto } from './dto/userProfile.dto';
 import { UserService } from './user.service';
 import { AddEmailDto } from './dto/addEmail.dto';
+import { Throttle } from '@nestjs/throttler';
 
 @ApiTags('user')
 @Controller()
@@ -144,18 +145,19 @@ export class UserController {
   }
 
   @ApiOperation({
-    description: 'Add an email address for the authenticated user.',
+    description:
+      'Add an email address for the authenticated user. Send an email to the user with a verification link.',
   })
   @ApiBearerAuth()
   @ApiOkResponse({ type: Boolean })
   @UseGuards(AuthGuard)
+  @Throttle(5, 60)
   @Post('/api/users/me/email')
   @HttpCode(200)
   async addEmail(
     @Request() req,
     @Body() addEmailDto: AddEmailDto,
   ): Promise<void> {
-    // TODO rate limit
     // TODO validate email is valid - check blocksurvey tools
     // TODO another user already has this email setup
 
