@@ -14,9 +14,11 @@ export class EmailVerificationService {
     private readonly configService: ConfigService<EnvironmentVariables>,
   ) {}
 
+  /**
+   * Generate a new link to verify an user email and send it.
+   * The token expires after 10 mins.
+   */
   async sendVerificationLink({ email }: { email: string }): Promise<void> {
-    // const jwtSecret = crypto.randomBytes(16).toString('hex');
-
     const payload: EmailVerificationToken = { email };
     const token = jwt.sign(payload, this.configService.get('NEXTAUTH_SECRET'), {
       algorithm: 'HS256',
