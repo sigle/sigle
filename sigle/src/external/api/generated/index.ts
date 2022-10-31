@@ -18,6 +18,7 @@ export type { HistoricalDto } from './models/HistoricalDto';
 export type { ReferrerDto } from './models/ReferrerDto';
 export type { SubscriptionDto } from './models/SubscriptionDto';
 export type { UserProfileDto } from './models/UserProfileDto';
+export type { VerifyEmailDto } from './models/VerifyEmailDto';
 
 export { AnalyticsService } from './services/AnalyticsService';
 export { DefaultService } from './services/DefaultService';

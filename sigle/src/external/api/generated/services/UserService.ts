@@ -7,6 +7,7 @@ import type { DeleteUserFollowDto } from '../models/DeleteUserFollowDto';
 import type { ExploreResponse } from '../models/ExploreResponse';
 import type { ExploreUser } from '../models/ExploreUser';
 import type { UserProfileDto } from '../models/UserProfileDto';
+import type { VerifyEmailDto } from '../models/VerifyEmailDto';
 
 import type { CancelablePromise } from '../core/CancelablePromise';
 import { OpenAPI } from '../core/OpenAPI';
@@ -138,7 +139,7 @@ export class UserService {
   }
 
   /**
-   * Add an email address for the authenticated user.
+   * Add an email address for the authenticated user. Send an email to the user with a verification link.
    * @returns boolean
    * @throws ApiError
    */
@@ -152,6 +153,36 @@ export class UserService {
       url: '/api/users/me/email',
       body: requestBody,
       mediaType: 'application/json',
+    });
+  }
+
+  /**
+   * Verify a user email address.
+   * @returns boolean
+   * @throws ApiError
+   */
+  public static emailVerificationControllerVerifyEmail({
+    requestBody,
+  }: {
+    requestBody: VerifyEmailDto;
+  }): CancelablePromise<boolean> {
+    return __request(OpenAPI, {
+      method: 'POST',
+      url: '/api/email-verification/verify',
+      body: requestBody,
+      mediaType: 'application/json',
+    });
+  }
+
+  /**
+   * Resend link to verify a user email address.
+   * @returns boolean
+   * @throws ApiError
+   */
+  public static emailVerificationControllerResendEmail(): CancelablePromise<boolean> {
+    return __request(OpenAPI, {
+      method: 'POST',
+      url: '/api/email-verification/resend',
     });
   }
 }
