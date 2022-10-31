@@ -156,7 +156,7 @@ export class UserController {
     @Body() addEmailDto: AddEmailDto,
   ): Promise<void> {
     // TODO add email to user object
-    // TODO validate user is valid
+    // TODO validate email is valid
     await this.emailVerificationService.sendVerificationLink({
       email: addEmailDto.email,
     });

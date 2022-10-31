@@ -1,6 +1,7 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
+import type { AddEmailDto } from '../models/AddEmailDto';
 import type { CreateUserFollowDto } from '../models/CreateUserFollowDto';
 import type { DeleteUserFollowDto } from '../models/DeleteUserFollowDto';
 import type { ExploreResponse } from '../models/ExploreResponse';
@@ -131,6 +132,24 @@ export class UserService {
     return __request(OpenAPI, {
       method: 'DELETE',
       url: '/api/users/me/following',
+      body: requestBody,
+      mediaType: 'application/json',
+    });
+  }
+
+  /**
+   * Add an email address for the authenticated user.
+   * @returns boolean
+   * @throws ApiError
+   */
+  public static userControllerAddEmail({
+    requestBody,
+  }: {
+    requestBody: AddEmailDto;
+  }): CancelablePromise<boolean> {
+    return __request(OpenAPI, {
+      method: 'POST',
+      url: '/api/users/me/email',
       body: requestBody,
       mediaType: 'application/json',
     });
