@@ -16,6 +16,7 @@ import { StacksService } from './stacks/stacks.service';
 import { AppController } from './app.controller';
 import { EmailVerificationController } from './email-verification/email-verification.controller';
 import { EmailVerificationService } from './email-verification/email-verification.service';
+import { EmailVerificationModule } from './email-verification/email-verification.module';
 
 @Module({
   imports: [
@@ -57,8 +58,9 @@ import { EmailVerificationService } from './email-verification/email-verificatio
     UserModule,
     SubscriptionModule,
     AnalyticsModule,
+    EmailVerificationModule,
   ],
-  controllers: [AppController, EmailVerificationController],
+  controllers: [AppController],
   providers: [
     {
       provide: APP_GUARD,
@@ -83,7 +85,6 @@ import { EmailVerificationService } from './email-verification/email-verificatio
     PrismaService,
     StacksService,
     PlausibleService,
-    EmailVerificationService,
   ],
 })
 export class AppModule {}

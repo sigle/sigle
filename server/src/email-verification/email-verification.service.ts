@@ -1,6 +1,7 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import * as jwt from 'jsonwebtoken';
+import { PrismaService } from '../prisma.service';
 import { EnvironmentVariables } from '../environment/environment.validation';
 
 interface EmailVerificationToken {
@@ -11,6 +12,7 @@ interface EmailVerificationToken {
 export class EmailVerificationService {
   constructor(
     private readonly configService: ConfigService<EnvironmentVariables>,
+    private readonly prisma: PrismaService,
   ) {}
 
   /**
@@ -28,20 +30,45 @@ export class EmailVerificationService {
     console.log(`----\n${text}`);
   }
 
-  // async confirmEmail(email: string) {
-  //   //   /** @type any */
-  //   //   const claims = jwt.verify(token, this.secret, {
-  //   //     algorithms: ['HS256'],
-  //   //     maxAge: '10m'
-  //   // });
-  //   // if (!claims || typeof claims === 'string') {
-  //   //     // @TODO: throw a detailed error message here
-  //   //     throw new UnauthorizedError();
-  //   // }
-  //   // const user = await this.usersService.getByEmail(email);
-  //   // if (user.isEmailConfirmed) {
-  //   //   throw new BadRequestException('Email already confirmed');
-  //   // }
-  //   // await this.usersService.markEmailAsConfirmed(email);
-  // }
+  decodeVerificationToken({
+    token,
+  }: {
+    token: string;
+  }): EmailVerificationToken {
+    try {
+      const payload = jwt.verify(
+        token,
+        this.configService.get('NEXTAUTH_SECRET'),
+        {
+          algorithms: ['HS256'],
+          maxAge: '10m',
+        },
+      );
+      if (typeof payload === 'object' && 'email' in payload) {
+        return { email: payload.email };
+      }
+      throw new BadRequestException();
+    } catch (error) {
+      if (error?.name === 'TokenExpiredError') {
+        throw new BadRequestException('Email verification token expired');
+      }
+      throw new BadRequestException('Invalid verification token');
+    }
+  }
+
+  async verifyEmail({ email }: { email: string }) {
+    const user = await this.prisma.user.findFirstOrThrow({
+      where: { email },
+      select: { id: true, emailVerified: true },
+    });
+    if (user.emailVerified) {
+      throw new BadRequestException('Email already verified');
+    }
+    await this.prisma.user.update({
+      where: { id: user.id },
+      data: {
+        emailVerified: new Date(),
+      },
+    });
+  }
 }
