@@ -14,8 +14,6 @@ import { AnalyticsModule } from './analytics/analytics.module';
 import { PlausibleService } from './plausible/plausible.service';
 import { StacksService } from './stacks/stacks.service';
 import { AppController } from './app.controller';
-import { EmailVerificationController } from './email-verification/email-verification.controller';
-import { EmailVerificationService } from './email-verification/email-verification.service';
 import { EmailVerificationModule } from './email-verification/email-verification.module';
 
 @Module({
