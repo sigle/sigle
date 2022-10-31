@@ -1,7 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import * as jwt from 'jsonwebtoken';
-import * as crypto from 'crypto';
 import { EnvironmentVariables } from '../environment/environment.validation';
 
 interface EmailVerificationToken {
