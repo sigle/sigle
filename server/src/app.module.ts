@@ -14,6 +14,8 @@ import { AnalyticsModule } from './analytics/analytics.module';
 import { PlausibleService } from './plausible/plausible.service';
 import { StacksService } from './stacks/stacks.service';
 import { AppController } from './app.controller';
+import { EmailVerificationController } from './email-verification/email-verification.controller';
+import { EmailVerificationService } from './email-verification/email-verification.service';
 
 @Module({
   imports: [
@@ -56,7 +58,7 @@ import { AppController } from './app.controller';
     SubscriptionModule,
     AnalyticsModule,
   ],
-  controllers: [AppController],
+  controllers: [AppController, EmailVerificationController],
   providers: [
     {
       provide: APP_GUARD,
@@ -81,6 +83,7 @@ import { AppController } from './app.controller';
     PrismaService,
     StacksService,
     PlausibleService,
+    EmailVerificationService,
   ],
 })
 export class AppModule {}

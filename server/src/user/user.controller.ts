@@ -16,6 +16,7 @@ import {
   ApiOperation,
   ApiTags,
 } from '@nestjs/swagger';
+import { EmailVerificationService } from '../email-verification/email-verification.service';
 import { AuthGuard } from '../auth.guard';
 import { CreateUserFollowDto } from './dto/createUserFollow.dto';
 import { DeleteUserFollowDto } from './dto/deleteUserFollow.dto';
@@ -24,11 +25,15 @@ import { ExploreResponse } from './dto/exploreResponse.dto';
 import { ExploreUser } from './dto/exploreUser.dto';
 import { UserProfileDto } from './dto/userProfile.dto';
 import { UserService } from './user.service';
+import { AddEmailDto } from './dto/addEmail.dto';
 
 @ApiTags('user')
 @Controller()
 export class UserController {
-  constructor(private readonly userService: UserService) {}
+  constructor(
+    private readonly userService: UserService,
+    private readonly emailVerificationService: EmailVerificationService,
+  ) {}
 
   @ApiOperation({
     description: 'Return a list of users using Sigle.',
@@ -135,6 +140,25 @@ export class UserController {
     return this.userService.removeFollow({
       followerAddress: req.user.stacksAddress,
       followingAddress: deleteUserFollowDto.stacksAddress,
+    });
+  }
+
+  @ApiOperation({
+    description: 'Add an email address for the authenticated user.',
+  })
+  @ApiBearerAuth()
+  @ApiOkResponse({ type: Boolean })
+  @UseGuards(AuthGuard)
+  @Post('/api/users/me/email')
+  @HttpCode(200)
+  async addEmail(
+    @Request() req,
+    @Body() addEmailDto: AddEmailDto,
+  ): Promise<void> {
+    // TODO add email to user object
+    // TODO validate user is valid
+    await this.emailVerificationService.sendVerificationLink({
+      email: addEmailDto.email,
     });
   }
 }
