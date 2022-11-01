@@ -14,6 +14,7 @@ import { AnalyticsModule } from './analytics/analytics.module';
 import { PlausibleService } from './plausible/plausible.service';
 import { StacksService } from './stacks/stacks.service';
 import { AppController } from './app.controller';
+import { DismissableFlagsModule } from './dismissable-flags/dismissable-flags.module';
 
 @Module({
   imports: [
@@ -55,6 +56,7 @@ import { AppController } from './app.controller';
     UserModule,
     SubscriptionModule,
     AnalyticsModule,
+    DismissableFlagsModule,
   ],
   controllers: [AppController],
   providers: [
