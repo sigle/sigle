@@ -11,6 +11,7 @@ export type { AnalyticsStoryDto } from './models/AnalyticsStoryDto';
 export type { CreateSubscriptionCreatorPlusDto } from './models/CreateSubscriptionCreatorPlusDto';
 export type { CreateUserFollowDto } from './models/CreateUserFollowDto';
 export type { DeleteUserFollowDto } from './models/DeleteUserFollowDto';
+export type { DismissableFlags } from './models/DismissableFlags';
 export type { ExploreResponse } from './models/ExploreResponse';
 export type { ExploreUser } from './models/ExploreUser';
 export type { HistoricalDto } from './models/HistoricalDto';

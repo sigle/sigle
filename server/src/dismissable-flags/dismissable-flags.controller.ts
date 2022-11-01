@@ -19,7 +19,7 @@ export class DismissableFlagsController {
   })
   @UseGuards(AuthGuard)
   @Get('/api/users/me/dismissable-flags')
-  explore(@Request() req): Promise<DismissableFlags> {
+  getUserDismissableFlags(@Request() req): Promise<DismissableFlags> {
     return this.dismissableFlagsService.getUserDismissableFlags({
       stacksAddress: req.user.stacksAddress,
     });
