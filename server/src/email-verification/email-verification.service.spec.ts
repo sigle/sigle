@@ -1,4 +1,7 @@
+import { BadRequestException } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import { Test, TestingModule } from '@nestjs/testing';
+import { PrismaService } from '../prisma.service';
 import { EmailVerificationService } from './email-verification.service';
 
 describe('EmailVerificationService', () => {
@@ -6,13 +9,56 @@ describe('EmailVerificationService', () => {
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      providers: [EmailVerificationService],
+      providers: [
+        EmailVerificationService,
+        {
+          provide: ConfigService,
+          useValue: {
+            get: jest.fn((key: string) => {
+              if (key === 'NEXTAUTH_SECRET') {
+                return 'secret';
+              }
+              return null;
+            }),
+          },
+        },
+        {
+          provide: PrismaService,
+          useValue: {},
+        },
+      ],
     }).compile();
 
     service = module.get<EmailVerificationService>(EmailVerificationService);
   });
 
-  it('should be defined', () => {
-    expect(service).toBeDefined();
+  describe('sendVerificationLink', () => {
+    it('should return the url', async () => {
+      const { url } = await service.sendVerificationLink({
+        email: 'hello@sigle.io',
+      });
+      expect(url).toBeDefined();
+    });
+  });
+
+  describe('decodeVerificationToken', () => {
+    it('should throw ion invalid token', async () => {
+      try {
+        service.decodeVerificationToken({ token: 'token' });
+        throw new Error();
+      } catch (error) {
+        expect(error).toEqual(
+          new BadRequestException('Invalid verification token'),
+        );
+      }
+    });
+
+    it('should decode the email from the token', async () => {
+      const { token } = await service.sendVerificationLink({
+        email: 'hello@sigle.io',
+      });
+      const payload = service.decodeVerificationToken({ token });
+      expect(payload).toEqual({ email: 'hello@sigle.io' });
+    });
   });
 });
