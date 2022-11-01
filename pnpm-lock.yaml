@@ -67,6 +67,7 @@ importers:
       class-transformer: 0.5.1
       class-validator: 0.13.2
       date-fns: 2.28.0
+      deep-email-validator: 0.1.21
       eslint: 8.24.0
       eslint-config-prettier: 8.5.0
       eslint-plugin-prettier: 4.2.1
@@ -109,6 +110,7 @@ importers:
       class-transformer: 0.5.1
       class-validator: 0.13.2
       date-fns: 2.28.0
+      deep-email-validator: 0.1.21
       ioredis: 5.2.3
       jsonwebtoken: 8.5.1
       micro-stacks: 1.1.4
@@ -4739,6 +4741,10 @@ packages:
     resolution: {integrity: sha512-9MVYlmIgmRR31C5b4FVSWtuMmBHh2mOWQYfl7XAYOa8dsnb7iEmUmRSWSFgXFtkjxO65d7hTUHQC+RhR/9IWFg==}
     dev: false
 
+  /@types/disposable-email-domains/1.0.2:
+    resolution: {integrity: sha512-SDKwyYTjk3y5aZBxxc38yRecpJPjsqn57STz1bNxYYlv4k11bBe7QB8w4llXDTmQXKT1mFvgGmJv+8Zdu3YmJw==}
+    dev: false
+
   /@types/elliptic/6.4.14:
     resolution: {integrity: sha512-z4OBcDAU0GVwDTuwJzQCiL6188QvZMkvoERgcVjq0/mPM8jCfdwZ3x5zQEVoL9WCAru3aG5wl3Z5Ww5wBWn7ZQ==}
     dependencies:
@@ -5957,6 +5963,14 @@ packages:
     engines: {node: '>=4'}
     dev: true
 
+  /axios/0.24.0:
+    resolution: {integrity: sha512-Q6cWsys88HoPgAaFAVUb0WpPk0O8iTeisR9IMqy9G8AbO4NlpVknrnQS03zzF9PGAWgO3cgletO3VjV/P7VztA==}
+    dependencies:
+      follow-redirects: 1.15.2
+    transitivePeerDependencies:
+      - debug
+    dev: false
+
   /axobject-query/2.2.0:
     resolution: {integrity: sha512-Td525n+iPOOyUQIeBfcASuG6uJsDOITl7Mds5gFyerkWiX7qhUTdYUBlSgNMyVqtSJqwpt1kXGLdUt6SykLMRA==}
     dev: true
@@ -7090,6 +7104,17 @@ packages:
     resolution: {integrity: sha512-Q6fKUPqnAHAyhiUgFU7BUzLiv0kd8saH9al7tnu5Q/okj6dnupxyTgFIBjVzJATdfIAm9NAsvXNzjaKa+bxVyA==}
     dev: true
 
+  /deep-email-validator/0.1.21:
+    resolution: {integrity: sha512-DBAmMzbr+MAubXQ+TS9tZuPwLcdKscb8YzKZiwoLqF3NmaeEgXvSSHhZ0EXOFeKFE2FNWC4mNXCyiQ/JdFXUwg==}
+    dependencies:
+      '@types/disposable-email-domains': 1.0.2
+      axios: 0.24.0
+      disposable-email-domains: 1.0.62
+      mailcheck: 1.1.1
+    transitivePeerDependencies:
+      - debug
+    dev: false
+
   /deep-is/0.1.4:
     resolution: {integrity: sha512-oIPzksmTg4/MriiaYGO+okXDT7ztn/w3Eptv/+gSIdMdKsJo0u4CfYNFJPy+4SKMuCqGw2wxnA+URMg3t8a/bQ==}
     dev: true
@@ -7224,6 +7249,10 @@ packages:
   /direction/0.1.5:
     resolution: {integrity: sha1-zl15f5fib4vnvv9T99xA4cGp7Ew=}
     hasBin: true
+    dev: false
+
+  /disposable-email-domains/1.0.62:
+    resolution: {integrity: sha512-LBQvhRw7mznQTPoyZbsmYeNOZt1pN5aCsx4BAU/3siVFuiM9f2oyKzUaB8v1jbxFjE3aYqYiMo63kAL4pHgfWQ==}
     dev: false
 
   /dlv/1.1.3:
@@ -8301,6 +8330,16 @@ packages:
   /flow-parser/0.186.0:
     resolution: {integrity: sha512-QaPJczRxNc/yvp3pawws439VZ/vHGq+i1/mZ3bEdSaRy8scPgZgiWklSB6jN7y5NR9sfgL4GGIiBcMXTj3Opqg==}
     engines: {node: '>=0.4.0'}
+    dev: false
+
+  /follow-redirects/1.15.2:
+    resolution: {integrity: sha512-VQLG33o04KaQ8uYi2tVNbdrWp1QWxNNea+nmIB4EVM28v0hmP17z7aG1+wAkNzVq4KeXTq3221ye5qTJP91JwA==}
+    engines: {node: '>=4.0'}
+    peerDependencies:
+      debug: '*'
+    peerDependenciesMeta:
+      debug:
+        optional: true
     dev: false
 
   /for-in/1.0.2:
@@ -10836,6 +10875,10 @@ packages:
     dependencies:
       sourcemap-codec: 1.4.8
     dev: true
+
+  /mailcheck/1.1.1:
+    resolution: {integrity: sha512-3WjL8+ZDouZwKlyJBMp/4LeziLFXgleOdsYu87piGcMLqhBzCsy2QFdbtAwv757TFC/rtqd738fgJw1tFQCSgA==}
+    dev: false
 
   /make-dir/2.1.0:
     resolution: {integrity: sha512-LS9X+dc8KLxXCb8dni79fLIIUA5VyZoyjSMCwTluaXA0o27cCK0bhXkpgw+sTXVpPy/lSO57ilRixqk0vDmtRA==}

@@ -158,7 +158,6 @@ export class UserController {
     @Request() req,
     @Body() addEmailDto: AddEmailDto,
   ): Promise<void> {
-    // TODO validate email is valid - check blocksurvey tools
     // TODO another user already has this email setup
 
     await this.userService.addOrUpdateEmail({

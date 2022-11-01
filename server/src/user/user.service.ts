@@ -1,10 +1,15 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import {
+  BadGatewayException,
+  BadRequestException,
+  Injectable,
+} from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { validateStacksAddress } from 'micro-stacks/crypto';
 import { getToken } from 'next-auth/jwt';
 import { fetch } from 'undici';
 import { Prisma } from '@prisma/client';
 import { InfoApi, Configuration } from '@stacks/blockchain-api-client';
+import { validate } from 'deep-email-validator';
 import { StacksService } from '../stacks/stacks.service';
 import { EnvironmentVariables } from '../environment/environment.validation';
 import { PrismaService } from '../prisma.service';
@@ -246,6 +251,21 @@ export class UserService {
     stacksAddress: string;
     email: string;
   }): Promise<void> {
+    const res = await validate({
+      email,
+      // This is already checked by the router
+      validateRegex: false,
+      validateMx: true,
+      validateTypo: false,
+      validateDisposable: true,
+      // Ideally we want to set this one to true.
+      // But because of many false positives we disabled it.
+      validateSMTP: false,
+    });
+    if (!res.valid) {
+      throw new BadGatewayException('Invalid email.');
+    }
+
     await this.prisma.user.update({
       select: { id: true },
       where: { stacksAddress },
