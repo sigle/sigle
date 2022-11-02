@@ -1,8 +1,16 @@
-import { Controller, Get, Request, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Post,
+  Request,
+  UseGuards,
+} from '@nestjs/common';
 import { ApiBearerAuth, ApiOkResponse, ApiOperation } from '@nestjs/swagger';
 import { AuthGuard } from '../auth.guard';
 import { DismissableFlagsService } from './dismissable-flags.service';
 import { DismissableFlags } from './dto/dismissable-flags.dto';
+import { UpdateDismissableFlagsDto } from './dto/update-dismissable-flags.dto';
 
 @Controller()
 export class DismissableFlagsController {
@@ -22,6 +30,25 @@ export class DismissableFlagsController {
   getUserDismissableFlags(@Request() req): Promise<DismissableFlags> {
     return this.dismissableFlagsService.getUserDismissableFlags({
       stacksAddress: req.user.stacksAddress,
+    });
+  }
+
+  @ApiOperation({
+    description: 'Update the dismissable flags for the authenticated user.',
+  })
+  @ApiBearerAuth()
+  @ApiOkResponse({
+    type: DismissableFlags,
+  })
+  @UseGuards(AuthGuard)
+  @Post('/api/users/me/dismissable-flags')
+  updateUserDismissableFlags(
+    @Request() req,
+    @Body() updateDismissableFlagsDto: UpdateDismissableFlagsDto,
+  ): Promise<DismissableFlags> {
+    return this.dismissableFlagsService.updateUserDismissableFlags({
+      stacksAddress: req.user.stacksAddress,
+      dismissableFlag: updateDismissableFlagsDto.dismissableFlag,
     });
   }
 }

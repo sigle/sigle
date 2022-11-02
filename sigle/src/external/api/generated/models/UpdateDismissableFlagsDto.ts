@@ -2,7 +2,6 @@
 /* tslint:disable */
 /* eslint-disable */
 
-export type DismissableFlags = {
-  id: string;
-  onboarding: Date;
+export type UpdateDismissableFlagsDto = {
+  dismissableFlag: number;
 };

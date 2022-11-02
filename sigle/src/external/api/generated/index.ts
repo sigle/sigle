@@ -17,6 +17,7 @@ export type { ExploreUser } from './models/ExploreUser';
 export type { HistoricalDto } from './models/HistoricalDto';
 export type { ReferrerDto } from './models/ReferrerDto';
 export type { SubscriptionDto } from './models/SubscriptionDto';
+export type { UpdateDismissableFlagsDto } from './models/UpdateDismissableFlagsDto';
 export type { UserProfileDto } from './models/UserProfileDto';
 
 export { AnalyticsService } from './services/AnalyticsService';

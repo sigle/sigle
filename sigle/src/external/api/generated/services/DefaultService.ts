@@ -2,6 +2,7 @@
 /* tslint:disable */
 /* eslint-disable */
 import type { DismissableFlags } from '../models/DismissableFlags';
+import type { UpdateDismissableFlagsDto } from '../models/UpdateDismissableFlagsDto';
 
 import type { CancelablePromise } from '../core/CancelablePromise';
 import { OpenAPI } from '../core/OpenAPI';
@@ -28,6 +29,24 @@ export class DefaultService {
     return __request(OpenAPI, {
       method: 'GET',
       url: '/api/users/me/dismissable-flags',
+    });
+  }
+
+  /**
+   * Update the dismissable flags for the authenticated user.
+   * @returns DismissableFlags
+   * @throws ApiError
+   */
+  public static dismissableFlagsControllerUpdateUserDismissableFlags({
+    requestBody,
+  }: {
+    requestBody: UpdateDismissableFlagsDto;
+  }): CancelablePromise<DismissableFlags> {
+    return __request(OpenAPI, {
+      method: 'POST',
+      url: '/api/users/me/dismissable-flags',
+      body: requestBody,
+      mediaType: 'application/json',
     });
   }
 }
