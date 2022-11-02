@@ -5,5 +5,5 @@ import { DismissableFlags } from '../dismissable-flags.service';
 export class UpdateDismissableFlagsDto {
   @IsEnum(DismissableFlags)
   @ApiProperty()
-  dismissableFlag: number;
+  dismissableFlag: string;
 }

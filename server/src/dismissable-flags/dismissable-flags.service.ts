@@ -3,7 +3,7 @@ import { ApiTags } from '@nestjs/swagger';
 import { PrismaService } from '../prisma.service';
 
 export enum DismissableFlags {
-  onboarding,
+  onboarding = 'onboarding',
 }
 
 @ApiTags('user')
@@ -34,11 +34,11 @@ export class DismissableFlagsService {
     dismissableFlag,
   }: {
     stacksAddress: string;
-    dismissableFlag: number;
+    dismissableFlag: string;
   }) {
     const date = new Date();
-    const onboarding =
-      dismissableFlag === DismissableFlags.onboarding && dismissableFlag;
+    const onboarding = dismissableFlag === 'onboarding' && dismissableFlag;
+    // dismissableFlag === DismissableFlags.onboarding && dismissableFlag;
     const user = await this.prisma.user.findUniqueOrThrow({
       where: { stacksAddress },
       select: { id: true },

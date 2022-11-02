@@ -3,5 +3,5 @@
 /* eslint-disable */
 
 export type UpdateDismissableFlagsDto = {
-  dismissableFlag: number;
+  dismissableFlag: string;
 };
