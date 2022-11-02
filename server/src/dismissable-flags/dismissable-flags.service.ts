@@ -38,7 +38,6 @@ export class DismissableFlagsService {
   }) {
     const date = new Date();
     const onboarding = dismissableFlag === 'onboarding' && dismissableFlag;
-    // dismissableFlag === DismissableFlags.onboarding && dismissableFlag;
     const user = await this.prisma.user.findUniqueOrThrow({
       where: { stacksAddress },
       select: { id: true },
@@ -47,7 +46,7 @@ export class DismissableFlagsService {
     const updateDismissableFlags = await this.prisma.dismissableFlags.update({
       where: { userId: user.id },
       data: {
-        [DismissableFlags[onboarding]]: date,
+        [onboarding]: date,
       },
       select: { id: true, onboarding: true },
     });
