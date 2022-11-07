@@ -16,6 +16,8 @@ import * as Fathom from 'fathom-client';
 import { Goals } from '../../../utils/fathom';
 import { useRouter } from 'next/router';
 import { toast } from 'react-toastify';
+import { OnboardingChecklist } from './OnboardingChecklist';
+import { useFeatureFlags } from '../../../utils/featureFlags';
 
 const ImgWrapper = styled('div', {
   position: 'relative',
@@ -97,6 +99,7 @@ export const Home = ({
 }: Props) => {
   const [loadingCreate, setLoadingCreate] = useState(false);
   const router = useRouter();
+  const { isExperimentalOnboardingEnabled } = useFeatureFlags();
 
   const showIllu = !loading && (!stories || stories.length === 0);
   const nbStoriesLabel = loading ? '...' : stories ? stories.length : 0;
@@ -139,35 +142,38 @@ export const Home = ({
           : `Drafts stories (${nbStoriesLabel})`}
       </Typography>
       {showIllu && (
-        <Flex css={{ mt: '$10' }} align="center" direction="column">
-          {selectedTab === 'drafts' && (
-            <ImgWrapper>
-              <Image
-                width={250}
-                height={94}
-                src="/static/img/zero_data.gif"
-                objectFit="cover"
-              />
-            </ImgWrapper>
-          )}
-          <Typography
-            size="subheading"
-            css={{ mt: '$5', mb: '$3' }}
-          >{`You currently have no ${
-            selectedTab === 'published' ? 'published stories' : 'drafts'
-          }`}</Typography>
-          {selectedTab === 'drafts' && (
-            <Button
-              variant="subtle"
-              disabled={loadingCreate}
-              onClick={handleCreateNewPrivateStory}
-            >
-              {!loadingCreate ? `Start writing` : `Creating new story...`}
-            </Button>
-          )}
-          <StoryCardSkeleton />
-          <StoryCardSkeleton />
-        </Flex>
+        <>
+          {isExperimentalOnboardingEnabled && <OnboardingChecklist />}
+          <Flex css={{ mt: '$10' }} align="center" direction="column">
+            {selectedTab === 'drafts' && (
+              <ImgWrapper>
+                <Image
+                  width={250}
+                  height={94}
+                  src="/static/img/zero_data.gif"
+                  objectFit="cover"
+                />
+              </ImgWrapper>
+            )}
+            <Typography
+              size="subheading"
+              css={{ mt: '$5', mb: '$3' }}
+            >{`You currently have no ${
+              selectedTab === 'published' ? 'published stories' : 'drafts'
+            }`}</Typography>
+            {selectedTab === 'drafts' && (
+              <Button
+                variant="subtle"
+                disabled={loadingCreate}
+                onClick={handleCreateNewPrivateStory}
+              >
+                {!loadingCreate ? `Start writing` : `Creating new story...`}
+              </Button>
+            )}
+            <StoryCardSkeleton />
+            <StoryCardSkeleton />
+          </Flex>
+        </>
       )}
 
       {stories &&

@@ -8,12 +8,17 @@ import { createContext, useContext, useEffect, useState } from 'react';
 const experimentalFollowKey = 'sigle-experimental-follow';
 const experimentalFollowParam = 'experimentalFollow';
 
+const experimentalOnboardingKey = 'sigle-experimental-onboarding';
+const experimentalOnboardingParam = 'experimentalOnboarding';
+
 interface FeatureFlagsOptions {
   isExperimentalFollowEnabled: boolean;
+  isExperimentalOnboardingEnabled: boolean;
 }
 
 const FeatureFlagsContext = createContext<FeatureFlagsOptions>({
   isExperimentalFollowEnabled: false,
+  isExperimentalOnboardingEnabled: false,
 });
 
 interface FeatureFlagsProviderProps {
@@ -23,6 +28,7 @@ interface FeatureFlagsProviderProps {
 export function FeatureFlagsProvider({ children }: FeatureFlagsProviderProps) {
   const [featureToggles, setFeatureToggles] = useState<FeatureFlagsOptions>({
     isExperimentalFollowEnabled: false,
+    isExperimentalOnboardingEnabled: false,
   });
 
   /**
@@ -32,6 +38,8 @@ export function FeatureFlagsProvider({ children }: FeatureFlagsProviderProps) {
   useEffect(() => {
     let isExperimentalFollowEnabled =
       localStorage.getItem(experimentalFollowKey) === 'true';
+    let isExperimentalOnboardingEnabled =
+      localStorage.getItem(experimentalOnboardingKey) === 'true';
 
     // Enable feature flags from the url params
     const query = new URL(window.location.href).searchParams;
@@ -42,8 +50,14 @@ export function FeatureFlagsProvider({ children }: FeatureFlagsProviderProps) {
       isExperimentalFollowEnabled = true;
     }
 
+    if (entries[experimentalOnboardingParam] === 'true') {
+      localStorage.setItem(experimentalOnboardingKey, 'true');
+      isExperimentalOnboardingEnabled = true;
+    }
+
     setFeatureToggles({
       isExperimentalFollowEnabled,
+      isExperimentalOnboardingEnabled,
     });
   }, []);
 
