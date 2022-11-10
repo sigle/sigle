@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import {
   validateSubdomainFormat,
@@ -7,7 +7,7 @@ import {
 import { makeProfileZoneFile } from '@stacks/profile';
 import posthog from 'posthog-js';
 import * as Fathom from 'fathom-client';
-import { Button, Flex, Typography } from '../ui';
+import { Button, Flex, FormControlGroup, FormInput, Typography } from '../ui';
 import { LoginLayout } from '../modules/layout/components/LoginLayout';
 import { keyframes, styled } from '../stitches.config';
 import { QuestionMarkCircledIcon } from '@radix-ui/react-icons';
@@ -87,41 +87,6 @@ const LoadingSpinner = styled('div', {
     border: '1px solid $colors$gray8',
     borderTopColor: '$gray11',
     animation: `${spin} .7s linear infinite`,
-  },
-});
-
-const ControlGroup = styled('div', {
-  display: 'flex',
-  justifyContent: 'space-between',
-  backgroundColor: '$gray3',
-  boxShadow: '0 0 0 1px $colors$gray7',
-  borderRadius: '$1',
-  minWidth: 320,
-  gap: '$3',
-  pr: '$2',
-  pl: '$3',
-  py: '$2',
-  mb: '$4',
-
-  '&:hover': {
-    backgroundColor: '$gray4',
-    boxShadow: '0 0 0 1px $colors$gray8',
-  },
-
-  '&:focus-within': {
-    boxShadow: '0 0 0 2px $colors$gray8',
-  },
-});
-
-const FormInput = styled('input', {
-  width: '100%',
-  outline: 'none',
-  backgroundColor: 'transparent',
-  fontSize: '$2',
-  color: '$gray11',
-
-  '&::placeholder': {
-    color: '$gray9',
   },
 });
 
@@ -299,27 +264,47 @@ const RegisterUsername = () => {
         Choose a .id.stx username
       </Typography>
       <form onSubmit={handleSubmit}>
-        <ControlGroup role="group">
+        <FormControlGroup
+          css={{
+            mb: '$4',
+            br: '$3',
+            backgroundColor: !formState.loading ? '$gray3' : 'transparent',
+            boxShadow: !formState.loading
+              ? '0 0 0 1px $colors$gray7'
+              : 'transparent',
+          }}
+          role="group"
+        >
           <FormInput
+            css={{
+              '&[type]': {
+                minWidth: 220,
+                boxShadow: !formState.loading
+                  ? 'none'
+                  : '0 0 0 1px $colors$gray7',
+              },
+            }}
+            type="text"
             disabled={formState.loading}
             placeholder="johndoe.id.stx"
             onChange={(event) =>
               setFormState({ username: event.target.value, loading: false })
             }
           />
-          <Button
-            disabled={formState.loading}
-            variant={formState.loading ? 'ghost' : 'solid'}
-            color="orange"
-            css={{
-              display: formState.loading ? 'flex' : 'block',
-              justifyContent: 'space-between',
-              pointerEvents: formState.loading ? 'none' : 'auto',
-            }}
-          >
-            {formState.loading ? <LoadingSpinner /> : 'Submit'}
-          </Button>
-        </ControlGroup>
+          {formState.loading ? (
+            <span>
+              <LoadingSpinner />
+            </span>
+          ) : (
+            <Button
+              disabled={formState.loading}
+              variant={formState.loading ? 'ghost' : 'solid'}
+              color="orange"
+            >
+              Submit
+            </Button>
+          )}
+        </FormControlGroup>
       </form>
       <Flex css={{ mb: '$5' }} align="center" gap="5">
         {!formState.loading && !formState.errorMessage ? (

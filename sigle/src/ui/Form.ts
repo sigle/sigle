@@ -1,4 +1,5 @@
 import { styled } from '../stitches.config';
+import { Button } from './Button';
 
 export const FormRow = styled('div', {
   display: 'flex',
@@ -30,7 +31,7 @@ export const FormInput = styled('input', {
     WebkitTapHighlightColor: 'rgba(0,0,0,0)',
     backgroundColor: '$gray3',
     boxShadow: '0 0 0 1px $colors$gray7',
-    borderRadius: '$1',
+    br: '$3',
     px: '$2',
     py: '$1',
     fontSize: '$1',
@@ -57,12 +58,79 @@ export const FormInput = styled('input', {
   },
 });
 
+export const FormControlGroup = styled('div', {
+  display: 'flex',
+  alignItems: 'center',
+
+  // Make sure ControlGroup and its children don't affect normal stacking order
+  position: 'relative',
+  zIndex: 0,
+
+  [`& ${Button}`]: {
+    br: 0,
+    '&:first-child': {
+      borderTopLeftRadius: '$3',
+      borderBottomLeftRadius: '$3',
+      borderTopRightRadius: 0,
+      borderBottomRightRadius: 0,
+      // boxShadow: '0 0 0 1px $colors$gray7',
+      // '&:hover': {
+      //   boxShadow: '0 0 0 1px $colors$gray8',
+      // },
+      // '&:focus': {
+      //   boxShadow: '0 0 0 1px $colors$gray8',
+      // },
+    },
+
+    '&:last-child': {
+      borderTopRightRadius: '$3',
+      borderBottomRightRadius: '$3',
+      borderTopLeftRadius: 0,
+      borderBottomLeftRadius: 0,
+      // boxShadow:
+      //   'inset 0 1px $colors$slate7, inset -1px 0 $colors$slate7, inset 0 -1px $colors$slate7',
+      // '&:focus': {
+      //   boxShadow: 'inset 0 0 0 1px $colors$slate8, 0 0 0 1px $colors$slate8',
+      // },
+    },
+  },
+
+  [`& ${FormInput}`]: {
+    br: 0,
+    '&:first-child': {
+      borderTopLeftRadius: '$3',
+      borderBottomLeftRadius: '$3',
+      borderTopRightRadius: 0,
+      borderBottomRightRadius: 0,
+      // boxShadow: '0 0 0 1px $colors$gray7',
+      // '&:hover': {
+      //   boxShadow: '0 0 0 1px $colors$gray8',
+      // },
+      // '&:focus': {
+      //   boxShadow: '0 0 0 1px $colors$gray8',
+      // },
+    },
+
+    '&:last-child': {
+      borderTopRightRadius: '$3',
+      borderBottomRightRadius: '$3',
+      borderTopLeftRadius: 0,
+      borderBottomLeftRadius: 0,
+      // boxShadow:
+      //   'inset 0 1px $colors$slate7, inset -1px 0 $colors$slate7, inset 0 -1px $colors$slate7',
+      // '&:focus': {
+      //   boxShadow: 'inset 0 0 0 1px $colors$slate8, 0 0 0 1px $colors$slate8',
+      // },
+    },
+  },
+});
+
 export const FormTextarea = styled('textarea', {
   outline: 'none',
   minWidth: 300,
   backgroundColor: '$gray3',
   boxShadow: '0 0 0 1px $colors$gray7',
-  borderRadius: '$1',
+  br: '$3',
   py: '$2',
   px: '$2',
   fontSize: '$1',
