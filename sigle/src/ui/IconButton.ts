@@ -32,20 +32,20 @@ export const IconButton = styled('button', {
         color: '$gray11',
         backgroundColor: '$gray3',
         '&:hover': {
-          backgroundColor: '$gray4',
+          backgroundColor: '$gray5',
         },
         '&:active': {
-          backgroundColor: '$gray5',
+          backgroundColor: '$gray4',
         },
       },
       orange: {
         color: '$orange11',
         backgroundColor: '$orange3',
         '&:hover': {
-          backgroundColor: '$orange4',
+          backgroundColor: '$orange5',
         },
         '&:active': {
-          backgroundColor: '$orange5',
+          backgroundColor: '$orange4',
         },
       },
     },
