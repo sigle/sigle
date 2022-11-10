@@ -225,6 +225,7 @@ export const TipTapEditor = forwardRef<
                 alignItems: 'center',
                 gap: '$3',
                 position: 'fixed',
+                mb: '$10',
                 bottom: 0,
                 right: 0,
                 left: 0,
