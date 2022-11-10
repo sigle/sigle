@@ -2,4 +2,5 @@
 '@sigle/app': patch
 ---
 
-Update button values to be in sync with design.
+Update normal buttons and icon buttons with new variants and styles.
+Resize button instances across the app.

@@ -374,6 +374,7 @@ export const EditorSettings = ({
                     <ImageEmptyIconContainer>
                       {formik.values.metaImage && (
                         <IconButton
+                          size="sm"
                           css={{ backgroundColor: '$gray3', opacity: '70%' }}
                           title="Remove meta image"
                           onClick={handleRemoveCover}
@@ -573,7 +574,7 @@ export const EditorSettings = ({
         />
 
         <StyledCloseButton asChild>
-          <IconButton>
+          <IconButton size="sm">
             <Cross1Icon width={15} height={15} />
           </IconButton>
         </StyledCloseButton>

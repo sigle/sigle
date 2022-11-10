@@ -280,6 +280,7 @@ export const ComparePlans = () => {
       <TableContainer />
       <Link href="/settings/plans">
         <Button
+          size="sm"
           css={{
             gap: '$2',
             cursor: 'pointer',

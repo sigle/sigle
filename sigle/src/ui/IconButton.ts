@@ -5,8 +5,7 @@ export const IconButton = styled('button', {
   justifyContent: 'center',
   alignItems: 'center',
   fontSize: '$2',
-  width: 28,
-  height: 28,
+  br: '$3',
 
   '&:disabled': {
     opacity: 0.5,
@@ -15,8 +14,17 @@ export const IconButton = styled('button', {
 
   variants: {
     size: {
+      sm: {
+        width: 28,
+        height: 28,
+      },
       md: {
-        br: '$1',
+        width: 36,
+        height: 36,
+      },
+      lg: {
+        width: 44,
+        height: 44,
       },
     },
     color: {
@@ -30,9 +38,20 @@ export const IconButton = styled('button', {
           backgroundColor: '$gray5',
         },
       },
+      orange: {
+        color: '$orange11',
+        backgroundColor: '$orange3',
+        '&:hover': {
+          backgroundColor: '$orange4',
+        },
+        '&:active': {
+          backgroundColor: '$orange5',
+        },
+      },
     },
     variant: {
       solid: {},
+      outline: {},
       ghost: {
         backgroundColor: 'transparent',
       },
@@ -44,6 +63,57 @@ export const IconButton = styled('button', {
       variant: 'ghost',
       css: {
         backgroundColor: 'transparent',
+      },
+    },
+    {
+      color: 'gray',
+      variant: 'outline',
+      css: {
+        backgroundColor: 'transparent',
+        boxShadow: '0 0 0 1px $colors$gray11',
+      },
+    },
+    {
+      color: 'gray',
+      variant: 'solid',
+      css: {
+        color: '$gray1',
+        backgroundColor: '$gray11',
+        '&:hover': {
+          backgroundColor: '$gray12',
+        },
+        '&:active': {
+          backgroundColor: '$gray10',
+        },
+      },
+    },
+    {
+      color: 'orange',
+      variant: 'ghost',
+      css: {
+        backgroundColor: 'transparent',
+      },
+    },
+    {
+      color: 'orange',
+      variant: 'outline',
+      css: {
+        backgroundColor: 'transparent',
+        boxShadow: '0 0 0 1px $colors$orange11',
+      },
+    },
+    {
+      color: 'orange',
+      variant: 'solid',
+      css: {
+        color: 'white',
+        backgroundColor: '$orange11',
+        '&:hover': {
+          backgroundColor: '$orange12',
+        },
+        '&:active': {
+          backgroundColor: '$orange10',
+        },
       },
     },
   ],

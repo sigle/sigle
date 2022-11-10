@@ -7,6 +7,7 @@ export const Button = styled('button', {
   fontSize: '$1',
   lineHeight: '20.4px',
   whiteSpace: 'nowrap',
+  br: '$3',
 
   '&:disabled': {
     opacity: 0.5,
@@ -19,19 +20,17 @@ export const Button = styled('button', {
 
   variants: {
     size: {
-      md: {
+      sm: {
         px: '$3',
         py: '$1',
-        br: '$1',
+      },
+      md: {
+        px: '$4',
+        py: '$2',
       },
       lg: {
-        px: '$3',
-        py: '$2',
-        br: '$1',
-        '@lg': {
-          px: '$4',
-          py: '$3',
-        },
+        px: '$5',
+        py: '$3',
       },
     },
     color: {
@@ -59,6 +58,7 @@ export const Button = styled('button', {
     },
     variant: {
       solid: {},
+      outline: {},
       ghost: {
         backgroundColor: 'transparent',
         boxShadow: 'none',
@@ -126,6 +126,36 @@ export const Button = styled('button', {
         },
         '&:active': {
           backgroundColor: '$gray5',
+        },
+      },
+    },
+    {
+      color: 'gray',
+      variant: 'outline',
+      css: {
+        backgroundColor: 'transparent',
+        color: '$gray11',
+        boxShadow: '0 0 0 1px $colors$gray11',
+        '&:hover': {
+          backgroundColor: '$gray4',
+        },
+        '&:active': {
+          backgroundColor: '$gray5',
+        },
+      },
+    },
+    {
+      color: 'orange',
+      variant: 'outline',
+      css: {
+        backgroundColor: 'transparent',
+        color: '$orange11',
+        boxShadow: '0 0 0 1px $colors$orange11',
+        '&:hover': {
+          backgroundColor: '$orange4',
+        },
+        '&:active': {
+          backgroundColor: '$orange5',
         },
       },
     },
