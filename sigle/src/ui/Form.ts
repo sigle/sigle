@@ -60,7 +60,8 @@ export const FormInput = styled('input', {
 
 export const FormControlGroup = styled('div', {
   display: 'flex',
-  alignItems: 'center',
+  boxShadow: '0 0 0 1px $colors$gray7',
+  br: '$3',
 
   // Make sure ControlGroup and its children don't affect normal stacking order
   position: 'relative',
@@ -73,13 +74,6 @@ export const FormControlGroup = styled('div', {
       borderBottomLeftRadius: '$3',
       borderTopRightRadius: 0,
       borderBottomRightRadius: 0,
-      // boxShadow: '0 0 0 1px $colors$gray7',
-      // '&:hover': {
-      //   boxShadow: '0 0 0 1px $colors$gray8',
-      // },
-      // '&:focus': {
-      //   boxShadow: '0 0 0 1px $colors$gray8',
-      // },
     },
 
     '&:last-child': {
@@ -87,28 +81,21 @@ export const FormControlGroup = styled('div', {
       borderBottomRightRadius: '$3',
       borderTopLeftRadius: 0,
       borderBottomLeftRadius: 0,
-      // boxShadow:
-      //   'inset 0 1px $colors$slate7, inset -1px 0 $colors$slate7, inset 0 -1px $colors$slate7',
-      // '&:focus': {
-      //   boxShadow: 'inset 0 0 0 1px $colors$slate8, 0 0 0 1px $colors$slate8',
-      // },
     },
   },
 
   [`& ${FormInput}`]: {
     br: 0,
+    boxShadow: 'none',
+    '&:focus': {
+      zIndex: 1,
+    },
+
     '&:first-child': {
       borderTopLeftRadius: '$3',
       borderBottomLeftRadius: '$3',
       borderTopRightRadius: 0,
       borderBottomRightRadius: 0,
-      // boxShadow: '0 0 0 1px $colors$gray7',
-      // '&:hover': {
-      //   boxShadow: '0 0 0 1px $colors$gray8',
-      // },
-      // '&:focus': {
-      //   boxShadow: '0 0 0 1px $colors$gray8',
-      // },
     },
 
     '&:last-child': {
@@ -116,11 +103,6 @@ export const FormControlGroup = styled('div', {
       borderBottomRightRadius: '$3',
       borderTopLeftRadius: 0,
       borderBottomLeftRadius: 0,
-      // boxShadow:
-      //   'inset 0 1px $colors$slate7, inset -1px 0 $colors$slate7, inset 0 -1px $colors$slate7',
-      // '&:focus': {
-      //   boxShadow: 'inset 0 0 0 1px $colors$slate8, 0 0 0 1px $colors$slate8',
-      // },
     },
   },
 });
