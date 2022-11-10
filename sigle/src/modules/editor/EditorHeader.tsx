@@ -118,7 +118,7 @@ export const EditorHeader = ({
               target="_blank"
               as="a"
             >
-              <Typography size="subheading">See your story</Typography>
+              See your story
               <EyeOpenIcon />
             </Button>
 

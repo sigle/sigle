@@ -4,13 +4,17 @@ export const Button = styled('button', {
   display: 'inline-flex',
   justifyContent: 'center',
   alignItems: 'center',
-  fontSize: '$2',
+  fontSize: '$1',
   lineHeight: '20.4px',
   whiteSpace: 'nowrap',
 
   '&:disabled': {
     opacity: 0.5,
     pointerEvents: 'none',
+  },
+
+  '@md': {
+    fontSize: '$2',
   },
 
   variants: {
