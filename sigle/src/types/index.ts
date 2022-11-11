@@ -107,4 +107,8 @@ export interface SettingsFile {
    * Twitter handle
    */
   siteTwitterHandle?: string;
+  /**
+   * Email
+   */
+  siteEmail?: string;
 }

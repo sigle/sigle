@@ -33,6 +33,14 @@ export const SettingsLayout = ({
       path: '/settings',
     },
     {
+      name: 'Private data',
+      path: '/settings/private-data',
+    },
+    {
+      name: 'Newsletter',
+      path: '/',
+    },
+    {
       name: 'Plans',
       path: '/settings/plans',
     },
