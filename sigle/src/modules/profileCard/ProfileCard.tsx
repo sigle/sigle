@@ -9,6 +9,7 @@ import {
   Tooltip,
   TooltipTrigger,
   TooltipContent,
+  IconButton,
 } from '../../ui';
 import Link from 'next/link';
 import Image from 'next/future/image';
@@ -26,6 +27,8 @@ import { useTheme } from 'next-themes';
 import { sigleConfig } from '../../config';
 import { useState } from 'react';
 import { LoginModal } from '../loginModal/LoginModal';
+import { EnvelopePlusIcon } from '../../icons/EnvelopPlusIcon';
+import { SubscribeModal } from '../subscribeModal/SubscribeModal';
 
 const ProfileImageContainer = styled('div', {
   display: 'flex',
@@ -60,6 +63,7 @@ export const ProfileCard = ({
   const { resolvedTheme } = useTheme();
   const [isOpen, setIsOpen] = useState(false);
   const [showLoginPromptDialog, setShowLoginPromptDialog] = useState(false);
+  const [showSubscribeDialog, setShowSubscribeDialog] = useState(false);
   const { data: userFollowing } = useGetGaiaUserFollowing({
     enabled: isOpen && !!user && userInfo.username !== user.username,
     staleTime: Infinity,
@@ -92,6 +96,10 @@ export const ProfileCard = ({
 
   const handleCancelLoginPrompt = () => setShowLoginPromptDialog(false);
 
+  const handleShowSubscribe = () => setShowSubscribeDialog(true);
+
+  const handleCancelSubscribe = () => setShowSubscribeDialog(false);
+
   return (
     <HoverCard onOpenChange={(open) => setIsOpen(open)} openDelay={300}>
       <Link href="/[username]" as={`/${userInfo.username}`} passHref>
@@ -116,25 +124,47 @@ export const ProfileCard = ({
               }
             />
           </ProfileImageContainer>
-          {user?.username !== userInfo.username &&
-            !isLegacy &&
-            (!isFollowingUser ? (
-              <Button
-                color="orange"
-                css={{ ml: '$5', alignSelf: 'start' }}
-                onClick={user ? handleFollow : handleShowLoginPrompt}
-              >
-                Follow
-              </Button>
-            ) : (
-              <Button
-                variant="subtle"
-                css={{ ml: '$5', alignSelf: 'start' }}
-                onClick={handleUnfollow}
-              >
-                Unfollow
-              </Button>
-            ))}
+          {user?.username !== userInfo.username && !isLegacy && (
+            <Flex
+              css={{
+                alignSelf: 'start',
+              }}
+              align="center"
+              gap="2"
+            >
+              {!isFollowingUser ? (
+                <Button
+                  color="orange"
+                  css={{ ml: '$5' }}
+                  onClick={user ? handleFollow : handleShowLoginPrompt}
+                >
+                  Follow
+                </Button>
+              ) : (
+                <Button
+                  variant="subtle"
+                  css={{ ml: '$5' }}
+                  onClick={handleUnfollow}
+                >
+                  Unfollow
+                </Button>
+              )}
+              <IconButton onClick={handleShowSubscribe}>
+                <EnvelopePlusIcon />
+              </IconButton>
+
+              <SubscribeModal
+                profileImgSrc={
+                  settings.siteLogo
+                    ? settings.siteLogo
+                    : generateAvatar(userInfo.address)
+                }
+                siteName={siteName}
+                open={showSubscribeDialog}
+                onClose={handleCancelSubscribe}
+              />
+            </Flex>
+          )}
         </Flex>
         <Flex gap="1" align="center">
           <Link href="/[username]" as={`/${userInfo.username}`} passHref>
