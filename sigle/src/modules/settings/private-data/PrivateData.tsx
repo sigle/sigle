@@ -13,6 +13,7 @@ import {
   SwitchThumb,
   Typography,
 } from '../../../ui';
+import { isValidEmail } from '../../../utils/regex';
 import { UnsavedChanges } from '../components/UnsavedChanges';
 import { SettingsLayout } from '../SettingsLayout';
 
@@ -33,6 +34,10 @@ export const PrivateData = () => {
 
       if (values.email && values.email.length > 100) {
         errors.email = 'Name too long';
+      }
+
+      if (values.email && !isValidEmail(values.email)) {
+        errors.email = 'Invalid email, enter a new one.';
       }
 
       return errors;
