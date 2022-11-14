@@ -8,6 +8,7 @@ import {
   AccordionTrigger,
   Box,
 } from '../../ui';
+import { useFeatureFlags } from '../../utils/featureFlags';
 import { AppFooter } from '../layout/components/AppFooter';
 import { AppHeader } from '../layout/components/AppHeader';
 import {
@@ -26,6 +27,7 @@ export const SettingsLayout = ({
   ...props
 }: DashboardLayoutProps) => {
   const router = useRouter();
+  const { isExperimentalNewsletterEnabled } = useFeatureFlags();
 
   const navItems = [
     {
@@ -33,18 +35,25 @@ export const SettingsLayout = ({
       path: '/settings',
     },
     {
-      name: 'Private data',
-      path: '/settings/private-data',
-    },
-    {
-      name: 'Newsletter',
-      path: '/',
-    },
-    {
       name: 'Plans',
       path: '/settings/plans',
     },
   ];
+
+  if (isExperimentalNewsletterEnabled) {
+    navItems.splice(
+      1,
+      0,
+      {
+        name: 'Private data',
+        path: '/settings/private-data',
+      },
+      {
+        name: 'Newsletter',
+        path: '/settings/newsletter',
+      }
+    );
+  }
 
   return (
     <FullScreen>

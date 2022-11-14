@@ -1,10 +1,10 @@
 import { useRouter } from 'next/router';
 import React, { useEffect } from 'react';
 import { Protected } from '../../modules/auth/Protected';
-import { PrivateData } from '../../modules/settings/private-data/PrivateData';
+import { Newsletter } from '../../modules/settings/newsletter/Newsletter';
 import { useFeatureFlags } from '../../utils/featureFlags';
 
-const PrivateDataPage = () => {
+const NewsletterPage = () => {
   const router = useRouter();
   const { isExperimentalNewsletterEnabled } = useFeatureFlags();
 
@@ -16,9 +16,9 @@ const PrivateDataPage = () => {
 
   return (
     <Protected>
-      <PrivateData />
+      <Newsletter />
     </Protected>
   );
 };
 
-export default PrivateDataPage;
+export default NewsletterPage;
