@@ -43,6 +43,7 @@ import Link from 'next/link';
 import { TwitterFilledIcon } from '../../../icons';
 import { EnvelopePlusIcon } from '../../../icons/EnvelopPlusIcon';
 import { SubscribeModal } from '../../subscribeModal/SubscribeModal';
+import { StoryCardSkeleton } from '../../home/components/StoryItemSkeleton';
 
 const StyledTabsTrigger = styled(TabsTrigger, {
   fontSize: 13,
@@ -531,9 +532,28 @@ export const PublicHome = ({ file, settings, userInfo }: PublicHomeProps) => {
             </TabsList>
             <TabsContent value="stories">
               {file.stories.length === 0 && (
-                <Typography css={{ mt: '$8', textAlign: 'center' }}>
-                  No stories yet
-                </Typography>
+                <>
+                  {userInfo.username === user?.username ? (
+                    <Flex
+                      css={{ mt: '$10' }}
+                      direction="column"
+                      gap="5"
+                      align="center"
+                    >
+                      <Typography size="subheading">{`${siteName} has not posted anything yet.`}</Typography>
+                      <Typography size="subheading">Come back later</Typography>
+                      <StoryCardSkeleton />
+                      <StoryCardSkeleton />
+                    </Flex>
+                  ) : (
+                    <Typography
+                      size="subheading"
+                      css={{ mt: '$8', textAlign: 'center' }}
+                    >
+                      No stories yet
+                    </Typography>
+                  )}
+                </>
               )}
               {featuredStoryIndex !== -1 && (
                 <StoryCard

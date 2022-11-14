@@ -4,7 +4,7 @@ import { SubsetStory, BlockstackUser } from '../../../types';
 import { DashboardLayout } from '../../layout/components/DashboardLayout';
 import Image from 'next/image';
 import { styled } from '../../../stitches.config';
-import { Box, Button, Flex, Typography } from '../../../ui';
+import { Button, Flex, Typography } from '../../../ui';
 import {
   createNewEmptyStory,
   getStoriesFile,
@@ -16,69 +16,12 @@ import * as Fathom from 'fathom-client';
 import { Goals } from '../../../utils/fathom';
 import { useRouter } from 'next/router';
 import { toast } from 'react-toastify';
+import { StoryCardSkeleton } from './StoryItemSkeleton';
 
 const ImgWrapper = styled('div', {
   position: 'relative',
   mx: 'auto',
 });
-
-const StoryCardSkeleton = () => {
-  return (
-    <Flex
-      css={{
-        display: 'none',
-
-        '@lg': {
-          display: 'flex',
-          gap: '$7',
-          p: '$7',
-        },
-      }}
-    >
-      <Box
-        css={{ width: 180, height: 130, backgroundColor: '$gray2', br: '$1' }}
-      />
-      <Flex direction="column" justify="between">
-        <Flex direction="column" gap="2">
-          <Box
-            css={{
-              width: 350,
-              height: 20,
-              backgroundColor: '$gray2',
-              br: '$1',
-            }}
-          />
-          <Box
-            css={{
-              width: 150,
-              height: 20,
-              backgroundColor: '$gray2',
-              br: '$1',
-            }}
-          />
-        </Flex>
-        <Flex direction="column" gap="2">
-          <Box
-            css={{
-              width: 600,
-              height: 20,
-              backgroundColor: '$gray2',
-              br: '$1',
-            }}
-          />
-          <Box
-            css={{
-              width: 500,
-              height: 20,
-              backgroundColor: '$gray2',
-              br: '$1',
-            }}
-          />
-        </Flex>
-      </Flex>
-    </Flex>
-  );
-};
 
 interface Props {
   selectedTab: 'published' | 'drafts';
