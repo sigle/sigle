@@ -55,7 +55,6 @@ export class EmailService {
         mjml += `<mj-divider />`;
       }
     });
-    console.log(JSON.stringify(json, null, 2));
     return mjml;
   }
 }
