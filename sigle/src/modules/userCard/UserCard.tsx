@@ -191,6 +191,7 @@ export const UserCard = ({ address }: UserCardProps) => {
           </Link>
           {user?.username !== username && !isLegacy && !following && (
             <Button
+              size="sm"
               color="orange"
               css={{ ml: '$5' }}
               onClick={user ? handleFollow : handleShowLoginPrompt}
@@ -200,6 +201,7 @@ export const UserCard = ({ address }: UserCardProps) => {
           )}
           {user?.username !== username && !isLegacy && following && (
             <Button
+              size="sm"
               variant="subtle"
               css={{ ml: '$5' }}
               onClick={handleUnfollow}
