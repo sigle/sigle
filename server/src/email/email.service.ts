@@ -6,6 +6,10 @@ const inlineText = (json: any[]): string => {
   json.forEach((node) => {
     if (node.type === 'text') {
       text += node.content;
+    } else if (node.tagName === 'a') {
+      text += `<${node.tagName} ${node.attributes
+        .map((attribute) => `${attribute.key}="${attribute.value}"`)
+        .join(' ')}>${inlineText(node.children)}</${node.tagName}>`;
     } else if (
       node.tagName === 'strong' ||
       node.tagName === 'em' ||

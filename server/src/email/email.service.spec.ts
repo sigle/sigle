@@ -41,6 +41,14 @@ describe('EmailService', () => {
       ).toEqual(
         '<mj-text>Hello <strong><em><s><u>world</u></s></em></strong></mj-text>',
       );
+      // a
+      expect(
+        service.htmlToMJML(
+          '<p>Hello <a target="_blank" rel="noopener noreferrer nofollow" href="https://app.sigle.io">world</a></p>',
+        ),
+      ).toEqual(
+        '<mj-text>Hello <a target="_blank" rel="noopener noreferrer nofollow" href="https://app.sigle.io">world</a></mj-text>',
+      );
     });
   });
 });
