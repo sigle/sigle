@@ -32,6 +32,8 @@ export class EmailService {
     json.forEach((node) => {
       if (node.tagName === 'p') {
         mjml += `<mj-text>${inlineText(node.children)}</mj-text>`;
+      } else if (node.tagName === 'hr') {
+        mjml += `<mj-divider />`;
       }
     });
     console.log(JSON.stringify(json, null, 2));

@@ -50,5 +50,9 @@ describe('EmailService', () => {
         '<mj-text>Hello <a target="_blank" rel="noopener noreferrer nofollow" href="https://app.sigle.io">world</a></mj-text>',
       );
     });
+
+    it('should convert hr', () => {
+      expect(service.htmlToMJML('<hr />')).toEqual('<mj-divider />');
+    });
   });
 });
