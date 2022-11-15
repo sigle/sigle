@@ -13,6 +13,18 @@ describe('EmailService', () => {
   });
 
   describe('htmlToMJML', () => {
+    it('should convert h2', () => {
+      expect(service.htmlToMJML('<h2>Hello</h2>')).toEqual(
+        '<mj-text><h2>Hello</h2></mj-text>',
+      );
+    });
+
+    it('should convert h3', () => {
+      expect(service.htmlToMJML('<h3>Hello</h3>')).toEqual(
+        '<mj-text><h3>Hello</h3></mj-text>',
+      );
+    });
+
     it('should convert p', () => {
       expect(service.htmlToMJML('<p>Hello</p>')).toEqual(
         '<mj-text>Hello</mj-text>',

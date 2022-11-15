@@ -30,7 +30,11 @@ export class EmailService {
     let mjml = '';
     const json = parse(html);
     json.forEach((node) => {
-      if (node.tagName === 'p') {
+      if (node.tagName === 'h2') {
+        mjml += `<mj-text><h2>${inlineText(node.children)}</h2></mj-text>`;
+      } else if (node.tagName === 'h3') {
+        mjml += `<mj-text><h3>${inlineText(node.children)}</h3></mj-text>`;
+      } else if (node.tagName === 'p') {
         mjml += `<mj-text>${inlineText(node.children)}</mj-text>`;
       } else if (node.tagName === 'hr') {
         mjml += `<mj-divider />`;
