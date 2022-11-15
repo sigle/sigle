@@ -14,7 +14,7 @@ export const Button = styled('button', {
     pointerEvents: 'none',
   },
 
-  '@md': {
+  '@lg': {
     fontSize: '$2',
   },
 
