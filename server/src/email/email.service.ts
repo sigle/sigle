@@ -14,7 +14,8 @@ const inlineText = (json: any[]): string => {
       node.tagName === 'strong' ||
       node.tagName === 'em' ||
       node.tagName === 'u' ||
-      node.tagName === 's'
+      node.tagName === 's' ||
+      node.tagName === 'code'
     ) {
       text += `<${node.tagName}>${inlineText(node.children)}</${node.tagName}>`;
     }
