@@ -402,7 +402,7 @@ export const SettingsForm = ({ settings, username }: SettingsFormProps) => {
           <Button
             disabled={formik.isSubmitting}
             type="submit"
-            size="md"
+            size="sm"
             color="orange"
           >
             {formik.isSubmitting ? 'Saving...' : 'Save changes'}

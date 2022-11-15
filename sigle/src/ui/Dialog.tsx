@@ -100,7 +100,7 @@ export const DialogContent = forwardRef<
     {children}
     {closeButton && (
       <StyledCloseButton asChild>
-        <IconButton>
+        <IconButton size="sm">
           <Cross1Icon width={15} height={15} />
         </IconButton>
       </StyledCloseButton>

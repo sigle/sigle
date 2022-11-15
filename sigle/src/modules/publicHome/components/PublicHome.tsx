@@ -335,7 +335,7 @@ export const PublicHome = ({ file, settings, userInfo }: PublicHomeProps) => {
             ) : null}
             {user && user.username === userInfo.username && (
               <Link href="/settings" passHref>
-                <Button as="a" css={{ gap: '$2' }} variant="subtle">
+                <Button size="sm" as="a" css={{ gap: '$2' }} variant="subtle">
                   Edit profile
                   <Pencil1Icon />
                 </Button>
