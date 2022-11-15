@@ -34,6 +34,9 @@ const inlineText = (json: any[]): string => {
 
 @Injectable()
 export class EmailService {
+  /**
+   * Convert an article HTML content to the corresponding mjml template.
+   */
   htmlToMJML(html: string): string {
     // TODO sanitise html or elsewhere ?
     let mjml = '';
