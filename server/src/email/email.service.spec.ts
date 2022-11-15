@@ -33,6 +33,14 @@ describe('EmailService', () => {
       expect(service.htmlToMJML('<p>Hello <s>world</s></p>')).toEqual(
         '<mj-text>Hello <s>world</s></mj-text>',
       );
+      // mixed
+      expect(
+        service.htmlToMJML(
+          '<p>Hello <strong><em><s><u>world</u></s></em></strong></p>',
+        ),
+      ).toEqual(
+        '<mj-text>Hello <strong><em><s><u>world</u></s></em></strong></mj-text>',
+      );
     });
   });
 });
