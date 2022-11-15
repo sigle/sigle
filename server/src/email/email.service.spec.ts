@@ -69,6 +69,16 @@ describe('EmailService', () => {
       );
     });
 
+    it('should convert image', () => {
+      expect(
+        service.htmlToMJML(
+          '<img src="https://gaia.blockstack.org/hub/1Mqh6Lqyqdjcu8PHczewej4DZmMjFp1ZEt/photos/ZuwzlaWfMhjG-yJbG1WhP/slRWpY-LD7gYPxZuJYuJg-Screenshot 2022-08-24 at 10.07.14.png">',
+        ),
+      ).toEqual(
+        '<mj-image src="https://gaia.blockstack.org/hub/1Mqh6Lqyqdjcu8PHczewej4DZmMjFp1ZEt/photos/ZuwzlaWfMhjG-yJbG1WhP/slRWpY-LD7gYPxZuJYuJg-Screenshot 2022-08-24 at 10.07.14.png" />',
+      );
+    });
+
     it('should convert hr', () => {
       expect(service.htmlToMJML('<hr />')).toEqual('<mj-divider />');
     });

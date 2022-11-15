@@ -1,15 +1,24 @@
 import { Injectable } from '@nestjs/common';
 import { parse } from 'himalaya';
 
+// TODO integrate https://www.npmjs.com/package/mjml-bullet-list for lists
+
+const inlineAttributes = (
+  attributes: { key: string; value: string }[],
+): string =>
+  attributes
+    .map((attribute) => `${attribute.key}="${attribute.value}"`)
+    .join(' ');
+
 const inlineText = (json: any[]): string => {
   let text = '';
   json.forEach((node) => {
     if (node.type === 'text') {
       text += node.content;
     } else if (node.tagName === 'a') {
-      text += `<${node.tagName} ${node.attributes
-        .map((attribute) => `${attribute.key}="${attribute.value}"`)
-        .join(' ')}>${inlineText(node.children)}</${node.tagName}>`;
+      text += `<${node.tagName} ${inlineAttributes(
+        node.attributes,
+      )}>${inlineText(node.children)}</${node.tagName}>`;
     } else if (
       node.tagName === 'strong' ||
       node.tagName === 'em' ||
@@ -40,6 +49,8 @@ export class EmailService {
         mjml += `<mj-text><blockquote>${inlineText(
           node.children,
         )}</blockquote></mj-text>`;
+      } else if (node.tagName === 'img') {
+        mjml += `<mj-image ${inlineAttributes(node.attributes)} />`;
       } else if (node.tagName === 'hr') {
         mjml += `<mj-divider />`;
       }
