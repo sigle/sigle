@@ -36,6 +36,10 @@ export class EmailService {
         mjml += `<mj-text><h3>${inlineText(node.children)}</h3></mj-text>`;
       } else if (node.tagName === 'p') {
         mjml += `<mj-text>${inlineText(node.children)}</mj-text>`;
+      } else if (node.tagName === 'blockquote') {
+        mjml += `<mj-text><blockquote>${inlineText(
+          node.children,
+        )}</blockquote></mj-text>`;
       } else if (node.tagName === 'hr') {
         mjml += `<mj-divider />`;
       }

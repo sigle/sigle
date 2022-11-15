@@ -63,6 +63,12 @@ describe('EmailService', () => {
       );
     });
 
+    it('should convert blockquote', () => {
+      expect(service.htmlToMJML('<blockquote>Hello</blockquote>')).toEqual(
+        '<mj-text><blockquote>Hello</blockquote></mj-text>',
+      );
+    });
+
     it('should convert hr', () => {
       expect(service.htmlToMJML('<hr />')).toEqual('<mj-divider />');
     });
