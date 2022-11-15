@@ -19,6 +19,7 @@ import { SettingsLayout } from '../SettingsLayout';
 
 interface SettingsFormValues {
   email: string;
+  receiveEmails: boolean;
 }
 
 export const PrivateData = () => {
@@ -27,7 +28,9 @@ export const PrivateData = () => {
 
   const formik = useFormik<SettingsFormValues>({
     initialValues: {
+      // values to be updated once we have data coming from server
       email: '',
+      receiveEmails: false,
     },
     validate: (values) => {
       const errors: FormikErrors<SettingsFormValues> = {};
@@ -100,7 +103,16 @@ export const PrivateData = () => {
           <Typography size="subheading">
             Receive transactional emails and updates from Sigle
           </Typography>
-          <Switch>
+          <Switch
+            name="receiveEmails"
+            checked={formik.values.receiveEmails}
+            onCheckedChange={() =>
+              formik.setFieldValue(
+                'receiveEmails',
+                !formik.values.receiveEmails
+              )
+            }
+          >
             <SwitchThumb />
           </Switch>
         </Flex>
