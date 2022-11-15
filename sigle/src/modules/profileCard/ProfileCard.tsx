@@ -120,6 +120,7 @@ export const ProfileCard = ({
             !isLegacy &&
             (!isFollowingUser ? (
               <Button
+                size="sm"
                 color="orange"
                 css={{ ml: '$5', alignSelf: 'start' }}
                 onClick={user ? handleFollow : handleShowLoginPrompt}
@@ -128,6 +129,7 @@ export const ProfileCard = ({
               </Button>
             ) : (
               <Button
+                size="sm"
                 variant="subtle"
                 css={{ ml: '$5', alignSelf: 'start' }}
                 onClick={handleUnfollow}

@@ -248,6 +248,7 @@ export const StoryItem = ({
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild>
                       <IconButton
+                        size="sm"
                         css={{ alignSelf: 'start', p: '$1' }}
                         aria-label="Story settings"
                       >

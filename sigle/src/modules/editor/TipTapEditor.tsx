@@ -240,6 +240,7 @@ export const TipTapEditor = forwardRef<
                 {editor?.storage.characterCount.words()} words
               </Typography>
               <IconButton
+                size="sm"
                 css={{
                   pointerEvents: 'auto',
                 }}

@@ -60,7 +60,7 @@ export const FloatingMenu = ({ editor }: FloatingMenuProps) => {
         );
       }}
     >
-      <IconButton variant="ghost" onClick={handleButtonClick}>
+      <IconButton size="sm" variant="ghost" onClick={handleButtonClick}>
         <PlusIcon width={14} height={14} />
       </IconButton>
     </TipTapFloatingMenu>
