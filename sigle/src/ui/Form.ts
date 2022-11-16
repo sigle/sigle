@@ -89,5 +89,5 @@ export const FormHelper = styled('p', {
 
 export const FormHelperError = styled('p', {
   fontSize: '$1',
-  color: '$orange11',
+  color: '$red11',
 });
