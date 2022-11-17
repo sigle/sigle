@@ -44,6 +44,7 @@ import { TwitterFilledIcon } from '../../../icons';
 import { EnvelopePlusIcon } from '../../../icons/EnvelopPlusIcon';
 import { SubscribeModal } from '../../subscribeModal/SubscribeModal';
 import { StoryCardSkeleton } from '../../home/components/StoryItemSkeleton';
+import { useFeatureFlags } from '../../../utils/featureFlags';
 
 const StyledTabsTrigger = styled(TabsTrigger, {
   fontSize: 13,
@@ -170,6 +171,7 @@ export const PublicHome = ({ file, settings, userInfo }: PublicHomeProps) => {
   const { resolvedTheme } = useTheme();
   const { user, isLegacy } = useAuth();
   const [showSubscribeDialog, setShowSubscribeDialog] = useState(false);
+  const { isExperimentalNewsletterEnabled } = useFeatureFlags();
   const router = useRouter();
   const { data: userInfoByAddress } = useGetUserByAddress(userInfo.address);
   const { data: userFollowing } = useGetGaiaUserFollowing({
@@ -310,16 +312,23 @@ export const PublicHome = ({ file, settings, userInfo }: PublicHomeProps) => {
                   </Button>
                 ) : (
                   <Button
-                    variant="subtle"
+                    color="orange"
+                    variant="outline"
                     css={{ ml: '$5' }}
                     onClick={handleUnfollow}
                   >
                     Unfollow
                   </Button>
                 )}
-                <IconButton onClick={handleShowSubscribe}>
-                  <EnvelopePlusIcon />
-                </IconButton>
+                {isExperimentalNewsletterEnabled && (
+                  <IconButton
+                    color="orange"
+                    variant="outline"
+                    onClick={handleShowSubscribe}
+                  >
+                    <EnvelopePlusIcon />
+                  </IconButton>
+                )}
 
                 <SubscribeModal
                   profileImgSrc={

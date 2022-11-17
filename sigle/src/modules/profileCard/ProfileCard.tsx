@@ -29,6 +29,7 @@ import { useState } from 'react';
 import { LoginModal } from '../loginModal/LoginModal';
 import { EnvelopePlusIcon } from '../../icons/EnvelopPlusIcon';
 import { SubscribeModal } from '../subscribeModal/SubscribeModal';
+import { useFeatureFlags } from '../../utils/featureFlags';
 
 const ProfileImageContainer = styled('div', {
   display: 'flex',
@@ -64,6 +65,7 @@ export const ProfileCard = ({
   const [isOpen, setIsOpen] = useState(false);
   const [showLoginPromptDialog, setShowLoginPromptDialog] = useState(false);
   const [showSubscribeDialog, setShowSubscribeDialog] = useState(false);
+  const { isExperimentalNewsletterEnabled } = useFeatureFlags();
   const { data: userFollowing } = useGetGaiaUserFollowing({
     enabled: isOpen && !!user && userInfo.username !== user.username,
     staleTime: Infinity,
@@ -134,6 +136,7 @@ export const ProfileCard = ({
             >
               {!isFollowingUser ? (
                 <Button
+                  size="sm"
                   color="orange"
                   css={{ ml: '$5' }}
                   onClick={user ? handleFollow : handleShowLoginPrompt}
@@ -142,16 +145,25 @@ export const ProfileCard = ({
                 </Button>
               ) : (
                 <Button
-                  variant="subtle"
+                  size="sm"
+                  color="orange"
+                  variant="outline"
                   css={{ ml: '$5' }}
                   onClick={handleUnfollow}
                 >
                   Unfollow
                 </Button>
               )}
-              <IconButton onClick={handleShowSubscribe}>
-                <EnvelopePlusIcon />
-              </IconButton>
+              {isExperimentalNewsletterEnabled && (
+                <IconButton
+                  size="sm"
+                  color="orange"
+                  variant="outline"
+                  onClick={handleShowSubscribe}
+                >
+                  <EnvelopePlusIcon />
+                </IconButton>
+              )}
 
               <SubscribeModal
                 profileImgSrc={

@@ -10,7 +10,6 @@ import {
   DialogDescription,
   DialogTitle,
   Flex,
-  FormHelper,
   FormHelperError,
   FormInput,
   Typography,
@@ -155,10 +154,6 @@ export const SubscribeModal = ({
                   {formik.errors.email}
                 </FormHelperError>
               )}
-              <FormHelper css={{ mt: '$2', color: '$gray11', fontSize: '$1' }}>
-                Your email address will be saved in the settings for future
-                subscriptions
-              </FormHelper>
               <Flex gap="5" css={{ mt: '$6', alignSelf: 'end' }}>
                 <Button
                   size="lg"
@@ -174,7 +169,7 @@ export const SubscribeModal = ({
                   size="lg"
                   color="orange"
                 >
-                  Submit
+                  Subscribe
                 </Button>
               </Flex>
             </>
