@@ -160,13 +160,13 @@ export const AppHeader = () => {
       >
         {user && !isLegacy ? (
           <Link href="/feed" passHref>
-            <Button variant="ghost" as="a">
+            <Button size="sm" variant="ghost" as="a">
               Feed
             </Button>
           </Link>
         ) : null}
         <Link href="/explore" passHref>
-          <Button variant="ghost" as="a">
+          <Button size="sm" variant="ghost" as="a">
             Explore
           </Button>
         </Link>
@@ -175,6 +175,7 @@ export const AppHeader = () => {
         ) : (
           <Flex gap="6">
             <IconButton
+              size="sm"
               as="a"
               href={sigleConfig.twitterUrl}
               target="_blank"
@@ -183,6 +184,7 @@ export const AppHeader = () => {
               <TwitterLogoIcon />
             </IconButton>
             <IconButton
+              size="sm"
               as="a"
               href={sigleConfig.discordUrl}
               target="_blank"
@@ -191,6 +193,7 @@ export const AppHeader = () => {
               <DiscordLogoIcon />
             </IconButton>
             <IconButton
+              size="sm"
               as="a"
               href={sigleConfig.githubUrl}
               target="_blank"
@@ -207,7 +210,7 @@ export const AppHeader = () => {
                 Enter App
               </Button>
             </Link>
-            <IconButton as="button" onClick={toggleTheme}>
+            <IconButton size="sm" as="button" onClick={toggleTheme}>
               <SunIcon />
             </IconButton>
           </>
