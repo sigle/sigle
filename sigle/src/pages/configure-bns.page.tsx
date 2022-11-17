@@ -25,7 +25,7 @@ const ConfigureBNS = () => {
           const namesJson = (await namesResponse.json()) as {
             zonefile: string;
           };
-          if (namesJson.zonefile !== '') {
+          if (namesJson.zonefile && namesJson.zonefile !== '') {
             router.push('/');
           }
         } catch (e) {}
