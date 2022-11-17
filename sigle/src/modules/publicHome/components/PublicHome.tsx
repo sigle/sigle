@@ -286,11 +286,9 @@ export const PublicHome = ({ file, settings, userInfo }: PublicHomeProps) => {
                 alt={`${siteName} logo`}
               />
             </HeaderLogoContainer>
-            {user &&
-            user.username !== userInfo.username &&
-            !isLegacy &&
-            userFollowing ? (
-              !isFollowingUser ? (
+            {user?.username !== userInfo.username &&
+              !isLegacy &&
+              (!isFollowingUser ? (
                 <Button
                   size="sm"
                   color="orange"
@@ -308,8 +306,7 @@ export const PublicHome = ({ file, settings, userInfo }: PublicHomeProps) => {
                 >
                   Unfollow
                 </Button>
-              )
-            ) : null}
+              ))}
             {user && user.username === userInfo.username && (
               <Link href="/settings" passHref>
                 <Button size="sm" as="a" css={{ gap: '$2' }} variant="subtle">
