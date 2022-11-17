@@ -54,7 +54,8 @@ export class SubscriptionService {
       where: { stacksAddress },
     });
 
-    // If NFT is already linked to another user, we downgrade the subscription to free the NFT
+    // If NFT is already linked to another user, we downgrade the subscription of the other user
+    // so the NFT id can be used again
     const existingSubscriptionForNFT = await this.prisma.subscription.findFirst(
       { select: { id: true }, where: { status: 'ACTIVE', nftId } },
     );
