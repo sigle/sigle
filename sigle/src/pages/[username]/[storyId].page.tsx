@@ -190,7 +190,7 @@ export const getServerSideProps: GetServerSideProps<
           allowedAttributes: {
             ...sanitizeHtml.defaults.allowedAttributes,
             code: ['class'],
-            div: ['data-twitter', 'data-twitter-id'],
+            div: ['data-twitter', 'data-twitter-id', 'data-cta'],
           },
         })
       : '';

@@ -197,6 +197,11 @@ export const BubbleMenu = ({ editor }: BubbleMenuProps) => {
           return false;
         }
 
+        /// Do not show on cta
+        if (editor.isActive('cta')) {
+          return false;
+        }
+
         return true;
       }}
       editor={editor}

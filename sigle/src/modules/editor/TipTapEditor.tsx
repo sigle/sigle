@@ -45,6 +45,7 @@ import { TipTapImage } from './extensions/Image';
 import { Toolbar } from './EditorToolbar/EditorToolbar';
 import { Twitter as TipTapTwitter } from './extensions/Twitter';
 import { MobileScroll } from './extensions/MobileScroll';
+import { Cta as TipTapCta } from './extensions/CallToAction';
 
 const fadeInAnimation = keyframes({
   '0%': { opacity: '0' },
@@ -171,6 +172,7 @@ export const TipTapEditor = forwardRef<
       TipTapPlaceholder(isMobile),
       // Custom extensions
       TipTapTwitter,
+      TipTapCta,
       !isMobile
         ? SlashCommands.configure({
             commands: slashCommands({ storyId: story.id }),
