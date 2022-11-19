@@ -25,7 +25,7 @@ model User {
 model Subscription {
   id           String             @id @default(uuid())
   status       SubscriptionStatus
-  nftId        Int                @unique
+  nftId        Int
   downgradedAt DateTime?
   userId       String
   createdAt    DateTime           @default(now())
