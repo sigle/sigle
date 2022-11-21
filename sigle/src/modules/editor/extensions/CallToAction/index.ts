@@ -10,7 +10,7 @@ declare module '@tiptap/core' {
   }
 }
 
-export const Cta = Node.create({
+export const Cta = Node.create<{}>({
   name: 'cta',
   group: 'block',
   selectable: true,
@@ -26,20 +26,14 @@ export const Cta = Node.create({
     return {
       label: {
         default: null,
-        // force correct id
-        // parseHTML: (element) => element.getAttribute('data-cta'),
+        parseHTML: (element) => element.textContent,
       },
       url: {
         default: null,
+        parseHTML: (element) => element.parentElement?.getAttribute('href'),
       },
       size: {
         default: null,
-      },
-      color: {
-        default: null,
-      },
-      button: {
-        default: false,
       },
     };
   },
@@ -60,13 +54,24 @@ export const Cta = Node.create({
   parseHTML() {
     return [
       {
-        tag: 'div[data-cta]',
+        tag: 'a[data-type="button-cta"] button',
       },
     ];
   },
 
   renderHTML({ HTMLAttributes }) {
-    return ['div', mergeAttributes({ 'data-cta': '' }, HTMLAttributes)];
+    return [
+      'a',
+      { 'data-type': 'button-cta', href: HTMLAttributes.url },
+      [
+        'button',
+        mergeAttributes(HTMLAttributes, {
+          url: undefined,
+          label: undefined,
+        }),
+        HTMLAttributes.label,
+      ],
+    ];
   },
 
   addNodeView() {

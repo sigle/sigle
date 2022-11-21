@@ -45,15 +45,8 @@ interface CtaFormValues {
 
 export const CtaComponent = (props: NodeViewProps) => {
   const [showCtatDialog, setShowCtaDialog] = useState(false);
-  const [showButton, setShowButton] = useState(false);
   const handleCancelCtaDialog = () => setShowCtaDialog(false);
   const { data: settings } = useGetUserSettings();
-
-  useEffect(() => {
-    if (!button) {
-      setShowCtaDialog(true);
-    }
-  }, []);
 
   const formik = useFormik<CtaFormValues>({
     initialValues: {
@@ -92,17 +85,11 @@ export const CtaComponent = (props: NodeViewProps) => {
         label: values.label,
         url: values.url,
         size: values.size,
-        button: true,
       });
 
-      setShowButton(true);
       handleCancelCtaDialog();
     },
   });
-
-  const button = props.node.attrs.button || showButton;
-  const size = formik.values.size || props.node.attrs.size;
-  const label = formik.values.label || props.node.attrs.label;
 
   return (
     <NodeViewWrapper>
@@ -245,68 +232,44 @@ export const CtaComponent = (props: NodeViewProps) => {
                     Cancel
                   </Button>
                   <Button type="submit" color="orange" size="lg">
-                    {button ? 'Update Button' : 'Create Button'}
+                    Save
                   </Button>
                 </Flex>
               </Flex>
             </DialogContent>
           </Dialog>
         )}
-        {button && (
-          <Button
-            css={{
-              backgroundColor: settings?.siteColor,
-              color: getContrastingColor(settings?.siteColor || colors.pink),
-
-              '&:hover': {
-                backgroundColor: settings?.siteColor,
-                opacity: '85%',
-              },
-
-              '&:active': {
-                backgroundColor: settings?.siteColor,
-                opacity: '80%',
-              },
-            }}
-            onClick={() => {
-              console.log({
-                size,
-                label,
-                button,
-              });
-
+        <Button
+          as="a"
+          href={props.node.attrs.url}
+          onClick={(e) => {
+            if (props.editor.isEditable) {
+              e.preventDefault();
               setShowCtaDialog(true);
-            }}
-            size={size}
-          >
-            {label}
-          </Button>
-        )}
+            }
+          }}
+          target="_blank"
+          rel="noreferrer"
+          css={{
+            backgroundColor: settings?.siteColor,
+            color: getContrastingColor(settings?.siteColor || colors.pink),
+            boxShadow: 'none',
+
+            '&:hover': {
+              backgroundColor: settings?.siteColor,
+              opacity: '85%',
+            },
+
+            '&:active': {
+              backgroundColor: settings?.siteColor,
+              opacity: '80%',
+            },
+          }}
+          size={props.node.attrs.size}
+        >
+          {props.node.attrs.label}
+        </Button>
       </Flex>
-      <Button
-        css={{
-          display: props.editor.isEditable ? 'none' : 'block',
-          backgroundColor: settings?.siteColor,
-          color: getContrastingColor(settings?.siteColor || colors.pink),
-
-          '&:hover': {
-            backgroundColor: settings?.siteColor,
-            opacity: '85%',
-          },
-
-          '&:active': {
-            backgroundColor: settings?.siteColor,
-            opacity: '80%',
-          },
-        }}
-        href={props.node.attrs.url}
-        size={props.node.attrs.size}
-        as="a"
-        target="_blank"
-        rel="noreferrer"
-      >
-        {props.node.attrs.label}
-      </Button>
     </NodeViewWrapper>
   );
 };
