@@ -23,7 +23,7 @@ import { CheckIcon } from '@radix-ui/react-icons';
 import { styled } from '../../../../stitches.config';
 import { isValidHttpUrl } from '../../../../utils';
 import { useGetUserSettings } from '../../../../hooks/appData';
-import { colors, getContrastingColor } from '../../../../utils/colors';
+import { getContrastingColor } from '../../../../utils/colors';
 
 const HiddenLabel = styled(Label, {
   position: 'absolute',
@@ -268,17 +268,19 @@ export const CtaComponent = (props: NodeViewProps) => {
           rel="noreferrer"
           css={{
             display: !hasAttrs ? 'none' : 'block',
-            backgroundColor: settings?.siteColor || colors.pink,
-            color: getContrastingColor(settings?.siteColor || colors.pink),
+            backgroundColor: settings?.siteColor || '$orange11',
+            color: settings?.siteColor
+              ? getContrastingColor(settings?.siteColor)
+              : 'white',
             boxShadow: 'none',
 
             '&:hover': {
-              backgroundColor: settings?.siteColor || colors.pink,
+              backgroundColor: settings?.siteColor || '$orange11',
               opacity: '85%',
             },
 
             '&:active': {
-              backgroundColor: settings?.siteColor || colors.pink,
+              backgroundColor: settings?.siteColor || '$orange11',
               opacity: '80%',
             },
           }}
