@@ -242,7 +242,7 @@ export const CtaComponent = (props: NodeViewProps) => {
         <Button
           as="a"
           href={props.node.attrs.url}
-          onClick={(e) => {
+          onClick={(e: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => {
             if (props.editor.isEditable) {
               e.preventDefault();
               setShowCtaDialog(true);
