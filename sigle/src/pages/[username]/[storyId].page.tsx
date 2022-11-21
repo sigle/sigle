@@ -186,11 +186,25 @@ export const getServerSideProps: GetServerSideProps<
             'sub',
             'sup',
             'span',
+            // button-cta
+            'button',
           ],
           allowedAttributes: {
             ...sanitizeHtml.defaults.allowedAttributes,
+            a: [
+              // Default
+              'href',
+              'name',
+              'target',
+              // button-cta
+              'data-type',
+            ],
             code: ['class'],
-            div: ['data-twitter', 'data-twitter-id', 'data-cta'],
+            div: ['data-twitter', 'data-twitter-id'],
+            button: [
+              // button-cta
+              'data-size',
+            ],
           },
         })
       : '';

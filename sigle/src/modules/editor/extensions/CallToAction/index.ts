@@ -33,7 +33,8 @@ export const Cta = Node.create<{}>({
         parseHTML: (element) => element.parentElement?.getAttribute('href'),
       },
       size: {
-        default: null,
+        default: 'md',
+        parseHTML: (element) => element.getAttribute('data-size'),
       },
     };
   },
@@ -68,6 +69,8 @@ export const Cta = Node.create<{}>({
         mergeAttributes(HTMLAttributes, {
           url: undefined,
           label: undefined,
+          size: undefined,
+          'data-size': HTMLAttributes.size,
         }),
         HTMLAttributes.label,
       ],
