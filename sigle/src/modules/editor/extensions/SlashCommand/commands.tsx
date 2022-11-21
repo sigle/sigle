@@ -220,8 +220,6 @@ export const slashCommands = ({
     description: 'Create a code snippet',
     command: ({ editor, range }) => {
       if (!range) {
-        console.log('piece of shit code');
-
         editor.chain().focus().setCodeBlock().run();
         return;
       }
