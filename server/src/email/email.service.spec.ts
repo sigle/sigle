@@ -96,23 +96,46 @@ describe('EmailService', () => {
   });
 
   describe('storyToMJML', () => {
+    const story: Story = {
+      id: 'h8Kxgg9_Ck6f0V-YgB7Gz',
+      type: 'public',
+      title: 'Pen Run #1: Writing contest!',
+      content:
+        '<p>For our NFT collection <a target="_blank" rel="noopener noreferrer nofollow" href="https://gamma.io/collections/the-explorer-guild">The Explorer Guild</a>’s 1 year anniversary, enter our very first storytelling contest and challenge your creativity! Ready? Set… <strong>Pen Run!</strong></p><h2><strong>The rules!</strong></h2><h3><strong>🎭 Theme</strong></h3><p>We kick off this first Pen Run with a very open theme!</p><p>Based on<a target="_blank" rel="noopener noreferrer nofollow" href="https://app.sigle.io/sigleapp.id.blockstack/9YaADPQyujrXa28aiNYzV"> <u>the first chapter of the story of the Explorer Guild</u></a>, <strong>write your own second chapter for the story.</strong></p><p>Step into Jules Verne\'s shoes, free your imagination and continue the tale. Make us dream, laugh, thrill! No matter where your creativity takes you... keep surprising your readers!</p><blockquote><p><em>You’re welcome to use </em><a target="_blank" rel="noopener noreferrer nofollow" href="https://app.sigle.io/sigleapp.id.blockstack/q3UgkR4eZvsQPwK3yAeLV"><em>our second chapter</em></a><em> as inspiration, but keep in mind yours can be entirely different, and the end doesn’t have to match what we’ve written.</em></p></blockquote><p><strong>You\'re free to explore any path!</strong></p><img src="https://gaia.blockstack.org/hub/1Gmf7Wt2WJTcbwUHAoY1tTeBZegD4zVifY/photos/Tp18iSo3f8vv1FIodesL1/uEpDz4VsGym5elLB70g8K-Drawing-1.png" alt=""><h3><strong>🏆 Prizes</strong></h3><p>🥇 The lucky winner will get <strong>the very first ANIMATED 1/1</strong> inspired by The Explorer Guild original collection and their story will be published in "The Explorer Guild Story" as the second version of chapter II.</p><img src="https://gaia.blockstack.org/hub/1Gmf7Wt2WJTcbwUHAoY1tTeBZegD4zVifY/photos/_O8ZASigEfspvOLcocIIz-Wizard%20explorer%20(1).gif" alt=""><p>🥈 The second place will get the first non-animated 1/1 ever created, also inspired by the original collection.</p><img src="https://gaia.blockstack.org/hub/1Gmf7Wt2WJTcbwUHAoY1tTeBZegD4zVifY/photos/dJEdQCM1rO3uOG5ZckoBQ-wizard_2_low.png" alt=""><h3><strong>🧑‍⚖️ Jury</strong></h3><p>We are pleased to welcome one of the most highly-rated writers on Sigle with 80+ articles on the platform and 5k+ views on his page!</p><p><a target="_blank" rel="noopener noreferrer nofollow" href="https://twitter.com/jackbinswitch"><strong>Jack Binswitch</strong></a> and the Sigle team will read your articles and vote for the best fiction between November 18th and December 1st.</p><p>The 2 best stories will be announced on December 2nd! 🎉</p><h3><strong>How do you enter?</strong></h3><p>1️⃣ <strong>Write</strong> your best fiction on<a target="_blank" rel="noopener noreferrer nofollow" href="http://app.sigle.io/"><strong> </strong></a><a target="_blank" rel="noopener noreferrer nofollow" href="http://app.sigle.io"><strong>app.sigle.io</strong></a>.&nbsp;</p><p>2️⃣ <strong>Publish</strong> <em>(don\'t just "save" it in your drafts!)</em> your article so everyone can read it.</p><p>3️⃣ <strong>Share</strong> your story on Twitter and tag <a target="_blank" rel="noopener noreferrer nofollow" href="https://twitter.com/sigleapp"><strong>@sigleapp</strong></a> and <a target="_blank" rel="noopener noreferrer nofollow" href="https://twitter.com/jackbinswitch"><strong>@jackbinswitch</strong></a> or directly on our Discord in the "✨| share-stories" channel before November 17th, 2022.</p><blockquote><p><em>The frequency of writing contests will depend on general enthusiasm of the community at the end of this first one.</em></p></blockquote><p>Good luck, word wizard! <strong>🪄</strong></p>',
+      createdAt: 1666044000000,
+      updatedAt: 1666086464680,
+      contentVersion: '2',
+      coverImage:
+        'https://gaia.blockstack.org/hub/1KwTnsTj6Rqm26zRfhJuNdQUG63ieozxbB/photos/h8Kxgg9_Ck6f0V-YgB7Gz/1666086010586-Pen Run_1.png',
+      metaTitle: 'Pen Run #1: Writing contest!',
+      metaDescription:
+        'For our NFT collection The Explorer Guild’s 1 year anniversary, enter our very first storytelling contest and challenge your creativity!',
+    };
+
     it('should render story with template', () => {
-      const story: Story = {
-        id: 'h8Kxgg9_Ck6f0V-YgB7Gz',
-        type: 'public',
-        title: 'Pen Run #1: Writing contest!',
-        content:
-          '<p>For our NFT collection <a target="_blank" rel="noopener noreferrer nofollow" href="https://gamma.io/collections/the-explorer-guild">The Explorer Guild</a>’s 1 year anniversary, enter our very first storytelling contest and challenge your creativity! Ready? Set… <strong>Pen Run!</strong></p><h2><strong>The rules!</strong></h2><h3><strong>🎭 Theme</strong></h3><p>We kick off this first Pen Run with a very open theme!</p><p>Based on<a target="_blank" rel="noopener noreferrer nofollow" href="https://app.sigle.io/sigleapp.id.blockstack/9YaADPQyujrXa28aiNYzV"> <u>the first chapter of the story of the Explorer Guild</u></a>, <strong>write your own second chapter for the story.</strong></p><p>Step into Jules Verne\'s shoes, free your imagination and continue the tale. Make us dream, laugh, thrill! No matter where your creativity takes you... keep surprising your readers!</p><blockquote><p><em>You’re welcome to use </em><a target="_blank" rel="noopener noreferrer nofollow" href="https://app.sigle.io/sigleapp.id.blockstack/q3UgkR4eZvsQPwK3yAeLV"><em>our second chapter</em></a><em> as inspiration, but keep in mind yours can be entirely different, and the end doesn’t have to match what we’ve written.</em></p></blockquote><p><strong>You\'re free to explore any path!</strong></p><img src="https://gaia.blockstack.org/hub/1Gmf7Wt2WJTcbwUHAoY1tTeBZegD4zVifY/photos/Tp18iSo3f8vv1FIodesL1/uEpDz4VsGym5elLB70g8K-Drawing-1.png" alt=""><h3><strong>🏆 Prizes</strong></h3><p>🥇 The lucky winner will get <strong>the very first ANIMATED 1/1</strong> inspired by The Explorer Guild original collection and their story will be published in "The Explorer Guild Story" as the second version of chapter II.</p><img src="https://gaia.blockstack.org/hub/1Gmf7Wt2WJTcbwUHAoY1tTeBZegD4zVifY/photos/_O8ZASigEfspvOLcocIIz-Wizard%20explorer%20(1).gif" alt=""><p>🥈 The second place will get the first non-animated 1/1 ever created, also inspired by the original collection.</p><img src="https://gaia.blockstack.org/hub/1Gmf7Wt2WJTcbwUHAoY1tTeBZegD4zVifY/photos/dJEdQCM1rO3uOG5ZckoBQ-wizard_2_low.png" alt=""><h3><strong>🧑‍⚖️ Jury</strong></h3><p>We are pleased to welcome one of the most highly-rated writers on Sigle with 80+ articles on the platform and 5k+ views on his page!</p><p><a target="_blank" rel="noopener noreferrer nofollow" href="https://twitter.com/jackbinswitch"><strong>Jack Binswitch</strong></a> and the Sigle team will read your articles and vote for the best fiction between November 18th and December 1st.</p><p>The 2 best stories will be announced on December 2nd! 🎉</p><h3><strong>How do you enter?</strong></h3><p>1️⃣ <strong>Write</strong> your best fiction on<a target="_blank" rel="noopener noreferrer nofollow" href="http://app.sigle.io/"><strong> </strong></a><a target="_blank" rel="noopener noreferrer nofollow" href="http://app.sigle.io"><strong>app.sigle.io</strong></a>.&nbsp;</p><p>2️⃣ <strong>Publish</strong> <em>(don\'t just "save" it in your drafts!)</em> your article so everyone can read it.</p><p>3️⃣ <strong>Share</strong> your story on Twitter and tag <a target="_blank" rel="noopener noreferrer nofollow" href="https://twitter.com/sigleapp"><strong>@sigleapp</strong></a> and <a target="_blank" rel="noopener noreferrer nofollow" href="https://twitter.com/jackbinswitch"><strong>@jackbinswitch</strong></a> or directly on our Discord in the "✨| share-stories" channel before November 17th, 2022.</p><blockquote><p><em>The frequency of writing contests will depend on general enthusiasm of the community at the end of this first one.</em></p></blockquote><p>Good luck, word wizard! <strong>🪄</strong></p>',
-        createdAt: 1666044000000,
-        updatedAt: 1666086464680,
-        contentVersion: '2',
-        coverImage:
-          'https://gaia.blockstack.org/hub/1KwTnsTj6Rqm26zRfhJuNdQUG63ieozxbB/photos/h8Kxgg9_Ck6f0V-YgB7Gz/1666086010586-Pen Run_1.png',
-        metaTitle: 'Pen Run #1: Writing contest!',
-        metaDescription:
-          'For our NFT collection The Explorer Guild’s 1 year anniversary, enter our very first storytelling contest and challenge your creativity!',
-      };
-      expect(service.storyToMJML({ story })).toMatchSnapshot();
+      expect(service.storyToMJML({ story, settings: {} })).toMatchSnapshot();
+    });
+
+    it('should render story with site url', () => {
+      expect(
+        service.storyToMJML({
+          story,
+          settings: {
+            siteUrl: 'https://www.sigle.io',
+          },
+        }),
+      ).toMatchSnapshot();
+    });
+
+    it('should render story with twitter url', () => {
+      expect(
+        service.storyToMJML({
+          story,
+          settings: {
+            siteTwitterHandle: 'sigleapp',
+          },
+        }),
+      ).toMatchSnapshot();
     });
   });
 });

@@ -25,18 +25,32 @@
         border-radius='12px'
         padding='20px 0px'
       >
-        <mj-text align='center'><a href='TODO'><img
-              src='https://app.sigle.io/img/emails/globe.png'
-              width='15'
-              height='15'
-              style='margin-right: 12px'
-            /></a><a href='TODO'><img
-              src='https://app.sigle.io/img/emails/twitter.png'
-              width='15'
-              height='15'
-            /></a></mj-text>
+        {{! Handlebars does not support && for if conditions so we are wrapping to check that at least 1 element is defined}}
+        {{#if settings.siteUrl}}
+          {{#if settings.siteTwitterHandle}}
+            <mj-text align='center'>
+              {{#if settings.siteUrl}}
+                <a href='{{settings.siteUrl}}'><img
+                    src='https://app.sigle.io/img/emails/globe.png'
+                    width='15'
+                    height='15'
+                    style='margin-right: 12px'
+                  /></a>
+              {{/if}}
+              {{#if settings.siteTwitterHandle}}
+                <a
+                  href='https://twitter.com/{{settings.siteTwitterHandle}}'
+                ><img
+                    src='https://app.sigle.io/img/emails/twitter.png'
+                    width='15'
+                    height='15'
+                  /></a>
+              {{/if}}
+            </mj-text>
+          {{/if}}
+        {{/if}}
         <mj-text align='center' color='#737373'><a
-            href='TODO'
+            href='[[UNSUB_LINK_EN]]'
             style='color: #737373; font-weight: 600'
           >Unsubscribe</a>
           from

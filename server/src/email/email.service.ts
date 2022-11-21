@@ -2,7 +2,7 @@ import { readFileSync } from 'fs';
 import { Injectable } from '@nestjs/common';
 import { parse } from 'himalaya';
 import { compile } from 'handlebars';
-import { Story } from '../external/gaia';
+import { SettingsFile, Story } from '../external/gaia';
 
 const inlineAttributes = (
   attributes: { key: string; value: string }[],
@@ -74,7 +74,13 @@ export class EmailService {
     return mjml;
   }
 
-  storyToMJML({ story }: { story: Story }): string {
+  storyToMJML({
+    story,
+    settings,
+  }: {
+    story: Story;
+    settings: SettingsFile;
+  }): string {
     if (story.contentVersion !== '2') {
       throw new Error('Story content version 1 not allowed.');
     }
