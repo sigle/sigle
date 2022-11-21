@@ -121,9 +121,6 @@ export const CommandList = forwardRef<CommandListRef, CommandListProps>(
     const callToActionItemIndex = items.findIndex(
       (item) => item.title === 'Call To Action'
     );
-
-    console.log(callToActionItemIndex);
-
     const callToActionItem = items[callToActionItemIndex];
 
     return (
