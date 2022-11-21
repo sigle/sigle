@@ -255,39 +255,41 @@ export const CtaComponent = (props: NodeViewProps) => {
             </DialogContent>
           </Dialog>
         )}
-        <Button
-          as="a"
-          href={props.node.attrs.url}
-          onClick={(e: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => {
-            if (props.editor.isEditable) {
-              e.preventDefault();
-              setShowCtaDialog(true);
-            }
-          }}
-          target="_blank"
-          rel="noreferrer"
-          css={{
-            display: !hasAttrs ? 'none' : 'block',
-            backgroundColor: settings?.siteColor || '$orange11',
-            color: settings?.siteColor
-              ? getContrastingColor(settings?.siteColor)
-              : 'white',
-            boxShadow: 'none',
-
-            '&:hover': {
+        <p>
+          <Button
+            as="a"
+            href={props.node.attrs.url}
+            onClick={(e: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => {
+              if (props.editor.isEditable) {
+                e.preventDefault();
+                setShowCtaDialog(true);
+              }
+            }}
+            target="_blank"
+            rel="noreferrer"
+            css={{
+              display: !hasAttrs ? 'none' : 'block',
               backgroundColor: settings?.siteColor || '$orange11',
-              opacity: '85%',
-            },
+              color: settings?.siteColor
+                ? getContrastingColor(settings?.siteColor)
+                : 'white',
+              boxShadow: 'none',
 
-            '&:active': {
-              backgroundColor: settings?.siteColor || '$orange11',
-              opacity: '80%',
-            },
-          }}
-          size={props.node.attrs.size}
-        >
-          {props.node.attrs.label}
-        </Button>
+              '&:hover': {
+                backgroundColor: settings?.siteColor || '$orange11',
+                opacity: '85%',
+              },
+
+              '&:active': {
+                backgroundColor: settings?.siteColor || '$orange11',
+                opacity: '80%',
+              },
+            }}
+            size={props.node.attrs.size}
+          >
+            {props.node.attrs.label}
+          </Button>
+        </p>
       </Flex>
     </NodeViewWrapper>
   );
