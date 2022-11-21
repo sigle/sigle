@@ -66,7 +66,7 @@ export const Cta = Node.create({
           size: undefined,
           'data-size': HTMLAttributes.size,
         }),
-        HTMLAttributes.label,
+        HTMLAttributes.label || '',
       ],
     ];
   },
