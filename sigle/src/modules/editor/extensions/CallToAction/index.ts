@@ -16,12 +16,6 @@ export const Cta = Node.create({
   selectable: true,
   draggable: true,
 
-  addOptions() {
-    return {
-      addPasteHandler: true,
-    };
-  },
-
   addAttributes() {
     return {
       label: {
