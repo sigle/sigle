@@ -9,7 +9,7 @@ import { hexRegex } from '../../utils/regex';
 import { storage } from '../../utils/blockstack';
 import { getSettingsFile, isValidHttpUrl, saveSettingsFile } from '../../utils';
 import { resizeImage } from '../../utils/image';
-import { colors } from '../../utils/colors';
+import { colors, getContrastingColor } from '../../utils/colors';
 import {
   FormRow,
   FormLabel,
@@ -328,12 +328,17 @@ export const SettingsForm = ({ settings, username }: SettingsFormProps) => {
       <FormRow>
         <FormLabel>Primary color</FormLabel>
         <FormColor
-          css={{ backgroundColor: formik.values.siteColor || colors.pink }}
+          css={{
+            backgroundColor: formik.values.siteColor || colors.pink,
+            color: getContrastingColor(formik.values.siteColor || colors.pink),
+          }}
           onClick={() => setColorOpen(true)}
         >
           {formik.values.siteColor || colors.pink}
           {colorOpen && (
-            <div style={{ position: 'absolute', zIndex: 2, top: 52, left: 0 }}>
+            <div
+              style={{ position: 'absolute', zIndex: 2, top: -150, left: 160 }}
+            >
               <div
                 style={{
                   position: 'fixed',
@@ -348,6 +353,14 @@ export const SettingsForm = ({ settings, username }: SettingsFormProps) => {
                 }}
               />
               <BlockPicker
+                styles={{
+                  default: {
+                    input: {
+                      backgroundColor: 'white',
+                    },
+                  },
+                }}
+                triangle="hide"
                 color={formik.values.siteColor || colors.pink}
                 onChange={(newColor) =>
                   formik.setFieldValue('siteColor', newColor.hex)
