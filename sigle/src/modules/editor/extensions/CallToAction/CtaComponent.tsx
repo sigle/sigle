@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { NodeViewProps } from '@tiptap/core';
 import { NodeViewWrapper } from '@tiptap/react';
 import {
@@ -48,6 +48,18 @@ export const CtaComponent = (props: NodeViewProps) => {
   const handleCancelCtaDialog = () => setShowCtaDialog(false);
   const { data: settings } = useGetUserSettings();
 
+  const label = props.node.attrs.label;
+  const url = props.node.attrs.url;
+  const size = props.node.attrs.size;
+
+  const hasAttrs = label && size && url;
+
+  useEffect(() => {
+    if (!hasAttrs) {
+      setShowCtaDialog(true);
+    }
+  }, []);
+
   const formik = useFormik<CtaFormValues>({
     initialValues: {
       label: props.node.attrs.label || '',
@@ -86,6 +98,10 @@ export const CtaComponent = (props: NodeViewProps) => {
         url: values.url,
         size: values.size,
       });
+
+      if (!hasAttrs) {
+        props.editor.commands.createParagraphNear();
+      }
 
       handleCancelCtaDialog();
     },
@@ -232,7 +248,7 @@ export const CtaComponent = (props: NodeViewProps) => {
                     Cancel
                   </Button>
                   <Button type="submit" color="orange" size="lg">
-                    Save
+                    {hasAttrs ? 'Update Button' : 'Create Button'}
                   </Button>
                 </Flex>
               </Flex>
@@ -251,17 +267,18 @@ export const CtaComponent = (props: NodeViewProps) => {
           target="_blank"
           rel="noreferrer"
           css={{
-            backgroundColor: settings?.siteColor,
+            display: !hasAttrs ? 'none' : 'block',
+            backgroundColor: settings?.siteColor || colors.pink,
             color: getContrastingColor(settings?.siteColor || colors.pink),
             boxShadow: 'none',
 
             '&:hover': {
-              backgroundColor: settings?.siteColor,
+              backgroundColor: settings?.siteColor || colors.pink,
               opacity: '85%',
             },
 
             '&:active': {
-              backgroundColor: settings?.siteColor,
+              backgroundColor: settings?.siteColor || colors.pink,
               opacity: '80%',
             },
           }}

@@ -31,6 +31,10 @@ export const RadioGroupItem = styled(RadioGroup.Item, {
     boxShadow: `none`,
     backgroundColor: '$orange11',
   },
+
+  '& svg': {
+    color: 'white',
+  },
 });
 
 export const RadioGroupIndicator = styled(RadioGroup.Indicator, {
