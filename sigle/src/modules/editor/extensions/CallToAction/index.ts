@@ -10,7 +10,7 @@ declare module '@tiptap/core' {
   }
 }
 
-export const Cta = Node.create<{}>({
+export const Cta = Node.create({
   name: 'cta',
   group: 'block',
   selectable: true,
