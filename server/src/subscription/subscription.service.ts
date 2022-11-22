@@ -31,7 +31,10 @@ export class SubscriptionService {
   }: {
     stacksAddress: string;
     nftId: number;
-  }) {
+  }): Promise<{
+    id: string;
+    nftId: number;
+  }> {
     const result = await callReadOnlyFunction({
       contractAddress: 'SP2X0TZ59D5SZ8ACQ6YMCHHNR2ZN51Z32E2CJ173',
       contractName: 'the-explorer-guild',
@@ -50,6 +53,21 @@ export class SubscriptionService {
     const user = await this.prisma.user.findUniqueOrThrow({
       where: { stacksAddress },
     });
+
+    // If NFT is already linked to another user, we downgrade the subscription of the other user
+    // so the NFT id can be used again
+    const existingSubscriptionForNFT = await this.prisma.subscription.findFirst(
+      { select: { id: true }, where: { status: 'ACTIVE', nftId } },
+    );
+    if (existingSubscriptionForNFT) {
+      await this.prisma.subscription.update({
+        where: { id: existingSubscriptionForNFT.id },
+        data: {
+          status: 'INACTIVE',
+          downgradedAt: new Date(),
+        },
+      });
+    }
 
     let activeSubscription = await this.prisma.subscription.findFirst({
       select: {
