@@ -51,7 +51,6 @@ export class EmailService {
    * Convert an article HTML content to the corresponding mjml template.
    */
   htmlToMJML(html: string): string {
-    // TODO sanitise html or elsewhere ?
     let mjml = '';
     const json = parse(html);
     json.forEach((node) => {
@@ -97,6 +96,7 @@ export class EmailService {
       {},
     );
 
+    // TODO sanitise html
     // TODO CTA template
     // TODO integrate https://www.npmjs.com/package/mjml-bullet-list for lists
     // TODO unsubscribe link
