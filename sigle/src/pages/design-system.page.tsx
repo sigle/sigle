@@ -11,6 +11,8 @@ import {
   DropdownMenuItem,
   Typography,
   Flex,
+  FormControlGroup,
+  FormInput,
 } from '../ui';
 
 const Separator = styled('div', {
@@ -94,6 +96,15 @@ const DesignSystem = () => {
         <IconButton>
           <Cross1Icon />
         </IconButton>
+      </Box>
+
+      <SectionHeading size="h1">Input</SectionHeading>
+      <Separator />
+      <Box css={{ display: 'flex', alignItems: 'center', gap: '$6', pb: '$5' }}>
+        <FormControlGroup>
+          <FormInput type="text" placeholder="Enter your email" />
+          <Button>Submit</Button>
+        </FormControlGroup>
       </Box>
     </Container>
   );
