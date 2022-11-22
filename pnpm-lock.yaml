@@ -69,6 +69,8 @@ importers:
       eslint: 8.24.0
       eslint-config-prettier: 8.5.0
       eslint-plugin-prettier: 4.2.1
+      handlebars: 4.7.7
+      himalaya: 1.1.0
       ioredis: 5.2.3
       jest: 29.1.1
       leaked-handles: 5.2.0
@@ -107,6 +109,8 @@ importers:
       class-transformer: 0.5.1
       class-validator: 0.13.2
       date-fns: 2.28.0
+      handlebars: 4.7.7
+      himalaya: 1.1.0
       ioredis: 5.2.3
       micro-stacks: 1.1.4
       nestjs-throttler-storage-redis: 0.1.20_xtkbcnqms3edyuba34pxaourem
@@ -8303,6 +8307,10 @@ packages:
     engines: {node: '>=12.0.0'}
     dev: false
 
+  /himalaya/1.1.0:
+    resolution: {integrity: sha512-LLase1dHCRMel68/HZTFft0N0wti0epHr3nNY7ynpLbyZpmrKMQ8YIpiOV77TM97cNpC8Wb2n6f66IRggwdWPw==}
+    dev: false
+
   /hmac-drbg/1.0.1:
     resolution: {integrity: sha512-Tti3gMqLdZfhOQY1Mzf/AanLiqh1WTiJgEj26ZuYQ9fbkLomzGchCws4FyrSd4VkpBfiNhaE1On+lOz894jvXg==}
     dependencies:
@@ -13171,6 +13179,7 @@ packages:
     resolution: {integrity: sha512-vMOPGDuvXecPs34V74qDKk4iJ/SN4vL3Ow/23ixafENYvtrNvtbcgUeugTcUGRGsOF/5fU8/NYSL5Hyb3l1OJA==}
     engines: {node: '>=0.8.0'}
     hasBin: true
+    requiresBuild: true
     dev: false
 
   /unbox-primitive/1.0.2:

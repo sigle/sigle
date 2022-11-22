@@ -54,6 +54,8 @@
     "class-transformer": "0.5.1",
     "class-validator": "0.13.2",
     "date-fns": "2.28.0",
+    "handlebars": "4.7.7",
+    "himalaya": "1.1.0",
     "ioredis": "5.2.3",
     "micro-stacks": "1.1.4",
     "nestjs-throttler-storage-redis": "0.1.20",

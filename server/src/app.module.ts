@@ -14,6 +14,7 @@ import { AnalyticsModule } from './analytics/analytics.module';
 import { PlausibleService } from './plausible/plausible.service';
 import { StacksService } from './stacks/stacks.service';
 import { AppController } from './app.controller';
+import { EmailModule } from './email/email.module';
 
 @Module({
   imports: [
@@ -55,6 +56,7 @@ import { AppController } from './app.controller';
     UserModule,
     SubscriptionModule,
     AnalyticsModule,
+    EmailModule,
   ],
   controllers: [AppController],
   providers: [
