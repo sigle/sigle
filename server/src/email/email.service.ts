@@ -92,6 +92,7 @@ export class EmailService {
           username: 'antoine.btc',
           displayName: 'Antoine Lebowitch',
         },
+        settings,
       },
       {},
     );

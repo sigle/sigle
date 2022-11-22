@@ -28,6 +28,14 @@ exports[`EmailService storyToMJML should render story with site url 1`] = `
         border-radius='12px'
         padding='20px 0px'
       >
+        <mj-text align='center'>
+            <a href='https://www.sigle.io'><img
+                src='https://app.sigle.io/img/emails/globe.png'
+                width='15'
+                height='15'
+                style='margin-right: 12px'
+              /></a>
+        </mj-text>
         <mj-text align='center' color='#737373'><a
             href='[[UNSUB_LINK_EN]]'
             style='color: #737373; font-weight: 600'
@@ -87,6 +95,8 @@ exports[`EmailService storyToMJML should render story with template 1`] = `
         border-radius='12px'
         padding='20px 0px'
       >
+        <mj-text align='center'>
+        </mj-text>
         <mj-text align='center' color='#737373'><a
             href='[[UNSUB_LINK_EN]]'
             style='color: #737373; font-weight: 600'
@@ -146,6 +156,13 @@ exports[`EmailService storyToMJML should render story with twitter url 1`] = `
         border-radius='12px'
         padding='20px 0px'
       >
+        <mj-text align='center'>
+            <a href='https://twitter.com/sigleapp'><img
+                src='https://app.sigle.io/img/emails/twitter.png'
+                width='15'
+                height='15'
+              /></a>
+        </mj-text>
         <mj-text align='center' color='#737373'><a
             href='[[UNSUB_LINK_EN]]'
             style='color: #737373; font-weight: 600'
