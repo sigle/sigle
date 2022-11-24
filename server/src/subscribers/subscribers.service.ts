@@ -49,8 +49,19 @@ export class SubscribersService {
       Email: email,
     };
 
-    await mailjet.post('contact', { version: 'v3' }).request(newContact);
-
+    try {
+      await mailjet.post('contact', { version: 'v3' }).request(newContact);
+    } catch (error) {
+      if (error.statusCode === 400 && error.statusText?.startsWith('MJ18')) {
+        // Email already subscribed, ignore the error
+      } else {
+        throw error;
+      }
+    }
     // TODO create subscriber via Mail API in right list
+    return {
+      createdAt: new Date(),
+      email,
+    };
   }
 }
