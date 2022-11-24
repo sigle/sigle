@@ -1,7 +1,7 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { cvToJSON, uintCV } from 'micro-stacks/clarity';
 import { callReadOnlyFunction } from 'micro-stacks/transactions';
-import { PrismaService } from '../prisma.service';
+import { PrismaService } from '../prisma/prisma.service';
 
 @Injectable()
 export class SubscriptionService {

@@ -7,7 +7,7 @@ import { Prisma } from '@prisma/client';
 import { InfoApi, Configuration } from '@stacks/blockchain-api-client';
 import { StacksService } from '../stacks/stacks.service';
 import { EnvironmentVariables } from '../environment/environment.validation';
-import { PrismaService } from '../prisma.service';
+import { PrismaService } from '../prisma/prisma.service';
 
 @Injectable()
 export class UserService {
