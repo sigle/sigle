@@ -1,6 +1,6 @@
 import { BadGatewayException, Injectable } from '@nestjs/common';
 import { validate } from 'deep-email-validator';
-import { PrismaService } from '../prisma.service';
+import { PrismaService } from '../prisma/prisma.service';
 import { CreateSubscriberDto } from './dto/createSubscriber.dto';
 
 @Injectable()
