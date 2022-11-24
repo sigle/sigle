@@ -1,12 +1,20 @@
 import { BadGatewayException, Injectable } from '@nestjs/common';
 import { validate } from 'deep-email-validator';
+import { PrismaService } from '../prisma.service';
 import { CreateSubscriberDto } from './dto/createSubscriber.dto';
 
 @Injectable()
 export class SubscribersService {
-  async create({ stacksAddress, email }: CreateSubscriberDto) {
-    // TODO verify that user has been created in DB
+  constructor(private readonly prisma: PrismaService) {}
 
+  async create({ stacksAddress, email }: CreateSubscriberDto) {
+    // Check that the user exists in the DB
+    const user = this.prisma.user.findUniqueOrThrow({
+      select: { id: true },
+      where: { stacksAddress },
+    });
+
+    // Quick verify email
     const res = await validate({
       email,
       // This is already checked by the router
