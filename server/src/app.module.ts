@@ -9,13 +9,13 @@ import type { ClientOpts } from 'redis';
 import { validate } from './environment/environment.validation';
 import { UserModule } from './user/user.module';
 import { SubscriptionModule } from './subscription/subscription.module';
-import { PrismaService } from './prisma.service';
 import { AnalyticsModule } from './analytics/analytics.module';
 import { PlausibleService } from './plausible/plausible.service';
 import { StacksService } from './stacks/stacks.service';
 import { AppController } from './app.controller';
 import { EmailModule } from './email/email.module';
 import { SubscribersModule } from './subscribers/subscribers.module';
+import { PrismaModule } from './prisma/prisma.module';
 
 @Module({
   imports: [
@@ -54,6 +54,7 @@ import { SubscribersModule } from './subscribers/subscribers.module';
         url: config.get('REDIS_DATABASE_URL'),
       }),
     }),
+    PrismaModule,
     UserModule,
     SubscriptionModule,
     AnalyticsModule,
@@ -82,7 +83,6 @@ import { SubscribersModule } from './subscribers/subscribers.module';
           ],
         }),
     },
-    PrismaService,
     StacksService,
     PlausibleService,
   ],
