@@ -61,6 +61,7 @@
     "micro-stacks": "1.1.4",
     "nestjs-throttler-storage-redis": "0.1.20",
     "next-auth": "4.10.3",
+    "node-mailjet": "5.1.1",
     "prisma": "4.3.1",
     "redis": "3.1.2",
     "reflect-metadata": "0.1.13",

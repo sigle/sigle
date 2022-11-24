@@ -1,7 +1,9 @@
-import { BadGatewayException, Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { validate } from 'deep-email-validator';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateSubscriberDto } from './dto/createSubscriber.dto';
+import { Contact } from 'node-mailjet';
+const Mailjet = require('node-mailjet');
 
 @Injectable()
 export class SubscribersService {
@@ -9,10 +11,13 @@ export class SubscribersService {
 
   async create({ stacksAddress, email }: CreateSubscriberDto) {
     // Check that the user exists in the DB
-    const user = this.prisma.user.findUniqueOrThrow({
+    const user = await this.prisma.user.findUnique({
       select: { id: true },
       where: { stacksAddress },
     });
+    if (!user) {
+      throw new BadRequestException('Invalid user.');
+    }
 
     // Quick verify email
     const res = await validate({
@@ -27,10 +32,25 @@ export class SubscribersService {
       validateSMTP: false,
     });
     if (!res.valid) {
-      throw new BadGatewayException('Invalid email.');
+      throw new BadRequestException('Invalid email.');
     }
 
     // TODO verify that user has email settings setup
+
+    const mailJetApiKey = '';
+    const mailJetSecretKey = '';
+
+    const mailjet = new Mailjet({
+      apiKey: mailJetApiKey,
+      apiSecret: mailJetSecretKey,
+    });
+
+    const newContact: Contact.IPostContactBody = {
+      Email: email,
+    };
+
+    await mailjet.post('contact', { version: 'v3' }).request(newContact);
+
     // TODO create subscriber via Mail API in right list
   }
 }
