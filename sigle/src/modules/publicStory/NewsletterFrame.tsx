@@ -89,7 +89,7 @@ export const NewsletterFrame = ({
           {isSubscribed ? (
             <Flex direction="column" align="center">
               <Typography size="subheading">{`You have subscribed to ${siteName}'s newsletter.`}</Typography>
-              <Button
+              {/* <Button
                 css={{ gap: '$1' }}
                 color="orange"
                 variant="outline"
@@ -105,7 +105,7 @@ export const NewsletterFrame = ({
               >
                 <EnvelopePlusIcon />
                 Unsubscribe
-              </Button>
+              </Button> */}
             </Flex>
           ) : (
             <Flex
