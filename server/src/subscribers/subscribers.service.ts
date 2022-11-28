@@ -4,6 +4,7 @@ import { PrismaService } from '../prisma/prisma.service';
 import { CreateSubscriberDto } from './dto/createSubscriber.dto';
 import { Contact } from 'node-mailjet';
 import { ConfigService } from '@nestjs/config';
+// eslint-disable-next-line @typescript-eslint/no-var-requires
 const Mailjet = require('node-mailjet');
 
 @Injectable()
