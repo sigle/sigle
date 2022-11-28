@@ -3,13 +3,26 @@ import { validate } from 'deep-email-validator';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateSubscriberDto } from './dto/createSubscriber.dto';
 import { Contact } from 'node-mailjet';
+import { ConfigService } from '@nestjs/config';
 const Mailjet = require('node-mailjet');
 
 @Injectable()
 export class SubscribersService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly configService: ConfigService,
+    private readonly prisma: PrismaService,
+  ) {}
 
   async create({ stacksAddress, email }: CreateSubscriberDto) {
+    // TODO - remove this check once newsletter feature is ready
+    // Limit who can access this feature
+    if (
+      this.configService.get('NODE_ENV') === 'production' &&
+      stacksAddress !== 'SP3VCX5NFQ8VCHFS9M6N40ZJNVTRT4HZ62WFH5C4Q'
+    ) {
+      throw new BadRequestException('Not activated.');
+    }
+
     // Check that the user exists in the DB
     const user = await this.prisma.user.findUnique({
       select: { id: true },
@@ -37,12 +50,9 @@ export class SubscribersService {
 
     // TODO verify that user has email settings setup
 
-    const mailJetApiKey = '';
-    const mailJetSecretKey = '';
-
     const mailjet = new Mailjet({
-      apiKey: mailJetApiKey,
-      apiSecret: mailJetSecretKey,
+      apiKey: this.configService.get('MAILJET_API_KEY'),
+      apiSecret: this.configService.get('MAILJET_API_SECRET'),
     });
 
     const newContact: Contact.IPostContactBody = {
@@ -59,6 +69,7 @@ export class SubscribersService {
       }
     }
     // TODO create subscriber via Mail API in right list
+
     return {
       createdAt: new Date(),
       email,
