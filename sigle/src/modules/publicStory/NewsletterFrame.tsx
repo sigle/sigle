@@ -1,6 +1,6 @@
 import { FormikErrors, useFormik } from 'formik';
 import { useState } from 'react';
-import { EnvelopePlusIcon } from '../../icons/EnvelopePlusIcon';
+// import { EnvelopePlusIcon } from '../../icons/EnvelopePlusIcon';
 import {
   Button,
   Flex,
