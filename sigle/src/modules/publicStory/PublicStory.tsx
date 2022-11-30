@@ -251,7 +251,7 @@ export const PublicStory = ({
           story={story}
           settings={settings}
         />
-        <NewsletterFrame siteName={siteName} />
+        <NewsletterFrame stacksAddress={userInfo.address} siteName={siteName} />
         <PoweredBy />
       </PublicStoryContainer>
     </>

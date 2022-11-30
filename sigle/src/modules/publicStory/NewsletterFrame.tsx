@@ -1,6 +1,6 @@
 import { FormikErrors, useFormik } from 'formik';
 import { useState } from 'react';
-import { EnvelopePlusIcon } from '../../icons/EnvelopePlusIcon';
+// import { EnvelopePlusIcon } from '../../icons/EnvelopePlusIcon';
 import {
   Button,
   Flex,
@@ -12,12 +12,18 @@ import {
 import { useFeatureFlags } from '../../utils/featureFlags';
 import { isValidEmail } from '../../utils/regex';
 import { toast } from 'react-toastify';
+import { useCreateSubscribers } from '../../hooks/subscribers';
+import { ApiError } from '../../external/api';
 
 interface NewsletterFrameProps {
+  stacksAddress: string;
   siteName: string | undefined;
 }
 
-export const NewsletterFrame = ({ siteName }: NewsletterFrameProps) => {
+export const NewsletterFrame = ({
+  stacksAddress,
+  siteName,
+}: NewsletterFrameProps) => {
   // temp state to show success state of form
   const [isSubscribed, setIsSubscribed] = useState(false);
   const { isExperimentalNewsletterEnabled } = useFeatureFlags();
@@ -46,14 +52,33 @@ export const NewsletterFrame = ({ siteName }: NewsletterFrameProps) => {
     },
     validateOnBlur: false,
     validateOnChange: false,
-    onSubmit: async (values, { setSubmitting, validateForm }) => {
+    onSubmit: async (values, { setErrors, validateForm }) => {
+      setErrors({});
       validateForm();
-      formik.resetForm({ values: { ...values } });
-      setIsSubscribed(true);
+      try {
+        createSubscribers({ stacksAddress, email: values.email });
+      } catch (error) {
+        console.error(error);
+        toast.error(error);
+      }
+    },
+  });
+
+  const { mutate: createSubscribers } = useCreateSubscribers({
+    onSuccess: () => {
       toast.success(`You successfully subscribed to ${siteName}'s newsletter`, {
         autoClose: 7000,
       });
-      setSubmitting(false);
+      formik.setSubmitting(false);
+      setIsSubscribed(true);
+    },
+    onError: (error: Error | ApiError) => {
+      let errorMessage = error.message;
+      if (error instanceof ApiError && error.body.message) {
+        errorMessage = error.body.message;
+      }
+      formik.setErrors({ email: errorMessage });
+      formik.setSubmitting(false);
     },
   });
 
@@ -64,7 +89,7 @@ export const NewsletterFrame = ({ siteName }: NewsletterFrameProps) => {
           {isSubscribed ? (
             <Flex direction="column" align="center">
               <Typography size="subheading">{`You have subscribed to ${siteName}'s newsletter.`}</Typography>
-              <Button
+              {/* <Button
                 css={{ gap: '$1' }}
                 color="orange"
                 variant="outline"
@@ -80,7 +105,7 @@ export const NewsletterFrame = ({ siteName }: NewsletterFrameProps) => {
               >
                 <EnvelopePlusIcon />
                 Unsubscribe
-              </Button>
+              </Button> */}
             </Flex>
           ) : (
             <Flex
@@ -105,6 +130,7 @@ export const NewsletterFrame = ({ siteName }: NewsletterFrameProps) => {
                 <FormInput
                   name="email"
                   type="email"
+                  autoComplete="off"
                   maxLength={100}
                   value={formik.values.email}
                   onChange={formik.handleChange}
@@ -114,7 +140,7 @@ export const NewsletterFrame = ({ siteName }: NewsletterFrameProps) => {
                   Subscribe
                 </Button>
               </FormControlGroup>
-              {formik.errors.email && !formik.values.email && (
+              {formik.errors.email && (
                 <FormHelperError
                   css={{
                     mt: '$2',
