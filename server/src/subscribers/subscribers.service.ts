@@ -7,6 +7,16 @@ import { ConfigService } from '@nestjs/config';
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const Mailjet = require('node-mailjet');
 
+// Production list
+const allowedNewsletterUsers = [
+  // sigle.btc
+  'SP2EVYKET55QH40RAZE5PVZ363QX0X6BSRP4C7H0W',
+];
+if (process.env.NODE_ENV === 'development') {
+  // leopradel.btc
+  allowedNewsletterUsers.push('SP3VCX5NFQ8VCHFS9M6N40ZJNVTRT4HZ62WFH5C4Q');
+}
+
 @Injectable()
 export class SubscribersService {
   constructor(
@@ -17,10 +27,7 @@ export class SubscribersService {
   async create({ stacksAddress, email }: CreateSubscriberDto) {
     // TODO - remove this check once newsletter feature is ready
     // Limit who can access this feature
-    if (
-      this.configService.get('NODE_ENV') === 'production' &&
-      stacksAddress !== 'SP3VCX5NFQ8VCHFS9M6N40ZJNVTRT4HZ62WFH5C4Q'
-    ) {
+    if (!allowedNewsletterUsers.includes(stacksAddress)) {
       throw new BadRequestException('Not activated.');
     }
 
