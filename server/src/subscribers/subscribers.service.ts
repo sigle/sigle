@@ -3,7 +3,12 @@ import { validate } from 'deep-email-validator';
 import { fetch } from 'undici';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateSubscriberDto } from './dto/createSubscriber.dto';
-import { Contact, ContactList } from 'node-mailjet';
+import {
+  BulkContactManagement,
+  Contact,
+  ContactList,
+  ContactSubscription,
+} from 'node-mailjet';
 import { ConfigService } from '@nestjs/config';
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const Mailjet = require('node-mailjet');
@@ -89,18 +94,21 @@ export class SubscribersService {
         .get('contactslist?Name=sigle', { version: 'v3' })
         .request();
       const listId = data.body.Data[0].ID;
+      const contactList: ContactSubscription.IPostContactManageContactsListsBody =
+        {
+          ContactsLists: [
+            {
+              ListID: listId,
+              Action:
+                'addnoforce' as BulkContactManagement.ManageContactsAction.AddNoForce,
+            },
+          ],
+        };
       await mailjet
         .post('contact')
         .id(contactId)
         .action('managecontactslists')
-        .request({
-          ContactsLists: [
-            {
-              ListID: listId,
-              Action: 'addnoforce',
-            },
-          ],
-        });
+        .request(contactList);
     }
 
     return {
