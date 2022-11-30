@@ -1,6 +1,5 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { validate } from 'deep-email-validator';
-import { fetch } from 'undici';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateSubscriberDto } from './dto/createSubscriber.dto';
 import {
