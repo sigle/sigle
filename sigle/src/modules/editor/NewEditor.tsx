@@ -18,6 +18,8 @@ import { UnpublishDialog } from './UnpublishDialog';
 import { PublishedDialog } from './PublishedDialog';
 import { CoverImage } from './CoverImage';
 import { EditorSettings } from './EditorSettings/EditorSettings';
+import { useAuth } from '../auth/AuthContext';
+import { StoriesService } from '../../external/api';
 
 const TitleInput = styled('input', {
   outline: 'transparent',
@@ -44,6 +46,7 @@ interface NewEditorProps {
 
 export const NewEditor = ({ story }: NewEditorProps) => {
   const router = useRouter();
+  const { isLegacy } = useAuth();
   const editorRef = useRef<{ getEditor: () => Editor | null }>(null);
   const [loadingSave, setLoadingSave] = useState(false);
   const [newStory, setNewStory] = useState(story);
@@ -126,6 +129,11 @@ export const NewEditor = ({ story }: NewEditorProps) => {
       setShowPublishedDialog(true);
       Fathom.trackGoal(Goals.PUBLISH, 0);
       posthog.capture('publish-story', { id: story.id });
+      if (!isLegacy) {
+        await StoriesService.storiesControllerPublish({
+          requestBody: { id: story.id },
+        });
+      }
     } catch (error) {
       console.error(error);
       toast.error(error.message);
@@ -166,6 +174,11 @@ export const NewEditor = ({ story }: NewEditorProps) => {
       setNewStory({ ...newStory, type: 'private' });
       toast.success('Story unpublished');
       posthog.capture('unpublish-story', { id: story.id });
+      if (!isLegacy) {
+        await StoriesService.storiesControllerUnpublish({
+          requestBody: { id: story.id },
+        });
+      }
     } catch (error) {
       console.error(error);
       toast.error(error.message);

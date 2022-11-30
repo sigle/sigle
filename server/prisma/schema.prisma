@@ -20,6 +20,7 @@ model User {
   subscriptions  Subscription[]
   followers      Follows[]      @relation("following")
   following      Follows[]      @relation("follower")
+  Story          Story[]
 }
 
 model Subscription {
@@ -36,6 +37,18 @@ model Subscription {
 enum SubscriptionStatus {
   INACTIVE
   ACTIVE
+}
+
+model Story {
+  id            String    @id @default(uuid())
+  gaiaId        String
+  userId        String
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  publishedAt   DateTime?
+  unpublishedAt DateTime?
+  deletedAt     DateTime?
+  user          User      @relation(fields: [userId], references: [id])
 }
 
 // Gaia data
