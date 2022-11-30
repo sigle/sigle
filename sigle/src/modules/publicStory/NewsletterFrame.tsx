@@ -7,13 +7,24 @@ import {
   FormControlGroup,
   FormHelperError,
   FormInput,
+  LoadingSpinner,
   Typography,
 } from '../../ui';
-import { useFeatureFlags } from '../../utils/featureFlags';
 import { isValidEmail } from '../../utils/regex';
 import { toast } from 'react-toastify';
 import { useCreateSubscribers } from '../../hooks/subscribers';
 import { ApiError } from '../../external/api';
+import { sigleConfig } from '../../config';
+
+// Production list
+const allowedNewsletterUsers = [
+  // sigle.btc
+  'SP2EVYKET55QH40RAZE5PVZ363QX0X6BSRP4C7H0W',
+];
+if (sigleConfig.env === 'development') {
+  // leopradel.btc
+  allowedNewsletterUsers.push('SP3VCX5NFQ8VCHFS9M6N40ZJNVTRT4HZ62WFH5C4Q');
+}
 
 interface NewsletterFrameProps {
   stacksAddress: string;
@@ -26,7 +37,6 @@ export const NewsletterFrame = ({
 }: NewsletterFrameProps) => {
   // temp state to show success state of form
   const [isSubscribed, setIsSubscribed] = useState(false);
-  const { isExperimentalNewsletterEnabled } = useFeatureFlags();
 
   const formik = useFormik<{ email: string }>({
     initialValues: {
@@ -64,32 +74,38 @@ export const NewsletterFrame = ({
     },
   });
 
-  const { mutate: createSubscribers } = useCreateSubscribers({
-    onSuccess: () => {
-      toast.success(`You successfully subscribed to ${siteName}'s newsletter`, {
-        autoClose: 7000,
-      });
-      formik.setSubmitting(false);
-      setIsSubscribed(true);
-    },
-    onError: (error: Error | ApiError) => {
-      let errorMessage = error.message;
-      if (error instanceof ApiError && error.body.message) {
-        errorMessage = error.body.message;
-      }
-      formik.setErrors({ email: errorMessage });
-      formik.setSubmitting(false);
-    },
-  });
+  const { mutate: createSubscribers, isLoading: isLoadingCreateSubscriber } =
+    useCreateSubscribers({
+      onSuccess: () => {
+        toast.success(
+          `You successfully subscribed to ${siteName}'s newsletter`,
+          {
+            autoClose: 7000,
+          }
+        );
+        formik.setSubmitting(false);
+        setIsSubscribed(true);
+      },
+      onError: (error: Error | ApiError) => {
+        let errorMessage = error.message;
+        if (error instanceof ApiError && error.body.message) {
+          errorMessage = error.body.message;
+        }
+        formik.setErrors({ email: errorMessage });
+        formik.setSubmitting(false);
+      },
+    });
+
+  if (!allowedNewsletterUsers.includes(stacksAddress)) {
+    return null;
+  }
 
   return (
     <Flex direction="column" gap="7">
-      {isExperimentalNewsletterEnabled && (
-        <>
-          {isSubscribed ? (
-            <Flex direction="column" align="center">
-              <Typography size="subheading">{`You have subscribed to ${siteName}'s newsletter.`}</Typography>
-              {/* <Button
+      {isSubscribed ? (
+        <Flex direction="column" align="center">
+          <Typography size="subheading">{`You have subscribed to ${siteName}'s newsletter.`}</Typography>
+          {/* <Button
                 css={{ gap: '$1' }}
                 color="orange"
                 variant="outline"
@@ -106,53 +122,58 @@ export const NewsletterFrame = ({
                 <EnvelopePlusIcon />
                 Unsubscribe
               </Button> */}
-            </Flex>
-          ) : (
-            <Flex
-              as="form"
-              onSubmit={formik.handleSubmit}
-              direction="column"
-              align="center"
+        </Flex>
+      ) : (
+        <Flex
+          as="form"
+          onSubmit={formik.handleSubmit}
+          direction="column"
+          align="center"
+          css={{
+            backgroundColor: '$gray2',
+            py: '$8',
+            br: 20,
+          }}
+        >
+          <Typography css={{ fontWeight: 600, my: 0 }} size="h4">
+            Ready for more?
+          </Typography>
+          <Typography
+            size="subheading"
+            css={{ my: 0, mb: '$5' }}
+          >{`Subscribe to ${siteName} and receive all of their stories directly in your mailbox`}</Typography>
+          <FormControlGroup>
+            <FormInput
+              name="email"
+              type="email"
+              autoComplete="off"
+              maxLength={100}
+              value={formik.values.email}
+              onChange={formik.handleChange}
+              placeholder="johndoe@gmail.com"
+            />
+            {isLoadingCreateSubscriber ? (
+              <Button type="submit" size="lg" disabled>
+                &nbsp;
+                <LoadingSpinner />
+              </Button>
+            ) : (
+              <Button type="submit" size="lg">
+                Subscribe
+              </Button>
+            )}
+          </FormControlGroup>
+          {formik.errors.email && (
+            <FormHelperError
               css={{
-                backgroundColor: '$gray2',
-                py: '$8',
-                br: 20,
+                mt: '$2',
+                mb: 0,
               }}
             >
-              <Typography css={{ fontWeight: 600, my: 0 }} size="h4">
-                Ready for more?
-              </Typography>
-              <Typography
-                size="subheading"
-                css={{ my: 0, mb: '$5' }}
-              >{`Subscribe to ${siteName} and receive all of their stories directly in your mailbox`}</Typography>
-              <FormControlGroup>
-                <FormInput
-                  name="email"
-                  type="email"
-                  autoComplete="off"
-                  maxLength={100}
-                  value={formik.values.email}
-                  onChange={formik.handleChange}
-                  placeholder="johndoe@gmail.com"
-                />
-                <Button type="submit" size="lg">
-                  Subscribe
-                </Button>
-              </FormControlGroup>
-              {formik.errors.email && (
-                <FormHelperError
-                  css={{
-                    mt: '$2',
-                    mb: 0,
-                  }}
-                >
-                  {formik.errors.email}
-                </FormHelperError>
-              )}
-            </Flex>
+              {formik.errors.email}
+            </FormHelperError>
           )}
-        </>
+        </Flex>
       )}
     </Flex>
   );
