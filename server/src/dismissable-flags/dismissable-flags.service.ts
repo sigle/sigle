@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
-import { PrismaService } from '../prisma.service';
+import { PrismaService } from '../prisma/prisma.service';
 
 export enum DismissableFlags {
   onboarding = 'onboarding',
