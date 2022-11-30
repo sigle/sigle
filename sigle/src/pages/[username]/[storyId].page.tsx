@@ -12,6 +12,7 @@ import { PublicStory } from '../../modules/publicStory/PublicStory';
 import { Story, SettingsFile } from '../../types';
 import { migrationStory } from '../../utils/migrations/story';
 import { sigleConfig } from '../../config';
+import { redirectUsernameMap } from '../../utils/redirectUsername';
 
 interface PublicStoryPageProps {
   statusCode: number | boolean;
@@ -75,6 +76,17 @@ export const getServerSideProps: GetServerSideProps<
 > = async ({ req, res, params }) => {
   const username = params?.username as string;
   const storyId = params?.storyId as string;
+
+  // Redirect blog when user move from .id.blocktack to .btc
+  if (redirectUsernameMap[username]) {
+    return {
+      redirect: {
+        statusCode: 301,
+        destination: `/${redirectUsernameMap[username]}/${storyId}`,
+      },
+      props: {},
+    };
+  }
 
   let file: Story | null = null;
   let settings: SettingsFile | null = null;

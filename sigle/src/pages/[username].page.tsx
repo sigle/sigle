@@ -11,6 +11,7 @@ import { sigleConfig } from '../config';
 import { StoryFile, SettingsFile } from '../types';
 import Error from './_error.page';
 import { fetchPublicStories, fetchSettings } from '../utils/gaia/fetch';
+import { redirectUsernameMap } from '../utils/redirectUsername';
 
 interface PublicHomePageProps {
   statusCode: number | boolean;
@@ -39,6 +40,17 @@ export const getServerSideProps: GetServerSideProps<
   PublicHomePageProps
 > = async ({ req, res, params }) => {
   const username = params?.username as string;
+
+  // Redirect blog when user move from .id.blocktack to .btc
+  if (redirectUsernameMap[username]) {
+    return {
+      redirect: {
+        permanent: true,
+        destination: `/${redirectUsernameMap[username]}`,
+      },
+      props: {},
+    };
+  }
 
   let file: StoryFile | null = null;
   let settings: SettingsFile | null = null;
