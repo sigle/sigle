@@ -45,7 +45,7 @@ export const getServerSideProps: GetServerSideProps<
   if (redirectUsernameMap[username]) {
     return {
       redirect: {
-        permanent: true,
+        statusCode: 301,
         destination: `/${redirectUsernameMap[username]}`,
       },
       props: {},
