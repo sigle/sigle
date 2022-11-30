@@ -8,15 +8,17 @@ import { sigleConfig } from '../../config';
 import { TipTapEditor } from '../editor/TipTapEditor';
 import { styled } from '../../stitches.config';
 import { Box, Container, Flex, Typography } from '../../ui';
-import { PoweredBy } from './PoweredBy';
+import { NewsletterFrame } from './NewsletterFrame';
 import { getTextFromHtml } from '../editor/utils/getTextFromHtml';
 import { AppHeader } from '../layout/components/AppHeader';
 import format from 'date-fns/format';
-import Link from 'next/link';
 import { ShareButtons } from './ShareButtons';
 import { generateAvatar } from '../../utils/boringAvatar';
+import { ProfileCard } from '../profileCard/ProfileCard';
+import { PoweredBy } from './PoweredBy';
 
 const ProfileImageContainer = styled('div', {
+  cursor: 'pointer',
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'center',
@@ -29,8 +31,6 @@ const ProfileImageContainer = styled('div', {
 const ProfileImage = styled('img', {
   width: 'auto',
   height: '100%',
-  maxWidth: 48,
-  maxHeight: 48,
   objectFit: 'cover',
 });
 
@@ -117,6 +117,7 @@ export const PublicStory = ({
     username: string;
     storyId: string;
   };
+
   const storyReadingTime = useMemo(
     () =>
       story.content ? readingTime(getTextFromHtml(story.content)) : undefined,
@@ -137,6 +138,7 @@ export const PublicStory = ({
       <NextSeo
         title={seoTitle}
         description={story.metaDescription}
+        canonical={story.canonicalUrl}
         openGraph={{
           type: 'website',
           url: seoUrl,
@@ -152,6 +154,15 @@ export const PublicStory = ({
           site: '@sigleapp',
           cardType: seoImage ? 'summary_large_image' : 'summary',
         }}
+        additionalLinkTags={[
+          {
+            rel: 'alternate',
+            type: 'application/rss+xml',
+            // @ts-expect-error title is missing in next-seo
+            title: seoTitle,
+            href: `${sigleConfig.appUrl}/api/feed/${userInfo.username}`,
+          },
+        ]}
       />
 
       <AppHeader />
@@ -173,10 +184,14 @@ export const PublicStory = ({
           css={{ mb: '$7' }}
           className="not-prose"
         >
-          <Link href="/[username]" as={`/${username}`} passHref>
-            <Flex as="a" align="center" gap="3">
+          <Flex align="center" gap="3">
+            <ProfileCard settings={settings} userInfo={userInfo}>
               <ProfileImageContainer>
                 <ProfileImage
+                  css={{
+                    maxWidth: 48,
+                    maxHeight: 48,
+                  }}
                   src={
                     settings?.siteLogo
                       ? settings.siteLogo
@@ -184,24 +199,28 @@ export const PublicStory = ({
                   }
                 />
               </ProfileImageContainer>
-              <Box>
-                <Typography size="subheading">{siteName}</Typography>
-                <Typography
-                  size="subheading"
-                  css={{
-                    display: 'flex',
-                    gap: '$2',
-                    color: '$gray9',
-                    mt: '$1',
-                  }}
-                >
-                  {format(story.createdAt, 'MMM dd')}
-                  <span>•</span>
-                  <span>{storyReadingTime?.text}</span>
+            </ProfileCard>
+            <Flex direction="column">
+              <ProfileCard settings={settings} userInfo={userInfo}>
+                <Typography css={{ fontWeight: 600 }} as="a" size="subheading">
+                  {siteName}
                 </Typography>
-              </Box>
+              </ProfileCard>
+              <Typography
+                size="subheading"
+                css={{
+                  display: 'flex',
+                  gap: '$2',
+                  color: '$gray9',
+                  mt: '$1',
+                }}
+              >
+                {format(story.createdAt, 'MMM dd')}
+                <span>•</span>
+                <span>{storyReadingTime?.text}</span>
+              </Typography>
             </Flex>
-          </Link>
+          </Flex>
           <ShareButtons username={username} story={story} settings={settings} />
         </Flex>
         <h1 className="sigle-title">{story.title}</h1>
@@ -232,6 +251,7 @@ export const PublicStory = ({
           story={story}
           settings={settings}
         />
+        <NewsletterFrame stacksAddress={userInfo.address} siteName={siteName} />
         <PoweredBy />
       </PublicStoryContainer>
     </>

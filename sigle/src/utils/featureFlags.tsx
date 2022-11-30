@@ -1,18 +1,23 @@
 import { createContext, useContext, useEffect, useState } from 'react';
 
-const experimentalAnalyticsPageKey = 'sigle-experimental-analytics-page';
-const experimentalAnalyticsParam = 'experimentalAnalyticsPage';
+/**
+ * Usage: https://app.sigle.io?<nameFeatureFlag>=true
+ * Usage example: https://app.sigle.io?experimentalFollow=true
+ */
+
 const experimentalFollowKey = 'sigle-experimental-follow';
 const experimentalFollowParam = 'experimentalFollow';
+const experimentalNewsletterKey = 'sigle-experimental-newsletter';
+const experimentalNewsletterParam = 'experimentalNewsletter';
 
 interface FeatureFlagsOptions {
-  isExperimentalAnalyticsPageEnabled: boolean;
   isExperimentalFollowEnabled: boolean;
+  isExperimentalNewsletterEnabled: boolean;
 }
 
 const FeatureFlagsContext = createContext<FeatureFlagsOptions>({
-  isExperimentalAnalyticsPageEnabled: false,
   isExperimentalFollowEnabled: false,
+  isExperimentalNewsletterEnabled: false,
 });
 
 interface FeatureFlagsProviderProps {
@@ -21,8 +26,8 @@ interface FeatureFlagsProviderProps {
 
 export function FeatureFlagsProvider({ children }: FeatureFlagsProviderProps) {
   const [featureToggles, setFeatureToggles] = useState<FeatureFlagsOptions>({
-    isExperimentalAnalyticsPageEnabled: false,
     isExperimentalFollowEnabled: false,
+    isExperimentalNewsletterEnabled: false,
   });
 
   /**
@@ -30,27 +35,28 @@ export function FeatureFlagsProvider({ children }: FeatureFlagsProviderProps) {
    * an ssr missmatch.
    */
   useEffect(() => {
-    let isExperimentalAnalyticsPageEnabled =
-      localStorage.getItem(experimentalAnalyticsPageKey) === 'true';
     let isExperimentalFollowEnabled =
       localStorage.getItem(experimentalFollowKey) === 'true';
+    let isExperimentalNewsletterEnabled =
+      localStorage.getItem(experimentalNewsletterKey) === 'true';
 
     // Enable feature flags from the url params
     const query = new URL(window.location.href).searchParams;
     const entries = Object.fromEntries(new URLSearchParams(query));
 
-    if (entries[experimentalAnalyticsParam] === 'true') {
-      localStorage.setItem(experimentalAnalyticsPageKey, 'true');
-      isExperimentalAnalyticsPageEnabled = true;
-    }
     if (entries[experimentalFollowParam] === 'true') {
       localStorage.setItem(experimentalFollowKey, 'true');
       isExperimentalFollowEnabled = true;
     }
 
+    if (entries[experimentalNewsletterParam] === 'true') {
+      localStorage.setItem(experimentalNewsletterKey, 'true');
+      isExperimentalNewsletterEnabled = true;
+    }
+
     setFeatureToggles({
-      isExperimentalAnalyticsPageEnabled,
       isExperimentalFollowEnabled,
+      isExperimentalNewsletterEnabled,
     });
   }, []);
 

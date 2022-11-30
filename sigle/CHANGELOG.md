@@ -1,5 +1,143 @@
 # @sigle/app
 
+## 1.5.0
+
+### Minor Changes
+
+- 72227af: Add twitter extension to the editor.
+- 252f151: Add bubble menu to mobile toolbar.
+- 5b4d49a: Updates floating menu items font size.
+  Adds label for basic commands section.
+  Adds plain text item to menu.
+  Reorders menu items.
+- 91f7cea: Improve the experience of drag and drop for story cover image.
+- 98f14ed: Update editor placeholder text on mobile.
+- 58607f4: Add drag and drop to the editor. You can now upload one to many images directly.
+- 09ed2ce: Update user card styles to be more responsive on mobile views.
+
+### Patch Changes
+
+- 010410e: Fix SSR issue when rendering the editor.
+- a6c5f0c: Fix sharing post on Twitter with special chars.
+- bd280d7: Add horizontal scroll on compare plans table for mobile views.
+- f57ba15: Fix Plain Text node not activating on mobile.
+- 2093d2f: Fix cover images exceeding width of the page on mobile.
+  Make editor header full width of the container.
+- 195be81: Fix issue with mobile header logo not navigating back to drafts when on a different route.
+- 57da686: Fix follow counter not updating after follow or unfollow action.
+- 7663f70: Fix missing box shadow for floating menu on light mode.
+- 454bede: Add missing accordion menu to tablet views.
+- ca66a8b: Fix issue with interactive styles still showing on images in public stories.
+- e0ba667: Update plus icon styling.
+- 7e03000: Fix ssr issue where articles where not rendered properly.
+- 6aa23a5: Make profile page responsive on mobile.
+- e8591d5: Add card for pen run contest.
+- a9c081a: Add boring avatar as a fallback option when sharing a profile page without a PFP set by the user.
+  Encode image URL to display images with special characters correctly.
+- c103bf0: Fix editor toolbar scroll issue on mobile.
+- 92c8820: Update tooltip styles.
+  Update subparagraph line height value.
+- 24e60ba: Add prompt to explore and find writers if a user has no content on their feed.
+  Update style of page heading.
+- d0b0aeb: Update word count font size.
+  Update title placeholder color.
+
+## 1.4.0
+
+### Minor Changes
+
+- 696ef4f: Display The Explorer Guild creator + badge on the profile page of a user.
+- a43d4ed: Redesign the header dropdown menu.
+  Add profile page to the dashboard.
+- c004528: Add social following system, you can follow other users and see their posts in your feed.
+- f17096d: Add explore page to discover writers using the platform.
+- ad2f94f: Add edit button to profile page.
+- 1c8f8dc: Improve the login flow by including steps with progress indicators.
+- 9fdc428: Make editor header responsive for mobile view.
+- 9312e2f: Improve the editor placeholder behavior to give more context.
+- 8e5e096: Improve editor slash command, scroll with keyboard navigation, press escape to close.
+- 361ae92: Add mobile header with drag-to-close functionality.
+- 5a41079: Show card displaying user information when hovering their name or avatar on the article page.
+- 4320ab3: Add RSS auto-discovery for all the blogs. So browser and RSS readers can automatically find the RSS feed of the blog.
+- 4217167: Add following and follower tabs to the profile page.
+
+### Patch Changes
+
+- 0db7bcd: Fix issue with the profile tab not navigating to profile page.
+- fceff6f: Upgrade next-themes to 0.2.0.
+- e2a7843: Upgrade radix packages to v1.
+- 1df1356: Fix vercel preview env.
+- 0d1ae50: Fix profile image not centered on profile page.
+- 074786f: Add infinite loading to explore page.
+- 94326a6: Enable react strict mode.
+- b6c609b: Upgrade react to v18.
+- 41c1a3f: Generate openapi typescript client for type safe calls to the Sigle api.
+- dfae2fc: Update react-query to v4.
+- 1cf7a95: Upgrade tiptap packages.
+- c7a1ccc: Update typography styles for mobile and tablet views.
+
+## 1.3.0
+
+### Minor Changes
+
+- 6764f3b: Add analytics, you can now track how your content performs.
+- 47eff66: New settings layout and first version of the plan page.
+- dea06e3: Allow users to add their website link and twitter handle in the settings, to be shown on the new profile pages.
+- 1cb8aa1: Enable Hiro wallet login for everyone and change login for new login flow, step 1.
+- 3c0b423: Redesign the story cards on the public profile page.
+- fa801a0: Update profile image upload component in settings.
+  Update App header to include a pfp next to username in the dropdown trigger.
+  Update public story to have pfp alongside username and date.
+- 84bf1ac: Redesign the public profile page by adding a new stories tab and a copyable stx address to bio.
+- 1fe1fc1: Custom SEO when sharing profile pages.
+
+### Patch Changes
+
+- e8cdf22: (Beta) Compare plans page with table including features and tiers.
+- cfee6cc: (Beta) Create the analytics referrer API.
+- e20417c: Create new Typography UI component.
+- a13149f: Fix a react ssr hydratation issue when using feature flags.
+- fc5c542: Fix issue when selecting all in the stats view.
+- e1a904a: Upgrade stacks.js dependencies to v4.3.0.
+- 134aa5a: Update the delay duration of the Tooltip on the Compare Plans page.
+- e087b2c: Fix the dialog trigger no longer appearing on the editor.
+- cdf1e4d: Fix invalid website issue in the settings when saving.
+- e84890e: (Beta) Create the analytics historical API.
+- bdc959e: Fix chart issue when values are close by changing the curve.
+- 9ccdf5a: (Beta) Fix height issues with referrers frame.
+- b2a8c4c: Fix image not updating properly when saving.
+- 693a6f9: (Beta) Allow user to sign a message to authenticate requests sent to the server.
+- 725ac37: Remove babel and styled components and use swc as a compiler.
+- 2459689: (Beta) Show real analytics data.
+- 53a16fc: Return user stacks info for the user public pages.
+- 03eda89: Add steps to the login page for signing the message.
+- 6e6fe0d: (Beta) Users can now decide to login with the Hiro web wallet.
+- 269dc65: (Beta) Replace error component in analytics with design system component.
+- f49423b: Move `Write a story` CTA to sidebar menu.
+- 3883a37: (Beta) Create analytics story performance API.
+- ce01fde: (Beta) Creator plus plan page in the plans.
+- 5305860: (Beta) Add compare plans page containing a modal where users can link their NFTs to access the creator plus plan.
+- bf2bb5a: Migrate analytics API to server.
+- 0a16488: (Beta) Add tabbable graph views to display views and visits stats for a user's blog.
+- a91dcd2: Update settings form components.
+- 6f9a2ce: (Beta) Add locked view for if a user doesn't have an Explorer Guild NFT in their wallet.
+- 0fcf76a: Display custom username in the header and on stories, or fallback to default username.
+- 124ff13: Show error for Blockstack connect without usernames.
+- ccc1bd4: (Beta) Display total views and visitors for the different time periods.
+- 119f119: Refactor pages testing structure.
+- 2b1c0ca: Improve Stacks next.js config to remove polyfills from bundle size.
+- c0a5720: (Beta) Create UI with dummy data for referrers on analytics page.
+- ffbe6c2: Fix message signature broken by new Hiro release.
+- 826a78e: Fix source of the issue with editor header appearing over settings dialog.
+- b739e8c: Fix validation when website field is empty in the settings.
+- 808c04e: (Beta) Add analytics page for individual stories.
+  (Beta) Replace placeholder data with data coming from API for story views and referrers.
+- 566e76b: Fix image issue in the rss feed.
+- 50753f2: Fix header width on profile page.
+- 88348ca: (Beta) Add analytics page containing a paginated frame for published stories.
+- f6e01e8: Update SEO meta tags.
+- 1f1d696: Detect and show guide when BNS missconfiguration is detected.
+
 ## 1.2.0
 
 ### Minor Changes

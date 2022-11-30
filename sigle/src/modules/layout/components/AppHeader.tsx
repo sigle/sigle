@@ -3,56 +3,31 @@ import {
   TwitterLogoIcon,
   DiscordLogoIcon,
   SunIcon,
+  HamburgerMenuIcon,
 } from '@radix-ui/react-icons';
 import Link from 'next/link';
 import Image from 'next/image';
-import { useRouter } from 'next/router';
-import { useState } from 'react';
-import { toast } from 'react-toastify';
-import { signOut, useSession } from 'next-auth/react';
-import { useQueryClient } from 'react-query';
+import { useSession } from 'next-auth/react';
 import { useTheme } from 'next-themes';
 import { styled } from '../../../stitches.config';
-import {
-  Box,
-  Button,
-  Container,
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-  Flex,
-  IconButton,
-  Typography,
-} from '../../../ui';
+import { Box, Button, Container, Flex, IconButton } from '../../../ui';
+import { useAuth } from '../../auth/AuthContext';
+import { sigleConfig } from '../../../config';
+import { useGetUserMe } from '../../../hooks/users';
+import { HeaderDropdown } from './HeaderDropdown';
+import { MobileHeader } from './MobileHeader';
+import { useState } from 'react';
 import {
   createNewEmptyStory,
   getStoriesFile,
   saveStoriesFile,
   saveStoryFile,
 } from '../../../utils';
-import * as Fathom from 'fathom-client';
-import { useAuth } from '../../auth/AuthContext';
-import { Goals } from '../../../utils/fathom';
-import { sigleConfig } from '../../../config';
-import { userSession } from '../../../utils/blockstack';
 import { createSubsetStory } from '../../editor/utils';
-import { StyledChevron } from '../../../ui/Accordion';
-import { generateAvatar } from '../../../utils/boringAvatar';
-import { useGetUserSettings } from '../../../hooks/appData';
-import { useGetUserMe } from '../../../hooks/users';
-import { useFeatureFlags } from '../../../utils/featureFlags';
-
-const ImageContainer = styled('div', {
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'center',
-  overflow: 'hidden',
-  width: 24,
-  height: 24,
-  br: '$1',
-});
+import * as Fathom from 'fathom-client';
+import { Goals } from '../../../utils/fathom';
+import { toast } from 'react-toastify';
+import { useRouter } from 'next/router';
 
 const Header = styled('header', Container, {
   display: 'flex',
@@ -67,14 +42,34 @@ const Header = styled('header', Container, {
 });
 
 export const AppHeader = () => {
-  const { data: settings } = useGetUserSettings();
   const { resolvedTheme, setTheme } = useTheme();
-  const { user } = useAuth();
+  const { user, isLegacy } = useAuth();
   const { status } = useSession();
-  const router = useRouter();
-  const queryClient = useQueryClient();
-  const { isExperimentalFollowEnabled } = useFeatureFlags();
+  const [showMobileHeaderDialog, setShowMobileHeaderDialog] = useState(false);
   const [loadingCreate, setLoadingCreate] = useState(false);
+  const router = useRouter();
+
+  const handleCreateNewPrivateStory = async () => {
+    setLoadingCreate(true);
+    try {
+      const storiesFile = await getStoriesFile();
+      const story = createNewEmptyStory();
+
+      storiesFile.stories.unshift(
+        createSubsetStory(story, { plainContent: '' })
+      );
+
+      await saveStoriesFile(storiesFile);
+      await saveStoryFile(story);
+
+      Fathom.trackGoal(Goals.CREATE_NEW_STORY, 0);
+      router.push('/stories/[storyId]', `/stories/${story.id}`);
+    } catch (error) {
+      console.error(error);
+      toast.error(error.message);
+      setLoadingCreate(false);
+    }
+  };
 
   /**
    * This query is used to register the user in the DB. As the header is part of all the
@@ -101,70 +96,58 @@ export const AppHeader = () => {
       break;
   }
 
-  const handleCreateNewPrivateStory = async () => {
-    setLoadingCreate(true);
-    try {
-      const storiesFile = await getStoriesFile();
-      const story = createNewEmptyStory();
+  const handleShowMobileHeader = () => setShowMobileHeaderDialog(true);
 
-      storiesFile.stories.unshift(
-        createSubsetStory(story, { plainContent: '' })
-      );
-
-      await saveStoriesFile(storiesFile);
-      await saveStoryFile(story);
-
-      Fathom.trackGoal(Goals.CREATE_NEW_STORY, 0);
-      router.push('/stories/[storyId]', `/stories/${story.id}`);
-    } catch (error) {
-      console.error(error);
-      toast.error(error.message);
-      setLoadingCreate(false);
-    }
-  };
-
-  const handleLogout = () => {
-    queryClient.removeQueries();
-    userSession.signUserOut();
-    signOut();
-  };
-
-  const userAddress =
-    user?.profile.stxAddress.mainnet || user?.profile.stxAddress;
+  const handleCloseMobileHeader = () => setShowMobileHeaderDialog(false);
 
   return (
     <Header>
-      <Flex
-        css={{ width: '100%', '@md': { width: 'auto' } }}
-        justify="between"
-        gap="10"
-        as="nav"
-        align="center"
-      >
-        <Link href="/[username]" as={`/`} passHref>
-          <Flex as="a" css={{ '@lg': { display: 'none' } }}>
-            <Image
-              width={93}
-              height={34}
-              objectFit="cover"
-              src={src}
-              alt="logo"
-            />
-          </Flex>
-        </Link>
+      <Link href="/" passHref>
+        <Box as="a">
+          <Image
+            width={93}
+            height={34}
+            objectFit="cover"
+            src={src}
+            alt="logo"
+          />
+        </Box>
+      </Link>
 
-        <Link href="/" passHref>
-          <Box as="a" css={{ display: 'none', '@lg': { display: 'flex' } }}>
-            <Image
-              width={93}
-              height={34}
-              objectFit="cover"
-              src={src}
-              alt="logo"
-            />
-          </Box>
-        </Link>
+      <Flex gap="2">
+        <Flex
+          css={{
+            display: 'flex',
+            '@md': {
+              display: 'none',
+            },
+          }}
+          gap="5"
+        >
+          <Button
+            disabled={loadingCreate}
+            onClick={handleCreateNewPrivateStory}
+          >
+            {!loadingCreate ? 'Write' : 'Creating...'}
+          </Button>
+          <IconButton
+            css={{
+              '&:hover': {
+                backgroundColor: 'transparent',
+              },
+            }}
+            onClick={handleShowMobileHeader}
+          >
+            <HamburgerMenuIcon />
+          </IconButton>
+
+          <MobileHeader
+            open={showMobileHeaderDialog}
+            onClose={handleCloseMobileHeader}
+          />
+        </Flex>
       </Flex>
+
       <Flex
         css={{
           display: 'none',
@@ -175,87 +158,24 @@ export const AppHeader = () => {
         align="center"
         gap="9"
       >
-        {isExperimentalFollowEnabled && user ? (
+        {user && !isLegacy ? (
           <Link href="/feed" passHref>
-            <Button variant="ghost" as="a">
+            <Button size="sm" variant="ghost" as="a">
               Feed
             </Button>
           </Link>
         ) : null}
+        <Link href="/explore" passHref>
+          <Button size="sm" variant="ghost" as="a">
+            Explore
+          </Button>
+        </Link>
         {user ? (
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button
-                css={{ display: 'flex', gap: '$2', alignItems: 'center' }}
-                size="lg"
-                variant="ghost"
-              >
-                <ImageContainer>
-                  <Box
-                    as="img"
-                    src={
-                      settings?.siteLogo
-                        ? settings.siteLogo
-                        : generateAvatar(userAddress)
-                    }
-                    css={{
-                      width: 'auto',
-                      height: '100%',
-                      maxWidth: 24,
-                      maxHeight: 24,
-                      objectFit: 'cover',
-                    }}
-                  />
-                </ImageContainer>
-                <Typography size="subheading">{user.username}</Typography>
-                <StyledChevron css={{ color: '$gray11' }} />
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent sideOffset={8}>
-              <Button
-                disabled={loadingCreate}
-                onClick={handleCreateNewPrivateStory}
-                size="lg"
-              >
-                {!loadingCreate ? `Write a story` : `Creating new story...`}
-              </Button>
-              <DropdownMenuItem
-                selected={router.pathname === `/${user.username}`}
-                as="a"
-                href={`/${user.username}`}
-                target="_blank"
-              >
-                My blog
-              </DropdownMenuItem>
-              <Link href="/" passHref>
-                <DropdownMenuItem selected={router.pathname === '/'} as="a">
-                  Dashboard
-                </DropdownMenuItem>
-              </Link>
-              <Link href="/settings" passHref>
-                <DropdownMenuItem
-                  selected={router.pathname === '/settings'}
-                  as="a"
-                >
-                  Settings
-                </DropdownMenuItem>
-              </Link>
-              <DropdownMenuSeparator />
-              <DropdownMenuItem onClick={toggleTheme}>
-                Switch theme
-                <IconButton css={{ p: 0 }} as="button">
-                  <SunIcon />
-                </IconButton>
-              </DropdownMenuItem>
-              <DropdownMenuSeparator />
-              <DropdownMenuItem color="red" onClick={handleLogout}>
-                Logout
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
+          <HeaderDropdown />
         ) : (
           <Flex gap="6">
             <IconButton
+              size="sm"
               as="a"
               href={sigleConfig.twitterUrl}
               target="_blank"
@@ -264,6 +184,7 @@ export const AppHeader = () => {
               <TwitterLogoIcon />
             </IconButton>
             <IconButton
+              size="sm"
               as="a"
               href={sigleConfig.discordUrl}
               target="_blank"
@@ -272,6 +193,7 @@ export const AppHeader = () => {
               <DiscordLogoIcon />
             </IconButton>
             <IconButton
+              size="sm"
               as="a"
               href={sigleConfig.githubUrl}
               target="_blank"
@@ -288,7 +210,7 @@ export const AppHeader = () => {
                 Enter App
               </Button>
             </Link>
-            <IconButton as="button" onClick={toggleTheme}>
+            <IconButton size="sm" as="button" onClick={toggleTheme}>
               <SunIcon />
             </IconButton>
           </>

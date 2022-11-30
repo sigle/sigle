@@ -1,5 +1,5 @@
 import { DialogDescription } from '@radix-ui/react-dialog';
-import { useQuery, useQueryClient } from 'react-query';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { NonFungibleTokensApi } from '@stacks/blockchain-api-client';
 import { darkTheme, styled } from '../../../stitches.config';
 import {
@@ -86,7 +86,7 @@ export const SelectNFTDialog = ({
   const { user } = useAuth();
   const cache = useQueryClient();
   const { isLoading: isLoadingUserNFT, data } = useQuery(
-    'get-user-nft',
+    ['get-user-nft'],
     () => {
       const address = user?.profile.stxAddress.mainnet;
       const nftApi = new NonFungibleTokensApi();
@@ -130,6 +130,7 @@ export const SelectNFTDialog = ({
 
   const NFTImageURL = `${sigleConfig.explorerGuildUrl}/nft-images/?image=ar://Z4ygyXm-fERGzKEB2bvE7gx98SHcoaP8qdZQo0Kxm6Y`;
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const subscriptionCreateError: any = createError as Error;
 
   const handleSubmit = () => {
@@ -140,7 +141,7 @@ export const SelectNFTDialog = ({
        * So the elements behind the modal can change.
        */
       onSuccess: () => {
-        cache.invalidateQueries('get-user-subscription');
+        cache.invalidateQueries(['get-user-subscription']);
       },
     });
   };
@@ -159,7 +160,12 @@ export const SelectNFTDialog = ({
       <SelectNFTDialogContent>
         {isSuccess ? (
           <Flex direction="column" align="center" gap="5">
-            <Image src="/static/img/success.gif" width={92} height={92} />
+            <Image
+              src="/static/img/success.gif"
+              alt="Success"
+              width={92}
+              height={92}
+            />
             <Box>
               <DialogTitle asChild>
                 <Typography
@@ -185,7 +191,9 @@ export const SelectNFTDialog = ({
               </DialogDescription>
             </Box>
             <Link href="/" passHref>
-              <Button variant="subtle">Go to dashboard</Button>
+              <Button size="sm" variant="subtle">
+                Go to dashboard
+              </Button>
             </Link>
           </Flex>
         ) : (
@@ -198,6 +206,7 @@ export const SelectNFTDialog = ({
             align="center"
           >
             <IconButton
+              size="sm"
               disabled={currentPage === 1}
               onClick={() => setCurrentPage(currentPage - 1)}
               aria-label="previous page"
@@ -401,6 +410,7 @@ export const SelectNFTDialog = ({
               )}
             </Flex>
             <IconButton
+              size="sm"
               disabled={!hasNextPage}
               onClick={() => setCurrentPage(currentPage + 1)}
               aria-label="page"

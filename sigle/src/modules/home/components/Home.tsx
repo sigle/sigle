@@ -129,7 +129,7 @@ export const Home = ({
         size="h4"
         css={{
           fontWeight: 600,
-          pb: '$8',
+          pb: '$5',
           mb: '$2',
           borderBottom: '1px solid $colors$gray6',
         }}
@@ -158,6 +158,7 @@ export const Home = ({
           }`}</Typography>
           {selectedTab === 'drafts' && (
             <Button
+              size="sm"
               variant="subtle"
               disabled={loadingCreate}
               onClick={handleCreateNewPrivateStory}

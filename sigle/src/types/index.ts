@@ -22,6 +22,7 @@ export interface Story {
   /**
    * JSON representing the slate.js structure of the story
    */
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   content: any;
   /**
    * Version representing the format of the content
@@ -52,6 +53,10 @@ export interface Story {
    * Meta image that will be used for SEO
    */
   metaImage?: string;
+  /**
+   * Canonical URL that will be used for SEO
+   */
+  canonicalUrl?: string;
   /**
    * Is the story featured. A featured story will be displayed in another way in the list
    * it will also always appear first in the list, no matter the created date

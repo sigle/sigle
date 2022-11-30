@@ -3,12 +3,11 @@ import App from 'next/app';
 import Router from 'next/router';
 import Head from 'next/head';
 import * as Fathom from 'fathom-client';
-import PlausibleProvider, { usePlausible } from 'next-plausible';
-import posthog from 'posthog-js';
+import PlausibleProvider from 'next-plausible';
 import { DefaultSeo } from 'next-seo';
 import { ToastContainer } from 'react-toastify';
-import { QueryClient, QueryClientProvider } from 'react-query';
-import { ReactQueryDevtools } from 'react-query/devtools';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { SessionProvider } from 'next-auth/react';
 import NProgress from 'nprogress';
 import 'nprogress/nprogress.css';
@@ -25,6 +24,9 @@ import { AuthProvider } from '../modules/auth/AuthContext';
 import { darkTheme, globalCss } from '../stitches.config';
 import { ThemeProvider } from 'next-themes';
 import { FeatureFlagsProvider } from '../utils/featureFlags';
+import { DesignSystemProvider } from '../ui';
+import { PlausibleTrack } from '../modules/plausible/PlausibleTrack';
+import { PosthogTrack } from '../modules/posthog/PosthogTrack';
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -48,40 +50,6 @@ const FathomTrack = () => {
       });
       Fathom.trackPageview();
     }
-    if (sigleConfig.posthogToken) {
-      posthog.init(sigleConfig.posthogToken, {
-        api_host: 'https://app.posthog.com',
-        persistence: 'localStorage',
-        ip: false,
-      });
-    }
-  }, []);
-
-  return <React.Fragment />;
-};
-
-type EventsPlausible = {
-  pageview: {
-    u: string;
-  };
-};
-
-// Track when page is loaded
-const PlausibleTrack = () => {
-  const plausible = usePlausible<EventsPlausible>();
-
-  useEffect(() => {
-    const trackPlausible = () => {
-      plausible('pageview', { props: { u: window.location.href } });
-    };
-
-    // Track pageview on mount
-    trackPlausible();
-    Router.events.on('routeChangeComplete', trackPlausible);
-
-    return () => {
-      Router.events.off('routeChangeComplete', trackPlausible);
-    };
   }, []);
 
   return <React.Fragment />;
@@ -90,7 +58,6 @@ const PlausibleTrack = () => {
 // Track on each page change
 Router.events.on('routeChangeComplete', () => {
   Fathom.trackPageview();
-  posthog.capture('$pageview');
 });
 
 /**
@@ -146,7 +113,8 @@ export default class MyApp extends App {
     // Workaround for https://github.com/zeit/next.js/issues/8592
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const { err } = this.props as any;
-    const modifiedPageProps = { ...pageProps, err };
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const modifiedPageProps: any = { ...pageProps, err };
 
     const seoTitle = 'Sigle | Where Web3 stories come to life';
     const seoDescription =
@@ -184,24 +152,30 @@ export default class MyApp extends App {
             cardType: 'summary_large_image',
           }}
         />
-        <FathomTrack />
         <PlausibleProvider
           domain="app.sigle.io"
           customDomain="app.sigle.io"
           manualPageviews
         >
+          <FathomTrack />
           <PlausibleTrack />
+          <PosthogTrack />
           <QueryClientProvider client={queryClient}>
             <ReactQueryDevtools initialIsOpen={false} />
             <FeatureFlagsProvider>
-              <SessionProvider session={pageProps.session} refetchInterval={0}>
+              <SessionProvider
+                session={modifiedPageProps.session}
+                refetchInterval={0}
+              >
                 <AuthProvider>
                   <ThemeProvider
                     disableTransitionOnChange
                     attribute="class"
                     value={{ light: 'light-theme', dark: darkTheme.toString() }}
                   >
-                    <Component {...modifiedPageProps} />
+                    <DesignSystemProvider>
+                      <Component {...modifiedPageProps} />
+                    </DesignSystemProvider>
                   </ThemeProvider>
                 </AuthProvider>
               </SessionProvider>

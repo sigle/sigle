@@ -31,7 +31,12 @@ const auth: NextApiHandler = async (req, res) => {
           const result = await siwe.verify({
             signature: credentials?.signature || '',
             domain: process.env.NEXTAUTH_URL,
-            nonce: await getCsrfToken({ req }),
+            nonce:
+              // In preview env, a different nonce is returned, to bypass this issue
+              // we disable nonce check on preview pr
+              process.env.VERCEL_ENV === 'preview'
+                ? undefined
+                : await getCsrfToken({ req }),
           });
 
           if (result.success) {
@@ -55,7 +60,7 @@ const auth: NextApiHandler = async (req, res) => {
   ];
 
   const isDefaultSigninPage =
-    req.method === 'GET' && req.query.nextauth.includes('signin');
+    req.method === 'GET' && req.query.nextauth?.includes('signin');
 
   // Hide Sign-In with Ethereum from default sign page
   if (isDefaultSigninPage) {
@@ -91,8 +96,12 @@ const auth: NextApiHandler = async (req, res) => {
            * We take the default cookies from NextAuth and add our own
            * domain to allow cookies to be shared between subdomains.
            * Eg: https://app.sigle.io needs to be set to .sigle.io
+           * Localhost and vercel preview env just use the hostname directly.
            */
-          domain: hostname == 'localhost' ? hostname : '.' + rootDomain,
+          domain:
+            hostname == 'localhost' || process.env.VERCEL_ENV === 'preview'
+              ? hostname
+              : '.' + rootDomain,
         },
       },
     },

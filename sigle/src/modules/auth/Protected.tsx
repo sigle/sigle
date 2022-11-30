@@ -10,7 +10,7 @@ interface Props {
 
 export const Protected = ({ children }: Props) => {
   const router = useRouter();
-  const { user, loggingIn } = useAuth();
+  const { user, isLegacy, loggingIn } = useAuth();
   const { status } = useSession();
 
   useEffect(() => {
@@ -21,9 +21,10 @@ export const Protected = ({ children }: Props) => {
             `https://stacks-node-api.stacks.co/v1/names/${user.username}`
           );
           const namesJson = (await namesResponse.json()) as {
-            zonefile: string;
+            zonefile?: string;
           };
-          if (namesJson.zonefile === '') {
+          // If the zonefile is non existant or empty the user needs to configure it
+          if (!namesJson.zonefile || namesJson.zonefile === '') {
             router.push('/configure-bns');
           }
         } catch (e) {}
@@ -38,7 +39,9 @@ export const Protected = ({ children }: Props) => {
     return <FullScreenLoading />;
   }
 
-  if (!user) {
+  // If user is not logged in
+  // If non legacy user doesn't have a session
+  if (!user || (!isLegacy && status === 'unauthenticated')) {
     router.push('/login');
     return null;
   }

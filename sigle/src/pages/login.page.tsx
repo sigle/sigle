@@ -1,8 +1,9 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { getCsrfToken, signIn, useSession } from 'next-auth/react';
 import type { RedirectableProviderType } from 'next-auth/providers';
 import * as Fathom from 'fathom-client';
 import posthog from 'posthog-js';
+import { StacksMainnet } from '@stacks/network';
 import { useConnect } from '@stacks/connect-react';
 import { useConnect as legacyUseConnect } from '@stacks/legacy-connect-react';
 import {
@@ -11,6 +12,7 @@ import {
   RocketIcon,
   SunIcon,
   ArrowLeftIcon,
+  CheckIcon,
 } from '@radix-ui/react-icons';
 import { toast } from 'react-toastify';
 import { Goals } from '../utils/fathom';
@@ -20,7 +22,53 @@ import { useRouter } from 'next/router';
 import { useAuth } from '../modules/auth/AuthContext';
 import { SignInWithStacksMessage } from '../modules/auth/sign-in-with-stacks/signInWithStacksMessage';
 import { sigleConfig } from '../config';
-import { useFeatureFlags } from '../utils/featureFlags';
+import { styled } from '../stitches.config';
+
+const ProgressCircle = styled('div', {
+  display: 'grid',
+  placeItems: 'center',
+  width: '$8',
+  height: '$8',
+  br: '$round',
+  color: '$gray1',
+
+  variants: {
+    variant: {
+      inactive: {
+        boxShadow: '0 0 0 1px $colors$gray8',
+      },
+      active: {
+        border: '1px dashed $colors$gray12',
+      },
+      complete: {
+        backgroundColor: '$green11',
+      },
+    },
+  },
+});
+
+const StepsText = styled(Typography, {
+  variants: {
+    active: {
+      true: {
+        color: '$gray12',
+      },
+    },
+    variant: {
+      inactive: {
+        color: '$gray8',
+      },
+      active: {
+        color: '$gray12',
+      },
+      complete: {
+        color: '$green11',
+      },
+    },
+  },
+});
+
+type SigningState = 'inactive' | 'active' | 'complete';
 
 const Login = () => {
   const router = useRouter();
@@ -28,15 +76,12 @@ const Login = () => {
   const { status } = useSession();
   const { doOpenAuth, sign } = useConnect();
   const { doOpenAuth: legacyDoOpenAuth } = legacyUseConnect();
-  const { isExperimentalAnalyticsPageEnabled } = useFeatureFlags();
+  const [signingState, setSigningState] = useState<SigningState>('inactive');
 
   useEffect(() => {
     // We keep the user on the login page so he can sign the message
-    if (
-      isExperimentalAnalyticsPageEnabled &&
-      user &&
-      status !== 'authenticated'
-    ) {
+    // Legacy users don't have to sign the message
+    if (user && !isLegacy && status !== 'authenticated') {
       return;
     }
 
@@ -44,7 +89,7 @@ const Login = () => {
     if (user) {
       router.push(`/`);
     }
-  }, [router, user, isLegacy, status, isExperimentalAnalyticsPageEnabled]);
+  }, [router, user, isLegacy, status]);
 
   const handleLogin = () => {
     Fathom.trackGoal(Goals.LOGIN, 0);
@@ -55,8 +100,10 @@ const Login = () => {
   const handleSignMessage = async () => {
     if (!user) return;
     // TODO as this can take some time add a loading state to the button
+    setSigningState('active');
 
     Fathom.trackGoal(Goals.LOGIN_SIGN_MESSAGE, 0);
+    posthog.capture('start-login-sign-message');
 
     const callbackUrl = '/protected';
     const stacksMessage = new SignInWithStacksMessage({
@@ -72,6 +119,7 @@ const Login = () => {
     const message = stacksMessage.prepareMessage();
 
     await sign({
+      network: new StacksMainnet(),
       message,
       onFinish: async ({ signature }) => {
         const signInResult = await signIn<RedirectableProviderType>(
@@ -84,9 +132,13 @@ const Login = () => {
           }
         );
         if (signInResult && signInResult.error) {
+          posthog.capture('start-login-sign-message-error');
           toast.error('Failed to login');
+          setSigningState('inactive');
         }
+        setSigningState('complete');
       },
+      onCancel: () => setSigningState('active'),
     });
   };
 
@@ -99,11 +151,64 @@ const Login = () => {
 
   return (
     <LoginLayout>
-      {isExperimentalAnalyticsPageEnabled ? (
-        <Typography size="h3" as="h3" css={{ mb: '$1', fontWeight: 600 }}>
-          {!user ? 'Step 1' : 'Step 2'}
-        </Typography>
-      ) : null}
+      <Flex gap="1" css={{ my: '$10', '@md': { my: '$15' } }} align="center">
+        <Box>
+          <StepsText variant={user ? 'complete' : 'active'} size="subheading">
+            <StepsText
+              variant={user ? 'complete' : 'active'}
+              css={{ fontWeight: 600 }}
+              size="h3"
+              as="span"
+            >
+              01{' '}
+            </StepsText>
+            Connect Wallet
+          </StepsText>
+          <Flex css={{ mt: '$2' }} gap="2" align="center">
+            <ProgressCircle variant={user ? 'complete' : 'active'}>
+              {user && <CheckIcon />}
+            </ProgressCircle>
+            <Box
+              css={{
+                height: 1,
+                width: 143,
+                backgroundColor: user ? '$green11' : '$gray8',
+              }}
+            />
+          </Flex>
+        </Box>
+        <Box>
+          <StepsText
+            variant={
+              user && signingState !== 'complete' ? 'active' : signingState
+            }
+            size="subheading"
+          >
+            <StepsText
+              variant={
+                user && signingState !== 'complete' ? 'active' : signingState
+              }
+              css={{ fontWeight: 600 }}
+              size="h3"
+              as="span"
+            >
+              02{' '}
+            </StepsText>
+            Sign message
+          </StepsText>
+          <ProgressCircle
+            css={{ mt: '$2' }}
+            variant={
+              user && signingState !== 'complete' ? 'active' : signingState
+            }
+          >
+            {signingState === 'complete' && <CheckIcon />}
+          </ProgressCircle>
+        </Box>
+      </Flex>
+      <Typography size="h3" as="h3" css={{ mb: '$1', fontWeight: 600 }}>
+        {!user ? 'Step 1' : 'Step 2'}
+      </Typography>
       {user ? (
         <Typography>
           In order to prove the ownership of your address and to verify your
@@ -126,7 +231,16 @@ const Login = () => {
           </Typography>
         </>
       )}
-      <Flex gap="3" justify="end" css={{ mt: '$7' }}>
+      <Flex
+        gap="3"
+        justify="end"
+        css={{
+          mt: '$7',
+          pb: '$3',
+          width: '100%',
+          boxShadow: '0 1px 0 0 $colors$gray6',
+        }}
+      >
         {!user ? (
           <Button
             variant="ghost"
@@ -134,7 +248,7 @@ const Login = () => {
             size="lg"
             onClick={handleLoginLegacy}
           >
-            Blockstack connect
+            Legacy login
           </Button>
         ) : (
           <Button
@@ -142,7 +256,10 @@ const Login = () => {
             color="gray"
             size="lg"
             css={{ gap: '$2' }}
-            onClick={logout}
+            onClick={() => {
+              setSigningState('inactive');
+              logout();
+            }}
           >
             <ArrowLeftIcon width={15} height={15} />
             Change account
@@ -151,28 +268,22 @@ const Login = () => {
         <Button
           color="orange"
           size="lg"
-          onClick={
-            isExperimentalAnalyticsPageEnabled && user
-              ? handleSignMessage
-              : handleLogin
-          }
+          onClick={user ? handleSignMessage : handleLogin}
         >
-          {isExperimentalAnalyticsPageEnabled && user
-            ? 'Sign message'
-            : 'Connect Wallet'}
+          {user ? 'Sign message' : 'Connect Wallet'}
         </Button>
       </Flex>
       <Box as="hr" css={{ mt: '$3', borderColor: '$gray6' }} />
       <Flex direction="column" gap="3" css={{ mt: '$3', color: '$gray9' }}>
         {!user ? (
           <>
-            <Flex css={{ gap: '$3' }} align="center">
+            <Flex css={{ gap: '$3' }}>
               <div>
                 <EyeOpenIcon width={15} height={15} />
               </div>
               <Typography size="subheading" css={{ color: '$gray9' }}>
-                We will never do anything without your approval and we only need
-                view only permissions.
+                View only permissions. We will never do anything without your
+                approval.
               </Typography>
             </Flex>
             <Flex css={{ gap: '$3' }} align="center">
@@ -205,9 +316,8 @@ const Login = () => {
                   target="_blank"
                   rel="noreferrer"
                 >
-                  #1 cohort
+                  Stacks start-up accelerator #1 cohort
                 </Box>{' '}
-                of the Stacks accelerator program.
               </Typography>
             </Flex>
           </>

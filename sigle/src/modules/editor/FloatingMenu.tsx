@@ -1,10 +1,7 @@
-import { useState, useCallback } from 'react';
 import { Editor, FloatingMenu as TipTapFloatingMenu } from '@tiptap/react';
-import Tippy from '@tippyjs/react';
-import { globalCss, styled } from '../../stitches.config';
-import { RoundPlus } from '../../icons';
-import { CommandsListController } from './extensions/SlashCommands';
-import { SlashCommandsList, slashCommands } from './InlineMenu';
+import { globalCss } from '../../stitches.config';
+import { PlusIcon } from '@radix-ui/react-icons';
+import { IconButton } from '../../ui';
 
 // Tippyjs theme used by the slash command menu
 const globalStylesCustomEditor = globalCss({
@@ -17,49 +14,17 @@ const globalStylesCustomEditor = globalCss({
   },
 });
 
-const PlusButton = styled('button', {
-  display: 'flex',
-  transitionProperty: 'color',
-  transitionTimingFunction: 'cubic-bezier(0.4, 0, 0.2, 1)',
-  transitionDuration: '150ms',
-  color: '$gray9',
-  '&:hover': {
-    color: '$gray11',
-  },
-
-  variants: {
-    open: {
-      true: {
-        // For now rotate is disabled because it doesn't work well. It's
-        // creating a glitch when you close the menu and the icon is moving
-        // by 2px on the right side.
-        // transform: 'rotate(45deg)',
-      },
-    },
-  },
-});
-
 interface FloatingMenuProps {
   editor: Editor;
-  storyId: string;
 }
 
-export const FloatingMenu = ({ editor, storyId }: FloatingMenuProps) => {
+export const FloatingMenu = ({ editor }: FloatingMenuProps) => {
   globalStylesCustomEditor();
 
-  const [isOpen, setIsOpen] = useState(false);
-
   const handleButtonClick = () => {
-    setIsOpen(!isOpen);
+    editor.commands.insertContent('/');
+    editor.commands.focus();
   };
-
-  const handleSelect = useCallback(
-    ({ command }) => {
-      command({ editor });
-      setIsOpen(false);
-    },
-    [editor]
-  );
 
   return (
     <TipTapFloatingMenu
@@ -95,26 +60,9 @@ export const FloatingMenu = ({ editor, storyId }: FloatingMenuProps) => {
         );
       }}
     >
-      <Tippy
-        content={
-          <CommandsListController
-            component={SlashCommandsList}
-            items={slashCommands({ storyId })}
-            command={handleSelect}
-          />
-        }
-        visible={isOpen}
-        placement="right-end"
-        theme="sigle-editor"
-        arrow={false}
-        interactive
-        appendTo={() => document.body}
-        onClickOutside={handleButtonClick}
-      >
-        <PlusButton open={isOpen} onClick={handleButtonClick}>
-          <RoundPlus width={27} height={27} />
-        </PlusButton>
-      </Tippy>
+      <IconButton size="sm" variant="ghost" onClick={handleButtonClick}>
+        <PlusIcon width={14} height={14} />
+      </IconButton>
     </TipTapFloatingMenu>
   );
 };

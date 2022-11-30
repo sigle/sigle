@@ -4,7 +4,7 @@ import * as uri from 'valid-url';
 import {
   createMessageSignature,
   getAddressFromPublicKey,
-  publicKeyFromSignature,
+  publicKeyFromSignatureRsv,
   validateStacksAddress,
 } from '@stacks/transactions';
 import { ParsedMessage } from './parser';
@@ -15,7 +15,7 @@ import {
   VerifyParams,
   VerifyParamsKeys,
 } from './types';
-import { hashMessage, verifyMessageSignature } from '@stacks/encryption';
+import { hashMessage, verifyMessageSignatureRsv } from '@stacks/encryption';
 
 // https://github.com/stacksgov/sips/blob/22f964ca9beddf9fd750d466b4a20568435f3911/sips/sip-x%20sign-in-with-stacks/sip-x-sign-in-with-stacks.md
 
@@ -165,7 +165,7 @@ export class SignInWithStacksMessage {
       );
     }
 
-    let suffix = suffixArray.join('\n');
+    const suffix = suffixArray.join('\n');
     prefix = [prefix, this.statement].join('\n\n');
     if (this.statement) {
       prefix += '\n';
@@ -286,40 +286,51 @@ export class SignInWithStacksMessage {
         return;
       }
 
+      const stacksSignature = createMessageSignature(signature);
+
+      /** Message Signing Prefixes */
+      const prefixes = [
+        '\x18Stacks Message Signing:\n', // Legacy Prefix
+        '\x17Stacks Signed Message:\n', // Future Prefix (for Ledger compatibility)
+      ];
+
       /** Recover address from signature */
-      let addr;
-      try {
-        const publicKey = publicKeyFromSignature(
-          hashMessage(EIP4361Message).toString('hex'),
-          createMessageSignature(signature)
-        );
-        const isValid = verifyMessageSignature({
-          signature,
-          message: EIP4361Message,
-          publicKey,
-        });
-        if (isValid) {
-          addr = getAddressFromPublicKey(publicKey);
-        }
-      } catch (_) {
-      } finally {
-        /** Match signature with message's address */
-        if (addr !== this.address) {
-          assert({
-            success: false,
-            data: this,
-            error: new SiweError(
-              SiweErrorType.INVALID_SIGNATURE,
-              addr,
-              `Resolved address to be ${this.address}`
-            ),
+      const potentialAddresses = prefixes
+        .map((prefix) => {
+          const publicKey = publicKeyFromSignatureRsv(
+            hashMessage(EIP4361Message, prefix).toString('hex'),
+            stacksSignature
+          );
+
+          const isValid = verifyMessageSignatureRsv({
+            signature,
+            message: EIP4361Message,
+            publicKey,
           });
-        }
+          if (!isValid) return false;
+
+          return getAddressFromPublicKey(publicKey);
+        })
+        .filter(Boolean) as string[];
+
+      /** Match signature with message's address */
+      if (potentialAddresses.includes(this.address)) {
+        resolve({
+          success: true,
+          data: this,
+        });
+        return;
       }
 
-      resolve({
-        success: true,
+      /** The correct address was NOT in the list of potential addresses */
+      assert({
+        success: false,
         data: this,
+        error: new SiweError(
+          SiweErrorType.INVALID_SIGNATURE,
+          this.address,
+          potentialAddresses[0]
+        ),
       });
     });
   }

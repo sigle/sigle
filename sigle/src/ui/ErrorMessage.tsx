@@ -17,14 +17,14 @@ export const ErrorMessage = ({ children, ...props }: ErrorProps) => {
       css={{
         color: '$red11',
         backgroundColor: '$red5',
-        py: '$3',
+        py: '$2',
         px: '$5',
         br: '$2',
         ...props.css,
       }}
     >
       <CrossCircledIcon />
-      <Typography css={{ color: '$red11' }} size="subheading">
+      <Typography css={{ color: '$red11', m: 0 }} size="subparagraph">
         {children}
       </Typography>
     </Flex>

@@ -5,11 +5,10 @@ import {
   MixerHorizontalIcon,
 } from '@radix-ui/react-icons';
 import Tippy from '@tippyjs/react';
-import { Box, Button, Flex, IconButton, Text } from '../../ui';
+import { Box, Button, Flex, IconButton, Typography } from '../../ui';
 import { Story } from '../../types';
 import { useAuth } from '../auth/AuthContext';
 import { useEffect, useState } from 'react';
-import { Typography } from '../../ui';
 
 interface EditorHeaderProps {
   story: Story | false;
@@ -47,7 +46,7 @@ export const EditorHeader = ({
   });
 
   const handleScroll = () => {
-    let scrollY = window.scrollY;
+    const scrollY = window.scrollY;
     if (scrollY === 0) {
       setScroll({ direction: null, prevOffset: scrollY });
     }
@@ -62,12 +61,16 @@ export const EditorHeader = ({
     <Flex
       css={{
         position: 'sticky',
-        transform: scroll.direction === 'down' ? 'translateY(-100%)' : 'none',
+        transform:
+          scroll.direction === 'down' && scroll.prevOffset > 0
+            ? 'translateY(-100%)'
+            : 'none',
         transition: 'transform 0.5s, padding 0.2s',
         backgroundColor: '$gray1',
         top: window.scrollY < 40 ? 'auto' : 0,
         zIndex: 1,
-        width: '100%',
+        mx: '-$5',
+        px: '$5',
         py: window.scrollY < 40 ? 0 : '$2',
         boxShadow: window.scrollY < 40 ? 'none' : '0 1px 0 0 $colors$gray6',
       }}
@@ -75,41 +78,71 @@ export const EditorHeader = ({
       justify="between"
       align="center"
     >
-      <Flex gap="10" align="center">
+      <Flex gap={{ '@initial': '5', '@md': '10' }} align="center">
         <Link href="/" passHref>
-          <IconButton as="a" aria-label="Go back to the dashboard">
+          <IconButton size="sm" as="a" aria-label="Go back to the dashboard">
             <ArrowLeftIcon />
           </IconButton>
         </Link>
-        <Text css={{ color: '$gray11' }} size="sm">
-          <Box as="span" css={{ fontWeight: 'bold', fontSize: '$3' }}>
+        <Typography css={{ color: '$gray11' }} size="subheading">
+          <Box
+            as="span"
+            css={{
+              fontWeight: 'bold',
+              fontSize: '$3',
+              display: 'none',
+              '@md': { display: 'inline' },
+            }}
+          >
             {user?.username}
+            <Box as="span" css={{ fontWeight: 400 }}>
+              {' '}
+              |{' '}
+            </Box>
           </Box>
           {story ? (
-            <span>{story.type === 'public' ? ' | Published' : ' | Draft'}</span>
+            <span>{story.type === 'public' ? 'Published' : 'Draft'}</span>
           ) : null}
-        </Text>
+        </Typography>
         {story && story.type === 'public' && (
-          <Button
-            css={{ display: 'flex', alignItems: 'center', gap: '$2' }}
-            variant="ghost"
-            href={`/${user?.username}/${story.id}`}
-            target="_blank"
-            as="a"
-          >
-            <Typography size="subheading">See your story</Typography>
-            <EyeOpenIcon />
-          </Button>
+          <>
+            <Button
+              size="sm"
+              css={{
+                display: 'none',
+                alignItems: 'center',
+                gap: '$2',
+                '@md': { display: 'flex' },
+              }}
+              variant="ghost"
+              href={`/${user?.username}/${story.id}`}
+              target="_blank"
+              as="a"
+            >
+              See your story
+              <EyeOpenIcon />
+            </Button>
+
+            <IconButton
+              size="sm"
+              href={`/${user?.username}/${story.id}`}
+              target="_blank"
+              as="a"
+              css={{ display: 'inline', '@md': { display: 'none' } }}
+            >
+              <EyeOpenIcon />
+            </IconButton>
+          </>
         )}
       </Flex>
-      <Flex gap="10">
+      <Flex gap={{ '@initial': '5', '@md': '10' }}>
         {loadingSave && (
-          <Button disabled variant="ghost">
+          <Button size="sm" disabled variant="ghost">
             Saving ...
           </Button>
         )}
         {!loadingSave && story && story.type === 'public' && (
-          <Button onClick={() => onSave()} variant="ghost">
+          <Button size="sm" onClick={() => onSave()} variant="ghost">
             Save
           </Button>
         )}
@@ -118,22 +151,26 @@ export const EditorHeader = ({
             content="Nobody can see it unless you click on « publish »"
             theme="light-border"
           >
-            <Button onClick={() => onSave()} variant="ghost">
+            <Button size="sm" onClick={() => onSave()} variant="ghost">
               Save
             </Button>
           </Tippy>
         )}
         {story && story.type === 'private' && (
-          <Button onClick={onPublish} variant="ghost">
+          <Button size="sm" onClick={onPublish} variant="ghost">
             Publish
           </Button>
         )}
         {story && story.type === 'public' && (
-          <Button onClick={onUnpublish} variant="ghost">
+          <Button size="sm" onClick={onUnpublish} variant="ghost">
             Unpublish
           </Button>
         )}
-        <IconButton onClick={onOpenSettings} aria-label="Open settings">
+        <IconButton
+          size="sm"
+          onClick={onOpenSettings}
+          aria-label="Open settings"
+        >
           <MixerHorizontalIcon />
         </IconButton>
       </Flex>

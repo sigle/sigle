@@ -2,18 +2,17 @@ import React, { useState } from 'react';
 import Link from 'next/link';
 import { AppHeader } from './AppHeader';
 import {
-  Box,
-  Button,
-  Container,
   Accordion,
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
+  Box,
+  Button,
+  Container,
 } from '../../../ui';
 import { styled } from '../../../stitches.config';
 import { AppFooter } from './AppFooter';
 import { useRouter } from 'next/router';
-import { useFeatureFlags } from '../../../utils/featureFlags';
 import { VariantProps } from '@stitches/react';
 import {
   createNewEmptyStory,
@@ -25,6 +24,7 @@ import * as Fathom from 'fathom-client';
 import { Goals } from '../../../utils/fathom';
 import { createSubsetStory } from '../../editor/utils';
 import { toast } from 'react-toastify';
+import { useAuth } from '../../auth/AuthContext';
 
 export const DashboardContainer = styled(Container, {
   flex: 1,
@@ -123,28 +123,8 @@ export const DashboardLayout = ({
   ...props
 }: DashboardLayoutProps) => {
   const router = useRouter();
-  const { isExperimentalAnalyticsPageEnabled } = useFeatureFlags();
+  const { user } = useAuth();
   const [loadingCreate, setLoadingCreate] = useState(false);
-
-  let triggerName;
-
-  switch (router.pathname) {
-    case '/':
-      triggerName = 'Drafts';
-      break;
-    case '/published':
-      triggerName = 'Published';
-      break;
-    case '/analytics':
-      triggerName = 'Analytics';
-      break;
-    case '/settings':
-      triggerName = 'Settings';
-      break;
-    default:
-      triggerName = 'Drafts';
-      break;
-  }
 
   const handleCreateNewPrivateStory = async () => {
     setLoadingCreate(true);
@@ -177,14 +157,15 @@ export const DashboardLayout = ({
       name: 'Published',
       path: '/published',
     },
-  ];
-
-  if (isExperimentalAnalyticsPageEnabled) {
-    navItems.push({
+    {
       name: 'Analytics',
       path: '/analytics',
-    });
-  }
+    },
+    {
+      name: 'Profile',
+      path: '/[username]',
+    },
+  ];
 
   return (
     <FullScreen>
@@ -192,14 +173,24 @@ export const DashboardLayout = ({
       <DashboardContainer {...props}>
         <DashboardSidebar>
           {navItems.map((item) => (
-            <Link key={item.path} href={item.path} passHref>
+            <Link
+              key={item.path}
+              href={item.path}
+              as={
+                item.path === '/[username]' ? `/${user?.username}` : undefined
+              }
+              passHref
+            >
               <DashboardSidebarNavItem selected={router.pathname === item.path}>
                 {item.name}
               </DashboardSidebarNavItem>
             </Link>
           ))}
           <Button
-            css={{ mt: '$5', alignSelf: 'start' }}
+            css={{
+              mt: '$5',
+              alignSelf: 'start',
+            }}
             disabled={loadingCreate}
             onClick={handleCreateNewPrivateStory}
             size="lg"
@@ -213,7 +204,11 @@ export const DashboardLayout = ({
           }}
         >
           <Accordion
-            css={{ '@xl': { display: 'none' } }}
+            css={{
+              display: 'none',
+              '@md': { display: 'block' },
+              '@xl': { display: 'none' },
+            }}
             collapsible
             type="single"
           >

@@ -9,7 +9,7 @@ const overlayShow = keyframes({
   '100%': { opacity: 1 },
 });
 
-const StyledOverlay = styled(DialogPrimitive.Overlay, {
+export const StyledOverlay = styled(DialogPrimitive.Overlay, {
   backgroundColor: 'rgba(8, 8, 8, 0.7)',
   position: 'fixed',
   inset: 0,
@@ -25,13 +25,14 @@ const StyledOverlay = styled(DialogPrimitive.Overlay, {
 
 type DialogProps = React.ComponentProps<typeof DialogPrimitive.Root> & {
   children: React.ReactNode;
+  overlay?: boolean;
 };
 
-export function Dialog({ children, ...props }: DialogProps) {
+export function Dialog({ children, overlay = true, ...props }: DialogProps) {
   return (
     <DialogPrimitive.Root {...props}>
       <DialogPrimitive.Portal>
-        <StyledOverlay />
+        {overlay && <StyledOverlay />}
         {children}
       </DialogPrimitive.Portal>
     </DialogPrimitive.Root>
@@ -49,20 +50,35 @@ const StyledContent = styled(DialogPrimitive.Content, {
   br: '$2',
   boxShadow: '0px 0px 33px rgba(0, 0, 0, 0.08)',
   position: 'fixed',
-  top: '50%',
-  left: '50%',
-  transform: 'translate(-50%, -50%)',
+  top: 0,
+  bottom: 0,
+  right: 0,
+  left: 0,
+  mx: 'auto',
+  my: 'auto',
   width: '90vw',
   maxWidth: '550px',
-  maxHeight: '85vh',
+  maxHeight: 'max-content',
   px: '$6',
   pt: 48,
   pb: '$5',
   overflow: 'scroll',
-  '@media (prefers-reduced-motion: no-preference)': {
-    animation: `${contentShow} 150ms cubic-bezier(0.16, 1, 0.3, 1)`,
-    willChange: 'transform',
+  transform: 'none',
+
+  '@md': {
+    maxHeight: '85vh',
+    top: '50%',
+    left: '50%',
+    right: 'auto',
+    bottom: 'auto',
+    transform: 'translate(-50%, -50%)',
+
+    '@media (prefers-reduced-motion: no-preference)': {
+      animation: `${contentShow} 150ms cubic-bezier(0.16, 1, 0.3, 1)`,
+      willChange: 'transform',
+    },
   },
+
   '&:focus': { outline: 'none' },
 });
 
@@ -74,19 +90,21 @@ const StyledCloseButton = styled(DialogPrimitive.Close, {
 
 type DialogContentProps = React.ComponentProps<
   typeof DialogPrimitive.Content
-> & { css?: CSS };
+> & { css?: CSS; closeButton?: boolean };
 
 export const DialogContent = forwardRef<
   React.ElementRef<typeof StyledContent>,
   DialogContentProps
->(({ children, ...props }, forwardedRef) => (
+>(({ children, closeButton = true, ...props }, forwardedRef) => (
   <StyledContent {...props} ref={forwardedRef}>
     {children}
-    <StyledCloseButton asChild>
-      <IconButton>
-        <Cross1Icon width={15} height={15} />
-      </IconButton>
-    </StyledCloseButton>
+    {closeButton && (
+      <StyledCloseButton asChild>
+        <IconButton size="sm">
+          <Cross1Icon width={15} height={15} />
+        </IconButton>
+      </StyledCloseButton>
+    )}
   </StyledContent>
 ));
 

@@ -1,55 +1,119 @@
 import React from 'react';
 import { NextSeo } from 'next-seo';
+import Image from 'next/future/image';
+import { useTheme } from 'next-themes';
 import { StoryFile, SettingsFile } from '../../../types';
 import { PoweredBy } from '../../publicStory/PoweredBy';
-import { AppHeader } from '../../layout/components/AppHeader';
-import { Box, Button, Container, Flex, Typography } from '../../../ui';
+import {
+  Box,
+  Button,
+  Container,
+  Flex,
+  Tabs,
+  TabsTrigger,
+  TabsContent,
+  TabsList,
+  Typography,
+  Tooltip,
+  TooltipTrigger,
+  TooltipContent,
+} from '../../../ui';
 import { sigleConfig } from '../../../config';
 import { styled } from '../../../stitches.config';
 import { useAuth } from '../../auth/AuthContext';
 import {
-  useGetUserFollowing,
+  useGetGaiaUserFollowing,
   useUserFollow,
   useUserUnfollow,
 } from '../../../hooks/appData';
 import { generateAvatar } from '../../../utils/boringAvatar';
-import { useFeatureFlags } from '../../../utils/featureFlags';
 import { StoryCard } from '../../storyCard/StoryCard';
+import {
+  useGetUserByAddress,
+  useGetUsersFollowers,
+  useGetUsersFollowing,
+} from '../../../hooks/users';
+import { UserCard } from '../../userCard/UserCard';
+import { DashboardLayout } from '../../layout';
+import { AppHeader } from '../../layout/components/AppHeader';
+import { useRouter } from 'next/router';
+import { GlobeIcon, Pencil1Icon } from '@radix-ui/react-icons';
+import Link from 'next/link';
+import { TwitterFilledIcon } from '../../../icons';
+
+const StyledTabsTrigger = styled(TabsTrigger, {
+  fontSize: 13,
+  '@xl': {
+    fontSize: 15,
+  },
+});
+
+const ExtraInfoLink = styled('a', {
+  color: '$gray9',
+  fontSize: '$1',
+
+  '&:hover': {
+    color: '$gray10',
+  },
+  '&:active': {
+    color: '$gray12',
+  },
+
+  '@md': {
+    fontSize: '$2',
+  },
+});
 
 const StyledContainer = styled(Container, {
-  pt: '$4',
   pb: '$15',
   maxWidth: 826,
 });
 
 const Header = styled('div', {
-  py: '$10',
-  px: '$4',
-  maxWidth: 960,
+  pb: '$8',
   display: 'flex',
   flexDirection: 'column',
-  placeItems: 'center',
   mx: 'auto',
+
+  '@md': {
+    maxWidth: 826,
+  },
 });
 
 const HeaderLogoContainer = styled('div', {
-  width: 92,
-  height: 92,
+  width: 76,
+  height: 76,
   display: 'flex',
-  alignItems: 'center',
   justifyContent: 'center',
   br: '$4',
   overflow: 'hidden',
-  mb: '$4',
+  mb: '$2',
+
+  '@md': {
+    width: 92,
+    height: 92,
+  },
 });
 
 const HeaderLogo = styled('img', {
   width: 'auto',
   height: '100%',
-  maxWidth: 92,
-  maxHeight: 92,
+  maxWidth: 76,
+  maxHeight: 76,
   objectFit: 'cover',
+
+  '@md': {
+    maxWidth: 92,
+    maxHeight: 92,
+  },
 });
+
+const abbreviateAddress = (address: string) => {
+  if (!address) return address;
+  const firstFour = address.substring(0, 4);
+  const lastFour = address.substring(address.length - 4);
+  return `${firstFour}...${lastFour}`;
+};
 
 const PublicHomeSiteUrl = ({ siteUrl }: { siteUrl: string }) => {
   let displayUrl = siteUrl;
@@ -63,27 +127,34 @@ const PublicHomeSiteUrl = ({ siteUrl }: { siteUrl: string }) => {
   }
 
   return (
-    <Typography
-      css={{
-        color: '$gray9',
-
-        '&:hover': {
-          color: '$gray10',
-        },
-        '&:active': {
-          color: '$gray12',
-        },
-      }}
-      size="subheading"
-      as="a"
-      href={fullUrl}
-      target="_blank"
-      rel="noreferrer"
-    >
-      {displayUrl}
-    </Typography>
+    <ExtraInfoLink href={fullUrl} target="_blank" rel="noreferrer">
+      <Box
+        css={{
+          display: 'block',
+          '@md': {
+            display: 'none',
+          },
+        }}
+        as="span"
+      >
+        <GlobeIcon />
+      </Box>
+      <Box
+        css={{
+          display: 'none',
+          '@md': {
+            display: ' block',
+          },
+        }}
+        as="span"
+      >
+        {displayUrl}
+      </Box>
+    </ExtraInfoLink>
   );
 };
+
+type ActiveTab = 'stories' | 'following' | 'followers';
 
 interface PublicHomeProps {
   file: StoryFile;
@@ -92,13 +163,25 @@ interface PublicHomeProps {
 }
 
 export const PublicHome = ({ file, settings, userInfo }: PublicHomeProps) => {
-  const { user } = useAuth();
-  const { isExperimentalFollowEnabled } = useFeatureFlags();
-  const { data: userFollowing } = useGetUserFollowing({
+  const { resolvedTheme } = useTheme();
+  const { user, isLegacy } = useAuth();
+  const router = useRouter();
+  const { data: userInfoByAddress } = useGetUserByAddress(userInfo.address);
+  const { data: userFollowing } = useGetGaiaUserFollowing({
     enabled: !!user && userInfo.username !== user.username,
   });
   const { mutate: followUser } = useUserFollow();
   const { mutate: unfollowUser } = useUserUnfollow();
+  const { data: following } = useGetUsersFollowing(userInfo.address, {
+    enabled: router.query.tab === 'following',
+  });
+  const { data: followers } = useGetUsersFollowers(userInfo.address, {
+    enabled: router.query.tab === 'followers',
+  });
+
+  const twitterHandle = settings.siteTwitterHandle;
+  const isFollowingUser =
+    userFollowing && !!userFollowing.following[userInfo.address];
 
   const handleFollow = async () => {
     if (!userFollowing) return;
@@ -112,24 +195,43 @@ export const PublicHome = ({ file, settings, userInfo }: PublicHomeProps) => {
     unfollowUser({ userFollowing, address: userInfo.address });
   };
 
-  const siteName = settings.siteName || userInfo.username;
-  const twitterHandle = settings.siteTwitterHandle;
-
   const featuredStoryIndex = file.stories.findIndex((story) => story.featured);
   const stories = [...file.stories];
   if (featuredStoryIndex !== -1) {
     stories.splice(featuredStoryIndex, 1);
   }
 
+  const userAddress =
+    user?.profile.stxAddress.mainnet || user?.profile.stxAddress;
+
+  const siteName = settings.siteName || userInfo.username;
+
   const seoUrl = `${sigleConfig.appUrl}/${userInfo.username}`;
   const seoTitle = `${siteName} - Sigle`;
   const seoDescription =
     settings.siteDescription?.substring(0, 300) ||
     `Read stories from ${siteName} on Sigle, decentralised and open-source platform for Web3 writers`;
-  const seoImage = settings.siteLogo;
 
-  const isFollowingUser =
-    userFollowing && !!userFollowing.following[userInfo.address];
+  const seoImage =
+    settings.siteLogo &&
+    encodeURI(settings.siteLogo).replace('(', '%28').replace(')', '%29');
+
+  const Layout =
+    userInfo.username !== user?.username ? React.Fragment : DashboardLayout;
+
+  const handleTabValueChange = (value: ActiveTab) => {
+    if (!value) {
+      return;
+    }
+
+    router.replace(
+      {
+        query: { ...router.query, tab: value },
+      },
+      undefined,
+      { shallow: true }
+    );
+  };
 
   return (
     <React.Fragment>
@@ -143,7 +245,7 @@ export const PublicHome = ({ file, settings, userInfo }: PublicHomeProps) => {
           description: seoDescription,
           images: [
             {
-              url: seoImage || `${sigleConfig.appUrl}/static/icon-192x192.png`,
+              url: seoImage || generateAvatar(userAddress),
             },
           ],
         }}
@@ -151,30 +253,44 @@ export const PublicHome = ({ file, settings, userInfo }: PublicHomeProps) => {
           site: '@sigleapp',
           cardType: 'summary',
         }}
+        additionalLinkTags={[
+          {
+            rel: 'alternate',
+            type: 'application/rss+xml',
+            // @ts-expect-error title is missing in next-seo
+            title: seoTitle,
+            href: `${sigleConfig.appUrl}/api/feed/${userInfo.username}`,
+          },
+        ]}
       />
-      <Container>
-        <AppHeader />
-        <Header>
-          <HeaderLogoContainer>
-            <HeaderLogo
-              src={
-                settings.siteLogo
-                  ? settings.siteLogo
-                  : generateAvatar(userInfo.address)
-              }
-              alt={`${siteName} logo`}
-            />
-          </HeaderLogoContainer>
-          <Flex align="center">
-            <Typography css={{ fontWeight: 700 }} as="h1" size="h2">
-              {siteName}
-            </Typography>
-            {isExperimentalFollowEnabled &&
-            user &&
-            user.username !== userInfo.username &&
-            userFollowing ? (
-              !isFollowingUser ? (
+      <Layout>
+        {userInfo.username !== user?.username && <AppHeader />}
+        <Header
+          css={{
+            pt: userInfo.username !== user?.username ? '$10' : 0,
+            px: userInfo.username !== user?.username ? '$5' : 0,
+          }}
+        >
+          <Flex
+            css={{ mb: '$2', width: '100%' }}
+            align="start"
+            justify="between"
+          >
+            <HeaderLogoContainer>
+              <HeaderLogo
+                src={
+                  settings.siteLogo
+                    ? settings.siteLogo
+                    : generateAvatar(userInfo.address)
+                }
+                alt={`${siteName} logo`}
+              />
+            </HeaderLogoContainer>
+            {user?.username !== userInfo.username &&
+              !isLegacy &&
+              (!isFollowingUser ? (
                 <Button
+                  size="sm"
                   color="orange"
                   css={{ ml: '$5' }}
                   onClick={handleFollow}
@@ -183,84 +299,255 @@ export const PublicHome = ({ file, settings, userInfo }: PublicHomeProps) => {
                 </Button>
               ) : (
                 <Button
+                  size="sm"
                   variant="subtle"
                   css={{ ml: '$5' }}
                   onClick={handleUnfollow}
                 >
                   Unfollow
                 </Button>
-              )
-            ) : null}
+              ))}
+            {user && user.username === userInfo.username && (
+              <Link href="/settings" passHref>
+                <Button size="sm" as="a" css={{ gap: '$2' }} variant="subtle">
+                  Edit profile
+                  <Pencil1Icon />
+                </Button>
+              </Link>
+            )}
           </Flex>
-          {settings.siteDescription &&
-            settings.siteDescription.split('\n').map((text, index) => (
+          <Flex
+            css={{
+              mb: '$3',
+
+              '@md': {
+                mb: '$1',
+              },
+            }}
+            direction={{
+              '@initial': 'column',
+              '@md': 'row',
+            }}
+            align={{
+              '@initial': 'start',
+              '@md': 'center',
+            }}
+            gap="1"
+          >
+            <Typography
+              css={{
+                fontWeight: 700,
+                whiteSpace: 'nowrap',
+                overflow: 'hidden',
+                textOverflow: 'ellipsis',
+                maxWidth: 360,
+
+                '@md': {
+                  maxWidth: '100%',
+                  whiteSpace: 'normal',
+                  overflow: 'initial',
+                  textOverflow: 'initial',
+                },
+              }}
+              as="h1"
+              size={{
+                '@initial': 'h4',
+                '@md': 'h2',
+              }}
+            >
+              {siteName}
+            </Typography>
+            <Flex gap="3" align="center">
               <Typography
                 size="subheading"
-                css={{ mt: '$2', textAlign: 'center' }}
-                key={index}
+                css={{
+                  backgroundColor: '$gray4',
+                  py: '$1',
+                  px: '$3',
+                  br: '$2',
+                }}
               >
-                {text}
+                {userInfo.username}
               </Typography>
-            ))}
-          <Flex css={{ pt: '$5' }} gap="3">
+              {userInfoByAddress?.subscription && (
+                <Tooltip delayDuration={200}>
+                  <TooltipTrigger asChild>
+                    <a
+                      href={`${sigleConfig.gammaUrl}/${userInfoByAddress.subscription.nftId}`}
+                      target="_blank"
+                      rel="noreferrer"
+                    >
+                      <Image
+                        src={
+                          resolvedTheme === 'dark'
+                            ? '/img/badges/creatorPlusDark.svg'
+                            : '/img/badges/creatorPlusLight.svg'
+                        }
+                        alt="Creator + badge"
+                        width={20}
+                        height={20}
+                      />
+                    </a>
+                  </TooltipTrigger>
+                  <TooltipContent
+                    css={{ boxShadow: 'none' }}
+                    side="right"
+                    sideOffset={8}
+                  >
+                    Creator + Explorer #{userInfoByAddress.subscription.nftId}
+                  </TooltipContent>
+                </Tooltip>
+              )}
+            </Flex>
+          </Flex>
+          <Flex gap="3" align="center">
             {settings.siteUrl && (
               <PublicHomeSiteUrl siteUrl={settings.siteUrl} />
             )}
             {settings.siteUrl && settings.siteTwitterHandle && (
-              <Box css={{ width: '1px', backgroundColor: '$gray9' }} />
+              <Box
+                css={{
+                  width: '1px',
+                  height: '$4',
+                  backgroundColor: '$gray9',
+                }}
+              />
             )}
             {settings.siteTwitterHandle && (
-              <Typography
-                css={{
-                  color: '$gray9',
-
-                  '&:hover': {
-                    color: '$gray10',
-                  },
-                  '&:active': {
-                    color: '$gray12',
-                  },
-                }}
-                size="subheading"
-                as="a"
+              <ExtraInfoLink
                 href={`https://twitter.com/${twitterHandle}`}
                 target="_blank"
                 rel="noreferrer"
               >
-                {twitterHandle?.includes('@')
-                  ? twitterHandle
-                  : `@${twitterHandle}`}
-              </Typography>
+                <Box
+                  css={{
+                    display: 'block',
+                    '@md': {
+                      display: 'none',
+                    },
+                  }}
+                  as="span"
+                >
+                  <TwitterFilledIcon />
+                </Box>
+                <Box
+                  css={{
+                    display: 'none',
+                    '@md': {
+                      display: 'block',
+                    },
+                  }}
+                  as="span"
+                >
+                  {twitterHandle?.includes('@')
+                    ? twitterHandle
+                    : `@${twitterHandle}`}
+                </Box>
+              </ExtraInfoLink>
             )}
+            {settings.siteTwitterHandle && (
+              <Box
+                css={{
+                  width: '1px',
+                  height: '$4',
+                  backgroundColor: '$gray9',
+                }}
+              />
+            )}
+            <Flex
+              align="center"
+              gap="2"
+              css={{
+                '&:hover': {
+                  '& button': {
+                    display: 'block',
+                  },
+                },
+              }}
+            >
+              <ExtraInfoLink
+                href={`https://explorer.stacks.co/address/${userInfo.address}?chain=mainnet`}
+                target="_blank"
+                rel="noreferrer"
+              >
+                {abbreviateAddress(userInfo.address)}
+              </ExtraInfoLink>
+            </Flex>
           </Flex>
+          {settings.siteDescription &&
+            settings.siteDescription.split('\n').map((text, index) => (
+              <Typography size="subheading" css={{ mt: '$2' }} key={index}>
+                {text}
+              </Typography>
+            ))}
         </Header>
-      </Container>
 
-      <StyledContainer>
-        {file.stories.length === 0 && (
-          <Typography css={{ mt: '$8', textAlign: 'center' }}>
-            No stories yet
-          </Typography>
-        )}
-        {featuredStoryIndex !== -1 && (
-          <StoryCard
-            userInfo={userInfo}
-            story={file.stories[featuredStoryIndex]}
-            settings={settings}
-            featured
-          />
-        )}
-        {stories.map((story) => (
-          <StoryCard
-            key={story.id}
-            userInfo={userInfo}
-            story={story}
-            settings={settings}
-          />
-        ))}
+        <StyledContainer
+          css={{
+            px: userInfo.username !== user?.username ? '$5' : 0,
+          }}
+        >
+          <Tabs
+            onValueChange={(value) => handleTabValueChange(value as ActiveTab)}
+            value={router.query.tab ? (router.query.tab as string) : 'stories'}
+            defaultValue="stories"
+          >
+            <TabsList
+              css={{ boxShadow: '0 1px 0 0 $colors$gray6', mb: 0 }}
+              aria-label="See your stories, other users that you follow, or, other users that follow you."
+            >
+              <StyledTabsTrigger value="stories">{`Stories (${file.stories.length})`}</StyledTabsTrigger>
+              <StyledTabsTrigger value="following">{`Following (${
+                userInfoByAddress ? userInfoByAddress.followingCount : 0
+              })`}</StyledTabsTrigger>
+              <StyledTabsTrigger value="followers">{`Followers (${
+                userInfoByAddress ? userInfoByAddress.followersCount : 0
+              })`}</StyledTabsTrigger>
+            </TabsList>
+            <TabsContent value="stories">
+              {file.stories.length === 0 && (
+                <Typography css={{ mt: '$8', textAlign: 'center' }}>
+                  No stories yet
+                </Typography>
+              )}
+              {featuredStoryIndex !== -1 && (
+                <StoryCard
+                  userInfo={userInfo}
+                  story={file.stories[featuredStoryIndex]}
+                  settings={settings}
+                  featured
+                />
+              )}
+              {stories.map((story) => (
+                <StoryCard
+                  key={story.id}
+                  userInfo={userInfo}
+                  story={story}
+                  settings={settings}
+                />
+              ))}
+            </TabsContent>
 
-        <PoweredBy />
-      </StyledContainer>
+            {router.query.tab === 'following' && (
+              <>
+                {following?.map((stxAddress) => (
+                  <UserCard key={stxAddress} address={stxAddress} />
+                ))}
+              </>
+            )}
+
+            {router.query.tab === 'followers' && (
+              <>
+                {followers?.map((stxAddress) => (
+                  <UserCard key={stxAddress} address={stxAddress} />
+                ))}
+              </>
+            )}
+          </Tabs>
+
+          {userInfo.username !== user?.username && <PoweredBy />}
+        </StyledContainer>
+      </Layout>
     </React.Fragment>
   );
 };

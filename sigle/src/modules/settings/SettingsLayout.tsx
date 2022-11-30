@@ -8,6 +8,7 @@ import {
   AccordionTrigger,
   Box,
 } from '../../ui';
+import { useFeatureFlags } from '../../utils/featureFlags';
 import { AppFooter } from '../layout/components/AppFooter';
 import { AppHeader } from '../layout/components/AppHeader';
 import {
@@ -26,6 +27,7 @@ export const SettingsLayout = ({
   ...props
 }: DashboardLayoutProps) => {
   const router = useRouter();
+  const { isExperimentalNewsletterEnabled } = useFeatureFlags();
 
   const navItems = [
     {
@@ -37,6 +39,21 @@ export const SettingsLayout = ({
       path: '/settings/plans',
     },
   ];
+
+  if (isExperimentalNewsletterEnabled) {
+    navItems.splice(
+      1,
+      0,
+      {
+        name: 'Private data',
+        path: '/settings/private-data',
+      },
+      {
+        name: 'Newsletter',
+        path: '/settings/newsletter',
+      }
+    );
+  }
 
   return (
     <FullScreen>
@@ -54,30 +71,33 @@ export const SettingsLayout = ({
         <Box
           css={{
             mb: '$5',
+            overflowY: 'hidden',
           }}
         >
-          <Accordion
-            css={{ '@xl': { display: 'none' } }}
-            collapsible
-            type="single"
-          >
-            <AccordionItem value="item1">
-              <AccordionTrigger>
-                {navItems.find((item) => item.path === router.pathname)?.name}
-              </AccordionTrigger>
-              <AccordionContent>
-                {navItems
-                  .filter((item) => item.path !== router.pathname)
-                  .map((item) => (
-                    <Link key={item.path} href={item.path} passHref>
-                      <DashboardSidebarNavItem variant="accordion">
-                        {item.name}
-                      </DashboardSidebarNavItem>
-                    </Link>
-                  ))}
-              </AccordionContent>
-            </AccordionItem>
-          </Accordion>
+          {router.pathname !== '/settings/plans/compare' && (
+            <Accordion
+              css={{ '@xl': { display: 'none' } }}
+              collapsible
+              type="single"
+            >
+              <AccordionItem value="item1">
+                <AccordionTrigger>
+                  {navItems.find((item) => item.path === router.pathname)?.name}
+                </AccordionTrigger>
+                <AccordionContent>
+                  {navItems
+                    .filter((item) => item.path !== router.pathname)
+                    .map((item) => (
+                      <Link key={item.path} href={item.path} passHref>
+                        <DashboardSidebarNavItem variant="accordion">
+                          {item.name}
+                        </DashboardSidebarNavItem>
+                      </Link>
+                    ))}
+                </AccordionContent>
+              </AccordionItem>
+            </Accordion>
+          )}
           {children}
         </Box>
       </DashboardContainer>

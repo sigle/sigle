@@ -1,10 +1,11 @@
 import 'highlight.js/styles/night-owl.css';
-import { forwardRef, useImperativeHandle, useState } from 'react';
+import { forwardRef, useEffect, useImperativeHandle, useState } from 'react';
 import {
   useEditor,
   EditorContent,
   ReactNodeViewRenderer,
   Editor,
+  Extensions,
 } from '@tiptap/react';
 import TipTapBlockquote from '@tiptap/extension-blockquote';
 import TipTapBold from '@tiptap/extension-bold';
@@ -17,29 +18,34 @@ import TipTapHeading from '@tiptap/extension-heading';
 import TipTapHistory from '@tiptap/extension-history';
 import TipTapHorizontalRule from '@tiptap/extension-horizontal-rule';
 import TipTapItalic from '@tiptap/extension-italic';
-import TipTapImage from '@tiptap/extension-image';
 import TipTapLink from '@tiptap/extension-link';
 import TipTapListItem from '@tiptap/extension-list-item';
 import TipTapOrderedList from '@tiptap/extension-ordered-list';
 import TipTapParagraph from '@tiptap/extension-paragraph';
-import TipTapPlaceholder from '@tiptap/extension-placeholder';
+import { Placeholder as TipTapPlaceholder } from './extensions/Placeholder';
 import TipTapStrike from '@tiptap/extension-strike';
 import TipTapText from '@tiptap/extension-text';
 import TipTapUnderline from '@tiptap/extension-underline';
 import TipTapCodeBlockLowlight from '@tiptap/extension-code-block-lowlight';
 import { lowlight } from 'lowlight/lib/common.js';
-import { SlashCommands } from './extensions/SlashCommands';
+import { SlashCommands } from './extensions/SlashCommand/SlashCommands';
 import { BubbleMenu } from './BubbleMenu';
-import { slashCommands, SlashCommandsList } from './InlineMenu';
+import { slashCommands } from './extensions/SlashCommand/commands';
 import { FloatingMenu } from './FloatingMenu';
 import { styled, globalCss, keyframes, darkTheme } from '../../stitches.config';
 import { CodeBlockComponent } from './extensions/CodeBlock';
 import { Story } from '../../types';
 import CharacterCount from '@tiptap/extension-character-count';
-import { Container, IconButton, Text, Typography } from '../../ui';
+import { Container, IconButton, Typography } from '../../ui';
 import { ShortcutsDialog } from './EditorShortcuts/ShortcutsDialog';
 import { clarity } from './utils/clarity-syntax';
 import { KeyboardIcon } from '@radix-ui/react-icons';
+import { useTheme } from 'next-themes';
+import { TipTapImage } from './extensions/Image';
+import { Toolbar } from './EditorToolbar/EditorToolbar';
+import { Twitter as TipTapTwitter } from './extensions/Twitter';
+import { MobileScroll } from './extensions/MobileScroll';
+import { Cta as TipTapCta } from './extensions/CallToAction';
 
 const fadeInAnimation = keyframes({
   '0%': { opacity: '0' },
@@ -54,7 +60,7 @@ const StyledEditorContent = styled(EditorContent, {
     outline: 'none',
   },
   // Placeholder plugin style
-  '& .ProseMirror p.is-empty::before': {
+  '& .ProseMirror .is-empty::before': {
     content: 'attr(data-placeholder)',
     float: 'left',
     color: '$gray8',
@@ -65,7 +71,7 @@ const StyledEditorContent = styled(EditorContent, {
 
   // Image selected style
   '& img.ProseMirror-selectednode': {
-    outline: '1px solid $orange11',
+    outline: '2px solid $green11',
   },
   // Image uploading style
   '& img[data-loading="true"]': {
@@ -75,14 +81,18 @@ const StyledEditorContent = styled(EditorContent, {
 
 // Tippyjs theme used by the slash command menu
 const globalStylesCustomEditor = globalCss({
+  '.tippy-box': {
+    br: '$3',
+    backgroundColor: '$gray1',
+  },
   ".tippy-box[data-theme~='sigle-editor'] .tippy-content": {
     overflow: 'hidden',
     padding: 0,
     backgroundColor: '$gray1',
+    br: '$3',
+    minWidth: '280px',
     boxShadow:
       '0px 8px 20px rgba(8, 8, 8, 0.09), 0px 10px 18px rgba(8, 8, 8, 0.06), 0px 5px 14px rgba(8, 8, 8, 0.05), 0px 3px 8px rgba(8, 8, 8, 0.05), 0px 1px 5px rgba(8, 8, 8, 0.04), 0px 1px 2px rgba(8, 8, 8, 0.03), 0px 0.2px 1px rgba(8, 8, 8, 0.02)',
-    br: '$1',
-    minWidth: '280px',
 
     [`.${darkTheme} &`]: {
       boxShadow:
@@ -105,12 +115,18 @@ export const TipTapEditor = forwardRef<
   TipTapEditorProps
 >(({ story, editable = true }, ref) => {
   const [showShortcutsDialog, setShowShortcutsDialog] = useState(false);
+  const { resolvedTheme } = useTheme();
+  const [width, setWidth] = useState(
+    typeof window !== 'undefined' ? window.innerWidth : 1000
+  );
   // TODO is story really needed? Could it be just the content prop?
   globalStylesCustomEditor();
 
   const handleCancelShortcuts = () => {
     setShowShortcutsDialog(false);
   };
+
+  const isMobile = width < 768;
 
   const editor = useEditor({
     editable,
@@ -140,27 +156,7 @@ export const TipTapEditor = forwardRef<
       }).configure({
         lowlight,
       }),
-      TipTapImage.extend({
-        addAttributes() {
-          return {
-            ...this.parent?.(),
-            loading: {
-              default: false,
-              renderHTML: (attributes) => {
-                if (attributes.loading) {
-                  return {
-                    'data-loading': attributes.loading,
-                  };
-                }
-              },
-            },
-            id: {
-              default: false,
-              renderHTML: () => ({}),
-            },
-          };
-        },
-      }),
+      TipTapImage,
       // Marks
       TipTapBold,
       TipTapCode,
@@ -168,22 +164,22 @@ export const TipTapEditor = forwardRef<
       TipTapStrike,
       TipTapUnderline,
       // Extensions
-      TipTapDropcursor,
+      TipTapDropcursor.configure({
+        color: resolvedTheme === 'dark' ? '#505050' : '#c7c7c7',
+        width: 2,
+      }),
       TipTapHistory,
-      TipTapPlaceholder.configure({
-        placeholder: ({ editor }) => {
-          const currentPos = editor.state.selection.$anchor.pos;
-          return currentPos === 1
-            ? 'Start your story here...'
-            : "Type '/' for commands";
-        },
-      }),
+      TipTapPlaceholder(isMobile),
       // Custom extensions
-      SlashCommands.configure({
-        commands: slashCommands({ storyId: story.id }),
-        component: SlashCommandsList,
-      }),
-    ],
+      TipTapTwitter,
+      TipTapCta,
+      !isMobile
+        ? SlashCommands.configure({
+            commands: slashCommands({ storyId: story.id }),
+          })
+        : undefined,
+      isMobile ? MobileScroll : undefined,
+    ] as Extensions,
     content: story.contentVersion === '2' ? story.content : '',
   });
 
@@ -197,43 +193,73 @@ export const TipTapEditor = forwardRef<
     [editor]
   );
 
+  useEffect(() => {
+    window.addEventListener('resize', () => setWidth(window.innerWidth));
+    return () => {
+      window.removeEventListener('resize', () => setWidth(window.innerWidth));
+    };
+  }, []);
+
   return (
     <>
-      {editor && <BubbleMenu editor={editor} />}
-      {editor && <FloatingMenu editor={editor} storyId={story.id} />}
+      {editor && !isMobile && <BubbleMenu editor={editor} />}
+      {editor && !isMobile && <FloatingMenu editor={editor} />}
 
-      <StyledEditorContent editor={editor} />
-      <Container
-        css={{
-          display: 'flex',
-          alignItems: 'center',
-          gap: '$3',
-          position: 'fixed',
-          bottom: 0,
-          right: 0,
-          left: 0,
-          zIndex: 0,
-          justifyContent: 'end',
-        }}
-      >
-        {editable && (
-          <>
-            <Typography size="subheading">
-              {editor?.storage.characterCount.words()} words
-            </Typography>
-            <IconButton
-              onClick={() => setShowShortcutsDialog(true)}
-              aria-label="Open keyboard shortcuts and hints"
-            >
-              <KeyboardIcon />
-            </IconButton>
-          </>
-        )}
-        <ShortcutsDialog
-          open={showShortcutsDialog}
-          onOpenChange={handleCancelShortcuts}
+      {/* editor is not set while doing SSR so we render the HTNL as it is for SEO */}
+      {editor ? (
+        <StyledEditorContent editor={editor} />
+      ) : (
+        <div
+          dangerouslySetInnerHTML={{
+            __html: story.contentVersion === '2' ? story.content : '',
+          }}
         />
-      </Container>
+      )}
+
+      {editable && (
+        <>
+          {isMobile ? (
+            <Toolbar editor={editor} story={story} />
+          ) : (
+            <Container
+              css={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '$3',
+                position: 'fixed',
+                mb: '$10',
+                bottom: 0,
+                right: 0,
+                left: 0,
+                zIndex: 0,
+                justifyContent: 'end',
+                pointerEvents: 'none',
+              }}
+            >
+              <Typography
+                css={{ m: 0, whiteSpace: 'nowrap' }}
+                size="subparagraph"
+              >
+                {editor?.storage.characterCount.words()} words
+              </Typography>
+              <IconButton
+                size="sm"
+                css={{
+                  pointerEvents: 'auto',
+                }}
+                onClick={() => setShowShortcutsDialog(true)}
+                aria-label="Open keyboard shortcuts and hints"
+              >
+                <KeyboardIcon />
+              </IconButton>
+              <ShortcutsDialog
+                open={showShortcutsDialog}
+                onOpenChange={handleCancelShortcuts}
+              />
+            </Container>
+          )}
+        </>
+      )}
     </>
   );
 });

@@ -1,3 +1,7 @@
+/**
+ * @jest-environment node
+ */
+
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { XMLParser } from 'fast-xml-parser';
 import { apiFeed } from './[username].api';
@@ -41,13 +45,13 @@ describe('test feed api', () => {
     const jsonObj = parser.parse(res.end.mock.calls[0][0]);
     expect(jsonObj.rss.channel).toEqual({
       copyright: 'All rights reserved 2022, sigleapp.id.blockstack',
-      description: expect.stringContaining('official blog of Sigle'),
+      description: expect.stringContaining('Sigle'),
       docs: expect.any(String),
       generator: expect.any(String),
       item: expect.any(Array),
       lastBuildDate: expect.any(String),
       link: 'https://app.sigle.io/sigleapp.id.blockstack',
-      title: 'Sigle official blog',
+      title: 'Sigle',
     });
     // Last items should never change
     expect(

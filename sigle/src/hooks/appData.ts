@@ -3,7 +3,8 @@ import {
   useQuery,
   useQueryClient,
   UseQueryOptions,
-} from 'react-query';
+} from '@tanstack/react-query';
+import { UserService } from '../external/api';
 import {
   getSettingsFile,
   GaiaUserFollowing,
@@ -14,11 +15,11 @@ import {
 /**
  * Get the app user following from Gaia.
  */
-export const useGetUserFollowing = (
+export const useGetGaiaUserFollowing = (
   options: UseQueryOptions<GaiaUserFollowing, Error> = {}
 ) =>
   useQuery<GaiaUserFollowing, Error>(
-    'get-user-following',
+    ['get-user-following'],
     () => getFollowingFile(),
     options
   );
@@ -37,8 +38,14 @@ export const useUserFollow = () => {
       createdAt: now,
     };
     // optimistic update
-    queryClient.setQueriesData('get-user-following', userFollowing);
+    queryClient.setQueriesData(['get-user-following'], userFollowing);
     await saveFollowingFile(userFollowing);
+    await UserService.userControllerAddFollow({
+      requestBody: { stacksAddress: address, createdAt: now },
+    });
+    await queryClient.invalidateQueries(['get-users-followers']);
+    await queryClient.invalidateQueries(['get-users-following']);
+    await queryClient.invalidateQueries(['get-user-by-address']);
   });
 };
 
@@ -54,10 +61,16 @@ export const useUserUnfollow = () => {
     userFollowing.updatedAt = now;
     delete userFollowing.following[address];
     // optimistic update
-    queryClient.setQueriesData('get-user-following', userFollowing);
+    queryClient.setQueriesData(['get-user-following'], userFollowing);
     await saveFollowingFile(userFollowing);
+    await UserService.userControllerRemoveFollow({
+      requestBody: { stacksAddress: address },
+    });
+    await queryClient.invalidateQueries(['get-users-followers']);
+    await queryClient.invalidateQueries(['get-users-following']);
+    await queryClient.invalidateQueries(['get-user-by-address']);
   });
 };
 
 export const useGetUserSettings = () =>
-  useQuery('user-settings', () => getSettingsFile());
+  useQuery(['user-settings'], () => getSettingsFile());

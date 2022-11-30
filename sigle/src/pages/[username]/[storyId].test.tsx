@@ -1,3 +1,7 @@
+/**
+ * @jest-environment node
+ */
+
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import * as Sentry from '@sentry/nextjs';
 import { getServerSideProps } from './[storyId].page';

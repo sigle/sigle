@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { TwitterLogoIcon, LinkedInLogoIcon } from '@radix-ui/react-icons';
+import posthog from 'posthog-js';
 import { sigleConfig } from '../../config';
 import { Story } from '../../types';
 import {
@@ -50,6 +51,7 @@ export const PublishedDialog = ({
   );
 
   const handleCopy = () => {
+    posthog.capture('publish-story-dialog-copy', { id: story.id });
     navigator.clipboard.writeText(storyUrl);
     setIsCopied(true);
   };
@@ -71,18 +73,21 @@ export const PublishedDialog = ({
           <a
             href={`https://twitter.com/intent/tweet?text=${shareTextEncoded}`}
             target="_blank"
+            rel="noreferrer"
           >
             <TwitterLogoIcon height={iconSize} width={iconSize} />
           </a>
           <a
             href={`https://www.linkedin.com/shareArticle?mini=true&url=${storyUrlEncoded}&title=${storyTitleEncoded}&source=Sigle`}
             target="_blank"
+            rel="noreferrer"
           >
             <LinkedInLogoIcon height={iconSize} width={iconSize} />
           </a>
           <a
             href={`https://www.facebook.com/sharer.php?u=${storyUrlEncoded}`}
             target="_blank"
+            rel="noreferrer"
           >
             <FacebookLogo height={iconSize} width={iconSize} />
           </a>

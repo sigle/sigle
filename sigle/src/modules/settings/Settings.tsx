@@ -1,6 +1,6 @@
 import React from 'react';
 import { toast } from 'react-toastify';
-import { useQuery } from 'react-query';
+import { useQuery } from '@tanstack/react-query';
 import * as Sentry from '@sentry/nextjs';
 import { useAuth } from '../auth/AuthContext';
 import { getSettingsFile } from '../../utils';
@@ -12,20 +12,20 @@ export const Settings = () => {
   const { user } = useAuth();
 
   const { data: settingsFile } = useQuery(
-    'user-settings',
+    ['user-settings'],
     () => getSettingsFile(),
     {
       cacheTime: 0,
-      onError: (error: Error) => {
+      onError: (error: Error | string) => {
         Sentry.captureException(error);
-        toast.error(error.message || error);
+        toast.error(typeof error === 'string' ? error : error.message);
       },
     }
   );
 
   return (
     <SettingsLayout>
-      <Box css={{ width: '100%' }}>
+      <Box css={{ width: '100%', pl: 1 }}>
         {user && settingsFile && (
           <SettingsForm settings={settingsFile} username={user.username} />
         )}

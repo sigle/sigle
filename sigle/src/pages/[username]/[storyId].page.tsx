@@ -122,7 +122,8 @@ export const getServerSideProps: GetServerSideProps<
   // If deployed on vercel we want to get the deployment url to be able to test unmerged pr's
   // If client side we use window.location.origin
   const appUrl = req.headers['x-forwarded-host']
-    ? `${req.headers['x-forwarded-proto']}://${req.headers['x-forwarded-host']}`
+    ? // ? `${req.headers['x-forwarded-proto']}://${req.headers['x-forwarded-host']}`
+      `https://${req.headers['x-forwarded-host']}`
     : req.headers.host === 'localhost:3000'
     ? 'http://localhost:3000'
     : sigleConfig.appUrl;
@@ -155,6 +156,7 @@ export const getServerSideProps: GetServerSideProps<
     file.content = file.content
       ? sanitizeHtml(file.content, {
           allowedTags: [
+            'div',
             'br',
             // Titles
             'h2',
@@ -184,10 +186,25 @@ export const getServerSideProps: GetServerSideProps<
             'sub',
             'sup',
             'span',
+            // button-cta
+            'button',
           ],
           allowedAttributes: {
             ...sanitizeHtml.defaults.allowedAttributes,
+            a: [
+              // Default
+              'href',
+              'name',
+              'target',
+              // button-cta
+              'data-type',
+            ],
             code: ['class'],
+            div: ['data-twitter', 'data-twitter-id'],
+            button: [
+              // button-cta
+              'data-size',
+            ],
           },
         })
       : '';
