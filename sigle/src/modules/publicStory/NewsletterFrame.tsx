@@ -62,7 +62,7 @@ export const NewsletterFrame = ({
     },
     validateOnBlur: false,
     validateOnChange: false,
-    onSubmit: async (values, { setErrors, validateForm, setSubmitting }) => {
+    onSubmit: async (values, { setErrors, validateForm }) => {
       setErrors({});
       validateForm();
       try {
