@@ -1,7 +1,7 @@
 import { ArrowRightIcon, CheckIcon, Cross1Icon } from '@radix-ui/react-icons';
 import { NonFungibleTokensApi } from '@stacks/blockchain-api-client';
-import { useEffect, useState } from 'react';
-import { useQuery } from 'react-query';
+import { useState } from 'react';
+import { useQuery } from '@tanstack/react-query';
 import { darkTheme, styled } from '../../stitches.config';
 import {
   Box,
@@ -20,7 +20,7 @@ import {
 } from '../../ui';
 import { getNftMetadata } from '../../utils/gamma';
 import { useAuth } from '../auth/AuthContext';
-import { NFTImage } from './NftImage';
+import { NFTImage } from './NFTImage';
 
 interface GammaResponse {
   data: NftTokens;
