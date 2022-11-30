@@ -14,6 +14,7 @@ import { generateRandomId } from '../../../../utils';
 import { resizeAndUploadImage } from '../../utils/image';
 import { PlainTextLight } from '../../../../icons/PlainTextLight';
 import { TwitterLight } from '../../../../icons/TwitterLight';
+import { CtaIcon } from '../../../../icons/CtaIcon';
 
 export const slashCommands = ({
   storyId,
@@ -224,6 +225,25 @@ export const slashCommands = ({
       }
 
       editor.chain().focus().deleteRange(range).setCodeBlock().run();
+    },
+  },
+  {
+    icon: CtaIcon,
+    title: 'Call To Action',
+    description: 'Add a call to action button',
+    command: ({ editor, range }) => {
+      if (!range) {
+        editor.commands.setCta();
+        return;
+      }
+
+      editor
+        .chain()
+        .focus()
+        // Use deleteRange to clear the text from command chars "/q" etc..
+        .deleteRange(range)
+        .run();
+      editor.commands.setCta();
     },
   },
   {

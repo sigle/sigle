@@ -25,7 +25,7 @@ export const Settings = () => {
 
   return (
     <SettingsLayout>
-      <Box css={{ width: '100%' }}>
+      <Box css={{ width: '100%', pl: 1 }}>
         {user && settingsFile && (
           <SettingsForm settings={settingsFile} username={user.username} />
         )}
