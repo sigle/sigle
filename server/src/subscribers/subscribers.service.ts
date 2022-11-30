@@ -82,7 +82,7 @@ export class SubscribersService {
       }
     }
 
-    // Add the new contact to the sigle list.
+    // Add the new contact to the "sigle" list.
     // If already subscribed we skip this part.
     if (contactId) {
       const data: { body: ContactList.TGetContactListResponse } = await mailjet
