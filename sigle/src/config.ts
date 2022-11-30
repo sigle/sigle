@@ -15,7 +15,7 @@ export const sigleConfig = {
   documentationUrl: 'https://docs.sigle.io',
   explorerGuildUrl: 'https://www.explorerguild.io',
   feedbackUrl: 'https://sigle.canny.io/feature-requests',
-  blogUrl: 'https://app.sigle.io/sigleapp.id.blockstack',
+  blogUrl: 'https://app.sigle.io/sigle.btc',
   gammaUrl: 'https://gamma.io/collections/the-explorer-guild',
   email: 'sigle@protonmail.com',
 };
