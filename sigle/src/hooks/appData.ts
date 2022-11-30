@@ -4,13 +4,19 @@ import {
   useQueryClient,
   UseQueryOptions,
 } from '@tanstack/react-query';
-import { UserService } from '../external/api';
+import { DefaultService, UserService } from '../external/api';
 import {
   getSettingsFile,
   GaiaUserFollowing,
   getFollowingFile,
   saveFollowingFile,
 } from '../utils';
+
+type GetApiDismissabledFlagsReturnType = Awaited<
+  ReturnType<
+    typeof DefaultService.dismissableFlagsControllerGetUserDismissableFlags
+  >
+>;
 
 /**
  * Get the app user following from Gaia.
@@ -74,3 +80,27 @@ export const useUserUnfollow = () => {
 
 export const useGetUserSettings = () =>
   useQuery(['user-settings'], () => getSettingsFile());
+
+export const useGetDismissableFlags = (
+  options: UseQueryOptions<GetApiDismissabledFlagsReturnType, Error> = {}
+) =>
+  useQuery<GetApiDismissabledFlagsReturnType, Error>(
+    ['get-user-dismissable-flags'],
+    () => DefaultService.dismissableFlagsControllerGetUserDismissableFlags(),
+    options
+  );
+
+export const useUpdateDismissableFlags = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation<void, Error, { dismissableFlag: string }>(
+    async ({ dismissableFlag }) => {
+      await DefaultService.dismissableFlagsControllerUpdateUserDismissableFlags(
+        {
+          requestBody: { dismissableFlag },
+        }
+      );
+      await queryClient.invalidateQueries(['get-user-dismissable-flags']);
+    }
+  );
+};

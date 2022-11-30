@@ -10,13 +10,18 @@ const experimentalFollowParam = 'experimentalFollow';
 const experimentalNewsletterKey = 'sigle-experimental-newsletter';
 const experimentalNewsletterParam = 'experimentalNewsletter';
 
+const experimentalOnboardingKey = 'sigle-experimental-onboarding';
+const experimentalOnboardingParam = 'experimentalOnboarding';
+
 interface FeatureFlagsOptions {
   isExperimentalFollowEnabled: boolean;
+  isExperimentalOnboardingEnabled: boolean;
   isExperimentalNewsletterEnabled: boolean;
 }
 
 const FeatureFlagsContext = createContext<FeatureFlagsOptions>({
   isExperimentalFollowEnabled: false,
+  isExperimentalOnboardingEnabled: false,
   isExperimentalNewsletterEnabled: false,
 });
 
@@ -27,6 +32,7 @@ interface FeatureFlagsProviderProps {
 export function FeatureFlagsProvider({ children }: FeatureFlagsProviderProps) {
   const [featureToggles, setFeatureToggles] = useState<FeatureFlagsOptions>({
     isExperimentalFollowEnabled: false,
+    isExperimentalOnboardingEnabled: false,
     isExperimentalNewsletterEnabled: false,
   });
 
@@ -37,6 +43,8 @@ export function FeatureFlagsProvider({ children }: FeatureFlagsProviderProps) {
   useEffect(() => {
     let isExperimentalFollowEnabled =
       localStorage.getItem(experimentalFollowKey) === 'true';
+    let isExperimentalOnboardingEnabled =
+      localStorage.getItem(experimentalOnboardingKey) === 'true';
     let isExperimentalNewsletterEnabled =
       localStorage.getItem(experimentalNewsletterKey) === 'true';
 
@@ -49,6 +57,10 @@ export function FeatureFlagsProvider({ children }: FeatureFlagsProviderProps) {
       isExperimentalFollowEnabled = true;
     }
 
+    if (entries[experimentalOnboardingParam] === 'true') {
+      localStorage.setItem(experimentalOnboardingKey, 'true');
+      isExperimentalOnboardingEnabled = true;
+    }
     if (entries[experimentalNewsletterParam] === 'true') {
       localStorage.setItem(experimentalNewsletterKey, 'true');
       isExperimentalNewsletterEnabled = true;
@@ -56,6 +68,7 @@ export function FeatureFlagsProvider({ children }: FeatureFlagsProviderProps) {
 
     setFeatureToggles({
       isExperimentalFollowEnabled,
+      isExperimentalOnboardingEnabled,
       isExperimentalNewsletterEnabled,
     });
   }, []);

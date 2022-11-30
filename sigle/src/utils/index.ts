@@ -220,3 +220,7 @@ export const saveFollowingFile = async (
     encrypt: false,
   });
 };
+
+export enum DismissableFlags {
+  onboarding = 'onboarding',
+}
