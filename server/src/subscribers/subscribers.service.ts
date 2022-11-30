@@ -9,6 +9,7 @@ import {
   ContactSubscription,
 } from 'node-mailjet';
 import { ConfigService } from '@nestjs/config';
+// Mailjet API https://dev.mailjet.com/email/reference/overview/authentication/
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const Mailjet = require('node-mailjet');
 
