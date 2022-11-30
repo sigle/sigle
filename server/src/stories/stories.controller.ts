@@ -1,4 +1,11 @@
-import { Controller, Post, Body, UseGuards, Request } from '@nestjs/common';
+import {
+  Controller,
+  Post,
+  Body,
+  UseGuards,
+  Request,
+  HttpCode,
+} from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { StoriesService } from './stories.service';
 import { PublishStoryDto } from './dto/publishStory.dto';
@@ -11,6 +18,7 @@ export class StoriesController {
 
   @UseGuards(AuthGuard)
   @Post('/api/stories/publish')
+  @HttpCode(200)
   publish(@Request() req, @Body() publishStoryDto: PublishStoryDto) {
     return this.storiesService.publish({
       stacksAddress: req.user.stacksAddress,
@@ -20,6 +28,7 @@ export class StoriesController {
 
   @UseGuards(AuthGuard)
   @Post('/api/stories/unpublish')
+  @HttpCode(200)
   unpublish(@Request() req, @Body() publishStoryDto: PublishStoryDto) {
     return this.storiesService.unpublish({
       stacksAddress: req.user.stacksAddress,
@@ -29,6 +38,7 @@ export class StoriesController {
 
   @UseGuards(AuthGuard)
   @Post('/api/stories/delete')
+  @HttpCode(200)
   delete(@Request() req, @Body() publishStoryDto: PublishStoryDto) {
     return this.storiesService.delete({
       stacksAddress: req.user.stacksAddress,
