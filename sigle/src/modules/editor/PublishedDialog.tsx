@@ -58,7 +58,7 @@ export const PublishedDialog = ({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent>
+      <DialogContent css={{ br: 28 }}>
         <DialogTitle asChild>
           <Heading as="h2" size="2xl" css={{ textAlign: 'center' }}>
             Published!

@@ -1,10 +1,9 @@
-import { Link2Icon } from '@radix-ui/react-icons';
-import { styled } from '../../stitches.config';
+import { CSS, styled } from '../../stitches.config';
 import { Flex, Box } from '../../ui';
 import { Story } from '../../types';
 
 const MetaContainer = styled('div', {
-  borderColor: 'rgb(207, 217, 222)',
+  borderColor: '$gray6',
   borderRadius: '16px',
   borderWidth: '1px',
   borderStyle: 'solid',
@@ -22,8 +21,9 @@ const MetaContainer = styled('div', {
 
 const MetaTitle = styled('div', {
   color: '$gray11',
-  fontSize: '15px',
-  lineHeight: '20px',
+  fontSize: '13px',
+  lineHeight: '18px',
+  fontWeight: 600,
   overflowWrap: 'break-word',
   overflow: 'hidden',
   textOverflow: 'ellipsis',
@@ -31,8 +31,8 @@ const MetaTitle = styled('div', {
 
 const MetaDescription = styled('div', {
   color: '$gray10',
-  fontSize: '15px',
-  lineHeight: '20px',
+  fontSize: '11px',
+  lineHeight: '14px',
   overflowWrap: 'break-word',
   overflow: 'hidden',
   textOverflow: 'ellipsis',
@@ -40,8 +40,8 @@ const MetaDescription = styled('div', {
 
 const MetaLink = styled('div', {
   color: '$gray9',
-  fontSize: '15px',
-  lineHeight: '20px',
+  fontSize: '11px',
+  lineHeight: '14px',
   overflowWrap: 'break-word',
   overflow: 'hidden',
   textOverflow: 'ellipsis',
@@ -51,15 +51,19 @@ const MetaLink = styled('div', {
 
 interface TwitterCardPreviewProps {
   story: Story;
+  css?: CSS;
 }
 
-export const TwitterCardPreview = ({ story }: TwitterCardPreviewProps) => {
+export const TwitterCardPreview = ({
+  story,
+  ...props
+}: TwitterCardPreviewProps) => {
   const seoTitle = story.metaTitle || `${story.title} | Sigle`;
   const seoDescription = story.metaDescription;
   const seoImage = story.metaImage || story.coverImage;
 
   return (
-    <MetaContainer image={!!seoImage}>
+    <MetaContainer css={{ ...props.css }} image={!!seoImage}>
       {seoImage ? (
         <Box css={{ overflow: 'hidden', position: 'relative' }}>
           <Box css={{ paddingBottom: '52.356%' }} />
@@ -138,16 +142,11 @@ export const TwitterCardPreview = ({ story }: TwitterCardPreviewProps) => {
 
       <Flex
         direction="column"
-        css={{ gap: 2, padding: 12, justifyContent: 'center', width: '100%' }}
+        css={{ gap: '$1', p: '$2', justifyContent: 'center', width: '100%' }}
       >
+        <MetaLink>app.sigle.io</MetaLink>
         <MetaTitle>{seoTitle}</MetaTitle>
         <MetaDescription>{seoDescription}</MetaDescription>
-        <MetaLink>
-          <Link2Icon />
-          <Box as="span" css={{ ml: 4 }}>
-            sigle.io
-          </Box>
-        </MetaLink>
       </Flex>
     </MetaContainer>
   );
