@@ -29,11 +29,14 @@ export const SlashCommands = Extension.create<{
     return {
       commands: [],
       filterCommands: (commands, query) => {
-        return commands
-          .filter((item) =>
-            item.title.toLowerCase().startsWith(query.toLowerCase())
-          )
-          .slice(0, 10);
+        return (
+          commands
+            .filter((item) =>
+              item.title.toLowerCase().startsWith(query.toLowerCase())
+            )
+            // When user is filtering, only show 10 results
+            .slice(0, query.length > 0 ? 10 : 20)
+        );
       },
       suggestion: {
         char: '/',

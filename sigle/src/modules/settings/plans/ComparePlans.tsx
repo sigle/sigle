@@ -49,16 +49,16 @@ const features: Feature[] = [
     info: 'In-depth analysis of your stories to maximize your views and visits on your blog.',
   },
   {
+    name: 'Send newsletters',
+    starterPlan: 'inactive',
+    creatorPlan: 'progress',
+    info: 'Create your community on web3 and send newsletters (paid or free) to your subscribers!',
+  },
+  {
     name: 'Monetise your stories',
     starterPlan: 'progress',
     creatorPlan: 'progress',
     info: 'Get subscribers, monetise your stories and newsletters in crypto or fiat.',
-  },
-  {
-    name: 'Send newsletters',
-    starterPlan: 'progress',
-    creatorPlan: 'progress',
-    info: 'Create your community on web3 and send newsletters (paid or free) to your subscribers!',
   },
   {
     name: 'Get featured in the Discover page',
@@ -280,6 +280,7 @@ export const ComparePlans = () => {
       <TableContainer />
       <Link href="/settings/plans">
         <Button
+          size="sm"
           css={{
             gap: '$2',
             cursor: 'pointer',

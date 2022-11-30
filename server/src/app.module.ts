@@ -9,12 +9,14 @@ import type { ClientOpts } from 'redis';
 import { validate } from './environment/environment.validation';
 import { UserModule } from './user/user.module';
 import { SubscriptionModule } from './subscription/subscription.module';
-import { PrismaService } from './prisma.service';
 import { AnalyticsModule } from './analytics/analytics.module';
 import { PlausibleService } from './plausible/plausible.service';
 import { StacksService } from './stacks/stacks.service';
 import { AppController } from './app.controller';
 import { DismissableFlagsModule } from './dismissable-flags/dismissable-flags.module';
+import { EmailModule } from './email/email.module';
+import { SubscribersModule } from './subscribers/subscribers.module';
+import { PrismaModule } from './prisma/prisma.module';
 
 @Module({
   imports: [
@@ -53,10 +55,13 @@ import { DismissableFlagsModule } from './dismissable-flags/dismissable-flags.mo
         url: config.get('REDIS_DATABASE_URL'),
       }),
     }),
+    PrismaModule,
     UserModule,
     SubscriptionModule,
     AnalyticsModule,
     DismissableFlagsModule,
+    EmailModule,
+    SubscribersModule,
   ],
   controllers: [AppController],
   providers: [
@@ -80,7 +85,6 @@ import { DismissableFlagsModule } from './dismissable-flags/dismissable-flags.mo
           ],
         }),
     },
-    PrismaService,
     StacksService,
     PlausibleService,
   ],

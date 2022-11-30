@@ -5,6 +5,7 @@ import {
   useRef,
   useState,
 } from 'react';
+import { CtaIcon } from '../../../../icons/CtaIcon';
 import { darkTheme, styled } from '../../../../stitches.config';
 import { Box, Flex, Typography } from '../../../../ui';
 import { SlashCommandsCommand } from './SlashCommands';
@@ -117,6 +118,11 @@ export const CommandList = forwardRef<CommandListRef, CommandListProps>(
     );
     const twitterItem = items[twitterItemIndex];
 
+    const callToActionItemIndex = items.findIndex(
+      (item) => item.title === 'Call To Action'
+    );
+    const callToActionItem = items[callToActionItemIndex];
+
     return (
       <Flex
         direction="column"
@@ -125,7 +131,10 @@ export const CommandList = forwardRef<CommandListRef, CommandListProps>(
       >
         <CommandsListLabel>Basics</CommandsListLabel>
         {items
-          .filter((item) => item.title !== 'Twitter')
+          .filter(
+            (item) =>
+              item.title !== 'Twitter' && item.title !== 'Call To Action'
+          )
           .map(({ title, description, icon: Icon }, index) => (
             <CommandsListItem
               key={index}
@@ -165,6 +174,37 @@ export const CommandList = forwardRef<CommandListRef, CommandListProps>(
           ))}
         <CommandsListSeparator />
         <CommandsListLabel>Embeds</CommandsListLabel>
+        {callToActionItem && (
+          <CommandsListItem
+            data-index={callToActionItemIndex}
+            className={
+              selectedIndex === callToActionItemIndex ? 'is-selected' : ''
+            }
+            onClick={() => selectItem(callToActionItemIndex)}
+          >
+            <Flex align="center">
+              <CtaIcon width={28} height={28} />
+              <Flex direction="column" css={{ ml: '$2' }}>
+                <Typography size="subparagraph">
+                  {callToActionItem.title}
+                </Typography>
+                <Typography size="subparagraph" css={{ color: '$gray9' }}>
+                  {callToActionItem.description}
+                </Typography>
+              </Flex>
+            </Flex>
+            {currentNodeName === callToActionItem.title && (
+              <Box
+                css={{
+                  backgroundColor: '$green11',
+                  width: 8,
+                  height: 8,
+                  br: '$round',
+                }}
+              />
+            )}
+          </CommandsListItem>
+        )}
         {twitterItem && (
           <CommandsListItem
             data-index={twitterItemIndex}

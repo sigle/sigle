@@ -118,6 +118,8 @@ export const ShareButtons = ({
           <IconButton
             disabled={isCopied}
             css={{
+              width: 15,
+              height: 15,
               p: 0,
               '&:hover': { backgroundColor: 'transparent' },
               '&:active': { backgroundColor: 'transparent' },

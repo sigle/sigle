@@ -7,6 +7,8 @@ import { createContext, useContext, useEffect, useState } from 'react';
 
 const experimentalFollowKey = 'sigle-experimental-follow';
 const experimentalFollowParam = 'experimentalFollow';
+const experimentalNewsletterKey = 'sigle-experimental-newsletter';
+const experimentalNewsletterParam = 'experimentalNewsletter';
 
 const experimentalOnboardingKey = 'sigle-experimental-onboarding';
 const experimentalOnboardingParam = 'experimentalOnboarding';
@@ -14,11 +16,13 @@ const experimentalOnboardingParam = 'experimentalOnboarding';
 interface FeatureFlagsOptions {
   isExperimentalFollowEnabled: boolean;
   isExperimentalOnboardingEnabled: boolean;
+  isExperimentalNewsletterEnabled: boolean;
 }
 
 const FeatureFlagsContext = createContext<FeatureFlagsOptions>({
   isExperimentalFollowEnabled: false,
   isExperimentalOnboardingEnabled: false,
+  isExperimentalNewsletterEnabled: false,
 });
 
 interface FeatureFlagsProviderProps {
@@ -29,6 +33,7 @@ export function FeatureFlagsProvider({ children }: FeatureFlagsProviderProps) {
   const [featureToggles, setFeatureToggles] = useState<FeatureFlagsOptions>({
     isExperimentalFollowEnabled: false,
     isExperimentalOnboardingEnabled: false,
+    isExperimentalNewsletterEnabled: false,
   });
 
   /**
@@ -40,6 +45,8 @@ export function FeatureFlagsProvider({ children }: FeatureFlagsProviderProps) {
       localStorage.getItem(experimentalFollowKey) === 'true';
     let isExperimentalOnboardingEnabled =
       localStorage.getItem(experimentalOnboardingKey) === 'true';
+    let isExperimentalNewsletterEnabled =
+      localStorage.getItem(experimentalNewsletterKey) === 'true';
 
     // Enable feature flags from the url params
     const query = new URL(window.location.href).searchParams;
@@ -54,10 +61,15 @@ export function FeatureFlagsProvider({ children }: FeatureFlagsProviderProps) {
       localStorage.setItem(experimentalOnboardingKey, 'true');
       isExperimentalOnboardingEnabled = true;
     }
+    if (entries[experimentalNewsletterParam] === 'true') {
+      localStorage.setItem(experimentalNewsletterKey, 'true');
+      isExperimentalNewsletterEnabled = true;
+    }
 
     setFeatureToggles({
       isExperimentalFollowEnabled,
       isExperimentalOnboardingEnabled,
+      isExperimentalNewsletterEnabled,
     });
   }, []);
 

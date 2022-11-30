@@ -80,7 +80,7 @@ export const EditorHeader = ({
     >
       <Flex gap={{ '@initial': '5', '@md': '10' }} align="center">
         <Link href="/" passHref>
-          <IconButton as="a" aria-label="Go back to the dashboard">
+          <IconButton size="sm" as="a" aria-label="Go back to the dashboard">
             <ArrowLeftIcon />
           </IconButton>
         </Link>
@@ -107,6 +107,7 @@ export const EditorHeader = ({
         {story && story.type === 'public' && (
           <>
             <Button
+              size="sm"
               css={{
                 display: 'none',
                 alignItems: 'center',
@@ -118,11 +119,12 @@ export const EditorHeader = ({
               target="_blank"
               as="a"
             >
-              <Typography size="subheading">See your story</Typography>
+              See your story
               <EyeOpenIcon />
             </Button>
 
             <IconButton
+              size="sm"
               href={`/${user?.username}/${story.id}`}
               target="_blank"
               as="a"
@@ -135,12 +137,12 @@ export const EditorHeader = ({
       </Flex>
       <Flex gap={{ '@initial': '5', '@md': '10' }}>
         {loadingSave && (
-          <Button disabled variant="ghost">
+          <Button size="sm" disabled variant="ghost">
             Saving ...
           </Button>
         )}
         {!loadingSave && story && story.type === 'public' && (
-          <Button onClick={() => onSave()} variant="ghost">
+          <Button size="sm" onClick={() => onSave()} variant="ghost">
             Save
           </Button>
         )}
@@ -149,22 +151,26 @@ export const EditorHeader = ({
             content="Nobody can see it unless you click on « publish »"
             theme="light-border"
           >
-            <Button onClick={() => onSave()} variant="ghost">
+            <Button size="sm" onClick={() => onSave()} variant="ghost">
               Save
             </Button>
           </Tippy>
         )}
         {story && story.type === 'private' && (
-          <Button onClick={onPublish} variant="ghost">
+          <Button size="sm" onClick={onPublish} variant="ghost">
             Publish
           </Button>
         )}
         {story && story.type === 'public' && (
-          <Button onClick={onUnpublish} variant="ghost">
+          <Button size="sm" onClick={onUnpublish} variant="ghost">
             Unpublish
           </Button>
         )}
-        <IconButton onClick={onOpenSettings} aria-label="Open settings">
+        <IconButton
+          size="sm"
+          onClick={onOpenSettings}
+          aria-label="Open settings"
+        >
           <MixerHorizontalIcon />
         </IconButton>
       </Flex>

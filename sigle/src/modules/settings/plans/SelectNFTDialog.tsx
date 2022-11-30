@@ -191,7 +191,9 @@ export const SelectNFTDialog = ({
               </DialogDescription>
             </Box>
             <Link href="/" passHref>
-              <Button variant="subtle">Go to dashboard</Button>
+              <Button size="sm" variant="subtle">
+                Go to dashboard
+              </Button>
             </Link>
           </Flex>
         ) : (
@@ -204,6 +206,7 @@ export const SelectNFTDialog = ({
             align="center"
           >
             <IconButton
+              size="sm"
               disabled={currentPage === 1}
               onClick={() => setCurrentPage(currentPage - 1)}
               aria-label="previous page"
@@ -407,6 +410,7 @@ export const SelectNFTDialog = ({
               )}
             </Flex>
             <IconButton
+              size="sm"
               disabled={!hasNextPage}
               onClick={() => setCurrentPage(currentPage + 1)}
               aria-label="page"

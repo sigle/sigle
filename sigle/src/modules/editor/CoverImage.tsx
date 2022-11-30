@@ -71,6 +71,7 @@ export const CoverImage = ({ story, setStoryFile }: CoverImageProps) => {
         <Box css={{ py: '$5', mb: '-$5', display: 'flex' }} {...getRootProps()}>
           <input {...getInputProps()} />
           <Button
+            size="sm"
             variant="ghostMuted"
             css={{
               gap: '$1',
