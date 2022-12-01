@@ -18,6 +18,7 @@ export const Home = ({ type }: HomeProps) => {
   const loadStoryFile = async () => {
     try {
       const file = await getStoriesFile();
+      console.log(file);
       const filter = type === 'published' ? 'public' : 'private';
       const fileStories = file.stories.filter((s) => s.type === filter);
       setStories(fileStories);
