@@ -31,7 +31,7 @@ describe('getServerSideProps', () => {
   it('should return info', async () => {
     const data = await getServerSideProps({
       params: {
-        username: 'sigleapp.id.blockstack',
+        username: 'sigle.btc',
         storyId: 'FRNv_3Lpup1CHZtGUDPOh',
       },
       req: { headers: {} },

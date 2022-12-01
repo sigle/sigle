@@ -187,7 +187,10 @@ export const DashboardLayout = ({
             </Link>
           ))}
           <Button
-            css={{ mt: '$5', alignSelf: 'start' }}
+            css={{
+              mt: '$5',
+              alignSelf: 'start',
+            }}
             disabled={loadingCreate}
             onClick={handleCreateNewPrivateStory}
             size="lg"

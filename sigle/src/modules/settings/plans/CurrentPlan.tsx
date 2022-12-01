@@ -7,6 +7,7 @@ import { useGetUserSubscription } from '../../../hooks/subscriptions';
 import Link from 'next/link';
 import { sigleConfig } from '../../../config';
 import { SelectNFTDialog } from './SelectNFTDialog';
+import { useAuth } from '../../auth/AuthContext';
 
 const plans = {
   starter: {
@@ -71,6 +72,7 @@ export const CurrentPlan = () => {
     data: userSubscription,
   } = useGetUserSubscription();
   const [isSelectNFTDialogOpen, setIsSelectNFTDialogOpen] = useState(false);
+  const { user, isLegacy } = useAuth();
 
   const currentPlan: 'starter' | 'creatorPlus' = userSubscription
     ? 'creatorPlus'
@@ -80,20 +82,36 @@ export const CurrentPlan = () => {
 
   return (
     <SettingsLayout>
-      <Flex align="center" justify="between">
-        <Typography size="h4" css={{ fontWeight: 600 }}>
+      <Flex
+        css={{
+          pb: isLegacy ? '$5' : 0,
+          mb: isLegacy ? '$2' : 0,
+          borderBottom: isLegacy ? '1px solid $colors$gray6' : 'none',
+        }}
+        align="center"
+        justify="between"
+      >
+        <Typography
+          size="h4"
+          css={{
+            fontWeight: 600,
+            flexGrow: 1,
+          }}
+        >
           Current plan
         </Typography>
         {!isLoading && !isError ? (
           currentPlan === 'starter' ? (
             <Link href="/settings/plans/compare" passHref>
-              <Button color="orange" as="a">
+              <Button size="sm" color="orange" as="a">
                 Upgrade
               </Button>
             </Link>
           ) : (
             <Link href="/settings/plans/compare" passHref>
-              <Button variant="subtle">Change plan</Button>
+              <Button size="sm" variant="subtle">
+                Change plan
+              </Button>
             </Link>
           )
         ) : null}
@@ -197,6 +215,19 @@ export const CurrentPlan = () => {
           </Flex>
         </>
       ) : null}
+
+      {isLegacy && (
+        <Flex direction="column" css={{ mt: '$5' }} gap="3" align="center">
+          <Typography size="subheading">
+            This feature is available for Hiro wallet accounts only
+          </Typography>
+          <Link href={`/${user?.username}`} passHref>
+            <Button size="sm" variant="subtle" as="a">
+              Back to profile
+            </Button>
+          </Link>
+        </Flex>
+      )}
 
       <SelectNFTDialog
         open={isSelectNFTDialogOpen}

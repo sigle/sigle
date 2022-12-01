@@ -2,16 +2,26 @@ import { BadRequestException, Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { validateStacksAddress } from 'micro-stacks/crypto';
 import { getToken } from 'next-auth/jwt';
+import { fetch } from 'undici';
+import { Prisma } from '@prisma/client';
+import { InfoApi, Configuration } from '@stacks/blockchain-api-client';
+import { StacksService } from '../stacks/stacks.service';
 import { EnvironmentVariables } from '../environment/environment.validation';
-import { PrismaService } from '../prisma.service';
+import { PrismaService } from '../prisma/prisma.service';
 
 @Injectable()
 export class UserService {
+  private stacksInfoApi: InfoApi;
+
   constructor(
     private readonly configService: ConfigService<EnvironmentVariables>,
     private prisma: PrismaService,
-  ) {}
-
+    private readonly stacksService: StacksService,
+  ) {
+    this.stacksInfoApi = new InfoApi(
+      new Configuration({ fetchApi: fetch as any }),
+    );
+  }
   async explore({ page }: { page: number }) {
     if (!page || page === 0) {
       page = 1;
@@ -33,6 +43,34 @@ export class UserService {
     return { data: users, nextPage };
   }
 
+  async createUser({
+    stacksAddress,
+    isLegacy,
+    userSelectFields,
+  }: {
+    stacksAddress: string;
+    isLegacy: boolean;
+    userSelectFields: Prisma.UserSelect;
+  }): Promise<any> {
+    const stacksUsername = await this.stacksService.getUsernameByAddress(
+      stacksAddress,
+    );
+    const gaiaUrl = await this.stacksService.getBucketUrl({
+      username: stacksUsername,
+    });
+    const data = await this.stacksInfoApi.getCoreApiInfo();
+    return this.prisma.user.create({
+      data: {
+        stacksAddress,
+        isLegacy,
+        stacksUsername,
+        gaiaUrl: gaiaUrl.bucketUrl,
+        stacksBlock: data.burn_block_height,
+      },
+      select: userSelectFields,
+    });
+  }
+
   async getUserMe({ stacksAddress }: { stacksAddress: string }) {
     const userSelectFields = {
       id: true,
@@ -44,11 +82,10 @@ export class UserService {
     });
 
     if (!loggedInUser) {
-      loggedInUser = await this.prisma.user.create({
-        data: {
-          stacksAddress,
-        },
-        select: userSelectFields,
+      loggedInUser = await this.createUser({
+        stacksAddress,
+        isLegacy: false,
+        userSelectFields,
       });
     }
 
@@ -100,12 +137,10 @@ export class UserService {
         secret: this.configService.get('NEXTAUTH_SECRET'),
       });
       if (token && token.sub) {
-        const newUser = await this.prisma.user.create({
-          data: {
-            stacksAddress: userAddress,
-            isLegacy: true,
-          },
-          select: { id: true, stacksAddress: true },
+        const newUser = await this.createUser({
+          stacksAddress: userAddress,
+          isLegacy: true,
+          userSelectFields: { id: true, stacksAddress: true },
         });
         return {
           ...newUser,

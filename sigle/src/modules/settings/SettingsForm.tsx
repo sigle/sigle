@@ -9,11 +9,8 @@ import { hexRegex } from '../../utils/regex';
 import { storage } from '../../utils/blockstack';
 import { getSettingsFile, isValidHttpUrl, saveSettingsFile } from '../../utils';
 import { resizeImage } from '../../utils/image';
-import { colors } from '../../utils/colors';
+import { colors, getContrastingColor } from '../../utils/colors';
 import {
-  Box,
-  Button,
-  Typography,
   FormRow,
   FormLabel,
   FormInput,
@@ -26,25 +23,7 @@ import { useQueryClient } from '@tanstack/react-query';
 import { generateAvatar } from '../../utils/boringAvatar';
 import { useAuth } from '../auth/AuthContext';
 import { useGetUserSettings } from '../../hooks/appData';
-
-const UnsavedChangesContainer = styled('div', {
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'space-between',
-  br: '$2',
-  boxShadow:
-    '0px 8px 20px rgba(8, 8, 8, 0.06), 0px 10px 18px rgba(8, 8, 8, 0.04), 0px 5px 14px rgba(8, 8, 8, 0.04), 0px 3px 8px rgba(8, 8, 8, 0.04), 0px 1px 5px rgba(8, 8, 8, 0.03), 0px 1px 2px rgba(8, 8, 8, 0.02), 0px 0.2px 1px rgba(8, 8, 8, 0.01)',
-  position: 'sticky',
-  bottom: '$5',
-  px: '$5',
-  py: '$3',
-  overflow: 'hidden',
-
-  [`.${darkTheme} &`]: {
-    boxShadow:
-      '0px 8px 20px rgba(8, 8, 8, 0.32), 0px 10px 18px rgba(8, 8, 8, 0.28), 0px 5px 14px rgba(8, 8, 8, 0.26), 0px 3px 8px rgba(8, 8, 8, 0.16), 0px 1px 5px rgba(8, 8, 8, 0.14), 0px 1px 2px rgba(8, 8, 8, 0.12), 0px 0.2px 1px rgba(8, 8, 8, 0.08)',
-  },
-});
+import { UnsavedChanges } from './components/UnsavedChanges';
 
 const FormColor = styled('div', {
   py: '$1',
@@ -349,12 +328,17 @@ export const SettingsForm = ({ settings, username }: SettingsFormProps) => {
       <FormRow>
         <FormLabel>Primary color</FormLabel>
         <FormColor
-          css={{ backgroundColor: formik.values.siteColor || colors.pink }}
+          css={{
+            backgroundColor: formik.values.siteColor || colors.pink,
+            color: getContrastingColor(formik.values.siteColor || colors.pink),
+          }}
           onClick={() => setColorOpen(true)}
         >
           {formik.values.siteColor || colors.pink}
           {colorOpen && (
-            <div style={{ position: 'absolute', zIndex: 2, top: 52, left: 0 }}>
+            <div
+              style={{ position: 'absolute', zIndex: 2, top: -150, left: 160 }}
+            >
               <div
                 style={{
                   position: 'fixed',
@@ -369,6 +353,14 @@ export const SettingsForm = ({ settings, username }: SettingsFormProps) => {
                 }}
               />
               <BlockPicker
+                styles={{
+                  default: {
+                    input: {
+                      backgroundColor: 'white',
+                    },
+                  },
+                }}
+                triangle="hide"
                 color={formik.values.siteColor || colors.pink}
                 onChange={(newColor) =>
                   formik.setFieldValue('siteColor', newColor.hex)
@@ -384,30 +376,7 @@ export const SettingsForm = ({ settings, username }: SettingsFormProps) => {
         )}
       </FormRow>
       {(formik.dirty || customLogo) && (
-        <UnsavedChangesContainer>
-          <Box
-            css={{
-              position: 'absolute',
-              width: '100%',
-              height: '100%',
-              left: 0,
-              zIndex: -1,
-              backgroundColor: '$gray1',
-              opacity: 0.95,
-            }}
-          />
-          <Typography size="subheading" css={{ fontWeight: 600 }}>
-            You have unsaved changes
-          </Typography>
-          <Button
-            disabled={formik.isSubmitting}
-            type="submit"
-            size="md"
-            color="orange"
-          >
-            {formik.isSubmitting ? 'Saving...' : 'Save changes'}
-          </Button>
-        </UnsavedChangesContainer>
+        <UnsavedChanges saving={formik.isSubmitting} />
       )}
     </form>
   );

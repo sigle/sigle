@@ -25,6 +25,7 @@ import {
 import { useTheme } from 'next-themes';
 import { sigleConfig } from '../../config';
 import { useState } from 'react';
+import { LoginModal } from '../loginModal/LoginModal';
 
 const ProfileImageContainer = styled('div', {
   display: 'flex',
@@ -58,6 +59,7 @@ export const ProfileCard = ({
   const { user, isLegacy } = useAuth();
   const { resolvedTheme } = useTheme();
   const [isOpen, setIsOpen] = useState(false);
+  const [showLoginPromptDialog, setShowLoginPromptDialog] = useState(false);
   const { data: userFollowing } = useGetGaiaUserFollowing({
     enabled: isOpen && !!user && userInfo.username !== user.username,
     staleTime: Infinity,
@@ -86,6 +88,10 @@ export const ProfileCard = ({
 
   const siteName = settings.siteName || userInfo.username;
 
+  const handleShowLoginPrompt = () => setShowLoginPromptDialog(true);
+
+  const handleCancelLoginPrompt = () => setShowLoginPromptDialog(false);
+
   return (
     <HoverCard onOpenChange={(open) => setIsOpen(open)} openDelay={300}>
       <Link href="/[username]" as={`/${userInfo.username}`} passHref>
@@ -110,28 +116,27 @@ export const ProfileCard = ({
               }
             />
           </ProfileImageContainer>
-          {user &&
-          user.username !== userInfo.username &&
-          !isLegacy &&
-          userFollowing ? (
-            !isFollowingUser ? (
+          {user?.username !== userInfo.username &&
+            !isLegacy &&
+            (!isFollowingUser ? (
               <Button
+                size="sm"
                 color="orange"
                 css={{ ml: '$5', alignSelf: 'start' }}
-                onClick={handleFollow}
+                onClick={user ? handleFollow : handleShowLoginPrompt}
               >
                 Follow
               </Button>
             ) : (
               <Button
+                size="sm"
                 variant="subtle"
                 css={{ ml: '$5', alignSelf: 'start' }}
                 onClick={handleUnfollow}
               >
                 Unfollow
               </Button>
-            )
-          ) : null}
+            ))}
         </Flex>
         <Flex gap="1" align="center">
           <Link href="/[username]" as={`/${userInfo.username}`} passHref>
@@ -213,6 +218,11 @@ export const ProfileCard = ({
           </Link>
         </Flex>
       </HoverCardContent>
+
+      <LoginModal
+        open={showLoginPromptDialog}
+        onClose={handleCancelLoginPrompt}
+      />
     </HoverCard>
   );
 };

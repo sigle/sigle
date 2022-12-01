@@ -36,7 +36,7 @@ describe('AnalyticsService', () => {
         {
           provide: StacksService,
           useValue: {
-            getUsernameByAddress: () => 'sigleapp.id.blockstack',
+            getUsernameByAddress: () => 'sigle.btc',
             getBucketUrl: () => ({
               profile: {},
               bucketUrl: 'https://www.sigle.io',
@@ -108,7 +108,7 @@ describe('AnalyticsService', () => {
       expect(plausibleService.referrers).toBeCalledWith({
         dateFrom: '2022-05-01',
         dateTo: '2022-04-04',
-        paths: ['/sigleapp.id.blockstack/test'],
+        paths: ['/sigle.btc/test'],
       });
       expect(data).toMatchSnapshot();
     });

@@ -4,7 +4,7 @@ import { StoryCard } from './StoryCard';
 import { SubsetStory } from '../../types';
 
 const userInfo = {
-  username: 'sigleapp.id.blockstack',
+  username: 'sigle.btc',
   address: 'SPXXXX',
 };
 const story: SubsetStory = {

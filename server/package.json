@@ -1,6 +1,6 @@
 {
   "name": "@sigle/server",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "private": true,
   "scripts": {
     "prebuild": "rimraf dist",
@@ -47,22 +47,27 @@
     "@nestjs/throttler": "3.0.0",
     "@ntegral/nestjs-sentry": "4.0.0",
     "@prisma/client": "4.3.1",
-    "@sentry/node": "7.12.1",
+    "@sentry/node": "7.20.0",
+    "@stacks/blockchain-api-client": "6.1.0",
     "cache-manager": "4.1.0",
     "cache-manager-redis-store": "2.0.0",
     "class-transformer": "0.5.1",
     "class-validator": "0.13.2",
     "date-fns": "2.28.0",
+    "deep-email-validator": "0.1.21",
+    "handlebars": "4.7.7",
+    "himalaya": "1.1.0",
     "ioredis": "5.2.3",
     "micro-stacks": "1.1.4",
     "nestjs-throttler-storage-redis": "0.1.20",
     "next-auth": "4.10.3",
+    "node-mailjet": "5.1.1",
     "prisma": "4.3.1",
     "redis": "3.1.2",
     "reflect-metadata": "0.1.13",
     "rimraf": "3.0.2",
     "rxjs": "7.5.7",
-    "undici": "5.10.0"
+    "undici": "5.11.0"
   },
   "devDependencies": {
     "@nestjs/cli": "9.1.3",

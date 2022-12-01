@@ -12,31 +12,19 @@ export class StacksService {
     @Inject(CACHE_MANAGER) private readonly cacheManager: Cache,
     private readonly configService: ConfigService<EnvironmentVariables>,
   ) {}
-  /**
-   * Return the username of a stacks address.
-   * Cache the result for better performance as the username is not changing often.
-   */
-  async getUsernameByAddress(address: string): Promise<string> {
-    const cacheKey = `stacks_username:${address}`;
-    const cachedResponse = await this.cacheManager.get<string>(cacheKey);
-    if (cachedResponse) {
-      return cachedResponse;
-    }
 
-    let username: string;
+  /**
+   * Return the username associated to a stacks address.
+   */
+  async getUsernameByAddress(address: string): Promise<string | null> {
     const namesResponse = await fetch(
       `https://stacks-node-api.stacks.co/v1/addresses/stacks/${address}`,
     );
     const namesJson = (await namesResponse.json()) as { names: string[] };
     if ((namesJson.names.length || 0) > 0) {
-      username = namesJson.names[0];
-    } else {
-      throw new Error(`No username found for ${address}`);
+      return namesJson.names[0];
     }
-
-    // Cache response for 1 day
-    await this.cacheManager.set(cacheKey, username, 24 * 60 * 60);
-    return username;
+    return null;
   }
 
   async getBucketUrl({
@@ -49,7 +37,7 @@ export class StacksService {
       userProfile = await lookupProfile({ username });
     } catch (error) {
       // This will happen if there is no blockstack user with this name
-      if (error.message === 'Name not found') {
+      if (error?.message === 'Name not found') {
         userProfile = undefined;
       } else {
         throw error;

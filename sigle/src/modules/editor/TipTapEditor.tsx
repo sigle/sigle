@@ -43,7 +43,9 @@ import { KeyboardIcon } from '@radix-ui/react-icons';
 import { useTheme } from 'next-themes';
 import { TipTapImage } from './extensions/Image';
 import { Toolbar } from './EditorToolbar/EditorToolbar';
+import { Twitter as TipTapTwitter } from './extensions/Twitter';
 import { MobileScroll } from './extensions/MobileScroll';
+import { Cta as TipTapCta } from './extensions/CallToAction';
 
 const fadeInAnimation = keyframes({
   '0%': { opacity: '0' },
@@ -169,6 +171,8 @@ export const TipTapEditor = forwardRef<
       TipTapHistory,
       TipTapPlaceholder(isMobile),
       // Custom extensions
+      TipTapTwitter,
+      TipTapCta,
       !isMobile
         ? SlashCommands.configure({
             commands: slashCommands({ storyId: story.id }),
@@ -223,6 +227,7 @@ export const TipTapEditor = forwardRef<
                 alignItems: 'center',
                 gap: '$3',
                 position: 'fixed',
+                mb: '$10',
                 bottom: 0,
                 right: 0,
                 left: 0,
@@ -238,6 +243,7 @@ export const TipTapEditor = forwardRef<
                 {editor?.storage.characterCount.words()} words
               </Typography>
               <IconButton
+                size="sm"
                 css={{
                   pointerEvents: 'auto',
                 }}

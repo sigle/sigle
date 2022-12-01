@@ -41,14 +41,12 @@ describe('StacksService', () => {
   });
 
   describe('getUsernameByAddress', () => {
-    it('should throw an error if no username found', async () => {
-      await expect(
-        service.getUsernameByAddress(
+    it('should return null if no username found', async () => {
+      expect(
+        await service.getUsernameByAddress(
           'SP2XTR7ZK886AJB0HNHNF244NBGZ0MG1P5PH8SB1C',
         ),
-      ).rejects.toThrowError(
-        'No username found for SP2XTR7ZK886AJB0HNHNF244NBGZ0MG1P5PH8SB1C',
-      );
+      ).toEqual(null);
     });
 
     it('should return correct username', async () => {

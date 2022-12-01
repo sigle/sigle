@@ -8,13 +8,14 @@ import { sigleConfig } from '../../config';
 import { TipTapEditor } from '../editor/TipTapEditor';
 import { styled } from '../../stitches.config';
 import { Box, Container, Flex, Typography } from '../../ui';
-import { PoweredBy } from './PoweredBy';
+import { NewsletterFrame } from './NewsletterFrame';
 import { getTextFromHtml } from '../editor/utils/getTextFromHtml';
 import { AppHeader } from '../layout/components/AppHeader';
 import format from 'date-fns/format';
 import { ShareButtons } from './ShareButtons';
 import { generateAvatar } from '../../utils/boringAvatar';
 import { ProfileCard } from '../profileCard/ProfileCard';
+import { PoweredBy } from './PoweredBy';
 
 const ProfileImageContainer = styled('div', {
   cursor: 'pointer',
@@ -137,6 +138,7 @@ export const PublicStory = ({
       <NextSeo
         title={seoTitle}
         description={story.metaDescription}
+        canonical={story.canonicalUrl}
         openGraph={{
           type: 'website',
           url: seoUrl,
@@ -249,6 +251,7 @@ export const PublicStory = ({
           story={story}
           settings={settings}
         />
+        <NewsletterFrame stacksAddress={userInfo.address} siteName={siteName} />
         <PoweredBy />
       </PublicStoryContainer>
     </>

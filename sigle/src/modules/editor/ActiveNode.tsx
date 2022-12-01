@@ -87,5 +87,33 @@ export const activeNode = (editor: Editor, storyId: string) => {
     };
   }
 
+  if (editor.isActive('twitter')) {
+    const twitter = slashCommands({ storyId }).find(
+      (item) => item.title === 'Twitter'
+    );
+    if (!twitter) {
+      return;
+    }
+    const Icon = twitter.icon;
+    return {
+      name: twitter.title,
+      icon: <Icon />,
+    };
+  }
+
+  if (editor.isActive('twitter')) {
+    const twitter = slashCommands({ storyId }).find(
+      (item) => item.title === 'Twitter'
+    );
+    if (!twitter) {
+      return;
+    }
+    const Icon = twitter.icon;
+    return {
+      name: twitter.title,
+      icon: <Icon />,
+    };
+  }
+
   return { name: 'Plain Text', icon: <TextIcon /> };
 };

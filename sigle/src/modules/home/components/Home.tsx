@@ -158,6 +158,7 @@ export const Home = ({
           }`}</Typography>
           {selectedTab === 'drafts' && (
             <Button
+              size="sm"
               variant="subtle"
               disabled={loadingCreate}
               onClick={handleCreateNewPrivateStory}
