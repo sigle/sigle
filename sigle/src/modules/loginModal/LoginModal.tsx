@@ -65,7 +65,7 @@ export const LoginModal = ({ open, onClose }: LoginModalProps) => {
           <Button size="lg" variant="ghost" color="gray" onClick={onClose}>
             Cancel
           </Button>
-          <Link href="/login" passHref>
+          <Link href="/login" passHref legacyBehavior>
             <Button as="a" size="lg" color="orange">
               Yes, go to login page
             </Button>

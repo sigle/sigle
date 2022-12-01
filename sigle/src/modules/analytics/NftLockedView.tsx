@@ -64,7 +64,7 @@ export const NftLockedView = () => {
             >
               Unlock the creator plan with your Explorer Guild NFT
             </Typography>
-            <Link href="/settings/plans" passHref>
+            <Link href="/settings/plans" passHref legacyBehavior>
               <Button
                 as="a"
                 size="lg"

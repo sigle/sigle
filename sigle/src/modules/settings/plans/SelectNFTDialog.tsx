@@ -190,7 +190,7 @@ export const SelectNFTDialog = ({
                 </Typography>
               </DialogDescription>
             </Box>
-            <Link href="/" passHref>
+            <Link href="/" passHref legacyBehavior>
               <Button size="sm" variant="subtle">
                 Go to dashboard
               </Button>

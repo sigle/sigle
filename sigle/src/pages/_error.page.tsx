@@ -169,7 +169,7 @@ export const MyError = ({
             <NotFoundText data-testid="error-id">{`Error ID: ${sentryErrorId}`}</NotFoundText>
           )}
           {notFound ? (
-            <Link href="/login" passHref>
+            <Link href="/login" passHref legacyBehavior>
               <Button css={{ mb: '$10' }} as="a" size="lg" color="orange">
                 {user ? 'Go back to your dashboard' : 'Log in'}
               </Button>

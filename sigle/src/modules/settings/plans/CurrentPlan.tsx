@@ -102,13 +102,13 @@ export const CurrentPlan = () => {
         </Typography>
         {!isLoading && !isError ? (
           currentPlan === 'starter' ? (
-            <Link href="/settings/plans/compare" passHref>
+            <Link href="/settings/plans/compare" passHref legacyBehavior>
               <Button size="sm" color="orange" as="a">
                 Upgrade
               </Button>
             </Link>
           ) : (
-            <Link href="/settings/plans/compare" passHref>
+            <Link href="/settings/plans/compare" passHref legacyBehavior>
               <Button size="sm" variant="subtle">
                 Change plan
               </Button>
@@ -221,7 +221,7 @@ export const CurrentPlan = () => {
           <Typography size="subheading">
             This feature is available for Hiro wallet accounts only
           </Typography>
-          <Link href={`/${user?.username}`} passHref>
+          <Link href={`/${user?.username}`} passHref legacyBehavior>
             <Button size="sm" variant="subtle" as="a">
               Back to profile
             </Button>

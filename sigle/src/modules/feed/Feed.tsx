@@ -124,7 +124,7 @@ export const UserFeed = () => {
           <Typography css={{ mt: '$10' }} size="subheading">
             You must follow writers to start filling your feed
           </Typography>
-          <Link href="/explore" passHref>
+          <Link href="/explore" passHref legacyBehavior>
             <Button color="orange" as="a">
               Explore new writers
             </Button>
