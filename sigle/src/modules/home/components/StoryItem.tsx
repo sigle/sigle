@@ -145,6 +145,7 @@ export const StoryItem = ({
                 css={{
                   display: 'inline-block',
                   position: 'relative',
+                  maxWidth: 'inherit',
                   overflow: 'hidden',
                   borderRadius: '$1',
 
