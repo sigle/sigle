@@ -62,7 +62,7 @@ export const getStoryFile = async (storyId: string): Promise<Story | null> => {
   let file;
   if (originalFile) {
     if (originalFile instanceof ArrayBuffer) {
-      originalFile = new TextDecoder().decode(file);
+      originalFile = new TextDecoder().decode(originalFile);
     }
     file = JSON.parse(originalFile);
   }
