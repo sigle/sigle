@@ -6,7 +6,7 @@ import {
   HamburgerMenuIcon,
 } from '@radix-ui/react-icons';
 import Link from 'next/link';
-import Image from 'next/image';
+import Image from 'next/legacy/image';
 import { useSession } from 'next-auth/react';
 import { useTheme } from 'next-themes';
 import { styled } from '../../../stitches.config';
@@ -102,7 +102,7 @@ export const AppHeader = () => {
 
   return (
     <Header>
-      <Link href="/" passHref>
+      <Link href="/" passHref legacyBehavior>
         <Box as="a">
           <Image
             width={93}
@@ -159,13 +159,13 @@ export const AppHeader = () => {
         gap="9"
       >
         {user && !isLegacy ? (
-          <Link href="/feed" passHref>
+          <Link href="/feed" passHref legacyBehavior>
             <Button size="sm" variant="ghost" as="a">
               Feed
             </Button>
           </Link>
         ) : null}
-        <Link href="/explore" passHref>
+        <Link href="/explore" passHref legacyBehavior>
           <Button size="sm" variant="ghost" as="a">
             Explore
           </Button>
@@ -205,7 +205,7 @@ export const AppHeader = () => {
         )}
         {!user && (
           <>
-            <Link href="/" passHref>
+            <Link href="/" passHref legacyBehavior>
               <Button as="a" size="lg">
                 Enter App
               </Button>

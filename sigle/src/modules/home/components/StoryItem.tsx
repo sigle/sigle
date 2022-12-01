@@ -126,7 +126,12 @@ export const StoryItem = ({
           </Box>
         )}
         {story.coverImage && (
-          <Link href="/stories/[storyId]" as={`/stories/${story.id}`} passHref>
+          <Link
+            href="/stories/[storyId]"
+            as={`/stories/${story.id}`}
+            passHref
+            legacyBehavior
+          >
             <Box
               css={{
                 borderRadius: '$1',
@@ -201,30 +206,28 @@ export const StoryItem = ({
                 as={`/stories/${story.id}`}
                 passHref
               >
-                <a>
-                  <Heading
-                    css={{
-                      fontSize: '$2',
-                      lineHeight: '20.4px',
-                      alignSelf: 'center',
-                      fontWeight: 600,
-                      overflow: 'hidden',
-                      display: '-webkit-box',
-                      '-webkit-line-clamp': 3,
-                      '-webkit-box-orient': 'vertical',
-                      textOverflow: 'ellipsis',
+                <Heading
+                  css={{
+                    fontSize: '$2',
+                    lineHeight: '20.4px',
+                    alignSelf: 'center',
+                    fontWeight: 600,
+                    overflow: 'hidden',
+                    display: '-webkit-box',
+                    '-webkit-line-clamp': 3,
+                    '-webkit-box-orient': 'vertical',
+                    textOverflow: 'ellipsis',
 
-                      '@md': {
-                        fontSize: '18px',
-                        lineHeight: '1.5rem',
-                        '-webkit-line-clamp': 2,
-                      },
-                    }}
-                    as="h4"
-                  >
-                    {story.title}
-                  </Heading>
-                </a>
+                    '@md': {
+                      fontSize: '18px',
+                      lineHeight: '1.5rem',
+                      '-webkit-line-clamp': 2,
+                    },
+                  }}
+                  as="h4"
+                >
+                  {story.title}
+                </Heading>
               </Link>
               <Flex align="center" gap="3">
                 {user && story.type === 'private' && (
@@ -292,6 +295,7 @@ export const StoryItem = ({
               href="/stories/[storyId]"
               as={`/stories/${story.id}`}
               passHref
+              legacyBehavior
             >
               <Text size="xs" as="a">
                 {format(story.createdAt, 'MMMM dd, yyyy ')}
@@ -305,6 +309,7 @@ export const StoryItem = ({
               href="/stories/[storyId]"
               as={`/stories/${story.id}`}
               passHref
+              legacyBehavior
             >
               <Text
                 as="a"

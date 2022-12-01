@@ -4,7 +4,7 @@ import {
   MixerHorizontalIcon,
   TrashIcon,
 } from '@radix-ui/react-icons';
-import Image from 'next/image';
+import Image from 'next/legacy/image';
 import { useState } from 'react';
 import { RoundPlus } from '../../../icons';
 import { styled } from '../../../stitches.config';

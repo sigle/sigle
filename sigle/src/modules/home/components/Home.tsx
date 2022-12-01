@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { StoryItem } from '../';
 import { SubsetStory, BlockstackUser } from '../../../types';
 import { DashboardLayout } from '../../layout/components/DashboardLayout';
-import Image from 'next/image';
+import Image from 'next/legacy/image';
 import { styled } from '../../../stitches.config';
 import { Box, Button, Flex, Typography } from '../../../ui';
 import {

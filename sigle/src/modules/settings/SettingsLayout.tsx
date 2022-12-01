@@ -61,7 +61,7 @@ export const SettingsLayout = ({
       <DashboardContainer {...props}>
         <DashboardSidebar>
           {navItems.map((item) => (
-            <Link key={item.path} href={item.path} passHref>
+            <Link key={item.path} href={item.path} passHref legacyBehavior>
               <DashboardSidebarNavItem selected={router.pathname === item.path}>
                 {item.name}
               </DashboardSidebarNavItem>
@@ -88,7 +88,12 @@ export const SettingsLayout = ({
                   {navItems
                     .filter((item) => item.path !== router.pathname)
                     .map((item) => (
-                      <Link key={item.path} href={item.path} passHref>
+                      <Link
+                        key={item.path}
+                        href={item.path}
+                        passHref
+                        legacyBehavior
+                      >
                         <DashboardSidebarNavItem variant="accordion">
                           {item.name}
                         </DashboardSidebarNavItem>

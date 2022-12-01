@@ -79,7 +79,7 @@ export const EditorHeader = ({
       align="center"
     >
       <Flex gap={{ '@initial': '5', '@md': '10' }} align="center">
-        <Link href="/" passHref>
+        <Link href="/" passHref legacyBehavior>
           <IconButton size="sm" as="a" aria-label="Go back to the dashboard">
             <ArrowLeftIcon />
           </IconButton>

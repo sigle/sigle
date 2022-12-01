@@ -1,6 +1,6 @@
 import React from 'react';
 import { NextSeo } from 'next-seo';
-import Image from 'next/future/image';
+import Image from 'next/image';
 import { useTheme } from 'next-themes';
 import { StoryFile, SettingsFile } from '../../../types';
 import { PoweredBy } from '../../publicStory/PoweredBy';
@@ -308,7 +308,7 @@ export const PublicHome = ({ file, settings, userInfo }: PublicHomeProps) => {
                 </Button>
               ))}
             {user && user.username === userInfo.username && (
-              <Link href="/settings" passHref>
+              <Link href="/settings" passHref legacyBehavior>
                 <Button size="sm" as="a" css={{ gap: '$2' }} variant="subtle">
                   Edit profile
                   <Pencil1Icon />
