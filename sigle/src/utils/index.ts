@@ -144,15 +144,21 @@ export const createNewEmptyStory = (): Story => {
 export const getSettingsFile = async (): Promise<SettingsFile> => {
   let file;
   try {
-    file = (await storage.getFile(settingsFileName, {
+    file = await storage.getFile(settingsFileName, {
       decrypt: false,
-    })) as string;
+    });
   } catch (error) {
     if (error.code !== 'does_not_exist') {
       throw error;
     }
   }
   if (file) {
+    console.log('1', file);
+    if (file instanceof ArrayBuffer) {
+      console.log('2', file);
+      file = new TextDecoder().decode(file);
+    }
+    console.log('3', file);
     file = JSON.parse(file);
   }
   if (!file) {
