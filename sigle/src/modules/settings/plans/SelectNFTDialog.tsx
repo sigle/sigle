@@ -19,7 +19,7 @@ import {
   useCreateSubscription,
   useGetUserSubscription,
 } from '../../../hooks/subscriptions';
-import Image from 'next/image';
+import Image from 'next/legacy/image';
 import { useEffect, useMemo, useState } from 'react';
 import { ErrorMessage } from '../../../ui/ErrorMessage';
 import {

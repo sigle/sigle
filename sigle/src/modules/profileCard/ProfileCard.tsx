@@ -11,7 +11,7 @@ import {
   TooltipContent,
 } from '../../ui';
 import Link from 'next/link';
-import Image from 'next/future/image';
+import Image from 'next/image';
 import { generateAvatar } from '../../utils/boringAvatar';
 import { SettingsFile } from '../../types';
 import { styled } from '../../stitches.config';

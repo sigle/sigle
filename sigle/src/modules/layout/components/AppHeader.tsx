@@ -6,7 +6,7 @@ import {
   HamburgerMenuIcon,
 } from '@radix-ui/react-icons';
 import Link from 'next/link';
-import Image from 'next/image';
+import Image from 'next/legacy/image';
 import { useSession } from 'next-auth/react';
 import { useTheme } from 'next-themes';
 import { styled } from '../../../stitches.config';

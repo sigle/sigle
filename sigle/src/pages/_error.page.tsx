@@ -5,7 +5,7 @@ import { styled } from '../stitches.config';
 import Link from 'next/link';
 import * as Sentry from '@sentry/nextjs';
 import { Button, Container, Flex, Heading, Text } from '../ui';
-import Image from 'next/image';
+import Image from 'next/legacy/image';
 import { useAuth } from '../modules/auth/AuthContext';
 import { AppHeader } from '../modules/layout/components/AppHeader';
 

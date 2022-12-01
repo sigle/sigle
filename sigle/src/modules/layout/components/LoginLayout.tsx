@@ -1,5 +1,5 @@
 import React from 'react';
-import Image from 'next/image';
+import Image from 'next/legacy/image';
 import { styled } from '../../../stitches.config';
 import { Box, Container } from '../../../ui';
 import { sigleConfig } from '../../../config';
