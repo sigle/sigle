@@ -543,6 +543,13 @@ export const PublicHome = ({ file, settings, userInfo }: PublicHomeProps) => {
               {file.stories.length === 0 && (
                 <>
                   {userInfo.username === user?.username ? (
+                    <Typography
+                      size="subheading"
+                      css={{ mt: '$8', textAlign: 'center' }}
+                    >
+                      No stories yet
+                    </Typography>
+                  ) : (
                     <Flex
                       css={{ mt: '$10' }}
                       direction="column"
@@ -554,13 +561,6 @@ export const PublicHome = ({ file, settings, userInfo }: PublicHomeProps) => {
                       <StoryCardSkeleton />
                       <StoryCardSkeleton />
                     </Flex>
-                  ) : (
-                    <Typography
-                      size="subheading"
-                      css={{ mt: '$8', textAlign: 'center' }}
-                    >
-                      No stories yet
-                    </Typography>
                   )}
                 </>
               )}
