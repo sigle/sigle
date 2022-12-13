@@ -11,6 +11,7 @@ import {
   AccordionTrigger,
   Box,
   Button,
+  Container,
   Dialog,
   DialogContent,
   DialogTitle,
@@ -77,7 +78,6 @@ const StyledDialogContent = styled(DialogContent, {
 
   '@xl': {
     pt: '$10',
-    px: 220,
   },
 });
 
@@ -130,205 +130,216 @@ export const PublishDialog = ({
   return (
     <Dialog open={open} onOpenChange={onClose}>
       <StyledDialogContent closeButton={false}>
-        <VisuallyHidden>
-          <DialogTitle>Preview and publish your story</DialogTitle>
-        </VisuallyHidden>
-        <Button onClick={onClose} variant="ghost" css={{ gap: '$2' }} size="sm">
-          <ArrowLeftIcon />
-          Back to the editor
-        </Button>
-        <Flex
-          direction={{
-            '@initial': 'column',
-            '@md': 'row',
-          }}
-          css={{
-            mx: 'auto',
-            mt: '$10',
-            justifyContent: 'center',
-            gap: '$10',
-            maxWidth: 700,
+        <Container>
+          <VisuallyHidden>
+            <DialogTitle>Preview and publish your story</DialogTitle>
+          </VisuallyHidden>
+          <Button
+            onClick={onClose}
+            variant="ghost"
+            css={{ gap: '$2' }}
+            size="sm"
+          >
+            <ArrowLeftIcon />
+            Back to the editor
+          </Button>
+          <Flex
+            direction={{
+              '@initial': 'column',
+              '@md': 'row',
+            }}
+            css={{
+              mx: 'auto',
+              mt: '$10',
+              justifyContent: 'center',
+              gap: '$10',
+              maxWidth: 826,
 
-            '@md': {
-              mt: '$15',
-            },
-          }}
-        >
-          <Flex css={{ flex: 1 }} direction="column" gap="5">
-            <Typography css={{ fontWeight: 700 }} as="h2" size="h1">
-              Publication
-            </Typography>
-            <Tabs value={tabValue}>
-              <TabsList
-                css={{
-                  alignSelf: 'start',
-                  flexDirection: newsletterActivated ? 'row-reverse' : 'row',
-                }}
-              >
-                <StyledTrigger value="publish only">Publish only</StyledTrigger>
-                <StyledTrigger
-                  disabled={!newsletterActive || !userSubscription}
-                  value="publish and send"
+              '@md': {
+                mt: '$15',
+              },
+            }}
+          >
+            <Flex css={{ flex: 1 }} direction="column" gap="5">
+              <Typography css={{ fontWeight: 700 }} as="h2" size="h1">
+                Publication
+              </Typography>
+              <Tabs value={tabValue}>
+                <TabsList
                   css={{
-                    textDecoration: userSubscription ? 'none' : 'line-through',
+                    alignSelf: 'start',
+                    flexDirection: newsletterActivated ? 'row-reverse' : 'row',
                   }}
                 >
-                  Publish and send
-                </StyledTrigger>
-              </TabsList>
-              <TabsContent
-                css={{
-                  display: 'flex',
-                  flexDirection: 'column',
-                  gap: '$5',
-                }}
-                value="publish only"
-              >
-                <Typography css={{ fontWeight: 600 }} size="subheading">
-                  You're in "Publish only" mode.
-                </Typography>
-                <Typography size="subheading">
-                  To start sending your first emails, you must{' '}
-                  {!userSubscription &&
-                    `upgrade your plan
+                  <StyledTrigger value="publish only">
+                    Publish only
+                  </StyledTrigger>
+                  <StyledTrigger
+                    disabled={!newsletterActive || !userSubscription}
+                    value="publish and send"
+                    css={{
+                      textDecoration: userSubscription
+                        ? 'none'
+                        : 'line-through',
+                    }}
+                  >
+                    Publish and send
+                  </StyledTrigger>
+                </TabsList>
+                <TabsContent
+                  css={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    gap: '$5',
+                  }}
+                  value="publish only"
+                >
+                  <Typography css={{ fontWeight: 600 }} size="subheading">
+                    You're in "Publish only" mode.
+                  </Typography>
+                  <Typography size="subheading">
+                    To start sending your first emails, you must{' '}
+                    {!userSubscription &&
+                      `upgrade your plan
                   and`}{' '}
-                  activate the newsletter feature.
-                </Typography>
-                {userSubscription ? (
-                  <>
-                    {!newsletterActive && (
+                    activate the newsletter feature.
+                  </Typography>
+                  {userSubscription ? (
+                    <>
+                      {!newsletterActive && (
+                        <Button
+                          onClick={() => {
+                            setNewsletterActive(true);
+                            setTabValue('publish and send');
+                            localStorage.setItem(
+                              experimentalNewsletterKey,
+                              'true'
+                            );
+                          }}
+                          css={{ alignSelf: 'start' }}
+                          variant="subtle"
+                        >
+                          Activate newsletter feature
+                        </Button>
+                      )}
+                    </>
+                  ) : (
+                    <Link href="/settings/plans" passHref legacyBehavior>
                       <Button
-                        onClick={() => {
-                          setNewsletterActive(true);
-                          setTabValue('publish and send');
-                          localStorage.setItem(
-                            experimentalNewsletterKey,
-                            'true'
-                          );
-                        }}
+                        as="a"
                         css={{ alignSelf: 'start' }}
                         variant="subtle"
                       >
-                        Activate newsletter feature
+                        Upgrade to the Creator+ plan
                       </Button>
-                    )}
-                  </>
-                ) : (
-                  <Link href="/settings/plans" passHref>
-                    <Button
-                      as="a"
-                      css={{ alignSelf: 'start' }}
-                      variant="subtle"
-                    >
-                      Upgrade to the Creator+ plan
-                    </Button>
-                  </Link>
-                )}
-              </TabsContent>
+                    </Link>
+                  )}
+                </TabsContent>
 
-              <TabsContent value="publish and send">
-                <Accordion collapsible type="single">
-                  <AccordionItem value="item1">
-                    <AccordionTrigger>Send a test email</AccordionTrigger>
-                    <AccordionContent
-                      css={{
-                        display: 'flex',
-                        flexDirection: 'column',
-                        gap: '$3',
-                      }}
-                    >
-                      {testMailSent ? (
-                        <Typography
-                          size="subheading"
-                          css={{
-                            mt: '$2',
-                            display: 'flex',
-                            alignItems: 'center',
-                            gap: '$2',
-                            justifyContent: 'center',
-                          }}
-                        >
-                          <span>
-                            <CheckCircledIcon />
-                          </span>
-                          Test emails sent!
-                        </Typography>
-                      ) : (
-                        <>
-                          <Box
+                <TabsContent value="publish and send">
+                  <Accordion collapsible type="single">
+                    <AccordionItem value="item1">
+                      <AccordionTrigger>Send a test email</AccordionTrigger>
+                      <AccordionContent
+                        css={{
+                          display: 'flex',
+                          flexDirection: 'column',
+                          gap: '$3',
+                        }}
+                      >
+                        {testMailSent ? (
+                          <Typography
+                            size="subheading"
                             css={{
+                              mt: '$2',
                               display: 'flex',
-                              flexDirection: 'column',
-                              gap: '$3',
+                              alignItems: 'center',
+                              gap: '$2',
+                              justifyContent: 'center',
                             }}
-                            onSubmit={handleSubmit}
-                            as="form"
                           >
-                            <FormTextarea
+                            <span>
+                              <CheckCircledIcon />
+                            </span>
+                            Test emails sent!
+                          </Typography>
+                        ) : (
+                          <>
+                            <Box
                               css={{
-                                minHeight: 78,
-                                m: 1,
+                                display: 'flex',
+                                flexDirection: 'column',
+                                gap: '$3',
                               }}
-                              placeholder="Send up to 5 emails separated by commas"
-                            />
-                            <Button type="submit">Send test mail</Button>
-                          </Box>
-                        </>
-                      )}
-                    </AccordionContent>
-                  </AccordionItem>
-                </Accordion>
-              </TabsContent>
-            </Tabs>
-          </Flex>
+                              onSubmit={handleSubmit}
+                              as="form"
+                            >
+                              <FormTextarea
+                                css={{
+                                  minHeight: 78,
+                                  m: 1,
+                                }}
+                                placeholder="Send up to 5 emails separated by commas"
+                              />
+                              <Button type="submit">Send test mail</Button>
+                            </Box>
+                          </>
+                        )}
+                      </AccordionContent>
+                    </AccordionItem>
+                  </Accordion>
+                </TabsContent>
+              </Tabs>
+            </Flex>
 
-          <Flex css={{ flex: 1 }} direction="column" gap="5">
-            <Flex justify="between">
-              <Typography css={{ fontWeight: 700 }} as="h2" size="h1">
-                Preview
-              </Typography>
-              <Button
-                size="lg"
-                variant="ghost"
-                color="orange"
-                disabled={loading}
-                onClick={onEditPreview}
-              >
-                Edit preview
-              </Button>
-            </Flex>
-            <TwitterCardPreview story={story} />
-            <Flex justify="end" gap="6" css={{ mt: '$5' }}>
-              <Button
-                size="lg"
-                variant="ghost"
-                disabled={loading}
-                onClick={onClose}
-              >
-                Cancel
-              </Button>
-              {newsletterActivated ? (
-                <Button
-                  onClick={handleShowPublishAndSendDialog}
-                  size="lg"
-                  color="orange"
-                  disabled={loading}
-                >
-                  Continue
-                </Button>
-              ) : (
+            <Flex css={{ flex: 1 }} direction="column" gap="5">
+              <Flex justify="between">
+                <Typography css={{ fontWeight: 700 }} as="h2" size="h1">
+                  Preview
+                </Typography>
                 <Button
                   size="lg"
+                  variant="ghost"
                   color="orange"
                   disabled={loading}
-                  onClick={onConfirm}
+                  onClick={onEditPreview}
                 >
-                  {loading ? 'Publishing ...' : 'Publish now'}
+                  Edit preview
                 </Button>
-              )}
+              </Flex>
+              <TwitterCardPreview story={story} />
+              <Flex justify="end" gap="6" css={{ mt: '$5' }}>
+                <Button
+                  size="lg"
+                  variant="ghost"
+                  disabled={loading}
+                  onClick={onClose}
+                >
+                  Cancel
+                </Button>
+                {newsletterActivated ? (
+                  <Button
+                    onClick={handleShowPublishAndSendDialog}
+                    size="lg"
+                    color="orange"
+                    disabled={loading}
+                  >
+                    Continue
+                  </Button>
+                ) : (
+                  <Button
+                    size="lg"
+                    color="orange"
+                    disabled={loading}
+                    onClick={onConfirm}
+                  >
+                    {loading ? 'Publishing ...' : 'Publish now'}
+                  </Button>
+                )}
+              </Flex>
             </Flex>
           </Flex>
-        </Flex>
+        </Container>
       </StyledDialogContent>
 
       <PublishAndSendDialog
