@@ -81,7 +81,7 @@ export const SubscribeModal = ({
     },
     validateOnBlur: false,
     validateOnChange: false,
-    onSubmit: async (values, { setSubmitting, validateForm, setErrors }) => {
+    onSubmit: async (values, { validateForm, setErrors }) => {
       setErrors({});
       validateForm();
       createSubscribers({
