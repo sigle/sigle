@@ -1,4 +1,3 @@
-import { Link2Icon } from '@radix-ui/react-icons';
 import { styled } from '../../stitches.config';
 import { Flex, Box } from '../../ui';
 import { Story } from '../../types';
@@ -31,8 +30,8 @@ const MetaTitle = styled('div', {
 
 const MetaDescription = styled('div', {
   color: '$gray10',
-  fontSize: '15px',
-  lineHeight: '20px',
+  fontSize: '13px',
+  lineHeight: '16px',
   overflowWrap: 'break-word',
   overflow: 'hidden',
   textOverflow: 'ellipsis',
@@ -40,8 +39,8 @@ const MetaDescription = styled('div', {
 
 const MetaLink = styled('div', {
   color: '$gray9',
-  fontSize: '15px',
-  lineHeight: '20px',
+  fontSize: '13px',
+  lineHeight: '16px',
   overflowWrap: 'break-word',
   overflow: 'hidden',
   textOverflow: 'ellipsis',
@@ -138,16 +137,11 @@ export const TwitterCardPreview = ({ story }: TwitterCardPreviewProps) => {
 
       <Flex
         direction="column"
-        css={{ gap: 2, padding: 12, justifyContent: 'center', width: '100%' }}
+        css={{ gap: 2, p: '$2', justifyContent: 'center', width: '100%' }}
       >
+        <MetaLink>app.sigle.io</MetaLink>
         <MetaTitle>{seoTitle}</MetaTitle>
         <MetaDescription>{seoDescription}</MetaDescription>
-        <MetaLink>
-          <Link2Icon />
-          <Box as="span" css={{ ml: 4 }}>
-            sigle.io
-          </Box>
-        </MetaLink>
       </Flex>
     </MetaContainer>
   );
