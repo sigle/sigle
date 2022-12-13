@@ -321,7 +321,7 @@ export const PublicHome = ({ file, settings, userInfo }: PublicHomeProps) => {
                 {allowedNewsletterUsers.includes(userInfo.address) && (
                   <IconButton
                     color="orange"
-                    variant="outline"
+                    variant="solid"
                     onClick={handleShowSubscribe}
                   >
                     <EnvelopePlusIcon />

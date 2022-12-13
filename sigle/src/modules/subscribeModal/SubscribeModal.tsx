@@ -137,7 +137,12 @@ export const SubscribeModal = ({
           )}
           <DialogTitle asChild>
             <Typography
-              css={{ fontWeight: 600, mt: '$4', textAlign: 'center' }}
+              css={{
+                fontWeight: 600,
+                mt: '$4',
+                textAlign: 'center',
+                width: '100%',
+              }}
               size="h3"
             >
               {success ? `Successfully subscribed!` : userInfo.siteName}
@@ -145,7 +150,7 @@ export const SubscribeModal = ({
           </DialogTitle>
           <DialogDescription asChild>
             <Typography
-              css={{ mt: '$1', mb: '$6', textAlign: 'center' }}
+              css={{ mt: '$1', mb: '$6', textAlign: 'center', width: '100%' }}
               size="subheading"
             >
               {success ? (

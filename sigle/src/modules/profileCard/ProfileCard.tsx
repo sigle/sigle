@@ -161,7 +161,7 @@ export const ProfileCard = ({
                 <IconButton
                   size="sm"
                   color="orange"
-                  variant="outline"
+                  variant="solid"
                   onClick={handleShowSubscribe}
                 >
                   <EnvelopePlusIcon />
