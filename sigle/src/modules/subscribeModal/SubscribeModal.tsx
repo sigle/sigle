@@ -1,6 +1,8 @@
 import { FormikErrors, useFormik } from 'formik';
 import Image from 'next/image';
 import { useState } from 'react';
+import { ApiError } from '../../external/api';
+import { useCreateSubscribers } from '../../hooks/subscribers';
 import { styled } from '../../stitches.config';
 import {
   Button,
@@ -11,6 +13,7 @@ import {
   Flex,
   FormHelperError,
   FormInput,
+  LoadingSpinner,
   Typography,
 } from '../../ui';
 import { isValidEmail } from '../../utils/regex';
@@ -78,13 +81,31 @@ export const SubscribeModal = ({
     },
     validateOnBlur: false,
     validateOnChange: false,
-    onSubmit: async (values, { setSubmitting, validateForm }) => {
+    onSubmit: async (values, { setSubmitting, validateForm, setErrors }) => {
+      setErrors({});
       validateForm();
-      formik.resetForm({ values: { ...values } });
-      setSuccess(true);
-      setSubmitting(false);
+      createSubscribers({
+        stacksAddress: userInfo.address,
+        email: values.email,
+      });
     },
   });
+
+  const { mutate: createSubscribers, isLoading: isLoadingCreateSubscriber } =
+    useCreateSubscribers({
+      onSuccess: () => {
+        setSuccess(true);
+        formik.setSubmitting(false);
+      },
+      onError: (error: Error | ApiError) => {
+        let errorMessage = error.message;
+        if (error instanceof ApiError && error.body.message) {
+          errorMessage = error.body.message;
+        }
+        formik.setErrors({ email: errorMessage });
+        formik.setSubmitting(false);
+      },
+    });
 
   return (
     <Dialog open={open} onOpenChange={onClose}>
@@ -150,7 +171,7 @@ export const SubscribeModal = ({
                 type="email"
                 placeholder="johndoe@gmail.com"
               />
-              {formik.errors.email && !formik.values.email && (
+              {formik.errors.email && (
                 <FormHelperError css={{ mt: '$2' }}>
                   {formik.errors.email}
                 </FormHelperError>
@@ -164,14 +185,20 @@ export const SubscribeModal = ({
                 >
                   Cancel
                 </Button>
-                <Button
-                  disabled={formik.isSubmitting}
-                  type="submit"
-                  size="lg"
-                  color="orange"
-                >
-                  Subscribe
-                </Button>
+                {isLoadingCreateSubscriber ? (
+                  <Button disabled size="lg" color="orange">
+                    <LoadingSpinner />
+                  </Button>
+                ) : (
+                  <Button
+                    disabled={formik.isSubmitting}
+                    type="submit"
+                    size="lg"
+                    color="orange"
+                  >
+                    Subscribe
+                  </Button>
+                )}
               </Flex>
             </>
           )}

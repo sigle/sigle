@@ -21,6 +21,8 @@ const allowedNewsletterUsers = [
 if (process.env.NODE_ENV === 'development') {
   // leopradel.btc
   allowedNewsletterUsers.push('SP3VCX5NFQ8VCHFS9M6N40ZJNVTRT4HZ62WFH5C4Q');
+  // gregogun.btc
+  allowedNewsletterUsers.push('SP1F48HCD4SP4HT8BHQPXZ35615764KC80ACNMBDZ');
 }
 
 @Injectable()
