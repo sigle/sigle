@@ -24,12 +24,11 @@ import {
   useUserUnfollow,
 } from '../../hooks/appData';
 import { useTheme } from 'next-themes';
-import { sigleConfig } from '../../config';
+import { allowedNewsletterUsers, sigleConfig } from '../../config';
 import { useState } from 'react';
 import { LoginModal } from '../loginModal/LoginModal';
 import { EnvelopePlusIcon } from '../../icons/EnvelopPlusIcon';
 import { SubscribeModal } from '../subscribeModal/SubscribeModal';
-import { useFeatureFlags } from '../../utils/featureFlags';
 
 const ProfileImageContainer = styled('div', {
   display: 'flex',
@@ -65,7 +64,6 @@ export const ProfileCard = ({
   const [isOpen, setIsOpen] = useState(false);
   const [showLoginPromptDialog, setShowLoginPromptDialog] = useState(false);
   const [showSubscribeDialog, setShowSubscribeDialog] = useState(false);
-  const { isExperimentalNewsletterEnabled } = useFeatureFlags();
   const { data: userFollowing } = useGetGaiaUserFollowing({
     enabled: isOpen && !!user && userInfo.username !== user.username,
     staleTime: Infinity,
@@ -159,7 +157,7 @@ export const ProfileCard = ({
                   Unfollow
                 </Button>
               )}
-              {isExperimentalNewsletterEnabled && (
+              {allowedNewsletterUsers.includes(userInfo.address) && (
                 <IconButton
                   size="sm"
                   color="orange"
