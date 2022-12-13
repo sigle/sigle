@@ -12,7 +12,7 @@ import {
   IconButton,
 } from '../../ui';
 import Link from 'next/link';
-import Image from 'next/future/image';
+import Image from 'next/image';
 import { generateAvatar } from '../../utils/boringAvatar';
 import { SettingsFile } from '../../types';
 import { styled } from '../../stitches.config';
@@ -104,7 +104,12 @@ export const ProfileCard = ({
 
   return (
     <HoverCard onOpenChange={(open) => setIsOpen(open)} openDelay={300}>
-      <Link href="/[username]" as={`/${userInfo.username}`} passHref>
+      <Link
+        href="/[username]"
+        as={`/${userInfo.username}`}
+        passHref
+        legacyBehavior
+      >
         <HoverCardTrigger asChild>{children}</HoverCardTrigger>
       </Link>
       <HoverCardContent
@@ -179,7 +184,12 @@ export const ProfileCard = ({
           )}
         </Flex>
         <Flex gap="1" align="center">
-          <Link href="/[username]" as={`/${userInfo.username}`} passHref>
+          <Link
+            href="/[username]"
+            as={`/${userInfo.username}`}
+            passHref
+            legacyBehavior
+          >
             <Typography as="a" css={{ fontWeight: 600 }} size="subheading">
               {siteName}
             </Typography>
@@ -225,6 +235,7 @@ export const ProfileCard = ({
             }}
             as={`/${userInfo.username}`}
             passHref
+            legacyBehavior
           >
             <Typography
               as="a"
@@ -244,6 +255,7 @@ export const ProfileCard = ({
             }}
             as={`/${userInfo.username}`}
             passHref
+            legacyBehavior
           >
             <Typography
               as="a"

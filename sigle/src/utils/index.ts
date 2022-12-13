@@ -9,13 +9,16 @@ const settingsFileName = 'settings.json';
 export const getStoriesFile = async (): Promise<StoryFile> => {
   let file;
   try {
-    file = (await storage.getFile(storiesFileName)) as string;
+    file = await storage.getFile(storiesFileName);
   } catch (error) {
     if (error.code !== 'does_not_exist') {
       throw error;
     }
   }
   if (file) {
+    if (file instanceof ArrayBuffer) {
+      file = new TextDecoder().decode(file);
+    }
     file = JSON.parse(file);
   }
   if (!file) {
@@ -48,9 +51,9 @@ export const saveStoriesFile = async (file: StoryFile): Promise<void> => {
 export const getStoryFile = async (storyId: string): Promise<Story | null> => {
   let originalFile;
   try {
-    originalFile = (await storage.getFile(`${storyId}.json`, {
+    originalFile = await storage.getFile(`${storyId}.json`, {
       decrypt: false,
-    })) as string;
+    });
   } catch (error) {
     if (error.code !== 'does_not_exist') {
       throw error;
@@ -58,6 +61,9 @@ export const getStoryFile = async (storyId: string): Promise<Story | null> => {
   }
   let file;
   if (originalFile) {
+    if (originalFile instanceof ArrayBuffer) {
+      originalFile = new TextDecoder().decode(originalFile);
+    }
     file = JSON.parse(originalFile);
   }
   if (originalFile && file.mac) {
@@ -144,15 +150,18 @@ export const createNewEmptyStory = (): Story => {
 export const getSettingsFile = async (): Promise<SettingsFile> => {
   let file;
   try {
-    file = (await storage.getFile(settingsFileName, {
+    file = await storage.getFile(settingsFileName, {
       decrypt: false,
-    })) as string;
+    });
   } catch (error) {
     if (error.code !== 'does_not_exist') {
       throw error;
     }
   }
   if (file) {
+    if (file instanceof ArrayBuffer) {
+      file = new TextDecoder().decode(file);
+    }
     file = JSON.parse(file);
   }
   if (!file) {

@@ -1,4 +1,4 @@
-import Image from 'next/image';
+import Image from 'next/legacy/image';
 import Link from 'next/link';
 import { Box, Button, Flex, Typography } from '../../ui';
 import { DashboardLayout } from '../layout';
@@ -64,7 +64,7 @@ export const NftLockedView = () => {
             >
               Unlock the creator plan with your Explorer Guild NFT
             </Typography>
-            <Link href="/settings/plans" passHref>
+            <Link href="/settings/plans" passHref legacyBehavior>
               <Button
                 as="a"
                 size="lg"

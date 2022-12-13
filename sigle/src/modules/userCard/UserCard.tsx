@@ -171,7 +171,7 @@ export const UserCard = ({ address }: UserCardProps) => {
 
   return (
     <UserCardContainer>
-      <Link href="/[username]" as={userPath} passHref>
+      <Link href="/[username]" as={userPath} passHref legacyBehavior>
         <ProfileImageContainer>
           <ProfileImage
             src={
@@ -184,7 +184,7 @@ export const UserCard = ({ address }: UserCardProps) => {
       </Link>
       <Flex css={{ width: '100%' }} direction="column">
         <Flex justify="between" align="center">
-          <Link href="/[username]" as={userPath} passHref>
+          <Link href="/[username]" as={userPath} passHref legacyBehavior>
             <UserCardTitle as="a" size="subheading">
               {isLoadingUsername ? '...' : username}
             </UserCardTitle>

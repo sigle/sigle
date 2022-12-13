@@ -278,7 +278,7 @@ export const ComparePlans = () => {
   return (
     <SettingsLayout>
       <TableContainer />
-      <Link href="/settings/plans">
+      <Link href="/settings/plans" legacyBehavior>
         <Button
           size="sm"
           css={{

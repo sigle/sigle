@@ -5,7 +5,7 @@ import { styled } from '../stitches.config';
 import Link from 'next/link';
 import * as Sentry from '@sentry/nextjs';
 import { Button, Container, Flex, Heading, Text } from '../ui';
-import Image from 'next/image';
+import Image from 'next/legacy/image';
 import { useAuth } from '../modules/auth/AuthContext';
 import { AppHeader } from '../modules/layout/components/AppHeader';
 
@@ -169,7 +169,7 @@ export const MyError = ({
             <NotFoundText data-testid="error-id">{`Error ID: ${sentryErrorId}`}</NotFoundText>
           )}
           {notFound ? (
-            <Link href="/login" passHref>
+            <Link href="/login" passHref legacyBehavior>
               <Button css={{ mb: '$10' }} as="a" size="lg" color="orange">
                 {user ? 'Go back to your dashboard' : 'Log in'}
               </Button>

@@ -15,12 +15,14 @@ export type { DeleteUserFollowDto } from './models/DeleteUserFollowDto';
 export type { ExploreResponse } from './models/ExploreResponse';
 export type { ExploreUser } from './models/ExploreUser';
 export type { HistoricalDto } from './models/HistoricalDto';
+export type { PublishStoryDto } from './models/PublishStoryDto';
 export type { ReferrerDto } from './models/ReferrerDto';
 export type { SubscriptionDto } from './models/SubscriptionDto';
 export type { UserProfileDto } from './models/UserProfileDto';
 
 export { AnalyticsService } from './services/AnalyticsService';
 export { DefaultService } from './services/DefaultService';
+export { StoriesService } from './services/StoriesService';
 export { SubscribersService } from './services/SubscribersService';
 export { SubscriptionService } from './services/SubscriptionService';
 export { UserService } from './services/UserService';

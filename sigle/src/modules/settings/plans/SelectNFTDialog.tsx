@@ -19,7 +19,7 @@ import {
   useCreateSubscription,
   useGetUserSubscription,
 } from '../../../hooks/subscriptions';
-import Image from 'next/image';
+import Image from 'next/legacy/image';
 import { useEffect, useMemo, useState } from 'react';
 import { ErrorMessage } from '../../../ui/ErrorMessage';
 import {
@@ -190,7 +190,7 @@ export const SelectNFTDialog = ({
                 </Typography>
               </DialogDescription>
             </Box>
-            <Link href="/" passHref>
+            <Link href="/" passHref legacyBehavior>
               <Button size="sm" variant="subtle">
                 Go to dashboard
               </Button>
