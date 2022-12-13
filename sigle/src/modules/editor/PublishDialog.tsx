@@ -137,7 +137,7 @@ export const PublishDialog = ({
           <Button
             onClick={onClose}
             variant="ghost"
-            css={{ gap: '$2' }}
+            css={{ gap: '$2', ml: '-$1' }}
             size="sm"
           >
             <ArrowLeftIcon />
