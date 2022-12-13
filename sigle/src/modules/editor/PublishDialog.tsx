@@ -1,22 +1,15 @@
 import { ArrowLeftIcon, CheckCircledIcon } from '@radix-ui/react-icons';
-import Link from 'next/link';
 import { FormEvent, useState } from 'react';
 import { useGetUserSubscription } from '../../hooks/subscriptions';
 import { styled } from '../../stitches.config';
 import { Story } from '../../types';
 import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-  Box,
   Button,
   Container,
   Dialog,
   DialogContent,
   DialogTitle,
   Flex,
-  FormTextarea,
   Tabs,
   TabsContent,
   TabsList,
@@ -25,7 +18,6 @@ import {
 } from '../../ui';
 import { VisuallyHidden } from '../../ui/VisuallyHidden';
 import { useFeatureFlags } from '../../utils/featureFlags';
-import { PublishAndSendDialog } from './PublishAndSendDialog';
 import { TwitterCardPreview } from './TwitterCardPreview';
 
 const StyledTrigger = styled(TabsTrigger, {
@@ -99,33 +91,9 @@ export const PublishDialog = ({
   onEditPreview,
 }: PublishDialogProps) => {
   const { data: userSubscription } = useGetUserSubscription();
-  const { isExperimentalNewsletterEnabled } = useFeatureFlags();
-  const [newsletterActive, setNewsletterActive] = useState(
-    isExperimentalNewsletterEnabled
+  const [tabValue] = useState<'publish only' | 'publish and send'>(
+    'publish only'
   );
-  const [testMailSent, setTestMailSent] = useState(false);
-  const [showPublishAndSendDialog, setShowPublishAndSendDialog] =
-    useState(false);
-  const [tabValue, setTabValue] = useState<'publish only' | 'publish and send'>(
-    newsletterActive && userSubscription ? 'publish and send' : 'publish only'
-  );
-
-  const experimentalNewsletterKey = 'sigle-experimental-newsletter';
-
-  // to be replaced with data from the server
-  const newsletterActivated = newsletterActive && userSubscription;
-
-  const handleSubmit = (e: FormEvent) => {
-    e.preventDefault();
-
-    setTestMailSent(true);
-  };
-
-  const handleShowPublishAndSendDialog = () =>
-    setShowPublishAndSendDialog(true);
-
-  const handleCancelPublishAndSendDialog = () =>
-    setShowPublishAndSendDialog(false);
 
   return (
     <Dialog open={open} onOpenChange={onClose}>
@@ -168,14 +136,14 @@ export const PublishDialog = ({
                 <TabsList
                   css={{
                     alignSelf: 'start',
-                    flexDirection: newsletterActivated ? 'row-reverse' : 'row',
+                    flexDirection: 'row',
                   }}
                 >
                   <StyledTrigger value="publish only">
                     Publish only
                   </StyledTrigger>
                   <StyledTrigger
-                    disabled={!newsletterActive || !userSubscription}
+                    disabled={!userSubscription}
                     value="publish and send"
                     css={{
                       textDecoration: userSubscription
@@ -197,97 +165,6 @@ export const PublishDialog = ({
                   <Typography css={{ fontWeight: 600 }} size="subheading">
                     You're in "Publish only" mode.
                   </Typography>
-                  <Typography size="subheading">
-                    To start sending your first emails, you must{' '}
-                    {!userSubscription &&
-                      `upgrade your plan
-                  and`}{' '}
-                    activate the newsletter feature.
-                  </Typography>
-                  {userSubscription ? (
-                    <>
-                      {!newsletterActive && (
-                        <Button
-                          onClick={() => {
-                            setNewsletterActive(true);
-                            setTabValue('publish and send');
-                            localStorage.setItem(
-                              experimentalNewsletterKey,
-                              'true'
-                            );
-                          }}
-                          css={{ alignSelf: 'start' }}
-                          variant="subtle"
-                        >
-                          Activate newsletter feature
-                        </Button>
-                      )}
-                    </>
-                  ) : (
-                    <Link href="/settings/plans" passHref legacyBehavior>
-                      <Button
-                        as="a"
-                        css={{ alignSelf: 'start' }}
-                        variant="subtle"
-                      >
-                        Upgrade to the Creator+ plan
-                      </Button>
-                    </Link>
-                  )}
-                </TabsContent>
-
-                <TabsContent value="publish and send">
-                  <Accordion collapsible type="single">
-                    <AccordionItem value="item1">
-                      <AccordionTrigger>Send a test email</AccordionTrigger>
-                      <AccordionContent
-                        css={{
-                          display: 'flex',
-                          flexDirection: 'column',
-                          gap: '$3',
-                        }}
-                      >
-                        {testMailSent ? (
-                          <Typography
-                            size="subheading"
-                            css={{
-                              mt: '$2',
-                              display: 'flex',
-                              alignItems: 'center',
-                              gap: '$2',
-                              justifyContent: 'center',
-                            }}
-                          >
-                            <span>
-                              <CheckCircledIcon />
-                            </span>
-                            Test emails sent!
-                          </Typography>
-                        ) : (
-                          <>
-                            <Box
-                              css={{
-                                display: 'flex',
-                                flexDirection: 'column',
-                                gap: '$3',
-                              }}
-                              onSubmit={handleSubmit}
-                              as="form"
-                            >
-                              <FormTextarea
-                                css={{
-                                  minHeight: 78,
-                                  m: 1,
-                                }}
-                                placeholder="Send up to 5 emails separated by commas"
-                              />
-                              <Button type="submit">Send test mail</Button>
-                            </Box>
-                          </>
-                        )}
-                      </AccordionContent>
-                    </AccordionItem>
-                  </Accordion>
                 </TabsContent>
               </Tabs>
             </Flex>
@@ -317,36 +194,19 @@ export const PublishDialog = ({
                 >
                   Cancel
                 </Button>
-                {newsletterActivated ? (
-                  <Button
-                    onClick={handleShowPublishAndSendDialog}
-                    size="lg"
-                    color="orange"
-                    disabled={loading}
-                  >
-                    Continue
-                  </Button>
-                ) : (
-                  <Button
-                    size="lg"
-                    color="orange"
-                    disabled={loading}
-                    onClick={onConfirm}
-                  >
-                    {loading ? 'Publishing ...' : 'Publish now'}
-                  </Button>
-                )}
+                <Button
+                  size="lg"
+                  color="orange"
+                  disabled={loading}
+                  onClick={onConfirm}
+                >
+                  {loading ? 'Publishing ...' : 'Publish now'}
+                </Button>
               </Flex>
             </Flex>
           </Flex>
         </Container>
       </StyledDialogContent>
-
-      <PublishAndSendDialog
-        open={showPublishAndSendDialog}
-        onClose={handleCancelPublishAndSendDialog}
-        onConfirm={onConfirm}
-      />
     </Dialog>
   );
 };
