@@ -14,17 +14,7 @@ import { isValidEmail } from '../../utils/regex';
 import { toast } from 'react-toastify';
 import { useCreateSubscribers } from '../../hooks/subscribers';
 import { ApiError } from '../../external/api';
-import { sigleConfig } from '../../config';
-
-// Production list
-const allowedNewsletterUsers = [
-  // sigle.btc
-  'SP2EVYKET55QH40RAZE5PVZ363QX0X6BSRP4C7H0W',
-];
-if (sigleConfig.env === 'development') {
-  // leopradel.btc
-  allowedNewsletterUsers.push('SP3VCX5NFQ8VCHFS9M6N40ZJNVTRT4HZ62WFH5C4Q');
-}
+import { allowedNewsletterUsers } from '../../config';
 
 interface NewsletterFrameProps {
   stacksAddress: string;
