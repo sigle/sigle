@@ -14,6 +14,9 @@ import {
   TabsContent,
   TabsList,
   TabsTrigger,
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
   Typography,
 } from '../../ui';
 import { VisuallyHidden } from '../../ui/VisuallyHidden';
@@ -141,17 +144,26 @@ export const PublishDialog = ({
                   <StyledTrigger value="publish only">
                     Publish only
                   </StyledTrigger>
-                  <StyledTrigger
-                    disabled={!userSubscription}
-                    value="publish and send"
-                    css={{
-                      textDecoration: userSubscription
-                        ? 'none'
-                        : 'line-through',
-                    }}
-                  >
-                    Publish and send
-                  </StyledTrigger>
+                  <Tooltip delayDuration={200}>
+                    <TooltipTrigger asChild>
+                      <div>
+                        <StyledTrigger
+                          disabled={!userSubscription}
+                          value="publish and send"
+                          css={{
+                            textDecoration: userSubscription
+                              ? 'none'
+                              : 'line-through',
+                          }}
+                        >
+                          Publish and send
+                        </StyledTrigger>
+                      </div>
+                    </TooltipTrigger>
+                    <TooltipContent side="bottom" sideOffset={8}>
+                      Coming Soon
+                    </TooltipContent>
+                  </Tooltip>
                 </TabsList>
                 <TabsContent
                   css={{
