@@ -45,6 +45,8 @@ import {
   FormRow,
   FormTextarea,
 } from '../../../ui/Form';
+import { StoriesService } from '../../../external/api';
+import { useAuth } from '../../auth/AuthContext';
 
 // TODO - migrate hideCoverImage from old articles
 // TODO - use twitter card preview component in settings?
@@ -184,6 +186,7 @@ export const EditorSettings = ({
   onSave,
 }: EditorSettingsProps) => {
   const router = useRouter();
+  const { isLegacy } = useAuth();
   const [loadingUploadMetaImage, setLoadingUploadMetaImage] = useState(false);
   const [loadingDelete, setLoadingDelete] = useState(false);
 
@@ -293,6 +296,11 @@ export const EditorSettings = ({
       file.stories.splice(index, 1);
       await saveStoriesFile(file);
       await deleteStoryFile(story);
+      if (!isLegacy) {
+        await StoriesService.storiesControllerDelete({
+          requestBody: { id: story.id },
+        });
+      }
       router.push(`/`);
     } catch (error) {
       console.error(error);

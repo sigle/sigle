@@ -180,6 +180,7 @@ export const DashboardLayout = ({
                 item.path === '/[username]' ? `/${user?.username}` : undefined
               }
               passHref
+              legacyBehavior
             >
               <DashboardSidebarNavItem selected={router.pathname === item.path}>
                 {item.name}
@@ -220,7 +221,12 @@ export const DashboardLayout = ({
                 {navItems
                   .filter((item) => item.path !== router.pathname)
                   .map((item) => (
-                    <Link key={item.path} href={item.path} passHref>
+                    <Link
+                      key={item.path}
+                      href={item.path}
+                      passHref
+                      legacyBehavior
+                    >
                       <DashboardSidebarNavItem variant="accordion">
                         {item.name}
                       </DashboardSidebarNavItem>

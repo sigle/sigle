@@ -96,7 +96,12 @@ export const StoryCard = ({
       }}
     >
       {story.coverImage && (
-        <Link href="/[username]/[storyId]" as={storyPath} passHref>
+        <Link
+          href="/[username]/[storyId]"
+          as={storyPath}
+          passHref
+          legacyBehavior
+        >
           <Box
             css={{
               lineHeight: 0,
@@ -121,21 +126,19 @@ export const StoryCard = ({
             css={{ gap: '$5', mb: '$1', '@md': { mb: '$2' } }}
           >
             <Link href={storyPath} passHref>
-              <a>
-                <StoryTitle
-                  size={{
-                    '@initial': 'subheading',
-                    '@md': 'h4',
-                  }}
-                  as="h4"
-                  data-testid="story-title"
-                >
-                  {story.title}
-                </StoryTitle>
-              </a>
+              <StoryTitle
+                size={{
+                  '@initial': 'subheading',
+                  '@md': 'h4',
+                }}
+                as="h4"
+                data-testid="story-title"
+              >
+                {story.title}
+              </StoryTitle>
             </Link>
           </Flex>
-          <Link href={storyPath} passHref>
+          <Link href={storyPath} passHref legacyBehavior>
             <Flex as="a" gap="1" align="center">
               {displayUser ? (
                 <StoryCardProfileImage
@@ -158,7 +161,7 @@ export const StoryCard = ({
           </Link>
         </Box>
         <Box css={{ flex: 1 }}>
-          <Link href={storyPath} passHref>
+          <Link href={storyPath} passHref legacyBehavior>
             <StoryContent as="a" data-testid="story-content" size="subheading">
               {story.content}
             </StoryContent>

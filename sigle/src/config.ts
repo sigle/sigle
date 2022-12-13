@@ -15,7 +15,19 @@ export const sigleConfig = {
   documentationUrl: 'https://docs.sigle.io',
   explorerGuildUrl: 'https://www.explorerguild.io',
   feedbackUrl: 'https://sigle.canny.io/feature-requests',
-  blogUrl: 'https://app.sigle.io/sigleapp.id.blockstack',
+  blogUrl: 'https://app.sigle.io/sigle.btc',
   gammaUrl: 'https://gamma.io/collections/the-explorer-guild',
   email: 'sigle@protonmail.com',
 };
+
+// Production list
+export const allowedNewsletterUsers = [
+  // sigle.btc
+  'SP2EVYKET55QH40RAZE5PVZ363QX0X6BSRP4C7H0W',
+];
+if (sigleConfig.env === 'development') {
+  // leopradel.btc
+  allowedNewsletterUsers.push('SP3VCX5NFQ8VCHFS9M6N40ZJNVTRT4HZ62WFH5C4Q');
+  // gregogun.btc
+  allowedNewsletterUsers.push('SP1F48HCD4SP4HT8BHQPXZ35615764KC80ACNMBDZ');
+}

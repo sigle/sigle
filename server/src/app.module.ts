@@ -14,7 +14,9 @@ import { PlausibleService } from './plausible/plausible.service';
 import { StacksService } from './stacks/stacks.service';
 import { AppController } from './app.controller';
 import { EmailModule } from './email/email.module';
+import { SubscribersModule } from './subscribers/subscribers.module';
 import { PrismaModule } from './prisma/prisma.module';
+import { StoriesModule } from './stories/stories.module';
 
 @Module({
   imports: [
@@ -58,6 +60,8 @@ import { PrismaModule } from './prisma/prisma.module';
     SubscriptionModule,
     AnalyticsModule,
     EmailModule,
+    SubscribersModule,
+    StoriesModule,
   ],
   controllers: [AppController],
   providers: [

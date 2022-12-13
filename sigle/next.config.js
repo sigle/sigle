@@ -97,6 +97,7 @@ const nextPlugins = [
           // https://docs.sentry.io/platforms/javascript/guides/nextjs/manual-setup/#use-hidden-source-map
           // for more information.
           hideSourceMaps: true,
+          widenClientFileUpload: true,
         },
       },
       {

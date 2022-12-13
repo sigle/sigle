@@ -275,6 +275,7 @@ export const MobileHeader = ({ open, onClose }: MobileHeaderProps) => {
                 href={path}
                 as={path === '/[username]' ? `/${user?.username}` : undefined}
                 passHref
+                legacyBehavior
               >
                 <StyledDialogItem
                   onTouchStart={handleDragStart}
@@ -291,7 +292,7 @@ export const MobileHeader = ({ open, onClose }: MobileHeaderProps) => {
             ))}
             <Box css={{ height: 1, backgroundColor: '$gray6', mx: '-$5' }} />
             {lowerNavItems.map((item) => (
-              <Link key={item.name} href={item.path} passHref>
+              <Link key={item.name} href={item.path} passHref legacyBehavior>
                 <StyledDialogItem
                   onTouchStart={handleDragStart}
                   onTouchEnd={handleDragEnd}
