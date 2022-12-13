@@ -1,6 +1,5 @@
 import { FormikErrors, useFormik } from 'formik';
 import Image from 'next/image';
-import Link from 'next/link';
 import { useState } from 'react';
 import { styled } from '../../stitches.config';
 import {
@@ -42,13 +41,15 @@ interface SettingsFormValues {
 interface SubscribeModalProps {
   open: boolean;
   onClose: () => void;
-  profileImgSrc: string;
-  siteName: string | undefined;
+  userInfo: {
+    siteName: string | undefined;
+    address: string;
+    siteLogo: string;
+  };
 }
 
 export const SubscribeModal = ({
-  profileImgSrc,
-  siteName,
+  userInfo,
   open,
   onClose,
 }: SubscribeModalProps) => {
@@ -107,7 +108,10 @@ export const SubscribeModal = ({
             </Flex>
           ) : (
             <HeaderLogoContainer>
-              <HeaderLogo src={profileImgSrc} alt={`${siteName} logo`} />
+              <HeaderLogo
+                src={userInfo.siteLogo}
+                alt={`${userInfo.siteName} logo`}
+              />
             </HeaderLogoContainer>
           )}
           <DialogTitle asChild>
@@ -115,7 +119,7 @@ export const SubscribeModal = ({
               css={{ fontWeight: 600, mt: '$4', textAlign: 'center' }}
               size="h3"
             >
-              {success ? `Successfully subscribed!` : siteName}
+              {success ? `Successfully subscribed!` : userInfo.siteName}
             </Typography>
           </DialogTitle>
           <DialogDescription asChild>
@@ -125,20 +129,17 @@ export const SubscribeModal = ({
             >
               {success ? (
                 <span>
-                  {`You just subscribed to ${siteName}’s newsletter.`} <br />
+                  {`You just subscribed to ${userInfo.siteName}’s newsletter.`}{' '}
+                  <br />
                   See you soon in your mailbox!
                 </span>
               ) : (
-                `            Enter your email to receive ${siteName}'s new stories in your 
+                `Enter your email to receive ${userInfo.siteName}'s new stories in your 
             mailbox`
               )}
             </Typography>
           </DialogDescription>
-          {success ? (
-            <Link href="/" passHref>
-              <Button as="a">Go back to my dashboard</Button>
-            </Link>
-          ) : (
+          {success ? null : (
             <>
               <FormInput
                 name="email"

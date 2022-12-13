@@ -329,12 +329,13 @@ export const PublicHome = ({ file, settings, userInfo }: PublicHomeProps) => {
                 )}
 
                 <SubscribeModal
-                  profileImgSrc={
-                    settings.siteLogo
+                  userInfo={{
+                    address: userInfo.address,
+                    siteName,
+                    siteLogo: settings.siteLogo
                       ? settings.siteLogo
-                      : generateAvatar(userInfo.address)
-                  }
-                  siteName={siteName}
+                      : generateAvatar(userInfo.address),
+                  }}
                   open={showSubscribeDialog}
                   onClose={handleCancelSubscribe}
                 />
