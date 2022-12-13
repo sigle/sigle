@@ -1,5 +1,5 @@
 import { PaperPlaneIcon } from '@radix-ui/react-icons';
-import Image from 'next/future/image';
+import Image from 'next/image';
 import {
   Box,
   Button,
