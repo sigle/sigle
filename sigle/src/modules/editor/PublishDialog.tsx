@@ -1,5 +1,6 @@
 import { ArrowLeftIcon } from '@radix-ui/react-icons';
 import { useState } from 'react';
+import { allowedNewsletterUsers } from '../../config';
 import { useGetUserSubscription } from '../../hooks/subscriptions';
 import { styled } from '../../stitches.config';
 import { Story } from '../../types';
@@ -20,6 +21,7 @@ import {
   Typography,
 } from '../../ui';
 import { VisuallyHidden } from '../../ui/VisuallyHidden';
+import { useAuth } from '../auth/AuthContext';
 import { TwitterCardPreview } from './TwitterCardPreview';
 
 const StyledTrigger = styled(TabsTrigger, {
@@ -93,9 +95,13 @@ export const PublishDialog = ({
   onClose,
   onEditPreview,
 }: PublishDialogProps) => {
+  const { user } = useAuth();
+  const newsletterActivated = allowedNewsletterUsers.includes(
+    user?.profile.stxAddress.mainnet || ''
+  );
   const { data: userSubscription } = useGetUserSubscription();
-  const [tabValue] = useState<'publish only' | 'publish and send'>(
-    'publish only'
+  const [tabValue, setTabValue] = useState<'publish only' | 'publish and send'>(
+    newsletterActivated ? 'publish and send' : 'publish only'
   );
 
   return (
@@ -135,11 +141,14 @@ export const PublishDialog = ({
               <Typography css={{ fontWeight: 700 }} as="h2" size="h1">
                 Publication
               </Typography>
-              <Tabs value={tabValue}>
+              <Tabs
+                value={tabValue}
+                onValueChange={(value) => setTabValue(value as any)}
+              >
                 <TabsList
                   css={{
                     alignSelf: 'start',
-                    flexDirection: 'row',
+                    flexDirection: newsletterActivated ? 'row-reverse' : 'row',
                   }}
                 >
                   <StyledTrigger value="publish only">
@@ -149,7 +158,7 @@ export const PublishDialog = ({
                     <TooltipTrigger asChild>
                       <div>
                         <StyledTrigger
-                          disabled={!userSubscription}
+                          disabled={!userSubscription && !newsletterActivated}
                           value="publish and send"
                           css={{
                             textDecoration: userSubscription
@@ -206,14 +215,25 @@ export const PublishDialog = ({
                 >
                   Cancel
                 </Button>
-                <Button
-                  size="lg"
-                  color="orange"
-                  disabled={loading}
-                  onClick={onConfirm}
-                >
-                  {loading ? 'Publishing ...' : 'Publish now'}
-                </Button>
+                {tabValue === 'publish only' ? (
+                  <Button
+                    size="lg"
+                    color="orange"
+                    disabled={loading}
+                    onClick={onConfirm}
+                  >
+                    {loading ? 'Publishing ...' : 'Publish now'}
+                  </Button>
+                ) : (
+                  <Button
+                    // onClick={handleShowPublishAndSendDialog}
+                    size="lg"
+                    color="orange"
+                    // disabled={loading}
+                  >
+                    Publish and send
+                  </Button>
+                )}
               </Flex>
             </Flex>
           </Flex>
