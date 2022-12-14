@@ -21,9 +21,12 @@ import {
   TabsContent,
   TabsList,
   TabsTrigger,
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
   Typography,
+  VisuallyHidden,
 } from '../../ui';
-import { VisuallyHidden } from '../../ui/VisuallyHidden';
 import { useFeatureFlags } from '../../utils/featureFlags';
 import { PublishAndSendDialog } from './PublishAndSendDialog';
 import { TwitterCardPreview } from './TwitterCardPreview';
@@ -75,6 +78,7 @@ const StyledDialogContent = styled(DialogContent, {
   width: '100vw',
   height: '100vh',
   pt: '$7',
+  animationDuration: '400ms',
 
   '@xl': {
     pt: '$10',
