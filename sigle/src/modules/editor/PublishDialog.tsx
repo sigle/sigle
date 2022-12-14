@@ -69,6 +69,7 @@ const StyledDialogContent = styled(DialogContent, {
   width: '100vw',
   height: '100vh',
   pt: '$7',
+  animationDuration: '400ms',
 
   '@xl': {
     pt: '$10',
@@ -98,7 +99,7 @@ export const PublishDialog = ({
   );
 
   return (
-    <Dialog open={open} onOpenChange={onClose}>
+    <Dialog open={open} onOpenChange={onClose} overlay={false}>
       <StyledDialogContent closeButton={false}>
         <Container>
           <VisuallyHidden>
