@@ -78,6 +78,9 @@ const ConfigureBNS = () => {
         >
           Follow the guide <StyledRocketIcon />
         </Button>
+        <Typography size="subparagraph" css={{ mt: '$4' }}>
+          {user?.profile.stxAddress.mainnet}
+        </Typography>
       </LoginLayout>
     </Protected>
   );
