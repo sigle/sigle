@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import { useRouter } from 'next/router';
 import { useSession } from 'next-auth/react';
+import { parseZoneFile } from 'zone-file';
 import { useAuth } from './AuthContext';
 import { FullScreenLoading } from '../layout/components/FullScreenLoading';
 
@@ -26,6 +27,18 @@ export const Protected = ({ children }: Props) => {
           // If the zonefile is non existant or empty the user needs to configure it
           if (!namesJson.zonefile || namesJson.zonefile === '') {
             router.push('/configure-bns');
+          }
+          // If missing the profile url the user needs to configure it
+          if (namesJson.zonefile) {
+            const parseZoneFileResult: {
+              uri?: { name: string; target: string }[];
+            } = parseZoneFile(namesJson.zonefile);
+            const profileUrl = parseZoneFileResult.uri?.find(
+              (uri) => uri.name === '_http._tcp'
+            );
+            if (!profileUrl) {
+              router.push('/configure-bns');
+            }
           }
         } catch (e) {}
       }
