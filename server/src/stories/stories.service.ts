@@ -5,6 +5,28 @@ import { PrismaService } from '../prisma/prisma.service';
 export class StoriesService {
   constructor(private readonly prisma: PrismaService) {}
 
+  async get({
+    stacksAddress,
+    gaiaId,
+  }: {
+    stacksAddress: string;
+    gaiaId: string;
+  }) {
+    return this.prisma.story.findFirst({
+      select: {
+        id: true,
+        publishedAt: true,
+        sentAt: true,
+        unpublishedAt: true,
+        deletedAt: true,
+      },
+      where: {
+        user: { stacksAddress: stacksAddress },
+        gaiaId: gaiaId,
+      },
+    });
+  }
+
   async publish({
     stacksAddress,
     gaiaId,
