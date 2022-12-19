@@ -2,6 +2,7 @@
 /* tslint:disable */
 /* eslint-disable */
 import type { PublishStoryDto } from '../models/PublishStoryDto';
+import type { StoryDto } from '../models/StoryDto';
 import type { UnpublishStoryDto } from '../models/UnpublishStoryDto';
 
 import type { CancelablePromise } from '../core/CancelablePromise';
@@ -9,6 +10,24 @@ import { OpenAPI } from '../core/OpenAPI';
 import { request as __request } from '../core/request';
 
 export class StoriesService {
+  /**
+   * @returns StoryDto
+   * @throws ApiError
+   */
+  public static storiesControllerGet({
+    storyId,
+  }: {
+    storyId: string;
+  }): CancelablePromise<StoryDto> {
+    return __request(OpenAPI, {
+      method: 'GET',
+      url: '/api/stories/{storyId}',
+      path: {
+        storyId: storyId,
+      },
+    });
+  }
+
   /**
    * @returns any
    * @throws ApiError
