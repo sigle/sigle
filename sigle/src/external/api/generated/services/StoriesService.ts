@@ -2,6 +2,7 @@
 /* tslint:disable */
 /* eslint-disable */
 import type { PublishStoryDto } from '../models/PublishStoryDto';
+import type { UnpublishStoryDto } from '../models/UnpublishStoryDto';
 
 import type { CancelablePromise } from '../core/CancelablePromise';
 import { OpenAPI } from '../core/OpenAPI';
@@ -32,7 +33,7 @@ export class StoriesService {
   public static storiesControllerUnpublish({
     requestBody,
   }: {
-    requestBody: PublishStoryDto;
+    requestBody: UnpublishStoryDto;
   }): CancelablePromise<any> {
     return __request(OpenAPI, {
       method: 'POST',
@@ -49,7 +50,7 @@ export class StoriesService {
   public static storiesControllerDelete({
     requestBody,
   }: {
-    requestBody: PublishStoryDto;
+    requestBody: UnpublishStoryDto;
   }): CancelablePromise<any> {
     return __request(OpenAPI, {
       method: 'POST',

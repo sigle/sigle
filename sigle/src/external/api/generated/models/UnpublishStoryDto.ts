@@ -2,7 +2,6 @@
 /* tslint:disable */
 /* eslint-disable */
 
-export type PublishStoryDto = {
+export type UnpublishStoryDto = {
   id: string;
-  send: boolean;
 };

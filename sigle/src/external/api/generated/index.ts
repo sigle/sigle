@@ -18,6 +18,7 @@ export type { HistoricalDto } from './models/HistoricalDto';
 export type { PublishStoryDto } from './models/PublishStoryDto';
 export type { ReferrerDto } from './models/ReferrerDto';
 export type { SubscriptionDto } from './models/SubscriptionDto';
+export type { UnpublishStoryDto } from './models/UnpublishStoryDto';
 export type { UserProfileDto } from './models/UserProfileDto';
 
 export { AnalyticsService } from './services/AnalyticsService';

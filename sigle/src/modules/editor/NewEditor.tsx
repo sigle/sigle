@@ -116,7 +116,7 @@ export const NewEditor = ({ story }: NewEditorProps) => {
     });
   };
 
-  const handleConfirmPublish = async () => {
+  const handleConfirmPublish = async (options?: { send?: boolean }) => {
     setPublishDialogState({
       open: true,
       loading: true,

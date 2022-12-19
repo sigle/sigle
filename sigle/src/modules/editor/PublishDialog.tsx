@@ -82,7 +82,7 @@ interface PublishDialogProps {
   story: Story;
   open: boolean;
   loading: boolean;
-  onConfirm: () => void;
+  onConfirm: (options?: { send?: boolean }) => void;
   onClose: () => void;
   onEditPreview: () => void;
 }
@@ -220,7 +220,7 @@ export const PublishDialog = ({
                     size="lg"
                     color="orange"
                     disabled={loading}
-                    onClick={onConfirm}
+                    onClick={() => onConfirm()}
                   >
                     {loading ? 'Publishing ...' : 'Publish now'}
                   </Button>
