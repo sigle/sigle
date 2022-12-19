@@ -131,7 +131,7 @@ export const NewEditor = ({ story }: NewEditorProps) => {
       posthog.capture('publish-story', { id: story.id });
       if (!isLegacy) {
         await StoriesService.storiesControllerPublish({
-          requestBody: { id: story.id },
+          requestBody: { id: story.id, send: options?.send ?? false },
         });
       }
     } catch (error) {
