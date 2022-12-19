@@ -261,6 +261,7 @@ export const PublishDialog = ({
       </Dialog>
       <PublishAndSendDialog
         open={showPublishAndSendDialog}
+        loading={loading}
         onClose={handleCancelPublishAndSendDialog}
         onConfirm={() => onConfirm({ send: true })}
       />

@@ -13,12 +13,14 @@ import {
 
 interface PublishAndSendDialogProps {
   open: boolean;
+  loading: boolean;
   onClose: () => void;
   onConfirm: () => void;
 }
 
 export const PublishAndSendDialog = ({
   open,
+  loading,
   onClose,
   onConfirm,
 }: PublishAndSendDialogProps) => {
@@ -58,8 +60,9 @@ export const PublishAndSendDialog = ({
             onClick={onConfirm}
             css={{ gap: '$2' }}
             color="orange"
+            disabled={loading}
           >
-            Publish and send
+            {loading ? 'Sending ...' : 'Publish and send'}
             <PaperPlaneIcon />
           </Button>
         </Flex>
