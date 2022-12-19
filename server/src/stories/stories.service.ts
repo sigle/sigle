@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 
 @Injectable()
@@ -8,11 +8,17 @@ export class StoriesService {
   async publish({
     stacksAddress,
     gaiaId,
+    send,
   }: {
     stacksAddress: string;
     gaiaId: string;
+    send: boolean;
   }) {
-    const story = await this.prisma.story.findFirst({
+    let story = await this.prisma.story.findFirst({
+      select: {
+        id: true,
+        sentAt: true,
+      },
       where: {
         user: { stacksAddress: stacksAddress },
         gaiaId: gaiaId,
@@ -23,8 +29,11 @@ export class StoriesService {
       where: { stacksAddress },
     });
 
-    await this.prisma.story.upsert({
-      select: { id: true },
+    story = await this.prisma.story.upsert({
+      select: {
+        id: true,
+        sentAt: true,
+      },
       // Workaround for select to work when creating the story
       where: { id: story ? story.id : 'none' },
       create: {
@@ -36,6 +45,20 @@ export class StoriesService {
         publishedAt: new Date(),
       },
     });
+
+    if (send) {
+      if (story.sentAt) {
+        // Newsletter already exists, do not send it again
+        throw new BadRequestException('Newsletter already sent');
+      }
+      await this.prisma.story.update({
+        select: { id: true },
+        where: { id: story.id },
+        data: {
+          sentAt: new Date(),
+        },
+      });
+    }
   }
 
   async unpublish({
