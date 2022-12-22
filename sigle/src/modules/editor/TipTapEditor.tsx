@@ -27,7 +27,7 @@ import TipTapStrike from '@tiptap/extension-strike';
 import TipTapText from '@tiptap/extension-text';
 import TipTapUnderline from '@tiptap/extension-underline';
 import TipTapCodeBlockLowlight from '@tiptap/extension-code-block-lowlight';
-import { lowlight } from 'lowlight/lib/common.js';
+import { lowlight } from 'lowlight/lib/common';
 import { SlashCommands } from './extensions/SlashCommand/SlashCommands';
 import { BubbleMenu } from './BubbleMenu';
 import { slashCommands } from './extensions/SlashCommand/commands';
