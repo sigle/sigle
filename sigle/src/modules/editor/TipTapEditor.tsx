@@ -22,12 +22,13 @@ import TipTapLink from '@tiptap/extension-link';
 import TipTapListItem from '@tiptap/extension-list-item';
 import TipTapOrderedList from '@tiptap/extension-ordered-list';
 import TipTapParagraph from '@tiptap/extension-paragraph';
-import { Placeholder as TipTapPlaceholder } from './extensions/Placeholder';
 import TipTapStrike from '@tiptap/extension-strike';
 import TipTapText from '@tiptap/extension-text';
+import TipTapTypography from '@tiptap/extension-typography';
 import TipTapUnderline from '@tiptap/extension-underline';
 import TipTapCodeBlockLowlight from '@tiptap/extension-code-block-lowlight';
 import { lowlight } from 'lowlight/lib/common';
+import { Placeholder as TipTapPlaceholder } from './extensions/Placeholder';
 import { SlashCommands } from './extensions/SlashCommand/SlashCommands';
 import { BubbleMenu } from './BubbleMenu';
 import { slashCommands } from './extensions/SlashCommand/commands';
@@ -170,6 +171,7 @@ export const TipTapEditor = forwardRef<
       }),
       TipTapHistory,
       TipTapPlaceholder(isMobile),
+      TipTapTypography,
       // Custom extensions
       TipTapTwitter,
       TipTapCta,

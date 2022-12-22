@@ -211,6 +211,7 @@ importers:
       '@tiptap/extension-placeholder': 2.0.0-beta.209
       '@tiptap/extension-strike': 2.0.0-beta.209
       '@tiptap/extension-text': 2.0.0-beta.209
+      '@tiptap/extension-typography': 2.0.0-beta.209
       '@tiptap/extension-underline': 2.0.0-beta.209
       '@tiptap/html': 2.0.0-beta.209
       '@tiptap/react': 2.0.0-beta.209
@@ -345,6 +346,7 @@ importers:
       '@tiptap/extension-placeholder': 2.0.0-beta.209_nv3r55gosyqqywjqk2ljir6ei4
       '@tiptap/extension-strike': 2.0.0-beta.209_f4ffqkgz5d3wev7su7t7l2rrua
       '@tiptap/extension-text': 2.0.0-beta.209_f4ffqkgz5d3wev7su7t7l2rrua
+      '@tiptap/extension-typography': 2.0.0-beta.209_f4ffqkgz5d3wev7su7t7l2rrua
       '@tiptap/extension-underline': 2.0.0-beta.209_f4ffqkgz5d3wev7su7t7l2rrua
       '@tiptap/html': 2.0.0-beta.209_a3wkqvivg3aepok4e4szoya4aa
       '@tiptap/react': 2.0.0-beta.209_q2znjafzmb4pvn25xzm5s3hjsu
@@ -4476,6 +4478,14 @@ packages:
 
   /@tiptap/extension-text/2.0.0-beta.209_f4ffqkgz5d3wev7su7t7l2rrua:
     resolution: {integrity: sha512-12PTPTQViDR7xDLwxGMPiYaV89E9olH/+4Zfoh6QiOjHqhmgYu3+/c8YZ3eARgXnfpy/EzUD0PBxiAyDZJ1vdw==}
+    peerDependencies:
+      '@tiptap/core': ^2.0.0-beta.193
+    dependencies:
+      '@tiptap/core': 2.0.0-beta.209_rd5pjtxohzfgv2zee3iufpqkay
+    dev: false
+
+  /@tiptap/extension-typography/2.0.0-beta.209_f4ffqkgz5d3wev7su7t7l2rrua:
+    resolution: {integrity: sha512-4XmBX6El7eC0Ktewx2+8/+KyCf8uHhtJYSvst8WpfF1Vot+MfhI6OngxDHlUbt3FY+XDG08O+JxEdQIUaiGTVQ==}
     peerDependencies:
       '@tiptap/core': ^2.0.0-beta.193
     dependencies:
