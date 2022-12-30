@@ -1,4 +1,3 @@
-import { CACHE_MANAGER } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { Test, TestingModule } from '@nestjs/testing';
 import { fetch } from 'undici';
@@ -16,13 +15,6 @@ describe('StacksService', () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         StacksService,
-        {
-          provide: CACHE_MANAGER,
-          useValue: {
-            get: () => null,
-            set: () => () => null,
-          },
-        },
         {
           provide: ConfigService,
           useValue: {

@@ -1,6 +1,5 @@
-import { CACHE_MANAGER, Inject, Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { Cache } from 'cache-manager';
 import { lookupProfile } from 'micro-stacks/storage';
 import { migrationStories, SettingsFile, SubsetStory } from '../external/gaia';
 import { fetch } from 'undici';
@@ -12,7 +11,6 @@ export class StacksService {
   private readonly settingsFileName = 'settings.json';
 
   constructor(
-    @Inject(CACHE_MANAGER) private readonly cacheManager: Cache,
     private readonly configService: ConfigService<EnvironmentVariables>,
   ) {}
 
