@@ -1,6 +1,7 @@
 import { ArrowLeftIcon } from '@radix-ui/react-icons';
 import { useEffect, useState } from 'react';
 import { allowedNewsletterUsers } from '../../config';
+import { useGetStory } from '../../hooks/stories';
 import { useGetUserSubscription } from '../../hooks/subscriptions';
 import { styled } from '../../stitches.config';
 import { Story } from '../../types';
@@ -101,6 +102,7 @@ export const PublishDialog = ({
     user?.profile.stxAddress.mainnet || ''
   );
   const { data: userSubscription } = useGetUserSubscription();
+  const { data: storyApi } = useGetStory({ storyId: story.id });
   const [tabValue, setTabValue] = useState<'publish only' | 'publish and send'>(
     newsletterActivated ? 'publish and send' : 'publish only'
   );
@@ -112,6 +114,12 @@ export const PublishDialog = ({
       setShowPublishAndSendDialog(false);
     }
   }, [open]);
+
+  useEffect(() => {
+    if (storyApi && storyApi.sentAt) {
+      setTabValue('publish only');
+    }
+  }, [storyApi]);
 
   const handleShowPublishAndSendDialog = () =>
     setShowPublishAndSendDialog(true);
@@ -176,13 +184,17 @@ export const PublishDialog = ({
                       <TooltipTrigger asChild>
                         <div>
                           <StyledTrigger
-                            disabled={!userSubscription && !newsletterActivated}
+                            disabled={
+                              !!storyApi?.sentAt ||
+                              (!userSubscription && !newsletterActivated)
+                            }
                             value="publish and send"
                             css={{
                               textDecoration:
-                                userSubscription || newsletterActivated
-                                  ? 'none'
-                                  : 'line-through',
+                                !!storyApi?.sentAt ||
+                                (!userSubscription && !newsletterActivated)
+                                  ? 'line-through'
+                                  : 'none',
                             }}
                           >
                             Publish and send
@@ -190,7 +202,9 @@ export const PublishDialog = ({
                         </div>
                       </TooltipTrigger>
                       <TooltipContent side="bottom" sideOffset={8}>
-                        Coming Soon
+                        {!!storyApi?.sentAt
+                          ? 'You already sent this newsletter'
+                          : 'Coming Soon'}
                       </TooltipContent>
                     </Tooltip>
                   </TabsList>
@@ -203,7 +217,9 @@ export const PublishDialog = ({
                     value="publish only"
                   >
                     <Typography css={{ fontWeight: 600 }} size="subheading">
-                      You're in "Publish only" mode.
+                      {!!storyApi?.sentAt
+                        ? 'You are in “Publish only” mode because you already sent this newsletter to your subscribers.'
+                        : 'You\'re in "Publish only" mode.'}
                     </Typography>
                   </TabsContent>
                 </Tabs>
