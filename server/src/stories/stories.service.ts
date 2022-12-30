@@ -1,4 +1,5 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
+import { allowedNewsletterUsers } from '../utils';
 import { PrismaService } from '../prisma/prisma.service';
 
 @Injectable()
@@ -69,6 +70,10 @@ export class StoriesService {
     });
 
     if (send) {
+      // Limit who can access this feature
+      if (!allowedNewsletterUsers.includes(stacksAddress)) {
+        throw new BadRequestException('Not activated.');
+      }
       if (story.sentAt) {
         // Newsletter already exists, do not send it again
         throw new BadRequestException('Newsletter already sent');
