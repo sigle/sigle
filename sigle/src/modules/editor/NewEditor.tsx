@@ -19,7 +19,7 @@ import { PublishedDialog } from './PublishedDialog';
 import { CoverImage } from './CoverImage';
 import { EditorSettings } from './EditorSettings/EditorSettings';
 import { useAuth } from '../auth/AuthContext';
-import { StoriesService } from '../../external/api';
+import { ApiError, StoriesService } from '../../external/api';
 
 const TitleInput = styled('input', {
   outline: 'transparent',
@@ -116,7 +116,7 @@ export const NewEditor = ({ story }: NewEditorProps) => {
     });
   };
 
-  const handleConfirmPublish = async () => {
+  const handleConfirmPublish = async (options?: { send?: boolean }) => {
     setPublishDialogState({
       open: true,
       loading: true,
@@ -131,12 +131,16 @@ export const NewEditor = ({ story }: NewEditorProps) => {
       posthog.capture('publish-story', { id: story.id });
       if (!isLegacy) {
         await StoriesService.storiesControllerPublish({
-          requestBody: { id: story.id },
+          requestBody: { id: story.id, send: options?.send ?? false },
         });
       }
     } catch (error) {
+      let errorMessage = error.message;
+      if (error instanceof ApiError && error.body.message) {
+        errorMessage = error.body.message;
+      }
       console.error(error);
-      toast.error(error.message);
+      toast.error(errorMessage);
     }
     NProgress.done();
     setPublishDialogState({

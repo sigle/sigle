@@ -46,6 +46,7 @@ model Story {
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
   publishedAt   DateTime?
+  sentAt        DateTime?
   unpublishedAt DateTime?
   deletedAt     DateTime?
   user          User      @relation(fields: [userId], references: [id])

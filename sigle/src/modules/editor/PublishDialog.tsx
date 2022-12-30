@@ -1,5 +1,7 @@
 import { ArrowLeftIcon } from '@radix-ui/react-icons';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { allowedNewsletterUsers } from '../../config';
+import { useGetStory } from '../../hooks/stories';
 import { useGetUserSubscription } from '../../hooks/subscriptions';
 import { styled } from '../../stitches.config';
 import { Story } from '../../types';
@@ -20,6 +22,8 @@ import {
   Typography,
 } from '../../ui';
 import { VisuallyHidden } from '../../ui/VisuallyHidden';
+import { useAuth } from '../auth/AuthContext';
+import { PublishAndSendDialog } from './PublishAndSendDialog';
 import { TwitterCardPreview } from './TwitterCardPreview';
 
 const StyledTrigger = styled(TabsTrigger, {
@@ -80,7 +84,7 @@ interface PublishDialogProps {
   story: Story;
   open: boolean;
   loading: boolean;
-  onConfirm: () => void;
+  onConfirm: (options?: { send?: boolean }) => void;
   onClose: () => void;
   onEditPreview: () => void;
 }
@@ -93,132 +97,190 @@ export const PublishDialog = ({
   onClose,
   onEditPreview,
 }: PublishDialogProps) => {
-  const { data: userSubscription } = useGetUserSubscription();
-  const [tabValue] = useState<'publish only' | 'publish and send'>(
-    'publish only'
+  const { user } = useAuth();
+  const newsletterActivated = allowedNewsletterUsers.includes(
+    user?.profile.stxAddress.mainnet || ''
   );
+  const { data: userSubscription } = useGetUserSubscription();
+  const { data: storyApi } = useGetStory({ storyId: story.id });
+  const [tabValue, setTabValue] = useState<'publish only' | 'publish and send'>(
+    newsletterActivated ? 'publish and send' : 'publish only'
+  );
+  const [showPublishAndSendDialog, setShowPublishAndSendDialog] =
+    useState(false);
+
+  useEffect(() => {
+    if (!open && showPublishAndSendDialog) {
+      setShowPublishAndSendDialog(false);
+    }
+  }, [open]);
+
+  useEffect(() => {
+    if (storyApi && storyApi.sentAt) {
+      setTabValue('publish only');
+    }
+  }, [storyApi]);
+
+  const handleShowPublishAndSendDialog = () =>
+    setShowPublishAndSendDialog(true);
+
+  const handleCancelPublishAndSendDialog = () =>
+    setShowPublishAndSendDialog(false);
 
   return (
-    <Dialog open={open} onOpenChange={onClose} overlay={false}>
-      <StyledDialogContent closeButton={false}>
-        <Container>
-          <VisuallyHidden>
-            <DialogTitle>Preview and publish your story</DialogTitle>
-          </VisuallyHidden>
-          <Button
-            onClick={onClose}
-            variant="ghost"
-            css={{ gap: '$2', ml: '-$1' }}
-            size="sm"
-          >
-            <ArrowLeftIcon />
-            Back to the editor
-          </Button>
-          <Flex
-            direction={{
-              '@initial': 'column',
-              '@md': 'row',
-            }}
-            css={{
-              mx: 'auto',
-              mt: '$10',
-              justifyContent: 'center',
-              gap: '$10',
-              maxWidth: 826,
+    <>
+      <Dialog open={open} onOpenChange={onClose} overlay={false}>
+        <StyledDialogContent closeButton={false}>
+          <Container>
+            <VisuallyHidden>
+              <DialogTitle>Preview and publish your story</DialogTitle>
+            </VisuallyHidden>
+            <Button
+              onClick={onClose}
+              variant="ghost"
+              css={{ gap: '$2', ml: '-$1' }}
+              size="sm"
+            >
+              <ArrowLeftIcon />
+              Back to the editor
+            </Button>
+            <Flex
+              direction={{
+                '@initial': 'column',
+                '@md': 'row',
+              }}
+              css={{
+                mx: 'auto',
+                mt: '$10',
+                justifyContent: 'center',
+                gap: '$10',
+                maxWidth: 826,
 
-              '@md': {
-                mt: '$15',
-              },
-            }}
-          >
-            <Flex css={{ flex: 1 }} direction="column" gap="5">
-              <Typography css={{ fontWeight: 700 }} as="h2" size="h1">
-                Publication
-              </Typography>
-              <Tabs value={tabValue}>
-                <TabsList
-                  css={{
-                    alignSelf: 'start',
-                    flexDirection: 'row',
-                  }}
-                >
-                  <StyledTrigger value="publish only">
-                    Publish only
-                  </StyledTrigger>
-                  <Tooltip delayDuration={200}>
-                    <TooltipTrigger asChild>
-                      <div>
-                        <StyledTrigger
-                          disabled={!userSubscription}
-                          value="publish and send"
-                          css={{
-                            textDecoration: userSubscription
-                              ? 'none'
-                              : 'line-through',
-                          }}
-                        >
-                          Publish and send
-                        </StyledTrigger>
-                      </div>
-                    </TooltipTrigger>
-                    <TooltipContent side="bottom" sideOffset={8}>
-                      Coming Soon
-                    </TooltipContent>
-                  </Tooltip>
-                </TabsList>
-                <TabsContent
-                  css={{
-                    display: 'flex',
-                    flexDirection: 'column',
-                    gap: '$5',
-                  }}
-                  value="publish only"
-                >
-                  <Typography css={{ fontWeight: 600 }} size="subheading">
-                    You're in "Publish only" mode.
-                  </Typography>
-                </TabsContent>
-              </Tabs>
-            </Flex>
-
-            <Flex css={{ flex: 1 }} direction="column" gap="5">
-              <Flex justify="between">
+                '@md': {
+                  mt: '$15',
+                },
+              }}
+            >
+              <Flex css={{ flex: 1 }} direction="column" gap="5">
                 <Typography css={{ fontWeight: 700 }} as="h2" size="h1">
-                  Preview
+                  Publication
                 </Typography>
-                <Button
-                  size="lg"
-                  variant="ghost"
-                  color="orange"
-                  disabled={loading}
-                  onClick={onEditPreview}
+                <Tabs
+                  value={tabValue}
+                  onValueChange={(value) => setTabValue(value as any)}
                 >
-                  Edit preview
-                </Button>
+                  <TabsList
+                    css={{
+                      alignSelf: 'start',
+                      flexDirection: newsletterActivated
+                        ? 'row-reverse'
+                        : 'row',
+                    }}
+                  >
+                    <StyledTrigger value="publish only">
+                      Publish only
+                    </StyledTrigger>
+                    <Tooltip delayDuration={200}>
+                      <TooltipTrigger asChild>
+                        <div>
+                          <StyledTrigger
+                            disabled={
+                              !!storyApi?.sentAt ||
+                              (!userSubscription && !newsletterActivated)
+                            }
+                            value="publish and send"
+                            css={{
+                              textDecoration:
+                                !!storyApi?.sentAt ||
+                                (!userSubscription && !newsletterActivated)
+                                  ? 'line-through'
+                                  : 'none',
+                            }}
+                          >
+                            Publish and send
+                          </StyledTrigger>
+                        </div>
+                      </TooltipTrigger>
+                      <TooltipContent side="bottom" sideOffset={8}>
+                        {!!storyApi?.sentAt
+                          ? 'You already sent this newsletter'
+                          : 'Coming Soon'}
+                      </TooltipContent>
+                    </Tooltip>
+                  </TabsList>
+                  <TabsContent
+                    css={{
+                      display: 'flex',
+                      flexDirection: 'column',
+                      gap: '$5',
+                    }}
+                    value="publish only"
+                  >
+                    <Typography css={{ fontWeight: 600 }} size="subheading">
+                      {!!storyApi?.sentAt
+                        ? 'You are in “Publish only” mode because you already sent this newsletter to your subscribers.'
+                        : 'You\'re in "Publish only" mode.'}
+                    </Typography>
+                  </TabsContent>
+                </Tabs>
               </Flex>
-              <TwitterCardPreview story={story} />
-              <Flex justify="end" gap="6" css={{ mt: '$5' }}>
-                <Button
-                  size="lg"
-                  variant="ghost"
-                  disabled={loading}
-                  onClick={onClose}
-                >
-                  Cancel
-                </Button>
-                <Button
-                  size="lg"
-                  color="orange"
-                  disabled={loading}
-                  onClick={onConfirm}
-                >
-                  {loading ? 'Publishing ...' : 'Publish now'}
-                </Button>
+
+              <Flex css={{ flex: 1 }} direction="column" gap="5">
+                <Flex justify="between">
+                  <Typography css={{ fontWeight: 700 }} as="h2" size="h1">
+                    Preview
+                  </Typography>
+                  <Button
+                    size="lg"
+                    variant="ghost"
+                    color="orange"
+                    disabled={loading}
+                    onClick={onEditPreview}
+                  >
+                    Edit preview
+                  </Button>
+                </Flex>
+                <TwitterCardPreview story={story} />
+                <Flex justify="end" gap="6" css={{ mt: '$5' }}>
+                  <Button
+                    size="lg"
+                    variant="ghost"
+                    disabled={loading}
+                    onClick={onClose}
+                  >
+                    Cancel
+                  </Button>
+                  {tabValue === 'publish only' ? (
+                    <Button
+                      size="lg"
+                      color="orange"
+                      disabled={loading}
+                      onClick={() => onConfirm()}
+                    >
+                      {loading ? 'Publishing ...' : 'Publish now'}
+                    </Button>
+                  ) : (
+                    <Button
+                      onClick={handleShowPublishAndSendDialog}
+                      size="lg"
+                      color="orange"
+                      disabled={loading}
+                    >
+                      Publish and send
+                    </Button>
+                  )}
+                </Flex>
               </Flex>
             </Flex>
-          </Flex>
-        </Container>
-      </StyledDialogContent>
-    </Dialog>
+          </Container>
+        </StyledDialogContent>
+      </Dialog>
+      <PublishAndSendDialog
+        open={showPublishAndSendDialog}
+        loading={loading}
+        onClose={handleCancelPublishAndSendDialog}
+        onConfirm={() => onConfirm({ send: true })}
+      />
+    </>
   );
 };
