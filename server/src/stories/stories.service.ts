@@ -78,6 +78,12 @@ export class StoriesService {
         // Newsletter already exists, do not send it again
         throw new BadRequestException('Newsletter already sent');
       }
+
+      // TODO get user data from Gaia
+      // 1. Settings
+      // 2. Story
+      // Then convert it to MJML and send it
+
       await this.prisma.story.update({
         select: { id: true },
         where: { id: story.id },
