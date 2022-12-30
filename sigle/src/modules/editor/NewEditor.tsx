@@ -19,7 +19,7 @@ import { PublishedDialog } from './PublishedDialog';
 import { CoverImage } from './CoverImage';
 import { EditorSettings } from './EditorSettings/EditorSettings';
 import { useAuth } from '../auth/AuthContext';
-import { StoriesService } from '../../external/api';
+import { ApiError, StoriesService } from '../../external/api';
 
 const TitleInput = styled('input', {
   outline: 'transparent',
@@ -135,8 +135,12 @@ export const NewEditor = ({ story }: NewEditorProps) => {
         });
       }
     } catch (error) {
+      let errorMessage = error.message;
+      if (error instanceof ApiError && error.body.message) {
+        errorMessage = error.body.message;
+      }
       console.error(error);
-      toast.error(error.message);
+      toast.error(errorMessage);
     }
     NProgress.done();
     setPublishDialogState({
