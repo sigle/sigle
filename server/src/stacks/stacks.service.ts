@@ -1,4 +1,4 @@
-import { Inject, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { lookupProfile } from 'micro-stacks/storage';
 import { migrationStories, SettingsFile, SubsetStory } from '../external/gaia';
