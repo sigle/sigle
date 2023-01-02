@@ -74,9 +74,11 @@ export class EmailService {
   }
 
   storyToMJML({
+    username,
     story,
     settings,
   }: {
+    username: string;
     story: Story;
     settings: SettingsFile;
   }): string {
@@ -87,10 +89,8 @@ export class EmailService {
     return this.templates.storyEmail(
       {
         content: this.htmlToMJML(story.content),
-        user: {
-          username: 'antoine.btc',
-          displayName: 'Antoine Lebowitch',
-        },
+        username: username,
+        displayName: settings.siteName || username,
         settings,
       },
       {},

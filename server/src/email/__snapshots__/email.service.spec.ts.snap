@@ -41,7 +41,7 @@ exports[`EmailService storyToMJML should render story with site url 1`] = `
             style='color: #737373; font-weight: 600'
           >Unsubscribe</a>
           from
-          antoine.btc’s Newsletter.</mj-text>
+          sigle.btc’s Newsletter.</mj-text>
         <mj-text align='center'><a href='https://app.sigle.io'><img
               src='https://app.sigle.io/img/emails/cta.png'
               width='143'
@@ -55,7 +55,7 @@ exports[`EmailService storyToMJML should render story with site url 1`] = `
         <mj-text color='#737373'>If you were forwarded this newsletter and you
           like it, you can subscribe
           <a
-            href='https://app.sigle.io/antoine.btc'
+            href='https://app.sigle.io/sigle.btc'
             style='color: #737373; font-weight: 600'
           >here</a>.
         </mj-text>
@@ -102,7 +102,7 @@ exports[`EmailService storyToMJML should render story with template 1`] = `
             style='color: #737373; font-weight: 600'
           >Unsubscribe</a>
           from
-          antoine.btc’s Newsletter.</mj-text>
+          sigle.btc’s Newsletter.</mj-text>
         <mj-text align='center'><a href='https://app.sigle.io'><img
               src='https://app.sigle.io/img/emails/cta.png'
               width='143'
@@ -116,7 +116,7 @@ exports[`EmailService storyToMJML should render story with template 1`] = `
         <mj-text color='#737373'>If you were forwarded this newsletter and you
           like it, you can subscribe
           <a
-            href='https://app.sigle.io/antoine.btc'
+            href='https://app.sigle.io/sigle.btc'
             style='color: #737373; font-weight: 600'
           >here</a>.
         </mj-text>
@@ -168,7 +168,7 @@ exports[`EmailService storyToMJML should render story with twitter url 1`] = `
             style='color: #737373; font-weight: 600'
           >Unsubscribe</a>
           from
-          antoine.btc’s Newsletter.</mj-text>
+          sigle.btc’s Newsletter.</mj-text>
         <mj-text align='center'><a href='https://app.sigle.io'><img
               src='https://app.sigle.io/img/emails/cta.png'
               width='143'
@@ -182,7 +182,7 @@ exports[`EmailService storyToMJML should render story with twitter url 1`] = `
         <mj-text color='#737373'>If you were forwarded this newsletter and you
           like it, you can subscribe
           <a
-            href='https://app.sigle.io/antoine.btc'
+            href='https://app.sigle.io/sigle.btc'
             style='color: #737373; font-weight: 600'
           >here</a>.
         </mj-text>

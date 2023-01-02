@@ -113,12 +113,15 @@ describe('EmailService', () => {
     };
 
     it('should render story with template', () => {
-      expect(service.storyToMJML({ story, settings: {} })).toMatchSnapshot();
+      expect(
+        service.storyToMJML({ username: 'sigle.btc', story, settings: {} }),
+      ).toMatchSnapshot();
     });
 
     it('should render story with site url', () => {
       expect(
         service.storyToMJML({
+          username: 'sigle.btc',
           story,
           settings: {
             siteUrl: 'https://www.sigle.io',
@@ -130,6 +133,7 @@ describe('EmailService', () => {
     it('should render story with twitter url', () => {
       expect(
         service.storyToMJML({
+          username: 'sigle.btc',
           story,
           settings: {
             siteTwitterHandle: 'sigleapp',

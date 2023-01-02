@@ -1,7 +1,12 @@
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { lookupProfile } from 'micro-stacks/storage';
-import { migrationStories, SettingsFile, SubsetStory } from '../external/gaia';
+import {
+  migrationStories,
+  SettingsFile,
+  Story,
+  SubsetStory,
+} from '../external/gaia';
 import { fetch } from 'undici';
 import { EnvironmentVariables } from '../environment/environment.validation';
 
@@ -69,6 +74,20 @@ export class StacksService {
       (await resPublicStories.json()) as any,
     );
     return publicStoriesFile.stories;
+  }
+
+  async getPublicStory({
+    bucketUrl,
+    storyId,
+  }: {
+    bucketUrl: string;
+    storyId: string;
+  }): Promise<Story | null> {
+    const resPublicStory = await fetch(`${bucketUrl}${storyId}.json`);
+    if (resPublicStory.status !== 200) {
+      return null;
+    }
+    return (await resPublicStory.json()) as Story;
   }
 
   async getPublicSettings({
