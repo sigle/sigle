@@ -1,10 +1,17 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
+import * as mjml2html from 'mjml';
 import { allowedNewsletterUsers } from '../utils';
 import { PrismaService } from '../prisma/prisma.service';
+import { StacksService } from '../stacks/stacks.service';
+import { EmailService } from '../email/email.service';
 
 @Injectable()
 export class StoriesService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly stacksService: StacksService,
+    private readonly emailService: EmailService,
+  ) {}
 
   async get({
     stacksAddress,
@@ -79,10 +86,26 @@ export class StoriesService {
         throw new BadRequestException('Newsletter already sent');
       }
 
-      // TODO get user data from Gaia
-      // 1. Settings
-      // 2. Story
-      // Then convert it to MJML and send it
+      const username = await this.stacksService.getUsernameByAddress(
+        stacksAddress,
+      );
+      const bucketUrl = await this.stacksService.getBucketUrl({ username });
+      const [publicSettings, publicStory] = await Promise.all([
+        this.stacksService.getPublicSettings({
+          bucketUrl: bucketUrl.bucketUrl,
+        }),
+        this.stacksService.getPublicStory({
+          bucketUrl: bucketUrl.bucketUrl,
+          storyId: gaiaId,
+        }),
+      ]);
+      const MJMLNewsletter = this.emailService.storyToMJML({
+        username,
+        story: publicStory,
+        settings: publicSettings,
+      });
+      const htmlNewsletter = mjml2html(MJMLNewsletter).html;
+      // TODO check if newsletter has errors and report it  mjml2html(MJMLNewsletter).errors
 
       await this.prisma.story.update({
         select: { id: true },
