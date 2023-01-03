@@ -1,13 +1,18 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import * as mjml2html from 'mjml';
+import { SendEmailV3_1 } from 'node-mailjet';
 import { allowedNewsletterUsers } from '../utils';
 import { PrismaService } from '../prisma/prisma.service';
 import { StacksService } from '../stacks/stacks.service';
 import { EmailService } from '../email/email.service';
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const Mailjet = require('node-mailjet');
 
 @Injectable()
 export class StoriesService {
   constructor(
+    private readonly configService: ConfigService,
     private readonly prisma: PrismaService,
     private readonly stacksService: StacksService,
     private readonly emailService: EmailService,
@@ -106,6 +111,46 @@ export class StoriesService {
       });
       const htmlNewsletter = mjml2html(MJMLNewsletter).html;
       // TODO check if newsletter has errors and report it  mjml2html(MJMLNewsletter).errors
+
+      const mailjet = new Mailjet({
+        apiKey: this.configService.get('MAILJET_API_KEY'),
+        apiSecret: this.configService.get('MAILJET_API_SECRET'),
+      });
+
+      const sendEmailBody: SendEmailV3_1.IBody = {
+        SandboxMode: false,
+        Messages: [
+          {
+            From: {
+              // TODO take it from user preference
+              Email: 'leo@sigle.io',
+              Name: publicSettings.siteName || username,
+            },
+            To: [
+              {
+                // TODO how to get the list email?
+                // TODO maybe can use the list ID?
+                Email: 'TODO',
+              },
+            ],
+            Subject: publicStory.title,
+            HTMLPart: htmlNewsletter,
+            // TODO convert html to text
+            TextPart: 'TODO',
+          },
+        ],
+      };
+
+      try {
+        const data: { body: SendEmailV3_1.IResponse } = await mailjet
+          .post('send', { version: 'v3.1' })
+          .request(sendEmailBody);
+        console.log(data);
+      } catch (error) {
+        // TODO report to sentry with all the info needed
+        console.log(error);
+        throw error;
+      }
 
       await this.prisma.story.update({
         select: { id: true },
