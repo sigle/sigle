@@ -77,6 +77,7 @@ importers:
       leaked-handles: 5.2.0
       micro-stacks: 1.1.4
       mjml: 4.13.0
+      mjml-bullet-list: 1.2.2
       nestjs-throttler-storage-redis: 0.1.20
       next-auth: 4.10.3
       node-mailjet: 5.1.1
@@ -119,6 +120,7 @@ importers:
       ioredis: 5.2.3
       micro-stacks: 1.1.4
       mjml: 4.13.0
+      mjml-bullet-list: 1.2.2
       nestjs-throttler-storage-redis: 0.1.20_xtkbcnqms3edyuba34pxaourem
       next-auth: 4.10.3_nodemailer@6.8.0
       node-mailjet: 5.1.1
@@ -10824,6 +10826,15 @@ packages:
     dependencies:
       '@babel/runtime': 7.17.9
       lodash: 4.17.21
+      mjml-core: 4.13.0
+    transitivePeerDependencies:
+      - encoding
+    dev: false
+
+  /mjml-bullet-list/1.2.2:
+    resolution: {integrity: sha512-Ddfajq1K1Okq5iwVN3yxpH4HUaHdlJFdXgbTuea36SLOfhg1PuKN8ZVc5LQoxQjUUTgxaqQ0M+9xPeTzEakKuA==}
+    dependencies:
+      mjml: 4.13.0
       mjml-core: 4.13.0
     transitivePeerDependencies:
       - encoding
