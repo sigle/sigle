@@ -8,11 +8,11 @@ exports[`EmailService storyToMJML should render story with site url 1`] = `
       href='https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700&display=swap'
     ></mj-font>
     <mj-attributes>
-      <mj-text
-        font-family='Open Sans'
+      <mj-all
+        font-family='Open Sans, Roboto, Arial, sans-serif'
         font-size='15px'
         line-height='20px'
-      ></mj-text>
+      ></mj-all>
       <mj-divider border-color='#E2E2E2' border-width='1px'></mj-divider>
     </mj-attributes>
   </mj-head>
@@ -60,7 +60,7 @@ exports[`EmailService storyToMJML should render story with site url 1`] = `
           >here</a>.
         </mj-text>
         <mj-divider></mj-divider>
-        <mj-text align='center' color='#737373'>© Sigle 2022</mj-text>
+        <mj-text align='center' color='#737373'>© Sigle 2023</mj-text>
       </mj-column>
     </mj-section>
   </mj-body>
@@ -75,11 +75,11 @@ exports[`EmailService storyToMJML should render story with template 1`] = `
       href='https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700&display=swap'
     ></mj-font>
     <mj-attributes>
-      <mj-text
-        font-family='Open Sans'
+      <mj-all
+        font-family='Open Sans, Roboto, Arial, sans-serif'
         font-size='15px'
         line-height='20px'
-      ></mj-text>
+      ></mj-all>
       <mj-divider border-color='#E2E2E2' border-width='1px'></mj-divider>
     </mj-attributes>
   </mj-head>
@@ -121,7 +121,7 @@ exports[`EmailService storyToMJML should render story with template 1`] = `
           >here</a>.
         </mj-text>
         <mj-divider></mj-divider>
-        <mj-text align='center' color='#737373'>© Sigle 2022</mj-text>
+        <mj-text align='center' color='#737373'>© Sigle 2023</mj-text>
       </mj-column>
     </mj-section>
   </mj-body>
@@ -136,11 +136,11 @@ exports[`EmailService storyToMJML should render story with twitter url 1`] = `
       href='https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700&display=swap'
     ></mj-font>
     <mj-attributes>
-      <mj-text
-        font-family='Open Sans'
+      <mj-all
+        font-family='Open Sans, Roboto, Arial, sans-serif'
         font-size='15px'
         line-height='20px'
-      ></mj-text>
+      ></mj-all>
       <mj-divider border-color='#E2E2E2' border-width='1px'></mj-divider>
     </mj-attributes>
   </mj-head>
@@ -187,7 +187,7 @@ exports[`EmailService storyToMJML should render story with twitter url 1`] = `
           >here</a>.
         </mj-text>
         <mj-divider></mj-divider>
-        <mj-text align='center' color='#737373'>© Sigle 2022</mj-text>
+        <mj-text align='center' color='#737373'>© Sigle 2023</mj-text>
       </mj-column>
     </mj-section>
   </mj-body>
