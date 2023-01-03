@@ -76,7 +76,7 @@ describe('EmailService', () => {
           '<img src="https://gaia.blockstack.org/hub/1Mqh6Lqyqdjcu8PHczewej4DZmMjFp1ZEt/photos/ZuwzlaWfMhjG-yJbG1WhP/slRWpY-LD7gYPxZuJYuJg-Screenshot 2022-08-24 at 10.07.14.png">',
         ),
       ).toEqual(
-        '<mj-image src="https://gaia.blockstack.org/hub/1Mqh6Lqyqdjcu8PHczewej4DZmMjFp1ZEt/photos/ZuwzlaWfMhjG-yJbG1WhP/slRWpY-LD7gYPxZuJYuJg-Screenshot 2022-08-24 at 10.07.14.png" />',
+        '<mj-image src="https://gaia.blockstack.org/hub/1Mqh6Lqyqdjcu8PHczewej4DZmMjFp1ZEt/photos/ZuwzlaWfMhjG-yJbG1WhP/slRWpY-LD7gYPxZuJYuJg-Screenshot%202022-08-24%20at%2010.07.14.png" />',
       );
     });
 

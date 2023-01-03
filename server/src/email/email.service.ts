@@ -6,9 +6,17 @@ import { SettingsFile, Story } from '../external/gaia';
 
 const inlineAttributes = (
   attributes: { key: string; value: string }[],
+  transform: { [key: string]: (value: string) => string } = {},
 ): string =>
   attributes
-    .map((attribute) => `${attribute.key}="${attribute.value}"`)
+    .map(
+      (attribute) =>
+        `${attribute.key}="${
+          transform[attribute.key]
+            ? transform[attribute.key](attribute.value)
+            : attribute.value
+        }"`,
+    )
     .join(' ');
 
 const inlineText = (json: any[]): string => {
@@ -65,7 +73,10 @@ export class EmailService {
           node.children,
         )}</blockquote></mj-text>`;
       } else if (node.tagName === 'img') {
-        mjml += `<mj-image ${inlineAttributes(node.attributes)} />`;
+        mjml += `<mj-image ${inlineAttributes(node.attributes, {
+          // If the image src contains a space, encode it.
+          src: (value) => (value.includes(' ') ? encodeURI(value) : value),
+        })} />`;
       } else if (node.tagName === 'hr') {
         mjml += `<mj-divider />`;
       }
