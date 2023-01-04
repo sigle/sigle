@@ -2,7 +2,9 @@ import { readFileSync } from 'fs';
 import { Injectable } from '@nestjs/common';
 import { parse } from 'himalaya';
 import { compile } from 'handlebars';
+import { format } from 'date-fns';
 import { SettingsFile, Story } from '../external/gaia';
+import { generateAvatar } from '../utils';
 
 type MJMLAttribute = { key: string; value: string };
 
@@ -113,10 +115,12 @@ export class EmailService {
   }
 
   storyToMJML({
+    stacksAddress,
     username,
     story,
     settings,
   }: {
+    stacksAddress: string;
     username: string;
     story: Story;
     settings: SettingsFile;
@@ -127,9 +131,16 @@ export class EmailService {
 
     return this.templates.storyEmail(
       {
+        title: story.title,
         content: this.htmlToMJML(story.content),
         username: username,
+        profileUrl: `https://app.sigle.io/${username}`,
+        storyUrl: `https://app.sigle.io/${username}/${story.id}`,
+        date: format(story.createdAt, 'MMMM dd, yyyy'),
         displayName: settings.siteName || username,
+        avatarUrl: settings.siteLogo
+          ? settings.siteLogo
+          : generateAvatar(stacksAddress),
         settings,
       },
       {},

@@ -9,3 +9,7 @@ if (process.env.NODE_ENV === 'development') {
   // gregogun.btc
   allowedNewsletterUsers.push('SP1F48HCD4SP4HT8BHQPXZ35615764KC80ACNMBDZ');
 }
+
+export const generateAvatar = (stxAddress: string) => {
+  return `https://source.boringavatars.com/marble/120/${stxAddress}?square&colors=da3a00,fa8158,ffa835,37c391,7c456cf`;
+};
