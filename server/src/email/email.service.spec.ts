@@ -104,6 +104,16 @@ describe('EmailService', () => {
       );
     });
 
+    it('should convert twitter embed', () => {
+      expect(
+        service.htmlToMJML(
+          '<div data-twitter="" data-twitter-id="1610573364296302592" url="https://twitter.com/sigleapp/status/1610573364296302592">',
+        ),
+      ).toEqual(
+        '<mj-text><a href="https://twitter.com/sigleapp/status/1610573364296302592">https://twitter.com/sigleapp/status/1610573364296302592</a></mj-text>',
+      );
+    });
+
     it('should convert full article', () => {
       expect(
         service.htmlToMJML(
