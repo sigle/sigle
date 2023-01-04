@@ -138,7 +138,9 @@ export class EmailService {
         date: format(story.createdAt, 'MMMM dd, yyyy'),
         displayName: settings.siteName || username,
         avatarUrl: settings.siteLogo
-          ? settings.siteLogo
+          ? settings.siteLogo.includes(' ')
+            ? encodeURI(settings.siteLogo)
+            : settings.siteLogo
           : generateAvatar(stacksAddress),
         story: {
           ...story,
