@@ -89,6 +89,17 @@ export class EmailService {
         mjml += `<mj-text><blockquote>${inlineText(
           node.children,
         )}</blockquote></mj-text>`;
+      } else if (node.tagName === 'div') {
+        if (
+          node.attributes.find(
+            (attr: MJMLAttribute) => attr.key === 'data-twitter',
+          )
+        ) {
+          const twitterUrl = node.attributes.find(
+            (attr: MJMLAttribute) => attr.key === 'url',
+          )?.value;
+          mjml += `<mj-text><a href="${twitterUrl}">${twitterUrl}</a></mj-text>`;
+        }
       } else if (node.tagName === 'img') {
         mjml += `<mj-image ${inlineAttributes(node.attributes, {
           // If the image src contains a space, encode it.
