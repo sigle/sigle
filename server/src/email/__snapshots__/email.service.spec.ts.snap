@@ -22,11 +22,11 @@ exports[`EmailService storyToMJML should render story with site url 1`] = `
   <mj-body>
     <mj-section padding='0px 25px'>
       <mj-column>
-        <mj-text align='right'><a
+        <mj-text padding='10px 0px' align='right'><a
             href='https://app.sigle.io/sigle.btc/h8Kxgg9_Ck6f0V-YgB7Gz'
             style='color: #737373; font-size: 13px;'
           >Read online</a></mj-text>
-        <mj-text align='center' line-height='30px'><h1
+        <mj-text padding='10px 0px' align='center' line-height='30px'><h1
             style='margin-bottom: 0px;'
           >Pen Run #1: Writing contest!</h1></mj-text>
         <mj-social
@@ -64,8 +64,8 @@ exports[`EmailService storyToMJML should render story with site url 1`] = `
         padding='20px 0px'
       >
         <mj-image
+          border-radius='8px'
           width='44px'
-          height='44px'
           padding='0px'
           src='https://source.boringavatars.com/marble/120/SP2EVYKET55QH40RAZE5PVZ363QX0X6BSRP4C7H0W?square&amp;colors&#x3D;da3a00,fa8158,ffa835,37c391,7c456cf'
         ></mj-image>
@@ -77,7 +77,6 @@ exports[`EmailService storyToMJML should render story with site url 1`] = `
                 src='https://app.sigle.io/img/emails/globe.png'
                 width='15'
                 height='15'
-                style='margin-right: 12px'
               /></a>
         </mj-text>
         <mj-text align='center' color='#737373' font-size='13px'><a
@@ -133,11 +132,11 @@ exports[`EmailService storyToMJML should render story with template 1`] = `
   <mj-body>
     <mj-section padding='0px 25px'>
       <mj-column>
-        <mj-text align='right'><a
+        <mj-text padding='10px 0px' align='right'><a
             href='https://app.sigle.io/sigle.btc/h8Kxgg9_Ck6f0V-YgB7Gz'
             style='color: #737373; font-size: 13px;'
           >Read online</a></mj-text>
-        <mj-text align='center' line-height='30px'><h1
+        <mj-text padding='10px 0px' align='center' line-height='30px'><h1
             style='margin-bottom: 0px;'
           >Pen Run #1: Writing contest!</h1></mj-text>
         <mj-social
@@ -175,8 +174,8 @@ exports[`EmailService storyToMJML should render story with template 1`] = `
         padding='20px 0px'
       >
         <mj-image
+          border-radius='8px'
           width='44px'
-          height='44px'
           padding='0px'
           src='https://source.boringavatars.com/marble/120/SP2EVYKET55QH40RAZE5PVZ363QX0X6BSRP4C7H0W?square&amp;colors&#x3D;da3a00,fa8158,ffa835,37c391,7c456cf'
         ></mj-image>
@@ -184,6 +183,7 @@ exports[`EmailService storyToMJML should render story with template 1`] = `
           sigle.btc
         </mj-text>
         <mj-text align='center' padding='0px 0px'>
+            <span style='margin-right: -12px'></span>
         </mj-text>
         <mj-text align='center' color='#737373' font-size='13px'><a
             href='[[UNSUB_LINK_EN]]'
@@ -238,11 +238,11 @@ exports[`EmailService storyToMJML should render story with twitter url 1`] = `
   <mj-body>
     <mj-section padding='0px 25px'>
       <mj-column>
-        <mj-text align='right'><a
+        <mj-text padding='10px 0px' align='right'><a
             href='https://app.sigle.io/sigle.btc/h8Kxgg9_Ck6f0V-YgB7Gz'
             style='color: #737373; font-size: 13px;'
           >Read online</a></mj-text>
-        <mj-text align='center' line-height='30px'><h1
+        <mj-text padding='10px 0px' align='center' line-height='30px'><h1
             style='margin-bottom: 0px;'
           >Pen Run #1: Writing contest!</h1></mj-text>
         <mj-social
@@ -280,8 +280,8 @@ exports[`EmailService storyToMJML should render story with twitter url 1`] = `
         padding='20px 0px'
       >
         <mj-image
+          border-radius='8px'
           width='44px'
-          height='44px'
           padding='0px'
           src='https://source.boringavatars.com/marble/120/SP2EVYKET55QH40RAZE5PVZ363QX0X6BSRP4C7H0W?square&amp;colors&#x3D;da3a00,fa8158,ffa835,37c391,7c456cf'
         ></mj-image>
@@ -289,6 +289,8 @@ exports[`EmailService storyToMJML should render story with twitter url 1`] = `
           sigle.btc
         </mj-text>
         <mj-text align='center' padding='0px 0px'>
+            <span style='margin-right: -12px'></span>
+            <span style='margin-right: 12px'></span>
             <a href='https://twitter.com/sigleapp'><img
                 src='https://app.sigle.io/img/emails/twitter.png'
                 width='15'
