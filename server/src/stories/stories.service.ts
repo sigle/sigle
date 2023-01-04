@@ -105,6 +105,7 @@ export class StoriesService {
         }),
       ]);
       const MJMLNewsletter = this.emailService.storyToMJML({
+        stacksAddress,
         username,
         story: publicStory,
         settings: publicSettings,
