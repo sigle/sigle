@@ -131,7 +131,6 @@ export class EmailService {
 
     return this.templates.storyEmail(
       {
-        title: story.title,
         content: this.htmlToMJML(story.content),
         username: username,
         profileUrl: `https://app.sigle.io/${username}`,
@@ -141,6 +140,12 @@ export class EmailService {
         avatarUrl: settings.siteLogo
           ? settings.siteLogo
           : generateAvatar(stacksAddress),
+        story: {
+          ...story,
+          coverImage: story.coverImage?.includes(' ')
+            ? encodeURI(story.coverImage)
+            : story.coverImage,
+        },
         settings,
       },
       {},

@@ -13,28 +13,19 @@
       <mj-text color='#1A1A1A'></mj-text>
       <mj-divider border-color='#E2E2E2' border-width='1px'></mj-divider>
       <mj-button background-color='#DA3A00' border-radius='8px'></mj-button>
-      <mj-title>{{title}}</mj-title>
+      <mj-title>{{story.title}}</mj-title>
     </mj-attributes>
   </mj-head>
   <mj-body>
-    {{! TODO image cover }}
     <mj-section padding='0px 25px'>
       <mj-column>
         <mj-text align='right'><a
             href='{{storyUrl}}'
             style='color: #737373; font-size: 13px;'
           >Read online</a></mj-text>
-      </mj-column>
-    </mj-section>
-    <mj-section padding='0px 25px'>
-      <mj-column>
         <mj-text align='center' line-height='30px'><h1
             style='margin-bottom: 0px;'
-          >{{title}}</h1></mj-text>
-      </mj-column>
-    </mj-section>
-    <mj-section padding='0px 25px'>
-      <mj-column>
+          >{{story.title}}</h1></mj-text>
         <mj-social
           padding='0px 0px'
           icon-size='24px'
@@ -50,6 +41,14 @@
             {{date}}
           </mj-social-element>
         </mj-social>
+        {{#if story.coverImage}}
+          <mj-image
+            padding='30px 0px 0px 0px'
+            border-radius='8px'
+            src='{{story.coverImage}}'
+          ></mj-image>
+        {{/if}}
+
       </mj-column>
     </mj-section>
     <mj-section>
