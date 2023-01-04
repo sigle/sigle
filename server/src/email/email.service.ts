@@ -60,6 +60,19 @@ export class EmailService {
         mjml += `<mj-text><h3>${inlineText(node.children)}</h3></mj-text>`;
       } else if (node.tagName === 'p') {
         mjml += `<mj-text>${inlineText(node.children)}</mj-text>`;
+      } else if (node.tagName === 'ul' || node.tagName === 'ol') {
+        mjml += `<mj-list>${node.children
+          .map((child) => {
+            if (child.tagName === 'li') {
+              // If item is wrapped in a paragraph, unwrap it.
+              if (child.children[0].tagName === 'p') {
+                child.children = child.children[0].children;
+              }
+              return `<mj-li>${inlineText(child.children)}</mj-li>`;
+            }
+            return '';
+          })
+          .join('')}</mj-list>`;
       } else if (node.tagName === 'blockquote') {
         mjml += `<mj-text><blockquote>${inlineText(
           node.children,
