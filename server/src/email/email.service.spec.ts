@@ -116,6 +116,7 @@ describe('EmailService', () => {
   });
 
   describe('storyToMJML', () => {
+    const stacksAddress = 'SP2EVYKET55QH40RAZE5PVZ363QX0X6BSRP4C7H0W';
     const story: Story = {
       id: 'h8Kxgg9_Ck6f0V-YgB7Gz',
       type: 'public',
@@ -131,16 +132,23 @@ describe('EmailService', () => {
       metaDescription:
         'For our NFT collection The Explorer Guild’s 1 year anniversary, enter our very first storytelling contest and challenge your creativity!',
     };
+    const settings = {};
 
     it('should render story with template', () => {
       expect(
-        service.storyToMJML({ username: 'sigle.btc', story, settings: {} }),
+        service.storyToMJML({
+          stacksAddress,
+          username: 'sigle.btc',
+          story,
+          settings,
+        }),
       ).toMatchSnapshot();
     });
 
     it('should render story with site url', () => {
       expect(
         service.storyToMJML({
+          stacksAddress,
           username: 'sigle.btc',
           story,
           settings: {
@@ -153,6 +161,7 @@ describe('EmailService', () => {
     it('should render story with twitter url', () => {
       expect(
         service.storyToMJML({
+          stacksAddress,
           username: 'sigle.btc',
           story,
           settings: {
