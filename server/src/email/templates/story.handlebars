@@ -77,10 +77,12 @@
                 src='https://app.sigle.io/img/emails/globe.png'
                 width='15'
                 height='15'
-                style='margin-right: 12px'
               /></a>
+          {{else}}
+            <span style='margin-right: -12px'></span>
           {{/if}}
           {{#if settings.siteTwitterHandle}}
+            <span style='margin-right: 12px'></span>
             <a href='https://twitter.com/{{settings.siteTwitterHandle}}'><img
                 src='https://app.sigle.io/img/emails/twitter.png'
                 width='15'
