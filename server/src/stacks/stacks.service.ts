@@ -1,15 +1,21 @@
-import { CACHE_MANAGER, Inject, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { Cache } from 'cache-manager';
 import { lookupProfile } from 'micro-stacks/storage';
-import { migrationStories, SubsetStory } from '../external/gaia';
+import {
+  migrationStories,
+  SettingsFile,
+  Story,
+  SubsetStory,
+} from '../external/gaia';
 import { fetch } from 'undici';
 import { EnvironmentVariables } from '../environment/environment.validation';
 
 @Injectable()
 export class StacksService {
+  private readonly publicStoriesFileName = 'publicStories.json';
+  private readonly settingsFileName = 'settings.json';
+
   constructor(
-    @Inject(CACHE_MANAGER) private readonly cacheManager: Cache,
     private readonly configService: ConfigService<EnvironmentVariables>,
   ) {}
 
@@ -57,7 +63,9 @@ export class StacksService {
   }: {
     bucketUrl: string;
   }): Promise<SubsetStory[]> {
-    const resPublicStories = await fetch(`${bucketUrl}publicStories.json`);
+    const resPublicStories = await fetch(
+      `${bucketUrl}${this.publicStoriesFileName}`,
+    );
     // This would happen if the user has not published any stories
     if (resPublicStories.status !== 200) {
       return [];
@@ -66,5 +74,34 @@ export class StacksService {
       (await resPublicStories.json()) as any,
     );
     return publicStoriesFile.stories;
+  }
+
+  async getPublicStory({
+    bucketUrl,
+    storyId,
+  }: {
+    bucketUrl: string;
+    storyId: string;
+  }): Promise<Story | null> {
+    const resPublicStory = await fetch(`${bucketUrl}${storyId}.json`);
+    if (resPublicStory.status !== 200) {
+      return null;
+    }
+    return (await resPublicStory.json()) as Story;
+  }
+
+  async getPublicSettings({
+    bucketUrl,
+  }: {
+    bucketUrl: string;
+  }): Promise<SettingsFile> {
+    const resPublicSettings = await fetch(
+      `${bucketUrl}${this.settingsFileName}`,
+    );
+    // This would happen if the user does not have any settings
+    if (resPublicSettings.status !== 200) {
+      return {};
+    }
+    return await resPublicSettings.json();
   }
 }
