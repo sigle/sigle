@@ -4,9 +4,9 @@ import { parse } from 'himalaya';
 import { compile } from 'handlebars';
 import { SettingsFile, Story } from '../external/gaia';
 
-const inlineAttributes = (
-  attributes: { key: string; value: string }[],
-): string =>
+type MJMLAttribute = { key: string; value: string };
+
+const inlineAttributes = (attributes: MJMLAttribute[]): string =>
   attributes
     .map((attribute) => `${attribute.key}="${attribute.value}"`)
     .join(' ');
@@ -68,6 +68,19 @@ export class EmailService {
         mjml += `<mj-image ${inlineAttributes(node.attributes)} />`;
       } else if (node.tagName === 'hr') {
         mjml += `<mj-divider />`;
+      } else if (node.tagName === 'a') {
+        // Make sure it's a CTA component
+        if (
+          node.attributes.find(
+            (attr: MJMLAttribute) =>
+              attr.key === 'data-type' && attr.value === 'button-cta',
+          )
+        ) {
+          mjml += `<mj-button href="${
+            node.attributes.find((attr: MJMLAttribute) => attr.key === 'href')
+              ?.value
+          }">${inlineText(node.children[0].children)}</mj-button>`;
+        }
       }
     });
     return mjml;
@@ -97,7 +110,6 @@ export class EmailService {
     );
 
     // TODO sanitise html
-    // TODO CTA template
     // TODO integrate https://www.npmjs.com/package/mjml-bullet-list for lists
     // TODO unsubscribe link
   }

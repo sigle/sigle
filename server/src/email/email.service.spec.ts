@@ -84,6 +84,16 @@ describe('EmailService', () => {
       expect(service.htmlToMJML('<hr />')).toEqual('<mj-divider />');
     });
 
+    it('should convert CTA', () => {
+      expect(
+        service.htmlToMJML(
+          '<a data-type="button-cta" href="https://twitter.com/"><button data-size="lg">Follow me on Twitter 🐦</button></a>',
+        ),
+      ).toEqual(
+        '<mj-button href="https://twitter.com/">Follow me on Twitter 🐦</mj-button>',
+      );
+    });
+
     it('should convert full article', () => {
       expect(
         service.htmlToMJML(
