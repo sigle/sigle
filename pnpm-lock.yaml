@@ -7,12 +7,12 @@ importers:
       '@changesets/cli': 2.25.0
       husky: 8.0.1
       lint-staged: 12.4.1
-      prettier: 2.7.1
+      prettier: 2.8.1
     devDependencies:
       '@changesets/cli': 2.25.0
       husky: 8.0.1
       lint-staged: 12.4.1
-      prettier: 2.7.1
+      prettier: 2.8.1
 
   packages/sitemap-scripts:
     specifiers:
@@ -81,7 +81,7 @@ importers:
       nestjs-throttler-storage-redis: 0.1.20
       next-auth: 4.10.3
       node-mailjet: 5.1.1
-      prettier: 2.7.1
+      prettier: 2.8.1
       prisma: 4.3.1
       redis: 3.1.2
       reflect-metadata: 0.1.13
@@ -142,10 +142,10 @@ importers:
       '@typescript-eslint/parser': 5.38.0_ypn2ylkkyfa5i233caldtndbqa
       eslint: 8.24.0
       eslint-config-prettier: 8.5.0_eslint@8.24.0
-      eslint-plugin-prettier: 4.2.1_cfn5x6ujhhgzv3423d6k7r2zzm
+      eslint-plugin-prettier: 4.2.1_zp5dqk7o5cmlvoqrs4sawxk5ge
       jest: 29.1.1_a2dposzgy7i4bcjs2j2y35unga
       leaked-handles: 5.2.0
-      prettier: 2.7.1
+      prettier: 2.8.1
       source-map-support: 0.5.21
       ts-jest: 29.0.2_v3pk32hgvovbtvitirqp2xjtje
       ts-loader: 9.4.1_qqxisngxjbp7lstdk7boexbu3e
@@ -313,7 +313,7 @@ importers:
       '@stacks/blockchain-api-client': 4.1.0
       '@stacks/common': 5.0.0
       '@stacks/connect': 7.0.0
-      '@stacks/connect-react': 20.0.0_dlix3dng273v6rscqkxmolzdlq
+      '@stacks/connect-react': 20.0.0_biqbaboplfbrettd7655fr4n2y
       '@stacks/encryption': 5.0.0
       '@stacks/keychain': 4.3.8
       '@stacks/legacy-auth': /@stacks/auth/2.0.0-beta.1
@@ -353,7 +353,7 @@ importers:
       '@tiptap/extension-typography': 2.0.0-beta.209_f4ffqkgz5d3wev7su7t7l2rrua
       '@tiptap/extension-underline': 2.0.0-beta.209_f4ffqkgz5d3wev7su7t7l2rrua
       '@tiptap/html': 2.0.0-beta.209_a3wkqvivg3aepok4e4szoya4aa
-      '@tiptap/react': 2.0.0-beta.209_q2znjafzmb4pvn25xzm5s3hjsu
+      '@tiptap/react': 2.0.0-beta.209_bopauc6b56ea3vplvw7shbpo64
       '@tiptap/suggestion': 2.0.0-beta.209_nv3r55gosyqqywjqk2ljir6ei4
       '@visx/axis': 2.10.0_react@18.2.0
       '@visx/curve': 2.1.0
@@ -1282,7 +1282,7 @@ packages:
       fs-extra: 7.0.1
       lodash.startcase: 4.4.0
       outdent: 0.5.0
-      prettier: 2.7.1
+      prettier: 2.8.1
       resolve-from: 5.0.0
       semver: 5.7.1
     dev: true
@@ -1449,7 +1449,7 @@ packages:
       '@changesets/types': 5.2.0
       fs-extra: 7.0.1
       human-id: 1.0.2
-      prettier: 2.7.1
+      prettier: 2.8.1
     dev: true
 
   /@colors/colors/1.5.0:
@@ -3781,10 +3781,9 @@ packages:
       - supports-color
     dev: false
 
-  /@stacks/connect-react/20.0.0_dlix3dng273v6rscqkxmolzdlq:
+  /@stacks/connect-react/20.0.0_biqbaboplfbrettd7655fr4n2y:
     resolution: {integrity: sha512-kpWqoY3xpPzpYqQ4xS5E1C9JufrQ4zr/0E1rja2+jxCmdE6vdNzCShSzqKgLnKSBb7xmTpjTUX9jkRqHKb+3bw==}
     peerDependencies:
-      '@stacks/connect': 7.0.0
       react: ^16.x || 17.x || 18.x
       react-dom: ^16.x || 17.x || 18.x
     dependencies:
@@ -3792,6 +3791,8 @@ packages:
       jsontokens: 4.0.1
       react: 18.2.0
       react-dom: 18.2.0_react@18.2.0
+    transitivePeerDependencies:
+      - encoding
     dev: false
 
   /@stacks/connect-ui/2.17.19:
@@ -4270,18 +4271,20 @@ packages:
       '@tiptap/core': 2.0.0-beta.209_rd5pjtxohzfgv2zee3iufpqkay
     dev: false
 
-  /@tiptap/extension-bubble-menu/2.0.0-beta.209_vde3gi7hrsabw5pj6bw7jls3ai:
+  /@tiptap/extension-bubble-menu/2.0.0-beta.209_aorzvepnbow73vkc4hi3akkkry:
     resolution: {integrity: sha512-tceZAuDpy3J96uGyCzpJFD3fHABJDTJTq5E0hm+TRQT+eVGVqZI0PE3/4yVFgkCshioTuJq8veMDFcqNsSkKsQ==}
-    peerDependencies:
-      '@tiptap/core': ^2.0.0-beta.193
-      prosemirror-state: ^1.4.1
-      prosemirror-view: ^1.28.2
     dependencies:
       '@tiptap/core': 2.0.0-beta.209_rd5pjtxohzfgv2zee3iufpqkay
       lodash: 4.17.21
       prosemirror-state: 1.4.2
       prosemirror-view: 1.29.1
       tippy.js: 6.3.7
+    transitivePeerDependencies:
+      - prosemirror-commands
+      - prosemirror-keymap
+      - prosemirror-model
+      - prosemirror-schema-list
+      - prosemirror-transform
     dev: false
 
   /@tiptap/extension-bullet-list/2.0.0-beta.209_f4ffqkgz5d3wev7su7t7l2rrua:
@@ -4515,7 +4518,7 @@ packages:
       zeed-dom: 0.9.26
     dev: false
 
-  /@tiptap/react/2.0.0-beta.209_q2znjafzmb4pvn25xzm5s3hjsu:
+  /@tiptap/react/2.0.0-beta.209_bopauc6b56ea3vplvw7shbpo64:
     resolution: {integrity: sha512-iuJ+hgaSPETPMX39QpX6e0tZmFAj9azl0qGhNm6NNB1biCehkB4qMfcfwecWFRWVpZKG5UtjJvjJ3UZM167Jlg==}
     peerDependencies:
       '@tiptap/core': ^2.0.0-beta.193
@@ -4523,13 +4526,18 @@ packages:
       react-dom: ^17.0.0 || ^18.0.0
     dependencies:
       '@tiptap/core': 2.0.0-beta.209_rd5pjtxohzfgv2zee3iufpqkay
-      '@tiptap/extension-bubble-menu': 2.0.0-beta.209_vde3gi7hrsabw5pj6bw7jls3ai
+      '@tiptap/extension-bubble-menu': 2.0.0-beta.209_aorzvepnbow73vkc4hi3akkkry
       '@tiptap/extension-floating-menu': 2.0.0-beta.209_vde3gi7hrsabw5pj6bw7jls3ai
       prosemirror-view: 1.29.1
       react: 18.2.0
       react-dom: 18.2.0_react@18.2.0
     transitivePeerDependencies:
+      - prosemirror-commands
+      - prosemirror-keymap
+      - prosemirror-model
+      - prosemirror-schema-list
       - prosemirror-state
+      - prosemirror-transform
     dev: false
 
   /@tiptap/suggestion/2.0.0-beta.209_nv3r55gosyqqywjqk2ljir6ei4:
@@ -7572,23 +7580,6 @@ packages:
       minimatch: 3.1.2
     dev: true
 
-  /eslint-plugin-prettier/4.2.1_cfn5x6ujhhgzv3423d6k7r2zzm:
-    resolution: {integrity: sha512-f/0rXLXUt0oFYs8ra4w49wYZBG5GKZpAYsJSm6rnYL5uVDjd+zowwMwVZHnAjf4edNrKpCDYfXDgmRE/Ak7QyQ==}
-    engines: {node: '>=12.0.0'}
-    peerDependencies:
-      eslint: '>=7.28.0'
-      eslint-config-prettier: '*'
-      prettier: '>=2.0.0'
-    peerDependenciesMeta:
-      eslint-config-prettier:
-        optional: true
-    dependencies:
-      eslint: 8.24.0
-      eslint-config-prettier: 8.5.0_eslint@8.24.0
-      prettier: 2.7.1
-      prettier-linter-helpers: 1.0.0
-    dev: true
-
   /eslint-plugin-prettier/4.2.1_rmrwosquysyxz32vxkk5sjikay:
     resolution: {integrity: sha512-f/0rXLXUt0oFYs8ra4w49wYZBG5GKZpAYsJSm6rnYL5uVDjd+zowwMwVZHnAjf4edNrKpCDYfXDgmRE/Ak7QyQ==}
     engines: {node: '>=12.0.0'}
@@ -7602,6 +7593,23 @@ packages:
     dependencies:
       eslint: 8.28.0
       eslint-config-prettier: 8.5.0_eslint@8.28.0
+      prettier-linter-helpers: 1.0.0
+    dev: true
+
+  /eslint-plugin-prettier/4.2.1_zp5dqk7o5cmlvoqrs4sawxk5ge:
+    resolution: {integrity: sha512-f/0rXLXUt0oFYs8ra4w49wYZBG5GKZpAYsJSm6rnYL5uVDjd+zowwMwVZHnAjf4edNrKpCDYfXDgmRE/Ak7QyQ==}
+    engines: {node: '>=12.0.0'}
+    peerDependencies:
+      eslint: '>=7.28.0'
+      eslint-config-prettier: '*'
+      prettier: '>=2.0.0'
+    peerDependenciesMeta:
+      eslint-config-prettier:
+        optional: true
+    dependencies:
+      eslint: 8.24.0
+      eslint-config-prettier: 8.5.0_eslint@8.24.0
+      prettier: 2.8.1
       prettier-linter-helpers: 1.0.0
     dev: true
 
@@ -12076,6 +12084,13 @@ packages:
     resolution: {integrity: sha512-ujppO+MkdPqoVINuDFDRLClm7D78qbDt0/NR+wp5FqEZOoTNAjPHWj17QRhu7geIHJfcNhRk1XVQmF8Bp3ye+g==}
     engines: {node: '>=10.13.0'}
     hasBin: true
+    dev: false
+
+  /prettier/2.8.1:
+    resolution: {integrity: sha512-lqGoSJBQNJidqCHE80vqZJHWHRFoNYsSpP9AjFhlhi9ODCJA541svILes/+/1GM3VaL/abZi7cpFzOpdR9UPKg==}
+    engines: {node: '>=10.13.0'}
+    hasBin: true
+    dev: true
 
   /pretty-format/27.5.1:
     resolution: {integrity: sha512-Qb1gy5OrP5+zDf2Bvnzdl3jsTf1qXVMazbvCoKhtKqVs4/YK4ozX4gKQJJVyNe+cajNPn0KoC0MC3FUmaHWEmQ==}
