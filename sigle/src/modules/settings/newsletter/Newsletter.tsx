@@ -30,6 +30,8 @@ export const Newsletter = () => {
   // TODO connect api key to form
   // TODO connect api secret to form
   // TODO here ink for where to find api key and secret
+  // TODO real youtube video link
+  // TODO review all wording
 
   return (
     <SettingsLayout>
@@ -83,7 +85,7 @@ export const Newsletter = () => {
       <Typography css={{ fontWeight: 600, mt: '$5' }} size="h4">
         API Secret
       </Typography>
-      <FormRow css={{ mt: '$2' }}>
+      <FormRow css={{ mt: '$2', mb: '$2' }}>
         <FormInput
           name="apiSecret"
           type="text"
@@ -93,6 +95,29 @@ export const Newsletter = () => {
       <Typography size="subheading" css={{ color: '$gray9', mt: '$2' }}>
         Find your Mailjet API key and API secret here
       </Typography>
+
+      <Flex
+        css={{ mt: '$5' }}
+        direction={{ '@initial': 'column', '@md': 'row' }}
+        gap="3"
+      >
+        <div>
+          <Typography css={{ fontWeight: 600 }} size="h4">
+            A bit lost? We show you how!
+          </Typography>
+          <Typography size="subheading" css={{ color: '$gray9', mt: '$2' }}>
+            If you need help, we have created a tutorial on how to set up your
+            newsletter using Sigle and Maillet.
+            <br />
+            <br />
+            Follow this step by step video, you will see, it's easy!
+          </Typography>
+        </div>
+        <iframe
+          id="ytplayer"
+          src="https://www.youtube.com/embed/8P3pL__udNM"
+        ></iframe>
+      </Flex>
     </SettingsLayout>
   );
 };
