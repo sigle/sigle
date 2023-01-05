@@ -1,4 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
+import { SENTRY_TOKEN } from '@ntegral/nestjs-sentry';
 import { Story } from '../external/gaia';
 import { EmailService } from './email.service';
 
@@ -7,7 +8,13 @@ describe('EmailService', () => {
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      providers: [EmailService],
+      providers: [
+        EmailService,
+        {
+          provide: SENTRY_TOKEN,
+          useValue: {},
+        },
+      ],
     }).compile();
 
     service = module.get<EmailService>(EmailService);

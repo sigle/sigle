@@ -1,6 +1,5 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import * as mjml2html from 'mjml';
 import { SendEmailV3_1 } from 'node-mailjet';
 import { allowedNewsletterUsers } from '../utils';
 import { PrismaService } from '../prisma/prisma.service';
@@ -104,14 +103,12 @@ export class StoriesService {
           storyId: gaiaId,
         }),
       ]);
-      const MJMLNewsletter = this.emailService.storyToMJML({
+      const newsletterHtml = this.emailService.storyToHTML({
         stacksAddress,
         username,
         story: publicStory,
         settings: publicSettings,
       });
-      const htmlNewsletter = mjml2html(MJMLNewsletter).html;
-      // TODO check if newsletter has errors and report it  mjml2html(MJMLNewsletter).errors
 
       const mailjet = new Mailjet({
         apiKey: this.configService.get('MAILJET_API_KEY'),
@@ -135,7 +132,7 @@ export class StoriesService {
               },
             ],
             Subject: publicStory.title,
-            HTMLPart: htmlNewsletter,
+            HTMLPart: newsletterHtml,
             // TODO convert html to text
             TextPart: 'TODO',
           },

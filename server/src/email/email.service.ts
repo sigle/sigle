@@ -1,8 +1,10 @@
 import { readFileSync } from 'fs';
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { parse } from 'himalaya';
 import { compile } from 'handlebars';
 import { format } from 'date-fns';
+import * as mjml2html from 'mjml';
+import { InjectSentry, SentryService } from '@ntegral/nestjs-sentry';
 import { SettingsFile, Story } from '../external/gaia';
 import { generateAvatar } from '../utils';
 
@@ -49,7 +51,7 @@ const inlineText = (json: any[]): string => {
 export class EmailService {
   private templates: { storyEmail: HandlebarsTemplateDelegate };
 
-  constructor() {
+  constructor(@InjectSentry() private readonly sentryService: SentryService) {
     this.templates = {
       storyEmail: compile(
         readFileSync(`${process.cwd()}/src/email/templates/story.handlebars`, {
@@ -136,10 +138,6 @@ export class EmailService {
     story: Story;
     settings: SettingsFile;
   }): string {
-    if (story.contentVersion !== '2') {
-      throw new Error('Story content version 1 not allowed.');
-    }
-
     return this.templates.storyEmail(
       {
         content: this.htmlToMJML(story.content),
@@ -163,8 +161,48 @@ export class EmailService {
       },
       {},
     );
+  }
+
+  storyToHTML({
+    stacksAddress,
+    username,
+    story,
+    settings,
+  }: {
+    stacksAddress: string;
+    username: string;
+    story: Story;
+    settings: SettingsFile;
+  }): string {
+    if (story.contentVersion !== '2') {
+      throw new Error('Story content version 1 not allowed.');
+    }
 
     // TODO sanitise html
     // TODO unsubscribe link
+
+    const MJMLNewsletter = this.storyToMJML({
+      stacksAddress,
+      username,
+      story,
+      settings,
+    });
+
+    const { html: mjmlHtml, errors: mjmlErrors } = mjml2html(MJMLNewsletter);
+    if (mjmlErrors) {
+      this.sentryService
+        .instance()
+        .captureMessage('Failed to generate story newsletter', {
+          level: 'error',
+          extra: {
+            stacksAddress,
+            storyId: story.id,
+            mjmlErrors,
+            MJMLNewsletter,
+          },
+        });
+      throw new BadRequestException('Failed to generate story newsletter');
+    }
+    return mjmlHtml;
   }
 }
