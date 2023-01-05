@@ -17,6 +17,7 @@ import { EmailModule } from './email/email.module';
 import { SubscribersModule } from './subscribers/subscribers.module';
 import { PrismaModule } from './prisma/prisma.module';
 import { StoriesModule } from './stories/stories.module';
+import { NewslettersModule } from './newsletters/newsletters.module';
 
 @Module({
   imports: [
@@ -62,6 +63,7 @@ import { StoriesModule } from './stories/stories.module';
     EmailModule,
     SubscribersModule,
     StoriesModule,
+    NewslettersModule,
   ],
   controllers: [AppController],
   providers: [
