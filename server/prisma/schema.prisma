@@ -53,11 +53,6 @@ model Story {
   user          User      @relation(fields: [userId], references: [id])
 }
 
-enum NewsletterStatus {
-  INACTIVE
-  ACTIVE
-}
-
 model Newsletter {
   id               String           @id @default(uuid())
   mailjetApikey    String
@@ -67,6 +62,11 @@ model Newsletter {
   createdAt        DateTime         @default(now())
   updatedAt        DateTime         @updatedAt
   user             User             @relation(fields: [userId], references: [id])
+}
+
+enum NewsletterStatus {
+  INACTIVE
+  ACTIVE
 }
 
 // Gaia data
