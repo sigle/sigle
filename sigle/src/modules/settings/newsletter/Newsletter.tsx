@@ -18,6 +18,8 @@ export const Newsletter = () => {
     );
   }
 
+  // TODO connect switch to form
+
   return (
     <SettingsLayout>
       <Flex justify="between" gap="5">
@@ -38,6 +40,23 @@ export const Newsletter = () => {
           </Switch>
         </div>
       </Flex>
+
+      <Typography css={{ fontWeight: 600, mt: '$5' }} size="h4">
+        Mailjet configuration
+      </Typography>
+      <Typography size="subheading" css={{ color: '$gray9', mt: '$2' }}>
+        The Mailjet API is used for bulk email newsletter delivery. To send your
+        first newsletter, you need to create an account on Mailjet and enter the
+        information in the inputs below.
+      </Typography>
+      <Button
+        css={{ mt: '$3' }}
+        as="a"
+        href="https://sinchemails.grsm.io/7i0c8m9zrvef-fxdog"
+        target="_blank"
+      >
+        Create Mailjet account
+      </Button>
     </SettingsLayout>
   );
 };
