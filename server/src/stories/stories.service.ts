@@ -1,6 +1,7 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { SendEmailV3_1 } from 'node-mailjet';
+import * as textVersion from 'textversionjs';
 import { allowedNewsletterUsers } from '../utils';
 import { PrismaService } from '../prisma/prisma.service';
 import { StacksService } from '../stacks/stacks.service';
@@ -133,8 +134,7 @@ export class StoriesService {
             ],
             Subject: publicStory.title,
             HTMLPart: newsletterHtml,
-            // TODO convert html to text
-            TextPart: 'TODO',
+            TextPart: textVersion(newsletterHtml),
           },
         ],
       };

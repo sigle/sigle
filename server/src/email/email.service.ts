@@ -189,7 +189,7 @@ export class EmailService {
     });
 
     const { html: mjmlHtml, errors: mjmlErrors } = mjml2html(MJMLNewsletter);
-    if (mjmlErrors) {
+    if (mjmlErrors && mjmlErrors.length > 0) {
       this.sentryService
         .instance()
         .captureMessage('Failed to generate story newsletter', {
