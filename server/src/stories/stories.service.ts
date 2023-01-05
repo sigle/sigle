@@ -1,6 +1,6 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { SendEmailV3_1 } from 'node-mailjet';
+import { ContactList, SendEmailV3_1 } from 'node-mailjet';
 import * as textVersion from 'textversionjs';
 import { InjectSentry, SentryService } from '@ntegral/nestjs-sentry';
 import { allowedNewsletterUsers } from '../utils';
@@ -88,6 +88,7 @@ export class StoriesService {
       if (!allowedNewsletterUsers.includes(stacksAddress)) {
         throw new BadRequestException('Not activated.');
       }
+      // TODO
       // if (story.sentAt) {
       //   // Newsletter already exists, do not send it again
       //   throw new BadRequestException('Newsletter already sent');
@@ -118,6 +119,12 @@ export class StoriesService {
         apiSecret: this.configService.get('MAILJET_API_SECRET'),
       });
 
+      const data: { body: ContactList.TGetContactListResponse } = await mailjet
+        .get('contactslist?Name=sigle', { version: 'v3' })
+        .request();
+      const listAddress = data.body.Data[0].Address;
+      const listEmail = `${listAddress}@lists.mailjet.com`;
+
       const sendEmailBody: SendEmailV3_1.IBody = {
         SandboxMode: false,
         AdvanceErrorHandling: true,
@@ -130,9 +137,7 @@ export class StoriesService {
             },
             To: [
               {
-                // TODO how to get the list email?
-                // TODO maybe can use the list ID?
-                Email: 'TODO',
+                Email: listEmail,
               },
             ],
             Subject: publicStory.title,
@@ -143,11 +148,7 @@ export class StoriesService {
       };
 
       try {
-        const data: { body: SendEmailV3_1.IResponse } = await mailjet
-          .post('send', { version: 'v3.1' })
-          .request(sendEmailBody);
-
-        console.log(data);
+        await mailjet.post('send', { version: 'v3.1' }).request(sendEmailBody);
       } catch (error) {
         // Format mailjet errors as package is messing with the error object
         // so it can be sent to sentry properly
