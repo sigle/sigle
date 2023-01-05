@@ -88,11 +88,10 @@ export class StoriesService {
       if (!allowedNewsletterUsers.includes(stacksAddress)) {
         throw new BadRequestException('Not activated.');
       }
-      // TODO
-      // if (story.sentAt) {
-      //   // Newsletter already exists, do not send it again
-      //   throw new BadRequestException('Newsletter already sent');
-      // }
+      if (story.sentAt) {
+        // Newsletter already exists, do not send it again
+        throw new BadRequestException('Newsletter already sent');
+      }
 
       const username = await this.stacksService.getUsernameByAddress(
         stacksAddress,
