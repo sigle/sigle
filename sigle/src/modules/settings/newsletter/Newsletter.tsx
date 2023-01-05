@@ -28,6 +28,8 @@ export const Newsletter = () => {
 
   // TODO connect switch to form
   // TODO connect api key to form
+  // TODO connect api secret to form
+  // TODO here ink for where to find api key and secret
 
   return (
     <SettingsLayout>
@@ -77,6 +79,20 @@ export const Newsletter = () => {
           placeholder="Enter your Mailjet’s API key"
         />
       </FormRow>
+
+      <Typography css={{ fontWeight: 600, mt: '$5' }} size="h4">
+        API Secret
+      </Typography>
+      <FormRow css={{ mt: '$2' }}>
+        <FormInput
+          name="apiSecret"
+          type="text"
+          placeholder="Enter your Mailjet’s API secret"
+        />
+      </FormRow>
+      <Typography size="subheading" css={{ color: '$gray9', mt: '$2' }}>
+        Find your Mailjet API key and API secret here
+      </Typography>
     </SettingsLayout>
   );
 };
