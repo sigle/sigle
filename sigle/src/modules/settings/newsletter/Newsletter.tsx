@@ -1,5 +1,13 @@
 import { useGetUserSubscription } from '../../../hooks/subscriptions';
-import { Button, Typography, Switch, SwitchThumb, Flex } from '../../../ui';
+import {
+  Button,
+  Typography,
+  Switch,
+  SwitchThumb,
+  Flex,
+  FormInput,
+  FormRow,
+} from '../../../ui';
 import { NftLockedView } from '../../analytics/NftLockedView';
 import { SettingsLayout } from '../SettingsLayout';
 
@@ -19,6 +27,7 @@ export const Newsletter = () => {
   }
 
   // TODO connect switch to form
+  // TODO connect api key to form
 
   return (
     <SettingsLayout>
@@ -57,6 +66,17 @@ export const Newsletter = () => {
       >
         Create Mailjet account
       </Button>
+
+      <Typography css={{ fontWeight: 600, mt: '$5' }} size="h4">
+        API key
+      </Typography>
+      <FormRow css={{ mt: '$2' }}>
+        <FormInput
+          name="apiKey"
+          type="text"
+          placeholder="Enter your Mailjet’s API key"
+        />
+      </FormRow>
     </SettingsLayout>
   );
 };
