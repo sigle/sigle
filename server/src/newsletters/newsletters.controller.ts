@@ -1,12 +1,4 @@
-import {
-  Controller,
-  Get,
-  Post,
-  Body,
-  Patch,
-  Param,
-  Delete,
-} from '@nestjs/common';
+import { Controller, Post, Body } from '@nestjs/common';
 import { NewslettersService } from './newsletters.service';
 import { UpdateNewsletterDto } from './dto/updateNewsletter.dto';
 
