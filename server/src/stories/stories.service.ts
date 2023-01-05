@@ -2,6 +2,7 @@ import { BadRequestException, Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { SendEmailV3_1 } from 'node-mailjet';
 import * as textVersion from 'textversionjs';
+import { InjectSentry, SentryService } from '@ntegral/nestjs-sentry';
 import { allowedNewsletterUsers } from '../utils';
 import { PrismaService } from '../prisma/prisma.service';
 import { StacksService } from '../stacks/stacks.service';
@@ -12,6 +13,7 @@ const Mailjet = require('node-mailjet');
 @Injectable()
 export class StoriesService {
   constructor(
+    @InjectSentry() private readonly sentryService: SentryService,
     private readonly configService: ConfigService,
     private readonly prisma: PrismaService,
     private readonly stacksService: StacksService,
@@ -86,10 +88,10 @@ export class StoriesService {
       if (!allowedNewsletterUsers.includes(stacksAddress)) {
         throw new BadRequestException('Not activated.');
       }
-      if (story.sentAt) {
-        // Newsletter already exists, do not send it again
-        throw new BadRequestException('Newsletter already sent');
-      }
+      // if (story.sentAt) {
+      //   // Newsletter already exists, do not send it again
+      //   throw new BadRequestException('Newsletter already sent');
+      // }
 
       const username = await this.stacksService.getUsernameByAddress(
         stacksAddress,
@@ -118,6 +120,7 @@ export class StoriesService {
 
       const sendEmailBody: SendEmailV3_1.IBody = {
         SandboxMode: false,
+        AdvanceErrorHandling: true,
         Messages: [
           {
             From: {
@@ -143,11 +146,38 @@ export class StoriesService {
         const data: { body: SendEmailV3_1.IResponse } = await mailjet
           .post('send', { version: 'v3.1' })
           .request(sendEmailBody);
+
         console.log(data);
       } catch (error) {
-        // TODO report to sentry with all the info needed
-        console.log(error);
-        throw error;
+        // Format mailjet errors as package is messing with the error object
+        // so it can be sent to sentry properly
+        const formattedErrors = error.response.data.Messages.map(
+          (message: any) => {
+            return {
+              Status: message.Status,
+              Errors: message.Errors.map(
+                (error: SendEmailV3_1.IResponseError) => {
+                  return {
+                    ErrorIdentifier: error.ErrorIdentifier,
+                    ErrorCode: error.ErrorCode,
+                    StatusCode: error.StatusCode,
+                    ErrorMessage: error.ErrorMessage,
+                    ErrorRelatedTo: error.ErrorRelatedTo,
+                  };
+                },
+              ),
+            };
+          },
+        );
+        this.sentryService.instance().captureException(error, {
+          level: 'error',
+          extra: {
+            stacksAddress,
+            storyId: story.id,
+            mailjetErrors: formattedErrors,
+          },
+        });
+        throw new BadRequestException('Failed to send newsletter');
       }
 
       await this.prisma.story.update({
