@@ -1,14 +1,28 @@
 import { readFileSync } from 'fs';
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { parse } from 'himalaya';
 import { compile } from 'handlebars';
+import { format } from 'date-fns';
+import * as mjml2html from 'mjml';
+import { InjectSentry, SentryService } from '@ntegral/nestjs-sentry';
 import { SettingsFile, Story } from '../external/gaia';
+import { generateAvatar } from '../utils';
 
 type MJMLAttribute = { key: string; value: string };
 
-const inlineAttributes = (attributes: MJMLAttribute[]): string =>
+const inlineAttributes = (
+  attributes: MJMLAttribute[],
+  transform: { [key: string]: (value: string) => string } = {},
+): string =>
   attributes
-    .map((attribute) => `${attribute.key}="${attribute.value}"`)
+    .map(
+      (attribute) =>
+        `${attribute.key}="${
+          transform[attribute.key]
+            ? transform[attribute.key](attribute.value)
+            : attribute.value
+        }"`,
+    )
     .join(' ');
 
 const inlineText = (json: any[]): string => {
@@ -37,7 +51,7 @@ const inlineText = (json: any[]): string => {
 export class EmailService {
   private templates: { storyEmail: HandlebarsTemplateDelegate };
 
-  constructor() {
+  constructor(@InjectSentry() private readonly sentryService: SentryService) {
     this.templates = {
       storyEmail: compile(
         readFileSync(`${process.cwd()}/src/email/templates/story.handlebars`, {
@@ -89,7 +103,10 @@ export class EmailService {
           mjml += `<mj-text><a href="${twitterUrl}">${twitterUrl}</a></mj-text>`;
         }
       } else if (node.tagName === 'img') {
-        mjml += `<mj-image ${inlineAttributes(node.attributes)} />`;
+        mjml += `<mj-image ${inlineAttributes(node.attributes, {
+          // If the image src contains a space, encode it.
+          src: (value) => (value.includes(' ') ? encodeURI(value) : value),
+        })} />`;
       } else if (node.tagName === 'hr') {
         mjml += `<mj-divider />`;
       } else if (node.tagName === 'a') {
@@ -111,9 +128,49 @@ export class EmailService {
   }
 
   storyToMJML({
+    stacksAddress,
+    username,
     story,
     settings,
   }: {
+    stacksAddress: string;
+    username: string;
+    story: Story;
+    settings: SettingsFile;
+  }): string {
+    return this.templates.storyEmail(
+      {
+        content: this.htmlToMJML(story.content),
+        username: username,
+        profileUrl: `https://app.sigle.io/${username}`,
+        storyUrl: `https://app.sigle.io/${username}/${story.id}`,
+        date: format(story.createdAt, 'MMMM dd, yyyy'),
+        displayName: settings.siteName || username,
+        avatarUrl: settings.siteLogo
+          ? settings.siteLogo.includes(' ')
+            ? encodeURI(settings.siteLogo)
+            : settings.siteLogo
+          : generateAvatar(stacksAddress),
+        story: {
+          ...story,
+          coverImage: story.coverImage?.includes(' ')
+            ? encodeURI(story.coverImage)
+            : story.coverImage,
+        },
+        settings,
+      },
+      {},
+    );
+  }
+
+  storyToHTML({
+    stacksAddress,
+    username,
+    story,
+    settings,
+  }: {
+    stacksAddress: string;
+    username: string;
     story: Story;
     settings: SettingsFile;
   }): string {
@@ -121,20 +178,31 @@ export class EmailService {
       throw new Error('Story content version 1 not allowed.');
     }
 
-    return this.templates.storyEmail(
-      {
-        content: this.htmlToMJML(story.content),
-        user: {
-          username: 'antoine.btc',
-          displayName: 'Antoine Lebowitch',
-        },
-        settings,
-      },
-      {},
-    );
-
     // TODO sanitise html
-    // TODO integrate https://www.npmjs.com/package/mjml-bullet-list for lists
     // TODO unsubscribe link
+
+    const MJMLNewsletter = this.storyToMJML({
+      stacksAddress,
+      username,
+      story,
+      settings,
+    });
+
+    const { html: mjmlHtml, errors: mjmlErrors } = mjml2html(MJMLNewsletter);
+    if (mjmlErrors && mjmlErrors.length > 0) {
+      this.sentryService
+        .instance()
+        .captureMessage('Failed to generate story newsletter', {
+          level: 'error',
+          extra: {
+            stacksAddress,
+            storyId: story.id,
+            mjmlErrors,
+            MJMLNewsletter,
+          },
+        });
+      throw new BadRequestException('Failed to generate story newsletter');
+    }
+    return mjmlHtml;
   }
 }

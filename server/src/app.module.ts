@@ -31,6 +31,8 @@ import { StoriesModule } from './stories/stories.module';
       inject: [ConfigService],
       useFactory: (config: ConfigService) => ({
         dsn: config.get('SENTRY_DSN'),
+        // Required to log more from the error objects. Added for mailjet errors in the first place.
+        normalizeDepth: 10,
       }),
     }),
     ThrottlerModule.forRootAsync({
