@@ -20,7 +20,7 @@ export class NewslettersService {
       select: {
         id: true,
         status: true,
-        mailjetApikey: true,
+        mailjetApiKey: true,
         mailjetApiSecret: true,
       },
       where: { user: { stacksAddress } },
@@ -28,7 +28,7 @@ export class NewslettersService {
     return newsletter
       ? {
           enabled: newsletter.status === 'ACTIVE',
-          mailjetApikey: newsletter.mailjetApikey,
+          mailjetApiKey: newsletter.mailjetApiKey,
           mailjetApiSecret: newsletter.mailjetApiSecret,
         }
       : null;
@@ -59,7 +59,7 @@ export class NewslettersService {
         newsletter: {
           select: {
             id: true,
-            mailjetApikey: true,
+            mailjetApiKey: true,
             mailjetApiSecret: true,
             mailjetListId: true,
             mailjetListAddress: true,
@@ -72,7 +72,7 @@ export class NewslettersService {
     const upsertData = {
       userId: user.id,
       status: enabled ? ('ACTIVE' as const) : ('INACTIVE' as const),
-      mailjetApikey: apiKey,
+      mailjetApiKey: apiKey,
       mailjetApiSecret: apiSecret,
       mailjetListId: user.newsletter?.mailjetListId ?? 0,
       mailjetListAddress: user.newsletter?.mailjetListAddress ?? '',
@@ -80,7 +80,7 @@ export class NewslettersService {
 
     // Validate the config and setup the account if something changed or if it's the first time.
     const hasMailjetConfigChanged =
-      user.newsletter?.mailjetApikey !== apiKey ||
+      user.newsletter?.mailjetApiKey !== apiKey ||
       user.newsletter?.mailjetApiSecret !== apiSecret;
     if (hasMailjetConfigChanged) {
       const { listId, listAddress } = await this.validateAndSetupMailjetConfig({

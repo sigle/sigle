@@ -57,7 +57,7 @@ export class StoriesService {
         newsletter: {
           select: {
             id: true,
-            mailjetApikey: true,
+            mailjetApiKey: true,
             mailjetApiSecret: true,
             mailjetListAddress: true,
           },
@@ -137,7 +137,7 @@ export class StoriesService {
       });
 
       const mailjet = new Mailjet({
-        apiKey: user.newsletter.mailjetApikey,
+        apiKey: user.newsletter.mailjetApiKey,
         apiSecret: user.newsletter.mailjetApiSecret,
       });
 

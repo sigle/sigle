@@ -49,13 +49,12 @@ export const Newsletter = () => {
   // TODO here link for where to find api key and secret
   // TODO real youtube video link
   // TODO review all wording
-  // TODO rename prisma schema apikey to apiKey
 
   const formik = useFormik<NewsletterSettingsFormValues>({
     validateOnChange: false,
     initialValues: {
       enabled: userNewsletter ? userNewsletter.enabled : true,
-      apiKey: userNewsletter ? userNewsletter.mailjetApikey : '',
+      apiKey: userNewsletter ? userNewsletter.mailjetApiKey : '',
       apiSecret: userNewsletter ? userNewsletter.mailjetApiSecret : '',
     },
     validate: (values) => {
@@ -82,7 +81,7 @@ export const Newsletter = () => {
       formik.resetForm({
         values: {
           enabled: userNewsletter.enabled,
-          apiKey: userNewsletter.mailjetApikey,
+          apiKey: userNewsletter.mailjetApiKey,
           apiSecret: userNewsletter.mailjetApiSecret,
         },
       });

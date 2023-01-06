@@ -55,7 +55,7 @@ model Story {
 
 model Newsletter {
   id                 String           @id @default(uuid())
-  mailjetApikey      String
+  mailjetApiKey      String
   mailjetApiSecret   String
   mailjetListId      Int
   mailjetListAddress String

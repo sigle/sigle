@@ -5,7 +5,7 @@ export class NewsletterEntity {
   enabled: boolean;
 
   @ApiProperty()
-  mailjetApikey: string;
+  mailjetApiKey: string;
 
   @ApiProperty()
   mailjetApiSecret: string;

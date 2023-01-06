@@ -4,6 +4,6 @@
 
 export type NewsletterEntity = {
   enabled: boolean;
-  mailjetApikey: string;
+  mailjetApiKey: string;
   mailjetApiSecret: string;
 };
