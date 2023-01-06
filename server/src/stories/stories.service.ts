@@ -1,6 +1,5 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
-import { ContactList, SendEmailV3_1 } from 'node-mailjet';
+import { SendEmailV3_1 } from 'node-mailjet';
 import * as textVersion from 'textversionjs';
 import { InjectSentry, SentryService } from '@ntegral/nestjs-sentry';
 import { allowedNewsletterUsers } from '../utils';
@@ -15,7 +14,6 @@ const Mailjet = require('node-mailjet');
 export class StoriesService {
   constructor(
     @InjectSentry() private readonly sentryService: SentryService,
-    private readonly configService: ConfigService,
     private readonly prisma: PrismaService,
     private readonly posthog: PosthogService,
     private readonly stacksService: StacksService,
@@ -53,6 +51,24 @@ export class StoriesService {
     gaiaId: string;
     send: boolean;
   }) {
+    const user = await this.prisma.user.findUniqueOrThrow({
+      select: {
+        id: true,
+        newsletter: {
+          select: {
+            id: true,
+            mailjetApiKey: true,
+            mailjetApiSecret: true,
+            mailjetListAddress: true,
+          },
+        },
+      },
+      where: { stacksAddress },
+    });
+    if (!user.newsletter) {
+      throw new BadRequestException('Newsletter not setup.');
+    }
+
     let story = await this.prisma.story.findFirst({
       select: {
         id: true,
@@ -62,10 +78,6 @@ export class StoriesService {
         user: { stacksAddress: stacksAddress },
         gaiaId: gaiaId,
       },
-    });
-    const user = await this.prisma.user.findUniqueOrThrow({
-      select: { id: true },
-      where: { stacksAddress },
     });
 
     story = await this.prisma.story.upsert({
@@ -125,15 +137,11 @@ export class StoriesService {
       });
 
       const mailjet = new Mailjet({
-        apiKey: this.configService.get('MAILJET_API_KEY'),
-        apiSecret: this.configService.get('MAILJET_API_SECRET'),
+        apiKey: user.newsletter.mailjetApiKey,
+        apiSecret: user.newsletter.mailjetApiSecret,
       });
 
-      const data: { body: ContactList.TGetContactListResponse } = await mailjet
-        .get('contactslist?Name=sigle', { version: 'v3' })
-        .request();
-      const listAddress = data.body.Data[0].Address;
-      const listEmail = `${listAddress}@lists.mailjet.com`;
+      const listEmail = `${user.newsletter.mailjetListAddress}@lists.mailjet.com`;
 
       const sendEmailBody: SendEmailV3_1.IBody = {
         SandboxMode: false,

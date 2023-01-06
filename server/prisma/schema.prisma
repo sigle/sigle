@@ -17,6 +17,7 @@ model User {
   isLegacy       Boolean        @default(false)
   createdAt      DateTime       @default(now())
   updatedAt      DateTime       @updatedAt
+  newsletter     Newsletter?
   subscriptions  Subscription[]
   followers      Follows[]      @relation("following")
   following      Follows[]      @relation("follower")
@@ -50,6 +51,24 @@ model Story {
   unpublishedAt DateTime?
   deletedAt     DateTime?
   user          User      @relation(fields: [userId], references: [id])
+}
+
+model Newsletter {
+  id                 String           @id @default(uuid())
+  mailjetApiKey      String
+  mailjetApiSecret   String
+  mailjetListId      Int
+  mailjetListAddress String
+  status             NewsletterStatus
+  userId             String           @unique
+  createdAt          DateTime         @default(now())
+  updatedAt          DateTime         @updatedAt
+  user               User             @relation(fields: [userId], references: [id])
+}
+
+enum NewsletterStatus {
+  INACTIVE
+  ACTIVE
 }
 
 // Gaia data

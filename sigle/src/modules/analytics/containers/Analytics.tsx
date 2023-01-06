@@ -28,7 +28,11 @@ export const Analytics = () => {
   }
 
   if (!isLoading && !userSubscription) {
-    return <NftLockedView />;
+    return (
+      <DashboardLayout>
+        <NftLockedView />
+      </DashboardLayout>
+    );
   }
 
   return <Component loading={isStoriesLoading} stories={stories} />;

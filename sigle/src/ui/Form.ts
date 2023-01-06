@@ -31,6 +31,8 @@ export const FormInput = styled('input', {
     WebkitTapHighlightColor: 'rgba(0,0,0,0)',
     backgroundColor: '$gray3',
     boxShadow: '0 0 0 1px $colors$gray7',
+    ml: '1px',
+    mr: '1px',
     br: '$3',
     px: '$2',
     py: '$1',
