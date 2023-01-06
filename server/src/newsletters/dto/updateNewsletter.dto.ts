@@ -4,7 +4,7 @@ import { IsBoolean, IsString } from 'class-validator';
 export class UpdateNewsletterDto {
   @IsBoolean()
   @ApiProperty()
-  enabled: string;
+  enabled: boolean;
 
   @IsString()
   @ApiProperty()

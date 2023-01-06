@@ -21,7 +21,7 @@ export class NewslettersService {
     apiSecret,
   }: {
     stacksAddress: string;
-    enabled: string;
+    enabled: boolean;
     apiKey: string;
     apiSecret: string;
   }): Promise<void> {

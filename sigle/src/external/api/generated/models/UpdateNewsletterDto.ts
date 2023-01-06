@@ -3,7 +3,7 @@
 /* eslint-disable */
 
 export type UpdateNewsletterDto = {
-  enabled: string;
+  enabled: boolean;
   apiKey: string;
   apiSecret: string;
 };
