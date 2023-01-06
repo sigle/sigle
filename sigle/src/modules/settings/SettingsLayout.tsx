@@ -44,10 +44,10 @@ export const SettingsLayout = ({
     navItems.splice(
       1,
       0,
-      {
-        name: 'Private data',
-        path: '/settings/private-data',
-      },
+      // {
+      //   name: 'Private data',
+      //   path: '/settings/private-data',
+      // },
       {
         name: 'Newsletter',
         path: '/settings/newsletter',
