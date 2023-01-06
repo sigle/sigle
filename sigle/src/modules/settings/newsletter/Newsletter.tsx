@@ -43,6 +43,7 @@ export const Newsletter = () => {
   // TODO init form with data from server
   // TODO success message
   // TODO error message if data is not valid
+  // TODO rename prisma schema apikey to apiKey
 
   const formik = useFormik<NewsletterSettingsFormValues>({
     validateOnChange: false,
