@@ -7,6 +7,7 @@ import { allowedNewsletterUsers } from '../utils';
 import { PrismaService } from '../prisma/prisma.service';
 import { StacksService } from '../stacks/stacks.service';
 import { EmailService } from '../email/email.service';
+import { PosthogService } from '../posthog/posthog.service';
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const Mailjet = require('node-mailjet');
 
@@ -16,6 +17,7 @@ export class StoriesService {
     @InjectSentry() private readonly sentryService: SentryService,
     private readonly configService: ConfigService,
     private readonly prisma: PrismaService,
+    private readonly posthog: PosthogService,
     private readonly stacksService: StacksService,
     private readonly emailService: EmailService,
   ) {}
@@ -232,5 +234,12 @@ export class StoriesService {
         data: { deletedAt: new Date() },
       });
     }
+    this.posthog.capture({
+      distinctId: stacksAddress,
+      event: 'Story deleted',
+      properties: {
+        storyId: gaiaId,
+      },
+    });
   }
 }
