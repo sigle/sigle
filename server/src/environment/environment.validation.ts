@@ -58,6 +58,12 @@ export class EnvironmentVariables {
 
   @IsString()
   PLAUSIBLE_SITE_ID: string;
+
+  /**
+   * PostHog
+   */
+  @IsString()
+  POSTHOG_API_KEY: string;
 }
 
 export function validate(config: Record<string, unknown>) {
