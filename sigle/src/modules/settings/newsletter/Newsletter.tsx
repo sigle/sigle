@@ -40,11 +40,10 @@ export const Newsletter = () => {
       },
       onSuccess: async () => {
         await refetchUserNewsletter();
-        toast.success('Newsletter configuration updated!');
+        toast.success('Mailjet configuration updated!');
       },
     });
 
-  // TODO real youtube video link
   // TODO review all wording
 
   const formik = useFormik<NewsletterSettingsFormValues>({
@@ -178,7 +177,7 @@ export const Newsletter = () => {
         </Box>
       </form>
 
-      <SenderEmail />
+      {userNewsletter && <SenderEmail />}
 
       <Flex
         css={{ mt: '$5' }}
