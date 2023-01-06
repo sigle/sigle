@@ -1,4 +1,4 @@
-import { Injectable, OnModuleDestroy } from '@nestjs/common';
+import { Injectable, Logger, OnModuleDestroy } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { PostHog } from 'posthog-node';
 import { EnvironmentVariables } from '../environment/environment.validation';
@@ -15,6 +15,7 @@ interface EventMessageV1 extends IdentifyMessageV1 {
 
 @Injectable()
 export class PosthogService implements OnModuleDestroy {
+  private readonly logger = new Logger(PosthogService.name);
   private readonly posthog: PostHog;
 
   constructor(
@@ -27,11 +28,13 @@ export class PosthogService implements OnModuleDestroy {
     }
   }
 
-  capture(args: EventMessageV1) {
+  capture(args: EventMessageV1): void {
+    this.logger.debug('PostHog capture event', args);
     return this.posthog?.capture(args);
   }
 
-  onModuleDestroy() {
+  onModuleDestroy(): void {
+    this.logger.debug('PostHog shutdown');
     this.posthog?.shutdown();
   }
 }
