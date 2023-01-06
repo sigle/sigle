@@ -11,6 +11,7 @@ import {
   Flex,
   FormInput,
   FormRow,
+  FormHelperError,
 } from '../../../ui';
 import { NftLockedView } from '../../analytics/NftLockedView';
 import { UnsavedChanges } from '../components/UnsavedChanges';
@@ -44,6 +45,7 @@ export const Newsletter = () => {
   // TODO error message if data is not valid
 
   const formik = useFormik<NewsletterSettingsFormValues>({
+    validateOnChange: false,
     initialValues: {
       enabled: true,
       apiKey: '',
@@ -51,9 +53,12 @@ export const Newsletter = () => {
     },
     validate: (values) => {
       const errors: FormikErrors<NewsletterSettingsFormValues> = {};
-      // if (values.metaTitle && values.metaTitle.length > 100) {
-      //   errors.metaTitle = 'Meta title too long';
-      // }
+      if (!values.apiKey || values.apiKey === '') {
+        errors.apiKey = 'API key is required';
+      }
+      if (!values.apiSecret || values.apiSecret === '') {
+        errors.apiSecret = 'API secret is required';
+      }
       return errors;
     },
     onSubmit: async (values, { setSubmitting }) => {
@@ -132,6 +137,9 @@ export const Newsletter = () => {
             value={formik.values.apiKey}
             onChange={formik.handleChange}
           />
+          {formik.errors.apiKey && (
+            <FormHelperError>{formik.errors.apiKey}</FormHelperError>
+          )}
         </FormRow>
 
         <Typography css={{ fontWeight: 600, mt: '$5' }} size="h4">
@@ -145,6 +153,9 @@ export const Newsletter = () => {
             value={formik.values.apiSecret}
             onChange={formik.handleChange}
           />
+          {formik.errors.apiSecret && (
+            <FormHelperError>{formik.errors.apiSecret}</FormHelperError>
+          )}
         </FormRow>
         <Typography size="subheading" css={{ color: '$gray9', mt: '$2' }}>
           Find your Mailjet API key and API secret here
