@@ -3,6 +3,7 @@ import { ContactList } from 'node-mailjet';
 import { SubscriptionService } from '../subscription/subscription.service';
 import { PrismaService } from '../prisma/prisma.service';
 import { PosthogService } from '../posthog/posthog.service';
+import { NewsletterEntity } from './entities/newsletter.entity';
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const Mailjet = require('node-mailjet');
 
@@ -13,6 +14,25 @@ export class NewslettersService {
     private readonly subscriptionService: SubscriptionService,
     private readonly posthog: PosthogService,
   ) {}
+
+  async get({ stacksAddress }: { stacksAddress: string }) {
+    const newsletter = await this.prisma.newsletter.findFirst({
+      select: {
+        id: true,
+        status: true,
+        mailjetApikey: true,
+        mailjetApiSecret: true,
+      },
+      where: { user: { stacksAddress } },
+    });
+    return newsletter
+      ? {
+          enabled: newsletter.status === 'ACTIVE',
+          mailjetApikey: newsletter.mailjetApikey,
+          mailjetApiSecret: newsletter.mailjetApiSecret,
+        }
+      : null;
+  }
 
   async update({
     stacksAddress,
