@@ -1,5 +1,5 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
-import { ContactList } from 'node-mailjet';
+import { ContactList, Sender } from 'node-mailjet';
 import { SubscriptionService } from '../subscription/subscription.service';
 import { PrismaService } from '../prisma/prisma.service';
 import { PosthogService } from '../posthog/posthog.service';
@@ -49,7 +49,7 @@ export class NewslettersService {
       throw new BadRequestException('No active subscription.');
     }
 
-    const user = await this.prisma.user.findFirstOrThrow({
+    const user = await this.prisma.user.findUniqueOrThrow({
       select: {
         id: true,
         newsletter: {
@@ -103,6 +103,56 @@ export class NewslettersService {
         hasMailjetConfigChanged,
       },
     });
+  }
+
+  async syncSender({
+    stacksAddress,
+  }: {
+    stacksAddress: string;
+  }): Promise<void> {
+    const activeSubscription =
+      await this.subscriptionService.getUserActiveSubscription({
+        stacksAddress,
+      });
+    if (!activeSubscription) {
+      throw new BadRequestException('No active subscription.');
+    }
+
+    const user = await this.prisma.user.findUniqueOrThrow({
+      select: {
+        id: true,
+        newsletter: {
+          select: {
+            id: true,
+            mailjetApiKey: true,
+            mailjetApiSecret: true,
+          },
+        },
+      },
+      where: { stacksAddress },
+    });
+    if (!user.newsletter) {
+      throw new BadRequestException('Newsletter not setup.');
+    }
+
+    const mailjet = new Mailjet({
+      apiKey: user.newsletter.mailjetApiKey,
+      apiSecret: user.newsletter.mailjetApiSecret,
+    });
+
+    const data: { body: Sender.TGetSenderResponse } = await mailjet
+      .get('sender', { version: 'v3' })
+      .request();
+
+    const activeSender = data.body.Data.filter(
+      (sender) => sender.Status === 'Active',
+    )[0];
+    if (!activeSender) {
+      throw new BadRequestException(
+        'No sender found, please add one in mailjet.',
+      );
+    }
+    console.log(activeSender);
   }
 
   /**

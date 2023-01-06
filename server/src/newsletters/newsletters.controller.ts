@@ -39,4 +39,13 @@ export class NewslettersController {
       apiSecret: updateNewsletterDto.apiSecret,
     });
   }
+
+  @UseGuards(AuthGuard)
+  @Post('/api/newsletters/sender')
+  @HttpCode(200)
+  syncSender(@Request() req) {
+    return this.newslettersService.syncSender({
+      stacksAddress: req.user.stacksAddress,
+    });
+  }
 }

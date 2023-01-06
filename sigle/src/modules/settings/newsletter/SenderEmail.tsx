@@ -1,6 +1,19 @@
+import { toast } from 'react-toastify';
+import { ApiError } from '../../../external/api';
+import { useSyncSenderNewsletter } from '../../../hooks/newsletters';
 import { Box, Button, Flex, Typography } from '../../../ui';
 
 export const SenderEmail = () => {
+  const { mutate: syncNewsletter } = useSyncSenderNewsletter({
+    onError: (error: Error | ApiError) => {
+      let errorMessage = error.message;
+      if (error instanceof ApiError && error.body.message) {
+        errorMessage = error.body.message;
+      }
+      toast.error(errorMessage);
+    },
+  });
+
   return (
     <Box css={{ backgroundColor: '$gray2', br: '$4', padding: '$5', mt: '$5' }}>
       <Typography css={{ fontWeight: 600 }} size="h4">
@@ -11,7 +24,7 @@ export const SenderEmail = () => {
         Mailjet account and sync below.
       </Typography>
       <Flex css={{ mt: '$5' }} gap="5">
-        <Button>Sync</Button>
+        <Button onClick={() => syncNewsletter()}>Sync</Button>
         <Button
           color="orange"
           variant="ghost"
