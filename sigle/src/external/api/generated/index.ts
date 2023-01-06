@@ -25,6 +25,7 @@ export type { UserProfileDto } from './models/UserProfileDto';
 
 export { AnalyticsService } from './services/AnalyticsService';
 export { DefaultService } from './services/DefaultService';
+export { NewslettersService } from './services/NewslettersService';
 export { StoriesService } from './services/StoriesService';
 export { SubscribersService } from './services/SubscribersService';
 export { SubscriptionService } from './services/SubscriptionService';
