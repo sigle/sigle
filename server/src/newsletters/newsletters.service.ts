@@ -1,12 +1,18 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { ContactList } from 'node-mailjet';
+import { SubscriptionService } from '../subscription/subscription.service';
 import { PrismaService } from '../prisma/prisma.service';
+import { PosthogService } from '../posthog/posthog.service';
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const Mailjet = require('node-mailjet');
 
 @Injectable()
 export class NewslettersService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly subscriptionService: SubscriptionService,
+    private readonly posthog: PosthogService,
+  ) {}
 
   async update({
     stacksAddress,
@@ -19,8 +25,13 @@ export class NewslettersService {
     apiKey: string;
     apiSecret: string;
   }): Promise<void> {
-    // TODO guard with active subscription
-    // TODO maybe create generic guard?
+    const activeSubscription =
+      await this.subscriptionService.getUserActiveSubscription({
+        stacksAddress,
+      });
+    if (!activeSubscription) {
+      throw new BadRequestException('No active subscription.');
+    }
 
     const user = await this.prisma.user.findFirstOrThrow({
       select: {
@@ -67,6 +78,14 @@ export class NewslettersService {
       where: { userId: user.id },
       create: upsertData,
       update: upsertData,
+    });
+
+    this.posthog.capture({
+      distinctId: stacksAddress,
+      event: user.newsletter ? 'newsletter updated' : 'newsletter created',
+      properties: {
+        hasMailjetConfigChanged,
+      },
     });
   }
 
