@@ -1,7 +1,6 @@
 import Image from 'next/legacy/image';
 import Link from 'next/link';
 import { Box, Button, Flex, Typography } from '../../ui';
-import { DashboardLayout } from '../layout';
 
 export const NftLockedView = () => {
   return (
