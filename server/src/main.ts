@@ -26,6 +26,12 @@ async function bootstrap() {
   const app = await NestFactory.create<NestFastifyApplication>(
     AppModule,
     new FastifyAdapter(),
+    {
+      logger:
+        process.env.NODE_ENV === 'development'
+          ? ['error', 'warn', 'log', 'debug', 'verbose']
+          : ['error', 'warn', 'log'],
+    },
   );
   const configService = app.get(
     ConfigService<{
