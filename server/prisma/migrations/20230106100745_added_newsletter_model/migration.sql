@@ -6,6 +6,7 @@ CREATE TABLE "Newsletter" (
     "id" TEXT NOT NULL,
     "mailjetApikey" TEXT NOT NULL,
     "mailjetApiSecret" TEXT NOT NULL,
+    "mailjetListId" TEXT NOT NULL,
     "status" "NewsletterStatus" NOT NULL,
     "userId" TEXT NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
