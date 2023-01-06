@@ -6,4 +6,7 @@ export class NewsletterEntity {
 
   @ApiProperty()
   mailjetApiSecret: string;
+
+  @ApiProperty({ nullable: true })
+  senderEmail?: string;
 }

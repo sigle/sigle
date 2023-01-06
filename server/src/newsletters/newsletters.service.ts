@@ -21,6 +21,7 @@ export class NewslettersService {
         status: true,
         mailjetApiKey: true,
         mailjetApiSecret: true,
+        senderEmail: true,
       },
       where: { user: { stacksAddress } },
     });
@@ -28,6 +29,7 @@ export class NewslettersService {
       ? {
           mailjetApiKey: newsletter.mailjetApiKey,
           mailjetApiSecret: newsletter.mailjetApiSecret,
+          senderEmail: newsletter.senderEmail,
         }
       : null;
   }
