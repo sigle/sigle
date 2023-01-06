@@ -1,13 +1,30 @@
-import { Controller, Post, Body } from '@nestjs/common';
+import {
+  Controller,
+  Post,
+  Body,
+  UseGuards,
+  HttpCode,
+  Request,
+} from '@nestjs/common';
+import { ApiTags } from '@nestjs/swagger';
 import { NewslettersService } from './newsletters.service';
 import { UpdateNewsletterDto } from './dto/updateNewsletter.dto';
+import { AuthGuard } from '../auth.guard';
 
-@Controller('newsletters')
+@ApiTags('newsletters')
+@Controller()
 export class NewslettersController {
   constructor(private readonly newslettersService: NewslettersService) {}
 
-  @Post()
-  update(@Body() updateNewsletterDto: UpdateNewsletterDto) {
-    return this.newslettersService.update(updateNewsletterDto);
+  @UseGuards(AuthGuard)
+  @Post('/api/newsletters')
+  @HttpCode(200)
+  update(@Request() req, @Body() updateNewsletterDto: UpdateNewsletterDto) {
+    return this.newslettersService.update({
+      stacksAddress: req.user.stacksAddress,
+      enabled: updateNewsletterDto.enabled,
+      apiKey: updateNewsletterDto.apiKey,
+      apiSecret: updateNewsletterDto.apiSecret,
+    });
   }
 }
