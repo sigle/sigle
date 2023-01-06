@@ -18,6 +18,7 @@ import {
 } from '../../../ui';
 import { NftLockedView } from '../../analytics/NftLockedView';
 import { SettingsLayout } from '../SettingsLayout';
+import { SenderEmail } from './SenderEmail';
 
 interface NewsletterSettingsFormValues {
   enabled: boolean;
@@ -180,6 +181,8 @@ export const Newsletter = () => {
           </Button>
         </Box>
       </form>
+
+      <SenderEmail />
 
       <Flex
         css={{ mt: '$5' }}
