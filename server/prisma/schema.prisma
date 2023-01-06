@@ -54,15 +54,16 @@ model Story {
 }
 
 model Newsletter {
-  id               String           @id @default(uuid())
-  mailjetApikey    String
-  mailjetApiSecret String
-  mailjetListId    String
-  status           NewsletterStatus
-  userId           String           @unique
-  createdAt        DateTime         @default(now())
-  updatedAt        DateTime         @updatedAt
-  user             User             @relation(fields: [userId], references: [id])
+  id                 String           @id @default(uuid())
+  mailjetApikey      String
+  mailjetApiSecret   String
+  mailjetListId      String
+  mailjetListAddress String
+  status             NewsletterStatus
+  userId             String           @unique
+  createdAt          DateTime         @default(now())
+  updatedAt          DateTime         @updatedAt
+  user               User             @relation(fields: [userId], references: [id])
 }
 
 enum NewsletterStatus {
