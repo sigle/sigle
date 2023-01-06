@@ -21,7 +21,8 @@ export class PosthogService implements OnModuleDestroy {
     private readonly configService: ConfigService<EnvironmentVariables>,
   ) {
     const postHogApiKey = this.configService.get('POSTHOG_API_KEY');
-    if (postHogApiKey) {
+    const nodeEnv = this.configService.get('NODE_ENV');
+    if (nodeEnv !== 'test' && postHogApiKey) {
       this.posthog = new PostHog(postHogApiKey);
     }
   }
