@@ -49,9 +49,6 @@ export const Newsletter = () => {
   // TODO here link for where to find api key and secret
   // TODO real youtube video link
   // TODO review all wording
-  // TODO init form with data from server
-  // TODO success message
-  // TODO error message if data is not valid
   // TODO rename prisma schema apikey to apiKey
 
   const formik = useFormik<NewsletterSettingsFormValues>({
