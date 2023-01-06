@@ -85,6 +85,15 @@ export class StoriesService {
       },
     });
 
+    this.posthog.capture({
+      distinctId: stacksAddress,
+      event: 'story published',
+      properties: {
+        storyId: story.id,
+        gaiaId: gaiaId,
+      },
+    });
+
     if (send) {
       // Limit who can access this feature
       if (!allowedNewsletterUsers.includes(stacksAddress)) {
@@ -189,6 +198,15 @@ export class StoriesService {
           sentAt: new Date(),
         },
       });
+
+      this.posthog.capture({
+        distinctId: stacksAddress,
+        event: 'newsletter sent',
+        properties: {
+          storyId: story.id,
+          gaiaId: gaiaId,
+        },
+      });
     }
   }
 
@@ -200,6 +218,7 @@ export class StoriesService {
     gaiaId: string;
   }) {
     const story = await this.prisma.story.findFirst({
+      select: { id: true },
       where: {
         user: { stacksAddress: stacksAddress },
         gaiaId: gaiaId,
@@ -210,6 +229,15 @@ export class StoriesService {
       await this.prisma.story.update({
         where: { id: story.id },
         data: { unpublishedAt: new Date() },
+      });
+
+      this.posthog.capture({
+        distinctId: stacksAddress,
+        event: 'story unpublished',
+        properties: {
+          storyId: story.id,
+          gaiaId: gaiaId,
+        },
       });
     }
   }
@@ -222,6 +250,7 @@ export class StoriesService {
     gaiaId: string;
   }) {
     const story = await this.prisma.story.findFirst({
+      select: { id: true },
       where: {
         user: { stacksAddress: stacksAddress },
         gaiaId: gaiaId,
@@ -233,13 +262,15 @@ export class StoriesService {
         where: { id: story.id },
         data: { deletedAt: new Date() },
       });
+
+      this.posthog.capture({
+        distinctId: stacksAddress,
+        event: 'story deleted',
+        properties: {
+          storyId: story.id,
+          gaiaId: gaiaId,
+        },
+      });
     }
-    this.posthog.capture({
-      distinctId: stacksAddress,
-      event: 'Story deleted',
-      properties: {
-        storyId: gaiaId,
-      },
-    });
   }
 }
