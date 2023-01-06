@@ -41,7 +41,7 @@ export const Newsletter = () => {
   // TODO real youtube video link
   // TODO review all wording
   // TODO init form with data from server
-  // TODO push data to server
+  // TODO success message
   // TODO error message if data is not valid
 
   const formik = useFormik<NewsletterSettingsFormValues>({
