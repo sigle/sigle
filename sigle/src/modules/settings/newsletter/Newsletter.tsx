@@ -44,7 +44,6 @@ export const Newsletter = () => {
       },
     });
 
-  // TODO here link for where to find api key and secret
   // TODO real youtube video link
   // TODO review all wording
 
@@ -163,7 +162,7 @@ export const Newsletter = () => {
             <Typography
               size="subheading"
               as="a"
-              href="#"
+              href="https://app.mailjet.com/account/apikeys"
               target="_blank"
               rel="noreferrer"
               css={{ color: '$orange11', cursor: 'pointer' }}
