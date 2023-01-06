@@ -57,7 +57,7 @@ model Newsletter {
   id                 String           @id @default(uuid())
   mailjetApikey      String
   mailjetApiSecret   String
-  mailjetListId      String
+  mailjetListId      Int
   mailjetListAddress String
   status             NewsletterStatus
   userId             String           @unique

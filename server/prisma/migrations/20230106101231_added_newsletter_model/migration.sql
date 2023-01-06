@@ -6,7 +6,7 @@ CREATE TABLE "Newsletter" (
     "id" TEXT NOT NULL,
     "mailjetApikey" TEXT NOT NULL,
     "mailjetApiSecret" TEXT NOT NULL,
-    "mailjetListId" TEXT NOT NULL,
+    "mailjetListId" INTEGER NOT NULL,
     "mailjetListAddress" TEXT NOT NULL,
     "status" "NewsletterStatus" NOT NULL,
     "userId" TEXT NOT NULL,
