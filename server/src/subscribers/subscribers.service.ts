@@ -10,6 +10,7 @@ import {
 } from 'node-mailjet';
 import { ConfigService } from '@nestjs/config';
 import { allowedNewsletterUsers } from '../utils';
+import { PosthogService } from '../posthog/posthog.service';
 // Mailjet API https://dev.mailjet.com/email/reference/overview/authentication/
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const Mailjet = require('node-mailjet');
@@ -19,6 +20,7 @@ export class SubscribersService {
   constructor(
     private readonly configService: ConfigService,
     private readonly prisma: PrismaService,
+    private readonly posthog: PosthogService,
   ) {}
 
   async create({ stacksAddress, email }: CreateSubscriberDto) {
@@ -101,6 +103,14 @@ export class SubscribersService {
         .action('managecontactslists')
         .request(contactList);
     }
+
+    this.posthog.capture({
+      distinctId: stacksAddress,
+      event: 'subscriber created',
+      properties: {
+        subscribedTo: stacksAddress,
+      },
+    });
 
     return {
       createdAt: new Date(),

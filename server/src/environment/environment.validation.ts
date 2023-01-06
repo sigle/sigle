@@ -1,5 +1,5 @@
 import { plainToInstance } from 'class-transformer';
-import { IsEnum, IsString, validateSync } from 'class-validator';
+import { IsEnum, IsOptional, IsString, validateSync } from 'class-validator';
 
 enum Environment {
   Development = 'development',
@@ -58,6 +58,13 @@ export class EnvironmentVariables {
 
   @IsString()
   PLAUSIBLE_SITE_ID: string;
+
+  /**
+   * PostHog
+   */
+  @IsString()
+  @IsOptional()
+  POSTHOG_API_KEY: string;
 }
 
 export function validate(config: Record<string, unknown>) {

@@ -8,6 +8,7 @@ import { InfoApi, Configuration } from '@stacks/blockchain-api-client';
 import { StacksService } from '../stacks/stacks.service';
 import { EnvironmentVariables } from '../environment/environment.validation';
 import { PrismaService } from '../prisma/prisma.service';
+import { PosthogService } from '../posthog/posthog.service';
 
 @Injectable()
 export class UserService {
@@ -15,7 +16,8 @@ export class UserService {
 
   constructor(
     private readonly configService: ConfigService<EnvironmentVariables>,
-    private prisma: PrismaService,
+    private readonly prisma: PrismaService,
+    private readonly posthog: PosthogService,
     private readonly stacksService: StacksService,
   ) {
     this.stacksInfoApi = new InfoApi(
@@ -218,6 +220,14 @@ export class UserService {
         createdAt: new Date(createdAt),
       },
     });
+
+    this.posthog.capture({
+      distinctId: followerAddress,
+      event: 'follow created',
+      properties: {
+        followingAddress,
+      },
+    });
   }
 
   async removeFollow({
@@ -234,6 +244,14 @@ export class UserService {
     await this.prisma.follows.deleteMany({
       where: {
         followerAddress,
+        followingAddress,
+      },
+    });
+
+    this.posthog.capture({
+      distinctId: followerAddress,
+      event: 'follow deleted',
+      properties: {
         followingAddress,
       },
     });
