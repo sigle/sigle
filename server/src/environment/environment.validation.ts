@@ -1,5 +1,5 @@
 import { plainToInstance } from 'class-transformer';
-import { IsEnum, IsString, validateSync } from 'class-validator';
+import { IsEnum, IsOptional, IsString, validateSync } from 'class-validator';
 
 enum Environment {
   Development = 'development',
@@ -63,6 +63,7 @@ export class EnvironmentVariables {
    * PostHog
    */
   @IsString()
+  @IsOptional()
   POSTHOG_API_KEY: string;
 }
 
