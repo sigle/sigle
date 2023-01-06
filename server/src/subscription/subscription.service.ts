@@ -97,6 +97,7 @@ export class SubscriptionService {
     });
     // When an active subscription is found, we just update the NFT linked to it.
     if (activeSubscription) {
+      const prevNftId = activeSubscription.nftId;
       activeSubscription = await this.prisma.subscription.update({
         select: {
           id: true,
@@ -115,6 +116,7 @@ export class SubscriptionService {
         event: 'subscription updated',
         properties: {
           subscriptionId: activeSubscription.id,
+          prevNftId,
           nftId,
         },
       });
