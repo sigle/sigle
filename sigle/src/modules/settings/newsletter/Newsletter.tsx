@@ -2,6 +2,7 @@ import { CheckCircledIcon } from '@radix-ui/react-icons';
 import { useFormik, FormikErrors } from 'formik';
 import { useEffect } from 'react';
 import { toast } from 'react-toastify';
+import { sigleConfig } from '../../../config';
 import { ApiError } from '../../../external/api';
 import {
   useGetUserNewsletter,
@@ -197,18 +198,22 @@ export const Newsletter = () => {
       <Flex
         css={{ mt: '$5' }}
         direction={{ '@initial': 'column', '@md': 'row' }}
-        gap="3"
+        gap="5"
       >
         <div>
           <Typography css={{ fontWeight: 600 }} size="h4">
-            A bit lost? We show you how!
+            Not sure what to do? We got you!
           </Typography>
           <Typography size="subheading" css={{ color: '$gray9', mt: '$2' }}>
-            If you need help, we have created a tutorial on how to set up your
-            newsletter using Sigle and Maillet.
+            We've created this tutorial to help you set your newsletter up using
+            Sigle and Mailjet.
             <br />
             <br />
-            Follow this step by step video, you will see, it's easy!
+            If you're still having trouble, feel free to reach out to us on{' '}
+            <a href={sigleConfig.discordUrl} target="_blank" rel="noreferrer">
+              Discord
+            </a>
+            .
           </Typography>
         </div>
         <iframe

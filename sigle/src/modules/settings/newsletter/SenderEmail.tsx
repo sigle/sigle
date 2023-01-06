@@ -43,7 +43,7 @@ export const SenderEmail = () => {
         )}
         {userNewsletter?.senderEmail && (
           <Typography size="subheading" css={{ color: '$gray9', mt: '$2' }}>
-            Your newsletter will be sent with{' '}
+            Your newsletter will be sent from{' '}
             <Typography size="subheading" as="span" css={{ color: '$gray10' }}>
               {userNewsletter.senderEmail}
             </Typography>
