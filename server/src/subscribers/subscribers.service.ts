@@ -5,10 +5,8 @@ import { CreateSubscriberDto } from './dto/createSubscriber.dto';
 import {
   BulkContactManagement,
   Contact,
-  ContactList,
   ContactSubscription,
 } from 'node-mailjet';
-import { ConfigService } from '@nestjs/config';
 import { allowedNewsletterUsers } from '../utils';
 // Mailjet API https://dev.mailjet.com/email/reference/overview/authentication/
 // eslint-disable-next-line @typescript-eslint/no-var-requires
@@ -16,10 +14,7 @@ const Mailjet = require('node-mailjet');
 
 @Injectable()
 export class SubscribersService {
-  constructor(
-    private readonly configService: ConfigService,
-    private readonly prisma: PrismaService,
-  ) {}
+  constructor(private readonly prisma: PrismaService) {}
 
   async create({ stacksAddress, email }: CreateSubscriberDto) {
     // TODO - remove this check once newsletter feature is ready
@@ -28,13 +23,22 @@ export class SubscribersService {
       throw new BadRequestException('Not activated.');
     }
 
-    // Check that the user exists in the DB
-    const user = await this.prisma.user.findUnique({
-      select: { id: true },
+    const user = await this.prisma.user.findUniqueOrThrow({
+      select: {
+        id: true,
+        newsletter: {
+          select: {
+            id: true,
+            mailjetApikey: true,
+            mailjetApiSecret: true,
+            mailjetListId: true,
+          },
+        },
+      },
       where: { stacksAddress },
     });
-    if (!user) {
-      throw new BadRequestException('Invalid user.');
+    if (!user.newsletter) {
+      throw new BadRequestException('Newsletter not setup.');
     }
 
     // Quick verify email
@@ -53,19 +57,16 @@ export class SubscribersService {
       throw new BadRequestException('Invalid email.');
     }
 
-    // TODO verify that user has email settings setup
-
     const mailjet = new Mailjet({
-      apiKey: this.configService.get('MAILJET_API_KEY'),
-      apiSecret: this.configService.get('MAILJET_API_SECRET'),
+      apiKey: user.newsletter.mailjetApikey,
+      apiSecret: user.newsletter.mailjetApiSecret,
     });
-
-    const newContact: Contact.IPostContactBody = {
-      Email: email,
-    };
 
     let contactId: number | undefined;
     try {
+      const newContact: Contact.IPostContactBody = {
+        Email: email,
+      };
       const response: { body: Contact.TPostContactResponse } = await mailjet
         .post('contact', { version: 'v3' })
         .request(newContact);
@@ -81,15 +82,11 @@ export class SubscribersService {
     // Add the new contact to the "sigle" list.
     // If already subscribed we skip this part.
     if (contactId) {
-      const data: { body: ContactList.TGetContactListResponse } = await mailjet
-        .get('contactslist?Name=sigle', { version: 'v3' })
-        .request();
-      const listId = data.body.Data[0].ID;
       const contactList: ContactSubscription.IPostContactManageContactsListsBody =
         {
           ContactsLists: [
             {
-              ListID: listId,
+              ListID: user.newsletter.mailjetListId,
               Action:
                 'addnoforce' as BulkContactManagement.ManageContactsAction.AddNoForce,
             },
