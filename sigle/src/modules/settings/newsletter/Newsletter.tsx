@@ -21,7 +21,6 @@ import { SettingsLayout } from '../SettingsLayout';
 import { SenderEmail } from './SenderEmail';
 
 interface NewsletterSettingsFormValues {
-  enabled: boolean;
   apiKey: string;
   apiSecret: string;
 }
@@ -51,7 +50,6 @@ export const Newsletter = () => {
   const formik = useFormik<NewsletterSettingsFormValues>({
     validateOnChange: false,
     initialValues: {
-      enabled: userNewsletter ? userNewsletter.enabled : true,
       apiKey: userNewsletter ? userNewsletter.mailjetApiKey : '',
       apiSecret: userNewsletter ? userNewsletter.mailjetApiSecret : '',
     },
@@ -67,7 +65,6 @@ export const Newsletter = () => {
     },
     onSubmit: async (values) => {
       updateNewsletter({
-        enabled: values.enabled,
         apiKey: values.apiKey.trim(),
         apiSecret: values.apiSecret.trim(),
       });
@@ -78,7 +75,6 @@ export const Newsletter = () => {
     if (userNewsletter) {
       formik.resetForm({
         values: {
-          enabled: userNewsletter.enabled,
           apiKey: userNewsletter.mailjetApiKey,
           apiSecret: userNewsletter.mailjetApiSecret,
         },
