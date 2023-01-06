@@ -171,8 +171,12 @@ export const Newsletter = () => {
             </Typography>
           </Typography>
 
-          <Button css={{ mt: '$5' }} type="submit">
-            Submit
+          <Button
+            css={{ mt: '$5' }}
+            type="submit"
+            disabled={isLoadingUpdateNewsletter}
+          >
+            {isLoadingUpdateNewsletter ? 'Saving...' : 'Submit'}
           </Button>
         </Box>
       </form>
