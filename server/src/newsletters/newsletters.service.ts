@@ -104,6 +104,7 @@ export class NewslettersService {
       apiKey,
       apiSecret,
     });
+
     let mailjetList: ContactList.IContactList;
     try {
       const data: { body: ContactList.TGetContactListResponse } = await mailjet
