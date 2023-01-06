@@ -10,6 +10,7 @@ import {
   FormRow,
 } from '../../../ui';
 import { NftLockedView } from '../../analytics/NftLockedView';
+import { UnsavedChanges } from '../components/UnsavedChanges';
 import { SettingsLayout } from '../SettingsLayout';
 
 interface NewsletterSettingsFormValues {
@@ -153,6 +154,8 @@ export const Newsletter = () => {
             src="https://www.youtube.com/embed/8P3pL__udNM"
           ></iframe>
         </Flex>
+
+        {formik.dirty && <UnsavedChanges saving={formik.isSubmitting} />}
       </form>
     </SettingsLayout>
   );
