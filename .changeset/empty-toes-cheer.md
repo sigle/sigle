@@ -11,3 +11,5 @@ Start capturing events with posthog:
 - subscription created
 - subscription updated
 - subscription downgraded
+- follow created
+- follow deleted
