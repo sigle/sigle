@@ -8,11 +8,11 @@ const NewsletterPage = () => {
   const router = useRouter();
   const { isExperimentalNewsletterEnabled } = useFeatureFlags();
 
-  // useEffect(() => {
-  //   if (!isExperimentalNewsletterEnabled) {
-  //     router.push('/');
-  //   }
-  // }, []);
+  useEffect(() => {
+    if (!isExperimentalNewsletterEnabled) {
+      router.push('/');
+    }
+  }, []);
 
   return (
     <Protected>
