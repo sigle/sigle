@@ -26,7 +26,6 @@ export class NewslettersService {
     });
     return newsletter
       ? {
-          enabled: newsletter.status === 'ACTIVE',
           mailjetApiKey: newsletter.mailjetApiKey,
           mailjetApiSecret: newsletter.mailjetApiSecret,
         }
@@ -35,12 +34,10 @@ export class NewslettersService {
 
   async update({
     stacksAddress,
-    enabled,
     apiKey,
     apiSecret,
   }: {
     stacksAddress: string;
-    enabled: boolean;
     apiKey: string;
     apiSecret: string;
   }): Promise<void> {
@@ -70,7 +67,7 @@ export class NewslettersService {
 
     const upsertData = {
       userId: user.id,
-      status: enabled ? ('ACTIVE' as const) : ('INACTIVE' as const),
+      status: 'INACTIVE' as const,
       mailjetApiKey: apiKey,
       mailjetApiSecret: apiSecret,
       mailjetListId: user.newsletter?.mailjetListId ?? 0,
