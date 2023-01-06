@@ -93,21 +93,21 @@ export class NewslettersService {
       if (data.body.Count >= 1) {
         mailjetList = data.body.Data.find((list) => list.Name === 'sigle');
       }
-      if (!mailjetList) {
-        const contactList: ContactList.IPostContactListBody = {
-          Name: 'sigle',
-        };
-        const data: { body: ContactList.TPostContactListResponse } =
-          await mailjet
-            .post('contactslist', { version: 'v3' })
-            .request(contactList);
-        mailjetList = data.body.Data[0];
-      }
     } catch (error) {
       if (error.statusCode === 401) {
-        throw new BadRequestException('Invalid Maijet credentials.');
+        throw new BadRequestException('Invalid Mailjet credentials.');
       }
       throw error;
+    }
+
+    if (!mailjetList) {
+      const contactList: ContactList.IPostContactListBody = {
+        Name: 'sigle',
+      };
+      const data: { body: ContactList.TPostContactListResponse } = await mailjet
+        .post('contactslist', { version: 'v3' })
+        .request(contactList);
+      mailjetList = data.body.Data[0];
     }
 
     return {
