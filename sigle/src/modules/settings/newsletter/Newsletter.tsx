@@ -1,3 +1,4 @@
+import { CheckCircledIcon } from '@radix-ui/react-icons';
 import { useFormik, FormikErrors } from 'formik';
 import { useEffect } from 'react';
 import { toast } from 'react-toastify';
@@ -126,13 +127,20 @@ export const Newsletter = () => {
             API key
           </Typography>
           <FormRow css={{ mt: '$2' }}>
-            <FormInput
-              name="apiKey"
-              type="text"
-              placeholder="Enter your Mailjet’s API key"
-              value={formik.values.apiKey}
-              onChange={formik.handleChange}
-            />
+            <Flex gap="2" align="center">
+              <FormInput
+                name="apiKey"
+                type="text"
+                placeholder="Enter your Mailjet’s API key"
+                value={formik.values.apiKey}
+                onChange={formik.handleChange}
+              />
+              {userNewsletter?.mailjetApiKey && (
+                <Box css={{ color: '$green11' }}>
+                  <CheckCircledIcon />
+                </Box>
+              )}
+            </Flex>
             {formik.errors.apiKey && (
               <FormHelperError>{formik.errors.apiKey}</FormHelperError>
             )}
@@ -142,13 +150,20 @@ export const Newsletter = () => {
             API Secret
           </Typography>
           <FormRow css={{ mt: '$2', mb: '$2' }}>
-            <FormInput
-              name="apiSecret"
-              type="text"
-              placeholder="Enter your Mailjet’s API secret"
-              value={formik.values.apiSecret}
-              onChange={formik.handleChange}
-            />
+            <Flex gap="2" align="center">
+              <FormInput
+                name="apiSecret"
+                type="text"
+                placeholder="Enter your Mailjet’s API secret"
+                value={formik.values.apiSecret}
+                onChange={formik.handleChange}
+              />
+              {userNewsletter?.mailjetApiSecret && (
+                <Box css={{ color: '$green11' }}>
+                  <CheckCircledIcon />
+                </Box>
+              )}
+            </Flex>
             {formik.errors.apiSecret && (
               <FormHelperError>{formik.errors.apiSecret}</FormHelperError>
             )}

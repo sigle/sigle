@@ -1,4 +1,4 @@
-import { ReloadIcon } from '@radix-ui/react-icons';
+import { CheckCircledIcon, ReloadIcon } from '@radix-ui/react-icons';
 import { useState } from 'react';
 import { toast } from 'react-toastify';
 import { ApiError } from '../../../external/api';
@@ -27,9 +27,6 @@ export const SenderEmail = () => {
       },
     });
 
-  // TODO success message
-  // all success icons
-
   return (
     <>
       <Box
@@ -50,6 +47,12 @@ export const SenderEmail = () => {
             <Typography size="subheading" as="span" css={{ color: '$gray10' }}>
               {userNewsletter.senderEmail}
             </Typography>
+            <Box
+              as="span"
+              css={{ color: '$green11', display: 'inline-block', ml: '$2' }}
+            >
+              <CheckCircledIcon />
+            </Box>
           </Typography>
         )}
         <Flex css={{ mt: '$5' }} gap="5">
