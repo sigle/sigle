@@ -8,3 +8,6 @@ Start capturing events with posthog:
 - story unpublished
 - story deleted
 - newsletter sent
+- subscription created
+- subscription updated
+- subscription downgraded
