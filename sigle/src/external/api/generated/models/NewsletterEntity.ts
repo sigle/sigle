@@ -5,4 +5,5 @@
 export type NewsletterEntity = {
   mailjetApiKey: string;
   mailjetApiSecret: string;
+  senderEmail: string | null;
 };
