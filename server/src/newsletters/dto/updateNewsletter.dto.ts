@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsBoolean, IsString } from 'class-validator';
+import { IsBoolean, IsNotEmpty, IsString } from 'class-validator';
 
 export class UpdateNewsletterDto {
   @IsBoolean()
@@ -7,10 +7,12 @@ export class UpdateNewsletterDto {
   enabled: boolean;
 
   @IsString()
+  @IsNotEmpty()
   @ApiProperty()
   apiKey: string;
 
   @IsString()
+  @IsNotEmpty()
   @ApiProperty()
   apiSecret: string;
 }

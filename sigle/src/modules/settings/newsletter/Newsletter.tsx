@@ -1,4 +1,7 @@
 import { useFormik, FormikErrors } from 'formik';
+import { toast } from 'react-toastify';
+import { ApiError } from '../../../external/api';
+import { useUpdateNewsletter } from '../../../hooks/newsletters';
 import { useGetUserSubscription } from '../../../hooks/subscriptions';
 import {
   Button,
@@ -21,6 +24,17 @@ interface NewsletterSettingsFormValues {
 
 export const Newsletter = () => {
   const { isLoading, data: userSubscription } = useGetUserSubscription();
+  const { mutate: updateNewsletter, isLoading: isLoadingUpdateNewsletter } =
+    useUpdateNewsletter({
+      onError: (error: Error | ApiError) => {
+        let errorMessage = error.message;
+        if (error instanceof ApiError && error.body.message) {
+          errorMessage = error.body.message;
+        }
+        toast.error(errorMessage);
+        formik.setSubmitting(false);
+      },
+    });
 
   // TODO here link for where to find api key and secret
   // TODO real youtube video link
@@ -43,7 +57,11 @@ export const Newsletter = () => {
       return errors;
     },
     onSubmit: async (values, { setSubmitting }) => {
-      setSubmitting(false);
+      updateNewsletter({
+        enabled: values.enabled,
+        apiKey: values.apiKey,
+        apiSecret: values.apiSecret,
+      });
     },
   });
 
