@@ -3,7 +3,6 @@ import { ContactList } from 'node-mailjet';
 import { SubscriptionService } from '../subscription/subscription.service';
 import { PrismaService } from '../prisma/prisma.service';
 import { PosthogService } from '../posthog/posthog.service';
-import { NewsletterEntity } from './entities/newsletter.entity';
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const Mailjet = require('node-mailjet');
 
