@@ -21,13 +21,52 @@ export class NewslettersService {
   }): Promise<void> {
     // TODO guard with active subscription
     // TODO maybe create generic guard?
-    // TODO validate keys if changed only
-    // TODO create list with new keys
-    // TODO upsert newsletter with new config
 
-    await this.validateAndSetupMailjetConfig({
-      apiKey,
-      apiSecret,
+    const user = await this.prisma.user.findFirstOrThrow({
+      select: {
+        id: true,
+        newsletter: {
+          select: {
+            id: true,
+            mailjetApikey: true,
+            mailjetApiSecret: true,
+            mailjetListId: true,
+            mailjetListAddress: true,
+          },
+        },
+      },
+      where: { stacksAddress },
+    });
+
+    const upsertData = {
+      userId: user.id,
+      status: enabled ? ('ACTIVE' as const) : ('INACTIVE' as const),
+      mailjetApikey: apiKey,
+      mailjetApiSecret: apiSecret,
+      mailjetListId: user.newsletter?.mailjetListId ?? 0,
+      mailjetListAddress: user.newsletter?.mailjetListAddress ?? '',
+    };
+
+    // Validate the config and setup the account if something changed or if it's the first time.
+    const hasMailjetConfigChanged =
+      user.newsletter?.mailjetApikey !== apiKey ||
+      user.newsletter?.mailjetApiSecret !== apiSecret;
+    if (hasMailjetConfigChanged) {
+      const { listId, listAddress } = await this.validateAndSetupMailjetConfig({
+        apiKey,
+        apiSecret,
+      });
+      upsertData.mailjetListId = listId;
+      upsertData.mailjetListAddress = listAddress;
+    }
+
+    await this.prisma.newsletter.upsert({
+      select: {
+        id: true,
+      },
+      where: { userId: user.id },
+      create: upsertData,
+      update: upsertData,
     });
   }
 
@@ -66,7 +105,7 @@ export class NewslettersService {
       }
     } catch (error) {
       if (error.statusCode === 401) {
-        throw new BadRequestException('Invalid Maijet api and/or secret key.');
+        throw new BadRequestException('Invalid Maijet credentials.');
       }
       throw error;
     }
