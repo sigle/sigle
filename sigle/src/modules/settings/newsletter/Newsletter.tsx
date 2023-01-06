@@ -1,7 +1,11 @@
 import { useFormik, FormikErrors } from 'formik';
+import { useEffect } from 'react';
 import { toast } from 'react-toastify';
 import { ApiError } from '../../../external/api';
-import { useUpdateNewsletter } from '../../../hooks/newsletters';
+import {
+  useGetUserNewsletter,
+  useUpdateNewsletter,
+} from '../../../hooks/newsletters';
 import { useGetUserSubscription } from '../../../hooks/subscriptions';
 import {
   Button,
@@ -25,6 +29,8 @@ interface NewsletterSettingsFormValues {
 
 export const Newsletter = () => {
   const { isLoading, data: userSubscription } = useGetUserSubscription();
+  const { data: userNewsletter, refetch: refetchUserNewsletter } =
+    useGetUserNewsletter();
   const { mutate: updateNewsletter, isLoading: isLoadingUpdateNewsletter } =
     useUpdateNewsletter({
       onError: (error: Error | ApiError) => {
@@ -33,7 +39,10 @@ export const Newsletter = () => {
           errorMessage = error.body.message;
         }
         toast.error(errorMessage);
-        formik.setSubmitting(false);
+      },
+      onSuccess: async () => {
+        await refetchUserNewsletter();
+        toast.success('Newsletter configuration updated!');
       },
     });
 
@@ -48,9 +57,9 @@ export const Newsletter = () => {
   const formik = useFormik<NewsletterSettingsFormValues>({
     validateOnChange: false,
     initialValues: {
-      enabled: true,
-      apiKey: '',
-      apiSecret: '',
+      enabled: userNewsletter ? userNewsletter.enabled : true,
+      apiKey: userNewsletter ? userNewsletter.mailjetApikey : '',
+      apiSecret: userNewsletter ? userNewsletter.mailjetApiSecret : '',
     },
     validate: (values) => {
       const errors: FormikErrors<NewsletterSettingsFormValues> = {};
@@ -62,14 +71,26 @@ export const Newsletter = () => {
       }
       return errors;
     },
-    onSubmit: async (values, { setSubmitting }) => {
+    onSubmit: async (values) => {
       updateNewsletter({
         enabled: values.enabled,
-        apiKey: values.apiKey,
-        apiSecret: values.apiSecret,
+        apiKey: values.apiKey.trim(),
+        apiSecret: values.apiSecret.trim(),
       });
     },
   });
+
+  useEffect(() => {
+    if (userNewsletter) {
+      formik.resetForm({
+        values: {
+          enabled: userNewsletter.enabled,
+          apiKey: userNewsletter.mailjetApikey,
+          apiSecret: userNewsletter.mailjetApiSecret,
+        },
+      });
+    }
+  }, [userNewsletter]);
 
   if (isLoading) {
     return <SettingsLayout layout="wide">Loading...</SettingsLayout>;
@@ -185,7 +206,11 @@ export const Newsletter = () => {
           ></iframe>
         </Flex>
 
-        {formik.dirty && <UnsavedChanges saving={formik.isSubmitting} />}
+        {formik.dirty && (
+          <UnsavedChanges
+            saving={formik.isSubmitting || isLoadingUpdateNewsletter}
+          />
+        )}
       </form>
     </SettingsLayout>
   );
