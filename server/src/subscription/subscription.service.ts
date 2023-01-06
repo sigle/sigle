@@ -1,11 +1,15 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { cvToJSON, uintCV } from 'micro-stacks/clarity';
 import { callReadOnlyFunction } from 'micro-stacks/transactions';
+import { PosthogService } from '../posthog/posthog.service';
 import { PrismaService } from '../prisma/prisma.service';
 
 @Injectable()
 export class SubscriptionService {
-  constructor(private prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly posthog: PosthogService,
+  ) {}
 
   async getUserActiveSubscription({
     stacksAddress,
@@ -57,7 +61,10 @@ export class SubscriptionService {
     // If NFT is already linked to another user, we downgrade the subscription of the other user
     // so the NFT id can be used again
     const existingSubscriptionForNFT = await this.prisma.subscription.findFirst(
-      { select: { id: true }, where: { status: 'ACTIVE', nftId } },
+      {
+        select: { id: true, user: { select: { stacksAddress: true } } },
+        where: { status: 'ACTIVE', nftId },
+      },
     );
     if (existingSubscriptionForNFT) {
       await this.prisma.subscription.update({
@@ -65,6 +72,15 @@ export class SubscriptionService {
         data: {
           status: 'INACTIVE',
           downgradedAt: new Date(),
+        },
+      });
+
+      this.posthog.capture({
+        distinctId: existingSubscriptionForNFT.user.stacksAddress,
+        event: 'subscription downgraded',
+        properties: {
+          subscriptionId: existingSubscriptionForNFT.id,
+          nftId,
         },
       });
     }
@@ -81,6 +97,7 @@ export class SubscriptionService {
     });
     // When an active subscription is found, we just update the NFT linked to it.
     if (activeSubscription) {
+      const prevNftId = activeSubscription.nftId;
       activeSubscription = await this.prisma.subscription.update({
         select: {
           id: true,
@@ -93,6 +110,16 @@ export class SubscriptionService {
           nftId,
         },
       });
+
+      this.posthog.capture({
+        distinctId: stacksAddress,
+        event: 'subscription updated',
+        properties: {
+          subscriptionId: activeSubscription.id,
+          prevNftId,
+          nftId,
+        },
+      });
     } else {
       activeSubscription = await this.prisma.subscription.create({
         select: {
@@ -102,6 +129,15 @@ export class SubscriptionService {
         data: {
           userId: user.id,
           status: 'ACTIVE',
+          nftId,
+        },
+      });
+
+      this.posthog.capture({
+        distinctId: stacksAddress,
+        event: 'subscription created',
+        properties: {
+          subscriptionId: activeSubscription.id,
           nftId,
         },
       });

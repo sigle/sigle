@@ -6,6 +6,7 @@ import { allowedNewsletterUsers } from '../utils';
 import { PrismaService } from '../prisma/prisma.service';
 import { StacksService } from '../stacks/stacks.service';
 import { EmailService } from '../email/email.service';
+import { PosthogService } from '../posthog/posthog.service';
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const Mailjet = require('node-mailjet');
 
@@ -14,6 +15,7 @@ export class StoriesService {
   constructor(
     @InjectSentry() private readonly sentryService: SentryService,
     private readonly prisma: PrismaService,
+    private readonly posthog: PosthogService,
     private readonly stacksService: StacksService,
     private readonly emailService: EmailService,
   ) {}
@@ -92,6 +94,15 @@ export class StoriesService {
       },
       update: {
         publishedAt: new Date(),
+      },
+    });
+
+    this.posthog.capture({
+      distinctId: stacksAddress,
+      event: 'story published',
+      properties: {
+        storyId: story.id,
+        gaiaId: gaiaId,
       },
     });
 
@@ -195,6 +206,15 @@ export class StoriesService {
           sentAt: new Date(),
         },
       });
+
+      this.posthog.capture({
+        distinctId: stacksAddress,
+        event: 'newsletter sent',
+        properties: {
+          storyId: story.id,
+          gaiaId: gaiaId,
+        },
+      });
     }
   }
 
@@ -206,6 +226,7 @@ export class StoriesService {
     gaiaId: string;
   }) {
     const story = await this.prisma.story.findFirst({
+      select: { id: true },
       where: {
         user: { stacksAddress: stacksAddress },
         gaiaId: gaiaId,
@@ -216,6 +237,15 @@ export class StoriesService {
       await this.prisma.story.update({
         where: { id: story.id },
         data: { unpublishedAt: new Date() },
+      });
+
+      this.posthog.capture({
+        distinctId: stacksAddress,
+        event: 'story unpublished',
+        properties: {
+          storyId: story.id,
+          gaiaId: gaiaId,
+        },
       });
     }
   }
@@ -228,6 +258,7 @@ export class StoriesService {
     gaiaId: string;
   }) {
     const story = await this.prisma.story.findFirst({
+      select: { id: true },
       where: {
         user: { stacksAddress: stacksAddress },
         gaiaId: gaiaId,
@@ -238,6 +269,15 @@ export class StoriesService {
       await this.prisma.story.update({
         where: { id: story.id },
         data: { deletedAt: new Date() },
+      });
+
+      this.posthog.capture({
+        distinctId: stacksAddress,
+        event: 'story deleted',
+        properties: {
+          storyId: story.id,
+          gaiaId: gaiaId,
+        },
       });
     }
   }

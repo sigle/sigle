@@ -82,6 +82,7 @@ importers:
       next-auth: 4.10.3
       node-mailjet: 5.1.1
       nodemailer: 6.8.0
+      posthog-node: 2.2.3
       prettier: 2.8.1
       prisma: 4.3.1
       redis: 3.1.2
@@ -126,6 +127,7 @@ importers:
       next-auth: 4.10.3_nodemailer@6.8.0
       node-mailjet: 5.1.1
       nodemailer: 6.8.0
+      posthog-node: 2.2.3
       prisma: 4.3.1
       redis: 3.1.2
       reflect-metadata: 0.1.13
@@ -12048,6 +12050,15 @@ packages:
       '@sentry/types': 7.12.1
       fflate: 0.4.8
       rrweb-snapshot: 1.1.14
+    dev: false
+
+  /posthog-node/2.2.3:
+    resolution: {integrity: sha512-dYlLZhrDus+uRov/Hh+EiRlMoMhRKchNjNa7mNE2iWmKg/ryOTipf0XYKS9UKdki7aU1NzWFhnLe11HF615XuA==}
+    engines: {node: '>=14.17.0'}
+    dependencies:
+      axios: 0.27.2
+    transitivePeerDependencies:
+      - debug
     dev: false
 
   /preact-render-to-string/5.2.0_preact@10.7.2:

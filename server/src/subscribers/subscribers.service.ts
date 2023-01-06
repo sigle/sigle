@@ -8,13 +8,17 @@ import {
   ContactSubscription,
 } from 'node-mailjet';
 import { allowedNewsletterUsers } from '../utils';
+import { PosthogService } from '../posthog/posthog.service';
 // Mailjet API https://dev.mailjet.com/email/reference/overview/authentication/
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const Mailjet = require('node-mailjet');
 
 @Injectable()
 export class SubscribersService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly posthog: PosthogService,
+  ) {}
 
   async create({ stacksAddress, email }: CreateSubscriberDto) {
     // TODO - remove this check once newsletter feature is ready
@@ -98,6 +102,14 @@ export class SubscribersService {
         .action('managecontactslists')
         .request(contactList);
     }
+
+    this.posthog.capture({
+      distinctId: stacksAddress,
+      event: 'subscriber created',
+      properties: {
+        subscribedTo: stacksAddress,
+      },
+    });
 
     return {
       createdAt: new Date(),
