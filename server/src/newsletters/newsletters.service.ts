@@ -105,6 +105,10 @@ export class NewslettersService {
     });
   }
 
+  /**
+   * Sync the sender email with the one in Mailjet.
+   * This is required because the sender email can be changed in Mailjet.
+   */
   async syncSender({
     stacksAddress,
   }: {
@@ -126,6 +130,7 @@ export class NewslettersService {
             id: true,
             mailjetApiKey: true,
             mailjetApiSecret: true,
+            senderEmail: true,
           },
         },
       },
@@ -149,10 +154,25 @@ export class NewslettersService {
     )[0];
     if (!activeSender) {
       throw new BadRequestException(
-        'No sender found, please add one in mailjet.',
+        'No sender found, please add one in Mailjet.',
       );
     }
-    console.log(activeSender);
+
+    if (user.newsletter.senderEmail !== activeSender.Email) {
+      await this.prisma.newsletter.update({
+        where: { userId: user.id },
+        data: {
+          senderEmail: activeSender.Email,
+          status: 'ACTIVE',
+        },
+      });
+
+      this.posthog.capture({
+        distinctId: stacksAddress,
+        event: 'newsletter sender updated',
+        properties: {},
+      });
+    }
   }
 
   /**
