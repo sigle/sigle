@@ -122,6 +122,12 @@ export class UserService {
           },
           take: 1,
         },
+        newsletter: {
+          select: {
+            id: true,
+            status: true,
+          },
+        },
       },
     });
 
@@ -160,6 +166,8 @@ export class UserService {
           subscription: user.subscriptions[0],
           followersCount: user._count.followers,
           followingCount: user._count.following,
+          newsletter:
+            user.newsletter?.status === 'ACTIVE' ? user.newsletter : null,
         }
       : null;
   }

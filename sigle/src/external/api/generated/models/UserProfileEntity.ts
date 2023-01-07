@@ -2,6 +2,7 @@
 /* tslint:disable */
 /* eslint-disable */
 
+import type { PublicNewsletterEntity } from './PublicNewsletterEntity';
 import type { SubscriptionDto } from './SubscriptionDto';
 
 export type UserProfileEntity = {
@@ -9,5 +10,6 @@ export type UserProfileEntity = {
   stacksAddress: string;
   followersCount: number;
   followingCount: number;
-  subscription: SubscriptionDto;
+  subscription: SubscriptionDto | null;
+  newsletter: PublicNewsletterEntity | null;
 };
