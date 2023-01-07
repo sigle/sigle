@@ -4,7 +4,7 @@
 
 import type { SubscriptionDto } from './SubscriptionDto';
 
-export type UserProfileDto = {
+export type UserProfileEntity = {
   id: string;
   stacksAddress: string;
   followersCount: number;

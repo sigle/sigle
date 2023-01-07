@@ -22,7 +22,7 @@ import { DeleteUserFollowDto } from './dto/deleteUserFollow.dto';
 import { ExploreQuery } from './dto/exploreQuery.dto';
 import { ExploreResponse } from './dto/exploreResponse.dto';
 import { ExploreUser } from './dto/exploreUser.dto';
-import { UserProfileDto } from './dto/userProfile.dto';
+import { UserProfileEntity } from './entities/userProfile.entity';
 import { UserService } from './user.service';
 
 @ApiTags('user')
@@ -61,13 +61,13 @@ export class UserController {
     description: 'Return a user for a given stacks address.',
   })
   @ApiOkResponse({
-    type: UserProfileDto,
+    type: UserProfileEntity,
   })
   @Get('/api/users/:userAddress')
   getUser(
     @Request() request,
     @Param('userAddress') userAddress: string,
-  ): Promise<UserProfileDto> {
+  ): Promise<UserProfileEntity> {
     return this.userService.getUser({ request, userAddress });
   }
 
