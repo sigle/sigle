@@ -116,6 +116,7 @@ describe('UserController (e2e)', () => {
         stacksAddress,
         followersCount: 2,
         followingCount: 1,
+        newsletter: null,
       });
     });
   });
