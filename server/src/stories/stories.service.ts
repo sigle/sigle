@@ -67,9 +67,6 @@ export class StoriesService {
       },
       where: { stacksAddress },
     });
-    if (!user.newsletter || user.newsletter.status !== 'ACTIVE') {
-      throw new BadRequestException('Newsletter not setup.');
-    }
 
     let story = await this.prisma.story.findFirst({
       select: {
@@ -112,6 +109,9 @@ export class StoriesService {
       // Limit who can access this feature
       if (!allowedNewsletterUsers.includes(stacksAddress)) {
         throw new BadRequestException('Not activated.');
+      }
+      if (!user.newsletter || user.newsletter.status !== 'ACTIVE') {
+        throw new BadRequestException('Newsletter not setup.');
       }
       if (story.sentAt) {
         // Newsletter already exists, do not send it again
