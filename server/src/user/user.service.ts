@@ -167,7 +167,9 @@ export class UserService {
           followersCount: user._count.followers,
           followingCount: user._count.following,
           newsletter:
-            user.newsletter?.status === 'ACTIVE' ? user.newsletter : null,
+            user.newsletter?.status === 'ACTIVE'
+              ? { id: user.newsletter.id }
+              : null,
         }
       : null;
   }
