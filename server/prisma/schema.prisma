@@ -59,6 +59,7 @@ model Newsletter {
   mailjetApiSecret   String
   mailjetListId      Int
   mailjetListAddress String
+  senderEmail        String?
   status             NewsletterStatus
   userId             String           @unique
   createdAt          DateTime         @default(now())

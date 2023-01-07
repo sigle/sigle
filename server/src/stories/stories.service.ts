@@ -57,15 +57,17 @@ export class StoriesService {
         newsletter: {
           select: {
             id: true,
+            status: true,
             mailjetApiKey: true,
             mailjetApiSecret: true,
             mailjetListAddress: true,
+            senderEmail: true,
           },
         },
       },
       where: { stacksAddress },
     });
-    if (!user.newsletter) {
+    if (!user.newsletter || user.newsletter.status !== 'ACTIVE') {
       throw new BadRequestException('Newsletter not setup.');
     }
 
@@ -149,8 +151,7 @@ export class StoriesService {
         Messages: [
           {
             From: {
-              // TODO take it from user preference
-              Email: 'leo@sigle.io',
+              Email: user.newsletter.senderEmail,
               Name: publicSettings.siteName || username,
             },
             To: [

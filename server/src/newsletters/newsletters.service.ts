@@ -1,5 +1,5 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
-import { ContactList } from 'node-mailjet';
+import { ContactList, Sender } from 'node-mailjet';
 import { SubscriptionService } from '../subscription/subscription.service';
 import { PrismaService } from '../prisma/prisma.service';
 import { PosthogService } from '../posthog/posthog.service';
@@ -21,26 +21,25 @@ export class NewslettersService {
         status: true,
         mailjetApiKey: true,
         mailjetApiSecret: true,
+        senderEmail: true,
       },
       where: { user: { stacksAddress } },
     });
     return newsletter
       ? {
-          enabled: newsletter.status === 'ACTIVE',
           mailjetApiKey: newsletter.mailjetApiKey,
           mailjetApiSecret: newsletter.mailjetApiSecret,
+          senderEmail: newsletter.senderEmail,
         }
       : null;
   }
 
   async update({
     stacksAddress,
-    enabled,
     apiKey,
     apiSecret,
   }: {
     stacksAddress: string;
-    enabled: boolean;
     apiKey: string;
     apiSecret: string;
   }): Promise<void> {
@@ -52,7 +51,7 @@ export class NewslettersService {
       throw new BadRequestException('No active subscription.');
     }
 
-    const user = await this.prisma.user.findFirstOrThrow({
+    const user = await this.prisma.user.findUniqueOrThrow({
       select: {
         id: true,
         newsletter: {
@@ -62,6 +61,7 @@ export class NewslettersService {
             mailjetApiSecret: true,
             mailjetListId: true,
             mailjetListAddress: true,
+            senderEmail: true,
           },
         },
       },
@@ -70,7 +70,9 @@ export class NewslettersService {
 
     const upsertData = {
       userId: user.id,
-      status: enabled ? ('ACTIVE' as const) : ('INACTIVE' as const),
+      status: user.newsletter?.senderEmail
+        ? ('ACTIVE' as const)
+        : ('INACTIVE' as const),
       mailjetApiKey: apiKey,
       mailjetApiSecret: apiSecret,
       mailjetListId: user.newsletter?.mailjetListId ?? 0,
@@ -106,6 +108,76 @@ export class NewslettersService {
         hasMailjetConfigChanged,
       },
     });
+  }
+
+  /**
+   * Sync the sender email with the one in Mailjet.
+   * This is required because the sender email can be changed in Mailjet.
+   */
+  async syncSender({
+    stacksAddress,
+  }: {
+    stacksAddress: string;
+  }): Promise<void> {
+    const activeSubscription =
+      await this.subscriptionService.getUserActiveSubscription({
+        stacksAddress,
+      });
+    if (!activeSubscription) {
+      throw new BadRequestException('No active subscription.');
+    }
+
+    const user = await this.prisma.user.findUniqueOrThrow({
+      select: {
+        id: true,
+        newsletter: {
+          select: {
+            id: true,
+            mailjetApiKey: true,
+            mailjetApiSecret: true,
+            senderEmail: true,
+          },
+        },
+      },
+      where: { stacksAddress },
+    });
+    if (!user.newsletter) {
+      throw new BadRequestException('Newsletter not setup.');
+    }
+
+    const mailjet = new Mailjet({
+      apiKey: user.newsletter.mailjetApiKey,
+      apiSecret: user.newsletter.mailjetApiSecret,
+    });
+
+    const data: { body: Sender.TGetSenderResponse } = await mailjet
+      .get('sender', { version: 'v3' })
+      .request();
+
+    const activeSender = data.body.Data.filter(
+      (sender) => sender.Status === 'Active',
+    )[0];
+    if (!activeSender) {
+      throw new BadRequestException(
+        'No sender found, please add one in Mailjet.',
+      );
+    }
+
+    if (user.newsletter.senderEmail !== activeSender.Email) {
+      await this.prisma.newsletter.update({
+        where: { userId: user.id },
+        data: {
+          senderEmail: activeSender.Email,
+          status: 'ACTIVE',
+        },
+      });
+
+      this.posthog.capture({
+        distinctId: stacksAddress,
+        event: 'newsletter sender updated',
+        properties: {},
+      });
+    }
   }
 
   /**

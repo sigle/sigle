@@ -35,9 +35,17 @@ export class NewslettersController {
   update(@Request() req, @Body() updateNewsletterDto: UpdateNewsletterDto) {
     return this.newslettersService.update({
       stacksAddress: req.user.stacksAddress,
-      enabled: updateNewsletterDto.enabled,
       apiKey: updateNewsletterDto.apiKey,
       apiSecret: updateNewsletterDto.apiSecret,
+    });
+  }
+
+  @UseGuards(AuthGuard)
+  @Post('/api/newsletters/sender')
+  @HttpCode(200)
+  syncSender(@Request() req) {
+    return this.newslettersService.syncSender({
+      stacksAddress: req.user.stacksAddress,
     });
   }
 }
