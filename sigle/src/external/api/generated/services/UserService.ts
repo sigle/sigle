@@ -4,8 +4,8 @@
 import type { CreateUserFollowDto } from '../models/CreateUserFollowDto';
 import type { DeleteUserFollowDto } from '../models/DeleteUserFollowDto';
 import type { ExploreResponse } from '../models/ExploreResponse';
-import type { ExploreUser } from '../models/ExploreUser';
-import type { UserProfileDto } from '../models/UserProfileDto';
+import type { UserMeProfileEntity } from '../models/UserMeProfileEntity';
+import type { UserProfileEntity } from '../models/UserProfileEntity';
 
 import type { CancelablePromise } from '../core/CancelablePromise';
 import { OpenAPI } from '../core/OpenAPI';
@@ -33,10 +33,10 @@ export class UserService {
 
   /**
    * Return the current logged in user.
-   * @returns ExploreUser
+   * @returns UserMeProfileEntity
    * @throws ApiError
    */
-  public static userControllerGetUserMe(): CancelablePromise<ExploreUser> {
+  public static userControllerGetUserMe(): CancelablePromise<UserMeProfileEntity> {
     return __request(OpenAPI, {
       method: 'GET',
       url: '/api/users/me',
@@ -45,14 +45,14 @@ export class UserService {
 
   /**
    * Return a user for a given stacks address.
-   * @returns UserProfileDto
+   * @returns UserProfileEntity
    * @throws ApiError
    */
   public static userControllerGetUser({
     userAddress,
   }: {
     userAddress: string;
-  }): CancelablePromise<UserProfileDto> {
+  }): CancelablePromise<UserProfileEntity> {
     return __request(OpenAPI, {
       method: 'GET',
       url: '/api/users/{userAddress}',

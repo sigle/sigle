@@ -14,7 +14,6 @@ import { isValidEmail } from '../../utils/regex';
 import { toast } from 'react-toastify';
 import { useCreateSubscribers } from '../../hooks/subscribers';
 import { ApiError } from '../../external/api';
-import { allowedNewsletterUsers } from '../../config';
 
 interface NewsletterFrameProps {
   stacksAddress: string;
@@ -85,10 +84,6 @@ export const NewsletterFrame = ({
         formik.setSubmitting(false);
       },
     });
-
-  if (!allowedNewsletterUsers.includes(stacksAddress)) {
-    return null;
-  }
 
   return (
     <Flex direction="column" gap="7">

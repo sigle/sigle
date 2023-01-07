@@ -1,11 +1,14 @@
-import { ArrowLeftIcon } from '@radix-ui/react-icons';
+import { ArrowLeftIcon, CheckCircledIcon } from '@radix-ui/react-icons';
+import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import { allowedNewsletterUsers } from '../../config';
 import { useGetStory } from '../../hooks/stories';
 import { useGetUserSubscription } from '../../hooks/subscriptions';
+import { useGetUserMe } from '../../hooks/users';
 import { styled } from '../../stitches.config';
 import { Story } from '../../types';
 import {
+  Box,
   Button,
   Container,
   Dialog,
@@ -16,9 +19,6 @@ import {
   TabsContent,
   TabsList,
   TabsTrigger,
-  Tooltip,
-  TooltipContent,
-  TooltipTrigger,
   Typography,
 } from '../../ui';
 import { VisuallyHidden } from '../../ui/VisuallyHidden';
@@ -26,7 +26,7 @@ import { useAuth } from '../auth/AuthContext';
 import { PublishAndSendDialog } from './PublishAndSendDialog';
 import { TwitterCardPreview } from './TwitterCardPreview';
 
-const StyledTrigger = styled(TabsTrigger, {
+const StyledTabsTrigger = styled(TabsTrigger, {
   br: '$3',
   px: '$5',
   py: '$3',
@@ -98,13 +98,11 @@ export const PublishDialog = ({
   onEditPreview,
 }: PublishDialogProps) => {
   const { user } = useAuth();
-  const newsletterActivated = allowedNewsletterUsers.includes(
-    user?.profile.stxAddress.mainnet || ''
-  );
+  const { data: userMe } = useGetUserMe();
   const { data: userSubscription } = useGetUserSubscription();
   const { data: storyApi } = useGetStory({ storyId: story.id });
   const [tabValue, setTabValue] = useState<'publish only' | 'publish and send'>(
-    newsletterActivated ? 'publish and send' : 'publish only'
+    'publish only'
   );
   const [showPublishAndSendDialog, setShowPublishAndSendDialog] =
     useState(false);
@@ -126,6 +124,13 @@ export const PublishDialog = ({
 
   const handleCancelPublishAndSendDialog = () =>
     setShowPublishAndSendDialog(false);
+
+  const hasActiveSubscription = !!userSubscription;
+  const isNewsletterActive = userMe?.newsletter?.status === 'ACTIVE';
+  const isStoryAlreadySent = !!storyApi?.sentAt;
+  const isNewsletterWhitelisted = allowedNewsletterUsers.includes(
+    user?.profile.stxAddress.mainnet || ''
+  );
 
   return (
     <>
@@ -172,41 +177,28 @@ export const PublishDialog = ({
                   <TabsList
                     css={{
                       alignSelf: 'start',
-                      flexDirection: newsletterActivated
-                        ? 'row-reverse'
-                        : 'row',
+                      flexDirection: isNewsletterActive ? 'row-reverse' : 'row',
                     }}
                   >
-                    <StyledTrigger value="publish only">
+                    <StyledTabsTrigger value="publish only">
                       Publish only
-                    </StyledTrigger>
-                    <Tooltip delayDuration={200}>
-                      <TooltipTrigger asChild>
-                        <div>
-                          <StyledTrigger
-                            disabled={
-                              !!storyApi?.sentAt ||
-                              (!userSubscription && !newsletterActivated)
-                            }
-                            value="publish and send"
-                            css={{
-                              textDecoration:
-                                !!storyApi?.sentAt ||
-                                (!userSubscription && !newsletterActivated)
-                                  ? 'line-through'
-                                  : 'none',
-                            }}
-                          >
-                            Publish and send
-                          </StyledTrigger>
-                        </div>
-                      </TooltipTrigger>
-                      <TooltipContent side="bottom" sideOffset={8}>
-                        {!!storyApi?.sentAt
-                          ? 'You already sent this newsletter'
-                          : 'Coming Soon'}
-                      </TooltipContent>
-                    </Tooltip>
+                    </StyledTabsTrigger>
+                    {(isStoryAlreadySent || !hasActiveSubscription) && (
+                      <StyledTabsTrigger
+                        disabled
+                        value="publish and send"
+                        css={{
+                          textDecoration: 'line-through',
+                        }}
+                      >
+                        Publish and send
+                      </StyledTabsTrigger>
+                    )}
+                    {!isStoryAlreadySent && hasActiveSubscription && (
+                      <StyledTabsTrigger value="publish and send">
+                        Publish and send
+                      </StyledTabsTrigger>
+                    )}
                   </TabsList>
                   <TabsContent
                     css={{
@@ -217,10 +209,59 @@ export const PublishDialog = ({
                     value="publish only"
                   >
                     <Typography css={{ fontWeight: 600 }} size="subheading">
-                      {!!storyApi?.sentAt
+                      {isStoryAlreadySent
                         ? 'You are in “Publish only” mode because you already sent this newsletter to your subscribers.'
                         : 'You\'re in "Publish only" mode.'}
                     </Typography>
+                    {(!hasActiveSubscription || !isNewsletterActive) && (
+                      <div>
+                        <Typography size="subheading">
+                          Start sending emails today:
+                        </Typography>
+                        <Typography size="subheading" css={{ mt: '$3' }}>
+                          1 - Upgrade to the Creator+ plan
+                          {hasActiveSubscription && (
+                            <Box
+                              as="span"
+                              css={{
+                                color: '$green11',
+                                display: 'inline-block',
+                                ml: '$2',
+                              }}
+                            >
+                              <CheckCircledIcon />
+                            </Box>
+                          )}
+                        </Typography>
+                        {!hasActiveSubscription && (
+                          <Link href="/settings/plans" target="_blank">
+                            <Button variant="subtle" css={{ mt: '$2' }}>
+                              Upgrade
+                            </Button>
+                          </Link>
+                        )}
+
+                        <Typography size="subheading" css={{ mt: '$3' }}>
+                          2 - Activate the newsletter feature
+                        </Typography>
+                        {!isNewsletterWhitelisted && (
+                          <Typography
+                            size="subheading"
+                            css={{ color: '$gray9', mt: '$2' }}
+                          >
+                            You need to be whitelisted to activate the
+                            newsletter feature.
+                          </Typography>
+                        )}
+                        {!isNewsletterActive && isNewsletterWhitelisted && (
+                          <Link href="/settings/newsletter" target="_blank">
+                            <Button variant="subtle" css={{ mt: '$2' }}>
+                              Activate
+                            </Button>
+                          </Link>
+                        )}
+                      </div>
+                    )}
                   </TabsContent>
                 </Tabs>
               </Flex>

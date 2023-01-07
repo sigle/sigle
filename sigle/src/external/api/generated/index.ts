@@ -16,13 +16,15 @@ export type { ExploreResponse } from './models/ExploreResponse';
 export type { ExploreUser } from './models/ExploreUser';
 export type { HistoricalDto } from './models/HistoricalDto';
 export type { NewsletterEntity } from './models/NewsletterEntity';
+export type { PublicNewsletterEntity } from './models/PublicNewsletterEntity';
 export type { PublishStoryDto } from './models/PublishStoryDto';
 export type { ReferrerDto } from './models/ReferrerDto';
 export type { StoryDto } from './models/StoryDto';
 export type { SubscriptionDto } from './models/SubscriptionDto';
 export type { UnpublishStoryDto } from './models/UnpublishStoryDto';
 export type { UpdateNewsletterDto } from './models/UpdateNewsletterDto';
-export type { UserProfileDto } from './models/UserProfileDto';
+export type { UserMeProfileEntity } from './models/UserMeProfileEntity';
+export type { UserProfileEntity } from './models/UserProfileEntity';
 
 export { AnalyticsService } from './services/AnalyticsService';
 export { DefaultService } from './services/DefaultService';

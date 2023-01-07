@@ -77,6 +77,12 @@ export class UserService {
     const userSelectFields = {
       id: true,
       stacksAddress: true,
+      newsletter: {
+        select: {
+          id: true,
+          status: true,
+        },
+      },
     };
     let loggedInUser = await this.prisma.user.findUnique({
       where: { stacksAddress },
@@ -122,6 +128,12 @@ export class UserService {
           },
           take: 1,
         },
+        newsletter: {
+          select: {
+            id: true,
+            status: true,
+          },
+        },
       },
     });
 
@@ -160,6 +172,10 @@ export class UserService {
           subscription: user.subscriptions[0],
           followersCount: user._count.followers,
           followingCount: user._count.following,
+          newsletter:
+            user.newsletter?.status === 'ACTIVE'
+              ? { id: user.newsletter.id }
+              : null,
         }
       : null;
   }

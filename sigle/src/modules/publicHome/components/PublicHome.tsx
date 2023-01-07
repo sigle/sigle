@@ -19,7 +19,7 @@ import {
   TooltipContent,
   IconButton,
 } from '../../../ui';
-import { allowedNewsletterUsers, sigleConfig } from '../../../config';
+import { sigleConfig } from '../../../config';
 import { styled } from '../../../stitches.config';
 import { useAuth } from '../../auth/AuthContext';
 import {
@@ -318,7 +318,7 @@ export const PublicHome = ({ file, settings, userInfo }: PublicHomeProps) => {
                     Unfollow
                   </Button>
                 )}
-                {allowedNewsletterUsers.includes(userInfo.address) && (
+                {userInfoByAddress?.newsletter && (
                   <IconButton
                     color="orange"
                     variant="solid"

@@ -16,6 +16,7 @@ import { ShareButtons } from './ShareButtons';
 import { generateAvatar } from '../../utils/boringAvatar';
 import { ProfileCard } from '../profileCard/ProfileCard';
 import { PoweredBy } from './PoweredBy';
+import { useGetUserByAddress } from '../../hooks/users';
 
 const ProfileImageContainer = styled('div', {
   cursor: 'pointer',
@@ -117,6 +118,7 @@ export const PublicStory = ({
     username: string;
     storyId: string;
   };
+  const { data: userInfoByAddress } = useGetUserByAddress(userInfo.address);
 
   const storyReadingTime = useMemo(
     () =>
@@ -251,7 +253,12 @@ export const PublicStory = ({
           story={story}
           settings={settings}
         />
-        <NewsletterFrame stacksAddress={userInfo.address} siteName={siteName} />
+        {userInfoByAddress?.newsletter && (
+          <NewsletterFrame
+            stacksAddress={userInfo.address}
+            siteName={siteName}
+          />
+        )}
         <PoweredBy />
       </PublicStoryContainer>
     </>

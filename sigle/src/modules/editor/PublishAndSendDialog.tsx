@@ -52,7 +52,12 @@ export const PublishAndSendDialog = ({
           </Flex>
         </DialogDescription>
         <Flex justify="end" gap="6" css={{ mt: '$5' }}>
-          <Button size="lg" disabled={loading} onClick={onClose}>
+          <Button
+            size="lg"
+            variant="ghost"
+            disabled={loading}
+            onClick={onClose}
+          >
             Cancel
           </Button>
           <Button
