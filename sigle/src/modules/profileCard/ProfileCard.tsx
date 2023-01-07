@@ -24,7 +24,7 @@ import {
   useUserUnfollow,
 } from '../../hooks/appData';
 import { useTheme } from 'next-themes';
-import { allowedNewsletterUsers, sigleConfig } from '../../config';
+import { sigleConfig } from '../../config';
 import { useState } from 'react';
 import { LoginModal } from '../loginModal/LoginModal';
 import { EnvelopePlusIcon } from '../../icons/EnvelopPlusIcon';
@@ -157,7 +157,7 @@ export const ProfileCard = ({
                   Unfollow
                 </Button>
               )}
-              {allowedNewsletterUsers.includes(userInfo.address) && (
+              {userInfoByAddress?.newsletter && (
                 <IconButton
                   size="sm"
                   color="orange"
