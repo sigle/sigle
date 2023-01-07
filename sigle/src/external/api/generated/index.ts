@@ -23,6 +23,7 @@ export type { StoryDto } from './models/StoryDto';
 export type { SubscriptionDto } from './models/SubscriptionDto';
 export type { UnpublishStoryDto } from './models/UnpublishStoryDto';
 export type { UpdateNewsletterDto } from './models/UpdateNewsletterDto';
+export type { UserMeProfileEntity } from './models/UserMeProfileEntity';
 export type { UserProfileEntity } from './models/UserProfileEntity';
 
 export { AnalyticsService } from './services/AnalyticsService';

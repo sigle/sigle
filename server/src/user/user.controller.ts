@@ -21,7 +21,7 @@ import { CreateUserFollowDto } from './dto/createUserFollow.dto';
 import { DeleteUserFollowDto } from './dto/deleteUserFollow.dto';
 import { ExploreQuery } from './dto/exploreQuery.dto';
 import { ExploreResponse } from './dto/exploreResponse.dto';
-import { ExploreUser } from './dto/exploreUser.dto';
+import { UserMeProfileEntity } from './entities/userMeProfile.entity';
 import { UserProfileEntity } from './entities/userProfile.entity';
 import { UserService } from './user.service';
 
@@ -47,11 +47,11 @@ export class UserController {
   })
   @ApiBearerAuth()
   @ApiOkResponse({
-    type: ExploreUser,
+    type: UserMeProfileEntity,
   })
   @UseGuards(AuthGuard)
   @Get('/api/users/me')
-  getUserMe(@Request() req): Promise<ExploreUser> {
+  getUserMe(@Request() req): Promise<UserMeProfileEntity> {
     return this.userService.getUserMe({
       stacksAddress: req.user.stacksAddress,
     });

@@ -4,4 +4,5 @@
 
 export type PublicNewsletterEntity = {
   id: string;
+  status: string;
 };

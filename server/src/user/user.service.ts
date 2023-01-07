@@ -77,6 +77,12 @@ export class UserService {
     const userSelectFields = {
       id: true,
       stacksAddress: true,
+      newsletter: {
+        select: {
+          id: true,
+          status: true,
+        },
+      },
     };
     let loggedInUser = await this.prisma.user.findUnique({
       where: { stacksAddress },
