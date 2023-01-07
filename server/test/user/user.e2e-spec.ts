@@ -89,6 +89,7 @@ describe('UserController (e2e)', () => {
       expect(JSON.parse(result.payload)).toEqual({
         id: expect.any(String),
         stacksAddress,
+        newsletter: null,
       });
     });
   });
