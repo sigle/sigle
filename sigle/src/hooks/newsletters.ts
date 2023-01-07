@@ -35,3 +35,14 @@ export const useUpdateNewsletter = (
       }),
     options
   );
+
+type PostApiSenderNewsletterReturnType = Awaited<
+  ReturnType<typeof NewslettersService.newslettersControllerSyncSender>
+>;
+export const useSyncSenderNewsletter = (
+  options: UseMutationOptions<PostApiSenderNewsletterReturnType, Error> = {}
+) =>
+  useMutation<PostApiSenderNewsletterReturnType, Error>(
+    () => NewslettersService.newslettersControllerSyncSender(),
+    options
+  );

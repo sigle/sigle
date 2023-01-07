@@ -13,7 +13,6 @@ const UnsavedChangesContainer = styled('div', {
   px: '$5',
   py: '$3',
   overflow: 'hidden',
-  mt: '$8',
 
   [`.${darkTheme} &`]: {
     boxShadow:

@@ -36,4 +36,15 @@ export class NewslettersService {
       mediaType: 'application/json',
     });
   }
+
+  /**
+   * @returns any
+   * @throws ApiError
+   */
+  public static newslettersControllerSyncSender(): CancelablePromise<any> {
+    return __request(OpenAPI, {
+      method: 'POST',
+      url: '/api/newsletters/sender',
+    });
+  }
 }

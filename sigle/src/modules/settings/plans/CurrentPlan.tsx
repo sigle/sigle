@@ -124,7 +124,7 @@ export const CurrentPlan = () => {
       ) : null}
 
       {!isLoading && !isError ? (
-        <Box css={{ mt: '$2', borderRadius: '$3', border: '1px solid $gray7' }}>
+        <Box css={{ mt: '$2', br: '$4', border: '1px solid $gray7' }}>
           <Flex
             align="center"
             gap="5"
@@ -132,8 +132,8 @@ export const CurrentPlan = () => {
               background: '$gray2',
               borderBottom: '1px solid $gray7',
               padding: '$3',
-              borderTopLeftRadius: '$3',
-              borderTopRightRadius: '$3',
+              borderTopLeftRadius: '$4',
+              borderTopRightRadius: '$4',
             }}
           >
             {currentPlan === 'starter' ? (
@@ -185,7 +185,7 @@ export const CurrentPlan = () => {
             justify="between"
             css={{
               mt: '$2',
-              borderRadius: '$3',
+              br: '$4',
               border: '1px solid $gray7',
               background: '$gray2',
               padding: '$3',
@@ -195,7 +195,7 @@ export const CurrentPlan = () => {
               <Box
                 as="img"
                 src={`${NFTImageURL}/${userSubscription?.nftId}.png&size=170`}
-                css={{ width: 92, height: 92, borderRadius: '$3' }}
+                css={{ width: 92, height: 92, br: '$4' }}
               />
               <Flex direction="column" gap="1" css={{ ml: '$5' }}>
                 <Typography size="h4" css={{ fontWeight: 600 }}>
