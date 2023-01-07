@@ -28,6 +28,8 @@ export const allowedNewsletterUsers = [
   'SP3VCX5NFQ8VCHFS9M6N40ZJNVTRT4HZ62WFH5C4Q',
   // quentin.btc
   'SP24GYRG3M7T0S6FZE9RVVP9PNNZQJQ614650G590',
+  // Test account
+  'SPRG63HF7QJJ8H7JN0DJQZH2P1FCGYVHPYBXMYGB',
 ];
 if (sigleConfig.env === 'development') {
   // gregogun.btc
