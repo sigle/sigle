@@ -70,7 +70,7 @@ export class NewslettersService {
 
     const upsertData = {
       userId: user.id,
-      status: user.newsletter.senderEmail
+      status: user.newsletter?.senderEmail
         ? ('ACTIVE' as const)
         : ('INACTIVE' as const),
       mailjetApiKey: apiKey,

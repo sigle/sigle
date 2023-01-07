@@ -30,7 +30,13 @@ export const SenderEmail = () => {
   return (
     <>
       <Box
-        css={{ backgroundColor: '$gray2', br: '$4', padding: '$5', mt: '$5' }}
+        css={{
+          backgroundColor: '$gray2',
+          border: '1px solid $gray7',
+          br: '$4',
+          padding: '$5',
+          mt: '$5',
+        }}
       >
         <Typography css={{ fontWeight: 600 }} size="h4">
           Add sender address
