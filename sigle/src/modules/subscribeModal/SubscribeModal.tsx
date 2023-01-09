@@ -186,6 +186,7 @@ export const SubscribeModal = ({
                   size="lg"
                   variant="ghost"
                   color="gray"
+                  type="button"
                   onClick={onClose}
                 >
                   Cancel
