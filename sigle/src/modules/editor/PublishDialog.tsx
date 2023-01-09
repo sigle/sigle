@@ -84,7 +84,7 @@ interface PublishDialogProps {
   story: Story;
   open: boolean;
   loading: boolean;
-  onConfirm: (options?: { send?: boolean }) => void;
+  onConfirm: (options?: { send?: boolean }) => Promise<void>;
   onClose: () => void;
   onEditPreview: () => void;
 }
@@ -100,7 +100,9 @@ export const PublishDialog = ({
   const { user } = useAuth();
   const { data: userMe } = useGetUserMe();
   const { data: userSubscription } = useGetUserSubscription();
-  const { data: storyApi } = useGetStory({ storyId: story.id });
+  const { data: storyApi, refetch: refetchStoryApi } = useGetStory({
+    storyId: story.id,
+  });
   const [tabValue, setTabValue] = useState<'publish only' | 'publish and send'>(
     'publish only'
   );
@@ -108,13 +110,7 @@ export const PublishDialog = ({
     useState(false);
 
   useEffect(() => {
-    if (!open && showPublishAndSendDialog) {
-      setShowPublishAndSendDialog(false);
-    }
-  }, [open]);
-
-  useEffect(() => {
-    if (storyApi && storyApi.sentAt) {
+    if (storyApi && storyApi.email) {
       setTabValue('publish only');
     }
   }, [storyApi]);
@@ -125,9 +121,15 @@ export const PublishDialog = ({
   const handleCancelPublishAndSendDialog = () =>
     setShowPublishAndSendDialog(false);
 
+  const handleConfirmPublishAndSendDialog = async () => {
+    await onConfirm({ send: true });
+    setShowPublishAndSendDialog(false);
+    await refetchStoryApi();
+  };
+
   const hasActiveSubscription = !!userSubscription;
   const isNewsletterActive = userMe?.newsletter?.status === 'ACTIVE';
-  const isStoryAlreadySent = !!storyApi?.sentAt;
+  const isStoryAlreadySent = !!storyApi?.email;
   const isNewsletterWhitelisted = allowedNewsletterUsers.includes(
     user?.profile.stxAddress.mainnet || ''
   );
@@ -320,7 +322,7 @@ export const PublishDialog = ({
         open={showPublishAndSendDialog}
         loading={loading}
         onClose={handleCancelPublishAndSendDialog}
-        onConfirm={() => onConfirm({ send: true })}
+        onConfirm={handleConfirmPublishAndSendDialog}
       />
     </>
   );
