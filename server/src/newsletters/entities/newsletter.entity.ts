@@ -9,4 +9,7 @@ export class NewsletterEntity {
 
   @ApiProperty({ nullable: true })
   senderEmail?: string;
+
+  @ApiProperty()
+  status: string;
 }
