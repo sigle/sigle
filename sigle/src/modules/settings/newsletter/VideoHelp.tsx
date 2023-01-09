@@ -26,7 +26,8 @@ export const VideoHelp = () => {
       </div>
       <iframe
         id="ytplayer"
-        src="https://www.youtube.com/embed/8P3pL__udNM"
+        src="https://www.youtube.com/embed/EAfqx5lx8Ic"
+        allowFullScreen={true}
       ></iframe>
     </Flex>
   );

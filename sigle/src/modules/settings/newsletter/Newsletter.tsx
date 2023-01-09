@@ -20,7 +20,7 @@ import {
 import { NftLockedView } from '../../analytics/NftLockedView';
 import { SettingsLayout } from '../SettingsLayout';
 import { SenderEmail } from './SenderEmail';
-// import { VideoHelp } from './VideoHelp';
+import { VideoHelp } from './VideoHelp';
 
 interface NewsletterSettingsFormValues {
   apiKey: string;
@@ -201,7 +201,7 @@ export const Newsletter = () => {
 
       {userNewsletter && <SenderEmail />}
 
-      {/* <VideoHelp /> */}
+      <VideoHelp />
     </SettingsLayout>
   );
 };
