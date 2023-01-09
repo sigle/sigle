@@ -52,6 +52,8 @@ export const allowedNewsletterUsers = [
   'SP22W7TM6NG3PJ2XVVND2E06D50K3DDNREBTKGFD3',
   // marthafog.btc
   'SP3J4WEWR42Q5919MR8CBV4X4ZC19SSA0Q7PKHZVG',
+  // Expresso
+  'SP0FK47T9271MJX3HEFKA1MEPD4X39J9DCGVXF2D',
 ];
 if (sigleConfig.env === 'development') {
   // gregogun.btc
