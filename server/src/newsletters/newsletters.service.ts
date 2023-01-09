@@ -30,6 +30,7 @@ export class NewslettersService {
           mailjetApiKey: newsletter.mailjetApiKey,
           mailjetApiSecret: newsletter.mailjetApiSecret,
           senderEmail: newsletter.senderEmail,
+          status: newsletter.status,
         }
       : null;
   }
