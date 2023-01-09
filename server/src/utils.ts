@@ -28,6 +28,8 @@ export const allowedNewsletterUsers = [
   'SP1MX63HP0YD1TFAR0J6N6VYN3KVED5AF5JHPH1B7',
   // wampastompa.btc
   'SP22W7TM6NG3PJ2XVVND2E06D50K3DDNREBTKGFD3',
+  // marthafog.btc
+  'SP3J4WEWR42Q5919MR8CBV4X4ZC19SSA0Q7PKHZVG',
 ];
 if (process.env.NODE_ENV === 'development') {
   // gregogun.btc
