@@ -92,7 +92,7 @@ export class SubscribersService {
             {
               ListID: user.newsletter.mailjetListId,
               Action:
-                'addnoforce' as BulkContactManagement.ManageContactsAction.AddNoForce,
+                'addforce' as BulkContactManagement.ManageContactsAction.AddNoForce,
             },
           ],
         };
