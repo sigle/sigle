@@ -109,15 +109,28 @@ export const Newsletter = () => {
           </Typography>
         </div>
         <div>
-          <Button
-            css={{ mt: '$3' }}
-            as="a"
-            href="https://sinchemails.grsm.io/7i0c8m9zrvef-fxdog"
-            target="_blank"
-            variant="subtle"
-          >
-            Create Mailjet account
-          </Button>
+          {(!userNewsletter || userNewsletter.status !== 'ACTIVE') && (
+            <Button
+              css={{ mt: '$3' }}
+              as="a"
+              href="https://sinchemails.grsm.io/7i0c8m9zrvef-fxdog"
+              target="_blank"
+              variant="subtle"
+            >
+              Create Mailjet account
+            </Button>
+          )}
+          {userNewsletter?.status === 'ACTIVE' && (
+            <Button
+              css={{ mt: '$3' }}
+              as="a"
+              href="https://app.mailjet.com"
+              target="_blank"
+              variant="subtle"
+            >
+              Mailjet dashboard
+            </Button>
+          )}
         </div>
       </Flex>
       <form onSubmit={formik.handleSubmit}>
