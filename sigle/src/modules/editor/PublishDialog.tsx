@@ -114,7 +114,7 @@ export const PublishDialog = ({
   }, [open]);
 
   useEffect(() => {
-    if (storyApi && storyApi.sentAt) {
+    if (storyApi && storyApi.email) {
       setTabValue('publish only');
     }
   }, [storyApi]);
@@ -127,7 +127,7 @@ export const PublishDialog = ({
 
   const hasActiveSubscription = !!userSubscription;
   const isNewsletterActive = userMe?.newsletter?.status === 'ACTIVE';
-  const isStoryAlreadySent = !!storyApi?.sentAt;
+  const isStoryAlreadySent = !!storyApi?.email;
   const isNewsletterWhitelisted = allowedNewsletterUsers.includes(
     user?.profile.stxAddress.mainnet || ''
   );

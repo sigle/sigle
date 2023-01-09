@@ -31,9 +31,13 @@ export class StoriesService {
       select: {
         id: true,
         publishedAt: true,
-        sentAt: true,
         unpublishedAt: true,
         deletedAt: true,
+        email: {
+          select: {
+            id: true,
+          },
+        },
       },
       where: {
         user: { stacksAddress: stacksAddress },
@@ -71,7 +75,11 @@ export class StoriesService {
     let story = await this.prisma.story.findFirst({
       select: {
         id: true,
-        sentAt: true,
+        email: {
+          select: {
+            id: true,
+          },
+        },
       },
       where: {
         user: { stacksAddress: stacksAddress },
@@ -82,7 +90,11 @@ export class StoriesService {
     story = await this.prisma.story.upsert({
       select: {
         id: true,
-        sentAt: true,
+        email: {
+          select: {
+            id: true,
+          },
+        },
       },
       // Workaround for select to work when creating the story
       where: { id: story ? story.id : 'none' },
@@ -113,7 +125,7 @@ export class StoriesService {
       if (!user.newsletter || user.newsletter.status !== 'ACTIVE') {
         throw new BadRequestException('Newsletter not setup.');
       }
-      if (story.sentAt) {
+      if (story.email) {
         // Newsletter already exists, do not send it again
         throw new BadRequestException('Newsletter already sent');
       }
@@ -200,11 +212,11 @@ export class StoriesService {
         throw new BadRequestException('Failed to send newsletter');
       }
 
-      await this.prisma.story.update({
+      await this.prisma.email.create({
         select: { id: true },
-        where: { id: story.id },
         data: {
-          sentAt: new Date(),
+          newsletterId: user.newsletter.id,
+          storyId: story.id,
         },
       });
 

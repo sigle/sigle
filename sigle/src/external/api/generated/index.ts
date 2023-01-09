@@ -12,6 +12,7 @@ export type { CreateSubscriberDto } from './models/CreateSubscriberDto';
 export type { CreateSubscriptionCreatorPlusDto } from './models/CreateSubscriptionCreatorPlusDto';
 export type { CreateUserFollowDto } from './models/CreateUserFollowDto';
 export type { DeleteUserFollowDto } from './models/DeleteUserFollowDto';
+export type { EmailDto } from './models/EmailDto';
 export type { ExploreResponse } from './models/ExploreResponse';
 export type { ExploreUser } from './models/ExploreUser';
 export type { HistoricalDto } from './models/HistoricalDto';

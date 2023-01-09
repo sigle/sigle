@@ -47,10 +47,11 @@ model Story {
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
   publishedAt   DateTime?
-  sentAt        DateTime?
   unpublishedAt DateTime?
   deletedAt     DateTime?
   user          User      @relation(fields: [userId], references: [id])
+  email         Email?
+  emailId       String?
 }
 
 model Newsletter {
@@ -65,11 +66,22 @@ model Newsletter {
   createdAt          DateTime         @default(now())
   updatedAt          DateTime         @updatedAt
   user               User             @relation(fields: [userId], references: [id])
+  Email              Email[]
 }
 
 enum NewsletterStatus {
   INACTIVE
   ACTIVE
+}
+
+model Email {
+  id           String      @id @default(uuid())
+  createdAt    DateTime    @default(now())
+  updatedAt    DateTime    @updatedAt
+  newsletterId String
+  newsletter   Newsletter? @relation(fields: [newsletterId], references: [id])
+  storyId      String      @unique
+  Story        Story       @relation(fields: [storyId], references: [id])
 }
 
 // Gaia data
