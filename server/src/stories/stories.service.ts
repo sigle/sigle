@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable, Logger } from '@nestjs/common';
 import { SendEmailV3_1 } from 'node-mailjet';
 import * as textVersion from 'textversionjs';
 import { InjectSentry, SentryService } from '@ntegral/nestjs-sentry';
@@ -12,6 +12,8 @@ const Mailjet = require('node-mailjet');
 
 @Injectable()
 export class StoriesService {
+  private readonly logger = new Logger(StoriesService.name);
+
   constructor(
     @InjectSentry() private readonly sentryService: SentryService,
     private readonly prisma: PrismaService,
@@ -181,6 +183,7 @@ export class StoriesService {
       try {
         await mailjet.post('send', { version: 'v3.1' }).request(sendEmailBody);
       } catch (error) {
+        this.logger.error(error, error.response.data);
         // Format mailjet errors as package is messing with the error object
         // so it can be sent to sentry properly
         const formattedErrors = error.response.data.Messages.map(
