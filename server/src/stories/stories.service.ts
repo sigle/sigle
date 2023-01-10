@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable, Logger } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { SendEmailV3_1 } from 'node-mailjet';
 import * as textVersion from 'textversionjs';
 import { InjectSentry, SentryService } from '@ntegral/nestjs-sentry';
@@ -12,8 +12,6 @@ const Mailjet = require('node-mailjet');
 
 @Injectable()
 export class StoriesService {
-  private readonly logger = new Logger(StoriesService.name);
-
   constructor(
     @InjectSentry() private readonly sentryService: SentryService,
     private readonly prisma: PrismaService,
@@ -183,33 +181,38 @@ export class StoriesService {
       try {
         await mailjet.post('send', { version: 'v3.1' }).request(sendEmailBody);
       } catch (error) {
-        this.logger.error(error, error.response.data);
         // Format mailjet errors as package is messing with the error object
         // so it can be sent to sentry properly
-        const formattedErrors = error.response.data.Messages.map(
-          (message: any) => {
-            return {
-              Status: message.Status,
-              Errors: message.Errors.map(
-                (error: SendEmailV3_1.IResponseError) => {
-                  return {
-                    ErrorIdentifier: error.ErrorIdentifier,
-                    ErrorCode: error.ErrorCode,
-                    StatusCode: error.StatusCode,
-                    ErrorMessage: error.ErrorMessage,
-                    ErrorRelatedTo: error.ErrorRelatedTo,
-                  };
-                },
-              ),
-            };
-          },
-        );
+        const mailjetError = {
+          ErrorIdentifier: error.response.data.ErrorIdentifier,
+          ErrorCode: error.response.data.ErrorCode,
+          StatusCode: error.response.data.StatusCode,
+          ErrorMessage: error.response.data.ErrorMessage,
+          Messages: error.response.data.Messages?.map(
+            (message: SendEmailV3_1.IResponseMessage) => {
+              return {
+                Status: message.Status,
+                Errors: message.Errors.map(
+                  (error: SendEmailV3_1.IResponseError) => {
+                    return {
+                      ErrorIdentifier: error.ErrorIdentifier,
+                      ErrorCode: error.ErrorCode,
+                      StatusCode: error.StatusCode,
+                      ErrorMessage: error.ErrorMessage,
+                      ErrorRelatedTo: error.ErrorRelatedTo,
+                    };
+                  },
+                ),
+              };
+            },
+          ),
+        };
         this.sentryService.instance().captureException(error, {
           level: 'error',
           extra: {
             stacksAddress,
             storyId: story.id,
-            mailjetErrors: formattedErrors,
+            mailjetError,
           },
         });
         throw new BadRequestException('Failed to send newsletter');
