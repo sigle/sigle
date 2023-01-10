@@ -189,22 +189,18 @@ export class StoriesService {
           StatusCode: error.response.data.StatusCode,
           ErrorMessage: error.response.data.ErrorMessage,
           Messages: error.response.data.Messages?.map(
-            (message: SendEmailV3_1.IResponseMessage) => {
-              return {
-                Status: message.Status,
-                Errors: message.Errors.map(
-                  (error: SendEmailV3_1.IResponseError) => {
-                    return {
-                      ErrorIdentifier: error.ErrorIdentifier,
-                      ErrorCode: error.ErrorCode,
-                      StatusCode: error.StatusCode,
-                      ErrorMessage: error.ErrorMessage,
-                      ErrorRelatedTo: error.ErrorRelatedTo,
-                    };
-                  },
-                ),
-              };
-            },
+            (message: SendEmailV3_1.IResponseMessage) => ({
+              Status: message.Status,
+              Errors: message.Errors.map(
+                (error: SendEmailV3_1.IResponseError) => ({
+                  ErrorIdentifier: error.ErrorIdentifier,
+                  ErrorCode: error.ErrorCode,
+                  StatusCode: error.StatusCode,
+                  ErrorMessage: error.ErrorMessage,
+                  ErrorRelatedTo: error.ErrorRelatedTo,
+                }),
+              ),
+            }),
           ),
         };
         this.sentryService.instance().captureException(error, {
@@ -215,6 +211,11 @@ export class StoriesService {
             mailjetError,
           },
         });
+        if (mailjetError.ErrorCode === 'mj-0001') {
+          throw new BadRequestException(
+            'Failed to send newsletter. Your account Mailjet account is blocked. Please contact the Mailjet support team to get assistance.',
+          );
+        }
         throw new BadRequestException('Failed to send newsletter');
       }
 
