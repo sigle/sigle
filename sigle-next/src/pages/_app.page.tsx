@@ -1,10 +1,10 @@
 import type { AppProps } from 'next/app';
-import { Open_Sans } from '@next/font/google';
+import { Inter } from '@next/font/google';
 
-const openSans = Open_Sans({
+const openSans = Inter({
   subsets: ['latin'],
-  style: ['normal', 'italic'],
-  weight: ['300', '400', '600', '700'],
+  style: ['normal'],
+  weight: ['400', '600', '700'],
 });
 // TODO remove main tag and use css variables instead
 

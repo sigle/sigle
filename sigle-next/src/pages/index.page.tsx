@@ -1,3 +1,5 @@
+import {} from '@sigle/ui';
+
 export default function Home() {
   return (
     <main>
