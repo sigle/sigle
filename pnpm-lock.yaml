@@ -446,6 +446,7 @@ importers:
   sigle-next:
     specifiers:
       '@next/font': 13.1.1
+      '@sigle/tailwind-style': workspace:^1.1.0
       '@stitches/react': 1.2.8
       '@types/node': 18.11.18
       '@types/react': 18.0.26
@@ -463,6 +464,7 @@ importers:
       react: 18.2.0
       react-dom: 18.2.0_react@18.2.0
     devDependencies:
+      '@sigle/tailwind-style': link:../packages/tailwind-style
       '@types/node': 18.11.18
       '@types/react': 18.0.26
       '@types/react-dom': 18.0.10
@@ -7760,10 +7762,10 @@ packages:
       eslint-import-resolver-webpack:
         optional: true
     dependencies:
-      '@typescript-eslint/parser': 5.45.0_iukboom6ndih5an6iafl45j2fe
+      '@typescript-eslint/parser': 5.45.0_tqvwk7sh3taph5wf7sr5z34mke
       debug: 3.2.7
       eslint-import-resolver-node: 0.3.6
-      eslint-import-resolver-typescript: 3.5.2_ol7jqilc3wemtdbq3nzhywgxq4
+      eslint-import-resolver-typescript: 3.5.2_ktrec6dplf4now6nlbc6d67jee
       find-up: 2.1.0
     transitivePeerDependencies:
       - supports-color
