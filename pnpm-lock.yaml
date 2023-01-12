@@ -466,6 +466,7 @@ importers:
       postcss-loader: 7.0.2
       react: 18.2.0
       react-dom: 18.2.0
+      react-icons: 4.7.1
       storybook: 7.0.0-beta.25
       style-loader: 3.3.1
       typescript: 4.9.4
@@ -475,6 +476,7 @@ importers:
       next: 13.1.1_biqbaboplfbrettd7655fr4n2y
       react: 18.2.0
       react-dom: 18.2.0_react@18.2.0
+      react-icons: 4.7.1_react@18.2.0
     devDependencies:
       '@sigle/tailwind-style': link:../packages/tailwind-style
       '@storybook/addon-essentials': 7.0.0-beta.25_biqbaboplfbrettd7655fr4n2y
@@ -11465,10 +11467,10 @@ packages:
       eslint-import-resolver-webpack:
         optional: true
     dependencies:
-      '@typescript-eslint/parser': 5.45.0_tqvwk7sh3taph5wf7sr5z34mke
+      '@typescript-eslint/parser': 5.45.0_iukboom6ndih5an6iafl45j2fe
       debug: 3.2.7
       eslint-import-resolver-node: 0.3.6
-      eslint-import-resolver-typescript: 3.5.2_ktrec6dplf4now6nlbc6d67jee
+      eslint-import-resolver-typescript: 3.5.2_ol7jqilc3wemtdbq3nzhywgxq4
       find-up: 2.1.0
     transitivePeerDependencies:
       - supports-color
@@ -17745,6 +17747,14 @@ packages:
 
   /react-fast-compare/2.0.4:
     resolution: {integrity: sha512-suNP+J1VU1MWFKcyt7RtjiSWUjvidmQSlqu+eHslq+342xCbGTYmC0mEhPCOHxlW0CywylOC1u2DFAT+bv4dBw==}
+    dev: false
+
+  /react-icons/4.7.1_react@18.2.0:
+    resolution: {integrity: sha512-yHd3oKGMgm7zxo3EA7H2n7vxSoiGmHk5t6Ou4bXsfcgWyhfDKMpyKfhHR6Bjnn63c+YXBLBPUql9H4wPJM6sXw==}
+    peerDependencies:
+      react: '*'
+    dependencies:
+      react: 18.2.0
     dev: false
 
   /react-inspector/6.0.1_react@18.2.0:
