@@ -16,6 +16,11 @@ const meta: Meta<typeof Button> = {
       control: 'select',
       options: ['solid', 'light', 'outline', 'ghost'],
     },
+    color: {
+      defaultValue: 'gray',
+      control: 'select',
+      options: ['gray', 'indigo'],
+    },
     disabled: {
       defaultValue: false,
       control: 'boolean',

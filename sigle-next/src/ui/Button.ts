@@ -16,6 +16,7 @@ export const Button = styled('button', {
   defaultVariants: {
     size: 'md',
     variant: 'solid',
+    color: 'gray',
   },
 
   variants: {
@@ -98,5 +99,87 @@ export const Button = styled('button', {
         },
       },
     },
+    color: {
+      gray: {},
+      indigo: {},
+    },
   },
+  compoundVariants: [
+    {
+      variant: 'solid',
+      color: 'indigo',
+      css: {
+        backgroundColor: '$indigo11',
+        '&:hover': {
+          backgroundColor: '$indigo12',
+        },
+        '&:active': {
+          backgroundColor: '$indigo10',
+        },
+        '&:disabled': {
+          backgroundColor: '$indigo7',
+        },
+      },
+    },
+    {
+      variant: 'light',
+      color: 'indigo',
+      css: {
+        color: '$indigo11',
+        backgroundColor: '$indigo3',
+        '&:hover': {
+          color: '$indigo12',
+          backgroundColor: '$indigo5',
+        },
+        '&:active': {
+          color: '$indigo10',
+          backgroundColor: '$indigo4',
+        },
+        '&:disabled': {
+          color: '$indigo9',
+          backgroundColor: '$indigo3',
+        },
+      },
+    },
+    {
+      variant: 'outline',
+      color: 'indigo',
+      css: {
+        color: '$indigo11',
+        borderColor: '$indigo11',
+        '&:hover': {
+          color: '$indigo12',
+          backgroundColor: '$indigo5',
+          borderColor: '$indigo12',
+        },
+        '&:active': {
+          color: '$indigo10',
+          backgroundColor: '$indigo4',
+          borderColor: '$indigo10',
+        },
+        '&:disabled': {
+          color: '$indigo7',
+          borderColor: '$indigo7',
+        },
+      },
+    },
+    {
+      variant: 'ghost',
+      color: 'indigo',
+      css: {
+        color: '$indigo11',
+        '&:hover': {
+          color: '$indigo12',
+          backgroundColor: '$indigo5',
+        },
+        '&:active': {
+          color: '$indigo10',
+          backgroundColor: '$indigo4',
+        },
+        '&:disabled': {
+          color: '$indigo9',
+        },
+      },
+    },
+  ],
 });

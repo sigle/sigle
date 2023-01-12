@@ -31,10 +31,41 @@ const grayDark = {
   gray12: '#fcfcfc',
 };
 
+const indigo = {
+  indigo1: '#f5f5ff',
+  indigo2: '#ebebff',
+  indigo3: '#dfdeff',
+  indigo4: '#cfcfff',
+  indigo5: '#c1c0ff',
+  indigo6: '#b5b1ff',
+  indigo7: '#a29dfd',
+  indigo8: '#918bff',
+  indigo9: '#8075ff',
+  indigo10: '#7367ff',
+  indigo11: '#6558ff',
+  indigo12: '#5345f9',
+};
+
+const indigoDark = {
+  indigo1: '#0a064a',
+  indigo2: '#150f6a',
+  indigo3: '#1b1476',
+  indigo4: '#1b1789',
+  indigo5: '#2c22ba',
+  indigo6: '#3a32e0',
+  indigo7: '#5154f3',
+  indigo8: '#5f62f5',
+  indigo9: '#7a7dff',
+  indigo10: '#9194ff',
+  indigo11: '#a3a4ff',
+  indigo12: '#b8baff',
+};
+
 export const { styled, getCssText } = createStitches({
   theme: {
     colors: {
       ...gray,
+      ...indigo,
     },
     fontSizes: {
       xs: '0.75rem',
@@ -154,5 +185,6 @@ export const { styled, getCssText } = createStitches({
 export const darkTheme = createTheme('dark', {
   colors: {
     ...grayDark,
+    ...indigoDark,
   },
 });
