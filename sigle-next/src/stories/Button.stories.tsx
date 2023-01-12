@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react';
-import { Button } from '@sigle/ui';
+import { TbPlus } from 'react-icons/tb';
+import { Button, ButtonProps } from '@sigle/ui';
 
 const meta: Meta<typeof Button> = {
   title: 'Button',
@@ -25,14 +26,25 @@ const meta: Meta<typeof Button> = {
       defaultValue: false,
       control: 'boolean',
     },
+    leftIcon: {
+      defaultValue: false,
+      control: 'boolean',
+    },
+    rightIcon: {
+      defaultValue: false,
+      control: 'boolean',
+    },
   },
 };
 
 export default meta;
-type Story = StoryObj<typeof Button>;
 
-export const Default: Story = {
-  args: {
-    children: 'Button',
-  },
-};
+export const Default = ({ leftIcon, rightIcon, ...args }: ButtonProps) => (
+  <Button
+    {...args}
+    leftIcon={leftIcon ? <TbPlus /> : undefined}
+    rightIcon={rightIcon ? <TbPlus /> : undefined}
+  >
+    Button
+  </Button>
+);

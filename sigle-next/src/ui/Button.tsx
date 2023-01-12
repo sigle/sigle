@@ -1,6 +1,7 @@
 import { styled } from '@sigle/stitches.config';
+import { forwardRef } from 'react';
 
-export const Button = styled('button', {
+const StyledButton = styled('button', {
   display: 'inline-flex',
   justifyContent: 'center',
   alignItems: 'center',
@@ -17,6 +18,7 @@ export const Button = styled('button', {
     size: 'md',
     variant: 'solid',
     color: 'gray',
+    hasIcon: 'none',
   },
 
   variants: {
@@ -103,6 +105,11 @@ export const Button = styled('button', {
       gray: {},
       indigo: {},
     },
+    hasIcon: {
+      none: {},
+      left: {},
+      right: {},
+    },
   },
   compoundVariants: [
     {
@@ -181,5 +188,76 @@ export const Button = styled('button', {
         },
       },
     },
+    {
+      hasIcon: 'left',
+      size: 'sm',
+      css: {
+        pl: '$2',
+      },
+    },
+    {
+      hasIcon: 'left',
+      size: 'md',
+      css: {
+        pl: '10px',
+      },
+    },
+    {
+      hasIcon: 'left',
+      size: 'lg',
+      css: {
+        pl: '$3',
+      },
+    },
+    {
+      hasIcon: 'right',
+      size: 'sm',
+      css: {
+        pr: '$2',
+      },
+    },
+    {
+      hasIcon: 'right',
+      size: 'md',
+      css: {
+        pr: '10px',
+      },
+    },
+    {
+      hasIcon: 'right',
+      size: 'lg',
+      css: {
+        pr: '$3',
+      },
+    },
   ],
 });
+
+const StyledLeftIcon = styled('span', {
+  mr: '$2',
+});
+
+const StyledRightIcon = styled('span', {
+  ml: '$2',
+});
+
+type StyledButtonProps = React.ComponentProps<typeof StyledButton>;
+export type ButtonProps = Omit<StyledButtonProps, 'hasIcon'> & {
+  leftIcon?: React.ReactNode;
+  rightIcon?: React.ReactNode;
+};
+
+export const Button = forwardRef<
+  React.ElementRef<typeof StyledButton>,
+  ButtonProps
+>(({ children, leftIcon, rightIcon, ...props }, forwardedRef) => (
+  <StyledButton
+    hasIcon={leftIcon ? 'left' : rightIcon ? 'right' : 'none'}
+    {...props}
+    ref={forwardedRef}
+  >
+    {leftIcon && <StyledLeftIcon>{leftIcon}</StyledLeftIcon>}
+    {children}
+    {rightIcon && <StyledRightIcon>{rightIcon}</StyledRightIcon>}
+  </StyledButton>
+));
