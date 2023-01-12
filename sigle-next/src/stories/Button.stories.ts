@@ -6,15 +6,19 @@ const meta: Meta<typeof Button> = {
   component: Button,
   tags: ['autodocs'],
   argTypes: {
-    variant: {
-      defaultValue: 'solid',
-      control: 'select',
-      options: ['solid', 'outline', 'ghost'],
-    },
     size: {
       defaultValue: 'md',
       control: 'select',
       options: ['sm', 'md', 'lg'],
+    },
+    variant: {
+      defaultValue: 'solid',
+      control: 'select',
+      options: ['solid', 'light', 'outline', 'ghost'],
+    },
+    disabled: {
+      defaultValue: false,
+      control: 'boolean',
     },
   },
 };

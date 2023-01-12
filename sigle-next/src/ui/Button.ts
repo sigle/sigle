@@ -16,7 +16,6 @@ export const Button = styled('button', {
   defaultVariants: {
     size: 'md',
     variant: 'solid',
-    // color: 'gray',
   },
 
   variants: {
@@ -36,8 +35,8 @@ export const Button = styled('button', {
     },
     variant: {
       solid: {
-        backgroundColor: '$gray11',
         color: '$gray1',
+        backgroundColor: '$gray11',
         '&:hover': {
           backgroundColor: '$gray12',
         },
@@ -48,24 +47,40 @@ export const Button = styled('button', {
           backgroundColor: '$gray7',
         },
       },
-      outline: {
-        borderWidth: '1px',
-        borderStyle: 'solid',
-        borderColor: '$gray11',
+      light: {
         color: '$gray11',
+        backgroundColor: '$gray3',
         '&:hover': {
-          borderColor: '$gray12',
           color: '$gray12',
           backgroundColor: '$gray5',
         },
         '&:active': {
-          borderColor: '$gray10',
           color: '$gray10',
           backgroundColor: '$gray4',
         },
         '&:disabled': {
-          borderColor: '$gray7',
+          color: '$gray9',
+          backgroundColor: '$gray3',
+        },
+      },
+      outline: {
+        color: '$gray11',
+        borderWidth: '1px',
+        borderStyle: 'solid',
+        borderColor: '$gray11',
+        '&:hover': {
+          color: '$gray12',
+          backgroundColor: '$gray5',
+          borderColor: '$gray12',
+        },
+        '&:active': {
+          color: '$gray10',
+          backgroundColor: '$gray4',
+          borderColor: '$gray10',
+        },
+        '&:disabled': {
           color: '$gray7',
+          borderColor: '$gray7',
         },
       },
       ghost: {
