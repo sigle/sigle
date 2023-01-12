@@ -137,3 +137,6 @@ jobs:
 
       - name: Build sigle
         run: pnpm --filter=@sigle/app-next run build
+
+      - name: Build storybook
+        run: pnpm --filter=@sigle/app-next run build-storybook
