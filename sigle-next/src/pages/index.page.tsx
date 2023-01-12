@@ -7,6 +7,9 @@ export default function Home() {
         <Button size="sm">Button</Button>
         <Button size="md">Button</Button>
         <Button size="lg">Button</Button>
+        <Button size="lg" disabled>
+          Button
+        </Button>
       </div>
       <div style={{ marginTop: 20 }}>
         <Button size="sm" variant="outline">
@@ -18,6 +21,9 @@ export default function Home() {
         <Button size="lg" variant="outline">
           Button
         </Button>
+        <Button size="lg" variant="outline" disabled>
+          Button
+        </Button>
       </div>
       <div style={{ marginTop: 20 }}>
         <Button size="sm" variant="ghost">
@@ -27,6 +33,9 @@ export default function Home() {
           Button
         </Button>
         <Button size="lg" variant="ghost">
+          Button
+        </Button>
+        <Button size="lg" variant="ghost" disabled>
           Button
         </Button>
       </div>

@@ -9,6 +9,10 @@ export const Button = styled('button', {
   fontWeight: 600,
   br: '$sm',
 
+  '&:disabled': {
+    pointerEvents: 'none',
+  },
+
   defaultVariants: {
     size: 'md',
     variant: 'solid',
@@ -40,6 +44,9 @@ export const Button = styled('button', {
         '&:active': {
           backgroundColor: '$gray10',
         },
+        '&:disabled': {
+          backgroundColor: '$gray7',
+        },
       },
       outline: {
         borderWidth: '1px',
@@ -56,6 +63,10 @@ export const Button = styled('button', {
           color: '$gray10',
           backgroundColor: '$gray4',
         },
+        '&:disabled': {
+          borderColor: '$gray7',
+          color: '$gray7',
+        },
       },
       ghost: {
         color: '$gray11',
@@ -66,6 +77,9 @@ export const Button = styled('button', {
         '&:active': {
           color: '$gray10',
           backgroundColor: '$gray4',
+        },
+        '&:disabled': {
+          color: '$gray9',
         },
       },
     },
