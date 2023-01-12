@@ -111,6 +111,11 @@ export const { styled, getCssText } = createStitches({
       9: '2.25rem',
       10: '2.5rem',
     },
+    fontWeights: {
+      normal: 400,
+      semiBold: 500,
+      bold: 700,
+    },
     radii: {
       xs: '0.25rem',
       sm: '0.5rem',
