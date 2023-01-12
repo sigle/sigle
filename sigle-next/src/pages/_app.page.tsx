@@ -1,17 +1,31 @@
 import type { AppProps } from 'next/app';
-import { Open_Sans } from '@next/font/google';
+import Head from 'next/head';
+import { Inter } from '@next/font/google';
+import { globalCss } from '@stitches/react';
+import '@sigle/tailwind-style/dist/tailwind.css';
 
-const openSans = Open_Sans({
+const inter = Inter({
   subsets: ['latin'],
-  style: ['normal', 'italic'],
-  weight: ['300', '400', '600', '700'],
+  style: ['normal'],
+  weight: ['400', '600', '700'],
+  variable: '--font-inter',
 });
-// TODO remove main tag and use css variables instead
+
+const globalStyle = globalCss({
+  body: {
+    fontFamily: 'var(--font-inter)',
+  },
+});
 
 export default function App({ Component, pageProps }: AppProps) {
+  globalStyle();
+
   return (
-    <main className={openSans.className}>
+    <>
+      <Head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      </Head>
       <Component {...pageProps} />
-    </main>
+    </>
   );
 }
