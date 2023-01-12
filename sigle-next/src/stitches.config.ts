@@ -125,6 +125,12 @@ export const { styled, getCssText } = createStitches({
       '2xl': '1.5rem',
       full: '9999px',
     },
+    shadows: {
+      sm: '0px 6px 6px -6px rgba(0, 0, 0, 0.16), 0px 0px 1px rgba(0, 0, 0, 0.4)',
+      md: '0px 12px 12px -6px rgba(0, 0, 0, 0.16), 0px 0px 1px rgba(0, 0, 0, 0.4)',
+      lg: '0px 8px 24px -6px rgba(0, 0, 0, 0.16), 0px 0px 1px rgba(0, 0, 0, 0.4)',
+      xl: '0px 32px 32px -8px rgba(0, 0, 0, 0.08), 0px 0px 32px -8px rgba(0, 0, 0, 0.12), 0px 0px 1px rgba(0, 0, 0, 0.2)',
+    },
   },
   utils: {
     p: (value: Stitches.PropertyValue<'padding'>) => ({
