@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from '@storybook/react';
+import type { Meta } from '@storybook/react';
 import { TbPlus } from 'react-icons/tb';
 import { Button, ButtonProps } from '@sigle/ui';
 
