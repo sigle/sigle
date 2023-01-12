@@ -261,3 +261,5 @@ export const Button = forwardRef<
     {rightIcon && <StyledRightIcon>{rightIcon}</StyledRightIcon>}
   </StyledButton>
 ));
+
+Button.displayName = 'Button';

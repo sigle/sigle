@@ -1,10 +1,13 @@
 import { Button } from '@sigle/ui';
+import { TbPlus } from 'react-icons/tb';
 
 export default function Home() {
   return (
     <main>
       <div style={{ marginTop: 20 }}>
-        <Button size="sm">Button</Button>
+        <Button size="sm" rightIcon={<TbPlus />}>
+          Button
+        </Button>
         <Button size="md">Button</Button>
         <Button size="lg">Button</Button>
         <Button size="lg" disabled>
