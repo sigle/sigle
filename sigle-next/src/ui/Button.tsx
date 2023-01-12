@@ -24,15 +24,15 @@ const StyledButton = styled('button', {
   variants: {
     size: {
       sm: {
-        height: '$8',
+        py: '6px',
         px: '$3',
       },
       md: {
-        height: '$9',
+        py: '$2',
         px: '$4',
       },
       lg: {
-        height: '$10',
+        py: '10px',
         px: '$5',
       },
     },
