@@ -143,7 +143,7 @@ const StyledButton = styled('button', {
           backgroundColor: '$indigo4',
         },
         '&:disabled': {
-          color: '$indigo9',
+          color: '$indigo6',
           backgroundColor: '$indigo3',
         },
       },
