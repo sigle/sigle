@@ -2,13 +2,20 @@ import { styled } from '@sigle/stitches.config';
 import { Button } from '@sigle/ui';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import { TbHome } from 'react-icons/tb';
+import {
+  TbBookmarks,
+  TbChartPie,
+  TbHome,
+  TbMail,
+  TbUserCircle,
+  TbUsers,
+} from 'react-icons/tb';
 import { LogoImage } from 'src/images/logo';
 import { NavBarUserDropdown } from './NavBarUserDropdown';
 
 const StyledNavBar = styled('nav', {
   px: '$5',
-  py: '$8',
+  py: '$5',
   display: 'flex',
   flexDirection: 'column',
   backgroundColor: '$gray1',
@@ -67,9 +74,32 @@ export const NavBar = ({}: NavBarProps) => {
       label: 'Home',
     },
     {
+      href: '/feed',
+      icon: <TbMail />,
+      label: 'Inbox',
+    },
+    {
+      href: '/saved',
+      icon: <TbBookmarks />,
+      label: 'Saved',
+    },
+    {
       href: '/profile',
-      icon: <TbHome />,
+      icon: <TbUserCircle />,
       label: 'Profile',
+    },
+  ];
+
+  const menu2 = [
+    {
+      href: '/analytics',
+      icon: <TbChartPie />,
+      label: 'Analytics',
+    },
+    {
+      href: '/feed',
+      icon: <TbUsers />,
+      label: 'Subscribers',
     },
   ];
 
@@ -79,6 +109,13 @@ export const NavBar = ({}: NavBarProps) => {
         <LogoImage />
         <Menu>
           {menu.map((item, index) => (
+            <NavBarLink
+              key={index}
+              {...item}
+              active={router.pathname === item.href}
+            />
+          ))}
+          {menu2.map((item, index) => (
             <NavBarLink
               key={index}
               {...item}
