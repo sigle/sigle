@@ -78,8 +78,10 @@ export const NavBarUserDropdown = () => {
               />
             </ImageAvatarContainer>
             <div>
-              <Typography size="xs">Marly McKendry</Typography>
-              <Typography css={{ color: '$gray9' }} size="xs">
+              <Typography size="xs" lineClamp={1}>
+                Marly McKendry
+              </Typography>
+              <Typography css={{ color: '$gray9' }} size="xs" lineClamp={1}>
                 markendry.btc
               </Typography>
             </div>

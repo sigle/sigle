@@ -51,6 +51,14 @@ export const Typography = styled('p', {
         fontWeight: '$bold',
       },
     },
+    lineClamp: {
+      1: {
+        display: '-webkit-box',
+        '-webkit-line-clamp': 1,
+        '-webkit-box-orient': 'vertical',
+        overflow: 'hidden',
+      },
+    },
   },
   defaultVariants: {
     size: 'paragraph',
