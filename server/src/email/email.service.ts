@@ -144,7 +144,7 @@ export class EmailService {
         username: username,
         profileUrl: `https://app.sigle.io/${username}`,
         storyUrl: `https://app.sigle.io/${username}/${story.id}`,
-        date: format(story.createdAt, 'MMMM dd, yyyy'),
+        date: format(new Date(), 'MMMM dd, yyyy'),
         displayName: settings.siteName || username,
         avatarUrl: settings.siteLogo
           ? settings.siteLogo.includes(' ')
