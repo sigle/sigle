@@ -34,6 +34,8 @@ export const allowedNewsletterUsers = [
   'SP0FK47T9271MJX3HEFKA1MEPD4X39J9DCGVXF2D',
   // 21milbtc.btc
   'SP3BCZN307DECNR5PRMV6HY4P37AJ9N48JP0VE547',
+  // goodkitty.btc
+  'SP28RZ1QXMXJXVKRRCR3D7GR5D48XY0NNA9MZWHJB',
 ];
 if (process.env.NODE_ENV === 'development') {
   // gregogun.btc

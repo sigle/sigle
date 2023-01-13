@@ -117,6 +117,7 @@ export const NewsletterFrame = ({
           css={{
             backgroundColor: '$gray2',
             py: '$8',
+            px: '$4',
             br: 20,
           }}
         >
@@ -127,8 +128,20 @@ export const NewsletterFrame = ({
             size="subheading"
             css={{ my: 0, mb: '$5' }}
           >{`Subscribe to ${siteName} and receive all of their stories directly in your mailbox`}</Typography>
-          <FormControlGroup>
+          <FormControlGroup
+            css={{
+              width: '100%',
+              justifyContent: 'center',
+              '@lg': {
+                maxWidth: '410px',
+              },
+            }}
+          >
             <FormInput
+              css={{
+                minWidth: 'auto !important',
+                width: '100%',
+              }}
               name="email"
               type="email"
               autoComplete="off"
