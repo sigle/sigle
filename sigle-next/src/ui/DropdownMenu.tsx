@@ -68,6 +68,8 @@ const DropdownMenuContent = forwardRef<
   </DropdownMenuPrimitive.Portal>
 ));
 
+DropdownMenuContent.displayName = 'DropdownMenuContent';
+
 const DropdownMenuItem = styled(DropdownMenuPrimitive.Item, {
   fontSize: '$sm',
   lineHeight: '$sm',
