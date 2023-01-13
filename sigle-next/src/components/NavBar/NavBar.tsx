@@ -1,5 +1,5 @@
 import { styled } from '@sigle/stitches.config';
-import { Button } from '@sigle/ui';
+import { Badge, Button } from '@sigle/ui';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import {
@@ -10,7 +10,7 @@ import {
   TbUserCircle,
   TbUsers,
 } from 'react-icons/tb';
-import { LogoImage } from 'src/images/logo';
+import { LogoImage } from '../../images/logo';
 import { NavBarUserDropdown } from './NavBarUserDropdown';
 
 const StyledNavBar = styled('nav', {
@@ -25,7 +25,7 @@ const StyledNavBar = styled('nav', {
   borderColor: '$gray6',
 });
 
-const StyledButton = styled(Button, {
+const NavBarLinkButton = styled(Button, {
   width: '100%',
   justifyContent: 'start',
   fontWeight: 400,
@@ -59,12 +59,36 @@ interface NavBarLinkProps {
 const NavBarLink = ({ href, icon, label, active }: NavBarLinkProps) => {
   return (
     <Link href={href}>
-      <StyledButton variant="ghost" leftIcon={icon} active={active}>
+      <NavBarLinkButton variant="ghost" leftIcon={icon} active={active}>
         {label}
-      </StyledButton>
+      </NavBarLinkButton>
     </Link>
   );
 };
+
+const NavBarStoriesContainer = styled('div', {
+  py: '$5',
+});
+
+const NavBarLinkStoriesButton = styled(Button, {
+  width: '100%',
+  justifyContent: 'space-between',
+  fontWeight: 400,
+  px: '$3',
+  fontSize: '$md',
+  lineHeight: '$md',
+
+  variants: {
+    size: {
+      md: {
+        pl: '38px',
+      },
+    },
+  },
+  defaultVariants: {
+    size: 'md',
+  },
+});
 
 interface NavBarProps {}
 
@@ -119,6 +143,16 @@ export const NavBar = ({}: NavBarProps) => {
               active={router.pathname === item.href}
             />
           ))}
+
+          <NavBarStoriesContainer>
+            <NavBarLinkStoriesButton variant="ghost">
+              Drafts <Badge>9</Badge>
+            </NavBarLinkStoriesButton>
+            <NavBarLinkStoriesButton variant="ghost">
+              Published <Badge>10</Badge>
+            </NavBarLinkStoriesButton>
+          </NavBarStoriesContainer>
+
           {menu2.map((item, index) => (
             <NavBarLink
               key={index}
