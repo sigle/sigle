@@ -1,9 +1,9 @@
 import { styled } from '@sigle/stitches.config';
 import { Button } from '@sigle/ui';
-import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { TbHome } from 'react-icons/tb';
+import { LogoImage } from 'src/images/logo';
 import { NavBarUserDropdown } from './NavBarUserDropdown';
 
 const StyledNavBar = styled('nav', {
@@ -59,6 +59,7 @@ interface NavBarProps {}
 
 export const NavBar = ({}: NavBarProps) => {
   const router = useRouter();
+
   const menu = [
     {
       href: '/',
@@ -75,7 +76,7 @@ export const NavBar = ({}: NavBarProps) => {
   return (
     <StyledNavBar>
       <div>
-        <Image src="/img/logo.png" alt="Logo" height={34} width={77} priority />
+        <LogoImage />
         <Menu>
           {menu.map((item, index) => (
             <NavBarLink

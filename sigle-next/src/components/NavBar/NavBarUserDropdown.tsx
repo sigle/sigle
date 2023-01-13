@@ -7,6 +7,7 @@ import {
   Typography,
   DropdownMenuSeparator,
 } from '@sigle/ui';
+import { useTheme } from 'next-themes';
 import Link from 'next/link';
 import { TbChevronDown } from 'react-icons/tb';
 
@@ -51,6 +52,12 @@ const StyledTbChevronDown = styled(TbChevronDown, {
 });
 
 export const NavBarUserDropdown = () => {
+  const { resolvedTheme, setTheme } = useTheme();
+
+  const toggleTheme = () => {
+    resolvedTheme === 'dark' ? setTheme('light') : setTheme('dark');
+  };
+
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -79,7 +86,7 @@ export const NavBarUserDropdown = () => {
         <Link href="/settings">
           <DropdownMenuItem>Upgrade</DropdownMenuItem>
         </Link>
-        <DropdownMenuItem>Dark mode</DropdownMenuItem>
+        <DropdownMenuItem onClick={toggleTheme}>Dark mode</DropdownMenuItem>
         <DropdownMenuSeparator />
         <DropdownMenuItem>Log out</DropdownMenuItem>
       </DropdownMenuContent>

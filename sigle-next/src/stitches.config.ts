@@ -1,4 +1,4 @@
-import { createStitches, createTheme } from '@stitches/react';
+import { createStitches } from '@stitches/react';
 import type * as Stitches from '@stitches/react';
 
 const gray = {
@@ -61,7 +61,15 @@ const indigoDark = {
   indigo12: '#b8baff',
 };
 
-export const { styled, getCssText, keyframes, config } = createStitches({
+export const {
+  styled,
+  getCssText,
+  keyframes,
+  config,
+  globalCss,
+  theme,
+  createTheme,
+} = createStitches({
   theme: {
     colors: {
       ...gray,
