@@ -8,8 +8,6 @@ interface DashboardLayoutProps {
 }
 
 export const DashboardLayout = ({ children }: DashboardLayoutProps) => {
-  const navBarCollapsed = true;
-
   return (
     <Box
       css={{

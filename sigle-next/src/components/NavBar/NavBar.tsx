@@ -1,15 +1,10 @@
 import { styled } from '@sigle/stitches.config';
-import {
-  Button,
-  // Typography
-} from '@sigle/ui';
+import { Button } from '@sigle/ui';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import {
-  TbHome,
-  // TbChevronDown
-} from 'react-icons/tb';
+import { TbHome } from 'react-icons/tb';
+import { NavBarUserDropdown } from './NavBarUserDropdown';
 
 const StyledNavBar = styled('nav', {
   px: '$5',
@@ -42,16 +37,6 @@ const StyledButton = styled(Button, {
 const Menu = styled('div', {
   mt: 44,
 });
-
-// const UserMenu = styled('div', {
-//   backgroundColor: '$gray3',
-//   br: '$xl',
-//   display: 'flex',
-//   justifyContent: 'space-between',
-//   alignItems: 'center',
-//   gap: '$2',
-//   p: '$3',
-// });
 
 interface NavBarLinkProps {
   href: string;
@@ -90,7 +75,7 @@ export const NavBar = ({}: NavBarProps) => {
   return (
     <StyledNavBar>
       <div>
-        <Image src="/img/logo.png" alt="Logo" height={34} width={93} />
+        <Image src="/img/logo.png" alt="Logo" height={34} width={77} priority />
         <Menu>
           {menu.map((item, index) => (
             <NavBarLink
@@ -101,15 +86,7 @@ export const NavBar = ({}: NavBarProps) => {
           ))}
         </Menu>
       </div>
-      {/* <UserMenu>
-        <div>
-          <Typography size="xs">Marly McKendry</Typography>
-          <Typography css={{ color: '$gray9' }} size="xs">
-            markendry.btc
-          </Typography>
-        </div>
-        <TbChevronDown />
-      </UserMenu> */}
+      <NavBarUserDropdown />
     </StyledNavBar>
   );
 };
