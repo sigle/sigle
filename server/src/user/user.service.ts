@@ -54,19 +54,11 @@ export class UserService {
     isLegacy: boolean;
     userSelectFields: Prisma.UserSelect;
   }): Promise<any> {
-    const stacksUsername = await this.stacksService.getUsernameByAddress(
-      stacksAddress,
-    );
-    const gaiaUrl = await this.stacksService.getBucketUrl({
-      username: stacksUsername,
-    });
     const data = await this.stacksInfoApi.getCoreApiInfo();
     return this.prisma.user.create({
       data: {
         stacksAddress,
         isLegacy,
-        stacksUsername,
-        gaiaUrl: gaiaUrl.bucketUrl,
         stacksBlock: data.burn_block_height,
       },
       select: userSelectFields,

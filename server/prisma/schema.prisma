@@ -8,20 +8,18 @@ datasource db {
 }
 
 model User {
-  id             String         @id @default(uuid())
-  stacksAddress  String         @unique
-  stacksUsername String?        @unique
-  gaiaUrl        String?
+  id            String         @id @default(uuid())
+  stacksAddress String         @unique
   // When was the last sync
-  stacksBlock    Int?
-  isLegacy       Boolean        @default(false)
-  createdAt      DateTime       @default(now())
-  updatedAt      DateTime       @updatedAt
-  newsletter     Newsletter?
-  subscriptions  Subscription[]
-  followers      Follows[]      @relation("following")
-  following      Follows[]      @relation("follower")
-  Story          Story[]
+  stacksBlock   Int?
+  isLegacy      Boolean        @default(false)
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+  newsletter    Newsletter?
+  subscriptions Subscription[]
+  followers     Follows[]      @relation("following")
+  following     Follows[]      @relation("follower")
+  Story         Story[]
 }
 
 model Subscription {
