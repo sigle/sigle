@@ -6,6 +6,7 @@ import {
   DropdownMenuItem,
   Typography,
   DropdownMenuSeparator,
+  Switch,
 } from '@sigle/ui';
 import { useTheme } from 'next-themes';
 import Link from 'next/link';
@@ -51,6 +52,13 @@ const StyledTbChevronDown = styled(TbChevronDown, {
   '[data-state=open] &': { transform: 'rotate(180deg)' },
 });
 
+const StyledDropdownMenuItemDarkMode = styled(DropdownMenuItem, {
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'space-between',
+  gap: '$2',
+});
+
 export const NavBarUserDropdown = () => {
   const { resolvedTheme, setTheme } = useTheme();
 
@@ -86,7 +94,14 @@ export const NavBarUserDropdown = () => {
         <Link href="/settings">
           <DropdownMenuItem>Upgrade</DropdownMenuItem>
         </Link>
-        <DropdownMenuItem onClick={toggleTheme}>Dark mode</DropdownMenuItem>
+        <StyledDropdownMenuItemDarkMode
+          // Prevent the dropdown from closing when clicking on the dark mode switch
+          onSelect={(e) => e.preventDefault()}
+          onClick={toggleTheme}
+        >
+          Dark mode
+          <Switch checked={resolvedTheme === 'dark'} />
+        </StyledDropdownMenuItemDarkMode>
         <DropdownMenuSeparator />
         <DropdownMenuItem>Log out</DropdownMenuItem>
       </DropdownMenuContent>
