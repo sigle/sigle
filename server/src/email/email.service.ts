@@ -144,7 +144,10 @@ export class EmailService {
         username: username,
         profileUrl: `https://app.sigle.io/${username}`,
         storyUrl: `https://app.sigle.io/${username}/${story.id}`,
-        date: format(new Date(), 'MMMM dd, yyyy'),
+        date:
+          process.env.NODE_ENV === 'test'
+            ? format(story.createdAt, 'MMMM dd, yyyy')
+            : format(new Date(), 'MMMM dd, yyyy'),
         displayName: settings.siteName || username,
         avatarUrl: settings.siteLogo
           ? settings.siteLogo.includes(' ')
