@@ -61,7 +61,7 @@ const indigoDark = {
   indigo12: '#b8baff',
 };
 
-export const { styled, getCssText } = createStitches({
+export const { styled, getCssText, keyframes, config } = createStitches({
   theme: {
     colors: {
       ...gray,
@@ -205,3 +205,5 @@ export const darkTheme = createTheme('dark', {
     xl: '0px 48px 48px -6px rgba(0, 0, 0, 0.88), 0px 0px 1px rgba(0, 0, 0, 0.72)',
   },
 });
+
+export type CSS = Stitches.CSS<typeof config>;
