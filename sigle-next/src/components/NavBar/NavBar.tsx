@@ -30,6 +30,8 @@ const StyledButton = styled(Button, {
   justifyContent: 'start',
   fontWeight: 400,
   px: '$3',
+  fontSize: '$md',
+  lineHeight: '$md',
   variants: {
     active: {
       true: {
@@ -40,6 +42,8 @@ const StyledButton = styled(Button, {
     },
   },
 });
+
+const navbarIconSize = 20;
 
 const Menu = styled('div', {
   mt: 44,
@@ -70,22 +74,22 @@ export const NavBar = ({}: NavBarProps) => {
   const menu = [
     {
       href: '/',
-      icon: <TbHome />,
+      icon: <TbHome size={navbarIconSize} />,
       label: 'Home',
     },
     {
       href: '/feed',
-      icon: <TbMail />,
+      icon: <TbMail size={navbarIconSize} />,
       label: 'Inbox',
     },
     {
       href: '/saved',
-      icon: <TbBookmarks />,
+      icon: <TbBookmarks size={navbarIconSize} />,
       label: 'Saved',
     },
     {
       href: '/profile',
-      icon: <TbUserCircle />,
+      icon: <TbUserCircle size={navbarIconSize} />,
       label: 'Profile',
     },
   ];
@@ -93,12 +97,12 @@ export const NavBar = ({}: NavBarProps) => {
   const menu2 = [
     {
       href: '/analytics',
-      icon: <TbChartPie />,
+      icon: <TbChartPie size={navbarIconSize} />,
       label: 'Analytics',
     },
     {
       href: '/feed',
-      icon: <TbUsers />,
+      icon: <TbUsers size={navbarIconSize} />,
       label: 'Subscribers',
     },
   ];
