@@ -1,4 +1,4 @@
-import { createStitches, createTheme } from '@stitches/react';
+import { createStitches } from '@stitches/react';
 import type * as Stitches from '@stitches/react';
 
 const gray = {
@@ -31,10 +31,49 @@ const grayDark = {
   gray12: '#fcfcfc',
 };
 
-export const { styled, getCssText } = createStitches({
+const indigo = {
+  indigo1: '#f5f5ff',
+  indigo2: '#ebebff',
+  indigo3: '#dfdeff',
+  indigo4: '#cfcfff',
+  indigo5: '#c1c0ff',
+  indigo6: '#b5b1ff',
+  indigo7: '#a29dfd',
+  indigo8: '#918bff',
+  indigo9: '#8075ff',
+  indigo10: '#7367ff',
+  indigo11: '#6558ff',
+  indigo12: '#5345f9',
+};
+
+const indigoDark = {
+  indigo1: '#0a064a',
+  indigo2: '#150f6a',
+  indigo3: '#1b1476',
+  indigo4: '#1b1789',
+  indigo5: '#2c22ba',
+  indigo6: '#3a32e0',
+  indigo7: '#5154f3',
+  indigo8: '#5f62f5',
+  indigo9: '#7a7dff',
+  indigo10: '#9194ff',
+  indigo11: '#a3a4ff',
+  indigo12: '#b8baff',
+};
+
+export const {
+  styled,
+  getCssText,
+  keyframes,
+  config,
+  globalCss,
+  theme,
+  createTheme,
+} = createStitches({
   theme: {
     colors: {
       ...gray,
+      ...indigo,
     },
     fontSizes: {
       xs: '0.75rem',
@@ -80,6 +119,11 @@ export const { styled, getCssText } = createStitches({
       9: '2.25rem',
       10: '2.5rem',
     },
+    fontWeights: {
+      normal: 400,
+      semiBold: 500,
+      bold: 700,
+    },
     radii: {
       xs: '0.25rem',
       sm: '0.5rem',
@@ -88,6 +132,12 @@ export const { styled, getCssText } = createStitches({
       xl: '1.25rem',
       '2xl': '1.5rem',
       full: '9999px',
+    },
+    shadows: {
+      sm: '0px 6px 6px -6px rgba(0, 0, 0, 0.16), 0px 0px 1px rgba(0, 0, 0, 0.4)',
+      md: '0px 12px 12px -6px rgba(0, 0, 0, 0.16), 0px 0px 1px rgba(0, 0, 0, 0.4)',
+      lg: '0px 8px 24px -6px rgba(0, 0, 0, 0.16), 0px 0px 1px rgba(0, 0, 0, 0.4)',
+      xl: '0px 32px 32px -8px rgba(0, 0, 0, 0.08), 0px 0px 32px -8px rgba(0, 0, 0, 0.12), 0px 0px 1px rgba(0, 0, 0, 0.2)',
     },
   },
   utils: {
@@ -154,5 +204,14 @@ export const { styled, getCssText } = createStitches({
 export const darkTheme = createTheme('dark', {
   colors: {
     ...grayDark,
+    ...indigoDark,
+  },
+  shadows: {
+    sm: '0px 6px 6px -6px rgba(0, 0, 0, 0.64), 0px 0px 1px rgba(0, 0, 0, 0.56)',
+    md: '0px 12px 12px -6px rgba(0, 0, 0, 0.64), 0px 0px 1px rgba(0, 0, 0, 0.56)',
+    lg: '0px 24px 24px -6px rgba(0, 0, 0, 0.64), 0px 0px 1px rgba(0, 0, 0, 0.56)',
+    xl: '0px 48px 48px -6px rgba(0, 0, 0, 0.88), 0px 0px 1px rgba(0, 0, 0, 0.72)',
   },
 });
+
+export type CSS = Stitches.CSS<typeof config>;
