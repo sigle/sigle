@@ -1,12 +1,14 @@
 import { styled } from '@sigle/stitches.config';
-import { Badge, Button } from '@sigle/ui';
+import { Badge, Button, Flex, IconButton, Typography } from '@sigle/ui';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import {
+  TbBook,
   TbBookmarks,
   TbChartPie,
   TbHome,
   TbMail,
+  TbPlus,
   TbUserCircle,
   TbUsers,
 } from 'react-icons/tb';
@@ -49,6 +51,12 @@ const Menu = styled('div', {
   mt: 44,
 });
 
+const NavBarLinkContainer = styled('div', {
+  display: 'flex',
+  flexDirection: 'column',
+  gap: '$1',
+});
+
 interface NavBarLinkProps {
   href: string;
   icon: React.ReactNode;
@@ -68,12 +76,16 @@ const NavBarLink = ({ href, icon, label, active }: NavBarLinkProps) => {
 
 const NavBarStoriesContainer = styled('div', {
   py: '$5',
+  display: 'flex',
+  flexDirection: 'column',
+  gap: '$1',
 });
 
 const NavBarLinkStoriesButton = styled(Button, {
   width: '100%',
-  justifyContent: 'space-between',
+  justifyContent: 'flex-start',
   fontWeight: 400,
+  gap: '$2',
   px: '$3',
   fontSize: '$md',
   lineHeight: '$md',
@@ -82,6 +94,7 @@ const NavBarLinkStoriesButton = styled(Button, {
     size: {
       md: {
         pl: '38px',
+        pr: '0px',
       },
     },
   },
@@ -136,15 +149,26 @@ export const NavBar = ({}: NavBarProps) => {
       <div>
         <LogoImage />
         <Menu>
-          {menu.map((item, index) => (
-            <NavBarLink
-              key={index}
-              {...item}
-              active={router.pathname === item.href}
-            />
-          ))}
+          <NavBarLinkContainer>
+            {menu.map((item, index) => (
+              <NavBarLink
+                key={index}
+                {...item}
+                active={router.pathname === item.href}
+              />
+            ))}
+          </NavBarLinkContainer>
 
           <NavBarStoriesContainer>
+            <Flex justify="between" align="center" css={{ pl: '10px' }}>
+              <Flex align="center" gap="2">
+                <TbBook size={navbarIconSize} />
+                <Typography>Stories</Typography>
+              </Flex>
+              <IconButton variant="light">
+                <TbPlus />
+              </IconButton>
+            </Flex>
             <NavBarLinkStoriesButton variant="ghost">
               Drafts <Badge>9</Badge>
             </NavBarLinkStoriesButton>
@@ -153,13 +177,15 @@ export const NavBar = ({}: NavBarProps) => {
             </NavBarLinkStoriesButton>
           </NavBarStoriesContainer>
 
-          {menu2.map((item, index) => (
-            <NavBarLink
-              key={index}
-              {...item}
-              active={router.pathname === item.href}
-            />
-          ))}
+          <NavBarLinkContainer>
+            {menu2.map((item, index) => (
+              <NavBarLink
+                key={index}
+                {...item}
+                active={router.pathname === item.href}
+              />
+            ))}
+          </NavBarLinkContainer>
         </Menu>
       </div>
       <NavBarUserDropdown />
