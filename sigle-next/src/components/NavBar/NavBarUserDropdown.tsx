@@ -44,6 +44,7 @@ const ImageAvatarContainer = styled('div', {
   width: 36,
   height: 36,
   br: '$sm',
+  cursor: 'pointer',
 });
 
 const StyledTbChevronDown = styled(TbChevronDown, {
@@ -63,7 +64,9 @@ interface NavBarUserDropdownProps {
   isCollapsed: boolean;
 }
 
-export const NavBarUserDropdown = ({}: NavBarUserDropdownProps) => {
+export const NavBarUserDropdown = ({
+  isCollapsed,
+}: NavBarUserDropdownProps) => {
   const { resolvedTheme, setTheme } = useTheme();
 
   const toggleTheme = () => {
@@ -73,27 +76,40 @@ export const NavBarUserDropdown = ({}: NavBarUserDropdownProps) => {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <UserMenu>
-          <LeftContainer>
-            <ImageAvatarContainer>
-              <img
-                src="https://gaia.blockstack.org/hub/1Mqh6Lqyqdjcu8PHczewej4DZmMjFp1ZEt/photos/settings/1664899611226-mAorjrYd_400x400.jpg"
-                alt="user avatar"
-              />
-            </ImageAvatarContainer>
-            <div>
-              <Typography size="xs" lineClamp={1}>
-                Marly McKendry
-              </Typography>
-              <Typography css={{ color: '$gray9' }} size="xs" lineClamp={1}>
-                markendry.btc
-              </Typography>
-            </div>
-          </LeftContainer>
-          <StyledTbChevronDown />
-        </UserMenu>
+        {isCollapsed ? (
+          <ImageAvatarContainer>
+            <img
+              src="https://gaia.blockstack.org/hub/1Mqh6Lqyqdjcu8PHczewej4DZmMjFp1ZEt/photos/settings/1664899611226-mAorjrYd_400x400.jpg"
+              alt="user avatar"
+            />
+          </ImageAvatarContainer>
+        ) : (
+          <UserMenu>
+            <LeftContainer>
+              <ImageAvatarContainer>
+                <img
+                  src="https://gaia.blockstack.org/hub/1Mqh6Lqyqdjcu8PHczewej4DZmMjFp1ZEt/photos/settings/1664899611226-mAorjrYd_400x400.jpg"
+                  alt="user avatar"
+                />
+              </ImageAvatarContainer>
+              <div>
+                <Typography size="xs" lineClamp={1}>
+                  Marly McKendry
+                </Typography>
+                <Typography css={{ color: '$gray9' }} size="xs" lineClamp={1}>
+                  markendry.btc
+                </Typography>
+              </div>
+            </LeftContainer>
+            <StyledTbChevronDown />
+          </UserMenu>
+        )}
       </DropdownMenuTrigger>
-      <DropdownMenuContent side="top" align="center" sideOffset={12}>
+      <DropdownMenuContent
+        side={isCollapsed ? 'right' : 'top'}
+        align={isCollapsed ? 'end' : 'center'}
+        sideOffset={12}
+      >
         <Link href="/settings">
           <DropdownMenuItem>Settings</DropdownMenuItem>
         </Link>
