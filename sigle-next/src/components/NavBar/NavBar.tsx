@@ -1,5 +1,14 @@
 import { styled } from '@sigle/stitches.config';
-import { Badge, Button, Flex, IconButton, Typography } from '@sigle/ui';
+import {
+  Badge,
+  Button,
+  Flex,
+  IconButton,
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+  Typography,
+} from '@sigle/ui';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import {
@@ -75,7 +84,7 @@ interface NavBarLinkProps {
   href: string;
   icon: React.ReactNode;
   label: string;
-  active?: boolean;
+  active: boolean;
 }
 
 const NavBarLink = ({
@@ -85,17 +94,28 @@ const NavBarLink = ({
   label,
   active,
 }: NavBarLinkProps) => {
+  if (isCollapsed) {
+    return (
+      <Tooltip delayDuration={600}>
+        <TooltipTrigger asChild>
+          <Link href={href}>
+            <NavBarLinkIconButton variant="ghost" size="lg" active={active}>
+              {icon}
+            </NavBarLinkIconButton>
+          </Link>
+        </TooltipTrigger>
+        <TooltipContent side="right" sideOffset={8}>
+          {label}
+        </TooltipContent>
+      </Tooltip>
+    );
+  }
+
   return (
     <Link href={href}>
-      {isCollapsed ? (
-        <NavBarLinkIconButton variant="ghost" size="lg" active={active}>
-          {icon}
-        </NavBarLinkIconButton>
-      ) : (
-        <NavBarLinkButton variant="ghost" leftIcon={icon} active={active}>
-          {label}
-        </NavBarLinkButton>
-      )}
+      <NavBarLinkButton variant="ghost" leftIcon={icon} active={active}>
+        {label}
+      </NavBarLinkButton>
     </Link>
   );
 };
@@ -200,18 +220,26 @@ export const NavBar = ({ isCollapsed }: NavBarProps) => {
               </Flex>
             )}
             {isCollapsed ? (
-              <IconButton variant="ghost" size="lg">
-                <TbFileDiff size={navbarIconSize} />
-              </IconButton>
+              <NavBarLink
+                isCollapsed={isCollapsed}
+                icon={<TbFileDiff size={navbarIconSize} />}
+                label="Drafts"
+                href="/"
+                active={false}
+              />
             ) : (
               <NavBarLinkStoriesButton variant="ghost">
                 Drafts <Badge>9</Badge>
               </NavBarLinkStoriesButton>
             )}
             {isCollapsed ? (
-              <IconButton variant="ghost" size="lg">
-                <TbNews size={navbarIconSize} />
-              </IconButton>
+              <NavBarLink
+                isCollapsed={isCollapsed}
+                icon={<TbNews size={navbarIconSize} />}
+                label="Published"
+                href="/"
+                active={false}
+              />
             ) : (
               <NavBarLinkStoriesButton variant="ghost">
                 Published <Badge>10</Badge>
