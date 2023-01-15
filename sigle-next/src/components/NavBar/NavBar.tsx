@@ -201,7 +201,7 @@ export const NavBar = ({ isCollapsed }: NavBarProps) => {
             )}
             {isCollapsed ? (
               <IconButton variant="ghost" size="lg">
-                <TbFileDiff />
+                <TbFileDiff size={navbarIconSize} />
               </IconButton>
             ) : (
               <NavBarLinkStoriesButton variant="ghost">
@@ -210,7 +210,7 @@ export const NavBar = ({ isCollapsed }: NavBarProps) => {
             )}
             {isCollapsed ? (
               <IconButton variant="ghost" size="lg">
-                <TbNews />
+                <TbNews size={navbarIconSize} />
               </IconButton>
             ) : (
               <NavBarLinkStoriesButton variant="ghost">
