@@ -8,15 +8,17 @@ interface DashboardLayoutProps {
 }
 
 export const DashboardLayout = ({ children }: DashboardLayoutProps) => {
+  const isCollapsed = true;
+
   return (
     <Box
       css={{
         display: 'grid',
-        gridTemplateColumns: '271px auto',
+        gridTemplateColumns: isCollapsed ? '81px auto' : '271px auto',
         height: '100vh',
       }}
     >
-      <NavBar />
+      <NavBar isCollapsed={isCollapsed} />
       <main>{children}</main>
     </Box>
   );

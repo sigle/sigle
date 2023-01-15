@@ -59,7 +59,11 @@ const StyledDropdownMenuItemDarkMode = styled(DropdownMenuItem, {
   gap: '$2',
 });
 
-export const NavBarUserDropdown = () => {
+interface NavBarUserDropdownProps {
+  isCollapsed: boolean;
+}
+
+export const NavBarUserDropdown = ({}: NavBarUserDropdownProps) => {
   const { resolvedTheme, setTheme } = useTheme();
 
   const toggleTheme = () => {

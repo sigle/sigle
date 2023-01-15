@@ -6,8 +6,10 @@ import {
   TbBook,
   TbBookmarks,
   TbChartPie,
+  TbFileDiff,
   TbHome,
   TbMail,
+  TbNews,
   TbPlus,
   TbUserCircle,
   TbUsers,
@@ -45,6 +47,17 @@ const NavBarLinkButton = styled(Button, {
   },
 });
 
+const NavBarLinkIconButton = styled(IconButton, {
+  variants: {
+    active: {
+      true: {
+        boxShadow: '0 0 0 1px $colors$gray6',
+        backgroundColor: '$gray3',
+      },
+    },
+  },
+});
+
 const navbarIconSize = 20;
 
 const Menu = styled('div', {
@@ -58,18 +71,31 @@ const NavBarLinkContainer = styled('div', {
 });
 
 interface NavBarLinkProps {
+  isCollapsed: boolean;
   href: string;
   icon: React.ReactNode;
   label: string;
   active?: boolean;
 }
 
-const NavBarLink = ({ href, icon, label, active }: NavBarLinkProps) => {
+const NavBarLink = ({
+  isCollapsed,
+  href,
+  icon,
+  label,
+  active,
+}: NavBarLinkProps) => {
   return (
     <Link href={href}>
-      <NavBarLinkButton variant="ghost" leftIcon={icon} active={active}>
-        {label}
-      </NavBarLinkButton>
+      {isCollapsed ? (
+        <NavBarLinkIconButton variant="ghost" size="lg" active={active}>
+          {icon}
+        </NavBarLinkIconButton>
+      ) : (
+        <NavBarLinkButton variant="ghost" leftIcon={icon} active={active}>
+          {label}
+        </NavBarLinkButton>
+      )}
     </Link>
   );
 };
@@ -94,7 +120,6 @@ const NavBarLinkStoriesButton = styled(Button, {
     size: {
       md: {
         pl: '38px',
-        pr: '0px',
       },
     },
   },
@@ -103,9 +128,11 @@ const NavBarLinkStoriesButton = styled(Button, {
   },
 });
 
-interface NavBarProps {}
+interface NavBarProps {
+  isCollapsed: boolean;
+}
 
-export const NavBar = ({}: NavBarProps) => {
+export const NavBar = ({ isCollapsed }: NavBarProps) => {
   const router = useRouter();
 
   const menu = [
@@ -154,27 +181,42 @@ export const NavBar = ({}: NavBarProps) => {
               <NavBarLink
                 key={index}
                 {...item}
+                isCollapsed={isCollapsed}
                 active={router.pathname === item.href}
               />
             ))}
           </NavBarLinkContainer>
 
           <NavBarStoriesContainer>
-            <Flex justify="between" align="center" css={{ pl: '10px' }}>
-              <Flex align="center" gap="2">
-                <TbBook size={navbarIconSize} />
-                <Typography>Stories</Typography>
+            {!isCollapsed && (
+              <Flex justify="between" align="center" css={{ pl: '10px' }}>
+                <Flex align="center" gap="2">
+                  <TbBook size={navbarIconSize} />
+                  <Typography>Stories</Typography>
+                </Flex>
+                <IconButton variant="light">
+                  <TbPlus />
+                </IconButton>
               </Flex>
-              <IconButton variant="light">
-                <TbPlus />
+            )}
+            {isCollapsed ? (
+              <IconButton variant="ghost" size="lg">
+                <TbFileDiff />
               </IconButton>
-            </Flex>
-            <NavBarLinkStoriesButton variant="ghost">
-              Drafts <Badge>9</Badge>
-            </NavBarLinkStoriesButton>
-            <NavBarLinkStoriesButton variant="ghost">
-              Published <Badge>10</Badge>
-            </NavBarLinkStoriesButton>
+            ) : (
+              <NavBarLinkStoriesButton variant="ghost">
+                Drafts <Badge>9</Badge>
+              </NavBarLinkStoriesButton>
+            )}
+            {isCollapsed ? (
+              <IconButton variant="ghost" size="lg">
+                <TbNews />
+              </IconButton>
+            ) : (
+              <NavBarLinkStoriesButton variant="ghost">
+                Published <Badge>10</Badge>
+              </NavBarLinkStoriesButton>
+            )}
           </NavBarStoriesContainer>
 
           <NavBarLinkContainer>
@@ -182,13 +224,14 @@ export const NavBar = ({}: NavBarProps) => {
               <NavBarLink
                 key={index}
                 {...item}
+                isCollapsed={isCollapsed}
                 active={router.pathname === item.href}
               />
             ))}
           </NavBarLinkContainer>
         </Menu>
       </div>
-      <NavBarUserDropdown />
+      <NavBarUserDropdown isCollapsed={isCollapsed} />
     </StyledNavBar>
   );
 };
