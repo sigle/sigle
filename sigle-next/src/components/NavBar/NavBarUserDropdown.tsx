@@ -11,6 +11,7 @@ import {
 import { useTheme } from 'next-themes';
 import Link from 'next/link';
 import { TbChevronDown } from 'react-icons/tb';
+import { useDashboardStore } from '../Dashboard/store';
 
 const UserMenu = styled('div', {
   backgroundColor: '$gray3',
@@ -61,14 +62,9 @@ const StyledDropdownMenuItemDarkMode = styled(DropdownMenuItem, {
   gap: '$2',
 });
 
-interface NavBarUserDropdownProps {
-  isCollapsed: boolean;
-}
-
-export const NavBarUserDropdown = ({
-  isCollapsed,
-}: NavBarUserDropdownProps) => {
+export const NavBarUserDropdown = () => {
   const { resolvedTheme, setTheme } = useTheme();
+  const collapsed = useDashboardStore((state) => state.collapsed);
 
   const toggleTheme = () => {
     resolvedTheme === 'dark' ? setTheme('light') : setTheme('dark');
@@ -77,7 +73,7 @@ export const NavBarUserDropdown = ({
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        {isCollapsed ? (
+        {collapsed ? (
           <ImageAvatarContainer>
             <img
               src="https://gaia.blockstack.org/hub/1Mqh6Lqyqdjcu8PHczewej4DZmMjFp1ZEt/photos/settings/1664899611226-mAorjrYd_400x400.jpg"
@@ -107,8 +103,8 @@ export const NavBarUserDropdown = ({
         )}
       </DropdownMenuTrigger>
       <DropdownMenuContent
-        side={isCollapsed ? 'right' : 'top'}
-        align={isCollapsed ? 'end' : 'center'}
+        side={collapsed ? 'right' : 'top'}
+        align={collapsed ? 'end' : 'center'}
         sideOffset={12}
       >
         <Link href="/settings">

@@ -20,7 +20,8 @@
     "next-themes": "0.2.0",
     "react": "18.2.0",
     "react-dom": "18.2.0",
-    "react-icons": "4.7.1"
+    "react-icons": "4.7.1",
+    "zustand": "4.3.2"
   },
   "devDependencies": {
     "@sigle/tailwind-style": "workspace:^1.1.0",

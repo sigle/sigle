@@ -12,6 +12,7 @@ import {
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import {
+  TbArrowBarToLeft,
   TbBook,
   TbBookmarks,
   TbChartPie,
@@ -24,6 +25,7 @@ import {
   TbUsers,
 } from 'react-icons/tb';
 import { LogoImage } from '../../images/logo';
+import { useDashboardStore } from '../Dashboard/store';
 import { NavBarUserDropdown } from './NavBarUserDropdown';
 
 const StyledNavBar = styled('nav', {
@@ -148,12 +150,10 @@ const NavBarLinkStoriesButton = styled(Button, {
   },
 });
 
-interface NavBarProps {
-  isCollapsed: boolean;
-}
-
-export const NavBar = ({ isCollapsed }: NavBarProps) => {
+export const NavBar = () => {
   const router = useRouter();
+  const collapsed = useDashboardStore((state) => state.collapsed);
+  const toggleCollapse = useDashboardStore((state) => state.toggleCollapse);
 
   const menu = [
     {
@@ -194,21 +194,30 @@ export const NavBar = ({ isCollapsed }: NavBarProps) => {
   return (
     <StyledNavBar>
       <div>
-        <LogoImage />
+        <Flex justify="between" align="center">
+          <LogoImage />
+          <IconButton
+            variant="ghost"
+            size="lg"
+            onClick={() => toggleCollapse(!collapsed)}
+          >
+            <TbArrowBarToLeft size={navbarIconSize} />
+          </IconButton>
+        </Flex>
         <Menu>
           <NavBarLinkContainer>
             {menu.map((item, index) => (
               <NavBarLink
                 key={index}
                 {...item}
-                isCollapsed={isCollapsed}
+                isCollapsed={collapsed}
                 active={router.pathname === item.href}
               />
             ))}
           </NavBarLinkContainer>
 
           <NavBarStoriesContainer>
-            {!isCollapsed && (
+            {!collapsed && (
               <Flex justify="between" align="center" css={{ pl: '10px' }}>
                 <Flex align="center" gap="2">
                   <TbBook size={navbarIconSize} />
@@ -219,9 +228,9 @@ export const NavBar = ({ isCollapsed }: NavBarProps) => {
                 </IconButton>
               </Flex>
             )}
-            {isCollapsed ? (
+            {collapsed ? (
               <NavBarLink
-                isCollapsed={isCollapsed}
+                isCollapsed={collapsed}
                 icon={<TbFileDiff size={navbarIconSize} />}
                 label="Drafts"
                 href="/"
@@ -232,9 +241,9 @@ export const NavBar = ({ isCollapsed }: NavBarProps) => {
                 Drafts <Badge>9</Badge>
               </NavBarLinkStoriesButton>
             )}
-            {isCollapsed ? (
+            {collapsed ? (
               <NavBarLink
-                isCollapsed={isCollapsed}
+                isCollapsed={collapsed}
                 icon={<TbNews size={navbarIconSize} />}
                 label="Published"
                 href="/"
@@ -252,14 +261,14 @@ export const NavBar = ({ isCollapsed }: NavBarProps) => {
               <NavBarLink
                 key={index}
                 {...item}
-                isCollapsed={isCollapsed}
+                isCollapsed={collapsed}
                 active={router.pathname === item.href}
               />
             ))}
           </NavBarLinkContainer>
         </Menu>
       </div>
-      <NavBarUserDropdown isCollapsed={isCollapsed} />
+      <NavBarUserDropdown />
     </StyledNavBar>
   );
 };
