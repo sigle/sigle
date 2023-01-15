@@ -40,6 +40,7 @@ const ImageAvatarContainer = styled('div', {
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'center',
+  alignSelf: 'center',
   overflow: 'hidden',
   width: 36,
   height: 36,
