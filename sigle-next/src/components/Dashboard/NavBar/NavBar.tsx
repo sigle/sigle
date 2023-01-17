@@ -159,7 +159,7 @@ export const NavBar = () => {
   const collapsed = useDashboardStore((state) => state.collapsed);
   const isMounted = useIsMounted();
   const { isConnected } = useAccount();
-  const { open: connectKitOpen, setOpen: setConnectKitOpen } = useModal();
+  const { setOpen: setConnectKitOpen } = useModal();
 
   const menu = [
     {
@@ -287,7 +287,11 @@ export const NavBar = () => {
             Connect wallet
           </Button>
         ) : collapsed && !isConnected ? (
-          <IconButton color="indigo" size="lg">
+          <IconButton
+            color="indigo"
+            size="lg"
+            onClick={() => setConnectKitOpen(true)}
+          >
             <TbKey />
           </IconButton>
         ) : null}
