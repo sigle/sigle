@@ -8,14 +8,12 @@ import {
   Typography,
   DropdownMenuSeparator,
   Switch,
-  Button,
   IconButton,
-  Flex,
 } from '@sigle/ui';
 import { useTheme } from 'next-themes';
 import Link from 'next/link';
-import { TbChevronDown, TbKey, TbSettings } from 'react-icons/tb';
-import { useAccount } from 'wagmi';
+import { TbChevronDown, TbSettings } from 'react-icons/tb';
+import { useAccount, useDisconnect } from 'wagmi';
 import { useDashboardStore } from '../store';
 
 const UserMenu = styled('div', {
@@ -72,108 +70,90 @@ export const NavBarUserDropdown = () => {
   const { resolvedTheme, setTheme } = useTheme();
   const collapsed = useDashboardStore((state) => state.collapsed);
   const toggleCollapse = useDashboardStore((state) => state.toggleCollapse);
-  const { isConnected } = useAccount();
   const isMounted = useIsMounted();
+  const { isConnected } = useAccount();
+  const { disconnect } = useDisconnect();
 
   const toggleTheme = () => {
     resolvedTheme === 'dark' ? setTheme('light') : setTheme('dark');
   };
 
   return (
-    <Flex
-      gap="3"
-      justify="between"
-      direction={collapsed ? 'columnReverse' : 'row'}
-    >
-      {!isMounted() ? null : !collapsed && !isConnected ? (
-        <Button
-          color="indigo"
-          size="lg"
-          rightIcon={<TbKey />}
-          css={{ flex: 1 }}
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild>
+        {!isMounted() ? null : !collapsed && !isConnected ? ( // TODO when component is not mounter, add a skeleton
+          <IconButton variant="light" size="lg">
+            <TbSettings />
+          </IconButton>
+        ) : collapsed && !isConnected ? (
+          <IconButton variant="light" size="lg">
+            <TbSettings />
+          </IconButton>
+        ) : !collapsed && isConnected ? (
+          <UserMenu>
+            <LeftContainer>
+              <ImageAvatarContainer>
+                <img
+                  src="https://gaia.blockstack.org/hub/1Mqh6Lqyqdjcu8PHczewej4DZmMjFp1ZEt/photos/settings/1664899611226-mAorjrYd_400x400.jpg"
+                  alt="user avatar"
+                />
+              </ImageAvatarContainer>
+              <div>
+                <Typography size="xs" lineClamp={1}>
+                  Marly McKendry
+                </Typography>
+                <Typography css={{ color: '$gray9' }} size="xs" lineClamp={1}>
+                  markendry.btc
+                </Typography>
+              </div>
+            </LeftContainer>
+            <StyledTbChevronDown />
+          </UserMenu>
+        ) : collapsed && isConnected ? (
+          <ImageAvatarContainer>
+            <img
+              src="https://gaia.blockstack.org/hub/1Mqh6Lqyqdjcu8PHczewej4DZmMjFp1ZEt/photos/settings/1664899611226-mAorjrYd_400x400.jpg"
+              alt="user avatar"
+            />
+          </ImageAvatarContainer>
+        ) : null}
+      </DropdownMenuTrigger>
+      <DropdownMenuContent
+        side={collapsed ? 'right' : 'top'}
+        align={
+          collapsed && isConnected
+            ? 'end'
+            : !collapsed && !isConnected
+            ? 'start'
+            : 'center'
+        }
+        sideOffset={12}
+      >
+        <Link href="/settings">
+          <DropdownMenuItem>Settings</DropdownMenuItem>
+        </Link>
+        <Link href="/settings">
+          <DropdownMenuItem>Upgrade</DropdownMenuItem>
+        </Link>
+        <StyledDropdownMenuItemDarkMode
+          // Prevent the dropdown from closing when clicking on the dark mode switch
+          onSelect={(e) => e.preventDefault()}
+          onClick={toggleTheme}
         >
-          Connect wallet
-        </Button>
-      ) : collapsed && !isConnected ? (
-        <IconButton color="indigo" size="lg">
-          <TbKey />
-        </IconButton>
-      ) : null}
-
-      <DropdownMenu>
-        <DropdownMenuTrigger asChild>
-          {!isMounted() ? null : !collapsed && !isConnected ? ( // TODO when component is not mounter, add a skeleton
-            <IconButton variant="light" size="lg">
-              <TbSettings />
-            </IconButton>
-          ) : collapsed && !isConnected ? (
-            <IconButton variant="light" size="lg">
-              <TbSettings />
-            </IconButton>
-          ) : !collapsed && isConnected ? (
-            <UserMenu>
-              <LeftContainer>
-                <ImageAvatarContainer>
-                  <img
-                    src="https://gaia.blockstack.org/hub/1Mqh6Lqyqdjcu8PHczewej4DZmMjFp1ZEt/photos/settings/1664899611226-mAorjrYd_400x400.jpg"
-                    alt="user avatar"
-                  />
-                </ImageAvatarContainer>
-                <div>
-                  <Typography size="xs" lineClamp={1}>
-                    Marly McKendry
-                  </Typography>
-                  <Typography css={{ color: '$gray9' }} size="xs" lineClamp={1}>
-                    markendry.btc
-                  </Typography>
-                </div>
-              </LeftContainer>
-              <StyledTbChevronDown />
-            </UserMenu>
-          ) : collapsed && isConnected ? (
-            <ImageAvatarContainer>
-              <img
-                src="https://gaia.blockstack.org/hub/1Mqh6Lqyqdjcu8PHczewej4DZmMjFp1ZEt/photos/settings/1664899611226-mAorjrYd_400x400.jpg"
-                alt="user avatar"
-              />
-            </ImageAvatarContainer>
-          ) : null}
-        </DropdownMenuTrigger>
-        <DropdownMenuContent
-          side={collapsed ? 'right' : 'top'}
-          align={
-            collapsed && isConnected
-              ? 'end'
-              : !collapsed && !isConnected
-              ? 'start'
-              : 'center'
-          }
-          sideOffset={12}
+          Dark mode
+          <Switch checked={resolvedTheme === 'dark'} />
+        </StyledDropdownMenuItemDarkMode>
+        <StyledDropdownMenuItemDarkMode
+          onClick={() => toggleCollapse(!collapsed)}
         >
-          <Link href="/settings">
-            <DropdownMenuItem>Settings</DropdownMenuItem>
-          </Link>
-          <Link href="/settings">
-            <DropdownMenuItem>Upgrade</DropdownMenuItem>
-          </Link>
-          <StyledDropdownMenuItemDarkMode
-            // Prevent the dropdown from closing when clicking on the dark mode switch
-            onSelect={(e) => e.preventDefault()}
-            onClick={toggleTheme}
-          >
-            Dark mode
-            <Switch checked={resolvedTheme === 'dark'} />
-          </StyledDropdownMenuItemDarkMode>
-          <StyledDropdownMenuItemDarkMode
-            onClick={() => toggleCollapse(!collapsed)}
-          >
-            Menu collapsed
-            <Switch checked={collapsed} />
-          </StyledDropdownMenuItemDarkMode>
-          <DropdownMenuSeparator />
-          <DropdownMenuItem>Log out</DropdownMenuItem>
-        </DropdownMenuContent>
-      </DropdownMenu>
-    </Flex>
+          Menu collapsed
+          <Switch checked={collapsed} />
+        </StyledDropdownMenuItemDarkMode>
+        <DropdownMenuSeparator />
+        <DropdownMenuItem onClick={() => disconnect()}>
+          Log out
+        </DropdownMenuItem>
+      </DropdownMenuContent>
+    </DropdownMenu>
   );
 };

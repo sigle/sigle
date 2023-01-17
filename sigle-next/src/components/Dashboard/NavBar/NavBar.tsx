@@ -1,3 +1,4 @@
+import { useIsMounted } from '@sigle/hooks';
 import { styled } from '@sigle/stitches.config';
 import {
   Badge,
@@ -16,6 +17,7 @@ import {
   TbBookmarks,
   TbChartPie,
   TbHome,
+  TbKey,
   TbMail,
   TbNews,
   TbNotebook,
@@ -23,6 +25,7 @@ import {
   TbUserCircle,
   TbUsers,
 } from 'react-icons/tb';
+import { useAccount } from 'wagmi';
 import { LogoImage } from '../../../images/Logo';
 import { LogoOnlyImage } from '../../../images/LogoOnly';
 import { useDashboardStore } from '../store';
@@ -153,6 +156,8 @@ const NavBarLinkStoriesButton = styled(Button, {
 export const NavBar = () => {
   const router = useRouter();
   const collapsed = useDashboardStore((state) => state.collapsed);
+  const isMounted = useIsMounted();
+  const { isConnected } = useAccount();
 
   const menu = [
     {
@@ -264,7 +269,27 @@ export const NavBar = () => {
           </NavBarLinkContainer>
         </Menu>
       </div>
-      <NavBarUserDropdown />
+      <Flex
+        gap="3"
+        justify="between"
+        direction={collapsed ? 'columnReverse' : 'row'}
+      >
+        {!isMounted() ? null : !collapsed && !isConnected ? (
+          <Button
+            color="indigo"
+            size="lg"
+            rightIcon={<TbKey />}
+            css={{ flex: 1 }}
+          >
+            Connect wallet
+          </Button>
+        ) : collapsed && !isConnected ? (
+          <IconButton color="indigo" size="lg">
+            <TbKey />
+          </IconButton>
+        ) : null}
+        <NavBarUserDropdown />
+      </Flex>
     </StyledNavBar>
   );
 };
