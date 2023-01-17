@@ -1,5 +1,5 @@
 import { styled } from '@sigle/stitches.config';
-import { NavBar } from '../NavBar/NavBar';
+import { NavBar } from './NavBar/NavBar';
 import { useDashboardStore } from './store';
 
 const Box = styled('div', {});

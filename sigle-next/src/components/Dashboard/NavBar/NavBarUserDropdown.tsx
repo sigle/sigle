@@ -11,7 +11,7 @@ import {
 import { useTheme } from 'next-themes';
 import Link from 'next/link';
 import { TbChevronDown } from 'react-icons/tb';
-import { useDashboardStore } from '../Dashboard/store';
+import { useDashboardStore } from '../store';
 
 const UserMenu = styled('div', {
   backgroundColor: '$gray3',

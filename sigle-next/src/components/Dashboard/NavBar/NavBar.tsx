@@ -24,9 +24,9 @@ import {
   TbUserCircle,
   TbUsers,
 } from 'react-icons/tb';
-import { LogoImage } from '../../images/Logo';
-import { LogoOnlyImage } from '../../images/LogoOnly';
-import { useDashboardStore } from '../Dashboard/store';
+import { LogoImage } from '../../../images/Logo';
+import { LogoOnlyImage } from '../../../images/LogoOnly';
+import { useDashboardStore } from '../store';
 import { NavBarUserDropdown } from './NavBarUserDropdown';
 
 const StyledNavBar = styled('nav', {
