@@ -15,10 +15,10 @@ import {
   TbBook,
   TbBookmarks,
   TbChartPie,
-  TbFileDiff,
   TbHome,
   TbMail,
   TbNews,
+  TbNotebook,
   TbPlus,
   TbUserCircle,
   TbUsers,
@@ -227,7 +227,7 @@ export const NavBar = () => {
             {collapsed ? (
               <NavBarLink
                 isCollapsed={collapsed}
-                icon={<TbFileDiff size={navbarIconSize} />}
+                icon={<TbNotebook size={navbarIconSize} />}
                 label="Drafts"
                 href="/"
                 active={false}
