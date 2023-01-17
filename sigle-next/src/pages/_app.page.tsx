@@ -9,7 +9,9 @@ import { darkTheme, globalCss } from '@sigle/stitches.config';
 /**
  * Lazy load the WagmiProvider as it's huge to avoid bloating the main bundle
  */
-const WagmiProvider = dynamic(() => import('../components/WagmiProvider'));
+const WagmiProvider = dynamic(
+  () => import('../components/Ethereum/WagmiProvider')
+);
 
 const inter = Inter({
   subsets: ['latin'],
