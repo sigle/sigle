@@ -10,6 +10,7 @@ import {
   TooltipTrigger,
   Typography,
 } from '@sigle/ui';
+import { useModal } from 'connectkit';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import {
@@ -158,6 +159,7 @@ export const NavBar = () => {
   const collapsed = useDashboardStore((state) => state.collapsed);
   const isMounted = useIsMounted();
   const { isConnected } = useAccount();
+  const { open: connectKitOpen, setOpen: setConnectKitOpen } = useModal();
 
   const menu = [
     {
@@ -280,6 +282,7 @@ export const NavBar = () => {
             size="lg"
             rightIcon={<TbKey />}
             css={{ flex: 1 }}
+            onClick={() => setConnectKitOpen(true)}
           >
             Connect wallet
           </Button>
