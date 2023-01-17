@@ -17,7 +17,16 @@ const client = createClient(
 export const WagmiProvider = ({ children }: { children: ReactNode }) => {
   return (
     <WagmiConfig client={client}>
-      <ConnectKitProvider>{children}</ConnectKitProvider>
+      <ConnectKitProvider
+        options={
+          {
+            // TODO setup disclaimer / privacy policy
+            // https://docs.family.co/connectkit/theming#additional-options-example
+          }
+        }
+      >
+        {children}
+      </ConnectKitProvider>
     </WagmiConfig>
   );
 };
