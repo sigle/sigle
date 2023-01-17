@@ -65,6 +65,7 @@ const StyledDropdownMenuItemDarkMode = styled(DropdownMenuItem, {
 export const NavBarUserDropdown = () => {
   const { resolvedTheme, setTheme } = useTheme();
   const collapsed = useDashboardStore((state) => state.collapsed);
+  const toggleCollapse = useDashboardStore((state) => state.toggleCollapse);
 
   const toggleTheme = () => {
     resolvedTheme === 'dark' ? setTheme('light') : setTheme('dark');
@@ -120,6 +121,12 @@ export const NavBarUserDropdown = () => {
         >
           Dark mode
           <Switch checked={resolvedTheme === 'dark'} />
+        </StyledDropdownMenuItemDarkMode>
+        <StyledDropdownMenuItemDarkMode
+          onClick={() => toggleCollapse(!collapsed)}
+        >
+          Menu collapsed
+          <Switch checked={collapsed} />
         </StyledDropdownMenuItemDarkMode>
         <DropdownMenuSeparator />
         <DropdownMenuItem>Log out</DropdownMenuItem>

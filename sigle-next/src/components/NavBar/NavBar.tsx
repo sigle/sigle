@@ -24,7 +24,8 @@ import {
   TbUserCircle,
   TbUsers,
 } from 'react-icons/tb';
-import { LogoImage } from '../../images/logo';
+import { LogoImage } from '../../images/Logo';
+import { LogoOnlyImage } from '../../images/LogoOnly';
 import { useDashboardStore } from '../Dashboard/store';
 import { NavBarUserDropdown } from './NavBarUserDropdown';
 
@@ -153,7 +154,6 @@ const NavBarLinkStoriesButton = styled(Button, {
 export const NavBar = () => {
   const router = useRouter();
   const collapsed = useDashboardStore((state) => state.collapsed);
-  const toggleCollapse = useDashboardStore((state) => state.toggleCollapse);
 
   const menu = [
     {
@@ -194,16 +194,13 @@ export const NavBar = () => {
   return (
     <StyledNavBar>
       <div>
-        <Flex justify="between" align="center">
+        {collapsed ? (
+          <Flex justify="center">
+            <LogoOnlyImage />
+          </Flex>
+        ) : (
           <LogoImage />
-          <IconButton
-            variant="ghost"
-            size="lg"
-            onClick={() => toggleCollapse(!collapsed)}
-          >
-            <TbArrowBarToLeft size={navbarIconSize} />
-          </IconButton>
-        </Flex>
+        )}
         <Menu>
           <NavBarLinkContainer>
             {menu.map((item, index) => (
