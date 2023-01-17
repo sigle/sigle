@@ -1,5 +1,10 @@
+import { TooltipProvider } from '@radix-ui/react-tooltip';
 import { DashboardLayout } from '../components/Dashboard/Layout';
 
 export default function Home() {
-  return <DashboardLayout>Hello</DashboardLayout>;
+  return (
+    <TooltipProvider>
+      <DashboardLayout>Hello</DashboardLayout>
+    </TooltipProvider>
+  );
 }
