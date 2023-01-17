@@ -2,8 +2,14 @@ import type { AppProps } from 'next/app';
 import Head from 'next/head';
 import { Inter } from '@next/font/google';
 import { ThemeProvider } from 'next-themes';
+import dynamic from 'next/dynamic';
 import '@sigle/tailwind-style/dist/tailwind.css';
 import { darkTheme, globalCss } from '@sigle/stitches.config';
+
+/**
+ * Lazy load the WagmiProvider as it's huge to avoid bloating the main bundle
+ */
+const WagmiProvider = dynamic(() => import('../components/WagmiProvider'));
 
 const inter = Inter({
   subsets: ['latin'],
@@ -33,7 +39,9 @@ export default function App({ Component, pageProps }: AppProps) {
         attribute="class"
         value={{ light: 'light', dark: darkTheme.className }}
       >
-        <Component {...pageProps} />
+        <WagmiProvider>
+          <Component {...pageProps} />
+        </WagmiProvider>
       </ThemeProvider>
     </>
   );
