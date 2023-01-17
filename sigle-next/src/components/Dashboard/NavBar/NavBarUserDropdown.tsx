@@ -7,10 +7,13 @@ import {
   Typography,
   DropdownMenuSeparator,
   Switch,
+  Button,
+  IconButton,
+  Flex,
 } from '@sigle/ui';
 import { useTheme } from 'next-themes';
 import Link from 'next/link';
-import { TbChevronDown } from 'react-icons/tb';
+import { TbChevronDown, TbKey, TbSettings } from 'react-icons/tb';
 import { useDashboardStore } from '../store';
 
 const UserMenu = styled('div', {
@@ -70,11 +73,43 @@ export const NavBarUserDropdown = () => {
   const toggleTheme = () => {
     resolvedTheme === 'dark' ? setTheme('light') : setTheme('dark');
   };
+  const isAuthenticated = false;
 
   return (
-    <DropdownMenu>
-      <DropdownMenuTrigger asChild>
-        {collapsed ? (
+    <Flex
+      gap="3"
+      justify="between"
+      direction={collapsed ? 'columnReverse' : 'row'}
+    >
+      {!collapsed && !isAuthenticated && (
+        <Button
+          color="indigo"
+          size="lg"
+          rightIcon={<TbKey />}
+          css={{ flex: 1 }}
+        >
+          Connect wallet
+        </Button>
+      )}
+      {collapsed && !isAuthenticated && (
+        <IconButton color="indigo" size="lg">
+          <TbKey />
+        </IconButton>
+      )}
+
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+          {!collapsed && !isAuthenticated ? (
+            <IconButton variant="light" size="lg">
+              <TbSettings />
+            </IconButton>
+          ) : collapsed && !isAuthenticated ? (
+            <IconButton variant="light" size="lg">
+              <TbSettings />
+            </IconButton>
+          ) : null}
+
+          {/* {collapsed ? (
           <ImageAvatarContainer>
             <img
               src="https://gaia.blockstack.org/hub/1Mqh6Lqyqdjcu8PHczewej4DZmMjFp1ZEt/photos/settings/1664899611226-mAorjrYd_400x400.jpg"
@@ -101,36 +136,43 @@ export const NavBarUserDropdown = () => {
             </LeftContainer>
             <StyledTbChevronDown />
           </UserMenu>
-        )}
-      </DropdownMenuTrigger>
-      <DropdownMenuContent
-        side={collapsed ? 'right' : 'top'}
-        align={collapsed ? 'end' : 'center'}
-        sideOffset={12}
-      >
-        <Link href="/settings">
-          <DropdownMenuItem>Settings</DropdownMenuItem>
-        </Link>
-        <Link href="/settings">
-          <DropdownMenuItem>Upgrade</DropdownMenuItem>
-        </Link>
-        <StyledDropdownMenuItemDarkMode
-          // Prevent the dropdown from closing when clicking on the dark mode switch
-          onSelect={(e) => e.preventDefault()}
-          onClick={toggleTheme}
+        )} */}
+        </DropdownMenuTrigger>
+        <DropdownMenuContent
+          side={collapsed ? 'right' : 'top'}
+          align={
+            collapsed && isAuthenticated
+              ? 'end'
+              : !collapsed && !isAuthenticated
+              ? 'start'
+              : 'center'
+          }
+          sideOffset={12}
         >
-          Dark mode
-          <Switch checked={resolvedTheme === 'dark'} />
-        </StyledDropdownMenuItemDarkMode>
-        <StyledDropdownMenuItemDarkMode
-          onClick={() => toggleCollapse(!collapsed)}
-        >
-          Menu collapsed
-          <Switch checked={collapsed} />
-        </StyledDropdownMenuItemDarkMode>
-        <DropdownMenuSeparator />
-        <DropdownMenuItem>Log out</DropdownMenuItem>
-      </DropdownMenuContent>
-    </DropdownMenu>
+          <Link href="/settings">
+            <DropdownMenuItem>Settings</DropdownMenuItem>
+          </Link>
+          <Link href="/settings">
+            <DropdownMenuItem>Upgrade</DropdownMenuItem>
+          </Link>
+          <StyledDropdownMenuItemDarkMode
+            // Prevent the dropdown from closing when clicking on the dark mode switch
+            onSelect={(e) => e.preventDefault()}
+            onClick={toggleTheme}
+          >
+            Dark mode
+            <Switch checked={resolvedTheme === 'dark'} />
+          </StyledDropdownMenuItemDarkMode>
+          <StyledDropdownMenuItemDarkMode
+            onClick={() => toggleCollapse(!collapsed)}
+          >
+            Menu collapsed
+            <Switch checked={collapsed} />
+          </StyledDropdownMenuItemDarkMode>
+          <DropdownMenuSeparator />
+          <DropdownMenuItem>Log out</DropdownMenuItem>
+        </DropdownMenuContent>
+      </DropdownMenu>
+    </Flex>
   );
 };
