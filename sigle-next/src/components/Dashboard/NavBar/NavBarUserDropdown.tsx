@@ -129,12 +129,16 @@ export const NavBarUserDropdown = () => {
         }
         sideOffset={12}
       >
-        <Link href="/settings">
-          <DropdownMenuItem>Settings</DropdownMenuItem>
-        </Link>
-        <Link href="/settings">
-          <DropdownMenuItem>Upgrade</DropdownMenuItem>
-        </Link>
+        {isConnected && (
+          <Link href="/settings">
+            <DropdownMenuItem>Settings</DropdownMenuItem>
+          </Link>
+        )}
+        {isConnected && (
+          <Link href="/settings">
+            <DropdownMenuItem>Upgrade</DropdownMenuItem>
+          </Link>
+        )}
         <StyledDropdownMenuItemDarkMode
           // Prevent the dropdown from closing when clicking on the dark mode switch
           onSelect={(e) => e.preventDefault()}
@@ -144,15 +148,19 @@ export const NavBarUserDropdown = () => {
           <Switch checked={resolvedTheme === 'dark'} />
         </StyledDropdownMenuItemDarkMode>
         <StyledDropdownMenuItemDarkMode
+          // Prevent the dropdown from closing when clicking on the dark mode switch
+          onSelect={(e) => e.preventDefault()}
           onClick={() => toggleCollapse(!collapsed)}
         >
           Menu collapsed
           <Switch checked={collapsed} />
         </StyledDropdownMenuItemDarkMode>
-        <DropdownMenuSeparator />
-        <DropdownMenuItem onClick={() => disconnect()}>
-          Log out
-        </DropdownMenuItem>
+        {isConnected && <DropdownMenuSeparator />}
+        {isConnected && (
+          <DropdownMenuItem onClick={() => disconnect()}>
+            Log out
+          </DropdownMenuItem>
+        )}
       </DropdownMenuContent>
     </DropdownMenu>
   );
