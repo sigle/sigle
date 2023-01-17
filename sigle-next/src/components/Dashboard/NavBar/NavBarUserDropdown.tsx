@@ -25,6 +25,7 @@ const UserMenu = styled('div', {
   gap: '$2',
   p: '$3',
   cursor: 'pointer',
+  flex: 1,
   '&:hover': {
     backgroundColor: '$gray5',
   },
@@ -73,7 +74,7 @@ export const NavBarUserDropdown = () => {
   const toggleTheme = () => {
     resolvedTheme === 'dark' ? setTheme('light') : setTheme('dark');
   };
-  const isAuthenticated = false;
+  const isAuthenticated = true;
 
   return (
     <Flex
@@ -107,36 +108,34 @@ export const NavBarUserDropdown = () => {
             <IconButton variant="light" size="lg">
               <TbSettings />
             </IconButton>
+          ) : !collapsed && isAuthenticated ? (
+            <UserMenu>
+              <LeftContainer>
+                <ImageAvatarContainer>
+                  <img
+                    src="https://gaia.blockstack.org/hub/1Mqh6Lqyqdjcu8PHczewej4DZmMjFp1ZEt/photos/settings/1664899611226-mAorjrYd_400x400.jpg"
+                    alt="user avatar"
+                  />
+                </ImageAvatarContainer>
+                <div>
+                  <Typography size="xs" lineClamp={1}>
+                    Marly McKendry
+                  </Typography>
+                  <Typography css={{ color: '$gray9' }} size="xs" lineClamp={1}>
+                    markendry.btc
+                  </Typography>
+                </div>
+              </LeftContainer>
+              <StyledTbChevronDown />
+            </UserMenu>
+          ) : collapsed && isAuthenticated ? (
+            <ImageAvatarContainer>
+              <img
+                src="https://gaia.blockstack.org/hub/1Mqh6Lqyqdjcu8PHczewej4DZmMjFp1ZEt/photos/settings/1664899611226-mAorjrYd_400x400.jpg"
+                alt="user avatar"
+              />
+            </ImageAvatarContainer>
           ) : null}
-
-          {/* {collapsed ? (
-          <ImageAvatarContainer>
-            <img
-              src="https://gaia.blockstack.org/hub/1Mqh6Lqyqdjcu8PHczewej4DZmMjFp1ZEt/photos/settings/1664899611226-mAorjrYd_400x400.jpg"
-              alt="user avatar"
-            />
-          </ImageAvatarContainer>
-        ) : (
-          <UserMenu>
-            <LeftContainer>
-              <ImageAvatarContainer>
-                <img
-                  src="https://gaia.blockstack.org/hub/1Mqh6Lqyqdjcu8PHczewej4DZmMjFp1ZEt/photos/settings/1664899611226-mAorjrYd_400x400.jpg"
-                  alt="user avatar"
-                />
-              </ImageAvatarContainer>
-              <div>
-                <Typography size="xs" lineClamp={1}>
-                  Marly McKendry
-                </Typography>
-                <Typography css={{ color: '$gray9' }} size="xs" lineClamp={1}>
-                  markendry.btc
-                </Typography>
-              </div>
-            </LeftContainer>
-            <StyledTbChevronDown />
-          </UserMenu>
-        )} */}
         </DropdownMenuTrigger>
         <DropdownMenuContent
           side={collapsed ? 'right' : 'top'}
