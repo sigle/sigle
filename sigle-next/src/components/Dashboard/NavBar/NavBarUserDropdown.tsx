@@ -11,6 +11,7 @@ import {
 import { useTheme } from 'next-themes';
 import Link from 'next/link';
 import { TbChevronDown } from 'react-icons/tb';
+import { useDashboardStore } from '../store';
 
 const UserMenu = styled('div', {
   backgroundColor: '$gray3',
@@ -40,10 +41,12 @@ const ImageAvatarContainer = styled('div', {
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'center',
+  alignSelf: 'center',
   overflow: 'hidden',
   width: 36,
   height: 36,
   br: '$sm',
+  cursor: 'pointer',
 });
 
 const StyledTbChevronDown = styled(TbChevronDown, {
@@ -61,6 +64,8 @@ const StyledDropdownMenuItemDarkMode = styled(DropdownMenuItem, {
 
 export const NavBarUserDropdown = () => {
   const { resolvedTheme, setTheme } = useTheme();
+  const collapsed = useDashboardStore((state) => state.collapsed);
+  const toggleCollapse = useDashboardStore((state) => state.toggleCollapse);
 
   const toggleTheme = () => {
     resolvedTheme === 'dark' ? setTheme('light') : setTheme('dark');
@@ -69,27 +74,40 @@ export const NavBarUserDropdown = () => {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <UserMenu>
-          <LeftContainer>
-            <ImageAvatarContainer>
-              <img
-                src="https://gaia.blockstack.org/hub/1Mqh6Lqyqdjcu8PHczewej4DZmMjFp1ZEt/photos/settings/1664899611226-mAorjrYd_400x400.jpg"
-                alt="user avatar"
-              />
-            </ImageAvatarContainer>
-            <div>
-              <Typography size="xs" lineClamp={1}>
-                Marly McKendry
-              </Typography>
-              <Typography css={{ color: '$gray9' }} size="xs" lineClamp={1}>
-                markendry.btc
-              </Typography>
-            </div>
-          </LeftContainer>
-          <StyledTbChevronDown />
-        </UserMenu>
+        {collapsed ? (
+          <ImageAvatarContainer>
+            <img
+              src="https://gaia.blockstack.org/hub/1Mqh6Lqyqdjcu8PHczewej4DZmMjFp1ZEt/photos/settings/1664899611226-mAorjrYd_400x400.jpg"
+              alt="user avatar"
+            />
+          </ImageAvatarContainer>
+        ) : (
+          <UserMenu>
+            <LeftContainer>
+              <ImageAvatarContainer>
+                <img
+                  src="https://gaia.blockstack.org/hub/1Mqh6Lqyqdjcu8PHczewej4DZmMjFp1ZEt/photos/settings/1664899611226-mAorjrYd_400x400.jpg"
+                  alt="user avatar"
+                />
+              </ImageAvatarContainer>
+              <div>
+                <Typography size="xs" lineClamp={1}>
+                  Marly McKendry
+                </Typography>
+                <Typography css={{ color: '$gray9' }} size="xs" lineClamp={1}>
+                  markendry.btc
+                </Typography>
+              </div>
+            </LeftContainer>
+            <StyledTbChevronDown />
+          </UserMenu>
+        )}
       </DropdownMenuTrigger>
-      <DropdownMenuContent side="top" align="center" sideOffset={12}>
+      <DropdownMenuContent
+        side={collapsed ? 'right' : 'top'}
+        align={collapsed ? 'end' : 'center'}
+        sideOffset={12}
+      >
         <Link href="/settings">
           <DropdownMenuItem>Settings</DropdownMenuItem>
         </Link>
@@ -103,6 +121,12 @@ export const NavBarUserDropdown = () => {
         >
           Dark mode
           <Switch checked={resolvedTheme === 'dark'} />
+        </StyledDropdownMenuItemDarkMode>
+        <StyledDropdownMenuItemDarkMode
+          onClick={() => toggleCollapse(!collapsed)}
+        >
+          Menu collapsed
+          <Switch checked={collapsed} />
         </StyledDropdownMenuItemDarkMode>
         <DropdownMenuSeparator />
         <DropdownMenuItem>Log out</DropdownMenuItem>
