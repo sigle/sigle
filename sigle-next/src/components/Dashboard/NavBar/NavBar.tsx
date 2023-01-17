@@ -104,11 +104,15 @@ const NavBarLink = ({
     return (
       <Tooltip delayDuration={600}>
         <TooltipTrigger asChild>
-          <Link href={href}>
-            <NavBarLinkIconButton variant="ghost" size="lg" active={active}>
-              {icon}
-            </NavBarLinkIconButton>
-          </Link>
+          <NavBarLinkIconButton
+            as={Link}
+            href={href}
+            variant="ghost"
+            size="lg"
+            active={active}
+          >
+            {icon}
+          </NavBarLinkIconButton>
         </TooltipTrigger>
         <TooltipContent side="right" sideOffset={8}>
           {label}
@@ -217,49 +221,47 @@ export const NavBar = () => {
                 active={router.pathname === item.href}
               />
             ))}
-          </NavBarLinkContainer>
 
-          <NavBarStoriesContainer>
-            {!collapsed && (
-              <Flex justify="between" align="center" css={{ pl: '10px' }}>
-                <Flex align="center" gap="2">
-                  <TbBook size={navbarIconSize} />
-                  <Typography>Stories</Typography>
+            <NavBarStoriesContainer>
+              {!collapsed && (
+                <Flex justify="between" align="center" css={{ pl: '10px' }}>
+                  <Flex align="center" gap="2">
+                    <TbBook size={navbarIconSize} />
+                    <Typography>Stories</Typography>
+                  </Flex>
+                  <IconButton variant="light">
+                    <TbPlus />
+                  </IconButton>
                 </Flex>
-                <IconButton variant="light">
-                  <TbPlus />
-                </IconButton>
-              </Flex>
-            )}
-            {collapsed ? (
-              <NavBarLink
-                isCollapsed={collapsed}
-                icon={<TbNotebook size={navbarIconSize} />}
-                label="Drafts"
-                href="/"
-                active={false}
-              />
-            ) : (
-              <NavBarLinkStoriesButton variant="ghost">
-                Drafts <Badge>9</Badge>
-              </NavBarLinkStoriesButton>
-            )}
-            {collapsed ? (
-              <NavBarLink
-                isCollapsed={collapsed}
-                icon={<TbNews size={navbarIconSize} />}
-                label="Published"
-                href="/"
-                active={false}
-              />
-            ) : (
-              <NavBarLinkStoriesButton variant="ghost">
-                Published <Badge>10</Badge>
-              </NavBarLinkStoriesButton>
-            )}
-          </NavBarStoriesContainer>
+              )}
+              {collapsed ? (
+                <NavBarLink
+                  isCollapsed={collapsed}
+                  icon={<TbNotebook size={navbarIconSize} />}
+                  label="Drafts"
+                  href="/"
+                  active={false}
+                />
+              ) : (
+                <NavBarLinkStoriesButton variant="ghost">
+                  Drafts <Badge>9</Badge>
+                </NavBarLinkStoriesButton>
+              )}
+              {collapsed ? (
+                <NavBarLink
+                  isCollapsed={collapsed}
+                  icon={<TbNews size={navbarIconSize} />}
+                  label="Published"
+                  href="/"
+                  active={false}
+                />
+              ) : (
+                <NavBarLinkStoriesButton variant="ghost">
+                  Published <Badge>10</Badge>
+                </NavBarLinkStoriesButton>
+              )}
+            </NavBarStoriesContainer>
 
-          <NavBarLinkContainer>
             {menu2.map((item, index) => (
               <NavBarLink
                 key={index}
