@@ -18,13 +18,13 @@ import {
   TbBookmarks,
   TbChartPie,
   TbHome,
-  TbKey,
   TbMail,
   TbNews,
   TbNotebook,
   TbPlus,
   TbUserCircle,
   TbUsers,
+  TbWallet,
 } from 'react-icons/tb';
 import { useAccount } from 'wagmi';
 import { LogoImage } from '../../../images/Logo';
@@ -282,7 +282,7 @@ export const NavBar = () => {
           <Button
             color="indigo"
             size="lg"
-            rightIcon={<TbKey />}
+            rightIcon={<TbWallet />}
             css={{ flex: 1 }}
             onClick={() => setConnectKitOpen(true)}
           >
@@ -294,7 +294,7 @@ export const NavBar = () => {
             size="lg"
             onClick={() => setConnectKitOpen(true)}
           >
-            <TbKey />
+            <TbWallet />
           </IconButton>
         ) : null}
         <NavBarUserDropdown />
