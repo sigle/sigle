@@ -17,7 +17,8 @@
     "baseUrl": ".",
     "paths": {
       "@sigle/stitches.config": ["src/stitches.config"],
-      "@sigle/ui": ["src/ui/index"]
+      "@sigle/ui": ["src/ui/index"],
+      "@sigle/hooks": ["src/hooks/index"]
     }
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"],
