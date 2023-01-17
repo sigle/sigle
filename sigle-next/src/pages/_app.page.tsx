@@ -12,6 +12,9 @@ import { darkTheme, globalCss } from '@sigle/stitches.config';
 const WagmiProvider = dynamic(
   () => import('../components/Ethereum/WagmiProvider')
 );
+const CeramicProvider = dynamic(
+  () => import('../components/Ceramic/CeramicProvider')
+);
 
 const inter = Inter({
   subsets: ['latin'],
@@ -42,7 +45,9 @@ export default function App({ Component, pageProps }: AppProps) {
         value={{ light: 'light', dark: darkTheme.className }}
       >
         <WagmiProvider>
-          <Component {...pageProps} />
+          <CeramicProvider>
+            <Component {...pageProps} />
+          </CeramicProvider>
         </WagmiProvider>
       </ThemeProvider>
     </>
