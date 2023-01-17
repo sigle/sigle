@@ -13,6 +13,7 @@ import {
 import { useTheme } from 'next-themes';
 import Link from 'next/link';
 import { TbChevronDown, TbSettings } from 'react-icons/tb';
+import { addressAvatar } from '@sigle/utils';
 import { useAccount, useDisconnect } from 'wagmi';
 import { useDashboardStore } from '../store';
 
@@ -71,7 +72,7 @@ export const NavBarUserDropdown = () => {
   const collapsed = useDashboardStore((state) => state.collapsed);
   const toggleCollapse = useDashboardStore((state) => state.toggleCollapse);
   const isMounted = useIsMounted();
-  const { isConnected } = useAccount();
+  const { isConnected, address } = useAccount();
   const { disconnect } = useDisconnect();
 
   const toggleTheme = () => {
@@ -89,14 +90,11 @@ export const NavBarUserDropdown = () => {
           <IconButton variant="light" size="lg">
             <TbSettings />
           </IconButton>
-        ) : !collapsed && isConnected ? (
+        ) : !collapsed && isConnected && address ? (
           <UserMenu>
             <LeftContainer>
               <ImageAvatarContainer>
-                <img
-                  src="https://gaia.blockstack.org/hub/1Mqh6Lqyqdjcu8PHczewej4DZmMjFp1ZEt/photos/settings/1664899611226-mAorjrYd_400x400.jpg"
-                  alt="user avatar"
-                />
+                <img src={addressAvatar(address, 36)} alt="user avatar" />
               </ImageAvatarContainer>
               <div>
                 <Typography size="xs" lineClamp={1}>
@@ -109,12 +107,9 @@ export const NavBarUserDropdown = () => {
             </LeftContainer>
             <StyledTbChevronDown />
           </UserMenu>
-        ) : collapsed && isConnected ? (
+        ) : collapsed && isConnected && address ? (
           <ImageAvatarContainer>
-            <img
-              src="https://gaia.blockstack.org/hub/1Mqh6Lqyqdjcu8PHczewej4DZmMjFp1ZEt/photos/settings/1664899611226-mAorjrYd_400x400.jpg"
-              alt="user avatar"
-            />
+            <img src={addressAvatar(address, 36)} alt="user avatar" />
           </ImageAvatarContainer>
         ) : null}
       </DropdownMenuTrigger>

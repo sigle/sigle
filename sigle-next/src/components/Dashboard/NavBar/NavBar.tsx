@@ -229,7 +229,7 @@ export const NavBar = () => {
                     <TbBook size={navbarIconSize} />
                     <Typography>Stories</Typography>
                   </Flex>
-                  <IconButton variant="light">
+                  <IconButton variant="light" size="lg">
                     <TbPlus />
                   </IconButton>
                 </Flex>
