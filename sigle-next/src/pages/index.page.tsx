@@ -4,7 +4,7 @@ import { DashboardLayout } from '../components/Dashboard/Layout';
 export default function Home() {
   return (
     <TooltipProvider>
-      <DashboardLayout>Hello</DashboardLayout>
+      <DashboardLayout> </DashboardLayout>
     </TooltipProvider>
   );
 }

@@ -1,3 +1,4 @@
+import { useIsMounted } from '@sigle/hooks';
 import { styled } from '@sigle/stitches.config';
 import {
   Badge,
@@ -9,6 +10,7 @@ import {
   TooltipTrigger,
   Typography,
 } from '@sigle/ui';
+import { useModal } from 'connectkit';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import {
@@ -22,7 +24,9 @@ import {
   TbPlus,
   TbUserCircle,
   TbUsers,
+  TbWallet,
 } from 'react-icons/tb';
+import { useAccount } from 'wagmi';
 import { LogoImage } from '../../../images/Logo';
 import { LogoOnlyImage } from '../../../images/LogoOnly';
 import { useDashboardStore } from '../store';
@@ -100,11 +104,15 @@ const NavBarLink = ({
     return (
       <Tooltip delayDuration={600}>
         <TooltipTrigger asChild>
-          <Link href={href}>
-            <NavBarLinkIconButton variant="ghost" size="lg" active={active}>
-              {icon}
-            </NavBarLinkIconButton>
-          </Link>
+          <NavBarLinkIconButton
+            as={Link}
+            href={href}
+            variant="ghost"
+            size="lg"
+            active={active}
+          >
+            {icon}
+          </NavBarLinkIconButton>
         </TooltipTrigger>
         <TooltipContent side="right" sideOffset={8}>
           {label}
@@ -153,6 +161,9 @@ const NavBarLinkStoriesButton = styled(Button, {
 export const NavBar = () => {
   const router = useRouter();
   const collapsed = useDashboardStore((state) => state.collapsed);
+  const isMounted = useIsMounted();
+  const { isConnected } = useAccount();
+  const { setOpen: setConnectKitOpen } = useModal();
 
   const menu = [
     {
@@ -210,49 +221,47 @@ export const NavBar = () => {
                 active={router.pathname === item.href}
               />
             ))}
-          </NavBarLinkContainer>
 
-          <NavBarStoriesContainer>
-            {!collapsed && (
-              <Flex justify="between" align="center" css={{ pl: '10px' }}>
-                <Flex align="center" gap="2">
-                  <TbBook size={navbarIconSize} />
-                  <Typography>Stories</Typography>
+            <NavBarStoriesContainer>
+              {!collapsed && (
+                <Flex justify="between" align="center" css={{ pl: '10px' }}>
+                  <Flex align="center" gap="2">
+                    <TbBook size={navbarIconSize} />
+                    <Typography>Stories</Typography>
+                  </Flex>
+                  <IconButton variant="light" size="lg">
+                    <TbPlus />
+                  </IconButton>
                 </Flex>
-                <IconButton variant="light">
-                  <TbPlus />
-                </IconButton>
-              </Flex>
-            )}
-            {collapsed ? (
-              <NavBarLink
-                isCollapsed={collapsed}
-                icon={<TbNotebook size={navbarIconSize} />}
-                label="Drafts"
-                href="/"
-                active={false}
-              />
-            ) : (
-              <NavBarLinkStoriesButton variant="ghost">
-                Drafts <Badge>9</Badge>
-              </NavBarLinkStoriesButton>
-            )}
-            {collapsed ? (
-              <NavBarLink
-                isCollapsed={collapsed}
-                icon={<TbNews size={navbarIconSize} />}
-                label="Published"
-                href="/"
-                active={false}
-              />
-            ) : (
-              <NavBarLinkStoriesButton variant="ghost">
-                Published <Badge>10</Badge>
-              </NavBarLinkStoriesButton>
-            )}
-          </NavBarStoriesContainer>
+              )}
+              {collapsed ? (
+                <NavBarLink
+                  isCollapsed={collapsed}
+                  icon={<TbNotebook size={navbarIconSize} />}
+                  label="Drafts"
+                  href="/"
+                  active={false}
+                />
+              ) : (
+                <NavBarLinkStoriesButton variant="ghost">
+                  Drafts <Badge>9</Badge>
+                </NavBarLinkStoriesButton>
+              )}
+              {collapsed ? (
+                <NavBarLink
+                  isCollapsed={collapsed}
+                  icon={<TbNews size={navbarIconSize} />}
+                  label="Published"
+                  href="/"
+                  active={false}
+                />
+              ) : (
+                <NavBarLinkStoriesButton variant="ghost">
+                  Published <Badge>10</Badge>
+                </NavBarLinkStoriesButton>
+              )}
+            </NavBarStoriesContainer>
 
-          <NavBarLinkContainer>
             {menu2.map((item, index) => (
               <NavBarLink
                 key={index}
@@ -264,7 +273,32 @@ export const NavBar = () => {
           </NavBarLinkContainer>
         </Menu>
       </div>
-      <NavBarUserDropdown />
+      <Flex
+        gap="3"
+        justify="between"
+        direction={collapsed ? 'columnReverse' : 'row'}
+      >
+        {!isMounted() ? null : !collapsed && !isConnected ? (
+          <Button
+            color="indigo"
+            size="lg"
+            rightIcon={<TbWallet />}
+            css={{ flex: 1 }}
+            onClick={() => setConnectKitOpen(true)}
+          >
+            Connect wallet
+          </Button>
+        ) : collapsed && !isConnected ? (
+          <IconButton
+            color="indigo"
+            size="lg"
+            onClick={() => setConnectKitOpen(true)}
+          >
+            <TbWallet />
+          </IconButton>
+        ) : null}
+        <NavBarUserDropdown />
+      </Flex>
     </StyledNavBar>
   );
 };

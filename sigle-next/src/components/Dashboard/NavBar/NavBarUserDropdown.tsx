@@ -1,3 +1,4 @@
+import { useIsMounted } from '@sigle/hooks';
 import { styled } from '@sigle/stitches.config';
 import {
   DropdownMenu,
@@ -7,10 +8,13 @@ import {
   Typography,
   DropdownMenuSeparator,
   Switch,
+  IconButton,
 } from '@sigle/ui';
 import { useTheme } from 'next-themes';
 import Link from 'next/link';
-import { TbChevronDown } from 'react-icons/tb';
+import { TbChevronDown, TbSettings } from 'react-icons/tb';
+import { addressAvatar } from '@sigle/utils';
+import { useAccount, useDisconnect } from 'wagmi';
 import { useDashboardStore } from '../store';
 
 const UserMenu = styled('div', {
@@ -22,6 +26,7 @@ const UserMenu = styled('div', {
   gap: '$2',
   p: '$3',
   cursor: 'pointer',
+  flex: 1,
   '&:hover': {
     backgroundColor: '$gray5',
   },
@@ -66,6 +71,9 @@ export const NavBarUserDropdown = () => {
   const { resolvedTheme, setTheme } = useTheme();
   const collapsed = useDashboardStore((state) => state.collapsed);
   const toggleCollapse = useDashboardStore((state) => state.toggleCollapse);
+  const isMounted = useIsMounted();
+  const { isConnected, address } = useAccount();
+  const { disconnect } = useDisconnect();
 
   const toggleTheme = () => {
     resolvedTheme === 'dark' ? setTheme('light') : setTheme('dark');
@@ -74,46 +82,60 @@ export const NavBarUserDropdown = () => {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        {collapsed ? (
-          <ImageAvatarContainer>
-            <img
-              src="https://gaia.blockstack.org/hub/1Mqh6Lqyqdjcu8PHczewej4DZmMjFp1ZEt/photos/settings/1664899611226-mAorjrYd_400x400.jpg"
-              alt="user avatar"
-            />
-          </ImageAvatarContainer>
-        ) : (
+        {!isMounted() ? null : !collapsed && !isConnected ? ( // TODO when component is not mounter, add a skeleton
+          <IconButton variant="light" size="lg">
+            <TbSettings />
+          </IconButton>
+        ) : collapsed && !isConnected ? (
+          <IconButton variant="light" size="lg">
+            <TbSettings />
+          </IconButton>
+        ) : !collapsed && isConnected && address ? (
           <UserMenu>
             <LeftContainer>
               <ImageAvatarContainer>
-                <img
-                  src="https://gaia.blockstack.org/hub/1Mqh6Lqyqdjcu8PHczewej4DZmMjFp1ZEt/photos/settings/1664899611226-mAorjrYd_400x400.jpg"
-                  alt="user avatar"
-                />
+                <img src={addressAvatar(address, 36)} alt="user avatar" />
               </ImageAvatarContainer>
               <div>
-                <Typography size="xs" lineClamp={1}>
-                  Marly McKendry
-                </Typography>
+                {/* <Typography size="xs" lineClamp={1}>
+                  TODO name from profile
+                </Typography> */}
                 <Typography css={{ color: '$gray9' }} size="xs" lineClamp={1}>
-                  markendry.btc
+                  {address.split('').slice(0, 6).join('')}
+                  ...
+                  {address.split('').slice(-4).join('')}
                 </Typography>
               </div>
             </LeftContainer>
             <StyledTbChevronDown />
           </UserMenu>
-        )}
+        ) : collapsed && isConnected && address ? (
+          <ImageAvatarContainer>
+            <img src={addressAvatar(address, 36)} alt="user avatar" />
+          </ImageAvatarContainer>
+        ) : null}
       </DropdownMenuTrigger>
       <DropdownMenuContent
         side={collapsed ? 'right' : 'top'}
-        align={collapsed ? 'end' : 'center'}
+        align={
+          collapsed && isConnected
+            ? 'end'
+            : !collapsed && !isConnected
+            ? 'start'
+            : 'center'
+        }
         sideOffset={12}
       >
-        <Link href="/settings">
-          <DropdownMenuItem>Settings</DropdownMenuItem>
-        </Link>
-        <Link href="/settings">
-          <DropdownMenuItem>Upgrade</DropdownMenuItem>
-        </Link>
+        {isConnected && (
+          <Link href="/settings">
+            <DropdownMenuItem>Settings</DropdownMenuItem>
+          </Link>
+        )}
+        {isConnected && (
+          <Link href="/settings">
+            <DropdownMenuItem>Upgrade</DropdownMenuItem>
+          </Link>
+        )}
         <StyledDropdownMenuItemDarkMode
           // Prevent the dropdown from closing when clicking on the dark mode switch
           onSelect={(e) => e.preventDefault()}
@@ -123,13 +145,19 @@ export const NavBarUserDropdown = () => {
           <Switch checked={resolvedTheme === 'dark'} />
         </StyledDropdownMenuItemDarkMode>
         <StyledDropdownMenuItemDarkMode
+          // Prevent the dropdown from closing when clicking on the dark mode switch
+          onSelect={(e) => e.preventDefault()}
           onClick={() => toggleCollapse(!collapsed)}
         >
           Menu collapsed
           <Switch checked={collapsed} />
         </StyledDropdownMenuItemDarkMode>
-        <DropdownMenuSeparator />
-        <DropdownMenuItem>Log out</DropdownMenuItem>
+        {isConnected && <DropdownMenuSeparator />}
+        {isConnected && (
+          <DropdownMenuItem onClick={() => disconnect()}>
+            Log out
+          </DropdownMenuItem>
+        )}
       </DropdownMenuContent>
     </DropdownMenu>
   );

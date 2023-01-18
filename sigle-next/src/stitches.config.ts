@@ -88,7 +88,7 @@ export const {
       xs: '1rem',
       sm: '1.25rem',
       md: '1.5rem',
-      lg: '1.75rem',
+      lg: '1.65rem',
       xl: '2rem',
       '2xl': '2.25rem',
       '3xl': '2.5rem',

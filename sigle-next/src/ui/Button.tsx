@@ -1,4 +1,5 @@
-import { styled } from '@sigle/stitches.config';
+import { CSS, styled } from '@sigle/stitches.config';
+import Link from 'next/link';
 import { forwardRef } from 'react';
 
 const StyledButton = styled('button', {
@@ -241,7 +242,8 @@ const StyledRightIcon = styled('span', {
   ml: '$2',
 });
 
-type StyledButtonProps = React.ComponentProps<typeof StyledButton>;
+type StyledButtonPrimitiveProps = React.ComponentProps<typeof StyledButton>;
+type StyledButtonProps = StyledButtonPrimitiveProps & { css?: CSS };
 export type ButtonProps = Omit<StyledButtonProps, 'hasIcon'> & {
   leftIcon?: React.ReactNode;
   rightIcon?: React.ReactNode;
