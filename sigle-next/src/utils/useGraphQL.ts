@@ -3,8 +3,9 @@ import { useQuery, type UseQueryResult } from '@tanstack/react-query';
 import { ComposeClient } from '@composedb/client';
 import runtimeComposite from '../../ceramic/runtime-composite.json';
 
+// ceramic: process.env.NEXT_PUBLIC_CERAMIC_API_URL!,
 export const composeClient = new ComposeClient({
-  ceramic: process.env.NEXT_PUBLIC_CERAMIC_API_URL!,
+  ceramic: 'http://localhost:5005',
   definition: runtimeComposite as any,
 });
 

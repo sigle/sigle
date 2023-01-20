@@ -32,6 +32,7 @@ const CeramicProvider = ({ children }: CeramicProviderProps) => {
   // Listen to the session changes to update the composeDB client DID
   useEffect(() => {
     if (!session) return;
+    console.log(session.did);
     composeClient.setDID(session.did);
   }, [session]);
 
