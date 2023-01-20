@@ -465,6 +465,7 @@ importers:
       '@storybook/nextjs': 7.0.0-beta.25
       '@storybook/react': 7.0.0-beta.25
       '@storybook/testing-library': 0.0.13
+      '@tanstack/react-query': 4.2.3
       '@types/node': 18.11.18
       '@types/react': 18.0.26
       '@types/react-dom': 18.0.10
@@ -498,6 +499,7 @@ importers:
       '@radix-ui/react-switch': 1.0.1_biqbaboplfbrettd7655fr4n2y
       '@radix-ui/react-tooltip': 1.0.2_ib3m5ricvtkl2cll7qpr2f6lvq
       '@stitches/react': 1.2.8_react@18.2.0
+      '@tanstack/react-query': 4.2.3_biqbaboplfbrettd7655fr4n2y
       connectkit: 1.1.1_qkmed6dvvmoytj3zb4yslfexju
       did-session: 1.0.0
       ethers: 5.7.2
@@ -14159,10 +14161,10 @@ packages:
       eslint-import-resolver-webpack:
         optional: true
     dependencies:
-      '@typescript-eslint/parser': 5.45.0_iukboom6ndih5an6iafl45j2fe
+      '@typescript-eslint/parser': 5.45.0_tqvwk7sh3taph5wf7sr5z34mke
       debug: 3.2.7
       eslint-import-resolver-node: 0.3.6
-      eslint-import-resolver-typescript: 3.5.2_ol7jqilc3wemtdbq3nzhywgxq4
+      eslint-import-resolver-typescript: 3.5.2_ktrec6dplf4now6nlbc6d67jee
       find-up: 2.1.0
     transitivePeerDependencies:
       - supports-color

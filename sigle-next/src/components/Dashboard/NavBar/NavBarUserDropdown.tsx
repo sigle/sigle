@@ -13,7 +13,7 @@ import {
 import { useTheme } from 'next-themes';
 import Link from 'next/link';
 import { TbChevronDown, TbSettings } from 'react-icons/tb';
-import { addressAvatar } from '@sigle/utils';
+import { addressAvatar } from '@/utils';
 import { useAccount, useDisconnect } from 'wagmi';
 import { useDashboardStore } from '../store';
 

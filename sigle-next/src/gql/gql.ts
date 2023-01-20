@@ -13,8 +13,8 @@ import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/
  * Therefore it is highly recommended to use the babel-plugin for production.
  */
 const documents = {
-  '\n  mutation createPost {\n  createPost(input: {\n    content: {\n      title: "TEst"\n    }\n  }) {\n    clientMutationId\n  }\n}\n':
-    types.CreatePostDocument,
+    "\n  mutation createPost($input: CreatePostInput!) {\n    createPost(input: $input) {\n      clientMutationId\n    }\n  }\n": types.CreatePostDocument,
+    "\n  query getPostsList {\n    viewer {\n      id\n      postList(first: 10) {\n        pageInfo {\n          hasNextPage\n          hasNextPage\n          startCursor\n          endCursor\n        }\n        edges {\n          node {\n            id\n            title\n            version\n          }\n        }\n      }\n    }\n  }\n": types.GetPostsListDocument,
 };
 
 /**
@@ -34,13 +34,14 @@ export function graphql(source: string): unknown;
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
-export function graphql(
-  source: '\n  mutation createPost {\n  createPost(input: {\n    content: {\n      title: "TEst"\n    }\n  }) {\n    clientMutationId\n  }\n}\n'
-): typeof documents['\n  mutation createPost {\n  createPost(input: {\n    content: {\n      title: "TEst"\n    }\n  }) {\n    clientMutationId\n  }\n}\n'];
+export function graphql(source: "\n  mutation createPost($input: CreatePostInput!) {\n    createPost(input: $input) {\n      clientMutationId\n    }\n  }\n"): (typeof documents)["\n  mutation createPost($input: CreatePostInput!) {\n    createPost(input: $input) {\n      clientMutationId\n    }\n  }\n"];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n  query getPostsList {\n    viewer {\n      id\n      postList(first: 10) {\n        pageInfo {\n          hasNextPage\n          hasNextPage\n          startCursor\n          endCursor\n        }\n        edges {\n          node {\n            id\n            title\n            version\n          }\n        }\n      }\n    }\n  }\n"): (typeof documents)["\n  query getPostsList {\n    viewer {\n      id\n      postList(first: 10) {\n        pageInfo {\n          hasNextPage\n          hasNextPage\n          startCursor\n          endCursor\n        }\n        edges {\n          node {\n            id\n            title\n            version\n          }\n        }\n      }\n    }\n  }\n"];
 
 export function graphql(source: string) {
   return (documents as any)[source] ?? {};
 }
 
-export type DocumentType<TDocumentNode extends DocumentNode<any, any>> =
-  TDocumentNode extends DocumentNode<infer TType, any> ? TType : never;
+export type DocumentType<TDocumentNode extends DocumentNode<any, any>> = TDocumentNode extends DocumentNode<  infer TType,  any>  ? TType  : never;

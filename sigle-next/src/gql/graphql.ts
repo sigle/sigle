@@ -2,15 +2,9 @@
 import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';
 export type Maybe<T> = T | null;
 export type InputMaybe<T> = Maybe<T>;
-export type Exact<T extends { [key: string]: unknown }> = {
-  [K in keyof T]: T[K];
-};
-export type MakeOptional<T, K extends keyof T> = Omit<T, K> & {
-  [SubKey in K]?: Maybe<T[SubKey]>;
-};
-export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & {
-  [SubKey in K]: Maybe<T[SubKey]>;
-};
+export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
+export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
   ID: string;
@@ -30,6 +24,7 @@ export type CeramicAccount = Node & {
   isViewer: Scalars['Boolean'];
   postList?: Maybe<PostConnection>;
 };
+
 
 export type CeramicAccountPostListArgs = {
   after?: InputMaybe<Scalars['String']>;
@@ -53,6 +48,7 @@ export type CreatePostPayload = {
   viewer?: Maybe<CeramicAccount>;
 };
 
+
 export type CreatePostPayloadNodeArgs = {
   id: Scalars['ID'];
 };
@@ -63,9 +59,11 @@ export type Mutation = {
   updatePost?: Maybe<UpdatePostPayload>;
 };
 
+
 export type MutationCreatePostArgs = {
   input: CreatePostInput;
 };
+
 
 export type MutationUpdatePostArgs = {
   input: UpdatePostInput;
@@ -135,9 +133,11 @@ export type Query = {
   viewer?: Maybe<CeramicAccount>;
 };
 
+
 export type QueryNodeArgs = {
   id: Scalars['ID'];
 };
+
 
 export type QueryPostIndexArgs = {
   after?: InputMaybe<Scalars['String']>;
@@ -170,74 +170,23 @@ export type UpdatePostPayload = {
   viewer?: Maybe<CeramicAccount>;
 };
 
+
 export type UpdatePostPayloadNodeArgs = {
   id: Scalars['ID'];
 };
 
-export type CreatePostMutationVariables = Exact<{ [key: string]: never }>;
+export type CreatePostMutationVariables = Exact<{
+  input: CreatePostInput;
+}>;
 
-export type CreatePostMutation = {
-  __typename?: 'Mutation';
-  createPost?: {
-    __typename?: 'CreatePostPayload';
-    clientMutationId?: string | null;
-  } | null;
-};
 
-export const CreatePostDocument = {
-  kind: 'Document',
-  definitions: [
-    {
-      kind: 'OperationDefinition',
-      operation: 'mutation',
-      name: { kind: 'Name', value: 'createPost' },
-      selectionSet: {
-        kind: 'SelectionSet',
-        selections: [
-          {
-            kind: 'Field',
-            name: { kind: 'Name', value: 'createPost' },
-            arguments: [
-              {
-                kind: 'Argument',
-                name: { kind: 'Name', value: 'input' },
-                value: {
-                  kind: 'ObjectValue',
-                  fields: [
-                    {
-                      kind: 'ObjectField',
-                      name: { kind: 'Name', value: 'content' },
-                      value: {
-                        kind: 'ObjectValue',
-                        fields: [
-                          {
-                            kind: 'ObjectField',
-                            name: { kind: 'Name', value: 'title' },
-                            value: {
-                              kind: 'StringValue',
-                              value: 'TEst',
-                              block: false,
-                            },
-                          },
-                        ],
-                      },
-                    },
-                  ],
-                },
-              },
-            ],
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [
-                {
-                  kind: 'Field',
-                  name: { kind: 'Name', value: 'clientMutationId' },
-                },
-              ],
-            },
-          },
-        ],
-      },
-    },
-  ],
-} as unknown as DocumentNode<CreatePostMutation, CreatePostMutationVariables>;
+export type CreatePostMutation = { __typename?: 'Mutation', createPost?: { __typename?: 'CreatePostPayload', clientMutationId?: string | null } | null };
+
+export type GetPostsListQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GetPostsListQuery = { __typename?: 'Query', viewer?: { __typename?: 'CeramicAccount', id: string, postList?: { __typename?: 'PostConnection', pageInfo: { __typename?: 'PageInfo', hasNextPage: boolean, startCursor?: string | null, endCursor?: string | null }, edges?: Array<{ __typename?: 'PostEdge', node?: { __typename?: 'Post', id: string, title: string, version: any } | null } | null> | null } | null } | null };
+
+
+export const CreatePostDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"createPost"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"CreatePostInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"createPost"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"clientMutationId"}}]}}]}}]} as unknown as DocumentNode<CreatePostMutation, CreatePostMutationVariables>;
+export const GetPostsListDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"getPostsList"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"viewer"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"postList"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"first"},"value":{"kind":"IntValue","value":"10"}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"pageInfo"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"hasNextPage"}},{"kind":"Field","name":{"kind":"Name","value":"hasNextPage"}},{"kind":"Field","name":{"kind":"Name","value":"startCursor"}},{"kind":"Field","name":{"kind":"Name","value":"endCursor"}}]}},{"kind":"Field","name":{"kind":"Name","value":"edges"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"node"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"title"}},{"kind":"Field","name":{"kind":"Name","value":"version"}}]}}]}}]}}]}}]}}]} as unknown as DocumentNode<GetPostsListQuery, GetPostsListQueryVariables>;

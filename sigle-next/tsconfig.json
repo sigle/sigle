@@ -19,7 +19,8 @@
       "@sigle/stitches.config": ["src/stitches.config"],
       "@sigle/ui": ["src/ui/index"],
       "@sigle/hooks": ["src/hooks/index"],
-      "@sigle/utils": ["src/utils/index"]
+      "@/utils": ["src/utils/index"],
+      "@/gql": ["src/gql/index"]
     }
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"],

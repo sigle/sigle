@@ -1,3 +1,4 @@
+import { graphql } from '@/gql';
 import { useIsMounted } from '@sigle/hooks';
 import { styled } from '@sigle/stitches.config';
 import {
@@ -31,11 +32,10 @@ import { LogoImage } from '../../../images/Logo';
 import { LogoOnlyImage } from '../../../images/LogoOnly';
 import { useDashboardStore } from '../store';
 import { NavBarUserDropdown } from './NavBarUserDropdown';
-import { graphql } from 'src/gql';
 
-const getMovieQueryDocument = graphql(/* GraphQL */ `
-  mutation createPost {
-    createPost(input: { content: { title: "TEst" } }) {
+const createPostMutationDocument = graphql(/* GraphQL */ `
+  mutation createPost($input: CreatePostInput!) {
+    createPost(input: $input) {
       clientMutationId
     }
   }
