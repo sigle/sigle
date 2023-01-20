@@ -1,0 +1,17 @@
+{
+  "models": {
+    "Post": {
+      "id": "kjzl6hvfrbw6c5buq1f18wkdde42sulm63pveym7qqhcom8uewg83v5eqegmwkv",
+      "accountRelation": { "type": "list" }
+    }
+  },
+  "objects": {
+    "Post": {
+      "title": { "type": "string", "required": true },
+      "author": { "type": "view", "viewType": "documentAccount" },
+      "version": { "type": "view", "viewType": "documentVersion" }
+    }
+  },
+  "enums": {},
+  "accountData": { "postList": { "type": "connection", "name": "Post" } }
+}
