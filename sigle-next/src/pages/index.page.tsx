@@ -28,9 +28,9 @@ const getPostsListQueryDocument = graphql(/* GraphQL */ `
 
 export default function Home() {
   // TODO SSR data fetching
-  const { data } = useGraphQL(getPostsListQueryDocument);
+  const { data, isLoading, error } = useGraphQL(getPostsListQueryDocument);
 
-  console.log(data);
+  console.log(data, isLoading, error);
 
   return (
     <TooltipProvider>

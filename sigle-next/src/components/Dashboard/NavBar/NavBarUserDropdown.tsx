@@ -154,6 +154,7 @@ export const NavBarUserDropdown = () => {
         </StyledDropdownMenuItemDarkMode>
         {isConnected && <DropdownMenuSeparator />}
         {isConnected && (
+          // TODO clean ceramic did-session local storage
           <DropdownMenuItem onClick={() => disconnect()}>
             Log out
           </DropdownMenuItem>

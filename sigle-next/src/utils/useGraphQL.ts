@@ -15,6 +15,9 @@ export function useGraphQL<TResult, TVariables>(
   return useQuery(
     [(document.definitions[0] as any).name.value, variables],
     async ({ queryKey }) =>
-      composeClient.execute(document, queryKey[1] ? queryKey[1] : undefined)
+      composeClient.executeQuery(
+        document as any,
+        queryKey[1] ? queryKey[1] : undefined
+      )
   );
 }

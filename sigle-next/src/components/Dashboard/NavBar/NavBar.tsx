@@ -1,6 +1,3 @@
-import { graphql } from '@/gql';
-import { useIsMounted } from '@sigle/hooks';
-import { styled } from '@sigle/stitches.config';
 import {
   Badge,
   Button,
@@ -11,6 +8,7 @@ import {
   TooltipTrigger,
   Typography,
 } from '@sigle/ui';
+import { useMutation } from '@tanstack/react-query';
 import { useModal } from 'connectkit';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
@@ -28,6 +26,10 @@ import {
   TbWallet,
 } from 'react-icons/tb';
 import { useAccount } from 'wagmi';
+import { graphql } from '@/gql';
+import { composeClient } from '@/utils';
+import { useIsMounted } from '@sigle/hooks';
+import { styled } from '@sigle/stitches.config';
 import { LogoImage } from '../../../images/Logo';
 import { LogoOnlyImage } from '../../../images/LogoOnly';
 import { useDashboardStore } from '../store';
@@ -174,6 +176,32 @@ export const NavBar = () => {
   const { isConnected } = useAccount();
   const { setOpen: setConnectKitOpen } = useModal();
 
+  const { mutate: createPostMutation } = useMutation(
+    ['createPostMutation'],
+    async () => {
+      const data = await composeClient.executeQuery(
+        `
+      mutation createPost($input: CreatePostInput!) {
+        createPost(input: $input) {
+          clientMutationId
+        }
+      }
+    `,
+        { input: { content: { title: 'Test' } } }
+      );
+      console.log('data', data);
+      return data;
+    },
+    {
+      onSuccess: () => {
+        console.log('success');
+      },
+      onError: (error) => {
+        console.log('error', error);
+      },
+    }
+  );
+
   const menu = [
     {
       href: '/',
@@ -238,7 +266,11 @@ export const NavBar = () => {
                     <TbBook size={navbarIconSize} />
                     <Typography>Stories</Typography>
                   </Flex>
-                  <IconButton variant="light" size="lg">
+                  <IconButton
+                    variant="light"
+                    size="lg"
+                    onClick={() => createPostMutation()}
+                  >
                     <TbPlus />
                   </IconButton>
                 </Flex>

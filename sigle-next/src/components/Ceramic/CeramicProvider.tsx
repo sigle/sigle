@@ -4,6 +4,7 @@ import { createContext, useState, useMemo } from 'react';
 import { useAccount } from 'wagmi';
 import { useEffect } from 'react';
 import { useContext } from 'react';
+import { composeClient } from '@/utils';
 
 interface CeramicContextType {
   session: DIDSession | null;
@@ -27,6 +28,12 @@ const CeramicProvider = ({ children }: CeramicProviderProps) => {
   useEffect(() => {
     loadSession();
   }, [address, connector]);
+
+  // Listen to the session changes to update the composeBB client DID
+  useEffect(() => {
+    if (!session) return;
+    composeClient.setDID(session.did);
+  }, [session]);
 
   const loadSession = async () => {
     if (!address) return;
