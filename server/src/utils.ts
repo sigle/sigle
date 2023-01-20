@@ -38,6 +38,8 @@ export const allowedNewsletterUsers = [
   'SP28RZ1QXMXJXVKRRCR3D7GR5D48XY0NNA9MZWHJB',
   // stablesir.btc
   'SP8ZVD9PQ9VP657P670KBCB5ZHMJM9QMNJNFVBS6',
+  // dutchee.btc
+  'SP339T41DGKV2ZR8ACAT630V8KWJVSJME2MK5ZXCB',
 ];
 if (process.env.NODE_ENV === 'development') {
   // gregogun.btc
