@@ -8,11 +8,14 @@
     "start": "next start",
     "lint": "next lint",
     "storybook": "storybook dev -p 6006",
-    "build-storybook": "storybook build"
+    "build-storybook": "storybook build",
+    "codegen": "graphql-codegen --config scripts/codegen.ts"
   },
   "dependencies": {
     "@composedb/client": "0.3.1",
     "@didtools/pkh-ethereum": "0.0.3",
+    "@graphql-codegen/client-preset": "1.2.6",
+    "@graphql-typed-document-node/core": "3.1.1",
     "@next/font": "13.1.1",
     "@radix-ui/react-dropdown-menu": "2.0.1",
     "@radix-ui/react-switch": "1.0.1",
@@ -22,6 +25,7 @@
     "did-session": "1.0.0",
     "ethers": "5.7.2",
     "graphql": "16.6.0",
+    "graphql-request": "5.1.0",
     "next": "13.1.1",
     "next-themes": "0.2.0",
     "react": "18.2.0",
@@ -33,6 +37,7 @@
   "devDependencies": {
     "@composedb/devtools": "0.3.1",
     "@composedb/devtools-node": "0.3.1",
+    "@graphql-codegen/cli": "2.16.4",
     "@sigle/tailwind-style": "workspace:^1.1.0",
     "@storybook/addon-essentials": "7.0.0-beta.25",
     "@storybook/addon-interactions": "7.0.0-beta.25",
