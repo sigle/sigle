@@ -1,0 +1,5 @@
+type Post @createModel(accountRelation: LIST, description: "Very basic post") {
+  author: DID! @documentAccount
+  version: CommitID! @documentVersion
+  title: String! @string(minLength: 10, maxLength: 100)
+}
