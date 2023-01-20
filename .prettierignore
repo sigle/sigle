@@ -4,5 +4,5 @@ dist
 coverage
 pnpm-lock.yaml
 
-# sigle-next'
+# sigle-next
 sigle-next/src/gql
