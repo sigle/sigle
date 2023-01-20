@@ -29,7 +29,7 @@ const CeramicProvider = ({ children }: CeramicProviderProps) => {
     loadSession();
   }, [address, connector]);
 
-  // Listen to the session changes to update the composeBB client DID
+  // Listen to the session changes to update the composeDB client DID
   useEffect(() => {
     if (!session) return;
     composeClient.setDID(session.did);
