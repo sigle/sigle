@@ -35,6 +35,7 @@ const inlineText = (json: any[]): string => {
         node.attributes,
       )}>${inlineText(node.children)}</${node.tagName}>`;
     } else if (
+      node.tagName === 'p' ||
       node.tagName === 'strong' ||
       node.tagName === 'em' ||
       node.tagName === 'u' ||

@@ -85,6 +85,10 @@ describe('EmailService', () => {
       expect(service.htmlToMJML('<blockquote>Hello</blockquote>')).toEqual(
         '<mj-text><blockquote>Hello</blockquote></mj-text>',
       );
+
+      expect(
+        service.htmlToMJML('<blockquote><p>Hello</p></blockquote>'),
+      ).toEqual('<mj-text><blockquote><p>Hello</p></blockquote></mj-text>');
     });
 
     it('should convert image', () => {
