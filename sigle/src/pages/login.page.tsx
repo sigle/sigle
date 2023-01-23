@@ -222,12 +222,23 @@ const Login = () => {
             <Box
               as="a"
               css={{ color: '$orange11', boxShadow: '0 1px 0 0' }}
-              href="https://www.hiro.so/wallet/install-web"
+              href="https://www.hiro.so/wallet/install-web?utm_source=sigle"
               target="_blank"
               rel="noreferrer"
             >
-              Hiro wallet.
+              Hiro wallet
+            </Box>{' '}
+            or{' '}
+            <Box
+              as="a"
+              css={{ color: '$orange11', boxShadow: '0 1px 0 0' }}
+              href="https://www.xverse.app/?utm_source=sigle"
+              target="_blank"
+              rel="noreferrer"
+            >
+              Xverse wallet
             </Box>
+            .
           </Typography>
         </>
       )}
