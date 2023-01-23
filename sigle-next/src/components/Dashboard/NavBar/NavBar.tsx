@@ -187,7 +187,7 @@ export const NavBar = () => {
         }
       }
     `,
-        { input: { content: { title: 'Test' } } }
+        { input: { content: { title: 'Test test test' } } }
       );
       console.log('data', data);
       return data;
