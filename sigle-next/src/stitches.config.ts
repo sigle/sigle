@@ -76,6 +76,7 @@ export const {
       ...indigo,
     },
     fontSizes: {
+      '2xs': '0.625rem',
       xs: '0.75rem',
       sm: '0.875rem',
       md: '1rem',
@@ -85,6 +86,7 @@ export const {
       '3xl': '2rem',
     },
     lineHeights: {
+      '2xs': '1rem',
       xs: '1rem',
       sm: '1.25rem',
       md: '1.5rem',

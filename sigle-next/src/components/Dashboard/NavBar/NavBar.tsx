@@ -1,5 +1,5 @@
 import {
-  Badge,
+  NumberBadge,
   Button,
   Flex,
   IconButton,
@@ -296,7 +296,7 @@ export const NavBar = () => {
                     variant="ghost"
                     active={router.pathname === '/drafts'}
                   >
-                    Drafts <Badge>9</Badge>
+                    Drafts <NumberBadge>9</NumberBadge>
                   </NavBarLinkStoriesButton>
                 </Link>
               )}
@@ -310,7 +310,7 @@ export const NavBar = () => {
                 />
               ) : (
                 <NavBarLinkStoriesButton variant="ghost">
-                  Published <Badge>10</Badge>
+                  Published <NumberBadge>10</NumberBadge>
                 </NavBarLinkStoriesButton>
               )}
             </NavBarStoriesContainer>
