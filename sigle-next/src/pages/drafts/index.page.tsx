@@ -37,7 +37,13 @@ interface StoryCardProps {
 
 const StoryCard = ({ story }: StoryCardProps) => {
   return (
-    <Flex direction="column">
+    <Flex
+      direction="column"
+      css={{
+        borderTop: '1px solid $gray6',
+        py: '$6',
+      }}
+    >
       <Typography size="lg">
         The NFT Standard will be become the primary protocol for transacting
         Digital Art
