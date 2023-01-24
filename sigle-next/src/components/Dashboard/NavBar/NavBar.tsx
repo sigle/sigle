@@ -163,6 +163,13 @@ const NavBarLinkStoriesButton = styled(Button, {
         pl: '38px',
       },
     },
+    active: {
+      true: {
+        boxShadow: '0 0 0 1px $colors$gray6',
+        backgroundColor: '$gray3',
+        fontWeight: 600,
+      },
+    },
   },
   defaultVariants: {
     size: 'md',
@@ -284,9 +291,14 @@ export const NavBar = () => {
                   active={false}
                 />
               ) : (
-                <NavBarLinkStoriesButton variant="ghost">
-                  Drafts <Badge>9</Badge>
-                </NavBarLinkStoriesButton>
+                <Link href="/drafts">
+                  <NavBarLinkStoriesButton
+                    variant="ghost"
+                    active={router.pathname === '/drafts'}
+                  >
+                    Drafts <Badge>9</Badge>
+                  </NavBarLinkStoriesButton>
+                </Link>
               )}
               {collapsed ? (
                 <NavBarLink
