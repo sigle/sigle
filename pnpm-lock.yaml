@@ -483,6 +483,8 @@ importers:
       react: 18.2.0
       react-dom: 18.2.0
       react-icons: 4.7.1
+      react-relay: 14.1.0
+      relay-compiler: 14.1.0
       storybook: 7.0.0-beta.25
       style-loader: 3.3.1
       typescript: 4.9.4
@@ -508,6 +510,7 @@ importers:
       react: 18.2.0
       react-dom: 18.2.0_react@18.2.0
       react-icons: 4.7.1_react@18.2.0
+      react-relay: 14.1.0_react@18.2.0
       wagmi: 0.10.10_np6otfa6zt4irkefc5u6wyuuwa
       zustand: 4.3.2_react@18.2.0
     devDependencies:
@@ -530,6 +533,7 @@ importers:
       eslint-config-next: 13.1.4_iukboom6ndih5an6iafl45j2fe
       eslint-plugin-storybook: 0.6.10_iukboom6ndih5an6iafl45j2fe
       postcss-loader: 7.0.2
+      relay-compiler: 14.1.0
       storybook: 7.0.0-beta.25
       style-loader: 3.3.1
       typescript: 4.9.4
@@ -14153,10 +14157,10 @@ packages:
       eslint-import-resolver-webpack:
         optional: true
     dependencies:
-      '@typescript-eslint/parser': 5.45.0_tqvwk7sh3taph5wf7sr5z34mke
+      '@typescript-eslint/parser': 5.45.0_iukboom6ndih5an6iafl45j2fe
       debug: 3.2.7
       eslint-import-resolver-node: 0.3.6
-      eslint-import-resolver-typescript: 3.5.2_ktrec6dplf4now6nlbc6d67jee
+      eslint-import-resolver-typescript: 3.5.2_ol7jqilc3wemtdbq3nzhywgxq4
       find-up: 2.1.0
     transitivePeerDependencies:
       - supports-color
@@ -21323,6 +21327,21 @@ packages:
     engines: {node: '>=0.10.0'}
     dev: true
 
+  /react-relay/14.1.0_react@18.2.0:
+    resolution: {integrity: sha512-U4oHb5wn1LEi17x3AcZOy66MXs83tnYbsK7/YE1/3cQKCPrXhyVUQbEOC9L7jMX659jtS1NACae+7b03bryMCQ==}
+    peerDependencies:
+      react: ^16.9.0 || ^17 || ^18
+    dependencies:
+      '@babel/runtime': 7.17.9
+      fbjs: 3.0.4
+      invariant: 2.2.4
+      nullthrows: 1.1.1
+      react: 18.2.0
+      relay-runtime: 14.1.0
+    transitivePeerDependencies:
+      - encoding
+    dev: false
+
   /react-remove-scroll-bar/2.3.3_kzbn2opkn2327fwg5yzwzya5o4:
     resolution: {integrity: sha512-i9GMNWwpz8XpUpQ6QlevUtFjHGqnPG4Hxs+wlIJntu/xcsZVEpJcIV71K3ZkqNy2q3GfgvkD7y6t/Sv8ofYSbw==}
     engines: {node: '>=10'}
@@ -21651,8 +21670,23 @@ packages:
     resolution: {integrity: sha512-G08Dxvm4iDN3MLM0EsP62EDV9IuhXPR6blNz6Utcp7zyV3tr4HVNINt6MpaRWbxoOHT3Q7YN2P+jaHX8vUbgog==}
     engines: {node: '>= 0.10'}
 
+  /relay-compiler/14.1.0:
+    resolution: {integrity: sha512-P8+CXm+Hq96z5NNwYl7hyGo5GgvMZDs9mXBRv7txUbJO4Ql9mXio3+D9EX3VfevRWTuE4ahM37i3Ssx1H604vA==}
+    hasBin: true
+    dev: true
+
   /relay-runtime/12.0.0:
     resolution: {integrity: sha512-QU6JKr1tMsry22DXNy9Whsq5rmvwr3LSZiiWV/9+DFpuTWvp+WFhobWMc8TC4OjKFfNhEZy7mOiqUAn5atQtug==}
+    dependencies:
+      '@babel/runtime': 7.17.9
+      fbjs: 3.0.4
+      invariant: 2.2.4
+    transitivePeerDependencies:
+      - encoding
+    dev: false
+
+  /relay-runtime/14.1.0:
+    resolution: {integrity: sha512-t2DR2hZviHrdEQrOvFqwmvRWvZ0SjI/r4bS5f3qvMyXt4g1kw3RTb2RNVmbKGg6zEQhf7Na/brdqE4roApmclQ==}
     dependencies:
       '@babel/runtime': 7.17.9
       fbjs: 3.0.4
