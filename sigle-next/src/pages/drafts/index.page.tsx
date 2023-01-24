@@ -1,10 +1,10 @@
 import { useQuery } from '@tanstack/react-query';
 import { TooltipProvider } from '@radix-ui/react-tooltip';
-import { graphql } from '@/gql';
+import { TbDots } from 'react-icons/tb';
 import { composeClient } from '@/utils';
 import { DashboardLayout } from '@/components/Dashboard/Layout';
 import { useCeramic } from '@/components/Ceramic/CeramicProvider';
-import { Badge, Container, Flex, Typography } from '@sigle/ui';
+import { Badge, Container, Flex, IconButton, Typography } from '@sigle/ui';
 
 const getPostsListQuery = /* GraphQL */ `
   query getPostsList {
@@ -45,7 +45,7 @@ const StoryCard = ({ story }: StoryCardProps) => {
         py: '$6',
       }}
     >
-      <Typography size="lg" lineClamp={2}>
+      <Typography size="lg" fontWeight="bold" lineClamp={2}>
         The NFT The NFT Standard will become the primary protocol for
         transacting Digital Art Digital Art
       </Typography>
@@ -56,11 +56,16 @@ const StoryCard = ({ story }: StoryCardProps) => {
         first successful use case for blockchain. Some creative developers
         believe Bitcoin is the first successful use case for blockchain.
       </Typography>
-      <Flex justify="between" css={{ mt: '$9' }}>
+      <Flex justify="between" align="center" css={{ mt: '$9' }}>
         <Typography size="xs" color="gray9">
           Feb 18, 2023 at 11:46am
         </Typography>
-        <Badge>DRAFT</Badge>
+        <Flex align="center" gap="2">
+          <Badge>DRAFT</Badge>
+          <IconButton size="xs" variant="ghost">
+            <TbDots />
+          </IconButton>
+        </Flex>
       </Flex>
     </Flex>
   );
