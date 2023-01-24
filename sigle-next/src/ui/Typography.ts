@@ -36,6 +36,9 @@ export const Typography = styled('p', {
       gray: {
         color: '$gray11',
       },
+      gray9: {
+        color: '$gray9',
+      },
       indigo: {
         color: '$indigo11',
       },

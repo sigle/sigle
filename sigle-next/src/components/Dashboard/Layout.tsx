@@ -15,7 +15,7 @@ export const DashboardLayout = ({ children }: DashboardLayoutProps) => {
     <Box
       css={{
         display: 'grid',
-        gridTemplateColumns: collapsed ? '81px auto' : '271px auto',
+        gridTemplateColumns: collapsed ? '81px auto 420px' : '271px auto 420px',
         height: '100vh',
       }}
     >

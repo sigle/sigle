@@ -124,13 +124,6 @@ export const {
       semiBold: 500,
       bold: 700,
     },
-    media: {
-      sm: '(min-width: 640px)',
-      md: '(min-width: 768px)',
-      lg: '(min-width: 1024px)',
-      xl: '(min-width: 1280px)',
-      '2xl': '(min-width: 1536px)',
-    },
     radii: {
       xs: '0.25rem',
       sm: '0.5rem',
@@ -146,6 +139,13 @@ export const {
       lg: '0px 8px 24px -6px rgba(0, 0, 0, 0.16), 0px 0px 1px rgba(0, 0, 0, 0.4)',
       xl: '0px 32px 32px -8px rgba(0, 0, 0, 0.08), 0px 0px 32px -8px rgba(0, 0, 0, 0.12), 0px 0px 1px rgba(0, 0, 0, 0.2)',
     },
+  },
+  media: {
+    sm: '(min-width: 640px)',
+    md: '(min-width: 768px)',
+    lg: '(min-width: 1024px)',
+    xl: '(min-width: 1280px)',
+    '2xl': '(min-width: 1536px)',
   },
   utils: {
     p: (value: Stitches.PropertyValue<'padding'>) => ({

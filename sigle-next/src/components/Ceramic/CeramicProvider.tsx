@@ -2,8 +2,7 @@ import { DIDSession } from 'did-session';
 import { EthereumWebAuth, getAccountId } from '@didtools/pkh-ethereum';
 import { createContext, useState, useMemo } from 'react';
 import { useAccount } from 'wagmi';
-import { useEffect } from 'react';
-import { useContext } from 'react';
+import { useEffect, useContext } from 'react';
 import { composeClient } from '@/utils';
 
 interface CeramicContextType {
@@ -29,13 +28,6 @@ const CeramicProvider = ({ children }: CeramicProviderProps) => {
     loadSession();
   }, [address, connector]);
 
-  // Listen to the session changes to update the composeDB client DID
-  useEffect(() => {
-    if (!session) return;
-    console.log(session.did);
-    composeClient.setDID(session.did);
-  }, [session]);
-
   const loadSession = async () => {
     if (!address) return;
 
@@ -43,6 +35,7 @@ const CeramicProvider = ({ children }: CeramicProviderProps) => {
     if (sessionString) {
       const session = await DIDSession.fromSession(sessionString);
       if (session && session.hasSession && !session.isExpired) {
+        composeClient.setDID(session.did);
         setSession(session);
         return;
       }
@@ -72,6 +65,7 @@ const CeramicProvider = ({ children }: CeramicProviderProps) => {
     const sessionString = session.serialize();
     localStorage.setItem(getStorageKey(address), sessionString);
 
+    composeClient.setDID(session.did);
     setSession(session);
   };
 
