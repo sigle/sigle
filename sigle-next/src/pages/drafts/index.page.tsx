@@ -6,6 +6,7 @@ import { DashboardLayout } from '@/components/Dashboard/DashboardLayout';
 import { useCeramic } from '@/components/Ceramic/CeramicProvider';
 import { Badge, Container, Flex, IconButton, Typography } from '@sigle/ui';
 import { DashboardContent } from '@/components/Dashboard/DashboardContent';
+import { styled } from '@sigle/stitches.config';
 
 const getPostsListQuery = /* GraphQL */ `
   query getPostsList {
@@ -72,6 +73,8 @@ const StoryCard = ({ story }: StoryCardProps) => {
   );
 };
 
+const Box = styled('div', {});
+
 const Drafts = () => {
   const { data, isLoading, error } = useQuery(['getPostsList'], () =>
     composeClient.executeQuery(getPostsListQuery)
@@ -81,11 +84,39 @@ const Drafts = () => {
 
   return (
     <DashboardContent>
-      {/* <Container css={{ maxWidth: 680 }}> */}
-      {data?.data.viewer.postList.edges.map((node) => (
-        <StoryCard key={node.node.id} story={node.node} />
-      ))}
-      {/* </Container> */}
+      <Box
+        css={{
+          display: 'grid',
+          gridTemplateColumns: '1fr 420px',
+        }}
+      >
+        <div>
+          <Container css={{ maxWidth: 680 }}>
+            {data?.data.viewer.postList.edges.map((node) => (
+              <StoryCard key={node.node.id} story={node.node} />
+            ))}
+          </Container>
+        </div>
+        <Box css={{ position: 'relative', borderLeft: '1px solid $gray6' }}>
+          <Box
+            css={{
+              py: '$5',
+              px: '$5',
+              overflowY: 'scroll',
+              position: 'fixed',
+              top: 80,
+              bottom: 0,
+            }}
+          >
+            <Typography size="lg" fontWeight="bold">
+              Recommended
+            </Typography>
+            {data?.data.viewer.postList.edges.map((node) => (
+              <StoryCard key={node.node.id} story={node.node} />
+            ))}
+          </Box>
+        </Box>
+      </Box>
     </DashboardContent>
   );
 };
