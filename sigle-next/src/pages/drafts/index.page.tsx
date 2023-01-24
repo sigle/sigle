@@ -39,12 +39,14 @@ interface StoryCardProps {
 
 const StoryCard = ({ story }: StoryCardProps) => {
   return (
-    // TODO not border top first element
     <Flex
       direction="column"
       css={{
         borderTop: '1px solid $gray6',
         py: '$6',
+        '&:first-child': {
+          borderTop: 'none',
+        },
       }}
     >
       <Typography size="lg" fontWeight="bold" lineClamp={2}>
