@@ -2,9 +2,10 @@ import { useQuery } from '@tanstack/react-query';
 import { TooltipProvider } from '@radix-ui/react-tooltip';
 import { TbDots } from 'react-icons/tb';
 import { composeClient } from '@/utils';
-import { DashboardLayout } from '@/components/Dashboard/Layout';
+import { DashboardLayout } from '@/components/Dashboard/DashboardLayout';
 import { useCeramic } from '@/components/Ceramic/CeramicProvider';
 import { Badge, Container, Flex, IconButton, Typography } from '@sigle/ui';
+import { DashboardContent } from '@/components/Dashboard/DashboardContent';
 
 const getPostsListQuery = /* GraphQL */ `
   query getPostsList {
@@ -79,11 +80,13 @@ const Drafts = () => {
   console.log(data, isLoading, error);
 
   return (
-    <Container css={{ maxWidth: 680 }}>
+    <DashboardContent>
+      {/* <Container css={{ maxWidth: 680 }}> */}
       {data?.data.viewer.postList.edges.map((node) => (
         <StoryCard key={node.node.id} story={node.node} />
       ))}
-    </Container>
+      {/* </Container> */}
+    </DashboardContent>
   );
 };
 

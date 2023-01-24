@@ -86,10 +86,6 @@ const NavBarLinkIconButton = styled(IconButton, {
 
 const navbarIconSize = 20;
 
-const Menu = styled('div', {
-  mt: 44,
-});
-
 const NavBarLinkContainer = styled('div', {
   display: 'flex',
   flexDirection: 'column',
@@ -248,83 +244,74 @@ export const NavBar = () => {
   return (
     <StyledNavBar>
       <div>
-        {collapsed ? (
-          <Flex justify="center">
-            <LogoOnlyImage />
-          </Flex>
-        ) : (
-          <LogoImage />
-        )}
-        <Menu>
-          <NavBarLinkContainer>
-            {menu.map((item, index) => (
-              <NavBarLink
-                key={index}
-                {...item}
-                isCollapsed={collapsed}
-                active={router.pathname === item.href}
-              />
-            ))}
+        <NavBarLinkContainer>
+          {menu.map((item, index) => (
+            <NavBarLink
+              key={index}
+              {...item}
+              isCollapsed={collapsed}
+              active={router.pathname === item.href}
+            />
+          ))}
 
-            <NavBarStoriesContainer>
-              {!collapsed && (
-                <Flex justify="between" align="center" css={{ pl: '10px' }}>
-                  <Flex align="center" gap="2">
-                    <TbBook size={navbarIconSize} />
-                    <Typography>Stories</Typography>
-                  </Flex>
-                  <IconButton
-                    variant="light"
-                    size="lg"
-                    onClick={() => createPostMutation()}
-                  >
-                    <TbPlus />
-                  </IconButton>
+          <NavBarStoriesContainer>
+            {!collapsed && (
+              <Flex justify="between" align="center" css={{ pl: '10px' }}>
+                <Flex align="center" gap="2">
+                  <TbBook size={navbarIconSize} />
+                  <Typography>Stories</Typography>
                 </Flex>
-              )}
-              {collapsed ? (
-                <NavBarLink
-                  isCollapsed={collapsed}
-                  icon={<TbNotebook size={navbarIconSize} />}
-                  label="Drafts"
-                  href="/"
-                  active={false}
-                />
-              ) : (
-                <Link href="/drafts">
-                  <NavBarLinkStoriesButton
-                    variant="ghost"
-                    active={router.pathname === '/drafts'}
-                  >
-                    Drafts <NumberBadge>9</NumberBadge>
-                  </NavBarLinkStoriesButton>
-                </Link>
-              )}
-              {collapsed ? (
-                <NavBarLink
-                  isCollapsed={collapsed}
-                  icon={<TbNews size={navbarIconSize} />}
-                  label="Published"
-                  href="/"
-                  active={false}
-                />
-              ) : (
-                <NavBarLinkStoriesButton variant="ghost">
-                  Published <NumberBadge>10</NumberBadge>
-                </NavBarLinkStoriesButton>
-              )}
-            </NavBarStoriesContainer>
-
-            {menu2.map((item, index) => (
+                <IconButton
+                  variant="light"
+                  size="lg"
+                  onClick={() => createPostMutation()}
+                >
+                  <TbPlus />
+                </IconButton>
+              </Flex>
+            )}
+            {collapsed ? (
               <NavBarLink
-                key={index}
-                {...item}
                 isCollapsed={collapsed}
-                active={router.pathname === item.href}
+                icon={<TbNotebook size={navbarIconSize} />}
+                label="Drafts"
+                href="/"
+                active={false}
               />
-            ))}
-          </NavBarLinkContainer>
-        </Menu>
+            ) : (
+              <Link href="/drafts">
+                <NavBarLinkStoriesButton
+                  variant="ghost"
+                  active={router.pathname === '/drafts'}
+                >
+                  Drafts <NumberBadge>9</NumberBadge>
+                </NavBarLinkStoriesButton>
+              </Link>
+            )}
+            {collapsed ? (
+              <NavBarLink
+                isCollapsed={collapsed}
+                icon={<TbNews size={navbarIconSize} />}
+                label="Published"
+                href="/"
+                active={false}
+              />
+            ) : (
+              <NavBarLinkStoriesButton variant="ghost">
+                Published <NumberBadge>10</NumberBadge>
+              </NavBarLinkStoriesButton>
+            )}
+          </NavBarStoriesContainer>
+
+          {menu2.map((item, index) => (
+            <NavBarLink
+              key={index}
+              {...item}
+              isCollapsed={collapsed}
+              active={router.pathname === item.href}
+            />
+          ))}
+        </NavBarLinkContainer>
       </div>
       <Flex
         gap="3"

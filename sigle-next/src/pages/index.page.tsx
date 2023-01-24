@@ -1,7 +1,7 @@
 import { graphql } from '@/gql';
 import { useGraphQL } from '@/utils';
 import { TooltipProvider } from '@radix-ui/react-tooltip';
-import { DashboardLayout } from '../components/Dashboard/Layout';
+import { DashboardLayout } from '../components/Dashboard/DashboardLayout';
 
 const getPostsListQueryDocument = graphql(/* GraphQL */ `
   query getPostsList {

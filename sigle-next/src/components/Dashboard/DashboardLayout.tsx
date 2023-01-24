@@ -1,5 +1,7 @@
 import { styled } from '@sigle/stitches.config';
 import { NavBar } from './NavBar/NavBar';
+import { NavBarTop } from './NavBarTop';
+import { NavTitle } from './NavTitle';
 import { useDashboardStore } from './store';
 
 const Box = styled('div', {});
@@ -15,12 +17,15 @@ export const DashboardLayout = ({ children }: DashboardLayoutProps) => {
     <Box
       css={{
         display: 'grid',
-        gridTemplateColumns: collapsed ? '81px auto 420px' : '271px auto 420px',
         height: '100vh',
+        gridTemplateRows: '80px 1fr',
+        gridTemplateColumns: collapsed ? '81px 1fr' : '271px 1fr',
       }}
     >
+      <NavBarTop collapsed={collapsed} />
+      <NavTitle />
       <NavBar />
-      <main>{children}</main>
+      {children}
     </Box>
   );
 };
