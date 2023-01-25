@@ -78,10 +78,6 @@ const StoryCard = ({ story }: StoryCardProps) => {
 const Box = styled('div', {});
 
 const Drafts = () => {
-  // const { data, isLoading, error } = useQuery(['getPostsList'], () =>
-  //   composeClient.executeQuery(getPostsListQuery)
-  // );
-
   const data = useLazyLoadQuery<draftsPostsListQuery>(DraftsPostsListQuery, {});
 
   return (
