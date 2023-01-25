@@ -95,7 +95,7 @@ const Settings = () => {
             Public name
           </Typography>
           <Flex direction="column" gap="2">
-            <Input />
+            <Input placeholder="Name" />
             <Typography size="xs" color="gray9">
               This name will be displayed on your profile page
             </Typography>
@@ -106,7 +106,7 @@ const Settings = () => {
             Present yourself
           </Typography>
           <Flex direction="column" gap="2">
-            <Textarea rows={4} />
+            <Textarea placeholder="Description" rows={4} />
             <Typography size="xs" color="gray9">
               Max. 350 characters
             </Typography>
@@ -121,6 +121,28 @@ const Settings = () => {
             Add links to your social networks to be displayed on your profile
           </Typography>
         </TitleRow>
+        <SettingsRow>
+          <Typography size="sm" fontWeight="semiBold">
+            Website
+          </Typography>
+          <Flex direction="column" gap="2">
+            <Input placeholder="https://www.sigle.io" />
+            <Typography size="xs" color="gray9">
+              Enter your personal website
+            </Typography>
+          </Flex>
+        </SettingsRow>
+        <SettingsRow>
+          <Typography size="sm" fontWeight="semiBold">
+            Twitter
+          </Typography>
+          <Flex direction="column" gap="2">
+            <Input placeholder="@sigleapp" />
+            <Typography size="xs" color="gray9">
+              Enter your twitter username
+            </Typography>
+          </Flex>
+        </SettingsRow>
       </Container>
     </DashboardLayout>
   );
