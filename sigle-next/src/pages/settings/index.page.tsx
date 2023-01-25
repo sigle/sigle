@@ -2,7 +2,8 @@ import { useCeramic } from '@/components/Ceramic/CeramicProvider';
 import { DashboardLayout } from '@/components/Dashboard/DashboardLayout';
 import { TooltipProvider } from '@radix-ui/react-tooltip';
 import { styled } from '@sigle/stitches.config';
-import { Container, Flex, Typography } from '@sigle/ui';
+import { Container, Flex, Input, Typography } from '@sigle/ui';
+import { TbBrandTwitter, TbWorld } from 'react-icons/tb';
 
 const TitleRow = styled('div', {
   py: '$5',
@@ -17,32 +18,6 @@ const SettingsRow = styled(Flex, {
   gridTemplateColumns: '1fr',
   '@md': {
     gridTemplateColumns: '1fr 2fr',
-  },
-});
-
-const Input = styled('input', {
-  color: '$gray11',
-  border: '1px solid $gray8',
-  backgroundColor: '$gray1',
-  borderRadius: '$sm',
-  fontSize: '$sm',
-  lineHeight: '$sm',
-  py: '$2',
-  px: '$3',
-  outline: 'none',
-  transition: 'all 75ms $ease-in',
-
-  '::placeholder': {
-    color: '$gray8',
-  },
-
-  '&:hover': {
-    border: '1px solid $gray9',
-  },
-
-  '&:focus': {
-    border: '1px solid $indigo8',
-    boxShadow: '0px 0px 0px 3px rgba(145, 139, 255, 0.3)',
   },
 });
 
@@ -126,7 +101,7 @@ const Settings = () => {
             Website
           </Typography>
           <Flex direction="column" gap="2">
-            <Input placeholder="https://www.sigle.io" />
+            <Input placeholder="https://www.sigle.io" rightIcon={<TbWorld />} />
             <Typography size="xs" color="gray9">
               Enter your personal website
             </Typography>
@@ -137,7 +112,7 @@ const Settings = () => {
             Twitter
           </Typography>
           <Flex direction="column" gap="2">
-            <Input placeholder="@sigleapp" />
+            <Input placeholder="@sigleapp" rightIcon={<TbBrandTwitter />} />
             <Typography size="xs" color="gray9">
               Enter your twitter username
             </Typography>
