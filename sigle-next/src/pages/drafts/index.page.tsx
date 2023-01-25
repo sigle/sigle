@@ -1,4 +1,3 @@
-import { useQuery } from '@tanstack/react-query';
 import { TooltipProvider } from '@radix-ui/react-tooltip';
 import { TbDots } from 'react-icons/tb';
 import { graphql, useLazyLoadQuery } from 'react-relay';

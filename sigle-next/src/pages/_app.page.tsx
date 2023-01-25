@@ -5,7 +5,6 @@ import { ThemeProvider } from 'next-themes';
 import dynamic from 'next/dynamic';
 import '@sigle/tailwind-style/dist/tailwind.css';
 import { darkTheme, globalCss } from '@sigle/stitches.config';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ReactRelayContext } from 'react-relay';
 import { environment } from '@/lib/relay';
 
@@ -34,15 +33,6 @@ const globalStyle = globalCss({
   },
 });
 
-const queryClient = new QueryClient({
-  defaultOptions: {
-    queries: {
-      refetchOnWindowFocus: false,
-      retry: false,
-    },
-  },
-});
-
 export default function App({ Component, pageProps }: AppProps) {
   globalStyle();
 
@@ -57,13 +47,11 @@ export default function App({ Component, pageProps }: AppProps) {
         value={{ light: 'light', dark: darkTheme.className }}
       >
         <ReactRelayContext.Provider value={{ environment }}>
-          <QueryClientProvider client={queryClient}>
-            <WagmiProvider>
-              <CeramicProvider>
-                <Component {...pageProps} />
-              </CeramicProvider>
-            </WagmiProvider>
-          </QueryClientProvider>
+          <WagmiProvider>
+            <CeramicProvider>
+              <Component {...pageProps} />
+            </CeramicProvider>
+          </WagmiProvider>
         </ReactRelayContext.Provider>
       </ThemeProvider>
     </>
