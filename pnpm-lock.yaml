@@ -480,6 +480,7 @@ importers:
       postcss-loader: 7.0.2
       react: 18.2.0
       react-dom: 18.2.0
+      react-hook-form: 7.42.1
       react-icons: 4.7.1
       react-relay: 14.1.0
       relay-compiler: 14.1.0
@@ -505,6 +506,7 @@ importers:
       next-themes: 0.2.0_gru2niblrprbai56sdagiiy5sa
       react: 18.2.0
       react-dom: 18.2.0_react@18.2.0
+      react-hook-form: 7.42.1_react@18.2.0
       react-icons: 4.7.1_react@18.2.0
       react-relay: 14.1.0_react@18.2.0
       relay-runtime: 14.1.0
@@ -20325,6 +20327,15 @@ packages:
 
   /react-fast-compare/2.0.4:
     resolution: {integrity: sha512-suNP+J1VU1MWFKcyt7RtjiSWUjvidmQSlqu+eHslq+342xCbGTYmC0mEhPCOHxlW0CywylOC1u2DFAT+bv4dBw==}
+    dev: false
+
+  /react-hook-form/7.42.1_react@18.2.0:
+    resolution: {integrity: sha512-2UIGqwMZksd5HS55crTT1ATLTr0rAI4jS7yVuqTaoRVDhY2Qc4IyjskCmpnmdYqUNOYFy04vW253tb2JRVh+IQ==}
+    engines: {node: '>=12.22.0'}
+    peerDependencies:
+      react: ^16.8.0 || ^17 || ^18
+    dependencies:
+      react: 18.2.0
     dev: false
 
   /react-icons/4.7.1_react@18.2.0:

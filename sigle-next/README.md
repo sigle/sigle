@@ -5,3 +5,4 @@ Run server: `composedb graphql:server --ceramic-url=http://localhost:7007 --grap
 1. `composedb composite:create ceramic/schema.graphql --output ceramic/composite.json --did-private-key XXX`
 2. `composedb composite:compile ceramic/composite.json ceramic/runtime-composite.json`
 3. `composedb composite:deploy ceramic/composite.json --ceramic-url=http://localhost:7007 --did-private-key XXX`
+4. `pnpm dlx get-graphql-schema http://localhost:5005/graphql > ceramic/runtime-schema.graphql`
