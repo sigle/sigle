@@ -83,9 +83,6 @@ const Drafts = () => {
           <Typography size="lg" fontWeight="bold">
             Recommended
           </Typography>
-          {data.viewer?.postList?.edges?.map((node) => (
-            <StoryCard key={node?.node?.id} story={node?.node!} />
-          ))}
         </>
       }
     >
