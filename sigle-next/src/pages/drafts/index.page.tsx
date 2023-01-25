@@ -6,7 +6,7 @@ import { useCeramic } from '@/components/Ceramic/CeramicProvider';
 import { Badge, Container, Flex, IconButton, Typography } from '@sigle/ui';
 import { DashboardContent } from '@/components/Dashboard/DashboardContent';
 import { styled } from '@sigle/stitches.config';
-import { draftsPostsListQuery } from '@/graphql/__generated__/draftsPostsListQuery.graphql';
+import { draftsPostsListQuery } from '@/__generated__/relay/draftsPostsListQuery.graphql';
 
 const DraftsPostsListQuery = graphql`
   query draftsPostsListQuery {

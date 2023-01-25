@@ -10,7 +10,7 @@ const nextConfig = {
   compiler: {
     relay: {
       src: './src',
-      artifactDirectory: './src/graphql/__generated__',
+      artifactDirectory: './src/__generated__/relay',
       language: 'typescript',
     },
   },

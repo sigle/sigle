@@ -25,15 +25,15 @@ import {
   TbWallet,
 } from 'react-icons/tb';
 import { useAccount } from 'wagmi';
+import { graphql, useMutation } from 'react-relay';
 import { useIsMounted } from '@sigle/hooks';
 import { styled } from '@sigle/stitches.config';
-import { LogoImage } from '../../../images/Logo';
-import { LogoOnlyImage } from '../../../images/LogoOnly';
 import { useDashboardStore } from '../store';
 import { NavBarUserDropdown } from './NavBarUserDropdown';
+import { NavBarCreatePostMutation } from '@/__generated__/relay/NavBarCreatePostMutation.graphql';
 
-const createPostMutationDocument = /* GraphQL */ `
-  mutation createPost($input: CreatePostInput!) {
+const CreatePostMutation = graphql`
+  mutation NavBarCreatePostMutation($input: CreatePostInput!) {
     createPost(input: $input) {
       clientMutationId
     }
@@ -176,6 +176,8 @@ export const NavBar = () => {
   const { isConnected } = useAccount();
   const { setOpen: setConnectKitOpen } = useModal();
 
+  const [commit] = useMutation<NavBarCreatePostMutation>(CreatePostMutation);
+
   const menu = [
     {
       href: '/',
@@ -235,7 +237,17 @@ export const NavBar = () => {
                 <IconButton
                   variant="light"
                   size="lg"
-                  // onClick={() => createPostMutation()}
+                  onClick={() =>
+                    commit({
+                      variables: {
+                        input: {
+                          content: {
+                            title: 'Test with relay',
+                          },
+                        },
+                      },
+                    })
+                  }
                 >
                   <TbPlus />
                 </IconButton>
