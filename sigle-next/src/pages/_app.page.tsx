@@ -6,6 +6,8 @@ import dynamic from 'next/dynamic';
 import '@sigle/tailwind-style/dist/tailwind.css';
 import { darkTheme, globalCss } from '@sigle/stitches.config';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { ReactRelayContext } from 'react-relay';
+import { environment } from '@/lib/relay';
 
 /**
  * Lazy load the WagmiProvider as it's huge to avoid bloating the main bundle
@@ -54,13 +56,15 @@ export default function App({ Component, pageProps }: AppProps) {
         attribute="class"
         value={{ light: 'light', dark: darkTheme.className }}
       >
-        <QueryClientProvider client={queryClient}>
-          <WagmiProvider>
-            <CeramicProvider>
-              <Component {...pageProps} />
-            </CeramicProvider>
-          </WagmiProvider>
-        </QueryClientProvider>
+        <ReactRelayContext.Provider value={{ environment }}>
+          <QueryClientProvider client={queryClient}>
+            <WagmiProvider>
+              <CeramicProvider>
+                <Component {...pageProps} />
+              </CeramicProvider>
+            </WagmiProvider>
+          </QueryClientProvider>
+        </ReactRelayContext.Provider>
       </ThemeProvider>
     </>
   );

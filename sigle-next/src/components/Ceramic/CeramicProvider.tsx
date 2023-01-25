@@ -3,7 +3,7 @@ import { EthereumWebAuth, getAccountId } from '@didtools/pkh-ethereum';
 import { createContext, useState, useMemo } from 'react';
 import { useAccount } from 'wagmi';
 import { useEffect, useContext } from 'react';
-import { composeClient } from '@/utils';
+import { composeClient } from '@/lib/composeDB';
 
 interface CeramicContextType {
   session: DIDSession | null;

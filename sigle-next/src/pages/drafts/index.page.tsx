@@ -1,15 +1,16 @@
 import { useQuery } from '@tanstack/react-query';
 import { TooltipProvider } from '@radix-ui/react-tooltip';
 import { TbDots } from 'react-icons/tb';
-import { composeClient } from '@/utils';
+import { graphql, useLazyLoadQuery } from 'react-relay';
 import { DashboardLayout } from '@/components/Dashboard/DashboardLayout';
 import { useCeramic } from '@/components/Ceramic/CeramicProvider';
 import { Badge, Container, Flex, IconButton, Typography } from '@sigle/ui';
 import { DashboardContent } from '@/components/Dashboard/DashboardContent';
 import { styled } from '@sigle/stitches.config';
+import { draftsPostsListQuery } from '@/graphql/__generated__/draftsPostsListQuery.graphql';
 
-const getPostsListQuery = /* GraphQL */ `
-  query getPostsList {
+const DraftsPostsListQuery = graphql`
+  query draftsPostsListQuery {
     viewer {
       id
       postList(first: 10) {
@@ -78,11 +79,11 @@ const StoryCard = ({ story }: StoryCardProps) => {
 const Box = styled('div', {});
 
 const Drafts = () => {
-  const { data, isLoading, error } = useQuery(['getPostsList'], () =>
-    composeClient.executeQuery(getPostsListQuery)
-  );
+  // const { data, isLoading, error } = useQuery(['getPostsList'], () =>
+  //   composeClient.executeQuery(getPostsListQuery)
+  // );
 
-  console.log(data, isLoading, error);
+  const data = useLazyLoadQuery<draftsPostsListQuery>(DraftsPostsListQuery, {});
 
   return (
     <DashboardContent>
@@ -94,8 +95,8 @@ const Drafts = () => {
       >
         <div>
           <Container css={{ maxWidth: 680 }}>
-            {data?.data.viewer.postList.edges.map((node) => (
-              <StoryCard key={node.node.id} story={node.node} />
+            {data.viewer?.postList?.edges?.map((node) => (
+              <StoryCard key={node?.node?.id} story={node?.node!} />
             ))}
           </Container>
         </div>
@@ -113,8 +114,8 @@ const Drafts = () => {
             <Typography size="lg" fontWeight="bold">
               Recommended
             </Typography>
-            {data?.data.viewer.postList.edges.map((node) => (
-              <StoryCard key={node.node.id} story={node.node} />
+            {data.viewer?.postList?.edges?.map((node) => (
+              <StoryCard key={node?.node?.id} story={node?.node!} />
             ))}
           </Box>
         </Box>

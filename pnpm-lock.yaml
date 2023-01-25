@@ -469,6 +469,8 @@ importers:
       '@types/node': 18.11.18
       '@types/react': 18.0.26
       '@types/react-dom': 18.0.10
+      '@types/react-relay': 14.1.3
+      '@types/relay-runtime': 14.1.6
       connectkit: 1.1.1
       css-loader: 6.7.3
       did-session: 1.0.0
@@ -485,6 +487,7 @@ importers:
       react-icons: 4.7.1
       react-relay: 14.1.0
       relay-compiler: 14.1.0
+      relay-runtime: 14.1.0
       storybook: 7.0.0-beta.25
       style-loader: 3.3.1
       typescript: 4.9.4
@@ -511,6 +514,7 @@ importers:
       react-dom: 18.2.0_react@18.2.0
       react-icons: 4.7.1_react@18.2.0
       react-relay: 14.1.0_react@18.2.0
+      relay-runtime: 14.1.0
       wagmi: 0.10.10_np6otfa6zt4irkefc5u6wyuuwa
       zustand: 4.3.2_react@18.2.0
     devDependencies:
@@ -528,6 +532,8 @@ importers:
       '@types/node': 18.11.18
       '@types/react': 18.0.26
       '@types/react-dom': 18.0.10
+      '@types/react-relay': 14.1.3
+      '@types/relay-runtime': 14.1.6
       css-loader: 6.7.3
       eslint: 8.31.0
       eslint-config-next: 13.1.4_iukboom6ndih5an6iafl45j2fe
@@ -9566,6 +9572,13 @@ packages:
     dependencies:
       '@types/react': 18.0.26
 
+  /@types/react-relay/14.1.3:
+    resolution: {integrity: sha512-tsu+3jN0zeOYKV485fwUy3yMEZWkDVzC2JG0tJgEH6p9tcPQkBAUoXqEZFwSBtHtNo1etfa1Eityg3fC55qDvQ==}
+    dependencies:
+      '@types/react': 18.0.26
+      '@types/relay-runtime': 14.1.6
+    dev: true
+
   /@types/react/18.0.26:
     resolution: {integrity: sha512-hCR3PJQsAIXyxhTNSiDFY//LhnMZWpNNr5etoCqx/iUfGc5gXWtQR2Phl908jVR6uPXacojQWTg4qRpkxTuGug==}
     dependencies:
@@ -9583,6 +9596,10 @@ packages:
     resolution: {integrity: sha512-7jkMKxcGq9p242exlbsVzuJb57KqHRhNl4dHoQu2Y5v9bCAbtIXXH0R3HleSQW4CTOqpHIYUW3t6tpUj4BVQ+w==}
     dependencies:
       '@types/node': 18.7.20
+    dev: true
+
+  /@types/relay-runtime/14.1.6:
+    resolution: {integrity: sha512-dvNdoGdogLDSJlsiNWKBJjqv2xwPxnoaQXKzgSh/QMShY+hNuLz/nVh0WuFNHzH6D3krg6I6zf+X/L4+nD4twg==}
     dev: true
 
   /@types/ripemd160/2.0.0:
