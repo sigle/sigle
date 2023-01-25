@@ -19,6 +19,10 @@ export const IconButton = styled('button', {
 
   variants: {
     size: {
+      xs: {
+        height: '$5',
+        width: '$5',
+      },
       sm: {
         height: '$8',
         width: '$8',

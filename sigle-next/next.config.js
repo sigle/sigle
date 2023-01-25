@@ -7,6 +7,13 @@ const nextConfig = {
     // `.api.ts` for API routes
     'api.ts',
   ],
+  compiler: {
+    relay: {
+      src: './src',
+      artifactDirectory: './src/__generated__/relay',
+      language: 'typescript',
+    },
+  },
 };
 
 module.exports = nextConfig;

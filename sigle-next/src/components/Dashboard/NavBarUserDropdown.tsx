@@ -13,9 +13,9 @@ import {
 import { useTheme } from 'next-themes';
 import Link from 'next/link';
 import { TbChevronDown, TbSettings } from 'react-icons/tb';
-import { addressAvatar } from '@sigle/utils';
+import { addressAvatar } from '@/utils';
 import { useAccount, useDisconnect } from 'wagmi';
-import { useDashboardStore } from '../store';
+import { useDashboardStore } from './store';
 
 const UserMenu = styled('div', {
   backgroundColor: '$gray3',
@@ -154,6 +154,7 @@ export const NavBarUserDropdown = () => {
         </StyledDropdownMenuItemDarkMode>
         {isConnected && <DropdownMenuSeparator />}
         {isConnected && (
+          // TODO clean ceramic did-session local storage
           <DropdownMenuItem onClick={() => disconnect()}>
             Log out
           </DropdownMenuItem>

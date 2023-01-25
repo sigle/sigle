@@ -1,7 +1,5 @@
-import { useIsMounted } from '@sigle/hooks';
-import { styled } from '@sigle/stitches.config';
 import {
-  Badge,
+  NumberBadge,
   Button,
   Flex,
   IconButton,
@@ -27,10 +25,20 @@ import {
   TbWallet,
 } from 'react-icons/tb';
 import { useAccount } from 'wagmi';
-import { LogoImage } from '../../../images/Logo';
-import { LogoOnlyImage } from '../../../images/LogoOnly';
-import { useDashboardStore } from '../store';
+import { graphql, useMutation } from 'react-relay';
+import { useIsMounted } from '@sigle/hooks';
+import { styled } from '@sigle/stitches.config';
+import { useDashboardStore } from './store';
 import { NavBarUserDropdown } from './NavBarUserDropdown';
+import { NavBarCreatePostMutation } from '@/__generated__/relay/NavBarCreatePostMutation.graphql';
+
+const CreatePostMutation = graphql`
+  mutation NavBarCreatePostMutation($input: CreatePostInput!) {
+    createPost(input: $input) {
+      clientMutationId
+    }
+  }
+`;
 
 const StyledNavBar = styled('nav', {
   px: '$5',
@@ -74,10 +82,6 @@ const NavBarLinkIconButton = styled(IconButton, {
 });
 
 const navbarIconSize = 20;
-
-const Menu = styled('div', {
-  mt: 44,
-});
 
 const NavBarLinkContainer = styled('div', {
   display: 'flex',
@@ -152,6 +156,13 @@ const NavBarLinkStoriesButton = styled(Button, {
         pl: '38px',
       },
     },
+    active: {
+      true: {
+        boxShadow: '0 0 0 1px $colors$gray6',
+        backgroundColor: '$gray3',
+        fontWeight: 600,
+      },
+    },
   },
   defaultVariants: {
     size: 'md',
@@ -164,6 +175,8 @@ export const NavBar = () => {
   const isMounted = useIsMounted();
   const { isConnected } = useAccount();
   const { setOpen: setConnectKitOpen } = useModal();
+
+  const [commit] = useMutation<NavBarCreatePostMutation>(CreatePostMutation);
 
   const menu = [
     {
@@ -204,74 +217,84 @@ export const NavBar = () => {
   return (
     <StyledNavBar>
       <div>
-        {collapsed ? (
-          <Flex justify="center">
-            <LogoOnlyImage />
-          </Flex>
-        ) : (
-          <LogoImage />
-        )}
-        <Menu>
-          <NavBarLinkContainer>
-            {menu.map((item, index) => (
-              <NavBarLink
-                key={index}
-                {...item}
-                isCollapsed={collapsed}
-                active={router.pathname === item.href}
-              />
-            ))}
+        <NavBarLinkContainer>
+          {menu.map((item, index) => (
+            <NavBarLink
+              key={index}
+              {...item}
+              isCollapsed={collapsed}
+              active={router.pathname === item.href}
+            />
+          ))}
 
-            <NavBarStoriesContainer>
-              {!collapsed && (
-                <Flex justify="between" align="center" css={{ pl: '10px' }}>
-                  <Flex align="center" gap="2">
-                    <TbBook size={navbarIconSize} />
-                    <Typography>Stories</Typography>
-                  </Flex>
-                  <IconButton variant="light" size="lg">
-                    <TbPlus />
-                  </IconButton>
+          <NavBarStoriesContainer>
+            {!collapsed && (
+              <Flex justify="between" align="center" css={{ pl: '10px' }}>
+                <Flex align="center" gap="2">
+                  <TbBook size={navbarIconSize} />
+                  <Typography>Stories</Typography>
                 </Flex>
-              )}
-              {collapsed ? (
-                <NavBarLink
-                  isCollapsed={collapsed}
-                  icon={<TbNotebook size={navbarIconSize} />}
-                  label="Drafts"
-                  href="/"
-                  active={false}
-                />
-              ) : (
-                <NavBarLinkStoriesButton variant="ghost">
-                  Drafts <Badge>9</Badge>
-                </NavBarLinkStoriesButton>
-              )}
-              {collapsed ? (
-                <NavBarLink
-                  isCollapsed={collapsed}
-                  icon={<TbNews size={navbarIconSize} />}
-                  label="Published"
-                  href="/"
-                  active={false}
-                />
-              ) : (
-                <NavBarLinkStoriesButton variant="ghost">
-                  Published <Badge>10</Badge>
-                </NavBarLinkStoriesButton>
-              )}
-            </NavBarStoriesContainer>
-
-            {menu2.map((item, index) => (
+                <IconButton
+                  variant="light"
+                  size="lg"
+                  onClick={() =>
+                    commit({
+                      variables: {
+                        input: {
+                          content: {
+                            title: 'Test with relay',
+                          },
+                        },
+                      },
+                    })
+                  }
+                >
+                  <TbPlus />
+                </IconButton>
+              </Flex>
+            )}
+            {collapsed ? (
               <NavBarLink
-                key={index}
-                {...item}
                 isCollapsed={collapsed}
-                active={router.pathname === item.href}
+                icon={<TbNotebook size={navbarIconSize} />}
+                label="Drafts"
+                href="/"
+                active={false}
               />
-            ))}
-          </NavBarLinkContainer>
-        </Menu>
+            ) : (
+              <Link href="/drafts">
+                <NavBarLinkStoriesButton
+                  variant="ghost"
+                  active={router.pathname === '/drafts'}
+                >
+                  Drafts <NumberBadge>9</NumberBadge>
+                </NavBarLinkStoriesButton>
+              </Link>
+            )}
+            {collapsed ? (
+              <NavBarLink
+                isCollapsed={collapsed}
+                icon={<TbNews size={navbarIconSize} />}
+                label="Published"
+                href="/"
+                active={false}
+              />
+            ) : (
+              <NavBarLinkStoriesButton variant="ghost">
+                Published <NumberBadge>10</NumberBadge>
+              </NavBarLinkStoriesButton>
+            )}
+          </NavBarStoriesContainer>
+
+          {menu2.map((item, index) => (
+            <NavBarLink
+              key={index}
+              {...item}
+              isCollapsed={collapsed}
+              active={router.pathname === item.href}
+            />
+          ))}
+        </NavBarLinkContainer>
       </div>
       <Flex
         gap="3"

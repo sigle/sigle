@@ -36,6 +36,9 @@ export const Typography = styled('p', {
       gray: {
         color: '$gray11',
       },
+      gray9: {
+        color: '$gray9',
+      },
       indigo: {
         color: '$indigo11',
       },
@@ -55,6 +58,18 @@ export const Typography = styled('p', {
       1: {
         display: '-webkit-box',
         '-webkit-line-clamp': 1,
+        '-webkit-box-orient': 'vertical',
+        overflow: 'hidden',
+      },
+      2: {
+        display: '-webkit-box',
+        '-webkit-line-clamp': 2,
+        '-webkit-box-orient': 'vertical',
+        overflow: 'hidden',
+      },
+      3: {
+        display: '-webkit-box',
+        '-webkit-line-clamp': 3,
         '-webkit-box-orient': 'vertical',
         overflow: 'hidden',
       },
