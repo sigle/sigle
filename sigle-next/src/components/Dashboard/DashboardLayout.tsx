@@ -1,5 +1,5 @@
 import { styled } from '@sigle/stitches.config';
-import { NavBar } from './NavBar/NavBar';
+import { NavBar } from './NavBar';
 import { NavBarTop } from './NavBarTop';
 import { NavTitle } from './NavTitle';
 import { useDashboardStore } from './store';

@@ -15,7 +15,7 @@ import Link from 'next/link';
 import { TbChevronDown, TbSettings } from 'react-icons/tb';
 import { addressAvatar } from '@/utils';
 import { useAccount, useDisconnect } from 'wagmi';
-import { useDashboardStore } from '../store';
+import { useDashboardStore } from './store';
 
 const UserMenu = styled('div', {
   backgroundColor: '$gray3',

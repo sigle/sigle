@@ -28,7 +28,7 @@ import { useAccount } from 'wagmi';
 import { graphql, useMutation } from 'react-relay';
 import { useIsMounted } from '@sigle/hooks';
 import { styled } from '@sigle/stitches.config';
-import { useDashboardStore } from '../store';
+import { useDashboardStore } from './store';
 import { NavBarUserDropdown } from './NavBarUserDropdown';
 import { NavBarCreatePostMutation } from '@/__generated__/relay/NavBarCreatePostMutation.graphql';
 
