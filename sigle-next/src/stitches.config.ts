@@ -141,6 +141,12 @@ export const {
       lg: '0px 8px 24px -6px rgba(0, 0, 0, 0.16), 0px 0px 1px rgba(0, 0, 0, 0.4)',
       xl: '0px 32px 32px -8px rgba(0, 0, 0, 0.08), 0px 0px 32px -8px rgba(0, 0, 0, 0.12), 0px 0px 1px rgba(0, 0, 0, 0.2)',
     },
+    transitions: {
+      'ease-linear': 'linear',
+      'ease-in': 'cubic-bezier(0.4, 0, 1, 1)',
+      'ease-out': 'cubic-bezier(0, 0, 0.2, 1)',
+      'ease-in-out': 'cubic-bezier(0.4, 0, 0.2, 1)',
+    },
   },
   media: {
     sm: '(min-width: 640px)',

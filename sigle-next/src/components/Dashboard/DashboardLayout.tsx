@@ -9,11 +9,13 @@ import { useDashboardStore } from './store';
 const Box = styled('div', {});
 
 interface DashboardLayoutProps {
+  headerContent?: React.ReactNode;
   sidebarContent?: React.ReactNode;
   children: React.ReactNode;
 }
 
 export const DashboardLayout = ({
+  headerContent,
   sidebarContent,
   children,
 }: DashboardLayoutProps) => {
@@ -29,7 +31,7 @@ export const DashboardLayout = ({
       }}
     >
       <NavBarTop collapsed={collapsed} />
-      <NavTitle />
+      <NavTitle>{headerContent}</NavTitle>
       <NavBar />
       <DashboardContent>
         <Box

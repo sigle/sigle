@@ -4,6 +4,7 @@ export const Container = styled('div', {
   ml: 'auto',
   mr: 'auto',
   px: '$5',
+  width: '100%',
 
   '@sm': {
     maxWidth: '640px',
