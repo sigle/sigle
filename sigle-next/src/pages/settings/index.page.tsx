@@ -1,12 +1,13 @@
 import { useCeramic } from '@/components/Ceramic/CeramicProvider';
 import { DashboardLayout } from '@/components/Dashboard/DashboardLayout';
 import { TooltipProvider } from '@radix-ui/react-tooltip';
-import { graphql, useLazyLoadQuery } from 'react-relay';
+import { graphql, useLazyLoadQuery, useMutation } from 'react-relay';
 import { styled } from '@sigle/stitches.config';
 import { Button, Container, Flex, Input, Typography } from '@sigle/ui';
 import { TbBrandTwitter, TbWorld } from 'react-icons/tb';
 import { useForm } from 'react-hook-form';
 import { settingsPageProfileQuery } from '@/__generated__/relay/settingsPageProfileQuery.graphql';
+import { settingsCreateProfileMutation } from '@/__generated__/relay/settingsCreateProfileMutation.graphql';
 
 const TitleRow = styled('div', {
   py: '$5',
@@ -77,8 +78,35 @@ const Settings = () => {
     {}
   );
 
+  const [commitCreateProfile] =
+    useMutation<settingsCreateProfileMutation>(graphql`
+      mutation settingsCreateProfileMutation($input: CreateProfileInput!) {
+        createProfile(input: $input) {
+          clientMutationId
+          document {
+            id
+            websiteUrl
+            description
+            twitterUsername
+          }
+        }
+      }
+    `);
+
   const onSubmit = handleSubmit((data) => {
-    console.log(data);
+    // TODO: add validation
+    // TODO: add loading state
+
+    commitCreateProfile({
+      variables: {
+        input: {
+          content: {
+            displayName: data.displayName,
+            description: data.description,
+          },
+        },
+      },
+    });
   });
 
   console.log(data);
