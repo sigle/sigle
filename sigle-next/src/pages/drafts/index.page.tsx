@@ -88,13 +88,11 @@ const Drafts = () => {
           gridTemplateColumns: '1fr 420px',
         }}
       >
-        <div>
-          <Container css={{ maxWidth: 680 }}>
-            {data.viewer?.postList?.edges?.map((node) => (
-              <StoryCard key={node?.node?.id} story={node?.node!} />
-            ))}
-          </Container>
-        </div>
+        <Container css={{ maxWidth: 680, py: '$5' }}>
+          {data.viewer?.postList?.edges?.map((node) => (
+            <StoryCard key={node?.node?.id} story={node?.node!} />
+          ))}
+        </Container>
         <Box css={{ position: 'relative', borderLeft: '1px solid $gray6' }}>
           <Box
             css={{
