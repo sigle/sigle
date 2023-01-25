@@ -4,8 +4,6 @@ import { graphql, useLazyLoadQuery } from 'react-relay';
 import { DashboardLayout } from '@/components/Dashboard/DashboardLayout';
 import { useCeramic } from '@/components/Ceramic/CeramicProvider';
 import { Badge, Container, Flex, IconButton, Typography } from '@sigle/ui';
-import { DashboardContent } from '@/components/Dashboard/DashboardContent';
-import { styled } from '@sigle/stitches.config';
 import { draftsPostsListQuery } from '@/__generated__/relay/draftsPostsListQuery.graphql';
 
 const DraftsPostsListQuery = graphql`
@@ -75,45 +73,28 @@ const StoryCard = ({ story }: StoryCardProps) => {
   );
 };
 
-const Box = styled('div', {});
-
 const Drafts = () => {
   const data = useLazyLoadQuery<draftsPostsListQuery>(DraftsPostsListQuery, {});
 
   return (
-    <DashboardContent>
-      <Box
-        css={{
-          display: 'grid',
-          gridTemplateColumns: '1fr 420px',
-        }}
-      >
-        <Container css={{ maxWidth: 680, py: '$5' }}>
+    <DashboardLayout
+      sidebarContent={
+        <>
+          <Typography size="lg" fontWeight="bold">
+            Recommended
+          </Typography>
           {data.viewer?.postList?.edges?.map((node) => (
             <StoryCard key={node?.node?.id} story={node?.node!} />
           ))}
-        </Container>
-        <Box css={{ position: 'relative', borderLeft: '1px solid $gray6' }}>
-          <Box
-            css={{
-              py: '$5',
-              px: '$5',
-              overflowY: 'scroll',
-              position: 'fixed',
-              top: 80,
-              bottom: 0,
-            }}
-          >
-            <Typography size="lg" fontWeight="bold">
-              Recommended
-            </Typography>
-            {data.viewer?.postList?.edges?.map((node) => (
-              <StoryCard key={node?.node?.id} story={node?.node!} />
-            ))}
-          </Box>
-        </Box>
-      </Box>
-    </DashboardContent>
+        </>
+      }
+    >
+      <Container css={{ maxWidth: 680, py: '$5' }}>
+        {data.viewer?.postList?.edges?.map((node) => (
+          <StoryCard key={node?.node?.id} story={node?.node!} />
+        ))}
+      </Container>
+    </DashboardLayout>
   );
 };
 
@@ -121,9 +102,5 @@ export default function ProtectedDrafts() {
   // TODO auth protect
   const { session } = useCeramic();
 
-  return (
-    <TooltipProvider>
-      <DashboardLayout>{session ? <Drafts /> : null}</DashboardLayout>
-    </TooltipProvider>
-  );
+  return <TooltipProvider>{session ? <Drafts /> : null}</TooltipProvider>;
 }
