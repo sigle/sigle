@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<46f7f4b8da4e3b1271ebada107d701e1>>
+ * @generated SignedSource<<6957620dd3f358d6f3fcb53086bf3586>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -16,6 +16,7 @@ export type settingsPageProfileQuery$data = {
     readonly profile: {
       readonly description: string;
       readonly displayName: string;
+      readonly id: string;
       readonly twitterUsername: string | null;
       readonly websiteUrl: string | null;
     } | null;
@@ -34,69 +35,67 @@ var v0 = {
   "name": "id",
   "storageKey": null
 },
-v1 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "displayName",
-  "storageKey": null
-},
-v2 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "description",
-  "storageKey": null
-},
-v3 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "websiteUrl",
-  "storageKey": null
-},
-v4 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "twitterUsername",
-  "storageKey": null
-};
-return {
-  "fragment": {
-    "argumentDefinitions": [],
-    "kind": "Fragment",
-    "metadata": null,
-    "name": "settingsPageProfileQuery",
+v1 = [
+  {
+    "alias": null,
+    "args": null,
+    "concreteType": "CeramicAccount",
+    "kind": "LinkedField",
+    "name": "viewer",
+    "plural": false,
     "selections": [
+      (v0/*: any*/),
       {
         "alias": null,
         "args": null,
-        "concreteType": "CeramicAccount",
+        "concreteType": "Profile",
         "kind": "LinkedField",
-        "name": "viewer",
+        "name": "profile",
         "plural": false,
         "selections": [
           (v0/*: any*/),
           {
             "alias": null,
             "args": null,
-            "concreteType": "Profile",
-            "kind": "LinkedField",
-            "name": "profile",
-            "plural": false,
-            "selections": [
-              (v1/*: any*/),
-              (v2/*: any*/),
-              (v3/*: any*/),
-              (v4/*: any*/)
-            ],
+            "kind": "ScalarField",
+            "name": "displayName",
+            "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": null,
+            "kind": "ScalarField",
+            "name": "description",
+            "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": null,
+            "kind": "ScalarField",
+            "name": "websiteUrl",
+            "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": null,
+            "kind": "ScalarField",
+            "name": "twitterUsername",
             "storageKey": null
           }
         ],
         "storageKey": null
       }
     ],
+    "storageKey": null
+  }
+];
+return {
+  "fragment": {
+    "argumentDefinitions": [],
+    "kind": "Fragment",
+    "metadata": null,
+    "name": "settingsPageProfileQuery",
+    "selections": (v1/*: any*/),
     "type": "Query",
     "abstractKey": null
   },
@@ -105,48 +104,19 @@ return {
     "argumentDefinitions": [],
     "kind": "Operation",
     "name": "settingsPageProfileQuery",
-    "selections": [
-      {
-        "alias": null,
-        "args": null,
-        "concreteType": "CeramicAccount",
-        "kind": "LinkedField",
-        "name": "viewer",
-        "plural": false,
-        "selections": [
-          (v0/*: any*/),
-          {
-            "alias": null,
-            "args": null,
-            "concreteType": "Profile",
-            "kind": "LinkedField",
-            "name": "profile",
-            "plural": false,
-            "selections": [
-              (v1/*: any*/),
-              (v2/*: any*/),
-              (v3/*: any*/),
-              (v4/*: any*/),
-              (v0/*: any*/)
-            ],
-            "storageKey": null
-          }
-        ],
-        "storageKey": null
-      }
-    ]
+    "selections": (v1/*: any*/)
   },
   "params": {
-    "cacheID": "6b9615980b9893d7c06fc957edc4d306",
+    "cacheID": "85360af33cd8b325017a90845ab4fbce",
     "id": null,
     "metadata": {},
     "name": "settingsPageProfileQuery",
     "operationKind": "query",
-    "text": "query settingsPageProfileQuery {\n  viewer {\n    id\n    profile {\n      displayName\n      description\n      websiteUrl\n      twitterUsername\n      id\n    }\n  }\n}\n"
+    "text": "query settingsPageProfileQuery {\n  viewer {\n    id\n    profile {\n      id\n      displayName\n      description\n      websiteUrl\n      twitterUsername\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "595baaf0b927355cbeebe9f950f4ea04";
+(node as any).hash = "708a642632449f4141faf1610e333e49";
 
 export default node;

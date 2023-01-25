@@ -8,6 +8,7 @@ import { TbBrandTwitter, TbWorld } from 'react-icons/tb';
 import { useForm } from 'react-hook-form';
 import { settingsPageProfileQuery } from '@/__generated__/relay/settingsPageProfileQuery.graphql';
 import { settingsCreateProfileMutation } from '@/__generated__/relay/settingsCreateProfileMutation.graphql';
+import { settingsUpdateProfileMutation } from '@/__generated__/relay/settingsUpdateProfileMutation.graphql';
 
 const TitleRow = styled('div', {
   py: '$5',
@@ -59,7 +60,11 @@ type SettingsFormData = {
 };
 
 const Settings = () => {
-  const { register, handleSubmit } = useForm<SettingsFormData>();
+  const {
+    register,
+    handleSubmit,
+    formState: { isDirty },
+  } = useForm<SettingsFormData>();
 
   const data = useLazyLoadQuery<settingsPageProfileQuery>(
     graphql`
@@ -67,6 +72,7 @@ const Settings = () => {
         viewer {
           id
           profile {
+            id
             displayName
             description
             websiteUrl
@@ -78,13 +84,14 @@ const Settings = () => {
     {}
   );
 
-  const [commitCreateProfile] =
+  const [commitCreateProfile, isLoadingCommitCreateProfile] =
     useMutation<settingsCreateProfileMutation>(graphql`
       mutation settingsCreateProfileMutation($input: CreateProfileInput!) {
         createProfile(input: $input) {
           clientMutationId
           document {
             id
+            displayName
             websiteUrl
             description
             twitterUsername
@@ -93,16 +100,51 @@ const Settings = () => {
       }
     `);
 
-  const onSubmit = handleSubmit((data) => {
+  const [commitUpdateProfile, isLoadingCommitUpdateProfile] =
+    useMutation<settingsUpdateProfileMutation>(graphql`
+      mutation settingsUpdateProfileMutation($input: UpdateProfileInput!) {
+        updateProfile(input: $input) {
+          clientMutationId
+          document {
+            id
+            displayName
+            websiteUrl
+            description
+            twitterUsername
+          }
+        }
+      }
+    `);
+
+  console.log(isLoadingCommitCreateProfile, isLoadingCommitUpdateProfile);
+
+  const onSubmit = handleSubmit((formValues) => {
     // TODO: add validation
     // TODO: add loading state
+    // TODO: update or create profile
 
-    commitCreateProfile({
+    // commitCreateProfile({
+    //   variables: {
+    //     input: {
+    //       content: {
+    //         displayName: data.displayName,
+    //         description: data.description,
+    //       },
+    //     },
+    //   },
+    // });
+    console.log({
+      id: data.viewer.profile.id,
+      displayName: formValues.displayName,
+      description: formValues.description,
+    });
+    commitUpdateProfile({
       variables: {
         input: {
           content: {
-            displayName: data.displayName,
-            description: data.description,
+            id: data.viewer.profile.id,
+            displayName: formValues.displayName,
+            description: formValues.description,
           },
         },
       },
@@ -118,7 +160,18 @@ const Settings = () => {
           <Typography size="xl" fontWeight="bold">
             Settings
           </Typography>
-          <Button onClick={onSubmit}>Save</Button>
+          <Button
+            onClick={onSubmit}
+            disabled={
+              !isDirty ||
+              isLoadingCommitCreateProfile ||
+              isLoadingCommitUpdateProfile
+            }
+          >
+            {isLoadingCommitCreateProfile || isLoadingCommitUpdateProfile
+              ? 'Saving...'
+              : 'Save'}
+          </Button>
         </Flex>
       }
     >

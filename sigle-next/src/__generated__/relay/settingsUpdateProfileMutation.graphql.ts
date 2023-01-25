@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<1ec7dd2a434d1eb5b86de540d3b6f7d8>>
+ * @generated SignedSource<<977ea739853cdb060bd41ea67efecf82>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,21 +9,27 @@
 // @ts-nocheck
 
 import { ConcreteRequest, Mutation } from 'relay-runtime';
-export type CreateProfileInput = {
+export type UpdateProfileInput = {
   clientMutationId?: string | null;
-  content: ProfileInput;
+  content: PartialProfileInput;
+  id: string;
+  options?: UpdateOptionsInput | null;
 };
-export type ProfileInput = {
-  description: string;
-  displayName: string;
+export type PartialProfileInput = {
+  description?: string | null;
+  displayName?: string | null;
   twitterUsername?: string | null;
   websiteUrl?: string | null;
 };
-export type settingsCreateProfileMutation$variables = {
-  input: CreateProfileInput;
+export type UpdateOptionsInput = {
+  replace?: boolean | null;
+  version?: any | null;
 };
-export type settingsCreateProfileMutation$data = {
-  readonly createProfile: {
+export type settingsUpdateProfileMutation$variables = {
+  input: UpdateProfileInput;
+};
+export type settingsUpdateProfileMutation$data = {
+  readonly updateProfile: {
     readonly clientMutationId: string | null;
     readonly document: {
       readonly description: string;
@@ -34,9 +40,9 @@ export type settingsCreateProfileMutation$data = {
     };
   } | null;
 };
-export type settingsCreateProfileMutation = {
-  response: settingsCreateProfileMutation$data;
-  variables: settingsCreateProfileMutation$variables;
+export type settingsUpdateProfileMutation = {
+  response: settingsUpdateProfileMutation$data;
+  variables: settingsUpdateProfileMutation$variables;
 };
 
 const node: ConcreteRequest = (function(){
@@ -57,9 +63,9 @@ v1 = [
         "variableName": "input"
       }
     ],
-    "concreteType": "CreateProfilePayload",
+    "concreteType": "UpdateProfilePayload",
     "kind": "LinkedField",
-    "name": "createProfile",
+    "name": "updateProfile",
     "plural": false,
     "selections": [
       {
@@ -124,7 +130,7 @@ return {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Fragment",
     "metadata": null,
-    "name": "settingsCreateProfileMutation",
+    "name": "settingsUpdateProfileMutation",
     "selections": (v1/*: any*/),
     "type": "Mutation",
     "abstractKey": null
@@ -133,20 +139,20 @@ return {
   "operation": {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Operation",
-    "name": "settingsCreateProfileMutation",
+    "name": "settingsUpdateProfileMutation",
     "selections": (v1/*: any*/)
   },
   "params": {
-    "cacheID": "0a837be6db538332449230521c274a64",
+    "cacheID": "2bd72f8261dfd92cac52b9a3dc70c8bf",
     "id": null,
     "metadata": {},
-    "name": "settingsCreateProfileMutation",
+    "name": "settingsUpdateProfileMutation",
     "operationKind": "mutation",
-    "text": "mutation settingsCreateProfileMutation(\n  $input: CreateProfileInput!\n) {\n  createProfile(input: $input) {\n    clientMutationId\n    document {\n      id\n      displayName\n      websiteUrl\n      description\n      twitterUsername\n    }\n  }\n}\n"
+    "text": "mutation settingsUpdateProfileMutation(\n  $input: UpdateProfileInput!\n) {\n  updateProfile(input: $input) {\n    clientMutationId\n    document {\n      id\n      displayName\n      websiteUrl\n      description\n      twitterUsername\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "7927f0e62b595320ad3f529980737aa3";
+(node as any).hash = "f09d8d6f97ff200e8b54a64552149038";
 
 export default node;
