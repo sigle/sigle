@@ -2,7 +2,7 @@ import { useCeramic } from '@/components/Ceramic/CeramicProvider';
 import { DashboardLayout } from '@/components/Dashboard/DashboardLayout';
 import { TooltipProvider } from '@radix-ui/react-tooltip';
 import { styled } from '@sigle/stitches.config';
-import { Container, Flex, Input, Typography } from '@sigle/ui';
+import { Button, Container, Flex, Input, Typography } from '@sigle/ui';
 import { TbBrandTwitter, TbWorld } from 'react-icons/tb';
 
 const TitleRow = styled('div', {
@@ -51,9 +51,12 @@ const Settings = () => {
   return (
     <DashboardLayout
       headerContent={
-        <Typography size="xl" fontWeight="bold">
-          Settings
-        </Typography>
+        <Flex justify="between" css={{ flex: 1 }}>
+          <Typography size="xl" fontWeight="bold">
+            Settings
+          </Typography>
+          <Button>Save</Button>
+        </Flex>
       }
     >
       <Container css={{ maxWidth: 770, py: '$5' }}>
