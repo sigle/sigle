@@ -118,6 +118,7 @@ const Drafts = () => {
 };
 
 export default function ProtectedDrafts() {
+  // TODO auth protect
   const { session } = useCeramic();
 
   return (
