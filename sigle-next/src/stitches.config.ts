@@ -61,6 +61,36 @@ const indigoDark = {
   indigo12: '#b8baff',
 };
 
+const orange = {
+  orange1: '#FFF9F6',
+  orange2: '#FFF1EC',
+  orange3: '#FFE9E1',
+  orange4: '#FFE0D5',
+  orange5: '#FFD6C7',
+  orange6: '#FFC8B4',
+  orange7: '#FFB79D',
+  orange8: '#FF9873',
+  orange9: '#F9703E',
+  orange10: '#E9531D',
+  orange11: '#DA3A00',
+  orange12: '#CC3600',
+};
+
+const orangeDark = {
+  orange1: '#1D0900',
+  orange2: '#2C1004',
+  orange3: '#391505',
+  orange4: '#4C1D08',
+  orange5: '#572109',
+  orange6: '#6D2607',
+  orange7: '#812E0A',
+  orange8: '#A33D10',
+  orange9: '#BC410D',
+  orange10: '#CA470F',
+  orange11: '#F76808',
+  orange12: '#FF802B',
+};
+
 export const {
   styled,
   getCssText,
@@ -74,6 +104,7 @@ export const {
     colors: {
       ...gray,
       ...indigo,
+      ...orange,
     },
     fontSizes: {
       '2xs': '0.625rem',
@@ -220,6 +251,7 @@ export const darkTheme = createTheme('dark', {
   colors: {
     ...grayDark,
     ...indigoDark,
+    ...orangeDark,
   },
   shadows: {
     sm: '0px 6px 6px -6px rgba(0, 0, 0, 0.64), 0px 0px 1px rgba(0, 0, 0, 0.56)',
