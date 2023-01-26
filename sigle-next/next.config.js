@@ -18,8 +18,6 @@ const nextConfig = {
   },
 };
 
-module.exports = nextConfig;
-
 module.exports = withSentryConfig(
   module.exports,
   { silent: true },
