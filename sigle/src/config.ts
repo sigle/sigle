@@ -62,6 +62,8 @@ export const allowedNewsletterUsers = [
   'SP8ZVD9PQ9VP657P670KBCB5ZHMJM9QMNJNFVBS6',
   // dutchee.btc
   'SP339T41DGKV2ZR8ACAT630V8KWJVSJME2MK5ZXCB',
+  // xverseapp.id.stx
+  'SPNW0Q9NE7GSFH10RKYWEN68FBQ9V5JFWCN8SK31',
 ];
 if (sigleConfig.env === 'development') {
   // gregogun.btc
