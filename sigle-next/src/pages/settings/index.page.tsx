@@ -1,5 +1,6 @@
 import { useCeramic } from '@/components/Ceramic/CeramicProvider';
 import { DashboardLayout } from '@/components/Dashboard/DashboardLayout';
+import { environment } from '@/lib/relay';
 import { TooltipProvider } from '@radix-ui/react-tooltip';
 import { graphql, useLazyLoadQuery, useMutation } from 'react-relay';
 import { styled } from '@sigle/stitches.config';
@@ -9,7 +10,8 @@ import { useForm } from 'react-hook-form';
 import { settingsPageProfileQuery } from '@/__generated__/relay/settingsPageProfileQuery.graphql';
 import { settingsCreateProfileMutation } from '@/__generated__/relay/settingsCreateProfileMutation.graphql';
 import { settingsUpdateProfileMutation } from '@/__generated__/relay/settingsUpdateProfileMutation.graphql';
-import { type PayloadError } from 'relay-runtime';
+import { fetchQuery } from 'relay-runtime';
+import { useEffect } from 'react';
 
 const TitleRow = styled('div', {
   py: '$5',
@@ -60,22 +62,24 @@ type SettingsFormData = {
   twitterUsername?: string | null;
 };
 
+const SettingsPageProfileQuery = graphql`
+  query settingsPageProfileQuery {
+    viewer {
+      id
+      profile {
+        id
+        displayName
+        description
+        websiteUrl
+        twitterUsername
+      }
+    }
+  }
+`;
+
 const Settings = () => {
   const data = useLazyLoadQuery<settingsPageProfileQuery>(
-    graphql`
-      query settingsPageProfileQuery {
-        viewer {
-          id
-          profile {
-            id
-            displayName
-            description
-            websiteUrl
-            twitterUsername
-          }
-        }
-      }
-    `,
+    SettingsPageProfileQuery,
     {}
   );
 
@@ -128,49 +132,75 @@ const Settings = () => {
 
   console.log(isLoadingCommitCreateProfile, isLoadingCommitUpdateProfile);
 
-  const onSubmit = handleSubmit((formValues) => {
-    // TODO: add validation
-
-    const content = {
-      displayName: formValues.displayName || undefined,
-      description: formValues.description || undefined,
-      websiteUrl: formValues.websiteUrl || undefined,
-      twitterUsername: formValues.twitterUsername || undefined,
-    };
-    const onCompleted = (_: unknown, errors: PayloadError[] | null) => {
-      if (errors) {
-        // TODO toast error
-        // TODO report Sentry
-        return;
-      }
-      // TODO toast success
-    };
-
-    // We either create or update the profile
-    // When a user create an account, there is no profile yet
-    const profileId = data.viewer?.profile?.id;
-    console.log('profileId', profileId);
-    if (!profileId) {
-      // TODO verify that it's not doing a double created the first time we do this
+  /**
+   * When a user first create an account, there is no profile yet.
+   * We need to create one in order to later update it with the data.
+   */
+  useEffect(() => {
+    if (!data.viewer?.profile) {
       commitCreateProfile({
         variables: {
           input: {
-            content,
+            content: {},
           },
         },
-        onCompleted,
-      });
-    } else {
-      commitUpdateProfile({
-        variables: {
-          input: {
-            id: data.viewer.profile.id,
-            content: content,
-          },
+        updater: (store) => {
+          // Invalidate the store to force a refetch of the query
+          store.invalidateStore();
+          // const payload = store.getRootField('createProfile');
+          // const document = payload?.getLinkedRecord('document');
+          // const viewer = store.get('client:root:viewer');
+          // if (document && viewer) {
+          //   viewer.setLinkedRecord(document, 'profile');
+          // }
         },
-        onCompleted,
+        onCompleted: (_, errors) => {
+          if (errors) {
+            // TODO toast error
+            // TODO report Sentry
+            console.error(errors);
+            return;
+          }
+          fetchQuery(environment, SettingsPageProfileQuery, {}).subscribe({
+            error: (error: Error) => {
+              // TODO toast error
+              // TODO report Sentry
+              console.error(error);
+            },
+          });
+        },
       });
     }
+  }, [data.viewer?.profile]);
+
+  const onSubmit = handleSubmit((formValues) => {
+    // TODO: add validation
+
+    const profileId = data.viewer?.profile?.id;
+    console.log('profileId', profileId);
+    if (!profileId) return;
+
+    commitUpdateProfile({
+      variables: {
+        input: {
+          id: data.viewer.profile.id,
+          content: {
+            displayName: formValues.displayName || undefined,
+            description: formValues.description || undefined,
+            websiteUrl: formValues.websiteUrl || undefined,
+            twitterUsername: formValues.twitterUsername || undefined,
+          },
+        },
+      },
+      onCompleted: (_, errors) => {
+        if (errors) {
+          // TODO toast error
+          // TODO report Sentry
+          return;
+        }
+        // TODO toast success
+      },
+    });
   });
 
   console.log(data);
