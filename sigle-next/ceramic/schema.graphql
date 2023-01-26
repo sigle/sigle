@@ -2,6 +2,8 @@ type Post @createModel(accountRelation: LIST, description: "sigle post") {
   author: DID! @documentAccount
   version: CommitID! @documentVersion
   title: String! @string(minLength: 10, maxLength: 100)
+  # TODO decide max length
+  content: String! @string(minLength: 1, maxLength: 50000)
 }
 
 type Profile
