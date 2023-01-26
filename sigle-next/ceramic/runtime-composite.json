@@ -1,8 +1,12 @@
 {
   "models": {
     "Post": {
-      "id": "kjzl6hvfrbw6c5buq1f18wkdde42sulm63pveym7qqhcom8uewg83v5eqegmwkv",
+      "id": "kjzl6hvfrbw6c52xuo1ftuyejoe4zhovfdtv7uxjo1sppn20sy6hxrmefx2ixfi",
       "accountRelation": { "type": "list" }
+    },
+    "Profile": {
+      "id": "kjzl6hvfrbw6c8kdwrxur6qqpp9tkjzehqp22atzxuk7ktbxmh30193jtd9t94w",
+      "accountRelation": { "type": "single" }
     }
   },
   "objects": {
@@ -10,8 +14,17 @@
       "title": { "type": "string", "required": true },
       "author": { "type": "view", "viewType": "documentAccount" },
       "version": { "type": "view", "viewType": "documentVersion" }
+    },
+    "Profile": {
+      "websiteUrl": { "type": "string", "required": false },
+      "description": { "type": "string", "required": false },
+      "displayName": { "type": "string", "required": false },
+      "twitterUsername": { "type": "string", "required": false }
     }
   },
   "enums": {},
-  "accountData": { "postList": { "type": "connection", "name": "Post" } }
+  "accountData": {
+    "postList": { "type": "connection", "name": "Post" },
+    "profile": { "type": "node", "name": "Profile" }
+  }
 }

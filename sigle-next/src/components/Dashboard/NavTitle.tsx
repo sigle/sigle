@@ -6,12 +6,10 @@ const StyledNavTitle = styled(Flex, {
   borderBottom: '1px solid $gray6',
 });
 
-export const NavTitle = () => {
-  return (
-    <StyledNavTitle align="center">
-      <Typography size="lg" fontWeight="bold">
-        Home
-      </Typography>
-    </StyledNavTitle>
-  );
+interface NavTitleProps {
+  children: React.ReactNode;
+}
+
+export const NavTitle = ({ children }: NavTitleProps) => {
+  return <StyledNavTitle align="center">{children}</StyledNavTitle>;
 };
