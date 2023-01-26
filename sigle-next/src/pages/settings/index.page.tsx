@@ -131,8 +131,6 @@ const Settings = () => {
       `
     );
 
-  console.log(isLoadingCommitCreateProfile, isLoadingCommitUpdateProfile);
-
   /**
    * When a user first create an account, there is no profile yet.
    * We need to create one in order to later update it with the data.
@@ -170,7 +168,6 @@ const Settings = () => {
     // TODO: add validation
 
     const profileId = data.viewer?.profile?.id;
-    console.log('profileId', profileId);
     if (!profileId) return;
 
     commitUpdateProfile({
@@ -197,8 +194,6 @@ const Settings = () => {
       },
     });
   });
-
-  console.log(data);
 
   return (
     <DashboardLayout
