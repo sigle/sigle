@@ -243,6 +243,7 @@ export const NavBar = () => {
                         input: {
                           content: {
                             title: 'Test with relay',
+                            content: 'Test with relay',
                           },
                         },
                       },

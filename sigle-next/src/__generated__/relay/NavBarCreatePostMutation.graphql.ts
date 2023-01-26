@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<2dd61939175d8155f3bc1157b37a477d>>
+ * @generated SignedSource<<8d1bb5d832580ae80047f262bfa1b209>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -14,6 +14,12 @@ export type CreatePostInput = {
   content: PostInput;
 };
 export type PostInput = {
+  canonicalUrl?: string | null;
+  content: string;
+  featuredImage?: string | null;
+  metaDescription?: string | null;
+  metaImage?: string | null;
+  metaTitle?: string | null;
   title: string;
 };
 export type NavBarCreatePostMutation$variables = {
