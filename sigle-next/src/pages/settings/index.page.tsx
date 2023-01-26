@@ -12,6 +12,7 @@ import { settingsCreateProfileMutation } from '@/__generated__/relay/settingsCre
 import { settingsUpdateProfileMutation } from '@/__generated__/relay/settingsUpdateProfileMutation.graphql';
 import { fetchQuery } from 'relay-runtime';
 import { useEffect } from 'react';
+import * as Sentry from '@sentry/nextjs';
 
 const TitleRow = styled('div', {
   py: '$5',
@@ -147,14 +148,16 @@ const Settings = () => {
         onCompleted: (_, errors) => {
           if (errors) {
             // TODO toast error
-            // TODO report Sentry
+            Sentry.captureMessage('Error creating profile', {
+              extra: { errors },
+            });
             console.error(errors);
             return;
           }
           fetchQuery(environment, SettingsPageProfileQuery, {}).subscribe({
             error: (error: Error) => {
               // TODO toast error
-              // TODO report Sentry
+              Sentry.captureException(error);
               console.error(error);
             },
           });
@@ -185,7 +188,9 @@ const Settings = () => {
       onCompleted: (_, errors) => {
         if (errors) {
           // TODO toast error
-          // TODO report Sentry
+          Sentry.captureMessage('Error updating profile', {
+            extra: { errors },
+          });
           return;
         }
         // TODO toast success
