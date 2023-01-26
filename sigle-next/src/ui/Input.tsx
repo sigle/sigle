@@ -83,3 +83,5 @@ export const Input = forwardRef<
     </>
   </InputContainer>
 ));
+
+Input.displayName = 'Input';
