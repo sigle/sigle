@@ -5,7 +5,7 @@
       "accountRelation": { "type": "list" }
     },
     "Profile": {
-      "id": "kjzl6hvfrbw6caw3kjbwchvphcjaw0ftp249csq28lptjl7xg95hipjluwosnxc",
+      "id": "kjzl6hvfrbw6c8kdwrxur6qqpp9tkjzehqp22atzxuk7ktbxmh30193jtd9t94w",
       "accountRelation": { "type": "single" }
     }
   },
@@ -17,8 +17,8 @@
     },
     "Profile": {
       "websiteUrl": { "type": "string", "required": false },
-      "description": { "type": "string", "required": true },
-      "displayName": { "type": "string", "required": true },
+      "description": { "type": "string", "required": false },
+      "displayName": { "type": "string", "required": false },
       "twitterUsername": { "type": "string", "required": false }
     }
   },

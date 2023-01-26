@@ -7,8 +7,8 @@ type Post @createModel(accountRelation: LIST, description: "sigle post") {
 type Profile
   @createModel(accountRelation: SINGLE, description: "Sigle profile") {
   # TODO display name and description not required
-  displayName: String! @string(minLength: 3, maxLength: 80)
-  description: String! @string(minLength: 3, maxLength: 300)
+  displayName: String @string(minLength: 3, maxLength: 80)
+  description: String @string(minLength: 3, maxLength: 300)
   websiteUrl: String @string(minLength: 3, maxLength: 2000)
   twitterUsername: String @string(minLength: 3, maxLength: 1000)
 }

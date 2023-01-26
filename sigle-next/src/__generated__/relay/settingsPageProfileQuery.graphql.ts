@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<6957620dd3f358d6f3fcb53086bf3586>>
+ * @generated SignedSource<<16cd2f7d32630719dcb63c6cf8e40b22>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -14,8 +14,8 @@ export type settingsPageProfileQuery$data = {
   readonly viewer: {
     readonly id: string;
     readonly profile: {
-      readonly description: string;
-      readonly displayName: string;
+      readonly description: string | null;
+      readonly displayName: string | null;
       readonly id: string;
       readonly twitterUsername: string | null;
       readonly websiteUrl: string | null;

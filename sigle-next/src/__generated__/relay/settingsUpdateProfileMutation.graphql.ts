@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<977ea739853cdb060bd41ea67efecf82>>
+ * @generated SignedSource<<c79d509c7a48bc957f2bb9411af4c6d3>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -32,8 +32,8 @@ export type settingsUpdateProfileMutation$data = {
   readonly updateProfile: {
     readonly clientMutationId: string | null;
     readonly document: {
-      readonly description: string;
-      readonly displayName: string;
+      readonly description: string | null;
+      readonly displayName: string | null;
       readonly id: string;
       readonly twitterUsername: string | null;
       readonly websiteUrl: string | null;

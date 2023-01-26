@@ -9,6 +9,7 @@ import { useForm } from 'react-hook-form';
 import { settingsPageProfileQuery } from '@/__generated__/relay/settingsPageProfileQuery.graphql';
 import { settingsCreateProfileMutation } from '@/__generated__/relay/settingsCreateProfileMutation.graphql';
 import { settingsUpdateProfileMutation } from '@/__generated__/relay/settingsUpdateProfileMutation.graphql';
+import { type PayloadError } from 'relay-runtime';
 
 const TitleRow = styled('div', {
   py: '$5',
@@ -53,19 +54,13 @@ const Textarea = styled('textarea', {
 });
 
 type SettingsFormData = {
-  displayName: string;
-  description: string;
-  websiteUrl: string;
-  twitterUsername: string;
+  displayName?: string | null;
+  description?: string | null;
+  websiteUrl?: string | null;
+  twitterUsername?: string | null;
 };
 
 const Settings = () => {
-  const {
-    register,
-    handleSubmit,
-    formState: { isDirty },
-  } = useForm<SettingsFormData>();
-
   const data = useLazyLoadQuery<settingsPageProfileQuery>(
     graphql`
       query settingsPageProfileQuery {
@@ -84,6 +79,19 @@ const Settings = () => {
     {}
   );
 
+  const {
+    register,
+    handleSubmit,
+    formState: { isDirty },
+  } = useForm<SettingsFormData>({
+    values: {
+      displayName: data.viewer?.profile?.displayName,
+      description: data.viewer?.profile?.description,
+      websiteUrl: data.viewer?.profile?.websiteUrl,
+      twitterUsername: data.viewer?.profile?.twitterUsername,
+    },
+  });
+
   const [commitCreateProfile, isLoadingCommitCreateProfile] =
     useMutation<settingsCreateProfileMutation>(graphql`
       mutation settingsCreateProfileMutation($input: CreateProfileInput!) {
@@ -101,54 +109,68 @@ const Settings = () => {
     `);
 
   const [commitUpdateProfile, isLoadingCommitUpdateProfile] =
-    useMutation<settingsUpdateProfileMutation>(graphql`
-      mutation settingsUpdateProfileMutation($input: UpdateProfileInput!) {
-        updateProfile(input: $input) {
-          clientMutationId
-          document {
-            id
-            displayName
-            websiteUrl
-            description
-            twitterUsername
+    useMutation<settingsUpdateProfileMutation>(
+      graphql`
+        mutation settingsUpdateProfileMutation($input: UpdateProfileInput!) {
+          updateProfile(input: $input) {
+            clientMutationId
+            document {
+              id
+              displayName
+              websiteUrl
+              description
+              twitterUsername
+            }
           }
         }
-      }
-    `);
+      `
+    );
 
   console.log(isLoadingCommitCreateProfile, isLoadingCommitUpdateProfile);
 
   const onSubmit = handleSubmit((formValues) => {
     // TODO: add validation
-    // TODO: add loading state
-    // TODO: update or create profile
 
-    // commitCreateProfile({
-    //   variables: {
-    //     input: {
-    //       content: {
-    //         displayName: data.displayName,
-    //         description: data.description,
-    //       },
-    //     },
-    //   },
-    // });
-    console.log({
-      id: data.viewer.profile.id,
-      displayName: formValues.displayName,
-      description: formValues.description,
-    });
-    commitUpdateProfile({
-      variables: {
-        input: {
-          content: {
-            id: data.viewer.profile.id,
-            displayName: formValues.displayName,
-            description: formValues.description,
+    const content = {
+      displayName: formValues.displayName || undefined,
+      description: formValues.description || undefined,
+      websiteUrl: formValues.websiteUrl || undefined,
+      twitterUsername: formValues.twitterUsername || undefined,
+    };
+    const onCompleted = (_: unknown, errors: PayloadError[] | null) => {
+      if (errors) {
+        // TODO toast error
+        // TODO report Sentry
+        return;
+      }
+      // TODO toast success
+    };
+
+    // We either create or update the profile
+    // When a user create an account, there is no profile yet
+    const profileId = data.viewer?.profile?.id;
+    console.log('profileId', profileId);
+    if (!profileId) {
+      // TODO verify that it's not doing a double created the first time we do this
+      commitCreateProfile({
+        variables: {
+          input: {
+            content,
           },
         },
-      },
-    });
+        onCompleted,
+      });
+    } else {
+      commitUpdateProfile({
+        variables: {
+          input: {
+            id: data.viewer.profile.id,
+            content: content,
+          },
+        },
+        onCompleted,
+      });
+    }
   });
 
   console.log(data);
@@ -229,6 +251,7 @@ const Settings = () => {
               <Input
                 placeholder="https://www.sigle.io"
                 rightIcon={<TbWorld />}
+                {...register('websiteUrl')}
               />
               <Typography size="xs" color="gray9">
                 Enter your personal website
@@ -240,7 +263,11 @@ const Settings = () => {
               Twitter
             </Typography>
             <Flex direction="column" gap="2">
-              <Input placeholder="@sigleapp" rightIcon={<TbBrandTwitter />} />
+              <Input
+                placeholder="@sigleapp"
+                rightIcon={<TbBrandTwitter />}
+                {...register('twitterUsername')}
+              />
               <Typography size="xs" color="gray9">
                 Enter your twitter username
               </Typography>

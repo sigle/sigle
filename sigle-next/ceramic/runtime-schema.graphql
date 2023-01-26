@@ -142,8 +142,8 @@ input PostInput {
 type Profile implements Node {
   id: ID!
   websiteUrl: String
-  description: String!
-  displayName: String!
+  description: String
+  displayName: String
   twitterUsername: String
 }
 
@@ -167,8 +167,8 @@ type ProfileEdge {
 
 input ProfileInput {
   websiteUrl: String
-  description: String!
-  displayName: String!
+  description: String
+  displayName: String
   twitterUsername: String
 }
 
