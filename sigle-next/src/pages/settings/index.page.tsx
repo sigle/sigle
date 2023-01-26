@@ -144,16 +144,6 @@ const Settings = () => {
             content: {},
           },
         },
-        updater: (store) => {
-          // Invalidate the store to force a refetch of the query
-          store.invalidateStore();
-          // const payload = store.getRootField('createProfile');
-          // const document = payload?.getLinkedRecord('document');
-          // const viewer = store.get('client:root:viewer');
-          // if (document && viewer) {
-          //   viewer.setLinkedRecord(document, 'profile');
-          // }
-        },
         onCompleted: (_, errors) => {
           if (errors) {
             // TODO toast error
