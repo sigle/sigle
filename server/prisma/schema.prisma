@@ -8,32 +8,20 @@ datasource db {
 }
 
 model User {
-  id                      String                   @id @default(uuid())
-  stacksAddress           String                   @unique
+  id            String         @id @default(uuid())
+  stacksAddress String         @unique
   // When was the last sync
-  stacksBlock             Int?
-  isLegacy                Boolean                  @default(false)
-  email                   String?                  @unique
-  emailVerified           DateTime?
-  createdAt               DateTime                 @default(now())
-  updatedAt               DateTime                 @updatedAt
-  newsletter              Newsletter?
-  subscriptions           Subscription[]
-  followers               Follows[]                @relation("following")
-  following               Follows[]                @relation("follower")
-  Story                   Story[]
-  emailVerificationsToken EmailVerificationToken[]
-}
-
-model EmailVerificationToken {
-  userId  String
-  email   String
-  token   String   @unique
-  expires DateTime
-
-  user User @relation(fields: [userId], references: [id])
-
-  @@unique([email, token])
+  stacksBlock   Int?
+  isLegacy      Boolean        @default(false)
+  email         String?        @unique
+  emailVerified DateTime?
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+  newsletter    Newsletter?
+  subscriptions Subscription[]
+  followers     Follows[]      @relation("following")
+  following     Follows[]      @relation("follower")
+  Story         Story[]
 }
 
 model Subscription {
