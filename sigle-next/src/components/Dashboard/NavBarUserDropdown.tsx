@@ -1,5 +1,7 @@
-import { useIsMounted } from '@sigle/hooks';
-import { styled } from '@sigle/stitches.config';
+import { useTheme } from 'next-themes';
+import Link from 'next/link';
+import { TbChevronDown, TbSettings } from 'react-icons/tb';
+import { useAccount, useDisconnect } from 'wagmi';
 import {
   DropdownMenu,
   DropdownMenuTrigger,
@@ -10,11 +12,9 @@ import {
   Switch,
   IconButton,
 } from '@sigle/ui';
-import { useTheme } from 'next-themes';
-import Link from 'next/link';
-import { TbChevronDown, TbSettings } from 'react-icons/tb';
+import { styled } from '@sigle/stitches.config';
+import { useIsMounted } from '@sigle/hooks';
 import { addressAvatar } from '@/utils';
-import { useAccount, useDisconnect } from 'wagmi';
 import { useDashboardStore } from './store';
 
 const UserMenu = styled('div', {

@@ -1,9 +1,9 @@
 import { TooltipProvider } from '@radix-ui/react-tooltip';
 import { TbDots } from 'react-icons/tb';
 import { graphql, useLazyLoadQuery } from 'react-relay';
+import { Badge, Container, Flex, IconButton, Typography } from '@sigle/ui';
 import { DashboardLayout } from '@/components/Dashboard/DashboardLayout';
 import { useCeramic } from '@/components/Ceramic/CeramicProvider';
-import { Badge, Container, Flex, IconButton, Typography } from '@sigle/ui';
 import { draftsPostsListQuery } from '@/__generated__/relay/draftsPostsListQuery.graphql';
 
 const DraftsPostsListQuery = graphql`

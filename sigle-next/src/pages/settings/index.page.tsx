@@ -1,18 +1,18 @@
-import { useCeramic } from '@/components/Ceramic/CeramicProvider';
-import { DashboardLayout } from '@/components/Dashboard/DashboardLayout';
-import { environment } from '@/lib/relay';
 import { TooltipProvider } from '@radix-ui/react-tooltip';
 import { graphql, useLazyLoadQuery, useMutation } from 'react-relay';
-import { styled } from '@sigle/stitches.config';
-import { Button, Container, Flex, Input, Typography } from '@sigle/ui';
 import { TbBrandTwitter, TbWorld } from 'react-icons/tb';
 import { useForm } from 'react-hook-form';
-import { settingsPageProfileQuery } from '@/__generated__/relay/settingsPageProfileQuery.graphql';
-import { settingsCreateProfileMutation } from '@/__generated__/relay/settingsCreateProfileMutation.graphql';
-import { settingsUpdateProfileMutation } from '@/__generated__/relay/settingsUpdateProfileMutation.graphql';
 import { fetchQuery } from 'relay-runtime';
 import { useEffect } from 'react';
 import * as Sentry from '@sentry/nextjs';
+import { Button, Container, Flex, Input, Typography } from '@sigle/ui';
+import { styled } from '@sigle/stitches.config';
+import { settingsPageProfileQuery } from '@/__generated__/relay/settingsPageProfileQuery.graphql';
+import { settingsCreateProfileMutation } from '@/__generated__/relay/settingsCreateProfileMutation.graphql';
+import { settingsUpdateProfileMutation } from '@/__generated__/relay/settingsUpdateProfileMutation.graphql';
+import { environment } from '@/lib/relay';
+import { DashboardLayout } from '@/components/Dashboard/DashboardLayout';
+import { useCeramic } from '@/components/Ceramic/CeramicProvider';
 
 const TitleRow = styled('div', {
   py: '$5',

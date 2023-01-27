@@ -1,4 +1,3 @@
-import { getCssText } from '@sigle/stitches.config';
 import Document, {
   Html,
   Head,
@@ -6,6 +5,7 @@ import Document, {
   NextScript,
   DocumentContext,
 } from 'next/document';
+import { getCssText } from '@sigle/stitches.config';
 
 export default class MyDocument extends Document {
   /**
