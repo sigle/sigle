@@ -1,6 +1,5 @@
 import { Module } from '@nestjs/common';
 import { StacksService } from '../stacks/stacks.service';
-import { PrismaModule } from '../prisma/prisma.module';
 import { SubscriptionService } from '../subscription/subscription.service';
 import { AnalyticsController } from './analytics.controller';
 import { AnalyticsService } from './analytics.service';
@@ -15,6 +14,6 @@ import { PosthogModule } from '../posthog/posthog.module';
     SubscriptionService,
     AnalyticsService,
   ],
-  imports: [PrismaModule, PosthogModule],
+  imports: [PosthogModule],
 })
 export class AnalyticsModule {}
