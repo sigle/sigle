@@ -1,13 +1,3 @@
-import {
-  NumberBadge,
-  Button,
-  Flex,
-  IconButton,
-  Tooltip,
-  TooltipContent,
-  TooltipTrigger,
-  Typography,
-} from '@sigle/ui';
 import { useModal } from 'connectkit';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
@@ -28,9 +18,19 @@ import { useAccount } from 'wagmi';
 import { graphql, useMutation } from 'react-relay';
 import { useIsMounted } from '@sigle/hooks';
 import { styled } from '@sigle/stitches.config';
+import {
+  NumberBadge,
+  Button,
+  Flex,
+  IconButton,
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+  Typography,
+} from '@sigle/ui';
+import { NavBarCreatePostMutation } from '@/__generated__/relay/NavBarCreatePostMutation.graphql';
 import { useDashboardStore } from './store';
 import { NavBarUserDropdown } from './NavBarUserDropdown';
-import { NavBarCreatePostMutation } from '@/__generated__/relay/NavBarCreatePostMutation.graphql';
 
 const CreatePostMutation = graphql`
   mutation NavBarCreatePostMutation($input: CreatePostInput!) {

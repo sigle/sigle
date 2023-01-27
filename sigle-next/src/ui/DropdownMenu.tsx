@@ -1,6 +1,6 @@
 import * as DropdownMenuPrimitive from '@radix-ui/react-dropdown-menu';
-import { styled, keyframes, CSS } from '@sigle/stitches.config';
 import { forwardRef } from 'react';
+import { styled, keyframes, CSS } from '@sigle/stitches.config';
 
 const DropdownMenu = DropdownMenuPrimitive.Root;
 const DropdownMenuTrigger = DropdownMenuPrimitive.Trigger;

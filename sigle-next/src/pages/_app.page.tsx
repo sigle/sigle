@@ -4,8 +4,8 @@ import { Inter } from '@next/font/google';
 import { ThemeProvider } from 'next-themes';
 import dynamic from 'next/dynamic';
 import '@sigle/tailwind-style/dist/tailwind.css';
-import { darkTheme, globalCss } from '@sigle/stitches.config';
 import { ReactRelayContext } from 'react-relay';
+import { darkTheme, globalCss } from '@sigle/stitches.config';
 import { environment } from '@/lib/relay';
 
 /**

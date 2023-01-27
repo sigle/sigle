@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react';
-import { IconButton } from '@sigle/ui';
 import { TbCurrencyBitcoin } from 'react-icons/tb';
+import { IconButton } from '@sigle/ui';
 
 const meta: Meta<typeof IconButton> = {
   title: 'IconButton',

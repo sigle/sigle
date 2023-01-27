@@ -1,6 +1,6 @@
-import { CSS, styled } from '@sigle/stitches.config';
 import Link from 'next/link';
 import { forwardRef } from 'react';
+import { CSS, styled } from '@sigle/stitches.config';
 
 const StyledButton = styled('button', {
   display: 'inline-flex',
