@@ -1,6 +1,7 @@
-import { Module } from '@nestjs/common';
+import { Global, Module } from '@nestjs/common';
 import { PosthogService } from './posthog.service';
 
+@Global()
 @Module({
   providers: [PosthogService],
   exports: [PosthogService],
