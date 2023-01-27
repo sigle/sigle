@@ -4,7 +4,6 @@ import { SubscriptionService } from '../subscription/subscription.service';
 import { AnalyticsController } from './analytics.controller';
 import { AnalyticsService } from './analytics.service';
 import { PlausibleService } from '../plausible/plausible.service';
-import { PosthogModule } from '../posthog/posthog.module';
 
 @Module({
   controllers: [AnalyticsController],
@@ -14,6 +13,6 @@ import { PosthogModule } from '../posthog/posthog.module';
     SubscriptionService,
     AnalyticsService,
   ],
-  imports: [PosthogModule],
+  imports: [],
 })
 export class AnalyticsModule {}
