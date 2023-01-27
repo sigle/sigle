@@ -1,7 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { SENTRY_TOKEN } from '@ntegral/nestjs-sentry';
 import { Story } from '../external/gaia';
-import { BulkEmailService } from './bulkEmail.service';
+import { BulkEmailService } from './bulk-email.service';
 
 describe('BulkEmailService', () => {
   let service: BulkEmailService;

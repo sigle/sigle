@@ -1,5 +1,5 @@
 import { Module } from '@nestjs/common';
-import { BulkEmailService } from './bulkEmail.service';
+import { BulkEmailService } from './bulk-email.service';
 
 @Module({
   providers: [BulkEmailService],

@@ -56,7 +56,7 @@ export class BulkEmailService {
     this.templates = {
       storyEmail: compile(
         readFileSync(
-          `${process.cwd()}/src/bulkEmail/templates/story.handlebars`,
+          `${process.cwd()}/src/bulk-email/templates/story.handlebars`,
           {
             encoding: 'utf-8',
           },
