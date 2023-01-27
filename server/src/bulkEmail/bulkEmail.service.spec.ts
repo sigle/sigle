@@ -1,15 +1,15 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { SENTRY_TOKEN } from '@ntegral/nestjs-sentry';
 import { Story } from '../external/gaia';
-import { EmailService } from './email.service';
+import { BulkEmailService } from './bulkEmail.service';
 
-describe('EmailService', () => {
-  let service: EmailService;
+describe('BulkEmailService', () => {
+  let service: BulkEmailService;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
-        EmailService,
+        BulkEmailService,
         {
           provide: SENTRY_TOKEN,
           useValue: {},
@@ -17,7 +17,7 @@ describe('EmailService', () => {
       ],
     }).compile();
 
-    service = module.get<EmailService>(EmailService);
+    service = module.get<BulkEmailService>(BulkEmailService);
   });
 
   describe('htmlToMJML', () => {

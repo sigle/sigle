@@ -5,7 +5,7 @@ import { InjectSentry, SentryService } from '@ntegral/nestjs-sentry';
 import { allowedNewsletterUsers } from '../utils';
 import { PrismaService } from '../prisma/prisma.service';
 import { StacksService } from '../stacks/stacks.service';
-import { EmailService } from '../email/email.service';
+import { EmailService } from '../bulkEmail/bulkEmail.service';
 import { PosthogService } from '../posthog/posthog.service';
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const Mailjet = require('node-mailjet');
