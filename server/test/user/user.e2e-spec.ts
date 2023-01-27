@@ -89,6 +89,7 @@ describe('UserController (e2e)', () => {
       expect(JSON.parse(result.payload)).toEqual({
         id: expect.any(String),
         stacksAddress,
+        newsletter: null,
       });
     });
   });
@@ -116,6 +117,7 @@ describe('UserController (e2e)', () => {
         stacksAddress,
         followersCount: 2,
         followingCount: 1,
+        newsletter: null,
       });
     });
   });

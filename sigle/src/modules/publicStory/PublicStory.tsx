@@ -8,13 +8,15 @@ import { sigleConfig } from '../../config';
 import { TipTapEditor } from '../editor/TipTapEditor';
 import { styled } from '../../stitches.config';
 import { Box, Container, Flex, Typography } from '../../ui';
-import { PoweredBy } from './PoweredBy';
+import { NewsletterFrame } from './NewsletterFrame';
 import { getTextFromHtml } from '../editor/utils/getTextFromHtml';
 import { AppHeader } from '../layout/components/AppHeader';
 import format from 'date-fns/format';
 import { ShareButtons } from './ShareButtons';
 import { generateAvatar } from '../../utils/boringAvatar';
 import { ProfileCard } from '../profileCard/ProfileCard';
+import { PoweredBy } from './PoweredBy';
+import { useGetUserByAddress } from '../../hooks/users';
 
 const ProfileImageContainer = styled('div', {
   cursor: 'pointer',
@@ -116,6 +118,7 @@ export const PublicStory = ({
     username: string;
     storyId: string;
   };
+  const { data: userInfoByAddress } = useGetUserByAddress(userInfo.address);
 
   const storyReadingTime = useMemo(
     () =>
@@ -250,6 +253,12 @@ export const PublicStory = ({
           story={story}
           settings={settings}
         />
+        {userInfoByAddress?.newsletter && (
+          <NewsletterFrame
+            stacksAddress={userInfo.address}
+            siteName={siteName}
+          />
+        )}
         <PoweredBy />
       </PublicStoryContainer>
     </>

@@ -25,7 +25,7 @@ const ConfigureBNS = () => {
           const namesJson = (await namesResponse.json()) as {
             zonefile: string;
           };
-          if (namesJson.zonefile !== '') {
+          if (namesJson.zonefile && namesJson.zonefile !== '') {
             router.push('/');
           }
         } catch (e) {}
@@ -78,6 +78,9 @@ const ConfigureBNS = () => {
         >
           Follow the guide <StyledRocketIcon />
         </Button>
+        <Typography size="subparagraph" css={{ mt: '$4' }}>
+          {user?.profile.stxAddress.mainnet}
+        </Typography>
       </LoginLayout>
     </Protected>
   );

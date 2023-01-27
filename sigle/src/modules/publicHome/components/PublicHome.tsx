@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { NextSeo } from 'next-seo';
-import Image from 'next/future/image';
+import Image from 'next/image';
 import { useTheme } from 'next-themes';
 import { StoryFile, SettingsFile } from '../../../types';
 import { PoweredBy } from '../../publicStory/PoweredBy';
@@ -17,6 +17,7 @@ import {
   Tooltip,
   TooltipTrigger,
   TooltipContent,
+  IconButton,
 } from '../../../ui';
 import { sigleConfig } from '../../../config';
 import { styled } from '../../../stitches.config';
@@ -40,6 +41,9 @@ import { useRouter } from 'next/router';
 import { GlobeIcon, Pencil1Icon } from '@radix-ui/react-icons';
 import Link from 'next/link';
 import { TwitterFilledIcon } from '../../../icons';
+import { EnvelopePlusIcon } from '../../../icons/EnvelopPlusIcon';
+import { SubscribeModal } from '../../subscribeModal/SubscribeModal';
+import { StoryCardSkeleton } from '../../home/components/StoryItemSkeleton';
 
 const StyledTabsTrigger = styled(TabsTrigger, {
   fontSize: 13,
@@ -165,6 +169,7 @@ interface PublicHomeProps {
 export const PublicHome = ({ file, settings, userInfo }: PublicHomeProps) => {
   const { resolvedTheme } = useTheme();
   const { user, isLegacy } = useAuth();
+  const [showSubscribeDialog, setShowSubscribeDialog] = useState(false);
   const router = useRouter();
   const { data: userInfoByAddress } = useGetUserByAddress(userInfo.address);
   const { data: userFollowing } = useGetGaiaUserFollowing({
@@ -233,6 +238,10 @@ export const PublicHome = ({ file, settings, userInfo }: PublicHomeProps) => {
     );
   };
 
+  const handleShowSubscribe = () => setShowSubscribeDialog(true);
+
+  const handleCancelSubscribe = () => setShowSubscribeDialog(false);
+
   return (
     <React.Fragment>
       <NextSeo
@@ -290,27 +299,51 @@ export const PublicHome = ({ file, settings, userInfo }: PublicHomeProps) => {
             user.username !== userInfo.username &&
             !isLegacy &&
             userFollowing ? (
-              !isFollowingUser ? (
-                <Button
-                  color="orange"
-                  css={{ ml: '$5' }}
-                  onClick={handleFollow}
-                >
-                  Follow
-                </Button>
-              ) : (
-                <Button
-                  variant="subtle"
-                  css={{ ml: '$5' }}
-                  onClick={handleUnfollow}
-                >
-                  Unfollow
-                </Button>
-              )
+              <Flex gap="3">
+                {!isFollowingUser ? (
+                  <Button
+                    color="orange"
+                    css={{ ml: '$5' }}
+                    onClick={handleFollow}
+                  >
+                    Follow
+                  </Button>
+                ) : (
+                  <Button
+                    color="orange"
+                    variant="outline"
+                    css={{ ml: '$5' }}
+                    onClick={handleUnfollow}
+                  >
+                    Unfollow
+                  </Button>
+                )}
+                {userInfoByAddress?.newsletter && (
+                  <IconButton
+                    color="orange"
+                    variant="solid"
+                    onClick={handleShowSubscribe}
+                  >
+                    <EnvelopePlusIcon />
+                  </IconButton>
+                )}
+
+                <SubscribeModal
+                  userInfo={{
+                    address: userInfo.address,
+                    siteName,
+                    siteLogo: settings.siteLogo
+                      ? settings.siteLogo
+                      : generateAvatar(userInfo.address),
+                  }}
+                  open={showSubscribeDialog}
+                  onClose={handleCancelSubscribe}
+                />
+              </Flex>
             ) : null}
             {user && user.username === userInfo.username && (
-              <Link href="/settings" passHref>
-                <Button as="a" css={{ gap: '$2' }} variant="subtle">
+              <Link href="/settings" passHref legacyBehavior>
+                <Button size="sm" as="a" css={{ gap: '$2' }} variant="subtle">
                   Edit profile
                   <Pencil1Icon />
                 </Button>
@@ -507,9 +540,28 @@ export const PublicHome = ({ file, settings, userInfo }: PublicHomeProps) => {
             </TabsList>
             <TabsContent value="stories">
               {file.stories.length === 0 && (
-                <Typography css={{ mt: '$8', textAlign: 'center' }}>
-                  No stories yet
-                </Typography>
+                <>
+                  {userInfo.username === user?.username ? (
+                    <Typography
+                      size="subheading"
+                      css={{ mt: '$8', textAlign: 'center' }}
+                    >
+                      No stories yet
+                    </Typography>
+                  ) : (
+                    <Flex
+                      css={{ mt: '$10' }}
+                      direction="column"
+                      gap="5"
+                      align="center"
+                    >
+                      <Typography size="subheading">{`${siteName} has not posted anything yet.`}</Typography>
+                      <Typography size="subheading">Come back later</Typography>
+                      <StoryCardSkeleton />
+                      <StoryCardSkeleton />
+                    </Flex>
+                  )}
+                </>
               )}
               {featuredStoryIndex !== -1 && (
                 <StoryCard

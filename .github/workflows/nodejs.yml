@@ -106,3 +106,37 @@ jobs:
 
       - name: Run api e2e tests
         run: pnpm --filter=@sigle/server run test:e2e
+
+  test-sigle-next:
+    runs-on: ubuntu-20.04
+    strategy:
+      matrix:
+        node-version: [16]
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - uses: pnpm/action-setup@v2
+        with:
+          version: 7.1
+
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v2
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'pnpm'
+
+      - name: Get next.js sigle cache
+        uses: actions/cache@v2
+        with:
+          path: ${{ github.workspace }}/sigle-next/.next/cache
+          key: ${{ runner.os }}-nextjs-sigle-next-${{ hashFiles('**/pnpm-lock.yaml') }}
+
+      - name: Install Dependencies
+        run: pnpm install
+
+      - name: Build sigle
+        run: pnpm --filter=@sigle/app-next run build
+
+      - name: Build storybook
+        run: pnpm --filter=@sigle/app-next run build-storybook

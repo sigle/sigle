@@ -12,7 +12,8 @@ import { InfoApi, Configuration } from '@stacks/blockchain-api-client';
 import { validate } from 'deep-email-validator';
 import { StacksService } from '../stacks/stacks.service';
 import { EnvironmentVariables } from '../environment/environment.validation';
-import { PrismaService } from '../prisma.service';
+import { PrismaService } from '../prisma/prisma.service';
+import { PosthogService } from '../posthog/posthog.service';
 
 @Injectable()
 export class UserService {
@@ -20,7 +21,8 @@ export class UserService {
 
   constructor(
     private readonly configService: ConfigService<EnvironmentVariables>,
-    private prisma: PrismaService,
+    private readonly prisma: PrismaService,
+    private readonly posthog: PosthogService,
     private readonly stacksService: StacksService,
   ) {
     this.stacksInfoApi = new InfoApi(
@@ -57,19 +59,11 @@ export class UserService {
     isLegacy: boolean;
     userSelectFields: Prisma.UserSelect;
   }): Promise<any> {
-    const stacksUsername = await this.stacksService.getUsernameByAddress(
-      stacksAddress,
-    );
-    const gaiaUrl = await this.stacksService.getBucketUrl({
-      username: stacksUsername,
-    });
     const data = await this.stacksInfoApi.getCoreApiInfo();
     return this.prisma.user.create({
       data: {
         stacksAddress,
         isLegacy,
-        stacksUsername,
-        gaiaUrl: gaiaUrl.bucketUrl,
         stacksBlock: data.burn_block_height,
       },
       select: userSelectFields,
@@ -80,6 +74,12 @@ export class UserService {
     const userSelectFields = {
       id: true,
       stacksAddress: true,
+      newsletter: {
+        select: {
+          id: true,
+          status: true,
+        },
+      },
     };
     let loggedInUser = await this.prisma.user.findUnique({
       where: { stacksAddress },
@@ -125,6 +125,12 @@ export class UserService {
           },
           take: 1,
         },
+        newsletter: {
+          select: {
+            id: true,
+            status: true,
+          },
+        },
       },
     });
 
@@ -163,6 +169,10 @@ export class UserService {
           subscription: user.subscriptions[0],
           followersCount: user._count.followers,
           followingCount: user._count.following,
+          newsletter:
+            user.newsletter?.status === 'ACTIVE'
+              ? { id: user.newsletter.id }
+              : null,
         }
       : null;
   }
@@ -223,6 +233,14 @@ export class UserService {
         createdAt: new Date(createdAt),
       },
     });
+
+    this.posthog.capture({
+      distinctId: followerAddress,
+      event: 'follow created',
+      properties: {
+        followingAddress,
+      },
+    });
   }
 
   async removeFollow({
@@ -239,6 +257,14 @@ export class UserService {
     await this.prisma.follows.deleteMany({
       where: {
         followerAddress,
+        followingAddress,
+      },
+    });
+
+    this.posthog.capture({
+      distinctId: followerAddress,
+      event: 'follow deleted',
+      properties: {
         followingAddress,
       },
     });

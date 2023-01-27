@@ -14,7 +14,7 @@ const start = async () => {
   // 1. List all the subdomains registered on Stacks
   // TODO https://github.com/hirosystems/stacks-blockchain-api/issues/1097
   const subdomains = [
-    'sigleapp.id.blockstack',
+    'sigle.btc',
     'friedger.id',
     'project_indigo.id.stx',
     'eliherf01.id.stx',

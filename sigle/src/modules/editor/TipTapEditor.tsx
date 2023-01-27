@@ -22,12 +22,13 @@ import TipTapLink from '@tiptap/extension-link';
 import TipTapListItem from '@tiptap/extension-list-item';
 import TipTapOrderedList from '@tiptap/extension-ordered-list';
 import TipTapParagraph from '@tiptap/extension-paragraph';
-import { Placeholder as TipTapPlaceholder } from './extensions/Placeholder';
 import TipTapStrike from '@tiptap/extension-strike';
 import TipTapText from '@tiptap/extension-text';
+import TipTapTypography from '@tiptap/extension-typography';
 import TipTapUnderline from '@tiptap/extension-underline';
 import TipTapCodeBlockLowlight from '@tiptap/extension-code-block-lowlight';
-import { lowlight } from 'lowlight/lib/common.js';
+import { lowlight } from 'lowlight/lib/common';
+import { Placeholder as TipTapPlaceholder } from './extensions/Placeholder';
 import { SlashCommands } from './extensions/SlashCommand/SlashCommands';
 import { BubbleMenu } from './BubbleMenu';
 import { slashCommands } from './extensions/SlashCommand/commands';
@@ -45,6 +46,7 @@ import { TipTapImage } from './extensions/Image';
 import { Toolbar } from './EditorToolbar/EditorToolbar';
 import { Twitter as TipTapTwitter } from './extensions/Twitter';
 import { MobileScroll } from './extensions/MobileScroll';
+import { Cta as TipTapCta } from './extensions/CallToAction';
 
 const fadeInAnimation = keyframes({
   '0%': { opacity: '0' },
@@ -169,8 +171,10 @@ export const TipTapEditor = forwardRef<
       }),
       TipTapHistory,
       TipTapPlaceholder(isMobile),
+      TipTapTypography,
       // Custom extensions
       TipTapTwitter,
+      TipTapCta,
       !isMobile
         ? SlashCommands.configure({
             commands: slashCommands({ storyId: story.id }),
@@ -225,6 +229,7 @@ export const TipTapEditor = forwardRef<
                 alignItems: 'center',
                 gap: '$3',
                 position: 'fixed',
+                mb: '$10',
                 bottom: 0,
                 right: 0,
                 left: 0,
@@ -240,6 +245,7 @@ export const TipTapEditor = forwardRef<
                 {editor?.storage.characterCount.words()} words
               </Typography>
               <IconButton
+                size="sm"
                 css={{
                   pointerEvents: 'auto',
                 }}

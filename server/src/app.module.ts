@@ -9,12 +9,17 @@ import type { ClientOpts } from 'redis';
 import { validate } from './environment/environment.validation';
 import { UserModule } from './user/user.module';
 import { SubscriptionModule } from './subscription/subscription.module';
-import { PrismaService } from './prisma.service';
 import { AnalyticsModule } from './analytics/analytics.module';
 import { PlausibleService } from './plausible/plausible.service';
 import { StacksService } from './stacks/stacks.service';
 import { AppController } from './app.controller';
 import { EmailVerificationModule } from './email-verification/email-verification.module';
+import { EmailModule } from './email/email.module';
+import { SubscribersModule } from './subscribers/subscribers.module';
+import { PrismaModule } from './prisma/prisma.module';
+import { StoriesModule } from './stories/stories.module';
+import { NewslettersModule } from './newsletters/newsletters.module';
+import { PosthogModule } from './posthog/posthog.module';
 
 @Module({
   imports: [
@@ -29,6 +34,8 @@ import { EmailVerificationModule } from './email-verification/email-verification
       inject: [ConfigService],
       useFactory: (config: ConfigService) => ({
         dsn: config.get('SENTRY_DSN'),
+        // Required to log more from the error objects. Added for mailjet errors in the first place.
+        normalizeDepth: 10,
       }),
     }),
     ThrottlerModule.forRootAsync({
@@ -53,10 +60,16 @@ import { EmailVerificationModule } from './email-verification/email-verification
         url: config.get('REDIS_DATABASE_URL'),
       }),
     }),
+    PrismaModule,
     UserModule,
     SubscriptionModule,
     AnalyticsModule,
     EmailVerificationModule,
+    EmailModule,
+    SubscribersModule,
+    StoriesModule,
+    NewslettersModule,
+    PosthogModule,
   ],
   controllers: [AppController],
   providers: [
@@ -80,7 +93,6 @@ import { EmailVerificationModule } from './email-verification/email-verification
           ],
         }),
     },
-    PrismaService,
     StacksService,
     PlausibleService,
   ],

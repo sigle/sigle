@@ -1,0 +1,13 @@
+type Post @createModel(accountRelation: LIST, description: "sigle post") {
+  author: DID! @documentAccount
+  version: CommitID! @documentVersion
+  title: String! @string(minLength: 10, maxLength: 100)
+}
+
+type Profile
+  @createModel(accountRelation: SINGLE, description: "Sigle profile") {
+  displayName: String @string(minLength: 3, maxLength: 80)
+  description: String @string(minLength: 3, maxLength: 300)
+  websiteUrl: String @string(minLength: 3, maxLength: 2000)
+  twitterUsername: String @string(minLength: 3, maxLength: 1000)
+}

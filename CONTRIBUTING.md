@@ -1,5 +1,7 @@
 # Contributing to Sigle
 
+We're open to all community contributions! This includes bug reports, feature requests, ideas, pull requests.
+
 ## Requirements
 
 - [Node](https://nodejs.org/en/) 16+
@@ -51,7 +53,7 @@ cp .env.example .env
 We use docker to manage the local postgres database.
 
 ```sh
-docker-compose start
+docker compose start
 ```
 
 ### Setup the database

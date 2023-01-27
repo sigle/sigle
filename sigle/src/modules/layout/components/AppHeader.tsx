@@ -6,7 +6,7 @@ import {
   HamburgerMenuIcon,
 } from '@radix-ui/react-icons';
 import Link from 'next/link';
-import Image from 'next/image';
+import Image from 'next/legacy/image';
 import { useSession } from 'next-auth/react';
 import { useTheme } from 'next-themes';
 import { styled } from '../../../stitches.config';
@@ -102,7 +102,7 @@ export const AppHeader = () => {
 
   return (
     <Header>
-      <Link href="/" passHref>
+      <Link href="/" passHref legacyBehavior>
         <Box as="a">
           <Image
             width={93}
@@ -159,14 +159,14 @@ export const AppHeader = () => {
         gap="9"
       >
         {user && !isLegacy ? (
-          <Link href="/feed" passHref>
-            <Button variant="ghost" as="a">
+          <Link href="/feed" passHref legacyBehavior>
+            <Button size="sm" variant="ghost" as="a">
               Feed
             </Button>
           </Link>
         ) : null}
-        <Link href="/explore" passHref>
-          <Button variant="ghost" as="a">
+        <Link href="/explore" passHref legacyBehavior>
+          <Button size="sm" variant="ghost" as="a">
             Explore
           </Button>
         </Link>
@@ -175,6 +175,7 @@ export const AppHeader = () => {
         ) : (
           <Flex gap="6">
             <IconButton
+              size="sm"
               as="a"
               href={sigleConfig.twitterUrl}
               target="_blank"
@@ -183,6 +184,7 @@ export const AppHeader = () => {
               <TwitterLogoIcon />
             </IconButton>
             <IconButton
+              size="sm"
               as="a"
               href={sigleConfig.discordUrl}
               target="_blank"
@@ -191,6 +193,7 @@ export const AppHeader = () => {
               <DiscordLogoIcon />
             </IconButton>
             <IconButton
+              size="sm"
               as="a"
               href={sigleConfig.githubUrl}
               target="_blank"
@@ -202,12 +205,12 @@ export const AppHeader = () => {
         )}
         {!user && (
           <>
-            <Link href="/" passHref>
+            <Link href="/" passHref legacyBehavior>
               <Button as="a" size="lg">
                 Enter App
               </Button>
             </Link>
-            <IconButton as="button" onClick={toggleTheme}>
+            <IconButton size="sm" as="button" onClick={toggleTheme}>
               <SunIcon />
             </IconButton>
           </>

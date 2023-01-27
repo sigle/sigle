@@ -1,4 +1,3 @@
-import { CACHE_MANAGER } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { Test, TestingModule } from '@nestjs/testing';
 import { fetch } from 'undici';
@@ -16,13 +15,6 @@ describe('StacksService', () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         StacksService,
-        {
-          provide: CACHE_MANAGER,
-          useValue: {
-            get: () => null,
-            set: () => () => null,
-          },
-        },
         {
           provide: ConfigService,
           useValue: {
@@ -66,13 +58,60 @@ describe('StacksService', () => {
       });
     });
 
-    it('should return undefined if user not using the app', async () => {
+    it('should return bucket url and profile', async () => {
       expect(await service.getBucketUrl({ username: 'leopradel.btc' })).toEqual(
         {
           bucketUrl: expect.any(String),
           profile: expect.any(Object),
         },
       );
+    });
+  });
+
+  describe('getPublicStories', () => {
+    it('should return user stories', async () => {
+      const { bucketUrl } = await service.getBucketUrl({
+        username: 'sigle.btc',
+      });
+      const publicStories = await service.getPublicStories({ bucketUrl });
+      expect(publicStories).toEqual(expect.any(Array));
+      expect(publicStories[0]).toMatchObject({
+        id: expect.any(String),
+        title: expect.any(String),
+      });
+    });
+  });
+
+  describe('getPublicStory', () => {
+    it('should return user story', async () => {
+      const { bucketUrl } = await service.getBucketUrl({
+        username: 'sigle.btc',
+      });
+      expect(
+        await service.getPublicStory({
+          bucketUrl,
+          storyId: 'GAtWYPsRz6qXUW0SuR8b0',
+        }),
+      ).toMatchObject({
+        id: expect.any(String),
+        title: expect.any(String),
+      });
+    });
+  });
+
+  describe('getPublicSettings', () => {
+    it('should return user settings', async () => {
+      const { bucketUrl } = await service.getBucketUrl({
+        username: 'sigle.btc',
+      });
+      expect(
+        await service.getPublicSettings({
+          bucketUrl,
+        }),
+      ).toMatchObject({
+        siteName: expect.any(String),
+        siteTwitterHandle: expect.any(String),
+      });
     });
   });
 });

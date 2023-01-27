@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import Image from 'next/image';
+import Image from 'next/legacy/image';
 import { Box, Button, Flex, Typography, LoadingSpinner } from '../../../ui';
 import { SettingsLayout } from '../SettingsLayout';
 import backpackImage from '../../../../public/img/illustrations/backpack.png';
@@ -102,14 +102,16 @@ export const CurrentPlan = () => {
         </Typography>
         {!isLoading && !isError ? (
           currentPlan === 'starter' ? (
-            <Link href="/settings/plans/compare" passHref>
-              <Button color="orange" as="a">
+            <Link href="/settings/plans/compare" passHref legacyBehavior>
+              <Button size="sm" color="orange" as="a">
                 Upgrade
               </Button>
             </Link>
           ) : (
-            <Link href="/settings/plans/compare" passHref>
-              <Button variant="subtle">Change plan</Button>
+            <Link href="/settings/plans/compare" passHref legacyBehavior>
+              <Button size="sm" variant="subtle">
+                Change plan
+              </Button>
             </Link>
           )
         ) : null}
@@ -122,7 +124,7 @@ export const CurrentPlan = () => {
       ) : null}
 
       {!isLoading && !isError ? (
-        <Box css={{ mt: '$2', borderRadius: '$3', border: '1px solid $gray7' }}>
+        <Box css={{ mt: '$2', br: '$4', border: '1px solid $gray7' }}>
           <Flex
             align="center"
             gap="5"
@@ -130,8 +132,8 @@ export const CurrentPlan = () => {
               background: '$gray2',
               borderBottom: '1px solid $gray7',
               padding: '$3',
-              borderTopLeftRadius: '$3',
-              borderTopRightRadius: '$3',
+              borderTopLeftRadius: '$4',
+              borderTopRightRadius: '$4',
             }}
           >
             {currentPlan === 'starter' ? (
@@ -183,7 +185,7 @@ export const CurrentPlan = () => {
             justify="between"
             css={{
               mt: '$2',
-              borderRadius: '$3',
+              br: '$4',
               border: '1px solid $gray7',
               background: '$gray2',
               padding: '$3',
@@ -193,7 +195,7 @@ export const CurrentPlan = () => {
               <Box
                 as="img"
                 src={`${NFTImageURL}/${userSubscription?.nftId}.png&size=170`}
-                css={{ width: 92, height: 92, borderRadius: '$3' }}
+                css={{ width: 92, height: 92, br: '$4' }}
               />
               <Flex direction="column" gap="1" css={{ ml: '$5' }}>
                 <Typography size="h4" css={{ fontWeight: 600 }}>
@@ -219,8 +221,8 @@ export const CurrentPlan = () => {
           <Typography size="subheading">
             This feature is available for Hiro wallet accounts only
           </Typography>
-          <Link href={`/${user?.username}`} passHref>
-            <Button variant="subtle" as="a">
+          <Link href={`/${user?.username}`} passHref legacyBehavior>
+            <Button size="sm" variant="subtle" as="a">
               Back to profile
             </Button>
           </Link>

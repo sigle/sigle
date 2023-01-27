@@ -47,6 +47,7 @@ const StoryImage = styled('img', {
   height: 58,
   zIndex: -1,
   position: 'relative',
+  maxWidth: 'inherit',
 
   '@md': {
     width: 180,
