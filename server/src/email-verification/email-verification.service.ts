@@ -1,8 +1,11 @@
+import { randomBytes } from 'crypto';
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import * as jwt from 'jsonwebtoken';
 import { PrismaService } from '../prisma/prisma.service';
 import { EnvironmentVariables } from '../environment/environment.validation';
+import { PosthogService } from '../posthog/posthog.service';
+import { EmailService } from '../email/email.service';
 
 interface EmailVerificationToken {
   email: string;
@@ -13,25 +16,65 @@ export class EmailVerificationService {
   constructor(
     private readonly configService: ConfigService<EnvironmentVariables>,
     private readonly prisma: PrismaService,
+    private readonly posthog: PosthogService,
+    private readonly emailService: EmailService,
   ) {}
 
   /**
    * Generate a new link to verify an user email and send it.
-   * The token expires after 10 mins.
    */
   async sendVerificationLink({
+    stacksAddress,
     email,
   }: {
+    stacksAddress: string;
     email: string;
   }): Promise<{ url: string; token: string }> {
-    const payload: EmailVerificationToken = { email };
-    const token = jwt.sign(payload, this.configService.get('NEXTAUTH_SECRET'), {
-      algorithm: 'HS256',
-      expiresIn: '10m',
+    const token = this.generateRandomToken();
+    email = email.toLowerCase();
+
+    const user = await this.prisma.user.findUniqueOrThrow({
+      where: { stacksAddress },
+      select: { id: true, email: true, emailVerified: true },
     });
+
+    // Do not send an email if the address is already verified
+    if (email === user.email) {
+      throw new BadRequestException('Email address already verified');
+    }
+
+    // Delete any existing token for this user
+    await this.prisma.emailVerificationToken.deleteMany({
+      where: { userId: user.id },
+    });
+    await this.prisma.emailVerificationToken.create({
+      data: {
+        userId: user.id,
+        token,
+        email,
+      },
+    });
+
     const url = `${this.configService.get('APP_URL')}/verify-email/${token}`;
-    const text = `To confirm the email address, click here: ${url}`;
-    console.log(`----\n${text}`);
+
+    await this.emailService.sendMail({
+      // TODO from
+      from: '"Fred Foo 👻" <foo@example.com>',
+      to: email,
+      // TODO subject
+      subject: 'Hello ✔',
+      // TODO text
+      text: `To confirm the email address, click here: ${url}`,
+      // TODO html
+      html: `<p>To confirm the email address, click here: ${url}</p>`,
+    });
+
+    this.posthog.capture({
+      distinctId: stacksAddress,
+      event: 'send verification link',
+      properties: {},
+    });
+
     return { url, token };
   }
 
@@ -85,6 +128,13 @@ export class EmailVerificationService {
     if (user.emailVerified) {
       throw new BadRequestException('Email already verified');
     }
-    await this.sendVerificationLink({ email: user.email });
+    await this.sendVerificationLink({
+      stacksAddress: 'TODO',
+      email: user.email,
+    });
+  }
+
+  private generateRandomToken(length = 43): string {
+    return randomBytes(length).toString('hex');
   }
 }

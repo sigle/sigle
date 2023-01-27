@@ -26,10 +26,10 @@ model User {
 }
 
 model EmailVerificationToken {
-  userId  String
-  email   String
-  token   String   @unique
-  expires DateTime
+  userId    String
+  email     String
+  token     String   @unique
+  createdAt DateTime @default(now())
 
   user User @relation(fields: [userId], references: [id])
 
