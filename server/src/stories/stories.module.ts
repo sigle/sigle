@@ -2,11 +2,11 @@ import { Module } from '@nestjs/common';
 import { StoriesService } from './stories.service';
 import { StoriesController } from './stories.controller';
 import { StacksService } from '../stacks/stacks.service';
-import { EmailModule } from '../bulkEmail/bulkEmail.module';
+import { BulkEmailModule } from '../bulkEmail/bulkEmail.module';
 
 @Module({
   controllers: [StoriesController],
   providers: [StoriesService, StacksService],
-  imports: [EmailModule],
+  imports: [BulkEmailModule],
 })
 export class StoriesModule {}
