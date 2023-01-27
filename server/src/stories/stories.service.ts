@@ -5,7 +5,7 @@ import { InjectSentry, SentryService } from '@ntegral/nestjs-sentry';
 import { allowedNewsletterUsers } from '../utils';
 import { PrismaService } from '../prisma/prisma.service';
 import { StacksService } from '../stacks/stacks.service';
-import { EmailService } from '../email/email.service';
+import { BulkEmailService } from '../bulk-email/bulk-email.service';
 import { PosthogService } from '../posthog/posthog.service';
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const Mailjet = require('node-mailjet');
@@ -17,7 +17,7 @@ export class StoriesService {
     private readonly prisma: PrismaService,
     private readonly posthog: PosthogService,
     private readonly stacksService: StacksService,
-    private readonly emailService: EmailService,
+    private readonly bulkEmailService: BulkEmailService,
   ) {}
 
   async get({
@@ -143,7 +143,7 @@ export class StoriesService {
           storyId: gaiaId,
         }),
       ]);
-      const newsletterHtml = this.emailService.storyToHTML({
+      const newsletterHtml = this.bulkEmailService.storyToHTML({
         stacksAddress,
         username,
         story: publicStory,
