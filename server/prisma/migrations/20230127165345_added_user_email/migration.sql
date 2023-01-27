@@ -13,7 +13,7 @@ CREATE TABLE "EmailVerificationToken" (
     "userId" TEXT NOT NULL,
     "email" TEXT NOT NULL,
     "token" TEXT NOT NULL,
-    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP
+    "expires" TIMESTAMP(3) NOT NULL
 );
 
 -- CreateIndex
