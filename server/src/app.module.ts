@@ -13,7 +13,7 @@ import { AnalyticsModule } from './analytics/analytics.module';
 import { PlausibleService } from './plausible/plausible.service';
 import { StacksService } from './stacks/stacks.service';
 import { AppController } from './app.controller';
-import { EmailModule } from './email/email.module';
+import { BulkEmailModule } from './bulk-email/bulk-email.module';
 import { SubscribersModule } from './subscribers/subscribers.module';
 import { PrismaModule } from './prisma/prisma.module';
 import { StoriesModule } from './stories/stories.module';
@@ -63,7 +63,7 @@ import { PosthogModule } from './posthog/posthog.module';
     UserModule,
     SubscriptionModule,
     AnalyticsModule,
-    EmailModule,
+    BulkEmailModule,
     SubscribersModule,
     StoriesModule,
     NewslettersModule,

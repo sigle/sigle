@@ -49,15 +49,18 @@ const inlineText = (json: any[]): string => {
 };
 
 @Injectable()
-export class EmailService {
+export class BulkEmailService {
   private templates: { storyEmail: HandlebarsTemplateDelegate };
 
   constructor(@InjectSentry() private readonly sentryService: SentryService) {
     this.templates = {
       storyEmail: compile(
-        readFileSync(`${process.cwd()}/src/email/templates/story.handlebars`, {
-          encoding: 'utf-8',
-        }).toString(),
+        readFileSync(
+          `${process.cwd()}/src/bulk-email/templates/story.handlebars`,
+          {
+            encoding: 'utf-8',
+          },
+        ).toString(),
       ),
     };
   }
