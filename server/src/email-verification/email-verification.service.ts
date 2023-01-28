@@ -1,8 +1,15 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  InternalServerErrorException,
+} from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import * as jwt from 'jsonwebtoken';
+import { validate } from 'deep-email-validator';
 import { PrismaService } from '../prisma/prisma.service';
 import { EnvironmentVariables } from '../environment/environment.validation';
+import { PosthogService } from '../posthog/posthog.service';
+import { EmailService } from '../email/email.service';
 
 interface EmailVerificationToken {
   email: string;
@@ -15,7 +22,70 @@ export class EmailVerificationService {
   constructor(
     private readonly configService: ConfigService<EnvironmentVariables>,
     private readonly prisma: PrismaService,
+    private readonly posthog: PosthogService,
+    private readonly emailService: EmailService,
   ) {}
+
+  async addEmail({
+    stacksAddress,
+    email,
+  }: {
+    stacksAddress: string;
+    email: string;
+  }): Promise<void> {
+    email = email.toLowerCase();
+
+    const user = await this.prisma.user.findUniqueOrThrow({
+      select: { id: true, email: true, emailVerified: true },
+      where: { stacksAddress },
+    });
+    // If the email is already set, do nothing
+    if (email === user.email) {
+      return;
+    }
+    const emailAlreadyUsed = await this.prisma.user.findFirst({
+      select: { id: true },
+      where: { email },
+    });
+    // If the email is already used by another user, do nothing to prevent email enumeration
+    if (emailAlreadyUsed) {
+      return;
+    }
+
+    // Quick verify email
+    const res = await validate({
+      email,
+      // This is already checked by the router
+      validateRegex: false,
+      validateMx: true,
+      validateTypo: false,
+      validateDisposable: true,
+      // Ideally we want to set this one to true.
+      // But because of many false positives we disabled it.
+      validateSMTP: false,
+    });
+    if (!res.valid) {
+      throw new BadRequestException('Invalid email.');
+    }
+
+    await this.prisma.user.update({
+      where: { id: user.id },
+      data: {
+        email,
+        emailVerified: null,
+      },
+    });
+
+    await this.sendVerificationLink({ email });
+
+    this.posthog.capture({
+      distinctId: stacksAddress,
+      event: 'email added',
+      properties: {
+        alreadyHadEmail: !!user.email,
+      },
+    });
+  }
 
   /**
    * Generate a new link to verify an user email and send it.
@@ -32,11 +102,25 @@ export class EmailVerificationService {
       expiresIn: this.tokenExpiresIn,
     });
     const url = `${this.configService.get('APP_URL')}/verify-email/${token}`;
-    const text = `To confirm the email address, click here: ${url}`;
-    console.log(`----\n${text}`);
+    await this.emailService.sendMail({
+      // TODO from
+      from: '"Fred Foo 👻" <foo@example.com>',
+      to: email,
+      // TODO subject
+      subject: 'Hello ✔',
+      // TODO text
+      text: `To confirm the email address, click here: ${url}`,
+      // TODO html
+      html: `<p>To confirm the email address, click here: ${url}</p>`,
+    });
+
     return { url, token };
   }
 
+  /**
+   * Decode a verification token and return the email address associated with it.
+   * Will throw an error if the token is invalid or expired.
+   */
   decodeVerificationToken({
     token,
   }: {
@@ -54,7 +138,7 @@ export class EmailVerificationService {
       if (typeof payload === 'object' && 'email' in payload) {
         return { email: payload.email };
       }
-      throw new BadRequestException();
+      throw new InternalServerErrorException();
     } catch (error) {
       if (error?.name === 'TokenExpiredError') {
         throw new BadRequestException('Email verification token expired');
@@ -66,7 +150,7 @@ export class EmailVerificationService {
   async verifyEmail({ email }: { email: string }) {
     const user = await this.prisma.user.findFirstOrThrow({
       where: { email },
-      select: { id: true, emailVerified: true },
+      select: { id: true, stacksAddress: true, emailVerified: true },
     });
     if (user.emailVerified) {
       throw new BadRequestException('Email already verified');
@@ -76,6 +160,12 @@ export class EmailVerificationService {
       data: {
         emailVerified: new Date(),
       },
+    });
+
+    this.posthog.capture({
+      distinctId: user.stacksAddress,
+      event: 'email verified',
+      properties: {},
     });
   }
 
@@ -87,6 +177,15 @@ export class EmailVerificationService {
     if (user.emailVerified) {
       throw new BadRequestException('Email already verified');
     }
+
     await this.sendVerificationLink({ email: user.email });
+
+    this.posthog.capture({
+      distinctId: stacksAddress,
+      event: 'email verification link resent',
+      properties: {
+        alreadyHadEmail: !!user.email,
+      },
+    });
   }
 }

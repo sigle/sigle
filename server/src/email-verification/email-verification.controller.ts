@@ -14,6 +14,7 @@ import {
 } from '@nestjs/swagger';
 import { Throttle } from '@nestjs/throttler';
 import { AuthGuard } from '../auth.guard';
+import { AddEmailDto } from './dto/addEmail.dto';
 import { VerifyEmailDto } from './dto/verifyEmail.dto';
 import { EmailVerificationService } from './email-verification.service';
 
@@ -23,6 +24,26 @@ export class EmailVerificationController {
   constructor(
     private readonly emailVerificationService: EmailVerificationService,
   ) {}
+
+  @ApiOperation({
+    description:
+      'Add an email address for the authenticated user. Send an email to the user with a verification link.',
+  })
+  @ApiBearerAuth()
+  @ApiOkResponse({ type: Boolean })
+  @UseGuards(AuthGuard)
+  @Throttle(5, 60)
+  @Post('/api/email-verification/add')
+  @HttpCode(200)
+  async addEmail(
+    @Request() req,
+    @Body() addEmailDto: AddEmailDto,
+  ): Promise<void> {
+    await this.emailVerificationService.addEmail({
+      stacksAddress: req.user.stacksAddress,
+      email: addEmailDto.email,
+    });
+  }
 
   @ApiOperation({
     description: 'Verify a user email address.',
