@@ -10,6 +10,8 @@ interface EmailVerificationToken {
 
 @Injectable()
 export class EmailVerificationService {
+  private readonly tokenExpiresIn = '10m';
+
   constructor(
     private readonly configService: ConfigService<EnvironmentVariables>,
     private readonly prisma: PrismaService,
@@ -27,7 +29,7 @@ export class EmailVerificationService {
     const payload: EmailVerificationToken = { email };
     const token = jwt.sign(payload, this.configService.get('NEXTAUTH_SECRET'), {
       algorithm: 'HS256',
-      expiresIn: '10m',
+      expiresIn: this.tokenExpiresIn,
     });
     const url = `${this.configService.get('APP_URL')}/verify-email/${token}`;
     const text = `To confirm the email address, click here: ${url}`;
@@ -46,7 +48,7 @@ export class EmailVerificationService {
         this.configService.get('NEXTAUTH_SECRET'),
         {
           algorithms: ['HS256'],
-          maxAge: '10m',
+          maxAge: this.tokenExpiresIn,
         },
       );
       if (typeof payload === 'object' && 'email' in payload) {
