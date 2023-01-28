@@ -1,11 +1,11 @@
 import React from 'react';
 import { Protected } from '../../modules/auth/Protected';
-import { PrivateData } from '../../modules/settings/private-data/PrivateData';
+import { EmailData } from '../../modules/settings/email/EmailData';
 
 const PrivateDataPage = () => {
   return (
     <Protected>
-      <PrivateData />
+      <EmailData />
     </Protected>
   );
 };

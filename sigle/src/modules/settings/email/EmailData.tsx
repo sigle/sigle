@@ -22,22 +22,18 @@ interface SettingsFormValues {
   receiveEmails: boolean;
 }
 
-export const PrivateData = () => {
+export const EmailData = () => {
   // temp state to show success state of form
+  // TODO
   const [success, setSuccess] = useState(false);
 
   const formik = useFormik<SettingsFormValues>({
     initialValues: {
-      // values to be updated once we have data coming from server
       email: '',
       receiveEmails: false,
     },
     validate: (values) => {
       const errors: FormikErrors<SettingsFormValues> = {};
-
-      if (values.email && values.email.length > 100) {
-        errors.email = 'Name too long';
-      }
 
       if (values.email && !isValidEmail(values.email)) {
         errors.email = 'Invalid email, enter a new one.';
