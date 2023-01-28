@@ -24,7 +24,8 @@ interface SettingsFormValues {
 
 export const EmailData = () => {
   // temp state to show success state of form
-  // TODO
+  // TODO add values from API
+  // TODO emails settings
   const [success, setSuccess] = useState(false);
 
   const formik = useFormik<SettingsFormValues>({
@@ -86,7 +87,7 @@ export const EmailData = () => {
           </FormHelper>
         </FormRow>
 
-        <Flex
+        {/* <Flex
           align="center"
           justify="between"
           css={{
@@ -111,7 +112,7 @@ export const EmailData = () => {
           >
             <SwitchThumb />
           </Switch>
-        </Flex>
+        </Flex> */}
         {formik.dirty && <UnsavedChanges saving={formik.isSubmitting} />}
       </Box>
     </SettingsLayout>
