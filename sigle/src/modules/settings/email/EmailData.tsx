@@ -42,7 +42,9 @@ export const EmailData = () => {
     },
     onSuccess: async () => {
       await refetchUserMe();
-      toast.success('Email added, please check your inbox to verify it.');
+      toast.success(
+        'Please verify your email by clicking the link sent to your inbox.'
+      );
     },
   });
   const { mutate: resendVerificationUserEmail } =
@@ -56,7 +58,9 @@ export const EmailData = () => {
       },
       onSuccess: async () => {
         await refetchUserMe();
-        toast.success('Email sent, please check your inbox.');
+        toast.success(
+          'Please verify your email by clicking the link sent to your inbox.'
+        );
       },
     });
 
