@@ -183,9 +183,7 @@ export class EmailVerificationService {
     this.posthog.capture({
       distinctId: stacksAddress,
       event: 'email verification link resent',
-      properties: {
-        alreadyHadEmail: !!user.email,
-      },
+      properties: {},
     });
   }
 }
