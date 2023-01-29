@@ -1,7 +1,8 @@
 import { CheckCircledIcon } from '@radix-ui/react-icons';
 import { FormikErrors, useFormik } from 'formik';
-import { useState } from 'react';
-import { useGetUserMe } from '../../../hooks/users';
+import { toast } from 'react-toastify';
+import { ApiError } from '../../../external/api';
+import { useAddUserEmail, useGetUserMe } from '../../../hooks/users';
 import {
   Box,
   Flex,
@@ -24,7 +25,22 @@ interface SettingsFormValues {
 }
 
 export const EmailData = () => {
-  const { data: userMe } = useGetUserMe({ suspense: true });
+  const { data: userMe, refetch: refetchUserMe } = useGetUserMe({
+    suspense: true,
+  });
+  const { mutate: addUserEmail } = useAddUserEmail({
+    onError: (error: Error | ApiError) => {
+      let errorMessage = error.message;
+      if (error instanceof ApiError && error.body.message) {
+        errorMessage = error.body.message;
+      }
+      toast.error(errorMessage);
+    },
+    onSuccess: async () => {
+      await refetchUserMe();
+      toast.success('Email added, please check your inbox to verify it.');
+    },
+  });
 
   // TODO emails settings preferences
   const formik = useFormik<SettingsFormValues>({
@@ -43,10 +59,9 @@ export const EmailData = () => {
     },
     validateOnBlur: false,
     validateOnChange: false,
-    onSubmit: (values, { setSubmitting, validateForm }) => {
-      validateForm();
-      formik.resetForm({ values: { ...values } });
+    onSubmit: (values, { setSubmitting }) => {
       setSubmitting(false);
+      addUserEmail({ email: values.email });
     },
   });
 

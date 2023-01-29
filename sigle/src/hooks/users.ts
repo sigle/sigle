@@ -1,5 +1,10 @@
-import { UseQueryOptions, useQuery } from '@tanstack/react-query';
-import { UserService } from '../external/api';
+import {
+  UseQueryOptions,
+  useQuery,
+  useMutation,
+  UseMutationOptions,
+} from '@tanstack/react-query';
+import { AddEmailDto, UserService } from '../external/api';
 
 type GetApiUsersMeReturnType = Awaited<
   ReturnType<typeof UserService.userControllerGetUserMe>
@@ -49,5 +54,23 @@ export const useGetUsersFollowers = (
   useQuery<GetApiUsersFollowersReturnType, Error>(
     ['get-users-followers', userAddress],
     () => UserService.userControllerGetUserFollowers({ userAddress }),
+    options
+  );
+
+type PostApiAddEmailReturnType = Awaited<
+  ReturnType<typeof UserService.emailVerificationControllerAddEmail>
+>;
+export const useAddUserEmail = (
+  options: UseMutationOptions<
+    PostApiAddEmailReturnType,
+    Error,
+    AddEmailDto
+  > = {}
+) =>
+  useMutation<PostApiAddEmailReturnType, Error, AddEmailDto>(
+    (data) =>
+      UserService.emailVerificationControllerAddEmail({
+        requestBody: data,
+      }),
     options
   );
