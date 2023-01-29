@@ -67,6 +67,8 @@ export class UserService {
     const userSelectFields = {
       id: true,
       stacksAddress: true,
+      email: true,
+      emailVerified: true,
       newsletter: {
         select: {
           id: true,

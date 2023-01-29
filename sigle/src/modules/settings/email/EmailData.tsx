@@ -1,6 +1,7 @@
 import { CheckCircledIcon } from '@radix-ui/react-icons';
 import { FormikErrors, useFormik } from 'formik';
 import { useState } from 'react';
+import { useGetUserMe } from '../../../hooks/users';
 import {
   Box,
   Flex,
@@ -9,9 +10,9 @@ import {
   FormInput,
   FormLabel,
   FormRow,
-  Switch,
-  SwitchThumb,
-  Typography,
+  // Switch,
+  // SwitchThumb,
+  // Typography,
 } from '../../../ui';
 import { isValidEmail } from '../../../utils/regex';
 import { UnsavedChanges } from '../components/UnsavedChanges';
@@ -19,19 +20,19 @@ import { SettingsLayout } from '../SettingsLayout';
 
 interface SettingsFormValues {
   email: string;
-  receiveEmails: boolean;
+  // receiveEmails: boolean;
 }
 
 export const EmailData = () => {
-  // temp state to show success state of form
-  // TODO add values from API
-  // TODO emails settings
+  const { data: userMe } = useGetUserMe({ suspense: true });
+  console.log({ userMe });
+  // TODO emails settings preferences
   const [success, setSuccess] = useState(false);
 
   const formik = useFormik<SettingsFormValues>({
     initialValues: {
-      email: '',
-      receiveEmails: false,
+      email: userMe?.email || '',
+      // receiveEmails: false,
     },
     validate: (values) => {
       const errors: FormikErrors<SettingsFormValues> = {};
@@ -44,7 +45,7 @@ export const EmailData = () => {
     },
     validateOnBlur: false,
     validateOnChange: false,
-    onSubmit: async (values, { setSubmitting, validateForm }) => {
+    onSubmit: (values, { setSubmitting, validateForm }) => {
       validateForm();
       formik.resetForm({ values: { ...values } });
       setSuccess(true);

@@ -1,11 +1,21 @@
-import React from 'react';
+import { Suspense } from 'react';
 import { Protected } from '../../modules/auth/Protected';
 import { EmailData } from '../../modules/settings/email/EmailData';
+import { SettingsLayout } from '../../modules/settings/SettingsLayout';
+import { Typography } from '../../ui';
 
 const PrivateDataPage = () => {
   return (
     <Protected>
-      <EmailData />
+      <Suspense
+        fallback={
+          <SettingsLayout>
+            <Typography>Loading ...</Typography>
+          </SettingsLayout>
+        }
+      >
+        <EmailData />
+      </Suspense>
     </Protected>
   );
 };
