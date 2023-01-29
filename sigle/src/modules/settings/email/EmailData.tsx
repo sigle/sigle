@@ -25,10 +25,8 @@ interface SettingsFormValues {
 
 export const EmailData = () => {
   const { data: userMe } = useGetUserMe({ suspense: true });
-  console.log({ userMe });
-  // TODO emails settings preferences
-  const [success, setSuccess] = useState(false);
 
+  // TODO emails settings preferences
   const formik = useFormik<SettingsFormValues>({
     initialValues: {
       email: userMe?.email || '',
@@ -48,7 +46,6 @@ export const EmailData = () => {
     onSubmit: (values, { setSubmitting, validateForm }) => {
       validateForm();
       formik.resetForm({ values: { ...values } });
-      setSuccess(true);
       setSubmitting(false);
     },
   });
@@ -67,7 +64,7 @@ export const EmailData = () => {
               onChange={formik.handleChange}
               placeholder="johndoe@gmail.com"
             />
-            {success && (
+            {!!userMe?.emailVerified && (
               <Box
                 css={{
                   color: '$green11',
