@@ -81,11 +81,10 @@ type PostApiResendVerificationEmailReturnType = Awaited<
 export const useResendVerificationUserEmail = (
   options: UseMutationOptions<
     PostApiResendVerificationEmailReturnType,
-    Error,
-    AddEmailDto
+    Error
   > = {}
 ) =>
-  useMutation<PostApiResendVerificationEmailReturnType, Error, AddEmailDto>(
+  useMutation<PostApiResendVerificationEmailReturnType, Error>(
     () => UserService.emailVerificationControllerResendEmail(),
     options
   );

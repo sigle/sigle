@@ -125,15 +125,16 @@ export const EmailData = () => {
                   boxShadow: '0 1px 0 0',
                   cursor: 'pointer',
                 }}
-                onClick={() => resendVerificationUserEmail({})}
+                onClick={() => resendVerificationUserEmail()}
               >
                 Resend verification email.
               </Box>
             </FormHelper>
           )}
           <FormHelper>
-            Add your email <em>(optional)</em> to receive updates and feature
-            releases from us and subscribe faster to writers. <br />
+            Include your email <em>(optional)</em> to stay informed about
+            updates and new features from us and quickly subscribe to writers.
+            <br />
             Max. 100 Characters
           </FormHelper>
         </FormRow>
