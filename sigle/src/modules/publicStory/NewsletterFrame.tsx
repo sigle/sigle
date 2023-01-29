@@ -1,5 +1,5 @@
 import { FormikErrors, useFormik } from 'formik';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 // import { EnvelopePlusIcon } from '../../icons/EnvelopePlusIcon';
 import {
   Button,
@@ -18,19 +18,19 @@ import { ApiError } from '../../external/api';
 interface NewsletterFrameProps {
   stacksAddress: string;
   siteName: string | undefined;
+  email?: string;
 }
 
 export const NewsletterFrame = ({
   stacksAddress,
   siteName,
+  email,
 }: NewsletterFrameProps) => {
-  // temp state to show success state of form
   const [isSubscribed, setIsSubscribed] = useState(false);
 
   const formik = useFormik<{ email: string }>({
     initialValues: {
-      // values to be updated once we have data coming from server
-      email: '',
+      email: email || '',
     },
     validate: (values) => {
       const errors: FormikErrors<{ email: string }> = {};
@@ -84,6 +84,12 @@ export const NewsletterFrame = ({
         formik.setSubmitting(false);
       },
     });
+
+  useEffect(() => {
+    if (email) {
+      formik.setValues({ email });
+    }
+  }, [email]);
 
   return (
     <Flex direction="column" gap="7">
@@ -148,6 +154,7 @@ export const NewsletterFrame = ({
               maxLength={100}
               value={formik.values.email}
               onChange={formik.handleChange}
+              disabled={!!email}
               placeholder="johndoe@gmail.com"
             />
             {isLoadingCreateSubscriber ? (

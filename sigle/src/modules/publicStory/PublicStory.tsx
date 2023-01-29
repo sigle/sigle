@@ -16,7 +16,8 @@ import { ShareButtons } from './ShareButtons';
 import { generateAvatar } from '../../utils/boringAvatar';
 import { ProfileCard } from '../profileCard/ProfileCard';
 import { PoweredBy } from './PoweredBy';
-import { useGetUserByAddress } from '../../hooks/users';
+import { useGetUserByAddress, useGetUserMe } from '../../hooks/users';
+import { useSession } from 'next-auth/react';
 
 const ProfileImageContainer = styled('div', {
   cursor: 'pointer',
@@ -113,12 +114,17 @@ export const PublicStory = ({
   settings,
   userInfo,
 }: PublicStoryProps) => {
+  const { status } = useSession();
   const router = useRouter();
   const { username, storyId } = router.query as {
     username: string;
     storyId: string;
   };
   const { data: userInfoByAddress } = useGetUserByAddress(userInfo.address);
+  const { data: userMe } = useGetUserMe({
+    enabled: status === 'authenticated',
+    refetchOnMount: false,
+  });
 
   const storyReadingTime = useMemo(
     () =>
@@ -257,6 +263,9 @@ export const PublicStory = ({
           <NewsletterFrame
             stacksAddress={userInfo.address}
             siteName={siteName}
+            email={
+              (userMe && userMe.emailVerified && userMe.email) || undefined
+            }
           />
         )}
         <PoweredBy />
