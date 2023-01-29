@@ -2,7 +2,11 @@ import { CheckCircledIcon } from '@radix-ui/react-icons';
 import { FormikErrors, useFormik } from 'formik';
 import { toast } from 'react-toastify';
 import { ApiError } from '../../../external/api';
-import { useAddUserEmail, useGetUserMe } from '../../../hooks/users';
+import {
+  useAddUserEmail,
+  useGetUserMe,
+  useResendVerificationUserEmail,
+} from '../../../hooks/users';
 import {
   Box,
   Flex,
@@ -41,6 +45,20 @@ export const EmailData = () => {
       toast.success('Email added, please check your inbox to verify it.');
     },
   });
+  const { mutate: resendVerificationUserEmail } =
+    useResendVerificationUserEmail({
+      onError: (error: Error | ApiError) => {
+        let errorMessage = error.message;
+        if (error instanceof ApiError && error.body.message) {
+          errorMessage = error.body.message;
+        }
+        toast.error(errorMessage);
+      },
+      onSuccess: async () => {
+        await refetchUserMe();
+        toast.success('Email sent, please check your inbox.');
+      },
+    });
 
   // TODO emails settings preferences
   const formik = useFormik<SettingsFormValues>({
@@ -92,6 +110,22 @@ export const EmailData = () => {
           </Flex>
           {formik.errors.email && (
             <FormHelperError>{formik.errors.email}</FormHelperError>
+          )}
+          {userMe && userMe.email && !userMe.emailVerified && (
+            <FormHelper>
+              Your email is not verified, please verify it.{' '}
+              <Box
+                as="a"
+                css={{
+                  color: '$orange11',
+                  boxShadow: '0 1px 0 0',
+                  cursor: 'pointer',
+                }}
+                onClick={() => resendVerificationUserEmail({})}
+              >
+                Resend verification email.
+              </Box>
+            </FormHelper>
           )}
           <FormHelper>
             Add your email <em>(optional)</em> to receive updates and feature
