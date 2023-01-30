@@ -11,4 +11,18 @@ export class SendTestStoryDto {
   @IsNotEmpty()
   @ApiProperty()
   emails: string;
+
+  @IsString()
+  @IsNotEmpty()
+  @ApiProperty()
+  storyTitle: string;
+
+  @IsString()
+  @IsNotEmpty()
+  @ApiProperty()
+  storyContent: string;
+
+  @IsString()
+  @ApiProperty()
+  storyCoverImage: string;
 }

@@ -42,6 +42,9 @@ export class StoriesController {
       stacksAddress: req.user.stacksAddress,
       gaiaId: publishStoryDto.id,
       emails: publishStoryDto.emails,
+      storyTitle: publishStoryDto.storyTitle,
+      storyContent: publishStoryDto.storyContent,
+      storyCoverImage: publishStoryDto.storyCoverImage,
     });
   }
 

@@ -311,10 +311,16 @@ export class StoriesService {
     stacksAddress,
     gaiaId,
     emails,
+    storyTitle,
+    storyContent,
+    storyCoverImage,
   }: {
     stacksAddress: string;
     gaiaId: string;
     emails: string;
+    storyTitle: string;
+    storyContent: string;
+    storyCoverImage?: string;
   }) {
     // Verify emails are valid
     const emailList = emails.split(',').map((email) => email.trim());
@@ -366,12 +372,22 @@ export class StoriesService {
       bucketUrl: bucketUrl.bucketUrl,
     });
 
-    // const newsletterHtml = this.bulkEmailService.storyToHTML({
-    //   stacksAddress,
-    //   username,
-    //   story: publicStory,
-    //   settings: publicSettings,
-    // });
+    const newsletterHtml = this.bulkEmailService.storyToHTML({
+      stacksAddress,
+      username,
+      story: {
+        id: gaiaId,
+        title: storyTitle,
+        content: storyContent,
+        coverImage: storyCoverImage,
+        type: 'private',
+        createdAt: Date.now(),
+        updatedAt: Date.now(),
+      },
+      settings: publicSettings,
+    });
+
+    console.log({ newsletterHtml });
 
     this.posthog.capture({
       distinctId: stacksAddress,
