@@ -43,50 +43,48 @@ export class EmailService implements OnModuleInit {
     };
 
     this.senderAddress = this.configService.get('EMAIL_FROM');
-
-    // const emailServerUser = this.configService.get('EMAIL_SERVER_USER');
-    // const emailServerHost = this.configService.get('EMAIL_SERVER_HOST');
-    // const emailServerPort = this.configService.get('EMAIL_SERVER_PORT');
-    // const emailServerPassword = this.configService.get('EMAIL_SERVER_PASSWORD');
-    // if (
-    //   !emailServerUser ||
-    //   !emailServerHost ||
-    //   !emailServerPort ||
-    //   !emailServerPassword
-    // ) {
-    //   throw new Error('Missing email configuration');
-    // }
-    // this.transporter = createTransport({
-    //   host: emailServerHost,
-    //   port: emailServerPort,
-    //   secure: false,
-    //   auth: {
-    //     user: emailServerUser,
-    //     pass: emailServerPassword,
-    //   },
-    // });
   }
 
   async onModuleInit() {
-    // TODO production mode
-
-    let testAccount = await createTestAccount();
-    this.isTestMode = true;
+    const emailServerUser = this.configService.get('EMAIL_SERVER_USER');
+    const emailServerHost = this.configService.get('EMAIL_SERVER_HOST');
+    const emailServerPort = this.configService.get('EMAIL_SERVER_PORT') || 587;
+    const emailServerPassword = this.configService.get('EMAIL_SERVER_PASSWORD');
+    if (
+      !emailServerUser ||
+      !emailServerHost ||
+      !emailServerPort ||
+      !emailServerPassword
+    ) {
+      this.logger.debug('Starting in test mode.');
+      let testAccount = await createTestAccount();
+      this.isTestMode = true;
+      this.transporter = createTransport({
+        host: 'smtp.ethereal.email',
+        port: 587,
+        secure: false,
+        auth: {
+          user: testAccount.user,
+          pass: testAccount.pass,
+        },
+      });
+      return;
+    }
 
     this.transporter = createTransport({
-      host: 'smtp.ethereal.email',
-      port: 587,
+      host: emailServerHost,
+      port: emailServerPort,
       secure: false,
       auth: {
-        user: testAccount.user,
-        pass: testAccount.pass,
+        user: emailServerUser,
+        pass: emailServerPassword,
       },
     });
   }
 
   async sendMail(mailOptions: Mail.Options) {
     if (!mailOptions.from) {
-      mailOptions.from = this.senderAddress;
+      mailOptions.from = `"Sigle" <${this.senderAddress}>`;
     }
     let info = await this.transporter.sendMail(mailOptions);
     this.logger.debug(`Email sent: ${info.messageId}`);
