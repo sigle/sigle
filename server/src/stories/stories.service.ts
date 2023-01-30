@@ -7,6 +7,7 @@ import { PrismaService } from '../prisma/prisma.service';
 import { StacksService } from '../stacks/stacks.service';
 import { BulkEmailService } from '../bulk-email/bulk-email.service';
 import { PosthogService } from '../posthog/posthog.service';
+import { isEmail } from 'class-validator';
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const Mailjet = require('node-mailjet');
 
@@ -300,5 +301,75 @@ export class StoriesService {
         },
       });
     }
+  }
+
+  async sendTestStory({
+    stacksAddress,
+    gaiaId,
+    emails,
+  }: {
+    stacksAddress: string;
+    gaiaId: string;
+    emails: string;
+  }) {
+    // Validate emails are valid
+    const emailList = emails.split(',');
+    const invalidEmails = emailList.filter((email) => !isEmail(email));
+    if (invalidEmails.length > 0) {
+      throw new BadRequestException(
+        `Invalid emails: ${invalidEmails.join(', ')}`,
+      );
+    }
+
+    const validEmails = emailList.filter((email) => isEmail(email));
+
+    const user = await this.prisma.user.findUniqueOrThrow({
+      select: {
+        id: true,
+        newsletter: {
+          select: {
+            id: true,
+            status: true,
+            mailjetApiKey: true,
+            mailjetApiSecret: true,
+            mailjetListAddress: true,
+            senderEmail: true,
+          },
+        },
+      },
+      where: { stacksAddress },
+    });
+
+    // Limit who can access this feature
+    if (!allowedNewsletterUsers.includes(stacksAddress)) {
+      throw new BadRequestException('Not activated.');
+    }
+    if (!user.newsletter || user.newsletter.status !== 'ACTIVE') {
+      throw new BadRequestException('Newsletter not setup.');
+    }
+
+    const username = await this.stacksService.getUsernameByAddress(
+      stacksAddress,
+    );
+    const bucketUrl = await this.stacksService.getBucketUrl({ username });
+    const publicSettings = await this.stacksService.getPublicSettings({
+      bucketUrl: bucketUrl.bucketUrl,
+    });
+
+    // const newsletterHtml = this.bulkEmailService.storyToHTML({
+    //   stacksAddress,
+    //   username,
+    //   story: publicStory,
+    //   settings: publicSettings,
+    // });
+
+    this.posthog.capture({
+      distinctId: stacksAddress,
+      event: 'newsletter test sent',
+      properties: {
+        gaiaId: gaiaId,
+        recipientsNumber: validEmails.length,
+      },
+    });
   }
 }
