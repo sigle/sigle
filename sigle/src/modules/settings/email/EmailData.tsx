@@ -32,23 +32,8 @@ export const EmailData = () => {
   const { data: userMe, refetch: refetchUserMe } = useGetUserMe({
     suspense: true,
   });
-  const { mutate: addUserEmail } = useAddUserEmail({
-    onError: (error: Error | ApiError) => {
-      let errorMessage = error.message;
-      if (error instanceof ApiError && error.body.message) {
-        errorMessage = error.body.message;
-      }
-      toast.error(errorMessage);
-    },
-    onSuccess: async () => {
-      await refetchUserMe();
-      toast.success(
-        'Please verify your email by clicking the link sent to your inbox.'
-      );
-    },
-  });
-  const { mutate: resendVerificationUserEmail } =
-    useResendVerificationUserEmail({
+  const { mutate: addUserEmail, isLoading: isLoadingAddUserEmail } =
+    useAddUserEmail({
       onError: (error: Error | ApiError) => {
         let errorMessage = error.message;
         if (error instanceof ApiError && error.body.message) {
@@ -63,6 +48,24 @@ export const EmailData = () => {
         );
       },
     });
+  const {
+    mutate: resendVerificationUserEmail,
+    isLoading: isLoadingResendVerificationUserEmail,
+  } = useResendVerificationUserEmail({
+    onError: (error: Error | ApiError) => {
+      let errorMessage = error.message;
+      if (error instanceof ApiError && error.body.message) {
+        errorMessage = error.body.message;
+      }
+      toast.error(errorMessage);
+    },
+    onSuccess: async () => {
+      await refetchUserMe();
+      toast.success(
+        'Please verify your email by clicking the link sent to your inbox.'
+      );
+    },
+  });
 
   // TODO emails settings preferences
   const formik = useFormik<SettingsFormValues>({
@@ -165,7 +168,15 @@ export const EmailData = () => {
             <SwitchThumb />
           </Switch>
         </Flex> */}
-        {formik.dirty && <UnsavedChanges saving={formik.isSubmitting} />}
+        {formik.dirty && (
+          <UnsavedChanges
+            saving={
+              formik.isSubmitting ||
+              isLoadingAddUserEmail ||
+              isLoadingResendVerificationUserEmail
+            }
+          />
+        )}
       </Box>
     </SettingsLayout>
   );
