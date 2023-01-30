@@ -104,15 +104,17 @@ export class EmailVerificationService {
     const verifyEmailUrl = `${this.configService.get(
       'APP_URL',
     )}/verify-email/${token}`;
-    const html = this.emailService.generateVerifyEmailTemplate({
-      verifyEmailUrl,
-    });
-    await this.emailService.sendMail({
-      to: email,
-      subject: 'Verify your email address',
-      text: `To confirm your email address, click here: ${verifyEmailUrl}`,
-      html: html,
-    });
+    if (process.env.NODE_ENV !== 'test') {
+      const html = this.emailService.generateVerifyEmailTemplate({
+        verifyEmailUrl,
+      });
+      await this.emailService.sendMail({
+        to: email,
+        subject: 'Verify your email address',
+        text: `To confirm your email address, click here: ${verifyEmailUrl}`,
+        html: html,
+      });
+    }
 
     return { url: verifyEmailUrl, token };
   }

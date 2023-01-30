@@ -1,6 +1,8 @@
 import { BadRequestException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { Test, TestingModule } from '@nestjs/testing';
+import { EmailService } from '../email/email.service';
+import { PosthogService } from '../posthog/posthog.service';
 import { PrismaService } from '../prisma/prisma.service';
 import { EmailVerificationService } from './email-verification.service';
 
@@ -26,6 +28,14 @@ describe('EmailVerificationService', () => {
           provide: PrismaService,
           useValue: {},
         },
+        {
+          provide: PosthogService,
+          useValue: {},
+        },
+        {
+          provide: EmailService,
+          useValue: {},
+        },
       ],
     }).compile();
 
@@ -42,7 +52,7 @@ describe('EmailVerificationService', () => {
   });
 
   describe('decodeVerificationToken', () => {
-    it('should throw ion invalid token', async () => {
+    it('should throw on invalid token', async () => {
       try {
         service.decodeVerificationToken({ token: 'token' });
         throw new Error();
