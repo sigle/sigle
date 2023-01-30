@@ -101,20 +101,20 @@ export class EmailVerificationService {
       algorithm: 'HS256',
       expiresIn: this.tokenExpiresIn,
     });
-    const url = `${this.configService.get('APP_URL')}/verify-email/${token}`;
+    const verifyEmailUrl = `${this.configService.get(
+      'APP_URL',
+    )}/verify-email/${token}`;
+    const html = this.emailService.generateVerifyEmailTemplate({
+      verifyEmailUrl,
+    });
     await this.emailService.sendMail({
-      // TODO from
-      from: '"Fred Foo 👻" <foo@example.com>',
       to: email,
-      // TODO subject
-      subject: 'Hello ✔',
-      // TODO text
-      text: `To confirm the email address, click here: ${url}`,
-      // TODO html
-      html: `<p>To confirm the email address, click here: ${url}</p>`,
+      subject: 'Verify your email address',
+      text: `To confirm your email address, click here: ${verifyEmailUrl}`,
+      html: html,
     });
 
-    return { url, token };
+    return { url: verifyEmailUrl, token };
   }
 
   /**
