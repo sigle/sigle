@@ -55,7 +55,7 @@ export const SendTestEmail = ({ story }: SendTestEmailProps) => {
   };
 
   return (
-    <Accordion collapsible defaultValue="item-1" type="single">
+    <Accordion collapsible type="single">
       <AccordionItem value="item-1">
         <AccordionTrigger>Send a test email</AccordionTrigger>
         <AccordionContent>
