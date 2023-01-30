@@ -24,7 +24,11 @@ export class EmailService implements OnModuleInit {
   private readonly logger = new Logger(EmailService.name);
   private transporter: Transporter<SMTPTransport.SentMessageInfo>;
   private isTestMode: boolean = false;
-  private templates: { verifyEmail: HandlebarsTemplateDelegate };
+  private templates: {
+    verifyEmail: HandlebarsTemplateDelegate<{
+      verifyEmailUrl: string;
+    }>;
+  };
   private senderAddress: string;
 
   constructor(
