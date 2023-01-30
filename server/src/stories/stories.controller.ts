@@ -14,6 +14,7 @@ import { PublishStoryDto } from './dto/publishStory.dto';
 import { AuthGuard } from '../auth.guard';
 import { UnpublishStoryDto } from './dto/unpublishStory.dto';
 import { StoryDto } from './dto/story.dto';
+import { SendTestStoryDto } from './dto/send-test-story.dto';
 
 @ApiTags('stories')
 @Controller()
@@ -30,6 +31,17 @@ export class StoriesController {
     return this.storiesService.get({
       stacksAddress: req.user.stacksAddress,
       gaiaId: storyId,
+    });
+  }
+
+  @UseGuards(AuthGuard)
+  @Post('/api/stories/send-test')
+  @HttpCode(200)
+  sendTest(@Request() req, @Body() publishStoryDto: SendTestStoryDto) {
+    return this.storiesService.sendTestStory({
+      stacksAddress: req.user.stacksAddress,
+      gaiaId: publishStoryDto.id,
+      emails: publishStoryDto.emails,
     });
   }
 
