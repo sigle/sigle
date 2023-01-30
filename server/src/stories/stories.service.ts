@@ -322,6 +322,12 @@ export class StoriesService {
     }
 
     const validEmails = emailList.filter((email) => isEmail(email));
+    if (validEmails.length === 0) {
+      throw new BadRequestException('No valid emails provided.');
+    }
+    if (validEmails.length > 5) {
+      throw new BadRequestException('Too many emails provided, max 5.');
+    }
 
     const user = await this.prisma.user.findUniqueOrThrow({
       select: {
