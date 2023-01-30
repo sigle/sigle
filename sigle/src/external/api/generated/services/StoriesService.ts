@@ -2,6 +2,7 @@
 /* tslint:disable */
 /* eslint-disable */
 import type { PublishStoryDto } from '../models/PublishStoryDto';
+import type { SendTestStoryDto } from '../models/SendTestStoryDto';
 import type { StoryDto } from '../models/StoryDto';
 import type { UnpublishStoryDto } from '../models/UnpublishStoryDto';
 
@@ -25,6 +26,23 @@ export class StoriesService {
       path: {
         storyId: storyId,
       },
+    });
+  }
+
+  /**
+   * @returns any
+   * @throws ApiError
+   */
+  public static storiesControllerSendTest({
+    requestBody,
+  }: {
+    requestBody: SendTestStoryDto;
+  }): CancelablePromise<any> {
+    return __request(OpenAPI, {
+      method: 'POST',
+      url: '/api/stories/send-test',
+      body: requestBody,
+      mediaType: 'application/json',
     });
   }
 

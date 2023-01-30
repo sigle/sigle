@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsNotEmpty, IsString } from 'class-validator';
+import { IsNotEmpty, IsOptional, IsString } from 'class-validator';
 
 export class SendTestStoryDto {
   @IsString()
@@ -23,6 +23,7 @@ export class SendTestStoryDto {
   storyContent: string;
 
   @IsString()
-  @ApiProperty()
+  @IsOptional()
+  @ApiProperty({ nullable: true })
   storyCoverImage: string;
 }
