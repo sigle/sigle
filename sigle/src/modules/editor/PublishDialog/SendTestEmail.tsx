@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import { toast } from 'react-toastify';
 import { ApiError } from '../../../external/api';
 import { useSendStoryTest } from '../../../hooks/stories';
 import { Story } from '../../../types';
