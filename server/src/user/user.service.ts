@@ -5,7 +5,6 @@ import { getToken } from 'next-auth/jwt';
 import { fetch } from 'undici';
 import { Prisma } from '@prisma/client';
 import { InfoApi, Configuration } from '@stacks/blockchain-api-client';
-import { StacksService } from '../stacks/stacks.service';
 import { EnvironmentVariables } from '../environment/environment.validation';
 import { PrismaService } from '../prisma/prisma.service';
 import { PosthogService } from '../posthog/posthog.service';
@@ -18,7 +17,6 @@ export class UserService {
     private readonly configService: ConfigService<EnvironmentVariables>,
     private readonly prisma: PrismaService,
     private readonly posthog: PosthogService,
-    private readonly stacksService: StacksService,
   ) {
     this.stacksInfoApi = new InfoApi(
       new Configuration({ fetchApi: fetch as any }),
@@ -69,6 +67,8 @@ export class UserService {
     const userSelectFields = {
       id: true,
       stacksAddress: true,
+      email: true,
+      emailVerified: true,
       newsletter: {
         select: {
           id: true,

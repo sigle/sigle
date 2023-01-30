@@ -15,6 +15,12 @@ export class UserMeProfileEntity {
   @ApiProperty()
   stacksAddress: string;
 
+  @ApiProperty()
+  email: string;
+
+  @ApiProperty()
+  emailVerified: Date;
+
   @ApiProperty({ type: PublicNewsletterEntity, nullable: true })
   newsletter?: PublicNewsletterEntity;
 }

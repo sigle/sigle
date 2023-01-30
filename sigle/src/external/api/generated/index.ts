@@ -6,6 +6,7 @@ export { CancelablePromise, CancelError } from './core/CancelablePromise';
 export { OpenAPI } from './core/OpenAPI';
 export type { OpenAPIConfig } from './core/OpenAPI';
 
+export type { AddEmailDto } from './models/AddEmailDto';
 export type { AnalyticsHistoricalDto } from './models/AnalyticsHistoricalDto';
 export type { AnalyticsStoryDto } from './models/AnalyticsStoryDto';
 export type { CreateSubscriberDto } from './models/CreateSubscriberDto';
@@ -27,6 +28,7 @@ export type { UnpublishStoryDto } from './models/UnpublishStoryDto';
 export type { UpdateNewsletterDto } from './models/UpdateNewsletterDto';
 export type { UserMeProfileEntity } from './models/UserMeProfileEntity';
 export type { UserProfileEntity } from './models/UserProfileEntity';
+export type { VerifyEmailDto } from './models/VerifyEmailDto';
 
 export { AnalyticsService } from './services/AnalyticsService';
 export { DefaultService } from './services/DefaultService';

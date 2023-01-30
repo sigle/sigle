@@ -19,6 +19,8 @@ import { PrismaModule } from './prisma/prisma.module';
 import { StoriesModule } from './stories/stories.module';
 import { NewslettersModule } from './newsletters/newsletters.module';
 import { PosthogModule } from './posthog/posthog.module';
+import { EmailModule } from './email/email.module';
+import { EmailVerificationModule } from './email-verification/email-verification.module';
 
 @Module({
   imports: [
@@ -68,6 +70,8 @@ import { PosthogModule } from './posthog/posthog.module';
     StoriesModule,
     NewslettersModule,
     PosthogModule,
+    EmailModule,
+    EmailVerificationModule,
   ],
   controllers: [AppController],
   providers: [

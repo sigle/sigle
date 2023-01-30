@@ -1,6 +1,12 @@
 import { CheckCircledIcon } from '@radix-ui/react-icons';
 import { FormikErrors, useFormik } from 'formik';
-import { useState } from 'react';
+import { toast } from 'react-toastify';
+import { ApiError } from '../../../external/api';
+import {
+  useAddUserEmail,
+  useGetUserMe,
+  useResendVerificationUserEmail,
+} from '../../../hooks/users';
 import {
   Box,
   Flex,
@@ -9,9 +15,9 @@ import {
   FormInput,
   FormLabel,
   FormRow,
-  Switch,
-  SwitchThumb,
-  Typography,
+  // Switch,
+  // SwitchThumb,
+  // Typography,
 } from '../../../ui';
 import { isValidEmail } from '../../../utils/regex';
 import { UnsavedChanges } from '../components/UnsavedChanges';
@@ -19,25 +25,53 @@ import { SettingsLayout } from '../SettingsLayout';
 
 interface SettingsFormValues {
   email: string;
-  receiveEmails: boolean;
+  // receiveEmails: boolean;
 }
 
-export const PrivateData = () => {
-  // temp state to show success state of form
-  const [success, setSuccess] = useState(false);
+export const EmailData = () => {
+  const { data: userMe, refetch: refetchUserMe } = useGetUserMe({
+    suspense: true,
+  });
+  const { mutate: addUserEmail } = useAddUserEmail({
+    onError: (error: Error | ApiError) => {
+      let errorMessage = error.message;
+      if (error instanceof ApiError && error.body.message) {
+        errorMessage = error.body.message;
+      }
+      toast.error(errorMessage);
+    },
+    onSuccess: async () => {
+      await refetchUserMe();
+      toast.success(
+        'Please verify your email by clicking the link sent to your inbox.'
+      );
+    },
+  });
+  const { mutate: resendVerificationUserEmail } =
+    useResendVerificationUserEmail({
+      onError: (error: Error | ApiError) => {
+        let errorMessage = error.message;
+        if (error instanceof ApiError && error.body.message) {
+          errorMessage = error.body.message;
+        }
+        toast.error(errorMessage);
+      },
+      onSuccess: async () => {
+        await refetchUserMe();
+        toast.success(
+          'Please verify your email by clicking the link sent to your inbox.'
+        );
+      },
+    });
 
+  // TODO emails settings preferences
   const formik = useFormik<SettingsFormValues>({
     initialValues: {
-      // values to be updated once we have data coming from server
-      email: '',
-      receiveEmails: false,
+      email: userMe?.email || '',
+      // receiveEmails: false,
     },
     validate: (values) => {
       const errors: FormikErrors<SettingsFormValues> = {};
-
-      if (values.email && values.email.length > 100) {
-        errors.email = 'Name too long';
-      }
 
       if (values.email && !isValidEmail(values.email)) {
         errors.email = 'Invalid email, enter a new one.';
@@ -47,11 +81,9 @@ export const PrivateData = () => {
     },
     validateOnBlur: false,
     validateOnChange: false,
-    onSubmit: async (values, { setSubmitting, validateForm }) => {
-      validateForm();
-      formik.resetForm({ values: { ...values } });
-      setSuccess(true);
+    onSubmit: (values, { setSubmitting }) => {
       setSubmitting(false);
+      addUserEmail({ email: values.email });
     },
   });
 
@@ -69,7 +101,7 @@ export const PrivateData = () => {
               onChange={formik.handleChange}
               placeholder="johndoe@gmail.com"
             />
-            {success && (
+            {!!userMe?.emailVerified && (
               <Box
                 css={{
                   color: '$green11',
@@ -83,14 +115,31 @@ export const PrivateData = () => {
           {formik.errors.email && (
             <FormHelperError>{formik.errors.email}</FormHelperError>
           )}
+          {userMe && userMe.email && !userMe.emailVerified && (
+            <FormHelper>
+              Your email is not verified, please verify it.{' '}
+              <Box
+                as="a"
+                css={{
+                  color: '$orange11',
+                  boxShadow: '0 1px 0 0',
+                  cursor: 'pointer',
+                }}
+                onClick={() => resendVerificationUserEmail()}
+              >
+                Resend verification email.
+              </Box>
+            </FormHelper>
+          )}
           <FormHelper>
-            Add your email <em>(optional)</em> to receive updates and feature
-            releases from us and subscribe faster to writers. <br />
+            Include your email <em>(optional)</em> to stay informed about
+            updates and new features from us and quickly subscribe to writers.
+            <br />
             Max. 100 Characters
           </FormHelper>
         </FormRow>
 
-        <Flex
+        {/* <Flex
           align="center"
           justify="between"
           css={{
@@ -115,7 +164,7 @@ export const PrivateData = () => {
           >
             <SwitchThumb />
           </Switch>
-        </Flex>
+        </Flex> */}
         {formik.dirty && <UnsavedChanges saving={formik.isSubmitting} />}
       </Box>
     </SettingsLayout>

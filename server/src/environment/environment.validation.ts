@@ -45,6 +45,29 @@ export class EnvironmentVariables {
   NEXTAUTH_SECRET: string;
 
   /**
+   * Transactional email
+   */
+  @IsString()
+  @IsOptional()
+  EMAIL_SERVER_USER: string;
+
+  @IsString()
+  @IsOptional()
+  EMAIL_SERVER_PASSWORD: string;
+
+  @IsString()
+  @IsOptional()
+  EMAIL_SERVER_HOST: string;
+
+  @IsString()
+  @IsOptional()
+  EMAIL_SERVER_PORT: string;
+
+  @IsString()
+  @IsOptional()
+  EMAIL_FROM: string;
+
+  /**
    * App config variables
    */
   @IsString()
