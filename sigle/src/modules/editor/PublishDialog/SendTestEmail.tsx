@@ -23,21 +23,25 @@ export const SendTestEmail = ({ story }: SendTestEmailProps) => {
   const [success, setSuccess] = useState<boolean>(false);
   const [emails, setEmails] = useState<string>('');
 
-  const { mutate: sendStoryTest } = useSendStoryTest({
-    onError: (error: Error | ApiError) => {
-      let errorMessage = error.message;
-      if (error instanceof ApiError && error.body.message) {
-        errorMessage = error.body.message;
-      }
-      setError(errorMessage);
-    },
-    onSuccess: () => {
-      setSuccess(true);
-    },
-  });
+  const { mutate: sendStoryTest, isLoading: isLoadingSendStoryTest } =
+    useSendStoryTest({
+      onError: (error: Error | ApiError) => {
+        let errorMessage = error.message;
+        if (error instanceof ApiError && error.body.message) {
+          errorMessage = error.body.message;
+        }
+        setError(errorMessage);
+      },
+      onSuccess: () => {
+        setSuccess(true);
+      },
+    });
 
   const handleSubmitForm = (e: any) => {
     e.preventDefault();
+    if (isLoadingSendStoryTest) {
+      return;
+    }
     setError(null);
     setSuccess(false);
 
@@ -78,7 +82,9 @@ export const SendTestEmail = ({ story }: SendTestEmailProps) => {
                 },
               }}
             />
-            <Button css={{ mt: '$3' }}>Send test email</Button>
+            <Button css={{ mt: '$3' }} disabled={isLoadingSendStoryTest}>
+              Send test email
+            </Button>
             {error && (
               <Typography
                 size="subheading"
