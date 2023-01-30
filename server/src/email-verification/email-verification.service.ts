@@ -17,7 +17,7 @@ interface EmailVerificationToken {
 
 @Injectable()
 export class EmailVerificationService {
-  private readonly tokenExpiresIn = '10m';
+  private readonly tokenExpiresIn = '1h';
 
   constructor(
     private readonly configService: ConfigService<EnvironmentVariables>,
