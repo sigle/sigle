@@ -1,8 +1,10 @@
 import { FormikErrors, useFormik } from 'formik';
+import { useSession } from 'next-auth/react';
 import Image from 'next/image';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { ApiError } from '../../external/api';
 import { useCreateSubscribers } from '../../hooks/subscribers';
+import { useGetUserMe } from '../../hooks/users';
 import { styled } from '../../stitches.config';
 import {
   Button,
@@ -56,7 +58,11 @@ export const SubscribeModal = ({
   open,
   onClose,
 }: SubscribeModalProps) => {
-  // temp state to show success state of form
+  const { status } = useSession();
+  const { data: userMe } = useGetUserMe({
+    enabled: status === 'authenticated',
+    refetchOnMount: false,
+  });
   const [success, setSuccess] = useState(false);
   const formik = useFormik<SettingsFormValues>({
     initialValues: {
@@ -68,11 +74,6 @@ export const SubscribeModal = ({
       if (!values.email) {
         errors.email = 'No email has been entered';
       }
-
-      if (values.email && values.email.length > 100) {
-        errors.email = 'Name too long';
-      }
-
       if (values.email && !isValidEmail(values.email)) {
         errors.email = 'Invalid email, enter a new one.';
       }
@@ -90,6 +91,12 @@ export const SubscribeModal = ({
       });
     },
   });
+
+  useEffect(() => {
+    if (userMe && userMe.email && userMe.emailVerified) {
+      formik.setFieldValue('email', userMe.email);
+    }
+  }, [userMe]);
 
   const { mutate: createSubscribers, isLoading: isLoadingCreateSubscriber } =
     useCreateSubscribers({
@@ -172,6 +179,7 @@ export const SubscribeModal = ({
                 maxLength={100}
                 value={formik.values.email}
                 onChange={formik.handleChange}
+                disabled={userMe && !!userMe.email && !!userMe.emailVerified}
                 css={{ width: '100%' }}
                 type="email"
                 placeholder="johndoe@gmail.com"
