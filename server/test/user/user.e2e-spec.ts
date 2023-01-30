@@ -90,6 +90,8 @@ describe('UserController (e2e)', () => {
         id: expect.any(String),
         stacksAddress,
         newsletter: null,
+        email: null,
+        emailVerified: null,
       });
     });
   });
