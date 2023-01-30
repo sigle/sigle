@@ -2,4 +2,4 @@
 '@sigle/server': minor
 ---
 
-Verify email logic and routes.
+Create the POST /api/email-verification/\* route to let a user link an email to his account.
