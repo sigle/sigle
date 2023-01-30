@@ -303,6 +303,10 @@ export class StoriesService {
     }
   }
 
+  /**
+   * Send test email before publishing a story.
+   * Max 5 emails per call.
+   */
   async sendTestStory({
     stacksAddress,
     gaiaId,
@@ -313,7 +317,7 @@ export class StoriesService {
     emails: string;
   }) {
     // Validate emails are valid
-    const emailList = emails.split(',');
+    const emailList = emails.split(',').map((email) => email.trim());
     const invalidEmails = emailList.filter((email) => !isEmail(email));
     if (invalidEmails.length > 0) {
       throw new BadRequestException(
