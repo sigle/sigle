@@ -316,7 +316,7 @@ export class StoriesService {
     gaiaId: string;
     emails: string;
   }) {
-    // Validate emails are valid
+    // Verify emails are valid
     const emailList = emails.split(',').map((email) => email.trim());
     const invalidEmails = emailList.filter((email) => !isEmail(email));
     if (invalidEmails.length > 0) {
