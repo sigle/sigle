@@ -24,6 +24,7 @@ import {
 import { VisuallyHidden } from '../../ui/VisuallyHidden';
 import { useAuth } from '../auth/AuthContext';
 import { PublishAndSendDialog } from './PublishAndSendDialog';
+import { SendTestEmail } from './PublishDialog/SendTestEmail';
 import { TwitterCardPreview } from './TwitterCardPreview';
 
 const StyledTabsTrigger = styled(TabsTrigger, {
@@ -264,6 +265,19 @@ export const PublishDialog = ({
                         )}
                       </div>
                     )}
+                  </TabsContent>
+
+                  <TabsContent
+                    css={{
+                      display: 'flex',
+                      flexDirection: 'column',
+                      gap: '$5',
+                    }}
+                    value="publish and send"
+                  >
+                    {!isStoryAlreadySent &&
+                      hasActiveSubscription &&
+                      isNewsletterActive && <SendTestEmail story={story} />}
                   </TabsContent>
                 </Tabs>
               </Flex>

@@ -64,6 +64,8 @@ export const allowedNewsletterUsers = [
   'SP339T41DGKV2ZR8ACAT630V8KWJVSJME2MK5ZXCB',
   // xverseapp.id.stx
   'SPNW0Q9NE7GSFH10RKYWEN68FBQ9V5JFWCN8SK31',
+  // liquidium.btc
+  'SPYHY9MV6S08YJQVW0R400ADXZBBJ0GM096BMY34',
 ];
 if (sigleConfig.env === 'development') {
   // gregogun.btc
