@@ -40,24 +40,20 @@ export const SettingsLayout = ({
       path: '/settings',
     },
     {
+      name: 'Email',
+      path: '/settings/email',
+    },
+    {
       name: 'Plans',
       path: '/settings/plans',
     },
   ];
 
   if (!loggingIn && isNewsletterWhitelisted) {
-    navItems.splice(
-      1,
-      0,
-      // {
-      //   name: 'Private data',
-      //   path: '/settings/private-data',
-      // },
-      {
-        name: 'Newsletter',
-        path: '/settings/newsletter',
-      }
-    );
+    navItems.splice(2, 0, {
+      name: 'Newsletter',
+      path: '/settings/newsletter',
+    });
   }
 
   return (
