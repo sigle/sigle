@@ -20,11 +20,6 @@ import {
   TabsList,
   TabsTrigger,
   Typography,
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-  FormTextarea,
 } from '../../ui';
 import { VisuallyHidden } from '../../ui/VisuallyHidden';
 import { useAuth } from '../auth/AuthContext';
