@@ -20,7 +20,7 @@ import { useBubbleMenuStore } from './store';
 const globalStylesBubbleMenu = globalCss({
   ".tippy-box[data-theme~='sigle-editor-bubble-menu']": {
     backgroundColor: '$gray11',
-    br: '$sm',
+    br: '$md',
   },
   ".tippy-box[data-theme~='sigle-editor-bubble-menu'][data-placement^='top'] > .tippy-arrow::before":
     {
