@@ -27,11 +27,11 @@ import TipTapTypography from '@tiptap/extension-typography';
 import TipTapUnderline from '@tiptap/extension-underline';
 import TipTapCodeBlockLowlight from '@tiptap/extension-code-block-lowlight';
 import CharacterCount from '@tiptap/extension-character-count';
-import { clarity } from './highlight/clarity-syntax';
+import { useTheme } from 'next-themes';
 import { keyframes, styled } from '@sigle/stitches.config';
 import { useWindowSize } from '@/hooks/useWindowSize';
+import { clarity } from './highlight/clarity-syntax';
 import { TipTapPlaceholder } from './extensions/Placeholder';
-import { useTheme } from 'next-themes';
 import { EditorBottomInfo } from './EditorBottomInfo';
 
 lowlight.registerLanguage('clarity (beta)', clarity);

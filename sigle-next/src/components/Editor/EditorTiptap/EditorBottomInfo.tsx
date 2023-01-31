@@ -1,8 +1,8 @@
-import { styled } from '@sigle/stitches.config';
-import { Container, IconButton, Typography } from '@sigle/ui';
 import { Editor } from '@tiptap/react';
 import { useTheme } from 'next-themes';
 import { TbKeyboard, TbSun } from 'react-icons/tb';
+import { Container, IconButton, Typography } from '@sigle/ui';
+import { styled } from '@sigle/stitches.config';
 
 const StyledContainer = styled(Container, {
   position: 'fixed',

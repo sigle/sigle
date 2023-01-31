@@ -1,9 +1,9 @@
 import { TooltipProvider } from '@radix-ui/react-tooltip';
+import { Container } from '@sigle/ui';
 import { useCeramic } from '@/components/Ceramic/CeramicProvider';
 import { EditorHeader } from '@/components/Editor/EditorHeader';
 import { EditorSettings } from '@/components/Editor/EditorSettings/EditorSettings';
 import { EditorTitle } from '@/components/Editor/EditorTitle';
-import { Container } from '@sigle/ui';
 import { EditorTipTap } from '@/components/Editor/EditorTiptap/EditorTipTap';
 
 const Editor = () => {
