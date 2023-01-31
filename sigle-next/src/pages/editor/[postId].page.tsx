@@ -4,6 +4,7 @@ import { EditorHeader } from '@/components/Editor/EditorHeader';
 import { EditorSettings } from '@/components/Editor/EditorSettings/EditorSettings';
 import { EditorTitle } from '@/components/Editor/EditorTitle';
 import { Container } from '@sigle/ui';
+import { EditorTipTap } from '@/components/Editor/EditorTiptap/EditorTipTap';
 
 const Editor = () => {
   // TODO suspense loading state when loading story
@@ -16,6 +17,7 @@ const Editor = () => {
         <EditorTitle />
       </Container>
       <EditorSettings />
+      <EditorTipTap />
     </>
   );
 };
