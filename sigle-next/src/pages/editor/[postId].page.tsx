@@ -15,9 +15,9 @@ const Editor = () => {
       <EditorHeader />
       <Container css={{ maxWidth: 720, pt: '56px', pb: '$5' }}>
         <EditorTitle />
+        <EditorTipTap />
       </Container>
       <EditorSettings />
-      <EditorTipTap />
     </>
   );
 };
