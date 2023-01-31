@@ -7,6 +7,8 @@ import {
   TbRocket,
 } from 'react-icons/tb';
 
+// Scroll logic taken from https://www.codemzy.com/blog/react-sticky-header-disappear-scroll
+
 const StyledEditorHeader = styled('header', {
   px: '$5',
   display: 'flex',
