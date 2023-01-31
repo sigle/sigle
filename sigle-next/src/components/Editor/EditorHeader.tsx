@@ -69,16 +69,16 @@ export const EditorHeader = () => {
       as="header"
     >
       <Flex justify="between" align="center" css={{ flex: 1 }}>
-        <IconButton size="sm" variant="ghost">
+        <IconButton size="sm" variant={{ '@initial': 'light', '@md': 'ghost' }}>
           <TbArrowLeft />
         </IconButton>
         <Flex align="center" gap="4">
-          <Button size="sm" variant="ghost">
+          <Button size="sm" variant={{ '@initial': 'light', '@md': 'ghost' }}>
             Save
           </Button>
           <Button
             size="sm"
-            variant="ghost"
+            variant={{ '@initial': 'light', '@md': 'ghost' }}
             color="indigo"
             rightIcon={<TbRocket />}
           >
@@ -86,7 +86,7 @@ export const EditorHeader = () => {
           </Button>
           <IconButton
             size="sm"
-            variant="ghost"
+            variant={{ '@initial': 'light', '@md': 'ghost' }}
             onClick={() => toggleMenu(!menuOpen)}
           >
             <TbLayoutSidebarRightExpand />

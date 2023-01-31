@@ -89,6 +89,7 @@ const StyledButton = styled('button', {
       },
       ghost: {
         color: '$gray11',
+        backgroundColor: 'transparent',
         '&:hover': {
           color: '$gray12',
           backgroundColor: '$gray5',
@@ -177,6 +178,7 @@ const StyledButton = styled('button', {
       color: 'indigo',
       css: {
         color: '$indigo11',
+        backgroundColor: 'transparent',
         '&:hover': {
           color: '$indigo12',
           backgroundColor: '$indigo5',
