@@ -1,7 +1,7 @@
-import { globalCss } from '@sigle/stitches.config';
-import { IconButton } from '@sigle/ui';
 import { Editor, FloatingMenu as TipTapFloatingMenu } from '@tiptap/react';
 import { TbPlus } from 'react-icons/tb';
+import { globalCss } from '@sigle/stitches.config';
+import { IconButton } from '@sigle/ui';
 
 // Tippyjs theme used by the slash command menu
 const globalStylesCustomEditor = globalCss({
