@@ -28,6 +28,7 @@ const inter = Inter({
 const globalStyle = globalCss({
   ...tailwindStyles,
   body: {
+    ...tailwindStyles.body,
     fontFamily: 'var(--font-inter)',
     backgroundColor: '$gray1',
     color: '$gray11',
