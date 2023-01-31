@@ -77,6 +77,7 @@ export const EditorSettings = () => {
             </IconLink>
           </Flex>
         </StorySettingsRow>
+        {/* TODO preview social */}
       </Flex>
 
       <Flex css={{ mt: '$8' }}>
