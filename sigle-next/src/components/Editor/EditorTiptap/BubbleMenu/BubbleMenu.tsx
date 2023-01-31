@@ -56,7 +56,7 @@ const BubbleMenuButton = styled('button', {
   variants: {
     active: {
       true: {
-        color: '$indigo8',
+        color: '$indigo9',
       },
     },
   },
