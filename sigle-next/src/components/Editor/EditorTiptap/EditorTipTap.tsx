@@ -32,6 +32,7 @@ import { keyframes, styled } from '@sigle/stitches.config';
 import { useWindowSize } from '@/hooks/useWindowSize';
 import { TipTapPlaceholder } from './extensions/Placeholder';
 import { useTheme } from 'next-themes';
+import { EditorBottomInfo } from './EditorBottomInfo';
 
 lowlight.registerLanguage('clarity (beta)', clarity);
 
@@ -131,6 +132,7 @@ export const EditorTipTap = () => {
   return (
     <div className="prose dark:prose-invert lg:prose-lg">
       <StyledEditorContent editor={editor} />
+      {editor && <EditorBottomInfo editor={editor} />}
     </div>
   );
 };
