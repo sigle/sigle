@@ -12,7 +12,6 @@ import { SlashCommandsCommand } from './SlashCommands';
 const globalStylesSlashCommand = globalCss({
   ".tippy-box[data-theme~='sigle-editor']": {
     backgroundColor: '$gray1',
-    br: '$sm',
   },
   ".tippy-box[data-theme~='sigle-editor'] .tippy-content": {
     overflow: 'hidden',
@@ -20,6 +19,7 @@ const globalStylesSlashCommand = globalCss({
     backgroundColor: '$gray1',
     minWidth: '280px',
     boxShadow: '$lg',
+    br: '$sm',
   },
 });
 
