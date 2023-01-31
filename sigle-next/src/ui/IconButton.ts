@@ -88,6 +88,7 @@ export const IconButton = styled('button', {
       },
       ghost: {
         color: '$gray11',
+        backgroundColor: 'transparent',
         '&:hover': {
           color: '$gray12',
           backgroundColor: '$gray5',

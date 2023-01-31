@@ -4,6 +4,8 @@ import { Inter } from '@next/font/google';
 import { ThemeProvider } from 'next-themes';
 import dynamic from 'next/dynamic';
 import { ReactRelayContext } from 'react-relay';
+import 'tippy.js/dist/tippy.css';
+import 'tippy.js/themes/light-border.css';
 import { darkTheme, globalCss } from '@sigle/stitches.config';
 import { environment } from '@/lib/relay';
 import { tailwindStyles } from '@/styles/tailwind';
@@ -28,6 +30,7 @@ const inter = Inter({
 const globalStyle = globalCss({
   ...tailwindStyles,
   body: {
+    ...tailwindStyles.body,
     fontFamily: 'var(--font-inter)',
     backgroundColor: '$gray1',
     color: '$gray11',
