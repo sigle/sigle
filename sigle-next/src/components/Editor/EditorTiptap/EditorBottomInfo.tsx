@@ -13,9 +13,12 @@ const StyledContainer = styled(Container, {
   zIndex: 0,
   justifyContent: 'end',
   pointerEvents: 'none',
-  display: 'flex',
   alignItems: 'center',
   gap: '$3',
+  display: 'none',
+  '@md': {
+    display: 'flex',
+  },
 });
 
 interface EditorBottomInfoProps {
