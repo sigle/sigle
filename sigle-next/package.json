@@ -72,6 +72,7 @@
     "react-icons": "4.7.1",
     "react-relay": "14.1.0",
     "relay-runtime": "14.1.0",
+    "tippy.js": "6.3.7",
     "wagmi": "0.10.10",
     "zustand": "4.3.2"
   },

@@ -534,6 +534,7 @@ importers:
       relay-runtime: 14.1.0
       storybook: 7.0.0-beta.25
       style-loader: 3.3.1
+      tippy.js: 6.3.7
       typescript: 4.9.4
       wagmi: 0.10.10
       zustand: 4.3.2
@@ -598,6 +599,7 @@ importers:
       react-icons: 4.7.1_react@18.2.0
       react-relay: 14.1.0_react@18.2.0
       relay-runtime: 14.1.0
+      tippy.js: 6.3.7
       wagmi: 0.10.10_np6otfa6zt4irkefc5u6wyuuwa
       zustand: 4.3.2_react@18.2.0
     devDependencies:

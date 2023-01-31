@@ -36,6 +36,8 @@ import { EditorBottomInfo } from './EditorBottomInfo';
 import { EditorBubbleMenu } from './BubbleMenu/BubbleMenu';
 import { EditorFloatingMenu } from './FloatingMenu/FloatingMenu';
 import { TipTapMobileScroll } from './extensions/MobileScroll';
+import { slashCommands } from './extensions/SlashCommand/commands';
+import { SlashCommands } from './extensions/SlashCommand/SlashCommands';
 
 lowlight.registerLanguage('clarity (beta)', clarity);
 
@@ -97,13 +99,13 @@ export const EditorTipTap = () => {
         levels: [2, 3],
       }),
       TipTapHorizontalRule,
-      //   TipTapCodeBlockLowlight.extend({
-      //     addNodeView() {
-      //       return ReactNodeViewRenderer(CodeBlockComponent);
-      //     },
-      //   }).configure({
-      //     lowlight,
-      //   }),
+      // TipTapCodeBlockLowlight.extend({
+      //   addNodeView() {
+      //     return ReactNodeViewRenderer(CodeBlockComponent);
+      //   },
+      // }).configure({
+      //   lowlight,
+      // }),
       //   TipTapImage,
       // Marks
       TipTapBold,
@@ -122,11 +124,11 @@ export const EditorTipTap = () => {
       // Custom extensions
       //   TipTapTwitter,
       //   TipTapCta,
-      //   !isMobile
-      //     ? SlashCommands.configure({
-      //         commands: slashCommands({ storyId: story.id }),
-      //       })
-      //     : undefined,
+      !isMobile
+        ? SlashCommands.configure({
+            commands: slashCommands,
+          })
+        : undefined,
       isMobile ? TipTapMobileScroll : undefined,
     ] as Extensions,
     content: '',
