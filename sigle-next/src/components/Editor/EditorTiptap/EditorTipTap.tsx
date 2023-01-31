@@ -31,6 +31,7 @@ import { clarity } from './highlight/clarity-syntax';
 import { keyframes, styled } from '@sigle/stitches.config';
 import { useWindowSize } from '@/hooks/useWindowSize';
 import { TipTapPlaceholder } from './extensions/Placeholder';
+import { useTheme } from 'next-themes';
 
 lowlight.registerLanguage('clarity (beta)', clarity);
 
@@ -68,6 +69,7 @@ const StyledEditorContent = styled(EditorContent, {
 });
 
 export const EditorTipTap = () => {
+  const { resolvedTheme } = useTheme();
   const { width } = useWindowSize();
   const isMobile = width ? width < 768 : false;
 
@@ -106,10 +108,10 @@ export const EditorTipTap = () => {
       TipTapStrike,
       TipTapUnderline,
       // Extensions
-      //   TipTapDropcursor.configure({
-      //     color: resolvedTheme === 'dark' ? '#505050' : '#c7c7c7',
-      //     width: 2,
-      //   }),
+      TipTapDropcursor.configure({
+        color: resolvedTheme === 'dark' ? '#505050' : '#c7c7c7',
+        width: 2,
+      }),
       TipTapHistory,
       TipTapPlaceholder(isMobile),
       TipTapTypography,
