@@ -456,6 +456,7 @@ importers:
       '@composedb/devtools-node': 0.3.1
       '@didtools/pkh-ethereum': 0.0.3
       '@next/font': 13.1.4
+      '@radix-ui/react-dialog': 1.0.2
       '@radix-ui/react-dropdown-menu': 2.0.1
       '@radix-ui/react-switch': 1.0.1
       '@radix-ui/react-tooltip': 1.0.2
@@ -501,6 +502,7 @@ importers:
       '@composedb/client': 0.3.1
       '@didtools/pkh-ethereum': 0.0.3
       '@next/font': 13.1.4
+      '@radix-ui/react-dialog': 1.0.2_ib3m5ricvtkl2cll7qpr2f6lvq
       '@radix-ui/react-dropdown-menu': 2.0.1_ib3m5ricvtkl2cll7qpr2f6lvq
       '@radix-ui/react-switch': 1.0.1_biqbaboplfbrettd7655fr4n2y
       '@radix-ui/react-tooltip': 1.0.2_ib3m5ricvtkl2cll7qpr2f6lvq
@@ -2490,7 +2492,7 @@ packages:
     engines: {node: '>=6.9.0'}
     dependencies:
       core-js-pure: 3.27.1
-      regenerator-runtime: 0.13.9
+      regenerator-runtime: 0.13.11
     dev: true
 
   /@babel/runtime/7.17.9:
@@ -2504,7 +2506,6 @@ packages:
     engines: {node: '>=6.9.0'}
     dependencies:
       regenerator-runtime: 0.13.11
-    dev: true
 
   /@babel/template/7.16.7:
     resolution: {integrity: sha512-I8j/x8kHUrbYRTUxXrrMbfCa7jxkE7tZre39x3kjr9hvI82cK1FfqLygotcWN5kdPGWcLdWMHpSBavse5tWw3w==}
@@ -5389,7 +5390,7 @@ packages:
   /@radix-ui/primitive/1.0.0:
     resolution: {integrity: sha512-3e7rn8FDMin4CgeL7Z/49smCA3rFYY3Ha2rUQ7HRWFadS5iCRw08ZgVT1LaNTCNqgvrUiyczLflrVrF0SRQtNA==}
     dependencies:
-      '@babel/runtime': 7.17.9
+      '@babel/runtime': 7.20.13
     dev: false
 
   /@radix-ui/react-accordion/1.0.1_biqbaboplfbrettd7655fr4n2y:
@@ -5417,7 +5418,7 @@ packages:
       react: ^16.8 || ^17.0 || ^18.0
       react-dom: ^16.8 || ^17.0 || ^18.0
     dependencies:
-      '@babel/runtime': 7.17.9
+      '@babel/runtime': 7.20.13
       '@radix-ui/react-primitive': 1.0.1_biqbaboplfbrettd7655fr4n2y
       react: 18.2.0
       react-dom: 18.2.0_react@18.2.0
@@ -5448,7 +5449,7 @@ packages:
       react: ^16.8 || ^17.0 || ^18.0
       react-dom: ^16.8 || ^17.0 || ^18.0
     dependencies:
-      '@babel/runtime': 7.17.9
+      '@babel/runtime': 7.20.13
       '@radix-ui/react-compose-refs': 1.0.0_react@18.2.0
       '@radix-ui/react-context': 1.0.0_react@18.2.0
       '@radix-ui/react-primitive': 1.0.1_biqbaboplfbrettd7655fr4n2y
@@ -5462,7 +5463,7 @@ packages:
     peerDependencies:
       react: ^16.8 || ^17.0 || ^18.0
     dependencies:
-      '@babel/runtime': 7.17.9
+      '@babel/runtime': 7.20.13
       react: 18.2.0
     dev: false
 
@@ -5471,7 +5472,7 @@ packages:
     peerDependencies:
       react: ^16.8 || ^17.0 || ^18.0
     dependencies:
-      '@babel/runtime': 7.17.9
+      '@babel/runtime': 7.20.13
       react: 18.2.0
     dev: false
 
@@ -5481,7 +5482,7 @@ packages:
       react: ^16.8 || ^17.0 || ^18.0
       react-dom: ^16.8 || ^17.0 || ^18.0
     dependencies:
-      '@babel/runtime': 7.17.9
+      '@babel/runtime': 7.20.13
       '@radix-ui/primitive': 1.0.0
       '@radix-ui/react-compose-refs': 1.0.0_react@18.2.0
       '@radix-ui/react-context': 1.0.0_react@18.2.0
@@ -5507,7 +5508,7 @@ packages:
     peerDependencies:
       react: ^16.8 || ^17.0 || ^18.0
     dependencies:
-      '@babel/runtime': 7.17.9
+      '@babel/runtime': 7.20.13
       react: 18.2.0
     dev: false
 
@@ -5517,7 +5518,7 @@ packages:
       react: ^16.8 || ^17.0 || ^18.0
       react-dom: ^16.8 || ^17.0 || ^18.0
     dependencies:
-      '@babel/runtime': 7.17.9
+      '@babel/runtime': 7.20.13
       '@radix-ui/primitive': 1.0.0
       '@radix-ui/react-compose-refs': 1.0.0_react@18.2.0
       '@radix-ui/react-primitive': 1.0.1_biqbaboplfbrettd7655fr4n2y
@@ -5552,7 +5553,7 @@ packages:
     peerDependencies:
       react: ^16.8 || ^17.0 || ^18.0
     dependencies:
-      '@babel/runtime': 7.17.9
+      '@babel/runtime': 7.20.13
       react: 18.2.0
     dev: false
 
@@ -5562,7 +5563,7 @@ packages:
       react: ^16.8 || ^17.0 || ^18.0
       react-dom: ^16.8 || ^17.0 || ^18.0
     dependencies:
-      '@babel/runtime': 7.17.9
+      '@babel/runtime': 7.20.13
       '@radix-ui/react-compose-refs': 1.0.0_react@18.2.0
       '@radix-ui/react-primitive': 1.0.1_biqbaboplfbrettd7655fr4n2y
       '@radix-ui/react-use-callback-ref': 1.0.0_react@18.2.0
@@ -5605,7 +5606,7 @@ packages:
     peerDependencies:
       react: ^16.8 || ^17.0 || ^18.0
     dependencies:
-      '@babel/runtime': 7.17.9
+      '@babel/runtime': 7.20.13
       '@radix-ui/react-use-layout-effect': 1.0.0_react@18.2.0
       react: 18.2.0
     dev: false
@@ -5669,7 +5670,7 @@ packages:
       react: ^16.8 || ^17.0 || ^18.0
       react-dom: ^16.8 || ^17.0 || ^18.0
     dependencies:
-      '@babel/runtime': 7.17.9
+      '@babel/runtime': 7.20.13
       '@radix-ui/react-primitive': 1.0.1_biqbaboplfbrettd7655fr4n2y
       react: 18.2.0
       react-dom: 18.2.0_react@18.2.0
@@ -5681,7 +5682,7 @@ packages:
       react: ^16.8 || ^17.0 || ^18.0
       react-dom: ^16.8 || ^17.0 || ^18.0
     dependencies:
-      '@babel/runtime': 7.17.9
+      '@babel/runtime': 7.20.13
       '@radix-ui/react-compose-refs': 1.0.0_react@18.2.0
       '@radix-ui/react-use-layout-effect': 1.0.0_react@18.2.0
       react: 18.2.0
@@ -5694,7 +5695,7 @@ packages:
       react: ^16.8 || ^17.0 || ^18.0
       react-dom: ^16.8 || ^17.0 || ^18.0
     dependencies:
-      '@babel/runtime': 7.17.9
+      '@babel/runtime': 7.20.13
       '@radix-ui/react-slot': 1.0.1_react@18.2.0
       react: 18.2.0
       react-dom: 18.2.0_react@18.2.0
@@ -5727,7 +5728,7 @@ packages:
       react: ^16.8 || ^17.0 || ^18.0
       react-dom: ^16.8 || ^17.0 || ^18.0
     dependencies:
-      '@babel/runtime': 7.17.9
+      '@babel/runtime': 7.20.13
       '@radix-ui/primitive': 1.0.0
       '@radix-ui/react-collection': 1.0.1_biqbaboplfbrettd7655fr4n2y
       '@radix-ui/react-compose-refs': 1.0.0_react@18.2.0
@@ -5766,7 +5767,7 @@ packages:
     peerDependencies:
       react: ^16.8 || ^17.0 || ^18.0
     dependencies:
-      '@babel/runtime': 7.17.9
+      '@babel/runtime': 7.20.13
       '@radix-ui/react-compose-refs': 1.0.0_react@18.2.0
       react: 18.2.0
     dev: false
@@ -5838,7 +5839,7 @@ packages:
     peerDependencies:
       react: ^16.8 || ^17.0 || ^18.0
     dependencies:
-      '@babel/runtime': 7.17.9
+      '@babel/runtime': 7.20.13
       react: 18.2.0
     dev: false
 
@@ -5847,7 +5848,7 @@ packages:
     peerDependencies:
       react: ^16.8 || ^17.0 || ^18.0
     dependencies:
-      '@babel/runtime': 7.17.9
+      '@babel/runtime': 7.20.13
       '@radix-ui/react-use-callback-ref': 1.0.0_react@18.2.0
       react: 18.2.0
     dev: false
@@ -5857,7 +5858,7 @@ packages:
     peerDependencies:
       react: ^16.8 || ^17.0 || ^18.0
     dependencies:
-      '@babel/runtime': 7.17.9
+      '@babel/runtime': 7.20.13
       '@radix-ui/react-use-callback-ref': 1.0.0_react@18.2.0
       react: 18.2.0
     dev: false
@@ -5867,7 +5868,7 @@ packages:
     peerDependencies:
       react: ^16.8 || ^17.0 || ^18.0
     dependencies:
-      '@babel/runtime': 7.17.9
+      '@babel/runtime': 7.20.13
       react: 18.2.0
     dev: false
 
@@ -5885,7 +5886,7 @@ packages:
     peerDependencies:
       react: ^16.8 || ^17.0 || ^18.0
     dependencies:
-      '@babel/runtime': 7.17.9
+      '@babel/runtime': 7.20.13
       '@radix-ui/rect': 1.0.0
       react: 18.2.0
     dev: false
@@ -5915,7 +5916,7 @@ packages:
   /@radix-ui/rect/1.0.0:
     resolution: {integrity: sha512-d0O68AYy/9oeEy1DdC07bz1/ZXX+DqCskRd3i4JzLSTXwefzaepQrKjXC7aNM8lTHjFLDO0pDgaEiQ7jEk+HVg==}
     dependencies:
-      '@babel/runtime': 7.17.9
+      '@babel/runtime': 7.20.13
     dev: false
 
   /@rollup/plugin-commonjs/24.0.0_rollup@2.78.0:
@@ -6315,7 +6316,7 @@ packages:
     resolution: {integrity: sha512-YrgX3Py7ylh8NYkbanoINUPCj//bWUjYZ5/WPy9nQ9SK3Cl7QWCR+NmbDjmC/fTspZGR+VO9LTQslM++jr5PRw==}
     engines: {node: '>=12.20.0'}
     dependencies:
-      '@babel/runtime': 7.17.9
+      '@babel/runtime': 7.20.13
       '@noble/ed25519': 1.7.1
       '@noble/hashes': 1.1.2
       '@noble/secp256k1': 1.6.3
@@ -7286,7 +7287,7 @@ packages:
       global: 4.4.0
       react: 18.2.0
       react-dom: 18.2.0_react@18.2.0
-      regenerator-runtime: 0.13.9
+      regenerator-runtime: 0.13.11
     dev: true
 
   /@storybook/addons/7.0.0-beta.25_biqbaboplfbrettd7655fr4n2y:
@@ -7324,7 +7325,7 @@ packages:
       memoizerific: 1.11.3
       react: 18.2.0
       react-dom: 18.2.0_react@18.2.0
-      regenerator-runtime: 0.13.9
+      regenerator-runtime: 0.13.11
       store2: 2.14.2
       telejson: 6.0.8
       ts-dedent: 2.2.0
@@ -8104,7 +8105,7 @@ packages:
       qs: 6.11.0
       react: 18.2.0
       react-dom: 18.2.0_react@18.2.0
-      regenerator-runtime: 0.13.9
+      regenerator-runtime: 0.13.11
     dev: true
 
   /@storybook/router/7.0.0-beta.25_biqbaboplfbrettd7655fr4n2y:
@@ -8179,7 +8180,7 @@ packages:
       memoizerific: 1.11.3
       react: 18.2.0
       react-dom: 18.2.0_react@18.2.0
-      regenerator-runtime: 0.13.9
+      regenerator-runtime: 0.13.11
     dev: true
 
   /@storybook/theming/7.0.0-beta.25_biqbaboplfbrettd7655fr4n2y:
@@ -10797,7 +10798,7 @@ packages:
     resolution: {integrity: sha512-o/HelwhuKpTj/frsOsbNLNgnNGVIFsVP/SW2BSF14gVl7kAfMOJ6/8wUAUvG1R1NHKrfG+2sHZTu0yauT1qBrA==}
     engines: {node: '>=6.0'}
     dependencies:
-      '@babel/runtime': 7.17.9
+      '@babel/runtime': 7.20.13
       '@babel/runtime-corejs3': 7.17.9
     dev: true
 
@@ -13597,10 +13598,10 @@ packages:
       eslint-import-resolver-webpack:
         optional: true
     dependencies:
-      '@typescript-eslint/parser': 5.45.0_tqvwk7sh3taph5wf7sr5z34mke
+      '@typescript-eslint/parser': 5.45.0_iukboom6ndih5an6iafl45j2fe
       debug: 3.2.7
       eslint-import-resolver-node: 0.3.6
-      eslint-import-resolver-typescript: 3.5.2_ktrec6dplf4now6nlbc6d67jee
+      eslint-import-resolver-typescript: 3.5.2_ol7jqilc3wemtdbq3nzhywgxq4
       find-up: 2.1.0
     transitivePeerDependencies:
       - supports-color
@@ -14094,7 +14095,7 @@ packages:
     resolution: {integrity: sha512-A8tG4Z4iNg4mw5tP1Vung9N9IjgMNqpiMoJ/FouSFwNCGHv2X0mmOYwtQOJzki6XN7r7Tyo01S29p7b224I4jw==}
     dependencies:
       '@babel/plugin-transform-runtime': 7.19.6
-      '@babel/runtime': 7.17.9
+      '@babel/runtime': 7.20.13
       eth-query: 2.1.2
       json-rpc-random-id: 1.0.1
       pify: 3.0.0
@@ -20574,7 +20575,7 @@ packages:
     dependencies:
       '@babel/core': 7.20.12
       '@babel/generator': 7.20.7
-      '@babel/runtime': 7.17.9
+      '@babel/runtime': 7.20.13
       ast-types: 0.14.2
       commander: 2.20.3
       doctrine: 3.0.0
@@ -20964,7 +20965,6 @@ packages:
 
   /regenerator-runtime/0.13.11:
     resolution: {integrity: sha512-kY1AZVr2Ra+t+piVaJ4gxaFaReZVH40AKNo7UCX6W+dEwBo/2oZJzqfuN1qLq1oL45o56cPaTXELwrTh8Fpggg==}
-    dev: true
 
   /regenerator-runtime/0.13.9:
     resolution: {integrity: sha512-p3VT+cOEgxFsRRA9X4lkI1E+k2/CtnKtU4gcxyaCUreilL/vqI6CdZ3wxVUx3UOUg+gnUOQQcRI7BmSI656MYA==}
@@ -20972,7 +20972,7 @@ packages:
   /regenerator-transform/0.15.1:
     resolution: {integrity: sha512-knzmNAcuyxV+gQCufkYcvOqX/qIIfHLv0u5x79kRxuGojfYVky1f15TzZEu2Avte8QGepvUNTnLskf8E6X6Vyg==}
     dependencies:
-      '@babel/runtime': 7.17.9
+      '@babel/runtime': 7.20.13
     dev: true
 
   /regex-not/1.0.2:
@@ -21252,7 +21252,7 @@ packages:
   /rpc-websockets/7.5.0:
     resolution: {integrity: sha512-9tIRi1uZGy7YmDjErf1Ax3wtqdSSLIlnmL5OtOzgd5eqPKbsPpwDP5whUDO2LQay3Xp0CcHlcNSGzacNRluBaQ==}
     dependencies:
-      '@babel/runtime': 7.17.9
+      '@babel/runtime': 7.20.13
       eventemitter3: 4.0.7
       uuid: 8.3.2
       ws: 8.9.0_3cxu5zja4e2r5wmvge7mdcljwq

@@ -2,6 +2,7 @@ import { TooltipProvider } from '@radix-ui/react-tooltip';
 import { styled } from '@sigle/stitches.config';
 import { useCeramic } from '@/components/Ceramic/CeramicProvider';
 import { EditorHeader } from '@/components/Editor/EditorHeader';
+import { EditorSettings } from '@/components/Editor/EditorSettings/EditorSettings';
 
 const Box = styled('div', {});
 
@@ -12,7 +13,8 @@ const Editor = () => {
   return (
     <>
       <EditorHeader />
-      <Box css={{ height: 2000 }}>Hey</Box>
+      <Box css={{ height: 2000 }}></Box>
+      <EditorSettings />
     </>
   );
 };

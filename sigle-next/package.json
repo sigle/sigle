@@ -15,6 +15,7 @@
     "@composedb/client": "0.3.1",
     "@didtools/pkh-ethereum": "0.0.3",
     "@next/font": "13.1.4",
+    "@radix-ui/react-dialog": "1.0.2",
     "@radix-ui/react-dropdown-menu": "2.0.1",
     "@radix-ui/react-switch": "1.0.1",
     "@radix-ui/react-tooltip": "1.0.2",

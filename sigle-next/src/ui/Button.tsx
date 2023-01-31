@@ -105,6 +105,7 @@ const StyledButton = styled('button', {
     color: {
       gray: {},
       indigo: {},
+      orange: {},
     },
     hasIcon: {
       none: {},
@@ -186,6 +187,26 @@ const StyledButton = styled('button', {
         },
         '&:disabled': {
           color: '$indigo9',
+        },
+      },
+    },
+    {
+      variant: 'light',
+      color: 'orange',
+      css: {
+        color: '$orange11',
+        backgroundColor: '$orange3',
+        '&:hover': {
+          color: '$orange12',
+          backgroundColor: '$orange5',
+        },
+        '&:active': {
+          color: '$orange10',
+          backgroundColor: '$orange4',
+        },
+        '&:disabled': {
+          color: '$orange6',
+          backgroundColor: '$orange3',
         },
       },
     },
