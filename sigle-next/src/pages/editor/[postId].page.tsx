@@ -4,6 +4,7 @@ import { useCeramic } from '@/components/Ceramic/CeramicProvider';
 import { EditorHeader } from '@/components/Editor/EditorHeader';
 import { EditorSettings } from '@/components/Editor/EditorSettings/EditorSettings';
 import { EditorTitle } from '@/components/Editor/EditorTitle';
+import { Container } from '@sigle/ui';
 
 const Box = styled('div', {});
 
@@ -14,9 +15,9 @@ const Editor = () => {
   return (
     <>
       <EditorHeader />
-      <Box css={{ height: 2000 }}>
+      <Container css={{ maxWidth: 720, pt: '56px', pb: '$5' }}>
         <EditorTitle />
-      </Box>
+      </Container>
       <EditorSettings />
     </>
   );
