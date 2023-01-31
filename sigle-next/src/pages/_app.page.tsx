@@ -3,10 +3,10 @@ import Head from 'next/head';
 import { Inter } from '@next/font/google';
 import { ThemeProvider } from 'next-themes';
 import dynamic from 'next/dynamic';
-import '@sigle/tailwind-style/dist/tailwind.css';
 import { ReactRelayContext } from 'react-relay';
 import { darkTheme, globalCss } from '@sigle/stitches.config';
 import { environment } from '@/lib/relay';
+import { tailwindStyles } from '@/styles/tailwind';
 
 /**
  * Lazy load the WagmiProvider as it's huge to avoid bloating the main bundle
@@ -26,6 +26,7 @@ const inter = Inter({
 });
 
 const globalStyle = globalCss({
+  ...tailwindStyles,
   body: {
     fontFamily: 'var(--font-inter)',
     backgroundColor: '$gray1',
