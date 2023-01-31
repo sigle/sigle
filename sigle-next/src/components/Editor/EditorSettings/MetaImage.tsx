@@ -1,6 +1,6 @@
+import { TbCameraPlus } from 'react-icons/tb';
 import { styled } from '@sigle/stitches.config';
 import { Button, Typography } from '@sigle/ui';
-import { TbCameraPlus } from 'react-icons/tb';
 
 const StyledEmptyFrame = styled('div', {
   height: '200px',

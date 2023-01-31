@@ -1,6 +1,6 @@
+import { TbInfoCircle, TbTrash } from 'react-icons/tb';
 import { keyframes, styled } from '@sigle/stitches.config';
 import { Button, Flex, Input, Typography } from '@sigle/ui';
-import { TbInfoCircle, TbTrash } from 'react-icons/tb';
 import { useEditorStore } from '../store';
 import { EditorSettingsModal } from './EditorSettingsModal';
 import { MetaImage } from './MetaImage';
