@@ -5,6 +5,7 @@ const StyledInput = styled('input', {
   // Here we copy the styles of the prose h1
   fontSize: '$3xl',
   lineHeight: '$3xl',
+  fontWeight: '$bold',
   backgroundColor: 'transparent',
   outline: 'none',
   width: '100%',
@@ -20,10 +21,11 @@ export const EditorTitle = () => {
   return (
     <StyledInput
       placeholder="Title..."
-      value={storyTitle}
+      value={storyTitle || ''}
       onChange={(e) =>
         useEditorStore.setState({ story: { title: e.target.value } })
       }
+      maxLength={100}
     />
   );
 };
