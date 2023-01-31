@@ -38,6 +38,7 @@ import { EditorFloatingMenu } from './FloatingMenu/FloatingMenu';
 import { TipTapMobileScroll } from './extensions/MobileScroll';
 import { slashCommands } from './extensions/SlashCommand/commands';
 import { SlashCommands } from './extensions/SlashCommand/SlashCommands';
+import { CodeBlockComponent } from './extensions/CodeBlock/CodeBlock';
 
 lowlight.registerLanguage('clarity (beta)', clarity);
 
@@ -99,13 +100,13 @@ export const EditorTipTap = () => {
         levels: [2, 3],
       }),
       TipTapHorizontalRule,
-      // TipTapCodeBlockLowlight.extend({
-      //   addNodeView() {
-      //     return ReactNodeViewRenderer(CodeBlockComponent);
-      //   },
-      // }).configure({
-      //   lowlight,
-      // }),
+      TipTapCodeBlockLowlight.extend({
+        addNodeView() {
+          return ReactNodeViewRenderer(CodeBlockComponent);
+        },
+      }).configure({
+        lowlight,
+      }),
       //   TipTapImage,
       // Marks
       TipTapBold,
@@ -140,6 +141,7 @@ export const EditorTipTap = () => {
       {editor && <EditorBottomInfo editor={editor} />}
       {editor && !isMobile && <EditorBubbleMenu editor={editor} />}
       {editor && !isMobile && <EditorFloatingMenu editor={editor} />}
+      {/* TODO mobile toolbar */}
     </div>
   );
 };
