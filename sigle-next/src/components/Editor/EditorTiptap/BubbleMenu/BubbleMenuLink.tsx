@@ -1,7 +1,7 @@
-import { styled } from '@sigle/stitches.config';
-import { Flex } from '@sigle/ui';
 import { Editor } from '@tiptap/react';
 import { TbCross } from 'react-icons/tb';
+import { styled } from '@sigle/stitches.config';
+import { Flex } from '@sigle/ui';
 import { useBubbleMenuStore } from './store';
 
 const BubbleMenuButton = styled('button', {

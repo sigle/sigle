@@ -1,4 +1,3 @@
-import { globalCss, styled } from '@sigle/stitches.config';
 import {
   Editor,
   BubbleMenu as TipTapBubbleMenu,
@@ -13,6 +12,7 @@ import {
   TbStrikethrough,
   TbUnderline,
 } from 'react-icons/tb';
+import { globalCss, styled } from '@sigle/stitches.config';
 import { EditorBubbleMenuLink } from './BubbleMenuLink';
 import { useBubbleMenuStore } from './store';
 
