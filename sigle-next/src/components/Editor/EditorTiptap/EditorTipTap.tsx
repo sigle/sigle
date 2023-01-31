@@ -126,5 +126,9 @@ export const EditorTipTap = () => {
     content: '',
   });
 
-  return <StyledEditorContent editor={editor} />;
+  return (
+    <div className="prose dark:prose-invert lg:prose-lg">
+      <StyledEditorContent editor={editor} />
+    </div>
+  );
 };
