@@ -34,6 +34,7 @@ import { clarity } from './highlight/clarity-syntax';
 import { TipTapPlaceholder } from './extensions/Placeholder';
 import { EditorBottomInfo } from './EditorBottomInfo';
 import { EditorBubbleMenu } from './BubbleMenu/BubbleMenu';
+import { EditorFloatingMenu } from './FloatingMenu/FloatingMenu';
 
 lowlight.registerLanguage('clarity (beta)', clarity);
 
@@ -135,6 +136,7 @@ export const EditorTipTap = () => {
       <StyledEditorContent editor={editor} />
       {editor && <EditorBottomInfo editor={editor} />}
       {editor && !isMobile && <EditorBubbleMenu editor={editor} />}
+      {editor && !isMobile && <EditorFloatingMenu editor={editor} />}
     </div>
   );
 };
