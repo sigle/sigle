@@ -5,7 +5,7 @@ interface EditorState {
   toggleMenu: (menuOpen: boolean) => void;
 }
 
-export const useDashboardStore = create<EditorState>()((set) => ({
+export const useEditorStore = create<EditorState>()((set) => ({
   menuOpen: false,
   toggleMenu: (menuOpen) => set(() => ({ menuOpen })),
 }));

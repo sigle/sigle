@@ -6,6 +6,7 @@ import {
 } from 'react-icons/tb';
 import { styled } from '@sigle/stitches.config';
 import { Button, Flex, IconButton } from '@sigle/ui';
+import { useEditorStore } from './store';
 
 // Scroll logic taken from https://www.codemzy.com/blog/react-sticky-header-disappear-scroll
 
@@ -36,6 +37,8 @@ const StyledEditorHeader = styled('header', {
 });
 
 export const EditorHeader = () => {
+  const menuOpen = useEditorStore((state) => state.menuOpen);
+  const toggleMenu = useEditorStore((state) => state.toggleMenu);
   const [scrollDirection, setScrollDirection] = useState<'down' | 'up' | null>(
     null
   );
@@ -81,7 +84,11 @@ export const EditorHeader = () => {
           >
             Publish
           </Button>
-          <IconButton size="sm" variant="ghost">
+          <IconButton
+            size="sm"
+            variant="ghost"
+            onClick={() => toggleMenu(!menuOpen)}
+          >
             <TbLayoutSidebarRightExpand />
           </IconButton>
         </Flex>
