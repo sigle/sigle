@@ -1,7 +1,7 @@
-import { useCeramic } from '@/components/Ceramic/CeramicProvider';
-import { EditorHeader } from '@/components/Editor/EditorHeader';
 import { TooltipProvider } from '@radix-ui/react-tooltip';
 import { styled } from '@sigle/stitches.config';
+import { useCeramic } from '@/components/Ceramic/CeramicProvider';
+import { EditorHeader } from '@/components/Editor/EditorHeader';
 
 const Box = styled('div', {});
 

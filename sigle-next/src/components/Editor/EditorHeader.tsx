@@ -1,11 +1,11 @@
-import { styled } from '@sigle/stitches.config';
-import { Button, Flex, IconButton } from '@sigle/ui';
 import { useEffect, useState } from 'react';
 import {
   TbArrowLeft,
   TbLayoutSidebarRightExpand,
   TbRocket,
 } from 'react-icons/tb';
+import { styled } from '@sigle/stitches.config';
+import { Button, Flex, IconButton } from '@sigle/ui';
 
 // Scroll logic taken from https://www.codemzy.com/blog/react-sticky-header-disappear-scroll
 
