@@ -17,7 +17,7 @@ const StyledEditorHeader = styled('header', {
   borderBottom: 'solid 1px $gray6',
   height: '80px',
   position: 'sticky',
-  transition: 'all 500ms $ease-in-out',
+  transition: 'top 500ms $ease-in-out',
   backgroundColor: '$gray1',
   top: 0,
 
