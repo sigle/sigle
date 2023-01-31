@@ -1,6 +1,6 @@
 import TipTapPlaceholder from '@tiptap/extension-placeholder';
 
-export const Placeholder = (isMobile: boolean) => {
+const Placeholder = (isMobile: boolean) => {
   return TipTapPlaceholder.configure({
     showOnlyWhenEditable: true,
     includeChildren: true,
@@ -47,3 +47,5 @@ export const Placeholder = (isMobile: boolean) => {
     },
   });
 };
+
+export { Placeholder as TipTapPlaceholder };

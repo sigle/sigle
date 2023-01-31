@@ -29,6 +29,8 @@ import TipTapCodeBlockLowlight from '@tiptap/extension-code-block-lowlight';
 import CharacterCount from '@tiptap/extension-character-count';
 import { clarity } from './highlight/clarity-syntax';
 import { keyframes, styled } from '@sigle/stitches.config';
+import { useWindowSize } from '@/hooks/useWindowSize';
+import { TipTapPlaceholder } from './extensions/Placeholder';
 
 lowlight.registerLanguage('clarity (beta)', clarity);
 
@@ -38,6 +40,7 @@ const fadeInAnimation = keyframes({
 });
 
 const StyledEditorContent = styled(EditorContent, {
+  mt: '$8',
   '& .ProseMirror': {
     minHeight: 150,
   },
@@ -65,6 +68,9 @@ const StyledEditorContent = styled(EditorContent, {
 });
 
 export const EditorTipTap = () => {
+  const { width } = useWindowSize();
+  const isMobile = width ? width < 768 : false;
+
   const editor = useEditor({
     extensions: [
       CharacterCount,
@@ -105,7 +111,7 @@ export const EditorTipTap = () => {
       //     width: 2,
       //   }),
       TipTapHistory,
-      //   TipTapPlaceholder(isMobile),
+      TipTapPlaceholder(isMobile),
       TipTapTypography,
       // Custom extensions
       //   TipTapTwitter,
