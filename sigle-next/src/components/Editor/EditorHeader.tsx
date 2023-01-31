@@ -4,6 +4,7 @@ import {
   TbLayoutSidebarRightExpand,
   TbRocket,
 } from 'react-icons/tb';
+import Link from 'next/link';
 import { styled } from '@sigle/stitches.config';
 import { Button, Flex, IconButton } from '@sigle/ui';
 import { useEditorStore } from './store';
@@ -70,9 +71,14 @@ export const EditorHeader = () => {
       as="header"
     >
       <Flex justify="between" align="center" css={{ flex: 1 }}>
-        <IconButton size="sm" variant={{ '@initial': 'light', '@md': 'ghost' }}>
-          <TbArrowLeft />
-        </IconButton>
+        <Link href="/drafts">
+          <IconButton
+            size="sm"
+            variant={{ '@initial': 'light', '@md': 'ghost' }}
+          >
+            <TbArrowLeft />
+          </IconButton>
+        </Link>
         <Flex align="center" gap="4">
           <Button size="sm" variant={{ '@initial': 'light', '@md': 'ghost' }}>
             Save
