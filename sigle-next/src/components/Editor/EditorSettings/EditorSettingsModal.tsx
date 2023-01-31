@@ -3,9 +3,15 @@ import React from 'react';
 import { keyframes, styled } from '@sigle/stitches.config';
 import { useEditorStore } from '../store';
 
+const overlayOpacity = 0.7;
 const overlayShow = keyframes({
   '0%': { opacity: 0 },
-  '100%': { opacity: 0.7 },
+  '100%': { opacity: overlayOpacity },
+});
+
+const overlayHide = keyframes({
+  '0%': { opacity: overlayOpacity },
+  '100%': { opacity: 0 },
 });
 
 const StyledOverlay = styled(DialogPrimitive.Overlay, {
@@ -16,16 +22,25 @@ const StyledOverlay = styled(DialogPrimitive.Overlay, {
   bottom: 0,
   left: 0,
   backgroundColor: '$gray3',
-  opacity: '0.7',
+  opacity: overlayOpacity,
 
   '@media (prefers-reduced-motion: no-preference)': {
-    animation: `${overlayShow} 150ms $transitions$ease-in`,
+    '&[data-state="open"]': {
+      animation: `${overlayShow} 150ms $transitions$ease-in`,
+    },
+    '&[data-state="closed"]': {
+      animation: `${overlayHide} 150ms $transitions$ease-in`,
+    },
   },
 });
 
 const contentShow = keyframes({
   '0%': { opacity: 0, transform: 'translateX(100%)' },
   '100%': { opacity: 1, transform: 'translateX(0%)' },
+});
+const contentHide = keyframes({
+  '0%': { opacity: 1, transform: 'translateX(0%)' },
+  '100%': { opacity: 0, transform: 'translateX(100%)' },
 });
 
 const StyledContent = styled(DialogPrimitive.Content, {
@@ -44,10 +59,15 @@ const StyledContent = styled(DialogPrimitive.Content, {
   flexDirection: 'column',
   padding: '$5',
   overflowY: 'scroll',
+  willChange: 'translateX',
 
   '@media (prefers-reduced-motion: no-preference)': {
-    animation: `${contentShow} 150ms $transitions$ease-in-out`,
-    willChange: 'translateX',
+    '&[data-state="open"]': {
+      animation: `${contentShow} 150ms $transitions$ease-in-out`,
+    },
+    '&[data-state="closed"]': {
+      animation: `${contentHide} 150ms $transitions$ease-in-out`,
+    },
   },
 });
 
