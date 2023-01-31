@@ -3,6 +3,7 @@ import { Button, Flex, Input, Typography } from '@sigle/ui';
 import { TbInfoCircle, TbTrash } from 'react-icons/tb';
 import { useEditorStore } from '../store';
 import { EditorSettingsModal } from './EditorSettingsModal';
+import { MetaImage } from './MetaImage';
 
 const StorySettingsRow = styled('div', {
   display: 'flex',
@@ -35,6 +36,9 @@ export const EditorSettings = () => {
             Publish date
           </Typography>
           <Input type="date" />
+        </StorySettingsRow>
+        <StorySettingsRow>
+          <MetaImage />
         </StorySettingsRow>
         <StorySettingsRow>
           <Typography size="sm" fontWeight="semiBold">
