@@ -35,6 +35,7 @@ import { TipTapPlaceholder } from './extensions/Placeholder';
 import { EditorBottomInfo } from './EditorBottomInfo';
 import { EditorBubbleMenu } from './BubbleMenu/BubbleMenu';
 import { EditorFloatingMenu } from './FloatingMenu/FloatingMenu';
+import { TipTapMobileScroll } from './extensions/MobileScroll';
 
 lowlight.registerLanguage('clarity (beta)', clarity);
 
@@ -126,7 +127,7 @@ export const EditorTipTap = () => {
       //         commands: slashCommands({ storyId: story.id }),
       //       })
       //     : undefined,
-      //   isMobile ? MobileScroll : undefined,
+      isMobile ? TipTapMobileScroll : undefined,
     ] as Extensions,
     content: '',
   });
