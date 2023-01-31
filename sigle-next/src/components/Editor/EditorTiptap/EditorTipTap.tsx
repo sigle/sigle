@@ -55,12 +55,12 @@ const StyledEditorContent = styled(EditorContent, {
     color: '$gray8',
     pointerEvents: 'none',
     height: 0,
-    animation: `${fadeInAnimation} 75ms cubic-bezier(0, 0, 0.2, 1)`,
+    animation: `${fadeInAnimation} 75ms $transitions$ease-out`,
   },
 
   // Image selected style
   '& img.ProseMirror-selectednode': {
-    outline: '2px solid $green11',
+    outline: '2px solid $indigo11',
   },
   // Image uploading style
   '& img[data-loading="true"]': {
