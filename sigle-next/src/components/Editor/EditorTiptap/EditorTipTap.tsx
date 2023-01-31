@@ -33,6 +33,7 @@ import { useWindowSize } from '@/hooks/useWindowSize';
 import { clarity } from './highlight/clarity-syntax';
 import { TipTapPlaceholder } from './extensions/Placeholder';
 import { EditorBottomInfo } from './EditorBottomInfo';
+import { EditorBubbleMenu } from './BubbleMenu/BubbleMenu';
 
 lowlight.registerLanguage('clarity (beta)', clarity);
 
@@ -133,6 +134,7 @@ export const EditorTipTap = () => {
     <div className="prose dark:prose-invert lg:prose-lg">
       <StyledEditorContent editor={editor} />
       {editor && <EditorBottomInfo editor={editor} />}
+      {editor && !isMobile && <EditorBubbleMenu editor={editor} />}
     </div>
   );
 };
