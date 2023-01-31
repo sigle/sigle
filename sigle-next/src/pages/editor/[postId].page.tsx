@@ -1,15 +1,12 @@
 import { TooltipProvider } from '@radix-ui/react-tooltip';
-import { styled } from '@sigle/stitches.config';
 import { useCeramic } from '@/components/Ceramic/CeramicProvider';
 import { EditorHeader } from '@/components/Editor/EditorHeader';
 import { EditorSettings } from '@/components/Editor/EditorSettings/EditorSettings';
 import { EditorTitle } from '@/components/Editor/EditorTitle';
 import { Container } from '@sigle/ui';
 
-const Box = styled('div', {});
-
 const Editor = () => {
-  // TODO suspense loading state
+  // TODO suspense loading state when loading story
   // TODO auto save
 
   return (
