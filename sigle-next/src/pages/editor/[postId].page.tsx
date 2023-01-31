@@ -3,6 +3,7 @@ import { styled } from '@sigle/stitches.config';
 import { useCeramic } from '@/components/Ceramic/CeramicProvider';
 import { EditorHeader } from '@/components/Editor/EditorHeader';
 import { EditorSettings } from '@/components/Editor/EditorSettings/EditorSettings';
+import { EditorTitle } from '@/components/Editor/EditorTitle';
 
 const Box = styled('div', {});
 
@@ -13,7 +14,9 @@ const Editor = () => {
   return (
     <>
       <EditorHeader />
-      <Box css={{ height: 2000 }}></Box>
+      <Box css={{ height: 2000 }}>
+        <EditorTitle />
+      </Box>
       <EditorSettings />
     </>
   );
