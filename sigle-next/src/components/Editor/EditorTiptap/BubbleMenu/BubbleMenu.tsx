@@ -1,11 +1,10 @@
 import { globalCss, styled } from '@sigle/stitches.config';
-import { Flex } from '@sigle/ui';
 import {
   Editor,
   BubbleMenu as TipTapBubbleMenu,
   isTextSelection,
 } from '@tiptap/react';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import {
   TbBold,
   TbCode,
@@ -14,6 +13,8 @@ import {
   TbStrikethrough,
   TbUnderline,
 } from 'react-icons/tb';
+import { EditorBubbleMenuLink } from './BubbleMenuLink';
+import { useBubbleMenuStore } from './store';
 
 // Tippyjs theme used by the bubble menu
 const globalStylesBubbleMenu = globalCss({
@@ -68,7 +69,9 @@ interface EditorBubbleMenuProps {
 
 export const EditorBubbleMenu = ({ editor }: EditorBubbleMenuProps) => {
   globalStylesBubbleMenu();
-  const [linkState, setLinkState] = useState({ open: false, value: '' });
+  const linkOpen = useBubbleMenuStore((state) => state.linkOpen);
+  const setLinkValue = useBubbleMenuStore((state) => state.setLinkValue);
+  const toggleLink = useBubbleMenuStore((state) => state.toggleLink);
 
   // Listen to any key press to detect cmd + k and activate the link edition
   useEffect(() => {
@@ -89,60 +92,8 @@ export const EditorBubbleMenu = ({ editor }: EditorBubbleMenuProps) => {
       ? editor.getAttributes('link').href
       : '';
 
-    setLinkState({
-      open: true,
-      value: existingHref,
-    });
-  };
-
-  const onSubmitLink = (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-
-    let safeLinkValue = linkState.value.trim();
-
-    if (
-      safeLinkValue &&
-      !safeLinkValue.startsWith('http') &&
-      !safeLinkValue.startsWith('#')
-    ) {
-      safeLinkValue = `https://${linkState.value}`;
-    }
-
-    if (safeLinkValue) {
-      const pos = editor.state.selection.$head;
-      editor
-        .chain()
-        .focus()
-        .extendMarkRange('link')
-        .setLink({ href: safeLinkValue })
-        // Set the text selection at the end of the link selection
-        // that way user can continue to type easily
-        .setTextSelection(pos.end())
-        // Unset link selection se when the user continues to type it won't be a link
-        // We are using `unsetMark` instead of `unsetLink` to avoid the full selection to be unlinked
-        .unsetMark('link')
-        .run();
-    } else {
-      // If input text is empty we unset the link
-      editor.chain().focus().extendMarkRange('link').unsetLink().run();
-    }
-
-    resetLink();
-  };
-
-  const onKeyDown = (event: React.KeyboardEvent) => {
-    // If user press escape we hide the link input
-    if (event.key === 'Escape') {
-      event.preventDefault();
-      resetLink();
-    }
-  };
-
-  const resetLink = () => {
-    setLinkState({
-      open: false,
-      value: '',
-    });
+    toggleLink(true);
+    setLinkValue(existingHref);
   };
 
   return (
@@ -150,7 +101,9 @@ export const EditorBubbleMenu = ({ editor }: EditorBubbleMenuProps) => {
       tippyOptions={{
         duration: 100,
         theme: 'sigle-editor-bubble-menu',
-        onHidden: () => resetLink(),
+        onHidden: () => {
+          // When bubble menu is hidden, reset the link state
+        },
       }}
       shouldShow={({ editor, state, from, to, view }) => {
         // Take the initial implementation of the plugin and extends it
@@ -197,7 +150,7 @@ export const EditorBubbleMenu = ({ editor }: EditorBubbleMenuProps) => {
       }}
       editor={editor}
     >
-      {!linkState.open ? (
+      {!linkOpen ? (
         <>
           <BubbleMenuButton
             onClick={() => editor.chain().focus().toggleBold().run()}
@@ -237,24 +190,7 @@ export const EditorBubbleMenu = ({ editor }: EditorBubbleMenuProps) => {
           </BubbleMenuButton>
         </>
       ) : (
-        <Flex as="form" onSubmit={onSubmitLink}>
-          {/* <BubbleMenuInput
-            value={linkState.value}
-            onKeyDown={onKeyDown}
-            onChange={(e) =>
-              setLinkState((state) => ({ ...state, value: e.target.value }))
-            }
-            placeholder="Enter link ..."
-            autoFocus
-          />
-          <BubbleMenuButton
-            type="button"
-            onClick={() => resetLink()}
-            active={false}
-          >
-            <Cross2Icon height={18} width={18} />
-          </BubbleMenuButton> */}
-        </Flex>
+        <EditorBubbleMenuLink editor={editor} />
       )}
     </StyledBubbleMenu>
   );
