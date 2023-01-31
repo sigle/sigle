@@ -7,13 +7,13 @@ import {
 } from '@tiptap/react';
 import { useEffect, useState } from 'react';
 import {
-  Link1Icon,
-  FontBoldIcon,
-  FontItalicIcon,
-  CodeIcon,
-  StrikethroughIcon,
-  UnderlineIcon,
-} from '@radix-ui/react-icons';
+  TbBold,
+  TbCode,
+  TbItalic,
+  TbLink,
+  TbStrikethrough,
+  TbUnderline,
+} from 'react-icons/tb';
 
 // Tippyjs theme used by the bubble menu
 const globalStylesBubbleMenu = globalCss({
@@ -203,37 +203,37 @@ export const EditorBubbleMenu = ({ editor }: EditorBubbleMenuProps) => {
             onClick={() => editor.chain().focus().toggleBold().run()}
             active={editor.isActive('bold')}
           >
-            <FontBoldIcon height={18} width={18} />
+            <TbBold size={18} />
           </BubbleMenuButton>
           <BubbleMenuButton
             onClick={() => editor.chain().focus().toggleItalic().run()}
             active={editor.isActive('italic')}
           >
-            <FontItalicIcon height={18} width={18} />
+            <TbItalic size={18} />
           </BubbleMenuButton>
           <BubbleMenuButton
             onClick={() => editor.chain().focus().toggleUnderline().run()}
             active={editor.isActive('underline')}
           >
-            <UnderlineIcon height={18} width={18} />
+            <TbUnderline size={18} />
           </BubbleMenuButton>
           <BubbleMenuButton
             onClick={() => editor.chain().focus().toggleStrike().run()}
             active={editor.isActive('strike')}
           >
-            <StrikethroughIcon height={18} width={18} />
+            <TbStrikethrough size={18} />
           </BubbleMenuButton>
           <BubbleMenuButton
             onClick={() => editor.chain().focus().toggleCode().run()}
             active={editor.isActive('code')}
           >
-            <CodeIcon height={18} width={18} />
+            <TbCode size={18} />
           </BubbleMenuButton>
           <BubbleMenuButton
             onClick={() => onSelectLink()}
             active={editor.isActive('link')}
           >
-            <Link1Icon height={18} width={18} />
+            <TbLink size={18} />
           </BubbleMenuButton>
         </>
       ) : (
