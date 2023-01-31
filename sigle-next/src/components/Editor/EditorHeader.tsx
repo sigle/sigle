@@ -20,6 +20,7 @@ const StyledEditorHeader = styled('header', {
   transition: 'top 500ms $ease-in-out',
   backgroundColor: '$gray1',
   top: 0,
+  zIndex: 1,
 
   defaultVariants: {
     scrollDirection: 'up',
