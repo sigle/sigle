@@ -39,6 +39,7 @@ import { TipTapMobileScroll } from './extensions/MobileScroll';
 import { slashCommands } from './extensions/SlashCommand/commands';
 import { SlashCommands } from './extensions/SlashCommand/SlashCommands';
 import { CodeBlockComponent } from './extensions/CodeBlock/CodeBlock';
+import { useEditorStore } from '../store';
 
 lowlight.registerLanguage('clarity (beta)', clarity);
 
@@ -79,6 +80,7 @@ export const EditorTipTap = () => {
   const { resolvedTheme } = useTheme();
   const { width } = useWindowSize();
   const isMobile = width ? width < 768 : false;
+  const setStory = useEditorStore((state) => state.setStory);
 
   const editor = useEditor({
     extensions: [
@@ -133,6 +135,9 @@ export const EditorTipTap = () => {
       isMobile ? TipTapMobileScroll : undefined,
     ] as Extensions,
     content: '',
+    onUpdate: ({ editor }) => {
+      setStory({ content: editor.getHTML() });
+    },
   });
 
   return (

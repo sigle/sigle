@@ -6,14 +6,18 @@ import { EditorSettings } from '@/components/Editor/EditorSettings/EditorSetting
 import { EditorTitle } from '@/components/Editor/EditorTitle';
 import { EditorTipTap } from '@/components/Editor/EditorTiptap/EditorTipTap';
 import { useRouter } from 'next/router';
-import { graphql, useLazyLoadQuery } from 'react-relay';
+import { graphql, useLazyLoadQuery, useMutation } from 'react-relay';
 import { PostIdEditorPagePostQuery } from '@/__generated__/relay/PostIdEditorPagePostQuery.graphql';
 import { useEffect } from 'react';
 import { useEditorStore } from '@/components/Editor/store';
+import { PostIdEditorUpdatePostMutation } from '@/__generated__/relay/PostIdEditorUpdatePostMutation.graphql';
+
+const autoSaveInterval = 3000;
 
 const Editor = () => {
   const router = useRouter();
   const { postId } = router.query;
+  const story = useEditorStore((state) => state.story);
   const setStory = useEditorStore((state) => state.setStory);
 
   const data = useLazyLoadQuery<PostIdEditorPagePostQuery>(
@@ -31,15 +35,60 @@ const Editor = () => {
     { id: postId as string }
   );
 
-  // TODO suspense loading state when loading story
-  // TODO auto save
-  // TODO story not found
+  const [commit] = useMutation<PostIdEditorUpdatePostMutation>(graphql`
+    mutation PostIdEditorUpdatePostMutation($input: UpdatePostInput!) {
+      updatePost(input: $input) {
+        clientMutationId
+        document {
+          id
+        }
+      }
+    }
+  `);
 
   useEffect(() => {
     if (data.node) {
       setStory(data.node);
     }
   }, [data.node]);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      if (data.node && story) {
+        // Only save if the story has changed
+        console.log(story);
+        if (
+          story.title !== data.node.title ||
+          story.content !== data.node.content
+        ) {
+          commit({
+            variables: {
+              input: {
+                id: data.node.id!,
+                content: {
+                  title: story.title,
+                  content: story.content,
+                },
+              },
+            },
+            onCompleted: (data) => {
+              console.log(data);
+            },
+            onError: (error) => {
+              // TODO
+              console.error(error);
+            },
+          });
+        }
+      }
+    }, autoSaveInterval);
+
+    return () => clearTimeout(timer);
+  }, [data.node, story]);
+
+  // TODO suspense loading state when loading story
+  // TODO auto save
+  // TODO story not found
 
   return (
     <>

@@ -3,6 +3,7 @@ import { create } from 'zustand';
 interface EditorStory {
   id: string;
   title: string;
+  content: string;
 }
 
 interface EditorState {
