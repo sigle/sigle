@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<bba522e2b1beb1170bea6f992eec6108>>
+ * @generated SignedSource<<ce04074ab902f47c1c1feac9ba807407>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -28,6 +28,9 @@ export type newPostCreatePostMutation$variables = {
 export type newPostCreatePostMutation$data = {
   readonly createPost: {
     readonly clientMutationId: string | null;
+    readonly document: {
+      readonly id: string;
+    };
   } | null;
 };
 export type newPostCreatePostMutation = {
@@ -64,6 +67,24 @@ v1 = [
         "kind": "ScalarField",
         "name": "clientMutationId",
         "storageKey": null
+      },
+      {
+        "alias": null,
+        "args": null,
+        "concreteType": "Post",
+        "kind": "LinkedField",
+        "name": "document",
+        "plural": false,
+        "selections": [
+          {
+            "alias": null,
+            "args": null,
+            "kind": "ScalarField",
+            "name": "id",
+            "storageKey": null
+          }
+        ],
+        "storageKey": null
       }
     ],
     "storageKey": null
@@ -87,16 +108,16 @@ return {
     "selections": (v1/*: any*/)
   },
   "params": {
-    "cacheID": "2a8f1e6ab0cf2635894ed3fe9070c16b",
+    "cacheID": "655177b7130295156428c1b625fbeaaa",
     "id": null,
     "metadata": {},
     "name": "newPostCreatePostMutation",
     "operationKind": "mutation",
-    "text": "mutation newPostCreatePostMutation(\n  $input: CreatePostInput!\n) {\n  createPost(input: $input) {\n    clientMutationId\n  }\n}\n"
+    "text": "mutation newPostCreatePostMutation(\n  $input: CreatePostInput!\n) {\n  createPost(input: $input) {\n    clientMutationId\n    document {\n      id\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "17e16678c290079bd14023247528637d";
+(node as any).hash = "808d3cf65223ea4cdfe83ed0ddcc1d2c";
 
 export default node;

@@ -5,12 +5,18 @@ import { EditorHeader } from '@/components/Editor/EditorHeader';
 import { graphql, useMutation } from 'react-relay';
 import type { newPostCreatePostMutation } from '@/__generated__/relay/newPostCreatePostMutation.graphql';
 import { useEffect } from 'react';
+import { useRouter } from 'next/router';
 
 const NewPost = () => {
+  const router = useRouter();
+
   const [commit] = useMutation<newPostCreatePostMutation>(graphql`
     mutation newPostCreatePostMutation($input: CreatePostInput!) {
       createPost(input: $input) {
         clientMutationId
+        document {
+          id
+        }
       }
     }
   `);
@@ -25,7 +31,9 @@ const NewPost = () => {
           },
         },
       },
-      onCompleted: (data) => {},
+      onCompleted: (data) => {
+        router.push(`/editor/${data.createPost?.document.id}`);
+      },
     });
   }, []);
 
