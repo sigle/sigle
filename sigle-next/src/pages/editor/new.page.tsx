@@ -1,11 +1,11 @@
 import { TooltipProvider } from '@radix-ui/react-tooltip';
+import { graphql, useMutation } from 'react-relay';
+import { useEffect } from 'react';
+import { useRouter } from 'next/router';
 import { Container, LoadingSpinner } from '@sigle/ui';
 import { useCeramic } from '@/components/Ceramic/CeramicProvider';
 import { EditorHeader } from '@/components/Editor/EditorHeader';
-import { graphql, useMutation } from 'react-relay';
 import type { newPostCreatePostMutation } from '@/__generated__/relay/newPostCreatePostMutation.graphql';
-import { useEffect } from 'react';
-import { useRouter } from 'next/router';
 
 const NewPost = () => {
   const router = useRouter();

@@ -1,14 +1,14 @@
 import { TooltipProvider } from '@radix-ui/react-tooltip';
+import { useRouter } from 'next/router';
+import { graphql, useLazyLoadQuery, useMutation } from 'react-relay';
+import { useEffect } from 'react';
 import { Container } from '@sigle/ui';
 import { useCeramic } from '@/components/Ceramic/CeramicProvider';
 import { EditorHeader } from '@/components/Editor/EditorHeader';
 import { EditorSettings } from '@/components/Editor/EditorSettings/EditorSettings';
 import { EditorTitle } from '@/components/Editor/EditorTitle';
 import { EditorTipTap } from '@/components/Editor/EditorTiptap/EditorTipTap';
-import { useRouter } from 'next/router';
-import { graphql, useLazyLoadQuery, useMutation } from 'react-relay';
 import { PostIdEditorPagePostQuery } from '@/__generated__/relay/PostIdEditorPagePostQuery.graphql';
-import { useEffect } from 'react';
 import { useEditorStore } from '@/components/Editor/store';
 import { PostIdEditorUpdatePostMutation } from '@/__generated__/relay/PostIdEditorUpdatePostMutation.graphql';
 

@@ -30,6 +30,7 @@ import CharacterCount from '@tiptap/extension-character-count';
 import { useTheme } from 'next-themes';
 import { keyframes, styled } from '@sigle/stitches.config';
 import { useWindowSize } from '@/hooks/useWindowSize';
+import { useEditorStore } from '../store';
 import { clarity } from './highlight/clarity-syntax';
 import { TipTapPlaceholder } from './extensions/Placeholder';
 import { EditorBottomInfo } from './EditorBottomInfo';
@@ -39,7 +40,6 @@ import { TipTapMobileScroll } from './extensions/MobileScroll';
 import { slashCommands } from './extensions/SlashCommand/commands';
 import { SlashCommands } from './extensions/SlashCommand/SlashCommands';
 import { CodeBlockComponent } from './extensions/CodeBlock/CodeBlock';
-import { useEditorStore } from '../store';
 
 lowlight.registerLanguage('clarity (beta)', clarity);
 
