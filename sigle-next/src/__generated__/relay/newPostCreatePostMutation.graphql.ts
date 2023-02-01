@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<2dd61939175d8155f3bc1157b37a477d>>
+ * @generated SignedSource<<bba522e2b1beb1170bea6f992eec6108>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -14,19 +14,25 @@ export type CreatePostInput = {
   content: PostInput;
 };
 export type PostInput = {
+  canonicalUrl?: string | null;
+  content: string;
+  featuredImage?: string | null;
+  metaDescription?: string | null;
+  metaImage?: string | null;
+  metaTitle?: string | null;
   title: string;
 };
-export type NavBarCreatePostMutation$variables = {
+export type newPostCreatePostMutation$variables = {
   input: CreatePostInput;
 };
-export type NavBarCreatePostMutation$data = {
+export type newPostCreatePostMutation$data = {
   readonly createPost: {
     readonly clientMutationId: string | null;
   } | null;
 };
-export type NavBarCreatePostMutation = {
-  response: NavBarCreatePostMutation$data;
-  variables: NavBarCreatePostMutation$variables;
+export type newPostCreatePostMutation = {
+  response: newPostCreatePostMutation$data;
+  variables: newPostCreatePostMutation$variables;
 };
 
 const node: ConcreteRequest = (function(){
@@ -68,7 +74,7 @@ return {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Fragment",
     "metadata": null,
-    "name": "NavBarCreatePostMutation",
+    "name": "newPostCreatePostMutation",
     "selections": (v1/*: any*/),
     "type": "Mutation",
     "abstractKey": null
@@ -77,20 +83,20 @@ return {
   "operation": {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Operation",
-    "name": "NavBarCreatePostMutation",
+    "name": "newPostCreatePostMutation",
     "selections": (v1/*: any*/)
   },
   "params": {
-    "cacheID": "1ad2eeea527b98950943c34211d1936d",
+    "cacheID": "2a8f1e6ab0cf2635894ed3fe9070c16b",
     "id": null,
     "metadata": {},
-    "name": "NavBarCreatePostMutation",
+    "name": "newPostCreatePostMutation",
     "operationKind": "mutation",
-    "text": "mutation NavBarCreatePostMutation(\n  $input: CreatePostInput!\n) {\n  createPost(input: $input) {\n    clientMutationId\n  }\n}\n"
+    "text": "mutation newPostCreatePostMutation(\n  $input: CreatePostInput!\n) {\n  createPost(input: $input) {\n    clientMutationId\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "73ffb951346d3bcd09bd5d11079b2105";
+(node as any).hash = "17e16678c290079bd14023247528637d";
 
 export default node;

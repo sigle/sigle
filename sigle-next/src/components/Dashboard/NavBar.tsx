@@ -15,7 +15,6 @@ import {
   TbWallet,
 } from 'react-icons/tb';
 import { useAccount } from 'wagmi';
-import { graphql, useMutation } from 'react-relay';
 import { useIsMounted } from '@sigle/hooks';
 import { styled } from '@sigle/stitches.config';
 import {
@@ -28,17 +27,8 @@ import {
   TooltipTrigger,
   Typography,
 } from '@sigle/ui';
-import { NavBarCreatePostMutation } from '@/__generated__/relay/NavBarCreatePostMutation.graphql';
 import { useDashboardStore } from './store';
 import { NavBarUserDropdown } from './NavBarUserDropdown';
-
-const CreatePostMutation = graphql`
-  mutation NavBarCreatePostMutation($input: CreatePostInput!) {
-    createPost(input: $input) {
-      clientMutationId
-    }
-  }
-`;
 
 const StyledNavBar = styled('nav', {
   px: '$5',
@@ -176,8 +166,6 @@ export const NavBar = () => {
   const { isConnected } = useAccount();
   const { setOpen: setConnectKitOpen } = useModal();
 
-  const [commit] = useMutation<NavBarCreatePostMutation>(CreatePostMutation);
-
   const menu = [
     {
       href: '/',
@@ -234,21 +222,7 @@ export const NavBar = () => {
                   <TbBook size={navbarIconSize} />
                   <Typography>Stories</Typography>
                 </Flex>
-                <IconButton
-                  variant="light"
-                  size="lg"
-                  onClick={() =>
-                    commit({
-                      variables: {
-                        input: {
-                          content: {
-                            title: 'Test with relay',
-                          },
-                        },
-                      },
-                    })
-                  }
-                >
+                <IconButton variant="light" size="lg">
                   <TbPlus />
                 </IconButton>
               </Flex>

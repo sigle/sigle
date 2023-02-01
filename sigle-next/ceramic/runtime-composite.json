@@ -1,30 +1,36 @@
 {
   "models": {
-    "Post": {
-      "id": "kjzl6hvfrbw6c52xuo1ftuyejoe4zhovfdtv7uxjo1sppn20sy6hxrmefx2ixfi",
-      "accountRelation": { "type": "list" }
-    },
     "Profile": {
       "id": "kjzl6hvfrbw6c8kdwrxur6qqpp9tkjzehqp22atzxuk7ktbxmh30193jtd9t94w",
       "accountRelation": { "type": "single" }
+    },
+    "Post": {
+      "id": "kjzl6hvfrbw6ca36x8wph4yaey3y20fqev08iagmqv3pndgmigu1bfpvatd20gd",
+      "accountRelation": { "type": "list" }
     }
   },
   "objects": {
-    "Post": {
-      "title": { "type": "string", "required": true },
-      "author": { "type": "view", "viewType": "documentAccount" },
-      "version": { "type": "view", "viewType": "documentVersion" }
-    },
     "Profile": {
       "websiteUrl": { "type": "string", "required": false },
       "description": { "type": "string", "required": false },
       "displayName": { "type": "string", "required": false },
       "twitterUsername": { "type": "string", "required": false }
+    },
+    "Post": {
+      "title": { "type": "string", "required": true },
+      "content": { "type": "string", "required": true },
+      "metaImage": { "type": "string", "required": false },
+      "metaTitle": { "type": "string", "required": false },
+      "canonicalUrl": { "type": "string", "required": false },
+      "featuredImage": { "type": "string", "required": false },
+      "metaDescription": { "type": "string", "required": false },
+      "author": { "type": "view", "viewType": "documentAccount" },
+      "version": { "type": "view", "viewType": "documentVersion" }
     }
   },
   "enums": {},
   "accountData": {
-    "postList": { "type": "connection", "name": "Post" },
-    "profile": { "type": "node", "name": "Profile" }
+    "profile": { "type": "node", "name": "Profile" },
+    "postList": { "type": "connection", "name": "Post" }
   }
 }
