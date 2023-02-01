@@ -1,5 +1,5 @@
 import { TooltipProvider } from '@radix-ui/react-tooltip';
-import { Container } from '@sigle/ui';
+import { Container, LoadingSpinner } from '@sigle/ui';
 import { useCeramic } from '@/components/Ceramic/CeramicProvider';
 import { EditorHeader } from '@/components/Editor/EditorHeader';
 import { graphql, useMutation } from 'react-relay';
@@ -40,8 +40,8 @@ const NewPost = () => {
   return (
     <>
       <EditorHeader />
-      <Container css={{ maxWidth: 720, pt: '56px', pb: '$5' }}>
-        {/* TODO loading animation */}
+      <Container css={{ maxWidth: 720, pt: '$20', pb: '$5' }}>
+        <LoadingSpinner />
       </Container>
     </>
   );
