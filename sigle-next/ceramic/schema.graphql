@@ -2,10 +2,10 @@ type Post @createModel(accountRelation: LIST, description: "sigle post") {
   author: DID! @documentAccount
   version: CommitID! @documentVersion
   # The title of a publication.
-  title: String! @string(minLength: 10, maxLength: 100)
+  title: String! @string(minLength: 0, maxLength: 100)
   # The content of a publication.
   # TODO decide max length
-  content: String! @string(minLength: 1, maxLength: 100000)
+  content: String! @string(minLength: 0, maxLength: 100000)
   # TODO content version
   # TODO status: draft, published, deleted
   # The cover image of a publication.
