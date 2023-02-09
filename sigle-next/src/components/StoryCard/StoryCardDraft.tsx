@@ -12,8 +12,8 @@ import {
   IconButton,
   Typography,
 } from '@sigle/ui';
-import { StoryCardDraft_post$key } from '@/__generated__/relay/StoryCardDraft_post.graphql';
 import { styled } from '@sigle/stitches.config';
+import { StoryCardDraft_post$key } from '@/__generated__/relay/StoryCardDraft_post.graphql';
 
 const StyledDropdownMenuItem = styled(DropdownMenuItem, {
   color: '$orange11',
