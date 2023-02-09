@@ -49,13 +49,16 @@ export const StoryCardDraft = ({ story: storyProp }: StoryCardDraftProps) => {
           {storyData.title}
         </Typography>
       </Link>
-      <Typography size="sm" color="gray9" css={{ mt: '$2' }} lineClamp={3}>
-        Blockchain has completely changed the way we think about money and
-        created a true era of digital property. Bitcoin is the first successful
-        use case for blockchain. Some creative developers believe Bitcoin is the
-        first successful use case for blockchain. Some creative developers
-        believe Bitcoin is the first successful use case for blockchain.
-      </Typography>
+      <Link href={storyEditorLink}>
+        <Typography size="sm" color="gray9" css={{ mt: '$2' }} lineClamp={3}>
+          Blockchain has completely changed the way we think about money and
+          created a true era of digital property. Bitcoin is the first
+          successful use case for blockchain. Some creative developers believe
+          Bitcoin is the first successful use case for blockchain. Some creative
+          developers believe Bitcoin is the first successful use case for
+          blockchain.
+        </Typography>
+      </Link>
       <Flex justify="between" align="center" css={{ mt: '$9' }}>
         <Typography size="xs" color="gray9">
           Feb 18, 2023 at 11:46am
