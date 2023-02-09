@@ -4,21 +4,28 @@ import { Button, Container, Flex, Typography } from '@sigle/ui';
 import { useCeramic } from '@/components/Ceramic/CeramicProvider';
 import { DashboardLayout } from '@/components/Dashboard/DashboardLayout';
 import { UserProfile } from '@/components/UserProfile/UserProfile';
+import { UserProfileSkeleton } from '@/components/UserProfile/UserProfileSkeleton';
+
+const ProfilePageHeaderContent = () => {
+  return (
+    <Flex justify="between" css={{ flex: 1 }}>
+      <Typography size="xl" fontWeight="bold">
+        Profile
+      </Typography>
+      <Link href="/editor/new">
+        <Button>Write story</Button>
+      </Link>
+    </Flex>
+  );
+};
 
 const ProfilePage = () => {
+  const showSkeleton = true;
+
   return (
     <DashboardLayout
-      sidebarContent={<UserProfile />}
-      headerContent={
-        <Flex justify="between" css={{ flex: 1 }}>
-          <Typography size="xl" fontWeight="bold">
-            Profile
-          </Typography>
-          <Link href="/editor/new">
-            <Button>Write story</Button>
-          </Link>
-        </Flex>
-      }
+      sidebarContent={showSkeleton ? <UserProfileSkeleton /> : <UserProfile />}
+      headerContent={<ProfilePageHeaderContent />}
     >
       <Container css={{ maxWidth: 680, py: '$5' }}></Container>
     </DashboardLayout>
