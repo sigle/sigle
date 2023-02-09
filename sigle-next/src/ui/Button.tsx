@@ -100,6 +100,7 @@ const StyledButton = styled('button', {
         },
         '&:disabled': {
           color: '$gray9',
+          backgroundColor: 'transparent',
         },
       },
     },

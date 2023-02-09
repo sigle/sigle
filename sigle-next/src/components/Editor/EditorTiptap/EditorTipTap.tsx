@@ -30,6 +30,7 @@ import CharacterCount from '@tiptap/extension-character-count';
 import { useTheme } from 'next-themes';
 import { keyframes, styled } from '@sigle/stitches.config';
 import { useWindowSize } from '@/hooks/useWindowSize';
+import { useEditorStore } from '../store';
 import { clarity } from './highlight/clarity-syntax';
 import { TipTapPlaceholder } from './extensions/Placeholder';
 import { EditorBottomInfo } from './EditorBottomInfo';
@@ -79,6 +80,7 @@ export const EditorTipTap = () => {
   const { resolvedTheme } = useTheme();
   const { width } = useWindowSize();
   const isMobile = width ? width < 768 : false;
+  const setStory = useEditorStore((state) => state.setStory);
 
   const editor = useEditor({
     extensions: [
@@ -133,6 +135,9 @@ export const EditorTipTap = () => {
       isMobile ? TipTapMobileScroll : undefined,
     ] as Extensions,
     content: '',
+    onUpdate: ({ editor }) => {
+      setStory({ content: editor.getHTML() });
+    },
   });
 
   return (

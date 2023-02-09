@@ -5,6 +5,7 @@ export * from './DropdownMenu';
 export * from './Flex';
 export * from './IconButton';
 export * from './Input';
+export * from './LoadingSpinner';
 export * from './Switch';
 export * from './Tooltip';
 export * from './Typography';

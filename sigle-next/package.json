@@ -73,6 +73,7 @@
     "react-relay": "14.1.0",
     "relay-runtime": "14.1.0",
     "tippy.js": "6.3.7",
+    "use-deep-compare-effect": "1.8.1",
     "wagmi": "0.10.10",
     "zustand": "4.3.2"
   },

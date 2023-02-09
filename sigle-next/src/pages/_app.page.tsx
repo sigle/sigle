@@ -25,6 +25,7 @@ const inter = Inter({
   style: ['normal'],
   weight: ['400', '600', '700'],
   variable: '--font-inter',
+  display: 'swap',
 });
 
 const globalStyle = globalCss({

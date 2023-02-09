@@ -17,14 +17,13 @@ const StyledInput = styled('input', {
 
 export const EditorTitle = () => {
   const storyTitle = useEditorStore((state) => state.story?.title);
+  const setStory = useEditorStore((state) => state.setStory);
 
   return (
     <StyledInput
       placeholder="Title..."
       value={storyTitle || ''}
-      onChange={(e) =>
-        useEditorStore.setState({ story: { title: e.target.value } })
-      }
+      onChange={(e) => setStory({ title: e.target.value })}
       maxLength={100}
     />
   );
