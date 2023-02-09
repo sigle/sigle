@@ -1,11 +1,11 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { TbBrandTwitter, TbLink } from 'react-icons/tb';
+import { graphql, useFragment } from 'react-relay';
 import { Badge, Button, Flex, Typography } from '@sigle/ui';
 import { styled } from '@sigle/stitches.config';
 import { nextImageLoader } from '@/utils/nextImageLoader';
 import { addressAvatar } from '@/utils';
-import { graphql, useFragment } from 'react-relay';
 import { UserProfile_profile$key } from '@/__generated__/relay/UserProfile_profile.graphql';
 
 const AvatarContainer = styled('div', {
