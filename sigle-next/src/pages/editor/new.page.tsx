@@ -32,7 +32,7 @@ const NewPost = () => {
         },
       },
       onCompleted: (data) => {
-        router.push(`/editor/${data.createPost?.document.id}`);
+        router.replace(`/editor/${data.createPost?.document.id}`);
       },
     });
   }, []);
