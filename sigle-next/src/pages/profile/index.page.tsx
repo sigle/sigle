@@ -1,10 +1,13 @@
 import Link from 'next/link';
 import { TooltipProvider } from '@radix-ui/react-tooltip';
+import { graphql, useLazyLoadQuery } from 'react-relay';
+import { Suspense } from 'react';
 import { Button, Container, Flex, Typography } from '@sigle/ui';
 import { useCeramic } from '@/components/Ceramic/CeramicProvider';
 import { DashboardLayout } from '@/components/Dashboard/DashboardLayout';
 import { UserProfile } from '@/components/UserProfile/UserProfile';
 import { UserProfileSkeleton } from '@/components/UserProfile/UserProfileSkeleton';
+import { profilePagePostsListQuery } from '@/__generated__/relay/profilePagePostsListQuery.graphql';
 
 const ProfilePageHeaderContent = () => {
   return (
@@ -20,11 +23,40 @@ const ProfilePageHeaderContent = () => {
 };
 
 const ProfilePage = () => {
-  const showSkeleton = true;
+  const data = useLazyLoadQuery<profilePagePostsListQuery>(
+    graphql`
+      query profilePagePostsListQuery {
+        viewer {
+          id
+          postList(first: 10) {
+            pageInfo {
+              hasNextPage
+              hasNextPage
+              startCursor
+              endCursor
+            }
+            edges {
+              node {
+                id
+                ...StoryCardDraft_post
+              }
+            }
+          }
+        }
+      }
+    `,
+    {},
+    {
+      // We always get the latest data from the server so we know we are editing the latest version
+      fetchPolicy: 'network-only',
+    }
+  );
+
+  console.log(data);
 
   return (
     <DashboardLayout
-      sidebarContent={showSkeleton ? <UserProfileSkeleton /> : <UserProfile />}
+      sidebarContent={<UserProfile />}
       headerContent={<ProfilePageHeaderContent />}
     >
       <Container css={{ maxWidth: 680, py: '$5' }}></Container>
@@ -36,5 +68,22 @@ export default function ProtectedProfilePage() {
   // TODO auth protect
   const { session } = useCeramic();
 
-  return <TooltipProvider>{session ? <ProfilePage /> : null}</TooltipProvider>;
+  return (
+    <TooltipProvider>
+      {session ? (
+        <Suspense
+          fallback={
+            <DashboardLayout
+              sidebarContent={<UserProfileSkeleton />}
+              headerContent={<ProfilePageHeaderContent />}
+            >
+              <Container css={{ maxWidth: 680, py: '$5' }}></Container>
+            </DashboardLayout>
+          }
+        >
+          <ProfilePage />
+        </Suspense>
+      ) : null}
+    </TooltipProvider>
+  );
 }

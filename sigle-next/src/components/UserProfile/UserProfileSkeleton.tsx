@@ -1,6 +1,6 @@
-import { pulse } from '@/ui/animations';
 import { styled } from '@sigle/stitches.config';
 import { Flex } from '@sigle/ui';
+import { pulse } from '@/ui/animations';
 
 const SkeletonContainer = styled('div', {
   animation: `${pulse} $transitions$animate-pulse`,
