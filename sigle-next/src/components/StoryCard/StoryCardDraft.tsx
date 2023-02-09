@@ -33,8 +33,6 @@ export const StoryCardDraft = ({ story: storyProp }: StoryCardDraftProps) => {
 
   const storyEditorLink = `/editor/${storyData.id}`;
 
-  // TODO use relay fragment
-
   return (
     <Flex
       direction="column"
