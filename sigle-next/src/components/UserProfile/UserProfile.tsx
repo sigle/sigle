@@ -37,6 +37,8 @@ export const UserProfile = (props: UserProfileProps) => {
     props.profile
   );
 
+  // TODO handle case where profile is null
+
   return (
     <>
       <Flex justify="between">
