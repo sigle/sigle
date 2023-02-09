@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import { TooltipProvider } from '@radix-ui/react-tooltip';
-import { Button, Flex, Typography } from '@sigle/ui';
+import { Badge, Button, Flex, Typography } from '@sigle/ui';
 import { useCeramic } from '@/components/Ceramic/CeramicProvider';
 import { DashboardLayout } from '@/components/Dashboard/DashboardLayout';
 import { TbBrandTwitter, TbLink } from 'react-icons/tb';
@@ -10,7 +10,14 @@ const ProfilePage = () => {
     <DashboardLayout
       sidebarContent={
         <>
-          <Flex gap="3">
+          <Flex gap="3" align="center">
+            <Typography size="lg" fontWeight="semiBold">
+              Motoki Tonn
+            </Typography>
+            <Badge>motoki.btc</Badge>
+          </Flex>
+
+          <Flex gap="3" css={{ mt: '$3' }}>
             <Typography size="sm">
               106{' '}
               <Typography as="span" size="sm" color="gray9">
