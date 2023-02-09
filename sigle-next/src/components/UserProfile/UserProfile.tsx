@@ -5,6 +5,8 @@ import { Badge, Button, Flex, Typography } from '@sigle/ui';
 import { styled } from '@sigle/stitches.config';
 import { nextImageLoader } from '@/utils/nextImageLoader';
 import { addressAvatar } from '@/utils';
+import { graphql, useFragment } from 'react-relay';
+import { UserProfile_profile$key } from '@/__generated__/relay/UserProfile_profile.graphql';
 
 const AvatarContainer = styled('div', {
   display: 'flex',
@@ -17,7 +19,24 @@ const AvatarContainer = styled('div', {
   br: '$sm',
 });
 
-export const UserProfile = () => {
+interface UserProfileProps {
+  profile: UserProfile_profile$key | null;
+}
+
+export const UserProfile = (props: UserProfileProps) => {
+  const profileData = useFragment(
+    graphql`
+      fragment UserProfile_profile on Profile {
+        id
+        displayName
+        description
+        websiteUrl
+        twitterUsername
+      }
+    `,
+    props.profile
+  );
+
   return (
     <>
       <Flex justify="between">
@@ -39,7 +58,7 @@ export const UserProfile = () => {
 
       <Flex mt="2" gap="3" align="center">
         <Typography size="lg" fontWeight="semiBold">
-          Motoki Tonn
+          {profileData?.displayName}
         </Typography>
         <Badge>motoki.btc</Badge>
       </Flex>
@@ -61,29 +80,34 @@ export const UserProfile = () => {
 
       <Flex mt="3">
         <Typography size="sm" color="gray9">
-          Writer and novelist. Bestselling author of “AI will change the world”.
-          Lover of coffee, books, and the written word. Always on the lookout
-          for new stories to tell. Can't stop the feeling that time is going
-          faster.
+          {profileData?.description}
         </Typography>
       </Flex>
 
       <Flex mt="5" gap="3" align="center">
-        <Link href="https://www.sigle.io" target="_blank">
-          <Flex align="center" gap="1">
-            <Typography size="sm" color="gray9">
-              <TbLink size={16} />
+        {profileData?.websiteUrl && (
+          <Link href={profileData.websiteUrl} target="_blank">
+            <Flex align="center" gap="1">
+              <Typography size="sm" color="gray9">
+                <TbLink size={16} />
+              </Typography>
+              <Typography size="sm" color="indigo">
+                {/* TODO normalise url to only show www.sigle.io as example */}
+                {profileData.websiteUrl}
+              </Typography>
+            </Flex>
+          </Link>
+        )}
+        {profileData?.twitterUsername && (
+          <Link
+            href={`https://twitter.com/${profileData.twitterUsername}`}
+            target="_blank"
+          >
+            <Typography size="sm">
+              <TbBrandTwitter fill="currentColor" stroke="0" size={16} />
             </Typography>
-            <Typography size="sm" color="indigo">
-              www.sigle.io
-            </Typography>
-          </Flex>
-        </Link>
-        <Link href="https://www.sigle.io" target="_blank">
-          <Typography size="sm">
-            <TbBrandTwitter fill="currentColor" stroke="0" size={16} />
-          </Typography>
-        </Link>
+          </Link>
+        )}
       </Flex>
     </>
   );

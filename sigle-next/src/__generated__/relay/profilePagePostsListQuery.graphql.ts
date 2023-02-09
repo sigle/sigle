@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<893302441ec7ec5880475b7485c27498>>
+ * @generated SignedSource<<4ba006f09300f67ef37e83a47eda75d3>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -14,18 +14,9 @@ export type profilePagePostsListQuery$variables = {};
 export type profilePagePostsListQuery$data = {
   readonly viewer: {
     readonly id: string;
-    readonly postList: {
-      readonly edges: ReadonlyArray<{
-        readonly node: {
-          readonly id: string;
-          readonly " $fragmentSpreads": FragmentRefs<"StoryCardDraft_post">;
-        } | null;
-      } | null> | null;
-      readonly pageInfo: {
-        readonly endCursor: string | null;
-        readonly hasNextPage: boolean;
-        readonly startCursor: string | null;
-      };
+    readonly profile: {
+      readonly id: string;
+      readonly " $fragmentSpreads": FragmentRefs<"UserProfile_profile">;
     } | null;
   } | null;
 };
@@ -40,45 +31,6 @@ var v0 = {
   "args": null,
   "kind": "ScalarField",
   "name": "id",
-  "storageKey": null
-},
-v1 = [
-  {
-    "kind": "Literal",
-    "name": "first",
-    "value": 10
-  }
-],
-v2 = {
-  "alias": null,
-  "args": null,
-  "concreteType": "PageInfo",
-  "kind": "LinkedField",
-  "name": "pageInfo",
-  "plural": false,
-  "selections": [
-    {
-      "alias": null,
-      "args": null,
-      "kind": "ScalarField",
-      "name": "hasNextPage",
-      "storageKey": null
-    },
-    {
-      "alias": null,
-      "args": null,
-      "kind": "ScalarField",
-      "name": "startCursor",
-      "storageKey": null
-    },
-    {
-      "alias": null,
-      "args": null,
-      "kind": "ScalarField",
-      "name": "endCursor",
-      "storageKey": null
-    }
-  ],
   "storageKey": null
 };
 return {
@@ -99,43 +51,20 @@ return {
           (v0/*: any*/),
           {
             "alias": null,
-            "args": (v1/*: any*/),
-            "concreteType": "PostConnection",
+            "args": null,
+            "concreteType": "Profile",
             "kind": "LinkedField",
-            "name": "postList",
+            "name": "profile",
             "plural": false,
             "selections": [
-              (v2/*: any*/),
+              (v0/*: any*/),
               {
-                "alias": null,
                 "args": null,
-                "concreteType": "PostEdge",
-                "kind": "LinkedField",
-                "name": "edges",
-                "plural": true,
-                "selections": [
-                  {
-                    "alias": null,
-                    "args": null,
-                    "concreteType": "Post",
-                    "kind": "LinkedField",
-                    "name": "node",
-                    "plural": false,
-                    "selections": [
-                      (v0/*: any*/),
-                      {
-                        "args": null,
-                        "kind": "FragmentSpread",
-                        "name": "StoryCardDraft_post"
-                      }
-                    ],
-                    "storageKey": null
-                  }
-                ],
-                "storageKey": null
+                "kind": "FragmentSpread",
+                "name": "UserProfile_profile"
               }
             ],
-            "storageKey": "postList(first:10)"
+            "storageKey": null
           }
         ],
         "storageKey": null
@@ -161,45 +90,43 @@ return {
           (v0/*: any*/),
           {
             "alias": null,
-            "args": (v1/*: any*/),
-            "concreteType": "PostConnection",
+            "args": null,
+            "concreteType": "Profile",
             "kind": "LinkedField",
-            "name": "postList",
+            "name": "profile",
             "plural": false,
             "selections": [
-              (v2/*: any*/),
+              (v0/*: any*/),
               {
                 "alias": null,
                 "args": null,
-                "concreteType": "PostEdge",
-                "kind": "LinkedField",
-                "name": "edges",
-                "plural": true,
-                "selections": [
-                  {
-                    "alias": null,
-                    "args": null,
-                    "concreteType": "Post",
-                    "kind": "LinkedField",
-                    "name": "node",
-                    "plural": false,
-                    "selections": [
-                      (v0/*: any*/),
-                      {
-                        "alias": null,
-                        "args": null,
-                        "kind": "ScalarField",
-                        "name": "title",
-                        "storageKey": null
-                      }
-                    ],
-                    "storageKey": null
-                  }
-                ],
+                "kind": "ScalarField",
+                "name": "displayName",
+                "storageKey": null
+              },
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "description",
+                "storageKey": null
+              },
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "websiteUrl",
+                "storageKey": null
+              },
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "twitterUsername",
                 "storageKey": null
               }
             ],
-            "storageKey": "postList(first:10)"
+            "storageKey": null
           }
         ],
         "storageKey": null
@@ -207,16 +134,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "7584c16b326f9ee81d0f4cb42e426e98",
+    "cacheID": "4427949845e65e019fa7b6f2896626c7",
     "id": null,
     "metadata": {},
     "name": "profilePagePostsListQuery",
     "operationKind": "query",
-    "text": "query profilePagePostsListQuery {\n  viewer {\n    id\n    postList(first: 10) {\n      pageInfo {\n        hasNextPage\n        startCursor\n        endCursor\n      }\n      edges {\n        node {\n          id\n          ...StoryCardDraft_post\n        }\n      }\n    }\n  }\n}\n\nfragment StoryCardDraft_post on Post {\n  id\n  title\n}\n"
+    "text": "query profilePagePostsListQuery {\n  viewer {\n    id\n    profile {\n      id\n      ...UserProfile_profile\n    }\n  }\n}\n\nfragment UserProfile_profile on Profile {\n  id\n  displayName\n  description\n  websiteUrl\n  twitterUsername\n}\n"
   }
 };
 })();
 
-(node as any).hash = "c071217dfa650f69285ec3bb51436d40";
+(node as any).hash = "d4edc23a60fe24754b7b5b87d12d0502";
 
 export default node;

@@ -28,19 +28,9 @@ const ProfilePage = () => {
       query profilePagePostsListQuery {
         viewer {
           id
-          postList(first: 10) {
-            pageInfo {
-              hasNextPage
-              hasNextPage
-              startCursor
-              endCursor
-            }
-            edges {
-              node {
-                id
-                ...StoryCardDraft_post
-              }
-            }
+          profile {
+            id
+            ...UserProfile_profile
           }
         }
       }
@@ -52,11 +42,12 @@ const ProfilePage = () => {
     }
   );
 
-  console.log(data);
+  // TODO 404 if no profile
+  if (!data.viewer) return null;
 
   return (
     <DashboardLayout
-      sidebarContent={<UserProfile />}
+      sidebarContent={<UserProfile profile={data.viewer.profile} />}
       headerContent={<ProfilePageHeaderContent />}
     >
       <Container css={{ maxWidth: 680, py: '$5' }}></Container>
