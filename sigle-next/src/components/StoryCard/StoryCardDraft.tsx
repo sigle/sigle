@@ -13,6 +13,15 @@ import {
   Typography,
 } from '@sigle/ui';
 import { StoryCardDraft_post$key } from '@/__generated__/relay/StoryCardDraft_post.graphql';
+import { styled } from '@sigle/stitches.config';
+
+const StyledDropdownMenuItem = styled(DropdownMenuItem, {
+  color: '$orange11',
+});
+
+const StyledDropdownMenuContent = styled(DropdownMenuContent, {
+  minWidth: 100,
+});
 
 interface StoryCardDraftProps {
   story: StoryCardDraft_post$key;
@@ -71,14 +80,14 @@ export const StoryCardDraft = ({ story: storyProp }: StoryCardDraftProps) => {
                 <TbDots />
               </IconButton>
             </DropdownMenuTrigger>
-            <DropdownMenuContent>
+            <StyledDropdownMenuContent side="left" align="end">
               <DropdownMenuItem onSelect={() => router.push(storyEditorLink)}>
                 Edit
               </DropdownMenuItem>
-              <DropdownMenuItem onSelect={() => alert('TODO')}>
+              <StyledDropdownMenuItem onSelect={() => alert('TODO')}>
                 Delete
-              </DropdownMenuItem>
-            </DropdownMenuContent>
+              </StyledDropdownMenuItem>
+            </StyledDropdownMenuContent>
           </DropdownMenu>
         </Flex>
       </Flex>
