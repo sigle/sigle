@@ -1,10 +1,10 @@
-import { addressAvatar } from '@/utils';
-import { nextImageLoader } from '@/utils/nextImageLoader';
-import { styled } from '@sigle/stitches.config';
-import { Badge, Button, Flex, Typography } from '@sigle/ui';
 import Image from 'next/image';
 import Link from 'next/link';
 import { TbBrandTwitter, TbLink } from 'react-icons/tb';
+import { Badge, Button, Flex, Typography } from '@sigle/ui';
+import { styled } from '@sigle/stitches.config';
+import { nextImageLoader } from '@/utils/nextImageLoader';
+import { addressAvatar } from '@/utils';
 
 const AvatarContainer = styled('div', {
   display: 'flex',
