@@ -4,13 +4,37 @@ import { Badge, Button, Flex, Typography } from '@sigle/ui';
 import { useCeramic } from '@/components/Ceramic/CeramicProvider';
 import { DashboardLayout } from '@/components/Dashboard/DashboardLayout';
 import { TbBrandTwitter, TbLink } from 'react-icons/tb';
+import { addressAvatar } from '@/utils';
+import { styled } from '@sigle/stitches.config';
+
+const AvatarContainer = styled('div', {
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+  alignSelf: 'center',
+  overflow: 'hidden',
+  width: 72,
+  height: 72,
+  br: '$sm',
+});
 
 const ProfilePage = () => {
   return (
     <DashboardLayout
       sidebarContent={
         <>
-          <Flex gap="3" align="center">
+          <Flex justify="between">
+            <AvatarContainer>
+              <img src={addressAvatar('TODO', 72)} alt="user avatar" />
+            </AvatarContainer>
+            <Link href="/settings">
+              <Button variant="light" size="sm">
+                Edit profile
+              </Button>
+            </Link>
+          </Flex>
+
+          <Flex gap="3" align="center" css={{ mt: '$2' }}>
             <Typography size="lg" fontWeight="semiBold">
               Motoki Tonn
             </Typography>
