@@ -1,11 +1,13 @@
 import Link from 'next/link';
 import { TooltipProvider } from '@radix-ui/react-tooltip';
+import { TbBrandTwitter, TbLink } from 'react-icons/tb';
+import Image from 'next/image';
 import { Badge, Button, Container, Flex, Typography } from '@sigle/ui';
+import { styled } from '@sigle/stitches.config';
 import { useCeramic } from '@/components/Ceramic/CeramicProvider';
 import { DashboardLayout } from '@/components/Dashboard/DashboardLayout';
-import { TbBrandTwitter, TbLink } from 'react-icons/tb';
 import { addressAvatar } from '@/utils';
-import { styled } from '@sigle/stitches.config';
+import { nextImageLoader } from '@/utils/nextImageLoader';
 
 const AvatarContainer = styled('div', {
   display: 'flex',
@@ -25,7 +27,13 @@ const ProfilePage = () => {
         <>
           <Flex justify="between">
             <AvatarContainer>
-              <img src={addressAvatar('TODO', 72)} alt="user avatar" />
+              <Image
+                loader={nextImageLoader}
+                src={addressAvatar('TODO', 72)}
+                alt="Picture of the author"
+                width={72}
+                height={72}
+              />
             </AvatarContainer>
             <Link href="/settings">
               <Button variant="light" size="sm">
