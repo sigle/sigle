@@ -92,6 +92,23 @@ export const Flex = styled('div', {
         gap: '$10',
       },
     },
+    mt: {
+      1: {
+        marginTop: '$1',
+      },
+      2: {
+        marginTop: '$2',
+      },
+      3: {
+        marginTop: '$3',
+      },
+      4: {
+        marginTop: '$4',
+      },
+      5: {
+        marginTop: '$5',
+      },
+    },
   },
   defaultVariants: {
     direction: 'row',

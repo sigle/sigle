@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import { TooltipProvider } from '@radix-ui/react-tooltip';
-import { Badge, Button, Flex, Typography } from '@sigle/ui';
+import { Badge, Button, Container, Flex, Typography } from '@sigle/ui';
 import { useCeramic } from '@/components/Ceramic/CeramicProvider';
 import { DashboardLayout } from '@/components/Dashboard/DashboardLayout';
 import { TbBrandTwitter, TbLink } from 'react-icons/tb';
@@ -34,14 +34,14 @@ const ProfilePage = () => {
             </Link>
           </Flex>
 
-          <Flex gap="3" align="center" css={{ mt: '$2' }}>
+          <Flex mt="2" gap="3" align="center">
             <Typography size="lg" fontWeight="semiBold">
               Motoki Tonn
             </Typography>
             <Badge>motoki.btc</Badge>
           </Flex>
 
-          <Flex gap="3" css={{ mt: '$3' }}>
+          <Flex mt="3" gap="3">
             <Typography size="sm">
               106{' '}
               <Typography as="span" size="sm" color="gray9">
@@ -56,14 +56,16 @@ const ProfilePage = () => {
             </Typography>
           </Flex>
 
-          <Typography size="sm" color="gray9" css={{ mt: '$3' }}>
-            Writer and novelist. Bestselling author of “AI will change the
-            world”. Lover of coffee, books, and the written word. Always on the
-            lookout for new stories to tell. Can't stop the feeling that time is
-            going faster.
-          </Typography>
+          <Flex mt="3">
+            <Typography size="sm" color="gray9">
+              Writer and novelist. Bestselling author of “AI will change the
+              world”. Lover of coffee, books, and the written word. Always on
+              the lookout for new stories to tell. Can't stop the feeling that
+              time is going faster.
+            </Typography>
+          </Flex>
 
-          <Flex gap="3" css={{ mt: '$5' }} align="center">
+          <Flex mt="5" gap="3" align="center">
             <Link href="https://www.sigle.io" target="_blank">
               <Flex align="center" gap="1">
                 <Typography size="sm" color="gray9">
@@ -93,7 +95,7 @@ const ProfilePage = () => {
         </Flex>
       }
     >
-      TODO
+      <Container css={{ maxWidth: 680, py: '$5' }}></Container>
     </DashboardLayout>
   );
 };
