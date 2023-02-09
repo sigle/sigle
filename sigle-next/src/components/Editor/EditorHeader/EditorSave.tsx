@@ -1,17 +1,14 @@
-import { useMemo, useState } from 'react';
+import { useMemo } from 'react';
 import { graphql, useMutation } from 'react-relay';
 import { shallow } from 'zustand/shallow';
 import { Button } from '@sigle/ui';
 import { EditorSaveUpdatePostMutation } from '@/__generated__/relay/EditorSaveUpdatePostMutation.graphql';
-import { useRestartSetTimeout } from '@/hooks/useRestartSetTimeout';
 import { useEditorStore } from '../store';
 
 export const EditorSave = () => {
   const initialStory = useEditorStore((state) => state.initialStory);
   const setInitialStory = useEditorStore((state) => state.setInitialStory);
   const story = useEditorStore((state) => state.story);
-  const restart = useRestartSetTimeout();
-  const [saved, setSaved] = useState(false);
 
   const [commit, isLoadingUpdatePost] =
     useMutation<EditorSaveUpdatePostMutation>(
@@ -48,10 +45,6 @@ export const EditorSave = () => {
       onCompleted: (data) => {
         if (data.updatePost) {
           setInitialStory(story);
-          // Show the saved message
-          setSaved(true);
-          // Hide the saved message after 2 seconds
-          restart(setTimeout(() => setSaved(false), 2000));
         }
       },
     });
@@ -66,7 +59,7 @@ export const EditorSave = () => {
       onClick={handleSave}
       disabled={!hasChanged || isLoadingUpdatePost}
     >
-      {isLoadingUpdatePost ? 'Saving...' : saved ? 'Saved' : 'Save'}
+      {isLoadingUpdatePost ? 'Saving...' : !hasChanged ? 'Saved' : 'Save'}
     </Button>
   );
 };

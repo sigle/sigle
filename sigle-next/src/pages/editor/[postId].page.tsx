@@ -1,7 +1,6 @@
 import { TooltipProvider } from '@radix-ui/react-tooltip';
 import { useRouter } from 'next/router';
 import { graphql, useLazyLoadQuery, useMutation } from 'react-relay';
-import { useEffect } from 'react';
 import useDeepCompareEffect from 'use-deep-compare-effect';
 import { Container } from '@sigle/ui';
 import { useCeramic } from '@/components/Ceramic/CeramicProvider';
@@ -11,14 +10,10 @@ import { EditorTitle } from '@/components/Editor/EditorTitle';
 import { EditorTipTap } from '@/components/Editor/EditorTiptap/EditorTipTap';
 import { PostIdEditorPagePostQuery } from '@/__generated__/relay/PostIdEditorPagePostQuery.graphql';
 import { useEditorStore } from '@/components/Editor/store';
-import { PostIdEditorUpdatePostMutation } from '@/__generated__/relay/PostIdEditorUpdatePostMutation.graphql';
-
-const autoSaveInterval = 3000;
 
 const Editor = () => {
   const router = useRouter();
   const { postId } = router.query;
-  const story = useEditorStore((state) => state.story);
   const setInitialStory = useEditorStore((state) => state.setInitialStory);
 
   const data = useLazyLoadQuery<PostIdEditorPagePostQuery>(
