@@ -4,7 +4,7 @@ import { useEffect } from 'react';
 import { useRouter } from 'next/router';
 import { Container, LoadingSpinner } from '@sigle/ui';
 import { useCeramic } from '@/components/Ceramic/CeramicProvider';
-import { EditorHeader } from '@/components/Editor/EditorHeader';
+import { EditorHeader } from '@/components/Editor/EditorHeader/EditorHeader';
 import type { newPostCreatePostMutation } from '@/__generated__/relay/newPostCreatePostMutation.graphql';
 
 const NewPost = () => {

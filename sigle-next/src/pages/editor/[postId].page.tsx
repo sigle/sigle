@@ -2,9 +2,10 @@ import { TooltipProvider } from '@radix-ui/react-tooltip';
 import { useRouter } from 'next/router';
 import { graphql, useLazyLoadQuery, useMutation } from 'react-relay';
 import { useEffect } from 'react';
+import useDeepCompareEffect from 'use-deep-compare-effect';
 import { Container } from '@sigle/ui';
 import { useCeramic } from '@/components/Ceramic/CeramicProvider';
-import { EditorHeader } from '@/components/Editor/EditorHeader';
+import { EditorHeader } from '@/components/Editor/EditorHeader/EditorHeader';
 import { EditorSettings } from '@/components/Editor/EditorSettings/EditorSettings';
 import { EditorTitle } from '@/components/Editor/EditorTitle';
 import { EditorTipTap } from '@/components/Editor/EditorTiptap/EditorTipTap';
@@ -18,7 +19,7 @@ const Editor = () => {
   const router = useRouter();
   const { postId } = router.query;
   const story = useEditorStore((state) => state.story);
-  const setStory = useEditorStore((state) => state.setStory);
+  const setInitialStory = useEditorStore((state) => state.setInitialStory);
 
   const data = useLazyLoadQuery<PostIdEditorPagePostQuery>(
     graphql`
@@ -35,59 +36,18 @@ const Editor = () => {
     { id: postId as string }
   );
 
-  const [commit] = useMutation<PostIdEditorUpdatePostMutation>(graphql`
-    mutation PostIdEditorUpdatePostMutation($input: UpdatePostInput!) {
-      updatePost(input: $input) {
-        clientMutationId
-        document {
-          id
-        }
-      }
-    }
-  `);
-
-  useEffect(() => {
+  /**
+   * This effect is used to update the initial story in the store when the data is loaded
+   * It's a deep compare effect to avoid useEffect issues with the story object
+   */
+  useDeepCompareEffect(() => {
     if (data.node) {
-      setStory(data.node);
+      // TODO fix types
+      setInitialStory(data.node as any);
     }
   }, [data.node]);
 
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      if (data.node && story) {
-        // Only save if the story has changed
-        console.log(story);
-        if (
-          story.title !== data.node.title ||
-          story.content !== data.node.content
-        ) {
-          commit({
-            variables: {
-              input: {
-                id: data.node.id!,
-                content: {
-                  title: story.title,
-                  content: story.content,
-                },
-              },
-            },
-            onCompleted: (data) => {
-              console.log(data);
-            },
-            onError: (error) => {
-              // TODO
-              console.error(error);
-            },
-          });
-        }
-      }
-    }, autoSaveInterval);
-
-    return () => clearTimeout(timer);
-  }, [data.node, story]);
-
   // TODO suspense loading state when loading story
-  // TODO auto save
   // TODO story not found
 
   return (

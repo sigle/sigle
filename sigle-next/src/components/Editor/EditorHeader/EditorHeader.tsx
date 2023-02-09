@@ -7,7 +7,8 @@ import {
 import Link from 'next/link';
 import { styled } from '@sigle/stitches.config';
 import { Button, Flex, IconButton } from '@sigle/ui';
-import { useEditorStore } from './store';
+import { useEditorStore } from '../store';
+import { EditorSave } from './EditorSave';
 
 // Scroll logic taken from https://www.codemzy.com/blog/react-sticky-header-disappear-scroll
 
@@ -80,9 +81,7 @@ export const EditorHeader = () => {
           </IconButton>
         </Link>
         <Flex align="center" gap="4">
-          <Button size="sm" variant={{ '@initial': 'light', '@md': 'ghost' }}>
-            Save
-          </Button>
+          <EditorSave />
           <Button
             size="sm"
             variant={{ '@initial': 'light', '@md': 'ghost' }}

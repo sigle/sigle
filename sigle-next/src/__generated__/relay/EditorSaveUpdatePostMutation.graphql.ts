@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<3a20e684e42bbdc18c8644d7417c46be>>
+ * @generated SignedSource<<788537d71571af4ed6bf1845bd5f5923>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -28,10 +28,10 @@ export type UpdateOptionsInput = {
   replace?: boolean | null;
   version?: any | null;
 };
-export type PostIdEditorUpdatePostMutation$variables = {
+export type EditorSaveUpdatePostMutation$variables = {
   input: UpdatePostInput;
 };
-export type PostIdEditorUpdatePostMutation$data = {
+export type EditorSaveUpdatePostMutation$data = {
   readonly updatePost: {
     readonly clientMutationId: string | null;
     readonly document: {
@@ -39,9 +39,9 @@ export type PostIdEditorUpdatePostMutation$data = {
     };
   } | null;
 };
-export type PostIdEditorUpdatePostMutation = {
-  response: PostIdEditorUpdatePostMutation$data;
-  variables: PostIdEditorUpdatePostMutation$variables;
+export type EditorSaveUpdatePostMutation = {
+  response: EditorSaveUpdatePostMutation$data;
+  variables: EditorSaveUpdatePostMutation$variables;
 };
 
 const node: ConcreteRequest = (function(){
@@ -101,7 +101,7 @@ return {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Fragment",
     "metadata": null,
-    "name": "PostIdEditorUpdatePostMutation",
+    "name": "EditorSaveUpdatePostMutation",
     "selections": (v1/*: any*/),
     "type": "Mutation",
     "abstractKey": null
@@ -110,20 +110,20 @@ return {
   "operation": {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Operation",
-    "name": "PostIdEditorUpdatePostMutation",
+    "name": "EditorSaveUpdatePostMutation",
     "selections": (v1/*: any*/)
   },
   "params": {
-    "cacheID": "f767333f1305568fb9d3e52ff63e7b43",
+    "cacheID": "c467e24025abaa7d9490eb3a37231760",
     "id": null,
     "metadata": {},
-    "name": "PostIdEditorUpdatePostMutation",
+    "name": "EditorSaveUpdatePostMutation",
     "operationKind": "mutation",
-    "text": "mutation PostIdEditorUpdatePostMutation(\n  $input: UpdatePostInput!\n) {\n  updatePost(input: $input) {\n    clientMutationId\n    document {\n      id\n    }\n  }\n}\n"
+    "text": "mutation EditorSaveUpdatePostMutation(\n  $input: UpdatePostInput!\n) {\n  updatePost(input: $input) {\n    clientMutationId\n    document {\n      id\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "a71d3b1415b89107782b2aa138e862e3";
+(node as any).hash = "2434456b202851cca0c14d2b6aa6c8fe";
 
 export default node;
