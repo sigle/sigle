@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<788537d71571af4ed6bf1845bd5f5923>>
+ * @generated SignedSource<<b0e15cf5e34b4a275a4d7a2e92d86c8c>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -36,6 +36,7 @@ export type EditorSaveUpdatePostMutation$data = {
     readonly clientMutationId: string | null;
     readonly document: {
       readonly id: string;
+      readonly title: string;
     };
   } | null;
 };
@@ -88,6 +89,13 @@ v1 = [
             "kind": "ScalarField",
             "name": "id",
             "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": null,
+            "kind": "ScalarField",
+            "name": "title",
+            "storageKey": null
           }
         ],
         "storageKey": null
@@ -114,16 +122,16 @@ return {
     "selections": (v1/*: any*/)
   },
   "params": {
-    "cacheID": "c467e24025abaa7d9490eb3a37231760",
+    "cacheID": "74d5cb5158507df61a43ebb0548d1ff4",
     "id": null,
     "metadata": {},
     "name": "EditorSaveUpdatePostMutation",
     "operationKind": "mutation",
-    "text": "mutation EditorSaveUpdatePostMutation(\n  $input: UpdatePostInput!\n) {\n  updatePost(input: $input) {\n    clientMutationId\n    document {\n      id\n    }\n  }\n}\n"
+    "text": "mutation EditorSaveUpdatePostMutation(\n  $input: UpdatePostInput!\n) {\n  updatePost(input: $input) {\n    clientMutationId\n    document {\n      id\n      title\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "2434456b202851cca0c14d2b6aa6c8fe";
+(node as any).hash = "f100959ce4b04eef43938d5c5c68223e";
 
 export default node;

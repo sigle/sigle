@@ -29,7 +29,14 @@ const DraftsPostsListQuery = graphql`
 `;
 
 const Drafts = () => {
-  const data = useLazyLoadQuery<draftsPostsListQuery>(DraftsPostsListQuery, {});
+  const data = useLazyLoadQuery<draftsPostsListQuery>(
+    DraftsPostsListQuery,
+    {},
+    {
+      // We always get the latest data from the server so we know we are editing the latest version
+      fetchPolicy: 'network-only',
+    }
+  );
 
   return (
     <DashboardLayout

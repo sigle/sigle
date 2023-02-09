@@ -18,6 +18,7 @@ export const EditorSave = () => {
             clientMutationId
             document {
               id
+              title
             }
           }
         }
