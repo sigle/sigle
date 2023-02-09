@@ -3,15 +3,52 @@ import { TooltipProvider } from '@radix-ui/react-tooltip';
 import { Button, Flex, Typography } from '@sigle/ui';
 import { useCeramic } from '@/components/Ceramic/CeramicProvider';
 import { DashboardLayout } from '@/components/Dashboard/DashboardLayout';
+import { TbBrandTwitter, TbLink } from 'react-icons/tb';
 
 const ProfilePage = () => {
   return (
     <DashboardLayout
       sidebarContent={
         <>
-          <Typography size="lg" fontWeight="bold">
-            Recommended
+          <Flex gap="3">
+            <Typography size="sm">
+              106{' '}
+              <Typography as="span" size="sm" color="gray9">
+                Following
+              </Typography>
+            </Typography>
+            <Typography size="sm">
+              3,209{' '}
+              <Typography as="span" size="sm" color="gray9">
+                Followers
+              </Typography>
+            </Typography>
+          </Flex>
+
+          <Typography size="sm" color="gray9" css={{ mt: '$3' }}>
+            Writer and novelist. Bestselling author of “AI will change the
+            world”. Lover of coffee, books, and the written word. Always on the
+            lookout for new stories to tell. Can't stop the feeling that time is
+            going faster.
           </Typography>
+
+          <Flex gap="3" css={{ mt: '$5' }} align="center">
+            <Link href="https://www.sigle.io" target="_blank">
+              <Flex align="center" gap="1">
+                <Typography size="sm" color="gray9">
+                  <TbLink size={16} />
+                </Typography>
+                <Typography size="sm" color="indigo">
+                  www.sigle.io
+                </Typography>
+              </Flex>
+            </Link>
+            <Link href="https://www.sigle.io" target="_blank">
+              <Typography size="sm">
+                <TbBrandTwitter fill="currentColor" stroke="0" size={16} />
+              </Typography>
+            </Link>
+          </Flex>
         </>
       }
       headerContent={
@@ -25,7 +62,7 @@ const ProfilePage = () => {
         </Flex>
       }
     >
-      Profile
+      TODO
     </DashboardLayout>
   );
 };
