@@ -1,7 +1,7 @@
-import { styled } from '@sigle/stitches.config';
-import { Button, Flex } from '@sigle/ui';
 import { Editor } from '@tiptap/react';
 import { useCallback, useState } from 'react';
+import { styled } from '@sigle/stitches.config';
+import { Button, Flex } from '@sigle/ui';
 import { slashCommands } from '../extensions/SlashCommand/commands';
 
 // const StyledDialogTitle = styled(DialogTitle, {
