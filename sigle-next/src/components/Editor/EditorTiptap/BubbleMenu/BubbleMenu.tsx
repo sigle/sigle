@@ -65,9 +65,13 @@ const BubbleMenuButton = styled('button', {
 
 interface EditorBubbleMenuProps {
   editor: Editor;
+  isMobile: boolean;
 }
 
-export const EditorBubbleMenu = ({ editor }: EditorBubbleMenuProps) => {
+export const EditorBubbleMenu = ({
+  editor,
+  isMobile,
+}: EditorBubbleMenuProps) => {
   globalStylesBubbleMenu();
   const linkOpen = useBubbleMenuStore((state) => state.linkOpen);
   const setLinkValue = useBubbleMenuStore((state) => state.setLinkValue);
@@ -106,6 +110,10 @@ export const EditorBubbleMenu = ({ editor }: EditorBubbleMenuProps) => {
         },
       }}
       shouldShow={({ editor, state, from, to, view }) => {
+        if (isMobile) {
+          return false;
+        }
+
         // Take the initial implementation of the plugin and extends it
         // https://github.com/ueberdosis/tiptap/blob/main/packages/extension-bubble-menu/src/bubble-menu-plugin.ts#L43
         const { doc, selection } = state;
