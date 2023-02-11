@@ -19,6 +19,11 @@ export const EditorSave = () => {
             document {
               id
               title
+              featuredImage
+              metaTitle
+              metaDescription
+              metaImage
+              canonicalUrl
             }
           }
         }
