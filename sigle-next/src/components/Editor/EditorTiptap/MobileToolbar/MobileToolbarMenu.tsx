@@ -1,7 +1,5 @@
 import { useState } from 'react';
 import { Editor } from '@tiptap/react';
-import { styled } from '@sigle/stitches.config';
-import { Flex } from '@sigle/ui';
 import {
   TbBold,
   TbCode,
@@ -11,6 +9,8 @@ import {
   TbStrikethrough,
   TbUnderline,
 } from 'react-icons/tb';
+import { styled } from '@sigle/stitches.config';
+import { Flex } from '@sigle/ui';
 
 const BubbleMenuButton = styled('button', {
   color: '$gray11',
