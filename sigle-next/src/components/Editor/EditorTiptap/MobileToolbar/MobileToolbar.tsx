@@ -3,6 +3,7 @@ import { useEffect, useRef, useState } from 'react';
 import { darkTheme, styled } from '@sigle/stitches.config';
 import { Container, Flex, IconButton, Typography } from '@sigle/ui';
 import { slashCommands } from '../extensions/SlashCommand/commands';
+import { MobileToolbarMenu } from './MobileToolbarMenu';
 
 const ToolbarContainer = styled(Container, {
   display: 'flex',
@@ -112,7 +113,7 @@ export const EditorMobileToolbar = ({ editor }: EditorMobileToolbarProps) => {
         }}
         gap="5"
       >
-        {/* <ToolbarMenu editor={editor} /> */}
+        <MobileToolbarMenu editor={editor} />
         <Flex
           css={{
             width: 2,

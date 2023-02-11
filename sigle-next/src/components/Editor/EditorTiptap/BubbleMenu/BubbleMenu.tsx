@@ -107,6 +107,8 @@ export const EditorBubbleMenu = ({
         theme: 'sigle-editor-bubble-menu',
         onHidden: () => {
           // When bubble menu is hidden, reset the link state
+          setLinkValue('');
+          toggleLink(false);
         },
       }}
       shouldShow={({ editor, state, from, to, view }) => {
