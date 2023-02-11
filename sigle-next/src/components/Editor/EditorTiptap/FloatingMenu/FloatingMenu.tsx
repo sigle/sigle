@@ -16,9 +16,13 @@ const globalStylesCustomEditor = globalCss({
 
 interface EditorFloatingMenuProps {
   editor: Editor;
+  isMobile: boolean;
 }
 
-export const EditorFloatingMenu = ({ editor }: EditorFloatingMenuProps) => {
+export const EditorFloatingMenu = ({
+  editor,
+  isMobile,
+}: EditorFloatingMenuProps) => {
   globalStylesCustomEditor();
 
   const handleButtonClick = () => {
@@ -36,8 +40,7 @@ export const EditorFloatingMenu = ({ editor }: EditorFloatingMenuProps) => {
         arrow: false,
       }}
       shouldShow={({ editor, state }) => {
-        // Should never show when read-only mode is enabled
-        if (!editor.isEditable) {
+        if (isMobile) {
           return false;
         }
 

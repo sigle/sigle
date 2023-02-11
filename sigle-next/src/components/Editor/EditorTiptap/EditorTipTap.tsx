@@ -145,7 +145,7 @@ export const EditorTipTap = () => {
       <StyledEditorContent editor={editor} />
       {editor && <EditorBottomInfo editor={editor} />}
       {editor && <EditorBubbleMenu editor={editor} isMobile={isMobile} />}
-      {editor && !isMobile && <EditorFloatingMenu editor={editor} />}
+      {editor && <EditorFloatingMenu editor={editor} isMobile={isMobile} />}
       {/* TODO mobile toolbar */}
     </div>
   );
