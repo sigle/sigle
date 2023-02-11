@@ -59,7 +59,7 @@ export const EditorSettings = () => {
           <Typography size="xs" color="gray9">
             Recommended: 70 characters.
             <br />
-            You have used 0 characters.
+            You have used {(story?.metaTitle || '').length} characters.
           </Typography>
         </StorySettingsRow>
         <StorySettingsRow>
@@ -80,7 +80,7 @@ export const EditorSettings = () => {
           <Typography size="xs" color="gray9">
             Recommended: 156 characters.
             <br />
-            You have used 0 characters.
+            You have used {(story?.metaDescription || '').length} characters.
           </Typography>
         </StorySettingsRow>
         <StorySettingsRow>
