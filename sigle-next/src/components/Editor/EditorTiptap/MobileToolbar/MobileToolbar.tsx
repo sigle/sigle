@@ -4,6 +4,7 @@ import { darkTheme, styled } from '@sigle/stitches.config';
 import { Container, Flex, IconButton, Typography } from '@sigle/ui';
 import { slashCommands } from '../extensions/SlashCommand/commands';
 import { MobileToolbarMenu } from './MobileToolbarMenu';
+import { MobileToolbarFloatingMenu } from './MobileToolbarFloatingMenu';
 
 const ToolbarContainer = styled(Container, {
   display: 'flex',
@@ -94,11 +95,10 @@ export const EditorMobileToolbar = ({ editor }: EditorMobileToolbarProps) => {
         transition: 'transform .25s',
       }}
     >
-      {/* <MobileFloatingMenu
+      <MobileToolbarFloatingMenu
         editor={editor}
-        story={story}
         triggerDisabled={!softKeyboardIsOpen}
-      /> */}
+      />
       <Flex
         css={{
           // workaround for iOS issue where flex gap is not acknowledged

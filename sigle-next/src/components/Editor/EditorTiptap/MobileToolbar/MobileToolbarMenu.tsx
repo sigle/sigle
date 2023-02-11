@@ -3,11 +3,11 @@ import { Editor } from '@tiptap/react';
 import {
   TbBold,
   TbCode,
-  TbCross,
   TbItalic,
   TbLink,
   TbStrikethrough,
   TbUnderline,
+  TbX,
 } from 'react-icons/tb';
 import { styled } from '@sigle/stitches.config';
 import { Flex } from '@sigle/ui';
@@ -160,7 +160,7 @@ export const MobileToolbarMenu = ({ editor }: MobileToolbarMenuProps) => {
             onClick={() => resetLink()}
             active={false}
           >
-            <TbCross size={18} />
+            <TbX size={18} />
           </BubbleMenuButton>
         </Flex>
       )}
