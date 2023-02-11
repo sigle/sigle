@@ -40,6 +40,7 @@ import { TipTapMobileScroll } from './extensions/MobileScroll';
 import { slashCommands } from './extensions/SlashCommand/commands';
 import { SlashCommands } from './extensions/SlashCommand/SlashCommands';
 import { CodeBlockComponent } from './extensions/CodeBlock/CodeBlock';
+import { EditorMobileToolbar } from './MobileToolbar/MobileToolbar';
 
 lowlight.registerLanguage('clarity (beta)', clarity);
 
@@ -146,7 +147,8 @@ export const EditorTipTap = () => {
       {editor && <EditorBottomInfo editor={editor} />}
       {editor && <EditorBubbleMenu editor={editor} isMobile={isMobile} />}
       {editor && <EditorFloatingMenu editor={editor} isMobile={isMobile} />}
-      {/* TODO mobile toolbar */}
+      {editor && <EditorFloatingMenu editor={editor} isMobile={isMobile} />}
+      {editor && isMobile && <EditorMobileToolbar editor={editor} />}
     </div>
   );
 };
