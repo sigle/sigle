@@ -1,6 +1,6 @@
 import { TbInfoCircle, TbTrash } from 'react-icons/tb';
 import { keyframes, styled } from '@sigle/stitches.config';
-import { Button, Flex, Input, Typography } from '@sigle/ui';
+import { Button, Flex, Input, Textarea, Typography } from '@sigle/ui';
 import { useEditorStore } from '../store';
 import { EditorSettingsModal } from './EditorSettingsModal';
 import { MetaImage } from './MetaImage';
@@ -66,10 +66,10 @@ export const EditorSettings = () => {
           <Typography size="sm" fontWeight="semiBold">
             Meta description
           </Typography>
-          {/* TODO replace by textarea */}
-          <Input
+          <Textarea
             placeholder="Meta description"
             maxLength={250}
+            rows={4}
             value={story?.metaDescription || ''}
             onChange={(e) =>
               setStory({
