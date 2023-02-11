@@ -1,6 +1,6 @@
 import { TbInfoCircle, TbTrash } from 'react-icons/tb';
-import { keyframes, styled } from '@sigle/stitches.config';
-import { Button, Flex, Input, Typography } from '@sigle/ui';
+import { styled } from '@sigle/stitches.config';
+import { Button, Flex, Input, Textarea, Typography } from '@sigle/ui';
 import { useEditorStore } from '../store';
 import { EditorSettingsModal } from './EditorSettingsModal';
 import { MetaImage } from './MetaImage';
@@ -21,6 +21,8 @@ const canonicalUrlInfo =
 export const EditorSettings = () => {
   const menuOpen = useEditorStore((state) => state.menuOpen);
   const toggleMenu = useEditorStore((state) => state.toggleMenu);
+  const story = useEditorStore((state) => state.story);
+  const setStory = useEditorStore((state) => state.setStory);
 
   return (
     <EditorSettingsModal
@@ -44,30 +46,57 @@ export const EditorSettings = () => {
           <Typography size="sm" fontWeight="semiBold">
             Meta title
           </Typography>
-          <Input placeholder="Meta title" maxLength={100} />
+          <Input
+            placeholder="Meta title"
+            maxLength={100}
+            value={story?.metaTitle || ''}
+            onChange={(e) =>
+              setStory({
+                metaTitle: e.target.value,
+              })
+            }
+          />
           <Typography size="xs" color="gray9">
             Recommended: 70 characters.
             <br />
-            You have used 0 characters.
+            You have used {(story?.metaTitle || '').length} characters.
           </Typography>
         </StorySettingsRow>
         <StorySettingsRow>
           <Typography size="sm" fontWeight="semiBold">
             Meta description
           </Typography>
-          {/* TODO replace by textarea */}
-          <Input placeholder="Meta description" maxLength={250} />
+          <Textarea
+            placeholder="Meta description"
+            maxLength={250}
+            rows={4}
+            value={story?.metaDescription || ''}
+            onChange={(e) =>
+              setStory({
+                metaDescription: e.target.value,
+              })
+            }
+          />
           <Typography size="xs" color="gray9">
             Recommended: 156 characters.
             <br />
-            You have used 0 characters.
+            You have used {(story?.metaDescription || '').length} characters.
           </Typography>
         </StorySettingsRow>
         <StorySettingsRow>
           <Typography size="sm" fontWeight="semiBold">
             Canonical URL
           </Typography>
-          <Input placeholder="https://" maxLength={1000} />
+          <Input
+            placeholder="https://"
+            maxLength={1000}
+            value={story?.canonicalUrl || ''}
+            onChange={(e) =>
+              setStory({
+                canonicalUrl: e.target.value,
+              })
+            }
+          />
           <Flex gap="1">
             <Typography size="xs" color="gray9">
               Add a canonical URL
