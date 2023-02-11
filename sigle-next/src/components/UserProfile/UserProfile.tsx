@@ -7,6 +7,7 @@ import { styled } from '@sigle/stitches.config';
 import { nextImageLoader } from '@/utils/nextImageLoader';
 import { addressAvatar } from '@/utils';
 import { UserProfile_profile$key } from '@/__generated__/relay/UserProfile_profile.graphql';
+import { prettifyUrl } from '@/utils/prettifyUrl';
 
 const AvatarContainer = styled('div', {
   display: 'flex',
@@ -94,8 +95,7 @@ export const UserProfile = (props: UserProfileProps) => {
                 <TbLink size={16} />
               </Typography>
               <Typography size="sm" color="indigo">
-                {/* TODO normalise url to only show www.sigle.io as example */}
-                {profileData.websiteUrl}
+                {prettifyUrl(profileData.websiteUrl)}
               </Typography>
             </Flex>
           </Link>
