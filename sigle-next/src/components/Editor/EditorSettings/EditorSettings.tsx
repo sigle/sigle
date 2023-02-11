@@ -1,5 +1,5 @@
 import { TbInfoCircle, TbTrash } from 'react-icons/tb';
-import { keyframes, styled } from '@sigle/stitches.config';
+import { styled } from '@sigle/stitches.config';
 import { Button, Flex, Input, Textarea, Typography } from '@sigle/ui';
 import { useEditorStore } from '../store';
 import { EditorSettingsModal } from './EditorSettingsModal';
