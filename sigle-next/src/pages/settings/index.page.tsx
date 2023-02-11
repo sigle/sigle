@@ -5,7 +5,14 @@ import { useForm } from 'react-hook-form';
 import { fetchQuery } from 'relay-runtime';
 import { useEffect } from 'react';
 import * as Sentry from '@sentry/nextjs';
-import { Button, Container, Flex, Input, Typography } from '@sigle/ui';
+import {
+  Button,
+  Container,
+  Flex,
+  Input,
+  Typography,
+  Textarea,
+} from '@sigle/ui';
 import { styled } from '@sigle/stitches.config';
 import { settingsPageProfileQuery } from '@/__generated__/relay/settingsPageProfileQuery.graphql';
 import { settingsCreateProfileMutation } from '@/__generated__/relay/settingsCreateProfileMutation.graphql';
@@ -27,32 +34,6 @@ const SettingsRow = styled(Flex, {
   gridTemplateColumns: '1fr',
   '@md': {
     gridTemplateColumns: '1fr 2fr',
-  },
-});
-
-const Textarea = styled('textarea', {
-  color: '$gray11',
-  border: '1px solid $gray8',
-  backgroundColor: '$gray1',
-  borderRadius: '$sm',
-  fontSize: '$sm',
-  lineHeight: '$sm',
-  py: '$2',
-  px: '$3',
-  outline: 'none',
-  transition: 'all 75ms $ease-in',
-
-  '::placeholder': {
-    color: '$gray8',
-  },
-
-  '&:hover': {
-    border: '1px solid $gray9',
-  },
-
-  '&:focus': {
-    border: '1px solid $indigo8',
-    boxShadow: '0px 0px 0px 3px rgba(145, 139, 255, 0.3)',
   },
 });
 

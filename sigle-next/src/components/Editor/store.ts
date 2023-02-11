@@ -4,6 +4,11 @@ interface EditorStory {
   id: string;
   title: string;
   content: string;
+  featuredImage?: string;
+  metaTitle?: string;
+  metaDescription?: string;
+  metaImage?: string;
+  canonicalUrl?: string;
 }
 
 interface EditorState {

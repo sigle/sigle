@@ -24,6 +24,11 @@ const Editor = () => {
             id
             title
             content
+            featuredImage
+            metaTitle
+            metaDescription
+            metaImage
+            canonicalUrl
           }
         }
       }
