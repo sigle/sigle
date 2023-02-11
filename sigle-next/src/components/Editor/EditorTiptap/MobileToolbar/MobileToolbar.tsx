@@ -1,7 +1,7 @@
-import { darkTheme, styled } from '@sigle/stitches.config';
-import { Container, Flex, IconButton, Typography } from '@sigle/ui';
 import { Editor } from '@tiptap/react';
 import { useEffect, useRef, useState } from 'react';
+import { darkTheme, styled } from '@sigle/stitches.config';
+import { Container, Flex, IconButton, Typography } from '@sigle/ui';
 import { slashCommands } from '../extensions/SlashCommand/commands';
 
 const ToolbarContainer = styled(Container, {
