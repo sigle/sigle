@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<4ba006f09300f67ef37e83a47eda75d3>>
+ * @generated SignedSource<<05bfa5a3787c7fa3e6dbb49e8b1c95f1>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -14,6 +14,19 @@ export type profilePagePostsListQuery$variables = {};
 export type profilePagePostsListQuery$data = {
   readonly viewer: {
     readonly id: string;
+    readonly postList: {
+      readonly edges: ReadonlyArray<{
+        readonly node: {
+          readonly id: string;
+          readonly " $fragmentSpreads": FragmentRefs<"StoryCardPublished_post">;
+        } | null;
+      } | null> | null;
+      readonly pageInfo: {
+        readonly endCursor: string | null;
+        readonly hasNextPage: boolean;
+        readonly startCursor: string | null;
+      };
+    } | null;
     readonly profile: {
       readonly id: string;
       readonly " $fragmentSpreads": FragmentRefs<"UserProfile_profile">;
@@ -31,6 +44,45 @@ var v0 = {
   "args": null,
   "kind": "ScalarField",
   "name": "id",
+  "storageKey": null
+},
+v1 = [
+  {
+    "kind": "Literal",
+    "name": "first",
+    "value": 10
+  }
+],
+v2 = {
+  "alias": null,
+  "args": null,
+  "concreteType": "PageInfo",
+  "kind": "LinkedField",
+  "name": "pageInfo",
+  "plural": false,
+  "selections": [
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "hasNextPage",
+      "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "startCursor",
+      "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "endCursor",
+      "storageKey": null
+    }
+  ],
   "storageKey": null
 };
 return {
@@ -65,6 +117,46 @@ return {
               }
             ],
             "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": (v1/*: any*/),
+            "concreteType": "PostConnection",
+            "kind": "LinkedField",
+            "name": "postList",
+            "plural": false,
+            "selections": [
+              (v2/*: any*/),
+              {
+                "alias": null,
+                "args": null,
+                "concreteType": "PostEdge",
+                "kind": "LinkedField",
+                "name": "edges",
+                "plural": true,
+                "selections": [
+                  {
+                    "alias": null,
+                    "args": null,
+                    "concreteType": "Post",
+                    "kind": "LinkedField",
+                    "name": "node",
+                    "plural": false,
+                    "selections": [
+                      (v0/*: any*/),
+                      {
+                        "args": null,
+                        "kind": "FragmentSpread",
+                        "name": "StoryCardPublished_post"
+                      }
+                    ],
+                    "storageKey": null
+                  }
+                ],
+                "storageKey": null
+              }
+            ],
+            "storageKey": "postList(first:10)"
           }
         ],
         "storageKey": null
@@ -127,6 +219,48 @@ return {
               }
             ],
             "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": (v1/*: any*/),
+            "concreteType": "PostConnection",
+            "kind": "LinkedField",
+            "name": "postList",
+            "plural": false,
+            "selections": [
+              (v2/*: any*/),
+              {
+                "alias": null,
+                "args": null,
+                "concreteType": "PostEdge",
+                "kind": "LinkedField",
+                "name": "edges",
+                "plural": true,
+                "selections": [
+                  {
+                    "alias": null,
+                    "args": null,
+                    "concreteType": "Post",
+                    "kind": "LinkedField",
+                    "name": "node",
+                    "plural": false,
+                    "selections": [
+                      (v0/*: any*/),
+                      {
+                        "alias": null,
+                        "args": null,
+                        "kind": "ScalarField",
+                        "name": "title",
+                        "storageKey": null
+                      }
+                    ],
+                    "storageKey": null
+                  }
+                ],
+                "storageKey": null
+              }
+            ],
+            "storageKey": "postList(first:10)"
           }
         ],
         "storageKey": null
@@ -134,16 +268,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "4427949845e65e019fa7b6f2896626c7",
+    "cacheID": "e03b06589570b5c6cf7bc8fc18b4d64a",
     "id": null,
     "metadata": {},
     "name": "profilePagePostsListQuery",
     "operationKind": "query",
-    "text": "query profilePagePostsListQuery {\n  viewer {\n    id\n    profile {\n      id\n      ...UserProfile_profile\n    }\n  }\n}\n\nfragment UserProfile_profile on Profile {\n  id\n  displayName\n  description\n  websiteUrl\n  twitterUsername\n}\n"
+    "text": "query profilePagePostsListQuery {\n  viewer {\n    id\n    profile {\n      id\n      ...UserProfile_profile\n    }\n    postList(first: 10) {\n      pageInfo {\n        hasNextPage\n        startCursor\n        endCursor\n      }\n      edges {\n        node {\n          id\n          ...StoryCardPublished_post\n        }\n      }\n    }\n  }\n}\n\nfragment StoryCardPublished_post on Post {\n  id\n  title\n}\n\nfragment UserProfile_profile on Profile {\n  id\n  displayName\n  description\n  websiteUrl\n  twitterUsername\n}\n"
   }
 };
 })();
 
-(node as any).hash = "d4edc23a60fe24754b7b5b87d12d0502";
+(node as any).hash = "83ce5019366660a110cfe0d953901d76";
 
 export default node;

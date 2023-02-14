@@ -8,6 +8,7 @@ import { DashboardLayout } from '@/components/Dashboard/DashboardLayout';
 import { UserProfile } from '@/components/UserProfile/UserProfile';
 import { UserProfileSkeleton } from '@/components/UserProfile/UserProfileSkeleton';
 import { profilePagePostsListQuery } from '@/__generated__/relay/profilePagePostsListQuery.graphql';
+import { StoryCardPublished } from '@/components/StoryCard/StoryCardPublished';
 
 const ProfilePageHeaderContent = () => {
   return (
@@ -32,6 +33,20 @@ const ProfilePage = () => {
             id
             ...UserProfile_profile
           }
+          postList(first: 10) {
+            pageInfo {
+              hasNextPage
+              hasNextPage
+              startCursor
+              endCursor
+            }
+            edges {
+              node {
+                id
+                ...StoryCardPublished_post
+              }
+            }
+          }
         }
       }
     `,
@@ -52,7 +67,15 @@ const ProfilePage = () => {
       }
       headerContent={<ProfilePageHeaderContent />}
     >
-      <Container css={{ maxWidth: 680, py: '$5' }}></Container>
+      <Container css={{ maxWidth: 680, py: '$5' }}>
+        {data.viewer.postList?.edges?.map((node) => (
+          <StoryCardPublished
+            key={node?.node?.id}
+            did={data.viewer!.id}
+            story={node!.node!}
+          />
+        ))}
+      </Container>
     </DashboardLayout>
   );
 };
