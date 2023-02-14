@@ -100,7 +100,7 @@ export const StoryCardPublished = (props: StoryCardPublishedProps) => {
           blockchain.
         </Typography>
       </Link>
-      <Flex justify="between" align="center" css={{ mt: '$9' }}>
+      <Flex justify="between" align="center" css={{ mt: '$6' }}>
         <Flex gap="2" align="center">
           <AvatarContainer>
             <Image
