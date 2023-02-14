@@ -1,5 +1,5 @@
-import { Button, Flex, Typography } from '@sigle/ui';
 import Link from 'next/link';
+import { Button, Flex, Typography } from '@sigle/ui';
 
 export const UserProfilePageHeader = () => {
   return (

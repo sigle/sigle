@@ -1,8 +1,8 @@
-import { UserProfilePosts_postList$key } from '@/__generated__/relay/UserProfilePosts_postList.graphql';
 import { graphql, usePaginationFragment } from 'react-relay';
 import { useInView } from 'react-cool-inview';
-import { StoryCardPublished } from '../StoryCard/StoryCardPublished';
 import { Flex, LoadingSpinner } from '@sigle/ui';
+import { UserProfilePosts_postList$key } from '@/__generated__/relay/UserProfilePosts_postList.graphql';
+import { StoryCardPublished } from '../StoryCard/StoryCardPublished';
 
 export const UserProfilePosts = (props: {
   user: UserProfilePosts_postList$key;
