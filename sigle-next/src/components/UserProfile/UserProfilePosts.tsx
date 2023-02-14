@@ -30,7 +30,7 @@ export const UserProfilePosts = (props: {
     onEnter: ({ observe, unobserve }) => {
       // Pause observe when loading data
       unobserve();
-      loadNext(5, {
+      loadNext(20, {
         onComplete: () => {
           if (hasNext) {
             observe();

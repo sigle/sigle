@@ -26,7 +26,7 @@ const ProfilePage = () => {
       }
     `,
     {
-      count: 5,
+      count: 20,
     },
     {
       // We always get the latest data from the server so we know we are editing the latest version
@@ -45,13 +45,6 @@ const ProfilePage = () => {
       headerContent={<UserProfilePageHeader />}
     >
       <Container css={{ maxWidth: 680, py: '$5' }}>
-        {/* {data.viewer.postList?.edges?.map((node) => (
-          <StoryCardPublished
-            key={node?.node?.id}
-            did={data.viewer!.id}
-            story={node!.node!}
-          />
-        ))} */}
         <UserProfilePosts user={data.viewer} />
       </Container>
     </DashboardLayout>
