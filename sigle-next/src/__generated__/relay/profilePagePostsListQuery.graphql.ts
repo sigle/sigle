@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<63b8e5d837477749c59ebc450b592598>>
+ * @generated SignedSource<<79eba89f80cb7e063fc7c7f003bba417>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -49,7 +49,14 @@ v1 = {
   "name": "id",
   "storageKey": null
 },
-v2 = [
+v2 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "displayName",
+  "storageKey": null
+},
+v3 = [
   {
     "kind": "Variable",
     "name": "after",
@@ -130,13 +137,7 @@ return {
             "plural": false,
             "selections": [
               (v1/*: any*/),
-              {
-                "alias": null,
-                "args": null,
-                "kind": "ScalarField",
-                "name": "displayName",
-                "storageKey": null
-              },
+              (v2/*: any*/),
               {
                 "alias": null,
                 "args": null,
@@ -163,7 +164,7 @@ return {
           },
           {
             "alias": null,
-            "args": (v2/*: any*/),
+            "args": (v3/*: any*/),
             "concreteType": "PostConnection",
             "kind": "LinkedField",
             "name": "postList",
@@ -191,6 +192,31 @@ return {
                         "args": null,
                         "kind": "ScalarField",
                         "name": "title",
+                        "storageKey": null
+                      },
+                      {
+                        "alias": null,
+                        "args": null,
+                        "concreteType": "CeramicAccount",
+                        "kind": "LinkedField",
+                        "name": "author",
+                        "plural": false,
+                        "selections": [
+                          (v1/*: any*/),
+                          {
+                            "alias": null,
+                            "args": null,
+                            "concreteType": "Profile",
+                            "kind": "LinkedField",
+                            "name": "profile",
+                            "plural": false,
+                            "selections": [
+                              (v1/*: any*/),
+                              (v2/*: any*/)
+                            ],
+                            "storageKey": null
+                          }
+                        ],
                         "storageKey": null
                       },
                       {
@@ -243,7 +269,7 @@ return {
           },
           {
             "alias": null,
-            "args": (v2/*: any*/),
+            "args": (v3/*: any*/),
             "filters": null,
             "handle": "connection",
             "key": "UserProfilePosts_postList",
@@ -256,12 +282,12 @@ return {
     ]
   },
   "params": {
-    "cacheID": "00a97d7440e8df57f0258c9f50c2ef4c",
+    "cacheID": "e0e289324599902bb78ece17810e3d4c",
     "id": null,
     "metadata": {},
     "name": "profilePagePostsListQuery",
     "operationKind": "query",
-    "text": "query profilePagePostsListQuery(\n  $count: Int!\n  $cursor: String\n) {\n  viewer {\n    id\n    profile {\n      id\n      ...UserProfile_profile\n    }\n    ...UserProfilePosts_postList\n  }\n}\n\nfragment StoryCardPublished_post on Post {\n  id\n  title\n}\n\nfragment UserProfilePosts_postList on CeramicAccount {\n  postList(first: $count, after: $cursor) {\n    edges {\n      node {\n        id\n        ...StoryCardPublished_post\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n  id\n}\n\nfragment UserProfile_profile on Profile {\n  id\n  displayName\n  description\n  websiteUrl\n  twitterUsername\n}\n"
+    "text": "query profilePagePostsListQuery(\n  $count: Int!\n  $cursor: String\n) {\n  viewer {\n    id\n    profile {\n      id\n      ...UserProfile_profile\n    }\n    ...UserProfilePosts_postList\n  }\n}\n\nfragment StoryCardPublished_post on Post {\n  id\n  title\n  author {\n    id\n    profile {\n      id\n      displayName\n    }\n  }\n}\n\nfragment UserProfilePosts_postList on CeramicAccount {\n  postList(first: $count, after: $cursor) {\n    edges {\n      node {\n        id\n        ...StoryCardPublished_post\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n  id\n}\n\nfragment UserProfile_profile on Profile {\n  id\n  displayName\n  description\n  websiteUrl\n  twitterUsername\n}\n"
   }
 };
 })();

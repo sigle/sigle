@@ -17,6 +17,7 @@ import { styled } from '@sigle/stitches.config';
 import { StoryCardPublished_post$key } from '@/__generated__/relay/StoryCardPublished_post.graphql';
 import { nextImageLoader } from '@/utils/nextImageLoader';
 import { addressAvatar } from '@/utils';
+import { getAddressFromDid } from '@/utils/getAddressFromDid';
 import { BadgeAddress } from '../UserProfile/BadgeAddress';
 
 const AvatarContainer = styled('div', {
@@ -39,7 +40,6 @@ const StyledDropdownMenuContent = styled(DropdownMenuContent, {
 });
 
 interface StoryCardPublishedProps {
-  did: string;
   story: StoryCardPublished_post$key;
 }
 
@@ -51,12 +51,20 @@ export const StoryCardPublished = (props: StoryCardPublishedProps) => {
       fragment StoryCardPublished_post on Post {
         id
         title
+        author {
+          id
+          profile {
+            id
+            displayName
+          }
+        }
       }
     `,
     props.story
   );
 
   const storyEditorLink = `/editor/${storyData.id}`;
+  const address = getAddressFromDid(storyData.author.id);
 
   return (
     <Flex
@@ -111,8 +119,15 @@ export const StoryCardPublished = (props: StoryCardPublishedProps) => {
               height={24}
             />
           </AvatarContainer>
-          <Typography size="xs">Motoki Tonn</Typography>
-          <BadgeAddress did={props.did} />
+          <Typography size="xs">
+            {storyData.author.profile?.displayName
+              ? storyData.author.profile.displayName
+              : `${address.split('').slice(0, 5).join('')}…${address
+                  .split('')
+                  .slice(-5)
+                  .join('')}`}
+          </Typography>
+          <BadgeAddress did={storyData.author.id} />
         </Flex>
         <DropdownMenu>
           <DropdownMenuTrigger asChild>

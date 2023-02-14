@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<fd318f22ea5312ac44db6f050c358dfd>>
+ * @generated SignedSource<<066079653ad52c4ee91e3a314649ef59>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -154,6 +154,37 @@ return {
                             "name": "title",
                             "storageKey": null
                           },
+                          {
+                            "alias": null,
+                            "args": null,
+                            "concreteType": "CeramicAccount",
+                            "kind": "LinkedField",
+                            "name": "author",
+                            "plural": false,
+                            "selections": [
+                              (v3/*: any*/),
+                              {
+                                "alias": null,
+                                "args": null,
+                                "concreteType": "Profile",
+                                "kind": "LinkedField",
+                                "name": "profile",
+                                "plural": false,
+                                "selections": [
+                                  (v3/*: any*/),
+                                  {
+                                    "alias": null,
+                                    "args": null,
+                                    "kind": "ScalarField",
+                                    "name": "displayName",
+                                    "storageKey": null
+                                  }
+                                ],
+                                "storageKey": null
+                              }
+                            ],
+                            "storageKey": null
+                          },
                           (v2/*: any*/)
                         ],
                         "storageKey": null
@@ -215,12 +246,12 @@ return {
     ]
   },
   "params": {
-    "cacheID": "59924285fdab05907e53fe069209ab4a",
+    "cacheID": "9d6e45a796e0db616ff22a68785ebb09",
     "id": null,
     "metadata": {},
     "name": "UserProfilePostsPaginationQuery",
     "operationKind": "query",
-    "text": "query UserProfilePostsPaginationQuery(\n  $count: Int\n  $cursor: String\n  $id: ID!\n) {\n  node(id: $id) {\n    __typename\n    ...UserProfilePosts_postList\n    id\n  }\n}\n\nfragment StoryCardPublished_post on Post {\n  id\n  title\n}\n\nfragment UserProfilePosts_postList on CeramicAccount {\n  postList(first: $count, after: $cursor) {\n    edges {\n      node {\n        id\n        ...StoryCardPublished_post\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n  id\n}\n"
+    "text": "query UserProfilePostsPaginationQuery(\n  $count: Int\n  $cursor: String\n  $id: ID!\n) {\n  node(id: $id) {\n    __typename\n    ...UserProfilePosts_postList\n    id\n  }\n}\n\nfragment StoryCardPublished_post on Post {\n  id\n  title\n  author {\n    id\n    profile {\n      id\n      displayName\n    }\n  }\n}\n\nfragment UserProfilePosts_postList on CeramicAccount {\n  postList(first: $count, after: $cursor) {\n    edges {\n      node {\n        id\n        ...StoryCardPublished_post\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n  id\n}\n"
   }
 };
 })();

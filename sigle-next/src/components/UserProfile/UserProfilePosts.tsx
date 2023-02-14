@@ -45,13 +45,7 @@ export const UserProfilePosts = (props: {
   return (
     <>
       {data.postList.edges.map((edge) => {
-        return (
-          <StoryCardPublished
-            key={edge?.node?.id}
-            did={data!.id}
-            story={edge!.node!}
-          />
-        );
+        return <StoryCardPublished key={edge?.node?.id} story={edge!.node!} />;
       })}
       <div ref={observe} />
       {isLoadingNext && (

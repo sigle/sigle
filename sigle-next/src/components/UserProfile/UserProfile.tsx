@@ -1,6 +1,6 @@
 import Image from 'next/image';
 import Link from 'next/link';
-import { TbBrandTwitter, TbLink } from 'react-icons/tb';
+import { TbBrandTwitter, TbLink, TbPencil } from 'react-icons/tb';
 import { graphql, useFragment } from 'react-relay';
 import { Badge, Button, Flex, Typography } from '@sigle/ui';
 import { styled } from '@sigle/stitches.config';
@@ -55,7 +55,7 @@ export const UserProfile = (props: UserProfileProps) => {
           />
         </AvatarContainer>
         <Link href="/settings">
-          <Button variant="light" size="sm">
+          <Button variant="light" size="sm" rightIcon={<TbPencil size={16} />}>
             Edit profile
           </Button>
         </Link>
