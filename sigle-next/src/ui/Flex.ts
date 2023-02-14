@@ -108,6 +108,9 @@ export const Flex = styled('div', {
       5: {
         marginTop: '$5',
       },
+      6: {
+        marginTop: '$6',
+      },
     },
   },
   defaultVariants: {

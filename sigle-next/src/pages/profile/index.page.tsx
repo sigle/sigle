@@ -1,27 +1,15 @@
-import Link from 'next/link';
 import { TooltipProvider } from '@radix-ui/react-tooltip';
 import { graphql, useLazyLoadQuery } from 'react-relay';
 import { Suspense } from 'react';
-import { Button, Container, Flex, Typography } from '@sigle/ui';
+import { Container } from '@sigle/ui';
 import { useCeramic } from '@/components/Ceramic/CeramicProvider';
 import { DashboardLayout } from '@/components/Dashboard/DashboardLayout';
 import { UserProfile } from '@/components/UserProfile/UserProfile';
 import { UserProfileSkeleton } from '@/components/UserProfile/UserProfileSkeleton';
 import { profilePagePostsListQuery } from '@/__generated__/relay/profilePagePostsListQuery.graphql';
 import { StoryCardPublished } from '@/components/StoryCard/StoryCardPublished';
-
-const ProfilePageHeaderContent = () => {
-  return (
-    <Flex justify="between" css={{ flex: 1 }}>
-      <Typography size="xl" fontWeight="bold">
-        Profile
-      </Typography>
-      <Link href="/editor/new">
-        <Button>Write story</Button>
-      </Link>
-    </Flex>
-  );
-};
+import { UserProfilePageHeader } from '@/components/UserProfile/UserProfilePageHeader';
+import { StoryCardPublishedSkeleton } from '@/components/StoryCard/StoryCardPublishedSkeleton';
 
 const ProfilePage = () => {
   const data = useLazyLoadQuery<profilePagePostsListQuery>(
@@ -65,7 +53,7 @@ const ProfilePage = () => {
       sidebarContent={
         <UserProfile did={data.viewer.id} profile={data.viewer.profile} />
       }
-      headerContent={<ProfilePageHeaderContent />}
+      headerContent={<UserProfilePageHeader />}
     >
       <Container css={{ maxWidth: 680, py: '$5' }}>
         {data.viewer.postList?.edges?.map((node) => (
@@ -91,9 +79,13 @@ export default function ProtectedProfilePage() {
           fallback={
             <DashboardLayout
               sidebarContent={<UserProfileSkeleton />}
-              headerContent={<ProfilePageHeaderContent />}
+              headerContent={<UserProfilePageHeader />}
             >
-              <Container css={{ maxWidth: 680, py: '$5' }}></Container>
+              <Container css={{ maxWidth: 680, py: '$5' }}>
+                <StoryCardPublishedSkeleton />
+                <StoryCardPublishedSkeleton />
+                <StoryCardPublishedSkeleton />
+              </Container>
             </DashboardLayout>
           }
         >
