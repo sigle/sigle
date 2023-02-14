@@ -7,38 +7,27 @@ import { DashboardLayout } from '@/components/Dashboard/DashboardLayout';
 import { UserProfile } from '@/components/UserProfile/UserProfile';
 import { UserProfileSkeleton } from '@/components/UserProfile/UserProfileSkeleton';
 import { profilePagePostsListQuery } from '@/__generated__/relay/profilePagePostsListQuery.graphql';
-import { StoryCardPublished } from '@/components/StoryCard/StoryCardPublished';
 import { UserProfilePageHeader } from '@/components/UserProfile/UserProfilePageHeader';
 import { StoryCardPublishedSkeleton } from '@/components/StoryCard/StoryCardPublishedSkeleton';
+import { UserProfilePosts } from '@/components/UserProfile/UserProfilePosts';
 
 const ProfilePage = () => {
   const data = useLazyLoadQuery<profilePagePostsListQuery>(
     graphql`
-      query profilePagePostsListQuery {
+      query profilePagePostsListQuery($count: Int!, $cursor: String) {
         viewer {
           id
           profile {
             id
             ...UserProfile_profile
           }
-          postList(first: 10) {
-            pageInfo {
-              hasNextPage
-              hasNextPage
-              startCursor
-              endCursor
-            }
-            edges {
-              node {
-                id
-                ...StoryCardPublished_post
-              }
-            }
-          }
+          ...UserProfilePosts_postList
         }
       }
     `,
-    {},
+    {
+      count: 5,
+    },
     {
       // We always get the latest data from the server so we know we are editing the latest version
       fetchPolicy: 'network-only',
@@ -56,13 +45,14 @@ const ProfilePage = () => {
       headerContent={<UserProfilePageHeader />}
     >
       <Container css={{ maxWidth: 680, py: '$5' }}>
-        {data.viewer.postList?.edges?.map((node) => (
+        {/* {data.viewer.postList?.edges?.map((node) => (
           <StoryCardPublished
             key={node?.node?.id}
             did={data.viewer!.id}
             story={node!.node!}
           />
-        ))}
+        ))} */}
+        <UserProfilePosts user={data.viewer} />
       </Container>
     </DashboardLayout>
   );
