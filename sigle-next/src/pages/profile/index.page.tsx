@@ -47,7 +47,9 @@ const ProfilePage = () => {
 
   return (
     <DashboardLayout
-      sidebarContent={<UserProfile profile={data.viewer.profile} />}
+      sidebarContent={
+        <UserProfile did={data.viewer.id} profile={data.viewer.profile} />
+      }
       headerContent={<ProfilePageHeaderContent />}
     >
       <Container css={{ maxWidth: 680, py: '$5' }}></Container>

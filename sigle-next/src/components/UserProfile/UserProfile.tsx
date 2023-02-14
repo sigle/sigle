@@ -8,6 +8,7 @@ import { nextImageLoader } from '@/utils/nextImageLoader';
 import { addressAvatar } from '@/utils';
 import { UserProfile_profile$key } from '@/__generated__/relay/UserProfile_profile.graphql';
 import { prettifyUrl } from '@/utils/prettifyUrl';
+import { BadgeAddress } from './BadgeAddress';
 
 const AvatarContainer = styled('div', {
   display: 'flex',
@@ -21,6 +22,7 @@ const AvatarContainer = styled('div', {
 });
 
 interface UserProfileProps {
+  did: string;
   profile: UserProfile_profile$key | null;
 }
 
@@ -63,7 +65,7 @@ export const UserProfile = (props: UserProfileProps) => {
         <Typography size="lg" fontWeight="semiBold">
           {profileData?.displayName}
         </Typography>
-        <Badge>motoki.btc</Badge>
+        <BadgeAddress did={props.did} />
       </Flex>
 
       <Flex mt="3" gap="3">
