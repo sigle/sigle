@@ -19,6 +19,7 @@
         ],
         "groups": ["builtin", "external", "parent", "sibling", "index"]
       }
-    ]
+    ],
+    "react/no-unescaped-entities": "off"
   }
 }

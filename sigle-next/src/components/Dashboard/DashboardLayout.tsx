@@ -38,6 +38,7 @@ export const DashboardLayout = ({
           css={{
             display: 'grid',
             gridTemplateColumns: '1fr 420px',
+            height: '100%',
           }}
         >
           {children}

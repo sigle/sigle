@@ -97,13 +97,17 @@ export const NavBarUserDropdown = () => {
                 <img src={addressAvatar(address, 36)} alt="user avatar" />
               </ImageAvatarContainer>
               <div>
-                {/* <Typography size="xs" lineClamp={1}>
-                  TODO name from profile
-                </Typography> */}
+                <Typography size="xs" lineClamp={1}>
+                  {`${address.split('').slice(0, 5).join('')}…${address
+                    .split('')
+                    .slice(-5)
+                    .join('')}`}
+                </Typography>
                 <Typography css={{ color: '$gray9' }} size="xs" lineClamp={1}>
-                  {address.split('').slice(0, 6).join('')}
-                  ...
-                  {address.split('').slice(-4).join('')}
+                  {`${address.split('').slice(0, 5).join('')}…${address
+                    .split('')
+                    .slice(-5)
+                    .join('')}`}
                 </Typography>
               </div>
             </LeftContainer>
