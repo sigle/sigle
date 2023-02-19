@@ -18,9 +18,9 @@ import { addressAvatar } from '@/utils';
 import { createNewEnvironment, useRelayStore } from '@/lib/relay';
 import { shortenAddress } from '@/utils/shortenAddress';
 import { composeClient } from '@/lib/composeDB';
-import { useDashboardStore } from '../store';
 import { UserDropdown_viewer$key } from '@/__generated__/relay/UserDropdown_viewer.graphql';
 import { getAddressFromDid } from '@/utils/getAddressFromDid';
+import { useDashboardStore } from '../store';
 
 const UserMenu = styled('div', {
   backgroundColor: '$gray3',
