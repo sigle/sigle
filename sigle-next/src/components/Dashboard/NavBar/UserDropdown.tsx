@@ -1,7 +1,8 @@
 import { useTheme } from 'next-themes';
 import Link from 'next/link';
 import { TbChevronDown } from 'react-icons/tb';
-import { useAccount, useDisconnect } from 'wagmi';
+import { useDisconnect } from 'wagmi';
+import { graphql, useFragment } from 'react-relay';
 import {
   DropdownMenu,
   DropdownMenuTrigger,
@@ -13,12 +14,13 @@ import {
   Flex,
 } from '@sigle/ui';
 import { styled } from '@sigle/stitches.config';
-import { useIsMounted } from '@sigle/hooks';
 import { addressAvatar } from '@/utils';
 import { createNewEnvironment, useRelayStore } from '@/lib/relay';
 import { shortenAddress } from '@/utils/shortenAddress';
 import { composeClient } from '@/lib/composeDB';
 import { useDashboardStore } from '../store';
+import { UserDropdown_viewer$key } from '@/__generated__/relay/UserDropdown_viewer.graphql';
+import { getAddressFromDid } from '@/utils/getAddressFromDid';
 
 const UserMenu = styled('div', {
   backgroundColor: '$gray3',
@@ -70,13 +72,27 @@ export const DropdownMenuItemWithSwitch = styled(DropdownMenuItem, {
   gap: '$2',
 });
 
-export const NavBarUserDropdown = () => {
+export const NavBarUserDropdown = (props: {
+  user: UserDropdown_viewer$key;
+}) => {
   const { resolvedTheme, setTheme } = useTheme();
   const collapsed = useDashboardStore((state) => state.collapsed);
   const toggleCollapse = useDashboardStore((state) => state.toggleCollapse);
   const setEnvironment = useRelayStore((store) => store.setEnvironment);
-  const { address } = useAccount();
   const { disconnect } = useDisconnect();
+
+  const user = useFragment(
+    graphql`
+      fragment UserDropdown_viewer on CeramicAccount {
+        id
+        profile {
+          id
+          displayName
+        }
+      }
+    `,
+    props.user
+  );
 
   const toggleTheme = () => {
     resolvedTheme === 'dark' ? setTheme('light') : setTheme('dark');
@@ -91,11 +107,13 @@ export const NavBarUserDropdown = () => {
     setEnvironment(createNewEnvironment());
   };
 
+  const address = getAddressFromDid(user.id);
+
   return (
     <Flex>
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
-          {!collapsed && address ? (
+          {!collapsed ? (
             <UserMenu>
               <LeftContainer>
                 <ImageAvatarContainer>
@@ -103,7 +121,7 @@ export const NavBarUserDropdown = () => {
                 </ImageAvatarContainer>
                 <div>
                   <Typography size="xs" lineClamp={1}>
-                    {shortenAddress(address)}
+                    {user.profile?.displayName || shortenAddress(address)}
                   </Typography>
                   <Typography css={{ color: '$gray9' }} size="xs" lineClamp={1}>
                     {shortenAddress(address)}
@@ -112,7 +130,7 @@ export const NavBarUserDropdown = () => {
               </LeftContainer>
               <StyledTbChevronDown />
             </UserMenu>
-          ) : collapsed && address ? (
+          ) : collapsed ? (
             <ImageAvatarContainer>
               <img src={addressAvatar(address, 36)} alt="user avatar" />
             </ImageAvatarContainer>

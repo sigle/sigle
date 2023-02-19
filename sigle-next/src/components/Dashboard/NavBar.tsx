@@ -166,16 +166,12 @@ export const NavBar = () => {
       query NavBarProfileQuery {
         viewer {
           id
-          profile {
-            id
-          }
+          ...UserDropdown_viewer
         }
       }
     `,
     {}
   );
-
-  console.log(data);
 
   const menu = [
     {
@@ -283,7 +279,11 @@ export const NavBar = () => {
           ))}
         </NavBarLinkContainer>
       </div>
-      {data.viewer ? <NavBarUserDropdown /> : <ConnectDropdown />}
+      {data.viewer ? (
+        <NavBarUserDropdown user={data.viewer} />
+      ) : (
+        <ConnectDropdown />
+      )}
     </StyledNavBar>
   );
 };
