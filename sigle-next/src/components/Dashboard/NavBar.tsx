@@ -30,7 +30,8 @@ import {
 } from '@sigle/ui';
 import { NavBarProfileQuery } from '@/__generated__/relay/NavBarProfileQuery.graphql';
 import { useDashboardStore } from './store';
-import { NavBarUserDropdown } from './NavBarUserDropdown';
+import { NavBarUserDropdown } from './NavBar/UserDropdown';
+import { ConnectDropdown } from './NavBar/ConnectDropdown';
 
 const StyledNavBar = styled('nav', {
   px: '$5',
@@ -290,7 +291,7 @@ export const NavBar = () => {
           ))}
         </NavBarLinkContainer>
       </div>
-      <Flex
+      {/* <Flex
         gap="3"
         justify="between"
         direction={collapsed ? 'columnReverse' : 'row'}
@@ -314,8 +315,8 @@ export const NavBar = () => {
             <TbWallet />
           </IconButton>
         ) : null}
-        <NavBarUserDropdown />
-      </Flex>
+      </Flex> */}
+      <ConnectDropdown />
     </StyledNavBar>
   );
 };
