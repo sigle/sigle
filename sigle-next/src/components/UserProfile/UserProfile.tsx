@@ -8,9 +8,9 @@ import { nextImageLoader } from '@/utils/nextImageLoader';
 import { addressAvatar } from '@/utils';
 import { UserProfile_profile$key } from '@/__generated__/relay/UserProfile_profile.graphql';
 import { prettifyUrl } from '@/utils/prettifyUrl';
-import { BadgeAddress } from './BadgeAddress';
 import { getAddressFromDid } from '@/utils/getAddressFromDid';
 import { shortenAddress } from '@/utils/shortenAddress';
+import { BadgeAddress } from './BadgeAddress';
 
 const AvatarContainer = styled('div', {
   display: 'flex',

@@ -15,9 +15,9 @@ import {
 import { styled } from '@sigle/stitches.config';
 import { useIsMounted } from '@sigle/hooks';
 import { addressAvatar } from '@/utils';
-import { useDashboardStore } from './store';
 import { createNewEnvironment, useRelayStore } from '@/lib/relay';
 import { shortenAddress } from '@/utils/shortenAddress';
+import { useDashboardStore } from './store';
 
 const UserMenu = styled('div', {
   backgroundColor: '$gray3',
