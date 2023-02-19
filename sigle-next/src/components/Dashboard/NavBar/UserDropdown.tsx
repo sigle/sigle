@@ -63,7 +63,7 @@ const StyledTbChevronDown = styled(TbChevronDown, {
   '[data-state=open] &': { transform: 'rotate(180deg)' },
 });
 
-export const StyledDropdownMenuItemDarkMode = styled(DropdownMenuItem, {
+export const DropdownMenuItemWithSwitch = styled(DropdownMenuItem, {
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'space-between',
@@ -129,22 +129,22 @@ export const NavBarUserDropdown = () => {
           <Link href="/settings">
             <DropdownMenuItem>Upgrade</DropdownMenuItem>
           </Link>
-          <StyledDropdownMenuItemDarkMode
+          <DropdownMenuItemWithSwitch
             // Prevent the dropdown from closing when clicking on the dark mode switch
             onSelect={(e) => e.preventDefault()}
             onClick={toggleTheme}
           >
             Dark mode
             <Switch checked={resolvedTheme === 'dark'} />
-          </StyledDropdownMenuItemDarkMode>
-          <StyledDropdownMenuItemDarkMode
+          </DropdownMenuItemWithSwitch>
+          <DropdownMenuItemWithSwitch
             // Prevent the dropdown from closing when clicking on the dark mode switch
             onSelect={(e) => e.preventDefault()}
             onClick={() => toggleCollapse(!collapsed)}
           >
             Menu collapsed
             <Switch checked={collapsed} />
-          </StyledDropdownMenuItemDarkMode>
+          </DropdownMenuItemWithSwitch>
           <DropdownMenuSeparator />
           <DropdownMenuItem onClick={handleLogout}>Log out</DropdownMenuItem>
         </DropdownMenuContent>

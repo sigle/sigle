@@ -11,7 +11,7 @@ import {
   Switch,
 } from '@sigle/ui';
 import { useDashboardStore } from '../store';
-import { StyledDropdownMenuItemDarkMode } from './UserDropdown';
+import { DropdownMenuItemWithSwitch } from './UserDropdown';
 
 export const ConnectDropdown = () => {
   const { resolvedTheme, setTheme } = useTheme();
@@ -65,22 +65,22 @@ export const ConnectDropdown = () => {
           align={collapsed ? 'start' : 'center'}
           sideOffset={12}
         >
-          <StyledDropdownMenuItemDarkMode
+          <DropdownMenuItemWithSwitch
             // Prevent the dropdown from closing when clicking on the dark mode switch
             onSelect={(e) => e.preventDefault()}
             onClick={toggleTheme}
           >
             Dark mode
             <Switch checked={resolvedTheme === 'dark'} />
-          </StyledDropdownMenuItemDarkMode>
-          <StyledDropdownMenuItemDarkMode
+          </DropdownMenuItemWithSwitch>
+          <DropdownMenuItemWithSwitch
             // Prevent the dropdown from closing when clicking on the dark mode switch
             onSelect={(e) => e.preventDefault()}
             onClick={() => toggleCollapse(!collapsed)}
           >
             Menu collapsed
             <Switch checked={collapsed} />
-          </StyledDropdownMenuItemDarkMode>
+          </DropdownMenuItemWithSwitch>
         </DropdownMenuContent>
       </DropdownMenu>
     </Flex>
