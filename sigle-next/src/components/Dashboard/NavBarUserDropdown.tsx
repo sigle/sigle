@@ -18,6 +18,7 @@ import { addressAvatar } from '@/utils';
 import { createNewEnvironment, useRelayStore } from '@/lib/relay';
 import { shortenAddress } from '@/utils/shortenAddress';
 import { useDashboardStore } from './store';
+import { composeClient } from '@/lib/composeDB';
 
 const UserMenu = styled('div', {
   backgroundColor: '$gray3',
@@ -84,7 +85,7 @@ export const NavBarUserDropdown = () => {
 
   const handleLogout = () => {
     // TODO clean ceramic did-session local storage
-    // TODO disconnect from ceramic and composeDB
+    composeClient.setDID(null as any);
     // Disconnect from wallet
     disconnect();
     setEnvironment(createNewEnvironment());
