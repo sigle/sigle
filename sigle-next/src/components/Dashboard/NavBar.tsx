@@ -190,7 +190,7 @@ export const NavBar = () => {
     //   label: 'Saved',
     // },
     {
-      href: '/profile',
+      href: `/profile/${data.viewer?.id}`,
       icon: <TbUserCircle size={navbarIconSize} />,
       label: 'Profile',
     },
