@@ -62,7 +62,7 @@ export const ConnectDropdown = () => {
         </DropdownMenuTrigger>
         <DropdownMenuContent
           side={collapsed ? 'right' : 'top'}
-          align={collapsed ? 'start' : 'end'}
+          align={collapsed ? 'start' : 'center'}
           sideOffset={12}
         >
           <StyledDropdownMenuItemDarkMode
