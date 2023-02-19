@@ -16,6 +16,8 @@ import { styled } from '@sigle/stitches.config';
 import { useIsMounted } from '@sigle/hooks';
 import { addressAvatar } from '@/utils';
 import { useDashboardStore } from './store';
+import { createNewEnvironment, useRelayStore } from '@/lib/relay';
+import { shortenAddress } from '@/utils/shortenAddress';
 
 const UserMenu = styled('div', {
   backgroundColor: '$gray3',
@@ -71,12 +73,21 @@ export const NavBarUserDropdown = () => {
   const { resolvedTheme, setTheme } = useTheme();
   const collapsed = useDashboardStore((state) => state.collapsed);
   const toggleCollapse = useDashboardStore((state) => state.toggleCollapse);
+  const setEnvironment = useRelayStore((store) => store.setEnvironment);
   const isMounted = useIsMounted();
   const { isConnected, address } = useAccount();
   const { disconnect } = useDisconnect();
 
   const toggleTheme = () => {
     resolvedTheme === 'dark' ? setTheme('light') : setTheme('dark');
+  };
+
+  const handleLogout = () => {
+    // TODO clean ceramic did-session local storage
+    // TODO disconnect from ceramic and composeDB
+    // Disconnect from wallet
+    disconnect();
+    setEnvironment(createNewEnvironment());
   };
 
   return (
@@ -98,16 +109,10 @@ export const NavBarUserDropdown = () => {
               </ImageAvatarContainer>
               <div>
                 <Typography size="xs" lineClamp={1}>
-                  {`${address.split('').slice(0, 5).join('')}…${address
-                    .split('')
-                    .slice(-5)
-                    .join('')}`}
+                  {shortenAddress(address)}
                 </Typography>
                 <Typography css={{ color: '$gray9' }} size="xs" lineClamp={1}>
-                  {`${address.split('').slice(0, 5).join('')}…${address
-                    .split('')
-                    .slice(-5)
-                    .join('')}`}
+                  {shortenAddress(address)}
                 </Typography>
               </div>
             </LeftContainer>
@@ -158,10 +163,7 @@ export const NavBarUserDropdown = () => {
         </StyledDropdownMenuItemDarkMode>
         {isConnected && <DropdownMenuSeparator />}
         {isConnected && (
-          // TODO clean ceramic did-session local storage
-          <DropdownMenuItem onClick={() => disconnect()}>
-            Log out
-          </DropdownMenuItem>
+          <DropdownMenuItem onClick={handleLogout}>Log out</DropdownMenuItem>
         )}
       </DropdownMenuContent>
     </DropdownMenu>

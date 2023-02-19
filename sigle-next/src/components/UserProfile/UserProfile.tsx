@@ -9,6 +9,8 @@ import { addressAvatar } from '@/utils';
 import { UserProfile_profile$key } from '@/__generated__/relay/UserProfile_profile.graphql';
 import { prettifyUrl } from '@/utils/prettifyUrl';
 import { BadgeAddress } from './BadgeAddress';
+import { getAddressFromDid } from '@/utils/getAddressFromDid';
+import { shortenAddress } from '@/utils/shortenAddress';
 
 const AvatarContainer = styled('div', {
   display: 'flex',
@@ -40,6 +42,8 @@ export const UserProfile = (props: UserProfileProps) => {
     props.profile
   );
 
+  const address = getAddressFromDid(props.did);
+
   // TODO handle case where profile is null
 
   return (
@@ -63,7 +67,7 @@ export const UserProfile = (props: UserProfileProps) => {
 
       <Flex mt="2" gap="3" align="center">
         <Typography size="lg" fontWeight="semiBold">
-          {profileData?.displayName}
+          {profileData?.displayName || shortenAddress(address)}
         </Typography>
         <BadgeAddress did={props.did} />
       </Flex>

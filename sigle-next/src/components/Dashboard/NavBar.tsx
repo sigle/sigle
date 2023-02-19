@@ -15,6 +15,7 @@ import {
   TbWallet,
 } from 'react-icons/tb';
 import { useAccount } from 'wagmi';
+import { graphql, useLazyLoadQuery } from 'react-relay';
 import { useIsMounted } from '@sigle/hooks';
 import { styled } from '@sigle/stitches.config';
 import {
@@ -27,6 +28,7 @@ import {
   TooltipTrigger,
   Typography,
 } from '@sigle/ui';
+import { NavBarProfileQuery } from '@/__generated__/relay/NavBarProfileQuery.graphql';
 import { useDashboardStore } from './store';
 import { NavBarUserDropdown } from './NavBarUserDropdown';
 
@@ -166,6 +168,25 @@ export const NavBar = () => {
   const { isConnected } = useAccount();
   const { setOpen: setConnectKitOpen } = useModal();
 
+  const data = useLazyLoadQuery<NavBarProfileQuery>(
+    graphql`
+      query NavBarProfileQuery {
+        viewer {
+          id
+          profile {
+            id
+          }
+        }
+      }
+    `,
+    {},
+    {
+      fetchPolicy: 'store-only',
+    }
+  );
+
+  console.log(data);
+
   const menu = [
     {
       href: '/',
@@ -177,11 +198,11 @@ export const NavBar = () => {
       icon: <TbMail size={navbarIconSize} />,
       label: 'Inbox',
     },
-    {
-      href: '/saved',
-      icon: <TbBookmarks size={navbarIconSize} />,
-      label: 'Saved',
-    },
+    // {
+    //   href: '/saved',
+    //   icon: <TbBookmarks size={navbarIconSize} />,
+    //   label: 'Saved',
+    // },
     {
       href: '/profile',
       icon: <TbUserCircle size={navbarIconSize} />,

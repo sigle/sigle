@@ -1,5 +1,6 @@
 import { Badge } from '@sigle/ui';
 import { getAddressFromDid } from '@/utils/getAddressFromDid';
+import { shortenAddress } from '@/utils/shortenAddress';
 
 interface BadgeAddressProps {
   did: string;
@@ -8,12 +9,5 @@ interface BadgeAddressProps {
 export const BadgeAddress = (props: BadgeAddressProps) => {
   const address = getAddressFromDid(props.did);
 
-  return (
-    <Badge>
-      {`${address.split('').slice(0, 5).join('')}…${address
-        .split('')
-        .slice(-5)
-        .join('')}`}
-    </Badge>
-  );
+  return <Badge>{`${shortenAddress(address)}`}</Badge>;
 };
