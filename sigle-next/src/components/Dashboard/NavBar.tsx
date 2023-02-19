@@ -1,9 +1,7 @@
-import { useModal } from 'connectkit';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import {
   TbBook,
-  TbBookmarks,
   TbChartPie,
   TbHome,
   TbMail,
@@ -12,11 +10,8 @@ import {
   TbPlus,
   TbUserCircle,
   TbUsers,
-  TbWallet,
 } from 'react-icons/tb';
-import { useAccount } from 'wagmi';
 import { graphql, useLazyLoadQuery } from 'react-relay';
-import { useIsMounted } from '@sigle/hooks';
 import { styled } from '@sigle/stitches.config';
 import {
   NumberBadge,
@@ -165,9 +160,6 @@ const NavBarLinkStoriesButton = styled(Button, {
 export const NavBar = () => {
   const router = useRouter();
   const collapsed = useDashboardStore((state) => state.collapsed);
-  const isMounted = useIsMounted();
-  const { isConnected } = useAccount();
-  const { setOpen: setConnectKitOpen } = useModal();
 
   const data = useLazyLoadQuery<NavBarProfileQuery>(
     graphql`
@@ -291,32 +283,7 @@ export const NavBar = () => {
           ))}
         </NavBarLinkContainer>
       </div>
-      {/* <Flex
-        gap="3"
-        justify="between"
-        direction={collapsed ? 'columnReverse' : 'row'}
-      >
-        {!isMounted() ? null : !collapsed && !isConnected ? (
-          <Button
-            color="indigo"
-            size="lg"
-            rightIcon={<TbWallet />}
-            css={{ flex: 1 }}
-            onClick={() => setConnectKitOpen(true)}
-          >
-            Connect wallet
-          </Button>
-        ) : collapsed && !isConnected ? (
-          <IconButton
-            color="indigo"
-            size="lg"
-            onClick={() => setConnectKitOpen(true)}
-          >
-            <TbWallet />
-          </IconButton>
-        ) : null}
-      </Flex> */}
-      <ConnectDropdown />
+      {data.viewer ? <NavBarUserDropdown /> : <ConnectDropdown />}
     </StyledNavBar>
   );
 };

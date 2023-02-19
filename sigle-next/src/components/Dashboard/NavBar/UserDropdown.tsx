@@ -1,6 +1,6 @@
 import { useTheme } from 'next-themes';
 import Link from 'next/link';
-import { TbChevronDown, TbSettings } from 'react-icons/tb';
+import { TbChevronDown } from 'react-icons/tb';
 import { useAccount, useDisconnect } from 'wagmi';
 import {
   DropdownMenu,
@@ -10,7 +10,7 @@ import {
   Typography,
   DropdownMenuSeparator,
   Switch,
-  IconButton,
+  Flex,
 } from '@sigle/ui';
 import { styled } from '@sigle/stitches.config';
 import { useIsMounted } from '@sigle/hooks';
@@ -75,8 +75,7 @@ export const NavBarUserDropdown = () => {
   const collapsed = useDashboardStore((state) => state.collapsed);
   const toggleCollapse = useDashboardStore((state) => state.toggleCollapse);
   const setEnvironment = useRelayStore((store) => store.setEnvironment);
-  const isMounted = useIsMounted();
-  const { isConnected, address } = useAccount();
+  const { address } = useAccount();
   const { disconnect } = useDisconnect();
 
   const toggleTheme = () => {
@@ -93,81 +92,63 @@ export const NavBarUserDropdown = () => {
   };
 
   return (
-    <DropdownMenu>
-      <DropdownMenuTrigger asChild>
-        {!isMounted() ? null : !collapsed && !isConnected ? ( // TODO when component is not mounter, add a skeleton
-          <IconButton variant="light" size="lg">
-            <TbSettings />
-          </IconButton>
-        ) : collapsed && !isConnected ? (
-          <IconButton variant="light" size="lg">
-            <TbSettings />
-          </IconButton>
-        ) : !collapsed && isConnected && address ? (
-          <UserMenu>
-            <LeftContainer>
-              <ImageAvatarContainer>
-                <img src={addressAvatar(address, 36)} alt="user avatar" />
-              </ImageAvatarContainer>
-              <div>
-                <Typography size="xs" lineClamp={1}>
-                  {shortenAddress(address)}
-                </Typography>
-                <Typography css={{ color: '$gray9' }} size="xs" lineClamp={1}>
-                  {shortenAddress(address)}
-                </Typography>
-              </div>
-            </LeftContainer>
-            <StyledTbChevronDown />
-          </UserMenu>
-        ) : collapsed && isConnected && address ? (
-          <ImageAvatarContainer>
-            <img src={addressAvatar(address, 36)} alt="user avatar" />
-          </ImageAvatarContainer>
-        ) : null}
-      </DropdownMenuTrigger>
-      <DropdownMenuContent
-        side={collapsed ? 'right' : 'top'}
-        align={
-          collapsed && isConnected
-            ? 'end'
-            : !collapsed && !isConnected
-            ? 'start'
-            : 'center'
-        }
-        sideOffset={12}
-      >
-        {isConnected && (
+    <Flex>
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+          {!collapsed && address ? (
+            <UserMenu>
+              <LeftContainer>
+                <ImageAvatarContainer>
+                  <img src={addressAvatar(address, 36)} alt="user avatar" />
+                </ImageAvatarContainer>
+                <div>
+                  <Typography size="xs" lineClamp={1}>
+                    {shortenAddress(address)}
+                  </Typography>
+                  <Typography css={{ color: '$gray9' }} size="xs" lineClamp={1}>
+                    {shortenAddress(address)}
+                  </Typography>
+                </div>
+              </LeftContainer>
+              <StyledTbChevronDown />
+            </UserMenu>
+          ) : collapsed && address ? (
+            <ImageAvatarContainer>
+              <img src={addressAvatar(address, 36)} alt="user avatar" />
+            </ImageAvatarContainer>
+          ) : null}
+        </DropdownMenuTrigger>
+        <DropdownMenuContent
+          side={collapsed ? 'right' : 'top'}
+          align={collapsed ? 'end' : 'center'}
+          sideOffset={12}
+        >
           <Link href="/settings">
             <DropdownMenuItem>Settings</DropdownMenuItem>
           </Link>
-        )}
-        {isConnected && (
           <Link href="/settings">
             <DropdownMenuItem>Upgrade</DropdownMenuItem>
           </Link>
-        )}
-        <StyledDropdownMenuItemDarkMode
-          // Prevent the dropdown from closing when clicking on the dark mode switch
-          onSelect={(e) => e.preventDefault()}
-          onClick={toggleTheme}
-        >
-          Dark mode
-          <Switch checked={resolvedTheme === 'dark'} />
-        </StyledDropdownMenuItemDarkMode>
-        <StyledDropdownMenuItemDarkMode
-          // Prevent the dropdown from closing when clicking on the dark mode switch
-          onSelect={(e) => e.preventDefault()}
-          onClick={() => toggleCollapse(!collapsed)}
-        >
-          Menu collapsed
-          <Switch checked={collapsed} />
-        </StyledDropdownMenuItemDarkMode>
-        {isConnected && <DropdownMenuSeparator />}
-        {isConnected && (
+          <StyledDropdownMenuItemDarkMode
+            // Prevent the dropdown from closing when clicking on the dark mode switch
+            onSelect={(e) => e.preventDefault()}
+            onClick={toggleTheme}
+          >
+            Dark mode
+            <Switch checked={resolvedTheme === 'dark'} />
+          </StyledDropdownMenuItemDarkMode>
+          <StyledDropdownMenuItemDarkMode
+            // Prevent the dropdown from closing when clicking on the dark mode switch
+            onSelect={(e) => e.preventDefault()}
+            onClick={() => toggleCollapse(!collapsed)}
+          >
+            Menu collapsed
+            <Switch checked={collapsed} />
+          </StyledDropdownMenuItemDarkMode>
+          <DropdownMenuSeparator />
           <DropdownMenuItem onClick={handleLogout}>Log out</DropdownMenuItem>
-        )}
-      </DropdownMenuContent>
-    </DropdownMenu>
+        </DropdownMenuContent>
+      </DropdownMenu>
+    </Flex>
   );
 };
