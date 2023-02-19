@@ -179,10 +179,7 @@ export const NavBar = () => {
         }
       }
     `,
-    {},
-    {
-      fetchPolicy: 'store-only',
-    }
+    {}
   );
 
   console.log(data);

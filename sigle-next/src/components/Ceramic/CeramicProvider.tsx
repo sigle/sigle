@@ -4,6 +4,7 @@ import { createContext, useState, useMemo } from 'react';
 import { useAccount } from 'wagmi';
 import { useEffect, useContext } from 'react';
 import { composeClient } from '@/lib/composeDB';
+import { createNewEnvironment, useRelayStore } from '@/lib/relay';
 
 interface CeramicContextType {
   session: DIDSession | null;
@@ -23,6 +24,7 @@ interface CeramicProviderProps {
 const CeramicProvider = ({ children }: CeramicProviderProps) => {
   const [session, setSession] = useState<DIDSession | null>(null);
   const { address, connector } = useAccount();
+  const setEnvironment = useRelayStore((store) => store.setEnvironment);
 
   useEffect(() => {
     loadSession();
@@ -37,6 +39,8 @@ const CeramicProvider = ({ children }: CeramicProviderProps) => {
       if (session && session.hasSession && !session.isExpired) {
         composeClient.setDID(session.did);
         setSession(session);
+        // Reset the relay environment to rerun all the queries as authenticated
+        setEnvironment(createNewEnvironment());
         return;
       }
     }
@@ -67,6 +71,8 @@ const CeramicProvider = ({ children }: CeramicProviderProps) => {
 
     composeClient.setDID(session.did);
     setSession(session);
+    // Reset the relay environment to rerun all the queries as authenticated
+    setEnvironment(createNewEnvironment());
   };
 
   const memoedValue = useMemo(

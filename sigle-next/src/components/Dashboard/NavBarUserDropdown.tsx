@@ -88,6 +88,7 @@ export const NavBarUserDropdown = () => {
     composeClient.setDID(null as any);
     // Disconnect from wallet
     disconnect();
+    // Reset the relay environment to rerun all the queries as unauthenticated
     setEnvironment(createNewEnvironment());
   };
 
