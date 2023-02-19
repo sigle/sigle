@@ -1,3 +1,6 @@
+import { useModal } from 'connectkit';
+import { useTheme } from 'next-themes';
+import { TbSettings, TbWallet } from 'react-icons/tb';
 import {
   Button,
   DropdownMenu,
@@ -7,9 +10,6 @@ import {
   IconButton,
   Switch,
 } from '@sigle/ui';
-import { useModal } from 'connectkit';
-import { useTheme } from 'next-themes';
-import { TbSettings, TbWallet } from 'react-icons/tb';
 import { useDashboardStore } from '../store';
 import { StyledDropdownMenuItemDarkMode } from './UserDropdown';
 
