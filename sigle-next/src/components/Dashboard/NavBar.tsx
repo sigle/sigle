@@ -218,7 +218,7 @@ export const NavBar = () => {
               key={index}
               {...item}
               isCollapsed={collapsed}
-              active={router.pathname === item.href}
+              active={router.asPath === item.href}
             />
           ))}
 
@@ -269,14 +269,14 @@ export const NavBar = () => {
             )}
           </NavBarStoriesContainer>
 
-          {menu2.map((item, index) => (
+          {/* {menu2.map((item, index) => (
             <NavBarLink
               key={index}
               {...item}
               isCollapsed={collapsed}
               active={router.pathname === item.href}
             />
-          ))}
+          ))} */}
         </NavBarLinkContainer>
       </div>
       {data.viewer ? (
