@@ -25,6 +25,7 @@ const AvatarContainer = styled('div', {
 
 interface UserProfileProps {
   did: string;
+  isViewer: boolean;
   profile: UserProfile_profile$key | null;
 }
 
@@ -58,11 +59,17 @@ export const UserProfile = (props: UserProfileProps) => {
             height={72}
           />
         </AvatarContainer>
-        <Link href="/settings">
-          <Button variant="light" size="sm" rightIcon={<TbPencil size={16} />}>
-            Edit profile
-          </Button>
-        </Link>
+        {props.isViewer ? (
+          <Link href="/settings">
+            <Button
+              variant="light"
+              size="sm"
+              rightIcon={<TbPencil size={16} />}
+            >
+              Edit profile
+            </Button>
+          </Link>
+        ) : null}
       </Flex>
 
       <Flex mt="2" gap="3" align="center">
