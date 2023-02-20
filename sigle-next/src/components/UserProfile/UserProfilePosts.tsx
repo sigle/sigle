@@ -45,7 +45,7 @@ export const UserProfilePosts = (props: {
   });
 
   if (!data.postList || !data.postList.edges) return null;
-  if (data.postList?.edges?.length === 0 && data.isViewer) {
+  if (data.postList.edges.length === 0 && data.isViewer) {
     return (
       <>
         <Flex justify="center" direction="column" align="center">
@@ -65,7 +65,7 @@ export const UserProfilePosts = (props: {
       </>
     );
   }
-  if (data.postList?.edges?.length === 0 && !data.isViewer) {
+  if (data.postList.edges.length === 0 && !data.isViewer) {
     return (
       <Flex justify="center" direction="column">
         <Typography
