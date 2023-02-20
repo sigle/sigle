@@ -1,6 +1,7 @@
 import { TooltipProvider } from '@radix-ui/react-tooltip';
 import { graphql, useLazyLoadQuery } from 'react-relay';
 import { Suspense } from 'react';
+import { useRouter } from 'next/router';
 import { Container } from '@sigle/ui';
 import { useCeramic } from '@/components/Ceramic/CeramicProvider';
 import { DashboardLayout } from '@/components/Dashboard/DashboardLayout';
@@ -10,7 +11,6 @@ import { UserProfilePageHeader } from '@/components/UserProfile/UserProfilePageH
 import { StoryCardPublishedSkeleton } from '@/components/StoryCard/StoryCardPublishedSkeleton';
 import { UserProfilePosts } from '@/components/UserProfile/UserProfilePosts';
 import { UserDidProfilePageQuery } from '@/__generated__/relay/UserDidProfilePageQuery.graphql';
-import { useRouter } from 'next/router';
 
 const ProfilePage = () => {
   const router = useRouter();
