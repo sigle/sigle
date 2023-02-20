@@ -15,8 +15,8 @@ const AvatarContainer = styled('div', {
   justifyContent: 'center',
   alignSelf: 'center',
   overflow: 'hidden',
-  width: 40,
-  height: 40,
+  width: 36,
+  height: 36,
   br: '$sm',
 });
 
@@ -62,10 +62,10 @@ export const UserProfilePageHeader = (props: UserProfilePageHeaderProps) => {
         <AvatarContainer>
           <Image
             loader={nextImageLoader}
-            src={addressAvatar(address, 40)}
+            src={addressAvatar(address, 36)}
             alt="Picture of the author"
-            width={40}
-            height={40}
+            width={36}
+            height={36}
           />
         </AvatarContainer>
         <Typography size="xl" fontWeight="bold">
