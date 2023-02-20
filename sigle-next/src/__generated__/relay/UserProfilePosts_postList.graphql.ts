@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<6d489f21e1967ad883c3af360fee4820>>
+ * @generated SignedSource<<630a0113fea3143c1f9162c0f2c2e1ec>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -12,6 +12,7 @@ import { ReaderFragment, RefetchableFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type UserProfilePosts_postList$data = {
   readonly id: string;
+  readonly isViewer: boolean;
   readonly postList: {
     readonly edges: ReadonlyArray<{
       readonly node: {
@@ -77,6 +78,14 @@ return {
   },
   "name": "UserProfilePosts_postList",
   "selections": [
+    (v1/*: any*/),
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "isViewer",
+      "storageKey": null
+    },
     {
       "alias": "postList",
       "args": null,
@@ -154,14 +163,13 @@ return {
         }
       ],
       "storageKey": null
-    },
-    (v1/*: any*/)
+    }
   ],
   "type": "CeramicAccount",
   "abstractKey": null
 };
 })();
 
-(node as any).hash = "25a89c36950da7760731bf00d6924bdf";
+(node as any).hash = "e726e02c056b3d878a6a8d18e3434455";
 
 export default node;

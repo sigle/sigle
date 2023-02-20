@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<066079653ad52c4ee91e3a314649ef59>>
+ * @generated SignedSource<<744e935997dce7d86a91cb3a2bfedae0>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -124,6 +124,13 @@ return {
             "selections": [
               {
                 "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "isViewer",
+                "storageKey": null
+              },
+              {
+                "alias": null,
                 "args": (v4/*: any*/),
                 "concreteType": "PostConnection",
                 "kind": "LinkedField",
@@ -246,16 +253,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "9d6e45a796e0db616ff22a68785ebb09",
+    "cacheID": "f9436eded109c990b51154b8388988b7",
     "id": null,
     "metadata": {},
     "name": "UserProfilePostsPaginationQuery",
     "operationKind": "query",
-    "text": "query UserProfilePostsPaginationQuery(\n  $count: Int\n  $cursor: String\n  $id: ID!\n) {\n  node(id: $id) {\n    __typename\n    ...UserProfilePosts_postList\n    id\n  }\n}\n\nfragment StoryCardPublished_post on Post {\n  id\n  title\n  author {\n    id\n    profile {\n      id\n      displayName\n    }\n  }\n}\n\nfragment UserProfilePosts_postList on CeramicAccount {\n  postList(first: $count, after: $cursor) {\n    edges {\n      node {\n        id\n        ...StoryCardPublished_post\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n  id\n}\n"
+    "text": "query UserProfilePostsPaginationQuery(\n  $count: Int\n  $cursor: String\n  $id: ID!\n) {\n  node(id: $id) {\n    __typename\n    ...UserProfilePosts_postList\n    id\n  }\n}\n\nfragment StoryCardPublished_post on Post {\n  id\n  title\n  author {\n    id\n    profile {\n      id\n      displayName\n    }\n  }\n}\n\nfragment UserProfilePosts_postList on CeramicAccount {\n  id\n  isViewer\n  postList(first: $count, after: $cursor) {\n    edges {\n      node {\n        id\n        ...StoryCardPublished_post\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "25a89c36950da7760731bf00d6924bdf";
+(node as any).hash = "e726e02c056b3d878a6a8d18e3434455";
 
 export default node;

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<7800e1a02dff4f9073db79481e820122>>
+ * @generated SignedSource<<8e51de10ac7d61d6f4eb31e15a006104>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -117,12 +117,7 @@ return {
             "kind": "InlineFragment",
             "selections": [
               (v4/*: any*/),
-              {
-                "kind": "RequiredField",
-                "field": (v5/*: any*/),
-                "action": "THROW",
-                "path": "node.isViewer"
-              },
+              (v5/*: any*/),
               {
                 "alias": null,
                 "args": null,
@@ -332,16 +327,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "7fe55f47c840cf2b5f7391c385d2b5be",
+    "cacheID": "0bb72fc1f56a0118e4907a9e499cb0af",
     "id": null,
     "metadata": {},
     "name": "UserDidProfilePageQuery",
     "operationKind": "query",
-    "text": "query UserDidProfilePageQuery(\n  $id: ID!\n  $count: Int!\n  $cursor: String\n) {\n  node(id: $id) {\n    __typename\n    ... on CeramicAccount {\n      id\n      isViewer\n      profile {\n        id\n        ...UserProfile_profile\n      }\n      ...UserProfilePosts_postList\n    }\n    id\n  }\n}\n\nfragment StoryCardPublished_post on Post {\n  id\n  title\n  author {\n    id\n    profile {\n      id\n      displayName\n    }\n  }\n}\n\nfragment UserProfilePosts_postList on CeramicAccount {\n  postList(first: $count, after: $cursor) {\n    edges {\n      node {\n        id\n        ...StoryCardPublished_post\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n  id\n}\n\nfragment UserProfile_profile on Profile {\n  id\n  displayName\n  description\n  websiteUrl\n  twitterUsername\n}\n"
+    "text": "query UserDidProfilePageQuery(\n  $id: ID!\n  $count: Int!\n  $cursor: String\n) {\n  node(id: $id) {\n    __typename\n    ... on CeramicAccount {\n      id\n      isViewer\n      profile {\n        id\n        ...UserProfile_profile\n      }\n      ...UserProfilePosts_postList\n    }\n    id\n  }\n}\n\nfragment StoryCardPublished_post on Post {\n  id\n  title\n  author {\n    id\n    profile {\n      id\n      displayName\n    }\n  }\n}\n\nfragment UserProfilePosts_postList on CeramicAccount {\n  id\n  isViewer\n  postList(first: $count, after: $cursor) {\n    edges {\n      node {\n        id\n        ...StoryCardPublished_post\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n\nfragment UserProfile_profile on Profile {\n  id\n  displayName\n  description\n  websiteUrl\n  twitterUsername\n}\n"
   }
 };
 })();
 
-(node as any).hash = "f602ad0cb06229e31a4a4f21c19d4cd4";
+(node as any).hash = "a9df19a892ad9da6f00057df0aae0508";
 
 export default node;

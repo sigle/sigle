@@ -53,7 +53,7 @@ export const UserProfile = (props: UserProfileProps) => {
         <AvatarContainer>
           <Image
             loader={nextImageLoader}
-            src={addressAvatar('TODO', 72)}
+            src={addressAvatar(address, 72)}
             alt="Picture of the author"
             width={72}
             height={72}

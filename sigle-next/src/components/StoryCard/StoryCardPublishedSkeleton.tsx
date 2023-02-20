@@ -3,7 +3,16 @@ import { Flex } from '@sigle/ui';
 import { pulse } from '@/ui/animations';
 
 const SkeletonContainer = styled('div', {
-  animation: `${pulse} $transitions$animate-pulse`,
+  variants: {
+    animate: {
+      true: {
+        animation: `${pulse} $transitions$animate-pulse`,
+      },
+      false: {
+        animation: 'none',
+      },
+    },
+  },
 });
 
 const Skeleton = styled('div', {
@@ -12,9 +21,16 @@ const Skeleton = styled('div', {
   maxWidth: '100%',
 });
 
-export const StoryCardPublishedSkeleton = () => {
+interface StoryCardPublishedSkeletonProps {
+  animate?: boolean;
+}
+
+export const StoryCardPublishedSkeleton = ({
+  animate,
+}: StoryCardPublishedSkeletonProps) => {
   return (
     <SkeletonContainer
+      animate={animate}
       css={{
         borderTop: '1px solid $gray6',
         py: '$6',
@@ -25,12 +41,12 @@ export const StoryCardPublishedSkeleton = () => {
     >
       <Skeleton css={{ height: 16, width: 130 }} />
       <Flex mt="3">
-        <Skeleton css={{ height: 26, width: 500 }} />
+        <Skeleton css={{ height: 26, width: '60%' }} />
       </Flex>
-      <Flex mt="2" gap="1" direction="column">
-        <Skeleton css={{ height: 16, width: '100%' }} />
-        <Skeleton css={{ height: 16, width: '100%' }} />
-        <Skeleton css={{ height: 16, width: '100%' }} />
+      <Flex mt="2" css={{ gap: 7 }} direction="column">
+        <Skeleton css={{ height: 14, width: '100%' }} />
+        <Skeleton css={{ height: 14, width: '100%' }} />
+        <Skeleton css={{ height: 14, width: '70%' }} />
       </Flex>
       <Flex mt="6" gap="2" align="center">
         <Skeleton css={{ height: 24, width: 24, br: '$xs' }} />
