@@ -2,7 +2,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { TbBrandTwitter, TbLink, TbPencil } from 'react-icons/tb';
 import { graphql, useFragment } from 'react-relay';
-import { Badge, Button, Flex, Typography } from '@sigle/ui';
+import { Button, Flex, Typography } from '@sigle/ui';
 import { styled } from '@sigle/stitches.config';
 import { nextImageLoader } from '@/utils/nextImageLoader';
 import { addressAvatar } from '@/utils';
