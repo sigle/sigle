@@ -68,7 +68,11 @@ export const UserProfilePosts = (props: {
   if (data.postList?.edges?.length === 0 && !data.isViewer) {
     return (
       <Flex justify="center" direction="column">
-        <Typography color="gray9" css={{ mb: '$10', textAlign: 'center' }}>
+        <Typography
+          color="gray9"
+          fontWeight="semiBold"
+          css={{ mb: '$10', textAlign: 'center' }}
+        >
           This user has no published stories yet.
         </Typography>
       </Flex>
