@@ -45,8 +45,6 @@ export const UserProfile = (props: UserProfileProps) => {
 
   const address = getAddressFromDid(props.did);
 
-  // TODO handle case where profile is null
-
   return (
     <>
       <Flex justify="between">
