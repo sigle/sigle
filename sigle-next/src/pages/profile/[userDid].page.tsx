@@ -26,6 +26,7 @@ const ProfilePage = () => {
               id
               ...UserProfile_profile
             }
+            ...UserProfilePageHeader_user
             ...UserProfilePosts_postList
           }
         }
@@ -38,7 +39,7 @@ const ProfilePage = () => {
     {}
   );
 
-  // TODO 404 if no profile
+  // TODO 404 if no user
   if (!data.node) return null;
 
   console.log('data', data);
@@ -52,7 +53,7 @@ const ProfilePage = () => {
           profile={data.node.profile || null}
         />
       }
-      headerContent={<UserProfilePageHeader />}
+      headerContent={<UserProfilePageHeader user={data.node} />}
     >
       <Container css={{ maxWidth: 680, py: '$5' }}>
         <UserProfilePosts user={data.node} />
@@ -73,10 +74,7 @@ export default function ProtectedProfilePage() {
       {session ? (
         <Suspense
           fallback={
-            <DashboardLayout
-              sidebarContent={<UserProfileSkeleton />}
-              headerContent={<UserProfilePageHeader />}
-            >
+            <DashboardLayout sidebarContent={<UserProfileSkeleton />}>
               <Container css={{ maxWidth: 680, py: '$5' }}>
                 <StoryCardPublishedSkeleton />
                 <StoryCardPublishedSkeleton />
