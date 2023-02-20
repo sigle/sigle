@@ -42,8 +42,6 @@ const ProfilePage = () => {
   // TODO 404 if no user
   if (!data.node) return null;
 
-  console.log('data', data);
-
   return (
     <DashboardLayout
       sidebarContent={
