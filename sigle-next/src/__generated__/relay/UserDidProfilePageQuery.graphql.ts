@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<b7761d60f838ccc8f9897fd890c0a6ee>>
+ * @generated SignedSource<<7bbbe6ccde8e2ae3bea889e13113e91f>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -10,68 +10,79 @@
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
-export type UserProfilePostsPaginationQuery$variables = {
-  count?: number | null;
+export type UserDidProfilePageQuery$variables = {
+  count: number;
   cursor?: string | null;
   id: string;
 };
-export type UserProfilePostsPaginationQuery$data = {
+export type UserDidProfilePageQuery$data = {
   readonly node: {
-    readonly " $fragmentSpreads": FragmentRefs<"UserProfilePosts_postList">;
+    readonly id?: string;
+    readonly isViewer?: boolean;
+    readonly profile?: {
+      readonly id: string;
+      readonly " $fragmentSpreads": FragmentRefs<"UserProfile_profile">;
+    } | null;
+    readonly " $fragmentSpreads": FragmentRefs<"UserProfilePageHeader_user" | "UserProfilePosts_postList">;
   } | null;
 };
-export type UserProfilePostsPaginationQuery = {
-  response: UserProfilePostsPaginationQuery$data;
-  variables: UserProfilePostsPaginationQuery$variables;
+export type UserDidProfilePageQuery = {
+  response: UserDidProfilePageQuery$data;
+  variables: UserDidProfilePageQuery$variables;
 };
 
 const node: ConcreteRequest = (function(){
-var v0 = [
-  {
-    "defaultValue": null,
-    "kind": "LocalArgument",
-    "name": "count"
-  },
-  {
-    "defaultValue": null,
-    "kind": "LocalArgument",
-    "name": "cursor"
-  },
-  {
-    "defaultValue": null,
-    "kind": "LocalArgument",
-    "name": "id"
-  }
-],
-v1 = [
+var v0 = {
+  "defaultValue": null,
+  "kind": "LocalArgument",
+  "name": "count"
+},
+v1 = {
+  "defaultValue": null,
+  "kind": "LocalArgument",
+  "name": "cursor"
+},
+v2 = {
+  "defaultValue": null,
+  "kind": "LocalArgument",
+  "name": "id"
+},
+v3 = [
   {
     "kind": "Variable",
     "name": "id",
     "variableName": "id"
   }
 ],
-v2 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "__typename",
-  "storageKey": null
-},
-v3 = {
+v4 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "id",
   "storageKey": null
 },
-v4 = {
+v5 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "isViewer",
   "storageKey": null
 },
-v5 = [
+v6 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "__typename",
+  "storageKey": null
+},
+v7 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "displayName",
+  "storageKey": null
+},
+v8 = [
   {
     "kind": "Variable",
     "name": "after",
@@ -85,23 +96,58 @@ v5 = [
 ];
 return {
   "fragment": {
-    "argumentDefinitions": (v0/*: any*/),
+    "argumentDefinitions": [
+      (v0/*: any*/),
+      (v1/*: any*/),
+      (v2/*: any*/)
+    ],
     "kind": "Fragment",
     "metadata": null,
-    "name": "UserProfilePostsPaginationQuery",
+    "name": "UserDidProfilePageQuery",
     "selections": [
       {
         "alias": null,
-        "args": (v1/*: any*/),
+        "args": (v3/*: any*/),
         "concreteType": null,
         "kind": "LinkedField",
         "name": "node",
         "plural": false,
         "selections": [
           {
-            "args": null,
-            "kind": "FragmentSpread",
-            "name": "UserProfilePosts_postList"
+            "kind": "InlineFragment",
+            "selections": [
+              (v4/*: any*/),
+              (v5/*: any*/),
+              {
+                "alias": null,
+                "args": null,
+                "concreteType": "Profile",
+                "kind": "LinkedField",
+                "name": "profile",
+                "plural": false,
+                "selections": [
+                  (v4/*: any*/),
+                  {
+                    "args": null,
+                    "kind": "FragmentSpread",
+                    "name": "UserProfile_profile"
+                  }
+                ],
+                "storageKey": null
+              },
+              {
+                "args": null,
+                "kind": "FragmentSpread",
+                "name": "UserProfilePageHeader_user"
+              },
+              {
+                "args": null,
+                "kind": "FragmentSpread",
+                "name": "UserProfilePosts_postList"
+              }
+            ],
+            "type": "CeramicAccount",
+            "abstractKey": null
           }
         ],
         "storageKey": null
@@ -112,27 +158,65 @@ return {
   },
   "kind": "Request",
   "operation": {
-    "argumentDefinitions": (v0/*: any*/),
+    "argumentDefinitions": [
+      (v2/*: any*/),
+      (v0/*: any*/),
+      (v1/*: any*/)
+    ],
     "kind": "Operation",
-    "name": "UserProfilePostsPaginationQuery",
+    "name": "UserDidProfilePageQuery",
     "selections": [
       {
         "alias": null,
-        "args": (v1/*: any*/),
+        "args": (v3/*: any*/),
         "concreteType": null,
         "kind": "LinkedField",
         "name": "node",
         "plural": false,
         "selections": [
-          (v2/*: any*/),
-          (v3/*: any*/),
+          (v6/*: any*/),
+          (v4/*: any*/),
           {
             "kind": "InlineFragment",
             "selections": [
-              (v4/*: any*/),
+              (v5/*: any*/),
               {
                 "alias": null,
-                "args": (v5/*: any*/),
+                "args": null,
+                "concreteType": "Profile",
+                "kind": "LinkedField",
+                "name": "profile",
+                "plural": false,
+                "selections": [
+                  (v4/*: any*/),
+                  (v7/*: any*/),
+                  {
+                    "alias": null,
+                    "args": null,
+                    "kind": "ScalarField",
+                    "name": "description",
+                    "storageKey": null
+                  },
+                  {
+                    "alias": null,
+                    "args": null,
+                    "kind": "ScalarField",
+                    "name": "websiteUrl",
+                    "storageKey": null
+                  },
+                  {
+                    "alias": null,
+                    "args": null,
+                    "kind": "ScalarField",
+                    "name": "twitterUsername",
+                    "storageKey": null
+                  }
+                ],
+                "storageKey": null
+              },
+              {
+                "alias": null,
+                "args": (v8/*: any*/),
                 "concreteType": "PostConnection",
                 "kind": "LinkedField",
                 "name": "postList",
@@ -154,7 +238,7 @@ return {
                         "name": "node",
                         "plural": false,
                         "selections": [
-                          (v3/*: any*/),
+                          (v4/*: any*/),
                           {
                             "alias": null,
                             "args": null,
@@ -170,8 +254,8 @@ return {
                             "name": "author",
                             "plural": false,
                             "selections": [
-                              (v3/*: any*/),
                               (v4/*: any*/),
+                              (v5/*: any*/),
                               {
                                 "alias": null,
                                 "args": null,
@@ -180,21 +264,15 @@ return {
                                 "name": "profile",
                                 "plural": false,
                                 "selections": [
-                                  (v3/*: any*/),
-                                  {
-                                    "alias": null,
-                                    "args": null,
-                                    "kind": "ScalarField",
-                                    "name": "displayName",
-                                    "storageKey": null
-                                  }
+                                  (v4/*: any*/),
+                                  (v7/*: any*/)
                                 ],
                                 "storageKey": null
                               }
                             ],
                             "storageKey": null
                           },
-                          (v2/*: any*/)
+                          (v6/*: any*/)
                         ],
                         "storageKey": null
                       },
@@ -238,7 +316,7 @@ return {
               },
               {
                 "alias": null,
-                "args": (v5/*: any*/),
+                "args": (v8/*: any*/),
                 "filters": null,
                 "handle": "connection",
                 "key": "UserProfilePosts_postList",
@@ -255,16 +333,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "18f3e43ef0c5dff2ca3929b28f427231",
+    "cacheID": "5371e9b9695baf1004667c70590827c4",
     "id": null,
     "metadata": {},
-    "name": "UserProfilePostsPaginationQuery",
+    "name": "UserDidProfilePageQuery",
     "operationKind": "query",
-    "text": "query UserProfilePostsPaginationQuery(\n  $count: Int\n  $cursor: String\n  $id: ID!\n) {\n  node(id: $id) {\n    __typename\n    ...UserProfilePosts_postList\n    id\n  }\n}\n\nfragment StoryCardPublished_post on Post {\n  id\n  title\n  author {\n    id\n    isViewer\n    profile {\n      id\n      displayName\n    }\n  }\n}\n\nfragment UserProfilePosts_postList on CeramicAccount {\n  id\n  isViewer\n  postList(first: $count, after: $cursor) {\n    edges {\n      node {\n        id\n        ...StoryCardPublished_post\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n"
+    "text": "query UserDidProfilePageQuery(\n  $id: ID!\n  $count: Int!\n  $cursor: String\n) {\n  node(id: $id) {\n    __typename\n    ... on CeramicAccount {\n      id\n      isViewer\n      profile {\n        id\n        ...UserProfile_profile\n      }\n      ...UserProfilePageHeader_user\n      ...UserProfilePosts_postList\n    }\n    id\n  }\n}\n\nfragment StoryCardPublished_post on Post {\n  id\n  title\n  author {\n    id\n    isViewer\n    profile {\n      id\n      displayName\n    }\n  }\n}\n\nfragment UserProfilePageHeader_user on CeramicAccount {\n  id\n  isViewer\n  profile {\n    id\n    displayName\n  }\n}\n\nfragment UserProfilePosts_postList on CeramicAccount {\n  id\n  isViewer\n  postList(first: $count, after: $cursor) {\n    edges {\n      node {\n        id\n        ...StoryCardPublished_post\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n\nfragment UserProfile_profile on Profile {\n  id\n  displayName\n  description\n  websiteUrl\n  twitterUsername\n}\n"
   }
 };
 })();
 
-(node as any).hash = "e726e02c056b3d878a6a8d18e3434455";
+(node as any).hash = "b75d4a7b621094166f959ce16af3d90d";
 
 export default node;

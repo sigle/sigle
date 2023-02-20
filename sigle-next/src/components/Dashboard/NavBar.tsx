@@ -1,9 +1,7 @@
-import { useModal } from 'connectkit';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import {
   TbBook,
-  TbBookmarks,
   TbChartPie,
   TbHome,
   TbMail,
@@ -12,10 +10,8 @@ import {
   TbPlus,
   TbUserCircle,
   TbUsers,
-  TbWallet,
 } from 'react-icons/tb';
-import { useAccount } from 'wagmi';
-import { useIsMounted } from '@sigle/hooks';
+import { graphql, useLazyLoadQuery } from 'react-relay';
 import { styled } from '@sigle/stitches.config';
 import {
   NumberBadge,
@@ -27,8 +23,10 @@ import {
   TooltipTrigger,
   Typography,
 } from '@sigle/ui';
+import { NavBarProfileQuery } from '@/__generated__/relay/NavBarProfileQuery.graphql';
 import { useDashboardStore } from './store';
-import { NavBarUserDropdown } from './NavBarUserDropdown';
+import { NavBarUserDropdown } from './NavBar/UserDropdown';
+import { ConnectDropdown } from './NavBar/ConnectDropdown';
 
 const StyledNavBar = styled('nav', {
   px: '$5',
@@ -162,9 +160,18 @@ const NavBarLinkStoriesButton = styled(Button, {
 export const NavBar = () => {
   const router = useRouter();
   const collapsed = useDashboardStore((state) => state.collapsed);
-  const isMounted = useIsMounted();
-  const { isConnected } = useAccount();
-  const { setOpen: setConnectKitOpen } = useModal();
+
+  const data = useLazyLoadQuery<NavBarProfileQuery>(
+    graphql`
+      query NavBarProfileQuery {
+        viewer {
+          id
+          ...UserDropdown_viewer
+        }
+      }
+    `,
+    {}
+  );
 
   const menu = [
     {
@@ -177,13 +184,13 @@ export const NavBar = () => {
       icon: <TbMail size={navbarIconSize} />,
       label: 'Inbox',
     },
+    // {
+    //   href: '/saved',
+    //   icon: <TbBookmarks size={navbarIconSize} />,
+    //   label: 'Saved',
+    // },
     {
-      href: '/saved',
-      icon: <TbBookmarks size={navbarIconSize} />,
-      label: 'Saved',
-    },
-    {
-      href: '/profile',
+      href: `/profile/${data.viewer?.id}`,
       icon: <TbUserCircle size={navbarIconSize} />,
       label: 'Profile',
     },
@@ -211,7 +218,7 @@ export const NavBar = () => {
               key={index}
               {...item}
               isCollapsed={collapsed}
-              active={router.pathname === item.href}
+              active={router.asPath === item.href}
             />
           ))}
 
@@ -262,42 +269,21 @@ export const NavBar = () => {
             )}
           </NavBarStoriesContainer>
 
-          {menu2.map((item, index) => (
+          {/* {menu2.map((item, index) => (
             <NavBarLink
               key={index}
               {...item}
               isCollapsed={collapsed}
               active={router.pathname === item.href}
             />
-          ))}
+          ))} */}
         </NavBarLinkContainer>
       </div>
-      <Flex
-        gap="3"
-        justify="between"
-        direction={collapsed ? 'columnReverse' : 'row'}
-      >
-        {!isMounted() ? null : !collapsed && !isConnected ? (
-          <Button
-            color="indigo"
-            size="lg"
-            rightIcon={<TbWallet />}
-            css={{ flex: 1 }}
-            onClick={() => setConnectKitOpen(true)}
-          >
-            Connect wallet
-          </Button>
-        ) : collapsed && !isConnected ? (
-          <IconButton
-            color="indigo"
-            size="lg"
-            onClick={() => setConnectKitOpen(true)}
-          >
-            <TbWallet />
-          </IconButton>
-        ) : null}
-        <NavBarUserDropdown />
-      </Flex>
+      {data.viewer ? (
+        <NavBarUserDropdown user={data.viewer} />
+      ) : (
+        <ConnectDropdown />
+      )}
     </StyledNavBar>
   );
 };

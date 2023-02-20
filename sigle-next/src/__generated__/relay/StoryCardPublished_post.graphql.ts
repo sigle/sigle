@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<247a54ed4eabed9ddbbb1e4b01315cc1>>
+ * @generated SignedSource<<f99044524a5f6826a3deeef6e56067f6>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -13,6 +13,7 @@ import { FragmentRefs } from "relay-runtime";
 export type StoryCardPublished_post$data = {
   readonly author: {
     readonly id: string;
+    readonly isViewer: boolean;
     readonly profile: {
       readonly displayName: string | null;
       readonly id: string;
@@ -61,6 +62,13 @@ return {
         {
           "alias": null,
           "args": null,
+          "kind": "ScalarField",
+          "name": "isViewer",
+          "storageKey": null
+        },
+        {
+          "alias": null,
+          "args": null,
           "concreteType": "Profile",
           "kind": "LinkedField",
           "name": "profile",
@@ -86,6 +94,6 @@ return {
 };
 })();
 
-(node as any).hash = "477b59c1c4ba09fd6f9b6a579ec5b261";
+(node as any).hash = "0b6c0c0beb300768751f309c279f21ee";
 
 export default node;

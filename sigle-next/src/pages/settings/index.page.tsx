@@ -1,5 +1,10 @@
 import { TooltipProvider } from '@radix-ui/react-tooltip';
-import { graphql, useLazyLoadQuery, useMutation } from 'react-relay';
+import {
+  graphql,
+  useLazyLoadQuery,
+  useMutation,
+  useRelayEnvironment,
+} from 'react-relay';
 import { TbBrandTwitter, TbWorld } from 'react-icons/tb';
 import { useForm } from 'react-hook-form';
 import { fetchQuery } from 'relay-runtime';
@@ -17,7 +22,6 @@ import { styled } from '@sigle/stitches.config';
 import { settingsPageProfileQuery } from '@/__generated__/relay/settingsPageProfileQuery.graphql';
 import { settingsCreateProfileMutation } from '@/__generated__/relay/settingsCreateProfileMutation.graphql';
 import { settingsUpdateProfileMutation } from '@/__generated__/relay/settingsUpdateProfileMutation.graphql';
-import { environment } from '@/lib/relay';
 import { DashboardLayout } from '@/components/Dashboard/DashboardLayout';
 import { useCeramic } from '@/components/Ceramic/CeramicProvider';
 
@@ -64,6 +68,7 @@ const Settings = () => {
     SettingsPageProfileQuery,
     {}
   );
+  const environment = useRelayEnvironment();
 
   const {
     register,

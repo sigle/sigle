@@ -13,6 +13,7 @@ const StyledSidebarContent = styled('div', {
   position: 'fixed',
   top: 80,
   bottom: 0,
+  width: 420,
 });
 
 interface SidebarContentProps {

@@ -1,51 +1,60 @@
 import { TooltipProvider } from '@radix-ui/react-tooltip';
 import { graphql, useLazyLoadQuery } from 'react-relay';
 import { Suspense } from 'react';
+import { useRouter } from 'next/router';
 import { Container } from '@sigle/ui';
 import { useCeramic } from '@/components/Ceramic/CeramicProvider';
 import { DashboardLayout } from '@/components/Dashboard/DashboardLayout';
 import { UserProfile } from '@/components/UserProfile/UserProfile';
 import { UserProfileSkeleton } from '@/components/UserProfile/UserProfileSkeleton';
-import { profilePagePostsListQuery } from '@/__generated__/relay/profilePagePostsListQuery.graphql';
 import { UserProfilePageHeader } from '@/components/UserProfile/UserProfilePageHeader';
 import { StoryCardPublishedSkeleton } from '@/components/StoryCard/StoryCardPublishedSkeleton';
 import { UserProfilePosts } from '@/components/UserProfile/UserProfilePosts';
+import { UserDidProfilePageQuery } from '@/__generated__/relay/UserDidProfilePageQuery.graphql';
 
 const ProfilePage = () => {
-  const data = useLazyLoadQuery<profilePagePostsListQuery>(
+  const router = useRouter();
+
+  const data = useLazyLoadQuery<UserDidProfilePageQuery>(
     graphql`
-      query profilePagePostsListQuery($count: Int!, $cursor: String) {
-        viewer {
-          id
-          profile {
+      query UserDidProfilePageQuery($id: ID!, $count: Int!, $cursor: String) {
+        node(id: $id) {
+          ... on CeramicAccount {
             id
-            ...UserProfile_profile
+            isViewer
+            profile {
+              id
+              ...UserProfile_profile
+            }
+            ...UserProfilePageHeader_user
+            ...UserProfilePosts_postList
           }
-          ...UserProfilePosts_postList
         }
       }
     `,
     {
       count: 20,
+      id: router.query.userDid as string,
     },
-    {
-      // We always get the latest data from the server so we know we are editing the latest version
-      fetchPolicy: 'network-only',
-    }
+    {}
   );
 
-  // TODO 404 if no profile
-  if (!data.viewer) return null;
+  // TODO 404 if no user
+  if (!data.node) return null;
 
   return (
     <DashboardLayout
       sidebarContent={
-        <UserProfile did={data.viewer.id} profile={data.viewer.profile} />
+        <UserProfile
+          did={data.node.id!}
+          isViewer={data.node.isViewer || false}
+          profile={data.node.profile || null}
+        />
       }
-      headerContent={<UserProfilePageHeader />}
+      headerContent={<UserProfilePageHeader user={data.node} />}
     >
       <Container css={{ maxWidth: 680, py: '$5' }}>
-        <UserProfilePosts user={data.viewer} />
+        <UserProfilePosts user={data.node} />
       </Container>
     </DashboardLayout>
   );
@@ -54,16 +63,16 @@ const ProfilePage = () => {
 export default function ProtectedProfilePage() {
   // TODO auth protect
   const { session } = useCeramic();
+  const router = useRouter();
+
+  if (!router.isReady) return null;
 
   return (
     <TooltipProvider>
       {session ? (
         <Suspense
           fallback={
-            <DashboardLayout
-              sidebarContent={<UserProfileSkeleton />}
-              headerContent={<UserProfilePageHeader />}
-            >
+            <DashboardLayout sidebarContent={<UserProfileSkeleton />}>
               <Container css={{ maxWidth: 680, py: '$5' }}>
                 <StoryCardPublishedSkeleton />
                 <StoryCardPublishedSkeleton />

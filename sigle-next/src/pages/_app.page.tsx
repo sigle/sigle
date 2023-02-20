@@ -7,7 +7,7 @@ import { ReactRelayContext } from 'react-relay';
 import 'tippy.js/dist/tippy.css';
 import 'tippy.js/themes/light-border.css';
 import { darkTheme, globalCss } from '@sigle/stitches.config';
-import { environment } from '@/lib/relay';
+import { useRelayStore } from '@/lib/relay';
 import { tailwindStyles } from '@/styles/tailwind';
 
 /**
@@ -40,6 +40,7 @@ const globalStyle = globalCss({
 
 export default function App({ Component, pageProps }: AppProps) {
   globalStyle();
+  const environment = useRelayStore((store) => store.environment);
 
   return (
     <>

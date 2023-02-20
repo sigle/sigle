@@ -2,12 +2,14 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { TbBrandTwitter, TbLink, TbPencil } from 'react-icons/tb';
 import { graphql, useFragment } from 'react-relay';
-import { Badge, Button, Flex, Typography } from '@sigle/ui';
+import { Button, Flex, Typography } from '@sigle/ui';
 import { styled } from '@sigle/stitches.config';
 import { nextImageLoader } from '@/utils/nextImageLoader';
 import { addressAvatar } from '@/utils';
 import { UserProfile_profile$key } from '@/__generated__/relay/UserProfile_profile.graphql';
 import { prettifyUrl } from '@/utils/prettifyUrl';
+import { getAddressFromDid } from '@/utils/getAddressFromDid';
+import { shortenAddress } from '@/utils/shortenAddress';
 import { BadgeAddress } from './BadgeAddress';
 
 const AvatarContainer = styled('div', {
@@ -23,6 +25,7 @@ const AvatarContainer = styled('div', {
 
 interface UserProfileProps {
   did: string;
+  isViewer: boolean;
   profile: UserProfile_profile$key | null;
 }
 
@@ -40,7 +43,7 @@ export const UserProfile = (props: UserProfileProps) => {
     props.profile
   );
 
-  // TODO handle case where profile is null
+  const address = getAddressFromDid(props.did);
 
   return (
     <>
@@ -48,22 +51,28 @@ export const UserProfile = (props: UserProfileProps) => {
         <AvatarContainer>
           <Image
             loader={nextImageLoader}
-            src={addressAvatar('TODO', 72)}
+            src={addressAvatar(address, 72)}
             alt="Picture of the author"
             width={72}
             height={72}
           />
         </AvatarContainer>
-        <Link href="/settings">
-          <Button variant="light" size="sm" rightIcon={<TbPencil size={16} />}>
-            Edit profile
-          </Button>
-        </Link>
+        {props.isViewer ? (
+          <Link href="/settings">
+            <Button
+              variant="light"
+              size="sm"
+              rightIcon={<TbPencil size={16} />}
+            >
+              Edit profile
+            </Button>
+          </Link>
+        ) : null}
       </Flex>
 
       <Flex mt="2" gap="3" align="center">
         <Typography size="lg" fontWeight="semiBold">
-          {profileData?.displayName}
+          {profileData?.displayName || shortenAddress(address)}
         </Typography>
         <BadgeAddress did={props.did} />
       </Flex>
