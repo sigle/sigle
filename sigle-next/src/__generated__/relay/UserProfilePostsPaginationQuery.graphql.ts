@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<744e935997dce7d86a91cb3a2bfedae0>>
+ * @generated SignedSource<<b7761d60f838ccc8f9897fd890c0a6ee>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -64,7 +64,14 @@ v3 = {
   "name": "id",
   "storageKey": null
 },
-v4 = [
+v4 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "isViewer",
+  "storageKey": null
+},
+v5 = [
   {
     "kind": "Variable",
     "name": "after",
@@ -122,16 +129,10 @@ return {
           {
             "kind": "InlineFragment",
             "selections": [
+              (v4/*: any*/),
               {
                 "alias": null,
-                "args": null,
-                "kind": "ScalarField",
-                "name": "isViewer",
-                "storageKey": null
-              },
-              {
-                "alias": null,
-                "args": (v4/*: any*/),
+                "args": (v5/*: any*/),
                 "concreteType": "PostConnection",
                 "kind": "LinkedField",
                 "name": "postList",
@@ -170,6 +171,7 @@ return {
                             "plural": false,
                             "selections": [
                               (v3/*: any*/),
+                              (v4/*: any*/),
                               {
                                 "alias": null,
                                 "args": null,
@@ -236,7 +238,7 @@ return {
               },
               {
                 "alias": null,
-                "args": (v4/*: any*/),
+                "args": (v5/*: any*/),
                 "filters": null,
                 "handle": "connection",
                 "key": "UserProfilePosts_postList",
@@ -253,12 +255,12 @@ return {
     ]
   },
   "params": {
-    "cacheID": "f9436eded109c990b51154b8388988b7",
+    "cacheID": "18f3e43ef0c5dff2ca3929b28f427231",
     "id": null,
     "metadata": {},
     "name": "UserProfilePostsPaginationQuery",
     "operationKind": "query",
-    "text": "query UserProfilePostsPaginationQuery(\n  $count: Int\n  $cursor: String\n  $id: ID!\n) {\n  node(id: $id) {\n    __typename\n    ...UserProfilePosts_postList\n    id\n  }\n}\n\nfragment StoryCardPublished_post on Post {\n  id\n  title\n  author {\n    id\n    profile {\n      id\n      displayName\n    }\n  }\n}\n\nfragment UserProfilePosts_postList on CeramicAccount {\n  id\n  isViewer\n  postList(first: $count, after: $cursor) {\n    edges {\n      node {\n        id\n        ...StoryCardPublished_post\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n"
+    "text": "query UserProfilePostsPaginationQuery(\n  $count: Int\n  $cursor: String\n  $id: ID!\n) {\n  node(id: $id) {\n    __typename\n    ...UserProfilePosts_postList\n    id\n  }\n}\n\nfragment StoryCardPublished_post on Post {\n  id\n  title\n  author {\n    id\n    isViewer\n    profile {\n      id\n      displayName\n    }\n  }\n}\n\nfragment UserProfilePosts_postList on CeramicAccount {\n  id\n  isViewer\n  postList(first: $count, after: $cursor) {\n    edges {\n      node {\n        id\n        ...StoryCardPublished_post\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n"
   }
 };
 })();

@@ -53,6 +53,7 @@ export const StoryCardPublished = (props: StoryCardPublishedProps) => {
         title
         author {
           id
+          isViewer
           profile {
             id
             displayName
@@ -64,6 +65,8 @@ export const StoryCardPublished = (props: StoryCardPublishedProps) => {
   );
 
   const storyEditorLink = `/editor/${storyData.id}`;
+  const storyReadLink = `/post/${storyData.id}`;
+  const userProfileLink = `/profile/${storyData.author.id}`;
   const address = getAddressFromDid(storyData.author.id);
 
   return (
@@ -88,7 +91,7 @@ export const StoryCardPublished = (props: StoryCardPublishedProps) => {
           8 MIN READ
         </Typography>
       </Flex>
-      <Link href={storyEditorLink}>
+      <Link href={storyReadLink}>
         <Typography
           size="lg"
           fontWeight="bold"
@@ -98,7 +101,7 @@ export const StoryCardPublished = (props: StoryCardPublishedProps) => {
           {storyData.title}
         </Typography>
       </Link>
-      <Link href={storyEditorLink}>
+      <Link href={storyReadLink}>
         <Typography size="sm" color="gray9" css={{ mt: '$2' }} lineClamp={3}>
           Blockchain has completely changed the way we think about money and
           created a true era of digital property. Bitcoin is the first
@@ -110,40 +113,46 @@ export const StoryCardPublished = (props: StoryCardPublishedProps) => {
       </Link>
       <Flex justify="between" align="center" css={{ mt: '$6' }}>
         <Flex gap="2" align="center">
-          <AvatarContainer>
-            <Image
-              loader={nextImageLoader}
-              src={addressAvatar('TODO', 24)}
-              alt="Picture of the author"
-              width={24}
-              height={24}
-            />
-          </AvatarContainer>
-          <Typography size="xs">
-            {storyData.author.profile?.displayName
-              ? storyData.author.profile.displayName
-              : `${address.split('').slice(0, 5).join('')}…${address
-                  .split('')
-                  .slice(-5)
-                  .join('')}`}
-          </Typography>
+          <Link href={userProfileLink}>
+            <AvatarContainer>
+              <Image
+                loader={nextImageLoader}
+                src={addressAvatar('TODO', 24)}
+                alt="Picture of the author"
+                width={24}
+                height={24}
+              />
+            </AvatarContainer>
+          </Link>
+          <Link href={userProfileLink}>
+            <Typography size="xs">
+              {storyData.author.profile?.displayName
+                ? storyData.author.profile.displayName
+                : `${address.split('').slice(0, 5).join('')}…${address
+                    .split('')
+                    .slice(-5)
+                    .join('')}`}
+            </Typography>
+          </Link>
           <BadgeAddress did={storyData.author.id} />
         </Flex>
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <IconButton size="xs" variant="ghost">
-              <TbDots />
-            </IconButton>
-          </DropdownMenuTrigger>
-          <StyledDropdownMenuContent side="left" align="end">
-            <DropdownMenuItem onSelect={() => router.push(storyEditorLink)}>
-              Edit
-            </DropdownMenuItem>
-            <StyledDropdownMenuItem onSelect={() => alert('TODO')}>
-              Delete
-            </StyledDropdownMenuItem>
-          </StyledDropdownMenuContent>
-        </DropdownMenu>
+        {storyData.author.isViewer ? (
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <IconButton size="xs" variant="ghost">
+                <TbDots />
+              </IconButton>
+            </DropdownMenuTrigger>
+            <StyledDropdownMenuContent side="left" align="end">
+              <DropdownMenuItem onSelect={() => router.push(storyEditorLink)}>
+                Edit
+              </DropdownMenuItem>
+              <StyledDropdownMenuItem onSelect={() => alert('TODO')}>
+                Delete
+              </StyledDropdownMenuItem>
+            </StyledDropdownMenuContent>
+          </DropdownMenu>
+        ) : null}
       </Flex>
     </Flex>
   );
