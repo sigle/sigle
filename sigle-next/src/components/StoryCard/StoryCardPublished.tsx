@@ -117,7 +117,7 @@ export const StoryCardPublished = (props: StoryCardPublishedProps) => {
             <AvatarContainer>
               <Image
                 loader={nextImageLoader}
-                src={addressAvatar('TODO', 24)}
+                src={addressAvatar(address, 24)}
                 alt="Picture of the author"
                 width={24}
                 height={24}
