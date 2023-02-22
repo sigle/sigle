@@ -1,0 +1,64 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "../node_modules/.prisma/client"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by the Prisma Client.
+model ceramic_config {
+  network String @db.VarChar(1024)
+
+  @@ignore
+}
+
+model ceramic_models {
+  model      String   @id @unique(map: "ceramic_models_model_unique") @db.VarChar(1024)
+  is_indexed Boolean  @default(true)
+  created_at DateTime @default(now()) @db.Timestamptz(6)
+  updated_at DateTime @default(now()) @db.Timestamptz(6)
+  updated_by String   @db.VarChar(1024)
+
+  @@index([is_indexed], map: "idx_ceramic_is_indexed")
+}
+
+model Post {
+  stream_id         String    @id(map: "idx_kkukt1szll_pkey") @unique(map: "constr_kkukt1szll_unique") @db.VarChar(255)
+  controller_did    String    @db.VarChar(1024)
+  stream_content    Json
+  tip               String    @db.VarChar(255)
+  last_anchored_at  DateTime? @db.Timestamptz(6)
+  first_anchored_at DateTime? @db.Timestamptz(6)
+  created_at        DateTime  @default(now()) @db.Timestamptz(6)
+  updated_at        DateTime  @default(now()) @db.Timestamptz(6)
+
+  @@index([created_at], map: "idx_kkukt1szll_created_at")
+  @@index([first_anchored_at], map: "idx_kkukt1szll_first_anchored_at")
+  @@index([last_anchored_at], map: "idx_kkukt1szll_last_anchored_at")
+  @@index([last_anchored_at, created_at], map: "idx_kkukt1szll_last_anchored_at_created_at")
+  @@index([stream_id], map: "idx_kkukt1szll_stream_id")
+  @@index([updated_at], map: "idx_kkukt1szll_updated_at")
+  @@map("kjzl6hvfrbw6c63zxon49b1l1fcq7hqanjj4tmuy3pv4rbb4gnbdakkukt1szll")
+}
+
+model Profile {
+  stream_id         String    @id(map: "idx_93jtd9t94w_pkey") @unique(map: "constr_93jtd9t94w_unique") @db.VarChar(255)
+  controller_did    String    @db.VarChar(1024)
+  stream_content    Json
+  tip               String    @db.VarChar(255)
+  last_anchored_at  DateTime? @db.Timestamptz(6)
+  first_anchored_at DateTime? @db.Timestamptz(6)
+  created_at        DateTime  @default(now()) @db.Timestamptz(6)
+  updated_at        DateTime  @default(now()) @db.Timestamptz(6)
+
+  @@index([created_at], map: "idx_93jtd9t94w_created_at")
+  @@index([first_anchored_at], map: "idx_93jtd9t94w_first_anchored_at")
+  @@index([last_anchored_at], map: "idx_93jtd9t94w_last_anchored_at")
+  @@index([last_anchored_at, created_at], map: "idx_93jtd9t94w_last_anchored_at_created_at")
+  @@index([stream_id], map: "idx_93jtd9t94w_stream_id")
+  @@index([updated_at], map: "idx_93jtd9t94w_updated_at")
+  @@map("kjzl6hvfrbw6c8kdwrxur6qqpp9tkjzehqp22atzxuk7ktbxmh30193jtd9t94w")
+}

@@ -1,7 +1,7 @@
 /**
  * This file is used to seed the database in a dev environment.
  */
-import { PrismaClient } from '@prisma/client';
+import { PrismaClient } from '.prisma/client';
 
 const main = async () => {
   const prisma = new PrismaClient();
