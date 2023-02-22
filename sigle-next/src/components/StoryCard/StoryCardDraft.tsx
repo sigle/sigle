@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { TbDots } from 'react-icons/tb';
-import { graphql, useFragment } from 'react-relay';
+import { format } from 'date-fns';
 import {
   Badge,
   DropdownMenu,
@@ -13,7 +13,7 @@ import {
   Typography,
 } from '@sigle/ui';
 import { styled } from '@sigle/stitches.config';
-import { StoryCardDraft_post$key } from '@/__generated__/relay/StoryCardDraft_post.graphql';
+import { CeramicPost } from '@/types/ceramic';
 
 const StyledDropdownMenuItem = styled(DropdownMenuItem, {
   color: '$orange11',
@@ -24,23 +24,13 @@ const StyledDropdownMenuContent = styled(DropdownMenuContent, {
 });
 
 interface StoryCardDraftProps {
-  story: StoryCardDraft_post$key;
+  post: CeramicPost;
 }
 
-export const StoryCardDraft = ({ story: storyProp }: StoryCardDraftProps) => {
+export const StoryCardDraft = ({ post }: StoryCardDraftProps) => {
   const router = useRouter();
 
-  const storyData = useFragment(
-    graphql`
-      fragment StoryCardDraft_post on Post {
-        id
-        title
-      }
-    `,
-    storyProp
-  );
-
-  const storyEditorLink = `/editor/${storyData.id}`;
+  const postEditorLink = `/editor/${post.id}`;
 
   return (
     <Flex
@@ -53,12 +43,12 @@ export const StoryCardDraft = ({ story: storyProp }: StoryCardDraftProps) => {
         },
       }}
     >
-      <Link href={storyEditorLink}>
+      <Link href={postEditorLink}>
         <Typography size="lg" fontWeight="bold" lineClamp={2}>
-          {storyData.title}
+          {post.title}
         </Typography>
       </Link>
-      <Link href={storyEditorLink}>
+      <Link href={postEditorLink}>
         <Typography size="sm" color="gray9" css={{ mt: '$2' }} lineClamp={3}>
           Blockchain has completely changed the way we think about money and
           created a true era of digital property. Bitcoin is the first
@@ -70,7 +60,7 @@ export const StoryCardDraft = ({ story: storyProp }: StoryCardDraftProps) => {
       </Link>
       <Flex justify="between" align="center" css={{ mt: '$9' }}>
         <Typography size="xs" color="gray9">
-          Feb 18, 2023 at 11:46am
+          {format(new Date(post.createdAt), "MMM dd, yyyy 'at' h:mmaaa")}
         </Typography>
         <Flex align="center" gap="2">
           <Badge>DRAFT</Badge>
@@ -81,7 +71,7 @@ export const StoryCardDraft = ({ story: storyProp }: StoryCardDraftProps) => {
               </IconButton>
             </DropdownMenuTrigger>
             <StyledDropdownMenuContent side="left" align="end">
-              <DropdownMenuItem onSelect={() => router.push(storyEditorLink)}>
+              <DropdownMenuItem onSelect={() => router.push(postEditorLink)}>
                 Edit
               </DropdownMenuItem>
               <StyledDropdownMenuItem onSelect={() => alert('TODO')}>

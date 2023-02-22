@@ -1,59 +1,60 @@
 import { TooltipProvider } from '@radix-ui/react-tooltip';
-import { graphql, useLazyLoadQuery } from 'react-relay';
-import { Container, Typography } from '@sigle/ui';
+import { useInView } from 'react-cool-inview';
+import { Container, Flex, LoadingSpinner } from '@sigle/ui';
 import { DashboardLayout } from '@/components/Dashboard/DashboardLayout';
 import { useCeramic } from '@/components/Ceramic/CeramicProvider';
-import { draftsPostsListQuery } from '@/__generated__/relay/draftsPostsListQuery.graphql';
 import { StoryCardDraft } from '@/components/StoryCard/StoryCardDraft';
-
-const DraftsPostsListQuery = graphql`
-  query draftsPostsListQuery {
-    viewer {
-      id
-      postList(first: 10) {
-        pageInfo {
-          hasNextPage
-          hasNextPage
-          startCursor
-          endCursor
-        }
-        edges {
-          node {
-            id
-            ...StoryCardDraft_post
-          }
-        }
-      }
-    }
-  }
-`;
+import { trpc } from '@/utils/trpc';
+import { StoryCardPublishedSkeleton } from '@/components/StoryCard/StoryCardPublishedSkeleton';
 
 const Drafts = () => {
-  const data = useLazyLoadQuery<draftsPostsListQuery>(
-    DraftsPostsListQuery,
-    {},
+  const { session } = useCeramic();
+  const userDid = session?.did.parent!;
+
+  const postList = trpc.postList.useInfiniteQuery(
+    { limit: 20, did: userDid },
     {
-      // We always get the latest data from the server so we know we are editing the latest version
-      fetchPolicy: 'network-only',
+      getNextPageParam: (lastPage) => lastPage.nextCursor,
     }
   );
 
-  return (
-    <DashboardLayout
-      sidebarContent={
-        <>
-          <Typography size="lg" fontWeight="bold">
-            Recommended
-          </Typography>
-        </>
+  const { observe } = useInView({
+    rootMargin: '50px 0px',
+    onEnter: async ({ observe, unobserve }) => {
+      // Pause observe when loading data
+      unobserve();
+
+      const data = await postList.fetchNextPage();
+      if (data.hasNextPage) {
+        observe();
       }
-    >
-      <Container css={{ maxWidth: 680, py: '$5' }}>
-        {data.viewer?.postList?.edges?.map((node) => (
-          <StoryCardDraft key={node?.node?.id} story={node!.node!} />
-        ))}
-      </Container>
-    </DashboardLayout>
+    },
+  });
+
+  if (postList.isInitialLoading) {
+    return (
+      <>
+        <StoryCardPublishedSkeleton />
+        <StoryCardPublishedSkeleton />
+        <StoryCardPublishedSkeleton />
+      </>
+    );
+  }
+
+  return (
+    <>
+      {postList.data?.pages.map((page) => {
+        return page.items.map((item) => {
+          return <StoryCardDraft key={item.id} post={item} />;
+        });
+      })}
+      <div ref={observe} />
+      {postList.isFetching && (
+        <Flex justify="center" mt="4">
+          <LoadingSpinner />
+        </Flex>
+      )}
+    </>
   );
 };
 
@@ -61,5 +62,15 @@ export default function ProtectedDrafts() {
   // TODO auth protect
   const { session } = useCeramic();
 
-  return <TooltipProvider>{session ? <Drafts /> : null}</TooltipProvider>;
+  return (
+    <TooltipProvider>
+      {session ? (
+        <DashboardLayout>
+          <Container css={{ maxWidth: 680, py: '$5' }}>
+            <Drafts />
+          </Container>
+        </DashboardLayout>
+      ) : null}
+    </TooltipProvider>
+  );
 }

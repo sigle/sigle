@@ -9,7 +9,7 @@ import { DashboardLayout } from '../components/Dashboard/DashboardLayout';
 
 const HopePostList = () => {
   const postList = trpc.postList.useInfiniteQuery(
-    { limit: 4 },
+    { limit: 50 },
     {
       getNextPageParam: (lastPage) => lastPage.nextCursor,
     }
