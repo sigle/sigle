@@ -1,10 +1,18 @@
 import { TooltipProvider } from '@radix-ui/react-tooltip';
+import { trpc } from '@/utils/trpc';
 import { DashboardLayout } from '../components/Dashboard/DashboardLayout';
 
 export default function Home() {
-  return (
-    <TooltipProvider>
-      <DashboardLayout> </DashboardLayout>
-    </TooltipProvider>
-  );
+  const hello = trpc.hello.useQuery({ text: 'client' });
+  if (!hello.data) {
+    return <div>Loading...</div>;
+  }
+
+  return null;
+
+  // return (
+  //   <TooltipProvider>
+  //     <DashboardLayout> </DashboardLayout>
+  //   </TooltipProvider>
+  // );
 }
