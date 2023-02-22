@@ -8,8 +8,8 @@ import { addressAvatar } from '@/utils';
 import { prettifyUrl } from '@/utils/prettifyUrl';
 import { getAddressFromDid } from '@/utils/getAddressFromDid';
 import { shortenAddress } from '@/utils/shortenAddress';
-import { BadgeAddress } from './BadgeAddress';
 import { trpc } from '@/utils/trpc';
+import { BadgeAddress } from './BadgeAddress';
 import { UserProfileSkeleton } from './UserProfileSkeleton';
 
 const AvatarContainer = styled('div', {

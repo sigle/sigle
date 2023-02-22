@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<4edfc6e9147cefecfa03204b476046aa>>
+ * @generated SignedSource<<bd47cfeea56669459ecd66eabf2cff66>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,10 +9,7 @@
 // @ts-nocheck
 
 import { ConcreteRequest, Query } from 'relay-runtime';
-import { FragmentRefs } from "relay-runtime";
 export type UserDidProfilePageQuery$variables = {
-  count: number;
-  cursor?: string | null;
   id: string;
 };
 export type UserDidProfilePageQuery$data = {
@@ -22,7 +19,6 @@ export type UserDidProfilePageQuery$data = {
     readonly profile?: {
       readonly id: string;
     } | null;
-    readonly " $fragmentSpreads": FragmentRefs<"UserProfilePosts_postList">;
   } | null;
 };
 export type UserDidProfilePageQuery = {
@@ -31,43 +27,35 @@ export type UserDidProfilePageQuery = {
 };
 
 const node: ConcreteRequest = (function(){
-var v0 = {
-  "defaultValue": null,
-  "kind": "LocalArgument",
-  "name": "count"
-},
-v1 = {
-  "defaultValue": null,
-  "kind": "LocalArgument",
-  "name": "cursor"
-},
-v2 = {
-  "defaultValue": null,
-  "kind": "LocalArgument",
-  "name": "id"
-},
-v3 = [
+var v0 = [
+  {
+    "defaultValue": null,
+    "kind": "LocalArgument",
+    "name": "id"
+  }
+],
+v1 = [
   {
     "kind": "Variable",
     "name": "id",
     "variableName": "id"
   }
 ],
-v4 = {
+v2 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "id",
   "storageKey": null
 },
-v5 = {
+v3 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "isViewer",
   "storageKey": null
 },
-v6 = {
+v4 = {
   "alias": null,
   "args": null,
   "concreteType": "Profile",
@@ -75,43 +63,20 @@ v6 = {
   "name": "profile",
   "plural": false,
   "selections": [
-    (v4/*: any*/)
+    (v2/*: any*/)
   ],
   "storageKey": null
-},
-v7 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "__typename",
-  "storageKey": null
-},
-v8 = [
-  {
-    "kind": "Variable",
-    "name": "after",
-    "variableName": "cursor"
-  },
-  {
-    "kind": "Variable",
-    "name": "first",
-    "variableName": "count"
-  }
-];
+};
 return {
   "fragment": {
-    "argumentDefinitions": [
-      (v0/*: any*/),
-      (v1/*: any*/),
-      (v2/*: any*/)
-    ],
+    "argumentDefinitions": (v0/*: any*/),
     "kind": "Fragment",
     "metadata": null,
     "name": "UserDidProfilePageQuery",
     "selections": [
       {
         "alias": null,
-        "args": (v3/*: any*/),
+        "args": (v1/*: any*/),
         "concreteType": null,
         "kind": "LinkedField",
         "name": "node",
@@ -120,14 +85,9 @@ return {
           {
             "kind": "InlineFragment",
             "selections": [
-              (v4/*: any*/),
-              (v5/*: any*/),
-              (v6/*: any*/),
-              {
-                "args": null,
-                "kind": "FragmentSpread",
-                "name": "UserProfilePosts_postList"
-              }
+              (v2/*: any*/),
+              (v3/*: any*/),
+              (v4/*: any*/)
             ],
             "type": "CeramicAccount",
             "abstractKey": null
@@ -141,144 +101,31 @@ return {
   },
   "kind": "Request",
   "operation": {
-    "argumentDefinitions": [
-      (v2/*: any*/),
-      (v0/*: any*/),
-      (v1/*: any*/)
-    ],
+    "argumentDefinitions": (v0/*: any*/),
     "kind": "Operation",
     "name": "UserDidProfilePageQuery",
     "selections": [
       {
         "alias": null,
-        "args": (v3/*: any*/),
+        "args": (v1/*: any*/),
         "concreteType": null,
         "kind": "LinkedField",
         "name": "node",
         "plural": false,
         "selections": [
-          (v7/*: any*/),
-          (v4/*: any*/),
+          {
+            "alias": null,
+            "args": null,
+            "kind": "ScalarField",
+            "name": "__typename",
+            "storageKey": null
+          },
+          (v2/*: any*/),
           {
             "kind": "InlineFragment",
             "selections": [
-              (v5/*: any*/),
-              (v6/*: any*/),
-              {
-                "alias": null,
-                "args": (v8/*: any*/),
-                "concreteType": "PostConnection",
-                "kind": "LinkedField",
-                "name": "postList",
-                "plural": false,
-                "selections": [
-                  {
-                    "alias": null,
-                    "args": null,
-                    "concreteType": "PostEdge",
-                    "kind": "LinkedField",
-                    "name": "edges",
-                    "plural": true,
-                    "selections": [
-                      {
-                        "alias": null,
-                        "args": null,
-                        "concreteType": "Post",
-                        "kind": "LinkedField",
-                        "name": "node",
-                        "plural": false,
-                        "selections": [
-                          (v4/*: any*/),
-                          {
-                            "alias": null,
-                            "args": null,
-                            "kind": "ScalarField",
-                            "name": "title",
-                            "storageKey": null
-                          },
-                          {
-                            "alias": null,
-                            "args": null,
-                            "concreteType": "CeramicAccount",
-                            "kind": "LinkedField",
-                            "name": "author",
-                            "plural": false,
-                            "selections": [
-                              (v4/*: any*/),
-                              (v5/*: any*/),
-                              {
-                                "alias": null,
-                                "args": null,
-                                "concreteType": "Profile",
-                                "kind": "LinkedField",
-                                "name": "profile",
-                                "plural": false,
-                                "selections": [
-                                  (v4/*: any*/),
-                                  {
-                                    "alias": null,
-                                    "args": null,
-                                    "kind": "ScalarField",
-                                    "name": "displayName",
-                                    "storageKey": null
-                                  }
-                                ],
-                                "storageKey": null
-                              }
-                            ],
-                            "storageKey": null
-                          },
-                          (v7/*: any*/)
-                        ],
-                        "storageKey": null
-                      },
-                      {
-                        "alias": null,
-                        "args": null,
-                        "kind": "ScalarField",
-                        "name": "cursor",
-                        "storageKey": null
-                      }
-                    ],
-                    "storageKey": null
-                  },
-                  {
-                    "alias": null,
-                    "args": null,
-                    "concreteType": "PageInfo",
-                    "kind": "LinkedField",
-                    "name": "pageInfo",
-                    "plural": false,
-                    "selections": [
-                      {
-                        "alias": null,
-                        "args": null,
-                        "kind": "ScalarField",
-                        "name": "endCursor",
-                        "storageKey": null
-                      },
-                      {
-                        "alias": null,
-                        "args": null,
-                        "kind": "ScalarField",
-                        "name": "hasNextPage",
-                        "storageKey": null
-                      }
-                    ],
-                    "storageKey": null
-                  }
-                ],
-                "storageKey": null
-              },
-              {
-                "alias": null,
-                "args": (v8/*: any*/),
-                "filters": null,
-                "handle": "connection",
-                "key": "UserProfilePosts_postList",
-                "kind": "LinkedHandle",
-                "name": "postList"
-              }
+              (v3/*: any*/),
+              (v4/*: any*/)
             ],
             "type": "CeramicAccount",
             "abstractKey": null
@@ -289,16 +136,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "64c93b131f89462653937e39055b46ef",
+    "cacheID": "f87f3bb7722a02aad9d0858f26e2d4b6",
     "id": null,
     "metadata": {},
     "name": "UserDidProfilePageQuery",
     "operationKind": "query",
-    "text": "query UserDidProfilePageQuery(\n  $id: ID!\n  $count: Int!\n  $cursor: String\n) {\n  node(id: $id) {\n    __typename\n    ... on CeramicAccount {\n      id\n      isViewer\n      profile {\n        id\n      }\n      ...UserProfilePosts_postList\n    }\n    id\n  }\n}\n\nfragment StoryCardPublishedGraphQL_post on Post {\n  id\n  title\n  author {\n    id\n    isViewer\n    profile {\n      id\n      displayName\n    }\n  }\n}\n\nfragment UserProfilePosts_postList on CeramicAccount {\n  id\n  isViewer\n  postList(first: $count, after: $cursor) {\n    edges {\n      node {\n        id\n        ...StoryCardPublishedGraphQL_post\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n"
+    "text": "query UserDidProfilePageQuery(\n  $id: ID!\n) {\n  node(id: $id) {\n    __typename\n    ... on CeramicAccount {\n      id\n      isViewer\n      profile {\n        id\n      }\n    }\n    id\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "73611688805b5b48f59ae49214f625c7";
+(node as any).hash = "125226b33c7679643540a20c7a8a11e3";
 
 export default node;

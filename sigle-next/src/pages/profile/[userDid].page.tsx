@@ -11,18 +11,14 @@ import { UserProfilePageHeader } from '@/components/UserProfile/UserProfilePageH
 import { StoryCardPublishedSkeleton } from '@/components/StoryCard/StoryCardPublishedSkeleton';
 import { UserProfilePosts } from '@/components/UserProfile/UserProfilePosts';
 import { UserDidProfilePageQuery } from '@/__generated__/relay/UserDidProfilePageQuery.graphql';
-import { trpc } from '@/utils/trpc';
 
 const ProfilePage = () => {
   const router = useRouter();
   const userDid = router.query.userDid as string;
-  const postList = trpc.postList.useQuery({
-    did: userDid,
-  });
 
   const data = useLazyLoadQuery<UserDidProfilePageQuery>(
     graphql`
-      query UserDidProfilePageQuery($id: ID!, $count: Int!, $cursor: String) {
+      query UserDidProfilePageQuery($id: ID!) {
         node(id: $id) {
           ... on CeramicAccount {
             id
@@ -30,7 +26,6 @@ const ProfilePage = () => {
             profile {
               id
             }
-            ...UserProfilePosts_postList
           }
         }
       }
@@ -48,20 +43,20 @@ const ProfilePage = () => {
   return (
     <DashboardLayout
       sidebarContent={
-        <UserProfile
-          did={data.node.id!}
-          isViewer={data.node.isViewer || false}
-        />
+        <UserProfile did={userDid} isViewer={data.node.isViewer || false} />
       }
       headerContent={
         <UserProfilePageHeader
-          did={data.node.id!}
+          did={userDid}
           isViewer={data.node.isViewer || false}
         />
       }
     >
       <Container css={{ maxWidth: 680, py: '$5' }}>
-        <UserProfilePosts user={data.node} />
+        <UserProfilePosts
+          did={userDid}
+          isViewer={data.node.isViewer || false}
+        />
       </Container>
     </DashboardLayout>
   );

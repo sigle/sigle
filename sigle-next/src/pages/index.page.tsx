@@ -26,7 +26,7 @@ const HopePostList = () => {
 
   return (
     <>
-      {postList.data.map((post) => {
+      {postList.data.items.map((post) => {
         return (
           <StoryCardPublished
             key={post.id}
