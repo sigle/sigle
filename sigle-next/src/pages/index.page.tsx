@@ -8,6 +8,8 @@ export default function Home() {
     return <div>Loading...</div>;
   }
 
+  console.log(hello.data);
+
   return null;
 
   // return (
