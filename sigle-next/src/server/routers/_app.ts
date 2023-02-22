@@ -1,21 +1,6 @@
-import { z } from 'zod';
-import { prismaClient } from '@/lib/prisma';
-import { procedure, router } from '../trpc';
+import { mergeRouters } from '../trpc';
+import { postRouter } from './post';
 
-export const appRouter = router({
-  hello: procedure
-    .input(
-      z.object({
-        text: z.string(),
-      })
-    )
-    .query(async ({ input }) => {
-      console.log(await prismaClient.profile.findMany());
-
-      return {
-        greeting: `hello ${input.text}`,
-      };
-    }),
-});
+export const appRouter = mergeRouters(postRouter);
 
 export type AppRouter = typeof appRouter;

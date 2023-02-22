@@ -3,18 +3,16 @@ import { trpc } from '@/utils/trpc';
 import { DashboardLayout } from '../components/Dashboard/DashboardLayout';
 
 export default function Home() {
-  const hello = trpc.hello.useQuery({ text: 'client' });
+  const hello = trpc.postList.useQuery();
   if (!hello.data) {
     return <div>Loading...</div>;
   }
 
   console.log(hello.data);
 
-  return null;
-
-  // return (
-  //   <TooltipProvider>
-  //     <DashboardLayout> </DashboardLayout>
-  //   </TooltipProvider>
-  // );
+  return (
+    <TooltipProvider>
+      <DashboardLayout>Hello</DashboardLayout>
+    </TooltipProvider>
+  );
 }
