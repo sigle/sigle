@@ -22,7 +22,7 @@
     "mode": "fs"
   },
   "indexing": {
-    "db": "sqlite:///.ceramic/indexing.sqlite",
+    "db": "$DATABASE_URL",
     "allow-queries-before-historical-sync": true
   }
 }
