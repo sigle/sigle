@@ -10,7 +10,8 @@
     "test": "jest",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build",
-    "relay": "relay-compiler"
+    "relay": "relay-compiler",
+    "deploy:ceramic-staging": "flyctl deploy --config fly.ceramic.staging.toml --dockerfile ceramic/staging.ceramic.Dockerfile --remote-only"
   },
   "dependencies": {
     "@composedb/client": "0.3.1",
