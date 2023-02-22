@@ -24,6 +24,8 @@ import {
   Typography,
 } from '@sigle/ui';
 import { NavBarProfileQuery } from '@/__generated__/relay/NavBarProfileQuery.graphql';
+import { trpc } from '@/utils/trpc';
+import { useCeramic } from '../Ceramic/CeramicProvider';
 import { useDashboardStore } from './store';
 import { NavBarUserDropdown } from './NavBar/UserDropdown';
 import { ConnectDropdown } from './NavBar/ConnectDropdown';
@@ -160,17 +162,12 @@ const NavBarLinkStoriesButton = styled(Button, {
 export const NavBar = () => {
   const router = useRouter();
   const collapsed = useDashboardStore((state) => state.collapsed);
+  const { session } = useCeramic();
 
-  const data = useLazyLoadQuery<NavBarProfileQuery>(
-    graphql`
-      query NavBarProfileQuery {
-        viewer {
-          id
-          ...UserDropdown_viewer
-        }
-      }
-    `,
-    {}
+  const did = session?.did.parent;
+  const profile = trpc.userProfile.useQuery(
+    { did: did ?? '' },
+    { enabled: !!did }
   );
 
   const menu = [
@@ -190,7 +187,7 @@ export const NavBar = () => {
     //   label: 'Saved',
     // },
     {
-      href: `/profile/${data.viewer?.id}`,
+      href: `/profile/${did}`,
       icon: <TbUserCircle size={navbarIconSize} />,
       label: 'Profile',
     },
@@ -279,11 +276,10 @@ export const NavBar = () => {
           ))} */}
         </NavBarLinkContainer>
       </div>
-      {data.viewer ? (
-        <NavBarUserDropdown user={data.viewer} />
-      ) : (
-        <ConnectDropdown />
+      {!profile.isLoading && did && (
+        <NavBarUserDropdown did={did} profile={profile.data} />
       )}
+      {!profile.isLoading && !did && <ConnectDropdown />}
     </StyledNavBar>
   );
 };

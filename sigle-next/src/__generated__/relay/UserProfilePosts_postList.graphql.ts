@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<630a0113fea3143c1f9162c0f2c2e1ec>>
+ * @generated SignedSource<<c295970d0535bd9e6957c0a57485f206>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -17,7 +17,7 @@ export type UserProfilePosts_postList$data = {
     readonly edges: ReadonlyArray<{
       readonly node: {
         readonly id: string;
-        readonly " $fragmentSpreads": FragmentRefs<"StoryCardPublished_post">;
+        readonly " $fragmentSpreads": FragmentRefs<"StoryCardPublishedGraphQL_post">;
       } | null;
     } | null> | null;
   } | null;
@@ -114,7 +114,7 @@ return {
                 {
                   "args": null,
                   "kind": "FragmentSpread",
-                  "name": "StoryCardPublished_post"
+                  "name": "StoryCardPublishedGraphQL_post"
                 },
                 {
                   "alias": null,
@@ -170,6 +170,6 @@ return {
 };
 })();
 
-(node as any).hash = "e726e02c056b3d878a6a8d18e3434455";
+(node as any).hash = "445638d12e5256cd54ebc8a1eb79356f";
 
 export default node;

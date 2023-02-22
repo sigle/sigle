@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<f99044524a5f6826a3deeef6e56067f6>>
+ * @generated SignedSource<<42be5a5652284530be19ef93d67b2783>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -10,7 +10,7 @@
 
 import { Fragment, ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
-export type StoryCardPublished_post$data = {
+export type StoryCardPublishedGraphQL_post$data = {
   readonly author: {
     readonly id: string;
     readonly isViewer: boolean;
@@ -21,11 +21,11 @@ export type StoryCardPublished_post$data = {
   };
   readonly id: string;
   readonly title: string;
-  readonly " $fragmentType": "StoryCardPublished_post";
+  readonly " $fragmentType": "StoryCardPublishedGraphQL_post";
 };
-export type StoryCardPublished_post$key = {
-  readonly " $data"?: StoryCardPublished_post$data;
-  readonly " $fragmentSpreads": FragmentRefs<"StoryCardPublished_post">;
+export type StoryCardPublishedGraphQL_post$key = {
+  readonly " $data"?: StoryCardPublishedGraphQL_post$data;
+  readonly " $fragmentSpreads": FragmentRefs<"StoryCardPublishedGraphQL_post">;
 };
 
 const node: ReaderFragment = (function(){
@@ -40,7 +40,7 @@ return {
   "argumentDefinitions": [],
   "kind": "Fragment",
   "metadata": null,
-  "name": "StoryCardPublished_post",
+  "name": "StoryCardPublishedGraphQL_post",
   "selections": [
     (v0/*: any*/),
     {
@@ -94,6 +94,6 @@ return {
 };
 })();
 
-(node as any).hash = "0b6c0c0beb300768751f309c279f21ee";
+(node as any).hash = "68e7133909c3d177ffc6ddd3d3a221d7";
 
 export default node;

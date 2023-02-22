@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<b7761d60f838ccc8f9897fd890c0a6ee>>
+ * @generated SignedSource<<355d788f73cd91c48a1d9027dafe4f8a>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -255,16 +255,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "18f3e43ef0c5dff2ca3929b28f427231",
+    "cacheID": "3927a37d3ca1b1602fe684c71d3d2f48",
     "id": null,
     "metadata": {},
     "name": "UserProfilePostsPaginationQuery",
     "operationKind": "query",
-    "text": "query UserProfilePostsPaginationQuery(\n  $count: Int\n  $cursor: String\n  $id: ID!\n) {\n  node(id: $id) {\n    __typename\n    ...UserProfilePosts_postList\n    id\n  }\n}\n\nfragment StoryCardPublished_post on Post {\n  id\n  title\n  author {\n    id\n    isViewer\n    profile {\n      id\n      displayName\n    }\n  }\n}\n\nfragment UserProfilePosts_postList on CeramicAccount {\n  id\n  isViewer\n  postList(first: $count, after: $cursor) {\n    edges {\n      node {\n        id\n        ...StoryCardPublished_post\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n"
+    "text": "query UserProfilePostsPaginationQuery(\n  $count: Int\n  $cursor: String\n  $id: ID!\n) {\n  node(id: $id) {\n    __typename\n    ...UserProfilePosts_postList\n    id\n  }\n}\n\nfragment StoryCardPublishedGraphQL_post on Post {\n  id\n  title\n  author {\n    id\n    isViewer\n    profile {\n      id\n      displayName\n    }\n  }\n}\n\nfragment UserProfilePosts_postList on CeramicAccount {\n  id\n  isViewer\n  postList(first: $count, after: $cursor) {\n    edges {\n      node {\n        id\n        ...StoryCardPublishedGraphQL_post\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "e726e02c056b3d878a6a8d18e3434455";
+(node as any).hash = "445638d12e5256cd54ebc8a1eb79356f";
 
 export default node;

@@ -24,6 +24,7 @@ import { settingsCreateProfileMutation } from '@/__generated__/relay/settingsCre
 import { settingsUpdateProfileMutation } from '@/__generated__/relay/settingsUpdateProfileMutation.graphql';
 import { DashboardLayout } from '@/components/Dashboard/DashboardLayout';
 import { useCeramic } from '@/components/Ceramic/CeramicProvider';
+import { trpc } from '@/utils/trpc';
 
 const TitleRow = styled('div', {
   py: '$5',
@@ -69,6 +70,7 @@ const Settings = () => {
     {}
   );
   const environment = useRelayEnvironment();
+  const utils = trpc.useContext();
 
   const {
     register,
@@ -176,6 +178,7 @@ const Settings = () => {
           });
           return;
         }
+        utils.invalidate();
         // TODO toast success
       },
     });

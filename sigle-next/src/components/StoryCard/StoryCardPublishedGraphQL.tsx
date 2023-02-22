@@ -14,7 +14,7 @@ import {
   Typography,
 } from '@sigle/ui';
 import { styled } from '@sigle/stitches.config';
-import { StoryCardPublished_post$key } from '@/__generated__/relay/StoryCardPublished_post.graphql';
+import { StoryCardPublishedGraphQL_post$key } from '@/__generated__/relay/StoryCardPublishedGraphQL_post.graphql';
 import { nextImageLoader } from '@/utils/nextImageLoader';
 import { addressAvatar } from '@/utils';
 import { getAddressFromDid } from '@/utils/getAddressFromDid';
@@ -40,7 +40,7 @@ const StyledDropdownMenuContent = styled(DropdownMenuContent, {
 });
 
 interface StoryCardPublishedProps {
-  story: StoryCardPublished_post$key;
+  story: StoryCardPublishedGraphQL_post$key;
 }
 
 export const StoryCardPublishedGraphQL = (props: StoryCardPublishedProps) => {
@@ -48,7 +48,7 @@ export const StoryCardPublishedGraphQL = (props: StoryCardPublishedProps) => {
 
   const storyData = useFragment(
     graphql`
-      fragment StoryCardPublished_post on Post {
+      fragment StoryCardPublishedGraphQL_post on Post {
         id
         title
         author {

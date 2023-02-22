@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<7bbbe6ccde8e2ae3bea889e13113e91f>>
+ * @generated SignedSource<<0869b2981a891b6c3b2d9e012815ce7c>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -333,12 +333,12 @@ return {
     ]
   },
   "params": {
-    "cacheID": "5371e9b9695baf1004667c70590827c4",
+    "cacheID": "048f804bcb3117a9345224b087dea567",
     "id": null,
     "metadata": {},
     "name": "UserDidProfilePageQuery",
     "operationKind": "query",
-    "text": "query UserDidProfilePageQuery(\n  $id: ID!\n  $count: Int!\n  $cursor: String\n) {\n  node(id: $id) {\n    __typename\n    ... on CeramicAccount {\n      id\n      isViewer\n      profile {\n        id\n        ...UserProfile_profile\n      }\n      ...UserProfilePageHeader_user\n      ...UserProfilePosts_postList\n    }\n    id\n  }\n}\n\nfragment StoryCardPublished_post on Post {\n  id\n  title\n  author {\n    id\n    isViewer\n    profile {\n      id\n      displayName\n    }\n  }\n}\n\nfragment UserProfilePageHeader_user on CeramicAccount {\n  id\n  isViewer\n  profile {\n    id\n    displayName\n  }\n}\n\nfragment UserProfilePosts_postList on CeramicAccount {\n  id\n  isViewer\n  postList(first: $count, after: $cursor) {\n    edges {\n      node {\n        id\n        ...StoryCardPublished_post\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n\nfragment UserProfile_profile on Profile {\n  id\n  displayName\n  description\n  websiteUrl\n  twitterUsername\n}\n"
+    "text": "query UserDidProfilePageQuery(\n  $id: ID!\n  $count: Int!\n  $cursor: String\n) {\n  node(id: $id) {\n    __typename\n    ... on CeramicAccount {\n      id\n      isViewer\n      profile {\n        id\n        ...UserProfile_profile\n      }\n      ...UserProfilePageHeader_user\n      ...UserProfilePosts_postList\n    }\n    id\n  }\n}\n\nfragment StoryCardPublishedGraphQL_post on Post {\n  id\n  title\n  author {\n    id\n    isViewer\n    profile {\n      id\n      displayName\n    }\n  }\n}\n\nfragment UserProfilePageHeader_user on CeramicAccount {\n  id\n  isViewer\n  profile {\n    id\n    displayName\n  }\n}\n\nfragment UserProfilePosts_postList on CeramicAccount {\n  id\n  isViewer\n  postList(first: $count, after: $cursor) {\n    edges {\n      node {\n        id\n        ...StoryCardPublishedGraphQL_post\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n\nfragment UserProfile_profile on Profile {\n  id\n  displayName\n  description\n  websiteUrl\n  twitterUsername\n}\n"
   }
 };
 })();

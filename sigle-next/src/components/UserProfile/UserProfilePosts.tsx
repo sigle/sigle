@@ -20,7 +20,7 @@ export const UserProfilePosts = (props: {
           edges {
             node {
               id
-              ...StoryCardPublished_post
+              ...StoryCardPublishedGraphQL_post
             }
           }
         }
