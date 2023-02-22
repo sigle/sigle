@@ -11,7 +11,6 @@ import {
   TbUserCircle,
   TbUsers,
 } from 'react-icons/tb';
-import { graphql, useLazyLoadQuery } from 'react-relay';
 import { styled } from '@sigle/stitches.config';
 import {
   NumberBadge,
@@ -23,7 +22,6 @@ import {
   TooltipTrigger,
   Typography,
 } from '@sigle/ui';
-import { NavBarProfileQuery } from '@/__generated__/relay/NavBarProfileQuery.graphql';
 import { trpc } from '@/utils/trpc';
 import { useCeramic } from '../Ceramic/CeramicProvider';
 import { useDashboardStore } from './store';

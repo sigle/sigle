@@ -1,16 +1,16 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { TbBrandTwitter, TbLink, TbPencil } from 'react-icons/tb';
-import { graphql, useFragment } from 'react-relay';
 import { Button, Flex, Typography } from '@sigle/ui';
 import { styled } from '@sigle/stitches.config';
 import { nextImageLoader } from '@/utils/nextImageLoader';
 import { addressAvatar } from '@/utils';
-import { UserProfile_profile$key } from '@/__generated__/relay/UserProfile_profile.graphql';
 import { prettifyUrl } from '@/utils/prettifyUrl';
 import { getAddressFromDid } from '@/utils/getAddressFromDid';
 import { shortenAddress } from '@/utils/shortenAddress';
 import { BadgeAddress } from './BadgeAddress';
+import { trpc } from '@/utils/trpc';
+import { UserProfileSkeleton } from './UserProfileSkeleton';
 
 const AvatarContainer = styled('div', {
   display: 'flex',
@@ -26,24 +26,16 @@ const AvatarContainer = styled('div', {
 interface UserProfileProps {
   did: string;
   isViewer: boolean;
-  profile: UserProfile_profile$key | null;
 }
 
-export const UserProfile = (props: UserProfileProps) => {
-  const profileData = useFragment(
-    graphql`
-      fragment UserProfile_profile on Profile {
-        id
-        displayName
-        description
-        websiteUrl
-        twitterUsername
-      }
-    `,
-    props.profile
-  );
+export const UserProfile = ({ isViewer, did }: UserProfileProps) => {
+  const profile = trpc.userProfile.useQuery({ did });
 
-  const address = getAddressFromDid(props.did);
+  const address = getAddressFromDid(did);
+
+  if (profile.isLoading) {
+    return <UserProfileSkeleton />;
+  }
 
   return (
     <>
@@ -57,7 +49,7 @@ export const UserProfile = (props: UserProfileProps) => {
             height={72}
           />
         </AvatarContainer>
-        {props.isViewer ? (
+        {isViewer ? (
           <Link href="/settings">
             <Button
               variant="light"
@@ -72,9 +64,9 @@ export const UserProfile = (props: UserProfileProps) => {
 
       <Flex mt="2" gap="3" align="center">
         <Typography size="lg" fontWeight="semiBold">
-          {profileData?.displayName || shortenAddress(address)}
+          {profile.data?.displayName || shortenAddress(address)}
         </Typography>
-        <BadgeAddress did={props.did} />
+        <BadgeAddress did={did} />
       </Flex>
 
       <Flex mt="3" gap="3">
@@ -94,26 +86,26 @@ export const UserProfile = (props: UserProfileProps) => {
 
       <Flex mt="3">
         <Typography size="sm" color="gray9">
-          {profileData?.description}
+          {profile.data?.description}
         </Typography>
       </Flex>
 
       <Flex mt="5" gap="3" align="center">
-        {profileData?.websiteUrl && (
-          <Link href={profileData.websiteUrl} target="_blank">
+        {profile.data?.websiteUrl && (
+          <Link href={profile.data.websiteUrl} target="_blank">
             <Flex align="center" gap="1">
               <Typography size="sm" color="gray9">
                 <TbLink size={16} />
               </Typography>
               <Typography size="sm" color="indigo">
-                {prettifyUrl(profileData.websiteUrl)}
+                {prettifyUrl(profile.data.websiteUrl)}
               </Typography>
             </Flex>
           </Link>
         )}
-        {profileData?.twitterUsername && (
+        {profile.data?.twitterUsername && (
           <Link
-            href={`https://twitter.com/${profileData.twitterUsername}`}
+            href={`https://twitter.com/${profile.data.twitterUsername}`}
             target="_blank"
           >
             <Typography size="sm">

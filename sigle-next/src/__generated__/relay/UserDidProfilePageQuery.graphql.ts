@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<0869b2981a891b6c3b2d9e012815ce7c>>
+ * @generated SignedSource<<1e0eb43ba18bc6088d28448a8199c9fc>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -21,7 +21,6 @@ export type UserDidProfilePageQuery$data = {
     readonly isViewer?: boolean;
     readonly profile?: {
       readonly id: string;
-      readonly " $fragmentSpreads": FragmentRefs<"UserProfile_profile">;
     } | null;
     readonly " $fragmentSpreads": FragmentRefs<"UserProfilePageHeader_user" | "UserProfilePosts_postList">;
   } | null;
@@ -78,8 +77,20 @@ v6 = {
 v7 = {
   "alias": null,
   "args": null,
-  "kind": "ScalarField",
-  "name": "displayName",
+  "concreteType": "Profile",
+  "kind": "LinkedField",
+  "name": "profile",
+  "plural": false,
+  "selections": [
+    (v4/*: any*/),
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "displayName",
+      "storageKey": null
+    }
+  ],
   "storageKey": null
 },
 v8 = [
@@ -126,12 +137,7 @@ return {
                 "name": "profile",
                 "plural": false,
                 "selections": [
-                  (v4/*: any*/),
-                  {
-                    "args": null,
-                    "kind": "FragmentSpread",
-                    "name": "UserProfile_profile"
-                  }
+                  (v4/*: any*/)
                 ],
                 "storageKey": null
               },
@@ -180,40 +186,7 @@ return {
             "kind": "InlineFragment",
             "selections": [
               (v5/*: any*/),
-              {
-                "alias": null,
-                "args": null,
-                "concreteType": "Profile",
-                "kind": "LinkedField",
-                "name": "profile",
-                "plural": false,
-                "selections": [
-                  (v4/*: any*/),
-                  (v7/*: any*/),
-                  {
-                    "alias": null,
-                    "args": null,
-                    "kind": "ScalarField",
-                    "name": "description",
-                    "storageKey": null
-                  },
-                  {
-                    "alias": null,
-                    "args": null,
-                    "kind": "ScalarField",
-                    "name": "websiteUrl",
-                    "storageKey": null
-                  },
-                  {
-                    "alias": null,
-                    "args": null,
-                    "kind": "ScalarField",
-                    "name": "twitterUsername",
-                    "storageKey": null
-                  }
-                ],
-                "storageKey": null
-              },
+              (v7/*: any*/),
               {
                 "alias": null,
                 "args": (v8/*: any*/),
@@ -256,19 +229,7 @@ return {
                             "selections": [
                               (v4/*: any*/),
                               (v5/*: any*/),
-                              {
-                                "alias": null,
-                                "args": null,
-                                "concreteType": "Profile",
-                                "kind": "LinkedField",
-                                "name": "profile",
-                                "plural": false,
-                                "selections": [
-                                  (v4/*: any*/),
-                                  (v7/*: any*/)
-                                ],
-                                "storageKey": null
-                              }
+                              (v7/*: any*/)
                             ],
                             "storageKey": null
                           },
@@ -333,16 +294,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "048f804bcb3117a9345224b087dea567",
+    "cacheID": "93111bd418dd756942837e44eff35994",
     "id": null,
     "metadata": {},
     "name": "UserDidProfilePageQuery",
     "operationKind": "query",
-    "text": "query UserDidProfilePageQuery(\n  $id: ID!\n  $count: Int!\n  $cursor: String\n) {\n  node(id: $id) {\n    __typename\n    ... on CeramicAccount {\n      id\n      isViewer\n      profile {\n        id\n        ...UserProfile_profile\n      }\n      ...UserProfilePageHeader_user\n      ...UserProfilePosts_postList\n    }\n    id\n  }\n}\n\nfragment StoryCardPublishedGraphQL_post on Post {\n  id\n  title\n  author {\n    id\n    isViewer\n    profile {\n      id\n      displayName\n    }\n  }\n}\n\nfragment UserProfilePageHeader_user on CeramicAccount {\n  id\n  isViewer\n  profile {\n    id\n    displayName\n  }\n}\n\nfragment UserProfilePosts_postList on CeramicAccount {\n  id\n  isViewer\n  postList(first: $count, after: $cursor) {\n    edges {\n      node {\n        id\n        ...StoryCardPublishedGraphQL_post\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n\nfragment UserProfile_profile on Profile {\n  id\n  displayName\n  description\n  websiteUrl\n  twitterUsername\n}\n"
+    "text": "query UserDidProfilePageQuery(\n  $id: ID!\n  $count: Int!\n  $cursor: String\n) {\n  node(id: $id) {\n    __typename\n    ... on CeramicAccount {\n      id\n      isViewer\n      profile {\n        id\n      }\n      ...UserProfilePageHeader_user\n      ...UserProfilePosts_postList\n    }\n    id\n  }\n}\n\nfragment StoryCardPublishedGraphQL_post on Post {\n  id\n  title\n  author {\n    id\n    isViewer\n    profile {\n      id\n      displayName\n    }\n  }\n}\n\nfragment UserProfilePageHeader_user on CeramicAccount {\n  id\n  isViewer\n  profile {\n    id\n    displayName\n  }\n}\n\nfragment UserProfilePosts_postList on CeramicAccount {\n  id\n  isViewer\n  postList(first: $count, after: $cursor) {\n    edges {\n      node {\n        id\n        ...StoryCardPublishedGraphQL_post\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "b75d4a7b621094166f959ce16af3d90d";
+(node as any).hash = "101fa3ef0e5e19ac16820add06da79cc";
 
 export default node;

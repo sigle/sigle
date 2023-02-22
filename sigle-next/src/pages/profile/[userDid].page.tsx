@@ -24,7 +24,6 @@ const ProfilePage = () => {
             isViewer
             profile {
               id
-              ...UserProfile_profile
             }
             ...UserProfilePageHeader_user
             ...UserProfilePosts_postList
@@ -48,7 +47,6 @@ const ProfilePage = () => {
         <UserProfile
           did={data.node.id!}
           isViewer={data.node.isViewer || false}
-          profile={data.node.profile || null}
         />
       }
       headerContent={<UserProfilePageHeader user={data.node} />}
