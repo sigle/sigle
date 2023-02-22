@@ -3,7 +3,7 @@ import { ConfigService } from '@nestjs/config';
 import { validateStacksAddress } from 'micro-stacks/crypto';
 import { getToken } from 'next-auth/jwt';
 import { fetch } from 'undici';
-import { Prisma } from '@prisma/client';
+import { Prisma } from '.prisma/client';
 import { InfoApi, Configuration } from '@stacks/blockchain-api-client';
 import { EnvironmentVariables } from '../environment/environment.validation';
 import { PrismaService } from '../prisma/prisma.service';

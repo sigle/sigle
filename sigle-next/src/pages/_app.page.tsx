@@ -1,4 +1,4 @@
-import type { AppProps } from 'next/app';
+import type { AppProps, AppType } from 'next/app';
 import Head from 'next/head';
 import { Inter } from '@next/font/google';
 import { ThemeProvider } from 'next-themes';
@@ -9,6 +9,7 @@ import 'tippy.js/themes/light-border.css';
 import { darkTheme, globalCss } from '@sigle/stitches.config';
 import { useRelayStore } from '@/lib/relay';
 import { tailwindStyles } from '@/styles/tailwind';
+import { trpc } from '@/utils/trpc';
 
 /**
  * Lazy load the WagmiProvider as it's huge to avoid bloating the main bundle
@@ -38,7 +39,7 @@ const globalStyle = globalCss({
   },
 });
 
-export default function App({ Component, pageProps }: AppProps) {
+const MyApp: AppType = ({ Component, pageProps }) => {
   globalStyle();
   const environment = useRelayStore((store) => store.environment);
 
@@ -62,4 +63,6 @@ export default function App({ Component, pageProps }: AppProps) {
       </ThemeProvider>
     </>
   );
-}
+};
+
+export default trpc.withTRPC(MyApp);
