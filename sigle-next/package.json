@@ -11,12 +11,14 @@
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build",
     "relay": "relay-compiler",
-    "deploy:ceramic-staging": "flyctl deploy --config fly.ceramic.staging.toml --dockerfile ceramic/staging.ceramic.Dockerfile --remote-only"
+    "deploy:ceramic-staging": "flyctl deploy --config fly.ceramic.staging.toml --dockerfile ceramic/staging.ceramic.Dockerfile --remote-only",
+    "postinstall": "prisma generate"
   },
   "dependencies": {
     "@composedb/client": "0.3.1",
     "@didtools/pkh-ethereum": "0.0.3",
     "@next/font": "13.1.4",
+    "@prisma/client": "4.10.1",
     "@radix-ui/react-dialog": "1.0.2",
     "@radix-ui/react-dropdown-menu": "2.0.1",
     "@radix-ui/react-switch": "1.0.1",
@@ -103,6 +105,7 @@
     "eslint-plugin-storybook": "0.6.10",
     "jest": "29.4.2",
     "postcss-loader": "7.0.2",
+    "prisma": "4.10.1",
     "relay-compiler": "14.1.0",
     "storybook": "7.0.0-beta.25",
     "style-loader": "3.3.1",
