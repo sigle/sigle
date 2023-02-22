@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<1e0eb43ba18bc6088d28448a8199c9fc>>
+ * @generated SignedSource<<4edfc6e9147cefecfa03204b476046aa>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -22,7 +22,7 @@ export type UserDidProfilePageQuery$data = {
     readonly profile?: {
       readonly id: string;
     } | null;
-    readonly " $fragmentSpreads": FragmentRefs<"UserProfilePageHeader_user" | "UserProfilePosts_postList">;
+    readonly " $fragmentSpreads": FragmentRefs<"UserProfilePosts_postList">;
   } | null;
 };
 export type UserDidProfilePageQuery = {
@@ -70,27 +70,20 @@ v5 = {
 v6 = {
   "alias": null,
   "args": null,
-  "kind": "ScalarField",
-  "name": "__typename",
-  "storageKey": null
-},
-v7 = {
-  "alias": null,
-  "args": null,
   "concreteType": "Profile",
   "kind": "LinkedField",
   "name": "profile",
   "plural": false,
   "selections": [
-    (v4/*: any*/),
-    {
-      "alias": null,
-      "args": null,
-      "kind": "ScalarField",
-      "name": "displayName",
-      "storageKey": null
-    }
+    (v4/*: any*/)
   ],
+  "storageKey": null
+},
+v7 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "__typename",
   "storageKey": null
 },
 v8 = [
@@ -129,23 +122,7 @@ return {
             "selections": [
               (v4/*: any*/),
               (v5/*: any*/),
-              {
-                "alias": null,
-                "args": null,
-                "concreteType": "Profile",
-                "kind": "LinkedField",
-                "name": "profile",
-                "plural": false,
-                "selections": [
-                  (v4/*: any*/)
-                ],
-                "storageKey": null
-              },
-              {
-                "args": null,
-                "kind": "FragmentSpread",
-                "name": "UserProfilePageHeader_user"
-              },
+              (v6/*: any*/),
               {
                 "args": null,
                 "kind": "FragmentSpread",
@@ -180,13 +157,13 @@ return {
         "name": "node",
         "plural": false,
         "selections": [
-          (v6/*: any*/),
+          (v7/*: any*/),
           (v4/*: any*/),
           {
             "kind": "InlineFragment",
             "selections": [
               (v5/*: any*/),
-              (v7/*: any*/),
+              (v6/*: any*/),
               {
                 "alias": null,
                 "args": (v8/*: any*/),
@@ -229,11 +206,29 @@ return {
                             "selections": [
                               (v4/*: any*/),
                               (v5/*: any*/),
-                              (v7/*: any*/)
+                              {
+                                "alias": null,
+                                "args": null,
+                                "concreteType": "Profile",
+                                "kind": "LinkedField",
+                                "name": "profile",
+                                "plural": false,
+                                "selections": [
+                                  (v4/*: any*/),
+                                  {
+                                    "alias": null,
+                                    "args": null,
+                                    "kind": "ScalarField",
+                                    "name": "displayName",
+                                    "storageKey": null
+                                  }
+                                ],
+                                "storageKey": null
+                              }
                             ],
                             "storageKey": null
                           },
-                          (v6/*: any*/)
+                          (v7/*: any*/)
                         ],
                         "storageKey": null
                       },
@@ -294,16 +289,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "93111bd418dd756942837e44eff35994",
+    "cacheID": "64c93b131f89462653937e39055b46ef",
     "id": null,
     "metadata": {},
     "name": "UserDidProfilePageQuery",
     "operationKind": "query",
-    "text": "query UserDidProfilePageQuery(\n  $id: ID!\n  $count: Int!\n  $cursor: String\n) {\n  node(id: $id) {\n    __typename\n    ... on CeramicAccount {\n      id\n      isViewer\n      profile {\n        id\n      }\n      ...UserProfilePageHeader_user\n      ...UserProfilePosts_postList\n    }\n    id\n  }\n}\n\nfragment StoryCardPublishedGraphQL_post on Post {\n  id\n  title\n  author {\n    id\n    isViewer\n    profile {\n      id\n      displayName\n    }\n  }\n}\n\nfragment UserProfilePageHeader_user on CeramicAccount {\n  id\n  isViewer\n  profile {\n    id\n    displayName\n  }\n}\n\nfragment UserProfilePosts_postList on CeramicAccount {\n  id\n  isViewer\n  postList(first: $count, after: $cursor) {\n    edges {\n      node {\n        id\n        ...StoryCardPublishedGraphQL_post\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n"
+    "text": "query UserDidProfilePageQuery(\n  $id: ID!\n  $count: Int!\n  $cursor: String\n) {\n  node(id: $id) {\n    __typename\n    ... on CeramicAccount {\n      id\n      isViewer\n      profile {\n        id\n      }\n      ...UserProfilePosts_postList\n    }\n    id\n  }\n}\n\nfragment StoryCardPublishedGraphQL_post on Post {\n  id\n  title\n  author {\n    id\n    isViewer\n    profile {\n      id\n      displayName\n    }\n  }\n}\n\nfragment UserProfilePosts_postList on CeramicAccount {\n  id\n  isViewer\n  postList(first: $count, after: $cursor) {\n    edges {\n      node {\n        id\n        ...StoryCardPublishedGraphQL_post\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "101fa3ef0e5e19ac16820add06da79cc";
+(node as any).hash = "73611688805b5b48f59ae49214f625c7";
 
 export default node;

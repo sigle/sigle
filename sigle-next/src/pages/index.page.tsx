@@ -7,7 +7,7 @@ import { StoryCardPublished } from '@/components/StoryCard/StoryCardPublished';
 import { DashboardLayout } from '../components/Dashboard/DashboardLayout';
 
 const HopePostList = () => {
-  const postList = trpc.postList.useQuery();
+  const postList = trpc.postList.useQuery({});
 
   if (postList.isLoading) {
     return (

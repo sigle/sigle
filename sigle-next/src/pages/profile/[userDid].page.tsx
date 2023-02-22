@@ -11,9 +11,14 @@ import { UserProfilePageHeader } from '@/components/UserProfile/UserProfilePageH
 import { StoryCardPublishedSkeleton } from '@/components/StoryCard/StoryCardPublishedSkeleton';
 import { UserProfilePosts } from '@/components/UserProfile/UserProfilePosts';
 import { UserDidProfilePageQuery } from '@/__generated__/relay/UserDidProfilePageQuery.graphql';
+import { trpc } from '@/utils/trpc';
 
 const ProfilePage = () => {
   const router = useRouter();
+  const userDid = router.query.userDid as string;
+  const postList = trpc.postList.useQuery({
+    did: userDid,
+  });
 
   const data = useLazyLoadQuery<UserDidProfilePageQuery>(
     graphql`
@@ -25,7 +30,6 @@ const ProfilePage = () => {
             profile {
               id
             }
-            ...UserProfilePageHeader_user
             ...UserProfilePosts_postList
           }
         }
@@ -49,7 +53,12 @@ const ProfilePage = () => {
           isViewer={data.node.isViewer || false}
         />
       }
-      headerContent={<UserProfilePageHeader user={data.node} />}
+      headerContent={
+        <UserProfilePageHeader
+          did={data.node.id!}
+          isViewer={data.node.isViewer || false}
+        />
+      }
     >
       <Container css={{ maxWidth: 680, py: '$5' }}>
         <UserProfilePosts user={data.node} />

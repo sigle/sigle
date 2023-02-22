@@ -13,7 +13,6 @@ export const userRouter = router({
       })
     )
     .query(async ({ input }) => {
-      console.log(input);
       const profile = await prismaClient.profile.findFirst({
         where: {
           controller_did: input.did,
