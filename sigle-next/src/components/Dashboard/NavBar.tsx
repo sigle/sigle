@@ -163,9 +163,10 @@ export const NavBar = () => {
   const { session } = useCeramic();
 
   const did = session?.did.parent;
+  const skipProfileQuery = !did;
   const profile = trpc.userProfile.useQuery(
     { did: did ?? '' },
-    { enabled: !!did }
+    { enabled: !skipProfileQuery }
   );
 
   const menu = [
@@ -191,18 +192,18 @@ export const NavBar = () => {
     },
   ];
 
-  const menu2 = [
-    {
-      href: '/analytics',
-      icon: <TbChartPie size={navbarIconSize} />,
-      label: 'Analytics',
-    },
-    {
-      href: '/feed',
-      icon: <TbUsers size={navbarIconSize} />,
-      label: 'Subscribers',
-    },
-  ];
+  // const menu2 = [
+  //   {
+  //     href: '/analytics',
+  //     icon: <TbChartPie size={navbarIconSize} />,
+  //     label: 'Analytics',
+  //   },
+  //   {
+  //     href: '/feed',
+  //     icon: <TbUsers size={navbarIconSize} />,
+  //     label: 'Subscribers',
+  //   },
+  // ];
 
   return (
     <StyledNavBar>
@@ -263,21 +264,14 @@ export const NavBar = () => {
               </NavBarLinkStoriesButton>
             )}
           </NavBarStoriesContainer>
-
-          {/* {menu2.map((item, index) => (
-            <NavBarLink
-              key={index}
-              {...item}
-              isCollapsed={collapsed}
-              active={router.pathname === item.href}
-            />
-          ))} */}
         </NavBarLinkContainer>
       </div>
       {!profile.isLoading && did && (
         <NavBarUserDropdown did={did} profile={profile.data} />
       )}
-      {!profile.isLoading && !did && <ConnectDropdown />}
+      {((!profile.isLoading && !did) || skipProfileQuery) && (
+        <ConnectDropdown />
+      )}
     </StyledNavBar>
   );
 };

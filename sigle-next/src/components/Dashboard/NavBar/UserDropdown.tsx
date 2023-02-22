@@ -74,7 +74,7 @@ export const DropdownMenuItemWithSwitch = styled(DropdownMenuItem, {
 
 interface NavBarUserDropdownProps {
   did: string;
-  profile?: CeramicProfile;
+  profile?: CeramicProfile | null;
 }
 
 export const NavBarUserDropdown = ({

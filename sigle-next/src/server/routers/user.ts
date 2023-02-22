@@ -20,7 +20,7 @@ export const userRouter = router({
       });
 
       if (!profile) {
-        return undefined;
+        return null;
       }
 
       return normalizeProfile(profile);
