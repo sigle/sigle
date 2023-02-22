@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { TbDots } from 'react-icons/tb';
+import { graphql, useFragment } from 'react-relay';
 import Image from 'next/image';
 import {
   Badge,
@@ -13,11 +14,11 @@ import {
   Typography,
 } from '@sigle/ui';
 import { styled } from '@sigle/stitches.config';
+import { StoryCardPublished_post$key } from '@/__generated__/relay/StoryCardPublished_post.graphql';
 import { nextImageLoader } from '@/utils/nextImageLoader';
 import { addressAvatar } from '@/utils';
 import { getAddressFromDid } from '@/utils/getAddressFromDid';
 import { BadgeAddress } from '../UserProfile/BadgeAddress';
-import { CeramicPost, CeramicProfile } from '@/types/ceramic';
 
 const AvatarContainer = styled('div', {
   display: 'flex',
@@ -39,22 +40,34 @@ const StyledDropdownMenuContent = styled(DropdownMenuContent, {
 });
 
 interface StoryCardPublishedProps {
-  post: CeramicPost;
-  profile?: CeramicProfile;
-  isViewer: boolean;
+  story: StoryCardPublished_post$key;
 }
 
-export const StoryCardPublished = ({
-  post,
-  profile,
-  isViewer,
-}: StoryCardPublishedProps) => {
+export const StoryCardPublishedGraphQL = (props: StoryCardPublishedProps) => {
   const router = useRouter();
 
-  const storyEditorLink = `/editor/${post.id}`;
-  const storyReadLink = `/post/${post.id}`;
-  const userProfileLink = `/profile/${post.did}`;
-  const address = getAddressFromDid(post.did);
+  const storyData = useFragment(
+    graphql`
+      fragment StoryCardPublished_post on Post {
+        id
+        title
+        author {
+          id
+          isViewer
+          profile {
+            id
+            displayName
+          }
+        }
+      }
+    `,
+    props.story
+  );
+
+  const storyEditorLink = `/editor/${storyData.id}`;
+  const storyReadLink = `/post/${storyData.id}`;
+  const userProfileLink = `/profile/${storyData.author.id}`;
+  const address = getAddressFromDid(storyData.author.id);
 
   return (
     <Flex
@@ -85,7 +98,7 @@ export const StoryCardPublished = ({
           lineClamp={2}
           css={{ mt: '$3' }}
         >
-          {post.title}
+          {storyData.title}
         </Typography>
       </Link>
       <Link href={storyReadLink}>
@@ -113,17 +126,17 @@ export const StoryCardPublished = ({
           </Link>
           <Link href={userProfileLink}>
             <Typography size="xs">
-              {profile?.displayName
-                ? profile.displayName
+              {storyData.author.profile?.displayName
+                ? storyData.author.profile.displayName
                 : `${address.split('').slice(0, 5).join('')}…${address
                     .split('')
                     .slice(-5)
                     .join('')}`}
             </Typography>
           </Link>
-          <BadgeAddress did={post.did} />
+          <BadgeAddress did={storyData.author.id} />
         </Flex>
-        {isViewer ? (
+        {storyData.author.isViewer ? (
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <IconButton size="xs" variant="ghost">

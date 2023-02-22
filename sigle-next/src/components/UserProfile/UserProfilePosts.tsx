@@ -3,7 +3,7 @@ import { useInView } from 'react-cool-inview';
 import Link from 'next/link';
 import { Button, Flex, LoadingSpinner, Typography } from '@sigle/ui';
 import { UserProfilePosts_postList$key } from '@/__generated__/relay/UserProfilePosts_postList.graphql';
-import { StoryCardPublished } from '../StoryCard/StoryCardPublished';
+import { StoryCardPublishedGraphQL } from '../StoryCard/StoryCardPublishedGraphQL';
 import { StoryCardPublishedSkeleton } from '../StoryCard/StoryCardPublishedSkeleton';
 
 export const UserProfilePosts = (props: {
@@ -82,7 +82,9 @@ export const UserProfilePosts = (props: {
   return (
     <>
       {data.postList.edges.map((edge) => {
-        return <StoryCardPublished key={edge?.node?.id} story={edge!.node!} />;
+        return (
+          <StoryCardPublishedGraphQL key={edge?.node?.id} story={edge!.node!} />
+        );
       })}
       <div ref={observe} />
       {isLoadingNext && (
