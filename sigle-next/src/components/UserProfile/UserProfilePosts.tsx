@@ -15,7 +15,7 @@ export const UserProfilePosts = ({
   const postList = trpc.postList.useInfiniteQuery(
     {
       did,
-      limit: 4,
+      limit: 20,
     },
     {
       getNextPageParam: (lastPage) => lastPage.nextCursor,

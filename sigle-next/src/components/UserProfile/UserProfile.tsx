@@ -39,7 +39,7 @@ export const UserProfile = ({ isViewer, did }: UserProfileProps) => {
 
   return (
     <>
-      <Flex justify="between">
+      <Flex justify="between" align="start">
         <AvatarContainer>
           <Image
             loader={nextImageLoader}
