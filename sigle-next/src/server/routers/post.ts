@@ -1,4 +1,4 @@
-import { Prisma } from '@prisma/client';
+import { Prisma } from '.prisma/client';
 import { prismaClient } from '@/lib/prisma';
 import { CeramicPost, CeramicProfile } from '@/types/ceramic';
 import { router, procedure } from '../trpc';

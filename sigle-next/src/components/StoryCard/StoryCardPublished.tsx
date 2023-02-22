@@ -2,8 +2,8 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { TbDots } from 'react-icons/tb';
 import Image from 'next/image';
+import { format } from 'date-fns';
 import {
-  Badge,
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
@@ -68,8 +68,8 @@ export const StoryCardPublished = ({
       }}
     >
       <Flex gap="2">
-        <Typography size="xs" color="gray9">
-          FEB 18
+        <Typography size="xs" color="gray9" textTransform="uppercase">
+          {format(new Date(post.createdAt), 'MMM dd')}
         </Typography>
         <Typography size="xs" color="gray9">
           ·
