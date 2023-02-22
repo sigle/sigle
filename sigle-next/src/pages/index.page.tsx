@@ -1,5 +1,6 @@
 import { TooltipProvider } from '@radix-ui/react-tooltip';
-import { Container } from '@sigle/ui';
+import Link from 'next/link';
+import { Button, Container, Flex, Typography } from '@sigle/ui';
 import { StoryCardPublishedSkeleton } from '@/components/StoryCard/StoryCardPublishedSkeleton';
 import { trpc } from '@/utils/trpc';
 import { StoryCardPublished } from '@/components/StoryCard/StoryCardPublished';
@@ -42,7 +43,18 @@ const HopePostList = () => {
 export default function Home() {
   return (
     <TooltipProvider>
-      <DashboardLayout>
+      <DashboardLayout
+        headerContent={
+          <Flex justify="between" align="center" css={{ flex: 1 }}>
+            <Typography size="xl" fontWeight="bold">
+              Explore
+            </Typography>
+            <Link href="/editor/new">
+              <Button>Write story</Button>
+            </Link>
+          </Flex>
+        }
+      >
         <Container css={{ maxWidth: 680, py: '$5' }}>
           <HopePostList />
         </Container>
