@@ -16,8 +16,8 @@ import { styled } from '@sigle/stitches.config';
 import { nextImageLoader } from '@/utils/nextImageLoader';
 import { addressAvatar } from '@/utils';
 import { getAddressFromDid } from '@/utils/getAddressFromDid';
-import { BadgeAddress } from '../UserProfile/BadgeAddress';
 import { CeramicPost, CeramicProfile } from '@/types/ceramic';
+import { BadgeAddress } from '../UserProfile/BadgeAddress';
 
 const AvatarContainer = styled('div', {
   display: 'flex',

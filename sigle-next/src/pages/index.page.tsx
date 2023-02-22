@@ -2,8 +2,8 @@ import { TooltipProvider } from '@radix-ui/react-tooltip';
 import { Container } from '@sigle/ui';
 import { StoryCardPublishedSkeleton } from '@/components/StoryCard/StoryCardPublishedSkeleton';
 import { trpc } from '@/utils/trpc';
-import { DashboardLayout } from '../components/Dashboard/DashboardLayout';
 import { StoryCardPublished } from '@/components/StoryCard/StoryCardPublished';
+import { DashboardLayout } from '../components/Dashboard/DashboardLayout';
 
 const HopePostList = () => {
   const postList = trpc.postList.useQuery();

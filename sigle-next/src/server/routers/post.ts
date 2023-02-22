@@ -1,6 +1,6 @@
+import { Prisma } from '@prisma/client';
 import { prismaClient } from '@/lib/prisma';
 import { CeramicPost, CeramicProfile } from '@/types/ceramic';
-import { Prisma } from '@prisma/client';
 import { router, procedure } from '../trpc';
 
 const normalizePost = (dbPost: {
