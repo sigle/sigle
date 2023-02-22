@@ -19,11 +19,13 @@ const HopePostList = () => {
     );
   }
 
-  console.log(postList.data);
+  if (postList.error) {
+    return <div>{postList.error.message}</div>;
+  }
 
   return (
     <>
-      {postList.data?.map((post) => {
+      {postList.data.map((post) => {
         return (
           <StoryCardPublished
             key={post.id}
