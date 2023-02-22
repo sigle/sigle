@@ -28,7 +28,7 @@ const HopePostList = () => {
     },
   });
 
-  if (postList.isLoading) {
+  if (postList.isInitialLoading) {
     return (
       <>
         <StoryCardPublishedSkeleton />
