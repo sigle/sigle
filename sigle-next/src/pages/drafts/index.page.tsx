@@ -1,6 +1,7 @@
 import { TooltipProvider } from '@radix-ui/react-tooltip';
 import { useInView } from 'react-cool-inview';
-import { Container, Flex, LoadingSpinner } from '@sigle/ui';
+import Link from 'next/link';
+import { Button, Container, Flex, LoadingSpinner, Typography } from '@sigle/ui';
 import { DashboardLayout } from '@/components/Dashboard/DashboardLayout';
 import { useCeramic } from '@/components/Ceramic/CeramicProvider';
 import { StoryCardDraft } from '@/components/StoryCard/StoryCardDraft';
@@ -37,6 +38,27 @@ const Drafts = () => {
         <StoryCardPublishedSkeleton />
         <StoryCardPublishedSkeleton />
         <StoryCardPublishedSkeleton />
+      </>
+    );
+  }
+
+  if (postList.data?.pages[0].items.length === 0) {
+    return (
+      <>
+        <Flex justify="center" direction="column" align="center">
+          <Typography color="gray9" fontWeight="semiBold">
+            You don't have any drafts
+          </Typography>
+          <Link href="/editor/new">
+            <Button variant="light" size="sm" css={{ mt: '$3', mb: '$5' }}>
+              Write your first story
+            </Button>
+          </Link>
+        </Flex>
+        <Flex direction="column">
+          <StoryCardPublishedSkeleton animate={false} />
+          <StoryCardPublishedSkeleton animate={false} />
+        </Flex>
       </>
     );
   }
