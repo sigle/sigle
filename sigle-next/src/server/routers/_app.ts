@@ -1,3 +1,4 @@
+import { prismaClient } from '@/lib/prisma';
 import { z } from 'zod';
 import { procedure, router } from '../trpc';
 
@@ -8,7 +9,9 @@ export const appRouter = router({
         text: z.string(),
       })
     )
-    .query(({ input }) => {
+    .query(async ({ input }) => {
+      console.log(await prismaClient.profile.findMany());
+
       return {
         greeting: `hello ${input.text}`,
       };

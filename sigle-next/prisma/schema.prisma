@@ -25,7 +25,7 @@ model ceramic_models {
   @@index([is_indexed], map: "idx_ceramic_is_indexed")
 }
 
-model kjzl6hvfrbw6c63zxon49b1l1fcq7hqanjj4tmuy3pv4rbb4gnbdakkukt1szll {
+model Post {
   stream_id         String    @id(map: "idx_kkukt1szll_pkey") @unique(map: "constr_kkukt1szll_unique") @db.VarChar(255)
   controller_did    String    @db.VarChar(1024)
   stream_content    Json
@@ -41,9 +41,10 @@ model kjzl6hvfrbw6c63zxon49b1l1fcq7hqanjj4tmuy3pv4rbb4gnbdakkukt1szll {
   @@index([last_anchored_at, created_at], map: "idx_kkukt1szll_last_anchored_at_created_at")
   @@index([stream_id], map: "idx_kkukt1szll_stream_id")
   @@index([updated_at], map: "idx_kkukt1szll_updated_at")
+  @@map("kjzl6hvfrbw6c63zxon49b1l1fcq7hqanjj4tmuy3pv4rbb4gnbdakkukt1szll")
 }
 
-model kjzl6hvfrbw6c8kdwrxur6qqpp9tkjzehqp22atzxuk7ktbxmh30193jtd9t94w {
+model Profile {
   stream_id         String    @id(map: "idx_93jtd9t94w_pkey") @unique(map: "constr_93jtd9t94w_unique") @db.VarChar(255)
   controller_did    String    @db.VarChar(1024)
   stream_content    Json
@@ -59,4 +60,5 @@ model kjzl6hvfrbw6c8kdwrxur6qqpp9tkjzehqp22atzxuk7ktbxmh30193jtd9t94w {
   @@index([last_anchored_at, created_at], map: "idx_93jtd9t94w_last_anchored_at_created_at")
   @@index([stream_id], map: "idx_93jtd9t94w_stream_id")
   @@index([updated_at], map: "idx_93jtd9t94w_updated_at")
+  @@map("kjzl6hvfrbw6c8kdwrxur6qqpp9tkjzehqp22atzxuk7ktbxmh30193jtd9t94w")
 }
