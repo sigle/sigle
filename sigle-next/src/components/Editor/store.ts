@@ -3,6 +3,7 @@ import { create } from 'zustand';
 interface EditorStory {
   id: string;
   title: string;
+  status?: 'DRAFT' | 'PUBLISHED' | 'DELETED' | '%future added value';
   content: string;
   featuredImage?: string;
   metaTitle?: string;

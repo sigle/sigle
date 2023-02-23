@@ -1,6 +1,6 @@
 import { TooltipProvider } from '@radix-ui/react-tooltip';
 import { useRouter } from 'next/router';
-import { graphql, useLazyLoadQuery, useMutation } from 'react-relay';
+import { graphql, useLazyLoadQuery } from 'react-relay';
 import useDeepCompareEffect from 'use-deep-compare-effect';
 import { Container } from '@sigle/ui';
 import { useCeramic } from '@/components/Ceramic/CeramicProvider';
@@ -22,6 +22,7 @@ const Editor = () => {
         node(id: $id) {
           ... on Post {
             id
+            status
             title
             content
             featuredImage
