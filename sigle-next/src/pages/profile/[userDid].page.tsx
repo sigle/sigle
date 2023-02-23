@@ -1,60 +1,28 @@
 import { TooltipProvider } from '@radix-ui/react-tooltip';
-import { graphql, useLazyLoadQuery } from 'react-relay';
-import { Suspense } from 'react';
 import { useRouter } from 'next/router';
 import { Container } from '@sigle/ui';
 import { useCeramic } from '@/components/Ceramic/CeramicProvider';
 import { DashboardLayout } from '@/components/Dashboard/DashboardLayout';
 import { UserProfile } from '@/components/UserProfile/UserProfile';
-import { UserProfileSkeleton } from '@/components/UserProfile/UserProfileSkeleton';
 import { UserProfilePageHeader } from '@/components/UserProfile/UserProfilePageHeader';
-import { StoryCardPublishedSkeleton } from '@/components/StoryCard/StoryCardPublishedSkeleton';
 import { UserProfilePosts } from '@/components/UserProfile/UserProfilePosts';
-import { UserDidProfilePageQuery } from '@/__generated__/relay/UserDidProfilePageQuery.graphql';
 
 const ProfilePage = () => {
   const router = useRouter();
-
-  const data = useLazyLoadQuery<UserDidProfilePageQuery>(
-    graphql`
-      query UserDidProfilePageQuery($id: ID!, $count: Int!, $cursor: String) {
-        node(id: $id) {
-          ... on CeramicAccount {
-            id
-            isViewer
-            profile {
-              id
-              ...UserProfile_profile
-            }
-            ...UserProfilePageHeader_user
-            ...UserProfilePosts_postList
-          }
-        }
-      }
-    `,
-    {
-      count: 20,
-      id: router.query.userDid as string,
-    },
-    {}
-  );
-
-  // TODO 404 if no user
-  if (!data.node) return null;
+  const { session } = useCeramic();
+  const userDid = session?.did.parent!;
+  const paramUserDid = router.query.userDid as string;
+  const isViewer = userDid === paramUserDid;
 
   return (
     <DashboardLayout
-      sidebarContent={
-        <UserProfile
-          did={data.node.id!}
-          isViewer={data.node.isViewer || false}
-          profile={data.node.profile || null}
-        />
+      sidebarContent={<UserProfile did={paramUserDid} isViewer={isViewer} />}
+      headerContent={
+        <UserProfilePageHeader did={paramUserDid} isViewer={isViewer} />
       }
-      headerContent={<UserProfilePageHeader user={data.node} />}
     >
       <Container css={{ maxWidth: 680, py: '$5' }}>
-        <UserProfilePosts user={data.node} />
+        <UserProfilePosts did={paramUserDid} isViewer={isViewer} />
       </Container>
     </DashboardLayout>
   );
@@ -67,23 +35,5 @@ export default function ProtectedProfilePage() {
 
   if (!router.isReady) return null;
 
-  return (
-    <TooltipProvider>
-      {session ? (
-        <Suspense
-          fallback={
-            <DashboardLayout sidebarContent={<UserProfileSkeleton />}>
-              <Container css={{ maxWidth: 680, py: '$5' }}>
-                <StoryCardPublishedSkeleton />
-                <StoryCardPublishedSkeleton />
-                <StoryCardPublishedSkeleton />
-              </Container>
-            </DashboardLayout>
-          }
-        >
-          <ProfilePage />
-        </Suspense>
-      ) : null}
-    </TooltipProvider>
-  );
+  return <TooltipProvider>{session ? <ProfilePage /> : null}</TooltipProvider>;
 }

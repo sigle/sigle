@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<1a6bdb3b99d15bf7433f4fa6762fc3f1>>
+ * @generated SignedSource<<de2a9c873e99b69abd797b9206d6bba8>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -30,26 +30,23 @@ export type UpdateOptionsInput = {
   replace?: boolean | null;
   version?: any | null;
 };
-export type EditorSaveUpdatePostMutation$variables = {
+export type DeleteDialogDeletePostMutation$variables = {
   input: UpdatePostInput;
 };
-export type EditorSaveUpdatePostMutation$data = {
+export type DeleteDialogDeletePostMutation$data = {
   readonly updatePost: {
     readonly clientMutationId: string | null;
     readonly document: {
-      readonly canonicalUrl: string | null;
-      readonly featuredImage: string | null;
+      readonly content: string;
       readonly id: string;
-      readonly metaDescription: string | null;
-      readonly metaImage: string | null;
-      readonly metaTitle: string | null;
+      readonly status: PostStatus | null;
       readonly title: string;
     };
   } | null;
 };
-export type EditorSaveUpdatePostMutation = {
-  response: EditorSaveUpdatePostMutation$data;
-  variables: EditorSaveUpdatePostMutation$variables;
+export type DeleteDialogDeletePostMutation = {
+  response: DeleteDialogDeletePostMutation$data;
+  variables: DeleteDialogDeletePostMutation$variables;
 };
 
 const node: ConcreteRequest = (function(){
@@ -101,6 +98,13 @@ v1 = [
             "alias": null,
             "args": null,
             "kind": "ScalarField",
+            "name": "status",
+            "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": null,
+            "kind": "ScalarField",
             "name": "title",
             "storageKey": null
           },
@@ -108,35 +112,7 @@ v1 = [
             "alias": null,
             "args": null,
             "kind": "ScalarField",
-            "name": "featuredImage",
-            "storageKey": null
-          },
-          {
-            "alias": null,
-            "args": null,
-            "kind": "ScalarField",
-            "name": "metaTitle",
-            "storageKey": null
-          },
-          {
-            "alias": null,
-            "args": null,
-            "kind": "ScalarField",
-            "name": "metaDescription",
-            "storageKey": null
-          },
-          {
-            "alias": null,
-            "args": null,
-            "kind": "ScalarField",
-            "name": "metaImage",
-            "storageKey": null
-          },
-          {
-            "alias": null,
-            "args": null,
-            "kind": "ScalarField",
-            "name": "canonicalUrl",
+            "name": "content",
             "storageKey": null
           }
         ],
@@ -151,7 +127,7 @@ return {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Fragment",
     "metadata": null,
-    "name": "EditorSaveUpdatePostMutation",
+    "name": "DeleteDialogDeletePostMutation",
     "selections": (v1/*: any*/),
     "type": "Mutation",
     "abstractKey": null
@@ -160,20 +136,20 @@ return {
   "operation": {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Operation",
-    "name": "EditorSaveUpdatePostMutation",
+    "name": "DeleteDialogDeletePostMutation",
     "selections": (v1/*: any*/)
   },
   "params": {
-    "cacheID": "52eb51fcaafa2b719cf0b1645965370f",
+    "cacheID": "25ed6852ab2bb13080101d3362e71b6e",
     "id": null,
     "metadata": {},
-    "name": "EditorSaveUpdatePostMutation",
+    "name": "DeleteDialogDeletePostMutation",
     "operationKind": "mutation",
-    "text": "mutation EditorSaveUpdatePostMutation(\n  $input: UpdatePostInput!\n) {\n  updatePost(input: $input) {\n    clientMutationId\n    document {\n      id\n      title\n      featuredImage\n      metaTitle\n      metaDescription\n      metaImage\n      canonicalUrl\n    }\n  }\n}\n"
+    "text": "mutation DeleteDialogDeletePostMutation(\n  $input: UpdatePostInput!\n) {\n  updatePost(input: $input) {\n    clientMutationId\n    document {\n      id\n      status\n      title\n      content\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "b996942242f5bee3fbf59786b1ade2d4";
+(node as any).hash = "9695249258bb624202f28cd9f693cde5";
 
 export default node;

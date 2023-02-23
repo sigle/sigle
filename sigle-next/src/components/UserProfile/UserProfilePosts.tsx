@@ -1,51 +1,52 @@
-import { graphql, usePaginationFragment } from 'react-relay';
 import { useInView } from 'react-cool-inview';
 import Link from 'next/link';
 import { Button, Flex, LoadingSpinner, Typography } from '@sigle/ui';
-import { UserProfilePosts_postList$key } from '@/__generated__/relay/UserProfilePosts_postList.graphql';
-import { StoryCardPublished } from '../StoryCard/StoryCardPublished';
+import { trpc } from '@/utils/trpc';
 import { StoryCardPublishedSkeleton } from '../StoryCard/StoryCardPublishedSkeleton';
+import { StoryCardPublished } from '../StoryCard/StoryCardPublished';
 
-export const UserProfilePosts = (props: {
-  user: UserProfilePosts_postList$key;
+export const UserProfilePosts = ({
+  isViewer,
+  did,
+}: {
+  isViewer: boolean;
+  did: string;
 }) => {
-  const { data, hasNext, loadNext, isLoadingNext } = usePaginationFragment(
-    graphql`
-      fragment UserProfilePosts_postList on CeramicAccount
-      @refetchable(queryName: "UserProfilePostsPaginationQuery") {
-        id
-        isViewer
-        postList(first: $count, after: $cursor)
-          @connection(key: "UserProfilePosts_postList") {
-          edges {
-            node {
-              id
-              ...StoryCardPublished_post
-            }
-          }
-        }
-      }
-    `,
-    props.user
+  const postList = trpc.postList.useInfiniteQuery(
+    {
+      did,
+      limit: 20,
+      status: 'PUBLISHED',
+    },
+    {
+      getNextPageParam: (lastPage) => lastPage.nextCursor,
+    }
   );
 
   const { observe } = useInView({
     rootMargin: '50px 0px',
-    onEnter: ({ observe, unobserve }) => {
+    onEnter: async ({ observe, unobserve }) => {
       // Pause observe when loading data
       unobserve();
-      loadNext(20, {
-        onComplete: () => {
-          if (hasNext) {
-            observe();
-          }
-        },
-      });
+
+      const data = await postList.fetchNextPage();
+      if (data.hasNextPage) {
+        observe();
+      }
     },
   });
 
-  if (!data.postList || !data.postList.edges) return null;
-  if (data.postList.edges.length === 0 && data.isViewer) {
+  if (postList.isInitialLoading) {
+    return (
+      <>
+        <StoryCardPublishedSkeleton />
+        <StoryCardPublishedSkeleton />
+        <StoryCardPublishedSkeleton />
+      </>
+    );
+  }
+
+  if (postList.data?.pages[0].items.length === 0 && isViewer) {
     return (
       <>
         <Flex justify="center" direction="column" align="center">
@@ -65,7 +66,7 @@ export const UserProfilePosts = (props: {
       </>
     );
   }
-  if (data.postList.edges.length === 0 && !data.isViewer) {
+  if (postList.data?.pages[0].items.length === 0 && !isViewer) {
     return (
       <Flex justify="center" direction="column">
         <Typography
@@ -81,11 +82,21 @@ export const UserProfilePosts = (props: {
 
   return (
     <>
-      {data.postList.edges.map((edge) => {
-        return <StoryCardPublished key={edge?.node?.id} story={edge!.node!} />;
+      {postList.data?.pages.map((page) => {
+        return page.items.map((item) => {
+          return (
+            <StoryCardPublished
+              key={item.id}
+              isViewer={isViewer}
+              post={item}
+              profile={item.profile}
+            />
+          );
+        });
       })}
+
       <div ref={observe} />
-      {isLoadingNext && (
+      {postList.isFetching && (
         <Flex justify="center" mt="4">
           <LoadingSpinner />
         </Flex>

@@ -11,7 +11,6 @@ import {
   TbUserCircle,
   TbUsers,
 } from 'react-icons/tb';
-import { graphql, useLazyLoadQuery } from 'react-relay';
 import { styled } from '@sigle/stitches.config';
 import {
   NumberBadge,
@@ -23,7 +22,8 @@ import {
   TooltipTrigger,
   Typography,
 } from '@sigle/ui';
-import { NavBarProfileQuery } from '@/__generated__/relay/NavBarProfileQuery.graphql';
+import { trpc } from '@/utils/trpc';
+import { useCeramic } from '../Ceramic/CeramicProvider';
 import { useDashboardStore } from './store';
 import { NavBarUserDropdown } from './NavBar/UserDropdown';
 import { ConnectDropdown } from './NavBar/ConnectDropdown';
@@ -160,17 +160,18 @@ const NavBarLinkStoriesButton = styled(Button, {
 export const NavBar = () => {
   const router = useRouter();
   const collapsed = useDashboardStore((state) => state.collapsed);
+  const { session } = useCeramic();
 
-  const data = useLazyLoadQuery<NavBarProfileQuery>(
-    graphql`
-      query NavBarProfileQuery {
-        viewer {
-          id
-          ...UserDropdown_viewer
-        }
-      }
-    `,
-    {}
+  const did = session?.did.parent;
+  const skipProfileQuery = !did;
+  const profile = trpc.userProfile.useQuery(
+    { did: did ?? '' },
+    { enabled: !skipProfileQuery }
+  );
+
+  const postsNumbers = trpc.postsNumbers.useQuery(
+    { did: did ?? '' },
+    { enabled: !skipProfileQuery }
   );
 
   const menu = [
@@ -190,24 +191,24 @@ export const NavBar = () => {
     //   label: 'Saved',
     // },
     {
-      href: `/profile/${data.viewer?.id}`,
+      href: `/profile/${did}`,
       icon: <TbUserCircle size={navbarIconSize} />,
       label: 'Profile',
     },
   ];
 
-  const menu2 = [
-    {
-      href: '/analytics',
-      icon: <TbChartPie size={navbarIconSize} />,
-      label: 'Analytics',
-    },
-    {
-      href: '/feed',
-      icon: <TbUsers size={navbarIconSize} />,
-      label: 'Subscribers',
-    },
-  ];
+  // const menu2 = [
+  //   {
+  //     href: '/analytics',
+  //     icon: <TbChartPie size={navbarIconSize} />,
+  //     label: 'Analytics',
+  //   },
+  //   {
+  //     href: '/feed',
+  //     icon: <TbUsers size={navbarIconSize} />,
+  //     label: 'Subscribers',
+  //   },
+  // ];
 
   return (
     <StyledNavBar>
@@ -222,66 +223,49 @@ export const NavBar = () => {
             />
           ))}
 
-          <NavBarStoriesContainer>
-            {!collapsed && (
-              <Flex justify="between" align="center" css={{ pl: '10px' }}>
-                <Flex align="center" gap="2">
-                  <TbBook size={navbarIconSize} />
-                  <Typography>Stories</Typography>
+          {did && (
+            <NavBarStoriesContainer>
+              {!collapsed && (
+                <Flex justify="between" align="center" css={{ pl: '10px' }}>
+                  <Flex align="center" gap="2">
+                    <TbBook size={navbarIconSize} />
+                    <Typography>Stories</Typography>
+                    <NumberBadge>{postsNumbers.data?.nbTotal}</NumberBadge>
+                  </Flex>
+                  <Link href="/editor/new">
+                    <IconButton variant="light" size="lg">
+                      <TbPlus />
+                    </IconButton>
+                  </Link>
                 </Flex>
-                <Link href="/editor/new">
-                  <IconButton variant="light" size="lg">
-                    <TbPlus />
-                  </IconButton>
+              )}
+              {collapsed ? (
+                <NavBarLink
+                  isCollapsed={collapsed}
+                  icon={<TbNotebook size={navbarIconSize} />}
+                  label="Drafts"
+                  href="/"
+                  active={false}
+                />
+              ) : (
+                <Link href="/drafts">
+                  <NavBarLinkStoriesButton
+                    variant="ghost"
+                    active={router.pathname === '/drafts'}
+                  >
+                    Drafts{' '}
+                    <NumberBadge>{postsNumbers.data?.nbDrafts}</NumberBadge>
+                  </NavBarLinkStoriesButton>
                 </Link>
-              </Flex>
-            )}
-            {collapsed ? (
-              <NavBarLink
-                isCollapsed={collapsed}
-                icon={<TbNotebook size={navbarIconSize} />}
-                label="Drafts"
-                href="/"
-                active={false}
-              />
-            ) : (
-              <Link href="/drafts">
-                <NavBarLinkStoriesButton
-                  variant="ghost"
-                  active={router.pathname === '/drafts'}
-                >
-                  Drafts <NumberBadge>9</NumberBadge>
-                </NavBarLinkStoriesButton>
-              </Link>
-            )}
-            {collapsed ? (
-              <NavBarLink
-                isCollapsed={collapsed}
-                icon={<TbNews size={navbarIconSize} />}
-                label="Published"
-                href="/"
-                active={false}
-              />
-            ) : (
-              <NavBarLinkStoriesButton variant="ghost">
-                Published <NumberBadge>10</NumberBadge>
-              </NavBarLinkStoriesButton>
-            )}
-          </NavBarStoriesContainer>
-
-          {/* {menu2.map((item, index) => (
-            <NavBarLink
-              key={index}
-              {...item}
-              isCollapsed={collapsed}
-              active={router.pathname === item.href}
-            />
-          ))} */}
+              )}
+            </NavBarStoriesContainer>
+          )}
         </NavBarLinkContainer>
       </div>
-      {data.viewer ? (
-        <NavBarUserDropdown user={data.viewer} />
-      ) : (
+      {!profile.isLoading && did && (
+        <NavBarUserDropdown did={did} profile={profile.data} />
+      )}
+      {((!profile.isLoading && !did) || skipProfileQuery) && (
         <ConnectDropdown />
       )}
     </StyledNavBar>

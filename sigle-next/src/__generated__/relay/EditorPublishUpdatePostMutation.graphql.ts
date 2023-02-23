@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<1a6bdb3b99d15bf7433f4fa6762fc3f1>>
+ * @generated SignedSource<<d527e7fa8389c3dfbfb8043bc93bfd71>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -30,26 +30,21 @@ export type UpdateOptionsInput = {
   replace?: boolean | null;
   version?: any | null;
 };
-export type EditorSaveUpdatePostMutation$variables = {
+export type EditorPublishUpdatePostMutation$variables = {
   input: UpdatePostInput;
 };
-export type EditorSaveUpdatePostMutation$data = {
+export type EditorPublishUpdatePostMutation$data = {
   readonly updatePost: {
     readonly clientMutationId: string | null;
     readonly document: {
-      readonly canonicalUrl: string | null;
-      readonly featuredImage: string | null;
       readonly id: string;
-      readonly metaDescription: string | null;
-      readonly metaImage: string | null;
-      readonly metaTitle: string | null;
-      readonly title: string;
+      readonly status: PostStatus | null;
     };
   } | null;
 };
-export type EditorSaveUpdatePostMutation = {
-  response: EditorSaveUpdatePostMutation$data;
-  variables: EditorSaveUpdatePostMutation$variables;
+export type EditorPublishUpdatePostMutation = {
+  response: EditorPublishUpdatePostMutation$data;
+  variables: EditorPublishUpdatePostMutation$variables;
 };
 
 const node: ConcreteRequest = (function(){
@@ -101,42 +96,7 @@ v1 = [
             "alias": null,
             "args": null,
             "kind": "ScalarField",
-            "name": "title",
-            "storageKey": null
-          },
-          {
-            "alias": null,
-            "args": null,
-            "kind": "ScalarField",
-            "name": "featuredImage",
-            "storageKey": null
-          },
-          {
-            "alias": null,
-            "args": null,
-            "kind": "ScalarField",
-            "name": "metaTitle",
-            "storageKey": null
-          },
-          {
-            "alias": null,
-            "args": null,
-            "kind": "ScalarField",
-            "name": "metaDescription",
-            "storageKey": null
-          },
-          {
-            "alias": null,
-            "args": null,
-            "kind": "ScalarField",
-            "name": "metaImage",
-            "storageKey": null
-          },
-          {
-            "alias": null,
-            "args": null,
-            "kind": "ScalarField",
-            "name": "canonicalUrl",
+            "name": "status",
             "storageKey": null
           }
         ],
@@ -151,7 +111,7 @@ return {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Fragment",
     "metadata": null,
-    "name": "EditorSaveUpdatePostMutation",
+    "name": "EditorPublishUpdatePostMutation",
     "selections": (v1/*: any*/),
     "type": "Mutation",
     "abstractKey": null
@@ -160,20 +120,20 @@ return {
   "operation": {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Operation",
-    "name": "EditorSaveUpdatePostMutation",
+    "name": "EditorPublishUpdatePostMutation",
     "selections": (v1/*: any*/)
   },
   "params": {
-    "cacheID": "52eb51fcaafa2b719cf0b1645965370f",
+    "cacheID": "2a20d879ad55c4bd8e0df6b7380b963c",
     "id": null,
     "metadata": {},
-    "name": "EditorSaveUpdatePostMutation",
+    "name": "EditorPublishUpdatePostMutation",
     "operationKind": "mutation",
-    "text": "mutation EditorSaveUpdatePostMutation(\n  $input: UpdatePostInput!\n) {\n  updatePost(input: $input) {\n    clientMutationId\n    document {\n      id\n      title\n      featuredImage\n      metaTitle\n      metaDescription\n      metaImage\n      canonicalUrl\n    }\n  }\n}\n"
+    "text": "mutation EditorPublishUpdatePostMutation(\n  $input: UpdatePostInput!\n) {\n  updatePost(input: $input) {\n    clientMutationId\n    document {\n      id\n      status\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "b996942242f5bee3fbf59786b1ade2d4";
+(node as any).hash = "3737063409e362620bea8a6b46db1a06";
 
 export default node;

@@ -2,7 +2,6 @@ import { useTheme } from 'next-themes';
 import Link from 'next/link';
 import { TbChevronDown } from 'react-icons/tb';
 import { useDisconnect } from 'wagmi';
-import { graphql, useFragment } from 'react-relay';
 import {
   DropdownMenu,
   DropdownMenuTrigger,
@@ -18,8 +17,9 @@ import { addressAvatar } from '@/utils';
 import { createNewEnvironment, useRelayStore } from '@/lib/relay';
 import { shortenAddress } from '@/utils/shortenAddress';
 import { composeClient } from '@/lib/composeDB';
-import { UserDropdown_viewer$key } from '@/__generated__/relay/UserDropdown_viewer.graphql';
 import { getAddressFromDid } from '@/utils/getAddressFromDid';
+import { CeramicProfile } from '@/types/ceramic';
+import { trpc } from '@/utils/trpc';
 import { useDashboardStore } from '../store';
 
 const UserMenu = styled('div', {
@@ -72,27 +72,21 @@ export const DropdownMenuItemWithSwitch = styled(DropdownMenuItem, {
   gap: '$2',
 });
 
-export const NavBarUserDropdown = (props: {
-  user: UserDropdown_viewer$key;
-}) => {
+interface NavBarUserDropdownProps {
+  did: string;
+  profile?: CeramicProfile | null;
+}
+
+export const NavBarUserDropdown = ({
+  did,
+  profile,
+}: NavBarUserDropdownProps) => {
   const { resolvedTheme, setTheme } = useTheme();
   const collapsed = useDashboardStore((state) => state.collapsed);
   const toggleCollapse = useDashboardStore((state) => state.toggleCollapse);
   const setEnvironment = useRelayStore((store) => store.setEnvironment);
   const { disconnect } = useDisconnect();
-
-  const user = useFragment(
-    graphql`
-      fragment UserDropdown_viewer on CeramicAccount {
-        id
-        profile {
-          id
-          displayName
-        }
-      }
-    `,
-    props.user
-  );
+  const utils = trpc.useContext();
 
   const toggleTheme = () => {
     resolvedTheme === 'dark' ? setTheme('light') : setTheme('dark');
@@ -105,9 +99,11 @@ export const NavBarUserDropdown = (props: {
     disconnect();
     // Reset the relay environment to rerun all the queries as unauthenticated
     setEnvironment(createNewEnvironment());
+    // Invalidate all the trpc queries
+    utils.invalidate();
   };
 
-  const address = getAddressFromDid(user.id);
+  const address = getAddressFromDid(did);
 
   return (
     <Flex>
@@ -121,7 +117,7 @@ export const NavBarUserDropdown = (props: {
                 </ImageAvatarContainer>
                 <div>
                   <Typography size="xs" lineClamp={1}>
-                    {user.profile?.displayName || shortenAddress(address)}
+                    {profile?.displayName || shortenAddress(address)}
                   </Typography>
                   <Typography css={{ color: '$gray9' }} size="xs" lineClamp={1}>
                     {shortenAddress(address)}
@@ -137,9 +133,10 @@ export const NavBarUserDropdown = (props: {
           ) : null}
         </DropdownMenuTrigger>
         <DropdownMenuContent
-          side={collapsed ? 'right' : 'top'}
-          align={collapsed ? 'end' : 'center'}
+          side={'top'}
+          align={collapsed ? 'start' : 'center'}
           sideOffset={12}
+          css={{ minWidth: 230 }}
         >
           <Link href="/settings">
             <DropdownMenuItem>Settings</DropdownMenuItem>

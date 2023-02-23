@@ -5,7 +5,7 @@
       "accountRelation": { "type": "single" }
     },
     "Post": {
-      "id": "kjzl6hvfrbw6c63zxon49b1l1fcq7hqanjj4tmuy3pv4rbb4gnbdakkukt1szll",
+      "id": "kjzl6hvfrbw6c8wwfx9bjdc9pbo0r4si50chqe5v5k8ia1hcwmbtzsxs1bf8jiq",
       "accountRelation": { "type": "list" }
     }
   },
@@ -18,6 +18,12 @@
     },
     "Post": {
       "title": { "type": "string", "required": true },
+      "status": {
+        "type": "reference",
+        "refType": "enum",
+        "refName": "PostStatus",
+        "required": false
+      },
       "content": { "type": "string", "required": true },
       "metaImage": { "type": "string", "required": false },
       "metaTitle": { "type": "string", "required": false },
@@ -28,7 +34,7 @@
       "version": { "type": "view", "viewType": "documentVersion" }
     }
   },
-  "enums": {},
+  "enums": { "PostStatus": ["DRAFT", "PUBLISHED", "DELETED"] },
   "accountData": {
     "profile": { "type": "node", "name": "Profile" },
     "postList": { "type": "connection", "name": "Post" }

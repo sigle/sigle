@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<11adca643a8b25ffd58132de88bd3285>>
+ * @generated SignedSource<<f1281a26d7fcbf318200a008fef4a7a6>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,6 +9,7 @@
 // @ts-nocheck
 
 import { ConcreteRequest, Query } from 'relay-runtime';
+export type PostStatus = "DELETED" | "DRAFT" | "PUBLISHED" | "%future added value";
 export type PostIdEditorPagePostQuery$variables = {
   id: string;
 };
@@ -21,6 +22,7 @@ export type PostIdEditorPagePostQuery$data = {
     readonly metaDescription?: string | null;
     readonly metaImage?: string | null;
     readonly metaTitle?: string | null;
+    readonly status?: PostStatus | null;
     readonly title?: string;
   } | null;
 };
@@ -55,45 +57,52 @@ v3 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "title",
+  "name": "status",
   "storageKey": null
 },
 v4 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "content",
+  "name": "title",
   "storageKey": null
 },
 v5 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "featuredImage",
+  "name": "content",
   "storageKey": null
 },
 v6 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "metaTitle",
+  "name": "featuredImage",
   "storageKey": null
 },
 v7 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "metaDescription",
+  "name": "metaTitle",
   "storageKey": null
 },
 v8 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "metaImage",
+  "name": "metaDescription",
   "storageKey": null
 },
 v9 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "metaImage",
+  "storageKey": null
+},
+v10 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
@@ -125,7 +134,8 @@ return {
               (v6/*: any*/),
               (v7/*: any*/),
               (v8/*: any*/),
-              (v9/*: any*/)
+              (v9/*: any*/),
+              (v10/*: any*/)
             ],
             "type": "Post",
             "abstractKey": null
@@ -168,7 +178,8 @@ return {
               (v6/*: any*/),
               (v7/*: any*/),
               (v8/*: any*/),
-              (v9/*: any*/)
+              (v9/*: any*/),
+              (v10/*: any*/)
             ],
             "type": "Post",
             "abstractKey": null
@@ -179,16 +190,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "d4be03c5af9adc31db0ab173cf7f3acf",
+    "cacheID": "50cec1c48c7c064fe1ac8daf79b219b7",
     "id": null,
     "metadata": {},
     "name": "PostIdEditorPagePostQuery",
     "operationKind": "query",
-    "text": "query PostIdEditorPagePostQuery(\n  $id: ID!\n) {\n  node(id: $id) {\n    __typename\n    ... on Post {\n      id\n      title\n      content\n      featuredImage\n      metaTitle\n      metaDescription\n      metaImage\n      canonicalUrl\n    }\n    id\n  }\n}\n"
+    "text": "query PostIdEditorPagePostQuery(\n  $id: ID!\n) {\n  node(id: $id) {\n    __typename\n    ... on Post {\n      id\n      status\n      title\n      content\n      featuredImage\n      metaTitle\n      metaDescription\n      metaImage\n      canonicalUrl\n    }\n    id\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "84920254aae0ec06c1f3dafa46261a17";
+(node as any).hash = "d8876d80d8cb73c072f320462c826b29";
 
 export default node;

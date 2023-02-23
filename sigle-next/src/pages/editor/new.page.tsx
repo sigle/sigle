@@ -1,6 +1,6 @@
 import { TooltipProvider } from '@radix-ui/react-tooltip';
 import { graphql, useMutation } from 'react-relay';
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import { useRouter } from 'next/router';
 import { Container, LoadingSpinner } from '@sigle/ui';
 import { useCeramic } from '@/components/Ceramic/CeramicProvider';
@@ -9,6 +9,7 @@ import type { newPostCreatePostMutation } from '@/__generated__/relay/newPostCre
 
 const NewPost = () => {
   const router = useRouter();
+  const isMounted = useRef(false);
 
   const [commit] = useMutation<newPostCreatePostMutation>(graphql`
     mutation newPostCreatePostMutation($input: CreatePostInput!) {
@@ -22,12 +23,17 @@ const NewPost = () => {
   `);
 
   useEffect(() => {
+    // Prevent useEffect from running twice with react strict mode
+    if (isMounted.current) return;
+    isMounted.current = true;
+
     commit({
       variables: {
         input: {
           content: {
             title: '',
             content: '',
+            status: 'DRAFT',
           },
         },
       },

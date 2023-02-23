@@ -1,13 +1,12 @@
 import Link from 'next/link';
-import { graphql, useFragment } from 'react-relay';
 import Image from 'next/image';
 import { Button, Flex, Typography } from '@sigle/ui';
 import { styled } from '@sigle/stitches.config';
-import { UserProfilePageHeader_user$key } from '@/__generated__/relay/UserProfilePageHeader_user.graphql';
 import { getAddressFromDid } from '@/utils/getAddressFromDid';
 import { shortenAddress } from '@/utils/shortenAddress';
 import { addressAvatar } from '@/utils';
 import { nextImageLoader } from '@/utils/nextImageLoader';
+import { trpc } from '@/utils/trpc';
 
 const AvatarContainer = styled('div', {
   display: 'flex',
@@ -21,27 +20,23 @@ const AvatarContainer = styled('div', {
 });
 
 interface UserProfilePageHeaderProps {
-  user: UserProfilePageHeader_user$key | null;
+  did: string;
+  isViewer: boolean;
 }
 
-export const UserProfilePageHeader = (props: UserProfilePageHeaderProps) => {
-  const user = useFragment(
-    graphql`
-      fragment UserProfilePageHeader_user on CeramicAccount {
-        id
-        isViewer
-        profile {
-          id
-          displayName
-        }
-      }
-    `,
-    props.user
-  );
+export const UserProfilePageHeader = ({
+  isViewer,
+  did,
+}: UserProfilePageHeaderProps) => {
+  const profile = trpc.userProfile.useQuery({ did });
 
-  if (!user) return null;
+  const address = getAddressFromDid(did);
 
-  if (user.isViewer) {
+  if (profile.isLoading) {
+    return null;
+  }
+
+  if (isViewer) {
     return (
       <Flex justify="between" align="center" css={{ flex: 1 }}>
         <Typography size="xl" fontWeight="bold">
@@ -53,8 +48,6 @@ export const UserProfilePageHeader = (props: UserProfilePageHeaderProps) => {
       </Flex>
     );
   }
-
-  const address = getAddressFromDid(user.id);
 
   return (
     <Flex justify="between" align="center" css={{ flex: 1 }}>
@@ -69,7 +62,7 @@ export const UserProfilePageHeader = (props: UserProfilePageHeaderProps) => {
           />
         </AvatarContainer>
         <Typography size="xl" fontWeight="bold">
-          {user?.profile?.displayName || shortenAddress(address)}'s profile
+          {profile.data?.displayName || shortenAddress(address)}'s profile
         </Typography>
       </Flex>
       <Flex gap="2">

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<ce04074ab902f47c1c1feac9ba807407>>
+ * @generated SignedSource<<07c4b24affa481c654b120b6b64e0342>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,6 +9,7 @@
 // @ts-nocheck
 
 import { ConcreteRequest, Mutation } from 'relay-runtime';
+export type PostStatus = "DELETED" | "DRAFT" | "PUBLISHED" | "%future added value";
 export type CreatePostInput = {
   clientMutationId?: string | null;
   content: PostInput;
@@ -20,6 +21,7 @@ export type PostInput = {
   metaDescription?: string | null;
   metaImage?: string | null;
   metaTitle?: string | null;
+  status?: PostStatus | null;
   title: string;
 };
 export type newPostCreatePostMutation$variables = {

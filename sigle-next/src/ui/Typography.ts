@@ -54,6 +54,11 @@ export const Typography = styled('p', {
         fontWeight: '$bold',
       },
     },
+    textTransform: {
+      uppercase: {
+        textTransform: 'uppercase',
+      },
+    },
     lineClamp: {
       1: {
         display: '-webkit-box',
