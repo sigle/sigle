@@ -67,7 +67,9 @@ export const DeleteDialog = ({
         }
         if (data.updatePost) {
           setIsDeleting(true);
-          utils.invalidate();
+          utils.invalidate().then(() => {
+            // TODO toast success;
+          });
         }
       },
     });
