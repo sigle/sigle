@@ -63,4 +63,39 @@ export const postRouter = router({
         }),
       };
     }),
+
+  postsNumbers: procedure
+    .input(
+      z.object({
+        did: z.string(),
+      })
+    )
+    .query(async ({ input }) => {
+      const [nbDrafts, nbPublished] = await Promise.all([
+        prismaClient.post.count({
+          where: {
+            controller_did: input.did,
+            stream_content: {
+              path: ['status'],
+              equals: 'DRAFT',
+            },
+          },
+        }),
+        prismaClient.post.count({
+          where: {
+            controller_did: input.did,
+            stream_content: {
+              path: ['status'],
+              equals: 'PUBLISHED',
+            },
+          },
+        }),
+      ]);
+
+      return {
+        nbDrafts,
+        nbPublished,
+        nbTotal: nbDrafts + nbPublished,
+      };
+    }),
 });

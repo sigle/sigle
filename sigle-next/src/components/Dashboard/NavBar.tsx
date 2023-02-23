@@ -169,6 +169,11 @@ export const NavBar = () => {
     { enabled: !skipProfileQuery }
   );
 
+  const postsNumbers = trpc.postsNumbers.useQuery(
+    { did: did ?? '' },
+    { enabled: !skipProfileQuery }
+  );
+
   const menu = [
     {
       href: '/',
@@ -218,52 +223,43 @@ export const NavBar = () => {
             />
           ))}
 
-          <NavBarStoriesContainer>
-            {!collapsed && (
-              <Flex justify="between" align="center" css={{ pl: '10px' }}>
-                <Flex align="center" gap="2">
-                  <TbBook size={navbarIconSize} />
-                  <Typography>Stories</Typography>
+          {did && (
+            <NavBarStoriesContainer>
+              {!collapsed && (
+                <Flex justify="between" align="center" css={{ pl: '10px' }}>
+                  <Flex align="center" gap="2">
+                    <TbBook size={navbarIconSize} />
+                    <Typography>Stories</Typography>
+                    <NumberBadge>{postsNumbers.data?.nbTotal}</NumberBadge>
+                  </Flex>
+                  <Link href="/editor/new">
+                    <IconButton variant="light" size="lg">
+                      <TbPlus />
+                    </IconButton>
+                  </Link>
                 </Flex>
-                <Link href="/editor/new">
-                  <IconButton variant="light" size="lg">
-                    <TbPlus />
-                  </IconButton>
+              )}
+              {collapsed ? (
+                <NavBarLink
+                  isCollapsed={collapsed}
+                  icon={<TbNotebook size={navbarIconSize} />}
+                  label="Drafts"
+                  href="/"
+                  active={false}
+                />
+              ) : (
+                <Link href="/drafts">
+                  <NavBarLinkStoriesButton
+                    variant="ghost"
+                    active={router.pathname === '/drafts'}
+                  >
+                    Drafts{' '}
+                    <NumberBadge>{postsNumbers.data?.nbDrafts}</NumberBadge>
+                  </NavBarLinkStoriesButton>
                 </Link>
-              </Flex>
-            )}
-            {collapsed ? (
-              <NavBarLink
-                isCollapsed={collapsed}
-                icon={<TbNotebook size={navbarIconSize} />}
-                label="Drafts"
-                href="/"
-                active={false}
-              />
-            ) : (
-              <Link href="/drafts">
-                <NavBarLinkStoriesButton
-                  variant="ghost"
-                  active={router.pathname === '/drafts'}
-                >
-                  Drafts <NumberBadge>9</NumberBadge>
-                </NavBarLinkStoriesButton>
-              </Link>
-            )}
-            {collapsed ? (
-              <NavBarLink
-                isCollapsed={collapsed}
-                icon={<TbNews size={navbarIconSize} />}
-                label="Published"
-                href="/"
-                active={false}
-              />
-            ) : (
-              <NavBarLinkStoriesButton variant="ghost">
-                Published <NumberBadge>10</NumberBadge>
-              </NavBarLinkStoriesButton>
-            )}
-          </NavBarStoriesContainer>
+              )}
+            </NavBarStoriesContainer>
+          )}
         </NavBarLinkContainer>
       </div>
       {!profile.isLoading && did && (
