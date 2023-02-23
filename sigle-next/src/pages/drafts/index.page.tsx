@@ -13,7 +13,7 @@ const Drafts = () => {
   const userDid = session?.did.parent!;
 
   const postList = trpc.postList.useInfiniteQuery(
-    { limit: 20, did: userDid },
+    { limit: 20, did: userDid, status: 'DRAFT' },
     {
       getNextPageParam: (lastPage) => lastPage.nextCursor,
     }

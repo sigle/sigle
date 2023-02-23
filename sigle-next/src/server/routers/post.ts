@@ -8,6 +8,7 @@ export const postRouter = router({
     .input(
       z.object({
         did: z.string().optional(),
+        status: z.enum(['DRAFT', 'PUBLISHED']).optional(),
         limit: z.number().min(1).max(100).optional(),
         cursor: z.string().optional(),
       })
@@ -17,6 +18,12 @@ export const postRouter = router({
       const posts = await prismaClient.post.findMany({
         where: {
           controller_did: input.did ?? undefined,
+          stream_content: input.status
+            ? {
+                path: ['status'],
+                equals: input.status,
+              }
+            : undefined,
         },
         // Get an extra item at the end which we'll use as next cursor
         take: limit + 1,

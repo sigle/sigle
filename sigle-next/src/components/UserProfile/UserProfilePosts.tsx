@@ -16,6 +16,7 @@ export const UserProfilePosts = ({
     {
       did,
       limit: 20,
+      status: 'PUBLISHED',
     },
     {
       getNextPageParam: (lastPage) => lastPage.nextCursor,
