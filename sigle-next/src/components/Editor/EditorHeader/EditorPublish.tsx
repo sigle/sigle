@@ -53,8 +53,6 @@ export const EditorPublish = () => {
     });
   };
 
-  console.log(story?.status);
-
   return (
     <Button
       size="sm"
