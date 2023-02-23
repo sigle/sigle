@@ -71,13 +71,13 @@ export const UserProfile = ({ isViewer, did }: UserProfileProps) => {
 
       <Flex mt="3" gap="3">
         <Typography size="sm">
-          106{' '}
+          0{' '}
           <Typography as="span" size="sm" color="gray9">
             Following
           </Typography>
         </Typography>
         <Typography size="sm">
-          3,209{' '}
+          0{' '}
           <Typography as="span" size="sm" color="gray9">
             Followers
           </Typography>

@@ -87,7 +87,18 @@ export default function ProtectedDrafts() {
   return (
     <TooltipProvider>
       {session ? (
-        <DashboardLayout>
+        <DashboardLayout
+          headerContent={
+            <Flex justify="between" align="center" css={{ flex: 1 }}>
+              <Typography size="xl" fontWeight="bold">
+                Drafts
+              </Typography>
+              <Link href="/editor/new">
+                <Button>Write story</Button>
+              </Link>
+            </Flex>
+          }
+        >
           <Container css={{ maxWidth: 680, py: '$5' }}>
             <Drafts />
           </Container>
