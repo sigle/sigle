@@ -1,9 +1,9 @@
 import { graphql, useMutation } from 'react-relay';
 import * as Sentry from '@sentry/nextjs';
+import { TbRocket } from 'react-icons/tb';
 import { Button } from '@sigle/ui';
 import { EditorPublishUpdatePostMutation } from '@/__generated__/relay/EditorPublishUpdatePostMutation.graphql';
 import { useEditorStore } from '../store';
-import { TbRocket } from 'react-icons/tb';
 
 export const EditorPublish = () => {
   const setStory = useEditorStore((state) => state.setStory);
