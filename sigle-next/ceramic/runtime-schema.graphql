@@ -97,6 +97,7 @@ type PageInfo {
 
 input PartialPostInput {
   title: String
+  status: PostStatus
   content: String
   metaImage: String
   metaTitle: String
@@ -115,6 +116,7 @@ input PartialProfileInput {
 type Post implements Node {
   id: ID!
   title: String!
+  status: PostStatus
   content: String!
   metaImage: String
   metaTitle: String
@@ -149,12 +151,19 @@ type PostEdge {
 
 input PostInput {
   title: String!
+  status: PostStatus
   content: String!
   metaImage: String
   metaTitle: String
   canonicalUrl: String
   featuredImage: String
   metaDescription: String
+}
+
+enum PostStatus {
+  DRAFT
+  PUBLISHED
+  DELETED
 }
 
 type Profile implements Node {
