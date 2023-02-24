@@ -7,6 +7,8 @@ export const tailwindStyles = {
     borderWidth: '0',
     borderStyle: 'solid',
     borderColor: '#e5e7eb',
+    '--tw-border-spacing-x': '0',
+    '--tw-border-spacing-y': '0',
     '--tw-translate-x': '0',
     '--tw-translate-y': '0',
     '--tw-rotate': '0',
@@ -58,6 +60,7 @@ export const tailwindStyles = {
     tabSize: 4,
     fontFamily:
       "ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont,\n    'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans', sans-serif,\n    'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji'",
+    fontFeatureSettings: 'normal',
   },
   body: { margin: '0', lineHeight: 'inherit' },
   hr: { height: '0', color: 'inherit', borderTopWidth: '1px' },
@@ -87,6 +90,7 @@ export const tailwindStyles = {
   'button,\ninput,\noptgroup,\nselect,\ntextarea': {
     fontFamily: 'inherit',
     fontSize: '100%',
+    fontWeight: 'inherit',
     lineHeight: 'inherit',
     color: 'inherit',
     margin: '0',
@@ -131,45 +135,95 @@ export const tailwindStyles = {
   },
   'img,\nvideo': { maxWidth: '100%', height: 'auto' },
   '[hidden]': { display: 'none' },
+  '::backdrop': {
+    '--tw-border-spacing-x': '0',
+    '--tw-border-spacing-y': '0',
+    '--tw-translate-x': '0',
+    '--tw-translate-y': '0',
+    '--tw-rotate': '0',
+    '--tw-skew-x': '0',
+    '--tw-skew-y': '0',
+    '--tw-scale-x': '1',
+    '--tw-scale-y': '1',
+    '--tw-pan-x': ' ',
+    '--tw-pan-y': ' ',
+    '--tw-pinch-zoom': ' ',
+    '--tw-scroll-snap-strictness': 'proximity',
+    '--tw-ordinal': ' ',
+    '--tw-slashed-zero': ' ',
+    '--tw-numeric-figure': ' ',
+    '--tw-numeric-spacing': ' ',
+    '--tw-numeric-fraction': ' ',
+    '--tw-ring-inset': ' ',
+    '--tw-ring-offset-width': '0px',
+    '--tw-ring-offset-color': '#fff',
+    '--tw-ring-color': 'rgb(59 130 246 / 0.5)',
+    '--tw-ring-offset-shadow': '0 0 #0000',
+    '--tw-ring-shadow': '0 0 #0000',
+    '--tw-shadow': '0 0 #0000',
+    '--tw-shadow-colored': '0 0 #0000',
+    '--tw-blur': ' ',
+    '--tw-brightness': ' ',
+    '--tw-contrast': ' ',
+    '--tw-grayscale': ' ',
+    '--tw-hue-rotate': ' ',
+    '--tw-invert': ' ',
+    '--tw-saturate': ' ',
+    '--tw-sepia': ' ',
+    '--tw-drop-shadow': ' ',
+    '--tw-backdrop-blur': ' ',
+    '--tw-backdrop-brightness': ' ',
+    '--tw-backdrop-contrast': ' ',
+    '--tw-backdrop-grayscale': ' ',
+    '--tw-backdrop-hue-rotate': ' ',
+    '--tw-backdrop-invert': ' ',
+    '--tw-backdrop-opacity': ' ',
+    '--tw-backdrop-saturate': ' ',
+    '--tw-backdrop-sepia': ' ',
+  },
   '.prose': {
     color: 'var(--tw-prose-body)',
     maxWidth: '826px',
-    '--tw-prose-body': '#2f2f2f',
-    '--tw-prose-headings': '#1a1a1a',
-    '--tw-prose-lead': '#e2e2e2',
-    '--tw-prose-links': '#da3a00',
-    '--tw-prose-bold': '#2f2f2f',
-    '--tw-prose-counters': '#2f2f2f',
-    '--tw-prose-bullets': '#2f2f2f',
-    '--tw-prose-hr': '#e2e2e2',
-    '--tw-prose-quotes': '#2f2f2f',
-    '--tw-prose-quote-borders': '#e2e2e2',
-    '--tw-prose-captions': '#737373',
-    '--tw-prose-code': '#1a1a1a',
-    '--tw-prose-pre-code': '#e8e8e8',
-    '--tw-prose-pre-bg': '#1a1a1a',
+    '--tw-prose-body': '#374151',
+    '--tw-prose-headings': '#111827',
+    '--tw-prose-lead': '#4b5563',
+    '--tw-prose-links': '#111827',
+    '--tw-prose-bold': '#111827',
+    '--tw-prose-counters': '#6b7280',
+    '--tw-prose-bullets': '#d1d5db',
+    '--tw-prose-hr': '#e5e7eb',
+    '--tw-prose-quotes': '#111827',
+    '--tw-prose-quote-borders': '#e5e7eb',
+    '--tw-prose-captions': '#6b7280',
+    '--tw-prose-code': '#111827',
+    '--tw-prose-pre-code': '#e5e7eb',
+    '--tw-prose-pre-bg': '#1f2937',
     '--tw-prose-th-borders': '#d1d5db',
     '--tw-prose-td-borders': '#e5e7eb',
-    '--tw-prose-invert-body': '#e5e5e5',
-    '--tw-prose-invert-headings': '#f2f2f2',
-    '--tw-prose-invert-lead': '#343434',
-    '--tw-prose-invert-links': '#f76808',
-    '--tw-prose-invert-bold': '#e5e5e5',
-    '--tw-prose-invert-counters': '#e5e5e5',
-    '--tw-prose-invert-bullets': '#e5e5e5',
-    '--tw-prose-invert-hr': '#343434',
-    '--tw-prose-invert-quotes': '#e5e5e5',
-    '--tw-prose-invert-quote-borders': '#343434',
-    '--tw-prose-invert-captions': '#a1a1a1',
-    '--tw-prose-invert-code': '#f2f2f2',
-    '--tw-prose-invert-pre-code': '#f2f2f2',
-    '--tw-prose-invert-pre-bg': '#202020',
+    '--tw-prose-invert-body': '#d1d5db',
+    '--tw-prose-invert-headings': '#fff',
+    '--tw-prose-invert-lead': '#9ca3af',
+    '--tw-prose-invert-links': '#fff',
+    '--tw-prose-invert-bold': '#fff',
+    '--tw-prose-invert-counters': '#9ca3af',
+    '--tw-prose-invert-bullets': '#4b5563',
+    '--tw-prose-invert-hr': '#374151',
+    '--tw-prose-invert-quotes': '#f3f4f6',
+    '--tw-prose-invert-quote-borders': '#374151',
+    '--tw-prose-invert-captions': '#9ca3af',
+    '--tw-prose-invert-code': '#fff',
+    '--tw-prose-invert-pre-code': '#d1d5db',
+    '--tw-prose-invert-pre-bg': 'rgb(0 0 0 / 50%)',
     '--tw-prose-invert-th-borders': '#4b5563',
     '--tw-prose-invert-td-borders': '#374151',
-    '--tw-prose-code-bg': '#f6f6f6',
-    '--tw-prose-invert-code-bg': '#202020',
     fontSize: '16px',
     lineHeight: 1.75,
+  },
+  ".prose :where(p):not(:where([class~='not-prose'] *))": {
+    marginTop: '1.25em',
+    marginBottom: '1.25em',
+    lineHeight: '26px',
+    letterSpacing: '0.2px',
   },
   ".prose :where(a):not(:where([class~='not-prose'] *))": {
     color: 'var(--tw-prose-links)',
@@ -180,8 +234,19 @@ export const tailwindStyles = {
     color: 'var(--tw-prose-bold)',
     fontWeight: 600,
   },
+  ".prose :where(a strong):not(:where([class~='not-prose'] *))": {
+    color: 'var(--tw-prose-links)',
+  },
+  ".prose :where(blockquote strong):not(:where([class~='not-prose'] *))": {
+    color: 'inherit',
+  },
+  ".prose :where(thead th strong):not(:where([class~='not-prose'] *))": {
+    color: 'inherit',
+  },
   ".prose :where(ol):not(:where([class~='not-prose'] *))": {
     listStyleType: 'decimal',
+    marginTop: '1.25em',
+    marginBottom: '1.25em',
     paddingLeft: '1.625em',
   },
   ".prose :where(ol[type='A']):not(:where([class~='not-prose'] *))": {
@@ -213,6 +278,8 @@ export const tailwindStyles = {
   },
   ".prose :where(ul):not(:where([class~='not-prose'] *))": {
     listStyleType: 'disc',
+    marginTop: '1.25em',
+    marginBottom: '1.25em',
     paddingLeft: '1.625em',
   },
   ".prose :where(ol > li):not(:where([class~='not-prose'] *))::marker": {
@@ -249,6 +316,7 @@ export const tailwindStyles = {
   },
   ".prose :where(h1 strong):not(:where([class~='not-prose'] *))": {
     fontWeight: 900,
+    color: 'inherit',
   },
   ".prose :where(h2):not(:where([class~='not-prose'] *))": {
     color: 'var(--tw-prose-headings)',
@@ -277,6 +345,10 @@ export const tailwindStyles = {
   },
   ".prose :where(h4 strong):not(:where([class~='not-prose'] *))": {
     fontWeight: 700,
+    color: 'inherit',
+  },
+  ".prose :where(img):not(:where([class~='not-prose'] *))": {
+    margin: '2em auto',
   },
   ".prose :where(figure > *):not(:where([class~='not-prose'] *))": {
     marginTop: '0',
@@ -297,7 +369,27 @@ export const tailwindStyles = {
     borderRadius: '4px',
   },
   ".prose :where(a code):not(:where([class~='not-prose'] *))": {
-    color: 'var(--tw-prose-links)',
+    color: 'inherit',
+  },
+  ".prose :where(h1 code):not(:where([class~='not-prose'] *))": {
+    color: 'inherit',
+  },
+  ".prose :where(h2 code):not(:where([class~='not-prose'] *))": {
+    color: 'inherit',
+    fontSize: '0.875em',
+  },
+  ".prose :where(h3 code):not(:where([class~='not-prose'] *))": {
+    color: 'inherit',
+    fontSize: '0.9em',
+  },
+  ".prose :where(h4 code):not(:where([class~='not-prose'] *))": {
+    color: 'inherit',
+  },
+  ".prose :where(blockquote code):not(:where([class~='not-prose'] *))": {
+    color: 'inherit',
+  },
+  ".prose :where(thead th code):not(:where([class~='not-prose'] *))": {
+    color: 'inherit',
   },
   ".prose :where(pre):not(:where([class~='not-prose'] *))": {
     color: 'var(--tw-prose-pre-code)',
@@ -361,19 +453,13 @@ export const tailwindStyles = {
   },
   ".prose :where(tbody td):not(:where([class~='not-prose'] *))": {
     verticalAlign: 'baseline',
-    paddingTop: '0.5714286em',
-    paddingRight: '0.5714286em',
-    paddingBottom: '0.5714286em',
-    paddingLeft: '0.5714286em',
   },
-  ".prose :where(p):not(:where([class~='not-prose'] *))": {
-    marginTop: '1.25em',
-    marginBottom: '1.25em',
-    lineHeight: '26px',
-    letterSpacing: '0.2px',
+  ".prose :where(tfoot):not(:where([class~='not-prose'] *))": {
+    borderTopWidth: '1px',
+    borderTopColor: 'var(--tw-prose-th-borders)',
   },
-  ".prose :where(img):not(:where([class~='not-prose'] *))": {
-    margin: '2em auto',
+  ".prose :where(tfoot td):not(:where([class~='not-prose'] *))": {
+    verticalAlign: 'top',
   },
   ".prose :where(video):not(:where([class~='not-prose'] *))": {
     marginTop: '2em',
@@ -382,12 +468,6 @@ export const tailwindStyles = {
   ".prose :where(figure):not(:where([class~='not-prose'] *))": {
     marginTop: '2em',
     marginBottom: '2em',
-  },
-  ".prose :where(h2 code):not(:where([class~='not-prose'] *))": {
-    fontSize: '0.875em',
-  },
-  ".prose :where(h3 code):not(:where([class~='not-prose'] *))": {
-    fontSize: '0.9em',
   },
   ".prose :where(li):not(:where([class~='not-prose'] *))": {
     marginTop: '0.5em',
@@ -399,23 +479,23 @@ export const tailwindStyles = {
   ".prose :where(ul > li):not(:where([class~='not-prose'] *))": {
     paddingLeft: '0.375em',
   },
-  ".prose > :where(ul > li p):not(:where([class~='not-prose'] *))": {
+  ".prose :where(.prose > ul > li p):not(:where([class~='not-prose'] *))": {
     marginTop: '0.75em',
     marginBottom: '0.75em',
   },
-  ".prose > :where(ul > li > *:first-child):not(:where([class~='not-prose'] *))":
+  ".prose\n  :where(.prose > ul > li > *:first-child):not(:where([class~='not-prose'] *))":
     {
       marginTop: '1.25em',
     },
-  ".prose > :where(ul > li > *:last-child):not(:where([class~='not-prose'] *))":
+  ".prose\n  :where(.prose > ul > li > *:last-child):not(:where([class~='not-prose'] *))":
     {
       marginBottom: '1.25em',
     },
-  ".prose > :where(ol > li > *:first-child):not(:where([class~='not-prose'] *))":
+  ".prose\n  :where(.prose > ol > li > *:first-child):not(:where([class~='not-prose'] *))":
     {
       marginTop: '1.25em',
     },
-  ".prose > :where(ol > li > *:last-child):not(:where([class~='not-prose'] *))":
+  ".prose\n  :where(.prose > ol > li > *:last-child):not(:where([class~='not-prose'] *))":
     {
       marginBottom: '1.25em',
     },
@@ -442,20 +522,25 @@ export const tailwindStyles = {
   ".prose :where(thead th:last-child):not(:where([class~='not-prose'] *))": {
     paddingRight: '0',
   },
-  ".prose :where(tbody td:first-child):not(:where([class~='not-prose'] *))": {
-    paddingLeft: '0',
+  ".prose :where(tbody td, tfoot td):not(:where([class~='not-prose'] *))": {
+    paddingTop: '0.5714286em',
+    paddingRight: '0.5714286em',
+    paddingBottom: '0.5714286em',
+    paddingLeft: '0.5714286em',
   },
-  ".prose :where(tbody td:last-child):not(:where([class~='not-prose'] *))": {
-    paddingRight: '0',
-  },
-  ".prose > :where(:first-child):not(:where([class~='not-prose'] *))": {
+  ".prose\n  :where(tbody td:first-child, tfoot td:first-child):not(\n    :where([class~='not-prose'] *)\n  )":
+    {
+      paddingLeft: '0',
+    },
+  ".prose\n  :where(tbody td:last-child, tfoot td:last-child):not(\n    :where([class~='not-prose'] *)\n  )":
+    {
+      paddingRight: '0',
+    },
+  ".prose :where(.prose > :first-child):not(:where([class~='not-prose'] *))": {
     marginTop: '0',
   },
-  ".prose > :where(:last-child):not(:where([class~='not-prose'] *))": {
+  ".prose :where(.prose > :last-child):not(:where([class~='not-prose'] *))": {
     marginBottom: '0',
-  },
-  ".prose :where(a strong):not(:where([class~='not-prose'] *))": {
-    color: 'var(--tw-prose-links)',
   },
   ".prose :where(a:hover):not(:where([class~='not-prose'] *))": {
     boxShadow: '0 1px 0 0 currentColor',
@@ -567,9 +652,13 @@ export const tailwindStyles = {
       paddingLeft: '1.5em',
     },
     ".lg\\:prose-lg :where(ol):not(:where([class~='not-prose'] *))": {
+      marginTop: '1.3333333em',
+      marginBottom: '1.3333333em',
       paddingLeft: '1.5555556em',
     },
     ".lg\\:prose-lg :where(ul):not(:where([class~='not-prose'] *))": {
+      marginTop: '1.3333333em',
+      marginBottom: '1.3333333em',
       paddingLeft: '1.5555556em',
     },
     ".lg\\:prose-lg :where(li):not(:where([class~='not-prose'] *))": {
@@ -582,23 +671,24 @@ export const tailwindStyles = {
     ".lg\\:prose-lg :where(ul > li):not(:where([class~='not-prose'] *))": {
       paddingLeft: '0.4444444em',
     },
-    ".lg\\:prose-lg > :where(ul > li p):not(:where([class~='not-prose'] *))": {
-      marginTop: '0.8888889em',
-      marginBottom: '0.8888889em',
-    },
-    ".lg\\:prose-lg\n    > :where(ul > li > *:first-child):not(:where([class~='not-prose'] *))":
+    ".lg\\:prose-lg\n    :where(.lg\\:prose-lg > ul > li p):not(:where([class~='not-prose'] *))":
+      {
+        marginTop: '0.8888889em',
+        marginBottom: '0.8888889em',
+      },
+    ".lg\\:prose-lg\n    :where(.lg\\:prose-lg > ul > li > *:first-child):not(\n      :where([class~='not-prose'] *)\n    )":
       {
         marginTop: '1.3333333em',
       },
-    ".lg\\:prose-lg\n    > :where(ul > li > *:last-child):not(:where([class~='not-prose'] *))":
+    ".lg\\:prose-lg\n    :where(.lg\\:prose-lg > ul > li > *:last-child):not(\n      :where([class~='not-prose'] *)\n    )":
       {
         marginBottom: '1.3333333em',
       },
-    ".lg\\:prose-lg\n    > :where(ol > li > *:first-child):not(:where([class~='not-prose'] *))":
+    ".lg\\:prose-lg\n    :where(.lg\\:prose-lg > ol > li > *:first-child):not(\n      :where([class~='not-prose'] *)\n    )":
       {
         marginTop: '1.3333333em',
       },
-    ".lg\\:prose-lg\n    > :where(ol > li > *:last-child):not(:where([class~='not-prose'] *))":
+    ".lg\\:prose-lg\n    :where(.lg\\:prose-lg > ol > li > *:last-child):not(\n      :where([class~='not-prose'] *)\n    )":
       {
         marginBottom: '1.3333333em',
       },
@@ -640,25 +730,26 @@ export const tailwindStyles = {
       {
         paddingRight: '0',
       },
-    ".lg\\:prose-lg :where(tbody td):not(:where([class~='not-prose'] *))": {
-      paddingTop: '0.75em',
-      paddingRight: '0.75em',
-      paddingBottom: '0.75em',
-      paddingLeft: '0.75em',
-    },
-    ".lg\\:prose-lg\n    :where(tbody td:first-child):not(:where([class~='not-prose'] *))":
+    ".lg\\:prose-lg :where(tbody td, tfoot td):not(:where([class~='not-prose'] *))":
+      {
+        paddingTop: '0.75em',
+        paddingRight: '0.75em',
+        paddingBottom: '0.75em',
+        paddingLeft: '0.75em',
+      },
+    ".lg\\:prose-lg\n    :where(tbody td:first-child, tfoot td:first-child):not(\n      :where([class~='not-prose'] *)\n    )":
       {
         paddingLeft: '0',
       },
-    ".lg\\:prose-lg\n    :where(tbody td:last-child):not(:where([class~='not-prose'] *))":
+    ".lg\\:prose-lg\n    :where(tbody td:last-child, tfoot td:last-child):not(\n      :where([class~='not-prose'] *)\n    )":
       {
         paddingRight: '0',
       },
-    ".lg\\:prose-lg > :where(:first-child):not(:where([class~='not-prose'] *))":
+    ".lg\\:prose-lg\n    :where(.lg\\:prose-lg > :first-child):not(:where([class~='not-prose'] *))":
       {
         marginTop: '0',
       },
-    ".lg\\:prose-lg > :where(:last-child):not(:where([class~='not-prose'] *))":
+    ".lg\\:prose-lg\n    :where(.lg\\:prose-lg > :last-child):not(:where([class~='not-prose'] *))":
       {
         marginBottom: '0',
       },
