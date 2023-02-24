@@ -125,7 +125,7 @@ export const tailwindStyles = {
   textarea: { resize: 'vertical' },
   'input::placeholder,\ntextarea::placeholder': {
     opacity: 1,
-    color: '#9ca3af',
+    color: 'var(--colors-gray8)',
   },
   "button,\n[role='button']": { cursor: 'pointer' },
   ':disabled': { cursor: 'default' },

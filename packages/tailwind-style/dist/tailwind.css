@@ -413,6 +413,11 @@ video {
   display: none;
 }
 
+input::placeholder,
+textarea::placeholder {
+  color: var(--colors-gray8);
+}
+
 *,
 ::before,
 ::after {
