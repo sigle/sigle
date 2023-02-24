@@ -3,9 +3,6 @@ const { withSentryConfig } = require('@sentry/nextjs');
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
-  experimental: {
-    serverComponentsExternalPackages: ['.prisma/client'],
-  },
   pageExtensions: [
     // `.page.tsx` for page components
     'page.tsx',

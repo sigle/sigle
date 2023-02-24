@@ -1,4 +1,4 @@
-import { Prisma } from '.prisma/client';
+import { Prisma } from '@prisma/client';
 import { z } from 'zod';
 import { prismaClient } from '@/lib/prisma';
 import { CeramicPost, CeramicProfile } from '@/types/ceramic';

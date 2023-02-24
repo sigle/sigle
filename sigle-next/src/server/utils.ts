@@ -1,4 +1,4 @@
-import { Prisma } from '.prisma/client';
+import { Prisma } from '@prisma/client';
 import { CeramicPost, CeramicProfile } from '@/types/ceramic';
 
 export const normalizePost = (dbPost: {
