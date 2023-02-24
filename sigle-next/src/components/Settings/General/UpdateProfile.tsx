@@ -56,7 +56,7 @@ export const SettingsUpdateProfile = ({
 }) => {
   const utils = trpc.useContext();
 
-  const [commitUpdateProfile, isLoadingCommitUpdateProfile] =
+  const [commit, isLoadingCommitUpdateProfile] =
     useMutation<UpdateProfileMutation>(
       graphql`
         mutation UpdateProfileMutation($input: UpdateProfileInput!) {
@@ -90,7 +90,7 @@ export const SettingsUpdateProfile = ({
   });
 
   const onSubmit = handleSubmit((formValues) => {
-    commitUpdateProfile({
+    commit({
       variables: {
         input: {
           id: profile.id,

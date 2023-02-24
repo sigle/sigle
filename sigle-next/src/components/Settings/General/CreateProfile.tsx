@@ -9,28 +9,27 @@ export const SettingsCreateProfile = () => {
   const utils = trpc.useContext();
   const isMounted = useRef(false);
 
-  const [commitCreateProfile, isLoadingCommitCreateProfile] =
-    useMutation<CreateProfileMutation>(graphql`
-      mutation CreateProfileMutation($input: CreateProfileInput!) {
-        createProfile(input: $input) {
-          clientMutationId
-          document {
-            id
-            displayName
-            websiteUrl
-            description
-            twitterUsername
-          }
+  const [commit] = useMutation<CreateProfileMutation>(graphql`
+    mutation CreateProfileMutation($input: CreateProfileInput!) {
+      createProfile(input: $input) {
+        clientMutationId
+        document {
+          id
+          displayName
+          websiteUrl
+          description
+          twitterUsername
         }
       }
-    `);
+    }
+  `);
 
   useEffect(() => {
     // Prevent useEffect from running twice with react strict mode
     if (isMounted.current) return;
     isMounted.current = true;
 
-    commitCreateProfile({
+    commit({
       variables: {
         input: {
           content: {},
@@ -50,7 +49,7 @@ export const SettingsCreateProfile = () => {
         }
       },
     });
-  }, [commitCreateProfile]);
+  }, [commit]);
 
   return (
     <Flex justify="center" mt="4">

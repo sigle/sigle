@@ -4,8 +4,10 @@ import { TbRocket } from 'react-icons/tb';
 import { Button } from '@sigle/ui';
 import { EditorPublishUpdatePostMutation } from '@/__generated__/relay/EditorPublishUpdatePostMutation.graphql';
 import { useEditorStore } from '../store';
+import { trpc } from '@/utils/trpc';
 
 export const EditorPublish = () => {
+  const utils = trpc.useContext();
   const setStory = useEditorStore((state) => state.setStory);
   const story = useEditorStore((state) => state.story);
 
@@ -48,6 +50,7 @@ export const EditorPublish = () => {
           setStory({
             status: data.updatePost.document.status ?? undefined,
           });
+          utils.invalidate();
         }
       },
     });
