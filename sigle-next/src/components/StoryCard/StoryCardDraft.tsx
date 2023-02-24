@@ -19,6 +19,14 @@ import { DeleteDialog } from './DeleteDialog';
 
 const StyledDropdownMenuItem = styled(DropdownMenuItem, {
   color: '$orange11',
+
+  // TODO - make it a variant in DropdownMenuItem
+  '&:hover': {
+    backgroundColor: '$orange5',
+  },
+  '&:active': {
+    backgroundColor: '$orange4',
+  },
 });
 
 const StyledDropdownMenuContent = styled(DropdownMenuContent, {

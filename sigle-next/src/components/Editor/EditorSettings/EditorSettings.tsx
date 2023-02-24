@@ -111,8 +111,8 @@ export const EditorSettings = () => {
 
       <Flex css={{ mt: '$8' }} direction="column" gap="1">
         <Typography size="xs" color="gray9">
-          Story content will still be viewable on IPFS. Remove entry only hides
-          it from your post list.
+          Delete entry only hides it from your post list. Story content will
+          still be viewable on IPFS.
         </Typography>
         <Button rightIcon={<TbTrash />} variant="light" color="orange">
           Delete post

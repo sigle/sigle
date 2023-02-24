@@ -81,17 +81,19 @@ export const DeleteDialog = ({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent>
         <DialogTitle asChild>
-          <Typography size="xl">Delete my story</Typography>
+          <Typography size="xl" fontWeight="bold">
+            Delete my story
+          </Typography>
         </DialogTitle>
         <DialogDescription asChild>
           <Flex mt="3" direction="column">
             <Typography>
-              Story content will still be viewable on IPFS. Remove entry only
-              hides it from your post list.
+              Delete entry only hides it from your post list. Story content will
+              still be viewable on IPFS.
             </Typography>
           </Flex>
         </DialogDescription>
-        <Flex justify="end" gap="6" css={{ mt: '$6' }}>
+        <Flex justify="end" gap="3" css={{ mt: '$6' }}>
           <DialogClose asChild>
             <Button size="lg" variant="ghost" disabled={isLoading}>
               Cancel
