@@ -18,12 +18,14 @@ interface DeleteDialogProps {
   postId: string;
   open: boolean;
   onOpenChange: (open: boolean) => void;
+  onDeleted?: () => void;
 }
 
 export const DeleteDialog = ({
   postId,
   open,
   onOpenChange,
+  onDeleted,
 }: DeleteDialogProps) => {
   const utils = trpc.useContext();
   const [isDeleting, setIsDeleting] = useState(false);
@@ -69,6 +71,7 @@ export const DeleteDialog = ({
           setIsDeleting(true);
           utils.invalidate().then(() => {
             // TODO toast success;
+            onDeleted?.();
           });
         }
       },

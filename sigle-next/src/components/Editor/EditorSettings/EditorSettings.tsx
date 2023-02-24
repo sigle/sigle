@@ -4,6 +4,9 @@ import { Button, Flex, Input, Textarea, Typography } from '@sigle/ui';
 import { useEditorStore } from '../store';
 import { EditorSettingsModal } from './EditorSettingsModal';
 import { MetaImage } from './MetaImage';
+import { DeleteDialog } from '@/components/StoryCard/DeleteDialog';
+import { useState } from 'react';
+import { useRouter } from 'next/router';
 
 const StorySettingsRow = styled('div', {
   display: 'flex',
@@ -19,10 +22,12 @@ const canonicalUrlInfo =
   'https://developers.google.com/search/docs/crawling-indexing/consolidate-duplicate-urls';
 
 export const EditorSettings = () => {
+  const router = useRouter();
   const menuOpen = useEditorStore((state) => state.menuOpen);
   const toggleMenu = useEditorStore((state) => state.toggleMenu);
   const story = useEditorStore((state) => state.story);
   const setStory = useEditorStore((state) => state.setStory);
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
 
   return (
     <EditorSettingsModal
@@ -114,10 +119,22 @@ export const EditorSettings = () => {
           Delete entry only hides it from your post list. Story content will
           still be viewable on IPFS.
         </Typography>
-        <Button rightIcon={<TbTrash />} variant="light" color="orange">
+        <Button
+          rightIcon={<TbTrash />}
+          variant="light"
+          color="orange"
+          onClick={() => setIsDeleteDialogOpen(true)}
+        >
           Delete post
         </Button>
       </Flex>
+
+      <DeleteDialog
+        postId={story?.id || ''}
+        open={isDeleteDialogOpen}
+        onOpenChange={(isOpen) => setIsDeleteDialogOpen(isOpen)}
+        onDeleted={() => router.push('/drafts')}
+      />
     </EditorSettingsModal>
   );
 };
