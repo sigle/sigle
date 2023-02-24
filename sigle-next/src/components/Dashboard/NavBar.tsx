@@ -11,6 +11,7 @@ import {
   TbUserCircle,
   TbUsers,
 } from 'react-icons/tb';
+import { useModal } from 'connectkit';
 import { styled } from '@sigle/stitches.config';
 import {
   NumberBadge,
@@ -92,6 +93,16 @@ const NavBarLink = ({
   label,
   active,
 }: NavBarLinkProps) => {
+  const { setOpen: setConnectKitOpen } = useModal();
+
+  const handleLinkClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
+    if (href === '/connect') {
+      e.preventDefault();
+      e.stopPropagation();
+      setConnectKitOpen(true);
+    }
+  };
+
   if (isCollapsed) {
     return (
       <Tooltip delayDuration={600}>
@@ -102,6 +113,7 @@ const NavBarLink = ({
             variant="ghost"
             size="lg"
             active={active}
+            onClick={handleLinkClick}
           >
             {icon}
           </NavBarLinkIconButton>
@@ -114,7 +126,7 @@ const NavBarLink = ({
   }
 
   return (
-    <Link href={href}>
+    <Link href={href} onClick={handleLinkClick}>
       <NavBarLinkButton variant="ghost" leftIcon={icon} active={active}>
         {label}
       </NavBarLinkButton>
@@ -191,7 +203,7 @@ export const NavBar = () => {
     //   label: 'Saved',
     // },
     {
-      href: `/profile/${did}`,
+      href: did ? `/profile/${did}` : '/connect',
       icon: <TbUserCircle size={navbarIconSize} />,
       label: 'Profile',
     },
