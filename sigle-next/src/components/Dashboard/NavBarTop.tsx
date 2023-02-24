@@ -2,6 +2,7 @@ import { styled } from '@sigle/stitches.config';
 import { Flex } from '@sigle/ui';
 import { LogoImage } from '@/images/Logo';
 import { LogoOnlyImage } from '@/images/LogoOnly';
+import Link from 'next/link';
 
 const StyledNavBar = styled(Flex, {
   px: '$5',
@@ -15,7 +16,7 @@ interface NavBarTopProps {
 export const NavBarTop = ({ collapsed }: NavBarTopProps) => {
   return (
     <StyledNavBar justify={collapsed ? 'center' : 'start'} align="center">
-      {collapsed ? <LogoOnlyImage /> : <LogoImage />}
+      <Link href="/">{collapsed ? <LogoOnlyImage /> : <LogoImage />}</Link>
     </StyledNavBar>
   );
 };
