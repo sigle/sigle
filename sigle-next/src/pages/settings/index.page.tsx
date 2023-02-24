@@ -274,7 +274,7 @@ const Settings = () => {
             <Flex direction="column" gap="2">
               <Input
                 placeholder="@sigleapp"
-                rightIcon={<TbBrandTwitter />}
+                rightIcon={<TbBrandTwitter fill="currentColor" stroke="0" />}
                 {...register('twitterUsername')}
               />
               <Typography size="xs" color="gray9">
