@@ -16,7 +16,7 @@ export const MetaImage = () => {
   return (
     <>
       <Typography size="sm" fontWeight="semiBold">
-        Meta title
+        Meta image
       </Typography>
       <StyledEmptyFrame>
         <Button size="sm" variant="light" rightIcon={<TbCameraPlus />}>

@@ -33,15 +33,15 @@ export const EditorSettings = () => {
         Story settings
       </Typography>
       <Flex gap="5" direction="column" css={{ mt: '$8' }}>
-        <StorySettingsRow>
+        {/* <StorySettingsRow>
           <Typography size="sm" fontWeight="semiBold">
             Publish date
           </Typography>
           <Input type="date" />
-        </StorySettingsRow>
-        <StorySettingsRow>
+        </StorySettingsRow> */}
+        {/* <StorySettingsRow>
           <MetaImage />
-        </StorySettingsRow>
+        </StorySettingsRow> */}
         <StorySettingsRow>
           <Typography size="sm" fontWeight="semiBold">
             Meta title
