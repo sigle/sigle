@@ -35,5 +35,9 @@ export default function ProtectedProfilePage() {
 
   if (!router.isReady) return null;
 
-  return <TooltipProvider>{session ? <ProfilePage /> : null}</TooltipProvider>;
+  return (
+    <TooltipProvider>
+      <ProfilePage />
+    </TooltipProvider>
+  );
 }

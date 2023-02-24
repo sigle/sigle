@@ -67,7 +67,7 @@ export const UserProfilePageHeader = ({
       </Flex>
       <Flex gap="2">
         <Button>Follow</Button>
-        <Button color="indigo">Subscribe</Button>
+        {/* <Button color="indigo">Subscribe</Button> */}
       </Flex>
     </Flex>
   );
