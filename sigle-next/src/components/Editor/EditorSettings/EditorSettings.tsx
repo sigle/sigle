@@ -1,12 +1,12 @@
 import { TbInfoCircle, TbTrash } from 'react-icons/tb';
+import { useState } from 'react';
+import { useRouter } from 'next/router';
 import { styled } from '@sigle/stitches.config';
 import { Button, Flex, Input, Textarea, Typography } from '@sigle/ui';
+import { DeleteDialog } from '@/components/StoryCard/DeleteDialog';
 import { useEditorStore } from '../store';
 import { EditorSettingsModal } from './EditorSettingsModal';
 import { MetaImage } from './MetaImage';
-import { DeleteDialog } from '@/components/StoryCard/DeleteDialog';
-import { useState } from 'react';
-import { useRouter } from 'next/router';
 
 const StorySettingsRow = styled('div', {
   display: 'flex',
