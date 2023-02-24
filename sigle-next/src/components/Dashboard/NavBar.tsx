@@ -225,7 +225,20 @@ export const NavBar = () => {
 
           {did && (
             <NavBarStoriesContainer>
-              {!collapsed && (
+              {collapsed ? (
+                <Tooltip delayDuration={600}>
+                  <TooltipTrigger asChild>
+                    <Link href="/editor/new">
+                      <IconButton variant="light" size="lg">
+                        <TbPlus />
+                      </IconButton>
+                    </Link>
+                  </TooltipTrigger>
+                  <TooltipContent side="right" sideOffset={8}>
+                    Write story
+                  </TooltipContent>
+                </Tooltip>
+              ) : (
                 <Flex justify="between" align="center" css={{ pl: '10px' }}>
                   <Flex align="center" gap="2">
                     <TbBook size={navbarIconSize} />
