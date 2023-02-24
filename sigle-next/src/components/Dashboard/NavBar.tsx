@@ -180,11 +180,11 @@ export const NavBar = () => {
       icon: <TbHome size={navbarIconSize} />,
       label: 'Home',
     },
-    {
-      href: '/feed',
-      icon: <TbMail size={navbarIconSize} />,
-      label: 'Inbox',
-    },
+    // {
+    //   href: '/feed',
+    //   icon: <TbMail size={navbarIconSize} />,
+    //   label: 'Inbox',
+    // },
     // {
     //   href: '/saved',
     //   icon: <TbBookmarks size={navbarIconSize} />,
