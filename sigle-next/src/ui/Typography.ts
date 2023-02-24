@@ -42,6 +42,9 @@ export const Typography = styled('p', {
       indigo: {
         color: '$indigo11',
       },
+      orange: {
+        color: '$orange11',
+      },
     },
     fontWeight: {
       normal: {

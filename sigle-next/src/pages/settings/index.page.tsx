@@ -25,6 +25,8 @@ import { settingsUpdateProfileMutation } from '@/__generated__/relay/settingsUpd
 import { DashboardLayout } from '@/components/Dashboard/DashboardLayout';
 import { useCeramic } from '@/components/Ceramic/CeramicProvider';
 import { trpc } from '@/utils/trpc';
+import { z } from 'zod';
+import { zodResolver } from '@hookform/resolvers/zod';
 
 const TitleRow = styled('div', {
   py: '$5',
@@ -42,12 +44,20 @@ const SettingsRow = styled(Flex, {
   },
 });
 
-type SettingsFormData = {
-  displayName?: string | null;
-  description?: string | null;
-  websiteUrl?: string | null;
-  twitterUsername?: string | null;
-};
+const settingsSchema = z.object({
+  displayName: z.string().optional(),
+  description: z.string().optional(),
+  websiteUrl: z.string().trim().url().optional(),
+  twitterUsername: z.union([
+    z
+      .string()
+      .regex(/^@?(\w){1,15}$/, 'Invalid Twitter username')
+      .optional(),
+    z.literal(''),
+  ]),
+});
+
+type SettingsFormData = z.infer<typeof settingsSchema>;
 
 const SettingsPageProfileQuery = graphql`
   query settingsPageProfileQuery {
@@ -75,13 +85,15 @@ const Settings = () => {
   const {
     register,
     handleSubmit,
-    formState: { isDirty },
+    setValue,
+    formState: { isDirty, errors },
   } = useForm<SettingsFormData>({
+    resolver: zodResolver(settingsSchema),
     values: {
-      displayName: data.viewer?.profile?.displayName,
-      description: data.viewer?.profile?.description,
-      websiteUrl: data.viewer?.profile?.websiteUrl,
-      twitterUsername: data.viewer?.profile?.twitterUsername,
+      displayName: data.viewer?.profile?.displayName ?? undefined,
+      description: data.viewer?.profile?.description ?? undefined,
+      websiteUrl: data.viewer?.profile?.websiteUrl ?? undefined,
+      twitterUsername: data.viewer?.profile?.twitterUsername ?? undefined,
     },
   });
 
@@ -153,8 +165,6 @@ const Settings = () => {
   }, [data.viewer?.profile]);
 
   const onSubmit = handleSubmit((formValues) => {
-    // TODO: add validation
-
     const profileId = data.viewer?.profile?.id;
     if (!profileId) return;
 
@@ -262,6 +272,11 @@ const Settings = () => {
                 rightIcon={<TbWorld />}
                 {...register('websiteUrl')}
               />
+              {errors.websiteUrl ? (
+                <Typography size="xs" color="orange">
+                  {errors.websiteUrl.message}
+                </Typography>
+              ) : null}
               <Typography size="xs" color="gray9">
                 Enter your personal website
               </Typography>
@@ -273,10 +288,27 @@ const Settings = () => {
             </Typography>
             <Flex direction="column" gap="2">
               <Input
-                placeholder="@sigleapp"
+                placeholder="sigleapp"
                 rightIcon={<TbBrandTwitter fill="currentColor" stroke="0" />}
                 {...register('twitterUsername')}
+                onChange={(e) => {
+                  let value = e.target.value;
+                  if (value.startsWith('@')) {
+                    value = value.slice(1);
+                  } else if (value.startsWith('https://twitter.com/')) {
+                    value = value.slice('https://twitter.com/'.length);
+                  }
+                  setValue('twitterUsername', value, {
+                    shouldValidate: true,
+                    shouldDirty: true,
+                  });
+                }}
               />
+              {errors.twitterUsername ? (
+                <Typography size="xs" color="orange">
+                  {errors.twitterUsername.message}
+                </Typography>
+              ) : null}
               <Typography size="xs" color="gray9">
                 Enter your twitter username
               </Typography>

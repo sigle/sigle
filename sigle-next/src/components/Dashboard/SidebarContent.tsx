@@ -14,7 +14,6 @@ const StyledSidebarContent = styled('div', {
   top: 80,
   bottom: 0,
   width: 420,
-  zIndex: -1,
 });
 
 interface SidebarContentProps {
