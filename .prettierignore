@@ -1,6 +1,6 @@
 .next
 .github/ISSUE_TEMPLATE
-dist
+server/dist
 coverage
 pnpm-lock.yaml
 
