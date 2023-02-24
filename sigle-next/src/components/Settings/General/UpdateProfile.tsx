@@ -3,6 +3,7 @@ import { useForm } from 'react-hook-form';
 import { TbBrandTwitter, TbWorld } from 'react-icons/tb';
 import { graphql, useMutation } from 'react-relay';
 import { z } from 'zod';
+import { useState } from 'react';
 import * as Sentry from '@sentry/nextjs';
 import {
   Button,
@@ -54,6 +55,7 @@ export const SettingsUpdateProfile = ({
 }: {
   profile: CeramicProfile;
 }) => {
+  const [isFetching, setIsFetching] = useState(false);
   const utils = trpc.useContext();
 
   const [commit, isLoadingCommitUpdateProfile] =
@@ -81,7 +83,7 @@ export const SettingsUpdateProfile = ({
     formState: { isDirty, errors },
   } = useForm<SettingsFormData>({
     resolver: zodResolver(settingsSchema),
-    defaultValues: {
+    values: {
       displayName: profile.displayName ?? undefined,
       description: profile.description ?? undefined,
       websiteUrl: profile.websiteUrl ?? undefined,
@@ -111,8 +113,10 @@ export const SettingsUpdateProfile = ({
           return;
         }
         if (data.updateProfile) {
+          setIsFetching(true);
           utils.invalidate().then(() => {
             // TODO toast success
+            setIsFetching(false);
           });
         }
       },
@@ -128,7 +132,7 @@ export const SettingsUpdateProfile = ({
           </Typography>
           <Button
             onClick={onSubmit}
-            disabled={!isDirty || isLoadingCommitUpdateProfile}
+            disabled={!isDirty || isLoadingCommitUpdateProfile || isFetching}
           >
             {isLoadingCommitUpdateProfile ? 'Saving...' : 'Saved'}
           </Button>
