@@ -10,6 +10,8 @@ import { useForm } from 'react-hook-form';
 import { fetchQuery } from 'relay-runtime';
 import { useEffect } from 'react';
 import * as Sentry from '@sentry/nextjs';
+import { z } from 'zod';
+import { zodResolver } from '@hookform/resolvers/zod';
 import {
   Button,
   Container,
@@ -25,8 +27,6 @@ import { settingsUpdateProfileMutation } from '@/__generated__/relay/settingsUpd
 import { DashboardLayout } from '@/components/Dashboard/DashboardLayout';
 import { useCeramic } from '@/components/Ceramic/CeramicProvider';
 import { trpc } from '@/utils/trpc';
-import { z } from 'zod';
-import { zodResolver } from '@hookform/resolvers/zod';
 
 const TitleRow = styled('div', {
   py: '$5',
