@@ -1,5 +1,5 @@
 /*
-! tailwindcss v3.0.23 | MIT License | https://tailwindcss.com
+! tailwindcss v3.2.7 | MIT License | https://tailwindcss.com
 */
 
 /*
@@ -30,6 +30,7 @@
 2. Prevent adjustments of font size after orientation changes in iOS.
 3. Use a more readable tab size.
 4. Use the user's configured `sans` font-family by default.
+5. Use the user's configured `sans` font-feature-settings by default.
 */
 
 html {
@@ -45,6 +46,8 @@ html {
     'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans', sans-serif,
     'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
   /* 4 */
+  font-feature-settings: normal;
+  /* 5 */
 }
 
 /*
@@ -187,6 +190,8 @@ textarea {
   font-family: inherit;
   /* 1 */
   font-size: 100%;
+  /* 1 */
+  font-weight: inherit;
   /* 1 */
   line-height: inherit;
   /* 1 */
@@ -402,17 +407,69 @@ video {
   height: auto;
 }
 
-/*
-Ensure the default browser behavior of the `hidden` attribute.
-*/
+/* Make elements with the HTML hidden attribute stay hidden by default */
 
 [hidden] {
   display: none;
 }
 
+input::placeholder,
+textarea::placeholder {
+  color: var(--colors-gray8);
+}
+
 *,
 ::before,
 ::after {
+  --tw-border-spacing-x: 0;
+  --tw-border-spacing-y: 0;
+  --tw-translate-x: 0;
+  --tw-translate-y: 0;
+  --tw-rotate: 0;
+  --tw-skew-x: 0;
+  --tw-skew-y: 0;
+  --tw-scale-x: 1;
+  --tw-scale-y: 1;
+  --tw-pan-x: ;
+  --tw-pan-y: ;
+  --tw-pinch-zoom: ;
+  --tw-scroll-snap-strictness: proximity;
+  --tw-ordinal: ;
+  --tw-slashed-zero: ;
+  --tw-numeric-figure: ;
+  --tw-numeric-spacing: ;
+  --tw-numeric-fraction: ;
+  --tw-ring-inset: ;
+  --tw-ring-offset-width: 0px;
+  --tw-ring-offset-color: #fff;
+  --tw-ring-color: rgb(59 130 246 / 0.5);
+  --tw-ring-offset-shadow: 0 0 #0000;
+  --tw-ring-shadow: 0 0 #0000;
+  --tw-shadow: 0 0 #0000;
+  --tw-shadow-colored: 0 0 #0000;
+  --tw-blur: ;
+  --tw-brightness: ;
+  --tw-contrast: ;
+  --tw-grayscale: ;
+  --tw-hue-rotate: ;
+  --tw-invert: ;
+  --tw-saturate: ;
+  --tw-sepia: ;
+  --tw-drop-shadow: ;
+  --tw-backdrop-blur: ;
+  --tw-backdrop-brightness: ;
+  --tw-backdrop-contrast: ;
+  --tw-backdrop-grayscale: ;
+  --tw-backdrop-hue-rotate: ;
+  --tw-backdrop-invert: ;
+  --tw-backdrop-opacity: ;
+  --tw-backdrop-saturate: ;
+  --tw-backdrop-sepia: ;
+}
+
+::backdrop {
+  --tw-border-spacing-x: 0;
+  --tw-border-spacing-y: 0;
   --tw-translate-x: 0;
   --tw-translate-y: 0;
   --tw-rotate: 0;
@@ -462,6 +519,13 @@ Ensure the default browser behavior of the `hidden` attribute.
   max-width: 826px;
 }
 
+.prose :where(p):not(:where([class~='not-prose'] *)) {
+  margin-top: 1.25em;
+  margin-bottom: 1.25em;
+  line-height: 26px;
+  letter-spacing: 0.2px;
+}
+
 .prose :where(a):not(:where([class~='not-prose'] *)) {
   color: var(--tw-prose-links);
   text-decoration: none;
@@ -473,8 +537,22 @@ Ensure the default browser behavior of the `hidden` attribute.
   font-weight: 600;
 }
 
+.prose :where(a strong):not(:where([class~='not-prose'] *)) {
+  color: var(--tw-prose-links);
+}
+
+.prose :where(blockquote strong):not(:where([class~='not-prose'] *)) {
+  color: inherit;
+}
+
+.prose :where(thead th strong):not(:where([class~='not-prose'] *)) {
+  color: inherit;
+}
+
 .prose :where(ol):not(:where([class~='not-prose'] *)) {
   list-style-type: decimal;
+  margin-top: 1.25em;
+  margin-bottom: 1.25em;
   padding-left: 1.625em;
 }
 
@@ -516,6 +594,8 @@ Ensure the default browser behavior of the `hidden` attribute.
 
 .prose :where(ul):not(:where([class~='not-prose'] *)) {
   list-style-type: disc;
+  margin-top: 1.25em;
+  margin-bottom: 1.25em;
   padding-left: 1.625em;
 }
 
@@ -558,6 +638,7 @@ Ensure the default browser behavior of the `hidden` attribute.
 
 .prose :where(h1 strong):not(:where([class~='not-prose'] *)) {
   font-weight: 900;
+  color: inherit;
 }
 
 .prose :where(h2):not(:where([class~='not-prose'] *)) {
@@ -591,6 +672,11 @@ Ensure the default browser behavior of the `hidden` attribute.
 
 .prose :where(h4 strong):not(:where([class~='not-prose'] *)) {
   font-weight: 700;
+  color: inherit;
+}
+
+.prose :where(img):not(:where([class~='not-prose'] *)) {
+  margin: 2em auto;
 }
 
 .prose :where(figure > *):not(:where([class~='not-prose'] *)) {
@@ -615,7 +701,33 @@ Ensure the default browser behavior of the `hidden` attribute.
 }
 
 .prose :where(a code):not(:where([class~='not-prose'] *)) {
-  color: var(--tw-prose-links);
+  color: inherit;
+}
+
+.prose :where(h1 code):not(:where([class~='not-prose'] *)) {
+  color: inherit;
+}
+
+.prose :where(h2 code):not(:where([class~='not-prose'] *)) {
+  color: inherit;
+  font-size: 0.875em;
+}
+
+.prose :where(h3 code):not(:where([class~='not-prose'] *)) {
+  color: inherit;
+  font-size: 0.9em;
+}
+
+.prose :where(h4 code):not(:where([class~='not-prose'] *)) {
+  color: inherit;
+}
+
+.prose :where(blockquote code):not(:where([class~='not-prose'] *)) {
+  color: inherit;
+}
+
+.prose :where(thead th code):not(:where([class~='not-prose'] *)) {
+  color: inherit;
 }
 
 .prose :where(pre):not(:where([class~='not-prose'] *)) {
@@ -689,60 +801,52 @@ Ensure the default browser behavior of the `hidden` attribute.
 
 .prose :where(tbody td):not(:where([class~='not-prose'] *)) {
   vertical-align: baseline;
-  padding-top: 0.5714286em;
-  padding-right: 0.5714286em;
-  padding-bottom: 0.5714286em;
-  padding-left: 0.5714286em;
+}
+
+.prose :where(tfoot):not(:where([class~='not-prose'] *)) {
+  border-top-width: 1px;
+  border-top-color: var(--tw-prose-th-borders);
+}
+
+.prose :where(tfoot td):not(:where([class~='not-prose'] *)) {
+  vertical-align: top;
 }
 
 .prose {
-  --tw-prose-body: #2f2f2f;
-  --tw-prose-headings: #1a1a1a;
-  --tw-prose-lead: #e2e2e2;
-  --tw-prose-links: #da3a00;
-  --tw-prose-bold: #2f2f2f;
-  --tw-prose-counters: #2f2f2f;
-  --tw-prose-bullets: #2f2f2f;
-  --tw-prose-hr: #e2e2e2;
-  --tw-prose-quotes: #2f2f2f;
-  --tw-prose-quote-borders: #e2e2e2;
-  --tw-prose-captions: #737373;
-  --tw-prose-code: #1a1a1a;
-  --tw-prose-pre-code: #e8e8e8;
-  --tw-prose-pre-bg: #1a1a1a;
+  --tw-prose-body: #374151;
+  --tw-prose-headings: #111827;
+  --tw-prose-lead: #4b5563;
+  --tw-prose-links: #111827;
+  --tw-prose-bold: #111827;
+  --tw-prose-counters: #6b7280;
+  --tw-prose-bullets: #d1d5db;
+  --tw-prose-hr: #e5e7eb;
+  --tw-prose-quotes: #111827;
+  --tw-prose-quote-borders: #e5e7eb;
+  --tw-prose-captions: #6b7280;
+  --tw-prose-code: #111827;
+  --tw-prose-pre-code: #e5e7eb;
+  --tw-prose-pre-bg: #1f2937;
   --tw-prose-th-borders: #d1d5db;
   --tw-prose-td-borders: #e5e7eb;
-  --tw-prose-invert-body: #e5e5e5;
-  --tw-prose-invert-headings: #f2f2f2;
-  --tw-prose-invert-lead: #343434;
-  --tw-prose-invert-links: #f76808;
-  --tw-prose-invert-bold: #e5e5e5;
-  --tw-prose-invert-counters: #e5e5e5;
-  --tw-prose-invert-bullets: #e5e5e5;
-  --tw-prose-invert-hr: #343434;
-  --tw-prose-invert-quotes: #e5e5e5;
-  --tw-prose-invert-quote-borders: #343434;
-  --tw-prose-invert-captions: #a1a1a1;
-  --tw-prose-invert-code: #f2f2f2;
-  --tw-prose-invert-pre-code: #f2f2f2;
-  --tw-prose-invert-pre-bg: #202020;
+  --tw-prose-invert-body: #d1d5db;
+  --tw-prose-invert-headings: #fff;
+  --tw-prose-invert-lead: #9ca3af;
+  --tw-prose-invert-links: #fff;
+  --tw-prose-invert-bold: #fff;
+  --tw-prose-invert-counters: #9ca3af;
+  --tw-prose-invert-bullets: #4b5563;
+  --tw-prose-invert-hr: #374151;
+  --tw-prose-invert-quotes: #f3f4f6;
+  --tw-prose-invert-quote-borders: #374151;
+  --tw-prose-invert-captions: #9ca3af;
+  --tw-prose-invert-code: #fff;
+  --tw-prose-invert-pre-code: #d1d5db;
+  --tw-prose-invert-pre-bg: rgb(0 0 0 / 50%);
   --tw-prose-invert-th-borders: #4b5563;
   --tw-prose-invert-td-borders: #374151;
-  --tw-prose-code-bg: #f6f6f6;
-  --tw-prose-invert-code-bg: #202020;
   font-size: 16px;
   line-height: 1.75;
-}
-
-.prose :where(p):not(:where([class~='not-prose'] *)) {
-  margin-top: 1.25em;
-  margin-bottom: 1.25em;
-  line-height: 26px;
-  letter-spacing: 0.2px;
-}
-
-.prose :where(img):not(:where([class~='not-prose'] *)) {
-  margin: 2em auto;
 }
 
 .prose :where(video):not(:where([class~='not-prose'] *)) {
@@ -753,14 +857,6 @@ Ensure the default browser behavior of the `hidden` attribute.
 .prose :where(figure):not(:where([class~='not-prose'] *)) {
   margin-top: 2em;
   margin-bottom: 2em;
-}
-
-.prose :where(h2 code):not(:where([class~='not-prose'] *)) {
-  font-size: 0.875em;
-}
-
-.prose :where(h3 code):not(:where([class~='not-prose'] *)) {
-  font-size: 0.9em;
 }
 
 .prose :where(li):not(:where([class~='not-prose'] *)) {
@@ -776,24 +872,28 @@ Ensure the default browser behavior of the `hidden` attribute.
   padding-left: 0.375em;
 }
 
-.prose > :where(ul > li p):not(:where([class~='not-prose'] *)) {
+.prose :where(.prose > ul > li p):not(:where([class~='not-prose'] *)) {
   margin-top: 0.75em;
   margin-bottom: 0.75em;
 }
 
-.prose > :where(ul > li > *:first-child):not(:where([class~='not-prose'] *)) {
+.prose
+  :where(.prose > ul > li > *:first-child):not(:where([class~='not-prose'] *)) {
   margin-top: 1.25em;
 }
 
-.prose > :where(ul > li > *:last-child):not(:where([class~='not-prose'] *)) {
+.prose
+  :where(.prose > ul > li > *:last-child):not(:where([class~='not-prose'] *)) {
   margin-bottom: 1.25em;
 }
 
-.prose > :where(ol > li > *:first-child):not(:where([class~='not-prose'] *)) {
+.prose
+  :where(.prose > ol > li > *:first-child):not(:where([class~='not-prose'] *)) {
   margin-top: 1.25em;
 }
 
-.prose > :where(ol > li > *:last-child):not(:where([class~='not-prose'] *)) {
+.prose
+  :where(.prose > ol > li > *:last-child):not(:where([class~='not-prose'] *)) {
   margin-bottom: 1.25em;
 }
 
@@ -826,24 +926,33 @@ Ensure the default browser behavior of the `hidden` attribute.
   padding-right: 0;
 }
 
-.prose :where(tbody td:first-child):not(:where([class~='not-prose'] *)) {
+.prose :where(tbody td, tfoot td):not(:where([class~='not-prose'] *)) {
+  padding-top: 0.5714286em;
+  padding-right: 0.5714286em;
+  padding-bottom: 0.5714286em;
+  padding-left: 0.5714286em;
+}
+
+.prose
+  :where(tbody td:first-child, tfoot td:first-child):not(
+    :where([class~='not-prose'] *)
+  ) {
   padding-left: 0;
 }
 
-.prose :where(tbody td:last-child):not(:where([class~='not-prose'] *)) {
+.prose
+  :where(tbody td:last-child, tfoot td:last-child):not(
+    :where([class~='not-prose'] *)
+  ) {
   padding-right: 0;
 }
 
-.prose > :where(:first-child):not(:where([class~='not-prose'] *)) {
+.prose :where(.prose > :first-child):not(:where([class~='not-prose'] *)) {
   margin-top: 0;
 }
 
-.prose > :where(:last-child):not(:where([class~='not-prose'] *)) {
+.prose :where(.prose > :last-child):not(:where([class~='not-prose'] *)) {
   margin-bottom: 0;
-}
-
-.prose :where(a strong):not(:where([class~='not-prose'] *)) {
-  color: var(--tw-prose-links);
 }
 
 .prose :where(a:hover):not(:where([class~='not-prose'] *)) {
@@ -978,10 +1087,14 @@ Ensure the default browser behavior of the `hidden` attribute.
   }
 
   .lg\:prose-lg :where(ol):not(:where([class~='not-prose'] *)) {
+    margin-top: 1.3333333em;
+    margin-bottom: 1.3333333em;
     padding-left: 1.5555556em;
   }
 
   .lg\:prose-lg :where(ul):not(:where([class~='not-prose'] *)) {
+    margin-top: 1.3333333em;
+    margin-bottom: 1.3333333em;
     padding-left: 1.5555556em;
   }
 
@@ -998,28 +1111,37 @@ Ensure the default browser behavior of the `hidden` attribute.
     padding-left: 0.4444444em;
   }
 
-  .lg\:prose-lg > :where(ul > li p):not(:where([class~='not-prose'] *)) {
+  .lg\:prose-lg
+    :where(.lg\:prose-lg > ul > li p):not(:where([class~='not-prose'] *)) {
     margin-top: 0.8888889em;
     margin-bottom: 0.8888889em;
   }
 
   .lg\:prose-lg
-    > :where(ul > li > *:first-child):not(:where([class~='not-prose'] *)) {
+    :where(.lg\:prose-lg > ul > li > *:first-child):not(
+      :where([class~='not-prose'] *)
+    ) {
     margin-top: 1.3333333em;
   }
 
   .lg\:prose-lg
-    > :where(ul > li > *:last-child):not(:where([class~='not-prose'] *)) {
+    :where(.lg\:prose-lg > ul > li > *:last-child):not(
+      :where([class~='not-prose'] *)
+    ) {
     margin-bottom: 1.3333333em;
   }
 
   .lg\:prose-lg
-    > :where(ol > li > *:first-child):not(:where([class~='not-prose'] *)) {
+    :where(.lg\:prose-lg > ol > li > *:first-child):not(
+      :where([class~='not-prose'] *)
+    ) {
     margin-top: 1.3333333em;
   }
 
   .lg\:prose-lg
-    > :where(ol > li > *:last-child):not(:where([class~='not-prose'] *)) {
+    :where(.lg\:prose-lg > ol > li > *:last-child):not(
+      :where([class~='not-prose'] *)
+    ) {
     margin-bottom: 1.3333333em;
   }
 
@@ -1071,7 +1193,7 @@ Ensure the default browser behavior of the `hidden` attribute.
     padding-right: 0;
   }
 
-  .lg\:prose-lg :where(tbody td):not(:where([class~='not-prose'] *)) {
+  .lg\:prose-lg :where(tbody td, tfoot td):not(:where([class~='not-prose'] *)) {
     padding-top: 0.75em;
     padding-right: 0.75em;
     padding-bottom: 0.75em;
@@ -1079,20 +1201,26 @@ Ensure the default browser behavior of the `hidden` attribute.
   }
 
   .lg\:prose-lg
-    :where(tbody td:first-child):not(:where([class~='not-prose'] *)) {
+    :where(tbody td:first-child, tfoot td:first-child):not(
+      :where([class~='not-prose'] *)
+    ) {
     padding-left: 0;
   }
 
   .lg\:prose-lg
-    :where(tbody td:last-child):not(:where([class~='not-prose'] *)) {
+    :where(tbody td:last-child, tfoot td:last-child):not(
+      :where([class~='not-prose'] *)
+    ) {
     padding-right: 0;
   }
 
-  .lg\:prose-lg > :where(:first-child):not(:where([class~='not-prose'] *)) {
+  .lg\:prose-lg
+    :where(.lg\:prose-lg > :first-child):not(:where([class~='not-prose'] *)) {
     margin-top: 0;
   }
 
-  .lg\:prose-lg > :where(:last-child):not(:where([class~='not-prose'] *)) {
+  .lg\:prose-lg
+    :where(.lg\:prose-lg > :last-child):not(:where([class~='not-prose'] *)) {
     margin-bottom: 0;
   }
 }

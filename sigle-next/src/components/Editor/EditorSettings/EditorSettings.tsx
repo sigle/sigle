@@ -1,6 +1,9 @@
 import { TbInfoCircle, TbTrash } from 'react-icons/tb';
+import { useState } from 'react';
+import { useRouter } from 'next/router';
 import { styled } from '@sigle/stitches.config';
 import { Button, Flex, Input, Textarea, Typography } from '@sigle/ui';
+import { DeleteDialog } from '@/components/StoryCard/DeleteDialog';
 import { useEditorStore } from '../store';
 import { EditorSettingsModal } from './EditorSettingsModal';
 import { MetaImage } from './MetaImage';
@@ -19,10 +22,12 @@ const canonicalUrlInfo =
   'https://developers.google.com/search/docs/crawling-indexing/consolidate-duplicate-urls';
 
 export const EditorSettings = () => {
+  const router = useRouter();
   const menuOpen = useEditorStore((state) => state.menuOpen);
   const toggleMenu = useEditorStore((state) => state.toggleMenu);
   const story = useEditorStore((state) => state.story);
   const setStory = useEditorStore((state) => state.setStory);
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
 
   return (
     <EditorSettingsModal
@@ -33,15 +38,15 @@ export const EditorSettings = () => {
         Story settings
       </Typography>
       <Flex gap="5" direction="column" css={{ mt: '$8' }}>
-        <StorySettingsRow>
+        {/* <StorySettingsRow>
           <Typography size="sm" fontWeight="semiBold">
             Publish date
           </Typography>
           <Input type="date" />
-        </StorySettingsRow>
-        <StorySettingsRow>
+        </StorySettingsRow> */}
+        {/* <StorySettingsRow>
           <MetaImage />
-        </StorySettingsRow>
+        </StorySettingsRow> */}
         <StorySettingsRow>
           <Typography size="sm" fontWeight="semiBold">
             Meta title
@@ -111,13 +116,25 @@ export const EditorSettings = () => {
 
       <Flex css={{ mt: '$8' }} direction="column" gap="1">
         <Typography size="xs" color="gray9">
-          Story content will still be viewable on IPFS. Remove entry only hides
-          it from your post list.
+          Delete entry only hides it from your post list. Story content will
+          still be viewable on IPFS.
         </Typography>
-        <Button rightIcon={<TbTrash />} variant="light" color="orange">
+        <Button
+          rightIcon={<TbTrash />}
+          variant="light"
+          color="orange"
+          onClick={() => setIsDeleteDialogOpen(true)}
+        >
           Delete post
         </Button>
       </Flex>
+
+      <DeleteDialog
+        postId={story?.id || ''}
+        open={isDeleteDialogOpen}
+        onOpenChange={(isOpen) => setIsDeleteDialogOpen(isOpen)}
+        onDeleted={() => router.push('/drafts')}
+      />
     </EditorSettingsModal>
   );
 };

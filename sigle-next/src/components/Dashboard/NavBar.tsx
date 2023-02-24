@@ -11,6 +11,7 @@ import {
   TbUserCircle,
   TbUsers,
 } from 'react-icons/tb';
+import { useModal } from 'connectkit';
 import { styled } from '@sigle/stitches.config';
 import {
   NumberBadge,
@@ -92,6 +93,16 @@ const NavBarLink = ({
   label,
   active,
 }: NavBarLinkProps) => {
+  const { setOpen: setConnectKitOpen } = useModal();
+
+  const handleLinkClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
+    if (href === '/connect') {
+      e.preventDefault();
+      e.stopPropagation();
+      setConnectKitOpen(true);
+    }
+  };
+
   if (isCollapsed) {
     return (
       <Tooltip delayDuration={600}>
@@ -102,6 +113,7 @@ const NavBarLink = ({
             variant="ghost"
             size="lg"
             active={active}
+            onClick={handleLinkClick}
           >
             {icon}
           </NavBarLinkIconButton>
@@ -114,7 +126,7 @@ const NavBarLink = ({
   }
 
   return (
-    <Link href={href}>
+    <Link href={href} onClick={handleLinkClick}>
       <NavBarLinkButton variant="ghost" leftIcon={icon} active={active}>
         {label}
       </NavBarLinkButton>
@@ -180,18 +192,18 @@ export const NavBar = () => {
       icon: <TbHome size={navbarIconSize} />,
       label: 'Home',
     },
-    {
-      href: '/feed',
-      icon: <TbMail size={navbarIconSize} />,
-      label: 'Inbox',
-    },
+    // {
+    //   href: '/feed',
+    //   icon: <TbMail size={navbarIconSize} />,
+    //   label: 'Inbox',
+    // },
     // {
     //   href: '/saved',
     //   icon: <TbBookmarks size={navbarIconSize} />,
     //   label: 'Saved',
     // },
     {
-      href: `/profile/${did}`,
+      href: did ? `/profile/${did}` : '/connect',
       icon: <TbUserCircle size={navbarIconSize} />,
       label: 'Profile',
     },
@@ -225,7 +237,20 @@ export const NavBar = () => {
 
           {did && (
             <NavBarStoriesContainer>
-              {!collapsed && (
+              {collapsed ? (
+                <Tooltip delayDuration={600}>
+                  <TooltipTrigger asChild>
+                    <Link href="/editor/new">
+                      <IconButton variant="light" size="lg">
+                        <TbPlus />
+                      </IconButton>
+                    </Link>
+                  </TooltipTrigger>
+                  <TooltipContent side="right" sideOffset={8}>
+                    Write story
+                  </TooltipContent>
+                </Tooltip>
+              ) : (
                 <Flex justify="between" align="center" css={{ pl: '10px' }}>
                   <Flex align="center" gap="2">
                     <TbBook size={navbarIconSize} />

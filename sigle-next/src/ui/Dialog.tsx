@@ -9,17 +9,27 @@ const overlayShow = keyframes({
   '100%': { opacity: 1 },
 });
 
+const overlayHide = keyframes({
+  '0%': { opacity: 1 },
+  '100%': { opacity: 0 },
+});
+
 export const StyledOverlay = styled(DialogPrimitive.Overlay, {
-  backgroundColor: 'rgba(8, 8, 8, 0.7)',
   position: 'fixed',
   inset: 0,
+  backgroundColor: 'rgba(8, 8, 8, 0.7)',
 
   [`.${darkTheme} &`]: {
     backgroundColor: 'rgba(46, 46, 46, 0.7)',
   },
 
   '@media (prefers-reduced-motion: no-preference)': {
-    animation: `${overlayShow} 150ms cubic-bezier(0.16, 1, 0.3, 1)`,
+    '&[data-state="open"]': {
+      animation: `${overlayShow} 150ms cubic-bezier(0.16, 1, 0.3, 1)`,
+    },
+    '&[data-state="closed"]': {
+      animation: `${overlayHide} 150ms cubic-bezier(0.16, 1, 0.3, 1)`,
+    },
   },
 });
 
@@ -42,6 +52,11 @@ export function Dialog({ children, overlay = true, ...props }: DialogProps) {
 const contentShow = keyframes({
   '0%': { opacity: 0, transform: 'translate(-50%, -48%) scale(.96)' },
   '100%': { opacity: 1, transform: 'translate(-50%, -50%) scale(1)' },
+});
+
+const contentHide = keyframes({
+  '0%': { opacity: 1, transform: 'translate(-50%, -50%) scale(1)' },
+  '100%': { opacity: 0, transform: 'translate(-50%, -48%) scale(.96)' },
 });
 
 const StyledContent = styled(DialogPrimitive.Content, {
@@ -74,7 +89,12 @@ const StyledContent = styled(DialogPrimitive.Content, {
     transform: 'translate(-50%, -50%)',
 
     '@media (prefers-reduced-motion: no-preference)': {
-      animation: `${contentShow} 150ms cubic-bezier(0.16, 1, 0.3, 1)`,
+      '&[data-state="open"]': {
+        animation: `${contentShow} 150ms cubic-bezier(0.16, 1, 0.3, 1)`,
+      },
+      '&[data-state="closed"]': {
+        animation: `${contentHide} 150ms cubic-bezier(0.16, 1, 0.3, 1)`,
+      },
     },
   },
 

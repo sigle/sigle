@@ -74,7 +74,6 @@ const DropdownMenuItem = styled(DropdownMenuPrimitive.Item, {
   fontSize: '$sm',
   lineHeight: '$sm',
   display: 'flex',
-  color: '$gray11',
   br: '$xs',
   p: '$2',
   userSelect: 'none',
@@ -82,14 +81,34 @@ const DropdownMenuItem = styled(DropdownMenuPrimitive.Item, {
   cursor: 'pointer',
   border: 'none',
 
-  '&:hover': {
-    backgroundColor: '$gray5',
-  },
-  '&:active': {
-    backgroundColor: '$gray4',
-  },
   '&:focus': {
     outline: 'none',
+  },
+
+  variants: {
+    color: {
+      gray: {
+        color: '$gray11',
+        '&:hover': {
+          backgroundColor: '$gray5',
+        },
+        '&:active': {
+          backgroundColor: '$gray4',
+        },
+      },
+      orange: {
+        color: '$orange11',
+        '&:hover': {
+          backgroundColor: '$orange5',
+        },
+        '&:active': {
+          backgroundColor: '$orange4',
+        },
+      },
+    },
+  },
+  defaultVariants: {
+    color: 'gray',
   },
 });
 

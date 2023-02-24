@@ -7,6 +7,7 @@ import { useCeramic } from '@/components/Ceramic/CeramicProvider';
 import { StoryCardDraft } from '@/components/StoryCard/StoryCardDraft';
 import { trpc } from '@/utils/trpc';
 import { StoryCardPublishedSkeleton } from '@/components/StoryCard/StoryCardPublishedSkeleton';
+import { UserProfile } from '@/components/UserProfile/UserProfile';
 
 const Drafts = () => {
   const { session } = useCeramic();
@@ -83,6 +84,7 @@ const Drafts = () => {
 export default function ProtectedDrafts() {
   // TODO auth protect
   const { session } = useCeramic();
+  const userDid = session?.did.parent!;
 
   return (
     <TooltipProvider>
@@ -98,6 +100,7 @@ export default function ProtectedDrafts() {
               </Link>
             </Flex>
           }
+          sidebarContent={<UserProfile did={userDid!} isViewer={true} />}
         >
           <Container css={{ maxWidth: 680, py: '$5' }}>
             <Drafts />

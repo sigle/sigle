@@ -17,10 +17,6 @@ import { styled } from '@sigle/stitches.config';
 import { CeramicPost } from '@/types/ceramic';
 import { DeleteDialog } from './DeleteDialog';
 
-const StyledDropdownMenuItem = styled(DropdownMenuItem, {
-  color: '$orange11',
-});
-
 const StyledDropdownMenuContent = styled(DropdownMenuContent, {
   minWidth: 100,
 });
@@ -78,11 +74,12 @@ export const StoryCardDraft = ({ post }: StoryCardDraftProps) => {
                 <DropdownMenuItem onSelect={() => router.push(postEditorLink)}>
                   Edit
                 </DropdownMenuItem>
-                <StyledDropdownMenuItem
+                <DropdownMenuItem
+                  color="orange"
                   onSelect={() => setIsDeleteDialogOpen(true)}
                 >
                   Delete
-                </StyledDropdownMenuItem>
+                </DropdownMenuItem>
               </StyledDropdownMenuContent>
             </DropdownMenu>
           </Flex>

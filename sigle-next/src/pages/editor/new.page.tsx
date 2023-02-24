@@ -6,9 +6,11 @@ import { Container, LoadingSpinner } from '@sigle/ui';
 import { useCeramic } from '@/components/Ceramic/CeramicProvider';
 import { EditorHeader } from '@/components/Editor/EditorHeader/EditorHeader';
 import type { newPostCreatePostMutation } from '@/__generated__/relay/newPostCreatePostMutation.graphql';
+import { trpc } from '@/utils/trpc';
 
 const NewPost = () => {
   const router = useRouter();
+  const utils = trpc.useContext();
   const isMounted = useRef(false);
 
   const [commit] = useMutation<newPostCreatePostMutation>(graphql`
@@ -38,7 +40,12 @@ const NewPost = () => {
         },
       },
       onCompleted: (data) => {
-        router.replace(`/editor/${data.createPost?.document.id}`);
+        // TODO: handle errors
+        if (data.createPost) {
+          utils.invalidate().then(() => {
+            router.push(`/editor/${data.createPost?.document.id}`);
+          });
+        }
       },
     });
   }, []);

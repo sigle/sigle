@@ -1,10 +1,12 @@
 import { TooltipProvider } from '@radix-ui/react-tooltip';
 import Link from 'next/link';
 import { useInView } from 'react-cool-inview';
+import { useModal } from 'connectkit';
 import { Button, Container, Flex, LoadingSpinner, Typography } from '@sigle/ui';
 import { StoryCardPublishedSkeleton } from '@/components/StoryCard/StoryCardPublishedSkeleton';
 import { trpc } from '@/utils/trpc';
 import { StoryCardPublished } from '@/components/StoryCard/StoryCardPublished';
+import { useCeramic } from '@/components/Ceramic/CeramicProvider';
 import { DashboardLayout } from '../components/Dashboard/DashboardLayout';
 
 const HopePostList = () => {
@@ -68,6 +70,10 @@ const HopePostList = () => {
 };
 
 export default function Home() {
+  const { setOpen: setConnectKitOpen } = useModal();
+  const { session } = useCeramic();
+  const userDid = session?.did.parent;
+
   return (
     <TooltipProvider>
       <DashboardLayout
@@ -76,9 +82,15 @@ export default function Home() {
             <Typography size="xl" fontWeight="bold">
               Explore
             </Typography>
-            <Link href="/editor/new">
-              <Button>Write story</Button>
-            </Link>
+            {userDid ? (
+              <Link href="/editor/new">
+                <Button>Write story</Button>
+              </Link>
+            ) : (
+              <Button onClick={() => setConnectKitOpen(true)}>
+                Write story
+              </Button>
+            )}
           </Flex>
         }
       >

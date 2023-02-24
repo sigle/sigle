@@ -3,9 +3,11 @@ import * as Sentry from '@sentry/nextjs';
 import { TbRocket } from 'react-icons/tb';
 import { Button } from '@sigle/ui';
 import { EditorPublishUpdatePostMutation } from '@/__generated__/relay/EditorPublishUpdatePostMutation.graphql';
+import { trpc } from '@/utils/trpc';
 import { useEditorStore } from '../store';
 
 export const EditorPublish = () => {
+  const utils = trpc.useContext();
   const setStory = useEditorStore((state) => state.setStory);
   const story = useEditorStore((state) => state.story);
 
@@ -48,6 +50,7 @@ export const EditorPublish = () => {
           setStory({
             status: data.updatePost.document.status ?? undefined,
           });
+          utils.invalidate();
         }
       },
     });

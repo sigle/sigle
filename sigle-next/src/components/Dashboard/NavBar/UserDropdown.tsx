@@ -141,9 +141,6 @@ export const NavBarUserDropdown = ({
           <Link href="/settings">
             <DropdownMenuItem>Settings</DropdownMenuItem>
           </Link>
-          <Link href="/settings">
-            <DropdownMenuItem>Upgrade</DropdownMenuItem>
-          </Link>
           <DropdownMenuItemWithSwitch
             // Prevent the dropdown from closing when clicking on the dark mode switch
             onSelect={(e) => e.preventDefault()}
