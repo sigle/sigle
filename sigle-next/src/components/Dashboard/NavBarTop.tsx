@@ -1,8 +1,8 @@
+import Link from 'next/link';
 import { styled } from '@sigle/stitches.config';
 import { Flex } from '@sigle/ui';
 import { LogoImage } from '@/images/Logo';
 import { LogoOnlyImage } from '@/images/LogoOnly';
-import Link from 'next/link';
 
 const StyledNavBar = styled(Flex, {
   px: '$5',
