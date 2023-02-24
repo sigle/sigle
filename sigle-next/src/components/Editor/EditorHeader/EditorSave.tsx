@@ -4,9 +4,11 @@ import { shallow } from 'zustand/shallow';
 import * as Sentry from '@sentry/nextjs';
 import { Button } from '@sigle/ui';
 import { EditorSaveUpdatePostMutation } from '@/__generated__/relay/EditorSaveUpdatePostMutation.graphql';
+import { trpc } from '@/utils/trpc';
 import { useEditorStore } from '../store';
 
 export const EditorSave = () => {
+  const utils = trpc.useContext();
   const initialStory = useEditorStore((state) => state.initialStory);
   const setInitialStory = useEditorStore((state) => state.setInitialStory);
   const story = useEditorStore((state) => state.story);
@@ -62,6 +64,7 @@ export const EditorSave = () => {
         }
         if (data.updatePost) {
           setInitialStory(story);
+          utils.invalidate();
         }
       },
     });

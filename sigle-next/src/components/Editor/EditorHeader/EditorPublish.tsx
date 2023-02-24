@@ -3,8 +3,8 @@ import * as Sentry from '@sentry/nextjs';
 import { TbRocket } from 'react-icons/tb';
 import { Button } from '@sigle/ui';
 import { EditorPublishUpdatePostMutation } from '@/__generated__/relay/EditorPublishUpdatePostMutation.graphql';
-import { useEditorStore } from '../store';
 import { trpc } from '@/utils/trpc';
+import { useEditorStore } from '../store';
 
 export const EditorPublish = () => {
   const utils = trpc.useContext();
