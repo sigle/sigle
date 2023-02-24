@@ -139,6 +139,7 @@ export const StoryCardPublished = ({
                   Edit
                 </DropdownMenuItem>
                 <StyledDropdownMenuItem
+                  color="orange"
                   onSelect={() => setIsDeleteDialogOpen(true)}
                 >
                   Delete
