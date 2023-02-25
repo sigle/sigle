@@ -33,7 +33,7 @@ export const EditorBottomInfo = ({ editor }: EditorBottomInfoProps) => {
       <Typography size="sm" color="gray9">
         {editor?.storage.characterCount.words()} words
       </Typography>
-      <IconButton
+      {/* <IconButton
         size="sm"
         variant="ghost"
         onClick={() => setTheme(resolvedTheme === 'dark' ? 'light' : 'dark')}
@@ -42,7 +42,7 @@ export const EditorBottomInfo = ({ editor }: EditorBottomInfoProps) => {
         }}
       >
         <TbKeyboard />
-      </IconButton>
+      </IconButton> */}
       <IconButton
         size="sm"
         variant="ghost"

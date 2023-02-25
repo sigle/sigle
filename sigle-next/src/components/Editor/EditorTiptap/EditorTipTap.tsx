@@ -80,6 +80,7 @@ export const EditorTipTap = () => {
   const { resolvedTheme } = useTheme();
   const { width } = useWindowSize();
   const isMobile = width ? width < 768 : false;
+  const story = useEditorStore((state) => state.story);
   const setStory = useEditorStore((state) => state.setStory);
 
   const editor = useEditor({
@@ -134,7 +135,7 @@ export const EditorTipTap = () => {
         : undefined,
       isMobile ? TipTapMobileScroll : undefined,
     ] as Extensions,
-    content: '',
+    content: story?.content || '',
     onUpdate: ({ editor }) => {
       setStory({ content: editor.getHTML() });
     },
