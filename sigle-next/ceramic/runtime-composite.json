@@ -1,11 +1,11 @@
 {
   "models": {
     "Profile": {
-      "id": "kjzl6hvfrbw6c8kdwrxur6qqpp9tkjzehqp22atzxuk7ktbxmh30193jtd9t94w",
+      "id": "kjzl6hvfrbw6c7ikbuw6592jedrtoen3gn6ggvcblmr1bbmihu9cfsl1p8yr3xk",
       "accountRelation": { "type": "single" }
     },
     "Post": {
-      "id": "kjzl6hvfrbw6c8wwfx9bjdc9pbo0r4si50chqe5v5k8ia1hcwmbtzsxs1bf8jiq",
+      "id": "kjzl6hvfrbw6c57r6z76e6pxwlmilanyovqygfx7sv2bmgf662azogo8993qxh2",
       "accountRelation": { "type": "list" }
     }
   },
@@ -14,7 +14,8 @@
       "websiteUrl": { "type": "string", "required": false },
       "description": { "type": "string", "required": false },
       "displayName": { "type": "string", "required": false },
-      "twitterUsername": { "type": "string", "required": false }
+      "twitterUsername": { "type": "string", "required": false },
+      "version": { "type": "view", "viewType": "documentVersion" }
     },
     "Post": {
       "title": { "type": "string", "required": true },

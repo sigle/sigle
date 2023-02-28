@@ -172,6 +172,9 @@ type Profile implements Node {
   description: String
   displayName: String
   twitterUsername: String
+
+  """Current version of the document"""
+  version: CeramicCommitID!
 }
 
 """A connection to a list of items."""
