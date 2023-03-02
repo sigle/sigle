@@ -49,6 +49,20 @@ services:
     # only allow internal connections
     ipAllowList: []
 
+  # Sigle next staging ceramic
+  - name: sigle-ceramic-staging
+    type: web
+    env: docker
+    region: oregon
+    plan: Standard
+    branch: main
+    autoDeploy: true
+    dockerfilePath: ./ceramic/staging.ceramic.Dockerfile
+    rootDir: sigle-next
+    buildFilter:
+      paths:
+        - ./sigle-next/ceramic/staging.ceramic.Dockerfile
+
 databases:
   # Postgres database
   - name: sigle-postgres
