@@ -54,7 +54,7 @@ services:
     type: web
     env: docker
     region: oregon
-    plan: Starter
+    plan: Standard
     branch: main
     autoDeploy: true
     dockerfilePath: ./ceramic/staging.ceramic.Dockerfile
