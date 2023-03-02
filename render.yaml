@@ -57,7 +57,8 @@ services:
     plan: Starter
     branch: main
     autoDeploy: true
-    dockerfilePath: ./sigle-next/ceramic/staging.ceramic.Dockerfile
+    dockerfilePath: ./ceramic/staging.ceramic.Dockerfile
+    rootDir: sigle-next
     buildFilter:
       paths:
         - ./sigle-next/ceramic/staging.ceramic.Dockerfile
