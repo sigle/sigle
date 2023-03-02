@@ -52,7 +52,7 @@ services:
   # Sigle next staging ceramic
   - name: sigle-ceramic-staging
     type: web
-    env: node
+    env: docker
     region: oregon
     plan: Starter
     branch: main
