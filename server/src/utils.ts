@@ -46,6 +46,8 @@ export const allowedNewsletterUsers = [
   'SPYHY9MV6S08YJQVW0R400ADXZBBJ0GM096BMY34',
   // nakops.btc
   'SP2PGSFKQR4H4AJ093MAXMKMEEDHVFVY881F0FF7F',
+  // counterfeitcvlt.btc
+  'SPWP8QGG60KA0T3KSZ2RC4M8THZTA0G3DZATMJ6V',
 ];
 if (process.env.NODE_ENV === 'development') {
   // gregogun.btc
