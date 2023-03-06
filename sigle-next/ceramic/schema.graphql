@@ -1,3 +1,5 @@
+# TODO Ceramic released scalar URI - https://composedb.js.org/docs/0.4.x/api/sdl/scalars?ref=the-ceramic-blog#uri
+
 type Post @createModel(accountRelation: LIST, description: "sigle post") {
   author: DID! @documentAccount
   version: CommitID! @documentVersion
