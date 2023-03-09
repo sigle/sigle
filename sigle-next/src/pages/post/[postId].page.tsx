@@ -2,13 +2,83 @@ import { TooltipProvider } from '@radix-ui/react-tooltip';
 import { useRouter } from 'next/router';
 import Balancer from 'react-wrap-balancer';
 import { format } from 'date-fns';
-import { Container, Flex, Typography } from '@sigle/ui';
+import Image from 'next/image';
+import { Button, Container, Flex, Typography } from '@sigle/ui';
+import { styled } from '@sigle/stitches.config';
 import { useCeramic } from '@/components/Ceramic/CeramicProvider';
 import { DashboardLayout } from '@/components/Dashboard/DashboardLayout';
 import { UserProfile } from '@/components/UserProfile/UserProfile';
-import { UserProfilePageHeader } from '@/components/UserProfile/UserProfilePageHeader';
-import { UserProfilePosts } from '@/components/UserProfile/UserProfilePosts';
 import { trpc } from '@/utils/trpc';
+import { getAddressFromDid } from '@/utils/getAddressFromDid';
+import { addressAvatar } from '@/utils';
+import { nextImageLoader } from '@/utils/nextImageLoader';
+import { shortenAddress } from '@/utils/shortenAddress';
+import { CeramicPost } from '@/types/ceramic';
+
+const AvatarContainer = styled('div', {
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+  alignSelf: 'center',
+  overflow: 'hidden',
+  width: 36,
+  height: 36,
+  br: '$sm',
+});
+
+const PostPageHeader = ({
+  did,
+  isViewer,
+  post,
+}: {
+  did: string;
+  isViewer: boolean;
+  post: CeramicPost;
+}) => {
+  const profile = trpc.userProfile.useQuery({ did });
+
+  const address = getAddressFromDid(did);
+
+  if (profile.isLoading) {
+    return null;
+  }
+
+  return (
+    <Flex justify="between" align="center" css={{ flex: 1 }}>
+      <Flex align="center" gap="2">
+        <AvatarContainer>
+          <Image
+            loader={nextImageLoader}
+            src={addressAvatar(address, 72)}
+            alt="Picture of the author"
+            width={36}
+            height={36}
+          />
+        </AvatarContainer>
+        <Typography
+          size="lg"
+          css={{
+            maxWidth: 300,
+            overflow: 'hidden',
+            textOverflow: 'ellipsis',
+            whiteSpace: 'nowrap',
+          }}
+        >
+          {post.title}
+        </Typography>
+        <Typography size="lg" fontWeight="bold">
+          By {profile.data?.displayName || shortenAddress(address)}
+        </Typography>
+      </Flex>
+
+      {!isViewer ? (
+        <Flex gap="2">
+          <Button>Follow</Button>
+        </Flex>
+      ) : null}
+    </Flex>
+  );
+};
 
 const PostPage = () => {
   const router = useRouter();
@@ -32,9 +102,13 @@ const PostPage = () => {
   return (
     <DashboardLayout
       sidebarContent={<UserProfile did={post.data.did} isViewer={isViewer} />}
-      // headerContent={
-      //   <UserProfilePageHeader did={paramUserDid} isViewer={isViewer} />
-      // }
+      headerContent={
+        <PostPageHeader
+          did={post.data.did}
+          isViewer={isViewer}
+          post={post.data}
+        />
+      }
     >
       <Container css={{ maxWidth: 680, py: '$5' }}>
         <div className="prose dark:prose-invert lg:prose-lg">
