@@ -1,7 +1,8 @@
 import { TooltipProvider } from '@radix-ui/react-tooltip';
 import { useRouter } from 'next/router';
 import Balancer from 'react-wrap-balancer';
-import { Container } from '@sigle/ui';
+import { format } from 'date-fns';
+import { Container, Flex, Typography } from '@sigle/ui';
 import { useCeramic } from '@/components/Ceramic/CeramicProvider';
 import { DashboardLayout } from '@/components/Dashboard/DashboardLayout';
 import { UserProfile } from '@/components/UserProfile/UserProfile';
@@ -19,13 +20,14 @@ const PostPage = () => {
   const isViewer = userDid === post.data?.did;
 
   // TODO loading state
+  if (post.isLoading) {
+    return <div>Loading...</div>;
+  }
 
   // TODO proper 404 page
   if (!post.data) {
     return <div>Not found</div>;
   }
-
-  console.log(post.data);
 
   return (
     <DashboardLayout
@@ -39,6 +41,17 @@ const PostPage = () => {
           <h1>
             <Balancer>{post.data.title}</Balancer>
           </h1>
+          <Flex className="not-prose" gap="2" css={{ marginTop: -10 }}>
+            <Typography size="xs" color="gray9" textTransform="uppercase">
+              {format(new Date(post.data.createdAt), 'MMM dd')}
+            </Typography>
+            <Typography size="xs" color="gray9">
+              ·
+            </Typography>
+            <Typography size="xs" color="gray9">
+              8 MIN READ
+            </Typography>
+          </Flex>
           <div dangerouslySetInnerHTML={{ __html: post.data.content }} />
         </div>
       </Container>
