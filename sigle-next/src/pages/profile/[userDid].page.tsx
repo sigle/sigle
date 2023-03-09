@@ -29,8 +29,6 @@ const ProfilePage = () => {
 };
 
 export default function ProtectedProfilePage() {
-  // TODO auth protect
-  const { session } = useCeramic();
   const router = useRouter();
 
   if (!router.isReady) return null;

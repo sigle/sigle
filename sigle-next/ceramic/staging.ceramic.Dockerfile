@@ -1,4 +1,5 @@
-FROM ceramicnetwork/js-ceramic:latest
+# TODO pin to a specific version of ceramic
+FROM ceramicnetwork/js-ceramic:develop
 
 WORKDIR /js-ceramic
 

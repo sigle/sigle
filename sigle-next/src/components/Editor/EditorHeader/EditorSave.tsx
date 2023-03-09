@@ -41,6 +41,7 @@ export const EditorSave = () => {
 
   const handleSave = () => {
     if (!story) return;
+
     commit({
       variables: {
         input: {

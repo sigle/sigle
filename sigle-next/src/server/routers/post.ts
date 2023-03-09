@@ -4,6 +4,22 @@ import { router, procedure } from '../trpc';
 import { normalizePost, normalizeProfile } from '../utils';
 
 export const postRouter = router({
+  postGet: procedure
+    .input(
+      z.object({
+        id: z.string(),
+      })
+    )
+    .query(async ({ input }) => {
+      const post = await prismaClient.post.findUnique({
+        where: {
+          stream_id: input.id,
+        },
+      });
+
+      return post ? normalizePost(post) : null;
+    }),
+
   postList: procedure
     .input(
       z.object({

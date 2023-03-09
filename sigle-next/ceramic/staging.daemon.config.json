@@ -23,6 +23,7 @@
   },
   "indexing": {
     "db": "$DATABASE_URL",
-    "allow-queries-before-historical-sync": true
+    "allow-queries-before-historical-sync": true,
+    "enable-historical-sync": false
   }
 }

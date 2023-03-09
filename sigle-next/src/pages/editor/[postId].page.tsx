@@ -14,6 +14,7 @@ import { useEditorStore } from '@/components/Editor/store';
 const Editor = () => {
   const router = useRouter();
   const { postId } = router.query;
+  const story = useEditorStore((state) => state.story);
   const setInitialStory = useEditorStore((state) => state.setInitialStory);
 
   const data = useLazyLoadQuery<PostIdEditorPagePostQuery>(
@@ -55,8 +56,8 @@ const Editor = () => {
     <>
       <EditorHeader />
       <Container css={{ maxWidth: 720, pt: '56px', pb: '$5' }}>
-        <EditorTitle />
-        <EditorTipTap />
+        {story && <EditorTitle />}
+        {story && <EditorTipTap />}
       </Container>
       <EditorSettings />
     </>
