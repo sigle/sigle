@@ -7,7 +7,7 @@ import { Protected } from '../../modules/auth/Protected';
 import { getStoryFile, saveStoryFile } from '../../utils';
 import { migrationStory } from '../../utils/migrations/story';
 import { DashboardLayout } from '../../modules/layout';
-import { Button, Flex, FormInput, Typography } from '../../ui';
+import { Button, Flex, Typography } from '../../ui';
 import { useAuth } from '../../modules/auth/AuthContext';
 import { appConfig } from '../../utils/blockstack';
 import { styled } from '../../stitches.config';
