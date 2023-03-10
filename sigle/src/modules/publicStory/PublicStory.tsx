@@ -18,6 +18,7 @@ import { ProfileCard } from '../profileCard/ProfileCard';
 import { PoweredBy } from './PoweredBy';
 import { useGetUserByAddress, useGetUserMe } from '../../hooks/users';
 import { useSession } from 'next-auth/react';
+import Link from 'next/link';
 
 const ProfileImageContainer = styled('div', {
   cursor: 'pointer',
@@ -41,6 +42,20 @@ const PublicStoryContainer = styled('div', {
   paddingTop: '$15',
   paddingBottom: '$15',
   px: '$4',
+});
+
+export const Badge = styled('span', {
+  display: 'inline-flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+  fontSize: '13px',
+  lineHeight: '16px',
+  whiteSpace: 'nowrap',
+  br: '$2',
+  color: '#7367ff',
+  backgroundColor: '#dfdeff',
+  px: '$2',
+  py: '$1',
 });
 
 interface ShareButtonsOnScrollProps {
@@ -226,6 +241,16 @@ export const PublicStory = ({
                 {format(story.createdAt, 'MMM dd')}
                 <span>•</span>
                 <span>{storyReadingTime?.text}</span>
+                {story.inscriptionId && (
+                  <Link
+                    href={`https://ordinals.com/inscription/${story.inscriptionId}`}
+                    target="_blank"
+                  >
+                    <Badge css={{ ml: '$1' }}>
+                      Inscription #{story.inscriptionNumber}
+                    </Badge>
+                  </Link>
+                )}
               </Typography>
             </Flex>
           </Flex>
