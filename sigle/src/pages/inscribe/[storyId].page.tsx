@@ -93,6 +93,7 @@ const Inscribe = () => {
   const parsedData = {
     p: 'ons',
     op: 'post',
+    id: data.id,
     author: user?.username,
     authorAddress: user?.profile?.stxAddress?.mainnet,
     title: data.title,
