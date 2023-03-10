@@ -94,7 +94,7 @@ const Inscribe = () => {
     p: 'ons',
     op: 'post',
     author: user?.username,
-    authorAdress: user?.profile?.stxAddress?.mainnet,
+    authorAddress: user?.profile?.stxAddress?.mainnet,
     title: data.title,
     body: data.content,
     url: `${appConfig.appDomain}/${user?.username}/${storyId}`,
@@ -140,8 +140,8 @@ const Inscribe = () => {
       createMessageSignature(json.signature)
     );
     const recoveredAddress = getAddressFromPublicKey(recoveredPublicKey);
-    if (json.authorAdress !== recoveredAddress) {
-      console.log(json.authorAdress, recoveredAddress);
+    if (json.authorAddress !== recoveredAddress) {
+      console.log(json.authorAddress, recoveredAddress);
       return toast.error(`address does not belong to publicKey`);
     }
     if (
