@@ -69,6 +69,12 @@ export interface Story {
   hideCoverImage?: boolean;
   createdAt: number;
   updatedAt: number;
+
+  /**
+   * (Experimental)
+   */
+  inscriptionId?: string;
+  inscriptionNumber?: number;
 }
 
 export interface SubsetStory {
