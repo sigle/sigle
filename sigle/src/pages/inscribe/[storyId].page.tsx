@@ -70,7 +70,7 @@ const Inscribe = () => {
   const { sign } = useConnect();
   const [signedData, setSignedData] = useState<string | null>(null);
 
-  const { data } = useQuery(
+  const { data, refetch } = useQuery(
     ['story', storyId],
     async () => {
       const file = await getStoryFile(storyId);
@@ -122,13 +122,13 @@ const Inscribe = () => {
     const inscriptionId = (event.target as any).inscriptionId.value;
 
     // Call the api to get the inscription data
-    const data = await fetch(
+    let data = await fetch(
       `https://inscribe.news/api/content/${inscriptionId}`
     );
     if (!data.ok) {
       return toast.error('Invalid response from api');
     }
-    const json = await data.json();
+    let json = await data.json();
     if (json.p !== 'ons' || json.op !== 'post' || !json.signature) {
       return toast.error('Invalid data');
     }
@@ -141,6 +141,7 @@ const Inscribe = () => {
     );
     const recoveredAddress = getAddressFromPublicKey(recoveredPublicKey);
     if (json.address !== recoveredAddress) {
+      console.log(json.address, recoveredAddress);
       return toast.error(`address does not belong to publicKey`);
     }
     if (
@@ -153,14 +154,32 @@ const Inscribe = () => {
       return toast.error(`Signature does not belong to issuer`);
     }
 
+    data = await fetch(`https://inscribe.news/api/info/${inscriptionId}`);
+    if (!data.ok) {
+      return toast.error('Invalid response from api');
+    }
+    json = await data.json();
+
     // Link the inscription in Gaia
     const file = await getStoryFile(storyId);
     if (!file) {
       return toast.error('Story not found');
     }
     file.inscriptionId = inscriptionId;
+    file.inscriptionNumber = json.number;
     await saveStoryFile(file);
+
+    await refetch();
+    toast.success('Inscription linked');
   };
+
+  if (data.inscriptionId) {
+    return (
+      <DashboardLayout>
+        <Typography size="h2">Inscription #{data.inscriptionNumber}</Typography>
+      </DashboardLayout>
+    );
+  }
 
   return (
     <DashboardLayout>
