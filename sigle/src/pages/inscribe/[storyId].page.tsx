@@ -84,7 +84,7 @@ const Inscribe = () => {
     <DashboardLayout>
       <Typography size="h2">Inscribe</Typography>
       <StyledCode>{JSON.stringify(parsedData, null, 2)}</StyledCode>
-      <Flex gap="5">
+      <Flex gap="5" align="center">
         {!signedData ? (
           <>
             <Typography size="subheading">
