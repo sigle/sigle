@@ -140,8 +140,8 @@ const Inscribe = () => {
       createMessageSignature(json.signature)
     );
     const recoveredAddress = getAddressFromPublicKey(recoveredPublicKey);
-    if (json.address !== recoveredAddress) {
-      console.log(json.address, recoveredAddress);
+    if (json.authorAdress !== recoveredAddress) {
+      console.log(json.authorAdress, recoveredAddress);
       return toast.error(`address does not belong to publicKey`);
     }
     if (
