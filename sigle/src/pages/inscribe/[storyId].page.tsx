@@ -4,15 +4,22 @@ import React, { useState } from 'react';
 import * as Sentry from '@sentry/nextjs';
 import { toast } from 'react-toastify';
 import { Protected } from '../../modules/auth/Protected';
-import { getStoryFile } from '../../utils';
+import { getStoryFile, saveStoryFile } from '../../utils';
 import { migrationStory } from '../../utils/migrations/story';
 import { DashboardLayout } from '../../modules/layout';
-import { Button, Flex, Typography } from '../../ui';
+import { Button, Flex, FormInput, Typography } from '../../ui';
 import { useAuth } from '../../modules/auth/AuthContext';
 import { appConfig } from '../../utils/blockstack';
 import { styled } from '../../stitches.config';
 import { useConnect } from '@stacks/connect-react';
 import { StacksMainnet } from '@stacks/network';
+import {
+  createMessageSignature,
+  getAddressFromPublicKey,
+  publicKeyFromSignatureRsv,
+} from '@stacks/transactions';
+import { bytesToHex } from '@stacks/common';
+import { hashMessage, verifyMessageSignatureRsv } from '@stacks/encryption';
 
 const StyledCode = styled('code', {
   display: 'block',
@@ -25,6 +32,35 @@ const StyledCode = styled('code', {
   wordBreak: 'break-word',
   maxHeight: '200px',
   overflow: 'auto',
+});
+
+const StyledInput = styled('input', {
+  color: '$gray11',
+  border: '1px solid $gray8',
+  backgroundColor: '$gray1',
+  borderRadius: '$2',
+  fontSize: '16px',
+  lineHeight: '26px',
+  py: '$2',
+  px: '$3',
+  width: '100%',
+  outline: 'none',
+  transition: 'all 75ms $ease-in',
+
+  '::placeholder': {
+    color: '$gray8',
+  },
+  '&:hover': {
+    border: '1px solid $gray9',
+  },
+  '&:focus': {
+    border: '1px solid $gray9',
+  },
+  '&:disabled': {
+    pointerEvents: 'none',
+    backgroundColor: '$gray3',
+    border: '1px solid $gray6',
+  },
 });
 
 const Inscribe = () => {
@@ -80,9 +116,55 @@ const Inscribe = () => {
     toast.success('Copied to clipboard');
   };
 
+  const handleSubmitLink = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+
+    const inscriptionId = (event.target as any).inscriptionId.value;
+
+    // Call the api to get the inscription data
+    const data = await fetch(
+      `https://inscribe.news/api/content/${inscriptionId}`
+    );
+    if (!data.ok) {
+      return toast.error('Invalid response from api');
+    }
+    const json = await data.json();
+    if (json.p !== 'ons' || json.op !== 'post' || !json.signature) {
+      return toast.error('Invalid data');
+    }
+
+    const message = JSON.stringify({ ...json, signature: undefined });
+    // We verify the signature is valid
+    const recoveredPublicKey = publicKeyFromSignatureRsv(
+      bytesToHex(hashMessage(message)),
+      createMessageSignature(json.signature)
+    );
+    const recoveredAddress = getAddressFromPublicKey(recoveredPublicKey);
+    if (json.address !== recoveredAddress) {
+      return toast.error(`address does not belong to publicKey`);
+    }
+    if (
+      !verifyMessageSignatureRsv({
+        message,
+        publicKey: recoveredPublicKey,
+        signature: json.signature,
+      })
+    ) {
+      return toast.error(`Signature does not belong to issuer`);
+    }
+
+    // Link the inscription in Gaia
+    const file = await getStoryFile(storyId);
+    if (!file) {
+      return toast.error('Story not found');
+    }
+    file.inscriptionId = inscriptionId;
+    await saveStoryFile(file);
+  };
+
   return (
     <DashboardLayout>
-      <Typography size="h2">Inscribe</Typography>
+      <Typography size="h2">Inscribe (Beta)</Typography>
       <StyledCode>{JSON.stringify(parsedData, null, 2)}</StyledCode>
       <Flex gap="5" align="center">
         {!signedData ? (
@@ -102,6 +184,26 @@ const Inscribe = () => {
             <Button onClick={handleCopyClipboard}>Copy to clipboard</Button>
           </>
         )}
+      </Flex>
+
+      <Flex direction="column" css={{ mt: '$10', mb: '$10' }}>
+        <Typography size="h2">Link Inscription</Typography>
+        <Typography size="subheading" css={{ mt: '$2' }}>
+          To link the inscription to your story, please enter the inscription id
+          below.
+        </Typography>
+        <Flex
+          gap="4"
+          align="center"
+          css={{ mt: '$2' }}
+          as="form"
+          onSubmit={handleSubmitLink}
+        >
+          <StyledInput placeholder="Inscription ID" name="inscriptionId" />
+          <Button size="lg" type="submit">
+            Link
+          </Button>
+        </Flex>
       </Flex>
     </DashboardLayout>
   );
