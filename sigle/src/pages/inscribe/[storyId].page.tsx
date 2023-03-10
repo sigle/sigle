@@ -70,7 +70,7 @@ const Inscribe = () => {
   const { sign } = useConnect();
   const [signedData, setSignedData] = useState<string | null>(null);
 
-  const { data } = useQuery(
+  const { data, refetch } = useQuery(
     ['story', storyId],
     async () => {
       const file = await getStoryFile(storyId);
@@ -168,7 +168,18 @@ const Inscribe = () => {
     file.inscriptionId = inscriptionId;
     file.inscriptionNumber = json.number;
     await saveStoryFile(file);
+
+    await refetch();
+    toast.success('Inscription linked');
   };
+
+  if (data.inscriptionId) {
+    return (
+      <DashboardLayout>
+        <Typography size="h2">Inscription #{data.inscriptionNumber}</Typography>
+      </DashboardLayout>
+    );
+  }
 
   return (
     <DashboardLayout>
