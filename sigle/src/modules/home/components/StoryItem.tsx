@@ -273,6 +273,14 @@ export const StoryItem = ({
                       <DropdownMenuItem onSelect={onEdit}>
                         Edit
                       </DropdownMenuItem>
+                      {type === 'public' && (
+                        <DropdownMenuItem
+                          as={Link}
+                          href={`/inscribe/${story.id}`}
+                        >
+                          Inscribe
+                        </DropdownMenuItem>
+                      )}
                       {!story.featured && type === 'public' && (
                         <DropdownMenuItem onSelect={onFeature}>
                           Feature this story

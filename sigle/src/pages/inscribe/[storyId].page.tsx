@@ -20,6 +20,8 @@ import {
 } from '@stacks/transactions';
 import { bytesToHex } from '@stacks/common';
 import { hashMessage, verifyMessageSignatureRsv } from '@stacks/encryption';
+import { useGetUserSubscription } from '../../hooks/subscriptions';
+import { NftLockedView } from '../../modules/analytics/NftLockedView';
 
 const StyledCode = styled('code', {
   display: 'block',
@@ -64,6 +66,7 @@ const StyledInput = styled('input', {
 });
 
 const Inscribe = () => {
+  const { isLoading, data: userSubscription } = useGetUserSubscription();
   const { user } = useAuth();
   const router = useRouter();
   const { storyId } = router.query as { storyId: string };
@@ -85,6 +88,14 @@ const Inscribe = () => {
       },
     }
   );
+
+  if (!isLoading && !userSubscription) {
+    return (
+      <DashboardLayout>
+        <NftLockedView />
+      </DashboardLayout>
+    );
+  }
 
   if (!data) {
     return null;
