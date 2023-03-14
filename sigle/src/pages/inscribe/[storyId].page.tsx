@@ -177,7 +177,7 @@ const Inscribe = () => {
     if (!file) {
       return toast.error('Story not found');
     }
-    file.inscriptionId = inscriptionId;
+    file.inscriptionId = json.id;
     file.inscriptionNumber = json.number;
     await saveStoryFile(file);
 
