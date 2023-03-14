@@ -20,7 +20,7 @@ import {
 } from '@stacks/transactions';
 import { bytesToHex } from '@stacks/common';
 import { hashMessage, verifyMessageSignatureRsv } from '@stacks/encryption';
-import { useGetUserSubscription } from '../../hooks/subscriptions';
+// import { useGetUserSubscription } from '../../hooks/subscriptions';
 // import { NftLockedView } from '../../modules/analytics/NftLockedView';
 
 const StyledCode = styled('code', {
