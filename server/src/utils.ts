@@ -48,6 +48,8 @@ export const allowedNewsletterUsers = [
   'SP2PGSFKQR4H4AJ093MAXMKMEEDHVFVY881F0FF7F',
   // counterfeitcvlt.btc
   'SPWP8QGG60KA0T3KSZ2RC4M8THZTA0G3DZATMJ6V',
+  // stxaus.btc
+  'SP162W9JMD2CRP9XDF1AJVE2MSTFQNRNPPKCRDA58',
 ];
 if (process.env.NODE_ENV === 'development') {
   // gregogun.btc
