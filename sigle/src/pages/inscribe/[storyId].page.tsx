@@ -185,7 +185,7 @@ const Inscribe = () => {
     toast.success('Inscription linked');
   };
 
-  if (data.inscriptionId && data.inscriptionNumber !== 464295) {
+  if (data.inscriptionId) {
     return (
       <DashboardLayout>
         <Typography size="h2">Inscription #{data.inscriptionNumber}</Typography>
