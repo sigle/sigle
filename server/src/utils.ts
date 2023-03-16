@@ -50,6 +50,8 @@ export const allowedNewsletterUsers = [
   'SPWP8QGG60KA0T3KSZ2RC4M8THZTA0G3DZATMJ6V',
   // stxaus.btc
   'SP162W9JMD2CRP9XDF1AJVE2MSTFQNRNPPKCRDA58',
+  // joemacmillan.btc
+  'SP23ZSH34VFD9WC6FVWYNKJAVME1SN89ZWHHR5NCC',
 ];
 if (process.env.NODE_ENV === 'development') {
   // gregogun.btc
