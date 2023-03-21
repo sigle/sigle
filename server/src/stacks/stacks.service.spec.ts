@@ -1,5 +1,6 @@
 import { ConfigService } from '@nestjs/config';
 import { Test, TestingModule } from '@nestjs/testing';
+import { SENTRY_TOKEN } from '@ntegral/nestjs-sentry';
 import { fetch } from 'undici';
 import { StacksService } from './stacks.service';
 
@@ -15,6 +16,10 @@ describe('StacksService', () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         StacksService,
+        {
+          provide: SENTRY_TOKEN,
+          useValue: {},
+        },
         {
           provide: ConfigService,
           useValue: {
