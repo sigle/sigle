@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { lookupProfile } from 'micro-stacks/storage';
+import { InjectSentry, SentryService } from '@ntegral/nestjs-sentry';
 import {
   migrationStories,
   SettingsFile,
@@ -16,6 +17,7 @@ export class StacksService {
   private readonly settingsFileName = 'settings.json';
 
   constructor(
+    @InjectSentry() private readonly sentryService: SentryService,
     private readonly configService: ConfigService<EnvironmentVariables>,
   ) {}
 
@@ -46,6 +48,13 @@ export class StacksService {
       if (error?.message === 'Name not found') {
         userProfile = undefined;
       } else {
+        this.sentryService.instance().captureMessage(`Lookup profile failed`, {
+          level: 'error',
+          extra: {
+            username,
+            error,
+          },
+        });
         throw error;
       }
     }
