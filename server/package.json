@@ -59,7 +59,7 @@
     "himalaya": "1.1.0",
     "ioredis": "5.2.3",
     "jsonwebtoken": "9.0.0",
-    "micro-stacks": "1.1.4",
+    "micro-stacks": "1.1.5",
     "mjml": "4.13.0",
     "mjml-bullet-list": "1.2.2",
     "nestjs-throttler-storage-redis": "0.1.20",
