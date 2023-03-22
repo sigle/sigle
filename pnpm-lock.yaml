@@ -78,7 +78,7 @@ importers:
       jest: 29.4.2
       jsonwebtoken: 9.0.0
       leaked-handles: 5.2.0
-      micro-stacks: 1.1.4
+      micro-stacks: 1.1.5
       mjml: 4.13.0
       mjml-bullet-list: 1.2.2
       nestjs-throttler-storage-redis: 0.1.20
@@ -124,7 +124,7 @@ importers:
       himalaya: 1.1.0
       ioredis: 5.2.3
       jsonwebtoken: 9.0.0
-      micro-stacks: 1.1.4
+      micro-stacks: 1.1.5
       mjml: 4.13.0
       mjml-bullet-list: 1.2.2
       nestjs-throttler-storage-redis: 0.1.20_rplxj3qsnugoz5qgjwqftun2qq
@@ -7420,7 +7420,7 @@ packages:
       '@storybook/csf-plugin': 7.0.0-beta.25
       '@storybook/csf-tools': 7.0.0-beta.25
       '@storybook/global': 5.0.0
-      '@storybook/mdx2-csf': 1.0.0-next.5
+      '@storybook/mdx2-csf': 1.0.0-next.6
       '@storybook/node-logger': 7.0.0-beta.25
       '@storybook/postinstall': 7.0.0-beta.25
       '@storybook/preview-api': 7.0.0-beta.25
@@ -8219,8 +8219,8 @@ packages:
     resolution: {integrity: sha512-WFUuqeGHqReeustZSOP4N5eMEBJ8bf2/c49v/my3IGroUFIGjV2EKX9jyOtJek3xP9LhctWTydezZ9H6EVpXVQ==}
     dev: true
 
-  /@storybook/mdx2-csf/1.0.0-next.5:
-    resolution: {integrity: sha512-02w0sgGZaK1agT050yCVhJ+o4rLHANWvLKWjQjeAsYbjneLC5ITt+3GDB4jRiWwJboZ8dHW1fGSK1Vg5fA34aQ==}
+  /@storybook/mdx2-csf/1.0.0-next.6:
+    resolution: {integrity: sha512-m6plojocU/rmrqWd26yvm8D+oHZPZ6PtSSFmZIgpNDEPVmc8s4fBD6LXOAB5MiPI5f8KLUr2HVhOMZ97o5pDTw==}
     dev: true
 
   /@storybook/nextjs/7.0.0-beta.25_m7twole5xeg3kmsyw6ob5bpw4y:
@@ -14105,10 +14105,10 @@ packages:
       eslint-import-resolver-webpack:
         optional: true
     dependencies:
-      '@typescript-eslint/parser': 5.45.0_iukboom6ndih5an6iafl45j2fe
+      '@typescript-eslint/parser': 5.45.0_tqvwk7sh3taph5wf7sr5z34mke
       debug: 3.2.7
       eslint-import-resolver-node: 0.3.6
-      eslint-import-resolver-typescript: 3.5.2_ol7jqilc3wemtdbq3nzhywgxq4
+      eslint-import-resolver-typescript: 3.5.2_ktrec6dplf4now6nlbc6d67jee
       find-up: 2.1.0
     transitivePeerDependencies:
       - supports-color
@@ -18832,8 +18832,8 @@ packages:
     engines: {node: '>= 0.6'}
     dev: true
 
-  /micro-stacks/1.1.4:
-    resolution: {integrity: sha512-roWyLX2LZxYDIYcmFadfb5uRmRye+UA3m2efhg9I3I4AoOT3X4THOo3zekLhFvjFbhFUs+uoXMjGnQhOFBnpAw==}
+  /micro-stacks/1.1.5:
+    resolution: {integrity: sha512-j9ItO4n4ZcB5dc0+TljnnWLyvTT3OPeR0yd4WtnqTyc4XsnUUieeFx5CnY4wYFxDbL5lumuTe572rseq23IbxQ==}
     engines: {node: '>=14'}
     peerDependencies:
       '@scure/bip32': 1.1.0
