@@ -1,6 +1,6 @@
 import type { AppProps, AppType } from 'next/app';
 import Head from 'next/head';
-import { Inter } from '@next/font/google';
+import { Inter } from 'next/font/google';
 import { ThemeProvider } from 'next-themes';
 import dynamic from 'next/dynamic';
 import { ReactRelayContext } from 'react-relay';
