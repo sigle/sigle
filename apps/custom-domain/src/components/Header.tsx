@@ -56,7 +56,7 @@ export const Header = ({ settings }: HeaderProps) => {
         )
       )}
     >
-      <Link href="/" className="w-full">
+      <Link href="/" className="w-full md:w-auto">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
             <div className="relative object-cover rounded overflow-hidden">
