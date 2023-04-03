@@ -76,7 +76,7 @@ export const Header = ({ settings }: HeaderProps) => {
 
           <Sheet>
             <SheetTrigger asChild>
-              <button className="md:hidden p-2">
+              <button className="md:hidden p-2" aria-label="Open mobile menu">
                 <IconMenu2 size={15} />
               </button>
             </SheetTrigger>
