@@ -18,7 +18,7 @@ jobs:
 
       - uses: pnpm/action-setup@v2
         with:
-          version: 7.1
+          version: 8.1
 
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v3
@@ -79,7 +79,7 @@ jobs:
 
       - uses: pnpm/action-setup@v2
         with:
-          version: 7.1
+          version: 8.1
 
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v3
@@ -111,14 +111,14 @@ jobs:
     runs-on: ubuntu-20.04
     strategy:
       matrix:
-        node-version: [16]
+        node-version: [18]
 
     steps:
       - uses: actions/checkout@v3
 
       - uses: pnpm/action-setup@v2
         with:
-          version: 7.1
+          version: 8.1
 
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v3
@@ -143,3 +143,34 @@ jobs:
 
       - name: Build storybook
         run: pnpm --filter=@sigle/app-next run build-storybook
+
+  test-custom-domain:
+    runs-on: ubuntu-20.04
+    strategy:
+      matrix:
+        node-version: [18]
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - uses: pnpm/action-setup@v2
+        with:
+          version: 8.1
+
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'pnpm'
+
+      - name: Get next.js cache
+        uses: actions/cache@v2
+        with:
+          path: ${{ github.workspace }}/apps/custom-domain/.next/cache
+          key: ${{ runner.os }}-nextjs-apps-custom-domain-next-${{ hashFiles('**/pnpm-lock.yaml') }}
+
+      - name: Install Dependencies
+        run: pnpm install
+
+      - name: Build sigle
+        run: pnpm --filter=@sigle/custom-domain run build

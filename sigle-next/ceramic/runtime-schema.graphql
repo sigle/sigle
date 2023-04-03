@@ -1,11 +1,17 @@
-"""Exposes a URL that specifies the behavior of this scalar."""
+"""
+Exposes a URL that specifies the behavior of this scalar.
+"""
 directive @specifiedBy(
-  """The URL that specifies the behavior of this scalar."""
+  """
+  The URL that specifies the behavior of this scalar.
+  """
   url: String!
 ) on SCALAR
 
 type CeramicAccount implements Node {
-  """Globally unique identifier of the account (DID string)"""
+  """
+  Globally unique identifier of the account (DID string)
+  """
   id: ID!
 
   """
@@ -14,21 +20,31 @@ type CeramicAccount implements Node {
   isViewer: Boolean!
   profile: Profile
   postList(
-    """Returns the items in the list that come after the specified cursor."""
+    """
+    Returns the items in the list that come after the specified cursor.
+    """
     after: String
 
-    """Returns the first n items from the list."""
+    """
+    Returns the first n items from the list.
+    """
     first: Int
 
-    """Returns the items in the list that come before the specified cursor."""
+    """
+    Returns the items in the list that come before the specified cursor.
+    """
     before: String
 
-    """Returns the last n items from the list."""
+    """
+    Returns the last n items from the list.
+    """
     last: Int
   ): PostConnection
 }
 
-"""A Ceramic Commit ID"""
+"""
+A Ceramic Commit ID
+"""
 scalar CeramicCommitID
 
 input CreatePostInput {
@@ -37,13 +53,19 @@ input CreatePostInput {
 }
 
 type CreatePostPayload {
-  """Fetches an object given its ID"""
+  """
+  Fetches an object given its ID
+  """
   node(
-    """The ID of an object"""
+    """
+    The ID of an object
+    """
     id: ID!
   ): Node
 
-  """Account currently authenticated on the Ceramic instance, if set"""
+  """
+  Account currently authenticated on the Ceramic instance, if set
+  """
   viewer: CeramicAccount
   document: Post!
   clientMutationId: String
@@ -55,13 +77,19 @@ input CreateProfileInput {
 }
 
 type CreateProfilePayload {
-  """Fetches an object given its ID"""
+  """
+  Fetches an object given its ID
+  """
   node(
-    """The ID of an object"""
+    """
+    The ID of an object
+    """
     id: ID!
   ): Node
 
-  """Account currently authenticated on the Ceramic instance, if set"""
+  """
+  Account currently authenticated on the Ceramic instance, if set
+  """
   viewer: CeramicAccount
   document: Profile!
   clientMutationId: String
@@ -74,24 +102,38 @@ type Mutation {
   updatePost(input: UpdatePostInput!): UpdatePostPayload
 }
 
-"""An object with an ID"""
+"""
+An object with an ID
+"""
 interface Node {
-  """The id of the object."""
+  """
+  The id of the object.
+  """
   id: ID!
 }
 
-"""Information about pagination in a connection."""
+"""
+Information about pagination in a connection.
+"""
 type PageInfo {
-  """When paginating forwards, are there more items?"""
+  """
+  When paginating forwards, are there more items?
+  """
   hasNextPage: Boolean!
 
-  """When paginating backwards, are there more items?"""
+  """
+  When paginating backwards, are there more items?
+  """
   hasPreviousPage: Boolean!
 
-  """When paginating backwards, the cursor to continue."""
+  """
+  When paginating backwards, the cursor to continue.
+  """
   startCursor: String
 
-  """When paginating forwards, the cursor to continue."""
+  """
+  When paginating forwards, the cursor to continue.
+  """
   endCursor: String
 }
 
@@ -124,28 +166,44 @@ type Post implements Node {
   featuredImage: String
   metaDescription: String
 
-  """Account controlling the document"""
+  """
+  Account controlling the document
+  """
   author: CeramicAccount!
 
-  """Current version of the document"""
+  """
+  Current version of the document
+  """
   version: CeramicCommitID!
 }
 
-"""A connection to a list of items."""
+"""
+A connection to a list of items.
+"""
 type PostConnection {
-  """Information to aid in pagination."""
+  """
+  Information to aid in pagination.
+  """
   pageInfo: PageInfo!
 
-  """A list of edges."""
+  """
+  A list of edges.
+  """
   edges: [PostEdge]
 }
 
-"""An edge in a connection."""
+"""
+An edge in a connection.
+"""
 type PostEdge {
-  """The item at the end of the edge"""
+  """
+  The item at the end of the edge
+  """
   node: Post
 
-  """A cursor for use in pagination"""
+  """
+  A cursor for use in pagination
+  """
   cursor: String!
 }
 
@@ -173,25 +231,39 @@ type Profile implements Node {
   displayName: String
   twitterUsername: String
 
-  """Current version of the document"""
+  """
+  Current version of the document
+  """
   version: CeramicCommitID!
 }
 
-"""A connection to a list of items."""
+"""
+A connection to a list of items.
+"""
 type ProfileConnection {
-  """Information to aid in pagination."""
+  """
+  Information to aid in pagination.
+  """
   pageInfo: PageInfo!
 
-  """A list of edges."""
+  """
+  A list of edges.
+  """
   edges: [ProfileEdge]
 }
 
-"""An edge in a connection."""
+"""
+An edge in a connection.
+"""
 type ProfileEdge {
-  """The item at the end of the edge"""
+  """
+  The item at the end of the edge
+  """
   node: Profile
 
-  """A cursor for use in pagination"""
+  """
+  A cursor for use in pagination
+  """
   cursor: String!
 }
 
@@ -203,38 +275,60 @@ input ProfileInput {
 }
 
 type Query {
-  """Fetches an object given its ID"""
+  """
+  Fetches an object given its ID
+  """
   node(
-    """The ID of an object"""
+    """
+    The ID of an object
+    """
     id: ID!
   ): Node
 
-  """Account currently authenticated on the Ceramic instance, if set"""
+  """
+  Account currently authenticated on the Ceramic instance, if set
+  """
   viewer: CeramicAccount
   profileIndex(
-    """Returns the items in the list that come after the specified cursor."""
+    """
+    Returns the items in the list that come after the specified cursor.
+    """
     after: String
 
-    """Returns the first n items from the list."""
+    """
+    Returns the first n items from the list.
+    """
     first: Int
 
-    """Returns the items in the list that come before the specified cursor."""
+    """
+    Returns the items in the list that come before the specified cursor.
+    """
     before: String
 
-    """Returns the last n items from the list."""
+    """
+    Returns the last n items from the list.
+    """
     last: Int
   ): ProfileConnection
   postIndex(
-    """Returns the items in the list that come after the specified cursor."""
+    """
+    Returns the items in the list that come after the specified cursor.
+    """
     after: String
 
-    """Returns the first n items from the list."""
+    """
+    Returns the first n items from the list.
+    """
     first: Int
 
-    """Returns the items in the list that come before the specified cursor."""
+    """
+    Returns the items in the list that come before the specified cursor.
+    """
     before: String
 
-    """Returns the last n items from the list."""
+    """
+    Returns the last n items from the list.
+    """
     last: Int
   ): PostConnection
 }
@@ -245,7 +339,9 @@ input UpdateOptionsInput {
   """
   replace: Boolean = false
 
-  """Only perform mutation if the document matches the provided version"""
+  """
+  Only perform mutation if the document matches the provided version
+  """
   version: CeramicCommitID
 }
 
@@ -257,13 +353,19 @@ input UpdatePostInput {
 }
 
 type UpdatePostPayload {
-  """Fetches an object given its ID"""
+  """
+  Fetches an object given its ID
+  """
   node(
-    """The ID of an object"""
+    """
+    The ID of an object
+    """
     id: ID!
   ): Node
 
-  """Account currently authenticated on the Ceramic instance, if set"""
+  """
+  Account currently authenticated on the Ceramic instance, if set
+  """
   viewer: CeramicAccount
   document: Post!
   clientMutationId: String
@@ -277,15 +379,20 @@ input UpdateProfileInput {
 }
 
 type UpdateProfilePayload {
-  """Fetches an object given its ID"""
+  """
+  Fetches an object given its ID
+  """
   node(
-    """The ID of an object"""
+    """
+    The ID of an object
+    """
     id: ID!
   ): Node
 
-  """Account currently authenticated on the Ceramic instance, if set"""
+  """
+  Account currently authenticated on the Ceramic instance, if set
+  """
   viewer: CeramicAccount
   document: Profile!
   clientMutationId: String
 }
-
