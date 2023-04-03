@@ -78,12 +78,14 @@ export const Header = ({ settings }: HeaderProps) => {
             </li>
           ))}
           {settings.cta ? (
-            <Link
-              className="text-sm text-white bg-gray-950 py-2 px-5 rounded-lg"
-              href={settings.cta.href}
-            >
-              {settings.cta.label}
-            </Link>
+            <li>
+              <Link
+                className="text-sm text-white bg-gray-950 py-2 px-5 rounded-lg"
+                href={settings.cta.href}
+              >
+                {settings.cta.label}
+              </Link>
+            </li>
           ) : null}
         </ul>
       </nav>
