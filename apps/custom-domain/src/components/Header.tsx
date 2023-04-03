@@ -5,18 +5,10 @@ import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import { clsx } from 'clsx';
 import { twMerge } from 'tailwind-merge';
-
-// TODO get links from settings
-const links = [
-  { href: 'https://www.sigle.io/', label: 'Home' },
-  { href: 'https://app.sigle.io/explore', label: 'Explore' },
-];
+import { SiteSettings } from '@/types';
 
 interface HeaderProps {
-  settings: {
-    name: string;
-    avatar: string;
-  };
+  settings: SiteSettings;
 }
 
 export const Header = ({ settings }: HeaderProps) => {
@@ -72,15 +64,27 @@ export const Header = ({ settings }: HeaderProps) => {
           </div>
         </div>
       </Link>
+
       <nav>
-        <ul className="flex gap-8">
-          {links.map(({ href, label }) => (
+        <ul className="flex gap-8 items-center">
+          {settings.links?.map(({ href, label }) => (
             <li key={href}>
-              <Link href={href} className="text-gray-800 hover:text-gray-500">
+              <Link
+                href={href}
+                className="text-sm text-gray-800 hover:text-gray-500"
+              >
                 {label}
               </Link>
             </li>
           ))}
+          {settings.cta ? (
+            <Link
+              className="text-sm text-white bg-gray-950 py-2 px-5 rounded-lg"
+              href={settings.cta.href}
+            >
+              {settings.cta.label}
+            </Link>
+          ) : null}
         </ul>
       </nav>
     </header>
