@@ -22,5 +22,10 @@ export const addIdsToHeadings = (html: string): string => {
     );
   });
 
+  const twitterEmbed = $('div[data-twitter]');
+  twitterEmbed.each((_index, embed) => {
+    $(embed).addClass('flex justify-center');
+  });
+
   return $.html();
 };

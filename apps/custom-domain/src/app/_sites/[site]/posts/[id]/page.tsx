@@ -2,6 +2,7 @@ import { Header } from '@/components/Header';
 import { PostCard } from '@/components/PostCard';
 import ScrollUp from '@/components/ScrollUp';
 import { TableOfContents } from '@/components/TableOfContents';
+import { TwitterEmbed } from '@/components/TwitterEmbeds';
 import { SiteSettings } from '@/types';
 import { addIdsToHeadings } from '@/utils/addIdsToHeadings';
 import { extractTableOfContents } from '@/utils/extractTableOfContents';
@@ -162,6 +163,8 @@ export default async function Post({
                   __html: posthtml,
                 }}
               />
+
+              <TwitterEmbed />
             </div>
           </div>
 
