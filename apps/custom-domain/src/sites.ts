@@ -35,5 +35,5 @@ export const sites: {
 
 // Add localhost to sites for development
 if (process.env.NODE_ENV === 'development') {
-  sites['localhost:3000'] = sites['blog.nftbot.app'];
+  sites['localhost:3000'] = sites['blog.sigle.io'];
 }
