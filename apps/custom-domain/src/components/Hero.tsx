@@ -31,7 +31,7 @@ export const Hero = ({ settings }: HeroProps) => {
           width={150}
         />
       </div>
-      <div className="container mx-auto">
+      <div className="container">
         <h1 className="text-4xl	font-bold text-center mt-5">{settings.name}</h1>
         <h2 className="text-lg text-center mt-3">{settings.description}</h2>
       </div>
