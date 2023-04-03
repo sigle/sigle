@@ -5,7 +5,11 @@ export const runtime = 'edge';
 
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
-  const siteParam = searchParams.get('site');
+  let siteParam = searchParams.get('site');
+
+  if (process.env.VERCEL_ENV === 'preview' && !siteParam) {
+    siteParam = 'blog.nftbot.app';
+  }
 
   const site = sites[siteParam || ''];
   if (!site) {

@@ -9,8 +9,12 @@ export async function GET(
   { params }: { params: { id: string } }
 ) {
   const { searchParams } = new URL(request.url);
-  const siteParam = searchParams.get('site');
+  let siteParam = searchParams.get('site');
   const postId = params.id;
+
+  if (process.env.VERCEL_ENV === 'preview' && !siteParam) {
+    siteParam = 'blog.nftbot.app';
+  }
 
   const site = sites[siteParam || ''];
   if (!site) {
