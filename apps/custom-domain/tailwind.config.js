@@ -20,12 +20,14 @@ module.exports = {
       colors: {
         sigle: {
           background: '#fcfcfc',
+          text: '#2f2f2f',
         },
       },
       typography: {
         DEFAULT: {
           css: {
             maxWidth: false,
+            color: false,
             h1: {
               color: false,
             },

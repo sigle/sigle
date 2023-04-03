@@ -27,7 +27,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={clsx(inter.className, 'bg-sigle-background text-gray-900')}
+        className={clsx(inter.className, 'bg-sigle-background text-sigle-text')}
       >
         {children}
       </body>
