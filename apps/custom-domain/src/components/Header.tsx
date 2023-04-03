@@ -66,7 +66,7 @@ export const Header = ({ settings }: HeaderProps) => {
               width={22}
             />
           </div>
-          <div className="text-sm	font-semibold">
+          <div className="text-sm font-semibold">
             {settings.name}{' '}
             <span className="font-normal text-gray-500">| Blog</span>
           </div>

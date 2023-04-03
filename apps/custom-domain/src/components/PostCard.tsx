@@ -32,7 +32,7 @@ export const PostCard = ({ post }: PostCardProps) => {
             />
           </div>
         )}
-        <h3 className="mt-4 text-lg	font-bold line-clamp-2">{post.title}</h3>
+        <h3 className="mt-4 text-lg font-bold line-clamp-2">{post.title}</h3>
         <p className="mt-2 text-sm text-gray-500 line-clamp-4">
           {post.content}
         </p>
