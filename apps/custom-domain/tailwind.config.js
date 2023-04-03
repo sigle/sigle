@@ -3,11 +3,15 @@ module.exports = {
   content: ['./src/**/*.{js,ts,jsx,tsx}'],
   theme: {
     extend: {
+      colors: {
+        sigle: {
+          background: '#fcfcfc',
+        },
+      },
       typography: {
         DEFAULT: {
           css: {
             maxWidth: false,
-            color: false,
             h1: {
               color: false,
             },

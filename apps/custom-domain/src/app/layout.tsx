@@ -28,8 +28,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={clsx(inter.className, 'bg-sigle-background')}
-        style={{ height: 2000 }}
+        className={clsx(inter.className, 'bg-sigle-background text-gray-900')}
       >
         {children}
       </body>
