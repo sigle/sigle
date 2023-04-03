@@ -5,4 +5,5 @@ export interface SiteSettings {
   avatar: string;
   banner: string;
   links?: { href: string; label: string }[];
+  cta?: { href: string; label: string };
 }

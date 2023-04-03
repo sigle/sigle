@@ -64,19 +64,29 @@ export const Header = ({ settings }: HeaderProps) => {
           </div>
         </div>
       </Link>
-      {settings.links ? (
-        <nav>
-          <ul className="flex gap-8">
-            {settings.links.map(({ href, label }) => (
-              <li key={href}>
-                <Link href={href} className="text-gray-800 hover:text-gray-500">
-                  {label}
-                </Link>
-              </li>
-            ))}
-          </ul>
-        </nav>
-      ) : null}
+
+      <nav>
+        <ul className="flex gap-8 items-center">
+          {settings.links?.map(({ href, label }) => (
+            <li key={href}>
+              <Link
+                href={href}
+                className="text-sm text-gray-800 hover:text-gray-500"
+              >
+                {label}
+              </Link>
+            </li>
+          ))}
+          {settings.cta ? (
+            <Link
+              className="text-sm text-white bg-gray-950 py-2 px-5 rounded-lg"
+              href={settings.cta.href}
+            >
+              {settings.cta.label}
+            </Link>
+          ) : null}
+        </ul>
+      </nav>
     </header>
   );
 };

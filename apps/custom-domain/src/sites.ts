@@ -15,6 +15,7 @@ export const sites: {
       { href: 'https://www.sigle.io/', label: 'Home' },
       { href: 'https://app.sigle.io/explore', label: 'Explore' },
     ],
+    cta: { href: 'https://app.sigle.io/', label: 'Get Started' },
   },
   ['blog.nftbot.app']: {
     username: 'nftbotapp.btc',
@@ -28,6 +29,7 @@ export const sites: {
       { href: 'https://www.nftbot.app/#features', label: 'Features' },
       { href: 'https://www.nftbot.app/#pricing', label: 'Pricing' },
     ],
+    cta: { href: 'https://www.nftbot.app/', label: 'Visit website' },
   },
 };
 
