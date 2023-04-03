@@ -2,4 +2,5 @@ packages:
   - 'sigle'
   - 'server'
   - 'sigle-next'
+  - 'apps/**'
   - 'packages/**'
