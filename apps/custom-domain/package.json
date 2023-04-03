@@ -10,7 +10,7 @@
   },
   "dependencies": {
     "@radix-ui/react-tooltip": "1.0.5",
-    "@tabler/icons-react": "2.12.0",
+    "@tabler/icons-react": "2.13.1",
     "buffer": "6.0.3",
     "cheerio": "1.0.0-rc.12",
     "clsx": "1.2.1",
