@@ -56,15 +56,31 @@ export const Header = ({ settings }: HeaderProps) => {
         )
       )}
     >
-      <Link href="/">
-        <div className="flex items-center gap-2">
+      <Link href="/" className="w-full">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <div className="relative object-cover rounded overflow-hidden">
+              <Image
+                src={settings.avatar}
+                alt="Avatar"
+                priority
+                height={22}
+                width={22}
+              />
+            </div>
+            <div className="text-sm font-semibold">
+              {settings.name}{' '}
+              <span className="font-normal text-gray-500">| Blog</span>
+            </div>
+          </div>
+
           <Sheet>
             <SheetTrigger asChild>
               <button className="md:hidden p-2">
                 <IconMenu2 size={15} />
               </button>
             </SheetTrigger>
-            <SheetContent position="left" size="xl">
+            <SheetContent position="top" size="content">
               <SheetHeader>
                 <SheetTitle>
                   <div className="flex items-center gap-2">
@@ -95,32 +111,28 @@ export const Header = ({ settings }: HeaderProps) => {
                         </Link>
                       </li>
                     ))}
+                    {settings.cta ? (
+                      <li className="mt-2">
+                        <Link
+                          className="text-sm text-white bg-gray-950 py-2 px-5 rounded-lg"
+                          href={settings.cta.href}
+                        >
+                          {settings.cta.label}
+                        </Link>
+                      </li>
+                    ) : null}
                   </ul>
                 </SheetDescription>
               </SheetHeader>
             </SheetContent>
           </Sheet>
-
-          <div className="relative object-cover rounded overflow-hidden">
-            <Image
-              src={settings.avatar}
-              alt="Avatar"
-              priority
-              height={22}
-              width={22}
-            />
-          </div>
-          <div className="text-sm font-semibold">
-            {settings.name}{' '}
-            <span className="font-normal text-gray-500">| Blog</span>
-          </div>
         </div>
       </Link>
 
-      <nav>
+      <nav className="hidden md:block">
         <ul className="flex gap-8 items-center">
           {settings.links?.map(({ href, label }) => (
-            <li key={href} className="hidden md:block">
+            <li key={href}>
               <Link
                 href={href}
                 className="text-sm text-gray-800 hover:text-gray-500"
