@@ -6,12 +6,8 @@ export const runtime = 'edge';
 
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
-  let siteParam = searchParams.get('site');
+  const siteParam = searchParams.get('site');
   const page = Number(searchParams.get('page')) || 1;
-
-  if (process.env.VERCEL_ENV === 'preview' && !siteParam) {
-    siteParam = 'blog.nftbot.app';
-  }
 
   const site = sites[siteParam || ''];
   if (!site) {
