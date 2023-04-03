@@ -5,17 +5,17 @@ import { Header } from '@/components/Header';
 import ScrollUp from '@/components/ScrollUp';
 import { getAbsoluteUrl } from '@/utils/vercel';
 import { notFound } from 'next/navigation';
+import { SiteSettings } from '@/types';
 
 export const runtime = 'edge';
 // Revalidate this page every 60 seconds
 export const revalidate = 60;
 
-async function getSettings({ site }: { site: string }): Promise<{
-  name: string;
-  description: string;
-  avatar: string;
-  banner: string;
-} | null> {
+async function getSettings({
+  site,
+}: {
+  site: string;
+}): Promise<SiteSettings | null> {
   const res = await fetch(`${getAbsoluteUrl()}/api/settings?site=${site}`);
   return res.json();
 }

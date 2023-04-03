@@ -1,11 +1,7 @@
+import { SiteSettings } from './types';
+
 export const sites: {
-  [key: string]: {
-    username: string;
-    name: string;
-    description: string;
-    avatar: string;
-    banner: string;
-  };
+  [key: string]: SiteSettings;
 } = {
   ['blog.sigle.io']: {
     username: 'sigle.btc',
@@ -15,6 +11,10 @@ export const sites: {
     banner: '/websites/blog.sigle.io/banner.png',
     avatar:
       'https://gaia.blockstack.org/hub/1KwTnsTj6Rqm26zRfhJuNdQUG63ieozxbB/photos/settings/1656339625902-logo_dapp_com.jpg',
+    links: [
+      { href: 'https://www.sigle.io/', label: 'Home' },
+      { href: 'https://app.sigle.io/explore', label: 'Explore' },
+    ],
   },
   ['blog.nftbot.app']: {
     username: 'nftbotapp.btc',
@@ -24,10 +24,14 @@ export const sites: {
     banner: '/websites/blog.nftbot.app/banner.png',
     avatar:
       'https://gaia.blockstack.org/hub/1P4Ktt6EbjmBWRxnZUFU7pjvWQcTxXdtfe/photos/settings/1680265571505-pfp_2.jpg',
+    links: [
+      { href: 'https://www.nftbot.app/#features', label: 'Features' },
+      { href: 'https://www.nftbot.app/#pricing', label: 'Pricing' },
+    ],
   },
 };
 
 // Add localhost to sites for development
 if (process.env.NODE_ENV === 'development') {
-  sites['localhost:3000'] = sites['blog.sigle.io'];
+  sites['localhost:3000'] = sites['blog.nftbot.app'];
 }
