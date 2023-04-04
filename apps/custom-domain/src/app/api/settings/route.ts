@@ -1,4 +1,6 @@
 import { sites } from '@/sites';
+import { SettingsFile } from '@/types';
+import { lookupProfile } from 'micro-stacks/storage';
 import { NextResponse } from 'next/server';
 
 export const runtime = 'edge';
@@ -12,5 +14,22 @@ export async function GET(request: Request) {
     return NextResponse.json(null);
   }
 
-  return NextResponse.json(site);
+  const userProfile = await lookupProfile({ username: site.username });
+  const appUrl = 'https://app.sigle.io';
+  const bucketUrl = userProfile?.apps?.[appUrl];
+
+  const data = await fetch(`${bucketUrl}settings.json`);
+  let settingsFile: SettingsFile | null;
+  if (data.status === 404) {
+    settingsFile = {};
+  } else {
+    settingsFile = await data.json();
+  }
+
+  return NextResponse.json({
+    ...site,
+    name: settingsFile?.siteName || site.username,
+    description: settingsFile?.siteDescription || '',
+    avatar: settingsFile?.siteLogo || '',
+  });
 }
