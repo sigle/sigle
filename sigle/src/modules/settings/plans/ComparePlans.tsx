@@ -13,7 +13,7 @@ import {
   Typography,
 } from '../../../ui';
 
-type PlanStatus = 'active' | 'inactive' | 'progress';
+type PlanStatus = 'active' | 'inactive' | 'progress' | string;
 
 interface Feature {
   name: string;
@@ -29,63 +29,84 @@ const features: Feature[] = [
     starterPlan: 'active',
     basicPlan: 'active',
     publisherPlan: 'active',
-    info: 'On Sigle, you can write as many stories as you want, whatever plan you choose.',
+    info: 'Write as many articles as you want on Sigle, whatever the plan you choose.',
+  },
+  {
+    name: 'Blog on app.sigle.io',
+    starterPlan: 'active',
+    basicPlan: 'active',
+    publisherPlan: 'active',
+    info: 'We create a profile page for you on app.sigle.io/yourname where your articles will be listed.',
   },
   {
     name: 'Data stored on Gaïa',
     starterPlan: 'active',
     basicPlan: 'active',
     publisherPlan: 'active',
-    info: 'Gaia is an off-chain storage solution. All your stories are truly yours and only you can edit and delete them.',
+    info: 'Gaia is an off-chain storage solution created by Stacks. All your stories are truly yours and only you can edit and delete them.',
   },
   {
-    name: 'Analytics',
-    starterPlan: 'inactive',
+    name: 'Create Ordinals',
+    starterPlan: 'active',
     basicPlan: 'active',
     publisherPlan: 'active',
-    info: 'In-depth analysis of your stories to maximize your views and visits on your blog.',
+    info: "Inscribe your stories as Ordinals on Bitcoin, the world's most secure blockchain.",
   },
   {
     name: 'Send newsletters',
     starterPlan: 'inactive',
-    basicPlan: 'progress',
+    basicPlan: 'active',
     publisherPlan: 'active',
-    info: 'Create your community on web3 and send newsletters (paid or free) to your subscribers!',
+    info: 'Connect your Mailjet account and start sending newsletters to your subscribers.',
   },
   {
-    name: 'Monetise your stories',
-    starterPlan: 'progress',
-    basicPlan: 'progress',
-    publisherPlan: 'active',
-    info: 'Get subscribers, monetise your stories and newsletters in crypto or fiat.',
-  },
-  {
-    name: 'Get featured in the Discover page',
-    starterPlan: 'inactive',
-    basicPlan: 'progress',
-    publisherPlan: 'active',
-    info: 'Grow your community faster by reaching more people on the Discover page.',
-  },
-  {
-    name: 'Create NFT gating for your stories',
-    starterPlan: 'inactive',
-    basicPlan: 'progress',
-    publisherPlan: 'active',
-    info: 'Give your community access to your paid stories with your own NFT collection!',
-  },
-  {
-    name: 'Personal domain',
-    starterPlan: 'inactive',
-    basicPlan: 'progress',
-    publisherPlan: 'active',
-    info: 'Use your own domain to match your brand and make your blog stand out.',
-  },
-  {
-    name: 'Access community Discord channel & special giveaway',
+    name: 'Privacy focused analytics',
     starterPlan: 'inactive',
     basicPlan: 'active',
     publisherPlan: 'active',
-    info: 'Explorer Guild NFT holders can access the community chat and many giveaways from our partners on Discord.',
+    info: "Get stats about the performance of your blog without sacrificing your user's privacy. Service provided by Plausible.",
+  },
+  {
+    name: 'Monetize your content',
+    starterPlan: 'inactive',
+    basicPlan: 'progress',
+    publisherPlan: 'progress',
+    info: 'Connect Unlock Protocol or use Stripe and create a recurring revenue stream.',
+  },
+  {
+    name: 'Custom domain',
+    starterPlan: 'inactive',
+    basicPlan: 'active',
+    publisherPlan: 'active',
+    info: 'Boost your SEO (100/100 Lighthouse score) with a personalized domain that truly stands out while maintaining full ownership of your content.',
+  },
+  {
+    name: 'Page views (custom domain)',
+    starterPlan: 'inactive',
+    basicPlan: '2,000',
+    publisherPlan: '100,000',
+    info: 'This indicates the limit of views per month that your custom domain can support. Your articles will always remain visible on app.sigle.io even if the limit is reached.',
+  },
+  {
+    name: 'Custom CSS',
+    starterPlan: 'inactive',
+    basicPlan: 'inactive',
+    publisherPlan: 'progress',
+    info: 'Create the blog of your dreams by editing the CSS of your custom domain.',
+  },
+  {
+    name: 'Themes (custom domain)',
+    starterPlan: 'inactive',
+    basicPlan: '1',
+    publisherPlan: '1 (more soon)',
+    info: 'Choose among several themes for your custom domain.',
+  },
+  {
+    name: 'Premium support',
+    starterPlan: 'inactive',
+    basicPlan: 'inactive',
+    publisherPlan: 'active',
+    info: 'Get fast and prioritized support on our Discord server.',
   },
 ];
 
@@ -325,7 +346,7 @@ export const ComparePlans = () => {
       case 'progress':
         return '⚙️';
       default:
-        throw new Error('No value received.');
+        return value;
     }
   };
 
