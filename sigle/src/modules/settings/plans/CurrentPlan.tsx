@@ -1,12 +1,9 @@
-import { useState } from 'react';
 import Image from 'next/legacy/image';
 import { Box, Button, Flex, Typography, LoadingSpinner } from '../../../ui';
 import { SettingsLayout } from '../SettingsLayout';
 import backpackImage from '../../../../public/img/illustrations/backpack.png';
 import { useGetUserSubscription } from '../../../hooks/subscriptions';
 import Link from 'next/link';
-import { sigleConfig } from '../../../config';
-import { SelectNFTDialog } from './SelectNFTDialog';
 import { useAuth } from '../../auth/AuthContext';
 
 const plans = {
@@ -71,14 +68,13 @@ export const CurrentPlan = () => {
     isError,
     data: userSubscription,
   } = useGetUserSubscription();
-  const [isSelectNFTDialogOpen, setIsSelectNFTDialogOpen] = useState(false);
   const { user, isLegacy } = useAuth();
 
   const currentPlan: 'starter' | 'creatorPlus' = userSubscription
     ? 'creatorPlus'
     : 'starter';
 
-  const NFTImageURL = `${sigleConfig.explorerGuildUrl}/nft-images/?image=ar://Z4ygyXm-fERGzKEB2bvE7gx98SHcoaP8qdZQo0Kxm6Y`;
+  const handleSyncWallet = () => {};
 
   return (
     <SettingsLayout>
@@ -116,6 +112,19 @@ export const CurrentPlan = () => {
           )
         ) : null}
       </Flex>
+
+      {isLegacy && (
+        <Flex direction="column" css={{ mt: '$5' }} gap="3" align="center">
+          <Typography size="subheading">
+            This feature is available for Hiro wallet accounts only
+          </Typography>
+          <Link href={`/${user?.username}`} passHref legacyBehavior>
+            <Button size="sm" variant="subtle" as="a">
+              Back to profile
+            </Button>
+          </Link>
+        </Flex>
+      )}
 
       {isLoading ? (
         <Box css={{ py: '$10' }}>
@@ -175,64 +184,23 @@ export const CurrentPlan = () => {
         </Box>
       ) : null}
 
-      {!isLoading && currentPlan === 'creatorPlus' ? (
-        <>
-          <Typography size="h4" css={{ fontWeight: 600, mt: '$5' }}>
-            Manage your Creator + NFT
-          </Typography>
-          <Flex
-            align="center"
-            justify="between"
-            css={{
-              mt: '$2',
-              br: '$4',
-              border: '1px solid $gray7',
-              background: '$gray2',
-              padding: '$3',
-            }}
-          >
-            <Flex align="center">
-              <Box
-                as="img"
-                src={`${NFTImageURL}/${userSubscription?.nftId}.png&size=170`}
-                css={{ width: 92, height: 92, br: '$4' }}
-              />
-              <Flex direction="column" gap="1" css={{ ml: '$5' }}>
-                <Typography size="h4" css={{ fontWeight: 600 }}>
-                  You picked Explorer #{userSubscription?.nftId}
-                </Typography>
-                <Typography size="subheading">
-                  This NFT is currently linked to your Creator + plan.
-                </Typography>
-                <Typography size="subheading">
-                  Listing or selling it will downgrade you to Starter plan.
-                </Typography>
-              </Flex>
-            </Flex>
-            <Button size="lg" onClick={() => setIsSelectNFTDialogOpen(true)}>
-              Change
-            </Button>
-          </Flex>
-        </>
-      ) : null}
-
-      {isLegacy && (
-        <Flex direction="column" css={{ mt: '$5' }} gap="3" align="center">
-          <Typography size="subheading">
-            This feature is available for Hiro wallet accounts only
-          </Typography>
-          <Link href={`/${user?.username}`} passHref legacyBehavior>
-            <Button size="sm" variant="subtle" as="a">
-              Back to profile
-            </Button>
-          </Link>
+      {!isLegacy && !isLoading ? (
+        <Flex
+          align="center"
+          justify="between"
+          css={{
+            mt: '$2',
+            br: '$4',
+            border: '1px solid $gray7',
+            background: '$gray2',
+            padding: '$3',
+          }}
+        >
+          <Button size="lg" onClick={handleSyncWallet}>
+            Sync wallet
+          </Button>
         </Flex>
-      )}
-
-      <SelectNFTDialog
-        open={isSelectNFTDialogOpen}
-        onOpenChange={() => setIsSelectNFTDialogOpen(false)}
-      />
+      ) : null}
     </SettingsLayout>
   );
 };
