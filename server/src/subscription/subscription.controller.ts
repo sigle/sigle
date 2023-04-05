@@ -16,7 +16,6 @@ import {
 import { Throttle } from '@nestjs/throttler';
 import { AuthGuard } from '../auth.guard';
 import { SubscriptionDto } from './dto/subscription.dto';
-import { CreateSubscriptionCreatorPlusDto } from './dto/createSubscriptionCreatorPlus.dto';
 import { SubscriptionService } from './subscription.service';
 
 @ApiTags('subscription')
@@ -55,13 +54,9 @@ export class SubscriptionController {
   @UseGuards(AuthGuard)
   @Post('/api/subscriptions/creatorPlus')
   @HttpCode(200)
-  createSubscriptionCreatorPlus(
-    @Request() req,
-    @Body() createCatDto: CreateSubscriptionCreatorPlusDto,
-  ): Promise<SubscriptionDto> {
+  createSubscriptionCreatorPlus(@Request() req): Promise<SubscriptionDto> {
     return this.subscriptionService.createSubscriptionCreatorPlus({
       stacksAddress: req.user.stacksAddress,
-      nftId: createCatDto.nftId,
     });
   }
 }

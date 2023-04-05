@@ -28,6 +28,7 @@ model User {
 model Subscription {
   id           String             @id @default(uuid())
   status       SubscriptionStatus
+  plan         SubscriptionPlan   @default(BASIC) @map("subscription_plan")
   upgradedAt   DateTime?
   downgradedAt DateTime?
   userId       String

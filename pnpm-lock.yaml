@@ -163,8 +163,8 @@ importers:
         specifier: 7.20.0
         version: 7.20.0
       '@stacks/blockchain-api-client':
-        specifier: 6.1.0
-        version: 6.1.0
+        specifier: 7.1.1
+        version: 7.1.1
       cache-manager:
         specifier: 4.1.0
         version: 4.1.0
@@ -7739,8 +7739,8 @@ packages:
       - utf-8-validate
     dev: false
 
-  /@stacks/blockchain-api-client@6.1.0:
-    resolution: {integrity: sha512-1FEDo0w+gjlpLayFFkft6OzWyqWU8YZGMbbpos0r3Dx/wpbV4UcgRw7iT1hU6rUqZRJ1Qp0hRiqLhF+qq9gl1A==}
+  /@stacks/blockchain-api-client@7.1.1:
+    resolution: {integrity: sha512-iJJs6jXCpusOxnrMoZ8r8KlMgYKaWMBsFFItFpGbINHd3vwpbfPRGoU0vdKKIh/Yb306HJmENOL9ygfmVDCFdg==}
     dependencies:
       '@stacks/stacks-blockchain-api-types': 6.1.0
       '@types/ws': 7.4.7
@@ -8918,7 +8918,7 @@ packages:
       ts-dedent: 2.2.0
       util-deprecate: 1.0.2
       watchpack: 2.4.0
-      ws: 8.12.0
+      ws: 8.13.0(bufferutil@4.0.7)(utf-8-validate@5.0.10)
     transitivePeerDependencies:
       - bufferutil
       - encoding
@@ -13159,7 +13159,6 @@ packages:
     requiresBuild: true
     dependencies:
       node-gyp-build: 4.6.0
-    dev: false
 
   /busboy@1.6.0:
     resolution: {integrity: sha512-8SFQbg/0hQ9xy3UNTB0YEnsNBbWfhf7RtnzpL7TkBiTBRfrQ9Fxcnz7VJsleJpyp6rVLvXiuORqjlHi5q+PYuA==}
@@ -21420,7 +21419,6 @@ packages:
   /node-gyp-build@4.6.0:
     resolution: {integrity: sha512-NTZVKn9IylLwUzaKjkas1e4u2DLNcV4rdYagA4PWdPwW87Bi7z+BznyKSRwS/761tV/lzCGXplWsiaMjLqP2zQ==}
     hasBin: true
-    dev: false
 
   /node-int64@0.4.0:
     resolution: {integrity: sha512-O5lz91xSOeoXP6DulyHfllpq+Eg00MWitZIbtPfoSEvqIHdl5gfcY6hYzDWnj0qD5tz52PI08u9qUvSVeUBeHw==}
@@ -25919,7 +25917,6 @@ packages:
     requiresBuild: true
     dependencies:
       node-gyp-build: 4.6.0
-    dev: false
 
   /util-deprecate@1.0.2:
     resolution: {integrity: sha512-EPD5q1uXyFxJpCrLnCc1nHnq3gOa6DZBocAIiI2TaSCA7VCJ1UJDMagCzIkXNsUYfD1daK//LTEQ8xiIbrHtcw==}
@@ -26530,6 +26527,8 @@ packages:
         optional: true
       utf-8-validate:
         optional: true
+    dev: false
+    optional: true
 
   /ws@8.13.0(bufferutil@4.0.7)(utf-8-validate@5.0.10):
     resolution: {integrity: sha512-x9vcZYTrFPC7aSIbj7sRCYo7L/Xb8Iy+pW0ng0wt2vCJv7M9HOMy0UoN3rr+IFC7hb7vXoqS+P9ktyLLLhO+LA==}
@@ -26545,7 +26544,6 @@ packages:
     dependencies:
       bufferutil: 4.0.7
       utf-8-validate: 5.0.10
-    dev: false
 
   /ws@8.2.3:
     resolution: {integrity: sha512-wBuoj1BDpC6ZQ1B7DWQBYVLphPWkm8i9Y0/3YdHjHKHiohOJ1ws+3OccDWtH+PoC9DZD5WOTrJvNbWvjS6JWaA==}
