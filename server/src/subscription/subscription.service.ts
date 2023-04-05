@@ -28,17 +28,19 @@ export class SubscriptionService {
       },
       select: {
         id: true,
+        plan: true,
       },
     });
     return activeSubscription;
   }
 
-  async createSubscriptionCreatorPlus({
+  async syncSubscriptionWithNft({
     stacksAddress,
   }: {
     stacksAddress: string;
   }): Promise<{
     id: string;
+    plan: 'BASIC' | 'PUBLISHER';
   }> {
     const nftHoldings = await this.nftApi.getNftHoldings({
       principal: stacksAddress,

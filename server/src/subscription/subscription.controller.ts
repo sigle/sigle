@@ -52,10 +52,10 @@ export class SubscriptionController {
   })
   @Throttle(5, 60)
   @UseGuards(AuthGuard)
-  @Post('/api/subscriptions/creatorPlus')
+  @Post('/api/subscriptions/syncWithNft')
   @HttpCode(200)
   createSubscriptionCreatorPlus(@Request() req): Promise<SubscriptionDto> {
-    return this.subscriptionService.createSubscriptionCreatorPlus({
+    return this.subscriptionService.syncSubscriptionWithNft({
       stacksAddress: req.user.stacksAddress,
     });
   }
