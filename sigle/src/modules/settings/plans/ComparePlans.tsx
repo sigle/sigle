@@ -241,7 +241,7 @@ const Table = ({
               borderRadius: '20px 20px 0 0',
               height: 8,
               width: '100%',
-              backgroundColor: '$violet11',
+              backgroundColor: '$green11',
             }}
           />
           <Typography size="h4" css={{ fontWeight: 600 }}>
