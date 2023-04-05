@@ -25,7 +25,7 @@ export class SubscriptionService {
    * @returns SubscriptionDto Returns the newly created subscription object.
    * @throws ApiError
    */
-  public static subscriptionControllerCreateSubscriptionCreatorPlus(): CancelablePromise<SubscriptionDto> {
+  public static subscriptionControllerSyncSubscriptionWithNft(): CancelablePromise<SubscriptionDto> {
     return __request(OpenAPI, {
       method: 'POST',
       url: '/api/subscriptions/syncWithNft',

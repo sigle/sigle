@@ -54,7 +54,7 @@ export class SubscriptionController {
   @UseGuards(AuthGuard)
   @Post('/api/subscriptions/syncWithNft')
   @HttpCode(200)
-  createSubscriptionCreatorPlus(@Request() req): Promise<SubscriptionDto> {
+  syncSubscriptionWithNft(@Request() req): Promise<SubscriptionDto> {
     return this.subscriptionService.syncSubscriptionWithNft({
       stacksAddress: req.user.stacksAddress,
     });

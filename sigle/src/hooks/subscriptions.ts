@@ -20,20 +20,16 @@ export const useGetUserSubscription = (
 
 type PostApiSubscriptionsCreatorPlusReturnType = Awaited<
   ReturnType<
-    typeof SubscriptionService.subscriptionControllerCreateSubscriptionCreatorPlus
+    typeof SubscriptionService.subscriptionControllerSyncSubscriptionWithNft
   >
 >;
-export const useCreateSubscription = (
+export const useSyncWithNftSubscription = (
   options: UseMutationOptions<
     PostApiSubscriptionsCreatorPlusReturnType,
-    Error,
-    number
+    Error
   > = {}
 ) =>
-  useMutation<PostApiSubscriptionsCreatorPlusReturnType, Error, number>(
-    (nftId) =>
-      SubscriptionService.subscriptionControllerCreateSubscriptionCreatorPlus({
-        requestBody: { nftId },
-      }),
+  useMutation<PostApiSubscriptionsCreatorPlusReturnType, Error>(
+    () => SubscriptionService.subscriptionControllerSyncSubscriptionWithNft(),
     options
   );

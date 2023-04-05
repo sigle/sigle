@@ -18,7 +18,6 @@ import {
   Typography,
 } from '../../../ui';
 import { SettingsLayout } from '../SettingsLayout';
-import { SelectNFTDialog } from './SelectNFTDialog';
 
 type PlanStatus = 'active' | 'inactive' | 'progress';
 
@@ -369,11 +368,6 @@ export const ComparePlans = () => {
           ))}
         </Table>
       ) : null}
-
-      <SelectNFTDialog
-        open={isSelectNFTDialogOpen}
-        onOpenChange={() => setIsSelectNFTDialogOpen(false)}
-      />
     </SettingsLayout>
   );
 };
