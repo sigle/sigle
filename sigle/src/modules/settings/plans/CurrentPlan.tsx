@@ -30,6 +30,23 @@ export const CurrentPlan = () => {
     syncWithNftSubscription();
   };
 
+  if (isLegacy) {
+    return (
+      <SettingsLayout>
+        <Flex direction="column" css={{ mt: '$5' }} gap="3" align="center">
+          <Typography size="subheading">
+            This feature is available for Hiro wallet accounts only
+          </Typography>
+          <Link href={`/${user?.username}`} passHref legacyBehavior>
+            <Button size="sm" variant="subtle" as="a">
+              Back to profile
+            </Button>
+          </Link>
+        </Flex>
+      </SettingsLayout>
+    );
+  }
+
   return (
     <SettingsLayout>
       <Flex
@@ -67,26 +84,13 @@ export const CurrentPlan = () => {
         ) : null}
       </Flex>
 
-      {isLegacy && (
-        <Flex direction="column" css={{ mt: '$5' }} gap="3" align="center">
-          <Typography size="subheading">
-            This feature is available for Hiro wallet accounts only
-          </Typography>
-          <Link href={`/${user?.username}`} passHref legacyBehavior>
-            <Button size="sm" variant="subtle" as="a">
-              Back to profile
-            </Button>
-          </Link>
-        </Flex>
-      )}
-
       {isLoading ? (
         <Box css={{ py: '$10' }}>
           <LoadingSpinner />
         </Box>
       ) : null}
 
-      {!isLegacy && !isLoading ? (
+      {!isLoading ? (
         <Flex
           align="center"
           justify="between"
