@@ -23,7 +23,6 @@ export class SubscriptionService {
       },
       select: {
         id: true,
-        nftId: true,
       },
     });
     return activeSubscription;
@@ -37,7 +36,6 @@ export class SubscriptionService {
     nftId: number;
   }): Promise<{
     id: string;
-    nftId: number;
   }> {
     const result = await callReadOnlyFunction({
       contractAddress: 'SP2X0TZ59D5SZ8ACQ6YMCHHNR2ZN51Z32E2CJ173',
@@ -58,37 +56,9 @@ export class SubscriptionService {
       where: { stacksAddress },
     });
 
-    // If NFT is already linked to another user, we downgrade the subscription of the other user
-    // so the NFT id can be used again
-    const existingSubscriptionForNFT = await this.prisma.subscription.findFirst(
-      {
-        select: { id: true, user: { select: { stacksAddress: true } } },
-        where: { status: 'ACTIVE', nftId },
-      },
-    );
-    if (existingSubscriptionForNFT) {
-      await this.prisma.subscription.update({
-        where: { id: existingSubscriptionForNFT.id },
-        data: {
-          status: 'INACTIVE',
-          downgradedAt: new Date(),
-        },
-      });
-
-      this.posthog.capture({
-        distinctId: existingSubscriptionForNFT.user.stacksAddress,
-        event: 'subscription downgraded',
-        properties: {
-          subscriptionId: existingSubscriptionForNFT.id,
-          nftId,
-        },
-      });
-    }
-
     let activeSubscription = await this.prisma.subscription.findFirst({
       select: {
         id: true,
-        nftId: true,
       },
       where: {
         userId: user.id,
@@ -97,17 +67,15 @@ export class SubscriptionService {
     });
     // When an active subscription is found, we just update the NFT linked to it.
     if (activeSubscription) {
-      const prevNftId = activeSubscription.nftId;
       activeSubscription = await this.prisma.subscription.update({
         select: {
           id: true,
-          nftId: true,
         },
         where: {
           id: activeSubscription.id,
         },
         data: {
-          nftId,
+          // TODO
         },
       });
 
@@ -116,20 +84,17 @@ export class SubscriptionService {
         event: 'subscription updated',
         properties: {
           subscriptionId: activeSubscription.id,
-          prevNftId,
-          nftId,
+          // TODO number nfts
         },
       });
     } else {
       activeSubscription = await this.prisma.subscription.create({
         select: {
           id: true,
-          nftId: true,
         },
         data: {
           userId: user.id,
           status: 'ACTIVE',
-          nftId,
         },
       });
 
@@ -138,7 +103,7 @@ export class SubscriptionService {
         event: 'subscription created',
         properties: {
           subscriptionId: activeSubscription.id,
-          nftId,
+          // TODO number nfts
         },
       });
     }

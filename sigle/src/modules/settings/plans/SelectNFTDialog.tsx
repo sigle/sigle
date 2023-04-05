@@ -1,3 +1,5 @@
+// TODO delete this file
+
 import { DialogDescription } from '@radix-ui/react-dialog';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { NonFungibleTokensApi } from '@stacks/blockchain-api-client';
@@ -109,10 +111,6 @@ export const SelectNFTDialog = ({
   const { data: subscriptionData } = useGetUserSubscription();
   const [activeNFT, setActiveNFT] = useState<string>();
   const [currentPage, setCurrentPage] = useState<number>(1);
-
-  useEffect(() => {
-    setActiveNFT(subscriptionData?.nftId.toString());
-  }, [subscriptionData]);
 
   const maxItemsPerPage = 10;
 
