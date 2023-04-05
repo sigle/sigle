@@ -1,9 +1,4 @@
-import {
-  ArrowLeftIcon,
-  CheckIcon,
-  QuestionMarkCircledIcon,
-} from '@radix-ui/react-icons';
-import Link from 'next/link';
+import { CheckIcon, QuestionMarkCircledIcon } from '@radix-ui/react-icons';
 import { Dispatch, SetStateAction, useState } from 'react';
 import { useGetUserSubscription } from '../../../hooks/subscriptions';
 import { styled } from '../../../stitches.config';
@@ -17,70 +12,79 @@ import {
   TooltipTrigger,
   Typography,
 } from '../../../ui';
-import { SettingsLayout } from '../SettingsLayout';
 
 type PlanStatus = 'active' | 'inactive' | 'progress';
 
 interface Feature {
   name: string;
   starterPlan: PlanStatus;
-  creatorPlan: PlanStatus;
+  basicPlan: PlanStatus;
+  publisherPlan: PlanStatus;
   info: string;
 }
 
 const features: Feature[] = [
   {
-    name: 'Write unlimited stories',
+    name: 'Unlimited publishing',
     starterPlan: 'active',
-    creatorPlan: 'active',
+    basicPlan: 'active',
+    publisherPlan: 'active',
     info: 'On Sigle, you can write as many stories as you want, whatever plan you choose.',
   },
   {
     name: 'Data stored on Gaïa',
     starterPlan: 'active',
-    creatorPlan: 'active',
+    basicPlan: 'active',
+    publisherPlan: 'active',
     info: 'Gaia is an off-chain storage solution. All your stories are truly yours and only you can edit and delete them.',
   },
   {
     name: 'Analytics',
     starterPlan: 'inactive',
-    creatorPlan: 'active',
+    basicPlan: 'active',
+    publisherPlan: 'active',
     info: 'In-depth analysis of your stories to maximize your views and visits on your blog.',
   },
   {
     name: 'Send newsletters',
     starterPlan: 'inactive',
-    creatorPlan: 'progress',
+    basicPlan: 'progress',
+    publisherPlan: 'active',
     info: 'Create your community on web3 and send newsletters (paid or free) to your subscribers!',
   },
   {
     name: 'Monetise your stories',
     starterPlan: 'progress',
-    creatorPlan: 'progress',
+    basicPlan: 'progress',
+    publisherPlan: 'active',
     info: 'Get subscribers, monetise your stories and newsletters in crypto or fiat.',
   },
   {
     name: 'Get featured in the Discover page',
     starterPlan: 'inactive',
-    creatorPlan: 'progress',
+    basicPlan: 'progress',
+    publisherPlan: 'active',
     info: 'Grow your community faster by reaching more people on the Discover page.',
   },
   {
     name: 'Create NFT gating for your stories',
     starterPlan: 'inactive',
-    creatorPlan: 'progress',
+    basicPlan: 'progress',
+    publisherPlan: 'active',
     info: 'Give your community access to your paid stories with your own NFT collection!',
   },
   {
     name: 'Personal domain',
     starterPlan: 'inactive',
-    creatorPlan: 'progress',
+    basicPlan: 'progress',
+    publisherPlan: 'active',
     info: 'Use your own domain to match your brand and make your blog stand out.',
   },
   {
     name: 'Access community Discord channel & special giveaway',
     starterPlan: 'inactive',
-    creatorPlan: 'active',
+    basicPlan: 'active',
+    publisherPlan: 'active',
     info: 'Explorer Guild NFT holders can access the community chat and many giveaways from our partners on Discord.',
   },
 ];
@@ -181,7 +185,7 @@ const Table = ({
             Starter
           </Typography>
           <Typography size="subheading" css={{ color: '$gray9' }}>
-            All the basic
+            The fundamentals
           </Typography>
           <Typography size="h4" css={{ fontWeight: 600 }}>
             Free
@@ -220,13 +224,64 @@ const Table = ({
             }}
           />
           <Typography size="h4" css={{ fontWeight: 600 }}>
-            Creator +
+            Basic
           </Typography>
           <Typography size="subheading" css={{ color: '$gray9' }}>
-            Unlock with your NFT
+            Free with 1 NFT
           </Typography>
           <Typography size="h4" css={{ fontWeight: 600 }}>
-            Free
+            $1/month
+          </Typography>
+          {!activeSubscription ? (
+            <Button
+              onClick={() => setIsSelectNFTDialogOpen(true)}
+              size="lg"
+              color="violet"
+              css={{ width: 'calc(100% - $6)' }}
+            >
+              Link your NFT
+            </Button>
+          ) : (
+            <Typography
+              size="subheading"
+              css={{
+                backgroundColor: '$green5',
+                px: '$3',
+                py: '$1',
+                br: '$2',
+              }}
+            >
+              Current plan
+            </Typography>
+          )}
+        </Th>
+        <Th
+          css={{
+            display: 'flex',
+            flexDirection: 'column',
+            gap: '$2',
+            alignItems: 'center',
+            backgroundColor: '$gray2',
+            maxWidth: 220,
+          }}
+          scope="col"
+        >
+          <Box
+            css={{
+              borderRadius: '20px 20px 0 0',
+              height: 8,
+              width: '100%',
+              backgroundColor: '$violet11',
+            }}
+          />
+          <Typography size="h4" css={{ fontWeight: 600 }}>
+            Publisher
+          </Typography>
+          <Typography size="subheading" css={{ color: '$gray9' }}>
+            Free with 3 NFTs
+          </Typography>
+          <Typography size="h4" css={{ fontWeight: 600 }}>
+            $1/month
           </Typography>
           {!activeSubscription ? (
             <Button
@@ -275,24 +330,8 @@ export const ComparePlans = () => {
   };
 
   return (
-    <SettingsLayout>
+    <>
       <TableContainer />
-      <Link href="/settings/plans" legacyBehavior>
-        <Button
-          size="sm"
-          css={{
-            gap: '$2',
-            cursor: 'pointer',
-            position: 'absolute',
-            '@md': { position: 'relative' },
-          }}
-          variant="subtle"
-          as="a"
-        >
-          <ArrowLeftIcon />
-          Go back to your current plan
-        </Button>
-      </Link>
 
       {isLoading ? (
         <Box css={{ py: '$10' }}>
@@ -362,12 +401,21 @@ export const ComparePlans = () => {
                   maxWidth: 220,
                 }}
               >
-                {getFeatureStatus(feature.creatorPlan)}
+                {getFeatureStatus(feature.basicPlan)}
+              </Td>
+              <Td
+                css={{
+                  backgroundColor: '$gray2',
+                  '& svg': { width: 22, height: 22, color: '$violet11' },
+                  maxWidth: 220,
+                }}
+              >
+                {getFeatureStatus(feature.publisherPlan)}
               </Td>
             </Tr>
           ))}
         </Table>
       ) : null}
-    </SettingsLayout>
+    </>
   );
 };

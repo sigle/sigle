@@ -1,11 +1,10 @@
-import Image from 'next/legacy/image';
 import { Box, Button, Flex, Typography, LoadingSpinner } from '../../../ui';
 import { SettingsLayout } from '../SettingsLayout';
-import backpackImage from '../../../../public/img/illustrations/backpack.png';
 import { useGetUserSubscription } from '../../../hooks/subscriptions';
 import Link from 'next/link';
 import { useAuth } from '../../auth/AuthContext';
 import { useSyncWithNftSubscription } from '../../../hooks/subscriptions';
+import { ComparePlans } from './ComparePlans';
 
 export const CurrentPlan = () => {
   const { user, isLegacy } = useAuth();
@@ -20,7 +19,12 @@ export const CurrentPlan = () => {
     error: errorSync,
     isSuccess: isSuccessSync,
     mutate: syncWithNftSubscription,
-  } = useSyncWithNftSubscription();
+  } = useSyncWithNftSubscription({
+    onSuccess: () => {
+      // TODO show success modal if user did upgrade
+      // TODO refetch user subscription
+    },
+  });
 
   const currentPlan: 'starter' | 'creatorPlus' = userSubscription
     ? 'creatorPlus'
@@ -48,7 +52,7 @@ export const CurrentPlan = () => {
   }
 
   return (
-    <SettingsLayout>
+    <SettingsLayout layout="wide">
       <Flex
         css={{
           pb: isLegacy ? '$5' : 0,
@@ -107,6 +111,8 @@ export const CurrentPlan = () => {
           </Button>
         </Flex>
       ) : null}
+
+      <ComparePlans />
     </SettingsLayout>
   );
 };
