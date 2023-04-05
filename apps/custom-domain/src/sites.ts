@@ -24,9 +24,15 @@ export const sites: {
     ],
     cta: { href: 'https://www.nftbot.app/', label: 'Visit website' },
   },
+  ['updates.liquidium.fi']: {
+    username: 'liquidium.btc',
+    banner: '/websites/updates.liquidium.fi/banner.png',
+    links: [],
+    cta: { href: 'https://liquidium.fi/', label: 'Visit Liquidium' },
+  },
 };
 
 // Add localhost to sites for development
 if (process.env.NODE_ENV === 'development') {
-  sites['localhost:3000'] = sites['blog.sigle.io'];
+  sites['localhost:3000'] = sites['updates.liquidium.fi'];
 }
