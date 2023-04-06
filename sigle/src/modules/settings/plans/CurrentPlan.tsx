@@ -26,9 +26,11 @@ export const CurrentPlan = () => {
     },
   });
 
-  const currentPlan: 'starter' | 'creatorPlus' = userSubscription
-    ? 'creatorPlus'
-    : 'starter';
+  const currentPlan: 'Starter' | 'Basic' | 'Publisher' = !userSubscription
+    ? 'Starter'
+    : userSubscription.plan === 'BASIC'
+    ? 'Basic'
+    : 'Publisher';
 
   const handleSyncWallet = () => {
     syncWithNftSubscription();
@@ -60,32 +62,34 @@ export const CurrentPlan = () => {
           borderBottom: isLegacy ? '1px solid $colors$gray6' : 'none',
         }}
         align="center"
-        justify="between"
+        gap="2"
       >
         <Typography
           size="h4"
           css={{
             fontWeight: 600,
-            flexGrow: 1,
           }}
         >
           Current plan
         </Typography>
-        {!isLoading && !isError ? (
-          currentPlan === 'starter' ? (
-            <Link href="/settings/plans/compare" passHref legacyBehavior>
-              <Button size="sm" color="orange" as="a">
-                Upgrade
-              </Button>
-            </Link>
-          ) : (
-            <Link href="/settings/plans/compare" passHref legacyBehavior>
-              <Button size="sm" variant="subtle">
-                Change plan
-              </Button>
-            </Link>
-          )
-        ) : null}
+        {!isLoading && (
+          <Typography
+            size="subheading"
+            css={{
+              backgroundColor:
+                currentPlan === 'Starter'
+                  ? '$gray5'
+                  : currentPlan === 'Basic'
+                  ? '$green5'
+                  : '$violet5',
+              px: '$3',
+              py: '$1',
+              br: '$2',
+            }}
+          >
+            {currentPlan}
+          </Typography>
+        )}
       </Flex>
 
       {isLoading ? (
