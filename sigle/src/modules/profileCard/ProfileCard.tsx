@@ -24,7 +24,6 @@ import {
   useUserUnfollow,
 } from '../../hooks/appData';
 import { useTheme } from 'next-themes';
-import { sigleConfig } from '../../config';
 import { useState } from 'react';
 import { LoginModal } from '../loginModal/LoginModal';
 import { EnvelopePlusIcon } from '../../icons/EnvelopPlusIcon';
