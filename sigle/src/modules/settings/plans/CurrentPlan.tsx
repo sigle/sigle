@@ -141,7 +141,7 @@ export const CurrentPlan = () => {
         </Flex>
       ) : null}
 
-      <ComparePlans />
+      {!isLoading ? <ComparePlans currentPlan={currentPlan} /> : null}
     </SettingsLayout>
   );
 };

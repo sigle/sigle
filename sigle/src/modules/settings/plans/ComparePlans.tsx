@@ -169,10 +169,10 @@ const Td = styled('td', {
 
 interface TableProps {
   children: React.ReactNode;
-  activeSubscription?: boolean;
+  currentPlan: 'Starter' | 'Basic' | 'Publisher';
 }
 
-const Table = ({ children, activeSubscription }: TableProps) => (
+const Table = ({ children, currentPlan }: TableProps) => (
   <StyledTable>
     <thead>
       <Tr css={{ boxShadow: '0 1px 0 0 $colors$gray12' }}>
@@ -208,7 +208,7 @@ const Table = ({ children, activeSubscription }: TableProps) => (
           <Typography size="h4" css={{ fontWeight: 600 }}>
             Free
           </Typography>
-          {!activeSubscription && (
+          {currentPlan === 'Starter' && (
             <Typography
               size="subheading"
               css={{
@@ -250,11 +250,7 @@ const Table = ({ children, activeSubscription }: TableProps) => (
           <Typography size="h4" css={{ fontWeight: 600 }}>
             $12/month
           </Typography>
-          {!activeSubscription ? (
-            <Link href={sigleConfig.gumroadUrl}>
-              <Button color="green">Select this plan</Button>
-            </Link>
-          ) : (
+          {currentPlan === 'Basic' ? (
             <Typography
               size="subheading"
               css={{
@@ -266,6 +262,10 @@ const Table = ({ children, activeSubscription }: TableProps) => (
             >
               Current plan
             </Typography>
+          ) : (
+            <Link href={sigleConfig.gumroadUrl}>
+              <Button color="green">Select this plan</Button>
+            </Link>
           )}
         </Th>
         <Th
@@ -296,11 +296,7 @@ const Table = ({ children, activeSubscription }: TableProps) => (
           <Typography size="h4" css={{ fontWeight: 600 }}>
             $29/month
           </Typography>
-          {!activeSubscription ? (
-            <Link href={sigleConfig.gumroadUrl}>
-              <Button color="violet">Select this plan</Button>
-            </Link>
-          ) : (
+          {currentPlan === 'Publisher' ? (
             <Typography
               size="subheading"
               css={{
@@ -312,6 +308,10 @@ const Table = ({ children, activeSubscription }: TableProps) => (
             >
               Current plan
             </Typography>
+          ) : (
+            <Link href={sigleConfig.gumroadUrl}>
+              <Button color="violet">Select this plan</Button>
+            </Link>
           )}
         </Th>
       </Tr>
@@ -320,9 +320,11 @@ const Table = ({ children, activeSubscription }: TableProps) => (
   </StyledTable>
 );
 
-export const ComparePlans = () => {
-  const { data: subscriptionData, isLoading } = useGetUserSubscription();
+interface ComparePlansProps {
+  currentPlan: 'Starter' | 'Basic' | 'Publisher';
+}
 
+export const ComparePlans = ({ currentPlan }: ComparePlansProps) => {
   const getFeatureStatus = (value: PlanStatus) => {
     switch (value) {
       case 'active':
@@ -340,86 +342,78 @@ export const ComparePlans = () => {
     <>
       <TableContainer />
 
-      {isLoading ? (
-        <Box css={{ py: '$10' }}>
-          <LoadingSpinner />
-        </Box>
-      ) : null}
-
-      {!isLoading ? (
-        <Table activeSubscription={!!subscriptionData}>
-          {features.map((feature) => (
-            <Tr
-              css={{
-                '&:last-of-type': {
-                  '& td': {
-                    br: '0 0 20px 20px',
-                    pb: '$8',
-                  },
+      <Table currentPlan={currentPlan}>
+        {features.map((feature) => (
+          <Tr
+            css={{
+              '&:last-of-type': {
+                '& td': {
+                  br: '0 0 20px 20px',
+                  pb: '$8',
                 },
+              },
+            }}
+            key={feature.name}
+          >
+            <Th
+              css={{
+                display: 'flex',
+                flexDirection: 'column',
+                justifyContent: 'center',
+                maxWidth: 335,
               }}
-              key={feature.name}
+              scope="row"
             >
-              <Th
-                css={{
-                  display: 'flex',
-                  flexDirection: 'column',
-                  justifyContent: 'center',
-                  maxWidth: 335,
-                }}
-                scope="row"
-              >
-                <Flex gap="10" justify="between" align="center">
-                  <Typography size="subheading">{feature.name}</Typography>
-                  <Tooltip delayDuration={100}>
-                    <TooltipTrigger>
-                      <QuestionMarkCircledIcon />
-                    </TooltipTrigger>
-                    <TooltipContent
-                      side="top"
-                      sideOffset={4}
-                      css={{
-                        textAlign: 'center',
-                        boxShadow: 'none',
-                        width: 240,
-                      }}
-                    >
-                      {feature.info}
-                    </TooltipContent>
-                  </Tooltip>
-                </Flex>
-              </Th>
-              <Td
-                css={{
-                  backgroundColor: '$gray2',
-                  '& svg': { width: 22, height: 22 },
-                  maxWidth: 220,
-                }}
-              >
-                {getFeatureStatus(feature.starterPlan)}
-              </Td>
-              <Td
-                css={{
-                  backgroundColor: '$gray2',
-                  '& svg': { width: 22, height: 22, color: '$violet11' },
-                  maxWidth: 220,
-                }}
-              >
-                {getFeatureStatus(feature.basicPlan)}
-              </Td>
-              <Td
-                css={{
-                  backgroundColor: '$gray2',
-                  '& svg': { width: 22, height: 22, color: '$violet11' },
-                  maxWidth: 220,
-                }}
-              >
-                {getFeatureStatus(feature.publisherPlan)}
-              </Td>
-            </Tr>
-          ))}
-        </Table>
-      ) : null}
+              <Flex gap="10" justify="between" align="center">
+                <Typography size="subheading">{feature.name}</Typography>
+                <Tooltip delayDuration={100}>
+                  <TooltipTrigger>
+                    <QuestionMarkCircledIcon />
+                  </TooltipTrigger>
+                  <TooltipContent
+                    side="top"
+                    sideOffset={4}
+                    css={{
+                      textAlign: 'center',
+                      boxShadow: 'none',
+                      width: 240,
+                    }}
+                  >
+                    {feature.info}
+                  </TooltipContent>
+                </Tooltip>
+              </Flex>
+            </Th>
+            <Td
+              css={{
+                backgroundColor: '$gray2',
+                '& svg': { width: 22, height: 22 },
+                maxWidth: 220,
+              }}
+            >
+              {getFeatureStatus(feature.starterPlan)}
+            </Td>
+            <Td
+              css={{
+                backgroundColor: '$gray2',
+                '& svg': { width: 22, height: 22, color: '$violet11' },
+                maxWidth: 220,
+              }}
+            >
+              {getFeatureStatus(feature.basicPlan)}
+            </Td>
+            <Td
+              css={{
+                backgroundColor: '$gray2',
+                '& svg': { width: 22, height: 22, color: '$violet11' },
+                maxWidth: 220,
+              }}
+            >
+              {getFeatureStatus(feature.publisherPlan)}
+            </Td>
+          </Tr>
+        ))}
+      </Table>
     </>
   );
 };
