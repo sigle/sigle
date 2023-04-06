@@ -193,7 +193,7 @@ const Table = ({ children, currentPlan }: TableProps) => (
               borderRadius: '20px 20px 0 0',
               height: 8,
               width: '100%',
-              backgroundColor: '$gray11',
+              backgroundColor: '$gray8',
             }}
           />
           <Typography size="h4" css={{ fontWeight: 600 }}>
