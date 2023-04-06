@@ -31,6 +31,9 @@ export const CurrentPlan = () => {
             `Your plan has been upgraded to ${data.plan.toLowerCase()} plan!`
           );
           refetchUserSubscription();
+        } else if (data.plan === userSubscription?.plan) {
+          // If plan didn't change
+          toast('Your plan is already up to date');
         }
       },
     });
