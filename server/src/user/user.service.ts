@@ -113,7 +113,6 @@ export class UserService {
         subscriptions: {
           select: {
             id: true,
-            nftId: true,
           },
           where: {
             status: 'ACTIVE',

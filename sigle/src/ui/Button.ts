@@ -64,6 +64,16 @@ export const Button = styled('button', {
           backgroundColor: '$violet10',
         },
       },
+      green: {
+        color: '$gray1',
+        backgroundColor: '$green11',
+        '&:hover': {
+          backgroundColor: '$green12',
+        },
+        '&:active': {
+          backgroundColor: '$green12',
+        },
+      },
     },
     variant: {
       solid: {},

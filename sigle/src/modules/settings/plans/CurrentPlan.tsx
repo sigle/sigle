@@ -1,222 +1,53 @@
-import { useState } from 'react';
-import Image from 'next/legacy/image';
 import { Box, Button, Flex, Typography, LoadingSpinner } from '../../../ui';
 import { SettingsLayout } from '../SettingsLayout';
-import backpackImage from '../../../../public/img/illustrations/backpack.png';
 import { useGetUserSubscription } from '../../../hooks/subscriptions';
 import Link from 'next/link';
-import { sigleConfig } from '../../../config';
-import { SelectNFTDialog } from './SelectNFTDialog';
 import { useAuth } from '../../auth/AuthContext';
-
-const plans = {
-  starter: {
-    title: "You're a Starter member!",
-    description: 'All the basics for casual writers',
-    features: [
-      {
-        title: 'Write unlimited stories',
-        status: 'done',
-      },
-      {
-        title: 'Data stored on Gaïa',
-        status: 'done',
-      },
-      {
-        title: 'Monetise your stories',
-        status: 'progress',
-      },
-      {
-        title: 'Send newsletters',
-        status: 'progress',
-      },
-    ],
-  },
-  creatorPlus: {
-    title: "You're a Creator + member!",
-    description:
-      'Hold your NFT and get lifetime access to the premium features',
-    features: [
-      {
-        title: 'Write unlimited stories',
-        status: 'done',
-      },
-      {
-        title: 'Data stored on Gaïa',
-        status: 'done',
-      },
-      {
-        title: 'Analytics',
-        status: 'done',
-      },
-      {
-        title: 'Monetise your stories',
-        status: 'progress',
-      },
-      {
-        title: 'Send newsletters',
-        status: 'progress',
-      },
-      {
-        title: 'And more...',
-        status: 'progress',
-      },
-    ],
-  },
-};
+import { useSyncWithNftSubscription } from '../../../hooks/subscriptions';
+import { ComparePlans } from './ComparePlans';
+import { sigleConfig } from '../../../config';
+import { toast } from 'react-toastify';
 
 export const CurrentPlan = () => {
+  const { user, isLegacy } = useAuth();
   const {
     isLoading,
-    isError,
     data: userSubscription,
+    refetch: refetchUserSubscription,
   } = useGetUserSubscription();
-  const [isSelectNFTDialogOpen, setIsSelectNFTDialogOpen] = useState(false);
-  const { user, isLegacy } = useAuth();
+  const { isLoading: isLoadingSync, mutate: syncWithNftSubscription } =
+    useSyncWithNftSubscription({
+      onSuccess: (data) => {
+        // If no NFT found
+        if (!data) {
+          toast(
+            'You don’t have enough NFTs to upgrade your account. Make sure your NFTs are not listed and try again.'
+          );
+          return;
+        }
+        // If plan changed
+        if (data.plan !== userSubscription?.plan) {
+          toast.success(
+            `Your plan has been upgraded to ${data.plan.toLowerCase()} plan!`
+          );
+          refetchUserSubscription();
+        }
+      },
+    });
 
-  const currentPlan: 'starter' | 'creatorPlus' = userSubscription
-    ? 'creatorPlus'
-    : 'starter';
+  const currentPlan: 'Starter' | 'Basic' | 'Publisher' = !userSubscription
+    ? 'Starter'
+    : userSubscription.plan === 'BASIC'
+    ? 'Basic'
+    : 'Publisher';
 
-  const NFTImageURL = `${sigleConfig.explorerGuildUrl}/nft-images/?image=ar://Z4ygyXm-fERGzKEB2bvE7gx98SHcoaP8qdZQo0Kxm6Y`;
+  const handleSyncWallet = () => {
+    syncWithNftSubscription();
+  };
 
-  return (
-    <SettingsLayout>
-      <Flex
-        css={{
-          pb: isLegacy ? '$5' : 0,
-          mb: isLegacy ? '$2' : 0,
-          borderBottom: isLegacy ? '1px solid $colors$gray6' : 'none',
-        }}
-        align="center"
-        justify="between"
-      >
-        <Typography
-          size="h4"
-          css={{
-            fontWeight: 600,
-            flexGrow: 1,
-          }}
-        >
-          Current plan
-        </Typography>
-        {!isLoading && !isError ? (
-          currentPlan === 'starter' ? (
-            <Link href="/settings/plans/compare" passHref legacyBehavior>
-              <Button size="sm" color="orange" as="a">
-                Upgrade
-              </Button>
-            </Link>
-          ) : (
-            <Link href="/settings/plans/compare" passHref legacyBehavior>
-              <Button size="sm" variant="subtle">
-                Change plan
-              </Button>
-            </Link>
-          )
-        ) : null}
-      </Flex>
-
-      {isLoading ? (
-        <Box css={{ py: '$10' }}>
-          <LoadingSpinner />
-        </Box>
-      ) : null}
-
-      {!isLoading && !isError ? (
-        <Box css={{ mt: '$2', br: '$4', border: '1px solid $gray7' }}>
-          <Flex
-            align="center"
-            gap="5"
-            css={{
-              background: '$gray2',
-              borderBottom: '1px solid $gray7',
-              padding: '$3',
-              borderTopLeftRadius: '$4',
-              borderTopRightRadius: '$4',
-            }}
-          >
-            {currentPlan === 'starter' ? (
-              <Image
-                src={backpackImage}
-                alt="Backpack"
-                width={70}
-                height={70}
-                quality={100}
-              />
-            ) : (
-              <Image
-                src="/static/img/nft_locked.gif"
-                alt="NFT Locked"
-                width={70}
-                height={64}
-                quality={100}
-              />
-            )}
-            <Flex direction="column" gap="1">
-              <Typography size="h4" css={{ fontWeight: 600 }}>
-                {plans[currentPlan].title}
-              </Typography>
-              <Typography size="subheading">
-                {plans[currentPlan].description}
-              </Typography>
-            </Flex>
-          </Flex>
-          <Flex gap="2" direction="column" css={{ padding: '$3' }}>
-            {plans[currentPlan].features.map(({ title, status }, index) => (
-              <Typography key={`${currentPlan}-${index}`} size="subheading">
-                <Box as="span" css={{ marginRight: '$2' }}>
-                  {status === 'done' ? '✅' : '⚙️'}
-                </Box>
-                {title}
-              </Typography>
-            ))}
-          </Flex>
-        </Box>
-      ) : null}
-
-      {!isLoading && currentPlan === 'creatorPlus' ? (
-        <>
-          <Typography size="h4" css={{ fontWeight: 600, mt: '$5' }}>
-            Manage your Creator + NFT
-          </Typography>
-          <Flex
-            align="center"
-            justify="between"
-            css={{
-              mt: '$2',
-              br: '$4',
-              border: '1px solid $gray7',
-              background: '$gray2',
-              padding: '$3',
-            }}
-          >
-            <Flex align="center">
-              <Box
-                as="img"
-                src={`${NFTImageURL}/${userSubscription?.nftId}.png&size=170`}
-                css={{ width: 92, height: 92, br: '$4' }}
-              />
-              <Flex direction="column" gap="1" css={{ ml: '$5' }}>
-                <Typography size="h4" css={{ fontWeight: 600 }}>
-                  You picked Explorer #{userSubscription?.nftId}
-                </Typography>
-                <Typography size="subheading">
-                  This NFT is currently linked to your Creator + plan.
-                </Typography>
-                <Typography size="subheading">
-                  Listing or selling it will downgrade you to Starter plan.
-                </Typography>
-              </Flex>
-            </Flex>
-            <Button size="lg" onClick={() => setIsSelectNFTDialogOpen(true)}>
-              Change
-            </Button>
-          </Flex>
-        </>
-      ) : null}
-
-      {isLegacy && (
+  if (isLegacy) {
+    return (
+      <SettingsLayout>
         <Flex direction="column" css={{ mt: '$5' }} gap="3" align="center">
           <Typography size="subheading">
             This feature is available for Hiro wallet accounts only
@@ -227,12 +58,97 @@ export const CurrentPlan = () => {
             </Button>
           </Link>
         </Flex>
-      )}
+      </SettingsLayout>
+    );
+  }
 
-      <SelectNFTDialog
-        open={isSelectNFTDialogOpen}
-        onOpenChange={() => setIsSelectNFTDialogOpen(false)}
-      />
+  return (
+    <SettingsLayout layout="wide">
+      <Flex
+        css={{
+          pb: isLegacy ? '$5' : 0,
+          mb: isLegacy ? '$2' : 0,
+          borderBottom: isLegacy ? '1px solid $colors$gray6' : 'none',
+        }}
+        align="center"
+        gap="2"
+      >
+        <Typography
+          size="h4"
+          css={{
+            fontWeight: 600,
+          }}
+        >
+          Current plan
+        </Typography>
+        {!isLoading && (
+          <Typography
+            size="subheading"
+            css={{
+              backgroundColor:
+                currentPlan === 'Starter'
+                  ? '$gray5'
+                  : currentPlan === 'Basic'
+                  ? '$green5'
+                  : '$violet5',
+              px: '$3',
+              py: '$1',
+              br: '$2',
+            }}
+          >
+            {currentPlan}
+          </Typography>
+        )}
+      </Flex>
+
+      {isLoading ? (
+        <Box css={{ py: '$10' }}>
+          <LoadingSpinner />
+        </Box>
+      ) : null}
+
+      {!isLoading ? (
+        <Flex
+          align="center"
+          justify="between"
+          css={{
+            mt: '$2',
+            br: '$4',
+            border: '1px solid $gray7',
+            background: '$gray2',
+            padding: '$3',
+          }}
+          gap="4"
+        >
+          <Flex direction="column" gap="1">
+            <Typography size="h4">
+              Upgrade with your Explorer Guild NFT
+            </Typography>
+            <Typography size="subheading">
+              Let us scan your wallet to confirm that you have 1 or more
+              Explorer Guild NFTs and unlock your plan.
+              <br />
+              Listing or selling your NFT(s) will downgrade your account.
+            </Typography>
+          </Flex>
+          <Flex gap="5">
+            <Button
+              size="lg"
+              onClick={handleSyncWallet}
+              disabled={isLoadingSync}
+            >
+              {!isLoadingSync ? 'Scan wallet' : 'Scanning...'}
+            </Button>
+            <Link href={sigleConfig.gammaUrl} target="_blank">
+              <Button size="lg" variant="outline">
+                Buy NFT
+              </Button>
+            </Link>
+          </Flex>
+        </Flex>
+      ) : null}
+
+      {!isLoading ? <ComparePlans currentPlan={currentPlan} /> : null}
     </SettingsLayout>
   );
 };

@@ -23,7 +23,7 @@ import { InjectSentry, SentryService } from '@ntegral/nestjs-sentry';
 export class EmailService implements OnModuleInit {
   private readonly logger = new Logger(EmailService.name);
   private transporter: Transporter<SMTPTransport.SentMessageInfo>;
-  private isTestMode: boolean = false;
+  private isTestMode = false;
   private templates: {
     verifyEmail: HandlebarsTemplateDelegate<{
       verifyEmailUrl: string;
@@ -61,7 +61,7 @@ export class EmailService implements OnModuleInit {
       !emailServerPassword
     ) {
       this.logger.debug('Starting in test mode.');
-      let testAccount = await createTestAccount();
+      const testAccount = await createTestAccount();
       this.isTestMode = true;
       this.transporter = createTransport({
         host: 'smtp.ethereal.email',
@@ -90,7 +90,7 @@ export class EmailService implements OnModuleInit {
     if (!mailOptions.from) {
       mailOptions.from = `"Sigle" <${this.senderAddress}>`;
     }
-    let info = await this.transporter.sendMail(mailOptions);
+    const info = await this.transporter.sendMail(mailOptions);
     this.logger.debug(`Email sent: ${info.messageId}`);
 
     if (this.isTestMode) {

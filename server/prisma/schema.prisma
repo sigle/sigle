@@ -28,7 +28,8 @@ model User {
 model Subscription {
   id           String             @id @default(uuid())
   status       SubscriptionStatus
-  nftId        Int
+  plan         SubscriptionPlan   @default(BASIC) @map("subscription_plan")
+  upgradedAt   DateTime?
   downgradedAt DateTime?
   userId       String
   createdAt    DateTime           @default(now())
@@ -39,6 +40,11 @@ model Subscription {
 enum SubscriptionStatus {
   INACTIVE
   ACTIVE
+}
+
+enum SubscriptionPlan {
+  BASIC
+  PUBLISHER
 }
 
 model Story {
