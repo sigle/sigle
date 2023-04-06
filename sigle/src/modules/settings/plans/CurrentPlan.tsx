@@ -13,6 +13,7 @@ export const CurrentPlan = () => {
     isLoading,
     isError,
     data: userSubscription,
+    refetch: refetchUserSubscription,
   } = useGetUserSubscription();
   const {
     isLoading: isLoadingSync,
@@ -23,7 +24,7 @@ export const CurrentPlan = () => {
   } = useSyncWithNftSubscription({
     onSuccess: () => {
       // TODO show success modal if user did upgrade
-      // TODO refetch user subscription
+      refetchUserSubscription();
     },
   });
 

@@ -12,6 +12,8 @@ import {
   TooltipTrigger,
   Typography,
 } from '../../../ui';
+import Link from 'next/link';
+import { sigleConfig } from '../../../config';
 
 type PlanStatus = 'active' | 'inactive' | 'progress' | string;
 
@@ -167,15 +169,10 @@ const Td = styled('td', {
 
 interface TableProps {
   children: React.ReactNode;
-  setIsSelectNFTDialogOpen: Dispatch<SetStateAction<boolean>>;
   activeSubscription?: boolean;
 }
 
-const Table = ({
-  children,
-  setIsSelectNFTDialogOpen,
-  activeSubscription,
-}: TableProps) => (
+const Table = ({ children, activeSubscription }: TableProps) => (
   <StyledTable>
     <thead>
       <Tr css={{ boxShadow: '0 1px 0 0 $colors$gray12' }}>
@@ -251,17 +248,12 @@ const Table = ({
             Free with 1 NFT
           </Typography>
           <Typography size="h4" css={{ fontWeight: 600 }}>
-            $1/month
+            $12/month
           </Typography>
           {!activeSubscription ? (
-            <Button
-              onClick={() => setIsSelectNFTDialogOpen(true)}
-              size="lg"
-              color="violet"
-              css={{ width: 'calc(100% - $6)' }}
-            >
-              Link your NFT
-            </Button>
+            <Link href={sigleConfig.gumroadUrl}>
+              <Button color="green">Select this plan</Button>
+            </Link>
           ) : (
             <Typography
               size="subheading"
@@ -302,17 +294,12 @@ const Table = ({
             Free with 3 NFTs
           </Typography>
           <Typography size="h4" css={{ fontWeight: 600 }}>
-            $1/month
+            $29/month
           </Typography>
           {!activeSubscription ? (
-            <Button
-              onClick={() => setIsSelectNFTDialogOpen(true)}
-              size="lg"
-              color="violet"
-              css={{ width: 'calc(100% - $6)' }}
-            >
-              Link your NFT
-            </Button>
+            <Link href={sigleConfig.gumroadUrl}>
+              <Button color="violet">Select this plan</Button>
+            </Link>
           ) : (
             <Typography
               size="subheading"
@@ -335,7 +322,6 @@ const Table = ({
 
 export const ComparePlans = () => {
   const { data: subscriptionData, isLoading } = useGetUserSubscription();
-  const [isSelectNFTDialogOpen, setIsSelectNFTDialogOpen] = useState(false);
 
   const getFeatureStatus = (value: PlanStatus) => {
     switch (value) {
@@ -361,10 +347,7 @@ export const ComparePlans = () => {
       ) : null}
 
       {!isLoading ? (
-        <Table
-          activeSubscription={!!subscriptionData}
-          setIsSelectNFTDialogOpen={setIsSelectNFTDialogOpen}
-        >
+        <Table activeSubscription={!!subscriptionData}>
           {features.map((feature) => (
             <Tr
               css={{
