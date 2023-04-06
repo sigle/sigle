@@ -11,22 +11,16 @@ export const CurrentPlan = () => {
   const { user, isLegacy } = useAuth();
   const {
     isLoading,
-    isError,
     data: userSubscription,
     refetch: refetchUserSubscription,
   } = useGetUserSubscription();
-  const {
-    isLoading: isLoadingSync,
-    isError: isErrorSync,
-    error: errorSync,
-    isSuccess: isSuccessSync,
-    mutate: syncWithNftSubscription,
-  } = useSyncWithNftSubscription({
-    onSuccess: () => {
-      // TODO show success modal if user did upgrade
-      refetchUserSubscription();
-    },
-  });
+  const { isLoading: isLoadingSync, mutate: syncWithNftSubscription } =
+    useSyncWithNftSubscription({
+      onSuccess: () => {
+        // TODO show success modal if user did upgrade
+        refetchUserSubscription();
+      },
+    });
 
   const currentPlan: 'Starter' | 'Basic' | 'Publisher' = !userSubscription
     ? 'Starter'
