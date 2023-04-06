@@ -124,7 +124,7 @@ export const CurrentPlan = () => {
               onClick={handleSyncWallet}
               disabled={isLoadingSync}
             >
-              {!isLoadingSync ? 'Scan wallet' : 'Syncing...'}
+              {!isLoadingSync ? 'Scan wallet' : 'Scanning...'}
             </Button>
             <Link href={sigleConfig.gammaUrl} target="_blank">
               <Button size="lg" variant="outline">

@@ -297,7 +297,7 @@ const Table = ({ children, currentPlan }: TableProps) => (
             <Typography
               size="subheading"
               css={{
-                backgroundColor: '$green5',
+                backgroundColor: '$violet5',
                 px: '$3',
                 py: '$1',
                 br: '$2',
@@ -393,7 +393,7 @@ export const ComparePlans = ({ currentPlan }: ComparePlansProps) => {
             <Td
               css={{
                 backgroundColor: '$gray2',
-                '& svg': { width: 22, height: 22, color: '$violet11' },
+                '& svg': { width: 22, height: 22 },
                 maxWidth: 220,
               }}
             >
@@ -402,7 +402,7 @@ export const ComparePlans = ({ currentPlan }: ComparePlansProps) => {
             <Td
               css={{
                 backgroundColor: '$gray2',
-                '& svg': { width: 22, height: 22, color: '$violet11' },
+                '& svg': { width: 22, height: 22 },
                 maxWidth: 220,
               }}
             >
