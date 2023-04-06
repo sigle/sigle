@@ -109,7 +109,19 @@ export const CurrentPlan = () => {
             background: '$gray2',
             padding: '$3',
           }}
+          gap="4"
         >
+          <Flex direction="column" gap="1">
+            <Typography size="h4">
+              Upgrade with your Explorer Guild NFT
+            </Typography>
+            <Typography size="subheading">
+              Let us scan your wallet to confirm that you have 1 or more
+              Explorer Guild NFTs and unlock your plan.
+              <br />
+              Listing or selling your NFT(s) will downgrade your account.
+            </Typography>
+          </Flex>
           <Button size="lg" onClick={handleSyncWallet}>
             Sync wallet
           </Button>
