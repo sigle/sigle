@@ -746,6 +746,9 @@ importers:
       '@didtools/pkh-ethereum':
         specifier: 0.2.1
         version: 0.2.1
+      '@didtools/pkh-stacks':
+        specifier: 0.1.0
+        version: 0.1.0
       '@hookform/resolvers':
         specifier: 2.9.11
         version: 2.9.11(react-hook-form@7.42.1)
@@ -3700,6 +3703,21 @@ packages:
       caip: 1.1.0
       uint8arrays: 4.0.3
 
+  /@didtools/pkh-stacks@0.1.0:
+    resolution: {integrity: sha512-dEgyHleiIa2afibchNqs07tSqddFS6pX9D5BNxbWH0NAr+FisVCA4nUXajcbd9TUbSuplClfQ4EXjjJAGqlgeg==}
+    engines: {node: '>=14.14'}
+    dependencies:
+      '@didtools/cacao': 2.0.0
+      '@stablelib/random': 1.0.2
+      '@stacks/common': 6.0.0
+      '@stacks/encryption': 6.5.0
+      '@stacks/transactions': 6.5.0
+      caip: 1.1.0
+      jsontokens: 4.0.1
+    transitivePeerDependencies:
+      - encoding
+    dev: false
+
   /@didtools/pkh-tezos@0.2.1:
     resolution: {integrity: sha512-QKf73frCwcxpY8qZkLqt7EP2eGieltRW5GU/xmMPfgrNLYQrfFRYjF8Rmp9wf16cBuRjCRD0WuxQ8rV/++dseg==}
     engines: {node: '>=14.14'}
@@ -6084,6 +6102,10 @@ packages:
     resolution: {integrity: sha512-KYRCASVTv6aeUi1tsF8/vpyR7zpfs3FUzy2Jqm+MU+LmUKhQ0y2FpfwqkCcxSg2ua4GALJd8k2R76WxwZGbQpA==}
     dev: false
 
+  /@noble/hashes@1.1.5:
+    resolution: {integrity: sha512-LTMZiiLc+V4v1Yi16TD6aX2gmtKszNye0pQgbaLqkvhIqP7nVsSaJsWloGQjJfJ8offaoP5GtX3yY5swbcJxxQ==}
+    dev: false
+
   /@noble/hashes@1.3.0:
     resolution: {integrity: sha512-ilHEACi9DwqJB0pw7kv+Apvh50jiiSyR/cQ3y4W7lOR5mhvn/50FLUfsnfJz0BDZtl/RR16kXvptiv6q1msYZg==}
     dev: false
@@ -6414,7 +6436,7 @@ packages:
       react: ^16.8 || ^17.0 || ^18.0
       react-dom: ^16.8 || ^17.0 || ^18.0
     dependencies:
-      '@babel/runtime': 7.21.0
+      '@babel/runtime': 7.20.13
       '@radix-ui/primitive': 1.0.0
       '@radix-ui/react-compose-refs': 1.0.0(react@18.2.0)
       '@radix-ui/react-context': 1.0.0(react@18.2.0)
@@ -7178,7 +7200,7 @@ packages:
   /@scure/bip39@1.1.0:
     resolution: {integrity: sha512-pwrPOS16VeTKg98dYXQyIjJEcWfz7/1YJIwxUEPFfQPtc86Ym/1sVgQ2RLoD43AazMk2l/unK4ITySSpW2+82w==}
     dependencies:
-      '@noble/hashes': 1.1.2
+      '@noble/hashes': 1.1.5
       '@scure/base': 1.1.1
     dev: false
 
@@ -7842,6 +7864,13 @@ packages:
       '@types/node': 18.15.11
     dev: false
 
+  /@stacks/common@6.0.0:
+    resolution: {integrity: sha512-tETwccvbYvaZ7u3ZucWNMOIPN97r6IPeZXKIFhLc1KSVaWSGEPTtZcwVp+Rz3mu2XgI2pg37SUrOWXSL7OOkDw==}
+    dependencies:
+      '@types/bn.js': 5.1.0
+      '@types/node': 18.15.11
+    dev: false
+
   /@stacks/connect-react@2.17.18(blockstack@21.1.1)(react-dom@18.2.0)(react@18.2.0):
     resolution: {integrity: sha512-DxodyMhGpa7JpcBfinIc1EYIF7uiMbKXo0RiGyyq1rbWgJVbF9GEsYtl4La6NNWoeji/sHnmdjLu4gqecaT3RQ==}
     peerDependencies:
@@ -7970,6 +7999,20 @@ packages:
       varuint-bitcoin: 1.1.2
     dev: false
 
+  /@stacks/encryption@6.5.0:
+    resolution: {integrity: sha512-QE1+gy1x6spGkpK5PnZxKoX1hL8eeIYxYa5HNMl4cbdIVKaFgqjoGFKMtTA/tQMc91T/saXLqbQLyh/U4AVpTA==}
+    dependencies:
+      '@noble/hashes': 1.1.5
+      '@noble/secp256k1': 1.7.1
+      '@scure/bip39': 1.1.0
+      '@stacks/common': 6.0.0
+      '@types/node': 18.15.11
+      base64-js: 1.5.1
+      bs58: 5.0.0
+      ripemd160-min: 0.0.6
+      varuint-bitcoin: 1.1.2
+    dev: false
+
   /@stacks/keychain@4.3.8:
     resolution: {integrity: sha512-8jC0VezWrnTzy1r4AW67dWVTlnbe9USRTHqlyad00pNcGNPas7woavo4kgSsEGgSUrDWElZn3HARD5+aIEysGg==}
     dependencies:
@@ -8024,6 +8067,15 @@ packages:
     resolution: {integrity: sha512-fv5eCuWv+NkuhgubDvzymoEOBAEfxq/AGLF25ghMCA7dYfsb80iRKr5dwKgUIFCUWcqmzLBJUVmzxFnXkblF8g==}
     dependencies:
       '@stacks/common': 5.0.0
+      cross-fetch: 3.1.5
+    transitivePeerDependencies:
+      - encoding
+    dev: false
+
+  /@stacks/network@6.3.0:
+    resolution: {integrity: sha512-573ZldQ+Iy0nCCxprXLLvkAo1AMEXncfmMUvqQ+5TN3m7VqCVADtb5G5WzMZsyR4m/k9oPsv076Lmqyl8AtR2A==}
+    dependencies:
+      '@stacks/common': 6.0.0
       cross-fetch: 3.1.5
     transitivePeerDependencies:
       - encoding
@@ -8169,6 +8221,19 @@ packages:
       '@noble/secp256k1': 1.6.3
       '@stacks/common': 5.0.0
       '@stacks/network': 5.0.0
+      c32check: 2.0.0
+      lodash.clonedeep: 4.5.0
+    transitivePeerDependencies:
+      - encoding
+    dev: false
+
+  /@stacks/transactions@6.5.0:
+    resolution: {integrity: sha512-kwE8cZq+QdAum4/LC+lSlAXVvzkdsSHTkCbfg4+VCWPBqA+gdXEqZe6R9SNBtMb8yGQrqUY8uIGRLVCWcXJ8zQ==}
+    dependencies:
+      '@noble/hashes': 1.1.5
+      '@noble/secp256k1': 1.7.1
+      '@stacks/common': 6.0.0
+      '@stacks/network': 6.3.0
       c32check: 2.0.0
       lodash.clonedeep: 4.5.0
     transitivePeerDependencies:

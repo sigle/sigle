@@ -1,7 +1,7 @@
 import { DIDSession } from 'did-session';
-import { EthereumWebAuth, getAccountId } from '@didtools/pkh-ethereum';
+import { StacksWebAuth, getAccountIdByNetwork } from '@didtools/pkh-stacks';
 import { createContext, useState, useMemo } from 'react';
-import { useAccount } from 'wagmi';
+import { useAccount } from '@micro-stacks/react';
 import { useEffect, useContext } from 'react';
 import { composeClient } from '@/lib/composeDB';
 import { createNewEnvironment, useRelayStore } from '@/lib/relay';
@@ -23,17 +23,17 @@ interface CeramicProviderProps {
 
 const CeramicProvider = ({ children }: CeramicProviderProps) => {
   const [session, setSession] = useState<DIDSession | null>(null);
-  const { address, connector } = useAccount();
+  const { stxAddress } = useAccount();
   const setEnvironment = useRelayStore((store) => store.setEnvironment);
 
   useEffect(() => {
     loadSession();
-  }, [address, connector]);
+  }, [stxAddress]);
 
   const loadSession = async () => {
-    if (!address) return;
+    if (!stxAddress) return;
 
-    const sessionString = localStorage.getItem(getStorageKey(address));
+    const sessionString = localStorage.getItem(getStorageKey(stxAddress));
     if (sessionString) {
       const session = await DIDSession.fromSession(sessionString);
       if (session && session.hasSession && !session.isExpired) {
@@ -51,12 +51,12 @@ const CeramicProvider = ({ children }: CeramicProviderProps) => {
   };
 
   const connect = async () => {
-    if (!address || !connector) return;
-    const ethProvider = await connector.getProvider();
+    if (!stxAddress) return;
 
-    const accountId = await getAccountId(ethProvider, address);
-    const authMethod = await EthereumWebAuth.getAuthMethod(
-      ethProvider,
+    const stacksProvider = window.StacksProvider;
+    const accountId = getAccountIdByNetwork('mainnet', stxAddress);
+    const authMethod = await StacksWebAuth.getAuthMethod(
+      stacksProvider,
       accountId
     );
     const session = await DIDSession.authorize(authMethod, {
@@ -67,7 +67,7 @@ const CeramicProvider = ({ children }: CeramicProviderProps) => {
 
     // Store the session in local storage
     const sessionString = session.serialize();
-    localStorage.setItem(getStorageKey(address), sessionString);
+    localStorage.setItem(getStorageKey(stxAddress), sessionString);
 
     composeClient.setDID(session.did);
     setSession(session);

@@ -1,9 +1,10 @@
-import type { AppProps, AppType } from 'next/app';
+import type { AppType } from 'next/app';
 import Head from 'next/head';
 import { Inter } from 'next/font/google';
 import { ThemeProvider } from 'next-themes';
 import dynamic from 'next/dynamic';
 import { ReactRelayContext } from 'react-relay';
+import { ClientProvider as StacksClientProvider } from '@micro-stacks/react';
 import 'tippy.js/dist/tippy.css';
 import 'tippy.js/themes/light-border.css';
 import { darkTheme, globalCss } from '@sigle/stitches.config';
@@ -55,9 +56,14 @@ const MyApp: AppType = ({ Component, pageProps }) => {
       >
         <ReactRelayContext.Provider value={{ environment }}>
           <WagmiProvider>
-            <CeramicProvider>
-              <Component {...pageProps} />
-            </CeramicProvider>
+            <StacksClientProvider
+              appName="Sigle"
+              appIconUrl="https://app.sigle.io/icon-192x192.png"
+            >
+              <CeramicProvider>
+                <Component {...pageProps} />
+              </CeramicProvider>
+            </StacksClientProvider>
           </WagmiProvider>
         </ReactRelayContext.Provider>
       </ThemeProvider>
