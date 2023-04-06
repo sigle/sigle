@@ -44,6 +44,10 @@ export const SettingsLayout = ({
       path: '/settings/email',
     },
     {
+      name: 'Custom domain',
+      path: '/settings/custom-domain',
+    },
+    {
       name: 'Plans',
       path: '/settings/plans',
     },
