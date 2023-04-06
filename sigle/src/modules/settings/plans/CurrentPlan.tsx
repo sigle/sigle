@@ -6,6 +6,7 @@ import { useAuth } from '../../auth/AuthContext';
 import { useSyncWithNftSubscription } from '../../../hooks/subscriptions';
 import { ComparePlans } from './ComparePlans';
 import { sigleConfig } from '../../../config';
+import { toast } from 'react-toastify';
 
 export const CurrentPlan = () => {
   const { user, isLegacy } = useAuth();
@@ -16,9 +17,14 @@ export const CurrentPlan = () => {
   } = useGetUserSubscription();
   const { isLoading: isLoadingSync, mutate: syncWithNftSubscription } =
     useSyncWithNftSubscription({
-      onSuccess: () => {
-        // TODO show success modal if user did upgrade
-        refetchUserSubscription();
+      onSuccess: (data) => {
+        // If plan changed
+        if (data.plan !== userSubscription?.plan) {
+          toast.success(
+            `Your plan has been upgraded to ${data.plan.toLowerCase()} plan!`
+          );
+          refetchUserSubscription();
+        }
       },
     });
 
