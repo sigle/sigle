@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { useAuth } from '../../auth/AuthContext';
 import { useSyncWithNftSubscription } from '../../../hooks/subscriptions';
 import { ComparePlans } from './ComparePlans';
+import { sigleConfig } from '../../../config';
 
 export const CurrentPlan = () => {
   const { user, isLegacy } = useAuth();
@@ -122,9 +123,20 @@ export const CurrentPlan = () => {
               Listing or selling your NFT(s) will downgrade your account.
             </Typography>
           </Flex>
-          <Button size="lg" onClick={handleSyncWallet}>
-            Sync wallet
-          </Button>
+          <Flex gap="5">
+            <Button
+              size="lg"
+              onClick={handleSyncWallet}
+              disabled={isLoadingSync}
+            >
+              {!isLoadingSync ? 'Scan wallet' : 'Syncing...'}
+            </Button>
+            <Link href={sigleConfig.gammaUrl} target="_blank">
+              <Button size="lg" variant="outline">
+                Buy NFT
+              </Button>
+            </Link>
+          </Flex>
         </Flex>
       ) : null}
 
