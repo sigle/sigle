@@ -342,7 +342,7 @@ export const ComparePlans = () => {
       case 'active':
         return <CheckIcon />;
       case 'inactive':
-        return null;
+        return '-';
       case 'progress':
         return '⚙️';
       default:
