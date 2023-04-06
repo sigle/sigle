@@ -1,12 +1,9 @@
 import { CheckIcon, QuestionMarkCircledIcon } from '@radix-ui/react-icons';
-import { Dispatch, SetStateAction, useState } from 'react';
-import { useGetUserSubscription } from '../../../hooks/subscriptions';
 import { styled } from '../../../stitches.config';
 import {
   Box,
   Button,
   Flex,
-  LoadingSpinner,
   Tooltip,
   TooltipContent,
   TooltipTrigger,
