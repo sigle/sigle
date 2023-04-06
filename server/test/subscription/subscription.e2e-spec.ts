@@ -104,7 +104,7 @@ describe('SubscriptionController (e2e)', () => {
     it('should allow only authenticated users', async () => {
       const result = await app.inject({
         method: 'POST',
-        url: '/api/subscriptions/creatorPlus',
+        url: '/api/subscriptions/syncWithNft',
         headers: {
           'user-agent': 'sigletests',
         },
