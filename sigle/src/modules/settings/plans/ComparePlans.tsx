@@ -411,6 +411,61 @@ export const ComparePlans = ({ currentPlan }: ComparePlansProps) => {
           </Tr>
         ))}
       </Table>
+
+      <Flex
+        css={{
+          mt: '$5',
+          gap: '$4',
+          backgroundColor: '$gray2',
+          position: 'relative',
+          p: '$5',
+          borderRadius: '0px 0px 12px 12px',
+        }}
+        justify="between"
+        align="start"
+      >
+        <Box
+          css={{
+            borderRadius: '20px 20px 0 0',
+            height: 8,
+            backgroundColor: '$gray11',
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            right: 0,
+          }}
+        />
+        <Flex direction="column">
+          <Typography css={{ fontWeight: 600 }}>Entreprise</Typography>
+          <Typography size="subheading" css={{ color: '$gray9', mt: '$1' }}>
+            Made for large audiences
+          </Typography>
+          <Flex align="center" gap="4" css={{ mt: '$4' }}>
+            <Typography
+              size="subheading"
+              css={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '$1',
+                fontWeight: 600,
+              }}
+            >
+              <CheckIcon />
+              Everything in Publisher
+            </Typography>
+            <Typography
+              size="subheading"
+              css={{ display: 'flex', alignItems: 'center', gap: '$1' }}
+            >
+              <CheckIcon />
+              100,000+ page views (custom domain)
+            </Typography>
+          </Flex>
+        </Flex>
+        <Link href={'mailto:hello@sigle.io?subject=Sigle enterprise plan'}>
+          <Button>Contact us</Button>
+        </Link>
+      </Flex>
     </>
   );
 };
