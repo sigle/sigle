@@ -406,29 +406,23 @@ export const PublicHome = ({ file, settings, userInfo }: PublicHomeProps) => {
               {userInfoByAddress?.subscription && (
                 <Tooltip delayDuration={200}>
                   <TooltipTrigger asChild>
-                    <a
-                      href={`${sigleConfig.gammaUrl}/${userInfoByAddress.subscription.nftId}`}
-                      target="_blank"
-                      rel="noreferrer"
-                    >
-                      <Image
-                        src={
-                          resolvedTheme === 'dark'
-                            ? '/img/badges/creatorPlusDark.svg'
-                            : '/img/badges/creatorPlusLight.svg'
-                        }
-                        alt="Creator + badge"
-                        width={20}
-                        height={20}
-                      />
-                    </a>
+                    <Image
+                      src={
+                        resolvedTheme === 'dark'
+                          ? '/img/badges/creatorPlusDark.svg'
+                          : '/img/badges/creatorPlusLight.svg'
+                      }
+                      alt="Creator + badge"
+                      width={20}
+                      height={20}
+                    />
                   </TooltipTrigger>
                   <TooltipContent
                     css={{ boxShadow: 'none' }}
                     side="right"
                     sideOffset={8}
                   >
-                    Creator + Explorer #{userInfoByAddress.subscription.nftId}
+                    Explorer holder
                   </TooltipContent>
                 </Tooltip>
               )}

@@ -196,29 +196,23 @@ export const ProfileCard = ({
           {userInfoByAddress?.subscription && (
             <Tooltip delayDuration={200}>
               <TooltipTrigger asChild>
-                <a
-                  href={`${sigleConfig.gammaUrl}/${userInfoByAddress.subscription.nftId}`}
-                  target="_blank"
-                  rel="noreferrer"
-                >
-                  <Image
-                    src={
-                      resolvedTheme === 'dark'
-                        ? '/img/badges/creatorPlusDark.svg'
-                        : '/img/badges/creatorPlusLight.svg'
-                    }
-                    alt="Creator + badge"
-                    width={12}
-                    height={12}
-                  />
-                </a>
+                <Image
+                  src={
+                    resolvedTheme === 'dark'
+                      ? '/img/badges/creatorPlusDark.svg'
+                      : '/img/badges/creatorPlusLight.svg'
+                  }
+                  alt="Creator + badge"
+                  width={12}
+                  height={12}
+                />
               </TooltipTrigger>
               <TooltipContent
                 css={{ boxShadow: 'none' }}
                 side="right"
                 sideOffset={8}
               >
-                Creator + Explorer #{userInfoByAddress.subscription.nftId}
+                Explorer holder
               </TooltipContent>
             </Tooltip>
           )}
