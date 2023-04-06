@@ -18,6 +18,13 @@ export const CurrentPlan = () => {
   const { isLoading: isLoadingSync, mutate: syncWithNftSubscription } =
     useSyncWithNftSubscription({
       onSuccess: (data) => {
+        // If no NFT found
+        if (!data) {
+          toast(
+            'You don’t have enough NFTs to upgrade your account. Make sure your NFTs are not listed and try again.'
+          );
+          return;
+        }
         // If plan changed
         if (data.plan !== userSubscription?.plan) {
           toast.success(
