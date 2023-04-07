@@ -221,7 +221,7 @@ export const SettingsForm = ({ settings, username }: SettingsFormProps) => {
 
   return (
     <form onSubmit={formik.handleSubmit}>
-      <FormRow>
+      <FormRow css={{ maxWidth: 300 }}>
         <FormLabel>Profile Image</FormLabel>
         <ImageContainer
           css={{
@@ -256,7 +256,11 @@ export const SettingsForm = ({ settings, username }: SettingsFormProps) => {
             <CameraIcon />
           </ImageEmptyIconAdd>
         </ImageContainer>
-        <FormHelper>Recommended size: 92x92px</FormHelper>
+        <FormHelper>
+          This image appears in your Profile page, Explore page , Custom domain
+          and story cards. Your image should be square, at least 92x92px, and
+          JPG, PNG or GIF format.
+        </FormHelper>
       </FormRow>
 
       <FormRow>

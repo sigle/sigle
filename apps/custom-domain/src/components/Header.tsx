@@ -144,7 +144,7 @@ export const Header = ({ settings }: HeaderProps) => {
           {settings.cta ? (
             <li>
               <Link
-                className="text-sm text-white bg-gray-950 py-2 px-5 rounded-lg"
+                className="block text-sm text-white bg-gray-950 py-2 px-5 rounded-lg"
                 href={settings.cta.href}
               >
                 {settings.cta.label}
