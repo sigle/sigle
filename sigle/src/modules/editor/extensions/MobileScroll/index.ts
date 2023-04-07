@@ -1,6 +1,6 @@
 // Inspired by https://github.com/kongdivin/prosemirror-scroll2cursor
 import { Extension } from '@tiptap/core';
-import { Plugin, PluginKey } from 'prosemirror-state';
+import { Plugin, PluginKey } from '@tiptap/pm/state';
 
 const options: any = {};
 const DEFAULT_DELAY = 10;
