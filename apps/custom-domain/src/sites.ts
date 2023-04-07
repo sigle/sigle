@@ -34,7 +34,6 @@ export const sites: {
     username: 'flor.btc',
     banner: '/websites/blog.xn--florpea-9za.es/banner.png',
     links: [
-      // Inicio - florpeña.es/bienvenida,
       {
         href: 'https://florpeña.es/bienvenida',
         label: 'Inicio',
@@ -45,15 +44,14 @@ export const sites: {
       },
       {
         href: 'https://marketplace.heylayer.com/flower',
-        label: 'Mis NFTs en Layer',
+        label: 'My Layer',
       },
       {
         href: 'https://gamma.io/flor.btc',
-        label: 'Mis NFTs en Gamma',
+        label: 'My Gamma',
       },
       { href: 'https://flowernft.es', label: 'Camisetas' },
       { href: 'https://www.amazon.com/shop/florpena', label: 'Cuadernos' },
-      { href: 'mailto:soporteflorpc@gmail.com', label: 'Contacto' },
     ],
     cta: { href: 'https://flowernft.es', label: '¡Conoce mi tienda aquí!' },
   },
