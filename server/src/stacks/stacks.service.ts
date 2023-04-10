@@ -24,7 +24,7 @@ export class StacksService {
    */
   async getUsernameByAddress(address: string): Promise<string | null> {
     const namesResponse = await fetch(
-      `https://stacks-node-api.stacks.co/v1/addresses/stacks/${address}`,
+      `https://api.hiro.so/v1/addresses/stacks/${address}`,
     );
     const namesJson = (await namesResponse.json()) as { names: string[] };
     if ((namesJson.names.length || 0) > 0) {

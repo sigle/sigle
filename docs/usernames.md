@@ -2,7 +2,7 @@
 
 ## Using .btc BNS names
 
-When logging in with the Hiro wallet, .btc BNS names are not injected in the `username` property [stacks.js#1144](https://github.com/hirosystems/stacks.js/issues/1144). To overcome this, we call the `https://stacks-node-api.stacks.co/v1/addresses/stacks/${address}` endpoint to fetch the names associated with your address and use it as the `username` property.
+When logging in with the Hiro wallet, .btc BNS names are not injected in the `username` property [stacks.js#1144](https://github.com/hirosystems/stacks.js/issues/1144). To overcome this, we call the `https://api.hiro.so/v1/addresses/stacks/${address}` endpoint to fetch the names associated with your address and use it as the `username` property.
 
 This is handled in the `sigle/src/modules/auth/AuthContext.tsx` file.
 

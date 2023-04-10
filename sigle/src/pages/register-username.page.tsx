@@ -216,7 +216,7 @@ const RegisterUsername = () => {
 
     /**
      * After the request was sent to the registrar, while the tx is being processed,
-     * and not yet included in the blockchain, the endpoint "https://stacks-node-api.stacks.co/v1/addresses/stacks/${address}"
+     * and not yet included in the blockchain, the endpoint "https://api.hiro.so/v1/addresses/stacks/${address}"
      * which we use to get the username will return a empty username array.
      * To solve this issue, we store the username in the local storage.
      * The dashboard will notify the user that the username is being processed.

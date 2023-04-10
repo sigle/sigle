@@ -19,7 +19,7 @@ export const Protected = ({ children }: Props) => {
       if (user && user.username) {
         try {
           const namesResponse = await fetch(
-            `https://stacks-node-api.stacks.co/v1/names/${user.username}`
+            `https://api.hiro.so/v1/names/${user.username}`
           );
           const namesJson = (await namesResponse.json()) as {
             zonefile?: string;
