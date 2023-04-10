@@ -68,6 +68,7 @@
     "lowlight": "2.8.0",
     "micro-stacks": "1.1.5",
     "next": "13.2.4",
+    "next-auth": "4.10.3",
     "next-themes": "0.2.0",
     "react": "18.2.0",
     "react-cool-inview": "3.0.1",

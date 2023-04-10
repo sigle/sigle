@@ -12,10 +12,6 @@ import { useRelayStore } from '@/lib/relay';
 import { tailwindStyles } from '@/styles/tailwind';
 import { trpc } from '@/utils/trpc';
 
-const CeramicProvider = dynamic(
-  () => import('../components/Ceramic/CeramicProvider')
-);
-
 const inter = Inter({
   subsets: ['latin'],
   style: ['normal'],
@@ -23,6 +19,10 @@ const inter = Inter({
   variable: '--font-inter',
   display: 'swap',
 });
+
+const CeramicProvider = dynamic(
+  () => import('../components/Ceramic/CeramicProvider')
+);
 
 const globalStyle = globalCss({
   ...tailwindStyles,
