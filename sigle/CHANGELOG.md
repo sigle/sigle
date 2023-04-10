@@ -1,5 +1,50 @@
 # @sigle/app
 
+## 1.6.0
+
+### Minor Changes
+
+- 20a3bab: Create new newsletter page to manage settings.
+- fb985c8: Add private data and newsletter page in the settings.
+- e47a331: Change subscription NFT logic.
+- b5bfa7f: Add subscribe button and modal to profile page and profile card.
+- 4fdcb82: Add login modal prompt when a logged out user tries to follow someone on the explore, public profile and public story pages.
+- 3b8e2b8: Add option for writer to include CTA button in their stories.
+- 6751b95: User can now send test emails before publishing a story.
+- c9ea43a: Add newsletter card at the bottom of the public story page.
+  Add Form Control Group component.
+- 3a1150b: Add settings page to manate current user email.
+- 1d502b5: Allow users to add a canonical link to their stories via the editor settings.
+- 3a1150b: Prefill user email when subscribing if user has email set.
+
+### Patch Changes
+
+- f422cb4: Fix BNS without profile not being detected.
+- 5c1ca77: Upgrade to pnpm 8.
+- 3d9cab2: Connect to the publish workflow REST routes.
+- 4ffeb6d: Use new Hiro API endpoint.
+- 5fff7a1: Fix incorrect signing state persisting on cancel and when a user goes back to change account.
+- e1d7424: Prepare new publish flow dialog.
+- 5b63bdf: Add temporary themed button for halloween festivities.
+- 789c660: Fix issue when user has both .id.blockstack and .btc
+- 0886170: Show Mailjet dashboard button once newsletter is configured.
+- 44c80ba: Add sender email UI.
+- 82b177b: Fix cover image not showing in story list.
+- c5d3cd8: Fix invalid BNS not properly detected when zonfile value was not set.
+- 8961a96: Connect subscribe form to backend.
+- 340daae: Upgrade to next 13.2.
+- 73b9249: Update newsletter plan information.
+- 061d90f: Add and serve email assets.
+- 81ce771: Upgrade TipTap to v2 stable version.
+- 6c9de54: Enable email capture for Sigle blog.
+- b4169bc: Redirect sigleapp.id.blockstack to sigle.btc.
+- 05b58e7: Add a message on the plans page for legacy users.
+- 7f3cf17: Update normal buttons and icon buttons with new variants and styles.
+  Resize button instances across the app.
+- 5b23ad2: Logic to only send a newsletter once.
+- 71fb013: Fix keyboard shorcuts closing the subscribe modal instead of submitting the form.
+- 97f0cca: Editor: convert common text patterns with the correct typographic character.
+
 ## 1.5.0
 
 ### Minor Changes
