@@ -1,7 +1,6 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-import type { CreateSubscriptionCreatorPlusDto } from '../models/CreateSubscriptionCreatorPlusDto';
 import type { SubscriptionDto } from '../models/SubscriptionDto';
 
 import type { CancelablePromise } from '../core/CancelablePromise';
@@ -26,16 +25,10 @@ export class SubscriptionService {
    * @returns SubscriptionDto Returns the newly created subscription object.
    * @throws ApiError
    */
-  public static subscriptionControllerCreateSubscriptionCreatorPlus({
-    requestBody,
-  }: {
-    requestBody: CreateSubscriptionCreatorPlusDto;
-  }): CancelablePromise<SubscriptionDto> {
+  public static subscriptionControllerSyncSubscriptionWithNft(): CancelablePromise<SubscriptionDto> {
     return __request(OpenAPI, {
       method: 'POST',
-      url: '/api/subscriptions/creatorPlus',
-      body: requestBody,
-      mediaType: 'application/json',
+      url: '/api/subscriptions/syncWithNft',
     });
   }
 }

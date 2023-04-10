@@ -1,33 +1,63 @@
 export const sites: {
   [key: string]: {
     username: string;
-    name: string;
-    description: string;
-    avatar: string;
     banner: string;
+    links: { href: string; label: string }[];
+    cta?: { href: string; label: string };
   };
 } = {
   ['blog.sigle.io']: {
     username: 'sigle.btc',
-    name: 'Sigle',
-    description:
-      'The official Sigle blog, an open-source writing platform for web3 content creators.',
     banner: '/websites/blog.sigle.io/banner.png',
-    avatar:
-      'https://gaia.blockstack.org/hub/1KwTnsTj6Rqm26zRfhJuNdQUG63ieozxbB/photos/settings/1656339625902-logo_dapp_com.jpg',
+    links: [
+      { href: 'https://www.sigle.io/', label: 'Home' },
+      { href: 'https://app.sigle.io/explore', label: 'Explore' },
+    ],
+    cta: { href: 'https://app.sigle.io/', label: 'Get Started' },
   },
   ['blog.nftbot.app']: {
     username: 'nftbotapp.btc',
-    name: 'NFTBOT.app',
-    description:
-      'A fast and affordable multi-chain service: NFTBOT is the best way to automate sales alerts for your NFT project on Twitter.',
     banner: '/websites/blog.nftbot.app/banner.png',
-    avatar:
-      'https://gaia.blockstack.org/hub/1P4Ktt6EbjmBWRxnZUFU7pjvWQcTxXdtfe/photos/settings/1680265571505-pfp_2.jpg',
+    links: [
+      { href: 'https://www.nftbot.app/#features', label: 'Features' },
+      { href: 'https://www.nftbot.app/#pricing', label: 'Pricing' },
+    ],
+    cta: { href: 'https://www.nftbot.app/', label: 'Visit website' },
+  },
+  ['updates.liquidium.fi']: {
+    username: 'liquidium.btc',
+    banner: '/websites/updates.liquidium.fi/banner.png',
+    links: [],
+    cta: { href: 'https://liquidium.fi/', label: 'Visit Liquidium' },
+  },
+  ['blog.xn--florpea-9za.es']: {
+    username: 'flor.btc',
+    banner: '/websites/blog.xn--florpea-9za.es/banner.png',
+    links: [
+      {
+        href: 'https://florpeña.es/bienvenida',
+        label: 'Inicio',
+      },
+      {
+        href: 'https://app.sigle.io/flor.btc/72KIJ7Xh6drKa7b1RqJrl',
+        label: 'Sobre mi',
+      },
+      {
+        href: 'https://marketplace.heylayer.com/flower',
+        label: 'My Layer',
+      },
+      {
+        href: 'https://gamma.io/flor.btc',
+        label: 'My Gamma',
+      },
+      { href: 'https://flowernft.es', label: 'Camisetas' },
+      { href: 'https://www.amazon.com/shop/florpena', label: 'Cuadernos' },
+    ],
+    cta: { href: 'https://flowernft.es', label: '¡Conoce mi tienda aquí!' },
   },
 };
 
 // Add localhost to sites for development
 if (process.env.NODE_ENV === 'development') {
-  sites['localhost:3000'] = sites['blog.sigle.io'];
+  sites['localhost:3000'] = sites['blog.xn--florpea-9za.es'];
 }

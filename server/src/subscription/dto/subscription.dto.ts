@@ -5,5 +5,5 @@ export class SubscriptionDto {
   id: string;
 
   @ApiProperty()
-  nftId: number;
+  plan: string;
 }

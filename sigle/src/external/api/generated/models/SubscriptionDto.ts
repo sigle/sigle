@@ -4,5 +4,5 @@
 
 export type SubscriptionDto = {
   id: string;
-  nftId: number;
+  plan: string;
 };

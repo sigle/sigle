@@ -2,6 +2,8 @@ import { Header } from '@/components/Header';
 import { PostCard } from '@/components/PostCard';
 import ScrollUp from '@/components/ScrollUp';
 import { TableOfContents } from '@/components/TableOfContents';
+import { TwitterEmbed } from '@/components/TwitterEmbeds';
+import { SiteSettings } from '@/types';
 import { addIdsToHeadings } from '@/utils/addIdsToHeadings';
 import { extractTableOfContents } from '@/utils/extractTableOfContents';
 import { getAbsoluteUrl } from '@/utils/vercel';
@@ -13,12 +15,11 @@ export const runtime = 'edge';
 // Revalidate this page every 60 seconds
 export const revalidate = 60;
 
-async function getSettings({ site }: { site: string }): Promise<{
-  name: string;
-  description: string;
-  avatar: string;
-  banner: string;
-} | null> {
+async function getSettings({
+  site,
+}: {
+  site: string;
+}): Promise<SiteSettings | null> {
   const res = await fetch(`${getAbsoluteUrl()}/api/settings?site=${site}`);
   return res.json();
 }
@@ -162,6 +163,8 @@ export default async function Post({
                   __html: posthtml,
                 }}
               />
+
+              <TwitterEmbed />
             </div>
           </div>
 

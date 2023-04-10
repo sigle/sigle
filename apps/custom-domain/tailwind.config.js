@@ -1,6 +1,7 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
   content: ['./src/**/*.{js,ts,jsx,tsx}'],
+  darkMode: ['class', '[data-theme="dark"]'],
   theme: {
     container: {
       center: true,
@@ -19,12 +20,14 @@ module.exports = {
       colors: {
         sigle: {
           background: '#fcfcfc',
+          text: '#2f2f2f',
         },
       },
       typography: {
         DEFAULT: {
           css: {
             maxWidth: false,
+            color: false,
             h1: {
               color: false,
             },
@@ -42,5 +45,5 @@ module.exports = {
       },
     },
   },
-  plugins: [require('@tailwindcss/typography')],
+  plugins: [require('@tailwindcss/typography'), require('tailwindcss-animate')],
 };

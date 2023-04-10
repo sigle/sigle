@@ -1,88 +1,111 @@
-import {
-  ArrowLeftIcon,
-  CheckIcon,
-  QuestionMarkCircledIcon,
-} from '@radix-ui/react-icons';
-import Link from 'next/link';
-import { Dispatch, SetStateAction, useState } from 'react';
-import { useGetUserSubscription } from '../../../hooks/subscriptions';
+import { CheckIcon, QuestionMarkCircledIcon } from '@radix-ui/react-icons';
 import { styled } from '../../../stitches.config';
 import {
   Box,
   Button,
   Flex,
-  LoadingSpinner,
   Tooltip,
   TooltipContent,
   TooltipTrigger,
   Typography,
 } from '../../../ui';
-import { SettingsLayout } from '../SettingsLayout';
-import { SelectNFTDialog } from './SelectNFTDialog';
+import Link from 'next/link';
+import { sigleConfig } from '../../../config';
 
-type PlanStatus = 'active' | 'inactive' | 'progress';
+type PlanStatus = 'active' | 'inactive' | 'progress' | string;
 
 interface Feature {
   name: string;
   starterPlan: PlanStatus;
-  creatorPlan: PlanStatus;
+  basicPlan: PlanStatus;
+  publisherPlan: PlanStatus;
   info: string;
 }
 
 const features: Feature[] = [
   {
-    name: 'Write unlimited stories',
+    name: 'Unlimited publishing',
     starterPlan: 'active',
-    creatorPlan: 'active',
-    info: 'On Sigle, you can write as many stories as you want, whatever plan you choose.',
+    basicPlan: 'active',
+    publisherPlan: 'active',
+    info: 'Write as many articles as you want on Sigle, whatever the plan you choose.',
+  },
+  {
+    name: 'Blog on app.sigle.io',
+    starterPlan: 'active',
+    basicPlan: 'active',
+    publisherPlan: 'active',
+    info: 'We create a profile page for you on app.sigle.io/yourname where your articles will be listed.',
   },
   {
     name: 'Data stored on Gaïa',
     starterPlan: 'active',
-    creatorPlan: 'active',
-    info: 'Gaia is an off-chain storage solution. All your stories are truly yours and only you can edit and delete them.',
+    basicPlan: 'active',
+    publisherPlan: 'active',
+    info: 'Gaia is an off-chain storage solution created by Stacks. All your stories are truly yours and only you can edit and delete them.',
   },
   {
-    name: 'Analytics',
-    starterPlan: 'inactive',
-    creatorPlan: 'active',
-    info: 'In-depth analysis of your stories to maximize your views and visits on your blog.',
+    name: 'Create Ordinals',
+    starterPlan: 'active',
+    basicPlan: 'active',
+    publisherPlan: 'active',
+    info: "Inscribe your stories as Ordinals on Bitcoin, the world's most secure blockchain.",
   },
   {
     name: 'Send newsletters',
     starterPlan: 'inactive',
-    creatorPlan: 'progress',
-    info: 'Create your community on web3 and send newsletters (paid or free) to your subscribers!',
+    basicPlan: 'active',
+    publisherPlan: 'active',
+    info: 'Connect your Mailjet account and start sending newsletters to your subscribers.',
   },
   {
-    name: 'Monetise your stories',
-    starterPlan: 'progress',
-    creatorPlan: 'progress',
-    info: 'Get subscribers, monetise your stories and newsletters in crypto or fiat.',
-  },
-  {
-    name: 'Get featured in the Discover page',
+    name: 'Privacy focused analytics',
     starterPlan: 'inactive',
-    creatorPlan: 'progress',
-    info: 'Grow your community faster by reaching more people on the Discover page.',
+    basicPlan: 'active',
+    publisherPlan: 'active',
+    info: "Get stats about the performance of your blog without sacrificing your user's privacy. Service provided by Plausible.",
   },
   {
-    name: 'Create NFT gating for your stories',
+    name: 'Monetize your content',
     starterPlan: 'inactive',
-    creatorPlan: 'progress',
-    info: 'Give your community access to your paid stories with your own NFT collection!',
+    basicPlan: 'progress',
+    publisherPlan: 'progress',
+    info: 'Connect Unlock Protocol or use Stripe and create a recurring revenue stream.',
   },
   {
-    name: 'Personal domain',
+    name: 'Custom domain',
     starterPlan: 'inactive',
-    creatorPlan: 'progress',
-    info: 'Use your own domain to match your brand and make your blog stand out.',
+    basicPlan: 'active',
+    publisherPlan: 'active',
+    info: 'Boost your SEO (100/100 Lighthouse score) with a personalized domain that truly stands out while maintaining full ownership of your content.',
   },
   {
-    name: 'Access community Discord channel & special giveaway',
+    name: 'Page views (custom domain)',
     starterPlan: 'inactive',
-    creatorPlan: 'active',
-    info: 'Explorer Guild NFT holders can access the community chat and many giveaways from our partners on Discord.',
+    basicPlan: '2,000',
+    publisherPlan: '100,000',
+    info: 'This indicates the limit of views per month that your custom domain can support. Your articles will always remain visible on app.sigle.io even if the limit is reached.',
+  },
+  {
+    name: 'Custom CSS',
+    starterPlan: 'inactive',
+    basicPlan: 'inactive',
+    publisherPlan: 'progress',
+    info: 'Create the blog of your dreams by editing the CSS of your custom domain.',
+  },
+  {
+    name: 'Themes (custom domain)',
+    starterPlan: 'inactive',
+    basicPlan: '1',
+    publisherPlan: '1 (more soon)',
+    info: 'Choose among several themes for your custom domain.',
+  },
+  {
+    name: 'Premium support',
+    starterPlan: 'inactive',
+    basicPlan: 'inactive',
+    publisherPlan: 'active',
+    info: 'Get fast and prioritized support on our Discord server.',
   },
 ];
 
@@ -143,15 +166,10 @@ const Td = styled('td', {
 
 interface TableProps {
   children: React.ReactNode;
-  setIsSelectNFTDialogOpen: Dispatch<SetStateAction<boolean>>;
-  activeSubscription?: boolean;
+  currentPlan: 'Starter' | 'Basic' | 'Publisher';
 }
 
-const Table = ({
-  children,
-  setIsSelectNFTDialogOpen,
-  activeSubscription,
-}: TableProps) => (
+const Table = ({ children, currentPlan }: TableProps) => (
   <StyledTable>
     <thead>
       <Tr css={{ boxShadow: '0 1px 0 0 $colors$gray12' }}>
@@ -175,19 +193,19 @@ const Table = ({
               borderRadius: '20px 20px 0 0',
               height: 8,
               width: '100%',
-              backgroundColor: '$gray11',
+              backgroundColor: '$gray8',
             }}
           />
           <Typography size="h4" css={{ fontWeight: 600 }}>
             Starter
           </Typography>
           <Typography size="subheading" css={{ color: '$gray9' }}>
-            All the basic
+            The fundamentals
           </Typography>
           <Typography size="h4" css={{ fontWeight: 600 }}>
             Free
           </Typography>
-          {!activeSubscription && (
+          {currentPlan === 'Starter' && (
             <Typography
               size="subheading"
               css={{
@@ -217,28 +235,19 @@ const Table = ({
               borderRadius: '20px 20px 0 0',
               height: 8,
               width: '100%',
-              backgroundColor: '$violet11',
+              backgroundColor: '$green11',
             }}
           />
           <Typography size="h4" css={{ fontWeight: 600 }}>
-            Creator +
+            Basic
           </Typography>
           <Typography size="subheading" css={{ color: '$gray9' }}>
-            Unlock with your NFT
+            Free with 1 NFT
           </Typography>
           <Typography size="h4" css={{ fontWeight: 600 }}>
-            Free
+            $12/month
           </Typography>
-          {!activeSubscription ? (
-            <Button
-              onClick={() => setIsSelectNFTDialogOpen(true)}
-              size="lg"
-              color="violet"
-              css={{ width: 'calc(100% - $6)' }}
-            >
-              Link your NFT
-            </Button>
-          ) : (
+          {currentPlan === 'Basic' ? (
             <Typography
               size="subheading"
               css={{
@@ -250,6 +259,56 @@ const Table = ({
             >
               Current plan
             </Typography>
+          ) : (
+            <Link href={sigleConfig.gumroadUrl}>
+              <Button color="green">Select this plan</Button>
+            </Link>
+          )}
+        </Th>
+        <Th
+          css={{
+            display: 'flex',
+            flexDirection: 'column',
+            gap: '$2',
+            alignItems: 'center',
+            backgroundColor: '$gray2',
+            maxWidth: 220,
+          }}
+          scope="col"
+        >
+          <Box
+            css={{
+              borderRadius: '20px 20px 0 0',
+              height: 8,
+              width: '100%',
+              backgroundColor: '$violet11',
+            }}
+          />
+          <Typography size="h4" css={{ fontWeight: 600 }}>
+            Publisher
+          </Typography>
+          <Typography size="subheading" css={{ color: '$gray9' }}>
+            Free with 3 NFTs
+          </Typography>
+          <Typography size="h4" css={{ fontWeight: 600 }}>
+            $29/month
+          </Typography>
+          {currentPlan === 'Publisher' ? (
+            <Typography
+              size="subheading"
+              css={{
+                backgroundColor: '$violet5',
+                px: '$3',
+                py: '$1',
+                br: '$2',
+              }}
+            >
+              Current plan
+            </Typography>
+          ) : (
+            <Link href={sigleConfig.gumroadUrl}>
+              <Button color="violet">Select this plan</Button>
+            </Link>
           )}
         </Th>
       </Tr>
@@ -258,122 +317,155 @@ const Table = ({
   </StyledTable>
 );
 
-export const ComparePlans = () => {
-  const { data: subscriptionData, isLoading } = useGetUserSubscription();
-  const [isSelectNFTDialogOpen, setIsSelectNFTDialogOpen] = useState(false);
+interface ComparePlansProps {
+  currentPlan: 'Starter' | 'Basic' | 'Publisher';
+}
 
+export const ComparePlans = ({ currentPlan }: ComparePlansProps) => {
   const getFeatureStatus = (value: PlanStatus) => {
     switch (value) {
       case 'active':
         return <CheckIcon />;
       case 'inactive':
-        return null;
+        return '-';
       case 'progress':
         return '⚙️';
       default:
-        throw new Error('No value received.');
+        return value;
     }
   };
 
   return (
-    <SettingsLayout>
+    <>
       <TableContainer />
-      <Link href="/settings/plans" legacyBehavior>
-        <Button
-          size="sm"
-          css={{
-            gap: '$2',
-            cursor: 'pointer',
-            position: 'absolute',
-            '@md': { position: 'relative' },
-          }}
-          variant="subtle"
-          as="a"
-        >
-          <ArrowLeftIcon />
-          Go back to your current plan
-        </Button>
-      </Link>
 
-      {isLoading ? (
-        <Box css={{ py: '$10' }}>
-          <LoadingSpinner />
-        </Box>
-      ) : null}
-
-      {!isLoading ? (
-        <Table
-          activeSubscription={!!subscriptionData}
-          setIsSelectNFTDialogOpen={setIsSelectNFTDialogOpen}
-        >
-          {features.map((feature) => (
-            <Tr
-              css={{
-                '&:last-of-type': {
-                  '& td': {
-                    br: '0 0 20px 20px',
-                    pb: '$8',
-                  },
+      <Table currentPlan={currentPlan}>
+        {features.map((feature) => (
+          <Tr
+            css={{
+              '&:last-of-type': {
+                '& td': {
+                  br: '0 0 20px 20px',
+                  pb: '$8',
                 },
+              },
+            }}
+            key={feature.name}
+          >
+            <Th
+              css={{
+                display: 'flex',
+                flexDirection: 'column',
+                justifyContent: 'center',
+                maxWidth: 335,
               }}
-              key={feature.name}
+              scope="row"
             >
-              <Th
-                css={{
-                  display: 'flex',
-                  flexDirection: 'column',
-                  justifyContent: 'center',
-                  maxWidth: 335,
-                }}
-                scope="row"
-              >
-                <Flex gap="10" justify="between" align="center">
-                  <Typography size="subheading">{feature.name}</Typography>
-                  <Tooltip delayDuration={100}>
-                    <TooltipTrigger>
-                      <QuestionMarkCircledIcon />
-                    </TooltipTrigger>
-                    <TooltipContent
-                      side="top"
-                      sideOffset={4}
-                      css={{
-                        textAlign: 'center',
-                        boxShadow: 'none',
-                        width: 240,
-                      }}
-                    >
-                      {feature.info}
-                    </TooltipContent>
-                  </Tooltip>
-                </Flex>
-              </Th>
-              <Td
-                css={{
-                  backgroundColor: '$gray2',
-                  '& svg': { width: 22, height: 22 },
-                  maxWidth: 220,
-                }}
-              >
-                {getFeatureStatus(feature.starterPlan)}
-              </Td>
-              <Td
-                css={{
-                  backgroundColor: '$gray2',
-                  '& svg': { width: 22, height: 22, color: '$violet11' },
-                  maxWidth: 220,
-                }}
-              >
-                {getFeatureStatus(feature.creatorPlan)}
-              </Td>
-            </Tr>
-          ))}
-        </Table>
-      ) : null}
+              <Flex gap="10" justify="between" align="center">
+                <Typography size="subheading">{feature.name}</Typography>
+                <Tooltip delayDuration={100}>
+                  <TooltipTrigger>
+                    <QuestionMarkCircledIcon />
+                  </TooltipTrigger>
+                  <TooltipContent
+                    side="top"
+                    sideOffset={4}
+                    css={{
+                      textAlign: 'center',
+                      boxShadow: 'none',
+                      width: 240,
+                    }}
+                  >
+                    {feature.info}
+                  </TooltipContent>
+                </Tooltip>
+              </Flex>
+            </Th>
+            <Td
+              css={{
+                backgroundColor: '$gray2',
+                '& svg': { width: 22, height: 22 },
+                maxWidth: 220,
+              }}
+            >
+              {getFeatureStatus(feature.starterPlan)}
+            </Td>
+            <Td
+              css={{
+                backgroundColor: '$gray2',
+                '& svg': { width: 22, height: 22 },
+                maxWidth: 220,
+              }}
+            >
+              {getFeatureStatus(feature.basicPlan)}
+            </Td>
+            <Td
+              css={{
+                backgroundColor: '$gray2',
+                '& svg': { width: 22, height: 22 },
+                maxWidth: 220,
+              }}
+            >
+              {getFeatureStatus(feature.publisherPlan)}
+            </Td>
+          </Tr>
+        ))}
+      </Table>
 
-      <SelectNFTDialog
-        open={isSelectNFTDialogOpen}
-        onOpenChange={() => setIsSelectNFTDialogOpen(false)}
-      />
-    </SettingsLayout>
+      <Flex
+        css={{
+          mt: '$5',
+          gap: '$4',
+          backgroundColor: '$gray2',
+          position: 'relative',
+          p: '$5',
+          borderRadius: '0px 0px 12px 12px',
+        }}
+        justify="between"
+        align="start"
+      >
+        <Box
+          css={{
+            borderRadius: '20px 20px 0 0',
+            height: 8,
+            backgroundColor: '$gray11',
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            right: 0,
+          }}
+        />
+        <Flex direction="column">
+          <Typography css={{ fontWeight: 600 }}>Enterprise</Typography>
+          <Typography size="subheading" css={{ color: '$gray9', mt: '$1' }}>
+            Made for large audiences
+          </Typography>
+          <Flex align="center" gap="4" css={{ mt: '$4' }}>
+            <Typography
+              size="subheading"
+              css={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '$1',
+                fontWeight: 600,
+              }}
+            >
+              <CheckIcon />
+              Everything in Publisher
+            </Typography>
+            <Typography
+              size="subheading"
+              css={{ display: 'flex', alignItems: 'center', gap: '$1' }}
+            >
+              <CheckIcon />
+              100,000+ page views (custom domain)
+            </Typography>
+          </Flex>
+        </Flex>
+        <Link href={'mailto:hello@sigle.io?subject=Sigle enterprise plan'}>
+          <Button>Contact us</Button>
+        </Link>
+      </Flex>
+    </>
   );
 };

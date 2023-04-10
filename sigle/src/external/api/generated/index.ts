@@ -10,7 +10,6 @@ export type { AddEmailDto } from './models/AddEmailDto';
 export type { AnalyticsHistoricalDto } from './models/AnalyticsHistoricalDto';
 export type { AnalyticsStoryDto } from './models/AnalyticsStoryDto';
 export type { CreateSubscriberDto } from './models/CreateSubscriberDto';
-export type { CreateSubscriptionCreatorPlusDto } from './models/CreateSubscriptionCreatorPlusDto';
 export type { CreateUserFollowDto } from './models/CreateUserFollowDto';
 export type { DeleteUserFollowDto } from './models/DeleteUserFollowDto';
 export type { EmailDto } from './models/EmailDto';
