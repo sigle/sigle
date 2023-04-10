@@ -11,7 +11,7 @@ import {
   TbUserCircle,
   TbUsers,
 } from 'react-icons/tb';
-import { useModal } from 'connectkit';
+import { useAuth as useStacksAuth } from '@micro-stacks/react';
 import { styled } from '@sigle/stitches.config';
 import {
   NumberBadge,
@@ -93,13 +93,13 @@ const NavBarLink = ({
   label,
   active,
 }: NavBarLinkProps) => {
-  const { setOpen: setConnectKitOpen } = useModal();
+  const { openAuthRequest } = useStacksAuth();
 
   const handleLinkClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
     if (href === '/connect') {
       e.preventDefault();
       e.stopPropagation();
-      setConnectKitOpen(true);
+      openAuthRequest();
     }
   };
 
