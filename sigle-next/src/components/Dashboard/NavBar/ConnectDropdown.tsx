@@ -12,10 +12,12 @@ import {
 } from '@sigle/ui';
 import { useDashboardStore } from '../store';
 import { DropdownMenuItemWithSwitch } from './UserDropdown';
+import { useAuthModal } from '@/components/AuthModal/AuthModal';
 
 export const ConnectDropdown = () => {
   const { resolvedTheme, setTheme } = useTheme();
   const { openAuthRequest } = useStacksAuth();
+  const { setOpen } = useAuthModal();
   const collapsed = useDashboardStore((state) => state.collapsed);
   const toggleCollapse = useDashboardStore((state) => state.toggleCollapse);
 
@@ -24,7 +26,7 @@ export const ConnectDropdown = () => {
   };
 
   const openStacksConnect = () => {
-    openAuthRequest();
+    setOpen(true);
   };
 
   return (

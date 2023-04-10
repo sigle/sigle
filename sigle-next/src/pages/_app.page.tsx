@@ -11,6 +11,7 @@ import { darkTheme, globalCss } from '@sigle/stitches.config';
 import { useRelayStore } from '@/lib/relay';
 import { tailwindStyles } from '@/styles/tailwind';
 import { trpc } from '@/utils/trpc';
+import { AuthModal } from '@/components/AuthModal/AuthModal';
 
 const inter = Inter({
   subsets: ['latin'],
@@ -54,6 +55,7 @@ const MyApp: AppType = ({ Component, pageProps }) => {
             appIconUrl="https://app.sigle.io/icon-192x192.png"
           >
             <CeramicProvider>
+              <AuthModal />
               <Component {...pageProps} />
             </CeramicProvider>
           </StacksClientProvider>
