@@ -30,9 +30,34 @@ export const sites: {
     links: [],
     cta: { href: 'https://liquidium.fi/', label: 'Visit Liquidium' },
   },
+  ['blog.xn--florpea-9za.es']: {
+    username: 'flor.btc',
+    banner: '/websites/blog.xn--florpea-9za.es/banner.png',
+    links: [
+      {
+        href: 'https://florpeña.es/bienvenida',
+        label: 'Inicio',
+      },
+      {
+        href: 'https://app.sigle.io/flor.btc/72KIJ7Xh6drKa7b1RqJrl',
+        label: 'Sobre mi',
+      },
+      {
+        href: 'https://marketplace.heylayer.com/flower',
+        label: 'My Layer',
+      },
+      {
+        href: 'https://gamma.io/flor.btc',
+        label: 'My Gamma',
+      },
+      { href: 'https://flowernft.es', label: 'Camisetas' },
+      { href: 'https://www.amazon.com/shop/florpena', label: 'Cuadernos' },
+    ],
+    cta: { href: 'https://flowernft.es', label: '¡Conoce mi tienda aquí!' },
+  },
 };
 
 // Add localhost to sites for development
 if (process.env.NODE_ENV === 'development') {
-  sites['localhost:3000'] = sites['updates.liquidium.fi'];
+  sites['localhost:3000'] = sites['blog.xn--florpea-9za.es'];
 }

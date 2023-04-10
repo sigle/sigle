@@ -94,7 +94,7 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
     if (userData.username === undefined && address) {
       try {
         const namesResponse = await fetch(
-          `https://stacks-node-api.stacks.co/v1/addresses/stacks/${address}`
+          `https://api.hiro.so/v1/addresses/stacks/${address}`
         );
         const namesJson = await namesResponse.json();
         if ((namesJson.names.length || 0) > 0) {

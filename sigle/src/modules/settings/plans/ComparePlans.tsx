@@ -436,7 +436,7 @@ export const ComparePlans = ({ currentPlan }: ComparePlansProps) => {
           }}
         />
         <Flex direction="column">
-          <Typography css={{ fontWeight: 600 }}>Entreprise</Typography>
+          <Typography css={{ fontWeight: 600 }}>Enterprise</Typography>
           <Typography size="subheading" css={{ color: '$gray9', mt: '$1' }}>
             Made for large audiences
           </Typography>
