@@ -12,12 +12,6 @@ import { useRelayStore } from '@/lib/relay';
 import { tailwindStyles } from '@/styles/tailwind';
 import { trpc } from '@/utils/trpc';
 
-/**
- * Lazy load the WagmiProvider as it's huge to avoid bloating the main bundle
- */
-const WagmiProvider = dynamic(
-  () => import('../components/Ethereum/WagmiProvider')
-);
 const CeramicProvider = dynamic(
   () => import('../components/Ceramic/CeramicProvider')
 );
@@ -55,16 +49,14 @@ const MyApp: AppType = ({ Component, pageProps }) => {
         value={{ light: 'light', dark: darkTheme.className }}
       >
         <ReactRelayContext.Provider value={{ environment }}>
-          <WagmiProvider>
-            <StacksClientProvider
-              appName="Sigle"
-              appIconUrl="https://app.sigle.io/icon-192x192.png"
-            >
-              <CeramicProvider>
-                <Component {...pageProps} />
-              </CeramicProvider>
-            </StacksClientProvider>
-          </WagmiProvider>
+          <StacksClientProvider
+            appName="Sigle"
+            appIconUrl="https://app.sigle.io/icon-192x192.png"
+          >
+            <CeramicProvider>
+              <Component {...pageProps} />
+            </CeramicProvider>
+          </StacksClientProvider>
         </ReactRelayContext.Provider>
       </ThemeProvider>
     </>

@@ -1,7 +1,7 @@
 import { TooltipProvider } from '@radix-ui/react-tooltip';
 import Link from 'next/link';
 import { useInView } from 'react-cool-inview';
-import { useModal } from 'connectkit';
+import { useAuth as useStacksAuth } from '@micro-stacks/react';
 import { Button, Container, Flex, LoadingSpinner, Typography } from '@sigle/ui';
 import { StoryCardPublishedSkeleton } from '@/components/StoryCard/StoryCardPublishedSkeleton';
 import { trpc } from '@/utils/trpc';
@@ -70,7 +70,7 @@ const HopePostList = () => {
 };
 
 export default function Home() {
-  const { setOpen: setConnectKitOpen } = useModal();
+  const { openAuthRequest } = useStacksAuth();
   const { session } = useCeramic();
   const userDid = session?.did.parent;
 
@@ -87,9 +87,7 @@ export default function Home() {
                 <Button>Write story</Button>
               </Link>
             ) : (
-              <Button onClick={() => setConnectKitOpen(true)}>
-                Write story
-              </Button>
+              <Button onClick={() => openAuthRequest()}>Write story</Button>
             )}
           </Flex>
         }
