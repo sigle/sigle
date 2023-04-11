@@ -11,6 +11,7 @@ import '@/styles/globals.css';
 import { darkTheme, globalCss } from '@sigle/stitches.config';
 import { useRelayStore } from '@/lib/relay';
 import { trpc } from '@/utils/trpc';
+import { Toaster } from '@/ui/Toaster';
 
 const CeramicProvider = dynamic(
   () => import('../components/Ceramic/CeramicProvider')
@@ -53,6 +54,7 @@ const MyApp: AppType = ({ Component, pageProps }) => {
           >
             <CeramicProvider>
               <Component {...pageProps} />
+              <Toaster />
             </CeramicProvider>
           </StacksClientProvider>
         </ReactRelayContext.Provider>
