@@ -67,7 +67,7 @@ export const RouteSign = () => {
     const signInResult = await signIn<RedirectableProviderType>('credentials', {
       message,
       redirect: false,
-      signature,
+      signature: signature.signature,
       callbackUrl: '/protected',
     });
     if (signInResult && signInResult.error) {
