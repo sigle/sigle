@@ -101,7 +101,6 @@ const PostPage = () => {
 
   const isViewer = userDid === post.data?.did;
 
-  // TODO loading state
   if (post.isLoading) {
     return (
       <DashboardLayout sidebarContent={<UserProfileSkeleton />}>
