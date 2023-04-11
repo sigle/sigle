@@ -1,6 +1,5 @@
 import { useTheme } from 'next-themes';
 import { TbSettings, TbWallet } from 'react-icons/tb';
-import { useAuth as useStacksAuth } from '@micro-stacks/react';
 import {
   Button,
   DropdownMenu,
@@ -16,7 +15,6 @@ import { useAuthModal } from '@/components/AuthModal/AuthModal';
 
 export const ConnectDropdown = () => {
   const { resolvedTheme, setTheme } = useTheme();
-  const { openAuthRequest } = useStacksAuth();
   const { setOpen } = useAuthModal();
   const collapsed = useDashboardStore((state) => state.collapsed);
   const toggleCollapse = useDashboardStore((state) => state.toggleCollapse);

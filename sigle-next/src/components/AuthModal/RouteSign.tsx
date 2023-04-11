@@ -11,7 +11,9 @@ import Image from 'next/image';
 import { nextImageLoader } from '@/utils/nextImageLoader';
 import { addressAvatar } from '@/utils';
 import { styled } from '@sigle/stitches.config';
-import { TbCircleCheck } from 'react-icons/tb';
+import { TbCircleCheck, TbChevronRight } from 'react-icons/tb';
+import { useMicroStacksClient } from '@micro-stacks/react';
+import { getCsrfToken } from 'next-auth/react';
 
 const AvatarContainer = styled('div', {
   display: 'flex',
@@ -27,19 +29,22 @@ const AvatarContainer = styled('div', {
 export const RouteSign = () => {
   const { openAuthRequest } = useStacksAuth();
   const { stxAddress } = useAccount();
+  const client = useMicroStacksClient();
   const setRoute = useAuthModalStore((state) => state.setRoute);
 
-  const signMessage = () => {
-    // TODO loading state once connect popup is open
-    // TODO if wallet not installed show message with install link
-    openAuthRequest({
-      onFinish: () => {
-        setRoute('sign');
-      },
-      onCancel: () => {
-        // TODO
-      },
+  const signMessage = async () => {
+    // TODO loading state once sign popup is open
+
+    const csrfToken = await getCsrfToken();
+    if (!csrfToken) {
+      throw new Error('No csrf token');
+    }
+    const message = client.getSignInMessage({
+      domain: `${window.location.protocol}//${window.location.host}`,
+      nonce: csrfToken,
     });
+
+    console.log(message);
   };
 
   return (
@@ -85,7 +90,11 @@ export const RouteSign = () => {
           <Typography color="gray9">
             Please sign the message request in your wallet to continue.
           </Typography>
-          <Button size="lg" onClick={signMessage}>
+          <Button
+            size="lg"
+            onClick={signMessage}
+            rightIcon={<TbChevronRight />}
+          >
             Sign in
           </Button>
         </Flex>
