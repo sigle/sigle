@@ -13,12 +13,27 @@ const gray = {
   gray12: '#080808',
 };
 
+const orange = {
+  orange1: '#FFF9F6',
+  orange2: '#FFF1EC',
+  orange3: '#FFE9E1',
+  orange4: '#FFE0D5',
+  orange5: '#FFD6C7',
+  orange6: '#FFC8B4',
+  orange7: '#FFB79D',
+  orange8: '#FF9873',
+  orange9: '#F9703E',
+  orange10: '#E9531D',
+  orange11: '#DA3A00',
+  orange12: '#CC3600',
+};
+
 /** @type {import('tailwindcss').Config} */
 module.exports = {
   content: ['./src/**/*.{js,ts,jsx,tsx,mdx}'],
   theme: {
     extend: {
-      colors: { ...gray },
+      colors: { ...gray, ...orange },
       keyframes: {
         hide: {
           from: { opacity: 1 },
