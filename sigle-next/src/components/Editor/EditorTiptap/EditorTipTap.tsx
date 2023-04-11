@@ -40,6 +40,7 @@ import { TipTapMobileScroll } from './extensions/MobileScroll';
 import { slashCommands } from './extensions/SlashCommand/commands';
 import { SlashCommands } from './extensions/SlashCommand/SlashCommands';
 import { CodeBlockComponent } from './extensions/CodeBlock/CodeBlock';
+import { EditorMobileToolbar } from './MobileToolbar/MobileToolbar';
 
 lowlight.registerLanguage('clarity (beta)', clarity);
 
@@ -145,9 +146,10 @@ export const EditorTipTap = () => {
     <div className="prose dark:prose-invert lg:prose-lg">
       <StyledEditorContent editor={editor} />
       {editor && <EditorBottomInfo editor={editor} />}
-      {editor && !isMobile && <EditorBubbleMenu editor={editor} />}
-      {editor && !isMobile && <EditorFloatingMenu editor={editor} />}
-      {/* TODO mobile toolbar */}
+      {editor && <EditorBubbleMenu editor={editor} isMobile={isMobile} />}
+      {editor && <EditorFloatingMenu editor={editor} isMobile={isMobile} />}
+      {editor && <EditorFloatingMenu editor={editor} isMobile={isMobile} />}
+      {editor && isMobile && <EditorMobileToolbar editor={editor} />}
     </div>
   );
 };

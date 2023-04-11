@@ -1,5 +1,5 @@
 import { Editor } from '@tiptap/react';
-import { TbCross } from 'react-icons/tb';
+import { TbX } from 'react-icons/tb';
 import { styled } from '@sigle/stitches.config';
 import { Flex } from '@sigle/ui';
 import { useBubbleMenuStore } from './store';
@@ -95,7 +95,7 @@ export const EditorBubbleMenuLink = ({ editor }: EditorBubbleMenuProps) => {
         onClick={() => resetLink()}
         active={false}
       >
-        <TbCross size={18} />
+        <TbX size={18} />
       </BubbleMenuButton>
     </Flex>
   );
