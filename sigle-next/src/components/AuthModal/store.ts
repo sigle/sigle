@@ -6,6 +6,6 @@ interface AuthModalState {
 }
 
 export const useAuthModalStore = create<AuthModalState>()((set) => ({
-  open: true,
+  open: false,
   setOpen: (open: boolean) => set({ open }),
 }));
