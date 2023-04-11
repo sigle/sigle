@@ -7,10 +7,11 @@ import { ReactRelayContext } from 'react-relay';
 import { ClientProvider as StacksClientProvider } from '@micro-stacks/react';
 import 'tippy.js/dist/tippy.css';
 import 'tippy.js/themes/light-border.css';
+import '@/styles/globals.css';
 import { darkTheme, globalCss } from '@sigle/stitches.config';
 import { useRelayStore } from '@/lib/relay';
-import { tailwindStyles } from '@/styles/tailwind';
 import { trpc } from '@/utils/trpc';
+import { Toaster } from '@/ui/Toaster';
 
 const CeramicProvider = dynamic(
   () => import('../components/Ceramic/CeramicProvider')
@@ -25,9 +26,7 @@ const inter = Inter({
 });
 
 const globalStyle = globalCss({
-  ...tailwindStyles,
   body: {
-    ...tailwindStyles.body,
     fontFamily: 'var(--font-inter)',
     backgroundColor: '$gray1',
     color: '$gray11',
@@ -55,6 +54,7 @@ const MyApp: AppType = ({ Component, pageProps }) => {
           >
             <CeramicProvider>
               <Component {...pageProps} />
+              <Toaster />
             </CeramicProvider>
           </StacksClientProvider>
         </ReactRelayContext.Provider>
