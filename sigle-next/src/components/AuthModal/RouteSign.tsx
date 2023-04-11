@@ -39,6 +39,7 @@ export const RouteSign = () => {
     if (!csrfToken) {
       throw new Error('No csrf token');
     }
+    // TODO custom statement with privacy policy
     const message = client.getSignInMessage({
       domain: `${window.location.protocol}//${window.location.host}`,
       nonce: csrfToken,
