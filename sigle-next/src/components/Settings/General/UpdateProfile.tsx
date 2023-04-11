@@ -18,6 +18,7 @@ import { UpdateProfileMutation } from '@/__generated__/relay/UpdateProfileMutati
 import { CeramicProfile } from '@/types/ceramic';
 import { trpc } from '@/utils/trpc';
 import { DashboardLayout } from '@/components/Dashboard/DashboardLayout';
+import { useToast } from '@/hooks/useToast';
 
 const TitleRow = styled('div', {
   py: '$5',
@@ -55,8 +56,9 @@ export const SettingsUpdateProfile = ({
 }: {
   profile: CeramicProfile;
 }) => {
-  const [isFetching, setIsFetching] = useState(false);
   const utils = trpc.useContext();
+  const { toast } = useToast();
+  const [isFetching, setIsFetching] = useState(false);
 
   const [commit, isLoadingCommitUpdateProfile] =
     useMutation<UpdateProfileMutation>(
@@ -106,16 +108,22 @@ export const SettingsUpdateProfile = ({
       },
       onCompleted: (data, errors) => {
         if (errors) {
-          // TODO toast error
           Sentry.captureMessage('Error updating profile', {
             extra: { errors },
+          });
+          console.error(errors);
+          toast({
+            description: `Error updating profile: ${errors[0].message}`,
+            variant: 'error',
           });
           return;
         }
         if (data.updateProfile) {
           setIsFetching(true);
           utils.invalidate().then(() => {
-            // TODO toast success
+            toast({
+              description: 'Profile updated',
+            });
             setIsFetching(false);
           });
         }
