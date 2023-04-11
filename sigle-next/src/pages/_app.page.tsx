@@ -6,12 +6,12 @@ import dynamic from 'next/dynamic';
 import { ReactRelayContext } from 'react-relay';
 import { ClientProvider as StacksClientProvider } from '@micro-stacks/react';
 import { SessionProvider } from 'next-auth/react';
+import '@/styles/globals.css';
 import 'tippy.js/dist/tippy.css';
 import 'tippy.js/themes/light-border.css';
 import { Session } from 'next-auth';
 import { darkTheme, globalCss } from '@sigle/stitches.config';
 import { useRelayStore } from '@/lib/relay';
-import { tailwindStyles } from '@/styles/tailwind';
 import { trpc } from '@/utils/trpc';
 import { AuthModal } from '@/components/AuthModal/AuthModal';
 
@@ -28,9 +28,7 @@ const CeramicProvider = dynamic(
 );
 
 const globalStyle = globalCss({
-  ...tailwindStyles,
   body: {
-    ...tailwindStyles.body,
     fontFamily: 'var(--font-inter)',
     backgroundColor: '$gray1',
     color: '$gray11',
