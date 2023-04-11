@@ -16,6 +16,7 @@ import {
 import { addressAvatar } from '@/utils';
 import { nextImageLoader } from '@/utils/nextImageLoader';
 import { useAuthModalStore } from './store';
+import { useToast } from '@/hooks/useToast';
 
 const AvatarContainer = styled('div', {
   display: 'flex',
@@ -36,6 +37,7 @@ export const RouteSign = () => {
   const { openSignMessage } = useOpenSignMessage();
   const client = useMicroStacksClient();
   const setOpen = useAuthModalStore((state) => state.setOpen);
+  const { toast } = useToast();
 
   const signMessage = async () => {
     setSigningState('loading');
@@ -52,32 +54,32 @@ export const RouteSign = () => {
       // TODO remove version field once https://github.com/fungible-systems/micro-stacks/pull/184 is merged
       version: '1',
     });
-    if (stacksMessage) {
-      const message = stacksMessage.toMessage();
-      const signature = await openSignMessage({ message });
-      if (!signature) {
-        setSigningState('cancelled');
-        return;
-      }
-      if (signature) {
-        const signInResult = await signIn<RedirectableProviderType>(
-          'credentials',
-          {
-            message,
-            redirect: false,
-            signature,
-            callbackUrl: '/protected',
-          }
-        );
-      }
-      // if (signInResult && signInResult.error) {
-      //   posthog.capture('start-login-sign-message-error');
-      //   toast.error('Failed to login');
-      //   setSigningState('inactive');
-      // }
-      // setSigningState('complete');
-      console.log('signature', signature);
+    if (!stacksMessage) {
+      setSigningState('cancelled');
+      return;
     }
+    const message = stacksMessage.toMessage();
+    const signature = await openSignMessage({ message });
+    if (!signature) {
+      setSigningState('cancelled');
+      return;
+    }
+    const signInResult = await signIn<RedirectableProviderType>('credentials', {
+      message,
+      redirect: false,
+      signature,
+      callbackUrl: '/protected',
+    });
+    if (signInResult && signInResult.error) {
+      // posthog.capture('start-login-sign-message-error');
+      toast({
+        description: 'Failed to login',
+        variant: 'error',
+      });
+      setSigningState('cancelled');
+      return;
+    }
+    setSigningState('complete');
   };
 
   return (
