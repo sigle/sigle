@@ -8,6 +8,7 @@ import { trpc } from '@/utils/trpc';
 import { StoryCardPublished } from '@/components/StoryCard/StoryCardPublished';
 import { useCeramic } from '@/components/Ceramic/CeramicProvider';
 import { DashboardLayout } from '../components/Dashboard/DashboardLayout';
+import { useAuthModal } from '@/components/AuthModal/AuthModal';
 
 const HopePostList = () => {
   const postList = trpc.postList.useInfiniteQuery(
@@ -70,7 +71,7 @@ const HopePostList = () => {
 };
 
 export default function Home() {
-  const { openAuthRequest } = useStacksAuth();
+  const { setOpen } = useAuthModal();
   const { session } = useCeramic();
   const userDid = session?.did.parent;
 
@@ -87,7 +88,7 @@ export default function Home() {
                 <Button>Write story</Button>
               </Link>
             ) : (
-              <Button onClick={() => openAuthRequest()}>Write story</Button>
+              <Button onClick={() => setOpen(true)}>Write story</Button>
             )}
           </Flex>
         }
