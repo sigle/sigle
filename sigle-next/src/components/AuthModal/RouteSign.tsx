@@ -1,4 +1,4 @@
-import { useAccount, useAuth as useStacksAuth } from '@micro-stacks/react';
+import { useAccount, useOpenSignMessage } from '@micro-stacks/react';
 import {
   Button,
   DialogDescription,
@@ -13,7 +13,8 @@ import { addressAvatar } from '@/utils';
 import { styled } from '@sigle/stitches.config';
 import { TbCircleCheck, TbChevronRight } from 'react-icons/tb';
 import { useMicroStacksClient } from '@micro-stacks/react';
-import { getCsrfToken } from 'next-auth/react';
+import { getCsrfToken, signIn } from 'next-auth/react';
+import { RedirectableProviderType } from 'next-auth/providers';
 
 const AvatarContainer = styled('div', {
   display: 'flex',
@@ -27,8 +28,8 @@ const AvatarContainer = styled('div', {
 });
 
 export const RouteSign = () => {
-  const { openAuthRequest } = useStacksAuth();
   const { stxAddress } = useAccount();
+  const { openSignMessage } = useOpenSignMessage();
   const client = useMicroStacksClient();
   const setRoute = useAuthModalStore((state) => state.setRoute);
 
@@ -40,12 +41,34 @@ export const RouteSign = () => {
       throw new Error('No csrf token');
     }
     // TODO custom statement with privacy policy
-    const message = client.getSignInMessage({
+    const stacksMessage = client.getSignInMessage({
       domain: `${window.location.protocol}//${window.location.host}`,
       nonce: csrfToken,
+      // TODO remove version field once https://github.com/fungible-systems/micro-stacks/pull/184 is merged
+      version: '1',
     });
-
-    console.log(message);
+    if (stacksMessage) {
+      const message = stacksMessage.toMessage();
+      const signature = await openSignMessage({ message });
+      if (signature) {
+        const signInResult = await signIn<RedirectableProviderType>(
+          'credentials',
+          {
+            message,
+            redirect: false,
+            signature,
+            callbackUrl: '/protected',
+          }
+        );
+      }
+      // if (signInResult && signInResult.error) {
+      //   posthog.capture('start-login-sign-message-error');
+      //   toast.error('Failed to login');
+      //   setSigningState('inactive');
+      // }
+      // setSigningState('complete');
+      console.log('signature', signature);
+    }
   };
 
   return (

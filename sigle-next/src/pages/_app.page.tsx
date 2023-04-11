@@ -5,6 +5,7 @@ import { ThemeProvider } from 'next-themes';
 import dynamic from 'next/dynamic';
 import { ReactRelayContext } from 'react-relay';
 import { ClientProvider as StacksClientProvider } from '@micro-stacks/react';
+import { SessionProvider } from 'next-auth/react';
 import 'tippy.js/dist/tippy.css';
 import 'tippy.js/themes/light-border.css';
 import { darkTheme, globalCss } from '@sigle/stitches.config';
@@ -12,6 +13,7 @@ import { useRelayStore } from '@/lib/relay';
 import { tailwindStyles } from '@/styles/tailwind';
 import { trpc } from '@/utils/trpc';
 import { AuthModal } from '@/components/AuthModal/AuthModal';
+import { Session } from 'next-auth';
 
 const inter = Inter({
   subsets: ['latin'],
@@ -35,7 +37,10 @@ const globalStyle = globalCss({
   },
 });
 
-const MyApp: AppType = ({ Component, pageProps }) => {
+const MyApp: AppType<{ session: Session | null }> = ({
+  Component,
+  pageProps: { session, ...pageProps },
+}) => {
   globalStyle();
   const environment = useRelayStore((store) => store.environment);
 
@@ -50,15 +55,17 @@ const MyApp: AppType = ({ Component, pageProps }) => {
         value={{ light: 'light', dark: darkTheme.className }}
       >
         <ReactRelayContext.Provider value={{ environment }}>
-          <StacksClientProvider
-            appName="Sigle"
-            appIconUrl="https://app.sigle.io/icon-192x192.png"
-          >
-            <CeramicProvider>
-              <AuthModal />
-              <Component {...pageProps} />
-            </CeramicProvider>
-          </StacksClientProvider>
+          <SessionProvider session={session}>
+            <StacksClientProvider
+              appName="Sigle"
+              appIconUrl="https://app.sigle.io/icon-192x192.png"
+            >
+              <CeramicProvider>
+                <AuthModal />
+                <Component {...pageProps} />
+              </CeramicProvider>
+            </StacksClientProvider>
+          </SessionProvider>
         </ReactRelayContext.Provider>
       </ThemeProvider>
     </>
