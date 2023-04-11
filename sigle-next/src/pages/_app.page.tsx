@@ -14,6 +14,8 @@ import { darkTheme, globalCss } from '@sigle/stitches.config';
 import { useRelayStore } from '@/lib/relay';
 import { trpc } from '@/utils/trpc';
 import { AuthModal } from '@/components/AuthModal/AuthModal';
+import { Toaster } from '@/ui/Toaster';
+import '@/styles/globals.css';
 
 const inter = Inter({
   subsets: ['latin'],
@@ -59,8 +61,9 @@ const MyApp: AppType<{ session: Session | null }> = ({
               appIconUrl="https://app.sigle.io/icon-192x192.png"
             >
               <CeramicProvider>
-                <AuthModal />
                 <Component {...pageProps} />
+                <AuthModal />
+                <Toaster />
               </CeramicProvider>
             </StacksClientProvider>
           </SessionProvider>

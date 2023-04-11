@@ -55,9 +55,18 @@ export const sites: {
     ],
     cta: { href: 'https://flowernft.es', label: '¡Conoce mi tienda aquí!' },
   },
+  ['bitcoin.21milbtc.blog']: {
+    username: '21milbtc.btc',
+    banner: '/websites/bitcoin.21milbtc.blog/banner.jpg',
+    links: [],
+    cta: {
+      href: 'https://calendly.com/bitcoin_apostle/30min?month=2023-04',
+      label: 'Contact Me',
+    },
+  },
 };
 
 // Add localhost to sites for development
 if (process.env.NODE_ENV === 'development') {
-  sites['localhost:3000'] = sites['blog.xn--florpea-9za.es'];
+  sites['localhost:3000'] = sites['bitcoin.21milbtc.blog'];
 }
