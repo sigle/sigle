@@ -5,8 +5,8 @@ import * as Sentry from '@sentry/nextjs';
 import { Button } from '@sigle/ui';
 import { EditorSaveUpdatePostMutation } from '@/__generated__/relay/EditorSaveUpdatePostMutation.graphql';
 import { trpc } from '@/utils/trpc';
-import { useEditorStore } from '../store';
 import { useToast } from '@/hooks/useToast';
+import { useEditorStore } from '../store';
 
 export const EditorSave = () => {
   const utils = trpc.useContext();

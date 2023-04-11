@@ -4,8 +4,8 @@ import { TbRocket } from 'react-icons/tb';
 import { Button } from '@sigle/ui';
 import { EditorPublishUpdatePostMutation } from '@/__generated__/relay/EditorPublishUpdatePostMutation.graphql';
 import { trpc } from '@/utils/trpc';
-import { useEditorStore } from '../store';
 import { useToast } from '@/hooks/useToast';
+import { useEditorStore } from '../store';
 
 export const EditorPublish = () => {
   const utils = trpc.useContext();
