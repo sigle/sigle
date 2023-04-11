@@ -66,6 +66,7 @@
     "clsx": "1.2.1",
     "date-fns": "2.28.0",
     "did-session": "2.0.0",
+    "eslint-plugin-tailwindcss": "3.11.0",
     "graphql": "16.6.0",
     "highlight.js": "11.5.1",
     "lowlight": "2.8.0",

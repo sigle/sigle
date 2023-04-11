@@ -869,6 +869,9 @@ importers:
       did-session:
         specifier: 2.0.0
         version: 2.0.0
+      eslint-plugin-tailwindcss:
+        specifier: 3.11.0
+        version: 3.11.0(tailwindcss@3.3.1)
       graphql:
         specifier: 16.6.0
         version: 16.6.0
@@ -13710,6 +13713,17 @@ packages:
       - supports-color
       - typescript
     dev: true
+
+  /eslint-plugin-tailwindcss@3.11.0(tailwindcss@3.3.1):
+    resolution: {integrity: sha512-RaraOG4D6VXutKnoNvFQ4+frTWGJDKtezy1yCrGFS7Um1to/npDNdh2GL19IRoGB/eanbtwhxFXy+xyEw0grAg==}
+    engines: {node: '>=12.13.0'}
+    peerDependencies:
+      tailwindcss: ^3.2.2
+    dependencies:
+      fast-glob: 3.2.12
+      postcss: 8.4.21
+      tailwindcss: 3.3.1(postcss@8.4.21)
+    dev: false
 
   /eslint-scope@5.1.1:
     resolution: {integrity: sha512-2NxwbF/hZ0KpepYN0cNbo+FN6XoK7GaHlQhgx/hIZl6Va0bF45RQOOwhLIy8lQDbuCiadSLCBnH2CFYquit5bw==}
