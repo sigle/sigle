@@ -15,8 +15,8 @@ import {
 } from '@sigle/ui';
 import { addressAvatar } from '@/utils';
 import { nextImageLoader } from '@/utils/nextImageLoader';
-import { useAuthModalStore } from './store';
 import { useToast } from '@/hooks/useToast';
+import { useAuthModalStore } from './store';
 
 const AvatarContainer = styled('div', {
   display: 'flex',
