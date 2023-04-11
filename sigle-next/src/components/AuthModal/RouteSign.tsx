@@ -1,6 +1,6 @@
 import { useAccount, useOpenSignMessage } from '@micro-stacks/react';
 import Image from 'next/image';
-import { TbCircleCheck, TbChevronRight } from 'react-icons/tb';
+import { TbCircleCheck, TbChevronRight, TbReload } from 'react-icons/tb';
 import { useMicroStacksClient } from '@micro-stacks/react';
 import { getCsrfToken, signIn } from 'next-auth/react';
 import { RedirectableProviderType } from 'next-auth/providers';
@@ -30,18 +30,19 @@ const AvatarContainer = styled('div', {
 
 export const RouteSign = () => {
   const [signingState, setSigningState] = useState<
-    'inactive' | 'loading' | 'complete'
+    'inactive' | 'loading' | 'complete' | 'cancelled'
   >('inactive');
   const { stxAddress } = useAccount();
   const { openSignMessage } = useOpenSignMessage();
   const client = useMicroStacksClient();
-  const setRoute = useAuthModalStore((state) => state.setRoute);
+  const setOpen = useAuthModalStore((state) => state.setOpen);
 
   const signMessage = async () => {
-    // TODO loading state once sign popup is open
+    setSigningState('loading');
 
     const csrfToken = await getCsrfToken();
     if (!csrfToken) {
+      setSigningState('inactive');
       throw new Error('No csrf token');
     }
     // TODO custom statement with privacy policy
@@ -54,6 +55,10 @@ export const RouteSign = () => {
     if (stacksMessage) {
       const message = stacksMessage.toMessage();
       const signature = await openSignMessage({ message });
+      if (!signature) {
+        setSigningState('cancelled');
+        return;
+      }
       if (signature) {
         const signInResult = await signIn<RedirectableProviderType>(
           'credentials',
@@ -118,13 +123,25 @@ export const RouteSign = () => {
           <Typography color="gray9">
             Please sign the message request in your wallet to continue.
           </Typography>
-          <Button
-            size="lg"
-            onClick={signMessage}
-            rightIcon={<TbChevronRight />}
-          >
-            Sign in
-          </Button>
+          {signingState === 'loading' && (
+            <Button size="lg" disabled>
+              Awaiting Confirmation...
+            </Button>
+          )}
+          {signingState === 'inactive' && (
+            <Button
+              size="lg"
+              onClick={signMessage}
+              rightIcon={<TbChevronRight />}
+            >
+              Sign in
+            </Button>
+          )}
+          {signingState === 'cancelled' && (
+            <Button size="lg" onClick={signMessage} rightIcon={<TbReload />}>
+              Try again
+            </Button>
+          )}
         </Flex>
       </DialogDescription>
     </>
