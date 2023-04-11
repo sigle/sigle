@@ -4,9 +4,11 @@ import * as Sentry from '@sentry/nextjs';
 import { Flex, LoadingSpinner } from '@sigle/ui';
 import { CreateProfileMutation } from '@/__generated__/relay/CreateProfileMutation.graphql';
 import { trpc } from '@/utils/trpc';
+import { useToast } from '@/hooks/useToast';
 
 export const SettingsCreateProfile = () => {
   const utils = trpc.useContext();
+  const { toast } = useToast();
   const isMounted = useRef(false);
 
   const [commit] = useMutation<CreateProfileMutation>(graphql`
@@ -37,11 +39,14 @@ export const SettingsCreateProfile = () => {
       },
       onCompleted: (data, errors) => {
         if (errors) {
-          // TODO toast error
           Sentry.captureMessage('Error creating profile', {
             extra: { errors },
           });
           console.error(errors);
+          toast({
+            description: `Error creating profile: ${errors[0].message}`,
+            variant: 'error',
+          });
           return;
         }
         if (data.createProfile) {
