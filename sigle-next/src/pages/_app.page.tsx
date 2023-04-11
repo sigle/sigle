@@ -8,12 +8,12 @@ import { ClientProvider as StacksClientProvider } from '@micro-stacks/react';
 import { SessionProvider } from 'next-auth/react';
 import 'tippy.js/dist/tippy.css';
 import 'tippy.js/themes/light-border.css';
+import { Session } from 'next-auth';
 import { darkTheme, globalCss } from '@sigle/stitches.config';
 import { useRelayStore } from '@/lib/relay';
 import { tailwindStyles } from '@/styles/tailwind';
 import { trpc } from '@/utils/trpc';
 import { AuthModal } from '@/components/AuthModal/AuthModal';
-import { Session } from 'next-auth';
 
 const inter = Inter({
   subsets: ['latin'],

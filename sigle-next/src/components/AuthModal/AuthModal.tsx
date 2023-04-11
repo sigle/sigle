@@ -1,6 +1,6 @@
 import { Dialog, DialogContent } from '@sigle/ui';
-import { useAuthModalStore } from './store';
 import { styled } from '@sigle/stitches.config';
+import { useAuthModalStore } from './store';
 import { RouteConnect } from './RouteConnect';
 import { RouteSign } from './RouteSign';
 

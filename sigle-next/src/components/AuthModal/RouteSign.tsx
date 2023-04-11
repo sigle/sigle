@@ -1,4 +1,11 @@
 import { useAccount, useOpenSignMessage } from '@micro-stacks/react';
+import Image from 'next/image';
+import { TbCircleCheck, TbChevronRight } from 'react-icons/tb';
+import { useMicroStacksClient } from '@micro-stacks/react';
+import { getCsrfToken, signIn } from 'next-auth/react';
+import { RedirectableProviderType } from 'next-auth/providers';
+import { useState } from 'react';
+import { styled } from '@sigle/stitches.config';
 import {
   Button,
   DialogDescription,
@@ -6,15 +13,9 @@ import {
   Flex,
   Typography,
 } from '@sigle/ui';
-import { useAuthModalStore } from './store';
-import Image from 'next/image';
-import { nextImageLoader } from '@/utils/nextImageLoader';
 import { addressAvatar } from '@/utils';
-import { styled } from '@sigle/stitches.config';
-import { TbCircleCheck, TbChevronRight } from 'react-icons/tb';
-import { useMicroStacksClient } from '@micro-stacks/react';
-import { getCsrfToken, signIn } from 'next-auth/react';
-import { RedirectableProviderType } from 'next-auth/providers';
+import { nextImageLoader } from '@/utils/nextImageLoader';
+import { useAuthModalStore } from './store';
 
 const AvatarContainer = styled('div', {
   display: 'flex',
@@ -28,6 +29,9 @@ const AvatarContainer = styled('div', {
 });
 
 export const RouteSign = () => {
+  const [signingState, setSigningState] = useState<
+    'inactive' | 'loading' | 'complete'
+  >('inactive');
   const { stxAddress } = useAccount();
   const { openSignMessage } = useOpenSignMessage();
   const client = useMicroStacksClient();

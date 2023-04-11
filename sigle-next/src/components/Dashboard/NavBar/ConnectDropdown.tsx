@@ -9,9 +9,9 @@ import {
   IconButton,
   Switch,
 } from '@sigle/ui';
+import { useAuthModal } from '@/components/AuthModal/AuthModal';
 import { useDashboardStore } from '../store';
 import { DropdownMenuItemWithSwitch } from './UserDropdown';
-import { useAuthModal } from '@/components/AuthModal/AuthModal';
 
 export const ConnectDropdown = () => {
   const { resolvedTheme, setTheme } = useTheme();
