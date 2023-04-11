@@ -71,7 +71,6 @@ export const RouteSign = () => {
       callbackUrl: '/protected',
     });
     if (signInResult && signInResult.error) {
-      // posthog.capture('start-login-sign-message-error');
       toast({
         description: 'Failed to login',
         variant: 'error',
@@ -80,6 +79,7 @@ export const RouteSign = () => {
       return;
     }
     setSigningState('complete');
+    setOpen(false);
   };
 
   return (

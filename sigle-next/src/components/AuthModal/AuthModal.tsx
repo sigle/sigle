@@ -4,6 +4,8 @@ import { useAuthModalStore } from './store';
 import { RouteConnect } from './RouteConnect';
 import { RouteSign } from './RouteSign';
 
+// TODO track login flow with posthog
+
 const StyledDialogContent = styled(DialogContent, {
   maxWidth: '360px',
   px: '$6',
