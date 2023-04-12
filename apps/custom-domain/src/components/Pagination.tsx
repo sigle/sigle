@@ -56,20 +56,24 @@ export function Pagination({ page, total, itemsPerPage }: PaginationProps) {
       }
       if (totalPages > 5) {
         items.push(renderDots());
+        items.push(renderPageItem(totalPages));
       }
     } else if (page > totalPages - 4) {
       if (totalPages > 5) {
+        items.push(renderPageItem(1));
         items.push(renderDots());
       }
       for (let i = totalPages - 4; i <= totalPages; i++) {
         items.push(renderPageItem(i));
       }
     } else {
+      items.push(renderPageItem(1));
       items.push(renderDots());
       for (let i = page - 2; i <= page + 2; i++) {
         items.push(renderPageItem(i));
       }
       items.push(renderDots());
+      items.push(renderPageItem(totalPages));
     }
 
     return items;
