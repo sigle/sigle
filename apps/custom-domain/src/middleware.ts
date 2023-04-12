@@ -20,7 +20,6 @@ export default async function middleware(req: NextRequest) {
   const url = req.nextUrl;
 
   const hostname = req.headers.get('host');
-  console.log('url', hostname);
 
   // Get the pathname of the request (e.g. /, /about, /blog/first-post)
   let path = url.pathname;
