@@ -1,3 +1,4 @@
+import { FeaturedPostCard } from '@/components/FeaturedPostCard';
 import { Pagination } from '@/components/Pagination';
 import { PostCard } from '@/components/PostCard';
 import { getAbsoluteUrl } from '@/utils/vercel';
@@ -43,7 +44,9 @@ export default async function Page({
 
   return (
     <div className="container">
-      <h2 className="mt-6 text-2xl font-bold">Latest articles</h2>
+      <h2 className="mt-10 text-2xl font-bold">Latest article</h2>
+      <FeaturedPostCard post={posts.posts[0]} />
+      <h2 className="mt-10 text-2xl font-bold">Read more</h2>
       <div className="mt-6 grid grid-cols-1 gap-x-12 gap-y-10 md:grid-cols-2 lg:grid-cols-3">
         {posts.posts.map((post) => {
           return <PostCard key={post.id} post={post} />;
