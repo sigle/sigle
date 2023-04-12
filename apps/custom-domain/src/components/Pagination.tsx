@@ -48,28 +48,30 @@ export function Pagination({ page, total, itemsPerPage }: PaginationProps) {
   const renderDots = () => <span className="mx-2">...</span>;
 
   const renderPageItems = () => {
+    const maxPagesToShow = 4;
     const items = [];
+    const sidePagesToShow = Math.floor(maxPagesToShow / 2);
 
-    if (page < 5) {
-      for (let i = 1; i <= Math.min(5, totalPages); i++) {
+    if (page <= sidePagesToShow + 1) {
+      for (let i = 1; i <= Math.min(maxPagesToShow, totalPages); i++) {
         items.push(renderPageItem(i));
       }
-      if (totalPages > 5) {
+      if (totalPages > maxPagesToShow) {
         items.push(renderDots());
         items.push(renderPageItem(totalPages));
       }
-    } else if (page > totalPages - 4) {
-      if (totalPages > 5) {
+    } else if (page > totalPages - sidePagesToShow) {
+      if (totalPages > maxPagesToShow) {
         items.push(renderPageItem(1));
         items.push(renderDots());
       }
-      for (let i = totalPages - 4; i <= totalPages; i++) {
+      for (let i = totalPages - maxPagesToShow + 1; i <= totalPages; i++) {
         items.push(renderPageItem(i));
       }
     } else {
       items.push(renderPageItem(1));
       items.push(renderDots());
-      for (let i = page - 2; i <= page + 2; i++) {
+      for (let i = page - sidePagesToShow; i <= page + sidePagesToShow; i++) {
         items.push(renderPageItem(i));
       }
       items.push(renderDots());
