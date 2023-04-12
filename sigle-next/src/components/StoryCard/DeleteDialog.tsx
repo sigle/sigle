@@ -13,6 +13,7 @@ import {
 } from '@sigle/ui';
 import { trpc } from '@/utils/trpc';
 import { DeleteDialogDeletePostMutation } from '@/__generated__/relay/DeleteDialogDeletePostMutation.graphql';
+import { useToast } from '@/hooks/useToast';
 
 interface DeleteDialogProps {
   postId: string;
@@ -28,6 +29,7 @@ export const DeleteDialog = ({
   onDeleted,
 }: DeleteDialogProps) => {
   const utils = trpc.useContext();
+  const { toast } = useToast();
   const [isDeleting, setIsDeleting] = useState(false);
 
   const [commit, isLoadingDeletePost] =
@@ -61,16 +63,22 @@ export const DeleteDialog = ({
       },
       onCompleted: (data, errors) => {
         if (errors) {
-          // TODO toast error
-          Sentry.captureMessage('Error updating story', {
+          Sentry.captureMessage('Error deleting story', {
             extra: { errors },
+          });
+          console.error(errors);
+          toast({
+            description: `Error deleting story: ${errors[0].message}`,
+            variant: 'error',
           });
           return;
         }
         if (data.updatePost) {
           setIsDeleting(true);
           utils.invalidate().then(() => {
-            // TODO toast success;
+            toast({
+              description: 'Story deleted successfully',
+            });
             onDeleted?.();
           });
         }

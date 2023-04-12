@@ -5,10 +5,12 @@ import * as Sentry from '@sentry/nextjs';
 import { Button } from '@sigle/ui';
 import { EditorSaveUpdatePostMutation } from '@/__generated__/relay/EditorSaveUpdatePostMutation.graphql';
 import { trpc } from '@/utils/trpc';
+import { useToast } from '@/hooks/useToast';
 import { useEditorStore } from '../store';
 
 export const EditorSave = () => {
   const utils = trpc.useContext();
+  const { toast } = useToast();
   const initialStory = useEditorStore((state) => state.initialStory);
   const setInitialStory = useEditorStore((state) => state.setInitialStory);
   const story = useEditorStore((state) => state.story);
@@ -57,9 +59,13 @@ export const EditorSave = () => {
       },
       onCompleted: (data, errors) => {
         if (errors) {
-          // TODO toast error
           Sentry.captureMessage('Error updating story', {
             extra: { errors },
+          });
+          console.error(errors);
+          toast({
+            description: `Error updating story: ${errors[0].message}`,
+            variant: 'error',
           });
           return;
         }

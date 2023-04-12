@@ -8,12 +8,24 @@ import { styled } from '@sigle/stitches.config';
 import { useCeramic } from '@/components/Ceramic/CeramicProvider';
 import { DashboardLayout } from '@/components/Dashboard/DashboardLayout';
 import { UserProfile } from '@/components/UserProfile/UserProfile';
+import { UserProfileSkeleton } from '@/components/UserProfile/UserProfileSkeleton';
 import { trpc } from '@/utils/trpc';
 import { getAddressFromDid } from '@/utils/getAddressFromDid';
 import { addressAvatar } from '@/utils';
 import { nextImageLoader } from '@/utils/nextImageLoader';
 import { shortenAddress } from '@/utils/shortenAddress';
 import { CeramicPost } from '@/types/ceramic';
+import { pulse } from '@/ui/animations';
+
+const SkeletonContainer = styled('div', {
+  animation: `${pulse} $transitions$animate-pulse`,
+});
+
+const Skeleton = styled('div', {
+  backgroundColor: '$gray3',
+  br: '$md',
+  maxWidth: '100%',
+});
 
 const AvatarContainer = styled('div', {
   display: 'flex',
@@ -89,9 +101,27 @@ const PostPage = () => {
 
   const isViewer = userDid === post.data?.did;
 
-  // TODO loading state
   if (post.isLoading) {
-    return <div>Loading...</div>;
+    return (
+      <DashboardLayout sidebarContent={<UserProfileSkeleton />}>
+        <Container css={{ maxWidth: 680, py: '$5' }}>
+          <SkeletonContainer>
+            <Skeleton css={{ height: 48, width: 380 }} />
+            <Flex mt="2">
+              <Skeleton css={{ height: 26, width: 200 }} />
+            </Flex>
+            <Flex mt="10" direction="column" gap="2">
+              <Skeleton css={{ height: 18, width: '100%' }} />
+              <Skeleton css={{ height: 18, width: '100%' }} />
+              <Skeleton css={{ height: 18, width: '100%' }} />
+              <Skeleton css={{ height: 18, width: '100%' }} />
+              <Skeleton css={{ height: 18, width: '100%' }} />
+              <Skeleton css={{ height: 18, width: '100%' }} />
+            </Flex>
+          </SkeletonContainer>
+        </Container>
+      </DashboardLayout>
+    );
   }
 
   // TODO proper 404 page
