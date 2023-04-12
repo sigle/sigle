@@ -74,10 +74,8 @@ export async function generateMetadata({
 
 export default async function Home({
   params,
-  searchParams,
 }: {
-  params: { site: string };
-  searchParams?: { [key: string]: string };
+  params: { site: string; page?: string };
 }) {
   const { site } = params;
   const settings = await getSettings({ site });
@@ -86,7 +84,7 @@ export default async function Home({
     notFound();
   }
 
-  const page = searchParams?.page ? parseInt(searchParams.page, 10) : 1;
+  const page = params.page ? parseInt(params.page, 10) : 1;
   const posts = await getPosts({
     site,
     page,
