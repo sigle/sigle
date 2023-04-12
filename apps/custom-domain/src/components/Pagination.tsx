@@ -6,12 +6,12 @@ import { useRouter } from 'next/navigation';
 
 const button = cva(
   [
-    'w-10 h-10 border border-gray-200 flex items-center justify-center rounded disabled:cursor-not-allowed disabled:bg-gray-100 disabled:text-gray-500 md:w-8 md:h-8',
+    'flex h-10 w-10 items-center justify-center rounded border border-gray-200 disabled:cursor-not-allowed disabled:bg-gray-100 disabled:text-gray-500 md:h-8 md:w-8',
   ],
   {
     variants: {
       active: {
-        true: 'bg-gray-900 border-gray-900 text-white',
+        true: 'border-gray-900 bg-gray-900 text-white',
       },
     },
   }

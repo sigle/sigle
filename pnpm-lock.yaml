@@ -89,6 +89,9 @@ importers:
       eslint-config-next:
         specifier: 13.2.4
         version: 13.2.4(eslint@8.38.0)(typescript@5.0.3)
+      eslint-plugin-tailwindcss:
+        specifier: 3.11.0
+        version: 3.11.0(tailwindcss@3.3.1)
       postcss:
         specifier: 8.4.21
         version: 8.4.21
@@ -13725,7 +13728,6 @@ packages:
       fast-glob: 3.2.12
       postcss: 8.4.21
       tailwindcss: 3.3.1(postcss@8.4.21)
-    dev: false
 
   /eslint-scope@5.1.1:
     resolution: {integrity: sha512-2NxwbF/hZ0KpepYN0cNbo+FN6XoK7GaHlQhgx/hIZl6Va0bF45RQOOwhLIy8lQDbuCiadSLCBnH2CFYquit5bw==}

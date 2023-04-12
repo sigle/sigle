@@ -131,22 +131,22 @@ export default async function Post({
     <>
       <ScrollUp />
       <Header settings={settings} />
-      <main className="mt-5 mb-16">
+      <main className="mb-16 mt-5">
         <div className="container">
-          <div className="text-[0.625rem] text-gray-500 uppercase tracking-wide flex gap-2">
+          <div className="flex gap-2 text-[0.625rem] uppercase tracking-wide text-gray-500">
             <div>{format(new Date(post.createdAt), 'MMMM dd, yyyy')}</div>
             <div>·</div>
             <div>8 min read</div>
           </div>
-          <h1 className="mt-2 font-bold text-4xl">{post.title}</h1>
+          <h1 className="mt-2 text-4xl font-bold">{post.title}</h1>
 
-          <div className="mt-9 gap-14 grid m grid-cols-1 md:grid-cols-[280px,_1fr]">
+          <div className="mt-9 grid grid-cols-1 gap-14 md:grid-cols-[280px,_1fr]">
             <div>
               <TableOfContents items={tableOfContent} post={post} />
             </div>
             <div>
               {post.coverImage && (
-                <div className="mb-3 relative aspect-[45/28] overflow-hidden rounded rounded-2xl">
+                <div className="relative mb-3 aspect-[45/28] overflow-hidden rounded-2xl">
                   <Image
                     className="object-cover"
                     src={post.coverImage}
@@ -170,7 +170,7 @@ export default async function Post({
 
           <div className="mt-10">
             <h3 className="text-2xl	font-bold">Read more</h3>
-            <div className="mt-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-12 gap-y-10">
+            <div className="mt-6 grid grid-cols-1 gap-x-12 gap-y-10 md:grid-cols-2 lg:grid-cols-3">
               {posts.posts.map((post) => {
                 return <PostCard key={post.id} post={post} />;
               })}
