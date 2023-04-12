@@ -105,7 +105,7 @@ export default async function Home({
               return <PostCard key={post.id} post={post} />;
             })}
           </div>
-          <Pagination page={page} total={posts.count} perPage={15} />
+          <Pagination page={page} total={posts.count} itemsPerPage={15} />
         </div>
       </main>
     </>
