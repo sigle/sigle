@@ -243,7 +243,7 @@ export const NavBar = () => {
                   <TooltipTrigger asChild>
                     <Link href="/editor/new">
                       <IconButton variant="light" size="lg">
-                        <TbPlus />
+                        <TbPlus size={navbarIconSize} />
                       </IconButton>
                     </Link>
                   </TooltipTrigger>
