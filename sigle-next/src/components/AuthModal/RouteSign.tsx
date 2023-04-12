@@ -91,7 +91,7 @@ export const RouteSign = () => {
       </DialogTitle>
       <DialogDescription asChild>
         <Flex mt="5" direction="column" gap="3">
-          <Typography color="gray9">
+          <Typography color="gray9" css={{ textAlign: 'center' }}>
             This app would like to verify you as the owner of this wallet.
           </Typography>
           <Flex
@@ -122,7 +122,7 @@ export const RouteSign = () => {
               />
             </AvatarContainer>
           </Flex>
-          <Typography color="gray9">
+          <Typography color="gray9" css={{ textAlign: 'center' }}>
             Please sign the message request in your wallet to continue.
           </Typography>
           {signingState === 'loading' && (
