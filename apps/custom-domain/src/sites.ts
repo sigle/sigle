@@ -66,15 +66,6 @@ export const sites: {
   },
 };
 
-console.log({
-  vercelEnv: process.env.VERCEL_ENV,
-  vercelUrl: process.env.VERCEL_URL,
-  vercelGitRepoSlug: `custom-domain-git-${process.env.VERCEL_GIT_COMMIT_REF?.replace(
-    '/',
-    '-'
-  )}-${process.env.VERCEL_GIT_REPO_OWNER}.vercel.app`,
-});
-
 // Add localhost to sites for development
 if (process.env.NODE_ENV === 'development') {
   sites['localhost:3000'] = sites['blog.sigle.io'];
