@@ -3,6 +3,7 @@ import ScrollUp from '@/components/ScrollUp';
 import { SiteSettings, StoryFile } from '@/types';
 import { getAbsoluteUrl } from '@/utils/vercel';
 import { notFound } from 'next/navigation';
+import { Metadata } from 'next';
 
 async function getSettings({
   site,
@@ -28,7 +29,7 @@ export async function generateMetadata({
   params,
 }: {
   params: { site: string; id: string };
-}) {
+}): Promise<Metadata> {
   const { site, id } = params;
   const settings = await getSettings({ site });
   const post = await getPost({
@@ -55,17 +56,14 @@ export async function generateMetadata({
       description,
       url: settings.url,
       type: 'website',
-      images: [
-        {
-          url: seoImage || settings.avatar,
-        },
-      ],
+      siteName: settings.name,
+      images: seoImage || settings.avatar,
     },
     twitter: {
       card: seoImage ? 'summary_large_image' : 'summary',
       title,
       description,
-      images: [seoImage || settings.avatar],
+      images: seoImage || settings.avatar,
     },
   };
 }

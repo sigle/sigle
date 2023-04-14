@@ -4,6 +4,7 @@ import ScrollUp from '@/components/ScrollUp';
 import { SiteSettings } from '@/types';
 import { getAbsoluteUrl } from '@/utils/vercel';
 import { notFound } from 'next/navigation';
+import { Metadata } from 'next';
 
 async function getSettings({
   site,
@@ -18,7 +19,7 @@ export async function generateMetadata({
   params,
 }: {
   params: { site: string };
-}) {
+}): Promise<Metadata> {
   const { site } = params;
   const settings = await getSettings({ site });
 
@@ -35,11 +36,19 @@ export async function generateMetadata({
     icons: {
       icon: settings.avatar,
     },
+    openGraph: {
+      title,
+      description,
+      url: settings.url,
+      type: 'website',
+      siteName: settings.name,
+      images: settings.avatar,
+    },
     twitter: {
       card: 'summary',
       title,
       description,
-      images: [settings.avatar],
+      images: settings.avatar,
     },
   };
 }
