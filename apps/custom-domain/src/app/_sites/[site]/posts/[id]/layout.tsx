@@ -54,7 +54,7 @@ export async function generateMetadata({
     openGraph: {
       title,
       description,
-      url: settings.url,
+      url: `${settings.url}/posts/${id}`,
       type: 'website',
       siteName: settings.name,
       images: seoImage || settings.avatar,
