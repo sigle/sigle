@@ -75,6 +75,8 @@ export const allowedNewsletterUsers = [
   'SP162W9JMD2CRP9XDF1AJVE2MSTFQNRNPPKCRDA58',
   // joemacmillan.btc
   'SP23ZSH34VFD9WC6FVWYNKJAVME1SN89ZWHHR5NCC',
+  // igolle.btc
+  'SP3Y808KQW24TXXVBQ4S71Z22KC93QJCTAJS35GH0',
 ];
 if (sigleConfig.env === 'development') {
   // gregogun.btc
