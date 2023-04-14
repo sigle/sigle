@@ -66,7 +66,15 @@ export const sites: {
   },
 };
 
+console.log({
+  vercelEnv: process.env.VERCEL_ENV,
+  vercelUrl: process.env.VERCEL_URL,
+});
+
 // Add localhost to sites for development
 if (process.env.NODE_ENV === 'development') {
-  sites['localhost:3000'] = sites['bitcoin.21milbtc.blog'];
+  sites['localhost:3000'] = sites['blog.sigle.io'];
+} else if (process.env.VERCEL_ENV === 'preview' && process.env.VERCEL_URL) {
+  // Preview deployments
+  sites[process.env.VERCEL_URL] = sites['blog.sigle.io'];
 }
