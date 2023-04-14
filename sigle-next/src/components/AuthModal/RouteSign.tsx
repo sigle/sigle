@@ -51,8 +51,6 @@ export const RouteSign = () => {
     const stacksMessage = client.getSignInMessage({
       domain: `${window.location.protocol}//${window.location.host}`,
       nonce: csrfToken,
-      // TODO remove version field once https://github.com/fungible-systems/micro-stacks/pull/184 is merged
-      version: '1',
     });
     if (!stacksMessage) {
       setSigningState('cancelled');

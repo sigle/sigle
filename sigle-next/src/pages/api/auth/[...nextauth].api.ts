@@ -3,6 +3,7 @@ import type { NextAuthOptions } from 'next-auth';
 import CredentialsProvider from 'next-auth/providers/credentials';
 import * as Sentry from '@sentry/nextjs';
 import { getCsrfToken } from 'next-auth/react';
+import { SignInWithStacksMessage } from '@micro-stacks/client';
 
 export const authOptions: NextAuthOptions = {
   providers: [
@@ -21,35 +22,38 @@ export const authOptions: NextAuthOptions = {
         },
       },
       async authorize(credentials, req) {
-        // TODO once micro-stacks pr is merged do the verification of the message
         // TODO create user in db if not exists
-        return null;
-        // try {
-        //   const siwe = new SignInWithStacksMessage(credentials?.message || '');
+        try {
+          const siwe = new SignInWithStacksMessage(credentials?.message || '');
 
-        //   const result = await siwe.verify({
-        //     signature: credentials?.signature || '',
-        //     domain: process.env.NEXTAUTH_URL,
-        //     // TODO test that this is working
-        //     nonce: await getCsrfToken({ req: req as any }),
-        //   });
+          console.log({ siwe: process.env.NEXTAUTH_URL });
 
-        //   if (result.success) {
-        //     return {
-        //       id: siwe.address,
-        //     };
-        //   }
-        //   return null;
-        // } catch (error) {
-        //   Sentry.withScope((scope) => {
-        //     scope.setExtras({
-        //       message: credentials?.message,
-        //       signature: credentials?.signature,
-        //     });
-        //     Sentry.captureException(error);
-        //   });
-        //   return null;
-        // }
+          const result = await siwe.verify({
+            signature: credentials?.signature || '',
+            // TODO domain should be url - needs to be fixed in micro-stacks
+            // domain: process.env.NEXTAUTH_URL,
+            domain: 'Sigle',
+            // TODO test that this is working
+            nonce: await getCsrfToken({ req: req as any }),
+          });
+
+          if (result.success) {
+            return {
+              id: siwe.address,
+            };
+          }
+          return null;
+        } catch (error) {
+          console.error(error);
+          Sentry.withScope((scope) => {
+            scope.setExtras({
+              message: credentials?.message,
+              signature: credentials?.signature,
+            });
+            Sentry.captureException(error);
+          });
+          return null;
+        }
       },
     }),
   ],
