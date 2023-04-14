@@ -69,6 +69,7 @@ export const sites: {
 console.log({
   vercelEnv: process.env.VERCEL_ENV,
   vercelUrl: process.env.VERCEL_URL,
+  vercelGitRepoSlug: `${process.env.VERCEL_GIT_REPO_SLUG}-git-${process.env.VERCEL_GIT_COMMIT_REF}-${process.env.VERCEL_GIT_REPO_OWNER}.vercel.app`,
 });
 
 // Add localhost to sites for development
@@ -77,4 +78,7 @@ if (process.env.NODE_ENV === 'development') {
 } else if (process.env.VERCEL_ENV === 'preview' && process.env.VERCEL_URL) {
   // Preview deployments
   sites[process.env.VERCEL_URL] = sites['blog.sigle.io'];
+  sites[
+    `${process.env.VERCEL_GIT_REPO_SLUG}-git-${process.env.VERCEL_GIT_COMMIT_REF}-${process.env.VERCEL_GIT_REPO_OWNER}.vercel.app`
+  ] = sites['blog.sigle.io'];
 }
