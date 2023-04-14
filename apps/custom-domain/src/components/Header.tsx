@@ -49,7 +49,7 @@ export const Header = ({ settings }: HeaderProps) => {
     <header
       className={twMerge(
         clsx(
-          'h-16 px-4 flex justify-between items-center bg-sigle-background sticky top-0 transition-all duration-300 ease-in-out z-10 border-b border-gray-150 md:px-16',
+          'sticky top-0 z-10 flex h-16 items-center justify-between border-b border-gray-200 bg-sigle-background px-4 transition-all duration-300 ease-in-out md:px-16',
           {
             ['-top-16']: scrollDirection === 'down',
           }
@@ -59,7 +59,7 @@ export const Header = ({ settings }: HeaderProps) => {
       <Link href="/" className="w-full md:w-auto">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <div className="relative object-cover rounded overflow-hidden">
+            <div className="relative overflow-hidden rounded object-cover">
               <Image
                 src={settings.avatar}
                 alt="Avatar"
@@ -76,7 +76,7 @@ export const Header = ({ settings }: HeaderProps) => {
 
           <Sheet>
             <SheetTrigger asChild>
-              <button className="md:hidden p-2" aria-label="Open mobile menu">
+              <button className="p-2 md:hidden" aria-label="Open mobile menu">
                 <IconMenu2 size={15} />
               </button>
             </SheetTrigger>
@@ -84,7 +84,7 @@ export const Header = ({ settings }: HeaderProps) => {
               <SheetHeader>
                 <SheetTitle>
                   <div className="flex items-center gap-2">
-                    <div className="relative object-cover rounded overflow-hidden">
+                    <div className="relative overflow-hidden rounded object-cover">
                       <Image
                         src={settings.avatar}
                         alt="Avatar"
@@ -100,7 +100,7 @@ export const Header = ({ settings }: HeaderProps) => {
                   </div>
                 </SheetTitle>
                 <SheetDescription>
-                  <ul className="mt-4 flex flex-col gap-5 items-start">
+                  <ul className="mt-4 flex flex-col items-start gap-5">
                     {settings.links?.map(({ href, label }) => (
                       <li key={href}>
                         <Link
@@ -114,7 +114,7 @@ export const Header = ({ settings }: HeaderProps) => {
                     {settings.cta ? (
                       <li className="mt-2">
                         <Link
-                          className="text-sm text-white bg-gray-950 py-2 px-5 rounded-lg"
+                          className="rounded-lg bg-gray-950 px-5 py-2 text-sm text-white"
                           href={settings.cta.href}
                         >
                           {settings.cta.label}
@@ -130,7 +130,7 @@ export const Header = ({ settings }: HeaderProps) => {
       </Link>
 
       <nav className="hidden md:block">
-        <ul className="flex gap-8 items-center">
+        <ul className="flex items-center gap-8">
           {settings.links?.map(({ href, label }) => (
             <li key={href}>
               <Link
@@ -144,7 +144,7 @@ export const Header = ({ settings }: HeaderProps) => {
           {settings.cta ? (
             <li>
               <Link
-                className="block text-sm text-white bg-gray-950 py-2 px-5 rounded-lg"
+                className="block rounded-lg bg-gray-950 px-5 py-2 text-sm text-white"
                 href={settings.cta.href}
               >
                 {settings.cta.label}

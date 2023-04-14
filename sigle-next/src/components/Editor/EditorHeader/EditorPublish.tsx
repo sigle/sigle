@@ -4,10 +4,12 @@ import { TbRocket } from 'react-icons/tb';
 import { Button } from '@sigle/ui';
 import { EditorPublishUpdatePostMutation } from '@/__generated__/relay/EditorPublishUpdatePostMutation.graphql';
 import { trpc } from '@/utils/trpc';
+import { useToast } from '@/hooks/useToast';
 import { useEditorStore } from '../store';
 
 export const EditorPublish = () => {
   const utils = trpc.useContext();
+  const { toast } = useToast();
   const setStory = useEditorStore((state) => state.setStory);
   const story = useEditorStore((state) => state.story);
 
@@ -40,9 +42,13 @@ export const EditorPublish = () => {
       },
       onCompleted: (data, errors) => {
         if (errors) {
-          // TODO toast error
-          Sentry.captureMessage('Error updating story', {
+          Sentry.captureMessage('Error publishing story', {
             extra: { errors },
+          });
+          console.error(errors);
+          toast({
+            description: `Error publishing story: ${errors[0].message}`,
+            variant: 'error',
           });
           return;
         }

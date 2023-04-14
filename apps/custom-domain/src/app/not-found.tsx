@@ -7,7 +7,7 @@ export default function NotFound() {
         <h2 className="text-5xl	font-bold">404 Not Found</h2>
         <p className="mt-2">Sorry, but this page doesn’t exist.</p>
         <Link
-          className="px-4 py-3 flex justify-center items-center rounded-lg bg-gray-900 text-white mx-auto mt-5"
+          className="mx-auto mt-5 flex items-center justify-center rounded-lg bg-gray-900 px-4 py-3 text-white"
           href="/"
         >
           Take me home, to the place I belong

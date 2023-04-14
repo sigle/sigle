@@ -1,6 +1,6 @@
-import { useModal } from 'connectkit';
 import { useTheme } from 'next-themes';
 import { TbSettings, TbWallet } from 'react-icons/tb';
+import { useAuth as useStacksAuth } from '@micro-stacks/react';
 import {
   Button,
   DropdownMenu,
@@ -15,12 +15,16 @@ import { DropdownMenuItemWithSwitch } from './UserDropdown';
 
 export const ConnectDropdown = () => {
   const { resolvedTheme, setTheme } = useTheme();
-  const { setOpen: setConnectKitOpen } = useModal();
+  const { openAuthRequest } = useStacksAuth();
   const collapsed = useDashboardStore((state) => state.collapsed);
   const toggleCollapse = useDashboardStore((state) => state.toggleCollapse);
 
   const toggleTheme = () => {
     resolvedTheme === 'dark' ? setTheme('light') : setTheme('dark');
+  };
+
+  const openStacksConnect = () => {
+    openAuthRequest();
   };
 
   return (
@@ -35,16 +39,12 @@ export const ConnectDropdown = () => {
           size="lg"
           rightIcon={<TbWallet />}
           css={{ flex: 1 }}
-          onClick={() => setConnectKitOpen(true)}
+          onClick={openStacksConnect}
         >
           Connect wallet
         </Button>
       ) : (
-        <IconButton
-          color="indigo"
-          size="lg"
-          onClick={() => setConnectKitOpen(true)}
-        >
+        <IconButton color="indigo" size="lg" onClick={openStacksConnect}>
           <TbWallet />
         </IconButton>
       )}
