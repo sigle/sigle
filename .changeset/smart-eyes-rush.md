@@ -2,4 +2,4 @@
 '@sigle/custom-domain': patch
 ---
 
-Use native next.js sitemap feature instead of next-sitemap.
+Upgrade to next.js 13.3.0 and rename `_sites` folder to `sites`.
