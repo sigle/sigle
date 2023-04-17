@@ -1,6 +1,6 @@
-import { SVGProps } from 'react';
+import type { IconBaseProps } from 'react-icons';
 
-export const LogoImage = (props: SVGProps<SVGSVGElement>) => (
+export const LogoImage = (props: IconBaseProps) => (
   <svg
     width={93}
     height={35}

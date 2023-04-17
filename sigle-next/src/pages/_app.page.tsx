@@ -5,17 +5,17 @@ import { ThemeProvider } from 'next-themes';
 import dynamic from 'next/dynamic';
 import { ReactRelayContext } from 'react-relay';
 import { ClientProvider as StacksClientProvider } from '@micro-stacks/react';
+import { SessionProvider } from 'next-auth/react';
+import '@/styles/globals.css';
 import 'tippy.js/dist/tippy.css';
 import 'tippy.js/themes/light-border.css';
-import '@/styles/globals.css';
+import { Session } from 'next-auth';
 import { darkTheme, globalCss } from '@sigle/stitches.config';
 import { useRelayStore } from '@/lib/relay';
 import { trpc } from '@/utils/trpc';
+import { AuthModal } from '@/components/AuthModal/AuthModal';
 import { Toaster } from '@/ui/Toaster';
-
-const CeramicProvider = dynamic(
-  () => import('../components/Ceramic/CeramicProvider')
-);
+import '@/styles/globals.css';
 
 const inter = Inter({
   subsets: ['latin'],
@@ -25,6 +25,10 @@ const inter = Inter({
   display: 'swap',
 });
 
+const CeramicProvider = dynamic(
+  () => import('../components/Ceramic/CeramicProvider')
+);
+
 const globalStyle = globalCss({
   body: {
     fontFamily: 'var(--font-inter)',
@@ -33,7 +37,10 @@ const globalStyle = globalCss({
   },
 });
 
-const MyApp: AppType = ({ Component, pageProps }) => {
+const MyApp: AppType<{ session: Session | null }> = ({
+  Component,
+  pageProps: { session, ...pageProps },
+}) => {
   globalStyle();
   const environment = useRelayStore((store) => store.environment);
 
@@ -48,15 +55,18 @@ const MyApp: AppType = ({ Component, pageProps }) => {
         value={{ light: 'light', dark: darkTheme.className }}
       >
         <ReactRelayContext.Provider value={{ environment }}>
-          <StacksClientProvider
-            appName="Sigle"
-            appIconUrl="https://app.sigle.io/icon-192x192.png"
-          >
-            <CeramicProvider>
-              <Component {...pageProps} />
-              <Toaster />
-            </CeramicProvider>
-          </StacksClientProvider>
+          <SessionProvider session={session}>
+            <StacksClientProvider
+              appName="Sigle"
+              appIconUrl="https://app.sigle.io/icon-192x192.png"
+            >
+              <CeramicProvider>
+                <Component {...pageProps} />
+                <AuthModal />
+                <Toaster />
+              </CeramicProvider>
+            </StacksClientProvider>
+          </SessionProvider>
         </ReactRelayContext.Provider>
       </ThemeProvider>
     </>

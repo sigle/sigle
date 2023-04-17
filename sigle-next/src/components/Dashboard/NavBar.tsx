@@ -25,6 +25,7 @@ import {
 } from '@sigle/ui';
 import { trpc } from '@/utils/trpc';
 import { useCeramic } from '../Ceramic/CeramicProvider';
+import { useAuthModal } from '../AuthModal/AuthModal';
 import { useDashboardStore } from './store';
 import { NavBarUserDropdown } from './NavBar/UserDropdown';
 import { ConnectDropdown } from './NavBar/ConnectDropdown';
@@ -93,13 +94,13 @@ const NavBarLink = ({
   label,
   active,
 }: NavBarLinkProps) => {
-  const { openAuthRequest } = useStacksAuth();
+  const { setOpen } = useAuthModal();
 
   const handleLinkClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
     if (href === '/connect') {
       e.preventDefault();
       e.stopPropagation();
-      openAuthRequest();
+      setOpen(true);
     }
   };
 
@@ -242,7 +243,7 @@ export const NavBar = () => {
                   <TooltipTrigger asChild>
                     <Link href="/editor/new">
                       <IconButton variant="light" size="lg">
-                        <TbPlus />
+                        <TbPlus size={navbarIconSize} />
                       </IconButton>
                     </Link>
                   </TooltipTrigger>
