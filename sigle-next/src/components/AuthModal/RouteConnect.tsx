@@ -8,6 +8,7 @@ import {
   Typography,
 } from '@sigle/ui';
 import { useAuthModalStore } from './store';
+import { TbWallet } from 'react-icons/tb';
 
 export const RouteConnect = () => {
   const { openAuthRequest } = useStacksAuth();
@@ -51,7 +52,7 @@ export const RouteConnect = () => {
             <Button size="lg" onClick={connectWallet}>
               Xverse Wallet
             </Button>
-            <Button size="lg" variant="ghost">
+            <Button size="lg" variant="ghost" rightIcon={<TbWallet />}>
               I don't have a wallet
             </Button>
           </Flex>
