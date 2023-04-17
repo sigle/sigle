@@ -1,7 +1,6 @@
 import { Header } from '@/components/Header';
-import { Hero } from '@/components/Hero';
 import ScrollUp from '@/components/ScrollUp';
-import { SiteSettings } from '@/types';
+import { SiteSettings, StoryFile } from '@/types';
 import { getAbsoluteUrl } from '@/utils/vercel';
 import { notFound } from 'next/navigation';
 import { Metadata } from 'next';
@@ -15,20 +14,36 @@ async function getSettings({
   return res.json();
 }
 
+async function getPost({
+  site,
+  id,
+}: {
+  site: string;
+  id: string;
+}): Promise<StoryFile | null> {
+  const res = await fetch(`${getAbsoluteUrl()}/api/posts/${id}?site=${site}`);
+  return res.json();
+}
+
 export async function generateMetadata({
   params,
 }: {
-  params: { site: string };
+  params: { site: string; id: string };
 }): Promise<Metadata> {
-  const { site } = params;
+  const { site, id } = params;
   const settings = await getSettings({ site });
+  const post = await getPost({
+    site,
+    id: id,
+  });
 
-  if (!settings) {
+  if (!settings || !post) {
     notFound();
   }
 
-  const title = `${settings.name} | Blog`;
-  const description = settings.description;
+  const title = post.metaTitle || post.title;
+  const description = post.metaDescription;
+  const seoImage = post.metaImage || post.coverImage;
 
   return {
     title,
@@ -39,21 +54,21 @@ export async function generateMetadata({
     openGraph: {
       title,
       description,
-      url: settings.url,
+      url: `${settings.url}/posts/${id}`,
       type: 'website',
       siteName: settings.name,
-      images: settings.avatar,
+      images: seoImage || settings.avatar,
     },
     twitter: {
-      card: 'summary',
+      card: seoImage ? 'summary_large_image' : 'summary',
       title,
       description,
-      images: settings.avatar,
+      images: seoImage || settings.avatar,
     },
   };
 }
 
-export default async function PageLayout({
+export default async function PostLayout({
   children,
   params,
 }: {
@@ -71,10 +86,7 @@ export default async function PageLayout({
     <>
       <ScrollUp />
       <Header settings={settings} />
-      <main className="mb-16">
-        <Hero settings={settings} />
-        {children}
-      </main>
+      <main className="mb-16 mt-5">{children}</main>
     </>
   );
 }
