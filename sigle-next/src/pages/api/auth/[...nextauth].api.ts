@@ -3,7 +3,7 @@ import type { NextAuthOptions } from 'next-auth';
 import CredentialsProvider from 'next-auth/providers/credentials';
 import * as Sentry from '@sentry/nextjs';
 import { getCsrfToken } from 'next-auth/react';
-import { SignInWithStacksMessage } from '@micro-stacks/client';
+import { SignInWithStacksMessage } from '@/lib/auth/sign-in-with-stacks/signInWithStacksMessage';
 
 export const authOptions: NextAuthOptions = {
   providers: [
@@ -26,15 +26,15 @@ export const authOptions: NextAuthOptions = {
         try {
           const siwe = new SignInWithStacksMessage(credentials?.message || '');
 
-          console.log({ siwe: process.env.NEXTAUTH_URL });
-
           const result = await siwe.verify({
             signature: credentials?.signature || '',
-            // TODO domain should be url - needs to be fixed in micro-stacks
-            // domain: process.env.NEXTAUTH_URL,
-            domain: 'Sigle',
-            // TODO test that this is working
-            nonce: await getCsrfToken({ req: req as any }),
+            domain: process.env.NEXTAUTH_URL,
+            nonce:
+              // In preview env, a different nonce is returned, to bypass this issue
+              // we disable nonce check on preview pr
+              process.env.VERCEL_ENV === 'preview'
+                ? undefined
+                : await getCsrfToken({ req }),
           });
 
           if (result.success) {

@@ -1,7 +1,6 @@
 import { useAccount, useOpenSignMessage } from '@micro-stacks/react';
 import Image from 'next/image';
 import { TbCircleCheck, TbChevronRight, TbReload } from 'react-icons/tb';
-import { useMicroStacksClient } from '@micro-stacks/react';
 import { getCsrfToken, signIn } from 'next-auth/react';
 import { RedirectableProviderType } from 'next-auth/providers';
 import { useState } from 'react';
@@ -17,6 +16,7 @@ import { addressAvatar } from '@/utils';
 import { nextImageLoader } from '@/utils/nextImageLoader';
 import { useToast } from '@/hooks/useToast';
 import { useAuthModalStore } from './store';
+import { SignInWithStacksMessage } from '@/lib/auth/sign-in-with-stacks/signInWithStacksMessage';
 
 const AvatarContainer = styled('div', {
   display: 'flex',
@@ -35,11 +35,14 @@ export const RouteSign = () => {
   >('inactive');
   const { stxAddress } = useAccount();
   const { openSignMessage } = useOpenSignMessage();
-  const client = useMicroStacksClient();
   const setOpen = useAuthModalStore((state) => state.setOpen);
   const { toast } = useToast();
 
   const signMessage = async () => {
+    if (!stxAddress) {
+      return;
+    }
+
     setSigningState('loading');
 
     const csrfToken = await getCsrfToken();
@@ -47,11 +50,18 @@ export const RouteSign = () => {
       setSigningState('inactive');
       throw new Error('No csrf token');
     }
-    // TODO custom statement with privacy policy
-    const stacksMessage = client.getSignInMessage({
+
+    const stacksMessage = new SignInWithStacksMessage({
       domain: `${window.location.protocol}//${window.location.host}`,
+      address: stxAddress,
+      // TODO custom statement with privacy policy
+      statement: 'Sign in with Stacks to the app.',
+      uri: window.location.origin,
+      version: '1',
+      chainId: 1,
       nonce: csrfToken,
     });
+
     if (!stacksMessage) {
       setSigningState('cancelled');
       return;

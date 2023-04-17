@@ -932,6 +932,9 @@ importers:
       use-deep-compare-effect:
         specifier: 1.8.1
         version: 1.8.1(react@18.2.0)
+      valid-url:
+        specifier: 1.0.9
+        version: 1.0.9
       zod:
         specifier: 3.21.4
         version: 3.21.4
@@ -987,6 +990,9 @@ importers:
       '@types/relay-runtime':
         specifier: 14.1.6
         version: 14.1.6
+      '@types/valid-url':
+        specifier: 1.0.3
+        version: 1.0.3
       autoprefixer:
         specifier: 10.4.14
         version: 10.4.14(postcss@8.4.21)
