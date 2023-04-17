@@ -1,4 +1,5 @@
 import { useAuth as useStacksAuth } from '@micro-stacks/react';
+import { TbWallet } from 'react-icons/tb';
 import {
   Button,
   DialogDescription,
@@ -7,10 +8,9 @@ import {
   Flex,
   Typography,
 } from '@sigle/ui';
-import { useAuthModalStore } from './store';
-import { TbWallet } from 'react-icons/tb';
 import { IconHiroWallet } from '@/images/IconHiroWallet';
 import { IconXverseWallet } from '@/images/IconXverseWallet';
+import { useAuthModalStore } from './store';
 
 export const RouteConnect = () => {
   const { openAuthRequest } = useStacksAuth();
