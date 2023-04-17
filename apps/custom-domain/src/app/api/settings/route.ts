@@ -28,6 +28,7 @@ export async function GET(request: Request) {
 
   return NextResponse.json({
     ...site,
+    url: `https://${siteParam}`,
     name: settingsFile?.siteName || site.username,
     description: settingsFile?.siteDescription || '',
     avatar: settingsFile?.siteLogo || '',

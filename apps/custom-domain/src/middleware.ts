@@ -22,8 +22,16 @@ export default async function middleware(req: NextRequest) {
   const hostname = req.headers.get('host');
 
   // Get the pathname of the request (e.g. /, /about, /blog/first-post)
-  const path = url.pathname;
+  let path = url.pathname;
 
-  // Rewrite everything else to `/_sites/[site] dynamic route
-  return NextResponse.rewrite(new URL(`/_sites/${hostname}${path}`, req.url));
+  // If the path is `/` or `/page/1` we rewrite to `/page/1`
+  if (path === '/') {
+    path = '/page/1';
+  } else if (path === '/page/1') {
+    // redirect to /
+    return NextResponse.redirect(req.nextUrl.origin);
+  }
+
+  // Rewrite everything else to `/sites/[site] dynamic route
+  return NextResponse.rewrite(new URL(`/sites/${hostname}${path}`, req.url));
 }

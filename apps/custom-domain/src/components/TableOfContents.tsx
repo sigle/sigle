@@ -72,8 +72,8 @@ export const TableOfContents = ({ items, post }: TableOfContentsProps) => {
   useIntersectionObserver(setActiveId);
 
   return (
-    <nav className="md:sticky md:top-20 overflow-auto	max-h[calc(100vh-40px)]">
-      <p className="font-bold text-[0.625rem] text-gray-500 uppercase tracking-wide">
+    <nav className="overflow-auto md:sticky	md:top-20">
+      <p className="text-[0.625rem] font-bold uppercase tracking-wide text-gray-500">
         Table of content
       </p>
       <ul>
@@ -81,7 +81,7 @@ export const TableOfContents = ({ items, post }: TableOfContentsProps) => {
           <li
             key={index}
             className={twMerge(
-              clsx('text-sm	mt-3', {
+              clsx('mt-3 text-sm', {
                 ['ml-3']: item.level === 3,
                 ['font-bold']: activeId === item.id,
               })

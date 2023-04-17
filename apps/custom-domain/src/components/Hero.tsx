@@ -12,7 +12,7 @@ interface HeroProps {
 export const Hero = ({ settings }: HeroProps) => {
   return (
     <div>
-      <div className="relative w-full h-64 md:h-[22rem]">
+      <div className="relative h-64 w-full md:h-[22rem]">
         <Image
           className="object-cover"
           src={settings.banner}
@@ -22,7 +22,7 @@ export const Hero = ({ settings }: HeroProps) => {
           fill
         />
       </div>
-      <div className="relative h-[110px] w-[110px] mt-[-55px] object-cover mx-auto border-[6px] border-white rounded-2xl overflow-hidden md:h-[150px] md:w-[150px] md:mt-[-75px]">
+      <div className="relative mx-auto mt-[-55px] h-[110px] w-[110px] overflow-hidden rounded-2xl border-[6px] border-white object-cover md:mt-[-75px] md:h-[150px] md:w-[150px]">
         <Image
           src={settings.avatar}
           alt="Avatar"
@@ -32,8 +32,8 @@ export const Hero = ({ settings }: HeroProps) => {
         />
       </div>
       <div className="container">
-        <h1 className="text-4xl	font-bold text-center mt-5">{settings.name}</h1>
-        <h2 className="text-lg text-center mt-3">{settings.description}</h2>
+        <h1 className="mt-5 text-center text-4xl font-bold">{settings.name}</h1>
+        <h2 className="mt-3 text-center text-lg">{settings.description}</h2>
       </div>
     </div>
   );

@@ -20,7 +20,7 @@ export const ShareSocial = ({
   const [isCopied, setIsCopied] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
 
-  const websiteUrl = location.href;
+  const websiteUrl = typeof window !== 'undefined' ? window.location.href : '';
 
   const handleClickCopy = (e: React.MouseEvent<HTMLAnchorElement>) => {
     e.preventDefault();
@@ -36,7 +36,7 @@ export const ShareSocial = ({
   return (
     <TooltipProvider>
       <div className="mt-5">
-        <p className="font-bold text-[0.625rem] text-gray-500 uppercase tracking-wide">
+        <p className="text-[0.625rem] font-bold uppercase tracking-wide text-gray-500">
           Share this article
         </p>
         <div className="mt-3 flex gap-3">
