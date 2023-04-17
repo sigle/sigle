@@ -15,8 +15,8 @@ import {
 import { addressAvatar } from '@/utils';
 import { nextImageLoader } from '@/utils/nextImageLoader';
 import { useToast } from '@/hooks/useToast';
-import { useAuthModalStore } from './store';
 import { SignInWithStacksMessage } from '@/lib/auth/sign-in-with-stacks/signInWithStacksMessage';
+import { useAuthModalStore } from './store';
 
 const AvatarContainer = styled('div', {
   display: 'flex',

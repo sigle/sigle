@@ -25,10 +25,10 @@ import {
 } from '@sigle/ui';
 import { trpc } from '@/utils/trpc';
 import { useCeramic } from '../Ceramic/CeramicProvider';
+import { useAuthModal } from '../AuthModal/AuthModal';
 import { useDashboardStore } from './store';
 import { NavBarUserDropdown } from './NavBar/UserDropdown';
 import { ConnectDropdown } from './NavBar/ConnectDropdown';
-import { useAuthModal } from '../AuthModal/AuthModal';
 
 const StyledNavBar = styled('nav', {
   px: '$5',

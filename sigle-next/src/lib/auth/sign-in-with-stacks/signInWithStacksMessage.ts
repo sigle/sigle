@@ -1,14 +1,6 @@
 // siwe port of https://github.com/spruceid/siwe/blob/main/packages/siwe/lib/client.ts
 
 import * as uri from 'valid-url';
-import { ParsedMessage } from './parser';
-import {
-  SiweError,
-  SiweErrorType,
-  SiweResponse,
-  VerifyParams,
-  VerifyParamsKeys,
-} from './types';
 import { hashMessage } from 'micro-stacks/connect';
 import { bytesToHex } from 'micro-stacks/common';
 import {
@@ -22,6 +14,14 @@ import {
   validateStacksAddress,
 } from 'micro-stacks/crypto';
 import { PubKeyEncoding } from 'micro-stacks/transactions';
+import {
+  SiweError,
+  SiweErrorType,
+  SiweResponse,
+  VerifyParams,
+  VerifyParamsKeys,
+} from './types';
+import { ParsedMessage } from './parser';
 // import { hashMessage, verifyMessageSignatureRsv } from '@stacks/encryption';
 
 // https://github.com/stacksgov/sips/blob/22f964ca9beddf9fd750d466b4a20568435f3911/sips/sip-x%20sign-in-with-stacks/sip-x-sign-in-with-stacks.md

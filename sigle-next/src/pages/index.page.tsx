@@ -7,8 +7,8 @@ import { StoryCardPublishedSkeleton } from '@/components/StoryCard/StoryCardPubl
 import { trpc } from '@/utils/trpc';
 import { StoryCardPublished } from '@/components/StoryCard/StoryCardPublished';
 import { useCeramic } from '@/components/Ceramic/CeramicProvider';
-import { DashboardLayout } from '../components/Dashboard/DashboardLayout';
 import { useAuthModal } from '@/components/AuthModal/AuthModal';
+import { DashboardLayout } from '../components/Dashboard/DashboardLayout';
 
 const HopePostList = () => {
   const postList = trpc.postList.useInfiniteQuery(
