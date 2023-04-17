@@ -74,9 +74,8 @@ const StyledContent = styled(DialogPrimitive.Content, {
   width: '90vw',
   maxWidth: '550px',
   maxHeight: 'max-content',
-  px: '$6',
-  pt: 48,
-  pb: '$5',
+  py: '$4',
+  px: '$5',
   overflow: 'scroll',
   transform: 'none',
 
@@ -103,7 +102,7 @@ const StyledContent = styled(DialogPrimitive.Content, {
 
 const StyledCloseButton = styled(DialogPrimitive.Close, {
   position: 'absolute',
-  top: '$4',
+  top: '$3',
   right: '$6',
 });
 
@@ -128,6 +127,13 @@ export const DialogContent = forwardRef<
 ));
 
 DialogContent.displayName = 'DialogContent';
+
+export const DialogDivider = styled('div', {
+  height: '1px',
+  my: '$4',
+  mx: '-$5',
+  backgroundColor: '$gray6',
+});
 
 export const DialogTrigger = DialogPrimitive.Trigger;
 export const DialogClose = DialogPrimitive.Close;

@@ -2,6 +2,7 @@ import { useAuth as useStacksAuth } from '@micro-stacks/react';
 import {
   Button,
   DialogDescription,
+  DialogDivider,
   DialogTitle,
   Flex,
   Typography,
@@ -27,20 +28,34 @@ export const RouteConnect = () => {
 
   return (
     <>
-      <DialogTitle asChild>
-        <Typography size="lg" fontWeight="bold" css={{ textAlign: 'center' }}>
+      <DialogTitle>
+        <Typography size="md" fontWeight="bold" css={{ textAlign: 'center' }}>
           Connect wallet
         </Typography>
       </DialogTitle>
       <DialogDescription asChild>
-        <Flex mt="5" direction="column" gap="3">
-          <Button size="lg" onClick={connectWallet}>
-            Hiro Wallet
-          </Button>
-          <Button size="lg" onClick={connectWallet}>
-            Xverse Wallet
-          </Button>
-        </Flex>
+        <>
+          <Typography
+            size="sm"
+            color="gray9"
+            css={{ textAlign: 'center', mt: '$3' }}
+          >
+            Choose the wallet you want to connect with. Each wallet will display
+            a different account.
+          </Typography>
+          <DialogDivider />
+          <Flex direction="column" gap="3">
+            <Button size="lg" onClick={connectWallet}>
+              Hiro Wallet
+            </Button>
+            <Button size="lg" onClick={connectWallet}>
+              Xverse Wallet
+            </Button>
+            <Button size="lg" variant="ghost">
+              I don't have a wallet
+            </Button>
+          </Flex>
+        </>
       </DialogDescription>
     </>
   );

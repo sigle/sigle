@@ -7,9 +7,7 @@ import { RouteSign } from './RouteSign';
 // TODO track login flow with posthog
 
 const StyledDialogContent = styled(DialogContent, {
-  maxWidth: '360px',
-  px: '$6',
-  py: '$6',
+  maxWidth: '330px',
 });
 
 /**
