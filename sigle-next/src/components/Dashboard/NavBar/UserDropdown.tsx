@@ -2,6 +2,7 @@ import { useTheme } from 'next-themes';
 import Link from 'next/link';
 import { TbChevronDown } from 'react-icons/tb';
 import { useAuth as useStacksAuth } from '@micro-stacks/react';
+import { useSession } from 'next-auth/react';
 import {
   DropdownMenu,
   DropdownMenuTrigger,
@@ -86,7 +87,10 @@ export const NavBarUserDropdown = ({
   const toggleCollapse = useDashboardStore((state) => state.toggleCollapse);
   const setEnvironment = useRelayStore((store) => store.setEnvironment);
   const { signOut } = useStacksAuth();
+  const { data } = useSession();
   const utils = trpc.useContext();
+
+  console.log(data, data?.user);
 
   const toggleTheme = () => {
     resolvedTheme === 'dark' ? setTheme('light') : setTheme('dark');

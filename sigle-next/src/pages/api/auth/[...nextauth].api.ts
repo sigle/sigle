@@ -40,6 +40,7 @@ export const authOptions: NextAuthOptions = {
           if (result.success) {
             return {
               id: siwe.address,
+              address: siwe.address,
             };
           }
           return null;
@@ -57,6 +58,25 @@ export const authOptions: NextAuthOptions = {
       },
     }),
   ],
+  callbacks: {
+    jwt({ token, user }) {
+      // Update the session to include some user information
+      /* Step 1: update the token based on the user object */
+      if (user) {
+        token.address = user.address;
+        console.log('token', token);
+      }
+      return token;
+    },
+    session({ session, token }) {
+      /* Step 2: update the session.user based on the token object */
+      if (token && session.user) {
+        session.user.address = token.address;
+        console.log('session.user', session.user);
+      }
+      return session;
+    },
+  },
 };
 
 export default NextAuth(authOptions);
