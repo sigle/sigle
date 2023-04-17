@@ -9,6 +9,8 @@ import {
 } from '@sigle/ui';
 import { useAuthModalStore } from './store';
 import { TbWallet } from 'react-icons/tb';
+import { IconHiroWallet } from '@/images/IconHiroWallet';
+import { IconXverseWallet } from '@/images/IconXverseWallet';
 
 export const RouteConnect = () => {
   const { openAuthRequest } = useStacksAuth();
@@ -46,13 +48,28 @@ export const RouteConnect = () => {
           </Typography>
           <DialogDivider />
           <Flex direction="column" gap="3">
-            <Button size="lg" onClick={connectWallet}>
+            <Button
+              size="lg"
+              onClick={connectWallet}
+              rightIcon={<IconHiroWallet />}
+              css={{ justifyContent: 'space-between' }}
+            >
               Hiro Wallet
             </Button>
-            <Button size="lg" onClick={connectWallet}>
+            <Button
+              size="lg"
+              onClick={connectWallet}
+              rightIcon={<IconXverseWallet />}
+              css={{ justifyContent: 'space-between' }}
+            >
               Xverse Wallet
             </Button>
-            <Button size="lg" variant="ghost" rightIcon={<TbWallet />}>
+            <Button
+              size="sm"
+              variant="ghost"
+              rightIcon={<TbWallet />}
+              css={{ color: '$gray9' }}
+            >
               I don't have a wallet
             </Button>
           </Flex>
