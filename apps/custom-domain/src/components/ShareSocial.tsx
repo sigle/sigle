@@ -20,7 +20,7 @@ export const ShareSocial = ({
   const [isCopied, setIsCopied] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
 
-  const websiteUrl = location.href;
+  const websiteUrl = typeof window !== 'undefined' ? window.location.href : '';
 
   const handleClickCopy = (e: React.MouseEvent<HTMLAnchorElement>) => {
     e.preventDefault();
