@@ -6,22 +6,19 @@ import { IconButton } from './IconButton';
 
 const overlayShow = keyframes({
   '0%': { opacity: 0 },
-  '100%': { opacity: 1 },
+  '100%': { opacity: 0.7 },
 });
 
 const overlayHide = keyframes({
-  '0%': { opacity: 1 },
+  '0%': { opacity: 0.7 },
   '100%': { opacity: 0 },
 });
 
 export const StyledOverlay = styled(DialogPrimitive.Overlay, {
   position: 'fixed',
   inset: 0,
-  backgroundColor: 'rgba(8, 8, 8, 0.7)',
-
-  [`.${darkTheme} &`]: {
-    backgroundColor: 'rgba(46, 46, 46, 0.7)',
-  },
+  backgroundColor: '$gray5',
+  opacity: 0.7,
 
   '@media (prefers-reduced-motion: no-preference)': {
     '&[data-state="open"]': {
@@ -63,7 +60,7 @@ const StyledContent = styled(DialogPrimitive.Content, {
   backgroundColor: '$gray1',
   color: '$gray11',
   br: '$sm',
-  boxShadow: '0px 0px 33px rgba(0, 0, 0, 0.08)',
+  boxShadow: '0px 12px 12px -6px rgba(0, 0, 0, 0.16)',
   position: 'fixed',
   top: 0,
   bottom: 0,
@@ -78,6 +75,10 @@ const StyledContent = styled(DialogPrimitive.Content, {
   px: '$5',
   overflow: 'scroll',
   transform: 'none',
+
+  [`.${darkTheme} &`]: {
+    boxShadow: '0px 12px 12px -6px rgba(0, 0, 0, 0.64)',
+  },
 
   '@md': {
     maxHeight: '85vh',
