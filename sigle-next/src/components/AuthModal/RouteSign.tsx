@@ -1,6 +1,6 @@
 import { useAccount, useOpenSignMessage } from '@micro-stacks/react';
 import Image from 'next/image';
-import { TbCircleCheck, TbChevronRight, TbReload } from 'react-icons/tb';
+import { TbCircleCheck, TbArrowRight, TbReload } from 'react-icons/tb';
 import { getCsrfToken, signIn } from 'next-auth/react';
 import { RedirectableProviderType } from 'next-auth/providers';
 import { useState } from 'react';
@@ -8,6 +8,7 @@ import { styled } from '@sigle/stitches.config';
 import {
   Button,
   DialogDescription,
+  DialogDivider,
   DialogTitle,
   Flex,
   Typography,
@@ -86,6 +87,9 @@ export const RouteSign = () => {
       setSigningState('cancelled');
       return;
     }
+    toast({
+      description: 'Logged in successfully',
+    });
     setSigningState('complete');
     setOpen(false);
   };
@@ -93,13 +97,17 @@ export const RouteSign = () => {
   return (
     <>
       <DialogTitle asChild>
-        <Typography size="lg" fontWeight="bold" css={{ textAlign: 'center' }}>
+        <Typography size="md" fontWeight="bold" css={{ textAlign: 'center' }}>
           Sign In With Stacks
         </Typography>
       </DialogTitle>
       <DialogDescription asChild>
-        <Flex mt="5" direction="column" gap="3">
-          <Typography color="gray9" css={{ textAlign: 'center' }}>
+        <>
+          <Typography
+            size="sm"
+            color="gray9"
+            css={{ textAlign: 'center', mt: '$3' }}
+          >
             This app would like to verify you as the owner of this wallet.
           </Typography>
           <Flex
@@ -107,7 +115,8 @@ export const RouteSign = () => {
             align="center"
             gap="7"
             css={{
-              py: '$8',
+              pt: '$8',
+              pb: '$4',
             }}
           >
             <AvatarContainer>
@@ -130,29 +139,32 @@ export const RouteSign = () => {
               />
             </AvatarContainer>
           </Flex>
-          <Typography color="gray9" css={{ textAlign: 'center' }}>
+          <Typography size="xs" css={{ textAlign: 'center' }}>
             Please sign the message request in your wallet to continue.
           </Typography>
-          {signingState === 'loading' && (
-            <Button size="lg" disabled>
-              Awaiting Confirmation...
-            </Button>
-          )}
-          {signingState === 'inactive' && (
-            <Button
-              size="lg"
-              onClick={signMessage}
-              rightIcon={<TbChevronRight />}
-            >
-              Sign in
-            </Button>
-          )}
-          {signingState === 'cancelled' && (
-            <Button size="lg" onClick={signMessage} rightIcon={<TbReload />}>
-              Try again
-            </Button>
-          )}
-        </Flex>
+          <DialogDivider />
+          <Flex direction="column">
+            {signingState === 'loading' && (
+              <Button size="lg" disabled>
+                Awaiting Confirmation...
+              </Button>
+            )}
+            {signingState === 'inactive' && (
+              <Button
+                size="lg"
+                onClick={signMessage}
+                rightIcon={<TbArrowRight />}
+              >
+                Sign in
+              </Button>
+            )}
+            {signingState === 'cancelled' && (
+              <Button size="lg" onClick={signMessage} rightIcon={<TbReload />}>
+                Try again
+              </Button>
+            )}
+          </Flex>
+        </>
       </DialogDescription>
     </>
   );
