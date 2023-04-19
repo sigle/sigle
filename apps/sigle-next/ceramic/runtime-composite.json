@@ -1,22 +1,15 @@
 {
   "models": {
-    "Profile": {
-      "id": "kjzl6hvfrbw6c7ikbuw6592jedrtoen3gn6ggvcblmr1bbmihu9cfsl1p8yr3xk",
-      "accountRelation": { "type": "single" }
-    },
     "Post": {
-      "id": "kjzl6hvfrbw6c57r6z76e6pxwlmilanyovqygfx7sv2bmgf662azogo8993qxh2",
+      "id": "kjzl6hvfrbw6c6qxiv8jr3gbrdtbcb2bq4475sgbssui6jj4kf4r9ckkrpoklqv",
       "accountRelation": { "type": "list" }
+    },
+    "Profile": {
+      "id": "kjzl6hvfrbw6c9nddzeeiqpwtdfldp4w7vi8zuvzhb1pqk02bc6gtif9edmoays",
+      "accountRelation": { "type": "single" }
     }
   },
   "objects": {
-    "Profile": {
-      "websiteUrl": { "type": "string", "required": false },
-      "description": { "type": "string", "required": false },
-      "displayName": { "type": "string", "required": false },
-      "twitterUsername": { "type": "string", "required": false },
-      "version": { "type": "view", "viewType": "documentVersion" }
-    },
     "Post": {
       "title": { "type": "string", "required": true },
       "status": {
@@ -28,16 +21,23 @@
       "content": { "type": "string", "required": true },
       "metaImage": { "type": "string", "required": false },
       "metaTitle": { "type": "string", "required": false },
-      "canonicalUrl": { "type": "string", "required": false },
+      "canonicalUrl": { "type": "uri", "required": false },
       "featuredImage": { "type": "string", "required": false },
       "metaDescription": { "type": "string", "required": false },
       "author": { "type": "view", "viewType": "documentAccount" },
+      "version": { "type": "view", "viewType": "documentVersion" }
+    },
+    "Profile": {
+      "websiteUrl": { "type": "uri", "required": false },
+      "description": { "type": "string", "required": false },
+      "displayName": { "type": "string", "required": false },
+      "twitterUsername": { "type": "string", "required": false },
       "version": { "type": "view", "viewType": "documentVersion" }
     }
   },
   "enums": { "PostStatus": ["DRAFT", "PUBLISHED", "DELETED"] },
   "accountData": {
-    "profile": { "type": "node", "name": "Profile" },
-    "postList": { "type": "connection", "name": "Post" }
+    "postList": { "type": "connection", "name": "Post" },
+    "profile": { "type": "node", "name": "Profile" }
   }
 }

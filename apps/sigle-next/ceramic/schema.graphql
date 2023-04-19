@@ -1,5 +1,3 @@
-# TODO Ceramic released scalar URI - https://composedb.js.org/docs/0.4.x/api/sdl/scalars?ref=the-ceramic-blog#uri
-
 type Post @createModel(accountRelation: LIST, description: "sigle post") {
   author: DID! @documentAccount
   version: CommitID! @documentVersion
@@ -23,7 +21,7 @@ type Post @createModel(accountRelation: LIST, description: "sigle post") {
   # TODO image interface with mime type included
   metaImage: String @string(minLength: 3, maxLength: 2000)
   # The canonical URL of a publication.
-  canonicalUrl: String @string(minLength: 3, maxLength: 2000)
+  canonicalUrl: URI @string(minLength: 3, maxLength: 2000)
 }
 
 enum PostStatus {
@@ -40,7 +38,7 @@ type Profile
   # Bio of a profile.
   description: String @string(minLength: 3, maxLength: 300)
   # Website URL of a profile.
-  websiteUrl: String @string(minLength: 3, maxLength: 2000)
+  websiteUrl: URI @string(minLength: 3, maxLength: 2000)
   # Twitter username of a profile.
   twitterUsername: String @string(minLength: 3, maxLength: 1000)
 }
