@@ -64,6 +64,20 @@ export const sites: {
       label: 'Contact Me',
     },
   },
+  ['blog.jackbinswitch.com']: {
+    username: 'jackbinswitch.btc',
+    banner: '/websites/blog.jackbinswitch.com/banner.png',
+    links: [
+      {
+        href: 'https://jackbinswitch.com/',
+        label: 'Home',
+      },
+      {
+        href: 'https://www.youtube.com/watch?v=9oqXZCemj1M&ab_channel=Bitcoinlive',
+        label: 'We Are Ready Podcast',
+      },
+    ],
+  },
 };
 
 // Add localhost to sites for development

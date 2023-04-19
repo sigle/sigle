@@ -1,7 +1,6 @@
 import { VariantProps } from '@stitches/react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import { allowedNewsletterUsers } from '../../config';
 import {
   Accordion,
   AccordionContent,
@@ -9,7 +8,6 @@ import {
   AccordionTrigger,
   Box,
 } from '../../ui';
-import { useAuth } from '../auth/AuthContext';
 import { AppFooter } from '../layout/components/AppFooter';
 import { AppHeader } from '../layout/components/AppHeader';
 import {
@@ -28,11 +26,6 @@ export const SettingsLayout = ({
   ...props
 }: DashboardLayoutProps) => {
   const router = useRouter();
-  const { user, loggingIn } = useAuth();
-
-  const isNewsletterWhitelisted = allowedNewsletterUsers.includes(
-    user?.profile.stxAddress.mainnet || ''
-  );
 
   const navItems = [
     {
@@ -52,13 +45,6 @@ export const SettingsLayout = ({
       path: '/settings/plans',
     },
   ];
-
-  if (!loggingIn && isNewsletterWhitelisted) {
-    navItems.splice(2, 0, {
-      name: 'Newsletter',
-      path: '/settings/newsletter',
-    });
-  }
 
   return (
     <FullScreen>

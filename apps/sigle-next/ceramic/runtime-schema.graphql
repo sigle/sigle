@@ -18,7 +18,6 @@ type CeramicAccount implements Node {
   Whether the Ceramic instance is currently authenticated with this account or not
   """
   isViewer: Boolean!
-  profile: Profile
   postList(
     """
     Returns the items in the list that come after the specified cursor.
@@ -40,6 +39,7 @@ type CeramicAccount implements Node {
     """
     last: Int
   ): PostConnection
+  profile: Profile
 }
 
 """
@@ -96,10 +96,10 @@ type CreateProfilePayload {
 }
 
 type Mutation {
-  createProfile(input: CreateProfileInput!): CreateProfilePayload
-  updateProfile(input: UpdateProfileInput!): UpdateProfilePayload
   createPost(input: CreatePostInput!): CreatePostPayload
   updatePost(input: UpdatePostInput!): UpdatePostPayload
+  createProfile(input: CreateProfileInput!): CreateProfilePayload
+  updateProfile(input: UpdateProfileInput!): UpdateProfilePayload
 }
 
 """
@@ -143,13 +143,13 @@ input PartialPostInput {
   content: String
   metaImage: String
   metaTitle: String
-  canonicalUrl: String
+  canonicalUrl: URI
   featuredImage: String
   metaDescription: String
 }
 
 input PartialProfileInput {
-  websiteUrl: String
+  websiteUrl: URI
   description: String
   displayName: String
   twitterUsername: String
@@ -162,7 +162,7 @@ type Post implements Node {
   content: String!
   metaImage: String
   metaTitle: String
-  canonicalUrl: String
+  canonicalUrl: URI
   featuredImage: String
   metaDescription: String
 
@@ -213,7 +213,7 @@ input PostInput {
   content: String!
   metaImage: String
   metaTitle: String
-  canonicalUrl: String
+  canonicalUrl: URI
   featuredImage: String
   metaDescription: String
 }
@@ -226,7 +226,7 @@ enum PostStatus {
 
 type Profile implements Node {
   id: ID!
-  websiteUrl: String
+  websiteUrl: URI
   description: String
   displayName: String
   twitterUsername: String
@@ -268,7 +268,7 @@ type ProfileEdge {
 }
 
 input ProfileInput {
-  websiteUrl: String
+  websiteUrl: URI
   description: String
   displayName: String
   twitterUsername: String
@@ -289,27 +289,6 @@ type Query {
   Account currently authenticated on the Ceramic instance, if set
   """
   viewer: CeramicAccount
-  profileIndex(
-    """
-    Returns the items in the list that come after the specified cursor.
-    """
-    after: String
-
-    """
-    Returns the first n items from the list.
-    """
-    first: Int
-
-    """
-    Returns the items in the list that come before the specified cursor.
-    """
-    before: String
-
-    """
-    Returns the last n items from the list.
-    """
-    last: Int
-  ): ProfileConnection
   postIndex(
     """
     Returns the items in the list that come after the specified cursor.
@@ -331,6 +310,27 @@ type Query {
     """
     last: Int
   ): PostConnection
+  profileIndex(
+    """
+    Returns the items in the list that come after the specified cursor.
+    """
+    after: String
+
+    """
+    Returns the first n items from the list.
+    """
+    first: Int
+
+    """
+    Returns the items in the list that come before the specified cursor.
+    """
+    before: String
+
+    """
+    Returns the last n items from the list.
+    """
+    last: Int
+  ): ProfileConnection
 }
 
 input UpdateOptionsInput {
@@ -396,3 +396,8 @@ type UpdateProfilePayload {
   document: Profile!
   clientMutationId: String
 }
+
+"""
+A field whose value conforms to the standard Uniform Resource Identifier (URI) format as specified in RFC3986.
+"""
+scalar URI

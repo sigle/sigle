@@ -6,7 +6,7 @@ kill_timeout = 5
 processes = []
 
 [build]
-  dockerfile = "sigle-next/ceramic/staging.ceramic.Dockerfile"
+  dockerfile = "apps/sigle-next/ceramic/staging.ceramic.Dockerfile"
 
 [env]
 

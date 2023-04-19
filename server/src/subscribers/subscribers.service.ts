@@ -7,7 +7,6 @@ import {
   Contact,
   ContactSubscription,
 } from 'node-mailjet';
-import { allowedNewsletterUsers } from '../utils';
 import { PosthogService } from '../posthog/posthog.service';
 // Mailjet API https://dev.mailjet.com/email/reference/overview/authentication/
 // eslint-disable-next-line @typescript-eslint/no-var-requires
@@ -21,12 +20,6 @@ export class SubscribersService {
   ) {}
 
   async create({ stacksAddress, email }: CreateSubscriberDto) {
-    // TODO - remove this check once newsletter feature is ready
-    // Limit who can access this feature
-    if (!allowedNewsletterUsers.includes(stacksAddress)) {
-      throw new BadRequestException('Not activated.');
-    }
-
     const user = await this.prisma.user.findUniqueOrThrow({
       select: {
         id: true,
