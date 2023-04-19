@@ -29,16 +29,8 @@ model ceramic_models {
   @@index([is_indexed], map: "idx_ceramic_is_indexed")
 }
 
-/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by the Prisma Client.
-model ceramic_indexing_state {
-  processed_block_hash   String? @db.VarChar(1024)
-  processed_block_number Int?
-
-  @@ignore
-}
-
 model Post {
-  stream_id         String    @id(map: "idx_go8993qxh2_pkey") @unique(map: "constr_go8993qxh2_unique") @db.VarChar(255)
+  stream_id         String    @id(map: "idx_ckkrpoklqv_pkey") @unique(map: "constr_ckkrpoklqv_unique") @db.VarChar(255)
   controller_did    String    @db.VarChar(1024)
   stream_content    Json
   tip               String    @db.VarChar(255)
@@ -47,17 +39,17 @@ model Post {
   created_at        DateTime  @default(now()) @db.Timestamptz(6)
   updated_at        DateTime  @default(now()) @db.Timestamptz(6)
 
-  @@index([created_at], map: "idx_go8993qxh2_created_at")
-  @@index([first_anchored_at], map: "idx_go8993qxh2_first_anchored_at")
-  @@index([last_anchored_at], map: "idx_go8993qxh2_last_anchored_at")
-  @@index([last_anchored_at, created_at], map: "idx_go8993qxh2_last_anchored_at_created_at")
-  @@index([stream_id], map: "idx_go8993qxh2_stream_id")
-  @@index([updated_at], map: "idx_go8993qxh2_updated_at")
-  @@map("kjzl6hvfrbw6c57r6z76e6pxwlmilanyovqygfx7sv2bmgf662azogo8993qxh2")
+  @@index([created_at], map: "idx_ckkrpoklqv_created_at")
+  @@index([first_anchored_at], map: "idx_ckkrpoklqv_first_anchored_at")
+  @@index([last_anchored_at], map: "idx_ckkrpoklqv_last_anchored_at")
+  @@index([last_anchored_at, created_at], map: "idx_ckkrpoklqv_last_anchored_at_created_at")
+  @@index([stream_id], map: "idx_ckkrpoklqv_stream_id")
+  @@index([updated_at], map: "idx_ckkrpoklqv_updated_at")
+  @@map("kjzl6hvfrbw6c6qxiv8jr3gbrdtbcb2bq4475sgbssui6jj4kf4r9ckkrpoklqv")
 }
 
 model Profile {
-  stream_id         String    @id(map: "idx_sl1p8yr3xk_pkey") @unique(map: "constr_sl1p8yr3xk_unique") @db.VarChar(255)
+  stream_id         String    @id(map: "idx_if9edmoays_pkey") @unique(map: "constr_if9edmoays_unique") @db.VarChar(255)
   controller_did    String    @db.VarChar(1024)
   stream_content    Json
   tip               String    @db.VarChar(255)
@@ -66,11 +58,11 @@ model Profile {
   created_at        DateTime  @default(now()) @db.Timestamptz(6)
   updated_at        DateTime  @default(now()) @db.Timestamptz(6)
 
-  @@index([created_at], map: "idx_sl1p8yr3xk_created_at")
-  @@index([first_anchored_at], map: "idx_sl1p8yr3xk_first_anchored_at")
-  @@index([last_anchored_at], map: "idx_sl1p8yr3xk_last_anchored_at")
-  @@index([last_anchored_at, created_at], map: "idx_sl1p8yr3xk_last_anchored_at_created_at")
-  @@index([stream_id], map: "idx_sl1p8yr3xk_stream_id")
-  @@index([updated_at], map: "idx_sl1p8yr3xk_updated_at")
-  @@map("kjzl6hvfrbw6c7ikbuw6592jedrtoen3gn6ggvcblmr1bbmihu9cfsl1p8yr3xk")
+  @@index([created_at], map: "idx_if9edmoays_created_at")
+  @@index([first_anchored_at], map: "idx_if9edmoays_first_anchored_at")
+  @@index([last_anchored_at], map: "idx_if9edmoays_last_anchored_at")
+  @@index([last_anchored_at, created_at], map: "idx_if9edmoays_last_anchored_at_created_at")
+  @@index([stream_id], map: "idx_if9edmoays_stream_id")
+  @@index([updated_at], map: "idx_if9edmoays_updated_at")
+  @@map("kjzl6hvfrbw6c9nddzeeiqpwtdfldp4w7vi8zuvzhb1pqk02bc6gtif9edmoays")
 }
