@@ -1,7 +1,6 @@
 import { ArrowLeftIcon, CheckCircledIcon } from '@radix-ui/react-icons';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
-import { allowedNewsletterUsers } from '../../config';
 import { useGetStory } from '../../hooks/stories';
 import { useGetUserSubscription } from '../../hooks/subscriptions';
 import { useGetUserMe } from '../../hooks/users';
@@ -131,9 +130,6 @@ export const PublishDialog = ({
   const hasActiveSubscription = !!userSubscription;
   const isNewsletterActive = userMe?.newsletter?.status === 'ACTIVE';
   const isStoryAlreadySent = !!storyApi?.email;
-  const isNewsletterWhitelisted = allowedNewsletterUsers.includes(
-    user?.profile.stxAddress.mainnet || ''
-  );
 
   return (
     <>
@@ -247,16 +243,7 @@ export const PublishDialog = ({
                         <Typography size="subheading" css={{ mt: '$3' }}>
                           2 - Activate the newsletter feature
                         </Typography>
-                        {!isNewsletterWhitelisted && (
-                          <Typography
-                            size="subheading"
-                            css={{ color: '$gray9', mt: '$2' }}
-                          >
-                            You need to be whitelisted to activate the
-                            newsletter feature.
-                          </Typography>
-                        )}
-                        {!isNewsletterActive && isNewsletterWhitelisted && (
+                        {!isNewsletterActive && (
                           <Link href="/settings/newsletter" target="_blank">
                             <Button variant="subtle" css={{ mt: '$2' }}>
                               Activate

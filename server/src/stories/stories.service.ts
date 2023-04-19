@@ -2,7 +2,6 @@ import { BadRequestException, Injectable } from '@nestjs/common';
 import { SendEmailV3_1 } from 'node-mailjet';
 import * as textVersion from 'textversionjs';
 import { InjectSentry, SentryService } from '@ntegral/nestjs-sentry';
-import { allowedNewsletterUsers } from '../utils';
 import { PrismaService } from '../prisma/prisma.service';
 import { StacksService } from '../stacks/stacks.service';
 import { BulkEmailService } from '../bulk-email/bulk-email.service';
@@ -119,10 +118,6 @@ export class StoriesService {
     });
 
     if (send) {
-      // Limit who can access this feature
-      if (!allowedNewsletterUsers.includes(stacksAddress)) {
-        throw new BadRequestException('Not activated.');
-      }
       if (!user.newsletter || user.newsletter.status !== 'ACTIVE') {
         throw new BadRequestException('Newsletter not setup.');
       }
@@ -356,10 +351,6 @@ export class StoriesService {
       where: { stacksAddress },
     });
 
-    // Limit who can access this feature
-    if (!allowedNewsletterUsers.includes(stacksAddress)) {
-      throw new BadRequestException('Not activated.');
-    }
     if (!user.newsletter || user.newsletter.status !== 'ACTIVE') {
       throw new BadRequestException('Newsletter not setup.');
     }
