@@ -21,7 +21,6 @@ import {
   Typography,
 } from '../../ui';
 import { VisuallyHidden } from '../../ui/VisuallyHidden';
-import { useAuth } from '../auth/AuthContext';
 import { PublishAndSendDialog } from './PublishAndSendDialog';
 import { SendTestEmail } from './PublishDialog/SendTestEmail';
 import { TwitterCardPreview } from './TwitterCardPreview';
@@ -97,7 +96,6 @@ export const PublishDialog = ({
   onClose,
   onEditPreview,
 }: PublishDialogProps) => {
-  const { user } = useAuth();
   const { data: userMe } = useGetUserMe();
   const { data: userSubscription } = useGetUserSubscription();
   const { data: storyApi, refetch: refetchStoryApi } = useGetStory({
