@@ -1,8 +1,10 @@
 .next
 .github/ISSUE_TEMPLATE
-server/dist
-coverage
 pnpm-lock.yaml
 
+# server
+server/dist
+coverage
+
 # sigle-next
-sigle-next/src/__generated__
+apps/sigle-next/src/__generated__
