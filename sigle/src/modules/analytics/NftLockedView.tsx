@@ -40,16 +40,16 @@ export const NftLockedView = () => {
             <span>✅</span> Analytics page
           </Typography>
           <Typography size="subheading" as="li">
-            <span>⚙️</span> Newsletters
+            <span>✅</span> Newsletters
+          </Typography>
+          <Typography size="subheading" as="li">
+            <span>✅</span> Custom domain name
           </Typography>
           <Typography size="subheading" as="li">
             <span>⚙️</span> Monetisation (write & earn)
           </Typography>
           <Typography size="subheading" as="li">
             <span>⚙️</span> Publish on Discover page
-          </Typography>
-          <Typography size="subheading" as="li">
-            <span>⚙️</span> Domain name
           </Typography>
           <Typography size="subheading" as="li">
             <span>⚙️</span> And more...
