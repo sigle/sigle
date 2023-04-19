@@ -129,7 +129,7 @@ jobs:
       - name: Get next.js sigle cache
         uses: actions/cache@v2
         with:
-          path: ${{ github.workspace }}/sigle-next/.next/cache
+          path: ${{ github.workspace }}/apps/sigle-next/.next/cache
           key: ${{ runner.os }}-nextjs-sigle-next-${{ hashFiles('**/pnpm-lock.yaml') }}
 
       - name: Install Dependencies
