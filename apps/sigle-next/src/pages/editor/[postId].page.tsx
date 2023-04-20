@@ -2,8 +2,9 @@ import { TooltipProvider } from '@radix-ui/react-tooltip';
 import { useRouter } from 'next/router';
 import { graphql, useLazyLoadQuery } from 'react-relay';
 import useDeepCompareEffect from 'use-deep-compare-effect';
-import { Container } from '@sigle/ui';
-import { useCeramic } from '@/components/Ceramic/CeramicProvider';
+import { useSession } from 'next-auth/react';
+import { Suspense } from 'react';
+import { Container, LoadingSpinner, Typography } from '@sigle/ui';
 import { EditorHeader } from '@/components/Editor/EditorHeader/EditorHeader';
 import { EditorSettings } from '@/components/Editor/EditorSettings/EditorSettings';
 import { EditorTitle } from '@/components/Editor/EditorTitle';
@@ -43,14 +44,14 @@ const Editor = () => {
    * It's a deep compare effect to avoid useEffect issues with the story object
    */
   useDeepCompareEffect(() => {
-    if (data.node) {
+    if (data?.node) {
       // TODO fix types
       setInitialStory(data.node as any);
     }
-  }, [data.node]);
+  }, [data?.node || []]);
 
-  // TODO suspense loading state when loading story
-  // TODO story not found
+  // TODO style story not found
+  if (!story) return null;
 
   return (
     <>
@@ -66,7 +67,7 @@ const Editor = () => {
 
 export default function ProtectedEditor() {
   // TODO auth protect
-  const { session } = useCeramic();
+  const { data: session } = useSession();
 
   const router = useRouter();
   const { postId } = router.query;
@@ -74,5 +75,22 @@ export default function ProtectedEditor() {
   // As it's a static page, the first render will have an undefined postId
   if (!postId) return null;
 
-  return <TooltipProvider>{session ? <Editor /> : null}</TooltipProvider>;
+  return (
+    <TooltipProvider>
+      {session?.user ? (
+        <Suspense
+          fallback={
+            <>
+              <EditorHeader />
+              <Container css={{ maxWidth: 720, pt: '56px', pb: '$5' }}>
+                <LoadingSpinner />
+              </Container>
+            </>
+          }
+        >
+          <Editor />
+        </Suspense>
+      ) : null}
+    </TooltipProvider>
+  );
 }
