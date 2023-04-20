@@ -1,6 +1,7 @@
 import NextAuth from 'next-auth';
 import type { NextAuthOptions } from 'next-auth';
 import CredentialsProvider from 'next-auth/providers/credentials';
+import { NextApiRequest, NextApiResponse } from 'next';
 import * as Sentry from '@sentry/nextjs';
 import { getCsrfToken } from 'next-auth/react';
 import { SignInWithStacksMessage } from '@/lib/auth/sign-in-with-stacks/signInWithStacksMessage';
@@ -109,4 +110,17 @@ export const authOptions: NextAuthOptions = {
   },
 };
 
-export default NextAuth(authOptions);
+export default function handler(req: NextApiRequest, res: NextApiResponse) {
+  console.log('url', process.env.NEXTAUTH_URL);
+  console.log('secret', process.env.NEXTAUTH_SECRET);
+
+  const isDefaultSigninPage =
+    req.method === 'GET' && req.query.nextauth?.includes('signin');
+
+  // Hide Sign-In with Ethereum from default sign page
+  if (isDefaultSigninPage) {
+    authOptions.providers.pop();
+  }
+
+  return NextAuth(req, res, authOptions);
+}
