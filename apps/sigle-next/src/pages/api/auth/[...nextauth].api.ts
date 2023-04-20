@@ -4,6 +4,7 @@ import CredentialsProvider from 'next-auth/providers/credentials';
 import * as Sentry from '@sentry/nextjs';
 import { getCsrfToken } from 'next-auth/react';
 import { SignInWithStacksMessage } from '@/lib/auth/sign-in-with-stacks/signInWithStacksMessage';
+import { prismaClient } from '@/lib/prisma';
 
 export const authOptions: NextAuthOptions = {
   providers: [
@@ -22,7 +23,6 @@ export const authOptions: NextAuthOptions = {
         },
       },
       async authorize(credentials, req) {
-        // TODO create user in db if not exists
         try {
           const siwe = new SignInWithStacksMessage(credentials?.message || '');
 
@@ -37,13 +37,40 @@ export const authOptions: NextAuthOptions = {
                 : await getCsrfToken({ req }),
           });
 
-          if (result.success) {
-            return {
-              id: siwe.address,
-              address: siwe.address,
-            };
+          if (!result.success) {
+            return null;
           }
-          return null;
+
+          let user = await prismaClient.user.findUnique({
+            select: {
+              id: true,
+              address: true,
+            },
+            where: {
+              address: siwe.address,
+            },
+          });
+
+          if (!user) {
+            user = await prismaClient.user.create({
+              select: {
+                id: true,
+                address: true,
+              },
+              data: {
+                address: siwe.address,
+                did: `did:pkh:stacks:1:${siwe.address}`,
+                chain: 'STACKS',
+              },
+            });
+
+            // TODO report to posthog that user is created
+          }
+
+          return {
+            id: user.id,
+            address: user.address,
+          };
         } catch (error) {
           console.error(error);
           Sentry.withScope((scope) => {
@@ -64,15 +91,14 @@ export const authOptions: NextAuthOptions = {
       /* Step 1: update the token based on the user object */
       if (user) {
         token.address = user.address;
-        console.log('token', token);
       }
       return token;
     },
     session({ session, token }) {
       /* Step 2: update the session.user based on the token object */
       if (token && session.user) {
+        session.user.id = token.sub;
         session.user.address = token.address;
-        console.log('session.user', session.user);
       }
       return session;
     },
