@@ -8,8 +8,6 @@ import { SignInWithStacksMessage } from '@/lib/auth/sign-in-with-stacks/signInWi
 import { prismaClient } from '@/lib/prisma';
 
 export const authOptions: NextAuthOptions = {
-  // TODO remove debug option
-  debug: true,
   session: {
     strategy: 'jwt',
   },
