@@ -8,7 +8,6 @@ import { SignInWithStacksMessage } from '@/lib/auth/sign-in-with-stacks/signInWi
 import { prismaClient } from '@/lib/prisma';
 
 export const authOptions: NextAuthOptions = {
-  secret: process.env.NEXTAUTH_SECRET,
   session: {
     strategy: 'jwt',
   },
@@ -110,6 +109,10 @@ export const authOptions: NextAuthOptions = {
   },
 };
 
+console.log('urlboot', process.env.NEXTAUTH_URL);
+console.log('secretboot', process.env.NEXTAUTH_SECRET);
+console.log('envboot', process.env.VERCEL_ENV);
+
 export default function handler(req: NextApiRequest, res: NextApiResponse) {
   console.log('url', process.env.NEXTAUTH_URL);
   console.log('secret', process.env.NEXTAUTH_SECRET);
@@ -121,6 +124,8 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
   if (isDefaultSigninPage) {
     authOptions.providers.pop();
   }
+
+  authOptions.secret = process.env.NEXTAUTH_SECRET;
 
   return NextAuth(req, res, authOptions);
 }
