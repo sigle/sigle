@@ -44,9 +44,15 @@ export const StoryCardDraft = ({ post }: StoryCardDraftProps) => {
         }}
       >
         <Link href={postEditorLink}>
-          <Typography size="lg" fontWeight="bold" lineClamp={2}>
-            {post.title}
-          </Typography>
+          {post.title ? (
+            <Typography size="lg" fontWeight="bold" lineClamp={2}>
+              {post.title}
+            </Typography>
+          ) : (
+            <Typography size="lg" fontWeight="bold" color="gray9">
+              Untitled
+            </Typography>
+          )}
         </Link>
         <Link href={postEditorLink}>
           <Typography size="sm" color="gray9" css={{ mt: '$2' }} lineClamp={3}>
