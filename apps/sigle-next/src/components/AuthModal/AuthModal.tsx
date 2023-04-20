@@ -1,14 +1,9 @@
 import { Dialog, DialogContent } from '@sigle/ui';
-import { styled } from '@sigle/stitches.config';
 import { useAuthModalStore } from './store';
 import { RouteConnect } from './RouteConnect';
 import { RouteSign } from './RouteSign';
 
 // TODO track login flow with posthog
-
-const StyledDialogContent = styled(DialogContent, {
-  maxWidth: '330px',
-});
 
 /**
  * Auth modal that handles wallet connect and sign in with Stacks.
@@ -20,10 +15,10 @@ export const AuthModal = () => {
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <StyledDialogContent>
+      <DialogContent>
         {route === 'connect' && <RouteConnect />}
         {route === 'sign' && <RouteSign />}
-      </StyledDialogContent>
+      </DialogContent>
     </Dialog>
   );
 };

@@ -10,6 +10,7 @@ import {
   DialogContent,
   DialogDescription,
   DialogTitle,
+  DialogDivider,
 } from '@sigle/ui';
 import { trpc } from '@/utils/trpc';
 import { DeleteDialogDeletePostMutation } from '@/__generated__/relay/DeleteDialogDeletePostMutation.graphql';
@@ -92,27 +93,28 @@ export const DeleteDialog = ({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent>
         <DialogTitle asChild>
-          <Typography size="xl" fontWeight="bold">
+          <Typography size="md" fontWeight="bold">
             Delete my story
           </Typography>
         </DialogTitle>
         <DialogDescription asChild>
-          <Flex mt="3" direction="column">
-            <Typography>
+          <Flex mt="3">
+            <Typography color="gray9" size="sm">
               Delete entry only hides it from your post list. Story content will
               still be viewable on IPFS.
             </Typography>
           </Flex>
         </DialogDescription>
-        <Flex justify="end" gap="3" css={{ mt: '$6' }}>
+        <DialogDivider />
+        <Flex justify="end" gap="2">
           <DialogClose asChild>
-            <Button size="lg" variant="ghost" disabled={isLoading}>
+            <Button size="lg" variant="light" disabled={isLoading}>
               Cancel
             </Button>
           </DialogClose>
           <Button
             size="lg"
-            color="indigo"
+            color="gray"
             disabled={isLoading}
             onClick={handleDelete}
           >
