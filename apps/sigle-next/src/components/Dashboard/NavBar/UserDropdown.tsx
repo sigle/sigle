@@ -2,7 +2,8 @@ import { useTheme } from 'next-themes';
 import Link from 'next/link';
 import { TbChevronDown } from 'react-icons/tb';
 import { useAuth as useStacksAuth } from '@micro-stacks/react';
-import { useSession, signOut } from 'next-auth/react';
+import { signOut } from 'next-auth/react';
+import Image from 'next/image';
 import {
   DropdownMenu,
   DropdownMenuTrigger,
@@ -21,6 +22,7 @@ import { composeClient } from '@/lib/composeDB';
 import { getAddressFromDid } from '@/utils/getAddressFromDid';
 import { CeramicProfile } from '@/types/ceramic';
 import { trpc } from '@/utils/trpc';
+import { nextImageLoader } from '@/utils/nextImageLoader';
 import { useDashboardStore } from '../store';
 
 const UserMenu = styled('div', {
@@ -116,7 +118,13 @@ export const NavBarUserDropdown = ({
             <UserMenu>
               <LeftContainer>
                 <ImageAvatarContainer>
-                  <img src={addressAvatar(address, 36)} alt="user avatar" />
+                  <Image
+                    loader={nextImageLoader}
+                    src={addressAvatar(address, 36)}
+                    alt="User avatar"
+                    width={36}
+                    height={36}
+                  />
                 </ImageAvatarContainer>
                 <div>
                   <Typography size="xs" lineClamp={1}>
@@ -131,7 +139,13 @@ export const NavBarUserDropdown = ({
             </UserMenu>
           ) : collapsed ? (
             <ImageAvatarContainer>
-              <img src={addressAvatar(address, 36)} alt="user avatar" />
+              <Image
+                loader={nextImageLoader}
+                src={addressAvatar(address, 36)}
+                alt="User avatar"
+                width={36}
+                height={36}
+              />
             </ImageAvatarContainer>
           ) : null}
         </DropdownMenuTrigger>
