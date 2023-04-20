@@ -44,7 +44,7 @@ export const authOptions: NextAuthOptions = {
           let user = await prismaClient.user.findUnique({
             select: {
               id: true,
-              address: true,
+              did: true,
             },
             where: {
               address: siwe.address,
@@ -55,7 +55,7 @@ export const authOptions: NextAuthOptions = {
             user = await prismaClient.user.create({
               select: {
                 id: true,
-                address: true,
+                did: true,
               },
               data: {
                 address: siwe.address,
@@ -69,7 +69,7 @@ export const authOptions: NextAuthOptions = {
 
           return {
             id: user.id,
-            address: user.address,
+            did: user.did,
           };
         } catch (error) {
           console.error(error);
@@ -90,7 +90,7 @@ export const authOptions: NextAuthOptions = {
       // Update the session to include some user information
       /* Step 1: update the token based on the user object */
       if (user) {
-        token.address = user.address;
+        token.did = user.did;
       }
       return token;
     },
@@ -98,7 +98,7 @@ export const authOptions: NextAuthOptions = {
       /* Step 2: update the session.user based on the token object */
       if (token && session.user) {
         session.user.id = token.sub;
-        session.user.address = token.address;
+        session.user.did = token.did;
       }
       return session;
     },

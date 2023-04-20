@@ -2,7 +2,7 @@ import 'next-auth';
 
 declare module 'next-auth' {
   interface User {
-    address: string;
+    did: string;
   }
 
   interface Session extends DefaultSession {
@@ -13,6 +13,6 @@ declare module 'next-auth' {
 declare module 'next-auth/jwt' {
   interface JWT {
     sub: string;
-    address: string;
+    did: string;
   }
 }
