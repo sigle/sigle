@@ -7,6 +7,7 @@ import { SignInWithStacksMessage } from '@/lib/auth/sign-in-with-stacks/signInWi
 import { prismaClient } from '@/lib/prisma';
 
 export const authOptions: NextAuthOptions = {
+  secret: process.env.NEXTAUTH_SECRET,
   session: {
     strategy: 'jwt',
   },

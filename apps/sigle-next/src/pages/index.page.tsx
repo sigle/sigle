@@ -1,7 +1,6 @@
 import { TooltipProvider } from '@radix-ui/react-tooltip';
 import Link from 'next/link';
 import { useInView } from 'react-cool-inview';
-import { useAuth as useStacksAuth } from '@micro-stacks/react';
 import { Button, Container, Flex, LoadingSpinner, Typography } from '@sigle/ui';
 import { StoryCardPublishedSkeleton } from '@/components/StoryCard/StoryCardPublishedSkeleton';
 import { trpc } from '@/utils/trpc';
