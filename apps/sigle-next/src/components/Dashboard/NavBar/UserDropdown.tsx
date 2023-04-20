@@ -2,6 +2,8 @@ import { useTheme } from 'next-themes';
 import Link from 'next/link';
 import { TbChevronDown } from 'react-icons/tb';
 import { useAuth as useStacksAuth } from '@micro-stacks/react';
+import { signOut } from 'next-auth/react';
+import Image from 'next/image';
 import {
   DropdownMenu,
   DropdownMenuTrigger,
@@ -20,6 +22,7 @@ import { composeClient } from '@/lib/composeDB';
 import { getAddressFromDid } from '@/utils/getAddressFromDid';
 import { CeramicProfile } from '@/types/ceramic';
 import { trpc } from '@/utils/trpc';
+import { nextImageLoader } from '@/utils/nextImageLoader';
 import { useDashboardStore } from '../store';
 
 const UserMenu = styled('div', {
@@ -85,22 +88,24 @@ export const NavBarUserDropdown = ({
   const collapsed = useDashboardStore((state) => state.collapsed);
   const toggleCollapse = useDashboardStore((state) => state.toggleCollapse);
   const setEnvironment = useRelayStore((store) => store.setEnvironment);
-  const { signOut } = useStacksAuth();
+  const { signOut: signOutStacks } = useStacksAuth();
   const utils = trpc.useContext();
 
   const toggleTheme = () => {
     resolvedTheme === 'dark' ? setTheme('light') : setTheme('dark');
   };
 
-  const handleLogout = () => {
+  const handleLogout = async () => {
     // TODO clean ceramic did-session local storage
     composeClient.setDID(null as any);
     // Disconnect from wallet
-    signOut();
+    await signOutStacks();
+    // Disconnect from next-auth
+    await signOut();
     // Reset the relay environment to rerun all the queries as unauthenticated
     setEnvironment(createNewEnvironment());
     // Invalidate all the trpc queries
-    utils.invalidate();
+    await utils.invalidate();
   };
 
   const address = getAddressFromDid(did);
@@ -113,7 +118,13 @@ export const NavBarUserDropdown = ({
             <UserMenu>
               <LeftContainer>
                 <ImageAvatarContainer>
-                  <img src={addressAvatar(address, 36)} alt="user avatar" />
+                  <Image
+                    loader={nextImageLoader}
+                    src={addressAvatar(address, 36)}
+                    alt="User avatar"
+                    width={36}
+                    height={36}
+                  />
                 </ImageAvatarContainer>
                 <div>
                   <Typography size="xs" lineClamp={1}>
@@ -128,7 +139,13 @@ export const NavBarUserDropdown = ({
             </UserMenu>
           ) : collapsed ? (
             <ImageAvatarContainer>
-              <img src={addressAvatar(address, 36)} alt="user avatar" />
+              <Image
+                loader={nextImageLoader}
+                src={addressAvatar(address, 36)}
+                alt="User avatar"
+                width={36}
+                height={36}
+              />
             </ImageAvatarContainer>
           ) : null}
         </DropdownMenuTrigger>

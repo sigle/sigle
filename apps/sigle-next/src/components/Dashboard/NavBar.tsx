@@ -2,16 +2,12 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 import {
   TbBook,
-  TbChartPie,
   TbHome,
-  TbMail,
-  TbNews,
   TbNotebook,
   TbPlus,
   TbUserCircle,
-  TbUsers,
 } from 'react-icons/tb';
-import { useAuth as useStacksAuth } from '@micro-stacks/react';
+import { useSession } from 'next-auth/react';
 import { styled } from '@sigle/stitches.config';
 import {
   NumberBadge,
@@ -24,7 +20,6 @@ import {
   Typography,
 } from '@sigle/ui';
 import { trpc } from '@/utils/trpc';
-import { useCeramic } from '../Ceramic/CeramicProvider';
 import { useAuthModal } from '../AuthModal/AuthModal';
 import { useDashboardStore } from './store';
 import { NavBarUserDropdown } from './NavBar/UserDropdown';
@@ -173,9 +168,9 @@ const NavBarLinkStoriesButton = styled(Button, {
 export const NavBar = () => {
   const router = useRouter();
   const collapsed = useDashboardStore((state) => state.collapsed);
-  const { session } = useCeramic();
+  const { data: session } = useSession();
 
-  const did = session?.did.parent;
+  const did = session?.user?.did;
   const skipProfileQuery = !did;
   const profile = trpc.userProfile.useQuery(
     { did: did ?? '' },
