@@ -109,14 +109,7 @@ export const authOptions: NextAuthOptions = {
   },
 };
 
-console.log('urlboot', process.env.NEXTAUTH_URL);
-console.log('secretboot', process.env.NEXTAUTH_SECRET);
-console.log('envboot', process.env.VERCEL_ENV);
-
 export default function handler(req: NextApiRequest, res: NextApiResponse) {
-  console.log('url', process.env.NEXTAUTH_URL);
-  console.log('secret', process.env.NEXTAUTH_SECRET);
-
   const isDefaultSigninPage =
     req.method === 'GET' && req.query.nextauth?.includes('signin');
 
