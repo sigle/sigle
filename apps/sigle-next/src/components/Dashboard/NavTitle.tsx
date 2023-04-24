@@ -1,6 +1,7 @@
 import { TbMenu2 } from 'react-icons/tb';
 import { styled } from '@sigle/stitches.config';
 import { Flex, IconButton } from '@sigle/ui';
+import { useDashboardStore } from './store';
 
 const StyledNavTitle = styled(Flex, {
   px: '$5',
@@ -13,6 +14,8 @@ interface NavTitleProps {
 }
 
 export const NavTitle = ({ children }: NavTitleProps) => {
+  const setOpen = useDashboardStore((state) => state.setOpen);
+
   return (
     <StyledNavTitle align="center">
       <IconButton
@@ -23,6 +26,7 @@ export const NavTitle = ({ children }: NavTitleProps) => {
             display: 'none',
           },
         }}
+        onClick={() => setOpen(true)}
       >
         <TbMenu2 size={30} />
       </IconButton>

@@ -7,6 +7,10 @@ import { LogoOnlyImage } from '@/images/LogoOnly';
 const StyledNavBar = styled(Flex, {
   px: '$5',
   borderRight: '1px solid $gray6',
+  display: 'none',
+  '@md': {
+    display: 'flex',
+  },
 });
 
 interface NavBarTopProps {
