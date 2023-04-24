@@ -248,6 +248,9 @@ importers:
       '@trpc/server':
         specifier: 10.19.1
         version: 10.19.1
+      cheerio:
+        specifier: 1.0.0-rc.12
+        version: 1.0.0-rc.12
       class-variance-authority:
         specifier: 0.5.2
         version: 0.5.2(typescript@5.0.4)
