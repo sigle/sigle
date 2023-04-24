@@ -94,12 +94,7 @@ export const StoryCardPublished = ({
         </Link>
         <Link href={storyReadLink}>
           <Typography size="sm" color="gray9" css={{ mt: '$2' }} lineClamp={3}>
-            Blockchain has completely changed the way we think about money and
-            created a true era of digital property. Bitcoin is the first
-            successful use case for blockchain. Some creative developers believe
-            Bitcoin is the first successful use case for blockchain. Some
-            creative developers believe Bitcoin is the first successful use case
-            for blockchain.
+            {post.excerpt}
           </Typography>
         </Link>
         <Flex justify="between" align="center" css={{ mt: '$6' }}>

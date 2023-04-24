@@ -1,4 +1,5 @@
 import { Prisma } from '@prisma/client';
+import * as cheerio from 'cheerio';
 import { CeramicPost, CeramicProfile } from '@/types/ceramic';
 
 export const normalizePost = (dbPost: {
@@ -7,8 +8,18 @@ export const normalizePost = (dbPost: {
   stream_content: Prisma.JsonValue;
   controller_did: string;
 }) => {
+  const content = (dbPost.stream_content as unknown as CeramicPost) ?? {};
+
+  let excerpt;
+  if (content.content) {
+    const $ = cheerio.load(content.content);
+    const text = $.root().text().trim();
+    excerpt = text.substring(0, 350);
+  }
+
   return {
-    ...((dbPost.stream_content as unknown as CeramicPost) ?? {}),
+    ...content,
+    excerpt,
     id: dbPost.stream_id,
     did: dbPost.controller_did,
     createdAt: dbPost.created_at,
@@ -21,8 +32,9 @@ export const normalizeProfile = (dbProfile: {
   stream_content: Prisma.JsonValue;
   controller_did: string;
 }) => {
+  const content = (dbProfile.stream_content as unknown as CeramicProfile) ?? {};
   return {
-    ...((dbProfile.stream_content as unknown as CeramicProfile) ?? {}),
+    ...content,
     id: dbProfile.stream_id,
     did: dbProfile.controller_did,
     createdAt: dbProfile.created_at,
