@@ -25,21 +25,6 @@ import { useDashboardStore } from './store';
 import { NavBarUserDropdown } from './NavBar/UserDropdown';
 import { ConnectDropdown } from './NavBar/ConnectDropdown';
 
-const StyledNavBar = styled('nav', {
-  px: '$5',
-  py: '$5',
-  display: 'none',
-  flexDirection: 'column',
-  backgroundColor: '$gray1',
-  justifyContent: 'space-between',
-  borderStyle: 'solid',
-  borderRightWidth: '1px',
-  borderColor: '$gray6',
-  '@md': {
-    display: 'flex',
-  },
-});
-
 const NavBarLinkButton = styled(Button, {
   width: '100%',
   justifyContent: 'start',
@@ -222,7 +207,7 @@ export const NavBar = () => {
   // ];
 
   return (
-    <StyledNavBar>
+    <>
       <div>
         <NavBarLinkContainer>
           {menu.map((item, index) => (
@@ -292,6 +277,6 @@ export const NavBar = () => {
       {((!profile.isLoading && !did) || skipProfileQuery) && (
         <ConnectDropdown />
       )}
-    </StyledNavBar>
+    </>
   );
 };

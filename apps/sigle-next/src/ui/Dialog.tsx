@@ -14,7 +14,7 @@ const overlayHide = keyframes({
   '100%': { opacity: 0 },
 });
 
-export const StyledOverlay = styled(DialogPrimitive.Overlay, {
+const StyledOverlay = styled(DialogPrimitive.Overlay, {
   position: 'fixed',
   inset: 0,
   backgroundColor: '$gray5',
@@ -136,6 +136,7 @@ export const DialogDivider = styled('div', {
   backgroundColor: '$gray6',
 });
 
+export const DialogOverlay = StyledOverlay;
 export const DialogTrigger = DialogPrimitive.Trigger;
 export const DialogClose = DialogPrimitive.Close;
 export const DialogTitle = DialogPrimitive.Title;
