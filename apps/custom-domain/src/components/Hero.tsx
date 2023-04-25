@@ -22,7 +22,7 @@ export const Hero = ({ settings }: HeroProps) => {
           fill
         />
       </div>
-      <div className="relative mx-auto mt-[-55px] h-[110px] w-[110px] overflow-hidden rounded-2xl border-[6px] border-white object-cover md:mt-[-75px] md:h-[150px] md:w-[150px]">
+      <div className="relative mx-auto mt-[-55px] h-[110px] w-[110px] overflow-hidden rounded-2xl border-[6px] border-white bg-white object-cover md:mt-[-75px] md:h-[150px] md:w-[150px]">
         <Image
           src={settings.avatar}
           alt="Avatar"
