@@ -134,7 +134,7 @@ export const SettingsUpdateProfile = ({
   return (
     <DashboardLayout
       headerContent={
-        <Flex justify="between" css={{ flex: 1 }}>
+        <Flex justify="between" align="center" css={{ flex: 1 }}>
           <Typography size="xl" fontWeight="bold">
             Settings
           </Typography>

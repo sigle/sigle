@@ -7,13 +7,16 @@ const SidebarContainer = styled('div', {
 });
 
 const StyledSidebarContent = styled('div', {
-  py: '$5',
+  pt: '$10',
   px: '$5',
-  overflowY: 'scroll',
-  position: 'fixed',
-  top: 80,
-  bottom: 0,
-  width: 420,
+  '@md': {
+    py: '$5',
+    overflowY: 'scroll',
+    position: 'fixed',
+    top: 80,
+    bottom: 0,
+    width: 420,
+  },
 });
 
 interface SidebarContentProps {

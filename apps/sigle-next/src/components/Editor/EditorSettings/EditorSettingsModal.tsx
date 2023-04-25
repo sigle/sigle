@@ -1,7 +1,6 @@
 import * as DialogPrimitive from '@radix-ui/react-dialog';
 import React from 'react';
 import { keyframes, styled } from '@sigle/stitches.config';
-import { useEditorStore } from '../store';
 
 const overlayOpacity = 0.7;
 const overlayShow = keyframes({
