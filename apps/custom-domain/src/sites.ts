@@ -78,11 +78,21 @@ export const sites: {
       },
     ],
   },
+  ['dutchee.wampastompa.com']: {
+    username: 'dutchee.btc',
+    banner: '/websites/dutchee.wampastompa.com/banner.png',
+    links: [],
+  },
+  ['blog.voidsrus.com']: {
+    username: 'exploreadao.id.stx',
+    banner: '/websites/blog.voidsrus.com/banner.jpg',
+    links: [],
+  },
 };
 
 // Add localhost to sites for development
 if (process.env.NODE_ENV === 'development') {
-  sites['localhost:3000'] = sites['blog.sigle.io'];
+  sites['localhost:3000'] = sites['blog.voidsrus.com'];
 } else if (process.env.VERCEL_ENV === 'preview' && process.env.VERCEL_URL) {
   // Preview deployments
   sites[process.env.VERCEL_URL] = sites['blog.sigle.io'];
