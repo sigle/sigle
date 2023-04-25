@@ -86,7 +86,16 @@ export const sites: {
   ['blog.voidsrus.com']: {
     username: 'exploreadao.id.stx',
     banner: '/websites/blog.voidsrus.com/banner.jpg',
-    links: [],
+    links: [
+      {
+        href: 'https://www.voidsrus.com',
+        label: 'Home',
+      },
+      {
+        href: 'https://www.youtube.com/channel/UC9AwSlISybgTqdI_dtLYF3w',
+        label: 'Youtube',
+      },
+    ],
   },
 };
 
