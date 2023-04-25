@@ -56,9 +56,11 @@ export const DashboardLayout = ({
       <DashboardContent>
         <Box
           css={{
-            height: '100%',
-            display: 'grid',
+            display: 'flex',
+            flexDirection: 'column-reverse',
             '@md': {
+              height: '100%',
+              display: 'grid',
               gridTemplateColumns: '1fr 420px',
             },
           }}
