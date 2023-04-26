@@ -40,6 +40,7 @@ import { TipTapMobileScroll } from './extensions/MobileScroll';
 import { slashCommands } from './extensions/SlashCommand/commands';
 import { SlashCommands } from './extensions/SlashCommand/SlashCommands';
 import { CodeBlockComponent } from './extensions/CodeBlock/CodeBlock';
+import { TipTapImage } from './extensions/Image';
 
 lowlight.registerLanguage('clarity (beta)', clarity);
 
@@ -110,7 +111,7 @@ export const EditorTipTap = () => {
       }).configure({
         lowlight,
       }),
-      //   TipTapImage,
+      TipTapImage,
       // Marks
       TipTapBold,
       TipTapCode,

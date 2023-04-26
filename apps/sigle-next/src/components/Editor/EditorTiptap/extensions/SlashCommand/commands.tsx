@@ -1,3 +1,4 @@
+import { nanoid } from 'nanoid';
 import { BulletedListLight } from '@/images/BulletedListLight';
 import { CodeLight } from '@/images/CodeLight';
 import { DividerLight } from '@/images/DividerLight';
@@ -6,6 +7,7 @@ import { Heading3Light } from '@/images/Heading3Light';
 import { NumberedListLight } from '@/images/NumberedListLight';
 import { PlainTextLight } from '@/images/PlainTextLight';
 import { QuoteLight } from '@/images/QuoteLight';
+import { ImageLight } from '@/images/ImageLight';
 import { SlashCommandsCommand } from './SlashCommands';
 
 export const slashCommands: SlashCommandsCommand[] = [
@@ -61,66 +63,83 @@ export const slashCommands: SlashCommandsCommand[] = [
         .run();
     },
   },
-  // {
-  //   icon: ImageLight,
-  //   title: 'Image',
-  //   description: 'Upload from your computer',
-  //   command: ({ editor, range }) => {
-  // const input = document.createElement('input');
-  // input.type = 'file';
-  // input.accept = 'image/jpeg,image/png,image/gif';
-  // input.onchange = async (e) => {
-  //   const file: File | undefined = (e.target as any)?.files?.[0];
-  //   if (!file) return;
-  //   const [mime] = file.type.split('/');
-  //   if (mime !== 'image') return;
-  //   // We show a preview of  the image image as uploading can take a while...
-  //   const preview = URL.createObjectURL(file);
-  //   const id = generateRandomId();
-  //   let chainCommands = editor.chain().focus();
-  //   if (range) {
-  //     chainCommands = chainCommands.deleteRange(range);
-  //   }
-  //   chainCommands
-  //     .setImage({ src: preview })
-  //     .updateAttributes('image', { loading: true, id })
-  //     .run();
-  //   const name = `photos/${storyId}/${id}-${file.name}`;
-  //   const imageUrl = await resizeAndUploadImage(file, name);
-  //   // Preload the new image so there is no flicker
-  //   const uploadedImage = new Image();
-  //   uploadedImage.src = imageUrl;
-  //   uploadedImage.onload = () => {
-  //     // When an image finished being uploaded, the selection of the user might habe changed
-  //     // so we need to find the right image associated with the ID in order to update it.
-  //     editor
-  //       .chain()
-  //       .focus()
-  //       .command(({ tr }) => {
-  //         const doc = tr.doc;
-  //         const images = findChildren(
-  //           doc,
-  //           (node) => node.type.name === 'image' && node.attrs.id === id
-  //         );
-  //         const image = images[0];
-  //         if (!image || images.length > 1) {
-  //           return false;
-  //         }
-  //         tr.setNodeMarkup(image.pos, undefined, {
-  //           ...image.node.attrs,
-  //           src: imageUrl,
-  //           loading: false,
-  //         });
-  //         return true;
-  //       })
-  //       .run();
-  //     // Create a new paragraph so user can continue writing
-  //     editor.commands.createParagraphNear();
-  //   };
-  // };
-  // input.click();
-  //   },
-  // },
+  {
+    icon: ImageLight,
+    title: 'Image',
+    description: 'Upload from your computer',
+    section: 'basic',
+    command: ({ editor, range }) => {
+      const input = document.createElement('input');
+      input.type = 'file';
+      input.accept = 'image/jpeg,image/png,image/gif';
+      input.onchange = async (e) => {
+        const file: File | undefined = (e.target as any)?.files?.[0];
+        if (!file) return;
+        const [mime] = file.type.split('/');
+        if (mime !== 'image') return;
+        // We show a preview of  the image image as uploading can take a while...
+        const preview = URL.createObjectURL(file);
+        const id = nanoid();
+        let chainCommands = editor.chain().focus();
+        if (range) {
+          chainCommands = chainCommands.deleteRange(range);
+        }
+        chainCommands
+          .setImage({ src: preview })
+          .updateAttributes('image', { loading: true, id })
+          .run();
+
+        // Upload the image to the API so it can be processed
+        var formData = new FormData();
+        formData.append('file', file);
+        formData.append('name', 'some value user types');
+        formData.append('description', 'some value user types');
+
+        const response = await fetch(`/api/image-upload`, {
+          method: 'POST',
+          // headers: { 'Content-Type': 'multipart/form-data' },
+          body: formData,
+        });
+        const json = await response.json();
+        console.log(json);
+
+        // TODO upload image
+        // const name = `photos/${storyId}/${id}-${file.name}`;
+        // const imageUrl = await resizeAndUploadImage(file, name);
+        // // Preload the new image so there is no flicker
+        // const uploadedImage = new Image();
+        // uploadedImage.src = imageUrl;
+        // uploadedImage.onload = () => {
+        //   // When an image finished being uploaded, the selection of the user might habe changed
+        //   // so we need to find the right image associated with the ID in order to update it.
+        //   editor
+        //     .chain()
+        //     .focus()
+        //     .command(({ tr }) => {
+        //       const doc = tr.doc;
+        //       const images = findChildren(
+        //         doc,
+        //         (node) => node.type.name === 'image' && node.attrs.id === id
+        //       );
+        //       const image = images[0];
+        //       if (!image || images.length > 1) {
+        //         return false;
+        //       }
+        //       tr.setNodeMarkup(image.pos, undefined, {
+        //         ...image.node.attrs,
+        //         src: imageUrl,
+        //         loading: false,
+        //       });
+        //       return true;
+        //     })
+        //     .run();
+        //   // Create a new paragraph so user can continue writing
+        //   editor.commands.createParagraphNear();
+        // };
+      };
+      input.click();
+    },
+  },
   {
     icon: BulletedListLight,
     title: 'Bulleted list',
