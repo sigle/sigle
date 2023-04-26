@@ -92,12 +92,12 @@ export const slashCommands: SlashCommandsCommand[] = [
         // Upload the image to the API so it can be processed
         var formData = new FormData();
         formData.append('file', file);
+        //  TODO inject storyId and verify it server side
         formData.append('name', 'some value user types');
         formData.append('description', 'some value user types');
 
         const response = await fetch(`/api/image-upload`, {
           method: 'POST',
-          // headers: { 'Content-Type': 'multipart/form-data' },
           body: formData,
         });
         const json = await response.json();

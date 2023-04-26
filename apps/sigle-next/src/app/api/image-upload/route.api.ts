@@ -29,13 +29,37 @@ export async function POST(request: Request) {
 
   const command = new PutObjectCommand({
     Bucket: 'sigle-staging',
+    // TODO generate unique key
     Key: 'hello-s3.txt',
     Body: fileArrayBuffer as Buffer,
   });
 
+  // Inject CID returned from Filebase into response
+  command.middlewareStack.add(
+    (next) => async (args) => {
+      // Check if request is incoming as middleware works both ways
+      const response: any = await next(args);
+      if (!response.response.statusCode) return response;
+
+      // Get cid from headers
+      const cid = response.response.headers['x-amz-meta-cid'];
+      response.output.cid = cid;
+      return response;
+    },
+    {
+      step: 'build',
+      name: 'addCidToOutput',
+    }
+  );
+
   try {
     const response = await client.send(command);
-    console.log(response);
+    // @ts-expect-error cid is injected by middleware
+    const cid = response.cid;
+    return NextResponse.json({
+      cid,
+      url: `ipfs://${cid}`,
+    });
   } catch (err) {
     console.error(err);
   }
