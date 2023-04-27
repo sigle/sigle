@@ -28,7 +28,7 @@ export async function POST(request: Request) {
   const fileArrayBuffer = await file.arrayBuffer();
 
   const command = new PutObjectCommand({
-    Bucket: 'sigle-staging',
+    Bucket: process.env.FILEBASE_BUCKET!,
     // TODO generate unique key
     Key: 'hello-s3.txt',
     Body: fileArrayBuffer as Buffer,
@@ -61,8 +61,9 @@ export async function POST(request: Request) {
       url: `ipfs://${cid}`,
     });
   } catch (err) {
-    console.error(err);
+    return NextResponse.json({
+      error: true,
+      message: 'Failed to upload file.',
+    });
   }
-
-  return NextResponse.json({});
 }
