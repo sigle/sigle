@@ -1,6 +1,7 @@
 import { PutObjectCommand, S3Client } from '@aws-sdk/client-s3';
 import { getServerSession } from 'next-auth';
 import { NextResponse } from 'next/server';
+import sharp from 'sharp';
 import { authOptions } from '@/pages/api/auth/[...nextauth].api';
 
 const client = new S3Client({
@@ -12,7 +13,18 @@ const client = new S3Client({
   },
 });
 
-const allowedFormats = ['image/jpeg', 'image/png', 'image/webp', 'image/gif'];
+const WEBP = 'image/webp';
+const PNG = 'image/png';
+const JPEG = 'image/jpeg';
+const GIF = 'image/gif';
+
+const allowedFormats = [
+  WEBP,
+  PNG,
+  JPEG,
+  // TODO GIF optimization support
+  // GIF
+];
 
 export async function POST(request: Request) {
   const session = await getServerSession(authOptions);
@@ -39,45 +51,60 @@ export async function POST(request: Request) {
     });
   }
 
+  const quality = 75;
+  const width = 1000;
   const fileArrayBuffer = await file.arrayBuffer();
 
-  // const command = new PutObjectCommand({
-  //   Bucket: process.env.FILEBASE_BUCKET!,
-  //   // TODO generate unique key
-  //   Key: 'hello-s3.txt',
-  //   Body: optimisedImage,
-  // });
+  const transformer = sharp(fileArrayBuffer);
+  transformer.resize(width, undefined, {
+    withoutEnlargement: true,
+  });
+  if (file.type === WEBP) {
+    transformer.webp({ quality });
+  } else if (file.type === PNG) {
+    transformer.png({ quality });
+  } else if (file.type === JPEG) {
+    transformer.jpeg({ quality });
+  }
+  const optimizedBuffer = await transformer.toBuffer();
 
-  // // Inject CID returned from Filebase into response
-  // command.middlewareStack.add(
-  //   (next) => async (args) => {
-  //     // Check if request is incoming as middleware works both ways
-  //     const response: any = await next(args);
-  //     if (!response.response.statusCode) return response;
+  const command = new PutObjectCommand({
+    Bucket: process.env.FILEBASE_BUCKET!,
+    // TODO generate unique key
+    Key: 'hello-s3.txt',
+    Body: optimizedBuffer,
+  });
 
-  //     // Get cid from headers
-  //     const cid = response.response.headers['x-amz-meta-cid'];
-  //     response.output.cid = cid;
-  //     return response;
-  //   },
-  //   {
-  //     step: 'build',
-  //     name: 'addCidToOutput',
-  //   }
-  // );
+  // Inject CID returned from Filebase into response
+  command.middlewareStack.add(
+    (next) => async (args) => {
+      // Check if request is incoming as middleware works both ways
+      const response: any = await next(args);
+      if (!response.response.statusCode) return response;
 
-  // try {
-  //   const response = await client.send(command);
-  //   // @ts-expect-error cid is injected by middleware
-  //   const cid = response.cid;
-  //   return NextResponse.json({
-  //     cid,
-  //     url: `ipfs://${cid}`,
-  //   });
-  // } catch (err) {
-  //   return NextResponse.json({
-  //     error: true,
-  //     message: 'Failed to upload file.',
-  //   });
-  // }
+      // Get cid from headers
+      const cid = response.response.headers['x-amz-meta-cid'];
+      response.output.cid = cid;
+      return response;
+    },
+    {
+      step: 'build',
+      name: 'addCidToOutput',
+    }
+  );
+
+  try {
+    const response = await client.send(command);
+    // @ts-expect-error cid is injected by middleware
+    const cid = response.cid;
+    return NextResponse.json({
+      cid,
+      url: `ipfs://${cid}`,
+    });
+  } catch (err) {
+    return NextResponse.json({
+      error: true,
+      message: 'Failed to upload file.',
+    });
+  }
 }
