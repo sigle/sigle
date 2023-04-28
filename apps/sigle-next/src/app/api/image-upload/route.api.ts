@@ -116,8 +116,6 @@ export async function POST(request: Request) {
   // @ts-expect-error cid is injected by middleware
   const cid = response.cid;
 
-  // TODO save file to DB
-
   return NextResponse.json({
     cid,
     url: `ipfs://${cid}`,
