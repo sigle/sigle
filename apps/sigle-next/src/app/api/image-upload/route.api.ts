@@ -1,10 +1,10 @@
 import { PutObjectCommand, S3Client } from '@aws-sdk/client-s3';
 import { getServerSession } from 'next-auth';
 import { NextResponse } from 'next/server';
-import sharp from 'sharp';
 import { nanoid } from 'nanoid';
 import { authOptions } from '@/pages/api/auth/[...nextauth].api';
 import { prismaClient } from '@/lib/prisma';
+import { optimizeImage } from '@/lib/image';
 
 const client = new S3Client({
   endpoint: 'https://s3.filebase.com',
@@ -72,20 +72,21 @@ export async function POST(request: Request) {
   const width = 1000;
   const fileArrayBuffer = await file.arrayBuffer();
 
-  const transformer = sharp(fileArrayBuffer);
-  transformer.resize(width, undefined, {
-    withoutEnlargement: true,
+  const optimizedBuffer = await optimizeImage({
+    buffer: fileArrayBuffer,
+    contentType: file.type,
+    quality,
+    width,
   });
-  if (file.type === WEBP) {
-    transformer.webp({ quality });
-  } else if (file.type === PNG) {
-    transformer.png({ quality });
-  } else if (file.type === JPEG) {
-    transformer.jpeg({ quality });
-  }
-  const optimizedBuffer = await transformer.toBuffer();
 
-  // TODO check file size is not more than 5MB
+  // Check file size is not more than 1MB
+  const fileSize = optimizedBuffer.byteLength;
+  if (fileSize > 1000000) {
+    return NextResponse.json({
+      error: true,
+      message: 'File is too big.',
+    });
+  }
 
   const command = new PutObjectCommand({
     Bucket: process.env.FILEBASE_BUCKET!,
