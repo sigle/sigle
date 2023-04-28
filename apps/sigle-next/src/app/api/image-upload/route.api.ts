@@ -2,7 +2,9 @@ import { PutObjectCommand, S3Client } from '@aws-sdk/client-s3';
 import { getServerSession } from 'next-auth';
 import { NextResponse } from 'next/server';
 import sharp from 'sharp';
+import { nanoid } from 'nanoid';
 import { authOptions } from '@/pages/api/auth/[...nextauth].api';
+import { prismaClient } from '@/lib/prisma';
 
 const client = new S3Client({
   endpoint: 'https://s3.filebase.com',
@@ -16,15 +18,10 @@ const client = new S3Client({
 const WEBP = 'image/webp';
 const PNG = 'image/png';
 const JPEG = 'image/jpeg';
-const GIF = 'image/gif';
+// TODO GIF optimization support
+// const GIF = 'image/gif';
 
-const allowedFormats = [
-  WEBP,
-  PNG,
-  JPEG,
-  // TODO GIF optimization support
-  // GIF
-];
+const allowedFormats = [WEBP, PNG, JPEG];
 
 export async function POST(request: Request) {
   const session = await getServerSession(authOptions);
@@ -32,22 +29,42 @@ export async function POST(request: Request) {
     return new Response('Unauthorized', { status: 401 });
   }
 
-  // TODO check file size
-  // TODO optimize image before upload
-
   const formData = await request.formData();
-
-  console.log('form data', formData);
-
   const file = formData.get('file');
-  if (!file || typeof file === 'string') {
-    return NextResponse.json({});
+  const postId = formData.get('postId');
+  if (
+    !postId ||
+    typeof postId !== 'string' ||
+    !file ||
+    typeof file === 'string'
+  ) {
+    return NextResponse.json({
+      error: true,
+      message: 'Invalid request.',
+    });
   }
 
   if (!allowedFormats.includes(file.type)) {
     return NextResponse.json({
       error: true,
       message: 'Invalid file format.',
+    });
+  }
+
+  // Check post exists and belongs to user
+  const post = prismaClient.post.findFirst({
+    select: {
+      stream_id: true,
+    },
+    where: {
+      stream_id: postId,
+      controller_did: session.user.did,
+    },
+  });
+  if (!post) {
+    return NextResponse.json({
+      error: true,
+      message: 'Invalid post.',
     });
   }
 
@@ -68,10 +85,11 @@ export async function POST(request: Request) {
   }
   const optimizedBuffer = await transformer.toBuffer();
 
+  // TODO check file size is not more than 5MB
+
   const command = new PutObjectCommand({
     Bucket: process.env.FILEBASE_BUCKET!,
-    // TODO generate unique key
-    Key: 'hello-s3.txt',
+    Key: `${postId}-${nanoid()}.${file.type.split('/')[1]}`,
     Body: optimizedBuffer,
   });
 
@@ -93,18 +111,14 @@ export async function POST(request: Request) {
     }
   );
 
-  try {
-    const response = await client.send(command);
-    // @ts-expect-error cid is injected by middleware
-    const cid = response.cid;
-    return NextResponse.json({
-      cid,
-      url: `ipfs://${cid}`,
-    });
-  } catch (err) {
-    return NextResponse.json({
-      error: true,
-      message: 'Failed to upload file.',
-    });
-  }
+  const response = await client.send(command);
+  // @ts-expect-error cid is injected by middleware
+  const cid = response.cid;
+
+  // TODO save file to DB
+
+  return NextResponse.json({
+    cid,
+    url: `ipfs://${cid}`,
+  });
 }

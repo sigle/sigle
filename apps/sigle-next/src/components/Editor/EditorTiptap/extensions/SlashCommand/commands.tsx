@@ -89,12 +89,13 @@ export const slashCommands: SlashCommandsCommand[] = [
           .updateAttributes('image', { loading: true, id })
           .run();
 
+        // Extract the post ID from the URL
+        const postId = window.location.pathname.split('/')[2];
+
         // Upload the image to the API so it can be processed
         var formData = new FormData();
         formData.append('file', file);
-        //  TODO inject storyId and verify it server side
-        formData.append('name', 'some value user types');
-        formData.append('description', 'some value user types');
+        formData.append('postId', postId);
 
         const response = await fetch(`/api/image-upload`, {
           method: 'POST',
