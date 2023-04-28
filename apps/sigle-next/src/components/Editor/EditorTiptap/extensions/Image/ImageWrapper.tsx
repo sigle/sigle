@@ -15,6 +15,8 @@ export const Component = ({ ...props }) => {
   // Show image from IPFS using a gateway
   if (src.startsWith('ipfs://')) {
     src = `https://ipfs.filebase.io/ipfs/${src.slice(7)}`;
+  } else if (src.startsWith('ar://')) {
+    src = `https://arweave.net/${src.slice(5)}`;
   }
 
   return (
