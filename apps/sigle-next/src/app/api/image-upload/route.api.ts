@@ -90,7 +90,7 @@ export async function POST(request: Request) {
 
   const command = new PutObjectCommand({
     Bucket: process.env.FILEBASE_BUCKET!,
-    Key: `${postId}-${nanoid()}.${file.type.split('/')[1]}`,
+    Key: `${postId}/${nanoid()}.${file.type.split('/')[1]}`,
     Body: optimizedBuffer,
   });
 
