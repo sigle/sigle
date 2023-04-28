@@ -97,11 +97,42 @@ export const sites: {
       },
     ],
   },
+  ['cuevas.co']: {
+    username: 'mitchell.btc',
+    banner: '/websites/cuevas.co/banner.jpg',
+    links: [],
+    cta: {
+      href: 'https://stacks.co/updates',
+      label: 'Updates',
+    },
+  },
+  ['newsletter.f3w.xyz']: {
+    username: 'f3w.btc',
+    banner: '/websites/newsletter.f3w.xyz/banner.png',
+    links: [
+      {
+        href: 'https://newsletter.f3w.xyx',
+        label: 'Home',
+      },
+      {
+        href: 'https://twitter.com/f3wNewsletter',
+        label: 'Twitter',
+      },
+      {
+        href: 'mailto:gm@f3w.xyz',
+        label: 'Email',
+      },
+    ],
+    cta: {
+      href: 'https://blocksurvey.io/survey/p/87048b6c-7c72-4616-af8f-1c4a5e00d5af/r/o',
+      label: 'Bookings',
+    },
+  },
 };
 
 // Add localhost to sites for development
 if (process.env.NODE_ENV === 'development') {
-  sites['localhost:3000'] = sites['dutchee.wampastompa.com'];
+  sites['localhost:3000'] = sites['cuevas.co'];
 } else if (process.env.VERCEL_ENV === 'preview' && process.env.VERCEL_URL) {
   // Preview deployments
   sites[process.env.VERCEL_URL] = sites['blog.sigle.io'];
