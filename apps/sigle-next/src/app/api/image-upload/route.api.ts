@@ -3,9 +3,7 @@ import { PutObjectCommand, S3Client } from '@aws-sdk/client-s3';
 import { getServerSession } from 'next-auth';
 import { optimizeImage } from 'next/dist/server/image-optimizer';
 import { NextResponse } from 'next/server';
-// import sharp from 'sharp';
-
-getServerSession;
+import sharp from 'sharp';
 
 const client = new S3Client({
   endpoint: 'https://s3.filebase.com',
@@ -15,6 +13,8 @@ const client = new S3Client({
     secretAccessKey: process.env.FILEBASE_SECRET!,
   },
 });
+
+const allowedFormats = ['image/jpeg', 'image/png', 'image/webp', 'image/gif'];
 
 function toBuffer(arrayBuffer: ArrayBuffer) {
   const buffer = Buffer.alloc(arrayBuffer.byteLength);
@@ -31,7 +31,6 @@ export async function POST(request: Request) {
     return new Response('Unauthorized', { status: 401 });
   }
 
-  // TODO check file extension
   // TODO check file size
   // TODO optimize image before upload
 
@@ -43,9 +42,15 @@ export async function POST(request: Request) {
   if (!file || typeof file === 'string') {
     return NextResponse.json({});
   }
-  console.log('file', file);
-  const fileArrayBuffer = await file.arrayBuffer();
 
+  if (!allowedFormats.includes(file.type)) {
+    return NextResponse.json({
+      error: true,
+      message: 'Invalid file format.',
+    });
+  }
+
+  const fileArrayBuffer = await file.arrayBuffer();
   // let sharpImage = sharp(fileArrayBuffer);
   // const meta = await sharpImage.metadata();
 
