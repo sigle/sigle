@@ -40,6 +40,11 @@ module.exports = {
             h4: {
               color: false,
             },
+            // Center images in prose
+            img: {
+              marginLeft: 'auto',
+              marginRight: 'auto',
+            },
           },
         },
       },
