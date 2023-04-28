@@ -1,4 +1,5 @@
 import { nanoid } from 'nanoid';
+import { findChildren } from '@tiptap/core';
 import { BulletedListLight } from '@/images/BulletedListLight';
 import { CodeLight } from '@/images/CodeLight';
 import { DividerLight } from '@/images/DividerLight';
@@ -9,7 +10,6 @@ import { PlainTextLight } from '@/images/PlainTextLight';
 import { QuoteLight } from '@/images/QuoteLight';
 import { ImageLight } from '@/images/ImageLight';
 import { SlashCommandsCommand } from './SlashCommands';
-import { findChildren } from '@tiptap/core';
 
 export const slashCommands: SlashCommandsCommand[] = [
   {
