@@ -119,5 +119,6 @@ export async function POST(request: Request) {
   return NextResponse.json({
     cid,
     url: `ipfs://${cid}`,
+    gatewayUrl: `https://ipfs.filebase.io/ipfs/${cid}`,
   });
 }
