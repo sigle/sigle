@@ -1,5 +1,7 @@
 import { PutObjectCommand, S3Client } from '@aws-sdk/client-s3';
+import { optimizeImage } from 'next/dist/server/image-optimizer';
 import { NextResponse } from 'next/server';
+// import sharp from 'sharp';
 
 const client = new S3Client({
   endpoint: 'https://s3.filebase.com',
@@ -9,6 +11,15 @@ const client = new S3Client({
     secretAccessKey: process.env.FILEBASE_SECRET!,
   },
 });
+
+function toBuffer(arrayBuffer: ArrayBuffer) {
+  const buffer = Buffer.alloc(arrayBuffer.byteLength);
+  const view = new Uint8Array(arrayBuffer);
+  for (let i = 0; i < buffer.length; ++i) {
+    buffer[i] = view[i];
+  }
+  return buffer;
+}
 
 export async function POST(request: Request) {
   // TODO protect auth
@@ -27,11 +38,26 @@ export async function POST(request: Request) {
   console.log('file', file);
   const fileArrayBuffer = await file.arrayBuffer();
 
+  // let sharpImage = sharp(fileArrayBuffer);
+  // const meta = await sharpImage.metadata();
+
+  // console.log(meta);
+  // const optimisedImage = await sharpImage
+  //   .webp({ quality: 20, lossless: true, alphaQuality: 80 })
+  //   .toBuffer();
+
+  const optimisedImage = await optimizeImage({
+    buffer: toBuffer(fileArrayBuffer),
+    contentType: file.type,
+    quality: 75,
+    width: 1200,
+  });
+
   const command = new PutObjectCommand({
     Bucket: process.env.FILEBASE_BUCKET!,
     // TODO generate unique key
     Key: 'hello-s3.txt',
-    Body: fileArrayBuffer as Buffer,
+    Body: optimisedImage,
   });
 
   // Inject CID returned from Filebase into response
