@@ -1,7 +1,11 @@
+import { authOptions } from '@/pages/api/auth/[...nextauth].api';
 import { PutObjectCommand, S3Client } from '@aws-sdk/client-s3';
+import { getServerSession } from 'next-auth';
 import { optimizeImage } from 'next/dist/server/image-optimizer';
 import { NextResponse } from 'next/server';
 // import sharp from 'sharp';
+
+getServerSession;
 
 const client = new S3Client({
   endpoint: 'https://s3.filebase.com',
@@ -22,7 +26,11 @@ function toBuffer(arrayBuffer: ArrayBuffer) {
 }
 
 export async function POST(request: Request) {
-  // TODO protect auth
+  const session = await getServerSession(authOptions);
+  if (!session?.user) {
+    return new Response('Unauthorized', { status: 401 });
+  }
+
   // TODO check file extension
   // TODO check file size
   // TODO optimize image before upload
