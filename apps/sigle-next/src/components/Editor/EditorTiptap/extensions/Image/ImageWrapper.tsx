@@ -10,6 +10,12 @@ const StyledImage = styled('img');
 
 export const Component = ({ ...props }) => {
   const alt = props.node.attrs.alt;
+  let src = props.node.attrs.src;
+
+  // Show image from IPFS using a gateway
+  if (src.startsWith('ipfs://')) {
+    src = `https://ipfs.filebase.io/ipfs/${src.slice(7)}`;
+  }
 
   return (
     <StyledNodeViewWrapper data-drag-handle>
@@ -34,7 +40,7 @@ export const Component = ({ ...props }) => {
             outline: props.editor.isEditable ? '1px solid $indigo11' : 'none',
           },
         }}
-        src={props.node.attrs.src}
+        src={src}
         alt={alt ? alt : ''}
       />
     </StyledNodeViewWrapper>

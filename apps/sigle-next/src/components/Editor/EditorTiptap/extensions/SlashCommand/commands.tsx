@@ -127,7 +127,7 @@ export const slashCommands: SlashCommandsCommand[] = [
               }
               tr.setNodeMarkup(image.pos, undefined, {
                 ...image.node.attrs,
-                src: imageUrl,
+                src: json.url,
                 loading: false,
               });
               return true;
