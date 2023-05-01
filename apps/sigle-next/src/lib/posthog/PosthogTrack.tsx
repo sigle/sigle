@@ -7,7 +7,7 @@ export const PosthogTrack = ({ children }: { children: React.ReactNode }) => {
   useEffect(() => {
     if (process.env.NEXT_PUBLIC_POSTHOG_KEY) {
       posthog.init(process.env.NEXT_PUBLIC_POSTHOG_KEY, {
-        api_host: 'https://app.posthog.com',
+        api_host: `https://${process.env.NEXT_PUBLIC_VERCEL_URL}/ingest`,
         ip: false,
         loaded: () => {
           if (process.env.NODE_ENV === 'development') {
