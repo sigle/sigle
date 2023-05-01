@@ -1,5 +1,16 @@
 const { withSentryConfig } = require('@sentry/nextjs');
 
+const corsHeaders = [
+  {
+    key: 'Access-Control-Allow-Origin',
+    value: '*',
+  },
+  {
+    key: 'Access-Control-Allow-Headers',
+    value: '*',
+  },
+];
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
@@ -18,6 +29,14 @@ const nextConfig = {
       artifactDirectory: './src/__generated__/relay',
       language: 'typescript',
     },
+  },
+  async headers() {
+    return [
+      {
+        source: '/ingest/:path*',
+        headers: corsHeaders,
+      },
+    ];
   },
   async rewrites() {
     return [
