@@ -6,6 +6,7 @@ import * as Sentry from '@sentry/nextjs';
 import { getCsrfToken } from 'next-auth/react';
 import { SignInWithStacksMessage } from '@/lib/auth/sign-in-with-stacks/signInWithStacksMessage';
 import { prismaClient } from '@/lib/prisma';
+import { postHogClient } from '@/lib/posthog';
 
 export const authOptions: NextAuthOptions = {
   secret: process.env.NEXTAUTH_SECRET,
@@ -69,7 +70,14 @@ export const authOptions: NextAuthOptions = {
               },
             });
 
-            // TODO report to posthog that user is created
+            postHogClient.capture({
+              distinctId: user.id,
+              event: 'user created',
+              properties: {
+                did: user.did,
+              },
+            });
+            await postHogClient.shutdownAsync();
           }
 
           return {

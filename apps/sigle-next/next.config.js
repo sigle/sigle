@@ -19,6 +19,16 @@ const nextConfig = {
       language: 'typescript',
     },
   },
+  async rewrites() {
+    return [
+      // Proxy /ingest to PostHog
+      // https://posthog.com/docs/advanced/proxy/nextjs
+      {
+        source: '/ingest/:path*',
+        destination: 'https://app.posthog.com/:path*',
+      },
+    ];
+  },
 };
 
 module.exports = withSentryConfig(
