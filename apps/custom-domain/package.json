@@ -11,7 +11,7 @@
   "dependencies": {
     "@radix-ui/react-dialog": "1.0.3",
     "@radix-ui/react-tooltip": "1.0.5",
-    "@tabler/icons-react": "2.15.0",
+    "@tabler/icons-react": "2.17.0",
     "buffer": "6.0.3",
     "cheerio": "1.0.0-rc.12",
     "class-variance-authority": "0.5.2",
