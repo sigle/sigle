@@ -4,8 +4,6 @@ import { findChildren } from '@tiptap/core';
 import { Plugin, PluginKey } from '@tiptap/pm/state';
 import { nanoid } from 'nanoid';
 import { Component } from './ImageWrapper';
-// import { generateRandomId } from '../../../../utils';
-// import { resizeAndUploadImage } from '../../utils/image';
 
 export const TipTapImage = TipTapImageBase.extend({
   addAttributes() {
