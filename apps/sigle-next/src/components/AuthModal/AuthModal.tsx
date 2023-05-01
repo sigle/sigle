@@ -3,8 +3,6 @@ import { useAuthModalStore } from './store';
 import { RouteConnect } from './RouteConnect';
 import { RouteSign } from './RouteSign';
 
-// TODO track login flow with posthog
-
 /**
  * Auth modal that handles wallet connect and sign in with Stacks.
  */
