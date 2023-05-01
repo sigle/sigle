@@ -44,7 +44,7 @@ pnpm install
 Copy the `env.example` file in the application directory to `.env` (which will be ignored by Git) and setup each variable.
 
 ```sh
-cd sigle
+cd server
 cp .env.example .env
 ```
 
@@ -81,7 +81,7 @@ You can now open your browser and go to http://localhost:3001 to see the api.
 Copy the `env.local.example` file in the application directory to `.env.local` (which will be ignored by Git) and setup each variable.
 
 ```sh
-cd server
+cd sigle
 cp .env.local.example .env.local
 ```
 
