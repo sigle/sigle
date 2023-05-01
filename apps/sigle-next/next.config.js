@@ -30,24 +30,6 @@ const nextConfig = {
       language: 'typescript',
     },
   },
-  async headers() {
-    return [
-      {
-        source: '/ingest/:path*',
-        headers: corsHeaders,
-      },
-    ];
-  },
-  async rewrites() {
-    return [
-      // Proxy /ingest to PostHog
-      // https://posthog.com/docs/advanced/proxy/nextjs
-      {
-        source: '/ingest/:path*',
-        destination: 'https://app.posthog.com/:path*',
-      },
-    ];
-  },
 };
 
 module.exports = withSentryConfig(

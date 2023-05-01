@@ -10,9 +10,8 @@ export const PosthogTrack = ({ children }: { children: React.ReactNode }) => {
   useEffect(() => {
     if (process.env.NEXT_PUBLIC_POSTHOG_KEY) {
       posthog.init(process.env.NEXT_PUBLIC_POSTHOG_KEY, {
-        api_host: process.env.NEXT_PUBLIC_VERCEL_URL
-          ? `https://${process.env.NEXT_PUBLIC_VERCEL_URL}/ingest`
-          : 'https://app.posthog.com',
+        // TODO setup proxy for production https://posthog.com/docs/advanced/proxy/nextjs
+        api_host: 'https://app.posthog.com',
         ip: false,
         loaded: () => {
           if (process.env.NODE_ENV === 'development') {
