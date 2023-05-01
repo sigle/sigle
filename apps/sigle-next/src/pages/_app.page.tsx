@@ -16,6 +16,7 @@ import { trpc } from '@/utils/trpc';
 import { AuthModal } from '@/components/AuthModal/AuthModal';
 import { Toaster } from '@/ui/Toaster';
 import '@/styles/globals.css';
+import { PosthogTrack } from '@/lib/posthog/PosthogTrack';
 
 const inter = Inter({
   subsets: ['latin'],
@@ -66,6 +67,7 @@ const MyApp: AppType<{ session: Session | null }> = ({
                 </div>
                 <AuthModal />
                 <Toaster />
+                <PosthogTrack />
               </CeramicProvider>
             </StacksClientProvider>
           </SessionProvider>
