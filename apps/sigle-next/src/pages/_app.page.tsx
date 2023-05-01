@@ -62,12 +62,13 @@ const MyApp: AppType<{ session: Session | null }> = ({
               appIconUrl="https://app.sigle.io/icon-192x192.png"
             >
               <CeramicProvider>
-                <div className={`${inter.variable} font-sans`}>
-                  <Component {...pageProps} />
-                </div>
-                <AuthModal />
-                <Toaster />
-                <PosthogTrack />
+                <PosthogTrack>
+                  <div className={`${inter.variable} font-sans`}>
+                    <Component {...pageProps} />
+                  </div>
+                  <AuthModal />
+                  <Toaster />
+                </PosthogTrack>
               </CeramicProvider>
             </StacksClientProvider>
           </SessionProvider>
