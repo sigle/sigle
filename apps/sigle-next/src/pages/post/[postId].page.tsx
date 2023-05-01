@@ -3,6 +3,7 @@ import { useRouter } from 'next/router';
 import Balancer from 'react-wrap-balancer';
 import { format } from 'date-fns';
 import Image from 'next/image';
+import * as cheerio from 'cheerio';
 import { Button, Container, Flex, Typography } from '@sigle/ui';
 import { styled } from '@sigle/stitches.config';
 import { useCeramic } from '@/components/Ceramic/CeramicProvider';
@@ -129,6 +130,16 @@ const PostPage = () => {
     return <div>Not found</div>;
   }
 
+  // Replace IPFS links with gateway links
+  const $ = cheerio.load(post.data.content);
+  $('img').each((_, el) => {
+    const src = $(el).attr('src');
+    if (src?.startsWith('ipfs://')) {
+      $(el).attr('src', `https://ipfs.filebase.io/ipfs/${src.slice(7)}`);
+    }
+  });
+  const content = $.html();
+
   return (
     <DashboardLayout
       sidebarContent={<UserProfile did={post.data.did} isViewer={isViewer} />}
@@ -156,7 +167,7 @@ const PostPage = () => {
               8 MIN READ
             </Typography>
           </Flex>
-          <div dangerouslySetInnerHTML={{ __html: post.data.content }} />
+          <div dangerouslySetInnerHTML={{ __html: content }} />
         </div>
       </Container>
     </DashboardLayout>

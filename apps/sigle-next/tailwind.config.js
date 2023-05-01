@@ -38,6 +38,18 @@ module.exports = {
         sans: ['var(--font-inter)'],
       },
       colors: { ...gray, ...orange },
+      typography: {
+        DEFAULT: {
+          css: {
+            maxWidth: false,
+            // Center images in prose
+            img: {
+              marginLeft: 'auto',
+              marginRight: 'auto',
+            },
+          },
+        },
+      },
       keyframes: {
         hide: {
           from: { opacity: 1 },
