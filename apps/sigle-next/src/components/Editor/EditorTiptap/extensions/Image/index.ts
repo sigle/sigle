@@ -2,6 +2,7 @@ import TipTapImageBase from '@tiptap/extension-image';
 import { ReactNodeViewRenderer } from '@tiptap/react';
 import { findChildren } from '@tiptap/core';
 import { Plugin, PluginKey } from '@tiptap/pm/state';
+import { nanoid } from 'nanoid';
 import { Component } from './ImageWrapper';
 // import { generateRandomId } from '../../../../utils';
 // import { resizeAndUploadImage } from '../../utils/image';
@@ -56,72 +57,85 @@ export const TipTapImage = TipTapImageBase.extend({
 
             const images = Array.from(event.dataTransfer.files);
 
-            // images.forEach((imageFile, idx) => {
-            //   const [mime, extension] = imageFile.type.split('/');
-            //   const accepted = ['jpeg', 'png', 'gif'];
-            //   if (!accepted.includes(extension)) {
-            //     return;
-            //   }
-            //   if (mime !== 'image') return;
-            //   const src = URL.createObjectURL(imageFile);
-            //   const id = generateRandomId();
+            images.forEach((imageFile, idx) => {
+              const [mime, extension] = imageFile.type.split('/');
+              const accepted = ['jpeg', 'png', 'gif'];
+              if (!accepted.includes(extension)) {
+                return;
+              }
+              if (mime !== 'image') return;
+              const src = URL.createObjectURL(imageFile);
+              const id = nanoid();
 
-            //   const coordinates = view.posAtCoords({
-            //     left: event.clientX,
-            //     top: event.clientY,
-            //   });
+              const coordinates = view.posAtCoords({
+                left: event.clientX,
+                top: event.clientY,
+              });
 
-            //   if (!coordinates) {
-            //     return;
-            //   }
+              if (!coordinates) {
+                return;
+              }
 
-            //   editor.commands.insertContentAt(coordinates.pos, {
-            //     type: 'image',
-            //     attrs: {
-            //       src,
-            //       id,
-            //       loading: true,
-            //     },
-            //   });
+              editor.commands.insertContentAt(coordinates.pos, {
+                type: 'image',
+                attrs: {
+                  src,
+                  id,
+                  loading: true,
+                },
+              });
 
-            //   const upload = async () => {
-            //     const name = `photos/${id}-${imageFile.name}`;
-            //     const imageUrl = await resizeAndUploadImage(imageFile, name);
-            //     return imageUrl;
-            //   };
+              const upload = async () => {
+                // Extract the post ID from the URL
+                const postId = window.location.pathname.split('/')[2];
 
-            //   upload().then((url) => {
-            //     const uploadedImage = new Image();
-            //     uploadedImage.src = url;
-            //     uploadedImage.onload = () => {
-            //       editor.commands.command(({ tr }) => {
-            //         const doc = view.state.tr.doc;
-            //         const images = findChildren(
-            //           doc,
-            //           (node) =>
-            //             node.type.name === 'image' && node.attrs.id === id
-            //         );
-            //         const image = images[0];
+                // Upload the image to the API so it can be processed
+                var formData = new FormData();
+                formData.append('file', imageFile);
+                formData.append('postId', postId);
 
-            //         if (!image || images.length > 1) {
-            //           return false;
-            //         }
+                const response = await fetch(`/api/image-upload`, {
+                  method: 'POST',
+                  body: formData,
+                });
+                // TODO try catch notification error
+                const json = await response.json();
 
-            //         tr.setNodeMarkup(image.pos, undefined, {
-            //           ...image.node.attrs,
-            //           src: url,
-            //           loading: false,
-            //         });
+                return { imageUrl: json.gatewayUrl, url: json.url };
+              };
 
-            //         return true;
-            //       });
+              upload().then(({ imageUrl, url }) => {
+                const uploadedImage = new Image();
+                uploadedImage.src = imageUrl;
+                uploadedImage.onload = () => {
+                  editor.commands.command(({ tr }) => {
+                    const doc = view.state.tr.doc;
+                    const images = findChildren(
+                      doc,
+                      (node) =>
+                        node.type.name === 'image' && node.attrs.id === id
+                    );
+                    const image = images[0];
 
-            //       if (idx == images.length - 1) {
-            //         editor.commands.createParagraphNear();
-            //       }
-            //     };
-            // });
-            // });
+                    if (!image || images.length > 1) {
+                      return false;
+                    }
+
+                    tr.setNodeMarkup(image.pos, undefined, {
+                      ...image.node.attrs,
+                      src: url,
+                      loading: false,
+                    });
+
+                    return true;
+                  });
+
+                  if (idx == images.length - 1) {
+                    editor.commands.createParagraphNear();
+                  }
+                };
+              });
+            });
 
             return true;
           },
