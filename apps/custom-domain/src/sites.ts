@@ -111,7 +111,7 @@ export const sites: {
     banner: '/websites/newsletter.f3w.xyz/banner.png',
     links: [
       {
-        href: 'https://newsletter.f3w.xyz',
+        href: 'https://f3w.xyz/',
         label: 'Home',
       },
       {
