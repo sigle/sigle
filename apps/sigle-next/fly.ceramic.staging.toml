@@ -1,33 +1,34 @@
-# fly.toml file generated for ceramic-node-staging on 2023-01-31T10:40:35+01:00
+# fly.toml app configuration file generated for ceramic-node-staging on 2023-05-02T14:38:47+02:00
+#
+# See https://fly.io/docs/reference/configuration/ for information about how to use this file.
+#
 
 app = "ceramic-node-staging"
+primary_region = "sea"
 kill_signal = "SIGINT"
-kill_timeout = 5
-processes = []
-
-[env]
-  CERAMIC_ENABLE_EXPERIMENTAL_COMPOSE_DB = "true"
+kill_timeout = "5s"
 
 [experimental]
   auto_rollback = true
 
+[env]
+  CERAMIC_ENABLE_EXPERIMENTAL_COMPOSE_DB = "true"
+
 [[services]]
-  http_checks = []
+  protocol = "tcp"
   internal_port = 7007
   processes = ["app"]
-  protocol = "tcp"
-  script_checks = []
 
   [[services.ports]]
+    port = 80
     handlers = ["http"]
-    port = "80"
 
   [[services.ports]]
+    port = 443
     handlers = ["tls", "http"]
-    port = "443"
 
   [[services.tcp_checks]]
-    grace_period = "1s"
     interval = "15s"
-    restart_limit = 0
     timeout = "2s"
+    grace_period = "1s"
+    restart_limit = 0
