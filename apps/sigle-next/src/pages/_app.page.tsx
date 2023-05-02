@@ -22,7 +22,6 @@ const inter = Inter({
   subsets: ['latin'],
   style: ['normal'],
   weight: ['400', '600', '700'],
-  variable: '--font-inter',
   display: 'swap',
 });
 
@@ -32,7 +31,7 @@ const CeramicProvider = dynamic(
 
 const globalStyle = globalCss({
   body: {
-    fontFamily: 'var(--font-inter)',
+    fontFamily: inter.style.fontFamily,
     backgroundColor: '$gray1',
     color: '$gray11',
   },
@@ -63,9 +62,7 @@ const MyApp: AppType<{ session: Session | null }> = ({
             >
               <CeramicProvider>
                 <PosthogTrack>
-                  <div className={`${inter.variable} font-sans`}>
-                    <Component {...pageProps} />
-                  </div>
+                  <Component {...pageProps} />
                   <AuthModal />
                   <Toaster />
                 </PosthogTrack>
