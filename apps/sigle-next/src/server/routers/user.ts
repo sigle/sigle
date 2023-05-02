@@ -1,7 +1,5 @@
-import { Prisma } from '@prisma/client';
 import { z } from 'zod';
 import { prismaClient } from '@/lib/prisma';
-import { CeramicPost, CeramicProfile } from '@/types/ceramic';
 import { router, procedure } from '../trpc';
 import { normalizeProfile } from '../utils';
 
