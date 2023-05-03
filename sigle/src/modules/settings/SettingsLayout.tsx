@@ -37,6 +37,10 @@ export const SettingsLayout = ({
       path: '/settings/email',
     },
     {
+      name: 'Newsletter',
+      path: '/settings/newsletter',
+    },
+    {
       name: 'Custom domain',
       path: '/settings/custom-domain',
     },
