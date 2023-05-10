@@ -13,6 +13,7 @@ import { UpdateNewsletterDto } from './dto/updateNewsletter.dto';
 import { AuthGuard } from '../auth.guard';
 import { NewsletterEntity } from './entities/newsletter.entity';
 import { ContactsListsEntity } from './entities/constacts-lists.entity';
+import { UpdateContactsListDto } from './dto/updateContactsList.dto';
 
 @ApiTags('newsletters')
 @Controller()
@@ -47,6 +48,19 @@ export class NewslettersController {
   getContactsLists(@Request() req): Promise<ContactsListsEntity[]> {
     return this.newslettersService.getContactsLists({
       stacksAddress: req.user.stacksAddress,
+    });
+  }
+
+  @UseGuards(AuthGuard)
+  @Post('/api/newsletters/contacts-lists')
+  @HttpCode(200)
+  updateContactsList(
+    @Request() req,
+    @Body() updateNewsletterDto: UpdateContactsListDto,
+  ) {
+    return this.newslettersService.updateContactsList({
+      stacksAddress: req.user.stacksAddress,
+      listId: updateNewsletterDto.listId,
     });
   }
 

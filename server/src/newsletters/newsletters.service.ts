@@ -157,6 +157,61 @@ export class NewslettersService {
   }
 
   /**
+   * Change the selected list where emails are being sent.
+   */
+  async updateContactsList({
+    stacksAddress,
+    listId,
+  }: {
+    stacksAddress: string;
+    listId: number;
+  }): Promise<void> {
+    const activeSubscription =
+      await this.subscriptionService.getUserActiveSubscription({
+        stacksAddress,
+      });
+    if (!activeSubscription) {
+      throw new BadRequestException('No active subscription.');
+    }
+
+    const user = await this.prisma.user.findUniqueOrThrow({
+      select: {
+        id: true,
+        newsletter: {
+          select: {
+            id: true,
+            mailjetApiKey: true,
+            mailjetApiSecret: true,
+            mailjetListId: true,
+          },
+        },
+      },
+      where: { stacksAddress },
+    });
+    if (!user.newsletter) {
+      throw new BadRequestException('Newsletter not setup.');
+    }
+
+    const mailjet = new Mailjet({
+      apiKey: user.newsletter.mailjetApiKey,
+      apiSecret: user.newsletter.mailjetApiSecret,
+    });
+
+    const data: { body: ContactList.TGetContactListResponse } = await mailjet
+      .get('contactslist', { version: 'v3' })
+      .id(listId)
+      .request();
+    if (data.body.Count === 0) {
+      throw new BadRequestException('List not found.');
+    }
+
+    await this.prisma.newsletter.update({
+      where: { id: user.newsletter.id },
+      data: { mailjetListId: listId },
+    });
+  }
+
+  /**
    * Sync the sender email with the one in Mailjet.
    * This is required because the sender email can be changed in Mailjet.
    */
