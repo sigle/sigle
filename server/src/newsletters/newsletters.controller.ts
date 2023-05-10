@@ -41,6 +41,15 @@ export class NewslettersController {
   }
 
   @UseGuards(AuthGuard)
+  @Get('/api/newsletters/contacts-lists')
+  @ApiOkResponse({})
+  getContactsLists(@Request() req): Promise<any | null> {
+    return this.newslettersService.getContactsLists({
+      stacksAddress: req.user.stacksAddress,
+    });
+  }
+
+  @UseGuards(AuthGuard)
   @Post('/api/newsletters/sender')
   @HttpCode(200)
   syncSender(@Request() req) {

@@ -61,7 +61,6 @@ export class NewslettersService {
             mailjetApiKey: true,
             mailjetApiSecret: true,
             mailjetListId: true,
-            mailjetListAddress: true,
             senderEmail: true,
           },
         },
@@ -77,7 +76,6 @@ export class NewslettersService {
       mailjetApiKey: apiKey,
       mailjetApiSecret: apiSecret,
       mailjetListId: user.newsletter?.mailjetListId ?? 0,
-      mailjetListAddress: user.newsletter?.mailjetListAddress ?? '',
     };
 
     // Validate the config and setup the account if something changed or if it's the first time.
@@ -90,7 +88,6 @@ export class NewslettersService {
         apiSecret,
       });
       upsertData.mailjetListId = listId;
-      upsertData.mailjetListAddress = listAddress;
     }
 
     await this.prisma.newsletter.upsert({
@@ -109,6 +106,54 @@ export class NewslettersService {
         hasMailjetConfigChanged,
       },
     });
+  }
+
+  /**
+   * Get the Mailjet contact lists and show the selected one.
+   */
+  async getContactsLists({ stacksAddress }: { stacksAddress: string }) {
+    const activeSubscription =
+      await this.subscriptionService.getUserActiveSubscription({
+        stacksAddress,
+      });
+    if (!activeSubscription) {
+      throw new BadRequestException('No active subscription.');
+    }
+
+    const user = await this.prisma.user.findUniqueOrThrow({
+      select: {
+        id: true,
+        newsletter: {
+          select: {
+            id: true,
+            mailjetApiKey: true,
+            mailjetApiSecret: true,
+            mailjetListId: true,
+          },
+        },
+      },
+      where: { stacksAddress },
+    });
+    if (!user.newsletter) {
+      throw new BadRequestException('Newsletter not setup.');
+    }
+
+    const mailjet = new Mailjet({
+      apiKey: user.newsletter.mailjetApiKey,
+      apiSecret: user.newsletter.mailjetApiSecret,
+    });
+
+    const data: { body: ContactList.TGetContactListResponse } = await mailjet
+      .get('contactslist', { version: 'v3' })
+      .request();
+
+    return data.body.Data.map((list) => ({
+      id: list.ID,
+      name: list.Name,
+      isSelected: list.ID === user.newsletter.mailjetListId,
+      isDeleted: list.IsDeleted,
+      subscriberCount: list.SubscriberCount,
+    }));
   }
 
   /**
