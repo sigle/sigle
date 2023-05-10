@@ -209,6 +209,14 @@ export class NewslettersService {
       where: { id: user.newsletter.id },
       data: { mailjetListId: listId },
     });
+
+    this.posthog.capture({
+      distinctId: stacksAddress,
+      event: 'newsletter list selected',
+      properties: {
+        listId,
+      },
+    });
   }
 
   /**
