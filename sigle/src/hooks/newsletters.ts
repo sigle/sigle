@@ -36,6 +36,18 @@ export const useUpdateNewsletter = (
     options
   );
 
+type GetApiContactsListsNewsletterReturnType = Awaited<
+  ReturnType<typeof NewslettersService.newslettersControllerGetContactsLists>
+>;
+export const useGetContactsListsNewsletter = (
+  options: UseQueryOptions<GetApiContactsListsNewsletterReturnType, Error> = {}
+) =>
+  useQuery<GetApiContactsListsNewsletterReturnType, Error>(
+    ['get-user-contact-lists'],
+    () => NewslettersService.newslettersControllerGetContactsLists(),
+    options
+  );
+
 type PostApiSenderNewsletterReturnType = Awaited<
   ReturnType<typeof NewslettersService.newslettersControllerSyncSender>
 >;
