@@ -1,6 +1,7 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
+import type { ContactsListsEntity } from '../models/ContactsListsEntity';
 import type { NewsletterEntity } from '../models/NewsletterEntity';
 import type { UpdateNewsletterDto } from '../models/UpdateNewsletterDto';
 
@@ -34,6 +35,19 @@ export class NewslettersService {
       url: '/api/newsletters',
       body: requestBody,
       mediaType: 'application/json',
+    });
+  }
+
+  /**
+   * @returns ContactsListsEntity
+   * @throws ApiError
+   */
+  public static newslettersControllerGetContactsLists(): CancelablePromise<
+    Array<ContactsListsEntity>
+  > {
+    return __request(OpenAPI, {
+      method: 'GET',
+      url: '/api/newsletters/contacts-lists',
     });
   }
 

@@ -9,6 +9,7 @@ export type { OpenAPIConfig } from './core/OpenAPI';
 export type { AddEmailDto } from './models/AddEmailDto';
 export type { AnalyticsHistoricalDto } from './models/AnalyticsHistoricalDto';
 export type { AnalyticsStoryDto } from './models/AnalyticsStoryDto';
+export type { ContactsListsEntity } from './models/ContactsListsEntity';
 export type { CreateSubscriberDto } from './models/CreateSubscriberDto';
 export type { CreateUserFollowDto } from './models/CreateUserFollowDto';
 export type { DeleteUserFollowDto } from './models/DeleteUserFollowDto';
