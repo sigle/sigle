@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { useGetContactsListsNewsletter } from '../../../hooks/newsletters';
 import { styled } from '../../../stitches.config';
 import { Box, Button, Flex, Typography } from '../../../ui';
@@ -17,6 +18,7 @@ const Select = styled('select', {
 });
 
 export const MailjetList = () => {
+  const [newListId, setNewListId] = useState<number | null>(null);
   const { data: contactsLists } = useGetContactsListsNewsletter();
 
   return (
@@ -34,7 +36,8 @@ export const MailjetList = () => {
       </Typography>
       <Select
         css={{ mt: '$2' }}
-        value={contactsLists?.find((list) => list.isSelected)?.id}
+        value={newListId ?? contactsLists?.find((list) => list.isSelected)?.id}
+        onChange={(e) => setNewListId(Number(e.target.value))}
       >
         {contactsLists?.map((list) => (
           <option key={list.id} value={list.id}>
