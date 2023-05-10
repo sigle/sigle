@@ -4,7 +4,11 @@ import {
   useQuery,
   UseQueryOptions,
 } from '@tanstack/react-query';
-import { NewslettersService, UpdateNewsletterDto } from '../external/api';
+import {
+  NewslettersService,
+  UpdateNewsletterDto,
+  UpdateContactsListDto,
+} from '../external/api';
 
 type GetApiNewsletterReturnType = Awaited<
   ReturnType<typeof NewslettersService.newslettersControllerGet>
@@ -45,6 +49,28 @@ export const useGetContactsListsNewsletter = (
   useQuery<GetApiContactsListsNewsletterReturnType, Error>(
     ['get-user-contact-lists'],
     () => NewslettersService.newslettersControllerGetContactsLists(),
+    options
+  );
+
+type PostApiContactsListNewsletterReturnType = Awaited<
+  ReturnType<typeof NewslettersService.newslettersControllerUpdateContactsList>
+>;
+export const useUpdateContactsListNewsletter = (
+  options: UseMutationOptions<
+    PostApiContactsListNewsletterReturnType,
+    Error,
+    UpdateContactsListDto
+  > = {}
+) =>
+  useMutation<
+    PostApiContactsListNewsletterReturnType,
+    Error,
+    UpdateContactsListDto
+  >(
+    (args) =>
+      NewslettersService.newslettersControllerUpdateContactsList({
+        requestBody: args,
+      }),
     options
   );
 

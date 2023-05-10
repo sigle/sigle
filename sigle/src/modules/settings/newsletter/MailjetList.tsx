@@ -1,7 +1,12 @@
 import { useState } from 'react';
-import { useGetContactsListsNewsletter } from '../../../hooks/newsletters';
+import { toast } from 'react-toastify';
+import {
+  useGetContactsListsNewsletter,
+  useUpdateContactsListNewsletter,
+} from '../../../hooks/newsletters';
 import { styled } from '../../../stitches.config';
 import { Box, Button, Flex, Typography } from '../../../ui';
+import { ApiError } from '../../../external/api';
 
 const Select = styled('select', {
   minWidth: 300,
@@ -19,7 +24,23 @@ const Select = styled('select', {
 
 export const MailjetList = () => {
   const [newListId, setNewListId] = useState<number | null>(null);
-  const { data: contactsLists } = useGetContactsListsNewsletter();
+  const { data: contactsLists, refetch: refetchContactsLists } =
+    useGetContactsListsNewsletter();
+  const {
+    mutate: updateContactsListNewsletter,
+    isLoading: isLoadingUpdateContactsListNewsletter,
+  } = useUpdateContactsListNewsletter({
+    onSuccess: async () => {
+      await refetchContactsLists();
+    },
+    onError: (error: Error | ApiError) => {
+      let errorMessage = error.message;
+      if (error instanceof ApiError && error.body.message) {
+        errorMessage = error.body.message;
+      }
+      toast.error(errorMessage);
+    },
+  });
 
   return (
     <Box
@@ -49,8 +70,12 @@ export const MailjetList = () => {
       </Select>
       <Flex css={{ mt: '$5' }}>
         <Button
-        // onClick={() => syncNewsletter()}
-        // disabled={isLoadingSyncNewsletter}
+          onClick={() =>
+            updateContactsListNewsletter({
+              listId: newListId || 0,
+            })
+          }
+          disabled={isLoadingUpdateContactsListNewsletter || !newListId}
         >
           <span>Submit</span>
         </Button>
