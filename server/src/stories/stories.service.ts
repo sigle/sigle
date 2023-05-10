@@ -1,5 +1,5 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
-import { SendEmailV3_1 } from 'node-mailjet';
+import { ContactList, SendEmailV3_1 } from 'node-mailjet';
 import * as textVersion from 'textversionjs';
 import { InjectSentry, SentryService } from '@ntegral/nestjs-sentry';
 import { PrismaService } from '../prisma/prisma.service';
@@ -64,7 +64,7 @@ export class StoriesService {
             status: true,
             mailjetApiKey: true,
             mailjetApiSecret: true,
-            mailjetListAddress: true,
+            mailjetListId: true,
             senderEmail: true,
           },
         },
@@ -151,7 +151,21 @@ export class StoriesService {
         apiSecret: user.newsletter.mailjetApiSecret,
       });
 
-      const listEmail = `${user.newsletter.mailjetListAddress}@lists.mailjet.com`;
+      const data: { body: ContactList.TGetContactListResponse } = await mailjet
+        .get('contactslist', { version: 'v3' })
+        .id(user.newsletter.mailjetListId)
+        .request();
+      if (data.body.Count === 0) {
+        throw new BadRequestException('Mailjet list does not exist.');
+      }
+      const mailjetList = data.body.Data[0];
+      if (mailjetList.IsDeleted) {
+        throw new BadRequestException(
+          'Mailjet list is deleted, please select a new one.',
+        );
+      }
+
+      const listEmail = `${data.body.Data[0].Address}@lists.mailjet.com`;
 
       const sendEmailBody: SendEmailV3_1.IBody = {
         SandboxMode: false,
@@ -229,6 +243,8 @@ export class StoriesService {
         properties: {
           storyId: story.id,
           gaiaId: gaiaId,
+          listId: user.newsletter.mailjetListId,
+          subscriberCount: data.body.Data[0].SubscriberCount,
         },
       });
     }
@@ -343,7 +359,6 @@ export class StoriesService {
             status: true,
             mailjetApiKey: true,
             mailjetApiSecret: true,
-            mailjetListAddress: true,
             senderEmail: true,
           },
         },

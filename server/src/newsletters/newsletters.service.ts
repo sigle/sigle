@@ -61,7 +61,6 @@ export class NewslettersService {
             mailjetApiKey: true,
             mailjetApiSecret: true,
             mailjetListId: true,
-            mailjetListAddress: true,
             senderEmail: true,
           },
         },
@@ -77,7 +76,6 @@ export class NewslettersService {
       mailjetApiKey: apiKey,
       mailjetApiSecret: apiSecret,
       mailjetListId: user.newsletter?.mailjetListId ?? 0,
-      mailjetListAddress: user.newsletter?.mailjetListAddress ?? '',
     };
 
     // Validate the config and setup the account if something changed or if it's the first time.
@@ -85,12 +83,11 @@ export class NewslettersService {
       user.newsletter?.mailjetApiKey !== apiKey ||
       user.newsletter?.mailjetApiSecret !== apiSecret;
     if (hasMailjetConfigChanged) {
-      const { listId, listAddress } = await this.validateAndSetupMailjetConfig({
+      const { listId } = await this.validateAndSetupMailjetConfig({
         apiKey,
         apiSecret,
       });
       upsertData.mailjetListId = listId;
-      upsertData.mailjetListAddress = listAddress;
     }
 
     await this.prisma.newsletter.upsert({
@@ -107,6 +104,117 @@ export class NewslettersService {
       event: user.newsletter ? 'newsletter updated' : 'newsletter created',
       properties: {
         hasMailjetConfigChanged,
+      },
+    });
+  }
+
+  /**
+   * Get the Mailjet contact lists and show the selected one.
+   */
+  async getContactsLists({ stacksAddress }: { stacksAddress: string }) {
+    const activeSubscription =
+      await this.subscriptionService.getUserActiveSubscription({
+        stacksAddress,
+      });
+    if (!activeSubscription) {
+      throw new BadRequestException('No active subscription.');
+    }
+
+    const user = await this.prisma.user.findUniqueOrThrow({
+      select: {
+        id: true,
+        newsletter: {
+          select: {
+            id: true,
+            mailjetApiKey: true,
+            mailjetApiSecret: true,
+            mailjetListId: true,
+          },
+        },
+      },
+      where: { stacksAddress },
+    });
+    if (!user.newsletter) {
+      throw new BadRequestException('Newsletter not setup.');
+    }
+
+    const mailjet = new Mailjet({
+      apiKey: user.newsletter.mailjetApiKey,
+      apiSecret: user.newsletter.mailjetApiSecret,
+    });
+
+    const data: { body: ContactList.TGetContactListResponse } = await mailjet
+      .get('contactslist', { version: 'v3' })
+      .request();
+
+    return data.body.Data.map((list) => ({
+      id: list.ID,
+      name: list.Name,
+      isSelected: list.ID === user.newsletter.mailjetListId,
+      isDeleted: list.IsDeleted,
+      subscriberCount: list.SubscriberCount,
+    }));
+  }
+
+  /**
+   * Change the selected list where emails are being sent.
+   */
+  async updateContactsList({
+    stacksAddress,
+    listId,
+  }: {
+    stacksAddress: string;
+    listId: number;
+  }): Promise<void> {
+    const activeSubscription =
+      await this.subscriptionService.getUserActiveSubscription({
+        stacksAddress,
+      });
+    if (!activeSubscription) {
+      throw new BadRequestException('No active subscription.');
+    }
+
+    const user = await this.prisma.user.findUniqueOrThrow({
+      select: {
+        id: true,
+        newsletter: {
+          select: {
+            id: true,
+            mailjetApiKey: true,
+            mailjetApiSecret: true,
+            mailjetListId: true,
+          },
+        },
+      },
+      where: { stacksAddress },
+    });
+    if (!user.newsletter) {
+      throw new BadRequestException('Newsletter not setup.');
+    }
+
+    const mailjet = new Mailjet({
+      apiKey: user.newsletter.mailjetApiKey,
+      apiSecret: user.newsletter.mailjetApiSecret,
+    });
+
+    const data: { body: ContactList.TGetContactListResponse } = await mailjet
+      .get('contactslist', { version: 'v3' })
+      .id(listId)
+      .request();
+    if (data.body.Count === 0) {
+      throw new BadRequestException('List not found.');
+    }
+
+    await this.prisma.newsletter.update({
+      where: { id: user.newsletter.id },
+      data: { mailjetListId: listId },
+    });
+
+    this.posthog.capture({
+      distinctId: stacksAddress,
+      event: 'newsletter list selected',
+      properties: {
+        listId,
       },
     });
   }
@@ -191,7 +299,7 @@ export class NewslettersService {
   }: {
     apiKey: string;
     apiSecret: string;
-  }): Promise<{ listId: number; listAddress: string }> {
+  }): Promise<{ listId: number }> {
     const mailjet = new Mailjet({
       apiKey,
       apiSecret,
@@ -224,7 +332,6 @@ export class NewslettersService {
 
     return {
       listId: mailjetList.ID,
-      listAddress: mailjetList.Address,
     };
   }
 }
