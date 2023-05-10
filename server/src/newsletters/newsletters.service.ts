@@ -83,7 +83,7 @@ export class NewslettersService {
       user.newsletter?.mailjetApiKey !== apiKey ||
       user.newsletter?.mailjetApiSecret !== apiSecret;
     if (hasMailjetConfigChanged) {
-      const { listId, listAddress } = await this.validateAndSetupMailjetConfig({
+      const { listId } = await this.validateAndSetupMailjetConfig({
         apiKey,
         apiSecret,
       });
@@ -299,7 +299,7 @@ export class NewslettersService {
   }: {
     apiKey: string;
     apiSecret: string;
-  }): Promise<{ listId: number; listAddress: string }> {
+  }): Promise<{ listId: number }> {
     const mailjet = new Mailjet({
       apiKey,
       apiSecret,
@@ -332,7 +332,6 @@ export class NewslettersService {
 
     return {
       listId: mailjetList.ID,
-      listAddress: mailjetList.Address,
     };
   }
 }
