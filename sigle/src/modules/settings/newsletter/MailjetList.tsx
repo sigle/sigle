@@ -1,5 +1,20 @@
 import { useGetContactsListsNewsletter } from '../../../hooks/newsletters';
+import { styled } from '../../../stitches.config';
 import { Box, Button, Flex, Typography } from '../../../ui';
+
+const Select = styled('select', {
+  minWidth: 300,
+  WebkitTapHighlightColor: 'rgba(0,0,0,0)',
+  backgroundColor: '$gray3',
+  boxShadow: '0 0 0 1px $colors$gray7',
+  ml: '1px',
+  mr: '1px',
+  br: '$3',
+  px: '$2',
+  py: '$1',
+  fontSize: '$1',
+  color: '$gray11',
+});
 
 export const MailjetList = () => {
   const { data: contactsLists } = useGetContactsListsNewsletter();
@@ -17,7 +32,10 @@ export const MailjetList = () => {
       <Typography css={{ fontWeight: 600 }} size="h4">
         Mailjet list
       </Typography>
-      <select value={contactsLists?.find((list) => list.isSelected)?.id}>
+      <Select
+        css={{ mt: '$2' }}
+        value={contactsLists?.find((list) => list.isSelected)?.id}
+      >
         {contactsLists?.map((list) => (
           <option key={list.id} value={list.id}>
             {list.name} - {list.subscriberCount} subscribers
@@ -25,7 +43,7 @@ export const MailjetList = () => {
             {list.isSelected ? ' (selected)' : ''}
           </option>
         ))}
-      </select>
+      </Select>
       <Flex css={{ mt: '$5' }}>
         <Button
         // onClick={() => syncNewsletter()}
