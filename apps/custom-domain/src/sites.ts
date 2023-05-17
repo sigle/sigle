@@ -128,6 +128,11 @@ export const sites: {
       label: 'Bookings',
     },
   },
+  ['blog.lifeonbtc.xyz']: {
+    username: 'lifeon.btc',
+    banner: '/websites/blog.lifeonbtc.xyz/banner.png',
+    links: [],
+  },
 };
 
 // Add localhost to sites for development
