@@ -115,7 +115,7 @@ export const sites: {
         label: 'Home',
       },
       {
-        href: 'https://twitter.com/f3wNewsletter',
+        href: 'https://twitter.com/f3wletter',
         label: 'Twitter',
       },
       {
