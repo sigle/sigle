@@ -34,6 +34,7 @@ const globalStyle = globalCss({
     fontFamily: inter.style.fontFamily,
     backgroundColor: '$gray1',
     color: '$gray11',
+    '-webkit-font-smoothing': 'antialiased',
   },
 });
 
