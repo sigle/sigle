@@ -4,15 +4,7 @@ import { SiteSettings, StoryFile } from '@/types';
 import { getAbsoluteUrl } from '@/utils/vercel';
 import { notFound } from 'next/navigation';
 import { Metadata } from 'next';
-
-async function getSettings({
-  site,
-}: {
-  site: string;
-}): Promise<SiteSettings | null> {
-  const res = await fetch(`${getAbsoluteUrl()}/api/settings?site=${site}`);
-  return res.json();
-}
+import { getSettings } from '@/lib/api';
 
 async function getPost({
   site,
