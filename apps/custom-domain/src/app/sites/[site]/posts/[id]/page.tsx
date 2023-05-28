@@ -1,10 +1,9 @@
 import { PostCard } from '@/components/PostCard';
 import { TableOfContents } from '@/components/TableOfContents';
 import { TwitterEmbed } from '@/components/TwitterEmbeds';
-import { StoryFile } from '@/types';
+import { getPost, getPosts } from '@/lib/api';
 import { addIdsToHeadings } from '@/utils/addIdsToHeadings';
 import { extractTableOfContents } from '@/utils/extractTableOfContents';
-import { getAbsoluteUrl } from '@/utils/vercel';
 import { format } from 'date-fns';
 import Image from 'next/image';
 import { notFound } from 'next/navigation';
@@ -12,39 +11,6 @@ import { notFound } from 'next/navigation';
 export const runtime = 'edge';
 // Revalidate this page every 60 seconds
 export const revalidate = 60;
-
-async function getPost({
-  site,
-  id,
-}: {
-  site: string;
-  id: string;
-}): Promise<StoryFile | null> {
-  const res = await fetch(`${getAbsoluteUrl()}/api/posts/${id}?site=${site}`);
-  return res.json();
-}
-
-async function getPosts({
-  site,
-  page,
-}: {
-  site: string;
-  page: number;
-}): Promise<{
-  count: number;
-  posts: {
-    id: string;
-    coverImage?: string;
-    title: string;
-    content: string;
-    createdAt: number;
-  }[];
-}> {
-  const res = await fetch(
-    `${getAbsoluteUrl()}/api/posts?site=${site}&page=${page}`
-  );
-  return res.json();
-}
 
 export default async function Post({
   params,
