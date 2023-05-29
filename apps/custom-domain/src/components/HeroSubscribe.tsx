@@ -7,7 +7,6 @@ import { z } from 'zod';
 
 interface HeroSubscribeProps {
   settings: SiteSettings;
-  newsletter: { id: string };
 }
 
 const subscribeSchema = z.object({
@@ -16,7 +15,7 @@ const subscribeSchema = z.object({
 
 type SubscribeFormData = z.infer<typeof subscribeSchema>;
 
-export const HeroSubscribe = ({ settings, newsletter }: HeroSubscribeProps) => {
+export const HeroSubscribe = ({ settings }: HeroSubscribeProps) => {
   const [status, setStatus] = useState<
     'idle' | 'loading' | 'success' | 'error'
   >('idle');
