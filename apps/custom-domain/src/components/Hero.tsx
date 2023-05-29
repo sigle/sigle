@@ -1,15 +1,12 @@
 import Image from 'next/image';
+import { SiteSettings } from '@/types';
 
 interface HeroProps {
-  settings: {
-    name: string;
-    description: string;
-    avatar: string;
-    banner: string;
-  };
+  settings: SiteSettings;
+  newsletter?: { id: string };
 }
 
-export const Hero = ({ settings }: HeroProps) => {
+export const Hero = ({ settings, newsletter }: HeroProps) => {
   return (
     <div>
       <div className="relative h-64 w-full md:h-[22rem]">
@@ -35,6 +32,24 @@ export const Hero = ({ settings }: HeroProps) => {
         <h1 className="mt-5 text-center text-4xl font-bold">{settings.name}</h1>
         <h2 className="mt-3 text-center text-lg">{settings.description}</h2>
       </div>
+      {newsletter && (
+        <form className="container mt-5 flex flex-row items-center justify-center max-w-md">
+          <input
+            className="rounded-l-lg	w-full text-sm px-4 bg-transparent border border-gray-300 focus:ring-0 focus:border-gray-400 h-10"
+            aria-label="Enter your email to subscribe"
+            name="email_address"
+            placeholder="Enter your email"
+            required
+            type="email"
+          />
+          <button
+            className="rounded-r-lg px-5 h-10 text-white text-sm bg-gray-950"
+            type="submit"
+          >
+            Subscribe
+          </button>
+        </form>
+      )}
     </div>
   );
 };

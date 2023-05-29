@@ -3,7 +3,7 @@ import { Hero } from '@/components/Hero';
 import ScrollUp from '@/components/ScrollUp';
 import { notFound } from 'next/navigation';
 import { Metadata } from 'next';
-import { getSettings } from '@/lib/api';
+import { getSettings, getSubscription } from '@/lib/api';
 
 export async function generateMetadata({
   params,
@@ -21,6 +21,7 @@ export async function generateMetadata({
   const description = settings.description;
 
   return {
+    // metadataBase: new URL(settings.url),
     title,
     description,
     icons: {
@@ -57,12 +58,14 @@ export default async function PageLayout({
     notFound();
   }
 
+  const subscription = await getSubscription({ address: settings.address });
+
   return (
     <>
       <ScrollUp />
       <Header settings={settings} />
       <main className="mb-16">
-        <Hero settings={settings} />
+        <Hero settings={settings} newsletter={subscription?.newsletter} />
         {children}
       </main>
     </>

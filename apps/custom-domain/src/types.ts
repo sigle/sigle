@@ -1,6 +1,7 @@
 export interface SiteSettings {
   url: string;
   username: string;
+  address: string;
   name: string;
   description: string;
   avatar: string;

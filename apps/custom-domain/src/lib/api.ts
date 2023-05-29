@@ -42,3 +42,12 @@ export async function getPost({
   const res = await fetch(`${getAbsoluteUrl()}/api/posts/${id}?site=${site}`);
   return res.json();
 }
+
+export async function getSubscription({
+  address,
+}: {
+  address: string;
+}): Promise<{ newsletter?: { id: string } } | null> {
+  const res = await fetch(`${process.env.API_URL}/api/users/${address}`);
+  return res.json();
+}
