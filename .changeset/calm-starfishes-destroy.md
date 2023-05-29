@@ -2,4 +2,4 @@
 '@sigle/custom-domain': minor
 ---
 
-Collect emails form on landing page.
+Collect emails from the landing and article pages.
