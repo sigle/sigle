@@ -38,14 +38,18 @@ export const SubscribeFrame = ({ settings }: HeroSubscribeProps) => {
         stacksAddress: settings.address,
         email: formValues.email,
       }),
-    }).then((res) => {
-      if (res.ok) {
-        setStatus('success');
-        setValue('email', '');
-      } else {
+    })
+      .then((res) => {
+        if (res.ok) {
+          setStatus('success');
+          setValue('email', '');
+        } else {
+          setStatus('error');
+        }
+      })
+      .catch(() => {
         setStatus('error');
-      }
-    });
+      });
   });
 
   return (

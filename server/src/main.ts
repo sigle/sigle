@@ -10,6 +10,7 @@ import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { fetch, Headers } from 'undici';
 import { AppModule } from './app.module';
 import { PrismaService } from './prisma/prisma.service';
+import { sites } from './sites';
 
 // next-auth workaround as node.js does not have the global Headers
 // https://github.com/nextauthjs/next-auth/issues/4988
@@ -55,6 +56,10 @@ async function bootstrap() {
   const document = SwaggerModule.createDocument(app, swaggerConfig);
   SwaggerModule.setup('api/docs', app, document);
 
+  const allowedSitesOrigins = Object.keys(sites).map(
+    (site) => `https://${site}`,
+  );
+
   // Enable cors so only requests from allowed domains can work
   // Cors is disabled for local env.
   // Cors is enabled on prod and allowed only for the APP_URL.
@@ -65,6 +70,7 @@ async function bootstrap() {
       if (
         configService.get('NODE_ENV') === 'development' ||
         origin === configService.get('APP_URL') ||
+        allowedSitesOrigins.includes(origin) ||
         origin === undefined
       ) {
         cb(null, true);
