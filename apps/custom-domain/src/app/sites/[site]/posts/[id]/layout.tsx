@@ -1,29 +1,8 @@
 import { Header } from '@/components/Header';
 import ScrollUp from '@/components/ScrollUp';
-import { SiteSettings, StoryFile } from '@/types';
-import { getAbsoluteUrl } from '@/utils/vercel';
 import { notFound } from 'next/navigation';
 import { Metadata } from 'next';
-
-async function getSettings({
-  site,
-}: {
-  site: string;
-}): Promise<SiteSettings | null> {
-  const res = await fetch(`${getAbsoluteUrl()}/api/settings?site=${site}`);
-  return res.json();
-}
-
-async function getPost({
-  site,
-  id,
-}: {
-  site: string;
-  id: string;
-}): Promise<StoryFile | null> {
-  const res = await fetch(`${getAbsoluteUrl()}/api/posts/${id}?site=${site}`);
-  return res.json();
-}
+import { getPost, getSettings } from '@/lib/api';
 
 export async function generateMetadata({
   params,

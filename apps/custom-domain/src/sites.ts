@@ -1,5 +1,6 @@
 export const sites: {
   [key: string]: {
+    address: string;
     username: string;
     banner: string;
     links: { href: string; label: string }[];
@@ -8,6 +9,7 @@ export const sites: {
 } = {
   ['blog.sigle.io']: {
     username: 'sigle.btc',
+    address: 'SP2EVYKET55QH40RAZE5PVZ363QX0X6BSRP4C7H0W',
     banner: '/websites/blog.sigle.io/banner.png',
     links: [
       { href: 'https://www.sigle.io/', label: 'Home' },
@@ -17,6 +19,7 @@ export const sites: {
   },
   ['blog.nftbot.app']: {
     username: 'nftbotapp.btc',
+    address: 'SP3ASYJVXNV10GYE9Y7Y9WFZJ7YVVDVJKTV5SZKTT',
     banner: '/websites/blog.nftbot.app/banner.png',
     links: [
       { href: 'https://www.nftbot.app/#features', label: 'Features' },
@@ -26,12 +29,14 @@ export const sites: {
   },
   ['updates.liquidium.fi']: {
     username: 'liquidium.btc',
+    address: 'SPYHY9MV6S08YJQVW0R400ADXZBBJ0GM096BMY34',
     banner: '/websites/updates.liquidium.fi/banner.png',
     links: [],
     cta: { href: 'https://liquidium.fi/', label: 'Visit Liquidium' },
   },
   ['blog.xn--florpea-9za.es']: {
     username: 'flor.btc',
+    address: 'SP1FD33S5AD9MW9C57BN1R4SWMG72M9667J6BZ2P7',
     banner: '/websites/blog.xn--florpea-9za.es/banner.png',
     links: [
       {
@@ -57,6 +62,7 @@ export const sites: {
   },
   ['bitcoin.21milbtc.blog']: {
     username: '21milbtc.btc',
+    address: 'SP3BCZN307DECNR5PRMV6HY4P37AJ9N48JP0VE547',
     banner: '/websites/bitcoin.21milbtc.blog/banner.jpg',
     links: [],
     cta: {
@@ -66,6 +72,7 @@ export const sites: {
   },
   ['blog.jackbinswitch.com']: {
     username: 'jackbinswitch.btc',
+    address: 'SPQE3J7XMMK0DN0BWJZHGE6B05VDYQRXRMDV734D',
     banner: '/websites/blog.jackbinswitch.com/banner.png',
     links: [
       {
@@ -80,11 +87,13 @@ export const sites: {
   },
   ['dutchee.wampastompa.com']: {
     username: 'dutchee.btc',
+    address: 'SP339T41DGKV2ZR8ACAT630V8KWJVSJME2MK5ZXCB',
     banner: '/websites/dutchee.wampastompa.com/banner.png',
     links: [],
   },
   ['blog.voidsrus.com']: {
     username: 'exploreadao.id.stx',
+    address: 'SP3RBDST6Y8V5DSF5FWYSCSGZ6AR7EA0AW011V2FS',
     banner: '/websites/blog.voidsrus.com/banner.jpg',
     links: [
       {
@@ -99,6 +108,7 @@ export const sites: {
   },
   ['cuevas.co']: {
     username: 'mitchell.btc',
+    address: 'SPSEBFRZZEZSHGRKRR1Z55RX5AWHER3CYM0H9BMW',
     banner: '/websites/cuevas.co/banner.jpg',
     links: [],
     cta: {
@@ -108,6 +118,7 @@ export const sites: {
   },
   ['newsletter.f3w.xyz']: {
     username: 'f3w.btc',
+    address: 'SP321XJEPEBY7GQGJ48Q3V05494BCDPTHR8XS7KJB',
     banner: '/websites/newsletter.f3w.xyz/banner.png',
     links: [
       {
@@ -130,6 +141,7 @@ export const sites: {
   },
   ['blog.lifeonbtc.xyz']: {
     username: 'lifeon.btc',
+    address: 'SP19N6NE3EYCM96N0Y173Z2B61MCPNDT8PQEQY166',
     banner: '/websites/blog.lifeonbtc.xyz/banner.png',
     links: [],
   },

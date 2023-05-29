@@ -1,15 +1,13 @@
 import Image from 'next/image';
+import { SiteSettings } from '@/types';
+import { SubscribeFrame } from './SubscribeFrame';
 
 interface HeroProps {
-  settings: {
-    name: string;
-    description: string;
-    avatar: string;
-    banner: string;
-  };
+  settings: SiteSettings;
+  newsletter?: { id: string };
 }
 
-export const Hero = ({ settings }: HeroProps) => {
+export const Hero = ({ settings, newsletter }: HeroProps) => {
   return (
     <div>
       <div className="relative h-64 w-full md:h-[22rem]">
@@ -35,6 +33,11 @@ export const Hero = ({ settings }: HeroProps) => {
         <h1 className="mt-5 text-center text-4xl font-bold">{settings.name}</h1>
         <h2 className="mt-3 text-center text-lg">{settings.description}</h2>
       </div>
+      {newsletter && (
+        <div className="container mt-5">
+          <SubscribeFrame settings={settings} />
+        </div>
+      )}
     </div>
   );
 };

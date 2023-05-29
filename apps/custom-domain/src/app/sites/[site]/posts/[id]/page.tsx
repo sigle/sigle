@@ -1,10 +1,10 @@
 import { PostCard } from '@/components/PostCard';
+import { SubscribeFrame } from '@/components/SubscribeFrame';
 import { TableOfContents } from '@/components/TableOfContents';
 import { TwitterEmbed } from '@/components/TwitterEmbeds';
-import { StoryFile } from '@/types';
+import { getPost, getPosts, getSettings, getSubscription } from '@/lib/api';
 import { addIdsToHeadings } from '@/utils/addIdsToHeadings';
 import { extractTableOfContents } from '@/utils/extractTableOfContents';
-import { getAbsoluteUrl } from '@/utils/vercel';
 import { format } from 'date-fns';
 import Image from 'next/image';
 import { notFound } from 'next/navigation';
@@ -13,39 +13,6 @@ export const runtime = 'edge';
 // Revalidate this page every 60 seconds
 export const revalidate = 60;
 
-async function getPost({
-  site,
-  id,
-}: {
-  site: string;
-  id: string;
-}): Promise<StoryFile | null> {
-  const res = await fetch(`${getAbsoluteUrl()}/api/posts/${id}?site=${site}`);
-  return res.json();
-}
-
-async function getPosts({
-  site,
-  page,
-}: {
-  site: string;
-  page: number;
-}): Promise<{
-  count: number;
-  posts: {
-    id: string;
-    coverImage?: string;
-    title: string;
-    content: string;
-    createdAt: number;
-  }[];
-}> {
-  const res = await fetch(
-    `${getAbsoluteUrl()}/api/posts?site=${site}&page=${page}`
-  );
-  return res.json();
-}
-
 export default async function Post({
   params,
 }: {
@@ -53,14 +20,17 @@ export default async function Post({
 }) {
   const { site, id } = params;
 
+  const settings = await getSettings({ site });
   const post = await getPost({
     site,
     id,
   });
 
-  if (!post) {
+  if (!post || !settings) {
     notFound();
   }
+
+  const subscription = await getSubscription({ address: settings.address });
 
   // TODO change logic to get next and previous post
   let posts = await getPosts({ site, page: 1 });
@@ -118,6 +88,15 @@ export default async function Post({
           })}
         </div>
       </div>
+
+      {subscription?.newsletter && (
+        <div className="mt-10">
+          <h3 className="mb-2 text-center text-lg font-bold">
+            Subscribe to the newsletter
+          </h3>
+          <SubscribeFrame settings={settings} />
+        </div>
+      )}
     </div>
   );
 }
