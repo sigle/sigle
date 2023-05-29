@@ -50,10 +50,10 @@ export const SubscribeFrame = ({ settings }: HeroSubscribeProps) => {
   });
 
   return (
-    <div className="container mt-5 flex flex-col items-center">
+    <div className="flex flex-col items-center">
       {status === 'idle' && (
         <form
-          className="flex max-w-md flex-row items-center justify-center"
+          className="flex w-[28rem] max-w-full flex-row items-center justify-center"
           onSubmit={onSubmit}
         >
           <input

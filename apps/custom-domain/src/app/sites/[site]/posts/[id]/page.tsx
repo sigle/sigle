@@ -1,7 +1,8 @@
 import { PostCard } from '@/components/PostCard';
+import { SubscribeFrame } from '@/components/SubscribeFrame';
 import { TableOfContents } from '@/components/TableOfContents';
 import { TwitterEmbed } from '@/components/TwitterEmbeds';
-import { getPost, getPosts } from '@/lib/api';
+import { getPost, getPosts, getSettings, getSubscription } from '@/lib/api';
 import { addIdsToHeadings } from '@/utils/addIdsToHeadings';
 import { extractTableOfContents } from '@/utils/extractTableOfContents';
 import { format } from 'date-fns';
@@ -19,14 +20,17 @@ export default async function Post({
 }) {
   const { site, id } = params;
 
+  const settings = await getSettings({ site });
   const post = await getPost({
     site,
     id,
   });
 
-  if (!post) {
+  if (!post || !settings) {
     notFound();
   }
+
+  const subscription = await getSubscription({ address: settings.address });
 
   // TODO change logic to get next and previous post
   let posts = await getPosts({ site, page: 1 });
@@ -84,6 +88,15 @@ export default async function Post({
           })}
         </div>
       </div>
+
+      {subscription?.newsletter && (
+        <div className="mt-10">
+          <h3 className="mb-2 text-center text-lg font-bold">
+            Subscribe to the newsletter
+          </h3>
+          <SubscribeFrame settings={settings} />
+        </div>
+      )}
     </div>
   );
 }
