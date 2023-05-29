@@ -1,9 +1,11 @@
 'use client';
+import { SiteSettings } from '@/types';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
 interface HeroSubscribeProps {
+  settings: SiteSettings;
   newsletter: { id: string };
 }
 
@@ -13,7 +15,7 @@ const subscribeSchema = z.object({
 
 type SubscribeFormData = z.infer<typeof subscribeSchema>;
 
-export const HeroSubscribe = ({ newsletter }: HeroSubscribeProps) => {
+export const HeroSubscribe = ({ settings, newsletter }: HeroSubscribeProps) => {
   const {
     register,
     handleSubmit,
@@ -25,12 +27,15 @@ export const HeroSubscribe = ({ newsletter }: HeroSubscribeProps) => {
 
   const onSubmit = handleSubmit((formValues) => {
     console.log(formValues);
-    fetch('https://app.sigle.io/api/subscribe', {
+    fetch(`${process.env.API_URL}/api/subscribers`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify(formValues),
+      body: JSON.stringify({
+        stacksAddress: settings.address,
+        email: formValues.email,
+      }),
     }).then((res) => {
       if (res.ok) {
         setValue('email', '');
