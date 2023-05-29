@@ -33,9 +33,9 @@ export const Hero = ({ settings, newsletter }: HeroProps) => {
         <h2 className="mt-3 text-center text-lg">{settings.description}</h2>
       </div>
       {newsletter && (
-        <form className="container mt-5 flex flex-row items-center justify-center max-w-md">
+        <form className="container mt-5 flex max-w-md flex-row items-center justify-center">
           <input
-            className="rounded-l-lg	w-full text-sm px-4 bg-transparent border border-gray-300 focus:ring-0 focus:border-gray-400 h-10"
+            className="h-10 w-full rounded-l-lg border border-gray-300 bg-transparent px-4 text-sm focus:border-gray-400 focus:ring-0"
             aria-label="Enter your email to subscribe"
             name="email_address"
             placeholder="Enter your email"
@@ -43,7 +43,7 @@ export const Hero = ({ settings, newsletter }: HeroProps) => {
             type="email"
           />
           <button
-            className="rounded-r-lg px-5 h-10 text-white text-sm bg-gray-950"
+            className="h-10 rounded-r-lg bg-gray-950 px-5 text-sm text-white"
             type="submit"
           >
             Subscribe
