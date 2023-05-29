@@ -29,7 +29,6 @@ export const SubscribeFrame = ({ settings }: HeroSubscribeProps) => {
   });
 
   const onSubmit = handleSubmit((formValues) => {
-    console.log(formValues);
     fetch(`${process.env.API_URL}/api/subscribers`, {
       method: 'POST',
       headers: {
