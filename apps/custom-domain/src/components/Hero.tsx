@@ -1,6 +1,6 @@
 import Image from 'next/image';
 import { SiteSettings } from '@/types';
-import { HeroSubscribe } from './HeroSubscribe';
+import { SubscribeFrame } from './SubscribeFrame';
 
 interface HeroProps {
   settings: SiteSettings;
@@ -33,7 +33,7 @@ export const Hero = ({ settings, newsletter }: HeroProps) => {
         <h1 className="mt-5 text-center text-4xl font-bold">{settings.name}</h1>
         <h2 className="mt-3 text-center text-lg">{settings.description}</h2>
       </div>
-      {newsletter && <HeroSubscribe settings={settings} />}
+      {newsletter && <SubscribeFrame settings={settings} />}
     </div>
   );
 };

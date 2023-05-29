@@ -15,7 +15,7 @@ const subscribeSchema = z.object({
 
 type SubscribeFormData = z.infer<typeof subscribeSchema>;
 
-export const HeroSubscribe = ({ settings }: HeroSubscribeProps) => {
+export const SubscribeFrame = ({ settings }: HeroSubscribeProps) => {
   const [status, setStatus] = useState<
     'idle' | 'loading' | 'success' | 'error'
   >('idle');
