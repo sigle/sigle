@@ -77,6 +77,15 @@ export default async function Post({
           />
 
           <TwitterEmbed />
+
+          {subscription?.newsletter && (
+            <div className="mt-10">
+              <h3 className="mb-2 text-center text-lg font-bold">
+                Subscribe to the newsletter
+              </h3>
+              <SubscribeFrame settings={settings} />
+            </div>
+          )}
         </div>
       </div>
 
@@ -88,15 +97,6 @@ export default async function Post({
           })}
         </div>
       </div>
-
-      {subscription?.newsletter && (
-        <div className="mt-10">
-          <h3 className="mb-2 text-center text-lg font-bold">
-            Subscribe to the newsletter
-          </h3>
-          <SubscribeFrame settings={settings} />
-        </div>
-      )}
     </div>
   );
 }
