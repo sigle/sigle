@@ -7,6 +7,7 @@ import { NavTitle } from './NavTitle';
 import { SidebarContent } from './SidebarContent';
 import { useDashboardStore } from './store';
 import { MobileNavBar } from './MobileNavBar';
+import { BetaBanner } from './BetaBanner';
 
 const StyledNavBar = styled('nav', {
   px: '$5',
@@ -37,41 +38,44 @@ export const DashboardLayout = ({
   const collapsed = useDashboardStore((state) => state.collapsed);
 
   return (
-    <Box
-      css={{
-        display: 'grid',
-        height: '100vh',
-        gridTemplateRows: '80px 1fr',
-        gridTemplateColumns: '1fr',
-        '@md': {
-          gridTemplateColumns: collapsed ? '81px 1fr' : '271px 1fr',
-        },
-      }}
-    >
-      <NavBarTop collapsed={collapsed} />
-      <NavTitle>{headerContent}</NavTitle>
-      <StyledNavBar>
-        <NavBar />
-      </StyledNavBar>
-      <DashboardContent>
-        <Box
-          css={{
-            display: 'flex',
-            flexDirection: 'column-reverse',
-            '@md': {
-              height: '100%',
-              display: 'grid',
-              gridTemplateColumns: '1fr 420px',
-            },
-          }}
-        >
-          {children}
-          {sidebarContent ? (
-            <SidebarContent>{sidebarContent}</SidebarContent>
-          ) : null}
-        </Box>
-      </DashboardContent>
-      <MobileNavBar />
-    </Box>
+    <>
+      <BetaBanner />
+      <Box
+        css={{
+          display: 'grid',
+          height: 'calc(100vh - 40px)',
+          gridTemplateRows: '80px 1fr',
+          gridTemplateColumns: '1fr',
+          '@md': {
+            gridTemplateColumns: collapsed ? '81px 1fr' : '271px 1fr',
+          },
+        }}
+      >
+        <NavBarTop collapsed={collapsed} />
+        <NavTitle>{headerContent}</NavTitle>
+        <StyledNavBar>
+          <NavBar />
+        </StyledNavBar>
+        <DashboardContent>
+          <Box
+            css={{
+              display: 'flex',
+              flexDirection: 'column-reverse',
+              '@md': {
+                height: '100%',
+                display: 'grid',
+                gridTemplateColumns: '1fr 420px',
+              },
+            }}
+          >
+            {children}
+            {sidebarContent ? (
+              <SidebarContent>{sidebarContent}</SidebarContent>
+            ) : null}
+          </Box>
+        </DashboardContent>
+        <MobileNavBar />
+      </Box>
+    </>
   );
 };
