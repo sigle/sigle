@@ -157,11 +157,17 @@ export const sites: {
       },
     ],
   },
+  ['blog.bitcoinbiohackers.xyz']: {
+    username: 'agentzim.btc',
+    address: 'SP129F9WA8C6731VVFN4RHA5GWFFCZ0KJE1PH7JNW',
+    banner: '/websites/blog.bitcoinbiohackers.xyz/banner.png',
+    links: [],
+  },
 };
 
 // Add localhost to sites for development
 if (process.env.NODE_ENV === 'development') {
-  sites['localhost:3000'] = sites['blog.friedger.de'];
+  sites['localhost:3000'] = sites['blog.bitcoinbiohackers.xyz'];
 } else if (process.env.VERCEL_ENV === 'preview' && process.env.VERCEL_URL) {
   // Preview deployments
   sites[process.env.VERCEL_URL] = sites['blog.sigle.io'];
