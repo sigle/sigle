@@ -145,11 +145,23 @@ export const sites: {
     banner: '/websites/blog.lifeonbtc.xyz/banner.png',
     links: [],
   },
+  ['blog.friedger.de']: {
+    username: 'friedger.id.stx',
+    address: 'SPEG9GC5SB98MFTJK79ZSF5WQSKB5RF24W3RR66P',
+    banner: '/websites/blog.friedger.de/banner.jpg',
+    links: [
+      { href: 'https://friedger.de', label: 'Home' },
+      {
+        href: 'https://pool.friedger.de',
+        label: 'Pool',
+      },
+    ],
+  },
 };
 
 // Add localhost to sites for development
 if (process.env.NODE_ENV === 'development') {
-  sites['localhost:3000'] = sites['blog.sigle.io'];
+  sites['localhost:3000'] = sites['blog.friedger.de'];
 } else if (process.env.VERCEL_ENV === 'preview' && process.env.VERCEL_URL) {
   // Preview deployments
   sites[process.env.VERCEL_URL] = sites['blog.sigle.io'];
