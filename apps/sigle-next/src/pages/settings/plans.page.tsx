@@ -230,7 +230,7 @@ const SettingsPlans = () => {
                 <tr key={feature.name}>
                   <th
                     scope="row"
-                    className="flex items-center justify-between py-2 text-left"
+                    className="flex items-center justify-between py-3 text-left"
                   >
                     <Typography size="sm" fontWeight="normal">
                       {feature.name}
@@ -252,17 +252,17 @@ const SettingsPlans = () => {
                       </TooltipContent>
                     </Tooltip>
                   </th>
-                  <td className="px-6 py-2">
+                  <td className="px-6 py-3">
                     <div className="flex justify-center">
                       {getFeatureStatus(feature.starterPlan)}
                     </div>
                   </td>
-                  <td className="px-6 py-2 text-center">
+                  <td className="px-6 py-3 text-center">
                     <div className="flex justify-center">
                       {getFeatureStatus(feature.basicPlan)}
                     </div>
                   </td>
-                  <td className="px-6 py-2 text-center">
+                  <td className="px-6 py-3 text-center">
                     <div className="flex justify-center">
                       {getFeatureStatus(feature.publisherPlan)}
                     </div>
