@@ -19,6 +19,7 @@ import { CeramicProfile } from '@/types/ceramic';
 import { trpc } from '@/utils/trpc';
 import { DashboardLayout } from '@/components/Dashboard/DashboardLayout';
 import { useToast } from '@/hooks/useToast';
+import { SettingsMenu } from '../SettingsMenu';
 
 const TitleRow = styled('div', {
   py: '$5',
@@ -148,7 +149,8 @@ export const SettingsUpdateProfile = ({
       }
     >
       <Container css={{ maxWidth: 770, py: '$5' }}>
-        <form onSubmit={onSubmit}>
+        <SettingsMenu />
+        <form onSubmit={onSubmit} className="mt-5">
           <TitleRow>
             <Typography size="xl" fontWeight="bold">
               My profile

@@ -12,6 +12,7 @@ import {
 } from '@sigle/ui';
 import { useCeramic } from '@/components/Ceramic/CeramicProvider';
 import { DashboardLayout } from '@/components/Dashboard/DashboardLayout';
+import { SettingsMenu } from '@/components/Settings/SettingsMenu';
 
 type PlanStatus = 'active' | 'inactive' | 'progress' | string;
 
@@ -132,7 +133,8 @@ const SettingsPlans = () => {
         </Typography>
       }
     >
-      <Container css={{ py: '$5' }}>
+      <Container css={{ maxWidth: 770, py: '$5' }}>
+        <SettingsMenu />
         <div className="relative">
           <div className="absolute inset-0 -z-10 flex">
             <div className="ml-[50%] flex w-1/4">
@@ -176,7 +178,7 @@ const SettingsPlans = () => {
             <tbody>
               <tr>
                 <th scope="row" />
-                <td className="px-6 pt-2 flex flex-col">
+                <td className="flex flex-col px-6 pt-2">
                   <div className="flex items-baseline gap-1">
                     <Typography size="xl" fontWeight="bold">
                       Free
