@@ -154,7 +154,7 @@ export const {
     },
     fontWeights: {
       normal: 400,
-      semiBold: 500,
+      semiBold: 600,
       bold: 700,
     },
     radii: {

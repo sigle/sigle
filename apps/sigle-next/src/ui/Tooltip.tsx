@@ -30,6 +30,7 @@ export const TooltipContent = styled(TooltipPrimitive.Content, {
   px: '$2',
   fontSize: '$sm',
   lineHeight: '$sm',
+  fontWeight: '$normal',
   br: '$sm',
   boxShadow: '0 0 0 1px $colors$gray6',
   backgroundColor: '$gray3',
