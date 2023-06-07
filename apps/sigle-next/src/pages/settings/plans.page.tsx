@@ -1,8 +1,8 @@
+import { TooltipProvider } from '@radix-ui/react-tooltip';
+import { TbCheck, TbSettings } from 'react-icons/tb';
+import { Badge, Box, Button, Container, Typography } from '@sigle/ui';
 import { useCeramic } from '@/components/Ceramic/CeramicProvider';
 import { DashboardLayout } from '@/components/Dashboard/DashboardLayout';
-import { TooltipProvider } from '@radix-ui/react-tooltip';
-import { Badge, Box, Button, Container, Typography } from '@sigle/ui';
-import { TbCheck, TbSettings } from 'react-icons/tb';
 
 type PlanStatus = 'active' | 'inactive' | 'progress' | string;
 
@@ -125,8 +125,8 @@ const SettingsPlans = () => {
     >
       <Container css={{ py: '$5' }}>
         <div className="relative">
-          <div className="absolute top-0 bottom-0 left-0 right-0 flex -z-10">
-            <div className="w-1/4 ml-[50%] flex">
+          <div className="absolute inset-0 -z-10 flex">
+            <div className="ml-[50%] flex w-1/4">
               <Box
                 css={{
                   backgroundColor: '$gray2',
@@ -146,18 +146,18 @@ const SettingsPlans = () => {
             <thead>
               <tr>
                 <td />
-                <th scope="col" className="text-left px-5 pt-5 flex gap-2">
+                <th scope="col" className="flex gap-2 px-5 pt-5 text-left">
                   <Typography size="sm" fontWeight="semiBold">
                     Starter
                   </Typography>
                   <Badge>Current plan</Badge>
                 </th>
-                <th scope="col" className="text-left px-5 pt-5">
+                <th scope="col" className="px-5 pt-5 text-left">
                   <Typography size="sm" fontWeight="semiBold">
                     Basic
                   </Typography>
                 </th>
-                <th scope="col" className="text-left px-5 pt-5">
+                <th scope="col" className="px-5 pt-5 text-left">
                   <Typography size="sm" fontWeight="semiBold">
                     Publisher
                   </Typography>
@@ -167,16 +167,16 @@ const SettingsPlans = () => {
             <tbody>
               <tr>
                 <th scope="row" />
-                <td className="pt-2 px-5">
-                  <div className="flex gap-1 items-baseline">
+                <td className="px-5 pt-2">
+                  <div className="flex items-baseline gap-1">
                     <Typography size="xl" fontWeight="bold">
                       Free
                     </Typography>
                   </div>
                   <Button className="mt-6 w-full">Buy plan</Button>
                 </td>
-                <td className="pt-2 px-5">
-                  <div className="flex gap-1 items-baseline">
+                <td className="px-5 pt-2">
+                  <div className="flex items-baseline gap-1">
                     <Typography size="xl" fontWeight="bold">
                       $12
                     </Typography>
@@ -186,8 +186,8 @@ const SettingsPlans = () => {
                   </div>
                   <Button className="mt-6 w-full">Buy plan</Button>
                 </td>
-                <td className="pt-2 px-5">
-                  <div className="flex gap-1 items-baseline">
+                <td className="px-5 pt-2">
+                  <div className="flex items-baseline gap-1">
                     <Typography size="xl" fontWeight="bold">
                       $29
                     </Typography>
@@ -202,7 +202,7 @@ const SettingsPlans = () => {
                 <th
                   scope="colgroup"
                   colSpan={4}
-                  className="pt-4 pb-2 text-left"
+                  className="pb-2 pt-4 text-left"
                 >
                   <Typography size="sm" fontWeight="semiBold">
                     Features
