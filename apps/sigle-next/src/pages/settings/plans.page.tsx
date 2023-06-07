@@ -146,18 +146,18 @@ const SettingsPlans = () => {
             <thead>
               <tr>
                 <td />
-                <th scope="col" className="flex gap-2 px-5 pt-5 text-left">
+                <th scope="col" className="flex gap-2 px-6 pt-6 text-left">
                   <Typography size="sm" fontWeight="semiBold">
                     Starter
                   </Typography>
                   <Badge>Current plan</Badge>
                 </th>
-                <th scope="col" className="px-5 pt-5 text-left">
+                <th scope="col" className="px-6 pt-6 text-left">
                   <Typography size="sm" fontWeight="semiBold">
                     Basic
                   </Typography>
                 </th>
-                <th scope="col" className="px-5 pt-5 text-left">
+                <th scope="col" className="px-6 pt-6 text-left">
                   <Typography size="sm" fontWeight="semiBold">
                     Publisher
                   </Typography>
@@ -167,7 +167,7 @@ const SettingsPlans = () => {
             <tbody>
               <tr>
                 <th scope="row" />
-                <td className="px-5 pt-2">
+                <td className="px-6 pt-2">
                   <div className="flex items-baseline gap-1">
                     <Typography size="xl" fontWeight="bold">
                       Free
@@ -175,7 +175,7 @@ const SettingsPlans = () => {
                   </div>
                   <Button className="mt-6 w-full">Buy plan</Button>
                 </td>
-                <td className="px-5 pt-2">
+                <td className="px-6 pt-2">
                   <div className="flex items-baseline gap-1">
                     <Typography size="xl" fontWeight="bold">
                       $12
@@ -186,7 +186,7 @@ const SettingsPlans = () => {
                   </div>
                   <Button className="mt-6 w-full">Buy plan</Button>
                 </td>
-                <td className="px-5 pt-2">
+                <td className="px-6 pt-2">
                   <div className="flex items-baseline gap-1">
                     <Typography size="xl" fontWeight="bold">
                       $29
@@ -216,17 +216,17 @@ const SettingsPlans = () => {
                       {feature.name}
                     </Typography>
                   </th>
-                  <td className="px-5 py-2">
+                  <td className="px-6 py-2">
                     <div className="flex justify-center">
                       {getFeatureStatus(feature.starterPlan)}
                     </div>
                   </td>
-                  <td className="px-5 py-2 text-center">
+                  <td className="px-6 py-2 text-center">
                     <div className="flex justify-center">
                       {getFeatureStatus(feature.basicPlan)}
                     </div>
                   </td>
-                  <td className="px-5 py-2 text-center">
+                  <td className="px-6 py-2 text-center">
                     <div className="flex justify-center">
                       {getFeatureStatus(feature.publisherPlan)}
                     </div>
