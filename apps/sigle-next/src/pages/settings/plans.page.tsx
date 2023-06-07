@@ -1,6 +1,15 @@
 import { TooltipProvider } from '@radix-ui/react-tooltip';
-import { TbCheck, TbSettings } from 'react-icons/tb';
-import { Badge, Box, Button, Container, Typography } from '@sigle/ui';
+import { TbCheck, TbInfoCircleFilled, TbSettings } from 'react-icons/tb';
+import {
+  Badge,
+  Box,
+  Button,
+  Container,
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+  Typography,
+} from '@sigle/ui';
 import { useCeramic } from '@/components/Ceramic/CeramicProvider';
 import { DashboardLayout } from '@/components/Dashboard/DashboardLayout';
 
@@ -211,10 +220,29 @@ const SettingsPlans = () => {
               </tr>
               {features.map((feature) => (
                 <tr key={feature.name}>
-                  <th scope="row" className="py-2 text-left">
+                  <th
+                    scope="row"
+                    className="flex items-center justify-between py-2 text-left"
+                  >
                     <Typography size="sm" fontWeight="normal">
                       {feature.name}
                     </Typography>
+                    <Tooltip delayDuration={100}>
+                      <TooltipTrigger>
+                        <TbInfoCircleFilled size={16} className="ml-1" />
+                      </TooltipTrigger>
+                      <TooltipContent
+                        side="top"
+                        sideOffset={4}
+                        css={{
+                          textAlign: 'center',
+                          boxShadow: 'none',
+                          width: 240,
+                        }}
+                      >
+                        <Typography>{feature.info}</Typography>
+                      </TooltipContent>
+                    </Tooltip>
                   </th>
                   <td className="px-6 py-2">
                     <div className="flex justify-center">
