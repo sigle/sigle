@@ -182,6 +182,9 @@ const SettingsPlans = () => {
                       Free
                     </Typography>
                   </div>
+                  <Typography size="xs" color="gray9">
+                    &zwnj;
+                  </Typography>
                   <Button className="mt-6 w-full">Buy plan</Button>
                 </td>
                 <td className="px-6 pt-2">
@@ -193,6 +196,9 @@ const SettingsPlans = () => {
                       /month
                     </Typography>
                   </div>
+                  <Typography size="xs" color="gray9">
+                    or free with 1 NFT
+                  </Typography>
                   <Button className="mt-6 w-full">Buy plan</Button>
                 </td>
                 <td className="px-6 pt-2">
@@ -204,6 +210,9 @@ const SettingsPlans = () => {
                       /month
                     </Typography>
                   </div>
+                  <Typography size="xs" color="gray9">
+                    or free with 3 NFT
+                  </Typography>
                   <Button className="mt-6 w-full">Buy plan</Button>
                 </td>
               </tr>
