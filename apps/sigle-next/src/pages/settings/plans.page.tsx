@@ -176,16 +176,15 @@ const SettingsPlans = () => {
             <tbody>
               <tr>
                 <th scope="row" />
-                <td className="px-6 pt-2">
+                <td className="px-6 pt-2 flex flex-col">
                   <div className="flex items-baseline gap-1">
                     <Typography size="xl" fontWeight="bold">
                       Free
                     </Typography>
                   </div>
                   <Typography size="xs" color="gray9">
-                    &zwnj;
+                    The fundamentals
                   </Typography>
-                  <Button className="mt-6 w-full">Buy plan</Button>
                 </td>
                 <td className="px-6 pt-2">
                   <div className="flex items-baseline gap-1">
