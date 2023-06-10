@@ -23,7 +23,9 @@ const getVercelPreviewUrl = () => {
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  experimental: {},
+  experimental: {
+    appDir: true,
+  },
   reactStrictMode: false,
   swcMinify: true,
   env: {
