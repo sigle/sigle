@@ -711,6 +711,9 @@ importers:
       '@sigle/slate-to-html':
         specifier: 1.0.0
         version: 1.0.0(immutable@4.0.0-rc.12)(react-dom@18.2.0)(react@18.2.0)
+      '@sparticuz/chromium':
+        specifier: 113.0.1
+        version: 113.0.1
       '@stacks/auth':
         specifier: 6.3.0
         version: 6.3.0
@@ -9940,6 +9943,16 @@ packages:
 
   /@socket.io/component-emitter@3.0.0:
     resolution: {integrity: sha512-2pTGuibAXJswAPJjaKisthqS/NOK5ypG4LYT6tEAV0S/mxW0zOIvYvGK0V8w8+SHxAm6vRMSjqSalFXeBAqs+Q==}
+    dev: false
+
+  /@sparticuz/chromium@113.0.1:
+    resolution: {integrity: sha512-m64Nc58YObfCYkPbc8EBsnhWCFaw02dbXhWNOmx+OYoIPtIRar+reGYyAeGC0HD9RUZfPEwMHHSZ8MFxdSWXZQ==}
+    engines: {node: '>= 16'}
+    dependencies:
+      follow-redirects: 1.15.2
+      tar-fs: 2.1.1
+    transitivePeerDependencies:
+      - debug
     dev: false
 
   /@stablelib/aead@1.0.1:
@@ -22731,7 +22744,7 @@ packages:
   /pino-abstract-transport@1.0.0:
     resolution: {integrity: sha512-c7vo5OpW4wIS42hUVcT5REsL8ZljsUfBjqV/e2sFxmFEFZiq1XLUp5EYLtuDH6PEHq9W1egWqRbnLUP5FuZmOA==}
     dependencies:
-      readable-stream: 4.3.0
+      readable-stream: 4.4.0
       split2: 4.2.0
     dev: false
 
@@ -24087,7 +24100,6 @@ packages:
       buffer: 6.0.3
       events: 3.3.0
       process: 0.11.10
-    dev: true
 
   /readdirp@3.6.0:
     resolution: {integrity: sha512-hOS089on8RduqdbhvQ5Z37A0ESjsqz6qnRcffsMU3495FuTdqSm+7bhJ29JvIOsBDEEnan5DPu9t3To9VRlMzA==}
