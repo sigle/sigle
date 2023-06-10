@@ -1,7 +1,6 @@
 import { Tweet } from 'react-tweet';
 
 export const revalidate = 86400;
-export const runtime = 'edge';
 
 type Props = {
   params: { id: string };
