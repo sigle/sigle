@@ -109,6 +109,7 @@
     "nprogress": "0.2.0",
     "openapi-typescript-codegen": "0.23.0",
     "playwright": "1.35.0",
+    "playwright-core": "1.35.0",
     "posthog-js": "1.32.2",
     "react": "18.2.0",
     "react-color": "2.19.3",

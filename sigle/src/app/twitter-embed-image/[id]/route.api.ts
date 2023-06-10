@@ -1,4 +1,4 @@
-import { chromium as playwright } from 'playwright';
+import { chromium as playwright } from 'playwright-core';
 import chromium from '@sparticuz/chromium';
 
 // Cache for 1 day
