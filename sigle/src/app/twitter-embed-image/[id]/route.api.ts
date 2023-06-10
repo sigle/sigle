@@ -1,5 +1,4 @@
 import { chromium } from 'playwright';
-import { NextResponse } from 'next/server';
 
 // Cache for 1 day
 export const revalidate = 86400;
