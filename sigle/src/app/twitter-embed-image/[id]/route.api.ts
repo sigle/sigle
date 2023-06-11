@@ -1,6 +1,6 @@
 // import { chromium as playwright } from 'playwright-core';
-import puppeteer from 'puppeteer';
-// import chromium from '@sparticuz/chromium';
+import puppeteer from 'puppeteer-core';
+import chromium from '@sparticuz/chromium-min';
 
 // Cache for 1 day
 export const revalidate = 86400;
@@ -13,11 +13,13 @@ export async function GET(
   { params }: { params: { id: string } }
 ) {
   const browser = await puppeteer.launch({
-    // args: chromium.args,
-    // defaultViewport: chromium.defaultViewport,
-    // executablePath: await chromium.executablePath(),
-    // headless: chromium.headless,
-    headless: 'new',
+    args: chromium.args,
+    defaultViewport: chromium.defaultViewport,
+    executablePath: await chromium.executablePath(
+      'https://github.com/Sparticuz/chromium/releases/download/v110.0.1/chromium-v110.0.1-pack.tar'
+    ),
+    headless: chromium.headless,
+    ignoreHTTPSErrors: true,
   });
 
   const page = await browser.newPage();

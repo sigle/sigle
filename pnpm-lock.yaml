@@ -714,6 +714,9 @@ importers:
       '@sparticuz/chromium':
         specifier: 113.0.1
         version: 113.0.1
+      '@sparticuz/chromium-min':
+        specifier: 113.0.1
+        version: 113.0.1
       '@stacks/auth':
         specifier: 6.3.0
         version: 6.3.0
@@ -9963,6 +9966,16 @@ packages:
 
   /@socket.io/component-emitter@3.0.0:
     resolution: {integrity: sha512-2pTGuibAXJswAPJjaKisthqS/NOK5ypG4LYT6tEAV0S/mxW0zOIvYvGK0V8w8+SHxAm6vRMSjqSalFXeBAqs+Q==}
+    dev: false
+
+  /@sparticuz/chromium-min@113.0.1:
+    resolution: {integrity: sha512-uLh7EaoEo+VGMn1axAU4MyIPastOjMOd6Yn0I9d0V4KQWsAsg7olX9rd26y2E2J7oBv9nPiUEfT9lHk7fChcUg==}
+    engines: {node: '>= 16'}
+    dependencies:
+      follow-redirects: 1.15.2
+      tar-fs: 2.1.1
+    transitivePeerDependencies:
+      - debug
     dev: false
 
   /@sparticuz/chromium@113.0.1:
