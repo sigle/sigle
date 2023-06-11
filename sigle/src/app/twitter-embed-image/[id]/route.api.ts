@@ -1,6 +1,6 @@
 // import { chromium as playwright } from 'playwright-core';
-import puppeteer from 'puppeteer-core';
-import chromium from '@sparticuz/chromium';
+import puppeteer from 'puppeteer';
+// import chromium from '@sparticuz/chromium';
 
 // Cache for 1 day
 export const revalidate = 86400;
@@ -13,10 +13,11 @@ export async function GET(
   { params }: { params: { id: string } }
 ) {
   const browser = await puppeteer.launch({
-    args: chromium.args,
-    defaultViewport: chromium.defaultViewport,
-    executablePath: await chromium.executablePath(),
-    headless: chromium.headless,
+    // args: chromium.args,
+    // defaultViewport: chromium.defaultViewport,
+    // executablePath: await chromium.executablePath(),
+    // headless: chromium.headless,
+    headless: 'new',
   });
 
   const page = await browser.newPage();
@@ -28,6 +29,7 @@ export async function GET(
   }
   // const buffer = await page.locator('.react-tweet-theme').screenshot();
   const buffer = await element.screenshot();
+  await browser.close();
 
   return new Response(buffer, {
     headers: {
