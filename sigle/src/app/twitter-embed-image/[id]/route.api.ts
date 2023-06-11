@@ -14,12 +14,10 @@ export async function GET(
 ) {
   const browser = await playwright.launch({
     args: chromium.args,
-    // defaultViewport: chromium.defaultViewport,
     executablePath: await chromium.executablePath(
       'https://github.com/Sparticuz/chromium/releases/download/v110.0.1/chromium-v110.0.1-pack.tar'
     ),
-    headless: chromium.headless as any,
-    // ignoreHTTPSErrors: true,
+    headless: true,
   });
 
   const context = await browser.newContext();
