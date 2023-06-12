@@ -1,7 +1,7 @@
 import { chromium as playwright } from 'playwright-core';
 // import puppeteer from 'puppeteer-core';
 import chromium from '@sparticuz/chromium';
-import { NextApiHandler } from 'next';
+import type { NextApiHandler } from 'next';
 
 // Cache for 1 day
 export const revalidate = 86400;
@@ -24,12 +24,6 @@ const healthCheckEndpoint: NextApiHandler = async (_, res) => {
 
   res.setHeader('Content-Type', 'image/png');
   res.end(buffer);
-
-  //   return new Response(buffer, {
-  //     headers: {
-  //       'Content-Type': 'image/png',
-  //     },
-  //   });
 };
 
 export default healthCheckEndpoint;
