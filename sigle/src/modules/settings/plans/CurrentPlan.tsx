@@ -38,11 +38,14 @@ export const CurrentPlan = () => {
       },
     });
 
-  const currentPlan: 'Starter' | 'Basic' | 'Publisher' = !userSubscription
-    ? 'Starter'
-    : userSubscription.plan === 'BASIC'
-    ? 'Basic'
-    : 'Publisher';
+  const currentPlan: 'Starter' | 'Basic' | 'Publisher' | 'Enterprise' =
+    !userSubscription
+      ? 'Starter'
+      : userSubscription.plan === 'BASIC'
+      ? 'Basic'
+      : userSubscription.plan === 'ENTERPRISE'
+      ? 'Enterprise'
+      : 'Publisher';
 
   const handleSyncWallet = () => {
     syncWithNftSubscription();

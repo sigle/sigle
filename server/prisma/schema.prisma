@@ -45,6 +45,7 @@ enum SubscriptionStatus {
 enum SubscriptionPlan {
   BASIC
   PUBLISHER
+  ENTERPRISE
 }
 
 model Story {
