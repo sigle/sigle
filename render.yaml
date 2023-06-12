@@ -9,6 +9,7 @@ services:
     healthCheckPath: /health
     autoDeploy: true
     buildCommand: cd server &&
+      pnpm -v &&
       pnpm install --filter=@sigle/server &&
       pnpm run build &&
       pnpm prisma migrate deploy
