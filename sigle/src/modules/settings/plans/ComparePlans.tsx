@@ -166,7 +166,7 @@ const Td = styled('td', {
 
 interface TableProps {
   children: React.ReactNode;
-  currentPlan: 'Starter' | 'Basic' | 'Publisher';
+  currentPlan: 'Starter' | 'Basic' | 'Publisher' | 'Enterprise';
 }
 
 const Table = ({ children, currentPlan }: TableProps) => (
@@ -318,7 +318,7 @@ const Table = ({ children, currentPlan }: TableProps) => (
 );
 
 interface ComparePlansProps {
-  currentPlan: 'Starter' | 'Basic' | 'Publisher';
+  currentPlan: 'Starter' | 'Basic' | 'Publisher' | 'Enterprise';
 }
 
 export const ComparePlans = ({ currentPlan }: ComparePlansProps) => {

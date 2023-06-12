@@ -40,7 +40,7 @@ export class SubscriptionService {
     stacksAddress: string;
   }): Promise<{
     id: string;
-    plan: 'BASIC' | 'PUBLISHER';
+    plan: 'BASIC' | 'PUBLISHER' | 'ENTERPRISE';
   }> {
     const nftHoldings = await this.nftApi.getNftHoldings({
       principal: stacksAddress,

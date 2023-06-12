@@ -8,7 +8,11 @@ services:
     branch: main
     healthCheckPath: /health
     autoDeploy: true
+    # `npm install -g pnpm` is needed to install pnpm 8.X https://community.render.com/t/support-pnpm-8-6/12513
+    # Can be removed once Render supports pnpm 8.X
     buildCommand: cd server &&
+      npm install -g pnpm &&
+      pnpm -v &&
       pnpm install --filter=@sigle/server &&
       pnpm run build &&
       pnpm prisma migrate deploy
