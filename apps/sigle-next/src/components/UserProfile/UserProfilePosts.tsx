@@ -12,7 +12,7 @@ export const UserProfilePosts = ({
   isViewer: boolean;
   did: string;
 }) => {
-  const postList = trpc.postList.useInfiniteQuery(
+  const postList = trpc.post.postList.useInfiniteQuery(
     {
       did,
       limit: 20,
