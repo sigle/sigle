@@ -4,8 +4,11 @@ import { useCeramic } from '@/components/Ceramic/CeramicProvider';
 import { DashboardLayout } from '@/components/Dashboard/DashboardLayout';
 import { SettingsMenu } from '@/components/Settings/SettingsMenu';
 import { TableFeatures } from '@/components/Settings/Plans/TableFeatures';
+import { trpc } from '@/utils/trpc';
 
 const SettingsPlans = () => {
+  const activeSubscription = trpc.subscription.getActive.useQuery();
+
   return (
     <DashboardLayout
       headerContent={
@@ -42,17 +45,25 @@ const SettingsPlans = () => {
                   <Typography size="sm" fontWeight="semiBold">
                     Starter
                   </Typography>
-                  <Badge>Current plan</Badge>
+                  {activeSubscription.isFetched && !activeSubscription.data && (
+                    <Badge>Current plan</Badge>
+                  )}
                 </th>
                 <th scope="col" className="px-6 pt-6 text-left">
                   <Typography size="sm" fontWeight="semiBold">
                     Basic
                   </Typography>
+                  {activeSubscription.data?.plan === 'BASIC' && (
+                    <Badge>Current plan</Badge>
+                  )}
                 </th>
                 <th scope="col" className="px-6 pt-6 text-left">
                   <Typography size="sm" fontWeight="semiBold">
                     Publisher
                   </Typography>
+                  {activeSubscription.data?.plan === 'PUBLISHER' && (
+                    <Badge>Current plan</Badge>
+                  )}
                 </th>
               </tr>
             </thead>
