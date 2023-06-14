@@ -2,13 +2,13 @@ import { TooltipProvider } from '@radix-ui/react-tooltip';
 import { useQuery } from '@tanstack/react-query';
 import { NonFungibleTokensApi } from '@stacks/blockchain-api-client';
 import { useAccount } from '@micro-stacks/react';
+import { useEffect } from 'react';
 import { Badge, Box, Button, Container, Typography } from '@sigle/ui';
 import { useCeramic } from '@/components/Ceramic/CeramicProvider';
 import { DashboardLayout } from '@/components/Dashboard/DashboardLayout';
 import { SettingsMenu } from '@/components/Settings/SettingsMenu';
 import { TableFeatures } from '@/components/Settings/Plans/TableFeatures';
 import { trpc } from '@/utils/trpc';
-import { useEffect } from 'react';
 import { useToast } from '@/hooks/useToast';
 import { ToastAction } from '@/ui/Toast';
 
