@@ -16,6 +16,7 @@ const SettingsPlans = () => {
   const { toast } = useToast();
   const { stxAddress } = useAccount();
   const activeSubscription = trpc.subscription.getActive.useQuery();
+  const upgradeWithNFT = trpc.subscription.upgradeWithNFT.useMutation();
   const nftsInWallet = useQuery(['nft-in-wallet', stxAddress], async () => {
     if (!stxAddress) return;
     const nftApi = new NonFungibleTokensApi();
@@ -27,6 +28,19 @@ const SettingsPlans = () => {
     });
     return nftHoldings.total;
   });
+
+  const onUpgradeWithNFT = async () => {
+    upgradeWithNFT.mutate(undefined, {
+      onSuccess: async (upgraded) => {
+        if (upgraded) {
+          await activeSubscription.refetch();
+          toast({
+            description: 'Your plan has been upgraded!',
+          });
+        }
+      },
+    });
+  };
 
   const shouldShowAlert =
     activeSubscription.isFetched &&
@@ -43,7 +57,7 @@ const SettingsPlans = () => {
           nftsInWallet.data > 3 ? 'Publisher' : 'Basic'
         } lifetime plan.`,
         action: (
-          <ToastAction altText="Upgrade" onClick={() => null}>
+          <ToastAction altText="Upgrade" onClick={onUpgradeWithNFT}>
             Upgrade
           </ToastAction>
         ),
