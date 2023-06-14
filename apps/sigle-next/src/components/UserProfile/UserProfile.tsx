@@ -29,7 +29,7 @@ interface UserProfileProps {
 }
 
 export const UserProfile = ({ isViewer, did }: UserProfileProps) => {
-  const profile = trpc.userProfile.useQuery({ did });
+  const profile = trpc.user.userProfile.useQuery({ did });
 
   const address = getAddressFromDid(did);
 

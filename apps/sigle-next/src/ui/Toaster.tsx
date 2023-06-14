@@ -1,8 +1,8 @@
 'use client';
+
 import { useToast } from '@/hooks/useToast';
 import {
   Toast,
-  ToastAction,
   ToastClose,
   ToastDescription,
   ToastProvider,
@@ -20,7 +20,7 @@ export function Toaster() {
           <Toast key={id} {...props}>
             {title && <ToastTitle>{title}</ToastTitle>}
             {description && <ToastDescription>{description}</ToastDescription>}
-            {action && <ToastAction altText="">{action}</ToastAction>}
+            {action}
             <ToastClose />
           </Toast>
         );

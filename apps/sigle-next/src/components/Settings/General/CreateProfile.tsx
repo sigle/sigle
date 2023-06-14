@@ -50,7 +50,7 @@ export const SettingsCreateProfile = () => {
           return;
         }
         if (data.createProfile) {
-          utils.userProfile.invalidate();
+          utils.user.userProfile.invalidate();
         }
       },
     });

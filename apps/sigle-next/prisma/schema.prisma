@@ -68,16 +68,42 @@ model Profile {
 }
 
 model User {
-  id        String   @id @default(cuid())
-  address   String   @unique
-  did       String   @unique
-  chain     Chain
-  createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @updatedAt @map("updated_at")
+  id            String         @id @default(cuid())
+  address       String         @unique
+  did           String         @unique
+  chain         Chain
+  createdAt     DateTime       @default(now()) @map("created_at")
+  updatedAt     DateTime       @updatedAt @map("updated_at")
+  subscriptions Subscription[]
 
   @@map("users")
 }
 
 enum Chain {
   STACKS
+}
+
+model Subscription {
+  id           String             @id @default(cuid())
+  status       SubscriptionStatus
+  plan         SubscriptionPlan   @default(BASIC) @map("subscription_plan")
+  upgradedAt   DateTime?          @map("upgraded_at")
+  downgradedAt DateTime?          @map("downgraded_at")
+  userId       String             @map("user_id")
+  createdAt    DateTime           @default(now()) @map("created_at")
+  updatedAt    DateTime           @updatedAt @map("updated_at")
+  user         User               @relation(fields: [userId], references: [id])
+
+  @@map("subscriptions")
+}
+
+enum SubscriptionStatus {
+  INACTIVE
+  ACTIVE
+}
+
+enum SubscriptionPlan {
+  BASIC
+  PUBLISHER
+  ENTERPRISE
 }

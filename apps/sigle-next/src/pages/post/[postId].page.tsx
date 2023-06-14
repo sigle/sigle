@@ -48,7 +48,7 @@ const PostPageHeader = ({
   isViewer: boolean;
   post: CeramicPost;
 }) => {
-  const profile = trpc.userProfile.useQuery({ did });
+  const profile = trpc.user.userProfile.useQuery({ did });
 
   const address = getAddressFromDid(did);
 
@@ -98,7 +98,7 @@ const PostPage = () => {
   const { session } = useCeramic();
   const userDid = session?.did.parent!;
   const postId = router.query.postId as string;
-  const post = trpc.postGet.useQuery({ id: postId });
+  const post = trpc.post.postGet.useQuery({ id: postId });
 
   const isViewer = userDid === post.data?.did;
 

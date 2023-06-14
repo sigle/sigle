@@ -10,7 +10,7 @@ const Settings = () => {
   const { session } = useCeramic();
   const userDid = session?.did.parent!;
 
-  const profile = trpc.userProfile.useQuery({ did: userDid });
+  const profile = trpc.user.userProfile.useQuery({ did: userDid });
 
   if (profile.isLoading) {
     return (

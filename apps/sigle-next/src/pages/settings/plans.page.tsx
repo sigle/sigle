@@ -1,130 +1,71 @@
 import { TooltipProvider } from '@radix-ui/react-tooltip';
-import { TbCheck, TbInfoCircleFilled, TbSettings } from 'react-icons/tb';
-import {
-  Badge,
-  Box,
-  Button,
-  Container,
-  Tooltip,
-  TooltipContent,
-  TooltipTrigger,
-  Typography,
-} from '@sigle/ui';
+import { useQuery } from '@tanstack/react-query';
+import { NonFungibleTokensApi } from '@stacks/blockchain-api-client';
+import { useAccount } from '@micro-stacks/react';
+import { useEffect } from 'react';
+import { Badge, Box, Button, Container, Typography } from '@sigle/ui';
 import { useCeramic } from '@/components/Ceramic/CeramicProvider';
 import { DashboardLayout } from '@/components/Dashboard/DashboardLayout';
 import { SettingsMenu } from '@/components/Settings/SettingsMenu';
-
-type PlanStatus = 'active' | 'inactive' | 'progress' | string;
-
-interface Feature {
-  name: string;
-  starterPlan: PlanStatus;
-  basicPlan: PlanStatus;
-  publisherPlan: PlanStatus;
-  info: string;
-}
-
-const features: Feature[] = [
-  {
-    name: 'Unlimited publishing',
-    starterPlan: 'active',
-    basicPlan: 'active',
-    publisherPlan: 'active',
-    info: 'Write as many articles as you want on Sigle, whatever the plan you choose.',
-  },
-  {
-    name: 'Blog on app.sigle.io',
-    starterPlan: 'active',
-    basicPlan: 'active',
-    publisherPlan: 'active',
-    info: 'We create a profile page for you on app.sigle.io/yourname where your articles will be listed.',
-  },
-  {
-    name: 'Data stored on Gaïa',
-    starterPlan: 'active',
-    basicPlan: 'active',
-    publisherPlan: 'active',
-    info: 'Gaia is an off-chain storage solution created by Stacks. All your stories are truly yours and only you can edit and delete them.',
-  },
-  {
-    name: 'Create Ordinals',
-    starterPlan: 'active',
-    basicPlan: 'active',
-    publisherPlan: 'active',
-    info: "Inscribe your stories as Ordinals on Bitcoin, the world's most secure blockchain.",
-  },
-  {
-    name: 'Send newsletters',
-    starterPlan: 'inactive',
-    basicPlan: 'active',
-    publisherPlan: 'active',
-    info: 'Connect your Mailjet account and start sending newsletters to your subscribers.',
-  },
-  {
-    name: 'Privacy focused analytics',
-    starterPlan: 'inactive',
-    basicPlan: 'active',
-    publisherPlan: 'active',
-    info: "Get stats about the performance of your blog without sacrificing your user's privacy. Service provided by Plausible.",
-  },
-  {
-    name: 'Monetize your content',
-    starterPlan: 'inactive',
-    basicPlan: 'progress',
-    publisherPlan: 'progress',
-    info: 'Connect Unlock Protocol or use Stripe and create a recurring revenue stream.',
-  },
-  {
-    name: 'Custom domain',
-    starterPlan: 'inactive',
-    basicPlan: 'active',
-    publisherPlan: 'active',
-    info: 'Boost your SEO (100/100 Lighthouse score) with a personalized domain that truly stands out while maintaining full ownership of your content.',
-  },
-  {
-    name: 'Page views (custom domain)',
-    starterPlan: 'inactive',
-    basicPlan: '2,000',
-    publisherPlan: '100,000',
-    info: 'This indicates the limit of views per month that your custom domain can support. Your articles will always remain visible on app.sigle.io even if the limit is reached.',
-  },
-  {
-    name: 'Custom CSS',
-    starterPlan: 'inactive',
-    basicPlan: 'inactive',
-    publisherPlan: 'progress',
-    info: 'Create the blog of your dreams by editing the CSS of your custom domain.',
-  },
-  {
-    name: 'Themes (custom domain)',
-    starterPlan: 'inactive',
-    basicPlan: '1',
-    publisherPlan: '1 (more soon)',
-    info: 'Choose among several themes for your custom domain.',
-  },
-  {
-    name: 'Premium support',
-    starterPlan: 'inactive',
-    basicPlan: 'inactive',
-    publisherPlan: 'active',
-    info: 'Get fast and prioritized support on our Discord server.',
-  },
-];
-
-const getFeatureStatus = (value: PlanStatus) => {
-  switch (value) {
-    case 'active':
-      return <TbCheck size={20} />;
-    case 'inactive':
-      return '—';
-    case 'progress':
-      return <TbSettings size={20} />;
-    default:
-      return value;
-  }
-};
+import { TableFeatures } from '@/components/Settings/Plans/TableFeatures';
+import { trpc } from '@/utils/trpc';
+import { useToast } from '@/hooks/useToast';
+import { ToastAction } from '@/ui/Toast';
 
 const SettingsPlans = () => {
+  const { toast } = useToast();
+  const { stxAddress } = useAccount();
+  const activeSubscription = trpc.subscription.getActive.useQuery();
+  const upgradeWithNFT = trpc.subscription.upgradeWithNFT.useMutation();
+  const nftsInWallet = useQuery(['nft-in-wallet', stxAddress], async () => {
+    if (!stxAddress) return;
+    const nftApi = new NonFungibleTokensApi();
+    const nftHoldings = await nftApi.getNftHoldings({
+      principal: stxAddress,
+      assetIdentifiers: [
+        'SP2X0TZ59D5SZ8ACQ6YMCHHNR2ZN51Z32E2CJ173.the-explorer-guild::The-Explorer-Guild',
+      ],
+    });
+    return nftHoldings.total;
+  });
+
+  const onUpgradeWithNFT = async () => {
+    upgradeWithNFT.mutate(undefined, {
+      onSuccess: async (upgraded) => {
+        if (upgraded) {
+          await activeSubscription.refetch();
+          toast({
+            description: 'Your plan has been upgraded!',
+          });
+        }
+      },
+    });
+  };
+
+  const shouldShowAlert =
+    activeSubscription.isFetched &&
+    !activeSubscription.data &&
+    nftsInWallet.data &&
+    nftsInWallet.data > 0;
+
+  useEffect(() => {
+    if (shouldShowAlert && nftsInWallet.data) {
+      toast({
+        description: `Use your ${
+          nftsInWallet.data
+        } The Explorer Guild NFTs to enable your ${
+          nftsInWallet.data > 3 ? 'Publisher' : 'Basic'
+        } lifetime plan.`,
+        action: (
+          <ToastAction altText="Upgrade" onClick={onUpgradeWithNFT}>
+            Upgrade
+          </ToastAction>
+        ),
+        duration: 60000,
+      });
+    }
+  }, [nftsInWallet.data, shouldShowAlert]);
+
   return (
     <DashboardLayout
       headerContent={
@@ -161,17 +102,25 @@ const SettingsPlans = () => {
                   <Typography size="sm" fontWeight="semiBold">
                     Starter
                   </Typography>
-                  <Badge>Current plan</Badge>
+                  {activeSubscription.isFetched && !activeSubscription.data && (
+                    <Badge>Current plan</Badge>
+                  )}
                 </th>
                 <th scope="col" className="px-6 pt-6 text-left">
                   <Typography size="sm" fontWeight="semiBold">
                     Basic
                   </Typography>
+                  {activeSubscription.data?.plan === 'BASIC' && (
+                    <Badge>Current plan</Badge>
+                  )}
                 </th>
                 <th scope="col" className="px-6 pt-6 text-left">
                   <Typography size="sm" fontWeight="semiBold">
                     Publisher
                   </Typography>
+                  {activeSubscription.data?.plan === 'PUBLISHER' && (
+                    <Badge>Current plan</Badge>
+                  )}
                 </th>
               </tr>
             </thead>
@@ -228,49 +177,7 @@ const SettingsPlans = () => {
                   </Typography>
                 </th>
               </tr>
-              {features.map((feature) => (
-                <tr key={feature.name}>
-                  <th
-                    scope="row"
-                    className="flex items-center justify-between py-3 text-left"
-                  >
-                    <Typography size="sm" fontWeight="normal">
-                      {feature.name}
-                    </Typography>
-                    <Tooltip delayDuration={100}>
-                      <TooltipTrigger>
-                        <TbInfoCircleFilled size={16} className="ml-1" />
-                      </TooltipTrigger>
-                      <TooltipContent
-                        side="top"
-                        sideOffset={4}
-                        css={{
-                          textAlign: 'center',
-                          boxShadow: 'none',
-                          width: 240,
-                        }}
-                      >
-                        <Typography>{feature.info}</Typography>
-                      </TooltipContent>
-                    </Tooltip>
-                  </th>
-                  <td className="px-6 py-3">
-                    <div className="flex justify-center">
-                      {getFeatureStatus(feature.starterPlan)}
-                    </div>
-                  </td>
-                  <td className="px-6 py-3 text-center">
-                    <div className="flex justify-center">
-                      {getFeatureStatus(feature.basicPlan)}
-                    </div>
-                  </td>
-                  <td className="px-6 py-3 text-center">
-                    <div className="flex justify-center">
-                      {getFeatureStatus(feature.publisherPlan)}
-                    </div>
-                  </td>
-                </tr>
-              ))}
+              <TableFeatures />
             </tbody>
           </table>
         </div>
