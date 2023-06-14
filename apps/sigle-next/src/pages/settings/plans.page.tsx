@@ -1,13 +1,56 @@
 import { TooltipProvider } from '@radix-ui/react-tooltip';
+import { useQuery } from '@tanstack/react-query';
+import { NonFungibleTokensApi } from '@stacks/blockchain-api-client';
+import { useAccount } from '@micro-stacks/react';
 import { Badge, Box, Button, Container, Typography } from '@sigle/ui';
 import { useCeramic } from '@/components/Ceramic/CeramicProvider';
 import { DashboardLayout } from '@/components/Dashboard/DashboardLayout';
 import { SettingsMenu } from '@/components/Settings/SettingsMenu';
 import { TableFeatures } from '@/components/Settings/Plans/TableFeatures';
 import { trpc } from '@/utils/trpc';
+import { useEffect } from 'react';
+import { useToast } from '@/hooks/useToast';
+import { ToastAction } from '@/ui/Toast';
 
 const SettingsPlans = () => {
+  const { toast } = useToast();
+  const { stxAddress } = useAccount();
   const activeSubscription = trpc.subscription.getActive.useQuery();
+  const nftsInWallet = useQuery(['nft-in-wallet', stxAddress], async () => {
+    if (!stxAddress) return;
+    const nftApi = new NonFungibleTokensApi();
+    const nftHoldings = await nftApi.getNftHoldings({
+      principal: stxAddress,
+      assetIdentifiers: [
+        'SP2X0TZ59D5SZ8ACQ6YMCHHNR2ZN51Z32E2CJ173.the-explorer-guild::The-Explorer-Guild',
+      ],
+    });
+    return nftHoldings.total;
+  });
+
+  const shouldShowAlert =
+    activeSubscription.isFetched &&
+    !activeSubscription.data &&
+    nftsInWallet.data &&
+    nftsInWallet.data > 0;
+
+  useEffect(() => {
+    if (shouldShowAlert && nftsInWallet.data) {
+      toast({
+        description: `Use your ${
+          nftsInWallet.data
+        } The Explorer Guild NFTs to enable your ${
+          nftsInWallet.data > 3 ? 'Publisher' : 'Basic'
+        } lifetime plan.`,
+        action: (
+          <ToastAction altText="Upgrade" onClick={() => null}>
+            Upgrade
+          </ToastAction>
+        ),
+        duration: 60000,
+      });
+    }
+  }, [nftsInWallet.data, shouldShowAlert]);
 
   return (
     <DashboardLayout
