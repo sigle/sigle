@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { toast } from 'react-toastify';
+import * as Sentry from '@sentry/nextjs';
 import { Home as Component } from '../components/Home';
 import { getStoriesFile } from '../../../utils';
 import { SubsetStory } from '../../../types';
@@ -22,7 +23,7 @@ export const Home = ({ type }: HomeProps) => {
       const fileStories = file.stories.filter((s) => s.type === filter);
       setStories(fileStories);
     } catch (error) {
-      console.error(error);
+      Sentry.captureException(error);
       toast.error(error.message);
     } finally {
       setLoading(false);

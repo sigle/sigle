@@ -8,7 +8,7 @@ export const Typography = styled('p', {
         lineHeight: '62px',
         letterSpacing: '-0.3px',
 
-        '@xl': {
+        '@lg': {
           fontSize: '72px',
           lineHeight: '84px',
         },
@@ -18,7 +18,7 @@ export const Typography = styled('p', {
         lineHeight: '48px',
         letterSpacing: '-0.3px',
 
-        '@xl': {
+        '@lg': {
           fontSize: '48px',
           lineHeight: '62px',
         },
@@ -28,7 +28,7 @@ export const Typography = styled('p', {
         lineHeight: '40px',
         letterSpacing: '-0.3px',
 
-        '@xl': {
+        '@lg': {
           fontSize: '36px',
           lineHeight: '42px',
         },
@@ -37,7 +37,7 @@ export const Typography = styled('p', {
         fontSize: '24px',
         lineHeight: '28px',
 
-        '@xl': {
+        '@lg': {
           fontSize: '30px',
           lineHeight: '40px',
         },
@@ -46,7 +46,7 @@ export const Typography = styled('p', {
         fontSize: '20px',
         lineHeight: '24px',
 
-        '@xl': {
+        '@lg': {
           fontSize: '22px',
           lineHeight: '28px',
         },
@@ -55,7 +55,7 @@ export const Typography = styled('p', {
         fontSize: '15px',
         lineHeight: 'normal',
 
-        '@xl': {
+        '@lg': {
           fontSize: '18px',
           lineHeight: '24px',
         },
@@ -64,7 +64,7 @@ export const Typography = styled('p', {
         fontSize: '13px',
         lineHeight: '16px',
 
-        '@xl': {
+        '@lg': {
           fontSize: '15px',
           lineHeight: '20px',
         },
@@ -74,14 +74,14 @@ export const Typography = styled('p', {
         lineHeight: '26px',
         letterSpacing: '0.2px',
 
-        '@xl': {
+        '@lg': {
           fontSize: '18px',
           lineHeight: '28.8px',
         },
       },
       subparagraph: {
-        fontSize: '14px',
-        lineHeight: '18px',
+        fontSize: '13px',
+        lineHeight: '16px',
         letterSpacing: '0.2px',
       },
     },

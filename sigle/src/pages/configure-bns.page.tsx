@@ -20,12 +20,12 @@ const ConfigureBNS = () => {
       if (user && user.username) {
         try {
           const namesResponse = await fetch(
-            `https://stacks-node-api.stacks.co/v1/names/${user.username}`
+            `https://api.hiro.so/v1/names/${user.username}`
           );
           const namesJson = (await namesResponse.json()) as {
             zonefile: string;
           };
-          if (namesJson.zonefile !== '') {
+          if (namesJson.zonefile && namesJson.zonefile !== '') {
             router.push('/');
           }
         } catch (e) {}
@@ -78,6 +78,9 @@ const ConfigureBNS = () => {
         >
           Follow the guide <StyledRocketIcon />
         </Button>
+        <Typography size="subparagraph" css={{ mt: '$4' }}>
+          {user?.profile.stxAddress.mainnet}
+        </Typography>
       </LoginLayout>
     </Protected>
   );

@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { TwitterLogoIcon, LinkedInLogoIcon } from '@radix-ui/react-icons';
+import posthog from 'posthog-js';
 import { sigleConfig } from '../../config';
 import { Story } from '../../types';
 import {
@@ -50,6 +51,7 @@ export const PublishedDialog = ({
   );
 
   const handleCopy = () => {
+    posthog.capture('publish-story-dialog-copy', { id: story.id });
     navigator.clipboard.writeText(storyUrl);
     setIsCopied(true);
   };

@@ -54,6 +54,10 @@ export interface Story {
    */
   metaImage?: string;
   /**
+   * Canonical URL that will be used for SEO
+   */
+  canonicalUrl?: string;
+  /**
    * Is the story featured. A featured story will be displayed in another way in the list
    * it will also always appear first in the list, no matter the created date
    */
@@ -65,6 +69,12 @@ export interface Story {
   hideCoverImage?: boolean;
   createdAt: number;
   updatedAt: number;
+
+  /**
+   * (Experimental)
+   */
+  inscriptionId?: string;
+  inscriptionNumber?: number;
 }
 
 export interface SubsetStory {

@@ -1,5 +1,126 @@
 # @sigle/app
 
+## 1.6.0
+
+### Minor Changes
+
+- 20a3bab: Create new newsletter page to manage settings.
+- fb985c8: Add private data and newsletter page in the settings.
+- e47a331: Change subscription NFT logic.
+- b5bfa7f: Add subscribe button and modal to profile page and profile card.
+- 4fdcb82: Add login modal prompt when a logged out user tries to follow someone on the explore, public profile and public story pages.
+- 3b8e2b8: Add option for writer to include CTA button in their stories.
+- 6751b95: User can now send test emails before publishing a story.
+- c9ea43a: Add newsletter card at the bottom of the public story page.
+  Add Form Control Group component.
+- 3a1150b: Add settings page to manate current user email.
+- 1d502b5: Allow users to add a canonical link to their stories via the editor settings.
+- 3a1150b: Prefill user email when subscribing if user has email set.
+
+### Patch Changes
+
+- f422cb4: Fix BNS without profile not being detected.
+- 5c1ca77: Upgrade to pnpm 8.
+- 3d9cab2: Connect to the publish workflow REST routes.
+- 4ffeb6d: Use new Hiro API endpoint.
+- 5fff7a1: Fix incorrect signing state persisting on cancel and when a user goes back to change account.
+- e1d7424: Prepare new publish flow dialog.
+- 5b63bdf: Add temporary themed button for halloween festivities.
+- 789c660: Fix issue when user has both .id.blockstack and .btc
+- 0886170: Show Mailjet dashboard button once newsletter is configured.
+- 44c80ba: Add sender email UI.
+- 82b177b: Fix cover image not showing in story list.
+- c5d3cd8: Fix invalid BNS not properly detected when zonfile value was not set.
+- 8961a96: Connect subscribe form to backend.
+- 340daae: Upgrade to next 13.2.
+- 73b9249: Update newsletter plan information.
+- 061d90f: Add and serve email assets.
+- 81ce771: Upgrade TipTap to v2 stable version.
+- 6c9de54: Enable email capture for Sigle blog.
+- b4169bc: Redirect sigleapp.id.blockstack to sigle.btc.
+- 05b58e7: Add a message on the plans page for legacy users.
+- 7f3cf17: Update normal buttons and icon buttons with new variants and styles.
+  Resize button instances across the app.
+- 5b23ad2: Logic to only send a newsletter once.
+- 71fb013: Fix keyboard shorcuts closing the subscribe modal instead of submitting the form.
+- 97f0cca: Editor: convert common text patterns with the correct typographic character.
+
+## 1.5.0
+
+### Minor Changes
+
+- 72227af: Add twitter extension to the editor.
+- 252f151: Add bubble menu to mobile toolbar.
+- 5b4d49a: Updates floating menu items font size.
+  Adds label for basic commands section.
+  Adds plain text item to menu.
+  Reorders menu items.
+- 91f7cea: Improve the experience of drag and drop for story cover image.
+- 98f14ed: Update editor placeholder text on mobile.
+- 58607f4: Add drag and drop to the editor. You can now upload one to many images directly.
+- 09ed2ce: Update user card styles to be more responsive on mobile views.
+
+### Patch Changes
+
+- 010410e: Fix SSR issue when rendering the editor.
+- a6c5f0c: Fix sharing post on Twitter with special chars.
+- bd280d7: Add horizontal scroll on compare plans table for mobile views.
+- f57ba15: Fix Plain Text node not activating on mobile.
+- 2093d2f: Fix cover images exceeding width of the page on mobile.
+  Make editor header full width of the container.
+- 195be81: Fix issue with mobile header logo not navigating back to drafts when on a different route.
+- 57da686: Fix follow counter not updating after follow or unfollow action.
+- 7663f70: Fix missing box shadow for floating menu on light mode.
+- 454bede: Add missing accordion menu to tablet views.
+- ca66a8b: Fix issue with interactive styles still showing on images in public stories.
+- e0ba667: Update plus icon styling.
+- 7e03000: Fix ssr issue where articles where not rendered properly.
+- 6aa23a5: Make profile page responsive on mobile.
+- e8591d5: Add card for pen run contest.
+- a9c081a: Add boring avatar as a fallback option when sharing a profile page without a PFP set by the user.
+  Encode image URL to display images with special characters correctly.
+- c103bf0: Fix editor toolbar scroll issue on mobile.
+- 92c8820: Update tooltip styles.
+  Update subparagraph line height value.
+- 24e60ba: Add prompt to explore and find writers if a user has no content on their feed.
+  Update style of page heading.
+- d0b0aeb: Update word count font size.
+  Update title placeholder color.
+
+## 1.4.0
+
+### Minor Changes
+
+- 696ef4f: Display The Explorer Guild creator + badge on the profile page of a user.
+- a43d4ed: Redesign the header dropdown menu.
+  Add profile page to the dashboard.
+- c004528: Add social following system, you can follow other users and see their posts in your feed.
+- f17096d: Add explore page to discover writers using the platform.
+- ad2f94f: Add edit button to profile page.
+- 1c8f8dc: Improve the login flow by including steps with progress indicators.
+- 9fdc428: Make editor header responsive for mobile view.
+- 9312e2f: Improve the editor placeholder behavior to give more context.
+- 8e5e096: Improve editor slash command, scroll with keyboard navigation, press escape to close.
+- 361ae92: Add mobile header with drag-to-close functionality.
+- 5a41079: Show card displaying user information when hovering their name or avatar on the article page.
+- 4320ab3: Add RSS auto-discovery for all the blogs. So browser and RSS readers can automatically find the RSS feed of the blog.
+- 4217167: Add following and follower tabs to the profile page.
+
+### Patch Changes
+
+- 0db7bcd: Fix issue with the profile tab not navigating to profile page.
+- fceff6f: Upgrade next-themes to 0.2.0.
+- e2a7843: Upgrade radix packages to v1.
+- 1df1356: Fix vercel preview env.
+- 0d1ae50: Fix profile image not centered on profile page.
+- 074786f: Add infinite loading to explore page.
+- 94326a6: Enable react strict mode.
+- b6c609b: Upgrade react to v18.
+- 41c1a3f: Generate openapi typescript client for type safe calls to the Sigle api.
+- dfae2fc: Update react-query to v4.
+- 1cf7a95: Upgrade tiptap packages.
+- c7a1ccc: Update typography styles for mobile and tablet views.
+
 ## 1.3.0
 
 ### Minor Changes

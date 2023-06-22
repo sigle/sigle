@@ -4,6 +4,7 @@ import {
   CameraIcon,
   Cross1Icon,
   FileTextIcon,
+  QuestionMarkCircledIcon,
   TrashIcon,
 } from '@radix-ui/react-icons';
 import { useFormik, FormikErrors } from 'formik';
@@ -33,6 +34,7 @@ import { storage } from '../../../utils/blockstack';
 import {
   deleteStoryFile,
   getStoriesFile,
+  isValidHttpUrl,
   saveStoriesFile,
 } from '../../../utils';
 import {
@@ -43,6 +45,8 @@ import {
   FormRow,
   FormTextarea,
 } from '../../../ui/Form';
+import { StoriesService } from '../../../external/api';
+import { useAuth } from '../../auth/AuthContext';
 
 // TODO - migrate hideCoverImage from old articles
 // TODO - use twitter card preview component in settings?
@@ -163,6 +167,7 @@ interface StorySettingsFormValues {
   metaDescription: string;
   metaImage: string;
   createdAt: string | number;
+  canonicalUrl: string;
 }
 
 interface EditorSettingsProps {
@@ -181,6 +186,7 @@ export const EditorSettings = ({
   onSave,
 }: EditorSettingsProps) => {
   const router = useRouter();
+  const { isLegacy } = useAuth();
   const [loadingUploadMetaImage, setLoadingUploadMetaImage] = useState(false);
   const [loadingDelete, setLoadingDelete] = useState(false);
 
@@ -190,6 +196,7 @@ export const EditorSettings = ({
       metaDescription: story.metaDescription || '',
       metaImage: story.metaImage || '',
       createdAt: format(story.createdAt, 'yyyy-MM-dd'),
+      canonicalUrl: story.canonicalUrl || '',
     },
     validate: (values) => {
       const errors: FormikErrors<StorySettingsFormValues> = {};
@@ -198,6 +205,10 @@ export const EditorSettings = ({
       }
       if (values.metaDescription && values.metaDescription.length > 250) {
         errors.metaDescription = 'Meta description too long';
+      }
+      if (values.canonicalUrl && !isValidHttpUrl(values.canonicalUrl)) {
+        errors.canonicalUrl =
+          'Invalid canonical URL entered (eg: https://example.com)';
       }
       if (!values.createdAt || !isValid(new Date(values.createdAt))) {
         errors.createdAt = 'Invalid date';
@@ -211,6 +222,7 @@ export const EditorSettings = ({
         metaDescription: values.metaDescription
           ? values.metaDescription
           : undefined,
+        canonicalUrl: values.canonicalUrl ? values.canonicalUrl : undefined,
         metaImage: values.metaImage ? values.metaImage : undefined,
         createdAt: new Date(values.createdAt).getTime(),
       };
@@ -284,6 +296,11 @@ export const EditorSettings = ({
       file.stories.splice(index, 1);
       await saveStoriesFile(file);
       await deleteStoryFile(story);
+      if (!isLegacy) {
+        await StoriesService.storiesControllerDelete({
+          requestBody: { id: story.id },
+        });
+      }
       router.push(`/`);
     } catch (error) {
       console.error(error);
@@ -291,6 +308,9 @@ export const EditorSettings = ({
       setLoadingDelete(false);
     }
   };
+
+  const canonicalUrlInfo =
+    'https://developers.google.com/search/docs/crawling-indexing/consolidate-duplicate-urls';
 
   return (
     <Dialog open={open} onOpenChange={onClose}>
@@ -362,6 +382,7 @@ export const EditorSettings = ({
                     <ImageEmptyIconContainer>
                       {formik.values.metaImage && (
                         <IconButton
+                          size="sm"
                           css={{ backgroundColor: '$gray3', opacity: '70%' }}
                           title="Remove meta image"
                           onClick={handleRemoveCover}
@@ -409,6 +430,35 @@ export const EditorSettings = ({
                   {formik.errors.metaDescription && (
                     <FormHelperError>
                       {formik.errors.metaDescription}
+                    </FormHelperError>
+                  )}
+                </FormRow>
+
+                <FormRow>
+                  <FormLabel>Canonical URL</FormLabel>
+                  <StyledFormInput
+                    placeholder="https://"
+                    name="canonicalUrl"
+                    type="text"
+                    value={formik.values.canonicalUrl}
+                    onChange={formik.handleChange}
+                    maxLength={200}
+                  />
+                  <Flex gap="1" align="center">
+                    <FormHelper>Add a canonical URL</FormHelper>
+                    <Box
+                      css={{ '& svg': { color: '$gray9' } }}
+                      as="a"
+                      href={canonicalUrlInfo}
+                      target="_blank"
+                      rel="noreferrer"
+                    >
+                      <QuestionMarkCircledIcon />
+                    </Box>
+                  </Flex>
+                  {formik.errors.canonicalUrl && (
+                    <FormHelperError>
+                      {formik.errors.canonicalUrl}
                     </FormHelperError>
                   )}
                 </FormRow>
@@ -532,7 +582,7 @@ export const EditorSettings = ({
         />
 
         <StyledCloseButton asChild>
-          <IconButton>
+          <IconButton size="sm">
             <Cross1Icon width={15} height={15} />
           </IconButton>
         </StyledCloseButton>

@@ -68,10 +68,15 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
 
   useEffect(() => {
     if (state.user) {
-      posthog.identify(state.user.profile.stxAddress, {
-        username: state.user.username,
-        isLegacy: state.isLegacy,
-      });
+      posthog.identify(
+        state.user.profile.stxAddress.mainnet
+          ? state.user.profile.stxAddress.mainnet
+          : state.user.profile.stxAddress,
+        {
+          username: state.user.username,
+          isLegacy: state.isLegacy,
+        }
+      );
     }
   }, [state.user, state.isLegacy]);
 
@@ -89,11 +94,16 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
     if (userData.username === undefined && address) {
       try {
         const namesResponse = await fetch(
-          `https://stacks-node-api.stacks.co/v1/addresses/stacks/${address}`
+          `https://api.hiro.so/v1/addresses/stacks/${address}`
         );
         const namesJson = await namesResponse.json();
         if ((namesJson.names.length || 0) > 0) {
-          userData.username = namesJson.names[0];
+          // If user has a subdomain and .btc we will use the .btc
+          if (namesJson.names.length === 2) {
+            userData.username = namesJson.names[1];
+          } else {
+            userData.username = namesJson.names[0];
+          }
         }
       } catch (e) {}
     }

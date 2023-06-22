@@ -33,6 +33,18 @@ export const SettingsLayout = ({
       path: '/settings',
     },
     {
+      name: 'Email',
+      path: '/settings/email',
+    },
+    {
+      name: 'Newsletter',
+      path: '/settings/newsletter',
+    },
+    {
+      name: 'Custom domain',
+      path: '/settings/custom-domain',
+    },
+    {
       name: 'Plans',
       path: '/settings/plans',
     },
@@ -44,7 +56,7 @@ export const SettingsLayout = ({
       <DashboardContainer {...props}>
         <DashboardSidebar>
           {navItems.map((item) => (
-            <Link key={item.path} href={item.path} passHref>
+            <Link key={item.path} href={item.path} passHref legacyBehavior>
               <DashboardSidebarNavItem selected={router.pathname === item.path}>
                 {item.name}
               </DashboardSidebarNavItem>
@@ -54,30 +66,38 @@ export const SettingsLayout = ({
         <Box
           css={{
             mb: '$5',
+            overflowY: 'hidden',
           }}
         >
-          <Accordion
-            css={{ '@xl': { display: 'none' } }}
-            collapsible
-            type="single"
-          >
-            <AccordionItem value="item1">
-              <AccordionTrigger>
-                {navItems.find((item) => item.path === router.pathname)?.name}
-              </AccordionTrigger>
-              <AccordionContent>
-                {navItems
-                  .filter((item) => item.path !== router.pathname)
-                  .map((item) => (
-                    <Link key={item.path} href={item.path} passHref>
-                      <DashboardSidebarNavItem variant="accordion">
-                        {item.name}
-                      </DashboardSidebarNavItem>
-                    </Link>
-                  ))}
-              </AccordionContent>
-            </AccordionItem>
-          </Accordion>
+          {router.pathname !== '/settings/plans/compare' && (
+            <Accordion
+              css={{ '@xl': { display: 'none' } }}
+              collapsible
+              type="single"
+            >
+              <AccordionItem value="item1">
+                <AccordionTrigger>
+                  {navItems.find((item) => item.path === router.pathname)?.name}
+                </AccordionTrigger>
+                <AccordionContent>
+                  {navItems
+                    .filter((item) => item.path !== router.pathname)
+                    .map((item) => (
+                      <Link
+                        key={item.path}
+                        href={item.path}
+                        passHref
+                        legacyBehavior
+                      >
+                        <DashboardSidebarNavItem variant="accordion">
+                          {item.name}
+                        </DashboardSidebarNavItem>
+                      </Link>
+                    ))}
+                </AccordionContent>
+              </AccordionItem>
+            </Accordion>
+          )}
           {children}
         </Box>
       </DashboardContainer>

@@ -3,33 +3,33 @@ import {
   UseMutationOptions,
   useQuery,
   UseQueryOptions,
-} from 'react-query';
+} from '@tanstack/react-query';
 import { SubscriptionService } from '../external/api';
 
 type GetApiSubscriptionsReturnType = Awaited<
-  ReturnType<typeof SubscriptionService.getApiSubscriptions>
+  ReturnType<typeof SubscriptionService.subscriptionControllerGetUserMe>
 >;
 export const useGetUserSubscription = (
   options: UseQueryOptions<GetApiSubscriptionsReturnType, Error> = {}
 ) =>
   useQuery<GetApiSubscriptionsReturnType, Error>(
-    'get-user-subscription',
-    () => SubscriptionService.getApiSubscriptions(),
+    ['get-user-subscription'],
+    () => SubscriptionService.subscriptionControllerGetUserMe(),
     options
   );
 
 type PostApiSubscriptionsCreatorPlusReturnType = Awaited<
-  ReturnType<typeof SubscriptionService.postApiSubscriptionsCreatorPlus>
+  ReturnType<
+    typeof SubscriptionService.subscriptionControllerSyncSubscriptionWithNft
+  >
 >;
-export const useCreateSubscription = (
+export const useSyncWithNftSubscription = (
   options: UseMutationOptions<
     PostApiSubscriptionsCreatorPlusReturnType,
-    Error,
-    number
+    Error
   > = {}
 ) =>
-  useMutation<PostApiSubscriptionsCreatorPlusReturnType, Error, number>(
-    (nftId) =>
-      SubscriptionService.postApiSubscriptionsCreatorPlus({ body: { nftId } }),
+  useMutation<PostApiSubscriptionsCreatorPlusReturnType, Error>(
+    () => SubscriptionService.subscriptionControllerSyncSubscriptionWithNft(),
     options
   );

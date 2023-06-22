@@ -33,7 +33,7 @@ describe('test feed api', () => {
         'x-forwarded-proto': 'https',
         'x-forwarded-host': 'app.sigle.io',
       },
-      query: { username: 'sigleapp.id.blockstack' },
+      query: { username: 'sigle.btc' },
     };
     const res = {
       end: jest.fn(),
@@ -44,13 +44,13 @@ describe('test feed api', () => {
     const parser = new XMLParser();
     const jsonObj = parser.parse(res.end.mock.calls[0][0]);
     expect(jsonObj.rss.channel).toEqual({
-      copyright: 'All rights reserved 2022, sigleapp.id.blockstack',
+      copyright: 'All rights reserved 2023, sigle.btc',
       description: expect.stringContaining('Sigle'),
       docs: expect.any(String),
       generator: expect.any(String),
       item: expect.any(Array),
       lastBuildDate: expect.any(String),
-      link: 'https://app.sigle.io/sigleapp.id.blockstack',
+      link: 'https://app.sigle.io/sigle.btc',
       title: 'Sigle',
     });
     // Last items should never change

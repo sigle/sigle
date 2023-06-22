@@ -1,4 +1,4 @@
-import { useQuery } from 'react-query';
+import { useQuery } from '@tanstack/react-query';
 import { toast } from 'react-toastify';
 import { useGetUserSubscription } from '../../../hooks/subscriptions';
 import { getStoriesFile } from '../../../utils';
@@ -9,7 +9,7 @@ import { NftLockedView } from '../NftLockedView';
 export const Analytics = () => {
   const { isLoading, data: userSubscription } = useGetUserSubscription();
   const { isLoading: isStoriesLoading, data: stories } = useQuery(
-    'get-user-stories',
+    ['get-user-stories'],
     async () => {
       const file = await getStoriesFile();
       const fileStories = file.stories.filter((s) => s.type === 'public');
@@ -28,7 +28,11 @@ export const Analytics = () => {
   }
 
   if (!isLoading && !userSubscription) {
-    return <NftLockedView />;
+    return (
+      <DashboardLayout>
+        <NftLockedView />
+      </DashboardLayout>
+    );
   }
 
   return <Component loading={isStoriesLoading} stories={stories} />;

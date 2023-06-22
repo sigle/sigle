@@ -16,3 +16,5 @@ export * from './Tabs';
 export * from './Typography';
 export * from './Form';
 export * from './HoverCard';
+export * from './Switch';
+export * from './VisuallyHidden';

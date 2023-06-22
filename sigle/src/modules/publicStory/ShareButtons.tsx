@@ -63,7 +63,11 @@ export const ShareButtons = ({
           <TooltipTrigger asChild>
             <Box
               as="a"
-              href={`https://twitter.com/intent/tweet?text=${title} by ${handle}&url=${sigleConfig.appUrl}/${username}/${story.id}`}
+              href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(
+                title
+              )} by ${handle}&url=${sigleConfig.appUrl}/${username}/${
+                story.id
+              }`}
               target="_blank"
               rel="noopener"
             >
@@ -114,6 +118,8 @@ export const ShareButtons = ({
           <IconButton
             disabled={isCopied}
             css={{
+              width: 15,
+              height: 15,
               p: 0,
               '&:hover': { backgroundColor: 'transparent' },
               '&:active': { backgroundColor: 'transparent' },

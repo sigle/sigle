@@ -1,5 +1,5 @@
 import React from 'react';
-import Image from 'next/image';
+import Image from 'next/legacy/image';
 import { styled } from '../../../stitches.config';
 import { Box, Container } from '../../../ui';
 import { sigleConfig } from '../../../config';
@@ -83,6 +83,7 @@ export const LoginLayout = ({
               href={sigleConfig.landingUrl}
               target="_blank"
               rel="noreferrer"
+              css={{ pt: '$5', '@md': { pt: 0 } }}
             >
               <Image src={src} alt="Logo" width={123} height={45} />
             </Box>

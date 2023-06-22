@@ -18,6 +18,7 @@ export const Pagination = ({
   return (
     <Flex role="navigation" gap="2" justify="end">
       <IconButton
+        size="sm"
         css={{
           '&:disabled': {
             opacity: '50%',
@@ -32,6 +33,7 @@ export const Pagination = ({
         <ChevronLeftIcon />
       </IconButton>
       <IconButton
+        size="sm"
         css={{
           '&:disabled': {
             opacity: '50%',

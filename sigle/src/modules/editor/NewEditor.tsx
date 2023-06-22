@@ -18,6 +18,8 @@ import { UnpublishDialog } from './UnpublishDialog';
 import { PublishedDialog } from './PublishedDialog';
 import { CoverImage } from './CoverImage';
 import { EditorSettings } from './EditorSettings/EditorSettings';
+import { useAuth } from '../auth/AuthContext';
+import { ApiError, StoriesService } from '../../external/api';
 
 const TitleInput = styled('input', {
   outline: 'transparent',
@@ -27,6 +29,9 @@ const TitleInput = styled('input', {
   fontSize: '36px',
   lineHeight: '46px',
   letterSpacing: '-0.3px',
+  '&::placeholder': {
+    color: '$gray9',
+  },
 });
 
 const EditorContainer = styled('div', {
@@ -41,6 +46,7 @@ interface NewEditorProps {
 
 export const NewEditor = ({ story }: NewEditorProps) => {
   const router = useRouter();
+  const { isLegacy } = useAuth();
   const editorRef = useRef<{ getEditor: () => Editor | null }>(null);
   const [loadingSave, setLoadingSave] = useState(false);
   const [newStory, setNewStory] = useState(story);
@@ -110,7 +116,7 @@ export const NewEditor = ({ story }: NewEditorProps) => {
     });
   };
 
-  const handleConfirmPublish = async () => {
+  const handleConfirmPublish = async (options?: { send?: boolean }) => {
     setPublishDialogState({
       open: true,
       loading: true,
@@ -123,9 +129,18 @@ export const NewEditor = ({ story }: NewEditorProps) => {
       setShowPublishedDialog(true);
       Fathom.trackGoal(Goals.PUBLISH, 0);
       posthog.capture('publish-story', { id: story.id });
+      if (!isLegacy) {
+        await StoriesService.storiesControllerPublish({
+          requestBody: { id: story.id, send: options?.send ?? false },
+        });
+      }
     } catch (error) {
+      let errorMessage = error.message;
+      if (error instanceof ApiError && error.body.message) {
+        errorMessage = error.body.message;
+      }
       console.error(error);
-      toast.error(error.message);
+      toast.error(errorMessage);
     }
     NProgress.done();
     setPublishDialogState({
@@ -163,6 +178,11 @@ export const NewEditor = ({ story }: NewEditorProps) => {
       setNewStory({ ...newStory, type: 'private' });
       toast.success('Story unpublished');
       posthog.capture('unpublish-story', { id: story.id });
+      if (!isLegacy) {
+        await StoriesService.storiesControllerUnpublish({
+          requestBody: { id: story.id },
+        });
+      }
     } catch (error) {
       console.error(error);
       toast.error(error.message);

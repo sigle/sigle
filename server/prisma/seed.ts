@@ -1,7 +1,7 @@
 /**
  * This file is used to seed the database in a dev environment.
  */
-import { PrismaClient } from '@prisma/client';
+import { PrismaClient } from '.prisma/client';
 
 const main = async () => {
   const prisma = new PrismaClient();
@@ -181,6 +181,26 @@ const main = async () => {
       },
       {
         stacksAddress: 'SP3R7Q3QMTYC4QR0RFDR9HZBWNBNBNDA7S549CR6Y',
+      },
+    ],
+  });
+
+  await prisma.follows.createMany({
+    data: [
+      {
+        followerAddress: 'SP3VCX5NFQ8VCHFS9M6N40ZJNVTRT4HZ62WFH5C4Q',
+        followingAddress: 'SP24GYRG3M7T0S6FZE9RVVP9PNNZQJQ614650G590',
+        createdAt: new Date(),
+      },
+      {
+        followerAddress: 'SP24GYRG3M7T0S6FZE9RVVP9PNNZQJQ614650G590',
+        followingAddress: 'SP3VCX5NFQ8VCHFS9M6N40ZJNVTRT4HZ62WFH5C4Q',
+        createdAt: new Date(),
+      },
+      {
+        followerAddress: 'SP1Y6ZAD2ZZFKNWN58V8EA42R3VRWFJSGWFAD9C36',
+        followingAddress: 'SP3VCX5NFQ8VCHFS9M6N40ZJNVTRT4HZ62WFH5C4Q',
+        createdAt: new Date(),
       },
     ],
   });

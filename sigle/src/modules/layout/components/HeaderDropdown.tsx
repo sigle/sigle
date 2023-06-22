@@ -21,7 +21,7 @@ import {
 import { useRouter } from 'next/router';
 import { useState } from 'react';
 import { toast } from 'react-toastify';
-import { useQueryClient } from 'react-query';
+import { useQueryClient } from '@tanstack/react-query';
 import { useGetUserSettings } from '../../../hooks/appData';
 import * as Fathom from 'fathom-client';
 import { Goals } from '../../../utils/fathom';
@@ -160,7 +160,7 @@ export const HeaderDropdown = () => {
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent sideOffset={8}>
-        <Link href={`/${user?.username}`} passHref>
+        <Link href={`/${user?.username}`} passHref legacyBehavior>
           <DropdownMenuItem
             css={{ py: '$1', px: '$2' }}
             selected={router.pathname === user?.username}
@@ -211,7 +211,7 @@ export const HeaderDropdown = () => {
           {!loadingCreate ? `Write a story` : `Creating new story...`}
         </DropdownMenuItem>
         {upperNavItems.map((item) => (
-          <Link key={item.path} href={item.path} passHref>
+          <Link key={item.path} href={item.path} passHref legacyBehavior>
             <DropdownMenuItem
               css={{ color: '$gray11' }}
               selected={router.pathname === item.path}
@@ -224,7 +224,7 @@ export const HeaderDropdown = () => {
         ))}
         <DropdownMenuSeparator />
         {lowerNavItems.map((item) => (
-          <Link key={item.path} href={item.path} passHref>
+          <Link key={item.path} href={item.path} passHref legacyBehavior>
             <DropdownMenuItem selected={router.pathname === item.path} as="a">
               {item.name}
             </DropdownMenuItem>

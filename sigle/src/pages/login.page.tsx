@@ -103,6 +103,7 @@ const Login = () => {
     setSigningState('active');
 
     Fathom.trackGoal(Goals.LOGIN_SIGN_MESSAGE, 0);
+    posthog.capture('start-login-sign-message');
 
     const callbackUrl = '/protected';
     const stacksMessage = new SignInWithStacksMessage({
@@ -131,12 +132,14 @@ const Login = () => {
           }
         );
         if (signInResult && signInResult.error) {
+          posthog.capture('start-login-sign-message-error');
           toast.error('Failed to login');
           setSigningState('inactive');
         }
+        setSigningState('complete');
       },
+      onCancel: () => setSigningState('active'),
     });
-    setSigningState('complete');
   };
 
   const handleLoginLegacy = () => {
@@ -148,7 +151,7 @@ const Login = () => {
 
   return (
     <LoginLayout>
-      <Flex gap="1" css={{ my: '$15' }} align="center">
+      <Flex gap="1" css={{ my: '$10', '@md': { my: '$15' } }} align="center">
         <Box>
           <StepsText variant={user ? 'complete' : 'active'} size="subheading">
             <StepsText
@@ -219,12 +222,23 @@ const Login = () => {
             <Box
               as="a"
               css={{ color: '$orange11', boxShadow: '0 1px 0 0' }}
-              href="https://www.hiro.so/wallet/install-web"
+              href="https://www.hiro.so/wallet/install-web?utm_source=sigle"
               target="_blank"
               rel="noreferrer"
             >
-              Hiro wallet.
+              Hiro wallet
+            </Box>{' '}
+            or{' '}
+            <Box
+              as="a"
+              css={{ color: '$orange11', boxShadow: '0 1px 0 0' }}
+              href="https://www.xverse.app/?utm_source=sigle"
+              target="_blank"
+              rel="noreferrer"
+            >
+              Xverse wallet
             </Box>
+            .
           </Typography>
         </>
       )}
@@ -253,7 +267,10 @@ const Login = () => {
             color="gray"
             size="lg"
             css={{ gap: '$2' }}
-            onClick={logout}
+            onClick={() => {
+              setSigningState('inactive');
+              logout();
+            }}
           >
             <ArrowLeftIcon width={15} height={15} />
             Change account

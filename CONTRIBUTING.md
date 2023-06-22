@@ -1,5 +1,7 @@
 # Contributing to Sigle
 
+We're open to all community contributions! This includes bug reports, feature requests, ideas, pull requests.
+
 ## Requirements
 
 - [Node](https://nodejs.org/en/) 16+
@@ -42,7 +44,7 @@ pnpm install
 Copy the `env.example` file in the application directory to `.env` (which will be ignored by Git) and setup each variable.
 
 ```sh
-cd sigle
+cd server
 cp .env.example .env
 ```
 
@@ -51,7 +53,7 @@ cp .env.example .env
 We use docker to manage the local postgres database.
 
 ```sh
-docker-compose start
+docker compose start
 ```
 
 ### Setup the database
@@ -79,7 +81,7 @@ You can now open your browser and go to http://localhost:3001 to see the api.
 Copy the `env.local.example` file in the application directory to `.env.local` (which will be ignored by Git) and setup each variable.
 
 ```sh
-cd server
+cd sigle
 cp .env.local.example .env.local
 ```
 

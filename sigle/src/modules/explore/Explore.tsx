@@ -1,4 +1,4 @@
-import { useInfiniteQuery } from 'react-query';
+import { useInfiniteQuery } from '@tanstack/react-query';
 import { useInView } from 'react-cool-inview';
 import { UserService } from '../../external/api';
 import { useGetGaiaUserFollowing } from '../../hooks/appData';
@@ -9,10 +9,9 @@ import { useAuth } from '../auth/AuthContext';
 
 export const ExploreUsers = () => {
   const { user, isLegacy } = useAuth();
-  const { isLoading: isLoadingUserFollowing, data: userFollowing } =
-    useGetGaiaUserFollowing({
-      enabled: !!user && !isLegacy,
-    });
+  const { data: userFollowing, fetchStatus } = useGetGaiaUserFollowing({
+    enabled: !!user && !isLegacy,
+  });
 
   const {
     isLoading: isLoadingExplore,
@@ -21,9 +20,9 @@ export const ExploreUsers = () => {
     hasNextPage,
     isFetchingNextPage,
   } = useInfiniteQuery(
-    'get-user-explore',
+    ['get-user-explore'],
     ({ pageParam }) => {
-      return UserService.getApiUsersExplore({
+      return UserService.userControllerExplore({
         page: pageParam ? pageParam : 1,
       });
     },
@@ -46,7 +45,14 @@ export const ExploreUsers = () => {
 
   return (
     <DashboardLayout>
-      <Typography size="h2" css={{ fontWeight: 600, mb: '$7' }}>
+      <Typography
+        size="h4"
+        css={{
+          fontWeight: 600,
+          pb: '$5',
+          borderBottom: '1px solid $colors$gray6',
+        }}
+      >
         Explore
       </Typography>
 
@@ -61,7 +67,7 @@ export const ExploreUsers = () => {
       the view, the client will get the next page from the API */}
       {userFollowing && userExplore && hasNextPage && <div ref={observe} />}
 
-      {isLoadingUserFollowing || isLoadingExplore || isFetchingNextPage ? (
+      {fetchStatus === 'fetching' || isLoadingExplore || isFetchingNextPage ? (
         <Box css={{ mt: '$10' }}>
           <LoadingSpinner />
         </Box>

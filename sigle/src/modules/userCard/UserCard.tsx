@@ -1,7 +1,7 @@
 import { lookupProfile } from '@stacks/auth';
 import { NamesApi } from '@stacks/blockchain-api-client';
 import Link from 'next/link';
-import { useQuery } from 'react-query';
+import { useQuery } from '@tanstack/react-query';
 import { sigleConfig } from '../../config';
 import {
   useGetGaiaUserFollowing,
@@ -13,12 +13,19 @@ import { Button, Flex, Typography } from '../../ui';
 import { generateAvatar } from '../../utils/boringAvatar';
 import { fetchSettings } from '../../utils/gaia/fetch';
 import { useAuth } from '../auth/AuthContext';
+import { LoginModal } from '../loginModal/LoginModal';
+import { useState } from 'react';
 
 const UserCardContainer = styled('div', {
   display: 'flex',
+  alignItems: 'center',
   borderBottom: '1px solid $colors$gray6',
   py: '$5',
   gap: '$5',
+
+  '@md': {
+    alignItems: 'start',
+  },
 });
 
 const ProfileImageContainer = styled('a', {
@@ -27,27 +34,59 @@ const ProfileImageContainer = styled('a', {
   justifyContent: 'center',
   br: '$1',
   overflow: 'hidden',
-  width: 38,
-  height: 38,
+  width: 50,
+  height: 50,
   flex: 'none',
+
+  '@md': {
+    width: 38,
+    height: 38,
+  },
 });
 
 const ProfileImage = styled('img', {
+  maxWidth: 50,
+  maxHeight: 50,
+
   width: 'auto',
   height: '100%',
-  maxWidth: 38,
-  maxHeight: 38,
   objectFit: 'cover',
+
+  '@md': {
+    maxWidth: 38,
+    maxHeight: 38,
+  },
+});
+
+const UserCardTitle = styled(Typography, {
+  maxWidth: 160,
+  display: 'block',
+  overflow: 'hidden',
+  textOverflow: 'ellipsis',
+  whiteSpace: 'nowrap',
+
+  '@md': {
+    maxWidth: 600,
+  },
 });
 
 const UserCardDescription = styled(Typography, {
+  maxWidth: 200,
   mt: '$1',
+  pr: '$2',
+  display: 'block',
   overflow: 'hidden',
-  display: '-webkit-box',
-  '-webkit-line-clamp': 2,
-  '-webkit-box-orient': 'vertical',
-  typographyOverflow: 'ellipsis',
-  maxWidth: 600,
+  textOverflow: 'ellipsis',
+  whiteSpace: 'nowrap',
+
+  '@md': {
+    maxWidth: 600,
+    whiteSpace: 'normal',
+    display: '-webkit-box',
+    '-webkit-line-clamp': 2,
+    '-webkit-box-orient': 'vertical',
+    typographyOverflow: 'ellipsis',
+  },
 });
 
 interface UserCardProps {
@@ -56,6 +95,7 @@ interface UserCardProps {
 
 export const UserCard = ({ address }: UserCardProps) => {
   const { user, isLegacy } = useAuth();
+  const [showLoginPromptDialog, setShowLoginPromptDialog] = useState(false);
   const { mutate: followUser } = useUserFollow();
   const { mutate: unfollowUser } = useUserUnfollow();
   const { isLoading: isLoadingUsername, data: username } = useQuery(
@@ -125,9 +165,13 @@ export const UserCard = ({ address }: UserCardProps) => {
   const userPath = `/${username}`;
   const following = !!userFollowing?.following[address];
 
+  const handleShowLoginPrompt = () => setShowLoginPromptDialog(true);
+
+  const handleCancelLoginPrompt = () => setShowLoginPromptDialog(false);
+
   return (
     <UserCardContainer>
-      <Link href="/[username]" as={userPath} passHref>
+      <Link href="/[username]" as={userPath} passHref legacyBehavior>
         <ProfileImageContainer>
           <ProfileImage
             src={
@@ -140,24 +184,24 @@ export const UserCard = ({ address }: UserCardProps) => {
       </Link>
       <Flex css={{ width: '100%' }} direction="column">
         <Flex justify="between" align="center">
-          <Link href="/[username]" as={userPath} passHref>
-            <Typography
-              as="a"
-              size="subheading"
-              css={{
-                fontWeight: 600,
-              }}
-            >
+          <Link href="/[username]" as={userPath} passHref legacyBehavior>
+            <UserCardTitle as="a" size="subheading">
               {isLoadingUsername ? '...' : username}
-            </Typography>
+            </UserCardTitle>
           </Link>
-          {user && user?.username !== username && !isLegacy && !following && (
-            <Button color="orange" css={{ ml: '$5' }} onClick={handleFollow}>
+          {user?.username !== username && !isLegacy && !following && (
+            <Button
+              size="sm"
+              color="orange"
+              css={{ ml: '$5' }}
+              onClick={user ? handleFollow : handleShowLoginPrompt}
+            >
               Follow
             </Button>
           )}
-          {user && user?.username !== username && !isLegacy && following && (
+          {user?.username !== username && !isLegacy && following && (
             <Button
+              size="sm"
               variant="subtle"
               css={{ ml: '$5' }}
               onClick={handleUnfollow}
@@ -170,6 +214,11 @@ export const UserCard = ({ address }: UserCardProps) => {
           {userSettings && userSettings.file.siteDescription}
         </UserCardDescription>
       </Flex>
+
+      <LoginModal
+        open={showLoginPromptDialog}
+        onClose={handleCancelLoginPrompt}
+      />
     </UserCardContainer>
   );
 };

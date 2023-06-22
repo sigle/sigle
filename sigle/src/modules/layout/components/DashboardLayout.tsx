@@ -2,13 +2,13 @@ import React, { useState } from 'react';
 import Link from 'next/link';
 import { AppHeader } from './AppHeader';
 import {
-  Box,
-  Button,
-  Container,
   Accordion,
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
+  Box,
+  Button,
+  Container,
 } from '../../../ui';
 import { styled } from '../../../stitches.config';
 import { AppFooter } from './AppFooter';
@@ -180,6 +180,7 @@ export const DashboardLayout = ({
                 item.path === '/[username]' ? `/${user?.username}` : undefined
               }
               passHref
+              legacyBehavior
             >
               <DashboardSidebarNavItem selected={router.pathname === item.path}>
                 {item.name}
@@ -187,7 +188,10 @@ export const DashboardLayout = ({
             </Link>
           ))}
           <Button
-            css={{ mt: '$5', alignSelf: 'start' }}
+            css={{
+              mt: '$5',
+              alignSelf: 'start',
+            }}
             disabled={loadingCreate}
             onClick={handleCreateNewPrivateStory}
             size="lg"
@@ -201,7 +205,11 @@ export const DashboardLayout = ({
           }}
         >
           <Accordion
-            css={{ '@xl': { display: 'none' } }}
+            css={{
+              display: 'none',
+              '@md': { display: 'block' },
+              '@xl': { display: 'none' },
+            }}
             collapsible
             type="single"
           >
@@ -213,7 +221,12 @@ export const DashboardLayout = ({
                 {navItems
                   .filter((item) => item.path !== router.pathname)
                   .map((item) => (
-                    <Link key={item.path} href={item.path} passHref>
+                    <Link
+                      key={item.path}
+                      href={item.path}
+                      passHref
+                      legacyBehavior
+                    >
                       <DashboardSidebarNavItem variant="accordion">
                         {item.name}
                       </DashboardSidebarNavItem>

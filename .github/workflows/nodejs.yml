@@ -14,14 +14,14 @@ jobs:
         node-version: [16]
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
       - uses: pnpm/action-setup@v2
         with:
-          version: 7.1
+          version: 8.6
 
       - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v2
+        uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node-version }}
           cache: 'pnpm'
@@ -75,14 +75,14 @@ jobs:
           - 5432:5432
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
       - uses: pnpm/action-setup@v2
         with:
-          version: 7.1
+          version: 8.6
 
       - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v2
+        uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node-version }}
           cache: 'pnpm'
@@ -96,10 +96,81 @@ jobs:
       - name: Build api
         run: pnpm --filter=@sigle/server run build
 
-      - name: Apply prisma migrations
-        run: cd server && pnpm prisma migrate deploy
+      - name: Run api tests
+        run: pnpm --filter=@sigle/server run test
+
+      - name: Seed test DB
+        run: cd server && pnpm prisma migrate deploy && pnpm prisma db seed
         env:
           PG_DATABASE_URL: 'postgres://postgresuser:postgrespassword@localhost:5432/postgresdb'
 
-      - name: Run api tests
-        run: pnpm --filter=@sigle/server run test
+      - name: Run api e2e tests
+        run: pnpm --filter=@sigle/server run test:e2e
+
+  test-sigle-next:
+    runs-on: ubuntu-20.04
+    strategy:
+      matrix:
+        node-version: [18]
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - uses: pnpm/action-setup@v2
+        with:
+          version: 8.6
+
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'pnpm'
+
+      - name: Get next.js sigle cache
+        uses: actions/cache@v2
+        with:
+          path: ${{ github.workspace }}/apps/sigle-next/.next/cache
+          key: ${{ runner.os }}-nextjs-sigle-next-${{ hashFiles('**/pnpm-lock.yaml') }}
+
+      - name: Install Dependencies
+        run: pnpm install
+
+      - name: Build sigle
+        run: pnpm --filter=@sigle/app-next run build
+
+      - name: Test sigle
+        run: pnpm --filter=@sigle/app-next run test
+
+      - name: Build storybook
+        run: pnpm --filter=@sigle/app-next run build-storybook
+
+  test-custom-domain:
+    runs-on: ubuntu-20.04
+    strategy:
+      matrix:
+        node-version: [18]
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - uses: pnpm/action-setup@v2
+        with:
+          version: 8.6
+
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'pnpm'
+
+      - name: Get next.js cache
+        uses: actions/cache@v2
+        with:
+          path: ${{ github.workspace }}/apps/custom-domain/.next/cache
+          key: ${{ runner.os }}-nextjs-apps-custom-domain-next-${{ hashFiles('**/pnpm-lock.yaml') }}
+
+      - name: Install Dependencies
+        run: pnpm install
+
+      - name: Build sigle
+        run: pnpm --filter=@sigle/custom-domain run build

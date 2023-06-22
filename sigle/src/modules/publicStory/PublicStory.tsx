@@ -8,13 +8,17 @@ import { sigleConfig } from '../../config';
 import { TipTapEditor } from '../editor/TipTapEditor';
 import { styled } from '../../stitches.config';
 import { Box, Container, Flex, Typography } from '../../ui';
-import { PoweredBy } from './PoweredBy';
+import { NewsletterFrame } from './NewsletterFrame';
 import { getTextFromHtml } from '../editor/utils/getTextFromHtml';
 import { AppHeader } from '../layout/components/AppHeader';
 import format from 'date-fns/format';
 import { ShareButtons } from './ShareButtons';
 import { generateAvatar } from '../../utils/boringAvatar';
 import { ProfileCard } from '../profileCard/ProfileCard';
+import { PoweredBy } from './PoweredBy';
+import { useGetUserByAddress, useGetUserMe } from '../../hooks/users';
+import { useSession } from 'next-auth/react';
+import Link from 'next/link';
 
 const ProfileImageContainer = styled('div', {
   cursor: 'pointer',
@@ -38,6 +42,20 @@ const PublicStoryContainer = styled('div', {
   paddingTop: '$15',
   paddingBottom: '$15',
   px: '$4',
+});
+
+export const Badge = styled('span', {
+  display: 'inline-flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+  fontSize: '13px',
+  lineHeight: '16px',
+  whiteSpace: 'nowrap',
+  br: '$2',
+  color: '#7367ff',
+  backgroundColor: '#dfdeff',
+  px: '$2',
+  py: '$1',
 });
 
 interface ShareButtonsOnScrollProps {
@@ -111,11 +129,17 @@ export const PublicStory = ({
   settings,
   userInfo,
 }: PublicStoryProps) => {
+  const { status } = useSession();
   const router = useRouter();
   const { username, storyId } = router.query as {
     username: string;
     storyId: string;
   };
+  const { data: userInfoByAddress } = useGetUserByAddress(userInfo.address);
+  const { data: userMe } = useGetUserMe({
+    enabled: status === 'authenticated',
+    refetchOnMount: false,
+  });
 
   const storyReadingTime = useMemo(
     () =>
@@ -137,6 +161,7 @@ export const PublicStory = ({
       <NextSeo
         title={seoTitle}
         description={story.metaDescription}
+        canonical={story.canonicalUrl}
         openGraph={{
           type: 'website',
           url: seoUrl,
@@ -216,6 +241,16 @@ export const PublicStory = ({
                 {format(story.createdAt, 'MMM dd')}
                 <span>•</span>
                 <span>{storyReadingTime?.text}</span>
+                {story.inscriptionId && (
+                  <Link
+                    href={`https://ordinals.com/inscription/${story.inscriptionId}`}
+                    target="_blank"
+                  >
+                    <Badge css={{ ml: '$1' }}>
+                      Inscription #{story.inscriptionNumber}
+                    </Badge>
+                  </Link>
+                )}
               </Typography>
             </Flex>
           </Flex>
@@ -249,6 +284,15 @@ export const PublicStory = ({
           story={story}
           settings={settings}
         />
+        {userInfoByAddress?.newsletter && (
+          <NewsletterFrame
+            stacksAddress={userInfo.address}
+            siteName={siteName}
+            email={
+              (userMe && userMe.emailVerified && userMe.email) || undefined
+            }
+          />
+        )}
         <PoweredBy />
       </PublicStoryContainer>
     </>
