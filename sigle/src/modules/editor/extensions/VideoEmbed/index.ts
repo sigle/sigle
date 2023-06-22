@@ -32,7 +32,7 @@ declare module '@tiptap/core' {
   }
 }
 
-export const Youtube = Node.create<VideoEmbedOptions>({
+export const VideoEmbed = Node.create<VideoEmbedOptions>({
   name: 'video-embed',
 
   addOptions() {
