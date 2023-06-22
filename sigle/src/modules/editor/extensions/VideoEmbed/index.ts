@@ -1,18 +1,25 @@
 import { mergeAttributes, Node, nodePasteRule } from '@tiptap/core';
 
 import {
-  getEmbedURLFromYoutubeURL,
+  getEmbedUrlFromYoutubeUrl,
   isValidYoutubeUrl,
   YOUTUBE_REGEX_GLOBAL,
 } from './youtube';
 
 export interface VideoEmbedOptions {
-  allowFullscreen: boolean;
-  controls: boolean;
+  addPasteHandler: boolean;
   height: number;
   HTMLAttributes: Record<string, any>;
+  nocookie: boolean;
   width: number;
+  inline: boolean;
 }
+
+type SetVideoEmbedOptions = {
+  src: string;
+  width?: number;
+  height?: number;
+};
 
 declare module '@tiptap/core' {
   interface Commands<ReturnType> {
@@ -20,31 +27,34 @@ declare module '@tiptap/core' {
       /**
        * Insert a video embed
        */
-      setVideoEmbed: (options: {
-        src: string;
-        width?: number;
-        height?: number;
-        start?: number;
-      }) => ReturnType;
+      setVideoEmbed: (options: SetVideoEmbedOptions) => ReturnType;
     };
   }
 }
 
-export const VideoEmbed = Node.create<VideoEmbedOptions>({
+export const Youtube = Node.create<VideoEmbedOptions>({
   name: 'video-embed',
-  group: 'block',
-  draggable: true,
-  selectable: true,
 
   addOptions() {
     return {
-      allowFullscreen: false,
-      controls: true,
+      addPasteHandler: true,
       height: 480,
       HTMLAttributes: {},
+      inline: false,
+      nocookie: false,
       width: 640,
     };
   },
+
+  inline() {
+    return this.options.inline;
+  },
+
+  group() {
+    return this.options.inline ? 'inline' : 'block';
+  },
+
+  draggable: true,
 
   addAttributes() {
     return {
@@ -74,7 +84,7 @@ export const VideoEmbed = Node.create<VideoEmbedOptions>({
   addCommands() {
     return {
       setVideoEmbed:
-        (options) =>
+        (options: SetVideoEmbedOptions) =>
         ({ commands }) => {
           if (!isValidYoutubeUrl(options.src)) {
             return false;
@@ -89,6 +99,10 @@ export const VideoEmbed = Node.create<VideoEmbedOptions>({
   },
 
   addPasteRules() {
+    if (!this.options.addPasteHandler) {
+      return [];
+    }
+
     return [
       nodePasteRule({
         find: YOUTUBE_REGEX_GLOBAL,
@@ -101,13 +115,11 @@ export const VideoEmbed = Node.create<VideoEmbedOptions>({
   },
 
   renderHTML({ HTMLAttributes }) {
-    const embedUrl = getEmbedURLFromYoutubeURL({
+    const embedUrl = getEmbedUrlFromYoutubeUrl({
       url: HTMLAttributes.src,
-      controls: this.options.controls,
+      nocookie: this.options.nocookie,
       startAt: HTMLAttributes.start || 0,
     });
-
-    console.log({ HTMLAttributes });
 
     HTMLAttributes.src = embedUrl;
 
@@ -121,7 +133,6 @@ export const VideoEmbed = Node.create<VideoEmbedOptions>({
           {
             width: this.options.width,
             height: this.options.height,
-            allowfullscreen: this.options.allowFullscreen,
           },
           HTMLAttributes
         ),
