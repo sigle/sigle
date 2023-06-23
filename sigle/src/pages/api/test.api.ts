@@ -11,7 +11,7 @@ const healthCheckEndpoint: NextApiHandler = async (_, res) => {
 
   const browser = await playwright.launch({
     args: chromium.args,
-    executablePath: await chromium.executablePath(),
+    executablePath: await chromium.executablePath,
     headless: true,
   });
 
