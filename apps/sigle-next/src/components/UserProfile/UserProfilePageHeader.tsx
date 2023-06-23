@@ -28,7 +28,7 @@ export const UserProfilePageHeader = ({
   isViewer,
   did,
 }: UserProfilePageHeaderProps) => {
-  const profile = trpc.userProfile.useQuery({ did });
+  const profile = trpc.user.userProfile.useQuery({ did });
 
   const address = getAddressFromDid(did);
 

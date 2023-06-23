@@ -160,12 +160,12 @@ export const NavBar = () => {
 
   const did = session?.user?.did;
   const skipProfileQuery = !did;
-  const profile = trpc.userProfile.useQuery(
+  const profile = trpc.user.userProfile.useQuery(
     { did: did ?? '' },
     { enabled: !skipProfileQuery }
   );
 
-  const postsNumbers = trpc.postsNumbers.useQuery(
+  const postsNumbers = trpc.post.postsNumbers.useQuery(
     { did: did ?? '' },
     { enabled: !skipProfileQuery }
   );

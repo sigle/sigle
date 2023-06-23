@@ -10,7 +10,7 @@ import { useAuthModal } from '@/components/AuthModal/AuthModal';
 import { DashboardLayout } from '../components/Dashboard/DashboardLayout';
 
 const HopePostList = () => {
-  const postList = trpc.postList.useInfiniteQuery(
+  const postList = trpc.post.postList.useInfiniteQuery(
     { limit: 50, status: 'PUBLISHED' },
     {
       getNextPageParam: (lastPage) => lastPage.nextCursor,
