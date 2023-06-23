@@ -33,7 +33,7 @@ const nextConfig = {
       '*': [
         '**esbuild**',
         '**webpack**',
-        'node_modules/.pnpm/sass**',
+        '**node_modules/.pnpm/sass**',
         '**rollup**',
       ],
     },
