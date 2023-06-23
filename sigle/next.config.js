@@ -30,7 +30,13 @@ const nextConfig = {
        * For playwright to be properly bundled and be < 50mb we need to exclude
        * some packages which are included in the playwright package but not used.
        */
-      '*': ['**esbuild**', '**webpack**', '**sass**'],
+      '*': [
+        '**esbuild**',
+        '**webpack**',
+        '**sass**',
+        '**@radix-ui/react-icons**',
+        '**@stacks/connect-ui**',
+      ],
     },
   },
   reactStrictMode: false,
