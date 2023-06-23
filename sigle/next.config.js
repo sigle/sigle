@@ -25,6 +25,13 @@ const getVercelPreviewUrl = () => {
 const nextConfig = {
   experimental: {
     appDir: true,
+    outputFileTracingExcludes: {
+      /**
+       * For playwright to be properly bundled and be < 50mb we need to exclude
+       * some packages which are included in the playwright package but not used.
+       */
+      '/api/test': ['./**/@esbuild*'],
+    },
   },
   reactStrictMode: false,
   swcMinify: true,
