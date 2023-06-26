@@ -39,6 +39,22 @@ export const SettingsMenu = () => {
           Plans
         </Button>
       </Link>
+      <Link href="/settings/import">
+        <Button
+          size="sm"
+          variant="ghost"
+          css={
+            router.pathname === '/settings/import'
+              ? {
+                  color: '$gray10',
+                  backgroundColor: '$gray4',
+                }
+              : {}
+          }
+        >
+          Import
+        </Button>
+      </Link>
     </div>
   );
 };
