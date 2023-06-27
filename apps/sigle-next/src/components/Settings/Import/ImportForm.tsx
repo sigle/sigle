@@ -29,11 +29,17 @@ export const ImportForm = () => {
 
     // 2. Migrate the posts one by one to the new format
     for (const [index, story] of posts.stories.entries()) {
+      const data = await fetch(`${bucketUrl}${story.id}.json`);
+      // TODO handle status 404
+      const post = await data.json();
+      console.log(post);
       // 3. Save them to ceramic
       setProcessed(index + 1);
-      // Sleep for 2 seconds to avoid rate limiting
-      await new Promise((resolve) => setTimeout(resolve, 2000));
+      // Wait 200 ms to avoid rate limiting
+      await new Promise((resolve) => setTimeout(resolve, 200));
     }
+
+    setStatus('success');
   };
 
   if (status === 'loading') {
@@ -48,6 +54,16 @@ export const ImportForm = () => {
             {processed}/{total} posts migrated
           </Typography>
         )}
+      </div>
+    );
+  }
+
+  if (status === 'success') {
+    return (
+      <div className="mt-10 flex flex-col items-center text-center">
+        <Typography size="sm" fontWeight="semiBold">
+          Your blog has been migrated successfully!
+        </Typography>
       </div>
     );
   }
