@@ -13,7 +13,8 @@ const StyledSidebarContent = styled('div', {
     py: '$5',
     overflowY: 'scroll',
     position: 'fixed',
-    top: 80,
+    // Remove 40 once banner is gone
+    top: 80 + 40,
     bottom: 0,
     width: 420,
   },
