@@ -17,17 +17,24 @@ const SettingsPlans = () => {
   const { stxAddress } = useAccount();
   const activeSubscription = trpc.subscription.getActive.useQuery();
   const upgradeWithNFT = trpc.subscription.upgradeWithNFT.useMutation();
-  const nftsInWallet = useQuery(['nft-in-wallet', stxAddress], async () => {
-    if (!stxAddress) return;
-    const nftApi = new NonFungibleTokensApi();
-    const nftHoldings = await nftApi.getNftHoldings({
-      principal: stxAddress,
-      assetIdentifiers: [
-        'SP2X0TZ59D5SZ8ACQ6YMCHHNR2ZN51Z32E2CJ173.the-explorer-guild::The-Explorer-Guild',
-      ],
-    });
-    return nftHoldings.total;
-  });
+  const nftsInWallet = useQuery(
+    ['nft-in-wallet', stxAddress],
+    async () => {
+      if (!stxAddress) return;
+      const nftApi = new NonFungibleTokensApi();
+      const nftHoldings = await nftApi.getNftHoldings({
+        principal: stxAddress,
+        assetIdentifiers: [
+          'SP2X0TZ59D5SZ8ACQ6YMCHHNR2ZN51Z32E2CJ173.the-explorer-guild::The-Explorer-Guild',
+        ],
+      });
+      return nftHoldings.total;
+    },
+    {
+      // Don't trigger if user is using something else than Stacks
+      enabled: !!stxAddress,
+    }
+  );
 
   const onUpgradeWithNFT = async () => {
     upgradeWithNFT.mutate(undefined, {
