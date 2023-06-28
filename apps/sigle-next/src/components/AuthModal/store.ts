@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 
-type Route = 'connect' | 'sign';
+type Route = 'select-chain' | 'connect' | 'sign';
 
 interface AuthModalState {
   open: boolean;
@@ -12,6 +12,6 @@ interface AuthModalState {
 export const useAuthModalStore = create<AuthModalState>()((set) => ({
   open: false,
   setOpen: (open: boolean) => set({ open }),
-  route: 'connect',
+  route: 'select-chain',
   setRoute: (route: Route) => set({ route }),
 }));

@@ -74,6 +74,7 @@ export const RouteSign = () => {
       return;
     }
     const signInResult = await signIn<RedirectableProviderType>('credentials', {
+      chain: 'stacks',
       message,
       redirect: false,
       signature: signature.signature,
