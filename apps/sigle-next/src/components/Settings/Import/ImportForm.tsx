@@ -1,10 +1,13 @@
 import { lookupProfile } from 'micro-stacks/storage';
-import { Button, Input, LoadingSpinner, Typography } from '@sigle/ui';
-import { useImportStore } from './store';
 import { IEnvironment, commitMutation, graphql } from 'relay-runtime';
-import { ImportFormCreatePostMutation } from '@/__generated__/relay/ImportFormCreatePostMutation.graphql';
-import { GaiaStoryFile, GaiaStory } from '@/types/gaia';
+import { z } from 'zod';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { Button, Input, LoadingSpinner, Typography } from '@sigle/ui';
 import { useRelayStore } from '@/lib/relay';
+import { GaiaStoryFile, GaiaStory } from '@/types/gaia';
+import { ImportFormCreatePostMutation } from '@/__generated__/relay/ImportFormCreatePostMutation.graphql';
+import { useImportStore } from './store';
 
 function importNewPost(environment: IEnvironment, file: GaiaStory) {
   return new Promise(function (
@@ -51,6 +54,12 @@ function importNewPost(environment: IEnvironment, file: GaiaStory) {
   });
 }
 
+const importNameSchema = z.object({
+  username: z.string(),
+});
+
+type ImportNameFormData = z.infer<typeof importNameSchema>;
+
 export const ImportForm = () => {
   const relayEnvironment = useRelayStore((store) => store.environment);
   const status = useImportStore((state) => state.status);
@@ -60,16 +69,20 @@ export const ImportForm = () => {
   const total = useImportStore((state) => state.total);
   const setTotal = useImportStore((state) => state.setTotal);
 
-  // TODO take it from the form
-  const url = 'sigle.btc';
+  const {
+    register,
+    handleSubmit,
+    setValue,
+    formState: { isDirty, errors },
+  } = useForm<ImportNameFormData>({
+    resolver: zodResolver(importNameSchema),
+  });
 
-  const handleSigleBlogMigration = async (e) => {
-    e.preventDefault();
-
+  const onSubmit = handleSubmit(async (formValues) => {
     setStatus('loading');
 
     // 1. Get the list of posts from the API
-    const userProfile = await lookupProfile({ username: url });
+    const userProfile = await lookupProfile({ username: formValues.username });
     const appUrl = 'https://app.sigle.io';
     const bucketUrl = userProfile?.apps?.[appUrl];
     const data = await fetch(`${bucketUrl}publicStories.json`);
@@ -93,7 +106,7 @@ export const ImportForm = () => {
     }
 
     setStatus('success');
-  };
+  });
 
   if (status === 'loading') {
     return (
@@ -122,12 +135,15 @@ export const ImportForm = () => {
   }
 
   return (
-    <form className="mt-4 text-center" onSubmit={handleSigleBlogMigration}>
+    <form className="mt-4 text-center" onSubmit={onSubmit}>
       <Typography size="sm" fontWeight="semiBold">
-        Enter the url of the Sigle blog you want to migrate
+        Enter your username (.btc, .id.stx) of the Sigle blog you want to
+        migrate
       </Typography>
-      <Input className="mt-2" />
-      <Button className="mt-2">Submit</Button>
+      <Input className="mt-2" {...register('username')} />
+      <Button className="mt-2" type="submit">
+        Submit
+      </Button>
     </form>
   );
 };
