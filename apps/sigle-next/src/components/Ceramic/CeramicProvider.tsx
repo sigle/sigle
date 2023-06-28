@@ -107,7 +107,7 @@ const CeramicProvider = ({ children }: CeramicProviderProps) => {
     // Store the session in local storage
     const sessionString = session.serialize();
     localStorage.setItem(
-      getStorageKey(stxAddress || ethAddress),
+      getStorageKey(stxAddress || ethAddress!),
       sessionString
     );
 
