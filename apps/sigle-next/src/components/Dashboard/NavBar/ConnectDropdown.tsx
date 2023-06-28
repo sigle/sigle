@@ -1,5 +1,6 @@
 import { useTheme } from 'next-themes';
 import { TbSettings, TbWallet } from 'react-icons/tb';
+import { useModal as useConnectKitModal } from 'connectkit';
 import {
   Button,
   DropdownMenu,
@@ -15,6 +16,7 @@ import { DropdownMenuItemWithSwitch } from './UserDropdown';
 
 export const ConnectDropdown = () => {
   const { resolvedTheme, setTheme } = useTheme();
+  const { setOpen: setConnectKitOpen } = useConnectKitModal();
   const { setOpen } = useAuthModal();
   const collapsed = useDashboardStore((state) => state.collapsed);
   const toggleCollapse = useDashboardStore((state) => state.toggleCollapse);
@@ -24,7 +26,8 @@ export const ConnectDropdown = () => {
   };
 
   const openStacksConnect = () => {
-    setOpen(true);
+    // setOpen(true);
+    setConnectKitOpen(true);
   };
 
   return (
