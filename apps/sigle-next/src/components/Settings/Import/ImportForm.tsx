@@ -69,12 +69,7 @@ export const ImportForm = () => {
   const total = useImportStore((state) => state.total);
   const setTotal = useImportStore((state) => state.setTotal);
 
-  const {
-    register,
-    handleSubmit,
-    setValue,
-    formState: { isDirty, errors },
-  } = useForm<ImportNameFormData>({
+  const { register, handleSubmit } = useForm<ImportNameFormData>({
     resolver: zodResolver(importNameSchema),
   });
 
