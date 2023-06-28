@@ -126,6 +126,9 @@ importers:
       '@composedb/client':
         specifier: 0.4.4
         version: 0.4.4
+      '@didtools/pkh-ethereum':
+        specifier: 0.4.0
+        version: 0.4.0
       '@didtools/pkh-stacks':
         specifier: 0.1.0
         version: 0.1.0
@@ -4599,7 +4602,7 @@ packages:
     dependencies:
       '@ceramicnetwork/codecs': 1.1.0
       '@ceramicnetwork/streamid': 2.14.0
-      '@didtools/cacao': 2.0.0
+      '@didtools/cacao': 2.1.0
       '@didtools/pkh-ethereum': 0.1.0
       '@didtools/pkh-solana': 0.1.1
       '@didtools/pkh-stacks': 0.1.0
@@ -5092,11 +5095,30 @@ packages:
       multiformats: 11.0.2
       uint8arrays: 4.0.4
 
+  /@didtools/cacao@2.1.0:
+    resolution: {integrity: sha512-35gopj+mOmAlA3nHoHiYMvNMXJtbJDJnVpIlCf/Wf/+/x+uG9aIQefXfF35D6JuaTCZ0apabjpT2umL5h3EXcw==}
+    engines: {node: '>=14.14'}
+    dependencies:
+      '@didtools/codecs': 1.0.1
+      '@didtools/siwx': 1.0.0
+      '@ipld/dag-cbor': 9.0.1
+      caip: 1.1.0
+      multiformats: 11.0.2
+      uint8arrays: 4.0.4
+
+  /@didtools/codecs@1.0.1:
+    resolution: {integrity: sha512-6PYXOCX7mwVWUcudKQ3eW5LtI8v5esozazbf2q2F01PE+LoeEvTytvgU9FEspj4pATpq3hPx1eenX2uLirDJ8w==}
+    engines: {node: '>=14.14'}
+    dependencies:
+      codeco: 1.1.3
+      multiformats: 11.0.2
+      uint8arrays: 4.0.4
+
   /@didtools/pkh-ethereum@0.1.0:
     resolution: {integrity: sha512-Abmc6uvWU8zkOrQbPUAsRtTW293vhx+rzd+/bbduTLrRGEqZ3niakQkxMqvQKZ6/9w+n0IjQVXSHE5vzc5cAeg==}
     engines: {node: '>=14.14'}
     dependencies:
-      '@didtools/cacao': 2.0.0
+      '@didtools/cacao': 2.1.0
       '@ethersproject/wallet': 5.7.0
       '@stablelib/random': 1.0.2
       caip: 1.1.0
@@ -5105,17 +5127,28 @@ packages:
     resolution: {integrity: sha512-JYC8pzk41qx1cPhA8YAT/3zG/NnUU2yP/MX6wdpeEjiml2LLHidX/GPIb5zYVkz7w4KOJs1WmyMu5qBovcWFdA==}
     engines: {node: '>=14.14'}
     dependencies:
-      '@didtools/cacao': 2.0.0
+      '@didtools/cacao': 2.1.0
       '@ethersproject/wallet': 5.7.0
       '@stablelib/random': 1.0.2
       caip: 1.1.0
       uint8arrays: 4.0.4
 
+  /@didtools/pkh-ethereum@0.4.0:
+    resolution: {integrity: sha512-NaPDE8QYOpBSa1MghiF0IkCt2kZdcRm0TV/Zcm9uQMqrf2I6qy5RhiRSG+2gPkobIgI+80OIpe6xJ6BmuzWvkQ==}
+    engines: {node: '>=14.14'}
+    dependencies:
+      '@didtools/cacao': 2.1.0
+      '@ethersproject/wallet': 5.7.0
+      '@stablelib/random': 1.0.2
+      caip: 1.1.0
+      uint8arrays: 4.0.4
+    dev: false
+
   /@didtools/pkh-solana@0.1.1:
     resolution: {integrity: sha512-2Sn4xSg8otqAeXA0tDYUM+3KQtzOr2gBcu0wbJyOn/30Ocj3jxHFQg7NfumEsiQtQ0HtnmsGZUrnCgoxHqLwWg==}
     engines: {node: '>=14.14'}
     dependencies:
-      '@didtools/cacao': 2.0.0
+      '@didtools/cacao': 2.1.0
       '@noble/curves': 1.1.0
       '@stablelib/random': 1.0.2
       caip: 1.1.0
@@ -5139,12 +5172,18 @@ packages:
     resolution: {integrity: sha512-pUzquLujQJQ4tQoGrXjozFZePNt+VLX7Bk32r1DPbkp8FaLoAA5UoaP1qf+fM/J9EsxCfdnpntqqGU+MmvIpHA==}
     engines: {node: '>=14.14'}
     dependencies:
-      '@didtools/cacao': 2.0.0
+      '@didtools/cacao': 2.1.0
       '@noble/curves': 1.1.0
       '@noble/hashes': 1.3.1
       '@stablelib/random': 1.0.2
       caip: 1.1.0
       uint8arrays: 4.0.4
+
+  /@didtools/siwx@1.0.0:
+    resolution: {integrity: sha512-b7sPDTNHdySoJ+Rp2p06x3rg1iTxI4yPTTA3PrPh40xcvFJ0K/YhdIb/Rzff13t92arcJ+VYGFhqtJorauV91g==}
+    engines: {node: '>=14.14'}
+    dependencies:
+      codeco: 1.1.3
 
   /@discoveryjs/json-ext@0.5.7:
     resolution: {integrity: sha512-dBVuXR082gk3jsFp7Rd/JI4kytwGHecnCoTtXFb7DB6CNHp4rg5k1bhg0nWdLGLnOV71lmDzGQaLMy8iPLY0pw==}

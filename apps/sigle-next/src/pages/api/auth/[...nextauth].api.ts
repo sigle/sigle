@@ -110,8 +110,10 @@ export const authOptions: NextAuthOptions = {
             },
             data: {
               address: address,
-              // change did to make it work with eth
-              did: `did:pkh:stacks:1:${address}`,
+              did:
+                credentials.chain === 'ethereum'
+                  ? `did:pkh:eip155:1:${address}`
+                  : `did:pkh:stacks:1:${address}`,
               chain: credentials.chain === 'ethereum' ? 'ETHEREUM' : 'STACKS',
             },
           });
