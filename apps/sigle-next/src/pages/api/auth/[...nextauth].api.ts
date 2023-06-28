@@ -112,8 +112,7 @@ export const authOptions: NextAuthOptions = {
               address: address,
               // change did to make it work with eth
               did: `did:pkh:stacks:1:${address}`,
-              // TODO chain should be an enum
-              chain: 'STACKS',
+              chain: credentials.chain === 'ethereum' ? 'ETHEREUM' : 'STACKS',
             },
           });
 
