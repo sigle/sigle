@@ -20,6 +20,7 @@ import {
   signIn,
   signOut,
 } from 'next-auth/react';
+import { RedirectableProviderType } from 'next-auth/providers';
 import '@/styles/globals.css';
 import 'tippy.js/dist/tippy.css';
 import 'tippy.js/themes/light-border.css';
@@ -31,7 +32,6 @@ import { AuthModal } from '@/components/AuthModal/AuthModal';
 import { Toaster } from '@/ui/Toaster';
 import '@/styles/globals.css';
 import { PosthogTrack } from '@/lib/posthog/PosthogTrack';
-import { RedirectableProviderType } from 'next-auth/providers';
 
 const inter = Inter({
   subsets: ['latin'],
