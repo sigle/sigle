@@ -35,6 +35,8 @@ const CeramicProvider = ({ children }: CeramicProviderProps) => {
   const { address: ethAddress, connector } = useEthereumAccount();
   const { stxAddress } = useStackAccount();
   const setEnvironment = useRelayStore((store) => store.setEnvironment);
+  // Normalize the address to lowercase to avoid missmatch issues
+  const normalizedEthAddress = ethAddress?.toLowerCase();
 
   useEffect(() => {
     loadSessionStacks();
@@ -42,7 +44,7 @@ const CeramicProvider = ({ children }: CeramicProviderProps) => {
 
   useEffect(() => {
     loadSessionEthereum();
-  }, [ethAddress, connector]);
+  }, [normalizedEthAddress, connector]);
 
   const loadSessionStacks = async () => {
     if (!stxAddress) return;
@@ -65,9 +67,11 @@ const CeramicProvider = ({ children }: CeramicProviderProps) => {
   };
 
   const loadSessionEthereum = async () => {
-    if (!ethAddress) return;
+    if (!normalizedEthAddress) return;
 
-    const sessionString = localStorage.getItem(getStorageKey(ethAddress));
+    const sessionString = localStorage.getItem(
+      getStorageKey(normalizedEthAddress)
+    );
     if (sessionString) {
       const session = await DIDSession.fromSession(sessionString);
       if (session && session.hasSession && !session.isExpired) {
@@ -85,7 +89,7 @@ const CeramicProvider = ({ children }: CeramicProviderProps) => {
   };
 
   const connect = async () => {
-    if (!stxAddress && (!ethAddress || !connector)) return;
+    if (!stxAddress && (!normalizedEthAddress || !connector)) return;
 
     let authMethod: AuthMethod;
     if (stxAddress) {
@@ -94,7 +98,10 @@ const CeramicProvider = ({ children }: CeramicProviderProps) => {
       authMethod = await StacksWebAuth.getAuthMethod(stacksProvider, accountId);
     } else {
       const ethProvider = await connector!.getProvider();
-      const accountId = await getEthAccountId(ethProvider, ethAddress);
+      const accountId = await getEthAccountId(
+        ethProvider,
+        normalizedEthAddress!
+      );
       authMethod = await EthereumWebAuth.getAuthMethod(ethProvider, accountId);
     }
 
@@ -107,7 +114,7 @@ const CeramicProvider = ({ children }: CeramicProviderProps) => {
     // Store the session in local storage
     const sessionString = session.serialize();
     localStorage.setItem(
-      getStorageKey(stxAddress || ethAddress!),
+      getStorageKey(stxAddress || normalizedEthAddress!),
       sessionString
     );
 
