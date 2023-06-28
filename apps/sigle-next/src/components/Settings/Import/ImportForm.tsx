@@ -1,12 +1,7 @@
 import { lookupProfile } from 'micro-stacks/storage';
 import { Button, Input, LoadingSpinner, Typography } from '@sigle/ui';
 import { useImportStore } from './store';
-import {
-  Disposable,
-  IEnvironment,
-  commitMutation,
-  graphql,
-} from 'relay-runtime';
+import { IEnvironment, commitMutation, graphql } from 'relay-runtime';
 import { ImportFormCreatePostMutation } from '@/__generated__/relay/ImportFormCreatePostMutation.graphql';
 import { GaiaStoryFile, GaiaStory } from '@/types/gaia';
 import { useRelayStore } from '@/lib/relay';
@@ -88,6 +83,8 @@ export const ImportForm = () => {
       // TODO handle status 404
       const post: GaiaStory = await data.json();
       console.log(post);
+      // TODO need to convert v1 JSON to html via api call to old version?
+      // TODO need to migrate images to IPFS
       // 3. Save them to ceramic
       await importNewPost(relayEnvironment, post);
       setProcessed(index + 1);
