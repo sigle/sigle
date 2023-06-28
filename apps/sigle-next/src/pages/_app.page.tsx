@@ -5,6 +5,12 @@ import { ThemeProvider } from 'next-themes';
 import dynamic from 'next/dynamic';
 import { ReactRelayContext } from 'react-relay';
 import { ClientProvider as StacksClientProvider } from '@micro-stacks/react';
+import { WagmiConfig, createConfig } from 'wagmi';
+import {
+  ConnectKitProvider,
+  ConnectKitButton,
+  getDefaultConfig,
+} from 'connectkit';
 import { SessionProvider } from 'next-auth/react';
 import '@/styles/globals.css';
 import 'tippy.js/dist/tippy.css';
@@ -38,6 +44,19 @@ const globalStyle = globalCss({
   },
 });
 
+const ethConfig = createConfig(
+  getDefaultConfig({
+    alchemyId: process.env.ALCHEMY_ID,
+    walletConnectProjectId: process.env.WALLETCONNECT_PROJECT_ID!,
+
+    // Required
+    appName: 'Sigle',
+
+    appUrl: 'https://next.sigle.io',
+    appIcon: 'https://app.sigle.io/icon-192x192.png',
+  })
+);
+
 const MyApp: AppType<{ session: Session | null }> = ({
   Component,
   pageProps: { session, ...pageProps },
@@ -57,18 +76,22 @@ const MyApp: AppType<{ session: Session | null }> = ({
       >
         <ReactRelayContext.Provider value={{ environment }}>
           <SessionProvider session={session}>
-            <StacksClientProvider
-              appName="Sigle"
-              appIconUrl="https://app.sigle.io/icon-192x192.png"
-            >
-              <CeramicProvider>
-                <PosthogTrack>
-                  <Component {...pageProps} />
-                  <AuthModal />
-                  <Toaster />
-                </PosthogTrack>
-              </CeramicProvider>
-            </StacksClientProvider>
+            <WagmiConfig config={ethConfig}>
+              <ConnectKitProvider>
+                <StacksClientProvider
+                  appName="Sigle"
+                  appIconUrl="https://app.sigle.io/icon-192x192.png"
+                >
+                  <CeramicProvider>
+                    <PosthogTrack>
+                      <Component {...pageProps} />
+                      <AuthModal />
+                      <Toaster />
+                    </PosthogTrack>
+                  </CeramicProvider>
+                </StacksClientProvider>
+              </ConnectKitProvider>
+            </WagmiConfig>
           </SessionProvider>
         </ReactRelayContext.Provider>
       </ThemeProvider>
