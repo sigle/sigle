@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<f1281a26d7fcbf318200a008fef4a7a6>>
+ * @generated SignedSource<<2ea0adf30a2bcf74e734248741a1cb24>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -15,7 +15,7 @@ export type PostIdEditorPagePostQuery$variables = {
 };
 export type PostIdEditorPagePostQuery$data = {
   readonly node: {
-    readonly canonicalUrl?: string | null;
+    readonly canonicalUrl?: any | null;
     readonly content?: string;
     readonly featuredImage?: string | null;
     readonly id?: string;

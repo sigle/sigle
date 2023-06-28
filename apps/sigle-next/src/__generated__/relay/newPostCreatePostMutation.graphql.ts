@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<07c4b24affa481c654b120b6b64e0342>>
+ * @generated SignedSource<<ae5fa4531fede8469d2ef93e45734539>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -15,7 +15,7 @@ export type CreatePostInput = {
   content: PostInput;
 };
 export type PostInput = {
-  canonicalUrl?: string | null;
+  canonicalUrl?: any | null;
   content: string;
   featuredImage?: string | null;
   metaDescription?: string | null;
