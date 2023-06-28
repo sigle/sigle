@@ -57,7 +57,7 @@ export const authOptions: NextAuthOptions = {
               return null;
             }
 
-            address = siwe.address;
+            address = siwe.address.toLowerCase();
           } else {
             const siwe = new SignInWithStacksMessage(
               credentials?.message || ''
