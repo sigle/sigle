@@ -44,9 +44,7 @@ export const authOptions: NextAuthOptions = {
 
         try {
           if (credentials.chain === 'ethereum') {
-            console.log(credentials?.message);
             const siwe = new SiweMessage(credentials.message);
-            console.log('siwe', siwe);
             const nextAuthUrl = new URL(process.env.NEXTAUTH_URL!);
 
             const result = await siwe.verify({
