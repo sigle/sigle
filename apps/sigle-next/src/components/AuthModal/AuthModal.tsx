@@ -1,5 +1,6 @@
 import { Dialog, DialogContent } from '@sigle/ui';
 import { useAuthModalStore } from './store';
+import { RouteSelectChain } from './RouteSelectChain';
 import { RouteConnect } from './RouteConnect';
 import { RouteSign } from './RouteSign';
 
@@ -14,6 +15,7 @@ export const AuthModal = () => {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogContent>
+        {route === 'select-chain' && <RouteSelectChain />}
         {route === 'connect' && <RouteConnect />}
         {route === 'sign' && <RouteSign />}
       </DialogContent>
