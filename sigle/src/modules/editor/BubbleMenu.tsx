@@ -154,6 +154,9 @@ export const BubbleMenu = ({ editor }: BubbleMenuProps) => {
     });
   };
 
+  // Check if we are on figcaption to only display some items of the bubble menu
+  const isFigureActive = editor.isActive('figure');
+
   return (
     <StyledBubbleMenu
       tippyOptions={{
@@ -220,24 +223,30 @@ export const BubbleMenu = ({ editor }: BubbleMenuProps) => {
           >
             <FontItalicIcon height={18} width={18} />
           </BubbleMenuButton>
-          <BubbleMenuButton
-            onClick={() => editor.chain().focus().toggleUnderline().run()}
-            active={editor.isActive('underline')}
-          >
-            <UnderlineIcon height={18} width={18} />
-          </BubbleMenuButton>
-          <BubbleMenuButton
-            onClick={() => editor.chain().focus().toggleStrike().run()}
-            active={editor.isActive('strike')}
-          >
-            <StrikethroughIcon height={18} width={18} />
-          </BubbleMenuButton>
-          <BubbleMenuButton
-            onClick={() => editor.chain().focus().toggleCode().run()}
-            active={editor.isActive('code')}
-          >
-            <CodeIcon height={18} width={18} />
-          </BubbleMenuButton>
+          {!isFigureActive && (
+            <BubbleMenuButton
+              onClick={() => editor.chain().focus().toggleUnderline().run()}
+              active={editor.isActive('underline')}
+            >
+              <UnderlineIcon height={18} width={18} />
+            </BubbleMenuButton>
+          )}
+          {!isFigureActive && (
+            <BubbleMenuButton
+              onClick={() => editor.chain().focus().toggleStrike().run()}
+              active={editor.isActive('strike')}
+            >
+              <StrikethroughIcon height={18} width={18} />
+            </BubbleMenuButton>
+          )}
+          {!isFigureActive && (
+            <BubbleMenuButton
+              onClick={() => editor.chain().focus().toggleCode().run()}
+              active={editor.isActive('code')}
+            >
+              <CodeIcon height={18} width={18} />
+            </BubbleMenuButton>
+          )}
           <BubbleMenuButton
             onClick={() => onSelectLink()}
             active={editor.isActive('link')}
