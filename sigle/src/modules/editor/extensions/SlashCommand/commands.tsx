@@ -75,6 +75,14 @@ export const slashCommands = ({
     title: 'Image',
     description: 'Upload from your computer',
     command: ({ editor, range }) => {
+      editor
+        .chain()
+        .focus()
+        .setFigure({
+          src: 'https://gaia.blockstack.org/hub/136fJXa47miR1VUiyxb3Lgs89e4D9jmNnu/photos/ZLbwOh710P92CszczuLpC-Screenshot 2023-02-28 at 12.22.49.png',
+        })
+        .run();
+      return;
       const input = document.createElement('input');
       input.type = 'file';
       input.accept = 'image/jpeg,image/png,image/gif';
