@@ -3,11 +3,18 @@ import type { NextAuthOptions } from 'next-auth';
 import CredentialsProvider from 'next-auth/providers/credentials';
 import { NextApiRequest, NextApiResponse } from 'next';
 import { SiweMessage } from 'siwe';
+import { z } from 'zod';
 import * as Sentry from '@sentry/nextjs';
 import { getCsrfToken } from 'next-auth/react';
 import { SignInWithStacksMessage } from '@/lib/auth/sign-in-with-stacks/signInWithStacksMessage';
 import { prismaClient } from '@/lib/prisma';
 import { postHogClient } from '@/lib/posthog';
+
+const authWalletSchema = z.object({
+  chain: z.enum(['ethereum', 'stacks']),
+  message: z.string(),
+  signature: z.string(),
+});
 
 export const authOptions: NextAuthOptions = {
   secret: process.env.NEXTAUTH_SECRET,
@@ -35,20 +42,21 @@ export const authOptions: NextAuthOptions = {
         },
       },
       async authorize(credentials, req) {
-        // TODO Zod validation for credentials
-        if (!credentials || !credentials.chain) {
+        const validationResult = authWalletSchema.safeParse(credentials);
+        if (!validationResult.success) {
           return null;
         }
+        const safeCredentials = validationResult.data;
 
         let address: string;
 
         try {
-          if (credentials.chain === 'ethereum') {
-            const siwe = new SiweMessage(credentials.message);
+          if (safeCredentials.chain === 'ethereum') {
+            const siwe = new SiweMessage(safeCredentials.message);
             const nextAuthUrl = new URL(process.env.NEXTAUTH_URL!);
 
             const result = await siwe.verify({
-              signature: credentials.signature || '',
+              signature: safeCredentials.signature,
               domain: nextAuthUrl.host,
               nonce: await getCsrfToken({ req }),
             });
@@ -59,12 +67,10 @@ export const authOptions: NextAuthOptions = {
 
             address = siwe.address.toLowerCase();
           } else {
-            const siwe = new SignInWithStacksMessage(
-              credentials?.message || ''
-            );
+            const siwe = new SignInWithStacksMessage(safeCredentials.message);
 
             const result = await siwe.verify({
-              signature: credentials?.signature || '',
+              signature: safeCredentials.signature,
               domain: process.env.NEXTAUTH_URL,
               nonce:
                 // In preview env, a different nonce is returned, to bypass this issue
@@ -84,8 +90,8 @@ export const authOptions: NextAuthOptions = {
           console.error(error);
           Sentry.withScope((scope) => {
             scope.setExtras({
-              message: credentials?.message,
-              signature: credentials?.signature,
+              message: safeCredentials.message,
+              signature: safeCredentials.signature,
             });
             Sentry.captureException(error);
           });
@@ -111,10 +117,11 @@ export const authOptions: NextAuthOptions = {
             data: {
               address: address,
               did:
-                credentials.chain === 'ethereum'
+                safeCredentials.chain === 'ethereum'
                   ? `did:pkh:eip155:1:${address}`
                   : `did:pkh:stacks:1:${address}`,
-              chain: credentials.chain === 'ethereum' ? 'ETHEREUM' : 'STACKS',
+              chain:
+                safeCredentials.chain === 'ethereum' ? 'ETHEREUM' : 'STACKS',
             },
           });
 
@@ -123,7 +130,7 @@ export const authOptions: NextAuthOptions = {
             event: 'user created',
             properties: {
               did: user.did,
-              chain: credentials.chain,
+              chain: safeCredentials.chain,
             },
           });
           await postHogClient.shutdownAsync();
