@@ -171,6 +171,9 @@ module.exports = {
               marginBottom: false,
               margin: '2em auto',
             },
+            figcaption: {
+              textAlign: 'center',
+            },
             '[class~="lead"]': false,
           },
         },
