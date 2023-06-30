@@ -3,7 +3,7 @@ import { APP_GUARD, APP_INTERCEPTOR } from '@nestjs/core';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
 import { SentryInterceptor, SentryModule } from '@ntegral/nestjs-sentry';
-import { CacheModule } from '@nestjs/cache-manager';
+import { CacheModule, CacheStore } from '@nestjs/cache-manager';
 import { ThrottlerStorageRedisService } from 'nestjs-throttler-storage-redis';
 import * as redisStore from 'cache-manager-redis-store';
 import type { RedisClientOptions } from 'redis';
@@ -58,7 +58,8 @@ import { EmailVerificationModule } from './email-verification/email-verification
       imports: [ConfigModule],
       inject: [ConfigService],
       useFactory: (config: ConfigService) => ({
-        store: redisStore,
+        // Required for the types, see https://github.com/dabroek/node-cache-manager-redis-store/pull/54
+        store: redisStore as unknown as CacheStore,
         url: config.get('REDIS_DATABASE_URL'),
       }),
     }),
