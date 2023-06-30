@@ -1,9 +1,5 @@
-import {
-  BadRequestException,
-  CACHE_MANAGER,
-  Inject,
-  Injectable,
-} from '@nestjs/common';
+import { BadRequestException, Inject, Injectable } from '@nestjs/common';
+import { CACHE_MANAGER } from '@nestjs/cache-manager';
 import { Cache } from 'cache-manager';
 import { differenceInMonths, format, isValid, parse } from 'date-fns';
 import { PlausibleService } from '../plausible/plausible.service';

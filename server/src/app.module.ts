@@ -1,8 +1,9 @@
-import { CacheModule, HttpException, Module } from '@nestjs/common';
+import { HttpException, Module } from '@nestjs/common';
 import { APP_GUARD, APP_INTERCEPTOR } from '@nestjs/core';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
 import { SentryInterceptor, SentryModule } from '@ntegral/nestjs-sentry';
+import { CacheModule } from '@nestjs/cache-manager';
 import { ThrottlerStorageRedisService } from 'nestjs-throttler-storage-redis';
 import * as redisStore from 'cache-manager-redis-store';
 import type { ClientOpts } from 'redis';
