@@ -6,7 +6,7 @@ import { SentryInterceptor, SentryModule } from '@ntegral/nestjs-sentry';
 import { CacheModule } from '@nestjs/cache-manager';
 import { ThrottlerStorageRedisService } from 'nestjs-throttler-storage-redis';
 import * as redisStore from 'cache-manager-redis-store';
-import type { ClientOpts } from 'redis';
+import type { RedisClientOptions } from 'redis';
 import { validate } from './environment/environment.validation';
 import { UserModule } from './user/user.module';
 import { SubscriptionModule } from './subscription/subscription.module';
@@ -53,7 +53,7 @@ import { EmailVerificationModule } from './email-verification/email-verification
           config.get('NODE_ENV') === 'test' ? [/sigletests/gi] : [],
       }),
     }),
-    CacheModule.registerAsync<ClientOpts>({
+    CacheModule.registerAsync<RedisClientOptions>({
       isGlobal: true,
       imports: [ConfigModule],
       inject: [ConfigService],

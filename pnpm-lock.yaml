@@ -648,9 +648,6 @@ importers:
       '@types/nodemailer':
         specifier: 6.4.7
         version: 6.4.7
-      '@types/redis':
-        specifier: 2.8.32
-        version: 2.8.32
       '@typescript-eslint/eslint-plugin':
         specifier: 5.60.1
         version: 5.60.1(@typescript-eslint/parser@5.60.1)(eslint@8.43.0)(typescript@5.1.6)
@@ -12588,12 +12585,6 @@ packages:
     resolution: {integrity: sha512-qaIzpCuXNWomGR1Xq8SCFTtF4v8V27Y6f+b9+bzHiv087MylI/nTCqqdChNeWS7tslgROmYB7yeiruWX7WnqNg==}
     dependencies:
       '@types/react': 18.0.35
-    dev: true
-
-  /@types/redis@2.8.32:
-    resolution: {integrity: sha512-7jkMKxcGq9p242exlbsVzuJb57KqHRhNl4dHoQu2Y5v9bCAbtIXXH0R3HleSQW4CTOqpHIYUW3t6tpUj4BVQ+w==}
-    dependencies:
-      '@types/node': 18.15.11
     dev: true
 
   /@types/relay-runtime@14.1.6:
