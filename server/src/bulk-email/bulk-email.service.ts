@@ -3,7 +3,7 @@ import { BadRequestException, Injectable } from '@nestjs/common';
 import { parse } from 'himalaya';
 import { compile } from 'handlebars';
 import { format } from 'date-fns';
-import * as mjml2html from 'mjml';
+import mjml2html from 'mjml';
 import { InjectSentry, SentryService } from '@ntegral/nestjs-sentry';
 import { SettingsFile, Story } from '../external/gaia';
 import { generateAvatar } from '../utils';
