@@ -1,11 +1,11 @@
 import { useInfiniteQuery } from '@tanstack/react-query';
 import { useInView } from 'react-cool-inview';
-import { UserService } from '../../external/api';
 import { useGetGaiaUserFollowing } from '../../hooks/appData';
 import { Box, LoadingSpinner, Typography } from '../../ui';
 import { DashboardLayout } from '../layout';
 import { UserCard } from '../userCard/UserCard';
 import { useAuth } from '../auth/AuthContext';
+import { fetchUserControllerExplore } from '../../__generated__/sigle-api/sigleApiComponents';
 
 export const ExploreUsers = () => {
   const { user, isLegacy } = useAuth();
@@ -22,8 +22,10 @@ export const ExploreUsers = () => {
   } = useInfiniteQuery(
     ['get-user-explore'],
     ({ pageParam }) => {
-      return UserService.userControllerExplore({
-        page: pageParam ? pageParam : 1,
+      return fetchUserControllerExplore({
+        queryParams: {
+          page: pageParam ? pageParam : 1,
+        },
       });
     },
     {
