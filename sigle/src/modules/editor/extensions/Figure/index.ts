@@ -2,6 +2,7 @@ import { mergeAttributes, Node, nodeInputRule } from '@tiptap/core';
 import { ReactNodeViewRenderer } from '@tiptap/react';
 import { FigureComponent } from './FigureComponent';
 
+// TODO selected state to delete image
 // TODO alt text editing
 // TODO press enter should create a new block
 // TODO upload image code should be in only one place
