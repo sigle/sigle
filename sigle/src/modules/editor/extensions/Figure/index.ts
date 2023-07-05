@@ -1,10 +1,4 @@
-import {
-  findChildrenInRange,
-  mergeAttributes,
-  Node,
-  nodeInputRule,
-  Tracker,
-} from '@tiptap/core';
+import { mergeAttributes, Node, nodeInputRule } from '@tiptap/core';
 
 export interface FigureOptions {
   HTMLAttributes: Record<string, any>;
@@ -22,16 +16,6 @@ declare module '@tiptap/core' {
         title?: string;
         caption?: string;
       }) => ReturnType;
-
-      /**
-       * Converts an image to a figure
-       */
-      imageToFigure: () => ReturnType;
-
-      /**
-       * Converts a figure to an image
-       */
-      figureToImage: () => ReturnType;
     };
   }
 }
@@ -122,44 +106,6 @@ export const TipTapFigure = Node.create<FigureOptions>({
               })
               .run()
           );
-        },
-
-      imageToFigure:
-        () =>
-        ({ tr, commands }) => {
-          const { doc, selection } = tr;
-          const { from, to } = selection;
-          const images = findChildrenInRange(
-            doc,
-            { from, to },
-            (node) => node.type.name === 'image'
-          );
-
-          if (!images.length) {
-            return false;
-          }
-
-          const tracker = new Tracker(tr);
-
-          return commands.forEach(images, ({ node, pos }) => {
-            const mapResult = tracker.map(pos);
-
-            if (mapResult.deleted) {
-              return false;
-            }
-
-            const range = {
-              from: mapResult.position,
-              to: mapResult.position + node.nodeSize,
-            };
-
-            return commands.insertContentAt(range, {
-              type: this.name,
-              attrs: {
-                src: node.attrs.src,
-              },
-            });
-          });
         },
     };
   },
