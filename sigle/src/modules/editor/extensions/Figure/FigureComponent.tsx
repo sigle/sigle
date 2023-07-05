@@ -1,9 +1,13 @@
-import { NodeViewContent, NodeViewWrapper } from '@tiptap/react';
-import { Editor } from '@tiptap/react';
+import {
+  NodeViewContent,
+  NodeViewRendererProps,
+  NodeViewWrapper,
+} from '@tiptap/react';
+import { useEffect, useState } from 'react';
 import type { Node as ProseMirrorNode } from '@tiptap/pm/model';
+import { NodeSelection } from '@tiptap/pm/state';
 import { LoadingSpinner } from '../../../../ui';
 import { styled } from '../../../../stitches.config';
-import { useEffect, useState } from 'react';
 
 const StyledFigcaption = styled('figcaption', {
   position: 'relative',
@@ -27,10 +31,9 @@ interface FigureNode extends ProseMirrorNode {
   };
 }
 
-interface FigureComponentProps {
-  selected: boolean;
-  editor: Editor;
+interface FigureComponentProps extends NodeViewRendererProps {
   node: FigureNode;
+  selected: boolean;
 }
 
 export const FigureComponent = (props: FigureComponentProps) => {
@@ -54,7 +57,7 @@ export const FigureComponent = (props: FigureComponentProps) => {
   }, [props.editor, props.node]);
 
   return (
-    <NodeViewWrapper data-drag-handle>
+    <NodeViewWrapper>
       {props.node.attrs.loading && (
         <LoadingSpinner
           css={{
@@ -64,8 +67,26 @@ export const FigureComponent = (props: FigureComponentProps) => {
           }}
         />
       )}
-      <figure>
-        <img src={props.node.attrs.src} alt={props.node.attrs.alt} />
+      <figure data-drag-handle draggable>
+        <img
+          contentEditable={false}
+          src={props.node.attrs.src}
+          alt={props.node.attrs.alt}
+          className={
+            props.editor.isEditable && props.selected
+              ? 'ProseMirror-selectednode'
+              : ''
+          }
+          onClick={() => {
+            if (typeof props.getPos !== 'function') return;
+            const pos = props.getPos();
+            props.editor.view.dispatch(
+              props.editor.view.state.tr.setSelection(
+                NodeSelection.create(props.editor.view.state.doc, pos)
+              )
+            );
+          }}
+        />
         <NodeViewContent
           as={StyledFigcaption}
           css={{

@@ -185,6 +185,15 @@ export const BubbleMenu = ({ editor }: BubbleMenuProps) => {
           return false;
         }
 
+        // Do not show menu on figures
+        // When we select the image we don't want the menu to show
+        if (
+          editor.isActive('figure') &&
+          editor.state.selection.$from.node().type.name !== 'figure'
+        ) {
+          return false;
+        }
+
         // Do not show menu on code blocks
         if (editor.isActive('codeBlock')) {
           return false;
