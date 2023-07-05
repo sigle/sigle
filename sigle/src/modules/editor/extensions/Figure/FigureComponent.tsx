@@ -1,15 +1,19 @@
-import { NodeViewWrapper } from '@tiptap/react';
+import { NodeViewContent, NodeViewWrapper } from '@tiptap/react';
 import { LoadingSpinner } from '../../../../ui';
 
 interface FigureComponentProps {
   node: {
     attrs: {
       loading: boolean;
+      src: string;
+      alt: string;
     };
   };
 }
 
 export const FigureComponent = (props: FigureComponentProps) => {
+  console.log(props.node);
+
   return (
     <NodeViewWrapper data-drag-handle>
       {props.node.attrs.loading && (
@@ -21,6 +25,10 @@ export const FigureComponent = (props: FigureComponentProps) => {
           }}
         />
       )}
+      <figure>
+        <img src={props.node.attrs.src} alt={props.node.attrs.alt} />
+        <NodeViewContent as="figcaption" />
+      </figure>
     </NodeViewWrapper>
   );
 };
