@@ -1,5 +1,6 @@
 import { NodeViewContent, NodeViewWrapper } from '@tiptap/react';
 import { Editor } from '@tiptap/react';
+import type { Node as ProseMirrorNode } from '@tiptap/pm/model';
 import { LoadingSpinner } from '../../../../ui';
 import { styled } from '../../../../stitches.config';
 import { useEffect, useState } from 'react';
@@ -18,16 +19,18 @@ const StyledFigcaption = styled('figcaption', {
   },
 });
 
-interface FigureComponentProps {
-  editor: Editor;
-  node: {
-    textContent: string;
-    attrs: {
-      loading: boolean;
-      src: string;
-      alt: string;
-    };
+interface FigureNode extends ProseMirrorNode {
+  attrs: {
+    loading: boolean;
+    src: string;
+    alt: string;
   };
+}
+
+interface FigureComponentProps {
+  selected: boolean;
+  editor: Editor;
+  node: FigureNode;
 }
 
 export const FigureComponent = (props: FigureComponentProps) => {
