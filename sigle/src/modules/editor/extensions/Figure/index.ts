@@ -5,7 +5,6 @@ import { FigureComponent } from './FigureComponent';
 
 // TODO upload image code should be in only one place
 // TODO loading state
-// TODO alt text editing
 // TODO see how to convert old images to new figure
 
 export interface FigureOptions {
