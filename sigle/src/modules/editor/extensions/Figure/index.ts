@@ -1,11 +1,11 @@
 import { mergeAttributes, Node, nodeInputRule } from '@tiptap/core';
 import { ReactNodeViewRenderer } from '@tiptap/react';
+import { TextSelection } from '@tiptap/pm/state';
 import { FigureComponent } from './FigureComponent';
 
-// TODO alt text editing
-// TODO press enter should create a new block
 // TODO upload image code should be in only one place
 // TODO loading state
+// TODO alt text editing
 // TODO see how to convert old images to new figure
 
 export interface FigureOptions {
@@ -119,6 +119,44 @@ export const TipTapFigure = Node.create<FigureOptions>({
               .run()
           );
         },
+    };
+  },
+
+  addKeyboardShortcuts() {
+    return {
+      /**
+       * When pressing Enter, insert a new paragraph after, if the cursor is at the end of the figcaption.
+       */
+      Enter: ({ editor }) => {
+        const { state } = editor;
+        const { $from, $to, empty } = state.selection;
+        // Get the current node type.
+        const currentNodeType = $from.node().type;
+        // If the current node is a 'figure' node and cursor is at the end of the text.
+        if (
+          currentNodeType.name === 'figure' &&
+          empty &&
+          $to.pos === $from.end()
+        ) {
+          // Calculate the replacement position.
+          const replacePos = $from.after();
+          if (replacePos <= state.doc.content.size) {
+            const newParagraph = state.schema.nodes.paragraph.create();
+            // Create a transaction to replace an empty text node right after the figure with the new paragraph.
+            const tr = state.tr.replaceWith(
+              replacePos,
+              replacePos,
+              newParagraph
+            );
+            // Set the focus on the new paragraph.
+            tr.setSelection(TextSelection.create(tr.doc, replacePos + 1));
+            // Dispatch the transaction.
+            editor.view.dispatch(tr);
+            return true;
+          }
+        }
+        return false;
+      },
     };
   },
 
