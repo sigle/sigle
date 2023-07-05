@@ -173,6 +173,9 @@ module.exports = {
             },
             figcaption: {
               textAlign: 'center',
+              strong: {
+                color: 'inherit',
+              },
             },
             '[class~="lead"]': false,
           },

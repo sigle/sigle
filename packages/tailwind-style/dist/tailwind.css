@@ -701,6 +701,10 @@ textarea::placeholder {
   text-align: center;
 }
 
+.prose :where(figcaption):not(:where([class~='not-prose'] *)) strong {
+  color: inherit;
+}
+
 .prose :where(code):not(:where([class~='not-prose'] *)) {
   color: var(--tw-prose-code);
   font-weight: 400;
