@@ -200,11 +200,30 @@ export const sites: {
       label: 'Go to Website',
     },
   },
+  ['espresso.jlabsdigital.com']: {
+    username: 'espresso.id.stx',
+    address: 'SP1N45KDKBM2GP2RN4XMRTE4SH2MM3FDW7NVHZDK7',
+    banner: '/websites/espresso.jlabsdigital.com/banner.png',
+    links: [
+      {
+        href: 'https://jlabsdigital.com',
+        label: 'Home',
+      },
+      {
+        href: 'https://www.youtube.com/@xChangingGood',
+        label: 'YouTube',
+      },
+    ],
+    cta: {
+      href: 'https://app.sigle.io/jlabsdigital.btc',
+      label: 'Subscribe',
+    },
+  },
 };
 
 // Add localhost to sites for development
 if (process.env.NODE_ENV === 'development') {
-  sites['localhost:3000'] = sites['blog.sigle.io'];
+  sites['localhost:3000'] = sites['espresso.jlabsdigital.com'];
 } else if (process.env.VERCEL_ENV === 'preview' && process.env.VERCEL_URL) {
   // Preview deployments
   sites[process.env.VERCEL_URL] = sites['blog.sigle.io'];
