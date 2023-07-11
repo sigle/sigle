@@ -4,6 +4,7 @@ import ScrollUp from '@/components/ScrollUp';
 import { notFound } from 'next/navigation';
 import { Metadata } from 'next';
 import { getSettings, getSubscription } from '@/lib/api';
+import { Footer } from '@/components/Footer';
 
 export async function generateMetadata({
   params,
@@ -64,10 +65,11 @@ export default async function PageLayout({
     <>
       <ScrollUp />
       <Header settings={settings} />
-      <main className="mb-16">
+      <main>
         <Hero settings={settings} newsletter={subscription?.newsletter} />
         {children}
       </main>
+      <Footer />
     </>
   );
 }
