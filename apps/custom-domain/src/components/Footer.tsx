@@ -10,7 +10,7 @@ export const Footer = () => {
         rel="noopener"
       >
         <div className="text-center text-sm font-semibold leading-tight">
-          Made with Sigle
+          Powered by Sigle
         </div>
         <Image
           src="/img/sigle-logo.svg"
