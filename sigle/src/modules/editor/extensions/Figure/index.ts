@@ -152,29 +152,26 @@ export const TipTapFigure = Node.create<FigureOptions>({
             const image = new Image();
             image.src = imageUrl;
             image.onload = () => {
-              editor
-                .chain()
-                .focus()
-                .command(({ tr }) => {
-                  const doc = tr.doc;
-                  const images = findChildren(
-                    doc,
-                    (node) =>
-                      node.type.name === 'figure' &&
-                      node.attrs.uploadId === uploadId
-                  );
-                  const image = images[0];
-                  if (!image || images.length > 1) {
-                    return false;
-                  }
-                  tr.setNodeMarkup(image.pos, undefined, {
-                    ...image.node.attrs,
+              const transaction = editor.state.tr;
+              editor.state.doc.descendants((node, pos) => {
+                if (
+                  node.type.name === 'figure' &&
+                  node.attrs.uploadId === uploadId
+                ) {
+                  const attrs = {
+                    ...node.attrs,
                     src: imageUrl,
-                    uploadId: null,
-                  });
-                  console.log('tr', tr);
-                  return true;
-                });
+                    uploadId: undefined,
+                  };
+                  const newNode = node.type.create(
+                    attrs,
+                    node.content,
+                    node.marks
+                  );
+                  transaction.replaceWith(pos, pos + node.nodeSize, newNode);
+                }
+              });
+              editor.view.dispatch(transaction);
             };
           });
 
