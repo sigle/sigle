@@ -173,6 +173,52 @@ export const sites: {
       label: 'Join us',
     },
   },
+  ['blog.stxldn.com']: {
+    username: 'stxldn.btc',
+    address: 'SPCMGSQF3ME39XN7W6RV4M21HFRHC2BGJH6S07V7',
+    banner: '/websites/blog.stxldn.com/banner.png',
+    links: [
+      {
+        href: 'https://twitter.com/stxldn',
+        label: 'Twitter',
+      },
+      {
+        href: 'https://t.me/stxldn',
+        label: 'Telegram',
+      },
+      {
+        href: 'https://youtube.com/@stxldn',
+        label: 'Youtube',
+      },
+      {
+        href: 'https://discord.gg/TJBS9G7BQg',
+        label: 'Discord',
+      },
+    ],
+    cta: {
+      href: 'https://stxldn.com/',
+      label: 'Go to Website',
+    },
+  },
+  ['espresso.jlabsdigital.com']: {
+    username: 'espresso.id.stx',
+    address: 'SP1N45KDKBM2GP2RN4XMRTE4SH2MM3FDW7NVHZDK7',
+    banner: '/websites/espresso.jlabsdigital.com/banner.png',
+    links: [
+      {
+        href: 'https://jlabsdigital.com',
+        label: 'Home',
+      },
+      {
+        href: 'https://www.youtube.com/@xChangingGood',
+        label: 'YouTube',
+      },
+    ],
+    cta: {
+      href: 'https://app.sigle.io/espresso.id.stx',
+      label: 'Subscribe',
+    },
+  },
 };
 
 // Add localhost to sites for development

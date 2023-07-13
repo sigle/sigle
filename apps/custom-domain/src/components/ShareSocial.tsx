@@ -1,3 +1,5 @@
+import { IconLink } from '@tabler/icons-react';
+import { useState } from 'react';
 import { FacebookLogoIcon } from '@/icons/FacebookLogoIcon';
 import { LinkedinIcon } from '@/icons/LinkedinIcon';
 import { TwitterFilledIcon } from '@/icons/TwitterFilledIcon';
@@ -7,8 +9,6 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from '@/ui/Tooltip';
-import { IconLink } from '@tabler/icons-react';
-import { useState } from 'react';
 
 export const ShareSocial = ({
   post,

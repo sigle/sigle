@@ -3,8 +3,8 @@
 import { useRouter } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
 import { clsx } from 'clsx';
-import { ShareSocial } from './ShareSocial';
 import { twMerge } from 'tailwind-merge';
+import { ShareSocial } from './ShareSocial';
 
 const scrollToElement = (id: string, offset = 16): void => {
   const element = document.getElementById(id);

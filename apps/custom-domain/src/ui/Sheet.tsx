@@ -3,8 +3,8 @@
 import * as React from 'react';
 import * as SheetPrimitive from '@radix-ui/react-dialog';
 import { VariantProps, cva } from 'class-variance-authority';
-import { cn } from '@/utils/tailwind';
 import { IconX } from '@tabler/icons-react';
+import { cn } from '@/utils/tailwind';
 
 const Sheet = SheetPrimitive.Root;
 

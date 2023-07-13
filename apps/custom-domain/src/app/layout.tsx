@@ -29,6 +29,8 @@ export default function RootLayout({
     <html lang="en">
       <body
         className={clsx(inter.className, 'bg-sigle-background text-sigle-text')}
+        // Required to avoid warning created by browser extensions
+        suppressHydrationWarning
       >
         {children}
       </body>

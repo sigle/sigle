@@ -1,7 +1,6 @@
-import { Header } from '@/components/Header';
-import ScrollUp from '@/components/ScrollUp';
 import { notFound } from 'next/navigation';
 import { Metadata } from 'next';
+import ScrollUp from '@/components/ScrollUp';
 import { getPost, getSettings } from '@/lib/api';
 
 export async function generateMetadata({
@@ -64,8 +63,7 @@ export default async function PostLayout({
   return (
     <>
       <ScrollUp />
-      <Header settings={settings} />
-      <main className="mb-16 mt-5">{children}</main>
+      <main className="mt-5">{children}</main>
     </>
   );
 }
