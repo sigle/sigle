@@ -1,4 +1,4 @@
-import { mergeAttributes, Node, nodeInputRule } from '@tiptap/core';
+import { Node, nodeInputRule } from '@tiptap/core';
 import { ReactNodeViewRenderer } from '@tiptap/react';
 import { Plugin, PluginKey, TextSelection } from '@tiptap/pm/state';
 import { FigureComponent } from './FigureComponent';
@@ -88,13 +88,7 @@ export const TipTapFigure = Node.create<FigureOptions>({
     return [
       'figure',
       this.options.HTMLAttributes,
-      [
-        'img',
-        mergeAttributes(HTMLAttributes, {
-          draggable: false,
-          contenteditable: false,
-        }),
-      ],
+      ['img', HTMLAttributes],
       ['figcaption', 0],
     ];
   },

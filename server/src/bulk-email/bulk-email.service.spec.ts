@@ -101,6 +101,16 @@ describe('BulkEmailService', () => {
       );
     });
 
+    it('should convert figure', () => {
+      expect(
+        service.htmlToMJML(
+          '<figure><img src="https://gaia.blockstack.org/hub/1GT81E4hd1s5cDyY2qhVUEvRUbkqBKWLte/photos/H4J8BEo-7kPMjU70BoTYt/huHZftWPTSggEV9ygItM_-banner.png"><figcaption>Test <em>caption</em> <strong>bold <em>italicbold</em> </strong><a href="http://localhost:3000/stories/H4J8BEo-7kPMjU70BoTYt">link</a> test</figcaption></figure>',
+        ),
+      ).toEqual(
+        '<mj-image src="https://gaia.blockstack.org/hub/1GT81E4hd1s5cDyY2qhVUEvRUbkqBKWLte/photos/H4J8BEo-7kPMjU70BoTYt/huHZftWPTSggEV9ygItM_-banner.png" /><mj-text align="center" font-size="14px" color="#6b7280">Test <em>caption</em> <strong>bold <em>italicbold</em> </strong><a href="http://localhost:3000/stories/H4J8BEo-7kPMjU70BoTYt">link</a> test</mj-text>',
+      );
+    });
+
     it('should convert hr', () => {
       expect(service.htmlToMJML('<hr />')).toEqual('<mj-divider />');
     });
