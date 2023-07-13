@@ -725,7 +725,7 @@ importers:
         version: 1.0.5(@types/react@18.0.26)(react-dom@18.2.0)(react@18.2.0)
       '@sentry/nextjs':
         specifier: 7.58.0
-        version: 7.58.0(next@13.4.9)(react@18.2.0)(webpack@5.88.1)
+        version: 7.58.0(next@13.4.9)(react@18.2.0)
       '@sigle/slate-to-html':
         specifier: 1.0.0
         version: 1.0.0(immutable@4.0.0-rc.12)(react-dom@18.2.0)(react@18.2.0)
@@ -938,7 +938,7 @@ importers:
         version: 13.4.9(@babel/core@7.22.9)(react-dom@18.2.0)(react@18.2.0)(sass@1.61.0)
       next-auth:
         specifier: 4.10.3
-        version: 4.10.3(nodemailer@6.9.1)(react-dom@18.2.0)(react@18.2.0)
+        version: 4.10.3(react-dom@18.2.0)(react@18.2.0)
       next-plausible:
         specifier: 3.5.0
         version: 3.5.0(next@13.4.9)(react-dom@18.2.0)(react@18.2.0)
@@ -1072,9 +1072,6 @@ importers:
       jest-environment-jsdom:
         specifier: 28.1.3
         version: 28.1.3
-      next-compose-plugins:
-        specifier: 2.2.1
-        version: 2.2.1
       next-sitemap:
         specifier: 2.5.20
         version: 2.5.20(next@13.4.9)
@@ -2199,10 +2196,10 @@ packages:
       '@babel/helpers': 7.22.6
       '@babel/parser': 7.22.7
       '@babel/template': 7.22.5
-      '@babel/traverse': 7.22.8(supports-color@5.5.0)
+      '@babel/traverse': 7.22.8
       '@babel/types': 7.22.5
       convert-source-map: 1.9.0
-      debug: 4.3.4(supports-color@5.5.0)
+      debug: 4.3.4
       gensync: 1.0.0-beta.2
       json5: 2.2.3
       semver: 6.3.1
@@ -2520,7 +2517,7 @@ packages:
     engines: {node: '>=6.9.0'}
     dependencies:
       '@babel/template': 7.22.5
-      '@babel/traverse': 7.22.8(supports-color@5.5.0)
+      '@babel/traverse': 7.22.8
       '@babel/types': 7.22.5
     transitivePeerDependencies:
       - supports-color
@@ -4479,6 +4476,23 @@ packages:
       - supports-color
     dev: true
 
+  /@babel/traverse@7.22.8:
+    resolution: {integrity: sha512-y6LPR+wpM2I3qJrsheCTwhIinzkETbplIgPBbwvqPKc+uljeA5gP+3nP8irdYt1mjQaDnlIcG+dw8OjAco4GXw==}
+    engines: {node: '>=6.9.0'}
+    dependencies:
+      '@babel/code-frame': 7.22.5
+      '@babel/generator': 7.22.9
+      '@babel/helper-environment-visitor': 7.22.5
+      '@babel/helper-function-name': 7.22.5
+      '@babel/helper-hoist-variables': 7.22.5
+      '@babel/helper-split-export-declaration': 7.22.6
+      '@babel/parser': 7.22.7
+      '@babel/types': 7.22.5
+      debug: 4.3.4
+      globals: 11.12.0
+    transitivePeerDependencies:
+      - supports-color
+
   /@babel/traverse@7.22.8(supports-color@5.5.0):
     resolution: {integrity: sha512-y6LPR+wpM2I3qJrsheCTwhIinzkETbplIgPBbwvqPKc+uljeA5gP+3nP8irdYt1mjQaDnlIcG+dw8OjAco4GXw==}
     engines: {node: '>=6.9.0'}
@@ -5454,7 +5468,7 @@ packages:
     engines: {node: ^12.22.0 || ^14.17.0 || >=16.0.0}
     dependencies:
       ajv: 6.12.6
-      debug: 4.3.4(supports-color@5.5.0)
+      debug: 4.3.4
       espree: 9.6.0
       globals: 13.20.0
       ignore: 5.2.4
@@ -6025,7 +6039,7 @@ packages:
     engines: {node: '>=10.10.0'}
     dependencies:
       '@humanwhocodes/object-schema': 1.2.1
-      debug: 4.3.4(supports-color@5.5.0)
+      debug: 4.3.4
       minimatch: 3.1.2
     transitivePeerDependencies:
       - supports-color
@@ -6533,7 +6547,7 @@ packages:
       '@jest/schemas': 29.6.0
       '@types/istanbul-lib-coverage': 2.0.4
       '@types/istanbul-reports': 3.0.1
-      '@types/node': 18.15.11
+      '@types/node': 18.11.18
       '@types/yargs': 17.0.24
       chalk: 4.1.2
     dev: true
@@ -6610,7 +6624,7 @@ packages:
     resolution: {integrity: sha512-YnBq0JlDWMEkTOK+tMo5yEVR0f5V//6qMLToGcLhTyM9g9i+IDFn51Z+5q2hLk7RdG4NBPgbcCXYi2w4RKsPeg==}
     engines: {node: ^12.16.0 || >=13.7.0}
     dependencies:
-      debug: 4.3.4(supports-color@5.5.0)
+      debug: 4.3.4
       picocolors: 1.0.0
     transitivePeerDependencies:
       - supports-color
@@ -6635,7 +6649,7 @@ packages:
       '@babel/plugin-proposal-export-namespace-from': 7.18.9(@babel/core@7.22.9)
       '@babel/plugin-syntax-dynamic-import': 7.8.3(@babel/core@7.22.9)
       '@babel/plugin-transform-modules-commonjs': 7.22.5(@babel/core@7.22.9)
-      '@babel/traverse': 7.22.8(supports-color@5.5.0)
+      '@babel/traverse': 7.22.8
       '@babel/types': 7.22.5
       '@linaria/logger': 4.0.0
       babel-merge: 3.0.0(@babel/core@7.22.9)
@@ -9327,6 +9341,36 @@ packages:
       '@sentry/utils': 7.58.0
       localforage: 1.10.0
       tslib: 2.6.0
+    dev: false
+
+  /@sentry/nextjs@7.58.0(next@13.4.9)(react@18.2.0):
+    resolution: {integrity: sha512-t2RKUVAZxSpJnUFcZMcBsh2iy72/5pWkwXDtnIaXUntQ5uwpqA0ZwWCOPp6kd1o+s9XhE8v+WLpIL6rXo67ZEg==}
+    engines: {node: '>=8'}
+    peerDependencies:
+      next: ^10.0.8 || ^11.0 || ^12.0 || ^13.0
+      react: 16.x || 17.x || 18.x
+      webpack: '>= 4.0.0'
+    peerDependenciesMeta:
+      webpack:
+        optional: true
+    dependencies:
+      '@rollup/plugin-commonjs': 24.0.0(rollup@2.78.0)
+      '@sentry/core': 7.58.0
+      '@sentry/integrations': 7.58.0
+      '@sentry/node': 7.58.0
+      '@sentry/react': 7.58.0(react@18.2.0)
+      '@sentry/types': 7.58.0
+      '@sentry/utils': 7.58.0
+      '@sentry/webpack-plugin': 1.20.0
+      chalk: 3.0.0
+      next: 13.4.9(@babel/core@7.22.9)(react-dom@18.2.0)(react@18.2.0)(sass@1.61.0)
+      react: 18.2.0
+      rollup: 2.78.0
+      stacktrace-parser: 0.1.10
+      tslib: 2.6.0
+    transitivePeerDependencies:
+      - encoding
+      - supports-color
     dev: false
 
   /@sentry/nextjs@7.58.0(next@13.4.9)(react@18.2.0)(webpack@5.88.1):
@@ -12027,7 +12071,7 @@ packages:
   /@types/bn.js@4.11.6:
     resolution: {integrity: sha512-pqr857jrp2kPuO9uRjZ3PwnJTjoQy+fcdxvBTvHm6dkmEL9q+hDD/2j/0ELOBPtPnS8LjCX0gI9nbl8lVkadpg==}
     dependencies:
-      '@types/node': 18.15.11
+      '@types/node': 18.11.18
     dev: false
 
   /@types/bn.js@5.1.1:
@@ -12054,7 +12098,7 @@ packages:
   /@types/cheerio@0.22.31:
     resolution: {integrity: sha512-Kt7Cdjjdi2XWSfrZ53v4Of0wG3ZcmaegFXjMmz9tfNrZSkzzo36G0AL1YqSdcIA78Etjt6E609pt5h1xnQkPUw==}
     dependencies:
-      '@types/node': 18.15.11
+      '@types/node': 18.11.18
     dev: false
 
   /@types/connect@3.4.35:
@@ -12326,7 +12370,6 @@ packages:
 
   /@types/node@18.11.18:
     resolution: {integrity: sha512-DHQpWGjyQKSHj3ebjFI/wRKcqQcdR+MoFBygntYOZytCqNfkd2ZC4ARDJ2DQqhjH5p85Nnd3jhUJIXrszFX/JA==}
-    dev: true
 
   /@types/node@18.15.11:
     resolution: {integrity: sha512-E5Kwq2n4SbMzQOn6wnmBjuK9ouqlURrcZDVfbo9ftDDTFt3nk7ZKK4GMOzoYgnpQJKcxwQw+lGaBvvlMo0qN/Q==}
@@ -12387,7 +12430,7 @@ packages:
   /@types/randombytes@2.0.0:
     resolution: {integrity: sha512-bz8PhAVlwN72vqefzxa14DKNT8jK/mV66CSjwdVQM/k3Th3EPKfUtdMniwZgMedQTFuywAsfjnZsg+pEnltaMA==}
     dependencies:
-      '@types/node': 18.15.11
+      '@types/node': 18.11.18
     dev: false
 
   /@types/range-parser@1.2.4:
@@ -12579,7 +12622,7 @@ packages:
       '@typescript-eslint/scope-manager': 5.30.7
       '@typescript-eslint/type-utils': 5.30.7(eslint@8.38.0)(typescript@4.7.4)
       '@typescript-eslint/utils': 5.30.7(eslint@8.38.0)(typescript@4.7.4)
-      debug: 4.3.4(supports-color@5.5.0)
+      debug: 4.3.4
       eslint: 8.38.0
       functional-red-black-tree: 1.0.1
       ignore: 5.2.4
@@ -12632,7 +12675,7 @@ packages:
       '@typescript-eslint/scope-manager': 5.60.1
       '@typescript-eslint/types': 5.60.1
       '@typescript-eslint/typescript-estree': 5.60.1(typescript@4.7.4)
-      debug: 4.3.4(supports-color@5.5.0)
+      debug: 4.3.4
       eslint: 8.38.0
       typescript: 4.7.4
     transitivePeerDependencies:
@@ -12734,7 +12777,7 @@ packages:
         optional: true
     dependencies:
       '@typescript-eslint/utils': 5.30.7(eslint@8.38.0)(typescript@4.7.4)
-      debug: 4.3.4(supports-color@5.5.0)
+      debug: 4.3.4
       eslint: 8.38.0
       tsutils: 3.21.0(typescript@4.7.4)
       typescript: 4.7.4
@@ -12788,7 +12831,7 @@ packages:
     dependencies:
       '@typescript-eslint/types': 5.30.7
       '@typescript-eslint/visitor-keys': 5.30.7
-      debug: 4.3.4(supports-color@5.5.0)
+      debug: 4.3.4
       globby: 11.1.0
       is-glob: 4.0.3
       semver: 7.5.4
@@ -12809,7 +12852,7 @@ packages:
     dependencies:
       '@typescript-eslint/types': 5.60.1
       '@typescript-eslint/visitor-keys': 5.60.1
-      debug: 4.3.4(supports-color@5.5.0)
+      debug: 4.3.4
       globby: 11.1.0
       is-glob: 4.0.3
       semver: 7.5.4
@@ -13844,7 +13887,7 @@ packages:
     resolution: {integrity: sha512-RZNwNclF7+MS/8bDg70amg32dyeZGZxiDuQmZxKLAlQjr3jGyLx+4Kkk58UO7D2QdgFIQCovuSuZESne6RG6XQ==}
     engines: {node: '>= 6.0.0'}
     dependencies:
-      debug: 4.3.4(supports-color@5.5.0)
+      debug: 4.3.4
     transitivePeerDependencies:
       - supports-color
 
@@ -16066,6 +16109,17 @@ packages:
     dependencies:
       ms: 2.1.3
 
+  /debug@4.3.4:
+    resolution: {integrity: sha512-PRWFHuSU3eDtQJPvnNY7Jcket1j0t5OuOsFzPPzsekD52Zl8qUfFIPEiswXqIvHWGVHOgX+7G/vCNNhehwxfkQ==}
+    engines: {node: '>=6.0'}
+    peerDependencies:
+      supports-color: '*'
+    peerDependenciesMeta:
+      supports-color:
+        optional: true
+    dependencies:
+      ms: 2.1.2
+
   /debug@4.3.4(supports-color@5.5.0):
     resolution: {integrity: sha512-PRWFHuSU3eDtQJPvnNY7Jcket1j0t5OuOsFzPPzsekD52Zl8qUfFIPEiswXqIvHWGVHOgX+7G/vCNNhehwxfkQ==}
     engines: {node: '>=6.0'}
@@ -16643,7 +16697,7 @@ packages:
     resolution: {integrity: sha512-V05mmDo4gjimYW+FGujoGmmmxRaDsrVr7AXA3ZIfa04MWM1jOfZfUwou0oNqhNwy/votUDvGDt4JA4QF4e0b4g==}
     dependencies:
       '@socket.io/component-emitter': 3.0.0
-      debug: 4.3.4(supports-color@5.5.0)
+      debug: 4.3.4
       engine.io-parser: 5.0.7
       has-cors: 1.1.0
       parseqs: 0.0.6
@@ -17013,7 +17067,7 @@ packages:
       eslint: '*'
       eslint-plugin-import: '*'
     dependencies:
-      debug: 4.3.4(supports-color@5.5.0)
+      debug: 4.3.4
       enhanced-resolve: 5.15.0
       eslint: 8.38.0
       eslint-module-utils: 2.8.0(@typescript-eslint/parser@5.60.1)(eslint-import-resolver-node@0.3.7)(eslint-import-resolver-typescript@3.5.5)(eslint@8.38.0)
@@ -17563,7 +17617,7 @@ packages:
       ajv: 6.12.6
       chalk: 4.1.2
       cross-spawn: 7.0.3
-      debug: 4.3.4(supports-color@5.5.0)
+      debug: 4.3.4
       doctrine: 3.0.0
       escape-string-regexp: 4.0.0
       eslint-scope: 7.2.0
@@ -19311,7 +19365,7 @@ packages:
     dependencies:
       '@tootallnate/once': 1.1.2
       agent-base: 6.0.2
-      debug: 4.3.4(supports-color@5.5.0)
+      debug: 4.3.4
     transitivePeerDependencies:
       - supports-color
     dev: false
@@ -19322,7 +19376,7 @@ packages:
     dependencies:
       '@tootallnate/once': 2.0.0
       agent-base: 6.0.2
-      debug: 4.3.4(supports-color@5.5.0)
+      debug: 4.3.4
     transitivePeerDependencies:
       - supports-color
     dev: true
@@ -19363,7 +19417,7 @@ packages:
     engines: {node: '>= 6'}
     dependencies:
       agent-base: 6.0.2
-      debug: 4.3.4(supports-color@5.5.0)
+      debug: 4.3.4
     transitivePeerDependencies:
       - supports-color
 
@@ -19995,7 +20049,7 @@ packages:
     resolution: {integrity: sha512-n3s8EwkdFIJCG3BPKBYvskgXGoy88ARzvegkitk60NxRdwltLOTaH7CUiMRXvwYorl0Q712iEjcWB+fK/MrWVw==}
     engines: {node: '>=10'}
     dependencies:
-      debug: 4.3.4(supports-color@5.5.0)
+      debug: 4.3.4
       istanbul-lib-coverage: 3.2.0
       source-map: 0.6.1
     transitivePeerDependencies:
@@ -20747,7 +20801,7 @@ packages:
       '@babel/core': 7.22.9
       '@babel/generator': 7.22.9
       '@babel/plugin-syntax-typescript': 7.22.5(@babel/core@7.22.9)
-      '@babel/traverse': 7.22.8(supports-color@5.5.0)
+      '@babel/traverse': 7.22.8
       '@babel/types': 7.22.5
       '@jest/expect-utils': 28.1.3
       '@jest/transform': 28.1.3
@@ -20817,7 +20871,7 @@ packages:
     engines: {node: ^14.15.0 || ^16.10.0 || >=18.0.0}
     dependencies:
       '@jest/types': 29.6.1
-      '@types/node': 18.15.11
+      '@types/node': 18.11.18
       chalk: 4.1.2
       ci-info: 3.8.0
       graceful-fs: 4.2.11
@@ -21088,7 +21142,7 @@ packages:
       whatwg-encoding: 2.0.0
       whatwg-mimetype: 3.0.0
       whatwg-url: 10.0.0
-      ws: 8.13.0(bufferutil@4.0.7)(utf-8-validate@5.0.10)
+      ws: 8.13.0
       xml-name-validator: 4.0.0
     transitivePeerDependencies:
       - bufferutil
@@ -22611,6 +22665,30 @@ packages:
       uuid: 8.3.2
     dev: false
 
+  /next-auth@4.10.3(react-dom@18.2.0)(react@18.2.0):
+    resolution: {integrity: sha512-7zc4aXYc/EEln7Pkcsn21V1IevaTZsMLJwapfbnKA4+JY0+jFzWbt5p/ljugesGIrN4VOZhpZIw50EaFZyghJQ==}
+    engines: {node: ^12.19.0 || ^14.15.0 || ^16.13.0}
+    peerDependencies:
+      nodemailer: ^6.6.5
+      react: ^17.0.2 || ^18
+      react-dom: ^17.0.2 || ^18
+    peerDependenciesMeta:
+      nodemailer:
+        optional: true
+    dependencies:
+      '@babel/runtime': 7.22.6
+      '@panva/hkdf': 1.1.1
+      cookie: 0.4.2
+      jose: 4.14.4
+      oauth: 0.9.15
+      openid-client: 5.4.3
+      preact: 10.16.0
+      preact-render-to-string: 5.2.6(preact@10.16.0)
+      react: 18.2.0
+      react-dom: 18.2.0(react@18.2.0)
+      uuid: 8.3.2
+    dev: false
+
   /next-auth@4.22.1(next@13.4.9)(react-dom@18.2.0)(react@18.2.0):
     resolution: {integrity: sha512-NTR3f6W7/AWXKw8GSsgSyQcDW6jkslZLH8AiZa5PQ09w1kR8uHtR9rez/E9gAq/o17+p0JYHE8QjF3RoniiObA==}
     peerDependencies:
@@ -22635,10 +22713,6 @@ packages:
       react-dom: 18.2.0(react@18.2.0)
       uuid: 8.3.2
     dev: false
-
-  /next-compose-plugins@2.2.1:
-    resolution: {integrity: sha512-OjJ+fV15FXO2uQXQagLD4C0abYErBjyjE0I0FHpOEIB8upw0hg1ldFP6cqHTJBH1cZqy96OeR3u1dJ+Ez2D4Bg==}
-    dev: true
 
   /next-plausible@3.5.0(next@13.4.9)(react-dom@18.2.0)(react@18.2.0):
     resolution: {integrity: sha512-mN4IXHwKA0/OlEhjCzpC1qrPbZIpZ6GTPqKyd8PdL+SW400aXKvkHD4oEAttokOYg0gieEIoK0Uj4He6UeaE2Q==}
@@ -25841,7 +25915,7 @@ packages:
     dependencies:
       '@socket.io/component-emitter': 3.0.0
       backo2: 1.0.2
-      debug: 4.3.4(supports-color@5.5.0)
+      debug: 4.3.4
       engine.io-client: 6.1.1
       parseuri: 0.0.6
       socket.io-parser: 4.1.2
@@ -25870,7 +25944,7 @@ packages:
     engines: {node: '>=10.0.0'}
     dependencies:
       '@socket.io/component-emitter': 3.0.0
-      debug: 4.3.4(supports-color@5.5.0)
+      debug: 4.3.4
     transitivePeerDependencies:
       - supports-color
     dev: false
@@ -28079,6 +28153,19 @@ packages:
       utf-8-validate:
         optional: true
     dev: false
+
+  /ws@8.13.0:
+    resolution: {integrity: sha512-x9vcZYTrFPC7aSIbj7sRCYo7L/Xb8Iy+pW0ng0wt2vCJv7M9HOMy0UoN3rr+IFC7hb7vXoqS+P9ktyLLLhO+LA==}
+    engines: {node: '>=10.0.0'}
+    peerDependencies:
+      bufferutil: ^4.0.1
+      utf-8-validate: '>=5.0.2'
+    peerDependenciesMeta:
+      bufferutil:
+        optional: true
+      utf-8-validate:
+        optional: true
+    dev: true
 
   /ws@8.13.0(bufferutil@4.0.7)(utf-8-validate@5.0.10):
     resolution: {integrity: sha512-x9vcZYTrFPC7aSIbj7sRCYo7L/Xb8Iy+pW0ng0wt2vCJv7M9HOMy0UoN3rr+IFC7hb7vXoqS+P9ktyLLLhO+LA==}
