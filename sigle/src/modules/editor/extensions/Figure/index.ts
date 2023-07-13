@@ -5,7 +5,6 @@ import { FigureComponent } from './FigureComponent';
 import { generateRandomId } from '../../../../utils';
 
 // TODO drag and drop image
-// TODO see how to convert old images to new figure
 
 export interface FigureOptions {
   HTMLAttributes: Record<string, any>;
