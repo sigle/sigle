@@ -14,7 +14,7 @@ import {
 } from 'nodemailer';
 import Mail from 'nodemailer/lib/mailer';
 import SMTPTransport from 'nodemailer/lib/smtp-transport';
-import * as mjml2html from 'mjml';
+import mjml2html from 'mjml';
 import { compile } from 'handlebars';
 import { EnvironmentVariables } from '../environment/environment.validation';
 import { InjectSentry, SentryService } from '@ntegral/nestjs-sentry';

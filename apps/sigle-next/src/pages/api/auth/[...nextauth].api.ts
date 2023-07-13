@@ -2,11 +2,19 @@ import NextAuth from 'next-auth';
 import type { NextAuthOptions } from 'next-auth';
 import CredentialsProvider from 'next-auth/providers/credentials';
 import { NextApiRequest, NextApiResponse } from 'next';
+import { SiweMessage } from 'siwe';
+import { z } from 'zod';
 import * as Sentry from '@sentry/nextjs';
 import { getCsrfToken } from 'next-auth/react';
 import { SignInWithStacksMessage } from '@/lib/auth/sign-in-with-stacks/signInWithStacksMessage';
 import { prismaClient } from '@/lib/prisma';
 import { postHogClient } from '@/lib/posthog';
+
+const authWalletSchema = z.object({
+  chain: z.enum(['ethereum', 'stacks']),
+  message: z.string(),
+  signature: z.string(),
+});
 
 export const authOptions: NextAuthOptions = {
   secret: process.env.NEXTAUTH_SECRET,
@@ -15,8 +23,13 @@ export const authOptions: NextAuthOptions = {
   },
   providers: [
     CredentialsProvider({
-      name: 'Stacks',
+      name: 'Wallet',
       credentials: {
+        chain: {
+          label: 'Chain',
+          type: 'text',
+          placeholder: '0x0',
+        },
         message: {
           label: 'Message',
           type: 'text',
@@ -29,72 +42,104 @@ export const authOptions: NextAuthOptions = {
         },
       },
       async authorize(credentials, req) {
+        const validationResult = authWalletSchema.safeParse(credentials);
+        if (!validationResult.success) {
+          return null;
+        }
+        const safeCredentials = validationResult.data;
+
+        let address: string;
+
         try {
-          const siwe = new SignInWithStacksMessage(credentials?.message || '');
+          if (safeCredentials.chain === 'ethereum') {
+            const siwe = new SiweMessage(safeCredentials.message);
+            const nextAuthUrl = new URL(process.env.NEXTAUTH_URL!);
 
-          const result = await siwe.verify({
-            signature: credentials?.signature || '',
-            domain: process.env.NEXTAUTH_URL,
-            nonce:
-              // In preview env, a different nonce is returned, to bypass this issue
-              // we disable nonce check on preview pr
-              process.env.VERCEL_ENV === 'preview'
-                ? undefined
-                : await getCsrfToken({ req }),
-          });
-
-          if (!result.success) {
-            return null;
-          }
-
-          let user = await prismaClient.user.findUnique({
-            select: {
-              id: true,
-              did: true,
-            },
-            where: {
-              address: siwe.address,
-            },
-          });
-
-          if (!user) {
-            user = await prismaClient.user.create({
-              select: {
-                id: true,
-                did: true,
-              },
-              data: {
-                address: siwe.address,
-                did: `did:pkh:stacks:1:${siwe.address}`,
-                chain: 'STACKS',
-              },
+            const result = await siwe.verify({
+              signature: safeCredentials.signature,
+              domain: nextAuthUrl.host,
+              nonce: await getCsrfToken({ req }),
             });
 
-            postHogClient.capture({
-              distinctId: user.id,
-              event: 'user created',
-              properties: {
-                did: user.did,
-              },
-            });
-            await postHogClient.shutdownAsync();
-          }
+            if (!result.success) {
+              return null;
+            }
 
-          return {
-            id: user.id,
-            did: user.did,
-          };
+            address = siwe.address.toLowerCase();
+          } else {
+            const siwe = new SignInWithStacksMessage(safeCredentials.message);
+
+            const result = await siwe.verify({
+              signature: safeCredentials.signature,
+              domain: process.env.NEXTAUTH_URL,
+              nonce:
+                // In preview env, a different nonce is returned, to bypass this issue
+                // we disable nonce check on preview pr
+                process.env.VERCEL_ENV === 'preview'
+                  ? undefined
+                  : await getCsrfToken({ req }),
+            });
+
+            if (!result.success) {
+              return null;
+            }
+
+            address = siwe.address;
+          }
         } catch (error) {
           console.error(error);
           Sentry.withScope((scope) => {
             scope.setExtras({
-              message: credentials?.message,
-              signature: credentials?.signature,
+              message: safeCredentials.message,
+              signature: safeCredentials.signature,
             });
             Sentry.captureException(error);
           });
           return null;
         }
+
+        let user = await prismaClient.user.findUnique({
+          select: {
+            id: true,
+            did: true,
+          },
+          where: {
+            address: address,
+          },
+        });
+
+        if (!user) {
+          user = await prismaClient.user.create({
+            select: {
+              id: true,
+              did: true,
+            },
+            data: {
+              address: address,
+              did:
+                safeCredentials.chain === 'ethereum'
+                  ? `did:pkh:eip155:1:${address}`
+                  : `did:pkh:stacks:1:${address}`,
+              chain:
+                safeCredentials.chain === 'ethereum' ? 'ETHEREUM' : 'STACKS',
+            },
+          });
+
+          postHogClient.capture({
+            distinctId: user.id,
+            event: 'user created',
+            properties: {
+              did: user.did,
+              chain: safeCredentials.chain,
+            },
+          });
+          await postHogClient.shutdownAsync();
+        }
+
+        return {
+          id: user.id,
+          did: user.did,
+        };
       },
     }),
   ],
