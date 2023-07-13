@@ -1,14 +1,26 @@
-import { mergeAttributes, Node, nodeInputRule } from '@tiptap/core';
+import {
+  findChildren,
+  mergeAttributes,
+  Node,
+  nodeInputRule,
+} from '@tiptap/core';
 import { ReactNodeViewRenderer } from '@tiptap/react';
 import { TextSelection } from '@tiptap/pm/state';
 import { FigureComponent } from './FigureComponent';
+import { generateRandomId } from '../../../../utils';
 
-// TODO upload image code should be in only one place
 // TODO loading state
+// TODO upload image code should be in only one place
+// TODO drag and drop image
 // TODO see how to convert old images to new figure
 
 export interface FigureOptions {
   HTMLAttributes: Record<string, any>;
+
+  /**
+   * Upload a file and return the URL.
+   */
+  uploadFile: (file: File) => Promise<string>;
 }
 
 declare module '@tiptap/core' {
@@ -20,9 +32,10 @@ declare module '@tiptap/core' {
       setFigure: (options: {
         src: string;
         alt?: string;
-        title?: string;
         caption?: string;
       }) => ReturnType;
+
+      setFigureFromFile: (options: { file: File }) => ReturnType;
     };
   }
 }
@@ -34,6 +47,7 @@ export const TipTapFigure = Node.create<FigureOptions>({
 
   addOptions() {
     return {
+      ...this.parent?.(),
       HTMLAttributes: {},
     };
   },
@@ -64,10 +78,9 @@ export const TipTapFigure = Node.create<FigureOptions>({
           element.querySelector('img')?.getAttribute('alt'),
       },
 
-      title: {
+      // Attribute used to store a temporary ID while the file is uploaded.
+      uploadId: {
         default: null,
-        parseHTML: (element) =>
-          element.querySelector('img')?.getAttribute('title'),
       },
     };
   },
@@ -118,6 +131,55 @@ export const TipTapFigure = Node.create<FigureOptions>({
               .run()
           );
         },
+
+      setFigureFromFile:
+        ({ file }) =>
+        ({ chain, editor }) => {
+          const uploadId = generateRandomId();
+          // We show a preview of  the image image as uploading can take a while.
+          const preview = URL.createObjectURL(file);
+
+          chain()
+            .insertContent({
+              type: this.name,
+              attrs: { uploadId, src: preview },
+            })
+            .run();
+
+          this.options.uploadFile(file).then((imageUrl) => {
+            console.log('image uploaded', imageUrl);
+            // Once the file is uploaded, we preload it so there is no flickering.
+            const image = new Image();
+            image.src = imageUrl;
+            image.onload = () => {
+              editor
+                .chain()
+                .focus()
+                .command(({ tr }) => {
+                  const doc = tr.doc;
+                  const images = findChildren(
+                    doc,
+                    (node) =>
+                      node.type.name === 'figure' &&
+                      node.attrs.uploadId === uploadId
+                  );
+                  const image = images[0];
+                  if (!image || images.length > 1) {
+                    return false;
+                  }
+                  tr.setNodeMarkup(image.pos, undefined, {
+                    ...image.node.attrs,
+                    src: imageUrl,
+                    uploadId: null,
+                  });
+                  console.log('tr', tr);
+                  return true;
+                });
+            };
+          });
+
+          return true;
+        },
     };
   },
 
@@ -165,9 +227,9 @@ export const TipTapFigure = Node.create<FigureOptions>({
         find: inputRegex,
         type: this.type,
         getAttributes: (match) => {
-          const [, src, alt, title] = match;
+          const [, src, alt] = match;
 
-          return { src, alt, title };
+          return { src, alt };
         },
       }),
     ];

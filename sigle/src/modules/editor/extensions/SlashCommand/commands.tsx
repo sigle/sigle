@@ -75,14 +75,6 @@ export const slashCommands = ({
     title: 'Image',
     description: 'Upload from your computer',
     command: ({ editor, range }) => {
-      editor
-        .chain()
-        .focus()
-        .setFigure({
-          src: 'https://gaia.blockstack.org/hub/136fJXa47miR1VUiyxb3Lgs89e4D9jmNnu/photos/ZLbwOh710P92CszczuLpC-Screenshot 2023-02-28 at 12.22.49.png',
-        })
-        .run();
-      return;
       const input = document.createElement('input');
       input.type = 'file';
       input.accept = 'image/jpeg,image/png,image/gif';
@@ -93,53 +85,61 @@ export const slashCommands = ({
         const [mime] = file.type.split('/');
         if (mime !== 'image') return;
 
-        // We show a preview of  the image image as uploading can take a while...
-        const preview = URL.createObjectURL(file);
-        const id = generateRandomId();
-        let chainCommands = editor.chain().focus();
-        if (range) {
-          chainCommands = chainCommands.deleteRange(range);
-        }
-        chainCommands
-          .setImage({ src: preview })
-          .updateAttributes('image', { loading: true, id })
+        return editor
+          .chain()
+          .focus()
+          .setFigureFromFile({
+            file,
+          })
           .run();
 
-        const name = `photos/${storyId}/${id}-${file.name}`;
-        const imageUrl = await resizeAndUploadImage(file, name);
+        // We show a preview of  the image image as uploading can take a while...
+        // const preview = URL.createObjectURL(file);
+        // const id = generateRandomId();
+        // let chainCommands = editor.chain().focus();
+        // if (range) {
+        //   chainCommands = chainCommands.deleteRange(range);
+        // }
+        // chainCommands
+        //   .setImage({ src: preview })
+        //   .updateAttributes('image', { loading: true, id })
+        //   .run();
 
-        // Preload the new image so there is no flicker
-        const uploadedImage = new Image();
-        uploadedImage.src = imageUrl;
-        uploadedImage.onload = () => {
-          // When an image finished being uploaded, the selection of the user might habe changed
-          // so we need to find the right image associated with the ID in order to update it.
-          editor
-            .chain()
-            .focus()
-            .command(({ tr }) => {
-              const doc = tr.doc;
-              const images = findChildren(
-                doc,
-                (node) => node.type.name === 'image' && node.attrs.id === id
-              );
-              const image = images[0];
-              if (!image || images.length > 1) {
-                return false;
-              }
+        // const name = `photos/${storyId}/${id}-${file.name}`;
+        // const imageUrl = await resizeAndUploadImage(file, name);
 
-              tr.setNodeMarkup(image.pos, undefined, {
-                ...image.node.attrs,
-                src: imageUrl,
-                loading: false,
-              });
-              return true;
-            })
-            .run();
+        // // Preload the new image so there is no flicker
+        // const uploadedImage = new Image();
+        // uploadedImage.src = imageUrl;
+        // uploadedImage.onload = () => {
+        //   // When an image finished being uploaded, the selection of the user might habe changed
+        //   // so we need to find the right image associated with the ID in order to update it.
+        //   editor
+        //     .chain()
+        //     .focus()
+        //     .command(({ tr }) => {
+        //       const doc = tr.doc;
+        //       const images = findChildren(
+        //         doc,
+        //         (node) => node.type.name === 'image' && node.attrs.id === id
+        //       );
+        //       const image = images[0];
+        //       if (!image || images.length > 1) {
+        //         return false;
+        //       }
 
-          // Create a new paragraph so user can continue writing
-          editor.commands.createParagraphNear();
-        };
+        //       tr.setNodeMarkup(image.pos, undefined, {
+        //         ...image.node.attrs,
+        //         src: imageUrl,
+        //         loading: false,
+        //       });
+        //       return true;
+        //     })
+        //     .run();
+
+        //   // Create a new paragraph so user can continue writing
+        //   editor.commands.createParagraphNear();
+        // };
       };
 
       input.click();

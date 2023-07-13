@@ -23,11 +23,13 @@ const StyledFigcaption = styled('figcaption', {
   },
 });
 
+const StyledImage = styled('img');
+
 interface FigureNode extends ProseMirrorNode {
   attrs: {
-    loading: boolean;
     src: string;
     alt: string;
+    uploadId?: string;
   };
 }
 
@@ -57,8 +59,8 @@ export const FigureComponent = (props: FigureComponentProps) => {
   }, [props.editor, props.node]);
 
   return (
-    <NodeViewWrapper>
-      {props.node.attrs.loading && (
+    <NodeViewWrapper style={{ position: 'relative' }}>
+      {props.node.attrs.uploadId && (
         <LoadingSpinner
           css={{
             position: 'absolute',
@@ -67,9 +69,16 @@ export const FigureComponent = (props: FigureComponentProps) => {
           }}
         />
       )}
+
       <figure data-drag-handle draggable>
-        <img
+        <StyledImage
           contentEditable={false}
+          css={{
+            opacity: props.node.attrs.uploadId ? 0.25 : 1,
+            '&:hover': {
+              outline: props.editor.isEditable ? '1px solid $green11' : 'none',
+            },
+          }}
           src={props.node.attrs.src}
           alt={props.node.attrs.alt}
           className={
