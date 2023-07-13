@@ -98,8 +98,7 @@ export const getServerSideProps: GetServerSideProps<
   // If deployed on vercel we want to get the deployment url to be able to test unmerged pr's
   // If client side we use window.location.origin
   const appUrl = req.headers['x-forwarded-host']
-    ? // ? `${req.headers['x-forwarded-proto']}://${req.headers['x-forwarded-host']}`
-      `https://${req.headers['x-forwarded-host']}`
+    ? `${req.headers['x-forwarded-proto']}://${req.headers['x-forwarded-host']}`
     : req.headers.host === 'localhost:3000'
     ? 'http://localhost:3000'
     : sigleConfig.appUrl;
@@ -119,6 +118,7 @@ export const getServerSideProps: GetServerSideProps<
 
     settings = dataSettings.file;
   } else if (!statusCode) {
+    console.log('No bucket url found for this user', statusCode);
     statusCode = 404;
   }
 
