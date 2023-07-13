@@ -10,6 +10,7 @@ const inter = Inter({ subsets: ['latin'] });
 // TODO setup analytics
 // TODO canonical url on sigle pages
 // TODO Schema markup for google
+// TODO sanitize html on blog posts
 
 // TODO verifications published
 // - /robots.txt
