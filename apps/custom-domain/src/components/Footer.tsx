@@ -2,9 +2,9 @@ import Image from 'next/image';
 
 export const Footer = () => {
   return (
-    <footer className="py-8 px-4 md:px-16 flex justify-end">
+    <footer className="flex justify-end px-4 py-8 md:px-16">
       <a
-        className="items-center gap-1 flex text-gray-300"
+        className="flex items-center gap-1 text-gray-300"
         href="https://www.sigle.io/"
         target="_blank"
         rel="noopener"
