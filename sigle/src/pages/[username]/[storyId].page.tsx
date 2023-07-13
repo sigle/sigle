@@ -189,6 +189,9 @@ export const getServerSideProps: GetServerSideProps<
             'pre',
             // Images
             'img',
+            // Figure
+            'figure',
+            'figcaption',
             // Marks
             'strong',
             'em',
