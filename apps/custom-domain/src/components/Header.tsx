@@ -5,8 +5,8 @@ import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import { clsx } from 'clsx';
 import { twMerge } from 'tailwind-merge';
-import { SiteSettings } from '@/types';
 import { IconMenu2 } from '@tabler/icons-react';
+import { SiteSettings } from '@/types';
 import {
   Sheet,
   SheetContent,

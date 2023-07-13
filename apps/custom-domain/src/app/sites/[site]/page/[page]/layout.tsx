@@ -1,6 +1,6 @@
+import { notFound } from 'next/navigation';
 import { Hero } from '@/components/Hero';
 import ScrollUp from '@/components/ScrollUp';
-import { notFound } from 'next/navigation';
 import { getSettings, getSubscription } from '@/lib/api';
 
 export default async function PageLayout({

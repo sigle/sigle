@@ -1,6 +1,6 @@
-import { getSettings } from '@/lib/api';
 import { notFound } from 'next/navigation';
 import type { Metadata } from 'next';
+import { getSettings } from '@/lib/api';
 import { Header } from '@/components/Header';
 import { Footer } from '@/components/Footer';
 

@@ -1,6 +1,6 @@
-import ScrollUp from '@/components/ScrollUp';
 import { notFound } from 'next/navigation';
 import { Metadata } from 'next';
+import ScrollUp from '@/components/ScrollUp';
 import { getPost, getSettings } from '@/lib/api';
 
 export async function generateMetadata({
