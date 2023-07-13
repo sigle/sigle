@@ -1,10 +1,8 @@
 import { mergeAttributes, Node, nodeInputRule } from '@tiptap/core';
 import { ReactNodeViewRenderer } from '@tiptap/react';
-import { TextSelection } from '@tiptap/pm/state';
+import { Plugin, PluginKey, TextSelection } from '@tiptap/pm/state';
 import { FigureComponent } from './FigureComponent';
 import { generateRandomId } from '../../../../utils';
-
-// TODO drag and drop image
 
 export interface FigureOptions {
   HTMLAttributes: Record<string, any>;
@@ -139,7 +137,6 @@ export const TipTapFigure = Node.create<FigureOptions>({
             .run();
 
           this.options.uploadFile(file).then((imageUrl) => {
-            console.log('image uploaded', imageUrl);
             // Once the file is uploaded, we preload it so there is no flickering.
             const image = new Image();
             image.src = imageUrl;
@@ -219,6 +216,93 @@ export const TipTapFigure = Node.create<FigureOptions>({
           const [, src, alt] = match;
 
           return { src, alt };
+        },
+      }),
+    ];
+  },
+
+  addProseMirrorPlugins() {
+    const { editor, options } = this;
+
+    return [
+      new Plugin({
+        key: new PluginKey('figureDropHandler'),
+        props: {
+          handleDrop(view, event: DragEvent) {
+            const hasFiles =
+              event &&
+              event?.dataTransfer?.files &&
+              event?.dataTransfer?.files?.length > 0;
+
+            event.preventDefault();
+
+            if (!hasFiles) {
+              // returning false ensures already uploaded images can be dragged to reorder
+              return false;
+            }
+
+            const coordinates = view.posAtCoords({
+              left: event.clientX,
+              top: event.clientY,
+            });
+
+            if (!coordinates) {
+              return;
+            }
+
+            // Get the file from the event.
+            const imageFile = event.dataTransfer.files[0];
+            const [mime, extension] = imageFile.type.split('/');
+            const accepted = ['jpeg', 'png', 'gif'];
+            if (!accepted.includes(extension)) {
+              return;
+            }
+            if (mime !== 'image') return;
+
+            const uploadId = generateRandomId();
+            // We show a preview of  the image image as uploading can take a while.
+            const preview = URL.createObjectURL(imageFile);
+
+            const figureNode = view.state.schema.nodes.figure.createAndFill({
+              uploadId,
+              src: preview,
+            })!;
+            const transaction = view.state.tr.insert(
+              coordinates.pos,
+              figureNode
+            );
+            view.dispatch(transaction);
+
+            options.uploadFile(imageFile).then((imageUrl) => {
+              // Once the file is uploaded, we preload it so there is no flickering.
+              const image = new Image();
+              image.src = imageUrl;
+              image.onload = () => {
+                const transaction = editor.state.tr;
+                editor.state.doc.descendants((node, pos) => {
+                  if (
+                    node.type.name === 'figure' &&
+                    node.attrs.uploadId === uploadId
+                  ) {
+                    const attrs = {
+                      ...node.attrs,
+                      src: imageUrl,
+                      uploadId: undefined,
+                    };
+                    const newNode = node.type.create(
+                      attrs,
+                      node.content,
+                      node.marks
+                    );
+                    transaction.replaceWith(pos, pos + node.nodeSize, newNode);
+                  }
+                });
+                editor.view.dispatch(transaction);
+              };
+            });
+
+            return true;
+          },
         },
       }),
     ];
