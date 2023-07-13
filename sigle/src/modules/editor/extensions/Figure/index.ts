@@ -9,8 +9,6 @@ import { TextSelection } from '@tiptap/pm/state';
 import { FigureComponent } from './FigureComponent';
 import { generateRandomId } from '../../../../utils';
 
-// TODO loading state
-// TODO upload image code should be in only one place
 // TODO drag and drop image
 // TODO see how to convert old images to new figure
 
