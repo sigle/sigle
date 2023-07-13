@@ -188,7 +188,7 @@ export const TipTapEditor = forwardRef<
       }),
       !isMobile
         ? SlashCommands.configure({
-            commands: slashCommands({ storyId: story.id }),
+            commands: slashCommands,
           })
         : undefined,
       isMobile ? MobileScroll : undefined,
@@ -232,7 +232,7 @@ export const TipTapEditor = forwardRef<
       {editable && (
         <>
           {isMobile ? (
-            <Toolbar editor={editor} story={story} />
+            <Toolbar editor={editor} />
           ) : (
             <Container
               css={{

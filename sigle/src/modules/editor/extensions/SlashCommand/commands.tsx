@@ -1,4 +1,3 @@
-import { findChildren } from '@tiptap/core';
 import {
   BulletedListLight,
   CodeLight,
@@ -10,17 +9,11 @@ import {
   QuoteLight,
 } from '../../../../icons';
 import { SlashCommandsCommand } from './SlashCommands';
-import { generateRandomId } from '../../../../utils';
-import { resizeAndUploadImage } from '../../utils/image';
 import { PlainTextLight } from '../../../../icons/PlainTextLight';
 import { TwitterLight } from '../../../../icons/TwitterLight';
 import { CtaIcon } from '../../../../icons/CtaIcon';
 
-export const slashCommands = ({
-  storyId,
-}: {
-  storyId: string;
-}): SlashCommandsCommand[] => [
+export const slashCommands: SlashCommandsCommand[] = [
   {
     icon: PlainTextLight,
     title: 'Plain Text',
