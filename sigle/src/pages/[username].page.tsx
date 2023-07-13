@@ -118,7 +118,6 @@ export const getServerSideProps: GetServerSideProps<
 
     settings = dataSettings.file;
   } else if (!statusCode) {
-    console.log('No bucket url found for this user', statusCode);
     statusCode = 404;
   }
 
