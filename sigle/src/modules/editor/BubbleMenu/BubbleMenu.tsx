@@ -10,8 +10,8 @@ import {
   StrikethroughIcon,
   UnderlineIcon,
 } from '@radix-ui/react-icons';
-import { globalCss, styled } from '../../stitches.config';
-import { Flex } from '../../ui';
+import { globalCss, styled } from '../../../stitches.config';
+import { Flex } from '../../../ui';
 
 // Tippyjs theme used by the bubble menu
 const globalStylesCustomEditor = globalCss({
