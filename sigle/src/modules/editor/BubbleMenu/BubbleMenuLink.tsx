@@ -6,14 +6,6 @@ import { Cross2Icon } from '@radix-ui/react-icons';
 
 const BubbleMenuButton = styled('button', {
   color: '$gray1',
-
-  variants: {
-    active: {
-      true: {
-        color: '$indigo8',
-      },
-    },
-  },
 });
 
 const BubbleMenuInput = styled('input', {
@@ -90,11 +82,7 @@ export const EditorBubbleMenuLink = ({ editor }: EditorBubbleMenuProps) => {
         placeholder="Enter link ..."
         autoFocus
       />
-      <BubbleMenuButton
-        type="button"
-        onClick={() => resetLink()}
-        active={false}
-      >
+      <BubbleMenuButton type="button" onClick={() => resetLink()}>
         <Cross2Icon height={18} width={18} />
       </BubbleMenuButton>
     </Flex>
