@@ -185,15 +185,6 @@ export const BubbleMenu = ({ editor }: BubbleMenuProps) => {
           return false;
         }
 
-        // Do not show menu on figures
-        // When we select the image we don't want the menu to show
-        if (
-          editor.isActive('figure') &&
-          editor.state.selection.$from.node().type.name !== 'figure'
-        ) {
-          return false;
-        }
-
         // Do not show menu on code blocks
         if (editor.isActive('codeBlock')) {
           return false;
@@ -211,6 +202,24 @@ export const BubbleMenu = ({ editor }: BubbleMenuProps) => {
 
         /// Do not show on cta
         if (editor.isActive('cta')) {
+          return false;
+        }
+
+        // Do not show menu on figures
+        // When we select the image we don't want the menu to show
+        if (
+          editor.isActive('figure') &&
+          editor.state.selection.$from.node().type.name !== 'figure'
+        ) {
+          return false;
+        }
+
+        // For figures we hide the menu if user select the caption and following paragraph
+        // We do this to avoid an issue where the bubble menu would jump and show options that should not be available.
+        if (
+          editor.state.selection.$from.node().type.name === 'figure' &&
+          editor.state.selection.$to.node().type.name !== 'figure'
+        ) {
           return false;
         }
 
