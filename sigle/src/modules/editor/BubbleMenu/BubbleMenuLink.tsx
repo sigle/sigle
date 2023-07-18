@@ -1,8 +1,9 @@
+import { useEffect } from 'react';
 import { Editor } from '@tiptap/react';
+import { Cross2Icon } from '@radix-ui/react-icons';
 import { useBubbleMenuStore } from './store';
 import { styled } from '../../../stitches.config';
 import { Flex } from '../../../ui';
-import { Cross2Icon } from '@radix-ui/react-icons';
 
 const BubbleMenuButton = styled('button', {
   color: '$gray1',
@@ -24,6 +25,19 @@ export const EditorBubbleMenuLink = ({ editor }: EditorBubbleMenuProps) => {
   const linkValue = useBubbleMenuStore((state) => state.linkValue);
   const setLinkValue = useBubbleMenuStore((state) => state.setLinkValue);
   const toggleLink = useBubbleMenuStore((state) => state.toggleLink);
+
+  // When the link bubble menu is opened we set the input value to the current link
+  useEffect(() => {
+    const existingHref = editor.isActive('link')
+      ? editor.getAttributes('link').href
+      : '';
+    setLinkValue(existingHref);
+
+    // When the link bubble menu is closed we reset the input value
+    return () => {
+      setLinkValue('');
+    };
+  }, []);
 
   const onSubmitLink = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();

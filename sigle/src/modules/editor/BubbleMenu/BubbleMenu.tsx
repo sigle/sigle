@@ -71,7 +71,6 @@ export const BubbleMenu = ({ editor }: EditorBubbleMenuProps) => {
   globalStylesBubbleMenu();
 
   const linkOpen = useBubbleMenuStore((state) => state.linkOpen);
-  const setLinkValue = useBubbleMenuStore((state) => state.setLinkValue);
   const toggleLink = useBubbleMenuStore((state) => state.toggleLink);
 
   // Listen to any key press to detect cmd + k and activate the link edition
@@ -88,13 +87,7 @@ export const BubbleMenu = ({ editor }: EditorBubbleMenuProps) => {
   }, []);
 
   const onSelectLink = () => {
-    // Get href of selected link to pre fill the input
-    const existingHref = editor.isActive('link')
-      ? editor.getAttributes('link').href
-      : '';
-
     toggleLink(true);
-    setLinkValue(existingHref);
   };
 
   return (
@@ -105,7 +98,6 @@ export const BubbleMenu = ({ editor }: EditorBubbleMenuProps) => {
         onHidden: () => {
           // When bubble menu is hidden, reset the link state
           toggleLink(false);
-          setLinkValue('');
         },
       }}
       shouldShow={({ editor, state, from, to, view }) => {
