@@ -23,7 +23,13 @@ const getVercelPreviewUrl = () => {
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  experimental: {},
+  experimental: {
+    // SWC is wrongly included in the final bundle causing function to be > 50mb
+    // https://github.com/vercel/next.js/issues/42641#issuecomment-1615901228
+    outputFileTracingExcludes: {
+      '*': ['./**/@swc/core-linux-x64-gnu*', './**/@swc/core-linux-x64-musl*'],
+    },
+  },
   reactStrictMode: false,
   swcMinify: true,
   env: {
