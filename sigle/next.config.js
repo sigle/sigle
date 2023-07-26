@@ -1,5 +1,4 @@
 const dotenv = require('dotenv');
-const withPlugins = require('next-compose-plugins');
 const { withSentryConfig } = require('@sentry/nextjs');
 const withBundleAnalyzer = require('@next/bundle-analyzer')({
   enabled: process.env.ANALYZE === 'true',
@@ -85,12 +84,11 @@ const nextConfig = {
 };
 
 const nextPlugins = [
-  [
-    withPlausibleProxy({
-      scriptName: 'index',
-    }),
-  ],
-  [withBundleAnalyzer],
+  nextConfig,
+  withPlausibleProxy({
+    scriptName: 'index',
+  }),
+  withBundleAnalyzer,
   (nextConfig) =>
     withSentryConfig(
       {
@@ -112,6 +110,8 @@ const nextPlugins = [
     ),
 ];
 
-module.exports = (phase) => {
-  return withPlugins(nextPlugins, nextConfig)(phase, {});
+module.exports = () => {
+  return nextPlugins.reduce((acc, next) => {
+    return next(acc);
+  });
 };

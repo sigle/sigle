@@ -30,7 +30,7 @@ import TipTapCodeBlockLowlight from '@tiptap/extension-code-block-lowlight';
 import { lowlight } from 'lowlight/lib/common';
 import { Placeholder as TipTapPlaceholder } from './extensions/Placeholder';
 import { SlashCommands } from './extensions/SlashCommand/SlashCommands';
-import { BubbleMenu } from './BubbleMenu';
+import { BubbleMenu } from './BubbleMenu/BubbleMenu';
 import { slashCommands } from './extensions/SlashCommand/commands';
 import { FloatingMenu } from './FloatingMenu';
 import { styled, globalCss, keyframes, darkTheme } from '../../stitches.config';
