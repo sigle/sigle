@@ -5,7 +5,7 @@ import { slashCommands } from './extensions/SlashCommand/commands';
 export const activeNode = (editor: Editor) => {
   if (editor.isActive('heading', { level: 2 })) {
     const bigHeading = slashCommands.find(
-      (item) => item.title === 'Big Heading'
+      (item) => item.title === 'Big Heading',
     );
     if (!bigHeading) {
       return;
@@ -19,7 +19,7 @@ export const activeNode = (editor: Editor) => {
 
   if (editor.isActive('heading', { level: 3 })) {
     const smallHeading = slashCommands.find(
-      (item) => item.title === 'Small Heading'
+      (item) => item.title === 'Small Heading',
     );
     if (!smallHeading) {
       return;
@@ -33,7 +33,7 @@ export const activeNode = (editor: Editor) => {
 
   if (editor.isActive('bulletList')) {
     const bulletList = slashCommands.find(
-      (item) => item.title === 'Bulleted list'
+      (item) => item.title === 'Bulleted list',
     );
     if (!bulletList) {
       return;
@@ -47,7 +47,7 @@ export const activeNode = (editor: Editor) => {
 
   if (editor.isActive('orderedList')) {
     const numberedList = slashCommands.find(
-      (item) => item.title === 'Numbered list'
+      (item) => item.title === 'Numbered list',
     );
     if (!numberedList) {
       return;

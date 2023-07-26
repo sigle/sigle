@@ -81,7 +81,7 @@ export const getServerSideProps: GetServerSideProps<
     if (nameInfo) {
       userProfile = await resolveZoneFileToProfile(
         nameInfo.zonefile,
-        nameInfo.address
+        nameInfo.address,
       );
     }
   } catch (error) {

@@ -270,7 +270,7 @@ export const EditorSettings = ({
   });
 
   const handleRemoveCover = (
-    event: React.MouseEvent<HTMLButtonElement, MouseEvent>
+    event: React.MouseEvent<HTMLButtonElement, MouseEvent>,
   ) => {
     // We stop the event so it does not trigger react-dropzone
     event.stopPropagation();
@@ -278,7 +278,7 @@ export const EditorSettings = ({
   };
 
   const handleDelete = async (
-    event: React.MouseEvent<HTMLButtonElement, MouseEvent>
+    event: React.MouseEvent<HTMLButtonElement, MouseEvent>,
   ) => {
     event.preventDefault();
     try {

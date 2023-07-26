@@ -7,7 +7,7 @@ import { authOptions } from '@/pages/api/auth/[...nextauth].api';
  * Inject next-auth session into context
  */
 export const createContext = async (
-  opts: trpcNext.CreateNextContextOptions
+  opts: trpcNext.CreateNextContextOptions,
 ) => {
   const session = await getServerSession(opts.req, opts.res, authOptions);
 

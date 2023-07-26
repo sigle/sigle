@@ -162,7 +162,7 @@ export class SignInWithStacksMessage {
 
     if (this.resources) {
       suffixArray.push(
-        [`Resources:`, ...this.resources.map((x) => `- ${x}`)].join('\n')
+        [`Resources:`, ...this.resources.map((x) => `- ${x}`)].join('\n'),
       );
     }
 
@@ -227,7 +227,7 @@ export class SignInWithStacksMessage {
           error: new SiweError(
             SiweErrorType.DOMAIN_MISMATCH,
             domain,
-            this.domain
+            this.domain,
           ),
         });
       }
@@ -254,7 +254,7 @@ export class SignInWithStacksMessage {
             error: new SiweError(
               SiweErrorType.EXPIRED_MESSAGE,
               `${checkTime.toISOString()} < ${expirationDate.toISOString()}`,
-              `${checkTime.toISOString()} >= ${expirationDate.toISOString()}`
+              `${checkTime.toISOString()} >= ${expirationDate.toISOString()}`,
             ),
           });
         }
@@ -270,7 +270,7 @@ export class SignInWithStacksMessage {
             error: new SiweError(
               SiweErrorType.NOT_YET_VALID_MESSAGE,
               `${checkTime.toISOString()} >= ${notBefore.toISOString()}`,
-              `${checkTime.toISOString()} < ${notBefore.toISOString()}`
+              `${checkTime.toISOString()} < ${notBefore.toISOString()}`,
             ),
           });
         }
@@ -300,7 +300,7 @@ export class SignInWithStacksMessage {
         .map((prefix) => {
           const publicKey = publicKeyFromSignatureRsv(
             bytesToHex(hashMessage(EIP4361Message, prefix)),
-            stacksSignature
+            stacksSignature,
           );
 
           const isValid = verifyMessageSignatureRsv({
@@ -330,7 +330,7 @@ export class SignInWithStacksMessage {
         error: new SiweError(
           SiweErrorType.INVALID_SIGNATURE,
           this.address,
-          potentialAddresses[0]
+          potentialAddresses[0],
         ),
       });
     });
@@ -345,7 +345,7 @@ export class SignInWithStacksMessage {
     if (args.length > 0) {
       throw new SiweError(
         SiweErrorType.UNABLE_TO_PARSE,
-        `Unexpected argument in the validateMessage function.`
+        `Unexpected argument in the validateMessage function.`,
       );
     }
 
@@ -357,7 +357,7 @@ export class SignInWithStacksMessage {
     ) {
       throw new SiweError(
         SiweErrorType.INVALID_DOMAIN,
-        `${this.domain} to be a valid domain.`
+        `${this.domain} to be a valid domain.`,
       );
     }
 
@@ -365,7 +365,7 @@ export class SignInWithStacksMessage {
     if (!validateStacksAddress(this.address)) {
       throw new SiweError(
         SiweErrorType.INVALID_ADDRESS,
-        `${this.address} to be a valid address.`
+        `${this.address} to be a valid address.`,
       );
     }
 
@@ -373,7 +373,7 @@ export class SignInWithStacksMessage {
     if (!uri.isUri(this.uri)) {
       throw new SiweError(
         SiweErrorType.INVALID_URI,
-        `${this.uri} to be a valid uri.`
+        `${this.uri} to be a valid uri.`,
       );
     }
 
@@ -382,7 +382,7 @@ export class SignInWithStacksMessage {
       throw new SiweError(
         SiweErrorType.INVALID_MESSAGE_VERSION,
         '1',
-        this.version
+        this.version,
       );
     }
 
@@ -392,7 +392,7 @@ export class SignInWithStacksMessage {
       throw new SiweError(
         SiweErrorType.INVALID_NONCE,
         `Length > 8 (${nonce?.length}). Alphanumeric.`,
-        this.nonce
+        this.nonce,
       );
     }
 

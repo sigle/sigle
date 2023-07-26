@@ -44,7 +44,7 @@ export const EmailData = () => {
       onSuccess: async () => {
         await refetchUserMe();
         toast.success(
-          'Please verify your email by clicking the link sent to your inbox.'
+          'Please verify your email by clicking the link sent to your inbox.',
         );
       },
     });
@@ -62,7 +62,7 @@ export const EmailData = () => {
     onSuccess: async () => {
       await refetchUserMe();
       toast.success(
-        'Please verify your email by clicking the link sent to your inbox.'
+        'Please verify your email by clicking the link sent to your inbox.',
       );
     },
   });

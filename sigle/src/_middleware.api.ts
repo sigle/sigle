@@ -11,7 +11,7 @@ export function middleware(req: NextRequest) {
   ) {
     return NextResponse.redirect(
       `https://${req.nextUrl.hostname}${req.nextUrl.pathname}`,
-      301
+      301,
     );
   }
   return NextResponse.next();

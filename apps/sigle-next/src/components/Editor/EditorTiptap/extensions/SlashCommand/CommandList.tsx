@@ -100,7 +100,7 @@ export const CommandList = forwardRef<CommandListRef, CommandListProps>(
         return;
       }
       const $ele = $div.querySelector(
-        `[data-index="${selectedIndex}"]`
+        `[data-index="${selectedIndex}"]`,
       ) as HTMLButtonElement;
       if (!$ele) {
         return;
@@ -177,7 +177,7 @@ export const CommandList = forwardRef<CommandListRef, CommandListProps>(
         <CommandsListSeparator />
       </Flex>
     );
-  }
+  },
 );
 
 CommandList.displayName = 'CommandList';

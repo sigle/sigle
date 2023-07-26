@@ -2,7 +2,7 @@ export const resizeImage = (
   file: File,
   options: {
     maxWidth: number;
-  }
+  },
 ): Promise<Blob & { preview: string }> => {
   return new Promise((resolve) => {
     const canvas = document.createElement('canvas');
@@ -28,11 +28,11 @@ export const resizeImage = (
               // eslint-disable-next-line @typescript-eslint/no-non-null-assertion -- blob is not null
               Object.assign(blob!, {
                 preview: dataurl,
-              })
+              }),
             );
           },
           file.type,
-          0.9
+          0.9,
         );
       };
 

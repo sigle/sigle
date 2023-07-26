@@ -10,12 +10,12 @@ type GetApiUsersMeReturnType = Awaited<
   ReturnType<typeof UserService.userControllerGetUserMe>
 >;
 export const useGetUserMe = (
-  options: UseQueryOptions<GetApiUsersMeReturnType, Error> = {}
+  options: UseQueryOptions<GetApiUsersMeReturnType, Error> = {},
 ) =>
   useQuery<GetApiUsersMeReturnType, Error>(
     ['get-user-me'],
     () => UserService.userControllerGetUserMe(),
-    options
+    options,
   );
 
 type GetApiUsersReturnType = Awaited<
@@ -23,12 +23,12 @@ type GetApiUsersReturnType = Awaited<
 >;
 export const useGetUserByAddress = (
   stacksAddress: string,
-  options: UseQueryOptions<GetApiUsersReturnType, Error> = {}
+  options: UseQueryOptions<GetApiUsersReturnType, Error> = {},
 ) =>
   useQuery<GetApiUsersReturnType, Error>(
     ['get-user-by-address', stacksAddress],
     () => UserService.userControllerGetUser({ userAddress: stacksAddress }),
-    options
+    options,
   );
 
 type GetApiUsersFollowingReturnType = Awaited<
@@ -36,12 +36,12 @@ type GetApiUsersFollowingReturnType = Awaited<
 >;
 export const useGetUsersFollowing = (
   userAddress: string,
-  options: UseQueryOptions<GetApiUsersFollowingReturnType, Error> = {}
+  options: UseQueryOptions<GetApiUsersFollowingReturnType, Error> = {},
 ) =>
   useQuery<GetApiUsersFollowingReturnType, Error>(
     ['get-users-following', userAddress],
     () => UserService.userControllerGetUserFollowing({ userAddress }),
-    options
+    options,
   );
 
 type GetApiUsersFollowersReturnType = Awaited<
@@ -49,12 +49,12 @@ type GetApiUsersFollowersReturnType = Awaited<
 >;
 export const useGetUsersFollowers = (
   userAddress: string,
-  options: UseQueryOptions<GetApiUsersFollowersReturnType, Error> = {}
+  options: UseQueryOptions<GetApiUsersFollowersReturnType, Error> = {},
 ) =>
   useQuery<GetApiUsersFollowersReturnType, Error>(
     ['get-users-followers', userAddress],
     () => UserService.userControllerGetUserFollowers({ userAddress }),
-    options
+    options,
   );
 
 type PostApiAddEmailReturnType = Awaited<
@@ -65,14 +65,14 @@ export const useAddUserEmail = (
     PostApiAddEmailReturnType,
     Error,
     AddEmailDto
-  > = {}
+  > = {},
 ) =>
   useMutation<PostApiAddEmailReturnType, Error, AddEmailDto>(
     (data) =>
       UserService.emailVerificationControllerAddEmail({
         requestBody: data,
       }),
-    options
+    options,
   );
 
 type PostApiResendVerificationEmailReturnType = Awaited<
@@ -82,11 +82,11 @@ export const useResendVerificationUserEmail = (
   options: UseMutationOptions<
     PostApiResendVerificationEmailReturnType,
     Error
-  > = {}
+  > = {},
 ) =>
   useMutation<PostApiResendVerificationEmailReturnType, Error>(
     () => UserService.emailVerificationControllerResendEmail(),
-    options
+    options,
   );
 
 type PostApiVerifyUserEmailReturnType = Awaited<
@@ -97,12 +97,12 @@ export const useVerifyUserEmail = (
     PostApiVerifyUserEmailReturnType,
     Error,
     VerifyEmailDto
-  > = {}
+  > = {},
 ) =>
   useMutation<PostApiVerifyUserEmailReturnType, Error, VerifyEmailDto>(
     (data) =>
       UserService.emailVerificationControllerVerifyEmail({
         requestBody: data,
       }),
-    options
+    options,
   );

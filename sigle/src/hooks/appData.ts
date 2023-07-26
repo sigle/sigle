@@ -16,12 +16,12 @@ import {
  * Get the app user following from Gaia.
  */
 export const useGetGaiaUserFollowing = (
-  options: UseQueryOptions<GaiaUserFollowing, Error> = {}
+  options: UseQueryOptions<GaiaUserFollowing, Error> = {},
 ) =>
   useQuery<GaiaUserFollowing, Error>(
     ['get-user-following'],
     () => getFollowingFile(),
-    options
+    options,
   );
 
 export const useUserFollow = () => {

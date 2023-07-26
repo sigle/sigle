@@ -46,7 +46,7 @@ export const MobileFloatingMenu = ({
     ({ command }: any) => {
       command({ editor });
     },
-    [editor]
+    [editor],
   );
 
   const currentNode = editor && activeNode(editor);

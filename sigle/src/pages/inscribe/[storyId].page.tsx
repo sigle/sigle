@@ -86,7 +86,7 @@ const Inscribe = () => {
         Sentry.captureException(error);
         toast.error(typeof error === 'string' ? error : error.message);
       },
-    }
+    },
   );
 
   // if (!isLoading && !userSubscription) {
@@ -135,7 +135,7 @@ const Inscribe = () => {
 
     // Call the api to get the inscription data
     let data = await fetch(
-      `https://inscribe.news/api/content/${inscriptionId}`
+      `https://inscribe.news/api/content/${inscriptionId}`,
     );
     if (!data.ok) {
       return toast.error('Invalid response from api');
@@ -149,7 +149,7 @@ const Inscribe = () => {
     // We verify the signature is valid
     const recoveredPublicKey = publicKeyFromSignatureRsv(
       bytesToHex(hashMessage(message)),
-      createMessageSignature(json.signature)
+      createMessageSignature(json.signature),
     );
     const recoveredAddress = getAddressFromPublicKey(recoveredPublicKey);
     if (json.authorAddress !== recoveredAddress) {

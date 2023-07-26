@@ -41,7 +41,7 @@ export const PublicStoryPage: NextPage<PublicStoryPageProps> = ({
 
 const fetchPublicStory = async (
   bucketUrl: string,
-  storyId: string
+  storyId: string,
 ): Promise<{ file: Story; statusCode: false | number }> => {
   let file;
   let statusCode: false | number = false;
@@ -55,7 +55,7 @@ const fetchPublicStory = async (
 };
 
 const fetchSettings = async (
-  bucketUrl: string
+  bucketUrl: string,
 ): Promise<{ file: SettingsFile; statusCode: false | number }> => {
   let file;
   let statusCode: false | number = false;
@@ -117,7 +117,7 @@ export const getServerSideProps: GetServerSideProps<
     if (nameInfo) {
       userProfile = await resolveZoneFileToProfile(
         nameInfo.zonefile,
-        nameInfo.address
+        nameInfo.address,
       );
     }
   } catch (error) {

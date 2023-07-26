@@ -5,7 +5,7 @@ import { getServerSideSitemap } from 'next-sitemap';
 
 export async function GET(
   request: Request,
-  { params }: { params: { site: string } }
+  { params }: { params: { site: string } },
 ) {
   const { site } = params;
   const { origin } = new URL(request.url);

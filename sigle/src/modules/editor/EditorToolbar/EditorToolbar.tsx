@@ -78,8 +78,8 @@ export const Toolbar = ({ editor }: ToolbarProps) => {
                 0,
                 window.innerHeight -
                   window.visualViewport.height -
-                  window.visualViewport.offsetTop
-              )
+                  window.visualViewport.offsetTop,
+              ),
             );
           }
         });
