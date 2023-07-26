@@ -49,7 +49,7 @@
     "@nestjs/throttler": "4.1.0",
     "@ntegral/nestjs-sentry": "4.0.0",
     "@prisma/client": "4.12.0",
-    "@sentry/node": "7.57.0",
+    "@sentry/node": "7.60.1",
     "@stacks/blockchain-api-client": "7.2.2",
     "cache-manager": "5.2.3",
     "cache-manager-redis-store": "3.0.1",
