@@ -93,7 +93,7 @@ export const StoryItem = ({
         const oldFeaturedStory = file.stories.find((story) => story.featured);
         if (oldFeaturedStory) {
           const oldFeaturedStoryFile = (await getStoryFile(
-            oldFeaturedStory.id
+            oldFeaturedStory.id,
           )) as Story;
           oldFeaturedStoryFile.featured = false;
           await saveStoryFile(oldFeaturedStoryFile);

@@ -21,14 +21,14 @@ export const CurrentPlan = () => {
         // If no NFT found
         if (!data) {
           toast(
-            'You don’t have enough NFTs to upgrade your account. Make sure your NFTs are not listed and try again.'
+            'You don’t have enough NFTs to upgrade your account. Make sure your NFTs are not listed and try again.',
           );
           return;
         }
         // If plan changed
         if (data.plan !== userSubscription?.plan) {
           toast.success(
-            `Your plan has been upgraded to ${data.plan.toLowerCase()} plan!`
+            `Your plan has been upgraded to ${data.plan.toLowerCase()} plan!`,
           );
           refetchUserSubscription();
         } else if (data.plan === userSubscription?.plan) {

@@ -118,7 +118,7 @@ export const TipTapEditor = forwardRef<
   const [showShortcutsDialog, setShowShortcutsDialog] = useState(false);
   const { resolvedTheme } = useTheme();
   const [width, setWidth] = useState(
-    typeof window !== 'undefined' ? window.innerWidth : 1000
+    typeof window !== 'undefined' ? window.innerWidth : 1000,
   );
   // TODO is story really needed? Could it be just the content prop?
   globalStylesCustomEditor();
@@ -192,7 +192,7 @@ export const TipTapEditor = forwardRef<
       // TODO cleanup empty <p>, <h1> etc tags, basically all empty tags
       getEditor: () => editor,
     }),
-    [editor]
+    [editor],
   );
 
   useEffect(() => {

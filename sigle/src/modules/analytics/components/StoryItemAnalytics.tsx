@@ -42,7 +42,7 @@ export const StoryItemAnalytics = ({ story }: StoryAnalyticsProps) => {
     { ...historicalParams, storyId: story?.id },
     {
       placeholderData: { historical: initialRange, stories: [] },
-    }
+    },
   );
   const data = historicalData?.historical;
 

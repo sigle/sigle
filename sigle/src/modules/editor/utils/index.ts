@@ -5,7 +5,7 @@ const CONTENT_SUBSET_SIZE = 300;
 
 export const createSubsetStory = (
   story: Story,
-  { plainContent }: { plainContent: string }
+  { plainContent }: { plainContent: string },
 ): SubsetStory => {
   return {
     id: story.id,
@@ -24,7 +24,7 @@ export const createSubsetStory = (
 
 export const saveStory = async (
   story: Story,
-  subsetStory: SubsetStory
+  subsetStory: SubsetStory,
 ): Promise<void> => {
   const file = await getStoriesFile();
   const index = file.stories.findIndex((s) => s.id === story.id);

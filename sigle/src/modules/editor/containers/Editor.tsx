@@ -23,7 +23,7 @@ export const Editor = () => {
         Sentry.captureException(error);
         toast.error(typeof error === 'string' ? error : error.message);
       },
-    }
+    },
   );
 
   return <Component loading={isLoading} story={data ?? null} />;

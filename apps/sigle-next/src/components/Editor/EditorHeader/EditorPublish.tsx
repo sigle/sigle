@@ -14,19 +14,17 @@ export const EditorPublish = () => {
   const story = useEditorStore((state) => state.story);
 
   const [commit, isLoadingPublishPost] =
-    useMutation<EditorPublishUpdatePostMutation>(
-      graphql`
-        mutation EditorPublishUpdatePostMutation($input: UpdatePostInput!) {
-          updatePost(input: $input) {
-            clientMutationId
-            document {
-              id
-              status
-            }
+    useMutation<EditorPublishUpdatePostMutation>(graphql`
+      mutation EditorPublishUpdatePostMutation($input: UpdatePostInput!) {
+        updatePost(input: $input) {
+          clientMutationId
+          document {
+            id
+            status
           }
         }
-      `
-    );
+      }
+    `);
 
   const handlePublish = () => {
     if (!story) return;

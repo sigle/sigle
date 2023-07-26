@@ -162,12 +162,12 @@ export const NavBar = () => {
   const skipProfileQuery = !did;
   const profile = trpc.user.userProfile.useQuery(
     { did: did ?? '' },
-    { enabled: !skipProfileQuery }
+    { enabled: !skipProfileQuery },
   );
 
   const postsNumbers = trpc.post.postsNumbers.useQuery(
     { did: did ?? '' },
-    { enabled: !skipProfileQuery }
+    { enabled: !skipProfileQuery },
   );
 
   const menu = [

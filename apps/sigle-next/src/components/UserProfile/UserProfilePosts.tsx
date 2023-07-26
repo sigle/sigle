@@ -20,7 +20,7 @@ export const UserProfilePosts = ({
     },
     {
       getNextPageParam: (lastPage) => lastPage.nextCursor,
-    }
+    },
   );
 
   const { observe } = useInView({
