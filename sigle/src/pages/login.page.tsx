@@ -129,7 +129,7 @@ const Login = () => {
             redirect: false,
             signature,
             callbackUrl,
-          }
+          },
         );
         if (signInResult && signInResult.error) {
           posthog.capture('start-login-sign-message-error');

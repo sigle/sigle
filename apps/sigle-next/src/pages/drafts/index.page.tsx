@@ -17,7 +17,7 @@ const Drafts = () => {
     { limit: 20, did: userDid, status: 'DRAFT' },
     {
       getNextPageParam: (lastPage) => lastPage.nextCursor,
-    }
+    },
   );
 
   const { observe } = useInView({

@@ -20,7 +20,7 @@ export const SlashCommands = Extension.create<{
   commands: SlashCommandsCommand[];
   filterCommands: (
     commands: SlashCommandsCommand[],
-    query: string
+    query: string,
   ) => SlashCommandsCommand[];
   suggestion: Partial<SuggestionOptions>;
 }>({
@@ -33,7 +33,7 @@ export const SlashCommands = Extension.create<{
         return (
           commands
             .filter((item) =>
-              item.title.toLowerCase().startsWith(query.toLowerCase())
+              item.title.toLowerCase().startsWith(query.toLowerCase()),
             )
             // When user is filtering, only show 10 results
             .slice(0, query.length > 0 ? 10 : 20)

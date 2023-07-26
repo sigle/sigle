@@ -108,7 +108,7 @@ export const MobileHeader = ({ open, onClose }: MobileHeaderProps) => {
     },
     {
       duration: 0.5,
-    }
+    },
   );
   const { play: canceledAnimation } = useMotionAnimate(
     nodeRef,
@@ -117,7 +117,7 @@ export const MobileHeader = ({ open, onClose }: MobileHeaderProps) => {
     },
     {
       duration: 0.5,
-    }
+    },
   );
   const { play: growAnimation } = useMotionTimeline(
     [
@@ -134,7 +134,7 @@ export const MobileHeader = ({ open, onClose }: MobileHeaderProps) => {
     ],
     {
       duration: 0.5,
-    }
+    },
   );
 
   const handleThemeToggle = () => {

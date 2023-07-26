@@ -2,7 +2,7 @@ import * as cheerio from 'cheerio';
 import slugify from 'slugify';
 
 export const extractTableOfContents = (
-  html: string
+  html: string,
 ): Array<{ level: 2 | 3; text: string; id: string }> => {
   const $ = cheerio.load(html);
   const headings = $('h2, h3');

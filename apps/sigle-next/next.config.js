@@ -30,5 +30,5 @@ const nextConfig = {
 module.exports = withSentryConfig(
   nextConfig,
   { silent: true, dryRun: !process.env.SENTRY_AUTH_TOKEN },
-  { hideSourceMaps: true }
+  { hideSourceMaps: true },
 );

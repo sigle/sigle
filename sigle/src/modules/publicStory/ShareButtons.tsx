@@ -64,7 +64,7 @@ export const ShareButtons = ({
             <Box
               as="a"
               href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(
-                title
+                title,
               )} by ${handle}&url=${sigleConfig.appUrl}/${username}/${
                 story.id
               }`}

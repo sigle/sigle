@@ -6,7 +6,7 @@ describe('prettifyUrl', () => {
     expect(prettifyUrl('https://example.com/')).toBe('example.com');
     expect(prettifyUrl('https://example.com/test/')).toBe('example.com/test');
     expect(prettifyUrl('https://www.example.com/test/')).toBe(
-      'www.example.com/test'
+      'www.example.com/test',
     );
   });
 });

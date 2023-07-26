@@ -44,7 +44,7 @@ export const saveStoriesFile = async (file: StoryFile): Promise<void> => {
       // If the private index is outdated the code will throw an error when we write the storiesFileName
       // before this call.
       dangerouslyIgnoreEtag: true,
-    }
+    },
   );
 };
 
@@ -68,7 +68,7 @@ export const getStoryFile = async (storyId: string): Promise<Story | null> => {
   }
   if (originalFile && file.mac) {
     file = JSON.parse(
-      (await userSession.decryptContent(originalFile)) as string
+      (await userSession.decryptContent(originalFile)) as string,
     );
   }
   return file;
@@ -171,7 +171,7 @@ export const getSettingsFile = async (): Promise<SettingsFile> => {
 };
 
 export const saveSettingsFile = async (
-  settings: SettingsFile
+  settings: SettingsFile,
 ): Promise<void> => {
   await storage.putFile(settingsFileName, JSON.stringify(settings), {
     encrypt: false,
@@ -223,7 +223,7 @@ export const getFollowingFile = async (): Promise<GaiaUserFollowing> => {
 };
 
 export const saveFollowingFile = async (
-  file: GaiaUserFollowing
+  file: GaiaUserFollowing,
 ): Promise<void> => {
   await storage.putFile(followingFileName, JSON.stringify(file), {
     encrypt: false,

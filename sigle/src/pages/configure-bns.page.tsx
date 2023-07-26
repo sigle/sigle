@@ -20,7 +20,7 @@ const ConfigureBNS = () => {
       if (user && user.username) {
         try {
           const namesResponse = await fetch(
-            `https://api.hiro.so/v1/names/${user.username}`
+            `https://api.hiro.so/v1/names/${user.username}`,
           );
           const namesJson = (await namesResponse.json()) as {
             zonefile: string;

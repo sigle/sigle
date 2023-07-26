@@ -63,7 +63,7 @@ const StatsChart = ({
         range: [margin.left, xMax],
         domain: data && (extent(data, getDate) as [Date, Date]),
       }),
-    [xMax, margin.left, data]
+    [xMax, margin.left, data],
   );
 
   const maxViews = (data && max(data, getViews)) || 0;
@@ -94,7 +94,9 @@ const StatsChart = ({
   // tooltip handler
   const handleTooltip = useCallback(
     (
-      event: React.TouchEvent<SVGRectElement> | React.MouseEvent<SVGRectElement>
+      event:
+        | React.TouchEvent<SVGRectElement>
+        | React.MouseEvent<SVGRectElement>,
     ) => {
       const { x } = localPoint(event) || { x: 0 };
       const x0 = dateScale.invert(x);
@@ -115,7 +117,7 @@ const StatsChart = ({
         tooltipTop: d && charValueScale(getViews(d)),
       });
     },
-    [showTooltip, charValueScale, dateScale]
+    [showTooltip, charValueScale, dateScale],
   );
 
   return (

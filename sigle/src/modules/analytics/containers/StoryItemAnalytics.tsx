@@ -22,7 +22,7 @@ export const StoryItemAnalytics = () => {
   const { data: story } = useQuery<SubsetStory>(
     ['loadStoryItem', storyId],
     () => loadStoryFile(storyId as string),
-    {}
+    {},
   );
 
   return <Component story={story} />;

@@ -8,7 +8,7 @@ import { Box, Button } from '../../../ui';
  */
 export const CodeBlockComponent = (props: NodeViewProps) => {
   const handleCHangeLanguage: React.ChangeEventHandler<HTMLSelectElement> = (
-    event
+    event,
   ) => {
     props.updateAttributes({
       language: event.target.value,

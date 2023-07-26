@@ -34,7 +34,7 @@ const StyledSelect = styled('select', {
  */
 export const CodeBlockComponent = (props: NodeViewProps) => {
   const handleCHangeLanguage: React.ChangeEventHandler<HTMLSelectElement> = (
-    event
+    event,
   ) => {
     props.updateAttributes({
       language: event.target.value,

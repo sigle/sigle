@@ -42,7 +42,7 @@ const registrarUrl = 'https://registrar.stacks.co';
 
 const validateSubdomainAvailability = async (
   name: string,
-  subdomain: string
+  subdomain: string,
 ) => {
   try {
     const url = `${registrarUrl}/v1/names/${name.toLowerCase()}.${subdomain}`;
@@ -112,7 +112,7 @@ const RegisterUsername = () => {
   }, [loggingIn, router, user]);
 
   const handleSubmit: React.FormEventHandler<HTMLFormElement> = async (
-    event
+    event,
   ) => {
     event.preventDefault();
     if (!user) {
@@ -140,7 +140,7 @@ const RegisterUsername = () => {
 
     const validityError = await validateSubdomainAvailability(
       formState.username,
-      subdomain
+      subdomain,
     );
     if (validityError !== null) {
       posthog.capture('username-validation-error');

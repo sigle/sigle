@@ -17,7 +17,7 @@ const getVercelPreviewUrl = () => {
     process.env.VERCEL_GIT_REPO_SLUG
   }-git-${process.env.VERCEL_GIT_COMMIT_REF.replace(
     new RegExp('/', 'g'),
-    '-'
+    '-',
   )}-${process.env.VERCEL_GIT_REPO_OWNER}.vercel.app`;
 };
 
@@ -108,7 +108,7 @@ const nextPlugins = [
       },
       {
         dryRun: !process.env.SENTRY_AUTH_TOKEN,
-      }
+      },
     ),
 ];
 

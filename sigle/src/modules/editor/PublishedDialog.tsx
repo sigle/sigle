@@ -47,7 +47,7 @@ export const PublishedDialog = ({
   const storyUrlEncoded = encodeURIComponent(storyUrl);
   const storyTitleEncoded = encodeURIComponent(story.title);
   const shareTextEncoded = encodeURIComponent(
-    `I just published "${story.title}" on @sigleapp\n${storyUrl}`
+    `I just published "${story.title}" on @sigleapp\n${storyUrl}`,
   );
 
   const handleCopy = () => {

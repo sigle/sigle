@@ -30,7 +30,7 @@ export const ReferrersFrame = ({
       delay: stagger(0.075),
       duration: 0.5,
       easing: 'ease-in-out',
-    }
+    },
   );
 
   useEffect(() => {
