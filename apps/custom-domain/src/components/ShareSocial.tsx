@@ -44,7 +44,7 @@ export const ShareSocial = ({
             <TooltipTrigger asChild>
               <a
                 href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(
-                  post.title
+                  post.title,
                 )}&url=${websiteUrl}`}
                 target="_blank"
                 rel="noopener"

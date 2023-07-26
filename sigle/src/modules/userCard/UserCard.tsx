@@ -107,7 +107,7 @@ export const UserCard = ({ address }: UserCardProps) => {
         blockchain: 'stacks',
       });
       return names.names[0];
-    }
+    },
   );
   const { data: userFollowing } = useGetGaiaUserFollowing({
     enabled: !!user && username !== user.username,
@@ -142,7 +142,7 @@ export const UserCard = ({ address }: UserCardProps) => {
       const dataSettings = await fetchSettings(bucketUrl);
       return dataSettings;
     },
-    { enabled: !!username }
+    { enabled: !!username },
   );
 
   const handleFollow = async () => {

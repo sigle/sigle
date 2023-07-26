@@ -20,7 +20,7 @@ export const Settings = () => {
         Sentry.captureException(error);
         toast.error(typeof error === 'string' ? error : error.message);
       },
-    }
+    },
   );
 
   return (

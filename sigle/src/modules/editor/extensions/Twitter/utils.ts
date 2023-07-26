@@ -24,7 +24,7 @@ export const getTweetIdFromUrl = (url: string | undefined) =>
 
 export const createTweet = async (
   tweetId: string,
-  ref: React.MutableRefObject<HTMLDivElement | null>
+  ref: React.MutableRefObject<HTMLDivElement | null>,
 ) => {
   // @ts-expect-error Twitter is attached to the window.
   return await window.twttr.widgets.createTweet(tweetId, ref.current);

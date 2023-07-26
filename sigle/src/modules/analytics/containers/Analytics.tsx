@@ -20,7 +20,7 @@ export const Analytics = () => {
         console.error(error);
         toast.error(error.message);
       },
-    }
+    },
   );
 
   if (isLoading) {

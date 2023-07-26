@@ -27,7 +27,7 @@ export async function getPosts({
   }[];
 }> {
   const res = await fetch(
-    `${getAbsoluteUrl()}/api/posts?site=${site}&page=${page}`
+    `${getAbsoluteUrl()}/api/posts?site=${site}&page=${page}`,
   );
   return res.json();
 }

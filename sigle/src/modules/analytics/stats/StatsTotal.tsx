@@ -19,7 +19,7 @@ export const StatsTotal = ({ data }: StatsTotalProps) => {
           visits: previousValue.visits + currentValue.visits,
         };
       },
-      { pageviews: 0, visits: 0 }
+      { pageviews: 0, visits: 0 },
     );
     return total;
   }, [data]);

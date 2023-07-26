@@ -33,7 +33,7 @@ const SettingsPlans = () => {
     {
       // Don't trigger if user is using something else than Stacks
       enabled: !!stxAddress,
-    }
+    },
   );
 
   const onUpgradeWithNFT = async () => {

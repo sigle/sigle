@@ -16,7 +16,7 @@ export const fetchPublicStories = async (bucketUrl: string) => {
 };
 
 export const fetchSettings = async (
-  bucketUrl: string
+  bucketUrl: string,
 ): Promise<{ statusCode: false | number; file: SettingsFile }> => {
   let file;
   let statusCode: false | number = false;

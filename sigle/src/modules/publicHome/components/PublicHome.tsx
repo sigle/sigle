@@ -234,7 +234,7 @@ export const PublicHome = ({ file, settings, userInfo }: PublicHomeProps) => {
         query: { ...router.query, tab: value },
       },
       undefined,
-      { shallow: true }
+      { shallow: true },
     );
   };
 

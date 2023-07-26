@@ -14,7 +14,7 @@ export class ApiError extends Error {
   constructor(
     request: ApiRequestOptions,
     response: ApiResult,
-    message: string
+    message: string,
   ) {
     super(message);
 
