@@ -90,7 +90,7 @@
     "@visx/tooltip": "2.10.0",
     "d3-array": "3.1.6",
     "date-fns": "2.28.0",
-    "fathom-client": "3.4.1",
+    "fathom-client": "3.5.0",
     "feed": "4.2.2",
     "formik": "2.2.9",
     "highlight.js": "11.5.1",
