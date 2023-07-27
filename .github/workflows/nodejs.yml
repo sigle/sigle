@@ -70,7 +70,7 @@ jobs:
         run: pnpm install
 
       - name: Install Playwright Browsers
-        run: pnpm exec playwright install --with-deps
+        run: cd sigle && pnpm exec playwright install --with-deps
 
       - name: Build sigle
         run: pnpm --filter=@sigle/app run build
