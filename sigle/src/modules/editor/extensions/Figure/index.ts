@@ -149,7 +149,7 @@ export const TipTapFigure = Node.create<FigureOptions>({
                   const newNode = node.type.create(
                     attrs,
                     node.content,
-                    node.marks
+                    node.marks,
                   );
                   transaction.replaceWith(pos, pos + node.nodeSize, newNode);
                 }
@@ -187,7 +187,7 @@ export const TipTapFigure = Node.create<FigureOptions>({
             const tr = state.tr.replaceWith(
               replacePos,
               replacePos,
-              newParagraph
+              newParagraph,
             );
             // Set the focus on the new paragraph.
             tr.setSelection(TextSelection.create(tr.doc, replacePos + 1));
@@ -263,7 +263,7 @@ export const TipTapFigure = Node.create<FigureOptions>({
             })!;
             const transaction = view.state.tr.insert(
               coordinates.pos,
-              figureNode
+              figureNode,
             );
             view.dispatch(transaction);
 
@@ -286,7 +286,7 @@ export const TipTapFigure = Node.create<FigureOptions>({
                     const newNode = node.type.create(
                       attrs,
                       node.content,
-                      node.marks
+                      node.marks,
                     );
                     transaction.replaceWith(pos, pos + node.nodeSize, newNode);
                   }

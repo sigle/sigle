@@ -91,8 +91,8 @@ export const FigureComponent = (props: FigureComponentProps) => {
             const pos = props.getPos();
             props.editor.view.dispatch(
               props.editor.view.state.tr.setSelection(
-                NodeSelection.create(props.editor.view.state.doc, pos)
-              )
+                NodeSelection.create(props.editor.view.state.doc, pos),
+              ),
             );
           }}
         />
