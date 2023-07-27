@@ -41,6 +41,51 @@ jobs:
       - name: Run sigle tests
         run: pnpm --filter=@sigle/app run test
 
+  test-sigle-e2e:
+    runs-on: ubuntu-20.04
+    strategy:
+      matrix:
+        node-version: [16]
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - uses: pnpm/action-setup@v2
+        with:
+          version: 8.6
+
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'pnpm'
+
+      - name: Get next.js sigle cache
+        uses: actions/cache@v2
+        with:
+          path: ${{ github.workspace }}/sigle/.next/cache
+          key: ${{ runner.os }}-nextjs-sigle-${{ hashFiles('**/pnpm-lock.yaml') }}
+
+      - name: Install Dependencies
+        run: pnpm install
+
+      - name: Install Playwright Browsers
+        run: pnpm exec playwright install --with-deps
+
+      - name: Build sigle
+        run: pnpm --filter=@sigle/app run build
+
+      # TODO ideally this should be tested on the vercel link
+      - name: Run sigle tests
+        run: pnpm --filter=@sigle/app run test:e2e
+
+      - uses: actions/upload-artifact@v3
+        if: always()
+        with:
+          name: playwright-report
+          path: playwright-report/
+          retention-days: 10
+
   test-api:
     runs-on: ubuntu-20.04
     strategy:
