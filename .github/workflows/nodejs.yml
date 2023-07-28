@@ -9,16 +9,19 @@ on:
 jobs:
   test-sigle:
     runs-on: ubuntu-20.04
+    defaults:
+      run:
+        working-directory: sigle
     strategy:
       matrix:
-        node-version: [16]
+        node-version: [18]
 
     steps:
       - uses: actions/checkout@v3
 
       - uses: pnpm/action-setup@v2
         with:
-          version: 8.6
+          version: 8
 
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v3
@@ -36,16 +39,19 @@ jobs:
         run: pnpm install
 
       - name: Build sigle
-        run: pnpm --filter=@sigle/app run build
+        run: pnpm run build
 
       - name: Run sigle tests
-        run: pnpm --filter=@sigle/app run test
+        run: pnpm run test
 
   test-api:
     runs-on: ubuntu-20.04
+    defaults:
+      run:
+        working-directory: server
     strategy:
       matrix:
-        node-version: [16]
+        node-version: [18]
     services:
       redis:
         image: redis:6.2
@@ -91,24 +97,27 @@ jobs:
         run: pnpm install
 
       - name: Lint api
-        run: pnpm --filter=@sigle/server run lint
+        run: pnpm run lint
 
       - name: Build api
-        run: pnpm --filter=@sigle/server run build
+        run: pnpm run build
 
       - name: Run api tests
-        run: pnpm --filter=@sigle/server run test
+        run: pnpm run test
 
       - name: Seed test DB
-        run: cd server && pnpm prisma migrate deploy && pnpm prisma db seed
+        run: pnpm prisma migrate deploy && pnpm prisma db seed
         env:
           PG_DATABASE_URL: 'postgres://postgresuser:postgrespassword@localhost:5432/postgresdb'
 
       - name: Run api e2e tests
-        run: pnpm --filter=@sigle/server run test:e2e
+        run: pnpm run test:e2e
 
   test-sigle-next:
     runs-on: ubuntu-20.04
+    defaults:
+      run:
+        working-directory: apps/sigle-next
     strategy:
       matrix:
         node-version: [18]
@@ -136,16 +145,19 @@ jobs:
         run: pnpm install
 
       - name: Build sigle
-        run: pnpm --filter=@sigle/app-next run build
+        run: pnpm run build
 
       - name: Test sigle
-        run: pnpm --filter=@sigle/app-next run test
+        run: pnpm run test
 
       - name: Build storybook
-        run: pnpm --filter=@sigle/app-next run build-storybook
+        run: pnpm run build-storybook
 
   test-custom-domain:
     runs-on: ubuntu-20.04
+    defaults:
+      run:
+        working-directory: apps/custom-domain
     strategy:
       matrix:
         node-version: [18]
@@ -172,5 +184,5 @@ jobs:
       - name: Install Dependencies
         run: pnpm install
 
-      - name: Build sigle
-        run: pnpm --filter=@sigle/custom-domain run build
+      - name: Build custom-domain
+        run: pnpm run build

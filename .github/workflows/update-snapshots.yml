@@ -1,0 +1,88 @@
+# https://mmazzarolo.com/blog/2022-09-09-visual-regression-testing-with-playwright-and-github-actions/
+# This workflow's goal is forcing an update of the reference snapshots used
+# by Playwright tests. It runs whenever you post a new pull request comment
+# that strictly matches the "/update-snapshots-sigle".
+# From a high-level perspective, it works like this:
+# 1. Because of a GitHub Action limitation, this workflow is triggered on every
+#    comment posted on a issue or pull request. We manually interrupt it unless
+#    the comment content strictly matches "/update-snapshots-sigle" and we're in a
+#    pull request.
+# 2. Use the GitHub API to grab the information about the branch name and SHA of
+#    the latest commit of the current pull request.
+# 3. Update the Playwright reference snapshots based on the UI of this branch.
+# 4. Commit the newly generated Playwright reference snapshots into this branch.
+name: Update e2e Snapshots
+
+on:
+  # It looks like you can't target PRs-only comments:
+  # https://docs.github.com/en/actions/using-workflows/events-that-trigger-workflows#pull_request_comment-use-issue_comment
+  # So we must run this workflow every time a new comment is added to issues
+  # and pull requests
+  issue_comment:
+    types: [created]
+
+jobs:
+  update-snapshots-sigle:
+    # Run this job only on comments of pull requests that strictly match
+    # the "/update-snapshots-sigle" string
+    if: ${{ github.event.issue.pull_request && github.event.comment.body == '/update-snapshots-sigle'}}
+    timeout-minutes: 60
+    runs-on: ubuntu-20.04
+    defaults:
+      run:
+        working-directory: sigle
+    strategy:
+      matrix:
+        node-version: [18]
+    steps:
+      # Checkout and do a deep fetch to load all commit IDs
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0 # Load all commits
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      # Get the SHA and branch name of the comment's pull request
+      # We must use the GitHub API to retrieve these information because they're
+      # not accessible within workflows triggered by "issue_comment"
+      - name: Get SHA and branch name
+        id: get-branch-and-sha
+        run: |
+          sha_and_branch=$(\
+            curl \
+              -H 'authorization: Bearer ${{ secrets.GITHUB_TOKEN }}' \
+              https://api.github.com/repos/${{ github.repository }}/pulls/${{ github.event.issue.number }} \
+            | jq -r '.head.sha," ",.head.ref');
+          echo "::set-output name=sha::$(echo $sha_and_branch | cut -d " " -f 1)";
+          echo "::set-output name=branch::$(echo $sha_and_branch | cut -d " " -f 2)"
+
+      # Checkout the comment's branch
+      - name: Fetch Branch
+        run: git fetch
+
+      - name: Checkout Branch
+        run: git checkout ${{ steps.get-branch-and-sha.outputs.branch }}
+
+      - uses: pnpm/action-setup@v2
+        with:
+          version: 8.6
+
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'pnpm'
+
+      - name: Install Dependencies
+        run: pnpm install
+
+      - name: Install Playwright browsers
+        run: pnpm playwright install --with-deps chromium
+
+      # Update the snapshots based on the current UI
+      - name: Update snapshots
+        run: pnpm playwright test --update-snapshots --reporter=list
+
+      # Commit the changes to the pull request branch
+      - uses: stefanzweifel/git-auto-commit-action@v4
+        with:
+          commit_message: '[CI] Update Snapshots'
