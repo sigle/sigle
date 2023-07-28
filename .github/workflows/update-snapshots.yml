@@ -31,6 +31,9 @@ jobs:
     defaults:
       run:
         working-directory: sigle
+    strategy:
+      matrix:
+        node-version: [18]
     steps:
       # Checkout and do a deep fetch to load all commit IDs
       - uses: actions/checkout@v2
