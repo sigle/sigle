@@ -36,7 +36,7 @@ jobs:
           key: ${{ runner.os }}-nextjs-sigle-${{ hashFiles('**/pnpm-lock.yaml') }}
 
       - name: Install Dependencies
-        run: pnpm install --filter={.}...
+        run: pnpm install
 
       - name: Build sigle
         run: pnpm run build
@@ -94,7 +94,7 @@ jobs:
           cache: 'pnpm'
 
       - name: Install Dependencies
-        run: pnpm install --filter={.}...
+        run: pnpm install
 
       - name: Lint api
         run: pnpm run lint
@@ -142,7 +142,7 @@ jobs:
           key: ${{ runner.os }}-nextjs-sigle-next-${{ hashFiles('**/pnpm-lock.yaml') }}
 
       - name: Install Dependencies
-        run: pnpm install --filter={.}...
+        run: pnpm install
 
       - name: Build sigle
         run: pnpm run build
@@ -182,7 +182,7 @@ jobs:
           key: ${{ runner.os }}-nextjs-apps-custom-domain-next-${{ hashFiles('**/pnpm-lock.yaml') }}
 
       - name: Install Dependencies
-        run: pnpm install --filter={.}...
+        run: pnpm install
 
       - name: Build custom-domain
         run: pnpm run build
