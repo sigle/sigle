@@ -135,8 +135,6 @@ export const getServerSideProps: GetServerSideProps<
   // If client side we use window.location.origin
   const appUrl = req.headers['x-forwarded-host']
     ? `${req.headers['x-forwarded-proto']}://${req.headers['x-forwarded-host']}`
-    : req.headers.host === 'localhost:3000'
-    ? 'http://localhost:3000'
     : sigleConfig.appUrl;
 
   const bucketUrl = userProfile?.apps?.[appUrl];
