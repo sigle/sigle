@@ -79,7 +79,7 @@ jobs:
         run: pnpm run build
 
       # TODO ideally this should be tested on the vercel link
-      - name: Run sigle tests
+      - name: Run sigle e2e tests
         run: pnpm run test:e2e
 
       - uses: actions/upload-artifact@v3
