@@ -6,6 +6,8 @@ const createJestConfig = nextJest();
 const customJestConfig = {
   resolver: '<rootDir>/src/jest/resolver.js',
   setupFilesAfterEnv: ['<rootDir>/src/jest.setup.ts'],
+  // Exclude e2e playwright tests from Jest
+  testPathIgnorePatterns: ['<rootDir>/node_modules/', '<rootDir>/e2e/'],
   testEnvironment: 'jsdom',
 };
 
