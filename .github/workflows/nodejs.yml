@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-20.04
     strategy:
       matrix:
-        node-version: [16]
+        node-version: [18]
 
     steps:
       - uses: actions/checkout@v3
@@ -43,9 +43,12 @@ jobs:
 
   test-sigle-e2e:
     runs-on: ubuntu-20.04
+    defaults:
+      run:
+        working-directory: sigle
     strategy:
       matrix:
-        node-version: [16]
+        node-version: [18]
 
     steps:
       - uses: actions/checkout@v3
@@ -67,20 +70,20 @@ jobs:
           key: ${{ runner.os }}-nextjs-sigle-${{ hashFiles('**/pnpm-lock.yaml') }}
 
       - name: Install Dependencies
-        run: pnpm install
+        run: pnpm install --filter={.}...
 
       - name: Install Playwright Browsers
-        run: cd sigle && pnpm exec playwright install --with-deps
+        run: pnpm exec playwright install --with-deps chromium
 
       - name: Build sigle
-        run: pnpm --filter=@sigle/app run build
+        run: pnpm run build
 
       # TODO ideally this should be tested on the vercel link
       - name: Run sigle tests
-        run: pnpm --filter=@sigle/app run test:e2e
+        run: pnpm run test:e2e
 
       - uses: actions/upload-artifact@v3
-        if: always()
+        if: failure()
         with:
           name: playwright-report
           path: playwright-report/
