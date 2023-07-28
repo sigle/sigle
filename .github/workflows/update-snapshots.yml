@@ -73,7 +73,7 @@ jobs:
           cache: 'pnpm'
 
       - name: Install Dependencies
-        run: pnpm install
+        run: pnpm install --filter={.}...
 
       - name: Install Playwright browsers
         run: pnpm playwright install --with-deps chromium

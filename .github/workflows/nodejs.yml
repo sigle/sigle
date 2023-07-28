@@ -73,7 +73,7 @@ jobs:
           key: ${{ runner.os }}-nextjs-sigle-${{ hashFiles('**/pnpm-lock.yaml') }}
 
       - name: Install Dependencies
-        run: pnpm install --filter={.}...
+        run: pnpm install
 
       - name: Install Playwright Browsers
         run: pnpm playwright install --with-deps chromium
