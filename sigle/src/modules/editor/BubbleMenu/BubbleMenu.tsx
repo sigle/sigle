@@ -1,20 +1,23 @@
-import { useState, useEffect } from 'react';
-import { Editor, BubbleMenu as TipTapBubbleMenu } from '@tiptap/react';
-import { isTextSelection } from '@tiptap/core';
+import {
+  Editor,
+  BubbleMenu as TipTapBubbleMenu,
+  isTextSelection,
+} from '@tiptap/react';
+import { useEffect } from 'react';
 import {
   Link1Icon,
   FontBoldIcon,
   FontItalicIcon,
   CodeIcon,
-  Cross2Icon,
   StrikethroughIcon,
   UnderlineIcon,
 } from '@radix-ui/react-icons';
-import { globalCss, styled } from '../../stitches.config';
-import { Flex } from '../../ui';
+import { globalCss, styled } from '../../../stitches.config';
+import { EditorBubbleMenuLink } from './BubbleMenuLink';
+import { useBubbleMenuStore } from './store';
 
 // Tippyjs theme used by the bubble menu
-const globalStylesCustomEditor = globalCss({
+const globalStylesBubbleMenu = globalCss({
   ".tippy-box[data-theme~='sigle-editor-bubble-menu']": {
     backgroundColor: '$gray11',
   },
@@ -60,24 +63,15 @@ const BubbleMenuButton = styled('button', {
   },
 });
 
-const BubbleMenuInput = styled('input', {
-  width: '100%',
-  pl: '$2',
-  pr: '$1',
-  backgroundColor: 'transparent',
-  outline: 'none',
-});
-
-// Maybe can be used on clicks https://github.com/ueberdosis/tiptap/issues/104#issuecomment-912794709
-
-interface BubbleMenuProps {
+interface EditorBubbleMenuProps {
   editor: Editor;
 }
 
-export const BubbleMenu = ({ editor }: BubbleMenuProps) => {
-  globalStylesCustomEditor();
+export const BubbleMenu = ({ editor }: EditorBubbleMenuProps) => {
+  globalStylesBubbleMenu();
 
-  const [linkState, setLinkState] = useState({ open: false, value: '' });
+  const linkOpen = useBubbleMenuStore((state) => state.linkOpen);
+  const toggleLink = useBubbleMenuStore((state) => state.toggleLink);
 
   // Listen to any key press to detect cmd + k and activate the link edition
   useEffect(() => {
@@ -93,65 +87,7 @@ export const BubbleMenu = ({ editor }: BubbleMenuProps) => {
   }, []);
 
   const onSelectLink = () => {
-    // Get href of selected link to pre fill the input
-    const existingHref = editor.isActive('link')
-      ? editor.getAttributes('link').href
-      : '';
-
-    setLinkState({
-      open: true,
-      value: existingHref,
-    });
-  };
-
-  const onSubmitLink = (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-
-    let safeLinkValue = linkState.value.trim();
-
-    if (
-      safeLinkValue &&
-      !safeLinkValue.startsWith('http') &&
-      !safeLinkValue.startsWith('#')
-    ) {
-      safeLinkValue = `https://${linkState.value}`;
-    }
-
-    if (safeLinkValue) {
-      const pos = editor.state.selection.$head;
-      editor
-        .chain()
-        .focus()
-        .extendMarkRange('link')
-        .setLink({ href: safeLinkValue })
-        // Set the text selection at the end of the link selection
-        // that way user can continue to type easily
-        .setTextSelection(pos.end())
-        // Unset link selection se when the user continues to type it won't be a link
-        // We are using `unsetMark` instead of `unsetLink` to avoid the full selection to be unlinked
-        .unsetMark('link')
-        .run();
-    } else {
-      // If input text is empty we unset the link
-      editor.chain().focus().extendMarkRange('link').unsetLink().run();
-    }
-
-    resetLink();
-  };
-
-  const onKeyDown = (event: React.KeyboardEvent) => {
-    // If user press escape we hide the link input
-    if (event.key === 'Escape') {
-      event.preventDefault();
-      resetLink();
-    }
-  };
-
-  const resetLink = () => {
-    setLinkState({
-      open: false,
-      value: '',
-    });
+    toggleLink(true);
   };
 
   return (
@@ -159,7 +95,10 @@ export const BubbleMenu = ({ editor }: BubbleMenuProps) => {
       tippyOptions={{
         duration: 100,
         theme: 'sigle-editor-bubble-menu',
-        onHidden: () => resetLink(),
+        onHidden: () => {
+          // When bubble menu is hidden, reset the link state
+          toggleLink(false);
+        },
       }}
       shouldShow={({ editor, state, from, to, view }) => {
         // Take the initial implementation of the plugin and extends it
@@ -206,7 +145,7 @@ export const BubbleMenu = ({ editor }: BubbleMenuProps) => {
       }}
       editor={editor}
     >
-      {!linkState.open ? (
+      {!linkOpen ? (
         <>
           <BubbleMenuButton
             onClick={() => editor.chain().focus().toggleBold().run()}
@@ -246,24 +185,7 @@ export const BubbleMenu = ({ editor }: BubbleMenuProps) => {
           </BubbleMenuButton>
         </>
       ) : (
-        <Flex as="form" onSubmit={onSubmitLink}>
-          <BubbleMenuInput
-            value={linkState.value}
-            onKeyDown={onKeyDown}
-            onChange={(e) =>
-              setLinkState((state) => ({ ...state, value: e.target.value }))
-            }
-            placeholder="Enter link ..."
-            autoFocus
-          />
-          <BubbleMenuButton
-            type="button"
-            onClick={() => resetLink()}
-            active={false}
-          >
-            <Cross2Icon height={18} width={18} />
-          </BubbleMenuButton>
-        </Flex>
+        <EditorBubbleMenuLink editor={editor} />
       )}
     </StyledBubbleMenu>
   );

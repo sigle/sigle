@@ -120,7 +120,8 @@
     "tinycolor2": "1.4.2",
     "tippy.js": "6.3.7",
     "valid-url": "1.0.9",
-    "zone-file": "1.0.0"
+    "zone-file": "1.0.0",
+    "zustand": "4.3.8"
   },
   "devDependencies": {
     "@fontsource/open-sans": "4.5.10",
