@@ -532,13 +532,13 @@ importers:
         version: 4.1.0(@nestjs/common@10.0.4)(@nestjs/core@10.0.4)(reflect-metadata@0.1.13)
       '@ntegral/nestjs-sentry':
         specifier: 4.0.0
-        version: 4.0.0(@nestjs/common@10.0.4)(@nestjs/core@10.0.4)(@sentry/hub@7.61.0)(@sentry/node@7.57.0)(class-transformer@0.5.1)(class-validator@0.14.0)(graphql@16.6.0)(reflect-metadata@0.1.13)(rimraf@3.0.2)(rxjs@7.8.1)
+        version: 4.0.0(@nestjs/common@10.0.4)(@nestjs/core@10.0.4)(@sentry/hub@7.61.0)(@sentry/node@7.60.1)(class-transformer@0.5.1)(class-validator@0.14.0)(graphql@16.6.0)(reflect-metadata@0.1.13)(rimraf@3.0.2)(rxjs@7.8.1)
       '@prisma/client':
         specifier: 4.12.0
         version: 4.12.0(prisma@4.12.0)
       '@sentry/node':
-        specifier: 7.57.0
-        version: 7.57.0
+        specifier: 7.60.1
+        version: 7.60.1
       '@stacks/blockchain-api-client':
         specifier: 7.2.2
         version: 7.2.2
@@ -1009,6 +1009,9 @@ importers:
       '@next/bundle-analyzer':
         specifier: 13.4.5
         version: 13.4.5
+      '@playwright/test':
+        specifier: 1.36.2
+        version: 1.36.2
       '@sigle/tailwind-style':
         specifier: 1.1.0
         version: link:../packages/tailwind-style
@@ -4994,7 +4997,7 @@ packages:
       '@types/lodash': 4.14.195
       '@types/randombytes': 2.0.0
       '@types/ripemd160': 2.0.0
-      '@types/sha.js': 2.4.0
+      '@types/sha.js': 2.4.1
       bn.js: 4.12.0
       c32check: 1.1.3
       cross-fetch: 3.1.8
@@ -6595,14 +6598,14 @@ packages:
       '@jest/test-result': 28.1.3
       '@jest/transform': 28.1.3
       '@jest/types': 28.1.3
-      '@types/node': 18.11.18
+      '@types/node': 18.15.11
       ansi-escapes: 4.3.2
       chalk: 4.1.2
       ci-info: 3.8.0
       exit: 0.1.2
       graceful-fs: 4.2.11
       jest-changed-files: 28.1.3
-      jest-config: 28.1.3(@types/node@18.11.18)
+      jest-config: 28.1.3(@types/node@18.15.11)
       jest-haste-map: 28.1.3
       jest-message-util: 28.1.3
       jest-regex-util: 28.0.2
@@ -6985,7 +6988,7 @@ packages:
       '@jest/schemas': 28.1.3
       '@types/istanbul-lib-coverage': 2.0.4
       '@types/istanbul-reports': 3.0.1
-      '@types/node': 18.11.18
+      '@types/node': 18.15.11
       '@types/yargs': 17.0.24
       chalk: 4.1.2
     dev: true
@@ -7846,7 +7849,7 @@ packages:
       '@nodelib/fs.scandir': 2.1.5
       fastq: 1.15.0
 
-  /@ntegral/nestjs-sentry@4.0.0(@nestjs/common@10.0.4)(@nestjs/core@10.0.4)(@sentry/hub@7.61.0)(@sentry/node@7.57.0)(class-transformer@0.5.1)(class-validator@0.14.0)(graphql@16.6.0)(reflect-metadata@0.1.13)(rimraf@3.0.2)(rxjs@7.8.1):
+  /@ntegral/nestjs-sentry@4.0.0(@nestjs/common@10.0.4)(@nestjs/core@10.0.4)(@sentry/hub@7.61.0)(@sentry/node@7.60.1)(class-transformer@0.5.1)(class-validator@0.14.0)(graphql@16.6.0)(reflect-metadata@0.1.13)(rimraf@3.0.2)(rxjs@7.8.1):
     resolution: {integrity: sha512-6WHZcK7NLeg7ue1y3Z61msEBzCGZeXQ0hWhliH1ddQH0kPbZ6lXLxduGMWYb0N/fPjXAX1Astz8urqnoTOZBQw==}
     peerDependencies:
       '@nestjs/common': ^9.0.4
@@ -7860,7 +7863,7 @@ packages:
       '@nestjs/common': 10.0.4(class-transformer@0.5.1)(class-validator@0.14.0)(reflect-metadata@0.1.13)(rxjs@7.8.1)
       '@nestjs/core': 10.0.4(@nestjs/common@10.0.4)(reflect-metadata@0.1.13)(rxjs@7.8.1)
       '@sentry/hub': 7.61.0
-      '@sentry/node': 7.57.0
+      '@sentry/node': 7.60.1
       reflect-metadata: 0.1.13
       rimraf: 3.0.2
       rxjs: 7.8.1
@@ -7927,6 +7930,17 @@ packages:
       open: 9.1.0
       picocolors: 1.0.0
       tslib: 2.6.1
+    dev: true
+
+  /@playwright/test@1.36.2:
+    resolution: {integrity: sha512-2rVZeyPRjxfPH6J0oGJqE8YxiM1IBRyM8hyrXYK7eSiAqmbNhxwcLa7dZ7fy9Kj26V7FYia5fh9XJRq4Dqme+g==}
+    engines: {node: '>=16'}
+    hasBin: true
+    dependencies:
+      '@types/node': 18.15.11
+      playwright-core: 1.36.2
+    optionalDependencies:
+      fsevents: 2.3.2
     dev: true
 
   /@pmmmwh/react-refresh-webpack-plugin@0.5.10(react-refresh@0.11.0)(webpack@5.88.1):
@@ -9807,13 +9821,13 @@ packages:
       tslib: 1.14.1
     dev: false
 
-  /@sentry-internal/tracing@7.57.0:
-    resolution: {integrity: sha512-tpViyDd8AhQGYYhI94xi2aaDopXOPfL2Apwrtb3qirWkomIQ2K86W1mPmkce+B0cFOnW2Dxv/ZTFKz6ghjK75A==}
+  /@sentry-internal/tracing@7.60.1:
+    resolution: {integrity: sha512-2vM+3/ddzmoBfi92OOD9FFTHXf0HdQhKtNM26+/RsmkKnTid+/inbvA7nKi+Qa7ExcnlC6eclEHQEg+0X3yDkQ==}
     engines: {node: '>=8'}
     dependencies:
-      '@sentry/core': 7.57.0
-      '@sentry/types': 7.57.0
-      '@sentry/utils': 7.57.0
+      '@sentry/core': 7.60.1
+      '@sentry/types': 7.60.1
+      '@sentry/utils': 7.60.1
       tslib: 2.6.1
     dev: false
 
@@ -9876,12 +9890,12 @@ packages:
       tslib: 1.14.1
     dev: false
 
-  /@sentry/core@7.57.0:
-    resolution: {integrity: sha512-l014NudPH0vQlzybtXajPxYFfs9w762NoarjObC3gu76D1jzBBFzhdRelkGpDbSLNTIsKhEDDRpgAjBWJ9icfw==}
+  /@sentry/core@7.60.1:
+    resolution: {integrity: sha512-yr/0VFYWOJyXj+F2nifkRYxXskotsNnDggUnFOZZN2ZgTG94IzRFsOZQ6RslHJ8nrYPTBNO74reU0C0GB++xRw==}
     engines: {node: '>=8'}
     dependencies:
-      '@sentry/types': 7.57.0
-      '@sentry/utils': 7.57.0
+      '@sentry/types': 7.60.1
+      '@sentry/utils': 7.60.1
       tslib: 2.6.1
     dev: false
 
@@ -10017,18 +10031,18 @@ packages:
       - supports-color
     dev: false
 
-  /@sentry/node@7.57.0:
-    resolution: {integrity: sha512-63mjyUVM6sfJFVQ5TGVRVGUsoEfESl5ABzIW1W0s9gUiQPaG8SOdaQJglb2VNrkMYxnRHgD8Q9LUh/qcmUyPGw==}
+  /@sentry/node@7.60.1:
+    resolution: {integrity: sha512-lBt3RqncY4XbzM+PlTbH/tUWeOsm24anwEzvA2DSDP1NL3WZ5MdvT77q7NqpvpVNd2LeGAQ6x7AXDzE53YBfnQ==}
     engines: {node: '>=8'}
     dependencies:
-      '@sentry-internal/tracing': 7.57.0
-      '@sentry/core': 7.57.0
-      '@sentry/types': 7.57.0
-      '@sentry/utils': 7.57.0
+      '@sentry-internal/tracing': 7.60.1
+      '@sentry/core': 7.60.1
+      '@sentry/types': 7.60.1
+      '@sentry/utils': 7.60.1
       cookie: 0.4.2
       https-proxy-agent: 5.0.1
       lru_map: 0.3.3
-      tslib: 2.6.0
+      tslib: 2.6.1
     transitivePeerDependencies:
       - supports-color
     dev: false
@@ -10094,8 +10108,8 @@ packages:
     engines: {node: '>=8'}
     dev: false
 
-  /@sentry/types@7.57.0:
-    resolution: {integrity: sha512-D7ifoUfxuVCUyktIr5Gc+jXUbtcUMmfHdTtTbf1XCZHua5mJceK9wtl3YCg3eq/HK2Ppd52BKnTzEcS5ZKQM+w==}
+  /@sentry/types@7.60.1:
+    resolution: {integrity: sha512-8lKKSCOhZ953cWxwnfZwoR3ZFFlZG4P3PQFTaFt/u4LxLh/0zYbdtgvtUqXRURjMCi5P6ddeE9Uw9FGnTJCsTw==}
     engines: {node: '>=8'}
     dev: false
 
@@ -10120,11 +10134,11 @@ packages:
       tslib: 1.14.1
     dev: false
 
-  /@sentry/utils@7.57.0:
-    resolution: {integrity: sha512-YXrkMCiNklqkXctn4mKYkrzNCf/dfVcRUQrkXjeBC+PHXbcpPyaJgInNvztR7Skl8lE3JPGPN4v5XhLxK1bUUg==}
+  /@sentry/utils@7.60.1:
+    resolution: {integrity: sha512-ik+5sKGBx4DWuvf6UUKPSafaDiASxP+Xvjg3C9ppop2I/JWxP1FfZ5g22n5ZmPmNahD6clTSoTWly8qyDUlUOw==}
     engines: {node: '>=8'}
     dependencies:
-      '@sentry/types': 7.57.0
+      '@sentry/types': 7.60.1
       tslib: 2.6.1
     dev: false
 
@@ -11269,7 +11283,7 @@ packages:
       '@storybook/router': 7.0.24(react-dom@18.2.0)(react@18.2.0)
       '@storybook/store': 7.0.24
       '@storybook/theming': 7.0.24(react-dom@18.2.0)(react@18.2.0)
-      '@types/node': 16.18.37
+      '@types/node': 16.18.39
       '@types/semver': 7.5.0
       babel-loader: 9.1.2(@babel/core@7.22.5)(webpack@5.88.1)
       babel-plugin-named-exports-order: 0.0.2
@@ -11441,7 +11455,7 @@ packages:
     dependencies:
       '@storybook/node-logger': 7.0.24
       '@storybook/types': 7.0.24
-      '@types/node': 16.18.37
+      '@types/node': 16.18.39
       '@types/node-fetch': 2.6.4
       '@types/pretty-hrtime': 1.0.1
       chalk: 4.1.2
@@ -11759,7 +11773,7 @@ packages:
       '@storybook/node-logger': 7.0.24
       '@storybook/react': 7.0.24(react-dom@18.2.0)(react@18.2.0)(typescript@5.1.3)
       '@storybook/react-docgen-typescript-plugin': 1.0.6--canary.9.0c3f3b7.0(typescript@5.1.3)(webpack@5.88.1)
-      '@types/node': 16.18.37
+      '@types/node': 16.18.39
       '@types/semver': 7.5.0
       babel-plugin-add-react-displayname: 0.0.5
       babel-plugin-react-docgen: 4.2.1
@@ -21042,6 +21056,45 @@ packages:
       - supports-color
     dev: true
 
+  /jest-config@28.1.3(@types/node@18.15.11):
+    resolution: {integrity: sha512-MG3INjByJ0J4AsNBm7T3hsuxKQqFIiRo/AUqb1q9LRKI5UU6Aar9JHbr9Ivn1TVwfUD9KirRoM/T6u8XlcQPHQ==}
+    engines: {node: ^12.13.0 || ^14.15.0 || ^16.10.0 || >=17.0.0}
+    peerDependencies:
+      '@types/node': '*'
+      ts-node: '>=9.0.0'
+    peerDependenciesMeta:
+      '@types/node':
+        optional: true
+      ts-node:
+        optional: true
+    dependencies:
+      '@babel/core': 7.22.5
+      '@jest/test-sequencer': 28.1.3
+      '@jest/types': 28.1.3
+      '@types/node': 18.15.11
+      babel-jest: 28.1.3(@babel/core@7.22.5)
+      chalk: 4.1.2
+      ci-info: 3.8.0
+      deepmerge: 4.3.1
+      glob: 7.2.3
+      graceful-fs: 4.2.11
+      jest-circus: 28.1.3
+      jest-environment-node: 28.1.3
+      jest-get-type: 28.0.2
+      jest-regex-util: 28.0.2
+      jest-resolve: 28.1.3
+      jest-runner: 28.1.3
+      jest-util: 28.1.3
+      jest-validate: 28.1.3
+      micromatch: 4.0.5
+      parse-json: 5.2.0
+      pretty-format: 28.1.3
+      slash: 3.0.0
+      strip-json-comments: 3.1.1
+    transitivePeerDependencies:
+      - supports-color
+    dev: true
+
   /jest-config@29.5.0(@types/node@18.15.11)(ts-node@10.9.1):
     resolution: {integrity: sha512-kvDUKBnNJPNBmFFOhDbm59iu1Fii1Q6SxyhXfvylq3UTHbg6o7j/g8k2dZyXWLvfdKB1vAPxNZnMgtKJcmu3kA==}
     engines: {node: ^14.15.0 || ^16.10.0 || >=18.0.0}
@@ -24472,6 +24525,12 @@ packages:
       find-up: 5.0.0
     dev: true
 
+  /playwright-core@1.36.2:
+    resolution: {integrity: sha512-sQYZt31dwkqxOrP7xy2ggDfEzUxM1lodjhsQ3NMMv5uGTRDsLxU0e4xf4wwMkF2gplIxf17QMBCodSFgm6bFVQ==}
+    engines: {node: '>=16'}
+    hasBin: true
+    dev: true
+
   /pluralize@8.0.0:
     resolution: {integrity: sha512-Nc3IT5yHzflTfbjgqWcCPpo7DaKy4FnpB0l/zCAW0Tc7jxAiuqSxHasntB3D7887LSrA93kDJ9IXovxJYxyLCA==}
     engines: {node: '>=4'}
@@ -27806,6 +27865,7 @@ packages:
 
   /tslib@2.5.0:
     resolution: {integrity: sha512-336iVw3rtn2BUK7ORdIAHTyxHGRIHVReokCR3XjbckJMK7ms8FysBfhLR8IXnAgy7T0PTPNBWKiH514FOW/WSg==}
+    requiresBuild: true
     dev: false
     optional: true
 

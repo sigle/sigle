@@ -36,7 +36,7 @@ jobs:
           key: ${{ runner.os }}-nextjs-sigle-${{ hashFiles('**/pnpm-lock.yaml') }}
 
       - name: Install Dependencies
-        run: pnpm install
+        run: pnpm install --filter={.}...
 
       - name: Build sigle
         run: pnpm run build

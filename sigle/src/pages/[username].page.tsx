@@ -104,7 +104,6 @@ export const getServerSideProps: GetServerSideProps<
   // This is used for the e2e tests
   if (sigleConfig.env === 'production' && appUrl === 'http://localhost:3000') {
     appUrl = sigleConfig.appUrl;
-    console.log('appUrl2', sigleConfig.appUrl);
   }
 
   const bucketUrl = userProfile?.apps?.[appUrl];
