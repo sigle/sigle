@@ -65,7 +65,7 @@
     "mjml": "4.14.1",
     "mjml-bullet-list": "1.2.2",
     "nestjs-throttler-storage-redis": "0.3.3",
-    "next-auth": "4.10.3",
+    "next-auth": "4.20.1",
     "node-mailjet": "5.1.1",
     "nodemailer": "6.9.1",
     "posthog-node": "3.1.1",
