@@ -21,7 +21,7 @@ interface CeramicContextType {
 }
 
 const CeramicContext = createContext<CeramicContextType>(
-  {} as CeramicContextType
+  {} as CeramicContextType,
 );
 
 const getStorageKey = (address: string) => `did-session:${address}`;
@@ -70,7 +70,7 @@ const CeramicProvider = ({ children }: CeramicProviderProps) => {
     if (!normalizedEthAddress) return;
 
     const sessionString = localStorage.getItem(
-      getStorageKey(normalizedEthAddress)
+      getStorageKey(normalizedEthAddress),
     );
     if (sessionString) {
       const session = await DIDSession.fromSession(sessionString);
@@ -100,7 +100,7 @@ const CeramicProvider = ({ children }: CeramicProviderProps) => {
       const ethProvider = await connector!.getProvider();
       const accountId = await getEthAccountId(
         ethProvider,
-        normalizedEthAddress!
+        normalizedEthAddress!,
       );
       authMethod = await EthereumWebAuth.getAuthMethod(ethProvider, accountId);
     }
@@ -115,7 +115,7 @@ const CeramicProvider = ({ children }: CeramicProviderProps) => {
     const sessionString = session.serialize();
     localStorage.setItem(
       getStorageKey(stxAddress || normalizedEthAddress!),
-      sessionString
+      sessionString,
     );
 
     composeClient.setDID(session.did);
@@ -129,7 +129,7 @@ const CeramicProvider = ({ children }: CeramicProviderProps) => {
       connect,
       session,
     }),
-    [connect, session]
+    [connect, session],
   );
 
   return (

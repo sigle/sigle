@@ -63,7 +63,7 @@ const start = async () => {
     JSON.stringify(subdomainsFound),
     {
       encoding: 'utf8',
-    }
+    },
   );
 
   console.log('Subdomains generated', { subdomainsNotFound });

@@ -14,7 +14,7 @@ const button = cva(
         true: 'border-gray-900 bg-gray-900 text-white',
       },
     },
-  }
+  },
 );
 
 interface PaginationProps {

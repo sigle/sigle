@@ -22,7 +22,7 @@ interface HeaderProps {
 
 export const Header = ({ settings }: HeaderProps) => {
   const [scrollDirection, setScrollDirection] = useState<'down' | 'up' | null>(
-    null
+    null,
   );
 
   useEffect(() => {
@@ -52,8 +52,8 @@ export const Header = ({ settings }: HeaderProps) => {
           'sticky top-0 z-10 flex h-16 items-center justify-between border-b border-gray-200 bg-sigle-background px-4 transition-all duration-300 ease-in-out md:px-16',
           {
             ['-top-16']: scrollDirection === 'down',
-          }
-        )
+          },
+        ),
       )}
     >
       <Link href="/" className="w-full md:w-auto">

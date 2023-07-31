@@ -6,7 +6,7 @@ export const runtime = 'edge';
 
 export async function GET(
   request: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: { id: string } },
 ) {
   const { searchParams } = new URL(request.url);
   const siteParam = searchParams.get('site');

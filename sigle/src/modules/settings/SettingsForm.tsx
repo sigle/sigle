@@ -202,7 +202,7 @@ export const SettingsForm = ({ settings, username }: SettingsFormProps) => {
       setCustomLogo(
         Object.assign(blob, {
           name: file.name,
-        })
+        }),
       );
     }
   }, []);

@@ -87,7 +87,7 @@ export const UserFeed = () => {
 
       return feedStories;
     },
-    { enabled: !!userFollowing }
+    { enabled: !!userFollowing },
   );
 
   return (

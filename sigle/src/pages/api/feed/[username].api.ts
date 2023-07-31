@@ -74,11 +74,11 @@ export const apiFeed: NextApiHandler = async (req, res) => {
     file = migrationStories();
   } else {
     Sentry.captureException(
-      `${username} failed to fetch public stories with code ${resPublicStories.status}`
+      `${username} failed to fetch public stories with code ${resPublicStories.status}`,
     );
     res.statusCode = 500;
     res.end(
-      `${username} failed to fetch public stories with code ${resPublicStories.status}`
+      `${username} failed to fetch public stories with code ${resPublicStories.status}`,
     );
     return;
   }
@@ -91,11 +91,11 @@ export const apiFeed: NextApiHandler = async (req, res) => {
     settings = migrationSettings();
   } else {
     Sentry.captureException(
-      `${username} failed to settings storied with code ${resSettings.status}`
+      `${username} failed to settings storied with code ${resSettings.status}`,
     );
     res.statusCode = 500;
     res.end(
-      `${username} failed to settings storied with code ${resSettings.status}`
+      `${username} failed to settings storied with code ${resSettings.status}`,
     );
     return;
   }

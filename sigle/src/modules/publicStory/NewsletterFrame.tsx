@@ -70,7 +70,7 @@ export const NewsletterFrame = ({
           `You successfully subscribed to ${siteName}'s newsletter`,
           {
             autoClose: 7000,
-          }
+          },
         );
         formik.setSubmitting(false);
         setIsSubscribed(true);

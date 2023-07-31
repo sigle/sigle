@@ -14,7 +14,7 @@ const HopePostList = () => {
     { limit: 50, status: 'PUBLISHED' },
     {
       getNextPageParam: (lastPage) => lastPage.nextCursor,
-    }
+    },
   );
 
   const { observe } = useInView({

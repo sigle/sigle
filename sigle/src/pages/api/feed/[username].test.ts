@@ -55,10 +55,10 @@ describe('test feed api', () => {
     });
     // Last items should never change
     expect(
-      jsonObj.rss.channel.item[jsonObj.rss.channel.item.length - 1]
+      jsonObj.rss.channel.item[jsonObj.rss.channel.item.length - 1],
     ).toMatchSnapshot();
     expect(
-      jsonObj.rss.channel.item[jsonObj.rss.channel.item.length - 2]
+      jsonObj.rss.channel.item[jsonObj.rss.channel.item.length - 2],
     ).toMatchSnapshot();
   });
 });

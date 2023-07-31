@@ -144,7 +144,7 @@ export const PublicStory = ({
   const storyReadingTime = useMemo(
     () =>
       story.content ? readingTime(getTextFromHtml(story.content)) : undefined,
-    [story.content]
+    [story.content],
   );
 
   const siteName = settings.siteName || username;

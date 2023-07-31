@@ -5,5 +5,5 @@ export const postHogClient = new PostHog(
   {
     host: 'https://app.posthog.com',
     enable: process.env.NODE_ENV === 'production',
-  }
+  },
 );

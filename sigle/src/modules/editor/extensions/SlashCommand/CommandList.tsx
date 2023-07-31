@@ -85,7 +85,7 @@ export const CommandList = forwardRef<CommandListRef, CommandListProps>(
         return;
       }
       const $ele = $div.querySelector(
-        `[data-index="${selectedIndex}"]`
+        `[data-index="${selectedIndex}"]`,
       ) as HTMLButtonElement;
       if (!$ele) {
         return;
@@ -114,12 +114,12 @@ export const CommandList = forwardRef<CommandListRef, CommandListProps>(
     };
 
     const twitterItemIndex = items.findIndex(
-      (item) => item.title === 'Twitter'
+      (item) => item.title === 'Twitter',
     );
     const twitterItem = items[twitterItemIndex];
 
     const callToActionItemIndex = items.findIndex(
-      (item) => item.title === 'Call To Action'
+      (item) => item.title === 'Call To Action',
     );
     const callToActionItem = items[callToActionItemIndex];
 
@@ -133,7 +133,7 @@ export const CommandList = forwardRef<CommandListRef, CommandListProps>(
         {items
           .filter(
             (item) =>
-              item.title !== 'Twitter' && item.title !== 'Call To Action'
+              item.title !== 'Twitter' && item.title !== 'Call To Action',
           )
           .map(({ title, description, icon: Icon }, index) => (
             <CommandsListItem
@@ -234,5 +234,5 @@ export const CommandList = forwardRef<CommandListRef, CommandListProps>(
         )}
       </Flex>
     );
-  }
+  },
 );

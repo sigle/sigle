@@ -9,12 +9,12 @@ export const useCreateSubscribers = (
     PostApiSubscribersReturnType,
     Error,
     CreateSubscriberDto
-  > = {}
+  > = {},
 ) =>
   useMutation<PostApiSubscribersReturnType, Error, CreateSubscriberDto>(
     (data) =>
       SubscribersService.subscribersControllerCreate({
         requestBody: data,
       }),
-    options
+    options,
   );
