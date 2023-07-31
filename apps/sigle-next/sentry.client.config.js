@@ -15,7 +15,7 @@ Sentry.init({
     new posthog.SentryIntegration(
       posthog,
       process.env.NEXT_PUBLIC_SENTRY_ORG,
-      sentryProjectId
+      sentryProjectId,
     ),
   ],
 });

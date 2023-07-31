@@ -5,7 +5,7 @@ import { slashCommands } from './extensions/SlashCommand/commands';
 export const activeNode = (editor: Editor, storyId: string) => {
   if (editor.isActive('heading', { level: 2 })) {
     const bigHeading = slashCommands({ storyId }).find(
-      (item) => item.title === 'Big Heading'
+      (item) => item.title === 'Big Heading',
     );
     if (!bigHeading) {
       return;
@@ -19,7 +19,7 @@ export const activeNode = (editor: Editor, storyId: string) => {
 
   if (editor.isActive('heading', { level: 3 })) {
     const smallHeading = slashCommands({ storyId }).find(
-      (item) => item.title === 'Small Heading'
+      (item) => item.title === 'Small Heading',
     );
     if (!smallHeading) {
       return;
@@ -33,7 +33,7 @@ export const activeNode = (editor: Editor, storyId: string) => {
 
   if (editor.isActive('bulletList')) {
     const bulletList = slashCommands({ storyId }).find(
-      (item) => item.title === 'Bulleted list'
+      (item) => item.title === 'Bulleted list',
     );
     if (!bulletList) {
       return;
@@ -47,7 +47,7 @@ export const activeNode = (editor: Editor, storyId: string) => {
 
   if (editor.isActive('orderedList')) {
     const numberedList = slashCommands({ storyId }).find(
-      (item) => item.title === 'Numbered list'
+      (item) => item.title === 'Numbered list',
     );
     if (!numberedList) {
       return;
@@ -61,7 +61,7 @@ export const activeNode = (editor: Editor, storyId: string) => {
 
   if (editor.isActive('blockquote')) {
     const quote = slashCommands({ storyId }).find(
-      (item) => item.title === 'Quote'
+      (item) => item.title === 'Quote',
     );
     if (!quote) {
       return;
@@ -75,7 +75,7 @@ export const activeNode = (editor: Editor, storyId: string) => {
 
   if (editor.isActive('codeBlock')) {
     const code = slashCommands({ storyId }).find(
-      (item) => item.title === 'Code'
+      (item) => item.title === 'Code',
     );
     if (!code) {
       return;
@@ -89,7 +89,7 @@ export const activeNode = (editor: Editor, storyId: string) => {
 
   if (editor.isActive('twitter')) {
     const twitter = slashCommands({ storyId }).find(
-      (item) => item.title === 'Twitter'
+      (item) => item.title === 'Twitter',
     );
     if (!twitter) {
       return;
@@ -103,7 +103,7 @@ export const activeNode = (editor: Editor, storyId: string) => {
 
   if (editor.isActive('twitter')) {
     const twitter = slashCommands({ storyId }).find(
-      (item) => item.title === 'Twitter'
+      (item) => item.title === 'Twitter',
     );
     if (!twitter) {
       return;

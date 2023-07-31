@@ -36,7 +36,7 @@ const Editor = () => {
         }
       }
     `,
-    { id: postId as string }
+    { id: postId as string },
   );
 
   /**

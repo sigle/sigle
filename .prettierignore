@@ -8,3 +8,4 @@ coverage
 
 # sigle-next
 apps/sigle-next/src/__generated__
+apps/sigle-next/storybook-static/

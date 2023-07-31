@@ -16,24 +16,22 @@ export const EditorSave = () => {
   const story = useEditorStore((state) => state.story);
 
   const [commit, isLoadingUpdatePost] =
-    useMutation<EditorSaveUpdatePostMutation>(
-      graphql`
-        mutation EditorSaveUpdatePostMutation($input: UpdatePostInput!) {
-          updatePost(input: $input) {
-            clientMutationId
-            document {
-              id
-              title
-              featuredImage
-              metaTitle
-              metaDescription
-              metaImage
-              canonicalUrl
-            }
+    useMutation<EditorSaveUpdatePostMutation>(graphql`
+      mutation EditorSaveUpdatePostMutation($input: UpdatePostInput!) {
+        updatePost(input: $input) {
+          clientMutationId
+          document {
+            id
+            title
+            featuredImage
+            metaTitle
+            metaDescription
+            metaImage
+            canonicalUrl
           }
         }
-      `
-    );
+      }
+    `);
 
   // State tracking change if the story has changed
   const hasChanged = useMemo(() => {

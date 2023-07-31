@@ -21,7 +21,7 @@ const settings = {};
 describe('PublicStoryItem', () => {
   it('should display the subset story', async () => {
     const { getByTestId } = render(
-      <StoryCard userInfo={userInfo} story={story} settings={settings} />
+      <StoryCard userInfo={userInfo} story={story} settings={settings} />,
     );
 
     expect(getByTestId('story-title')).toHaveTextContent(story.title);
@@ -35,7 +35,7 @@ describe('PublicStoryItem', () => {
         userInfo={userInfo}
         story={{ ...story, coverImage: 'https://i.goopics.net/9OW4l.jpg' }}
         settings={settings}
-      />
+      />,
     );
 
     expect(getByTestId('story-cover-image')).toBeTruthy();

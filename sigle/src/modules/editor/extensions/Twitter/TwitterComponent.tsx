@@ -231,7 +231,7 @@ export const TwitterComponent = (props: NodeViewProps) => {
       },
       isValid
         ? `<a href="${formik.values.tweetUrl}">${formik.values.tweetUrl}</a>`
-        : `<p>${formik.values.tweetUrl}</p>`
+        : `<p>${formik.values.tweetUrl}</p>`,
     );
   };
 

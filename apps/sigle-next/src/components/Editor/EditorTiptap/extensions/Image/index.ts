@@ -111,7 +111,7 @@ export const TipTapImage = TipTapImageBase.extend({
                     const images = findChildren(
                       doc,
                       (node) =>
-                        node.type.name === 'image' && node.attrs.id === id
+                        node.type.name === 'image' && node.attrs.id === id,
                     );
                     const image = images[0];
 

@@ -4,7 +4,7 @@ type TooltipProviderProps = React.ComponentProps<typeof TooltipProvider>;
 type DesignSystemProviderProps = TooltipProviderProps;
 
 export const DesignSystemProvider: React.FC<DesignSystemProviderProps> = (
-  props
+  props,
 ) => {
   return <TooltipProvider {...props} />;
 };

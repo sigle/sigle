@@ -41,7 +41,7 @@ const inter = Inter({
 });
 
 const CeramicProvider = dynamic(
-  () => import('../components/Ceramic/CeramicProvider')
+  () => import('../components/Ceramic/CeramicProvider'),
 );
 
 const globalStyle = globalCss({
@@ -63,7 +63,7 @@ const ethConfig = createConfig(
 
     appUrl: 'https://next.sigle.io',
     appIcon: 'https://app.sigle.io/icon-192x192.png',
-  })
+  }),
 );
 
 const siweConfig: SIWEConfig = {

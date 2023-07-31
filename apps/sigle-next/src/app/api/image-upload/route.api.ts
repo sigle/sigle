@@ -109,7 +109,7 @@ export async function POST(request: Request) {
     {
       step: 'build',
       name: 'addCidToOutput',
-    }
+    },
   );
 
   const response = await client.send(command);

@@ -34,7 +34,7 @@ export const PublishedStoryItem = ({
       delay: stagger(0.075),
       duration: 0.5,
       easing: 'ease-in-out',
-    }
+    },
   );
 
   // Play the animation on mount of the component

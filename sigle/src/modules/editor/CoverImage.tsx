@@ -57,7 +57,7 @@ export const CoverImage = ({ story, setStoryFile }: CoverImageProps) => {
       setLoadingSave(false);
       setStoryFile({ ...story, coverImage: coverImageUrl });
     },
-    [story]
+    [story],
   );
   const { getRootProps, getInputProps, fileRejections, isDragActive } =
     useDropzone({

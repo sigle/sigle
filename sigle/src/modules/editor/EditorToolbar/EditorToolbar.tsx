@@ -42,7 +42,7 @@ export const Toolbar = ({ editor, story }: ToolbarProps) => {
   const scrollRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const image = slashCommands({ storyId: story.id }).find(
-    (item) => item.title === 'Image'
+    (item) => item.title === 'Image',
   );
 
   useEffect(() => {
@@ -82,8 +82,8 @@ export const Toolbar = ({ editor, story }: ToolbarProps) => {
                 0,
                 window.innerHeight -
                   window.visualViewport.height -
-                  window.visualViewport.offsetTop
-              )
+                  window.visualViewport.offsetTop,
+              ),
             );
           }
         });

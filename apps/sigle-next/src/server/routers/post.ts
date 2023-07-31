@@ -8,7 +8,7 @@ export const postRouter = router({
     .input(
       z.object({
         id: z.string(),
-      })
+      }),
     )
     .query(async ({ input }) => {
       const post = await prismaClient.post.findUnique({
@@ -27,7 +27,7 @@ export const postRouter = router({
         status: z.enum(['DRAFT', 'PUBLISHED']).optional(),
         limit: z.number().min(1).max(100).optional(),
         cursor: z.string().optional(),
-      })
+      }),
     )
     .query(async ({ input }) => {
       const limit = input.limit ?? 50;
@@ -69,7 +69,7 @@ export const postRouter = router({
         nextCursor,
         items: posts.map((post) => {
           const profile = profiles.find(
-            (profile) => profile.controller_did === post.controller_did
+            (profile) => profile.controller_did === post.controller_did,
           );
 
           return {
@@ -84,7 +84,7 @@ export const postRouter = router({
     .input(
       z.object({
         did: z.string(),
-      })
+      }),
     )
     .query(async ({ input }) => {
       const [nbDrafts, nbPublished] = await Promise.all([
