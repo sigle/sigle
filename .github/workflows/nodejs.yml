@@ -106,7 +106,7 @@ jobs:
         run: pnpm run test
 
       - name: Seed test DB
-        run: cd server && pnpm prisma migrate deploy && pnpm prisma db seed
+        run: pnpm prisma migrate deploy && pnpm prisma db seed
         env:
           PG_DATABASE_URL: 'postgres://postgresuser:postgrespassword@localhost:5432/postgresdb'
 
