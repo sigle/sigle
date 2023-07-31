@@ -74,6 +74,8 @@ jobs:
       - name: Install Dependencies
         run: pnpm install --filter={.}...
 
+      # TODO create .env.development.local with silly next-auth secret
+
       - name: Build sigle
         run: pnpm run build
 
