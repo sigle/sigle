@@ -13,7 +13,7 @@ services:
     buildCommand: cd server &&
       npm install -g pnpm &&
       pnpm -v &&
-      pnpm install --filter=@sigle/server &&
+      pnpm install --filter={.}... &&
       pnpm run build &&
       pnpm prisma migrate deploy
     startCommand: cd server &&
