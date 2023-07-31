@@ -76,15 +76,6 @@ You can now open your browser and go to http://localhost:3001 to see the api.
 
 ## Setup client
 
-### Set up environment variables
-
-Copy the `env.local.example` file in the application directory to `.env.local` (which will be ignored by Git) and setup each variable.
-
-```sh
-cd sigle
-cp .env.local.example .env.local
-```
-
 ### Run Next.js in development mode
 
 To start the project in development/watch mode run:
@@ -94,6 +85,10 @@ pnpm run dev
 ```
 
 You can now open your browser and go to http://localhost:3000 to see the app.
+
+### Set up custom environment variables
+
+If needed, you can use your own environment variables in development. For this create a `.env.development.local` file in the application directory (which will be ignored by Git) and setup your variables.
 
 ## License
 
