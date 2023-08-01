@@ -100,9 +100,13 @@ export const getServerSideProps: GetServerSideProps<
   let appUrl = req.headers['x-forwarded-host']
     ? `${req.headers['x-forwarded-proto']}://${req.headers['x-forwarded-host']}`
     : sigleConfig.appUrl;
+
   // If we are in production and the appUrl is localhost we use the one from the config
   // This is used for the e2e tests
-  if (sigleConfig.env === 'production' && appUrl === 'http://localhost:3000') {
+  if (
+    sigleConfig.env === 'production' &&
+    ['http://localhost:3000', 'http://127.0.0.1:3000'].includes(appUrl)
+  ) {
     appUrl = sigleConfig.appUrl;
   }
 
