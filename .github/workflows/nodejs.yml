@@ -46,6 +46,8 @@ jobs:
 
   test-sigle-e2e:
     runs-on: ubuntu-20.04
+    container:
+      image: mcr.microsoft.com/playwright:v1.36.0-jammy
     defaults:
       run:
         working-directory: sigle
@@ -88,8 +90,8 @@ jobs:
       - uses: actions/upload-artifact@v3
         if: failure()
         with:
-          name: playwright-report
-          path: playwright-report/
+          name: sigle/playwright-report
+          path: sigle/playwright-report/
           retention-days: 10
 
   test-api:
