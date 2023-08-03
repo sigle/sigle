@@ -1,16 +1,5 @@
 const { withSentryConfig } = require('@sentry/nextjs');
 
-const corsHeaders = [
-  {
-    key: 'Access-Control-Allow-Origin',
-    value: '*',
-  },
-  {
-    key: 'Access-Control-Allow-Headers',
-    value: '*',
-  },
-];
-
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
