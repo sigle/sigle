@@ -41,3 +41,11 @@ next-env.d.ts
 
 # vscode
 .vscode
+
+# playwright
+node_modules/
+/test-results/
+/playwright-report/
+/playwright/.cache/
+# Do not commit mac screenshots as CI is using linux
+/e2e/**/*-darwin.png

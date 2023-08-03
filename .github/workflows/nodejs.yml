@@ -44,6 +44,56 @@ jobs:
       - name: Run sigle tests
         run: pnpm run test
 
+  test-sigle-e2e:
+    runs-on: ubuntu-20.04
+    container:
+      image: mcr.microsoft.com/playwright:v1.36.0-jammy
+    defaults:
+      run:
+        working-directory: sigle
+    strategy:
+      matrix:
+        node-version: [18]
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - uses: pnpm/action-setup@v2
+        with:
+          version: 8
+
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'pnpm'
+
+      - name: Get next.js sigle cache
+        uses: actions/cache@v2
+        with:
+          path: ${{ github.workspace }}/sigle/.next/cache
+          key: ${{ runner.os }}-nextjs-sigle-${{ hashFiles('**/pnpm-lock.yaml') }}
+
+      - name: Install Dependencies
+        run: pnpm install --filter={.}...
+
+      - name: Install Playwright Browsers
+        run: pnpm playwright install --with-deps chromium
+
+      - name: Build sigle
+        run: pnpm run build
+
+      # TODO ideally this should be tested on the vercel link
+      - name: Run sigle e2e tests
+        run: pnpm run test:e2e
+
+      - uses: actions/upload-artifact@v3
+        if: failure()
+        with:
+          name: sigle/playwright-report
+          path: sigle/playwright-report/
+          retention-days: 10
+
   test-api:
     runs-on: ubuntu-20.04
     defaults:
@@ -184,5 +234,5 @@ jobs:
       - name: Install Dependencies
         run: pnpm install --filter={.}...
 
-      - name: Build sigle
+      - name: Build custom-domain
         run: pnpm run build

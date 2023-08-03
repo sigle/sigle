@@ -90,6 +90,13 @@ You can now open your browser and go to http://localhost:3000 to see the app.
 
 If needed, you can use your own environment variables in development. For this create a `.env.development.local` file in the application directory (which will be ignored by Git) and setup your variables.
 
+### Update the e2e tests snapshots
+
+```sh
+docker build -t local-playwright-docker --file Dockerfile.e2e ../
+docker run -v "./e2e:/app/sigle/e2e" -it local-playwright-docker:latest
+```
+
 ## License
 
 Sigle is licensed under the [MIT license](https://github.com/sigle/sigle/blob/main/LICENSE).

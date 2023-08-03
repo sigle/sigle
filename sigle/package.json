@@ -10,7 +10,8 @@
     "generate-openapi": "rm -rf src/external/api/generated && pnpm openapi --input http://0.0.0.0:3001/api/docs-json --output ./src/external/api/generated --useOptions",
     "analyze": "ANALYZE=true pnpm run build",
     "test": "pnpm run test:only",
-    "test:only": "jest"
+    "test:only": "jest",
+    "test:e2e": "playwright test"
   },
   "nextBundleAnalysis": {
     "budget": 512000,
@@ -125,7 +126,8 @@
   },
   "devDependencies": {
     "@fontsource/open-sans": "4.5.10",
-    "@next/bundle-analyzer": "13.4.12",
+    "@next/bundle-analyzer": "13.4.5",
+    "@playwright/test": "1.36.2",
     "@sigle/tailwind-style": "1.1.0",
     "@testing-library/jest-dom": "5.16.5",
     "@testing-library/react": "13.3.0",

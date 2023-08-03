@@ -97,11 +97,18 @@ export const getServerSideProps: GetServerSideProps<
 
   // If deployed on vercel we want to get the deployment url to be able to test unmerged pr's
   // If client side we use window.location.origin
-  const appUrl = req.headers['x-forwarded-host']
+  let appUrl = req.headers['x-forwarded-host']
     ? `${req.headers['x-forwarded-proto']}://${req.headers['x-forwarded-host']}`
-    : req.headers.host === 'localhost:3000'
-    ? 'http://localhost:3000'
     : sigleConfig.appUrl;
+
+  // If we are in production and the appUrl is localhost we use the one from the config
+  // This is used for the e2e tests
+  if (
+    sigleConfig.env === 'production' &&
+    ['http://localhost:3000', 'http://127.0.0.1:3000'].includes(appUrl)
+  ) {
+    appUrl = sigleConfig.appUrl;
+  }
 
   const bucketUrl = userProfile?.apps?.[appUrl];
   // If the user already used the app we try to get the public list
