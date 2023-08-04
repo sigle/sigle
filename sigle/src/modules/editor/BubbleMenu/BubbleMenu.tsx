@@ -90,6 +90,9 @@ export const BubbleMenu = ({ editor }: EditorBubbleMenuProps) => {
     toggleLink(true);
   };
 
+  // Check if we are on figcaption to only display some items of the bubble menu
+  const isFigureActive = editor.isActive('figure');
+
   return (
     <StyledBubbleMenu
       tippyOptions={{
@@ -141,6 +144,24 @@ export const BubbleMenu = ({ editor }: EditorBubbleMenuProps) => {
           return false;
         }
 
+        // Do not show menu on figures
+        // When we select the image we don't want the menu to show
+        if (
+          editor.isActive('figure') &&
+          editor.state.selection.$from.node().type.name !== 'figure'
+        ) {
+          return false;
+        }
+
+        // For figures we hide the menu if user select the caption and following paragraph
+        // We do this to avoid an issue where the bubble menu would jump and show options that should not be available.
+        if (
+          editor.state.selection.$from.node().type.name === 'figure' &&
+          editor.state.selection.$to.node().type.name !== 'figure'
+        ) {
+          return false;
+        }
+
         return true;
       }}
       editor={editor}
@@ -159,24 +180,30 @@ export const BubbleMenu = ({ editor }: EditorBubbleMenuProps) => {
           >
             <FontItalicIcon height={18} width={18} />
           </BubbleMenuButton>
-          <BubbleMenuButton
-            onClick={() => editor.chain().focus().toggleUnderline().run()}
-            active={editor.isActive('underline')}
-          >
-            <UnderlineIcon height={18} width={18} />
-          </BubbleMenuButton>
-          <BubbleMenuButton
-            onClick={() => editor.chain().focus().toggleStrike().run()}
-            active={editor.isActive('strike')}
-          >
-            <StrikethroughIcon height={18} width={18} />
-          </BubbleMenuButton>
-          <BubbleMenuButton
-            onClick={() => editor.chain().focus().toggleCode().run()}
-            active={editor.isActive('code')}
-          >
-            <CodeIcon height={18} width={18} />
-          </BubbleMenuButton>
+          {!isFigureActive && (
+            <BubbleMenuButton
+              onClick={() => editor.chain().focus().toggleUnderline().run()}
+              active={editor.isActive('underline')}
+            >
+              <UnderlineIcon height={18} width={18} />
+            </BubbleMenuButton>
+          )}
+          {!isFigureActive && (
+            <BubbleMenuButton
+              onClick={() => editor.chain().focus().toggleStrike().run()}
+              active={editor.isActive('strike')}
+            >
+              <StrikethroughIcon height={18} width={18} />
+            </BubbleMenuButton>
+          )}
+          {!isFigureActive && (
+            <BubbleMenuButton
+              onClick={() => editor.chain().focus().toggleCode().run()}
+              active={editor.isActive('code')}
+            >
+              <CodeIcon height={18} width={18} />
+            </BubbleMenuButton>
+          )}
           <BubbleMenuButton
             onClick={() => onSelectLink()}
             active={editor.isActive('link')}

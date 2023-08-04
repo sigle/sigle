@@ -111,6 +111,14 @@ export class BulkEmailService {
           // If the image src contains a space, encode it.
           src: (value) => (value.includes(' ') ? encodeURI(value) : value),
         })} />`;
+      } else if (node.tagName === 'figure') {
+        mjml += `<mj-image ${inlineAttributes(node.children[0].attributes, {
+          // If the image src contains a space, encode it.
+          src: (value) => (value.includes(' ') ? encodeURI(value) : value),
+        })} />`;
+        mjml += `<mj-text align="center" font-size="14px" color="#6b7280">${inlineText(
+          node.children[1].children,
+        )}</mj-text>`;
       } else if (node.tagName === 'hr') {
         mjml += `<mj-divider />`;
       } else if (node.tagName === 'a') {

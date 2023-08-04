@@ -45,6 +45,13 @@ module.exports = {
               marginLeft: 'auto',
               marginRight: 'auto',
             },
+            // Center captions in figures
+            figcaption: {
+              textAlign: 'center',
+              strong: {
+                color: 'inherit',
+              },
+            },
           },
         },
       },

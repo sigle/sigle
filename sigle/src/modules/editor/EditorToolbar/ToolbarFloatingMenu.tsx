@@ -1,7 +1,6 @@
 import { Editor } from '@tiptap/react';
 import { useCallback, useState } from 'react';
 import { styled } from '../../../stitches.config';
-import { Story } from '../../../types';
 import { Box, Button, Dialog, DialogContent, DialogTitle } from '../../../ui';
 import { CommandList } from '../extensions/SlashCommand/CommandList';
 import { activeNode } from '../ActiveNode';
@@ -34,13 +33,11 @@ const StyledDialogContent = styled(DialogContent, {
 
 interface MobileFloatingMenuProps {
   editor: Editor | null;
-  story: Story;
   triggerDisabled: boolean;
 }
 
 export const MobileFloatingMenu = ({
   editor,
-  story,
   triggerDisabled,
 }: MobileFloatingMenuProps) => {
   const [showFloatingMenuDialog, setShowFloatingMenuDialog] = useState(false);
@@ -52,7 +49,7 @@ export const MobileFloatingMenu = ({
     [editor],
   );
 
-  const currentNode = editor && activeNode(editor, story.id);
+  const currentNode = editor && activeNode(editor);
   const isTwitter = currentNode?.name === 'Twitter';
 
   return (
@@ -103,7 +100,7 @@ export const MobileFloatingMenu = ({
               >
                 <CommandList
                   currentNodeName={currentNode?.name}
-                  items={slashCommands({ storyId: story.id })}
+                  items={slashCommands}
                   command={handleSelect}
                 />
               </Box>

@@ -1,4 +1,3 @@
-import { findChildren } from '@tiptap/core';
 import {
   BulletedListLight,
   CodeLight,
@@ -10,17 +9,11 @@ import {
   QuoteLight,
 } from '../../../../icons';
 import { SlashCommandsCommand } from './SlashCommands';
-import { generateRandomId } from '../../../../utils';
-import { resizeAndUploadImage } from '../../utils/image';
 import { PlainTextLight } from '../../../../icons/PlainTextLight';
 import { TwitterLight } from '../../../../icons/TwitterLight';
 import { CtaIcon } from '../../../../icons/CtaIcon';
 
-export const slashCommands = ({
-  storyId,
-}: {
-  storyId: string;
-}): SlashCommandsCommand[] => [
+export const slashCommands: SlashCommandsCommand[] = [
   {
     icon: PlainTextLight,
     title: 'Plain Text',
@@ -85,53 +78,24 @@ export const slashCommands = ({
         const [mime] = file.type.split('/');
         if (mime !== 'image') return;
 
-        // We show a preview of  the image image as uploading can take a while...
-        const preview = URL.createObjectURL(file);
-        const id = generateRandomId();
-        let chainCommands = editor.chain().focus();
-        if (range) {
-          chainCommands = chainCommands.deleteRange(range);
-        }
-        chainCommands
-          .setImage({ src: preview })
-          .updateAttributes('image', { loading: true, id })
-          .run();
-
-        const name = `photos/${storyId}/${id}-${file.name}`;
-        const imageUrl = await resizeAndUploadImage(file, name);
-
-        // Preload the new image so there is no flicker
-        const uploadedImage = new Image();
-        uploadedImage.src = imageUrl;
-        uploadedImage.onload = () => {
-          // When an image finished being uploaded, the selection of the user might habe changed
-          // so we need to find the right image associated with the ID in order to update it.
-          editor
+        if (!range) {
+          return editor
             .chain()
             .focus()
-            .command(({ tr }) => {
-              const doc = tr.doc;
-              const images = findChildren(
-                doc,
-                (node) => node.type.name === 'image' && node.attrs.id === id,
-              );
-              const image = images[0];
-              if (!image || images.length > 1) {
-                return false;
-              }
-
-              tr.setNodeMarkup(image.pos, undefined, {
-                ...image.node.attrs,
-                src: imageUrl,
-                loading: false,
-              });
-              return true;
+            .setFigureFromFile({
+              file,
             })
             .run();
+        }
 
-          // Create a new paragraph so user can continue writing
-          editor.commands.createParagraphNear();
-        };
+        return editor
+          .chain()
+          .focus()
+          .deleteRange(range)
+          .setFigureFromFile({
+            file,
+          })
+          .run();
       };
 
       input.click();

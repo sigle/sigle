@@ -1,7 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { Editor } from '@tiptap/react';
 import { darkTheme, styled } from '../../../stitches.config';
-import { Story } from '../../../types';
 import { Box, Container, Flex, IconButton, Typography } from '../../../ui';
 import { ToolbarMenu } from './ToolbarMenu';
 import { slashCommands } from '../extensions/SlashCommand/commands';
@@ -32,18 +31,15 @@ const ToolbarContainer = styled(Container, {
 
 interface ToolbarProps {
   editor: Editor | null;
-  story: Story;
 }
 
-export const Toolbar = ({ editor, story }: ToolbarProps) => {
+export const Toolbar = ({ editor }: ToolbarProps) => {
   const [pendingUpdate, setPendingUpdate] = useState(false);
   const [position, setPosition] = useState<number>();
   const [softKeyboardIsOpen, setSoftKeyboardIsOpen] = useState(false);
   const scrollRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  const image = slashCommands({ storyId: story.id }).find(
-    (item) => item.title === 'Image',
-  );
+  const image = slashCommands.find((item) => item.title === 'Image');
 
   useEffect(() => {
     window.visualViewport.addEventListener('resize', () => {
@@ -100,7 +96,6 @@ export const Toolbar = ({ editor, story }: ToolbarProps) => {
     >
       <MobileFloatingMenu
         editor={editor}
-        story={story}
         triggerDisabled={!softKeyboardIsOpen}
       />
       {editor && (

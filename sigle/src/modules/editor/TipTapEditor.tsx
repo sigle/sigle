@@ -47,6 +47,9 @@ import { Toolbar } from './EditorToolbar/EditorToolbar';
 import { Twitter as TipTapTwitter } from './extensions/Twitter';
 import { MobileScroll } from './extensions/MobileScroll';
 import { Cta as TipTapCta } from './extensions/CallToAction';
+import { TipTapFigure } from './extensions/Figure';
+import { resizeAndUploadImage } from './utils/image';
+import { generateRandomId } from '../../utils';
 
 const fadeInAnimation = keyframes({
   '0%': { opacity: '0' },
@@ -175,9 +178,17 @@ export const TipTapEditor = forwardRef<
       // Custom extensions
       TipTapTwitter,
       TipTapCta,
+      TipTapFigure.configure({
+        uploadFile: async (file: File) => {
+          const id = generateRandomId();
+          const name = `photos/${story.id}/${id}-${file.name}`;
+          const imageUrl = await resizeAndUploadImage(file, name);
+          return imageUrl;
+        },
+      }),
       !isMobile
         ? SlashCommands.configure({
-            commands: slashCommands({ storyId: story.id }),
+            commands: slashCommands,
           })
         : undefined,
       isMobile ? MobileScroll : undefined,
@@ -221,7 +232,7 @@ export const TipTapEditor = forwardRef<
       {editable && (
         <>
           {isMobile ? (
-            <Toolbar editor={editor} story={story} />
+            <Toolbar editor={editor} />
           ) : (
             <Container
               css={{

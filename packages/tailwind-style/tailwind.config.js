@@ -171,6 +171,12 @@ module.exports = {
               marginBottom: false,
               margin: '2em auto',
             },
+            figcaption: {
+              textAlign: 'center',
+              strong: {
+                color: 'inherit',
+              },
+            },
             '[class~="lead"]': false,
           },
         },
