@@ -26,13 +26,13 @@ const start = async () => {
         continue;
       } else {
         throw new Error(
-          `Unexpected status code: ${res.status} for domain ${subdomain.subdomain}`
+          `Unexpected status code: ${res.status} for domain ${subdomain.subdomain}`,
         );
       }
 
       const storyUrls: string[] = file.stories.map(
         (story: { id: string }) =>
-          `${appUrl}/${subdomain.subdomain}/${story.id}`
+          `${appUrl}/${subdomain.subdomain}/${story.id}`,
       );
       storyUrls.unshift(`${appUrl}/${subdomain.subdomain}`);
       urlsToIndex = urlsToIndex.concat(storyUrls);

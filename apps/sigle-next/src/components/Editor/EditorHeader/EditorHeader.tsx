@@ -44,7 +44,7 @@ export const EditorHeader = () => {
   const menuOpen = useEditorStore((state) => state.menuOpen);
   const toggleMenu = useEditorStore((state) => state.toggleMenu);
   const [scrollDirection, setScrollDirection] = useState<'down' | 'up' | null>(
-    null
+    null,
   );
 
   useEffect(() => {

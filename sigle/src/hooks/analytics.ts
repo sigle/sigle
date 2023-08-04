@@ -14,7 +14,7 @@ export const useGetReferrers = ({
   useQuery<GetApiAnalyticsReferrersReturnType, Error>(
     ['get-analytics-referrer', dateFrom, storyId],
     () =>
-      AnalyticsService.analyticsControllerGetReferrers({ dateFrom, storyId })
+      AnalyticsService.analyticsControllerGetReferrers({ dateFrom, storyId }),
   );
 
 type GetApiAnalyticsHistoricalReturnType = Awaited<
@@ -30,7 +30,7 @@ export const useGetHistorical = (
     dateGrouping: 'day' | 'month';
     storyId?: string;
   },
-  options: UseQueryOptions<GetApiAnalyticsHistoricalReturnType, Error>
+  options: UseQueryOptions<GetApiAnalyticsHistoricalReturnType, Error>,
 ) =>
   useQuery<GetApiAnalyticsHistoricalReturnType, Error>(
     ['get-analytics-historical', dateFrom, dateGrouping, storyId],
@@ -40,5 +40,5 @@ export const useGetHistorical = (
         dateGrouping,
         storyId,
       }),
-    options
+    options,
   );

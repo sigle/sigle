@@ -18,7 +18,7 @@ export const addIdsToHeadings = (html: string): string => {
     $(button).wrap('<div class="flex justify-center"></div>');
     // Add class to button to style it
     $(button).addClass(
-      'bg-black text-white py-2 px-5 hover:opacity-90 rounded-lg text-sm'
+      'bg-black text-white py-2 px-5 hover:opacity-90 rounded-lg text-sm',
     );
   });
 

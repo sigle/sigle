@@ -30,7 +30,7 @@ export const ExploreUsers = () => {
     },
     {
       getNextPageParam: (lastPage) => lastPage.nextPage,
-    }
+    },
   );
 
   const { observe } = useInView({
@@ -62,7 +62,7 @@ export const ExploreUsers = () => {
         userExplore.pages.map((page) =>
           page.data.map((user) => (
             <UserCard key={user.stacksAddress} address={user.stacksAddress} />
-          ))
+          )),
         )}
 
       {/* This element is used as a trigger for the infinite scrolling, when it enters

@@ -1,3 +1,5 @@
+import { IconLink } from '@tabler/icons-react';
+import { useState } from 'react';
 import { FacebookLogoIcon } from '@/icons/FacebookLogoIcon';
 import { LinkedinIcon } from '@/icons/LinkedinIcon';
 import { TwitterFilledIcon } from '@/icons/TwitterFilledIcon';
@@ -7,8 +9,6 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from '@/ui/Tooltip';
-import { IconLink } from '@tabler/icons-react';
-import { useState } from 'react';
 
 export const ShareSocial = ({
   post,
@@ -44,7 +44,7 @@ export const ShareSocial = ({
             <TooltipTrigger asChild>
               <a
                 href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(
-                  post.title
+                  post.title,
                 )}&url=${websiteUrl}`}
                 target="_blank"
                 rel="noopener"

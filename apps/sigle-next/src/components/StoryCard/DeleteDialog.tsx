@@ -34,21 +34,19 @@ export const DeleteDialog = ({
   const [isDeleting, setIsDeleting] = useState(false);
 
   const [commit, isLoadingDeletePost] =
-    useMutation<DeleteDialogDeletePostMutation>(
-      graphql`
-        mutation DeleteDialogDeletePostMutation($input: UpdatePostInput!) {
-          updatePost(input: $input) {
-            clientMutationId
-            document {
-              id
-              status
-              title
-              content
-            }
+    useMutation<DeleteDialogDeletePostMutation>(graphql`
+      mutation DeleteDialogDeletePostMutation($input: UpdatePostInput!) {
+        updatePost(input: $input) {
+          clientMutationId
+          document {
+            id
+            status
+            title
+            content
           }
         }
-      `
-    );
+      }
+    `);
 
   const handleDelete = () => {
     commit({

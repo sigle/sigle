@@ -62,22 +62,20 @@ export const SettingsUpdateProfile = ({
   const [isFetching, setIsFetching] = useState(false);
 
   const [commit, isLoadingCommitUpdateProfile] =
-    useMutation<UpdateProfileMutation>(
-      graphql`
-        mutation UpdateProfileMutation($input: UpdateProfileInput!) {
-          updateProfile(input: $input) {
-            clientMutationId
-            document {
-              id
-              displayName
-              websiteUrl
-              description
-              twitterUsername
-            }
+    useMutation<UpdateProfileMutation>(graphql`
+      mutation UpdateProfileMutation($input: UpdateProfileInput!) {
+        updateProfile(input: $input) {
+          clientMutationId
+          document {
+            id
+            displayName
+            websiteUrl
+            description
+            twitterUsername
           }
         }
-      `
-    );
+      }
+    `);
 
   const {
     register,

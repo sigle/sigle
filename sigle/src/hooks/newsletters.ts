@@ -14,12 +14,12 @@ type GetApiNewsletterReturnType = Awaited<
   ReturnType<typeof NewslettersService.newslettersControllerGet>
 >;
 export const useGetUserNewsletter = (
-  options: UseQueryOptions<GetApiNewsletterReturnType, Error> = {}
+  options: UseQueryOptions<GetApiNewsletterReturnType, Error> = {},
 ) =>
   useQuery<GetApiNewsletterReturnType, Error>(
     ['get-user-newsletter'],
     () => NewslettersService.newslettersControllerGet(),
-    options
+    options,
   );
 
 type PostApiNewsletterReturnType = Awaited<
@@ -30,26 +30,26 @@ export const useUpdateNewsletter = (
     PostApiNewsletterReturnType,
     Error,
     UpdateNewsletterDto
-  > = {}
+  > = {},
 ) =>
   useMutation<PostApiNewsletterReturnType, Error, UpdateNewsletterDto>(
     (args) =>
       NewslettersService.newslettersControllerUpdate({
         requestBody: args,
       }),
-    options
+    options,
   );
 
 type GetApiContactsListsNewsletterReturnType = Awaited<
   ReturnType<typeof NewslettersService.newslettersControllerGetContactsLists>
 >;
 export const useGetContactsListsNewsletter = (
-  options: UseQueryOptions<GetApiContactsListsNewsletterReturnType, Error> = {}
+  options: UseQueryOptions<GetApiContactsListsNewsletterReturnType, Error> = {},
 ) =>
   useQuery<GetApiContactsListsNewsletterReturnType, Error>(
     ['get-user-contact-lists'],
     () => NewslettersService.newslettersControllerGetContactsLists(),
-    options
+    options,
   );
 
 type PostApiContactsListNewsletterReturnType = Awaited<
@@ -60,7 +60,7 @@ export const useUpdateContactsListNewsletter = (
     PostApiContactsListNewsletterReturnType,
     Error,
     UpdateContactsListDto
-  > = {}
+  > = {},
 ) =>
   useMutation<
     PostApiContactsListNewsletterReturnType,
@@ -71,16 +71,16 @@ export const useUpdateContactsListNewsletter = (
       NewslettersService.newslettersControllerUpdateContactsList({
         requestBody: args,
       }),
-    options
+    options,
   );
 
 type PostApiSenderNewsletterReturnType = Awaited<
   ReturnType<typeof NewslettersService.newslettersControllerSyncSender>
 >;
 export const useSyncSenderNewsletter = (
-  options: UseMutationOptions<PostApiSenderNewsletterReturnType, Error> = {}
+  options: UseMutationOptions<PostApiSenderNewsletterReturnType, Error> = {},
 ) =>
   useMutation<PostApiSenderNewsletterReturnType, Error>(
     () => NewslettersService.newslettersControllerSyncSender(),
-    options
+    options,
   );

@@ -8,22 +8,19 @@ const { withPlausibleProxy } = require('next-plausible');
 
 dotenv.config();
 
-/**
- * On vercel preview deployments we overwrite the NEXTAUTH_URL value to the
- * branch pull request one. The git branch name can contain `/` so we replace them with `-`
- */
-const getVercelPreviewUrl = () => {
-  return `https://${
-    process.env.VERCEL_GIT_REPO_SLUG
-  }-git-${process.env.VERCEL_GIT_COMMIT_REF.replace(
-    new RegExp('/', 'g'),
-    '-'
-  )}-${process.env.VERCEL_GIT_REPO_OWNER}.vercel.app`;
-};
-
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  experimental: {},
+  experimental: {
+    // SWC is wrongly included in the final bundle causing function to be > 50mb
+    // https://github.com/vercel/next.js/issues/42641#issuecomment-1615901228
+    outputFileTracingExcludes: {
+      '*': [
+        './**/@swc/core-linux-x64-gnu*',
+        './**/@swc/core-linux-x64-musl*',
+        './**/@esbuild/linux-x64*',
+      ],
+    },
+  },
   reactStrictMode: false,
   swcMinify: true,
   env: {
@@ -34,7 +31,7 @@ const nextConfig = {
     API_URL: process.env.API_URL,
     NEXTAUTH_URL:
       process.env.VERCEL_ENV === 'preview'
-        ? getVercelPreviewUrl()
+        ? `https://${process.env.VERCEL_BRANCH_URL}`
         : process.env.NEXTAUTH_URL,
   },
   pageExtensions: [
@@ -102,7 +99,7 @@ const nextPlugins = [
       },
       {
         dryRun: !process.env.SENTRY_AUTH_TOKEN,
-      }
+      },
     ),
 ];
 

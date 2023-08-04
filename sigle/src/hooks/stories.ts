@@ -10,7 +10,7 @@ type GetApiStoriesReturnType = Awaited<
 >;
 export const useGetStory = ({ storyId }: { storyId: string }) =>
   useQuery<GetApiStoriesReturnType, Error>(['get-story', storyId], () =>
-    StoriesService.storiesControllerGet({ storyId })
+    StoriesService.storiesControllerGet({ storyId }),
   );
 
 type PostApiSendTestStoryReturnType = Awaited<
@@ -21,12 +21,12 @@ export const useSendStoryTest = (
     PostApiSendTestStoryReturnType,
     Error,
     SendTestStoryDto
-  > = {}
+  > = {},
 ) =>
   useMutation<PostApiSendTestStoryReturnType, Error, SendTestStoryDto>(
     (data) =>
       StoriesService.storiesControllerSendTest({
         requestBody: data,
       }),
-    options
+    options,
   );

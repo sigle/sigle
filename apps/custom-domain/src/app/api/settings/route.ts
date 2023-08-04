@@ -1,7 +1,7 @@
-import { sites } from '@/sites';
-import { SettingsFile } from '@/types';
 import { lookupProfile } from 'micro-stacks/storage';
 import { NextResponse } from 'next/server';
+import { sites } from '@/sites';
+import { SettingsFile } from '@/types';
 
 export const runtime = 'edge';
 

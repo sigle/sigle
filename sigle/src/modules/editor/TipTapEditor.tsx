@@ -30,7 +30,7 @@ import TipTapCodeBlockLowlight from '@tiptap/extension-code-block-lowlight';
 import { lowlight } from 'lowlight/lib/common';
 import { Placeholder as TipTapPlaceholder } from './extensions/Placeholder';
 import { SlashCommands } from './extensions/SlashCommand/SlashCommands';
-import { BubbleMenu } from './BubbleMenu';
+import { BubbleMenu } from './BubbleMenu/BubbleMenu';
 import { slashCommands } from './extensions/SlashCommand/commands';
 import { FloatingMenu } from './FloatingMenu';
 import { styled, globalCss, keyframes, darkTheme } from '../../stitches.config';
@@ -118,7 +118,7 @@ export const TipTapEditor = forwardRef<
   const [showShortcutsDialog, setShowShortcutsDialog] = useState(false);
   const { resolvedTheme } = useTheme();
   const [width, setWidth] = useState(
-    typeof window !== 'undefined' ? window.innerWidth : 1000
+    typeof window !== 'undefined' ? window.innerWidth : 1000,
   );
   // TODO is story really needed? Could it be just the content prop?
   globalStylesCustomEditor();
@@ -192,7 +192,7 @@ export const TipTapEditor = forwardRef<
       // TODO cleanup empty <p>, <h1> etc tags, basically all empty tags
       getEditor: () => editor,
     }),
-    [editor]
+    [editor],
   );
 
   useEffect(() => {

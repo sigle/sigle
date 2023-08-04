@@ -19,7 +19,7 @@ describe('MyError', () => {
     const { getByTestId } = render(
       <QueryClientProvider client={queryClient}>
         <MyError statusCode={404} />
-      </QueryClientProvider>
+      </QueryClientProvider>,
     );
 
     expect(getByTestId('error-title')).toHaveTextContent('404');
@@ -30,11 +30,11 @@ describe('MyError', () => {
     const { getByTestId } = render(
       <QueryClientProvider client={queryClient}>
         <MyError statusCode={404} errorMessage="Custom error message" />
-      </QueryClientProvider>
+      </QueryClientProvider>,
     );
 
     expect(getByTestId('error-sub-title')).toHaveTextContent(
-      'Custom error message'
+      'Custom error message',
     );
   });
 });
@@ -76,7 +76,7 @@ describe('getInitialProps', () => {
       res: { statusCode: 500 },
     } as any);
     expect(Sentry.captureException).toBeCalledWith(
-      new Error('_error.js getInitialProps missing data at path: /login')
+      new Error('_error.js getInitialProps missing data at path: /login'),
     );
     expect(res).toEqual({ hasGetInitialPropsRun: true, statusCode: 500 });
   });
@@ -101,7 +101,7 @@ describe('getInitialProps', () => {
       res: undefined,
     } as any);
     expect(Sentry.captureException).toBeCalledWith(
-      new Error('_error.js getInitialProps missing data at path: /login')
+      new Error('_error.js getInitialProps missing data at path: /login'),
     );
     expect(res).toEqual({ hasGetInitialPropsRun: true, statusCode: 404 });
   });
@@ -118,7 +118,7 @@ describe('Sentry ID', () => {
           statusCode={500}
           errorMessage="Custom error message"
         />
-      </QueryClientProvider>
+      </QueryClientProvider>,
     );
     expect(getByTestId('error-id')).toBeInTheDocument();
     expect(getByTestId('error-id')).toHaveTextContent(/737H3RJA3RRH237/);

@@ -102,7 +102,7 @@ export const PublishDialog = ({
     storyId: story.id,
   });
   const [tabValue, setTabValue] = useState<'publish only' | 'publish and send'>(
-    'publish only'
+    'publish only',
   );
   const [showPublishAndSendDialog, setShowPublishAndSendDialog] =
     useState(false);

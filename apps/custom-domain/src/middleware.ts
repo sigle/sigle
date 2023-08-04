@@ -9,7 +9,7 @@ export const config = {
      * 3. /websites (inside /public) - sites assets
      * 4. all root files inside /public (e.g. /favicon.ico)
      */
-    '/((?!api/|_next/|_static/|websites/|[\\w-]+\\.\\w+).*)',
+    '/((?!api/|_next/|_static/|websites/|img/|[\\w-]+\\.\\w+).*)',
     // Match custom routes paths
     '/sitemap.xml',
     '/robots.txt',

@@ -3,7 +3,7 @@ import { storage } from '../../../utils/blockstack';
 
 export const resizeAndUploadImage = async (
   image: File,
-  name: string
+  name: string,
 ): Promise<string> => {
   return new Promise((resolve) => {
     const reader = new FileReader();

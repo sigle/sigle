@@ -8,7 +8,7 @@ export const userRouter = router({
     .input(
       z.object({
         did: z.string(),
-      })
+      }),
     )
     .query(async ({ input }) => {
       const profile = await prismaClient.profile.findFirst({

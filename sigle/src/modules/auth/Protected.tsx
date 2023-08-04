@@ -19,7 +19,7 @@ export const Protected = ({ children }: Props) => {
       if (user && user.username) {
         try {
           const namesResponse = await fetch(
-            `https://api.hiro.so/v1/names/${user.username}`
+            `https://api.hiro.so/v1/names/${user.username}`,
           );
           const namesJson = (await namesResponse.json()) as {
             zonefile?: string;
@@ -34,7 +34,7 @@ export const Protected = ({ children }: Props) => {
               uri?: { name: string; target: string }[];
             } = parseZoneFile(namesJson.zonefile);
             const profileUrl = parseZoneFileResult.uri?.find(
-              (uri) => uri.name === '_http._tcp'
+              (uri) => uri.name === '_http._tcp',
             );
             if (!profileUrl) {
               router.push('/configure-bns');

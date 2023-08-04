@@ -3,8 +3,8 @@
 import * as React from 'react';
 import * as SheetPrimitive from '@radix-ui/react-dialog';
 import { VariantProps, cva } from 'class-variance-authority';
-import { cn } from '@/utils/tailwind';
 import { IconX } from '@tabler/icons-react';
+import { cn } from '@/utils/tailwind';
 
 const Sheet = SheetPrimitive.Root;
 
@@ -45,7 +45,7 @@ const SheetOverlay = React.forwardRef<
   <SheetPrimitive.Overlay
     className={cn(
       'data-[state=closed]:animate-out data-[state=open]:fade-in data-[state=closed]:fade-out fixed inset-0 z-50 bg-black/50 backdrop-blur-sm transition-all duration-100',
-      className
+      className,
     )}
     {...props}
     ref={ref}
@@ -138,7 +138,7 @@ const sheetVariants = cva(
       position: 'right',
       size: 'default',
     },
-  }
+  },
 );
 
 export interface DialogContentProps
@@ -173,7 +173,7 @@ const SheetHeader = ({
   <div
     className={cn(
       'flex flex-col space-y-2 text-center sm:text-left',
-      className
+      className,
     )}
     {...props}
   />
@@ -187,7 +187,7 @@ const SheetFooter = ({
   <div
     className={cn(
       'flex flex-col-reverse sm:flex-row sm:justify-end sm:space-x-2',
-      className
+      className,
     )}
     {...props}
   />
@@ -203,7 +203,7 @@ const SheetTitle = React.forwardRef<
     className={cn(
       'text-lg font-semibold text-slate-900',
       'dark:text-slate-50',
-      className
+      className,
     )}
     {...props}
   />

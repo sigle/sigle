@@ -3,8 +3,8 @@
 import { useRouter } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
 import { clsx } from 'clsx';
-import { ShareSocial } from './ShareSocial';
 import { twMerge } from 'tailwind-merge';
+import { ShareSocial } from './ShareSocial';
 
 const scrollToElement = (id: string, offset = 16): void => {
   const element = document.getElementById(id);
@@ -24,7 +24,7 @@ const useIntersectionObserver = (setActiveId: any) => {
           map[headingElement.target.id] = headingElement;
           return map;
         },
-        headingElementsRef.current
+        headingElementsRef.current,
       );
 
       const visibleHeadings: any[] = [];
@@ -41,7 +41,7 @@ const useIntersectionObserver = (setActiveId: any) => {
       } else if (visibleHeadings.length > 1) {
         const sortedVisibleHeadings = visibleHeadings.sort(
           (a, b) =>
-            (getIndexFromId(a.target.id) > getIndexFromId(b.target.id)) as any
+            (getIndexFromId(a.target.id) > getIndexFromId(b.target.id)) as any,
         );
         setActiveId(sortedVisibleHeadings[0].target.id);
       }
@@ -84,7 +84,7 @@ export const TableOfContents = ({ items, post }: TableOfContentsProps) => {
               clsx('mt-3 text-sm', {
                 ['ml-3']: item.level === 3,
                 ['font-bold']: activeId === item.id,
-              })
+              }),
             )}
           >
             <a

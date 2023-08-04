@@ -56,7 +56,7 @@ export const AppHeader = () => {
       const story = createNewEmptyStory();
 
       storiesFile.stories.unshift(
-        createSubsetStory(story, { plainContent: '' })
+        createSubsetStory(story, { plainContent: '' }),
       );
 
       await saveStoriesFile(storiesFile);
