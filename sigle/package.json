@@ -127,7 +127,7 @@
     "@fontsource/open-sans": "4.5.10",
     "@next/bundle-analyzer": "13.4.5",
     "@openapi-codegen/cli": "2.0.0",
-    "@openapi-codegen/typescript": "6.2.4",
+    "@openapi-codegen/typescript": "7.0.0",
     "@playwright/test": "1.36.2",
     "@sigle/tailwind-style": "1.1.0",
     "@testing-library/jest-dom": "5.16.5",

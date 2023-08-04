@@ -15,7 +15,7 @@ export type AppControllerGetHelloVariables = SigleApiContext['fetcherOptions'];
 
 export const fetchAppControllerGetHello = (
   variables: AppControllerGetHelloVariables,
-  signal?: AbortSignal
+  signal?: AbortSignal,
 ) =>
   sigleApiFetch<undefined, AppControllerGetHelloError, undefined, {}, {}, {}>({
     url: '/health',
@@ -29,23 +29,21 @@ export const useAppControllerGetHello = <TData = undefined>(
   options?: Omit<
     reactQuery.UseQueryOptions<undefined, AppControllerGetHelloError, TData>,
     'queryKey' | 'queryFn'
-  >
+  >,
 ) => {
   const { fetcherOptions, queryOptions, queryKeyFn } =
     useSigleApiContext(options);
-  return reactQuery.useQuery<undefined, AppControllerGetHelloError, TData>(
-    queryKeyFn({
+  return reactQuery.useQuery<undefined, AppControllerGetHelloError, TData>({
+    queryKey: queryKeyFn({
       path: '/health',
       operationId: 'appControllerGetHello',
       variables,
     }),
-    ({ signal }) =>
+    queryFn: ({ signal }) =>
       fetchAppControllerGetHello({ ...fetcherOptions, ...variables }, signal),
-    {
-      ...options,
-      ...queryOptions,
-    }
-  );
+    ...options,
+    ...queryOptions,
+  });
 };
 
 export type UserControllerExploreQueryParams = {
@@ -63,7 +61,7 @@ export type UserControllerExploreVariables = {
  */
 export const fetchUserControllerExplore = (
   variables: UserControllerExploreVariables,
-  signal?: AbortSignal
+  signal?: AbortSignal,
 ) =>
   sigleApiFetch<
     Schemas.ExploreResponse,
@@ -86,7 +84,7 @@ export const useUserControllerExplore = <TData = Schemas.ExploreResponse>(
       TData
     >,
     'queryKey' | 'queryFn'
-  >
+  >,
 ) => {
   const { fetcherOptions, queryOptions, queryKeyFn } =
     useSigleApiContext(options);
@@ -94,19 +92,17 @@ export const useUserControllerExplore = <TData = Schemas.ExploreResponse>(
     Schemas.ExploreResponse,
     UserControllerExploreError,
     TData
-  >(
-    queryKeyFn({
+  >({
+    queryKey: queryKeyFn({
       path: '/api/users/explore',
       operationId: 'userControllerExplore',
       variables,
     }),
-    ({ signal }) =>
+    queryFn: ({ signal }) =>
       fetchUserControllerExplore({ ...fetcherOptions, ...variables }, signal),
-    {
-      ...options,
-      ...queryOptions,
-    }
-  );
+    ...options,
+    ...queryOptions,
+  });
 };
 
 export type UserControllerGetUserMeError = Fetcher.ErrorWrapper<undefined>;
@@ -119,7 +115,7 @@ export type UserControllerGetUserMeVariables =
  */
 export const fetchUserControllerGetUserMe = (
   variables: UserControllerGetUserMeVariables,
-  signal?: AbortSignal
+  signal?: AbortSignal,
 ) =>
   sigleApiFetch<
     Schemas.UserMeProfileEntity,
@@ -142,7 +138,7 @@ export const useUserControllerGetUserMe = <TData = Schemas.UserMeProfileEntity>(
       TData
     >,
     'queryKey' | 'queryFn'
-  >
+  >,
 ) => {
   const { fetcherOptions, queryOptions, queryKeyFn } =
     useSigleApiContext(options);
@@ -150,19 +146,17 @@ export const useUserControllerGetUserMe = <TData = Schemas.UserMeProfileEntity>(
     Schemas.UserMeProfileEntity,
     UserControllerGetUserMeError,
     TData
-  >(
-    queryKeyFn({
+  >({
+    queryKey: queryKeyFn({
       path: '/api/users/me',
       operationId: 'userControllerGetUserMe',
       variables,
     }),
-    ({ signal }) =>
+    queryFn: ({ signal }) =>
       fetchUserControllerGetUserMe({ ...fetcherOptions, ...variables }, signal),
-    {
-      ...options,
-      ...queryOptions,
-    }
-  );
+    ...options,
+    ...queryOptions,
+  });
 };
 
 export type UserControllerGetUserPathParams = {
@@ -180,7 +174,7 @@ export type UserControllerGetUserVariables = {
  */
 export const fetchUserControllerGetUser = (
   variables: UserControllerGetUserVariables,
-  signal?: AbortSignal
+  signal?: AbortSignal,
 ) =>
   sigleApiFetch<
     Schemas.UserProfileEntity,
@@ -203,7 +197,7 @@ export const useUserControllerGetUser = <TData = Schemas.UserProfileEntity>(
       TData
     >,
     'queryKey' | 'queryFn'
-  >
+  >,
 ) => {
   const { fetcherOptions, queryOptions, queryKeyFn } =
     useSigleApiContext(options);
@@ -211,19 +205,17 @@ export const useUserControllerGetUser = <TData = Schemas.UserProfileEntity>(
     Schemas.UserProfileEntity,
     UserControllerGetUserError,
     TData
-  >(
-    queryKeyFn({
+  >({
+    queryKey: queryKeyFn({
       path: '/api/users/{userAddress}',
       operationId: 'userControllerGetUser',
       variables,
     }),
-    ({ signal }) =>
+    queryFn: ({ signal }) =>
       fetchUserControllerGetUser({ ...fetcherOptions, ...variables }, signal),
-    {
-      ...options,
-      ...queryOptions,
-    }
-  );
+    ...options,
+    ...queryOptions,
+  });
 };
 
 export type UserControllerGetUserFollowersPathParams = {
@@ -244,7 +236,7 @@ export type UserControllerGetUserFollowersVariables = {
  */
 export const fetchUserControllerGetUserFollowers = (
   variables: UserControllerGetUserFollowersVariables,
-  signal?: AbortSignal
+  signal?: AbortSignal,
 ) =>
   sigleApiFetch<
     UserControllerGetUserFollowersResponse,
@@ -264,7 +256,7 @@ export const fetchUserControllerGetUserFollowers = (
  * Returns a list of users who are followers of the specified user.
  */
 export const useUserControllerGetUserFollowers = <
-  TData = UserControllerGetUserFollowersResponse
+  TData = UserControllerGetUserFollowersResponse,
 >(
   variables: UserControllerGetUserFollowersVariables,
   options?: Omit<
@@ -274,7 +266,7 @@ export const useUserControllerGetUserFollowers = <
       TData
     >,
     'queryKey' | 'queryFn'
-  >
+  >,
 ) => {
   const { fetcherOptions, queryOptions, queryKeyFn } =
     useSigleApiContext(options);
@@ -282,22 +274,20 @@ export const useUserControllerGetUserFollowers = <
     UserControllerGetUserFollowersResponse,
     UserControllerGetUserFollowersError,
     TData
-  >(
-    queryKeyFn({
+  >({
+    queryKey: queryKeyFn({
       path: '/api/users/{userAddress}/followers',
       operationId: 'userControllerGetUserFollowers',
       variables,
     }),
-    ({ signal }) =>
+    queryFn: ({ signal }) =>
       fetchUserControllerGetUserFollowers(
         { ...fetcherOptions, ...variables },
-        signal
+        signal,
       ),
-    {
-      ...options,
-      ...queryOptions,
-    }
-  );
+    ...options,
+    ...queryOptions,
+  });
 };
 
 export type UserControllerGetUserFollowingPathParams = {
@@ -318,7 +308,7 @@ export type UserControllerGetUserFollowingVariables = {
  */
 export const fetchUserControllerGetUserFollowing = (
   variables: UserControllerGetUserFollowingVariables,
-  signal?: AbortSignal
+  signal?: AbortSignal,
 ) =>
   sigleApiFetch<
     UserControllerGetUserFollowingResponse,
@@ -338,7 +328,7 @@ export const fetchUserControllerGetUserFollowing = (
  * Returns a list of users the specified user is following.
  */
 export const useUserControllerGetUserFollowing = <
-  TData = UserControllerGetUserFollowingResponse
+  TData = UserControllerGetUserFollowingResponse,
 >(
   variables: UserControllerGetUserFollowingVariables,
   options?: Omit<
@@ -348,7 +338,7 @@ export const useUserControllerGetUserFollowing = <
       TData
     >,
     'queryKey' | 'queryFn'
-  >
+  >,
 ) => {
   const { fetcherOptions, queryOptions, queryKeyFn } =
     useSigleApiContext(options);
@@ -356,22 +346,20 @@ export const useUserControllerGetUserFollowing = <
     UserControllerGetUserFollowingResponse,
     UserControllerGetUserFollowingError,
     TData
-  >(
-    queryKeyFn({
+  >({
+    queryKey: queryKeyFn({
       path: '/api/users/{userAddress}/following',
       operationId: 'userControllerGetUserFollowing',
       variables,
     }),
-    ({ signal }) =>
+    queryFn: ({ signal }) =>
       fetchUserControllerGetUserFollowing(
         { ...fetcherOptions, ...variables },
-        signal
+        signal,
       ),
-    {
-      ...options,
-      ...queryOptions,
-    }
-  );
+    ...options,
+    ...queryOptions,
+  });
 };
 
 export type UserControllerAddFollowError = Fetcher.ErrorWrapper<undefined>;
@@ -385,7 +373,7 @@ export type UserControllerAddFollowVariables = {
  */
 export const fetchUserControllerAddFollow = (
   variables: UserControllerAddFollowVariables,
-  signal?: AbortSignal
+  signal?: AbortSignal,
 ) =>
   sigleApiFetch<
     boolean,
@@ -407,18 +395,18 @@ export const useUserControllerAddFollow = (
       UserControllerAddFollowVariables
     >,
     'mutationFn'
-  >
+  >,
 ) => {
   const { fetcherOptions } = useSigleApiContext();
   return reactQuery.useMutation<
     boolean,
     UserControllerAddFollowError,
     UserControllerAddFollowVariables
-  >(
-    (variables: UserControllerAddFollowVariables) =>
+  >({
+    mutationFn: (variables: UserControllerAddFollowVariables) =>
       fetchUserControllerAddFollow({ ...fetcherOptions, ...variables }),
-    options
-  );
+    ...options,
+  });
 };
 
 export type UserControllerRemoveFollowError = Fetcher.ErrorWrapper<undefined>;
@@ -432,7 +420,7 @@ export type UserControllerRemoveFollowVariables = {
  */
 export const fetchUserControllerRemoveFollow = (
   variables: UserControllerRemoveFollowVariables,
-  signal?: AbortSignal
+  signal?: AbortSignal,
 ) =>
   sigleApiFetch<
     boolean,
@@ -454,18 +442,18 @@ export const useUserControllerRemoveFollow = (
       UserControllerRemoveFollowVariables
     >,
     'mutationFn'
-  >
+  >,
 ) => {
   const { fetcherOptions } = useSigleApiContext();
   return reactQuery.useMutation<
     boolean,
     UserControllerRemoveFollowError,
     UserControllerRemoveFollowVariables
-  >(
-    (variables: UserControllerRemoveFollowVariables) =>
+  >({
+    mutationFn: (variables: UserControllerRemoveFollowVariables) =>
       fetchUserControllerRemoveFollow({ ...fetcherOptions, ...variables }),
-    options
-  );
+    ...options,
+  });
 };
 
 export type SubscriptionControllerGetUserMeError =
@@ -479,7 +467,7 @@ export type SubscriptionControllerGetUserMeVariables =
  */
 export const fetchSubscriptionControllerGetUserMe = (
   variables: SubscriptionControllerGetUserMeVariables,
-  signal?: AbortSignal
+  signal?: AbortSignal,
 ) =>
   sigleApiFetch<
     Schemas.SubscriptionDto,
@@ -494,7 +482,7 @@ export const fetchSubscriptionControllerGetUserMe = (
  * Return the current active subscription of the current logged in user.
  */
 export const useSubscriptionControllerGetUserMe = <
-  TData = Schemas.SubscriptionDto
+  TData = Schemas.SubscriptionDto,
 >(
   variables: SubscriptionControllerGetUserMeVariables,
   options?: Omit<
@@ -504,7 +492,7 @@ export const useSubscriptionControllerGetUserMe = <
       TData
     >,
     'queryKey' | 'queryFn'
-  >
+  >,
 ) => {
   const { fetcherOptions, queryOptions, queryKeyFn } =
     useSigleApiContext(options);
@@ -512,22 +500,20 @@ export const useSubscriptionControllerGetUserMe = <
     Schemas.SubscriptionDto,
     SubscriptionControllerGetUserMeError,
     TData
-  >(
-    queryKeyFn({
+  >({
+    queryKey: queryKeyFn({
       path: '/api/subscriptions',
       operationId: 'subscriptionControllerGetUserMe',
       variables,
     }),
-    ({ signal }) =>
+    queryFn: ({ signal }) =>
       fetchSubscriptionControllerGetUserMe(
         { ...fetcherOptions, ...variables },
-        signal
+        signal,
       ),
-    {
-      ...options,
-      ...queryOptions,
-    }
-  );
+    ...options,
+    ...queryOptions,
+  });
 };
 
 export type SubscriptionControllerSyncSubscriptionWithNftError =
@@ -541,7 +527,7 @@ export type SubscriptionControllerSyncSubscriptionWithNftVariables =
  */
 export const fetchSubscriptionControllerSyncSubscriptionWithNft = (
   variables: SubscriptionControllerSyncSubscriptionWithNftVariables,
-  signal?: AbortSignal
+  signal?: AbortSignal,
 ) =>
   sigleApiFetch<
     Schemas.SubscriptionDto,
@@ -568,21 +554,23 @@ export const useSubscriptionControllerSyncSubscriptionWithNft = (
       SubscriptionControllerSyncSubscriptionWithNftVariables
     >,
     'mutationFn'
-  >
+  >,
 ) => {
   const { fetcherOptions } = useSigleApiContext();
   return reactQuery.useMutation<
     Schemas.SubscriptionDto,
     SubscriptionControllerSyncSubscriptionWithNftError,
     SubscriptionControllerSyncSubscriptionWithNftVariables
-  >(
-    (variables: SubscriptionControllerSyncSubscriptionWithNftVariables) =>
+  >({
+    mutationFn: (
+      variables: SubscriptionControllerSyncSubscriptionWithNftVariables,
+    ) =>
       fetchSubscriptionControllerSyncSubscriptionWithNft({
         ...fetcherOptions,
         ...variables,
       }),
-    options
-  );
+    ...options,
+  });
 };
 
 export type AnalyticsControllerGetReferrersQueryParams = {
@@ -610,7 +598,7 @@ export type AnalyticsControllerGetReferrersVariables = {
  */
 export const fetchAnalyticsControllerGetReferrers = (
   variables: AnalyticsControllerGetReferrersVariables,
-  signal?: AbortSignal
+  signal?: AbortSignal,
 ) =>
   sigleApiFetch<
     AnalyticsControllerGetReferrersResponse,
@@ -625,7 +613,7 @@ export const fetchAnalyticsControllerGetReferrers = (
  * Return the referrer statistics.
  */
 export const useAnalyticsControllerGetReferrers = <
-  TData = AnalyticsControllerGetReferrersResponse
+  TData = AnalyticsControllerGetReferrersResponse,
 >(
   variables: AnalyticsControllerGetReferrersVariables,
   options?: Omit<
@@ -635,7 +623,7 @@ export const useAnalyticsControllerGetReferrers = <
       TData
     >,
     'queryKey' | 'queryFn'
-  >
+  >,
 ) => {
   const { fetcherOptions, queryOptions, queryKeyFn } =
     useSigleApiContext(options);
@@ -643,22 +631,20 @@ export const useAnalyticsControllerGetReferrers = <
     AnalyticsControllerGetReferrersResponse,
     AnalyticsControllerGetReferrersError,
     TData
-  >(
-    queryKeyFn({
+  >({
+    queryKey: queryKeyFn({
       path: '/api/analytics/referrers',
       operationId: 'analyticsControllerGetReferrers',
       variables,
     }),
-    ({ signal }) =>
+    queryFn: ({ signal }) =>
       fetchAnalyticsControllerGetReferrers(
         { ...fetcherOptions, ...variables },
-        signal
+        signal,
       ),
-    {
-      ...options,
-      ...queryOptions,
-    }
-  );
+    ...options,
+    ...queryOptions,
+  });
 };
 
 export type AnalyticsControllerGetHistoricalQueryParams = {
@@ -688,7 +674,7 @@ export type AnalyticsControllerGetHistoricalVariables = {
  */
 export const fetchAnalyticsControllerGetHistorical = (
   variables: AnalyticsControllerGetHistoricalVariables,
-  signal?: AbortSignal
+  signal?: AbortSignal,
 ) =>
   sigleApiFetch<
     Schemas.HistoricalDto,
@@ -703,7 +689,7 @@ export const fetchAnalyticsControllerGetHistorical = (
  * Return the historical statistics.
  */
 export const useAnalyticsControllerGetHistorical = <
-  TData = Schemas.HistoricalDto
+  TData = Schemas.HistoricalDto,
 >(
   variables: AnalyticsControllerGetHistoricalVariables,
   options?: Omit<
@@ -713,7 +699,7 @@ export const useAnalyticsControllerGetHistorical = <
       TData
     >,
     'queryKey' | 'queryFn'
-  >
+  >,
 ) => {
   const { fetcherOptions, queryOptions, queryKeyFn } =
     useSigleApiContext(options);
@@ -721,22 +707,20 @@ export const useAnalyticsControllerGetHistorical = <
     Schemas.HistoricalDto,
     AnalyticsControllerGetHistoricalError,
     TData
-  >(
-    queryKeyFn({
+  >({
+    queryKey: queryKeyFn({
       path: '/api/analytics/historical',
       operationId: 'analyticsControllerGetHistorical',
       variables,
     }),
-    ({ signal }) =>
+    queryFn: ({ signal }) =>
       fetchAnalyticsControllerGetHistorical(
         { ...fetcherOptions, ...variables },
-        signal
+        signal,
       ),
-    {
-      ...options,
-      ...queryOptions,
-    }
-  );
+    ...options,
+    ...queryOptions,
+  });
 };
 
 export type SubscribersControllerCreateError = Fetcher.ErrorWrapper<undefined>;
@@ -750,7 +734,7 @@ export type SubscribersControllerCreateVariables = {
  */
 export const fetchSubscribersControllerCreate = (
   variables: SubscribersControllerCreateVariables,
-  signal?: AbortSignal
+  signal?: AbortSignal,
 ) =>
   sigleApiFetch<
     undefined,
@@ -772,18 +756,18 @@ export const useSubscribersControllerCreate = (
       SubscribersControllerCreateVariables
     >,
     'mutationFn'
-  >
+  >,
 ) => {
   const { fetcherOptions } = useSigleApiContext();
   return reactQuery.useMutation<
     undefined,
     SubscribersControllerCreateError,
     SubscribersControllerCreateVariables
-  >(
-    (variables: SubscribersControllerCreateVariables) =>
+  >({
+    mutationFn: (variables: SubscribersControllerCreateVariables) =>
       fetchSubscribersControllerCreate({ ...fetcherOptions, ...variables }),
-    options
-  );
+    ...options,
+  });
 };
 
 export type StoriesControllerGetPathParams = {
@@ -798,7 +782,7 @@ export type StoriesControllerGetVariables = {
 
 export const fetchStoriesControllerGet = (
   variables: StoriesControllerGetVariables,
-  signal?: AbortSignal
+  signal?: AbortSignal,
 ) =>
   sigleApiFetch<
     Schemas.StoryDto,
@@ -818,7 +802,7 @@ export const useStoriesControllerGet = <TData = Schemas.StoryDto>(
       TData
     >,
     'queryKey' | 'queryFn'
-  >
+  >,
 ) => {
   const { fetcherOptions, queryOptions, queryKeyFn } =
     useSigleApiContext(options);
@@ -826,19 +810,17 @@ export const useStoriesControllerGet = <TData = Schemas.StoryDto>(
     Schemas.StoryDto,
     StoriesControllerGetError,
     TData
-  >(
-    queryKeyFn({
+  >({
+    queryKey: queryKeyFn({
       path: '/api/stories/{storyId}',
       operationId: 'storiesControllerGet',
       variables,
     }),
-    ({ signal }) =>
+    queryFn: ({ signal }) =>
       fetchStoriesControllerGet({ ...fetcherOptions, ...variables }, signal),
-    {
-      ...options,
-      ...queryOptions,
-    }
-  );
+    ...options,
+    ...queryOptions,
+  });
 };
 
 export type StoriesControllerSendTestError = Fetcher.ErrorWrapper<undefined>;
@@ -849,7 +831,7 @@ export type StoriesControllerSendTestVariables = {
 
 export const fetchStoriesControllerSendTest = (
   variables: StoriesControllerSendTestVariables,
-  signal?: AbortSignal
+  signal?: AbortSignal,
 ) =>
   sigleApiFetch<
     undefined,
@@ -868,18 +850,18 @@ export const useStoriesControllerSendTest = (
       StoriesControllerSendTestVariables
     >,
     'mutationFn'
-  >
+  >,
 ) => {
   const { fetcherOptions } = useSigleApiContext();
   return reactQuery.useMutation<
     undefined,
     StoriesControllerSendTestError,
     StoriesControllerSendTestVariables
-  >(
-    (variables: StoriesControllerSendTestVariables) =>
+  >({
+    mutationFn: (variables: StoriesControllerSendTestVariables) =>
       fetchStoriesControllerSendTest({ ...fetcherOptions, ...variables }),
-    options
-  );
+    ...options,
+  });
 };
 
 export type StoriesControllerPublishError = Fetcher.ErrorWrapper<undefined>;
@@ -890,7 +872,7 @@ export type StoriesControllerPublishVariables = {
 
 export const fetchStoriesControllerPublish = (
   variables: StoriesControllerPublishVariables,
-  signal?: AbortSignal
+  signal?: AbortSignal,
 ) =>
   sigleApiFetch<
     undefined,
@@ -909,18 +891,18 @@ export const useStoriesControllerPublish = (
       StoriesControllerPublishVariables
     >,
     'mutationFn'
-  >
+  >,
 ) => {
   const { fetcherOptions } = useSigleApiContext();
   return reactQuery.useMutation<
     undefined,
     StoriesControllerPublishError,
     StoriesControllerPublishVariables
-  >(
-    (variables: StoriesControllerPublishVariables) =>
+  >({
+    mutationFn: (variables: StoriesControllerPublishVariables) =>
       fetchStoriesControllerPublish({ ...fetcherOptions, ...variables }),
-    options
-  );
+    ...options,
+  });
 };
 
 export type StoriesControllerUnpublishError = Fetcher.ErrorWrapper<undefined>;
@@ -931,7 +913,7 @@ export type StoriesControllerUnpublishVariables = {
 
 export const fetchStoriesControllerUnpublish = (
   variables: StoriesControllerUnpublishVariables,
-  signal?: AbortSignal
+  signal?: AbortSignal,
 ) =>
   sigleApiFetch<
     undefined,
@@ -950,18 +932,18 @@ export const useStoriesControllerUnpublish = (
       StoriesControllerUnpublishVariables
     >,
     'mutationFn'
-  >
+  >,
 ) => {
   const { fetcherOptions } = useSigleApiContext();
   return reactQuery.useMutation<
     undefined,
     StoriesControllerUnpublishError,
     StoriesControllerUnpublishVariables
-  >(
-    (variables: StoriesControllerUnpublishVariables) =>
+  >({
+    mutationFn: (variables: StoriesControllerUnpublishVariables) =>
       fetchStoriesControllerUnpublish({ ...fetcherOptions, ...variables }),
-    options
-  );
+    ...options,
+  });
 };
 
 export type StoriesControllerDeleteError = Fetcher.ErrorWrapper<undefined>;
@@ -972,7 +954,7 @@ export type StoriesControllerDeleteVariables = {
 
 export const fetchStoriesControllerDelete = (
   variables: StoriesControllerDeleteVariables,
-  signal?: AbortSignal
+  signal?: AbortSignal,
 ) =>
   sigleApiFetch<
     undefined,
@@ -991,18 +973,18 @@ export const useStoriesControllerDelete = (
       StoriesControllerDeleteVariables
     >,
     'mutationFn'
-  >
+  >,
 ) => {
   const { fetcherOptions } = useSigleApiContext();
   return reactQuery.useMutation<
     undefined,
     StoriesControllerDeleteError,
     StoriesControllerDeleteVariables
-  >(
-    (variables: StoriesControllerDeleteVariables) =>
+  >({
+    mutationFn: (variables: StoriesControllerDeleteVariables) =>
       fetchStoriesControllerDelete({ ...fetcherOptions, ...variables }),
-    options
-  );
+    ...options,
+  });
 };
 
 export type NewslettersControllerGetError = Fetcher.ErrorWrapper<undefined>;
@@ -1012,7 +994,7 @@ export type NewslettersControllerGetVariables =
 
 export const fetchNewslettersControllerGet = (
   variables: NewslettersControllerGetVariables,
-  signal?: AbortSignal
+  signal?: AbortSignal,
 ) =>
   sigleApiFetch<
     Schemas.NewsletterEntity,
@@ -1032,7 +1014,7 @@ export const useNewslettersControllerGet = <TData = Schemas.NewsletterEntity>(
       TData
     >,
     'queryKey' | 'queryFn'
-  >
+  >,
 ) => {
   const { fetcherOptions, queryOptions, queryKeyFn } =
     useSigleApiContext(options);
@@ -1040,22 +1022,20 @@ export const useNewslettersControllerGet = <TData = Schemas.NewsletterEntity>(
     Schemas.NewsletterEntity,
     NewslettersControllerGetError,
     TData
-  >(
-    queryKeyFn({
+  >({
+    queryKey: queryKeyFn({
       path: '/api/newsletters',
       operationId: 'newslettersControllerGet',
       variables,
     }),
-    ({ signal }) =>
+    queryFn: ({ signal }) =>
       fetchNewslettersControllerGet(
         { ...fetcherOptions, ...variables },
-        signal
+        signal,
       ),
-    {
-      ...options,
-      ...queryOptions,
-    }
-  );
+    ...options,
+    ...queryOptions,
+  });
 };
 
 export type NewslettersControllerUpdateError = Fetcher.ErrorWrapper<undefined>;
@@ -1066,7 +1046,7 @@ export type NewslettersControllerUpdateVariables = {
 
 export const fetchNewslettersControllerUpdate = (
   variables: NewslettersControllerUpdateVariables,
-  signal?: AbortSignal
+  signal?: AbortSignal,
 ) =>
   sigleApiFetch<
     undefined,
@@ -1085,18 +1065,18 @@ export const useNewslettersControllerUpdate = (
       NewslettersControllerUpdateVariables
     >,
     'mutationFn'
-  >
+  >,
 ) => {
   const { fetcherOptions } = useSigleApiContext();
   return reactQuery.useMutation<
     undefined,
     NewslettersControllerUpdateError,
     NewslettersControllerUpdateVariables
-  >(
-    (variables: NewslettersControllerUpdateVariables) =>
+  >({
+    mutationFn: (variables: NewslettersControllerUpdateVariables) =>
       fetchNewslettersControllerUpdate({ ...fetcherOptions, ...variables }),
-    options
-  );
+    ...options,
+  });
 };
 
 export type NewslettersControllerGetContactsListsError =
@@ -1110,7 +1090,7 @@ export type NewslettersControllerGetContactsListsVariables =
 
 export const fetchNewslettersControllerGetContactsLists = (
   variables: NewslettersControllerGetContactsListsVariables,
-  signal?: AbortSignal
+  signal?: AbortSignal,
 ) =>
   sigleApiFetch<
     NewslettersControllerGetContactsListsResponse,
@@ -1127,7 +1107,7 @@ export const fetchNewslettersControllerGetContactsLists = (
   });
 
 export const useNewslettersControllerGetContactsLists = <
-  TData = NewslettersControllerGetContactsListsResponse
+  TData = NewslettersControllerGetContactsListsResponse,
 >(
   variables: NewslettersControllerGetContactsListsVariables,
   options?: Omit<
@@ -1137,7 +1117,7 @@ export const useNewslettersControllerGetContactsLists = <
       TData
     >,
     'queryKey' | 'queryFn'
-  >
+  >,
 ) => {
   const { fetcherOptions, queryOptions, queryKeyFn } =
     useSigleApiContext(options);
@@ -1145,22 +1125,20 @@ export const useNewslettersControllerGetContactsLists = <
     NewslettersControllerGetContactsListsResponse,
     NewslettersControllerGetContactsListsError,
     TData
-  >(
-    queryKeyFn({
+  >({
+    queryKey: queryKeyFn({
       path: '/api/newsletters/contacts-lists',
       operationId: 'newslettersControllerGetContactsLists',
       variables,
     }),
-    ({ signal }) =>
+    queryFn: ({ signal }) =>
       fetchNewslettersControllerGetContactsLists(
         { ...fetcherOptions, ...variables },
-        signal
+        signal,
       ),
-    {
-      ...options,
-      ...queryOptions,
-    }
-  );
+    ...options,
+    ...queryOptions,
+  });
 };
 
 export type NewslettersControllerUpdateContactsListError =
@@ -1172,7 +1150,7 @@ export type NewslettersControllerUpdateContactsListVariables = {
 
 export const fetchNewslettersControllerUpdateContactsList = (
   variables: NewslettersControllerUpdateContactsListVariables,
-  signal?: AbortSignal
+  signal?: AbortSignal,
 ) =>
   sigleApiFetch<
     undefined,
@@ -1196,21 +1174,21 @@ export const useNewslettersControllerUpdateContactsList = (
       NewslettersControllerUpdateContactsListVariables
     >,
     'mutationFn'
-  >
+  >,
 ) => {
   const { fetcherOptions } = useSigleApiContext();
   return reactQuery.useMutation<
     undefined,
     NewslettersControllerUpdateContactsListError,
     NewslettersControllerUpdateContactsListVariables
-  >(
-    (variables: NewslettersControllerUpdateContactsListVariables) =>
+  >({
+    mutationFn: (variables: NewslettersControllerUpdateContactsListVariables) =>
       fetchNewslettersControllerUpdateContactsList({
         ...fetcherOptions,
         ...variables,
       }),
-    options
-  );
+    ...options,
+  });
 };
 
 export type NewslettersControllerSyncSenderError =
@@ -1221,7 +1199,7 @@ export type NewslettersControllerSyncSenderVariables =
 
 export const fetchNewslettersControllerSyncSender = (
   variables: NewslettersControllerSyncSenderVariables,
-  signal?: AbortSignal
+  signal?: AbortSignal,
 ) =>
   sigleApiFetch<
     undefined,
@@ -1240,18 +1218,18 @@ export const useNewslettersControllerSyncSender = (
       NewslettersControllerSyncSenderVariables
     >,
     'mutationFn'
-  >
+  >,
 ) => {
   const { fetcherOptions } = useSigleApiContext();
   return reactQuery.useMutation<
     undefined,
     NewslettersControllerSyncSenderError,
     NewslettersControllerSyncSenderVariables
-  >(
-    (variables: NewslettersControllerSyncSenderVariables) =>
+  >({
+    mutationFn: (variables: NewslettersControllerSyncSenderVariables) =>
       fetchNewslettersControllerSyncSender({ ...fetcherOptions, ...variables }),
-    options
-  );
+    ...options,
+  });
 };
 
 export type EmailVerificationControllerAddEmailError =
@@ -1266,7 +1244,7 @@ export type EmailVerificationControllerAddEmailVariables = {
  */
 export const fetchEmailVerificationControllerAddEmail = (
   variables: EmailVerificationControllerAddEmailVariables,
-  signal?: AbortSignal
+  signal?: AbortSignal,
 ) =>
   sigleApiFetch<
     boolean,
@@ -1293,21 +1271,21 @@ export const useEmailVerificationControllerAddEmail = (
       EmailVerificationControllerAddEmailVariables
     >,
     'mutationFn'
-  >
+  >,
 ) => {
   const { fetcherOptions } = useSigleApiContext();
   return reactQuery.useMutation<
     boolean,
     EmailVerificationControllerAddEmailError,
     EmailVerificationControllerAddEmailVariables
-  >(
-    (variables: EmailVerificationControllerAddEmailVariables) =>
+  >({
+    mutationFn: (variables: EmailVerificationControllerAddEmailVariables) =>
       fetchEmailVerificationControllerAddEmail({
         ...fetcherOptions,
         ...variables,
       }),
-    options
-  );
+    ...options,
+  });
 };
 
 export type EmailVerificationControllerVerifyEmailError =
@@ -1322,7 +1300,7 @@ export type EmailVerificationControllerVerifyEmailVariables = {
  */
 export const fetchEmailVerificationControllerVerifyEmail = (
   variables: EmailVerificationControllerVerifyEmailVariables,
-  signal?: AbortSignal
+  signal?: AbortSignal,
 ) =>
   sigleApiFetch<
     boolean,
@@ -1349,21 +1327,21 @@ export const useEmailVerificationControllerVerifyEmail = (
       EmailVerificationControllerVerifyEmailVariables
     >,
     'mutationFn'
-  >
+  >,
 ) => {
   const { fetcherOptions } = useSigleApiContext();
   return reactQuery.useMutation<
     boolean,
     EmailVerificationControllerVerifyEmailError,
     EmailVerificationControllerVerifyEmailVariables
-  >(
-    (variables: EmailVerificationControllerVerifyEmailVariables) =>
+  >({
+    mutationFn: (variables: EmailVerificationControllerVerifyEmailVariables) =>
       fetchEmailVerificationControllerVerifyEmail({
         ...fetcherOptions,
         ...variables,
       }),
-    options
-  );
+    ...options,
+  });
 };
 
 export type EmailVerificationControllerResendEmailError =
@@ -1377,7 +1355,7 @@ export type EmailVerificationControllerResendEmailVariables =
  */
 export const fetchEmailVerificationControllerResendEmail = (
   variables: EmailVerificationControllerResendEmailVariables,
-  signal?: AbortSignal
+  signal?: AbortSignal,
 ) =>
   sigleApiFetch<
     boolean,
@@ -1404,21 +1382,21 @@ export const useEmailVerificationControllerResendEmail = (
       EmailVerificationControllerResendEmailVariables
     >,
     'mutationFn'
-  >
+  >,
 ) => {
   const { fetcherOptions } = useSigleApiContext();
   return reactQuery.useMutation<
     boolean,
     EmailVerificationControllerResendEmailError,
     EmailVerificationControllerResendEmailVariables
-  >(
-    (variables: EmailVerificationControllerResendEmailVariables) =>
+  >({
+    mutationFn: (variables: EmailVerificationControllerResendEmailVariables) =>
       fetchEmailVerificationControllerResendEmail({
         ...fetcherOptions,
         ...variables,
       }),
-    options
-  );
+    ...options,
+  });
 };
 
 export type QueryOperation =
