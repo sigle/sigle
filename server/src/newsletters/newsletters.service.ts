@@ -335,7 +335,9 @@ export class NewslettersService {
     this.posthog.capture({
       distinctId: stacksAddress,
       event: 'newsletter sender updated',
-      properties: {},
+      properties: {
+        senderId,
+      },
     });
   }
 
