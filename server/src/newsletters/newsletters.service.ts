@@ -220,6 +220,55 @@ export class NewslettersService {
   }
 
   /**
+   * Get the Mailjet active senders and show the selected one.
+   */
+  async getSenders({ stacksAddress }: { stacksAddress: string }) {
+    const activeSubscription =
+      await this.subscriptionService.getUserActiveSubscription({
+        stacksAddress,
+      });
+    if (!activeSubscription) {
+      throw new BadRequestException('No active subscription.');
+    }
+
+    const user = await this.prisma.user.findUniqueOrThrow({
+      select: {
+        id: true,
+        newsletter: {
+          select: {
+            id: true,
+            senderEmail: true,
+            mailjetApiKey: true,
+            mailjetApiSecret: true,
+          },
+        },
+      },
+      where: { stacksAddress },
+    });
+    if (!user.newsletter) {
+      throw new BadRequestException('Newsletter not setup.');
+    }
+
+    const mailjet = new Mailjet({
+      apiKey: user.newsletter.mailjetApiKey,
+      apiSecret: user.newsletter.mailjetApiSecret,
+    });
+
+    const data: { body: Sender.TGetSenderResponse } = await mailjet
+      .get('sender', { version: 'v3' })
+      .request();
+
+    const activeSenders = data.body.Data.filter(
+      (sender) => sender.Status === 'Active',
+    );
+    return activeSenders.map((sender) => ({
+      id: sender.ID,
+      email: sender.Email,
+      isSelected: sender.Email === user.newsletter.senderEmail,
+    }));
+  }
+
+  /**
    * Sync the sender email with the one in Mailjet.
    * This is required because the sender email can be changed in Mailjet.
    */

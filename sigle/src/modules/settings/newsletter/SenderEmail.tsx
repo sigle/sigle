@@ -1,17 +1,36 @@
-import { CheckCircledIcon, ReloadIcon } from '@radix-ui/react-icons';
+import { CheckCircledIcon } from '@radix-ui/react-icons';
 import { useState } from 'react';
 import { toast } from 'react-toastify';
 import { ApiError } from '../../../external/api';
 import {
+  useGetSendersNewsletter,
   useGetUserNewsletter,
   useSyncSenderNewsletter,
 } from '../../../hooks/newsletters';
 import { Box, Button, Flex, Typography } from '../../../ui';
+import { styled } from '../../../stitches.config';
+
+const Select = styled('select', {
+  minWidth: 300,
+  WebkitTapHighlightColor: 'rgba(0,0,0,0)',
+  backgroundColor: '$gray3',
+  boxShadow: '0 0 0 1px $colors$gray7',
+  ml: '1px',
+  mr: '1px',
+  br: '$3',
+  px: '$2',
+  py: '$1',
+  fontSize: '$1',
+  color: '$gray11',
+});
 
 export const SenderEmail = () => {
+  const [newSenderId, setNewSenderId] = useState<number | null>(null);
   const [successSenderEmail, setSuccessSenderEmail] = useState(false);
   const { data: userNewsletter, refetch: refetchUserNewsletter } =
     useGetUserNewsletter();
+  const { data: sendersNewsletter, isLoading: isLoadingSendersNewsletter } =
+    useGetSendersNewsletter();
   const { mutate: syncNewsletter, isLoading: isLoadingSyncNewsletter } =
     useSyncSenderNewsletter({
       onSuccess: async () => {
@@ -27,6 +46,10 @@ export const SenderEmail = () => {
       },
     });
 
+  const isSenderSelected = sendersNewsletter?.some(
+    (sender) => sender.isSelected,
+  );
+
   return (
     <>
       <Box
@@ -39,13 +62,33 @@ export const SenderEmail = () => {
         }}
       >
         <Typography css={{ fontWeight: 600 }} size="h4">
-          Add sender address
+          Sender address
         </Typography>
-        {(!userNewsletter || !userNewsletter.senderEmail) && (
+        {!isLoadingSendersNewsletter && !isSenderSelected && (
           <Typography size="subheading" css={{ color: '$gray9', mt: '$2' }}>
-            To be able to send emails, you must add/choose a sender email on
-            your Mailjet account and sync below.
+            To be able to send emails, you must add/choose a sender email from
+            your Mailjet account.
           </Typography>
+        )}
+        {!isLoadingSendersNewsletter && (
+          <Select
+            css={{ mt: '$2' }}
+            value={
+              newSenderId ??
+              sendersNewsletter?.find((list) => list.isSelected)?.id ??
+              'default'
+            }
+            onChange={(e) => setNewSenderId(Number(e.target.value))}
+          >
+            <option disabled value="default">
+              -- select a sender address --
+            </option>
+            {sendersNewsletter?.map((list) => (
+              <option key={list.id} value={list.id}>
+                {list.email} {list.isSelected ? ' (selected)' : ''}
+              </option>
+            ))}
+          </Select>
         )}
         {userNewsletter?.senderEmail && (
           <Typography size="subheading" css={{ color: '$gray9', mt: '$2' }}>
@@ -67,7 +110,7 @@ export const SenderEmail = () => {
             onClick={() => syncNewsletter()}
             disabled={isLoadingSyncNewsletter}
           >
-            <span>Sync</span> <ReloadIcon />
+            Submit
           </Button>
           <Button
             color="orange"

@@ -3,6 +3,7 @@
 /* eslint-disable */
 import type { ContactsListsEntity } from '../models/ContactsListsEntity';
 import type { NewsletterEntity } from '../models/NewsletterEntity';
+import type { SenderEntity } from '../models/SenderEntity';
 import type { UpdateContactsListDto } from '../models/UpdateContactsListDto';
 import type { UpdateNewsletterDto } from '../models/UpdateNewsletterDto';
 
@@ -66,6 +67,19 @@ export class NewslettersService {
       url: '/api/newsletters/contacts-lists',
       body: requestBody,
       mediaType: 'application/json',
+    });
+  }
+
+  /**
+   * @returns SenderEntity
+   * @throws ApiError
+   */
+  public static newslettersControllerGetSenders(): CancelablePromise<
+    Array<SenderEntity>
+  > {
+    return __request(OpenAPI, {
+      method: 'GET',
+      url: '/api/newsletters/senders',
     });
   }
 

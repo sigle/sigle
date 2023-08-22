@@ -21,6 +21,7 @@ export type { NewsletterEntity } from './models/NewsletterEntity';
 export type { PublicNewsletterEntity } from './models/PublicNewsletterEntity';
 export type { PublishStoryDto } from './models/PublishStoryDto';
 export type { ReferrerDto } from './models/ReferrerDto';
+export type { SenderEntity } from './models/SenderEntity';
 export type { SendTestStoryDto } from './models/SendTestStoryDto';
 export type { StoryDto } from './models/StoryDto';
 export type { SubscriptionDto } from './models/SubscriptionDto';
