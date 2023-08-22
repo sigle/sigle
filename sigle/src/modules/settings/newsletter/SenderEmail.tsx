@@ -1,4 +1,3 @@
-import { CheckCircledIcon } from '@radix-ui/react-icons';
 import { useState } from 'react';
 import { toast } from 'react-toastify';
 import { ApiError } from '../../../external/api';
