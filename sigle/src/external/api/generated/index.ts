@@ -28,6 +28,7 @@ export type { SubscriptionDto } from './models/SubscriptionDto';
 export type { UnpublishStoryDto } from './models/UnpublishStoryDto';
 export type { UpdateContactsListDto } from './models/UpdateContactsListDto';
 export type { UpdateNewsletterDto } from './models/UpdateNewsletterDto';
+export type { UpdateSenderDto } from './models/UpdateSenderDto';
 export type { UserMeProfileEntity } from './models/UserMeProfileEntity';
 export type { UserProfileEntity } from './models/UserProfileEntity';
 export type { VerifyEmailDto } from './models/VerifyEmailDto';

@@ -272,10 +272,12 @@ export class NewslettersService {
    * Sync the sender email with the one in Mailjet.
    * This is required because the sender email can be changed in Mailjet.
    */
-  async syncSender({
+  async updateSender({
     stacksAddress,
+    senderId,
   }: {
     stacksAddress: string;
+    senderId: number;
   }): Promise<void> {
     const activeSubscription =
       await this.subscriptionService.getUserActiveSubscription({
@@ -312,30 +314,29 @@ export class NewslettersService {
       .get('sender', { version: 'v3' })
       .request();
 
-    const activeSender = data.body.Data.filter(
-      (sender) => sender.Status === 'Active',
-    )[0];
-    if (!activeSender) {
+    const sender = data.body.Data.find((sender) => sender.ID === senderId);
+    if (!sender) {
+      throw new BadRequestException('Sender not found.');
+    }
+    if (sender.Status !== 'Active') {
       throw new BadRequestException(
-        'No sender found, please add one in Mailjet.',
+        'Sender is not active, please verify it on Mailjet.',
       );
     }
 
-    if (user.newsletter.senderEmail !== activeSender.Email) {
-      await this.prisma.newsletter.update({
-        where: { userId: user.id },
-        data: {
-          senderEmail: activeSender.Email,
-          status: 'ACTIVE',
-        },
-      });
+    await this.prisma.newsletter.update({
+      where: { userId: user.id },
+      data: {
+        senderEmail: sender.Email,
+        status: 'ACTIVE',
+      },
+    });
 
-      this.posthog.capture({
-        distinctId: stacksAddress,
-        event: 'newsletter sender updated',
-        properties: {},
-      });
-    }
+    this.posthog.capture({
+      distinctId: stacksAddress,
+      event: 'newsletter sender updated',
+      properties: {},
+    });
   }
 
   /**

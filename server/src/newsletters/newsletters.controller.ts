@@ -15,6 +15,7 @@ import { NewsletterEntity } from './entities/newsletter.entity';
 import { ContactsListsEntity } from './entities/constacts-lists.entity';
 import { UpdateContactsListDto } from './dto/updateContactsList.dto';
 import { SenderEntity } from './entities/sender.entity';
+import { UpdateSenderDto } from './dto/updateSender.dto';
 
 @ApiTags('newsletters')
 @Controller()
@@ -75,11 +76,12 @@ export class NewslettersController {
   }
 
   @UseGuards(AuthGuard)
-  @Post('/api/newsletters/sender')
+  @Post('/api/newsletters/senders')
   @HttpCode(200)
-  syncSender(@Request() req) {
-    return this.newslettersService.syncSender({
+  updateSender(@Request() req, @Body() updateNewsletterDto: UpdateSenderDto) {
+    return this.newslettersService.updateSender({
       stacksAddress: req.user.stacksAddress,
+      senderId: updateNewsletterDto.senderId,
     });
   }
 }

@@ -8,6 +8,7 @@ import {
   NewslettersService,
   UpdateNewsletterDto,
   UpdateContactsListDto,
+  UpdateSenderDto,
 } from '../external/api';
 
 type GetApiNewsletterReturnType = Awaited<
@@ -87,12 +88,19 @@ export const useGetSendersNewsletter = (
   );
 
 type PostApiSenderNewsletterReturnType = Awaited<
-  ReturnType<typeof NewslettersService.newslettersControllerSyncSender>
+  ReturnType<typeof NewslettersService.newslettersControllerUpdateSender>
 >;
-export const useSyncSenderNewsletter = (
-  options: UseMutationOptions<PostApiSenderNewsletterReturnType, Error> = {},
+export const useUpdateSenderNewsletter = (
+  options: UseMutationOptions<
+    PostApiSenderNewsletterReturnType,
+    Error,
+    UpdateSenderDto
+  > = {},
 ) =>
-  useMutation<PostApiSenderNewsletterReturnType, Error>(
-    () => NewslettersService.newslettersControllerSyncSender(),
+  useMutation<PostApiSenderNewsletterReturnType, Error, UpdateSenderDto>(
+    (args) =>
+      NewslettersService.newslettersControllerUpdateSender({
+        requestBody: args,
+      }),
     options,
   );

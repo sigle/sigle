@@ -4,8 +4,7 @@ import { toast } from 'react-toastify';
 import { ApiError } from '../../../external/api';
 import {
   useGetSendersNewsletter,
-  useGetUserNewsletter,
-  useSyncSenderNewsletter,
+  useUpdateSenderNewsletter,
 } from '../../../hooks/newsletters';
 import { Box, Button, Flex, Typography } from '../../../ui';
 import { styled } from '../../../stitches.config';
@@ -27,14 +26,15 @@ const Select = styled('select', {
 export const SenderEmail = () => {
   const [newSenderId, setNewSenderId] = useState<number | null>(null);
   const [successSenderEmail, setSuccessSenderEmail] = useState(false);
-  const { data: userNewsletter, refetch: refetchUserNewsletter } =
-    useGetUserNewsletter();
-  const { data: sendersNewsletter, isLoading: isLoadingSendersNewsletter } =
-    useGetSendersNewsletter();
+  const {
+    data: sendersNewsletter,
+    isLoading: isLoadingSendersNewsletter,
+    refetch: refetchSendersNewsletter,
+  } = useGetSendersNewsletter();
   const { mutate: syncNewsletter, isLoading: isLoadingSyncNewsletter } =
-    useSyncSenderNewsletter({
+    useUpdateSenderNewsletter({
       onSuccess: async () => {
-        await refetchUserNewsletter();
+        await refetchSendersNewsletter();
         setSuccessSenderEmail(true);
       },
       onError: (error: Error | ApiError) => {
@@ -90,24 +90,14 @@ export const SenderEmail = () => {
             ))}
           </Select>
         )}
-        {userNewsletter?.senderEmail && (
-          <Typography size="subheading" css={{ color: '$gray9', mt: '$2' }}>
-            Your newsletter will be sent from{' '}
-            <Typography size="subheading" as="span" css={{ color: '$gray10' }}>
-              {userNewsletter.senderEmail}
-            </Typography>
-            <Box
-              as="span"
-              css={{ color: '$green11', display: 'inline-block', ml: '$2' }}
-            >
-              <CheckCircledIcon />
-            </Box>
-          </Typography>
-        )}
         <Flex css={{ mt: '$5' }} gap="5">
           <Button
             css={{ gap: '$2' }}
-            onClick={() => syncNewsletter()}
+            onClick={() =>
+              syncNewsletter({
+                senderId: newSenderId || 0,
+              })
+            }
             disabled={isLoadingSyncNewsletter}
           >
             Submit
