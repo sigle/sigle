@@ -1,21 +1,39 @@
-import { CheckCircledIcon, ReloadIcon } from '@radix-ui/react-icons';
 import { useState } from 'react';
 import { toast } from 'react-toastify';
 import { ApiError } from '../../../external/api';
 import {
-  useGetUserNewsletter,
-  useSyncSenderNewsletter,
+  useGetSendersNewsletter,
+  useUpdateSenderNewsletter,
 } from '../../../hooks/newsletters';
 import { Box, Button, Flex, Typography } from '../../../ui';
+import { styled } from '../../../stitches.config';
+
+const Select = styled('select', {
+  minWidth: 300,
+  WebkitTapHighlightColor: 'rgba(0,0,0,0)',
+  backgroundColor: '$gray3',
+  boxShadow: '0 0 0 1px $colors$gray7',
+  ml: '1px',
+  mr: '1px',
+  br: '$3',
+  px: '$2',
+  py: '$1',
+  fontSize: '$1',
+  color: '$gray11',
+});
 
 export const SenderEmail = () => {
+  const [newSenderId, setNewSenderId] = useState<number | null>(null);
   const [successSenderEmail, setSuccessSenderEmail] = useState(false);
-  const { data: userNewsletter, refetch: refetchUserNewsletter } =
-    useGetUserNewsletter();
+  const {
+    data: sendersNewsletter,
+    isLoading: isLoadingSendersNewsletter,
+    refetch: refetchSendersNewsletter,
+  } = useGetSendersNewsletter();
   const { mutate: syncNewsletter, isLoading: isLoadingSyncNewsletter } =
-    useSyncSenderNewsletter({
+    useUpdateSenderNewsletter({
       onSuccess: async () => {
-        await refetchUserNewsletter();
+        await refetchSendersNewsletter();
         setSuccessSenderEmail(true);
       },
       onError: (error: Error | ApiError) => {
@@ -26,6 +44,10 @@ export const SenderEmail = () => {
         toast.error(errorMessage);
       },
     });
+
+  const isSenderSelected = sendersNewsletter?.some(
+    (sender) => sender.isSelected,
+  );
 
   return (
     <>
@@ -39,35 +61,45 @@ export const SenderEmail = () => {
         }}
       >
         <Typography css={{ fontWeight: 600 }} size="h4">
-          Add sender address
+          Sender address
         </Typography>
-        {(!userNewsletter || !userNewsletter.senderEmail) && (
+        {!isLoadingSendersNewsletter && !isSenderSelected && (
           <Typography size="subheading" css={{ color: '$gray9', mt: '$2' }}>
-            To be able to send emails, you must add/choose a sender email on
-            your Mailjet account and sync below.
+            To be able to send emails, you must add/choose a sender email from
+            your Mailjet account.
           </Typography>
         )}
-        {userNewsletter?.senderEmail && (
-          <Typography size="subheading" css={{ color: '$gray9', mt: '$2' }}>
-            Your newsletter will be sent from{' '}
-            <Typography size="subheading" as="span" css={{ color: '$gray10' }}>
-              {userNewsletter.senderEmail}
-            </Typography>
-            <Box
-              as="span"
-              css={{ color: '$green11', display: 'inline-block', ml: '$2' }}
-            >
-              <CheckCircledIcon />
-            </Box>
-          </Typography>
+        {!isLoadingSendersNewsletter && (
+          <Select
+            css={{ mt: '$2' }}
+            value={
+              newSenderId ??
+              sendersNewsletter?.find((list) => list.isSelected)?.id ??
+              'default'
+            }
+            onChange={(e) => setNewSenderId(Number(e.target.value))}
+          >
+            <option disabled value="default">
+              -- select a sender address --
+            </option>
+            {sendersNewsletter?.map((list) => (
+              <option key={list.id} value={list.id}>
+                {list.email} {list.isSelected ? ' (selected)' : ''}
+              </option>
+            ))}
+          </Select>
         )}
         <Flex css={{ mt: '$5' }} gap="5">
           <Button
             css={{ gap: '$2' }}
-            onClick={() => syncNewsletter()}
+            onClick={() =>
+              syncNewsletter({
+                senderId: newSenderId || 0,
+              })
+            }
             disabled={isLoadingSyncNewsletter}
           >
-            <span>Sync</span> <ReloadIcon />
+            Submit
           </Button>
           <Button
             color="orange"

@@ -220,13 +220,64 @@ export class NewslettersService {
   }
 
   /**
+   * Get the Mailjet active senders and show the selected one.
+   */
+  async getSenders({ stacksAddress }: { stacksAddress: string }) {
+    const activeSubscription =
+      await this.subscriptionService.getUserActiveSubscription({
+        stacksAddress,
+      });
+    if (!activeSubscription) {
+      throw new BadRequestException('No active subscription.');
+    }
+
+    const user = await this.prisma.user.findUniqueOrThrow({
+      select: {
+        id: true,
+        newsletter: {
+          select: {
+            id: true,
+            senderEmail: true,
+            mailjetApiKey: true,
+            mailjetApiSecret: true,
+          },
+        },
+      },
+      where: { stacksAddress },
+    });
+    if (!user.newsletter) {
+      throw new BadRequestException('Newsletter not setup.');
+    }
+
+    const mailjet = new Mailjet({
+      apiKey: user.newsletter.mailjetApiKey,
+      apiSecret: user.newsletter.mailjetApiSecret,
+    });
+
+    const data: { body: Sender.TGetSenderResponse } = await mailjet
+      .get('sender', { version: 'v3' })
+      .request();
+
+    const activeSenders = data.body.Data.filter(
+      (sender) => sender.Status === 'Active',
+    );
+    return activeSenders.map((sender) => ({
+      id: sender.ID,
+      email: sender.Email,
+      isSelected: sender.Email === user.newsletter.senderEmail,
+    }));
+  }
+
+  /**
    * Sync the sender email with the one in Mailjet.
    * This is required because the sender email can be changed in Mailjet.
    */
-  async syncSender({
+  async updateSender({
     stacksAddress,
+    senderId,
   }: {
     stacksAddress: string;
+    senderId: number;
   }): Promise<void> {
     const activeSubscription =
       await this.subscriptionService.getUserActiveSubscription({
@@ -263,30 +314,31 @@ export class NewslettersService {
       .get('sender', { version: 'v3' })
       .request();
 
-    const activeSender = data.body.Data.filter(
-      (sender) => sender.Status === 'Active',
-    )[0];
-    if (!activeSender) {
+    const sender = data.body.Data.find((sender) => sender.ID === senderId);
+    if (!sender) {
+      throw new BadRequestException('Sender not found.');
+    }
+    if (sender.Status !== 'Active') {
       throw new BadRequestException(
-        'No sender found, please add one in Mailjet.',
+        'Sender is not active, please verify it on Mailjet.',
       );
     }
 
-    if (user.newsletter.senderEmail !== activeSender.Email) {
-      await this.prisma.newsletter.update({
-        where: { userId: user.id },
-        data: {
-          senderEmail: activeSender.Email,
-          status: 'ACTIVE',
-        },
-      });
+    await this.prisma.newsletter.update({
+      where: { userId: user.id },
+      data: {
+        senderEmail: sender.Email,
+        status: 'ACTIVE',
+      },
+    });
 
-      this.posthog.capture({
-        distinctId: stacksAddress,
-        event: 'newsletter sender updated',
-        properties: {},
-      });
-    }
+    this.posthog.capture({
+      distinctId: stacksAddress,
+      event: 'newsletter sender updated',
+      properties: {
+        senderId,
+      },
+    });
   }
 
   /**
