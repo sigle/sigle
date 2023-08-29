@@ -74,7 +74,7 @@ export const TableOfContents = ({ items, post }: TableOfContentsProps) => {
   return (
     <nav className="overflow-auto md:sticky	md:top-20">
       <p className="text-[0.625rem] font-bold uppercase tracking-wide text-gray-500">
-        Table of content
+        Table of contents
       </p>
       <ul>
         {items.map((item, index) => (
