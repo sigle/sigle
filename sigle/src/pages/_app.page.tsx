@@ -45,9 +45,7 @@ const queryClient = new QueryClient({
 const FathomTrack = () => {
   useEffect(() => {
     if (sigleConfig.fathomSiteId) {
-      Fathom.load(sigleConfig.fathomSiteId, {
-        url: sigleConfig.fathomSiteUrl,
-      });
+      Fathom.load(sigleConfig.fathomSiteId);
       Fathom.trackPageview();
     }
   }, []);
