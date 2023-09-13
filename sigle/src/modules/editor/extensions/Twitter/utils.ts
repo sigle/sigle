@@ -31,7 +31,7 @@ export const createTweet = async (
 };
 
 export const TWITTER_REGEX =
-  /^https?:\/\/twitter\.com\/(?:#!\/)?(\w+)\/status(es)?\/(\d+)/;
+  /^https?:\/\/(?:twitter\.com|x\.com)\/(?:#!\/)?(\w+)\/status(es)?\/(\d+)/;
 
 export const TWITTER_REGEX_GLOBAL =
-  /^https?:\/\/twitter\.com\/(?:#!\/)?(\w+)\/status(es)?\/(.+)?$/g;
+  /^https?:\/\/(?:twitter\.com|x\.com)\/(?:#!\/)?(\w+)\/status(es)?\/(.+)?$/g;
