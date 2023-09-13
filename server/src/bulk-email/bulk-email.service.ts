@@ -7,6 +7,7 @@ import mjml2html from 'mjml';
 import { InjectSentry, SentryService } from '@ntegral/nestjs-sentry';
 import { SettingsFile, Story } from '../external/gaia';
 import { generateAvatar } from '../utils';
+import { sites } from '../sites';
 
 type MJMLAttribute = { key: string; value: string };
 
@@ -141,12 +142,20 @@ export class BulkEmailService {
     story: Story;
     settings: SettingsFile;
   }): string {
+    // Resolve custom domain users
+    const customDomainUser = Object.keys(sites).find(
+      (key) => sites[key].address === stacksAddress,
+    );
+    const rootUrl = customDomainUser
+      ? `https://${customDomainUser}`
+      : `https://app.sigle.io/${username}`;
+
     return this.templates.storyEmail(
       {
         content: this.htmlToMJML(story.content),
         username: username,
-        profileUrl: `https://app.sigle.io/${username}`,
-        storyUrl: `https://app.sigle.io/${username}/${story.id}`,
+        profileUrl: rootUrl,
+        storyUrl: `${rootUrl}/${story.id}`,
         date:
           process.env.NODE_ENV === 'test'
             ? format(story.createdAt, 'MMMM dd, yyyy')

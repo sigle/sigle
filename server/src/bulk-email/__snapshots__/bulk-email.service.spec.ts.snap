@@ -2,7 +2,7 @@
 
 exports[`BulkEmailService htmlToMJML should convert full article 1`] = `"<mj-text><em>Hot from the press: Sigle 1.5</em></mj-text><mj-text><h2>Sigle x Xverse</h2></mj-text><mj-text>Ever been frustrated not being able to check out new Sigle posts, or write your own, during long metro rides or in waiting rooms? Ever felt like there was nothing left to do but stare at the chipped off paint? Alright, this may be <s>a little</s> dramatic. But being deprived of your favourite content on mobile simply won’t do.</mj-text><mj-text>As we grow and improve Sigle, we want to allow our users to write on the go and read on the bus, and we are excited to announce that Sigle is now featured on the <a target="_blank" rel="noopener noreferrer nofollow" href="https://www.xverse.app/">Xverse app</a>, in the app section!</mj-text><mj-image src="https://gaia.blockstack.org/hub/1KwTnsTj6Rqm26zRfhJuNdQUG63ieozxbB/photos/Ggryl-wuLF5Lk1_QFrLzw-XVerseXSigle.png" /><mj-text>Xverse is a mobile Stacks compatible wallet that allows you to manage your accounts and access apps through their built-in web browser. Users can also lock their Stacks in the Xverse non-custodial Stacking pool and earn native Bitcoin with zero fees.</mj-text><mj-text><h2>Editor improvements</h2></mj-text><mj-text>This release includes many bug fixes in the editor. And as we strive to give you the best writing experience possible, we’ve also implemented plenty of improvements which we hope you’ll enjoy!</mj-text><mj-text>We’ve made some writing blocks context-aware, to help you write faster and execute quick actions. Also, not only can you now <strong>drag and drop images</strong> directly into the editor, you can embed tweets in your articles with <strong>Twitter blocks</strong>!</mj-text><mj-text><h2>Changelog Sigle 1.5</h2></mj-text><mj-list><mj-li>Added <strong>Twitter embeds</strong> to the editor.</mj-li></mj-list><mj-image src="https://gaia.blockstack.org/hub/1KwTnsTj6Rqm26zRfhJuNdQUG63ieozxbB/photos/vjyOifZ3XNEOrtnDGWfV5-final.png" /><mj-list><mj-li>The editor now <strong>works on mobile</strong>.</mj-li></mj-list><mj-image src="https://gaia.blockstack.org/hub/1KwTnsTj6Rqm26zRfhJuNdQUG63ieozxbB/photos/ngUQ5NSE55EUi-WpuE1ts-Frame%20286.png" /><mj-list><mj-li>Added <strong>drag-and-drop support</strong> to the editor.</mj-li><mj-li>Improved drag-and-drop experience for the cover image.</mj-li></mj-list><mj-image src="https://gaia.blockstack.org/hub/1KwTnsTj6Rqm26zRfhJuNdQUG63ieozxbB/photos/tzAo1G4LiTsgWdRlXgzWK-triptolisbon.png" /><mj-text></mj-text><mj-list><mj-li>Many changes to the interface to make the website <strong>responsive on mobile</strong>.</mj-li><mj-li>Fixed an issue causing articles not to be correctly indexed by crawlers.</mj-li><mj-li>Many small bug fixes across the app.</mj-li></mj-list><mj-text>See the full list of changes <a target="_blank" rel="noopener noreferrer nofollow" href="https://github.com/sigle/sigle/releases/tag/%40sigle%2Fapp%401.5.0">here</a>.</mj-text><mj-text><h2>The Explorer Guild Birthday</h2></mj-text><mj-image src="https://gaia.blockstack.org/hub/1KwTnsTj6Rqm26zRfhJuNdQUG63ieozxbB/photos/0TwJ6ctL9x4t1jxdzuMPv-Pen%20Run_1.png" /><mj-text>This may be hard to believe, but the Explorer Guild is celebrating their first birthday! To mark the occasion, we’ve put together our very first <a target="_blank" rel="noopener noreferrer nofollow" href="https://app.sigle.io/sigleapp.id.blockstack/h8Kxgg9_Ck6f0V-YgB7Gz">Pen Run Contest</a>, don’t forget to join for a chance to win our very first 1/1 NFT!</mj-text><mj-image src="https://gaia.blockstack.org/hub/1KwTnsTj6Rqm26zRfhJuNdQUG63ieozxbB/photos/aZnSwTcYu2hjtk22FwVCR-Wizard%20explorer%20(1).gif" /><mj-text>We also want to thank all of our holders and community for supporting us and allowing us to build Sigle for over a year. We’re excited for what’s ahead of us, and can’t wait to continue the adventure with you by our sides. In the meantime, why not take a walk down memory lane in the <a target="_blank" rel="noopener noreferrer nofollow" href="https://museum.explorerguild.io/">Explorer Guild Museum</a>?</mj-text><mj-text><h2>Explorers keep exploring</h2></mj-text><mj-image src="https://gaia.blockstack.org/hub/1KwTnsTj6Rqm26zRfhJuNdQUG63ieozxbB/photos/yCsXl0hAEomHW571dqCiG-Capture%20d%E2%80%99e%CC%81cran%202022-11-01%20a%CC%80%2014.54.30.png" /><mj-text>The Explorer Guild is placed as the 12th most traded project on STX, with over 177k STX of volume. We’re also very excited to see our floor price go back up, almost reaching 100 STX.</mj-text><mj-text><h2>What’s next</h2></mj-text><mj-text>As we strive to make our user experience as seamless as possible, it’s important to us that old and new users understand where they’re going when they reach the platform. The next release will focus on <strong>improving the onboarding experience</strong> even more.</mj-text><mj-text><strong>Newsletter features will also be top of mind over the next few months.</strong> We want to allow our writers to create direct communication channels with their audiences, to help them grow and expand their communities.</mj-text><mj-text>The Sigle team 📝</mj-text>"`;
 
-exports[`BulkEmailService storyToMJML should render story with site url 1`] = `
+exports[`BulkEmailService storyToMJML should render story for non custom domain users 1`] = `
 "<mjml>
   <mj-head>
     <mj-font
@@ -40,7 +40,120 @@ exports[`BulkEmailService storyToMJML should render story with site url 1`] = `
           color='#1A1A1A'
           mode='horizontal'
         >
-          <mj-social-element src='https://source.boringavatars.com/marble/120/SP2EVYKET55QH40RAZE5PVZ363QX0X6BSRP4C7H0W?square&amp;colors&#x3D;da3a00,fa8158,ffa835,37c391,7c456cf' href='https://app.sigle.io/sigle.btc'>
+          <mj-social-element src='https://source.boringavatars.com/marble/120/SP2EVYKET55QH40RAZE5PVZ363QX0X6BSRP4C7H07?square&amp;colors&#x3D;da3a00,fa8158,ffa835,37c391,7c456cf' href='https://app.sigle.io/sigle.btc'>
+            By
+            sigle.btc
+            ·
+            October 18, 2022
+          </mj-social-element>
+        </mj-social>
+          <mj-image
+            padding='30px 0px 0px 0px'
+            border-radius='8px'
+            src='https://gaia.blockstack.org/hub/1KwTnsTj6Rqm26zRfhJuNdQUG63ieozxbB/photos/h8Kxgg9_Ck6f0V-YgB7Gz/1666086010586-Pen%20Run_1.png'
+          ></mj-image>
+
+      </mj-column>
+    </mj-section>
+    <mj-section>
+      <mj-column>
+        <mj-text>For our NFT collection <a target="_blank" rel="noopener noreferrer nofollow" href="https://gamma.io/collections/the-explorer-guild">The Explorer Guild</a>’s 1 year anniversary, enter our very first storytelling contest and challenge your creativity! Ready? Set… <strong>Pen Run!</strong></mj-text><mj-text><h2><strong>The rules!</strong></h2></mj-text><mj-text><h3><strong>🎭 Theme</strong></h3></mj-text><mj-text>We kick off this first Pen Run with a very open theme!</mj-text><mj-text>Based on<a target="_blank" rel="noopener noreferrer nofollow" href="https://app.sigle.io/sigleapp.id.blockstack/9YaADPQyujrXa28aiNYzV"> <u>the first chapter of the story of the Explorer Guild</u></a>, <strong>write your own second chapter for the story.</strong></mj-text><mj-text>Step into Jules Verne's shoes, free your imagination and continue the tale. Make us dream, laugh, thrill! No matter where your creativity takes you... keep surprising your readers!</mj-text><mj-text><blockquote><p><em>You’re welcome to use </em><a target="_blank" rel="noopener noreferrer nofollow" href="https://app.sigle.io/sigleapp.id.blockstack/q3UgkR4eZvsQPwK3yAeLV"><em>our second chapter</em></a><em> as inspiration, but keep in mind yours can be entirely different, and the end doesn’t have to match what we’ve written.</em></p></blockquote></mj-text><mj-text><strong>You're free to explore any path!</strong></mj-text><mj-image src="https://gaia.blockstack.org/hub/1Gmf7Wt2WJTcbwUHAoY1tTeBZegD4zVifY/photos/Tp18iSo3f8vv1FIodesL1/uEpDz4VsGym5elLB70g8K-Drawing-1.png" alt="" /><mj-text><h3><strong>🏆 Prizes</strong></h3></mj-text><mj-text>🥇 The lucky winner will get <strong>the very first ANIMATED 1/1</strong> inspired by The Explorer Guild original collection and their story will be published in "The Explorer Guild Story" as the second version of chapter II.</mj-text><mj-image src="https://gaia.blockstack.org/hub/1Gmf7Wt2WJTcbwUHAoY1tTeBZegD4zVifY/photos/_O8ZASigEfspvOLcocIIz-Wizard%20explorer%20(1).gif" alt="" /><mj-text>🥈 The second place will get the first non-animated 1/1 ever created, also inspired by the original collection.</mj-text><mj-image src="https://gaia.blockstack.org/hub/1Gmf7Wt2WJTcbwUHAoY1tTeBZegD4zVifY/photos/dJEdQCM1rO3uOG5ZckoBQ-wizard_2_low.png" alt="" /><mj-text><h3><strong>🧑‍⚖️ Jury</strong></h3></mj-text><mj-text>We are pleased to welcome one of the most highly-rated writers on Sigle with 80+ articles on the platform and 5k+ views on his page!</mj-text><mj-text><a target="_blank" rel="noopener noreferrer nofollow" href="https://twitter.com/jackbinswitch"><strong>Jack Binswitch</strong></a> and the Sigle team will read your articles and vote for the best fiction between November 18th and December 1st.</mj-text><mj-text>The 2 best stories will be announced on December 2nd! 🎉</mj-text><mj-text><h3><strong>How do you enter?</strong></h3></mj-text><mj-text>1️⃣ <strong>Write</strong> your best fiction on<a target="_blank" rel="noopener noreferrer nofollow" href="http://app.sigle.io/"><strong> </strong></a><a target="_blank" rel="noopener noreferrer nofollow" href="http://app.sigle.io"><strong>app.sigle.io</strong></a>.&nbsp;</mj-text><mj-text>2️⃣ <strong>Publish</strong> <em>(don't just "save" it in your drafts!)</em> your article so everyone can read it.</mj-text><mj-text>3️⃣ <strong>Share</strong> your story on Twitter and tag <a target="_blank" rel="noopener noreferrer nofollow" href="https://twitter.com/sigleapp"><strong>@sigleapp</strong></a> and <a target="_blank" rel="noopener noreferrer nofollow" href="https://twitter.com/jackbinswitch"><strong>@jackbinswitch</strong></a> or directly on our Discord in the "✨| share-stories" channel before November 17th, 2022.</mj-text><mj-text><blockquote><p><em>The frequency of writing contests will depend on general enthusiasm of the community at the end of this first one.</em></p></blockquote></mj-text><mj-text>Good luck, word wizard! <strong>🪄</strong></mj-text>
+      </mj-column>
+    </mj-section>
+    <mj-section padding='0px 25px'>
+      <mj-column
+        background-color='#F6F6F6'
+        border-radius='12px'
+        padding='20px 0px'
+      >
+        <mj-image
+          border-radius='8px'
+          width='44px'
+          padding='0px'
+          src='https://source.boringavatars.com/marble/120/SP2EVYKET55QH40RAZE5PVZ363QX0X6BSRP4C7H07?square&amp;colors&#x3D;da3a00,fa8158,ffa835,37c391,7c456cf'
+        ></mj-image>
+        <mj-text align='center' font-size='18px'>
+          sigle.btc
+        </mj-text>
+        <mj-text align='center' padding='0px 0px'>
+            <span style='margin-right: -12px'></span>
+            <span style='margin-right: 12px'></span>
+            <a href='https://twitter.com/sigleapp'><img
+                src='https://app.sigle.io/img/emails/twitter.png'
+                width='15'
+                height='15'
+              /></a>
+        </mj-text>
+        <mj-text align='center' color='#737373' font-size='13px'><a
+            href='[[UNSUB_LINK_EN]]'
+            style='color: #737373; font-weight: 600'
+          >Unsubscribe</a>
+          from
+          sigle.btc’s Newsletter.</mj-text>
+        <mj-text align='center'><a href='https://app.sigle.io'><img
+              src='https://app.sigle.io/img/emails/cta.png'
+              width='143'
+              height='28'
+            /></a></mj-text>
+      </mj-column>
+    </mj-section>
+    <mj-section>
+      <mj-column>
+        <mj-divider></mj-divider>
+        <mj-text color='#737373'>If you were forwarded this newsletter and you
+          like it, you can subscribe
+          <a
+            href='https://app.sigle.io/sigle.btc'
+            style='color: #737373; font-weight: 600'
+          >here</a>.
+        </mj-text>
+        <mj-divider></mj-divider>
+        <mj-text align='center' color='#737373'>© Sigle 2023</mj-text>
+      </mj-column>
+    </mj-section>
+  </mj-body>
+</mjml>"
+`;
+
+exports[`BulkEmailService storyToMJML should render story with site url 1`] = `
+"<mjml>
+  <mj-head>
+    <mj-font
+      name='Open Sans'
+      href='https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700&display=swap'
+    ></mj-font>
+    <mj-attributes>
+      <mj-all
+        font-family='Open Sans, Roboto, sans-serif, Arial'
+        font-size='16px'
+        line-height='24px'
+        letter-spacing='0.4px'
+      ></mj-all>
+      <mj-text color='#1A1A1A'></mj-text>
+      <mj-divider border-color='#E2E2E2' border-width='1px'></mj-divider>
+      <mj-button background-color='#DA3A00' border-radius='8px'></mj-button>
+      <mj-title>Pen Run #1: Writing contest!</mj-title>
+    </mj-attributes>
+  </mj-head>
+  <mj-body>
+    <mj-section padding='0px 25px'>
+      <mj-column>
+        <mj-text padding='10px 0px' align='right'><a
+            href='https://blog.sigle.io/h8Kxgg9_Ck6f0V-YgB7Gz'
+            style='color: #737373; font-size: 13px;'
+          >Read online</a></mj-text>
+        <mj-text padding='10px 0px' align='center' line-height='30px'><h1
+            style='margin-bottom: 0px;'
+          >Pen Run #1: Writing contest!</h1></mj-text>
+        <mj-social
+          padding='0px 0px'
+          icon-size='24px'
+          inner-padding='8px'
+          font-size='13px'
+          color='#1A1A1A'
+          mode='horizontal'
+        >
+          <mj-social-element src='https://source.boringavatars.com/marble/120/SP2EVYKET55QH40RAZE5PVZ363QX0X6BSRP4C7H0W?square&amp;colors&#x3D;da3a00,fa8158,ffa835,37c391,7c456cf' href='https://blog.sigle.io'>
             By
             sigle.btc
             ·
@@ -101,7 +214,7 @@ exports[`BulkEmailService storyToMJML should render story with site url 1`] = `
         <mj-text color='#737373'>If you were forwarded this newsletter and you
           like it, you can subscribe
           <a
-            href='https://app.sigle.io/sigle.btc'
+            href='https://blog.sigle.io'
             style='color: #737373; font-weight: 600'
           >here</a>.
         </mj-text>
@@ -137,7 +250,7 @@ exports[`BulkEmailService storyToMJML should render story with template 1`] = `
     <mj-section padding='0px 25px'>
       <mj-column>
         <mj-text padding='10px 0px' align='right'><a
-            href='https://app.sigle.io/sigle.btc/h8Kxgg9_Ck6f0V-YgB7Gz'
+            href='https://blog.sigle.io/h8Kxgg9_Ck6f0V-YgB7Gz'
             style='color: #737373; font-size: 13px;'
           >Read online</a></mj-text>
         <mj-text padding='10px 0px' align='center' line-height='30px'><h1
@@ -151,7 +264,7 @@ exports[`BulkEmailService storyToMJML should render story with template 1`] = `
           color='#1A1A1A'
           mode='horizontal'
         >
-          <mj-social-element src='https://source.boringavatars.com/marble/120/SP2EVYKET55QH40RAZE5PVZ363QX0X6BSRP4C7H0W?square&amp;colors&#x3D;da3a00,fa8158,ffa835,37c391,7c456cf' href='https://app.sigle.io/sigle.btc'>
+          <mj-social-element src='https://source.boringavatars.com/marble/120/SP2EVYKET55QH40RAZE5PVZ363QX0X6BSRP4C7H0W?square&amp;colors&#x3D;da3a00,fa8158,ffa835,37c391,7c456cf' href='https://blog.sigle.io'>
             By
             sigle.btc
             ·
@@ -208,7 +321,7 @@ exports[`BulkEmailService storyToMJML should render story with template 1`] = `
         <mj-text color='#737373'>If you were forwarded this newsletter and you
           like it, you can subscribe
           <a
-            href='https://app.sigle.io/sigle.btc'
+            href='https://blog.sigle.io'
             style='color: #737373; font-weight: 600'
           >here</a>.
         </mj-text>
@@ -244,7 +357,7 @@ exports[`BulkEmailService storyToMJML should render story with twitter url 1`] =
     <mj-section padding='0px 25px'>
       <mj-column>
         <mj-text padding='10px 0px' align='right'><a
-            href='https://app.sigle.io/sigle.btc/h8Kxgg9_Ck6f0V-YgB7Gz'
+            href='https://blog.sigle.io/h8Kxgg9_Ck6f0V-YgB7Gz'
             style='color: #737373; font-size: 13px;'
           >Read online</a></mj-text>
         <mj-text padding='10px 0px' align='center' line-height='30px'><h1
@@ -258,7 +371,7 @@ exports[`BulkEmailService storyToMJML should render story with twitter url 1`] =
           color='#1A1A1A'
           mode='horizontal'
         >
-          <mj-social-element src='https://source.boringavatars.com/marble/120/SP2EVYKET55QH40RAZE5PVZ363QX0X6BSRP4C7H0W?square&amp;colors&#x3D;da3a00,fa8158,ffa835,37c391,7c456cf' href='https://app.sigle.io/sigle.btc'>
+          <mj-social-element src='https://source.boringavatars.com/marble/120/SP2EVYKET55QH40RAZE5PVZ363QX0X6BSRP4C7H0W?square&amp;colors&#x3D;da3a00,fa8158,ffa835,37c391,7c456cf' href='https://blog.sigle.io'>
             By
             sigle.btc
             ·
@@ -321,7 +434,7 @@ exports[`BulkEmailService storyToMJML should render story with twitter url 1`] =
         <mj-text color='#737373'>If you were forwarded this newsletter and you
           like it, you can subscribe
           <a
-            href='https://app.sigle.io/sigle.btc'
+            href='https://blog.sigle.io'
             style='color: #737373; font-weight: 600'
           >here</a>.
         </mj-text>
