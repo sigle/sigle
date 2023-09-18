@@ -155,7 +155,9 @@ export class BulkEmailService {
         content: this.htmlToMJML(story.content),
         username: username,
         profileUrl: rootUrl,
-        storyUrl: `${rootUrl}/${story.id}`,
+        storyUrl: customDomainUser
+          ? `${rootUrl}/posts/${story.id}`
+          : `${rootUrl}/${story.id}`,
         date:
           process.env.NODE_ENV === 'test'
             ? format(story.createdAt, 'MMMM dd, yyyy')

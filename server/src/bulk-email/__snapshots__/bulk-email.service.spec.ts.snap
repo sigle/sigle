@@ -139,7 +139,7 @@ exports[`BulkEmailService storyToMJML should render story with site url 1`] = `
     <mj-section padding='0px 25px'>
       <mj-column>
         <mj-text padding='10px 0px' align='right'><a
-            href='https://blog.sigle.io/h8Kxgg9_Ck6f0V-YgB7Gz'
+            href='https://blog.sigle.io/posts/h8Kxgg9_Ck6f0V-YgB7Gz'
             style='color: #737373; font-size: 13px;'
           >Read online</a></mj-text>
         <mj-text padding='10px 0px' align='center' line-height='30px'><h1
@@ -250,7 +250,7 @@ exports[`BulkEmailService storyToMJML should render story with template 1`] = `
     <mj-section padding='0px 25px'>
       <mj-column>
         <mj-text padding='10px 0px' align='right'><a
-            href='https://blog.sigle.io/h8Kxgg9_Ck6f0V-YgB7Gz'
+            href='https://blog.sigle.io/posts/h8Kxgg9_Ck6f0V-YgB7Gz'
             style='color: #737373; font-size: 13px;'
           >Read online</a></mj-text>
         <mj-text padding='10px 0px' align='center' line-height='30px'><h1
@@ -357,7 +357,7 @@ exports[`BulkEmailService storyToMJML should render story with twitter url 1`] =
     <mj-section padding='0px 25px'>
       <mj-column>
         <mj-text padding='10px 0px' align='right'><a
-            href='https://blog.sigle.io/h8Kxgg9_Ck6f0V-YgB7Gz'
+            href='https://blog.sigle.io/posts/h8Kxgg9_Ck6f0V-YgB7Gz'
             style='color: #737373; font-size: 13px;'
           >Read online</a></mj-text>
         <mj-text padding='10px 0px' align='center' line-height='30px'><h1
