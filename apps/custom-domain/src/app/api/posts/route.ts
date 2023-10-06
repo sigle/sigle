@@ -19,7 +19,7 @@ export async function GET(request: Request) {
   const bucketUrl = userProfile?.apps?.[appUrl];
 
   const data = await fetch(`${bucketUrl}publicStories.json`);
-  const posts = await data.json();
+  const posts = data.status === 404 ? { stories: [] } : await data.json();
 
   // Paginate by creating slice of 15 based on page number
   const startIndex = (page - 1) * 15;
