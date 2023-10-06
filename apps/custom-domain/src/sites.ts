@@ -219,6 +219,21 @@ export const sites: {
       label: 'Subscribe',
     },
   },
+  ['blog.bts-studios.io']: {
+    username: 'behindthescenes.btc ',
+    address: 'SP1MX63HP0YD1TFAR0J6N6VYN3KVED5AF5JHPH1B7',
+    banner: '/websites/blog.bts-studios.io/banner.jpg',
+    links: [
+      {
+        href: 'https://bts-studios.io',
+        label: 'Home',
+      },
+    ],
+    cta: {
+      href: 'https://marketplace.bts-studios.io',
+      label: 'Become an EXECUTIVE PRODUCER',
+    },
+  },
 };
 
 // Add localhost to sites for development
