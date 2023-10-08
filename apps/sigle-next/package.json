@@ -74,7 +74,7 @@
     "date-fns": "2.30.0",
     "did-session": "2.0.1",
     "eslint-plugin-tailwindcss": "3.12.1",
-    "graphql": "16.6.0",
+    "graphql": "16.8.1",
     "highlight.js": "11.8.0",
     "lowlight": "2.9.0",
     "micro-stacks": "1.2.1",
