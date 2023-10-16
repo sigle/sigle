@@ -489,8 +489,8 @@ importers:
         specifier: 4.7.4
         version: 4.7.4
       undici:
-        specifier: 5.21.2
-        version: 5.21.2
+        specifier: 5.26.2
+        version: 5.26.2
 
   packages/tailwind-style:
     devDependencies:
@@ -612,8 +612,8 @@ importers:
         specifier: 1.1.3
         version: 1.1.3
       undici:
-        specifier: 5.22.1
-        version: 5.22.1
+        specifier: 5.26.2
+        version: 5.26.2
     devDependencies:
       '@nestjs/cli':
         specifier: 10.1.13
@@ -6266,6 +6266,10 @@ packages:
       fast-uri: 2.2.0
     dev: false
 
+  /@fastify/busboy@2.0.0:
+    resolution: {integrity: sha512-JUFJad5lv7jxj926GPgymrWQxxjPYuJNiNjNMzqT+HiuP6Vl3dk5xzG+8sTX96np0ZAluvaMzPsjhHZ5rNuNQQ==}
+    engines: {node: '>=14'}
+
   /@fastify/cookie@8.3.0:
     resolution: {integrity: sha512-P9hY9GO11L20TnZ33XN3i0bt+3x0zaT7S0ohAzWO950E9PB2xnNhLYzPFJIGFi5AVN0yr5+/iZhWxeYvR6KCzg==}
     dependencies:
@@ -10841,7 +10845,7 @@ packages:
       '@stacks/network': 6.5.5
       '@stacks/transactions': 6.7.0
       jsontokens: 4.0.1
-      schema-inspector: 2.0.3
+      schema-inspector: 2.1.0
       zone-file: 2.0.0-beta.3
     transitivePeerDependencies:
       - encoding
@@ -26702,12 +26706,6 @@ packages:
       async: 2.6.4
     dev: false
 
-  /schema-inspector@2.0.3:
-    resolution: {integrity: sha512-Q9mpYxrP3w6CpHRfnh3QLOE1urkGTLvnl7xgVH7fsu0HYJUZenUASUr4j/pf7bAxShh+4R3Ta8ZgVKak1b2wyA==}
-    dependencies:
-      async: 2.6.4
-    dev: false
-
   /schema-inspector@2.1.0:
     resolution: {integrity: sha512-3bmQVhbA01/EW8cZin4vIpqlpNU2SIy4BhKCfCgogJ3T/L76dLx3QAE+++4o+dNT33sa+SN9vOJL7iHiHFjiNg==}
     dependencies:
@@ -28590,19 +28588,11 @@ packages:
       which-boxed-primitive: 1.0.2
     dev: true
 
-  /undici@5.21.2:
-    resolution: {integrity: sha512-f6pTQ9RF4DQtwoWSaC42P/NKlUjvezVvd9r155ohqkwFNRyBKM3f3pcty3ouusefNRyM25XhIQEbeQ46sZDJfQ==}
-    engines: {node: '>=12.18'}
-    dependencies:
-      busboy: 1.6.0
-    dev: true
-
-  /undici@5.22.1:
-    resolution: {integrity: sha512-Ji2IJhFXZY0x/0tVBXeQwgPlLWw13GVzpsWPQ3rV50IFMMof2I55PZZxtm4P6iNq+L5znYN9nSTAq0ZyE6lSJw==}
+  /undici@5.26.2:
+    resolution: {integrity: sha512-a4PDLQgLTPHVzOK+x3F79/M4GtyYPl+aX9AAK7aQxpwxDwCqkeZCScy7Gk5kWT3JtdFq1uhO3uZJdLtHI4dK9A==}
     engines: {node: '>=14.0'}
     dependencies:
-      busboy: 1.6.0
-    dev: false
+      '@fastify/busboy': 2.0.0
 
   /unfetch@4.2.0:
     resolution: {integrity: sha512-F9p7yYCn6cIW9El1zi0HI6vqpeIvBsr3dSuRO6Xuppb1u5rXpCPmMvLSyECLhybr9isec8Ohl0hPekMVrEinDA==}
