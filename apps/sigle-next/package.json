@@ -27,7 +27,7 @@
     "@radix-ui/react-switch": "1.0.3",
     "@radix-ui/react-toast": "1.1.4",
     "@radix-ui/react-tooltip": "1.0.6",
-    "@sentry/nextjs": "7.56.0",
+    "@sentry/nextjs": "7.74.1",
     "@stacks/blockchain-api-client": "7.2.2",
     "@stitches/react": "1.2.8",
     "@tailwindcss/typography": "0.5.9",
