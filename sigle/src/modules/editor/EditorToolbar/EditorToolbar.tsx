@@ -46,16 +46,16 @@ export const Toolbar = ({ editor, story }: ToolbarProps) => {
   );
 
   useEffect(() => {
-    window.visualViewport.addEventListener('resize', () => {
+    window.visualViewport?.addEventListener('resize', () => {
       // detects if virtual keyboard has opened, however an imperfect solution but the best option for iOS browsers currently as it does not yet support Virtual Keyboard API
       setSoftKeyboardIsOpen(!softKeyboardIsOpen);
       handleSetPosition();
     });
-    window.visualViewport.addEventListener('scroll', handleSetPosition);
+    window.visualViewport?.addEventListener('scroll', handleSetPosition);
 
     return () => {
-      window.visualViewport.removeEventListener('resize', handleSetPosition);
-      window.visualViewport.removeEventListener('scroll', handleSetPosition);
+      window.visualViewport?.removeEventListener('resize', handleSetPosition);
+      window.visualViewport?.removeEventListener('scroll', handleSetPosition);
     };
   }, []);
 
@@ -74,15 +74,15 @@ export const Toolbar = ({ editor, story }: ToolbarProps) => {
         requestAnimationFrame(() => {
           setPendingUpdate(false);
 
-          const topOffset = window.visualViewport.offsetTop;
+          const topOffset = window.visualViewport?.offsetTop || 0;
 
           if (topOffset >= 0) {
             setPosition(
               Math.max(
                 0,
                 window.innerHeight -
-                  window.visualViewport.height -
-                  window.visualViewport.offsetTop,
+                  (window.visualViewport?.height || 0) -
+                  (window.visualViewport?.offsetTop || 0),
               ),
             );
           }
