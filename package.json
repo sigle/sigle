@@ -4,6 +4,8 @@
   "scripts": {
     "format": "prettier --write '**/*' --ignore-unknown",
     "deploy:sigle": "flyctl deploy --config sigle/fly.toml --dockerfile sigle/Dockerfile",
+    "build": "turbo build --cache-dir=.turbo",
+    "test": "turbo test --cache-dir=.turbo",
     "version": "pnpm changeset version && pnpm install --lockfile-only",
     "release": "pnpm changeset publish",
     "postinstall": "husky install"

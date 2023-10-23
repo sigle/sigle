@@ -35,45 +35,10 @@ jobs:
         run: pnpm install
 
       - name: Build
-        run: pnpm turbo build
+        run: pnpm build
 
       - name: Test
-        run: pnpm turbo test
-
-  test-sigle:
-    runs-on: ubuntu-20.04
-    defaults:
-      run:
-        working-directory: sigle
-    strategy:
-      matrix:
-        node-version: [18]
-
-    steps:
-      - uses: actions/checkout@v3
-
-      - uses: pnpm/action-setup@v2
-
-      - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v3
-        with:
-          node-version: ${{ matrix.node-version }}
-          cache: 'pnpm'
-
-      - name: Get next.js sigle cache
-        uses: actions/cache@v2
-        with:
-          path: ${{ github.workspace }}/sigle/.next/cache
-          key: ${{ runner.os }}-nextjs-sigle-${{ hashFiles('**/pnpm-lock.yaml') }}
-
-      - name: Install Dependencies
-        run: pnpm install --filter={.}...
-
-      - name: Build sigle
-        run: pnpm run build
-
-      - name: Run sigle tests
-        run: pnpm run test
+        run: pnpm test
 
   test-sigle-e2e:
     runs-on: ubuntu-20.04
@@ -174,13 +139,13 @@ jobs:
         run: pnpm install --filter={.}...
 
       - name: Lint api
-        run: pnpm run lint
+        run: pnpm turbo lint
 
       - name: Build api
-        run: pnpm run build
+        run: pnpm turbo build
 
       - name: Run api tests
-        run: pnpm run test
+        run: pnpm turbo test
 
       - name: Seed test DB
         run: pnpm prisma migrate deploy && pnpm prisma db seed
@@ -189,70 +154,3 @@ jobs:
 
       - name: Run api e2e tests
         run: pnpm run test:e2e
-
-  test-sigle-next:
-    runs-on: ubuntu-20.04
-    defaults:
-      run:
-        working-directory: apps/sigle-next
-    strategy:
-      matrix:
-        node-version: [18]
-
-    steps:
-      - uses: actions/checkout@v3
-
-      - uses: pnpm/action-setup@v2
-
-      - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v3
-        with:
-          node-version: ${{ matrix.node-version }}
-          cache: 'pnpm'
-
-      - name: Get next.js sigle cache
-        uses: actions/cache@v2
-        with:
-          path: ${{ github.workspace }}/apps/sigle-next/.next/cache
-          key: ${{ runner.os }}-nextjs-sigle-next-${{ hashFiles('**/pnpm-lock.yaml') }}
-
-      - name: Install Dependencies
-        run: pnpm install --filter={.}...
-
-      - name: Build sigle
-        run: pnpm run build
-
-      - name: Test sigle
-        run: pnpm run test
-
-  test-custom-domain:
-    runs-on: ubuntu-20.04
-    defaults:
-      run:
-        working-directory: apps/custom-domain
-    strategy:
-      matrix:
-        node-version: [18]
-
-    steps:
-      - uses: actions/checkout@v3
-
-      - uses: pnpm/action-setup@v2
-
-      - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v3
-        with:
-          node-version: ${{ matrix.node-version }}
-          cache: 'pnpm'
-
-      - name: Get next.js cache
-        uses: actions/cache@v2
-        with:
-          path: ${{ github.workspace }}/apps/custom-domain/.next/cache
-          key: ${{ runner.os }}-nextjs-apps-custom-domain-next-${{ hashFiles('**/pnpm-lock.yaml') }}
-
-      - name: Install Dependencies
-        run: pnpm install --filter={.}...
-
-      - name: Build custom-domain
-        run: pnpm run build
