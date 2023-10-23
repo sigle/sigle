@@ -200,9 +200,6 @@ jobs:
       - name: Test sigle
         run: pnpm run test
 
-      - name: Build storybook
-        run: pnpm run build-storybook
-
   test-custom-domain:
     runs-on: ubuntu-20.04
     defaults:
