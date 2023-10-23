@@ -1,6 +1,6 @@
 {
   "private": true,
-  "packageManager": "pnpm@8.6.2",
+  "packageManager": "pnpm@8.9.2",
   "scripts": {
     "format": "prettier --write '**/*' --ignore-unknown",
     "deploy:sigle": "flyctl deploy --config sigle/fly.toml --dockerfile sigle/Dockerfile",
