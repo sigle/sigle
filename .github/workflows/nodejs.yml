@@ -64,12 +64,6 @@ jobs:
           node-version: ${{ matrix.node-version }}
           cache: 'pnpm'
 
-      - name: Get next.js sigle cache
-        uses: actions/cache@v2
-        with:
-          path: ${{ github.workspace }}/sigle/.next/cache
-          key: ${{ runner.os }}-nextjs-sigle-${{ hashFiles('**/pnpm-lock.yaml') }}
-
       - name: Install Dependencies
         run: pnpm install --filter={.}...
 
@@ -77,7 +71,7 @@ jobs:
         run: pnpm playwright install --with-deps chromium
 
       - name: Build sigle
-        run: pnpm run build
+        run: pnpm turbo build
 
       - name: Run sigle e2e tests
         run: pnpm run test:e2e
@@ -137,9 +131,6 @@ jobs:
 
       - name: Install Dependencies
         run: pnpm install --filter={.}...
-
-      - name: Lint api
-        run: pnpm turbo lint
 
       - name: Seed test DB
         run: pnpm prisma migrate deploy && pnpm prisma db seed
