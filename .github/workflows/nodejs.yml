@@ -8,6 +8,7 @@ on:
 
 jobs:
   build:
+    name: Build and Test
     runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v3
@@ -23,28 +24,16 @@ jobs:
         run: pnpm test
 
   test-sigle-e2e:
+    name: Test sigle e2e
     runs-on: ubuntu-20.04
     container:
       image: mcr.microsoft.com/playwright:v1.36.0-jammy
     defaults:
       run:
         working-directory: sigle
-    strategy:
-      matrix:
-        node-version: [18]
     steps:
       - uses: actions/checkout@v3
-
-      - uses: pnpm/action-setup@v2
-
-      - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v3
-        with:
-          node-version: ${{ matrix.node-version }}
-          cache: 'pnpm'
-
-      - name: Install Dependencies
-        run: pnpm install --filter={.}...
+      - uses: ./.github/actions/setup-monorepo
 
       - name: Install Playwright Browsers
         run: pnpm playwright install --with-deps chromium
@@ -63,13 +52,11 @@ jobs:
           retention-days: 10
 
   test-server-e2e:
+    name: Test server e2e
     runs-on: ubuntu-20.04
     defaults:
       run:
         working-directory: server
-    strategy:
-      matrix:
-        node-version: [18]
     services:
       redis:
         image: redis:6.2
@@ -99,17 +86,7 @@ jobs:
           - 5432:5432
     steps:
       - uses: actions/checkout@v3
-
-      - uses: pnpm/action-setup@v2
-
-      - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v3
-        with:
-          node-version: ${{ matrix.node-version }}
-          cache: 'pnpm'
-
-      - name: Install Dependencies
-        run: pnpm install --filter={.}...
+      - uses: ./.github/actions/setup-monorepo
 
       - name: Seed test DB
         run: pnpm prisma migrate deploy && pnpm prisma db seed
