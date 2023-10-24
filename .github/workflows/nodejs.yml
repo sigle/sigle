@@ -47,7 +47,7 @@ jobs:
         if: failure()
         with:
           name: sigle/playwright-report
-          path: 'sigle/playwright-report/'
+          path: sigle/playwright-report
           retention-days: 10
 
   test-server-e2e:
