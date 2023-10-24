@@ -3,7 +3,8 @@ FROM node:18-alpine AS base
 # Injected by builder
 ARG NODE_ENV
 ARG PORT
-ARG DATABASE_URL
+ARG PG_DATABASE_URL
+ARG REDIS_DATABASE_URL
 
 ENV APP_NAME="server"
 RUN corepack enable pnpm
