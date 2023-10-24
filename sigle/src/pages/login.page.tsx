@@ -1,19 +1,26 @@
 import React, { useEffect, useState } from 'react';
-import { useSession } from 'next-auth/react';
+import { getCsrfToken, signIn, useSession } from 'next-auth/react';
+import type { RedirectableProviderType } from 'next-auth/providers';
+import * as Fathom from 'fathom-client';
+import posthog from 'posthog-js';
+import { StacksMainnet } from '@stacks/network';
+import { useConnect } from '@stacks/connect-react';
+import { useConnect as legacyUseConnect } from '@stacks/legacy-connect-react';
 import {
   EyeOpenIcon,
   FaceIcon,
   RocketIcon,
   SunIcon,
+  ArrowLeftIcon,
   CheckIcon,
 } from '@radix-ui/react-icons';
-// import { toast } from 'react-toastify';
-// import { Goals } from '../utils/fathom';
-import { Box, Flex, Typography } from '../ui';
+import { toast } from 'react-toastify';
+import { Goals } from '../utils/fathom';
+import { Box, Button, Flex, Typography } from '../ui';
 import { LoginLayout } from '../modules/layout/components/LoginLayout';
 import { useRouter } from 'next/router';
 import { useAuth } from '../modules/auth/AuthContext';
-// import { SignInWithStacksMessage } from '../modules/auth/sign-in-with-stacks/signInWithStacksMessage';
+import { SignInWithStacksMessage } from '../modules/auth/sign-in-with-stacks/signInWithStacksMessage';
 import { sigleConfig } from '../config';
 import { styled } from '../stitches.config';
 
@@ -65,9 +72,11 @@ type SigningState = 'inactive' | 'active' | 'complete';
 
 const Login = () => {
   const router = useRouter();
-  const { user, isLegacy } = useAuth();
+  const { user, isLegacy, logout } = useAuth();
   const { status } = useSession();
-  const [signingState] = useState<SigningState>('inactive');
+  const { doOpenAuth, sign } = useConnect();
+  const { doOpenAuth: legacyDoOpenAuth } = legacyUseConnect();
+  const [signingState, setSigningState] = useState<SigningState>('inactive');
 
   useEffect(() => {
     // We keep the user on the login page so he can sign the message
@@ -82,63 +91,63 @@ const Login = () => {
     }
   }, [router, user, isLegacy, status]);
 
-  // const handleLogin = () => {
-  //   Fathom.trackGoal(Goals.LOGIN, 0);
-  //   posthog.capture('start-login');
-  //   doOpenAuth();
-  // };
+  const handleLogin = () => {
+    Fathom.trackGoal(Goals.LOGIN, 0);
+    posthog.capture('start-login');
+    doOpenAuth();
+  };
 
-  // const handleSignMessage = async () => {
-  //   if (!user) return;
-  //   // TODO as this can take some time add a loading state to the button
-  //   setSigningState('active');
+  const handleSignMessage = async () => {
+    if (!user) return;
+    // TODO as this can take some time add a loading state to the button
+    setSigningState('active');
 
-  //   Fathom.trackGoal(Goals.LOGIN_SIGN_MESSAGE, 0);
-  //   posthog.capture('start-login-sign-message');
+    Fathom.trackGoal(Goals.LOGIN_SIGN_MESSAGE, 0);
+    posthog.capture('start-login-sign-message');
 
-  //   const callbackUrl = '/protected';
-  //   const stacksMessage = new SignInWithStacksMessage({
-  //     domain: `${window.location.protocol}//${window.location.host}`,
-  //     address: user.profile.stxAddress.mainnet,
-  //     statement: 'Sign in with Stacks to the app.',
-  //     uri: window.location.origin,
-  //     version: '1',
-  //     chainId: 1,
-  //     nonce: (await getCsrfToken()) as string,
-  //   });
+    const callbackUrl = '/protected';
+    const stacksMessage = new SignInWithStacksMessage({
+      domain: `${window.location.protocol}//${window.location.host}`,
+      address: user.profile.stxAddress.mainnet,
+      statement: 'Sign in with Stacks to the app.',
+      uri: window.location.origin,
+      version: '1',
+      chainId: 1,
+      nonce: (await getCsrfToken()) as string,
+    });
 
-  //   const message = stacksMessage.prepareMessage();
+    const message = stacksMessage.prepareMessage();
 
-  //   await sign({
-  //     network: new StacksMainnet(),
-  //     message,
-  //     onFinish: async ({ signature }) => {
-  //       const signInResult = await signIn<RedirectableProviderType>(
-  //         'credentials',
-  //         {
-  //           message: message,
-  //           redirect: false,
-  //           signature,
-  //           callbackUrl,
-  //         },
-  //       );
-  //       if (signInResult && signInResult.error) {
-  //         posthog.capture('start-login-sign-message-error');
-  //         toast.error('Failed to login');
-  //         setSigningState('inactive');
-  //       }
-  //       setSigningState('complete');
-  //     },
-  //     onCancel: () => setSigningState('active'),
-  //   });
-  // };
+    await sign({
+      network: new StacksMainnet(),
+      message,
+      onFinish: async ({ signature }) => {
+        const signInResult = await signIn<RedirectableProviderType>(
+          'credentials',
+          {
+            message: message,
+            redirect: false,
+            signature,
+            callbackUrl,
+          },
+        );
+        if (signInResult && signInResult.error) {
+          posthog.capture('start-login-sign-message-error');
+          toast.error('Failed to login');
+          setSigningState('inactive');
+        }
+        setSigningState('complete');
+      },
+      onCancel: () => setSigningState('active'),
+    });
+  };
 
-  // const handleLoginLegacy = () => {
-  //   Fathom.trackGoal(Goals.LOGIN, 0);
-  //   Fathom.trackGoal(Goals.LEGACY_LOGIN, 0);
-  //   posthog.capture('start-login-legacy');
-  //   legacyDoOpenAuth();
-  // };
+  const handleLoginLegacy = () => {
+    Fathom.trackGoal(Goals.LOGIN, 0);
+    Fathom.trackGoal(Goals.LEGACY_LOGIN, 0);
+    posthog.capture('start-login-legacy');
+    legacyDoOpenAuth();
+  };
 
   return (
     <LoginLayout>
@@ -233,6 +242,48 @@ const Login = () => {
           </Typography>
         </>
       )}
+      <Flex
+        gap="3"
+        justify="end"
+        css={{
+          mt: '$7',
+          pb: '$3',
+          width: '100%',
+          boxShadow: '0 1px 0 0 $colors$gray6',
+        }}
+      >
+        {!user ? (
+          <Button
+            variant="ghost"
+            color="gray"
+            size="lg"
+            onClick={handleLoginLegacy}
+          >
+            Legacy login
+          </Button>
+        ) : (
+          <Button
+            variant="ghost"
+            color="gray"
+            size="lg"
+            css={{ gap: '$2' }}
+            onClick={() => {
+              setSigningState('inactive');
+              logout();
+            }}
+          >
+            <ArrowLeftIcon width={15} height={15} />
+            Change account
+          </Button>
+        )}
+        <Button
+          color="orange"
+          size="lg"
+          onClick={user ? handleSignMessage : handleLogin}
+        >
+          {user ? 'Sign message' : 'Connect Wallet'}
+        </Button>
+      </Flex>
       <Box as="hr" css={{ mt: '$3', borderColor: '$gray6' }} />
       <Flex direction="column" gap="3" css={{ mt: '$3', color: '$gray9' }}>
         {!user ? (
