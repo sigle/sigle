@@ -92,6 +92,8 @@ If needed, you can use your own environment variables in development. For this c
 
 ### Update the e2e tests snapshots
 
+To update the e2e tests snapshots, run the following command in the sigle directory:
+
 ```sh
 docker build -t local-playwright-docker --file Dockerfile.e2e ../
 docker run -v "./e2e:/app/sigle/e2e" -it local-playwright-docker:latest

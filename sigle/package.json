@@ -127,7 +127,7 @@
   "devDependencies": {
     "@fontsource/open-sans": "4.5.10",
     "@next/bundle-analyzer": "13.5.6",
-    "@playwright/test": "1.36.2",
+    "@playwright/test": "1.39.0",
     "@sigle/tailwind-style": "1.1.0",
     "@testing-library/jest-dom": "5.16.5",
     "@testing-library/react": "13.3.0",

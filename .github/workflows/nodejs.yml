@@ -9,7 +9,7 @@ on:
 jobs:
   build:
     name: Build and Test
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@v3
       - uses: ./.github/actions/setup-monorepo
@@ -25,7 +25,7 @@ jobs:
 
   test-sigle-e2e:
     name: Test sigle e2e
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     container:
       image: mcr.microsoft.com/playwright:v1.36.0-jammy
     steps:
@@ -46,13 +46,13 @@ jobs:
       - uses: actions/upload-artifact@v3
         if: failure()
         with:
-          name: sigle/playwright-report
+          name: sigle-playwright-report
           path: sigle/playwright-report/
           retention-days: 10
 
   test-server-e2e:
     name: Test server e2e
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     defaults:
       run:
         working-directory: server
