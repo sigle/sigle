@@ -46,9 +46,11 @@ jobs:
       # Have to upload a zip file because of this issue:
       # https://github.com/actions/upload-artifact/issues/333#issuecomment-1227464293
       - name: Zip the test result folder
+        uses: vimtor/action-zip@v1.1
         if: failure()
-        run: |
-          zip -r testResult.zip sigle/playwright-report
+        with:
+          files: sigle/playwright-report/
+          dest: testResult.zip
 
       - uses: actions/upload-artifact@v3
         if: failure()
