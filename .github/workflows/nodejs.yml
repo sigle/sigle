@@ -7,81 +7,41 @@ on:
     branches: [main]
 
 jobs:
-  test-sigle:
+  build:
+    name: Build and Test
     runs-on: ubuntu-20.04
-    defaults:
-      run:
-        working-directory: sigle
-    strategy:
-      matrix:
-        node-version: [18]
-
     steps:
       - uses: actions/checkout@v3
+      - uses: ./.github/actions/setup-monorepo
 
-      - uses: pnpm/action-setup@v2
+      - name: Lint
+        run: pnpm lint
 
-      - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v3
-        with:
-          node-version: ${{ matrix.node-version }}
-          cache: 'pnpm'
+      - name: Build
+        run: pnpm build
 
-      - name: Get next.js sigle cache
-        uses: actions/cache@v2
-        with:
-          path: ${{ github.workspace }}/sigle/.next/cache
-          key: ${{ runner.os }}-nextjs-sigle-${{ hashFiles('**/pnpm-lock.yaml') }}
-
-      - name: Install Dependencies
-        run: pnpm install --filter={.}...
-
-      - name: Build sigle
-        run: pnpm run build
-
-      - name: Run sigle tests
-        run: pnpm run test
+      - name: Test
+        run: pnpm test
 
   test-sigle-e2e:
+    name: Test sigle e2e
     runs-on: ubuntu-20.04
     container:
       image: mcr.microsoft.com/playwright:v1.36.0-jammy
-    defaults:
-      run:
-        working-directory: sigle
-    strategy:
-      matrix:
-        node-version: [18]
-
     steps:
       - uses: actions/checkout@v3
-
-      - uses: pnpm/action-setup@v2
-
-      - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v3
-        with:
-          node-version: ${{ matrix.node-version }}
-          cache: 'pnpm'
-
-      - name: Get next.js sigle cache
-        uses: actions/cache@v2
-        with:
-          path: ${{ github.workspace }}/sigle/.next/cache
-          key: ${{ runner.os }}-nextjs-sigle-${{ hashFiles('**/pnpm-lock.yaml') }}
-
-      - name: Install Dependencies
-        run: pnpm install --filter={.}...
+      - uses: ./.github/actions/setup-monorepo
 
       - name: Install Playwright Browsers
         run: pnpm playwright install --with-deps chromium
+        working-directory: sigle
 
       - name: Build sigle
-        run: pnpm run build
+        run: pnpm build --scope=@sigle/app
 
-      # TODO ideally this should be tested on the vercel link
       - name: Run sigle e2e tests
         run: pnpm run test:e2e
+        working-directory: sigle
 
       - uses: actions/upload-artifact@v3
         if: failure()
@@ -90,14 +50,12 @@ jobs:
           path: sigle/playwright-report/
           retention-days: 10
 
-  test-api:
+  test-server-e2e:
+    name: Test server e2e
     runs-on: ubuntu-20.04
     defaults:
       run:
         working-directory: server
-    strategy:
-      matrix:
-        node-version: [18]
     services:
       redis:
         image: redis:6.2
@@ -125,29 +83,9 @@ jobs:
           --health-retries 5
         ports:
           - 5432:5432
-
     steps:
       - uses: actions/checkout@v3
-
-      - uses: pnpm/action-setup@v2
-
-      - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v3
-        with:
-          node-version: ${{ matrix.node-version }}
-          cache: 'pnpm'
-
-      - name: Install Dependencies
-        run: pnpm install --filter={.}...
-
-      - name: Lint api
-        run: pnpm run lint
-
-      - name: Build api
-        run: pnpm run build
-
-      - name: Run api tests
-        run: pnpm run test
+      - uses: ./.github/actions/setup-monorepo
 
       - name: Seed test DB
         run: pnpm prisma migrate deploy && pnpm prisma db seed
@@ -156,70 +94,3 @@ jobs:
 
       - name: Run api e2e tests
         run: pnpm run test:e2e
-
-  test-sigle-next:
-    runs-on: ubuntu-20.04
-    defaults:
-      run:
-        working-directory: apps/sigle-next
-    strategy:
-      matrix:
-        node-version: [18]
-
-    steps:
-      - uses: actions/checkout@v3
-
-      - uses: pnpm/action-setup@v2
-
-      - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v3
-        with:
-          node-version: ${{ matrix.node-version }}
-          cache: 'pnpm'
-
-      - name: Get next.js sigle cache
-        uses: actions/cache@v2
-        with:
-          path: ${{ github.workspace }}/apps/sigle-next/.next/cache
-          key: ${{ runner.os }}-nextjs-sigle-next-${{ hashFiles('**/pnpm-lock.yaml') }}
-
-      - name: Install Dependencies
-        run: pnpm install --filter={.}...
-
-      - name: Build sigle
-        run: pnpm run build
-
-      - name: Test sigle
-        run: pnpm run test
-
-  test-custom-domain:
-    runs-on: ubuntu-20.04
-    defaults:
-      run:
-        working-directory: apps/custom-domain
-    strategy:
-      matrix:
-        node-version: [18]
-
-    steps:
-      - uses: actions/checkout@v3
-
-      - uses: pnpm/action-setup@v2
-
-      - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v3
-        with:
-          node-version: ${{ matrix.node-version }}
-          cache: 'pnpm'
-
-      - name: Get next.js cache
-        uses: actions/cache@v2
-        with:
-          path: ${{ github.workspace }}/apps/custom-domain/.next/cache
-          key: ${{ runner.os }}-nextjs-apps-custom-domain-next-${{ hashFiles('**/pnpm-lock.yaml') }}
-
-      - name: Install Dependencies
-        run: pnpm install --filter={.}...
-
-      - name: Build custom-domain
-        run: pnpm run build

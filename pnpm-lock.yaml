@@ -20,6 +20,9 @@ importers:
       prettier:
         specifier: 3.0.0
         version: 3.0.0
+      turbo:
+        specifier: 1.10.16
+        version: 1.10.16
 
   apps/custom-domain:
     dependencies:
@@ -322,8 +325,8 @@ importers:
         specifier: 0.2.0
         version: 0.2.0(next@13.5.6)(react-dom@18.2.0)(react@18.2.0)
       posthog-js:
-        specifier: 1.78.4
-        version: 1.78.4
+        specifier: 1.84.3
+        version: 1.84.3
       posthog-node:
         specifier: 3.1.2
         version: 3.1.2
@@ -928,8 +931,8 @@ importers:
         specifier: 0.23.0
         version: 0.23.0
       posthog-js:
-        specifier: 1.78.4
-        version: 1.78.4
+        specifier: 1.84.3
+        version: 1.84.3
       react:
         specifier: 18.2.0
         version: 18.2.0
@@ -19316,8 +19319,8 @@ packages:
       picocolors: 1.0.0
       source-map-js: 1.0.2
 
-  /posthog-js@1.78.4:
-    resolution: {integrity: sha512-+ao0/qoP8fUErrF6Y2Yugilkh4ooh8MX6n6ckYsn3yV610YrpXGR165fbq8X1ukimV4YmkWbMHOACtkOuZ/+8w==}
+  /posthog-js@1.84.3:
+    resolution: {integrity: sha512-xvPrvp1AENgyblsGU9tHDoMkBE2EHxtlEAZiOaqp2cNivC/L+fSmdfCCtCF1rEUMFDzUkFVvH5zOshOzOfyrMQ==}
     dependencies:
       fflate: 0.4.8
     dev: false
@@ -22077,6 +22080,66 @@ packages:
     dependencies:
       safe-buffer: 5.2.1
     dev: false
+
+  /turbo-darwin-64@1.10.16:
+    resolution: {integrity: sha512-+Jk91FNcp9e9NCLYlvDDlp2HwEDp14F9N42IoW3dmHI5ZkGSXzalbhVcrx3DOox3QfiNUHxzWg4d7CnVNCuuMg==}
+    cpu: [x64]
+    os: [darwin]
+    requiresBuild: true
+    dev: true
+    optional: true
+
+  /turbo-darwin-arm64@1.10.16:
+    resolution: {integrity: sha512-jqGpFZipIivkRp/i+jnL8npX0VssE6IAVNKtu573LXtssZdV/S+fRGYA16tI46xJGxSAivrZ/IcgZrV6Jk80bw==}
+    cpu: [arm64]
+    os: [darwin]
+    requiresBuild: true
+    dev: true
+    optional: true
+
+  /turbo-linux-64@1.10.16:
+    resolution: {integrity: sha512-PpqEZHwLoizQ6sTUvmImcRmACyRk9EWLXGlqceogPZsJ1jTRK3sfcF9fC2W56zkSIzuLEP07k5kl+ZxJd8JMcg==}
+    cpu: [x64]
+    os: [linux]
+    requiresBuild: true
+    dev: true
+    optional: true
+
+  /turbo-linux-arm64@1.10.16:
+    resolution: {integrity: sha512-TMjFYz8to1QE0fKVXCIvG/4giyfnmqcQIwjdNfJvKjBxn22PpbjeuFuQ5kNXshUTRaTJihFbuuCcb5OYFNx4uw==}
+    cpu: [arm64]
+    os: [linux]
+    requiresBuild: true
+    dev: true
+    optional: true
+
+  /turbo-windows-64@1.10.16:
+    resolution: {integrity: sha512-+jsf68krs0N66FfC4/zZvioUap/Tq3sPFumnMV+EBo8jFdqs4yehd6+MxIwYTjSQLIcpH8KoNMB0gQYhJRLZzw==}
+    cpu: [x64]
+    os: [win32]
+    requiresBuild: true
+    dev: true
+    optional: true
+
+  /turbo-windows-arm64@1.10.16:
+    resolution: {integrity: sha512-sKm3hcMM1bl0B3PLG4ifidicOGfoJmOEacM5JtgBkYM48ncMHjkHfFY7HrJHZHUnXM4l05RQTpLFoOl/uIo2HQ==}
+    cpu: [arm64]
+    os: [win32]
+    requiresBuild: true
+    dev: true
+    optional: true
+
+  /turbo@1.10.16:
+    resolution: {integrity: sha512-2CEaK4FIuSZiP83iFa9GqMTQhroW2QryckVqUydmg4tx78baftTOS0O+oDAhvo9r9Nit4xUEtC1RAHoqs6ZEtg==}
+    hasBin: true
+    optionalDependencies:
+      turbo-darwin-64: 1.10.16
+      turbo-darwin-arm64: 1.10.16
+      turbo-linux-64: 1.10.16
+      turbo-linux-arm64: 1.10.16
+      turbo-windows-64: 1.10.16
+      turbo-windows-arm64: 1.10.16
+    dev: true
 
   /tweetnacl@0.14.5:
     resolution: {integrity: sha512-KXXFFdAbFXY4geFIwoyNK+f5Z1b7swfXABfL7HXCmoIWMKU3dmS26672A4EeQtDzLKy7SXmfBu51JolvEKwtGA==}
