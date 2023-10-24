@@ -39,7 +39,7 @@ jobs:
         run: pnpm playwright install --with-deps chromium
 
       - name: Build sigle
-        run: pnpm turbo build
+        run: pnpm turbo build --cache-dir=.turbo
 
       - name: Run sigle e2e tests
         run: pnpm run test:e2e
