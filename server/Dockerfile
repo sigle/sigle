@@ -50,6 +50,8 @@ RUN pnpm turbo run build --filter=@sigle/$APP_NAME
 FROM base AS runner
 WORKDIR /app
 
+ENV NODE_ENV production
+
 # Don't run production as root
 RUN addgroup --system --gid 1001 nestjs
 RUN adduser --system --uid 1001 nestjs
