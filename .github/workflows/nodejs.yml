@@ -28,21 +28,20 @@ jobs:
     runs-on: ubuntu-20.04
     container:
       image: mcr.microsoft.com/playwright:v1.36.0-jammy
-    defaults:
-      run:
-        working-directory: sigle
     steps:
       - uses: actions/checkout@v3
       - uses: ./.github/actions/setup-monorepo
 
       - name: Install Playwright Browsers
         run: pnpm playwright install --with-deps chromium
+        working-directory: sigle
 
       - name: Build sigle
-        run: pnpm turbo build --cache-dir=.turbo
+        run: pnpm build --scope=@sigle/app
 
       - name: Run sigle e2e tests
         run: pnpm run test:e2e
+        working-directory: sigle
 
       - uses: actions/upload-artifact@v3
         if: failure()
