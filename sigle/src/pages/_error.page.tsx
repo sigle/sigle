@@ -102,7 +102,7 @@ export const MyError = ({
   const { user } = useAuth();
   const notFound = statusCode === 404;
 
-  if (!hasGetInitialPropsRun && err) {
+  if (!hasGetInitialPropsRun && err && toto) {
     // getInitialProps is not called in case of
     // https://github.com/vercel/next.js/issues/8592. As a workaround, we pass
     // err via _app.js so it can be captured
