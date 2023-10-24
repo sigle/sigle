@@ -1,4 +1,10 @@
 FROM node:18-alpine AS base
+
+# Injected by builder
+ARG NODE_ENV
+ARG PORT
+ARG DATABASE_URL
+
 ENV APP_NAME="server"
 RUN corepack enable pnpm
 RUN npm i -g turbo
@@ -36,10 +42,6 @@ RUN addgroup --system --gid 1001 nestjs
 RUN adduser --system --uid 1001 nestjs
 USER nestjs
 COPY --from=installer /app .
-
-# Injected by builder
-ARG NODE_ENV
-ARG PORT
 
 WORKDIR /app/$APP_NAME
 
