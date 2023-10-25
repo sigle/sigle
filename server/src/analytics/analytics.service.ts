@@ -44,9 +44,8 @@ export class AnalyticsService {
       throw new BadRequestException('No active subscription.');
     }
 
-    const username = await this.stacksService.getUsernameByAddress(
-      stacksAddress,
-    );
+    const username =
+      await this.stacksService.getUsernameByAddress(stacksAddress);
     if (username === null) {
       throw new BadRequestException(`No username found for ${stacksAddress}.`);
     }
@@ -153,9 +152,8 @@ export class AnalyticsService {
       throw new BadRequestException('No active subscription.');
     }
 
-    const username = await this.stacksService.getUsernameByAddress(
-      stacksAddress,
-    );
+    const username =
+      await this.stacksService.getUsernameByAddress(stacksAddress);
     if (username === null) {
       throw new BadRequestException(`No username found for ${stacksAddress}.`);
     }
