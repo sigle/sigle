@@ -27,7 +27,7 @@ jobs:
     name: Test sigle e2e
     runs-on: ubuntu-22.04
     container:
-      image: mcr.microsoft.com/playwright:v1.36.0-jammy
+      image: mcr.microsoft.com/playwright:v1.39.0-jammy
     steps:
       - uses: actions/checkout@v3
       - uses: ./.github/actions/setup-monorepo
@@ -36,10 +36,10 @@ jobs:
         run: pnpm playwright install --with-deps chromium
         working-directory: sigle
 
-      - name: Build sigle
+      - name: Build
         run: pnpm build --scope=@sigle/app
 
-      - name: Run sigle e2e tests
+      - name: Run e2e tests
         run: pnpm run test:e2e
         working-directory: sigle
 
@@ -48,6 +48,33 @@ jobs:
         with:
           name: sigle-playwright-report
           path: sigle/playwright-report/
+          retention-days: 10
+
+  test-custom-domain-e2e:
+    name: Test custom domain e2e
+    runs-on: ubuntu-22.04
+    container:
+      image: mcr.microsoft.com/playwright:v1.39.0-jammy
+    steps:
+      - uses: actions/checkout@v3
+      - uses: ./.github/actions/setup-monorepo
+
+      - name: Install Playwright Browsers
+        run: pnpm playwright install --with-deps chromium
+        working-directory: apps/custom-domain
+
+      - name: Build
+        run: pnpm build --scope=@sigle/custom-domain
+
+      - name: Run e2e tests
+        run: pnpm run test:e2e
+        working-directory: apps/custom-domain
+
+      - uses: actions/upload-artifact@v3
+        if: failure()
+        with:
+          name: custom-domain-playwright-report
+          path: apps/custom-domain/playwright-report/
           retention-days: 10
 
   test-server-e2e:
