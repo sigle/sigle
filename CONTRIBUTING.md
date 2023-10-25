@@ -99,6 +99,13 @@ docker build -t local-playwright-docker --file Dockerfile.e2e ../
 docker run -v "./e2e:/app/sigle/e2e" -it local-playwright-docker:latest
 ```
 
+To update the custom domain e2e tests snapshots, run the following command in the apps/custom-domain directory:
+
+```sh
+docker build -t local-custom-domain-playwright-docker --file Dockerfile.e2e ../../
+docker run -v "./e2e:/app/apps/custom-domain/e2e" -it local-custom-domain-playwright-docker:latest
+```
+
 ## License
 
 Sigle is licensed under the [MIT license](https://github.com/sigle/sigle/blob/main/LICENSE).
