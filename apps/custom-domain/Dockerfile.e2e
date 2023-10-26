@@ -18,7 +18,7 @@ RUN pnpm install -r --offline
 
 WORKDIR /app/apps/custom-domain
 
-ENV APP_URL http://127.0.0.1:3000
+RUN cp .env.e2e .env.production.local
 
 # Build the next.js application
 RUN pnpm run build

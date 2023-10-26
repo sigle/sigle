@@ -64,7 +64,9 @@ jobs:
         working-directory: apps/custom-domain
 
       - name: Build
-        run: pnpm build --scope=@sigle/custom-domain
+        run: |
+          cp apps/custom-domain/.env.e2e apps/custom-domain/.env.production.local
+          pnpm build --scope=@sigle/custom-domain
 
       - name: Run e2e tests
         run: pnpm run test:e2e
