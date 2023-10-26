@@ -1,5 +1,26 @@
 # @sigle/app
 
+## 1.7.0
+
+### Minor Changes
+
+- 70bc06f: Add ability to select the mailjet list where you send emails to.
+- 1b4307e: Remove whitelist for newsletter.
+- 6a0094c: Add ability to select the sender address where emails are sent from.
+- 1b6f792: Setup E2E tests to catch visual regressions.
+
+### Patch Changes
+
+- 823ff8c: Add Enterprise plan.
+- 0e2e852: Allow x.com links in the twitter embeds.
+- 614ad4f: Fix Vercel bundle issue by excluding swc from outputs.
+- ff85fa9: Refactor editor BubbleMenu component.
+- ce3d0d9: Upgrade next.js to 13.4.
+- 81518f0: e2e: public story page
+- 81d0f83: Simplify local env setup by using .env.development file.
+- 5f4bf2d: Add newsletter item back to settings.
+- 1c96e7a: Protect custom domain page for user with subscriptions.
+
 ## 1.6.0
 
 ### Minor Changes
