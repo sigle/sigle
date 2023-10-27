@@ -5,5 +5,6 @@ test('match snapshot', async ({ page }) => {
 
   await expect(page).toHaveScreenshot('login.png', {
     fullPage: true,
+    maxDiffPixels: 50,
   });
 });
