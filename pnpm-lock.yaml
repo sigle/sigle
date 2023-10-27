@@ -474,11 +474,11 @@ importers:
   packages/tailwind-style:
     devDependencies:
       '@tailwindcss/typography':
-        specifier: 0.5.9
-        version: 0.5.9(tailwindcss@3.3.2)
+        specifier: 0.5.10
+        version: 0.5.10(tailwindcss@3.3.5)
       tailwindcss:
-        specifier: 3.3.2
-        version: 3.3.2
+        specifier: 3.3.5
+        version: 3.3.5
 
   server:
     dependencies:
@@ -1095,7 +1095,7 @@ packages:
     engines: {node: '>=6.0.0'}
     dependencies:
       '@jridgewell/gen-mapping': 0.3.3
-      '@jridgewell/trace-mapping': 0.3.19
+      '@jridgewell/trace-mapping': 0.3.20
 
   /@angular-devkit/core@16.1.8(chokidar@3.5.3):
     resolution: {integrity: sha512-dSRD/+bGanArIXkj+kaU1kDFleZeQMzmBiOXX+pK0Ah9/0Yn1VmY3RZh1zcX9vgIQXV+t7UPrTpOjaERMUtVGw==}
@@ -6362,7 +6362,7 @@ packages:
       '@types/react-dom':
         optional: true
     dependencies:
-      '@babel/runtime': 7.22.5
+      '@babel/runtime': 7.23.1
       '@radix-ui/react-compose-refs': 1.0.1(@types/react@18.0.31)(react@18.2.0)
       '@radix-ui/react-use-layout-effect': 1.0.1(@types/react@18.0.31)(react@18.2.0)
       '@types/react': 18.0.31
@@ -6894,7 +6894,7 @@ packages:
       '@types/react':
         optional: true
     dependencies:
-      '@babel/runtime': 7.22.5
+      '@babel/runtime': 7.23.1
       '@radix-ui/react-use-callback-ref': 1.0.1(@types/react@18.0.31)(react@18.2.0)
       '@types/react': 18.0.31
       react: 18.2.0
@@ -8484,6 +8484,7 @@ packages:
       lodash.merge: 4.6.2
       postcss-selector-parser: 6.0.10
       tailwindcss: 3.3.2
+    dev: false
 
   /@tanstack/match-sorter-utils@8.8.4:
     resolution: {integrity: sha512-rKH8LjZiszWEvmi01NR72QWZ8m4xmXre0OOwlRGnjU01Eqz/QnN+cqpty2PJ0efHblq09+KilvyR7lsbzmXVEw==}

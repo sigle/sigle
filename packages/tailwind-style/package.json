@@ -13,7 +13,7 @@
     "build": "NODE_ENV=production pnpm tailwindcss --no-autoprefixer -i ./src/tailwind.css -o ./dist/tailwind.css"
   },
   "devDependencies": {
-    "@tailwindcss/typography": "0.5.9",
-    "tailwindcss": "3.3.2"
+    "@tailwindcss/typography": "0.5.10",
+    "tailwindcss": "3.3.5"
   }
 }
