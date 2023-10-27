@@ -37,7 +37,9 @@ jobs:
         working-directory: sigle
 
       - name: Build
-        run: pnpm build --scope=@sigle/app
+        run: |
+          cp sigle/.env.e2e sigle/.env.production.local
+          pnpm build --scope=@sigle/app
 
       - name: Run e2e tests
         run: pnpm run test:e2e

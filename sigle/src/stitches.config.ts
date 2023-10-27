@@ -127,7 +127,7 @@ export const {
       ...violet,
     },
     fonts: {
-      openSans: "'Open Sans', sans-serif",
+      openSans: 'var(--font-open-sans)',
       monaco: "'Monaco', monospace",
     },
     space: {
