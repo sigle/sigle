@@ -982,9 +982,6 @@ importers:
         specifier: 4.4.4
         version: 4.4.4(@types/react@18.0.26)(react@18.2.0)
     devDependencies:
-      '@fontsource/open-sans':
-        specifier: 4.5.10
-        version: 4.5.10
       '@next/bundle-analyzer':
         specifier: 13.5.6
         version: 13.5.6
@@ -3777,10 +3774,6 @@ packages:
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
     dev: false
-
-  /@fontsource/open-sans@4.5.10:
-    resolution: {integrity: sha512-MrtTDfWb1Tu9YxVh2KaKmsKBn6O3KL/lHZS0KRKK58jgqvdwuiDt4QW4udmW4FQf0XOWgnZ+4vKUF80F3SqBAA==}
-    dev: true
 
   /@graphql-tools/batch-delegate@8.4.27(graphql@16.6.0):
     resolution: {integrity: sha512-efgDDJhljma9d3Ky/LswIu1xm/if2oS27XA1sOcxcShW+Ze+Qxi0hZZ6iyI4eQxVDX5Lyy/n+NvQEZAK1riqnQ==}
