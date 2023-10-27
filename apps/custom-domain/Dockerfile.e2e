@@ -40,6 +40,6 @@ WORKDIR /app
 
 COPY --from=installer /app .
 
-WORKDIR /app/apps/$APP_NAME
+WORKDIR /app/apps/custom-domain
 
 CMD pnpm playwright test --update-snapshots 
