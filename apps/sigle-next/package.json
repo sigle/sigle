@@ -1,6 +1,6 @@
 {
   "name": "@sigle/app-next",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "private": true,
   "scripts": {
     "dev": "next dev",
@@ -105,7 +105,7 @@
     "@composedb/devtools": "0.4.4",
     "@composedb/devtools-node": "0.4.4",
     "@jest/globals": "29.5.0",
-    "@sigle/tailwind-style": "workspace:^1.1.0",
+    "@sigle/tailwind-style": "workspace:^1.2.0",
     "@types/node": "18.15.11",
     "@types/react": "18.0.35",
     "@types/react-dom": "18.0.11",

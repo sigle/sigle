@@ -398,7 +398,7 @@ importers:
         specifier: 29.5.0
         version: 29.5.0
       '@sigle/tailwind-style':
-        specifier: workspace:^1.1.0
+        specifier: workspace:^1.2.0
         version: link:../../packages/tailwind-style
       '@types/node':
         specifier: 18.15.11
@@ -992,7 +992,7 @@ importers:
         specifier: 1.39.0
         version: 1.39.0
       '@sigle/tailwind-style':
-        specifier: 1.1.0
+        specifier: 1.2.0
         version: link:../packages/tailwind-style
       '@testing-library/jest-dom':
         specifier: 5.16.5

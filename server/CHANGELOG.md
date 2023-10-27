@@ -1,5 +1,22 @@
 # @sigle/server
 
+## 0.5.0
+
+### Minor Changes
+
+- 70bc06f: Add routes to change the mailjet list where you send emails to.
+- 6a0094c: Add routes to change the sender address where emails are sent from.
+- 1b4307e: Remove whitelist for newsletter.
+- 1622d27: Upgrade Nest.js to v10 and use swc.
+
+### Patch Changes
+
+- 823ff8c: Add Enterprise plan.
+- 9937ce7: Fix "Read online" email link for custom domain users.
+- 7caf4f4: Fix cache module initialisation for redis 4.X.
+- 5768f96: Fix cors api calls from custom domains.
+- 8ab440f: Change email template font size and spacing.
+
 ## 0.4.0
 
 ### Minor Changes
