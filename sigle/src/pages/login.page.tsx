@@ -222,11 +222,11 @@ const Login = () => {
             <Box
               as="a"
               css={{ color: '$orange11', boxShadow: '0 1px 0 0' }}
-              href="https://www.hiro.so/wallet/install-web?utm_source=sigle"
+              href="https://leather.io/?utm_source=sigle"
               target="_blank"
               rel="noreferrer"
             >
-              Hiro wallet
+              Leather wallet
             </Box>{' '}
             or{' '}
             <Box

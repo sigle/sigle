@@ -56,7 +56,8 @@ export const CurrentPlan = () => {
       <SettingsLayout>
         <Flex direction="column" css={{ mt: '$5' }} gap="3" align="center">
           <Typography size="subheading">
-            This feature is available for Hiro wallet accounts only
+            This feature is available for Leather and Xverse wallet accounts
+            only
           </Typography>
           <Link href={`/${user?.username}`} passHref legacyBehavior>
             <Button size="sm" variant="subtle" as="a">
