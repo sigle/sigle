@@ -3,6 +3,7 @@ import { StoryItem } from '../';
 import { SubsetStory, BlockstackUser } from '../../../types';
 import { DashboardLayout } from '../../layout/components/DashboardLayout';
 import Image from 'next/legacy/image';
+import { useInView } from 'react-cool-inview';
 import { styled } from '../../../stitches.config';
 import { Button, Flex, Typography } from '../../../ui';
 import {
@@ -31,6 +32,12 @@ interface Props {
   refetchStoriesLists: () => Promise<void>;
 }
 
+/**
+ * Render the home page with the list of stories
+ * We use an infinite loading system to not show all the stories at the same time
+ * As Gaia rate limit is pretty strict, we don't want to make 200 calls at the same time
+ * to fetch the preview images for example
+ */
 export const Home = ({
   selectedTab,
   user,
@@ -38,8 +45,19 @@ export const Home = ({
   loading,
   refetchStoriesLists,
 }: Props) => {
+  const itemsPerPage = 5;
+  const [currentPage, setCurrentPage] = useState(1);
   const [loadingCreate, setLoadingCreate] = useState(false);
   const router = useRouter();
+
+  const { observe } = useInView({
+    // For better UX, we can grow the root margin so the data will be loaded earlier
+    rootMargin: '50px 0px',
+    onEnter: async ({}) => {
+      console.log('enter');
+      setCurrentPage((prev) => prev + 1);
+    },
+  });
 
   const showIllu = !loading && (!stories || stories.length === 0);
   const nbStoriesLabel = loading ? '...' : stories ? stories.length : 0;
@@ -66,6 +84,11 @@ export const Home = ({
     }
   };
 
+  // Create the subset of stories to display based on the current page
+  const storiesToDisplay = stories
+    ? stories.slice(0, (currentPage - 1) * itemsPerPage + itemsPerPage)
+    : [];
+
   return (
     <DashboardLayout>
       <Typography
@@ -81,6 +104,7 @@ export const Home = ({
           ? `Published stories (${nbStoriesLabel})`
           : `Drafts stories (${nbStoriesLabel})`}
       </Typography>
+
       {showIllu && (
         <Flex css={{ mt: '$10' }} align="center" direction="column">
           {selectedTab === 'drafts' && (
@@ -114,16 +138,16 @@ export const Home = ({
         </Flex>
       )}
 
-      {stories &&
-        stories.map((story) => (
-          <StoryItem
-            key={story.id}
-            user={user}
-            story={story}
-            type={selectedTab === 'published' ? 'public' : 'private'}
-            refetchStoriesLists={refetchStoriesLists}
-          />
-        ))}
+      {storiesToDisplay?.map((story) => (
+        <StoryItem
+          key={story.id}
+          user={user}
+          story={story}
+          type={selectedTab === 'published' ? 'public' : 'private'}
+          refetchStoriesLists={refetchStoriesLists}
+        />
+      ))}
+      <div ref={observe} />
     </DashboardLayout>
   );
 };
