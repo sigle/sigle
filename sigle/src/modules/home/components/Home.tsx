@@ -33,10 +33,10 @@ interface Props {
 }
 
 /**
- * Render the home page with the list of stories
- * We use an infinite loading system to not show all the stories at the same time
- * As Gaia rate limit is pretty strict, we don't want to make 200 calls at the same time
- * to fetch the preview images for example
+ * Render the home page with the list of stories.
+ * We use an infinite loading system to not show all the stories at the same time.
+ * Gaia rate limit is pretty strict, we don't want to make 200 calls at the same time
+ * to fetch the preview images for example.
  */
 export const Home = ({
   selectedTab,
@@ -45,7 +45,7 @@ export const Home = ({
   loading,
   refetchStoriesLists,
 }: Props) => {
-  const itemsPerPage = 5;
+  const itemsPerPage = 20;
   const [currentPage, setCurrentPage] = useState(1);
   const [loadingCreate, setLoadingCreate] = useState(false);
   const router = useRouter();
