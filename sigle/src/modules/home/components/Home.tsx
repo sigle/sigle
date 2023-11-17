@@ -54,7 +54,6 @@ export const Home = ({
     // For better UX, we can grow the root margin so the data will be loaded earlier
     rootMargin: '50px 0px',
     onEnter: async ({}) => {
-      console.log('enter');
       setCurrentPage((prev) => prev + 1);
     },
   });
