@@ -126,9 +126,8 @@ export class StoriesService {
         throw new BadRequestException('Newsletter already sent');
       }
 
-      const username = await this.stacksService.getUsernameByAddress(
-        stacksAddress,
-      );
+      const username =
+        await this.stacksService.getUsernameByAddress(stacksAddress);
       const bucketUrl = await this.stacksService.getBucketUrl({ username });
       const [publicSettings, publicStory] = await Promise.all([
         this.stacksService.getPublicSettings({
@@ -370,9 +369,8 @@ export class StoriesService {
       throw new BadRequestException('Newsletter not setup.');
     }
 
-    const username = await this.stacksService.getUsernameByAddress(
-      stacksAddress,
-    );
+    const username =
+      await this.stacksService.getUsernameByAddress(stacksAddress);
     const bucketUrl = await this.stacksService.getBucketUrl({ username });
     const publicSettings = await this.stacksService.getPublicSettings({
       bucketUrl: bucketUrl.bucketUrl,

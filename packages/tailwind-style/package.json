@@ -1,6 +1,6 @@
 {
   "name": "@sigle/tailwind-style",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "description": "This package use tailwind css to generate the typography style used by the client.",
   "publishConfig": {
     "access": "public"

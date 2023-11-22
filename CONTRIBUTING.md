@@ -4,8 +4,8 @@ We're open to all community contributions! This includes bug reports, feature re
 
 ## Requirements
 
-- [Node](https://nodejs.org/en/) 16+
-- [pnpm](https://pnpm.io/) 7+
+- [Node](https://nodejs.org/en/) 18+
+- [pnpm](https://pnpm.io/) 8+
 - [Docker](https://www.docker.com/)
 
 ## Pull Requests
@@ -92,9 +92,18 @@ If needed, you can use your own environment variables in development. For this c
 
 ### Update the e2e tests snapshots
 
+To update the e2e tests snapshots, run the following command in the sigle directory:
+
 ```sh
 docker build -t local-playwright-docker --file Dockerfile.e2e ../
 docker run -v "./e2e:/app/sigle/e2e" -it local-playwright-docker:latest
+```
+
+To update the custom domain e2e tests snapshots, run the following command in the apps/custom-domain directory:
+
+```sh
+docker build -t local-custom-domain-playwright-docker --file Dockerfile.e2e ../../
+docker run -v "./e2e:/app/apps/custom-domain/e2e" -it local-custom-domain-playwright-docker:latest
 ```
 
 ## License

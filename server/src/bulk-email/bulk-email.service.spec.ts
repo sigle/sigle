@@ -189,5 +189,18 @@ describe('BulkEmailService', () => {
         }),
       ).toMatchSnapshot();
     });
+
+    it('should render story for non custom domain users', () => {
+      expect(
+        service.storyToMJML({
+          stacksAddress: 'SP2EVYKET55QH40RAZE5PVZ363QX0X6BSRP4C7H07',
+          username: 'sigle.btc',
+          story,
+          settings: {
+            siteTwitterHandle: 'sigleapp',
+          },
+        }),
+      ).toMatchSnapshot();
+    });
   });
 });

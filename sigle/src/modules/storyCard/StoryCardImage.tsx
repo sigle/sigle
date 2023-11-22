@@ -81,6 +81,7 @@ export const StoryCardImage = ({ featured, image }: StoryCardImageProps) => {
         featured={featured}
         data-testid="story-cover-image"
         src={image}
+        loading="lazy"
       />
     </StoryImageContainer>
   );

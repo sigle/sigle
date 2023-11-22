@@ -219,13 +219,56 @@ export const sites: {
       label: 'Subscribe',
     },
   },
+  ['blog.bts-studios.io']: {
+    username: 'behindthescenes.btc',
+    address: 'SP1MX63HP0YD1TFAR0J6N6VYN3KVED5AF5JHPH1B7',
+    banner: '/websites/blog.bts-studios.io/banner.jpg',
+    links: [
+      {
+        href: 'https://bts-studios.io',
+        label: 'Home',
+      },
+    ],
+    cta: {
+      href: 'https://marketplace.bts-studios.io',
+      label: 'Become an EXECUTIVE PRODUCER',
+    },
+  },
+  ['blog.marcoleder.ch']: {
+    username: 'marcoleder.btc',
+    address: 'SP3JXJG9DA4DYFMBMMEYMF9AXV8RARJ0S5335TSK2',
+    banner: '/websites/blog.marcoleder.ch/banner.jpg',
+    links: [
+      {
+        href: 'https://blog.marcoleder.ch',
+        label: 'Home',
+      },
+      {
+        href: 'https://github.com/marcoleder',
+        label: 'Github',
+      },
+      {
+        href: 'https://www.linkedin.com/in/marcoleder/',
+        label: 'LinkedIn',
+      },
+      {
+        href: 'https://owl.link/marcoleder.btc',
+        label: 'Owl.link',
+      },
+    ],
+    cta: {
+      href: 'https://marcoleder.ch',
+      label: 'marcoleder.ch',
+    },
+  },
 };
 
 // Add localhost to sites for development
 if (process.env.NODE_ENV === 'development') {
   sites['localhost:3000'] = sites['blog.sigle.io'];
-} else if (process.env.VERCEL_ENV === 'preview' && process.env.VERCEL_URL) {
-  // Preview deployments
+}
+// Preview deployments
+else if (process.env.VERCEL_ENV === 'preview' && process.env.VERCEL_URL) {
   sites[process.env.VERCEL_URL] = sites['blog.sigle.io'];
   sites[
     `custom-domain-git-${process.env.VERCEL_GIT_COMMIT_REF?.replace(
@@ -233,4 +276,8 @@ if (process.env.NODE_ENV === 'development') {
       '-',
     )}-${process.env.VERCEL_GIT_REPO_OWNER}.vercel.app`
   ] = sites['blog.sigle.io'];
+}
+// E2E tests
+else if (process.env.APP_URL === 'http://127.0.0.1:3000') {
+  sites['127.0.0.1:3000'] = sites['blog.sigle.io'];
 }

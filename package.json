@@ -1,9 +1,12 @@
 {
   "private": true,
-  "packageManager": "pnpm@8.6.2",
+  "packageManager": "pnpm@8.9.2",
   "scripts": {
     "format": "prettier --write '**/*' --ignore-unknown",
     "deploy:sigle": "flyctl deploy --config sigle/fly.toml --dockerfile sigle/Dockerfile",
+    "lint": "turbo lint --cache-dir=.turbo",
+    "build": "turbo build --cache-dir=.turbo",
+    "test": "turbo test --cache-dir=.turbo",
     "version": "pnpm changeset version && pnpm install --lockfile-only",
     "release": "pnpm changeset publish",
     "postinstall": "husky install"
@@ -17,7 +20,8 @@
   "devDependencies": {
     "@changesets/cli": "2.26.2",
     "husky": "8.0.3",
-    "lint-staged": "13.2.3",
-    "prettier": "3.0.0"
+    "lint-staged": "15.0.2",
+    "prettier": "3.0.3",
+    "turbo": "1.10.16"
   }
 }

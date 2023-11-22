@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import App from 'next/app';
 import Router from 'next/router';
 import Head from 'next/head';
+import { Open_Sans } from 'next/font/google';
 import * as Fathom from 'fathom-client';
 import PlausibleProvider from 'next-plausible';
 import { DefaultSeo } from 'next-seo';
@@ -16,7 +17,6 @@ import 'tippy.js/dist/tippy.css';
 import 'tippy.js/themes/light-border.css';
 import 'react-toastify/dist/ReactToastify.css';
 // reach-ui styles
-import '../styles/fonts.scss';
 import '@sigle/tailwind-style/dist/tailwind.css';
 import { sigleConfig } from '../config';
 import { colors } from '../utils/colors';
@@ -27,6 +27,13 @@ import { FeatureFlagsProvider } from '../utils/featureFlags';
 import { DesignSystemProvider } from '../ui';
 import { PlausibleTrack } from '../modules/plausible/PlausibleTrack';
 import { PosthogTrack } from '../modules/posthog/PosthogTrack';
+
+const openSans = Open_Sans({
+  subsets: ['latin', 'cyrillic'],
+  weight: ['300', '400', '600', '700'],
+  display: 'swap',
+  style: ['normal', 'italic'],
+});
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -45,9 +52,7 @@ const queryClient = new QueryClient({
 const FathomTrack = () => {
   useEffect(() => {
     if (sigleConfig.fathomSiteId) {
-      Fathom.load(sigleConfig.fathomSiteId, {
-        url: sigleConfig.fathomSiteUrl,
-      });
+      Fathom.load(sigleConfig.fathomSiteId);
       Fathom.trackPageview();
     }
   }, []);
@@ -74,13 +79,14 @@ const GlobalStyle = globalCss({
     zIndex: 0,
   },
 
+  ':root': {
+    '--toastify-color-success': '#4db6a1',
+    '--font-open-sans': openSans.style.fontFamily,
+  },
+
   body: {
     fontFamily: '$openSans',
     backgroundColor: '$gray1',
-  },
-
-  ':root': {
-    '--toastify-color-success': '#4db6a1',
   },
 
   '#nprogress, .bar': {

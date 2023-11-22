@@ -14,6 +14,8 @@ import { AuthGuard } from '../auth.guard';
 import { NewsletterEntity } from './entities/newsletter.entity';
 import { ContactsListsEntity } from './entities/constacts-lists.entity';
 import { UpdateContactsListDto } from './dto/updateContactsList.dto';
+import { SenderEntity } from './entities/sender.entity';
+import { UpdateSenderDto } from './dto/updateSender.dto';
 
 @ApiTags('newsletters')
 @Controller()
@@ -65,11 +67,21 @@ export class NewslettersController {
   }
 
   @UseGuards(AuthGuard)
-  @Post('/api/newsletters/sender')
-  @HttpCode(200)
-  syncSender(@Request() req) {
-    return this.newslettersService.syncSender({
+  @Get('/api/newsletters/senders')
+  @ApiOkResponse({ type: SenderEntity, isArray: true })
+  getSenders(@Request() req): Promise<SenderEntity[]> {
+    return this.newslettersService.getSenders({
       stacksAddress: req.user.stacksAddress,
+    });
+  }
+
+  @UseGuards(AuthGuard)
+  @Post('/api/newsletters/senders')
+  @HttpCode(200)
+  updateSender(@Request() req, @Body() updateNewsletterDto: UpdateSenderDto) {
+    return this.newslettersService.updateSender({
+      stacksAddress: req.user.stacksAddress,
+      senderId: updateNewsletterDto.senderId,
     });
   }
 }
