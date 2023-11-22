@@ -1,6 +1,7 @@
+import { sigleConfig } from '@/config';
 import { SigleApiContext } from './sigleApiContext';
 
-const baseUrl = ''; // TODO add your baseUrl
+const baseUrl = sigleConfig.apiUrl;
 
 export type ErrorWrapper<TError> =
   | TError
@@ -69,6 +70,7 @@ export async function sigleApiFetch<
             : JSON.stringify(body)
           : undefined,
         headers: requestHeaders,
+        credentials: 'include',
       },
     );
     if (!response.ok) {

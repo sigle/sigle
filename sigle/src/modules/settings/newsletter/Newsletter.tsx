@@ -22,6 +22,7 @@ import { SettingsLayout } from '../SettingsLayout';
 import { SenderEmail } from './SenderEmail';
 import { VideoHelp } from './VideoHelp';
 import { MailjetList } from './MailjetList';
+import { useNewslettersControllerGet } from '@/__generated__/sigle-api/sigleApiComponents';
 
 interface NewsletterSettingsFormValues {
   apiKey: string;
@@ -31,7 +32,7 @@ interface NewsletterSettingsFormValues {
 export const Newsletter = () => {
   const { isLoading, data: userSubscription } = useGetUserSubscription();
   const { data: userNewsletter, refetch: refetchUserNewsletter } =
-    useGetUserNewsletter();
+    useNewslettersControllerGet({});
   const { mutate: updateNewsletter, isLoading: isLoadingUpdateNewsletter } =
     useUpdateNewsletter({
       onError: (error: Error | ApiError) => {
