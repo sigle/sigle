@@ -12,6 +12,10 @@ export default defineConfig({
     },
     outputDir: 'src/__generated__/sigle-api',
     to: async (context) => {
+      const writeFile = context.writeFile;
+      context.writeFile = (file, data) =>
+        writeFile(file, `/* eslint-disable */\n\n${data}`);
+
       const filenamePrefix = 'sigleApi';
       const { schemasFiles } = await generateSchemaTypes(context, {
         filenamePrefix,
