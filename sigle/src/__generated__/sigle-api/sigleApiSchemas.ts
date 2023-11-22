@@ -144,6 +144,16 @@ export type UpdateContactsListDto = {
   listId: number;
 };
 
+export type SenderEntity = {
+  id: number;
+  email: string;
+  isSelected: boolean;
+};
+
+export type UpdateSenderDto = {
+  senderId: number;
+};
+
 export type AddEmailDto = {
   email: string;
 };

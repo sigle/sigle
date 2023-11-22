@@ -28,7 +28,7 @@ export const useAppControllerGetHello = <TData = undefined>(
   variables: AppControllerGetHelloVariables,
   options?: Omit<
     reactQuery.UseQueryOptions<undefined, AppControllerGetHelloError, TData>,
-    'queryKey' | 'queryFn'
+    'queryKey' | 'queryFn' | 'initialData'
   >,
 ) => {
   const { fetcherOptions, queryOptions, queryKeyFn } =
@@ -83,7 +83,7 @@ export const useUserControllerExplore = <TData = Schemas.ExploreResponse>(
       UserControllerExploreError,
       TData
     >,
-    'queryKey' | 'queryFn'
+    'queryKey' | 'queryFn' | 'initialData'
   >,
 ) => {
   const { fetcherOptions, queryOptions, queryKeyFn } =
@@ -137,7 +137,7 @@ export const useUserControllerGetUserMe = <TData = Schemas.UserMeProfileEntity>(
       UserControllerGetUserMeError,
       TData
     >,
-    'queryKey' | 'queryFn'
+    'queryKey' | 'queryFn' | 'initialData'
   >,
 ) => {
   const { fetcherOptions, queryOptions, queryKeyFn } =
@@ -196,7 +196,7 @@ export const useUserControllerGetUser = <TData = Schemas.UserProfileEntity>(
       UserControllerGetUserError,
       TData
     >,
-    'queryKey' | 'queryFn'
+    'queryKey' | 'queryFn' | 'initialData'
   >,
 ) => {
   const { fetcherOptions, queryOptions, queryKeyFn } =
@@ -265,7 +265,7 @@ export const useUserControllerGetUserFollowers = <
       UserControllerGetUserFollowersError,
       TData
     >,
-    'queryKey' | 'queryFn'
+    'queryKey' | 'queryFn' | 'initialData'
   >,
 ) => {
   const { fetcherOptions, queryOptions, queryKeyFn } =
@@ -337,7 +337,7 @@ export const useUserControllerGetUserFollowing = <
       UserControllerGetUserFollowingError,
       TData
     >,
-    'queryKey' | 'queryFn'
+    'queryKey' | 'queryFn' | 'initialData'
   >,
 ) => {
   const { fetcherOptions, queryOptions, queryKeyFn } =
@@ -491,7 +491,7 @@ export const useSubscriptionControllerGetUserMe = <
       SubscriptionControllerGetUserMeError,
       TData
     >,
-    'queryKey' | 'queryFn'
+    'queryKey' | 'queryFn' | 'initialData'
   >,
 ) => {
   const { fetcherOptions, queryOptions, queryKeyFn } =
@@ -622,7 +622,7 @@ export const useAnalyticsControllerGetReferrers = <
       AnalyticsControllerGetReferrersError,
       TData
     >,
-    'queryKey' | 'queryFn'
+    'queryKey' | 'queryFn' | 'initialData'
   >,
 ) => {
   const { fetcherOptions, queryOptions, queryKeyFn } =
@@ -698,7 +698,7 @@ export const useAnalyticsControllerGetHistorical = <
       AnalyticsControllerGetHistoricalError,
       TData
     >,
-    'queryKey' | 'queryFn'
+    'queryKey' | 'queryFn' | 'initialData'
   >,
 ) => {
   const { fetcherOptions, queryOptions, queryKeyFn } =
@@ -801,7 +801,7 @@ export const useStoriesControllerGet = <TData = Schemas.StoryDto>(
       StoriesControllerGetError,
       TData
     >,
-    'queryKey' | 'queryFn'
+    'queryKey' | 'queryFn' | 'initialData'
   >,
 ) => {
   const { fetcherOptions, queryOptions, queryKeyFn } =
@@ -1013,7 +1013,7 @@ export const useNewslettersControllerGet = <TData = Schemas.NewsletterEntity>(
       NewslettersControllerGetError,
       TData
     >,
-    'queryKey' | 'queryFn'
+    'queryKey' | 'queryFn' | 'initialData'
   >,
 ) => {
   const { fetcherOptions, queryOptions, queryKeyFn } =
@@ -1116,7 +1116,7 @@ export const useNewslettersControllerGetContactsLists = <
       NewslettersControllerGetContactsListsError,
       TData
     >,
-    'queryKey' | 'queryFn'
+    'queryKey' | 'queryFn' | 'initialData'
   >,
 ) => {
   const { fetcherOptions, queryOptions, queryKeyFn } =
@@ -1191,31 +1191,88 @@ export const useNewslettersControllerUpdateContactsList = (
   });
 };
 
-export type NewslettersControllerSyncSenderError =
+export type NewslettersControllerGetSendersError =
   Fetcher.ErrorWrapper<undefined>;
 
-export type NewslettersControllerSyncSenderVariables =
+export type NewslettersControllerGetSendersResponse = Schemas.SenderEntity[];
+
+export type NewslettersControllerGetSendersVariables =
   SigleApiContext['fetcherOptions'];
 
-export const fetchNewslettersControllerSyncSender = (
-  variables: NewslettersControllerSyncSenderVariables,
+export const fetchNewslettersControllerGetSenders = (
+  variables: NewslettersControllerGetSendersVariables,
   signal?: AbortSignal,
 ) =>
   sigleApiFetch<
-    undefined,
-    NewslettersControllerSyncSenderError,
+    NewslettersControllerGetSendersResponse,
+    NewslettersControllerGetSendersError,
     undefined,
     {},
     {},
     {}
-  >({ url: '/api/newsletters/sender', method: 'post', ...variables, signal });
+  >({ url: '/api/newsletters/senders', method: 'get', ...variables, signal });
 
-export const useNewslettersControllerSyncSender = (
+export const useNewslettersControllerGetSenders = <
+  TData = NewslettersControllerGetSendersResponse,
+>(
+  variables: NewslettersControllerGetSendersVariables,
+  options?: Omit<
+    reactQuery.UseQueryOptions<
+      NewslettersControllerGetSendersResponse,
+      NewslettersControllerGetSendersError,
+      TData
+    >,
+    'queryKey' | 'queryFn' | 'initialData'
+  >,
+) => {
+  const { fetcherOptions, queryOptions, queryKeyFn } =
+    useSigleApiContext(options);
+  return reactQuery.useQuery<
+    NewslettersControllerGetSendersResponse,
+    NewslettersControllerGetSendersError,
+    TData
+  >({
+    queryKey: queryKeyFn({
+      path: '/api/newsletters/senders',
+      operationId: 'newslettersControllerGetSenders',
+      variables,
+    }),
+    queryFn: ({ signal }) =>
+      fetchNewslettersControllerGetSenders(
+        { ...fetcherOptions, ...variables },
+        signal,
+      ),
+    ...options,
+    ...queryOptions,
+  });
+};
+
+export type NewslettersControllerUpdateSenderError =
+  Fetcher.ErrorWrapper<undefined>;
+
+export type NewslettersControllerUpdateSenderVariables = {
+  body: Schemas.UpdateSenderDto;
+} & SigleApiContext['fetcherOptions'];
+
+export const fetchNewslettersControllerUpdateSender = (
+  variables: NewslettersControllerUpdateSenderVariables,
+  signal?: AbortSignal,
+) =>
+  sigleApiFetch<
+    undefined,
+    NewslettersControllerUpdateSenderError,
+    Schemas.UpdateSenderDto,
+    {},
+    {},
+    {}
+  >({ url: '/api/newsletters/senders', method: 'post', ...variables, signal });
+
+export const useNewslettersControllerUpdateSender = (
   options?: Omit<
     reactQuery.UseMutationOptions<
       undefined,
-      NewslettersControllerSyncSenderError,
-      NewslettersControllerSyncSenderVariables
+      NewslettersControllerUpdateSenderError,
+      NewslettersControllerUpdateSenderVariables
     >,
     'mutationFn'
   >,
@@ -1223,11 +1280,14 @@ export const useNewslettersControllerSyncSender = (
   const { fetcherOptions } = useSigleApiContext();
   return reactQuery.useMutation<
     undefined,
-    NewslettersControllerSyncSenderError,
-    NewslettersControllerSyncSenderVariables
+    NewslettersControllerUpdateSenderError,
+    NewslettersControllerUpdateSenderVariables
   >({
-    mutationFn: (variables: NewslettersControllerSyncSenderVariables) =>
-      fetchNewslettersControllerSyncSender({ ...fetcherOptions, ...variables }),
+    mutationFn: (variables: NewslettersControllerUpdateSenderVariables) =>
+      fetchNewslettersControllerUpdateSender({
+        ...fetcherOptions,
+        ...variables,
+      }),
     ...options,
   });
 };
@@ -1459,4 +1519,9 @@ export type QueryOperation =
       path: '/api/newsletters/contacts-lists';
       operationId: 'newslettersControllerGetContactsLists';
       variables: NewslettersControllerGetContactsListsVariables;
+    }
+  | {
+      path: '/api/newsletters/senders';
+      operationId: 'newslettersControllerGetSenders';
+      variables: NewslettersControllerGetSendersVariables;
     };

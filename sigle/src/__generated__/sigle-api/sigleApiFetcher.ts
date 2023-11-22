@@ -23,7 +23,7 @@ export async function sigleApiFetch<
   TBody extends {} | FormData | undefined | null,
   THeaders extends {},
   TQueryParams extends {},
-  TPathParams extends {}
+  TPathParams extends {},
 >({
   url,
   method,
@@ -69,7 +69,7 @@ export async function sigleApiFetch<
             : JSON.stringify(body)
           : undefined,
         headers: requestHeaders,
-      }
+      },
     );
     if (!response.ok) {
       let error: ErrorWrapper<TError>;
@@ -108,7 +108,7 @@ export async function sigleApiFetch<
 const resolveUrl = (
   url: string,
   queryParams: Record<string, string> = {},
-  pathParams: Record<string, string> = {}
+  pathParams: Record<string, string> = {},
 ) => {
   let query = new URLSearchParams(queryParams).toString();
   if (query) query = `?${query}`;

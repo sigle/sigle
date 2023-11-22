@@ -34,12 +34,12 @@ export function useSigleApiContext<
   TQueryFnData = unknown,
   TError = unknown,
   TData = TQueryFnData,
-  TQueryKey extends QueryKey = QueryKey
+  TQueryKey extends QueryKey = QueryKey,
 >(
   _queryOptions?: Omit<
     UseQueryOptions<TQueryFnData, TError, TData, TQueryKey>,
     'queryKey' | 'queryFn'
-  >
+  >,
 ): SigleApiContext {
   return {
     fetcherOptions: {},
@@ -75,7 +75,7 @@ const resolvePathParam = (key: string, pathParams: Record<string, string>) => {
 };
 
 const hasPathParams = (
-  operation: QueryOperation
+  operation: QueryOperation,
 ): operation is QueryOperation & {
   variables: { pathParams: Record<string, string> };
 } => {
@@ -83,7 +83,7 @@ const hasPathParams = (
 };
 
 const hasBody = (
-  operation: QueryOperation
+  operation: QueryOperation,
 ): operation is QueryOperation & {
   variables: { body: Record<string, unknown> };
 } => {
@@ -91,7 +91,7 @@ const hasBody = (
 };
 
 const hasQueryParams = (
-  operation: QueryOperation
+  operation: QueryOperation,
 ): operation is QueryOperation & {
   variables: { queryParams: Record<string, unknown> };
 } => {

@@ -7,7 +7,7 @@
     "start": "next start",
     "build": "next build",
     "generate-sitemap": "next-sitemap",
-    "generate-openapi": "rm -rf src/__generated__/sigle-api && pnpm openapi-codegen gen sigleApi",
+    "generate-openapi": "pnpm openapi-codegen gen sigleApi",
     "analyze": "ANALYZE=true pnpm run build",
     "test": "pnpm run test:only",
     "test:only": "jest",
