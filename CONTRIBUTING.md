@@ -66,6 +66,8 @@ docker exec $(docker container ls --all | grep -w sigle-server | awk '{print $1}
 
 ### Create prisma migration
 
+To create a new prisma migration, run the following command in the `apps/server` directory:
+
 ```sh
 docker exec $(docker container ls --all | grep -w sigle-server | awk '{print $1}') pnpm prisma migrate dev --name <migration-name>
 ```
