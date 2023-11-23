@@ -3,10 +3,10 @@ import { SettingsLayout } from '../SettingsLayout';
 import { useGetUserSubscription } from '../../../hooks/subscriptions';
 import Link from 'next/link';
 import { useAuth } from '../../auth/AuthContext';
-import { useSyncWithNftSubscription } from '../../../hooks/subscriptions';
 import { ComparePlans } from './ComparePlans';
 import { sigleConfig } from '../../../config';
 import { toast } from 'react-toastify';
+import { useSubscriptionControllerSyncSubscriptionWithNft } from '@/__generated__/sigle-api/sigleApiComponents';
 
 export const CurrentPlan = () => {
   const { user, isLegacy } = useAuth();
@@ -16,7 +16,7 @@ export const CurrentPlan = () => {
     refetch: refetchUserSubscription,
   } = useGetUserSubscription();
   const { isLoading: isLoadingSync, mutate: syncWithNftSubscription } =
-    useSyncWithNftSubscription({
+    useSubscriptionControllerSyncSubscriptionWithNft({
       onSuccess: (data) => {
         // If no NFT found
         if (!data) {
@@ -36,6 +36,9 @@ export const CurrentPlan = () => {
           toast('Your plan is already up to date');
         }
       },
+      onError: (error) => {
+        toast.error(error?.message);
+      },
     });
 
   const currentPlan: 'Starter' | 'Basic' | 'Publisher' | 'Enterprise' =
@@ -48,7 +51,7 @@ export const CurrentPlan = () => {
       : 'Publisher';
 
   const handleSyncWallet = () => {
-    syncWithNftSubscription();
+    syncWithNftSubscription({});
   };
 
   if (isLegacy) {

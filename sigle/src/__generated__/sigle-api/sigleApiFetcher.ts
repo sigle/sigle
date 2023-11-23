@@ -61,6 +61,16 @@ export async function sigleApiFetch<
       delete requestHeaders['Content-Type'];
     }
 
+    // Fastify does not support JSON requests without a body
+    if (
+      method === "post" &&
+      requestHeaders["Content-Type"] === "application/json" &&
+      body === undefined
+    ) {
+      // @ts-expect-error
+      body = {};
+    }
+
     const response = await window.fetch(
       `${baseUrl}${resolveUrl(url, queryParams, pathParams)}`,
       {
