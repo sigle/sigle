@@ -2,10 +2,7 @@ import { CheckCircledIcon } from '@radix-ui/react-icons';
 import { FormikErrors, useFormik } from 'formik';
 import { toast } from 'react-toastify';
 import { ApiError } from '../../../external/api';
-import {
-  useAddUserEmail,
-  useResendVerificationUserEmail,
-} from '../../../hooks/users';
+import { useResendVerificationUserEmail } from '../../../hooks/users';
 import {
   Box,
   Flex,
@@ -21,7 +18,10 @@ import {
 import { isValidEmail } from '../../../utils/regex';
 import { UnsavedChanges } from '../components/UnsavedChanges';
 import { SettingsLayout } from '../SettingsLayout';
-import { useUserControllerGetUserMe } from '@/__generated__/sigle-api';
+import {
+  useUserControllerGetUserMe,
+  useEmailVerificationControllerAddEmail,
+} from '@/__generated__/sigle-api';
 
 interface SettingsFormValues {
   email: string;
@@ -36,13 +36,9 @@ export const EmailData = () => {
     },
   );
   const { mutate: addUserEmail, isLoading: isLoadingAddUserEmail } =
-    useAddUserEmail({
-      onError: (error: Error | ApiError) => {
-        let errorMessage = error.message;
-        if (error instanceof ApiError && error.body.message) {
-          errorMessage = error.body.message;
-        }
-        toast.error(errorMessage);
+    useEmailVerificationControllerAddEmail({
+      onError: (error) => {
+        toast.error(error?.message);
       },
       onSuccess: async () => {
         await refetchUserMe();
@@ -89,7 +85,11 @@ export const EmailData = () => {
     validateOnChange: false,
     onSubmit: (values, { setSubmitting }) => {
       setSubmitting(false);
-      addUserEmail({ email: values.email });
+      addUserEmail({
+        body: {
+          email: values.email,
+        },
+      });
     },
   });
 
