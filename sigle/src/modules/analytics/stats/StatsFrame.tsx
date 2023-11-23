@@ -1,4 +1,4 @@
-import { useGetHistorical } from '../../../hooks/analytics';
+import { useAnalyticsControllerGetHistorical } from '@/__generated__/sigle-api';
 import { Box, Flex, Tabs, TabsList, TabsTrigger } from '../../../ui';
 import { StatsChart } from './StatsChart';
 import { ErrorMessage } from '../../../ui/ErrorMessage';
@@ -19,18 +19,19 @@ export const StatsFrame = ({
   historicalParams,
   changeHistoricalParams,
 }: StatsFrameProps) => {
-  const {
-    data: historicalData,
-    isError,
-    error,
-  } = useGetHistorical(historicalParams, {
-    placeholderData: { historical: initialRange, stories: [] },
-  });
+  const { data: historicalData, error } = useAnalyticsControllerGetHistorical(
+    {
+      queryParams: historicalParams,
+    },
+    {
+      placeholderData: { historical: initialRange, stories: [] },
+    },
+  );
   const data = historicalData?.historical;
 
   return (
     <Box css={{ mb: '$8', position: 'relative' }}>
-      {isError && <ErrorMessage>{error.message}</ErrorMessage>}
+      {error && <ErrorMessage>{error.message}</ErrorMessage>}
       <Flex>
         <StatsTotal data={data} />
         <Tabs
