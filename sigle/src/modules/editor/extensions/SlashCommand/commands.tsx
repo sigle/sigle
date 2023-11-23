@@ -215,6 +215,29 @@ export const slashCommands = ({
     },
   },
   {
+    icon: DividerLight,
+    title: 'Video',
+    description: 'Embed from YouTube, Vimeo...',
+    command: ({ editor, range }) => {
+      if (!range) {
+        editor.commands.setVideoEmbed({
+          src: 'https://www.youtube.com/watch?v=mu_nCBU60pE',
+        });
+        return;
+      }
+
+      editor
+        .chain()
+        .focus()
+        // Use deleteRange to clear the text from command chars "/q" etc..
+        .deleteRange(range)
+        .run();
+      editor.commands.setVideoEmbed({
+        src: 'https://www.youtube.com/watch?v=mu_nCBU60pE',
+      });
+    },
+  },
+  {
     icon: CodeLight,
     title: 'Code',
     description: 'Create a code snippet',

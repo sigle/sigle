@@ -35,6 +35,7 @@ import { slashCommands } from './extensions/SlashCommand/commands';
 import { FloatingMenu } from './FloatingMenu';
 import { styled, globalCss, keyframes, darkTheme } from '../../stitches.config';
 import { CodeBlockComponent } from './extensions/CodeBlock';
+import { VideoEmbed as TipTapVideoEmbed } from './extensions/VideoEmbed';
 import { Story } from '../../types';
 import CharacterCount from '@tiptap/extension-character-count';
 import { Container, IconButton, Typography } from '../../ui';
@@ -169,6 +170,7 @@ export const TipTapEditor = forwardRef<
         color: resolvedTheme === 'dark' ? '#505050' : '#c7c7c7',
         width: 2,
       }),
+      TipTapVideoEmbed,
       TipTapHistory,
       TipTapPlaceholder(isMobile),
       TipTapTypography,
