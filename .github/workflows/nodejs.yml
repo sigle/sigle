@@ -86,7 +86,7 @@ jobs:
     runs-on: ubuntu-22.04
     defaults:
       run:
-        working-directory: server
+        working-directory: apps/server
     services:
       redis:
         image: redis:6.2
