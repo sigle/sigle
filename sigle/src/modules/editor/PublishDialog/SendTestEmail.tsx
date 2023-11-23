@@ -1,6 +1,4 @@
 import { useState } from 'react';
-import { ApiError } from '../../../external/api';
-import { useSendStoryTest } from '../../../hooks/stories';
 import { Story } from '../../../types';
 import {
   Accordion,
@@ -12,6 +10,7 @@ import {
   FormTextarea,
   Typography,
 } from '../../../ui';
+import { useStoriesControllerSendTest } from '@/__generated__/sigle-api';
 
 interface SendTestEmailProps {
   story: Story;
@@ -23,13 +22,9 @@ export const SendTestEmail = ({ story }: SendTestEmailProps) => {
   const [emails, setEmails] = useState<string>('');
 
   const { mutate: sendStoryTest, isLoading: isLoadingSendStoryTest } =
-    useSendStoryTest({
-      onError: (error: Error | ApiError) => {
-        let errorMessage = error.message;
-        if (error instanceof ApiError && error.body.message) {
-          errorMessage = error.body.message;
-        }
-        setError(errorMessage);
+    useStoriesControllerSendTest({
+      onError: (error) => {
+        setError(error?.message || 'An error occurred');
       },
       onSuccess: () => {
         setSuccess(true);
@@ -45,11 +40,13 @@ export const SendTestEmail = ({ story }: SendTestEmailProps) => {
     setSuccess(false);
 
     sendStoryTest({
-      id: story.id,
-      storyTitle: story.title,
-      storyContent: story.content,
-      storyCoverImage: story.coverImage ?? null,
-      emails,
+      body: {
+        id: story.id,
+        storyTitle: story.title,
+        storyContent: story.content,
+        storyCoverImage: story.coverImage ?? null,
+        emails,
+      },
     });
   };
 

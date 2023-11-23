@@ -3,11 +3,12 @@ import Link from 'next/link';
 import { Protected } from '../../modules/auth/Protected';
 import { SettingsLayout } from '../../modules/settings/SettingsLayout';
 import { Box, Button, Flex, Typography } from '../../ui';
-import { useGetUserSubscription } from '../../hooks/subscriptions';
+import { useSubscriptionControllerGetUserMe } from '@/__generated__/sigle-api';
 import { NftLockedView } from '../../modules/analytics/NftLockedView';
 
 const CustomDomain = () => {
-  const { isLoading, data: userSubscription } = useGetUserSubscription();
+  const { isLoading, data: userSubscription } =
+    useSubscriptionControllerGetUserMe({});
 
   if (isLoading) {
     return <SettingsLayout>Loading...</SettingsLayout>;

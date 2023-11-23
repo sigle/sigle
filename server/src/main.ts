@@ -9,7 +9,6 @@ import {
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { fetch, Headers } from 'undici';
 import { AppModule } from './app.module';
-import { PrismaService } from './prisma/prisma.service';
 import { sites } from './sites';
 
 // next-auth workaround as node.js does not have the global Headers
@@ -88,11 +87,6 @@ async function bootstrap() {
   // Auto validate schemas in body etc..
   // https://docs.nestjs.com/techniques/validation#auto-validation
   app.useGlobalPipes(new ValidationPipe({ whitelist: true }));
-
-  // Prisma interferes with NestJS enableShutdownHooks, we shutdown prisma gracefully to avoid side effects
-  // https://docs.nestjs.com/recipes/prisma#issues-with-enableshutdownhooks
-  const prismaService = app.get(PrismaService);
-  await prismaService.enableShutdownHooks(app);
 
   await app.listen(configService.get('PORT') || 3000, '0.0.0.0');
 }

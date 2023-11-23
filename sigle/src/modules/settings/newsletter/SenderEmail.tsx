@@ -1,12 +1,11 @@
 import { useState } from 'react';
 import { toast } from 'react-toastify';
-import { ApiError } from '../../../external/api';
-import {
-  useGetSendersNewsletter,
-  useUpdateSenderNewsletter,
-} from '../../../hooks/newsletters';
 import { Box, Button, Flex, Typography } from '../../../ui';
 import { styled } from '../../../stitches.config';
+import {
+  useNewslettersControllerGetSenders,
+  useNewslettersControllerUpdateSender,
+} from '@/__generated__/sigle-api';
 
 const Select = styled('select', {
   minWidth: 300,
@@ -29,19 +28,15 @@ export const SenderEmail = () => {
     data: sendersNewsletter,
     isLoading: isLoadingSendersNewsletter,
     refetch: refetchSendersNewsletter,
-  } = useGetSendersNewsletter();
+  } = useNewslettersControllerGetSenders({});
   const { mutate: syncNewsletter, isLoading: isLoadingSyncNewsletter } =
-    useUpdateSenderNewsletter({
+    useNewslettersControllerUpdateSender({
       onSuccess: async () => {
         await refetchSendersNewsletter();
         setSuccessSenderEmail(true);
       },
-      onError: (error: Error | ApiError) => {
-        let errorMessage = error.message;
-        if (error instanceof ApiError && error.body.message) {
-          errorMessage = error.body.message;
-        }
-        toast.error(errorMessage);
+      onError: (error) => {
+        toast.error(error?.message);
       },
     });
 
@@ -94,7 +89,9 @@ export const SenderEmail = () => {
             css={{ gap: '$2' }}
             onClick={() =>
               syncNewsletter({
-                senderId: newSenderId || 0,
+                body: {
+                  senderId: newSenderId || 0,
+                },
               })
             }
             disabled={isLoadingSyncNewsletter}

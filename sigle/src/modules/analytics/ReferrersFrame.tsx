@@ -1,10 +1,10 @@
 import { stagger } from 'motion';
 import { useMotionAnimate } from 'motion-hooks';
 import { useEffect, useMemo, useState } from 'react';
-import { useGetReferrers } from '../../hooks/analytics';
 import { Box, Flex, Typography } from '../../ui';
 import { Pagination } from './Pagination';
 import { ErrorMessage } from '../../ui/ErrorMessage';
+import { useAnalyticsControllerGetReferrers } from '@/__generated__/sigle-api';
 
 interface ReferrersFrameProps {
   storyId?: string;
@@ -18,11 +18,12 @@ export const ReferrersFrame = ({
   storyId,
 }: ReferrersFrameProps) => {
   const [currentPage, setCurrentPage] = useState<number>(1);
-  const {
-    data: referrers,
-    isError,
-    error,
-  } = useGetReferrers({ dateFrom: historicalParams.dateFrom, storyId });
+  const { data: referrers, error } = useAnalyticsControllerGetReferrers({
+    queryParams: {
+      dateFrom: historicalParams.dateFrom,
+      storyId,
+    },
+  });
   const { play } = useMotionAnimate(
     '.referrer-item',
     { opacity: 1 },
@@ -83,7 +84,7 @@ export const ReferrersFrame = ({
           Views
         </Typography>
       </Flex>
-      {isError && <ErrorMessage>{error.message}</ErrorMessage>}
+      {error && <ErrorMessage>{error.message}</ErrorMessage>}
       {currentReferrers ? (
         <Flex
           css={{ flexShrink: 0, mb: '$4', height: 476 }}

@@ -3,7 +3,7 @@ import { Throttle } from '@nestjs/throttler';
 
 @Controller()
 export class AppController {
-  @Throttle(150, 60)
+  @Throttle({ default: { limit: 150, ttl: 60000 } })
   @Get('/health')
   getHello() {
     return {

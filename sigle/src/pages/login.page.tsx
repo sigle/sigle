@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import { getCsrfToken, signIn, useSession } from 'next-auth/react';
-import type { RedirectableProviderType } from 'next-auth/providers';
 import * as Fathom from 'fathom-client';
 import posthog from 'posthog-js';
 import { StacksMainnet } from '@stacks/network';
@@ -122,15 +121,12 @@ const Login = () => {
       network: new StacksMainnet(),
       message,
       onFinish: async ({ signature }) => {
-        const signInResult = await signIn<RedirectableProviderType>(
-          'credentials',
-          {
-            message: message,
-            redirect: false,
-            signature,
-            callbackUrl,
-          },
-        );
+        const signInResult = await signIn('credentials', {
+          message: message,
+          redirect: false,
+          signature,
+          callbackUrl,
+        });
         if (signInResult && signInResult.error) {
           posthog.capture('start-login-sign-message-error');
           toast.error('Failed to login');

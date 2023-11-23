@@ -1,12 +1,11 @@
 import { useState } from 'react';
 import { toast } from 'react-toastify';
-import {
-  useGetContactsListsNewsletter,
-  useUpdateContactsListNewsletter,
-} from '../../../hooks/newsletters';
 import { styled } from '../../../stitches.config';
 import { Box, Button, Flex, Typography } from '../../../ui';
-import { ApiError } from '../../../external/api';
+import {
+  useNewslettersControllerGetContactsLists,
+  useNewslettersControllerUpdateContactsList,
+} from '@/__generated__/sigle-api';
 
 const Select = styled('select', {
   minWidth: 300,
@@ -25,20 +24,16 @@ const Select = styled('select', {
 export const MailjetList = () => {
   const [newListId, setNewListId] = useState<number | null>(null);
   const { data: contactsLists, refetch: refetchContactsLists } =
-    useGetContactsListsNewsletter();
+    useNewslettersControllerGetContactsLists({});
   const {
     mutate: updateContactsListNewsletter,
     isLoading: isLoadingUpdateContactsListNewsletter,
-  } = useUpdateContactsListNewsletter({
+  } = useNewslettersControllerUpdateContactsList({
     onSuccess: async () => {
       await refetchContactsLists();
     },
-    onError: (error: Error | ApiError) => {
-      let errorMessage = error.message;
-      if (error instanceof ApiError && error.body.message) {
-        errorMessage = error.body.message;
-      }
-      toast.error(errorMessage);
+    onError: (error) => {
+      toast.error(error?.message);
     },
   });
 
@@ -72,7 +67,9 @@ export const MailjetList = () => {
         <Button
           onClick={() =>
             updateContactsListNewsletter({
-              listId: newListId || 0,
+              body: {
+                listId: newListId || 0,
+              },
             })
           }
           disabled={isLoadingUpdateContactsListNewsletter || !newListId}

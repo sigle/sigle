@@ -12,7 +12,7 @@ import {
   saveStoryFile,
 } from '../../../utils';
 import { useAuth } from '../../auth/AuthContext';
-import { StoriesService } from '../../../external/api';
+import { fetchStoriesControllerDelete } from '@/__generated__/sigle-api';
 
 interface Props {
   user: BlockstackUser;
@@ -58,8 +58,8 @@ export const StoryItem = ({
       await deleteStoryFile(story);
       await refetchStoriesLists();
       if (!isLegacy) {
-        await StoriesService.storiesControllerDelete({
-          requestBody: { id: story.id },
+        await fetchStoriesControllerDelete({
+          body: { id: story.id },
         });
       }
     } catch (error) {

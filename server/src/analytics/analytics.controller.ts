@@ -31,7 +31,7 @@ export class AnalyticsController {
       ],
     },
   })
-  @Throttle(10, 60)
+  @Throttle({ default: { limit: 10, ttl: 60000 } })
   @UseGuards(AuthGuard)
   @Get('/api/analytics/referrers')
   getReferrers(
@@ -72,7 +72,7 @@ export class AnalyticsController {
       },
     },
   })
-  @Throttle(10, 60)
+  @Throttle({ default: { limit: 10, ttl: 60000 } })
   @UseGuards(AuthGuard)
   @Get('/api/analytics/historical')
   getHistorical(

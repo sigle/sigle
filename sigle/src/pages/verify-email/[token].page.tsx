@@ -1,11 +1,10 @@
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
-import { ApiError } from '../../external/api';
-import { useVerifyUserEmail } from '../../hooks/users';
 import { AppHeader } from '../../modules/layout/components/AppHeader';
 import { styled } from '../../stitches.config';
 import { Button, Container, Flex, Typography } from '../../ui';
+import { useEmailVerificationControllerVerifyEmail } from '@/__generated__/sigle-api';
 
 const VerifyEmailContainer = styled(Container, {
   display: 'flex',
@@ -20,23 +19,21 @@ const VerifyEmail = () => {
   const router = useRouter();
   const [success, setSuccess] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
-  const { mutate: verifyUserEmail } = useVerifyUserEmail({
-    onError: (error) => {
-      let errorMessage = error.message;
-      if (error instanceof ApiError && error.body.message) {
-        errorMessage = error.body.message;
-      }
-      setError(errorMessage);
+  const { mutate: verifyUserEmail } = useEmailVerificationControllerVerifyEmail(
+    {
+      onError: (error) => {
+        setError(error?.message || 'An error occurred');
+      },
+      onSuccess: () => {
+        setSuccess(true);
+      },
     },
-    onSuccess: () => {
-      setSuccess(true);
-    },
-  });
+  );
   const { token } = router.query;
 
   useEffect(() => {
     if (token) {
-      verifyUserEmail({ token: token as string });
+      verifyUserEmail({ body: { token: token as string } });
     }
   }, [token]);
 
