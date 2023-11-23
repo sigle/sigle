@@ -1,12 +1,10 @@
 import { useState } from 'react';
 import { toast } from 'react-toastify';
 import { ApiError } from '../../../external/api';
-import {
-  useGetSendersNewsletter,
-  useUpdateSenderNewsletter,
-} from '../../../hooks/newsletters';
+import { useUpdateSenderNewsletter } from '../../../hooks/newsletters';
 import { Box, Button, Flex, Typography } from '../../../ui';
 import { styled } from '../../../stitches.config';
+import { useNewslettersControllerGetSenders } from '@/__generated__/sigle-api/sigleApiComponents';
 
 const Select = styled('select', {
   minWidth: 300,
@@ -29,7 +27,7 @@ export const SenderEmail = () => {
     data: sendersNewsletter,
     isLoading: isLoadingSendersNewsletter,
     refetch: refetchSendersNewsletter,
-  } = useGetSendersNewsletter();
+  } = useNewslettersControllerGetSenders({});
   const { mutate: syncNewsletter, isLoading: isLoadingSyncNewsletter } =
     useUpdateSenderNewsletter({
       onSuccess: async () => {

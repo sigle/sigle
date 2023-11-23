@@ -1,12 +1,10 @@
 import { useState } from 'react';
 import { toast } from 'react-toastify';
-import {
-  useGetContactsListsNewsletter,
-  useUpdateContactsListNewsletter,
-} from '../../../hooks/newsletters';
+import { useUpdateContactsListNewsletter } from '../../../hooks/newsletters';
 import { styled } from '../../../stitches.config';
 import { Box, Button, Flex, Typography } from '../../../ui';
 import { ApiError } from '../../../external/api';
+import { useNewslettersControllerGetContactsLists } from '@/__generated__/sigle-api/sigleApiComponents';
 
 const Select = styled('select', {
   minWidth: 300,
@@ -25,7 +23,7 @@ const Select = styled('select', {
 export const MailjetList = () => {
   const [newListId, setNewListId] = useState<number | null>(null);
   const { data: contactsLists, refetch: refetchContactsLists } =
-    useGetContactsListsNewsletter();
+    useNewslettersControllerGetContactsLists({});
   const {
     mutate: updateContactsListNewsletter,
     isLoading: isLoadingUpdateContactsListNewsletter,

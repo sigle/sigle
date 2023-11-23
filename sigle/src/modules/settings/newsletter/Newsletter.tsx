@@ -3,10 +3,7 @@ import { useFormik, FormikErrors } from 'formik';
 import { useEffect } from 'react';
 import { toast } from 'react-toastify';
 import { ApiError } from '../../../external/api';
-import {
-  useGetUserNewsletter,
-  useUpdateNewsletter,
-} from '../../../hooks/newsletters';
+import { useUpdateNewsletter } from '../../../hooks/newsletters';
 import { useGetUserSubscription } from '../../../hooks/subscriptions';
 import {
   Button,

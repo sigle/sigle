@@ -11,18 +11,6 @@ import {
   UpdateSenderDto,
 } from '../external/api';
 
-type GetApiNewsletterReturnType = Awaited<
-  ReturnType<typeof NewslettersService.newslettersControllerGet>
->;
-export const useGetUserNewsletter = (
-  options: UseQueryOptions<GetApiNewsletterReturnType, Error> = {},
-) =>
-  useQuery<GetApiNewsletterReturnType, Error>(
-    ['get-user-newsletter'],
-    () => NewslettersService.newslettersControllerGet(),
-    options,
-  );
-
 type PostApiNewsletterReturnType = Awaited<
   ReturnType<typeof NewslettersService.newslettersControllerUpdate>
 >;
@@ -38,18 +26,6 @@ export const useUpdateNewsletter = (
       NewslettersService.newslettersControllerUpdate({
         requestBody: args,
       }),
-    options,
-  );
-
-type GetApiContactsListsNewsletterReturnType = Awaited<
-  ReturnType<typeof NewslettersService.newslettersControllerGetContactsLists>
->;
-export const useGetContactsListsNewsletter = (
-  options: UseQueryOptions<GetApiContactsListsNewsletterReturnType, Error> = {},
-) =>
-  useQuery<GetApiContactsListsNewsletterReturnType, Error>(
-    ['get-user-contact-lists'],
-    () => NewslettersService.newslettersControllerGetContactsLists(),
     options,
   );
 
@@ -72,18 +48,6 @@ export const useUpdateContactsListNewsletter = (
       NewslettersService.newslettersControllerUpdateContactsList({
         requestBody: args,
       }),
-    options,
-  );
-
-type GetApiSendersNewsletterReturnType = Awaited<
-  ReturnType<typeof NewslettersService.newslettersControllerGetSenders>
->;
-export const useGetSendersNewsletter = (
-  options: UseQueryOptions<GetApiSendersNewsletterReturnType, Error> = {},
-) =>
-  useQuery<GetApiSendersNewsletterReturnType, Error>(
-    ['get-user-senders'],
-    () => NewslettersService.newslettersControllerGetSenders(),
     options,
   );
 
