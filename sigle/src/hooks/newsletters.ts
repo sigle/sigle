@@ -2,7 +2,6 @@ import { useMutation, UseMutationOptions } from '@tanstack/react-query';
 import {
   NewslettersService,
   UpdateNewsletterDto,
-  UpdateContactsListDto,
   UpdateSenderDto,
 } from '../external/api';
 
@@ -19,24 +18,6 @@ export const useUpdateNewsletter = (
   useMutation<PostApiNewsletterReturnType, Error, UpdateNewsletterDto>(
     (args) =>
       NewslettersService.newslettersControllerUpdate({
-        requestBody: args,
-      }),
-    options,
-  );
-
-type PostApiSenderNewsletterReturnType = Awaited<
-  ReturnType<typeof NewslettersService.newslettersControllerUpdateSender>
->;
-export const useUpdateSenderNewsletter = (
-  options: UseMutationOptions<
-    PostApiSenderNewsletterReturnType,
-    Error,
-    UpdateSenderDto
-  > = {},
-) =>
-  useMutation<PostApiSenderNewsletterReturnType, Error, UpdateSenderDto>(
-    (args) =>
-      NewslettersService.newslettersControllerUpdateSender({
         requestBody: args,
       }),
     options,

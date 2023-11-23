@@ -2,7 +2,6 @@ import { useState } from 'react';
 import { toast } from 'react-toastify';
 import { styled } from '../../../stitches.config';
 import { Box, Button, Flex, Typography } from '../../../ui';
-import { ApiError } from '../../../external/api';
 import {
   useNewslettersControllerGetContactsLists,
   useNewslettersControllerUpdateContactsList,
