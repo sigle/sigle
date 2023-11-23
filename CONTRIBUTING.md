@@ -40,58 +40,35 @@ Now you can run run the following command to install the dependencies:
 pnpm install
 ```
 
-## Setup server
-
-### Set up environment variables
-
-Copy the `env.example` file in the application directory to `.env` (which will be ignored by Git) and setup each variable.
-
-```sh
-cd server
-cp .env.example .env
-```
-
-### Start the databases
-
-We use docker to manage the local postgres database.
+To start the project in development/watch mode run:
 
 ```sh
 docker compose start
 ```
 
-### Setup the database
+This will start the databases and the applications services. You can now open your browser and go to http://localhost:3000 to see the app.
 
-To apply the schemas and seed the database with some data, run the following command:
+### Docker services
 
-```sh
-pnpm prisma migrate reset
-```
+| Name                 | Link                  |
+| -------------------- | --------------------- |
+| @sigle/app           | http://localhost:3000 |
+| @sigle/server        | http://localhost:3001 |
+| @sigle/custom-domain | http://localhost:3002 |
 
-### Run the server in development mode
+### Seed the database (optional)
 
-To start the project in development/watch mode run:
-
-```sh
-pnpm run dev
-```
-
-You can now open your browser and go to http://localhost:3001 to see the api.
-
-## Setup client
-
-### Run Next.js in development mode
-
-To start the project in development/watch mode run:
+To apply the schemas and seed the database with some data, run the following command in the `apps/server` directory:
 
 ```sh
-pnpm run dev
+docker exec $(docker container ls --all | grep -w sigle-server | awk '{print $1}') pnpm prisma migrate reset
 ```
 
-You can now open your browser and go to http://localhost:3000 to see the app.
+### Create prisma migration
 
-### Set up custom environment variables
-
-If needed, you can use your own environment variables in development. For this create a `.env.development.local` file in the application directory (which will be ignored by Git) and setup your variables.
+```sh
+docker exec $(docker container ls --all | grep -w sigle-server | awk '{print $1}') pnpm prisma migrate dev --name <migration-name>
+```
 
 ### Update the e2e tests snapshots
 
