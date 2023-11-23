@@ -58,10 +58,10 @@ const sheetVariants = cva(
   {
     variants: {
       position: {
-        top: 'w-full animate-in slide-in-from-top duration-300',
-        bottom: 'w-full animate-in slide-in-from-bottom duration-300',
-        left: 'h-full animate-in slide-in-from-left duration-300',
-        right: 'h-full animate-in slide-in-from-right duration-300',
+        top: 'w-full duration-300 animate-in slide-in-from-top',
+        bottom: 'w-full duration-300 animate-in slide-in-from-bottom',
+        left: 'h-full duration-300 animate-in slide-in-from-left',
+        right: 'h-full duration-300 animate-in slide-in-from-right',
       },
       size: {
         content: '',
