@@ -6,32 +6,6 @@ import {
 } from '@tanstack/react-query';
 import { AddEmailDto, UserService, VerifyEmailDto } from '../external/api';
 
-type GetApiUsersFollowingReturnType = Awaited<
-  ReturnType<typeof UserService.userControllerGetUserFollowing>
->;
-export const useGetUsersFollowing = (
-  userAddress: string,
-  options: UseQueryOptions<GetApiUsersFollowingReturnType, Error> = {},
-) =>
-  useQuery<GetApiUsersFollowingReturnType, Error>(
-    ['get-users-following', userAddress],
-    () => UserService.userControllerGetUserFollowing({ userAddress }),
-    options,
-  );
-
-type GetApiUsersFollowersReturnType = Awaited<
-  ReturnType<typeof UserService.userControllerGetUserFollowers>
->;
-export const useGetUsersFollowers = (
-  userAddress: string,
-  options: UseQueryOptions<GetApiUsersFollowersReturnType, Error> = {},
-) =>
-  useQuery<GetApiUsersFollowersReturnType, Error>(
-    ['get-users-followers', userAddress],
-    () => UserService.userControllerGetUserFollowers({ userAddress }),
-    options,
-  );
-
 type PostApiAddEmailReturnType = Awaited<
   ReturnType<typeof UserService.emailVerificationControllerAddEmail>
 >;
