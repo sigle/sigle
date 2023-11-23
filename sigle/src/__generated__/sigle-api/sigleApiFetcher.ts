@@ -1,3 +1,5 @@
+/* eslint-disable */
+
 import { sigleConfig } from '@/config';
 import { SigleApiContext } from './sigleApiContext';
 
