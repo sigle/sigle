@@ -15,7 +15,7 @@ export const sigleConfig = {
   explorerGuildUrl: 'https://www.explorerguild.io',
   feedbackUrl: 'https://sigle.canny.io/feature-requests',
   blogUrl: 'https://app.sigle.io/sigle.btc',
-  gammaUrl: 'https://gamma.io/collections/the-explorer-guild',
+  gammaUrl: 'https://stacks.gamma.io/collections/the-explorer-guild',
   gumroadUrl: 'https://sigle.gumroad.com/l/sigle',
   email: 'sigle@protonmail.com',
 };
