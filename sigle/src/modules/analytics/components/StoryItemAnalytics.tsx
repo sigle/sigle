@@ -16,7 +16,7 @@ import {
   monthFromDate,
   weekFromDate,
 } from '../stats/utils';
-import { useGetHistorical } from '../../../hooks/analytics';
+import { useAnalyticsControllerGetHistorical } from '@/__generated__/sigle-api';
 
 interface StoryAnalyticsProps {
   story: SubsetStory | undefined;
@@ -34,12 +34,13 @@ export const StoryItemAnalytics = ({ story }: StoryAnalyticsProps) => {
     dateGrouping: 'day',
     statType: 'weekly',
   }));
-  const {
-    data: historicalData,
-    isError,
-    error,
-  } = useGetHistorical(
-    { ...historicalParams, storyId: story?.id },
+  const { data: historicalData, error } = useAnalyticsControllerGetHistorical(
+    {
+      queryParams: {
+        ...historicalParams,
+        storyId: story?.id,
+      },
+    },
     {
       placeholderData: { historical: initialRange, stories: [] },
     },
@@ -85,7 +86,7 @@ export const StoryItemAnalytics = ({ story }: StoryAnalyticsProps) => {
       ) : (
         <Box css={{ height: 68 }} />
       )}
-      {isError && <ErrorMessage>{error.message}</ErrorMessage>}
+      {error && <ErrorMessage>{error.message}</ErrorMessage>}
       <Flex css={{ mt: '$8' }}>
         <StatsTotal data={data!} />
         <Tabs

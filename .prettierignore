@@ -2,6 +2,9 @@
 .github/ISSUE_TEMPLATE
 pnpm-lock.yaml
 
+# sigle
+sigle/src/__generated__
+
 # server
 server/dist
 coverage

@@ -12,8 +12,7 @@ import {
 } from '../../ui';
 import { isValidEmail } from '../../utils/regex';
 import { toast } from 'react-toastify';
-import { useCreateSubscribers } from '../../hooks/subscribers';
-import { ApiError } from '../../external/api';
+import { useSubscribersControllerCreate } from '@/__generated__/sigle-api';
 
 interface NewsletterFrameProps {
   stacksAddress: string;
@@ -54,17 +53,12 @@ export const NewsletterFrame = ({
     onSubmit: async (values, { setErrors, validateForm }) => {
       setErrors({});
       validateForm();
-      try {
-        createSubscribers({ stacksAddress, email: values.email });
-      } catch (error) {
-        console.error(error);
-        toast.error(error);
-      }
+      createSubscribers({ body: { stacksAddress, email: values.email } });
     },
   });
 
   const { mutate: createSubscribers, isLoading: isLoadingCreateSubscriber } =
-    useCreateSubscribers({
+    useSubscribersControllerCreate({
       onSuccess: () => {
         toast.success(
           `You successfully subscribed to ${siteName}'s newsletter`,
@@ -75,12 +69,8 @@ export const NewsletterFrame = ({
         formik.setSubmitting(false);
         setIsSubscribed(true);
       },
-      onError: (error: Error | ApiError) => {
-        let errorMessage = error.message;
-        if (error instanceof ApiError && error.body.message) {
-          errorMessage = error.body.message;
-        }
-        formik.setErrors({ email: errorMessage });
+      onError: (error) => {
+        formik.setErrors({ email: error?.message });
         formik.setSubmitting(false);
       },
     });

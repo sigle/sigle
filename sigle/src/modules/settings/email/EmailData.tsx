@@ -1,12 +1,6 @@
 import { CheckCircledIcon } from '@radix-ui/react-icons';
 import { FormikErrors, useFormik } from 'formik';
 import { toast } from 'react-toastify';
-import { ApiError } from '../../../external/api';
-import {
-  useAddUserEmail,
-  useGetUserMe,
-  useResendVerificationUserEmail,
-} from '../../../hooks/users';
 import {
   Box,
   Flex,
@@ -22,6 +16,11 @@ import {
 import { isValidEmail } from '../../../utils/regex';
 import { UnsavedChanges } from '../components/UnsavedChanges';
 import { SettingsLayout } from '../SettingsLayout';
+import {
+  useUserControllerGetUserMe,
+  useEmailVerificationControllerAddEmail,
+  useEmailVerificationControllerResendEmail,
+} from '@/__generated__/sigle-api';
 
 interface SettingsFormValues {
   email: string;
@@ -29,17 +28,16 @@ interface SettingsFormValues {
 }
 
 export const EmailData = () => {
-  const { data: userMe, refetch: refetchUserMe } = useGetUserMe({
-    suspense: true,
-  });
+  const { data: userMe, refetch: refetchUserMe } = useUserControllerGetUserMe(
+    {},
+    {
+      suspense: true,
+    },
+  );
   const { mutate: addUserEmail, isLoading: isLoadingAddUserEmail } =
-    useAddUserEmail({
-      onError: (error: Error | ApiError) => {
-        let errorMessage = error.message;
-        if (error instanceof ApiError && error.body.message) {
-          errorMessage = error.body.message;
-        }
-        toast.error(errorMessage);
+    useEmailVerificationControllerAddEmail({
+      onError: (error) => {
+        toast.error(error?.message);
       },
       onSuccess: async () => {
         await refetchUserMe();
@@ -51,13 +49,9 @@ export const EmailData = () => {
   const {
     mutate: resendVerificationUserEmail,
     isLoading: isLoadingResendVerificationUserEmail,
-  } = useResendVerificationUserEmail({
-    onError: (error: Error | ApiError) => {
-      let errorMessage = error.message;
-      if (error instanceof ApiError && error.body.message) {
-        errorMessage = error.body.message;
-      }
-      toast.error(errorMessage);
+  } = useEmailVerificationControllerResendEmail({
+    onError: (error) => {
+      toast.error(error?.message);
     },
     onSuccess: async () => {
       await refetchUserMe();
@@ -86,7 +80,11 @@ export const EmailData = () => {
     validateOnChange: false,
     onSubmit: (values, { setSubmitting }) => {
       setSubmitting(false);
-      addUserEmail({ email: values.email });
+      addUserEmail({
+        body: {
+          email: values.email,
+        },
+      });
     },
   });
 
@@ -128,7 +126,7 @@ export const EmailData = () => {
                   boxShadow: '0 1px 0 0',
                   cursor: 'pointer',
                 }}
-                onClick={() => resendVerificationUserEmail()}
+                onClick={() => resendVerificationUserEmail({})}
               >
                 Resend verification email.
               </Box>

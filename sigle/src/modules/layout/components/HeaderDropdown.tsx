@@ -38,7 +38,7 @@ import {
 } from '@radix-ui/react-icons';
 import { useTheme } from 'next-themes';
 import { Switch, SwitchThumb } from '../../../ui/Switch';
-import { useGetUserSubscription } from '../../../hooks/subscriptions';
+import { useSubscriptionControllerGetUserMe } from '@/__generated__/sigle-api';
 
 const ImageContainer = styled('div', {
   display: 'flex',
@@ -57,9 +57,12 @@ export const HeaderDropdown = () => {
   const queryClient = useQueryClient();
   const [loadingCreate, setLoadingCreate] = useState(false);
   const { resolvedTheme, setTheme } = useTheme();
-  const { data: userSubscription } = useGetUserSubscription({
-    enabled: !isLegacy,
-  });
+  const { data: userSubscription } = useSubscriptionControllerGetUserMe(
+    {},
+    {
+      enabled: !isLegacy,
+    },
+  );
 
   const handleCreateNewPrivateStory = async () => {
     setLoadingCreate(true);

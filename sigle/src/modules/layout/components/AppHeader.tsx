@@ -13,7 +13,6 @@ import { styled } from '../../../stitches.config';
 import { Box, Button, Container, Flex, IconButton } from '../../../ui';
 import { useAuth } from '../../auth/AuthContext';
 import { sigleConfig } from '../../../config';
-import { useGetUserMe } from '../../../hooks/users';
 import { HeaderDropdown } from './HeaderDropdown';
 import { MobileHeader } from './MobileHeader';
 import { useState } from 'react';
@@ -28,6 +27,7 @@ import * as Fathom from 'fathom-client';
 import { Goals } from '../../../utils/fathom';
 import { toast } from 'react-toastify';
 import { useRouter } from 'next/router';
+import { useUserControllerGetUserMe } from '@/__generated__/sigle-api';
 
 const Header = styled('header', Container, {
   display: 'flex',
@@ -75,11 +75,14 @@ export const AppHeader = () => {
    * This query is used to register the user in the DB. As the header is part of all the
    * pages we know this query will run before any operation.
    */
-  useGetUserMe({
-    enabled: status === 'authenticated',
-    staleTime: 0,
-    refetchOnMount: false,
-  });
+  useUserControllerGetUserMe(
+    {},
+    {
+      enabled: status === 'authenticated',
+      staleTime: 0,
+      refetchOnMount: false,
+    },
+  );
 
   const toggleTheme = () => {
     resolvedTheme === 'dark' ? setTheme('light') : setTheme('dark');

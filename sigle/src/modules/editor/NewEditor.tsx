@@ -19,7 +19,10 @@ import { PublishedDialog } from './PublishedDialog';
 import { CoverImage } from './CoverImage';
 import { EditorSettings } from './EditorSettings/EditorSettings';
 import { useAuth } from '../auth/AuthContext';
-import { ApiError, StoriesService } from '../../external/api';
+import {
+  fetchStoriesControllerPublish,
+  fetchStoriesControllerUnpublish,
+} from '@/__generated__/sigle-api';
 
 const TitleInput = styled('input', {
   outline: 'transparent',
@@ -130,17 +133,13 @@ export const NewEditor = ({ story }: NewEditorProps) => {
       Fathom.trackGoal(Goals.PUBLISH, 0);
       posthog.capture('publish-story', { id: story.id });
       if (!isLegacy) {
-        await StoriesService.storiesControllerPublish({
-          requestBody: { id: story.id, send: options?.send ?? false },
+        await fetchStoriesControllerPublish({
+          body: { id: story.id, send: options?.send ?? false },
         });
       }
     } catch (error) {
-      let errorMessage = error.message;
-      if (error instanceof ApiError && error.body.message) {
-        errorMessage = error.body.message;
-      }
-      console.error(error);
-      toast.error(errorMessage);
+      console.error(error.message);
+      toast.error(error.message);
     }
     NProgress.done();
     setPublishDialogState({
@@ -179,8 +178,8 @@ export const NewEditor = ({ story }: NewEditorProps) => {
       toast.success('Story unpublished');
       posthog.capture('unpublish-story', { id: story.id });
       if (!isLegacy) {
-        await StoriesService.storiesControllerUnpublish({
-          requestBody: { id: story.id },
+        await fetchStoriesControllerUnpublish({
+          body: { id: story.id },
         });
       }
     } catch (error) {

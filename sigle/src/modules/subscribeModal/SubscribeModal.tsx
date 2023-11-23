@@ -2,9 +2,6 @@ import { FormikErrors, useFormik } from 'formik';
 import { useSession } from 'next-auth/react';
 import Image from 'next/image';
 import { useEffect, useState } from 'react';
-import { ApiError } from '../../external/api';
-import { useCreateSubscribers } from '../../hooks/subscribers';
-import { useGetUserMe } from '../../hooks/users';
 import { styled } from '../../stitches.config';
 import {
   Button,
@@ -19,6 +16,10 @@ import {
   Typography,
 } from '../../ui';
 import { isValidEmail } from '../../utils/regex';
+import {
+  useUserControllerGetUserMe,
+  useSubscribersControllerCreate,
+} from '@/__generated__/sigle-api';
 
 const HeaderLogoContainer = styled('div', {
   mx: 'auto',
@@ -59,10 +60,13 @@ export const SubscribeModal = ({
   onClose,
 }: SubscribeModalProps) => {
   const { status } = useSession();
-  const { data: userMe } = useGetUserMe({
-    enabled: status === 'authenticated',
-    refetchOnMount: false,
-  });
+  const { data: userMe } = useUserControllerGetUserMe(
+    {},
+    {
+      enabled: status === 'authenticated',
+      refetchOnMount: false,
+    },
+  );
   const [success, setSuccess] = useState(false);
   const formik = useFormik<SettingsFormValues>({
     initialValues: {
@@ -86,8 +90,10 @@ export const SubscribeModal = ({
       setErrors({});
       validateForm();
       createSubscribers({
-        stacksAddress: userInfo.address,
-        email: values.email,
+        body: {
+          stacksAddress: userInfo.address,
+          email: values.email,
+        },
       });
     },
   });
@@ -99,17 +105,13 @@ export const SubscribeModal = ({
   }, [userMe]);
 
   const { mutate: createSubscribers, isLoading: isLoadingCreateSubscriber } =
-    useCreateSubscribers({
+    useSubscribersControllerCreate({
       onSuccess: () => {
         setSuccess(true);
         formik.setSubmitting(false);
       },
-      onError: (error: Error | ApiError) => {
-        let errorMessage = error.message;
-        if (error instanceof ApiError && error.body.message) {
-          errorMessage = error.body.message;
-        }
-        formik.setErrors({ email: errorMessage });
+      onError: (error) => {
+        formik.setErrors({ email: error?.message });
         formik.setSubmitting(false);
       },
     });

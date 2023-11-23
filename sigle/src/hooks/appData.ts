@@ -4,13 +4,16 @@ import {
   useQueryClient,
   UseQueryOptions,
 } from '@tanstack/react-query';
-import { UserService } from '../external/api';
 import {
   getSettingsFile,
   GaiaUserFollowing,
   getFollowingFile,
   saveFollowingFile,
 } from '../utils';
+import {
+  fetchUserControllerAddFollow,
+  fetchUserControllerRemoveFollow,
+} from '@/__generated__/sigle-api';
 
 /**
  * Get the app user following from Gaia.
@@ -37,15 +40,11 @@ export const useUserFollow = () => {
     userFollowing.following[address] = {
       createdAt: now,
     };
-    // optimistic update
-    queryClient.setQueriesData(['get-user-following'], userFollowing);
     await saveFollowingFile(userFollowing);
-    await UserService.userControllerAddFollow({
-      requestBody: { stacksAddress: address, createdAt: now },
+    await fetchUserControllerAddFollow({
+      body: { stacksAddress: address, createdAt: now },
     });
-    await queryClient.invalidateQueries(['get-users-followers']);
-    await queryClient.invalidateQueries(['get-users-following']);
-    await queryClient.invalidateQueries(['get-user-by-address']);
+    await queryClient.invalidateQueries();
   });
 };
 
@@ -60,15 +59,12 @@ export const useUserUnfollow = () => {
     const now = Date.now();
     userFollowing.updatedAt = now;
     delete userFollowing.following[address];
-    // optimistic update
-    queryClient.setQueriesData(['get-user-following'], userFollowing);
+
     await saveFollowingFile(userFollowing);
-    await UserService.userControllerRemoveFollow({
-      requestBody: { stacksAddress: address },
+    await fetchUserControllerRemoveFollow({
+      body: { stacksAddress: address },
     });
-    await queryClient.invalidateQueries(['get-users-followers']);
-    await queryClient.invalidateQueries(['get-users-following']);
-    await queryClient.invalidateQueries(['get-user-by-address']);
+    await queryClient.invalidateQueries();
   });
 };
 

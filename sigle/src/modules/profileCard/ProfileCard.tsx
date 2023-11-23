@@ -17,7 +17,7 @@ import { generateAvatar } from '../../utils/boringAvatar';
 import { SettingsFile } from '../../types';
 import { styled } from '../../stitches.config';
 import { useAuth } from '../auth/AuthContext';
-import { useGetUserByAddress } from '../../hooks/users';
+import { useUserControllerGetUser } from '@/__generated__/sigle-api';
 import {
   useGetGaiaUserFollowing,
   useUserFollow,
@@ -67,10 +67,17 @@ export const ProfileCard = ({
     enabled: isOpen && !!user && userInfo.username !== user.username,
     staleTime: Infinity,
   });
-  const { data: userInfoByAddress } = useGetUserByAddress(userInfo.address, {
-    enabled: isOpen,
-    staleTime: Infinity,
-  });
+  const { data: userInfoByAddress } = useUserControllerGetUser(
+    {
+      pathParams: {
+        userAddress: userInfo.address,
+      },
+    },
+    {
+      enabled: isOpen,
+      staleTime: Infinity,
+    },
+  );
   const { mutate: followUser } = useUserFollow();
   const { mutate: unfollowUser } = useUserUnfollow();
 

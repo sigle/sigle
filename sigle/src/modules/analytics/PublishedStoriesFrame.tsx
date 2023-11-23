@@ -1,11 +1,11 @@
 import { useRouter } from 'next/router';
 import { useMemo, useState } from 'react';
-import { useGetHistorical } from '../../hooks/analytics';
 import { SubsetStory } from '../../types';
 import { Box, Typography } from '../../ui';
 import { Pagination } from './Pagination';
 import { PublishedStoryItem } from './PublishedStoryItem';
 import { ErrorMessage } from '../../ui/ErrorMessage';
+import { useAnalyticsControllerGetHistorical } from '@/__generated__/sigle-api';
 
 interface PublishedStoriesFrameProps {
   historicalParams: {
@@ -23,11 +23,12 @@ export const PublishedStoriesFrame = ({
 }: PublishedStoriesFrameProps) => {
   const router = useRouter();
   const [currentPage, setCurrentPage] = useState<number>(1);
-  const {
-    data: historicalData,
-    isError,
-    error,
-  } = useGetHistorical(historicalParams, {});
+  const { data: historicalData, error } = useAnalyticsControllerGetHistorical(
+    {
+      queryParams: historicalParams,
+    },
+    {},
+  );
 
   const nbStoriesLabel = loading ? '...' : stories ? stories.length : 0;
   // how many stories we should show on each page
@@ -53,7 +54,7 @@ export const PublishedStoriesFrame = ({
       >
         My published stories ({nbStoriesLabel})
       </Typography>
-      {isError && <ErrorMessage>{error.message}</ErrorMessage>}
+      {error && <ErrorMessage>{error.message}</ErrorMessage>}
       <Box css={{ mb: '$3', height: 476 }}>
         {currentStories?.map((story) => (
           <PublishedStoryItem

@@ -29,11 +29,6 @@ import {
 } from '../../../hooks/appData';
 import { generateAvatar } from '../../../utils/boringAvatar';
 import { StoryCard } from '../../storyCard/StoryCard';
-import {
-  useGetUserByAddress,
-  useGetUsersFollowers,
-  useGetUsersFollowing,
-} from '../../../hooks/users';
 import { UserCard } from '../../userCard/UserCard';
 import { DashboardLayout } from '../../layout';
 import { AppHeader } from '../../layout/components/AppHeader';
@@ -44,6 +39,11 @@ import { TwitterFilledIcon } from '../../../icons';
 import { EnvelopePlusIcon } from '../../../icons/EnvelopPlusIcon';
 import { SubscribeModal } from '../../subscribeModal/SubscribeModal';
 import { StoryCardSkeleton } from '../../home/components/StoryItemSkeleton';
+import {
+  useUserControllerGetUser,
+  useUserControllerGetUserFollowers,
+  useUserControllerGetUserFollowing,
+} from '@/__generated__/sigle-api';
 
 const StyledTabsTrigger = styled(TabsTrigger, {
   fontSize: 13,
@@ -171,18 +171,36 @@ export const PublicHome = ({ file, settings, userInfo }: PublicHomeProps) => {
   const { user, isLegacy } = useAuth();
   const [showSubscribeDialog, setShowSubscribeDialog] = useState(false);
   const router = useRouter();
-  const { data: userInfoByAddress } = useGetUserByAddress(userInfo.address);
+  const { data: userInfoByAddress } = useUserControllerGetUser({
+    pathParams: {
+      userAddress: userInfo.address,
+    },
+  });
   const { data: userFollowing } = useGetGaiaUserFollowing({
     enabled: !!user && userInfo.username !== user.username,
   });
   const { mutate: followUser } = useUserFollow();
   const { mutate: unfollowUser } = useUserUnfollow();
-  const { data: following } = useGetUsersFollowing(userInfo.address, {
-    enabled: router.query.tab === 'following',
-  });
-  const { data: followers } = useGetUsersFollowers(userInfo.address, {
-    enabled: router.query.tab === 'followers',
-  });
+  const { data: following } = useUserControllerGetUserFollowing(
+    {
+      pathParams: {
+        userAddress: userInfo.address,
+      },
+    },
+    {
+      enabled: router.query.tab === 'following',
+    },
+  );
+  const { data: followers } = useUserControllerGetUserFollowers(
+    {
+      pathParams: {
+        userAddress: userInfo.address,
+      },
+    },
+    {
+      enabled: router.query.tab === 'followers',
+    },
+  );
 
   const twitterHandle = settings.siteTwitterHandle;
   const isFollowingUser =
