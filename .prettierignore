@@ -1,13 +1,5 @@
 .next
 .github/ISSUE_TEMPLATE
 pnpm-lock.yaml
-
-# sigle
-sigle/src/__generated__
-
-# server
-server/dist
-coverage
-
-# sigle-next
-apps/sigle-next/src/__generated__
+__generated__
+dist

@@ -34,22 +34,22 @@ jobs:
 
       - name: Install Playwright Browsers
         run: pnpm playwright install --with-deps chromium
-        working-directory: sigle
+        working-directory: apps/sigle
 
       - name: Build
         run: |
-          cp sigle/.env.e2e sigle/.env.production.local
+          cp apps/sigle/.env.e2e apps/sigle/.env.production.local
           pnpm build --scope=@sigle/app
 
       - name: Run e2e tests
         run: pnpm run test:e2e
-        working-directory: sigle
+        working-directory: apps/sigle
 
       - uses: actions/upload-artifact@v3
         if: failure()
         with:
           name: sigle-playwright-report
-          path: sigle/playwright-report/
+          path: apps/sigle/playwright-report/
           retention-days: 10
 
   test-custom-domain-e2e:
@@ -86,7 +86,7 @@ jobs:
     runs-on: ubuntu-22.04
     defaults:
       run:
-        working-directory: server
+        working-directory: apps/server
     services:
       redis:
         image: redis:6.2
