@@ -1,7 +1,6 @@
 import { ArrowLeftIcon, CheckCircledIcon } from '@radix-ui/react-icons';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
-import { useGetStory } from '../../hooks/stories';
 import { styled } from '../../stitches.config';
 import { Story } from '../../types';
 import {
@@ -25,6 +24,7 @@ import { TwitterCardPreview } from './TwitterCardPreview';
 import {
   useUserControllerGetUserMe,
   useSubscriptionControllerGetUserMe,
+  useStoriesControllerGet,
 } from '@/__generated__/sigle-api';
 
 const StyledTabsTrigger = styled(TabsTrigger, {
@@ -100,8 +100,10 @@ export const PublishDialog = ({
 }: PublishDialogProps) => {
   const { data: userMe } = useUserControllerGetUserMe({});
   const { data: userSubscription } = useSubscriptionControllerGetUserMe({});
-  const { data: storyApi, refetch: refetchStoryApi } = useGetStory({
-    storyId: story.id,
+  const { data: storyApi, refetch: refetchStoryApi } = useStoriesControllerGet({
+    pathParams: {
+      storyId: story.id,
+    },
   });
   const [tabValue, setTabValue] = useState<'publish only' | 'publish and send'>(
     'publish only',
