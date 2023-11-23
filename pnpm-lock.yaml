@@ -170,7 +170,7 @@ importers:
         version: 1.0.6(@types/react-dom@18.0.11)(@types/react@18.0.35)(react-dom@18.2.0)(react@18.2.0)
       '@sentry/nextjs':
         specifier: 7.81.1
-        version: 7.81.1(next@13.5.6)(react@18.2.0)(webpack@5.89.0)
+        version: 7.81.1(next@14.0.3)(react@18.2.0)(webpack@5.89.0)
       '@stacks/blockchain-api-client':
         specifier: 7.2.2
         version: 7.2.2
@@ -275,7 +275,7 @@ importers:
         version: 10.30.0(@trpc/server@10.30.0)
       '@trpc/next':
         specifier: 10.30.0
-        version: 10.30.0(@tanstack/react-query@4.29.13)(@trpc/client@10.30.0)(@trpc/react-query@10.30.0)(@trpc/server@10.30.0)(next@13.5.6)(react-dom@18.2.0)(react@18.2.0)
+        version: 10.30.0(@tanstack/react-query@4.29.13)(@trpc/client@10.30.0)(@trpc/react-query@10.30.0)(@trpc/server@10.30.0)(next@14.0.3)(react-dom@18.2.0)(react@18.2.0)
       '@trpc/react-query':
         specifier: 10.30.0
         version: 10.30.0(@tanstack/react-query@4.29.13)(@trpc/client@10.30.0)(@trpc/server@10.30.0)(react-dom@18.2.0)(react@18.2.0)
@@ -319,14 +319,14 @@ importers:
         specifier: 3.3.3
         version: 3.3.3
       next:
-        specifier: 13.5.6
-        version: 13.5.6(@babel/core@7.23.3)(react-dom@18.2.0)(react@18.2.0)(sass@1.69.4)
+        specifier: 14.0.3
+        version: 14.0.3(@babel/core@7.23.3)(react-dom@18.2.0)(react@18.2.0)
       next-auth:
         specifier: 4.24.5
-        version: 4.24.5(next@13.5.6)(react-dom@18.2.0)(react@18.2.0)
+        version: 4.24.5(next@14.0.3)(nodemailer@6.9.7)(react-dom@18.2.0)(react@18.2.0)
       next-themes:
         specifier: 0.2.0
-        version: 0.2.0(next@13.5.6)(react-dom@18.2.0)(react@18.2.0)
+        version: 0.2.0(next@14.0.3)(react-dom@18.2.0)(react@18.2.0)
       posthog-js:
         specifier: 1.84.3
         version: 1.84.3
@@ -428,8 +428,8 @@ importers:
         specifier: 8.42.0
         version: 8.42.0
       eslint-config-next:
-        specifier: 13.5.6
-        version: 13.5.6(eslint@8.42.0)(typescript@5.1.3)
+        specifier: 14.0.3
+        version: 14.0.3(eslint@8.42.0)(typescript@5.1.3)
       jest:
         specifier: 29.5.0
         version: 29.5.0(@types/node@18.15.11)
@@ -704,7 +704,7 @@ importers:
         version: 1.0.7(@types/react-dom@18.0.10)(@types/react@18.0.26)(react-dom@18.2.0)(react@18.2.0)
       '@sentry/nextjs':
         specifier: 7.81.1
-        version: 7.81.1(next@13.5.6)(react@18.2.0)(webpack@5.89.0)
+        version: 7.81.1(next@13.5.6)(react@18.2.0)
       '@sigle/slate-to-html':
         specifier: 1.0.0
         version: 1.0.0(immutable@4.0.0-rc.12)(react-dom@18.2.0)(react@18.2.0)
@@ -7988,7 +7988,7 @@ packages:
       localforage: 1.10.0
     dev: false
 
-  /@sentry/nextjs@7.81.1(next@13.5.6)(react@18.2.0)(webpack@5.89.0):
+  /@sentry/nextjs@7.81.1(next@13.5.6)(react@18.2.0):
     resolution: {integrity: sha512-Wx0QiZHttf+WJkao4UQ5szOWJVu/pmPdKZKE4FWsJuG+mUu6FviOXgh0T0Iq+NnJrgqzKzGLMN6rIWPzN9PLkg==}
     engines: {node: '>=8'}
     peerDependencies:
@@ -8010,6 +8010,37 @@ packages:
       '@sentry/webpack-plugin': 1.21.0
       chalk: 3.0.0
       next: 13.5.6(@babel/core@7.23.3)(react-dom@18.2.0)(react@18.2.0)(sass@1.69.4)
+      react: 18.2.0
+      resolve: 1.22.8
+      rollup: 2.78.0
+      stacktrace-parser: 0.1.10
+    transitivePeerDependencies:
+      - encoding
+      - supports-color
+    dev: false
+
+  /@sentry/nextjs@7.81.1(next@14.0.3)(react@18.2.0)(webpack@5.89.0):
+    resolution: {integrity: sha512-Wx0QiZHttf+WJkao4UQ5szOWJVu/pmPdKZKE4FWsJuG+mUu6FviOXgh0T0Iq+NnJrgqzKzGLMN6rIWPzN9PLkg==}
+    engines: {node: '>=8'}
+    peerDependencies:
+      next: ^10.0.8 || ^11.0 || ^12.0 || ^13.0 || ^14.0
+      react: 16.x || 17.x || 18.x
+      webpack: '>= 4.0.0'
+    peerDependenciesMeta:
+      webpack:
+        optional: true
+    dependencies:
+      '@rollup/plugin-commonjs': 24.0.0(rollup@2.78.0)
+      '@sentry/core': 7.81.1
+      '@sentry/integrations': 7.81.1
+      '@sentry/node': 7.81.1
+      '@sentry/react': 7.81.1(react@18.2.0)
+      '@sentry/types': 7.81.1
+      '@sentry/utils': 7.81.1
+      '@sentry/vercel-edge': 7.81.1
+      '@sentry/webpack-plugin': 1.21.0
+      chalk: 3.0.0
+      next: 14.0.3(@babel/core@7.23.3)(react-dom@18.2.0)(react@18.2.0)
       react: 18.2.0
       resolve: 1.22.8
       rollup: 2.78.0
@@ -9523,7 +9554,7 @@ packages:
       '@trpc/server': 10.30.0
     dev: false
 
-  /@trpc/next@10.30.0(@tanstack/react-query@4.29.13)(@trpc/client@10.30.0)(@trpc/react-query@10.30.0)(@trpc/server@10.30.0)(next@13.5.6)(react-dom@18.2.0)(react@18.2.0):
+  /@trpc/next@10.30.0(@tanstack/react-query@4.29.13)(@trpc/client@10.30.0)(@trpc/react-query@10.30.0)(@trpc/server@10.30.0)(next@14.0.3)(react-dom@18.2.0)(react@18.2.0):
     resolution: {integrity: sha512-DhvEadQe5E6yFXkAS394OvCe7MKAnuK45Ni86Hg7B6Sq5nCX5aFm7YeNdJKxfuxaXzXuvK0XD2YGJFsf9+0j0Q==}
     peerDependencies:
       '@tanstack/react-query': ^4.18.0
@@ -9538,7 +9569,7 @@ packages:
       '@trpc/client': 10.30.0(@trpc/server@10.30.0)
       '@trpc/react-query': 10.30.0(@tanstack/react-query@4.29.13)(@trpc/client@10.30.0)(@trpc/server@10.30.0)(react-dom@18.2.0)(react@18.2.0)
       '@trpc/server': 10.30.0
-      next: 13.5.6(@babel/core@7.23.3)(react-dom@18.2.0)(react@18.2.0)(sass@1.69.4)
+      next: 14.0.3(@babel/core@7.23.3)(react-dom@18.2.0)(react@18.2.0)
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
       react-ssr-prepass: 1.5.0(react@18.2.0)
@@ -14013,31 +14044,6 @@ packages:
       source-map: 0.6.1
     dev: true
 
-  /eslint-config-next@13.5.6(eslint@8.42.0)(typescript@5.1.3):
-    resolution: {integrity: sha512-o8pQsUHTo9aHqJ2YiZDym5gQAMRf7O2HndHo/JZeY7TDD+W4hk6Ma8Vw54RHiBeb7OWWO5dPirQB+Is/aVQ7Kg==}
-    peerDependencies:
-      eslint: ^7.23.0 || ^8.0.0
-      typescript: '>=3.3.1'
-    peerDependenciesMeta:
-      typescript:
-        optional: true
-    dependencies:
-      '@next/eslint-plugin-next': 13.5.6
-      '@rushstack/eslint-patch': 1.5.1
-      '@typescript-eslint/parser': 6.12.0(eslint@8.42.0)(typescript@5.1.3)
-      eslint: 8.42.0
-      eslint-import-resolver-node: 0.3.9
-      eslint-import-resolver-typescript: 3.6.1(@typescript-eslint/parser@6.12.0)(eslint-import-resolver-node@0.3.9)(eslint-plugin-import@2.28.1)(eslint@8.42.0)
-      eslint-plugin-import: 2.28.1(@typescript-eslint/parser@6.12.0)(eslint-import-resolver-typescript@3.6.1)(eslint@8.42.0)
-      eslint-plugin-jsx-a11y: 6.7.1(eslint@8.42.0)
-      eslint-plugin-react: 7.33.2(eslint@8.42.0)
-      eslint-plugin-react-hooks: 4.6.0(eslint@8.42.0)
-      typescript: 5.1.3
-    transitivePeerDependencies:
-      - eslint-import-resolver-webpack
-      - supports-color
-    dev: true
-
   /eslint-config-next@13.5.6(eslint@8.52.0)(typescript@5.2.2):
     resolution: {integrity: sha512-o8pQsUHTo9aHqJ2YiZDym5gQAMRf7O2HndHo/JZeY7TDD+W4hk6Ma8Vw54RHiBeb7OWWO5dPirQB+Is/aVQ7Kg==}
     peerDependencies:
@@ -14058,6 +14064,31 @@ packages:
       eslint-plugin-react: 7.33.2(eslint@8.52.0)
       eslint-plugin-react-hooks: 4.6.0(eslint@8.52.0)
       typescript: 5.2.2
+    transitivePeerDependencies:
+      - eslint-import-resolver-webpack
+      - supports-color
+    dev: true
+
+  /eslint-config-next@14.0.3(eslint@8.42.0)(typescript@5.1.3):
+    resolution: {integrity: sha512-IKPhpLdpSUyKofmsXUfrvBC49JMUTdeaD8ZIH4v9Vk0sC1X6URTuTJCLtA0Vwuj7V/CQh0oISuSTvNn5//Buew==}
+    peerDependencies:
+      eslint: ^7.23.0 || ^8.0.0
+      typescript: '>=3.3.1'
+    peerDependenciesMeta:
+      typescript:
+        optional: true
+    dependencies:
+      '@next/eslint-plugin-next': 14.0.3
+      '@rushstack/eslint-patch': 1.5.1
+      '@typescript-eslint/parser': 6.12.0(eslint@8.42.0)(typescript@5.1.3)
+      eslint: 8.42.0
+      eslint-import-resolver-node: 0.3.9
+      eslint-import-resolver-typescript: 3.6.1(@typescript-eslint/parser@6.12.0)(eslint-import-resolver-node@0.3.9)(eslint-plugin-import@2.28.1)(eslint@8.42.0)
+      eslint-plugin-import: 2.28.1(@typescript-eslint/parser@6.12.0)(eslint-import-resolver-typescript@3.6.1)(eslint@8.42.0)
+      eslint-plugin-jsx-a11y: 6.7.1(eslint@8.42.0)
+      eslint-plugin-react: 7.33.2(eslint@8.42.0)
+      eslint-plugin-react-hooks: 4.6.0(eslint@8.42.0)
+      typescript: 5.1.3
     transitivePeerDependencies:
       - eslint-import-resolver-webpack
       - supports-color
@@ -14130,7 +14161,7 @@ packages:
       eslint-plugin-import: 2.28.1(@typescript-eslint/parser@6.12.0)(eslint-import-resolver-typescript@3.6.1)(eslint@8.42.0)
       fast-glob: 3.3.2
       get-tsconfig: 4.7.2
-      is-core-module: 2.13.0
+      is-core-module: 2.13.1
       is-glob: 4.0.3
     transitivePeerDependencies:
       - '@typescript-eslint/parser'
@@ -14272,7 +14303,7 @@ packages:
       eslint-import-resolver-node: 0.3.9
       eslint-module-utils: 2.8.0(@typescript-eslint/parser@5.62.0)(eslint-import-resolver-node@0.3.9)(eslint@8.52.0)
       has: 1.0.4
-      is-core-module: 2.13.0
+      is-core-module: 2.13.1
       is-glob: 4.0.3
       minimatch: 3.1.2
       object.fromentries: 2.0.7
@@ -14307,7 +14338,7 @@ packages:
       eslint-import-resolver-node: 0.3.9
       eslint-module-utils: 2.8.0(@typescript-eslint/parser@6.12.0)(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@3.6.1)(eslint@8.42.0)
       has: 1.0.4
-      is-core-module: 2.13.0
+      is-core-module: 2.13.1
       is-glob: 4.0.3
       minimatch: 3.1.2
       object.fromentries: 2.0.7
@@ -19776,6 +19807,18 @@ packages:
       react-dom: '*'
     dependencies:
       next: 13.5.6(@babel/core@7.23.3)(react-dom@18.2.0)(react@18.2.0)(sass@1.69.4)
+      react: 18.2.0
+      react-dom: 18.2.0(react@18.2.0)
+    dev: false
+
+  /next-themes@0.2.0(next@14.0.3)(react-dom@18.2.0)(react@18.2.0):
+    resolution: {integrity: sha512-myhpDL4vadBD9YDSHiewqvzorGzB03N84e+3LxCwHRlM/hiBOaW+UsKsQojQAzC7fdcJA0l2ppveXcYaVV+hxQ==}
+    peerDependencies:
+      next: '*'
+      react: '*'
+      react-dom: '*'
+    dependencies:
+      next: 14.0.3(@babel/core@7.23.3)(react-dom@18.2.0)(react@18.2.0)
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
     dev: false
