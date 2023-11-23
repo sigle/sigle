@@ -2,6 +2,3 @@
 **/.turbo
 **/dist
 **/node_modules
-apps/sigle/.env.local
-.github
-.changeset
