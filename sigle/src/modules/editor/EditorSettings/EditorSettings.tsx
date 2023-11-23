@@ -45,7 +45,7 @@ import {
   FormRow,
   FormTextarea,
 } from '../../../ui/Form';
-import { StoriesService } from '../../../external/api';
+import { fetchStoriesControllerDelete } from '@/__generated__/sigle-api';
 import { useAuth } from '../../auth/AuthContext';
 
 // TODO - migrate hideCoverImage from old articles
@@ -297,8 +297,8 @@ export const EditorSettings = ({
       await saveStoriesFile(file);
       await deleteStoryFile(story);
       if (!isLegacy) {
-        await StoriesService.storiesControllerDelete({
-          requestBody: { id: story.id },
+        await fetchStoriesControllerDelete({
+          body: { id: story.id },
         });
       }
       router.push(`/`);
