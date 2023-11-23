@@ -9,7 +9,6 @@ import {
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { fetch, Headers } from 'undici';
 import { AppModule } from './app.module';
-import { PrismaService } from './prisma/prisma.service';
 import { sites } from './sites';
 
 // next-auth workaround as node.js does not have the global Headers
