@@ -4,7 +4,7 @@ import { getStoriesFile } from '../../../utils';
 import { DashboardLayout } from '../../layout';
 import { Analytics as Component } from '../components/Analytics';
 import { NftLockedView } from '../NftLockedView';
-import { useSubscriptionControllerGetUserMe } from '@/__generated__/sigle-api/sigleApiComponents';
+import { useSubscriptionControllerGetUserMe } from '@/__generated__/sigle-api';
 
 export const Analytics = () => {
   const { isLoading, data: userSubscription } =

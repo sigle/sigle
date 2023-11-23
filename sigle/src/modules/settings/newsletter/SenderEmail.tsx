@@ -5,7 +5,7 @@ import { styled } from '../../../stitches.config';
 import {
   useNewslettersControllerGetSenders,
   useNewslettersControllerUpdateSender,
-} from '@/__generated__/sigle-api/sigleApiComponents';
+} from '@/__generated__/sigle-api';
 
 const Select = styled('select', {
   minWidth: 300,

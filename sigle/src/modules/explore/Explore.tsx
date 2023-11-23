@@ -5,7 +5,7 @@ import { Box, LoadingSpinner, Typography } from '../../ui';
 import { DashboardLayout } from '../layout';
 import { UserCard } from '../userCard/UserCard';
 import { useAuth } from '../auth/AuthContext';
-import { fetchUserControllerExplore } from '../../__generated__/sigle-api/sigleApiComponents';
+import { fetchUserControllerExplore } from '@/__generated__/sigle-api';
 
 export const ExploreUsers = () => {
   const { user, isLegacy } = useAuth();

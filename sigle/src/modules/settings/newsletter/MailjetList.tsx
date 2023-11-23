@@ -5,7 +5,7 @@ import { Box, Button, Flex, Typography } from '../../../ui';
 import {
   useNewslettersControllerGetContactsLists,
   useNewslettersControllerUpdateContactsList,
-} from '@/__generated__/sigle-api/sigleApiComponents';
+} from '@/__generated__/sigle-api';
 
 const Select = styled('select', {
   minWidth: 300,

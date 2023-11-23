@@ -38,7 +38,7 @@ import {
 } from '@radix-ui/react-icons';
 import { useTheme } from 'next-themes';
 import { Switch, SwitchThumb } from '../../../ui/Switch';
-import { useSubscriptionControllerGetUserMe } from '@/__generated__/sigle-api/sigleApiComponents';
+import { useSubscriptionControllerGetUserMe } from '@/__generated__/sigle-api';
 
 const ImageContainer = styled('div', {
   display: 'flex',

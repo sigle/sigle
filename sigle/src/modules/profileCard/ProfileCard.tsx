@@ -17,7 +17,7 @@ import { generateAvatar } from '../../utils/boringAvatar';
 import { SettingsFile } from '../../types';
 import { styled } from '../../stitches.config';
 import { useAuth } from '../auth/AuthContext';
-import { useUserControllerGetUser } from '@/__generated__/sigle-api/sigleApiComponents';
+import { useUserControllerGetUser } from '@/__generated__/sigle-api';
 import {
   useGetGaiaUserFollowing,
   useUserFollow,

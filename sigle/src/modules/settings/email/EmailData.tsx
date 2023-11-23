@@ -4,7 +4,6 @@ import { toast } from 'react-toastify';
 import { ApiError } from '../../../external/api';
 import {
   useAddUserEmail,
-  useGetUserMe,
   useResendVerificationUserEmail,
 } from '../../../hooks/users';
 import {
@@ -22,6 +21,7 @@ import {
 import { isValidEmail } from '../../../utils/regex';
 import { UnsavedChanges } from '../components/UnsavedChanges';
 import { SettingsLayout } from '../SettingsLayout';
+import { useUserControllerGetUserMe } from '@/__generated__/sigle-api';
 
 interface SettingsFormValues {
   email: string;
@@ -29,9 +29,12 @@ interface SettingsFormValues {
 }
 
 export const EmailData = () => {
-  const { data: userMe, refetch: refetchUserMe } = useGetUserMe({
-    suspense: true,
-  });
+  const { data: userMe, refetch: refetchUserMe } = useUserControllerGetUserMe(
+    {},
+    {
+      suspense: true,
+    },
+  );
   const { mutate: addUserEmail, isLoading: isLoadingAddUserEmail } =
     useAddUserEmail({
       onError: (error: Error | ApiError) => {

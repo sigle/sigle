@@ -8,7 +8,7 @@ import { toast } from 'react-toastify';
 import {
   useSubscriptionControllerGetUserMe,
   useSubscriptionControllerSyncSubscriptionWithNft,
-} from '@/__generated__/sigle-api/sigleApiComponents';
+} from '@/__generated__/sigle-api';
 
 export const CurrentPlan = () => {
   const { user, isLegacy } = useAuth();

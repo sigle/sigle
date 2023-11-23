@@ -6,18 +6,6 @@ import {
 } from '@tanstack/react-query';
 import { AddEmailDto, UserService, VerifyEmailDto } from '../external/api';
 
-type GetApiUsersMeReturnType = Awaited<
-  ReturnType<typeof UserService.userControllerGetUserMe>
->;
-export const useGetUserMe = (
-  options: UseQueryOptions<GetApiUsersMeReturnType, Error> = {},
-) =>
-  useQuery<GetApiUsersMeReturnType, Error>(
-    ['get-user-me'],
-    () => UserService.userControllerGetUserMe(),
-    options,
-  );
-
 type GetApiUsersFollowingReturnType = Awaited<
   ReturnType<typeof UserService.userControllerGetUserFollowing>
 >;

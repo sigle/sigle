@@ -4,7 +4,6 @@ import Image from 'next/image';
 import { useEffect, useState } from 'react';
 import { ApiError } from '../../external/api';
 import { useCreateSubscribers } from '../../hooks/subscribers';
-import { useGetUserMe } from '../../hooks/users';
 import { styled } from '../../stitches.config';
 import {
   Button,
@@ -19,6 +18,7 @@ import {
   Typography,
 } from '../../ui';
 import { isValidEmail } from '../../utils/regex';
+import { useUserControllerGetUserMe } from '@/__generated__/sigle-api';
 
 const HeaderLogoContainer = styled('div', {
   mx: 'auto',
@@ -59,10 +59,13 @@ export const SubscribeModal = ({
   onClose,
 }: SubscribeModalProps) => {
   const { status } = useSession();
-  const { data: userMe } = useGetUserMe({
-    enabled: status === 'authenticated',
-    refetchOnMount: false,
-  });
+  const { data: userMe } = useUserControllerGetUserMe(
+    {},
+    {
+      enabled: status === 'authenticated',
+      refetchOnMount: false,
+    },
+  );
   const [success, setSuccess] = useState(false);
   const formik = useFormik<SettingsFormValues>({
     initialValues: {

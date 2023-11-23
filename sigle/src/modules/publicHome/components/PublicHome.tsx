@@ -43,7 +43,7 @@ import { TwitterFilledIcon } from '../../../icons';
 import { EnvelopePlusIcon } from '../../../icons/EnvelopPlusIcon';
 import { SubscribeModal } from '../../subscribeModal/SubscribeModal';
 import { StoryCardSkeleton } from '../../home/components/StoryItemSkeleton';
-import { useUserControllerGetUser } from '@/__generated__/sigle-api/sigleApiComponents';
+import { useUserControllerGetUser } from '@/__generated__/sigle-api';
 
 const StyledTabsTrigger = styled(TabsTrigger, {
   fontSize: 13,

@@ -2,7 +2,6 @@ import { CheckCircledIcon } from '@radix-ui/react-icons';
 import { useFormik, FormikErrors } from 'formik';
 import { useEffect } from 'react';
 import { toast } from 'react-toastify';
-import { useSubscriptionControllerGetUserMe } from '@/__generated__/sigle-api/sigleApiComponents';
 import {
   Button,
   Typography,
@@ -18,9 +17,10 @@ import { SenderEmail } from './SenderEmail';
 import { VideoHelp } from './VideoHelp';
 import { MailjetList } from './MailjetList';
 import {
+  useSubscriptionControllerGetUserMe,
   useNewslettersControllerGet,
   useNewslettersControllerUpdate,
-} from '@/__generated__/sigle-api/sigleApiComponents';
+} from '@/__generated__/sigle-api';
 
 interface NewsletterSettingsFormValues {
   apiKey: string;
