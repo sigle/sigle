@@ -157,8 +157,8 @@ export const MyError = ({
             {errorMessage
               ? errorMessage
               : notFound
-              ? 'The page could not be found'
-              : 'An error has occured'}
+                ? 'The page could not be found'
+                : 'An error has occured'}
           </Heading>
           <NotFoundText>
             {notFound

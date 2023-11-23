@@ -47,10 +47,10 @@ export const CurrentPlan = () => {
     !userSubscription
       ? 'Starter'
       : userSubscription.plan === 'BASIC'
-      ? 'Basic'
-      : userSubscription.plan === 'ENTERPRISE'
-      ? 'Enterprise'
-      : 'Publisher';
+        ? 'Basic'
+        : userSubscription.plan === 'ENTERPRISE'
+          ? 'Enterprise'
+          : 'Publisher';
 
   const handleSyncWallet = () => {
     syncWithNftSubscription({});
@@ -100,8 +100,8 @@ export const CurrentPlan = () => {
                 currentPlan === 'Starter'
                   ? '$gray5'
                   : currentPlan === 'Basic'
-                  ? '$green5'
-                  : '$violet5',
+                    ? '$green5'
+                    : '$violet5',
               px: '$3',
               py: '$1',
               br: '$2',

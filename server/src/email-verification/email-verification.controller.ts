@@ -32,7 +32,7 @@ export class EmailVerificationController {
   @ApiBearerAuth()
   @ApiOkResponse({ type: Boolean })
   @UseGuards(AuthGuard)
-  @Throttle(5, 60)
+  @Throttle({ default: { limit: 5, ttl: 60000 } })
   @Post('/api/email-verification/add')
   @HttpCode(200)
   async addEmail(
@@ -49,7 +49,7 @@ export class EmailVerificationController {
     description: 'Verify a user email address.',
   })
   @ApiOkResponse({ type: Boolean })
-  @Throttle(5, 60)
+  @Throttle({ default: { limit: 5, ttl: 60000 } })
   @Post('/api/email-verification/verify')
   @HttpCode(200)
   async verifyEmail(@Body() verifyEmailDto: VerifyEmailDto): Promise<void> {
@@ -66,7 +66,7 @@ export class EmailVerificationController {
   })
   @ApiBearerAuth()
   @ApiOkResponse({ type: Boolean })
-  @Throttle(2, 60)
+  @Throttle({ default: { limit: 2, ttl: 60000 } })
   @UseGuards(AuthGuard)
   @Post('/api/email-verification/resend')
   @HttpCode(200)
