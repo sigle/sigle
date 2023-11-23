@@ -89,11 +89,6 @@ async function bootstrap() {
   // https://docs.nestjs.com/techniques/validation#auto-validation
   app.useGlobalPipes(new ValidationPipe({ whitelist: true }));
 
-  // Prisma interferes with NestJS enableShutdownHooks, we shutdown prisma gracefully to avoid side effects
-  // https://docs.nestjs.com/recipes/prisma#issues-with-enableshutdownhooks
-  const prismaService = app.get(PrismaService);
-  await prismaService.enableShutdownHooks(app);
-
   await app.listen(configService.get('PORT') || 3000, '0.0.0.0');
 }
 
