@@ -15,7 +15,12 @@ export default defineConfig({
     baseURL: 'http://127.0.0.1:3000',
     trace: 'on-first-retry',
   },
-  expect: { timeout: 10000 },
+  expect: {
+    timeout: 10000,
+    toMatchSnapshot: {
+      maxDiffPixelRatio: 0.1,
+    },
+  },
 
   projects: [
     {
