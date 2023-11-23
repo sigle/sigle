@@ -2,8 +2,6 @@ import { CheckCircledIcon } from '@radix-ui/react-icons';
 import { useFormik, FormikErrors } from 'formik';
 import { useEffect } from 'react';
 import { toast } from 'react-toastify';
-import { ApiError } from '../../../external/api';
-import { useUpdateNewsletter } from '../../../hooks/newsletters';
 import { useGetUserSubscription } from '../../../hooks/subscriptions';
 import {
   Button,
@@ -19,7 +17,10 @@ import { SettingsLayout } from '../SettingsLayout';
 import { SenderEmail } from './SenderEmail';
 import { VideoHelp } from './VideoHelp';
 import { MailjetList } from './MailjetList';
-import { useNewslettersControllerGet } from '@/__generated__/sigle-api/sigleApiComponents';
+import {
+  useNewslettersControllerGet,
+  useNewslettersControllerUpdate,
+} from '@/__generated__/sigle-api/sigleApiComponents';
 
 interface NewsletterSettingsFormValues {
   apiKey: string;
@@ -31,13 +32,9 @@ export const Newsletter = () => {
   const { data: userNewsletter, refetch: refetchUserNewsletter } =
     useNewslettersControllerGet({});
   const { mutate: updateNewsletter, isLoading: isLoadingUpdateNewsletter } =
-    useUpdateNewsletter({
-      onError: (error: Error | ApiError) => {
-        let errorMessage = error.message;
-        if (error instanceof ApiError && error.body.message) {
-          errorMessage = error.body.message;
-        }
-        toast.error(errorMessage);
+    useNewslettersControllerUpdate({
+      onError: (error) => {
+        toast.error(error?.message);
       },
       onSuccess: async () => {
         await refetchUserNewsletter();
@@ -65,8 +62,10 @@ export const Newsletter = () => {
     },
     onSubmit: async (values) => {
       updateNewsletter({
-        apiKey: values.apiKey.trim(),
-        apiSecret: values.apiSecret.trim(),
+        body: {
+          apiKey: values.apiKey.trim(),
+          apiSecret: values.apiSecret.trim(),
+        },
       });
     },
   });
