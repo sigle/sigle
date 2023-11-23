@@ -25,6 +25,10 @@
 <div align="center">
     <br>
     <a href="https://www.sigle.io"><b>sigle.io</b></a>
+    •
+    <a href="https://app.sigle.io/discord"><b>Discord</b></a>
+    •
+    <a href="https://app.sigle.io/twitter"><b>Twitter</b></a>
 </div>
 
 ## About
