@@ -7,7 +7,7 @@ const baseUrl = sigleConfig.apiUrl;
 
 export type ErrorWrapper<TError> =
   | TError
-  | { status: 'unknown'; payload: string };
+  | { status: 'unknown'; message: string }
 
 export type SigleApiFetcherOptions<TBody, THeaders, TQueryParams, TPathParams> =
   {
@@ -82,7 +82,7 @@ export async function sigleApiFetch<
       } catch (e) {
         error = {
           status: 'unknown' as const,
-          payload:
+          message:
             e instanceof Error
               ? `Unexpected error (${e.message})`
               : 'Unexpected error',
@@ -98,11 +98,11 @@ export async function sigleApiFetch<
       // if it is not a json response, assume it is a blob and cast it to TData
       return (await response.blob()) as unknown as TData;
     }
-  } catch (e) {
+  } catch (e: any) {
     let errorObject: Error = {
       name: 'unknown' as const,
       message:
-        e instanceof Error ? `Network error (${e.message})` : 'Network error',
+        e instanceof Error ? `Network error (${e.message})` : e.message ? e.message :'Network error',
       stack: e as string,
     };
     throw errorObject;

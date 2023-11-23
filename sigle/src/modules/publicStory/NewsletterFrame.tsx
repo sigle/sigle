@@ -54,12 +54,7 @@ export const NewsletterFrame = ({
     onSubmit: async (values, { setErrors, validateForm }) => {
       setErrors({});
       validateForm();
-      try {
-        createSubscribers({ stacksAddress, email: values.email });
-      } catch (error) {
-        console.error(error);
-        toast.error(error);
-      }
+      createSubscribers({ stacksAddress, email: values.email });
     },
   });
 

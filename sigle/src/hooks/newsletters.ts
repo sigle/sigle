@@ -1,9 +1,4 @@
-import {
-  useMutation,
-  UseMutationOptions,
-  useQuery,
-  UseQueryOptions,
-} from '@tanstack/react-query';
+import { useMutation, UseMutationOptions } from '@tanstack/react-query';
 import {
   NewslettersService,
   UpdateNewsletterDto,
@@ -24,28 +19,6 @@ export const useUpdateNewsletter = (
   useMutation<PostApiNewsletterReturnType, Error, UpdateNewsletterDto>(
     (args) =>
       NewslettersService.newslettersControllerUpdate({
-        requestBody: args,
-      }),
-    options,
-  );
-
-type PostApiContactsListNewsletterReturnType = Awaited<
-  ReturnType<typeof NewslettersService.newslettersControllerUpdateContactsList>
->;
-export const useUpdateContactsListNewsletter = (
-  options: UseMutationOptions<
-    PostApiContactsListNewsletterReturnType,
-    Error,
-    UpdateContactsListDto
-  > = {},
-) =>
-  useMutation<
-    PostApiContactsListNewsletterReturnType,
-    Error,
-    UpdateContactsListDto
-  >(
-    (args) =>
-      NewslettersService.newslettersControllerUpdateContactsList({
         requestBody: args,
       }),
     options,
