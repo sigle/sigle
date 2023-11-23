@@ -58,6 +58,6 @@ RUN adduser --system --uid 1001 nestjs
 USER nestjs
 COPY --from=installer /app .
 
-WORKDIR /app/$APP_NAME
+WORKDIR /app/apps/$APP_NAME
 
 CMD pnpm run db:deploy && pnpm run start
