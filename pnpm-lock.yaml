@@ -311,6 +311,409 @@ importers:
         specifier: 5.89.0
         version: 5.89.0(@swc/core@1.3.99)
 
+  apps/sigle:
+    dependencies:
+      '@radix-ui/colors':
+        specifier: 0.1.8
+        version: 0.1.8
+      '@radix-ui/react-accordion':
+        specifier: 1.1.2
+        version: 1.1.2(@types/react-dom@18.0.10)(@types/react@18.0.26)(react-dom@18.2.0)(react@18.2.0)
+      '@radix-ui/react-dialog':
+        specifier: 1.0.5
+        version: 1.0.5(@types/react-dom@18.0.10)(@types/react@18.0.26)(react-dom@18.2.0)(react@18.2.0)
+      '@radix-ui/react-dropdown-menu':
+        specifier: 2.0.6
+        version: 2.0.6(@types/react-dom@18.0.10)(@types/react@18.0.26)(react-dom@18.2.0)(react@18.2.0)
+      '@radix-ui/react-hover-card':
+        specifier: 1.0.7
+        version: 1.0.7(@types/react-dom@18.0.10)(@types/react@18.0.26)(react-dom@18.2.0)(react@18.2.0)
+      '@radix-ui/react-icons':
+        specifier: 1.3.0
+        version: 1.3.0(react@18.2.0)
+      '@radix-ui/react-radio-group':
+        specifier: 1.1.3
+        version: 1.1.3(@types/react-dom@18.0.10)(@types/react@18.0.26)(react-dom@18.2.0)(react@18.2.0)
+      '@radix-ui/react-scroll-area':
+        specifier: 1.0.5
+        version: 1.0.5(@types/react-dom@18.0.10)(@types/react@18.0.26)(react-dom@18.2.0)(react@18.2.0)
+      '@radix-ui/react-switch':
+        specifier: 1.0.3
+        version: 1.0.3(@types/react-dom@18.0.10)(@types/react@18.0.26)(react-dom@18.2.0)(react@18.2.0)
+      '@radix-ui/react-tabs':
+        specifier: 1.0.4
+        version: 1.0.4(@types/react-dom@18.0.10)(@types/react@18.0.26)(react-dom@18.2.0)(react@18.2.0)
+      '@radix-ui/react-tooltip':
+        specifier: 1.0.7
+        version: 1.0.7(@types/react-dom@18.0.10)(@types/react@18.0.26)(react-dom@18.2.0)(react@18.2.0)
+      '@sentry/nextjs':
+        specifier: 7.81.1
+        version: 7.81.1(next@14.0.3)(react@18.2.0)(webpack@5.89.0)
+      '@sigle/slate-to-html':
+        specifier: 1.0.0
+        version: 1.0.0(immutable@4.0.0-rc.12)(react-dom@18.2.0)(react@18.2.0)
+      '@stacks/auth':
+        specifier: 6.7.0
+        version: 6.7.0
+      '@stacks/blockchain-api-client':
+        specifier: 7.3.1
+        version: 7.3.1
+      '@stacks/common':
+        specifier: 6.5.5
+        version: 6.5.5
+      '@stacks/connect':
+        specifier: 7.4.0
+        version: 7.4.0
+      '@stacks/connect-react':
+        specifier: 22.2.0
+        version: 22.2.0(react-dom@18.2.0)(react@18.2.0)
+      '@stacks/encryption':
+        specifier: 6.7.0
+        version: 6.7.0
+      '@stacks/keychain':
+        specifier: 4.3.8
+        version: 4.3.8
+      '@stacks/legacy-auth':
+        specifier: npm:@stacks/auth@2.0.0-beta.1
+        version: /@stacks/auth@2.0.0-beta.1
+      '@stacks/legacy-connect':
+        specifier: npm:@stacks/connect@4.3.18
+        version: /@stacks/connect@4.3.18
+      '@stacks/legacy-connect-react':
+        specifier: npm:@stacks/connect-react@2.17.18
+        version: /@stacks/connect-react@2.17.18(blockstack@21.1.1)(react-dom@18.2.0)(react@18.2.0)
+      '@stacks/network':
+        specifier: 6.5.5
+        version: 6.5.5
+      '@stacks/profile':
+        specifier: 6.7.0
+        version: 6.7.0
+      '@stacks/storage':
+        specifier: 6.7.0
+        version: 6.7.0
+      '@stacks/transactions':
+        specifier: 6.7.0
+        version: 6.7.0
+      '@stitches/react':
+        specifier: 1.2.8
+        version: 1.2.8(react@18.2.0)
+      '@tanstack/react-query':
+        specifier: 4.28.0
+        version: 4.28.0(react-dom@18.2.0)(react@18.2.0)
+      '@tanstack/react-query-devtools':
+        specifier: 4.29.0
+        version: 4.29.0(@tanstack/react-query@4.28.0)(react-dom@18.2.0)(react@18.2.0)
+      '@tippyjs/react':
+        specifier: 4.2.6
+        version: 4.2.6(react-dom@18.2.0)(react@18.2.0)
+      '@tiptap/core':
+        specifier: 2.0.3
+        version: 2.0.3(@tiptap/pm@2.0.3)
+      '@tiptap/extension-blockquote':
+        specifier: 2.0.3
+        version: 2.0.3(@tiptap/core@2.0.3)
+      '@tiptap/extension-bold':
+        specifier: 2.0.3
+        version: 2.0.3(@tiptap/core@2.0.3)
+      '@tiptap/extension-bullet-list':
+        specifier: 2.0.3
+        version: 2.0.3(@tiptap/core@2.0.3)
+      '@tiptap/extension-character-count':
+        specifier: 2.0.3
+        version: 2.0.3(@tiptap/core@2.0.3)(@tiptap/pm@2.0.3)
+      '@tiptap/extension-code':
+        specifier: 2.0.3
+        version: 2.0.3(@tiptap/core@2.0.3)
+      '@tiptap/extension-code-block':
+        specifier: 2.0.3
+        version: 2.0.3(@tiptap/core@2.0.3)(@tiptap/pm@2.0.3)
+      '@tiptap/extension-code-block-lowlight':
+        specifier: 2.0.3
+        version: 2.0.3(@tiptap/core@2.0.3)(@tiptap/extension-code-block@2.0.3)(@tiptap/pm@2.0.3)
+      '@tiptap/extension-document':
+        specifier: 2.0.3
+        version: 2.0.3(@tiptap/core@2.0.3)
+      '@tiptap/extension-dropcursor':
+        specifier: 2.0.3
+        version: 2.0.3(@tiptap/core@2.0.3)(@tiptap/pm@2.0.3)
+      '@tiptap/extension-hard-break':
+        specifier: 2.0.3
+        version: 2.0.3(@tiptap/core@2.0.3)
+      '@tiptap/extension-heading':
+        specifier: 2.0.3
+        version: 2.0.3(@tiptap/core@2.0.3)
+      '@tiptap/extension-history':
+        specifier: 2.0.3
+        version: 2.0.3(@tiptap/core@2.0.3)(@tiptap/pm@2.0.3)
+      '@tiptap/extension-horizontal-rule':
+        specifier: 2.0.3
+        version: 2.0.3(@tiptap/core@2.0.3)(@tiptap/pm@2.0.3)
+      '@tiptap/extension-image':
+        specifier: 2.0.3
+        version: 2.0.3(@tiptap/core@2.0.3)
+      '@tiptap/extension-italic':
+        specifier: 2.0.3
+        version: 2.0.3(@tiptap/core@2.0.3)
+      '@tiptap/extension-link':
+        specifier: 2.0.3
+        version: 2.0.3(@tiptap/core@2.0.3)(@tiptap/pm@2.0.3)
+      '@tiptap/extension-list-item':
+        specifier: 2.0.3
+        version: 2.0.3(@tiptap/core@2.0.3)
+      '@tiptap/extension-ordered-list':
+        specifier: 2.0.3
+        version: 2.0.3(@tiptap/core@2.0.3)
+      '@tiptap/extension-paragraph':
+        specifier: 2.0.3
+        version: 2.0.3(@tiptap/core@2.0.3)
+      '@tiptap/extension-placeholder':
+        specifier: 2.0.3
+        version: 2.0.3(@tiptap/core@2.0.3)(@tiptap/pm@2.0.3)
+      '@tiptap/extension-strike':
+        specifier: 2.0.3
+        version: 2.0.3(@tiptap/core@2.0.3)
+      '@tiptap/extension-text':
+        specifier: 2.0.3
+        version: 2.0.3(@tiptap/core@2.0.3)
+      '@tiptap/extension-typography':
+        specifier: 2.0.3
+        version: 2.0.3(@tiptap/core@2.0.3)
+      '@tiptap/extension-underline':
+        specifier: 2.0.3
+        version: 2.0.3(@tiptap/core@2.0.3)
+      '@tiptap/html':
+        specifier: 2.0.3
+        version: 2.0.3(@tiptap/core@2.0.3)(@tiptap/pm@2.0.3)
+      '@tiptap/pm':
+        specifier: 2.0.3
+        version: 2.0.3(@tiptap/core@2.0.3)
+      '@tiptap/react':
+        specifier: 2.0.3
+        version: 2.0.3(@tiptap/core@2.0.3)(@tiptap/pm@2.0.3)(react-dom@18.2.0)(react@18.2.0)
+      '@tiptap/suggestion':
+        specifier: 2.0.3
+        version: 2.0.3(@tiptap/core@2.0.3)(@tiptap/pm@2.0.3)
+      '@visx/axis':
+        specifier: 2.10.0
+        version: 2.10.0(react@18.2.0)
+      '@visx/curve':
+        specifier: 2.1.0
+        version: 2.1.0
+      '@visx/event':
+        specifier: 2.6.0
+        version: 2.6.0
+      '@visx/gradient':
+        specifier: 2.10.0
+        version: 2.10.0(react@18.2.0)
+      '@visx/group':
+        specifier: 2.10.0
+        version: 2.10.0(react@18.2.0)
+      '@visx/mock-data':
+        specifier: 2.1.2
+        version: 2.1.2
+      '@visx/responsive':
+        specifier: 2.10.0
+        version: 2.10.0(react@18.2.0)
+      '@visx/scale':
+        specifier: 2.2.2
+        version: 2.2.2
+      '@visx/shape':
+        specifier: 2.10.0
+        version: 2.10.0(react@18.2.0)
+      '@visx/tooltip':
+        specifier: 2.10.0
+        version: 2.10.0(react-dom@18.2.0)(react@18.2.0)
+      d3-array:
+        specifier: 3.1.6
+        version: 3.1.6
+      date-fns:
+        specifier: 2.28.0
+        version: 2.28.0
+      fathom-client:
+        specifier: 3.5.0
+        version: 3.5.0
+      feed:
+        specifier: 4.2.2
+        version: 4.2.2
+      formik:
+        specifier: 2.2.9
+        version: 2.2.9(react@18.2.0)
+      highlight.js:
+        specifier: 11.5.1
+        version: 11.5.1
+      immutable:
+        specifier: 4.0.0-rc.12
+        version: 4.0.0-rc.12
+      lowlight:
+        specifier: 2.8.0
+        version: 2.8.0
+      motion:
+        specifier: 10.13.1
+        version: 10.13.1
+      motion-hooks:
+        specifier: 0.1.1
+        version: 0.1.1(motion@10.13.1)(react-dom@18.2.0)(react@18.2.0)
+      nanoid:
+        specifier: 3.3.3
+        version: 3.3.3
+      next:
+        specifier: 14.0.3
+        version: 14.0.3(@babel/core@7.23.3)(react-dom@18.2.0)(react@18.2.0)(sass@1.69.4)
+      next-auth:
+        specifier: 4.24.5
+        version: 4.24.5(next@14.0.3)(nodemailer@6.9.7)(react-dom@18.2.0)(react@18.2.0)
+      next-plausible:
+        specifier: 3.5.0
+        version: 3.5.0(next@14.0.3)(react-dom@18.2.0)(react@18.2.0)
+      next-seo:
+        specifier: 5.4.0
+        version: 5.4.0(next@14.0.3)(react-dom@18.2.0)(react@18.2.0)
+      next-themes:
+        specifier: 0.2.0
+        version: 0.2.0(next@14.0.3)(react-dom@18.2.0)(react@18.2.0)
+      nprogress:
+        specifier: 0.2.0
+        version: 0.2.0
+      posthog-js:
+        specifier: 1.84.3
+        version: 1.84.3
+      react:
+        specifier: 18.2.0
+        version: 18.2.0
+      react-color:
+        specifier: 2.19.3
+        version: 2.19.3(react@18.2.0)
+      react-cool-inview:
+        specifier: 3.0.1
+        version: 3.0.1(react@18.2.0)
+      react-div-100vh:
+        specifier: 0.6.0
+        version: 0.6.0(react@18.2.0)
+      react-dom:
+        specifier: 18.2.0
+        version: 18.2.0(react@18.2.0)
+      react-draggable:
+        specifier: 4.4.5
+        version: 4.4.5(react-dom@18.2.0)(react@18.2.0)
+      react-dropzone:
+        specifier: 11.4.2
+        version: 11.4.2(react@18.2.0)
+      react-toastify:
+        specifier: 8.2.0
+        version: 8.2.0(react-dom@18.2.0)(react@18.2.0)
+      reading-time:
+        specifier: 1.5.0
+        version: 1.5.0
+      sanitize-html:
+        specifier: 2.7.0
+        version: 2.7.0
+      tinycolor2:
+        specifier: 1.4.2
+        version: 1.4.2
+      tippy.js:
+        specifier: 6.3.7
+        version: 6.3.7
+      valid-url:
+        specifier: 1.0.9
+        version: 1.0.9
+      zone-file:
+        specifier: 1.0.0
+        version: 1.0.0
+      zustand:
+        specifier: 4.4.4
+        version: 4.4.4(@types/react@18.0.26)(react@18.2.0)
+    devDependencies:
+      '@next/bundle-analyzer':
+        specifier: 14.0.3
+        version: 14.0.3
+      '@openapi-codegen/cli':
+        specifier: 2.0.0
+        version: 2.0.0(@types/react@18.0.26)(react-dom@18.2.0)(react@18.2.0)
+      '@openapi-codegen/typescript':
+        specifier: 8.0.0
+        version: 8.0.0
+      '@playwright/test':
+        specifier: 1.40.0
+        version: 1.40.0
+      '@sigle/tailwind-style':
+        specifier: 1.2.0
+        version: link:../../packages/tailwind-style
+      '@testing-library/jest-dom':
+        specifier: 5.16.5
+        version: 5.16.5
+      '@testing-library/react':
+        specifier: 13.3.0
+        version: 13.3.0(react-dom@18.2.0)(react@18.2.0)
+      '@types/d3-array':
+        specifier: 3.0.2
+        version: 3.0.2
+      '@types/jest':
+        specifier: 28.1.6
+        version: 28.1.6
+      '@types/node':
+        specifier: 18.11.18
+        version: 18.11.18
+      '@types/nprogress':
+        specifier: 0.2.0
+        version: 0.2.0
+      '@types/react':
+        specifier: 18.0.26
+        version: 18.0.26
+      '@types/react-color':
+        specifier: 3.0.6
+        version: 3.0.6
+      '@types/react-dom':
+        specifier: 18.0.10
+        version: 18.0.10
+      '@types/sanitize-html':
+        specifier: 2.6.2
+        version: 2.6.2
+      '@types/tinycolor2':
+        specifier: 1.4.3
+        version: 1.4.3
+      '@types/valid-url':
+        specifier: 1.0.3
+        version: 1.0.3
+      '@typescript-eslint/eslint-plugin':
+        specifier: 5.30.7
+        version: 5.30.7(@typescript-eslint/parser@5.62.0)(eslint@8.52.0)(typescript@5.2.2)
+      dotenv:
+        specifier: 16.3.1
+        version: 16.3.1
+      eslint:
+        specifier: 8.52.0
+        version: 8.52.0
+      eslint-config-next:
+        specifier: 14.0.3
+        version: 14.0.3(eslint@8.52.0)(typescript@5.2.2)
+      eslint-config-prettier:
+        specifier: 9.0.0
+        version: 9.0.0(eslint@8.52.0)
+      eslint-plugin-prettier:
+        specifier: 5.0.1
+        version: 5.0.1(eslint-config-prettier@9.0.0)(eslint@8.52.0)(prettier@3.1.0)
+      fast-xml-parser:
+        specifier: 4.3.2
+        version: 4.3.2
+      jest:
+        specifier: 28.1.3
+        version: 28.1.3(@types/node@18.11.18)
+      jest-environment-jsdom:
+        specifier: 28.1.3
+        version: 28.1.3
+      next-compose-plugins:
+        specifier: 2.2.1
+        version: 2.2.1
+      next-sitemap:
+        specifier: 2.5.20
+        version: 2.5.20(next@14.0.3)
+      sass:
+        specifier: 1.69.4
+        version: 1.69.4
+      typescript:
+        specifier: 5.2.2
+        version: 5.2.2
+
   apps/sigle-next:
     dependencies:
       '@aws-sdk/client-s3':
@@ -666,409 +1069,6 @@ importers:
       tailwindcss:
         specifier: 3.3.2
         version: 3.3.2
-
-  sigle:
-    dependencies:
-      '@radix-ui/colors':
-        specifier: 0.1.8
-        version: 0.1.8
-      '@radix-ui/react-accordion':
-        specifier: 1.1.2
-        version: 1.1.2(@types/react-dom@18.0.10)(@types/react@18.0.26)(react-dom@18.2.0)(react@18.2.0)
-      '@radix-ui/react-dialog':
-        specifier: 1.0.5
-        version: 1.0.5(@types/react-dom@18.0.10)(@types/react@18.0.26)(react-dom@18.2.0)(react@18.2.0)
-      '@radix-ui/react-dropdown-menu':
-        specifier: 2.0.6
-        version: 2.0.6(@types/react-dom@18.0.10)(@types/react@18.0.26)(react-dom@18.2.0)(react@18.2.0)
-      '@radix-ui/react-hover-card':
-        specifier: 1.0.7
-        version: 1.0.7(@types/react-dom@18.0.10)(@types/react@18.0.26)(react-dom@18.2.0)(react@18.2.0)
-      '@radix-ui/react-icons':
-        specifier: 1.3.0
-        version: 1.3.0(react@18.2.0)
-      '@radix-ui/react-radio-group':
-        specifier: 1.1.3
-        version: 1.1.3(@types/react-dom@18.0.10)(@types/react@18.0.26)(react-dom@18.2.0)(react@18.2.0)
-      '@radix-ui/react-scroll-area':
-        specifier: 1.0.5
-        version: 1.0.5(@types/react-dom@18.0.10)(@types/react@18.0.26)(react-dom@18.2.0)(react@18.2.0)
-      '@radix-ui/react-switch':
-        specifier: 1.0.3
-        version: 1.0.3(@types/react-dom@18.0.10)(@types/react@18.0.26)(react-dom@18.2.0)(react@18.2.0)
-      '@radix-ui/react-tabs':
-        specifier: 1.0.4
-        version: 1.0.4(@types/react-dom@18.0.10)(@types/react@18.0.26)(react-dom@18.2.0)(react@18.2.0)
-      '@radix-ui/react-tooltip':
-        specifier: 1.0.7
-        version: 1.0.7(@types/react-dom@18.0.10)(@types/react@18.0.26)(react-dom@18.2.0)(react@18.2.0)
-      '@sentry/nextjs':
-        specifier: 7.81.1
-        version: 7.81.1(next@14.0.3)(react@18.2.0)(webpack@5.89.0)
-      '@sigle/slate-to-html':
-        specifier: 1.0.0
-        version: 1.0.0(immutable@4.0.0-rc.12)(react-dom@18.2.0)(react@18.2.0)
-      '@stacks/auth':
-        specifier: 6.7.0
-        version: 6.7.0
-      '@stacks/blockchain-api-client':
-        specifier: 7.3.1
-        version: 7.3.1
-      '@stacks/common':
-        specifier: 6.5.5
-        version: 6.5.5
-      '@stacks/connect':
-        specifier: 7.4.0
-        version: 7.4.0
-      '@stacks/connect-react':
-        specifier: 22.2.0
-        version: 22.2.0(react-dom@18.2.0)(react@18.2.0)
-      '@stacks/encryption':
-        specifier: 6.7.0
-        version: 6.7.0
-      '@stacks/keychain':
-        specifier: 4.3.8
-        version: 4.3.8
-      '@stacks/legacy-auth':
-        specifier: npm:@stacks/auth@2.0.0-beta.1
-        version: /@stacks/auth@2.0.0-beta.1
-      '@stacks/legacy-connect':
-        specifier: npm:@stacks/connect@4.3.18
-        version: /@stacks/connect@4.3.18
-      '@stacks/legacy-connect-react':
-        specifier: npm:@stacks/connect-react@2.17.18
-        version: /@stacks/connect-react@2.17.18(blockstack@21.1.1)(react-dom@18.2.0)(react@18.2.0)
-      '@stacks/network':
-        specifier: 6.5.5
-        version: 6.5.5
-      '@stacks/profile':
-        specifier: 6.7.0
-        version: 6.7.0
-      '@stacks/storage':
-        specifier: 6.7.0
-        version: 6.7.0
-      '@stacks/transactions':
-        specifier: 6.7.0
-        version: 6.7.0
-      '@stitches/react':
-        specifier: 1.2.8
-        version: 1.2.8(react@18.2.0)
-      '@tanstack/react-query':
-        specifier: 4.28.0
-        version: 4.28.0(react-dom@18.2.0)(react@18.2.0)
-      '@tanstack/react-query-devtools':
-        specifier: 4.29.0
-        version: 4.29.0(@tanstack/react-query@4.28.0)(react-dom@18.2.0)(react@18.2.0)
-      '@tippyjs/react':
-        specifier: 4.2.6
-        version: 4.2.6(react-dom@18.2.0)(react@18.2.0)
-      '@tiptap/core':
-        specifier: 2.0.3
-        version: 2.0.3(@tiptap/pm@2.0.3)
-      '@tiptap/extension-blockquote':
-        specifier: 2.0.3
-        version: 2.0.3(@tiptap/core@2.0.3)
-      '@tiptap/extension-bold':
-        specifier: 2.0.3
-        version: 2.0.3(@tiptap/core@2.0.3)
-      '@tiptap/extension-bullet-list':
-        specifier: 2.0.3
-        version: 2.0.3(@tiptap/core@2.0.3)
-      '@tiptap/extension-character-count':
-        specifier: 2.0.3
-        version: 2.0.3(@tiptap/core@2.0.3)(@tiptap/pm@2.0.3)
-      '@tiptap/extension-code':
-        specifier: 2.0.3
-        version: 2.0.3(@tiptap/core@2.0.3)
-      '@tiptap/extension-code-block':
-        specifier: 2.0.3
-        version: 2.0.3(@tiptap/core@2.0.3)(@tiptap/pm@2.0.3)
-      '@tiptap/extension-code-block-lowlight':
-        specifier: 2.0.3
-        version: 2.0.3(@tiptap/core@2.0.3)(@tiptap/extension-code-block@2.0.3)(@tiptap/pm@2.0.3)
-      '@tiptap/extension-document':
-        specifier: 2.0.3
-        version: 2.0.3(@tiptap/core@2.0.3)
-      '@tiptap/extension-dropcursor':
-        specifier: 2.0.3
-        version: 2.0.3(@tiptap/core@2.0.3)(@tiptap/pm@2.0.3)
-      '@tiptap/extension-hard-break':
-        specifier: 2.0.3
-        version: 2.0.3(@tiptap/core@2.0.3)
-      '@tiptap/extension-heading':
-        specifier: 2.0.3
-        version: 2.0.3(@tiptap/core@2.0.3)
-      '@tiptap/extension-history':
-        specifier: 2.0.3
-        version: 2.0.3(@tiptap/core@2.0.3)(@tiptap/pm@2.0.3)
-      '@tiptap/extension-horizontal-rule':
-        specifier: 2.0.3
-        version: 2.0.3(@tiptap/core@2.0.3)(@tiptap/pm@2.0.3)
-      '@tiptap/extension-image':
-        specifier: 2.0.3
-        version: 2.0.3(@tiptap/core@2.0.3)
-      '@tiptap/extension-italic':
-        specifier: 2.0.3
-        version: 2.0.3(@tiptap/core@2.0.3)
-      '@tiptap/extension-link':
-        specifier: 2.0.3
-        version: 2.0.3(@tiptap/core@2.0.3)(@tiptap/pm@2.0.3)
-      '@tiptap/extension-list-item':
-        specifier: 2.0.3
-        version: 2.0.3(@tiptap/core@2.0.3)
-      '@tiptap/extension-ordered-list':
-        specifier: 2.0.3
-        version: 2.0.3(@tiptap/core@2.0.3)
-      '@tiptap/extension-paragraph':
-        specifier: 2.0.3
-        version: 2.0.3(@tiptap/core@2.0.3)
-      '@tiptap/extension-placeholder':
-        specifier: 2.0.3
-        version: 2.0.3(@tiptap/core@2.0.3)(@tiptap/pm@2.0.3)
-      '@tiptap/extension-strike':
-        specifier: 2.0.3
-        version: 2.0.3(@tiptap/core@2.0.3)
-      '@tiptap/extension-text':
-        specifier: 2.0.3
-        version: 2.0.3(@tiptap/core@2.0.3)
-      '@tiptap/extension-typography':
-        specifier: 2.0.3
-        version: 2.0.3(@tiptap/core@2.0.3)
-      '@tiptap/extension-underline':
-        specifier: 2.0.3
-        version: 2.0.3(@tiptap/core@2.0.3)
-      '@tiptap/html':
-        specifier: 2.0.3
-        version: 2.0.3(@tiptap/core@2.0.3)(@tiptap/pm@2.0.3)
-      '@tiptap/pm':
-        specifier: 2.0.3
-        version: 2.0.3(@tiptap/core@2.0.3)
-      '@tiptap/react':
-        specifier: 2.0.3
-        version: 2.0.3(@tiptap/core@2.0.3)(@tiptap/pm@2.0.3)(react-dom@18.2.0)(react@18.2.0)
-      '@tiptap/suggestion':
-        specifier: 2.0.3
-        version: 2.0.3(@tiptap/core@2.0.3)(@tiptap/pm@2.0.3)
-      '@visx/axis':
-        specifier: 2.10.0
-        version: 2.10.0(react@18.2.0)
-      '@visx/curve':
-        specifier: 2.1.0
-        version: 2.1.0
-      '@visx/event':
-        specifier: 2.6.0
-        version: 2.6.0
-      '@visx/gradient':
-        specifier: 2.10.0
-        version: 2.10.0(react@18.2.0)
-      '@visx/group':
-        specifier: 2.10.0
-        version: 2.10.0(react@18.2.0)
-      '@visx/mock-data':
-        specifier: 2.1.2
-        version: 2.1.2
-      '@visx/responsive':
-        specifier: 2.10.0
-        version: 2.10.0(react@18.2.0)
-      '@visx/scale':
-        specifier: 2.2.2
-        version: 2.2.2
-      '@visx/shape':
-        specifier: 2.10.0
-        version: 2.10.0(react@18.2.0)
-      '@visx/tooltip':
-        specifier: 2.10.0
-        version: 2.10.0(react-dom@18.2.0)(react@18.2.0)
-      d3-array:
-        specifier: 3.1.6
-        version: 3.1.6
-      date-fns:
-        specifier: 2.28.0
-        version: 2.28.0
-      fathom-client:
-        specifier: 3.5.0
-        version: 3.5.0
-      feed:
-        specifier: 4.2.2
-        version: 4.2.2
-      formik:
-        specifier: 2.2.9
-        version: 2.2.9(react@18.2.0)
-      highlight.js:
-        specifier: 11.5.1
-        version: 11.5.1
-      immutable:
-        specifier: 4.0.0-rc.12
-        version: 4.0.0-rc.12
-      lowlight:
-        specifier: 2.8.0
-        version: 2.8.0
-      motion:
-        specifier: 10.13.1
-        version: 10.13.1
-      motion-hooks:
-        specifier: 0.1.1
-        version: 0.1.1(motion@10.13.1)(react-dom@18.2.0)(react@18.2.0)
-      nanoid:
-        specifier: 3.3.3
-        version: 3.3.3
-      next:
-        specifier: 14.0.3
-        version: 14.0.3(@babel/core@7.23.3)(react-dom@18.2.0)(react@18.2.0)(sass@1.69.4)
-      next-auth:
-        specifier: 4.24.5
-        version: 4.24.5(next@14.0.3)(nodemailer@6.9.7)(react-dom@18.2.0)(react@18.2.0)
-      next-plausible:
-        specifier: 3.5.0
-        version: 3.5.0(next@14.0.3)(react-dom@18.2.0)(react@18.2.0)
-      next-seo:
-        specifier: 5.4.0
-        version: 5.4.0(next@14.0.3)(react-dom@18.2.0)(react@18.2.0)
-      next-themes:
-        specifier: 0.2.0
-        version: 0.2.0(next@14.0.3)(react-dom@18.2.0)(react@18.2.0)
-      nprogress:
-        specifier: 0.2.0
-        version: 0.2.0
-      posthog-js:
-        specifier: 1.84.3
-        version: 1.84.3
-      react:
-        specifier: 18.2.0
-        version: 18.2.0
-      react-color:
-        specifier: 2.19.3
-        version: 2.19.3(react@18.2.0)
-      react-cool-inview:
-        specifier: 3.0.1
-        version: 3.0.1(react@18.2.0)
-      react-div-100vh:
-        specifier: 0.6.0
-        version: 0.6.0(react@18.2.0)
-      react-dom:
-        specifier: 18.2.0
-        version: 18.2.0(react@18.2.0)
-      react-draggable:
-        specifier: 4.4.5
-        version: 4.4.5(react-dom@18.2.0)(react@18.2.0)
-      react-dropzone:
-        specifier: 11.4.2
-        version: 11.4.2(react@18.2.0)
-      react-toastify:
-        specifier: 8.2.0
-        version: 8.2.0(react-dom@18.2.0)(react@18.2.0)
-      reading-time:
-        specifier: 1.5.0
-        version: 1.5.0
-      sanitize-html:
-        specifier: 2.7.0
-        version: 2.7.0
-      tinycolor2:
-        specifier: 1.4.2
-        version: 1.4.2
-      tippy.js:
-        specifier: 6.3.7
-        version: 6.3.7
-      valid-url:
-        specifier: 1.0.9
-        version: 1.0.9
-      zone-file:
-        specifier: 1.0.0
-        version: 1.0.0
-      zustand:
-        specifier: 4.4.4
-        version: 4.4.4(@types/react@18.0.26)(react@18.2.0)
-    devDependencies:
-      '@next/bundle-analyzer':
-        specifier: 14.0.3
-        version: 14.0.3
-      '@openapi-codegen/cli':
-        specifier: 2.0.0
-        version: 2.0.0(@types/react@18.0.26)(react-dom@18.2.0)(react@18.2.0)
-      '@openapi-codegen/typescript':
-        specifier: 8.0.0
-        version: 8.0.0
-      '@playwright/test':
-        specifier: 1.40.0
-        version: 1.40.0
-      '@sigle/tailwind-style':
-        specifier: 1.2.0
-        version: link:../packages/tailwind-style
-      '@testing-library/jest-dom':
-        specifier: 5.16.5
-        version: 5.16.5
-      '@testing-library/react':
-        specifier: 13.3.0
-        version: 13.3.0(react-dom@18.2.0)(react@18.2.0)
-      '@types/d3-array':
-        specifier: 3.0.2
-        version: 3.0.2
-      '@types/jest':
-        specifier: 28.1.6
-        version: 28.1.6
-      '@types/node':
-        specifier: 18.11.18
-        version: 18.11.18
-      '@types/nprogress':
-        specifier: 0.2.0
-        version: 0.2.0
-      '@types/react':
-        specifier: 18.0.26
-        version: 18.0.26
-      '@types/react-color':
-        specifier: 3.0.6
-        version: 3.0.6
-      '@types/react-dom':
-        specifier: 18.0.10
-        version: 18.0.10
-      '@types/sanitize-html':
-        specifier: 2.6.2
-        version: 2.6.2
-      '@types/tinycolor2':
-        specifier: 1.4.3
-        version: 1.4.3
-      '@types/valid-url':
-        specifier: 1.0.3
-        version: 1.0.3
-      '@typescript-eslint/eslint-plugin':
-        specifier: 5.30.7
-        version: 5.30.7(@typescript-eslint/parser@5.62.0)(eslint@8.52.0)(typescript@5.2.2)
-      dotenv:
-        specifier: 16.3.1
-        version: 16.3.1
-      eslint:
-        specifier: 8.52.0
-        version: 8.52.0
-      eslint-config-next:
-        specifier: 14.0.3
-        version: 14.0.3(eslint@8.52.0)(typescript@5.2.2)
-      eslint-config-prettier:
-        specifier: 9.0.0
-        version: 9.0.0(eslint@8.52.0)
-      eslint-plugin-prettier:
-        specifier: 5.0.1
-        version: 5.0.1(eslint-config-prettier@9.0.0)(eslint@8.52.0)(prettier@3.1.0)
-      fast-xml-parser:
-        specifier: 4.3.2
-        version: 4.3.2
-      jest:
-        specifier: 28.1.3
-        version: 28.1.3(@types/node@18.11.18)
-      jest-environment-jsdom:
-        specifier: 28.1.3
-        version: 28.1.3
-      next-compose-plugins:
-        specifier: 2.2.1
-        version: 2.2.1
-      next-sitemap:
-        specifier: 2.5.20
-        version: 2.5.20(next@14.0.3)
-      sass:
-        specifier: 1.69.4
-        version: 1.69.4
-      typescript:
-        specifier: 5.2.2
-        version: 5.2.2
 
 packages:
 
