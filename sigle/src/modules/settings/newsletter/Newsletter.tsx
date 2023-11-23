@@ -2,7 +2,7 @@ import { CheckCircledIcon } from '@radix-ui/react-icons';
 import { useFormik, FormikErrors } from 'formik';
 import { useEffect } from 'react';
 import { toast } from 'react-toastify';
-import { useGetUserSubscription } from '../../../hooks/subscriptions';
+import { useSubscriptionControllerGetUserMe } from '@/__generated__/sigle-api/sigleApiComponents';
 import {
   Button,
   Typography,
@@ -28,7 +28,8 @@ interface NewsletterSettingsFormValues {
 }
 
 export const Newsletter = () => {
-  const { isLoading, data: userSubscription } = useGetUserSubscription();
+  const { isLoading, data: userSubscription } =
+    useSubscriptionControllerGetUserMe({});
   const { data: userNewsletter, refetch: refetchUserNewsletter } =
     useNewslettersControllerGet({});
   const { mutate: updateNewsletter, isLoading: isLoadingUpdateNewsletter } =

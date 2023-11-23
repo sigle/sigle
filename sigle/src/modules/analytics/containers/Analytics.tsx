@@ -1,13 +1,14 @@
 import { useQuery } from '@tanstack/react-query';
 import { toast } from 'react-toastify';
-import { useGetUserSubscription } from '../../../hooks/subscriptions';
 import { getStoriesFile } from '../../../utils';
 import { DashboardLayout } from '../../layout';
 import { Analytics as Component } from '../components/Analytics';
 import { NftLockedView } from '../NftLockedView';
+import { useSubscriptionControllerGetUserMe } from '@/__generated__/sigle-api/sigleApiComponents';
 
 export const Analytics = () => {
-  const { isLoading, data: userSubscription } = useGetUserSubscription();
+  const { isLoading, data: userSubscription } =
+    useSubscriptionControllerGetUserMe({});
   const { isLoading: isStoriesLoading, data: stories } = useQuery(
     ['get-user-stories'],
     async () => {

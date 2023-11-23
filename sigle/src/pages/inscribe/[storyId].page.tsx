@@ -20,7 +20,6 @@ import {
 } from '@stacks/transactions';
 import { bytesToHex } from '@stacks/common';
 import { hashMessage, verifyMessageSignatureRsv } from '@stacks/encryption';
-// import { useGetUserSubscription } from '../../hooks/subscriptions';
 // import { NftLockedView } from '../../modules/analytics/NftLockedView';
 
 const StyledCode = styled('code', {
@@ -66,7 +65,6 @@ const StyledInput = styled('input', {
 });
 
 const Inscribe = () => {
-  // const { isLoading, data: userSubscription } = useGetUserSubscription();
   const { user } = useAuth();
   const router = useRouter();
   const { storyId } = router.query as { storyId: string };

@@ -1,12 +1,14 @@
 import { Box, Button, Flex, Typography, LoadingSpinner } from '../../../ui';
 import { SettingsLayout } from '../SettingsLayout';
-import { useGetUserSubscription } from '../../../hooks/subscriptions';
 import Link from 'next/link';
 import { useAuth } from '../../auth/AuthContext';
 import { ComparePlans } from './ComparePlans';
 import { sigleConfig } from '../../../config';
 import { toast } from 'react-toastify';
-import { useSubscriptionControllerSyncSubscriptionWithNft } from '@/__generated__/sigle-api/sigleApiComponents';
+import {
+  useSubscriptionControllerGetUserMe,
+  useSubscriptionControllerSyncSubscriptionWithNft,
+} from '@/__generated__/sigle-api/sigleApiComponents';
 
 export const CurrentPlan = () => {
   const { user, isLegacy } = useAuth();
@@ -14,7 +16,7 @@ export const CurrentPlan = () => {
     isLoading,
     data: userSubscription,
     refetch: refetchUserSubscription,
-  } = useGetUserSubscription();
+  } = useSubscriptionControllerGetUserMe({});
   const { isLoading: isLoadingSync, mutate: syncWithNftSubscription } =
     useSubscriptionControllerSyncSubscriptionWithNft({
       onSuccess: (data) => {
