@@ -3,7 +3,6 @@ import { useSession } from 'next-auth/react';
 import Image from 'next/image';
 import { useEffect, useState } from 'react';
 import { ApiError } from '../../external/api';
-import { useCreateSubscribers } from '../../hooks/subscribers';
 import { styled } from '../../stitches.config';
 import {
   Button,
@@ -18,7 +17,10 @@ import {
   Typography,
 } from '../../ui';
 import { isValidEmail } from '../../utils/regex';
-import { useUserControllerGetUserMe } from '@/__generated__/sigle-api';
+import {
+  useUserControllerGetUserMe,
+  useSubscribersControllerCreate,
+} from '@/__generated__/sigle-api';
 
 const HeaderLogoContainer = styled('div', {
   mx: 'auto',
@@ -89,8 +91,10 @@ export const SubscribeModal = ({
       setErrors({});
       validateForm();
       createSubscribers({
-        stacksAddress: userInfo.address,
-        email: values.email,
+        body: {
+          stacksAddress: userInfo.address,
+          email: values.email,
+        },
       });
     },
   });
@@ -102,17 +106,13 @@ export const SubscribeModal = ({
   }, [userMe]);
 
   const { mutate: createSubscribers, isLoading: isLoadingCreateSubscriber } =
-    useCreateSubscribers({
+    useSubscribersControllerCreate({
       onSuccess: () => {
         setSuccess(true);
         formik.setSubmitting(false);
       },
-      onError: (error: Error | ApiError) => {
-        let errorMessage = error.message;
-        if (error instanceof ApiError && error.body.message) {
-          errorMessage = error.body.message;
-        }
-        formik.setErrors({ email: errorMessage });
+      onError: (error) => {
+        formik.setErrors({ email: error?.message });
         formik.setSubmitting(false);
       },
     });
