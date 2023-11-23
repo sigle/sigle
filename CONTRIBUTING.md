@@ -25,10 +25,10 @@ For non-bug-fixes, please open an issue first and discuss your idea to make sure
 Sigle is a monorepo made of multiple applications and packages:
 
 - `apps` - Contains the apps.
+  - `sigle` - Contains the user facing application.
   - `custom-domain` - Contains the custom domain app.
+  - `server` - Contains the api.
 - `packages` - Contains the shared packages.
-- `sigle` - Contains the user facing application.
-- `server` - Contains the api.
 
 ## Development Workflow
 
