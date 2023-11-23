@@ -30,7 +30,7 @@
     "@radix-ui/react-switch": "1.0.3",
     "@radix-ui/react-tabs": "1.0.4",
     "@radix-ui/react-tooltip": "1.0.7",
-    "@sentry/nextjs": "7.74.1",
+    "@sentry/nextjs": "7.77.0",
     "@sigle/slate-to-html": "1.0.0",
     "@stacks/auth": "6.7.0",
     "@stacks/blockchain-api-client": "7.3.1",
