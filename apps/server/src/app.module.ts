@@ -29,7 +29,12 @@ import { EmailVerificationModule } from './email-verification/email-verification
       isGlobal: true,
       validate,
       cache: true,
-      envFilePath: process.env.NODE_ENV === 'test' ? '.env.test' : '.env',
+      envFilePath:
+        process.env.NODE_ENV === 'test'
+          ? '.env.test'
+          : process.env.NODE_ENV === 'development'
+            ? ['.env.development.local', '.env.development']
+            : '.env',
     }),
     SentryModule.forRootAsync({
       imports: [ConfigModule],
