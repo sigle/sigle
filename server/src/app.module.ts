@@ -44,8 +44,12 @@ import { EmailVerificationModule } from './email-verification/email-verification
       imports: [ConfigModule],
       inject: [ConfigService],
       useFactory: (config: ConfigService) => ({
-        ttl: 60,
-        limit: config.get('NODE_ENV') === 'test' ? 1000 : 50,
+        throttlers: [
+          {
+            ttl: 60000,
+            limit: config.get('NODE_ENV') === 'test' ? 1000 : 50,
+          },
+        ],
         storage: new ThrottlerStorageRedisService(
           config.get('REDIS_DATABASE_URL'),
         ),

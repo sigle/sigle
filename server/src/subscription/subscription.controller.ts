@@ -49,7 +49,7 @@ export class SubscriptionController {
     description: 'Returns the newly created subscription object.',
     type: SubscriptionDto,
   })
-  @Throttle(5, 60)
+  @Throttle({ default: { limit: 5, ttl: 60000 } })
   @UseGuards(AuthGuard)
   @Post('/api/subscriptions/syncWithNft')
   @HttpCode(200)

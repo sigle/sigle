@@ -12,7 +12,7 @@ export class SubscribersController {
   @ApiOperation({
     description: 'Create a new email subscriber.',
   })
-  @Throttle(5, 60)
+  @Throttle({ default: { limit: 5, ttl: 60000 } })
   @Post('/api/subscribers')
   create(@Body() createSubscriberDto: CreateSubscriberDto) {
     return this.subscribersService.create(createSubscriberDto);

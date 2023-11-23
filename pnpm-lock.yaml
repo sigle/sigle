@@ -15,11 +15,11 @@ importers:
         specifier: 8.0.3
         version: 8.0.3
       lint-staged:
-        specifier: 15.0.2
-        version: 15.0.2
+        specifier: 15.1.0
+        version: 15.1.0
       prettier:
-        specifier: 3.0.3
-        version: 3.0.3
+        specifier: 3.1.0
+        version: 3.1.0
       turbo:
         specifier: 1.10.16
         version: 1.10.16
@@ -483,8 +483,8 @@ importers:
   server:
     dependencies:
       '@fastify/cookie':
-        specifier: 8.3.0
-        version: 8.3.0
+        specifier: 9.2.0
+        version: 9.2.0
       '@fastify/static':
         specifier: 6.12.0
         version: 6.12.0
@@ -507,8 +507,8 @@ importers:
         specifier: 7.1.16
         version: 7.1.16(@fastify/static@6.12.0)(@nestjs/common@10.2.10)(@nestjs/core@10.2.10)(class-transformer@0.5.1)(class-validator@0.14.0)(reflect-metadata@0.1.13)
       '@nestjs/throttler':
-        specifier: 4.2.1
-        version: 4.2.1(@nestjs/common@10.2.10)(@nestjs/core@10.2.10)(reflect-metadata@0.1.13)
+        specifier: 5.0.1
+        version: 5.0.1(@nestjs/common@10.2.10)(@nestjs/core@10.2.10)(reflect-metadata@0.1.13)
       '@ntegral/nestjs-sentry':
         specifier: 4.0.0
         version: 4.0.0(@nestjs/common@10.2.10)(@nestjs/core@10.2.10)(@sentry/hub@7.81.1)(@sentry/node@7.81.1)(class-transformer@0.5.1)(class-validator@0.14.0)(graphql@16.8.1)(reflect-metadata@0.1.13)(rimraf@3.0.2)(rxjs@7.8.1)
@@ -561,8 +561,8 @@ importers:
         specifier: 1.2.2
         version: 1.2.2
       nestjs-throttler-storage-redis:
-        specifier: 0.3.3
-        version: 0.3.3(@nestjs/common@10.2.10)(@nestjs/core@10.2.10)(@nestjs/throttler@4.2.1)(ioredis@5.3.2)(reflect-metadata@0.1.13)
+        specifier: 0.4.1
+        version: 0.4.1(@nestjs/common@10.2.10)(@nestjs/core@10.2.10)(@nestjs/throttler@5.0.1)(ioredis@5.3.2)(reflect-metadata@0.1.13)
       next-auth:
         specifier: 4.24.5
         version: 4.24.5(next@14.0.3)(nodemailer@6.9.7)(react-dom@18.2.0)(react@18.2.0)
@@ -3843,10 +3843,10 @@ packages:
     engines: {node: '>=14'}
     dev: false
 
-  /@fastify/cookie@8.3.0:
-    resolution: {integrity: sha512-P9hY9GO11L20TnZ33XN3i0bt+3x0zaT7S0ohAzWO950E9PB2xnNhLYzPFJIGFi5AVN0yr5+/iZhWxeYvR6KCzg==}
+  /@fastify/cookie@9.2.0:
+    resolution: {integrity: sha512-fkg1yjjQRHPFAxSHeLC8CqYuNzvR6Lwlj/KjrzQcGjNBK+K82nW+UfCjfN71g1GkoVoc1GTOgIWkFJpcMfMkHQ==}
     dependencies:
-      cookie: 0.5.0
+      cookie-signature: 1.2.1
       fastify-plugin: 4.5.1
     dev: false
 
@@ -5490,8 +5490,8 @@ packages:
       tslib: 2.6.2
     dev: true
 
-  /@nestjs/throttler@4.2.1(@nestjs/common@10.2.10)(@nestjs/core@10.2.10)(reflect-metadata@0.1.13):
-    resolution: {integrity: sha512-wVPMuIyr0KdrK1RVVQceWVNesogCm9IgYC1V5EkaTZ+usIE4qxEyzdwU5IqQLgOO/Loiq98MLwReDxazX7i9Uw==}
+  /@nestjs/throttler@5.0.1(@nestjs/common@10.2.10)(@nestjs/core@10.2.10)(reflect-metadata@0.1.13):
+    resolution: {integrity: sha512-6gHmKmus7LDgzK/wRh7W9cT3gtZw1rY4mLVymvx6pYyRA46A9fMvjmZNQKJbo02jGg2R7gNo+3pyfvNnjDqg4A==}
     peerDependencies:
       '@nestjs/common': ^7.0.0 || ^8.0.0 || ^9.0.0 || ^10.0.0
       '@nestjs/core': ^7.0.0 || ^8.0.0 || ^9.0.0 || ^10.0.0
@@ -13019,6 +13019,11 @@ packages:
     engines: {node: '>= 4'}
     dev: true
 
+  /cookie-signature@1.2.1:
+    resolution: {integrity: sha512-78KWk9T26NhzXtuL26cIJ8/qNHANyJ/ZYrmEXFzUmhZdjpBv+DlWlOANRTGBt48YcyslsLrj0bMLFTmXvLRCOw==}
+    engines: {node: '>=6.6.0'}
+    dev: false
+
   /cookie@0.5.0:
     resolution: {integrity: sha512-YZ3GUyn/o8gfKJlnlX7g7xq4gyO6OSuhGPKaaGssGB2qgDUS0gPgtTvoyZLTt9Ab6dC4hfc9dV5arkvc/OCmrw==}
     engines: {node: '>= 0.6'}
@@ -18593,8 +18598,8 @@ packages:
     resolution: {integrity: sha512-zFN/CTVmbcVef+WaDXT63dNzzkfRBKT1j464NJQkV7iSgJU0sLBus9W0HBwnXK13/hf168pbrx/V/bjEHOXNHA==}
     dev: false
 
-  /lint-staged@15.0.2:
-    resolution: {integrity: sha512-vnEy7pFTHyVuDmCAIFKR5QDO8XLVlPFQQyujQ/STOxe40ICWqJ6knS2wSJ/ffX/Lw0rz83luRDh+ET7toN+rOw==}
+  /lint-staged@15.1.0:
+    resolution: {integrity: sha512-ZPKXWHVlL7uwVpy8OZ7YQjYDAuO5X4kMh0XgZvPNxLcCCngd0PO5jKQyy3+s4TL2EnHoIXIzP1422f/l3nZKMw==}
     engines: {node: '>=18.12.0'}
     hasBin: true
     dependencies:
@@ -18607,7 +18612,7 @@ packages:
       micromatch: 4.0.5
       pidtree: 0.6.0
       string-argv: 0.3.2
-      yaml: 2.3.3
+      yaml: 2.3.4
     transitivePeerDependencies:
       - supports-color
     dev: true
@@ -19610,18 +19615,18 @@ packages:
   /neo-async@2.6.2:
     resolution: {integrity: sha512-Yd3UES5mWCSqR+qNT93S3UoYUkqAZ9lLg8a7g9rimsWmYGK8cVToA4/sF3RrshdyV3sAGMXVUmpMYOw+dLpOuw==}
 
-  /nestjs-throttler-storage-redis@0.3.3(@nestjs/common@10.2.10)(@nestjs/core@10.2.10)(@nestjs/throttler@4.2.1)(ioredis@5.3.2)(reflect-metadata@0.1.13):
-    resolution: {integrity: sha512-AwiWgcugi3wfE0loWJhcubgxCWDfnPy9M2BQOQFZhozc7PGktjJRIMlydwhDQzWYtRrgZT92cSIup20iQ/x+lA==}
+  /nestjs-throttler-storage-redis@0.4.1(@nestjs/common@10.2.10)(@nestjs/core@10.2.10)(@nestjs/throttler@5.0.1)(ioredis@5.3.2)(reflect-metadata@0.1.13):
+    resolution: {integrity: sha512-nSjPWfzAqwTFl6WA+wqwjJIHf63ffG9RJTojccHrDIE6cEk5Iw5IjO98crcBbu4PEqezWoX2eaUwAtpB1Ei8jA==}
     peerDependencies:
-      '@nestjs/common': '>=9.4.1'
-      '@nestjs/core': '>=9.4.1'
-      '@nestjs/throttler': '>=4.0.0'
-      ioredis: ^5.3.2
+      '@nestjs/common': ^7.0.0 || ^8.0.0 || ^9.0.0 || ^10.0.0
+      '@nestjs/core': ^7.0.0 || ^8.0.0 || ^9.0.0 || ^10.0.0
+      '@nestjs/throttler': '>=5.0.0'
+      ioredis: '>=5.0.0'
       reflect-metadata: ^0.1.13
     dependencies:
       '@nestjs/common': 10.2.10(class-transformer@0.5.1)(class-validator@0.14.0)(reflect-metadata@0.1.13)(rxjs@7.8.1)
       '@nestjs/core': 10.2.10(@nestjs/common@10.2.10)(reflect-metadata@0.1.13)(rxjs@7.8.1)
-      '@nestjs/throttler': 4.2.1(@nestjs/common@10.2.10)(@nestjs/core@10.2.10)(reflect-metadata@0.1.13)
+      '@nestjs/throttler': 5.0.1(@nestjs/common@10.2.10)(@nestjs/core@10.2.10)(reflect-metadata@0.1.13)
       ioredis: 5.3.2
       reflect-metadata: 0.1.13
     dev: false
@@ -20699,7 +20704,7 @@ packages:
     dependencies:
       lilconfig: 2.1.0
       postcss: 8.4.31
-      yaml: 2.3.2
+      yaml: 2.3.4
 
   /postcss-modules-extract-imports@3.0.0(postcss@8.4.31):
     resolution: {integrity: sha512-bdHleFnP3kZ4NYDhuGlVK+CMrQ/pqUm8bx/oGL93K6gVwiclvX5x0n76fYMKuIGKzlABOy13zsvqjb0f92TEXw==}
@@ -20864,12 +20869,6 @@ packages:
   /prettier@2.8.8:
     resolution: {integrity: sha512-tdN8qQGvNjw4CHbY+XXk0JgCXn9QiF21a55rBe5LJAU+kDyC4WQn4+awm2Xfk2lQMk5fKup9XgzTZtGkjBdP9Q==}
     engines: {node: '>=10.13.0'}
-    hasBin: true
-    dev: true
-
-  /prettier@3.0.3:
-    resolution: {integrity: sha512-L/4pUDMxcNa8R/EthV08Zt42WBO4h1rarVtK0K+QJG0X187OLo7l699jWw0GKuwzkPQ//jMFA/8Xm6Fh3J/DAg==}
-    engines: {node: '>=14'}
     hasBin: true
     dev: true
 
@@ -24854,14 +24853,9 @@ packages:
     engines: {node: '>= 6'}
     dev: true
 
-  /yaml@2.3.2:
-    resolution: {integrity: sha512-N/lyzTPaJasoDmfV7YTrYCI0G/3ivm/9wdG0aHuheKowWQwGTsK0Eoiw6utmzAnI6pkJa0DUVygvp3spqqEKXg==}
+  /yaml@2.3.4:
+    resolution: {integrity: sha512-8aAvwVUSHpfEqTQ4w/KMlf3HcRdt50E5ODIQJBw1fQ5RL34xabzxtUlzTXVqc4rkZsPbvrXKWnABCD7kWSmocA==}
     engines: {node: '>= 14'}
-
-  /yaml@2.3.3:
-    resolution: {integrity: sha512-zw0VAJxgeZ6+++/su5AFoqBbZbrEakwu+X0M5HmcwUiBL7AzcuPKjj5we4xfQLp78LkEMpD0cOnUhmgOVy3KdQ==}
-    engines: {node: '>= 14'}
-    dev: true
 
   /yargs-parser@18.1.3:
     resolution: {integrity: sha512-o50j0JeToy/4K6OZcaQmW6lyXXKhq7csREXcDwk2omFPJEwUNOVtJKvmDr9EI1fAJZUyZcRF7kxGBWmRXudrCQ==}
