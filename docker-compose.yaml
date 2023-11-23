@@ -47,5 +47,18 @@ services:
       postgres:
         condition: service_healthy
 
+  sigle:
+    build:
+      context: .
+      dockerfile: ./apps/sigle/Dockerfile.dev
+    restart: always
+    ports:
+      - 3000:3000
+    extra_hosts:
+      - 'host.docker.internal:host-gateway'
+    volumes:
+      - './apps/sigle/src:/app/apps/sigle/src'
+      - './apps/sigle/public:/app/apps/sigle/public'
+
 volumes:
   pg_db_data:
