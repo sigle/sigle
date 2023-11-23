@@ -2,7 +2,6 @@ import { FormikErrors, useFormik } from 'formik';
 import { useSession } from 'next-auth/react';
 import Image from 'next/image';
 import { useEffect, useState } from 'react';
-import { ApiError } from '../../external/api';
 import { styled } from '../../stitches.config';
 import {
   Button,

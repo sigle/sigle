@@ -12,7 +12,6 @@ import {
 } from '../../ui';
 import { isValidEmail } from '../../utils/regex';
 import { toast } from 'react-toastify';
-import { ApiError } from '../../external/api';
 import { useSubscribersControllerCreate } from '@/__generated__/sigle-api';
 
 interface NewsletterFrameProps {

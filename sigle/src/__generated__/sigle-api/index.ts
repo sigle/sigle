@@ -1,1 +1,1 @@
-export * from './sigleApiComponents'
+export * from './sigleApiComponents';
