@@ -18,19 +18,6 @@ export const useGetUserMe = (
     options,
   );
 
-type GetApiUsersReturnType = Awaited<
-  ReturnType<typeof UserService.userControllerGetUser>
->;
-export const useGetUserByAddress = (
-  stacksAddress: string,
-  options: UseQueryOptions<GetApiUsersReturnType, Error> = {},
-) =>
-  useQuery<GetApiUsersReturnType, Error>(
-    ['get-user-by-address', stacksAddress],
-    () => UserService.userControllerGetUser({ userAddress: stacksAddress }),
-    options,
-  );
-
 type GetApiUsersFollowingReturnType = Awaited<
   ReturnType<typeof UserService.userControllerGetUserFollowing>
 >;

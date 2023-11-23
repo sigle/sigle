@@ -16,9 +16,10 @@ import { ShareButtons } from './ShareButtons';
 import { generateAvatar } from '../../utils/boringAvatar';
 import { ProfileCard } from '../profileCard/ProfileCard';
 import { PoweredBy } from './PoweredBy';
-import { useGetUserByAddress, useGetUserMe } from '../../hooks/users';
+import { useGetUserMe } from '../../hooks/users';
 import { useSession } from 'next-auth/react';
 import Link from 'next/link';
+import { useUserControllerGetUser } from '@/__generated__/sigle-api/sigleApiComponents';
 
 const ProfileImageContainer = styled('div', {
   cursor: 'pointer',
@@ -135,7 +136,11 @@ export const PublicStory = ({
     username: string;
     storyId: string;
   };
-  const { data: userInfoByAddress } = useGetUserByAddress(userInfo.address);
+  const { data: userInfoByAddress } = useUserControllerGetUser({
+    pathParams: {
+      userAddress: userInfo.address,
+    },
+  });
   const { data: userMe } = useGetUserMe({
     enabled: status === 'authenticated',
     refetchOnMount: false,
