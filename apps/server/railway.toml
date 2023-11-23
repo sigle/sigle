@@ -1,7 +1,7 @@
 [build]
 builder = "DOCKERFILE"
-watchPatterns = ["/server/**"]
-dockerfilePath = "/server/Dockerfile"
+watchPatterns = ["/apps/server/**"]
+dockerfilePath = "/apps/server/Dockerfile"
 
 [deploy]
 numReplicas = 1
