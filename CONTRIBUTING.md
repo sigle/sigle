@@ -1,6 +1,6 @@
 # Contributing to Sigle
 
-We're open to all community contributions! This includes bug reports, feature requests, ideas, pull requests.
+We're open to all community contributions! This includes bug reports, feature requests, ideas, pull requests. If you are unsure about anything, just ask us in Discord, we're happy to help!
 
 ## Requirements
 
@@ -22,10 +22,13 @@ For non-bug-fixes, please open an issue first and discuss your idea to make sure
 
 ## Structure
 
-Sigle is a monorepo made of 1 next.js application, and one node.js application.:
+Sigle is a monorepo made of multiple applications and packages:
 
-`sigle` folder - Contains the editor to write and edit your posts
-`server` folder - Contains the api
+- `apps` - Contains the apps.
+  - `custom-domain` - Contains the custom domain app.
+- `packages` - Contains the shared packages.
+- `sigle` - Contains the user facing application.
+- `server` - Contains the api.
 
 ## Development Workflow
 
@@ -105,7 +108,3 @@ To update the custom domain e2e tests snapshots, run the following command in th
 docker build -t local-custom-domain-playwright-docker --file Dockerfile.e2e ../../
 docker run -v "./e2e:/app/apps/custom-domain/e2e" -it local-custom-domain-playwright-docker:latest
 ```
-
-## License
-
-Sigle is licensed under the [MIT license](https://github.com/sigle/sigle/blob/main/LICENSE).
