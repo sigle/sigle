@@ -2,7 +2,6 @@ import { CheckCircledIcon } from '@radix-ui/react-icons';
 import { FormikErrors, useFormik } from 'formik';
 import { toast } from 'react-toastify';
 import { ApiError } from '../../../external/api';
-import { useResendVerificationUserEmail } from '../../../hooks/users';
 import {
   Box,
   Flex,
@@ -21,6 +20,7 @@ import { SettingsLayout } from '../SettingsLayout';
 import {
   useUserControllerGetUserMe,
   useEmailVerificationControllerAddEmail,
+  useEmailVerificationControllerResendEmail,
 } from '@/__generated__/sigle-api';
 
 interface SettingsFormValues {
@@ -50,13 +50,9 @@ export const EmailData = () => {
   const {
     mutate: resendVerificationUserEmail,
     isLoading: isLoadingResendVerificationUserEmail,
-  } = useResendVerificationUserEmail({
-    onError: (error: Error | ApiError) => {
-      let errorMessage = error.message;
-      if (error instanceof ApiError && error.body.message) {
-        errorMessage = error.body.message;
-      }
-      toast.error(errorMessage);
+  } = useEmailVerificationControllerResendEmail({
+    onError: (error) => {
+      toast.error(error?.message);
     },
     onSuccess: async () => {
       await refetchUserMe();
@@ -131,7 +127,7 @@ export const EmailData = () => {
                   boxShadow: '0 1px 0 0',
                   cursor: 'pointer',
                 }}
-                onClick={() => resendVerificationUserEmail()}
+                onClick={() => resendVerificationUserEmail({})}
               >
                 Resend verification email.
               </Box>

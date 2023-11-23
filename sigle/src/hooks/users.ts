@@ -1,20 +1,6 @@
 import { useMutation, UseMutationOptions } from '@tanstack/react-query';
 import { AddEmailDto, UserService, VerifyEmailDto } from '../external/api';
 
-type PostApiResendVerificationEmailReturnType = Awaited<
-  ReturnType<typeof UserService.emailVerificationControllerResendEmail>
->;
-export const useResendVerificationUserEmail = (
-  options: UseMutationOptions<
-    PostApiResendVerificationEmailReturnType,
-    Error
-  > = {},
-) =>
-  useMutation<PostApiResendVerificationEmailReturnType, Error>(
-    () => UserService.emailVerificationControllerResendEmail(),
-    options,
-  );
-
 type PostApiVerifyUserEmailReturnType = Awaited<
   ReturnType<typeof UserService.emailVerificationControllerVerifyEmail>
 >;
