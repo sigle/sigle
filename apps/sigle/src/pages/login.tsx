@@ -14,10 +14,10 @@ import {
   CheckIcon,
 } from '@radix-ui/react-icons';
 import { toast } from 'react-toastify';
+import { useRouter } from 'next/router';
 import { Goals } from '../utils/fathom';
 import { Box, Button, Flex, Typography } from '../ui';
 import { LoginLayout } from '../modules/layout/components/LoginLayout';
-import { useRouter } from 'next/router';
 import { useAuth } from '../modules/auth/AuthContext';
 import { SignInWithStacksMessage } from '../modules/auth/sign-in-with-stacks/signInWithStacksMessage';
 import { sigleConfig } from '../config';

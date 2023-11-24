@@ -1,10 +1,10 @@
 import { stagger } from 'motion';
 import { useMotionAnimate } from 'motion-hooks';
 import { useEffect, useMemo, useState } from 'react';
-import { Box, Flex, Typography } from '../../ui';
-import { Pagination } from './Pagination';
-import { ErrorMessage } from '../../ui/ErrorMessage';
 import { useAnalyticsControllerGetReferrers } from '@/__generated__/sigle-api';
+import { Box, Flex, Typography } from '../../ui';
+import { ErrorMessage } from '../../ui/ErrorMessage';
+import { Pagination } from './Pagination';
 
 interface ReferrersFrameProps {
   storyId?: string;

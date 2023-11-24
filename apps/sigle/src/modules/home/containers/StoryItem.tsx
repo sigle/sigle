@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useRouter } from 'next/router';
 import { toast } from 'react-toastify';
 import NProgress from 'nprogress';
+import { fetchStoriesControllerDelete } from '@/__generated__/sigle-api';
 import { StoryItem as Component } from '../components/StoryItem';
 import { SubsetStory, BlockstackUser, Story } from '../../../types';
 import {
@@ -12,7 +13,6 @@ import {
   saveStoryFile,
 } from '../../../utils';
 import { useAuth } from '../../auth/AuthContext';
-import { fetchStoriesControllerDelete } from '@/__generated__/sigle-api';
 
 interface Props {
   user: BlockstackUser;

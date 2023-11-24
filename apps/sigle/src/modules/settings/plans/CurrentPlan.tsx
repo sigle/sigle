@@ -1,14 +1,14 @@
-import { Box, Button, Flex, Typography, LoadingSpinner } from '../../../ui';
-import { SettingsLayout } from '../SettingsLayout';
 import Link from 'next/link';
-import { useAuth } from '../../auth/AuthContext';
-import { ComparePlans } from './ComparePlans';
-import { sigleConfig } from '../../../config';
 import { toast } from 'react-toastify';
 import {
   useSubscriptionControllerGetUserMe,
   useSubscriptionControllerSyncSubscriptionWithNft,
 } from '@/__generated__/sigle-api';
+import { Box, Button, Flex, Typography, LoadingSpinner } from '../../../ui';
+import { SettingsLayout } from '../SettingsLayout';
+import { useAuth } from '../../auth/AuthContext';
+import { sigleConfig } from '../../../config';
+import { ComparePlans } from './ComparePlans';
 
 export const CurrentPlan = () => {
   const { user, isLegacy } = useAuth();

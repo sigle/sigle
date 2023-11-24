@@ -2,26 +2,26 @@ import { useRouter } from 'next/router';
 import { NextSeo } from 'next-seo';
 import readingTime from 'reading-time';
 import { useEffect, useMemo, useState } from 'react';
-import { SettingsFile, Story } from '../../types';
-import { sanitizeHexColor } from '../../utils/security';
-import { sigleConfig } from '../../config';
-import { TipTapEditor } from '../editor/TipTapEditor';
-import { styled } from '../../stitches.config';
-import { Box, Container, Flex, Typography } from '../../ui';
-import { NewsletterFrame } from './NewsletterFrame';
-import { getTextFromHtml } from '../editor/utils/getTextFromHtml';
-import { AppHeader } from '../layout/components/AppHeader';
 import format from 'date-fns/format';
-import { ShareButtons } from './ShareButtons';
-import { generateAvatar } from '../../utils/boringAvatar';
-import { ProfileCard } from '../profileCard/ProfileCard';
-import { PoweredBy } from './PoweredBy';
 import { useSession } from 'next-auth/react';
 import Link from 'next/link';
 import {
   useUserControllerGetUserMe,
   useUserControllerGetUser,
 } from '@/__generated__/sigle-api';
+import { SettingsFile, Story } from '../../types';
+import { sanitizeHexColor } from '../../utils/security';
+import { sigleConfig } from '../../config';
+import { TipTapEditor } from '../editor/TipTapEditor';
+import { styled } from '../../stitches.config';
+import { Box, Container, Flex, Typography } from '../../ui';
+import { getTextFromHtml } from '../editor/utils/getTextFromHtml';
+import { AppHeader } from '../layout/components/AppHeader';
+import { generateAvatar } from '../../utils/boringAvatar';
+import { ProfileCard } from '../profileCard/ProfileCard';
+import { ShareButtons } from './ShareButtons';
+import { NewsletterFrame } from './NewsletterFrame';
+import { PoweredBy } from './PoweredBy';
 
 const ProfileImageContainer = styled('div', {
   cursor: 'pointer',
@@ -201,7 +201,7 @@ export const PublicStory = ({
       <AppHeader />
 
       <PublicStoryContainer
-        className="prose dark:prose-invert lg:prose-lg sigle-content"
+        className="sigle-content prose dark:prose-invert lg:prose-lg"
         css={{
           "& :where(a):not(:where([class~='not-prose'] *))": {
             color: safeSiteColor,

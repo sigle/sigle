@@ -1,6 +1,7 @@
 import { format } from 'date-fns';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
+import { useAnalyticsControllerGetHistorical } from '@/__generated__/sigle-api';
 import { StatsChart } from '../stats/StatsChart';
 import { StatsType } from '../stats/types';
 import { DashboardLayout } from '../../layout';
@@ -16,7 +17,6 @@ import {
   monthFromDate,
   weekFromDate,
 } from '../stats/utils';
-import { useAnalyticsControllerGetHistorical } from '@/__generated__/sigle-api';
 
 interface StoryAnalyticsProps {
   story: SubsetStory | undefined;

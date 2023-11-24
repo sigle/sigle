@@ -1,3 +1,8 @@
+import Link from 'next/link';
+import Image from 'next/image';
+import { useTheme } from 'next-themes';
+import { useState } from 'react';
+import { useUserControllerGetUser } from '@/__generated__/sigle-api';
 import {
   Box,
   Button,
@@ -11,20 +16,15 @@ import {
   TooltipContent,
   IconButton,
 } from '../../ui';
-import Link from 'next/link';
-import Image from 'next/image';
 import { generateAvatar } from '../../utils/boringAvatar';
 import { SettingsFile } from '../../types';
 import { styled } from '../../stitches.config';
 import { useAuth } from '../auth/AuthContext';
-import { useUserControllerGetUser } from '@/__generated__/sigle-api';
 import {
   useGetGaiaUserFollowing,
   useUserFollow,
   useUserUnfollow,
 } from '../../hooks/appData';
-import { useTheme } from 'next-themes';
-import { useState } from 'react';
 import { LoginModal } from '../loginModal/LoginModal';
 import { EnvelopePlusIcon } from '../../icons/EnvelopPlusIcon';
 import { SubscribeModal } from '../subscribeModal/SubscribeModal';

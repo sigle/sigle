@@ -9,13 +9,15 @@ import Link from 'next/link';
 import Image from 'next/legacy/image';
 import { useSession } from 'next-auth/react';
 import { useTheme } from 'next-themes';
+import { useState } from 'react';
+import * as Fathom from 'fathom-client';
+import { toast } from 'react-toastify';
+import { useRouter } from 'next/router';
+import { useUserControllerGetUserMe } from '@/__generated__/sigle-api';
 import { styled } from '../../../stitches.config';
 import { Box, Button, Container, Flex, IconButton } from '../../../ui';
 import { useAuth } from '../../auth/AuthContext';
 import { sigleConfig } from '../../../config';
-import { HeaderDropdown } from './HeaderDropdown';
-import { MobileHeader } from './MobileHeader';
-import { useState } from 'react';
 import {
   createNewEmptyStory,
   getStoriesFile,
@@ -23,11 +25,9 @@ import {
   saveStoryFile,
 } from '../../../utils';
 import { createSubsetStory } from '../../editor/utils';
-import * as Fathom from 'fathom-client';
 import { Goals } from '../../../utils/fathom';
-import { toast } from 'react-toastify';
-import { useRouter } from 'next/router';
-import { useUserControllerGetUserMe } from '@/__generated__/sigle-api';
+import { MobileHeader } from './MobileHeader';
+import { HeaderDropdown } from './HeaderDropdown';
 
 const Header = styled('header', Container, {
   display: 'flex',

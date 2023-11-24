@@ -1,6 +1,6 @@
 import { nanoid } from 'nanoid';
-import { userSession, storage } from './blockstack';
 import { StoryFile, Story, SettingsFile } from '../types';
+import { userSession, storage } from './blockstack';
 
 const storiesFileName = 'stories.json';
 const publicStoriesFileName = 'publicStories.json';

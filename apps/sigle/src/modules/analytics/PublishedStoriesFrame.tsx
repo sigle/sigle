@@ -1,11 +1,11 @@
 import { useRouter } from 'next/router';
 import { useMemo, useState } from 'react';
+import { useAnalyticsControllerGetHistorical } from '@/__generated__/sigle-api';
 import { SubsetStory } from '../../types';
 import { Box, Typography } from '../../ui';
+import { ErrorMessage } from '../../ui/ErrorMessage';
 import { Pagination } from './Pagination';
 import { PublishedStoryItem } from './PublishedStoryItem';
-import { ErrorMessage } from '../../ui/ErrorMessage';
-import { useAnalyticsControllerGetHistorical } from '@/__generated__/sigle-api';
 
 interface PublishedStoriesFrameProps {
   historicalParams: {

@@ -1,7 +1,7 @@
 import { useAnalyticsControllerGetHistorical } from '@/__generated__/sigle-api';
 import { Box, Flex, Tabs, TabsList, TabsTrigger } from '../../../ui';
-import { StatsChart } from './StatsChart';
 import { ErrorMessage } from '../../../ui/ErrorMessage';
+import { StatsChart } from './StatsChart';
 import { StatsTotal } from './StatsTotal';
 import { StatsType } from './types';
 import { initialRange } from './utils';

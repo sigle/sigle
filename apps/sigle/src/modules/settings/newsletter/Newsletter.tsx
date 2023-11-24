@@ -3,6 +3,11 @@ import { useFormik, FormikErrors } from 'formik';
 import { useEffect } from 'react';
 import { toast } from 'react-toastify';
 import {
+  useSubscriptionControllerGetUserMe,
+  useNewslettersControllerGet,
+  useNewslettersControllerUpdate,
+} from '@/__generated__/sigle-api';
+import {
   Button,
   Typography,
   Flex,
@@ -16,11 +21,6 @@ import { SettingsLayout } from '../SettingsLayout';
 import { SenderEmail } from './SenderEmail';
 import { VideoHelp } from './VideoHelp';
 import { MailjetList } from './MailjetList';
-import {
-  useSubscriptionControllerGetUserMe,
-  useNewslettersControllerGet,
-  useNewslettersControllerUpdate,
-} from '@/__generated__/sigle-api';
 
 interface NewsletterSettingsFormValues {
   apiKey: string;

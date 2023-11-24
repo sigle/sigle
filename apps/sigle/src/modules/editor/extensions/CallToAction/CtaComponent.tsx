@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { NodeViewProps } from '@tiptap/core';
 import { NodeViewWrapper } from '@tiptap/react';
+import { FormikErrors, useFormik } from 'formik';
+import { CheckIcon } from '@radix-ui/react-icons';
 import {
   Button,
   Flex,
@@ -12,14 +14,12 @@ import {
   FormHelper,
   FormHelperError,
 } from '../../../../ui';
-import { FormikErrors, useFormik } from 'formik';
 import {
   Label,
   RadioGroupIndicator,
   RadioGroupItem,
   RadioGroupRoot,
 } from '../../../../ui/RadioGroup';
-import { CheckIcon } from '@radix-ui/react-icons';
 import { styled } from '../../../../stitches.config';
 import { isValidHttpUrl } from '../../../../utils';
 import { useGetUserSettings } from '../../../../hooks/appData';

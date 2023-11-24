@@ -1,4 +1,5 @@
 import { CheckIcon, QuestionMarkCircledIcon } from '@radix-ui/react-icons';
+import Link from 'next/link';
 import { styled } from '../../../stitches.config';
 import {
   Box,
@@ -9,7 +10,6 @@ import {
   TooltipTrigger,
   Typography,
 } from '../../../ui';
-import Link from 'next/link';
 import { sigleConfig } from '../../../config';
 
 type PlanStatus = 'active' | 'inactive' | 'progress' | string;

@@ -2,8 +2,8 @@ import { AreaClosed, LinePath } from '@visx/shape';
 import { LinearGradient } from '@visx/gradient';
 import { curveMonotoneX } from '@visx/curve';
 import { AxisBottom, AxisLeft, AxisScale } from '@visx/axis';
-import { theme } from '../../../stitches.config';
 import { WithParentSizeProps } from '@visx/responsive/lib/enhancers/withParentSizeModern';
+import { theme } from '../../../stitches.config';
 import { StatsData } from './types';
 
 const violet = theme.colors.violet5.toString();

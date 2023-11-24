@@ -2,9 +2,9 @@ import TipTapImageBase from '@tiptap/extension-image';
 import { ReactNodeViewRenderer } from '@tiptap/react';
 import { findChildren } from '@tiptap/core';
 import { Plugin, PluginKey } from '@tiptap/pm/state';
-import { Component } from './ImageWrapper';
 import { generateRandomId } from '../../../../utils';
 import { resizeAndUploadImage } from '../../utils/image';
+import { Component } from './ImageWrapper';
 
 export const TipTapImage = TipTapImageBase.extend({
   addAttributes() {

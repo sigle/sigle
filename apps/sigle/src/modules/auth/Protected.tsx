@@ -2,8 +2,8 @@ import React, { useEffect } from 'react';
 import { useRouter } from 'next/router';
 import { useSession } from 'next-auth/react';
 import { parseZoneFile } from 'zone-file';
-import { useAuth } from './AuthContext';
 import { FullScreenLoading } from '../layout/components/FullScreenLoading';
+import { useAuth } from './AuthContext';
 
 interface Props {
   children: JSX.Element;

@@ -9,12 +9,12 @@ import {
   ImageLight,
   QuoteLight,
 } from '../../../../icons';
-import { SlashCommandsCommand } from './SlashCommands';
 import { generateRandomId } from '../../../../utils';
 import { resizeAndUploadImage } from '../../utils/image';
 import { PlainTextLight } from '../../../../icons/PlainTextLight';
 import { TwitterLight } from '../../../../icons/TwitterLight';
 import { CtaIcon } from '../../../../icons/CtaIcon';
+import { SlashCommandsCommand } from './SlashCommands';
 
 export const slashCommands = ({
   storyId,

@@ -4,8 +4,8 @@ import { useQuery } from '@tanstack/react-query';
 import * as Sentry from '@sentry/nextjs';
 import { useAuth } from '../auth/AuthContext';
 import { getSettingsFile } from '../../utils';
-import { SettingsForm } from './SettingsForm';
 import { Box } from '../../ui';
+import { SettingsForm } from './SettingsForm';
 import { SettingsLayout } from './SettingsLayout';
 
 export const Settings = () => {

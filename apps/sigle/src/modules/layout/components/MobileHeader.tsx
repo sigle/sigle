@@ -1,10 +1,6 @@
 import { signOut } from 'next-auth/react';
 import { useTheme } from 'next-themes';
 import Link from 'next/link';
-import { keyframes, styled } from '../../../stitches.config';
-import { Box, Dialog, DialogContent, Flex, StyledOverlay } from '../../../ui';
-import { Switch, SwitchThumb } from '../../../ui/Switch';
-import { userSession } from '../../../utils/blockstack';
 import { useQueryClient } from '@tanstack/react-query';
 import Draggable from 'react-draggable';
 import { TouchEvent, useRef, useState } from 'react';
@@ -17,6 +13,10 @@ import {
   LightningBoltIcon,
   MixIcon,
 } from '@radix-ui/react-icons';
+import { userSession } from '../../../utils/blockstack';
+import { Switch, SwitchThumb } from '../../../ui/Switch';
+import { Box, Dialog, DialogContent, Flex, StyledOverlay } from '../../../ui';
+import { keyframes, styled } from '../../../stitches.config';
 import { useAuth } from '../../auth/AuthContext';
 
 const overlayShow = keyframes({

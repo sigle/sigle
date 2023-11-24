@@ -1,7 +1,7 @@
 import { CrossCircledIcon } from '@radix-ui/react-icons';
 import { CSS } from '../stitches.config';
-import { Flex } from '.';
 import { Typography } from './Typography';
+import { Flex } from '.';
 
 interface ErrorProps {
   children: React.ReactNode;

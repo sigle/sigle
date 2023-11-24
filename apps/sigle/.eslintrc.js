@@ -1,10 +1,9 @@
 module.exports = {
   extends: [
     'plugin:@typescript-eslint/recommended',
-    'prettier',
-    'plugin:prettier/recommended',
     'plugin:@next/next/recommended',
     'next/core-web-vitals',
+    'plugin:tailwindcss/recommended',
   ],
   rules: {
     '@typescript-eslint/explicit-function-return-type': 'off',
@@ -15,5 +14,19 @@ module.exports = {
     'react/display-name': 'off',
     'react-hooks/exhaustive-deps': 'off',
     'react/no-unescaped-entities': ['error', { forbid: ['>', '}'] }],
+    'import/order': [
+      'error',
+      {
+        'newlines-between': 'never',
+        pathGroups: [
+          {
+            pattern: '@/**',
+            group: 'external',
+            position: 'after',
+          },
+        ],
+        groups: ['builtin', 'external', 'parent', 'sibling', 'index'],
+      },
+    ],
   },
 };

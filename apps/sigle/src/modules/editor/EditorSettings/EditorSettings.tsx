@@ -13,6 +13,7 @@ import { toast } from 'react-toastify';
 import { useDropzone } from 'react-dropzone';
 import format from 'date-fns/format';
 import isValid from 'date-fns/isValid';
+import { fetchStoriesControllerDelete } from '@/__generated__/sigle-api';
 import { Story } from '../../../types';
 import {
   Box,
@@ -45,7 +46,6 @@ import {
   FormRow,
   FormTextarea,
 } from '../../../ui/Form';
-import { fetchStoriesControllerDelete } from '@/__generated__/sigle-api';
 import { useAuth } from '../../auth/AuthContext';
 
 // TODO - migrate hideCoverImage from old articles

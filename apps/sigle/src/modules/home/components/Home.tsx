@@ -1,9 +1,12 @@
 import React, { useState } from 'react';
+import Image from 'next/legacy/image';
+import { useInView } from 'react-cool-inview';
+import * as Fathom from 'fathom-client';
+import { useRouter } from 'next/router';
+import { toast } from 'react-toastify';
 import { StoryItem } from '../';
 import { SubsetStory, BlockstackUser } from '../../../types';
 import { DashboardLayout } from '../../layout/components/DashboardLayout';
-import Image from 'next/legacy/image';
-import { useInView } from 'react-cool-inview';
 import { styled } from '../../../stitches.config';
 import { Button, Flex, Typography } from '../../../ui';
 import {
@@ -13,10 +16,7 @@ import {
   saveStoryFile,
 } from '../../../utils';
 import { createSubsetStory } from '../../editor/utils';
-import * as Fathom from 'fathom-client';
 import { Goals } from '../../../utils/fathom';
-import { useRouter } from 'next/router';
-import { toast } from 'react-toastify';
 import { StoryCardSkeleton } from './StoryItemSkeleton';
 
 const ImgWrapper = styled('div', {

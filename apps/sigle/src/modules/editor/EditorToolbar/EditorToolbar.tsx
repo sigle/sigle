@@ -3,8 +3,8 @@ import { Editor } from '@tiptap/react';
 import { darkTheme, styled } from '../../../stitches.config';
 import { Story } from '../../../types';
 import { Box, Container, Flex, IconButton, Typography } from '../../../ui';
-import { ToolbarMenu } from './ToolbarMenu';
 import { slashCommands } from '../extensions/SlashCommand/commands';
+import { ToolbarMenu } from './ToolbarMenu';
 import { MobileFloatingMenu } from './ToolbarFloatingMenu';
 
 const ToolbarContainer = styled(Container, {
