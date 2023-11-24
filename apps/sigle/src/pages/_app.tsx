@@ -16,8 +16,7 @@ import 'nprogress/nprogress.css';
 import 'tippy.js/dist/tippy.css';
 import 'tippy.js/themes/light-border.css';
 import 'react-toastify/dist/ReactToastify.css';
-// reach-ui styles
-import '@sigle/tailwind-style/dist/tailwind.css';
+import '../globals.css';
 import { sigleConfig } from '../config';
 import { colors } from '../utils/colors';
 import { AuthProvider } from '../modules/auth/AuthContext';
