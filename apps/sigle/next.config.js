@@ -22,10 +22,6 @@ const nextConfig = {
         ? `https://${process.env.VERCEL_BRANCH_URL}`
         : process.env.NEXTAUTH_URL,
   },
-  pageExtensions: [
-    // `.api.ts` for API routes
-    'api.ts',
-  ],
   headers: async () => {
     return [
       {
