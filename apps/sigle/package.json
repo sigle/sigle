@@ -129,6 +129,7 @@
     "@openapi-codegen/cli": "2.0.0",
     "@openapi-codegen/typescript": "8.0.0",
     "@playwright/test": "1.40.0",
+    "@tailwindcss/typography": "0.5.10",
     "@testing-library/jest-dom": "5.16.5",
     "@testing-library/react": "13.3.0",
     "@types/d3-array": "3.0.2",
