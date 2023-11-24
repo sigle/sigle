@@ -16,7 +16,6 @@ import 'nprogress/nprogress.css';
 import 'tippy.js/dist/tippy.css';
 import 'tippy.js/themes/light-border.css';
 import 'react-toastify/dist/ReactToastify.css';
-import '@radix-ui/themes/styles.css';
 import '../globals.css';
 import { ThemeProvider } from 'next-themes';
 import { Theme } from '@radix-ui/themes';
