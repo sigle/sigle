@@ -3,14 +3,6 @@ import { useRouter } from 'next/router';
 import React, { useState } from 'react';
 import * as Sentry from '@sentry/nextjs';
 import { toast } from 'react-toastify';
-import { Protected } from '../../modules/auth/Protected';
-import { getStoryFile, saveStoryFile } from '../../utils';
-import { migrationStory } from '../../utils/migrations/story';
-import { DashboardLayout } from '../../modules/layout';
-import { Button, Flex, Typography } from '../../ui';
-import { useAuth } from '../../modules/auth/AuthContext';
-import { appConfig } from '../../utils/blockstack';
-import { styled } from '../../stitches.config';
 import { useConnect } from '@stacks/connect-react';
 import { StacksMainnet } from '@stacks/network';
 import {
@@ -20,6 +12,14 @@ import {
 } from '@stacks/transactions';
 import { bytesToHex } from '@stacks/common';
 import { hashMessage, verifyMessageSignatureRsv } from '@stacks/encryption';
+import { Protected } from '../../modules/auth/Protected';
+import { getStoryFile, saveStoryFile } from '../../utils';
+import { migrationStory } from '../../utils/migrations/story';
+import { DashboardLayout } from '../../modules/layout';
+import { Button, Flex, Typography } from '../../ui';
+import { useAuth } from '../../modules/auth/AuthContext';
+import { appConfig } from '../../utils/blockstack';
+import { styled } from '../../stitches.config';
 // import { NftLockedView } from '../../modules/analytics/NftLockedView';
 
 const StyledCode = styled('code', {

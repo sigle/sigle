@@ -1,4 +1,18 @@
 import Link from 'next/link';
+import { useRouter } from 'next/router';
+import { useState } from 'react';
+import { toast } from 'react-toastify';
+import { useQueryClient } from '@tanstack/react-query';
+import * as Fathom from 'fathom-client';
+import { signOut } from 'next-auth/react';
+import {
+  ArchiveIcon,
+  CrumpledPaperIcon,
+  FileTextIcon,
+  MixIcon,
+} from '@radix-ui/react-icons';
+import { useTheme } from 'next-themes';
+import { useSubscriptionControllerGetUserMe } from '@/__generated__/sigle-api';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -18,27 +32,13 @@ import {
   saveStoriesFile,
   saveStoryFile,
 } from '../../../utils';
-import { useRouter } from 'next/router';
-import { useState } from 'react';
-import { toast } from 'react-toastify';
-import { useQueryClient } from '@tanstack/react-query';
 import { useGetUserSettings } from '../../../hooks/appData';
-import * as Fathom from 'fathom-client';
 import { Goals } from '../../../utils/fathom';
 import { userSession } from '../../../utils/blockstack';
 import { createSubsetStory } from '../../editor/utils';
 import { styled } from '../../../stitches.config';
 import { useAuth } from '../../auth/AuthContext';
-import { signOut } from 'next-auth/react';
-import {
-  ArchiveIcon,
-  CrumpledPaperIcon,
-  FileTextIcon,
-  MixIcon,
-} from '@radix-ui/react-icons';
-import { useTheme } from 'next-themes';
 import { Switch, SwitchThumb } from '../../../ui/Switch';
-import { useSubscriptionControllerGetUserMe } from '@/__generated__/sigle-api';
 
 const ImageContainer = styled('div', {
   display: 'flex',

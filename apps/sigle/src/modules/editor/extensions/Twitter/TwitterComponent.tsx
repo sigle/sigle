@@ -1,17 +1,17 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { NodeViewProps } from '@tiptap/core';
 import { NodeViewWrapper } from '@tiptap/react';
+import { FormikErrors, useFormik } from 'formik';
 import { Box, LoadingSpinner, Button, Flex, FormInput } from '../../../../ui';
 import { styled } from '../../../../stitches.config';
 import { ErrorMessage } from '../../../../ui/ErrorMessage';
-import { FormikErrors, useFormik } from 'formik';
+import { isValidHttpUrl } from '../../../../utils';
 import {
   createTweet,
   getTweetIdFromUrl,
   loadTwitterWidget,
   TWITTER_REGEX,
 } from './utils';
-import { isValidHttpUrl } from '../../../../utils';
 
 const ErrorButton = styled('button', {
   px: '$2',

@@ -1,14 +1,14 @@
 import { useQuery } from '@tanstack/react-query';
 import { NamesApi } from '@stacks/blockchain-api-client';
+import { lookupProfile } from '@stacks/auth';
+import Link from 'next/link';
 import { useGetGaiaUserFollowing } from '../../hooks/appData';
 import { Box, Button, Flex, LoadingSpinner, Typography } from '../../ui';
 import { DashboardLayout } from '../layout';
-import { lookupProfile } from '@stacks/auth';
 import { sigleConfig } from '../../config';
 import { SettingsFile, SubsetStory } from '../../types';
 import { StoryCard } from '../storyCard/StoryCard';
 import { fetchPublicStories, fetchSettings } from '../../utils/gaia/fetch';
-import Link from 'next/link';
 
 interface StoriesWithUser extends SubsetStory {
   user: {

@@ -2,6 +2,10 @@ import { FormikErrors, useFormik } from 'formik';
 import { useSession } from 'next-auth/react';
 import Image from 'next/image';
 import { useEffect, useState } from 'react';
+import {
+  useUserControllerGetUserMe,
+  useSubscribersControllerCreate,
+} from '@/__generated__/sigle-api';
 import { styled } from '../../stitches.config';
 import {
   Button,
@@ -16,10 +20,6 @@ import {
   Typography,
 } from '../../ui';
 import { isValidEmail } from '../../utils/regex';
-import {
-  useUserControllerGetUserMe,
-  useSubscribersControllerCreate,
-} from '@/__generated__/sigle-api';
 
 const HeaderLogoContainer = styled('div', {
   mx: 'auto',

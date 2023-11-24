@@ -8,6 +8,7 @@ import {
   publicKeyFromSignatureRsv,
   validateStacksAddress,
 } from '@stacks/transactions';
+import { hashMessage, verifyMessageSignatureRsv } from '@stacks/encryption';
 import { ParsedMessage } from './parser';
 import {
   SiweError,
@@ -16,7 +17,6 @@ import {
   VerifyParams,
   VerifyParamsKeys,
 } from './types';
-import { hashMessage, verifyMessageSignatureRsv } from '@stacks/encryption';
 
 // https://github.com/stacksgov/sips/blob/22f964ca9beddf9fd750d466b4a20568435f3911/sips/sip-x%20sign-in-with-stacks/sip-x-sign-in-with-stacks.md
 

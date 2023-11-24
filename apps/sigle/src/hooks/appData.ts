@@ -5,15 +5,15 @@ import {
   UseQueryOptions,
 } from '@tanstack/react-query';
 import {
+  fetchUserControllerAddFollow,
+  fetchUserControllerRemoveFollow,
+} from '@/__generated__/sigle-api';
+import {
   getSettingsFile,
   GaiaUserFollowing,
   getFollowingFile,
   saveFollowingFile,
 } from '../utils';
-import {
-  fetchUserControllerAddFollow,
-  fetchUserControllerRemoveFollow,
-} from '@/__generated__/sigle-api';
 
 /**
  * Get the app user following from Gaia.

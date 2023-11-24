@@ -1,3 +1,5 @@
+import { Link2Icon, LinkedInLogoIcon } from '@radix-ui/react-icons';
+import { useState } from 'react';
 import {
   Box,
   Flex,
@@ -7,9 +9,7 @@ import {
   TooltipTrigger,
 } from '../../ui';
 import { TwitterFilledIcon, FacebookLogoIcon } from '../../icons';
-import { Link2Icon, LinkedInLogoIcon } from '@radix-ui/react-icons';
 import { SettingsFile, Story } from '../../types';
-import { useState } from 'react';
 import { useAuth } from '../auth/AuthContext';
 import { sigleConfig } from '../../config';
 

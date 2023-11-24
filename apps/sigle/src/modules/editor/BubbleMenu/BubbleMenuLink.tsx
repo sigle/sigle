@@ -1,9 +1,9 @@
 import { useEffect } from 'react';
 import { Editor } from '@tiptap/react';
 import { Cross2Icon } from '@radix-ui/react-icons';
-import { useBubbleMenuStore } from './store';
 import { styled } from '../../../stitches.config';
 import { Flex } from '../../../ui';
+import { useBubbleMenuStore } from './store';
 
 const BubbleMenuButton = styled('button', {
   color: '$gray1',

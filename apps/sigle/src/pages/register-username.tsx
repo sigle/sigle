@@ -7,10 +7,10 @@ import {
 import { makeProfileZoneFile } from '@stacks/profile';
 import posthog from 'posthog-js';
 import * as Fathom from 'fathom-client';
+import { QuestionMarkCircledIcon } from '@radix-ui/react-icons';
 import { Button, Flex, FormControlGroup, FormInput, Typography } from '../ui';
 import { LoginLayout } from '../modules/layout/components/LoginLayout';
 import { keyframes, styled } from '../stitches.config';
-import { QuestionMarkCircledIcon } from '@radix-ui/react-icons';
 import { useAuth } from '../modules/auth/AuthContext';
 import { Goals } from '../utils/fathom';
 

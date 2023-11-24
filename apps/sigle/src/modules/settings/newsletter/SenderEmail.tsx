@@ -1,11 +1,11 @@
 import { useState } from 'react';
 import { toast } from 'react-toastify';
-import { Box, Button, Flex, Typography } from '../../../ui';
-import { styled } from '../../../stitches.config';
 import {
   useNewslettersControllerGetSenders,
   useNewslettersControllerUpdateSender,
 } from '@/__generated__/sigle-api';
+import { Box, Button, Flex, Typography } from '../../../ui';
+import { styled } from '../../../stitches.config';
 
 const Select = styled('select', {
   minWidth: 300,

@@ -1,6 +1,18 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
-import { AppHeader } from './AppHeader';
+import { useRouter } from 'next/router';
+import { VariantProps } from '@stitches/react';
+import * as Fathom from 'fathom-client';
+import { toast } from 'react-toastify';
+import {
+  createNewEmptyStory,
+  getStoriesFile,
+  saveStoriesFile,
+  saveStoryFile,
+} from '../../../utils';
+import { Goals } from '../../../utils/fathom';
+import { createSubsetStory } from '../../editor/utils';
+import { styled } from '../../../stitches.config';
 import {
   Accordion,
   AccordionContent,
@@ -10,21 +22,9 @@ import {
   Button,
   Container,
 } from '../../../ui';
-import { styled } from '../../../stitches.config';
-import { AppFooter } from './AppFooter';
-import { useRouter } from 'next/router';
-import { VariantProps } from '@stitches/react';
-import {
-  createNewEmptyStory,
-  getStoriesFile,
-  saveStoriesFile,
-  saveStoryFile,
-} from '../../../utils';
-import * as Fathom from 'fathom-client';
-import { Goals } from '../../../utils/fathom';
-import { createSubsetStory } from '../../editor/utils';
-import { toast } from 'react-toastify';
 import { useAuth } from '../../auth/AuthContext';
+import { AppFooter } from './AppFooter';
+import { AppHeader } from './AppHeader';
 
 export const DashboardContainer = styled(Container, {
   flex: 1,

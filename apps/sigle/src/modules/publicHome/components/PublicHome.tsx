@@ -2,6 +2,14 @@ import React, { useState } from 'react';
 import { NextSeo } from 'next-seo';
 import Image from 'next/image';
 import { useTheme } from 'next-themes';
+import { useRouter } from 'next/router';
+import { GlobeIcon, Pencil1Icon } from '@radix-ui/react-icons';
+import Link from 'next/link';
+import {
+  useUserControllerGetUser,
+  useUserControllerGetUserFollowers,
+  useUserControllerGetUserFollowing,
+} from '@/__generated__/sigle-api';
 import { StoryFile, SettingsFile } from '../../../types';
 import { PoweredBy } from '../../publicStory/PoweredBy';
 import {
@@ -32,18 +40,10 @@ import { StoryCard } from '../../storyCard/StoryCard';
 import { UserCard } from '../../userCard/UserCard';
 import { DashboardLayout } from '../../layout';
 import { AppHeader } from '../../layout/components/AppHeader';
-import { useRouter } from 'next/router';
-import { GlobeIcon, Pencil1Icon } from '@radix-ui/react-icons';
-import Link from 'next/link';
 import { TwitterFilledIcon } from '../../../icons';
 import { EnvelopePlusIcon } from '../../../icons/EnvelopPlusIcon';
 import { SubscribeModal } from '../../subscribeModal/SubscribeModal';
 import { StoryCardSkeleton } from '../../home/components/StoryItemSkeleton';
-import {
-  useUserControllerGetUser,
-  useUserControllerGetUserFollowers,
-  useUserControllerGetUserFollowing,
-} from '@/__generated__/sigle-api';
 
 const StyledTabsTrigger = styled(TabsTrigger, {
   fontSize: 13,

@@ -2,6 +2,11 @@ import { CheckCircledIcon } from '@radix-ui/react-icons';
 import { FormikErrors, useFormik } from 'formik';
 import { toast } from 'react-toastify';
 import {
+  useUserControllerGetUserMe,
+  useEmailVerificationControllerAddEmail,
+  useEmailVerificationControllerResendEmail,
+} from '@/__generated__/sigle-api';
+import {
   Box,
   Flex,
   FormHelper,
@@ -16,11 +21,6 @@ import {
 import { isValidEmail } from '../../../utils/regex';
 import { UnsavedChanges } from '../components/UnsavedChanges';
 import { SettingsLayout } from '../SettingsLayout';
-import {
-  useUserControllerGetUserMe,
-  useEmailVerificationControllerAddEmail,
-  useEmailVerificationControllerResendEmail,
-} from '@/__generated__/sigle-api';
 
 interface SettingsFormValues {
   email: string;

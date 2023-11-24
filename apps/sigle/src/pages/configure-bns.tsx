@@ -1,8 +1,8 @@
 import React, { useEffect } from 'react';
 import { useRouter } from 'next/router';
+import { RocketIcon } from '@radix-ui/react-icons';
 import { Button, Typography } from '../ui';
 import { LoginLayout } from '../modules/layout/components/LoginLayout';
-import { RocketIcon } from '@radix-ui/react-icons';
 import { Protected } from '../modules/auth/Protected';
 import { styled } from '../stitches.config';
 import { useAuth } from '../modules/auth/AuthContext';

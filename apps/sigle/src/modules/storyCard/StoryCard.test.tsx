@@ -1,7 +1,7 @@
 import React from 'react';
 import { render } from '@testing-library/react';
-import { StoryCard } from './StoryCard';
 import { SubsetStory } from '../../types';
+import { StoryCard } from './StoryCard';
 
 const userInfo = {
   username: 'sigle.btc',

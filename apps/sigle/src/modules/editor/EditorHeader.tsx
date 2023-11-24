@@ -5,10 +5,10 @@ import {
   MixerHorizontalIcon,
 } from '@radix-ui/react-icons';
 import Tippy from '@tippyjs/react';
+import { useEffect, useState } from 'react';
 import { Box, Button, Flex, IconButton, Typography } from '../../ui';
 import { Story } from '../../types';
 import { useAuth } from '../auth/AuthContext';
-import { useEffect, useState } from 'react';
 
 interface EditorHeaderProps {
   story: Story | false;

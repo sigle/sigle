@@ -5,24 +5,24 @@ import { toast } from 'react-toastify';
 import NProgress from 'nprogress';
 import * as Fathom from 'fathom-client';
 import posthog from 'posthog-js';
-import { styled } from '../../stitches.config';
-import { Story } from '../../types';
-import { Container } from '../../ui';
-import { EditorHeader } from './EditorHeader';
-import { PublishDialog } from './PublishDialog';
-import { TipTapEditor } from './TipTapEditor';
-import { createSubsetStory, saveStory } from './utils';
-import { publishStory, unPublishStory } from '../../utils';
-import { Goals } from '../../utils/fathom';
-import { UnpublishDialog } from './UnpublishDialog';
-import { PublishedDialog } from './PublishedDialog';
-import { CoverImage } from './CoverImage';
-import { EditorSettings } from './EditorSettings/EditorSettings';
-import { useAuth } from '../auth/AuthContext';
 import {
   fetchStoriesControllerPublish,
   fetchStoriesControllerUnpublish,
 } from '@/__generated__/sigle-api';
+import { styled } from '../../stitches.config';
+import { Story } from '../../types';
+import { Container } from '../../ui';
+import { publishStory, unPublishStory } from '../../utils';
+import { Goals } from '../../utils/fathom';
+import { useAuth } from '../auth/AuthContext';
+import { EditorHeader } from './EditorHeader';
+import { PublishDialog } from './PublishDialog';
+import { TipTapEditor } from './TipTapEditor';
+import { createSubsetStory, saveStory } from './utils';
+import { UnpublishDialog } from './UnpublishDialog';
+import { PublishedDialog } from './PublishedDialog';
+import { CoverImage } from './CoverImage';
+import { EditorSettings } from './EditorSettings/EditorSettings';
 
 const TitleInput = styled('input', {
   outline: 'transparent',

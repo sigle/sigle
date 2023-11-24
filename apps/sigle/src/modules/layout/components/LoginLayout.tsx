@@ -1,9 +1,9 @@
 import React from 'react';
 import Image from 'next/legacy/image';
+import { useTheme } from 'next-themes';
 import { styled } from '../../../stitches.config';
 import { Box, Container } from '../../../ui';
 import { sigleConfig } from '../../../config';
-import { useTheme } from 'next-themes';
 import { AppFooter } from './AppFooter';
 
 const FullScreen = styled('div', {

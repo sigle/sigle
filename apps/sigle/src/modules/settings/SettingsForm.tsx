@@ -4,6 +4,7 @@ import { useFormik, FormikErrors } from 'formik';
 import { useDropzone } from 'react-dropzone';
 import { CameraIcon, UpdateIcon } from '@radix-ui/react-icons';
 import { BlockPicker } from 'react-color';
+import { useQueryClient } from '@tanstack/react-query';
 import { SettingsFile } from '../../types';
 import { hexRegex } from '../../utils/regex';
 import { storage } from '../../utils/blockstack';
@@ -19,7 +20,6 @@ import {
   FormHelper,
 } from '../../ui';
 import { darkTheme, styled } from '../../stitches.config';
-import { useQueryClient } from '@tanstack/react-query';
 import { generateAvatar } from '../../utils/boringAvatar';
 import { useAuth } from '../auth/AuthContext';
 import { useGetUserSettings } from '../../hooks/appData';

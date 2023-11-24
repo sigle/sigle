@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useStoriesControllerSendTest } from '@/__generated__/sigle-api';
 import { Story } from '../../../types';
 import {
   Accordion,
@@ -10,7 +11,6 @@ import {
   FormTextarea,
   Typography,
 } from '../../../ui';
-import { useStoriesControllerSendTest } from '@/__generated__/sigle-api';
 
 interface SendTestEmailProps {
   story: Story;

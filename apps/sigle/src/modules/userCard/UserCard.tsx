@@ -2,6 +2,7 @@ import { lookupProfile } from '@stacks/auth';
 import { NamesApi } from '@stacks/blockchain-api-client';
 import Link from 'next/link';
 import { useQuery } from '@tanstack/react-query';
+import { useState } from 'react';
 import { sigleConfig } from '../../config';
 import {
   useGetGaiaUserFollowing,
@@ -14,7 +15,6 @@ import { generateAvatar } from '../../utils/boringAvatar';
 import { fetchSettings } from '../../utils/gaia/fetch';
 import { useAuth } from '../auth/AuthContext';
 import { LoginModal } from '../loginModal/LoginModal';
-import { useState } from 'react';
 
 const UserCardContainer = styled('div', {
   display: 'flex',

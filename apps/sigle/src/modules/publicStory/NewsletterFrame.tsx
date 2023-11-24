@@ -1,6 +1,8 @@
 import { FormikErrors, useFormik } from 'formik';
 import { useEffect, useState } from 'react';
 // import { EnvelopePlusIcon } from '../../icons/EnvelopePlusIcon';
+import { toast } from 'react-toastify';
+import { useSubscribersControllerCreate } from '@/__generated__/sigle-api';
 import {
   Button,
   Flex,
@@ -11,8 +13,6 @@ import {
   Typography,
 } from '../../ui';
 import { isValidEmail } from '../../utils/regex';
-import { toast } from 'react-toastify';
-import { useSubscribersControllerCreate } from '@/__generated__/sigle-api';
 
 interface NewsletterFrameProps {
   stacksAddress: string;
