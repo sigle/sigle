@@ -27,7 +27,7 @@ RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --frozen-lockfile
 # Build the project and its dependencies
 COPY --from=builder /app/out/full/ .
 COPY turbo.json turbo.json
-RUN cp ./sigle/.env.e2e ./sigle/.env.production.local
+RUN cp apps/sigle/.env.e2e apps/sigle/.env.production.local
 
 # Build the next.js application as it's required for the e2e tests
 RUN pnpm turbo run build --filter=@sigle/$APP_NAME...
@@ -40,6 +40,6 @@ WORKDIR /app
 
 COPY --from=installer /app .
 
-WORKDIR /app/sigle
+WORKDIR /app/apps/sigle
 
 CMD pnpm playwright test --update-snapshots 
