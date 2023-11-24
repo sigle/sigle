@@ -7,7 +7,7 @@ import {
   NamesApi,
 } from '@stacks/blockchain-api-client';
 import sanitizeHtml from 'sanitize-html';
-import Error from '../_error.page';
+import Error from '../_error';
 import { PublicStory } from '../../modules/publicStory/PublicStory';
 import { Story, SettingsFile } from '../../types';
 import { migrationStory } from '../../utils/migrations/story';

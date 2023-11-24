@@ -3,7 +3,6 @@
   "packageManager": "pnpm@8.9.2",
   "scripts": {
     "format": "prettier --write '**/*' --ignore-unknown",
-    "deploy:sigle": "flyctl deploy --config sigle/fly.toml --dockerfile sigle/Dockerfile",
     "lint": "turbo lint --cache-dir=.turbo",
     "build": "turbo build --cache-dir=.turbo",
     "test": "turbo test --cache-dir=.turbo",

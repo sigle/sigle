@@ -9,7 +9,7 @@ import {
 import { PublicHome } from '../modules/publicHome';
 import { sigleConfig } from '../config';
 import { StoryFile, SettingsFile } from '../types';
-import Error from './_error.page';
+import Error from './_error';
 import { fetchPublicStories, fetchSettings } from '../utils/gaia/fetch';
 import { redirectUsernameMap } from '../utils/redirectUsername';
 
