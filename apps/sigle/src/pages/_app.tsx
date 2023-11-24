@@ -16,8 +16,10 @@ import 'nprogress/nprogress.css';
 import 'tippy.js/dist/tippy.css';
 import 'tippy.js/themes/light-border.css';
 import 'react-toastify/dist/ReactToastify.css';
+import '@radix-ui/themes/styles.css';
 import '../globals.css';
 import { ThemeProvider } from 'next-themes';
+import { Theme } from '@radix-ui/themes';
 import { sigleConfig } from '../config';
 import { colors } from '../utils/colors';
 import { AuthProvider } from '../modules/auth/AuthContext';
@@ -178,9 +180,11 @@ export default class MyApp extends App {
                     attribute="class"
                     value={{ light: 'light-theme', dark: darkTheme.toString() }}
                   >
-                    <DesignSystemProvider>
-                      <Component {...modifiedPageProps} />
-                    </DesignSystemProvider>
+                    <Theme grayColor="gray" accentColor="orange" radius="large">
+                      <DesignSystemProvider>
+                        <Component {...modifiedPageProps} />
+                      </DesignSystemProvider>
+                    </Theme>
                   </ThemeProvider>
                 </AuthProvider>
               </SessionProvider>
