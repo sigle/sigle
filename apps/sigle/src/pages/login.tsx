@@ -13,10 +13,11 @@ import {
   ArrowLeftIcon,
   CheckIcon,
 } from '@radix-ui/react-icons';
+import { Button } from '@radix-ui/themes';
 import { toast } from 'react-toastify';
 import { useRouter } from 'next/router';
 import { Goals } from '../utils/fathom';
-import { Box, Button, Flex, Typography } from '../ui';
+import { Box, Button as UiButton, Flex, Typography } from '../ui';
 import { LoginLayout } from '../modules/layout/components/LoginLayout';
 import { useAuth } from '../modules/auth/AuthContext';
 import { SignInWithStacksMessage } from '../modules/auth/sign-in-with-stacks/signInWithStacksMessage';
@@ -241,6 +242,7 @@ const Login = () => {
       <Flex
         gap="3"
         justify="end"
+        align="center"
         css={{
           mt: '$7',
           pb: '$3',
@@ -250,15 +252,15 @@ const Login = () => {
       >
         {!user ? (
           <Button
-            variant="ghost"
             color="gray"
-            size="lg"
+            variant="ghost"
+            size="3"
             onClick={handleLoginLegacy}
           >
             Legacy login
           </Button>
         ) : (
-          <Button
+          <UiButton
             variant="ghost"
             color="gray"
             size="lg"
@@ -270,13 +272,9 @@ const Login = () => {
           >
             <ArrowLeftIcon width={15} height={15} />
             Change account
-          </Button>
+          </UiButton>
         )}
-        <Button
-          color="orange"
-          size="lg"
-          onClick={user ? handleSignMessage : handleLogin}
-        >
+        <Button size="3" onClick={user ? handleSignMessage : handleLogin}>
           {user ? 'Sign message' : 'Connect Wallet'}
         </Button>
       </Flex>
