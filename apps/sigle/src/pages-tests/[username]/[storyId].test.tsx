@@ -4,7 +4,7 @@
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import * as Sentry from '@sentry/nextjs';
-import { getServerSideProps } from './[storyId]';
+import { getServerSideProps } from '../../pages/[username]/[storyId]';
 
 jest.mock('@sentry/nextjs');
 jest.mock('../../modules/publicStory/PublicStory', () => null);
