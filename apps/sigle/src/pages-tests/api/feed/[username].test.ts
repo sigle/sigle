@@ -4,7 +4,7 @@
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { XMLParser } from 'fast-xml-parser';
-import { apiFeed } from './[username].api';
+import { apiFeed } from '../../../pages/api/feed/[username]';
 
 jest.mock('@sentry/nextjs');
 
