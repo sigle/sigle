@@ -89,7 +89,7 @@ export class DomainsService {
     }
 
     const response = await this.addDomainToVercel(domain);
-    if (response.error) {
+    if ('error' in response) {
       this.sentryService
         .instance()
         .captureMessage('Failed to add vercel domain', {
@@ -100,8 +100,17 @@ export class DomainsService {
         });
       throw new InternalServerErrorException();
     }
-
-    console.log('response', response);
+    if (!response.verified) {
+      this.sentryService
+        .instance()
+        .captureMessage('Failed to add vercel domain', {
+          level: 'error',
+          extra: {
+            response,
+          },
+        });
+      throw new InternalServerErrorException();
+    }
 
     await this.prisma.site.upsert({
       // Workaround for select to work when creating the story
@@ -137,11 +146,17 @@ export class DomainsService {
     }
   }
 
-  private async addDomainToVercel(domain: string): Promise<{
-    error: {
-      code: string;
-    };
-  }> {
+  private async addDomainToVercel(domain: string): Promise<
+    | {
+        error: {
+          code: string;
+        };
+      }
+    | {
+        name: string;
+        verified?: boolean;
+      }
+  > {
     return await fetch(
       `https://api.vercel.com/v10/projects/${this.vercelProjectId}/domains?teamId=${this.vercelTeamId}`,
       {
