@@ -84,8 +84,18 @@ export class DomainsService {
 
     // If user already has a domain, remove it from vercel
     if (currentDomain && currentDomain !== domain) {
-      // TODO
-      // response = await removeDomainFromVercelProject(site.customDomain);
+      const response = await this.removeDomainFromVercelProject(currentDomain);
+      if ('error' in response) {
+        this.sentryService
+          .instance()
+          .captureMessage('Failed to remove vercel domain', {
+            level: 'error',
+            extra: {
+              response,
+            },
+          });
+        throw new InternalServerErrorException();
+      }
     }
 
     const response = await this.addDomainToVercel(domain);
@@ -168,6 +178,22 @@ export class DomainsService {
         body: JSON.stringify({
           name: domain,
         }),
+      },
+    ).then((res) => res.json());
+  }
+
+  private async removeDomainFromVercelProject(domain: string): Promise<{
+    error: {
+      code: string;
+    };
+  }> {
+    return await fetch(
+      `https://api.vercel.com/v9/projects/${this.vercelProjectId}/domains/${domain}?teamId=${this.vercelTeamId}`,
+      {
+        headers: {
+          Authorization: `Bearer ${this.vercelBearerToken}`,
+        },
+        method: 'DELETE',
       },
     ).then((res) => res.json());
   }
