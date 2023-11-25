@@ -10,6 +10,7 @@ import { SubscriptionService } from '../subscription/subscription.service';
 import { InjectSentry, SentryService } from '@ntegral/nestjs-sentry';
 import { EnvironmentVariables } from '../environment/environment.validation';
 import { validDomainRegex } from '../utils';
+import { sites } from '../sites';
 
 // From https://vercel.com/docs/rest-api/endpoints#get-a-domain-s-configuration
 interface DomainConfigResponse {
@@ -203,6 +204,20 @@ export class DomainsService {
     return {
       status,
     };
+  }
+
+  async getSettings({ domain }: { domain: string }) {
+    const site = await this.prisma.site.findUniqueOrThrow({
+      select: {
+        id: true,
+        domain: true,
+      },
+      where: {
+        domain,
+      },
+    });
+    return site || null;
+    // return (site && sites[domain]) || null;
   }
 
   private checkVercelSetup() {

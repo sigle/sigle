@@ -6,6 +6,7 @@ import {
   HttpCode,
   Request,
   Get,
+  Query,
 } from '@nestjs/common';
 import {
   ApiBearerAuth,
@@ -15,7 +16,7 @@ import {
 } from '@nestjs/swagger';
 import { DomainsService } from './domains.service';
 import { AuthGuard } from '../auth.guard';
-import { UpdateDomainDto } from './dto/updateDomain.dto';
+import { UpdateDomainDto, DomainSettingsDto } from './dto/updateDomain.dto';
 import { DomainEntity, DomainVerifyEntity } from './entities/domain.entity';
 
 @ApiTags('domains')
@@ -68,6 +69,16 @@ export class DomainsController {
   verify(@Request() req): Promise<DomainVerifyEntity> {
     return this.domainsService.verify({
       stacksAddress: req.user.stacksAddress,
+    });
+  }
+
+  @ApiOkResponse({
+    type: DomainEntity,
+  })
+  @Get('/api/domains/settings')
+  getSettings(@Query() query: DomainSettingsDto): Promise<DomainEntity | null> {
+    return this.domainsService.getSettings({
+      domain: query.domain,
     });
   }
 }

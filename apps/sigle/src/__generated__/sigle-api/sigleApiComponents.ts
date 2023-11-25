@@ -1615,6 +1615,57 @@ export const useDomainsControllerVerify = <TData = Schemas.DomainVerifyEntity>(
   });
 };
 
+export type DomainsControllerGetSettingsError = Fetcher.ErrorWrapper<undefined>;
+
+export type DomainsControllerGetSettingsVariables =
+  SigleApiContext['fetcherOptions'];
+
+export const fetchDomainsControllerGetSettings = (
+  variables: DomainsControllerGetSettingsVariables,
+  signal?: AbortSignal
+) =>
+  sigleApiFetch<
+    Schemas.DomainEntity,
+    DomainsControllerGetSettingsError,
+    undefined,
+    {},
+    {},
+    {}
+  >({ url: '/api/domains/settings', method: 'get', ...variables, signal });
+
+export const useDomainsControllerGetSettings = <TData = Schemas.DomainEntity>(
+  variables: DomainsControllerGetSettingsVariables,
+  options?: Omit<
+    reactQuery.UseQueryOptions<
+      Schemas.DomainEntity,
+      DomainsControllerGetSettingsError,
+      TData
+    >,
+    'queryKey' | 'queryFn' | 'initialData'
+  >
+) => {
+  const { fetcherOptions, queryOptions, queryKeyFn } =
+    useSigleApiContext(options);
+  return reactQuery.useQuery<
+    Schemas.DomainEntity,
+    DomainsControllerGetSettingsError,
+    TData
+  >({
+    queryKey: queryKeyFn({
+      path: '/api/domains/settings',
+      operationId: 'domainsControllerGetSettings',
+      variables,
+    }),
+    queryFn: ({ signal }) =>
+      fetchDomainsControllerGetSettings(
+        { ...fetcherOptions, ...variables },
+        signal
+      ),
+    ...options,
+    ...queryOptions,
+  });
+};
+
 export type QueryOperation =
   | {
       path: '/health';
@@ -1690,4 +1741,9 @@ export type QueryOperation =
       path: '/api/domains/verify';
       operationId: 'domainsControllerVerify';
       variables: DomainsControllerVerifyVariables;
+    }
+  | {
+      path: '/api/domains/settings';
+      operationId: 'domainsControllerGetSettings';
+      variables: DomainsControllerGetSettingsVariables;
     };

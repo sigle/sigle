@@ -6,3 +6,8 @@ export class UpdateDomainDto {
   @ApiProperty()
   domain: string;
 }
+
+export class DomainSettingsDto {
+  @IsString()
+  domain: string;
+}
