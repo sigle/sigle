@@ -14,8 +14,14 @@ export const CustomDomainDns = ({
   domain,
   setIsEditing,
 }: CustomDomainDnsProps) => {
-  const { data: domainVerify, isLoading: isLoadingDomainVerify } =
-    useDomainsControllerVerify({});
+  const {
+    data: domainVerify,
+    isLoading: isLoadingDomainVerify,
+    refetch: refetchDomainVerify,
+    isFetching: isFetchingDomainVerify,
+  } = useDomainsControllerVerify({});
+
+  const isLoading = isLoadingDomainVerify || isFetchingDomainVerify;
 
   return (
     <div className="space-y-4">
@@ -24,23 +30,23 @@ export const CustomDomainDns = ({
           {domain.domain}
         </Typography>
         <div className="space-x-4">
-          <Button variant="outline">Refresh</Button>
+          <Button variant="outline" onClick={() => refetchDomainVerify()}>
+            Refresh
+          </Button>
           <Button variant="outline" onClick={() => setIsEditing(true)}>
             Edit
           </Button>
         </div>
       </div>
 
-      {isLoadingDomainVerify ? (
+      {isLoading ? (
         <div className="flex">
           <LoadingSpinner />
           <Typography size="subparagraph">Loading ...</Typography>
         </div>
       ) : null}
 
-      {!isLoadingDomainVerify &&
-      domainVerify &&
-      domainVerify.status === 'misconfigured' ? (
+      {!isLoading && domainVerify && domainVerify.status === 'misconfigured' ? (
         <div className="space-y-8">
           <Typography
             size="subparagraph"
@@ -84,9 +90,7 @@ export const CustomDomainDns = ({
         </div>
       ) : null}
 
-      {!isLoadingDomainVerify &&
-      domainVerify &&
-      domainVerify.status === 'verified' ? (
+      {!isLoading && domainVerify && domainVerify.status === 'verified' ? (
         <div>
           <Typography
             size="subparagraph"
