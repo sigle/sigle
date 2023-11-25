@@ -1,5 +1,4 @@
 import React from 'react';
-import { useSubscriptionControllerGetUserMe } from '@/__generated__/sigle-api';
 import {
   Card,
   CardContent,
@@ -10,24 +9,9 @@ import {
 import { CustomDomainForm } from '@/modules/settings/custom-domain/custom-domain-form';
 import { Protected } from '../../modules/auth/Protected';
 import { SettingsLayout } from '../../modules/settings/SettingsLayout';
-import { NftLockedView } from '../../modules/analytics/NftLockedView';
+import { ActiveSubscription } from '@/modules/auth/ActiveSubscription';
 
 const CustomDomain = () => {
-  const { isLoading, data: userSubscription } =
-    useSubscriptionControllerGetUserMe({});
-
-  if (isLoading) {
-    return <SettingsLayout>Loading...</SettingsLayout>;
-  }
-
-  if (!isLoading && !userSubscription) {
-    return (
-      <SettingsLayout>
-        <NftLockedView />
-      </SettingsLayout>
-    );
-  }
-
   return (
     <SettingsLayout>
       <Card>
@@ -46,7 +30,9 @@ const CustomDomain = () => {
 const CustomDomainPage = () => {
   return (
     <Protected>
-      <CustomDomain />
+      <ActiveSubscription>
+        <CustomDomain />
+      </ActiveSubscription>
     </Protected>
   );
 };
