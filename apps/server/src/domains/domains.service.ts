@@ -217,7 +217,7 @@ export class DomainsService {
     ) {
       return {
         id: 'fake-id',
-        domain: 'localhost:3002',
+        domain: 'blog.sigle.io',
         ...sites['blog.sigle.io'],
       };
     }

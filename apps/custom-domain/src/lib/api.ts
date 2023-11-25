@@ -1,13 +1,38 @@
-import { SiteSettings, StoryFile } from '@/types';
+import { SettingsFile, SiteSettings, StoryFile } from '@/types';
 import { getAbsoluteUrl, getApiUrl } from '@/utils/vercel';
+import { lookupProfile } from 'micro-stacks/storage';
 
 export async function getSettings({
   site,
 }: {
   site: string;
 }): Promise<SiteSettings | null> {
-  const res = await fetch(`${getAbsoluteUrl()}/api/settings?site=${site}`);
-  return res.json();
+  const domainSettings = await fetch(
+    `${getApiUrl()}/api/domains/settings?domain=${site}`,
+  ).then((res) => res.json());
+  if (!domainSettings) return null;
+
+  const userProfile = await lookupProfile({
+    username: domainSettings.username,
+  });
+  const appUrl = 'https://app.sigle.io';
+  const bucketUrl = userProfile?.apps?.[appUrl];
+
+  const data = await fetch(`${bucketUrl}settings.json`);
+  let settingsFile: SettingsFile | null;
+  if (data.status === 404) {
+    settingsFile = {};
+  } else {
+    settingsFile = await data.json();
+  }
+
+  return {
+    ...domainSettings,
+    url: `https://${domainSettings.domain}`,
+    name: settingsFile?.siteName || domainSettings.username,
+    description: settingsFile?.siteDescription || '',
+    avatar: settingsFile?.siteLogo || '',
+  };
 }
 
 export async function getPosts({
