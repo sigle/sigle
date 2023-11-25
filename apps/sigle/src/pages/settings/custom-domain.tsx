@@ -4,15 +4,14 @@ import {
   CardContent,
   CardDescription,
   CardHeader,
-  CardTitle,
 } from '@/components/ui/Card';
 import { CustomDomainForm } from '@/modules/settings/custom-domain/custom-domain-form';
-import { Protected } from '../../modules/auth/Protected';
-import { SettingsLayout } from '../../modules/settings/SettingsLayout';
 import { ActiveSubscription } from '@/modules/auth/ActiveSubscription';
 import { useDomainsControllerGet } from '@/__generated__/sigle-api';
 import { CustomDomainDns } from '@/modules/settings/custom-domain/custom-domain-dns';
 import { Typography } from '@/ui';
+import { SettingsLayout } from '../../modules/settings/SettingsLayout';
+import { Protected } from '../../modules/auth/Protected';
 
 const CustomDomain = () => {
   const [isEditing, setIsEditing] = useState(false);

@@ -1,9 +1,9 @@
+import { CheckCircledIcon, CrossCircledIcon } from '@radix-ui/react-icons';
 import {
   DomainEntity,
   useDomainsControllerVerify,
 } from '@/__generated__/sigle-api';
 import { Button, LoadingSpinner, Typography } from '@/ui';
-import { CheckCircledIcon, CrossCircledIcon } from '@radix-ui/react-icons';
 
 interface CustomDomainDnsProps {
   domain: DomainEntity;
@@ -60,7 +60,7 @@ export const CustomDomainDns = ({
             <Typography size="subparagraph">
               Set the following record on your DNS provider to continue:
             </Typography>
-            <div className="p-4 bg-gray-100 rounded-md flex gap-6">
+            <div className="flex gap-6 rounded-md bg-gray-100 p-4">
               <div className="space-y-2">
                 <Typography size="subparagraph" css={{ fontWeight: 600 }}>
                   Type
