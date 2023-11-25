@@ -164,6 +164,11 @@ export type VerifyEmailDto = {
   token: string;
 };
 
+export type DomainEntity = {
+  id: string;
+  domain: string;
+};
+
 export type UpdateDomainDto = {
   domain: string;
 };

@@ -16,11 +16,27 @@ import {
 import { DomainsService } from './domains.service';
 import { AuthGuard } from '../auth.guard';
 import { UpdateDomainDto } from './dto/updateDomain.dto';
+import { DomainEntity } from './entities/domain.entity';
 
 @ApiTags('domains')
 @Controller()
 export class DomainsController {
   constructor(private readonly domainsService: DomainsService) {}
+
+  @ApiOperation({
+    description: 'Return the domain of the current user.',
+  })
+  @ApiBearerAuth()
+  @ApiOkResponse({
+    type: DomainEntity,
+  })
+  @UseGuards(AuthGuard)
+  @Get('/api/domains/me')
+  get(@Request() req): Promise<DomainEntity> {
+    return this.domainsService.get({
+      stacksAddress: req.user.stacksAddress,
+    });
+  }
 
   @ApiOperation({
     description: 'Update the custom domain of the current user.',

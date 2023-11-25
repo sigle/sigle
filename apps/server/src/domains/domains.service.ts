@@ -29,6 +29,23 @@ export class DomainsService {
     this.vercelBearerToken = this.configService.get('VERCEL_BEARER_TOKEN');
   }
 
+  async get({ stacksAddress }: { stacksAddress: string }) {
+    const user = await this.prisma.user.findUniqueOrThrow({
+      select: {
+        site: {
+          select: {
+            id: true,
+            domain: true,
+          },
+        },
+      },
+      where: {
+        stacksAddress,
+      },
+    });
+    return user.site;
+  }
+
   async updateDomain({
     stacksAddress,
     domain,

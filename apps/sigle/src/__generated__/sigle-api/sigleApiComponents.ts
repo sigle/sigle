@@ -1461,6 +1461,59 @@ export const useEmailVerificationControllerResendEmail = (
   });
 };
 
+export type DomainsControllerGetError = Fetcher.ErrorWrapper<undefined>;
+
+export type DomainsControllerGetVariables = SigleApiContext['fetcherOptions'];
+
+/**
+ * Return the domain of the current user.
+ */
+export const fetchDomainsControllerGet = (
+  variables: DomainsControllerGetVariables,
+  signal?: AbortSignal
+) =>
+  sigleApiFetch<
+    Schemas.DomainEntity,
+    DomainsControllerGetError,
+    undefined,
+    {},
+    {},
+    {}
+  >({ url: '/api/domains/me', method: 'get', ...variables, signal });
+
+/**
+ * Return the domain of the current user.
+ */
+export const useDomainsControllerGet = <TData = Schemas.DomainEntity>(
+  variables: DomainsControllerGetVariables,
+  options?: Omit<
+    reactQuery.UseQueryOptions<
+      Schemas.DomainEntity,
+      DomainsControllerGetError,
+      TData
+    >,
+    'queryKey' | 'queryFn' | 'initialData'
+  >
+) => {
+  const { fetcherOptions, queryOptions, queryKeyFn } =
+    useSigleApiContext(options);
+  return reactQuery.useQuery<
+    Schemas.DomainEntity,
+    DomainsControllerGetError,
+    TData
+  >({
+    queryKey: queryKeyFn({
+      path: '/api/domains/me',
+      operationId: 'domainsControllerGet',
+      variables,
+    }),
+    queryFn: ({ signal }) =>
+      fetchDomainsControllerGet({ ...fetcherOptions, ...variables }, signal),
+    ...options,
+    ...queryOptions,
+  });
+};
+
 export type DomainsControllerUpdateError = Fetcher.ErrorWrapper<undefined>;
 
 export type DomainsControllerUpdateVariables = {
@@ -1573,4 +1626,9 @@ export type QueryOperation =
       path: '/api/newsletters/senders';
       operationId: 'newslettersControllerGetSenders';
       variables: NewslettersControllerGetSendersVariables;
+    }
+  | {
+      path: '/api/domains/me';
+      operationId: 'domainsControllerGet';
+      variables: DomainsControllerGetVariables;
     };
