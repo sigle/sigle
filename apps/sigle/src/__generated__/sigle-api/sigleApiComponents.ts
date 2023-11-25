@@ -1461,6 +1461,53 @@ export const useEmailVerificationControllerResendEmail = (
   });
 };
 
+export type DomainsControllerUpdateError = Fetcher.ErrorWrapper<undefined>;
+
+export type DomainsControllerUpdateVariables = {
+  body: Schemas.UpdateDomainDto;
+} & SigleApiContext['fetcherOptions'];
+
+/**
+ * Update the custom domain of the current user.
+ */
+export const fetchDomainsControllerUpdate = (
+  variables: DomainsControllerUpdateVariables,
+  signal?: AbortSignal
+) =>
+  sigleApiFetch<
+    boolean,
+    DomainsControllerUpdateError,
+    Schemas.UpdateDomainDto,
+    {},
+    {},
+    {}
+  >({ url: '/api/domains/update', method: 'post', ...variables, signal });
+
+/**
+ * Update the custom domain of the current user.
+ */
+export const useDomainsControllerUpdate = (
+  options?: Omit<
+    reactQuery.UseMutationOptions<
+      boolean,
+      DomainsControllerUpdateError,
+      DomainsControllerUpdateVariables
+    >,
+    'mutationFn'
+  >
+) => {
+  const { fetcherOptions } = useSigleApiContext();
+  return reactQuery.useMutation<
+    boolean,
+    DomainsControllerUpdateError,
+    DomainsControllerUpdateVariables
+  >({
+    mutationFn: (variables: DomainsControllerUpdateVariables) =>
+      fetchDomainsControllerUpdate({ ...fetcherOptions, ...variables }),
+    ...options,
+  });
+};
+
 export type QueryOperation =
   | {
       path: '/health';

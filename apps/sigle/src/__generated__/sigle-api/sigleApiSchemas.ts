@@ -163,3 +163,7 @@ export type AddEmailDto = {
 export type VerifyEmailDto = {
   token: string;
 };
+
+export type UpdateDomainDto = {
+  domain: string;
+};
