@@ -19,6 +19,7 @@
     "showDetails": true
   },
   "dependencies": {
+    "@hookform/resolvers": "3.3.2",
     "@radix-ui/colors": "0.1.8",
     "@radix-ui/react-accordion": "1.1.2",
     "@radix-ui/react-dialog": "1.0.5",
@@ -115,6 +116,7 @@
     "react-dom": "18.2.0",
     "react-draggable": "4.4.5",
     "react-dropzone": "11.4.2",
+    "react-hook-form": "7.48.2",
     "react-toastify": "8.2.0",
     "reading-time": "1.5.0",
     "sanitize-html": "2.7.0",
@@ -122,6 +124,7 @@
     "tinycolor2": "1.4.2",
     "tippy.js": "6.3.7",
     "valid-url": "1.0.9",
+    "zod": "3.22.3",
     "zone-file": "1.0.0",
     "zustand": "4.4.4"
   },

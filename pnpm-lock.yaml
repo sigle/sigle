@@ -304,6 +304,9 @@ importers:
 
   apps/sigle:
     dependencies:
+      '@hookform/resolvers':
+        specifier: 3.3.2
+        version: 3.3.2(react-hook-form@7.48.2)
       '@radix-ui/colors':
         specifier: 0.1.8
         version: 0.1.8
@@ -592,6 +595,9 @@ importers:
       react-dropzone:
         specifier: 11.4.2
         version: 11.4.2(react@18.2.0)
+      react-hook-form:
+        specifier: 7.48.2
+        version: 7.48.2(react@18.2.0)
       react-toastify:
         specifier: 8.2.0
         version: 8.2.0(react-dom@18.2.0)(react@18.2.0)
@@ -613,6 +619,9 @@ importers:
       valid-url:
         specifier: 1.0.9
         version: 1.0.9
+      zod:
+        specifier: 3.22.3
+        version: 3.22.3
       zone-file:
         specifier: 1.0.0
         version: 1.0.0
@@ -3770,6 +3779,14 @@ packages:
       react-hook-form: ^7.0.0
     dependencies:
       react-hook-form: 7.47.0(react@18.2.0)
+    dev: false
+
+  /@hookform/resolvers@3.3.2(react-hook-form@7.48.2):
+    resolution: {integrity: sha512-Tw+GGPnBp+5DOsSg4ek3LCPgkBOuOgS5DsDV7qsWNH9LZc433kgsWICjlsh2J9p04H2K66hsXPPb9qn9ILdUtA==}
+    peerDependencies:
+      react-hook-form: ^7.0.0
+    dependencies:
+      react-hook-form: 7.48.2(react@18.2.0)
     dev: false
 
   /@humanwhocodes/config-array@0.11.13:
@@ -19701,6 +19718,15 @@ packages:
 
   /react-hook-form@7.47.0(react@18.2.0):
     resolution: {integrity: sha512-F/TroLjTICipmHeFlMrLtNLceO2xr1jU3CyiNla5zdwsGUGu2UOxxR4UyJgLlhMwLW/Wzp4cpJ7CPfgJIeKdSg==}
+    engines: {node: '>=12.22.0'}
+    peerDependencies:
+      react: ^16.8.0 || ^17 || ^18
+    dependencies:
+      react: 18.2.0
+    dev: false
+
+  /react-hook-form@7.48.2(react@18.2.0):
+    resolution: {integrity: sha512-H0T2InFQb1hX7qKtDIZmvpU1Xfn/bdahWBN1fH19gSe4bBEqTfmlr7H3XWTaVtiK4/tpPaI1F3355GPMZYge+A==}
     engines: {node: '>=12.22.0'}
     peerDependencies:
       react: ^16.8.0 || ^17 || ^18
