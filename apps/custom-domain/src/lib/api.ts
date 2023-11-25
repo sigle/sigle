@@ -1,6 +1,6 @@
+import { lookupProfile } from 'micro-stacks/storage';
 import { SettingsFile, SiteSettings, StoryFile } from '@/types';
 import { getAbsoluteUrl, getApiUrl } from '@/utils/vercel';
-import { lookupProfile } from 'micro-stacks/storage';
 
 export async function getSettings({
   site,
