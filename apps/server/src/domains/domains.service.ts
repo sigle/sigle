@@ -1,15 +1,32 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  InternalServerErrorException,
+} from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import { PrismaService } from '../prisma/prisma.service';
 import { PosthogService } from '../posthog/posthog.service';
 import { SubscriptionService } from '../subscription/subscription.service';
+import { InjectSentry, SentryService } from '@ntegral/nestjs-sentry';
+import { EnvironmentVariables } from '../environment/environment.validation';
 
 @Injectable()
 export class DomainsService {
+  private readonly vercelTeamId: string;
+  private readonly vercelProjectId: string;
+  private readonly vercelBearerToken: string;
+
   constructor(
+    @InjectSentry() private readonly sentryService: SentryService,
     private readonly prisma: PrismaService,
     private readonly subscriptionService: SubscriptionService,
     private readonly posthog: PosthogService,
-  ) {}
+    private readonly configService: ConfigService<EnvironmentVariables>,
+  ) {
+    this.vercelTeamId = this.configService.get('VERCEL_TEAM_ID');
+    this.vercelProjectId = this.configService.get('VERCEL_PROJECT_ID');
+    this.vercelBearerToken = this.configService.get('VERCEL_BEARER_TOKEN');
+  }
 
   async updateDomain({
     stacksAddress,
@@ -18,6 +35,8 @@ export class DomainsService {
     stacksAddress: string;
     domain: string;
   }) {
+    this.checkVercelSetup();
+
     // TODO validate domain with regex
     // if (!validateStacksAddress(followingAddress)) {
     //   throw new BadRequestException('Invalid Stacks address.');
@@ -69,8 +88,20 @@ export class DomainsService {
       // response = await removeDomainFromVercelProject(site.customDomain);
     }
 
-    // TODO add the domain to vercel
-    // await addDomainToVercel(value)
+    const response = await this.addDomainToVercel(domain);
+    if (response.error) {
+      this.sentryService
+        .instance()
+        .captureMessage('Failed to add vercel domain', {
+          level: 'error',
+          extra: {
+            response,
+          },
+        });
+      throw new InternalServerErrorException();
+    }
+
+    console.log('response', response);
 
     await this.prisma.site.upsert({
       // Workaround for select to work when creating the story
@@ -89,9 +120,40 @@ export class DomainsService {
       event: 'domain updated',
       properties: {
         domain,
+        created: !currentDomain,
       },
     });
 
     return true;
+  }
+
+  private checkVercelSetup() {
+    if (
+      !this.vercelTeamId ||
+      !this.vercelProjectId ||
+      !this.vercelBearerToken
+    ) {
+      throw new BadRequestException('Vercel not setup.');
+    }
+  }
+
+  private async addDomainToVercel(domain: string): Promise<{
+    error: {
+      code: string;
+    };
+  }> {
+    return await fetch(
+      `https://api.vercel.com/v10/projects/${this.vercelProjectId}/domains?teamId=${this.vercelTeamId}`,
+      {
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${this.vercelBearerToken}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          name: domain,
+        }),
+      },
+    ).then((res) => res.json());
   }
 }
