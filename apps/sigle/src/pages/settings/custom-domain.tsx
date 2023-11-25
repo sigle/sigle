@@ -1,10 +1,5 @@
 import React from 'react';
-import Link from 'next/link';
 import { useSubscriptionControllerGetUserMe } from '@/__generated__/sigle-api';
-import { Protected } from '../../modules/auth/Protected';
-import { SettingsLayout } from '../../modules/settings/SettingsLayout';
-import { Box, Button, Flex, Typography } from '../../ui';
-import { NftLockedView } from '../../modules/analytics/NftLockedView';
 import {
   Card,
   CardContent,
@@ -13,6 +8,9 @@ import {
   CardTitle,
 } from '@/components/ui/Card';
 import { CustomDomainForm } from '@/modules/settings/custom-domain/custom-domain-form';
+import { Protected } from '../../modules/auth/Protected';
+import { SettingsLayout } from '../../modules/settings/SettingsLayout';
+import { NftLockedView } from '../../modules/analytics/NftLockedView';
 
 const CustomDomain = () => {
   const { isLoading, data: userSubscription } =
