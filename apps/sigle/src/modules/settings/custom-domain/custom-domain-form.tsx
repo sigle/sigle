@@ -1,8 +1,10 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
+import { toast } from 'react-toastify';
 import { Button, FormHelperError, FormInput, FormRow } from '@/ui';
 import { validDomainRegex } from '@/utils/regex';
+import { useDomainsControllerUpdate } from '@/__generated__/sigle-api';
 
 const customDomainSchema = z.object({
   domain: z.string().regex(validDomainRegex, 'Please enter a valid domain'),
@@ -11,6 +13,9 @@ const customDomainSchema = z.object({
 type CustomDomainFormData = z.infer<typeof customDomainSchema>;
 
 export const CustomDomainForm = () => {
+  const { mutate: updateDomain, isLoading: isLoadingUpdateDomain } =
+    useDomainsControllerUpdate({});
+
   const {
     register,
     handleSubmit,
@@ -21,10 +26,20 @@ export const CustomDomainForm = () => {
 
   const onSubmit = handleSubmit(async (formValues) => {
     console.log(formValues);
+    updateDomain(
+      {
+        body: {
+          domain: formValues.domain,
+        },
+      },
+      {
+        // TODO onSuccess that refetches the current domain to hide the form
+        onError: (error) => {
+          toast.error(error?.message);
+        },
+      },
+    );
   });
-
-  // TODO loading state
-  const isLoadingUpdateNewsletter = false;
 
   return (
     <form onSubmit={onSubmit}>
@@ -39,8 +54,8 @@ export const CustomDomainForm = () => {
         )}
       </FormRow>
 
-      <Button type="submit" disabled={isLoadingUpdateNewsletter}>
-        {isLoadingUpdateNewsletter ? 'Saving...' : 'Save'}
+      <Button type="submit" disabled={isLoadingUpdateDomain}>
+        {isLoadingUpdateDomain ? 'Saving...' : 'Save'}
       </Button>
     </form>
   );

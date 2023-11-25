@@ -33,7 +33,7 @@ export class DomainsController {
   update(
     @Request() req,
     @Body() updateDomainDto: UpdateDomainDto,
-  ): Promise<void> {
+  ): Promise<boolean> {
     return this.domainsService.updateDomain({
       stacksAddress: req.user.stacksAddress,
       domain: updateDomainDto.domain,

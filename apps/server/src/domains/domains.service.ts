@@ -45,5 +45,7 @@ export class DomainsService {
         domain,
       },
     });
+
+    return true;
   }
 }
