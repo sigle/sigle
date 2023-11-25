@@ -16,9 +16,11 @@ import { Typography } from '@/ui';
 
 const CustomDomain = () => {
   const [isEditing, setIsEditing] = useState(false);
-  const { data: domain, isLoading: isLoadingDomain } = useDomainsControllerGet(
-    {},
-  );
+  const {
+    data: domain,
+    isLoading: isLoadingDomain,
+    refetch: refetchDomain,
+  } = useDomainsControllerGet({});
 
   return (
     <SettingsLayout>
@@ -31,7 +33,11 @@ const CustomDomain = () => {
         </CardHeader>
         <CardContent>
           {(!isLoadingDomain && !domain) || isEditing ? (
-            <CustomDomainForm domain={domain} setIsEditing={setIsEditing} />
+            <CustomDomainForm
+              domain={domain}
+              setIsEditing={setIsEditing}
+              refetchDomain={refetchDomain}
+            />
           ) : null}
           {!isLoadingDomain && domain && !isEditing ? (
             <CustomDomainDns domain={domain} setIsEditing={setIsEditing} />

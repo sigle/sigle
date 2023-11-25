@@ -12,6 +12,7 @@ import {
 interface CustomDomainFormProps {
   domain?: DomainEntity;
   setIsEditing: (isEditing: boolean) => void;
+  refetchDomain: () => void;
 }
 
 const customDomainSchema = z.object({
@@ -23,6 +24,7 @@ type CustomDomainFormData = z.infer<typeof customDomainSchema>;
 export const CustomDomainForm = ({
   domain,
   setIsEditing,
+  refetchDomain,
 }: CustomDomainFormProps) => {
   const { mutate: updateDomain, isLoading: isLoadingUpdateDomain } =
     useDomainsControllerUpdate({});
@@ -47,7 +49,11 @@ export const CustomDomainForm = ({
         },
       },
       {
-        // TODO onSuccess that refetches the current domain to hide the form
+        onSuccess: () => {
+          refetchDomain();
+          setIsEditing(false);
+          toast.success('Domain updated!');
+        },
         onError: (error) => {
           toast.error(error?.message);
         },
