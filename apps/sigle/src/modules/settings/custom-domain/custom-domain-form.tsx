@@ -41,7 +41,6 @@ export const CustomDomainForm = ({
   });
 
   const onSubmit = handleSubmit(async (formValues) => {
-    console.log(formValues);
     updateDomain(
       {
         body: {

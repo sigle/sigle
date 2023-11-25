@@ -7,3 +7,8 @@ export class DomainEntity {
   @ApiProperty()
   domain: string;
 }
+
+export class DomainVerifyEntity {
+  @ApiProperty({ enum: ['misconfigured', 'verified'] })
+  status: 'misconfigured' | 'verified';
+}

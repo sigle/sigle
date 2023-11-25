@@ -16,7 +16,7 @@ import {
 import { DomainsService } from './domains.service';
 import { AuthGuard } from '../auth.guard';
 import { UpdateDomainDto } from './dto/updateDomain.dto';
-import { DomainEntity } from './entities/domain.entity';
+import { DomainEntity, DomainVerifyEntity } from './entities/domain.entity';
 
 @ApiTags('domains')
 @Controller()
@@ -53,6 +53,21 @@ export class DomainsController {
     return this.domainsService.updateDomain({
       stacksAddress: req.user.stacksAddress,
       domain: updateDomainDto.domain,
+    });
+  }
+
+  @ApiOperation({
+    description: 'Return the domain of the current user.',
+  })
+  @ApiBearerAuth()
+  @ApiOkResponse({
+    type: DomainVerifyEntity,
+  })
+  @UseGuards(AuthGuard)
+  @Get('/api/domains/verify')
+  verify(@Request() req): Promise<DomainVerifyEntity> {
+    return this.domainsService.verify({
+      stacksAddress: req.user.stacksAddress,
     });
   }
 }

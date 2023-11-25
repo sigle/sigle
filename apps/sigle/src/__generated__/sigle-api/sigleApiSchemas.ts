@@ -172,3 +172,7 @@ export type DomainEntity = {
 export type UpdateDomainDto = {
   domain: string;
 };
+
+export type DomainVerifyEntity = {
+  status: 'misconfigured' | 'verified';
+};

@@ -11,6 +11,16 @@ import { InjectSentry, SentryService } from '@ntegral/nestjs-sentry';
 import { EnvironmentVariables } from '../environment/environment.validation';
 import { validDomainRegex } from '../utils';
 
+// From https://vercel.com/docs/rest-api/endpoints#get-a-domain-s-configuration
+interface DomainConfigResponse {
+  /** How we see the domain's configuration. - `CNAME`: Domain has a CNAME pointing to Vercel. - `A`: Domain's A record is resolving to Vercel. - `http`: Domain is resolving to Vercel but may be behind a Proxy. - `null`: Domain is not resolving to Vercel. */
+  configuredBy?: ('CNAME' | 'A' | 'http') | null;
+  /** Which challenge types the domain can use for issuing certs. */
+  acceptedChallenges?: ('dns-01' | 'http-01')[];
+  /** Whether or not the domain is configured AND we can automatically generate a TLS certificate. */
+  misconfigured: boolean;
+}
+
 @Injectable()
 export class DomainsService {
   private readonly vercelTeamId: string;
@@ -163,6 +173,38 @@ export class DomainsService {
     return true;
   }
 
+  async verify({ stacksAddress }: { stacksAddress: string }) {
+    this.checkVercelSetup();
+
+    const user = await this.prisma.user.findUniqueOrThrow({
+      select: {
+        site: {
+          select: {
+            domain: true,
+          },
+        },
+      },
+      where: {
+        stacksAddress,
+      },
+    });
+    if (!user.site?.domain) {
+      throw new BadRequestException('No domain set.');
+    }
+
+    let status: 'misconfigured' | 'verified';
+    const response = await this.getConfigResponse(user.site.domain);
+    if (response.misconfigured) {
+      status = 'misconfigured';
+    } else {
+      status = 'verified';
+    }
+
+    return {
+      status,
+    };
+  }
+
   private checkVercelSetup() {
     if (
       !this.vercelTeamId ||
@@ -211,6 +253,21 @@ export class DomainsService {
           Authorization: `Bearer ${this.vercelBearerToken}`,
         },
         method: 'DELETE',
+      },
+    ).then((res) => res.json());
+  }
+
+  private async getConfigResponse(
+    domain: string,
+  ): Promise<DomainConfigResponse> {
+    return await fetch(
+      `https://api.vercel.com/v6/domains/${domain}/config?teamId=${this.vercelTeamId}`,
+      {
+        method: 'GET',
+        headers: {
+          Authorization: `Bearer ${this.vercelBearerToken}`,
+          'Content-Type': 'application/json',
+        },
       },
     ).then((res) => res.json());
   }
