@@ -216,8 +216,8 @@ export class DomainsService {
         domain,
       },
     });
-    return site || null;
     // return (site && sites[domain]) || null;
+    return site || null;
   }
 
   private checkVercelSetup() {

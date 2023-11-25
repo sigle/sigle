@@ -60,5 +60,18 @@ services:
       - './apps/sigle/src:/app/apps/sigle/src'
       - './apps/sigle/public:/app/apps/sigle/public'
 
+  custom-domain:
+    build:
+      context: .
+      dockerfile: ./apps/custom-domain/Dockerfile.dev
+    restart: always
+    ports:
+      - 3002:3002
+    extra_hosts:
+      - 'host.docker.internal:host-gateway'
+    volumes:
+      - './apps/custom-domain/src:/app/apps/custom-domain/src'
+      - './apps/custom-domain/public:/app/apps/custom-domain/public'
+
 volumes:
   pg_db_data:
