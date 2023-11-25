@@ -9,6 +9,7 @@ import { PosthogService } from '../posthog/posthog.service';
 import { SubscriptionService } from '../subscription/subscription.service';
 import { InjectSentry, SentryService } from '@ntegral/nestjs-sentry';
 import { EnvironmentVariables } from '../environment/environment.validation';
+import { validDomainRegex } from '../utils';
 
 @Injectable()
 export class DomainsService {
@@ -37,10 +38,9 @@ export class DomainsService {
   }) {
     this.checkVercelSetup();
 
-    // TODO validate domain with regex
-    // if (!validateStacksAddress(followingAddress)) {
-    //   throw new BadRequestException('Invalid Stacks address.');
-    // }
+    if (!validDomainRegex.test(domain)) {
+      throw new BadRequestException('Invalid domain.');
+    }
 
     const activeSubscription =
       await this.subscriptionService.getUserActiveSubscription({
