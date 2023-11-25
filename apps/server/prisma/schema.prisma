@@ -9,20 +9,23 @@ datasource db {
 }
 
 model User {
-  id            String         @id @default(uuid())
-  stacksAddress String         @unique
+  id            String    @id @default(uuid())
+  stacksAddress String    @unique
   // When was the last sync
   stacksBlock   Int?
-  isLegacy      Boolean        @default(false)
-  email         String?        @unique
+  isLegacy      Boolean   @default(false)
+  email         String?   @unique
   emailVerified DateTime?
-  createdAt     DateTime       @default(now())
-  updatedAt     DateTime       @updatedAt
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
   newsletter    Newsletter?
   subscriptions Subscription[]
   followers     Follows[]      @relation("following")
   following     Follows[]      @relation("follower")
   Story         Story[]
+  site          Site?
 }
 
 model Subscription {
@@ -31,10 +34,12 @@ model Subscription {
   plan         SubscriptionPlan   @default(BASIC) @map("subscription_plan")
   upgradedAt   DateTime?
   downgradedAt DateTime?
-  userId       String
-  createdAt    DateTime           @default(now())
-  updatedAt    DateTime           @updatedAt
-  user         User               @relation(fields: [userId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id])
 }
 
 enum SubscriptionStatus {
@@ -51,15 +56,17 @@ enum SubscriptionPlan {
 model Story {
   id            String    @id @default(uuid())
   gaiaId        String
-  userId        String
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
   publishedAt   DateTime?
   unpublishedAt DateTime?
   deletedAt     DateTime?
-  user          User      @relation(fields: [userId], references: [id])
-  email         Email?
-  emailId       String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  userId  String
+  user    User    @relation(fields: [userId], references: [id])
+  email   Email?
+  emailId String?
 }
 
 model Newsletter {
@@ -70,10 +77,12 @@ model Newsletter {
   senderEmail      String?
   status           NewsletterStatus
   userId           String           @unique
-  createdAt        DateTime         @default(now())
-  updatedAt        DateTime         @updatedAt
-  user             User             @relation(fields: [userId], references: [id])
-  Email            Email[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user  User    @relation(fields: [userId], references: [id])
+  Email Email[]
 }
 
 enum NewsletterStatus {
@@ -82,23 +91,37 @@ enum NewsletterStatus {
 }
 
 model Email {
-  id           String      @id @default(uuid())
-  createdAt    DateTime    @default(now())
-  updatedAt    DateTime    @updatedAt
+  id String @id @default(uuid())
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
   newsletterId String
   newsletter   Newsletter? @relation(fields: [newsletterId], references: [id])
   storyId      String      @unique
   Story        Story       @relation(fields: [storyId], references: [id])
 }
 
+model Site {
+  id     String @id @default(uuid())
+  domain String @unique
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user   User?  @relation(fields: [userId], references: [id])
+  userId String @unique
+}
+
 // Gaia data
 // File: app-data/following.json
 model Follows {
+  createdAt DateTime
+
   followerAddress  String
-  follower         User     @relation("follower", fields: [followerAddress], references: [stacksAddress])
+  follower         User   @relation("follower", fields: [followerAddress], references: [stacksAddress])
   followingAddress String
-  following        User     @relation("following", fields: [followingAddress], references: [stacksAddress])
-  createdAt        DateTime
+  following        User   @relation("following", fields: [followingAddress], references: [stacksAddress])
 
   @@id([followerAddress, followingAddress])
 }
