@@ -207,6 +207,21 @@ export class DomainsService {
   }
 
   async getSettings({ domain }: { domain: string }) {
+    if (
+      // Local env
+      (process.env.NODE_ENV === 'development' && domain === 'localhost:3002') ||
+      // Vercel preview
+      (process.env.VERCEL_ENV === 'preview' && process.env.VERCEL_URL) ||
+      // E2E tests
+      domain === 'http://127.0.0.1:3002'
+    ) {
+      return {
+        id: 'fake-id',
+        domain: 'localhost:3002',
+        ...sites['blog.sigle.io'],
+      };
+    }
+
     const site = await this.prisma.site.findUniqueOrThrow({
       select: {
         id: true,
@@ -216,8 +231,11 @@ export class DomainsService {
         domain,
       },
     });
-    // return (site && sites[domain]) || null;
-    return site || null;
+
+    return {
+      ...site,
+      ...sites[domain],
+    };
   }
 
   private checkVercelSetup() {

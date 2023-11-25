@@ -1,7 +1,7 @@
 import { lookupProfile } from 'micro-stacks/storage';
 import { NextResponse } from 'next/server';
-import { sites } from '@/sites';
 import { SettingsFile } from '@/types';
+import { getApiUrl } from '@/utils/vercel';
 
 export const runtime = 'edge';
 
@@ -9,7 +9,10 @@ export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
   const siteParam = searchParams.get('site');
 
-  const site = sites[siteParam || ''];
+  const site = await fetch(
+    `${getApiUrl()}/api/domains/settings?domain=${siteParam}`,
+  ).then((res) => res.json());
+
   if (!site) {
     return NextResponse.json(null);
   }
