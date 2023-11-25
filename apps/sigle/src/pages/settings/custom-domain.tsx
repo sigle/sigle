@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   Card,
   CardContent,
@@ -10,17 +10,32 @@ import { CustomDomainForm } from '@/modules/settings/custom-domain/custom-domain
 import { Protected } from '../../modules/auth/Protected';
 import { SettingsLayout } from '../../modules/settings/SettingsLayout';
 import { ActiveSubscription } from '@/modules/auth/ActiveSubscription';
+import { useDomainsControllerGet } from '@/__generated__/sigle-api';
+import { CustomDomainDns } from '@/modules/settings/custom-domain/custom-domain-dns';
+import { Typography } from '@/ui';
 
 const CustomDomain = () => {
+  const [isEditing, setIsEditing] = useState(false);
+  const { data: domain, isLoading: isLoadingDomain } = useDomainsControllerGet(
+    {},
+  );
+
   return (
     <SettingsLayout>
       <Card>
         <CardHeader>
-          <CardTitle>Custom Domain</CardTitle>
+          <Typography css={{ fontWeight: 600 }} size="h4">
+            Custom domain
+          </Typography>
           <CardDescription>Add a custom domain to your blog.</CardDescription>
         </CardHeader>
         <CardContent>
-          <CustomDomainForm />
+          {(!isLoadingDomain && !domain) || isEditing ? (
+            <CustomDomainForm domain={domain} setIsEditing={setIsEditing} />
+          ) : null}
+          {!isLoadingDomain && domain && !isEditing ? (
+            <CustomDomainDns domain={domain} setIsEditing={setIsEditing} />
+          ) : null}
         </CardContent>
       </Card>
     </SettingsLayout>
