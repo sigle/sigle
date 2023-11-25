@@ -1,4 +1,9 @@
-import { CheckCircledIcon, CrossCircledIcon } from '@radix-ui/react-icons';
+import {
+  CheckCircledIcon,
+  CrossCircledIcon,
+  ExternalLinkIcon,
+} from '@radix-ui/react-icons';
+import Link from 'next/link';
 import {
   DomainEntity,
   useDomainsControllerVerify,
@@ -27,7 +32,15 @@ export const CustomDomainDns = ({
     <div className="space-y-4">
       <div className="flex items-center justify-between">
         <Typography size="subheading" css={{ fontWeight: 600 }}>
-          {domain.domain}
+          <Link
+            href={`https://${domain.domain}`}
+            target="_blank"
+            rel="noreferrer"
+            className="flex items-center gap-1"
+          >
+            {domain.domain}
+            <ExternalLinkIcon />
+          </Link>
         </Typography>
         <div className="space-x-4">
           <Button variant="outline" onClick={() => refetchDomainVerify()}>
