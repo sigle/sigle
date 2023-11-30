@@ -1,4 +1,4 @@
-FROM node:18-alpine AS base
+ARG NODE_VERSION=18
 
 # Injected by builder
 ARG NODE_ENV
@@ -18,46 +18,57 @@ ARG POSTHOG_API_KEY
 ARG REDIS_DATABASE_URL
 ARG SENTRY_DSN
 
+# Alpine image
+FROM node:${NODE_VERSION}-alpine AS alpine
 ENV APP_NAME="server"
+ENV PROJECT="@sigle/$APP_NAME"
+RUN apk update
+RUN apk add --no-cache libc6-compat
+
+# Setup pnpm and turbo on the alpine base
+FROM alpine AS base
 RUN corepack enable pnpm
 RUN npm i -g turbo
-RUN apk add --no-cache libc6-compat python3 g++ make
-RUN apk update
+RUN pnpm config set store-dir ~/.pnpm-store
 
-FROM base AS builder
-# Set working directory
+# Prune projects
+FROM base AS pruner
+
 WORKDIR /app
 COPY . .
-RUN turbo prune --scope=@sigle/$APP_NAME --docker
+RUN turbo prune --scope=$PROJECT --docker
 
-# Add lockfile and package.json's of isolated subworkspace
-FROM base AS installer
+# Build the project
+FROM base AS builder
+
 WORKDIR /app
 
-# First install dependencies (as they change less often)
-COPY .gitignore .gitignore
-COPY --from=builder /app/out/json/ .
-COPY --from=builder /app/out/pnpm-lock.yaml ./pnpm-lock.yaml
-COPY --from=builder /app/out/pnpm-workspace.yaml ./pnpm-workspace.yaml
-RUN pnpm install --frozen-lockfile
+# Copy lockfile and package.json's of isolated subworkspace
+COPY --from=pruner /app/out/json/ .
+COPY --from=pruner /app/out/pnpm-lock.yaml ./pnpm-lock.yaml
+COPY --from=pruner /app/out/pnpm-workspace.yaml ./pnpm-workspace.yaml
 
-# Build the project and its dependencies
-COPY --from=builder /app/out/full/ .
-COPY turbo.json turbo.json
-RUN pnpm turbo run db:generate --filter=@sigle/$APP_NAME
-RUN pnpm turbo run build --filter=@sigle/$APP_NAME
+# First install the dependencies (as they change less often)
+RUN --mount=type=cache,id=pnpm,target=~/.pnpm-store pnpm install --frozen-lockfile
 
-FROM base AS runner
+# Copy source code of isolated subworkspace
+COPY --from=pruner /app/out/full/ .
+
+RUN turbo run db:generate --filter=$PROJECT
+RUN turbo build --filter=$PROJECT
+RUN --mount=type=cache,id=pnpm,target=~/.pnpm-store pnpm prune --prod --no-optional
+
+# Final image
+FROM alpine AS runner
+
+RUN addgroup --system --gid 1001 nodejs
+RUN adduser --system --uid 1001 nodejs
+USER nodejs
+
 WORKDIR /app
-
-ENV NODE_ENV production
-
-# Don't run production as root
-RUN addgroup --system --gid 1001 nestjs
-RUN adduser --system --uid 1001 nestjs
-USER nestjs
-COPY --from=installer /app .
-
+COPY --from=builder --chown=nodejs:nodejs /app .
 WORKDIR /app/apps/$APP_NAME
 
-CMD pnpm run db:deploy && pnpm run start
+ENV NODE_ENV=production
+
+CMD npm run db:deploy && npm run start
