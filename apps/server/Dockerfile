@@ -1,9 +1,7 @@
-# Alpine image
-FROM node:18-alpine AS alpine
-ENV APP_NAME="server"
-ENV PROJECT="@sigle/$APP_NAME"
-RUN apk update
-RUN apk add --no-cache libc6-compat
+ARG NODE_VERSION=18
+
+# Required for railway
+ARG RAILWAY_SERVICE_ID=local
 
 # Injected by builder
 ARG NODE_ENV
@@ -22,6 +20,13 @@ ARG PLAUSIBLE_SITE_ID
 ARG POSTHOG_API_KEY
 ARG REDIS_DATABASE_URL
 ARG SENTRY_DSN
+
+# Alpine image
+FROM node:${NODE_VERSION}-alpine AS alpine
+ENV APP_NAME="server"
+ENV PROJECT="@sigle/$APP_NAME"
+RUN apk update
+RUN apk add --no-cache libc6-compat
 
 # Setup pnpm and turbo on the alpine base
 FROM alpine AS base
@@ -47,14 +52,14 @@ COPY --from=pruner /app/out/pnpm-lock.yaml ./pnpm-lock.yaml
 COPY --from=pruner /app/out/pnpm-workspace.yaml ./pnpm-workspace.yaml
 
 # First install the dependencies (as they change less often)
-RUN --mount=type=cache,id=pnpm,target=~/.pnpm-store pnpm install --frozen-lockfile
+RUN --mount=type=cache,id=s/${RAILWAY_SERVICE_ID}-pnpm,target=~/.pnpm-store pnpm install --frozen-lockfile
 
 # Copy source code of isolated subworkspace
 COPY --from=pruner /app/out/full/ .
 
 RUN turbo run db:generate --filter=$PROJECT
 RUN turbo build --filter=$PROJECT
-RUN --mount=type=cache,id=pnpm,target=~/.pnpm-store pnpm prune --prod --no-optional
+RUN --mount=type=cache,id=s/${RAILWAY_SERVICE_ID}-pnpm,target=~/.pnpm-store pnpm prune --prod --no-optional
 
 # Final image
 FROM alpine AS runner
