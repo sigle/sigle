@@ -1,7 +1,5 @@
-ARG NODE_VERSION=18
-
 # Alpine image
-FROM node:${NODE_VERSION}-alpine AS alpine
+FROM node:18-alpine AS alpine
 ENV APP_NAME="server"
 ENV PROJECT="@sigle/$APP_NAME"
 RUN apk update
