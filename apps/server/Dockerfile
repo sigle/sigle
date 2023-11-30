@@ -20,13 +20,13 @@ ARG SENTRY_DSN
 
 # Alpine image
 FROM node:${NODE_VERSION}-alpine AS alpine
+ENV APP_NAME="server"
+ENV PROJECT="@sigle/$APP_NAME"
 RUN apk update
 RUN apk add --no-cache libc6-compat
 
 # Setup pnpm and turbo on the alpine base
 FROM alpine AS base
-ENV APP_NAME="server"
-ENV PROJECT="@sigle/$APP_NAME"
 RUN corepack enable pnpm
 RUN npm i -g turbo
 RUN pnpm config set store-dir ~/.pnpm-store
