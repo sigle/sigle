@@ -1,5 +1,12 @@
 ARG NODE_VERSION=18
 
+# Alpine image
+FROM node:${NODE_VERSION}-alpine AS alpine
+ENV APP_NAME="server"
+ENV PROJECT="@sigle/$APP_NAME"
+RUN apk update
+RUN apk add --no-cache libc6-compat
+
 # Injected by builder
 ARG NODE_ENV
 ARG PORT
@@ -17,13 +24,6 @@ ARG PLAUSIBLE_SITE_ID
 ARG POSTHOG_API_KEY
 ARG REDIS_DATABASE_URL
 ARG SENTRY_DSN
-
-# Alpine image
-FROM node:${NODE_VERSION}-alpine AS alpine
-ENV APP_NAME="server"
-ENV PROJECT="@sigle/$APP_NAME"
-RUN apk update
-RUN apk add --no-cache libc6-compat
 
 # Setup pnpm and turbo on the alpine base
 FROM alpine AS base
