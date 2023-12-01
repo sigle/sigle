@@ -1,0 +1,34 @@
+FROM node:18-alpine AS base
+ENV APP_NAME="custom-domain"
+ENV PNPM_HOME="/pnpm"
+ENV PATH="$PNPM_HOME:$PATH"
+RUN corepack enable pnpm
+RUN npm i -g turbo
+RUN apk add --no-cache libc6-compat python3 g++ make
+RUN apk update
+
+FROM base AS builder
+# Set working directory
+WORKDIR /app
+COPY . .
+RUN turbo prune --scope=@sigle/$APP_NAME --docker
+
+# Add lockfile and package.json's of isolated subworkspace
+FROM base AS installer
+RUN apk update
+WORKDIR /app
+
+# First install dependencies (as they change less often)
+COPY .gitignore .gitignore
+COPY --from=builder /app/out/json/ .
+COPY --from=builder /app/out/pnpm-lock.yaml ./pnpm-lock.yaml
+COPY --from=builder /app/out/pnpm-workspace.yaml ./pnpm-workspace.yaml
+RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --frozen-lockfile
+
+# Build the project and its dependencies
+COPY --from=builder /app/out/full/ .
+COPY turbo.json turbo.json
+
+WORKDIR /app/apps/$APP_NAME
+
+CMD turbo run dev
