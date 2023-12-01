@@ -52,14 +52,14 @@ COPY --from=pruner /app/out/pnpm-lock.yaml ./pnpm-lock.yaml
 COPY --from=pruner /app/out/pnpm-workspace.yaml ./pnpm-workspace.yaml
 
 # First install the dependencies (as they change less often)
-RUN --mount=type=cache,id=s/${RAILWAY_SERVICE_ID}-pnpm,target=~/.pnpm-store pnpm install --frozen-lockfile
+RUN pnpm install --frozen-lockfile
 
 # Copy source code of isolated subworkspace
 COPY --from=pruner /app/out/full/ .
 
 RUN turbo run db:generate --filter=$PROJECT
 RUN turbo build --filter=$PROJECT
-RUN --mount=type=cache,id=s/${RAILWAY_SERVICE_ID}-pnpm,target=~/.pnpm-store pnpm prune --prod --no-optional
+RUN pnpm prune --prod --no-optional
 
 # Final image
 FROM alpine AS runner
