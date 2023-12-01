@@ -86,7 +86,6 @@ const GlobalStyle = globalCss({
 
   body: {
     fontFamily: '$openSans',
-    backgroundColor: '$gray1',
   },
 
   '#nprogress, .bar': {
