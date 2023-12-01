@@ -1,13 +1,13 @@
-import { NextResponse } from 'next/server';
 import { lookupProfile } from 'micro-stacks/storage';
+import { NextResponse } from 'next/server';
 import { sites } from '@/sites';
+import { SettingsFile } from '@/types';
 
 export const runtime = 'edge';
 
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
   const siteParam = searchParams.get('site');
-  const page = Number(searchParams.get('page')) || 1;
 
   const site = sites[siteParam || ''];
   if (!site) {
@@ -18,17 +18,19 @@ export async function GET(request: Request) {
   const appUrl = 'https://app.sigle.io';
   const bucketUrl = userProfile?.apps?.[appUrl];
 
-  const data = await fetch(`${bucketUrl}publicStories.json`);
-  const posts = data.status === 404 ? { stories: [] } : await data.json();
-
-  // Paginate by creating slice of 15 based on page number
-  const startIndex = (page - 1) * 15;
-  const endIndex = page * 15;
-  const count = posts.stories.length;
-  posts.stories = posts.stories.slice(startIndex, endIndex);
+  const data = await fetch(`${bucketUrl}settings.json`);
+  let settingsFile: SettingsFile | null;
+  if (data.status === 404) {
+    settingsFile = {};
+  } else {
+    settingsFile = await data.json();
+  }
 
   return NextResponse.json({
-    count,
-    posts: posts.stories,
+    ...site,
+    url: `https://${siteParam}`,
+    name: settingsFile?.siteName || site.username,
+    description: settingsFile?.siteDescription || '',
+    avatar: settingsFile?.siteLogo || '',
   });
 }

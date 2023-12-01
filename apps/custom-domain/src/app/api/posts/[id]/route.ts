@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import { lookupProfile } from 'micro-stacks/storage';
-import { getSettings } from '@/lib/api';
+import { sites } from '@/sites';
 
 export const runtime = 'edge';
 
@@ -11,18 +11,13 @@ export async function GET(
   const { searchParams } = new URL(request.url);
   const siteParam = searchParams.get('site');
   const postId = params.id;
-  if (!siteParam) {
+
+  const site = sites[siteParam || ''];
+  if (!site) {
     return NextResponse.json(null);
   }
 
-  const domainSettings = await getSettings({ site: siteParam });
-  if (!domainSettings) {
-    return NextResponse.json(null);
-  }
-
-  const userProfile = await lookupProfile({
-    username: domainSettings.username,
-  });
+  const userProfile = await lookupProfile({ username: site.username });
   const appUrl = 'https://app.sigle.io';
   const bucketUrl = userProfile?.apps?.[appUrl];
 
