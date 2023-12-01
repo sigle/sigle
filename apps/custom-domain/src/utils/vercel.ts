@@ -16,3 +16,11 @@ export function getAbsoluteUrl() {
     return `https://${process.env.VERCEL_URL}`;
   }
 }
+
+export function getApiUrl() {
+  if (process.env.NODE_ENV === 'development') {
+    return process.env.API_URL?.replace('localhost', 'host.docker.internal');
+  }
+
+  return process.env.API_URL;
+}
