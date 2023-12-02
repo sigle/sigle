@@ -1,12 +1,5 @@
 import { defineConfig, devices } from '@playwright/test';
 
-const chromeFlags = [
-  '--font-render-hinting=none',
-  '--disable-skia-runtime-opts',
-  '--disable-font-subpixel-positioning',
-  '--disable-lcd-text',
-];
-
 export default defineConfig({
   testDir: './e2e',
   fullyParallel: true,
@@ -29,9 +22,6 @@ export default defineConfig({
       name: 'chromium',
       use: {
         ...devices['Desktop Chrome'],
-        launchOptions: {
-          args: chromeFlags,
-        },
       },
     },
 
@@ -40,9 +30,6 @@ export default defineConfig({
       name: 'Mobile Chrome',
       use: {
         ...devices['Pixel 5'],
-        launchOptions: {
-          args: chromeFlags,
-        },
       },
     },
   ],
