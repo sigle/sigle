@@ -118,6 +118,7 @@ export const {
   config,
   theme,
 } = createStitches({
+  prefix: 'radix',
   theme: {
     colors: {
       ...gray,
