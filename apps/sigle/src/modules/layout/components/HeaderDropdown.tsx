@@ -5,6 +5,7 @@ import { toast } from 'react-toastify';
 import { useQueryClient } from '@tanstack/react-query';
 import * as Fathom from 'fathom-client';
 import { signOut } from 'next-auth/react';
+import { DropdownMenu, Switch, Flex, Button, Text } from '@radix-ui/themes';
 import {
   ArchiveIcon,
   CrumpledPaperIcon,
@@ -13,18 +14,7 @@ import {
 } from '@radix-ui/react-icons';
 import { useTheme } from 'next-themes';
 import { useSubscriptionControllerGetUserMe } from '@/__generated__/sigle-api';
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-  Button,
-  Box,
-  Typography,
-  StyledChevron,
-  Flex,
-} from '../../../ui';
+import { StyledChevron } from '../../../ui';
 import { generateAvatar } from '../../../utils/boringAvatar';
 import {
   createNewEmptyStory,
@@ -36,19 +26,7 @@ import { useGetUserSettings } from '../../../hooks/appData';
 import { Goals } from '../../../utils/fathom';
 import { userSession } from '../../../utils/blockstack';
 import { createSubsetStory } from '../../editor/utils';
-import { styled } from '../../../stitches.config';
 import { useAuth } from '../../auth/AuthContext';
-import { Switch, SwitchThumb } from '../../../ui/Switch';
-
-const ImageContainer = styled('div', {
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'center',
-  overflow: 'hidden',
-  width: 24,
-  height: 24,
-  br: '$1',
-});
 
 export const HeaderDropdown = () => {
   const { data: settings } = useGetUserSettings();
@@ -132,120 +110,99 @@ export const HeaderDropdown = () => {
   !userSubscription && !isLegacy && lowerNavItems.push(upgradeItem);
 
   return (
-    <DropdownMenu>
-      <DropdownMenuTrigger asChild>
+    <DropdownMenu.Root>
+      <DropdownMenu.Trigger>
         <Button
-          css={{ display: 'flex', gap: '$2', alignItems: 'center' }}
-          size="lg"
+          className="flex gap-2 items-center"
+          size="3"
+          color="gray"
           variant="ghost"
         >
-          <ImageContainer>
-            <Box
-              as="img"
+          <div className="flex items-center justify-center overflow-hidden rounded-1 w-6 h-6">
+            <img
+              alt="avatar"
               src={
                 settings?.siteLogo
                   ? settings.siteLogo
                   : generateAvatar(userAddress)
               }
-              css={{
-                width: 'auto',
-                height: '100%',
-                maxWidth: 24,
-                maxHeight: 24,
-                objectFit: 'cover',
-              }}
+              className="w-auto h-100% max-w-6 max-h-6 object-cover"
             />
-          </ImageContainer>
-          <Typography size="subheading">
+          </div>
+          <Text size="2" color="gray" highContrast>
             {settings?.siteName ? settings.siteName : user?.username}
-          </Typography>
-          <StyledChevron css={{ color: '$gray11' }} />
+          </Text>
+          <StyledChevron />
         </Button>
-      </DropdownMenuTrigger>
-      <DropdownMenuContent sideOffset={8}>
-        <Link href={`/${user?.username}`} passHref legacyBehavior>
-          <DropdownMenuItem
-            css={{ py: '$1', px: '$2' }}
-            selected={router.pathname === user?.username}
-            as="a"
-          >
-            <ImageContainer
-              css={{
-                width: 38,
-                height: 38,
-              }}
-            >
-              <Box
-                as="img"
+      </DropdownMenu.Trigger>
+      <DropdownMenu.Content
+        color="gray"
+        align="end"
+        variant="soft"
+        className="min-w-[220px]"
+      >
+        <DropdownMenu.Item asChild>
+          <Link href={`/${user?.username}`} className="justify-start gap-2">
+            <div className="flex items-center justify-center overflow-hidden rounded-1 w-6 h-6">
+              <img
+                alt="avatar"
                 src={
                   settings?.siteLogo
                     ? settings.siteLogo
                     : generateAvatar(userAddress)
                 }
-                css={{
-                  width: 'auto',
-                  height: '100%',
-                  maxWidth: 38,
-                  maxHeight: 38,
-                  objectFit: 'cover',
-                }}
+                className="w-auto h-100% max-w-6 max-h-6 object-cover"
               />
-            </ImageContainer>
+            </div>
             <Flex direction="column" align="start" justify="center">
               {settings?.siteName && (
-                <Typography size="subheading" css={{ color: '$gray11' }}>
+                <Text size="2" color="gray" highContrast>
                   {settings.siteName}
-                </Typography>
+                </Text>
               )}
-              <Typography size="subparagraph" css={{ color: '$gray9' }}>
+              <Text size="2" color="gray">
                 {user?.username}
-              </Typography>
+              </Text>
             </Flex>
-          </DropdownMenuItem>
-        </Link>
-        <DropdownMenuSeparator />
-        <DropdownMenuItem
-          css={{ color: '$gray11' }}
+          </Link>
+        </DropdownMenu.Item>
+        <DropdownMenu.Separator />
+        <DropdownMenu.Item
           disabled={loadingCreate}
           onClick={handleCreateNewPrivateStory}
           onSelect={(e) => e.preventDefault()}
+          className="justify-start gap-2"
         >
           <FileTextIcon />
           {!loadingCreate ? `Write a story` : `Creating new story...`}
-        </DropdownMenuItem>
+        </DropdownMenu.Item>
         {upperNavItems.map((item) => (
-          <Link key={item.path} href={item.path} passHref legacyBehavior>
-            <DropdownMenuItem
-              css={{ color: '$gray11' }}
-              selected={router.pathname === item.path}
-              as="a"
-            >
+          <DropdownMenu.Item key={item.path} asChild>
+            <Link href={item.path} className="justify-start gap-2">
               {item.icon}
               {item.name}
-            </DropdownMenuItem>
-          </Link>
+            </Link>
+          </DropdownMenu.Item>
         ))}
-        <DropdownMenuSeparator />
+        <DropdownMenu.Separator />
         {lowerNavItems.map((item) => (
-          <Link key={item.path} href={item.path} passHref legacyBehavior>
-            <DropdownMenuItem selected={router.pathname === item.path} as="a">
-              {item.name}
-            </DropdownMenuItem>
-          </Link>
+          <DropdownMenu.Item color="gray" asChild>
+            <Link href={item.path}>{item.name}</Link>
+          </DropdownMenu.Item>
         ))}
-        <DropdownMenuItem
-          css={{ minWidth: 231, justifyContent: 'space-between', pr: '$2' }}
+        <DropdownMenu.Item
+          color="gray"
           onSelect={(e) => e.preventDefault()}
           onClick={toggleTheme}
         >
           Dark mode
-          <Switch checked={resolvedTheme === 'dark'}>
-            <SwitchThumb />
-          </Switch>
-        </DropdownMenuItem>
-        <DropdownMenuSeparator />
-        <DropdownMenuItem onClick={handleLogout}>Logout</DropdownMenuItem>
-      </DropdownMenuContent>
-    </DropdownMenu>
+          <Switch color="orange" checked={resolvedTheme === 'dark'} />
+        </DropdownMenu.Item>
+        <DropdownMenu.Separator />
+        <DropdownMenu.Item color="gray" onClick={handleLogout}>
+          Logout
+        </DropdownMenu.Item>
+      </DropdownMenu.Content>
+    </DropdownMenu.Root>
   );
 };
