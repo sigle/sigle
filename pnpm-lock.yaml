@@ -719,6 +719,9 @@ importers:
       postcss:
         specifier: 8.4.31
         version: 8.4.31
+      radix-themes-tw:
+        specifier: 0.0.8
+        version: 0.0.8
       sass:
         specifier: 1.69.4
         version: 1.69.4
@@ -19977,6 +19980,10 @@ packages:
   /quick-lru@5.1.1:
     resolution: {integrity: sha512-WuyALRjWPDGtt/wzJiadO5AXY+8hZ80hVpe6MyivgraREW751X3SbhRvG3eLKOYN+8VEvqLcf3wdnt44Z4S4SA==}
     engines: {node: '>=10'}
+    dev: true
+
+  /radix-themes-tw@0.0.8:
+    resolution: {integrity: sha512-NPRRoahUlnYOQNfBHuGR/XFwJ4L2md59MGMbTmPZ11pwPFLeYnu4Lgqa0wcb8wiJSaiRzLA9vrWxj6suupDmdg==}
     dev: true
 
   /randombytes@2.1.0:
