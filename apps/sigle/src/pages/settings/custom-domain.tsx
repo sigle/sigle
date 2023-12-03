@@ -20,7 +20,7 @@ const CustomDomain = () => {
       <Card size="2">
         <div className="space-y-4">
           <div>
-            <Heading size="5" as="h4">
+            <Heading size="4" as="h4">
               Custom domain
             </Heading>
             <Text size="2" color="gray">
