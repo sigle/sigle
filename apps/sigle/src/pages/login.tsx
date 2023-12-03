@@ -241,6 +241,7 @@ const Login = () => {
       <Flex
         gap="3"
         justify="end"
+        align="center"
         css={{
           mt: '$7',
           pb: '$3',
