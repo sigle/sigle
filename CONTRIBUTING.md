@@ -77,8 +77,8 @@ docker exec $(docker container ls --all | grep -w sigle-server | awk '{print $1}
 To update the e2e tests snapshots, run the following command in the sigle directory:
 
 ```sh
-docker build -t local-playwright-docker --file Dockerfile.e2e ../
-docker run -v "./e2e:/app/sigle/e2e" -it local-playwright-docker:latest
+docker build -t local-playwright-docker --file Dockerfile.e2e ../../
+docker run -v "./e2e:/app/apps/sigle/e2e" -it local-playwright-docker:latest
 ```
 
 To update the custom domain e2e tests snapshots, run the following command in the apps/custom-domain directory:

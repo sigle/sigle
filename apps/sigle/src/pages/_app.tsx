@@ -18,6 +18,7 @@ import 'tippy.js/themes/light-border.css';
 import 'react-toastify/dist/ReactToastify.css';
 import '../globals.css';
 import { ThemeProvider } from 'next-themes';
+import { Theme } from '@radix-ui/themes';
 import { sigleConfig } from '../config';
 import { colors } from '../utils/colors';
 import { AuthProvider } from '../modules/auth/AuthContext';
@@ -85,7 +86,6 @@ const GlobalStyle = globalCss({
 
   body: {
     fontFamily: '$openSans',
-    backgroundColor: '$gray1',
   },
 
   '#nprogress, .bar': {
@@ -178,9 +178,11 @@ export default class MyApp extends App {
                     attribute="class"
                     value={{ light: 'light-theme', dark: darkTheme.toString() }}
                   >
-                    <DesignSystemProvider>
-                      <Component {...modifiedPageProps} />
-                    </DesignSystemProvider>
+                    <Theme grayColor="gray" accentColor="orange" radius="large">
+                      <DesignSystemProvider>
+                        <Component {...modifiedPageProps} />
+                      </DesignSystemProvider>
+                    </Theme>
                   </ThemeProvider>
                 </AuthProvider>
               </SessionProvider>

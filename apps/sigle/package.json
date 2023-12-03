@@ -13,11 +13,6 @@
     "test:only": "jest",
     "test:e2e": "playwright test"
   },
-  "nextBundleAnalysis": {
-    "budget": 512000,
-    "budgetPercentIncreaseRed": 20,
-    "showDetails": true
-  },
   "dependencies": {
     "@radix-ui/colors": "0.1.8",
     "@radix-ui/react-accordion": "1.1.2",
@@ -30,6 +25,7 @@
     "@radix-ui/react-switch": "1.0.3",
     "@radix-ui/react-tabs": "1.0.4",
     "@radix-ui/react-tooltip": "1.0.7",
+    "@radix-ui/themes": "2.0.1",
     "@sentry/nextjs": "7.81.1",
     "@sigle/slate-to-html": "1.0.0",
     "@stacks/auth": "6.7.0",
