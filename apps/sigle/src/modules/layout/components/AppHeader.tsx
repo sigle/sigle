@@ -5,6 +5,7 @@ import {
   SunIcon,
   HamburgerMenuIcon,
 } from '@radix-ui/react-icons';
+import { Button } from '@radix-ui/themes';
 import Link from 'next/link';
 import Image from 'next/legacy/image';
 import { useSession } from 'next-auth/react';
@@ -14,8 +15,15 @@ import * as Fathom from 'fathom-client';
 import { toast } from 'react-toastify';
 import { useRouter } from 'next/router';
 import { useUserControllerGetUserMe } from '@/__generated__/sigle-api';
+import { cn } from '@/lib/cn';
 import { styled } from '../../../stitches.config';
-import { Box, Button, Container, Flex, IconButton } from '../../../ui';
+import {
+  Box,
+  Button as UiButton,
+  Container,
+  Flex,
+  IconButton,
+} from '../../../ui';
 import { useAuth } from '../../auth/AuthContext';
 import { sigleConfig } from '../../../config';
 import {
@@ -127,12 +135,12 @@ export const AppHeader = () => {
           }}
           gap="5"
         >
-          <Button
+          <UiButton
             disabled={loadingCreate}
             onClick={handleCreateNewPrivateStory}
           >
             {!loadingCreate ? 'Write' : 'Creating...'}
-          </Button>
+          </UiButton>
           <IconButton
             css={{
               '&:hover': {
@@ -162,17 +170,13 @@ export const AppHeader = () => {
         gap="9"
       >
         {user && !isLegacy ? (
-          <Link href="/feed" passHref legacyBehavior>
-            <Button size="sm" variant="ghost" as="a">
-              Feed
-            </Button>
-          </Link>
-        ) : null}
-        <Link href="/explore" passHref legacyBehavior>
-          <Button size="sm" variant="ghost" as="a">
-            Explore
+          <Button size="2" variant="ghost" color="gray" highContrast asChild>
+            <Link href="/feed">Feed</Link>
           </Button>
-        </Link>
+        ) : null}
+        <Button size="2" variant="ghost" color="gray" highContrast asChild>
+          <Link href="/explore">Explore</Link>
+        </Button>
         {user ? (
           <HeaderDropdown />
         ) : (
@@ -209,9 +213,9 @@ export const AppHeader = () => {
         {!user && (
           <>
             <Link href="/" passHref legacyBehavior>
-              <Button as="a" size="lg">
+              <UiButton as="a" size="lg">
                 Enter App
-              </Button>
+              </UiButton>
             </Link>
             <IconButton size="sm" as="button" onClick={toggleTheme}>
               <SunIcon />

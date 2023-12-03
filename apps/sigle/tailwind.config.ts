@@ -1,3 +1,6 @@
+import type { Config } from 'tailwindcss';
+import { radixThemePreset } from 'radix-themes-tw';
+
 const gray = {
   gray1: '#fcfcfc',
   gray2: '#f6f6f6',
@@ -58,8 +61,7 @@ const orangeDark = {
   orange12: '#FF802B',
 };
 
-/** @type {import('tailwindcss').Config} */
-module.exports = {
+const config: Config = {
   darkMode: 'class',
   content: ['./src/**/*.{js,ts,jsx,tsx,mdx}'],
   theme: {
@@ -199,4 +201,7 @@ module.exports = {
     },
   },
   plugins: [require('@tailwindcss/typography')],
+  presets: [radixThemePreset],
 };
+
+export default config;
