@@ -14,6 +14,7 @@ import {
   ApiOperation,
   ApiTags,
 } from '@nestjs/swagger';
+import { Throttle } from '@nestjs/throttler';
 import { DomainsService } from './domains.service';
 import { AuthGuard } from '../auth.guard';
 import { UpdateDomainDto, DomainSettingsDto } from './dto/updateDomain.dto';
@@ -44,6 +45,7 @@ export class DomainsController {
   })
   @ApiBearerAuth()
   @ApiOkResponse({ type: Boolean })
+  @Throttle({ default: { limit: 5, ttl: 60000 } })
   @UseGuards(AuthGuard)
   @Post('/api/domains/update')
   @HttpCode(200)
@@ -64,6 +66,7 @@ export class DomainsController {
   @ApiOkResponse({
     type: DomainVerifyEntity,
   })
+  @Throttle({ default: { limit: 10, ttl: 60000 } })
   @UseGuards(AuthGuard)
   @Get('/api/domains/verify')
   verify(@Request() req): Promise<DomainVerifyEntity> {
