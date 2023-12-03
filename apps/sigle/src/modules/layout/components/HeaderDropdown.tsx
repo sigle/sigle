@@ -113,12 +113,13 @@ export const HeaderDropdown = () => {
     <DropdownMenu.Root>
       <DropdownMenu.Trigger>
         <Button
-          className="flex gap-2 items-center"
+          className="flex items-center gap-2"
           size="3"
           color="gray"
           variant="ghost"
         >
-          <div className="flex items-center justify-center overflow-hidden rounded-1 w-6 h-6">
+          <div className="flex h-6 w-6 items-center justify-center overflow-hidden rounded-1">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               alt="avatar"
               src={
@@ -126,7 +127,7 @@ export const HeaderDropdown = () => {
                   ? settings.siteLogo
                   : generateAvatar(userAddress)
               }
-              className="w-auto h-100% max-w-6 max-h-6 object-cover"
+              className="h-full w-auto object-cover"
             />
           </div>
           <Text size="2" color="gray" highContrast>
@@ -143,7 +144,8 @@ export const HeaderDropdown = () => {
       >
         <DropdownMenu.Item asChild>
           <Link href={`/${user?.username}`} className="justify-start gap-2">
-            <div className="flex items-center justify-center overflow-hidden rounded-1 w-6 h-6">
+            <div className="flex h-6 w-6 items-center justify-center overflow-hidden rounded-1">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 alt="avatar"
                 src={
@@ -151,7 +153,7 @@ export const HeaderDropdown = () => {
                     ? settings.siteLogo
                     : generateAvatar(userAddress)
                 }
-                className="w-auto h-100% max-w-6 max-h-6 object-cover"
+                className="h-full w-auto object-cover"
               />
             </div>
             <Flex direction="column" align="start" justify="center">
@@ -186,7 +188,7 @@ export const HeaderDropdown = () => {
         ))}
         <DropdownMenu.Separator />
         {lowerNavItems.map((item) => (
-          <DropdownMenu.Item color="gray" asChild>
+          <DropdownMenu.Item key={item.path} color="gray" asChild>
             <Link href={item.path}>{item.name}</Link>
           </DropdownMenu.Item>
         ))}
