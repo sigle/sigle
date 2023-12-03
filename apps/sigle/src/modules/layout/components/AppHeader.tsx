@@ -5,6 +5,7 @@ import {
   SunIcon,
   HamburgerMenuIcon,
 } from '@radix-ui/react-icons';
+import { Button, IconButton, Flex } from '@radix-ui/themes';
 import Link from 'next/link';
 import Image from 'next/legacy/image';
 import { useSession } from 'next-auth/react';
@@ -15,7 +16,7 @@ import { toast } from 'react-toastify';
 import { useRouter } from 'next/router';
 import { useUserControllerGetUserMe } from '@/__generated__/sigle-api';
 import { styled } from '../../../stitches.config';
-import { Box, Button, Container, Flex, IconButton } from '../../../ui';
+import { Container } from '../../../ui';
 import { useAuth } from '../../auth/AuthContext';
 import { sigleConfig } from '../../../config';
 import {
@@ -105,115 +106,75 @@ export const AppHeader = () => {
 
   return (
     <Header>
-      <Link href="/" passHref legacyBehavior>
-        <Box as="a">
-          <Image
-            width={93}
-            height={34}
-            objectFit="cover"
-            src={src}
-            alt="logo"
-          />
-        </Box>
+      <Link href="/">
+        <Image width={93} height={34} objectFit="cover" src={src} alt="logo" />
       </Link>
 
-      <Flex gap="2">
-        <Flex
-          css={{
-            display: 'flex',
-            '@md': {
-              display: 'none',
-            },
-          }}
-          gap="5"
+      <Flex className="flex md:hidden" gap="5" align="center">
+        <Button
+          color="gray"
+          highContrast
+          disabled={loadingCreate}
+          onClick={handleCreateNewPrivateStory}
         >
-          <Button
-            disabled={loadingCreate}
-            onClick={handleCreateNewPrivateStory}
-          >
-            {!loadingCreate ? 'Write' : 'Creating...'}
-          </Button>
-          <IconButton
-            css={{
-              '&:hover': {
-                backgroundColor: 'transparent',
-              },
-            }}
-            onClick={handleShowMobileHeader}
-          >
-            <HamburgerMenuIcon />
-          </IconButton>
+          {!loadingCreate ? 'Write' : 'Creating...'}
+        </Button>
+        <IconButton
+          size="3"
+          variant="ghost"
+          color="gray"
+          onClick={handleShowMobileHeader}
+        >
+          <HamburgerMenuIcon />
+        </IconButton>
 
-          <MobileHeader
-            open={showMobileHeaderDialog}
-            onClose={handleCloseMobileHeader}
-          />
-        </Flex>
+        <MobileHeader
+          open={showMobileHeaderDialog}
+          onClose={handleCloseMobileHeader}
+        />
       </Flex>
 
-      <Flex
-        css={{
-          display: 'none',
-          '@md': {
-            display: 'flex',
-          },
-        }}
-        align="center"
-        gap="9"
-      >
+      <Flex className="hidden md:flex" align="center" gap="7">
         {user && !isLegacy ? (
-          <Link href="/feed" passHref legacyBehavior>
-            <Button size="sm" variant="ghost" as="a">
-              Feed
-            </Button>
-          </Link>
-        ) : null}
-        <Link href="/explore" passHref legacyBehavior>
-          <Button size="sm" variant="ghost" as="a">
-            Explore
+          <Button size="2" variant="ghost" color="gray" highContrast asChild>
+            <Link href="/feed">Feed</Link>
           </Button>
-        </Link>
+        ) : null}
+        <Button size="2" variant="ghost" color="gray" highContrast asChild>
+          <Link href="/explore">Explore</Link>
+        </Button>
         {user ? (
           <HeaderDropdown />
         ) : (
-          <Flex gap="6">
-            <IconButton
-              size="sm"
-              as="a"
-              href={sigleConfig.twitterUrl}
-              target="_blank"
-              rel="noreferrer"
-            >
-              <TwitterLogoIcon />
+          <Flex gap="6" align="center">
+            <IconButton size="2" variant="ghost" color="gray" asChild>
+              <a href={sigleConfig.twitterUrl} target="_blank" rel="noreferrer">
+                <TwitterLogoIcon />
+              </a>
             </IconButton>
-            <IconButton
-              size="sm"
-              as="a"
-              href={sigleConfig.discordUrl}
-              target="_blank"
-              rel="noreferrer"
-            >
-              <DiscordLogoIcon />
+            <IconButton size="2" variant="ghost" color="gray" asChild>
+              <a href={sigleConfig.discordUrl} target="_blank" rel="noreferrer">
+                <DiscordLogoIcon />
+              </a>
             </IconButton>
-            <IconButton
-              size="sm"
-              as="a"
-              href={sigleConfig.githubUrl}
-              target="_blank"
-              rel="noreferrer"
-            >
-              <GitHubLogoIcon />
+            <IconButton size="2" variant="ghost" color="gray" asChild>
+              <a href={sigleConfig.githubUrl} target="_blank" rel="noreferrer">
+                <GitHubLogoIcon />
+              </a>
             </IconButton>
           </Flex>
         )}
         {!user && (
           <>
-            <Link href="/" passHref legacyBehavior>
-              <Button as="a" size="lg">
-                Enter App
-              </Button>
-            </Link>
-            <IconButton size="sm" as="button" onClick={toggleTheme}>
+            <Button size="2" color="gray" highContrast asChild>
+              <Link href="/login">Enter App</Link>
+            </Button>
+            <IconButton
+              size="2"
+              variant="ghost"
+              color="gray"
+              onClick={toggleTheme}
+            >
               <SunIcon />
             </IconButton>
           </>

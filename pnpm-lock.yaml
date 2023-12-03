@@ -517,6 +517,9 @@ importers:
       '@visx/tooltip':
         specifier: 2.10.0
         version: 2.10.0(react-dom@18.2.0)(react@18.2.0)
+      clsx:
+        specifier: 2.0.0
+        version: 2.0.0
       d3-array:
         specifier: 3.1.6
         version: 3.1.6
@@ -601,6 +604,9 @@ importers:
       sanitize-html:
         specifier: 2.7.0
         version: 2.7.0
+      tailwind-merge:
+        specifier: 2.1.0
+        version: 2.1.0
       tinycolor2:
         specifier: 1.4.2
         version: 1.4.2
@@ -704,6 +710,9 @@ importers:
       postcss:
         specifier: 8.4.31
         version: 8.4.31
+      radix-themes-tw:
+        specifier: 0.0.8
+        version: 0.0.8
       sass:
         specifier: 1.69.4
         version: 1.69.4
@@ -2450,6 +2459,13 @@ packages:
     engines: {node: '>=6.9.0'}
     dependencies:
       regenerator-runtime: 0.14.0
+
+  /@babel/runtime@7.23.5:
+    resolution: {integrity: sha512-NdUTHcPe4C99WxPub+K9l9tK5/lV4UXIoaHSYgzco9BCyjKAAwzdBI+wWtYqHt7LJdbo74ZjRPJgzVweq1sz0w==}
+    engines: {node: '>=6.9.0'}
+    dependencies:
+      regenerator-runtime: 0.14.0
+    dev: false
 
   /@babel/template@7.22.15:
     resolution: {integrity: sha512-QPErUVm4uyJa60rkI73qneDacvdvzxshT3kksGqlGWYdOTIUOwJ7RDUL8sGqslY1uXWSL6xMFKEXDS3ox2uF0w==}
@@ -19956,6 +19972,10 @@ packages:
     engines: {node: '>=10'}
     dev: true
 
+  /radix-themes-tw@0.0.8:
+    resolution: {integrity: sha512-NPRRoahUlnYOQNfBHuGR/XFwJ4L2md59MGMbTmPZ11pwPFLeYnu4Lgqa0wcb8wiJSaiRzLA9vrWxj6suupDmdg==}
+    dev: true
+
   /randombytes@2.1.0:
     resolution: {integrity: sha512-vYl3iOX+4CKUWuxGi9Ukhie6fsqXqS9FE2Zaic4tNFD2N2QQaXOMFbuKK4QmDHC0JO6B1Zp41J0LpT0oR68amQ==}
     dependencies:
@@ -21744,6 +21764,12 @@ packages:
 
   /tailwind-merge@1.14.0:
     resolution: {integrity: sha512-3mFKyCo/MBcgyOTlrY8T7odzZFx+w+qKSMAmdFzRvqBfLlSigU6TZnlFHK0lkMwj9Bj8OYU+9yW9lmGuS0QEnQ==}
+    dev: false
+
+  /tailwind-merge@2.1.0:
+    resolution: {integrity: sha512-l11VvI4nSwW7MtLSLYT4ldidDEUwQAMWuSHk7l4zcXZDgnCRa0V3OdCwFfM7DCzakVXMNRwAeje9maFFXT71dQ==}
+    dependencies:
+      '@babel/runtime': 7.23.5
     dev: false
 
   /tailwindcss-animate@1.0.7(tailwindcss@3.3.5):
