@@ -11,10 +11,5 @@
 }
 
 @layer utils {
-  /* As the radix container can't be extended easily we add one more breakpoint here */
-  .rt-ContainerInner {
-    :where(.rt-Container.rt-r-size-5) & {
-      max-width: 1350px;
-    }
-  }
+  /* Custom application styles */
 }
