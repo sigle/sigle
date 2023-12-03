@@ -21,15 +21,11 @@ export const CustomDomainDns = ({
   setIsEditing,
 }: CustomDomainDnsProps) => {
   const {
-    // data: domainVerify,
+    data: domainVerify,
     isLoading: isLoadingDomainVerify,
     refetch: refetchDomainVerify,
     isFetching: isFetchingDomainVerify,
   } = useDomainsControllerVerify({});
-
-  const domainVerify = {
-    status: 'misconfigured',
-  };
 
   const isLoading = isLoadingDomainVerify || isFetchingDomainVerify;
 
