@@ -3,12 +3,13 @@ import {
   CrossCircledIcon,
   ExternalLinkIcon,
 } from '@radix-ui/react-icons';
+import { Button, Text } from '@radix-ui/themes';
 import Link from 'next/link';
 import {
   DomainEntity,
   useDomainsControllerVerify,
 } from '@/__generated__/sigle-api';
-import { Button, LoadingSpinner, Typography } from '@/ui';
+import { LoadingSpinner } from '@/ui';
 
 interface CustomDomainDnsProps {
   domain: DomainEntity;
@@ -20,18 +21,22 @@ export const CustomDomainDns = ({
   setIsEditing,
 }: CustomDomainDnsProps) => {
   const {
-    data: domainVerify,
+    // data: domainVerify,
     isLoading: isLoadingDomainVerify,
     refetch: refetchDomainVerify,
     isFetching: isFetchingDomainVerify,
   } = useDomainsControllerVerify({});
 
+  const domainVerify = {
+    status: 'misconfigured',
+  };
+
   const isLoading = isLoadingDomainVerify || isFetchingDomainVerify;
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-2">
       <div className="flex items-center justify-between">
-        <Typography size="subheading" css={{ fontWeight: 600 }}>
+        <Text size="3" weight="medium" asChild>
           <Link
             href={`https://${domain.domain}`}
             target="_blank"
@@ -41,12 +46,21 @@ export const CustomDomainDns = ({
             {domain.domain}
             <ExternalLinkIcon />
           </Link>
-        </Typography>
+        </Text>
         <div className="space-x-4">
-          <Button variant="outline" onClick={() => refetchDomainVerify()}>
+          <Button
+            variant="outline"
+            color="gray"
+            onClick={() => refetchDomainVerify()}
+            disabled={isLoading}
+          >
             Refresh
           </Button>
-          <Button variant="outline" onClick={() => setIsEditing(true)}>
+          <Button
+            variant="outline"
+            color="gray"
+            onClick={() => setIsEditing(true)}
+          >
             Edit
           </Button>
         </div>
@@ -55,64 +69,65 @@ export const CustomDomainDns = ({
       {isLoading ? (
         <div className="flex">
           <LoadingSpinner />
-          <Typography size="subparagraph">Loading ...</Typography>
+          <Text size="2">Loading ...</Text>
         </div>
       ) : null}
 
       {!isLoading && domainVerify && domainVerify.status === 'misconfigured' ? (
-        <div className="space-y-8">
-          <Typography
-            size="subparagraph"
+        <div className="space-y-6">
+          <Text
+            as="div"
+            size="2"
             color="orange"
             className="flex items-center gap-1"
           >
             <CrossCircledIcon />
             Invalid Configuration
-          </Typography>
+          </Text>
           <div className="space-y-4">
-            <Typography size="subparagraph">
+            <Text as="div" size="2">
               Set the following record on your DNS provider to continue:
-            </Typography>
+            </Text>
             <div className="flex gap-6 rounded-md bg-gray-100 p-4">
               <div className="space-y-2">
-                <Typography size="subparagraph" css={{ fontWeight: 600 }}>
+                <Text as="div" size="2" weight="medium">
                   Type
-                </Typography>
-                <Typography size="subparagraph">CNAME</Typography>
+                </Text>
+                <Text as="div" size="2">
+                  CNAME
+                </Text>
               </div>
               <div className="space-y-2">
-                <Typography size="subparagraph" css={{ fontWeight: 600 }}>
+                <Text as="div" size="2" weight="medium">
                   Name
-                </Typography>
-                <Typography size="subparagraph">
+                </Text>
+                <Text as="div" size="2">
                   {domain.domain.split('.')[0]}
-                </Typography>
+                </Text>
               </div>
               <div className="space-y-2">
-                <Typography size="subparagraph" css={{ fontWeight: 600 }}>
+                <Text as="div" size="2" weight="medium">
                   Value
-                </Typography>
-                <Typography size="subparagraph">cname.sigle.io.</Typography>
+                </Text>
+                <Text as="div" size="2">
+                  cname.sigle.io.
+                </Text>
               </div>
             </div>
-            <Typography size="subparagraph">
+            <Text as="div" size="2">
               Depending on your provider, it might take some time for the DNS
               records to apply.
-            </Typography>
+            </Text>
           </div>
         </div>
       ) : null}
 
       {!isLoading && domainVerify && domainVerify.status === 'verified' ? (
         <div>
-          <Typography
-            size="subparagraph"
-            color="green"
-            className="flex items-center gap-1"
-          >
+          <Text size="2" color="green" className="flex items-center gap-1">
             <CheckCircledIcon />
             Valid Configuration
-          </Typography>
+          </Text>
         </div>
       ) : null}
     </div>

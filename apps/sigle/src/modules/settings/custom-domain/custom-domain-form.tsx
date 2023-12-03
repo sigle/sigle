@@ -1,8 +1,8 @@
 import { zodResolver } from '@hookform/resolvers/zod';
+import { TextField, Button, Text } from '@radix-ui/themes';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { toast } from 'react-toastify';
-import { Button, FormHelperError, FormInput, FormRow } from '@/ui';
 import { validDomainRegex } from '@/utils/regex';
 import {
   DomainEntity,
@@ -61,28 +61,36 @@ export const CustomDomainForm = ({
   });
 
   return (
-    <form onSubmit={onSubmit}>
-      <FormRow>
-        <FormInput
+    <form className="space-y-4" onSubmit={onSubmit}>
+      <div className="space-y-1">
+        <TextField.Input
           type="text"
           placeholder="blog.yourdomain.com"
           {...register('domain')}
         />
         {errors.domain && (
-          <FormHelperError>{errors.domain.message}</FormHelperError>
+          <Text as="div" size="2" color="red">
+            {errors.domain.message}
+          </Text>
         )}
-      </FormRow>
+      </div>
 
       <div className="space-x-2">
         <Button
           type="button"
           variant="outline"
+          color="gray"
           disabled={isLoadingUpdateDomain}
           onClick={() => setIsEditing(false)}
         >
           Cancel
         </Button>
-        <Button type="submit" disabled={isLoadingUpdateDomain}>
+        <Button
+          color="gray"
+          highContrast
+          type="submit"
+          disabled={isLoadingUpdateDomain}
+        >
           {isLoadingUpdateDomain ? 'Saving...' : 'Save'}
         </Button>
       </div>
