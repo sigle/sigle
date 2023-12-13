@@ -97,7 +97,7 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
           `https://api.hiro.so/v1/addresses/stacks/${address}`,
         );
         const namesJson = await namesResponse.json();
-        if ((namesJson.names.length || 0) > 0) {
+        if (namesJson.names && namesJson.names.length > 0) {
           // If user has multiple subdomains we use the .btc
           // This can happen with free subdomains and .btc
           userData.username =
