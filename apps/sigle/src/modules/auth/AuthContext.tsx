@@ -98,12 +98,12 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
         );
         const namesJson = await namesResponse.json();
         if ((namesJson.names.length || 0) > 0) {
-          // If user has a subdomain and .btc we will use the .btc
-          if (namesJson.names.length === 2) {
-            userData.username = namesJson.names[1];
-          } else {
-            userData.username = namesJson.names[0];
-          }
+          // If user has multiple subdomains we use the .btc
+          // This can happen with free subdomains and .btc
+          userData.username =
+            namesJson.names.find(
+              (name: string) => name.endsWith('.btc') === true,
+            ) || namesJson.names[0];
         }
       } catch (e) {}
     }
