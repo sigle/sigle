@@ -21,14 +21,19 @@ export class StacksService {
 
   /**
    * Return the username associated to a stacks address.
+   * If the user has 1 free subdomain and 1 .btc, the .btc will be returned.
    */
   async getUsernameByAddress(address: string): Promise<string | null> {
     const namesResponse = await fetch(
       `https://api.hiro.so/v1/addresses/stacks/${address}`,
     );
     const namesJson = (await namesResponse.json()) as { names: string[] };
-    if ((namesJson.names.length || 0) > 0) {
-      return namesJson.names[0];
+    if (namesJson.names && namesJson.names.length > 0) {
+      return (
+        namesJson.names.find(
+          (name: string) => name.endsWith('.btc') === true,
+        ) || namesJson.names[0]
+      );
     }
     return null;
   }
