@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { lookupProfile } from 'micro-stacks/storage';
+import { lookupProfile } from '@stacks/auth';
 import { sites } from '@/sites';
 
 export const runtime = 'edge';

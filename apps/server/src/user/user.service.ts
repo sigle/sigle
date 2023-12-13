@@ -1,6 +1,6 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { validateStacksAddress } from 'micro-stacks/crypto';
+import { validateStacksAddress } from '@stacks/transactions';
 import { getToken } from 'next-auth/jwt';
 import { fetch } from 'undici';
 import { Prisma } from '.prisma/client';
