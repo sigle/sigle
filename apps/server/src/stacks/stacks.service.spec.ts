@@ -46,7 +46,7 @@ describe('StacksService', () => {
 
   describe('getBucketUrl', () => {
     it('should return undefined if user not using the app', async () => {
-      expect(await service.getBucketUrl({ username: 'stxstats.btc' })).toEqual({
+      expect(await service.getBucketUrl({ username: 'leop.btc' })).toEqual({
         bucketUrl: undefined,
         profile: expect.any(Object),
       });
