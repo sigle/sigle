@@ -17,11 +17,6 @@ import { sites } from './sites';
 // @ts-ignore
 globalThis.Headers = Headers;
 
-// micro-stacks require a global fetch function
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-ignore
-globalThis.fetch = fetch;
-
 async function bootstrap() {
   const app = await NestFactory.create<NestFastifyApplication>(
     AppModule,

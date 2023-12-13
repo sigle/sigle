@@ -5,7 +5,6 @@ import {
   NestFastifyApplication,
 } from '@nestjs/platform-fastify';
 import fastifyCookie from '@fastify/cookie';
-import { fetch } from 'undici';
 import { AppModule } from '../../src/app.module';
 
 // next-auth workaround as node.js does not have the global Headers
@@ -13,11 +12,6 @@ import { AppModule } from '../../src/app.module';
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 globalThis.Headers = class Headers {};
-
-// micro-stacks require a global fetch function
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-ignore
-globalThis.fetch = fetch;
 
 describe('AnalyticsController (e2e)', () => {
   let app: NestFastifyApplication;

@@ -1,12 +1,6 @@
 import { ConfigService } from '@nestjs/config';
 import { Test, TestingModule } from '@nestjs/testing';
-import { fetch } from 'undici';
 import { StacksService } from './stacks.service';
-
-// micro-stacks require a global fetch function
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-ignore
-globalThis.fetch = fetch;
 
 describe('StacksService', () => {
   let service: StacksService;

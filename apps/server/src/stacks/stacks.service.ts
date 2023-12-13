@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { lookupProfile } from 'micro-stacks/storage';
+import { lookupProfile } from '@stacks/auth';
 import {
   migrationStories,
   SettingsFile,
