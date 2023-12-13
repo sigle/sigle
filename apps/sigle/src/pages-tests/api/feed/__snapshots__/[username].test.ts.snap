@@ -1,7 +1,7 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`test feed api should work properly 1`] = `
-Object {
+{
   "description": "This content was created on app.sigle.io
 
 In just a few words, Sigle is the perfect tool for writers/bloggers to easily create decentralized content and take notes.
@@ -16,12 +16,12 @@ That means no one but you owns your data and published work. It is safe from any
 `;
 
 exports[`test feed api should work properly 2`] = `
-Object {
+{
   "description": "This guide provides you with everything you need to know about the text editor and page styles. It may change, depending on the added themes or possible updates.
 Images
 Story cover picture
 You can add a cover picture to any stories.
-By clicking on the wheel next to the save button on the \\"Edit\\" page...",
+By clicking on the wheel next to the save button on the "Edit" page...",
   "enclosure": "",
   "guid": "https://app.sigle.io/sigle.btc/0jE9PPqbxU6ptWNxl0Wi-",
   "link": "https://app.sigle.io/sigle.btc/0jE9PPqbxU6ptWNxl0Wi-",
