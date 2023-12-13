@@ -97,13 +97,17 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
           `https://api.hiro.so/v1/addresses/stacks/${address}`,
         );
         const namesJson = await namesResponse.json();
-        if ((namesJson.names.length || 0) > 0) {
-          // If user has a subdomain and .btc we will use the .btc
-          if (namesJson.names.length === 2) {
-            userData.username = namesJson.names[1];
-          } else {
-            userData.username = namesJson.names[0];
-          }
+        if (namesJson.names && namesJson.names.length > 0) {
+          // If user has multiple subdomains we use the .btc
+          // This can happen with free subdomains and .btc
+          userData.username =
+            namesJson.names.find(
+              (name: string) => name.endsWith('.btc') === true,
+            ) || namesJson.names[0];
+        } else {
+          // Used for debug purpose when a user is redirect to the register username page
+          // and has a .btc name linked to his address
+          console.info(`No names found for ${address}`);
         }
       } catch (e) {}
     }
