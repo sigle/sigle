@@ -1,4 +1,4 @@
-ARG NODE_VERSION=18
+ARG NODE_VERSION=20
 
 # Required for railway
 ARG RAILWAY_SERVICE_ID=local
