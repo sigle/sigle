@@ -104,6 +104,10 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
             namesJson.names.find(
               (name: string) => name.endsWith('.btc') === true,
             ) || namesJson.names[0];
+        } else {
+          // Used for debug purpose when a user is redirect to the register username page
+          // and has a .btc name linked to his address
+          console.info(`No names found for ${address}`);
         }
       } catch (e) {}
     }
