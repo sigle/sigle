@@ -1,5 +1,5 @@
 import { SiteSettings, StoryFile } from '@/types';
-import { getAbsoluteUrl } from '@/utils/vercel';
+import { getAbsoluteUrl, getApiUrl } from '@/utils/vercel';
 
 export async function getSettings({
   site,
@@ -48,6 +48,6 @@ export async function getSubscription({
 }: {
   address: string;
 }): Promise<{ newsletter?: { id: string } } | null> {
-  const res = await fetch(`${process.env.API_URL}/api/users/${address}`);
+  const res = await fetch(`${getApiUrl()}/api/users/${address}`);
   return res.json();
 }

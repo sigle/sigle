@@ -4,6 +4,8 @@ services:
     image: 'redis:6.2'
     ports:
       - '6379:6379'
+    healthcheck:
+      test: ['CMD', 'redis-cli', '--raw', 'incr', 'ping']
 
   postgres:
     image: postgres:14
@@ -17,6 +19,59 @@ services:
       POSTGRES_PASSWORD: postgrespassword
       POSTGRES_DB: postgresdb
       POSTGRES_PORT: 5432
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready']
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  server:
+    build:
+      context: ./
+      dockerfile: ./apps/server/Dockerfile.dev
+    restart: always
+    ports:
+      - '3001:3001'
+    extra_hosts:
+      - 'host.docker.internal:host-gateway'
+    environment:
+      - NODE_ENV=development
+      - REDIS_DATABASE_URL=redis://redis:6379
+      - PG_DATABASE_URL=postgres://postgresuser:postgrespassword@postgres:5432/postgresdb?sslmode=disable
+    volumes:
+      - './apps/server/src:/app/apps/server/src'
+      - './apps/server/prisma:/app/apps/server/prisma'
+    depends_on:
+      redis:
+        condition: service_healthy
+      postgres:
+        condition: service_healthy
+
+  sigle:
+    build:
+      context: .
+      dockerfile: ./apps/sigle/Dockerfile.dev
+    restart: always
+    ports:
+      - 3000:3000
+    extra_hosts:
+      - 'host.docker.internal:host-gateway'
+    volumes:
+      - './apps/sigle/src:/app/apps/sigle/src'
+      - './apps/sigle/public:/app/apps/sigle/public'
+
+  custom-domain:
+    build:
+      context: .
+      dockerfile: ./apps/custom-domain/Dockerfile.dev
+    restart: always
+    ports:
+      - 3002:3002
+    extra_hosts:
+      - 'host.docker.internal:host-gateway'
+    volumes:
+      - './apps/custom-domain/src:/app/apps/custom-domain/src'
+      - './apps/custom-domain/public:/app/apps/custom-domain/public'
 
 volumes:
   pg_db_data:

@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { SiteSettings } from '@/types';
+import { getApiUrl } from '@/utils/vercel';
 
 interface HeroSubscribeProps {
   settings: SiteSettings;
@@ -29,7 +30,7 @@ export const SubscribeFrame = ({ settings }: HeroSubscribeProps) => {
   });
 
   const onSubmit = handleSubmit((formValues) => {
-    fetch(`${process.env.API_URL}/api/subscribers`, {
+    fetch(`${getApiUrl()}/api/subscribers`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

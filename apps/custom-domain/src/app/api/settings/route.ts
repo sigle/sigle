@@ -1,4 +1,4 @@
-import { lookupProfile } from 'micro-stacks/storage';
+import { lookupProfile } from '@stacks/auth';
 import { NextResponse } from 'next/server';
 import { sites } from '@/sites';
 import { SettingsFile } from '@/types';
