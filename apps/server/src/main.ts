@@ -7,7 +7,7 @@ import {
   NestFastifyApplication,
 } from '@nestjs/platform-fastify';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
-import { fetch, Headers } from 'undici';
+import { Headers } from 'undici';
 import { AppModule } from './app.module';
 import { sites } from './sites';
 
