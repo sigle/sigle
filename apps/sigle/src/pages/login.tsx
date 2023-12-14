@@ -13,6 +13,7 @@ import {
   CheckIcon,
 } from '@radix-ui/react-icons';
 import { toast } from 'sonner';
+import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { Goals } from '../utils/fathom';
 import { Box, Button, Flex, Typography } from '../ui';
@@ -240,7 +241,13 @@ const Login = () => {
           boxShadow: '0 1px 0 0 $colors$gray6',
         }}
       >
-        {user ? (
+        {!user ? (
+          <Link href={sigleConfig.landingUrl} target="_blank">
+            <Button variant="ghost" color="gray" size="lg">
+              Learn more
+            </Button>
+          </Link>
+        ) : (
           <Button
             variant="ghost"
             color="gray"
@@ -254,7 +261,7 @@ const Login = () => {
             <ArrowLeftIcon width={15} height={15} />
             Change account
           </Button>
-        ) : null}
+        )}
         <Button
           color="orange"
           size="lg"
