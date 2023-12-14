@@ -102,7 +102,8 @@ export const AppHeader = () => {
 
   const handleShowMobileHeader = () => setShowMobileHeaderDialog(true);
 
-  const handleCloseMobileHeader = () => setShowMobileHeaderDialog(false);
+  const handleCloseMobileHeader = (open: boolean) =>
+    setShowMobileHeaderDialog(open);
 
   return (
     <Header>
@@ -130,7 +131,7 @@ export const AppHeader = () => {
 
         <MobileHeader
           open={showMobileHeaderDialog}
-          onClose={handleCloseMobileHeader}
+          onOpenChange={handleCloseMobileHeader}
         />
       </Flex>
 
