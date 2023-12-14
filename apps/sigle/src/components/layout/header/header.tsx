@@ -5,7 +5,7 @@ import { HeaderLogo } from '@/components/layout/header/header-logo';
 import { HeaderLoggedOut } from '@/components/layout/header/header-logged-out';
 import { HeaderLoggedIn } from '@/components/layout/header/header-logged-in';
 import { HeaderMobile } from '@/components/layout/header/header-mobile';
-import { useAuth } from '../../auth/AuthContext';
+import { useAuth } from '../../../modules/auth/AuthContext';
 
 export const AppHeader = () => {
   const { user } = useAuth();

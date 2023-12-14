@@ -2,7 +2,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import { useEmailVerificationControllerVerifyEmail } from '@/__generated__/sigle-api';
-import { AppHeader } from '../../modules/layout/components/AppHeader';
+import { AppHeader } from '../../components/layout/header/header';
 import { styled } from '../../stitches.config';
 import { Button, Container, Flex, Typography } from '../../ui';
 
