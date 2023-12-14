@@ -1,25 +1,11 @@
-import { Flex } from '@radix-ui/themes';
+import { Container, Flex } from '@radix-ui/themes';
 import { useSession } from 'next-auth/react';
 import { useUserControllerGetUserMe } from '@/__generated__/sigle-api';
 import { HeaderLogo } from '@/components/layout/header/header-logo';
 import { HeaderLoggedOut } from '@/components/layout/header/header-logged-out';
 import { HeaderLoggedIn } from '@/components/layout/header/header-logged-in';
 import { HeaderMobile } from '@/components/layout/header/header-mobile';
-import { styled } from '../../../stitches.config';
-import { Container } from '../../../ui';
 import { useAuth } from '../../auth/AuthContext';
-
-const Header = styled('header', Container, {
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'space-between',
-  mt: '$4',
-  width: '100%',
-
-  '@md': {
-    mt: '$10',
-  },
-});
 
 export const AppHeader = () => {
   const { user } = useAuth();
@@ -39,16 +25,20 @@ export const AppHeader = () => {
   );
 
   return (
-    <Header>
-      <HeaderLogo />
+    <header className="w-full">
+      <Container className="rt-r-size-5 mt-4 px-5 md:mt-10">
+        <div className="flex items-center justify-between">
+          <HeaderLogo />
 
-      <Flex className="flex md:hidden" gap="5" align="center">
-        <HeaderMobile />
-      </Flex>
+          <Flex className="flex md:hidden" gap="5" align="center">
+            <HeaderMobile />
+          </Flex>
 
-      <Flex className="hidden md:flex" align="center" gap="7">
-        {!user ? <HeaderLoggedOut /> : <HeaderLoggedIn />}
-      </Flex>
-    </Header>
+          <Flex className="hidden md:flex" align="center" gap="7">
+            {!user ? <HeaderLoggedOut /> : <HeaderLoggedIn />}
+          </Flex>
+        </div>
+      </Container>
+    </header>
   );
 };
