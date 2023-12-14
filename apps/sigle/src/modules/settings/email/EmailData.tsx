@@ -14,9 +14,6 @@ import {
   FormInput,
   FormLabel,
   FormRow,
-  // Switch,
-  // SwitchThumb,
-  // Typography,
 } from '../../../ui';
 import { isValidEmail } from '../../../utils/regex';
 import { UnsavedChanges } from '../components/UnsavedChanges';
@@ -24,7 +21,6 @@ import { SettingsLayout } from '../SettingsLayout';
 
 interface SettingsFormValues {
   email: string;
-  // receiveEmails: boolean;
 }
 
 export const EmailData = () => {
@@ -139,33 +135,6 @@ export const EmailData = () => {
             Max. 100 Characters
           </FormHelper>
         </FormRow>
-
-        {/* <Flex
-          align="center"
-          justify="between"
-          css={{
-            p: '$3',
-            backgroundColor: '$gray2',
-            br: '$3',
-            mb: '$20',
-          }}
-        >
-          <Typography size="subheading">
-            Receive transactional emails and updates from Sigle
-          </Typography>
-          <Switch
-            name="receiveEmails"
-            checked={formik.values.receiveEmails}
-            onCheckedChange={() =>
-              formik.setFieldValue(
-                'receiveEmails',
-                !formik.values.receiveEmails
-              )
-            }
-          >
-            <SwitchThumb />
-          </Switch>
-        </Flex> */}
         {formik.dirty && (
           <UnsavedChanges
             saving={
