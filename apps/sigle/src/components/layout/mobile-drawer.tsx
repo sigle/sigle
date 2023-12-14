@@ -12,15 +12,15 @@ import {
   MixIcon,
 } from '@radix-ui/react-icons';
 import { Drawer } from 'vaul';
-import { userSession } from '../../../utils/blockstack';
-import { useAuth } from '../../auth/AuthContext';
+import { userSession } from '@/utils/blockstack';
+import { useAuth } from '@/modules/auth/AuthContext';
 
-interface MobileHeaderProps {
+interface MobileDrawerProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
 }
 
-export const MobileHeader = ({ open, onOpenChange }: MobileHeaderProps) => {
+export const MobileDrawer = ({ open, onOpenChange }: MobileDrawerProps) => {
   const { resolvedTheme, setTheme } = useTheme();
   const queryClient = useQueryClient();
   const { user } = useAuth();

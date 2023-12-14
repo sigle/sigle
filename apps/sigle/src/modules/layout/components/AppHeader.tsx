@@ -20,7 +20,7 @@ import {
 } from '../../../utils';
 import { createSubsetStory } from '../../editor/utils';
 import { Goals } from '../../../utils/fathom';
-import { MobileHeader } from './MobileHeader';
+import { MobileDrawer } from '@/components/layout/mobile-drawer';
 
 const Header = styled('header', Container, {
   display: 'flex',
@@ -103,7 +103,7 @@ export const AppHeader = () => {
           <HamburgerMenuIcon />
         </IconButton>
 
-        <MobileHeader
+        <MobileDrawer
           open={showMobileHeaderDialog}
           onOpenChange={handleCloseMobileHeader}
         />
