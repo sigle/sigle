@@ -12,12 +12,18 @@ const FullScreenLoadingContainer = styled('div', {
   },
 });
 
-export const FullScreenLoading = () => {
+interface FullScreenLoadingProps {
+  message?: string;
+}
+
+export const FullScreenLoading = ({
+  message = 'Loading ...',
+}: FullScreenLoadingProps) => {
   return (
     <FullScreenLoadingContainer>
       <img src="/static/img/logo.png" alt="Logo Sigle" />
       <Heading as="p" css={{ fontWeight: 600, mt: '$2' }}>
-        Loading ...
+        {message}
       </Heading>
     </FullScreenLoadingContainer>
   );
