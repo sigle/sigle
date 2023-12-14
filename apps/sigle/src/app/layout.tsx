@@ -1,7 +1,7 @@
-import { sigleConfig } from '@/config';
-import { cn } from '@/lib/cn';
 import { Metadata } from 'next';
 import { Open_Sans } from 'next/font/google';
+import { sigleConfig } from '@/config';
+import { cn } from '@/lib/cn';
 import { Providers } from './providers';
 
 const openSans = Open_Sans({
