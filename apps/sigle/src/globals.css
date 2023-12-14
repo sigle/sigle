@@ -12,4 +12,14 @@
 
 @layer utils {
   /* Custom application styles */
+  :root {
+    --container-5: 1240px;
+  }
+
+  /* As the radix container can't be extended easily we add one more breakpoint here */
+  .rt-ContainerInner {
+    :where(.rt-Container.rt-r-size-5) & {
+      max-width: var(--container-5);
+    }
+  }
 }

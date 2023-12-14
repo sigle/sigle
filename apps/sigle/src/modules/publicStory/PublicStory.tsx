@@ -16,7 +16,7 @@ import { TipTapEditor } from '../editor/TipTapEditor';
 import { styled } from '../../stitches.config';
 import { Box, Container, Flex, Typography } from '../../ui';
 import { getTextFromHtml } from '../editor/utils/getTextFromHtml';
-import { AppHeader } from '../layout/components/AppHeader';
+import { AppHeader } from '../../components/layout/header/header';
 import { generateAvatar } from '../../utils/boringAvatar';
 import { ProfileCard } from '../profileCard/ProfileCard';
 import { ShareButtons } from './ShareButtons';

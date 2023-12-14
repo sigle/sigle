@@ -13,8 +13,8 @@ import {
   Container,
 } from '../../../ui';
 import { useAuth } from '../../auth/AuthContext';
+import { AppHeader } from '../../../components/layout/header/header';
 import { AppFooter } from './AppFooter';
-import { AppHeader } from './AppHeader';
 
 export const DashboardContainer = styled(Container, {
   flex: 1,

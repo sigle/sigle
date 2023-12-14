@@ -10,13 +10,13 @@ import {
 } from '@radix-ui/react-icons';
 import { useTheme } from 'next-themes';
 import { useSubscriptionControllerGetUserMe } from '@/__generated__/sigle-api';
+import { useAuth } from '@/modules/auth/AuthContext';
 import { StyledChevron } from '../../../ui';
 import { generateAvatar } from '../../../utils/boringAvatar';
 import { useGetUserSettings } from '../../../hooks/appData';
 import { userSession } from '../../../utils/blockstack';
-import { useAuth } from '../../auth/AuthContext';
 
-export const HeaderDropdown = () => {
+export const HeaderUserDropdown = () => {
   const { data: settings } = useGetUserSettings();
   const { user, isLegacy } = useAuth();
   const queryClient = useQueryClient();
