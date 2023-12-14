@@ -92,6 +92,9 @@ export const Typography = styled('p', {
       orange: {
         color: '$orange11',
       },
+      green: {
+        color: '$green11',
+      },
     },
   },
   defaultVariants: {

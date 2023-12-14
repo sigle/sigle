@@ -1461,6 +1461,211 @@ export const useEmailVerificationControllerResendEmail = (
   });
 };
 
+export type DomainsControllerGetError = Fetcher.ErrorWrapper<undefined>;
+
+export type DomainsControllerGetVariables = SigleApiContext['fetcherOptions'];
+
+/**
+ * Return the domain of the current user.
+ */
+export const fetchDomainsControllerGet = (
+  variables: DomainsControllerGetVariables,
+  signal?: AbortSignal
+) =>
+  sigleApiFetch<
+    Schemas.DomainEntity,
+    DomainsControllerGetError,
+    undefined,
+    {},
+    {},
+    {}
+  >({ url: '/api/domains/me', method: 'get', ...variables, signal });
+
+/**
+ * Return the domain of the current user.
+ */
+export const useDomainsControllerGet = <TData = Schemas.DomainEntity>(
+  variables: DomainsControllerGetVariables,
+  options?: Omit<
+    reactQuery.UseQueryOptions<
+      Schemas.DomainEntity,
+      DomainsControllerGetError,
+      TData
+    >,
+    'queryKey' | 'queryFn' | 'initialData'
+  >
+) => {
+  const { fetcherOptions, queryOptions, queryKeyFn } =
+    useSigleApiContext(options);
+  return reactQuery.useQuery<
+    Schemas.DomainEntity,
+    DomainsControllerGetError,
+    TData
+  >({
+    queryKey: queryKeyFn({
+      path: '/api/domains/me',
+      operationId: 'domainsControllerGet',
+      variables,
+    }),
+    queryFn: ({ signal }) =>
+      fetchDomainsControllerGet({ ...fetcherOptions, ...variables }, signal),
+    ...options,
+    ...queryOptions,
+  });
+};
+
+export type DomainsControllerUpdateError = Fetcher.ErrorWrapper<undefined>;
+
+export type DomainsControllerUpdateVariables = {
+  body: Schemas.UpdateDomainDto;
+} & SigleApiContext['fetcherOptions'];
+
+/**
+ * Update the custom domain of the current user.
+ */
+export const fetchDomainsControllerUpdate = (
+  variables: DomainsControllerUpdateVariables,
+  signal?: AbortSignal
+) =>
+  sigleApiFetch<
+    boolean,
+    DomainsControllerUpdateError,
+    Schemas.UpdateDomainDto,
+    {},
+    {},
+    {}
+  >({ url: '/api/domains/update', method: 'post', ...variables, signal });
+
+/**
+ * Update the custom domain of the current user.
+ */
+export const useDomainsControllerUpdate = (
+  options?: Omit<
+    reactQuery.UseMutationOptions<
+      boolean,
+      DomainsControllerUpdateError,
+      DomainsControllerUpdateVariables
+    >,
+    'mutationFn'
+  >
+) => {
+  const { fetcherOptions } = useSigleApiContext();
+  return reactQuery.useMutation<
+    boolean,
+    DomainsControllerUpdateError,
+    DomainsControllerUpdateVariables
+  >({
+    mutationFn: (variables: DomainsControllerUpdateVariables) =>
+      fetchDomainsControllerUpdate({ ...fetcherOptions, ...variables }),
+    ...options,
+  });
+};
+
+export type DomainsControllerVerifyError = Fetcher.ErrorWrapper<undefined>;
+
+export type DomainsControllerVerifyVariables =
+  SigleApiContext['fetcherOptions'];
+
+/**
+ * Return the domain of the current user.
+ */
+export const fetchDomainsControllerVerify = (
+  variables: DomainsControllerVerifyVariables,
+  signal?: AbortSignal
+) =>
+  sigleApiFetch<
+    Schemas.DomainVerifyEntity,
+    DomainsControllerVerifyError,
+    undefined,
+    {},
+    {},
+    {}
+  >({ url: '/api/domains/verify', method: 'get', ...variables, signal });
+
+/**
+ * Return the domain of the current user.
+ */
+export const useDomainsControllerVerify = <TData = Schemas.DomainVerifyEntity>(
+  variables: DomainsControllerVerifyVariables,
+  options?: Omit<
+    reactQuery.UseQueryOptions<
+      Schemas.DomainVerifyEntity,
+      DomainsControllerVerifyError,
+      TData
+    >,
+    'queryKey' | 'queryFn' | 'initialData'
+  >
+) => {
+  const { fetcherOptions, queryOptions, queryKeyFn } =
+    useSigleApiContext(options);
+  return reactQuery.useQuery<
+    Schemas.DomainVerifyEntity,
+    DomainsControllerVerifyError,
+    TData
+  >({
+    queryKey: queryKeyFn({
+      path: '/api/domains/verify',
+      operationId: 'domainsControllerVerify',
+      variables,
+    }),
+    queryFn: ({ signal }) =>
+      fetchDomainsControllerVerify({ ...fetcherOptions, ...variables }, signal),
+    ...options,
+    ...queryOptions,
+  });
+};
+
+export type DomainsControllerGetSettingsError = Fetcher.ErrorWrapper<undefined>;
+
+export type DomainsControllerGetSettingsVariables =
+  SigleApiContext['fetcherOptions'];
+
+export const fetchDomainsControllerGetSettings = (
+  variables: DomainsControllerGetSettingsVariables,
+  signal?: AbortSignal
+) =>
+  sigleApiFetch<
+    Schemas.DomainEntity,
+    DomainsControllerGetSettingsError,
+    undefined,
+    {},
+    {},
+    {}
+  >({ url: '/api/domains/settings', method: 'get', ...variables, signal });
+
+export const useDomainsControllerGetSettings = <TData = Schemas.DomainEntity>(
+  variables: DomainsControllerGetSettingsVariables,
+  options?: Omit<
+    reactQuery.UseQueryOptions<
+      Schemas.DomainEntity,
+      DomainsControllerGetSettingsError,
+      TData
+    >,
+    'queryKey' | 'queryFn' | 'initialData'
+  >
+) => {
+  const { fetcherOptions, queryOptions, queryKeyFn } =
+    useSigleApiContext(options);
+  return reactQuery.useQuery<
+    Schemas.DomainEntity,
+    DomainsControllerGetSettingsError,
+    TData
+  >({
+    queryKey: queryKeyFn({
+      path: '/api/domains/settings',
+      operationId: 'domainsControllerGetSettings',
+      variables,
+    }),
+    queryFn: ({ signal }) =>
+      fetchDomainsControllerGetSettings(
+        { ...fetcherOptions, ...variables },
+        signal
+      ),
+    ...options,
+    ...queryOptions,
+  });
+};
+
 export type QueryOperation =
   | {
       path: '/health';
@@ -1526,4 +1731,19 @@ export type QueryOperation =
       path: '/api/newsletters/senders';
       operationId: 'newslettersControllerGetSenders';
       variables: NewslettersControllerGetSendersVariables;
+    }
+  | {
+      path: '/api/domains/me';
+      operationId: 'domainsControllerGet';
+      variables: DomainsControllerGetVariables;
+    }
+  | {
+      path: '/api/domains/verify';
+      operationId: 'domainsControllerVerify';
+      variables: DomainsControllerVerifyVariables;
+    }
+  | {
+      path: '/api/domains/settings';
+      operationId: 'domainsControllerGetSettings';
+      variables: DomainsControllerGetSettingsVariables;
     };

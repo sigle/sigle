@@ -88,6 +88,21 @@ export class EnvironmentVariables {
   @IsString()
   @IsOptional()
   POSTHOG_API_KEY: string;
+
+  /**
+   * Vercel
+   */
+  @IsString()
+  @IsOptional()
+  VERCEL_TEAM_ID: string;
+
+  @IsString()
+  @IsOptional()
+  VERCEL_PROJECT_ID: string;
+
+  @IsString()
+  @IsOptional()
+  VERCEL_BEARER_TOKEN: string;
 }
 
 export function validate(config: Record<string, unknown>) {

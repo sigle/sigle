@@ -262,17 +262,3 @@ export const sites: {
     },
   },
 };
-
-// Add localhost to sites for development
-if (process.env.NODE_ENV === 'development') {
-  sites['localhost:3000'] = sites['blog.sigle.io'];
-} else if (process.env.VERCEL_ENV === 'preview' && process.env.VERCEL_URL) {
-  // Preview deployments
-  sites[process.env.VERCEL_URL] = sites['blog.sigle.io'];
-  sites[
-    `custom-domain-git-${process.env.VERCEL_GIT_COMMIT_REF?.replace(
-      '/',
-      '-',
-    )}-${process.env.VERCEL_GIT_REPO_OWNER}.vercel.app`
-  ] = sites['blog.sigle.io'];
-}

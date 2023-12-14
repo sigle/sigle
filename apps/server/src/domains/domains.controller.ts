@@ -1,0 +1,87 @@
+import {
+  Controller,
+  Post,
+  Body,
+  UseGuards,
+  HttpCode,
+  Request,
+  Get,
+  Query,
+} from '@nestjs/common';
+import {
+  ApiBearerAuth,
+  ApiOkResponse,
+  ApiOperation,
+  ApiTags,
+} from '@nestjs/swagger';
+import { Throttle } from '@nestjs/throttler';
+import { DomainsService } from './domains.service';
+import { AuthGuard } from '../auth.guard';
+import { UpdateDomainDto, DomainSettingsDto } from './dto/updateDomain.dto';
+import { DomainEntity, DomainVerifyEntity } from './entities/domain.entity';
+
+@ApiTags('domains')
+@Controller()
+export class DomainsController {
+  constructor(private readonly domainsService: DomainsService) {}
+
+  @ApiOperation({
+    description: 'Return the domain of the current user.',
+  })
+  @ApiBearerAuth()
+  @ApiOkResponse({
+    type: DomainEntity,
+  })
+  @UseGuards(AuthGuard)
+  @Get('/api/domains/me')
+  get(@Request() req): Promise<DomainEntity> {
+    return this.domainsService.get({
+      stacksAddress: req.user.stacksAddress,
+    });
+  }
+
+  @ApiOperation({
+    description: 'Update the custom domain of the current user.',
+  })
+  @ApiBearerAuth()
+  @ApiOkResponse({ type: Boolean })
+  @Throttle({ default: { limit: 5, ttl: 60000 } })
+  @UseGuards(AuthGuard)
+  @Post('/api/domains/update')
+  @HttpCode(200)
+  update(
+    @Request() req,
+    @Body() updateDomainDto: UpdateDomainDto,
+  ): Promise<boolean> {
+    return this.domainsService.updateDomain({
+      stacksAddress: req.user.stacksAddress,
+      domain: updateDomainDto.domain,
+    });
+  }
+
+  @ApiOperation({
+    description: 'Return the domain of the current user.',
+  })
+  @ApiBearerAuth()
+  @ApiOkResponse({
+    type: DomainVerifyEntity,
+  })
+  @Throttle({ default: { limit: 10, ttl: 60000 } })
+  @UseGuards(AuthGuard)
+  @Get('/api/domains/verify')
+  verify(@Request() req): Promise<DomainVerifyEntity> {
+    return this.domainsService.verify({
+      stacksAddress: req.user.stacksAddress,
+    });
+  }
+
+  @ApiOkResponse({
+    type: DomainEntity,
+  })
+  @Get('/api/domains/settings')
+  getSettings(@Query() query: DomainSettingsDto): Promise<DomainEntity | null> {
+    return this.domainsService.getSettings({
+      domain: query.domain,
+    });
+  }
+}
