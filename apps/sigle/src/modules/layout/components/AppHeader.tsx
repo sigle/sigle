@@ -1,24 +1,17 @@
-import {
-  GitHubLogoIcon,
-  TwitterLogoIcon,
-  DiscordLogoIcon,
-  SunIcon,
-  HamburgerMenuIcon,
-} from '@radix-ui/react-icons';
+import { HamburgerMenuIcon } from '@radix-ui/react-icons';
 import { Button, IconButton, Flex } from '@radix-ui/themes';
-import Link from 'next/link';
-import Image from 'next/legacy/image';
 import { useSession } from 'next-auth/react';
-import { useTheme } from 'next-themes';
 import { useState } from 'react';
 import * as Fathom from 'fathom-client';
-import { toast } from 'sonner';
 import { useRouter } from 'next/router';
+import { toast } from 'sonner';
 import { useUserControllerGetUserMe } from '@/__generated__/sigle-api';
+import { HeaderLogo } from '@/components/layout/header/header-logo';
+import { HeaderLoggedOut } from '@/components/layout/header/header-logged-out';
+import { HeaderLoggedIn } from '@/components/layout/header/header-logged-in';
 import { styled } from '../../../stitches.config';
 import { Container } from '../../../ui';
 import { useAuth } from '../../auth/AuthContext';
-import { sigleConfig } from '../../../config';
 import {
   createNewEmptyStory,
   getStoriesFile,
@@ -28,7 +21,6 @@ import {
 import { createSubsetStory } from '../../editor/utils';
 import { Goals } from '../../../utils/fathom';
 import { MobileHeader } from './MobileHeader';
-import { HeaderDropdown } from './HeaderDropdown';
 
 const Header = styled('header', Container, {
   display: 'flex',
@@ -43,8 +35,7 @@ const Header = styled('header', Container, {
 });
 
 export const AppHeader = () => {
-  const { resolvedTheme, setTheme } = useTheme();
-  const { user, isLegacy } = useAuth();
+  const { user } = useAuth();
   const { status } = useSession();
   const [showMobileHeaderDialog, setShowMobileHeaderDialog] = useState(false);
   const [loadingCreate, setLoadingCreate] = useState(false);
@@ -85,21 +76,6 @@ export const AppHeader = () => {
     },
   );
 
-  const toggleTheme = () => {
-    resolvedTheme === 'dark' ? setTheme('light') : setTheme('dark');
-  };
-
-  let src;
-
-  switch (resolvedTheme) {
-    case 'dark':
-      src = '/static/img/logo_white.png';
-      break;
-    default:
-      src = '/static/img/logo.png';
-      break;
-  }
-
   const handleShowMobileHeader = () => setShowMobileHeaderDialog(true);
 
   const handleCloseMobileHeader = (open: boolean) =>
@@ -107,9 +83,7 @@ export const AppHeader = () => {
 
   return (
     <Header>
-      <Link href="/">
-        <Image width={93} height={34} objectFit="cover" src={src} alt="logo" />
-      </Link>
+      <HeaderLogo />
 
       <Flex className="flex md:hidden" gap="5" align="center">
         <Button
@@ -136,50 +110,7 @@ export const AppHeader = () => {
       </Flex>
 
       <Flex className="hidden md:flex" align="center" gap="7">
-        {user && !isLegacy ? (
-          <Button size="2" variant="ghost" color="gray" highContrast asChild>
-            <Link href="/feed">Feed</Link>
-          </Button>
-        ) : null}
-        <Button size="2" variant="ghost" color="gray" highContrast asChild>
-          <Link href="/explore">Explore</Link>
-        </Button>
-        {user ? (
-          <HeaderDropdown />
-        ) : (
-          <Flex gap="6" align="center">
-            <IconButton size="2" variant="ghost" color="gray" asChild>
-              <a href={sigleConfig.twitterUrl} target="_blank" rel="noreferrer">
-                <TwitterLogoIcon />
-              </a>
-            </IconButton>
-            <IconButton size="2" variant="ghost" color="gray" asChild>
-              <a href={sigleConfig.discordUrl} target="_blank" rel="noreferrer">
-                <DiscordLogoIcon />
-              </a>
-            </IconButton>
-            <IconButton size="2" variant="ghost" color="gray" asChild>
-              <a href={sigleConfig.githubUrl} target="_blank" rel="noreferrer">
-                <GitHubLogoIcon />
-              </a>
-            </IconButton>
-          </Flex>
-        )}
-        {!user && (
-          <>
-            <Button size="2" color="gray" highContrast asChild>
-              <Link href="/login">Enter App</Link>
-            </Button>
-            <IconButton
-              size="2"
-              variant="ghost"
-              color="gray"
-              onClick={toggleTheme}
-            >
-              <SunIcon />
-            </IconButton>
-          </>
-        )}
+        {!user ? <HeaderLoggedOut /> : <HeaderLoggedIn />}
       </Flex>
     </Header>
   );
