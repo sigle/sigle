@@ -92,7 +92,7 @@ export const MobileHeader = ({ open, onOpenChange }: MobileHeaderProps) => {
           onClick={() => onOpenChange(false)}
         />
         <Drawer.Content className="fixed inset-x-0 bottom-0 mt-24 flex h-full max-h-[96%] flex-col rounded-t-[10px]">
-          <div className="flex flex-1 flex-col gap-5 rounded-t-[10px] bg-gray-1 p-4 overflow-auto">
+          <div className="flex flex-1 flex-col gap-5 overflow-auto rounded-t-[10px] bg-gray-1 p-4">
             <div className="mx-auto mb-4 h-1.5 w-12 shrink-0 rounded-2 bg-gray-6" />
 
             {upperNavItems.map(({ name, path, icon: Icon }) => (
