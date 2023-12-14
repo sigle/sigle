@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useCallback, useMemo } from 'react';
-import { toast } from 'react-toastify';
+import { toast } from 'sonner';
 import type { UserData } from '@stacks/auth';
 import type { UserData as LegacyUserData } from '@stacks/legacy-auth';
 import { Connect, AuthOptions } from '@stacks/connect-react';

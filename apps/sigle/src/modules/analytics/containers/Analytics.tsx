@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import { toast } from 'react-toastify';
+import { toast } from 'sonner';
 import { useSubscriptionControllerGetUserMe } from '@/__generated__/sigle-api';
 import { getStoriesFile } from '../../../utils';
 import { DashboardLayout } from '../../layout';

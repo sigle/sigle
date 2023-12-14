@@ -1,7 +1,7 @@
 import { Editor } from '@tiptap/react';
 import { useEffect, useRef, useState } from 'react';
 import { useRouter } from 'next/router';
-import { toast } from 'react-toastify';
+import { toast } from 'sonner';
 import NProgress from 'nprogress';
 import * as Fathom from 'fathom-client';
 import posthog from 'posthog-js';

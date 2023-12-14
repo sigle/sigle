@@ -6,7 +6,7 @@ import { Open_Sans } from 'next/font/google';
 import * as Fathom from 'fathom-client';
 import PlausibleProvider from 'next-plausible';
 import { DefaultSeo } from 'next-seo';
-import { ToastContainer } from 'react-toastify';
+import { Toaster } from 'sonner';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { SessionProvider } from 'next-auth/react';
@@ -15,7 +15,6 @@ import 'nprogress/nprogress.css';
 // TODO add tippy.js only on the pages that are using it
 import 'tippy.js/dist/tippy.css';
 import 'tippy.js/themes/light-border.css';
-import 'react-toastify/dist/ReactToastify.css';
 import '../globals.css';
 import { ThemeProvider } from 'next-themes';
 import { Theme } from '@radix-ui/themes';
@@ -80,7 +79,6 @@ const GlobalStyle = globalCss({
   },
 
   ':root': {
-    '--toastify-color-success': '#4db6a1',
     '--font-open-sans': openSans.style.fontFamily,
   },
 
@@ -188,7 +186,7 @@ export default class MyApp extends App {
               </SessionProvider>
             </FeatureFlagsProvider>
           </QueryClientProvider>
-          <ToastContainer autoClose={3000} icon={false} theme="colored" />
+          <Toaster richColors closeButton position="bottom-right" />
         </PlausibleProvider>
       </React.Fragment>
     );

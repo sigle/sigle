@@ -2,7 +2,7 @@ import { useQuery } from '@tanstack/react-query';
 import { useRouter } from 'next/router';
 import React, { useState } from 'react';
 import * as Sentry from '@sentry/nextjs';
-import { toast } from 'react-toastify';
+import { toast } from 'sonner';
 import { useConnect } from '@stacks/connect-react';
 import { StacksMainnet } from '@stacks/network';
 import {
