@@ -25,10 +25,10 @@ import {
 import { useGetUserSettings } from '../../../hooks/appData';
 import { Goals } from '../../../utils/fathom';
 import { userSession } from '../../../utils/blockstack';
-import { createSubsetStory } from '../../editor/utils';
-import { useAuth } from '../../auth/AuthContext';
+import { createSubsetStory } from '../../../modules/editor/utils';
+import { useAuth } from '../../../modules/auth/AuthContext';
 
-export const HeaderDropdown = () => {
+export const HeaderUserDropdown = () => {
   const { data: settings } = useGetUserSettings();
   const router = useRouter();
   const { user, isLegacy } = useAuth();

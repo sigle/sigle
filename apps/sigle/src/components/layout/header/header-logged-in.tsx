@@ -1,6 +1,6 @@
 import { Button } from '@radix-ui/themes';
 import Link from 'next/link';
-import { HeaderDropdown } from '@/modules/layout/components/HeaderDropdown';
+import { HeaderUserDropdown } from './header-user-dropdown';
 
 export const HeaderLoggedIn = () => {
   return (
@@ -11,7 +11,7 @@ export const HeaderLoggedIn = () => {
       <Button size="2" variant="ghost" color="gray" highContrast asChild>
         <Link href="/explore">Explore</Link>
       </Button>
-      <HeaderDropdown />
+      <HeaderUserDropdown />
     </>
   );
 };
