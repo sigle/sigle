@@ -1,24 +1,16 @@
-import { styled } from '../../../stitches.config';
-import { Heading } from '../../../ui';
-
-const FullScreenLoadingContainer = styled('div', {
-  height: '100vh',
-  display: 'flex',
-  flexDirection: 'column',
-  justifyContent: 'center',
-  alignItems: 'center',
-  img: {
-    width: '250px',
-  },
-});
+import { Text } from '@radix-ui/themes';
+import Image from 'next/image';
 
 export const FullScreenLoading = () => {
   return (
-    <FullScreenLoadingContainer>
-      <img src="/static/img/logo.png" alt="Logo Sigle" />
-      <Heading as="p" css={{ fontWeight: 600, mt: '$2' }}>
-        Loading ...
-      </Heading>
-    </FullScreenLoadingContainer>
+    <div className="h-screen flex flex-col justify-center items-center">
+      <Image
+        src="/static/img/logo.png"
+        alt="Logo Sigle"
+        width={250}
+        height={92}
+      />
+      <Text weight="medium">Loading ...</Text>
+    </div>
   );
 };
