@@ -80,14 +80,19 @@ export const MobileHeader = ({ open, onOpenChange }: MobileHeaderProps) => {
       <Drawer.Portal
         // Should be rendered in the radix container to have access to the theme variables
         container={
-          document.querySelectorAll(
-            '[data-is-root-theme="true"]',
-          )[0] as HTMLElement
+          typeof window !== 'undefined'
+            ? (window.document.querySelectorAll(
+                '[data-is-root-theme="true"]',
+              )[0] as HTMLElement)
+            : undefined
         }
       >
-        <Drawer.Overlay className="fixed inset-0 bg-[rgba(0,0,0,0.4)]" />
+        <Drawer.Overlay
+          className="fixed inset-0 bg-[rgba(0,0,0,0.4)]"
+          onClick={() => onOpenChange(false)}
+        />
         <Drawer.Content className="fixed inset-x-0 bottom-0 mt-24 flex h-full max-h-[96%] flex-col rounded-t-[10px]">
-          <div className="flex flex-1 flex-col gap-4 rounded-t-[10px] bg-gray-1 p-4">
+          <div className="flex flex-1 flex-col gap-5 rounded-t-[10px] bg-gray-1 p-4 overflow-auto">
             <div className="mx-auto mb-4 h-1.5 w-12 shrink-0 rounded-2 bg-gray-6" />
 
             {upperNavItems.map(({ name, path, icon: Icon }) => (
@@ -95,14 +100,14 @@ export const MobileHeader = ({ open, onOpenChange }: MobileHeaderProps) => {
                 key={name}
                 variant="ghost"
                 color="gray"
-                size="4"
+                size="3"
                 radius="none"
                 asChild
               >
                 <Link
                   href={path}
                   as={path === '/[username]' ? `/${user?.username}` : undefined}
-                  className="flex w-full items-center justify-start gap-2"
+                  className="flex w-full items-center justify-start gap-3"
                 >
                   <Icon />
                   {name}
@@ -116,7 +121,7 @@ export const MobileHeader = ({ open, onOpenChange }: MobileHeaderProps) => {
                 className="w-full justify-between"
                 variant="ghost"
                 color="gray"
-                size="4"
+                size="3"
                 radius="none"
                 asChild
               >
@@ -127,7 +132,7 @@ export const MobileHeader = ({ open, onOpenChange }: MobileHeaderProps) => {
               className="w-full justify-between"
               variant="ghost"
               color="gray"
-              size="4"
+              size="3"
               radius="none"
               onClick={handleThemeToggle}
             >
@@ -143,7 +148,7 @@ export const MobileHeader = ({ open, onOpenChange }: MobileHeaderProps) => {
               className="w-full justify-start"
               variant="ghost"
               color="gray"
-              size="4"
+              size="3"
               radius="none"
               onClick={handleLogout}
             >
