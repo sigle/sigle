@@ -3,6 +3,8 @@ import { toast } from 'sonner';
 import { useRouter } from 'next/router';
 import * as Fathom from 'fathom-client';
 import { useAsyncEffect } from 'use-async-effect';
+import Image from 'next/image';
+import { Text } from '@radix-ui/themes';
 import { Goals } from '@/utils/fathom';
 import {
   createNewEmptyStory,
@@ -11,7 +13,6 @@ import {
   saveStoryFile,
 } from '@/utils';
 import { createSubsetStory } from '@/modules/editor/utils';
-import { FullScreenLoading } from '@/modules/layout/components/FullScreenLoading';
 import { Protected } from '../../modules/auth/Protected';
 
 const CreateStory = () => {
@@ -42,7 +43,19 @@ const CreateStory = () => {
     }
   }, []);
 
-  return <FullScreenLoading message="Creating new story ..." />;
+  return (
+    <div className="flex h-screen flex-col items-center justify-center gap-4">
+      <Image
+        width={250}
+        height={94}
+        src="/static/img/zero_data.gif"
+        alt="Creating story"
+      />
+      <Text size="3" weight="medium">
+        Creating story ...
+      </Text>
+    </div>
+  );
 };
 
 const EditorNewPage = () => {
