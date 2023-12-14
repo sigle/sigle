@@ -17,6 +17,7 @@ const openSans = Open_Sans({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL(sigleConfig.appUrl),
   title: 'Sigle | Where Web3 stories come to life',
   description:
     'Sigle is a decentralised open-source platform empowering Web3 creators. Write, share and lock your stories on the blockchain, forever.',

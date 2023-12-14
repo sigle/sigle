@@ -9,6 +9,7 @@ export const FullScreenLoading = () => {
         alt="Logo Sigle"
         width={250}
         height={92}
+        priority
       />
       <Text weight="medium">Loading ...</Text>
     </div>
