@@ -7,7 +7,7 @@ import { BlockPicker } from 'react-color';
 import { useQueryClient } from '@tanstack/react-query';
 import { SettingsFile } from '../../types';
 import { hexRegex } from '../../utils/regex';
-import { storage } from '../../utils/blockstack';
+import { storage } from '../../utils/stacks';
 import { getSettingsFile, isValidHttpUrl, saveSettingsFile } from '../../utils';
 import { resizeImage } from '../../utils/image';
 import { colors, getContrastingColor } from '../../utils/colors';

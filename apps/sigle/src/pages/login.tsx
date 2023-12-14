@@ -4,7 +4,6 @@ import * as Fathom from 'fathom-client';
 import posthog from 'posthog-js';
 import { StacksMainnet } from '@stacks/network';
 import { useConnect } from '@stacks/connect-react';
-import { useConnect as legacyUseConnect } from '@stacks/legacy-connect-react';
 import {
   EyeOpenIcon,
   FaceIcon,
@@ -71,16 +70,15 @@ type SigningState = 'inactive' | 'active' | 'complete';
 
 const Login = () => {
   const router = useRouter();
-  const { user, isLegacy, logout } = useAuth();
+  const { user, logout } = useAuth();
   const { status } = useSession();
   const { doOpenAuth, sign } = useConnect();
-  const { doOpenAuth: legacyDoOpenAuth } = legacyUseConnect();
   const [signingState, setSigningState] = useState<SigningState>('inactive');
 
   useEffect(() => {
     // We keep the user on the login page so he can sign the message
     // Legacy users don't have to sign the message
-    if (user && !isLegacy && status !== 'authenticated') {
+    if (user && status !== 'authenticated') {
       return;
     }
 
@@ -88,7 +86,7 @@ const Login = () => {
     if (user) {
       router.push(`/`);
     }
-  }, [router, user, isLegacy, status]);
+  }, [router, user, status]);
 
   const handleLogin = () => {
     Fathom.trackGoal(Goals.LOGIN, 0);
@@ -136,13 +134,6 @@ const Login = () => {
       },
       onCancel: () => setSigningState('active'),
     });
-  };
-
-  const handleLoginLegacy = () => {
-    Fathom.trackGoal(Goals.LOGIN, 0);
-    Fathom.trackGoal(Goals.LEGACY_LOGIN, 0);
-    posthog.capture('start-login-legacy');
-    legacyDoOpenAuth();
   };
 
   return (
@@ -249,16 +240,7 @@ const Login = () => {
           boxShadow: '0 1px 0 0 $colors$gray6',
         }}
       >
-        {!user ? (
-          <Button
-            variant="ghost"
-            color="gray"
-            size="lg"
-            onClick={handleLoginLegacy}
-          >
-            Legacy login
-          </Button>
-        ) : (
+        {user ? (
           <Button
             variant="ghost"
             color="gray"
@@ -272,7 +254,7 @@ const Login = () => {
             <ArrowLeftIcon width={15} height={15} />
             Change account
           </Button>
-        )}
+        ) : null}
         <Button
           color="orange"
           size="lg"

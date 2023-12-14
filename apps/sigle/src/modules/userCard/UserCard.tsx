@@ -94,7 +94,7 @@ interface UserCardProps {
 }
 
 export const UserCard = ({ address }: UserCardProps) => {
-  const { user, isLegacy } = useAuth();
+  const { user } = useAuth();
   const [showLoginPromptDialog, setShowLoginPromptDialog] = useState(false);
   const { mutate: followUser } = useUserFollow();
   const { mutate: unfollowUser } = useUserUnfollow();
@@ -189,7 +189,7 @@ export const UserCard = ({ address }: UserCardProps) => {
               {isLoadingUsername ? '...' : username}
             </UserCardTitle>
           </Link>
-          {user?.username !== username && !isLegacy && !following && (
+          {user?.username !== username && !following && (
             <Button
               size="sm"
               color="orange"
@@ -199,7 +199,7 @@ export const UserCard = ({ address }: UserCardProps) => {
               Follow
             </Button>
           )}
-          {user?.username !== username && !isLegacy && following && (
+          {user?.username !== username && following && (
             <Button
               size="sm"
               variant="subtle"

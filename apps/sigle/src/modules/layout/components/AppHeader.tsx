@@ -44,7 +44,7 @@ const Header = styled('header', Container, {
 
 export const AppHeader = () => {
   const { resolvedTheme, setTheme } = useTheme();
-  const { user, isLegacy } = useAuth();
+  const { user } = useAuth();
   const { status } = useSession();
   const [showMobileHeaderDialog, setShowMobileHeaderDialog] = useState(false);
   const [loadingCreate, setLoadingCreate] = useState(false);
@@ -136,7 +136,7 @@ export const AppHeader = () => {
       </Flex>
 
       <Flex className="hidden md:flex" align="center" gap="7">
-        {user && !isLegacy ? (
+        {user ? (
           <Button size="2" variant="ghost" color="gray" highContrast asChild>
             <Link href="/feed">Feed</Link>
           </Button>

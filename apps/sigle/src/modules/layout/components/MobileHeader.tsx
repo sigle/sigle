@@ -12,7 +12,7 @@ import {
   MixIcon,
 } from '@radix-ui/react-icons';
 import { Drawer } from 'vaul';
-import { userSession } from '../../../utils/blockstack';
+import { userSession } from '../../../utils/stacks';
 import { useAuth } from '../../auth/AuthContext';
 
 interface MobileHeaderProps {

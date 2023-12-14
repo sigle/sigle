@@ -168,7 +168,7 @@ interface PublicHomeProps {
 
 export const PublicHome = ({ file, settings, userInfo }: PublicHomeProps) => {
   const { resolvedTheme } = useTheme();
-  const { user, isLegacy } = useAuth();
+  const { user } = useAuth();
   const [showSubscribeDialog, setShowSubscribeDialog] = useState(false);
   const router = useRouter();
   const { data: userInfoByAddress } = useUserControllerGetUser({
@@ -313,10 +313,7 @@ export const PublicHome = ({ file, settings, userInfo }: PublicHomeProps) => {
                 alt={`${siteName} logo`}
               />
             </HeaderLogoContainer>
-            {user &&
-            user.username !== userInfo.username &&
-            !isLegacy &&
-            userFollowing ? (
+            {user && user.username !== userInfo.username && userFollowing ? (
               <Flex gap="3">
                 {!isFollowingUser ? (
                   <Button

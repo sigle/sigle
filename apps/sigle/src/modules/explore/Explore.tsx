@@ -8,9 +8,9 @@ import { UserCard } from '../userCard/UserCard';
 import { useAuth } from '../auth/AuthContext';
 
 export const ExploreUsers = () => {
-  const { user, isLegacy } = useAuth();
+  const { user } = useAuth();
   const { data: userFollowing, fetchStatus } = useGetGaiaUserFollowing({
-    enabled: !!user && !isLegacy,
+    enabled: !!user,
   });
 
   const {

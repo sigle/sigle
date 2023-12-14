@@ -24,23 +24,18 @@ import {
 } from '../../../utils';
 import { useGetUserSettings } from '../../../hooks/appData';
 import { Goals } from '../../../utils/fathom';
-import { userSession } from '../../../utils/blockstack';
+import { userSession } from '../../../utils/stacks';
 import { createSubsetStory } from '../../editor/utils';
 import { useAuth } from '../../auth/AuthContext';
 
 export const HeaderDropdown = () => {
   const { data: settings } = useGetUserSettings();
   const router = useRouter();
-  const { user, isLegacy } = useAuth();
+  const { user } = useAuth();
   const queryClient = useQueryClient();
   const [loadingCreate, setLoadingCreate] = useState(false);
   const { resolvedTheme, setTheme } = useTheme();
-  const { data: userSubscription } = useSubscriptionControllerGetUserMe(
-    {},
-    {
-      enabled: !isLegacy,
-    },
-  );
+  const { data: userSubscription } = useSubscriptionControllerGetUserMe({});
 
   const handleCreateNewPrivateStory = async () => {
     setLoadingCreate(true);
@@ -107,7 +102,7 @@ export const HeaderDropdown = () => {
     },
   ];
 
-  !userSubscription && !isLegacy && lowerNavItems.push(upgradeItem);
+  !userSubscription && lowerNavItems.push(upgradeItem);
 
   return (
     <DropdownMenu.Root>
