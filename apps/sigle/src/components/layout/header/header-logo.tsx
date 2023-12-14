@@ -17,7 +17,7 @@ export const HeaderLogo = () => {
 
   return (
     <Link href="/">
-      <Image width={93} height={34} objectFit="cover" src={src} alt="logo" />
+      <Image width={93} height={34} src={src} alt="logo" />
     </Link>
   );
 };
