@@ -1,7 +1,7 @@
 import { CheckCircledIcon } from '@radix-ui/react-icons';
 import { useFormik, FormikErrors } from 'formik';
 import { useEffect } from 'react';
-import { toast } from 'react-toastify';
+import { toast } from 'sonner';
 import {
   useSubscriptionControllerGetUserMe,
   useNewslettersControllerGet,

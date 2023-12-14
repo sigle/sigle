@@ -1,5 +1,5 @@
 import React, { useState, useCallback } from 'react';
-import { toast } from 'react-toastify';
+import { toast } from 'sonner';
 import { useFormik, FormikErrors } from 'formik';
 import { useDropzone } from 'react-dropzone';
 import { CameraIcon, UpdateIcon } from '@radix-ui/react-icons';

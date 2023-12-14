@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useRouter } from 'next/router';
-import { toast } from 'react-toastify';
+import { toast } from 'sonner';
 import NProgress from 'nprogress';
 import { fetchStoriesControllerDelete } from '@/__generated__/sigle-api';
 import { StoryItem as Component } from '../components/StoryItem';

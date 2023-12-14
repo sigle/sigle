@@ -1,7 +1,7 @@
 import { FormikErrors, useFormik } from 'formik';
 import { useEffect, useState } from 'react';
 // import { EnvelopePlusIcon } from '../../icons/EnvelopePlusIcon';
-import { toast } from 'react-toastify';
+import { toast } from 'sonner';
 import { useSubscribersControllerCreate } from '@/__generated__/sigle-api';
 import {
   Button,
@@ -63,7 +63,7 @@ export const NewsletterFrame = ({
         toast.success(
           `You successfully subscribed to ${siteName}'s newsletter`,
           {
-            autoClose: 7000,
+            duration: 7000,
           },
         );
         formik.setSubmitting(false);

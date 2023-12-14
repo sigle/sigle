@@ -1,5 +1,5 @@
 import React from 'react';
-import { toast } from 'react-toastify';
+import { toast } from 'sonner';
 import { useQuery } from '@tanstack/react-query';
 import * as Sentry from '@sentry/nextjs';
 import { useAuth } from '../auth/AuthContext';

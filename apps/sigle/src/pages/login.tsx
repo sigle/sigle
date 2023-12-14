@@ -13,7 +13,7 @@ import {
   ArrowLeftIcon,
   CheckIcon,
 } from '@radix-ui/react-icons';
-import { toast } from 'react-toastify';
+import { toast } from 'sonner';
 import { useRouter } from 'next/router';
 import { Goals } from '../utils/fathom';
 import { Box, Button, Flex, Typography } from '../ui';

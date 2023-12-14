@@ -9,7 +9,7 @@ import {
 } from '@radix-ui/react-icons';
 import { useFormik, FormikErrors } from 'formik';
 import { useRouter } from 'next/router';
-import { toast } from 'react-toastify';
+import { toast } from 'sonner';
 import { useDropzone } from 'react-dropzone';
 import format from 'date-fns/format';
 import isValid from 'date-fns/isValid';

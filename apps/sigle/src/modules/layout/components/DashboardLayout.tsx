@@ -3,7 +3,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { VariantProps } from '@stitches/react';
 import * as Fathom from 'fathom-client';
-import { toast } from 'react-toastify';
+import { toast } from 'sonner';
 import {
   createNewEmptyStory,
   getStoriesFile,

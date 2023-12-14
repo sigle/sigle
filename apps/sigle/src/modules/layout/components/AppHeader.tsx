@@ -12,7 +12,7 @@ import { useSession } from 'next-auth/react';
 import { useTheme } from 'next-themes';
 import { useState } from 'react';
 import * as Fathom from 'fathom-client';
-import { toast } from 'react-toastify';
+import { toast } from 'sonner';
 import { useRouter } from 'next/router';
 import { useUserControllerGetUserMe } from '@/__generated__/sigle-api';
 import { styled } from '../../../stitches.config';

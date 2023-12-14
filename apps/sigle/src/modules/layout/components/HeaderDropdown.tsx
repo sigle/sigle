@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
-import { toast } from 'react-toastify';
+import { toast } from 'sonner';
 import { useQueryClient } from '@tanstack/react-query';
 import * as Fathom from 'fathom-client';
 import { signOut } from 'next-auth/react';

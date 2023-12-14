@@ -598,15 +598,15 @@ importers:
       react-dropzone:
         specifier: 11.4.2
         version: 11.4.2(react@18.2.0)
-      react-toastify:
-        specifier: 8.2.0
-        version: 8.2.0(react-dom@18.2.0)(react@18.2.0)
       reading-time:
         specifier: 1.5.0
         version: 1.5.0
       sanitize-html:
         specifier: 2.7.0
         version: 2.7.0
+      sonner:
+        specifier: 1.2.4
+        version: 1.2.4(react-dom@18.2.0)(react@18.2.0)
       tailwind-merge:
         specifier: 2.1.0
         version: 2.1.0
@@ -19763,17 +19763,6 @@ packages:
       tslib: 2.6.2
     dev: false
 
-  /react-toastify@8.2.0(react-dom@18.2.0)(react@18.2.0):
-    resolution: {integrity: sha512-Pg2Ju7NngAamarFvLwqrFomJ57u/Ay6i6zfLurt/qPynWkAkOthu6vxfqYpJCyNhHRhR4hu7+bySSeWWJu6PAg==}
-    peerDependencies:
-      react: '>=16'
-      react-dom: '>=16'
-    dependencies:
-      clsx: 1.2.1
-      react: 18.2.0
-      react-dom: 18.2.0(react@18.2.0)
-    dev: false
-
   /react-transition-state@1.1.5(react-dom@18.2.0)(react@18.2.0):
     resolution: {integrity: sha512-ITY2mZqc2dWG2eitJkYNdcSFW8aKeOlkL2A/vowRrLL8GH3J6Re/SpD/BLvQzrVOTqjsP0b5S9N10vgNNzwMUQ==}
     peerDependencies:
@@ -20722,6 +20711,16 @@ packages:
     resolution: {integrity: sha512-IudtNvSqA/ObjN97tfgNmOKyDOs4dNcg4cUUsHDebqsgb8wGBBwb31LIgShNO8fye0dFI52X1+tFoKKI6Rq1Gg==}
     dependencies:
       atomic-sleep: 1.0.0
+    dev: false
+
+  /sonner@1.2.4(react-dom@18.2.0)(react@18.2.0):
+    resolution: {integrity: sha512-WGLP2QQnomgewaCTsK7YWiLcy5n1Yj83vsL5cP4zHMmpSkmFsCYTpQKhlXJrPE5kzjwbqCkCFXcOpbKc4vaUaA==}
+    peerDependencies:
+      react: ^18.0.0
+      react-dom: ^18.0.0
+    dependencies:
+      react: 18.2.0
+      react-dom: 18.2.0(react@18.2.0)
     dev: false
 
   /sort-keys-length@1.0.1:

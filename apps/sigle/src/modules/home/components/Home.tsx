@@ -3,7 +3,7 @@ import Image from 'next/legacy/image';
 import { useInView } from 'react-cool-inview';
 import * as Fathom from 'fathom-client';
 import { useRouter } from 'next/router';
-import { toast } from 'react-toastify';
+import { toast } from 'sonner';
 import { StoryItem } from '../';
 import { SubsetStory, BlockstackUser } from '../../../types';
 import { DashboardLayout } from '../../layout/components/DashboardLayout';

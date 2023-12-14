@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { toast } from 'react-toastify';
+import { toast } from 'sonner';
 import {
   useSubscriptionControllerGetUserMe,
   useSubscriptionControllerSyncSubscriptionWithNft,
