@@ -63,7 +63,7 @@ export const NewsletterFrame = ({
         toast.success(
           `You successfully subscribed to ${siteName}'s newsletter`,
           {
-            autoClose: 7000,
+            duration: 7000,
           },
         );
         formik.setSubmitting(false);
