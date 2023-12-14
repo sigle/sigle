@@ -135,13 +135,16 @@ export const MobileHeader = ({ open, onOpenChange }: MobileHeaderProps) => {
               size="3"
               radius="none"
               onClick={handleThemeToggle}
+              asChild
             >
-              Dark mode
-              <Switch
-                color="orange"
-                checked={resolvedTheme === 'dark'}
-                radius="medium"
-              />
+              <div>
+                Dark mode
+                <Switch
+                  color="orange"
+                  checked={resolvedTheme === 'dark'}
+                  radius="medium"
+                />
+              </div>
             </Button>
             <Separator orientation="horizontal" className="w-full" />
             <Button
