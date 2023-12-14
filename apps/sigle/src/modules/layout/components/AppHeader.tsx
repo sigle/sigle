@@ -11,22 +11,11 @@ import Image from 'next/legacy/image';
 import { useSession } from 'next-auth/react';
 import { useTheme } from 'next-themes';
 import { useState } from 'react';
-import * as Fathom from 'fathom-client';
-import { toast } from 'sonner';
-import { useRouter } from 'next/router';
 import { useUserControllerGetUserMe } from '@/__generated__/sigle-api';
 import { styled } from '../../../stitches.config';
 import { Container } from '../../../ui';
 import { useAuth } from '../../auth/AuthContext';
 import { sigleConfig } from '../../../config';
-import {
-  createNewEmptyStory,
-  getStoriesFile,
-  saveStoriesFile,
-  saveStoryFile,
-} from '../../../utils';
-import { createSubsetStory } from '../../editor/utils';
-import { Goals } from '../../../utils/fathom';
 import { MobileHeader } from './MobileHeader';
 import { HeaderDropdown } from './HeaderDropdown';
 
@@ -47,30 +36,6 @@ export const AppHeader = () => {
   const { user, isLegacy } = useAuth();
   const { status } = useSession();
   const [showMobileHeaderDialog, setShowMobileHeaderDialog] = useState(false);
-  const [loadingCreate, setLoadingCreate] = useState(false);
-  const router = useRouter();
-
-  const handleCreateNewPrivateStory = async () => {
-    setLoadingCreate(true);
-    try {
-      const storiesFile = await getStoriesFile();
-      const story = createNewEmptyStory();
-
-      storiesFile.stories.unshift(
-        createSubsetStory(story, { plainContent: '' }),
-      );
-
-      await saveStoriesFile(storiesFile);
-      await saveStoryFile(story);
-
-      Fathom.trackGoal(Goals.CREATE_NEW_STORY, 0);
-      router.push('/stories/[storyId]', `/stories/${story.id}`);
-    } catch (error) {
-      console.error(error);
-      toast.error(error.message);
-      setLoadingCreate(false);
-    }
-  };
 
   /**
    * This query is used to register the user in the DB. As the header is part of all the
@@ -112,13 +77,8 @@ export const AppHeader = () => {
       </Link>
 
       <Flex className="flex md:hidden" gap="5" align="center">
-        <Button
-          color="gray"
-          highContrast
-          disabled={loadingCreate}
-          onClick={handleCreateNewPrivateStory}
-        >
-          {!loadingCreate ? 'Write' : 'Creating...'}
+        <Button color="gray" highContrast asChild>
+          <Link href="/stories/new">Write</Link>
         </Button>
         <IconButton
           size="3"

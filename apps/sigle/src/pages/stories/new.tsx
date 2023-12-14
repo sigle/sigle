@@ -1,7 +1,8 @@
 import React from 'react';
 import { toast } from 'sonner';
-import { FullScreenLoading } from '@/modules/layout/components/FullScreenLoading';
-import { Protected } from '../../modules/auth/Protected';
+import { useRouter } from 'next/router';
+import * as Fathom from 'fathom-client';
+import { useAsyncEffect } from 'use-async-effect';
 import { Goals } from '@/utils/fathom';
 import {
   createNewEmptyStory,
@@ -10,9 +11,8 @@ import {
   saveStoryFile,
 } from '@/utils';
 import { createSubsetStory } from '@/modules/editor/utils';
-import { useRouter } from 'next/router';
-import * as Fathom from 'fathom-client';
-import { useAsyncEffect } from 'use-async-effect';
+import { FullScreenLoading } from '@/modules/layout/components/FullScreenLoading';
+import { Protected } from '../../modules/auth/Protected';
 
 const CreateStory = () => {
   const router = useRouter();
