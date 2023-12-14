@@ -3,6 +3,10 @@ import { Open_Sans } from 'next/font/google';
 import { sigleConfig } from '@/config';
 import { cn } from '@/lib/cn';
 import { Providers } from './providers';
+/**
+ * Styles
+ */
+import '../globals.css';
 
 const openSans = Open_Sans({
   subsets: ['latin', 'cyrillic'],
