@@ -316,9 +316,6 @@ importers:
       '@radix-ui/react-dialog':
         specifier: 1.0.5
         version: 1.0.5(@types/react-dom@18.0.10)(@types/react@18.0.26)(react-dom@18.2.0)(react@18.2.0)
-      '@radix-ui/react-dropdown-menu':
-        specifier: 2.0.6
-        version: 2.0.6(@types/react-dom@18.0.10)(@types/react@18.0.26)(react-dom@18.2.0)(react@18.2.0)
       '@radix-ui/react-hover-card':
         specifier: 1.0.7
         version: 1.0.7(@types/react-dom@18.0.10)(@types/react@18.0.26)(react-dom@18.2.0)(react@18.2.0)
@@ -331,9 +328,6 @@ importers:
       '@radix-ui/react-scroll-area':
         specifier: 1.0.5
         version: 1.0.5(@types/react-dom@18.0.10)(@types/react@18.0.26)(react-dom@18.2.0)(react@18.2.0)
-      '@radix-ui/react-switch':
-        specifier: 1.0.3
-        version: 1.0.3(@types/react-dom@18.0.10)(@types/react@18.0.26)(react-dom@18.2.0)(react@18.2.0)
       '@radix-ui/react-tabs':
         specifier: 1.0.4
         version: 1.0.4(@types/react-dom@18.0.10)(@types/react@18.0.26)(react-dom@18.2.0)(react@18.2.0)
@@ -619,6 +613,9 @@ importers:
       valid-url:
         specifier: 1.0.9
         version: 1.0.9
+      vaul:
+        specifier: 0.7.9
+        version: 0.7.9(@types/react-dom@18.0.10)(@types/react@18.0.26)(react-dom@18.2.0)(react@18.2.0)
       zone-file:
         specifier: 1.0.0
         version: 1.0.0
@@ -22350,6 +22347,20 @@ packages:
     resolution: {integrity: sha512-4EVb+w4rx+YfVM32HQX42AbbT7/1f5zwAYhIujKXKk8NQK+JfRVl3pqT3hjNn/L+RstigmGGKVwHA/P0wgITZw==}
     dependencies:
       safe-buffer: 5.2.1
+
+  /vaul@0.7.9(@types/react-dom@18.0.10)(@types/react@18.0.26)(react-dom@18.2.0)(react@18.2.0):
+    resolution: {integrity: sha512-RrcnGOHOq/cEU3YpyyZrnjh0H79xMpF3IrHZs9ichvHlpKjLDc4Vwjn4VkuGzeUGrmQ3wamfm/cpdKWpvBIgQw==}
+    peerDependencies:
+      react: ^16.8 || ^17.0 || ^18.0
+      react-dom: ^16.8 || ^17.0 || ^18.0
+    dependencies:
+      '@radix-ui/react-dialog': 1.0.5(@types/react-dom@18.0.10)(@types/react@18.0.26)(react-dom@18.2.0)(react@18.2.0)
+      react: 18.2.0
+      react-dom: 18.2.0(react@18.2.0)
+    transitivePeerDependencies:
+      - '@types/react'
+      - '@types/react-dom'
+    dev: false
 
   /verror@1.10.0:
     resolution: {integrity: sha512-ZZKSmDAEFOijERBLkmYfJ+vmk3w+7hOLYDNkRCuRuMJGEmqYNCNLyBBFwWKVMhfwaEF3WOd0Zlw86U/WC/+nYw==}
