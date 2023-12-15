@@ -11,22 +11,17 @@ import {
 import { useTheme } from 'next-themes';
 import { useSubscriptionControllerGetUserMe } from '@/__generated__/sigle-api';
 import { useAuth } from '@/modules/auth/AuthContext';
+import { userSession } from '@/utils/stacks';
 import { StyledChevron } from '../../../ui';
 import { generateAvatar } from '../../../utils/boringAvatar';
 import { useGetUserSettings } from '../../../hooks/appData';
-import { userSession } from '../../../utils/blockstack';
 
 export const HeaderUserDropdown = () => {
   const { data: settings } = useGetUserSettings();
-  const { user, isLegacy } = useAuth();
+  const { user } = useAuth();
   const queryClient = useQueryClient();
   const { resolvedTheme, setTheme } = useTheme();
-  const { data: userSubscription } = useSubscriptionControllerGetUserMe(
-    {},
-    {
-      enabled: !isLegacy,
-    },
-  );
+  const { data: userSubscription } = useSubscriptionControllerGetUserMe({});
 
   const handleLogout = () => {
     queryClient.removeQueries();
@@ -71,7 +66,7 @@ export const HeaderUserDropdown = () => {
     },
   ];
 
-  !userSubscription && !isLegacy && lowerNavItems.push(upgradeItem);
+  !userSubscription && lowerNavItems.push(upgradeItem);
 
   return (
     <DropdownMenu.Root>

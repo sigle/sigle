@@ -18,7 +18,7 @@ import { migrationStory } from '../../utils/migrations/story';
 import { DashboardLayout } from '../../modules/layout';
 import { Button, Flex, Typography } from '../../ui';
 import { useAuth } from '../../modules/auth/AuthContext';
-import { appConfig } from '../../utils/blockstack';
+import { appConfig } from '../../utils/stacks';
 import { styled } from '../../stitches.config';
 // import { NftLockedView } from '../../modules/analytics/NftLockedView';
 
