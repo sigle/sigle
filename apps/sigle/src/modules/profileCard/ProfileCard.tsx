@@ -58,7 +58,7 @@ export const ProfileCard = ({
   settings,
   userInfo,
 }: ProfileCardProps) => {
-  const { user, isLegacy } = useAuth();
+  const { user } = useAuth();
   const { resolvedTheme } = useTheme();
   const [isOpen, setIsOpen] = useState(false);
   const [showLoginPromptDialog, setShowLoginPromptDialog] = useState(false);
@@ -135,7 +135,7 @@ export const ProfileCard = ({
               }
             />
           </ProfileImageContainer>
-          {user?.username !== userInfo.username && !isLegacy && (
+          {user?.username !== userInfo.username && (
             <Flex
               css={{
                 alignSelf: 'start',

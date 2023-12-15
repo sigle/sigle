@@ -1,5 +1,5 @@
 import { resizeImage } from '../../../utils/image';
-import { storage } from '../../../utils/blockstack';
+import { storage } from '../../../utils/stacks';
 
 export const resizeAndUploadImage = async (
   image: File,

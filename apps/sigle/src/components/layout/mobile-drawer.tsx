@@ -12,8 +12,8 @@ import {
   MixIcon,
 } from '@radix-ui/react-icons';
 import { Drawer } from 'vaul';
-import { userSession } from '@/utils/blockstack';
 import { useAuth } from '@/modules/auth/AuthContext';
+import { userSession } from '@/utils/stacks';
 
 interface MobileDrawerProps {
   open: boolean;

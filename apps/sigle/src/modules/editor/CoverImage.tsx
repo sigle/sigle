@@ -5,7 +5,7 @@ import { styled } from '../../stitches.config';
 import { Box, Button, IconButton } from '../../ui';
 import { resizeImage } from '../../utils/image';
 import { Story } from '../../types';
-import { storage } from '../../utils/blockstack';
+import { storage } from '../../utils/stacks';
 import { ErrorMessage } from '../../ui/ErrorMessage';
 
 const StyledImage = styled('img', {
