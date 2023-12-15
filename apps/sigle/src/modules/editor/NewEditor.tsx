@@ -1,7 +1,7 @@
 import { Editor } from '@tiptap/react';
 import { useEffect, useRef, useState } from 'react';
 import { useRouter } from 'next/router';
-import { toast } from 'react-toastify';
+import { toast } from 'sonner';
 import NProgress from 'nprogress';
 import * as Fathom from 'fathom-client';
 import posthog from 'posthog-js';
@@ -14,7 +14,6 @@ import { Story } from '../../types';
 import { Container } from '../../ui';
 import { publishStory, unPublishStory } from '../../utils';
 import { Goals } from '../../utils/fathom';
-import { useAuth } from '../auth/AuthContext';
 import { EditorHeader } from './EditorHeader';
 import { PublishDialog } from './PublishDialog';
 import { TipTapEditor } from './TipTapEditor';
@@ -49,7 +48,6 @@ interface NewEditorProps {
 
 export const NewEditor = ({ story }: NewEditorProps) => {
   const router = useRouter();
-  const { isLegacy } = useAuth();
   const editorRef = useRef<{ getEditor: () => Editor | null }>(null);
   const [loadingSave, setLoadingSave] = useState(false);
   const [newStory, setNewStory] = useState(story);
@@ -132,11 +130,9 @@ export const NewEditor = ({ story }: NewEditorProps) => {
       setShowPublishedDialog(true);
       Fathom.trackGoal(Goals.PUBLISH, 0);
       posthog.capture('publish-story', { id: story.id });
-      if (!isLegacy) {
-        await fetchStoriesControllerPublish({
-          body: { id: story.id, send: options?.send ?? false },
-        });
-      }
+      await fetchStoriesControllerPublish({
+        body: { id: story.id, send: options?.send ?? false },
+      });
     } catch (error) {
       console.error(error.message);
       toast.error(error.message);
@@ -177,11 +173,9 @@ export const NewEditor = ({ story }: NewEditorProps) => {
       setNewStory({ ...newStory, type: 'private' });
       toast.success('Story unpublished');
       posthog.capture('unpublish-story', { id: story.id });
-      if (!isLegacy) {
-        await fetchStoriesControllerUnpublish({
-          body: { id: story.id },
-        });
-      }
+      await fetchStoriesControllerUnpublish({
+        body: { id: story.id },
+      });
     } catch (error) {
       console.error(error);
       toast.error(error.message);

@@ -1,5 +1,5 @@
 import React, { useState, useCallback } from 'react';
-import { toast } from 'react-toastify';
+import { toast } from 'sonner';
 import { useFormik, FormikErrors } from 'formik';
 import { useDropzone } from 'react-dropzone';
 import { CameraIcon, UpdateIcon } from '@radix-ui/react-icons';
@@ -7,7 +7,7 @@ import { BlockPicker } from 'react-color';
 import { useQueryClient } from '@tanstack/react-query';
 import { SettingsFile } from '../../types';
 import { hexRegex } from '../../utils/regex';
-import { storage } from '../../utils/blockstack';
+import { storage } from '../../utils/stacks';
 import { getSettingsFile, isValidHttpUrl, saveSettingsFile } from '../../utils';
 import { resizeImage } from '../../utils/image';
 import { colors, getContrastingColor } from '../../utils/colors';

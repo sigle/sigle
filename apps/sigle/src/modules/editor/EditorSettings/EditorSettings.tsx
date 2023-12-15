@@ -9,7 +9,7 @@ import {
 } from '@radix-ui/react-icons';
 import { useFormik, FormikErrors } from 'formik';
 import { useRouter } from 'next/router';
-import { toast } from 'react-toastify';
+import { toast } from 'sonner';
 import { useDropzone } from 'react-dropzone';
 import format from 'date-fns/format';
 import isValid from 'date-fns/isValid';
@@ -31,7 +31,7 @@ import {
 } from '../../../ui';
 import { keyframes, styled } from '../../../stitches.config';
 import { resizeImage } from '../../../utils/image';
-import { storage } from '../../../utils/blockstack';
+import { storage } from '../../../utils/stacks';
 import {
   deleteStoryFile,
   getStoriesFile,
@@ -46,7 +46,6 @@ import {
   FormRow,
   FormTextarea,
 } from '../../../ui/Form';
-import { useAuth } from '../../auth/AuthContext';
 
 // TODO - migrate hideCoverImage from old articles
 // TODO - use twitter card preview component in settings?
@@ -186,7 +185,6 @@ export const EditorSettings = ({
   onSave,
 }: EditorSettingsProps) => {
   const router = useRouter();
-  const { isLegacy } = useAuth();
   const [loadingUploadMetaImage, setLoadingUploadMetaImage] = useState(false);
   const [loadingDelete, setLoadingDelete] = useState(false);
 
@@ -296,11 +294,9 @@ export const EditorSettings = ({
       file.stories.splice(index, 1);
       await saveStoriesFile(file);
       await deleteStoryFile(story);
-      if (!isLegacy) {
-        await fetchStoriesControllerDelete({
-          body: { id: story.id },
-        });
-      }
+      await fetchStoriesControllerDelete({
+        body: { id: story.id },
+      });
       router.push(`/`);
     } catch (error) {
       console.error(error);

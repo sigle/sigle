@@ -1,17 +1,15 @@
 import Link from 'next/link';
-import { toast } from 'react-toastify';
+import { toast } from 'sonner';
 import {
   useSubscriptionControllerGetUserMe,
   useSubscriptionControllerSyncSubscriptionWithNft,
 } from '@/__generated__/sigle-api';
 import { Box, Button, Flex, Typography, LoadingSpinner } from '../../../ui';
 import { SettingsLayout } from '../SettingsLayout';
-import { useAuth } from '../../auth/AuthContext';
 import { sigleConfig } from '../../../config';
 import { ComparePlans } from './ComparePlans';
 
 export const CurrentPlan = () => {
-  const { user, isLegacy } = useAuth();
   const {
     isLoading,
     data: userSubscription,
@@ -56,31 +54,13 @@ export const CurrentPlan = () => {
     syncWithNftSubscription({});
   };
 
-  if (isLegacy) {
-    return (
-      <SettingsLayout>
-        <Flex direction="column" css={{ mt: '$5' }} gap="3" align="center">
-          <Typography size="subheading">
-            This feature is available for Leather and Xverse wallet accounts
-            only
-          </Typography>
-          <Link href={`/${user?.username}`} passHref legacyBehavior>
-            <Button size="sm" variant="subtle" as="a">
-              Back to profile
-            </Button>
-          </Link>
-        </Flex>
-      </SettingsLayout>
-    );
-  }
-
   return (
     <SettingsLayout layout="wide">
       <Flex
         css={{
-          pb: isLegacy ? '$5' : 0,
-          mb: isLegacy ? '$2' : 0,
-          borderBottom: isLegacy ? '1px solid $colors$gray6' : 'none',
+          pb: 0,
+          mb: 0,
+          borderBottom: 'none',
         }}
         align="center"
         gap="2"

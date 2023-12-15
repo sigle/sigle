@@ -1,6 +1,6 @@
 import { useRouter } from 'next/router';
 import { useQuery } from '@tanstack/react-query';
-import { toast } from 'react-toastify';
+import { toast } from 'sonner';
 import { SubsetStory } from '../../../types';
 import { getStoriesFile } from '../../../utils';
 import { StoryItemAnalytics as Component } from '../components/StoryItemAnalytics';

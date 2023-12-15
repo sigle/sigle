@@ -92,7 +92,7 @@ const LoadingSpinner = styled('div', {
 
 const RegisterUsername = () => {
   const router = useRouter();
-  const { user, loggingIn, isLegacy, setUsername } = useAuth();
+  const { user, loggingIn, setUsername } = useAuth();
   const [formState, setFormState] = useState<FormState>({
     username: '',
     loading: false,
@@ -230,17 +230,6 @@ const RegisterUsername = () => {
 
     router.push(`/`);
   };
-
-  if (isLegacy) {
-    return (
-      <LoginLayout>
-        <Typography>
-          Looks like there was an issue with your account (Blockstack connect)
-          and no username were found.
-        </Typography>
-      </LoginLayout>
-    );
-  }
 
   return (
     <LoginLayout centered>

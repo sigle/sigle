@@ -1,4 +1,4 @@
-import { toast } from 'react-toastify';
+import { toast } from 'sonner';
 import { useRouter } from 'next/router';
 import { useQuery } from '@tanstack/react-query';
 import * as Sentry from '@sentry/nextjs';

@@ -1,6 +1,7 @@
 import React from 'react';
 import Link from 'next/link';
 import { StarFilledIcon } from '@radix-ui/react-icons';
+import { DropdownMenu, IconButton } from '@radix-ui/themes';
 import { DotsHorizontalIcon } from '@radix-ui/react-icons';
 import format from 'date-fns/format';
 import {
@@ -10,15 +11,9 @@ import {
   DialogTitle,
   DialogDescription,
   DialogClose,
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuTrigger,
-  DropdownMenuItem,
   Flex,
   Heading,
   Text,
-  DropdownMenuSeparator,
-  IconButton,
   Box,
 } from '../../../ui';
 import { SubsetStory, BlockstackUser } from '../../../types';
@@ -249,54 +244,52 @@ export const StoryItem = ({
                   </Box>
                 )}
                 {user && (
-                  <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                      <IconButton
-                        size="sm"
-                        css={{ alignSelf: 'start', p: '$1' }}
-                        aria-label="Story settings"
-                      >
-                        <DotsHorizontalIcon width={22} height={22} />
+                  <DropdownMenu.Root>
+                    <DropdownMenu.Trigger>
+                      <IconButton variant="ghost" color="gray" size="1">
+                        <DotsHorizontalIcon width={18} height={18} />
                       </IconButton>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent>
+                    </DropdownMenu.Trigger>
+                    <DropdownMenu.Content
+                      align="end"
+                      color="gray"
+                      variant="soft"
+                    >
                       {type === 'public' && (
-                        <DropdownMenuItem
-                          as="a"
-                          href={`/${user.username}/${story.id}`}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                        >
-                          View my story
-                        </DropdownMenuItem>
+                        <DropdownMenu.Item asChild>
+                          <a
+                            href={`/${user.username}/${story.id}`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                          >
+                            View my story
+                          </a>
+                        </DropdownMenu.Item>
                       )}
-                      <DropdownMenuItem onSelect={onEdit}>
+                      <DropdownMenu.Item onClick={onEdit}>
                         Edit
-                      </DropdownMenuItem>
+                      </DropdownMenu.Item>
                       {type === 'public' && (
-                        <DropdownMenuItem
-                          as={Link}
-                          href={`/inscribe/${story.id}`}
-                        >
-                          Inscribe
-                        </DropdownMenuItem>
+                        <DropdownMenu.Item asChild>
+                          <Link href={`/inscribe/${story.id}`}>Inscribe</Link>
+                        </DropdownMenu.Item>
                       )}
                       {!story.featured && type === 'public' && (
-                        <DropdownMenuItem onSelect={onFeature}>
+                        <DropdownMenu.Item onClick={onFeature}>
                           Feature this story
-                        </DropdownMenuItem>
+                        </DropdownMenu.Item>
                       )}
                       {story.featured && type === 'public' && (
-                        <DropdownMenuItem onSelect={onUnFeature}>
+                        <DropdownMenu.Item onClick={onUnFeature}>
                           Un-feature this story
-                        </DropdownMenuItem>
+                        </DropdownMenu.Item>
                       )}
-                      <DropdownMenuSeparator />
-                      <DropdownMenuItem color="red" onSelect={onDelete}>
+                      <DropdownMenu.Separator />
+                      <DropdownMenu.Item color="red" onClick={onDelete}>
                         Delete
-                      </DropdownMenuItem>
-                    </DropdownMenuContent>
-                  </DropdownMenu>
+                      </DropdownMenu.Item>
+                    </DropdownMenu.Content>
+                  </DropdownMenu.Root>
                 )}
               </Flex>
             </Flex>

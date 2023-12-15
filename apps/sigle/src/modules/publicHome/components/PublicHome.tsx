@@ -39,7 +39,7 @@ import { generateAvatar } from '../../../utils/boringAvatar';
 import { StoryCard } from '../../storyCard/StoryCard';
 import { UserCard } from '../../userCard/UserCard';
 import { DashboardLayout } from '../../layout';
-import { AppHeader } from '../../layout/components/AppHeader';
+import { AppHeader } from '../../../components/layout/header/header';
 import { TwitterFilledIcon } from '../../../icons';
 import { EnvelopePlusIcon } from '../../../icons/EnvelopPlusIcon';
 import { SubscribeModal } from '../../subscribeModal/SubscribeModal';
@@ -168,7 +168,7 @@ interface PublicHomeProps {
 
 export const PublicHome = ({ file, settings, userInfo }: PublicHomeProps) => {
   const { resolvedTheme } = useTheme();
-  const { user, isLegacy } = useAuth();
+  const { user } = useAuth();
   const [showSubscribeDialog, setShowSubscribeDialog] = useState(false);
   const router = useRouter();
   const { data: userInfoByAddress } = useUserControllerGetUser({
@@ -313,10 +313,7 @@ export const PublicHome = ({ file, settings, userInfo }: PublicHomeProps) => {
                 alt={`${siteName} logo`}
               />
             </HeaderLogoContainer>
-            {user &&
-            user.username !== userInfo.username &&
-            !isLegacy &&
-            userFollowing ? (
+            {user && user.username !== userInfo.username && userFollowing ? (
               <Flex gap="3">
                 {!isFollowingUser ? (
                   <Button

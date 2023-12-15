@@ -1,17 +1,8 @@
-import React, { useState } from 'react';
+import React from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { VariantProps } from '@stitches/react';
-import * as Fathom from 'fathom-client';
-import { toast } from 'react-toastify';
-import {
-  createNewEmptyStory,
-  getStoriesFile,
-  saveStoriesFile,
-  saveStoryFile,
-} from '../../../utils';
-import { Goals } from '../../../utils/fathom';
-import { createSubsetStory } from '../../editor/utils';
+import { Button } from '@radix-ui/themes';
 import { styled } from '../../../stitches.config';
 import {
   Accordion,
@@ -19,12 +10,11 @@ import {
   AccordionItem,
   AccordionTrigger,
   Box,
-  Button,
   Container,
 } from '../../../ui';
 import { useAuth } from '../../auth/AuthContext';
+import { AppHeader } from '../../../components/layout/header/header';
 import { AppFooter } from './AppFooter';
-import { AppHeader } from './AppHeader';
 
 export const DashboardContainer = styled(Container, {
   flex: 1,
@@ -124,29 +114,6 @@ export const DashboardLayout = ({
 }: DashboardLayoutProps) => {
   const router = useRouter();
   const { user } = useAuth();
-  const [loadingCreate, setLoadingCreate] = useState(false);
-
-  const handleCreateNewPrivateStory = async () => {
-    setLoadingCreate(true);
-    try {
-      const storiesFile = await getStoriesFile();
-      const story = createNewEmptyStory();
-
-      storiesFile.stories.unshift(
-        createSubsetStory(story, { plainContent: '' }),
-      );
-
-      await saveStoriesFile(storiesFile);
-      await saveStoryFile(story);
-
-      Fathom.trackGoal(Goals.CREATE_NEW_STORY, 0);
-      router.push('/stories/[storyId]', `/stories/${story.id}`);
-    } catch (error) {
-      console.error(error);
-      toast.error(error.message);
-      setLoadingCreate(false);
-    }
-  };
 
   const navItems = [
     {
@@ -188,15 +155,13 @@ export const DashboardLayout = ({
             </Link>
           ))}
           <Button
-            css={{
-              mt: '$5',
-              alignSelf: 'start',
-            }}
-            disabled={loadingCreate}
-            onClick={handleCreateNewPrivateStory}
-            size="lg"
+            className="mt-1 self-start"
+            size="3"
+            color="gray"
+            highContrast
+            asChild
           >
-            {!loadingCreate ? `Write a story` : `Creating new story...`}
+            <Link href="/stories/new">Write a story</Link>
           </Button>
         </DashboardSidebar>
         <Box

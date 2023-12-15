@@ -11,7 +11,7 @@ interface Props {
 
 export const Protected = ({ children }: Props) => {
   const router = useRouter();
-  const { user, isLegacy, loggingIn } = useAuth();
+  const { user, loggingIn } = useAuth();
   const { status } = useSession();
 
   useEffect(() => {
@@ -54,7 +54,7 @@ export const Protected = ({ children }: Props) => {
 
   // If user is not logged in
   // If non legacy user doesn't have a session
-  if (!user || (!isLegacy && status === 'unauthenticated')) {
+  if (!user || status === 'unauthenticated') {
     router.push('/login');
     return null;
   }

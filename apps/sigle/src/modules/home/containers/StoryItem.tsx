@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useRouter } from 'next/router';
-import { toast } from 'react-toastify';
+import { toast } from 'sonner';
 import NProgress from 'nprogress';
 import { fetchStoriesControllerDelete } from '@/__generated__/sigle-api';
 import { StoryItem as Component } from '../components/StoryItem';
@@ -12,7 +12,6 @@ import {
   getStoryFile,
   saveStoryFile,
 } from '../../../utils';
-import { useAuth } from '../../auth/AuthContext';
 
 interface Props {
   user: BlockstackUser;
@@ -28,7 +27,6 @@ export const StoryItem = ({
   refetchStoriesLists,
 }: Props) => {
   const router = useRouter();
-  const { isLegacy } = useAuth();
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
   const [deleteLoading, setDeleteLoading] = useState(false);
   const [showFeatureDialog, setShowFeatureDialog] = useState(false);
@@ -57,11 +55,9 @@ export const StoryItem = ({
       await saveStoriesFile(file);
       await deleteStoryFile(story);
       await refetchStoriesLists();
-      if (!isLegacy) {
-        await fetchStoriesControllerDelete({
-          body: { id: story.id },
-        });
-      }
+      await fetchStoriesControllerDelete({
+        body: { id: story.id },
+      });
     } catch (error) {
       toast.error(error.message);
     }

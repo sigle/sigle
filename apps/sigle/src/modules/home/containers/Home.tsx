@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { toast } from 'react-toastify';
+import { toast } from 'sonner';
 import * as Sentry from '@sentry/nextjs';
 import { Home as Component } from '../components/Home';
 import { getStoriesFile } from '../../../utils';
