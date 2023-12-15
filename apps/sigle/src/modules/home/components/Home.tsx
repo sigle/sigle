@@ -1,22 +1,13 @@
 import React, { useState } from 'react';
 import Image from 'next/legacy/image';
 import { useInView } from 'react-cool-inview';
-import * as Fathom from 'fathom-client';
-import { useRouter } from 'next/router';
-import { toast } from 'sonner';
+import { Button } from '@radix-ui/themes';
+import Link from 'next/link';
 import { StoryItem } from '../';
 import { SubsetStory, BlockstackUser } from '../../../types';
 import { DashboardLayout } from '../../layout/components/DashboardLayout';
 import { styled } from '../../../stitches.config';
-import { Button, Flex, Typography } from '../../../ui';
-import {
-  createNewEmptyStory,
-  getStoriesFile,
-  saveStoriesFile,
-  saveStoryFile,
-} from '../../../utils';
-import { createSubsetStory } from '../../editor/utils';
-import { Goals } from '../../../utils/fathom';
+import { Flex, Typography } from '../../../ui';
 import { StoryCardSkeleton } from './StoryItemSkeleton';
 
 const ImgWrapper = styled('div', {
@@ -47,8 +38,6 @@ export const Home = ({
 }: Props) => {
   const itemsPerPage = 20;
   const [currentPage, setCurrentPage] = useState(1);
-  const [loadingCreate, setLoadingCreate] = useState(false);
-  const router = useRouter();
 
   const { observe } = useInView({
     // For better UX, we can grow the root margin so the data will be loaded earlier
@@ -60,28 +49,6 @@ export const Home = ({
 
   const showIllu = !loading && (!stories || stories.length === 0);
   const nbStoriesLabel = loading ? '...' : stories ? stories.length : 0;
-
-  const handleCreateNewPrivateStory = async () => {
-    setLoadingCreate(true);
-    try {
-      const storiesFile = await getStoriesFile();
-      const story = createNewEmptyStory();
-
-      storiesFile.stories.unshift(
-        createSubsetStory(story, { plainContent: '' }),
-      );
-
-      await saveStoriesFile(storiesFile);
-      await saveStoryFile(story);
-
-      Fathom.trackGoal(Goals.CREATE_NEW_STORY, 0);
-      router.push('/stories/[storyId]', `/stories/${story.id}`);
-    } catch (error) {
-      console.error(error);
-      toast.error(error.message);
-      setLoadingCreate(false);
-    }
-  };
 
   // Create the subset of stories to display based on the current page
   const storiesToDisplay = stories
@@ -123,13 +90,8 @@ export const Home = ({
             selectedTab === 'published' ? 'published stories' : 'drafts'
           }`}</Typography>
           {selectedTab === 'drafts' && (
-            <Button
-              size="sm"
-              variant="subtle"
-              disabled={loadingCreate}
-              onClick={handleCreateNewPrivateStory}
-            >
-              {!loadingCreate ? `Start writing` : `Creating new story...`}
+            <Button size="2" variant="soft" asChild>
+              <Link href="/stories/new">Start writing</Link>
             </Button>
           )}
           <StoryCardSkeleton />

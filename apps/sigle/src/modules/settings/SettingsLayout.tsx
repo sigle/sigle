@@ -9,7 +9,7 @@ import {
   Box,
 } from '../../ui';
 import { AppFooter } from '../layout/components/AppFooter';
-import { AppHeader } from '../layout/components/AppHeader';
+import { AppHeader } from '../../components/layout/header/header';
 import {
   DashboardContainer,
   FullScreen,
