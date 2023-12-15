@@ -3,7 +3,7 @@ import Image from 'next/image';
 
 export const FullScreenLoading = () => {
   return (
-    <div className="h-screen flex flex-col justify-center items-center">
+    <div className="flex h-screen flex-col items-center justify-center">
       <Image
         src="/static/img/logo.png"
         alt="Logo Sigle"
