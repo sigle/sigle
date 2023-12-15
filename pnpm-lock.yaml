@@ -554,8 +554,8 @@ importers:
         specifier: 5.4.0
         version: 5.4.0(next@14.0.4)(react-dom@18.2.0)(react@18.2.0)
       next-themes:
-        specifier: 0.2.1
-        version: 0.2.1(next@14.0.4)(react-dom@18.2.0)(react@18.2.0)
+        specifier: 0.2.0
+        version: 0.2.0(next@14.0.4)(react-dom@18.2.0)(react@18.2.0)
       nprogress:
         specifier: 0.2.0
         version: 0.2.0
@@ -17498,18 +17498,6 @@ packages:
 
   /next-themes@0.2.0(next@14.0.4)(react-dom@18.2.0)(react@18.2.0):
     resolution: {integrity: sha512-myhpDL4vadBD9YDSHiewqvzorGzB03N84e+3LxCwHRlM/hiBOaW+UsKsQojQAzC7fdcJA0l2ppveXcYaVV+hxQ==}
-    peerDependencies:
-      next: '*'
-      react: '*'
-      react-dom: '*'
-    dependencies:
-      next: 14.0.4(@babel/core@7.23.3)(react-dom@18.2.0)(react@18.2.0)(sass@1.69.4)
-      react: 18.2.0
-      react-dom: 18.2.0(react@18.2.0)
-    dev: false
-
-  /next-themes@0.2.1(next@14.0.4)(react-dom@18.2.0)(react@18.2.0):
-    resolution: {integrity: sha512-B+AKNfYNIzh0vqQQKqQItTS8evEouKD7H5Hj3kmuPERwddR2TxvDSFZuTj6T7Jfn1oyeUyJMydPl1Bkxkh0W7A==}
     peerDependencies:
       next: '*'
       react: '*'
