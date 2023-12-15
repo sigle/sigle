@@ -3,7 +3,7 @@ import { useRouter } from 'next/router';
 import { RocketIcon } from '@radix-ui/react-icons';
 import { Button, Typography } from '../ui';
 import { LoginLayout } from '../modules/layout/components/LoginLayout';
-import { Protected } from '../modules/auth/Protected';
+import { Protected } from '../components/authentication/protected';
 import { styled } from '../stitches.config';
 import { useAuth } from '../modules/auth/AuthContext';
 

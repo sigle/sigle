@@ -13,7 +13,7 @@ import {
   saveStoryFile,
 } from '@/utils';
 import { createSubsetStory } from '@/modules/editor/utils';
-import { Protected } from '../../modules/auth/Protected';
+import { Protected } from '../../components/authentication/protected';
 
 const CreateStory = () => {
   const router = useRouter();
