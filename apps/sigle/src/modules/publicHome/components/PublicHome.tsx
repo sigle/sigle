@@ -39,7 +39,7 @@ import { generateAvatar } from '../../../utils/boringAvatar';
 import { StoryCard } from '../../storyCard/StoryCard';
 import { UserCard } from '../../userCard/UserCard';
 import { DashboardLayout } from '../../layout';
-import { AppHeader } from '../../layout/components/AppHeader';
+import { AppHeader } from '../../../components/layout/header/header';
 import { TwitterFilledIcon } from '../../../icons';
 import { EnvelopePlusIcon } from '../../../icons/EnvelopPlusIcon';
 import { SubscribeModal } from '../../subscribeModal/SubscribeModal';

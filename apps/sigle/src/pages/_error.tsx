@@ -7,7 +7,7 @@ import Image from 'next/legacy/image';
 import { Button, Container, Flex, Heading, Text } from '../ui';
 import { styled } from '../stitches.config';
 import { useAuth } from '../modules/auth/AuthContext';
-import { AppHeader } from '../modules/layout/components/AppHeader';
+import { AppHeader } from '../components/layout/header/header';
 
 const NotFoundContainer = styled(Container, {
   display: 'flex',

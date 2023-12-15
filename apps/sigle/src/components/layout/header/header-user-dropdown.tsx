@@ -1,9 +1,5 @@
 import Link from 'next/link';
-import { useRouter } from 'next/router';
-import { useState } from 'react';
-import { toast } from 'sonner';
 import { useQueryClient } from '@tanstack/react-query';
-import * as Fathom from 'fathom-client';
 import { signOut } from 'next-auth/react';
 import { DropdownMenu, Switch, Flex, Button, Text } from '@radix-ui/themes';
 import {
@@ -14,50 +10,18 @@ import {
 } from '@radix-ui/react-icons';
 import { useTheme } from 'next-themes';
 import { useSubscriptionControllerGetUserMe } from '@/__generated__/sigle-api';
+import { useAuth } from '@/modules/auth/AuthContext';
+import { userSession } from '@/utils/stacks';
 import { StyledChevron } from '../../../ui';
 import { generateAvatar } from '../../../utils/boringAvatar';
-import {
-  createNewEmptyStory,
-  getStoriesFile,
-  saveStoriesFile,
-  saveStoryFile,
-} from '../../../utils';
 import { useGetUserSettings } from '../../../hooks/appData';
-import { Goals } from '../../../utils/fathom';
-import { userSession } from '../../../utils/stacks';
-import { createSubsetStory } from '../../editor/utils';
-import { useAuth } from '../../auth/AuthContext';
 
-export const HeaderDropdown = () => {
+export const HeaderUserDropdown = () => {
   const { data: settings } = useGetUserSettings();
-  const router = useRouter();
   const { user } = useAuth();
   const queryClient = useQueryClient();
-  const [loadingCreate, setLoadingCreate] = useState(false);
   const { resolvedTheme, setTheme } = useTheme();
   const { data: userSubscription } = useSubscriptionControllerGetUserMe({});
-
-  const handleCreateNewPrivateStory = async () => {
-    setLoadingCreate(true);
-    try {
-      const storiesFile = await getStoriesFile();
-      const story = createNewEmptyStory();
-
-      storiesFile.stories.unshift(
-        createSubsetStory(story, { plainContent: '' }),
-      );
-
-      await saveStoriesFile(storiesFile);
-      await saveStoryFile(story);
-
-      Fathom.trackGoal(Goals.CREATE_NEW_STORY, 0);
-      router.push('/stories/[storyId]', `/stories/${story.id}`);
-    } catch (error) {
-      console.error(error);
-      toast.error(error.message);
-      setLoadingCreate(false);
-    }
-  };
 
   const handleLogout = () => {
     queryClient.removeQueries();
@@ -164,14 +128,11 @@ export const HeaderDropdown = () => {
           </Link>
         </DropdownMenu.Item>
         <DropdownMenu.Separator />
-        <DropdownMenu.Item
-          disabled={loadingCreate}
-          onClick={handleCreateNewPrivateStory}
-          onSelect={(e) => e.preventDefault()}
-          className="justify-start gap-2"
-        >
-          <FileTextIcon />
-          {!loadingCreate ? `Write a story` : `Creating new story...`}
+        <DropdownMenu.Item className="justify-start gap-2" asChild>
+          <Link href="/stories/new">
+            <FileTextIcon />
+            Write a story
+          </Link>
         </DropdownMenu.Item>
         {upperNavItems.map((item) => (
           <DropdownMenu.Item key={item.path} asChild>
