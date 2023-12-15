@@ -1,4 +1,4 @@
-import { AppHeader } from '@/modules/layout/components/AppHeader';
+import { AppHeader } from '@/components/layout/header/header';
 
 export default function DashboardLayout({
   children,

@@ -1,3 +1,4 @@
+'use client';
 import React, { useEffect, useState, useCallback, useMemo } from 'react';
 import { toast } from 'sonner';
 import type { UserData } from '@stacks/auth';

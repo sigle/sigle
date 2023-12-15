@@ -1,3 +1,4 @@
+'use client';
 import { HamburgerMenuIcon } from '@radix-ui/react-icons';
 import { Button, IconButton } from '@radix-ui/themes';
 import { useState } from 'react';
