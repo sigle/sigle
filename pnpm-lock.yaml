@@ -36,8 +36,8 @@ importers:
         specifier: 1.0.6
         version: 1.0.6(@types/react-dom@18.2.17)(@types/react@18.2.45)(react-dom@18.2.0)(react@18.2.0)
       '@stacks/auth':
-        specifier: 6.10.0
-        version: 6.10.0
+        specifier: 6.11.0
+        version: 6.11.0
       '@tabler/icons-react':
         specifier: 2.39.0
         version: 2.39.0(react@18.2.0)
@@ -163,14 +163,14 @@ importers:
         specifier: 7.81.1
         version: 7.81.1
       '@stacks/auth':
-        specifier: 6.10.0
-        version: 6.10.0
+        specifier: 6.11.0
+        version: 6.11.0
       '@stacks/blockchain-api-client':
         specifier: 7.3.6
         version: 7.3.6
       '@stacks/transactions':
-        specifier: 6.10.0
-        version: 6.10.0
+        specifier: 6.11.0
+        version: 6.11.0
       cache-manager:
         specifier: 5.3.1
         version: 5.3.1
@@ -344,8 +344,8 @@ importers:
         specifier: 1.0.0
         version: 1.0.0(immutable@4.0.0-rc.12)(react-dom@18.2.0)(react@18.2.0)
       '@stacks/auth':
-        specifier: 6.10.0
-        version: 6.10.0
+        specifier: 6.11.0
+        version: 6.11.0
       '@stacks/blockchain-api-client':
         specifier: 7.3.6
         version: 7.3.6
@@ -359,8 +359,8 @@ importers:
         specifier: 22.3.0
         version: 22.3.0(react-dom@18.2.0)(react@18.2.0)
       '@stacks/encryption':
-        specifier: 6.10.0
-        version: 6.10.0
+        specifier: 6.11.0
+        version: 6.11.0
       '@stacks/keychain':
         specifier: 4.3.8
         version: 4.3.8
@@ -368,14 +368,14 @@ importers:
         specifier: 6.10.0
         version: 6.10.0
       '@stacks/profile':
-        specifier: 6.10.0
-        version: 6.10.0
+        specifier: 6.11.0
+        version: 6.11.0
       '@stacks/storage':
-        specifier: 6.10.0
-        version: 6.10.0
+        specifier: 6.11.0
+        version: 6.11.0
       '@stacks/transactions':
-        specifier: 6.10.0
-        version: 6.10.0
+        specifier: 6.11.0
+        version: 6.11.0
       '@stitches/react':
         specifier: 1.2.8
         version: 1.2.8(react@18.2.0)
@@ -1045,8 +1045,8 @@ importers:
   packages/sitemap-scripts:
     dependencies:
       '@stacks/auth':
-        specifier: 6.10.0
-        version: 6.10.0
+        specifier: 6.11.0
+        version: 6.11.0
     devDependencies:
       '@types/node':
         specifier: 18.0.3
@@ -3090,8 +3090,8 @@ packages:
       '@didtools/cacao': 2.1.0
       '@stablelib/random': 1.0.2
       '@stacks/common': 6.10.0
-      '@stacks/encryption': 6.10.0
-      '@stacks/transactions': 6.10.0
+      '@stacks/encryption': 6.11.0
+      '@stacks/transactions': 6.11.0
       caip: 1.1.0
       jsontokens: 4.0.1
     transitivePeerDependencies:
@@ -7020,13 +7020,13 @@ packages:
       - encoding
     dev: false
 
-  /@stacks/auth@6.10.0:
-    resolution: {integrity: sha512-5/FdD1btPovJTckVfaNdD+J/JxtKwn1jVOcyiuDwOABMOMGykgH8ZdXc0Kho2POZoOwKTIrG8sYH5TolSoH7BA==}
+  /@stacks/auth@6.11.0:
+    resolution: {integrity: sha512-I4oWBoTu57lg3dL+PC/tpRdAU/1ETYtMw4g7f76a8tauiFDDvk4Dve5MNl5fknrH+rhtvqkwLILc3UBFIMfu0Q==}
     dependencies:
       '@stacks/common': 6.10.0
-      '@stacks/encryption': 6.10.0
+      '@stacks/encryption': 6.11.0
       '@stacks/network': 6.10.0
-      '@stacks/profile': 6.10.0
+      '@stacks/profile': 6.11.0
       cross-fetch: 3.1.8
       jsontokens: 4.0.1
     transitivePeerDependencies:
@@ -7087,11 +7087,11 @@ packages:
   /@stacks/connect@7.5.0:
     resolution: {integrity: sha512-XdacWqWMBYL2ikFoK2lhnIZRgvGQFxiKER6J9ZsHlKJzcCz+tab6NeqMBmctHCdFyHWFGS1LOF8W8IaxFW6N0g==}
     dependencies:
-      '@stacks/auth': 6.10.0
+      '@stacks/auth': 6.11.0
       '@stacks/connect-ui': 6.2.0
       '@stacks/network': 6.10.0
-      '@stacks/profile': 6.10.0
-      '@stacks/transactions': 6.10.0
+      '@stacks/profile': 6.11.0
+      '@stacks/transactions': 6.11.0
       jsontokens: 4.0.1
     transitivePeerDependencies:
       - encoding
@@ -7110,8 +7110,8 @@ packages:
       varuint-bitcoin: 1.1.2
     dev: false
 
-  /@stacks/encryption@6.10.0:
-    resolution: {integrity: sha512-Olk5WDKju8Xl06O04pyYF1e5gNxDF7o3FrxS5zxReLQZzn0FKAKP9WSUqIWkZ4t1YA841ZohwHPqM+5bfccqZA==}
+  /@stacks/encryption@6.11.0:
+    resolution: {integrity: sha512-VfBkrwmCRppCasJo+R/hWfC7vgS6GmfPyoTeDsoYlfRRXz/auFbEdRaaruFPtAda/1nKdDOZ9UZEMOp5AIw0IQ==}
     dependencies:
       '@noble/hashes': 1.1.5
       '@noble/secp256k1': 1.7.1
@@ -7178,12 +7178,12 @@ packages:
       - encoding
     dev: false
 
-  /@stacks/profile@6.10.0:
-    resolution: {integrity: sha512-n2H1Imuu7UfwIvUv7xgHiSb3CKfbP4H+Jzy1+w73njYX7glt60uQ1SjWef7gvMgMFQNTAPELqitweyA+UII6Hg==}
+  /@stacks/profile@6.11.0:
+    resolution: {integrity: sha512-GXheCbu2g5X5qCAj1rSWCeZEbzHTW/IhPMOInPA15FH4VUBu09AonWtDs9w+sPUhbbiG9Zx4A0TLDaO52hHpBg==}
     dependencies:
       '@stacks/common': 6.10.0
       '@stacks/network': 6.10.0
-      '@stacks/transactions': 6.10.0
+      '@stacks/transactions': 6.11.0
       jsontokens: 4.0.1
       schema-inspector: 2.1.0
       zone-file: 2.0.0-beta.3
@@ -7207,12 +7207,12 @@ packages:
       - encoding
     dev: false
 
-  /@stacks/storage@6.10.0:
-    resolution: {integrity: sha512-DLinjJkCN9Q7Yu5yelcXfP89CIDZ4TqXisjJYRqRlFfQdoDWDFZT5vpM2C8U2xDmgzVxfjg90HmQpIjTeIMSnw==}
+  /@stacks/storage@6.11.0:
+    resolution: {integrity: sha512-tZ39pntKzNaJQiDmG32AMU5HKZ3kuU4jd0t9/9A1SHVfqXDWxO1Kuu81MZk4ujcXfJM5zZtrMAMOj2Tgc988GA==}
     dependencies:
-      '@stacks/auth': 6.10.0
+      '@stacks/auth': 6.11.0
       '@stacks/common': 6.10.0
-      '@stacks/encryption': 6.10.0
+      '@stacks/encryption': 6.11.0
       '@stacks/network': 6.10.0
       base64-js: 1.5.1
       jsontokens: 4.0.1
@@ -7238,8 +7238,8 @@ packages:
       - encoding
     dev: false
 
-  /@stacks/transactions@6.10.0:
-    resolution: {integrity: sha512-6zeCV3nym6Bu42KCslBSR3Y+otvjRoSPQNbu0hOFqFOxCXT7ZWW2ZWkdkDjHUmbxpVsCb38l+pbxIFWWrPVC9w==}
+  /@stacks/transactions@6.11.0:
+    resolution: {integrity: sha512-+zIDqn9j4H/+o1ER8C9rFpig1fyrQcj2hVGNIrp+YbpPyja+cxv3fPk6kI/gePzwggzxRgUkIWhBc+mZAXuXyQ==}
     dependencies:
       '@noble/hashes': 1.1.5
       '@noble/secp256k1': 1.7.1
