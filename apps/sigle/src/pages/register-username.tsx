@@ -13,6 +13,7 @@ import { LoginLayout } from '../modules/layout/components/LoginLayout';
 import { keyframes, styled } from '../stitches.config';
 import { useAuth } from '../modules/auth/AuthContext';
 import { Goals } from '../utils/fathom';
+import { Heading, Link, Text } from '@radix-ui/themes';
 
 interface HubInfo {
   challenge_text?: string;
@@ -231,8 +232,8 @@ const RegisterUsername = () => {
     router.push(`/`);
   };
 
-  return (
-    <LoginLayout centered>
+  const registerUsernameContent = (
+    <>
       <Typography
         as="h1"
         size="h2"
@@ -335,6 +336,34 @@ const RegisterUsername = () => {
           </Typography>
         ) : null}
       </Flex>
+    </>
+  );
+
+  const fallbackContent = (
+    <div className="space-y-2 text-center">
+      <Heading as="h1" weight="medium">
+        Username required
+      </Heading>
+      <Text as="p">
+        We couldn't find any username attached to your address{' '}
+        {user?.profile.stxAddress.mainnet}.
+      </Text>
+      <Text as="p">
+        In order to use Sigle, you need a Stacks BNS. You can buy a new .btc
+        domain at{' '}
+        <Link href="https://btc.us/" target="_blank" rel="noreferrer">
+          btc.us
+        </Link>
+        .
+      </Text>
+    </div>
+  );
+
+  const isRegisterUsernameWorking = false;
+
+  return (
+    <LoginLayout centered>
+      {isRegisterUsernameWorking ? registerUsernameContent : fallbackContent}
     </LoginLayout>
   );
 };
