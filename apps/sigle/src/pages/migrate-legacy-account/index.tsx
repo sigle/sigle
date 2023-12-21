@@ -1,8 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { StacksMainnet } from '@stacks/network';
 import { useRouter } from 'next/router';
-import { useAuth } from '@/modules/auth/AuthContext';
-import { LoginLayout } from '@/modules/layout/components/LoginLayout';
 import { Button, Heading, Text, TextFieldInput } from '@radix-ui/themes';
 import { CheckIcon } from '@radix-ui/react-icons';
 import { generateWallet, restoreWalletAccounts } from '@stacks/wallet-sdk';
@@ -13,6 +11,8 @@ import {
   NamesApi,
 } from '@stacks/blockchain-api-client';
 import { resolveZoneFileToProfile } from '@stacks/profile';
+import { LoginLayout } from '@/modules/layout/components/LoginLayout';
+import { useAuth } from '@/modules/auth/AuthContext';
 import {
   fetchPublicStories,
   fetchPublicStory,
