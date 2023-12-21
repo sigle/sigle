@@ -13,7 +13,15 @@ import {
   NamesApi,
 } from '@stacks/blockchain-api-client';
 import { resolveZoneFileToProfile } from '@stacks/profile';
-import { fetchPublicStories, fetchSettings } from '@/utils/gaia/fetch';
+import {
+  fetchPublicStories,
+  fetchPublicStory,
+  fetchSettings,
+} from '@/utils/gaia/fetch';
+import { saveSettingsFile, saveStoriesFile, saveStoryFile } from '@/utils';
+import { SubsetStory } from '@/types';
+
+const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
 const MigrateLegacyAccount = () => {
   const router = useRouter();
@@ -146,7 +154,25 @@ const MigrateLegacyAccount = () => {
       }, starting to migrate data...`,
     ]);
 
-    // Authenticate legacy account to Gaia
+    // Migrate the data
+    await saveSettingsFile(dataSettings.file);
+    setLogs((logs) => [...logs, `Settings saved`]);
+
+    await saveStoriesFile(dataPublicStories.file);
+    setLogs((logs) => [...logs, `Stories saved`]);
+
+    const publicStories = dataPublicStories.file.stories.filter(
+      (story: SubsetStory) => story.type === 'public',
+    );
+    for (const subsetStory of publicStories) {
+      const story = await fetchPublicStory(bucketUrl, subsetStory.id);
+      await saveStoryFile(story.file);
+      await sleep(1000);
+      setLogs((logs) => [
+        ...logs,
+        `Saved story ${subsetStory.id} (${subsetStory.title})`,
+      ]);
+    }
 
     setFormState({ ...formState, loading: false });
   };
