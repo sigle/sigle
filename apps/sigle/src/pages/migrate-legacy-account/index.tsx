@@ -12,6 +12,12 @@ import {
   TextFieldInput,
 } from '@radix-ui/themes';
 import { CheckIcon } from '@radix-ui/react-icons';
+import {
+  generateNewAccount,
+  generateWallet,
+  getAppPrivateKey,
+  restoreWalletAccounts,
+} from '@stacks/wallet-sdk';
 
 const MigrateLegacyAccount = () => {
   const router = useRouter();
@@ -24,6 +30,7 @@ const MigrateLegacyAccount = () => {
     seed: '',
     loading: false,
   });
+  const [logs, setLogs] = useState<string[]>([]);
 
   useEffect(() => {
     // If user is not logged him redirect him to the login page
@@ -34,6 +41,8 @@ const MigrateLegacyAccount = () => {
   }, [loggingIn, router, user]);
 
   const handleMigration = async () => {
+    setLogs([]);
+    setFormState({ ...formState, loading: true });
     const { seed } = formState;
     const numberOfWords = seed.split(' ').length;
     if (numberOfWords !== 12) {
@@ -43,6 +52,13 @@ const MigrateLegacyAccount = () => {
       });
       return;
     }
+
+    // Extract the legacy accounts from the seed phrase
+    setLogs((logs) => [...logs, 'Extracting legacy accounts...']);
+    const baseWallet = await generateWallet({
+      secretKey: seed,
+      password: '',
+    });
   };
 
   if (!user) return null;
@@ -72,11 +88,25 @@ const MigrateLegacyAccount = () => {
           </Text>
         ) : null}
         <div className="flex justify-end">
-          <Button onClick={handleMigration}>
+          <Button onClick={handleMigration} disabled={formState.loading}>
             <CheckIcon />
             Migrate
           </Button>
         </div>
+        {logs.length > 0 ? (
+          <div className="space-y-2">
+            <Heading as="h2" size="2" weight="medium">
+              Logs
+            </Heading>
+            <div className="space-y-1">
+              {logs.map((log, index) => (
+                <Text as="p" size="1" key={index}>
+                  {log}
+                </Text>
+              ))}
+            </div>
+          </div>
+        ) : null}
       </div>
     </LoginLayout>
   );
