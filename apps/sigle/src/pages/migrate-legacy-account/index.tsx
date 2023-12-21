@@ -176,6 +176,11 @@ const MigrateLegacyAccount = () => {
       ]);
     }
 
+    setLogs((logs) => [
+      ...logs,
+      `---------- All content migrated, you can now use your new account ----------`,
+    ]);
+
     setFormState({ ...formState, loading: false });
   };
 
