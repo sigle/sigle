@@ -164,13 +164,15 @@ const MigrateLegacyAccount = () => {
     const publicStories = dataPublicStories.file.stories.filter(
       (story: SubsetStory) => story.type === 'public',
     );
+    let index = 0;
     for (const subsetStory of publicStories) {
       const story = await fetchPublicStory(bucketUrl, subsetStory.id);
       await saveStoryFile(story.file);
-      await sleep(1000);
+      await sleep(2000);
+      index++;
       setLogs((logs) => [
         ...logs,
-        `Saved story ${subsetStory.id} (${subsetStory.title})`,
+        `${index}/${publicStories.length} Saved story ${subsetStory.id} (${subsetStory.title})`,
       ]);
     }
 
