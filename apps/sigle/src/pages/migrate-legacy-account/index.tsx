@@ -16,6 +16,14 @@ import { CheckIcon } from '@radix-ui/react-icons';
 const MigrateLegacyAccount = () => {
   const router = useRouter();
   const { user, loggingIn } = useAuth();
+  const [formState, setFormState] = useState<{
+    seed: string;
+    loading: boolean;
+    error?: string;
+  }>({
+    seed: '',
+    loading: false,
+  });
 
   useEffect(() => {
     // If user is not logged him redirect him to the login page
@@ -24,6 +32,18 @@ const MigrateLegacyAccount = () => {
       return;
     }
   }, [loggingIn, router, user]);
+
+  const handleMigration = async () => {
+    const { seed } = formState;
+    const numberOfWords = seed.split(' ').length;
+    if (numberOfWords !== 12) {
+      setFormState({
+        ...formState,
+        error: 'Seed phrase must contain 12 words',
+      });
+      return;
+    }
+  };
 
   if (!user) return null;
 
@@ -41,9 +61,18 @@ const MigrateLegacyAccount = () => {
         <Text as="p" size="1" color="gray">
           Enter your legacy account 12 words seed phrase
         </Text>
-        <TextFieldInput placeholder="enter 12 words seed phrase" />
+        <TextFieldInput
+          placeholder="enter 12 words seed phrase"
+          value={formState.seed}
+          onChange={(e) => setFormState({ ...formState, seed: e.target.value })}
+        />
+        {formState.error ? (
+          <Text as="p" size="2" color="red">
+            {formState.error}
+          </Text>
+        ) : null}
         <div className="flex justify-end">
-          <Button>
+          <Button onClick={handleMigration}>
             <CheckIcon />
             Migrate
           </Button>
