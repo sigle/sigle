@@ -7,7 +7,7 @@ import {
 import { makeProfileZoneFile } from '@stacks/profile';
 import posthog from 'posthog-js';
 import * as Fathom from 'fathom-client';
-import { QuestionMarkCircledIcon } from '@radix-ui/react-icons';
+import { ArrowLeftIcon, QuestionMarkCircledIcon } from '@radix-ui/react-icons';
 import { Heading, Link, Text } from '@radix-ui/themes';
 import { Button, Flex, FormControlGroup, FormInput, Typography } from '../ui';
 import { LoginLayout } from '../modules/layout/components/LoginLayout';
@@ -93,7 +93,7 @@ const LoadingSpinner = styled('div', {
 
 const RegisterUsername = () => {
   const router = useRouter();
-  const { user, loggingIn, setUsername } = useAuth();
+  const { user, loggingIn, setUsername, logout } = useAuth();
   const [formState, setFormState] = useState<FormState>({
     username: '',
     loading: false,
@@ -356,6 +356,18 @@ const RegisterUsername = () => {
         </Link>
         .
       </Text>
+      <Button
+        variant="ghost"
+        color="gray"
+        size="lg"
+        css={{ gap: '$2' }}
+        onClick={() => {
+          logout();
+        }}
+      >
+        <ArrowLeftIcon width={15} height={15} />
+        Change account
+      </Button>
     </div>
   );
 
