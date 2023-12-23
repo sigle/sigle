@@ -115,7 +115,7 @@ export const ProfileCard = ({
         <HoverCard.Trigger>{children}</HoverCard.Trigger>
       </Link>
       <HoverCard.Content
-        className="w-[280px] flex flex-col gap-2"
+        className="flex w-[280px] flex-col gap-2"
         sideOffset={40}
       >
         <Flex justify="between">

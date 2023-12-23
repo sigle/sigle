@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Button, Dialog, Flex, Heading, Text } from '@radix-ui/themes';
+import { Button, Dialog, Flex, Heading } from '@radix-ui/themes';
 import { TwitterLogoIcon, LinkedInLogoIcon } from '@radix-ui/react-icons';
 import posthog from 'posthog-js';
 import { sigleConfig } from '../../config';
