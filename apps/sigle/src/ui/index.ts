@@ -7,7 +7,6 @@ export * from './Heading';
 export * from './IconButton';
 export * from './LoadingSpinner';
 export * from './Text';
-export * from './Tabs';
 export * from './Typography';
 export * from './Form';
 export * from './VisuallyHidden';

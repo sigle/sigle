@@ -1,5 +1,4 @@
-import { Dialog } from '@radix-ui/themes';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '../../../ui';
+import { Dialog, Kbd, Tabs } from '@radix-ui/themes';
 import { styled } from '../../../stitches.config';
 import { HintsCarousel } from './HintsCarousel';
 
@@ -155,9 +154,24 @@ const textSelection = [
   },
 ];
 
-const StyledTable = styled('table', {
-  width: '100%',
-});
+const shortcuts = [
+  {
+    value: 'essentials',
+    items: essentials,
+  },
+  {
+    value: 'text-formatting',
+    items: textFormatting,
+  },
+  {
+    value: 'p-formatting',
+    items: paragraphFormatting,
+  },
+  {
+    value: 'selection',
+    items: textSelection,
+  },
+];
 
 const Tr = styled('tr', {
   display: 'flex',
@@ -182,43 +196,6 @@ const Th = styled('th', {
   textAlign: 'left',
 });
 
-const Td = styled('td', {
-  display: 'flex',
-  gap: '$2',
-  maxWidth: '30%',
-  flex: 1,
-  textAlign: 'left',
-});
-
-interface TableProps {
-  children: React.ReactNode;
-}
-
-const Table = ({ children }: TableProps) => (
-  <StyledTable>
-    <thead>
-      <Tr css={{ boxShadow: '0 1px 0 0 $colors$gray12' }}>
-        <Th scope="col">Command</Th>
-        <Th scope="col">Windows/Linux</Th>
-        <Th scope="col">macOS</Th>
-      </Tr>
-    </thead>
-    <tbody>{children}</tbody>
-  </StyledTable>
-);
-
-const Kbd = styled('kbd', {
-  all: 'unset',
-  display: 'grid',
-  placeItems: 'center',
-  br: '$1',
-  backgroundColor: '$gray11',
-  color: '$gray1',
-  p: '$1',
-  fontFamily: '$monaco',
-  fontSize: '$2',
-});
-
 export const ShortcutsDialog = ({
   open,
   onOpenChange,
@@ -226,106 +203,63 @@ export const ShortcutsDialog = ({
   return (
     <Dialog.Root open={open} onOpenChange={onOpenChange}>
       <Dialog.Content size="3">
-        <Tabs defaultValue="shortcuts">
-          <TabsList aria-label="Find keyboard shortcuts and hints">
-            <TabsTrigger value="shortcuts">Keyboard Shortcuts</TabsTrigger>
-            <TabsTrigger value="hints">Hints</TabsTrigger>
-          </TabsList>
+        <Tabs.Root defaultValue="shortcuts" color="gray">
+          <Tabs.List
+            aria-label="Find keyboard shortcuts and hints"
+            className="mb-4"
+          >
+            <Tabs.Trigger value="shortcuts" color="gray">
+              Keyboard Shortcuts
+            </Tabs.Trigger>
+            <Tabs.Trigger value="hints" color="gray">
+              Hints
+            </Tabs.Trigger>
+          </Tabs.List>
 
-          <TabsContent css={{ height: 600 }} value="shortcuts">
-            <Tabs defaultValue="essentials">
-              <TabsList css={{ mb: '$4' }} aria-label="Explore shortcut types">
-                <TabsTrigger value="essentials">Essentials</TabsTrigger>
-                <TabsTrigger value="text-formatting">
+          <Tabs.Content className="h-[600px]" value="shortcuts">
+            <Tabs.Root defaultValue="essentials">
+              <Tabs.List className="mb-4" aria-label="Explore shortcut types">
+                <Tabs.Trigger value="essentials">Essentials</Tabs.Trigger>
+                <Tabs.Trigger value="text-formatting">
                   Text Formatting
-                </TabsTrigger>
-                <TabsTrigger value="p-formatting">
+                </Tabs.Trigger>
+                <Tabs.Trigger value="p-formatting">
                   Paragraph Formatting
-                </TabsTrigger>
-                <TabsTrigger value="selection">Text Selection</TabsTrigger>
-              </TabsList>
-              <TabsContent value="essentials">
-                <Table>
-                  {essentials.map((shortcut) => (
-                    <Tr key={shortcut.action}>
-                      <Th scope="row">{shortcut.action}</Th>
-                      <Td>
-                        {shortcut.winCommand.map((command) => (
-                          <Kbd key={command}>{command}</Kbd>
-                        ))}
-                      </Td>
-                      <Td>
-                        {shortcut.macCommand.map((command) => (
-                          <Kbd key={command}>{command}</Kbd>
-                        ))}
-                      </Td>
-                    </Tr>
-                  ))}
-                </Table>
-              </TabsContent>
-              <TabsContent value="text-formatting">
-                <Table>
-                  {textFormatting.map((shortcut) => (
-                    <Tr key={shortcut.action}>
-                      <Th scope="row">{shortcut.action}</Th>
-                      <Td>
-                        {shortcut.winCommand.map((command) => (
-                          <Kbd key={command}>{command}</Kbd>
-                        ))}
-                      </Td>
-                      <Td>
-                        {shortcut.macCommand.map((command) => (
-                          <Kbd key={command}>{command}</Kbd>
-                        ))}
-                      </Td>
-                    </Tr>
-                  ))}
-                </Table>
-              </TabsContent>
-              <TabsContent value="p-formatting">
-                <Table>
-                  {paragraphFormatting.map((shortcut) => (
-                    <Tr key={shortcut.action}>
-                      <Th scope="row">{shortcut.action}</Th>
-                      <Td>
-                        {shortcut.winCommand.map((command) => (
-                          <Kbd key={command}>{command}</Kbd>
-                        ))}
-                      </Td>
-                      <Td>
-                        {shortcut.macCommand.map((command) => (
-                          <Kbd key={command}>{command}</Kbd>
-                        ))}
-                      </Td>
-                    </Tr>
-                  ))}
-                </Table>
-              </TabsContent>
-              <TabsContent value="selection">
-                <Table>
-                  {textSelection.map((shortcut) => (
-                    <Tr key={shortcut.action}>
-                      <Th scope="row">{shortcut.action}</Th>
-                      <Td>
-                        {shortcut.winCommand.map((command) => (
-                          <Kbd key={command}>{command}</Kbd>
-                        ))}
-                      </Td>
-                      <Td>
-                        {shortcut.macCommand.map((command) => (
-                          <Kbd key={command}>{command}</Kbd>
-                        ))}
-                      </Td>
-                    </Tr>
-                  ))}
-                </Table>
-              </TabsContent>
-            </Tabs>
-          </TabsContent>
-          <TabsContent value="hints">
+                </Tabs.Trigger>
+                <Tabs.Trigger value="selection">Text Selection</Tabs.Trigger>
+              </Tabs.List>
+              {shortcuts.map((shortcut) => (
+                <Tabs.Content key={shortcut.value} value={shortcut.value}>
+                  <table className="w-full">
+                    <thead>
+                      <Tr css={{ boxShadow: '0 1px 0 0 $colors$gray12' }}>
+                        <Th scope="col">Command</Th>
+                        <Th scope="col">Windows/Linux</Th>
+                        <Th scope="col">macOS</Th>
+                      </Tr>
+                    </thead>
+                    <tbody>
+                      {shortcut.items.map((shortcut) => (
+                        <Tr key={shortcut.action}>
+                          <Th scope="row">{shortcut.action}</Th>
+                          <td className="flex flex-1">
+                            <Kbd>{shortcut.winCommand.join(' + ')}</Kbd>
+                          </td>
+                          <td className="flex flex-1">
+                            <Kbd>{shortcut.macCommand.join(' + ')}</Kbd>
+                          </td>
+                        </Tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </Tabs.Content>
+              ))}
+            </Tabs.Root>
+          </Tabs.Content>
+          <Tabs.Content value="hints">
             <HintsCarousel />
-          </TabsContent>
-        </Tabs>
+          </Tabs.Content>
+        </Tabs.Root>
       </Dialog.Content>
     </Dialog.Root>
   );
