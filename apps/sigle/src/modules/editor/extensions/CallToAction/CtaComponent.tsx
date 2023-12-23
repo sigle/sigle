@@ -1,41 +1,19 @@
 import React, { useEffect, useState } from 'react';
 import { NodeViewProps } from '@tiptap/core';
 import { NodeViewWrapper } from '@tiptap/react';
+import { Dialog, RadioGroup } from '@radix-ui/themes';
 import { FormikErrors, useFormik } from 'formik';
-import { CheckIcon } from '@radix-ui/react-icons';
 import {
   Button,
   Flex,
   FormInput,
   Typography,
-  Dialog,
-  DialogContent,
-  DialogTitle,
   FormHelper,
   FormHelperError,
 } from '../../../../ui';
-import {
-  Label,
-  RadioGroupIndicator,
-  RadioGroupItem,
-  RadioGroupRoot,
-} from '../../../../ui/RadioGroup';
-import { styled } from '../../../../stitches.config';
 import { isValidHttpUrl } from '../../../../utils';
 import { useGetUserSettings } from '../../../../hooks/appData';
 import { getContrastingColor } from '../../../../utils/colors';
-
-const HiddenLabel = styled(Label, {
-  position: 'absolute',
-  width: '1px',
-  height: '1px',
-  padding: 0,
-  margin: '-1px',
-  overflow: 'hidden',
-  clip: 'rect(0, 0, 0, 0)',
-  whiteSpace: 'nowrap',
-  borderWidth: 0,
-});
 
 interface CtaFormValues {
   label: string;
@@ -121,20 +99,16 @@ export const CtaComponent = (props: NodeViewProps) => {
         }}
       >
         {props.editor.isEditable && (
-          <Dialog open={showCtatDialog} onOpenChange={handleCancelCtaDialog}>
-            <DialogContent
-              closeButton={false}
-              css={{
-                p: '$5',
-                maxWidth: 450,
-                br: 28,
-              }}
-            >
-              <DialogTitle asChild>
+          <Dialog.Root
+            open={showCtatDialog}
+            onOpenChange={handleCancelCtaDialog}
+          >
+            <Dialog.Content size="3" className="max-w-[450px]">
+              <Dialog.Title asChild>
                 <Typography css={{ fontWeight: 600, mb: '$4' }} size="h3">
                   Style your button
                 </Typography>
-              </DialogTitle>
+              </Dialog.Title>
               <Flex
                 onSubmit={formik.handleSubmit}
                 direction="column"
@@ -176,64 +150,41 @@ export const CtaComponent = (props: NodeViewProps) => {
                   )}
                 </Flex>
                 <Flex direction="column" gap="3">
-                  <Flex css={{ gap: 80 }} align="end">
-                    <Button css={{ pointerEvents: 'none' }} size="lg">
-                      Large
-                    </Button>
-                    <Button css={{ pointerEvents: 'none' }} size="md">
-                      Medium
-                    </Button>
-                    <Button css={{ pointerEvents: 'none' }} size="sm">
-                      Small
-                    </Button>
-                  </Flex>
-                  <RadioGroupRoot
+                  <div className="grid grid-cols-3">
+                    <div className="flex justify-center items-center">
+                      <Button css={{ pointerEvents: 'none' }} size="lg">
+                        Large
+                      </Button>
+                    </div>
+                    <div className="flex justify-center items-center">
+                      <Button css={{ pointerEvents: 'none' }} size="md">
+                        Medium
+                      </Button>
+                    </div>
+                    <div className="flex justify-center items-center">
+                      <Button css={{ pointerEvents: 'none' }} size="sm">
+                        Small
+                      </Button>
+                    </div>
+                  </div>
+                  <RadioGroup.Root
                     name="size"
                     onValueChange={(e) => formik.setFieldValue('size', e)}
-                    css={{ gap: 80 }}
                     defaultValue={formik.values.size || 'md'}
                     aria-label="Call to action button size"
                   >
-                    <Flex
-                      css={{
-                        width: 78,
-                        justifyContent: 'center',
-                      }}
-                    >
-                      <RadioGroupItem value="lg" id="lg">
-                        <RadioGroupIndicator>
-                          <CheckIcon width={16} height={16} />
-                        </RadioGroupIndicator>
-                      </RadioGroupItem>
-                      <HiddenLabel htmlFor="lg">Large</HiddenLabel>
-                    </Flex>
-                    <Flex
-                      css={{
-                        width: 90,
-                        justifyContent: 'center',
-                      }}
-                    >
-                      <RadioGroupItem value="md" id="md">
-                        <RadioGroupIndicator>
-                          <CheckIcon width={16} height={16} />
-                        </RadioGroupIndicator>
-                      </RadioGroupItem>
-                      <HiddenLabel htmlFor="md">Medium</HiddenLabel>
-                    </Flex>
-                    <Flex
-                      css={{
-                        width: 60,
-                        justifyContent: 'center',
-                      }}
-                    >
-                      <RadioGroupItem value="sm" id="sm">
-                        <RadioGroupIndicator>
-                          <CheckIcon width={16} height={16} />
-                        </RadioGroupIndicator>
-                      </RadioGroupItem>
-                      <HiddenLabel htmlFor="sm">Small</HiddenLabel>
-                    </Flex>
-                  </RadioGroupRoot>
+                    <div className="grid grid-cols-3">
+                      <div className="flex justify-center">
+                        <RadioGroup.Item value="lg" id="lg" />
+                      </div>
+                      <div className="flex justify-center">
+                        <RadioGroup.Item value="md" id="md" />
+                      </div>
+                      <div className="flex justify-center">
+                        <RadioGroup.Item value="sm" id="sm" />
+                      </div>
+                    </div>
+                  </RadioGroup.Root>
                 </Flex>
                 <Typography css={{ color: '$gray9' }} size="subparagraph">
                   Tips: You can customize your primary color on the settings
@@ -252,8 +203,8 @@ export const CtaComponent = (props: NodeViewProps) => {
                   </Button>
                 </Flex>
               </Flex>
-            </DialogContent>
-          </Dialog>
+            </Dialog.Content>
+          </Dialog.Root>
         )}
         <p>
           <Button
