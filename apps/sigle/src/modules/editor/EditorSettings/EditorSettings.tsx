@@ -7,6 +7,7 @@ import {
   QuestionMarkCircledIcon,
   TrashIcon,
 } from '@radix-ui/react-icons';
+import { ScrollArea } from '@radix-ui/themes';
 import { useFormik, FormikErrors } from 'formik';
 import { useRouter } from 'next/router';
 import { toast } from 'sonner';
@@ -22,11 +23,6 @@ import {
   DialogTitle,
   Flex,
   IconButton,
-  ScrollArea,
-  ScrollAreaCorner,
-  ScrollAreaScrollbar,
-  ScrollAreaThumb,
-  ScrollAreaViewport,
   Typography,
 } from '../../../ui';
 import { keyframes, styled } from '../../../stitches.config';
@@ -325,209 +321,198 @@ export const EditorSettings = ({
           as="form"
           css={{
             height: '100%',
-            overflow: 'auto',
           }}
           onSubmit={formik.handleSubmit}
         >
-          <ScrollArea type="scroll" scrollHideDelay={300}>
-            <ScrollAreaViewport>
-              <Box
-                css={{
-                  px: '$8',
-                }}
-              >
-                <FormRow>
-                  <FormLabel>Created on</FormLabel>
-                  <StyledFormInput
-                    type="date"
-                    name="createdAt"
-                    value={formik.values.createdAt}
-                    onChange={formik.handleChange}
-                  />
-                  {formik.errors.createdAt && (
-                    <FormHelperError>{formik.errors.createdAt}</FormHelperError>
-                  )}
-                </FormRow>
+          <ScrollArea type="always" scrollbars="vertical">
+            <div className="flex flex-col px-8">
+              <FormRow>
+                <FormLabel>Created on</FormLabel>
+                <StyledFormInput
+                  type="date"
+                  name="createdAt"
+                  value={formik.values.createdAt}
+                  onChange={formik.handleChange}
+                />
+                {formik.errors.createdAt && (
+                  <FormHelperError>{formik.errors.createdAt}</FormHelperError>
+                )}
+              </FormRow>
 
-                <FormRow>
-                  <FormLabel>Meta image</FormLabel>{' '}
-                  <ImageEmpty
-                    {...getRootProps({ tabIndex: undefined })}
+              <FormRow>
+                <FormLabel>Meta image</FormLabel>{' '}
+                <ImageEmpty
+                  {...getRootProps({ tabIndex: undefined })}
+                  css={{
+                    py: !!formik.values.metaImage ? 0 : undefined,
+                    height: !!formik.values.metaImage ? undefined : 178,
+                    width: '100%',
+                  }}
+                >
+                  {formik.values.metaImage && (
+                    <Image
+                      src={formik.values.metaImage}
+                      alt="Meta image"
+                      loading={loadingUploadMetaImage}
+                    />
+                  )}
+                  {!formik.values.metaImage && (
+                    <Flex align="center" gap="1" css={{ color: '$gray9' }}>
+                      <CameraIcon />
+                      <Typography size="subheading" css={{ color: '$gray9' }}>
+                        Add a custom meta image
+                      </Typography>
+                    </Flex>
+                  )}
+                  <input {...getInputProps()} />
+                  <ImageEmptyIconContainer>
+                    {formik.values.metaImage && (
+                      <IconButton
+                        size="sm"
+                        css={{ backgroundColor: '$gray3', opacity: '70%' }}
+                        title="Remove meta image"
+                        onClick={handleRemoveCover}
+                      >
+                        <TrashIcon />
+                      </IconButton>
+                    )}
+                  </ImageEmptyIconContainer>
+                </ImageEmpty>
+              </FormRow>
+
+              <FormRow>
+                <FormLabel>Meta title</FormLabel>
+                <StyledFormInput
+                  placeholder="Type here..."
+                  name="metaTitle"
+                  type="text"
+                  value={formik.values.metaTitle}
+                  onChange={formik.handleChange}
+                  maxLength={100}
+                />
+                <FormHelper>
+                  Recommended: 70 characters. <br /> You have used{' '}
+                  {formik.values.metaTitle.length} characters.
+                </FormHelper>
+                {formik.errors.metaTitle && (
+                  <FormHelperError>{formik.errors.metaTitle}</FormHelperError>
+                )}
+              </FormRow>
+
+              <FormRow>
+                <FormLabel>Meta description</FormLabel>
+                <StyledFormTextarea
+                  placeholder="Type here..."
+                  name="metaDescription"
+                  value={formik.values.metaDescription}
+                  onChange={formik.handleChange}
+                  rows={3}
+                  maxLength={250}
+                />
+                <FormHelper>
+                  Recommended: 156 characters. <br /> You have used{' '}
+                  {formik.values.metaDescription.length} characters.
+                </FormHelper>
+                {formik.errors.metaDescription && (
+                  <FormHelperError>
+                    {formik.errors.metaDescription}
+                  </FormHelperError>
+                )}
+              </FormRow>
+
+              <FormRow>
+                <FormLabel>Canonical URL</FormLabel>
+                <StyledFormInput
+                  placeholder="https://"
+                  name="canonicalUrl"
+                  type="text"
+                  value={formik.values.canonicalUrl}
+                  onChange={formik.handleChange}
+                  maxLength={200}
+                />
+                <Flex gap="1" align="center">
+                  <FormHelper>Add a canonical URL</FormHelper>
+                  <Box
+                    css={{ '& svg': { color: '$gray9' } }}
+                    as="a"
+                    href={canonicalUrlInfo}
+                    target="_blank"
+                    rel="noreferrer"
+                  >
+                    <QuestionMarkCircledIcon />
+                  </Box>
+                </Flex>
+                {formik.errors.canonicalUrl && (
+                  <FormHelperError>
+                    {formik.errors.canonicalUrl}
+                  </FormHelperError>
+                )}
+              </FormRow>
+
+              <Typography css={{ mb: '$3' }}>Preview</Typography>
+              {formik.values.metaImage || story.coverImage ? (
+                <PreviewCard>
+                  <Image
+                    src={formik.values.metaImage || story.coverImage}
+                    alt="Meta image"
+                  />
+                  <Box css={{ p: '$2' }}>
+                    <Typography
+                      size="subparagraph"
+                      css={{ display: 'flex', gap: '$1' }}
+                    >
+                      app.sigle.io
+                    </Typography>
+                    <Typography as="h3" css={{ fontWeight: 600 }}>
+                      {story.metaTitle
+                        ? story.metaTitle
+                        : story.title + ' | Sigle'}
+                    </Typography>
+                    {story.metaDescription && (
+                      <Typography size="subparagraph" css={{ mb: '$1' }}>
+                        {story.metaDescription}
+                      </Typography>
+                    )}
+                  </Box>
+                </PreviewCard>
+              ) : (
+                <PreviewCardNoImage>
+                  <Box
                     css={{
-                      py: !!formik.values.metaImage ? 0 : undefined,
-                      height: !!formik.values.metaImage ? undefined : 178,
-                      width: '100%',
+                      display: 'grid',
+                      placeItems: 'center',
+                      width: 75,
+                      backgroundColor: '$gray3',
+                      borderRight: '1px solid $colors$gray7',
+
+                      '& svg': {
+                        color: '$gray9',
+                      },
                     }}
                   >
-                    {formik.values.metaImage && (
-                      <Image
-                        src={formik.values.metaImage}
-                        alt="Meta image"
-                        loading={loadingUploadMetaImage}
-                      />
-                    )}
-                    {!formik.values.metaImage && (
-                      <Flex align="center" gap="1" css={{ color: '$gray9' }}>
-                        <CameraIcon />
-                        <Typography size="subheading" css={{ color: '$gray9' }}>
-                          Add a custom meta image
-                        </Typography>
-                      </Flex>
-                    )}
-                    <input {...getInputProps()} />
-                    <ImageEmptyIconContainer>
-                      {formik.values.metaImage && (
-                        <IconButton
-                          size="sm"
-                          css={{ backgroundColor: '$gray3', opacity: '70%' }}
-                          title="Remove meta image"
-                          onClick={handleRemoveCover}
-                        >
-                          <TrashIcon />
-                        </IconButton>
-                      )}
-                    </ImageEmptyIconContainer>
-                  </ImageEmpty>
-                </FormRow>
-
-                <FormRow>
-                  <FormLabel>Meta title</FormLabel>
-                  <StyledFormInput
-                    placeholder="Type here..."
-                    name="metaTitle"
-                    type="text"
-                    value={formik.values.metaTitle}
-                    onChange={formik.handleChange}
-                    maxLength={100}
-                  />
-                  <FormHelper>
-                    Recommended: 70 characters. <br /> You have used{' '}
-                    {formik.values.metaTitle.length} characters.
-                  </FormHelper>
-                  {formik.errors.metaTitle && (
-                    <FormHelperError>{formik.errors.metaTitle}</FormHelperError>
-                  )}
-                </FormRow>
-
-                <FormRow>
-                  <FormLabel>Meta description</FormLabel>
-                  <StyledFormTextarea
-                    placeholder="Type here..."
-                    name="metaDescription"
-                    value={formik.values.metaDescription}
-                    onChange={formik.handleChange}
-                    rows={3}
-                    maxLength={250}
-                  />
-                  <FormHelper>
-                    Recommended: 156 characters. <br /> You have used{' '}
-                    {formik.values.metaDescription.length} characters.
-                  </FormHelper>
-                  {formik.errors.metaDescription && (
-                    <FormHelperError>
-                      {formik.errors.metaDescription}
-                    </FormHelperError>
-                  )}
-                </FormRow>
-
-                <FormRow>
-                  <FormLabel>Canonical URL</FormLabel>
-                  <StyledFormInput
-                    placeholder="https://"
-                    name="canonicalUrl"
-                    type="text"
-                    value={formik.values.canonicalUrl}
-                    onChange={formik.handleChange}
-                    maxLength={200}
-                  />
-                  <Flex gap="1" align="center">
-                    <FormHelper>Add a canonical URL</FormHelper>
-                    <Box
-                      css={{ '& svg': { color: '$gray9' } }}
-                      as="a"
-                      href={canonicalUrlInfo}
-                      target="_blank"
-                      rel="noreferrer"
+                    <FileTextIcon />
+                  </Box>
+                  <Flex direction="column" justify="center" css={{ p: '$2' }}>
+                    <Typography
+                      size="subparagraph"
+                      css={{ display: 'flex', gap: '$1' }}
                     >
-                      <QuestionMarkCircledIcon />
-                    </Box>
+                      app.sigle.io
+                    </Typography>
+                    <Typography as="h3" css={{ fontWeight: 600 }}>
+                      {story.metaTitle
+                        ? story.metaTitle
+                        : story.title + ' | Sigle'}
+                    </Typography>
+                    {story.metaDescription && (
+                      <Typography size="subparagraph" css={{ mb: '$1' }}>
+                        {story.metaDescription}
+                      </Typography>
+                    )}
                   </Flex>
-                  {formik.errors.canonicalUrl && (
-                    <FormHelperError>
-                      {formik.errors.canonicalUrl}
-                    </FormHelperError>
-                  )}
-                </FormRow>
-
-                <Typography css={{ mb: '$3' }}>Preview</Typography>
-                {formik.values.metaImage || story.coverImage ? (
-                  <PreviewCard>
-                    <Image
-                      src={formik.values.metaImage || story.coverImage}
-                      alt="Meta image"
-                    />
-                    <Box css={{ p: '$2' }}>
-                      <Typography
-                        size="subparagraph"
-                        css={{ display: 'flex', gap: '$1' }}
-                      >
-                        app.sigle.io
-                      </Typography>
-                      <Typography as="h3" css={{ fontWeight: 600 }}>
-                        {story.metaTitle
-                          ? story.metaTitle
-                          : story.title + ' | Sigle'}
-                      </Typography>
-                      {story.metaDescription && (
-                        <Typography size="subparagraph" css={{ mb: '$1' }}>
-                          {story.metaDescription}
-                        </Typography>
-                      )}
-                    </Box>
-                  </PreviewCard>
-                ) : (
-                  <PreviewCardNoImage>
-                    <Box
-                      css={{
-                        display: 'grid',
-                        placeItems: 'center',
-                        width: 75,
-                        backgroundColor: '$gray3',
-                        borderRight: '1px solid $colors$gray7',
-
-                        '& svg': {
-                          color: '$gray9',
-                        },
-                      }}
-                    >
-                      <FileTextIcon />
-                    </Box>
-                    <Flex direction="column" justify="center" css={{ p: '$2' }}>
-                      <Typography
-                        size="subparagraph"
-                        css={{ display: 'flex', gap: '$1' }}
-                      >
-                        app.sigle.io
-                      </Typography>
-                      <Typography as="h3" css={{ fontWeight: 600 }}>
-                        {story.metaTitle
-                          ? story.metaTitle
-                          : story.title + ' | Sigle'}
-                      </Typography>
-                      {story.metaDescription && (
-                        <Typography size="subparagraph" css={{ mb: '$1' }}>
-                          {story.metaDescription}
-                        </Typography>
-                      )}
-                    </Flex>
-                  </PreviewCardNoImage>
-                )}
-              </Box>
-            </ScrollAreaViewport>
-            <ScrollAreaScrollbar orientation="vertical">
-              <ScrollAreaThumb />
-            </ScrollAreaScrollbar>
-            <ScrollAreaCorner />
+                </PreviewCardNoImage>
+              )}
+            </div>
           </ScrollArea>
 
           <Box
