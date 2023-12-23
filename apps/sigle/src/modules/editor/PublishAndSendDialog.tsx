@@ -1,15 +1,7 @@
 import { PaperPlaneIcon } from '@radix-ui/react-icons';
 import Image from 'next/image';
-import {
-  Box,
-  Button,
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogTitle,
-  Flex,
-  Typography,
-} from '../../ui';
+import { Dialog, Heading } from '@radix-ui/themes';
+import { Box, Button, Flex, Typography } from '../../ui';
 
 interface PublishAndSendDialogProps {
   open: boolean;
@@ -25,20 +17,20 @@ export const PublishAndSendDialog = ({
   onConfirm,
 }: PublishAndSendDialogProps) => {
   return (
-    <Dialog open={open} onOpenChange={onClose}>
-      <DialogContent closeButton={false} css={{ p: '$5', br: 28 }}>
+    <Dialog.Root open={open} onOpenChange={onClose}>
+      <Dialog.Content size="3">
         <Image
           width={484}
           height={214}
           alt="Illustration of someone using a pencil as a pole vault stick."
           src="/static/img/login_to_continue_low_2.png"
         />
-        <DialogTitle asChild>
-          <Typography css={{ fontWeight: 600, mt: '$4' }} size="h3">
+        <Dialog.Title asChild>
+          <Heading mt="4" size="2" as="h4">
             One last check
-          </Typography>
-        </DialogTitle>
-        <DialogDescription asChild>
+          </Heading>
+        </Dialog.Title>
+        <Dialog.Description>
           <Flex direction="column" gap="5">
             <Typography css={{ mt: '$1' }} size="subheading">
               Your post will be published on your profile{' '}
@@ -50,7 +42,7 @@ export const PublishAndSendDialog = ({
             </Typography>
             <Typography size="subheading">Are you sure?</Typography>
           </Flex>
-        </DialogDescription>
+        </Dialog.Description>
         <Flex justify="end" gap="6" css={{ mt: '$5' }}>
           <Button
             size="lg"
@@ -71,7 +63,7 @@ export const PublishAndSendDialog = ({
             <PaperPlaneIcon />
           </Button>
         </Flex>
-      </DialogContent>
-    </Dialog>
+      </Dialog.Content>
+    </Dialog.Root>
   );
 };

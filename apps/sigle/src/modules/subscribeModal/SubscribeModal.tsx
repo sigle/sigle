@@ -154,7 +154,7 @@ export const SubscribeModal = ({
               {success ? `Successfully subscribed!` : userInfo.siteName}
             </Typography>
           </Dialog.Title>
-          <Dialog.Description className="mt-1 mb-6 text-center w-full" size="2">
+          <Dialog.Description className="mb-6 mt-1 w-full text-center" size="2">
             {success ? (
               <span>
                 {`You just subscribed to ${userInfo.siteName}’s newsletter.`}{' '}
