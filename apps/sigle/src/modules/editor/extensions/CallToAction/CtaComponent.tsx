@@ -151,17 +151,17 @@ export const CtaComponent = (props: NodeViewProps) => {
                 </Flex>
                 <Flex direction="column" gap="3">
                   <div className="grid grid-cols-3">
-                    <div className="flex justify-center items-center">
+                    <div className="flex items-center justify-center">
                       <Button css={{ pointerEvents: 'none' }} size="lg">
                         Large
                       </Button>
                     </div>
-                    <div className="flex justify-center items-center">
+                    <div className="flex items-center justify-center">
                       <Button css={{ pointerEvents: 'none' }} size="md">
                         Medium
                       </Button>
                     </div>
-                    <div className="flex justify-center items-center">
+                    <div className="flex items-center justify-center">
                       <Button css={{ pointerEvents: 'none' }} size="sm">
                         Small
                       </Button>

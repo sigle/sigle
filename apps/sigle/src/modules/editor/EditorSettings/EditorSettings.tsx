@@ -1,5 +1,4 @@
 import React, { useCallback, useState } from 'react';
-import * as DialogPrimitive from '@radix-ui/react-dialog';
 import {
   CameraIcon,
   Cross1Icon,
@@ -7,7 +6,7 @@ import {
   QuestionMarkCircledIcon,
   TrashIcon,
 } from '@radix-ui/react-icons';
-import { ScrollArea } from '@radix-ui/themes';
+import { Dialog, ScrollArea } from '@radix-ui/themes';
 import { useFormik, FormikErrors } from 'formik';
 import { useRouter } from 'next/router';
 import { toast } from 'sonner';
@@ -16,15 +15,7 @@ import format from 'date-fns/format';
 import isValid from 'date-fns/isValid';
 import { fetchStoriesControllerDelete } from '@/__generated__/sigle-api';
 import { Story } from '../../../types';
-import {
-  Box,
-  Button,
-  Dialog,
-  DialogTitle,
-  Flex,
-  IconButton,
-  Typography,
-} from '../../../ui';
+import { Box, Button, Flex, IconButton, Typography } from '../../../ui';
 import { keyframes, styled } from '../../../stitches.config';
 import { resizeImage } from '../../../utils/image';
 import { storage } from '../../../utils/stacks';
@@ -130,7 +121,7 @@ const contentShow = keyframes({
   '100%': { opacity: 1, transform: 'translateX(0)' },
 });
 
-const StyledDialogContent = styled(DialogPrimitive.Content, {
+const StyledDialogContent = styled(Dialog.Content, {
   display: 'flex',
   flexDirection: 'column',
   transform: 'translateX(0)',
@@ -151,7 +142,7 @@ const StyledDialogContent = styled(DialogPrimitive.Content, {
   },
 });
 
-const StyledCloseButton = styled(DialogPrimitive.Close, {
+const StyledCloseButton = styled(Dialog.Close, {
   position: 'absolute',
   top: '$9',
   right: '$6',
@@ -305,17 +296,17 @@ export const EditorSettings = ({
     'https://developers.google.com/search/docs/crawling-indexing/consolidate-duplicate-urls';
 
   return (
-    <Dialog open={open} onOpenChange={onClose}>
+    <Dialog.Root open={open} onOpenChange={onClose}>
       <StyledDialogContent aria-label="Story settings">
-        <DialogTitle asChild>
+        <Dialog.Title asChild>
           <Typography
             as="h2"
             size="h3"
-            css={{ ml: '$8', mt: '$10', pb: '$4', fontWeight: 'normal' }}
+            css={{ mt: '$4', pb: '$4', fontWeight: 'normal' }}
           >
             Story settings
           </Typography>
-        </DialogTitle>
+        </Dialog.Title>
 
         <Box
           as="form"
@@ -324,8 +315,8 @@ export const EditorSettings = ({
           }}
           onSubmit={formik.handleSubmit}
         >
-          <ScrollArea type="always" scrollbars="vertical">
-            <div className="flex flex-col px-8">
+          <ScrollArea type="scroll" scrollbars="vertical">
+            <div className="flex flex-col">
               <FormRow>
                 <FormLabel>Created on</FormLabel>
                 <StyledFormInput
@@ -562,12 +553,12 @@ export const EditorSettings = ({
           }}
         />
 
-        <StyledCloseButton asChild>
+        <StyledCloseButton>
           <IconButton size="sm">
             <Cross1Icon width={15} height={15} />
           </IconButton>
         </StyledCloseButton>
       </StyledDialogContent>
-    </Dialog>
+    </Dialog.Root>
   );
 };

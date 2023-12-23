@@ -1,11 +1,5 @@
-import {
-  Dialog,
-  DialogContent,
-  Tabs,
-  TabsContent,
-  TabsList,
-  TabsTrigger,
-} from '../../../ui';
+import { Dialog } from '@radix-ui/themes';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '../../../ui';
 import { styled } from '../../../stitches.config';
 import { HintsCarousel } from './HintsCarousel';
 
@@ -230,15 +224,8 @@ export const ShortcutsDialog = ({
   onOpenChange,
 }: ShortcutsDialogProps) => {
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent
-        css={{
-          backgroundColor: '$gray1',
-          maxWidth: '760px',
-          px: '$8',
-          py: '$8',
-        }}
-      >
+    <Dialog.Root open={open} onOpenChange={onOpenChange}>
+      <Dialog.Content size="3">
         <Tabs defaultValue="shortcuts">
           <TabsList aria-label="Find keyboard shortcuts and hints">
             <TabsTrigger value="shortcuts">Keyboard Shortcuts</TabsTrigger>
@@ -339,7 +326,7 @@ export const ShortcutsDialog = ({
             <HintsCarousel />
           </TabsContent>
         </Tabs>
-      </DialogContent>
-    </Dialog>
+      </Dialog.Content>
+    </Dialog.Root>
   );
 };
