@@ -22,7 +22,6 @@ import { colors } from '../utils/colors';
 import { AuthProvider } from '../modules/auth/AuthContext';
 import { darkTheme, globalCss } from '../stitches.config';
 import { FeatureFlagsProvider } from '../utils/featureFlags';
-import { DesignSystemProvider } from '../ui';
 import { PlausibleTrack } from '../modules/plausible/PlausibleTrack';
 import { PosthogTrack } from '../modules/posthog/PosthogTrack';
 
@@ -175,9 +174,7 @@ export default class MyApp extends App {
                     value={{ light: 'light-theme', dark: darkTheme.toString() }}
                   >
                     <Theme grayColor="gray" accentColor="orange" radius="large">
-                      <DesignSystemProvider>
-                        <Component {...modifiedPageProps} />
-                      </DesignSystemProvider>
+                      <Component {...modifiedPageProps} />
                     </Theme>
                   </ThemeProvider>
                 </AuthProvider>
