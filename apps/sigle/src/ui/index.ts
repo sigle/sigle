@@ -8,7 +8,6 @@ export * from './Flex';
 export * from './Heading';
 export * from './IconButton';
 export * from './LoadingSpinner';
-export * from './ScrollArea';
 export * from './Text';
 export * from './Tooltip';
 export * from './Tabs';
