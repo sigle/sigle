@@ -1,5 +1,6 @@
+import { Tabs } from '@radix-ui/themes';
 import { useAnalyticsControllerGetHistorical } from '@/__generated__/sigle-api';
-import { Box, Flex, Tabs, TabsList, TabsTrigger } from '../../../ui';
+import { Box, Flex } from '../../../ui';
 import { ErrorMessage } from '../../../ui/ErrorMessage';
 import { StatsChart } from './StatsChart';
 import { StatsTotal } from './StatsTotal';
@@ -34,19 +35,20 @@ export const StatsFrame = ({
       {error && <ErrorMessage>{error.message}</ErrorMessage>}
       <Flex>
         <StatsTotal data={data} />
-        <Tabs
+        <Tabs.Root
           onValueChange={(value) => changeHistoricalParams(value as StatsType)}
-          css={{ width: '100%' }}
           defaultValue="weekly"
+          className="w-full"
         >
-          <TabsList
-            css={{ alignSelf: 'end' }}
+          <Tabs.List
             aria-label="See your total views and visitors"
+            className="justify-end mb-4"
+            style={{ boxShadow: 'none' }}
           >
-            <TabsTrigger value="weekly">Weekly</TabsTrigger>
-            <TabsTrigger value="monthly">Monthly</TabsTrigger>
-            <TabsTrigger value="all">All</TabsTrigger>
-          </TabsList>
+            <Tabs.Trigger value="weekly">Weekly</Tabs.Trigger>
+            <Tabs.Trigger value="monthly">Monthly</Tabs.Trigger>
+            <Tabs.Trigger value="all">All</Tabs.Trigger>
+          </Tabs.List>
           <Box
             css={{
               mb: '$8',
@@ -57,7 +59,7 @@ export const StatsFrame = ({
           >
             <StatsChart type={historicalParams.statType} data={data} />
           </Box>
-        </Tabs>
+        </Tabs.Root>
       </Flex>
     </Box>
   );
