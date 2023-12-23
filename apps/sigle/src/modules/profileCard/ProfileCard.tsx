@@ -2,18 +2,9 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { useTheme } from 'next-themes';
 import { useState } from 'react';
-import { HoverCard } from '@radix-ui/themes';
+import { HoverCard, Tooltip } from '@radix-ui/themes';
 import { useUserControllerGetUser } from '@/__generated__/sigle-api';
-import {
-  Box,
-  Button,
-  Flex,
-  Typography,
-  Tooltip,
-  TooltipTrigger,
-  TooltipContent,
-  IconButton,
-} from '../../ui';
+import { Box, Button, Flex, Typography, IconButton } from '../../ui';
 import { generateAvatar } from '../../utils/boringAvatar';
 import { SettingsFile } from '../../types';
 import { styled } from '../../stitches.config';
@@ -193,26 +184,22 @@ export const ProfileCard = ({
             </Typography>
           </Link>
           {userInfoByAddress?.subscription && (
-            <Tooltip delayDuration={200}>
-              <TooltipTrigger asChild>
-                <Image
-                  src={
-                    resolvedTheme === 'dark'
-                      ? '/img/badges/creatorPlusDark.svg'
-                      : '/img/badges/creatorPlusLight.svg'
-                  }
-                  alt="Creator + badge"
-                  width={12}
-                  height={12}
-                />
-              </TooltipTrigger>
-              <TooltipContent
-                css={{ boxShadow: 'none' }}
-                side="right"
-                sideOffset={8}
-              >
-                Explorer holder
-              </TooltipContent>
+            <Tooltip
+              delayDuration={200}
+              side="right"
+              sideOffset={8}
+              content="Explorer holder"
+            >
+              <Image
+                src={
+                  resolvedTheme === 'dark'
+                    ? '/img/badges/creatorPlusDark.svg'
+                    : '/img/badges/creatorPlusLight.svg'
+                }
+                alt="Creator + badge"
+                width={12}
+                height={12}
+              />
             </Tooltip>
           )}
         </Flex>
