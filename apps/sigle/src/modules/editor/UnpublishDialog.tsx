@@ -1,14 +1,4 @@
-import {
-  Button,
-  Dialog,
-  DialogContent,
-  DialogTitle,
-  DialogDescription,
-  Flex,
-  Heading,
-  Text,
-  DialogClose,
-} from '../../ui';
+import { Dialog, Text, Flex, Button } from '@radix-ui/themes';
 
 interface UnpublishDialogProps {
   open: boolean;
@@ -24,38 +14,29 @@ export const UnpublishDialog = ({
   onClose,
 }: UnpublishDialogProps) => {
   return (
-    <Dialog open={open} onOpenChange={onClose}>
-      <DialogContent>
-        <DialogTitle asChild>
-          <Heading as="h2" size="xl" css={{ mb: '$3' }}>
-            Unpublish my story
-          </Heading>
-        </DialogTitle>
-        <DialogDescription asChild>
+    <Dialog.Root open={open} onOpenChange={onClose}>
+      <Dialog.Content size="3" className="max-w-[450px]">
+        <Dialog.Title>Unpublish my story</Dialog.Title>
+        <Dialog.Description className="space-y-2">
           <>
-            <Text>You’re about to unpublish this story.</Text>
-            <Text>
+            <Text as="p">You’re about to unpublish this story.</Text>
+            <Text as="p">
               It won’t be visible on your blog anymore but you still can see and
               edit it in your draft section.
             </Text>
           </>
-        </DialogDescription>
-        <Flex justify="end" gap="6" css={{ mt: '$6' }}>
-          <DialogClose asChild>
-            <Button size="lg" variant="ghost" disabled={loading}>
+        </Dialog.Description>
+        <Flex gap="3" mt="4" justify="end">
+          <Dialog.Close>
+            <Button size="2" variant="soft" color="gray" disabled={loading}>
               Cancel
             </Button>
-          </DialogClose>
-          <Button
-            size="lg"
-            color="orange"
-            disabled={loading}
-            onClick={onConfirm}
-          >
+          </Dialog.Close>
+          <Button size="2" disabled={loading} onClick={onConfirm}>
             {loading ? 'Unpublishing ...' : 'Confirm'}
           </Button>
         </Flex>
-      </DialogContent>
-    </Dialog>
+      </Dialog.Content>
+    </Dialog.Root>
   );
 };
