@@ -553,7 +553,7 @@ export const EditorSettings = ({
           }}
         />
 
-        <StyledCloseButton asChild>
+        <StyledCloseButton>
           <IconButton size="sm">
             <Cross1Icon width={15} height={15} />
           </IconButton>
