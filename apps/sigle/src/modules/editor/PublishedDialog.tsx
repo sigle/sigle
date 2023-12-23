@@ -48,7 +48,7 @@ export const PublishedDialog = ({
   };
 
   return (
-    <Dialog.Root open={true} onOpenChange={onOpenChange}>
+    <Dialog.Root open={open} onOpenChange={onOpenChange}>
       <Dialog.Content size="3" className="max-w-[450px]">
         <Dialog.Title asChild>
           <Heading as="h2" size="2" className="text-center">
