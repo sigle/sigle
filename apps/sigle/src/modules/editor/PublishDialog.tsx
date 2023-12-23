@@ -1,6 +1,7 @@
 import { ArrowLeftIcon, CheckCircledIcon } from '@radix-ui/react-icons';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
+import { Dialog } from '@radix-ui/themes';
 import {
   useUserControllerGetUserMe,
   useSubscriptionControllerGetUserMe,
@@ -12,9 +13,6 @@ import {
   Box,
   Button,
   Container,
-  Dialog,
-  DialogContent,
-  DialogTitle,
   Flex,
   Tabs,
   TabsContent,
@@ -68,7 +66,7 @@ const StyledTabsTrigger = styled(TabsTrigger, {
   },
 });
 
-const StyledDialogContent = styled(DialogContent, {
+const StyledDialogContent = styled(Dialog.Content, {
   maxWidth: '100%',
   maxHeight: '100%',
   width: '100vw',
@@ -135,11 +133,11 @@ export const PublishDialog = ({
 
   return (
     <>
-      <Dialog open={open} onOpenChange={onClose} overlay={false}>
-        <StyledDialogContent closeButton={false}>
+      <Dialog.Root open={open} onOpenChange={onClose}>
+        <StyledDialogContent size="3">
           <Container>
             <VisuallyHidden>
-              <DialogTitle>Preview and publish your story</DialogTitle>
+              <Dialog.Title>Preview and publish your story</Dialog.Title>
             </VisuallyHidden>
             <Button
               onClick={onClose}
@@ -320,7 +318,8 @@ export const PublishDialog = ({
             </Flex>
           </Container>
         </StyledDialogContent>
-      </Dialog>
+      </Dialog.Root>
+
       <PublishAndSendDialog
         open={showPublishAndSendDialog}
         loading={loading}
