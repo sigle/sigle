@@ -321,16 +321,11 @@ export const EditorSettings = ({
           as="form"
           css={{
             height: '100%',
-            //   overflow: 'auto',
           }}
           onSubmit={formik.handleSubmit}
         >
           <ScrollArea type="always" scrollbars="vertical">
-            <Box
-              css={{
-                px: '$8',
-              }}
-            >
+            <div className="flex flex-col px-8">
               <FormRow>
                 <FormLabel>Created on</FormLabel>
                 <StyledFormInput
@@ -517,7 +512,7 @@ export const EditorSettings = ({
                   </Flex>
                 </PreviewCardNoImage>
               )}
-            </Box>
+            </div>
           </ScrollArea>
 
           <Box
