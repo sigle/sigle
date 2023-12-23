@@ -1,13 +1,7 @@
 import { Link2Icon, LinkedInLogoIcon } from '@radix-ui/react-icons';
 import { useState } from 'react';
-import {
-  Box,
-  Flex,
-  IconButton,
-  Tooltip,
-  TooltipContent,
-  TooltipTrigger,
-} from '../../ui';
+import { Tooltip } from '@radix-ui/themes';
+import { Box, Flex, IconButton } from '../../ui';
 import { TwitterFilledIcon, FacebookLogoIcon } from '../../icons';
 import { SettingsFile, Story } from '../../types';
 import { useAuth } from '../auth/AuthContext';
@@ -59,87 +53,59 @@ export const ShareButtons = ({
       className="not-prose"
     >
       <Flex gap="3">
-        <Tooltip delayDuration={200}>
-          <TooltipTrigger asChild>
-            <Box
-              as="a"
-              href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(
-                title,
-              )} by ${handle}&url=${sigleConfig.appUrl}/${username}/${
-                story.id
-              }`}
-              target="_blank"
-              rel="noopener"
-            >
-              <TwitterFilledIcon />
-            </Box>
-          </TooltipTrigger>
-          <TooltipContent css={{ boxShadow: 'none' }} side="top" sideOffset={8}>
-            Share on Twitter
-          </TooltipContent>
+        <Tooltip delayDuration={200} content="Share on Twitter" side="top">
+          <Box
+            as="a"
+            href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(
+              title,
+            )} by ${handle}&url=${sigleConfig.appUrl}/${username}/${story.id}`}
+            target="_blank"
+            rel="noopener"
+          >
+            <TwitterFilledIcon />
+          </Box>
         </Tooltip>
-        <Tooltip delayDuration={200}>
-          <TooltipTrigger asChild>
-            <Box
-              as="a"
-              href={`https://www.facebook.com/sharer/sharer.php?u=${sigleConfig.appUrl}/${siteName}/${story.id}&quote=${title} by ${username}`}
-              target="_blank"
-              rel="noopener"
-            >
-              <FacebookLogoIcon />
-            </Box>
-          </TooltipTrigger>
-          <TooltipContent css={{ boxShadow: 'none' }} side="top" sideOffset={8}>
-            Share on Facebook
-          </TooltipContent>
+        <Tooltip delayDuration={200} content="Share on Facebook" side="top">
+          <Box
+            as="a"
+            href={`https://www.facebook.com/sharer/sharer.php?u=${sigleConfig.appUrl}/${siteName}/${story.id}&quote=${title} by ${username}`}
+            target="_blank"
+            rel="noopener"
+          >
+            <FacebookLogoIcon />
+          </Box>
         </Tooltip>
-        <Tooltip delayDuration={200}>
-          <TooltipTrigger asChild>
-            <Box
-              as="a"
-              href={`https://www.linkedin.com/sharing/share-offsite/?url=${sigleConfig.appUrl}/${user?.username}/${story.id}`}
-              target="_blank"
-              rel="noopener"
-            >
-              <LinkedInLogoIcon />
-            </Box>
-          </TooltipTrigger>
-          <TooltipContent css={{ boxShadow: 'none' }} side="top" sideOffset={8}>
-            Share on LinkedIn
-          </TooltipContent>
+        <Tooltip delayDuration={200} content="Share on LinkedIn" side="top">
+          <Box
+            as="a"
+            href={`https://www.linkedin.com/sharing/share-offsite/?url=${sigleConfig.appUrl}/${user?.username}/${story.id}`}
+            target="_blank"
+            rel="noopener"
+          >
+            <LinkedInLogoIcon />
+          </Box>
         </Tooltip>
       </Flex>
       <Tooltip
         open={isOpen}
         onOpenChange={() => setIsOpen(!isOpen)}
         delayDuration={200}
+        content={isCopied ? 'Copied!' : 'Copy link'}
+        side="top"
       >
-        <TooltipTrigger asChild>
-          <IconButton
-            disabled={isCopied}
-            css={{
-              width: 15,
-              height: 15,
-              p: 0,
-              '&:hover': { backgroundColor: 'transparent' },
-              '&:active': { backgroundColor: 'transparent' },
-            }}
-            onClick={handleClick}
-          >
-            <Link2Icon />
-          </IconButton>
-        </TooltipTrigger>
-        <TooltipContent
+        <IconButton
+          disabled={isCopied}
           css={{
-            boxShadow: 'none',
-            backgroundColor: isCopied ? '$green11' : '$gray3',
-            color: isCopied ? '$gray1' : '$gray11',
+            width: 15,
+            height: 15,
+            p: 0,
+            '&:hover': { backgroundColor: 'transparent' },
+            '&:active': { backgroundColor: 'transparent' },
           }}
-          side="top"
-          sideOffset={8}
+          onClick={handleClick}
         >
-          {isCopied ? 'Copied!' : 'Copy link'}
-        </TooltipContent>
+          <Link2Icon />
+        </IconButton>
       </Tooltip>
     </Flex>
   );
