@@ -1,70 +1,20 @@
 import { ArrowLeftIcon, CheckCircledIcon } from '@radix-ui/react-icons';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
-import { Dialog } from '@radix-ui/themes';
+import { Dialog, Tabs } from '@radix-ui/themes';
 import {
   useUserControllerGetUserMe,
   useSubscriptionControllerGetUserMe,
   useStoriesControllerGet,
 } from '@/__generated__/sigle-api';
+import { cn } from '@/lib/cn';
 import { styled } from '../../stitches.config';
 import { Story } from '../../types';
-import {
-  Box,
-  Button,
-  Container,
-  Flex,
-  Tabs,
-  TabsContent,
-  TabsList,
-  TabsTrigger,
-  Typography,
-} from '../../ui';
+import { Box, Button, Container, Flex, Typography } from '../../ui';
 import { VisuallyHidden } from '../../ui/VisuallyHidden';
 import { PublishAndSendDialog } from './PublishAndSendDialog';
 import { SendTestEmail } from './PublishDialog/SendTestEmail';
 import { TwitterCardPreview } from './TwitterCardPreview';
-
-const StyledTabsTrigger = styled(TabsTrigger, {
-  br: '$3',
-  px: '$5',
-  py: '$3',
-  fontSize: '$2',
-  lineHeight: '20.4px',
-  color: '$gray9',
-  boxShadow: '0 0 0 1px $colors$gray7',
-
-  '&:hover': {
-    color: '$gray11',
-    boxShadow: '0 0 0 1px $colors$gray9',
-  },
-
-  '&:active': {
-    color: '$gray11',
-    backgroundColor: '$gray4',
-    boxShadow: '0 0 0 1px $colors$gray9',
-  },
-
-  '&:disabled': {
-    pointerEvents: 'none',
-  },
-
-  '&[data-state="active"]': {
-    color: '$gray11',
-    boxShadow: '0 0 0 1px $colors$gray11',
-
-    '&:hover': {
-      color: '$gray11',
-      boxShadow: '0 0 0 1px $colors$gray11',
-    },
-
-    '&:active': {
-      color: '$gray11',
-      backgroundColor: 'transparent',
-      boxShadow: '0 0 0 1px $colors$gray11',
-    },
-  },
-});
 
 const StyledDialogContent = styled(Dialog.Content, {
   maxWidth: '100%',
@@ -169,42 +119,28 @@ export const PublishDialog = ({
                 <Typography css={{ fontWeight: 700 }} as="h2" size="h1">
                   Publication
                 </Typography>
-                <Tabs
+                <Tabs.Root
                   value={tabValue}
                   onValueChange={(value) => setTabValue(value as any)}
                 >
-                  <TabsList
-                    css={{
-                      alignSelf: 'start',
-                      flexDirection: isNewsletterActive ? 'row-reverse' : 'row',
-                    }}
+                  <Tabs.List
+                    className={cn('self-start mb-4', {
+                      'flex-row': !isNewsletterActive,
+                      'flex-row-reverse': isNewsletterActive,
+                    })}
                   >
-                    <StyledTabsTrigger value="publish only">
+                    <Tabs.Trigger value="publish only">
                       Publish only
-                    </StyledTabsTrigger>
-                    {(isStoryAlreadySent || !hasActiveSubscription) && (
-                      <StyledTabsTrigger
-                        disabled
-                        value="publish and send"
-                        css={{
-                          textDecoration: 'line-through',
-                        }}
-                      >
-                        Publish and send
-                      </StyledTabsTrigger>
-                    )}
-                    {!isStoryAlreadySent && hasActiveSubscription && (
-                      <StyledTabsTrigger value="publish and send">
-                        Publish and send
-                      </StyledTabsTrigger>
-                    )}
-                  </TabsList>
-                  <TabsContent
-                    css={{
-                      display: 'flex',
-                      flexDirection: 'column',
-                      gap: '$5',
-                    }}
+                    </Tabs.Trigger>
+                    <Tabs.Trigger
+                      disabled={isStoryAlreadySent || !hasActiveSubscription}
+                      value="publish and send"
+                    >
+                      Publish and send
+                    </Tabs.Trigger>
+                  </Tabs.List>
+                  <Tabs.Content
+                    className="flex flex-col gap-5"
                     value="publish only"
                   >
                     <Typography css={{ fontWeight: 600 }} size="subheading">
@@ -252,21 +188,17 @@ export const PublishDialog = ({
                         )}
                       </div>
                     )}
-                  </TabsContent>
+                  </Tabs.Content>
 
-                  <TabsContent
-                    css={{
-                      display: 'flex',
-                      flexDirection: 'column',
-                      gap: '$5',
-                    }}
+                  <Tabs.Content
+                    className="flex flex-col gap-5"
                     value="publish and send"
                   >
                     {!isStoryAlreadySent &&
                       hasActiveSubscription &&
                       isNewsletterActive && <SendTestEmail story={story} />}
-                  </TabsContent>
-                </Tabs>
+                  </Tabs.Content>
+                </Tabs.Root>
               </Flex>
 
               <Flex css={{ flex: 1 }} direction="column" gap="5">
