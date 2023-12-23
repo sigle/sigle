@@ -1,18 +1,9 @@
 import { useEffect, useState } from 'react';
+import { Button, Dialog, Flex, Heading, Text } from '@radix-ui/themes';
 import { TwitterLogoIcon, LinkedInLogoIcon } from '@radix-ui/react-icons';
 import posthog from 'posthog-js';
 import { sigleConfig } from '../../config';
 import { Story } from '../../types';
-import {
-  Button,
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogTitle,
-  Flex,
-  Heading,
-  Text,
-} from '../../ui';
 import { useAuth } from '../auth/AuthContext';
 import { FacebookLogo } from '../../icons';
 
@@ -57,19 +48,17 @@ export const PublishedDialog = ({
   };
 
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent>
-        <DialogTitle asChild>
-          <Heading as="h2" size="2xl" css={{ textAlign: 'center' }}>
+    <Dialog.Root open={true} onOpenChange={onOpenChange}>
+      <Dialog.Content size="3" className="max-w-[450px]">
+        <Dialog.Title asChild>
+          <Heading as="h2" size="2" className="text-center">
             Published!
           </Heading>
-        </DialogTitle>
-        <DialogDescription asChild>
-          <Text css={{ textAlign: 'center' }}>
-            Spread the word on social media
-          </Text>
-        </DialogDescription>
-        <Flex justify="center" gap="6" css={{ mt: '$6' }}>
+        </Dialog.Title>
+        <Dialog.Description className="text-center">
+          Spread the word on social media
+        </Dialog.Description>
+        <Flex justify="center" gap="6" mt="6">
           <a
             href={`https://twitter.com/intent/tweet?text=${shareTextEncoded}`}
             target="_blank"
@@ -92,12 +81,12 @@ export const PublishedDialog = ({
             <FacebookLogo height={iconSize} width={iconSize} />
           </a>
         </Flex>
-        <Flex justify="center" css={{ mt: '$6' }}>
-          <Button size="lg" variant="ghost" color="orange" onClick={handleCopy}>
+        <Flex justify="center" mt="6">
+          <Button size="3" variant="ghost" color="orange" onClick={handleCopy}>
             {isCopied ? 'Copied!' : 'Copy story link'}
           </Button>
         </Flex>
-      </DialogContent>
-    </Dialog>
+      </Dialog.Content>
+    </Dialog.Root>
   );
 };
