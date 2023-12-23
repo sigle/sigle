@@ -2,6 +2,7 @@ import { FormikErrors, useFormik } from 'formik';
 import { useSession } from 'next-auth/react';
 import Image from 'next/image';
 import { useEffect, useState } from 'react';
+import { Dialog } from '@radix-ui/themes';
 import {
   useUserControllerGetUserMe,
   useSubscribersControllerCreate,
@@ -9,10 +10,6 @@ import {
 import { styled } from '../../stitches.config';
 import {
   Button,
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogTitle,
   Flex,
   FormHelperError,
   FormInput,
@@ -117,8 +114,8 @@ export const SubscribeModal = ({
     });
 
   return (
-    <Dialog open={open} onOpenChange={onClose}>
-      <DialogContent css={{ p: '$5', br: 28 }} closeButton={success}>
+    <Dialog.Root open={true} onOpenChange={onClose}>
+      <Dialog.Content size="3">
         <Flex
           direction="column"
           css={{
@@ -144,7 +141,7 @@ export const SubscribeModal = ({
               />
             </HeaderLogoContainer>
           )}
-          <DialogTitle asChild>
+          <Dialog.Title asChild>
             <Typography
               css={{
                 fontWeight: 600,
@@ -156,24 +153,19 @@ export const SubscribeModal = ({
             >
               {success ? `Successfully subscribed!` : userInfo.siteName}
             </Typography>
-          </DialogTitle>
-          <DialogDescription asChild>
-            <Typography
-              css={{ mt: '$1', mb: '$6', textAlign: 'center', width: '100%' }}
-              size="subheading"
-            >
-              {success ? (
-                <span>
-                  {`You just subscribed to ${userInfo.siteName}’s newsletter.`}{' '}
-                  <br />
-                  See you soon in your mailbox!
-                </span>
-              ) : (
-                `Enter your email to receive ${userInfo.siteName}'s new stories in your 
+          </Dialog.Title>
+          <Dialog.Description className="mt-1 mb-6 text-center w-full" size="2">
+            {success ? (
+              <span>
+                {`You just subscribed to ${userInfo.siteName}’s newsletter.`}{' '}
+                <br />
+                See you soon in your mailbox!
+              </span>
+            ) : (
+              `Enter your email to receive ${userInfo.siteName}'s new stories in your 
             mailbox`
-              )}
-            </Typography>
-          </DialogDescription>
+            )}
+          </Dialog.Description>
           {success ? null : (
             <>
               <FormInput
@@ -219,7 +211,7 @@ export const SubscribeModal = ({
             </>
           )}
         </Flex>
-      </DialogContent>
-    </Dialog>
+      </Dialog.Content>
+    </Dialog.Root>
   );
 };
