@@ -114,7 +114,7 @@ export const SubscribeModal = ({
     });
 
   return (
-    <Dialog.Root open={true} onOpenChange={onClose}>
+    <Dialog.Root open={open} onOpenChange={onClose}>
       <Dialog.Content size="3">
         <Flex
           direction="column"
