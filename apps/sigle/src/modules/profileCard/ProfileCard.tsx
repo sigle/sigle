@@ -2,15 +2,13 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { useTheme } from 'next-themes';
 import { useState } from 'react';
+import { HoverCard } from '@radix-ui/themes';
 import { useUserControllerGetUser } from '@/__generated__/sigle-api';
 import {
   Box,
   Button,
   Flex,
   Typography,
-  HoverCard,
-  HoverCardContent,
-  HoverCardTrigger,
   Tooltip,
   TooltipTrigger,
   TooltipContent,
@@ -107,23 +105,18 @@ export const ProfileCard = ({
   const handleCancelSubscribe = () => setShowSubscribeDialog(false);
 
   return (
-    <HoverCard onOpenChange={(open) => setIsOpen(open)} openDelay={300}>
+    <HoverCard.Root onOpenChange={(open) => setIsOpen(open)} openDelay={300}>
       <Link
         href="/[username]"
         as={`/${userInfo.username}`}
         passHref
         legacyBehavior
       >
-        <HoverCardTrigger asChild>{children}</HoverCardTrigger>
+        <HoverCard.Trigger>{children}</HoverCard.Trigger>
       </Link>
-      <HoverCardContent
+      <HoverCard.Content
+        className="w-[280px] flex flex-col gap-2"
         sideOffset={40}
-        css={{
-          display: 'flex',
-          gap: '$2',
-          flexDirection: 'column',
-          width: 280,
-        }}
       >
         <Flex justify="between">
           <ProfileImageContainer>
@@ -268,12 +261,12 @@ export const ProfileCard = ({
             </Typography>
           </Link>
         </Flex>
-      </HoverCardContent>
+      </HoverCard.Content>
 
       <LoginModal
         open={showLoginPromptDialog}
         onClose={handleCancelLoginPrompt}
       />
-    </HoverCard>
+    </HoverCard.Root>
   );
 };
