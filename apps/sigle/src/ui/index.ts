@@ -3,7 +3,6 @@ export * from './Box';
 export * from './Button';
 export * from './Container';
 export * from './DesignSystemProvider';
-export * from './Dialog';
 export * from './Flex';
 export * from './Heading';
 export * from './IconButton';

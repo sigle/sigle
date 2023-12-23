@@ -8,7 +8,6 @@ import PlausibleProvider from 'next-plausible';
 import { DefaultSeo } from 'next-seo';
 import { Toaster } from 'sonner';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { SessionProvider } from 'next-auth/react';
 import NProgress from 'nprogress';
 import 'nprogress/nprogress.css';
@@ -164,7 +163,6 @@ export default class MyApp extends App {
           <PlausibleTrack />
           <PosthogTrack />
           <QueryClientProvider client={queryClient}>
-            <ReactQueryDevtools initialIsOpen={false} />
             <FeatureFlagsProvider>
               <SessionProvider
                 session={modifiedPageProps.session}

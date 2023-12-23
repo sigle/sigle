@@ -1,17 +1,18 @@
 import { Editor } from '@tiptap/react';
 import { useCallback, useState } from 'react';
+import { Dialog } from '@radix-ui/themes';
 import { styled } from '../../../stitches.config';
 import { Story } from '../../../types';
-import { Box, Button, Dialog, DialogContent, DialogTitle } from '../../../ui';
+import { Box, Button } from '../../../ui';
 import { CommandList } from '../extensions/SlashCommand/CommandList';
 import { activeNode } from '../ActiveNode';
 import { slashCommands } from '../extensions/SlashCommand/commands';
 
-const StyledDialogTitle = styled(DialogTitle, {
+const StyledDialogTitle = styled(Dialog.Title, {
   ml: '-$1',
 });
 
-const StyledDialogContent = styled(DialogContent, {
+const StyledDialogContent = styled(Dialog.Content, {
   display: 'flex',
   flexDirection: 'column',
   gap: '$2',
@@ -84,11 +85,11 @@ export const MobileFloatingMenu = ({
             </Box>
             {currentNode?.name}
           </Button>
-          <Dialog
+          <Dialog.Root
             open={showFloatingMenuDialog}
             onOpenChange={() => setShowFloatingMenuDialog(false)}
           >
-            <StyledDialogContent closeButton={false}>
+            <StyledDialogContent>
               <StyledDialogTitle>Paragraph Style</StyledDialogTitle>
               <Box
                 css={{
@@ -108,7 +109,7 @@ export const MobileFloatingMenu = ({
                 />
               </Box>
             </StyledDialogContent>
-          </Dialog>
+          </Dialog.Root>
         </>
       )}
     </>
