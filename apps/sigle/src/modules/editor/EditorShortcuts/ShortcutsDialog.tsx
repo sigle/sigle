@@ -154,9 +154,24 @@ const textSelection = [
   },
 ];
 
-const StyledTable = styled('table', {
-  width: '100%',
-});
+const shortcuts = [
+  {
+    value: 'essentials',
+    items: essentials,
+  },
+  {
+    value: 'text-formatting',
+    items: textFormatting,
+  },
+  {
+    value: 'p-formatting',
+    items: paragraphFormatting,
+  },
+  {
+    value: 'selection',
+    items: textSelection,
+  },
+];
 
 const Tr = styled('tr', {
   display: 'flex',
@@ -180,31 +195,6 @@ const Th = styled('th', {
   maxWidth: '30%',
   textAlign: 'left',
 });
-
-const Td = styled('td', {
-  display: 'flex',
-  gap: '$2',
-  maxWidth: '30%',
-  flex: 1,
-  textAlign: 'left',
-});
-
-interface TableProps {
-  children: React.ReactNode;
-}
-
-const Table = ({ children }: TableProps) => (
-  <StyledTable>
-    <thead>
-      <Tr css={{ boxShadow: '0 1px 0 0 $colors$gray12' }}>
-        <Th scope="col">Command</Th>
-        <Th scope="col">Windows/Linux</Th>
-        <Th scope="col">macOS</Th>
-      </Tr>
-    </thead>
-    <tbody>{children}</tbody>
-  </StyledTable>
-);
 
 export const ShortcutsDialog = ({
   open,
@@ -238,66 +228,32 @@ export const ShortcutsDialog = ({
                 </Tabs.Trigger>
                 <Tabs.Trigger value="selection">Text Selection</Tabs.Trigger>
               </Tabs.List>
-              <Tabs.Content value="essentials">
-                <Table>
-                  {essentials.map((shortcut) => (
-                    <Tr key={shortcut.action}>
-                      <Th scope="row">{shortcut.action}</Th>
-                      <Td>
-                        <Kbd>{shortcut.winCommand.join(' + ')}</Kbd>
-                      </Td>
-                      <Td>
-                        <Kbd>{shortcut.macCommand.join(' + ')}</Kbd>
-                      </Td>
-                    </Tr>
-                  ))}
-                </Table>
-              </Tabs.Content>
-              <Tabs.Content value="text-formatting">
-                <Table>
-                  {textFormatting.map((shortcut) => (
-                    <Tr key={shortcut.action}>
-                      <Th scope="row">{shortcut.action}</Th>
-                      <Td>
-                        <Kbd>{shortcut.winCommand.join(' + ')}</Kbd>
-                      </Td>
-                      <Td>
-                        <Kbd>{shortcut.macCommand.join(' + ')}</Kbd>
-                      </Td>
-                    </Tr>
-                  ))}
-                </Table>
-              </Tabs.Content>
-              <Tabs.Content value="p-formatting">
-                <Table>
-                  {paragraphFormatting.map((shortcut) => (
-                    <Tr key={shortcut.action}>
-                      <Th scope="row">{shortcut.action}</Th>
-                      <Td>
-                        <Kbd>{shortcut.winCommand.join(' + ')}</Kbd>
-                      </Td>
-                      <Td>
-                        <Kbd>{shortcut.macCommand.join(' + ')}</Kbd>
-                      </Td>
-                    </Tr>
-                  ))}
-                </Table>
-              </Tabs.Content>
-              <Tabs.Content value="selection">
-                <Table>
-                  {textSelection.map((shortcut) => (
-                    <Tr key={shortcut.action}>
-                      <Th scope="row">{shortcut.action}</Th>
-                      <Td>
-                        <Kbd>{shortcut.winCommand.join(' + ')}</Kbd>
-                      </Td>
-                      <Td>
-                        <Kbd>{shortcut.macCommand.join(' + ')}</Kbd>
-                      </Td>
-                    </Tr>
-                  ))}
-                </Table>
-              </Tabs.Content>
+              {shortcuts.map((shortcut) => (
+                <Tabs.Content key={shortcut.value} value={shortcut.value}>
+                  <table className="w-full">
+                    <thead>
+                      <Tr css={{ boxShadow: '0 1px 0 0 $colors$gray12' }}>
+                        <Th scope="col">Command</Th>
+                        <Th scope="col">Windows/Linux</Th>
+                        <Th scope="col">macOS</Th>
+                      </Tr>
+                    </thead>
+                    <tbody>
+                      {shortcut.items.map((shortcut) => (
+                        <Tr key={shortcut.action}>
+                          <Th scope="row">{shortcut.action}</Th>
+                          <td className="flex flex-1">
+                            <Kbd>{shortcut.winCommand.join(' + ')}</Kbd>
+                          </td>
+                          <td className="flex flex-1">
+                            <Kbd>{shortcut.macCommand.join(' + ')}</Kbd>
+                          </td>
+                        </Tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </Tabs.Content>
+              ))}
             </Tabs.Root>
           </Tabs.Content>
           <Tabs.Content value="hints">
