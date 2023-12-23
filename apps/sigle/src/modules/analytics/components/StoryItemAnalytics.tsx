@@ -97,7 +97,7 @@ export const StoryItemAnalytics = ({ story }: StoryAnalyticsProps) => {
         >
           <Tabs.List
             aria-label="See your total views and visitors"
-            className="justify-end mb-4"
+            className="mb-4 justify-end"
             style={{ boxShadow: 'none' }}
           >
             <Tabs.Trigger value="weekly">Weekly</Tabs.Trigger>
