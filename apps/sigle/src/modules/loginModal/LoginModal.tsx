@@ -17,7 +17,7 @@ export const LoginModal = ({ open, onClose }: LoginModalProps) => {
   ];
 
   return (
-    <Dialog.Root open={true} onOpenChange={onClose}>
+    <Dialog.Root open={open} onOpenChange={onClose}>
       <Dialog.Content size="3" className="text-center">
         <Image
           width={527}
