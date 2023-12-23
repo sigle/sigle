@@ -43,7 +43,7 @@ pnpm install
 To start the project in development/watch mode run:
 
 ```sh
-docker compose start
+docker compose up
 ```
 
 This will start the databases and the applications services. You can now open your browser and go to http://localhost:3000 to see the app.
