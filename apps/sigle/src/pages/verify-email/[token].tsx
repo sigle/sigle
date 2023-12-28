@@ -31,7 +31,7 @@ const VerifyEmail = () => {
     <Flex direction="column" className="h-full">
       <AppHeader />
       <Container size="3" px="4" className="mt-10">
-        <div className="flex flex-col justify-center items-center text-center flex-1">
+        <div className="flex flex-1 flex-col items-center justify-center text-center">
           {success && (
             <>
               <Text>Email verified successfully!</Text>
