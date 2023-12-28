@@ -7,7 +7,7 @@ import { AppHeader } from '../../components/layout/header/header';
 
 const VerifyEmail = () => {
   const router = useRouter();
-  const [success, setSuccess] = useState<boolean>(true);
+  const [success, setSuccess] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
   const { mutate: verifyUserEmail } = useEmailVerificationControllerVerifyEmail(
     {
