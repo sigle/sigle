@@ -1,4 +1,4 @@
-import { SettingsFile } from '../../types';
+import { SettingsFile, Story } from '../../types';
 
 export const fetchPublicStories = async (bucketUrl: string) => {
   let file;
@@ -26,6 +26,21 @@ export const fetchSettings = async (
   } else if (data.status === 404) {
     // If file is not found we set an empty object
     file = {};
+  } else {
+    statusCode = data.status;
+  }
+  return { file, statusCode };
+};
+
+export const fetchPublicStory = async (
+  bucketUrl: string,
+  storyId: string,
+): Promise<{ file: Story; statusCode: false | number }> => {
+  let file;
+  let statusCode: false | number = false;
+  const data = await fetch(`${bucketUrl}${storyId}.json`);
+  if (data.status === 200) {
+    file = await data.json();
   } else {
     statusCode = data.status;
   }

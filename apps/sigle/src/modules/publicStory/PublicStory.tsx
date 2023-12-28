@@ -9,6 +9,7 @@ import {
   useUserControllerGetUserMe,
   useUserControllerGetUser,
 } from '@/__generated__/sigle-api';
+import { sites } from '@/sites';
 import { SettingsFile, Story } from '../../types';
 import { sanitizeHexColor } from '../../utils/security';
 import { sigleConfig } from '../../config';
@@ -166,12 +167,22 @@ export const PublicStory = ({
   const seoDescription = story.metaDescription;
   const seoImage = story.metaImage || story.coverImage;
 
+  // If the user has a custom domain, we use it as canonical URL to avoid duplicate content
+  const customDomain = Object.keys(sites).find(
+    (domain) => sites[domain].username === username,
+  );
+  const canonicalUrl = story.canonicalUrl
+    ? story.canonicalUrl
+    : customDomain
+      ? `https://${customDomain}/posts/${storyId}`
+      : undefined;
+
   return (
     <>
       <NextSeo
         title={seoTitle}
         description={story.metaDescription}
-        canonical={story.canonicalUrl}
+        canonical={canonicalUrl}
         openGraph={{
           type: 'website',
           url: seoUrl,

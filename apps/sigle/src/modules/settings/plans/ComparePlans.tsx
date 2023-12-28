@@ -1,15 +1,8 @@
 import { CheckIcon, QuestionMarkCircledIcon } from '@radix-ui/react-icons';
 import Link from 'next/link';
+import { Tooltip } from '@radix-ui/themes';
 import { styled } from '../../../stitches.config';
-import {
-  Box,
-  Button,
-  Flex,
-  Tooltip,
-  TooltipContent,
-  TooltipTrigger,
-  Typography,
-} from '../../../ui';
+import { Box, Button, Flex, Typography } from '../../../ui';
 import { sigleConfig } from '../../../config';
 
 type PlanStatus = 'active' | 'inactive' | 'progress' | string;
@@ -363,21 +356,13 @@ export const ComparePlans = ({ currentPlan }: ComparePlansProps) => {
             >
               <Flex gap="10" justify="between" align="center">
                 <Typography size="subheading">{feature.name}</Typography>
-                <Tooltip delayDuration={100}>
-                  <TooltipTrigger>
-                    <QuestionMarkCircledIcon />
-                  </TooltipTrigger>
-                  <TooltipContent
-                    side="top"
-                    sideOffset={4}
-                    css={{
-                      textAlign: 'center',
-                      boxShadow: 'none',
-                      width: 240,
-                    }}
-                  >
-                    {feature.info}
-                  </TooltipContent>
+                <Tooltip
+                  delayDuration={100}
+                  side="top"
+                  content={feature.info}
+                  className="max-w-[240px] text-center"
+                >
+                  <QuestionMarkCircledIcon />
                 </Tooltip>
               </Flex>
             </Th>

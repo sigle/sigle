@@ -22,4 +22,9 @@
       max-width: var(--container-5);
     }
   }
+
+  /* Set all the Tabs underline to be gray as there is not prop to configure the Tabs color */
+  .rt-TabsTrigger:where([data-state='active'])::before {
+    background-color: var(--gray-11);
+  }
 }

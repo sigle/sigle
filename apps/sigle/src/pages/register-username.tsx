@@ -7,7 +7,8 @@ import {
 import { makeProfileZoneFile } from '@stacks/profile';
 import posthog from 'posthog-js';
 import * as Fathom from 'fathom-client';
-import { QuestionMarkCircledIcon } from '@radix-ui/react-icons';
+import { ArrowLeftIcon, QuestionMarkCircledIcon } from '@radix-ui/react-icons';
+import { Heading, Link, Text } from '@radix-ui/themes';
 import { Button, Flex, FormControlGroup, FormInput, Typography } from '../ui';
 import { LoginLayout } from '../modules/layout/components/LoginLayout';
 import { keyframes, styled } from '../stitches.config';
@@ -92,7 +93,7 @@ const LoadingSpinner = styled('div', {
 
 const RegisterUsername = () => {
   const router = useRouter();
-  const { user, loggingIn, setUsername } = useAuth();
+  const { user, loggingIn, setUsername, logout } = useAuth();
   const [formState, setFormState] = useState<FormState>({
     username: '',
     loading: false,
@@ -231,8 +232,8 @@ const RegisterUsername = () => {
     router.push(`/`);
   };
 
-  return (
-    <LoginLayout centered>
+  const registerUsernameContent = (
+    <>
       <Typography
         as="h1"
         size="h2"
@@ -335,6 +336,46 @@ const RegisterUsername = () => {
           </Typography>
         ) : null}
       </Flex>
+    </>
+  );
+
+  const fallbackContent = (
+    <div className="space-y-2 text-center">
+      <Heading as="h1" weight="medium">
+        Username required
+      </Heading>
+      <Text as="p">
+        We couldn't find any username attached to your address{' '}
+        {user?.profile.stxAddress.mainnet}.
+      </Text>
+      <Text as="p">
+        In order to use Sigle, you need a Stacks BNS. You can buy a new .btc
+        domain at{' '}
+        <Link href="https://btc.us/" target="_blank" rel="noreferrer">
+          btc.us
+        </Link>
+        .
+      </Text>
+      <Button
+        variant="ghost"
+        color="gray"
+        size="lg"
+        css={{ gap: '$2' }}
+        onClick={() => {
+          logout();
+        }}
+      >
+        <ArrowLeftIcon width={15} height={15} />
+        Change account
+      </Button>
+    </div>
+  );
+
+  const isRegisterUsernameWorking = false;
+
+  return (
+    <LoginLayout centered>
+      {isRegisterUsernameWorking ? registerUsernameContent : fallbackContent}
     </LoginLayout>
   );
 };

@@ -8,7 +8,6 @@ import PlausibleProvider from 'next-plausible';
 import { DefaultSeo } from 'next-seo';
 import { Toaster } from 'sonner';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { SessionProvider } from 'next-auth/react';
 import NProgress from 'nprogress';
 import 'nprogress/nprogress.css';
@@ -23,7 +22,6 @@ import { colors } from '../utils/colors';
 import { AuthProvider } from '../modules/auth/AuthContext';
 import { darkTheme, globalCss } from '../stitches.config';
 import { FeatureFlagsProvider } from '../utils/featureFlags';
-import { DesignSystemProvider } from '../ui';
 import { PlausibleTrack } from '../modules/plausible/PlausibleTrack';
 import { PosthogTrack } from '../modules/posthog/PosthogTrack';
 
@@ -164,7 +162,6 @@ export default class MyApp extends App {
           <PlausibleTrack />
           <PosthogTrack />
           <QueryClientProvider client={queryClient}>
-            <ReactQueryDevtools initialIsOpen={false} />
             <FeatureFlagsProvider>
               <SessionProvider
                 session={modifiedPageProps.session}
@@ -177,9 +174,7 @@ export default class MyApp extends App {
                     value={{ light: 'light-theme', dark: darkTheme.toString() }}
                   >
                     <Theme grayColor="gray" accentColor="orange" radius="large">
-                      <DesignSystemProvider>
-                        <Component {...modifiedPageProps} />
-                      </DesignSystemProvider>
+                      <Component {...modifiedPageProps} />
                     </Theme>
                   </ThemeProvider>
                 </AuthProvider>

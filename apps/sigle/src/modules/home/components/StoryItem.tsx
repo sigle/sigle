@@ -1,21 +1,10 @@
 import React from 'react';
 import Link from 'next/link';
 import { StarFilledIcon } from '@radix-ui/react-icons';
-import { DropdownMenu, IconButton } from '@radix-ui/themes';
+import { Dialog, DropdownMenu, IconButton, Button } from '@radix-ui/themes';
 import { DotsHorizontalIcon } from '@radix-ui/react-icons';
 import format from 'date-fns/format';
-import {
-  Button,
-  Dialog,
-  DialogContent,
-  DialogTitle,
-  DialogDescription,
-  DialogClose,
-  Flex,
-  Heading,
-  Text,
-  Box,
-} from '../../../ui';
+import { Heading, Text, Box, Flex } from '../../../ui';
 import { SubsetStory, BlockstackUser } from '../../../types';
 import { darkTheme, styled } from '../../../stitches.config';
 
@@ -336,97 +325,82 @@ export const StoryItem = ({
         </Flex>
       </StoryContainer>
 
-      <Dialog open={showFeatureDialog} onOpenChange={onCancelFeature}>
-        <DialogContent>
-          <DialogTitle asChild>
+      <Dialog.Root open={showFeatureDialog} onOpenChange={onCancelFeature}>
+        <Dialog.Content size="3" className="max-w-[450px]">
+          <Dialog.Title asChild>
             <Heading as="h2" size="xl" css={{ mb: '$3' }}>
               Feature this story
             </Heading>
-          </DialogTitle>
-          <DialogDescription asChild>
+          </Dialog.Title>
+          <Dialog.Description>
             <Text>
               This story, once featured, will appear on top of your blog.
             </Text>
-          </DialogDescription>
-          <Flex justify="end" gap="6" css={{ mt: '$6' }}>
-            <DialogClose asChild>
-              <Button size="lg" variant="ghost" disabled={featureLoading}>
+          </Dialog.Description>
+          <Flex justify="end" gap="3" css={{ mt: '$4' }}>
+            <Dialog.Close>
+              <Button variant="soft" color="gray" disabled={featureLoading}>
                 Cancel
               </Button>
-            </DialogClose>
-            <Button
-              size="lg"
-              color="orange"
-              disabled={featureLoading}
-              onClick={onConfirmFeature}
-            >
+            </Dialog.Close>
+            <Button disabled={featureLoading} onClick={onConfirmFeature}>
               {featureLoading ? 'Processing ...' : 'Confirm'}
             </Button>
           </Flex>
-        </DialogContent>
-      </Dialog>
+        </Dialog.Content>
+      </Dialog.Root>
 
-      <Dialog open={showUnFeatureDialog} onOpenChange={onCancelUnFeature}>
-        <DialogContent>
-          <DialogTitle asChild>
+      <Dialog.Root open={showUnFeatureDialog} onOpenChange={onCancelUnFeature}>
+        <Dialog.Content size="3" className="max-w-[450px]">
+          <Dialog.Title asChild>
             <Heading as="h2" size="xl" css={{ mb: '$3' }}>
               Un-feature this story
             </Heading>
-          </DialogTitle>
-          <DialogDescription asChild>
+          </Dialog.Title>
+          <Dialog.Description>
             <>
               <Text>You’re about to un-feature this story.</Text>
               <Text>Would you like to continue?</Text>
             </>
-          </DialogDescription>
-          <Flex justify="end" gap="6" css={{ mt: '$6' }}>
-            <DialogClose asChild>
-              <Button size="lg" variant="ghost" disabled={unFeatureLoading}>
+          </Dialog.Description>
+          <Flex justify="end" gap="3" css={{ mt: '$4' }}>
+            <Dialog.Close>
+              <Button variant="soft" color="gray" disabled={unFeatureLoading}>
                 Cancel
               </Button>
-            </DialogClose>
-            <Button
-              size="lg"
-              color="orange"
-              disabled={unFeatureLoading}
-              onClick={onConfirmUnFeature}
-            >
+            </Dialog.Close>
+            <Button disabled={unFeatureLoading} onClick={onConfirmUnFeature}>
               {unFeatureLoading ? 'Processing ...' : 'Confirm'}
             </Button>
           </Flex>
-        </DialogContent>
-      </Dialog>
+        </Dialog.Content>
+      </Dialog.Root>
 
-      <Dialog open={showDeleteDialog} onOpenChange={onCancelDelete}>
-        <DialogContent>
-          <DialogTitle asChild>
+      <Dialog.Root open={showDeleteDialog} onOpenChange={onCancelDelete}>
+        <Dialog.Content size="3" className="max-w-[450px]">
+          <Dialog.Title asChild>
             <Heading as="h2" size="xl" css={{ mb: '$3' }}>
               Delete my story
             </Heading>
-          </DialogTitle>
-          <DialogDescription asChild>
+          </Dialog.Title>
+          <Dialog.Description>
             <>
               <Text>You’re about to delete your story.</Text>
               <Text>Would you like to continue?</Text>
             </>
-          </DialogDescription>
-          <Flex justify="end" gap="6" css={{ mt: '$6' }}>
-            <DialogClose asChild>
-              <Button size="lg" variant="ghost" disabled={deleteLoading}>
+          </Dialog.Description>
+          <Flex justify="end" gap="3" css={{ mt: '$4' }}>
+            <Dialog.Close>
+              <Button variant="soft" color="gray" disabled={deleteLoading}>
                 Cancel
               </Button>
-            </DialogClose>
-            <Button
-              size="lg"
-              color="orange"
-              disabled={deleteLoading}
-              onClick={onConfirmDelete}
-            >
+            </Dialog.Close>
+            <Button disabled={deleteLoading} onClick={onConfirmDelete}>
               {deleteLoading ? 'Deleting ...' : 'Confirm'}
             </Button>
           </Flex>
-        </DialogContent>
-      </Dialog>
+        </Dialog.Content>
+      </Dialog.Root>
     </React.Fragment>
   );
 };

@@ -2,20 +2,9 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { useTheme } from 'next-themes';
 import { useState } from 'react';
+import { HoverCard, Tooltip } from '@radix-ui/themes';
 import { useUserControllerGetUser } from '@/__generated__/sigle-api';
-import {
-  Box,
-  Button,
-  Flex,
-  Typography,
-  HoverCard,
-  HoverCardContent,
-  HoverCardTrigger,
-  Tooltip,
-  TooltipTrigger,
-  TooltipContent,
-  IconButton,
-} from '../../ui';
+import { Box, Button, Flex, Typography, IconButton } from '../../ui';
 import { generateAvatar } from '../../utils/boringAvatar';
 import { SettingsFile } from '../../types';
 import { styled } from '../../stitches.config';
@@ -107,23 +96,18 @@ export const ProfileCard = ({
   const handleCancelSubscribe = () => setShowSubscribeDialog(false);
 
   return (
-    <HoverCard onOpenChange={(open) => setIsOpen(open)} openDelay={300}>
+    <HoverCard.Root onOpenChange={(open) => setIsOpen(open)} openDelay={300}>
       <Link
         href="/[username]"
         as={`/${userInfo.username}`}
         passHref
         legacyBehavior
       >
-        <HoverCardTrigger asChild>{children}</HoverCardTrigger>
+        <HoverCard.Trigger>{children}</HoverCard.Trigger>
       </Link>
-      <HoverCardContent
+      <HoverCard.Content
+        className="flex w-[280px] flex-col gap-2"
         sideOffset={40}
-        css={{
-          display: 'flex',
-          gap: '$2',
-          flexDirection: 'column',
-          width: 280,
-        }}
       >
         <Flex justify="between">
           <ProfileImageContainer>
@@ -200,26 +184,22 @@ export const ProfileCard = ({
             </Typography>
           </Link>
           {userInfoByAddress?.subscription && (
-            <Tooltip delayDuration={200}>
-              <TooltipTrigger asChild>
-                <Image
-                  src={
-                    resolvedTheme === 'dark'
-                      ? '/img/badges/creatorPlusDark.svg'
-                      : '/img/badges/creatorPlusLight.svg'
-                  }
-                  alt="Creator + badge"
-                  width={12}
-                  height={12}
-                />
-              </TooltipTrigger>
-              <TooltipContent
-                css={{ boxShadow: 'none' }}
-                side="right"
-                sideOffset={8}
-              >
-                Explorer holder
-              </TooltipContent>
+            <Tooltip
+              delayDuration={200}
+              side="right"
+              sideOffset={8}
+              content="Explorer holder"
+            >
+              <Image
+                src={
+                  resolvedTheme === 'dark'
+                    ? '/img/badges/creatorPlusDark.svg'
+                    : '/img/badges/creatorPlusLight.svg'
+                }
+                alt="Creator + badge"
+                width={12}
+                height={12}
+              />
             </Tooltip>
           )}
         </Flex>
@@ -268,12 +248,12 @@ export const ProfileCard = ({
             </Typography>
           </Link>
         </Flex>
-      </HoverCardContent>
+      </HoverCard.Content>
 
       <LoginModal
         open={showLoginPromptDialog}
         onClose={handleCancelLoginPrompt}
       />
-    </HoverCard>
+    </HoverCard.Root>
   );
 };

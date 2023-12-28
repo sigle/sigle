@@ -34,7 +34,7 @@ Sigle is a monorepo made of multiple applications and packages:
 
 To setup the project locally you first need to fork the project on Github (top right on the project page). Then clone the project: `git clone git@github.com:yourname/sigle.git`.
 
-Now you can run run the following command to install the dependencies:
+Now you can run the following command to install the dependencies:
 
 ```sh
 pnpm install
@@ -43,7 +43,7 @@ pnpm install
 To start the project in development/watch mode run:
 
 ```sh
-docker compose start
+docker compose up
 ```
 
 This will start the databases and the applications services. You can now open your browser and go to http://localhost:3000 to see the app.

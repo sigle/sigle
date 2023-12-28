@@ -5,6 +5,7 @@ import { useTheme } from 'next-themes';
 import { useRouter } from 'next/router';
 import { GlobeIcon, Pencil1Icon } from '@radix-ui/react-icons';
 import Link from 'next/link';
+import { Tabs, Tooltip } from '@radix-ui/themes';
 import {
   useUserControllerGetUser,
   useUserControllerGetUserFollowers,
@@ -17,14 +18,7 @@ import {
   Button,
   Container,
   Flex,
-  Tabs,
-  TabsTrigger,
-  TabsContent,
-  TabsList,
   Typography,
-  Tooltip,
-  TooltipTrigger,
-  TooltipContent,
   IconButton,
 } from '../../../ui';
 import { sigleConfig } from '../../../config';
@@ -44,13 +38,6 @@ import { TwitterFilledIcon } from '../../../icons';
 import { EnvelopePlusIcon } from '../../../icons/EnvelopPlusIcon';
 import { SubscribeModal } from '../../subscribeModal/SubscribeModal';
 import { StoryCardSkeleton } from '../../home/components/StoryItemSkeleton';
-
-const StyledTabsTrigger = styled(TabsTrigger, {
-  fontSize: 13,
-  '@xl': {
-    fontSize: 15,
-  },
-});
 
 const ExtraInfoLink = styled('a', {
   color: '$gray9',
@@ -419,26 +406,22 @@ export const PublicHome = ({ file, settings, userInfo }: PublicHomeProps) => {
                 {userInfo.username}
               </Typography>
               {userInfoByAddress?.subscription && (
-                <Tooltip delayDuration={200}>
-                  <TooltipTrigger asChild>
-                    <Image
-                      src={
-                        resolvedTheme === 'dark'
-                          ? '/img/badges/creatorPlusDark.svg'
-                          : '/img/badges/creatorPlusLight.svg'
-                      }
-                      alt="Creator + badge"
-                      width={20}
-                      height={20}
-                    />
-                  </TooltipTrigger>
-                  <TooltipContent
-                    css={{ boxShadow: 'none' }}
-                    side="right"
-                    sideOffset={8}
-                  >
-                    Explorer holder
-                  </TooltipContent>
+                <Tooltip
+                  delayDuration={200}
+                  side="right"
+                  sideOffset={8}
+                  content="Explorer holder"
+                >
+                  <Image
+                    src={
+                      resolvedTheme === 'dark'
+                        ? '/img/badges/creatorPlusDark.svg'
+                        : '/img/badges/creatorPlusLight.svg'
+                    }
+                    alt="Creator + badge"
+                    width={20}
+                    height={20}
+                  />
                 </Tooltip>
               )}
             </Flex>
@@ -530,24 +513,21 @@ export const PublicHome = ({ file, settings, userInfo }: PublicHomeProps) => {
             px: userInfo.username !== user?.username ? '$5' : 0,
           }}
         >
-          <Tabs
+          <Tabs.Root
             onValueChange={(value) => handleTabValueChange(value as ActiveTab)}
             value={router.query.tab ? (router.query.tab as string) : 'stories'}
             defaultValue="stories"
           >
-            <TabsList
-              css={{ boxShadow: '0 1px 0 0 $colors$gray6', mb: 0 }}
-              aria-label="See your stories, other users that you follow, or, other users that follow you."
-            >
-              <StyledTabsTrigger value="stories">{`Stories (${file.stories.length})`}</StyledTabsTrigger>
-              <StyledTabsTrigger value="following">{`Following (${
+            <Tabs.List aria-label="See your stories, other users that you follow, or, other users that follow you.">
+              <Tabs.Trigger value="stories">{`Stories (${file.stories.length})`}</Tabs.Trigger>
+              <Tabs.Trigger value="following">{`Following (${
                 userInfoByAddress ? userInfoByAddress.followingCount : 0
-              })`}</StyledTabsTrigger>
-              <StyledTabsTrigger value="followers">{`Followers (${
+              })`}</Tabs.Trigger>
+              <Tabs.Trigger value="followers">{`Followers (${
                 userInfoByAddress ? userInfoByAddress.followersCount : 0
-              })`}</StyledTabsTrigger>
-            </TabsList>
-            <TabsContent value="stories">
+              })`}</Tabs.Trigger>
+            </Tabs.List>
+            <Tabs.Content value="stories">
               {file.stories.length === 0 && (
                 <>
                   {userInfo.username === user?.username ? (
@@ -588,7 +568,7 @@ export const PublicHome = ({ file, settings, userInfo }: PublicHomeProps) => {
                   settings={settings}
                 />
               ))}
-            </TabsContent>
+            </Tabs.Content>
 
             {router.query.tab === 'following' && (
               <>
@@ -605,7 +585,7 @@ export const PublicHome = ({ file, settings, userInfo }: PublicHomeProps) => {
                 ))}
               </>
             )}
-          </Tabs>
+          </Tabs.Root>
 
           {userInfo.username !== user?.username && <PoweredBy />}
         </StyledContainer>
