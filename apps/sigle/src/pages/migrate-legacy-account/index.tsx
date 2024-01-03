@@ -110,12 +110,13 @@ const MigrateLegacyAccount = () => {
         nameInfo?.address,
     );
     if (!account) {
-      setLogs((logs) => [
-        ...logs,
-        `No legacy account found matching address ${nameInfo?.address}`,
-      ]);
-      setFormState({ ...formState, loading: false });
-      return;
+      // TODO revert this once account migrated
+      // setLogs((logs) => [
+      //   ...logs,
+      //   `No legacy account found matching address ${nameInfo?.address}`,
+      // ]);
+      // setFormState({ ...formState, loading: false });
+      // return;
     }
 
     // Fetch the legacy account Gaia info
