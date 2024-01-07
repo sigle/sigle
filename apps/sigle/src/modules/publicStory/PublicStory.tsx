@@ -180,6 +180,8 @@ export const PublicStory = ({
   return (
     <>
       <NextSeo
+        // No follow is set to true avoid spammers to use Sigle as a backlink
+        nofollow={true}
         title={seoTitle}
         description={story.metaDescription}
         canonical={canonicalUrl}
