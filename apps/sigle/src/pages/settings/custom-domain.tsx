@@ -1,7 +1,7 @@
 import React from 'react';
 import Link from 'next/link';
 import { useSubscriptionControllerGetUserMe } from '@/__generated__/sigle-api';
-import { Protected } from '../../modules/auth/Protected';
+import { Protected } from '../../components/authentication/protected';
 import { SettingsLayout } from '../../modules/settings/SettingsLayout';
 import { Box, Button, Flex, Typography } from '../../ui';
 import { NftLockedView } from '../../modules/analytics/NftLockedView';

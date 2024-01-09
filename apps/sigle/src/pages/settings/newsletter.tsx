@@ -1,5 +1,5 @@
 import React from 'react';
-import { Protected } from '../../modules/auth/Protected';
+import { Protected } from '../../components/authentication/protected';
 import { Newsletter } from '../../modules/settings/newsletter/Newsletter';
 
 const NewsletterPage = () => {

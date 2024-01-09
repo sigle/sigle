@@ -1,12 +1,13 @@
+'use client';
 import React, { useEffect } from 'react';
-import { useRouter } from 'next/router';
+import { useRouter } from 'next/navigation';
 import { useSession } from 'next-auth/react';
 import { parseZoneFile } from 'zone-file';
-import { FullScreenLoading } from '../layout/components/FullScreenLoading';
-import { useAuth } from './AuthContext';
+import { FullScreenLoading } from '../layout/full-screen-loading';
+import { useAuth } from '../../modules/auth/AuthContext';
 
 interface Props {
-  children: JSX.Element;
+  children: React.ReactNode;
 }
 
 export const Protected = ({ children }: Props) => {

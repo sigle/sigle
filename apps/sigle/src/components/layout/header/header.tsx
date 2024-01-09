@@ -1,3 +1,4 @@
+'use client';
 import { Container, Flex } from '@radix-ui/themes';
 import { useSession } from 'next-auth/react';
 import { useUserControllerGetUserMe } from '@/__generated__/sigle-api';

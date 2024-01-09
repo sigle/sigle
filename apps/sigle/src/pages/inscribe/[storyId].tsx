@@ -12,7 +12,7 @@ import {
 } from '@stacks/transactions';
 import { bytesToHex } from '@stacks/common';
 import { hashMessage, verifyMessageSignatureRsv } from '@stacks/encryption';
-import { Protected } from '../../modules/auth/Protected';
+import { Protected } from '../../components/authentication/protected';
 import { getStoryFile, saveStoryFile } from '../../utils';
 import { migrationStory } from '../../utils/migrations/story';
 import { DashboardLayout } from '../../modules/layout';
