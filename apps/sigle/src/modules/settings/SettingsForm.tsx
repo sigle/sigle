@@ -213,7 +213,7 @@ export const SettingsForm = ({ settings, username }: SettingsFormProps) => {
     user?.profile.stxAddress.mainnet || user?.profile.stxAddress;
 
   return (
-    <form onSubmit={formik.handleSubmit} className="space-y-4 max-w-[300px]">
+    <form onSubmit={formik.handleSubmit} className="max-w-[300px] space-y-4">
       <div className="space-y-1">
         <Text as="p" size="2" color="gray" highContrast weight="bold">
           Profile Image
