@@ -1,20 +1,12 @@
 import { CheckCircledIcon } from '@radix-ui/react-icons';
 import { FormikErrors, useFormik } from 'formik';
 import { toast } from 'sonner';
+import { Text, Flex, TextField, Link, Box } from '@radix-ui/themes';
 import {
   useUserControllerGetUserMe,
   useEmailVerificationControllerAddEmail,
   useEmailVerificationControllerResendEmail,
 } from '@/__generated__/sigle-api';
-import {
-  Box,
-  Flex,
-  FormHelper,
-  FormHelperError,
-  FormInput,
-  FormLabel,
-  FormRow,
-} from '../../../ui';
 import { isValidEmail } from '../../../utils/regex';
 import { UnsavedChanges } from '../components/UnsavedChanges';
 import { SettingsLayout } from '../SettingsLayout';
@@ -86,55 +78,47 @@ export const EmailData = () => {
 
   return (
     <SettingsLayout>
-      <Box as="form" onSubmit={formik.handleSubmit} css={{ ml: 1 }}>
-        <FormRow>
-          <FormLabel>Email</FormLabel>
-          <Flex align="center" gap="2" as="span">
-            <FormInput
-              name="email"
-              type="email"
-              maxLength={100}
-              value={formik.values.email}
-              onChange={formik.handleChange}
-              placeholder="johndoe@gmail.com"
-            />
-            {!!userMe?.emailVerified && (
-              <Box
-                css={{
-                  color: '$green11',
-                }}
-                as="span"
-              >
-                <CheckCircledIcon />
-              </Box>
-            )}
+      <form onSubmit={formik.handleSubmit} className="space-y-4">
+        <div className="space-y-2">
+          <Text as="p" size="2" color="gray" highContrast weight="bold">
+            Email
+          </Text>
+          <Flex align="center" gap="2">
+            <TextField.Root className="w-full max-w-[300px]">
+              <TextField.Input
+                name="email"
+                type="email"
+                maxLength={100}
+                value={formik.values.email}
+                onChange={formik.handleChange}
+                placeholder="johndoe@gmail.com"
+              />
+            </TextField.Root>
+            {!!userMe?.emailVerified && <CheckCircledIcon />}
           </Flex>
           {formik.errors.email && (
-            <FormHelperError>{formik.errors.email}</FormHelperError>
+            <Text as="p" size="2" color="red">
+              {formik.errors.email}
+            </Text>
           )}
           {userMe && userMe.email && !userMe.emailVerified && (
-            <FormHelper>
+            <Text as="p" size="1" color="gray">
               Your email is not verified, please verify it.{' '}
-              <Box
-                as="a"
-                css={{
-                  color: '$orange11',
-                  boxShadow: '0 1px 0 0',
-                  cursor: 'pointer',
-                }}
+              <Link
+                color="orange"
                 onClick={() => resendVerificationUserEmail({})}
               >
                 Resend verification email.
-              </Box>
-            </FormHelper>
+              </Link>
+            </Text>
           )}
-          <FormHelper>
+          <Text as="p" size="1" color="gray">
             Include your email <em>(optional)</em> to stay informed about
             updates and new features from us and quickly subscribe to writers.
             <br />
             Max. 100 Characters
-          </FormHelper>
-        </FormRow>
+          </Text>
+        </div>
         {formik.dirty && (
           <UnsavedChanges
             saving={
@@ -144,7 +128,7 @@ export const EmailData = () => {
             }
           />
         )}
-      </Box>
+      </form>
     </SettingsLayout>
   );
 };
