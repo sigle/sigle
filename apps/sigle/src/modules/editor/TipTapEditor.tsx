@@ -38,7 +38,6 @@ import { CodeBlockComponent } from '@/components/editor/extensions/code-block';
 import { TipTapImage } from '@/components/editor/extensions/image';
 import { styled, globalCss, keyframes, darkTheme } from '../../stitches.config';
 import { Story } from '../../types';
-import { Placeholder as TipTapPlaceholder } from './extensions/Placeholder';
 import { SlashCommands } from './extensions/SlashCommand/SlashCommands';
 import { slashCommands } from './extensions/SlashCommand/commands';
 import { clarity } from './utils/clarity-syntax';
@@ -47,6 +46,7 @@ import { Twitter as TipTapTwitter } from './extensions/Twitter';
 import { Cta as TipTapCta } from './extensions/CallToAction';
 import { resizeAndUploadImage } from './utils/image';
 import { TipTapMobileScroll } from '@/components/editor/extensions/mobile-scroll';
+import { TipTapPlaceholder } from '@/components/editor/extensions/placeholder';
 
 const fadeInAnimation = keyframes({
   '0%': { opacity: '0' },
