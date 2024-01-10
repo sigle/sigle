@@ -1,0 +1,7 @@
+/* Tippyjs theme used by the slash command */
+.tippy-box[data-theme~='sigle-editor'] {
+  @apply bg-gray-1;
+}
+.tippy-box[data-theme~='sigle-editor'] .tippy-content {
+  @apply overflow-hidden p-0 bg-gray-1 min-w-[280px] shadow-2 rounded-2;
+}

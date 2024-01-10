@@ -38,8 +38,6 @@ import { CodeBlockComponent } from '@/components/editor/extensions/code-block';
 import { TipTapImage } from '@/components/editor/extensions/image';
 import { styled, globalCss, keyframes, darkTheme } from '../../stitches.config';
 import { Story } from '../../types';
-import { SlashCommands } from './extensions/SlashCommand/SlashCommands';
-import { slashCommands } from './extensions/SlashCommand/commands';
 import { clarity } from './utils/clarity-syntax';
 import { Toolbar } from './EditorToolbar/EditorToolbar';
 import { Twitter as TipTapTwitter } from './extensions/Twitter';
@@ -47,6 +45,8 @@ import { Cta as TipTapCta } from './extensions/CallToAction';
 import { resizeAndUploadImage } from './utils/image';
 import { TipTapMobileScroll } from '@/components/editor/extensions/mobile-scroll';
 import { TipTapPlaceholder } from '@/components/editor/extensions/placeholder';
+import { SlashCommands } from '@/components/editor/extensions/slash-command/slash-commands';
+import { slashCommands } from '@/components/editor/extensions/slash-command/commands';
 
 const fadeInAnimation = keyframes({
   '0%': { opacity: '0' },
@@ -179,7 +179,7 @@ export const TipTapEditor = forwardRef<
       TipTapCta,
       !isMobile
         ? SlashCommands.configure({
-            commands: slashCommands({ storyId: story.id }),
+            commands: slashCommands,
           })
         : undefined,
       isMobile ? TipTapMobileScroll : undefined,
