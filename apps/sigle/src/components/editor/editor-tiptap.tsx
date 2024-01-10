@@ -42,14 +42,20 @@ import { SlashCommands } from './extensions/slash-command/slash-commands';
 import { slashCommands } from './extensions/slash-command/commands';
 import { CodeBlockComponent } from './extensions/code-block';
 import { TipTapTwitter } from './extensions/twitter';
+import { nanoid } from 'nanoid';
+import { resizeAndUploadImage } from '@/modules/editor/utils/image';
+import { useTheme } from 'next-themes';
+// TODO migrate to components
+import { Cta as TipTapCta } from '@/modules/editor/extensions/CallToAction';
+import { EditorFloatingMenu } from './floating-menu';
+import { Toolbar } from '@/modules/editor/EditorToolbar/EditorToolbar';
 
 lowlight.registerLanguage('clarity', clarity);
-// TODO add solidity language
 
 export const EditorTipTap = () => {
-  // const { resolvedTheme } = useTheme();
+  const { resolvedTheme } = useTheme();
   const params = useParams();
-  const postId = params.postId as string;
+  const storyId = params?.storyId as string;
   const { width } = useWindowSize();
   const isMobile = width ? width < 768 : false;
   const { setValue, getValues } = useFormContext<EditorPostFormData>();
@@ -86,17 +92,10 @@ export const EditorTipTap = () => {
       }),
       TipTapImage.configure({
         uploadFile: async (file: File) => {
-          // Upload the image to the API so it can be processed
-          var formData = new FormData();
-          formData.append('file', file);
-          formData.append('postId', postId);
-
-          const response = await fetch(`/api/image-upload`, {
-            method: 'POST',
-            body: formData,
-          });
-          const json = await response.json();
-          return json.url;
+          const id = nanoid();
+          const name = `photos/${storyId}/${id}-${file.name}`;
+          const imageUrl = await resizeAndUploadImage(file, name);
+          return imageUrl;
         },
       }),
       // Marks
@@ -106,17 +105,16 @@ export const EditorTipTap = () => {
       TipTapStrike,
       TipTapUnderline,
       // Extensions
-      // TODO add dropcursor
-      // TipTapDropcursor.configure({
-      //   color: resolvedTheme === "dark" ? "#505050" : "#c7c7c7",
-      //   width: 2,
-      // }),
+      TipTapDropcursor.configure({
+        color: resolvedTheme === 'dark' ? '#505050' : '#c7c7c7',
+        width: 2,
+      }),
       TipTapHistory,
       TipTapPlaceholder(isMobile),
       TipTapTypography,
       // Custom extensions
       TipTapTwitter,
-      //   TipTapCta,
+      TipTapCta,
       !isMobile
         ? SlashCommands.configure({
             commands: slashCommands,
@@ -137,10 +135,12 @@ export const EditorTipTap = () => {
   return (
     <div className="prose lg:prose-lg dark:prose-invert">
       <EditorContent className={styles.editor} editor={editor} />
-      {editor && !isMobile && <EditorBottomInfo editor={editor} />}
+
       {editor && !isMobile && <EditorBubbleMenu editor={editor} />}
-      {/* TODO floating menu */}
-      {/* TODO mobile toolbar */}
+      {editor && !isMobile && <EditorFloatingMenu editor={editor} />}
+      {editor && !isMobile && <EditorBottomInfo editor={editor} />}
+      {/* TODO migrate to components */}
+      {editor && isMobile && <Toolbar editor={editor} />}
     </div>
   );
 };
