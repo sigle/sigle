@@ -29,18 +29,16 @@ import TipTapUnderline from '@tiptap/extension-underline';
 import TipTapCodeBlockLowlight from '@tiptap/extension-code-block-lowlight';
 import { lowlight } from 'lowlight/lib/common';
 import CharacterCount from '@tiptap/extension-character-count';
-import { KeyboardIcon } from '@radix-ui/react-icons';
 import { useTheme } from 'next-themes';
 import { EditorBubbleMenu } from '@/components/editor/bubble-menu';
 import { EditorFloatingMenu } from '@/components/editor/floating-menu';
+import { EditorBottomInfo } from '@/components/editor/bottom-info';
 import { styled, globalCss, keyframes, darkTheme } from '../../stitches.config';
 import { Story } from '../../types';
-import { Container, IconButton, Typography } from '../../ui';
 import { Placeholder as TipTapPlaceholder } from './extensions/Placeholder';
 import { SlashCommands } from './extensions/SlashCommand/SlashCommands';
 import { slashCommands } from './extensions/SlashCommand/commands';
 import { CodeBlockComponent } from './extensions/CodeBlock';
-import { ShortcutsDialog } from './EditorShortcuts/ShortcutsDialog';
 import { clarity } from './utils/clarity-syntax';
 import { TipTapImage } from './extensions/Image';
 import { Toolbar } from './EditorToolbar/EditorToolbar';
@@ -115,17 +113,12 @@ export const TipTapEditor = forwardRef<
   },
   TipTapEditorProps
 >(({ story, editable = true }, ref) => {
-  const [showShortcutsDialog, setShowShortcutsDialog] = useState(false);
   const { resolvedTheme } = useTheme();
   const [width, setWidth] = useState(
     typeof window !== 'undefined' ? window.innerWidth : 1000,
   );
   // TODO is story really needed? Could it be just the content prop?
   globalStylesCustomEditor();
-
-  const handleCancelShortcuts = () => {
-    setShowShortcutsDialog(false);
-  };
 
   const isMobile = width < 768;
 
@@ -218,50 +211,8 @@ export const TipTapEditor = forwardRef<
         />
       )}
 
-      {editable && (
-        <>
-          {isMobile ? (
-            <Toolbar editor={editor} story={story} />
-          ) : (
-            <Container
-              css={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: '$3',
-                position: 'fixed',
-                mb: '$10',
-                bottom: 0,
-                right: 0,
-                left: 0,
-                zIndex: 0,
-                justifyContent: 'end',
-                pointerEvents: 'none',
-              }}
-            >
-              <Typography
-                css={{ m: 0, whiteSpace: 'nowrap' }}
-                size="subparagraph"
-              >
-                {editor?.storage.characterCount.words()} words
-              </Typography>
-              <IconButton
-                size="sm"
-                css={{
-                  pointerEvents: 'auto',
-                }}
-                onClick={() => setShowShortcutsDialog(true)}
-                aria-label="Open keyboard shortcuts and hints"
-              >
-                <KeyboardIcon />
-              </IconButton>
-              <ShortcutsDialog
-                open={showShortcutsDialog}
-                onOpenChange={handleCancelShortcuts}
-              />
-            </Container>
-          )}
-        </>
-      )}
+      {editable && editor && <EditorBottomInfo editor={editor} />}
+      {editable && isMobile && <Toolbar editor={editor} story={story} />}
     </>
   );
 });
