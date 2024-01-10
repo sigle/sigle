@@ -42,11 +42,11 @@ import { SlashCommands } from '@/components/editor/extensions/slash-command/slas
 import { slashCommands } from '@/components/editor/extensions/slash-command/commands';
 import { TipTapTwitter } from '@/components/editor/extensions/twitter';
 import { clarity } from '@/components/editor/highlight/clarity-syntax';
+import { TipTapCta } from '@/components/editor/extensions/cta';
 import { styled, globalCss, keyframes, darkTheme } from '../../stitches.config';
 import { Story } from '../../types';
 import { Toolbar } from './EditorToolbar/EditorToolbar';
 import { resizeAndUploadImage } from './utils/image';
-import { TipTapCta } from '@/components/editor/extensions/cta';
 
 const fadeInAnimation = keyframes({
   '0%': { opacity: '0' },
