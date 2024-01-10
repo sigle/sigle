@@ -3,7 +3,10 @@ import { IconX } from '@tabler/icons-react';
 import { cn } from '@/lib/cn';
 import { useBubbleMenuStore } from './store';
 
-const BubbleMenuButton = ({ active, ...props }: any) => (
+const BubbleMenuButton = ({
+  active,
+  ...props
+}: { active: boolean } & React.ButtonHTMLAttributes<HTMLButtonElement>) => (
   <button
     {...props}
     className={cn({

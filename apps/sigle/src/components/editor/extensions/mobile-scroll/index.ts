@@ -2,7 +2,12 @@
 import { Extension } from '@tiptap/core';
 import { Plugin, PluginKey } from '@tiptap/pm/state';
 
-const options: any = {};
+const options: {
+  scrollerElement?: HTMLElement;
+  computeScrollTop?: () => number;
+  delay?: number;
+  debugMode?: boolean;
+} = {};
 const DEFAULT_DELAY = 10;
 const DEFAULT_OFFSET_BOTTOM = 80;
 const DEFAULT_OFFEST_TOP = 0;

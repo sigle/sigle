@@ -17,7 +17,10 @@ import { EditorBubbleMenuLink } from './bubble-menu-link';
 import { useBubbleMenuStore } from './store';
 import './style.css';
 
-const BubbleMenuButton = ({ active, ...props }: any) => (
+const BubbleMenuButton = ({
+  active,
+  ...props
+}: { active: boolean } & React.ButtonHTMLAttributes<HTMLButtonElement>) => (
   <button
     {...props}
     className={cn({

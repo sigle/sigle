@@ -69,6 +69,7 @@ export const SlashCommands = Extension.create<{
               });
 
               popup = tippy('body', {
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
                 getReferenceClientRect: props.clientRect as any,
                 appendTo: () =>
                   document.getElementsByClassName('radix-themes')[0],
@@ -85,6 +86,7 @@ export const SlashCommands = Extension.create<{
               reactRenderer.updateProps(props);
 
               popup[0].setProps({
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
                 getReferenceClientRect: props.clientRect as any,
               });
             },
