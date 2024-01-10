@@ -30,21 +30,23 @@ import TipTapCodeBlockLowlight from '@tiptap/extension-code-block-lowlight';
 import { lowlight } from 'lowlight/lib/common';
 import CharacterCount from '@tiptap/extension-character-count';
 import { useTheme } from 'next-themes';
+import { nanoid } from 'nanoid';
 import { EditorBubbleMenu } from '@/components/editor/bubble-menu';
 import { EditorFloatingMenu } from '@/components/editor/floating-menu';
 import { EditorBottomInfo } from '@/components/editor/bottom-info';
+import { CodeBlockComponent } from '@/components/editor/extensions/code-block';
+import { TipTapImage } from '@/components/editor/extensions/image';
 import { styled, globalCss, keyframes, darkTheme } from '../../stitches.config';
 import { Story } from '../../types';
 import { Placeholder as TipTapPlaceholder } from './extensions/Placeholder';
 import { SlashCommands } from './extensions/SlashCommand/SlashCommands';
 import { slashCommands } from './extensions/SlashCommand/commands';
 import { clarity } from './utils/clarity-syntax';
-import { TipTapImage } from './extensions/Image';
 import { Toolbar } from './EditorToolbar/EditorToolbar';
 import { Twitter as TipTapTwitter } from './extensions/Twitter';
 import { MobileScroll } from './extensions/MobileScroll';
 import { Cta as TipTapCta } from './extensions/CallToAction';
-import { CodeBlockComponent } from '@/components/editor/extensions/code-block';
+import { resizeAndUploadImage } from './utils/image';
 
 const fadeInAnimation = keyframes({
   '0%': { opacity: '0' },
@@ -150,7 +152,14 @@ export const TipTapEditor = forwardRef<
       }).configure({
         lowlight,
       }),
-      TipTapImage,
+      TipTapImage.configure({
+        uploadFile: async (file: File) => {
+          const id = nanoid();
+          const name = `photos/${story.id}/${id}-${file.name}`;
+          const imageUrl = await resizeAndUploadImage(file, name);
+          return imageUrl;
+        },
+      }),
       // Marks
       TipTapBold,
       TipTapCode,
