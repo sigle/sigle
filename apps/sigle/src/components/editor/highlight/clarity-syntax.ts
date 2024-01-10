@@ -1,4 +1,4 @@
-import { LanguageFn, Mode } from 'highlight.js';
+import type { LanguageFn, Mode } from 'highlight.js';
 
 const MAIN_KEYWORDS = [
   'or',
