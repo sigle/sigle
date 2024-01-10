@@ -44,9 +44,9 @@ import { slashCommands } from './extensions/SlashCommand/commands';
 import { clarity } from './utils/clarity-syntax';
 import { Toolbar } from './EditorToolbar/EditorToolbar';
 import { Twitter as TipTapTwitter } from './extensions/Twitter';
-import { MobileScroll } from './extensions/MobileScroll';
 import { Cta as TipTapCta } from './extensions/CallToAction';
 import { resizeAndUploadImage } from './utils/image';
+import { TipTapMobileScroll } from '@/components/editor/extensions/mobile-scroll';
 
 const fadeInAnimation = keyframes({
   '0%': { opacity: '0' },
@@ -182,7 +182,7 @@ export const TipTapEditor = forwardRef<
             commands: slashCommands({ storyId: story.id }),
           })
         : undefined,
-      isMobile ? MobileScroll : undefined,
+      isMobile ? TipTapMobileScroll : undefined,
     ] as Extensions,
     content: story.contentVersion === '2' ? story.content : '',
   });
