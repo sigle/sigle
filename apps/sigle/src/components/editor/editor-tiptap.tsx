@@ -29,7 +29,13 @@ import TipTapCodeBlockLowlight from '@tiptap/extension-code-block-lowlight';
 import CharacterCount from '@tiptap/extension-character-count';
 import { useFormContext } from 'react-hook-form';
 import { useParams } from 'next/navigation';
+import { nanoid } from 'nanoid';
+import { useTheme } from 'next-themes';
 import { useWindowSize } from '@/hooks/use-window-size';
+import { resizeAndUploadImage } from '@/modules/editor/utils/image';
+// TODO migrate to components
+import { Cta as TipTapCta } from '@/modules/editor/extensions/CallToAction';
+import { Toolbar } from '@/modules/editor/EditorToolbar/EditorToolbar';
 import styles from './editor-tiptap.module.css';
 import { useEditorStore } from './store';
 import { clarity } from './highlight/clarity-syntax';
@@ -42,13 +48,7 @@ import { SlashCommands } from './extensions/slash-command/slash-commands';
 import { slashCommands } from './extensions/slash-command/commands';
 import { CodeBlockComponent } from './extensions/code-block';
 import { TipTapTwitter } from './extensions/twitter';
-import { nanoid } from 'nanoid';
-import { resizeAndUploadImage } from '@/modules/editor/utils/image';
-import { useTheme } from 'next-themes';
-// TODO migrate to components
-import { Cta as TipTapCta } from '@/modules/editor/extensions/CallToAction';
 import { EditorFloatingMenu } from './floating-menu';
-import { Toolbar } from '@/modules/editor/EditorToolbar/EditorToolbar';
 
 lowlight.registerLanguage('clarity', clarity);
 
@@ -133,7 +133,7 @@ export const EditorTipTap = () => {
   });
 
   return (
-    <div className="prose lg:prose-lg dark:prose-invert">
+    <div className="prose dark:prose-invert lg:prose-lg">
       <EditorContent className={styles.editor} editor={editor} />
 
       {editor && !isMobile && <EditorBubbleMenu editor={editor} />}
