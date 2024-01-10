@@ -31,13 +31,14 @@ import { lowlight } from 'lowlight/lib/common';
 import CharacterCount from '@tiptap/extension-character-count';
 import { KeyboardIcon } from '@radix-ui/react-icons';
 import { useTheme } from 'next-themes';
+import { EditorBubbleMenu } from '@/components/editor/bubble-menu';
+import { EditorFloatingMenu } from '@/components/editor/floating-menu';
 import { styled, globalCss, keyframes, darkTheme } from '../../stitches.config';
 import { Story } from '../../types';
 import { Container, IconButton, Typography } from '../../ui';
 import { Placeholder as TipTapPlaceholder } from './extensions/Placeholder';
 import { SlashCommands } from './extensions/SlashCommand/SlashCommands';
 import { slashCommands } from './extensions/SlashCommand/commands';
-import { FloatingMenu } from './FloatingMenu';
 import { CodeBlockComponent } from './extensions/CodeBlock';
 import { ShortcutsDialog } from './EditorShortcuts/ShortcutsDialog';
 import { clarity } from './utils/clarity-syntax';
@@ -46,7 +47,6 @@ import { Toolbar } from './EditorToolbar/EditorToolbar';
 import { Twitter as TipTapTwitter } from './extensions/Twitter';
 import { MobileScroll } from './extensions/MobileScroll';
 import { Cta as TipTapCta } from './extensions/CallToAction';
-import { EditorBubbleMenu } from '@/components/editor/bubble-menu';
 
 const fadeInAnimation = keyframes({
   '0%': { opacity: '0' },
@@ -205,7 +205,7 @@ export const TipTapEditor = forwardRef<
   return (
     <>
       {editor && !isMobile && <EditorBubbleMenu editor={editor} />}
-      {editor && !isMobile && <FloatingMenu editor={editor} />}
+      {editor && !isMobile && <EditorFloatingMenu editor={editor} />}
 
       {/* editor is not set while doing SSR so we render the HTNL as it is for SEO */}
       {editor ? (

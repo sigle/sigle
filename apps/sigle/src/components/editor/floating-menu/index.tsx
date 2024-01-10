@@ -1,26 +1,13 @@
+import { IconButton } from '@radix-ui/themes';
+import { IconPlus } from '@tabler/icons-react';
 import { Editor, FloatingMenu as TipTapFloatingMenu } from '@tiptap/react';
-import { PlusIcon } from '@radix-ui/react-icons';
-import { globalCss } from '../../stitches.config';
-import { IconButton } from '../../ui';
+import './style.css';
 
-// Tippyjs theme used by the slash command menu
-const globalStylesCustomEditor = globalCss({
-  ".tippy-box[data-theme~='sigle-editor-floating-menu']": {
-    backgroundColor: 'transparent',
-  },
-  ".tippy-box[data-theme~='sigle-editor-floating-menu'] .tippy-content": {
-    backgroundColor: 'transparent',
-    padding: 0,
-  },
-});
-
-interface FloatingMenuProps {
+interface EditorFloatingMenuProps {
   editor: Editor;
 }
 
-export const FloatingMenu = ({ editor }: FloatingMenuProps) => {
-  globalStylesCustomEditor();
-
+export const EditorFloatingMenu = ({ editor }: EditorFloatingMenuProps) => {
   const handleButtonClick = () => {
     editor.commands.insertContent('/');
     editor.commands.focus();
@@ -60,8 +47,13 @@ export const FloatingMenu = ({ editor }: FloatingMenuProps) => {
         );
       }}
     >
-      <IconButton size="sm" variant="ghost" onClick={handleButtonClick}>
-        <PlusIcon width={14} height={14} />
+      <IconButton
+        color="gray"
+        size="2"
+        variant="ghost"
+        onClick={handleButtonClick}
+      >
+        <IconPlus width={14} height={14} />
       </IconButton>
     </TipTapFloatingMenu>
   );
