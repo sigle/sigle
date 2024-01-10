@@ -1,11 +1,10 @@
 import { useEffect, useRef, useState } from 'react';
 import { Editor } from '@tiptap/react';
+import { slashCommands } from '@/components/editor/extensions/slash-command/commands';
 import { darkTheme, styled } from '../../../stitches.config';
-import { Story } from '../../../types';
 import { Box, Container, Flex, IconButton, Typography } from '../../../ui';
 import { ToolbarMenu } from './ToolbarMenu';
 import { MobileFloatingMenu } from './ToolbarFloatingMenu';
-import { slashCommands } from '@/components/editor/extensions/slash-command/commands';
 
 const ToolbarContainer = styled(Container, {
   display: 'flex',
@@ -32,10 +31,9 @@ const ToolbarContainer = styled(Container, {
 
 interface ToolbarProps {
   editor: Editor | null;
-  story: Story;
 }
 
-export const Toolbar = ({ editor, story }: ToolbarProps) => {
+export const Toolbar = ({ editor }: ToolbarProps) => {
   const [pendingUpdate, setPendingUpdate] = useState(false);
   const [position, setPosition] = useState<number>();
   const [softKeyboardIsOpen, setSoftKeyboardIsOpen] = useState(false);
@@ -98,7 +96,6 @@ export const Toolbar = ({ editor, story }: ToolbarProps) => {
     >
       <MobileFloatingMenu
         editor={editor}
-        story={story}
         triggerDisabled={!softKeyboardIsOpen}
       />
       {editor && (

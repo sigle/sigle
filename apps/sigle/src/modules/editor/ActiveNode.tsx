@@ -2,7 +2,7 @@ import { Editor } from '@tiptap/react';
 import { TextIcon } from '@radix-ui/react-icons';
 import { slashCommands } from '@/components/editor/extensions/slash-command/commands';
 
-export const activeNode = (editor: Editor, storyId: string) => {
+export const activeNode = (editor: Editor) => {
   if (editor.isActive('heading', { level: 2 })) {
     const bigHeading = slashCommands.find(
       (item) => item.title === 'Big Heading',

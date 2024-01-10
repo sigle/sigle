@@ -40,13 +40,13 @@ import { TipTapMobileScroll } from '@/components/editor/extensions/mobile-scroll
 import { TipTapPlaceholder } from '@/components/editor/extensions/placeholder';
 import { SlashCommands } from '@/components/editor/extensions/slash-command/slash-commands';
 import { slashCommands } from '@/components/editor/extensions/slash-command/commands';
+import { TipTapTwitter } from '@/components/editor/extensions/twitter';
 import { styled, globalCss, keyframes, darkTheme } from '../../stitches.config';
 import { Story } from '../../types';
 import { clarity } from './utils/clarity-syntax';
 import { Toolbar } from './EditorToolbar/EditorToolbar';
 import { Cta as TipTapCta } from './extensions/CallToAction';
 import { resizeAndUploadImage } from './utils/image';
-import { TipTapTwitter } from '@/components/editor/extensions/twitter';
 
 const fadeInAnimation = keyframes({
   '0%': { opacity: '0' },
@@ -221,7 +221,7 @@ export const TipTapEditor = forwardRef<
       )}
 
       {editable && editor && <EditorBottomInfo editor={editor} />}
-      {editable && isMobile && <Toolbar editor={editor} story={story} />}
+      {editable && isMobile && <Toolbar editor={editor} />}
     </>
   );
 });

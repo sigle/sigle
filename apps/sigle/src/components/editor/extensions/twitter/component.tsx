@@ -20,10 +20,6 @@ const twitterEmbedSchema = z.object({
 
 type TwitterEmbedFormData = z.infer<typeof twitterEmbedSchema>;
 
-interface TweetValues {
-  tweetUrl: string;
-}
-
 export const TwitterComponent = (props: NodeViewProps) => {
   const containerRef = useRef<HTMLDivElement | null>(null);
   const [isTweetLoading, setIsTweetLoading] = useState(false);
@@ -40,7 +36,6 @@ export const TwitterComponent = (props: NodeViewProps) => {
   });
 
   const tweetUrl = props.node.attrs.url;
-  const isPasted = props.node.attrs.pasted;
 
   // Override tiptap focus and focus on input instead
   useEffect(() => {
@@ -64,16 +59,7 @@ export const TwitterComponent = (props: NodeViewProps) => {
     if (!tweetId) return;
 
     setIsTweetLoading(true);
-    createTweet(tweetId, containerRef).then((value: any) => {
-      // if (isPasted) {
-      //   props.editor.commands.updateAttributes("twitter", {
-      //     ...props.node.attrs,
-      //     pasted: false,
-      //   });
-      // }
-      // if (formik.isSubmitting) {
-      //   formik.setSubmitting(false);
-      // }
+    createTweet(tweetId, containerRef).then(() => {
       props.editor.commands.createParagraphNear();
       setIsTweetLoading(false);
     });
