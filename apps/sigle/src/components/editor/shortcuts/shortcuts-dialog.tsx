@@ -219,7 +219,7 @@ export const ShortcutsDialog = ({
 
                     <Table.Body>
                       {shortcut.items.map((shortcut) => (
-                        <Table.Row>
+                        <Table.Row key={shortcut.action}>
                           <Table.RowHeaderCell>
                             {shortcut.action}
                           </Table.RowHeaderCell>

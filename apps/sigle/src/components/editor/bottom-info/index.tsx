@@ -3,7 +3,7 @@ import { IconKeyboard, IconSun } from '@tabler/icons-react';
 import { Editor } from '@tiptap/react';
 import { useTheme } from 'next-themes';
 import { useState } from 'react';
-import { ShortcutsDialog } from '@/modules/editor/EditorShortcuts/ShortcutsDialog';
+import { ShortcutsDialog } from '../shortcuts/shortcuts-dialog';
 
 interface EditorBottomInfoProps {
   editor: Editor;

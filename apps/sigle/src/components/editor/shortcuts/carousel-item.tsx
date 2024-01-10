@@ -1,6 +1,6 @@
-import { cn } from '@/lib/cn';
 import { Text } from '@radix-ui/themes';
 import Image from 'next/image';
+import { cn } from '@/lib/cn';
 
 export const CarouselItem = ({
   description,
@@ -19,7 +19,7 @@ export const CarouselItem = ({
       })}
     >
       <Text color="gray">{description}</Text>
-      <div className="z-0 relative mx-auto max-w-[600px] shadow-sm rounded-md overflow-hidden">
+      <div className="shadow-sm rounded-md relative z-0 mx-auto max-w-[600px] overflow-hidden">
         <Image
           width={600}
           height={350}

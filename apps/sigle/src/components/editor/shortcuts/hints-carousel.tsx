@@ -1,7 +1,7 @@
 import { IconButton } from '@radix-ui/themes';
 import { useState } from 'react';
-import { CarouselItem } from './carousel-item';
 import { IconArrowLeft, IconArrowRight } from '@tabler/icons-react';
+import { CarouselItem } from './carousel-item';
 
 export const HintsCarousel = () => {
   const [activeSlide, setActiveSlide] = useState(0);
@@ -48,7 +48,7 @@ export const HintsCarousel = () => {
   return (
     <section
       aria-label="hints carousel"
-      className="text-center relative py-4 justify-between flex items-center gap-4"
+      className="relative flex items-center justify-between gap-4 py-4 text-center"
     >
       <IconButton
         color="gray"
@@ -61,7 +61,7 @@ export const HintsCarousel = () => {
 
       <div className="grid grid-rows-1 gap-4">
         {hints.map((hint, index) => (
-          <CarouselItem {...hint} active={activeSlide === index} />
+          <CarouselItem key={index} {...hint} active={activeSlide === index} />
         ))}
       </div>
 
