@@ -163,10 +163,12 @@ const CommandListItem = ({
       onClick={() => selectItem(index)}
     >
       <Flex align="center">
-        <Icon width={28} height={28} />
+        <Icon width={30} height={30} />
         <Flex direction="column" className="ml-2">
-          <Text size="2">{title}</Text>
-          <Text size="2" color="gray">
+          <Text size="2" color="gray" highContrast weight="medium">
+            {title}
+          </Text>
+          <Text size="1" color="gray">
             {description}
           </Text>
         </Flex>
