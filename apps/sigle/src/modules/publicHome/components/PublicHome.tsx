@@ -5,7 +5,7 @@ import { useTheme } from 'next-themes';
 import { useRouter } from 'next/router';
 import { GlobeIcon, Pencil1Icon } from '@radix-ui/react-icons';
 import Link from 'next/link';
-import { Tabs, Tooltip } from '@radix-ui/themes';
+import { Tabs, Tooltip, IconButton, Button } from '@radix-ui/themes';
 import {
   useUserControllerGetUser,
   useUserControllerGetUserFollowers,
@@ -13,14 +13,7 @@ import {
 } from '@/__generated__/sigle-api';
 import { StoryFile, SettingsFile } from '../../../types';
 import { PoweredBy } from '../../publicStory/PoweredBy';
-import {
-  Box,
-  Button,
-  Container,
-  Flex,
-  Typography,
-  IconButton,
-} from '../../../ui';
+import { Box, Container, Flex, Typography } from '../../../ui';
 import { sigleConfig } from '../../../config';
 import { styled } from '../../../stitches.config';
 import { useAuth } from '../../auth/AuthContext';
@@ -305,8 +298,8 @@ export const PublicHome = ({ file, settings, userInfo }: PublicHomeProps) => {
                 {!isFollowingUser ? (
                   <Button
                     color="orange"
-                    css={{ ml: '$5' }}
                     onClick={handleFollow}
+                    className="ml-5"
                   >
                     Follow
                   </Button>
@@ -314,18 +307,14 @@ export const PublicHome = ({ file, settings, userInfo }: PublicHomeProps) => {
                   <Button
                     color="orange"
                     variant="outline"
-                    css={{ ml: '$5' }}
                     onClick={handleUnfollow}
+                    className="ml-5"
                   >
                     Unfollow
                   </Button>
                 )}
                 {userInfoByAddress?.newsletter && (
-                  <IconButton
-                    color="orange"
-                    variant="solid"
-                    onClick={handleShowSubscribe}
-                  >
+                  <IconButton color="orange" onClick={handleShowSubscribe}>
                     <EnvelopePlusIcon />
                   </IconButton>
                 )}
@@ -344,12 +333,12 @@ export const PublicHome = ({ file, settings, userInfo }: PublicHomeProps) => {
               </Flex>
             ) : null}
             {user && user.username === userInfo.username && (
-              <Link href="/settings" passHref legacyBehavior>
-                <Button size="sm" as="a" css={{ gap: '$2' }} variant="subtle">
+              <Button variant="soft" color="gray" asChild>
+                <Link href="/settings">
                   Edit profile
                   <Pencil1Icon />
-                </Button>
-              </Link>
+                </Link>
+              </Button>
             )}
           </Flex>
           <Flex
