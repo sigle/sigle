@@ -38,13 +38,13 @@ import { Story } from '../../types';
 import { Placeholder as TipTapPlaceholder } from './extensions/Placeholder';
 import { SlashCommands } from './extensions/SlashCommand/SlashCommands';
 import { slashCommands } from './extensions/SlashCommand/commands';
-import { CodeBlockComponent } from './extensions/CodeBlock';
 import { clarity } from './utils/clarity-syntax';
 import { TipTapImage } from './extensions/Image';
 import { Toolbar } from './EditorToolbar/EditorToolbar';
 import { Twitter as TipTapTwitter } from './extensions/Twitter';
 import { MobileScroll } from './extensions/MobileScroll';
 import { Cta as TipTapCta } from './extensions/CallToAction';
+import { CodeBlockComponent } from '@/components/editor/extensions/code-block';
 
 const fadeInAnimation = keyframes({
   '0%': { opacity: '0' },
