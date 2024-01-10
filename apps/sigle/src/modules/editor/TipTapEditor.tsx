@@ -36,7 +36,6 @@ import { Story } from '../../types';
 import { Container, IconButton, Typography } from '../../ui';
 import { Placeholder as TipTapPlaceholder } from './extensions/Placeholder';
 import { SlashCommands } from './extensions/SlashCommand/SlashCommands';
-import { BubbleMenu } from './BubbleMenu/BubbleMenu';
 import { slashCommands } from './extensions/SlashCommand/commands';
 import { FloatingMenu } from './FloatingMenu';
 import { CodeBlockComponent } from './extensions/CodeBlock';
