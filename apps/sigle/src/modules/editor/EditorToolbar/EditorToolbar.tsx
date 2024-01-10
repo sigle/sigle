@@ -1,33 +1,9 @@
 import { useEffect, useRef, useState } from 'react';
 import { Editor } from '@tiptap/react';
+import { Separator, Text, IconButton } from '@radix-ui/themes';
 import { slashCommands } from '@/components/editor/extensions/slash-command/commands';
-import { darkTheme, styled } from '../../../stitches.config';
-import { Box, Container, Flex, IconButton, Typography } from '../../../ui';
 import { ToolbarMenu } from './ToolbarMenu';
 import { MobileFloatingMenu } from './ToolbarFloatingMenu';
-
-const ToolbarContainer = styled(Container, {
-  display: 'flex',
-  alignItems: 'center',
-  gap: '$5',
-  position: 'fixed',
-  bottom: 0,
-  right: 0,
-  left: 0,
-  zIndex: 0,
-  justifyContent: 'start',
-  overflow: 'scroll',
-  borderTop: '1px solid $colors$gray6',
-  p: '$3',
-  backgroundColor: '$gray1',
-
-  // workaround for iOS issue where flex gap is not acknowledged
-  '@supports (-webkit-touch-callout: none) and (not (translate: none))': {
-    '& button': {
-      mr: '$5',
-    },
-  },
-});
 
 interface ToolbarProps {
   editor: Editor | null;
@@ -88,8 +64,9 @@ export const Toolbar = ({ editor }: ToolbarProps) => {
   };
 
   return (
-    <ToolbarContainer
-      css={{
+    <div
+      className="flex items-center justify-between p-3 gap-5 fixed bottom-0 z-0 justify-self-start overflow-x-scroll left-0 right-0 bg-gray-1 border-t border-gray-6"
+      style={{
         transform: `translateY(-${position}px)`,
         transition: 'transform .25s',
       }}
@@ -99,54 +76,24 @@ export const Toolbar = ({ editor }: ToolbarProps) => {
         triggerDisabled={!softKeyboardIsOpen}
       />
       {editor && (
-        <Flex
-          css={{
-            // workaround for iOS issue where flex gap is not acknowledged
-            '@supports (-webkit-touch-callout: none) and (not (translate: none))':
-              {
-                '& button': {
-                  mr: '$5',
-                },
-                mr: '$5',
-              },
-            display: '-webkit-flex',
-          }}
-          gap="5"
-        >
+        <div className="flex gap-5 items-center not-prose">
           <ToolbarMenu editor={editor} />
-          <Box
-            css={{
-              width: 2,
-              backgroundColor: '$gray6',
-            }}
-          />
+          <Separator orientation="vertical" size="2" />
           {image && (
             <IconButton
-              css={{
-                p: 0,
-
-                '& svg': {
-                  [`.${darkTheme} &`]: {
-                    filter: 'invert(1)',
-                  },
-                },
-              }}
+              variant="ghost"
+              color="gray"
               onClick={() => image.command({ editor: editor })}
             >
               <image.icon width={20} height={20} />
             </IconButton>
           )}
-          <Box
-            css={{
-              width: 2,
-              backgroundColor: '$gray6',
-            }}
-          />
-          <Typography css={{ m: 0, whiteSpace: 'nowrap' }} size="subheading">
+          <Separator orientation="vertical" size="2" />
+          <Text as="p" size="1" color="gray" className="text-nowrap">
             {editor.storage.characterCount.words()} words
-          </Typography>
-        </Flex>
+          </Text>
+        </div>
       )}
-    </ToolbarContainer>
+    </div>
   );
 };
