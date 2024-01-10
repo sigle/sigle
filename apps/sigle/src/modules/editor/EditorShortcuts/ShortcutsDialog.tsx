@@ -1,6 +1,5 @@
-import { Dialog, Kbd, Tabs } from '@radix-ui/themes';
-import { styled } from '../../../stitches.config';
-import { HintsCarousel } from './HintsCarousel';
+import { Dialog, Kbd, Table, Tabs } from '@radix-ui/themes';
+import { HintsCarousel } from './hints-carousel';
 
 interface ShortcutsDialogProps {
   open: boolean;
@@ -173,29 +172,6 @@ const shortcuts = [
   },
 ];
 
-const Tr = styled('tr', {
-  display: 'flex',
-  justifyContent: 'space-between',
-  alignItems: 'center',
-  gap: '$5',
-  py: '$4',
-  mb: '$2',
-  boxShadow: '0 1px 0 0 $colors$gray6',
-
-  '&:last-of-type': {
-    boxShadow: 'none',
-  },
-});
-
-const Th = styled('th', {
-  fontSize: '$2',
-  fontWeight: 400,
-  color: '$gray11',
-  flex: 1,
-  maxWidth: '30%',
-  textAlign: 'left',
-});
-
 export const ShortcutsDialog = ({
   open,
   onOpenChange,
@@ -230,28 +206,37 @@ export const ShortcutsDialog = ({
               </Tabs.List>
               {shortcuts.map((shortcut) => (
                 <Tabs.Content key={shortcut.value} value={shortcut.value}>
-                  <table className="w-full">
-                    <thead>
-                      <Tr css={{ boxShadow: '0 1px 0 0 $colors$gray12' }}>
-                        <Th scope="col">Command</Th>
-                        <Th scope="col">Windows/Linux</Th>
-                        <Th scope="col">macOS</Th>
-                      </Tr>
-                    </thead>
-                    <tbody>
+                  <Table.Root>
+                    <Table.Header>
+                      <Table.Row>
+                        <Table.ColumnHeaderCell>Command</Table.ColumnHeaderCell>
+                        <Table.ColumnHeaderCell>
+                          Windows/Linux
+                        </Table.ColumnHeaderCell>
+                        <Table.ColumnHeaderCell>macOS</Table.ColumnHeaderCell>
+                      </Table.Row>
+                    </Table.Header>
+
+                    <Table.Body>
                       {shortcut.items.map((shortcut) => (
-                        <Tr key={shortcut.action}>
-                          <Th scope="row">{shortcut.action}</Th>
-                          <td className="flex flex-1">
-                            <Kbd>{shortcut.winCommand.join(' + ')}</Kbd>
-                          </td>
-                          <td className="flex flex-1">
-                            <Kbd>{shortcut.macCommand.join(' + ')}</Kbd>
-                          </td>
-                        </Tr>
+                        <Table.Row>
+                          <Table.RowHeaderCell>
+                            {shortcut.action}
+                          </Table.RowHeaderCell>
+                          <Table.Cell>
+                            <Kbd size="3">
+                              {shortcut.winCommand.join(' + ')}
+                            </Kbd>
+                          </Table.Cell>
+                          <Table.Cell>
+                            <Kbd size="3">
+                              {shortcut.macCommand.join(' + ')}
+                            </Kbd>
+                          </Table.Cell>
+                        </Table.Row>
                       ))}
-                    </tbody>
-                  </table>
+                    </Table.Body>
+                  </Table.Root>
                 </Tabs.Content>
               ))}
             </Tabs.Root>
