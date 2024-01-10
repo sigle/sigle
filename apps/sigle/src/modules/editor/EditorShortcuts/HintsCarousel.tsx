@@ -4,11 +4,12 @@ import {
   MixerHorizontalIcon,
   TrashIcon,
 } from '@radix-ui/react-icons';
+import { IconButton, Text } from '@radix-ui/themes';
 import Image from 'next/legacy/image';
 import { useState } from 'react';
 import { RoundPlus } from '../../../icons';
 import { styled } from '../../../stitches.config';
-import { Box, Flex, IconButton, Text } from '../../../ui';
+import { Box } from '../../../ui';
 
 const ImgWrapper = styled('div', {
   maxWidth: 600,
@@ -40,16 +41,19 @@ export const HintsCarousel = () => {
   };
 
   return (
-    <Flex
-      align="center"
-      justify="between"
-      css={{ textAlign: 'center', position: 'relative', py: '$4' }}
-      as="section"
+    <section
       aria-label="hints carousel"
+      className="text-center relative py-4 justify-between flex items-center gap-4"
     >
-      <IconButton onClick={previousSlide} aria-label="previous slide">
+      <IconButton
+        color="gray"
+        variant="ghost"
+        aria-label="previous slide"
+        onClick={previousSlide}
+      >
         <ArrowLeftIcon />
       </IconButton>
+
       <Box
         css={{
           display: 'grid',
@@ -61,8 +65,9 @@ export const HintsCarousel = () => {
           aria-label="slide 4 of 4"
           aria-current={activeSlide === 0 ? 'true' : 'false'}
           css={{ display: activeSlide === 0 ? 'block' : 'none' }}
+          className="space-y-4"
         >
-          <Text css={{ mb: '$5', color: '$gray9' }}>
+          <Text color="gray">
             Highlight text to display the Bubble menu and change the formatting
           </Text>
           <ImgWrapper>
@@ -79,8 +84,9 @@ export const HintsCarousel = () => {
           aria-label="slide 2 of 4"
           aria-current={activeSlide === 1 ? 'true' : 'false'}
           css={{ display: activeSlide === 1 ? 'block' : 'none' }}
+          className="space-y-4"
         >
-          <Text css={{ mb: '$5', color: '$gray9' }}>
+          <Text as="p" color="gray">
             Open a new paragraph and click on the{' '}
             <Box as="span" css={{ display: 'inline-block' }}>
               <RoundPlus />{' '}
@@ -101,8 +107,9 @@ export const HintsCarousel = () => {
           aria-label="slide 3 of 4"
           aria-current={activeSlide === 2 ? 'true' : 'false'}
           css={{ display: activeSlide === 2 ? 'block' : 'none' }}
+          className="space-y-4"
         >
-          <Text css={{ mb: '$5', color: '$gray9' }}>
+          <Text as="p" color="gray">
             You can use the slash command "/" to open the inline menu faster
           </Text>
           <ImgWrapper>
@@ -120,8 +127,9 @@ export const HintsCarousel = () => {
           aria-label="slide 1 of 4"
           aria-current={activeSlide === 3 ? 'true' : 'false'}
           css={{ display: activeSlide === 3 ? 'block' : 'none' }}
+          className="space-y-4"
         >
-          <Text css={{ mb: '$5', color: '$gray9' }}>
+          <Text as="p" color="gray">
             Add and remove a cover image to your story by clicking on the{' '}
             <Box css={{ display: 'inline-block', px: '$1' }} as="span">
               <TrashIcon />
@@ -143,9 +151,15 @@ export const HintsCarousel = () => {
           </ImgWrapper>
         </Box>
       </Box>
-      <IconButton onClick={nextSlide} aria-label="next slide">
+
+      <IconButton
+        color="gray"
+        variant="ghost"
+        aria-label="next slide"
+        onClick={nextSlide}
+      >
         <ArrowRightIcon />
       </IconButton>
-    </Flex>
+    </section>
   );
 };
