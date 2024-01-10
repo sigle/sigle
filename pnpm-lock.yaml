@@ -364,6 +364,9 @@ importers:
       '@stitches/react':
         specifier: 1.2.8
         version: 1.2.8(react@18.2.0)
+      '@tabler/icons-react':
+        specifier: 2.39.0
+        version: 2.39.0(react@18.2.0)
       '@tanstack/react-query':
         specifier: 4.28.0
         version: 4.28.0(react-dom@18.2.0)(react@18.2.0)

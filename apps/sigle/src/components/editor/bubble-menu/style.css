@@ -1,0 +1,23 @@
+/* Tippyjs theme used by the bubble menu */
+.tippy-box[data-theme~='sigle-editor-bubble-menu'] {
+  @apply rounded-3 bg-gray-12;
+}
+.tippy-box[data-theme~='sigle-editor-bubble-menu'][data-placement^='top']
+  > .tippy-arrow::before {
+  @apply border-t-gray-12;
+}
+.tippy-box[data-theme~='sigle-editor-bubble-menu'][data-placement^='bottom']
+  > .tippy-arrow::before {
+  @apply border-b-gray-12;
+}
+.tippy-box[data-theme~='sigle-editor-bubble-menu'][data-placement^='left']
+  > .tippy-arrow::before {
+  @apply border-l-gray-12;
+}
+.tippy-box[data-theme~='sigle-editor-bubble-menu'][data-placement^='right']
+  > .tippy-arrow::before {
+  @apply border-r-gray-12;
+}
+.tippy-box[data-theme~='sigle-editor-bubble-menu'] .tippy-content {
+  @apply p-0 text-gray-1;
+}

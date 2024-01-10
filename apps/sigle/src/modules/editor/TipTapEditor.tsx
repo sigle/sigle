@@ -47,6 +47,7 @@ import { Toolbar } from './EditorToolbar/EditorToolbar';
 import { Twitter as TipTapTwitter } from './extensions/Twitter';
 import { MobileScroll } from './extensions/MobileScroll';
 import { Cta as TipTapCta } from './extensions/CallToAction';
+import { EditorBubbleMenu } from '@/components/editor/bubble-menu';
 
 const fadeInAnimation = keyframes({
   '0%': { opacity: '0' },
@@ -204,7 +205,7 @@ export const TipTapEditor = forwardRef<
 
   return (
     <>
-      {editor && !isMobile && <BubbleMenu editor={editor} />}
+      {editor && !isMobile && <EditorBubbleMenu editor={editor} />}
       {editor && !isMobile && <FloatingMenu editor={editor} />}
 
       {/* editor is not set while doing SSR so we render the HTNL as it is for SEO */}
