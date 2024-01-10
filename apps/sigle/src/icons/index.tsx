@@ -13,3 +13,4 @@ export * from './TwitterFilledIcon';
 export * from './FacebookLogoIcon';
 export * from './PlainTextLight';
 export * from './TwitterLight';
+export * from './CtaIcon';

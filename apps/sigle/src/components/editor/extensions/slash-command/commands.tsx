@@ -9,6 +9,7 @@ import {
   QuoteLight,
   PlainTextLight,
   TwitterLight,
+  CtaIcon,
 } from '../../../../icons';
 import { SlashCommandsCommand } from './slash-commands';
 
@@ -200,35 +201,37 @@ export const slashCommands: SlashCommandsCommand[] = [
       editor.chain().focus().deleteRange(range).setCodeBlock().run();
     },
   },
-  // {
-  //   icon: CtaIcon,
-  //   title: 'Call To Action',
-  //   description: 'Add a call to action button',
-  //   command: ({ editor, range }) => {
-  //     if (!range) {
-  //       editor.commands.setCta();
-  //       return;
-  //     }
+  {
+    icon: CtaIcon,
+    title: 'Call To Action',
+    description: 'Add a call to action button',
+    section: 'embed',
+    command: ({ editor, range }) => {
+      if (!range) {
+        editor.commands.setCta();
+        return;
+      }
 
-  //     editor
-  //       .chain()
-  //       .focus()
-  //       // Use deleteRange to clear the text from command chars "/q" etc..
-  //       .deleteRange(range)
-  //       .run();
-  //     editor.commands.setCta();
-  //   },
-  // },
+      editor
+        .chain()
+        .focus()
+        // Use deleteRange to clear the text from command chars "/q" etc..
+        .deleteRange(range)
+        .run();
+      editor.commands.setCta();
+    },
+  },
   {
     icon: TwitterLight,
     title: 'Twitter',
-    description: 'Add a Twitter embed',
+    description: '/Twitter [Tweet URL]',
     section: 'embed',
     command: ({ editor, range }) => {
       if (!range) {
         editor.commands.setTweet();
         return;
       }
+
       editor
         .chain()
         .focus()

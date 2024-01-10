@@ -1,6 +1,6 @@
-import { IconProps } from '@radix-ui/react-icons/dist/types';
+import { TablerIconsProps } from '@tabler/icons-react';
 
-export const CtaIcon = ({ width = 35, height = 35 }: IconProps) => (
+export const CtaIcon = ({ width = 35, height = 35 }: TablerIconsProps) => (
   <svg
     width={width}
     height={height}
