@@ -3,134 +3,62 @@ import {
   GitHubLogoIcon,
   TwitterLogoIcon,
 } from '@radix-ui/react-icons';
+import { IconButton, Text } from '@radix-ui/themes';
 import { sigleConfig } from '../../../config';
-import { styled } from '../../../stitches.config';
-import { Flex, IconButton, Text } from '../../../ui';
-
-export const Footer = styled('footer', {
-  width: '100%',
-  display: 'flex',
-  flexDirection: 'column',
-  justifyContent: 'center',
-  alignItems: 'center',
-  pt: '$6',
-  boxShadow: ' 0 0 0 1px $colors$gray6',
-});
 
 export const AppFooter = () => {
   return (
-    <Footer>
-      <Flex css={{ mb: '$5' }} gap="3">
-        <IconButton
-          as="a"
-          href={sigleConfig.twitterUrl}
-          target="_blank"
-          rel="noreferrer"
-        >
-          <TwitterLogoIcon />
+    <footer className="flex w-full flex-col items-center justify-center gap-4 border-t border-gray-6 pt-4">
+      <div className="flex gap-6">
+        <IconButton asChild variant="ghost" color="gray" size="3">
+          <a href={sigleConfig.twitterUrl} target="_blank" rel="noreferrer">
+            <TwitterLogoIcon />
+          </a>
         </IconButton>
-        <IconButton
-          as="a"
-          href={sigleConfig.discordUrl}
-          target="_blank"
-          rel="noreferrer"
-        >
-          <DiscordLogoIcon />
+        <IconButton asChild variant="ghost" color="gray" size="3">
+          <a href={sigleConfig.discordUrl} target="_blank" rel="noreferrer">
+            <DiscordLogoIcon />
+          </a>
         </IconButton>
-        <IconButton
-          as="a"
-          href={sigleConfig.githubUrl}
-          target="_blank"
-          rel="noreferrer"
-        >
-          <GitHubLogoIcon />
+        <IconButton asChild variant="ghost" color="gray" size="3">
+          <a href={sigleConfig.githubUrl} target="_blank" rel="noreferrer">
+            <GitHubLogoIcon />
+          </a>
         </IconButton>
-      </Flex>
-      <Flex
-        css={{
-          flexDirection: 'column',
-          boxShadow: '0 1px 0 0 $colors$gray6',
-          pb: '$3',
-          alignItems: 'center',
-          justifyContent: 'center',
-          width: '100%',
+      </div>
 
-          '@md': {
-            flexDirection: 'row',
-          },
-        }}
-        gap="5"
-      >
-        <Text
-          size="sm"
-          as="a"
-          target="_blank"
-          rel="noreferrer"
-          href={sigleConfig.blogUrl}
-          css={{
-            color: '$gray12',
-            '&:hover': {
-              boxShadow: '0 1px 0 0px $colors$gray12',
-            },
-          }}
-        >
-          Blog
+      <div className="flex w-full flex-col items-center justify-center gap-5 md:flex-row">
+        <Text size="1" as="p">
+          <a target="_blank" rel="noreferrer" href={sigleConfig.blogUrl}>
+            Blog
+          </a>
         </Text>
-        <Text
-          size="sm"
-          as="a"
-          target="_blank"
-          rel="noreferrer"
-          href={sigleConfig.documentationUrl}
-          css={{
-            color: '$gray12',
-            '&:hover': {
-              boxShadow: '0 1px 0 0px $colors$gray12',
-            },
-          }}
-        >
-          Documentation
+        <Text size="1" as="p">
+          <a
+            target="_blank"
+            rel="noreferrer"
+            href={sigleConfig.documentationUrl}
+          >
+            Documentation
+          </a>
         </Text>
-        <Text
-          size="sm"
-          as="a"
-          target="_blank"
-          rel="noreferrer"
-          href={sigleConfig.discordUrl}
-          css={{
-            color: '$gray12',
-            '&:hover': {
-              boxShadow: '0 1px 0 0px $colors$gray12',
-            },
-          }}
-        >
-          Support
+        <Text size="1" as="p">
+          <a target="_blank" rel="noreferrer" href={sigleConfig.discordUrl}>
+            Support
+          </a>
         </Text>
-        <Text
-          size="sm"
-          as="a"
-          target="_blank"
-          rel="noreferrer"
-          href={sigleConfig.feedbackUrl}
-          css={{
-            color: '$gray12',
-            '&:hover': {
-              boxShadow: '0 1px 0 0px $colors$gray12',
-            },
-          }}
-        >
-          Feedback
+        <Text size="1" as="p">
+          <a target="_blank" rel="noreferrer" href={sigleConfig.feedbackUrl}>
+            Feedback
+          </a>
         </Text>
-      </Flex>
-      <Text
-        size="xs"
-        css={{
-          py: '$5',
-          color: '$gray12',
-        }}
-      >
-        © Sigle {new Date().getFullYear()}
-      </Text>
-    </Footer>
+      </div>
+
+      <div className="flex w-full items-center justify-center border-t border-gray-6 py-4">
+        <Text size="1" as="p">
+          © Sigle {new Date().getFullYear()}
+        </Text>
+      </div>
+    </footer>
   );
 };
