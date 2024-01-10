@@ -33,22 +33,21 @@ import { nanoid } from 'nanoid';
 import { useTheme } from 'next-themes';
 import { useWindowSize } from '@/hooks/use-window-size';
 import { resizeAndUploadImage } from '@/modules/editor/utils/image';
-// TODO migrate to components
-import { Cta as TipTapCta } from '@/modules/editor/extensions/CallToAction';
 import { Toolbar } from '@/modules/editor/EditorToolbar/EditorToolbar';
 import styles from './editor-tiptap.module.css';
 import { useEditorStore } from './store';
 import { clarity } from './highlight/clarity-syntax';
-import { TipTapPlaceholder } from './extensions/placeholder';
 import { EditorBubbleMenu } from './bubble-menu';
-import { TipTapMobileScroll } from './extensions/mobile-scroll';
 import { TipTapImage } from './extensions/image';
 import { EditorBottomInfo } from './bottom-info';
+import { EditorFloatingMenu } from './floating-menu';
+import { TipTapPlaceholder } from './extensions/placeholder';
+import { TipTapMobileScroll } from './extensions/mobile-scroll';
 import { SlashCommands } from './extensions/slash-command/slash-commands';
 import { slashCommands } from './extensions/slash-command/commands';
 import { CodeBlockComponent } from './extensions/code-block';
 import { TipTapTwitter } from './extensions/twitter';
-import { EditorFloatingMenu } from './floating-menu';
+import { TipTapCta } from './extensions/cta';
 
 lowlight.registerLanguage('clarity', clarity);
 

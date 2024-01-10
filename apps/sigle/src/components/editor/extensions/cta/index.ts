@@ -1,6 +1,6 @@
 import { Node, mergeAttributes } from '@tiptap/core';
 import { ReactNodeViewRenderer } from '@tiptap/react';
-import { CtaComponent } from './CtaComponent';
+import { CtaComponent } from './component';
 
 declare module '@tiptap/core' {
   interface Commands<ReturnType> {
@@ -10,7 +10,7 @@ declare module '@tiptap/core' {
   }
 }
 
-export const Cta = Node.create({
+const Cta = Node.create({
   name: 'cta',
   group: 'block',
   selectable: true,
@@ -75,3 +75,5 @@ export const Cta = Node.create({
     return ReactNodeViewRenderer(CtaComponent);
   },
 });
+
+export { Cta as TipTapCta };

@@ -1,19 +1,19 @@
 import React, { useEffect, useState } from 'react';
 import { NodeViewProps } from '@tiptap/core';
 import { NodeViewWrapper } from '@tiptap/react';
-import { Dialog, RadioGroup } from '@radix-ui/themes';
-import { FormikErrors, useFormik } from 'formik';
 import {
   Button,
+  Dialog,
   Flex,
-  FormInput,
-  Typography,
-  FormHelper,
-  FormHelperError,
-} from '../../../../ui';
+  RadioGroup,
+  Text,
+  TextField,
+} from '@radix-ui/themes';
+import { FormikErrors, useFormik } from 'formik';
 import { isValidHttpUrl } from '../../../../utils';
 import { useGetUserSettings } from '../../../../hooks/appData';
 import { getContrastingColor } from '../../../../utils/colors';
+import { cn } from '@/lib/cn';
 
 interface CtaFormValues {
   label: string;
@@ -38,6 +38,7 @@ export const CtaComponent = (props: NodeViewProps) => {
     }
   }, []);
 
+  // TODO stop using formik
   const formik = useFormik<CtaFormValues>({
     initialValues: {
       label: props.node.attrs.label || '',
@@ -87,16 +88,16 @@ export const CtaComponent = (props: NodeViewProps) => {
 
   return (
     <NodeViewWrapper>
-      <Flex
+      <div
         data-cta
         data-drag-handle
-        css={{
-          boxShadow:
-            props.editor.isEditable && props.selected
-              ? '0 0 0 1px $colors$green11'
-              : 'none',
-          justifyContent: 'center',
-        }}
+        // css={{
+        //   boxShadow:
+        //     props.editor.isEditable && props.selected
+        //       ? '0 0 0 1px $colors$green11'
+        //       : 'none',
+        //   justifyContent: 'center',
+        // }}
       >
         {props.editor.isEditable && (
           <Dialog.Root
@@ -104,22 +105,10 @@ export const CtaComponent = (props: NodeViewProps) => {
             onOpenChange={handleCancelCtaDialog}
           >
             <Dialog.Content size="3" className="max-w-[450px]">
-              <Dialog.Title asChild>
-                <Typography css={{ fontWeight: 600, mb: '$4' }} size="h3">
-                  Style your button
-                </Typography>
-              </Dialog.Title>
-              <Flex
-                onSubmit={formik.handleSubmit}
-                direction="column"
-                gap="4"
-                as="form"
-              >
-                <Flex direction="column" gap="1">
-                  <FormInput
-                    css={{
-                      width: '100%',
-                    }}
+              <Dialog.Title asChild>Style your button</Dialog.Title>
+              <form className="space-y-4" onSubmit={formik.handleSubmit}>
+                <div className="space-y-1">
+                  <TextField.Input
                     name="label"
                     value={formik.values.label}
                     onChange={formik.handleChange}
@@ -128,16 +117,16 @@ export const CtaComponent = (props: NodeViewProps) => {
                     placeholder="Enter text..."
                   />
                   {formik.errors.label && (
-                    <FormHelperError css={{ my: '$1' }}>
+                    <Text as="p" size="2" color="red">
                       {formik.errors.label}
-                    </FormHelperError>
+                    </Text>
                   )}
-                  <FormHelper css={{ color: '$gray9', mt: '$1' }}>
+                  <Text as="p" size="1" color="gray">
                     Max: 45 characters.
-                  </FormHelper>
-                </Flex>
-                <Flex direction="column" gap="1">
-                  <FormInput
+                  </Text>
+                </div>
+                <div className="space-y-1">
+                  <TextField.Input
                     name="url"
                     value={formik.values.url}
                     onChange={formik.handleChange}
@@ -146,23 +135,25 @@ export const CtaComponent = (props: NodeViewProps) => {
                     placeholder="Enter URL..."
                   />
                   {formik.errors.url && (
-                    <FormHelperError>{formik.errors.url}</FormHelperError>
+                    <Text as="p" size="2" color="red">
+                      {formik.errors.url}
+                    </Text>
                   )}
-                </Flex>
+                </div>
                 <Flex direction="column" gap="3">
                   <div className="grid grid-cols-3">
                     <div className="flex items-center justify-center">
-                      <Button css={{ pointerEvents: 'none' }} size="lg">
+                      <Button className="pointer-events-none" size="3">
                         Large
                       </Button>
                     </div>
                     <div className="flex items-center justify-center">
-                      <Button css={{ pointerEvents: 'none' }} size="md">
+                      <Button className="pointer-events-none" size="2">
                         Medium
                       </Button>
                     </div>
                     <div className="flex items-center justify-center">
-                      <Button css={{ pointerEvents: 'none' }} size="sm">
+                      <Button className="pointer-events-none" size="1">
                         Small
                       </Button>
                     </div>
@@ -186,62 +177,77 @@ export const CtaComponent = (props: NodeViewProps) => {
                     </div>
                   </RadioGroup.Root>
                 </Flex>
-                <Typography css={{ color: '$gray9' }} size="subparagraph">
+                <Text as="p" size="2" color="gray">
                   Tips: You can customize your primary color on the settings
                   page.
-                </Typography>
-                <Flex css={{ alignSelf: 'end' }} gap="5">
+                </Text>
+
+                <Flex gap="3" justify="end">
                   <Button
                     onClick={handleCancelCtaDialog}
-                    variant="ghost"
-                    size="lg"
+                    variant="soft"
+                    color="gray"
                   >
                     Cancel
                   </Button>
-                  <Button type="submit" color="orange" size="lg">
+                  <Button type="submit">
                     {hasAttrs ? 'Update Button' : 'Create Button'}
                   </Button>
                 </Flex>
-              </Flex>
+              </form>
             </Dialog.Content>
           </Dialog.Root>
         )}
-        <p>
+
+        <p className="not-prose">
           <Button
-            as="a"
-            href={props.node.attrs.url}
-            onClick={(e: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => {
-              if (props.editor.isEditable) {
-                e.preventDefault();
-                setShowCtaDialog(true);
-              }
-            }}
-            target="_blank"
-            rel="noreferrer"
-            css={{
-              display: !hasAttrs ? 'none' : 'block',
-              backgroundColor: settings?.siteColor || '$orange11',
-              color: settings?.siteColor
-                ? getContrastingColor(settings?.siteColor)
-                : 'white',
-              boxShadow: 'none',
+            // TODO
+            // css={{
+            //   backgroundColor: settings?.siteColor || '$orange11',
+            //   color: settings?.siteColor
+            //     ? getContrastingColor(settings?.siteColor)
+            //     : 'white',
+            //   boxShadow: 'none',
 
-              '&:hover': {
-                backgroundColor: settings?.siteColor || '$orange11',
-                opacity: '85%',
-              },
+            //   '&:hover': {
+            //     backgroundColor: settings?.siteColor || '$orange11',
+            //     opacity: '85%',
+            //   },
 
-              '&:active': {
-                backgroundColor: settings?.siteColor || '$orange11',
-                opacity: '80%',
-              },
-            }}
-            size={props.node.attrs.size}
+            //   '&:active': {
+            //     backgroundColor: settings?.siteColor || '$orange11',
+            //     opacity: '80%',
+            //   },
+            // }}
+            size={
+              props.node.attrs.size === 'sm'
+                ? '1'
+                : props.node.attrs.size === 'md'
+                  ? '2'
+                  : '3'
+            }
+            asChild
           >
-            {props.node.attrs.label}
+            <a
+              className={cn({
+                hidden: !hasAttrs,
+                'inline-flex': hasAttrs,
+              })}
+              href={props.node.attrs.url}
+              onClick={(e: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => {
+                if (props.editor.isEditable) {
+                  e.preventDefault();
+                  setShowCtaDialog(true);
+                }
+              }}
+              target="_blank"
+              rel="noreferrer"
+            >
+              {props.node.attrs.label}
+            </a>
           </Button>
         </p>
-      </Flex>
+      </div>
     </NodeViewWrapper>
   );
 };

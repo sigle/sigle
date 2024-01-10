@@ -45,8 +45,8 @@ import { clarity } from '@/components/editor/highlight/clarity-syntax';
 import { styled, globalCss, keyframes, darkTheme } from '../../stitches.config';
 import { Story } from '../../types';
 import { Toolbar } from './EditorToolbar/EditorToolbar';
-import { Cta as TipTapCta } from './extensions/CallToAction';
 import { resizeAndUploadImage } from './utils/image';
+import { TipTapCta } from '@/components/editor/extensions/cta';
 
 const fadeInAnimation = keyframes({
   '0%': { opacity: '0' },
