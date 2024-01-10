@@ -82,6 +82,7 @@
     "fathom-client": "3.5.0",
     "feed": "4.2.2",
     "formik": "2.2.9",
+    "framer-motion": "10.18.0",
     "highlight.js": "11.8.0",
     "immutable": "4.0.0-rc.12",
     "lowlight": "2.8.0",
