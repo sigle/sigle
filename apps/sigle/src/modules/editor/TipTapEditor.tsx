@@ -36,6 +36,10 @@ import { EditorFloatingMenu } from '@/components/editor/floating-menu';
 import { EditorBottomInfo } from '@/components/editor/bottom-info';
 import { CodeBlockComponent } from '@/components/editor/extensions/code-block';
 import { TipTapImage } from '@/components/editor/extensions/image';
+import { TipTapMobileScroll } from '@/components/editor/extensions/mobile-scroll';
+import { TipTapPlaceholder } from '@/components/editor/extensions/placeholder';
+import { SlashCommands } from '@/components/editor/extensions/slash-command/slash-commands';
+import { slashCommands } from '@/components/editor/extensions/slash-command/commands';
 import { styled, globalCss, keyframes, darkTheme } from '../../stitches.config';
 import { Story } from '../../types';
 import { clarity } from './utils/clarity-syntax';
@@ -43,10 +47,6 @@ import { Toolbar } from './EditorToolbar/EditorToolbar';
 import { Twitter as TipTapTwitter } from './extensions/Twitter';
 import { Cta as TipTapCta } from './extensions/CallToAction';
 import { resizeAndUploadImage } from './utils/image';
-import { TipTapMobileScroll } from '@/components/editor/extensions/mobile-scroll';
-import { TipTapPlaceholder } from '@/components/editor/extensions/placeholder';
-import { SlashCommands } from '@/components/editor/extensions/slash-command/slash-commands';
-import { slashCommands } from '@/components/editor/extensions/slash-command/commands';
 
 const fadeInAnimation = keyframes({
   '0%': { opacity: '0' },
