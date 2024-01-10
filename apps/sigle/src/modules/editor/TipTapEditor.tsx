@@ -44,9 +44,9 @@ import { styled, globalCss, keyframes, darkTheme } from '../../stitches.config';
 import { Story } from '../../types';
 import { clarity } from './utils/clarity-syntax';
 import { Toolbar } from './EditorToolbar/EditorToolbar';
-import { Twitter as TipTapTwitter } from './extensions/Twitter';
 import { Cta as TipTapCta } from './extensions/CallToAction';
 import { resizeAndUploadImage } from './utils/image';
+import { TipTapTwitter } from '@/components/editor/extensions/twitter';
 
 const fadeInAnimation = keyframes({
   '0%': { opacity: '0' },

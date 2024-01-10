@@ -1,10 +1,10 @@
 import { Editor } from '@tiptap/react';
 import { TextIcon } from '@radix-ui/react-icons';
-import { slashCommands } from './extensions/SlashCommand/commands';
+import { slashCommands } from '@/components/editor/extensions/slash-command/commands';
 
 export const activeNode = (editor: Editor, storyId: string) => {
   if (editor.isActive('heading', { level: 2 })) {
-    const bigHeading = slashCommands({ storyId }).find(
+    const bigHeading = slashCommands.find(
       (item) => item.title === 'Big Heading',
     );
     if (!bigHeading) {
@@ -18,7 +18,7 @@ export const activeNode = (editor: Editor, storyId: string) => {
   }
 
   if (editor.isActive('heading', { level: 3 })) {
-    const smallHeading = slashCommands({ storyId }).find(
+    const smallHeading = slashCommands.find(
       (item) => item.title === 'Small Heading',
     );
     if (!smallHeading) {
@@ -32,7 +32,7 @@ export const activeNode = (editor: Editor, storyId: string) => {
   }
 
   if (editor.isActive('bulletList')) {
-    const bulletList = slashCommands({ storyId }).find(
+    const bulletList = slashCommands.find(
       (item) => item.title === 'Bulleted list',
     );
     if (!bulletList) {
@@ -46,7 +46,7 @@ export const activeNode = (editor: Editor, storyId: string) => {
   }
 
   if (editor.isActive('orderedList')) {
-    const numberedList = slashCommands({ storyId }).find(
+    const numberedList = slashCommands.find(
       (item) => item.title === 'Numbered list',
     );
     if (!numberedList) {
@@ -60,9 +60,7 @@ export const activeNode = (editor: Editor, storyId: string) => {
   }
 
   if (editor.isActive('blockquote')) {
-    const quote = slashCommands({ storyId }).find(
-      (item) => item.title === 'Quote',
-    );
+    const quote = slashCommands.find((item) => item.title === 'Quote');
     if (!quote) {
       return;
     }
@@ -74,9 +72,7 @@ export const activeNode = (editor: Editor, storyId: string) => {
   }
 
   if (editor.isActive('codeBlock')) {
-    const code = slashCommands({ storyId }).find(
-      (item) => item.title === 'Code',
-    );
+    const code = slashCommands.find((item) => item.title === 'Code');
     if (!code) {
       return;
     }
@@ -88,9 +84,7 @@ export const activeNode = (editor: Editor, storyId: string) => {
   }
 
   if (editor.isActive('twitter')) {
-    const twitter = slashCommands({ storyId }).find(
-      (item) => item.title === 'Twitter',
-    );
+    const twitter = slashCommands.find((item) => item.title === 'Twitter');
     if (!twitter) {
       return;
     }
@@ -102,9 +96,7 @@ export const activeNode = (editor: Editor, storyId: string) => {
   }
 
   if (editor.isActive('twitter')) {
-    const twitter = slashCommands({ storyId }).find(
-      (item) => item.title === 'Twitter',
-    );
+    const twitter = slashCommands.find((item) => item.title === 'Twitter');
     if (!twitter) {
       return;
     }

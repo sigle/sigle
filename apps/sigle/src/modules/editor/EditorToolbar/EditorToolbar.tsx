@@ -3,9 +3,9 @@ import { Editor } from '@tiptap/react';
 import { darkTheme, styled } from '../../../stitches.config';
 import { Story } from '../../../types';
 import { Box, Container, Flex, IconButton, Typography } from '../../../ui';
-import { slashCommands } from '../extensions/SlashCommand/commands';
 import { ToolbarMenu } from './ToolbarMenu';
 import { MobileFloatingMenu } from './ToolbarFloatingMenu';
+import { slashCommands } from '@/components/editor/extensions/slash-command/commands';
 
 const ToolbarContainer = styled(Container, {
   display: 'flex',
@@ -41,9 +41,7 @@ export const Toolbar = ({ editor, story }: ToolbarProps) => {
   const [softKeyboardIsOpen, setSoftKeyboardIsOpen] = useState(false);
   const scrollRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  const image = slashCommands({ storyId: story.id }).find(
-    (item) => item.title === 'Image',
-  );
+  const image = slashCommands.find((item) => item.title === 'Image');
 
   useEffect(() => {
     window.visualViewport?.addEventListener('resize', () => {

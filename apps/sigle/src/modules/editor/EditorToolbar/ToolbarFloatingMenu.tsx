@@ -4,9 +4,9 @@ import { Dialog } from '@radix-ui/themes';
 import { styled } from '../../../stitches.config';
 import { Story } from '../../../types';
 import { Box, Button } from '../../../ui';
-import { CommandList } from '../extensions/SlashCommand/CommandList';
 import { activeNode } from '../ActiveNode';
-import { slashCommands } from '../extensions/SlashCommand/commands';
+import { slashCommands } from '@/components/editor/extensions/slash-command/commands';
+import { CommandList } from '@/components/editor/extensions/slash-command/command-list';
 
 const StyledDialogTitle = styled(Dialog.Title, {
   ml: '-$1',
@@ -104,7 +104,7 @@ export const MobileFloatingMenu = ({
               >
                 <CommandList
                   currentNodeName={currentNode?.name}
-                  items={slashCommands({ storyId: story.id })}
+                  items={slashCommands}
                   command={handleSelect}
                 />
               </Box>
