@@ -138,7 +138,6 @@ export const EditorTipTap = () => {
       {editor && !isMobile && <EditorBubbleMenu editor={editor} />}
       {editor && !isMobile && <EditorFloatingMenu editor={editor} />}
       {editor && !isMobile && <EditorBottomInfo editor={editor} />}
-      {/* TODO migrate to components */}
       {editor && isMobile && <Toolbar editor={editor} />}
     </div>
   );
