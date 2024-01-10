@@ -9,22 +9,22 @@ import {
   Text,
   TextField,
 } from '@radix-ui/themes';
-import { FormikErrors, useFormik } from 'formik';
-import { isValidHttpUrl } from '../../../../utils';
-import { useGetUserSettings } from '../../../../hooks/appData';
-import { getContrastingColor } from '../../../../utils/colors';
+import { z } from 'zod';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { useForm } from 'react-hook-form';
 import { cn } from '@/lib/cn';
 
-interface CtaFormValues {
-  label: string;
-  url: string;
-  size: 'sm' | 'md' | 'lg';
-}
+const ctaSchema = z.object({
+  label: z.string().min(1).max(50),
+  url: z.string().url(),
+  size: z.enum(['sm', 'md', 'lg']),
+});
+
+type CtaFormData = z.infer<typeof ctaSchema>;
 
 export const CtaComponent = (props: NodeViewProps) => {
   const [showCtatDialog, setShowCtaDialog] = useState(false);
   const handleCancelCtaDialog = () => setShowCtaDialog(false);
-  const { data: settings } = useGetUserSettings();
 
   const label = props.node.attrs.label;
   const url = props.node.attrs.url;
@@ -38,52 +38,34 @@ export const CtaComponent = (props: NodeViewProps) => {
     }
   }, []);
 
-  // TODO stop using formik
-  const formik = useFormik<CtaFormValues>({
-    initialValues: {
+  const {
+    register,
+    handleSubmit,
+    getValues,
+    setValue,
+    formState: { errors },
+  } = useForm<CtaFormData>({
+    resolver: zodResolver(ctaSchema),
+    defaultValues: {
       label: props.node.attrs.label || '',
       url: props.node.attrs.url || '',
       size: props.node.attrs.size || 'md',
     },
-    validateOnChange: false,
-    validateOnBlur: false,
-    validate: (values) => {
-      const errors: FormikErrors<CtaFormValues> = {};
+  });
 
-      if (!values.label) {
-        errors.label = 'Please add a label';
-      }
+  const onSubmit = handleSubmit(async (formValues) => {
+    props.editor.commands.updateAttributes('cta', {
+      ...props.node.attrs,
+      label: formValues.label,
+      url: formValues.url,
+      size: formValues.size,
+    });
 
-      if (values.label && values.label.length > 50) {
-        errors.label = 'Label is too long';
-      }
+    if (!hasAttrs) {
+      props.editor.commands.createParagraphNear();
+    }
 
-      if (!values.url) {
-        errors.url = 'Please add a URL';
-      }
-
-      if (values.url && !isValidHttpUrl(values.url)) {
-        errors.url = 'Invalid website entered (eg: https://example.com)';
-      }
-
-      return errors;
-    },
-    onSubmit: async (values, { validateForm }) => {
-      validateForm();
-
-      props.editor.commands.updateAttributes('cta', {
-        ...props.node.attrs,
-        label: values.label,
-        url: values.url,
-        size: values.size,
-      });
-
-      if (!hasAttrs) {
-        props.editor.commands.createParagraphNear();
-      }
-
-      handleCancelCtaDialog();
-    },
+    handleCancelCtaDialog();
   });
 
   return (
@@ -91,13 +73,12 @@ export const CtaComponent = (props: NodeViewProps) => {
       <div
         data-cta
         data-drag-handle
-        // css={{
-        //   boxShadow:
-        //     props.editor.isEditable && props.selected
-        //       ? '0 0 0 1px $colors$green11'
-        //       : 'none',
-        //   justifyContent: 'center',
-        // }}
+        className={cn(
+          'not-prose flex justify-center outline outline-0 outline-offset-2 outline-indigo-9 hover:outline-2',
+          {
+            'outline-2': props.selected,
+          },
+        )}
       >
         {props.editor.isEditable && (
           <Dialog.Root
@@ -106,19 +87,16 @@ export const CtaComponent = (props: NodeViewProps) => {
           >
             <Dialog.Content size="3" className="max-w-[450px]">
               <Dialog.Title asChild>Style your button</Dialog.Title>
-              <form className="space-y-4" onSubmit={formik.handleSubmit}>
+              <form className="space-y-4" onSubmit={onSubmit}>
                 <div className="space-y-1">
                   <TextField.Input
-                    name="label"
-                    value={formik.values.label}
-                    onChange={formik.handleChange}
                     maxLength={45}
-                    type="text"
                     placeholder="Enter text..."
+                    {...register('label')}
                   />
-                  {formik.errors.label && (
+                  {errors.label && (
                     <Text as="p" size="2" color="red">
-                      {formik.errors.label}
+                      {errors.label.message}
                     </Text>
                   )}
                   <Text as="p" size="1" color="gray">
@@ -127,16 +105,13 @@ export const CtaComponent = (props: NodeViewProps) => {
                 </div>
                 <div className="space-y-1">
                   <TextField.Input
-                    name="url"
-                    value={formik.values.url}
-                    onChange={formik.handleChange}
                     maxLength={100}
-                    type="text"
                     placeholder="Enter URL..."
+                    {...register('url')}
                   />
-                  {formik.errors.url && (
+                  {errors.url && (
                     <Text as="p" size="2" color="red">
-                      {formik.errors.url}
+                      {errors.url.message}
                     </Text>
                   )}
                 </div>
@@ -160,8 +135,10 @@ export const CtaComponent = (props: NodeViewProps) => {
                   </div>
                   <RadioGroup.Root
                     name="size"
-                    onValueChange={(e) => formik.setFieldValue('size', e)}
-                    defaultValue={formik.values.size || 'md'}
+                    onValueChange={(e) =>
+                      setValue('size', e as 'sm' | 'md' | 'lg')
+                    }
+                    defaultValue={getValues('size') || 'md'}
                     aria-label="Call to action button size"
                   >
                     <div className="grid grid-cols-3">
@@ -199,54 +176,34 @@ export const CtaComponent = (props: NodeViewProps) => {
           </Dialog.Root>
         )}
 
-        <p className="not-prose">
-          <Button
-            // TODO
-            // css={{
-            //   backgroundColor: settings?.siteColor || '$orange11',
-            //   color: settings?.siteColor
-            //     ? getContrastingColor(settings?.siteColor)
-            //     : 'white',
-            //   boxShadow: 'none',
-
-            //   '&:hover': {
-            //     backgroundColor: settings?.siteColor || '$orange11',
-            //     opacity: '85%',
-            //   },
-
-            //   '&:active': {
-            //     backgroundColor: settings?.siteColor || '$orange11',
-            //     opacity: '80%',
-            //   },
-            // }}
-            size={
-              props.node.attrs.size === 'sm'
-                ? '1'
-                : props.node.attrs.size === 'md'
-                  ? '2'
-                  : '3'
-            }
-            asChild
+        <Button
+          size={
+            props.node.attrs.size === 'sm'
+              ? '1'
+              : props.node.attrs.size === 'md'
+                ? '2'
+                : '3'
+          }
+          asChild
+        >
+          <a
+            className={cn({
+              hidden: !hasAttrs,
+              'inline-flex': hasAttrs,
+            })}
+            href={props.node.attrs.url}
+            onClick={(e: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => {
+              if (props.editor.isEditable) {
+                e.preventDefault();
+                setShowCtaDialog(true);
+              }
+            }}
+            target="_blank"
+            rel="noreferrer"
           >
-            <a
-              className={cn({
-                hidden: !hasAttrs,
-                'inline-flex': hasAttrs,
-              })}
-              href={props.node.attrs.url}
-              onClick={(e: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => {
-                if (props.editor.isEditable) {
-                  e.preventDefault();
-                  setShowCtaDialog(true);
-                }
-              }}
-              target="_blank"
-              rel="noreferrer"
-            >
-              {props.node.attrs.label}
-            </a>
-          </Button>
-        </p>
+            {props.node.attrs.label}
+          </a>
+        </Button>
       </div>
     </NodeViewWrapper>
   );
