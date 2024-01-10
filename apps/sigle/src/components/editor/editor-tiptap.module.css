@@ -1,0 +1,16 @@
+.editor {
+  @apply mt-8;
+}
+
+.editor :global .ProseMirror {
+  min-height: 150px;
+}
+
+.editor :global .ProseMirror-focused {
+  outline: none;
+}
+
+.editor :global .ProseMirror .is-empty::before {
+  @apply float-left pointer-events-none h-0 animate-in fade-in text-gray-8;
+  content: attr(data-placeholder);
+}
