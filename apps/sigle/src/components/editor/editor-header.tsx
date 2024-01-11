@@ -60,9 +60,9 @@ export const EditorHeader = () => {
               <IconArrowLeft size={headerIconSize} />
             </IconButton>
           </Link>
-          {/* <EditorSave /> */}
         </Flex>
         <Flex align="center" gap="6">
+          {/* <EditorSave /> */}
           <EditorPublish />
           <IconButton
             size="2"
