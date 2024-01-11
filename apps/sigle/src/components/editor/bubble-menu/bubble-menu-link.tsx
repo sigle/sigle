@@ -11,7 +11,7 @@ const BubbleMenuButton = ({
     {...props}
     className={cn({
       ['text-gray-1']: !active,
-      ['text-indigo-7 dark:text-indigo-9']: active,
+      ['text-orange-7 dark:text-orange-9']: active,
     })}
   />
 );

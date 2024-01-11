@@ -74,7 +74,7 @@ export const CtaComponent = (props: NodeViewProps) => {
         data-cta
         data-drag-handle
         className={cn(
-          'not-prose flex justify-center outline outline-0 outline-offset-2 outline-indigo-9 hover:outline-2',
+          'not-prose flex justify-center outline outline-0 outline-offset-2 outline-orange-9 hover:outline-2',
           {
             'outline-2': props.selected,
           },
