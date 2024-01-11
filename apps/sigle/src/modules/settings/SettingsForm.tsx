@@ -5,20 +5,13 @@ import { useDropzone } from 'react-dropzone';
 import { CameraIcon, UpdateIcon } from '@radix-ui/react-icons';
 import { BlockPicker } from 'react-color';
 import { useQueryClient } from '@tanstack/react-query';
+import { Text, TextArea, TextFieldInput } from '@radix-ui/themes';
 import { SettingsFile } from '../../types';
 import { hexRegex } from '../../utils/regex';
 import { storage } from '../../utils/stacks';
 import { getSettingsFile, isValidHttpUrl, saveSettingsFile } from '../../utils';
 import { resizeImage } from '../../utils/image';
 import { colors, getContrastingColor } from '../../utils/colors';
-import {
-  FormRow,
-  FormLabel,
-  FormInput,
-  FormTextarea,
-  FormHelperError,
-  FormHelper,
-} from '../../ui';
 import { darkTheme, styled } from '../../stitches.config';
 import { generateAvatar } from '../../utils/boringAvatar';
 import { useAuth } from '../auth/AuthContext';
@@ -220,9 +213,11 @@ export const SettingsForm = ({ settings, username }: SettingsFormProps) => {
     user?.profile.stxAddress.mainnet || user?.profile.stxAddress;
 
   return (
-    <form onSubmit={formik.handleSubmit}>
-      <FormRow css={{ maxWidth: 300 }}>
-        <FormLabel>Profile Image</FormLabel>
+    <form onSubmit={formik.handleSubmit} className="max-w-[300px] space-y-4">
+      <div className="space-y-1">
+        <Text as="p" size="2" color="gray" highContrast weight="bold">
+          Profile Image
+        </Text>
         <ImageContainer
           css={{
             '&:hover::before': {
@@ -256,16 +251,18 @@ export const SettingsForm = ({ settings, username }: SettingsFormProps) => {
             <CameraIcon />
           </ImageEmptyIconAdd>
         </ImageContainer>
-        <FormHelper>
+        <Text as="p" size="1" color="gray">
           This image appears in your Profile page, Explore page , Custom domain
           and story cards. Your image should be square, at least 92x92px, and
           JPG, PNG or GIF format.
-        </FormHelper>
-      </FormRow>
+        </Text>
+      </div>
 
-      <FormRow>
-        <FormLabel>Name</FormLabel>
-        <FormInput
+      <div className="space-y-1">
+        <Text as="p" size="2" color="gray" highContrast weight="bold">
+          Name
+        </Text>
+        <TextFieldInput
           name="siteName"
           type="text"
           maxLength={50}
@@ -273,17 +270,21 @@ export const SettingsForm = ({ settings, username }: SettingsFormProps) => {
           value={formik.values.siteName}
           onChange={formik.handleChange}
         />
-        <FormHelper>
+        <Text as="p" size="1" color="gray">
           This name will be displayed on your profile page
-        </FormHelper>
+        </Text>
         {formik.errors.siteName && (
-          <FormHelperError>{formik.errors.siteName}</FormHelperError>
+          <Text as="p" size="2" color="red">
+            {formik.errors.siteName}
+          </Text>
         )}
-      </FormRow>
+      </div>
 
-      <FormRow>
-        <FormLabel>Description</FormLabel>
-        <FormTextarea
+      <div className="space-y-1">
+        <Text as="p" size="2" color="gray" highContrast weight="bold">
+          Description
+        </Text>
+        <TextArea
           name="siteDescription"
           rows={3}
           maxLength={350}
@@ -291,15 +292,21 @@ export const SettingsForm = ({ settings, username }: SettingsFormProps) => {
           onChange={formik.handleChange}
           placeholder="Describe yourself in a few words..."
         />
-        <FormHelper>Max. 350 characters</FormHelper>
+        <Text as="p" size="1" color="gray">
+          Max. 350 characters
+        </Text>
         {formik.errors.siteDescription && (
-          <FormHelperError>{formik.errors.siteDescription}</FormHelperError>
+          <Text as="p" size="2" color="red">
+            {formik.errors.siteDescription}
+          </Text>
         )}
-      </FormRow>
+      </div>
 
-      <FormRow>
-        <FormLabel>Website</FormLabel>
-        <FormInput
+      <div className="space-y-1">
+        <Text as="p" size="2" color="gray" highContrast weight="bold">
+          Website
+        </Text>
+        <TextFieldInput
           name="siteUrl"
           type="text"
           maxLength={100}
@@ -307,15 +314,21 @@ export const SettingsForm = ({ settings, username }: SettingsFormProps) => {
           value={formik.values.siteUrl}
           onChange={formik.handleChange}
         />
-        <FormHelper>Max. 100 characters</FormHelper>
+        <Text as="p" size="1" color="gray">
+          Max. 100 characters
+        </Text>
         {formik.errors.siteUrl && (
-          <FormHelperError>{formik.errors.siteUrl}</FormHelperError>
+          <Text as="p" size="2" color="red">
+            {formik.errors.siteUrl}
+          </Text>
         )}
-      </FormRow>
+      </div>
 
-      <FormRow>
-        <FormLabel>Twitter Handle</FormLabel>
-        <FormInput
+      <div className="space-y-1">
+        <Text as="p" size="2" color="gray" highContrast weight="bold">
+          Twitter Handle
+        </Text>
+        <TextFieldInput
           name="siteTwitterHandle"
           type="text"
           maxLength={50}
@@ -323,14 +336,20 @@ export const SettingsForm = ({ settings, username }: SettingsFormProps) => {
           onChange={formik.handleChange}
           placeholder="@"
         />
-        <FormHelper>Enter your Twitter handle</FormHelper>
+        <Text as="p" size="1" color="gray">
+          Enter your Twitter handle
+        </Text>
         {formik.errors.siteTwitterHandle && (
-          <FormHelperError>{formik.errors.siteTwitterHandle}</FormHelperError>
+          <Text as="p" size="2" color="red">
+            {formik.errors.siteTwitterHandle}
+          </Text>
         )}
-      </FormRow>
+      </div>
 
-      <FormRow>
-        <FormLabel>Primary color</FormLabel>
+      <div className="space-y-1">
+        <Text as="p" size="2" color="gray" highContrast weight="bold">
+          Primary color
+        </Text>
         <FormColor
           css={{
             backgroundColor: formik.values.siteColor || colors.pink,
@@ -374,11 +393,16 @@ export const SettingsForm = ({ settings, username }: SettingsFormProps) => {
             </div>
           )}
         </FormColor>
-        <FormHelper>Choose a custom color for your links</FormHelper>
+        <Text as="p" size="1" color="gray">
+          Choose a custom color for your links
+        </Text>
         {formik.errors.siteColor && (
-          <FormHelperError>{formik.errors.siteColor}</FormHelperError>
+          <Text as="p" size="2" color="red">
+            {formik.errors.siteColor}
+          </Text>
         )}
-      </FormRow>
+      </div>
+
       {(formik.dirty || customLogo) && (
         <UnsavedChanges saving={formik.isSubmitting} />
       )}

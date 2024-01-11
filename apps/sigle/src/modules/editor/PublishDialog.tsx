@@ -11,7 +11,6 @@ import { cn } from '@/lib/cn';
 import { styled } from '../../stitches.config';
 import { Story } from '../../types';
 import { Box, Button, Container, Flex, Typography } from '../../ui';
-import { VisuallyHidden } from '../../ui/VisuallyHidden';
 import { PublishAndSendDialog } from './PublishAndSendDialog';
 import { SendTestEmail } from './PublishDialog/SendTestEmail';
 import { TwitterCardPreview } from './TwitterCardPreview';
@@ -86,9 +85,6 @@ export const PublishDialog = ({
       <Dialog.Root open={open} onOpenChange={onClose}>
         <StyledDialogContent size="3">
           <Container>
-            <VisuallyHidden>
-              <Dialog.Title>Preview and publish your story</Dialog.Title>
-            </VisuallyHidden>
             <Button
               onClick={onClose}
               variant="ghost"

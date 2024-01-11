@@ -9,4 +9,3 @@ export * from './LoadingSpinner';
 export * from './Text';
 export * from './Typography';
 export * from './Form';
-export * from './VisuallyHidden';
