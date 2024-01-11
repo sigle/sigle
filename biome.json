@@ -6,7 +6,7 @@
   "formatter": {
     "enabled": true,
     "indentStyle": "space",
-    "ignore": [".turbo"]
+    "ignore": [".turbo", ".next", "__generated__", "dist"]
   },
   "linter": {
     "enabled": false,
