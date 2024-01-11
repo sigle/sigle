@@ -63,7 +63,7 @@ export const EditorHeader = () => {
         </Flex>
         <Flex align="center" gap="6">
           {/* <EditorSave /> */}
-          <EditorPublish />
+          {/* <EditorPublish /> */}
           <IconButton
             size="2"
             variant="ghost"

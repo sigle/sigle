@@ -7,6 +7,7 @@ const editorPostSchema = z.object({
   title: z.string().min(4).max(200),
   metaTitle: z.string().optional(),
   metaDescription: z.string().optional(),
+  canonicalUrl: z.string().optional(),
 });
 
 export type EditorPostFormData = z.infer<typeof editorPostSchema>;
@@ -27,6 +28,7 @@ export const EditorFormProvider = ({
       title: story.title,
       metaTitle: story.metaTitle,
       metaDescription: story.metaDescription,
+      canonicalUrl: story.canonicalUrl,
     },
   });
 

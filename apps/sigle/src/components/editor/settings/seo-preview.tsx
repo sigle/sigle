@@ -1,11 +1,11 @@
 import { AspectRatio, Card, Inset, Text, Tooltip } from '@radix-ui/themes';
 import { IconHelpCircle } from '@tabler/icons-react';
 import { useFormContext } from 'react-hook-form';
-import { EditorPostFormData } from '@/app/(editor)/p/[postId]/edit/page';
-import { env } from '@/env';
 import { prettifyUrl } from '@/lib/prettify-url';
 import { resolveImageUrl } from '@/lib/resolve-image-url';
 import { useEditorStore } from '../store';
+import { EditorPostFormData } from '../editor-form-provider';
+import { sigleConfig } from '@/config';
 
 export const SeoPreview = () => {
   const editor = useEditorStore((state) => state.editor);
@@ -13,17 +13,25 @@ export const SeoPreview = () => {
   const watchTitle = watch('title');
   const watchMetaTitle = watch('metaTitle');
   const watchMetaDescription = watch('metaDescription');
-  const watchCoverImage = watch('coverImage');
+  // const watchCoverImage = watch('coverImage');
 
   const metaTitle = watchMetaTitle || watchTitle;
   const metaDescription =
     watchMetaDescription || editor?.getText().slice(0, 90);
   // TODO custom meta image
-  const metaImage = watchCoverImage;
+  // const metaImage = watchCoverImage;
 
   return (
     <div>
-      <Text as="div" size="2" mb="1" className="flex items-center gap-1">
+      <Text
+        className="flex items-center gap-1"
+        as="div"
+        size="3"
+        mb="1"
+        color="gray"
+        highContrast
+        weight="medium"
+      >
         Preview
         <Text color="gray">
           <Tooltip content="This is how the post will be displayed when sharing the link on social media">
@@ -32,7 +40,7 @@ export const SeoPreview = () => {
         </Text>
       </Text>
       <Card size="1">
-        {metaImage ? (
+        {/* {metaImage ? (
           <Inset
             clip="padding-box"
             side="top"
@@ -40,7 +48,7 @@ export const SeoPreview = () => {
           >
             <AspectRatio ratio={1.91 / 1}>
               {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
+        {/* <img
                 src={resolveImageUrl(metaImage)}
                 alt="Cover image"
                 style={{
@@ -52,7 +60,7 @@ export const SeoPreview = () => {
               />
             </AspectRatio>
           </Inset>
-        ) : null}
+        ) : null}  */}
         <Text as="div" size="2" className="truncate">
           {metaTitle}
         </Text>
@@ -66,7 +74,7 @@ export const SeoPreview = () => {
           {metaDescription}
         </Text>
         <Text as="div" size="2" color="gray" className="truncate">
-          {prettifyUrl(env.NEXT_PUBLIC_APP_URL)}
+          {prettifyUrl(sigleConfig.appUrl)}
         </Text>
       </Card>
     </div>

@@ -2,17 +2,21 @@ import {
   Dialog,
   Flex,
   IconButton,
+  Link,
   Text,
   TextArea,
   TextField,
 } from '@radix-ui/themes';
 import { useFormContext } from 'react-hook-form';
-import { IconX } from '@tabler/icons-react';
+import { IconHelpCircle, IconX } from '@tabler/icons-react';
 import { cn } from '@/lib/cn';
 import { useEditorStore } from '../store';
 import styles from './styles.module.css';
 import { SeoPreview } from './seo-preview';
 import { EditorPostFormData } from '../editor-form-provider';
+
+const canonicalUrlInfo =
+  'https://developers.google.com/search/docs/crawling-indexing/consolidate-duplicate-urls';
 
 export const EditorSettings = () => {
   const menuOpen = useEditorStore((state) => state.menuOpen);
@@ -20,6 +24,8 @@ export const EditorSettings = () => {
   const { register, watch } = useFormContext<EditorPostFormData>();
   const watchMetaTitle = watch('metaTitle');
   const watchMetaDescription = watch('metaDescription');
+
+  // TODO show validation errors
 
   return (
     <Dialog.Root open={menuOpen} onOpenChange={toggleMenu}>
@@ -38,9 +44,16 @@ export const EditorSettings = () => {
           </Dialog.Close>
         </Flex>
 
-        <Flex direction="column" gap="3">
+        <Flex direction="column" gap="5" mt="4">
           <label>
-            <Text as="p" size="2" mb="1">
+            <Text
+              as="p"
+              size="3"
+              mb="1"
+              color="gray"
+              highContrast
+              weight="medium"
+            >
               Meta title
             </Text>
             <TextField.Input
@@ -49,18 +62,21 @@ export const EditorSettings = () => {
               {...register('metaTitle')}
             />
             <Text as="p" mt="2" size="1" color="gray">
-              Recommended:{' '}
-              <Text color="gray" highContrast>
-                70
-              </Text>{' '}
+              Recommended: <Text weight="medium">70</Text> characters. You have
+              used <Text weight="medium">{(watchMetaTitle || '').length}</Text>{' '}
               characters.
             </Text>
-            <Text as="p" size="1" color="gray">
-              You have used {(watchMetaTitle || '').length} characters.
-            </Text>
           </label>
+
           <label>
-            <Text as="p" size="2" mb="1">
+            <Text
+              as="p"
+              size="3"
+              mb="1"
+              color="gray"
+              highContrast
+              weight="medium"
+            >
               Meta description
             </Text>
             <TextArea
@@ -70,15 +86,35 @@ export const EditorSettings = () => {
               {...register('metaDescription')}
             />
             <Text as="p" mt="2" size="1" color="gray">
-              Recommended:{' '}
-              <Text color="gray" highContrast>
-                156
-              </Text>{' '}
+              Recommended: <Text weight="medium">156</Text> characters. You have
+              used{' '}
+              <Text weight="medium">{(watchMetaDescription || '').length}</Text>{' '}
               characters.
             </Text>
-            <Text as="p" size="1" color="gray">
-              You have used {(watchMetaDescription || '').length} characters.
+          </label>
+
+          <label>
+            <Text
+              className="flex items-center gap-1"
+              as="p"
+              size="3"
+              mb="1"
+              color="gray"
+              highContrast
+              weight="medium"
+            >
+              Canonical URL
+              <Text color="gray">
+                <Link href={canonicalUrlInfo} target="_blank" rel="noreferrer">
+                  <IconHelpCircle size={16} />
+                </Link>
+              </Text>
             </Text>
+            <TextField.Input
+              placeholder="https://"
+              maxLength={250}
+              {...register('canonicalUrl')}
+            />
           </label>
           <SeoPreview />
         </Flex>
