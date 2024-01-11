@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { useRouter } from 'next/router';
 import { useSession } from 'next-auth/react';
 import { parseZoneFile } from 'zone-file';
-import { FullScreenLoading } from '../layout/components/FullScreenLoading';
+import { FullScreenLoading } from '../../components/layout/full-screen-loading';
 import { useAuth } from './AuthContext';
 
 interface Props {

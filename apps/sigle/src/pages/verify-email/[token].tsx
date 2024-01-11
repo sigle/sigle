@@ -1,19 +1,9 @@
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
+import { Button, Text, Flex, Container } from '@radix-ui/themes';
 import { useEmailVerificationControllerVerifyEmail } from '@/__generated__/sigle-api';
 import { AppHeader } from '../../components/layout/header/header';
-import { styled } from '../../stitches.config';
-import { Button, Container, Flex, Typography } from '../../ui';
-
-const VerifyEmailContainer = styled(Container, {
-  display: 'flex',
-  flexDirection: 'column',
-  justifyContent: 'center',
-  alignItems: 'center',
-  textAlign: 'center',
-  flex: 1,
-});
 
 const VerifyEmail = () => {
   const router = useRouter();
@@ -38,21 +28,23 @@ const VerifyEmail = () => {
   }, [token]);
 
   return (
-    <Flex direction="column" css={{ height: '100%' }}>
+    <Flex direction="column" className="h-full">
       <AppHeader />
-      <VerifyEmailContainer>
-        {success && (
-          <>
-            <Typography>Email verified successfully!</Typography>
-            <Link href="/login" passHref legacyBehavior>
-              <Button css={{ mt: '$5' }} as="a" size="lg" color="orange">
-                Go back to your dashboard
+      <Container size="3" px="4" className="mt-10">
+        <div className="flex flex-1 flex-col items-center justify-center text-center">
+          {success && (
+            <>
+              <Text>Email verified successfully!</Text>
+              <Button size="2" color="gray" highContrast asChild>
+                <Link href="/" className="mt-4">
+                  Go back to your dashboard
+                </Link>
               </Button>
-            </Link>
-          </>
-        )}
-        {error && <Typography css={{ color: '$orange11' }}>{error}</Typography>}
-      </VerifyEmailContainer>
+            </>
+          )}
+          {error && <Text color="orange">{error}</Text>}
+        </div>
+      </Container>
     </Flex>
   );
 };

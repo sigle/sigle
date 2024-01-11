@@ -1,8 +1,8 @@
 import { Suspense } from 'react';
+import { Text } from '@radix-ui/themes';
 import { Protected } from '../../modules/auth/Protected';
 import { EmailData } from '../../modules/settings/email/EmailData';
 import { SettingsLayout } from '../../modules/settings/SettingsLayout';
-import { Typography } from '../../ui';
 
 const PrivateDataPage = () => {
   return (
@@ -10,7 +10,7 @@ const PrivateDataPage = () => {
       <Suspense
         fallback={
           <SettingsLayout>
-            <Typography>Loading ...</Typography>
+            <Text>Loading ...</Text>
           </SettingsLayout>
         }
       >
