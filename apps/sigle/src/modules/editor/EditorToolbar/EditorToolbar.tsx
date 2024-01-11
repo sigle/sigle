@@ -65,7 +65,7 @@ export const Toolbar = ({ editor }: ToolbarProps) => {
 
   return (
     <div
-      className="flex items-center justify-between p-3 gap-5 fixed bottom-0 z-0 justify-self-start overflow-x-scroll left-0 right-0 bg-gray-1 border-t border-gray-6"
+      className="fixed inset-x-0 bottom-0 z-0 flex items-center justify-between gap-5 justify-self-start overflow-x-scroll border-t border-gray-6 bg-gray-1 p-3"
       style={{
         transform: `translateY(-${position}px)`,
         transition: 'transform .25s',
@@ -76,7 +76,7 @@ export const Toolbar = ({ editor }: ToolbarProps) => {
         triggerDisabled={!softKeyboardIsOpen}
       />
       {editor && (
-        <div className="flex gap-5 items-center not-prose">
+        <div className="not-prose flex items-center gap-5">
           <ToolbarMenu editor={editor} />
           <Separator orientation="vertical" size="2" />
           {image && (
