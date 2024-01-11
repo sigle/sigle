@@ -16,7 +16,7 @@ For non-bug-fixes, please open an issue first and discuss your idea to make sure
 
 - Fork the repository and create a new branch from `main`.
 - Must not break the test suite. If you're fixing a bug, include a test that would fail without your fix.
-- Must be formatted with prettier (`pnpm run format`).
+- Must be formatted properly (`pnpm run format`).
 - Must be **isolated**. Avoid grouping many, unrelated changes in a single PR.
 - Must contain a changeset file describing the changes and affected packages. Run `pnpm changeset` to generate one.
 
