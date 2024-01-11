@@ -9,38 +9,20 @@ import {
   fetchStoriesControllerPublish,
   fetchStoriesControllerUnpublish,
 } from '@/__generated__/sigle-api';
-import { styled } from '../../stitches.config';
+import { EditorTitle } from '@/components/editor/editor-title';
+import { EditorFormProvider } from '@/components/editor/editor-form-provider';
 import { Story } from '../../types';
-import { Container } from '../../ui';
 import { publishStory, unPublishStory } from '../../utils';
 import { Goals } from '../../utils/fathom';
-import { EditorHeader } from './EditorHeader';
 import { PublishDialog } from './PublishDialog';
 import { TipTapEditor } from './TipTapEditor';
 import { createSubsetStory, saveStory } from './utils';
 import { UnpublishDialog } from './UnpublishDialog';
 import { PublishedDialog } from './PublishedDialog';
 import { CoverImage } from './CoverImage';
-import { EditorSettings } from './EditorSettings/EditorSettings';
-
-const TitleInput = styled('input', {
-  outline: 'transparent',
-  background: 'transparent',
-  width: '100%',
-  fontWeight: '700',
-  fontSize: '36px',
-  lineHeight: '46px',
-  letterSpacing: '-0.3px',
-  '&::placeholder': {
-    color: '$gray9',
-  },
-});
-
-const EditorContainer = styled('div', {
-  margin: '0 auto',
-  paddingTop: '$15',
-  paddingBottom: '$15',
-});
+import { EditorHeader } from '@/components/editor/editor-header';
+import { Container } from '@radix-ui/themes';
+import { EditorSettings } from '@/components/editor/settings/editor-settings';
 
 interface NewEditorProps {
   story: Story;
@@ -226,65 +208,48 @@ export const NewEditor = ({ story }: NewEditorProps) => {
   };
 
   return (
-    <Container
-      css={{
-        pt: '$5',
-        '@md': {
-          pt: '$10',
-        },
-      }}
-    >
-      <EditorHeader
-        story={newStory}
-        loadingSave={loadingSave}
-        onOpenSettings={handleOpenSettings}
-        onSave={handleSave}
-        onPublish={handlePublish}
-        onUnpublish={handleUnpublish}
-      />
+    <EditorFormProvider story={story}>
+      <EditorHeader />
+      <Container size="2">
+        <div className="prose dark:prose-invert lg:prose-lg my-10">
+          <EditorTitle />
+          <CoverImage story={newStory} setStoryFile={setNewStory} />
 
-      <EditorContainer className="prose dark:prose-invert lg:prose-lg">
-        <TitleInput
-          value={newStory.title}
-          onChange={(e) => {
-            setNewStory({ ...newStory, title: e.target.value });
-          }}
-          placeholder="Title"
+          <TipTapEditor ref={editorRef} story={story} />
+        </div>
+
+        <EditorSettings />
+
+        <PublishDialog
+          story={newStory}
+          open={publishDialogState.open}
+          loading={publishDialogState.loading}
+          onConfirm={handleConfirmPublish}
+          onClose={handleCancelPublish}
+          onEditPreview={handleOpenSettings}
         />
-        <CoverImage story={newStory} setStoryFile={setNewStory} />
 
-        <TipTapEditor ref={editorRef} story={story} />
-      </EditorContainer>
+        <PublishedDialog
+          open={showPublishedDialog}
+          onOpenChange={handleCancelPublished}
+          story={newStory}
+        />
 
-      <PublishDialog
-        story={newStory}
-        open={publishDialogState.open}
-        loading={publishDialogState.loading}
-        onConfirm={handleConfirmPublish}
-        onClose={handleCancelPublish}
-        onEditPreview={handleOpenSettings}
-      />
+        <UnpublishDialog
+          open={unpublishDialogState.open}
+          loading={unpublishDialogState.loading}
+          onConfirm={handleConfirmUnpublish}
+          onClose={handleCancelUnpublish}
+        />
 
-      <PublishedDialog
-        open={showPublishedDialog}
-        onOpenChange={handleCancelPublished}
-        story={newStory}
-      />
-
-      <UnpublishDialog
-        open={unpublishDialogState.open}
-        loading={unpublishDialogState.loading}
-        onConfirm={handleConfirmUnpublish}
-        onClose={handleCancelUnpublish}
-      />
-
-      <EditorSettings
-        story={newStory}
-        open={showSettingsDialog}
-        onClose={handleCloseSettings}
-        setStoryFile={setNewStory}
-        onSave={handleSave}
-      />
-    </Container>
+        <EditorSettings
+          story={newStory}
+          open={showSettingsDialog}
+          onClose={handleCloseSettings}
+          setStoryFile={setNewStory}
+          onSave={handleSave}
+        />
+      </Container>
+    </EditorFormProvider>
   );
 };
