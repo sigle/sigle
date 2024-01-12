@@ -14,7 +14,7 @@
     "postinstall": "husky install"
   },
   "lint-staged": {
-    "**/*": "biome format --no-errors-on-unmatched --files-ignore-unknown=true"
+    "**/*": "biome format --write --no-errors-on-unmatched --files-ignore-unknown=true"
   },
   "devDependencies": {
     "@biomejs/biome": "1.5.1",
