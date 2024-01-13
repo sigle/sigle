@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<d527e7fa8389c3dfbfb8043bc93bfd71>>
+ * @generated SignedSource<<19b0bd0ebdcf3e74cc85caa07ba26def>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -17,7 +17,7 @@ export type UpdatePostInput = {
   options?: UpdateOptionsInput | null;
 };
 export type PartialPostInput = {
-  canonicalUrl?: string | null;
+  canonicalUrl?: any | null;
   content?: string | null;
   featuredImage?: string | null;
   metaDescription?: string | null;

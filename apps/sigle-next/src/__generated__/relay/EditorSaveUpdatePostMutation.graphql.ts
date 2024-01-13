@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<1a6bdb3b99d15bf7433f4fa6762fc3f1>>
+ * @generated SignedSource<<4bcf86eec157af7a4058b6618d75097f>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -17,7 +17,7 @@ export type UpdatePostInput = {
   options?: UpdateOptionsInput | null;
 };
 export type PartialPostInput = {
-  canonicalUrl?: string | null;
+  canonicalUrl?: any | null;
   content?: string | null;
   featuredImage?: string | null;
   metaDescription?: string | null;
@@ -37,7 +37,7 @@ export type EditorSaveUpdatePostMutation$data = {
   readonly updatePost: {
     readonly clientMutationId: string | null;
     readonly document: {
-      readonly canonicalUrl: string | null;
+      readonly canonicalUrl: any | null;
       readonly featuredImage: string | null;
       readonly id: string;
       readonly metaDescription: string | null;

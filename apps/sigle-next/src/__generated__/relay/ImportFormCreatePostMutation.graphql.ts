@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<1c38191dbe8cc196819377e72647aacc>>
+ * @generated SignedSource<<fdb7f78874ad3871aabdb4e58f251457>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -10,43 +10,34 @@
 
 import { ConcreteRequest, Mutation } from 'relay-runtime';
 export type PostStatus = "DELETED" | "DRAFT" | "PUBLISHED" | "%future added value";
-export type UpdatePostInput = {
+export type CreatePostInput = {
   clientMutationId?: string | null;
-  content: PartialPostInput;
-  id: string;
-  options?: UpdateOptionsInput | null;
+  content: PostInput;
 };
-export type PartialPostInput = {
+export type PostInput = {
   canonicalUrl?: any | null;
-  content?: string | null;
+  content: string;
   featuredImage?: string | null;
   metaDescription?: string | null;
   metaImage?: string | null;
   metaTitle?: string | null;
   status?: PostStatus | null;
-  title?: string | null;
+  title: string;
 };
-export type UpdateOptionsInput = {
-  replace?: boolean | null;
-  version?: any | null;
+export type ImportFormCreatePostMutation$variables = {
+  input: CreatePostInput;
 };
-export type DeleteDialogDeletePostMutation$variables = {
-  input: UpdatePostInput;
-};
-export type DeleteDialogDeletePostMutation$data = {
-  readonly updatePost: {
+export type ImportFormCreatePostMutation$data = {
+  readonly createPost: {
     readonly clientMutationId: string | null;
     readonly document: {
-      readonly content: string;
       readonly id: string;
-      readonly status: PostStatus | null;
-      readonly title: string;
     };
   } | null;
 };
-export type DeleteDialogDeletePostMutation = {
-  response: DeleteDialogDeletePostMutation$data;
-  variables: DeleteDialogDeletePostMutation$variables;
+export type ImportFormCreatePostMutation = {
+  response: ImportFormCreatePostMutation$data;
+  variables: ImportFormCreatePostMutation$variables;
 };
 
 const node: ConcreteRequest = (function(){
@@ -67,9 +58,9 @@ v1 = [
         "variableName": "input"
       }
     ],
-    "concreteType": "UpdatePostPayload",
+    "concreteType": "CreatePostPayload",
     "kind": "LinkedField",
-    "name": "updatePost",
+    "name": "createPost",
     "plural": false,
     "selections": [
       {
@@ -93,27 +84,6 @@ v1 = [
             "kind": "ScalarField",
             "name": "id",
             "storageKey": null
-          },
-          {
-            "alias": null,
-            "args": null,
-            "kind": "ScalarField",
-            "name": "status",
-            "storageKey": null
-          },
-          {
-            "alias": null,
-            "args": null,
-            "kind": "ScalarField",
-            "name": "title",
-            "storageKey": null
-          },
-          {
-            "alias": null,
-            "args": null,
-            "kind": "ScalarField",
-            "name": "content",
-            "storageKey": null
           }
         ],
         "storageKey": null
@@ -127,7 +97,7 @@ return {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Fragment",
     "metadata": null,
-    "name": "DeleteDialogDeletePostMutation",
+    "name": "ImportFormCreatePostMutation",
     "selections": (v1/*: any*/),
     "type": "Mutation",
     "abstractKey": null
@@ -136,20 +106,20 @@ return {
   "operation": {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Operation",
-    "name": "DeleteDialogDeletePostMutation",
+    "name": "ImportFormCreatePostMutation",
     "selections": (v1/*: any*/)
   },
   "params": {
-    "cacheID": "25ed6852ab2bb13080101d3362e71b6e",
+    "cacheID": "d13bc1dcd8b4a823cd3f5439a8cb2585",
     "id": null,
     "metadata": {},
-    "name": "DeleteDialogDeletePostMutation",
+    "name": "ImportFormCreatePostMutation",
     "operationKind": "mutation",
-    "text": "mutation DeleteDialogDeletePostMutation(\n  $input: UpdatePostInput!\n) {\n  updatePost(input: $input) {\n    clientMutationId\n    document {\n      id\n      status\n      title\n      content\n    }\n  }\n}\n"
+    "text": "mutation ImportFormCreatePostMutation(\n  $input: CreatePostInput!\n) {\n  createPost(input: $input) {\n    clientMutationId\n    document {\n      id\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "9695249258bb624202f28cd9f693cde5";
+(node as any).hash = "d4bf1f8774f4d68f3ddd1b3049e9d2cb";
 
 export default node;

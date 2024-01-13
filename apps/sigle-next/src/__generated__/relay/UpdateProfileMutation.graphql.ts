@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<5cc0560e3943128a7d37b6ca42d9edf1>>
+ * @generated SignedSource<<6abde16fb5cd3bf1515e5e2b6500f5db>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -19,7 +19,7 @@ export type PartialProfileInput = {
   description?: string | null;
   displayName?: string | null;
   twitterUsername?: string | null;
-  websiteUrl?: string | null;
+  websiteUrl?: any | null;
 };
 export type UpdateOptionsInput = {
   replace?: boolean | null;
@@ -36,7 +36,7 @@ export type UpdateProfileMutation$data = {
       readonly displayName: string | null;
       readonly id: string;
       readonly twitterUsername: string | null;
-      readonly websiteUrl: string | null;
+      readonly websiteUrl: any | null;
     };
   } | null;
 };

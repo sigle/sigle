@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<538d6215ee3f8efd569662c337223d75>>
+ * @generated SignedSource<<0ac3c86987ed389aa928b69a81b8f672>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -17,7 +17,7 @@ export type ProfileInput = {
   description?: string | null;
   displayName?: string | null;
   twitterUsername?: string | null;
-  websiteUrl?: string | null;
+  websiteUrl?: any | null;
 };
 export type CreateProfileMutation$variables = {
   input: CreateProfileInput;
@@ -30,7 +30,7 @@ export type CreateProfileMutation$data = {
       readonly displayName: string | null;
       readonly id: string;
       readonly twitterUsername: string | null;
-      readonly websiteUrl: string | null;
+      readonly websiteUrl: any | null;
     };
   } | null;
 };
