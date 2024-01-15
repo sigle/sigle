@@ -27,7 +27,7 @@ import TipTapText from '@tiptap/extension-text';
 import TipTapTypography from '@tiptap/extension-typography';
 import TipTapUnderline from '@tiptap/extension-underline';
 import TipTapCodeBlockLowlight from '@tiptap/extension-code-block-lowlight';
-import { lowlight } from 'lowlight/lib/common';
+import { common, createLowlight } from 'lowlight';
 import CharacterCount from '@tiptap/extension-character-count';
 import { useTheme } from 'next-themes';
 import { nanoid } from 'nanoid';
@@ -107,7 +107,8 @@ interface TipTapEditorProps {
   editable?: boolean;
 }
 
-lowlight.registerLanguage('clarity (beta)', clarity);
+const lowlight = createLowlight(common);
+lowlight.register('clarity (beta)', clarity);
 
 export const TipTapEditor = forwardRef<
   {
