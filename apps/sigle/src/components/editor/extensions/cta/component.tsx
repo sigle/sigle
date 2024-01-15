@@ -73,12 +73,11 @@ export const CtaComponent = (props: NodeViewProps) => {
       <div
         data-cta
         data-drag-handle
-        className={cn(
-          'not-prose flex justify-center outline outline-0 outline-offset-2 outline-orange-9 hover:outline-2',
-          {
-            'outline-2': props.selected,
-          },
-        )}
+        className={cn('flex justify-center', {
+          'outline outline-0 outline-offset-2 outline-orange-9 hover:outline-2':
+            props.editor.isEditable,
+          'outline-2': props.selected,
+        })}
       >
         {props.editor.isEditable && (
           <Dialog.Root
@@ -176,34 +175,38 @@ export const CtaComponent = (props: NodeViewProps) => {
           </Dialog.Root>
         )}
 
-        <Button
-          size={
-            props.node.attrs.size === 'sm'
-              ? '1'
-              : props.node.attrs.size === 'md'
-                ? '2'
-                : '3'
-          }
-          asChild
-        >
-          <a
-            className={cn({
-              hidden: !hasAttrs,
-              'inline-flex': hasAttrs,
-            })}
-            href={props.node.attrs.url}
-            onClick={(e: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => {
-              if (props.editor.isEditable) {
-                e.preventDefault();
-                setShowCtaDialog(true);
-              }
-            }}
-            target="_blank"
-            rel="noreferrer"
+        {/* p is used to add some margin to the button, it's important to keep it */}
+        <p>
+          <Button
+            className="not-prose"
+            size={
+              props.node.attrs.size === 'sm'
+                ? '1'
+                : props.node.attrs.size === 'md'
+                  ? '2'
+                  : '3'
+            }
+            asChild
           >
-            {props.node.attrs.label}
-          </a>
-        </Button>
+            <a
+              className={cn({
+                hidden: !hasAttrs,
+                'inline-flex': hasAttrs,
+              })}
+              href={props.node.attrs.url}
+              onClick={(e: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => {
+                if (props.editor.isEditable) {
+                  e.preventDefault();
+                  setShowCtaDialog(true);
+                }
+              }}
+              target="_blank"
+              rel="noreferrer"
+            >
+              {props.node.attrs.label}
+            </a>
+          </Button>
+        </p>
       </div>
     </NodeViewWrapper>
   );

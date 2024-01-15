@@ -17,13 +17,12 @@ export const ImageComponent = (props: NodeViewProps) => {
       )}
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img
-        className={cn(
-          'outline outline-0 outline-offset-2 outline-orange-9 hover:outline-2',
-          {
-            ['outline-2']: props.selected,
-            ['opacity-25']: uploadId,
-          },
-        )}
+        className={cn({
+          ['outline outline-0 outline-offset-2 outline-orange-9 hover:outline-2']:
+            props.editor.isEditable,
+          ['outline-2']: props.selected,
+          ['opacity-25']: uploadId,
+        })}
         src={src}
         alt={alt}
       />
