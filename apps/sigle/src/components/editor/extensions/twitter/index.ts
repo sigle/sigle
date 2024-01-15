@@ -1,7 +1,7 @@
-import { Node, nodePasteRule } from '@tiptap/core';
+import { Node, mergeAttributes, nodePasteRule } from '@tiptap/core';
 import { ReactNodeViewRenderer } from '@tiptap/react';
 import { TwitterComponent } from './component';
-import { TWITTER_REGEX_GLOBAL } from './utils';
+import { TWITTER_REGEX_GLOBAL, getTweetIdFromUrl } from './utils';
 
 declare module '@tiptap/core' {
   interface Commands<ReturnType> {
@@ -28,6 +28,11 @@ const Twitter = Node.create({
 
   addAttributes() {
     return {
+      ['data-twitter-id']: {
+        default: null,
+        // force correct id
+        parseHTML: (element) => element.getAttribute('data-twitter-id'),
+      },
       url: {
         default: null,
       },
@@ -59,6 +64,7 @@ const Twitter = Node.create({
         type: this.type,
         getAttributes: (match) => {
           return {
+            ['data-twitter-id']: getTweetIdFromUrl(match.input),
             url: match.input,
             pasted: true,
           };
@@ -71,10 +77,6 @@ const Twitter = Node.create({
     return [
       {
         tag: 'div[data-twitter]',
-        getAttrs: (element) => {
-          const url = (element as HTMLElement).getAttribute('data-twitter');
-          return { url };
-        },
       },
     ];
   },
@@ -85,7 +87,7 @@ const Twitter = Node.create({
       return ['span'];
     }
 
-    return ['div', { 'data-twitter': HTMLAttributes.url }];
+    return ['div', mergeAttributes({ 'data-twitter': '' }, HTMLAttributes)];
   },
 
   addNodeView() {
