@@ -74,7 +74,6 @@ export const EditorBubbleMenu = ({ editor }: EditorBubbleMenuProps) => {
         duration: 100,
         theme: 'sigle-editor-bubble-menu',
         onHidden: () => {
-          console.log('onHidden');
           resetLink();
         },
       }}
