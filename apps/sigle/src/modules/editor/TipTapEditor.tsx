@@ -222,7 +222,7 @@ export const TipTapEditor = forwardRef<
       )}
 
       {editable && !isMobile && editor && <EditorBottomInfo editor={editor} />}
-      {editable && isMobile && <Toolbar editor={editor} story={story} />}
+      {editable && isMobile && <Toolbar editor={editor} />}
     </>
   );
 });
