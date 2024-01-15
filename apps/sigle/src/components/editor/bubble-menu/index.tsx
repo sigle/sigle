@@ -35,10 +35,9 @@ interface EditorBubbleMenuProps {
 }
 
 export const EditorBubbleMenu = ({ editor }: EditorBubbleMenuProps) => {
-  // globalStylesBubbleMenu();
   const linkOpen = useBubbleMenuStore((state) => state.linkOpen);
   const setLinkValue = useBubbleMenuStore((state) => state.setLinkValue);
-  const toggleLink = useBubbleMenuStore((state) => state.toggleLink);
+  const setLinkOpen = useBubbleMenuStore((state) => state.setLinkOpen);
 
   // Listen to any key press to detect cmd + k and activate the link edition
   useEffect(() => {
@@ -59,8 +58,13 @@ export const EditorBubbleMenu = ({ editor }: EditorBubbleMenuProps) => {
       ? editor.getAttributes('link').href
       : '';
 
-    toggleLink(true);
+    setLinkOpen(true);
     setLinkValue(existingHref);
+  };
+
+  const resetLink = () => {
+    setLinkOpen(false);
+    setLinkValue('');
   };
 
   return (
@@ -69,6 +73,9 @@ export const EditorBubbleMenu = ({ editor }: EditorBubbleMenuProps) => {
       tippyOptions={{
         duration: 100,
         theme: 'sigle-editor-bubble-menu',
+        onHidden: () => {
+          resetLink();
+        },
       }}
       shouldShow={({ editor, state, from, to, view }) => {
         // Take the initial implementation of the plugin and extends it

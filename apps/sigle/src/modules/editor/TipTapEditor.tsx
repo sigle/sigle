@@ -27,26 +27,26 @@ import TipTapText from '@tiptap/extension-text';
 import TipTapTypography from '@tiptap/extension-typography';
 import TipTapUnderline from '@tiptap/extension-underline';
 import TipTapCodeBlockLowlight from '@tiptap/extension-code-block-lowlight';
-import { lowlight } from 'lowlight/lib/common';
+import { common, createLowlight } from 'lowlight';
 import CharacterCount from '@tiptap/extension-character-count';
 import { useTheme } from 'next-themes';
 import { nanoid } from 'nanoid';
-import { EditorBubbleMenu } from '@/components/editor/bubble-menu';
-import { EditorFloatingMenu } from '@/components/editor/floating-menu';
-import { EditorBottomInfo } from '@/components/editor/bottom-info';
-import { CodeBlockComponent } from '@/components/editor/extensions/code-block';
-import { TipTapImage } from '@/components/editor/extensions/image';
 import { TipTapMobileScroll } from '@/components/editor/extensions/mobile-scroll';
+import { EditorBottomInfo } from '@/components/editor/bottom-info';
+import { EditorFloatingMenu } from '@/components/editor/floating-menu';
+import { EditorBubbleMenu } from '@/components/editor/bubble-menu';
+import { clarity } from '@/components/editor/highlight/clarity-syntax';
+import { TipTapImage } from '@/components/editor/extensions/image';
+import { TipTapTwitter } from '@/components/editor/extensions/twitter';
+import { TipTapCta } from '@/components/editor/extensions/cta';
 import { TipTapPlaceholder } from '@/components/editor/extensions/placeholder';
+import { CodeBlockComponent } from '@/components/editor/extensions/code-block';
 import { SlashCommands } from '@/components/editor/extensions/slash-command/slash-commands';
 import { slashCommands } from '@/components/editor/extensions/slash-command/commands';
-import { TipTapTwitter } from '@/components/editor/extensions/twitter';
-import { clarity } from '@/components/editor/highlight/clarity-syntax';
-import { TipTapCta } from '@/components/editor/extensions/cta';
-import { styled, globalCss, keyframes, darkTheme } from '../../stitches.config';
 import { Story } from '../../types';
-import { Toolbar } from './EditorToolbar/EditorToolbar';
+import { styled, globalCss, keyframes, darkTheme } from '../../stitches.config';
 import { resizeAndUploadImage } from './utils/image';
+import { Toolbar } from './EditorToolbar/EditorToolbar';
 
 const fadeInAnimation = keyframes({
   '0%': { opacity: '0' },
@@ -107,7 +107,8 @@ interface TipTapEditorProps {
   editable?: boolean;
 }
 
-lowlight.registerLanguage('clarity (beta)', clarity);
+const lowlight = createLowlight(common);
+lowlight.register('clarity (beta)', clarity);
 
 export const TipTapEditor = forwardRef<
   {

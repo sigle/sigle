@@ -1,7 +1,7 @@
 import { Node, nodePasteRule } from '@tiptap/core';
 import { ReactNodeViewRenderer } from '@tiptap/react';
 import { TwitterComponent } from './component';
-import { TWITTER_REGEX_GLOBAL } from './utils';
+import { TWITTER_REGEX_GLOBAL, getTweetIdFromUrl } from './utils';
 
 declare module '@tiptap/core' {
   interface Commands<ReturnType> {

@@ -14,26 +14,28 @@ export const CodeBlockComponent = (props: NodeViewProps) => {
 
   return (
     <NodeViewWrapper style={{ position: 'relative' }}>
-      <div className="absolute right-1 top-1">
-        <Select.Root
-          value={props.node.attrs.language || 'auto'}
-          onValueChange={handleCHangeLanguage}
-        >
-          <Select.Trigger className="bg-gray-1" />
-          <Select.Content>
-            <Select.Item value="auto">auto</Select.Item>
-            <Select.Separator />
-            {props.extension.options.lowlight
-              .listLanguages()
-              .sort()
-              .map((o: string) => (
-                <Select.Item value={o} key={o}>
-                  {o}
-                </Select.Item>
-              ))}
-          </Select.Content>
-        </Select.Root>
-      </div>
+      {props.editor.isEditable ? (
+        <div className="absolute right-1 top-1">
+          <Select.Root
+            value={props.node.attrs.language || 'auto'}
+            onValueChange={handleCHangeLanguage}
+          >
+            <Select.Trigger className="bg-gray-1" />
+            <Select.Content>
+              <Select.Item value="auto">auto</Select.Item>
+              <Select.Separator />
+              {props.extension.options.lowlight
+                .listLanguages()
+                .sort()
+                .map((o: string) => (
+                  <Select.Item value={o} key={o}>
+                    {o}
+                  </Select.Item>
+                ))}
+            </Select.Content>
+          </Select.Root>
+        </div>
+      ) : null}
 
       <NodeViewContent as={'pre'} />
     </NodeViewWrapper>
