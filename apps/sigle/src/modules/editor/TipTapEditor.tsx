@@ -29,24 +29,22 @@ import TipTapUnderline from '@tiptap/extension-underline';
 import TipTapCodeBlockLowlight from '@tiptap/extension-code-block-lowlight';
 import { lowlight } from 'lowlight/lib/common';
 import CharacterCount from '@tiptap/extension-character-count';
-import { KeyboardIcon } from '@radix-ui/react-icons';
 import { useTheme } from 'next-themes';
 import { styled, globalCss, keyframes, darkTheme } from '../../stitches.config';
 import { Story } from '../../types';
-import { Container, IconButton, Typography } from '../../ui';
 import { Placeholder as TipTapPlaceholder } from './extensions/Placeholder';
 import { SlashCommands } from './extensions/SlashCommand/SlashCommands';
-import { BubbleMenu } from './BubbleMenu/BubbleMenu';
 import { slashCommands } from './extensions/SlashCommand/commands';
-import { FloatingMenu } from './FloatingMenu';
 import { CodeBlockComponent } from './extensions/CodeBlock';
-import { ShortcutsDialog } from './EditorShortcuts/ShortcutsDialog';
 import { clarity } from './utils/clarity-syntax';
 import { TipTapImage } from './extensions/Image';
 import { Toolbar } from './EditorToolbar/EditorToolbar';
 import { Twitter as TipTapTwitter } from './extensions/Twitter';
-import { MobileScroll } from './extensions/MobileScroll';
 import { Cta as TipTapCta } from './extensions/CallToAction';
+import { EditorBubbleMenu } from '@/components/editor/bubble-menu';
+import { EditorFloatingMenu } from '@/components/editor/floating-menu';
+import { TipTapMobileScroll } from '@/components/editor/extensions/mobile-scroll';
+import { EditorBottomInfo } from '@/components/editor/bottom-info';
 
 const fadeInAnimation = keyframes({
   '0%': { opacity: '0' },
@@ -180,7 +178,7 @@ export const TipTapEditor = forwardRef<
             commands: slashCommands({ storyId: story.id }),
           })
         : undefined,
-      isMobile ? MobileScroll : undefined,
+      isMobile ? TipTapMobileScroll : undefined,
     ] as Extensions,
     content: story.contentVersion === '2' ? story.content : '',
   });
@@ -204,8 +202,8 @@ export const TipTapEditor = forwardRef<
 
   return (
     <>
-      {editor && !isMobile && <BubbleMenu editor={editor} />}
-      {editor && !isMobile && <FloatingMenu editor={editor} />}
+      {editor && !isMobile && <EditorBubbleMenu editor={editor} />}
+      {editor && !isMobile && <EditorFloatingMenu editor={editor} />}
 
       {/* editor is not set while doing SSR so we render the HTNL as it is for SEO */}
       {editor ? (
@@ -218,50 +216,8 @@ export const TipTapEditor = forwardRef<
         />
       )}
 
-      {editable && (
-        <>
-          {isMobile ? (
-            <Toolbar editor={editor} story={story} />
-          ) : (
-            <Container
-              css={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: '$3',
-                position: 'fixed',
-                mb: '$10',
-                bottom: 0,
-                right: 0,
-                left: 0,
-                zIndex: 0,
-                justifyContent: 'end',
-                pointerEvents: 'none',
-              }}
-            >
-              <Typography
-                css={{ m: 0, whiteSpace: 'nowrap' }}
-                size="subparagraph"
-              >
-                {editor?.storage.characterCount.words()} words
-              </Typography>
-              <IconButton
-                size="sm"
-                css={{
-                  pointerEvents: 'auto',
-                }}
-                onClick={() => setShowShortcutsDialog(true)}
-                aria-label="Open keyboard shortcuts and hints"
-              >
-                <KeyboardIcon />
-              </IconButton>
-              <ShortcutsDialog
-                open={showShortcutsDialog}
-                onOpenChange={handleCancelShortcuts}
-              />
-            </Container>
-          )}
-        </>
-      )}
+      {editable && !isMobile && editor && <EditorBottomInfo editor={editor} />}
+      {editable && isMobile && <Toolbar editor={editor} story={story} />}
     </>
   );
 });
