@@ -27,26 +27,26 @@ import TipTapText from '@tiptap/extension-text';
 import TipTapTypography from '@tiptap/extension-typography';
 import TipTapUnderline from '@tiptap/extension-underline';
 import TipTapCodeBlockLowlight from '@tiptap/extension-code-block-lowlight';
-import { lowlight } from 'lowlight/lib/common';
+import { common, createLowlight } from 'lowlight';
 import CharacterCount from '@tiptap/extension-character-count';
-import { KeyboardIcon } from '@radix-ui/react-icons';
 import { useTheme } from 'next-themes';
-import { styled, globalCss, keyframes, darkTheme } from '../../stitches.config';
+import { nanoid } from 'nanoid';
+import { TipTapMobileScroll } from '@/components/editor/extensions/mobile-scroll';
+import { EditorBottomInfo } from '@/components/editor/bottom-info';
+import { EditorFloatingMenu } from '@/components/editor/floating-menu';
+import { EditorBubbleMenu } from '@/components/editor/bubble-menu';
+import { clarity } from '@/components/editor/highlight/clarity-syntax';
+import { TipTapImage } from '@/components/editor/extensions/image';
+import { TipTapTwitter } from '@/components/editor/extensions/twitter';
+import { TipTapCta } from '@/components/editor/extensions/cta';
+import { TipTapPlaceholder } from '@/components/editor/extensions/placeholder';
+import { CodeBlockComponent } from '@/components/editor/extensions/code-block';
+import { SlashCommands } from '@/components/editor/extensions/slash-command/slash-commands';
+import { slashCommands } from '@/components/editor/extensions/slash-command/commands';
 import { Story } from '../../types';
-import { Container, IconButton, Typography } from '../../ui';
-import { Placeholder as TipTapPlaceholder } from './extensions/Placeholder';
-import { SlashCommands } from './extensions/SlashCommand/SlashCommands';
-import { BubbleMenu } from './BubbleMenu/BubbleMenu';
-import { slashCommands } from './extensions/SlashCommand/commands';
-import { FloatingMenu } from './FloatingMenu';
-import { CodeBlockComponent } from './extensions/CodeBlock';
-import { ShortcutsDialog } from './EditorShortcuts/ShortcutsDialog';
-import { clarity } from './utils/clarity-syntax';
-import { TipTapImage } from './extensions/Image';
+import { styled, globalCss, keyframes, darkTheme } from '../../stitches.config';
+import { resizeAndUploadImage } from './utils/image';
 import { Toolbar } from './EditorToolbar/EditorToolbar';
-import { Twitter as TipTapTwitter } from './extensions/Twitter';
-import { MobileScroll } from './extensions/MobileScroll';
-import { Cta as TipTapCta } from './extensions/CallToAction';
 
 const fadeInAnimation = keyframes({
   '0%': { opacity: '0' },
@@ -107,7 +107,8 @@ interface TipTapEditorProps {
   editable?: boolean;
 }
 
-lowlight.registerLanguage('clarity (beta)', clarity);
+const lowlight = createLowlight(common);
+lowlight.register('clarity (beta)', clarity);
 
 export const TipTapEditor = forwardRef<
   {
@@ -115,17 +116,12 @@ export const TipTapEditor = forwardRef<
   },
   TipTapEditorProps
 >(({ story, editable = true }, ref) => {
-  const [showShortcutsDialog, setShowShortcutsDialog] = useState(false);
   const { resolvedTheme } = useTheme();
   const [width, setWidth] = useState(
     typeof window !== 'undefined' ? window.innerWidth : 1000,
   );
   // TODO is story really needed? Could it be just the content prop?
   globalStylesCustomEditor();
-
-  const handleCancelShortcuts = () => {
-    setShowShortcutsDialog(false);
-  };
 
   const isMobile = width < 768;
 
@@ -157,7 +153,15 @@ export const TipTapEditor = forwardRef<
       }).configure({
         lowlight,
       }),
-      TipTapImage,
+      TipTapImage.configure({
+        uploadFile: async (file: File) => {
+          const id = nanoid();
+          const name = `photos/${story.id}/${id}-${file.name}`;
+          const imageUrl = await resizeAndUploadImage(file, name);
+          return imageUrl;
+        },
+      }),
+      ,
       // Marks
       TipTapBold,
       TipTapCode,
@@ -177,10 +181,10 @@ export const TipTapEditor = forwardRef<
       TipTapCta,
       !isMobile
         ? SlashCommands.configure({
-            commands: slashCommands({ storyId: story.id }),
+            commands: slashCommands,
           })
         : undefined,
-      isMobile ? MobileScroll : undefined,
+      isMobile ? TipTapMobileScroll : undefined,
     ] as Extensions,
     content: story.contentVersion === '2' ? story.content : '',
   });
@@ -204,8 +208,8 @@ export const TipTapEditor = forwardRef<
 
   return (
     <>
-      {editor && !isMobile && <BubbleMenu editor={editor} />}
-      {editor && !isMobile && <FloatingMenu editor={editor} />}
+      {editor && !isMobile && <EditorBubbleMenu editor={editor} />}
+      {editor && !isMobile && <EditorFloatingMenu editor={editor} />}
 
       {/* editor is not set while doing SSR so we render the HTNL as it is for SEO */}
       {editor ? (
@@ -218,50 +222,8 @@ export const TipTapEditor = forwardRef<
         />
       )}
 
-      {editable && (
-        <>
-          {isMobile ? (
-            <Toolbar editor={editor} story={story} />
-          ) : (
-            <Container
-              css={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: '$3',
-                position: 'fixed',
-                mb: '$10',
-                bottom: 0,
-                right: 0,
-                left: 0,
-                zIndex: 0,
-                justifyContent: 'end',
-                pointerEvents: 'none',
-              }}
-            >
-              <Typography
-                css={{ m: 0, whiteSpace: 'nowrap' }}
-                size="subparagraph"
-              >
-                {editor?.storage.characterCount.words()} words
-              </Typography>
-              <IconButton
-                size="sm"
-                css={{
-                  pointerEvents: 'auto',
-                }}
-                onClick={() => setShowShortcutsDialog(true)}
-                aria-label="Open keyboard shortcuts and hints"
-              >
-                <KeyboardIcon />
-              </IconButton>
-              <ShortcutsDialog
-                open={showShortcutsDialog}
-                onOpenChange={handleCancelShortcuts}
-              />
-            </Container>
-          )}
-        </>
-      )}
+      {editable && !isMobile && editor && <EditorBottomInfo editor={editor} />}
+      {editable && isMobile && <Toolbar editor={editor} />}
     </>
   );
 });
