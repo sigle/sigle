@@ -23,7 +23,7 @@ interface EditorBubbleMenuProps {
 export const EditorBubbleMenuLink = ({ editor }: EditorBubbleMenuProps) => {
   const linkValue = useBubbleMenuStore((state) => state.linkValue);
   const setLinkValue = useBubbleMenuStore((state) => state.setLinkValue);
-  const toggleLink = useBubbleMenuStore((state) => state.toggleLink);
+  const setLinkOpen = useBubbleMenuStore((state) => state.setLinkOpen);
 
   const onSubmitLink = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -69,7 +69,7 @@ export const EditorBubbleMenuLink = ({ editor }: EditorBubbleMenuProps) => {
   };
 
   const resetLink = () => {
-    toggleLink(false);
+    setLinkOpen(false);
     setLinkValue('');
   };
 
