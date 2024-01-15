@@ -1,49 +1,21 @@
 import { useEffect, useRef, useState } from 'react';
 import { Editor } from '@tiptap/react';
-import { darkTheme, styled } from '../../../stitches.config';
-import { Story } from '../../../types';
-import { Box, Container, Flex, IconButton, Typography } from '../../../ui';
-import { slashCommands } from '../extensions/SlashCommand/commands';
+import { Separator, Text, IconButton } from '@radix-ui/themes';
+import { slashCommands } from '@/components/editor/extensions/slash-command/commands';
 import { ToolbarMenu } from './ToolbarMenu';
 import { MobileFloatingMenu } from './ToolbarFloatingMenu';
 
-const ToolbarContainer = styled(Container, {
-  display: 'flex',
-  alignItems: 'center',
-  gap: '$5',
-  position: 'fixed',
-  bottom: 0,
-  right: 0,
-  left: 0,
-  zIndex: 0,
-  justifyContent: 'start',
-  overflow: 'scroll',
-  borderTop: '1px solid $colors$gray6',
-  p: '$3',
-  backgroundColor: '$gray1',
-
-  // workaround for iOS issue where flex gap is not acknowledged
-  '@supports (-webkit-touch-callout: none) and (not (translate: none))': {
-    '& button': {
-      mr: '$5',
-    },
-  },
-});
-
 interface ToolbarProps {
   editor: Editor | null;
-  story: Story;
 }
 
-export const Toolbar = ({ editor, story }: ToolbarProps) => {
+export const Toolbar = ({ editor }: ToolbarProps) => {
   const [pendingUpdate, setPendingUpdate] = useState(false);
   const [position, setPosition] = useState<number>();
   const [softKeyboardIsOpen, setSoftKeyboardIsOpen] = useState(false);
   const scrollRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  const image = slashCommands({ storyId: story.id }).find(
-    (item) => item.title === 'Image',
-  );
+  const image = slashCommands.find((item) => item.title === 'Image');
 
   useEffect(() => {
     window.visualViewport?.addEventListener('resize', () => {
@@ -92,66 +64,36 @@ export const Toolbar = ({ editor, story }: ToolbarProps) => {
   };
 
   return (
-    <ToolbarContainer
-      css={{
+    <div
+      className="fixed inset-x-0 bottom-0 z-0 flex items-center justify-between gap-5 justify-self-start overflow-x-scroll border-t border-gray-6 bg-gray-1 p-3"
+      style={{
         transform: `translateY(-${position}px)`,
         transition: 'transform .25s',
       }}
     >
       <MobileFloatingMenu
         editor={editor}
-        story={story}
         triggerDisabled={!softKeyboardIsOpen}
       />
       {editor && (
-        <Flex
-          css={{
-            // workaround for iOS issue where flex gap is not acknowledged
-            '@supports (-webkit-touch-callout: none) and (not (translate: none))':
-              {
-                '& button': {
-                  mr: '$5',
-                },
-                mr: '$5',
-              },
-            display: '-webkit-flex',
-          }}
-          gap="5"
-        >
+        <div className="not-prose flex items-center gap-5">
           <ToolbarMenu editor={editor} />
-          <Box
-            css={{
-              width: 2,
-              backgroundColor: '$gray6',
-            }}
-          />
+          <Separator orientation="vertical" size="2" />
           {image && (
             <IconButton
-              css={{
-                p: 0,
-
-                '& svg': {
-                  [`.${darkTheme} &`]: {
-                    filter: 'invert(1)',
-                  },
-                },
-              }}
+              variant="ghost"
+              color="gray"
               onClick={() => image.command({ editor: editor })}
             >
               <image.icon width={20} height={20} />
             </IconButton>
           )}
-          <Box
-            css={{
-              width: 2,
-              backgroundColor: '$gray6',
-            }}
-          />
-          <Typography css={{ m: 0, whiteSpace: 'nowrap' }} size="subheading">
+          <Separator orientation="vertical" size="2" />
+          <Text as="p" size="1" color="gray" className="text-nowrap">
             {editor.storage.characterCount.words()} words
-          </Typography>
-        </Flex>
+          </Text>
+        </div>
       )}
-    </ToolbarContainer>
+    </div>
   );
 };
