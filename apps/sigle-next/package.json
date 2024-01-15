@@ -120,7 +120,7 @@
     "prisma": "4.15.0",
     "relay-compiler": "14.1.0",
     "style-loader": "3.3.3",
-    "tailwindcss": "3.3.2",
+    "tailwindcss": "3.4.1",
     "typescript": "5.1.3"
   }
 }
