@@ -62,12 +62,21 @@ export const EditorBubbleMenu = ({ editor }: EditorBubbleMenuProps) => {
     setLinkValue(existingHref);
   };
 
+  const resetLink = () => {
+    setLinkOpen(false);
+    setLinkValue('');
+  };
+
   return (
     <TipTapBubbleMenu
       className="flex gap-3 px-4 py-3"
       tippyOptions={{
         duration: 100,
         theme: 'sigle-editor-bubble-menu',
+        onHidden: () => {
+          console.log('onHidden');
+          resetLink();
+        },
       }}
       shouldShow={({ editor, state, from, to, view }) => {
         // Take the initial implementation of the plugin and extends it
