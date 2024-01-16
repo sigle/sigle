@@ -1,6 +1,7 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { FormProvider, useForm } from 'react-hook-form';
 import { z } from 'zod';
+import { format } from 'date-fns';
 import { Story } from '@/types';
 
 const editorPostSchema = z.object({
@@ -11,6 +12,7 @@ const editorPostSchema = z.object({
   metaDescription: z.string().optional(),
   metaImage: z.string().optional(),
   canonicalUrl: z.string().optional(),
+  createdAt: z.string(),
 });
 
 export type EditorPostFormData = z.infer<typeof editorPostSchema>;
@@ -34,6 +36,8 @@ export const EditorFormProvider = ({
       metaDescription: story.metaDescription,
       metaImage: story.metaImage,
       canonicalUrl: story.canonicalUrl,
+      // Convert to string to avoid datepicker issues with the native date input
+      createdAt: format(story.createdAt, 'yyyy-MM-dd'),
     },
   });
 

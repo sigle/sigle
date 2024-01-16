@@ -191,6 +191,7 @@ export const NewEditor = ({ story }: NewEditorProps) => {
         ...(storyParams ? storyParams : story),
         // Update with form values
         ...values,
+        createdAt: new Date(values.createdAt).getTime(),
         content: htmlContent,
         contentVersion: '2',
         updatedAt: Date.now(),
@@ -217,7 +218,6 @@ export const NewEditor = ({ story }: NewEditorProps) => {
         <div className="prose my-10 dark:prose-invert lg:prose-lg">
           <EditorTitle />
           <EditorCoverImage story={story} />
-          {/* <CoverImage story={newStory} setStoryFile={setNewStory} /> */}
           <EditorTipTap />
         </div>
 

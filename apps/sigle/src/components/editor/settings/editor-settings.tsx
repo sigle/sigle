@@ -9,6 +9,7 @@ import {
 } from '@radix-ui/themes';
 import { useFormContext } from 'react-hook-form';
 import { IconHelpCircle, IconX } from '@tabler/icons-react';
+import { format } from 'date-fns';
 import { cn } from '@/lib/cn';
 import { useEditorStore } from '../store';
 import { EditorPostFormData } from '../editor-form-provider';
@@ -46,6 +47,20 @@ export const EditorSettings = () => {
         </Flex>
 
         <Flex direction="column" gap="5" mt="4">
+          <label>
+            <Text
+              as="p"
+              size="3"
+              mb="1"
+              color="gray"
+              highContrast
+              weight="medium"
+            >
+              Created on
+            </Text>
+            <TextField.Input type="date" {...register('createdAt')} />
+          </label>
+
           <MetaImage />
 
           <label>
