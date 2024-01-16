@@ -5,7 +5,7 @@ import { slashCommands } from '@/components/editor/extensions/slash-command/comm
 import { CommandList } from '@/components/editor/extensions/slash-command/command-list';
 import { styled } from '../../../stitches.config';
 import { Box, Button } from '../../../ui';
-import { activeNode } from '../ActiveNode';
+import { activeNode } from './ActiveNode';
 
 const StyledDialogTitle = styled(Dialog.Title, {
   ml: '-$1',
