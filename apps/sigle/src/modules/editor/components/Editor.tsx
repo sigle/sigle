@@ -1,8 +1,10 @@
 import React from 'react';
+import { Container } from '@radix-ui/themes';
 import { Story } from '../../../types';
-import { Container, Text } from '../../../ui';
+import { Text } from '../../../ui';
 import { NewEditor } from '../NewEditor';
 import { EditorHeader } from '../EditorHeader';
+import { EditorFormProvider } from '@/components/editor/editor-form-provider';
 
 interface Props {
   loading: boolean;
@@ -12,14 +14,7 @@ interface Props {
 export const Editor = ({ loading, story }: Props) => {
   if (loading || !story) {
     return (
-      <Container
-        css={{
-          pt: '$5',
-          '@md': {
-            pt: '$10',
-          },
-        }}
-      >
+      <Container size="2">
         <EditorHeader
           story={false}
           loadingSave={false}
@@ -35,5 +30,9 @@ export const Editor = ({ loading, story }: Props) => {
     );
   }
 
-  return <NewEditor story={story} />;
+  return (
+    <EditorFormProvider story={story}>
+      <NewEditor story={story} />
+    </EditorFormProvider>
+  );
 };

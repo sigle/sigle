@@ -48,6 +48,7 @@ import { CodeBlockComponent } from './extensions/code-block';
 import { TipTapTwitter } from './extensions/twitter';
 import { TipTapCta } from './extensions/cta';
 import { EditorPostFormData } from './editor-form-provider';
+import { useEditorStore } from './store';
 
 const lowlight = createLowlight(common);
 lowlight.register('clarity (beta)', clarity);
@@ -59,6 +60,7 @@ export const EditorTipTap = () => {
   const { width } = useWindowSize();
   const isMobile = width ? width < 768 : false;
   const { setValue, getValues } = useFormContext<EditorPostFormData>();
+  const setEditor = useEditorStore((state) => state.setEditor);
 
   const editor = useEditor({
     extensions: [
@@ -122,6 +124,9 @@ export const EditorTipTap = () => {
       isMobile ? TipTapMobileScroll : undefined,
     ] as Extensions,
     content: getValues().content,
+    onCreate: ({ editor }) => {
+      setEditor(editor);
+    },
     onUpdate: ({ editor }) => {
       setValue('content', editor.getHTML());
     },

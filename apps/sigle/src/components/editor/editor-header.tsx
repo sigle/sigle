@@ -8,15 +8,15 @@ import {
 } from '@tabler/icons-react';
 import { cn } from '@/lib/cn';
 import { useEditorStore } from './store';
-// import { EditorSave } from './editor-save';
 import { EditorPublish } from './editor-publish';
+import { EditorSave } from './editor-save';
 
 const headerIconSize = 20;
 
 /**
  * Scroll logic taken from https://www.codemzy.com/blog/react-sticky-header-disappear-scroll
  */
-export const EditorHeader = () => {
+export const EditorHeader = ({ onSave }: { onSave: () => void }) => {
   const menuOpen = useEditorStore((state) => state.menuOpen);
   const toggleMenu = useEditorStore((state) => state.toggleMenu);
   const [scrollDirection, setScrollDirection] = useState<'down' | 'up' | null>(
@@ -62,8 +62,8 @@ export const EditorHeader = () => {
           </Link>
         </Flex>
         <Flex align="center" gap="6">
-          {/* <EditorSave /> */}
-          {/* <EditorPublish /> */}
+          <EditorSave onSave={onSave} />
+          <EditorPublish />
           <IconButton
             size="2"
             variant="ghost"
