@@ -19,7 +19,7 @@ export const CarouselItem = ({
       })}
     >
       <Text color="gray">{description}</Text>
-      <div className="shadow-sm rounded-md relative z-0 mx-auto max-w-[600px] overflow-hidden">
+      <div className="shadow-1 rounded-2 relative z-0 mx-auto max-w-[600px] overflow-hidden">
         <Image
           width={600}
           height={350}
