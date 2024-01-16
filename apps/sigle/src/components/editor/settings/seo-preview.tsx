@@ -13,13 +13,13 @@ export const SeoPreview = () => {
   const watchTitle = watch('title');
   const watchMetaTitle = watch('metaTitle');
   const watchMetaDescription = watch('metaDescription');
-  // const watchCoverImage = watch('coverImage');
+  const watchCoverImage = watch('coverImage');
 
   const metaTitle = watchMetaTitle || watchTitle;
   const metaDescription =
     watchMetaDescription || editor?.getText().slice(0, 90);
   // TODO custom meta image
-  // const metaImage = watchCoverImage;
+  const metaImage = watchCoverImage;
 
   return (
     <div>
@@ -34,13 +34,16 @@ export const SeoPreview = () => {
       >
         Preview
         <Text color="gray">
-          <Tooltip content="This is how the post will be displayed when sharing the link on social media">
+          <Tooltip
+            delayDuration={250}
+            content="This is how the post will be displayed when sharing the link on social media"
+          >
             <IconHelpCircle size={16} />
           </Tooltip>
         </Text>
       </Text>
       <Card size="1">
-        {/* {metaImage ? (
+        {metaImage ? (
           <Inset
             clip="padding-box"
             side="top"
@@ -48,7 +51,7 @@ export const SeoPreview = () => {
           >
             <AspectRatio ratio={1.91 / 1}>
               {/* eslint-disable-next-line @next/next/no-img-element */}
-        {/* <img
+              <img
                 src={resolveImageUrl(metaImage)}
                 alt="Cover image"
                 style={{
@@ -60,7 +63,7 @@ export const SeoPreview = () => {
               />
             </AspectRatio>
           </Inset>
-        ) : null}  */}
+        ) : null}
         <Text as="div" size="2" className="truncate">
           {metaTitle}
         </Text>
