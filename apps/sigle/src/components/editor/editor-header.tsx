@@ -61,7 +61,7 @@ export const EditorHeader = ({ onSave }: { onSave: () => void }) => {
             </IconButton>
           </Link>
         </Flex>
-        <Flex align="center" gap="6">
+        <Flex align="center" gap="7">
           <EditorSave onSave={onSave} />
           <EditorPublish />
           <IconButton

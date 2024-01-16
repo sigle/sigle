@@ -9,8 +9,9 @@ export const EditorSave = ({ onSave }: { onSave: () => void }) => {
   return (
     <Button
       size="2"
-      color="gray"
       variant="ghost"
+      color="gray"
+      highContrast
       disabled={saving}
       onClick={onSave}
     >

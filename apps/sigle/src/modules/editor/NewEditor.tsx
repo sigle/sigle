@@ -185,6 +185,7 @@ export const NewEditor = ({ story }: NewEditorProps) => {
     try {
       const htmlContent = editor.getHTML();
       const values = getValues();
+      // TODO test edge cases for this
       const updatedStory: Story = {
         // Take the initial object
         ...(storyParams ? storyParams : story),
@@ -201,6 +202,7 @@ export const NewEditor = ({ story }: NewEditorProps) => {
       if (!hideToast) {
         toast.success('Story saved', { position: toastPosition });
       }
+      posthog.capture('save-story', { id: story.id });
     } catch (error) {
       console.error(error);
       toast.error(error.message);
@@ -240,8 +242,8 @@ export const NewEditor = ({ story }: NewEditorProps) => {
           loading={unpublishDialogState.loading}
           onConfirm={handleConfirmUnpublish}
           onClose={handleCancelUnpublish}
-        /> */}
-        {/* 
+        /> 
+        
         <EditorSettings
           story={newStory}
           open={showSettingsDialog}
