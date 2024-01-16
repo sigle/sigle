@@ -6,6 +6,7 @@ import NProgress from 'nprogress';
 import * as Fathom from 'fathom-client';
 import posthog from 'posthog-js';
 import { Container } from '@radix-ui/themes';
+import { useFormContext } from 'react-hook-form';
 import {
   fetchStoriesControllerPublish,
   fetchStoriesControllerUnpublish,
@@ -17,6 +18,8 @@ import {
 } from '@/components/editor/editor-form-provider';
 import { EditorHeader } from '@/components/editor/editor-header';
 import { EditorSettings } from '@/components/editor/settings/editor-settings';
+import { EditorTipTap } from '@/components/editor/editor-tiptap';
+import { useEditorStore } from '@/components/editor/store';
 import { Story } from '../../types';
 import { publishStory, unPublishStory } from '../../utils';
 import { Goals } from '../../utils/fathom';
@@ -25,9 +28,6 @@ import { createSubsetStory, saveStory } from './utils';
 import { UnpublishDialog } from './UnpublishDialog';
 import { PublishedDialog } from './PublishedDialog';
 import { CoverImage } from './CoverImage';
-import { EditorTipTap } from '@/components/editor/editor-tiptap';
-import { useEditorStore } from '@/components/editor/store';
-import { useFormContext } from 'react-hook-form';
 
 interface NewEditorProps {
   story: Story;

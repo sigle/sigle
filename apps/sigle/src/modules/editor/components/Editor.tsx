@@ -1,10 +1,10 @@
 import React from 'react';
 import { Container } from '@radix-ui/themes';
+import { EditorFormProvider } from '@/components/editor/editor-form-provider';
 import { Story } from '../../../types';
 import { Text } from '../../../ui';
 import { NewEditor } from '../NewEditor';
 import { EditorHeader } from '../EditorHeader';
-import { EditorFormProvider } from '@/components/editor/editor-form-provider';
 
 interface Props {
   loading: boolean;
