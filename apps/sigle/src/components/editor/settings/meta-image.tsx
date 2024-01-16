@@ -1,15 +1,21 @@
 import { useFormContext } from 'react-hook-form';
-import { useUploadImage } from '@/hooks/use-upload-image';
-import { EditorPostFormData } from '../editor-form-provider';
 import { MouseEventHandler, useCallback, useState } from 'react';
 import { usePostHog } from 'posthog-js/react';
 import { useParams } from 'next/navigation';
 import { toast } from 'sonner';
 import { useDropzone } from 'react-dropzone';
+import { Card, IconButton, Text, Tooltip } from '@radix-ui/themes';
+import {
+  IconCameraPlus,
+  IconHandGrab,
+  IconHelpCircle,
+  IconTrash,
+} from '@tabler/icons-react';
 import { resolveImageUrl } from '@/lib/resolve-image-url';
-import { Card, Text, Tooltip } from '@radix-ui/themes';
 import { cn } from '@/lib/cn';
-import { IconCameraPlus, IconHelpCircle } from '@tabler/icons-react';
+import { useUploadImage } from '@/hooks/use-upload-image';
+import { LoadingSpinner } from '@/components/ui/loading-spinner';
+import { EditorPostFormData } from '../editor-form-provider';
 
 export const MetaImage = () => {
   const params = useParams<{ storyId: string }>();
@@ -59,7 +65,7 @@ export const MetaImage = () => {
     );
   }, []);
 
-  const { getRootProps, getInputProps, isDragActive, open } = useDropzone({
+  const { getRootProps, getInputProps, isDragActive } = useDropzone({
     onDrop,
     accept: 'image/jpeg,image/png',
   });
@@ -100,28 +106,59 @@ export const MetaImage = () => {
         </Text>
       </Text>
 
-      <Card
-        className={cn('cursor-pointer bg-gray-2', {
-          ['h-[180px]']: !preview && !resolvedWatchMetaImage,
-        })}
-        size="1"
-        asChild
-      >
-        <button {...getRootProps()}>
-          <div className="h-full flex items-center justify-center">
-            <input {...getInputProps()} />
-            <Text
-              className="flex items-center gap-1"
-              as="p"
-              size="2"
-              color="gray"
-            >
-              Add a custom meta image
-              <IconCameraPlus size={16} />
-            </Text>
-          </div>
-        </button>
-      </Card>
+      {!preview && !resolvedWatchMetaImage ? (
+        <Card
+          className={cn('cursor-pointer bg-gray-2', {
+            ['h-[180px]']: !preview && !resolvedWatchMetaImage,
+          })}
+          size="1"
+          asChild
+        >
+          <button {...getRootProps()}>
+            <div className="flex h-full items-center justify-center">
+              <input {...getInputProps()} />
+              <Text
+                className="flex items-center gap-1"
+                as="p"
+                size="2"
+                color="gray"
+              >
+                {isDragActive ? (
+                  <>
+                    Drop the file here <IconHandGrab size={16} />
+                  </>
+                ) : (
+                  <>
+                    Add a custom meta image <IconCameraPlus size={16} />
+                  </>
+                )}
+              </Text>
+            </div>
+          </button>
+        </Card>
+      ) : (
+        <div className="relative">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src={preview || resolvedWatchMetaImage || ''}
+            className={cn('rounded-2', {
+              ['opacity-25']: loadingUploadImage,
+            })}
+            alt="Meta image"
+          />
+          {!loadingUploadImage ? (
+            <div className="absolute right-2 top-2">
+              <IconButton size="3" color="gray" highContrast onClick={onRemove}>
+                <IconTrash size={16} />
+              </IconButton>
+            </div>
+          ) : (
+            <div className="absolute inset-0 flex items-center justify-center">
+              <LoadingSpinner />
+            </div>
+          )}
+        </div>
+      )}
     </div>
   );
 };
