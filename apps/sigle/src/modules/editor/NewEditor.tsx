@@ -20,6 +20,7 @@ import { EditorHeader } from '@/components/editor/editor-header';
 import { EditorSettings } from '@/components/editor/settings/editor-settings';
 import { EditorTipTap } from '@/components/editor/editor-tiptap';
 import { useEditorStore } from '@/components/editor/store';
+import { EditorCoverImage } from '@/components/editor/editor-cover-image';
 import { Story } from '../../types';
 import { publishStory, unPublishStory } from '../../utils';
 import { Goals } from '../../utils/fathom';
@@ -27,7 +28,6 @@ import { PublishDialog } from './PublishDialog';
 import { createSubsetStory, saveStory } from './utils';
 import { UnpublishDialog } from './UnpublishDialog';
 import { PublishedDialog } from './PublishedDialog';
-import { CoverImage } from './CoverImage';
 
 interface NewEditorProps {
   story: Story;
@@ -216,6 +216,7 @@ export const NewEditor = ({ story }: NewEditorProps) => {
       <Container size="2">
         <div className="prose my-10 dark:prose-invert lg:prose-lg">
           <EditorTitle />
+          <EditorCoverImage story={story} />
           {/* <CoverImage story={newStory} setStoryFile={setNewStory} /> */}
           <EditorTipTap />
         </div>

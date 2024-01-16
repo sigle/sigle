@@ -6,6 +6,7 @@ import { Story } from '@/types';
 const editorPostSchema = z.object({
   title: z.string().min(4).max(200),
   content: z.string().min(1),
+  coverImage: z.string().optional(),
   metaTitle: z.string().optional(),
   metaDescription: z.string().optional(),
   canonicalUrl: z.string().optional(),
@@ -27,6 +28,7 @@ export const EditorFormProvider = ({
     defaultValues: {
       title: story.title,
       content: story.contentVersion === '2' ? story.content : '',
+      coverImage: story.coverImage,
       metaTitle: story.metaTitle,
       metaDescription: story.metaDescription,
       canonicalUrl: story.canonicalUrl,
