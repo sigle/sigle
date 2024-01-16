@@ -108,6 +108,7 @@
     "sanitize-html": "2.7.0",
     "sonner": "1.2.4",
     "tailwind-merge": "2.1.0",
+    "tailwindcss-animate": "1.0.7",
     "tinycolor2": "1.4.2",
     "tippy.js": "6.3.7",
     "use-async-effect": "2.2.7",
