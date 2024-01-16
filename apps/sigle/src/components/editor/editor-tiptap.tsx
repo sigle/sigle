@@ -35,7 +35,6 @@ import { useWindowSize } from '@/hooks/use-window-size';
 import { resizeAndUploadImage } from '@/modules/editor/utils/image';
 import { Toolbar } from '@/modules/editor/EditorToolbar/EditorToolbar';
 import styles from './editor-tiptap.module.css';
-import { useEditorStore } from './store';
 import { clarity } from './highlight/clarity-syntax';
 import { EditorBubbleMenu } from './bubble-menu';
 import { TipTapImage } from './extensions/image';
