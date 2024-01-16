@@ -130,7 +130,16 @@ export const EditorTipTap = () => {
 
   return (
     <div className="prose dark:prose-invert lg:prose-lg">
-      <EditorContent className={styles.editor} editor={editor} />
+      {/* editor is not set while doing SSR so we render the HTNL as it is for SEO */}
+      {editor ? (
+        <EditorContent className={styles.editor} editor={editor} />
+      ) : (
+        <div
+          dangerouslySetInnerHTML={{
+            __html: getValues().content,
+          }}
+        />
+      )}
 
       {editor && !isMobile && <EditorBubbleMenu editor={editor} />}
       {editor && !isMobile && <EditorFloatingMenu editor={editor} />}
