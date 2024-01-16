@@ -14,6 +14,7 @@ import { useEditorStore } from '../store';
 import { EditorPostFormData } from '../editor-form-provider';
 import styles from './styles.module.css';
 import { SeoPreview } from './seo-preview';
+import { MetaImage } from './meta-image';
 
 const canonicalUrlInfo =
   'https://developers.google.com/search/docs/crawling-indexing/consolidate-duplicate-urls';
@@ -45,6 +46,8 @@ export const EditorSettings = () => {
         </Flex>
 
         <Flex direction="column" gap="5" mt="4">
+          <MetaImage />
+
           <label>
             <Text
               as="p"

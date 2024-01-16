@@ -11,15 +11,15 @@ export const SeoPreview = () => {
   const editor = useEditorStore((state) => state.editor);
   const { watch } = useFormContext<EditorPostFormData>();
   const watchTitle = watch('title');
+  const watchCoverImage = watch('coverImage');
   const watchMetaTitle = watch('metaTitle');
   const watchMetaDescription = watch('metaDescription');
-  const watchCoverImage = watch('coverImage');
+  const watchMetaImage = watch('metaImage');
 
   const metaTitle = watchMetaTitle || watchTitle;
   const metaDescription =
     watchMetaDescription || editor?.getText().slice(0, 90);
-  // TODO custom meta image
-  const metaImage = watchCoverImage;
+  const metaImage = watchMetaImage || watchCoverImage;
 
   return (
     <div>

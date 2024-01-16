@@ -9,6 +9,7 @@ const editorPostSchema = z.object({
   coverImage: z.string().optional(),
   metaTitle: z.string().optional(),
   metaDescription: z.string().optional(),
+  metaImage: z.string().optional(),
   canonicalUrl: z.string().optional(),
 });
 
@@ -31,6 +32,7 @@ export const EditorFormProvider = ({
       coverImage: story.coverImage,
       metaTitle: story.metaTitle,
       metaDescription: story.metaDescription,
+      metaImage: story.metaImage,
       canonicalUrl: story.canonicalUrl,
     },
   });
