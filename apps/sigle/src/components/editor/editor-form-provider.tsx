@@ -1,10 +1,11 @@
-import { Story } from '@/types';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { FormProvider, useForm } from 'react-hook-form';
 import { z } from 'zod';
+import { Story } from '@/types';
 
 const editorPostSchema = z.object({
   title: z.string().min(4).max(200),
+  content: z.string().min(1),
   metaTitle: z.string().optional(),
   metaDescription: z.string().optional(),
   canonicalUrl: z.string().optional(),
@@ -21,11 +22,11 @@ export const EditorFormProvider = ({
   children,
   story,
 }: EditorFormProviderProps) => {
-  // TODO init with story data
   const methods = useForm<EditorPostFormData>({
     resolver: zodResolver(editorPostSchema),
     defaultValues: {
       title: story.title,
+      content: story.contentVersion === '2' ? story.content : '',
       metaTitle: story.metaTitle,
       metaDescription: story.metaDescription,
       canonicalUrl: story.canonicalUrl,

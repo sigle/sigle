@@ -1,4 +1,3 @@
-import { Editor } from '@tiptap/core';
 import { create } from 'zustand';
 
 interface EditorState {
@@ -7,9 +6,6 @@ interface EditorState {
 
   publishOpen: boolean;
   togglePublish: (menuOpen: boolean) => void;
-
-  editor?: Editor;
-  setEditor: (editor: Editor) => void;
 }
 
 export const useEditorStore = create<EditorState>()((set) => ({
@@ -18,7 +14,4 @@ export const useEditorStore = create<EditorState>()((set) => ({
 
   publishOpen: false,
   togglePublish: (publishOpen) => set(() => ({ publishOpen })),
-
-  editor: undefined,
-  setEditor: (editor) => set(() => ({ editor })),
 }));

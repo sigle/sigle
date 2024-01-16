@@ -3,9 +3,9 @@ import { IconHelpCircle } from '@tabler/icons-react';
 import { useFormContext } from 'react-hook-form';
 import { prettifyUrl } from '@/lib/prettify-url';
 import { resolveImageUrl } from '@/lib/resolve-image-url';
+import { sigleConfig } from '@/config';
 import { useEditorStore } from '../store';
 import { EditorPostFormData } from '../editor-form-provider';
-import { sigleConfig } from '@/config';
 
 export const SeoPreview = () => {
   const editor = useEditorStore((state) => state.editor);

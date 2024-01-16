@@ -5,12 +5,15 @@ import { toast } from 'sonner';
 import NProgress from 'nprogress';
 import * as Fathom from 'fathom-client';
 import posthog from 'posthog-js';
+import { Container } from '@radix-ui/themes';
 import {
   fetchStoriesControllerPublish,
   fetchStoriesControllerUnpublish,
 } from '@/__generated__/sigle-api';
 import { EditorTitle } from '@/components/editor/editor-title';
 import { EditorFormProvider } from '@/components/editor/editor-form-provider';
+import { EditorHeader } from '@/components/editor/editor-header';
+import { EditorSettings } from '@/components/editor/settings/editor-settings';
 import { Story } from '../../types';
 import { publishStory, unPublishStory } from '../../utils';
 import { Goals } from '../../utils/fathom';
@@ -20,9 +23,6 @@ import { createSubsetStory, saveStory } from './utils';
 import { UnpublishDialog } from './UnpublishDialog';
 import { PublishedDialog } from './PublishedDialog';
 import { CoverImage } from './CoverImage';
-import { EditorHeader } from '@/components/editor/editor-header';
-import { Container } from '@radix-ui/themes';
-import { EditorSettings } from '@/components/editor/settings/editor-settings';
 
 interface NewEditorProps {
   story: Story;
@@ -211,7 +211,7 @@ export const NewEditor = ({ story }: NewEditorProps) => {
     <EditorFormProvider story={story}>
       <EditorHeader />
       <Container size="2">
-        <div className="prose dark:prose-invert lg:prose-lg my-10">
+        <div className="prose my-10 dark:prose-invert lg:prose-lg">
           <EditorTitle />
           <CoverImage story={newStory} setStoryFile={setNewStory} />
 

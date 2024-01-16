@@ -11,9 +11,9 @@ import { useFormContext } from 'react-hook-form';
 import { IconHelpCircle, IconX } from '@tabler/icons-react';
 import { cn } from '@/lib/cn';
 import { useEditorStore } from '../store';
+import { EditorPostFormData } from '../editor-form-provider';
 import styles from './styles.module.css';
 import { SeoPreview } from './seo-preview';
-import { EditorPostFormData } from '../editor-form-provider';
 
 const canonicalUrlInfo =
   'https://developers.google.com/search/docs/crawling-indexing/consolidate-duplicate-urls';
