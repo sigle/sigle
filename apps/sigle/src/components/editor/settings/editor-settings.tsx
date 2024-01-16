@@ -16,6 +16,7 @@ import { EditorPostFormData } from '../editor-form-provider';
 import styles from './styles.module.css';
 import { SeoPreview } from './seo-preview';
 import { MetaImage } from './meta-image';
+import { DeleteStory } from './delete-story';
 
 const canonicalUrlInfo =
   'https://developers.google.com/search/docs/crawling-indexing/consolidate-duplicate-urls';
@@ -134,7 +135,10 @@ export const EditorSettings = () => {
               {...register('canonicalUrl')}
             />
           </label>
+
           <SeoPreview />
+
+          <DeleteStory />
         </Flex>
       </Dialog.Content>
     </Dialog.Root>

@@ -185,7 +185,6 @@ export const NewEditor = ({ story }: NewEditorProps) => {
     try {
       const htmlContent = editor.getHTML();
       const values = getValues();
-      // TODO test edge cases for this
       const updatedStory: Story = {
         // Take the initial object
         ...(storyParams ? storyParams : story),
