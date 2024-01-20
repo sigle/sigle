@@ -55,7 +55,7 @@ export const EditorHeader = ({ onSave }: { onSave: () => void }) => {
     >
       <Flex justify="between" align="center" className="flex-1">
         <Flex align="start" gap="6">
-          <Link href="/dashboard/drafts">
+          <Link href="/">
             <IconButton size="2" variant="ghost" color="gray" highContrast>
               <IconArrowLeft size={headerIconSize} />
             </IconButton>
