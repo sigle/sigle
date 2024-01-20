@@ -6,7 +6,7 @@ interface EditorState {
   toggleMenu: (menuOpen: boolean) => void;
 
   publishOpen: boolean;
-  togglePublish: (menuOpen: boolean) => void;
+  setPublishOpen: (menuOpen: boolean) => void;
 
   editor?: Editor;
   setEditor: (editor: Editor) => void;
@@ -20,7 +20,7 @@ export const useEditorStore = create<EditorState>()((set) => ({
   toggleMenu: (menuOpen) => set(() => ({ menuOpen })),
 
   publishOpen: false,
-  togglePublish: (publishOpen) => set(() => ({ publishOpen })),
+  setPublishOpen: (publishOpen) => set(() => ({ publishOpen })),
 
   editor: undefined,
   setEditor: (editor) => set(() => ({ editor })),

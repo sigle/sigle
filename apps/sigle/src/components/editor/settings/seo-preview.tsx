@@ -16,7 +16,7 @@ export const SeoPreview = () => {
   const watchMetaDescription = watch('metaDescription');
   const watchMetaImage = watch('metaImage');
 
-  const metaTitle = watchMetaTitle || watchTitle;
+  const metaTitle = watchMetaTitle || `${watchTitle} | Sigle`;
   const metaDescription =
     watchMetaDescription || editor?.getText().slice(0, 90);
   const metaImage = watchMetaImage || watchCoverImage;

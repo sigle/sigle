@@ -28,6 +28,7 @@ import { PublishDialog } from './PublishDialog';
 import { createSubsetStory, saveStory } from './utils';
 import { UnpublishDialog } from './UnpublishDialog';
 import { PublishedDialog } from './PublishedDialog';
+import { EditorPublishDialog } from '@/components/editor/publish-dialog';
 
 interface NewEditorProps {
   story: Story;
@@ -100,32 +101,32 @@ export const NewEditor = ({ story }: NewEditorProps) => {
   //   });
   // };
 
-  // const handleConfirmPublish = async (options?: { send?: boolean }) => {
-  //   setPublishDialogState({
-  //     open: true,
-  //     loading: true,
-  //   });
-  //   NProgress.start();
-  //   try {
-  //     await handleSave({ hideToast: true });
-  //     await publishStory(story.id);
-  //     setNewStory({ ...newStory, type: 'public' });
-  //     setShowPublishedDialog(true);
-  //     Fathom.trackGoal(Goals.PUBLISH, 0);
-  //     posthog.capture('publish-story', { id: story.id });
-  //     await fetchStoriesControllerPublish({
-  //       body: { id: story.id, send: options?.send ?? false },
-  //     });
-  //   } catch (error) {
-  //     console.error(error.message);
-  //     toast.error(error.message);
-  //   }
-  //   NProgress.done();
-  //   setPublishDialogState({
-  //     open: false,
-  //     loading: false,
-  //   });
-  // };
+  const handleConfirmPublish = async (options?: { send?: boolean }) => {
+    setPublishDialogState({
+      open: true,
+      loading: true,
+    });
+    NProgress.start();
+    try {
+      await handleSave({ hideToast: true });
+      await publishStory(story.id);
+      // setNewStory({ ...newStory, type: 'public' });
+      setShowPublishedDialog(true);
+      Fathom.trackGoal(Goals.PUBLISH, 0);
+      posthog.capture('publish-story', { id: story.id });
+      await fetchStoriesControllerPublish({
+        body: { id: story.id, send: options?.send ?? false },
+      });
+    } catch (error) {
+      console.error(error.message);
+      toast.error(error.message);
+    }
+    NProgress.done();
+    setPublishDialogState({
+      open: false,
+      loading: false,
+    });
+  };
 
   // const handleCancelPublished = () => {
   //   setShowPublishedDialog(false);
@@ -221,17 +222,14 @@ export const NewEditor = ({ story }: NewEditorProps) => {
         </div>
 
         <EditorSettings />
+        {/* <EditorPublishDialog /> */}
 
-        {/* <PublishDialog
-          story={newStory}
-          open={publishDialogState.open}
+        <PublishDialog
           loading={publishDialogState.loading}
           onConfirm={handleConfirmPublish}
-          onClose={handleCancelPublish}
-          // onEditPreview={handleOpenSettings}
         />
 
-        <PublishedDialog
+        {/* <PublishedDialog
           open={showPublishedDialog}
           onOpenChange={handleCancelPublished}
           story={newStory}
