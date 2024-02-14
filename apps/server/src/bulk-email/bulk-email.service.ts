@@ -122,9 +122,10 @@ export class BulkEmailService {
               attr.key === 'data-type' && attr.value === 'button-cta',
           )
         ) {
-          mjml += `<mj-button href="${node.attributes.find(
-            (attr: MJMLAttribute) => attr.key === 'href',
-          )?.value}">${inlineText(node.children[0].children)}</mj-button>`;
+          mjml += `<mj-button href="${
+            node.attributes.find((attr: MJMLAttribute) => attr.key === 'href')
+              ?.value
+          }">${inlineText(node.children[0].children)}</mj-button>`;
         }
       }
     });
