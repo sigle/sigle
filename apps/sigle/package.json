@@ -21,7 +21,7 @@
     "@radix-ui/themes": "2.0.1",
     "@sentry/nextjs": "7.81.1",
     "@sigle/slate-to-html": "1.0.0",
-    "@stacks/auth": "6.11.0",
+    "@stacks/auth": "6.11.3",
     "@stacks/blockchain-api-client": "7.8.1",
     "@stacks/common": "6.10.0",
     "@stacks/connect": "7.7.0",
