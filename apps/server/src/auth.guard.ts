@@ -3,6 +3,14 @@ import { ConfigService } from '@nestjs/config';
 import { getToken } from 'next-auth/jwt';
 import { EnvironmentVariables } from './environment/environment.validation';
 
+export interface AuthenticatedUser {
+  stacksAddress: string;
+}
+
+export interface AuthenticatedRequest {
+  user: AuthenticatedUser;
+}
+
 /**
  * AuthGuard for the application. Require a valid next-auth JWT, the JWT is parsed and
  * we extract the user address. The address is then injected in the request object so it
@@ -24,7 +32,7 @@ export class AuthGuard implements CanActivate {
     ) {
       request.user = {
         stacksAddress: request.cookies['next-auth.session-token'],
-      };
+      } satisfies AuthenticatedUser;
       return true;
     }
 
@@ -40,7 +48,7 @@ export class AuthGuard implements CanActivate {
     // Inject the user address so it can be used in subsequent requests.
     request.user = {
       stacksAddress: token.sub,
-    };
+    } satisfies AuthenticatedUser;
 
     return true;
   }

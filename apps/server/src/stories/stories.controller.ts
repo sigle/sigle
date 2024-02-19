@@ -11,7 +11,7 @@ import {
 import { ApiOkResponse, ApiTags } from '@nestjs/swagger';
 import { StoriesService } from './stories.service';
 import { PublishStoryDto } from './dto/publishStory.dto';
-import { AuthGuard } from '../auth.guard';
+import { AuthGuard, AuthenticatedRequest } from '../auth.guard';
 import { UnpublishStoryDto } from './dto/unpublishStory.dto';
 import { StoryDto } from './dto/story.dto';
 import { SendTestStoryDto } from './dto/send-test-story.dto';
@@ -27,7 +27,10 @@ export class StoriesController {
   @ApiOkResponse({
     type: StoryDto,
   })
-  get(@Request() req, @Param('storyId') storyId: string): Promise<StoryDto> {
+  get(
+    @Request() req: AuthenticatedRequest,
+    @Param('storyId') storyId: string,
+  ): Promise<StoryDto> {
     return this.storiesService.get({
       stacksAddress: req.user.stacksAddress,
       gaiaId: storyId,
@@ -37,7 +40,10 @@ export class StoriesController {
   @UseGuards(AuthGuard)
   @Post('/api/stories/send-test')
   @HttpCode(200)
-  sendTest(@Request() req, @Body() publishStoryDto: SendTestStoryDto) {
+  sendTest(
+    @Request() req: AuthenticatedRequest,
+    @Body() publishStoryDto: SendTestStoryDto,
+  ) {
     return this.storiesService.sendTestStory({
       stacksAddress: req.user.stacksAddress,
       gaiaId: publishStoryDto.id,
@@ -51,7 +57,10 @@ export class StoriesController {
   @UseGuards(AuthGuard)
   @Post('/api/stories/publish')
   @HttpCode(200)
-  publish(@Request() req, @Body() publishStoryDto: PublishStoryDto) {
+  publish(
+    @Request() req: AuthenticatedRequest,
+    @Body() publishStoryDto: PublishStoryDto,
+  ) {
     return this.storiesService.publish({
       stacksAddress: req.user.stacksAddress,
       gaiaId: publishStoryDto.id,
@@ -62,7 +71,10 @@ export class StoriesController {
   @UseGuards(AuthGuard)
   @Post('/api/stories/unpublish')
   @HttpCode(200)
-  unpublish(@Request() req, @Body() publishStoryDto: UnpublishStoryDto) {
+  unpublish(
+    @Request() req: AuthenticatedRequest,
+    @Body() publishStoryDto: UnpublishStoryDto,
+  ) {
     return this.storiesService.unpublish({
       stacksAddress: req.user.stacksAddress,
       gaiaId: publishStoryDto.id,
@@ -72,7 +84,10 @@ export class StoriesController {
   @UseGuards(AuthGuard)
   @Post('/api/stories/delete')
   @HttpCode(200)
-  delete(@Request() req, @Body() publishStoryDto: UnpublishStoryDto) {
+  delete(
+    @Request() req: AuthenticatedRequest,
+    @Body() publishStoryDto: UnpublishStoryDto,
+  ) {
     return this.storiesService.delete({
       stacksAddress: req.user.stacksAddress,
       gaiaId: publishStoryDto.id,

@@ -6,7 +6,7 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 import { Throttle } from '@nestjs/throttler';
-import { AuthGuard } from '../auth.guard';
+import { AuthGuard, AuthenticatedRequest } from '../auth.guard';
 import { AnalyticsService } from './analytics.service';
 import { HistoricalDto } from './dto/historical.dto';
 import { HistoricalQueryDto } from './dto/historicalQuery.dto';
@@ -35,7 +35,7 @@ export class AnalyticsController {
   @UseGuards(AuthGuard)
   @Get('/api/analytics/referrers')
   getReferrers(
-    @Request() req,
+    @Request() req: AuthenticatedRequest,
     @Query() query: ReferrersQueryDto,
   ): Promise<ReferrerDto[]> {
     return this.analyticsService.referrers({
@@ -76,7 +76,7 @@ export class AnalyticsController {
   @UseGuards(AuthGuard)
   @Get('/api/analytics/historical')
   getHistorical(
-    @Request() req,
+    @Request() req: AuthenticatedRequest,
     @Query() query: HistoricalQueryDto,
   ): Promise<HistoricalDto> {
     return this.analyticsService.historical({
