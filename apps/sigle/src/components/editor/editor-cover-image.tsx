@@ -71,6 +71,7 @@ export const EditorCoverImage = ({
       'image/jpeg': [],
       'image/png': [],
     },
+    multiple: false,
   });
 
   const onRemove: MouseEventHandler<HTMLButtonElement> = (e) => {
