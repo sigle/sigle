@@ -2,7 +2,7 @@ import { ApiProperty } from '@nestjs/swagger';
 import { ExploreUser } from './exploreUser.dto';
 
 export class ExploreResponse {
-  @ApiProperty({ nullable: true })
+  @ApiProperty({ type: 'number', nullable: true })
   nextPage: number | null;
 
   @ApiProperty({ type: ExploreUser, isArray: true })

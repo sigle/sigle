@@ -15,10 +15,10 @@ export class UserMeProfileEntity {
   @ApiProperty()
   stacksAddress: string;
 
-  @ApiProperty({ nullable: true })
+  @ApiProperty({ type: 'string', nullable: true })
   email: string | null;
 
-  @ApiProperty({ nullable: true })
+  @ApiProperty({ type: 'string', nullable: true })
   emailVerified: Date | null;
 
   @ApiProperty({ type: PublicNewsletterEntity, nullable: true })
