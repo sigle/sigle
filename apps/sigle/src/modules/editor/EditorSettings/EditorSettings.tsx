@@ -1,6 +1,5 @@
-import React, { useCallback, useState } from 'react';
+import React, { useState } from 'react';
 import {
-  CameraIcon,
   Cross1Icon,
   FileTextIcon,
   QuestionMarkCircledIcon,
@@ -10,15 +9,13 @@ import { Dialog, ScrollArea } from '@radix-ui/themes';
 import { useFormik, FormikErrors } from 'formik';
 import { useRouter } from 'next/router';
 import { toast } from 'sonner';
-import { useDropzone } from 'react-dropzone';
 import format from 'date-fns/format';
 import isValid from 'date-fns/isValid';
 import { fetchStoriesControllerDelete } from '@/__generated__/sigle-api';
+import { MetaImage } from '@/components/editor/settings/meta-image';
 import { Story } from '../../../types';
 import { Box, Button, Flex, IconButton, Typography } from '../../../ui';
 import { keyframes, styled } from '../../../stitches.config';
-import { resizeImage } from '../../../utils/image';
-import { storage } from '../../../utils/stacks';
 import {
   deleteStoryFile,
   getStoriesFile,
@@ -34,34 +31,12 @@ import {
   FormTextarea,
 } from '../../../ui/Form';
 
-// TODO - migrate hideCoverImage from old articles
-// TODO - use twitter card preview component in settings?
-
 const StyledFormInput = styled(FormInput, {
   width: '100%',
 });
 
 const StyledFormTextarea = styled(FormTextarea, {
   width: '100%',
-});
-
-const ImageEmpty = styled('div', {
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'center',
-  backgroundColor: '$gray3',
-  py: '$4',
-  cursor: 'pointer',
-  borderRadius: '$1',
-  position: 'relative',
-  overflow: 'hidden',
-
-  '& span': {
-    py: '$1',
-    px: '$2',
-    fontSize: '$1',
-    color: '$gray9',
-  },
 });
 
 const Image = styled('img', {
@@ -73,16 +48,6 @@ const Image = styled('img', {
       },
     },
   },
-});
-
-const ImageEmptyIconContainer = styled('div', {
-  position: 'absolute',
-  bottom: '$1',
-  right: '$1',
-  display: 'flex',
-  alignItems: 'center',
-  color: '$gray9',
-  gap: '$1',
 });
 
 const SaveRow = styled('div', {
@@ -172,7 +137,6 @@ export const EditorSettings = ({
   onSave,
 }: EditorSettingsProps) => {
   const router = useRouter();
-  const [loadingUploadMetaImage, setLoadingUploadMetaImage] = useState(false);
   const [loadingDelete, setLoadingDelete] = useState(false);
 
   const formik = useFormik<StorySettingsFormValues>({
@@ -225,45 +189,6 @@ export const EditorSettings = ({
       setSubmitting(false);
     },
   });
-
-  const onDrop = useCallback(async (acceptedFiles: File[]) => {
-    const file = acceptedFiles[0];
-    if (file) {
-      const [mime] = file.type.split('/');
-      if (mime !== 'image') {
-        return;
-      }
-
-      const blob = await resizeImage(file, { maxWidth: 2000 });
-      setLoadingUploadMetaImage(true);
-      formik.setFieldValue('metaImage', blob.preview);
-
-      const now = new Date().getTime();
-      const name = `photos/${story.id}/${now}-${file.name}`;
-      const metaImageUrl = await storage.putFile(name, file, {
-        encrypt: false,
-        contentType: file.type,
-      });
-      setLoadingUploadMetaImage(false);
-      formik.setFieldValue('metaImage', metaImageUrl);
-    }
-  }, []);
-  const { getRootProps, getInputProps } = useDropzone({
-    onDrop,
-    accept: {
-      'image/jpeg': [],
-      'image/png': [],
-    },
-    multiple: false,
-  });
-
-  const handleRemoveCover = (
-    event: React.MouseEvent<HTMLButtonElement, MouseEvent>,
-  ) => {
-    // We stop the event so it does not trigger react-dropzone
-    event.stopPropagation();
-    formik.setFieldValue('metaImage', '');
-  };
 
   const handleDelete = async (
     event: React.MouseEvent<HTMLButtonElement, MouseEvent>,
@@ -333,46 +258,15 @@ export const EditorSettings = ({
                 )}
               </FormRow>
 
-              <FormRow>
-                <FormLabel>Meta image</FormLabel>{' '}
-                <ImageEmpty
-                  {...getRootProps({ tabIndex: undefined })}
-                  css={{
-                    py: !!formik.values.metaImage ? 0 : undefined,
-                    height: !!formik.values.metaImage ? undefined : 178,
-                    width: '100%',
+              <div className="mb-5">
+                <MetaImage
+                  story={story}
+                  metaImage={formik.values.metaImage}
+                  setMetaImage={(metaImage?: string) => {
+                    formik.setFieldValue('metaImage', metaImage);
                   }}
-                >
-                  {formik.values.metaImage && (
-                    <Image
-                      src={formik.values.metaImage}
-                      alt="Meta image"
-                      loading={loadingUploadMetaImage}
-                    />
-                  )}
-                  {!formik.values.metaImage && (
-                    <Flex align="center" gap="1" css={{ color: '$gray9' }}>
-                      <CameraIcon />
-                      <Typography size="subheading" css={{ color: '$gray9' }}>
-                        Add a custom meta image
-                      </Typography>
-                    </Flex>
-                  )}
-                  <input {...getInputProps()} />
-                  <ImageEmptyIconContainer>
-                    {formik.values.metaImage && (
-                      <IconButton
-                        size="sm"
-                        css={{ backgroundColor: '$gray3', opacity: '70%' }}
-                        title="Remove meta image"
-                        onClick={handleRemoveCover}
-                      >
-                        <TrashIcon />
-                      </IconButton>
-                    )}
-                  </ImageEmptyIconContainer>
-                </ImageEmpty>
-              </FormRow>
+                />
+              </div>
 
               <FormRow>
                 <FormLabel>Meta title</FormLabel>
