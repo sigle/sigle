@@ -9,6 +9,7 @@ import {
   fetchStoriesControllerPublish,
   fetchStoriesControllerUnpublish,
 } from '@/__generated__/sigle-api';
+import { EditorCoverImage } from '@/components/editor/editor-cover-image';
 import { styled } from '../../stitches.config';
 import { Story } from '../../types';
 import { Container } from '../../ui';
@@ -21,7 +22,6 @@ import { createSubsetStory, saveStory } from './utils';
 import { UnpublishDialog } from './UnpublishDialog';
 import { PublishedDialog } from './PublishedDialog';
 import { EditorSettings } from './EditorSettings/EditorSettings';
-import { EditorCoverImage } from '@/components/editor/editor-cover-image';
 
 const TitleInput = styled('input', {
   outline: 'transparent',

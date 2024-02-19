@@ -67,7 +67,10 @@ export const EditorCoverImage = ({
 
   const { getRootProps, getInputProps, isDragActive, open } = useDropzone({
     onDrop,
-    accept: 'image/jpeg,image/png',
+    accept: {
+      'image/jpeg': [],
+      'image/png': [],
+    },
   });
 
   const onRemove: MouseEventHandler<HTMLButtonElement> = (e) => {
