@@ -136,13 +136,18 @@ export class StoriesService {
           `No username found for ${stacksAddress}.`,
         );
       }
-      const bucketUrl = await this.stacksService.getBucketUrl({ username });
+      const { bucketUrl } = await this.stacksService.getBucketUrl({ username });
+      if (!bucketUrl) {
+        throw new BadRequestException(
+          `No profile or bucketUrl for ${username}.`,
+        );
+      }
       const [publicSettings, publicStory] = await Promise.all([
         this.stacksService.getPublicSettings({
-          bucketUrl: bucketUrl.bucketUrl,
+          bucketUrl,
         }),
         this.stacksService.getPublicStory({
-          bucketUrl: bucketUrl.bucketUrl,
+          bucketUrl,
           storyId: gaiaId,
         }),
       ]);
@@ -388,9 +393,12 @@ export class StoriesService {
     if (username === null) {
       throw new BadRequestException(`No username found for ${stacksAddress}.`);
     }
-    const bucketUrl = await this.stacksService.getBucketUrl({ username });
+    const { bucketUrl } = await this.stacksService.getBucketUrl({ username });
+    if (!bucketUrl) {
+      throw new BadRequestException(`No profile or bucketUrl for ${username}.`);
+    }
     const publicSettings = await this.stacksService.getPublicSettings({
-      bucketUrl: bucketUrl.bucketUrl,
+      bucketUrl,
     });
 
     const newsletterHtml = this.bulkEmailService.storyToHTML({

@@ -134,13 +134,14 @@ export class NewslettersService {
       },
       where: { stacksAddress },
     });
-    if (!user.newsletter) {
+    const userNewsletter = user.newsletter;
+    if (!userNewsletter) {
       throw new BadRequestException('Newsletter not setup.');
     }
 
     const mailjet = new Mailjet({
-      apiKey: user.newsletter.mailjetApiKey,
-      apiSecret: user.newsletter.mailjetApiSecret,
+      apiKey: userNewsletter.mailjetApiKey,
+      apiSecret: userNewsletter.mailjetApiSecret,
     });
 
     const data: { body: ContactList.TGetContactListResponse } = await mailjet
@@ -150,7 +151,7 @@ export class NewslettersService {
     return data.body.Data.map((list) => ({
       id: list.ID,
       name: list.Name,
-      isSelected: list.ID === user.newsletter.mailjetListId,
+      isSelected: list.ID === userNewsletter.mailjetListId,
       isDeleted: list.IsDeleted,
       subscriberCount: list.SubscriberCount,
     }));
@@ -245,13 +246,14 @@ export class NewslettersService {
       },
       where: { stacksAddress },
     });
-    if (!user.newsletter) {
+    const userNewsletter = user.newsletter;
+    if (!userNewsletter) {
       throw new BadRequestException('Newsletter not setup.');
     }
 
     const mailjet = new Mailjet({
-      apiKey: user.newsletter.mailjetApiKey,
-      apiSecret: user.newsletter.mailjetApiSecret,
+      apiKey: userNewsletter.mailjetApiKey,
+      apiSecret: userNewsletter.mailjetApiSecret,
     });
 
     const data: { body: Sender.TGetSenderResponse } = await mailjet
@@ -264,7 +266,7 @@ export class NewslettersService {
     return activeSenders.map((sender) => ({
       id: sender.ID,
       email: sender.Email,
-      isSelected: sender.Email === user.newsletter.senderEmail,
+      isSelected: sender.Email === userNewsletter.senderEmail,
     }));
   }
 
@@ -357,7 +359,7 @@ export class NewslettersService {
       apiSecret,
     });
 
-    let mailjetList: ContactList.IContactList;
+    let mailjetList: ContactList.IContactList | undefined;
     try {
       const data: { body: ContactList.TGetContactListResponse } = await mailjet
         .get('contactslist?Name=sigle', { version: 'v3' })

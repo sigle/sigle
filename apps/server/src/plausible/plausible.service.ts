@@ -10,8 +10,8 @@ export class PlausibleService {
   constructor(
     private readonly configService: ConfigService<EnvironmentVariables>,
   ) {
-    this.siteId = this.configService.get('PLAUSIBLE_SITE_ID');
-    this.apiToken = this.configService.get('PLAUSIBLE_API_TOKEN');
+    this.siteId = this.configService.get('PLAUSIBLE_SITE_ID') as string;
+    this.apiToken = this.configService.get('PLAUSIBLE_API_TOKEN') as string;
   }
 
   async pages(params: {

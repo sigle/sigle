@@ -42,7 +42,7 @@ export class StacksService {
     username,
   }: {
     username: string;
-  }): Promise<{ profile: Record<string, any>; bucketUrl: string }> {
+  }): Promise<{ profile?: Record<string, any>; bucketUrl?: string }> {
     let userProfile: Record<string, any> | undefined;
     try {
       userProfile = await lookupProfile({ username });
