@@ -115,7 +115,7 @@ export const EditorCoverImage = ({
             </Button>
           )
         ) : (
-          <div className="relative mx-auto">
+          <div className="relative -mx-20">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src={preview || resolvedWatchCoverImage || ''}
