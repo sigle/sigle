@@ -20,8 +20,8 @@ import { TipTapEditor } from './TipTapEditor';
 import { createSubsetStory, saveStory } from './utils';
 import { UnpublishDialog } from './UnpublishDialog';
 import { PublishedDialog } from './PublishedDialog';
-import { CoverImage } from './CoverImage';
 import { EditorSettings } from './EditorSettings/EditorSettings';
+import { EditorCoverImage } from '@/components/editor/editor-cover-image';
 
 const TitleInput = styled('input', {
   outline: 'transparent',
@@ -251,7 +251,7 @@ export const NewEditor = ({ story }: NewEditorProps) => {
           }}
           placeholder="Title"
         />
-        <CoverImage story={newStory} setStoryFile={setNewStory} />
+        <EditorCoverImage story={newStory} setStoryFile={setNewStory} />
 
         <TipTapEditor ref={editorRef} story={story} />
       </EditorContainer>
