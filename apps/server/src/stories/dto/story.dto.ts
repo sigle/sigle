@@ -9,15 +9,15 @@ export class StoryDto {
   @ApiProperty()
   id: string;
 
-  @ApiProperty()
-  publishedAt: Date;
-
-  @ApiProperty()
-  unpublishedAt: Date;
-
-  @ApiProperty()
-  deletedAt: Date;
+  @ApiProperty({ nullable: true })
+  publishedAt: Date | null;
 
   @ApiProperty({ nullable: true })
-  email?: EmailDto;
+  unpublishedAt: Date | null;
+
+  @ApiProperty({ nullable: true })
+  deletedAt: Date | null;
+
+  @ApiProperty({ nullable: true })
+  email: EmailDto | null;
 }

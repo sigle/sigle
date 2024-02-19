@@ -30,7 +30,7 @@ export class StoriesController {
   get(
     @Request() req: AuthenticatedRequest,
     @Param('storyId') storyId: string,
-  ): Promise<StoryDto> {
+  ): Promise<StoryDto | null> {
     return this.storiesService.get({
       stacksAddress: req.user.stacksAddress,
       gaiaId: storyId,

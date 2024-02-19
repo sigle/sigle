@@ -107,6 +107,6 @@ export class StacksService {
     if (resPublicSettings.status !== 200) {
       return {};
     }
-    return await resPublicSettings.json();
+    return (await resPublicSettings.json()) as SettingsFile;
   }
 }

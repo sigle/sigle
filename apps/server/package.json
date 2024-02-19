@@ -90,6 +90,7 @@
     "@types/jsonwebtoken": "9.0.5",
     "@types/node": "18.15.11",
     "@types/nodemailer": "6.4.14",
+    "@types/textversionjs": "1.1.4",
     "@typescript-eslint/eslint-plugin": "6.12.0",
     "@typescript-eslint/parser": "6.12.0",
     "eslint": "8.54.0",

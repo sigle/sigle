@@ -34,7 +34,9 @@ export class SubscriptionController {
   })
   @UseGuards(AuthGuard)
   @Get('/api/subscriptions')
-  getUserMe(@Request() req: AuthenticatedRequest): Promise<SubscriptionDto> {
+  getUserMe(
+    @Request() req: AuthenticatedRequest,
+  ): Promise<SubscriptionDto | null> {
     return this.subscriptionService.getUserActiveSubscription({
       stacksAddress: req.user.stacksAddress,
     });
@@ -55,7 +57,7 @@ export class SubscriptionController {
   @HttpCode(200)
   syncSubscriptionWithNft(
     @Request() req: AuthenticatedRequest,
-  ): Promise<SubscriptionDto> {
+  ): Promise<SubscriptionDto | null> {
     return this.subscriptionService.syncSubscriptionWithNft({
       stacksAddress: req.user.stacksAddress,
     });
