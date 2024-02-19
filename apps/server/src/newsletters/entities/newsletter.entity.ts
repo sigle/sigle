@@ -8,7 +8,7 @@ export class NewsletterEntity {
   mailjetApiSecret: string;
 
   @ApiProperty({ nullable: true })
-  senderEmail?: string;
+  senderEmail: string | null;
 
   @ApiProperty()
   status: string;

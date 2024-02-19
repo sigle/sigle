@@ -87,6 +87,7 @@ export class PlausibleService {
   private async fetch(path: string, params: URLSearchParams): Promise<any> {
     params.append('site_id', this.siteId);
 
+    // @ts-expect-error - fetch is injected
     const response = await fetch(
       `https://plausible.io/api/v1${path}?${params.toString()}`,
       {

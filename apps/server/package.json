@@ -88,6 +88,7 @@
     "@swc/jest": "0.2.29",
     "@types/jest": "29.5.10",
     "@types/jsonwebtoken": "9.0.5",
+    "@types/mjml": "4.7.4",
     "@types/node": "18.15.11",
     "@types/nodemailer": "6.4.14",
     "@types/textversionjs": "1.1.4",
