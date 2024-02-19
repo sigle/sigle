@@ -46,7 +46,7 @@ export class EmailService implements OnModuleInit {
       ),
     };
 
-    this.senderAddress = this.configService.get('EMAIL_FROM');
+    this.senderAddress = this.configService.get('EMAIL_FROM') as string;
   }
 
   async onModuleInit() {

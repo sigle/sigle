@@ -97,10 +97,14 @@ export class EmailVerificationService {
     email: string;
   }): Promise<{ url: string; token: string }> {
     const payload: EmailVerificationToken = { email };
-    const token = jwt.sign(payload, this.configService.get('NEXTAUTH_SECRET'), {
-      algorithm: 'HS256',
-      expiresIn: this.tokenExpiresIn,
-    });
+    const token = jwt.sign(
+      payload,
+      this.configService.get('NEXTAUTH_SECRET') as string,
+      {
+        algorithm: 'HS256',
+        expiresIn: this.tokenExpiresIn,
+      },
+    );
     const verifyEmailUrl = `${this.configService.get(
       'APP_URL',
     )}/verify-email/${token}`;
@@ -131,7 +135,7 @@ export class EmailVerificationService {
     try {
       const payload = jwt.verify(
         token,
-        this.configService.get('NEXTAUTH_SECRET'),
+        this.configService.get('NEXTAUTH_SECRET') as string,
         {
           algorithms: ['HS256'],
           maxAge: this.tokenExpiresIn,
@@ -176,6 +180,9 @@ export class EmailVerificationService {
       where: { stacksAddress },
       select: { id: true, email: true, emailVerified: true },
     });
+    if (!user.email) {
+      throw new BadRequestException('No email set');
+    }
     if (user.emailVerified) {
       throw new BadRequestException('Email already verified');
     }

@@ -16,7 +16,7 @@ import {
   ApiOperation,
   ApiTags,
 } from '@nestjs/swagger';
-import { AuthGuard } from '../auth.guard';
+import { AuthGuard, AuthenticatedRequest } from '../auth.guard';
 import { CreateUserFollowDto } from './dto/createUserFollow.dto';
 import { DeleteUserFollowDto } from './dto/deleteUserFollow.dto';
 import { ExploreQuery } from './dto/exploreQuery.dto';
@@ -51,7 +51,9 @@ export class UserController {
   })
   @UseGuards(AuthGuard)
   @Get('/api/users/me')
-  getUserMe(@Request() req): Promise<UserMeProfileEntity> {
+  getUserMe(
+    @Request() req: AuthenticatedRequest,
+  ): Promise<UserMeProfileEntity> {
     return this.userService.getUserMe({
       stacksAddress: req.user.stacksAddress,
     });
@@ -65,7 +67,7 @@ export class UserController {
   })
   @Get('/api/users/:userAddress')
   getUser(
-    @Request() request,
+    @Request() request: AuthenticatedRequest,
     @Param('userAddress') userAddress: string,
   ): Promise<UserProfileEntity> {
     return this.userService.getUser({ request, userAddress });
@@ -111,7 +113,7 @@ export class UserController {
   @Post('/api/users/me/following')
   @HttpCode(200)
   addFollow(
-    @Request() req,
+    @Request() req: AuthenticatedRequest,
     @Body() createUserFollowDto: CreateUserFollowDto,
   ): Promise<void> {
     return this.userService.addFollow({
@@ -129,7 +131,7 @@ export class UserController {
   @UseGuards(AuthGuard)
   @Delete('/api/users/me/following')
   removeFollow(
-    @Request() req,
+    @Request() req: AuthenticatedRequest,
     @Body() deleteUserFollowDto: DeleteUserFollowDto,
   ): Promise<void> {
     return this.userService.removeFollow({

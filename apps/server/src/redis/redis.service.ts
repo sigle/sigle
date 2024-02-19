@@ -13,7 +13,9 @@ export class RedisService implements OnModuleInit, OnModuleDestroy {
 
   async onModuleInit() {
     if (!this.redis) {
-      this.redis = new Redis(this.configService.get('REDIS_DATABASE_URL'));
+      this.redis = new Redis(
+        this.configService.get('REDIS_DATABASE_URL') as string,
+      );
     }
   }
 

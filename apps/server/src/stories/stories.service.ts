@@ -125,19 +125,35 @@ export class StoriesService {
         // Newsletter already exists, do not send it again
         throw new BadRequestException('Newsletter already sent');
       }
+      if (!user.newsletter.senderEmail) {
+        throw new BadRequestException('Sender email not set.');
+      }
 
       const username =
         await this.stacksService.getUsernameByAddress(stacksAddress);
-      const bucketUrl = await this.stacksService.getBucketUrl({ username });
+      if (username === null) {
+        throw new BadRequestException(
+          `No username found for ${stacksAddress}.`,
+        );
+      }
+      const { bucketUrl } = await this.stacksService.getBucketUrl({ username });
+      if (!bucketUrl) {
+        throw new BadRequestException(
+          `No profile or bucketUrl for ${username}.`,
+        );
+      }
       const [publicSettings, publicStory] = await Promise.all([
         this.stacksService.getPublicSettings({
-          bucketUrl: bucketUrl.bucketUrl,
+          bucketUrl,
         }),
         this.stacksService.getPublicStory({
-          bucketUrl: bucketUrl.bucketUrl,
+          bucketUrl,
           storyId: gaiaId,
         }),
       ]);
+      if (!publicStory) {
+        throw new BadRequestException('Story not found.');
+      }
       const newsletterHtml = this.bulkEmailService.storyToHTML({
         stacksAddress,
         username,
@@ -368,12 +384,21 @@ export class StoriesService {
     if (!user.newsletter || user.newsletter.status !== 'ACTIVE') {
       throw new BadRequestException('Newsletter not setup.');
     }
+    if (!user.newsletter.senderEmail) {
+      throw new BadRequestException('Sender email not set.');
+    }
 
     const username =
       await this.stacksService.getUsernameByAddress(stacksAddress);
-    const bucketUrl = await this.stacksService.getBucketUrl({ username });
+    if (username === null) {
+      throw new BadRequestException(`No username found for ${stacksAddress}.`);
+    }
+    const { bucketUrl } = await this.stacksService.getBucketUrl({ username });
+    if (!bucketUrl) {
+      throw new BadRequestException(`No profile or bucketUrl for ${username}.`);
+    }
     const publicSettings = await this.stacksService.getPublicSettings({
-      bucketUrl: bucketUrl.bucketUrl,
+      bucketUrl,
     });
 
     const newsletterHtml = this.bulkEmailService.storyToHTML({

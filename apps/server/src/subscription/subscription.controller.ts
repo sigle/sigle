@@ -13,7 +13,7 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 import { Throttle } from '@nestjs/throttler';
-import { AuthGuard } from '../auth.guard';
+import { AuthGuard, AuthenticatedRequest } from '../auth.guard';
 import { SubscriptionDto } from './dto/subscription.dto';
 import { SubscriptionService } from './subscription.service';
 
@@ -34,7 +34,9 @@ export class SubscriptionController {
   })
   @UseGuards(AuthGuard)
   @Get('/api/subscriptions')
-  getUserMe(@Request() req): Promise<SubscriptionDto> {
+  getUserMe(
+    @Request() req: AuthenticatedRequest,
+  ): Promise<SubscriptionDto | null> {
     return this.subscriptionService.getUserActiveSubscription({
       stacksAddress: req.user.stacksAddress,
     });
@@ -53,7 +55,9 @@ export class SubscriptionController {
   @UseGuards(AuthGuard)
   @Post('/api/subscriptions/syncWithNft')
   @HttpCode(200)
-  syncSubscriptionWithNft(@Request() req): Promise<SubscriptionDto> {
+  syncSubscriptionWithNft(
+    @Request() req: AuthenticatedRequest,
+  ): Promise<SubscriptionDto | null> {
     return this.subscriptionService.syncSubscriptionWithNft({
       stacksAddress: req.user.stacksAddress,
     });
