@@ -3,8 +3,8 @@ import { PostCard } from '@/components/PostCard';
 import { getPosts } from '@/lib/api';
 
 export const runtime = 'edge';
-// Revalidate this page every 60 seconds
-export const revalidate = 60;
+// Revalidate this page every 2 mins
+export const revalidate = 120;
 
 export default async function Page({
   params,

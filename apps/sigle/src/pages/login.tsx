@@ -309,7 +309,7 @@ const Login = () => {
                 <Box
                   as="a"
                   css={{ boxShadow: '0 1px 0 0' }}
-                  href="https://stacks.ac/teams"
+                  href="https://www.btcfrontier.fund"
                   target="_blank"
                   rel="noreferrer"
                 >

@@ -10,8 +10,8 @@ export class PlausibleService {
   constructor(
     private readonly configService: ConfigService<EnvironmentVariables>,
   ) {
-    this.siteId = this.configService.get('PLAUSIBLE_SITE_ID');
-    this.apiToken = this.configService.get('PLAUSIBLE_API_TOKEN');
+    this.siteId = this.configService.get('PLAUSIBLE_SITE_ID') as string;
+    this.apiToken = this.configService.get('PLAUSIBLE_API_TOKEN') as string;
   }
 
   async pages(params: {
@@ -87,6 +87,7 @@ export class PlausibleService {
   private async fetch(path: string, params: URLSearchParams): Promise<any> {
     params.append('site_id', this.siteId);
 
+    // @ts-expect-error - fetch is injected
     const response = await fetch(
       `https://plausible.io/api/v1${path}?${params.toString()}`,
       {

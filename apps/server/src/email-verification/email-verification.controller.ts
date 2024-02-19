@@ -13,7 +13,7 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 import { Throttle } from '@nestjs/throttler';
-import { AuthGuard } from '../auth.guard';
+import { AuthGuard, AuthenticatedRequest } from '../auth.guard';
 import { AddEmailDto } from './dto/addEmail.dto';
 import { VerifyEmailDto } from './dto/verifyEmail.dto';
 import { EmailVerificationService } from './email-verification.service';
@@ -36,7 +36,7 @@ export class EmailVerificationController {
   @Post('/api/email-verification/add')
   @HttpCode(200)
   async addEmail(
-    @Request() req,
+    @Request() req: AuthenticatedRequest,
     @Body() addEmailDto: AddEmailDto,
   ): Promise<void> {
     await this.emailVerificationService.addEmail({
@@ -70,7 +70,7 @@ export class EmailVerificationController {
   @UseGuards(AuthGuard)
   @Post('/api/email-verification/resend')
   @HttpCode(200)
-  async resendEmail(@Request() req): Promise<void> {
+  async resendEmail(@Request() req: AuthenticatedRequest): Promise<void> {
     await this.emailVerificationService.resendVerificationLink({
       stacksAddress: req.user.stacksAddress,
     });

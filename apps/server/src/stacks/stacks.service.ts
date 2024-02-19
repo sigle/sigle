@@ -42,7 +42,7 @@ export class StacksService {
     username,
   }: {
     username: string;
-  }): Promise<{ profile: Record<string, any>; bucketUrl: string }> {
+  }): Promise<{ profile?: Record<string, any>; bucketUrl?: string }> {
     let userProfile: Record<string, any> | undefined;
     try {
       userProfile = await lookupProfile({ username });
@@ -107,6 +107,6 @@ export class StacksService {
     if (resPublicSettings.status !== 200) {
       return {};
     }
-    return await resPublicSettings.json();
+    return (await resPublicSettings.json()) as SettingsFile;
   }
 }

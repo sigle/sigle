@@ -89,7 +89,7 @@ export class UserService {
       });
     }
 
-    return loggedInUser;
+    return loggedInUser!;
   }
 
   async getUser({

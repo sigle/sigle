@@ -11,7 +11,7 @@ export type ExploreUser = {
 };
 
 export type ExploreResponse = {
-  nextPage: number;
+  nextPage: number | null;
   data: ExploreUser[];
 };
 
@@ -23,11 +23,8 @@ export type PublicNewsletterEntity = {
 export type UserMeProfileEntity = {
   id: string;
   stacksAddress: string;
-  email: string;
-  /**
-   * @format date-time
-   */
-  emailVerified: string;
+  email: string | null;
+  emailVerified: string | null;
   newsletter: PublicNewsletterEntity;
 };
 
@@ -84,25 +81,12 @@ export type CreateSubscriberDto = {
   email: string;
 };
 
-export type EmailDto = {
-  id: string;
-};
-
 export type StoryDto = {
   id: string;
-  /**
-   * @format date-time
-   */
-  publishedAt: string;
-  /**
-   * @format date-time
-   */
-  unpublishedAt: string;
-  /**
-   * @format date-time
-   */
-  deletedAt: string;
-  email: EmailDto;
+  publishedAt: string | null;
+  unpublishedAt: string | null;
+  deletedAt: string | null;
+  email: string | null;
 };
 
 export type SendTestStoryDto = {

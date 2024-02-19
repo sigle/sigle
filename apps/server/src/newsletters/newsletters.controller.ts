@@ -10,7 +10,7 @@ import {
 import { ApiOkResponse, ApiTags } from '@nestjs/swagger';
 import { NewslettersService } from './newsletters.service';
 import { UpdateNewsletterDto } from './dto/updateNewsletter.dto';
-import { AuthGuard } from '../auth.guard';
+import { AuthGuard, AuthenticatedRequest } from '../auth.guard';
 import { NewsletterEntity } from './entities/newsletter.entity';
 import { ContactsListsEntity } from './entities/constacts-lists.entity';
 import { UpdateContactsListDto } from './dto/updateContactsList.dto';
@@ -27,7 +27,7 @@ export class NewslettersController {
   @ApiOkResponse({
     type: NewsletterEntity,
   })
-  get(@Request() req): Promise<NewsletterEntity | null> {
+  get(@Request() req: AuthenticatedRequest): Promise<NewsletterEntity | null> {
     return this.newslettersService.get({
       stacksAddress: req.user.stacksAddress,
     });
@@ -36,7 +36,10 @@ export class NewslettersController {
   @UseGuards(AuthGuard)
   @Post('/api/newsletters')
   @HttpCode(200)
-  update(@Request() req, @Body() updateNewsletterDto: UpdateNewsletterDto) {
+  update(
+    @Request() req: AuthenticatedRequest,
+    @Body() updateNewsletterDto: UpdateNewsletterDto,
+  ) {
     return this.newslettersService.update({
       stacksAddress: req.user.stacksAddress,
       apiKey: updateNewsletterDto.apiKey,
@@ -47,7 +50,9 @@ export class NewslettersController {
   @UseGuards(AuthGuard)
   @Get('/api/newsletters/contacts-lists')
   @ApiOkResponse({ type: ContactsListsEntity, isArray: true })
-  getContactsLists(@Request() req): Promise<ContactsListsEntity[]> {
+  getContactsLists(
+    @Request() req: AuthenticatedRequest,
+  ): Promise<ContactsListsEntity[]> {
     return this.newslettersService.getContactsLists({
       stacksAddress: req.user.stacksAddress,
     });
@@ -57,7 +62,7 @@ export class NewslettersController {
   @Post('/api/newsletters/contacts-lists')
   @HttpCode(200)
   updateContactsList(
-    @Request() req,
+    @Request() req: AuthenticatedRequest,
     @Body() updateNewsletterDto: UpdateContactsListDto,
   ) {
     return this.newslettersService.updateContactsList({
@@ -69,7 +74,7 @@ export class NewslettersController {
   @UseGuards(AuthGuard)
   @Get('/api/newsletters/senders')
   @ApiOkResponse({ type: SenderEntity, isArray: true })
-  getSenders(@Request() req): Promise<SenderEntity[]> {
+  getSenders(@Request() req: AuthenticatedRequest): Promise<SenderEntity[]> {
     return this.newslettersService.getSenders({
       stacksAddress: req.user.stacksAddress,
     });
@@ -78,7 +83,10 @@ export class NewslettersController {
   @UseGuards(AuthGuard)
   @Post('/api/newsletters/senders')
   @HttpCode(200)
-  updateSender(@Request() req, @Body() updateNewsletterDto: UpdateSenderDto) {
+  updateSender(
+    @Request() req: AuthenticatedRequest,
+    @Body() updateNewsletterDto: UpdateSenderDto,
+  ) {
     return this.newslettersService.updateSender({
       stacksAddress: req.user.stacksAddress,
       senderId: updateNewsletterDto.senderId,

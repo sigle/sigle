@@ -72,7 +72,7 @@ export class BulkEmailService {
   htmlToMJML(html: string): string {
     let mjml = '';
     const json = parse(html);
-    json.forEach((node) => {
+    json.forEach((node: any) => {
       if (node.tagName === 'h2') {
         mjml += `<mj-text><h2>${inlineText(node.children)}</h2></mj-text>`;
       } else if (node.tagName === 'h3') {
@@ -81,7 +81,7 @@ export class BulkEmailService {
         mjml += `<mj-text>${inlineText(node.children)}</mj-text>`;
       } else if (node.tagName === 'ul' || node.tagName === 'ol') {
         mjml += `<mj-list>${node.children
-          .map((child) => {
+          .map((child: any) => {
             if (child.tagName === 'li') {
               // If item is wrapped in a paragraph, unwrap it.
               if (child.children[0].tagName === 'p') {
@@ -122,9 +122,10 @@ export class BulkEmailService {
               attr.key === 'data-type' && attr.value === 'button-cta',
           )
         ) {
-          mjml += `<mj-button href="${node.attributes.find(
-            (attr: MJMLAttribute) => attr.key === 'href',
-          )?.value}">${inlineText(node.children[0].children)}</mj-button>`;
+          mjml += `<mj-button href="${
+            node.attributes.find((attr: MJMLAttribute) => attr.key === 'href')
+              ?.value
+          }">${inlineText(node.children[0].children)}</mj-button>`;
         }
       }
     });

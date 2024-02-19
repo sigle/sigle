@@ -41,7 +41,7 @@ export class SubscriptionService {
   }): Promise<{
     id: string;
     plan: 'BASIC' | 'PUBLISHER' | 'ENTERPRISE';
-  }> {
+  } | null> {
     const nftHoldings = await this.nftApi.getNftHoldings({
       principal: stacksAddress,
       assetIdentifiers: [

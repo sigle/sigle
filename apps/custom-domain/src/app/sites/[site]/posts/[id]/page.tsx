@@ -10,8 +10,8 @@ import { addIdsToHeadings } from '@/utils/addIdsToHeadings';
 import { extractTableOfContents } from '@/utils/extractTableOfContents';
 
 export const runtime = 'edge';
-// Revalidate this page every 60 seconds
-export const revalidate = 60;
+// Revalidate this page every 10 mins
+export const revalidate = 600;
 
 export default async function Post({
   params,
