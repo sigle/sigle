@@ -15,7 +15,7 @@ export const EditorBottomInfo = ({ editor }: EditorBottomInfoProps) => {
 
   return (
     <div className="not-prose">
-      <Container className="fixed inset-x-0 bottom-0 mb-8">
+      <Container className="fixed inset-x-0 bottom-0 mb-8 mx-4">
         <div className="pointer-events-none flex items-center justify-end gap-3">
           <Text size="1">{editor?.storage.characterCount.words()} words</Text>
 
