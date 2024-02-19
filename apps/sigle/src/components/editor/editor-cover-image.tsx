@@ -62,6 +62,7 @@ export const EditorCoverImage = ({
         },
       },
     );
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const { getRootProps, getInputProps, isDragActive, open } = useDropzone({
@@ -98,7 +99,6 @@ export const EditorCoverImage = ({
         }}
         transition={{ delay: 0.1 }}
         key={!preview && !resolvedWatchCoverImage ? 'button' : 'image'}
-        className={isDragActive ? 'w-full' : undefined}
       >
         {!preview && !resolvedWatchCoverImage ? (
           !isDragActive ? (
@@ -106,17 +106,12 @@ export const EditorCoverImage = ({
               Add cover image <IconCameraPlus size={16} />
             </Button>
           ) : (
-            <Button
-              className="w-full animate-in fade-in zoom-in"
-              size="4"
-              color="gray"
-              variant="outline"
-            >
+            <Button color="gray" variant="outline">
               Drop your cover image here <IconHandGrab size={16} />
             </Button>
           )
         ) : (
-          <div className="relative">
+          <div className="relative mx-auto">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src={preview || resolvedWatchCoverImage || ''}
