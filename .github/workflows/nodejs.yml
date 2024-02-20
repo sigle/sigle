@@ -74,7 +74,7 @@ jobs:
         run: pnpm run test:e2e
         working-directory: apps/custom-domain
 
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         if: failure()
         with:
           name: custom-domain-playwright-report
