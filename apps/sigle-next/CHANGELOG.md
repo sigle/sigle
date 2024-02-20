@@ -1,5 +1,11 @@
 # @sigle/app-next
 
+## 0.2.1
+
+### Patch Changes
+
+- ba24a7b: Upgrade next.js to v14.
+
 ## 0.2.0
 
 ### Minor Changes
