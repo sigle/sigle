@@ -13,7 +13,7 @@ import { sites } from '@/sites';
 import { SettingsFile, Story } from '../../types';
 import { sanitizeHexColor } from '../../utils/security';
 import { sigleConfig } from '../../config';
-import { TipTapEditor } from '../editor/TipTapEditor';
+// import { TipTapEditor } from '../editor/TipTapEditor';
 import { styled } from '../../stitches.config';
 import { Box, Container, Flex, Typography } from '../../ui';
 import { getTextFromHtml } from '../editor/utils/getTextFromHtml';
@@ -301,7 +301,7 @@ export const PublicStory = ({
             </Box>
           </Box>
         )}
-        <TipTapEditor story={story} editable={false} />
+        {/* <TipTapEditor story={story} editable={false} /> */}
         <ShareButtonsOnScroll
           username={username}
           story={story}

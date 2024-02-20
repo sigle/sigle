@@ -1,8 +1,9 @@
 import React from 'react';
+import { Container, Flex, Text } from '@radix-ui/themes';
+import { EditorFormProvider } from '@/components/editor/editor-form-provider';
+import { LoadingSpinner } from '@/components/ui/loading-spinner';
 import { Story } from '../../../types';
-import { Container, Text } from '../../../ui';
 import { NewEditor } from '../NewEditor';
-import { EditorHeader } from '../EditorHeader';
 
 interface Props {
   loading: boolean;
@@ -10,30 +11,28 @@ interface Props {
 }
 
 export const Editor = ({ loading, story }: Props) => {
-  if (loading || !story) {
+  if (loading) {
     return (
-      <Container
-        css={{
-          pt: '$5',
-          '@md': {
-            pt: '$10',
-          },
-        }}
-      >
-        <EditorHeader
-          story={false}
-          loadingSave={false}
-          onOpenSettings={() => null}
-          onSave={() => null}
-          onPublish={() => null}
-          onUnpublish={() => null}
-        />
-        <Text css={{ paddingTop: '$15', textAlign: 'center' }}>
-          {loading ? 'Loading ...' : '404 Story not found'}
-        </Text>
+      <Container size="2">
+        <Flex justify="center" py="7">
+          <LoadingSpinner />
+        </Flex>
+      </Container>
+    );
+  }
+  if (!story) {
+    return (
+      <Container size="2">
+        <Flex justify="center" py="7">
+          <Text color="red">404 story not found</Text>
+        </Flex>
       </Container>
     );
   }
 
-  return <NewEditor story={story} />;
+  return (
+    <EditorFormProvider story={story}>
+      <NewEditor story={story} />
+    </EditorFormProvider>
+  );
 };

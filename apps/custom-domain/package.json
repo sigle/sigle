@@ -40,8 +40,8 @@
     "autoprefixer": "10.4.16",
     "eslint": "8.52.0",
     "eslint-config-next": "14.0.4",
-    "eslint-plugin-tailwindcss": "3.13.0",
-    "postcss": "8.4.31",
+    "eslint-plugin-tailwindcss": "3.13.1",
+    "postcss": "8.4.33",
     "tailwindcss": "3.4.1",
     "typescript": "5.3.3"
   }

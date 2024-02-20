@@ -9,11 +9,12 @@ import {
 } from '@/__generated__/sigle-api';
 import { cn } from '@/lib/cn';
 import { styled } from '../../stitches.config';
-import { Story } from '../../types';
 import { Box, Button, Container, Flex, Typography } from '../../ui';
 import { PublishAndSendDialog } from './PublishAndSendDialog';
 import { SendTestEmail } from './PublishDialog/SendTestEmail';
-import { TwitterCardPreview } from './TwitterCardPreview';
+import { useEditorStore } from '@/components/editor/store';
+import { SeoPreview } from '@/components/editor/settings/seo-preview';
+import { useParams } from 'next/navigation';
 
 const StyledDialogContent = styled(Dialog.Content, {
   maxWidth: '100%',
@@ -29,29 +30,23 @@ const StyledDialogContent = styled(Dialog.Content, {
 });
 
 interface PublishDialogProps {
-  story: Story;
-  open: boolean;
   loading: boolean;
   onConfirm: (options?: { send?: boolean }) => Promise<void>;
-  onClose: () => void;
-  onEditPreview: () => void;
 }
 
-export const PublishDialog = ({
-  story,
-  open,
-  loading,
-  onConfirm,
-  onClose,
-  onEditPreview,
-}: PublishDialogProps) => {
+export const PublishDialog = ({ loading, onConfirm }: PublishDialogProps) => {
+  const params = useParams<{ storyId: string }>();
+  const storyId = params!.storyId;
   const { data: userMe } = useUserControllerGetUserMe({});
   const { data: userSubscription } = useSubscriptionControllerGetUserMe({});
   const { data: storyApi, refetch: refetchStoryApi } = useStoriesControllerGet({
     pathParams: {
-      storyId: story.id,
+      storyId,
     },
   });
+  const publishOpen = useEditorStore((state) => state.publishOpen);
+  const setPublishOpen = useEditorStore((state) => state.setPublishOpen);
+  const toggleMenu = useEditorStore((state) => state.toggleMenu);
   const [tabValue, setTabValue] = useState<'publish only' | 'publish and send'>(
     'publish only',
   );
@@ -76,17 +71,26 @@ export const PublishDialog = ({
     await refetchStoryApi();
   };
 
+  const handleCancel = () => {
+    setPublishOpen(false);
+  };
+
+  const handleEditPreview = () => {
+    toggleMenu(true);
+    setPublishOpen(false);
+  };
+
   const hasActiveSubscription = !!userSubscription;
   const isNewsletterActive = userMe?.newsletter?.status === 'ACTIVE';
   const isStoryAlreadySent = !!storyApi?.email;
 
   return (
     <>
-      <Dialog.Root open={open} onOpenChange={onClose}>
+      <Dialog.Root open={publishOpen} onOpenChange={setPublishOpen}>
         <StyledDialogContent size="3">
           <Container>
             <Button
-              onClick={onClose}
+              onClick={handleCancel}
               variant="ghost"
               css={{ gap: '$2', ml: '-$1' }}
               size="sm"
@@ -192,7 +196,7 @@ export const PublishDialog = ({
                   >
                     {!isStoryAlreadySent &&
                       hasActiveSubscription &&
-                      isNewsletterActive && <SendTestEmail story={story} />}
+                      isNewsletterActive && <SendTestEmail />}
                   </Tabs.Content>
                 </Tabs.Root>
               </Flex>
@@ -207,18 +211,18 @@ export const PublishDialog = ({
                     variant="ghost"
                     color="orange"
                     disabled={loading}
-                    onClick={onEditPreview}
+                    onClick={handleEditPreview}
                   >
                     Edit preview
                   </Button>
                 </Flex>
-                <TwitterCardPreview story={story} />
+                <SeoPreview />
                 <Flex justify="end" gap="6" css={{ mt: '$5' }}>
                   <Button
                     size="lg"
                     variant="ghost"
                     disabled={loading}
-                    onClick={onClose}
+                    onClick={handleCancel}
                   >
                     Cancel
                   </Button>

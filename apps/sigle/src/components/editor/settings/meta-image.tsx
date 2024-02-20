@@ -1,5 +1,7 @@
+import { useFormContext } from 'react-hook-form';
 import { MouseEventHandler, useCallback, useState } from 'react';
 import { usePostHog } from 'posthog-js/react';
+import { useParams } from 'next/navigation';
 import { toast } from 'sonner';
 import { useDropzone } from 'react-dropzone';
 import { Card, IconButton, Text, Tooltip } from '@radix-ui/themes';
@@ -13,22 +15,15 @@ import { resolveImageUrl } from '@/lib/resolve-image-url';
 import { cn } from '@/lib/cn';
 import { useUploadImage } from '@/hooks/use-upload-image';
 import { LoadingSpinner } from '@/components/ui/loading-spinner';
-import { Story } from '@/types';
+import { EditorPostFormData } from '../editor-form-provider';
 
-interface MetaImageProps {
-  story: Story;
-  metaImage?: string;
-  setMetaImage: (metaImage?: string) => void;
-}
-
-export const MetaImage = ({
-  story,
-  metaImage,
-  setMetaImage,
-}: MetaImageProps) => {
-  const postId = story.id;
+export const MetaImage = () => {
+  const params = useParams<{ storyId: string }>();
+  const postId = params!.storyId;
   const posthog = usePostHog();
   const [preview, setPreview] = useState<string | null>(null);
+  const { setValue, watch } = useFormContext<EditorPostFormData>();
+  const watchMetaImage = watch('metaImage');
   const { mutate: uploadImage, isLoading: loadingUploadImage } =
     useUploadImage();
 
@@ -54,7 +49,7 @@ export const MetaImage = ({
       {
         onSuccess: (data) => {
           URL.revokeObjectURL(previewBlobUrl);
-          setMetaImage(data.url);
+          setValue('metaImage', data.url);
           setPreview(null);
           posthog.capture('meta_image_upload_success', {
             postId,
@@ -72,24 +67,22 @@ export const MetaImage = ({
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     onDrop,
-    accept: {
-      'image/jpeg': [],
-      'image/png': [],
-    },
-    multiple: false,
+    accept: 'image/jpeg,image/png',
   });
 
   const onRemove: MouseEventHandler<HTMLButtonElement> = (e) => {
     // Prevent the form from submitting
     e.preventDefault();
     e.stopPropagation();
-    setMetaImage(undefined);
+    setValue('metaImage', undefined);
     posthog.capture('meta_image_removed', {
       postId,
     });
   };
 
-  const resolvedWatchMetaImage = metaImage ? resolveImageUrl(metaImage) : null;
+  const resolvedWatchMetaImage = watchMetaImage
+    ? resolveImageUrl(watchMetaImage)
+    : null;
 
   return (
     <div className="flex flex-col">

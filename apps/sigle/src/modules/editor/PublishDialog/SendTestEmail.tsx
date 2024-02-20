@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import { useStoriesControllerSendTest } from '@/__generated__/sigle-api';
-import { Story } from '../../../types';
 import {
   Accordion,
   AccordionContent,
@@ -11,12 +10,14 @@ import {
   FormTextarea,
   Typography,
 } from '../../../ui';
+import { useFormContext } from 'react-hook-form';
+import { EditorPostFormData } from '@/components/editor/editor-form-provider';
+import { useParams } from 'next/navigation';
 
-interface SendTestEmailProps {
-  story: Story;
-}
-
-export const SendTestEmail = ({ story }: SendTestEmailProps) => {
+export const SendTestEmail = () => {
+  const params = useParams<{ storyId: string }>();
+  const storyId = params!.storyId;
+  const { getValues } = useFormContext<EditorPostFormData>();
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<boolean>(false);
   const [emails, setEmails] = useState<string>('');
@@ -39,9 +40,11 @@ export const SendTestEmail = ({ story }: SendTestEmailProps) => {
     setError(null);
     setSuccess(false);
 
+    const story = getValues();
+
     sendStoryTest({
       body: {
-        id: story.id,
+        id: storyId,
         storyTitle: story.title,
         storyContent: story.content,
         storyCoverImage: story.coverImage ?? null,

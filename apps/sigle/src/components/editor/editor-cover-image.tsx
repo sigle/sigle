@@ -2,6 +2,7 @@ import { Button, Flex, IconButton } from '@radix-ui/themes';
 import { IconCameraPlus, IconHandGrab, IconTrash } from '@tabler/icons-react';
 import { MouseEventHandler, useCallback, useState } from 'react';
 import { useDropzone } from 'react-dropzone';
+import { useFormContext } from 'react-hook-form';
 import { motion } from 'framer-motion';
 import { usePostHog } from 'posthog-js/react';
 import { toast } from 'sonner';
@@ -10,19 +11,18 @@ import { cn } from '@/lib/cn';
 import { useUploadImage } from '@/hooks/use-upload-image';
 import { Story } from '@/types';
 import { LoadingSpinner } from '../ui/loading-spinner';
+import { EditorPostFormData } from './editor-form-provider';
 
 interface EditorCoverImageProps {
   story: Story;
-  setStoryFile: (story: Story) => void;
 }
 
-export const EditorCoverImage = ({
-  story,
-  setStoryFile,
-}: EditorCoverImageProps) => {
+export const EditorCoverImage = ({ story }: EditorCoverImageProps) => {
   const postId = story.id;
   const posthog = usePostHog();
   const [preview, setPreview] = useState<string | null>(null);
+  const { setValue, watch } = useFormContext<EditorPostFormData>();
+  const watchCoverImage = watch('coverImage');
   const { mutate: uploadImage, isLoading: loadingUploadImage } =
     useUploadImage();
 
@@ -48,7 +48,7 @@ export const EditorCoverImage = ({
       {
         onSuccess: (data) => {
           URL.revokeObjectURL(previewBlobUrl);
-          setStoryFile({ ...story, coverImage: data.url });
+          setValue('coverImage', data.url);
           setPreview(null);
           posthog.capture('cover_image_upload_success', {
             postId,
@@ -62,30 +62,25 @@ export const EditorCoverImage = ({
         },
       },
     );
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const { getRootProps, getInputProps, isDragActive, open } = useDropzone({
     onDrop,
-    accept: {
-      'image/jpeg': [],
-      'image/png': [],
-    },
-    multiple: false,
+    accept: 'image/jpeg,image/png',
   });
 
   const onRemove: MouseEventHandler<HTMLButtonElement> = (e) => {
     // Prevent the form from submitting
     e.preventDefault();
     e.stopPropagation();
-    setStoryFile({ ...story, coverImage: undefined });
+    setValue('coverImage', undefined);
     posthog.capture('cover_image_removed', {
       postId,
     });
   };
 
-  const resolvedWatchCoverImage = story.coverImage
-    ? resolveImageUrl(story.coverImage)
+  const resolvedWatchCoverImage = watchCoverImage
+    ? resolveImageUrl(watchCoverImage)
     : null;
 
   return (
@@ -103,6 +98,7 @@ export const EditorCoverImage = ({
         }}
         transition={{ delay: 0.1 }}
         key={!preview && !resolvedWatchCoverImage ? 'button' : 'image'}
+        className={isDragActive ? 'w-full' : undefined}
       >
         {!preview && !resolvedWatchCoverImage ? (
           !isDragActive ? (
@@ -110,12 +106,17 @@ export const EditorCoverImage = ({
               Add cover image <IconCameraPlus size={16} />
             </Button>
           ) : (
-            <Button color="gray" variant="outline">
+            <Button
+              className="w-full animate-in fade-in zoom-in"
+              size="4"
+              color="gray"
+              variant="outline"
+            >
               Drop your cover image here <IconHandGrab size={16} />
             </Button>
           )
         ) : (
-          <div className="relative md:-mx-20">
+          <div className="relative">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src={preview || resolvedWatchCoverImage || ''}
