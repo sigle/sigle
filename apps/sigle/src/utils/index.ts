@@ -80,8 +80,8 @@ export const saveStoryFile = async (file: Story): Promise<void> => {
   });
 };
 
-export const deleteStoryFile = async (file: Story): Promise<void> => {
-  await storage.deleteFile(`${file.id}.json`);
+export const deleteStoryFile = async (storyId: string): Promise<void> => {
+  await storage.deleteFile(`${storyId}.json`);
 };
 
 export const publishStory = async (storyId: string): Promise<void> => {

@@ -53,7 +53,7 @@ export const StoryItem = ({
       }
       file.stories.splice(index, 1);
       await saveStoriesFile(file);
-      await deleteStoryFile(story);
+      await deleteStoryFile(story.id);
       await refetchStoriesLists();
       await fetchStoriesControllerDelete({
         body: { id: story.id },
