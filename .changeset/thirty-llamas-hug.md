@@ -1,6 +1,5 @@
 ---
 '@sigle/custom-domain': patch
-'@sigle/app-next': patch
 '@sigle/app': patch
 ---
 
