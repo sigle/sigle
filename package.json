@@ -1,6 +1,6 @@
 {
   "private": true,
-  "packageManager": "pnpm@8.15.1",
+  "packageManager": "pnpm@9.0.5",
   "engines": {
     "node": ">=20"
   },
@@ -24,6 +24,6 @@
     "husky": "9.0.11",
     "lint-staged": "15.2.2",
     "prettier": "3.2.5",
-    "turbo": "1.12.4"
+    "turbo": "1.13.3"
   }
 }
