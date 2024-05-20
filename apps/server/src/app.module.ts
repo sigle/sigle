@@ -22,6 +22,7 @@ import { NewslettersModule } from './newsletters/newsletters.module';
 import { PosthogModule } from './posthog/posthog.module';
 import { EmailModule } from './email/email.module';
 import { EmailVerificationModule } from './email-verification/email-verification.module';
+import { GaiaModule } from './gaia/gaia.module';
 
 @Module({
   imports: [
@@ -84,6 +85,7 @@ import { EmailVerificationModule } from './email-verification/email-verification
     PosthogModule,
     EmailModule,
     EmailVerificationModule,
+    GaiaModule,
   ],
   controllers: [AppController],
   providers: [

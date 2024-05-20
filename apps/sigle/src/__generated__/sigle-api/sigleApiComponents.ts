@@ -1461,6 +1461,217 @@ export const useEmailVerificationControllerResendEmail = (
   });
 };
 
+export type GaiaControllerGetUserStoriesPathParams = {
+  username: string;
+};
+
+export type GaiaControllerGetUserStoriesError = Fetcher.ErrorWrapper<undefined>;
+
+export type GaiaControllerGetUserStoriesResponse = Schemas.SubsetStoryEntity[];
+
+export type GaiaControllerGetUserStoriesVariables = {
+  pathParams: GaiaControllerGetUserStoriesPathParams;
+} & SigleApiContext['fetcherOptions'];
+
+/**
+ * Returns the stories stored in Gaia. Response is cached for 1 minute.
+ */
+export const fetchGaiaControllerGetUserStories = (
+  variables: GaiaControllerGetUserStoriesVariables,
+  signal?: AbortSignal
+) =>
+  sigleApiFetch<
+    GaiaControllerGetUserStoriesResponse,
+    GaiaControllerGetUserStoriesError,
+    undefined,
+    {},
+    {},
+    GaiaControllerGetUserStoriesPathParams
+  >({
+    url: '/api/gaia/{username}/stories',
+    method: 'get',
+    ...variables,
+    signal,
+  });
+
+/**
+ * Returns the stories stored in Gaia. Response is cached for 1 minute.
+ */
+export const useGaiaControllerGetUserStories = <
+  TData = GaiaControllerGetUserStoriesResponse
+>(
+  variables: GaiaControllerGetUserStoriesVariables,
+  options?: Omit<
+    reactQuery.UseQueryOptions<
+      GaiaControllerGetUserStoriesResponse,
+      GaiaControllerGetUserStoriesError,
+      TData
+    >,
+    'queryKey' | 'queryFn' | 'initialData'
+  >
+) => {
+  const { fetcherOptions, queryOptions, queryKeyFn } =
+    useSigleApiContext(options);
+  return reactQuery.useQuery<
+    GaiaControllerGetUserStoriesResponse,
+    GaiaControllerGetUserStoriesError,
+    TData
+  >({
+    queryKey: queryKeyFn({
+      path: '/api/gaia/{username}/stories',
+      operationId: 'gaiaControllerGetUserStories',
+      variables,
+    }),
+    queryFn: ({ signal }) =>
+      fetchGaiaControllerGetUserStories(
+        { ...fetcherOptions, ...variables },
+        signal
+      ),
+    ...options,
+    ...queryOptions,
+  });
+};
+
+export type GaiaControllerGetUserStoryPathParams = {
+  username: string;
+  storyId: string;
+};
+
+export type GaiaControllerGetUserStoryError = Fetcher.ErrorWrapper<undefined>;
+
+export type GaiaControllerGetUserStoryVariables = {
+  pathParams: GaiaControllerGetUserStoryPathParams;
+} & SigleApiContext['fetcherOptions'];
+
+/**
+ * Returns the story stored in Gaia. Response is cached for 1 minute.
+ */
+export const fetchGaiaControllerGetUserStory = (
+  variables: GaiaControllerGetUserStoryVariables,
+  signal?: AbortSignal
+) =>
+  sigleApiFetch<
+    Schemas.SubsetStoryEntity,
+    GaiaControllerGetUserStoryError,
+    undefined,
+    {},
+    {},
+    GaiaControllerGetUserStoryPathParams
+  >({
+    url: '/api/gaia/{username}/stories/{storyId}',
+    method: 'get',
+    ...variables,
+    signal,
+  });
+
+/**
+ * Returns the story stored in Gaia. Response is cached for 1 minute.
+ */
+export const useGaiaControllerGetUserStory = <
+  TData = Schemas.SubsetStoryEntity
+>(
+  variables: GaiaControllerGetUserStoryVariables,
+  options?: Omit<
+    reactQuery.UseQueryOptions<
+      Schemas.SubsetStoryEntity,
+      GaiaControllerGetUserStoryError,
+      TData
+    >,
+    'queryKey' | 'queryFn' | 'initialData'
+  >
+) => {
+  const { fetcherOptions, queryOptions, queryKeyFn } =
+    useSigleApiContext(options);
+  return reactQuery.useQuery<
+    Schemas.SubsetStoryEntity,
+    GaiaControllerGetUserStoryError,
+    TData
+  >({
+    queryKey: queryKeyFn({
+      path: '/api/gaia/{username}/stories/{storyId}',
+      operationId: 'gaiaControllerGetUserStory',
+      variables,
+    }),
+    queryFn: ({ signal }) =>
+      fetchGaiaControllerGetUserStory(
+        { ...fetcherOptions, ...variables },
+        signal
+      ),
+    ...options,
+    ...queryOptions,
+  });
+};
+
+export type GaiaControllerGetUserSettingsPathParams = {
+  username: string;
+};
+
+export type GaiaControllerGetUserSettingsError =
+  Fetcher.ErrorWrapper<undefined>;
+
+export type GaiaControllerGetUserSettingsVariables = {
+  pathParams: GaiaControllerGetUserSettingsPathParams;
+} & SigleApiContext['fetcherOptions'];
+
+/**
+ * Returns the settings stored in Gaia. Response is cached for 1 minute.
+ */
+export const fetchGaiaControllerGetUserSettings = (
+  variables: GaiaControllerGetUserSettingsVariables,
+  signal?: AbortSignal
+) =>
+  sigleApiFetch<
+    Schemas.SettingsEntity,
+    GaiaControllerGetUserSettingsError,
+    undefined,
+    {},
+    {},
+    GaiaControllerGetUserSettingsPathParams
+  >({
+    url: '/api/gaia/{username}/settings',
+    method: 'get',
+    ...variables,
+    signal,
+  });
+
+/**
+ * Returns the settings stored in Gaia. Response is cached for 1 minute.
+ */
+export const useGaiaControllerGetUserSettings = <
+  TData = Schemas.SettingsEntity
+>(
+  variables: GaiaControllerGetUserSettingsVariables,
+  options?: Omit<
+    reactQuery.UseQueryOptions<
+      Schemas.SettingsEntity,
+      GaiaControllerGetUserSettingsError,
+      TData
+    >,
+    'queryKey' | 'queryFn' | 'initialData'
+  >
+) => {
+  const { fetcherOptions, queryOptions, queryKeyFn } =
+    useSigleApiContext(options);
+  return reactQuery.useQuery<
+    Schemas.SettingsEntity,
+    GaiaControllerGetUserSettingsError,
+    TData
+  >({
+    queryKey: queryKeyFn({
+      path: '/api/gaia/{username}/settings',
+      operationId: 'gaiaControllerGetUserSettings',
+      variables,
+    }),
+    queryFn: ({ signal }) =>
+      fetchGaiaControllerGetUserSettings(
+        { ...fetcherOptions, ...variables },
+        signal
+      ),
+    ...options,
+    ...queryOptions,
+  });
+};
+
 export type QueryOperation =
   | {
       path: '/health';
@@ -1526,4 +1737,19 @@ export type QueryOperation =
       path: '/api/newsletters/senders';
       operationId: 'newslettersControllerGetSenders';
       variables: NewslettersControllerGetSendersVariables;
+    }
+  | {
+      path: '/api/gaia/{username}/stories';
+      operationId: 'gaiaControllerGetUserStories';
+      variables: GaiaControllerGetUserStoriesVariables;
+    }
+  | {
+      path: '/api/gaia/{username}/stories/{storyId}';
+      operationId: 'gaiaControllerGetUserStory';
+      variables: GaiaControllerGetUserStoryVariables;
+    }
+  | {
+      path: '/api/gaia/{username}/settings';
+      operationId: 'gaiaControllerGetUserSettings';
+      variables: GaiaControllerGetUserSettingsVariables;
     };
