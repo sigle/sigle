@@ -2,6 +2,7 @@ import { Controller, Get, Param } from '@nestjs/common';
 import { ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { GaiaService } from './gaia.service';
 import { SubsetStoryEntity } from './entities/subsetStory.entity';
+import { StoryEntity } from './entities/story.entity';
 
 @ApiTags('gaia')
 @Controller()
@@ -17,9 +18,24 @@ export class GaiaController {
     isArray: true,
   })
   @Get('/api/gaia/:username/stories')
-  getUserFollowing(
+  getUserStories(
     @Param('username') username: string,
   ): Promise<SubsetStoryEntity[]> {
     return this.gaiaService.getUserStories({ username });
+  }
+
+  @ApiOperation({
+    description:
+      'Returns the story stored in Gaia. Response is cached for 1 minute.',
+  })
+  @ApiOkResponse({
+    type: SubsetStoryEntity,
+  })
+  @Get('/api/gaia/:username/stories/:storyId')
+  getUserStory(
+    @Param('username') username: string,
+    @Param('storyId') storyId: string,
+  ): Promise<StoryEntity | null> {
+    return this.gaiaService.getUserStory({ username, storyId });
   }
 }
