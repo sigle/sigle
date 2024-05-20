@@ -1461,6 +1461,79 @@ export const useEmailVerificationControllerResendEmail = (
   });
 };
 
+export type GaiaControllerGetUserFollowingPathParams = {
+  username: string;
+};
+
+export type GaiaControllerGetUserFollowingError =
+  Fetcher.ErrorWrapper<undefined>;
+
+export type GaiaControllerGetUserFollowingResponse =
+  Schemas.SubsetStoryEntity[];
+
+export type GaiaControllerGetUserFollowingVariables = {
+  pathParams: GaiaControllerGetUserFollowingPathParams;
+} & SigleApiContext['fetcherOptions'];
+
+/**
+ * Returns the stories stored in Gaia.
+ */
+export const fetchGaiaControllerGetUserFollowing = (
+  variables: GaiaControllerGetUserFollowingVariables,
+  signal?: AbortSignal
+) =>
+  sigleApiFetch<
+    GaiaControllerGetUserFollowingResponse,
+    GaiaControllerGetUserFollowingError,
+    undefined,
+    {},
+    {},
+    GaiaControllerGetUserFollowingPathParams
+  >({
+    url: '/api/gaia/{username}/stories',
+    method: 'get',
+    ...variables,
+    signal,
+  });
+
+/**
+ * Returns the stories stored in Gaia.
+ */
+export const useGaiaControllerGetUserFollowing = <
+  TData = GaiaControllerGetUserFollowingResponse
+>(
+  variables: GaiaControllerGetUserFollowingVariables,
+  options?: Omit<
+    reactQuery.UseQueryOptions<
+      GaiaControllerGetUserFollowingResponse,
+      GaiaControllerGetUserFollowingError,
+      TData
+    >,
+    'queryKey' | 'queryFn' | 'initialData'
+  >
+) => {
+  const { fetcherOptions, queryOptions, queryKeyFn } =
+    useSigleApiContext(options);
+  return reactQuery.useQuery<
+    GaiaControllerGetUserFollowingResponse,
+    GaiaControllerGetUserFollowingError,
+    TData
+  >({
+    queryKey: queryKeyFn({
+      path: '/api/gaia/{username}/stories',
+      operationId: 'gaiaControllerGetUserFollowing',
+      variables,
+    }),
+    queryFn: ({ signal }) =>
+      fetchGaiaControllerGetUserFollowing(
+        { ...fetcherOptions, ...variables },
+        signal
+      ),
+    ...options,
+    ...queryOptions,
+  });
+};
+
 export type QueryOperation =
   | {
       path: '/health';
@@ -1526,4 +1599,9 @@ export type QueryOperation =
       path: '/api/newsletters/senders';
       operationId: 'newslettersControllerGetSenders';
       variables: NewslettersControllerGetSendersVariables;
+    }
+  | {
+      path: '/api/gaia/{username}/stories';
+      operationId: 'gaiaControllerGetUserFollowing';
+      variables: GaiaControllerGetUserFollowingVariables;
     };

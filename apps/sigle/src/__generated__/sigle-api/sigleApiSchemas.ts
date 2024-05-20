@@ -147,3 +147,14 @@ export type AddEmailDto = {
 export type VerifyEmailDto = {
   token: string;
 };
+
+export type SubsetStoryEntity = {
+  id: string;
+  title: string;
+  content: string;
+  type: string;
+  coverImage: string | null;
+  featured: boolean | null;
+  createdAt: number;
+  updatedAt: number;
+};
