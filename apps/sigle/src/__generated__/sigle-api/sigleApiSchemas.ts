@@ -158,3 +158,12 @@ export type SubsetStoryEntity = {
   createdAt: number;
   updatedAt: number;
 };
+
+export type SettingsEntity = {
+  siteName: string | null;
+  siteDescription: string | null;
+  siteColor: string | null;
+  siteLogo: string | null;
+  siteUrl: string | null;
+  siteTwitterHandle: string | null;
+};
