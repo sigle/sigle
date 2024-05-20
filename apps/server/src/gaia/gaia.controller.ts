@@ -9,7 +9,8 @@ export class GaiaController {
   constructor(private readonly gaiaService: GaiaService) {}
 
   @ApiOperation({
-    description: 'Returns the stories stored in Gaia.',
+    description:
+      'Returns the stories stored in Gaia. Response is cached for 1 minute.',
   })
   @ApiOkResponse({
     type: SubsetStoryEntity,

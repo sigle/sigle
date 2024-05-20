@@ -17,13 +17,30 @@ export class GaiaService {
       return [];
     }
 
+    const cacheKey = `stories:${username}`;
+    const cachedResponse = await this.cacheManager.get<string>(cacheKey);
+    if (cachedResponse) {
+      return JSON.parse(cachedResponse);
+    }
+
     const publicStoriesFile = await this.stacksService.getPublicStories({
       bucketUrl,
     });
 
+    // Cache response for 1 minute
+    await this.cacheManager.set(
+      cacheKey,
+      JSON.stringify(publicStoriesFile),
+      60,
+    );
+
     return publicStoriesFile;
   }
 
+  /**
+   * Caches the bucket URL for 1 hour.
+   * This is to avoid hitting the Gaia hub too often.
+   */
   private async getCachedBucketUrl(
     username: string,
   ): Promise<string | undefined> {
