@@ -1,4 +1,4 @@
-import { Story, SubsetStory } from '../external/gaia';
+import { SettingsFile, Story, SubsetStory } from '../external/gaia';
 import { StacksService } from '../stacks/stacks.service';
 import { CACHE_MANAGER } from '@nestjs/cache-manager';
 import { Inject, Injectable } from '@nestjs/common';
@@ -70,6 +70,33 @@ export class GaiaService {
     await this.cacheManager.set(cacheKey, JSON.stringify(storyFile), 60);
 
     return storyFile;
+  }
+
+  async getUserSettings({
+    username,
+  }: {
+    username: string;
+  }): Promise<SettingsFile | null> {
+    const bucketUrl = await this.getCachedBucketUrl(username);
+
+    if (!bucketUrl) {
+      return null;
+    }
+
+    const cacheKey = `settings:${username}`;
+    const cachedResponse = await this.cacheManager.get<string>(cacheKey);
+    if (cachedResponse) {
+      return JSON.parse(cachedResponse);
+    }
+
+    const settingsFile = await this.stacksService.getPublicSettings({
+      bucketUrl,
+    });
+
+    // Cache response for 1 minute
+    await this.cacheManager.set(cacheKey, JSON.stringify(settingsFile), 60);
+
+    return settingsFile;
   }
 
   /**
