@@ -1461,34 +1461,32 @@ export const useEmailVerificationControllerResendEmail = (
   });
 };
 
-export type GaiaControllerGetUserFollowingPathParams = {
+export type GaiaControllerGetUserStoriesPathParams = {
   username: string;
 };
 
-export type GaiaControllerGetUserFollowingError =
-  Fetcher.ErrorWrapper<undefined>;
+export type GaiaControllerGetUserStoriesError = Fetcher.ErrorWrapper<undefined>;
 
-export type GaiaControllerGetUserFollowingResponse =
-  Schemas.SubsetStoryEntity[];
+export type GaiaControllerGetUserStoriesResponse = Schemas.SubsetStoryEntity[];
 
-export type GaiaControllerGetUserFollowingVariables = {
-  pathParams: GaiaControllerGetUserFollowingPathParams;
+export type GaiaControllerGetUserStoriesVariables = {
+  pathParams: GaiaControllerGetUserStoriesPathParams;
 } & SigleApiContext['fetcherOptions'];
 
 /**
- * Returns the stories stored in Gaia.
+ * Returns the stories stored in Gaia. Response is cached for 1 minute.
  */
-export const fetchGaiaControllerGetUserFollowing = (
-  variables: GaiaControllerGetUserFollowingVariables,
+export const fetchGaiaControllerGetUserStories = (
+  variables: GaiaControllerGetUserStoriesVariables,
   signal?: AbortSignal
 ) =>
   sigleApiFetch<
-    GaiaControllerGetUserFollowingResponse,
-    GaiaControllerGetUserFollowingError,
+    GaiaControllerGetUserStoriesResponse,
+    GaiaControllerGetUserStoriesError,
     undefined,
     {},
     {},
-    GaiaControllerGetUserFollowingPathParams
+    GaiaControllerGetUserStoriesPathParams
   >({
     url: '/api/gaia/{username}/stories',
     method: 'get',
@@ -1497,16 +1495,16 @@ export const fetchGaiaControllerGetUserFollowing = (
   });
 
 /**
- * Returns the stories stored in Gaia.
+ * Returns the stories stored in Gaia. Response is cached for 1 minute.
  */
-export const useGaiaControllerGetUserFollowing = <
-  TData = GaiaControllerGetUserFollowingResponse
+export const useGaiaControllerGetUserStories = <
+  TData = GaiaControllerGetUserStoriesResponse
 >(
-  variables: GaiaControllerGetUserFollowingVariables,
+  variables: GaiaControllerGetUserStoriesVariables,
   options?: Omit<
     reactQuery.UseQueryOptions<
-      GaiaControllerGetUserFollowingResponse,
-      GaiaControllerGetUserFollowingError,
+      GaiaControllerGetUserStoriesResponse,
+      GaiaControllerGetUserStoriesError,
       TData
     >,
     'queryKey' | 'queryFn' | 'initialData'
@@ -1515,17 +1513,17 @@ export const useGaiaControllerGetUserFollowing = <
   const { fetcherOptions, queryOptions, queryKeyFn } =
     useSigleApiContext(options);
   return reactQuery.useQuery<
-    GaiaControllerGetUserFollowingResponse,
-    GaiaControllerGetUserFollowingError,
+    GaiaControllerGetUserStoriesResponse,
+    GaiaControllerGetUserStoriesError,
     TData
   >({
     queryKey: queryKeyFn({
       path: '/api/gaia/{username}/stories',
-      operationId: 'gaiaControllerGetUserFollowing',
+      operationId: 'gaiaControllerGetUserStories',
       variables,
     }),
     queryFn: ({ signal }) =>
-      fetchGaiaControllerGetUserFollowing(
+      fetchGaiaControllerGetUserStories(
         { ...fetcherOptions, ...variables },
         signal
       ),
@@ -1602,6 +1600,6 @@ export type QueryOperation =
     }
   | {
       path: '/api/gaia/{username}/stories';
-      operationId: 'gaiaControllerGetUserFollowing';
-      variables: GaiaControllerGetUserFollowingVariables;
+      operationId: 'gaiaControllerGetUserStories';
+      variables: GaiaControllerGetUserStoriesVariables;
     };
