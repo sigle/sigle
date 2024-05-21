@@ -108,4 +108,4 @@ const auth: NextApiHandler = async (req, res) => {
   });
 };
 
-export default Sentry.withSentry(auth);
+export default auth;

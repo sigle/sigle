@@ -130,4 +130,4 @@ export const apiFeed: NextApiHandler = async (req, res) => {
   res.end(feed.rss2());
 };
 
-export default Sentry.withSentry(apiFeed);
+export default apiFeed;
