@@ -55,7 +55,7 @@ describe('getInitialProps', () => {
       ...params,
       res: { statusCode: 404 },
     } as any);
-    expect(Sentry.captureException).not.toBeCalled();
+    expect(Sentry.captureUnderscoreErrorException).not.toBeCalled();
     expect(res).toEqual({ statusCode: 404 });
   });
 
@@ -66,8 +66,15 @@ describe('getInitialProps', () => {
       res: { statusCode: 500 },
       err: error,
     } as any);
-    expect(Sentry.captureException).toBeCalledWith(error);
-    expect(res).toEqual({ hasGetInitialPropsRun: true, statusCode: 500 });
+    expect(Sentry.captureUnderscoreErrorException).toBeCalledWith({
+      asPath: '/login',
+      err: error,
+      req: {},
+      res: {
+        statusCode: 500,
+      },
+    });
+    expect(res).toEqual({ statusCode: 500 });
   });
 
   it('should report generic server error if no error passed down', async () => {
@@ -75,10 +82,14 @@ describe('getInitialProps', () => {
       ...params,
       res: { statusCode: 500 },
     } as any);
-    expect(Sentry.captureException).toBeCalledWith(
-      new Error('_error.js getInitialProps missing data at path: /login'),
-    );
-    expect(res).toEqual({ hasGetInitialPropsRun: true, statusCode: 500 });
+    expect(Sentry.captureUnderscoreErrorException).toBeCalledWith({
+      asPath: '/login',
+      req: {},
+      res: {
+        statusCode: 500,
+      },
+    });
+    expect(res).toEqual({ statusCode: 500 });
   });
 
   it('should report client errors to sentry', async () => {
@@ -90,8 +101,13 @@ describe('getInitialProps', () => {
       res: undefined,
       err: error,
     } as any);
-    expect(Sentry.captureException).toBeCalledWith(error);
-    expect(res).toEqual({ hasGetInitialPropsRun: true, statusCode: 500 });
+    expect(Sentry.captureUnderscoreErrorException).toBeCalledWith({
+      asPath: '/login',
+      err: error,
+      req: undefined,
+      res: undefined,
+    });
+    expect(res).toEqual({ statusCode: 500 });
   });
 
   it('should report generic client error if no error passed down', async () => {
@@ -100,27 +116,11 @@ describe('getInitialProps', () => {
       req: undefined,
       res: undefined,
     } as any);
-    expect(Sentry.captureException).toBeCalledWith(
-      new Error('_error.js getInitialProps missing data at path: /login'),
-    );
-    expect(res).toEqual({ hasGetInitialPropsRun: true, statusCode: 404 });
-  });
-});
-
-describe('Sentry ID', () => {
-  it('should display server error Sentry ID', async () => {
-    (useSession as jest.Mock).mockReturnValue({ status: 'unauthenticated' });
-    const sentryID = '737H3RJA3RRH237';
-    const { getByTestId } = render(
-      <QueryClientProvider client={queryClient}>
-        <MyError
-          sentryErrorId={sentryID}
-          statusCode={500}
-          errorMessage="Custom error message"
-        />
-      </QueryClientProvider>,
-    );
-    expect(getByTestId('error-id')).toBeInTheDocument();
-    expect(getByTestId('error-id')).toHaveTextContent(/737H3RJA3RRH237/);
+    expect(Sentry.captureUnderscoreErrorException).toBeCalledWith({
+      asPath: '/login',
+      req: undefined,
+      res: undefined,
+    });
+    expect(res).toEqual({ statusCode: 404 });
   });
 });
