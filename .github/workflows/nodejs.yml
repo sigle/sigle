@@ -31,7 +31,7 @@ jobs:
     name: Test sigle e2e
     runs-on: ubuntu-22.04
     container:
-      image: mcr.microsoft.com/playwright:v1.40.0-jammy
+      image: mcr.microsoft.com/playwright:v1.44.0-jammy
     steps:
       - uses: actions/checkout@v4
       - uses: ./.github/actions/setup-monorepo
@@ -60,7 +60,7 @@ jobs:
     name: Test custom domain e2e
     runs-on: ubuntu-22.04
     container:
-      image: mcr.microsoft.com/playwright:v1.40.0-jammy
+      image: mcr.microsoft.com/playwright:v1.44.0-jammy
     steps:
       - uses: actions/checkout@v4
       - uses: ./.github/actions/setup-monorepo
