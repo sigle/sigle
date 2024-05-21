@@ -98,8 +98,10 @@ export const getServerSideProps: GetServerSideProps<
     const stacksNamesApi = new NamesApi();
     nameInfo = await stacksNamesApi.getNameInfo({ name: username });
   } catch (error) {
-    // This will happen if there is no Stacks user with this name
-    if (error.status === 404) {
+    // 404 will happen if there is no Stacks user with this name
+    // 403 will happen if the username is suspicious, eg: moon.php as the hiro API
+    // will block the request
+    if (error.status === 404 || error.status === 403) {
       statusCode = 404;
     } else {
       statusCode = 500;
