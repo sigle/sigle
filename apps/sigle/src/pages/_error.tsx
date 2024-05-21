@@ -171,6 +171,11 @@ export const MyError = ({ statusCode, errorMessage }: ErrorProps) => {
 };
 
 MyError.getInitialProps = async (contextData: NextPageContext) => {
+  if (contextData.res?.statusCode === 404) {
+    // Opinionated: do not record an exception in Sentry for 404
+    return { statusCode: 404 };
+  }
+
   // In case this is running in a serverless function, await this in order to give Sentry
   // time to send the error before the lambda exits
   await Sentry.captureUnderscoreErrorException(contextData);
