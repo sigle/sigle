@@ -1,10 +1,9 @@
-import * as Sentry from '@sentry/nextjs';
 import { NextApiHandler } from 'next';
-import { lookupProfile } from '@stacks/auth';
 import { Feed } from 'feed';
-import { SettingsFile, StoryFile } from '../../../types';
-import { migrationSettings } from '../../../utils/migrations/settings';
-import { migrationStories } from '../../../utils/migrations/stories';
+import {
+  fetchGaiaControllerGetUserSettings,
+  fetchGaiaControllerGetUserStories,
+} from '@/__generated__/sigle-api';
 
 const escapeXml = (unsafe: string) => {
   return unsafe.replace(/[<>&'" ]/g, (c) => {
@@ -37,72 +36,18 @@ export const apiFeed: NextApiHandler = async (req, res) => {
   const appUrl = `${appProto}://${appHost}`;
   const blogLink = `${appUrl}/${username}`;
 
-  let userProfile;
-  try {
-    userProfile = await lookupProfile({ username });
-  } catch (error) {
-    // This will happen if there is no blockstack user with this name
-    if (error.message === 'Name not found') {
-      res.statusCode = 404;
-      res.end(`${username} not found`);
-      return;
-    }
-    Sentry.captureException(error);
-    res.statusCode = 500;
-    res.end(`Blockstack lookupProfile returned error: ${error.message}`);
-    return;
-  }
-
-  const bucketUrl: string | undefined =
-    userProfile && userProfile.apps && userProfile.apps[appUrl];
-  if (!bucketUrl) {
-    res.statusCode = 404;
-    res.end(`${username} is not using the app`);
-    return;
-  }
-
-  const [resPublicStories, resSettings] = await Promise.all([
-    fetch(`${bucketUrl}publicStories.json`),
-    fetch(`${bucketUrl}settings.json`),
+  const [settings, stories] = await Promise.all([
+    fetchGaiaControllerGetUserSettings({
+      pathParams: { username },
+    }),
+    fetchGaiaControllerGetUserStories({
+      pathParams: { username },
+    }),
   ]);
-
-  let file: StoryFile;
-  if (resPublicStories.status === 200) {
-    file = migrationStories(await resPublicStories.json());
-  } else if (resPublicStories.status === 404) {
-    // If file is not found we set an empty array to show an empty list
-    file = migrationStories();
-  } else {
-    Sentry.captureException(
-      `${username} failed to fetch public stories with code ${resPublicStories.status}`,
-    );
-    res.statusCode = 500;
-    res.end(
-      `${username} failed to fetch public stories with code ${resPublicStories.status}`,
-    );
-    return;
-  }
-
-  let settings: SettingsFile;
-  if (resSettings.status === 200) {
-    settings = migrationSettings(await resSettings.json());
-  } else if (resSettings.status === 404) {
-    // If file is not found we set an empty object
-    settings = migrationSettings();
-  } else {
-    Sentry.captureException(
-      `${username} failed to settings storied with code ${resSettings.status}`,
-    );
-    res.statusCode = 500;
-    res.end(
-      `${username} failed to settings storied with code ${resSettings.status}`,
-    );
-    return;
-  }
 
   const feed = new Feed({
     title: settings.siteName || username,
-    description: settings.siteDescription,
+    description: settings.siteDescription || undefined,
     id: blogLink,
     link: blogLink,
     favicon: `${appUrl}/favicon/apple-touch-icon.png`,
@@ -113,7 +58,7 @@ export const apiFeed: NextApiHandler = async (req, res) => {
     },
   });
 
-  file.stories.forEach((story) => {
+  stories.forEach((story) => {
     const storyLink = `${appUrl}/${username}/${story.id}`;
 
     feed.addItem({
