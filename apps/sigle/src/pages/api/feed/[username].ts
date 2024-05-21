@@ -1,6 +1,7 @@
 import { NextApiHandler } from 'next';
 import { Feed } from 'feed';
 import {
+  fetchGaiaControllerGetUserInfo,
   fetchGaiaControllerGetUserSettings,
   fetchGaiaControllerGetUserStories,
 } from '@/__generated__/sigle-api';
@@ -36,6 +37,15 @@ export const apiFeed: NextApiHandler = async (req, res) => {
   const appUrl = `${appProto}://${appHost}`;
   const blogLink = `${appUrl}/${username}`;
 
+  const userInfo = await fetchGaiaControllerGetUserInfo({
+    pathParams: { username },
+  });
+  if (!userInfo) {
+    res.statusCode = 404;
+    res.end(`Invalid ${username}`);
+    return;
+  }
+
   const [settings, stories] = await Promise.all([
     fetchGaiaControllerGetUserSettings({
       pathParams: { username },
@@ -45,9 +55,15 @@ export const apiFeed: NextApiHandler = async (req, res) => {
     }),
   ]);
 
+  if (!settings) {
+    res.statusCode = 404;
+    res.end(`${username} is not using the app`);
+    return;
+  }
+
   const feed = new Feed({
     title: settings.siteName || username,
-    description: settings.siteDescription || undefined,
+    description: settings.siteDescription || '',
     id: blogLink,
     link: blogLink,
     favicon: `${appUrl}/favicon/apple-touch-icon.png`,

@@ -148,6 +148,11 @@ export type VerifyEmailDto = {
   token: string;
 };
 
+export type UserInfoEntity = {
+  username: string;
+  address: string;
+};
+
 export type SubsetStoryEntity = {
   id: string;
   title: string;

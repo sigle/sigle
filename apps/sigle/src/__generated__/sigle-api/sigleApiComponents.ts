@@ -1461,6 +1461,68 @@ export const useEmailVerificationControllerResendEmail = (
   });
 };
 
+export type GaiaControllerGetUserInfoPathParams = {
+  username: string;
+};
+
+export type GaiaControllerGetUserInfoError = Fetcher.ErrorWrapper<undefined>;
+
+export type GaiaControllerGetUserInfoVariables = {
+  pathParams: GaiaControllerGetUserInfoPathParams;
+} & SigleApiContext['fetcherOptions'];
+
+/**
+ * Returns the user blockchain info. Response is cached for 1 minute.
+ */
+export const fetchGaiaControllerGetUserInfo = (
+  variables: GaiaControllerGetUserInfoVariables,
+  signal?: AbortSignal
+) =>
+  sigleApiFetch<
+    Schemas.UserInfoEntity,
+    GaiaControllerGetUserInfoError,
+    undefined,
+    {},
+    {},
+    GaiaControllerGetUserInfoPathParams
+  >({ url: '/api/gaia/{username}/info', method: 'get', ...variables, signal });
+
+/**
+ * Returns the user blockchain info. Response is cached for 1 minute.
+ */
+export const useGaiaControllerGetUserInfo = <TData = Schemas.UserInfoEntity>(
+  variables: GaiaControllerGetUserInfoVariables,
+  options?: Omit<
+    reactQuery.UseQueryOptions<
+      Schemas.UserInfoEntity,
+      GaiaControllerGetUserInfoError,
+      TData
+    >,
+    'queryKey' | 'queryFn' | 'initialData'
+  >
+) => {
+  const { fetcherOptions, queryOptions, queryKeyFn } =
+    useSigleApiContext(options);
+  return reactQuery.useQuery<
+    Schemas.UserInfoEntity,
+    GaiaControllerGetUserInfoError,
+    TData
+  >({
+    queryKey: queryKeyFn({
+      path: '/api/gaia/{username}/info',
+      operationId: 'gaiaControllerGetUserInfo',
+      variables,
+    }),
+    queryFn: ({ signal }) =>
+      fetchGaiaControllerGetUserInfo(
+        { ...fetcherOptions, ...variables },
+        signal
+      ),
+    ...options,
+    ...queryOptions,
+  });
+};
+
 export type GaiaControllerGetUserStoriesPathParams = {
   username: string;
 };
@@ -1737,6 +1799,11 @@ export type QueryOperation =
       path: '/api/newsletters/senders';
       operationId: 'newslettersControllerGetSenders';
       variables: NewslettersControllerGetSendersVariables;
+    }
+  | {
+      path: '/api/gaia/{username}/info';
+      operationId: 'gaiaControllerGetUserInfo';
+      variables: GaiaControllerGetUserInfoVariables;
     }
   | {
       path: '/api/gaia/{username}/stories';
