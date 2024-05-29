@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import { evaluate } from './utils.js';
 
 export interface Story {
   /**
@@ -84,7 +85,7 @@ export interface Story {
 export const StorySchema = z.object({
   id: z.string(),
   title: z.string(),
-  content: z.unknown(),
+  content: z.union([z.string(), z.record(z.unknown())]),
   contentVersion: z.literal('2').optional(),
   coverImage: z.string().optional(),
   type: z.union([z.literal('private'), z.literal('public')]),
@@ -97,3 +98,7 @@ export const StorySchema = z.object({
   createdAt: z.number(),
   updatedAt: z.number(),
 });
+
+export function createStory(data: Story): Story {
+  return evaluate(StorySchema.safeParse(data));
+}
