@@ -12,7 +12,8 @@
     "./package.json": "./package.json"
   },
   "scripts": {
-    "build": "tsup"
+    "build": "tsup",
+    "test": "vitest"
   },
   "peerDependencies": {
     "zod": "^3.23.0"
@@ -22,6 +23,7 @@
     "@types/node": "20.12.13",
     "tsup": "8.0.2",
     "typescript": "5.3.3",
+    "vitest": "1.6.0",
     "zod": "3.23.8"
   }
 }

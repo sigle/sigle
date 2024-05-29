@@ -3,7 +3,8 @@
   "extends": "@tsconfig/recommended/tsconfig.json",
   "compilerOptions": {
     "target": "ESNext",
-    "module": "ESNext"
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext"
   },
   "include": ["**/*.ts"],
   "exclude": ["dist", "node_modules"]
