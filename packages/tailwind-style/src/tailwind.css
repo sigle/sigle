@@ -1,9 +1,0 @@
-@tailwind base;
-@tailwind components;
-
-@layer base {
-  input::placeholder,
-  textarea::placeholder {
-    color: var(--colors-gray8);
-  }
-}
