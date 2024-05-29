@@ -137,6 +137,7 @@ export const generateRandomId = nanoid;
 
 export const createNewEmptyStory = (): Story => {
   const now = Date.now();
+
   return {
     id: generateRandomId(),
     type: 'private',

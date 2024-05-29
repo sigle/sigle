@@ -331,6 +331,9 @@ importers:
       '@sentry/nextjs':
         specifier: 8.2.1
         version: 8.2.1(@opentelemetry/api@1.8.0)(@opentelemetry/core@1.24.1(@opentelemetry/api@1.8.0))(@opentelemetry/instrumentation@0.51.1(@opentelemetry/api@1.8.0))(@opentelemetry/sdk-trace-base@1.24.1(@opentelemetry/api@1.8.0))(@opentelemetry/semantic-conventions@1.24.1)(next@14.2.3(@babel/core@7.23.9)(@opentelemetry/api@1.8.0)(@playwright/test@1.44.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)(sass@1.69.4))(react@18.2.0)(webpack@5.89.0)
+      '@sigle/client':
+        specifier: workspace:*
+        version: link:../../packages/client
       '@sigle/slate-to-html':
         specifier: 1.0.0
         version: 1.0.0(immutable@4.0.0-rc.12)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
@@ -730,10 +733,10 @@ importers:
         version: 20.12.13
       tsup:
         specifier: 8.0.2
-        version: 8.0.2(@swc/core@1.3.99)(postcss@8.4.38)(ts-node@10.9.1(@swc/core@1.3.99)(@types/node@20.12.13)(typescript@5.3.3))(typescript@5.3.3)
+        version: 8.0.2(@swc/core@1.3.99)(postcss@8.4.38)(ts-node@10.9.1(@swc/core@1.3.99)(@types/node@20.12.13)(typescript@5.4.5))(typescript@5.4.5)
       typescript:
-        specifier: 5.3.3
-        version: 5.3.3
+        specifier: 5.4.5
+        version: 5.4.5
       vitest:
         specifier: 1.6.0
         version: 1.6.0(@types/node@20.12.13)(jsdom@20.0.3)(sass@1.69.4)(terser@5.27.0)
@@ -9091,6 +9094,11 @@ packages:
 
   typescript@5.3.3:
     resolution: {integrity: sha512-pXWcraxM0uxAS+tN0AG/BF2TyqmHO014Z070UsJ+pFvYuRSq8KH8DmWpnbXe0pEPDHXZV3FcAbJkijJ5oNEnWw==}
+    engines: {node: '>=14.17'}
+    hasBin: true
+
+  typescript@5.4.5:
+    resolution: {integrity: sha512-vcI4UpRgg81oIRUFwR0WSIHKt11nJ7SAVlYNIu+QpqeyXP+gpQJy/Z4+F0aGxSE4MqwjyXvW/TzgkLAx2AGHwQ==}
     engines: {node: '>=14.17'}
     hasBin: true
 
@@ -18370,13 +18378,13 @@ snapshots:
       postcss: 8.4.31
       ts-node: 10.9.1(@swc/core@1.3.99(@swc/helpers@0.5.5))(@types/node@18.15.11)(typescript@5.3.3)
 
-  postcss-load-config@4.0.1(postcss@8.4.38)(ts-node@10.9.1(@swc/core@1.3.99)(@types/node@20.12.13)(typescript@5.3.3)):
+  postcss-load-config@4.0.1(postcss@8.4.38)(ts-node@10.9.1(@swc/core@1.3.99)(@types/node@20.12.13)(typescript@5.4.5)):
     dependencies:
       lilconfig: 2.1.0
       yaml: 2.3.4
     optionalDependencies:
       postcss: 8.4.38
-      ts-node: 10.9.1(@swc/core@1.3.99)(@types/node@20.12.13)(typescript@5.3.3)
+      ts-node: 10.9.1(@swc/core@1.3.99)(@types/node@20.12.13)(typescript@5.4.5)
 
   postcss-nested@6.0.1(postcss@8.4.31):
     dependencies:
@@ -19789,7 +19797,7 @@ snapshots:
     optionalDependencies:
       '@swc/core': 1.3.99(@swc/helpers@0.5.5)
 
-  ts-node@10.9.1(@swc/core@1.3.99)(@types/node@20.12.13)(typescript@5.3.3):
+  ts-node@10.9.1(@swc/core@1.3.99)(@types/node@20.12.13)(typescript@5.4.5):
     dependencies:
       '@cspotcode/source-map-support': 0.8.1
       '@tsconfig/node10': 1.0.9
@@ -19803,7 +19811,7 @@ snapshots:
       create-require: 1.1.1
       diff: 4.0.2
       make-error: 1.3.6
-      typescript: 5.3.3
+      typescript: 5.4.5
       v8-compile-cache-lib: 3.0.1
       yn: 3.1.1
     optionalDependencies:
@@ -19855,7 +19863,7 @@ snapshots:
 
   tslib@2.6.2: {}
 
-  tsup@8.0.2(@swc/core@1.3.99)(postcss@8.4.38)(ts-node@10.9.1(@swc/core@1.3.99)(@types/node@20.12.13)(typescript@5.3.3))(typescript@5.3.3):
+  tsup@8.0.2(@swc/core@1.3.99)(postcss@8.4.38)(ts-node@10.9.1(@swc/core@1.3.99)(@types/node@20.12.13)(typescript@5.4.5))(typescript@5.4.5):
     dependencies:
       bundle-require: 4.1.0(esbuild@0.19.12)
       cac: 6.7.14
@@ -19865,7 +19873,7 @@ snapshots:
       execa: 5.1.1
       globby: 11.1.0
       joycon: 3.1.1
-      postcss-load-config: 4.0.1(postcss@8.4.38)(ts-node@10.9.1(@swc/core@1.3.99)(@types/node@20.12.13)(typescript@5.3.3))
+      postcss-load-config: 4.0.1(postcss@8.4.38)(ts-node@10.9.1(@swc/core@1.3.99)(@types/node@20.12.13)(typescript@5.4.5))
       resolve-from: 5.0.0
       rollup: 4.18.0
       source-map: 0.8.0-beta.0
@@ -19874,7 +19882,7 @@ snapshots:
     optionalDependencies:
       '@swc/core': 1.3.99(@swc/helpers@0.5.5)
       postcss: 8.4.38
-      typescript: 5.3.3
+      typescript: 5.4.5
     transitivePeerDependencies:
       - supports-color
       - ts-node
@@ -19994,6 +20002,8 @@ snapshots:
   typescript@5.2.2: {}
 
   typescript@5.3.3: {}
+
+  typescript@5.4.5: {}
 
   uc.micro@1.0.6: {}
 
