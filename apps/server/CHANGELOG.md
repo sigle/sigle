@@ -1,5 +1,20 @@
 # @sigle/server
 
+## 0.6.0
+
+### Minor Changes
+
+- 4190a9f: Remove micro-stacks and use @stacks/\* packages.
+- ddde83a: Move server to apps folder in the monorepo.
+- f786ca8: Create new server routes to fetch the gaia files.
+- 15f6e3f: Upgrade from node 18 to node 20.
+
+### Patch Changes
+
+- 7d39310: Change the tsconfig to be strict.
+- 5d6fb9b: Fix to better handle the case where a user has a free subdomain and a .btc domain linked to the same address.
+- b1bbfba: Upgrade packages with many major versions (prisma 5, nestjs/throttler 5, ...)
+
 ## 0.5.0
 
 ### Minor Changes
