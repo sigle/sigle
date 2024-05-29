@@ -1,4 +1,4 @@
-name: Node CI
+name: CI
 
 on:
   push:
@@ -8,12 +8,19 @@ on:
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
-  cancel-in-progress: true
 
 jobs:
+  setup-monorepo:
+    name: Setup Monorepo
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/setup-monorepo
+
   build:
     name: Build and Test
     runs-on: ubuntu-22.04
+    needs: setup-monorepo
     steps:
       - uses: actions/checkout@v4
       - uses: ./.github/actions/setup-monorepo
@@ -30,6 +37,7 @@ jobs:
   test-sigle-e2e:
     name: Test sigle e2e
     runs-on: ubuntu-22.04
+    needs: build
     container:
       image: mcr.microsoft.com/playwright:v1.44.0-jammy
     steps:
@@ -59,6 +67,7 @@ jobs:
   test-custom-domain-e2e:
     name: Test custom domain e2e
     runs-on: ubuntu-22.04
+    needs: build
     container:
       image: mcr.microsoft.com/playwright:v1.44.0-jammy
     steps:
@@ -88,6 +97,7 @@ jobs:
   test-server-e2e:
     name: Test server e2e
     runs-on: ubuntu-22.04
+    needs: build
     defaults:
       run:
         working-directory: apps/server
