@@ -14,7 +14,12 @@
   "scripts": {
     "build": "tsup"
   },
+  "peerDependencies": {
+    "zod": "^3.23.0"
+  },
   "devDependencies": {
+    "@tsconfig/recommended": "1.0.6",
+    "@types/node": "20.12.13",
     "tsup": "8.0.2",
     "typescript": "5.3.3",
     "zod": "3.23.8"
