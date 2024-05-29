@@ -1,5 +1,5 @@
 import { expect, test } from 'vitest';
-import { StorySchema } from './story.js';
+import { StorySchema, createStory } from './story.js';
 
 test('StorySchema should validate a valid story object', () => {
   const validStory = {
@@ -29,4 +29,19 @@ test('StorySchema should fail to validate an invalid story object', () => {
   const result = StorySchema.safeParse(invalidStory);
 
   expect(result.success).toBe(false);
+});
+
+test('createStory should return a valid story object', () => {
+  const validStory = {
+    id: '123',
+    title: 'My Story',
+    content: {},
+    type: 'public',
+    createdAt: 1629876543,
+    updatedAt: 1629876543,
+  } as const;
+
+  const result = createStory(validStory);
+
+  expect(result).toEqual(validStory);
 });
