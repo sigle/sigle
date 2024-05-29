@@ -1,5 +1,52 @@
 # @sigle/app
 
+## 1.8.0
+
+### Minor Changes
+
+- 2b4c09c: Add redirection shortlinks, eg: /github, /gamma etc.
+- fc904ca: New mobile drawer menu.
+- fbdf1bb: Auto-generate react-query hooks from server openapi spec.
+- 4b79196: Create migration flow for the old legacy accounts.
+- e822f67: Remove "Blockstack connect" (legacy login) from the app.
+- d1b9877: Improve contributing workflow and onboarding documents. Introduce a new Docker Compose file to easily run all the services locally.
+- 97d8e57: Move sigle to apps folder in the monorepo.
+- 9f5fbcf: Use next/font to optimise the font loading process.
+- fec6a40: Change register username page to point users to buy a new .btc username as the subdomains registration is currently not working.
+- 15f6e3f: Upgrade from node 18 to node 20.
+
+### Patch Changes
+
+- 078514a: New route that handles a new story creation.
+- e61fadb: Fix error 500 when Hiro API block the request.
+- ce273c6: Use new design system Dialog component.
+- 945c13c: Use new design system Tooltip component.
+- 3635954: Add Tailwind to the sigle instead of relying on the @sigle/tailwind-style package.
+- ad6ab06: Use route handlers for shortlinks.
+- 918b8db: Use new design system ScrollArea component.
+- d01e288: Upgrade Stacks packages and update Hiro wallet references to Leather wallet.
+- 9f5fbcf: Create an optimised docker image with layers to run the E2E tests locally.
+- df61278: Set public stories meta robots as nofollow to avoid spammers to use Sigle as a backlink.
+- fc904ca: Use new design system Switch component.
+- 0cdc950: Use new design system HoverCard component.
+- 476714a: Fix canonical url creating duplicated user content with custom domain.
+- 3727425: Remove next.js page extension in files.
+- 352d81f: Migrate app header to new design system.
+- 26d2c46: New eslint rule to configure import order.
+- fcc10f1: Lazy load the story list in the dashboard to do less calls to Gaia and avoid getting rate limited.
+- 568b93e: Refactor app header component.
+- 85d5b8e: Use new design system Tab component.
+- 9f73ece: Upgrade next.js to v14.
+- c47af3a: Fix to better handle the case where a user has a free subdomain and a .btc domain linked to the same address.
+- ccb83fa: Lazy load images in story cards to do less calls to Gaia and avoid getting rate limited.
+- 90464f6: Change chrome e2e flags to make tests more consistants.
+- 8c2555d: Use new design system RadioGroup component.
+- 992bd61: Setup @radix-ui/themes configuration for the new design system.
+- cba2dd7: Update Stacks.js deps to fix a wallet select issue when logging in.
+- 8a5feec: Add sonner instead of react-toastify for the toast components.
+- 5f4b7c2: Migrate to sentry 8.
+- d82a66c: Use new design system DropdownMenu component.
+
 ## 1.7.0
 
 ### Minor Changes
