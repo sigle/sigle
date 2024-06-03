@@ -4,11 +4,26 @@ import { GaiaService } from './gaia.service';
 import { SubsetStoryEntity } from './entities/subsetStory.entity';
 import { StoryEntity } from './entities/story.entity';
 import { SettingsEntity } from './entities/settings.entity';
+import { UserInfoEntity } from './entities/userInfo.entity';
 
 @ApiTags('gaia')
 @Controller()
 export class GaiaController {
   constructor(private readonly gaiaService: GaiaService) {}
+
+  @ApiOperation({
+    description:
+      'Returns the user blockchain info. Response is cached for 1 minute.',
+  })
+  @ApiOkResponse({
+    type: UserInfoEntity,
+  })
+  @Get('/api/gaia/:username/info')
+  getUserInfo(
+    @Param('username') username: string,
+  ): Promise<UserInfoEntity | null> {
+    return this.gaiaService.getUserInfo({ username });
+  }
 
   @ApiOperation({
     description:
