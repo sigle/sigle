@@ -14,10 +14,9 @@ export interface Story {
   title: string;
 
   /**
-   * JSON representing the slate.js structure of the story
+   * HTML content of the story
    */
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  content: any;
+  content: string;
 
   /**
    * Version representing the format of the content
@@ -25,7 +24,7 @@ export interface Story {
    * v1: Slate.js JSON
    * v2: TipTap HTML
    */
-  contentVersion?: '2';
+  contentVersion: '2';
 
   /**
    * Image used to display the cards
@@ -85,8 +84,8 @@ export interface Story {
 export const StorySchema = z.object({
   id: z.string(),
   title: z.string(),
-  content: z.union([z.string(), z.record(z.unknown())]),
-  contentVersion: z.literal('2').optional(),
+  content: z.string(),
+  contentVersion: z.literal('2'),
   coverImage: z.string().optional(),
   type: z.union([z.literal('private'), z.literal('public')]),
   metaTitle: z.string().optional(),
