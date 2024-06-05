@@ -98,6 +98,6 @@ export const GaiaStoryV2Schema = z.object({
   updatedAt: z.number(),
 });
 
-export function createStory(data: GaiaStoryV2): GaiaStoryV2 {
+export function createGaiaStoryV2(data: GaiaStoryV2): GaiaStoryV2 {
   return evaluate(GaiaStoryV2Schema.safeParse(data));
 }

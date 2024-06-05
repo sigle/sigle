@@ -1,7 +1,7 @@
 import { expect, test } from 'vitest';
-import { GaiaStoryV2Schema, createStory } from './story-v2.js';
+import { GaiaStoryV2Schema, createGaiaStoryV2 } from './story-v2.js';
 
-test('StorySchema should validate a valid story object', () => {
+test('GaiaStoryV2Schema should validate a valid story object', () => {
   const validStory = {
     id: '123',
     title: 'My Story',
@@ -17,7 +17,7 @@ test('StorySchema should validate a valid story object', () => {
   expect(result.success).toBe(true);
 });
 
-test('StorySchema should fail to validate an invalid story object', () => {
+test('GaiaStoryV2Schema should fail to validate an invalid story object', () => {
   const invalidStory = {
     id: '123',
     title: 'My Story',
@@ -32,7 +32,7 @@ test('StorySchema should fail to validate an invalid story object', () => {
   expect(result.success).toBe(false);
 });
 
-test('createStory should return a valid story object', () => {
+test('createGaiaStoryV2 should return a valid story object', () => {
   const validStory = {
     id: '123',
     title: 'My Story',
@@ -43,7 +43,7 @@ test('createStory should return a valid story object', () => {
     updatedAt: 1629876543,
   } as const;
 
-  const result = createStory(validStory);
+  const result = createGaiaStoryV2(validStory);
 
   expect(result).toEqual(validStory);
 });
