@@ -1,1 +1,1 @@
-export * from './story.js';
+export * from './gaia/story-v2.js';

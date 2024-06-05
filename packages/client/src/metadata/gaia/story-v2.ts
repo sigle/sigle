@@ -1,7 +1,7 @@
 import { z } from 'zod';
-import { evaluate } from './utils.js';
+import { evaluate } from '../utils.js';
 
-export interface Story {
+export interface GaiaStoryV2 {
   /**
    * Random id also used in the url
    * Have to be unique
@@ -81,7 +81,7 @@ export interface Story {
   updatedAt: number;
 }
 
-export const StorySchema = z.object({
+export const GaiaStoryV2Schema = z.object({
   id: z.string(),
   title: z.string(),
   content: z.string(),
@@ -98,6 +98,6 @@ export const StorySchema = z.object({
   updatedAt: z.number(),
 });
 
-export function createStory(data: Story): Story {
-  return evaluate(StorySchema.safeParse(data));
+export function createStory(data: GaiaStoryV2): GaiaStoryV2 {
+  return evaluate(GaiaStoryV2Schema.safeParse(data));
 }
