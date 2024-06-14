@@ -30,6 +30,7 @@ import {
   FormRow,
   FormTextarea,
 } from '../../../ui/Form';
+import { DeleteStory } from '@/components/editor/settings/delete-story';
 
 const StyledFormInput = styled(FormInput, {
   width: '100%',
@@ -137,7 +138,6 @@ export const EditorSettings = ({
   onSave,
 }: EditorSettingsProps) => {
   const router = useRouter();
-  const [loadingDelete, setLoadingDelete] = useState(false);
 
   const formik = useFormik<StorySettingsFormValues>({
     initialValues: {
@@ -189,36 +189,6 @@ export const EditorSettings = ({
       setSubmitting(false);
     },
   });
-
-  const handleDelete = async (
-    event: React.MouseEvent<HTMLButtonElement, MouseEvent>,
-  ) => {
-    event.preventDefault();
-    try {
-      const result = window.confirm('Do you really want to delete this story?');
-      if (!result) {
-        return;
-      }
-
-      setLoadingDelete(true);
-      const file = await getStoriesFile();
-      const index = file.stories.findIndex((s) => s.id === story.id);
-      if (index === -1) {
-        throw new Error('File not found in list');
-      }
-      file.stories.splice(index, 1);
-      await saveStoriesFile(file);
-      await deleteStoryFile(story);
-      await fetchStoriesControllerDelete({
-        body: { id: story.id },
-      });
-      router.push(`/`);
-    } catch (error) {
-      console.error(error);
-      toast.error(error.message);
-      setLoadingDelete(false);
-    }
-  };
 
   const canonicalUrlInfo =
     'https://developers.google.com/search/docs/crawling-indexing/consolidate-duplicate-urls';
@@ -415,23 +385,7 @@ export const EditorSettings = ({
             }}
           >
             <SaveRow>
-              {loadingDelete ? (
-                <Button variant="ghost" color="orange" size="lg" disabled>
-                  <TrashIcon />
-                  <span>Deleting ...</span>
-                </Button>
-              ) : (
-                <Button
-                  css={{ display: 'flex', gap: '$2' }}
-                  size="lg"
-                  onClick={handleDelete}
-                  variant="ghost"
-                  color="orange"
-                >
-                  <span>Delete this story</span>
-                  <TrashIcon />
-                </Button>
-              )}
+              <DeleteStory storyId={story.id} />
               <Button
                 size="lg"
                 color="orange"
