@@ -38,11 +38,11 @@ const MobileScroll = Extension.create({
 
               const scrollTop = options?.computeScrollTop
                 ? options.computeScrollTop()
-                : options?.scrollerElement?.scrollTop ??
+                : (options?.scrollerElement?.scrollTop ??
                   (window.pageYOffset ||
                     document.documentElement.scrollTop ||
                     document.body.scrollTop) ??
-                  -1;
+                  -1);
 
               if (scrollTop === -1) {
                 options?.debugMode &&
