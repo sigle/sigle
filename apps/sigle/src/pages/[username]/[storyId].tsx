@@ -235,6 +235,11 @@ export const getServerSideProps: GetServerSideProps<
     res.statusCode = statusCode as number;
   }
 
+  if (file && (file as any).ephemeralPK) {
+    statusCode = 500;
+    errorMessage = 'Encrypted version published';
+  }
+
   return {
     props: {
       statusCode,
