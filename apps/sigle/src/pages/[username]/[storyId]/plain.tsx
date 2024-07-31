@@ -47,10 +47,6 @@ export default function Plain() {
 
       const bucketUrl = userProfile?.apps?.[appUrl];
       const file = await fetchPublicStory(bucketUrl, storyId);
-
-      const dataa = await getStoryFile(storyId);
-      console.log(dataa);
-
       return file.file;
     },
   );
@@ -59,7 +55,7 @@ export default function Plain() {
     ['decrypted-story', storyId],
     async () => {
       const data = await getStoryFile(storyId);
-      return data;
+      return data ?? null;
     },
   );
 
