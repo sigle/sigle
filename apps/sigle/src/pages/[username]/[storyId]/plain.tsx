@@ -1,5 +1,3 @@
-import { Story } from '@/types';
-import { getStoryFile } from '@/utils';
 import { Container, Heading, Text } from '@radix-ui/themes';
 import {
   BnsGetNameInfoResponse,
@@ -8,6 +6,8 @@ import {
 import { resolveZoneFileToProfile } from '@stacks/profile';
 import { useQuery } from '@tanstack/react-query';
 import { useRouter } from 'next/router';
+import { getStoryFile } from '@/utils';
+import { Story } from '@/types';
 
 const fetchPublicStory = async (
   bucketUrl: string,
