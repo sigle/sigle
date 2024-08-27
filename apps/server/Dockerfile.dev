@@ -3,7 +3,7 @@ ENV APP_NAME="server"
 ENV PNPM_HOME="/pnpm"
 ENV PATH="$PNPM_HOME:$PATH"
 RUN corepack enable pnpm
-RUN npm i -g turbo
+RUN npm i -g turbo@2
 RUN apk add --no-cache libc6-compat python3 g++ make
 RUN apk update
 
@@ -11,7 +11,7 @@ FROM base AS builder
 # Set working directory
 WORKDIR /app
 COPY . .
-RUN turbo prune --scope=@sigle/$APP_NAME --docker
+RUN turbo prune @sigle/$APP_NAME --docker
 
 # Add lockfile and package.json's of isolated subworkspace
 FROM base AS installer

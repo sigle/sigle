@@ -31,7 +31,7 @@ RUN apk add --no-cache libc6-compat
 # Setup pnpm and turbo on the alpine base
 FROM alpine AS base
 RUN corepack enable pnpm
-RUN npm i -g turbo
+RUN npm i -g turbo@2
 RUN pnpm config set store-dir ~/.pnpm-store
 
 # Prune projects
@@ -39,7 +39,7 @@ FROM base AS pruner
 
 WORKDIR /app
 COPY . .
-RUN turbo prune --scope=$PROJECT --docker
+RUN turbo prune $PROJECT --docker
 
 # Build the project
 FROM base AS builder
