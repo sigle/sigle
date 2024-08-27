@@ -126,6 +126,7 @@ export const TipTapEditor = forwardRef<
   const isMobile = width < 768;
 
   const editor = useEditor({
+    immediatelyRender: false,
     editable,
     extensions: [
       CharacterCount,
