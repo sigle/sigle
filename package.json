@@ -1,6 +1,7 @@
 {
+  "name": "root",
   "private": true,
-  "packageManager": "pnpm@9.1.1",
+  "packageManager": "pnpm@9.6.0",
   "engines": {
     "node": ">=20"
   },
@@ -20,10 +21,10 @@
     "**/*": "prettier --write --ignore-unknown"
   },
   "devDependencies": {
-    "@changesets/cli": "2.27.1",
-    "husky": "9.0.11",
-    "lint-staged": "15.2.2",
+    "@changesets/cli": "2.27.7",
+    "husky": "9.1.5",
+    "lint-staged": "15.2.9",
     "prettier": "3.3.3",
-    "turbo": "1.13.3"
+    "turbo": "2.1.0"
   }
 }

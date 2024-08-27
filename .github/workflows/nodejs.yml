@@ -43,7 +43,7 @@ jobs:
       - name: Build
         run: |
           cp apps/sigle/.env.e2e apps/sigle/.env.production.local
-          pnpm build --scope=@sigle/app
+          pnpm build --filter=@sigle/app
 
       - name: Run e2e tests
         run: pnpm run test:e2e
@@ -72,7 +72,7 @@ jobs:
       - name: Build
         run: |
           cp apps/custom-domain/.env.e2e apps/custom-domain/.env.production.local
-          pnpm build --scope=@sigle/custom-domain
+          pnpm build --filter=@sigle/custom-domain
 
       - name: Run e2e tests
         run: pnpm run test:e2e
