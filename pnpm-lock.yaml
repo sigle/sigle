@@ -162,6 +162,9 @@ importers:
       '@sentry/node':
         specifier: 7.81.1
         version: 7.81.1
+      '@sigle/client':
+        specifier: workspace:*
+        version: link:../../packages/client
       '@stacks/auth':
         specifier: 6.11.3
         version: 6.11.3

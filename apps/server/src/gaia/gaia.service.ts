@@ -1,8 +1,9 @@
-import { SettingsFile, Story, SubsetStory } from '../external/gaia';
+import { Story, SubsetStory } from '../external/gaia';
 import { StacksService } from '../stacks/stacks.service';
 import { CACHE_MANAGER } from '@nestjs/cache-manager';
 import { Inject, Injectable } from '@nestjs/common';
 import { Cache } from 'cache-manager';
+import { GaiaSettings } from '@sigle/client';
 
 @Injectable()
 export class GaiaService {
@@ -76,7 +77,7 @@ export class GaiaService {
     username,
   }: {
     username: string;
-  }): Promise<SettingsFile | null> {
+  }): Promise<GaiaSettings | null> {
     const bucketUrl = await this.getCachedBucketUrl(username);
 
     if (!bucketUrl) {
