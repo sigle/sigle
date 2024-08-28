@@ -2,8 +2,8 @@ import { Story, SubsetStory } from '../external/gaia';
 import { StacksService } from '../stacks/stacks.service';
 import { CACHE_MANAGER } from '@nestjs/cache-manager';
 import { Inject, Injectable } from '@nestjs/common';
-import { Cache } from 'cache-manager';
 import { GaiaSettings } from '@sigle/client';
+import { Cache } from 'cache-manager';
 
 @Injectable()
 export class GaiaService {
