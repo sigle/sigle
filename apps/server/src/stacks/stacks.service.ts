@@ -1,12 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { lookupProfile } from '@stacks/auth';
-import {
-  migrationStories,
-  SettingsFile,
-  Story,
-  SubsetStory,
-} from '../external/gaia';
+import { GaiaSettings } from '@sigle/client';
+import { migrationStories, Story, SubsetStory } from '../external/gaia';
 import { fetch } from 'undici';
 import { EnvironmentVariables } from '../environment/environment.validation';
 
@@ -99,7 +95,7 @@ export class StacksService {
     bucketUrl,
   }: {
     bucketUrl: string;
-  }): Promise<SettingsFile> {
+  }): Promise<GaiaSettings> {
     const resPublicSettings = await fetch(
       `${bucketUrl}${this.settingsFileName}`,
     );
@@ -107,6 +103,6 @@ export class StacksService {
     if (resPublicSettings.status !== 200) {
       return {};
     }
-    return (await resPublicSettings.json()) as SettingsFile;
+    return (await resPublicSettings.json()) as GaiaSettings;
   }
 }
