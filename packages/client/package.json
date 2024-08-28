@@ -16,7 +16,7 @@
     "test": "vitest"
   },
   "dependencies": {
-    "zod-validation-error": "3.3.0"
+    "zod-validation-error": "3.3.1"
   },
   "peerDependencies": {
     "zod": "^3.23.0"
