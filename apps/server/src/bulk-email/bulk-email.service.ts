@@ -5,7 +5,8 @@ import { compile } from 'handlebars';
 import { format } from 'date-fns';
 import mjml2html from 'mjml';
 import { InjectSentry, SentryService } from '@ntegral/nestjs-sentry';
-import { SettingsFile, Story } from '../external/gaia';
+import { GaiaSettings } from '@sigle/client';
+import { Story } from '../external/gaia';
 import { generateAvatar } from '../utils';
 import { sites } from '../sites';
 
@@ -141,7 +142,7 @@ export class BulkEmailService {
     stacksAddress: string;
     username: string;
     story: Story;
-    settings: SettingsFile;
+    settings: GaiaSettings;
   }): string {
     // Resolve custom domain users
     const customDomainUser = Object.keys(sites).find(
@@ -190,7 +191,7 @@ export class BulkEmailService {
     stacksAddress: string;
     username: string;
     story: Story;
-    settings: SettingsFile;
+    settings: GaiaSettings;
   }): string {
     if (story.contentVersion !== '2') {
       throw new Error('Story content version 1 not allowed.');

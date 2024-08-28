@@ -52,6 +52,7 @@
     "@ntegral/nestjs-sentry": "4.0.0",
     "@prisma/client": "5.6.0",
     "@sentry/node": "7.81.1",
+    "@sigle/client": "workspace:*",
     "@stacks/auth": "6.11.3",
     "@stacks/blockchain-api-client": "7.14.1",
     "@stacks/transactions": "6.16.1",
