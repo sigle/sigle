@@ -71,7 +71,7 @@ export async function sigleApiFetch<
       body = {};
     }
 
-    const response = await window.fetch(
+    const response = await fetch(
       `${baseUrl}${resolveUrl(url, queryParams, pathParams)}`,
       {
         signal,
