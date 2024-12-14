@@ -8,7 +8,7 @@ import { makeProfileZoneFile } from '@stacks/profile';
 import posthog from 'posthog-js';
 import * as Fathom from 'fathom-client';
 import { ArrowLeftIcon, QuestionMarkCircledIcon } from '@radix-ui/react-icons';
-import { Heading, Link, Text } from '@radix-ui/themes';
+import { Heading, Text } from '@radix-ui/themes';
 import { Button, Flex, FormControlGroup, FormInput, Typography } from '../ui';
 import { LoginLayout } from '../modules/layout/components/LoginLayout';
 import { keyframes, styled } from '../stitches.config';
