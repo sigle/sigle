@@ -16,7 +16,7 @@ export const Protected = ({ children }: Props) => {
 
   useEffect(() => {
     const checkBnsConfiguration = async () => {
-      if (user && user.username) {
+      if (user?.username && user.username !== 'bypass-username') {
         try {
           const namesResponse = await fetch(
             `https://api.hiro.so/v1/names/${user.username}`,

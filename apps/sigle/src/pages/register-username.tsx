@@ -349,12 +349,9 @@ const RegisterUsername = () => {
         {user?.profile.stxAddress.mainnet}.
       </Text>
       <Text as="p">
-        In order to use Sigle, you need a Stacks BNS. You can buy a new .btc
-        domain at{' '}
-        <Link href="https://btc.us/" target="_blank" rel="noreferrer">
-          btc.us
-        </Link>
-        .
+        In order to use Sigle, you need a Stacks BNS V1. If you have a Stacks
+        BNS V2, keep an eye on the discord announcements to know when it will be
+        supported.
       </Text>
       <Button
         variant="ghost"

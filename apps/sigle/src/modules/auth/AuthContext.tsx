@@ -105,6 +105,19 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
     }
 
     /**
+     * Add a way to bypass the username check
+     * This is useful when there are problems with the API but users want to use the app anyway
+     */
+    if (userData.username === undefined && address) {
+      const searchParams = new URLSearchParams(window.location.search);
+      const bypassUsernameCheck = searchParams.get('bypass-username.btc');
+      if (bypassUsernameCheck === 'true') {
+        userData.username = 'bypass-username';
+        console.info(`Bypass username check for ${address}`);
+      }
+    }
+
+    /**
      * Try to find if a username is registered in localStorage.
      * If userData.username is empty, we will use the username from localStorage.
      * If userData.username value is returned by the API we can clean the localStorage.
