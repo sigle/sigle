@@ -6,7 +6,7 @@
     "node": ">=20"
   },
   "scripts": {
-    "format": "prettier --write '**/*' --ignore-unknown",
+    "format": "biome check --write --no-errors-on-unmatched",
     "lint": "turbo lint --cache-dir=.turbo",
     "build": "turbo build --cache-dir=.turbo",
     "test": "turbo test --cache-dir=.turbo",
@@ -18,9 +18,12 @@
     "singleQuote": true
   },
   "lint-staged": {
-    "**/*": "prettier --write --ignore-unknown"
+    "*": [
+      "biome check --apply --no-errors-on-unmatched --files-ignore-unknown=true"
+    ]
   },
   "devDependencies": {
+    "@biomejs/biome": "1.9.4",
     "@changesets/cli": "2.27.7",
     "husky": "9.1.5",
     "lint-staged": "15.2.9",
