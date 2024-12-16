@@ -2,6 +2,8 @@
 
 ## Mint
 
+To prepare a mint transaction, use the `mint` method. Then pass the  parameters to `openContractCall` to execute the transaction with the user's wallet.
+
 ```tsx
 import { STACKS_MAINNET } from '@stacks/network';
 import { openContractCall } from '@stacks/connect';
@@ -12,10 +14,15 @@ const sigleClient = createClient({
 });
 
 const { parameters } = await sigleClient.mint({
-  sender: user.address,
-  contract: post.address,
+  // Your user sender address
+  sender: 'SP2X0TZ59D5SZ8ACQ6YMCHHNR2ZN51Z32E2CJ173',
+  // Address of the NFT post contract
+  contract: 'SP2X0TZ59D5SZ8ACQ6YMCHHNR2ZN51Z32E2CJ173.xxx',
+  // Amount of tokens to mint
   amount: 1,
-  referral: referral,
+  // Optionally, set a referral address to receive the referral fee
+  referral: 'SP2X0TZ59D5SZ8ACQ6YMCHHNR2ZN51Z32E2CJ173',
+  // Price of 1 NFT
   price: post.price,
 });
 
