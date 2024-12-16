@@ -1,5 +1,5 @@
 @layer tw_base, radix_ui, tw_components_utils, utils;
-@import '@radix-ui/themes/styles.css' layer(radix_ui);
+@import "@radix-ui/themes/styles.css" layer(radix_ui);
 
 @layer tw_base {
   @tailwind base;
@@ -24,7 +24,7 @@
   }
 
   /* Set all the Tabs underline to be gray as there is not prop to configure the Tabs color */
-  .rt-TabsTrigger:where([data-state='active'])::before {
+  .rt-TabsTrigger:where([data-state="active"])::before {
     background-color: var(--gray-11);
   }
 }
