@@ -1,0 +1,28 @@
+# @sigle/sdk
+
+## Mint
+
+```tsx
+import { STACKS_MAINNET } from '@stacks/network';
+import { openContractCall } from '@stacks/connect';
+import { createClient } from '@sigle/sdk';
+
+const sigleClient = createClient({
+  network: STACKS_MAINNET,
+});
+
+const { parameters } = await sigleClient.mint({
+  sender: user.address,
+  contract: post.address,
+  amount: 1,
+  referral: referral,
+  price: post.price,
+});
+
+openContractCall({
+  ...parameters,
+  network: STACKS_MAINNET,
+  // Your other options
+})
+
+```
