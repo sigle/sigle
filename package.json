@@ -14,9 +14,6 @@
     "release": "pnpm changeset publish",
     "postinstall": "husky"
   },
-  "prettier": {
-    "singleQuote": true
-  },
   "lint-staged": {
     "*": [
       "biome check --apply --no-errors-on-unmatched --files-ignore-unknown=true"
@@ -27,7 +24,6 @@
     "@changesets/cli": "2.27.7",
     "husky": "9.1.5",
     "lint-staged": "15.2.9",
-    "prettier": "3.3.3",
     "turbo": "2.1.0"
   }
 }
