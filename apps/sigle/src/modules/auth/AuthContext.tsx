@@ -110,7 +110,7 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
      */
     if (userData.username === undefined && address) {
       const searchParams = new URLSearchParams(window.location.search);
-      const bypassUsernameCheck = searchParams.get('bypass-username.btc');
+      const bypassUsernameCheck = searchParams.get('bypass-username');
       if (bypassUsernameCheck === 'true') {
         userData.username = 'bypass-username';
         console.info(`Bypass username check for ${address}`);
