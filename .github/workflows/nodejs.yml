@@ -11,6 +11,17 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  quality:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Biome
+        uses: biomejs/setup-biome@v2
+
+      - name: Run Biome
+        run: biome ci .
+
   build:
     name: Build and Test
     runs-on: ubuntu-22.04
@@ -125,7 +136,7 @@ jobs:
       - name: Seed test DB
         run: pnpm prisma migrate deploy && pnpm prisma db seed
         env:
-          PG_DATABASE_URL: 'postgres://postgresuser:postgrespassword@localhost:5432/postgresdb'
+          PG_DATABASE_URL: "postgres://postgresuser:postgrespassword@localhost:5432/postgresdb"
 
       - name: Run api e2e tests
         run: pnpm run test:e2e
