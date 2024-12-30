@@ -1,5 +1,16 @@
 # @sigle/app
 
+## 1.9.0
+
+### Minor Changes
+
+- 5e30849: Add page to see the plain content of a story, add /plain after the article.
+
+### Patch Changes
+
+- Updated dependencies [fea4ce2]
+  - @sigle/client@0.1.0
+
 ## 1.8.0
 
 ### Minor Changes

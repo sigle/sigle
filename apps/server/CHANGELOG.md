@@ -1,5 +1,13 @@
 # @sigle/server
 
+## 0.6.1
+
+### Patch Changes
+
+- 6a49297: Use client package for Gaia types.
+- Updated dependencies [fea4ce2]
+  - @sigle/client@0.1.0
+
 ## 0.6.0
 
 ### Minor Changes
