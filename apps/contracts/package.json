@@ -1,0 +1,21 @@
+{
+  "name": "@sigle/contracts",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "vitest run",
+    "test:report": "vitest run -- --coverage --costs"
+  },
+  "devDependencies": {
+    "@hirosystems/clarinet-sdk": "2.11.2",
+    "@hirosystems/clarinet-sdk-wasm": "2.12.0",
+    "@sigle/sdk": "workspace:*",
+    "@stacks/network": "7.0.2",
+    "@stacks/transactions": "6.12.0",
+    "typescript": "5.7.2",
+    "vite": "5.4.11",
+    "vitest": "2.1.8",
+    "vitest-environment-clarinet": "2.1.0"
+  }
+}
