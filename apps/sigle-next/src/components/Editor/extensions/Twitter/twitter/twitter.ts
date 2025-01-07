@@ -25,7 +25,7 @@ export const loadTwitterWidget = async (): Promise<void> => {
 };
 
 export const getTweetIdFromUrl = (url: string | undefined) =>
-  url?.split('/')[5].split('?')[0];
+  url?.split('/')[5]?.split('?')[0];
 
 export const createTweet = async (
   tweetId: string,
