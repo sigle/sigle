@@ -5,9 +5,10 @@
     "ignoreUnknown": false,
     "ignore": [
       "**/.next",
+      "**/.nitro",
+      "**/.output",
       ".github/ISSUE_TEMPLATE",
       "**/pnpm-lock.yaml",
-      "**/__generated__",
       "**/dist"
     ]
   },

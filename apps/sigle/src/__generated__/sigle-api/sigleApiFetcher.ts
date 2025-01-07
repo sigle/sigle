@@ -7,7 +7,7 @@ const baseUrl = sigleConfig.apiUrl;
 
 export type ErrorWrapper<TError> =
   | TError
-  | { status: 'unknown'; message: string }
+  | { status: 'unknown'; message: string };
 
 export type SigleApiFetcherOptions<TBody, THeaders, TQueryParams, TPathParams> =
   {
@@ -63,8 +63,8 @@ export async function sigleApiFetch<
 
     // Fastify does not support JSON requests without a body
     if (
-      method === "post" &&
-      requestHeaders["Content-Type"] === "application/json" &&
+      method === 'post' &&
+      requestHeaders['Content-Type'] === 'application/json' &&
       body === undefined
     ) {
       // @ts-expect-error
@@ -112,7 +112,11 @@ export async function sigleApiFetch<
     let errorObject: Error = {
       name: 'unknown' as const,
       message:
-        e instanceof Error ? `Network error (${e.message})` : e.message ? e.message :'Network error',
+        e instanceof Error
+          ? `Network error (${e.message})`
+          : e.message
+            ? e.message
+            : 'Network error',
       stack: e as string,
     };
     throw errorObject;
