@@ -10,7 +10,7 @@
     "test:e2e": "playwright test"
   },
   "dependencies": {
-    "@hookform/resolvers": "3.3.2",
+    "@hookform/resolvers": "3.9.1",
     "@radix-ui/react-dialog": "1.0.4",
     "@radix-ui/react-tooltip": "1.0.6",
     "@stacks/auth": "6.11.3",
