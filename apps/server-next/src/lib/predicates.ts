@@ -39,7 +39,7 @@ export const sigleMinterFixedPricePredicate = {
       if_this: {
         scope: 'print_event',
         contract_identifier: sigleConfig[env.STACKS_ENV].fixedPriceMinter,
-        // @ts-ignore @hirosystems/chainhook-client types are wrong there
+        // @ts-ignore @hirosystems/chainhook-client types are wrong there https://github.com/hirosystems/chainhook/pull/701
         matches_regex: '.*',
       } as any,
       then_that: {
@@ -64,7 +64,7 @@ export const siglePublicationPrintPredicate = {
       if_this: {
         scope: 'print_event',
         contract_identifier: '{__CONTRACT__}',
-        // @ts-ignore @hirosystems/chainhook-client types are wrong there
+        // @ts-ignore @hirosystems/chainhook-client types are wrong there https://github.com/hirosystems/chainhook/pull/701
         matches_regex: '.*',
       } as any,
       then_that: {
