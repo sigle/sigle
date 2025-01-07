@@ -287,12 +287,6 @@ export class SignInWithStacksMessage {
 
       const stacksSignature = createMessageSignature(signature);
 
-      /** Message Signing Prefixes */
-      const prefixes = [
-        '\x18Stacks Message Signing:\n', // Legacy Prefix
-        '\x17Stacks Signed Message:\n', // Future Prefix (for Ledger compatibility)
-      ];
-
       const hashedMessage = Buffer.from(hashMessage(EIP4361Message)).toString(
         'hex',
       );
