@@ -1,9 +1,6 @@
 ARG NODE_VERSION=22
 FROM node:${NODE_VERSION}-alpine as base
 
-# Required for railway
-ARG RAILWAY_SERVICE_ID=local
-
 WORKDIR /app
 
 # Set production environment
