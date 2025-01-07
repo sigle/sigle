@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-non-null-asserted-optional-chain, @typescript-eslint/no-non-null-assertion */
 // siwe port of https://github.com/spruceid/siwe/blob/main/packages/siwe-parser/lib/regex.ts
+// @ts-ignore
 import * as uri from 'valid-url';
 import { validateStacksAddress } from '@stacks/transactions';
 
