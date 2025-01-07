@@ -1,8 +1,9 @@
 ARG NODE_VERSION=22
 FROM node:${NODE_VERSION}-alpine AS base
 
-ENV APP_NAME="server"
 WORKDIR /app
+
+ENV APP_NAME="server-next"
 
 ENV PNPM_HOME="/pnpm"
 ENV PATH="$PNPM_HOME:$PATH"
