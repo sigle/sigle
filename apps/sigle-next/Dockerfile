@@ -45,7 +45,8 @@ COPY turbo.json turbo.json
 WORKDIR /app/apps/$APP_NAME
 
 # Add fake environment file for build to succeed
-COPY ./apps/$APP_NAME/.env.development .env.production.local
+COPY ./apps/$APP_NAME/.env.development .env.production
+COPY ./apps/$APP_NAME/.env.testnet .env.production.local
 
 # Build application
 RUN pnpm turbo run build --filter=@sigle/$APP_NAME...
