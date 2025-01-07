@@ -11,6 +11,9 @@
     },
     "./package.json": "./package.json"
   },
+  "publishConfig": {
+    "access": "public"
+  },
   "scripts": {
     "build": "rspack build && tsc --emitDeclarationOnly"
   },
