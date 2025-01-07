@@ -52,7 +52,7 @@ export const preparePredicate = (predicate: Predicate) => {
         ? env.WEBHOOK_PROXY_URL!
         : predicateBody.then_that.http_post.url.replace(
             '{__BASE_URL__}',
-            env.APP_URL,
+            env.API_URL,
           );
 
     predicateBody.then_that.http_post.authorization_header =
