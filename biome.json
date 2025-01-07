@@ -5,6 +5,8 @@
     "ignoreUnknown": false,
     "ignore": [
       "**/.next",
+      "**/.nitro",
+      "**/.output",
       ".github/ISSUE_TEMPLATE",
       "**/pnpm-lock.yaml",
       "**/dist"
