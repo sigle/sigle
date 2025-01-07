@@ -77,7 +77,7 @@ export const SlashCommands = Extension.create<{
                 // biome-ignore lint/suspicious/noExplicitAny: <explanation>
                 getReferenceClientRect: props.clientRect as any,
                 appendTo: () =>
-                  document.getElementsByClassName('radix-themes')[0],
+                  document.getElementsByClassName('radix-themes')[0] as any,
                 content: reactRenderer.element,
                 showOnCreate: true,
                 interactive: true,
