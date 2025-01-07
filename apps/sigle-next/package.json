@@ -82,6 +82,7 @@
     "zustand": "5.0.2"
   },
   "devDependencies": {
+    "@dotenvx/dotenvx": "1.32.0",
     "@tailwindcss/typography": "0.5.15",
     "@types/node": "22.10.5",
     "@types/react": "18.2.45",
