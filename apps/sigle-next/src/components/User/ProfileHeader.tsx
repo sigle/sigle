@@ -72,7 +72,7 @@ export const ProfileHeader = ({ user }: ProfileHeaderProps) => {
                   ? resolveImageUrl(user.profile.pictureUri)
                   : undefined
               }
-              fallback={user.id[0]}
+              fallback={user.id[0] ?? ''}
               alt={user.id}
               size="8"
               radius="small"

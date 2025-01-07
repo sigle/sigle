@@ -1,5 +1,6 @@
 import { z } from 'zod';
 import {
+  ReadonlyURLSearchParams,
   useParams as useNextParams,
   useSearchParams as useNextSearchParams,
 } from 'next/navigation';
