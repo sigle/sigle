@@ -5,6 +5,7 @@
     "build": "nitro build",
     "dev": "dotenvx run --env-file=.env.development --env-file=.env.development.local -- nitro dev --port 3001",
     "db:generate": "prisma generate",
+    "db:migrate:prod": "prisma migrate deploy",
     "prisma:migrate:dev": "dotenvx run --env-file=.env.development -- prisma migrate dev",
     "prisma:studio:dev": "dotenvx run --env-file=.env.development -- prisma studio",
     "prepare": "nitro prepare"
