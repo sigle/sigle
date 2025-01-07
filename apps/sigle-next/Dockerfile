@@ -59,8 +59,8 @@ WORKDIR /app
 COPY --from=installer /app/apps/$APP_NAME/.next/standalone ./
 COPY --from=installer /app/apps/$APP_NAME/.next/static ./apps/$APP_NAME/.next/static
 COPY --from=installer /app/apps/$APP_NAME/public ./apps/$APP_NAME/public
-COPY ./apps/$APP_NAME/.env.testnet.local ./.env.production.local
+COPY ./apps/$APP_NAME/.env.testnet.local ./.env.testnet.local
 
 # Start the server by default, this can be overwritten at runtime
 EXPOSE 3000
-CMD dotenvx run -- node apps/web/server.js
+CMD dotenvx run -- node apps/$APP_NAME/server.js
