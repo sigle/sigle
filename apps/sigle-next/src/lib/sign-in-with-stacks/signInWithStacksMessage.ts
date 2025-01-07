@@ -1,5 +1,6 @@
 // siwe port of https://github.com/spruceid/siwe/blob/main/packages/siwe/lib/client.ts
 
+// @ts-expect-error valid-url is not typed
 import * as uri from 'valid-url';
 import {
   createMessageSignature,
