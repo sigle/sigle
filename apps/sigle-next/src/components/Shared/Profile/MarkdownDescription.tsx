@@ -22,7 +22,7 @@ export const ProfileMarkdownDescription = ({
               target="_blank"
               color="gray"
               highContrast
-              {...props}
+              {...(props as any)}
             />
           );
         },
