@@ -421,6 +421,9 @@ importers:
       posthog-node:
         specifier: 4.3.2
         version: 4.3.2
+      prisma:
+        specifier: 6.1.0
+        version: 6.1.0
       sharp:
         specifier: 0.33.5
         version: 0.33.5
@@ -437,9 +440,6 @@ importers:
       nitropack:
         specifier: 2.10.4
         version: 2.10.4(typescript@5.7.2)
-      prisma:
-        specifier: 6.1.0
-        version: 6.1.0
 
   apps/sigle:
     dependencies:
@@ -22201,7 +22201,7 @@ snapshots:
       arconnect: 0.4.2
       asn1.js: 5.4.1
       base64-js: 1.5.1
-      bignumber.js: 9.1.1
+      bignumber.js: 9.1.2
     optional: true
 
   asn1.js@5.4.1:

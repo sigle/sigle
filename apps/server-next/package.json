@@ -31,13 +31,13 @@
     "nitro-cors": "0.7.1",
     "pg-boss": "10.1.5",
     "posthog-node": "4.3.2",
+    "prisma": "6.1.0",
     "sharp": "0.33.5",
     "smee-client": "2.0.4",
     "zod": "3.24.1",
     "zod-validation-error": "3.4.0"
   },
   "devDependencies": {
-    "nitropack": "2.10.4",
-    "prisma": "6.1.0"
+    "nitropack": "2.10.4"
   }
 }
