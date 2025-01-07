@@ -63,7 +63,7 @@ COPY --from=installer --chown=nitro:nodejs /app/apps/$APP_NAME/package.json ./pa
 COPY --from=installer --chown=nitro:nodejs /app/apps/$APP_NAME/scripts ./scripts
 COPY --from=builder --chown=nitro:nodejs /app/apps/$APP_NAME/.env.testnet.local ./.env.testnet.local
 RUN node scripts/prod-deps.js
-RUN pnpm install --frozen-lockfile
+RUN pnpm install
 
 USER nitro
 
