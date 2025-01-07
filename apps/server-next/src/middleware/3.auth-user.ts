@@ -16,10 +16,14 @@ export default defineEventHandler(async (event) => {
     return;
   }
 
+  console.log('headers', event.headers);
+
   const token = await getToken({
     req: event,
     secret: env.AUTH_SECRET,
   });
+
+  console.log('token', token);
 
   if (!token || !token.address) {
     throw createError({
