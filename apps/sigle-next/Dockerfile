@@ -22,7 +22,7 @@ WORKDIR /app
 RUN apk update && \
     apk add --no-cache libc6-compat
 COPY . .
-RUN turbo prune $APP_NAME --docker
+RUN turbo prune @sigle/$APP_NAME --docker
 
 # --- Build stage ---
 
