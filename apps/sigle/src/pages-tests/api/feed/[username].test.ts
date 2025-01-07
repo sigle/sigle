@@ -44,7 +44,7 @@ describe('test feed api', () => {
     const parser = new XMLParser();
     const jsonObj = parser.parse(res.end.mock.calls[0][0]);
     expect(jsonObj.rss.channel).toEqual({
-      copyright: 'All rights reserved 2024, sigle.btc',
+      copyright: 'All rights reserved 2025, sigle.btc',
       description: expect.stringContaining('Sigle'),
       docs: expect.any(String),
       generator: expect.any(String),
