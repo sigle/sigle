@@ -38,7 +38,7 @@ COPY .gitignore .gitignore
 COPY --from=builder /app/out/json/ .
 COPY --from=builder /app/out/pnpm-lock.yaml ./pnpm-lock.yaml
 COPY --from=builder /app/out/pnpm-workspace.yaml ./pnpm-workspace.yaml
-RUN --mount=type=cache,id=s/$RAILWAY_SERVICE_ID-/pnpm/store,target=/pnpm/store pnpm install --frozen-lockfile --prod=false
+RUN pnpm install --frozen-lockfile --prod=false
 
 COPY --from=builder /app/out/full/ .
 # Copy contracts source to avoid cyclic dependency
