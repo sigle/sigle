@@ -61,6 +61,8 @@ RUN adduser --system --uid 1001 nitro
 COPY --from=installer --chown=nitro:nodejs /app/apps/$APP_NAME/.output ./.output
 COPY --from=installer --chown=nitro:nodejs /app/apps/$APP_NAME/package.json ./package.json
 COPY --from=builder --chown=nitro:nodejs /app/apps/$APP_NAME/.env.testnet.local ./.env.testnet.local
+RUN node scripts/prod-deps.js
+RUN pnpm install --frozen-lockfile
 
 USER nitro
 
