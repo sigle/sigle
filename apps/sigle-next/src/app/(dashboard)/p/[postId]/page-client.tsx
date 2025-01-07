@@ -56,8 +56,6 @@ export function PostClientPage(props: Props) {
             placeholder={post.coverImage.blurhash ? 'blur' : 'empty'}
             blurDataURL={post.coverImage.blurhash}
             objectFit="cover"
-            // data:image/png;base64,VW05WyoudGwubW96b3prQ296ZlFXQmFlYXlma2tDYXlrQ2pb
-
             width={post.coverImage.width}
             height={post.coverImage.height}
           />

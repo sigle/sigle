@@ -9,6 +9,7 @@ import NextLink from 'next/link';
 import { useState } from 'react';
 import { PostShareDialog } from '../PostShareDialog';
 import { formatReadableAddress } from '@/lib/stacks';
+import Image from 'next/image';
 
 interface PublicationCardProps {
   user: paths['/api/users/{username}']['get']['responses']['200']['content']['application/json'];
@@ -57,11 +58,15 @@ export const PublicationCard = ({ user, post }: PublicationCardProps) => {
             <NextLink href={Routes.post({ postId: post.id })}>
               <div className="w-[100px] max-w-full overflow-hidden md:w-[200px]">
                 <AspectRatio ratio={16 / 10}>
-                  {/* TODO use next.js image component with blurhash */}
-                  <img
-                    src={resolveImageUrl(post.coverImage)}
+                  <Image
+                    src={resolveImageUrl(post.coverImage.id)}
                     alt="Cover card"
-                    className="size-full rounded-2 object-cover"
+                    className="size-full rounded-2"
+                    placeholder={post.coverImage.blurhash ? 'blur' : 'empty'}
+                    blurDataURL={post.coverImage.blurhash}
+                    objectFit="cover"
+                    width={post.coverImage.width}
+                    height={post.coverImage.height}
                   />
                 </AspectRatio>
               </div>
