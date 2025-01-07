@@ -36,7 +36,7 @@ export const UpdateProfileMetadata = ({
     'post',
     '/api/protected/user/profile/update',
     {
-      onError: (error) => {
+      onError: (error: any) => {
         toast.error('Failed to update profile', {
           description: error.message,
         });
