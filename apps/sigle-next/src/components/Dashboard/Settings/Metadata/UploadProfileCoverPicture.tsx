@@ -43,7 +43,7 @@ export const UploadProfileCoverPicture = ({
           setPicture(data.url);
           posthog.capture('profile_cover_image_upload_success', {});
         },
-        onError: (error) => {
+        onError: (error: any) => {
           posthog.capture('profile_cover_image_upload_error', {});
           toast.error(error.message);
         },
