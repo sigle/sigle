@@ -4,9 +4,12 @@ watchPatterns = ["/apps/server-next/**"]
 dockerfilePath = "/apps/server-next/Dockerfile"
 
 [deploy]
+multiRegionConfig = {"us-west2":{"numReplicas":1}}
+region = "us-west2"
+runtime = "V2"
 numReplicas = 1
 healthcheckPath = "/health"
-healthcheckTimeout = 300
 sleepApplication = true
 restartPolicyType = "ON_FAILURE"
+healthcheckTimeout = 300
 restartPolicyMaxRetries = 5
