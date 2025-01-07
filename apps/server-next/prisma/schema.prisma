@@ -1,0 +1,108 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id          String    @id @map("id")
+  lastLoginAt DateTime? @map("last_login_at")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  drafts     Draft[]
+  posts      Post[]
+  profile    Profile?
+  ownedNfts  PostNft[] @relation("owner")
+  mintedNfts PostNft[] @relation("minter")
+}
+
+model Profile {
+  id              String  @id @map("id")
+  displayName     String? @map("display_name")
+  description     String? @map("description")
+  website         String? @map("website")
+  twitter         String? @map("twitter")
+  pictureUri      String? @map("picture_uri")
+  coverPictureUri String? @map("cover_picture_uri")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  user User @relation(fields: [id], references: [id])
+}
+
+model Draft {
+  id              String  @id @map("id")
+  title           String  @map("title")
+  content         String  @map("content")
+  metaTitle       String? @map("meta_title")
+  metaDescription String? @map("meta_description")
+  coverImage      String? @map("cover_image")
+  txId            String? @map("tx_id")
+  txStatus        String? @map("tx_status")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  userId String @map("user_id")
+  user   User   @relation(fields: [userId], references: [id])
+}
+
+model Post {
+  id          String  @id @map("id")
+  version     Int     @map("version")
+  address     String  @unique @map("address")
+  txId        String  @unique @map("tx_id")
+  collected   Int     @map("collected")
+  maxSupply   Int     @map("max_supply")
+  metadataUri String  @map("metadata_uri")
+  enabled     Boolean @map("enabled")
+  openEdition Boolean @map("open_edition")
+  price       BigInt  @map("price")
+
+  // Metadata fields
+  title           String      @map("title")
+  content         String      @map("content")
+  excerpt         String      @map("excerpt")
+  metaTitle       String?     @map("meta_title")
+  metaDescription String?     @map("meta_description")
+  coverImageId    String?     @map("cover_image_id")
+  coverImage      MediaImage? @relation(fields: [coverImageId], references: [id])
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  userId String    @map("user_id")
+  user   User      @relation(fields: [userId], references: [id])
+  nfts   PostNft[]
+}
+
+model MediaImage {
+  id        String   @id @map("id")
+  mimeType  String   @map("mime_type")
+  alt       String?  @map("alt")
+  width     Int?     @map("width")
+  height    Int?     @map("height")
+  size      Int?     @map("size")
+  blurhash  String?  @map("blurhash")
+  createdAt DateTime @default(now()) @map("created_at")
+  posts     Post[]
+}
+
+model PostNft {
+  id String @id @map("id")
+
+  createdAt DateTime @map("created_at")
+
+  postId   String @map("post_id")
+  post     Post   @relation(fields: [postId], references: [id])
+  ownerId  String @map("owner_id")
+  owner    User   @relation(name: "owner", fields: [ownerId], references: [id])
+  minterId String @map("minter_id")
+  minter   User   @relation(name: "minter", fields: [minterId], references: [id])
+}
