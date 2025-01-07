@@ -90,21 +90,21 @@ export const SlashCommands = Extension.create<{
             onUpdate: (props) => {
               reactRenderer.updateProps(props);
 
-              popup[0].setProps({
+              popup[0]?.setProps({
                 // biome-ignore lint/suspicious/noExplicitAny: <explanation>
                 getReferenceClientRect: props.clientRect as any,
               });
             },
             onKeyDown(props) {
               if (props.event.key === 'Escape') {
-                popup[0].hide();
+                popup[0]?.hide();
                 return true;
               }
 
               return reactRenderer?.ref?.onKeyDown(props) ?? false;
             },
             onExit() {
-              popup[0].destroy();
+              popup[0]?.destroy();
               reactRenderer.destroy();
             },
           };
