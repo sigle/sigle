@@ -10,6 +10,7 @@
 //   ./src/lib/sign-in-with-stacks/index.ts
 //   ./src/lib/auth.ts
 //   ./src/middleware.ts
+
 import NextAuth from 'next-auth';
 import type { DefaultJWT } from 'next-auth/jwt';
 

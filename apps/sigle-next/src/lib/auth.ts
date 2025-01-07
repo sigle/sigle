@@ -114,6 +114,8 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
 
           return null;
         } catch (error) {
+          // TODO remove the console.error after debugging
+          console.error(error);
           Sentry.withScope((scope) => {
             scope.setExtras({
               message: credentials?.message,
