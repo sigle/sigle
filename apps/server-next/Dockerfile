@@ -45,7 +45,7 @@ COPY turbo.json turbo.json
 WORKDIR /app/apps/$APP_NAME
 
 # Build application
-RUN pnpm turbo run db:generate --filter=@sigle/$PROJECT
+RUN pnpm turbo run db:generate --filter=@sigle/$APP_NAME
 RUN pnpm turbo run build --filter=@sigle/$APP_NAME...
 
 # --- Runner stage ---
