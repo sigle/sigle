@@ -114,7 +114,7 @@
     "use-async-effect": "2.2.7",
     "valid-url": "1.0.9",
     "vaul": "0.7.9",
-    "zod": "3.22.3",
+    "zod": "3.24.1",
     "zone-file": "1.0.0",
     "zustand": "4.4.4"
   },

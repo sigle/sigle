@@ -108,8 +108,8 @@ importers:
         specifier: 1.0.7
         version: 1.0.7(tailwindcss@3.4.1(ts-node@10.9.2(@swc/core@1.7.18(@swc/helpers@0.5.15))(@types/node@18.15.11)(typescript@5.3.3)))
       zod:
-        specifier: 3.22.3
-        version: 3.22.3
+        specifier: 3.24.1
+        version: 3.24.1
     devDependencies:
       '@playwright/test':
         specifier: 1.44.0
@@ -744,8 +744,8 @@ importers:
         specifier: 0.7.9
         version: 0.7.9(@types/react-dom@18.2.17)(@types/react@18.2.45)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       zod:
-        specifier: 3.22.3
-        version: 3.22.3
+        specifier: 3.24.1
+        version: 3.24.1
       zone-file:
         specifier: 1.0.0
         version: 1.0.0
@@ -1104,7 +1104,7 @@ importers:
     dependencies:
       zod-validation-error:
         specifier: 3.3.1
-        version: 3.3.1(zod@3.23.8)
+        version: 3.3.1(zod@3.24.1)
     devDependencies:
       '@tsconfig/recommended':
         specifier: 1.0.6
@@ -1122,8 +1122,8 @@ importers:
         specifier: 2.0.5
         version: 2.0.5(@types/node@20.12.13)(jsdom@25.0.0(bufferutil@4.0.8)(utf-8-validate@5.0.10))(sass@1.77.8)(terser@5.31.6)
       zod:
-        specifier: 3.23.8
-        version: 3.23.8
+        specifier: 3.24.1
+        version: 3.24.1
 
   packages/contracts-source:
     devDependencies:
@@ -16233,12 +16233,6 @@ packages:
     peerDependencies:
       zod: ^3.18.0
 
-  zod@3.22.3:
-    resolution: {integrity: sha512-EjIevzuJRiRPbVH4mGc8nApb/lVLKVpmUhAaR5R5doKGfAnGJ6Gr3CViAVjP+4FWSxCsybeWQdcgCtbX+7oZug==}
-
-  zod@3.23.8:
-    resolution: {integrity: sha512-XBx9AXhXktjUqnepgTiE5flcKIYWi/rme0Eaj+5Y0lftuGBq+jyRu/md4WnuxqgP1ubdpNCsYEYPxrzVHD8d6g==}
-
   zod@3.24.1:
     resolution: {integrity: sha512-muH7gBL9sI1nciMZV67X5fTKKBLtwpZ5VBp1vsOQzj1MhrBZ4wlVCm3gedKZWLp0Oyel8sIGfeiz54Su+OVT+A==}
 
@@ -31167,7 +31161,7 @@ snapshots:
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
       scroll-into-view-if-needed: 3.1.0
-      zod: 3.23.8
+      zod: 3.24.1
 
   nextra@3.2.5(@types/react@19.0.2)(acorn@8.14.0)(next@14.2.7(@opentelemetry/api@1.9.0)(@playwright/test@1.46.1)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)(sass@1.77.8))(react-dom@18.2.0(react@18.2.0))(react@18.2.0)(typescript@5.7.2):
     dependencies:
@@ -31210,8 +31204,8 @@ snapshots:
       unist-util-remove: 4.0.0
       unist-util-visit: 5.0.0
       yaml: 2.6.1
-      zod: 3.23.8
-      zod-validation-error: 3.3.1(zod@3.23.8)
+      zod: 3.24.1
+      zod-validation-error: 3.3.1(zod@3.24.1)
     transitivePeerDependencies:
       - '@types/react'
       - acorn
@@ -35985,17 +35979,13 @@ snapshots:
       compress-commons: 6.0.2
       readable-stream: 4.4.2
 
-  zod-validation-error@3.3.1(zod@3.23.8):
+  zod-validation-error@3.3.1(zod@3.24.1):
     dependencies:
-      zod: 3.23.8
+      zod: 3.24.1
 
   zod-validation-error@3.4.0(zod@3.24.1):
     dependencies:
       zod: 3.24.1
-
-  zod@3.22.3: {}
-
-  zod@3.23.8: {}
 
   zod@3.24.1: {}
 
