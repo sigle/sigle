@@ -12,6 +12,11 @@ const fs = require('fs').promises;
 
     const clean = {
       ...pj,
+      scripts: {
+        ...pj.scripts,
+        // Remove the nitro prepare script as we already built the server
+        prepare: undefined,
+      },
       dependencies: {
         prisma: pj.dependencies.prisma,
       },
