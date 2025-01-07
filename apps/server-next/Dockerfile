@@ -59,8 +59,7 @@ RUN adduser --system --uid 1001 nitro
 # Copy built application
 COPY --from=installer --chown=nitro:nodejs /app/apps/$APP_NAME/.output ./.output
 COPY --from=installer --chown=nitro:nodejs /app/apps/$APP_NAME/package.json ./package.json
-# TODO setup testnet env
-# COPY --from=builder --chown=nitro:nodejs /app/apps/$APP_NAME/.env.production.local ./.env.production.local
+COPY --from=builder --chown=nitro:nodejs /app/apps/$APP_NAME/.env.testnet.local ./.env.testnet.local
 
 USER nitro
 
