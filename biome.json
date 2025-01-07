@@ -7,7 +7,6 @@
       "**/.next",
       ".github/ISSUE_TEMPLATE",
       "**/pnpm-lock.yaml",
-      "**/__generated__",
       "**/dist"
     ]
   },
