@@ -15,8 +15,8 @@
     "build": "rspack build && tsc --emitDeclarationOnly"
   },
   "devDependencies": {
-    "@rspack/cli": "1.1.6",
-    "@rspack/core": "1.1.6",
+    "@rspack/cli": "1.1.8",
+    "@rspack/core": "1.1.8",
     "raw-loader": "4.0.2",
     "typescript": "5.7.2"
   }
