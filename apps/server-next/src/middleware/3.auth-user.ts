@@ -21,6 +21,7 @@ export default defineEventHandler(async (event) => {
   const token = await getToken({
     req: event,
     secret: env.AUTH_SECRET,
+    secureCookie: env.NODE_ENV === 'production',
   });
 
   console.log('token', token);
