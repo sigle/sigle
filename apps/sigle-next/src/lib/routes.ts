@@ -23,6 +23,7 @@ export const Routes = {
       referral: z.string().optional().nullable(),
     }),
   ),
+  dashboard: makeRoute(() => '/dashboard'),
 };
 
 type RouteBuilder<Params extends z.ZodSchema, Search extends z.ZodSchema> = {
