@@ -1,5 +1,24 @@
 # @sigle/sdk
 
+## Installation
+
+```bash
+npm install @sigle/sdk
+```
+
+## Create client
+
+To create a client, use the `createClient` method. Pass in the network you want to use.
+
+```tsx
+import { STACKS_MAINNET } from '@stacks/network';
+import { createClient } from '@sigle/sdk';
+
+const sigleClient = createClient({
+  network: STACKS_MAINNET,
+});
+```
+
 ## Mint
 
 To prepare a mint transaction, use the `mint` method. Then pass the  parameters to `openContractCall` to execute the transaction with the user's wallet.
