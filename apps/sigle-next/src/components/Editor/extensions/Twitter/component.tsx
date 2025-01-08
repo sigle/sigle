@@ -1,6 +1,6 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Text, TextField } from '@radix-ui/themes';
-import { IconBrandTwitter } from '@tabler/icons-react';
+import { IconBrandTwitter, IconBrandYoutube } from '@tabler/icons-react';
 import type { NodeViewProps } from '@tiptap/core';
 import { NodeViewWrapper } from '@tiptap/react';
 import type React from 'react';
@@ -54,7 +54,7 @@ export const EmbedComponent = (props: NodeViewProps) => {
         setFocus('url');
       }, 5);
     }
-  }, []);
+  }, [url, setFocus]);
 
   const onSubmit = handleSubmit((formValues) => {
     props.editor.commands.updateAttributes('embed', {
@@ -81,12 +81,21 @@ export const EmbedComponent = (props: NodeViewProps) => {
         <form onSubmit={onSubmit} className="space-y-2">
           <TextField.Root
             size="3"
-            placeholder="Paste tweet URL and press “enter”..."
+            placeholder={
+              props.node.attrs.embedType === 'twitter'
+                ? 'Paste tweet URL and press “enter”...'
+                : 'Paste video URL and press “enter”...'
+            }
             {...register('url')}
             onKeyDown={onKeyDown}
           >
             <TextField.Slot>
-              <IconBrandTwitter height="16" width="16" />
+              {props.node.attrs.embedType === 'twitter' ? (
+                <IconBrandTwitter height="16" width="16" />
+              ) : null}
+              {props.node.attrs.embedType === 'video' ? (
+                <IconBrandYoutube height="16" width="16" />
+              ) : null}
             </TextField.Slot>
           </TextField.Root>
           {errors.url && (

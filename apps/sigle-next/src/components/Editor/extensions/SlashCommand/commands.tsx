@@ -9,6 +9,7 @@ import { PlainTextLight } from '@/images/PlainTextLight';
 import { QuoteLight } from '@/images/QuoteLight';
 import { TwitterLight } from '@/images/TwitterLight';
 import type { SlashCommandsCommand } from './SlashCommands';
+import { VideoLight } from '@/images/VideoLight';
 
 export const slashCommands: SlashCommandsCommand[] = [
   {
@@ -209,7 +210,7 @@ export const slashCommands: SlashCommandsCommand[] = [
     section: 'embed',
     command: ({ editor, range }) => {
       if (!range) {
-        editor.commands.setEmbed();
+        editor.commands.setEmbed('twitter');
         return;
       }
 
@@ -219,18 +220,18 @@ export const slashCommands: SlashCommandsCommand[] = [
         // Use deleteRange to clear the text from command chars "/q" etc..
         .deleteRange(range)
         .run();
-      editor.commands.setEmbed();
+      editor.commands.setEmbed('twitter');
     },
   },
   {
-    icon: TwitterLight,
+    icon: VideoLight,
     title: 'Video',
     description: 'Add a video embed (YouTube, etc.)',
     section: 'embed',
     keywords: ['youtube'],
     command: ({ editor, range }) => {
       if (!range) {
-        editor.commands.setEmbed();
+        editor.commands.setEmbed('video');
         return;
       }
       editor
@@ -239,7 +240,7 @@ export const slashCommands: SlashCommandsCommand[] = [
         // Use deleteRange to clear the text from command chars "/q" etc..
         .deleteRange(range)
         .run();
-      editor.commands.setEmbed();
+      editor.commands.setEmbed('video');
     },
   },
 ];

@@ -5,7 +5,7 @@ import { EmbedComponent, globalPasteRegex, isValidUrl } from './component';
 declare module '@tiptap/core' {
   interface Commands<ReturnType> {
     embed: {
-      setEmbed: () => ReturnType;
+      setEmbed: (type: 'twitter' | 'video') => ReturnType;
     };
   }
 }
@@ -31,16 +31,22 @@ const Embed = Node.create({
         default: null,
       },
       pasted: false,
+      embedType: {
+        default: 'twitter',
+      },
     };
   },
 
   addCommands() {
     return {
       setEmbed:
-        () =>
+        (type: 'twitter' | 'video') =>
         ({ commands }) => {
           commands.insertContent({
             type: this.name,
+            attrs: {
+              embedType: type,
+            },
           });
           return true;
         },
@@ -72,7 +78,10 @@ const Embed = Node.create({
         tag: 'div[data-embed]',
         getAttrs: (element) => {
           const url = (element as HTMLElement).getAttribute('data-embed');
-          return { url };
+          const embedType =
+            (element as HTMLElement).getAttribute('data-embed-type') ||
+            'twitter';
+          return { url, embedType };
         },
       },
     ];
@@ -84,7 +93,13 @@ const Embed = Node.create({
       return ['span'];
     }
 
-    return ['div', { 'data-embed': HTMLAttributes.url }];
+    return [
+      'div',
+      {
+        'data-embed': HTMLAttributes.url,
+        'data-embed-type': HTMLAttributes.embedType,
+      },
+    ];
   },
 
   addStorage() {

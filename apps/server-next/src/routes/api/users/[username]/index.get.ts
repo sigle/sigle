@@ -74,5 +74,12 @@ export default defineEventHandler(async (event) => {
     },
   });
 
+  if (!user) {
+    throw createError({
+      status: 404,
+      statusMessage: 'User not found',
+    });
+  }
+
   return user;
 });
