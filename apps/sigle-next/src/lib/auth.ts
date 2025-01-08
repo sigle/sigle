@@ -32,10 +32,36 @@ declare module 'next-auth/jwt' {
   }
 }
 
+const hostname = new URL(env.NEXT_PUBLIC_APP_URL).hostname;
+const rootDomain = hostname.split('.').slice(-2).join('.');
+const useSecureCookies = env.NEXT_PUBLIC_APP_URL.startsWith('https://');
+const cookiePrefix = useSecureCookies ? '__Secure-' : '';
+
 export const { handlers, signIn, signOut, auth } = NextAuth({
   trustHost: true,
   session: {
     strategy: 'jwt',
+  },
+  cookies: {
+    sessionToken: {
+      name: `${cookiePrefix}authjs.session-token`,
+      options: {
+        httpOnly: true,
+        sameSite: 'lax',
+        path: '/',
+        secure: useSecureCookies,
+        /**
+         * We take the default cookies from NextAuth and add our own
+         * domain to allow cookies to be shared between subdomains.
+         * Eg: https://app.sigle.io needs to be set to .sigle.io
+         * Localhost and vercel preview env just use the hostname directly.
+         */
+        domain:
+          hostname == 'localhost' || process.env.VERCEL_ENV === 'preview'
+            ? hostname
+            : '.' + rootDomain,
+      },
+    },
   },
   callbacks: {
     jwt({ token, user }) {
