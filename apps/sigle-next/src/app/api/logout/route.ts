@@ -1,3 +1,4 @@
+import { env } from '@/env';
 import { cookies } from 'next/headers';
 import { NextResponse } from 'next/server';
 
@@ -6,7 +7,9 @@ import { NextResponse } from 'next/server';
  */
 export async function GET(request: Request) {
   const userCookies = await cookies();
-  userCookies.delete('authjs.session-token');
+  const useSecureCookies = env.NEXT_PUBLIC_APP_URL.startsWith('https://');
+  const cookiePrefix = useSecureCookies ? '__Secure-' : '';
+  userCookies.delete(`${cookiePrefix}authjs.session-token`);
   userCookies.delete('authjs.csrf-token');
-  return NextResponse.redirect(new URL('/', request.url));
+  return NextResponse.redirect(new URL('/', env.NEXT_PUBLIC_APP_URL));
 }
