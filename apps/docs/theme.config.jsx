@@ -1,7 +1,7 @@
 export default {
-  logo: <span>My Nextra Documentation</span>,
+  logo: <span>Sigle</span>,
+  docsRepositoryBase: 'https://github.com/sigle/sigle/tree/main/apps/docs',
   project: {
-    link: 'https://github.com/shuding/nextra',
+    link: 'https://github.com/sigle/sigle',
   },
-  // ... other theme options
 };
