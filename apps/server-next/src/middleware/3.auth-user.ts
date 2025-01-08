@@ -18,13 +18,10 @@ export default defineEventHandler(async (event) => {
 
   console.log('headers', event.headers);
 
-  const useSecureCookies = env.NODE_ENV === 'production';
-  const cookiePrefix = useSecureCookies ? '__Secure-' : '';
   const token = await getToken({
     req: event,
     secret: env.AUTH_SECRET,
     secureCookie: env.NODE_ENV === 'production',
-    cookieName: `${cookiePrefix}-next-auth.session-token`,
   });
 
   console.log('token', token);
