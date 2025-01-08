@@ -1,7 +1,7 @@
 'use client';
 
 import { cn } from '@/lib/cn';
-import { Button, Flex, IconButton, Spinner } from '@radix-ui/themes';
+import { Button, IconButton, Spinner } from '@radix-ui/themes';
 import { IconCameraPlus, IconHandGrab, IconTrash } from '@tabler/icons-react';
 import { useParams } from 'next/navigation';
 import { usePostHog } from 'posthog-js/react';
@@ -28,48 +28,51 @@ export const EditorCoverImage = () => {
     );
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
-  const onDrop = useCallback(async (acceptedFiles: File[]) => {
-    const file = acceptedFiles[0];
-    if (!file) return;
-    if (loadingUploadImage) return;
+  const onDrop = useCallback(
+    async (acceptedFiles: File[]) => {
+      const file = acceptedFiles[0];
+      if (!file) return;
+      if (loadingUploadImage) return;
 
-    const previewBlobUrl = URL.createObjectURL(file);
-    setPreview(previewBlobUrl);
+      const previewBlobUrl = URL.createObjectURL(file);
+      setPreview(previewBlobUrl);
 
-    posthog.capture('cover_image_upload_start', {
-      postId,
-    });
-    const formData = new FormData();
-    formData.append('file', file);
-    uploadMedia(
-      {
-        params: {
-          path: {
-            draftId: postId,
+      posthog.capture('cover_image_upload_start', {
+        postId,
+      });
+      const formData = new FormData();
+      formData.append('file', file);
+      uploadMedia(
+        {
+          params: {
+            path: {
+              draftId: postId,
+            },
+          },
+          // biome-ignore lint/suspicious/noExplicitAny: <explanation>
+          body: formData as any,
+        },
+        {
+          onSuccess: (data) => {
+            URL.revokeObjectURL(previewBlobUrl);
+            setValue('coverImage', data.url);
+            setPreview(null);
+            posthog.capture('cover_image_upload_success', {
+              postId,
+            });
+          },
+          // biome-ignore lint/suspicious/noExplicitAny: <explanation>
+          onError: (error: any) => {
+            posthog.capture('cover_image_upload_error', {
+              postId,
+            });
+            toast.error(error?.message);
           },
         },
-        // biome-ignore lint/suspicious/noExplicitAny: <explanation>
-        body: formData as any,
-      },
-      {
-        onSuccess: (data) => {
-          URL.revokeObjectURL(previewBlobUrl);
-          setValue('coverImage', data.url);
-          setPreview(null);
-          posthog.capture('cover_image_upload_success', {
-            postId,
-          });
-        },
-        // biome-ignore lint/suspicious/noExplicitAny: <explanation>
-        onError: (error: any) => {
-          posthog.capture('cover_image_upload_error', {
-            postId,
-          });
-          toast.error(error?.message);
-        },
-      },
-    );
-  }, []);
+      );
+    },
+    [postId, loadingUploadImage, posthog, setValue, setPreview, uploadMedia],
+  );
 
   const { getRootProps, getInputProps, isDragActive, open } = useDropzone({
     onDrop,
@@ -94,7 +97,13 @@ export const EditorCoverImage = () => {
     : null;
 
   return (
-    <Flex mt="4" {...getRootProps()}>
+    <div
+      {...getRootProps()}
+      className={cn('mt-4 flex justify-center', {
+        'justify-start': !preview && !resolvedWatchCoverImage,
+      })}
+      onClick={(e) => e.stopPropagation()}
+    >
       <input {...getInputProps()} />
       <motion.div
         initial={{ opacity: 0, scale: 0.95 }}
@@ -117,6 +126,7 @@ export const EditorCoverImage = () => {
           )
         ) : (
           <div className="relative mx-auto">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src={preview || resolvedWatchCoverImage || ''}
               className={cn('rounded-2', {
@@ -143,6 +153,6 @@ export const EditorCoverImage = () => {
           </div>
         )}
       </motion.div>
-    </Flex>
+    </div>
   );
 };
