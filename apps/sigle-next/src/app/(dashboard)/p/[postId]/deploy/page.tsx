@@ -16,7 +16,11 @@ export default function PostDeployPending(props: PostDeployPendingProps) {
   const params = use(props.params);
   const router = useRouter();
 
-  const { data: post, isLoading: isPostLoading } = sigleApiClient.useQuery(
+  const {
+    data: post,
+    isLoading: isPostLoading,
+    error,
+  } = sigleApiClient.useQuery(
     'get',
     '/api/protected/drafts/{draftId}',
     {
@@ -33,12 +37,12 @@ export default function PostDeployPending(props: PostDeployPendingProps) {
   );
 
   // We wait for the post to be deleted before redirecting to the post page
-  // Deleted means that the post has been indexed
+  // Deleted means that the post has been indexed so we check for the 404 status
   useEffect(() => {
-    if (!isPostLoading && !post) {
+    if (!isPostLoading && error?.statusCode === 404) {
       router.push(`/p/${params.postId}?published=true`);
     }
-  }, [post, isPostLoading, params.postId, router.push]);
+  }, [isPostLoading, params.postId, router, error]);
 
   return (
     <AuthProtect>

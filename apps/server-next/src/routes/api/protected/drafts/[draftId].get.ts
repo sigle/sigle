@@ -48,6 +48,26 @@ defineRouteMeta({
           },
         },
       },
+      404: {
+        description: 'Draft not found.',
+        content: {
+          'application/json': {
+            schema: {
+              type: 'object',
+              properties: {
+                message: {
+                  type: 'string',
+                  example: 'Draft not found.',
+                },
+                statusCode: {
+                  type: 'number',
+                  example: 404,
+                },
+              },
+            },
+          },
+        },
+      },
     },
   },
 });
@@ -80,6 +100,13 @@ export default defineEventHandler(async (event) => {
       userId: event.context.user.id,
     },
   });
+
+  if (!draft) {
+    throw createError({
+      status: 404,
+      statusMessage: 'Not Found',
+    });
+  }
 
   return draft;
 });
