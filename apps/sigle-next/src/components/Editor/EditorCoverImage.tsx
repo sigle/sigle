@@ -1,7 +1,7 @@
 'use client';
 
 import { cn } from '@/lib/cn';
-import { Button, Flex, IconButton, Spinner } from '@radix-ui/themes';
+import { Button, IconButton, Spinner } from '@radix-ui/themes';
 import { IconCameraPlus, IconHandGrab, IconTrash } from '@tabler/icons-react';
 import { useParams } from 'next/navigation';
 import { usePostHog } from 'posthog-js/react';
@@ -100,10 +100,11 @@ export const EditorCoverImage = () => {
 
   return (
     <div
+      {...getRootProps()}
       className={cn('mt-4 flex justify-center', {
         'justify-start': !preview && !resolvedWatchCoverImage,
       })}
-      {...getRootProps()}
+      onClick={(e) => e.stopPropagation()}
     >
       <input {...getInputProps()} />
       <motion.div

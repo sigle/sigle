@@ -101,12 +101,16 @@ export default defineEventHandler(async (event) => {
     buffer: file.data,
     contentType: parsedFile.data.type,
     quality: 75,
-    width: 600,
+    width: 700,
   });
 
   const generatedCID = await generateCID(optimizedBuffer);
   const { cid } = await ipfsUploadFile(event, {
-    path: `${event.context.user.id}/post-${draftId}/${generatedCID}.${mimeTypeToExtension(parsedFile.data.type)}`,
+    path: `${
+      event.context.user.id
+    }/post-${draftId}/${generatedCID}.${mimeTypeToExtension(
+      parsedFile.data.type,
+    )}`,
     content: optimizedBuffer,
   });
 
