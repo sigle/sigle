@@ -9,6 +9,7 @@ import { PlainTextLight } from '@/images/PlainTextLight';
 import { QuoteLight } from '@/images/QuoteLight';
 import { TwitterLight } from '@/images/TwitterLight';
 import type { SlashCommandsCommand } from './SlashCommands';
+import { VideoLight } from '@/images/VideoLight';
 
 export const slashCommands: SlashCommandsCommand[] = [
   {
@@ -223,8 +224,7 @@ export const slashCommands: SlashCommandsCommand[] = [
     },
   },
   {
-    // TODO custom icon
-    icon: TwitterLight,
+    icon: VideoLight,
     title: 'Video',
     description: 'Add a video embed (YouTube, etc.)',
     section: 'embed',
