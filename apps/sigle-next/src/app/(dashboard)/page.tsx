@@ -13,7 +13,10 @@ export default function Home() {
 
   return (
     <div className="pb-20">
-      <Container size="2" className="container mx-auto px-4 py-20 text-center">
+      <Container
+        size="2"
+        className="container mx-auto px-4 py-10 text-center md:py-20"
+      >
         <Heading size="8">Web3 writing platform for Web3 writers</Heading>
         <Heading
           as="h2"
@@ -35,7 +38,7 @@ export default function Home() {
         )}
       </Container>
 
-      <Container size="1">
+      <Container size="1" className="px-4">
         <Callout.Root>
           <Callout.Icon>
             <IconInfoCircle />
@@ -47,9 +50,9 @@ export default function Home() {
         </Callout.Root>
       </Container>
 
-      <Container size="4" className="mt-20">
-        <section className="grid grid-cols-1 gap-x-6 gap-y-4 md:grid-cols-3">
-          <div className="flex flex-col items-center text-center gap-4 p-6 bg-white rounded-xl shadow-md">
+      <Container size="4" className="mt-10 px-4 md:mt-20">
+        <section className="grid grid-cols-1 gap-x-6 md:grid-cols-3">
+          <div className="flex flex-col items-center text-center gap-4 p-6 rounded-xl shadow-md">
             <Heading as="h3" size="4">
               ⛓️ Write on-chain
             </Heading>
@@ -58,7 +61,7 @@ export default function Home() {
               Inscribe your words as Ordinals and make them live forever.
             </Text>
           </div>
-          <div className="flex flex-col items-center text-center gap-4 p-6 bg-white rounded-xl shadow-md">
+          <div className="flex flex-col items-center text-center gap-4 p-6 rounded-xl shadow-md">
             <Heading as="h3" size="4">
               💰 Earn Bitcoin
             </Heading>
@@ -67,7 +70,7 @@ export default function Home() {
               <Text weight="medium">sBTC</Text> payments to your wallet.
             </Text>
           </div>
-          <div className="flex flex-col items-center text-center gap-4 p-6 bg-white rounded-xl shadow-md">
+          <div className="flex flex-col items-center text-center gap-4 p-6 rounded-xl shadow-md">
             <Heading as="h3" size="4">
               ⚡ Full Control
             </Heading>
