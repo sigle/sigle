@@ -34,6 +34,8 @@ export const EditorCoverImage = () => {
       if (!file) return;
       if (loadingUploadImage) return;
 
+      console.log('acceptedFiles', acceptedFiles);
+
       const previewBlobUrl = URL.createObjectURL(file);
       setPreview(previewBlobUrl);
 
@@ -97,7 +99,12 @@ export const EditorCoverImage = () => {
     : null;
 
   return (
-    <div className="mt-4 flex justify-center" {...getRootProps()}>
+    <div
+      className={cn('mt-4 flex justify-center', {
+        'justify-start': !preview && !resolvedWatchCoverImage,
+      })}
+      {...getRootProps()}
+    >
       <input {...getInputProps()} />
       <motion.div
         initial={{ opacity: 0, scale: 0.95 }}
