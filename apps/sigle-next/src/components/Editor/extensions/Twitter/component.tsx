@@ -75,8 +75,6 @@ export const EmbedComponent = (props: NodeViewProps) => {
     }
   };
 
-  console.log('embedType', props.node);
-
   return (
     <NodeViewWrapper data-embed>
       {!url && (
