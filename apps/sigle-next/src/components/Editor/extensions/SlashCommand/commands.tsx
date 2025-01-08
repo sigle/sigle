@@ -209,7 +209,7 @@ export const slashCommands: SlashCommandsCommand[] = [
     section: 'embed',
     command: ({ editor, range }) => {
       if (!range) {
-        editor.commands.setEmbed();
+        editor.commands.setEmbed('twitter');
         return;
       }
 
@@ -219,10 +219,11 @@ export const slashCommands: SlashCommandsCommand[] = [
         // Use deleteRange to clear the text from command chars "/q" etc..
         .deleteRange(range)
         .run();
-      editor.commands.setEmbed();
+      editor.commands.setEmbed('twitter');
     },
   },
   {
+    // TODO custom icon
     icon: TwitterLight,
     title: 'Video',
     description: 'Add a video embed (YouTube, etc.)',
@@ -230,7 +231,7 @@ export const slashCommands: SlashCommandsCommand[] = [
     keywords: ['youtube'],
     command: ({ editor, range }) => {
       if (!range) {
-        editor.commands.setEmbed();
+        editor.commands.setEmbed('video');
         return;
       }
       editor
@@ -239,7 +240,7 @@ export const slashCommands: SlashCommandsCommand[] = [
         // Use deleteRange to clear the text from command chars "/q" etc..
         .deleteRange(range)
         .run();
-      editor.commands.setEmbed();
+      editor.commands.setEmbed('video');
     },
   },
 ];
