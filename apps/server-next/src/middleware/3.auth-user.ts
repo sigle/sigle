@@ -18,10 +18,11 @@ export default defineEventHandler(async (event) => {
 
   console.log('headers', event.headers);
 
+  const useSecureCookies = env.APP_URL.startsWith('https://');
   const token = await getToken({
     req: event,
     secret: env.AUTH_SECRET,
-    secureCookie: env.NODE_ENV === 'production',
+    secureCookie: useSecureCookies,
   });
 
   console.log('token', token);
