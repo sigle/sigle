@@ -91,7 +91,7 @@
     "motion-hooks": "0.1.1",
     "nanoid": "3.3.3",
     "next": "14.2.7",
-    "next-auth": "4.24.5",
+    "next-auth": "5.0.0-beta.25",
     "next-plausible": "3.12.0",
     "next-seo": "5.4.0",
     "next-themes": "0.2.0",
