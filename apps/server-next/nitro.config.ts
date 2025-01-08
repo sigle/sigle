@@ -6,6 +6,9 @@ export default defineNitroConfig({
       target: 'es2022',
     },
   },
+  openAPI: {
+    production: 'runtime',
+  },
   experimental: {
     openAPI: true,
     tasks: true,
