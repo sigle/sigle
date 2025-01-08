@@ -75,6 +75,8 @@ export const EmbedComponent = (props: NodeViewProps) => {
     }
   };
 
+  console.log('embedType', props.node);
+
   return (
     <NodeViewWrapper data-embed>
       {!url && (
@@ -82,7 +84,7 @@ export const EmbedComponent = (props: NodeViewProps) => {
           <TextField.Root
             size="3"
             placeholder={
-              props.HTMLAttributes.embedType === 'twitter'
+              props.node.attrs.embedType === 'twitter'
                 ? 'Paste tweet URL and press “enter”...'
                 : 'Paste video URL and press “enter”...'
             }
@@ -90,10 +92,10 @@ export const EmbedComponent = (props: NodeViewProps) => {
             onKeyDown={onKeyDown}
           >
             <TextField.Slot>
-              {props.HTMLAttributes.embedType === 'twitter' ? (
+              {props.node.attrs.embedType === 'twitter' ? (
                 <IconBrandTwitter height="16" width="16" />
               ) : null}
-              {props.HTMLAttributes.embedType === 'video' ? (
+              {props.node.attrs.embedType === 'video' ? (
                 <IconBrandYoutube height="16" width="16" />
               ) : null}
             </TextField.Slot>
