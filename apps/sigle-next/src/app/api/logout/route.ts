@@ -5,7 +5,7 @@ import { NextResponse } from 'next/server';
 /**
  * This function is used as a workaround as I didn't manage to get the logout to work with next-auth
  */
-export async function GET(request: Request) {
+export async function GET() {
   const userCookies = await cookies();
   const useSecureCookies = env.NEXT_PUBLIC_APP_URL.startsWith('https://');
   const cookiePrefix = useSecureCookies ? '__Secure-' : '';
