@@ -6,18 +6,8 @@
 (define-constant ERR-SALE-NOT-STARTED u1002)
 (define-constant ERR-SALE-ENDED u1003)
 
-;; Separate fee structures for free and paid mints
-(define-data-var paid-fee-structure {
-    protocol: uint,
-    creator: uint,
-    mintReferrer: uint
-} {
-    protocol: u550000,
-    creator: u300000,
-    mintReferrer: u150000
-})
-
-(define-data-var free-fee-structure {
+;; Single fee structure for all mints
+(define-data-var fixed-fee-structure {
     protocol: uint,
     creator: uint,
     mintReferrer: uint
@@ -57,10 +47,7 @@
     (protocol-address (contract-call? .sigle-protocol get-payout-address))
     (mint-config (unwrap! (map-get? contract-mint-config (contract-of token-contract)) (err ERR-INVALID-MINT-DATA)))
     (mint-recipient (default-to tx-sender recipient))
-    ;; Choose fee structure based on whether it's a paid mint
-    (fees (if (> (get price mint-config) u0)
-            (var-get paid-fee-structure)
-            (var-get free-fee-structure)))
+    (fees (var-get fixed-fee-structure))
     (protocol-fee (* (get protocol fees) quantity))
     (creator-fee (* (get creator fees) quantity))
     (referrer-fee (* (get mintReferrer fees) quantity))
@@ -92,32 +79,17 @@
   )
 )
 
-(define-public (update-paid-fees (protocol uint) (creator uint) (mintReferrer uint))
+(define-public (update-fees (protocol uint) (creator uint) (mintReferrer uint))
     (let (
         (protocol-owner (contract-call? .sigle-protocol get-contract-owner))
     )
         (asserts! (is-eq tx-sender protocol-owner) (err ERR-NOT-AUTHORIZED))
-        (var-set paid-fee-structure {
+        (var-set fixed-fee-structure {
             protocol: protocol,
             creator: creator,
             mintReferrer: mintReferrer
         })
-        (print { a: "update-paid-fees", protocol: protocol, creator: creator, mintReferrer: mintReferrer })
-        (ok true)
-    )
-)
-
-(define-public (update-free-fees (protocol uint) (creator uint) (mintReferrer uint))
-    (let (
-        (protocol-owner (contract-call? .sigle-protocol get-contract-owner))
-    )
-        (asserts! (is-eq tx-sender protocol-owner) (err ERR-NOT-AUTHORIZED))
-        (var-set free-fee-structure {
-            protocol: protocol,
-            creator: creator,
-            mintReferrer: mintReferrer
-        })
-        (print { a: "update-free-fees", protocol: protocol, creator: creator, mintReferrer: mintReferrer })
+        (print { a: "update-fees", protocol: protocol, creator: creator, mintReferrer: mintReferrer })
         (ok true)
     )
 )

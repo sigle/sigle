@@ -7,7 +7,7 @@ import {
   PostConditionMode,
   uintCV,
 } from '@stacks/transactions';
-import { fixedMintFeeFree } from './config.js';
+import { fixedMintFee } from './config.js';
 
 export type MintParams = {
   // Contract address of the post
@@ -52,7 +52,7 @@ export const mint = async ({
   const minterContract = minterData.value.value;
   const [minterContractAddress, minterContractName] = minterContract.split('.');
 
-  const totalFixedMintFee = fixedMintFeeFree.total * BigInt(params.amount);
+  const totalFixedMintFee = fixedMintFee.total * BigInt(params.amount);
   const totalPrice =
     BigInt(params.price) * BigInt(params.amount) + totalFixedMintFee;
 

@@ -28,7 +28,7 @@ import { useSession } from 'next-auth/react';
 import { useSearchParams } from 'next/navigation';
 import { useState } from 'react';
 import { toast } from 'sonner';
-import { formatSTX, fixedMintFeeFree } from '@sigle/sdk';
+import { formatSTX, fixedMintFee } from '@sigle/sdk';
 import { sigleClient } from '@/lib/sigle';
 import { formatReadableAddress, getExplorerTransactionUrl } from '@/lib/stacks';
 import { useContractCall } from '@/hooks/useContractCall';
@@ -112,10 +112,10 @@ export const PostCollectDialog = ({
   const price = BigInt(post.price);
   const isFree = price === BigInt(0);
   const loadingCollect = contractLoading;
-  const totalPrice = BigInt(editions) * (price + fixedMintFeeFree.total);
-  const protocolFee = BigInt(editions) * fixedMintFeeFree.protocol;
-  const creatorFee = BigInt(editions) * (price + fixedMintFeeFree.creator);
-  const referrerFee = BigInt(editions) * fixedMintFeeFree.mintReferrer;
+  const totalPrice = BigInt(editions) * (price + fixedMintFee.total);
+  const protocolFee = BigInt(editions) * fixedMintFee.protocol;
+  const creatorFee = BigInt(editions) * (price + fixedMintFee.creator);
+  const referrerFee = BigInt(editions) * fixedMintFee.mintReferrer;
 
   return (
     <Dialog.Root open={open} onOpenChange={onOpenChange}>
@@ -198,7 +198,7 @@ export const PostCollectDialog = ({
               </a>
             </Text>
             <Text as="p" size="1" weight="medium" color="gray">
-              {formatSTX(fixedMintFeeFree.total)} STX
+              {formatSTX(fixedMintFee.total)} STX
             </Text>
           </div>
           <div className="flex items-center justify-between">

@@ -8,7 +8,7 @@ import {
   generatePostContract,
   type GeneratePostParams,
 } from './generate-post-contract.js';
-import { config, fixedMintFeeFree, fixedMintFeePaid } from './config.js';
+import { config, fixedMintFee } from './config.js';
 
 interface CreateClientOptions {
   /**
@@ -38,4 +38,4 @@ export const createClient = (options: CreateClientOptions) => {
       }),
   };
 };
-export { config as sigleConfig, fixedMintFeeFree, fixedMintFeePaid };
+export { config as sigleConfig, fixedMintFee };
