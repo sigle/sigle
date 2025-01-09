@@ -198,7 +198,7 @@ export const PostCollectDialog = ({
               </a>
             </Text>
             <Text as="p" size="1" weight="medium" color="gray">
-              {formatSTX(fixedMintFeeFree.total)} STX
+              {formatSTX(fixedMintFee.total)} STX
             </Text>
           </div>
           <div className="flex items-center justify-between">
