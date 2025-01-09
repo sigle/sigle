@@ -1,11 +1,6 @@
 import { Cl } from '@stacks/transactions';
 import { beforeEach, describe, expect, it } from 'vitest';
-import {
-  createClient,
-  fixedMintFeeFree,
-  fixedMintFeePaid,
-  parseSTX,
-} from '@sigle/sdk';
+import { createClient, fixedMintFee, parseSTX } from '@sigle/sdk';
 import { STACKS_MOCKNET } from '@stacks/network';
 
 const contract = 'sigle-minter-fixed-price-v001';
@@ -31,11 +26,11 @@ describe(contract, () => {
   const defaultContractName = `${wallet1}.default-contract`;
 
   describe('update-fees', () => {
-    describe('update-paid-fees', () => {
+    describe('update-fees', () => {
       it('allows protocol owner to update fees', () => {
         const { result } = simnet.callPublicFn(
           contract,
-          'update-paid-fees',
+          'update-fees',
           [
             Cl.uint(100000), // Protocol fee
             Cl.uint(200000), // Creator fee
@@ -50,35 +45,7 @@ describe(contract, () => {
       it('prevents non-owner from updating fees', () => {
         const { result } = simnet.callPublicFn(
           contract,
-          'update-paid-fees',
-          [Cl.uint(100000), Cl.uint(200000), Cl.uint(50000)],
-          wallet1,
-        );
-
-        expect(result).toBeErr(Cl.uint(403)); // ERR-NOT-AUTHORIZED
-      });
-    });
-
-    describe('update-free-fees', () => {
-      it('allows protocol owner to update fees', () => {
-        const { result } = simnet.callPublicFn(
-          contract,
-          'update-free-fees',
-          [
-            Cl.uint(100000), // Protocol fee
-            Cl.uint(200000), // Creator fee
-            Cl.uint(50000), // Referrer fee
-          ],
-          deployer,
-        );
-
-        expect(result).toBeOk(Cl.bool(true));
-      });
-
-      it('prevents non-owner from updating fees', () => {
-        const { result } = simnet.callPublicFn(
-          contract,
-          'update-free-fees',
+          'update-fees',
           [Cl.uint(100000), Cl.uint(200000), Cl.uint(50000)],
           wallet1,
         );
@@ -166,7 +133,7 @@ describe(contract, () => {
       expect(events[0]).toEqual({
         event: 'stx_transfer_event',
         data: {
-          amount: fixedMintFeeFree.protocol.toString(),
+          amount: fixedMintFee.protocol.toString(),
           memo: '',
           recipient: deployer,
           sender: wallet2,
@@ -175,7 +142,7 @@ describe(contract, () => {
       expect(events[1]).toEqual({
         event: 'stx_transfer_event',
         data: {
-          amount: fixedMintFeeFree.creator.toString(),
+          amount: fixedMintFee.creator.toString(),
           memo: '',
           recipient: wallet1,
           sender: wallet2,
@@ -184,7 +151,7 @@ describe(contract, () => {
       expect(events[2]).toEqual({
         event: 'stx_transfer_event',
         data: {
-          amount: fixedMintFeeFree.mintReferrer.toString(),
+          amount: fixedMintFee.mintReferrer.toString(),
           memo: '',
           recipient: wallet3,
           sender: wallet2,
@@ -227,7 +194,7 @@ describe(contract, () => {
       expect(events[0]).toEqual({
         event: 'stx_transfer_event',
         data: {
-          amount: fixedMintFeePaid.protocol.toString(),
+          amount: fixedMintFee.protocol.toString(),
           memo: '',
           recipient: deployer,
           sender: wallet2,
@@ -236,7 +203,7 @@ describe(contract, () => {
       expect(events[1]).toEqual({
         event: 'stx_transfer_event',
         data: {
-          amount: (parseSTX('4.2') + fixedMintFeePaid.creator).toString(),
+          amount: (parseSTX('4.2') + fixedMintFee.creator).toString(),
           memo: '',
           recipient: wallet1,
           sender: wallet2,
@@ -245,7 +212,7 @@ describe(contract, () => {
       expect(events[2]).toEqual({
         event: 'stx_transfer_event',
         data: {
-          amount: fixedMintFeePaid.mintReferrer.toString(),
+          amount: fixedMintFee.mintReferrer.toString(),
           memo: '',
           recipient: wallet3,
           sender: wallet2,

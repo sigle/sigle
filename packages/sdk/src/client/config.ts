@@ -49,16 +49,9 @@ export const config: {
   },
 };
 
-export const fixedMintFeeFree = {
+export const fixedMintFee = {
   protocol: parseSTX('0.35'),
   creator: parseSTX('0.5'),
-  mintReferrer: parseSTX('0.15'),
-  total: parseSTX('1'),
-};
-
-export const fixedMintFeePaid = {
-  protocol: parseSTX('0.55'),
-  creator: parseSTX('0.3'),
   mintReferrer: parseSTX('0.15'),
   total: parseSTX('1'),
 };
