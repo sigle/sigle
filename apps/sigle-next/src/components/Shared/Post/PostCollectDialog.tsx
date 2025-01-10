@@ -99,11 +99,13 @@ export const PostCollectDialog = ({
   };
 
   const incrementEditions = () => {
+    const maxMints = 10;
     const remainingEditions = post.maxSupply - editions;
     if (
-      post.openEdition ||
-      editions < post.maxSupply ||
-      remainingEditions < 1
+      (post.openEdition ||
+        editions < post.maxSupply ||
+        remainingEditions < 1) &&
+      editions < maxMints
     ) {
       setEditions(editions + 1);
     }
