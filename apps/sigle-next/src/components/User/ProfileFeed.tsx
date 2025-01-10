@@ -30,7 +30,7 @@ export const ProfileFeed = ({ user }: ProfileFeedProps) => {
   if (posts?.length === 0 && user.id === session?.user.id) {
     return (
       <>
-        <div className="my-10 gap-3 items-center flex flex-col">
+        <div className="my-20 gap-3 items-center flex flex-col">
           <Text size="2" color="gray" weight="medium">
             You haven{"'"}t published anything yet.
           </Text>
@@ -46,7 +46,7 @@ export const ProfileFeed = ({ user }: ProfileFeedProps) => {
 
   if (posts.length === 0) {
     return (
-      <div className="mt-10 gap-3 items-center flex flex-col">
+      <div className="my-20 gap-3 items-center flex flex-col">
         <Text>This user has not published anything yet.</Text>
         <Button color="gray" highContrast asChild>
           <NextLink href="/">Explore</NextLink>

@@ -81,6 +81,12 @@ export const PostCollectDialog = ({
       return;
     }
 
+    // TODO owner mint
+    if (session.user.address === post.address.split('.')[0]) {
+      alert('You cannot collect your own post (will be possible soon)');
+      return;
+    }
+
     const { parameters } = await sigleClient.mint({
       sender: session.user.address,
       contract: post.address,
