@@ -198,7 +198,7 @@ export const PostCollectDialog = ({
             >
               Mint fee
               <a
-                href="https://docs.sigle.io/TODO"
+                href="https://sigle-docs-next.vercel.app/monetization#fee-structure"
                 target="_blank"
                 rel="noreferrer"
               >

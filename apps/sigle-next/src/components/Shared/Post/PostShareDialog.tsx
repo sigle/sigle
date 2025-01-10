@@ -67,7 +67,10 @@ export const PostShareDialog = ({
             <Callout.Text>
               Earn referrer rewards for each primary sale made through your
               link.{' '}
-              <Link href="https://docs.sigle.io/TODO" target="_blank">
+              <Link
+                href="https://sigle-docs-next.vercel.app/monetization#fee-structure"
+                target="_blank"
+              >
                 Learn more.
               </Link>
             </Callout.Text>
@@ -93,7 +96,9 @@ export const PostShareDialog = ({
             </IconButton>
             <IconButton size="4" color="gray" highContrast asChild>
               <a
-                href={`https://bsky.app/intent/compose?text=${encodeURIComponent(`Collect ${metaTitleAttribute} on @sigleapp`)}&url=${publicationLink}`}
+                href={`https://bsky.app/intent/compose?text=${encodeURIComponent(
+                  `Collect ${metaTitleAttribute} on @sigleapp`,
+                )}&url=${publicationLink}`}
                 target="_blank"
                 rel="noreferrer noopener"
                 className="overflow-hidden"
@@ -108,7 +113,9 @@ export const PostShareDialog = ({
             </IconButton>
             <IconButton size="4" color="gray" highContrast asChild>
               <a
-                href={`https://t.me/share/url?text=${encodeURIComponent(`Collect ${metaTitleAttribute} on @sigleapp`)}&url=${publicationLink}`}
+                href={`https://t.me/share/url?text=${encodeURIComponent(
+                  `Collect ${metaTitleAttribute} on @sigleapp`,
+                )}&url=${publicationLink}`}
                 target="_blank"
                 rel="noreferrer noopener"
                 className="overflow-hidden"
