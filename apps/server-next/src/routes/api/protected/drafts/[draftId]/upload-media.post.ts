@@ -8,6 +8,7 @@ import {
   mimeTypeToExtension,
   optimizeImage,
 } from '~/lib/images';
+import { readMultipartFormDataSafe } from '~/lib/nitro';
 import { prisma } from '~/lib/prisma';
 
 defineRouteMeta({
@@ -60,10 +61,9 @@ const fileSchema = z.object({
 });
 
 export default defineEventHandler(async (event) => {
-  // TODO limit file size
   // TODO rate limit route 10 / minute / user
   const draftId = getRouterParam(event, 'draftId');
-  const formData = await readMultipartFormData(event);
+  const formData = await readMultipartFormDataSafe(event, '5mb');
 
   const file = formData?.find((f) => f.name === 'file');
   if (!file) {

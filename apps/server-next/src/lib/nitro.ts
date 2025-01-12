@@ -1,4 +1,4 @@
-import type { H3Event } from 'h3';
+import type { H3Event, MultiPartData } from 'h3';
 import type { z } from 'zod';
 import { fromError } from 'zod-validation-error';
 
@@ -38,4 +38,29 @@ export const readValidatedBodyZod = async <T, Event extends H3Event = H3Event>(
   }
 
   return response.data;
+};
+
+const possibleMaxSizes = {
+  '1mb': 1024 * 1024,
+  '5mb': 1024 * 1024 * 5,
+};
+
+export const readMultipartFormDataSafe = async (
+  event: H3Event,
+  maxSize: keyof typeof possibleMaxSizes,
+): Promise<MultiPartData[] | undefined> => {
+  const maxSizeValue = possibleMaxSizes[maxSize];
+  if (!maxSizeValue) {
+    throw new Error(`Invalid maxSize: ${maxSize}`);
+  }
+  setResponseHeader(event, 'max-content-length', maxSizeValue.toString());
+
+  if (Number(getRequestHeader(event, 'content-length')) > maxSizeValue) {
+    throw createError({
+      status: 413,
+      message: `File too large. Maximum size is ${maxSize}.`,
+    });
+  }
+
+  return readMultipartFormData(event);
 };

@@ -6,6 +6,7 @@ import {
   mimeTypeToExtension,
   optimizeImage,
 } from '~/lib/images';
+import { readMultipartFormDataSafe } from '~/lib/nitro';
 
 defineRouteMeta({
   openAPI: {
@@ -57,9 +58,8 @@ const fileSchema = z.object({
 });
 
 export default defineEventHandler(async (event) => {
-  // TODO limit file size
   // TODO rate limit route 2 / minute / user
-  const formData = await readMultipartFormData(event);
+  const formData = await readMultipartFormDataSafe(event, '5mb');
 
   const file = formData?.find((f) => f.name === 'file');
   if (!file) {
@@ -85,7 +85,9 @@ export default defineEventHandler(async (event) => {
   });
 
   const { cid } = await ipfsUploadFile(event, {
-    path: `${event.context.user.id}/profile.${mimeTypeToExtension(parsedFile.data.type)}`,
+    path: `${event.context.user.id}/profile.${mimeTypeToExtension(
+      parsedFile.data.type,
+    )}`,
     content: optimizedBuffer,
   });
 
