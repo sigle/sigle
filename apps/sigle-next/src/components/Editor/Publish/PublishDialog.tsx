@@ -20,10 +20,9 @@ import { useEditorStore } from '../store';
 import { generateSigleMetadataFromForm } from '../utils';
 import { PublishReview } from './PublishReview';
 import { sigleApiClient } from '@/__generated__/sigle-api';
-import { openContractDeploy } from '@stacks/connect';
-import { stacksNetwork, appDetails, userSession } from '@/lib/stacks';
 import { sigleClient } from '@/lib/sigle';
 import { parseSTX } from '@sigle/sdk';
+import { useContractDeploy } from '@/hooks/useContractDeploy';
 
 interface PublishDialogProps {
   postId: string;
@@ -48,6 +47,40 @@ export const PublishDialog = ({ postId }: PublishDialogProps) => {
     'post',
     '/api/protected/drafts/{draftId}/set-tx-id',
   );
+  const { contractDeploy, loading: deployLoading } = useContractDeploy({
+    onCancel: () => {
+      posthog.capture('post_publish_cancel', {
+        postId,
+      });
+
+      setPublishingLoading(false);
+    },
+    onSuccess: async (tx) => {
+      posthog.capture('post_publish_transaction_submitted', {
+        postId,
+        txId: tx.txId,
+      });
+
+      setPublishingLoading({
+        action: 'transaction-pending',
+        txId: tx.txId,
+      });
+
+      await updateTxId({
+        params: {
+          path: {
+            draftId: postId,
+          },
+        },
+        body: {
+          txId: tx.txId,
+        },
+      });
+
+      // Redirect to the deploy page
+      router.push(`/p/${postId}/deploy`);
+    },
+  });
 
   const onSubmit = () => {
     handleSubmit(
@@ -98,45 +131,10 @@ export const PublishDialog = ({ postId }: PublishDialogProps) => {
             },
           });
 
-          openContractDeploy({
+          await contractDeploy({
             // TODO decide on the contract name slug, id or other
             contractName: newPostId,
             codeBody: contract,
-            network: stacksNetwork,
-            appDetails,
-            userSession,
-            onCancel: () => {
-              posthog.capture('post_publish_cancel', {
-                postId,
-              });
-
-              setPublishingLoading(false);
-            },
-            onFinish: async (tx) => {
-              posthog.capture('post_publish_transaction_submitted', {
-                postId,
-                txId: tx.txId,
-              });
-
-              setPublishingLoading({
-                action: 'transaction-pending',
-                txId: tx.txId,
-              });
-
-              await updateTxId({
-                params: {
-                  path: {
-                    draftId: postId,
-                  },
-                },
-                body: {
-                  txId: tx.txId,
-                },
-              });
-
-              // Redirect to the deploy page
-              router.push(`/p/${postId}/deploy`);
-            },
           });
           // biome-ignore lint/suspicious/noExplicitAny: <explanation>
         } catch (error: any) {

@@ -25,7 +25,7 @@ export const PublishReview = ({ onPublish }: PublishReviewProps) => {
     | 'loading'
     | { valid: true }
   >('loading');
-  const { handleSubmit } = useFormContext<EditorPostFormData>();
+  const { handleSubmit, formState } = useFormContext<EditorPostFormData>();
 
   // Validate form on mount so we can show the various error messages in the callout
   // and disable the publish button
@@ -108,6 +108,7 @@ export const PublishReview = ({ onPublish }: PublishReviewProps) => {
         </Dialog.Close>
         <Button
           disabled={isFormValid === 'loading' || !isFormValid.valid}
+          loading={formState.isSubmitting}
           onClick={onPublish}
         >
           Publish
