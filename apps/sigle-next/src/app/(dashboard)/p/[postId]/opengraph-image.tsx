@@ -2,8 +2,6 @@ import { sigleApiFetchclient } from '@/__generated__/sigle-api';
 import { resolveImageUrl } from '@/lib/images';
 import { ImageResponse } from 'next/og';
 
-export const runtime = 'edge';
-
 export const size = {
   width: 800,
   height: 418,
