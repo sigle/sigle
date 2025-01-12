@@ -21,8 +21,6 @@ type Props = {
 export function PostClientPage(props: Props) {
   const params = use(props.params);
 
-  // TODO opengraph-image.tsx
-
   const { data: post } = sigleApiClient.useSuspenseQuery(
     'get',
     '/api/posts/{postId}',
