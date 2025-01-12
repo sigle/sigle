@@ -61,10 +61,9 @@ export const PublicationCard = ({ user, post }: PublicationCardProps) => {
                   <Image
                     src={resolveImageUrl(post.coverImage.id)}
                     alt="Cover card"
-                    className="size-full rounded-2"
+                    className="size-full rounded-2 object-cover"
                     placeholder={post.coverImage.blurhash ? 'blur' : 'empty'}
                     blurDataURL={post.coverImage.blurhash}
-                    objectFit="cover"
                     width={post.coverImage.width}
                     height={post.coverImage.height}
                   />
