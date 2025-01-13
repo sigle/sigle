@@ -1,7 +1,16 @@
 'use client';
 
 import { sigleApiClient } from '@/__generated__/sigle-api';
-import { Button, Card, Flex, Heading, Spinner, Text } from '@radix-ui/themes';
+import { getExplorerTransactionUrl } from '@/lib/stacks';
+import {
+  Badge,
+  Button,
+  Card,
+  Flex,
+  Heading,
+  Spinner,
+  Text,
+} from '@radix-ui/themes';
 import { format } from 'date-fns';
 import NextLink from 'next/link';
 
@@ -53,29 +62,45 @@ export const LatestDrafts = () => {
           </div>
         ) : null}
 
-        {drafts?.map((draft) => (
-          // TODO show tx status, maybe create a shared card component for drafts?
-          // TODO share component with the drafts page
-          <div
-            key={draft.id}
-            className="border-b border-solid border-gray-6 py-5 first:pt-0 last:border-b-0 last:pb-0"
-          >
-            <NextLink href={`/p/${draft.id}/edit`}>
-              {draft.metaTitle || draft.title ? (
-                <Heading as="h3" size="4" className="line-clamp-2">
-                  {draft.metaTitle || draft.title}
-                </Heading>
-              ) : (
-                <Heading as="h3" size="4" className="line-clamp-2" color="gray">
-                  No title
-                </Heading>
+        {drafts?.map((draft) => {
+          const heading =
+            draft.metaTitle || draft.title ? (
+              <Heading as="h3" size="4" className="line-clamp-2">
+                {draft.metaTitle || draft.title}
+              </Heading>
+            ) : (
+              <Heading as="h3" size="4" className="line-clamp-2" color="gray">
+                No title
+              </Heading>
+            );
+
+          return (
+            <div
+              key={draft.id}
+              className="border-b border-solid border-gray-6 py-5 first:pt-0 last:border-b-0 last:pb-0"
+            >
+              {draft.txStatus === 'pending' && draft.txId && (
+                <Badge className="mb-2" asChild>
+                  <a
+                    href={getExplorerTransactionUrl(draft.txId)}
+                    target="_blank"
+                    rel="noreferrer"
+                  >
+                    Publishing: Transaction pending
+                  </a>
+                </Badge>
               )}
-            </NextLink>
-            <Text as="p" mt="3" color="gray" size="1" className="uppercase">
-              {format(new Date(draft.createdAt), 'MMM dd')}
-            </Text>
-          </div>
-        ))}
+              {draft.txStatus === 'pending' ? (
+                heading
+              ) : (
+                <NextLink href={`/p/${draft.id}/edit`}>{heading}</NextLink>
+              )}
+              <Text as="p" mt="3" color="gray" size="1" className="uppercase">
+                {format(new Date(draft.createdAt), 'MMM dd')}
+              </Text>
+            </div>
+          );
+        })}
       </Card>
     </div>
   );
