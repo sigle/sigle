@@ -23,6 +23,7 @@ defineRouteMeta({
         schema: {
           type: 'string',
         },
+        description: 'The address of the user to get posts for.',
       },
     ],
     responses: {
@@ -115,7 +116,7 @@ defineRouteMeta({
 
 const listQuerySchema = z.object({
   limit: z.coerce.number().min(1).max(100),
-  username: z.string().min(1),
+  username: z.string().min(1).optional(),
 });
 
 export default defineEventHandler(async (event) => {
