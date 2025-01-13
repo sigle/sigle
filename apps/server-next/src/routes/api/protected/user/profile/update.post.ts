@@ -34,7 +34,9 @@ export default defineEventHandler(async (event) => {
   if (!parsedMetadata.success) {
     throw createError({
       status: 400,
-      message: `Invalid metadata: ${fromError(parsedMetadata.error).toString()}`,
+      message: `Invalid metadata: ${fromError(
+        parsedMetadata.error,
+      ).toString()}`,
     });
   }
   const {
@@ -72,6 +74,8 @@ export default defineEventHandler(async (event) => {
       coverPictureUri: parsedMetadata.data.coverPicture,
     },
   });
+
+  // TODO get blurhash from images cover and picture
 
   return { id };
 });
