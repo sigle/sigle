@@ -9,6 +9,8 @@ import NextLink from 'next/link';
 import { Routes } from '@/lib/routes';
 import { sigleApiClient } from '@/__generated__/sigle-api';
 import { resolveImageUrl } from '@/lib/images';
+import { getDefaultAvatarUrl } from '@/lib/users';
+import { ProfileAvatar } from '../Shared/Profile/ProfileAvatar';
 
 export const UserDropdown = () => {
   const posthog = usePostHog();
@@ -45,17 +47,7 @@ export const UserDropdown = () => {
     <DropdownMenu.Root>
       <DropdownMenu.Trigger>
         <IconButton variant="ghost" size="1">
-          {/* TODO use next.js image component with blurhash */}
-          <Avatar
-            src={
-              user.profile?.pictureUri
-                ? resolveImageUrl(user.profile.pictureUri)
-                : undefined
-            }
-            fallback={session.user?.id?.[0] || ''}
-            alt={`${user.profile?.displayName}`}
-            size="2"
-          />
+          <ProfileAvatar user={user} size="2" />
         </IconButton>
       </DropdownMenu.Trigger>
       <DropdownMenu.Content align="end" color="gray" variant="soft">

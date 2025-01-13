@@ -1,13 +1,13 @@
 import type { paths } from '@/__generated__/sigle-api/openapi';
-import { resolveImageUrl } from '@/lib/images';
 import { Routes } from '@/lib/routes';
 import { formatReadableAddress } from '@/lib/stacks';
-import { Avatar, Button, IconButton, Text, Tooltip } from '@radix-ui/themes';
+import { Button, IconButton, Text, Tooltip } from '@radix-ui/themes';
 import NextLink from 'next/link';
 import { useState } from 'react';
 import { PostCollectDialog } from '../Shared/Post/PostCollectDialog';
 import { IconShare } from '@tabler/icons-react';
 import { PostShareDialog } from '../Shared/Post/PostShareDialog';
+import { ProfileAvatar } from '../Shared/Profile/ProfileAvatar';
 
 interface PostUserActionsProps {
   post: paths['/api/posts/{postId}']['get']['responses']['200']['content']['application/json'];
@@ -24,16 +24,7 @@ export const PostUserActions = ({ post }: PostUserActionsProps) => {
       <div className="mt-5 flex items-center justify-between">
         <div className="flex items-center gap-2">
           <NextLink href={Routes.userProfile({ username: post.user.id })}>
-            <Avatar
-              size="2"
-              fallback="T"
-              radius="full"
-              src={
-                post.user.profile?.pictureUri
-                  ? resolveImageUrl(post.user.profile.pictureUri)
-                  : undefined
-              }
-            />
+            <ProfileAvatar user={post.user} size="2" />
           </NextLink>
           <div className="grid gap-0.5">
             <Text size="2" weight="medium" asChild>

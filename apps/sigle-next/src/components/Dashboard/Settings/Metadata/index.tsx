@@ -1,12 +1,12 @@
 'use client';
 
 import { sigleApiClient } from '@/__generated__/sigle-api';
-import { Avatar, Button, Card, Flex, Heading, Text } from '@radix-ui/themes';
+import { Button, Card, Flex, Heading, Text } from '@radix-ui/themes';
 import { IconPencil } from '@tabler/icons-react';
 import { useSession } from 'next-auth/react';
 import { useState } from 'react';
 import { UpdateProfileMetadata } from './UpdateProfileMetadata';
-import { resolveImageUrl } from '@/lib/images';
+import { ProfileAvatar } from '@/components/Shared/Profile/ProfileAvatar';
 
 export const SettingsProfileMetadata = () => {
   const [editingProfileMetadata, setEditingProfileMetadata] = useState(false);
@@ -51,17 +51,7 @@ export const SettingsProfileMetadata = () => {
         {!editingProfileMetadata ? (
           <Card size="1">
             <Flex gap="4" align="center">
-              {/* TODO use next.js image component with blurhash */}
-              <Avatar
-                src={
-                  user.profile?.pictureUri
-                    ? resolveImageUrl(user.profile.pictureUri)
-                    : undefined
-                }
-                fallback={user.id[0]!}
-                alt={user.id}
-                size="3"
-              />
+              <ProfileAvatar user={user} size="3" />
               <Flex direction="column">
                 {user.profile?.displayName ? (
                   <Text weight="medium">{user.profile.displayName}</Text>

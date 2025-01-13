@@ -1,10 +1,10 @@
 import type { paths } from '@/__generated__/sigle-api/openapi';
-import { resolveImageUrl } from '@/lib/images';
 import { formatReadableAddress } from '@/lib/stacks';
-import { Avatar, Text } from '@radix-ui/themes';
+import { Text } from '@radix-ui/themes';
 import { ProfileMarkdownDescription } from '../Shared/Profile/MarkdownDescription';
 import { Routes } from '@/lib/routes';
 import NextLink from 'next/link';
+import { ProfileAvatar } from '../Shared/Profile/ProfileAvatar';
 
 interface PostUserInfoCardProps {
   post: paths['/api/posts/{postId}']['get']['responses']['200']['content']['application/json'];
@@ -16,16 +16,7 @@ export const PostUserInfoCard = ({ post }: PostUserInfoCardProps) => {
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
           <NextLink href={Routes.userProfile({ username: post.user.id })}>
-            <Avatar
-              size="2"
-              fallback="T"
-              radius="full"
-              src={
-                post.user.profile?.pictureUri
-                  ? resolveImageUrl(post.user.profile.pictureUri)
-                  : undefined
-              }
-            />
+            <ProfileAvatar user={post.user} size="2" />
           </NextLink>
           <div className="grid gap-0.5">
             <Text size="2" weight="medium" asChild>
