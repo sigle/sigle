@@ -70,4 +70,4 @@ USER nitro
 
 # Start the server by default, this can be overwritten at runtime
 EXPOSE 3000
-CMD dotenvx run -- npm run db:migrate:prod && dotenvx run -- node .output/server/index.mjs
+CMD dotenvx run -- node .output/server/index.mjs

@@ -16,6 +16,7 @@
       }
     },
     "healthcheckPath": "/health",
+    "preDeployCommand": ["dotenvx run -- npm run db:migrate:prod"],
     "sleepApplication": true,
     "multiRegionConfig": {
       "us-west2": {
