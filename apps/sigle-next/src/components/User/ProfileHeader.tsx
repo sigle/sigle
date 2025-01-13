@@ -48,7 +48,6 @@ export const ProfileHeader = ({ user }: ProfileHeaderProps) => {
           'h-32': !hasBanner,
         })}
       >
-        {/* TODO use next.js image component with blurhash */}
         {hasBanner ? (
           // eslint-disable-next-line @next/next/no-img-element
           <img
