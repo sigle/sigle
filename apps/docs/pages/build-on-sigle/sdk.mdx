@@ -50,5 +50,47 @@ openContractCall({
   network: STACKS_MAINNET,
   // Your other options
 })
+```
 
+## Publish post
+
+To deploy a new post, use the `generatePostContract` method to get the smart contract code. Then pass the parameters to `openContractDeploy` to execute the transaction with the user's wallet.
+
+```tsx
+import { STACKS_MAINNET } from '@stacks/network';
+import { openContractCall } from '@stacks/connect';
+import { createClient, createPostMetadata } from '@sigle/sdk';
+import { createId } from '@paralleldrive/cuid2';
+
+const sigleClient = createClient({
+  network: STACKS_MAINNET,
+});
+
+// Generate a unique post ID
+const postId = createId();
+
+const metadata = createPostMetadata({
+  // Add all the metadata fields here
+  name: "Your post title",
+});
+
+// Upload the post metadata on the storage of your choice (IPFS, Arweave, etc.)
+const metadataUrl = await uploadMetadata({
+  metadata
+});
+
+const { contract } = sigleClient.generatePostContract({
+  metadata: metadataUrl,
+  collectInfo: {
+    amount: 0,
+    maxSupply: 100,
+  },
+});
+
+openContractDeploy({
+  network: STACKS_MAINNET,
+  contractName: postId,
+  codeBody: contract,
+  // Your other options
+})
 ```
