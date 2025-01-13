@@ -48,7 +48,10 @@ export const CollectPrice = () => {
           </RadioCards.Root>
           <Text as="p" size="1" color="gray">
             Earn protocol fees on each mint,{' '}
-            <Link href="TODO" target="_blank">
+            <Link
+              href="https://sigle-docs-next.vercel.app/monetization#fee-structure"
+              target="_blank"
+            >
               learn more
             </Link>
             .
