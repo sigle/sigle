@@ -7,6 +7,7 @@ import { Toaster } from 'sonner';
 import posthog from 'posthog-js';
 import { SessionProvider } from 'next-auth/react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { PostHogInit, SuspendedPostHogPageView } from './PostHog';
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -29,9 +30,9 @@ export const Providers = ({ children }: { children: React.ReactNode }) => {
         <Theme grayColor="gray" accentColor="orange" radius="large">
           <QueryClientProvider client={queryClient}>
             <PostHogProvider client={posthog}>
+              <PostHogInit />
+              <SuspendedPostHogPageView />
               {children}
-              {/* TODO: add posthog */}
-              {/* <PostHogInit /> */}
               <Toaster closeButton />
             </PostHogProvider>
           </QueryClientProvider>
