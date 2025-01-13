@@ -17,6 +17,7 @@ import { IconDotsVertical, IconPencil } from '@tabler/icons-react';
 import { useSession } from 'next-auth/react';
 import Link from 'next/link';
 import { usePostHog } from 'posthog-js/react';
+import { ProfileAvatar } from '../Shared/Profile/ProfileAvatar';
 
 interface ProfileHeaderProps {
   user: paths['/api/users/{username}']['get']['responses']['200']['content']['application/json'];
@@ -47,8 +48,8 @@ export const ProfileHeader = ({ user }: ProfileHeaderProps) => {
           'h-32': !hasBanner,
         })}
       >
-        {/* TODO use next.js image component with blurhash */}
         {hasBanner ? (
+          // eslint-disable-next-line @next/next/no-img-element
           <img
             className="size-full object-cover"
             src={
@@ -64,19 +65,8 @@ export const ProfileHeader = ({ user }: ProfileHeaderProps) => {
 
       <Container size="2" px="4">
         <div className="flex justify-between">
-          <div className="z-10 mt-[-70px] rounded-5 border-[6px] border-white bg-white dark:border-gray-1">
-            {/* TODO use next.js image component with blurhash */}
-            <Avatar
-              src={
-                user.profile?.pictureUri
-                  ? resolveImageUrl(user.profile.pictureUri)
-                  : undefined
-              }
-              fallback={user.id[0] ?? ''}
-              alt={user.id}
-              size="8"
-              radius="small"
-            />
+          <div className="z-10 mt-[-70px] rounded-3 border-[6px] border-white bg-white dark:border-gray-1">
+            <ProfileAvatar user={user} size="8" />
           </div>
 
           <div className="mt-4 flex items-center gap-4">

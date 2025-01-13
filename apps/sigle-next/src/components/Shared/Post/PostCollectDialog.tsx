@@ -35,6 +35,7 @@ import { useContractCall } from '@/hooks/useContractCall';
 import { useStacksLogin } from '@/hooks/useStacksLogin';
 import { resolveImageUrl } from '@/lib/images';
 import Image from 'next/image';
+import { ProfileAvatar } from '../Profile/ProfileAvatar';
 
 interface PostCollectDialogProps {
   post: paths['/api/posts/{postId}']['get']['responses']['200']['content']['application/json'];
@@ -136,16 +137,7 @@ export const PostCollectDialog = ({
         <div className="space-y-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
-              <Avatar
-                size="2"
-                fallback="T"
-                radius="full"
-                src={
-                  post.user.profile?.pictureUri
-                    ? resolveImageUrl(post.user.profile.pictureUri)
-                    : undefined
-                }
-              />
+              <ProfileAvatar user={post.user} size="2" />
               <div className="grid gap-0.5">
                 <Text size="2" weight="medium">
                   {post.user.profile?.displayName}
