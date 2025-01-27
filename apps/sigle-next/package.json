@@ -12,7 +12,7 @@
   "dependencies": {
     "@hookform/resolvers": "3.9.1",
     "@radix-ui/react-collapsible": "1.1.2",
-    "@radix-ui/themes": "3.1.6",
+    "@radix-ui/themes": "3.2.0",
     "@sentry/nextjs": "8.48.0",
     "@sigle/sdk": "workspace:*",
     "@stacks/blockchain-api-client": "8.4.0",
