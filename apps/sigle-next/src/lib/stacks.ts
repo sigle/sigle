@@ -27,3 +27,34 @@ export const getExplorerTransactionUrl = (txId: string) =>
 
 export const formatReadableAddress = (address: string) =>
   `${address.substring(0, 6)}...${address.substring(address.length - 4)}`;
+
+/**
+ * Returns a promise that resolves when the transaction is confirmed
+ */
+export const getPromiseTransactionConfirmation = (txId: string) => {
+  return new Promise((resolve, reject) => {
+    const checkTransaction = async () => {
+      try {
+        const data = await stacksApiClient.GET('/extended/v1/tx/{tx_id}', {
+          params: {
+            path: {
+              tx_id: txId,
+            },
+          },
+        });
+
+        if (data.data?.tx_status === 'pending') {
+          setTimeout(checkTransaction, 5000);
+        } else if (data.data?.tx_status === 'success') {
+          resolve('Transaction confirmed');
+        } else {
+          reject('Transaction failed');
+        }
+      } catch (error) {
+        reject(error);
+      }
+    };
+
+    checkTransaction();
+  });
+};
