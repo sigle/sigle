@@ -6,7 +6,6 @@ import {
   useCurrencyFiatPrice,
 } from '@/hooks/useCurrencyFiatPrice';
 import {
-  Avatar,
   Badge,
   Button,
   Dialog,
@@ -30,7 +29,11 @@ import { useState } from 'react';
 import { toast } from 'sonner';
 import { formatSTX, fixedMintFee } from '@sigle/sdk';
 import { sigleClient } from '@/lib/sigle';
-import { formatReadableAddress, getExplorerTransactionUrl } from '@/lib/stacks';
+import {
+  formatReadableAddress,
+  getExplorerTransactionUrl,
+  getPromiseTransactionConfirmation,
+} from '@/lib/stacks';
 import { useContractCall } from '@/hooks/useContractCall';
 import { useStacksLogin } from '@/hooks/useStacksLogin';
 import { resolveImageUrl } from '@/lib/images';
@@ -58,9 +61,13 @@ export const PostCollectDialog = ({
       open ? 'STX' : undefined,
     );
   const [editions, setEditions] = useState(1);
+
   const { contractCall, loading: contractLoading } = useContractCall({
     onSuccess: (data) => {
-      toast.success('Transaction submitted', {
+      toast.promise(getPromiseTransactionConfirmation(data.txId), {
+        loading: 'Collect transaction submitted',
+        success: 'Collected successfully',
+        error: 'Transaction failed',
         action: {
           label: 'View tx',
           onClick: () =>
