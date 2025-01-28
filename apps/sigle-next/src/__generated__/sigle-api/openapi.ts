@@ -190,6 +190,7 @@ export interface paths {
         query?: {
           /** @description Limit the number of posts returned. */
           limit?: number;
+          /** @description The address of the user to get posts for. */
           username?: string;
         };
         header?: never;
@@ -817,6 +818,55 @@ export interface paths {
                 coverPictureUri?: string;
               };
             };
+          };
+        };
+      };
+    };
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/api/users/trending': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /** @description Get trending profiles. */
+    get: {
+      parameters: {
+        query?: never;
+        header?: never;
+        path?: never;
+        cookie?: never;
+      };
+      requestBody?: never;
+      responses: {
+        /** @description User profiles. */
+        200: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': {
+              id: string;
+              createdAt: string;
+              updatedAt: string;
+              profile?: {
+                id: string;
+                displayName?: string;
+                description?: string;
+                website?: string;
+                twitter?: string;
+                pictureUri?: string;
+                coverPictureUri?: string;
+              };
+            }[];
           };
         };
       };

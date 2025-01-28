@@ -1,5 +1,6 @@
 'use client';
 
+import { HomeTrendingUsers } from '@/components/Home/TrendingUsers';
 import { useStacksLogin } from '@/hooks/useStacksLogin';
 import { Routes } from '@/lib/routes';
 import { Button, Callout, Container, Heading, Text } from '@radix-ui/themes';
@@ -81,6 +82,8 @@ export default function Home() {
           </div>
         </section>
       </Container>
+
+      <HomeTrendingUsers />
     </div>
   );
 }
