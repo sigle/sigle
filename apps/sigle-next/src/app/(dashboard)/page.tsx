@@ -8,6 +8,8 @@ import { IconInfoCircle } from '@tabler/icons-react';
 import { useSession } from 'next-auth/react';
 import NextLink from 'next/link';
 
+export const dynamic = 'force-dynamic';
+
 export default function Home() {
   const { login } = useStacksLogin();
   const { data: session } = useSession();
