@@ -51,6 +51,7 @@ export const PublishReview = ({ onPublish }: PublishReviewProps) => {
         });
       },
     )();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (

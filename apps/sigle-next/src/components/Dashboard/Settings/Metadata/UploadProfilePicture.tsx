@@ -49,6 +49,7 @@ export const UploadProfilePicture = ({
         },
       },
     );
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const { getRootProps, getInputProps } = useDropzone({
