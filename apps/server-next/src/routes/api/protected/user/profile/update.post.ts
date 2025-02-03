@@ -1,7 +1,6 @@
 import { ProfileMetadataSchema } from '@sigle/sdk';
 import { fromError } from 'zod-validation-error';
-import { aerweaveUploadFile } from '~/lib/arweave';
-import { prisma } from '~/lib/prisma';
+import { ipfsUploadFile } from '~/lib/filebase';
 
 defineRouteMeta({
   openAPI: {
@@ -17,6 +16,23 @@ defineRouteMeta({
               metadata: {
                 type: 'object',
                 description: 'Profile metadata',
+              },
+            },
+          },
+        },
+      },
+    },
+    responses: {
+      200: {
+        description: 'Profile metadata uploaded',
+        content: {
+          'application/json': {
+            schema: {
+              type: 'object',
+              required: ['cid', 'url'],
+              properties: {
+                cid: { type: 'string' },
+                url: { type: 'string' },
               },
             },
           },
@@ -39,43 +55,23 @@ export default defineEventHandler(async (event) => {
       ).toString()}`,
     });
   }
-  const {
-    id: _,
-    picture: __,
-    coverPicture: ____,
-    ...metadataWithoutId
-  } = parsedMetadata.data;
 
-  const { id } = await aerweaveUploadFile(event, {
-    metadata: parsedMetadata.data,
+  // TODO get blurhash from images cover and picture
+  const { cid } = await ipfsUploadFile(event, {
+    path: `${event.context.user.id}/profile.json`,
+    content: Buffer.from(JSON.stringify(parsedMetadata.data)),
   });
 
   event.context.$posthog.capture({
     distinctId: event.context.user.id,
     event: 'profile metadata uploaded',
     properties: {
-      arweaveId: id,
+      cid,
     },
   });
 
-  await prisma.profile.upsert({
-    where: {
-      id: event.context.user.id,
-    },
-    update: {
-      ...metadataWithoutId,
-      pictureUri: parsedMetadata.data.picture,
-      coverPictureUri: parsedMetadata.data.coverPicture,
-    },
-    create: {
-      ...metadataWithoutId,
-      id: event.context.user.id,
-      pictureUri: parsedMetadata.data.picture,
-      coverPictureUri: parsedMetadata.data.coverPicture,
-    },
-  });
-
-  // TODO get blurhash from images cover and picture
-
-  return { id };
+  return {
+    cid: cid.toString(),
+    url: `ipfs://${cid}`,
+  };
 });
