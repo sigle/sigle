@@ -13,7 +13,6 @@
 (define-public (set-profile (uri (string-ascii 256)))
   (begin
     (print { a: "set-profile", address: tx-sender, uri: uri })
-    ;; Update the profile map
     (ok (map-set profiles tx-sender uri))
   )
 )
