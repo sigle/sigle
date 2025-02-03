@@ -8,7 +8,7 @@
     "test:report": "vitest run -- --coverage --costs"
   },
   "devDependencies": {
-    "@hirosystems/clarinet-sdk": "2.11.2",
+    "@hirosystems/clarinet-sdk": "2.12.0",
     "@hirosystems/clarinet-sdk-wasm": "2.12.0",
     "@sigle/sdk": "workspace:*",
     "@stacks/network": "7.0.2",
