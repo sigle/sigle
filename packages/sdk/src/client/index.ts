@@ -9,6 +9,7 @@ import {
   type GeneratePostParams,
 } from './generate-post-contract.js';
 import { config, fixedMintFee } from './config.js';
+import { setProfile, type SetProfileParams } from './setProfile.js';
 
 interface CreateClientOptions {
   /**
@@ -32,6 +33,12 @@ export const createClient = (options: CreateClientOptions) => {
     mint: (params: MintParams) => mint({ network: options.network, params }),
     generatePostContract: (params: GeneratePostParams) =>
       generatePostContract({
+        params,
+        network: options.network,
+        networkName,
+      }),
+    setProfile: (params: SetProfileParams) =>
+      setProfile({
         params,
         network: options.network,
         networkName,
