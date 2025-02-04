@@ -24,7 +24,7 @@ export const contractDeploymentPredicate = {
         },
       },
       // TODO start_block depending on env.STACKS_ENV
-      start_block: 1243,
+      start_block: 138496,
       decode_clarity_values: true,
     },
   },
