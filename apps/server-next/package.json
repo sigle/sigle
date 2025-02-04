@@ -11,11 +11,10 @@
     "prepare": "nitro prepare"
   },
   "dependencies": {
+    "@ardrive/turbo-sdk": "1.22.0",
     "@aws-sdk/client-s3": "3.722.0",
     "@dotenvx/dotenvx": "1.32.0",
     "@hirosystems/chainhook-client": "2.3.0",
-    "@irys/upload": "0.0.14",
-    "@irys/upload-solana": "0.1.7",
     "@paralleldrive/cuid2": "2.2.2",
     "@prisma/client": "6.1.0",
     "@sentry/node": "8.48.0",

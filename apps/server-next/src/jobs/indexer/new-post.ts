@@ -57,9 +57,7 @@ export const indexerNewPostJob = defineJob('indexer-new-post')
 
     // Fetch data from Arweave
     const arweaveTxId = baseTokenUri.replace('ar://', '');
-    const data = await fetch(
-      `https://uploader.irys.xyz/tx/${arweaveTxId}/data`,
-    );
+    const data = await fetch(`https://arweave.net/${arweaveTxId}`);
     const json = await data.json();
 
     // Verify data is correct
