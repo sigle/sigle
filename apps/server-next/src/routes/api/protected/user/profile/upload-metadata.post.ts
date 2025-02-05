@@ -1,12 +1,11 @@
 import { ProfileMetadataSchema } from '@sigle/sdk';
 import { fromError } from 'zod-validation-error';
 import { aerweaveUploadFile } from '~/lib/arweave';
-import { prisma } from '~/lib/prisma';
 
 defineRouteMeta({
   openAPI: {
     tags: ['users'],
-    description: 'Update user profile.',
+    description: 'Upload profile metadata to Arweave.',
     requestBody: {
       required: true,
       content: {
@@ -17,6 +16,25 @@ defineRouteMeta({
               metadata: {
                 type: 'object',
                 description: 'Profile metadata',
+              },
+            },
+          },
+        },
+      },
+    },
+    responses: {
+      200: {
+        description: 'Metadata uploaded.',
+        content: {
+          'application/json': {
+            schema: {
+              type: 'object',
+              required: ['id'],
+              properties: {
+                id: {
+                  description: 'Arweave ID.',
+                  type: 'string',
+                },
               },
             },
           },
@@ -39,12 +57,6 @@ export default defineEventHandler(async (event) => {
       ).toString()}`,
     });
   }
-  const {
-    id: _,
-    picture: __,
-    coverPicture: ____,
-    ...metadataWithoutId
-  } = parsedMetadata.data;
 
   const { id } = await aerweaveUploadFile(event, {
     metadata: parsedMetadata.data,
@@ -58,24 +70,7 @@ export default defineEventHandler(async (event) => {
     },
   });
 
-  await prisma.profile.upsert({
-    where: {
-      id: event.context.user.id,
-    },
-    update: {
-      ...metadataWithoutId,
-      pictureUri: parsedMetadata.data.picture,
-      coverPictureUri: parsedMetadata.data.coverPicture,
-    },
-    create: {
-      ...metadataWithoutId,
-      id: event.context.user.id,
-      pictureUri: parsedMetadata.data.picture,
-      coverPictureUri: parsedMetadata.data.coverPicture,
-    },
-  });
-
-  // TODO get blurhash from images cover and picture
-
-  return { id };
+  return {
+    id,
+  };
 });

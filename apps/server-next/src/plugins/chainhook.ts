@@ -8,6 +8,7 @@ import {
 import { consola } from '~/lib/consola';
 import {
   contractDeploymentPredicate,
+  sigleProfilesPredicate,
   sigleMinterFixedPricePredicate,
 } from '~/lib/predicates';
 
@@ -33,6 +34,7 @@ export default defineNitroPlugin(async (nitroApp) => {
   // Array of predicates to register
   const predicatesToRegister = [
     contractDeploymentPredicate,
+    sigleProfilesPredicate,
     sigleMinterFixedPricePredicate,
   ];
 

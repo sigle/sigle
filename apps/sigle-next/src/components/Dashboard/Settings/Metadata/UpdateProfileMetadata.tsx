@@ -9,6 +9,12 @@ import { toast } from 'sonner';
 import { z } from 'zod';
 import { UploadProfilePicture } from './UploadProfilePicture';
 import { UploadProfileCoverPicture } from './UploadProfileCoverPicture';
+import { useContractCall } from '@/hooks/useContractCall';
+import {
+  getExplorerTransactionUrl,
+  getPromiseTransactionConfirmation,
+} from '@/lib/stacks';
+import { sigleClient } from '@/lib/sigle';
 
 const updateProfileMetadataSchema = z.object({
   displayName: z.string().optional(),
@@ -32,9 +38,9 @@ export const UpdateProfileMetadata = ({
   profile,
   setEditingProfileMetadata,
 }: UpdateProfileMetadataProps) => {
-  const { mutateAsync: updateProfile } = sigleApiClient.useMutation(
+  const { mutateAsync: uploadProfileMetadata } = sigleApiClient.useMutation(
     'post',
-    '/api/protected/user/profile/update',
+    '/api/protected/user/profile/upload-metadata',
     {
       onError: (error: any) => {
         toast.error('Failed to update profile', {
@@ -43,6 +49,26 @@ export const UpdateProfileMetadata = ({
       },
     },
   );
+
+  const { contractCall } = useContractCall({
+    onSuccess: (data) => {
+      toast.promise(getPromiseTransactionConfirmation(data.txId), {
+        loading: 'Update profile transaction submitted',
+        success: 'Profile updated successfully',
+        error: 'Transaction failed',
+        action: {
+          label: 'View tx',
+          onClick: () =>
+            window.open(getExplorerTransactionUrl(data.txId), '_blank'),
+        },
+      });
+    },
+    onError: (error) => {
+      toast.error('Failed to collect', {
+        description: error,
+      });
+    },
+  });
 
   const {
     register,
@@ -74,13 +100,18 @@ export const UpdateProfileMetadata = ({
       coverPicture: formValues.coverPicture || undefined,
     });
 
-    await updateProfile({
+    const data = await uploadProfileMetadata({
       body: {
         metadata: metadata as any,
       },
     });
 
-    toast.message('Profile updated successfully');
+    const { parameters } = sigleClient.setProfile({
+      metadata: `ar://${data.id}`,
+    });
+
+    await contractCall(parameters);
+
     setEditingProfileMetadata(false);
   });
 

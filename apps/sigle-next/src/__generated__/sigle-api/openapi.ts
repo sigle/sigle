@@ -190,6 +190,7 @@ export interface paths {
         query?: {
           /** @description Limit the number of posts returned. */
           limit?: number;
+          /** @description The address of the user to get posts for. */
           username?: string;
         };
         header?: never;
@@ -637,47 +638,6 @@ export interface paths {
     patch?: never;
     trace?: never;
   };
-  '/api/protected/user/profile/update': {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    get?: never;
-    put?: never;
-    /** @description Update user profile. */
-    post: {
-      parameters: {
-        query?: never;
-        header?: never;
-        path?: never;
-        cookie?: never;
-      };
-      requestBody: {
-        content: {
-          'application/json': {
-            /** @description Profile metadata */
-            metadata?: Record<string, never>;
-          };
-        };
-      };
-      responses: {
-        /** @description OK */
-        200: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content?: never;
-        };
-      };
-    };
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
   '/api/protected/user/profile/upload-avatar': {
     parameters: {
       query?: never;
@@ -767,6 +727,52 @@ export interface paths {
               cid: string;
               url: string;
               gatewayUrl: string;
+            };
+          };
+        };
+      };
+    };
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/api/protected/user/profile/upload-metadata': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    /** @description Upload profile metadata to Arweave. */
+    post: {
+      parameters: {
+        query?: never;
+        header?: never;
+        path?: never;
+        cookie?: never;
+      };
+      requestBody: {
+        content: {
+          'application/json': {
+            /** @description Profile metadata */
+            metadata?: Record<string, never>;
+          };
+        };
+      };
+      responses: {
+        /** @description Metadata uploaded. */
+        200: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': {
+              /** @description Arweave ID. */
+              id: string;
             };
           };
         };

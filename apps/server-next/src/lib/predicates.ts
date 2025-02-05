@@ -30,6 +30,32 @@ export const contractDeploymentPredicate = {
   },
 } satisfies Omit<Predicate, 'uuid'>;
 
+export const sigleProfilesPredicate = {
+  name: 'sigle-profiles',
+  chain: 'stacks',
+  version: 1,
+  networks: {
+    testnet: {
+      if_this: {
+        scope: 'print_event',
+        contains: 'set-profile',
+        contract_identifier: `${
+          sigleConfig[env.STACKS_ENV].protocolAddress
+        }.sigle-profiles`,
+      },
+      then_that: {
+        http_post: {
+          url: '{__BASE_URL__}/api/chainhook/webhook',
+          authorization_header: 'Bearer {__TOKEN__}',
+        },
+      },
+      // TODO start_block depending on env.STACKS_ENV
+      start_block: 143819,
+      decode_clarity_values: true,
+    },
+  },
+} satisfies Omit<Predicate, 'uuid'>;
+
 export const sigleMinterFixedPricePredicate = {
   name: 'sigle-minter-fixed-price',
   chain: 'stacks',
