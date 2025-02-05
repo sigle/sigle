@@ -15,7 +15,7 @@ export type SetProfileReturn = {
   parameters: ContractCallBase;
 };
 
-export const setProfile = async ({
+export const setProfile = ({
   params,
   network,
   networkName,
@@ -23,7 +23,7 @@ export const setProfile = async ({
   params: SetProfileParams;
   network: StacksNetwork;
   networkName: StacksNetworkName;
-}): Promise<SetProfileReturn> => {
+}): SetProfileReturn => {
   const protocolAddress = config[networkName].protocolAddress;
 
   return {
