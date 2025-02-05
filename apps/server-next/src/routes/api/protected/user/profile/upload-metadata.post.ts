@@ -5,7 +5,7 @@ import { ipfsUploadFile } from '~/lib/filebase';
 defineRouteMeta({
   openAPI: {
     tags: ['users'],
-    description: 'Update user profile.',
+    description: 'Upload profile metadata to Arweave.',
     requestBody: {
       required: true,
       content: {
