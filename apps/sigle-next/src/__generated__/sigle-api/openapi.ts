@@ -190,6 +190,7 @@ export interface paths {
         query?: {
           /** @description Limit the number of posts returned. */
           limit?: number;
+          /** @description The address of the user to get posts for. */
           username?: string;
         };
         header?: never;
@@ -663,12 +664,17 @@ export interface paths {
         };
       };
       responses: {
-        /** @description OK */
+        /** @description Profile metadata uploaded */
         200: {
           headers: {
             [name: string]: unknown;
           };
-          content?: never;
+          content: {
+            'application/json': {
+              cid: string;
+              url: string;
+            };
+          };
         };
       };
     };
