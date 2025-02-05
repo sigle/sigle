@@ -106,7 +106,9 @@ export const UpdateProfileMetadata = ({
       },
     });
 
-    const { parameters } = sigleClient.setProfile({ metadata: data.url });
+    const { parameters } = sigleClient.setProfile({
+      metadata: `ar://${data.id}`,
+    });
 
     await contractCall(parameters);
 

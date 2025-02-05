@@ -764,15 +764,15 @@ export interface paths {
         };
       };
       responses: {
-        /** @description Profile metadata uploaded */
+        /** @description Metadata uploaded. */
         200: {
           headers: {
             [name: string]: unknown;
           };
           content: {
             'application/json': {
-              cid: string;
-              url: string;
+              /** @description Arweave ID. */
+              id: string;
             };
           };
         };
