@@ -1,3 +1,4 @@
+export { generateSiwsNonce } from './generateSiwsNonce.js';
 export {
   validateSiwsMessage,
   ValidateSiwsMessageParameters,
