@@ -34,9 +34,9 @@ export type VerifySiwsMessageReturnType = boolean;
  * @param parameters - {@link VerifySiwsMessageParameters}
  * @returns Whether or not the signature is valid. {@link VerifySiwsMessageReturnType}
  */
-export async function verifySiwsMessage(
+export function verifySiwsMessage(
   parameters: VerifySiwsMessageParameters,
-): Promise<VerifySiwsMessageReturnType> {
+): VerifySiwsMessageReturnType {
   const {
     address,
     domain,

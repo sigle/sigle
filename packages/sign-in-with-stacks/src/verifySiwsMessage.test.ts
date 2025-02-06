@@ -23,7 +23,7 @@ test('default', async () => {
   });
 
   expect(
-    await verifySiwsMessage({
+    verifySiwsMessage({
       message,
       signature,
     }),
@@ -44,7 +44,7 @@ test('behavior: invalid message fields', async () => {
     privateKey: account.privateKey,
   });
   expect(
-    await verifySiwsMessage({
+    verifySiwsMessage({
       domain: 'viem.sh',
       message,
       signature,
@@ -59,7 +59,7 @@ test('behavior: invalid message', async () => {
     privateKey: account.privateKey,
   });
   expect(
-    await verifySiwsMessage({
+    verifySiwsMessage({
       message,
       signature,
     }),
