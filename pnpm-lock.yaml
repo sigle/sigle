@@ -1186,6 +1186,28 @@ importers:
         specifier: 3.24.1
         version: 3.24.1
 
+  packages/sign-in-with-stacks:
+    dependencies:
+      '@stacks/transactions':
+        specifier: ^7.0.0
+        version: 7.0.4
+    devDependencies:
+      '@tsconfig/recommended':
+        specifier: 1.0.8
+        version: 1.0.8
+      '@types/node':
+        specifier: 22.10.5
+        version: 22.10.5
+      tsup:
+        specifier: 8.3.5
+        version: 8.3.5(@swc/core@1.7.18(@swc/helpers@0.5.15))(jiti@2.4.2)(postcss@8.4.49)(typescript@5.7.2)(yaml@2.6.1)
+      typescript:
+        specifier: 5.7.2
+        version: 5.7.2
+      vitest:
+        specifier: 2.1.8
+        version: 2.1.8(@types/node@22.10.5)(jsdom@25.0.0(bufferutil@4.0.8)(utf-8-validate@5.0.10))(sass@1.77.8)(terser@5.31.6)
+
   packages/sitemap-scripts:
     dependencies:
       '@stacks/auth':
@@ -6026,6 +6048,9 @@ packages:
 
   '@stacks/transactions@7.0.2':
     resolution: {integrity: sha512-m2bvchqUeYv1ttXuC0EukW8UX4xBXTDcYb8bXmfI1RG89HXAvvCCgr5aiadU6zbutgoXvm8mquDt3nww0PO4Jg==}
+
+  '@stacks/transactions@7.0.4':
+    resolution: {integrity: sha512-OTQSqb+xaq+QeHB1m83SONVjVs9DD1SMqX7UvvLmzQx3ppZNoRqbWx9UGjm1bVwpQ+mw44TVOe7w3Zm0HRYFfw==}
 
   '@stacks/wallet-sdk@6.16.1':
     resolution: {integrity: sha512-QYm/BfRpHZfD5FjvaOJp0hy8yeqde6qrEmSrcIl06IC2SNr4R5NOy0xK/RPUgJFB1/Gd16HbqS9EdyV3o6ybwg==}
@@ -11479,10 +11504,6 @@ packages:
     resolution: {integrity: sha512-utWOt/GHzuUxnLKxB6dk81RoOeoNeHgbrXiuGk4yyF5qlRz+iIVWu56E2fqGHFrXz0QNUhLB/8nKqvRH66JKGQ==}
     engines: {node: '>=10'}
 
-  lilconfig@3.1.2:
-    resolution: {integrity: sha512-eop+wDAvpItUys0FWkHIKeC9ybYrTGbU41U5K7+bttZZeohvnY7M9dZ5kB21GNWiFT2q1OoPTvncPCgSOVO5ow==}
-    engines: {node: '>=14'}
-
   lilconfig@3.1.3:
     resolution: {integrity: sha512-/vlFKAoH5Cgt3Ie+JLhRbwOsCQePABiU3tJ1egGvyQ+33R/vcwM2Zl2QR/LzjsBeItPt3oSVXapn+m4nQDvpzw==}
     engines: {node: '>=14'}
@@ -11595,9 +11616,6 @@ packages:
 
   loupe@2.3.7:
     resolution: {integrity: sha512-zSMINGVYkdpYSOBmLi0D1Uo7JU9nVdQKrHxC8eYlV+9YKK9WePqAlL7lSlorG/U2Fw1w0hTBmaa/jrQ3UbPHtA==}
-
-  loupe@3.1.1:
-    resolution: {integrity: sha512-edNu/8D5MKVfGVFRhFf8aAxiTM6Wumfz5XsaatSxlD3w4R1d/WEKUTydCdPGbl9K7QG/Ca3GnDV2sIKIpXRQcw==}
 
   loupe@3.1.2:
     resolution: {integrity: sha512-23I4pFZHmAemUnz8WZXbYRSKYj801VDaNv9ETuMh7IrMc7VuVVSo+Z9iLE3ni30+U48iDWfi30d3twAXBYmnCg==}
@@ -14873,9 +14891,6 @@ packages:
   tinycolor2@1.4.2:
     resolution: {integrity: sha512-vJhccZPs965sV/L2sU4oRQVAos0pQXwsvTLkWYdqJ+a8Q5kPFzJTuOFwy7UniPli44NKQGAglksjvOcpo95aZA==}
 
-  tinyexec@0.3.1:
-    resolution: {integrity: sha512-WiCJLEECkO18gwqIp6+hJg0//p23HXp4S+gGtAKu3mI2F2/sXC4FvHvXvB0zJVVaTPhx1/tOwdbRsa1sOBIKqQ==}
-
   tinyexec@0.3.2:
     resolution: {integrity: sha512-KQQR9yN7R5+OSwaK0XQoj22pwHoTlgYqmUscPYoknOoWCWfj/5/ABTMRi69FrKU5ffPVh5QcFikpWJI/P1ocHA==}
 
@@ -14897,10 +14912,6 @@ packages:
 
   tinyspy@2.2.1:
     resolution: {integrity: sha512-KYad6Vy5VDWV4GH3fjpseMQ/XU2BhIYP7Vzd0LG44qRWm/Yt2WCOTicFdvmgo6gWaqooMQCawTtILVQJupKu7A==}
-    engines: {node: '>=14.0.0'}
-
-  tinyspy@3.0.0:
-    resolution: {integrity: sha512-q5nmENpTHgiPVd1cJDDc9cVoYN5x4vCvwT3FMilvKPKneCBZAxn2YWQjDF0UMcE9k0Cay1gBiDfTMU0g+mPMQA==}
     engines: {node: '>=14.0.0'}
 
   tinyspy@3.0.2:
@@ -16413,7 +16424,7 @@ snapshots:
   '@antfu/install-pkg@0.4.1':
     dependencies:
       package-manager-detector: 0.2.8
-      tinyexec: 0.3.1
+      tinyexec: 0.3.2
 
   '@antfu/utils@0.7.10': {}
 
@@ -22659,6 +22670,17 @@ snapshots:
     transitivePeerDependencies:
       - encoding
 
+  '@stacks/transactions@7.0.4':
+    dependencies:
+      '@noble/hashes': 1.1.5
+      '@noble/secp256k1': 1.7.1
+      '@stacks/common': 7.0.2
+      '@stacks/network': 7.0.2
+      c32check: 2.0.0
+      lodash.clonedeep: 4.5.0
+    transitivePeerDependencies:
+      - encoding
+
   '@stacks/wallet-sdk@6.16.1':
     dependencies:
       '@scure/bip32': 1.1.3
@@ -24167,7 +24189,7 @@ snapshots:
 
   '@vitest/spy@2.0.5':
     dependencies:
-      tinyspy: 3.0.0
+      tinyspy: 3.0.2
 
   '@vitest/spy@2.1.8':
     dependencies:
@@ -24184,7 +24206,7 @@ snapshots:
     dependencies:
       '@vitest/pretty-format': 2.0.5
       estree-walker: 3.0.3
-      loupe: 3.1.1
+      loupe: 3.1.2
       tinyrainbow: 1.2.0
 
   '@vitest/utils@2.1.8':
@@ -25193,7 +25215,7 @@ snapshots:
       assertion-error: 2.0.1
       check-error: 2.1.1
       deep-eql: 5.0.2
-      loupe: 3.1.1
+      loupe: 3.1.2
       pathval: 2.0.0
 
   chai@5.1.2:
@@ -29776,8 +29798,6 @@ snapshots:
 
   lilconfig@2.1.0: {}
 
-  lilconfig@3.1.2: {}
-
   lilconfig@3.1.3: {}
 
   lines-and-columns@1.2.4: {}
@@ -29889,10 +29909,6 @@ snapshots:
   lossless-json@4.0.2: {}
 
   loupe@2.3.7:
-    dependencies:
-      get-func-name: 2.0.2
-
-  loupe@3.1.1:
     dependencies:
       get-func-name: 2.0.2
 
@@ -32214,7 +32230,7 @@ snapshots:
 
   postcss-load-config@6.0.1(jiti@2.4.2)(postcss@8.4.49)(yaml@2.6.1):
     dependencies:
-      lilconfig: 3.1.2
+      lilconfig: 3.1.3
     optionalDependencies:
       jiti: 2.4.2
       postcss: 8.4.49
@@ -34497,8 +34513,6 @@ snapshots:
 
   tinycolor2@1.4.2: {}
 
-  tinyexec@0.3.1: {}
-
   tinyexec@0.3.2: {}
 
   tinyglobby@0.2.10:
@@ -34513,8 +34527,6 @@ snapshots:
   tinyrainbow@1.2.0: {}
 
   tinyspy@2.2.1: {}
-
-  tinyspy@3.0.0: {}
 
   tinyspy@3.0.2: {}
 
