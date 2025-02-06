@@ -43,7 +43,7 @@ test('parameters: domain', () => {
     }),
   ).toMatchInlineSnapshot(`
     "foo.example.com wants you to sign in with your Ethereum account:
-    0xA0Cf798816D4b9b9866b5330EEa46a18382f251e
+    SP2X0TZ59D5SZ8ACQ6YMCHHNR2ZN51Z32E2CJ173
 
 
     URI: https://example.com/path
@@ -60,7 +60,7 @@ test('parameters: domain', () => {
     }),
   ).toMatchInlineSnapshot(`
     "example.co.uk wants you to sign in with your Ethereum account:
-    0xA0Cf798816D4b9b9866b5330EEa46a18382f251e
+    SP2X0TZ59D5SZ8ACQ6YMCHHNR2ZN51Z32E2CJ173
 
 
     URI: https://example.com/path
@@ -84,7 +84,7 @@ test('parameters: scheme', () => {
     }),
   ).toMatchInlineSnapshot(`
     "https://example.com wants you to sign in with your Ethereum account:
-    0xA0Cf798816D4b9b9866b5330EEa46a18382f251e
+    SP2X0TZ59D5SZ8ACQ6YMCHHNR2ZN51Z32E2CJ173
 
 
     URI: https://example.com/path
@@ -109,7 +109,7 @@ test('parameters: statement', () => {
     }),
   ).toMatchInlineSnapshot(`
     "example.com wants you to sign in with your Ethereum account:
-    0xA0Cf798816D4b9b9866b5330EEa46a18382f251e
+    SP2X0TZ59D5SZ8ACQ6YMCHHNR2ZN51Z32E2CJ173
 
     I accept the ExampleOrg Terms of Service: https://example.com/tos
 
@@ -127,7 +127,7 @@ test('parameters: issuedAt', () => {
   const issuedAt = new Date(Date.UTC(2022, 1, 4));
   expect(createSiwsMessage({ ...message, issuedAt })).toMatchInlineSnapshot(`
     "example.com wants you to sign in with your Ethereum account:
-    0xA0Cf798816D4b9b9866b5330EEa46a18382f251e
+    SP2X0TZ59D5SZ8ACQ6YMCHHNR2ZN51Z32E2CJ173
 
 
     URI: https://example.com/path
@@ -149,7 +149,7 @@ test('parameters: expirationTime', () => {
     }),
   ).toMatchInlineSnapshot(`
     "example.com wants you to sign in with your Ethereum account:
-    0xA0Cf798816D4b9b9866b5330EEa46a18382f251e
+    SP2X0TZ59D5SZ8ACQ6YMCHHNR2ZN51Z32E2CJ173
 
 
     URI: https://example.com/path
@@ -174,7 +174,7 @@ test('parameters: notBefore', () => {
     }),
   ).toMatchInlineSnapshot(`
     "example.com wants you to sign in with your Ethereum account:
-    0xA0Cf798816D4b9b9866b5330EEa46a18382f251e
+    SP2X0TZ59D5SZ8ACQ6YMCHHNR2ZN51Z32E2CJ173
 
 
     URI: https://example.com/path
@@ -199,7 +199,7 @@ test('parameters: requestId', () => {
     }),
   ).toMatchInlineSnapshot(`
     "example.com wants you to sign in with your Ethereum account:
-    0xA0Cf798816D4b9b9866b5330EEa46a18382f251e
+    SP2X0TZ59D5SZ8ACQ6YMCHHNR2ZN51Z32E2CJ173
 
 
     URI: https://example.com/path
@@ -228,7 +228,7 @@ test('parameters: resources', () => {
     }),
   ).toMatchInlineSnapshot(`
     "example.com wants you to sign in with your Ethereum account:
-    0xA0Cf798816D4b9b9866b5330EEa46a18382f251e
+    SP2X0TZ59D5SZ8ACQ6YMCHHNR2ZN51Z32E2CJ173
 
 
     URI: https://example.com/path
