@@ -1187,11 +1187,13 @@ importers:
         version: 3.24.1
 
   packages/sign-in-with-stacks:
-    dependencies:
-      '@stacks/transactions':
-        specifier: ^7.0.0
-        version: 7.0.4
     devDependencies:
+      '@stacks/network':
+        specifier: 7.0.2
+        version: 7.0.2
+      '@stacks/transactions':
+        specifier: 7.0.2
+        version: 7.0.2
       '@tsconfig/recommended':
         specifier: 1.0.8
         version: 1.0.8
@@ -6048,9 +6050,6 @@ packages:
 
   '@stacks/transactions@7.0.2':
     resolution: {integrity: sha512-m2bvchqUeYv1ttXuC0EukW8UX4xBXTDcYb8bXmfI1RG89HXAvvCCgr5aiadU6zbutgoXvm8mquDt3nww0PO4Jg==}
-
-  '@stacks/transactions@7.0.4':
-    resolution: {integrity: sha512-OTQSqb+xaq+QeHB1m83SONVjVs9DD1SMqX7UvvLmzQx3ppZNoRqbWx9UGjm1bVwpQ+mw44TVOe7w3Zm0HRYFfw==}
 
   '@stacks/wallet-sdk@6.16.1':
     resolution: {integrity: sha512-QYm/BfRpHZfD5FjvaOJp0hy8yeqde6qrEmSrcIl06IC2SNr4R5NOy0xK/RPUgJFB1/Gd16HbqS9EdyV3o6ybwg==}
@@ -22667,17 +22666,6 @@ snapshots:
       - encoding
 
   '@stacks/transactions@7.0.2':
-    dependencies:
-      '@noble/hashes': 1.1.5
-      '@noble/secp256k1': 1.7.1
-      '@stacks/common': 7.0.2
-      '@stacks/network': 7.0.2
-      c32check: 2.0.0
-      lodash.clonedeep: 4.5.0
-    transitivePeerDependencies:
-      - encoding
-
-  '@stacks/transactions@7.0.4':
     dependencies:
       '@noble/hashes': 1.1.5
       '@noble/secp256k1': 1.7.1

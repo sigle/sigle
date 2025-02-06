@@ -1,18 +1,13 @@
-import {
-  SiwsInvalidMessageFieldError,
-  type SiwsInvalidMessageFieldErrorType,
-} from '../../errors/siws.js';
+import { SiwsInvalidMessageFieldError } from './errors/siws.js';
 import type { ErrorType } from '../../errors/utils.js';
-import { type GetAddressErrorType, getAddress } from '../address/getAddress.js';
 import type { SiwsMessage } from './types.js';
-import { isUri } from './utils.js';
+import { getAddress, isUri } from './utils.js';
 
 export type CreateSiwsMessageParameters = SiwsMessage;
 
 export type CreateSiwsMessageReturnType = string;
 
 export type CreateSiwsMessageErrorType =
-  | GetAddressErrorType
   | SiwsInvalidMessageFieldErrorType
   | ErrorType;
 

@@ -1,11 +1,12 @@
 import { expect, test, vi } from 'vitest';
-import { mainnet } from '../../chains/definitions/mainnet.js';
+// TODO hardcode the chain id to remove the dependency on the network package if no other part of the codebase uses it
+import { STACKS_MAINNET } from '@stacks/network';
 import { createSiwsMessage } from './createSiwsMessage.js';
 import type { SiwsMessage } from './types.js';
 
 const message = {
-  address: '0xA0Cf798816D4b9b9866b5330EEa46a18382f251e',
-  chainId: mainnet.id,
+  address: 'SP2X0TZ59D5SZ8ACQ6YMCHHNR2ZN51Z32E2CJ173',
+  chainId: STACKS_MAINNET.chainId,
   domain: 'example.com',
   nonce: 'foobarbaz',
   uri: 'https://example.com/path',
@@ -18,7 +19,7 @@ test('default', () => {
 
   expect(createSiwsMessage(message)).toMatchInlineSnapshot(`
     "example.com wants you to sign in with your Ethereum account:
-    0xA0Cf798816D4b9b9866b5330EEa46a18382f251e
+    SP2X0TZ59D5SZ8ACQ6YMCHHNR2ZN51Z32E2CJ173
 
 
     URI: https://example.com/path
@@ -261,7 +262,7 @@ test('behavior: invalid chainId', () => {
   expect(() =>
     createSiwsMessage({ ...message, chainId: 1.1 }),
   ).toThrowErrorMatchingInlineSnapshot(`
-    [SiweInvalidMessageFieldError: Invalid Sign-In with Ethereum message field "chainId".
+    [SiwsInvalidMessageFieldError: Invalid Sign-In with Ethereum message field "chainId".
 
     - Chain ID must be a EIP-155 chain ID.
     - See https://eips.ethereum.org/EIPS/eip-155
@@ -276,7 +277,7 @@ test('behavior: invalid domain', () => {
   expect(() =>
     createSiwsMessage({ ...message, domain: '#foo' }),
   ).toThrowErrorMatchingInlineSnapshot(`
-    [SiweInvalidMessageFieldError: Invalid Sign-In with Ethereum message field "domain".
+    [SiwsInvalidMessageFieldError: Invalid Sign-In with Ethereum message field "domain".
 
     - Domain must be an RFC 3986 authority.
     - See https://www.rfc-editor.org/rfc/rfc3986
@@ -291,7 +292,7 @@ test('behavior: invalid nonce', () => {
   expect(() =>
     createSiwsMessage({ ...message, nonce: '#foo' }),
   ).toThrowErrorMatchingInlineSnapshot(`
-    [SiweInvalidMessageFieldError: Invalid Sign-In with Ethereum message field "nonce".
+    [SiwsInvalidMessageFieldError: Invalid Sign-In with Ethereum message field "nonce".
 
     - Nonce must be at least 8 characters.
     - Nonce must be alphanumeric.
@@ -306,7 +307,7 @@ test('behavior: invalid uri', () => {
   expect(() =>
     createSiwsMessage({ ...message, uri: '#foo' }),
   ).toThrowErrorMatchingInlineSnapshot(`
-    [SiweInvalidMessageFieldError: Invalid Sign-In with Ethereum message field "uri".
+    [SiwsInvalidMessageFieldError: Invalid Sign-In with Ethereum message field "uri".
 
     - URI must be a RFC 3986 URI referring to the resource that is the subject of the signing.
     - See https://www.rfc-editor.org/rfc/rfc3986
@@ -320,9 +321,9 @@ test('behavior: invalid uri', () => {
 test('behavior: invalid version', () => {
   expect(() =>
     // @ts-expect-error
-    createSiweMessage({ ...message, version: '2' }),
+    createSiwsMessage({ ...message, version: '2' }),
   ).toThrowErrorMatchingInlineSnapshot(`
-    [SiweInvalidMessageFieldError: Invalid Sign-In with Ethereum message field "version".
+    [SiwsInvalidMessageFieldError: Invalid Sign-In with Ethereum message field "version".
 
     - Version must be '1'.
 
@@ -336,7 +337,7 @@ test('behavior: invalid scheme', () => {
   expect(() =>
     createSiwsMessage({ ...message, scheme: 'foo_bar' }),
   ).toThrowErrorMatchingInlineSnapshot(`
-    [SiweInvalidMessageFieldError: Invalid Sign-In with Ethereum message field "scheme".
+    [SiwsInvalidMessageFieldError: Invalid Sign-In with Ethereum message field "scheme".
 
     - Scheme must be an RFC 3986 URI scheme.
     - See https://www.rfc-editor.org/rfc/rfc3986#section-3.1
@@ -351,7 +352,7 @@ test('behavior: invalid statement', () => {
   expect(() =>
     createSiwsMessage({ ...message, statement: 'foo\nbar' }),
   ).toThrowErrorMatchingInlineSnapshot(`
-    [SiweInvalidMessageFieldError: Invalid Sign-In with Ethereum message field "statement".
+    [SiwsInvalidMessageFieldError: Invalid Sign-In with Ethereum message field "statement".
 
     - Statement must not include '\\n'.
 
@@ -369,7 +370,7 @@ test('behavior: invalid resources', () => {
       resources: ['https://example.com', 'foo'],
     }),
   ).toThrowErrorMatchingInlineSnapshot(`
-    [SiweInvalidMessageFieldError: Invalid Sign-In with Ethereum message field "resources".
+    [SiwsInvalidMessageFieldError: Invalid Sign-In with Ethereum message field "resources".
 
     - Every resource must be a RFC 3986 URI.
     - See https://www.rfc-editor.org/rfc/rfc3986

@@ -1,3 +1,6 @@
+import { validateStacksAddress } from '@stacks/transactions';
+import { InvalidAddressError } from './errors/address.js';
+
 export function isUri(value: string) {
   // based on https://github.com/ogt/valid-url
 
@@ -48,4 +51,16 @@ function splitUri(value: string) {
   return value.match(
     /(?:([^:\/?#]+):)?(?:\/\/([^\/?#]*))?([^?#]*)(?:\?([^#]*))?(?:#(.*))?/,
   )!;
+}
+
+export function isAddressEqual(a: string, b: string): boolean {
+  if (!validateStacksAddress(a)) throw new InvalidAddressError({ address: a });
+  if (!validateStacksAddress(b)) throw new InvalidAddressError({ address: b });
+  return a === b;
+}
+
+export function getAddress(address: string): string {
+  if (!validateStacksAddress(address))
+    throw new InvalidAddressError({ address });
+  return address;
 }

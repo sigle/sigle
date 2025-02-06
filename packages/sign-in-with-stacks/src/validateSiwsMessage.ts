@@ -1,6 +1,5 @@
-import { validateStacksAddress } from '@stacks/transactions';
 import type { SiwsMessage, ExactPartial } from './types.js';
-import { InvalidAddressError } from './errors/address.js';
+import { isAddressEqual } from './utils.js';
 
 export type ValidateSiwsMessageParameters = {
   /**
@@ -65,10 +64,4 @@ export function validateSiwsMessage(
   }
 
   return true;
-}
-
-function isAddressEqual(a: string, b: string): boolean {
-  if (!validateStacksAddress(a)) throw new InvalidAddressError({ address: a });
-  if (!validateStacksAddress(b)) throw new InvalidAddressError({ address: b });
-  return a === b;
 }
