@@ -258,10 +258,8 @@ test('behavior: invalid chainId', () => {
     createSiwsMessage({ ...message, chainId: 1.1 }),
   ).toThrowErrorMatchingInlineSnapshot(`
     [SiwsInvalidMessageFieldError: Invalid Sign-In with Ethereum message field "chainId".
-
     - Chain ID must be a EIP-155 chain ID.
     - See https://eips.ethereum.org/EIPS/eip-155
-
     Provided value: 1.1]
   `);
 });
@@ -271,10 +269,8 @@ test('behavior: invalid domain', () => {
     createSiwsMessage({ ...message, domain: '#foo' }),
   ).toThrowErrorMatchingInlineSnapshot(`
     [SiwsInvalidMessageFieldError: Invalid Sign-In with Ethereum message field "domain".
-
     - Domain must be an RFC 3986 authority.
     - See https://www.rfc-editor.org/rfc/rfc3986
-
     Provided value: #foo]
   `);
 });
@@ -284,10 +280,8 @@ test('behavior: invalid nonce', () => {
     createSiwsMessage({ ...message, nonce: '#foo' }),
   ).toThrowErrorMatchingInlineSnapshot(`
     [SiwsInvalidMessageFieldError: Invalid Sign-In with Ethereum message field "nonce".
-
     - Nonce must be at least 8 characters.
     - Nonce must be alphanumeric.
-
     Provided value: #foo]
   `);
 });
@@ -297,10 +291,8 @@ test('behavior: invalid uri', () => {
     createSiwsMessage({ ...message, uri: '#foo' }),
   ).toThrowErrorMatchingInlineSnapshot(`
     [SiwsInvalidMessageFieldError: Invalid Sign-In with Ethereum message field "uri".
-
     - URI must be a RFC 3986 URI referring to the resource that is the subject of the signing.
     - See https://www.rfc-editor.org/rfc/rfc3986
-
     Provided value: #foo]
   `);
 });
@@ -311,9 +303,7 @@ test('behavior: invalid version', () => {
     createSiwsMessage({ ...message, version: '2' }),
   ).toThrowErrorMatchingInlineSnapshot(`
     [SiwsInvalidMessageFieldError: Invalid Sign-In with Ethereum message field "version".
-
     - Version must be '1'.
-
     Provided value: 2]
   `);
 });
@@ -323,10 +313,8 @@ test('behavior: invalid scheme', () => {
     createSiwsMessage({ ...message, scheme: 'foo_bar' }),
   ).toThrowErrorMatchingInlineSnapshot(`
     [SiwsInvalidMessageFieldError: Invalid Sign-In with Ethereum message field "scheme".
-
     - Scheme must be an RFC 3986 URI scheme.
     - See https://www.rfc-editor.org/rfc/rfc3986#section-3.1
-
     Provided value: foo_bar]
   `);
 });
@@ -336,9 +324,7 @@ test('behavior: invalid statement', () => {
     createSiwsMessage({ ...message, statement: 'foo\nbar' }),
   ).toThrowErrorMatchingInlineSnapshot(`
     [SiwsInvalidMessageFieldError: Invalid Sign-In with Ethereum message field "statement".
-
     - Statement must not include '\\n'.
-
     Provided value: foo
     bar]
   `);
@@ -352,10 +338,8 @@ test('behavior: invalid resources', () => {
     }),
   ).toThrowErrorMatchingInlineSnapshot(`
     [SiwsInvalidMessageFieldError: Invalid Sign-In with Ethereum message field "resources".
-
     - Every resource must be a RFC 3986 URI.
     - See https://www.rfc-editor.org/rfc/rfc3986
-
     Provided value: foo]
   `);
 });
