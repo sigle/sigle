@@ -1,7 +1,7 @@
 'use client';
 
 import { useStacksLogin } from '@/hooks/useStacksLogin';
-import { Avatar, DropdownMenu, IconButton } from '@radix-ui/themes';
+import { DropdownMenu, IconButton } from '@radix-ui/themes';
 import { useSession } from 'next-auth/react';
 import { useTheme } from 'next-themes';
 import { usePostHog } from 'posthog-js/react';

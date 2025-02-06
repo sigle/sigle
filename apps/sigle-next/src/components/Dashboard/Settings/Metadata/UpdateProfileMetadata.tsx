@@ -81,8 +81,8 @@ export const UpdateProfileMetadata = ({
     values: {
       displayName: profile?.displayName || undefined,
       description: profile?.description || undefined,
-      picture: profile?.pictureUri || undefined,
-      coverPicture: profile?.coverPictureUri || undefined,
+      picture: profile?.pictureUri?.id || undefined,
+      coverPicture: profile?.coverPictureUri?.id || undefined,
       website: profile?.website || undefined,
       twitter: profile?.twitter || undefined,
     },
