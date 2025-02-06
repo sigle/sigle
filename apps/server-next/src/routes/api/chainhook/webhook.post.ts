@@ -41,7 +41,7 @@ export default defineEventHandler(async (event) => {
             (deployLogEvent.data as any).value.a === 'deploy';
 
           // TODO setup and verify log payload
-          // TODO extra security: check that the contract is following the template exported by the SDK (AST?)
+          // TODO extra security: check that the contract is following the template exported by the SDK
 
           if (isSiglePost) {
             const txId = transaction.transaction_identifier.hash;
