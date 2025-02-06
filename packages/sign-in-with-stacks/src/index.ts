@@ -10,3 +10,8 @@ export {
   type ValidateSiwsMessageParameters,
   type ValidateSiwsMessageReturnType,
 } from './validateSiwsMessage.js';
+export {
+  verifySiwsMessage,
+  type VerifySiwsMessageParameters,
+  type VerifySiwsMessageReturnType,
+} from './verifySiwsMessage.js';

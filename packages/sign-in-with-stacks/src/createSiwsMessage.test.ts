@@ -1,5 +1,4 @@
 import { expect, test, vi } from 'vitest';
-// TODO hardcode the chain id to remove the dependency on the network package if no other part of the codebase uses it
 import { STACKS_MAINNET } from '@stacks/network';
 import { createSiwsMessage } from './createSiwsMessage.js';
 import type { SiwsMessage } from './types.js';
