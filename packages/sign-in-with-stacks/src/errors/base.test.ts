@@ -10,13 +10,11 @@ test('BaseError', () => {
     new BaseError('An error occurred.', { details: 'details' }),
   ).toMatchInlineSnapshot(`
     [BaseError: An error occurred.
-
     Details: details]
   `);
 
   expect(new BaseError('', { details: 'details' })).toMatchInlineSnapshot(`
     [BaseError: An error occurred.
-
     Details: details]
   `);
 });
@@ -29,7 +27,6 @@ test('BaseError (w/ docsPath)', () => {
     }),
   ).toMatchInlineSnapshot(`
     [BaseError: An error occurred.
-
     Docs: https://viem.sh/lol
     Details: details]
   `);
@@ -39,7 +36,6 @@ test('BaseError (w/ docsPath)', () => {
     }),
   ).toMatchInlineSnapshot(`
     [BaseError: An error occurred.
-
     Docs: https://viem.sh/docs]
   `);
   expect(
@@ -49,7 +45,6 @@ test('BaseError (w/ docsPath)', () => {
     }),
   ).toMatchInlineSnapshot(`
     [BaseError: An error occurred.
-
     Docs: https://viem.sh/lol]
   `);
   expect(
@@ -59,7 +54,6 @@ test('BaseError (w/ docsPath)', () => {
     }),
   ).toMatchInlineSnapshot(`
     [BaseError: An error occurred.
-
     Docs: https://viem.sh/lol
     Details: details]
   `);
@@ -74,7 +68,6 @@ test('BaseError (w/ docsBaseUrl)', () => {
     }),
   ).toMatchInlineSnapshot(`
     [BaseError: An error occurred.
-
     Docs: https://test/lol
     Details: details]
   `);
@@ -88,10 +81,8 @@ test('BaseError (w/ metaMessages)', () => {
     }),
   ).toMatchInlineSnapshot(`
     [BaseError: An error occurred.
-
     Reason: idk
     Cause: lol
-
     Details: details]
   `);
 });
@@ -107,7 +98,6 @@ test('inherited BaseError', () => {
     }),
   ).toMatchInlineSnapshot(`
     [BaseError: An internal error occurred.
-
     Docs: https://viem.sh/lol
     Details: details]
   `);
@@ -122,7 +112,6 @@ test('inherited Error', () => {
     }),
   ).toMatchInlineSnapshot(`
     [BaseError: An internal error occurred.
-
     Docs: https://viem.sh/lol
     Details: details]
   `);
@@ -193,7 +182,6 @@ test('setErrorConfig', () => {
 
   expect(new FooError()).toMatchInlineSnapshot(`
     [FooError: An error occurred
-
     Docs: https://sweetlib.com/xyz]
   `);
 });

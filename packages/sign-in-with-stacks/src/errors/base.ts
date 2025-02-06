@@ -57,7 +57,10 @@ export class BaseError extends Error {
       ...(args.metaMessages ? [...args.metaMessages, ''] : []),
       ...(docsUrl ? [`Docs: ${docsUrl}`] : []),
       ...(details ? [`Details: ${details}`] : []),
-    ].join('\n');
+    ]
+      .filter((data) => data !== '')
+      .join('\n')
+      .replace(/\n$/, '');
 
     super(message, args.cause ? { cause: args.cause } : undefined);
 
