@@ -252,9 +252,7 @@ test('behavior: invalid address', () => {
     [InvalidAddressError: Address "0xfoobarbaz" is invalid.
 
     - Address must be a hex value of 20 bytes (40 hex characters).
-    - Address must match its checksum counterpart.
-
-    Version: viem@x.y.z]
+    - Address must match its checksum counterpart.]
   `);
 });
 
@@ -267,9 +265,7 @@ test('behavior: invalid chainId', () => {
     - Chain ID must be a EIP-155 chain ID.
     - See https://eips.ethereum.org/EIPS/eip-155
 
-    Provided value: 1.1
-
-    Version: viem@x.y.z]
+    Provided value: 1.1]
   `);
 });
 
@@ -282,9 +278,7 @@ test('behavior: invalid domain', () => {
     - Domain must be an RFC 3986 authority.
     - See https://www.rfc-editor.org/rfc/rfc3986
 
-    Provided value: #foo
-
-    Version: viem@x.y.z]
+    Provided value: #foo]
   `);
 });
 
@@ -297,9 +291,7 @@ test('behavior: invalid nonce', () => {
     - Nonce must be at least 8 characters.
     - Nonce must be alphanumeric.
 
-    Provided value: #foo
-
-    Version: viem@x.y.z]
+    Provided value: #foo]
   `);
 });
 
@@ -312,9 +304,7 @@ test('behavior: invalid uri', () => {
     - URI must be a RFC 3986 URI referring to the resource that is the subject of the signing.
     - See https://www.rfc-editor.org/rfc/rfc3986
 
-    Provided value: #foo
-
-    Version: viem@x.y.z]
+    Provided value: #foo]
   `);
 });
 
@@ -327,9 +317,7 @@ test('behavior: invalid version', () => {
 
     - Version must be '1'.
 
-    Provided value: 2
-
-    Version: viem@x.y.z]
+    Provided value: 2]
   `);
 });
 
@@ -342,9 +330,7 @@ test('behavior: invalid scheme', () => {
     - Scheme must be an RFC 3986 URI scheme.
     - See https://www.rfc-editor.org/rfc/rfc3986#section-3.1
 
-    Provided value: foo_bar
-
-    Version: viem@x.y.z]
+    Provided value: foo_bar]
   `);
 });
 
@@ -357,9 +343,7 @@ test('behavior: invalid statement', () => {
     - Statement must not include '\\n'.
 
     Provided value: foo
-    bar
-
-    Version: viem@x.y.z]
+    bar]
   `);
 });
 
@@ -375,9 +359,7 @@ test('behavior: invalid resources', () => {
     - Every resource must be a RFC 3986 URI.
     - See https://www.rfc-editor.org/rfc/rfc3986
 
-    Provided value: foo
-
-    Version: viem@x.y.z]
+    Provided value: foo]
   `);
 });
 

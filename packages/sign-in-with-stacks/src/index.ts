@@ -1,6 +1,12 @@
+export {
+  createSiwsMessage,
+  type CreateSiwsMessageParameters,
+  type CreateSiwsMessageReturnType,
+  type CreateSiwsMessageErrorType,
+} from './createSiwsMessage.js';
 export { generateSiwsNonce } from './generateSiwsNonce.js';
 export {
   validateSiwsMessage,
-  ValidateSiwsMessageParameters,
-  ValidateSiwsMessageReturnType,
+  type ValidateSiwsMessageParameters,
+  type ValidateSiwsMessageReturnType,
 } from './validateSiwsMessage.js';
