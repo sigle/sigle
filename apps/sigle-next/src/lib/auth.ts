@@ -1,10 +1,10 @@
 import NextAuth from 'next-auth';
 import Credentials from 'next-auth/providers/credentials';
-import { SignInWithStacksMessage } from './sign-in-with-stacks';
 import { z } from 'zod';
 import { env } from '@/env';
 import type { DefaultJWT } from 'next-auth/jwt';
 import * as Sentry from '@sentry/nextjs';
+import { verifySiwsMessage } from '@sigle/sign-in-with-stacks';
 
 declare module 'next-auth' {
   /**
@@ -93,24 +93,24 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       authorize: async (credentials) => {
         try {
           const signInSchema = z.object({
+            address: z.string().min(1),
             message: z.string().min(1),
             signature: z.string().min(1),
             csrfToken: z.string().min(1),
           });
 
-          const { message, signature, csrfToken } =
+          const { address, message, signature, csrfToken } =
             signInSchema.parse(credentials);
 
-          // TODO set expirationTime to avoid replay attacks
-          const siwe = new SignInWithStacksMessage(message);
-
-          const result = await siwe.verify({
-            signature: signature,
-            domain: env.NEXT_PUBLIC_APP_URL,
+          const valid = verifySiwsMessage({
+            message,
+            signature,
+            address,
+            domain: new URL(env.NEXT_PUBLIC_APP_URL).host,
             nonce: csrfToken,
           });
 
-          if (result.success) {
+          if (valid) {
             const data = await fetch(
               `${env.NEXT_PUBLIC_API_URL}/api/internal/login-user-sync`,
               {
@@ -120,7 +120,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
                   authorization: `Bearer ${env.INTERNAL_API_TOKEN}`,
                 },
                 body: JSON.stringify({
-                  address: siwe.address,
+                  address,
                 }),
               },
             );
@@ -134,7 +134,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
 
             return {
               id,
-              address: siwe.address,
+              address,
             };
           }
 

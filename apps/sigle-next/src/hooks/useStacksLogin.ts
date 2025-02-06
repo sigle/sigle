@@ -4,12 +4,12 @@ import {
   showConnect,
   type UserData,
 } from '@stacks/connect';
+import { createSiwsMessage } from '@sigle/sign-in-with-stacks';
 import { usePostHog } from 'posthog-js/react';
 import { useEffect } from 'react';
 import { create } from 'zustand';
 import { getCsrfToken, signIn } from 'next-auth/react';
 import { toast } from 'sonner';
-import { SignInWithStacksMessage } from '@/lib/sign-in-with-stacks';
 import { env } from '@/env';
 
 interface SessionState {
@@ -62,23 +62,22 @@ export const useStacksLogin = () => {
         ? userData.profile.stxAddress.mainnet
         : userData.profile.stxAddress.testnet;
 
-    const stacksMessage = new SignInWithStacksMessage({
-      domain: `${window.location.protocol}//${window.location.host}`,
+    const message = createSiwsMessage({
       address,
+      chainId: stacksNetwork.chainId,
+      domain: window.location.host,
       statement: 'Sign in to Sigle.',
+      nonce: await getCsrfToken(),
       uri: window.location.origin,
       version: '1',
-      chainId: 1,
-      nonce: await getCsrfToken(),
     });
-
-    const message = stacksMessage.prepareMessage();
 
     await openSignatureRequestPopup({
       network: stacksNetwork,
       message,
       onFinish: async ({ signature }) => {
         const signInResult = await signIn('credentials', {
+          address,
           message: message,
           signature,
           redirect: false,

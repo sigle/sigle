@@ -18,9 +18,12 @@
     "build": "tsup",
     "test": "vitest"
   },
+  "dependencies": {
+    "@stacks/common": "^7.0.2"
+  },
   "peerDependencies": {
-    "@stacks/encryption": "^7.0.0",
-    "@stacks/transactions": "^7.0.0"
+    "@stacks/encryption": "^7.0.2",
+    "@stacks/transactions": "^7.0.2"
   },
   "devDependencies": {
     "@stacks/encryption": "7.0.2",
@@ -30,6 +33,6 @@
     "@types/node": "22.10.5",
     "tsup": "8.3.5",
     "typescript": "5.7.2",
-    "vitest": "2.1.8"
+    "vitest": "3.0.5"
   }
 }

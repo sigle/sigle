@@ -45,5 +45,6 @@ import { STACKS_MAINNET } from '@stacks/network';
 const valid = verifySiwsMessage({
   message,
   signature,
+  nonce: 'your-nonce',
 })
 ```

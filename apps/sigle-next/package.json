@@ -15,6 +15,7 @@
     "@radix-ui/themes": "3.2.0",
     "@sentry/nextjs": "8.48.0",
     "@sigle/sdk": "workspace:*",
+    "@sigle/sign-in-with-stacks": "workspace:*",
     "@stacks/blockchain-api-client": "8.4.0",
     "@stacks/common": "7.0.2",
     "@stacks/connect": "7.9.0",

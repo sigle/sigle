@@ -1,7 +1,10 @@
 import { hashMessage, verifyMessageSignatureRsv } from '@stacks/encryption';
+import { STACKS_MAINNET } from '@stacks/network';
+import { bytesToHex } from '@stacks/common';
 import {
   createMessageSignature,
   publicKeyFromSignatureRsv,
+  publicKeyToAddress,
 } from '@stacks/transactions';
 import { parseSiwsMessage } from './parseSiwsMessage.js';
 import {
@@ -49,6 +52,7 @@ export function verifySiwsMessage(
 
   const parsed = parseSiwsMessage(message);
   if (!parsed.address) return false;
+  if (!parsed.chainId) return false;
 
   const isValid = validateSiwsMessage({
     address,
@@ -62,15 +66,21 @@ export function verifySiwsMessage(
 
   const stacksSignature = createMessageSignature(signature);
   const hash = hashMessage(message);
-  const hashedMessage = Buffer.from(hash).toString('hex');
   const publicKey = publicKeyFromSignatureRsv(
-    hashedMessage,
+    bytesToHex(hash),
     stacksSignature.data,
   );
+  const stacksAddress = publicKeyToAddress(
+    publicKey,
+    parsed.chainId === STACKS_MAINNET.chainId ? 'mainnet' : 'testnet',
+  );
 
-  return verifyMessageSignatureRsv({
+  const isValidSignature = verifyMessageSignatureRsv({
     signature,
     message,
     publicKey,
   });
+
+  // Verify the address matches the signature address
+  return isValidSignature && stacksAddress === parsed.address;
 }
