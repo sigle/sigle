@@ -413,8 +413,8 @@ importers:
         specifier: 0.7.1
         version: 0.7.1
       pg-boss:
-        specifier: 10.1.5
-        version: 10.1.5
+        specifier: 10.1.6
+        version: 10.1.6
       posthog-node:
         specifier: 4.3.2
         version: 4.3.2
@@ -12987,8 +12987,8 @@ packages:
   perfect-debounce@1.0.0:
     resolution: {integrity: sha512-xCy9V055GLEqoFaHoC1SoLIaLmWctgCUaBaWxDZ7/Zx4CTyX7cJQLJOok/orfjZAh9kEYpjJa4d0KcJmCbctZA==}
 
-  pg-boss@10.1.5:
-    resolution: {integrity: sha512-H87NL6c7N6nTCSCePh16EaSQVSFevNXWdJuzY6PZz4rw+W/nuMKPfI/vYyXS0AdT1g1Q3S3EgeOYOHcB7ZVToQ==}
+  pg-boss@10.1.6:
+    resolution: {integrity: sha512-O3ujMF4aL/EDucyTlCpJ2bqNJendWnMKwuLaWDqVVt3CDSJ6/iBRvj3PMiO5exwlqHYLQkZnHCutzdc32nPpOA==}
     engines: {node: '>=20'}
 
   pg-cloudflare@1.1.1:
@@ -32043,7 +32043,7 @@ snapshots:
 
   perfect-debounce@1.0.0: {}
 
-  pg-boss@10.1.5:
+  pg-boss@10.1.6:
     dependencies:
       cron-parser: 4.9.0
       pg: 8.13.1
