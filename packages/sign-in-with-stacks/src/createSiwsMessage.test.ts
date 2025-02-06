@@ -18,7 +18,7 @@ test('default', () => {
   vi.setSystemTime(new Date(Date.UTC(2023, 1, 1)));
 
   expect(createSiwsMessage(message)).toMatchInlineSnapshot(`
-    "example.com wants you to sign in with your Ethereum account:
+    "example.com wants you to sign in with your Stacks account:
     SP2X0TZ59D5SZ8ACQ6YMCHHNR2ZN51Z32E2CJ173
 
 
@@ -42,7 +42,7 @@ test('parameters: domain', () => {
       domain: 'foo.example.com',
     }),
   ).toMatchInlineSnapshot(`
-    "foo.example.com wants you to sign in with your Ethereum account:
+    "foo.example.com wants you to sign in with your Stacks account:
     SP2X0TZ59D5SZ8ACQ6YMCHHNR2ZN51Z32E2CJ173
 
 
@@ -59,7 +59,7 @@ test('parameters: domain', () => {
       domain: 'example.co.uk',
     }),
   ).toMatchInlineSnapshot(`
-    "example.co.uk wants you to sign in with your Ethereum account:
+    "example.co.uk wants you to sign in with your Stacks account:
     SP2X0TZ59D5SZ8ACQ6YMCHHNR2ZN51Z32E2CJ173
 
 
@@ -83,7 +83,7 @@ test('parameters: scheme', () => {
       scheme: 'https',
     }),
   ).toMatchInlineSnapshot(`
-    "https://example.com wants you to sign in with your Ethereum account:
+    "https://example.com wants you to sign in with your Stacks account:
     SP2X0TZ59D5SZ8ACQ6YMCHHNR2ZN51Z32E2CJ173
 
 
@@ -108,7 +108,7 @@ test('parameters: statement', () => {
         'I accept the ExampleOrg Terms of Service: https://example.com/tos',
     }),
   ).toMatchInlineSnapshot(`
-    "example.com wants you to sign in with your Ethereum account:
+    "example.com wants you to sign in with your Stacks account:
     SP2X0TZ59D5SZ8ACQ6YMCHHNR2ZN51Z32E2CJ173
 
     I accept the ExampleOrg Terms of Service: https://example.com/tos
@@ -126,7 +126,7 @@ test('parameters: statement', () => {
 test('parameters: issuedAt', () => {
   const issuedAt = new Date(Date.UTC(2022, 1, 4));
   expect(createSiwsMessage({ ...message, issuedAt })).toMatchInlineSnapshot(`
-    "example.com wants you to sign in with your Ethereum account:
+    "example.com wants you to sign in with your Stacks account:
     SP2X0TZ59D5SZ8ACQ6YMCHHNR2ZN51Z32E2CJ173
 
 
@@ -148,7 +148,7 @@ test('parameters: expirationTime', () => {
       expirationTime: new Date(Date.UTC(2022, 1, 4)),
     }),
   ).toMatchInlineSnapshot(`
-    "example.com wants you to sign in with your Ethereum account:
+    "example.com wants you to sign in with your Stacks account:
     SP2X0TZ59D5SZ8ACQ6YMCHHNR2ZN51Z32E2CJ173
 
 
@@ -173,7 +173,7 @@ test('parameters: notBefore', () => {
       notBefore: new Date(Date.UTC(2022, 1, 4)),
     }),
   ).toMatchInlineSnapshot(`
-    "example.com wants you to sign in with your Ethereum account:
+    "example.com wants you to sign in with your Stacks account:
     SP2X0TZ59D5SZ8ACQ6YMCHHNR2ZN51Z32E2CJ173
 
 
@@ -198,7 +198,7 @@ test('parameters: requestId', () => {
       requestId: '123e4567-e89b-12d3-a456-426614174000',
     }),
   ).toMatchInlineSnapshot(`
-    "example.com wants you to sign in with your Ethereum account:
+    "example.com wants you to sign in with your Stacks account:
     SP2X0TZ59D5SZ8ACQ6YMCHHNR2ZN51Z32E2CJ173
 
 
@@ -227,7 +227,7 @@ test('parameters: resources', () => {
       ],
     }),
   ).toMatchInlineSnapshot(`
-    "example.com wants you to sign in with your Ethereum account:
+    "example.com wants you to sign in with your Stacks account:
     SP2X0TZ59D5SZ8ACQ6YMCHHNR2ZN51Z32E2CJ173
 
 
@@ -257,9 +257,9 @@ test('behavior: invalid chainId', () => {
   expect(() =>
     createSiwsMessage({ ...message, chainId: 1.1 }),
   ).toThrowErrorMatchingInlineSnapshot(`
-    [SiwsInvalidMessageFieldError: Invalid Sign-In with Ethereum message field "chainId".
-    - Chain ID must be a EIP-155 chain ID.
-    - See https://eips.ethereum.org/EIPS/eip-155
+    [SiwsInvalidMessageFieldError: Invalid Sign-In with Stacks message field "chainId".
+    - Chain ID must be a SIP-005 chain ID.
+    - See https://github.com/stacksgov/sips/blob/main/sips/sip-005/sip-005-blocks-and-transactions.md
     Provided value: 1.1]
   `);
 });
@@ -268,7 +268,7 @@ test('behavior: invalid domain', () => {
   expect(() =>
     createSiwsMessage({ ...message, domain: '#foo' }),
   ).toThrowErrorMatchingInlineSnapshot(`
-    [SiwsInvalidMessageFieldError: Invalid Sign-In with Ethereum message field "domain".
+    [SiwsInvalidMessageFieldError: Invalid Sign-In with Stacks message field "domain".
     - Domain must be an RFC 3986 authority.
     - See https://www.rfc-editor.org/rfc/rfc3986
     Provided value: #foo]
@@ -279,7 +279,7 @@ test('behavior: invalid nonce', () => {
   expect(() =>
     createSiwsMessage({ ...message, nonce: '#foo' }),
   ).toThrowErrorMatchingInlineSnapshot(`
-    [SiwsInvalidMessageFieldError: Invalid Sign-In with Ethereum message field "nonce".
+    [SiwsInvalidMessageFieldError: Invalid Sign-In with Stacks message field "nonce".
     - Nonce must be at least 8 characters.
     - Nonce must be alphanumeric.
     Provided value: #foo]
@@ -290,7 +290,7 @@ test('behavior: invalid uri', () => {
   expect(() =>
     createSiwsMessage({ ...message, uri: '#foo' }),
   ).toThrowErrorMatchingInlineSnapshot(`
-    [SiwsInvalidMessageFieldError: Invalid Sign-In with Ethereum message field "uri".
+    [SiwsInvalidMessageFieldError: Invalid Sign-In with Stacks message field "uri".
     - URI must be a RFC 3986 URI referring to the resource that is the subject of the signing.
     - See https://www.rfc-editor.org/rfc/rfc3986
     Provided value: #foo]
@@ -302,7 +302,7 @@ test('behavior: invalid version', () => {
     // @ts-expect-error
     createSiwsMessage({ ...message, version: '2' }),
   ).toThrowErrorMatchingInlineSnapshot(`
-    [SiwsInvalidMessageFieldError: Invalid Sign-In with Ethereum message field "version".
+    [SiwsInvalidMessageFieldError: Invalid Sign-In with Stacks message field "version".
     - Version must be '1'.
     Provided value: 2]
   `);
@@ -312,7 +312,7 @@ test('behavior: invalid scheme', () => {
   expect(() =>
     createSiwsMessage({ ...message, scheme: 'foo_bar' }),
   ).toThrowErrorMatchingInlineSnapshot(`
-    [SiwsInvalidMessageFieldError: Invalid Sign-In with Ethereum message field "scheme".
+    [SiwsInvalidMessageFieldError: Invalid Sign-In with Stacks message field "scheme".
     - Scheme must be an RFC 3986 URI scheme.
     - See https://www.rfc-editor.org/rfc/rfc3986#section-3.1
     Provided value: foo_bar]
@@ -323,7 +323,7 @@ test('behavior: invalid statement', () => {
   expect(() =>
     createSiwsMessage({ ...message, statement: 'foo\nbar' }),
   ).toThrowErrorMatchingInlineSnapshot(`
-    [SiwsInvalidMessageFieldError: Invalid Sign-In with Ethereum message field "statement".
+    [SiwsInvalidMessageFieldError: Invalid Sign-In with Stacks message field "statement".
     - Statement must not include '\\n'.
     Provided value: foo
     bar]
@@ -337,7 +337,7 @@ test('behavior: invalid resources', () => {
       resources: ['https://example.com', 'foo'],
     }),
   ).toThrowErrorMatchingInlineSnapshot(`
-    [SiwsInvalidMessageFieldError: Invalid Sign-In with Ethereum message field "resources".
+    [SiwsInvalidMessageFieldError: Invalid Sign-In with Stacks message field "resources".
     - Every resource must be a RFC 3986 URI.
     - See https://www.rfc-editor.org/rfc/rfc3986
     Provided value: foo]

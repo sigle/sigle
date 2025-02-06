@@ -1,22 +1,25 @@
-import { SiwsInvalidMessageFieldError } from './errors/siws.js';
-import type { ErrorType } from '../../errors/utils.js';
+import {
+  SiwsInvalidMessageFieldError,
+  type SiwsInvalidMessageFieldErrorType,
+} from './errors/siws.js';
 import type { SiwsMessage } from './types.js';
 import { getAddress, isUri } from './utils.js';
+import type { InvalidAddressErrorType } from './errors/address.js';
 
 export type CreateSiwsMessageParameters = SiwsMessage;
 
 export type CreateSiwsMessageReturnType = string;
 
 export type CreateSiwsMessageErrorType =
-  | SiwsInvalidMessageFieldErrorType
-  | ErrorType;
+  | InvalidAddressErrorType
+  | SiwsInvalidMessageFieldErrorType;
 
 /**
- * @description Creates EIP-4361 formatted message.
+ * @description Creates SIP-X formatted message.
  *
  * @example
  * const message = createMessage({
- *   address: '0xA0Cf798816D4b9b9866b5330EEa46a18382f251e',
+ *   address: 'SP2X0TZ59D5SZ8ACQ6YMCHHNR2ZN51Z32E2CJ173',
  *   chainId: 1,
  *   domain: 'example.com',
  *   nonce: 'foobarbaz',
@@ -24,7 +27,7 @@ export type CreateSiwsMessageErrorType =
  *   version: '1',
  * })
  *
- * @see https://eips.ethereum.org/EIPS/eip-4361
+ * @see https://github.com/stacksgov/sips/pull/70
  */
 export function createSiwsMessage(
   parameters: CreateSiwsMessageParameters,
@@ -50,8 +53,8 @@ export function createSiwsMessage(
       throw new SiwsInvalidMessageFieldError({
         field: 'chainId',
         metaMessages: [
-          '- Chain ID must be a EIP-155 chain ID.',
-          '- See https://eips.ethereum.org/EIPS/eip-155',
+          '- Chain ID must be a SIP-005 chain ID.',
+          '- See https://github.com/stacksgov/sips/blob/main/sips/sip-005/sip-005-blocks-and-transactions.md',
           '',
           `Provided value: ${chainId}`,
         ],
@@ -135,7 +138,7 @@ export function createSiwsMessage(
     if (!parameters.statement) return '';
     return `${parameters.statement}\n`;
   })();
-  const prefix = `${origin} wants you to sign in with your Ethereum account:\n${address}\n\n${statement}`;
+  const prefix = `${origin} wants you to sign in with your Stacks account:\n${address}\n\n${statement}`;
 
   let suffix = `URI: ${uri}\nVersion: ${version}\nChain ID: ${chainId}\nNonce: ${nonce}\nIssued At: ${issuedAt.toISOString()}`;
 

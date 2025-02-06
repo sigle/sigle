@@ -11,7 +11,7 @@ export class SiwsInvalidMessageFieldError extends BaseError {
     field: string;
     metaMessages?: string[] | undefined;
   }) {
-    super(`Invalid Sign-In with Ethereum message field "${field}".`, {
+    super(`Invalid Sign-In with Stacks message field "${field}".`, {
       metaMessages,
       name: 'SiwsInvalidMessageFieldError',
     });
