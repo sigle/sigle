@@ -249,10 +249,7 @@ test('behavior: invalid address', () => {
   expect(() =>
     createSiwsMessage({ ...message, address: '0xfoobarbaz' }),
   ).toThrowErrorMatchingInlineSnapshot(`
-    [InvalidAddressError: Address "0xfoobarbaz" is invalid.
-
-    - Address must be a hex value of 20 bytes (40 hex characters).
-    - Address must match its checksum counterpart.]
+    [InvalidAddressError: Address "0xfoobarbaz" is invalid.]
   `);
 });
 
