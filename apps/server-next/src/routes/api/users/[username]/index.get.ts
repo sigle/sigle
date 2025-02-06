@@ -42,10 +42,40 @@ defineRouteMeta({
                       type: 'string',
                     },
                     pictureUri: {
-                      type: 'string',
+                      type: 'object',
+                      required: ['id'],
+                      properties: {
+                        id: {
+                          type: 'string',
+                        },
+                        width: {
+                          type: 'number',
+                        },
+                        height: {
+                          type: 'number',
+                        },
+                        blurhash: {
+                          type: 'string',
+                        },
+                      },
                     },
                     coverPictureUri: {
-                      type: 'string',
+                      type: 'object',
+                      required: ['id'],
+                      properties: {
+                        id: {
+                          type: 'string',
+                        },
+                        width: {
+                          type: 'number',
+                        },
+                        height: {
+                          type: 'number',
+                        },
+                        blurhash: {
+                          type: 'string',
+                        },
+                      },
                     },
                   },
                 },

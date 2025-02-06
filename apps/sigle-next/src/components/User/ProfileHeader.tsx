@@ -6,18 +6,13 @@ import { useCopyToClipboard } from '@/hooks/useCopyToClipboard';
 import { cn } from '@/lib/cn';
 import { resolveImageUrl } from '@/lib/images';
 import { Routes } from '@/lib/routes';
-import {
-  Avatar,
-  Button,
-  Container,
-  DropdownMenu,
-  IconButton,
-} from '@radix-ui/themes';
+import { Button, Container, DropdownMenu, IconButton } from '@radix-ui/themes';
 import { IconDotsVertical, IconPencil } from '@tabler/icons-react';
 import { useSession } from 'next-auth/react';
 import Link from 'next/link';
 import { usePostHog } from 'posthog-js/react';
 import { ProfileAvatar } from '../Shared/Profile/ProfileAvatar';
+import Image from 'next/image';
 
 interface ProfileHeaderProps {
   user: paths['/api/users/{username}']['get']['responses']['200']['content']['application/json'];
@@ -48,17 +43,18 @@ export const ProfileHeader = ({ user }: ProfileHeaderProps) => {
           'h-32': !hasBanner,
         })}
       >
-        {hasBanner ? (
-          // eslint-disable-next-line @next/next/no-img-element
-          <img
-            className="size-full object-cover"
-            src={
-              user.profile?.coverPictureUri
-                ? resolveImageUrl(user.profile.coverPictureUri)
-                : undefined
-            }
+        {user?.profile?.coverPictureUri ? (
+          <Image
+            src={resolveImageUrl(user.profile.coverPictureUri.id)}
             alt="Banner"
             sizes="100vw"
+            className="size-full object-cover"
+            placeholder={
+              user.profile.coverPictureUri.blurhash ? 'blur' : 'empty'
+            }
+            blurDataURL={user.profile.coverPictureUri.blurhash}
+            width={user.profile.coverPictureUri.width}
+            height={user.profile.coverPictureUri.height}
           />
         ) : null}
       </div>
