@@ -33,8 +33,6 @@ export const indexerSetProfileJob = defineJob('indexer-set-profile')
       ...metadataWithoutId
     } = profileMetadata.data;
 
-    // TODO get blurhash from images cover and picture
-
     await prisma.profile.upsert({
       where: {
         id: job.data.address,
