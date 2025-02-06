@@ -2,7 +2,7 @@ import { expect, test } from 'vitest';
 import { parseSiwsMessage } from './parseSiwsMessage.js';
 
 test('default', () => {
-  const message = `example.com wants you to sign in with your Ethereum account:
+  const message = `example.com wants you to sign in with your Stacks account:
 0xA0Cf798816D4b9b9866b5330EEa46a18382f251e
 
 I accept the ExampleOrg Terms of Service: https://example.com/tos
@@ -28,7 +28,7 @@ Issued At: 2023-02-01T00:00:00.000Z`;
 });
 
 test('behavior: with scheme', () => {
-  const message = `https://example.com wants you to sign in with your Ethereum account:
+  const message = `https://example.com wants you to sign in with your Stacks account:
 0xA0Cf798816D4b9b9866b5330EEa46a18382f251e
 
 URI: https://example.com/path
@@ -41,7 +41,7 @@ Issued At: 2023-02-01T00:00:00.000Z`;
 });
 
 test('behavior: domain with port', () => {
-  const message = `example.com:8080 wants you to sign in with your Ethereum account:
+  const message = `example.com:8080 wants you to sign in with your Stacks account:
 0xA0Cf798816D4b9b9866b5330EEa46a18382f251e
 
 URI: https://example.com/path
@@ -54,7 +54,7 @@ Issued At: 2023-02-01T00:00:00.000Z`;
 });
 
 test('behavior: with statement', () => {
-  const message = `example.com wants you to sign in with your Ethereum account:
+  const message = `example.com wants you to sign in with your Stacks account:
 0xA0Cf798816D4b9b9866b5330EEa46a18382f251e
 
 I accept the ExampleOrg Terms of Service: https://example.com/tos
@@ -71,7 +71,7 @@ Issued At: 2023-02-01T00:00:00.000Z`;
 });
 
 test('behavior: with expirationTime', () => {
-  const message = `https://example.com wants you to sign in with your Ethereum account:
+  const message = `https://example.com wants you to sign in with your Stacks account:
 0xA0Cf798816D4b9b9866b5330EEa46a18382f251e
 
 URI: https://example.com/path
@@ -87,7 +87,7 @@ Expiration Time: 2022-02-04T00:00:00.000Z`;
 });
 
 test('behavior: with notBefore', () => {
-  const message = `https://example.com wants you to sign in with your Ethereum account:
+  const message = `https://example.com wants you to sign in with your Stacks account:
 0xA0Cf798816D4b9b9866b5330EEa46a18382f251e
 
 URI: https://example.com/path
@@ -101,7 +101,7 @@ Not Before: 2022-02-04T00:00:00.000Z`;
 });
 
 test('behavior: with requestId', () => {
-  const message = `https://example.com wants you to sign in with your Ethereum account:
+  const message = `https://example.com wants you to sign in with your Stacks account:
 0xA0Cf798816D4b9b9866b5330EEa46a18382f251e
 
 URI: https://example.com/path
@@ -117,7 +117,7 @@ Request ID: 123e4567-e89b-12d3-a456-426614174000`;
 });
 
 test('behavior: with resources', () => {
-  const message = `https://example.com wants you to sign in with your Ethereum account:
+  const message = `https://example.com wants you to sign in with your Stacks account:
 0xA0Cf798816D4b9b9866b5330EEa46a18382f251e
 
 URI: https://example.com/path
@@ -140,7 +140,7 @@ Resources:
 });
 
 test('behavior: no suffix', () => {
-  const message = `https://example.com wants you to sign in with your Ethereum account:
+  const message = `https://example.com wants you to sign in with your Stacks account:
 0xA0Cf798816D4b9b9866b5330EEa46a18382f251e
 
 `;
