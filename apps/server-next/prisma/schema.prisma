@@ -22,13 +22,15 @@ model User {
 }
 
 model Profile {
-  id              String  @id @map("id")
-  displayName     String? @map("display_name")
-  description     String? @map("description")
-  website         String? @map("website")
-  twitter         String? @map("twitter")
-  pictureUri      String? @map("picture_uri")
-  coverPictureUri String? @map("cover_picture_uri")
+  id                String      @id @map("id")
+  displayName       String?     @map("display_name")
+  description       String?     @map("description")
+  website           String?     @map("website")
+  twitter           String?     @map("twitter")
+  pictureUriId      String?     @map("picture_uri_id")
+  pictureUri        MediaImage? @relation(fields: [pictureUriId], references: [id], name: "Profile_picture_uri_id_fkey")
+  coverPictureUriId String?     @map("cover_picture_uri_id")
+  coverPictureUri   MediaImage? @relation(fields: [coverPictureUriId], references: [id], name: "Profile_cover_picture_uri_id_fkey")
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
@@ -83,15 +85,17 @@ model Post {
 }
 
 model MediaImage {
-  id        String   @id @map("id")
-  mimeType  String   @map("mime_type")
-  alt       String?  @map("alt")
-  width     Int?     @map("width")
-  height    Int?     @map("height")
-  size      Int?     @map("size")
-  blurhash  String?  @map("blurhash")
-  createdAt DateTime @default(now()) @map("created_at")
-  posts     Post[]
+  id                  String    @id @map("id")
+  mimeType            String    @map("mime_type")
+  alt                 String?   @map("alt")
+  width               Int?      @map("width")
+  height              Int?      @map("height")
+  size                Int?      @map("size")
+  blurhash            String?   @map("blurhash")
+  createdAt           DateTime  @default(now()) @map("created_at")
+  posts               Post[]
+  profilePicture      Profile[] @relation(name: "Profile_picture_uri_id_fkey")
+  profileCoverPicture Profile[] @relation(name: "Profile_cover_picture_uri_id_fkey")
 }
 
 model PostNft {

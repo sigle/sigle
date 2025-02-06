@@ -16,7 +16,7 @@
     "@dotenvx/dotenvx": "1.32.0",
     "@hirosystems/chainhook-client": "2.3.0",
     "@paralleldrive/cuid2": "2.2.2",
-    "@prisma/client": "6.1.0",
+    "@prisma/client": "6.3.1",
     "@sentry/node": "8.48.0",
     "@sigle/sdk": "workspace:*",
     "@stacks/blockchain-api-client": "8.4.0",
@@ -28,15 +28,16 @@
     "ipfs-only-hash": "4.0.0",
     "next-auth": "5.0.0-beta.25",
     "nitro-cors": "0.7.1",
-    "pg-boss": "10.1.5",
+    "pg-boss": "10.1.6",
     "posthog-node": "4.3.2",
-    "prisma": "6.1.0",
+    "prisma": "6.3.1",
     "sharp": "0.33.5",
     "smee-client": "2.0.4",
     "zod": "3.24.1",
     "zod-validation-error": "3.4.0"
   },
   "devDependencies": {
-    "nitropack": "2.10.4"
+    "nitropack": "2.10.4",
+    "typescript": "5.7.2"
   }
 }
