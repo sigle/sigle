@@ -12,7 +12,7 @@ export type ValidateSiwsMessageParameters = {
    */
   domain?: string | undefined;
   /**
-   * EIP-4361 message fields.
+   * SIP-X message fields.
    */
   message: ExactPartial<SiwsMessage>;
   /**
@@ -34,9 +34,9 @@ export type ValidateSiwsMessageParameters = {
 export type ValidateSiwsMessageReturnType = boolean;
 
 /**
- * @description Validates EIP-4361 message.
+ * @description Validates SIP-X message.
  *
- * @see https://eips.ethereum.org/EIPS/eip-4361
+ * @see https://github.com/stacksgov/sips/pull/70
  */
 export function validateSiwsMessage(
   parameters: ValidateSiwsMessageParameters,

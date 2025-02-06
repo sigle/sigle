@@ -14,14 +14,14 @@ function uid(length = 11) {
 }
 
 /**
- * @description Generates random EIP-4361 nonce.
+ * @description Generates random SIP-X nonce.
  *
  * @example
  * const nonce = generateNonce()
  *
- * @see https://eips.ethereum.org/EIPS/eip-4361
+ * @see https://github.com/stacksgov/sips/pull/70
  *
- * @returns A randomly generated EIP-4361 nonce.
+ * @returns A randomly generated SIP-X nonce.
  */
 export function generateSiwsNonce(): string {
   return uid(96);

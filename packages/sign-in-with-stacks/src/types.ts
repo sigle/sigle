@@ -15,9 +15,9 @@ export type ExactPartial<type> = {
 };
 
 /**
- * @description EIP-4361 message fields
+ * @description SIP-X message fields
  *
- * @see https://eips.ethereum.org/EIPS/eip-4361
+ * @see https://github.com/stacksgov/sips/pull/70
  */
 export type SiwsMessage = {
   /**
@@ -25,7 +25,7 @@ export type SiwsMessage = {
    */
   address: string;
   /**
-   * The [EIP-155](https://eips.ethereum.org/EIPS/eip-155) Chain ID to which the session is bound,
+   * The [SIP-005](https://github.com/stacksgov/sips/blob/main/sips/sip-005/sip-005-blocks-and-transactions.md) Chain ID to which the session is bound,
    */
   chainId: number;
   /**
