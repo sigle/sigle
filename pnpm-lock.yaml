@@ -1244,6 +1244,18 @@ importers:
 
   packages/testnet-seed:
     devDependencies:
+      '@sigle/sdk':
+        specifier: workspace:*
+        version: link:../sdk
+      '@stacks/network':
+        specifier: 7.0.2
+        version: 7.0.2
+      '@tsconfig/recommended':
+        specifier: 1.0.8
+        version: 1.0.8
+      '@types/node':
+        specifier: 22.10.5
+        version: 22.10.5
       tsx:
         specifier: 4.19.2
         version: 4.19.2
