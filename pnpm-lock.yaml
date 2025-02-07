@@ -8,6 +8,9 @@ overrides:
   '@noble/hashes': 1.7.1
 
 patchedDependencies:
+  '@ardrive/turbo-sdk@1.22.0':
+    hash: vfhiuadom72jrr6eijhwmlmrja
+    path: patches/@ardrive__turbo-sdk@1.22.0.patch
   '@dha-team/arbundles@1.0.1':
     hash: gxr3pe2xdsty4ni7nl6crfldfi
     path: patches/@dha-team__arbundles@1.0.1.patch
@@ -371,7 +374,7 @@ importers:
     dependencies:
       '@ardrive/turbo-sdk':
         specifier: 1.22.0
-        version: 1.22.0(bufferutil@4.0.8)(utf-8-validate@5.0.10)
+        version: 1.22.0(patch_hash=vfhiuadom72jrr6eijhwmlmrja)(bufferutil@4.0.8)(utf-8-validate@5.0.10)
       '@aws-sdk/client-s3':
         specifier: 3.722.0
         version: 3.722.0
@@ -16487,7 +16490,7 @@ snapshots:
       react-dom: 18.2.0(react@18.2.0)
       subscriptions-transport-ws: 0.11.0(bufferutil@4.0.8)(graphql@15.8.0)(utf-8-validate@5.0.10)
 
-  '@ardrive/turbo-sdk@1.22.0(bufferutil@4.0.8)(utf-8-validate@5.0.10)':
+  '@ardrive/turbo-sdk@1.22.0(patch_hash=vfhiuadom72jrr6eijhwmlmrja)(bufferutil@4.0.8)(utf-8-validate@5.0.10)':
     dependencies:
       '@cosmjs/amino': 0.32.4
       '@cosmjs/crypto': 0.32.4

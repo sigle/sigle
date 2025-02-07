@@ -1,0 +1,44 @@
+diff --git a/lib/esm/common/signer.js b/lib/esm/common/signer.js
+index 4951c2df7fe585cd9132815d8f52b42f57a2ffd1..21ec3598ccf77535d9020fecaaab28369520fb92 100644
+--- a/lib/esm/common/signer.js
++++ b/lib/esm/common/signer.js
+@@ -18,7 +18,7 @@ import { Secp256k1 } from '@cosmjs/crypto';
+ import { toBase64 } from '@cosmjs/encoding';
+ import { EthereumSigner, HexSolanaSigner } from '@dha-team/arbundles';
+ import { computePublicKey } from '@ethersproject/signing-key';
+-import { KyveSDK } from '@kyvejs/sdk/dist/sdk.js';
++// import { KyveSDK } from '@kyvejs/sdk/dist/sdk.js';
+ import bs58 from 'bs58';
+ import { randomBytes } from 'crypto';
+ import { Wallet as EthereumWallet, ethers, parseEther } from 'ethers';
+@@ -93,18 +93,18 @@ export class TurboDataItemAbstractSigner {
+             throw new Error('Only EthereumSigner is supported for sendTransaction API currently!');
+         }
+         const keyAsStringFromUint8Array = Buffer.from(this.signer.key).toString('hex');
+-        if (this.token === 'kyve') {
+-            const chainId = gatewayUrl.includes('kaon')
+-                ? 'kaon-1'
+-                : gatewayUrl.includes('korellia')
+-                    ? 'korellia-2'
+-                    : 'kyve-1';
+-            // TODO: KYVE Web wallet tx signing/sending
+-            const client = await new KyveSDK(chainId).fromPrivateKey(keyAsStringFromUint8Array);
+-            const tx = await client.kyve.base.v1beta1.transfer(target, amount.toString());
+-            await tx.execute();
+-            return tx.txHash;
+-        }
++        // if (this.token === 'kyve') {
++        //     const chainId = gatewayUrl.includes('kaon')
++        //         ? 'kaon-1'
++        //         : gatewayUrl.includes('korellia')
++        //             ? 'korellia-2'
++        //             : 'kyve-1';
++        //     // TODO: KYVE Web wallet tx signing/sending
++        //     const client = await new KyveSDK(chainId).fromPrivateKey(keyAsStringFromUint8Array);
++        //     const tx = await client.kyve.base.v1beta1.transfer(target, amount.toString());
++        //     await tx.execute();
++        //     return tx.txHash;
++        // }
+         const provider = new ethers.JsonRpcProvider(gatewayUrl);
+         const ethWalletAndProvider = new EthereumWallet(keyAsStringFromUint8Array, provider);
+         const tx = await ethWalletAndProvider.sendTransaction({

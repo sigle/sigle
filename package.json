@@ -10,7 +10,8 @@
       "@noble/hashes": "1.7.1"
     },
     "patchedDependencies": {
-      "@dha-team/arbundles@1.0.1": "patches/@dha-team__arbundles@1.0.1.patch"
+      "@dha-team/arbundles@1.0.1": "patches/@dha-team__arbundles@1.0.1.patch",
+      "@ardrive/turbo-sdk@1.22.0": "patches/@ardrive__turbo-sdk@1.22.0.patch"
     }
   },
   "scripts": {
