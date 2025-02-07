@@ -27,7 +27,7 @@ export const AuthProtect = ({ children }: AuthProtectProps) => {
   }
 
   return (
-    <div className="flex flex-col gap-2 py-14 items-center justify-center">
+    <div className="flex flex-col items-center justify-center gap-2 py-14">
       <Spinner />
       <Text color="gray" size="2">
         loading auth

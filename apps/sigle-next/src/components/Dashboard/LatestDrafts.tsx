@@ -52,7 +52,7 @@ export const LatestDrafts = () => {
         ) : null}
 
         {!loadingDrafts && drafts?.length === 0 ? (
-          <div className="flex flex-col justify-center gap-4 items-center py-7">
+          <div className="flex flex-col items-center justify-center gap-4 py-7">
             <Text size="2" color="gray">
               No drafts yet
             </Text>

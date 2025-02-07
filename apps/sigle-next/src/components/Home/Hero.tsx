@@ -20,7 +20,7 @@ export const HomeHero = () => {
         as="h2"
         size="4"
         weight="medium"
-        className="mt-6 max-w-md mx-auto"
+        className="mx-auto mt-6 max-w-md"
       >
         Sigle is a secured and open-source writing platform for web3 content
         creators, NFT projects, crypto analysts and more.

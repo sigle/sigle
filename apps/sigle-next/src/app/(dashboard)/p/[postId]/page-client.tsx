@@ -39,7 +39,7 @@ export function PostClientPage(props: Props) {
 
   return (
     <FadeSlideBottom>
-      <Container size="2" className="mt-20 mb-20 px-4">
+      <Container size="2" className="my-20 px-4">
         <Heading size="8" className="text-pretty">
           {post.title}
         </Heading>

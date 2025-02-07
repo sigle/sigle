@@ -22,7 +22,7 @@ export const ProfileAvatar = ({
 }) => {
   return (
     <div
-      className={cn('bg-gray-3 rounded-2 overflow-hidden', {
+      className={cn('overflow-hidden rounded-2 bg-gray-3', {
         'size-8': size === '2',
         'size-10': size === '3',
         'size-32': size === '8',
@@ -32,7 +32,7 @@ export const ProfileAvatar = ({
         <Image
           src={resolveImageUrl(user.profile.pictureUri.id)}
           alt={user.id}
-          className="w-full h-full object-cover"
+          className="size-full object-cover"
           placeholder={user.profile.pictureUri.blurhash ? 'blur' : 'empty'}
           blurDataURL={user.profile.pictureUri.blurhash}
           width={user.profile.pictureUri.width}

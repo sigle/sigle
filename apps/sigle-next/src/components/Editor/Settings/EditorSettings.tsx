@@ -19,7 +19,7 @@ export const EditorSettings = () => {
     <Dialog.Root open={!!menuOpen} onOpenChange={setMenuOpen}>
       <Dialog.Content
         className={cn(
-          'right-0 top-0 bottom-0 fixed max-w-[420px] max-h-full rounded-none',
+          'fixed inset-y-0 right-0 max-h-full max-w-[420px] rounded-none',
           styles.dialogContent,
         )}
       >
