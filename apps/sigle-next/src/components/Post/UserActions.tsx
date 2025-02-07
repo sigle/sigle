@@ -2,12 +2,12 @@ import type { paths } from '@/__generated__/sigle-api/openapi';
 import { Routes } from '@/lib/routes';
 import { formatReadableAddress } from '@/lib/stacks';
 import { Button, IconButton, Text, Tooltip } from '@radix-ui/themes';
-import NextLink from 'next/link';
 import { useState } from 'react';
 import { PostCollectDialog } from '../Shared/Post/PostCollectDialog';
 import { IconShare } from '@tabler/icons-react';
 import { PostShareDialog } from '../Shared/Post/PostShareDialog';
 import { ProfileAvatar } from '../Shared/Profile/ProfileAvatar';
+import { NextLink } from '../Shared/NextLink';
 
 interface PostUserActionsProps {
   post: paths['/api/posts/{postId}']['get']['responses']['200']['content']['application/json'];

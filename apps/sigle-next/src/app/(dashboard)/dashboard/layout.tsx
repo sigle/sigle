@@ -1,9 +1,9 @@
 'use client';
 
 import { AuthProtect } from '@/components/Auth/AuthProtect';
+import { NextLink } from '@/components/Shared/NextLink';
 import { cn } from '@/lib/cn';
 import { Button, Container, Select } from '@radix-ui/themes';
-import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 
 export default function DashboardLayout({
@@ -50,7 +50,7 @@ export default function DashboardLayout({
                     })}
                     asChild
                   >
-                    <Link href={link.href}>{link.label}</Link>
+                    <NextLink href={link.href}>{link.label}</NextLink>
                   </Button>
                 </li>
               ))}

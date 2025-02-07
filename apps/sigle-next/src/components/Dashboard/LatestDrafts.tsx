@@ -12,7 +12,7 @@ import {
   Text,
 } from '@radix-ui/themes';
 import { format } from 'date-fns';
-import NextLink from 'next/link';
+import { NextLink } from '../Shared/NextLink';
 
 export const LatestDrafts = () => {
   const {

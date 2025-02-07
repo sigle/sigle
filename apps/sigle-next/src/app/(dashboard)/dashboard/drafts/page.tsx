@@ -2,6 +2,7 @@
 
 import { sigleApiClient } from '@/__generated__/sigle-api';
 import type { paths } from '@/__generated__/sigle-api/openapi';
+import { NextLink } from '@/components/Shared/NextLink';
 import { getExplorerTransactionUrl } from '@/lib/stacks';
 import {
   Badge,
@@ -16,7 +17,6 @@ import {
 } from '@radix-ui/themes';
 import { IconDotsVertical } from '@tabler/icons-react';
 import { format } from 'date-fns';
-import NextLink from 'next/link';
 import { useState } from 'react';
 import { toast } from 'sonner';
 

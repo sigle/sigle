@@ -5,11 +5,11 @@ import { resolveImageUrl } from '@/lib/images';
 import { Routes } from '@/lib/routes';
 import { AspectRatio, Flex, Heading, Link, Text } from '@radix-ui/themes';
 import { format } from 'date-fns';
-import NextLink from 'next/link';
 import { useState } from 'react';
 import { PostShareDialog } from '../PostShareDialog';
 import { formatReadableAddress } from '@/lib/stacks';
 import Image from 'next/image';
+import { NextLink } from '../../NextLink';
 
 interface PublicationCardProps {
   user: paths['/api/users/{username}']['get']['responses']['200']['content']['application/json'];

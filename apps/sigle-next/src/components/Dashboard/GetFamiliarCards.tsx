@@ -1,5 +1,5 @@
 import { Card, Grid, Text } from '@radix-ui/themes';
-import NextLink from 'next/link';
+import { NextLink } from '../Shared/NextLink';
 
 export const GetFamiliarCards = () => {
   return (

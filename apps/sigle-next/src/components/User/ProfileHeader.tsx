@@ -9,10 +9,10 @@ import { Routes } from '@/lib/routes';
 import { Button, Container, DropdownMenu, IconButton } from '@radix-ui/themes';
 import { IconDotsVertical, IconPencil } from '@tabler/icons-react';
 import { useSession } from 'next-auth/react';
-import Link from 'next/link';
 import { usePostHog } from 'posthog-js/react';
 import { ProfileAvatar } from '../Shared/Profile/ProfileAvatar';
 import Image from 'next/image';
+import { NextLink } from '../Shared/NextLink';
 
 interface ProfileHeaderProps {
   user: paths['/api/users/{username}']['get']['responses']['200']['content']['application/json'];
@@ -68,9 +68,9 @@ export const ProfileHeader = ({ user }: ProfileHeaderProps) => {
           <div className="mt-4 flex items-center gap-4">
             {isCurrentUser ? (
               <Button color="gray" variant="soft" asChild>
-                <Link href="/dashboard/settings">
+                <NextLink href="/dashboard/settings">
                   Edit profile <IconPencil size={16} />
-                </Link>
+                </NextLink>
               </Button>
             ) : null}
 

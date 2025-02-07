@@ -2,10 +2,10 @@ import { Button, Flex, Text } from '@radix-ui/themes';
 import { PublicationCardSkeleton } from '../Shared/Post/Card/Skeleton';
 import type { paths } from '@/__generated__/sigle-api/openapi';
 import { sigleApiClient } from '@/__generated__/sigle-api';
-import NextLink from 'next/link';
 import { useSession } from 'next-auth/react';
 import { GetFamiliarCards } from '../Dashboard/GetFamiliarCards';
 import { PublicationCard } from '../Shared/Post/Card';
+import { NextLink } from '../Shared/NextLink';
 
 interface ProfileFeedProps {
   user: paths['/api/users/{username}']['get']['responses']['200']['content']['application/json'];
