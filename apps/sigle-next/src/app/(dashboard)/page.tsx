@@ -1,5 +1,6 @@
 'use client';
 
+import { HomeTrendingPosts } from '@/components/Home/TrendingPosts';
 import { useStacksLogin } from '@/hooks/useStacksLogin';
 import { Routes } from '@/lib/routes';
 import { Button, Container, Heading, Text } from '@radix-ui/themes';
@@ -68,6 +69,8 @@ export default function Home() {
           </div>
         </section>
       </Container>
+
+      <HomeTrendingPosts />
     </div>
   );
 }

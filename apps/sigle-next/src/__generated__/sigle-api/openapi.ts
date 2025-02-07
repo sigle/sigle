@@ -235,6 +235,30 @@ export interface paths {
               metadataUri: string;
               createdAt: string;
               updatedAt: string;
+              user: {
+                id: string;
+                createdAt: string;
+                updatedAt: string;
+                profile?: {
+                  id: string;
+                  displayName?: string;
+                  description?: string;
+                  website?: string;
+                  twitter?: string;
+                  pictureUri?: {
+                    id: string;
+                    width?: number;
+                    height?: number;
+                    blurhash?: string;
+                  };
+                  coverPictureUri?: {
+                    id: string;
+                    width?: number;
+                    height?: number;
+                    blurhash?: string;
+                  };
+                };
+              };
             }[];
           };
         };
