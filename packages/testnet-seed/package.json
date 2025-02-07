@@ -1,0 +1,13 @@
+{
+  "name": "@sigle/sign-in-with-stacks",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "tsx src/index.ts"
+  },
+  "devDependencies": {
+    "tsx": "4.19.2",
+    "typescript": "5.7.2"
+  }
+}
