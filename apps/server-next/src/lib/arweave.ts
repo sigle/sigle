@@ -27,9 +27,12 @@ export const aerweaveUploadFile = async (
     tags?: ArweaveTag[];
   },
 ) => {
+  console.log('step 2.1');
   const file = Buffer.from(JSON.stringify(metadata));
   const fileSize = file.byteLength;
+  console.log('step 2.2');
   const cid = await generateCID(file);
+  console.log('step 2.3');
 
   const arweaveTags: ArweaveTag[] = [
     {
@@ -52,6 +55,7 @@ export const aerweaveUploadFile = async (
         tags: arweaveTags,
       },
     });
+    console.log('step 2.4');
 
     return { id: uploadResult.id };
   } catch (error) {

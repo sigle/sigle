@@ -48,6 +48,7 @@ export default defineEventHandler(async (event) => {
   // TODO rate limit route 2 / minute / user
   const body = await readBody(event);
 
+  console.log('step 1');
   const parsedMetadata = ProfileMetadataSchema.safeParse(body.metadata);
   if (!parsedMetadata.success) {
     throw createError({
@@ -57,10 +58,12 @@ export default defineEventHandler(async (event) => {
       ).toString()}`,
     });
   }
+  console.log('step 2');
 
   const { id } = await aerweaveUploadFile(event, {
     metadata: parsedMetadata.data,
   });
+  console.log('step 3');
 
   event.context.$posthog.capture({
     distinctId: event.context.user.id,
@@ -69,6 +72,8 @@ export default defineEventHandler(async (event) => {
       arweaveId: id,
     },
   });
+
+  console.log('step 4');
 
   return {
     id,
