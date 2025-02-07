@@ -2,8 +2,7 @@
 
 import { useStacksLogin } from '@/hooks/useStacksLogin';
 import { Routes } from '@/lib/routes';
-import { Button, Callout, Container, Heading, Text } from '@radix-ui/themes';
-import { IconInfoCircle } from '@tabler/icons-react';
+import { Button, Container, Heading, Text } from '@radix-ui/themes';
 import { useSession } from 'next-auth/react';
 import NextLink from 'next/link';
 
@@ -38,19 +37,7 @@ export default function Home() {
         )}
       </Container>
 
-      <Container size="1" className="px-4">
-        <Callout.Root>
-          <Callout.Icon>
-            <IconInfoCircle />
-          </Callout.Icon>
-          <Callout.Text>
-            🚀 Welcome to the Sigle testnet! Please share your feedback with us
-            on Discord.
-          </Callout.Text>
-        </Callout.Root>
-      </Container>
-
-      <Container size="4" className="mt-10 px-4 md:mt-20">
+      <Container size="4" className="mt-10 px-4">
         <section className="grid grid-cols-1 gap-x-6 md:grid-cols-3">
           <div className="flex flex-col items-center text-center gap-4 p-6 rounded-xl shadow-md">
             <Heading as="h3" size="4">
