@@ -12,7 +12,7 @@ interface PostUserInfoCardProps {
 
 export const PostUserInfoCard = ({ post }: PostUserInfoCardProps) => {
   return (
-    <div className="mt-10 p-5 bg-gray-3 rounded-2">
+    <div className="mt-10 rounded-2 bg-gray-3 p-5">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
           <NextLink href={Routes.userProfile({ username: post.user.id })}>

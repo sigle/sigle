@@ -10,9 +10,9 @@ export const Footer = () => {
     <footer>
       <Container className="px-4">
         <Separator size="4" color="gray" />
-        <div className="flex flex-col md:flex-row justify-between items-center py-7">
+        <div className="flex flex-col items-center justify-between py-7 md:flex-row">
           <div className="mb-4 md:mb-0">
-            <div className="flex space-x-4 items-center">
+            <div className="flex items-center space-x-4">
               <Text size="2" color="gray">
                 © {new Date().getFullYear()} Sigle
               </Text>

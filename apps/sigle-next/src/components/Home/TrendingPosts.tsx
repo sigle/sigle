@@ -43,7 +43,7 @@ export const HomeTrendingPosts = () => {
         Trending
       </Heading>
 
-      <Carousel className="w-full mt-4">
+      <Carousel className="mt-4 w-full">
         <CarouselContent>
           {posts.map((post) => (
             <CarouselItem key={post.id} className="md:basis-1/2 lg:basis-1/4">
