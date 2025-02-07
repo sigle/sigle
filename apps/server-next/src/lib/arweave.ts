@@ -1,7 +1,7 @@
 import type { H3Event } from 'h3';
 import { env } from '~/env';
 import IPFS from 'ipfs-only-hash';
-import { TurboFactory } from '@ardrive/turbo-sdk/node';
+import { TurboFactory } from '@ardrive/turbo-sdk';
 import { consola } from './consola';
 
 const turboClient = TurboFactory.authenticated({
