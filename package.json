@@ -8,6 +8,9 @@
   "pnpm": {
     "overrides": {
       "@noble/hashes": "1.7.1"
+    },
+    "patchedDependencies": {
+      "@dha-team/arbundles@1.0.1": "patches/@dha-team__arbundles@1.0.1.patch"
     }
   },
   "scripts": {
