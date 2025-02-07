@@ -2,10 +2,10 @@
 
 import { sigleApiClient } from '@/__generated__/sigle-api';
 import { AuthProtect } from '@/components/Auth/AuthProtect';
+import { NextLink } from '@/components/Shared/NextLink';
 import { getExplorerTransactionUrl } from '@/lib/stacks';
 import { Container, Spinner, Text, Link, Button } from '@radix-ui/themes';
 import { useRouter } from 'next/navigation';
-import NextLink from 'next/link';
 import { use, useEffect } from 'react';
 
 type PostDeployPendingProps = {

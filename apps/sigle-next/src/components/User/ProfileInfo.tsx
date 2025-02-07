@@ -2,10 +2,10 @@
 
 import { Heading, Link, Text } from '@radix-ui/themes';
 import { IconLink } from '@tabler/icons-react';
-import NextLink from 'next/link';
 import { ProfileMarkdownDescription } from '../Shared/Profile/MarkdownDescription';
 import type { paths } from '@/__generated__/sigle-api/openapi';
 import { prettifyUrl } from '@/lib/urls';
+import { NextLink } from '../Shared/NextLink';
 
 interface ProfileInfoProps {
   user: paths['/api/users/{username}']['get']['responses']['200']['content']['application/json'];

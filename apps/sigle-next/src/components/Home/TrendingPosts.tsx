@@ -11,7 +11,6 @@ import {
   Text,
 } from '@radix-ui/themes';
 import { formatReadableAddress } from '@/lib/stacks';
-import NextLink from 'next/link';
 import { Routes } from '@/lib/routes';
 import {
   Carousel,
@@ -23,6 +22,7 @@ import {
 import { format } from 'date-fns';
 import Image from 'next/image';
 import { resolveImageUrl } from '@/lib/images';
+import { NextLink } from '../Shared/NextLink';
 
 export const HomeTrendingPosts = () => {
   const { data: posts } = sigleApiClient.useSuspenseQuery(

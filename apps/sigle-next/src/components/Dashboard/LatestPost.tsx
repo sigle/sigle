@@ -5,7 +5,7 @@ import { Routes } from '@/lib/routes';
 import { Button, Card, Flex, Heading, Text } from '@radix-ui/themes';
 import { format } from 'date-fns';
 import { useSession } from 'next-auth/react';
-import NextLink from 'next/link';
+import { NextLink } from '../Shared/NextLink';
 
 export const LatestPost = () => {
   const { data: session } = useSession();

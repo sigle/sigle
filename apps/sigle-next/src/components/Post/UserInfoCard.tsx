@@ -3,8 +3,8 @@ import { formatReadableAddress } from '@/lib/stacks';
 import { Text } from '@radix-ui/themes';
 import { ProfileMarkdownDescription } from '../Shared/Profile/MarkdownDescription';
 import { Routes } from '@/lib/routes';
-import NextLink from 'next/link';
 import { ProfileAvatar } from '../Shared/Profile/ProfileAvatar';
+import { NextLink } from '../Shared/NextLink';
 
 interface PostUserInfoCardProps {
   post: paths['/api/posts/{postId}']['get']['responses']['200']['content']['application/json'];

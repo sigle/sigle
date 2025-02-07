@@ -4,13 +4,13 @@ import { useStacksLogin } from '@/hooks/useStacksLogin';
 import { LogoImage } from '@/images/Logo';
 import { Button, IconButton } from '@radix-ui/themes';
 import { useTheme } from 'next-themes';
-import NextLink from 'next/link';
 import { usePostHog } from 'posthog-js/react';
 import { IconSun, IconMoon } from '@tabler/icons-react';
 import { useIsClient } from '@/hooks/useIsClient';
 import { useSession } from 'next-auth/react';
 import { UserDropdown } from './UserDropdown';
 import { Suspense } from 'react';
+import { NextLink } from '../Shared/NextLink';
 
 export const Header = () => {
   const posthog = usePostHog();
