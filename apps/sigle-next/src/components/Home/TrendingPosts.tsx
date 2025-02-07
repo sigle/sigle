@@ -1,10 +1,20 @@
 import { sigleApiClient } from '@/__generated__/sigle-api';
-import { Card, Container, Heading, Link, Text } from '@radix-ui/themes';
+import {
+  AspectRatio,
+  Card,
+  Container,
+  Heading,
+  Inset,
+  Link,
+  Text,
+} from '@radix-ui/themes';
 import { formatReadableAddress } from '@/lib/stacks';
 import NextLink from 'next/link';
 import { Routes } from '@/lib/routes';
 import { Carousel, CarouselContent, CarouselItem } from '../ui';
 import { format } from 'date-fns';
+import Image from 'next/image';
+import { resolveImageUrl } from '@/lib/images';
 
 export const HomeTrendingPosts = () => {
   const { data } = sigleApiClient.useSuspenseQuery('get', '/api/posts/list', {
@@ -26,6 +36,27 @@ export const HomeTrendingPosts = () => {
           {data.map((post) => (
             <CarouselItem key={post.id} className="md:basis-1/2 lg:basis-1/4">
               <Card size="2">
+                <Inset clip="padding-box" side="top" pb="current">
+                  <NextLink href={Routes.post({ postId: post.id })}>
+                    <div className="overflow-hidden bg-gray-2">
+                      <AspectRatio ratio={16 / 10}>
+                        {post.coverImage ? (
+                          <Image
+                            src={resolveImageUrl(post.coverImage.id)}
+                            alt="Cover card"
+                            className="size-full object-cover"
+                            placeholder={
+                              post.coverImage.blurhash ? 'blur' : 'empty'
+                            }
+                            blurDataURL={post.coverImage.blurhash}
+                            width={post.coverImage.width}
+                            height={post.coverImage.height}
+                          />
+                        ) : null}
+                      </AspectRatio>
+                    </div>
+                  </NextLink>
+                </Inset>
                 <div className="flex-1 space-y-2">
                   <NextLink
                     href={Routes.post({ postId: post.id })}
@@ -74,29 +105,6 @@ export const HomeTrendingPosts = () => {
           ))}
         </CarouselContent>
       </Carousel>
-
-      {/* <div className="grid grid-cols-2 gap-6 mt-5 md:grid-cols-5">
-        {data.map((user) => (
-          <Card
-            key={user.id}
-            size="2"
-            className="flex flex-col items-center gap-2 p-5"
-          >
-            <ProfileAvatar user={user} size="8" />
-            <Text as="p" size="3" className="truncate">
-              {user.profile?.displayName
-                ? user.profile?.displayName
-                : formatReadableAddress(user.id)}
-            </Text>
-
-            <Button color="gray" className="mt-5">
-              <NextLink href={Routes.userProfile({ username: user.id })}>
-                Discover
-              </NextLink>
-            </Button>
-          </Card>
-        ))}
-      </div> */}
     </Container>
   );
 };
