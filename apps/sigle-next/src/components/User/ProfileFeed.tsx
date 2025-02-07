@@ -58,7 +58,7 @@ export const ProfileFeed = ({ user }: ProfileFeedProps) => {
   return (
     <div>
       {posts.map((post) => {
-        return <PostListItem key={post.id} post={post} user={user} />;
+        return <PostListItem key={post.id} post={post} />;
       })}
     </div>
   );
