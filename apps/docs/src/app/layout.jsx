@@ -4,12 +4,15 @@ import { getPageMap } from 'nextra/page-map';
 import 'nextra-theme-docs/style.css';
 
 export const metadata = {
-  // Define your metadata here
-  // For more information on metadata API, see: https://nextjs.org/docs/app/building-your-application/optimizing/metadata
+  title: 'Documentation | Sigle',
 };
 
 const navbar = (
-  <Navbar logo={<b>Sigle</b>} projectLink="https://github.com/sigle/sigle" />
+  <Navbar
+    logo={<b>Sigle</b>}
+    projectLink="https://github.com/sigle/sigle"
+    chatLink="https://app.sigle.io/discord"
+  />
 );
 const footer = <Footer>MIT {new Date().getFullYear()} © Sigle.</Footer>;
 
