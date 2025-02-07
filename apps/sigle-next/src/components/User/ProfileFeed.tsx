@@ -6,6 +6,7 @@ import NextLink from 'next/link';
 import { useSession } from 'next-auth/react';
 import { GetFamiliarCards } from '../Dashboard/GetFamiliarCards';
 import { PublicationCard } from '../Shared/Post/Card';
+import { PublicationCard2 } from '../Shared/Post/Card2';
 
 interface ProfileFeedProps {
   user: paths['/api/users/{username}']['get']['responses']['200']['content']['application/json'];
@@ -56,9 +57,9 @@ export const ProfileFeed = ({ user }: ProfileFeedProps) => {
   }
 
   return (
-    <div>
+    <div className="grid grid-cols-3 gap-4">
       {posts.map((post) => {
-        return <PublicationCard key={post.id} post={post} user={user} />;
+        return <PublicationCard2 key={post.id} post={post} />;
       })}
     </div>
   );

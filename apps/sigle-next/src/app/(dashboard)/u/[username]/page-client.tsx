@@ -37,10 +37,12 @@ export function UserClientPage(props: Props) {
   return (
     <FadeSlideBottom>
       <ProfileHeader user={user} />
-      <Container size="2" className="mt-4 px-4 pb-20">
+      <Container size="2" className="mt-4 px-4">
         <ProfileInfo user={user} />
+      </Container>
 
-        <Heading className="mt-10" size="5">
+      <Container size="3" className="px-4 pb-20">
+        <Heading className="mt-10 mb-5" size="5">
           Latest posts
         </Heading>
 

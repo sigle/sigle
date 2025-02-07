@@ -12,11 +12,10 @@ import { formatReadableAddress } from '@/lib/stacks';
 import Image from 'next/image';
 
 interface PublicationCardProps {
-  user: paths['/api/users/{username}']['get']['responses']['200']['content']['application/json'];
   post: paths['/api/posts/list']['get']['responses']['200']['content']['application/json'][0];
 }
 
-export const PublicationCard = ({ user, post }: PublicationCardProps) => {
+export const PublicationCard = ({ post }: PublicationCardProps) => {
   const [shareDialogOpen, setShareDialogOpen] = useState(false);
 
   return (
@@ -44,10 +43,12 @@ export const PublicationCard = ({ user, post }: PublicationCardProps) => {
               <Text as="p" color="gray" size="1">
                 By{' '}
                 <Link asChild>
-                  <NextLink href={Routes.userProfile({ username: user.id })}>
-                    {user.profile?.displayName
-                      ? user.profile?.displayName
-                      : formatReadableAddress(user.id)}
+                  <NextLink
+                    href={Routes.userProfile({ username: post.user.id })}
+                  >
+                    {post.user.profile?.displayName
+                      ? post.user.profile?.displayName
+                      : formatReadableAddress(post.user.id)}
                   </NextLink>
                 </Link>{' '}
                 • {format(new Date(post.createdAt), 'MMM dd, yyyy')}
