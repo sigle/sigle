@@ -1,5 +1,5 @@
 ARG NODE_VERSION=22
-FROM node:${NODE_VERSION}-alpine as base
+FROM node:${NODE_VERSION}-alpine AS base
 
 WORKDIR /app
 
@@ -25,7 +25,7 @@ RUN turbo prune @sigle/$APP_NAME --docker
 
 # --- Build stage ---
 
-FROM base as installer
+FROM base AS installer
 WORKDIR /app
 
 RUN apk update && \
@@ -46,8 +46,8 @@ COPY turbo.json turbo.json
 WORKDIR /app/apps/$APP_NAME
 
 # Build application
-RUN pnpm turbo run db:generate --filter=@sigle/$APP_NAME
-RUN pnpm turbo run build --filter=@sigle/$APP_NAME...
+RUN turbo run db:generate --filter=@sigle/$APP_NAME
+RUN turbo run build --filter=@sigle/$APP_NAME...
 
 # --- Runner stage ---
 
