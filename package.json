@@ -5,6 +5,11 @@
   "engines": {
     "node": ">=20"
   },
+  "pnpm": {
+    "overrides": {
+      "@noble/hashes": "1.7.1"
+    }
+  },
   "scripts": {
     "format": "biome check --write --no-errors-on-unmatched",
     "lint": "turbo lint --cache-dir=.turbo",
