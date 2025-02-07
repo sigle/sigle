@@ -1,6 +1,8 @@
 import { BetaFeedbackButton } from '@/components/Layout/BetaFeedbackButton';
 import { Header } from '@/components/Layout/Header';
 
+export const dynamic = 'force-dynamic';
+
 export default function DashboardLayout({
   children,
 }: {
