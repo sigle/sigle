@@ -5,6 +5,15 @@
   "engines": {
     "node": ">=20"
   },
+  "pnpm": {
+    "overrides": {
+      "@noble/hashes@1.3.2": "1.7.1"
+    },
+    "patchedDependencies": {
+      "@dha-team/arbundles@1.0.1": "patches/@dha-team__arbundles@1.0.1.patch",
+      "@ardrive/turbo-sdk@1.22.0": "patches/@ardrive__turbo-sdk@1.22.0.patch"
+    }
+  },
   "scripts": {
     "format": "biome check --write --no-errors-on-unmatched",
     "lint": "turbo lint --cache-dir=.turbo",
