@@ -1,6 +1,7 @@
 {
   "name": "@sigle/server-next",
   "private": true,
+  "packageManager": "pnpm@9.15.5",
   "scripts": {
     "build": "nitro build",
     "dev": "dotenvx run --env-file=.env.development --env-file=.env.development.local -- nitro dev --port 3001",
