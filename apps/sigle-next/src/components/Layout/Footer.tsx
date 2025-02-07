@@ -34,56 +34,48 @@ export const Footer = () => {
             </div>
           </div>
 
-          <div className="grid grid-cols-2 gap-8 sm:grid-cols-3 sm:gap-6">
-            <div>
-              <ul className="space-y-2">
-                <li>
-                  <Link
-                    size="2"
-                    color="gray"
-                    href="https://docs.sigle.io"
-                    target="_blank"
-                  >
-                    Docs
-                  </Link>
-                </li>
-                <li>
-                  <Link
-                    size="2"
-                    color="gray"
-                    href="https://blog.sigle.io"
-                    target="_blank"
-                  >
-                    Blog
-                  </Link>
-                </li>
-              </ul>
-            </div>
-            <div>
-              <ul className="space-y-2">
-                <li>
-                  <Link
-                    size="2"
-                    color="gray"
-                    href="https://app.sigle.io/discord"
-                    target="_blank"
-                  >
-                    Support
-                  </Link>
-                </li>
-                <li>
-                  <Link
-                    size="2"
-                    color="gray"
-                    href="https://app.sigle.io/feedback"
-                    target="_blank"
-                  >
-                    Feedback
-                  </Link>
-                </li>
-              </ul>
-            </div>
-          </div>
+          <ul className="grid grid-cols-2 gap-x-6 gap-y-2 md:grid-cols-4">
+            <li>
+              <Link
+                size="2"
+                color="gray"
+                href="https://docs.sigle.io"
+                target="_blank"
+              >
+                Docs
+              </Link>
+            </li>
+            <li>
+              <Link
+                size="2"
+                color="gray"
+                href="https://blog.sigle.io"
+                target="_blank"
+              >
+                Blog
+              </Link>
+            </li>
+            <li>
+              <Link
+                size="2"
+                color="gray"
+                href="https://app.sigle.io/discord"
+                target="_blank"
+              >
+                Support
+              </Link>
+            </li>
+            <li>
+              <Link
+                size="2"
+                color="gray"
+                href="https://app.sigle.io/feedback"
+                target="_blank"
+              >
+                Feedback
+              </Link>
+            </li>
+          </ul>
         </div>
       </Container>
     </footer>
