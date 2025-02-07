@@ -38,7 +38,7 @@ exports[`generate-post-contract > should generate fixed edition contract 1`] = `
 (define-data-var metadata-frozen bool false)
 
 (begin
-  (print { a: "deploy", version: contract-version, minter: authorized-minter }))
+  (print { a: "publish-content", version: contract-version, minter: authorized-minter }))
   (unwrap-panic (as-contract (contract-call? 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.sigle-minter-fixed-price-v001 set-mint-details u0 u0 u340282366920938463463374607431768211455)))
 
 ;; @desc SIP-009 transfer token to a specified principal
@@ -290,7 +290,7 @@ exports[`generate-post-contract > should generate open edition contract 1`] = `
 (define-data-var metadata-frozen bool false)
 
 (begin
-  (print { a: "deploy", version: contract-version, minter: authorized-minter }))
+  (print { a: "publish-content", version: contract-version, minter: authorized-minter }))
   (unwrap-panic (as-contract (contract-call? 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.sigle-minter-fixed-price-v001 set-mint-details u0 u0 u340282366920938463463374607431768211455)))
 
 ;; @desc SIP-009 transfer token to a specified principal
@@ -542,7 +542,7 @@ exports[`generate-post-contract > should generate paid edition contract 1`] = `
 (define-data-var metadata-frozen bool false)
 
 (begin
-  (print { a: "deploy", version: contract-version, minter: authorized-minter }))
+  (print { a: "publish-content", version: contract-version, minter: authorized-minter }))
   (unwrap-panic (as-contract (contract-call? 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.sigle-minter-fixed-price-v001 set-mint-details u10 u0 u340282366920938463463374607431768211455)))
 
 ;; @desc SIP-009 transfer token to a specified principal

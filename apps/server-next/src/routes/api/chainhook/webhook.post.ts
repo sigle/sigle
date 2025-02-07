@@ -38,7 +38,7 @@ export default defineEventHandler(async (event) => {
             deployLogEvent &&
             setMintDetailsLogEvent &&
             deployLogEvent.data.topic === 'print' &&
-            (deployLogEvent.data as any).value.a === 'deploy';
+            (deployLogEvent.data as any).value.a === 'publish-content';
 
           // TODO setup and verify log payload
           // TODO extra security: check that the contract is following the template exported by the SDK
