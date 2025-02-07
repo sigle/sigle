@@ -2,6 +2,7 @@ import type { H3Event } from 'h3';
 import { env } from '~/env';
 import IPFS from 'ipfs-only-hash';
 import { TurboFactory } from '@ardrive/turbo-sdk/node';
+import { consola } from './consola';
 
 const turboClient = TurboFactory.authenticated({
   privateKey: env.ARWEAVE_PRIVATE_KEY,
@@ -27,12 +28,12 @@ export const aerweaveUploadFile = async (
     tags?: ArweaveTag[];
   },
 ) => {
-  console.log('step 2.1');
+  consola.log('step 2.1');
   const file = Buffer.from(JSON.stringify(metadata));
   const fileSize = file.byteLength;
-  console.log('step 2.2');
+  consola.log('step 2.2');
   const cid = await generateCID(file);
-  console.log('step 2.3');
+  consola.log('step 2.3');
 
   const arweaveTags: ArweaveTag[] = [
     {
@@ -55,7 +56,7 @@ export const aerweaveUploadFile = async (
         tags: arweaveTags,
       },
     });
-    console.log('step 2.4');
+    consola.log('step 2.4');
 
     return { id: uploadResult.id };
   } catch (error) {

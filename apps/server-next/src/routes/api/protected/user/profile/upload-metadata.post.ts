@@ -1,6 +1,7 @@
 import { ProfileMetadataSchema } from '@sigle/sdk';
 import { fromError } from 'zod-validation-error';
 import { aerweaveUploadFile } from '~/lib/arweave';
+import { consola } from '~/lib/consola';
 
 defineRouteMeta({
   openAPI: {
@@ -45,10 +46,11 @@ defineRouteMeta({
 });
 
 export default defineEventHandler(async (event) => {
+  consola.log('step 0');
   // TODO rate limit route 2 / minute / user
   const body = await readBody(event);
 
-  console.log('step 1');
+  consola.log('step 1');
   const parsedMetadata = ProfileMetadataSchema.safeParse(body.metadata);
   if (!parsedMetadata.success) {
     throw createError({
@@ -58,12 +60,12 @@ export default defineEventHandler(async (event) => {
       ).toString()}`,
     });
   }
-  console.log('step 2');
+  consola.log('step 2');
 
   const { id } = await aerweaveUploadFile(event, {
     metadata: parsedMetadata.data,
   });
-  console.log('step 3');
+  consola.log('step 3');
 
   event.context.$posthog.capture({
     distinctId: event.context.user.id,
@@ -73,7 +75,7 @@ export default defineEventHandler(async (event) => {
     },
   });
 
-  console.log('step 4');
+  consola.log('step 4');
 
   return {
     id,
