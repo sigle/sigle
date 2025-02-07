@@ -1,3 +1,5 @@
+'use client';
+
 import { sigleApiClient } from '@/__generated__/sigle-api';
 import {
   AspectRatio,

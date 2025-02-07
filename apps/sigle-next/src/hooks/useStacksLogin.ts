@@ -1,3 +1,5 @@
+'use client';
+
 import { appDetails, stacksNetwork, userSession } from '@/lib/stacks';
 import {
   openSignatureRequestPopup,
