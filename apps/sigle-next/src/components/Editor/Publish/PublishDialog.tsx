@@ -47,7 +47,7 @@ export const PublishDialog = ({ postId }: PublishDialogProps) => {
     'post',
     '/api/protected/drafts/{draftId}/set-tx-id',
   );
-  const { contractDeploy, loading: deployLoading } = useContractDeploy({
+  const { contractDeploy } = useContractDeploy({
     onCancel: () => {
       posthog.capture('post_publish_cancel', {
         postId,

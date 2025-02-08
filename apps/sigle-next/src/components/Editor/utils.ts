@@ -44,7 +44,7 @@ const generateMetadataAttributesFromForm = ({
 const getImageMediaMetadata = async (
   url: string,
 ): Promise<MediaImageMetadata> => {
-  const response = await fetch(resolveImageUrl(url));
+  const response = await fetch(resolveImageUrl(url, { gateway: true }));
   const arrayBuffer = await response.arrayBuffer();
   const buffer = Buffer.from(arrayBuffer);
   const contentType = await fileTypeFromBuffer(buffer);

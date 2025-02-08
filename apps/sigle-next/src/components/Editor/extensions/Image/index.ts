@@ -40,12 +40,6 @@ export const TipTapImage = TipTapImageBase.extend<
       uploadId: {
         default: null,
       },
-
-      // Attribute used to override the src attribute with a preview while the file is being
-      // propagated to IPFS.
-      preloadUrl: {
-        default: null,
-      },
     };
   },
 
@@ -83,7 +77,6 @@ export const TipTapImage = TipTapImageBase.extend<
                     ...node.attrs,
                     src: imageUrl,
                     uploadId: undefined,
-                    preloadUrl: preview,
                   };
                   const newNode = node.type.create(
                     attrs,
