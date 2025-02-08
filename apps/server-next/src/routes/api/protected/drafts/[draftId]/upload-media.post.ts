@@ -50,6 +50,22 @@ defineRouteMeta({
           },
         },
       },
+      400: {
+        description: 'Bad request',
+        content: {
+          'application/json': {
+            schema: {
+              type: 'object',
+              required: ['message'],
+              properties: {
+                message: {
+                  type: 'string',
+                },
+              },
+            },
+          },
+        },
+      },
     },
   },
 });
