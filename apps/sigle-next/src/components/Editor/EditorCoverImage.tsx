@@ -93,7 +93,7 @@ export const EditorCoverImage = () => {
   };
 
   const resolvedWatchCoverImage = watchCoverImage
-    ? resolveImageUrl(watchCoverImage)
+    ? resolveImageUrl(watchCoverImage, { gateway: true })
     : null;
 
   return (
