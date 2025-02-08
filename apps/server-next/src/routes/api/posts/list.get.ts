@@ -37,6 +37,7 @@ defineRouteMeta({
                 type: 'object',
                 required: [
                   'id',
+                  'address',
                   'title',
                   'maxSupply',
                   'collected',
@@ -49,6 +50,9 @@ defineRouteMeta({
                 ],
                 properties: {
                   id: {
+                    type: 'string',
+                  },
+                  address: {
                     type: 'string',
                   },
                   title: {
@@ -198,6 +202,7 @@ export default defineEventHandler(async (event) => {
   const postsList = await prisma.post.findMany({
     select: {
       id: true,
+      address: true,
       title: true,
       content: true,
       metaTitle: true,

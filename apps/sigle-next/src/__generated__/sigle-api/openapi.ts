@@ -217,6 +217,7 @@ export interface paths {
           content: {
             'application/json': {
               id: string;
+              address: string;
               title: string;
               content?: string;
               metaTitle?: string;

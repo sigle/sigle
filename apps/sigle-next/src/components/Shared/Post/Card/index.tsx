@@ -3,6 +3,7 @@ import { resolveImageUrl } from '@/lib/images';
 import { Routes } from '@/lib/routes';
 import {
   AspectRatio,
+  Button,
   Card,
   Heading,
   Inset,
@@ -13,12 +14,17 @@ import { format } from 'date-fns';
 import { formatReadableAddress } from '@/lib/stacks';
 import Image from 'next/image';
 import { NextLink } from '../../NextLink';
+import { useState } from 'react';
+import { PostCollectDialog } from '../PostCollectDialog';
 
 interface PostCardProps {
   post: paths['/api/posts/list']['get']['responses']['200']['content']['application/json'][0];
 }
 
 export const PostCard = ({ post }: PostCardProps) => {
+  const [collectDialogOpen, setCollectDialogOpen] = useState(false);
+  const canCollect = post.maxSupply === 0 || post.collected < post.maxSupply;
+
   return (
     <Card size="2">
       <Inset clip="padding-box" side="top" pb="current">
@@ -71,6 +77,27 @@ export const PostCard = ({ post }: PostCardProps) => {
           </Text>
         </div>
       </div>
+      <div className="mt-4 flex items-center justify-between">
+        <Text as="p" color="gray" size="2">
+          {post.openEdition
+            ? `${post.collected} collected`
+            : `${post.collected}/${post.maxSupply} collected`}
+        </Text>
+        <Button
+          color="gray"
+          size="2"
+          variant="soft"
+          disabled={!canCollect}
+          onClick={() => setCollectDialogOpen(true)}
+        >
+          Collect
+        </Button>
+      </div>
+      <PostCollectDialog
+        post={post}
+        open={collectDialogOpen}
+        onOpenChange={setCollectDialogOpen}
+      />
     </Card>
   );
 };
