@@ -19,10 +19,6 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from '../ui';
-import { format } from 'date-fns';
-import Image from 'next/image';
-import { resolveImageUrl } from '@/lib/images';
-import { NextLink } from '../Shared/NextLink';
 import { PostCard } from '../Shared/Post/Card';
 
 export const HomeTrendingPosts = () => {
@@ -44,7 +40,12 @@ export const HomeTrendingPosts = () => {
         Trending
       </Heading>
 
-      <Carousel className="mt-4 w-full">
+      <Carousel
+        className="mt-4 w-full"
+        opts={{
+          align: 'start',
+        }}
+      >
         <CarouselContent>
           {posts.map((post) => (
             <CarouselItem key={post.id} className="md:basis-1/2 lg:basis-1/4">
