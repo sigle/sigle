@@ -41,7 +41,7 @@ import Image from 'next/image';
 import { ProfileAvatar } from '../Profile/ProfileAvatar';
 
 interface PostCollectDialogProps {
-  post: paths['/api/posts/{postId}']['get']['responses']['200']['content']['application/json'];
+  post: paths['/api/posts/list']['get']['responses']['200']['content']['application/json'][number];
   open: boolean;
   onOpenChange: (open: boolean) => void;
 }
