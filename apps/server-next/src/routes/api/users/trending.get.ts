@@ -94,7 +94,23 @@ defineRouteMeta({
   },
 });
 
+const NUMBER_OF_USERS = 20;
+
 export default defineEventHandler(async () => {
+  // First get count of all users with posts
+  const totalUsers = await prisma.user.count({
+    where: {
+      posts: {
+        some: {},
+      },
+    },
+  });
+
+  // Calculate random offset
+  const randomSkip = Math.floor(
+    Math.random() * Math.max(0, totalUsers - NUMBER_OF_USERS),
+  );
+
   const users = await prisma.user.findMany({
     select: {
       ...SELECT_PUBLIC_USER_FIELDS,
@@ -109,10 +125,8 @@ export default defineEventHandler(async () => {
         some: {},
       },
     },
-    orderBy: {
-      createdAt: 'desc',
-    },
-    take: 10,
+    skip: randomSkip,
+    take: NUMBER_OF_USERS,
   });
 
   return users.map((user) => ({
