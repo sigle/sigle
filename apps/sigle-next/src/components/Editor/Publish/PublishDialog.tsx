@@ -124,7 +124,7 @@ export const PublishDialog = ({ postId }: PublishDialogProps) => {
                   ? parseSTX(data.collect.collectPrice.price.toString())
                   : 0,
               maxSupply:
-                data.collect.collectLimit?.enabled === true &&
+                data.collect.collectLimit.type === 'fixed' &&
                 data.collect.collectLimit.limit
                   ? data.collect.collectLimit.limit
                   : undefined,
