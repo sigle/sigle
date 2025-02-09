@@ -308,6 +308,9 @@ export interface paths {
               /** @enum {string} */
               collectPriceType?: 'free' | 'paid';
               collectPrice?: string;
+              /** @enum {string} */
+              collectLimitType?: 'open' | 'fixed';
+              collectLimit?: number;
               txId?: string;
               txStatus?: string;
               createdAt: string;
@@ -450,8 +453,9 @@ export interface paths {
                 type: 'free' | 'paid';
                 price: number;
               };
-              collectLimit?: {
-                enabled: boolean;
+              collectLimit: {
+                /** @enum {string} */
+                type: 'open' | 'fixed';
                 limit: number;
               };
             };

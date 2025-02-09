@@ -49,8 +49,8 @@ model Draft {
   txStatus         String? @map("tx_status")
   collectPriceType String? @map("collect_price_type")
   collectPrice     BigInt? @map("collect_price")
-  maxSupplyType    String? @map("max_supply_type")
-  maxSupply        Int?    @map("max_supply")
+  collectLimitType String? @map("collect_limit_type")
+  collectLimit     Int?    @map("collect_limit")
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")

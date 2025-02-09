@@ -31,7 +31,7 @@ defineRouteMeta({
               },
               collect: {
                 type: 'object',
-                required: ['collectPrice'],
+                required: ['collectPrice', 'collectLimit'],
                 properties: {
                   collectPrice: {
                     type: 'object',
@@ -42,6 +42,19 @@ defineRouteMeta({
                         enum: ['free', 'paid'],
                       },
                       price: {
+                        type: 'number',
+                      },
+                    },
+                  },
+                  collectLimit: {
+                    type: 'object',
+                    required: ['type', 'limit'],
+                    properties: {
+                      type: {
+                        type: 'string',
+                        enum: ['open', 'fixed'],
+                      },
+                      limit: {
                         type: 'number',
                       },
                     },
@@ -85,6 +98,10 @@ const updateDraftSchema = z.object({
       type: z.enum(['free', 'paid'] as const),
       price: z.coerce.number().min(0),
     }),
+    collectLimit: z.object({
+      type: z.enum(['open', 'fixed'] as const),
+      limit: z.coerce.number().int().min(1),
+    }),
   }),
 });
 
@@ -105,6 +122,8 @@ export default defineEventHandler(async (event) => {
       coverImage: body.coverImage,
       collectPriceType: body.collect.collectPrice.type,
       collectPrice: body.collect.collectPrice.price,
+      collectLimitType: body.collect.collectLimit.type,
+      collectLimit: body.collect.collectLimit.limit,
     },
     select: {
       id: true,
