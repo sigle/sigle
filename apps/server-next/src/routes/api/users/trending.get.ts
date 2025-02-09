@@ -104,6 +104,11 @@ export default defineEventHandler(async () => {
         },
       },
     },
+    where: {
+      posts: {
+        some: {},
+      },
+    },
     orderBy: {
       createdAt: 'desc',
     },
