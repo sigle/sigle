@@ -34,14 +34,22 @@ export const HomeTrendingUsers = () => {
       >
         <CarouselContent>
           {users.map((user) => (
-            <CarouselItem key={user.id} className="basis-1/2 md:basis-1/5">
+            <CarouselItem
+              key={user.id}
+              className="basis-1/2 md:basis-1/5 lg:basis-1/6"
+            >
               <Card
                 key={user.id}
                 size="2"
                 className="flex flex-col items-center gap-2 p-5"
               >
                 <ProfileAvatar user={user} size="8" />
-                <Text as="p" size="3" className="truncate">
+                <Text
+                  as="p"
+                  size="3"
+                  weight="medium"
+                  className="max-w-full truncate"
+                >
                   {user.profile?.displayName
                     ? user.profile?.displayName
                     : formatReadableAddress(user.id)}
