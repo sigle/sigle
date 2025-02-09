@@ -24,6 +24,9 @@ defineRouteMeta({
                   updatedAt: {
                     type: 'string',
                   },
+                  postsCount: {
+                    type: 'number',
+                  },
                   profile: {
                     type: 'object',
                     required: ['id'],
@@ -93,12 +96,23 @@ defineRouteMeta({
 
 export default defineEventHandler(async () => {
   const users = await prisma.user.findMany({
-    select: SELECT_PUBLIC_USER_FIELDS,
+    select: {
+      ...SELECT_PUBLIC_USER_FIELDS,
+      _count: {
+        select: {
+          posts: {},
+        },
+      },
+    },
     orderBy: {
       createdAt: 'desc',
     },
     take: 10,
   });
 
-  return users;
+  return users.map((user) => ({
+    ...user,
+    postsCount: user._count.posts,
+    _count: undefined,
+  }));
 });

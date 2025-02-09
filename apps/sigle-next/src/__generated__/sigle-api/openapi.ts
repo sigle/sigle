@@ -936,6 +936,7 @@ export interface paths {
               id: string;
               createdAt: string;
               updatedAt: string;
+              postsCount?: number;
               profile?: {
                 id: string;
                 displayName?: string;

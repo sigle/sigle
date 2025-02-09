@@ -49,7 +49,7 @@ export const HomeTrendingUsers = () => {
 
                 <div className="mt-5 flex flex-col gap-2 w-full">
                   <Text as="p" size="1" color="gray">
-                    TODO posts
+                    {user.postsCount} posts
                   </Text>
                   <Button color="gray" variant="soft" className="w-full">
                     <NextLink href={Routes.userProfile({ username: user.id })}>
@@ -64,12 +64,6 @@ export const HomeTrendingUsers = () => {
         <CarouselPrevious color="gray" highContrast />
         <CarouselNext color="gray" highContrast />
       </Carousel>
-
-      {/* <div className="grid grid-cols-2 gap-6 mt-5 md:grid-cols-5">
-        {data.map((user) => (
-
-        ))}
-      </div> */}
     </Container>
   );
 };
