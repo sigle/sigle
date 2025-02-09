@@ -47,7 +47,7 @@ export const HomeTrendingUsers = () => {
                     : formatReadableAddress(user.id)}
                 </Text>
 
-                <div className="mt-5 flex flex-col gap-2 w-full">
+                <div className="mt-5 flex w-full flex-col gap-2">
                   <Text as="p" size="1" color="gray">
                     {user.postsCount} posts
                   </Text>
