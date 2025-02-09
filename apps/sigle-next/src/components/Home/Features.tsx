@@ -9,8 +9,8 @@ export const HomeFeatures = () => {
             ⛓️ Write on-chain
           </Heading>
           <Text as="p" color="gray" size="3" className="text-balance">
-            {/* Every article lives <Text weight="medium">on-chain</Text>. */}
-            Inscribe your words as Ordinals and make them live forever.
+            Inscribe your words as <Text weight="medium">Ordinals</Text> make
+            them live forever.
           </Text>
         </div>
         <div className="flex flex-col items-center gap-4 rounded-3 bg-gray-2 p-6 text-center">
