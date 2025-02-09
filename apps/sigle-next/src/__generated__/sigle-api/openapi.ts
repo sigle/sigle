@@ -942,8 +942,18 @@ export interface paths {
                 description?: string;
                 website?: string;
                 twitter?: string;
-                pictureUri?: string;
-                coverPictureUri?: string;
+                pictureUri?: {
+                  id: string;
+                  width?: number;
+                  height?: number;
+                  blurhash?: string;
+                };
+                coverPictureUri?: {
+                  id: string;
+                  width?: number;
+                  height?: number;
+                  blurhash?: string;
+                };
               };
             }[];
           };
