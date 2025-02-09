@@ -21,17 +21,6 @@ export const EditorSave = () => {
   );
   const editor = useEditorStore((state) => state.editor);
 
-  // When the form is changing, we start a timer to save the post
-  // We wait for the editor to be ready before listening to changes
-  useEffect(() => {
-    if (!editor) return;
-    const subscription = watch(() => {
-      setSaveState('saving');
-      onAutoSave();
-    });
-    return () => subscription.unsubscribe();
-  }, [watch, editor]);
-
   const onAutoSave = useDebouncedCallback(
     () => {
       if (!editor) return;
@@ -59,6 +48,17 @@ export const EditorSave = () => {
     2000,
     [editor],
   );
+
+  // When the form is changing, we start a timer to save the post
+  // We wait for the editor to be ready before listening to changes
+  useEffect(() => {
+    if (!editor) return;
+    const subscription = watch(() => {
+      setSaveState('saving');
+      onAutoSave();
+    });
+    return () => subscription.unsubscribe();
+  }, [watch, editor, onAutoSave]);
 
   if (saveState === 'error') {
     return (

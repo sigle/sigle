@@ -9,7 +9,7 @@ interface PublicationInfoCardProps {
 
 export const PostInfoCard = ({ post }: PublicationInfoCardProps) => {
   const fullLink = post.metadataUri.startsWith('ar://')
-    ? `https://viewblock.io/arweave/tx/${post.metadataUri.slice(5)}`
+    ? `https://arweave.net/${post.metadataUri.slice(5)}`
     : post.metadataUri;
 
   return (

@@ -1,6 +1,6 @@
 import { z } from 'zod';
 import { getValidatedQueryZod } from '~/lib/nitro';
-import { prisma } from '~/lib/prisma';
+import { prisma, SELECT_PUBLIC_USER_FIELDS } from '~/lib/prisma';
 
 defineRouteMeta({
   openAPI: {
@@ -37,6 +37,7 @@ defineRouteMeta({
                 type: 'object',
                 required: [
                   'id',
+                  'address',
                   'title',
                   'maxSupply',
                   'collected',
@@ -45,9 +46,13 @@ defineRouteMeta({
                   'metadataUri',
                   'createdAt',
                   'updatedAt',
+                  'user',
                 ],
                 properties: {
                   id: {
+                    type: 'string',
+                  },
+                  address: {
                     type: 'string',
                   },
                   title: {
@@ -104,6 +109,78 @@ defineRouteMeta({
                   updatedAt: {
                     type: 'string',
                   },
+                  user: {
+                    type: 'object',
+                    required: ['id', 'createdAt', 'updatedAt'],
+                    properties: {
+                      id: {
+                        type: 'string',
+                      },
+                      createdAt: {
+                        type: 'string',
+                      },
+                      updatedAt: {
+                        type: 'string',
+                      },
+                      profile: {
+                        type: 'object',
+                        required: ['id'],
+                        properties: {
+                          id: {
+                            type: 'string',
+                          },
+                          displayName: {
+                            type: 'string',
+                          },
+                          description: {
+                            type: 'string',
+                          },
+                          website: {
+                            type: 'string',
+                          },
+                          twitter: {
+                            type: 'string',
+                          },
+                          pictureUri: {
+                            type: 'object',
+                            required: ['id'],
+                            properties: {
+                              id: {
+                                type: 'string',
+                              },
+                              width: {
+                                type: 'number',
+                              },
+                              height: {
+                                type: 'number',
+                              },
+                              blurhash: {
+                                type: 'string',
+                              },
+                            },
+                          },
+                          coverPictureUri: {
+                            type: 'object',
+                            required: ['id'],
+                            properties: {
+                              id: {
+                                type: 'string',
+                              },
+                              width: {
+                                type: 'number',
+                              },
+                              height: {
+                                type: 'number',
+                              },
+                              blurhash: {
+                                type: 'string',
+                              },
+                            },
+                          },
+                        },
+                      },
+                    },
+                  },
                 },
               },
             },
@@ -125,6 +202,7 @@ export default defineEventHandler(async (event) => {
   const postsList = await prisma.post.findMany({
     select: {
       id: true,
+      address: true,
       title: true,
       content: true,
       metaTitle: true,
@@ -139,6 +217,9 @@ export default defineEventHandler(async (event) => {
       metadataUri: true,
       createdAt: true,
       updatedAt: true,
+      user: {
+        select: SELECT_PUBLIC_USER_FIELDS,
+      },
     },
     where: {
       userId: query.username,

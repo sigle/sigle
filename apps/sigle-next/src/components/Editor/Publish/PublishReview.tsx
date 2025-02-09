@@ -45,12 +45,12 @@ export const PublishReview = ({ onPublish }: PublishReviewProps) => {
           coverImage: errors.coverImage?.message,
           collectLimit:
             errors.collect?.collectLimit?.message ||
-            // biome-ignore lint/suspicious/noExplicitAny: <explanation>
-            (errors?.collect?.collectLimit as any)?.limit?.message,
+            errors?.collect?.collectLimit?.limit?.message,
           price: errors.collect?.collectPrice?.price?.message,
         });
       },
     )();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (

@@ -35,6 +35,8 @@ services:
       watch:
         - path: ./apps/server-next/package.json
           action: rebuild
+        - path: ./apps/server-next/prisma
+          action: rebuild
         - path: ./apps/server-next/
           target: /app/apps/server-next
           action: sync

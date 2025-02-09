@@ -11,7 +11,7 @@ export const PublishReviewCollect = () => {
   const data = getValues();
 
   const collectLimit =
-    data.collect.collectLimit?.enabled === true &&
+    data.collect.collectLimit.type === 'fixed' &&
     data.collect.collectLimit.limit
       ? data.collect.collectLimit.limit
       : undefined;

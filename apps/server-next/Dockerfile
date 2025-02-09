@@ -1,5 +1,5 @@
 ARG NODE_VERSION=22
-FROM node:${NODE_VERSION}-alpine as base
+FROM node:${NODE_VERSION}-alpine AS base
 
 WORKDIR /app
 
@@ -11,7 +11,8 @@ ENV APP_NAME="server-next"
 ENV PNPM_HOME="/pnpm"
 ENV PATH="$PNPM_HOME:$PATH"
 COPY --link ./package.json ./
-RUN corepack enable && corepack install
+RUN npm install -g corepack@latest # fix for https://github.com/nodejs/corepack/issues/612
+RUN corepack enable pnpm
 RUN pnpm install turbo@^2 --global
 RUN pnpm install @dotenvx/dotenvx@^1 --global
 
@@ -24,7 +25,7 @@ RUN turbo prune @sigle/$APP_NAME --docker
 
 # --- Build stage ---
 
-FROM base as installer
+FROM base AS installer
 WORKDIR /app
 
 RUN apk update && \
@@ -45,8 +46,8 @@ COPY turbo.json turbo.json
 WORKDIR /app/apps/$APP_NAME
 
 # Build application
-RUN pnpm turbo run db:generate --filter=@sigle/$APP_NAME
-RUN pnpm turbo run build --filter=@sigle/$APP_NAME...
+RUN turbo run db:generate --filter=@sigle/$APP_NAME
+RUN turbo run build --filter=@sigle/$APP_NAME...
 
 # --- Runner stage ---
 

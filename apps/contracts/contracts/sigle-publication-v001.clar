@@ -35,7 +35,7 @@
 (define-data-var metadata-frozen bool false)
 
 (begin
-  (print { a: "deploy", version: contract-version, minter: authorized-minter }))
+  (print { a: "publish-content", version: contract-version, minter: authorized-minter }))
   (unwrap-panic (as-contract (contract-call? .sigle-minter-fixed-price-v001 set-mint-details u0 u0 u0)))
 
 ;; @desc SIP-009 transfer token to a specified principal

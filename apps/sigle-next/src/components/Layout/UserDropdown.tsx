@@ -1,16 +1,14 @@
 'use client';
 
 import { useStacksLogin } from '@/hooks/useStacksLogin';
-import { Avatar, DropdownMenu, IconButton } from '@radix-ui/themes';
+import { DropdownMenu, IconButton } from '@radix-ui/themes';
 import { useSession } from 'next-auth/react';
 import { useTheme } from 'next-themes';
 import { usePostHog } from 'posthog-js/react';
-import NextLink from 'next/link';
 import { Routes } from '@/lib/routes';
 import { sigleApiClient } from '@/__generated__/sigle-api';
-import { resolveImageUrl } from '@/lib/images';
-import { getDefaultAvatarUrl } from '@/lib/users';
 import { ProfileAvatar } from '../Shared/Profile/ProfileAvatar';
+import { NextLink } from '../Shared/NextLink';
 
 export const UserDropdown = () => {
   const posthog = usePostHog();

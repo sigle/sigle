@@ -41,7 +41,7 @@ import Image from 'next/image';
 import { ProfileAvatar } from '../Profile/ProfileAvatar';
 
 interface PostCollectDialogProps {
-  post: paths['/api/posts/{postId}']['get']['responses']['200']['content']['application/json'];
+  post: paths['/api/posts/list']['get']['responses']['200']['content']['application/json'][number];
   open: boolean;
   onOpenChange: (open: boolean) => void;
 }
@@ -156,11 +156,11 @@ export const PostCollectDialog = ({
             </div>
           </div>
           {post.coverImage ? (
-            <div className="w-full h-[160px] bg-gray-2 rounded-2 overflow-hidden">
+            <div className="h-[160px] w-full overflow-hidden rounded-2 bg-gray-2">
               <Image
                 src={resolveImageUrl(post.coverImage.id)}
                 alt={post.title}
-                className="w-full h-full object-cover"
+                className="size-full object-cover"
                 placeholder={post.coverImage.blurhash ? 'blur' : 'empty'}
                 blurDataURL={post.coverImage.blurhash}
                 width={post.coverImage.width}
@@ -187,7 +187,7 @@ export const PostCollectDialog = ({
               {isFree ? 'Free' : `${formatSTX(price)} STX`}
             </Text>
           </div>
-          <div className="flex items-center justify-between bg-gray-2 p-2 rounded-2">
+          <div className="flex items-center justify-between rounded-2 bg-gray-2 p-2">
             <Text
               as="p"
               size="1"
@@ -226,7 +226,7 @@ export const PostCollectDialog = ({
                 onClick={decrementEditions}
                 disabled={editions === 1}
               >
-                <IconMinus className="h-4 w-4" />
+                <IconMinus className="size-4" />
               </IconButton>
               <Text className="w-6 text-center" size="2" weight="medium">
                 {editions}
@@ -239,7 +239,7 @@ export const PostCollectDialog = ({
                 onClick={incrementEditions}
                 disabled={!post.openEdition && editions === post.maxSupply}
               >
-                <IconPlus className="h-4 w-4" />
+                <IconPlus className="size-4" />
               </IconButton>
             </div>
           </div>

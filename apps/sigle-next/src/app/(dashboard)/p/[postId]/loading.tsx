@@ -2,7 +2,7 @@ import { Container, Heading, Skeleton, Text } from '@radix-ui/themes';
 
 export const PagePostSkeleton = () => {
   return (
-    <Container size="2" className="mt-20 pb-10 px-4">
+    <Container size="2" className="mt-20 px-4 pb-10">
       {/* Title */}
       <Heading size="8">
         <Skeleton>Lorem ipsum dolor sit amet</Skeleton>

@@ -1,11 +1,11 @@
 import { Button, Flex, Text } from '@radix-ui/themes';
-import { PublicationCardSkeleton } from '../Shared/Post/Card/Skeleton';
 import type { paths } from '@/__generated__/sigle-api/openapi';
 import { sigleApiClient } from '@/__generated__/sigle-api';
-import NextLink from 'next/link';
 import { useSession } from 'next-auth/react';
 import { GetFamiliarCards } from '../Dashboard/GetFamiliarCards';
-import { PublicationCard } from '../Shared/Post/Card';
+import { NextLink } from '../Shared/NextLink';
+import { PostListItem } from '../Shared/Post/ListItem';
+import { PostListItemSkeleton } from '../Shared/Post/ListItem/Skeleton';
 
 interface ProfileFeedProps {
   user: paths['/api/users/{username}']['get']['responses']['200']['content']['application/json'];
@@ -30,7 +30,7 @@ export const ProfileFeed = ({ user }: ProfileFeedProps) => {
   if (posts?.length === 0 && user.id === session?.user.id) {
     return (
       <>
-        <div className="my-20 gap-3 items-center flex flex-col">
+        <div className="my-20 flex flex-col items-center gap-3">
           <Text size="2" color="gray" weight="medium">
             You haven{"'"}t published anything yet.
           </Text>
@@ -46,7 +46,7 @@ export const ProfileFeed = ({ user }: ProfileFeedProps) => {
 
   if (posts.length === 0) {
     return (
-      <div className="my-20 gap-3 items-center flex flex-col">
+      <div className="my-20 flex flex-col items-center gap-3">
         <Text>This user has not published anything yet.</Text>
         <Button color="gray" highContrast asChild>
           <NextLink href="/">Explore</NextLink>
@@ -58,7 +58,7 @@ export const ProfileFeed = ({ user }: ProfileFeedProps) => {
   return (
     <div>
       {posts.map((post) => {
-        return <PublicationCard key={post.id} post={post} user={user} />;
+        return <PostListItem key={post.id} post={post} />;
       })}
     </div>
   );
@@ -67,9 +67,9 @@ export const ProfileFeed = ({ user }: ProfileFeedProps) => {
 export const ProfileFeedSkeleton = () => {
   return (
     <Flex direction="column">
-      <PublicationCardSkeleton />
-      <PublicationCardSkeleton />
-      <PublicationCardSkeleton />
+      <PostListItemSkeleton />
+      <PostListItemSkeleton />
+      <PostListItemSkeleton />
     </Flex>
   );
 };

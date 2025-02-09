@@ -3,8 +3,8 @@ import { formatReadableAddress } from '@/lib/stacks';
 import { Text } from '@radix-ui/themes';
 import { ProfileMarkdownDescription } from '../Shared/Profile/MarkdownDescription';
 import { Routes } from '@/lib/routes';
-import NextLink from 'next/link';
 import { ProfileAvatar } from '../Shared/Profile/ProfileAvatar';
+import { NextLink } from '../Shared/NextLink';
 
 interface PostUserInfoCardProps {
   post: paths['/api/posts/{postId}']['get']['responses']['200']['content']['application/json'];
@@ -12,7 +12,7 @@ interface PostUserInfoCardProps {
 
 export const PostUserInfoCard = ({ post }: PostUserInfoCardProps) => {
   return (
-    <div className="mt-10 p-5 bg-gray-3 rounded-2">
+    <div className="mt-10 rounded-2 bg-gray-3 p-5">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
           <NextLink href={Routes.userProfile({ username: post.user.id })}>

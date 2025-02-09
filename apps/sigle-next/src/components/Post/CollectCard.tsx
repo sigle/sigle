@@ -29,7 +29,7 @@ export const PostCollectCard = ({ post }: PostCollectCardProps) => {
                 : 'Be the first to collect this post'}
             </Text>
           </div>
-          <div className="text-right space-y-1">
+          <div className="space-y-1 text-right">
             <Text as="p" size={post.price === '0' ? '3' : '4'} weight="medium">
               {post.price === '0'
                 ? 'Free'

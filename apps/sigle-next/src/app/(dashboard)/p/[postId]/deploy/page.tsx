@@ -2,10 +2,10 @@
 
 import { sigleApiClient } from '@/__generated__/sigle-api';
 import { AuthProtect } from '@/components/Auth/AuthProtect';
+import { NextLink } from '@/components/Shared/NextLink';
 import { getExplorerTransactionUrl } from '@/lib/stacks';
 import { Container, Spinner, Text, Link, Button } from '@radix-ui/themes';
 import { useRouter } from 'next/navigation';
-import NextLink from 'next/link';
 import { use, useEffect } from 'react';
 
 type PostDeployPendingProps = {
@@ -48,7 +48,7 @@ export default function PostDeployPending(props: PostDeployPendingProps) {
     <AuthProtect>
       <Container px="4">
         {post?.txId && post.txStatus === 'rejected' ? (
-          <div className="flex flex-col space-y-2 justify-center items-center py-[200px] max-w-sm mx-auto">
+          <div className="mx-auto flex max-w-sm flex-col items-center justify-center space-y-2 py-[200px]">
             <Text as="div" size="2" color="red">
               Something went wrong and your transaction was rejected.
             </Text>
@@ -62,7 +62,7 @@ export default function PostDeployPending(props: PostDeployPendingProps) {
           </div>
         ) : null}
         {post?.txId && post.txStatus === 'pending' ? (
-          <div className="flex flex-col space-y-2 justify-center items-center py-[200px] max-w-sm mx-auto">
+          <div className="mx-auto flex max-w-sm flex-col items-center justify-center space-y-2 py-[200px]">
             <div className="mb-2">
               <Spinner />
             </div>

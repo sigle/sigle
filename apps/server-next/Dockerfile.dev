@@ -8,7 +8,8 @@ ENV APP_NAME="server-next"
 ENV PNPM_HOME="/pnpm"
 ENV PATH="$PNPM_HOME:$PATH"
 COPY --link ./package.json ./
-RUN corepack enable && corepack install
+RUN npm install -g corepack@latest # fix for https://github.com/nodejs/corepack/issues/612
+RUN corepack enable pnpm
 RUN pnpm install turbo@^2 --global
 RUN pnpm install @dotenvx/dotenvx@^1 --global
 RUN apk update; \
@@ -39,6 +40,7 @@ RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --frozen-lockfile
 COPY --from=builder /app/out/full/ .
 # Copy contracts source to avoid cyclic dependency
 COPY --from=builder /app/apps/contracts ./apps/contracts
+COPY ./apps/$APP_NAME/.env.development.local ./apps/$APP_NAME/.env.development.local
 COPY turbo.json turbo.json
 
 WORKDIR /app/apps/$APP_NAME

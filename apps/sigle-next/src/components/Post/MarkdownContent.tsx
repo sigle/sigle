@@ -24,7 +24,6 @@ export const PublicationMarkdownContent = ({
         img: ({ node, src, ...props }) => {
           src = src ? resolveImageUrl(src) : undefined;
           // eslint-disable-next-line @next/next/no-img-element, jsx-a11y/alt-text
-          // biome-ignore lint/a11y/useAltText: <explanation>
           return <img src={src} {...props} />;
         },
         a: ({ node, href, ...props }) => {

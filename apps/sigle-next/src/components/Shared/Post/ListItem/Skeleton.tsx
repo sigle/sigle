@@ -1,6 +1,6 @@
 import { Skeleton, Text } from '@radix-ui/themes';
 
-export const PublicationCardSkeleton = () => {
+export const PostListItemSkeleton = () => {
   return (
     <div className="space-y-3 border-b border-solid border-gray-6 py-5 last:border-b-0">
       {/* Date at the top */}

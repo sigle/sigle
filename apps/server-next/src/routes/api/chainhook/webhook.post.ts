@@ -4,6 +4,7 @@ import { indexerMintJob } from '~/jobs/indexer/mint';
 import { indexerMintEnabledJob } from '~/jobs/indexer/mint-enabled';
 import { indexerNewPostJob } from '~/jobs/indexer/new-post';
 import { indexerReduceSupplyJob } from '~/jobs/indexer/reduce-supply';
+import { indexerSetProfileJob } from '~/jobs/indexer/set-profile';
 import { consola } from '~/lib/consola';
 
 export default defineEventHandler(async (event) => {
@@ -37,10 +38,10 @@ export default defineEventHandler(async (event) => {
             deployLogEvent &&
             setMintDetailsLogEvent &&
             deployLogEvent.data.topic === 'print' &&
-            (deployLogEvent.data as any).value.a === 'deploy';
+            (deployLogEvent.data as any).value.a === 'publish-content';
 
           // TODO setup and verify log payload
-          // TODO extra security: check that the contract is following the template exported by the SDK (AST?)
+          // TODO extra security: check that the contract is following the template exported by the SDK
 
           if (isSiglePost) {
             const txId = transaction.transaction_identifier.hash;
@@ -86,7 +87,8 @@ export default defineEventHandler(async (event) => {
                   'end-block': number;
                 }
               | { a: 'mint-enabled'; enabled: boolean }
-              | { a: 'reduce-supply'; 'max-supply': number } =
+              | { a: 'reduce-supply'; 'max-supply': number }
+              | { a: 'set-profile'; address: string; uri: string } =
               // @ts-expect-error the types are not correct for value here
               event.data.value;
             switch (value.a) {
@@ -119,6 +121,12 @@ export default defineEventHandler(async (event) => {
                 await indexerReduceSupplyJob.emit({
                   address: contractAddress,
                   maxSupply: value['max-supply'],
+                });
+                break;
+              case 'set-profile':
+                await indexerSetProfileJob.emit({
+                  address: value.address,
+                  uri: value.uri,
                 });
                 break;
               default:

@@ -5,7 +5,14 @@ const nextConfig: NextConfig = {
   output: 'standalone',
   images: {
     // TODO find a better way to do this
-    domains: ['ipfs.io'],
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'ipfs.io',
+        port: '',
+        search: '',
+      },
+    ],
   },
 };
 

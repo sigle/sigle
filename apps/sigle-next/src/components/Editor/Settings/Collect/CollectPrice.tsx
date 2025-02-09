@@ -74,7 +74,9 @@ export const CollectPrice = () => {
             </Flex>
           </>
         ) : null}
-        {currencyFiatPrice && watchCollectPrice ? (
+        {currencyFiatPrice &&
+        watchCollectType === 'paid' &&
+        watchCollectPrice ? (
           <Text size="1" color="gray">
             ~
             {formatUSDollar.format(

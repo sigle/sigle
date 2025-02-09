@@ -15,6 +15,11 @@ path = 'contracts/sigle-protocol.clar'
 clarity_version = 3
 epoch = 3.0
 
+[contracts.sigle-profiles]
+path = 'contracts/sigle-profiles.clar'
+clarity_version = 3
+epoch = 3.0
+
 [contracts.sigle-publication-trait-v001]
 path = 'contracts/sigle-publication-trait-v001.clar'
 clarity_version = 3

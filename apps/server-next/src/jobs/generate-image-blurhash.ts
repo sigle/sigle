@@ -32,7 +32,9 @@ export const generateImageBlurhashJob = defineJob('generate-image-blurhash')
       throw new Error('Failed to fetch image');
     }
     const imageBuffer = await imageResponse.arrayBuffer();
-    const { width, height } = await sharp(Buffer.from(imageBuffer)).metadata();
+    const { width, height, size } = await sharp(
+      Buffer.from(imageBuffer),
+    ).metadata();
 
     const blurhash = await generateBlurhashURI({ buffer: imageBuffer });
 
@@ -44,6 +46,7 @@ export const generateImageBlurhashJob = defineJob('generate-image-blurhash')
         blurhash,
         width,
         height,
+        size,
       },
     });
 

@@ -1,16 +1,15 @@
 import type { H3Event } from 'h3';
 import { env } from '~/env';
-import { Uploader } from '@irys/upload';
-import { Solana } from '@irys/upload-solana';
 import IPFS from 'ipfs-only-hash';
+import { TurboFactory } from '@ardrive/turbo-sdk';
+
+const turboClient = TurboFactory.authenticated({
+  privateKey: env.ARWEAVE_PRIVATE_KEY,
+  token: 'solana',
+});
 
 export const generateCID = async (content: Buffer) => {
   return await IPFS.of(content);
-};
-
-const getIrysUploader = async () => {
-  const irysUploader = await Uploader(Solana).withWallet(env.IRYS_PRIVATE_KEY);
-  return irysUploader;
 };
 
 interface ArweaveTag {
@@ -28,11 +27,9 @@ export const aerweaveUploadFile = async (
     tags?: ArweaveTag[];
   },
 ) => {
-  // TODO can this client be shared between requests?
-  const irys = await getIrysUploader();
-
-  // TODO create IPFS CID for file?
-  // see https://docs.irys.xyz/build/d/features/ipfs-cid#content-ids-vs-transaction-ids
+  const file = Buffer.from(JSON.stringify(metadata));
+  const fileSize = file.byteLength;
+  const cid = await generateCID(file);
 
   const arweaveTags: ArweaveTag[] = [
     {
@@ -43,15 +40,20 @@ export const aerweaveUploadFile = async (
       name: 'App-Name',
       value: env.APP_ID,
     },
+    { name: 'IPFS-CID', value: cid },
     ...tags,
   ];
 
   try {
-    const receipt = await irys.upload(JSON.stringify(metadata), {
-      tags: arweaveTags,
+    const uploadResult = await turboClient.uploadFile({
+      fileStreamFactory: () => file,
+      fileSizeFactory: () => fileSize,
+      dataItemOpts: {
+        tags: arweaveTags,
+      },
     });
 
-    return { id: receipt.id };
+    return { id: uploadResult.id };
   } catch (error) {
     const sentryId = event.context.$sentry.captureException(error, {
       level: 'error',

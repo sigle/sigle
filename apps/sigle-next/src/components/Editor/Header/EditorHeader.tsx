@@ -6,13 +6,13 @@ import {
   IconArrowLeft,
   IconLayoutSidebarRightExpand,
 } from '@tabler/icons-react';
-import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import { useFormContext } from 'react-hook-form';
 import type { EditorPostFormData } from '../EditorFormProvider';
 import { useEditorStore } from '../store';
 import { EditorPublish } from './EditorPublish';
 import { EditorSave } from './EditorSave';
+import { NextLink } from '@/components/Shared/NextLink';
 
 const headerIconSize = 20;
 
@@ -51,7 +51,7 @@ export const EditorHeader = () => {
   return (
     <header
       className={cn(
-        'flex items-center px-6 h-[80px] sticky transition-all duration-500 border-b border-gray-5 bg-gray-1 z-10',
+        'sticky z-10 flex h-[80px] items-center border-b border-gray-5 bg-gray-1 px-6 transition-all duration-500',
         {
           'top-0': scrollDirection === 'up',
           '-top-[80px]': scrollDirection === 'down',
@@ -67,9 +67,9 @@ export const EditorHeader = () => {
             highContrast
             asChild
           >
-            <Link href="/dashboard/drafts">
+            <NextLink href="/dashboard/drafts">
               <IconArrowLeft size={headerIconSize} />
-            </Link>
+            </NextLink>
           </IconButton>
           {type === 'draft' ? <EditorSave /> : null}
         </Flex>

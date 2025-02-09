@@ -61,8 +61,8 @@ export const EditorCoverImage = () => {
               postId,
             });
           },
-          // biome-ignore lint/suspicious/noExplicitAny: <explanation>
-          onError: (error: any) => {
+          onError: (error) => {
+            setPreview(null);
             posthog.capture('cover_image_upload_error', {
               postId,
             });
@@ -93,7 +93,7 @@ export const EditorCoverImage = () => {
   };
 
   const resolvedWatchCoverImage = watchCoverImage
-    ? resolveImageUrl(watchCoverImage)
+    ? resolveImageUrl(watchCoverImage, { gateway: true })
     : null;
 
   return (

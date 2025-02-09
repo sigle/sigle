@@ -5,7 +5,7 @@ import { Routes } from '@/lib/routes';
 import { Button, Card, Flex, Heading, Text } from '@radix-ui/themes';
 import { format } from 'date-fns';
 import { useSession } from 'next-auth/react';
-import NextLink from 'next/link';
+import { NextLink } from '../Shared/NextLink';
 
 export const LatestPost = () => {
   const { data: session } = useSession();
@@ -30,7 +30,7 @@ export const LatestPost = () => {
       </Flex>
       <Card mt="2" size="2">
         {!post ? (
-          <div className="flex flex-col justify-center gap-4 items-center py-7">
+          <div className="flex flex-col items-center justify-center gap-4 py-7">
             <Text size="2" color="gray">
               No post yet
             </Text>
@@ -42,7 +42,7 @@ export const LatestPost = () => {
 
         {post ? (
           <>
-            <div className="bg-gray-3 p-4 rounded-2">
+            <div className="rounded-2 bg-gray-3 p-4">
               <Heading size="4" className="line-clamp-2">
                 {post.metaTitle || post.title}
               </Heading>
@@ -63,7 +63,7 @@ export const LatestPost = () => {
               </Button>
             </div>
 
-            <div className="mt-5 -mb-4">
+            <div className="-mb-4 mt-5">
               <Flex
                 gap="5"
                 align="center"

@@ -160,8 +160,18 @@ export interface paths {
                   description?: string;
                   website?: string;
                   twitter?: string;
-                  pictureUri?: string;
-                  coverPictureUri?: string;
+                  pictureUri?: {
+                    id: string;
+                    width?: number;
+                    height?: number;
+                    blurhash?: string;
+                  };
+                  coverPictureUri?: {
+                    id: string;
+                    width?: number;
+                    height?: number;
+                    blurhash?: string;
+                  };
                 };
               };
             };
@@ -207,6 +217,7 @@ export interface paths {
           content: {
             'application/json': {
               id: string;
+              address: string;
               title: string;
               content?: string;
               metaTitle?: string;
@@ -225,6 +236,30 @@ export interface paths {
               metadataUri: string;
               createdAt: string;
               updatedAt: string;
+              user: {
+                id: string;
+                createdAt: string;
+                updatedAt: string;
+                profile?: {
+                  id: string;
+                  displayName?: string;
+                  description?: string;
+                  website?: string;
+                  twitter?: string;
+                  pictureUri?: {
+                    id: string;
+                    width?: number;
+                    height?: number;
+                    blurhash?: string;
+                  };
+                  coverPictureUri?: {
+                    id: string;
+                    width?: number;
+                    height?: number;
+                    blurhash?: string;
+                  };
+                };
+              };
             }[];
           };
         };
@@ -270,6 +305,12 @@ export interface paths {
               metaTitle?: string;
               metaDescription?: string;
               coverImage?: string;
+              /** @enum {string} */
+              collectPriceType?: 'free' | 'paid';
+              collectPrice?: string;
+              /** @enum {string} */
+              collectLimitType?: 'open' | 'fixed';
+              collectLimit?: number;
               txId?: string;
               txStatus?: string;
               createdAt: string;
@@ -406,6 +447,18 @@ export interface paths {
             metaTitle?: string;
             metaDescription?: string;
             coverImage?: string;
+            collect?: {
+              collectPrice: {
+                /** @enum {string} */
+                type: 'free' | 'paid';
+                price: number;
+              };
+              collectLimit: {
+                /** @enum {string} */
+                type: 'open' | 'fixed';
+                limit: number;
+              };
+            };
           };
         };
       };
@@ -470,6 +523,17 @@ export interface paths {
               cid: string;
               url: string;
               gatewayUrl: string;
+            };
+          };
+        };
+        /** @description Bad request */
+        400: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': {
+              message: string;
             };
           };
         };
@@ -638,47 +702,6 @@ export interface paths {
     patch?: never;
     trace?: never;
   };
-  '/api/protected/user/profile/update': {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    get?: never;
-    put?: never;
-    /** @description Update user profile. */
-    post: {
-      parameters: {
-        query?: never;
-        header?: never;
-        path?: never;
-        cookie?: never;
-      };
-      requestBody: {
-        content: {
-          'application/json': {
-            /** @description Profile metadata */
-            metadata?: Record<string, never>;
-          };
-        };
-      };
-      responses: {
-        /** @description OK */
-        200: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content?: never;
-        };
-      };
-    };
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
   '/api/protected/user/profile/upload-avatar': {
     parameters: {
       query?: never;
@@ -779,6 +802,52 @@ export interface paths {
     patch?: never;
     trace?: never;
   };
+  '/api/protected/user/profile/upload-metadata': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    /** @description Upload profile metadata to Arweave. */
+    post: {
+      parameters: {
+        query?: never;
+        header?: never;
+        path?: never;
+        cookie?: never;
+      };
+      requestBody: {
+        content: {
+          'application/json': {
+            /** @description Profile metadata */
+            metadata?: Record<string, never>;
+          };
+        };
+      };
+      responses: {
+        /** @description Metadata uploaded. */
+        200: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': {
+              /** @description Arweave ID. */
+              id: string;
+            };
+          };
+        };
+      };
+    };
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
   '/api/users/{username}': {
     parameters: {
       query?: never;
@@ -814,8 +883,18 @@ export interface paths {
                 description?: string;
                 website?: string;
                 twitter?: string;
-                pictureUri?: string;
-                coverPictureUri?: string;
+                pictureUri?: {
+                  id: string;
+                  width?: number;
+                  height?: number;
+                  blurhash?: string;
+                };
+                coverPictureUri?: {
+                  id: string;
+                  width?: number;
+                  height?: number;
+                  blurhash?: string;
+                };
               };
             };
           };
