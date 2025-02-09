@@ -31,6 +31,20 @@ defineRouteMeta({
                 coverImage: {
                   type: 'string',
                 },
+                collectPriceType: {
+                  type: 'string',
+                  enum: ['free', 'paid'],
+                },
+                collectPrice: {
+                  type: 'string',
+                },
+                collectLimitType: {
+                  type: 'string',
+                  enum: ['open', 'fixed'],
+                },
+                collectLimit: {
+                  type: 'number',
+                },
                 txId: {
                   type: 'string',
                 },
@@ -90,6 +104,10 @@ export default defineEventHandler(async (event) => {
       metaTitle: true,
       metaDescription: true,
       coverImage: true,
+      collectPriceType: true,
+      collectPrice: true,
+      collectLimitType: true,
+      collectLimit: true,
       txId: true,
       txStatus: true,
       createdAt: true,

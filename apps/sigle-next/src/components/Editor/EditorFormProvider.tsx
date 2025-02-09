@@ -15,17 +15,10 @@ const editorPostSchema = z.object({
       type: z.enum(['free', 'paid'] as const),
       price: z.coerce.number().min(0),
     }),
-    collectLimit: z
-      .discriminatedUnion('enabled', [
-        z.object({
-          enabled: z.literal(true),
-          limit: z.coerce.number().int().min(1),
-        }),
-        z.object({
-          enabled: z.literal(false),
-        }),
-      ])
-      .optional(),
+    collectLimit: z.object({
+      type: z.enum(['open', 'fixed'] as const),
+      limit: z.coerce.number().int().min(1),
+    }),
   }),
 });
 
@@ -54,11 +47,12 @@ export const EditorFormProvider = ({
       coverImage: post.coverImage || undefined,
       collect: {
         collectPrice: {
-          type: 'free',
-          price: 0,
+          type: post.collectPriceType || 'free',
+          price: post.collectPrice ? Number(post.collectPrice) : 0,
         },
         collectLimit: {
-          enabled: false,
+          type: post.collectLimitType || 'open',
+          limit: post.collectLimit || 100,
         },
       },
     },
