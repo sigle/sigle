@@ -39,14 +39,18 @@ model Profile {
 }
 
 model Draft {
-  id              String  @id @map("id")
-  title           String  @map("title")
-  content         String  @map("content")
-  metaTitle       String? @map("meta_title")
-  metaDescription String? @map("meta_description")
-  coverImage      String? @map("cover_image")
-  txId            String? @map("tx_id")
-  txStatus        String? @map("tx_status")
+  id               String  @id @map("id")
+  title            String  @map("title")
+  content          String  @map("content")
+  metaTitle        String? @map("meta_title")
+  metaDescription  String? @map("meta_description")
+  coverImage       String? @map("cover_image")
+  txId             String? @map("tx_id")
+  txStatus         String? @map("tx_status")
+  collectPriceType String? @map("collect_price_type")
+  collectPrice     BigInt? @map("collect_price")
+  maxSupplyType    String? @map("max_supply_type")
+  maxSupply        Int?    @map("max_supply")
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")

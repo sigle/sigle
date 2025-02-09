@@ -54,8 +54,8 @@ export const EditorFormProvider = ({
       coverImage: post.coverImage || undefined,
       collect: {
         collectPrice: {
-          type: 'free',
-          price: 0,
+          type: post.collectPriceType || 'free',
+          price: post.collectPrice ? Number(post.collectPrice) : 0,
         },
         collectLimit: {
           enabled: false,

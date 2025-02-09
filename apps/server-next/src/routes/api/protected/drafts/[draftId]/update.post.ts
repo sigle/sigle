@@ -29,6 +29,25 @@ defineRouteMeta({
               coverImage: {
                 type: 'string',
               },
+              collect: {
+                type: 'object',
+                required: ['collectPrice'],
+                properties: {
+                  collectPrice: {
+                    type: 'object',
+                    required: ['type', 'price'],
+                    properties: {
+                      type: {
+                        type: 'string',
+                        enum: ['free', 'paid'],
+                      },
+                      price: {
+                        type: 'number',
+                      },
+                    },
+                  },
+                },
+              },
             },
           },
         },
@@ -61,6 +80,12 @@ const updateDraftSchema = z.object({
   metaTitle: z.string().optional(),
   metaDescription: z.string().optional(),
   coverImage: z.string().optional(),
+  collect: z.object({
+    collectPrice: z.object({
+      type: z.enum(['free', 'paid'] as const),
+      price: z.coerce.number().min(0),
+    }),
+  }),
 });
 
 export default defineEventHandler(async (event) => {
@@ -78,6 +103,8 @@ export default defineEventHandler(async (event) => {
       metaTitle: body.metaTitle,
       metaDescription: body.metaDescription,
       coverImage: body.coverImage,
+      collectPriceType: body.collect.collectPrice.type,
+      collectPrice: body.collect.collectPrice.price,
     },
     select: {
       id: true,

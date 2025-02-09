@@ -305,6 +305,9 @@ export interface paths {
               metaTitle?: string;
               metaDescription?: string;
               coverImage?: string;
+              /** @enum {string} */
+              collectPriceType?: 'free' | 'paid';
+              collectPrice?: string;
               txId?: string;
               txStatus?: string;
               createdAt: string;
@@ -441,6 +444,17 @@ export interface paths {
             metaTitle?: string;
             metaDescription?: string;
             coverImage?: string;
+            collect?: {
+              collectPrice: {
+                /** @enum {string} */
+                type: 'free' | 'paid';
+                price: number;
+              };
+              collectLimit?: {
+                enabled: boolean;
+                limit: number;
+              };
+            };
           };
         };
       };
