@@ -1,7 +1,0 @@
-/* Tippyjs theme used by the floating menu */
-.tippy-box[data-theme~="sigle-editor-floating-menu"] {
-  @apply bg-transparent;
-}
-.tippy-box[data-theme~="sigle-editor-floating-menu"] .tippy-content {
-  @apply bg-transparent p-0 mt-5 mr-1;
-}
