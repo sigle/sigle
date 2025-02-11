@@ -1,6 +1,6 @@
-name: 'Setup the monorepo'
+name: "Setup the monorepo"
 runs:
-  using: 'composite'
+  using: "composite"
   steps:
     - uses: actions/checkout@v4
 
@@ -8,9 +8,9 @@ runs:
       uses: actions/cache@v4
       with:
         path: ${{ github.workspace }}/.turbo
-        key: ${{ runner.os }}-turbo-${{ github.sha }}
+        key: v1-${{ runner.os }}-turbo-${{ github.sha }}
         restore-keys: |
-          ${{ runner.os }}-turbo-
+          v1-${{ runner.os }}-turbo-
 
     - uses: pnpm/action-setup@v3
 
@@ -18,7 +18,7 @@ runs:
       uses: actions/setup-node@v4
       with:
         node-version: 20
-        cache: 'pnpm'
+        cache: "pnpm"
 
     - name: Install dependencies
       shell: bash
