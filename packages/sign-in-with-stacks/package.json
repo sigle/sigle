@@ -1,9 +1,6 @@
 {
   "name": "@sigle/sign-in-with-stacks",
   "version": "0.0.0",
-  "dependencies": {
-    "@stacks/common": "^7.0.2"
-  },
   "devDependencies": {
     "@stacks/encryption": "7.0.2",
     "@stacks/network": "7.0.2",
@@ -23,6 +20,7 @@
   },
   "main": "dist/index.js",
   "peerDependencies": {
+    "@stacks/common": "^7.0.2",
     "@stacks/encryption": "^7.0.2",
     "@stacks/transactions": "^7.0.2"
   },

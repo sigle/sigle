@@ -1,4 +1,22 @@
 {
-  "dependencyTypes": ["prod", "dev", "peer"],
-  "sortAz": ["bin", "contributors", "keywords", "resolutions", "scripts", "dependencies", "devDependencies", "peerDependencies"]
+  "dependencyTypes": ["prod", "dev"],
+  "sortPackages": true,
+  "semverGroups": [
+    {
+      "label": "enforce production versions to match",
+      "range": "",
+      "dependencyTypes": ["prod", "dev"],
+      "dependencies": ["**"],
+      "packages": ["**"]
+    }
+  ],
+  "versionGroups": [
+    {
+      "label": "@sigle/contracts old version enforced by clarinet",
+      "packages": ["@sigle/contracts"],
+      "dependencies": ["vitest", "@stacks/transactions"],
+      "dependencyTypes": ["prod", "dev"],
+      "isIgnored": true
+    },
+  ]
 }
