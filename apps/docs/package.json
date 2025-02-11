@@ -1,12 +1,12 @@
 {
   "name": "@sigle/docs",
-  "version": "0.0.0",
   "private": true,
+  "version": "0.0.0",
   "scripts": {
-    "dev": "next --turbopack",
     "build": "next build",
-    "start": "next start",
-    "postbuild": "pagefind --site .next/server/app --output-path public/_pagefind"
+    "dev": "next --turbopack",
+    "postbuild": "pagefind --site .next/server/app --output-path public/_pagefind",
+    "start": "next start"
   },
   "dependencies": {
     "next": "15.1.3",

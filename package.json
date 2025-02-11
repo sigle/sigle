@@ -1,9 +1,24 @@
 {
   "name": "root",
-  "private": true,
-  "packageManager": "pnpm@9.15.5",
   "engines": {
     "node": ">=20"
+  },
+  "private": true,
+  "packageManager": "pnpm@9.15.5",
+  "scripts": {
+    "build": "turbo build --cache-dir=.turbo",
+    "format": "biome check --write --no-errors-on-unmatched",
+    "lint": "turbo lint --cache-dir=.turbo",
+    "release": "pnpm changeset publish",
+    "test": "turbo test --cache-dir=.turbo",
+    "version": "pnpm changeset version && pnpm install --lockfile-only"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "1.9.4",
+    "@changesets/cli": "2.27.12",
+    "lefthook": "1.10.10",
+    "syncpack": "13.0.2",
+    "turbo": "2.4.0"
   },
   "pnpm": {
     "overrides": {
@@ -13,19 +28,5 @@
       "@dha-team/arbundles@1.0.1": "patches/@dha-team__arbundles@1.0.1.patch",
       "@ardrive/turbo-sdk@1.22.0": "patches/@ardrive__turbo-sdk@1.22.0.patch"
     }
-  },
-  "scripts": {
-    "format": "biome check --write --no-errors-on-unmatched",
-    "lint": "turbo lint --cache-dir=.turbo",
-    "build": "turbo build --cache-dir=.turbo",
-    "test": "turbo test --cache-dir=.turbo",
-    "version": "pnpm changeset version && pnpm install --lockfile-only",
-    "release": "pnpm changeset publish"
-  },
-  "devDependencies": {
-    "@biomejs/biome": "1.9.4",
-    "@changesets/cli": "2.27.12",
-    "lefthook": "1.10.10",
-    "turbo": "2.4.0"
   }
 }

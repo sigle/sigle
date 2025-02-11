@@ -1,13 +1,13 @@
 {
   "name": "@sigle/sigle-next",
-  "version": "0.0.0",
   "private": true,
+  "version": "0.0.0",
   "scripts": {
-    "dev": "next dev",
     "build": "next build",
-    "start": "next start",
+    "codegen": "openapi-typescript http://localhost:3001/_openapi.json --output ./src/__generated__/sigle-api/openapi.ts",
+    "dev": "next dev",
     "lint": "next lint",
-    "codegen": "openapi-typescript http://localhost:3001/_openapi.json --output ./src/__generated__/sigle-api/openapi.ts"
+    "start": "next start"
   },
   "dependencies": {
     "@hookform/resolvers": "3.9.1",
