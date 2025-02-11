@@ -2,9 +2,9 @@ name: Node CI
 
 on:
   push:
-    branches: [main]
+    branches: [v1]
   pull_request:
-    branches: [main]
+    branches: [v1]
 
 concurrency:
   group: v1-${{ github.workflow }}-${{ github.ref }}
