@@ -6,6 +6,7 @@
     "access": "public"
   },
   "main": "dist/index.js",
+  "types": "dist/index.d.ts",
   "exports": {
     ".": {
       "import": "./dist/index.js",
@@ -31,6 +32,5 @@
     "@stacks/common": "^7.0.2",
     "@stacks/encryption": "^7.0.2",
     "@stacks/transactions": "^7.0.2"
-  },
-  "types": "dist/index.d.ts"
+  }
 }

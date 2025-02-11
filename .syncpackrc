@@ -16,13 +16,14 @@
     "type",
     "publishConfig",
     "main",
+    "types",
     "exports",
+    "files",
     "bin",
     "scripts",
     "dependencies",
     "devDependencies",
-    "peerDependencies",
-    "files"
+    "peerDependencies"
   ],
   "semverGroups": [
     {
