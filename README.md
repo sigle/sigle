@@ -1,5 +1,7 @@
 <h1 align="center">Sigle</h1>
 
+> This is the v1 branch for Sigle. Prefix all prs with `v1-` to be merged.
+
 <p align="center">
   <img src="https://raw.githubusercontent.com/sigle/sigle/main/assets/icon-192x192.png" height="50">
 </p>
