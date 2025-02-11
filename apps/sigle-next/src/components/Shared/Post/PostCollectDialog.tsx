@@ -1,10 +1,10 @@
-'use client';
+"use client";
 
-import type { paths } from '@/__generated__/sigle-api/openapi';
+import type { paths } from "@/__generated__/sigle-api/openapi";
 import {
   formatUSDollar,
   useCurrencyFiatPrice,
-} from '@/hooks/useCurrencyFiatPrice';
+} from "@/hooks/useCurrencyFiatPrice";
 import {
   Badge,
   Button,
@@ -16,32 +16,32 @@ import {
   Text,
   Tooltip,
   VisuallyHidden,
-} from '@radix-ui/themes';
+} from "@radix-ui/themes";
 import {
   IconHelpCircle,
   IconInfoCircle,
   IconMinus,
   IconPlus,
-} from '@tabler/icons-react';
-import { useSession } from 'next-auth/react';
-import { useSearchParams } from 'next/navigation';
-import { useState } from 'react';
-import { toast } from 'sonner';
-import { formatSTX, fixedMintFee } from '@sigle/sdk';
-import { sigleClient } from '@/lib/sigle';
+} from "@tabler/icons-react";
+import { useSession } from "next-auth/react";
+import { useSearchParams } from "next/navigation";
+import { useState } from "react";
+import { toast } from "sonner";
+import { formatSTX, fixedMintFee } from "@sigle/sdk";
+import { sigleClient } from "@/lib/sigle";
 import {
   formatReadableAddress,
   getExplorerTransactionUrl,
   getPromiseTransactionConfirmation,
-} from '@/lib/stacks';
-import { useContractCall } from '@/hooks/useContractCall';
-import { useStacksLogin } from '@/hooks/useStacksLogin';
-import { resolveImageUrl } from '@/lib/images';
-import Image from 'next/image';
-import { ProfileAvatar } from '../Profile/ProfileAvatar';
+} from "@/lib/stacks";
+import { useContractCall } from "@/hooks/useContractCall";
+import { useStacksLogin } from "@/hooks/useStacksLogin";
+import { resolveImageUrl } from "@/lib/images";
+import Image from "next/image";
+import { ProfileAvatar } from "../Profile/ProfileAvatar";
 
 interface PostCollectDialogProps {
-  post: paths['/api/posts/list']['get']['responses']['200']['content']['application/json'][number];
+  post: paths["/api/posts/list"]["get"]["responses"]["200"]["content"]["application/json"][number];
   open: boolean;
   onOpenChange: (open: boolean) => void;
 }
@@ -52,32 +52,32 @@ export const PostCollectDialog = ({
   onOpenChange,
 }: PostCollectDialogProps) => {
   const searchParams = useSearchParams();
-  const referral = searchParams.get('referral');
+  const referral = searchParams.get("referral");
   const { data: session } = useSession();
   const { login } = useStacksLogin();
   const { data: currencyFiatPrice, isLoading: loadingCurrencyFiatPrice } =
     useCurrencyFiatPrice(
       // We wait for the dialog to be open to fetch the price
-      open ? 'STX' : undefined,
+      open ? "STX" : undefined,
     );
   const [editions, setEditions] = useState(1);
 
   const { contractCall, loading: contractLoading } = useContractCall({
     onSuccess: (data) => {
       toast.promise(getPromiseTransactionConfirmation(data.txId), {
-        loading: 'Collect transaction submitted',
-        success: 'Collected successfully',
-        error: 'Transaction failed',
+        loading: "Collect transaction submitted",
+        success: "Collected successfully",
+        error: "Transaction failed",
         action: {
-          label: 'View tx',
+          label: "View tx",
           onClick: () =>
-            window.open(getExplorerTransactionUrl(data.txId), '_blank'),
+            window.open(getExplorerTransactionUrl(data.txId), "_blank"),
         },
       });
       onOpenChange(false);
     },
     onError: (error) => {
-      toast.error('Failed to collect', {
+      toast.error("Failed to collect", {
         description: error,
       });
     },
@@ -90,8 +90,8 @@ export const PostCollectDialog = ({
     }
 
     // TODO owner mint
-    if (session.user.address === post.address.split('.')[0]) {
-      alert('You cannot collect your own post (will be possible soon)');
+    if (session.user.address === post.address.split(".")[0]) {
+      alert("You cannot collect your own post (will be possible soon)");
       return;
     }
 
@@ -161,7 +161,7 @@ export const PostCollectDialog = ({
                 src={resolveImageUrl(post.coverImage.id)}
                 alt={post.title}
                 className="size-full object-cover"
-                placeholder={post.coverImage.blurhash ? 'blur' : 'empty'}
+                placeholder={post.coverImage.blurhash ? "blur" : "empty"}
                 blurDataURL={post.coverImage.blurhash}
                 width={post.coverImage.width}
                 height={post.coverImage.height}
@@ -184,7 +184,7 @@ export const PostCollectDialog = ({
               Price
             </Text>
             <Text as="p" size="2" weight="medium">
-              {isFree ? 'Free' : `${formatSTX(price)} STX`}
+              {isFree ? "Free" : `${formatSTX(price)} STX`}
             </Text>
           </div>
           <div className="flex items-center justify-between rounded-2 bg-gray-2 p-2">
@@ -248,7 +248,7 @@ export const PostCollectDialog = ({
 
           <div className="flex items-start justify-between">
             <Text className="flex items-center gap-1" size="3" weight="medium">
-              Total{' '}
+              Total{" "}
               <Tooltip
                 content={
                   <div className="grid gap-2 p-2">

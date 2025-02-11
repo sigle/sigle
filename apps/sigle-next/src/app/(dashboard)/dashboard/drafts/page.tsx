@@ -1,9 +1,9 @@
-'use client';
+"use client";
 
-import { sigleApiClient } from '@/__generated__/sigle-api';
-import type { paths } from '@/__generated__/sigle-api/openapi';
-import { NextLink } from '@/components/Shared/NextLink';
-import { getExplorerTransactionUrl } from '@/lib/stacks';
+import { sigleApiClient } from "@/__generated__/sigle-api";
+import type { paths } from "@/__generated__/sigle-api/openapi";
+import { NextLink } from "@/components/Shared/NextLink";
+import { getExplorerTransactionUrl } from "@/lib/stacks";
 import {
   Badge,
   Button,
@@ -14,11 +14,11 @@ import {
   IconButton,
   Spinner,
   Text,
-} from '@radix-ui/themes';
-import { IconDotsVertical } from '@tabler/icons-react';
-import { format } from 'date-fns';
-import { useState } from 'react';
-import { toast } from 'sonner';
+} from "@radix-ui/themes";
+import { IconDotsVertical } from "@tabler/icons-react";
+import { format } from "date-fns";
+import { useState } from "react";
+import { toast } from "sonner";
 
 export default function DashboardDrafts() {
   const {
@@ -26,7 +26,7 @@ export default function DashboardDrafts() {
     isLoading: loadingDrafts,
     error: errorDrafts,
     refetch: refetchDrafts,
-  } = sigleApiClient.useQuery('get', '/api/protected/drafts/list', {
+  } = sigleApiClient.useQuery("get", "/api/protected/drafts/list", {
     params: {
       query: {
         limit: 50,
@@ -64,7 +64,7 @@ export default function DashboardDrafts() {
               No drafts yet
             </Text>
             <Button color="gray" highContrast asChild>
-              <NextLink href={'/p/new'}>Write a story</NextLink>
+              <NextLink href={"/p/new"}>Write a story</NextLink>
             </Button>
           </Flex>
         ) : null}
@@ -81,16 +81,16 @@ const Draft = ({
   draft,
   refetchDrafts,
 }: {
-  draft: paths['/api/protected/drafts/list']['get']['responses'][200]['content']['application/json'][0];
+  draft: paths["/api/protected/drafts/list"]["get"]["responses"][200]["content"]["application/json"][0];
   refetchDrafts: () => Promise<unknown>;
 }) => {
   const [isDeleting, setIsDeleting] = useState(false);
   const { mutateAsync: deletePost } = sigleApiClient.useMutation(
-    'post',
-    '/api/protected/drafts/{draftId}/delete',
+    "post",
+    "/api/protected/drafts/{draftId}/delete",
     {
       onError: (error: { message: string }) => {
-        toast.error('Failed to upload metadata', {
+        toast.error("Failed to upload metadata", {
           description: error.message,
         });
       },
@@ -98,7 +98,7 @@ const Draft = ({
   );
 
   const onDelete = async () => {
-    const ok = confirm('Are you sure you want to delete this draft?');
+    const ok = confirm("Are you sure you want to delete this draft?");
     if (!ok) return;
 
     setIsDeleting(true);
@@ -110,16 +110,16 @@ const Draft = ({
       },
     });
     await refetchDrafts();
-    toast.message('Draft deleted');
+    toast.message("Draft deleted");
   };
 
-  const isTxPending = draft.txStatus === 'pending';
+  const isTxPending = draft.txStatus === "pending";
 
   const heading =
     draft.metaTitle || draft.title ? (
       <Heading as="h3" size="4" className="line-clamp-2">
-        {' '}
-        {draft.metaTitle || draft.title}{' '}
+        {" "}
+        {draft.metaTitle || draft.title}{" "}
       </Heading>
     ) : (
       <Heading as="h3" size="4" className="line-clamp-2" color="gray">
@@ -129,7 +129,7 @@ const Draft = ({
 
   return (
     <div className="border-b border-solid border-gray-6 py-5 first:pt-0 last:border-b-0 last:pb-0">
-      {draft.txStatus === 'pending' && draft.txId && (
+      {draft.txStatus === "pending" && draft.txId && (
         <Badge className="mb-2" asChild>
           <a
             href={getExplorerTransactionUrl(draft.txId)}
@@ -140,15 +140,15 @@ const Draft = ({
           </a>
         </Badge>
       )}
-      {draft.txStatus === 'pending' ? (
+      {draft.txStatus === "pending" ? (
         heading
       ) : (
         <NextLink href={`/p/${draft.id}/edit`}>{heading}</NextLink>
       )}
       <Flex justify="between" align="center">
         <Text as="p" mt="3" color="gray" size="1">
-          Created {format(new Date(draft.createdAt), 'MMM dd, yyyy')} • Last
-          updated {format(new Date(draft.updatedAt), 'MMM dd, yyyy h:mm a')}
+          Created {format(new Date(draft.createdAt), "MMM dd, yyyy")} • Last
+          updated {format(new Date(draft.updatedAt), "MMM dd, yyyy h:mm a")}
         </Text>
         {isDeleting ? <Spinner /> : null}
         {!isDeleting && !isTxPending ? (

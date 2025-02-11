@@ -1,4 +1,4 @@
-import { Container, Skeleton, Text } from '@radix-ui/themes';
+import { Container, Skeleton, Text } from "@radix-ui/themes";
 
 export const PageEditorSkeleton = () => {
   return (

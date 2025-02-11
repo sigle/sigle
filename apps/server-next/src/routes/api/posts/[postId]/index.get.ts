@@ -1,159 +1,159 @@
-import { prisma, SELECT_PUBLIC_USER_FIELDS } from '~/lib/prisma';
+import { prisma, SELECT_PUBLIC_USER_FIELDS } from "~/lib/prisma";
 
 defineRouteMeta({
   openAPI: {
-    tags: ['posts'],
-    description: 'Get post.',
+    tags: ["posts"],
+    description: "Get post.",
     responses: {
       200: {
-        description: 'Post entry.',
+        description: "Post entry.",
         content: {
-          'application/json': {
+          "application/json": {
             schema: {
-              type: 'object',
+              type: "object",
               required: [
-                'id',
-                'address',
-                'txId',
-                'title',
-                'maxSupply',
-                'collected',
-                'openEdition',
-                'price',
-                'metadataUri',
-                'createdAt',
-                'updatedAt',
-                'user',
+                "id",
+                "address",
+                "txId",
+                "title",
+                "maxSupply",
+                "collected",
+                "openEdition",
+                "price",
+                "metadataUri",
+                "createdAt",
+                "updatedAt",
+                "user",
               ],
               properties: {
                 id: {
-                  type: 'string',
+                  type: "string",
                 },
                 title: {
-                  type: 'string',
+                  type: "string",
                 },
                 content: {
-                  type: 'string',
+                  type: "string",
                 },
                 metaTitle: {
-                  type: 'string',
+                  type: "string",
                 },
                 metaDescription: {
-                  type: 'string',
+                  type: "string",
                 },
                 coverImage: {
-                  type: 'object',
-                  required: ['id'],
+                  type: "object",
+                  required: ["id"],
                   properties: {
                     id: {
-                      type: 'string',
+                      type: "string",
                     },
                     width: {
-                      type: 'number',
+                      type: "number",
                     },
                     height: {
-                      type: 'number',
+                      type: "number",
                     },
                     blurhash: {
-                      type: 'string',
+                      type: "string",
                     },
                   },
                 },
                 excerpt: {
-                  type: 'string',
+                  type: "string",
                 },
                 address: {
-                  type: 'string',
+                  type: "string",
                 },
                 txId: {
-                  type: 'string',
+                  type: "string",
                 },
                 maxSupply: {
-                  type: 'number',
+                  type: "number",
                 },
                 collected: {
-                  type: 'number',
+                  type: "number",
                 },
                 openEdition: {
-                  type: 'boolean',
+                  type: "boolean",
                 },
                 price: {
-                  type: 'string',
+                  type: "string",
                 },
                 metadataUri: {
-                  type: 'string',
+                  type: "string",
                 },
                 createdAt: {
-                  type: 'string',
+                  type: "string",
                 },
                 updatedAt: {
-                  type: 'string',
+                  type: "string",
                 },
                 user: {
-                  type: 'object',
-                  required: ['id', 'createdAt', 'updatedAt'],
+                  type: "object",
+                  required: ["id", "createdAt", "updatedAt"],
                   properties: {
                     id: {
-                      type: 'string',
+                      type: "string",
                     },
                     createdAt: {
-                      type: 'string',
+                      type: "string",
                     },
                     updatedAt: {
-                      type: 'string',
+                      type: "string",
                     },
                     profile: {
-                      type: 'object',
-                      required: ['id'],
+                      type: "object",
+                      required: ["id"],
                       properties: {
                         id: {
-                          type: 'string',
+                          type: "string",
                         },
                         displayName: {
-                          type: 'string',
+                          type: "string",
                         },
                         description: {
-                          type: 'string',
+                          type: "string",
                         },
                         website: {
-                          type: 'string',
+                          type: "string",
                         },
                         twitter: {
-                          type: 'string',
+                          type: "string",
                         },
                         pictureUri: {
-                          type: 'object',
-                          required: ['id'],
+                          type: "object",
+                          required: ["id"],
                           properties: {
                             id: {
-                              type: 'string',
+                              type: "string",
                             },
                             width: {
-                              type: 'number',
+                              type: "number",
                             },
                             height: {
-                              type: 'number',
+                              type: "number",
                             },
                             blurhash: {
-                              type: 'string',
+                              type: "string",
                             },
                           },
                         },
                         coverPictureUri: {
-                          type: 'object',
-                          required: ['id'],
+                          type: "object",
+                          required: ["id"],
                           properties: {
                             id: {
-                              type: 'string',
+                              type: "string",
                             },
                             width: {
-                              type: 'number',
+                              type: "number",
                             },
                             height: {
-                              type: 'number',
+                              type: "number",
                             },
                             blurhash: {
-                              type: 'string',
+                              type: "string",
                             },
                           },
                         },
@@ -171,11 +171,11 @@ defineRouteMeta({
 });
 
 export default defineEventHandler(async (event) => {
-  const postId = getRouterParam(event, 'postId');
+  const postId = getRouterParam(event, "postId");
   if (!postId) {
     throw createError({
       status: 400,
-      statusMessage: 'Bad Request',
+      statusMessage: "Bad Request",
     });
   }
 

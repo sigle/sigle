@@ -1,9 +1,9 @@
-import { z } from 'zod';
-import { consola } from '~/lib/consola';
-import { defineJob } from '~/lib/jobs';
-import { prisma } from '~/lib/prisma';
+import { z } from "zod";
+import { consola } from "~/lib/consola";
+import { defineJob } from "~/lib/jobs";
+import { prisma } from "~/lib/prisma";
 
-export const indexerMintEnabledJob = defineJob('indexer-mint-enabled')
+export const indexerMintEnabledJob = defineJob("indexer-mint-enabled")
   .input(
     z.object({
       address: z.string(),
@@ -25,7 +25,7 @@ export const indexerMintEnabledJob = defineJob('indexer-mint-enabled')
       },
     });
 
-    consola.debug('post.mintEnabled', {
+    consola.debug("post.mintEnabled", {
       id: updatedPost.id,
       enabled: job.data.enabled,
     });

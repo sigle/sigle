@@ -1,27 +1,27 @@
-import { env } from '~/env';
+import { env } from "~/env";
 import {
   createChainhook,
   createPredicate,
   getChainhooks,
   preparePredicate,
-} from '~/lib/chainhook';
-import { consola } from '~/lib/consola';
+} from "~/lib/chainhook";
+import { consola } from "~/lib/consola";
 import {
   contractDeploymentPredicate,
   sigleProfilesPredicate,
   sigleMinterFixedPricePredicate,
-} from '~/lib/predicates';
+} from "~/lib/predicates";
 
 /**
  * Setup the required chainhook that are necessary for the app to run properly.
  */
 export default defineNitroPlugin(async (nitroApp) => {
-  if (env.NODE_ENV === 'development' && !env.HIRO_API_KEY) {
-    consola.warn('HIRO_API_KEY is not set, chainhooks will not be registered');
+  if (env.NODE_ENV === "development" && !env.HIRO_API_KEY) {
+    consola.warn("HIRO_API_KEY is not set, chainhooks will not be registered");
   }
-  if (env.NODE_ENV === 'development' && !env.WEBHOOK_PROXY_URL) {
+  if (env.NODE_ENV === "development" && !env.WEBHOOK_PROXY_URL) {
     consola.warn(
-      'WEBHOOK_PROXY_URL is not set, chainhooks will not be registered',
+      "WEBHOOK_PROXY_URL is not set, chainhooks will not be registered",
     );
     return;
   }
@@ -56,5 +56,5 @@ export default defineNitroPlugin(async (nitroApp) => {
     }
   }
 
-  consola.success('Plugin: Chainhooks registered');
+  consola.success("Plugin: Chainhooks registered");
 });

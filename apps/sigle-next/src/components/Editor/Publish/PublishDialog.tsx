@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import {
   Callout,
@@ -7,22 +7,22 @@ import {
   Spinner,
   Text,
   VisuallyHidden,
-} from '@radix-ui/themes';
-import * as Sentry from '@sentry/nextjs';
-import { useRouter } from 'next/navigation';
-import { usePostHog } from 'posthog-js/react';
-import { useState } from 'react';
-import { useFormContext } from 'react-hook-form';
-import { toast } from 'sonner';
-import { IconExclamationCircle } from '@tabler/icons-react';
-import type { EditorPostFormData } from '../EditorFormProvider';
-import { useEditorStore } from '../store';
-import { generateSigleMetadataFromForm } from '../utils';
-import { PublishReview } from './PublishReview';
-import { sigleApiClient } from '@/__generated__/sigle-api';
-import { sigleClient } from '@/lib/sigle';
-import { parseSTX } from '@sigle/sdk';
-import { useContractDeploy } from '@/hooks/useContractDeploy';
+} from "@radix-ui/themes";
+import * as Sentry from "@sentry/nextjs";
+import { useRouter } from "next/navigation";
+import { usePostHog } from "posthog-js/react";
+import { useState } from "react";
+import { useFormContext } from "react-hook-form";
+import { toast } from "sonner";
+import { IconExclamationCircle } from "@tabler/icons-react";
+import type { EditorPostFormData } from "../EditorFormProvider";
+import { useEditorStore } from "../store";
+import { generateSigleMetadataFromForm } from "../utils";
+import { PublishReview } from "./PublishReview";
+import { sigleApiClient } from "@/__generated__/sigle-api";
+import { sigleClient } from "@/lib/sigle";
+import { parseSTX } from "@sigle/sdk";
+import { useContractDeploy } from "@/hooks/useContractDeploy";
 
 interface PublishDialogProps {
   postId: string;
@@ -37,32 +37,32 @@ export const PublishDialog = ({ postId }: PublishDialogProps) => {
   const publishOpen = useEditorStore((state) => state.publishOpen);
   const setPublishOpen = useEditorStore((state) => state.setPublishOpen);
   const [publishingLoading, setPublishingLoading] = useState<
-    { action: 'transaction-pending'; txId: string } | false
+    { action: "transaction-pending"; txId: string } | false
   >(false);
   const { mutateAsync: uploadMetadata } = sigleApiClient.useMutation(
-    'post',
-    '/api/protected/drafts/{draftId}/upload-metadata',
+    "post",
+    "/api/protected/drafts/{draftId}/upload-metadata",
   );
   const { mutateAsync: updateTxId } = sigleApiClient.useMutation(
-    'post',
-    '/api/protected/drafts/{draftId}/set-tx-id',
+    "post",
+    "/api/protected/drafts/{draftId}/set-tx-id",
   );
   const { contractDeploy } = useContractDeploy({
     onCancel: () => {
-      posthog.capture('post_publish_cancel', {
+      posthog.capture("post_publish_cancel", {
         postId,
       });
 
       setPublishingLoading(false);
     },
     onSuccess: async (tx) => {
-      posthog.capture('post_publish_transaction_submitted', {
+      posthog.capture("post_publish_transaction_submitted", {
         postId,
         txId: tx.txId,
       });
 
       setPublishingLoading({
-        action: 'transaction-pending',
+        action: "transaction-pending",
         txId: tx.txId,
       });
 
@@ -88,7 +88,7 @@ export const PublishDialog = ({ postId }: PublishDialogProps) => {
         try {
           setPublishingError(null);
 
-          posthog.capture('post_publish_start', {
+          posthog.capture("post_publish_start", {
             postId,
           });
 
@@ -120,11 +120,11 @@ export const PublishDialog = ({ postId }: PublishDialogProps) => {
             metadata: arweaveUrl,
             collectInfo: {
               amount:
-                data.collect.collectPrice.type === 'paid'
+                data.collect.collectPrice.type === "paid"
                   ? parseSTX(data.collect.collectPrice.price.toString())
                   : 0,
               maxSupply:
-                data.collect.collectLimit.type === 'fixed' &&
+                data.collect.collectLimit.type === "fixed" &&
                 data.collect.collectLimit.limit
                   ? data.collect.collectLimit.limit
                   : undefined,
@@ -138,8 +138,8 @@ export const PublishDialog = ({ postId }: PublishDialogProps) => {
           });
           // biome-ignore lint/suspicious/noExplicitAny: <explanation>
         } catch (error: any) {
-          console.error('Error SDK publishing', error);
-          toast('Error publishing', {
+          console.error("Error SDK publishing", error);
+          toast("Error publishing", {
             description: error.message ? error.message : error,
           });
           setPublishingError(error.message ? error.message : error);
@@ -148,9 +148,9 @@ export const PublishDialog = ({ postId }: PublishDialogProps) => {
         }
       },
       (errors) => {
-        console.error('Publishing form errors', { errors });
-        toast('Error publishing', {
-          description: 'Please check the form for errors',
+        console.error("Publishing form errors", { errors });
+        toast("Error publishing", {
+          description: "Please check the form for errors",
         });
       },
     )();

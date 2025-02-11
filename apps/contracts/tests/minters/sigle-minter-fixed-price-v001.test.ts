@@ -1,18 +1,18 @@
-import { Cl } from '@stacks/transactions';
-import { beforeEach, describe, expect, it } from 'vitest';
-import { createClient, fixedMintFee, parseSTX } from '@sigle/sdk';
-import { STACKS_MOCKNET } from '@stacks/network';
+import { Cl } from "@stacks/transactions";
+import { beforeEach, describe, expect, it } from "vitest";
+import { createClient, fixedMintFee, parseSTX } from "@sigle/sdk";
+import { STACKS_MOCKNET } from "@stacks/network";
 
-const contract = 'sigle-minter-fixed-price-v001';
+const contract = "sigle-minter-fixed-price-v001";
 const accounts = simnet.getAccounts();
-const deployer = accounts.get('deployer')!;
-const wallet1 = accounts.get('wallet_1')!;
-const wallet2 = accounts.get('wallet_2')!;
-const wallet3 = accounts.get('wallet_3')!;
+const deployer = accounts.get("deployer")!;
+const wallet1 = accounts.get("wallet_1")!;
+const wallet2 = accounts.get("wallet_2")!;
+const wallet3 = accounts.get("wallet_3")!;
 
 const sigleClient = createClient({
   network: STACKS_MOCKNET,
-  networkName: 'mocknet',
+  networkName: "mocknet",
 });
 
 describe(contract, () => {
@@ -21,16 +21,16 @@ describe(contract, () => {
       amount: 0,
       maxSupply: 100,
     },
-    metadata: 'ipfs://anything',
+    metadata: "ipfs://anything",
   });
   const defaultContractName = `${wallet1}.default-contract`;
 
-  describe('update-fees', () => {
-    describe('update-fees', () => {
-      it('allows protocol owner to update fees', () => {
+  describe("update-fees", () => {
+    describe("update-fees", () => {
+      it("allows protocol owner to update fees", () => {
         const { result } = simnet.callPublicFn(
           contract,
-          'update-fees',
+          "update-fees",
           [
             Cl.uint(100000), // Protocol fee
             Cl.uint(200000), // Creator fee
@@ -42,10 +42,10 @@ describe(contract, () => {
         expect(result).toBeOk(Cl.bool(true));
       });
 
-      it('prevents non-owner from updating fees', () => {
+      it("prevents non-owner from updating fees", () => {
         const { result } = simnet.callPublicFn(
           contract,
-          'update-fees',
+          "update-fees",
           [Cl.uint(100000), Cl.uint(200000), Cl.uint(50000)],
           wallet1,
         );
@@ -55,26 +55,26 @@ describe(contract, () => {
     });
   });
 
-  describe('mint', () => {
+  describe("mint", () => {
     beforeEach(() => {
       simnet.deployContract(
-        defaultContractName.split('.')[1],
+        defaultContractName.split(".")[1],
         defaultContract,
         { clarityVersion: 3 },
         wallet1,
       );
     });
 
-    it('allows minting within valid parameters', () => {
+    it("allows minting within valid parameters", () => {
       const quantity = 1;
 
       const { result } = simnet.callPublicFn(
         contract,
-        'mint',
+        "mint",
         [
           Cl.contractPrincipal(
-            defaultContractName.split('.')[0],
-            defaultContractName.split('.')[1],
+            defaultContractName.split(".")[0],
+            defaultContractName.split(".")[1],
           ), // token contract
           Cl.uint(quantity),
           Cl.none(), // no referrer
@@ -86,14 +86,14 @@ describe(contract, () => {
       expect(result).toBeOk(Cl.bool(true));
     });
 
-    it('fails when trying to mint more than max quantity', () => {
+    it("fails when trying to mint more than max quantity", () => {
       const { result } = simnet.callPublicFn(
         contract,
-        'mint',
+        "mint",
         [
           Cl.contractPrincipal(
-            defaultContractName.split('.')[0],
-            defaultContractName.split('.')[1],
+            defaultContractName.split(".")[0],
+            defaultContractName.split(".")[1],
           ),
           Cl.uint(11), // More than max 10
           Cl.none(),
@@ -106,10 +106,10 @@ describe(contract, () => {
     });
   });
 
-  describe('fees', () => {
-    it('fees should match the SDK values for free mints', () => {
+  describe("fees", () => {
+    it("fees should match the SDK values for free mints", () => {
       simnet.deployContract(
-        defaultContractName.split('.')[1],
+        defaultContractName.split(".")[1],
         defaultContract,
         { clarityVersion: 3 },
         wallet1,
@@ -117,11 +117,11 @@ describe(contract, () => {
 
       const { events } = simnet.callPublicFn(
         contract,
-        'mint',
+        "mint",
         [
           Cl.contractPrincipal(
-            defaultContractName.split('.')[0],
-            defaultContractName.split('.')[1],
+            defaultContractName.split(".")[0],
+            defaultContractName.split(".")[1],
           ),
           Cl.uint(1),
           Cl.some(Cl.principal(wallet3)),
@@ -131,46 +131,46 @@ describe(contract, () => {
       );
 
       expect(events[0]).toEqual({
-        event: 'stx_transfer_event',
+        event: "stx_transfer_event",
         data: {
           amount: fixedMintFee.protocol.toString(),
-          memo: '',
+          memo: "",
           recipient: deployer,
           sender: wallet2,
         },
       });
       expect(events[1]).toEqual({
-        event: 'stx_transfer_event',
+        event: "stx_transfer_event",
         data: {
           amount: fixedMintFee.creator.toString(),
-          memo: '',
+          memo: "",
           recipient: wallet1,
           sender: wallet2,
         },
       });
       expect(events[2]).toEqual({
-        event: 'stx_transfer_event',
+        event: "stx_transfer_event",
         data: {
           amount: fixedMintFee.mintReferrer.toString(),
-          memo: '',
+          memo: "",
           recipient: wallet3,
           sender: wallet2,
         },
       });
     });
 
-    it('fees should match the SDK values for paid mints', () => {
+    it("fees should match the SDK values for paid mints", () => {
       const { contract: defaultContract } = sigleClient.generatePostContract({
         collectInfo: {
-          amount: parseSTX('4.2'),
+          amount: parseSTX("4.2"),
           maxSupply: 100,
         },
-        metadata: 'ipfs://anything',
+        metadata: "ipfs://anything",
       });
       const defaultContractName = `${wallet1}.default-contract`;
 
       simnet.deployContract(
-        defaultContractName.split('.')[1],
+        defaultContractName.split(".")[1],
         defaultContract,
         { clarityVersion: 3 },
         wallet1,
@@ -178,11 +178,11 @@ describe(contract, () => {
 
       const { events } = simnet.callPublicFn(
         contract,
-        'mint',
+        "mint",
         [
           Cl.contractPrincipal(
-            defaultContractName.split('.')[0],
-            defaultContractName.split('.')[1],
+            defaultContractName.split(".")[0],
+            defaultContractName.split(".")[1],
           ),
           Cl.uint(1),
           Cl.some(Cl.principal(wallet3)),
@@ -192,28 +192,28 @@ describe(contract, () => {
       );
 
       expect(events[0]).toEqual({
-        event: 'stx_transfer_event',
+        event: "stx_transfer_event",
         data: {
           amount: fixedMintFee.protocol.toString(),
-          memo: '',
+          memo: "",
           recipient: deployer,
           sender: wallet2,
         },
       });
       expect(events[1]).toEqual({
-        event: 'stx_transfer_event',
+        event: "stx_transfer_event",
         data: {
-          amount: (parseSTX('4.2') + fixedMintFee.creator).toString(),
-          memo: '',
+          amount: (parseSTX("4.2") + fixedMintFee.creator).toString(),
+          memo: "",
           recipient: wallet1,
           sender: wallet2,
         },
       });
       expect(events[2]).toEqual({
-        event: 'stx_transfer_event',
+        event: "stx_transfer_event",
         data: {
           amount: fixedMintFee.mintReferrer.toString(),
-          memo: '',
+          memo: "",
           recipient: wallet3,
           sender: wallet2,
         },

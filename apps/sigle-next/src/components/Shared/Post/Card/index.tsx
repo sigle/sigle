@@ -1,6 +1,6 @@
-import type { paths } from '@/__generated__/sigle-api/openapi';
-import { resolveImageUrl } from '@/lib/images';
-import { Routes } from '@/lib/routes';
+import type { paths } from "@/__generated__/sigle-api/openapi";
+import { resolveImageUrl } from "@/lib/images";
+import { Routes } from "@/lib/routes";
 import {
   AspectRatio,
   Button,
@@ -9,16 +9,16 @@ import {
   Inset,
   Link,
   Text,
-} from '@radix-ui/themes';
-import { format } from 'date-fns';
-import { formatReadableAddress } from '@/lib/stacks';
-import Image from 'next/image';
-import { NextLink } from '../../NextLink';
-import { useState } from 'react';
-import { PostCollectDialog } from '../PostCollectDialog';
+} from "@radix-ui/themes";
+import { format } from "date-fns";
+import { formatReadableAddress } from "@/lib/stacks";
+import Image from "next/image";
+import { NextLink } from "../../NextLink";
+import { useState } from "react";
+import { PostCollectDialog } from "../PostCollectDialog";
 
 interface PostCardProps {
-  post: paths['/api/posts/list']['get']['responses']['200']['content']['application/json'][0];
+  post: paths["/api/posts/list"]["get"]["responses"]["200"]["content"]["application/json"][0];
 }
 
 export const PostCard = ({ post }: PostCardProps) => {
@@ -36,7 +36,7 @@ export const PostCard = ({ post }: PostCardProps) => {
                   src={resolveImageUrl(post.coverImage.id)}
                   alt="Cover card"
                   className="size-full object-cover"
-                  placeholder={post.coverImage.blurhash ? 'blur' : 'empty'}
+                  placeholder={post.coverImage.blurhash ? "blur" : "empty"}
                   blurDataURL={post.coverImage.blurhash}
                   width={post.coverImage.width}
                   height={post.coverImage.height}
@@ -52,7 +52,7 @@ export const PostCard = ({ post }: PostCardProps) => {
             size="4"
             className="line-clamp-2 break-words"
             style={{
-              wordBreak: 'break-word',
+              wordBreak: "break-word",
             }}
           >
             {post.metaTitle || post.title}
@@ -65,15 +65,15 @@ export const PostCard = ({ post }: PostCardProps) => {
         </NextLink>
         <div className="mt-3">
           <Text as="p" color="gray" size="1">
-            By{' '}
+            By{" "}
             <Link asChild>
               <NextLink href={Routes.userProfile({ username: post.user.id })}>
                 {post.user.profile?.displayName
                   ? post.user.profile?.displayName
                   : formatReadableAddress(post.user.id)}
               </NextLink>
-            </Link>{' '}
-            • {format(new Date(post.createdAt), 'MMM dd, yyyy')}
+            </Link>{" "}
+            • {format(new Date(post.createdAt), "MMM dd, yyyy")}
           </Text>
         </div>
       </div>

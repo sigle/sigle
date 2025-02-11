@@ -1,9 +1,9 @@
-import { z } from 'zod';
-import { consola } from '~/lib/consola';
-import { defineJob } from '~/lib/jobs';
-import { prisma } from '~/lib/prisma';
+import { z } from "zod";
+import { consola } from "~/lib/consola";
+import { defineJob } from "~/lib/jobs";
+import { prisma } from "~/lib/prisma";
 
-export const indexerReduceSupplyJob = defineJob('indexer-reduce-supply')
+export const indexerReduceSupplyJob = defineJob("indexer-reduce-supply")
   .input(
     z.object({
       address: z.string(),
@@ -26,7 +26,7 @@ export const indexerReduceSupplyJob = defineJob('indexer-reduce-supply')
       },
     });
 
-    consola.debug('indexer.reduceSupply', {
+    consola.debug("indexer.reduceSupply", {
       id: updatedPost.id,
       maxSupply: job.data.maxSupply,
     });

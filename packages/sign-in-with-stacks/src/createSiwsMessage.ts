@@ -1,10 +1,10 @@
 import {
   SiwsInvalidMessageFieldError,
   type SiwsInvalidMessageFieldErrorType,
-} from './errors/siws.js';
-import type { SiwsMessage } from './types.js';
-import { getAddress, isUri } from './utils.js';
-import type { InvalidAddressErrorType } from './errors/address.js';
+} from "./errors/siws.js";
+import type { SiwsMessage } from "./types.js";
+import { getAddress, isUri } from "./utils.js";
+import type { InvalidAddressErrorType } from "./errors/address.js";
 
 export type CreateSiwsMessageParameters = SiwsMessage;
 
@@ -51,11 +51,11 @@ export function createSiwsMessage(
     // Required fields
     if (chainId !== Math.floor(chainId))
       throw new SiwsInvalidMessageFieldError({
-        field: 'chainId',
+        field: "chainId",
         metaMessages: [
-          '- Chain ID must be a SIP-005 chain ID.',
-          '- See https://github.com/stacksgov/sips/blob/main/sips/sip-005/sip-005-blocks-and-transactions.md',
-          '',
+          "- Chain ID must be a SIP-005 chain ID.",
+          "- See https://github.com/stacksgov/sips/blob/main/sips/sip-005/sip-005-blocks-and-transactions.md",
+          "",
           `Provided value: ${chainId}`,
         ],
       });
@@ -67,40 +67,40 @@ export function createSiwsMessage(
       )
     )
       throw new SiwsInvalidMessageFieldError({
-        field: 'domain',
+        field: "domain",
         metaMessages: [
-          '- Domain must be an RFC 3986 authority.',
-          '- See https://www.rfc-editor.org/rfc/rfc3986',
-          '',
+          "- Domain must be an RFC 3986 authority.",
+          "- See https://www.rfc-editor.org/rfc/rfc3986",
+          "",
           `Provided value: ${domain}`,
         ],
       });
     if (!nonceRegex.test(nonce))
       throw new SiwsInvalidMessageFieldError({
-        field: 'nonce',
+        field: "nonce",
         metaMessages: [
-          '- Nonce must be at least 8 characters.',
-          '- Nonce must be alphanumeric.',
-          '',
+          "- Nonce must be at least 8 characters.",
+          "- Nonce must be alphanumeric.",
+          "",
           `Provided value: ${nonce}`,
         ],
       });
     if (!isUri(uri))
       throw new SiwsInvalidMessageFieldError({
-        field: 'uri',
+        field: "uri",
         metaMessages: [
-          '- URI must be a RFC 3986 URI referring to the resource that is the subject of the signing.',
-          '- See https://www.rfc-editor.org/rfc/rfc3986',
-          '',
+          "- URI must be a RFC 3986 URI referring to the resource that is the subject of the signing.",
+          "- See https://www.rfc-editor.org/rfc/rfc3986",
+          "",
           `Provided value: ${uri}`,
         ],
       });
-    if (version !== '1')
+    if (version !== "1")
       throw new SiwsInvalidMessageFieldError({
-        field: 'version',
+        field: "version",
         metaMessages: [
           "- Version must be '1'.",
-          '',
+          "",
           `Provided value: ${version}`,
         ],
       });
@@ -108,21 +108,21 @@ export function createSiwsMessage(
     // Optional fields
     if (scheme && !schemeRegex.test(scheme))
       throw new SiwsInvalidMessageFieldError({
-        field: 'scheme',
+        field: "scheme",
         metaMessages: [
-          '- Scheme must be an RFC 3986 URI scheme.',
-          '- See https://www.rfc-editor.org/rfc/rfc3986#section-3.1',
-          '',
+          "- Scheme must be an RFC 3986 URI scheme.",
+          "- See https://www.rfc-editor.org/rfc/rfc3986#section-3.1",
+          "",
           `Provided value: ${scheme}`,
         ],
       });
     const statement = parameters.statement;
-    if (statement?.includes('\n'))
+    if (statement?.includes("\n"))
       throw new SiwsInvalidMessageFieldError({
-        field: 'statement',
+        field: "statement",
         metaMessages: [
           "- Statement must not include '\\n'.",
-          '',
+          "",
           `Provided value: ${statement}`,
         ],
       });
@@ -135,7 +135,7 @@ export function createSiwsMessage(
     return domain;
   })();
   const statement = (() => {
-    if (!parameters.statement) return '';
+    if (!parameters.statement) return "";
     return `${parameters.statement}\n`;
   })();
   const prefix = `${origin} wants you to sign in with your Stacks account:\n${address}\n\n${statement}`;
@@ -147,15 +147,15 @@ export function createSiwsMessage(
   if (notBefore) suffix += `\nNot Before: ${notBefore.toISOString()}`;
   if (requestId) suffix += `\nRequest ID: ${requestId}`;
   if (resources) {
-    let content = '\nResources:';
+    let content = "\nResources:";
     for (const resource of resources) {
       if (!isUri(resource))
         throw new SiwsInvalidMessageFieldError({
-          field: 'resources',
+          field: "resources",
           metaMessages: [
-            '- Every resource must be a RFC 3986 URI.',
-            '- See https://www.rfc-editor.org/rfc/rfc3986',
-            '',
+            "- Every resource must be a RFC 3986 URI.",
+            "- See https://www.rfc-editor.org/rfc/rfc3986",
+            "",
             `Provided value: ${resource}`,
           ],
         });

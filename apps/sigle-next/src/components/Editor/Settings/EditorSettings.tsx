@@ -1,15 +1,15 @@
-import { cn } from '@/lib/cn';
-import { Dialog, Inset, Text } from '@radix-ui/themes';
+import { cn } from "@/lib/cn";
+import { Dialog, Inset, Text } from "@radix-ui/themes";
 import {
   IconBrandGoogle,
   IconCards,
   IconChevronRight,
-} from '@tabler/icons-react';
-import { useEditorStore } from '../store';
-import { CollectSettings } from './CollectSettings';
-import { DialogTitle } from './DialogTitle';
-import { MetaSettings } from './MetaSettings';
-import styles from './styles.module.css';
+} from "@tabler/icons-react";
+import { useEditorStore } from "../store";
+import { CollectSettings } from "./CollectSettings";
+import { DialogTitle } from "./DialogTitle";
+import { MetaSettings } from "./MetaSettings";
+import styles from "./styles.module.css";
 
 export const EditorSettings = () => {
   const menuOpen = useEditorStore((state) => state.menuOpen);
@@ -19,7 +19,7 @@ export const EditorSettings = () => {
     <Dialog.Root open={!!menuOpen} onOpenChange={setMenuOpen}>
       <Dialog.Content
         className={cn(
-          'fixed inset-y-0 right-0 max-h-full max-w-[420px] rounded-none',
+          "fixed inset-y-0 right-0 max-h-full max-w-[420px] rounded-none",
           styles.dialogContent,
         )}
       >
@@ -33,7 +33,7 @@ export const EditorSettings = () => {
             <Inset side="x">
               <div
                 className="flex cursor-pointer justify-between border-y border-gray-5 px-6 py-4 transition-colors hover:bg-gray-2"
-                onClick={() => setMenuOpen('meta')}
+                onClick={() => setMenuOpen("meta")}
               >
                 <Text
                   as="div"
@@ -48,7 +48,7 @@ export const EditorSettings = () => {
               </div>
               <div
                 className="flex cursor-pointer justify-between border-b border-gray-5 px-6 py-4 transition-colors hover:bg-gray-2"
-                onClick={() => setMenuOpen('collect')}
+                onClick={() => setMenuOpen("collect")}
               >
                 <Text
                   as="div"
@@ -65,8 +65,8 @@ export const EditorSettings = () => {
           </div>
         ) : null}
 
-        {menuOpen === 'meta' ? <MetaSettings /> : null}
-        {menuOpen === 'collect' ? <CollectSettings /> : null}
+        {menuOpen === "meta" ? <MetaSettings /> : null}
+        {menuOpen === "collect" ? <CollectSettings /> : null}
       </Dialog.Content>
     </Dialog.Root>
   );

@@ -1,5 +1,5 @@
 export default {
-  intro: 'Introduction',
-  sdk: 'SDK',
-  api: 'API',
+  intro: "Introduction",
+  sdk: "SDK",
+  api: "API",
 };

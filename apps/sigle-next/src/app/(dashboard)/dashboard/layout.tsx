@@ -1,10 +1,10 @@
-'use client';
+"use client";
 
-import { AuthProtect } from '@/components/Auth/AuthProtect';
-import { NextLink } from '@/components/Shared/NextLink';
-import { cn } from '@/lib/cn';
-import { Button, Container, Select } from '@radix-ui/themes';
-import { usePathname, useRouter } from 'next/navigation';
+import { AuthProtect } from "@/components/Auth/AuthProtect";
+import { NextLink } from "@/components/Shared/NextLink";
+import { cn } from "@/lib/cn";
+import { Button, Container, Select } from "@radix-ui/themes";
+import { usePathname, useRouter } from "next/navigation";
 
 export default function DashboardLayout({
   children,
@@ -16,16 +16,16 @@ export default function DashboardLayout({
 
   const navigationLinks = [
     {
-      label: 'Overview',
-      href: '/dashboard',
+      label: "Overview",
+      href: "/dashboard",
     },
     {
-      label: 'Drafts',
-      href: '/dashboard/drafts',
+      label: "Drafts",
+      href: "/dashboard/drafts",
     },
     {
-      label: 'Settings',
-      href: '/dashboard/settings',
+      label: "Settings",
+      href: "/dashboard/settings",
     },
   ];
 
@@ -45,8 +45,8 @@ export default function DashboardLayout({
                     variant="ghost"
                     color="gray"
                     highContrast
-                    className={cn('m-0', {
-                      'font-medium bg-[--accent-a3]': pathname === link.href,
+                    className={cn("m-0", {
+                      "font-medium bg-[--accent-a3]": pathname === link.href,
                     })}
                     asChild
                   >

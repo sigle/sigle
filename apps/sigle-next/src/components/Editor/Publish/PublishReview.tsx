@@ -1,10 +1,10 @@
-import { Button, Callout, Dialog, Flex, Grid, Text } from '@radix-ui/themes';
-import { IconExclamationCircle } from '@tabler/icons-react';
-import { useEffect, useState } from 'react';
-import { useFormContext } from 'react-hook-form';
-import type { EditorPostFormData } from '../EditorFormProvider';
-import { PublishReviewCollect } from './ReviewCollect';
-import { PublishReviewGeneral } from './ReviewGeneral';
+import { Button, Callout, Dialog, Flex, Grid, Text } from "@radix-ui/themes";
+import { IconExclamationCircle } from "@tabler/icons-react";
+import { useEffect, useState } from "react";
+import { useFormContext } from "react-hook-form";
+import type { EditorPostFormData } from "../EditorFormProvider";
+import { PublishReviewCollect } from "./ReviewCollect";
+import { PublishReviewGeneral } from "./ReviewGeneral";
 
 interface PublishReviewProps {
   onPublish: () => void;
@@ -22,9 +22,9 @@ export const PublishReview = ({ onPublish }: PublishReviewProps) => {
         collectLimit?: string;
         price?: string;
       }
-    | 'loading'
+    | "loading"
     | { valid: true }
-  >('loading');
+  >("loading");
   const { handleSubmit, formState } = useFormContext<EditorPostFormData>();
 
   // Validate form on mount so we can show the various error messages in the callout
@@ -55,7 +55,7 @@ export const PublishReview = ({ onPublish }: PublishReviewProps) => {
 
   return (
     <div className="space-y-4">
-      {isFormValid !== 'loading' && !isFormValid.valid ? (
+      {isFormValid !== "loading" && !isFormValid.valid ? (
         <Callout.Root color="red" role="alert">
           <Callout.Icon>
             <IconExclamationCircle />
@@ -107,7 +107,7 @@ export const PublishReview = ({ onPublish }: PublishReviewProps) => {
           </Button>
         </Dialog.Close>
         <Button
-          disabled={isFormValid === 'loading' || !isFormValid.valid}
+          disabled={isFormValid === "loading" || !isFormValid.valid}
           loading={formState.isSubmitting}
           onClick={onPublish}
         >

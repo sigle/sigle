@@ -1,5 +1,5 @@
-import { createEnv } from '@t3-oss/env-nextjs';
-import { z } from 'zod';
+import { createEnv } from "@t3-oss/env-nextjs";
+import { z } from "zod";
 
 export const env = createEnv({
   emptyStringAsUndefined: true,
@@ -16,7 +16,7 @@ export const env = createEnv({
   client: {
     NEXT_PUBLIC_APP_URL: z.string(),
     NEXT_PUBLIC_API_URL: z.string(),
-    NEXT_PUBLIC_STACKS_ENV: z.enum(['mainnet', 'testnet']),
+    NEXT_PUBLIC_STACKS_ENV: z.enum(["mainnet", "testnet"]),
     NEXT_PUBLIC_POSTHOG_KEY: z.string().optional(),
     NEXT_PUBLIC_POSTHOG_HOST: z.string().optional(),
     NEXT_PUBLIC_SENTRY_DSN: z.string().optional(),

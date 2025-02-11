@@ -1,10 +1,10 @@
-'use client';
+"use client";
 
-import { useStacksLogin } from '@/hooks/useStacksLogin';
-import { Routes } from '@/lib/routes';
-import { Button, Container, Heading } from '@radix-ui/themes';
-import { useSession } from 'next-auth/react';
-import { NextLink } from '../Shared/NextLink';
+import { useStacksLogin } from "@/hooks/useStacksLogin";
+import { Routes } from "@/lib/routes";
+import { Button, Container, Heading } from "@radix-ui/themes";
+import { useSession } from "next-auth/react";
+import { NextLink } from "../Shared/NextLink";
 
 export const HomeHero = () => {
   const { login } = useStacksLogin();

@@ -1,4 +1,4 @@
-import { Skeleton, Text } from '@radix-ui/themes';
+import { Skeleton, Text } from "@radix-ui/themes";
 
 export const PostListItemSkeleton = () => {
   return (

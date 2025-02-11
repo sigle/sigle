@@ -1,15 +1,15 @@
-'use client';
+"use client";
 
-import { z } from 'zod';
+import { z } from "zod";
 import {
   ReadonlyURLSearchParams,
   useParams as useNextParams,
   useSearchParams as useNextSearchParams,
-} from 'next/navigation';
-import queryString from 'query-string';
+} from "next/navigation";
+import queryString from "query-string";
 
 export const Routes = {
-  home: makeRoute(() => '/'),
+  home: makeRoute(() => "/"),
   userProfile: makeRoute(
     ({ username }) => `/u/${username}`,
     z.object({
@@ -25,7 +25,7 @@ export const Routes = {
       referral: z.string().optional().nullable(),
     }),
   ),
-  dashboard: makeRoute(() => '/dashboard'),
+  dashboard: makeRoute(() => "/dashboard"),
 };
 
 type RouteBuilder<Params extends z.ZodSchema, Search extends z.ZodSchema> = {
@@ -45,7 +45,7 @@ function makeRoute<Params extends z.ZodSchema, Search extends z.ZodSchema>(
     const baseUrl = fn(params);
     const searchString =
       options?.search && queryString.stringify(options.search);
-    return [baseUrl, searchString ? `?${searchString}` : ''].join('');
+    return [baseUrl, searchString ? `?${searchString}` : ""].join("");
   };
 
   routeBuilder.parse = function parse(args: z.input<Params>): z.output<Params> {
@@ -54,7 +54,7 @@ function makeRoute<Params extends z.ZodSchema, Search extends z.ZodSchema>(
       const routeName =
         Object.entries(Routes).find(
           ([, route]) => (route as unknown) === routeBuilder,
-        )?.[0] || '(unknown route)';
+        )?.[0] || "(unknown route)";
       throw new Error(
         `Invalid route params for route ${routeName}: ${res.error.message}`,
       );
@@ -68,7 +68,7 @@ function makeRoute<Params extends z.ZodSchema, Search extends z.ZodSchema>(
       const routeName =
         Object.entries(Routes).find(
           ([, route]) => (route as unknown) === routeBuilder,
-        )?.[0] || '(unknown route)';
+        )?.[0] || "(unknown route)";
       throw new Error(
         `Invalid route params for route ${routeName}: ${res.error.message}`,
       );
@@ -84,7 +84,7 @@ function makeRoute<Params extends z.ZodSchema, Search extends z.ZodSchema>(
       const routeName =
         Object.entries(Routes).find(
           ([, route]) => (route as unknown) === routeBuilder,
-        )?.[0] || '(unknown route)';
+        )?.[0] || "(unknown route)";
       throw new Error(
         `Invalid search params for route ${routeName}: ${res.error.message}`,
       );
@@ -95,10 +95,10 @@ function makeRoute<Params extends z.ZodSchema, Search extends z.ZodSchema>(
   // set the type
   routeBuilder.params = undefined as z.output<Params>;
   // set the runtime getter
-  Object.defineProperty(routeBuilder, 'params', {
+  Object.defineProperty(routeBuilder, "params", {
     get() {
       throw new Error(
-        'Routes.[route].params is only for type usage, not runtime. Use it like `typeof Routes.[routes].params`',
+        "Routes.[route].params is only for type usage, not runtime. Use it like `typeof Routes.[routes].params`",
       );
     },
   });

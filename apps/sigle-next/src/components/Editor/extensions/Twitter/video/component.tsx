@@ -1,5 +1,5 @@
-import type { NodeViewProps } from '@tiptap/core';
-import { getEmbedUrlFromYoutubeUrl } from './youtube';
+import type { NodeViewProps } from "@tiptap/core";
+import { getEmbedUrlFromYoutubeUrl } from "./youtube";
 
 export const VideoComponent = (props: NodeViewProps) => {
   let url = props.node.attrs.url;

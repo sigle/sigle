@@ -1,11 +1,11 @@
-import sharp from 'sharp';
-import { z } from 'zod';
-import { consola } from '~/lib/consola';
-import { generateBlurhashURI, resolveImageUrl } from '~/lib/images';
-import { defineJob } from '~/lib/jobs';
-import { prisma } from '~/lib/prisma';
+import sharp from "sharp";
+import { z } from "zod";
+import { consola } from "~/lib/consola";
+import { generateBlurhashURI, resolveImageUrl } from "~/lib/images";
+import { defineJob } from "~/lib/jobs";
+import { prisma } from "~/lib/prisma";
 
-export const generateImageBlurhashJob = defineJob('generate-image-blurhash')
+export const generateImageBlurhashJob = defineJob("generate-image-blurhash")
   .input(
     z.object({
       imageId: z.string(),
@@ -23,13 +23,13 @@ export const generateImageBlurhashJob = defineJob('generate-image-blurhash')
       },
     });
     if (!mediaImage) {
-      throw new Error('Image not found');
+      throw new Error("Image not found");
     }
 
     const mediaUrl = resolveImageUrl(mediaImage.id);
     const imageResponse = await fetch(mediaUrl);
     if (!imageResponse.ok) {
-      throw new Error('Failed to fetch image');
+      throw new Error("Failed to fetch image");
     }
     const imageBuffer = await imageResponse.arrayBuffer();
     const { width, height, size } = await sharp(
@@ -50,7 +50,7 @@ export const generateImageBlurhashJob = defineJob('generate-image-blurhash')
       },
     });
 
-    consola.debug('generate-image-blurhash', {
+    consola.debug("generate-image-blurhash", {
       imageId: job.data.imageId,
     });
   });

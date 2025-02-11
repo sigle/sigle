@@ -1,19 +1,19 @@
-import { env } from '@/env';
-import { prettifyUrl } from '@/lib/urls';
-import { resolveImageUrl } from '@/lib/images';
-import { AspectRatio, Card, Inset, Text, Tooltip } from '@radix-ui/themes';
-import { IconHelpCircle } from '@tabler/icons-react';
-import { useFormContext } from 'react-hook-form';
-import type { EditorPostFormData } from '../EditorFormProvider';
-import { useEditorStore } from '../store';
+import { env } from "@/env";
+import { prettifyUrl } from "@/lib/urls";
+import { resolveImageUrl } from "@/lib/images";
+import { AspectRatio, Card, Inset, Text, Tooltip } from "@radix-ui/themes";
+import { IconHelpCircle } from "@tabler/icons-react";
+import { useFormContext } from "react-hook-form";
+import type { EditorPostFormData } from "../EditorFormProvider";
+import { useEditorStore } from "../store";
 
 export const SeoPreview = () => {
   const editor = useEditorStore((state) => state.editor);
   const { watch } = useFormContext<EditorPostFormData>();
-  const watchTitle = watch('title');
-  const watchMetaTitle = watch('metaTitle');
-  const watchMetaDescription = watch('metaDescription');
-  const watchCoverImage = watch('coverImage');
+  const watchTitle = watch("title");
+  const watchMetaTitle = watch("metaTitle");
+  const watchMetaDescription = watch("metaDescription");
+  const watchCoverImage = watch("coverImage");
 
   const metaTitle = watchMetaTitle || watchTitle;
   const metaDescription =
@@ -43,10 +43,10 @@ export const SeoPreview = () => {
                 src={resolveImageUrl(metaImage)}
                 alt="Cover social media"
                 style={{
-                  objectFit: 'cover',
-                  width: '100%',
-                  height: '100%',
-                  backgroundColor: 'var(--gray-5)',
+                  objectFit: "cover",
+                  width: "100%",
+                  height: "100%",
+                  backgroundColor: "var(--gray-5)",
                 }}
               />
             </AspectRatio>
@@ -60,7 +60,7 @@ export const SeoPreview = () => {
           size="2"
           color="gray"
           className="truncate"
-          style={{ marginTop: '2px' }}
+          style={{ marginTop: "2px" }}
         >
           {metaDescription}
         </Text>

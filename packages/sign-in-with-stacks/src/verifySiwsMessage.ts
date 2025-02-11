@@ -1,22 +1,22 @@
-import { hashMessage, verifyMessageSignatureRsv } from '@stacks/encryption';
-import { STACKS_MAINNET } from '@stacks/network';
-import { bytesToHex } from '@stacks/common';
+import { hashMessage, verifyMessageSignatureRsv } from "@stacks/encryption";
+import { STACKS_MAINNET } from "@stacks/network";
+import { bytesToHex } from "@stacks/common";
 import {
   createMessageSignature,
   publicKeyFromSignatureRsv,
   publicKeyToAddress,
-} from '@stacks/transactions';
-import { parseSiwsMessage } from './parseSiwsMessage.js';
+} from "@stacks/transactions";
+import { parseSiwsMessage } from "./parseSiwsMessage.js";
 import {
   type ValidateSiwsMessageParameters,
   validateSiwsMessage,
-} from './validateSiwsMessage.js';
-import { Prettify } from './types.js';
+} from "./validateSiwsMessage.js";
+import { Prettify } from "./types.js";
 
 export type VerifySiwsMessageParameters = Prettify<
   Pick<
     ValidateSiwsMessageParameters,
-    'address' | 'domain' | 'nonce' | 'scheme' | 'time'
+    "address" | "domain" | "nonce" | "scheme" | "time"
   > & {
     /**
      * SIP-X formatted message.
@@ -72,7 +72,7 @@ export function verifySiwsMessage(
   );
   const stacksAddress = publicKeyToAddress(
     publicKey,
-    parsed.chainId === STACKS_MAINNET.chainId ? 'mainnet' : 'testnet',
+    parsed.chainId === STACKS_MAINNET.chainId ? "mainnet" : "testnet",
   );
 
   const isValidSignature = verifyMessageSignatureRsv({

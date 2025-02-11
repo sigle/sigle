@@ -1,22 +1,22 @@
-import { expect, test } from 'vitest';
-import { STACKS_TESTNET } from '@stacks/network';
-import { bytesToHex } from '@stacks/common';
-import { signMessageHashRsv } from '@stacks/transactions';
-import { hashMessage } from '@stacks/encryption';
-import { createSiwsMessage } from './createSiwsMessage.js';
-import { verifySiwsMessage } from './verifySiwsMessage.js';
-import { accounts } from '../test/constants.js';
+import { expect, test } from "vitest";
+import { STACKS_TESTNET } from "@stacks/network";
+import { bytesToHex } from "@stacks/common";
+import { signMessageHashRsv } from "@stacks/transactions";
+import { hashMessage } from "@stacks/encryption";
+import { createSiwsMessage } from "./createSiwsMessage.js";
+import { verifySiwsMessage } from "./verifySiwsMessage.js";
+import { accounts } from "../test/constants.js";
 
 const account = accounts[0];
 
-test('default', async () => {
+test("default", async () => {
   const message = createSiwsMessage({
     address: account.address,
     chainId: STACKS_TESTNET.chainId,
-    domain: 'example.com',
-    nonce: 'foobarbaz',
-    uri: 'https://example.com/path',
-    version: '1',
+    domain: "example.com",
+    nonce: "foobarbaz",
+    uri: "https://example.com/path",
+    version: "1",
   });
 
   const hash = hashMessage(message);
@@ -33,14 +33,14 @@ test('default', async () => {
   ).toBeTruthy();
 });
 
-test('behavior: invalid message fields', async () => {
+test("behavior: invalid message fields", async () => {
   const message = createSiwsMessage({
     address: account.address,
     chainId: STACKS_TESTNET.chainId,
-    domain: 'example.com',
-    nonce: 'foobarbaz',
-    uri: 'https://example.com/path',
-    version: '1',
+    domain: "example.com",
+    nonce: "foobarbaz",
+    uri: "https://example.com/path",
+    version: "1",
   });
 
   const hash = hashMessage(message);
@@ -51,21 +51,21 @@ test('behavior: invalid message fields', async () => {
 
   expect(
     verifySiwsMessage({
-      domain: 'viem.sh',
+      domain: "viem.sh",
       message,
       signature,
     }),
   ).toBeFalsy();
 });
 
-test('behavior: invalid address not matching signature', async () => {
+test("behavior: invalid address not matching signature", async () => {
   const message = createSiwsMessage({
-    address: 'SP2X0TZ59D5SZ8ACQ6YMCHHNR2ZN51Z32E2CJ173',
+    address: "SP2X0TZ59D5SZ8ACQ6YMCHHNR2ZN51Z32E2CJ173",
     chainId: STACKS_TESTNET.chainId,
-    domain: 'example.com',
-    nonce: 'foobarbaz',
-    uri: 'https://example.com/path',
-    version: '1',
+    domain: "example.com",
+    nonce: "foobarbaz",
+    uri: "https://example.com/path",
+    version: "1",
   });
 
   const hash = hashMessage(message);
@@ -82,8 +82,8 @@ test('behavior: invalid address not matching signature', async () => {
   ).toBeFalsy();
 });
 
-test('behavior: invalid message', async () => {
-  const message = 'foobarbaz';
+test("behavior: invalid message", async () => {
+  const message = "foobarbaz";
   const hash = hashMessage(message);
   const signature = signMessageHashRsv({
     messageHash: bytesToHex(hash),

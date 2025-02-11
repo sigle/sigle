@@ -1,16 +1,16 @@
-'use client';
+"use client";
 
-import { sigleApiClient } from '@/__generated__/sigle-api';
-import { FadeSlideBottom } from '@/components/ui';
+import { sigleApiClient } from "@/__generated__/sigle-api";
+import { FadeSlideBottom } from "@/components/ui";
 import {
   ProfileFeed,
   ProfileFeedSkeleton,
-} from '@/components/User/ProfileFeed';
-import { ProfileHeader } from '@/components/User/ProfileHeader';
-import { ProfileInfo } from '@/components/User/ProfileInfo';
-import { Container, Heading } from '@radix-ui/themes';
-import { notFound } from 'next/navigation';
-import { Suspense, use } from 'react';
+} from "@/components/User/ProfileFeed";
+import { ProfileHeader } from "@/components/User/ProfileHeader";
+import { ProfileInfo } from "@/components/User/ProfileInfo";
+import { Container, Heading } from "@radix-ui/themes";
+import { notFound } from "next/navigation";
+import { Suspense, use } from "react";
 
 type Props = {
   params: Promise<{ username: string }>;
@@ -20,8 +20,8 @@ export function UserClientPage(props: Props) {
   const params = use(props.params);
 
   const { data: user } = sigleApiClient.useSuspenseQuery(
-    'get',
-    '/api/users/{username}',
+    "get",
+    "/api/users/{username}",
     {
       params: {
         path: {

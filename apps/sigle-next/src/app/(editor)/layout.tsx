@@ -1,6 +1,6 @@
-'use client';
+"use client";
 
-import { AuthProtect } from '@/components/Auth/AuthProtect';
+import { AuthProtect } from "@/components/Auth/AuthProtect";
 
 export default function DashboardLayout({
   children,

@@ -1,4 +1,4 @@
-import { cn } from '@/lib/cn';
+import { cn } from "@/lib/cn";
 
 export const FadeSlideBottom = ({
   children,
@@ -9,7 +9,7 @@ export const FadeSlideBottom = ({
     <div
       {...props}
       className={cn(
-        'duration-500 animate-in fade-in slide-in-from-bottom-1',
+        "duration-500 animate-in fade-in slide-in-from-bottom-1",
         className,
       )}
     >

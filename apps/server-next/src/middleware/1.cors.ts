@@ -1,5 +1,5 @@
-import { corsEventHandler } from 'nitro-cors';
-import { env } from '~/env';
+import { corsEventHandler } from "nitro-cors";
+import { env } from "~/env";
 
 export default corsEventHandler((_event) => {}, {
   origin: (origin) => {
@@ -8,6 +8,6 @@ export default corsEventHandler((_event) => {}, {
     }
     return false;
   },
-  methods: '*',
+  methods: "*",
   credentials: true,
 });

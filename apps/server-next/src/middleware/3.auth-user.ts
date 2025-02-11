@@ -1,6 +1,6 @@
-import { getToken } from 'next-auth/jwt';
-import { env } from '~/env';
-import { prisma } from '~/lib/prisma';
+import { getToken } from "next-auth/jwt";
+import { env } from "~/env";
+import { prisma } from "~/lib/prisma";
 
 export interface AuthenticatedUser {
   id: string;
@@ -12,11 +12,11 @@ export interface AuthenticatedUser {
  */
 export default defineEventHandler(async (event) => {
   // Only apply middleware for /api/protected/** routes
-  if (!event.path.startsWith('/api/protected')) {
+  if (!event.path.startsWith("/api/protected")) {
     return;
   }
 
-  const useSecureCookies = env.APP_URL.startsWith('https://');
+  const useSecureCookies = env.APP_URL.startsWith("https://");
   const token = await getToken({
     req: event,
     secret: env.AUTH_SECRET,
@@ -26,7 +26,7 @@ export default defineEventHandler(async (event) => {
   if (!token || !token.address) {
     throw createError({
       status: 401,
-      message: 'Unauthorized',
+      message: "Unauthorized",
     });
   }
 
@@ -42,7 +42,7 @@ export default defineEventHandler(async (event) => {
   if (!user) {
     throw createError({
       status: 401,
-      message: 'Unauthorized',
+      message: "Unauthorized",
     });
   }
 

@@ -1,8 +1,8 @@
-import { Badge, Card, IconButton, Inset, Text } from '@radix-ui/themes';
-import { IconCards, IconPencil } from '@tabler/icons-react';
-import { useFormContext } from 'react-hook-form';
-import type { EditorPostFormData } from '../EditorFormProvider';
-import { useEditorStore } from '../store';
+import { Badge, Card, IconButton, Inset, Text } from "@radix-ui/themes";
+import { IconCards, IconPencil } from "@tabler/icons-react";
+import { useFormContext } from "react-hook-form";
+import type { EditorPostFormData } from "../EditorFormProvider";
+import { useEditorStore } from "../store";
 
 export const PublishReviewCollect = () => {
   const { getValues } = useFormContext<EditorPostFormData>();
@@ -11,14 +11,14 @@ export const PublishReviewCollect = () => {
   const data = getValues();
 
   const collectLimit =
-    data.collect.collectLimit.type === 'fixed' &&
+    data.collect.collectLimit.type === "fixed" &&
     data.collect.collectLimit.limit
       ? data.collect.collectLimit.limit
       : undefined;
 
   const openCollectSettings = () => {
     setPublishOpen(false);
-    setMenuOpen('collect');
+    setMenuOpen("collect");
   };
 
   return (
@@ -51,13 +51,13 @@ export const PublishReviewCollect = () => {
           <Text size="2">
             {collectLimit ? (
               <>
-                Limited edition{' '}
+                Limited edition{" "}
                 <Badge color="gray" highContrast>
                   {collectLimit}
                 </Badge>
               </>
             ) : (
-              'Open edition'
+              "Open edition"
             )}
           </Text>
         </div>
@@ -66,8 +66,8 @@ export const PublishReviewCollect = () => {
             Price
           </Text>
           <Text size="2">
-            {data.collect.collectPrice.type === 'free'
-              ? 'Free'
+            {data.collect.collectPrice.type === "free"
+              ? "Free"
               : `${data.collect.collectPrice.price} STX`}
           </Text>
         </div>

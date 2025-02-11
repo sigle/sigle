@@ -1,19 +1,19 @@
-import { Node, nodePasteRule } from '@tiptap/core';
-import { ReactNodeViewRenderer } from '@tiptap/react';
-import { EmbedComponent, globalPasteRegex, isValidUrl } from './component';
+import { Node, nodePasteRule } from "@tiptap/core";
+import { ReactNodeViewRenderer } from "@tiptap/react";
+import { EmbedComponent, globalPasteRegex, isValidUrl } from "./component";
 
-declare module '@tiptap/core' {
+declare module "@tiptap/core" {
   interface Commands<ReturnType> {
     embed: {
-      setEmbed: (type: 'twitter' | 'video') => ReturnType;
+      setEmbed: (type: "twitter" | "video") => ReturnType;
     };
   }
 }
 
 const Embed = Node.create({
-  name: 'embed',
+  name: "embed",
 
-  group: 'block',
+  group: "block",
 
   selectable: true,
 
@@ -32,7 +32,7 @@ const Embed = Node.create({
       },
       pasted: false,
       embedType: {
-        default: 'twitter',
+        default: "twitter",
       },
     };
   },
@@ -40,7 +40,7 @@ const Embed = Node.create({
   addCommands() {
     return {
       setEmbed:
-        (type: 'twitter' | 'video') =>
+        (type: "twitter" | "video") =>
         ({ commands }) => {
           commands.insertContent({
             type: this.name,
@@ -75,12 +75,12 @@ const Embed = Node.create({
   parseHTML() {
     return [
       {
-        tag: 'div[data-embed]',
+        tag: "div[data-embed]",
         getAttrs: (element) => {
-          const url = (element as HTMLElement).getAttribute('data-embed');
+          const url = (element as HTMLElement).getAttribute("data-embed");
           const embedType =
-            (element as HTMLElement).getAttribute('data-embed-type') ||
-            'twitter';
+            (element as HTMLElement).getAttribute("data-embed-type") ||
+            "twitter";
           return { url, embedType };
         },
       },
@@ -90,14 +90,14 @@ const Embed = Node.create({
   renderHTML({ HTMLAttributes }) {
     if (!HTMLAttributes.url) {
       // temporary solution as we cannot currently return null
-      return ['span'];
+      return ["span"];
     }
 
     return [
-      'div',
+      "div",
       {
-        'data-embed': HTMLAttributes.url,
-        'data-embed-type': HTMLAttributes.embedType,
+        "data-embed": HTMLAttributes.url,
+        "data-embed-type": HTMLAttributes.embedType,
       },
     ];
   },
@@ -122,22 +122,22 @@ const Embed = Node.create({
                 // token +2 needs to be a paragraph_close
                 // Then we remove the paragraph and inlines and replace it with a html_block
                 if (
-                  state.tokens[i].type === 'paragraph_open' &&
+                  state.tokens[i].type === "paragraph_open" &&
                   state.tokens[i + 1] &&
-                  state.tokens[i + 1].type === 'inline' &&
+                  state.tokens[i + 1].type === "inline" &&
                   state.tokens[i + 2] &&
-                  state.tokens[i + 2].type === 'paragraph_close'
+                  state.tokens[i + 2].type === "paragraph_close"
                 ) {
                   const inlineTokens = state.tokens[i + 1].children;
                   if (
                     inlineTokens.length === 3 &&
-                    inlineTokens[0].type === 'link_open' &&
-                    inlineTokens[1].type === 'text' &&
-                    inlineTokens[2].type === 'link_close' &&
+                    inlineTokens[0].type === "link_open" &&
+                    inlineTokens[1].type === "text" &&
+                    inlineTokens[2].type === "link_close" &&
                     isValidUrl(inlineTokens[1].content)
                   ) {
-                    const url = inlineTokens[0].attrGet('href');
-                    const token = new state.Token('html_block', '', 0);
+                    const url = inlineTokens[0].attrGet("href");
+                    const token = new state.Token("html_block", "", 0);
                     token.content = `<div data-embed="${url}"></div>`;
                     // remove the paragraph and inlines and replace it with a html_block
                     state.tokens.splice(i, 3, token);
@@ -148,7 +148,7 @@ const Embed = Node.create({
 
             // biome-ignore lint/suspicious/noExplicitAny: <explanation>
             const parser = (md: any) => {
-              md.core.ruler.push('twitter_transformer', twitterTransformer);
+              md.core.ruler.push("twitter_transformer", twitterTransformer);
             };
 
             markdownit.use(parser);

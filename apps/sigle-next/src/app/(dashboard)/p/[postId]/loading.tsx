@@ -1,4 +1,4 @@
-import { Container, Heading, Skeleton, Text } from '@radix-ui/themes';
+import { Container, Heading, Skeleton, Text } from "@radix-ui/themes";
 
 export const PagePostSkeleton = () => {
   return (

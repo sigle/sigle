@@ -1,12 +1,12 @@
-'use client';
+"use client";
 
-import { sigleApiClient } from '@/__generated__/sigle-api';
-import { AuthProtect } from '@/components/Auth/AuthProtect';
-import { NextLink } from '@/components/Shared/NextLink';
-import { getExplorerTransactionUrl } from '@/lib/stacks';
-import { Container, Spinner, Text, Link, Button } from '@radix-ui/themes';
-import { useRouter } from 'next/navigation';
-import { use, useEffect } from 'react';
+import { sigleApiClient } from "@/__generated__/sigle-api";
+import { AuthProtect } from "@/components/Auth/AuthProtect";
+import { NextLink } from "@/components/Shared/NextLink";
+import { getExplorerTransactionUrl } from "@/lib/stacks";
+import { Container, Spinner, Text, Link, Button } from "@radix-ui/themes";
+import { useRouter } from "next/navigation";
+import { use, useEffect } from "react";
 
 type PostDeployPendingProps = {
   params: Promise<{ postId: string }>;
@@ -21,8 +21,8 @@ export default function PostDeployPending(props: PostDeployPendingProps) {
     isLoading: isPostLoading,
     error,
   } = sigleApiClient.useQuery(
-    'get',
-    '/api/protected/drafts/{draftId}',
+    "get",
+    "/api/protected/drafts/{draftId}",
     {
       params: {
         path: {
@@ -47,7 +47,7 @@ export default function PostDeployPending(props: PostDeployPendingProps) {
   return (
     <AuthProtect>
       <Container px="4">
-        {post?.txId && post.txStatus === 'rejected' ? (
+        {post?.txId && post.txStatus === "rejected" ? (
           <div className="mx-auto flex max-w-sm flex-col items-center justify-center space-y-2 py-[200px]">
             <Text as="div" size="2" color="red">
               Something went wrong and your transaction was rejected.
@@ -61,7 +61,7 @@ export default function PostDeployPending(props: PostDeployPendingProps) {
             </Link>
           </div>
         ) : null}
-        {post?.txId && post.txStatus === 'pending' ? (
+        {post?.txId && post.txStatus === "pending" ? (
           <div className="mx-auto flex max-w-sm flex-col items-center justify-center space-y-2 py-[200px]">
             <div className="mb-2">
               <Spinner />

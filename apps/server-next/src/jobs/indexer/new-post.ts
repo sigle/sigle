@@ -1,17 +1,17 @@
-import { MAX_UINT, PostMetadataSchema } from '@sigle/sdk';
-import { z } from 'zod';
-import { env } from '~/env';
+import { MAX_UINT, PostMetadataSchema } from "@sigle/sdk";
+import { z } from "zod";
+import { env } from "~/env";
 import {
   createChainhook,
   createPredicate,
   getChainhooks,
   preparePredicate,
-} from '~/lib/chainhook';
-import { consola } from '~/lib/consola';
-import { defineJob } from '~/lib/jobs';
-import { siglePublicationPrintPredicate } from '~/lib/predicates';
-import { prisma } from '~/lib/prisma';
-import { generateImageBlurhashJob } from '../generate-image-blurhash';
+} from "~/lib/chainhook";
+import { consola } from "~/lib/consola";
+import { defineJob } from "~/lib/jobs";
+import { siglePublicationPrintPredicate } from "~/lib/predicates";
+import { prisma } from "~/lib/prisma";
+import { generateImageBlurhashJob } from "../generate-image-blurhash";
 
 function extractBaseTokenUri(contractString: string): string | null {
   const regex =
@@ -26,7 +26,7 @@ function extractMaxSupply(contractString: string): bigint | null {
   return match ? BigInt(match[1]) : null;
 }
 
-export const indexerNewPostJob = defineJob('indexer-new-post')
+export const indexerNewPostJob = defineJob("indexer-new-post")
   .input(
     z.object({
       address: z.string(),
@@ -45,7 +45,7 @@ export const indexerNewPostJob = defineJob('indexer-new-post')
   })
   .work(async ([job]) => {
     const baseTokenUri = extractBaseTokenUri(job.data.contract);
-    if (!baseTokenUri || !baseTokenUri.startsWith('ar://')) {
+    if (!baseTokenUri || !baseTokenUri.startsWith("ar://")) {
       throw new Error(`Invalid baseTokenUri: ${baseTokenUri}`);
     }
 
@@ -56,7 +56,7 @@ export const indexerNewPostJob = defineJob('indexer-new-post')
     const openEdition = maxSupply === BigInt(MAX_UINT);
 
     // Fetch data from Arweave
-    const arweaveTxId = baseTokenUri.replace('ar://', '');
+    const arweaveTxId = baseTokenUri.replace("ar://", "");
     const data = await fetch(`https://arweave.net/${arweaveTxId}`);
     const json = await data.json();
 
@@ -71,13 +71,13 @@ export const indexerNewPostJob = defineJob('indexer-new-post')
     // TODO add user Stacks address in the arweave tags?
 
     const metaTitle = postData.content.attributes?.find(
-      (attribute) => attribute.key === 'meta-title',
+      (attribute) => attribute.key === "meta-title",
     )?.value;
     const metaDescription = postData.content.attributes?.find(
-      (attribute) => attribute.key === 'meta-description',
+      (attribute) => attribute.key === "meta-description",
     )?.value;
     const excerpt = postData.content.attributes?.find(
-      (attribute) => attribute.key === 'excerpt',
+      (attribute) => attribute.key === "excerpt",
     )?.value;
 
     await prisma.$transaction(async (tx) => {
@@ -204,7 +204,7 @@ export const indexerNewPostJob = defineJob('indexer-new-post')
       consola.debug(`new-post: Registered chainhook ${response.chainhookUuid}`);
     }
 
-    consola.debug('New post indexed', {
+    consola.debug("New post indexed", {
       id: postData.content.id,
       txId: job.data.txId,
       address: job.data.address,

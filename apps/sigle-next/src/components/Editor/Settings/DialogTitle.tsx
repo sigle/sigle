@@ -1,6 +1,6 @@
-import { Dialog, Flex, IconButton, VisuallyHidden } from '@radix-ui/themes';
-import { IconChevronLeft, IconX } from '@tabler/icons-react';
-import { useEditorStore } from '../store';
+import { Dialog, Flex, IconButton, VisuallyHidden } from "@radix-ui/themes";
+import { IconChevronLeft, IconX } from "@tabler/icons-react";
+import { useEditorStore } from "../store";
 
 interface DialogTitleProps {
   title: string;

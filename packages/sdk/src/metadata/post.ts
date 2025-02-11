@@ -1,10 +1,10 @@
-import { z } from 'zod';
-import { evaluate } from './utils.js';
+import { z } from "zod";
+import { evaluate } from "./utils.js";
 import {
   MarketplaceMetadataSchema,
   type MarketplaceMetadata,
-} from './marketplace.js';
-import { MediaImageMetadataSchema, type MediaImageMetadata } from './media.js';
+} from "./marketplace.js";
+import { MediaImageMetadataSchema, type MediaImageMetadata } from "./media.js";
 
 export interface MetadataAttribute {
   value: string;

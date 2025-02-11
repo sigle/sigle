@@ -1,5 +1,5 @@
-import { createEnv } from '@t3-oss/env-core';
-import { z } from 'zod';
+import { createEnv } from "@t3-oss/env-core";
+import { z } from "zod";
 
 export const env = createEnv({
   emptyStringAsUndefined: true,
@@ -7,9 +7,9 @@ export const env = createEnv({
   runtimeEnv: import.meta.env,
 
   server: {
-    NODE_ENV: z.enum(['production', 'development']),
-    STACKS_ENV: z.enum(['mainnet', 'testnet']),
-    SIGLE_ENV: z.enum(['production', 'staging', 'local']),
+    NODE_ENV: z.enum(["production", "development"]),
+    STACKS_ENV: z.enum(["mainnet", "testnet"]),
+    SIGLE_ENV: z.enum(["production", "staging", "local"]),
     APP_ID: z.string(),
     // The URL to the Postgres database
     DATABASE_URL: z.string().url(),
@@ -35,6 +35,6 @@ export const env = createEnv({
     FILEBASE_ACCESS_KEY: z.string(),
     FILEBASE_SECRET_KEY: z.string(),
     FILEBASE_BUCKET: z.string(),
-    IPFS_GATEWAY_URL: z.string().url().optional().default('https://ipfs.io'),
+    IPFS_GATEWAY_URL: z.string().url().optional().default("https://ipfs.io"),
   },
 });

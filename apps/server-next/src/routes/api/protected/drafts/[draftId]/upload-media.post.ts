@@ -1,65 +1,65 @@
-import { createId } from '@paralleldrive/cuid2';
-import { z } from 'zod';
-import { env } from '~/env';
-import { generateCID } from '~/lib/arweave';
-import { ipfsUploadFile } from '~/lib/filebase';
+import { createId } from "@paralleldrive/cuid2";
+import { z } from "zod";
+import { env } from "~/env";
+import { generateCID } from "~/lib/arweave";
+import { ipfsUploadFile } from "~/lib/filebase";
 import {
   allowedFormats,
   mimeTypeToExtension,
   optimizeImage,
-} from '~/lib/images';
-import { readMultipartFormDataSafe } from '~/lib/nitro';
-import { prisma } from '~/lib/prisma';
+} from "~/lib/images";
+import { readMultipartFormDataSafe } from "~/lib/nitro";
+import { prisma } from "~/lib/prisma";
 
 defineRouteMeta({
   openAPI: {
-    tags: ['drafts'],
-    description: 'Upload draft media.',
+    tags: ["drafts"],
+    description: "Upload draft media.",
     requestBody: {
       required: true,
       content: {
-        'multipart/form-data': {
+        "multipart/form-data": {
           schema: {
-            type: 'object',
+            type: "object",
             properties: {
               file: {
-                type: 'string',
-                format: 'binary',
-                description: 'Profile media',
+                type: "string",
+                format: "binary",
+                description: "Profile media",
               },
             },
-            required: ['file'],
+            required: ["file"],
           },
         },
       },
     },
     responses: {
       200: {
-        description: 'Media uploaded',
+        description: "Media uploaded",
         content: {
-          'application/json': {
+          "application/json": {
             schema: {
-              type: 'object',
-              required: ['cid', 'url', 'gatewayUrl'],
+              type: "object",
+              required: ["cid", "url", "gatewayUrl"],
               properties: {
-                cid: { type: 'string' },
-                url: { type: 'string' },
-                gatewayUrl: { type: 'string' },
+                cid: { type: "string" },
+                url: { type: "string" },
+                gatewayUrl: { type: "string" },
               },
             },
           },
         },
       },
       400: {
-        description: 'Bad request',
+        description: "Bad request",
         content: {
-          'application/json': {
+          "application/json": {
             schema: {
-              type: 'object',
-              required: ['message'],
+              type: "object",
+              required: ["message"],
               properties: {
                 message: {
-                  type: 'string',
+                  type: "string",
                 },
               },
             },
@@ -78,14 +78,14 @@ const fileSchema = z.object({
 
 export default defineEventHandler(async (event) => {
   // TODO rate limit route 10 / minute / user
-  const draftId = getRouterParam(event, 'draftId');
-  const formData = await readMultipartFormDataSafe(event, '5mb');
+  const draftId = getRouterParam(event, "draftId");
+  const formData = await readMultipartFormDataSafe(event, "5mb");
 
-  const file = formData?.find((f) => f.name === 'file');
+  const file = formData?.find((f) => f.name === "file");
   if (!file) {
     throw createError({
       status: 400,
-      message: 'No file provided',
+      message: "No file provided",
     });
   }
 
@@ -93,7 +93,7 @@ export default defineEventHandler(async (event) => {
   if (!parsedFile.success) {
     throw createError({
       status: 400,
-      message: 'Invalid file',
+      message: "Invalid file",
     });
   }
 
@@ -109,7 +109,7 @@ export default defineEventHandler(async (event) => {
   if (!draft) {
     throw createError({
       status: 404,
-      message: 'Draft not found.',
+      message: "Draft not found.",
     });
   }
 
@@ -132,7 +132,7 @@ export default defineEventHandler(async (event) => {
 
   event.context.$posthog.capture({
     distinctId: event.context.user.id,
-    event: 'draft media uploaded',
+    event: "draft media uploaded",
     properties: {
       draftId,
       cid,

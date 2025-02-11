@@ -1,12 +1,12 @@
-import { sigleApiClient } from '@/__generated__/sigle-api';
-import { cn } from '@/lib/cn';
-import { resolveImageUrl } from '@/lib/images';
-import { Avatar, Spinner, Text } from '@radix-ui/themes';
-import { IconPencil } from '@tabler/icons-react';
-import { usePostHog } from 'posthog-js/react';
-import { useCallback } from 'react';
-import { useDropzone } from 'react-dropzone';
-import { toast } from 'sonner';
+import { sigleApiClient } from "@/__generated__/sigle-api";
+import { cn } from "@/lib/cn";
+import { resolveImageUrl } from "@/lib/images";
+import { Avatar, Spinner, Text } from "@radix-ui/themes";
+import { IconPencil } from "@tabler/icons-react";
+import { usePostHog } from "posthog-js/react";
+import { useCallback } from "react";
+import { useDropzone } from "react-dropzone";
+import { toast } from "sonner";
 
 interface UploadProfilePictureProps {
   picture?: string;
@@ -20,8 +20,8 @@ export const UploadProfilePicture = ({
   const posthog = usePostHog();
   const { mutate: uploadImage, isPending: loadingUploadImage } =
     sigleApiClient.useMutation(
-      'post',
-      '/api/protected/user/profile/upload-avatar',
+      "post",
+      "/api/protected/user/profile/upload-avatar",
     );
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
@@ -29,10 +29,10 @@ export const UploadProfilePicture = ({
     const file = acceptedFiles[0];
     if (!file) return;
     if (loadingUploadImage) return;
-    posthog.capture('profile_image_upload_start', {});
+    posthog.capture("profile_image_upload_start", {});
 
     const formData = new FormData();
-    formData.append('file', file);
+    formData.append("file", file);
     uploadImage(
       {
         // biome-ignore lint/suspicious/noExplicitAny: <explanation>
@@ -41,10 +41,10 @@ export const UploadProfilePicture = ({
       {
         onSuccess: (data) => {
           setPicture(data.url);
-          posthog.capture('profile_image_upload_success', {});
+          posthog.capture("profile_image_upload_success", {});
         },
         onError: (error: any) => {
-          posthog.capture('profile_image_upload_error', {});
+          posthog.capture("profile_image_upload_error", {});
           toast.error(error.message);
         },
       },
@@ -55,8 +55,8 @@ export const UploadProfilePicture = ({
   const { getRootProps, getInputProps } = useDropzone({
     onDrop,
     accept: {
-      'image/jpeg': [],
-      'image/png': [],
+      "image/jpeg": [],
+      "image/png": [],
     },
   });
 
@@ -77,8 +77,8 @@ export const UploadProfilePicture = ({
             alt="Profile image"
             size="9"
             color="gray"
-            className={cn('rounded-2 border border-gray-6', {
-              'opacity-25': loadingUploadImage,
+            className={cn("rounded-2 border border-gray-6", {
+              "opacity-25": loadingUploadImage,
             })}
           />
           {loadingUploadImage ? (

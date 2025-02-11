@@ -1,179 +1,179 @@
-import { z } from 'zod';
-import { getValidatedQueryZod } from '~/lib/nitro';
-import { prisma, SELECT_PUBLIC_USER_FIELDS } from '~/lib/prisma';
+import { z } from "zod";
+import { getValidatedQueryZod } from "~/lib/nitro";
+import { prisma, SELECT_PUBLIC_USER_FIELDS } from "~/lib/prisma";
 
 defineRouteMeta({
   openAPI: {
-    tags: ['posts'],
-    description: 'Get posts list.',
+    tags: ["posts"],
+    description: "Get posts list.",
     parameters: [
       {
-        in: 'query',
-        name: 'limit',
+        in: "query",
+        name: "limit",
         schema: {
-          type: 'integer',
+          type: "integer",
           minimum: 1,
           maximum: 100,
         },
-        description: 'Limit the number of posts returned.',
+        description: "Limit the number of posts returned.",
       },
       {
-        in: 'query',
-        name: 'username',
+        in: "query",
+        name: "username",
         schema: {
-          type: 'string',
+          type: "string",
         },
-        description: 'The address of the user to get posts for.',
+        description: "The address of the user to get posts for.",
       },
     ],
     responses: {
       200: {
-        description: 'Posts list.',
+        description: "Posts list.",
         content: {
-          'application/json': {
+          "application/json": {
             schema: {
-              type: 'array',
+              type: "array",
               items: {
-                type: 'object',
+                type: "object",
                 required: [
-                  'id',
-                  'address',
-                  'title',
-                  'maxSupply',
-                  'collected',
-                  'openEdition',
-                  'price',
-                  'metadataUri',
-                  'createdAt',
-                  'updatedAt',
-                  'user',
+                  "id",
+                  "address",
+                  "title",
+                  "maxSupply",
+                  "collected",
+                  "openEdition",
+                  "price",
+                  "metadataUri",
+                  "createdAt",
+                  "updatedAt",
+                  "user",
                 ],
                 properties: {
                   id: {
-                    type: 'string',
+                    type: "string",
                   },
                   address: {
-                    type: 'string',
+                    type: "string",
                   },
                   title: {
-                    type: 'string',
+                    type: "string",
                   },
                   content: {
-                    type: 'string',
+                    type: "string",
                   },
                   metaTitle: {
-                    type: 'string',
+                    type: "string",
                   },
                   metaDescription: {
-                    type: 'string',
+                    type: "string",
                   },
                   excerpt: {
-                    type: 'string',
+                    type: "string",
                   },
                   coverImage: {
-                    type: 'object',
-                    required: ['id'],
+                    type: "object",
+                    required: ["id"],
                     properties: {
                       id: {
-                        type: 'string',
+                        type: "string",
                       },
                       width: {
-                        type: 'number',
+                        type: "number",
                       },
                       height: {
-                        type: 'number',
+                        type: "number",
                       },
                       blurhash: {
-                        type: 'string',
+                        type: "string",
                       },
                     },
                   },
                   maxSupply: {
-                    type: 'number',
+                    type: "number",
                   },
                   collected: {
-                    type: 'number',
+                    type: "number",
                   },
                   openEdition: {
-                    type: 'boolean',
+                    type: "boolean",
                   },
                   price: {
-                    type: 'string',
+                    type: "string",
                   },
                   metadataUri: {
-                    type: 'string',
+                    type: "string",
                   },
                   createdAt: {
-                    type: 'string',
+                    type: "string",
                   },
                   updatedAt: {
-                    type: 'string',
+                    type: "string",
                   },
                   user: {
-                    type: 'object',
-                    required: ['id', 'createdAt', 'updatedAt'],
+                    type: "object",
+                    required: ["id", "createdAt", "updatedAt"],
                     properties: {
                       id: {
-                        type: 'string',
+                        type: "string",
                       },
                       createdAt: {
-                        type: 'string',
+                        type: "string",
                       },
                       updatedAt: {
-                        type: 'string',
+                        type: "string",
                       },
                       profile: {
-                        type: 'object',
-                        required: ['id'],
+                        type: "object",
+                        required: ["id"],
                         properties: {
                           id: {
-                            type: 'string',
+                            type: "string",
                           },
                           displayName: {
-                            type: 'string',
+                            type: "string",
                           },
                           description: {
-                            type: 'string',
+                            type: "string",
                           },
                           website: {
-                            type: 'string',
+                            type: "string",
                           },
                           twitter: {
-                            type: 'string',
+                            type: "string",
                           },
                           pictureUri: {
-                            type: 'object',
-                            required: ['id'],
+                            type: "object",
+                            required: ["id"],
                             properties: {
                               id: {
-                                type: 'string',
+                                type: "string",
                               },
                               width: {
-                                type: 'number',
+                                type: "number",
                               },
                               height: {
-                                type: 'number',
+                                type: "number",
                               },
                               blurhash: {
-                                type: 'string',
+                                type: "string",
                               },
                             },
                           },
                           coverPictureUri: {
-                            type: 'object',
-                            required: ['id'],
+                            type: "object",
+                            required: ["id"],
                             properties: {
                               id: {
-                                type: 'string',
+                                type: "string",
                               },
                               width: {
-                                type: 'number',
+                                type: "number",
                               },
                               height: {
-                                type: 'number',
+                                type: "number",
                               },
                               blurhash: {
-                                type: 'string',
+                                type: "string",
                               },
                             },
                           },
@@ -225,7 +225,7 @@ export default defineEventHandler(async (event) => {
       userId: query.username,
     },
     orderBy: {
-      createdAt: 'desc',
+      createdAt: "desc",
     },
     take: query.limit,
   });

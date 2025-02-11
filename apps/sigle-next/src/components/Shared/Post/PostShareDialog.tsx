@@ -1,6 +1,6 @@
-import type { paths } from '@/__generated__/sigle-api/openapi';
-import { env } from '@/env';
-import { Routes } from '@/lib/routes';
+import type { paths } from "@/__generated__/sigle-api/openapi";
+import { env } from "@/env";
+import { Routes } from "@/lib/routes";
 import {
   Button,
   Callout,
@@ -9,16 +9,16 @@ import {
   Link,
   TextField,
   VisuallyHidden,
-} from '@radix-ui/themes';
-import { IconReceiptTax } from '@tabler/icons-react';
-import { useSession } from 'next-auth/react';
-import Image from 'next/image';
-import { useState } from 'react';
+} from "@radix-ui/themes";
+import { IconReceiptTax } from "@tabler/icons-react";
+import { useSession } from "next-auth/react";
+import Image from "next/image";
+import { useState } from "react";
 
 interface PublicationShareDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  post: paths['/api/posts/list']['get']['responses']['200']['content']['application/json'][0];
+  post: paths["/api/posts/list"]["get"]["responses"]["200"]["content"]["application/json"][0];
 }
 
 export const PostShareDialog = ({
@@ -66,7 +66,7 @@ export const PostShareDialog = ({
             </Callout.Icon>
             <Callout.Text>
               Earn referrer rewards for each primary sale made through your
-              link.{' '}
+              link.{" "}
               <Link
                 href="https://sigle-docs-next.vercel.app/monetization#fee-structure"
                 target="_blank"
@@ -145,7 +145,7 @@ export const PostShareDialog = ({
               disabled={isCopied}
               onClick={onCopy}
             >
-              {isCopied ? 'Copied' : 'Copy'}
+              {isCopied ? "Copied" : "Copy"}
             </Button>
           </div>
         </div>

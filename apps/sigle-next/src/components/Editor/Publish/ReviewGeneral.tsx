@@ -1,8 +1,8 @@
-import { Badge, Card, Inset, Text, Tooltip } from '@radix-ui/themes';
-import { IconInfoCircle, IconPencil } from '@tabler/icons-react';
-import { useFormContext } from 'react-hook-form';
-import type { EditorPostFormData } from '../EditorFormProvider';
-import { useEditorStore } from '../store';
+import { Badge, Card, Inset, Text, Tooltip } from "@radix-ui/themes";
+import { IconInfoCircle, IconPencil } from "@tabler/icons-react";
+import { useFormContext } from "react-hook-form";
+import type { EditorPostFormData } from "../EditorFormProvider";
+import { useEditorStore } from "../store";
 
 export const PublishReviewGeneral = () => {
   const { getValues } = useFormContext<EditorPostFormData>();
@@ -14,7 +14,7 @@ export const PublishReviewGeneral = () => {
 
   const openMetaSettings = () => {
     setPublishOpen(false);
-    setMenuOpen('meta');
+    setMenuOpen("meta");
   };
 
   return (

@@ -1,17 +1,17 @@
-'use client';
+"use client";
 
-import { useStacksLogin } from '@/hooks/useStacksLogin';
-import { LogoImage } from '@/images/Logo';
-import { Button, IconButton } from '@radix-ui/themes';
-import { useTheme } from 'next-themes';
-import { usePostHog } from 'posthog-js/react';
-import { IconSun, IconMoon } from '@tabler/icons-react';
-import { useIsClient } from '@/hooks/useIsClient';
-import { useSession } from 'next-auth/react';
-import { UserDropdown } from './UserDropdown';
-import { Suspense, useLayoutEffect } from 'react';
-import { NextLink } from '../Shared/NextLink';
-import { usePathname } from 'next/navigation';
+import { useStacksLogin } from "@/hooks/useStacksLogin";
+import { LogoImage } from "@/images/Logo";
+import { Button, IconButton } from "@radix-ui/themes";
+import { useTheme } from "next-themes";
+import { usePostHog } from "posthog-js/react";
+import { IconSun, IconMoon } from "@tabler/icons-react";
+import { useIsClient } from "@/hooks/useIsClient";
+import { useSession } from "next-auth/react";
+import { UserDropdown } from "./UserDropdown";
+import { Suspense, useLayoutEffect } from "react";
+import { NextLink } from "../Shared/NextLink";
+import { usePathname } from "next/navigation";
 
 export const Header = () => {
   const posthog = usePostHog();
@@ -24,13 +24,13 @@ export const Header = () => {
   // Next.js has a problem with the scroll position when changing pages
   // https://github.com/vercel/next.js/issues/49427
   useLayoutEffect(() => {
-    document.documentElement.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+    document.documentElement.scrollTo({ top: 0, left: 0, behavior: "instant" });
   }, [pathname]);
 
   const onThemeChange = () => {
-    const newTheme = resolvedTheme === 'dark' ? 'light' : 'dark';
+    const newTheme = resolvedTheme === "dark" ? "light" : "dark";
     setTheme(newTheme);
-    posthog.capture('theme_change', { theme: newTheme });
+    posthog.capture("theme_change", { theme: newTheme });
   };
 
   return (
@@ -64,7 +64,7 @@ export const Header = () => {
             onClick={onThemeChange}
           >
             {/* To avoid hydratation issues we always render the sun icon on the server */}
-            {!isClient || resolvedTheme === 'light' ? (
+            {!isClient || resolvedTheme === "light" ? (
               <IconSun size={16} />
             ) : (
               <IconMoon size={16} />

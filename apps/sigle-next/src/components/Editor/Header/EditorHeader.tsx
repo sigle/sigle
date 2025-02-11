@@ -1,18 +1,18 @@
-'use client';
+"use client";
 
-import { cn } from '@/lib/cn';
-import { Flex, IconButton } from '@radix-ui/themes';
+import { cn } from "@/lib/cn";
+import { Flex, IconButton } from "@radix-ui/themes";
 import {
   IconArrowLeft,
   IconLayoutSidebarRightExpand,
-} from '@tabler/icons-react';
-import { useEffect, useState } from 'react';
-import { useFormContext } from 'react-hook-form';
-import type { EditorPostFormData } from '../EditorFormProvider';
-import { useEditorStore } from '../store';
-import { EditorPublish } from './EditorPublish';
-import { EditorSave } from './EditorSave';
-import { NextLink } from '@/components/Shared/NextLink';
+} from "@tabler/icons-react";
+import { useEffect, useState } from "react";
+import { useFormContext } from "react-hook-form";
+import type { EditorPostFormData } from "../EditorFormProvider";
+import { useEditorStore } from "../store";
+import { EditorPublish } from "./EditorPublish";
+import { EditorSave } from "./EditorSave";
+import { NextLink } from "@/components/Shared/NextLink";
 
 const headerIconSize = 20;
 
@@ -21,10 +21,10 @@ const headerIconSize = 20;
  */
 export const EditorHeader = () => {
   const { watch } = useFormContext<EditorPostFormData>();
-  const type = watch('type');
+  const type = watch("type");
   const menuOpen = useEditorStore((state) => state.menuOpen);
   const setMenuOpen = useEditorStore((state) => state.setMenuOpen);
-  const [scrollDirection, setScrollDirection] = useState<'down' | 'up' | null>(
+  const [scrollDirection, setScrollDirection] = useState<"down" | "up" | null>(
     null,
   );
 
@@ -33,7 +33,7 @@ export const EditorHeader = () => {
 
     const updateScrollDirection = () => {
       const scrollY = window.pageYOffset;
-      const direction = scrollY > lastScrollY ? 'down' : 'up';
+      const direction = scrollY > lastScrollY ? "down" : "up";
       if (
         direction !== scrollDirection &&
         (scrollY - lastScrollY > 10 || scrollY - lastScrollY < -10)
@@ -42,19 +42,19 @@ export const EditorHeader = () => {
       }
       lastScrollY = scrollY > 0 ? scrollY : 0;
     };
-    window.addEventListener('scroll', updateScrollDirection);
+    window.addEventListener("scroll", updateScrollDirection);
     return () => {
-      window.removeEventListener('scroll', updateScrollDirection);
+      window.removeEventListener("scroll", updateScrollDirection);
     };
   }, [scrollDirection]);
 
   return (
     <header
       className={cn(
-        'sticky z-10 flex h-[80px] items-center border-b border-gray-5 bg-gray-1 px-6 transition-all duration-500',
+        "sticky z-10 flex h-[80px] items-center border-b border-gray-5 bg-gray-1 px-6 transition-all duration-500",
         {
-          'top-0': scrollDirection === 'up',
-          '-top-[80px]': scrollDirection === 'down',
+          "top-0": scrollDirection === "up",
+          "-top-[80px]": scrollDirection === "down",
         },
       )}
     >
@@ -71,7 +71,7 @@ export const EditorHeader = () => {
               <IconArrowLeft size={headerIconSize} />
             </NextLink>
           </IconButton>
-          {type === 'draft' ? <EditorSave /> : null}
+          {type === "draft" ? <EditorSave /> : null}
         </Flex>
         <Flex align="center" gap="6">
           <EditorPublish />

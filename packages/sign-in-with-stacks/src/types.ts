@@ -71,5 +71,5 @@ export type SiwsMessage = {
   /**
    * The current version of the SIWS Message.
    */
-  version: '1';
+  version: "1";
 };

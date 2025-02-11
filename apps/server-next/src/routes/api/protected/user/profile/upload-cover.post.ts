@@ -1,47 +1,47 @@
-import { z } from 'zod';
-import { env } from '~/env';
-import { ipfsUploadFile } from '~/lib/filebase';
+import { z } from "zod";
+import { env } from "~/env";
+import { ipfsUploadFile } from "~/lib/filebase";
 import {
   allowedFormats,
   mimeTypeToExtension,
   optimizeImage,
-} from '~/lib/images';
-import { readMultipartFormDataSafe } from '~/lib/nitro';
+} from "~/lib/images";
+import { readMultipartFormDataSafe } from "~/lib/nitro";
 
 defineRouteMeta({
   openAPI: {
-    tags: ['users'],
-    description: 'Upload cover picture for a profile.',
+    tags: ["users"],
+    description: "Upload cover picture for a profile.",
     requestBody: {
       required: true,
       content: {
-        'multipart/form-data': {
+        "multipart/form-data": {
           schema: {
-            type: 'object',
+            type: "object",
             properties: {
               file: {
-                type: 'string',
-                format: 'binary',
-                description: 'Profile media',
+                type: "string",
+                format: "binary",
+                description: "Profile media",
               },
             },
-            required: ['file'],
+            required: ["file"],
           },
         },
       },
     },
     responses: {
       200: {
-        description: 'Cover uploaded',
+        description: "Cover uploaded",
         content: {
-          'application/json': {
+          "application/json": {
             schema: {
-              type: 'object',
-              required: ['cid', 'url', 'gatewayUrl'],
+              type: "object",
+              required: ["cid", "url", "gatewayUrl"],
               properties: {
-                cid: { type: 'string' },
-                url: { type: 'string' },
-                gatewayUrl: { type: 'string' },
+                cid: { type: "string" },
+                url: { type: "string" },
+                gatewayUrl: { type: "string" },
               },
             },
           },
@@ -59,13 +59,13 @@ const fileSchema = z.object({
 
 export default defineEventHandler(async (event) => {
   // TODO rate limit route 2 / minute / user
-  const formData = await readMultipartFormDataSafe(event, '5mb');
+  const formData = await readMultipartFormDataSafe(event, "5mb");
 
-  const file = formData?.find((f) => f.name === 'file');
+  const file = formData?.find((f) => f.name === "file");
   if (!file) {
     throw createError({
       status: 400,
-      message: 'No file provided',
+      message: "No file provided",
     });
   }
 
@@ -73,7 +73,7 @@ export default defineEventHandler(async (event) => {
   if (!parsedFile.success) {
     throw createError({
       status: 400,
-      message: 'Invalid file',
+      message: "Invalid file",
     });
   }
 
@@ -93,7 +93,7 @@ export default defineEventHandler(async (event) => {
 
   event.context.$posthog.capture({
     distinctId: event.context.user.id,
-    event: 'profile cover media uploaded',
+    event: "profile cover media uploaded",
     properties: {
       cid,
     },

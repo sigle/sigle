@@ -1,4 +1,4 @@
-import { Container, Heading, Text } from '@radix-ui/themes';
+import { Container, Heading, Text } from "@radix-ui/themes";
 
 export const HomeFeatures = () => {
   return (
@@ -18,7 +18,7 @@ export const HomeFeatures = () => {
             💰 Earn Bitcoin
           </Heading>
           <Text as="p" color="gray" size="3" className="text-balance">
-            Turn readers into collectors with direct{' '}
+            Turn readers into collectors with direct{" "}
             <Text weight="medium">sBTC</Text> payments to your wallet.
           </Text>
         </div>
@@ -27,7 +27,7 @@ export const HomeFeatures = () => {
             ⚡ Full Control
           </Heading>
           <Text as="p" color="gray" size="3" className="text-balance">
-            Your content, your rules. Build anything with our{' '}
+            Your content, your rules. Build anything with our{" "}
             <Text weight="medium">API, SDKs, and developer tools</Text>.
           </Text>
         </div>

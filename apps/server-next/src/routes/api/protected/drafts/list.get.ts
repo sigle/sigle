@@ -1,63 +1,63 @@
-import { z } from 'zod';
-import { getValidatedQueryZod } from '~/lib/nitro';
-import { prisma } from '~/lib/prisma';
+import { z } from "zod";
+import { getValidatedQueryZod } from "~/lib/nitro";
+import { prisma } from "~/lib/prisma";
 
 defineRouteMeta({
   openAPI: {
-    tags: ['drafts'],
-    description: 'Get drafts for the current profile.',
+    tags: ["drafts"],
+    description: "Get drafts for the current profile.",
     parameters: [
       {
-        in: 'query',
-        name: 'limit',
+        in: "query",
+        name: "limit",
         schema: {
-          type: 'integer',
+          type: "integer",
           minimum: 1,
           maximum: 100,
         },
-        description: 'Limit the number of drafts returned.',
+        description: "Limit the number of drafts returned.",
       },
     ],
     responses: {
       200: {
-        description: 'Drafts list.',
+        description: "Drafts list.",
         content: {
-          'application/json': {
+          "application/json": {
             schema: {
-              type: 'array',
+              type: "array",
               items: {
-                type: 'object',
-                required: ['id', 'title', 'createdAt', 'updatedAt'],
+                type: "object",
+                required: ["id", "title", "createdAt", "updatedAt"],
                 properties: {
                   id: {
-                    type: 'string',
+                    type: "string",
                   },
                   title: {
-                    type: 'string',
+                    type: "string",
                   },
                   content: {
-                    type: 'string',
+                    type: "string",
                   },
                   metaTitle: {
-                    type: 'string',
+                    type: "string",
                   },
                   metaDescription: {
-                    type: 'string',
+                    type: "string",
                   },
                   coverImage: {
-                    type: 'string',
+                    type: "string",
                   },
                   txId: {
-                    type: 'string',
+                    type: "string",
                   },
                   txStatus: {
-                    type: 'string',
+                    type: "string",
                   },
                   createdAt: {
-                    type: 'string',
+                    type: "string",
                   },
                   updatedAt: {
-                    type: 'string',
+                    type: "string",
                   },
                 },
               },
@@ -65,16 +65,16 @@ defineRouteMeta({
           },
         },
       },
-      '400': {
-        description: 'Bad request',
+      "400": {
+        description: "Bad request",
         content: {
-          'application/json': {
+          "application/json": {
             schema: {
-              type: 'object',
-              required: ['message'],
+              type: "object",
+              required: ["message"],
               properties: {
                 message: {
-                  type: 'string',
+                  type: "string",
                 },
               },
             },
@@ -109,7 +109,7 @@ export default defineEventHandler(async (event) => {
       userId: event.context.user.id,
     },
     orderBy: {
-      updatedAt: 'desc',
+      updatedAt: "desc",
     },
     take: query.limit,
   });

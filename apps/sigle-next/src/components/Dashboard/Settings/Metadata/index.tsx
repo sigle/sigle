@@ -1,23 +1,23 @@
-'use client';
+"use client";
 
-import { sigleApiClient } from '@/__generated__/sigle-api';
-import { Button, Card, Flex, Heading, Text } from '@radix-ui/themes';
-import { IconPencil } from '@tabler/icons-react';
-import { useSession } from 'next-auth/react';
-import { useState } from 'react';
-import { UpdateProfileMetadata } from './UpdateProfileMetadata';
-import { ProfileAvatar } from '@/components/Shared/Profile/ProfileAvatar';
+import { sigleApiClient } from "@/__generated__/sigle-api";
+import { Button, Card, Flex, Heading, Text } from "@radix-ui/themes";
+import { IconPencil } from "@tabler/icons-react";
+import { useSession } from "next-auth/react";
+import { useState } from "react";
+import { UpdateProfileMetadata } from "./UpdateProfileMetadata";
+import { ProfileAvatar } from "@/components/Shared/Profile/ProfileAvatar";
 
 export const SettingsProfileMetadata = () => {
   const [editingProfileMetadata, setEditingProfileMetadata] = useState(false);
   const { data: session } = useSession();
   const { data: user } = sigleApiClient.useSuspenseQuery(
-    'get',
-    '/api/users/{username}',
+    "get",
+    "/api/users/{username}",
     {
       params: {
         path: {
-          username: session?.user.id || '',
+          username: session?.user.id || "",
         },
       },
     },

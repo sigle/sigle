@@ -1,61 +1,61 @@
-import { z } from 'zod';
-import { readValidatedBodyZod } from '~/lib/nitro';
-import { prisma } from '~/lib/prisma';
+import { z } from "zod";
+import { readValidatedBodyZod } from "~/lib/nitro";
+import { prisma } from "~/lib/prisma";
 
 defineRouteMeta({
   openAPI: {
-    tags: ['drafts'],
-    description: 'Update the draft for the current profile.',
+    tags: ["drafts"],
+    description: "Update the draft for the current profile.",
     requestBody: {
       required: true,
       content: {
-        'application/json': {
+        "application/json": {
           schema: {
-            type: 'object',
-            required: ['title', 'content'],
+            type: "object",
+            required: ["title", "content"],
             properties: {
               title: {
-                type: 'string',
+                type: "string",
               },
               content: {
-                type: 'string',
+                type: "string",
               },
               metaTitle: {
-                type: 'string',
+                type: "string",
               },
               metaDescription: {
-                type: 'string',
+                type: "string",
               },
               coverImage: {
-                type: 'string',
+                type: "string",
               },
               collect: {
-                type: 'object',
-                required: ['collectPrice', 'collectLimit'],
+                type: "object",
+                required: ["collectPrice", "collectLimit"],
                 properties: {
                   collectPrice: {
-                    type: 'object',
-                    required: ['type', 'price'],
+                    type: "object",
+                    required: ["type", "price"],
                     properties: {
                       type: {
-                        type: 'string',
-                        enum: ['free', 'paid'],
+                        type: "string",
+                        enum: ["free", "paid"],
                       },
                       price: {
-                        type: 'number',
+                        type: "number",
                       },
                     },
                   },
                   collectLimit: {
-                    type: 'object',
-                    required: ['type', 'limit'],
+                    type: "object",
+                    required: ["type", "limit"],
                     properties: {
                       type: {
-                        type: 'string',
-                        enum: ['open', 'fixed'],
+                        type: "string",
+                        enum: ["open", "fixed"],
                       },
                       limit: {
-                        type: 'number',
+                        type: "number",
                       },
                     },
                   },
@@ -68,15 +68,15 @@ defineRouteMeta({
     },
     responses: {
       200: {
-        description: 'Draft updated.',
+        description: "Draft updated.",
         content: {
-          'application/json': {
+          "application/json": {
             schema: {
-              type: 'object',
-              required: ['id'],
+              type: "object",
+              required: ["id"],
               properties: {
                 id: {
-                  type: 'string',
+                  type: "string",
                 },
               },
             },
@@ -95,18 +95,18 @@ const updateDraftSchema = z.object({
   coverImage: z.string().optional(),
   collect: z.object({
     collectPrice: z.object({
-      type: z.enum(['free', 'paid'] as const),
+      type: z.enum(["free", "paid"] as const),
       price: z.coerce.number().min(0),
     }),
     collectLimit: z.object({
-      type: z.enum(['open', 'fixed'] as const),
+      type: z.enum(["open", "fixed"] as const),
       limit: z.coerce.number().int().min(1),
     }),
   }),
 });
 
 export default defineEventHandler(async (event) => {
-  const draftId = getRouterParam(event, 'draftId');
+  const draftId = getRouterParam(event, "draftId");
   const body = await readValidatedBodyZod(event, updateDraftSchema);
 
   const updatedDraft = await prisma.draft.update({

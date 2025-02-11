@@ -1,6 +1,6 @@
-import { z } from 'zod';
-import { readValidatedBodyZod } from '~/lib/nitro';
-import { prisma } from '~/lib/prisma';
+import { z } from "zod";
+import { readValidatedBodyZod } from "~/lib/nitro";
+import { prisma } from "~/lib/prisma";
 
 const syncUserSchema = z.object({
   address: z.string(),

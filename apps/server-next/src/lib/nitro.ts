@@ -1,6 +1,6 @@
-import type { H3Event, MultiPartData } from 'h3';
-import type { z } from 'zod';
-import { fromError } from 'zod-validation-error';
+import type { H3Event, MultiPartData } from "h3";
+import type { z } from "zod";
+import { fromError } from "zod-validation-error";
 
 export const getValidatedQueryZod = async <T, Event extends H3Event = H3Event>(
   event: Event,
@@ -12,7 +12,7 @@ export const getValidatedQueryZod = async <T, Event extends H3Event = H3Event>(
   if (!response.success) {
     throw createError({
       status: 400,
-      statusMessage: 'Validation Error',
+      statusMessage: "Validation Error",
       message: fromError(response.error).toString(),
       data: response.error,
     });
@@ -31,7 +31,7 @@ export const readValidatedBodyZod = async <T, Event extends H3Event = H3Event>(
   if (!response.success) {
     throw createError({
       status: 400,
-      statusMessage: 'Validation Error',
+      statusMessage: "Validation Error",
       message: fromError(response.error).toString(),
       data: response.error,
     });
@@ -41,8 +41,8 @@ export const readValidatedBodyZod = async <T, Event extends H3Event = H3Event>(
 };
 
 const possibleMaxSizes = {
-  '1mb': 1024 * 1024,
-  '5mb': 1024 * 1024 * 5,
+  "1mb": 1024 * 1024,
+  "5mb": 1024 * 1024 * 5,
 };
 
 export const readMultipartFormDataSafe = async (
@@ -53,9 +53,9 @@ export const readMultipartFormDataSafe = async (
   if (!maxSizeValue) {
     throw new Error(`Invalid maxSize: ${maxSize}`);
   }
-  setResponseHeader(event, 'max-content-length', maxSizeValue.toString());
+  setResponseHeader(event, "max-content-length", maxSizeValue.toString());
 
-  if (Number(getRequestHeader(event, 'content-length')) > maxSizeValue) {
+  if (Number(getRequestHeader(event, "content-length")) > maxSizeValue) {
     throw createError({
       status: 413,
       message: `File too large. Maximum size is ${maxSize}.`,

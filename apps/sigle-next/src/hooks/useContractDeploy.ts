@@ -1,10 +1,10 @@
-import { useCallback, useState } from 'react';
+import { useCallback, useState } from "react";
 import {
   openContractDeploy,
   ContractDeployOptions,
   FinishedTxData,
-} from '@stacks/connect';
-import { appDetails, stacksNetwork, userSession } from '@/lib/stacks';
+} from "@stacks/connect";
+import { appDetails, stacksNetwork, userSession } from "@/lib/stacks";
 
 interface UseContractDeployOptions {
   onSuccess?: (data: FinishedTxData) => void;
@@ -41,7 +41,7 @@ export function useContractDeploy(options: UseContractDeployOptions = {}) {
     async (
       parameters: Omit<
         ContractDeployOptions,
-        'network' | 'onFinish' | 'onCancel' | 'sponsored'
+        "network" | "onFinish" | "onCancel" | "sponsored"
       >,
     ) => {
       try {
@@ -77,7 +77,7 @@ export function useContractDeploy(options: UseContractDeployOptions = {}) {
         });
       } catch (error) {
         const errorMessage =
-          error instanceof Error ? error.message : 'Unknown error';
+          error instanceof Error ? error.message : "Unknown error";
         setState((prev) => ({
           ...prev,
           loading: false,

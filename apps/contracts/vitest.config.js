@@ -1,15 +1,15 @@
 /// <reference types="vitest" />
 
-import { defineConfig } from 'vite';
+import { defineConfig } from "vite";
 import {
   vitestSetupFilePath,
   getClarinetVitestsArgv,
-} from '@hirosystems/clarinet-sdk/vitest';
+} from "@hirosystems/clarinet-sdk/vitest";
 
 export default defineConfig({
   test: {
-    environment: 'clarinet',
-    pool: 'forks',
+    environment: "clarinet",
+    pool: "forks",
     poolOptions: {
       threads: { singleThread: true },
       forks: { singleFork: true },

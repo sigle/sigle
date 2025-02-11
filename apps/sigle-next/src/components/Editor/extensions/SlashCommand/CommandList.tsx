@@ -1,14 +1,14 @@
-import { cn } from '@/lib/cn';
-import { Flex, ScrollArea, Text } from '@radix-ui/themes';
-import type { Icon } from '@tabler/icons-react';
+import { cn } from "@/lib/cn";
+import { Flex, ScrollArea, Text } from "@radix-ui/themes";
+import type { Icon } from "@tabler/icons-react";
 import {
   forwardRef,
   useEffect,
   useImperativeHandle,
   useRef,
   useState,
-} from 'react';
-import type { SlashCommandsCommand } from './SlashCommands';
+} from "react";
+import type { SlashCommandsCommand } from "./SlashCommands";
 
 export interface CommandListRef {
   onKeyDown: (o: { event: KeyboardEvent }) => boolean;
@@ -31,17 +31,17 @@ export const CommandList = forwardRef<CommandListRef, CommandListProps>(
 
     useImperativeHandle(ref, () => ({
       onKeyDown: ({ event }) => {
-        if (event.key === 'ArrowUp') {
+        if (event.key === "ArrowUp") {
           setSelectedIndex((selectedIndex + items.length - 1) % items.length);
           return true;
         }
 
-        if (event.key === 'ArrowDown') {
+        if (event.key === "ArrowDown") {
           setSelectedIndex((selectedIndex + 1) % items.length);
           return true;
         }
 
-        if (event.key === 'Enter') {
+        if (event.key === "Enter") {
           selectItem(selectedIndex);
           return true;
         }
@@ -84,8 +84,8 @@ export const CommandList = forwardRef<CommandListRef, CommandListProps>(
       }
     };
 
-    const basicItems = items.filter((item) => item.section === 'basic');
-    const embedItems = items.filter((item) => item.section === 'embed');
+    const basicItems = items.filter((item) => item.section === "basic");
+    const embedItems = items.filter((item) => item.section === "embed");
 
     return (
       <ScrollArea
@@ -135,7 +135,7 @@ export const CommandList = forwardRef<CommandListRef, CommandListProps>(
   },
 );
 
-CommandList.displayName = 'CommandList';
+CommandList.displayName = "CommandList";
 
 const CommandListItem = ({
   index,
@@ -156,9 +156,9 @@ const CommandListItem = ({
     <div
       data-index={index}
       className={cn(
-        'flex w-full cursor-pointer items-center justify-between px-4 py-2',
+        "flex w-full cursor-pointer items-center justify-between px-4 py-2",
         {
-          'bg-gray-3': selectedIndex === index,
+          "bg-gray-3": selectedIndex === index,
         },
       )}
       onClick={() => selectItem(index)}

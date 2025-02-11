@@ -1,18 +1,18 @@
-'use client';
+"use client";
 
-import type { paths } from '@/__generated__/sigle-api/openapi';
-import { resolveImageUrl } from '@/lib/images';
-import { Routes } from '@/lib/routes';
-import { AspectRatio, Flex, Heading, Link, Text } from '@radix-ui/themes';
-import { format } from 'date-fns';
-import { useState } from 'react';
-import { PostShareDialog } from '../PostShareDialog';
-import { formatReadableAddress } from '@/lib/stacks';
-import Image from 'next/image';
-import { NextLink } from '../../NextLink';
+import type { paths } from "@/__generated__/sigle-api/openapi";
+import { resolveImageUrl } from "@/lib/images";
+import { Routes } from "@/lib/routes";
+import { AspectRatio, Flex, Heading, Link, Text } from "@radix-ui/themes";
+import { format } from "date-fns";
+import { useState } from "react";
+import { PostShareDialog } from "../PostShareDialog";
+import { formatReadableAddress } from "@/lib/stacks";
+import Image from "next/image";
+import { NextLink } from "../../NextLink";
 
 interface PostListItemProps {
-  post: paths['/api/posts/list']['get']['responses']['200']['content']['application/json'][0];
+  post: paths["/api/posts/list"]["get"]["responses"]["200"]["content"]["application/json"][0];
 }
 
 export const PostListItem = ({ post }: PostListItemProps) => {
@@ -28,7 +28,7 @@ export const PostListItem = ({ post }: PostListItemProps) => {
                 size="4"
                 className="line-clamp-2 break-words"
                 style={{
-                  wordBreak: 'break-word',
+                  wordBreak: "break-word",
                 }}
               >
                 {post.metaTitle || post.title}
@@ -41,7 +41,7 @@ export const PostListItem = ({ post }: PostListItemProps) => {
             </NextLink>
             <div className="mt-3">
               <Text as="p" color="gray" size="1">
-                By{' '}
+                By{" "}
                 <Link asChild>
                   <NextLink
                     href={Routes.userProfile({ username: post.user.id })}
@@ -50,8 +50,8 @@ export const PostListItem = ({ post }: PostListItemProps) => {
                       ? post.user.profile?.displayName
                       : formatReadableAddress(post.user.id)}
                   </NextLink>
-                </Link>{' '}
-                • {format(new Date(post.createdAt), 'MMM dd, yyyy')}
+                </Link>{" "}
+                • {format(new Date(post.createdAt), "MMM dd, yyyy")}
               </Text>
             </div>
           </div>
@@ -63,7 +63,7 @@ export const PostListItem = ({ post }: PostListItemProps) => {
                     src={resolveImageUrl(post.coverImage.id)}
                     alt="Cover card"
                     className="size-full rounded-2 object-cover"
-                    placeholder={post.coverImage.blurhash ? 'blur' : 'empty'}
+                    placeholder={post.coverImage.blurhash ? "blur" : "empty"}
                     blurDataURL={post.coverImage.blurhash}
                     width={post.coverImage.width}
                     height={post.coverImage.height}

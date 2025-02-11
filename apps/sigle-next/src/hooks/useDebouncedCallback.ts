@@ -1,5 +1,5 @@
 // https://www.codemzy.com/blog/reactjs-debounce-hook
-import React from 'react';
+import React from "react";
 
 // debounce function (defaults wait to .2 seconds)
 // biome-ignore lint/suspicious/noExplicitAny: any is fine
