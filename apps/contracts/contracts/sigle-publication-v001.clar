@@ -1,8 +1,7 @@
 (impl-trait 'SP2PABAF9FTAJYNFZH93XENAJ8FVY99RRM50D2JG9.nft-trait.nft-trait)
 (impl-trait .sigle-publication-trait-v001.sigle-publication-trait)
 
-;; TODO change test name
-(define-non-fungible-token test uint)
+(define-non-fungible-token sigle-post uint)
 
 (define-constant ERR-NOT-AUTHORIZED u403)
 (define-constant ERR-NOT-FOUND u1000)
