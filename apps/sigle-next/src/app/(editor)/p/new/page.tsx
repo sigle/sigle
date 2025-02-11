@@ -1,11 +1,11 @@
 "use client";
 
+import { sigleApiClient } from "@/__generated__/sigle-api";
+import * as Sentry from "@sentry/nextjs";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 import { toast } from "sonner";
 import { PageEditorSkeleton } from "./loading";
-import { sigleApiClient } from "@/__generated__/sigle-api";
-import * as Sentry from "@sentry/nextjs";
 
 export default function PostCreate() {
   const router = useRouter();

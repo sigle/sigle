@@ -1,10 +1,10 @@
-import NextAuth from "next-auth";
-import Credentials from "next-auth/providers/credentials";
-import { z } from "zod";
 import { env } from "@/env";
-import type { DefaultJWT } from "next-auth/jwt";
 import * as Sentry from "@sentry/nextjs";
 import { verifySiwsMessage } from "@sigle/sign-in-with-stacks";
+import NextAuth from "next-auth";
+import type { DefaultJWT } from "next-auth/jwt";
+import Credentials from "next-auth/providers/credentials";
+import { z } from "zod";
 
 declare module "next-auth" {
   /**

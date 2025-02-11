@@ -1,7 +1,7 @@
 import type { paths } from "@/__generated__/sigle-api/openapi";
 import { Button, Heading, Progress, Text } from "@radix-ui/themes";
-import { useState } from "react";
 import { formatSTX } from "@sigle/sdk";
+import { useState } from "react";
 import { PostCollectDialog } from "../Shared/Post/PostCollectDialog";
 
 interface PostCollectCardProps {

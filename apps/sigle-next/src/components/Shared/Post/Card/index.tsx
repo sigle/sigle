@@ -1,6 +1,7 @@
 import type { paths } from "@/__generated__/sigle-api/openapi";
 import { resolveImageUrl } from "@/lib/images";
 import { Routes } from "@/lib/routes";
+import { formatReadableAddress } from "@/lib/stacks";
 import {
   AspectRatio,
   Button,
@@ -11,10 +12,9 @@ import {
   Text,
 } from "@radix-ui/themes";
 import { format } from "date-fns";
-import { formatReadableAddress } from "@/lib/stacks";
 import Image from "next/image";
-import { NextLink } from "../../NextLink";
 import { useState } from "react";
+import { NextLink } from "../../NextLink";
 import { PostCollectDialog } from "../PostCollectDialog";
 
 interface PostCardProps {

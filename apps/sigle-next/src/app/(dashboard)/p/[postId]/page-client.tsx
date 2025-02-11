@@ -5,14 +5,14 @@ import { PostCollectCard } from "@/components/Post/CollectCard";
 import { PostInfoCard } from "@/components/Post/InfoCard";
 import { PublicationMarkdownContent } from "@/components/Post/MarkdownContent";
 import { PostShareCard } from "@/components/Post/ShareCard";
+import { PostUserActions } from "@/components/Post/UserActions";
 import { PostUserInfoCard } from "@/components/Post/UserInfoCard";
 import { FadeSlideBottom } from "@/components/ui";
 import { resolveImageUrl } from "@/lib/images";
 import { Container, Heading, Separator } from "@radix-ui/themes";
+import Image from "next/image";
 import { notFound } from "next/navigation";
 import { use } from "react";
-import { PostUserActions } from "@/components/Post/UserActions";
-import Image from "next/image";
 
 type Props = {
   params: Promise<{ postId: string }>;

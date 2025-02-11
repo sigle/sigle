@@ -1,6 +1,8 @@
 "use client";
 
 import { sigleApiClient } from "@/__generated__/sigle-api";
+import { Routes } from "@/lib/routes";
+import { formatReadableAddress } from "@/lib/stacks";
 import {
   AspectRatio,
   Card,
@@ -10,8 +12,7 @@ import {
   Link,
   Text,
 } from "@radix-ui/themes";
-import { formatReadableAddress } from "@/lib/stacks";
-import { Routes } from "@/lib/routes";
+import { PostCard } from "../Shared/Post/Card";
 import {
   Carousel,
   CarouselContent,
@@ -19,7 +20,6 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from "../ui";
-import { PostCard } from "../Shared/Post/Card";
 
 export const HomeTrendingPosts = () => {
   const { data: posts } = sigleApiClient.useSuspenseQuery(

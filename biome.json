@@ -21,7 +21,7 @@
     "attributePosition": "auto",
     "bracketSpacing": true
   },
-  "organizeImports": { "enabled": false },
+  "organizeImports": { "enabled": true },
   "linter": { "enabled": false, "rules": { "recommended": true } },
   "javascript": {}
 }

@@ -1,5 +1,5 @@
-import type { StacksNetwork, StacksNetworkName } from "@stacks/network";
 import type { ContractCallBase } from "@stacks/connect";
+import type { StacksNetwork, StacksNetworkName } from "@stacks/network";
 import { PostConditionMode, stringAsciiCV } from "@stacks/transactions";
 import { config } from "./config.js";
 

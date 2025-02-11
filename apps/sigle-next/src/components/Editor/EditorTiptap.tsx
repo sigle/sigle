@@ -37,6 +37,7 @@ import { EditorBubbleMenu } from "./BubbleMenu";
 import type { EditorPostFormData } from "./EditorFormProvider";
 import { EditorFloatingMenu } from "./FloatingMenu";
 import "./editor-tiptap.css";
+import { sigleApiClient } from "@/__generated__/sigle-api";
 import { toast } from "sonner";
 import { CodeBlockComponent } from "./extensions/CodeBlock";
 import { TipTapImage } from "./extensions/Image";
@@ -46,7 +47,6 @@ import { SlashCommands } from "./extensions/SlashCommand/SlashCommands";
 import { slashCommands } from "./extensions/SlashCommand/commands";
 import { TipTapEmbed } from "./extensions/Twitter";
 import { useEditorStore } from "./store";
-import { sigleApiClient } from "@/__generated__/sigle-api";
 
 const lowlight = createLowlight(common);
 

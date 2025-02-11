@@ -1,10 +1,10 @@
-import { useCallback, useState } from "react";
+import { appDetails, stacksNetwork, userSession } from "@/lib/stacks";
 import {
-  openContractDeploy,
   ContractDeployOptions,
   FinishedTxData,
+  openContractDeploy,
 } from "@stacks/connect";
-import { appDetails, stacksNetwork, userSession } from "@/lib/stacks";
+import { useCallback, useState } from "react";
 
 interface UseContractDeployOptions {
   onSuccess?: (data: FinishedTxData) => void;

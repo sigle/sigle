@@ -1,5 +1,6 @@
 "use client";
 
+import { NextLink } from "@/components/Shared/NextLink";
 import { cn } from "@/lib/cn";
 import { Flex, IconButton } from "@radix-ui/themes";
 import {
@@ -12,7 +13,6 @@ import type { EditorPostFormData } from "../EditorFormProvider";
 import { useEditorStore } from "../store";
 import { EditorPublish } from "./EditorPublish";
 import { EditorSave } from "./EditorSave";
-import { NextLink } from "@/components/Shared/NextLink";
 
 const headerIconSize = 20;
 

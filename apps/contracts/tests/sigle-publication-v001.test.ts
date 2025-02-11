@@ -1,7 +1,7 @@
-import { Cl } from "@stacks/transactions";
-import { describe, expect, it } from "vitest";
 import { createClient } from "@sigle/sdk";
 import { STACKS_MOCKNET } from "@stacks/network";
+import { Cl } from "@stacks/transactions";
+import { describe, expect, it } from "vitest";
 import { beforeEach } from "vitest";
 
 const contract = "sigle-publication-v001";

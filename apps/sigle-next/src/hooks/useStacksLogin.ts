@@ -1,18 +1,18 @@
 "use client";
 
+import { env } from "@/env";
 import { appDetails, stacksNetwork, userSession } from "@/lib/stacks";
+import { createSiwsMessage } from "@sigle/sign-in-with-stacks";
 import {
+  type UserData,
   openSignatureRequestPopup,
   showConnect,
-  type UserData,
 } from "@stacks/connect";
-import { createSiwsMessage } from "@sigle/sign-in-with-stacks";
+import { getCsrfToken, signIn } from "next-auth/react";
 import { usePostHog } from "posthog-js/react";
 import { useEffect } from "react";
-import { create } from "zustand";
-import { getCsrfToken, signIn } from "next-auth/react";
 import { toast } from "sonner";
-import { env } from "@/env";
+import { create } from "zustand";
 
 interface SessionState {
   user?: UserData;

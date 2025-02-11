@@ -1,3 +1,4 @@
+import { resolveImageUrl } from "@/lib/images";
 import ReactMarkdown from "react-markdown";
 import { Tweet } from "react-tweet";
 import {
@@ -8,7 +9,6 @@ import {
   getEmbedUrlFromYoutubeUrl,
   isValidYoutubeUrl,
 } from "../Editor/extensions/Twitter/video";
-import { resolveImageUrl } from "@/lib/images";
 
 interface PublicationMarkdownContentProps {
   content: string;

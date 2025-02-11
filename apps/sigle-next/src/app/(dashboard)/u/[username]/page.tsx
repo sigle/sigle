@@ -1,8 +1,8 @@
+import { sigleApiFetchclient } from "@/__generated__/sigle-api";
+import type { Routes } from "@/lib/routes";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { sigleApiFetchclient } from "@/__generated__/sigle-api";
 import { UserClientPage } from "./page-client";
-import type { Routes } from "@/lib/routes";
 
 export const dynamic = "force-dynamic";
 

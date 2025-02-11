@@ -1,11 +1,11 @@
-import { expect, test } from "vitest";
-import { STACKS_TESTNET } from "@stacks/network";
 import { bytesToHex } from "@stacks/common";
-import { signMessageHashRsv } from "@stacks/transactions";
 import { hashMessage } from "@stacks/encryption";
+import { STACKS_TESTNET } from "@stacks/network";
+import { signMessageHashRsv } from "@stacks/transactions";
+import { expect, test } from "vitest";
+import { accounts } from "../test/constants.js";
 import { createSiwsMessage } from "./createSiwsMessage.js";
 import { verifySiwsMessage } from "./verifySiwsMessage.js";
-import { accounts } from "../test/constants.js";
 
 const account = accounts[0];
 

@@ -1,3 +1,5 @@
+import { sigleApiClient } from "@/__generated__/sigle-api";
+import { useDebouncedCallback } from "@/hooks/useDebouncedCallback";
 import { Callout, Text } from "@radix-ui/themes";
 import { IconInfoCircle } from "@tabler/icons-react";
 import { useParams } from "next/navigation";
@@ -5,8 +7,6 @@ import { useEffect, useState } from "react";
 import { useFormContext } from "react-hook-form";
 import type { EditorPostFormData } from "../EditorFormProvider";
 import { useEditorStore } from "../store";
-import { useDebouncedCallback } from "@/hooks/useDebouncedCallback";
-import { sigleApiClient } from "@/__generated__/sigle-api";
 
 export const EditorSave = () => {
   const params = useParams();

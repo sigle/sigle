@@ -1,5 +1,5 @@
-import type { StacksNetworkName, StacksNetwork } from "@stacks/network";
 import { contracts } from "@sigle/contracts-source";
+import type { StacksNetwork, StacksNetworkName } from "@stacks/network";
 import { MAX_UINT } from "../lib/clarity.js";
 import { config } from "./config.js";
 

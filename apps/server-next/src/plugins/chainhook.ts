@@ -8,8 +8,8 @@ import {
 import { consola } from "~/lib/consola";
 import {
   contractDeploymentPredicate,
-  sigleProfilesPredicate,
   sigleMinterFixedPricePredicate,
+  sigleProfilesPredicate,
 } from "~/lib/predicates";
 
 /**

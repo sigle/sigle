@@ -1,10 +1,10 @@
-import type { StacksNetwork } from "@stacks/network";
 import type { ContractCallBase } from "@stacks/connect";
+import type { StacksNetwork } from "@stacks/network";
 import {
+  PostConditionMode,
   contractPrincipalCV,
   fetchCallReadOnlyFunction,
   noneCV,
-  PostConditionMode,
   uintCV,
 } from "@stacks/transactions";
 import { fixedMintFee } from "./config.js";

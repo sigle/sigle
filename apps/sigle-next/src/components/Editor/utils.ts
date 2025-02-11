@@ -1,15 +1,15 @@
 import { env } from "@/env";
 import { resolveImageUrl } from "@/lib/images";
-import type { Editor } from "@tiptap/core";
-import type { EditorPostFormData } from "./EditorFormProvider";
 import {
-  createPostMetadata,
-  MediaImageMimeType,
   type MediaImageMetadata,
+  MediaImageMimeType,
   type MetadataAttribute,
   type PostMetadata,
+  createPostMetadata,
 } from "@sigle/sdk";
+import type { Editor } from "@tiptap/core";
 import { fileTypeFromBuffer } from "file-type";
+import type { EditorPostFormData } from "./EditorFormProvider";
 
 const generateMetadataAttributesFromForm = ({
   editorText,

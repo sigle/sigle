@@ -1,9 +1,9 @@
+import { PostMetadataSchema } from "@sigle/sdk";
 import { z } from "zod";
 import { fromError } from "zod-validation-error";
-import { PostMetadataSchema } from "@sigle/sdk";
+import { aerweaveUploadFile } from "~/lib/arweave";
 import { readValidatedBodyZod } from "~/lib/nitro";
 import { prisma } from "~/lib/prisma";
-import { aerweaveUploadFile } from "~/lib/arweave";
 
 defineRouteMeta({
   openAPI: {

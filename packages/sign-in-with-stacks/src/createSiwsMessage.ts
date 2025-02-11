@@ -1,10 +1,10 @@
+import type { InvalidAddressErrorType } from "./errors/address.js";
 import {
   SiwsInvalidMessageFieldError,
   type SiwsInvalidMessageFieldErrorType,
 } from "./errors/siws.js";
 import type { SiwsMessage } from "./types.js";
 import { getAddress, isUri } from "./utils.js";
-import type { InvalidAddressErrorType } from "./errors/address.js";
 
 export type CreateSiwsMessageParameters = SiwsMessage;
 

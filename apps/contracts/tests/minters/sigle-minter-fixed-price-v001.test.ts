@@ -1,7 +1,7 @@
-import { Cl } from "@stacks/transactions";
-import { beforeEach, describe, expect, it } from "vitest";
 import { createClient, fixedMintFee, parseSTX } from "@sigle/sdk";
 import { STACKS_MOCKNET } from "@stacks/network";
+import { Cl } from "@stacks/transactions";
+import { beforeEach, describe, expect, it } from "vitest";
 
 const contract = "sigle-minter-fixed-price-v001";
 const accounts = simnet.getAccounts();

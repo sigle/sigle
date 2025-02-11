@@ -1,6 +1,6 @@
-import type { z } from "zod";
 import type PgBoss from "pg-boss";
-import type { WorkHandler, SendOptions } from "pg-boss";
+import type { SendOptions, WorkHandler } from "pg-boss";
+import type { z } from "zod";
 import { consola } from "./consola";
 
 class JobBuilder<TInput = any> {

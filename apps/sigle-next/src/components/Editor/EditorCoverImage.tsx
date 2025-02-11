@@ -1,18 +1,18 @@
 "use client";
 
+import { sigleApiClient } from "@/__generated__/sigle-api";
 import { cn } from "@/lib/cn";
+import { resolveImageUrl } from "@/lib/images";
 import { Button, IconButton, Spinner } from "@radix-ui/themes";
 import { IconCameraPlus, IconHandGrab, IconTrash } from "@tabler/icons-react";
+import { motion } from "framer-motion";
 import { useParams } from "next/navigation";
 import { usePostHog } from "posthog-js/react";
 import { type MouseEventHandler, useCallback, useState } from "react";
 import { useDropzone } from "react-dropzone";
 import { useFormContext } from "react-hook-form";
 import { toast } from "sonner";
-import { motion } from "framer-motion";
 import type { EditorPostFormData } from "./EditorFormProvider";
-import { sigleApiClient } from "@/__generated__/sigle-api";
-import { resolveImageUrl } from "@/lib/images";
 
 export const EditorCoverImage = () => {
   const params = useParams();

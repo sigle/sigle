@@ -1,5 +1,5 @@
-import { env } from "~/env";
 import SmeeClient from "smee-client";
+import { env } from "~/env";
 import { consola } from "~/lib/consola";
 
 /**

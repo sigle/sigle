@@ -1,7 +1,7 @@
 import { env } from "@/env";
-import { AppConfig, UserSession } from "@stacks/connect";
-import { STACKS_MAINNET, STACKS_TESTNET, STACKS_DEVNET } from "@stacks/network";
 import { createClient } from "@stacks/blockchain-api-client";
+import { AppConfig, UserSession } from "@stacks/connect";
+import { STACKS_DEVNET, STACKS_MAINNET, STACKS_TESTNET } from "@stacks/network";
 
 export const appConfig = new AppConfig([]);
 export const userSession = new UserSession({ appConfig });

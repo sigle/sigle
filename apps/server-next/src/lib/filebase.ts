@@ -3,9 +3,9 @@ import {
   S3Client,
   S3ServiceException,
 } from "@aws-sdk/client-s3";
-import { consola } from "./consola";
 import type { H3Event } from "h3";
 import { env } from "~/env";
+import { consola } from "./consola";
 
 const client = new S3Client({
   endpoint: "https://s3.filebase.com",

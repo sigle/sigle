@@ -1,4 +1,4 @@
-import type { SiwsMessage, ExactPartial } from "./types.js";
+import type { ExactPartial, SiwsMessage } from "./types.js";
 import { isAddressEqual } from "./utils.js";
 
 export type ValidateSiwsMessageParameters = {

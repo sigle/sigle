@@ -1,17 +1,17 @@
+import { bytesToHex } from "@stacks/common";
 import { hashMessage, verifyMessageSignatureRsv } from "@stacks/encryption";
 import { STACKS_MAINNET } from "@stacks/network";
-import { bytesToHex } from "@stacks/common";
 import {
   createMessageSignature,
   publicKeyFromSignatureRsv,
   publicKeyToAddress,
 } from "@stacks/transactions";
 import { parseSiwsMessage } from "./parseSiwsMessage.js";
+import { Prettify } from "./types.js";
 import {
   type ValidateSiwsMessageParameters,
   validateSiwsMessage,
 } from "./validateSiwsMessage.js";
-import { Prettify } from "./types.js";
 
 export type VerifySiwsMessageParameters = Prettify<
   Pick<

@@ -1,15 +1,15 @@
 import {
+  STACKS_MAINNET,
   type StacksNetwork,
   type StacksNetworkName,
-  STACKS_MAINNET,
 } from "@stacks/network";
-import { mint, type MintParams } from "./mint.js";
-import {
-  generatePostContract,
-  type GeneratePostParams,
-} from "./generate-post-contract.js";
 import { config, fixedMintFee } from "./config.js";
-import { setProfile, type SetProfileParams } from "./setProfile.js";
+import {
+  type GeneratePostParams,
+  generatePostContract,
+} from "./generate-post-contract.js";
+import { type MintParams, mint } from "./mint.js";
+import { type SetProfileParams, setProfile } from "./setProfile.js";
 
 interface CreateClientOptions {
   /**

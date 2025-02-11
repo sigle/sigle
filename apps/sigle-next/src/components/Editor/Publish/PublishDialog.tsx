@@ -1,5 +1,8 @@
 "use client";
 
+import { sigleApiClient } from "@/__generated__/sigle-api";
+import { useContractDeploy } from "@/hooks/useContractDeploy";
+import { sigleClient } from "@/lib/sigle";
 import {
   Callout,
   Dialog,
@@ -9,20 +12,17 @@ import {
   VisuallyHidden,
 } from "@radix-ui/themes";
 import * as Sentry from "@sentry/nextjs";
+import { parseSTX } from "@sigle/sdk";
+import { IconExclamationCircle } from "@tabler/icons-react";
 import { useRouter } from "next/navigation";
 import { usePostHog } from "posthog-js/react";
 import { useState } from "react";
 import { useFormContext } from "react-hook-form";
 import { toast } from "sonner";
-import { IconExclamationCircle } from "@tabler/icons-react";
 import type { EditorPostFormData } from "../EditorFormProvider";
 import { useEditorStore } from "../store";
 import { generateSigleMetadataFromForm } from "../utils";
 import { PublishReview } from "./PublishReview";
-import { sigleApiClient } from "@/__generated__/sigle-api";
-import { sigleClient } from "@/lib/sigle";
-import { parseSTX } from "@sigle/sdk";
-import { useContractDeploy } from "@/hooks/useContractDeploy";
 
 interface PublishDialogProps {
   postId: string;

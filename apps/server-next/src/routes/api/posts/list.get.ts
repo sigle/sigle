@@ -1,6 +1,6 @@
 import { z } from "zod";
 import { getValidatedQueryZod } from "~/lib/nitro";
-import { prisma, SELECT_PUBLIC_USER_FIELDS } from "~/lib/prisma";
+import { SELECT_PUBLIC_USER_FIELDS, prisma } from "~/lib/prisma";
 
 defineRouteMeta({
   openAPI: {

@@ -1,12 +1,12 @@
 "use client";
 
-import { z } from "zod";
 import {
   ReadonlyURLSearchParams,
   useParams as useNextParams,
   useSearchParams as useNextSearchParams,
 } from "next/navigation";
 import queryString from "query-string";
+import { z } from "zod";
 
 export const Routes = {
   home: makeRoute(() => "/"),

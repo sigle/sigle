@@ -1,10 +1,19 @@
 "use client";
 
 import type { paths } from "@/__generated__/sigle-api/openapi";
+import { useContractCall } from "@/hooks/useContractCall";
 import {
   formatUSDollar,
   useCurrencyFiatPrice,
 } from "@/hooks/useCurrencyFiatPrice";
+import { useStacksLogin } from "@/hooks/useStacksLogin";
+import { resolveImageUrl } from "@/lib/images";
+import { sigleClient } from "@/lib/sigle";
+import {
+  formatReadableAddress,
+  getExplorerTransactionUrl,
+  getPromiseTransactionConfirmation,
+} from "@/lib/stacks";
 import {
   Badge,
   Button,
@@ -17,6 +26,7 @@ import {
   Tooltip,
   VisuallyHidden,
 } from "@radix-ui/themes";
+import { fixedMintFee, formatSTX } from "@sigle/sdk";
 import {
   IconHelpCircle,
   IconInfoCircle,
@@ -24,20 +34,10 @@ import {
   IconPlus,
 } from "@tabler/icons-react";
 import { useSession } from "next-auth/react";
+import Image from "next/image";
 import { useSearchParams } from "next/navigation";
 import { useState } from "react";
 import { toast } from "sonner";
-import { formatSTX, fixedMintFee } from "@sigle/sdk";
-import { sigleClient } from "@/lib/sigle";
-import {
-  formatReadableAddress,
-  getExplorerTransactionUrl,
-  getPromiseTransactionConfirmation,
-} from "@/lib/stacks";
-import { useContractCall } from "@/hooks/useContractCall";
-import { useStacksLogin } from "@/hooks/useStacksLogin";
-import { resolveImageUrl } from "@/lib/images";
-import Image from "next/image";
 import { ProfileAvatar } from "../Profile/ProfileAvatar";
 
 interface PostCollectDialogProps {

@@ -9,10 +9,10 @@ import { Routes } from "@/lib/routes";
 import { Button, Container, DropdownMenu, IconButton } from "@radix-ui/themes";
 import { IconDotsVertical, IconPencil } from "@tabler/icons-react";
 import { useSession } from "next-auth/react";
-import { usePostHog } from "posthog-js/react";
-import { ProfileAvatar } from "../Shared/Profile/ProfileAvatar";
 import Image from "next/image";
+import { usePostHog } from "posthog-js/react";
 import { NextLink } from "../Shared/NextLink";
+import { ProfileAvatar } from "../Shared/Profile/ProfileAvatar";
 
 interface ProfileHeaderProps {
   user: paths["/api/users/{username}"]["get"]["responses"]["200"]["content"]["application/json"];

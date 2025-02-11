@@ -1,7 +1,7 @@
+import { randomUUID } from "node:crypto";
+import type { Predicate } from "@hirosystems/chainhook-client";
 import { env } from "~/env";
 import { consola } from "./consola";
-import type { Predicate } from "@hirosystems/chainhook-client";
-import { randomUUID } from "node:crypto";
 
 export const getChainhooks = async (): Promise<
   { name: string; uuid: string }[]

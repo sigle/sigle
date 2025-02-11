@@ -1,5 +1,11 @@
 import { sigleApiClient } from "@/__generated__/sigle-api";
 import type { paths } from "@/__generated__/sigle-api/openapi";
+import { useContractCall } from "@/hooks/useContractCall";
+import { sigleClient } from "@/lib/sigle";
+import {
+  getExplorerTransactionUrl,
+  getPromiseTransactionConfirmation,
+} from "@/lib/stacks";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button, Flex, Text, TextArea, TextField } from "@radix-ui/themes";
 import { createProfileMetadata } from "@sigle/sdk";
@@ -7,14 +13,8 @@ import { IconAt, IconBrandX } from "@tabler/icons-react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
-import { UploadProfilePicture } from "./UploadProfilePicture";
 import { UploadProfileCoverPicture } from "./UploadProfileCoverPicture";
-import { useContractCall } from "@/hooks/useContractCall";
-import {
-  getExplorerTransactionUrl,
-  getPromiseTransactionConfirmation,
-} from "@/lib/stacks";
-import { sigleClient } from "@/lib/sigle";
+import { UploadProfilePicture } from "./UploadProfilePicture";
 
 const updateProfileMetadataSchema = z.object({
   displayName: z.string().optional(),

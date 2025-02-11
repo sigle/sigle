@@ -1,5 +1,5 @@
-import { expect, test, vi } from "vitest";
 import { STACKS_MAINNET } from "@stacks/network";
+import { expect, test, vi } from "vitest";
 import { createSiwsMessage } from "./createSiwsMessage.js";
 import type { SiwsMessage } from "./types.js";
 

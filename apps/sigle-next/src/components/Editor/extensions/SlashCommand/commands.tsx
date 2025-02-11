@@ -8,8 +8,8 @@ import { NumberedListLight } from "@/images/NumberedListLight";
 import { PlainTextLight } from "@/images/PlainTextLight";
 import { QuoteLight } from "@/images/QuoteLight";
 import { TwitterLight } from "@/images/TwitterLight";
-import type { SlashCommandsCommand } from "./SlashCommands";
 import { VideoLight } from "@/images/VideoLight";
+import type { SlashCommandsCommand } from "./SlashCommands";
 
 export const slashCommands: SlashCommandsCommand[] = [
   {

@@ -1,10 +1,10 @@
 /// <reference types="vitest" />
 
-import { defineConfig } from "vite";
 import {
-  vitestSetupFilePath,
   getClarinetVitestsArgv,
+  vitestSetupFilePath,
 } from "@hirosystems/clarinet-sdk/vitest";
+import { defineConfig } from "vite";
 
 export default defineConfig({
   test: {

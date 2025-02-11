@@ -1,17 +1,17 @@
 "use client";
 
+import { useIsClient } from "@/hooks/useIsClient";
 import { useStacksLogin } from "@/hooks/useStacksLogin";
 import { LogoImage } from "@/images/Logo";
 import { Button, IconButton } from "@radix-ui/themes";
-import { useTheme } from "next-themes";
-import { usePostHog } from "posthog-js/react";
-import { IconSun, IconMoon } from "@tabler/icons-react";
-import { useIsClient } from "@/hooks/useIsClient";
+import { IconMoon, IconSun } from "@tabler/icons-react";
 import { useSession } from "next-auth/react";
-import { UserDropdown } from "./UserDropdown";
+import { useTheme } from "next-themes";
+import { usePathname } from "next/navigation";
+import { usePostHog } from "posthog-js/react";
 import { Suspense, useLayoutEffect } from "react";
 import { NextLink } from "../Shared/NextLink";
-import { usePathname } from "next/navigation";
+import { UserDropdown } from "./UserDropdown";
 
 export const Header = () => {
   const posthog = usePostHog();

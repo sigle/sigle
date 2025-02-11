@@ -1,12 +1,12 @@
 "use client";
 
 import { sigleApiClient } from "@/__generated__/sigle-api";
+import { ProfileAvatar } from "@/components/Shared/Profile/ProfileAvatar";
 import { Button, Card, Flex, Heading, Text } from "@radix-ui/themes";
 import { IconPencil } from "@tabler/icons-react";
 import { useSession } from "next-auth/react";
 import { useState } from "react";
 import { UpdateProfileMetadata } from "./UpdateProfileMetadata";
-import { ProfileAvatar } from "@/components/Shared/Profile/ProfileAvatar";
 
 export const SettingsProfileMetadata = () => {
   const [editingProfileMetadata, setEditingProfileMetadata] = useState(false);

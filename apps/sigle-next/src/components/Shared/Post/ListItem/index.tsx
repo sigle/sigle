@@ -3,13 +3,13 @@
 import type { paths } from "@/__generated__/sigle-api/openapi";
 import { resolveImageUrl } from "@/lib/images";
 import { Routes } from "@/lib/routes";
+import { formatReadableAddress } from "@/lib/stacks";
 import { AspectRatio, Flex, Heading, Link, Text } from "@radix-ui/themes";
 import { format } from "date-fns";
-import { useState } from "react";
-import { PostShareDialog } from "../PostShareDialog";
-import { formatReadableAddress } from "@/lib/stacks";
 import Image from "next/image";
+import { useState } from "react";
 import { NextLink } from "../../NextLink";
+import { PostShareDialog } from "../PostShareDialog";
 
 interface PostListItemProps {
   post: paths["/api/posts/list"]["get"]["responses"]["200"]["content"]["application/json"][0];
