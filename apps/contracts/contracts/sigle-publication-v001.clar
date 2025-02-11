@@ -1,8 +1,7 @@
 (impl-trait 'SP2PABAF9FTAJYNFZH93XENAJ8FVY99RRM50D2JG9.nft-trait.nft-trait)
 (impl-trait .sigle-publication-trait-v001.sigle-publication-trait)
 
-;; TODO change test name
-(define-non-fungible-token test uint)
+(define-non-fungible-token sigle-post uint)
 
 (define-constant ERR-NOT-AUTHORIZED u403)
 (define-constant ERR-NOT-FOUND u1000)
@@ -52,7 +51,7 @@
 
 ;; @desc SIP-009 get the principal owning the NFT with the given identifier
 (define-read-only (get-owner (token-id uint))
-  (ok (nft-get-owner? test token-id)))
+  (ok (nft-get-owner? sigle-post token-id)))
 
 ;; @desc SIP-009 returns a valid URI which resolves to the NFT's metadata
 (define-read-only (get-token-uri (token-id uint))
@@ -65,7 +64,7 @@
     (asserts! (is-sender-owner token-id) (err ERR-NOT-AUTHORIZED))
     (asserts! (is-none (map-get? market token-id)) (err ERR-LISTING))
     (print { a: "burn", token-id: token-id })
-    (nft-burn? test token-id tx-sender)))
+    (nft-burn? sigle-post token-id tx-sender)))
 
 ;; @desc set the mint state to paused or unpaused
 ;; @param paused the new state of the mint
@@ -133,7 +132,7 @@
   (asserts! (<= next-token-id (var-get max-supply)) (err ERR-ALL-MINTED))
   (var-set last-token-id next-token-id)
   (map-set token-count recipient (+ current-balance u1))
-  (try! (nft-mint? test next-token-id recipient))
+  (try! (nft-mint? sigle-post next-token-id recipient))
   (ok next-token-id)))
 
 ;; @desc returns the max supply
@@ -162,7 +161,7 @@
 
 ;; @desc checks if the sender is the owner of the given token
 (define-private (is-sender-owner (id uint))
-  (let ((owner (unwrap! (nft-get-owner? test id) false)))
+  (let ((owner (unwrap! (nft-get-owner? sigle-post id) false)))
     (or (is-eq tx-sender owner) (is-eq contract-caller owner))))
 
 ;; @desc Check if caller is authorized minter
@@ -183,7 +182,7 @@
     (map-get? token-count account)))
 
 (define-private (trnsfr (id uint) (sender principal) (recipient principal))
-  (match (nft-transfer? test id sender recipient)
+  (match (nft-transfer? sigle-post id sender recipient)
     success
       (let
         ((sender-balance (get-balance sender))
@@ -215,7 +214,7 @@
     (ok true)))
 
 (define-public (buy-in-ustx (id uint) (comm-trait <commission-trait>))
-  (let ((owner (unwrap! (nft-get-owner? test id) (err ERR-NOT-FOUND)))
+  (let ((owner (unwrap! (nft-get-owner? sigle-post id) (err ERR-NOT-FOUND)))
         (listing (unwrap! (map-get? market id) (err ERR-LISTING)))
         (price (get price listing))
         (royalty (get royalty listing)))
