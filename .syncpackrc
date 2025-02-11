@@ -6,6 +6,7 @@
     "description",
     "keywords",
     "homepage",
+    "engines",
     "bugs",
     "repository",
     "license",

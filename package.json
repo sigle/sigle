@@ -1,5 +1,8 @@
 {
   "name": "root",
+  "engines": {
+    "node": ">=20"
+  },
   "private": true,
   "packageManager": "pnpm@9.15.5",
   "scripts": {
@@ -16,9 +19,6 @@
     "lefthook": "1.10.10",
     "syncpack": "13.0.2",
     "turbo": "2.4.0"
-  },
-  "engines": {
-    "node": ">=20"
   },
   "pnpm": {
     "overrides": {
