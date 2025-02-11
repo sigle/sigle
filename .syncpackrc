@@ -1,0 +1,4 @@
+{
+  "dependencyTypes": ["prod", "dev", "peer"],
+  "sortAz": ["bin", "contributors", "keywords", "resolutions", "scripts", "dependencies", "devDependencies", "peerDependencies"]
+}

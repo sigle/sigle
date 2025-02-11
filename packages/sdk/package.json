@@ -1,32 +1,9 @@
 {
   "name": "@sigle/sdk",
   "version": "0.0.0",
-  "type": "module",
-  "main": "dist/index.js",
-  "types": "dist/index.d.ts",
-  "exports": {
-    ".": {
-      "import": "./dist/index.js",
-      "require": "./dist/index.js"
-    },
-    "./package.json": "./package.json"
-  },
-  "publishConfig": {
-    "access": "public"
-  },
-  "scripts": {
-    "build": "tsup",
-    "test": "vitest"
-  },
   "dependencies": {
     "@sigle/contracts-source": "workspace:*",
     "zod-validation-error": "3.4.0"
-  },
-  "peerDependencies": {
-    "@stacks/connect": "^7.0.0",
-    "@stacks/network": "^7.0.0",
-    "@stacks/transactions": "^7.0.0",
-    "zod": "^3.23.0"
   },
   "devDependencies": {
     "@stacks/connect": "7.9.0",
@@ -38,5 +15,28 @@
     "typescript": "5.7.2",
     "vitest": "3.0.5",
     "zod": "3.24.1"
-  }
+  },
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "require": "./dist/index.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "main": "dist/index.js",
+  "peerDependencies": {
+    "@stacks/connect": "^7.0.0",
+    "@stacks/network": "^7.0.0",
+    "@stacks/transactions": "^7.0.0",
+    "zod": "^3.23.0"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "build": "tsup",
+    "test": "vitest"
+  },
+  "type": "module",
+  "types": "dist/index.d.ts"
 }

@@ -1,9 +1,12 @@
 {
   "name": "@sigle/contracts-source",
   "version": "0.0.0",
-  "type": "module",
-  "main": "dist/index.js",
-  "types": "dist/index.d.ts",
+  "devDependencies": {
+    "@rspack/cli": "1.1.8",
+    "@rspack/core": "1.1.8",
+    "raw-loader": "4.0.2",
+    "typescript": "5.7.2"
+  },
   "exports": {
     ".": {
       "import": "./dist/index.js",
@@ -11,16 +14,13 @@
     },
     "./package.json": "./package.json"
   },
+  "main": "dist/index.js",
   "publishConfig": {
     "access": "public"
   },
   "scripts": {
     "build": "rspack build && tsc --emitDeclarationOnly"
   },
-  "devDependencies": {
-    "@rspack/cli": "1.1.8",
-    "@rspack/core": "1.1.8",
-    "raw-loader": "4.0.2",
-    "typescript": "5.7.2"
-  }
+  "type": "module",
+  "types": "dist/index.d.ts"
 }
