@@ -1,13 +1,13 @@
-import type { paths } from '@/__generated__/sigle-api/openapi';
-import { formatReadableAddress } from '@/lib/stacks';
-import { Text } from '@radix-ui/themes';
-import { ProfileMarkdownDescription } from '../Shared/Profile/MarkdownDescription';
-import { Routes } from '@/lib/routes';
-import { ProfileAvatar } from '../Shared/Profile/ProfileAvatar';
-import { NextLink } from '../Shared/NextLink';
+import type { paths } from "@/__generated__/sigle-api/openapi";
+import { Routes } from "@/lib/routes";
+import { formatReadableAddress } from "@/lib/stacks";
+import { Text } from "@radix-ui/themes";
+import { NextLink } from "../Shared/NextLink";
+import { ProfileMarkdownDescription } from "../Shared/Profile/MarkdownDescription";
+import { ProfileAvatar } from "../Shared/Profile/ProfileAvatar";
 
 interface PostUserInfoCardProps {
-  post: paths['/api/posts/{postId}']['get']['responses']['200']['content']['application/json'];
+  post: paths["/api/posts/{postId}"]["get"]["responses"]["200"]["content"]["application/json"];
 }
 
 export const PostUserInfoCard = ({ post }: PostUserInfoCardProps) => {

@@ -1,18 +1,18 @@
-'use client';
+"use client";
 
-import { cn } from '@/lib/cn';
-import { Button, IconButton, Spinner } from '@radix-ui/themes';
-import { IconCameraPlus, IconHandGrab, IconTrash } from '@tabler/icons-react';
-import { useParams } from 'next/navigation';
-import { usePostHog } from 'posthog-js/react';
-import { type MouseEventHandler, useCallback, useState } from 'react';
-import { useDropzone } from 'react-dropzone';
-import { useFormContext } from 'react-hook-form';
-import { toast } from 'sonner';
-import { motion } from 'framer-motion';
-import type { EditorPostFormData } from './EditorFormProvider';
-import { sigleApiClient } from '@/__generated__/sigle-api';
-import { resolveImageUrl } from '@/lib/images';
+import { sigleApiClient } from "@/__generated__/sigle-api";
+import { cn } from "@/lib/cn";
+import { resolveImageUrl } from "@/lib/images";
+import { Button, IconButton, Spinner } from "@radix-ui/themes";
+import { IconCameraPlus, IconHandGrab, IconTrash } from "@tabler/icons-react";
+import { motion } from "framer-motion";
+import { useParams } from "next/navigation";
+import { usePostHog } from "posthog-js/react";
+import { type MouseEventHandler, useCallback, useState } from "react";
+import { useDropzone } from "react-dropzone";
+import { useFormContext } from "react-hook-form";
+import { toast } from "sonner";
+import type { EditorPostFormData } from "./EditorFormProvider";
 
 export const EditorCoverImage = () => {
   const params = useParams();
@@ -20,11 +20,11 @@ export const EditorCoverImage = () => {
   const posthog = usePostHog();
   const [preview, setPreview] = useState<string | null>(null);
   const { setValue, watch } = useFormContext<EditorPostFormData>();
-  const watchCoverImage = watch('coverImage');
+  const watchCoverImage = watch("coverImage");
   const { mutateAsync: uploadMedia, isPending: loadingUploadImage } =
     sigleApiClient.useMutation(
-      'post',
-      '/api/protected/drafts/{draftId}/upload-media',
+      "post",
+      "/api/protected/drafts/{draftId}/upload-media",
     );
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
@@ -37,11 +37,11 @@ export const EditorCoverImage = () => {
       const previewBlobUrl = URL.createObjectURL(file);
       setPreview(previewBlobUrl);
 
-      posthog.capture('cover_image_upload_start', {
+      posthog.capture("cover_image_upload_start", {
         postId,
       });
       const formData = new FormData();
-      formData.append('file', file);
+      formData.append("file", file);
       uploadMedia(
         {
           params: {
@@ -55,15 +55,15 @@ export const EditorCoverImage = () => {
         {
           onSuccess: (data) => {
             URL.revokeObjectURL(previewBlobUrl);
-            setValue('coverImage', data.url);
+            setValue("coverImage", data.url);
             setPreview(null);
-            posthog.capture('cover_image_upload_success', {
+            posthog.capture("cover_image_upload_success", {
               postId,
             });
           },
           onError: (error) => {
             setPreview(null);
-            posthog.capture('cover_image_upload_error', {
+            posthog.capture("cover_image_upload_error", {
               postId,
             });
             toast.error(error?.message);
@@ -77,8 +77,8 @@ export const EditorCoverImage = () => {
   const { getRootProps, getInputProps, isDragActive, open } = useDropzone({
     onDrop,
     accept: {
-      'image/jpeg': [],
-      'image/png': [],
+      "image/jpeg": [],
+      "image/png": [],
     },
   });
 
@@ -86,8 +86,8 @@ export const EditorCoverImage = () => {
     // Prevent the form from submitting
     e.preventDefault();
     e.stopPropagation();
-    setValue('coverImage', undefined);
-    posthog.capture('cover_image_removed', {
+    setValue("coverImage", undefined);
+    posthog.capture("cover_image_removed", {
       postId,
     });
   };
@@ -99,8 +99,8 @@ export const EditorCoverImage = () => {
   return (
     <div
       {...getRootProps()}
-      className={cn('mt-4 flex justify-center', {
-        'justify-start': !preview && !resolvedWatchCoverImage,
+      className={cn("mt-4 flex justify-center", {
+        "justify-start": !preview && !resolvedWatchCoverImage,
       })}
       onClick={(e) => e.stopPropagation()}
     >
@@ -112,7 +112,7 @@ export const EditorCoverImage = () => {
           scale: 1,
         }}
         transition={{ delay: 0.1 }}
-        key={!preview && !resolvedWatchCoverImage ? 'button' : 'image'}
+        key={!preview && !resolvedWatchCoverImage ? "button" : "image"}
       >
         {!preview && !resolvedWatchCoverImage ? (
           !isDragActive ? (
@@ -128,9 +128,9 @@ export const EditorCoverImage = () => {
           <div className="relative mx-auto">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
-              src={preview || resolvedWatchCoverImage || ''}
-              className={cn('rounded-2', {
-                'opacity-25': loadingUploadImage,
+              src={preview || resolvedWatchCoverImage || ""}
+              className={cn("rounded-2", {
+                "opacity-25": loadingUploadImage,
               })}
               alt="Cover post"
             />

@@ -1,4 +1,4 @@
-import { create } from 'zustand';
+import { create } from "zustand";
 
 interface BubbleMenuState {
   linkOpen: boolean;
@@ -10,6 +10,6 @@ interface BubbleMenuState {
 export const useBubbleMenuStore = create<BubbleMenuState>()((set) => ({
   linkOpen: false,
   setLinkOpen: (linkOpen: boolean) => set({ linkOpen }),
-  linkValue: '',
+  linkValue: "",
   setLinkValue: (linkValue: string) => set({ linkValue }),
 }));

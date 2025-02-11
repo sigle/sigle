@@ -1,6 +1,6 @@
-import { env } from '~/env';
-import SmeeClient from 'smee-client';
-import { consola } from '~/lib/consola';
+import SmeeClient from "smee-client";
+import { env } from "~/env";
+import { consola } from "~/lib/consola";
 
 /**
  * Smee is a proxy server that allows you to receive webhooks locally.
@@ -8,11 +8,11 @@ import { consola } from '~/lib/consola';
  * It's a development only plugin.
  */
 export default defineNitroPlugin(async (nitroApp) => {
-  if (env.NODE_ENV !== 'development') {
+  if (env.NODE_ENV !== "development") {
     return;
   }
   if (!env.WEBHOOK_PROXY_URL) {
-    consola.warn('WEBHOOK_PROXY_URL is not set, smee will not be started');
+    consola.warn("WEBHOOK_PROXY_URL is not set, smee will not be started");
     return;
   }
 
@@ -25,7 +25,7 @@ export default defineNitroPlugin(async (nitroApp) => {
 
   const events = smee.start();
 
-  nitroApp.hooks.hookOnce('close', async () => {
+  nitroApp.hooks.hookOnce("close", async () => {
     // Stop forwarding events
     events.close();
   });

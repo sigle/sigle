@@ -1,10 +1,10 @@
-import { Footer, Layout, Navbar } from 'nextra-theme-docs';
-import { Head } from 'nextra/components';
-import { getPageMap } from 'nextra/page-map';
-import 'nextra-theme-docs/style.css';
+import { Footer, Layout, Navbar } from "nextra-theme-docs";
+import { Head } from "nextra/components";
+import { getPageMap } from "nextra/page-map";
+import "nextra-theme-docs/style.css";
 
 export const metadata = {
-  title: 'Documentation | Sigle',
+  title: "Documentation | Sigle",
 };
 
 const navbar = (

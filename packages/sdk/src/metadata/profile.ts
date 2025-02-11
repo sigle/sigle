@@ -1,5 +1,5 @@
-import { z } from 'zod';
-import { evaluate } from './utils.js';
+import { z } from "zod";
+import { evaluate } from "./utils.js";
 
 export interface ProfileMetadata {
   /**
@@ -43,7 +43,7 @@ export const ProfileMetadataSchema = z.object({
     .min(1)
     .regex(
       /^[A-Za-z0-9_]*$/,
-      'Twitter handle can only contain letters, numbers and underscore',
+      "Twitter handle can only contain letters, numbers and underscore",
     )
     .optional(),
   picture: z.string().url().optional(),

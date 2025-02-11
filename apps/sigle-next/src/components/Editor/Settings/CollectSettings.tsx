@@ -1,6 +1,6 @@
-import { CollectEdition } from './Collect/CollectEdition';
-import { CollectPrice } from './Collect/CollectPrice';
-import { DialogTitleGoBack } from './DialogTitle';
+import { CollectEdition } from "./Collect/CollectEdition";
+import { CollectPrice } from "./Collect/CollectPrice";
+import { DialogTitleGoBack } from "./DialogTitle";
 
 export const CollectSettings = () => {
   return (

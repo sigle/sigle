@@ -1,84 +1,84 @@
-import { prisma, SELECT_PUBLIC_USER_FIELDS } from '~/lib/prisma';
+import { SELECT_PUBLIC_USER_FIELDS, prisma } from "~/lib/prisma";
 
 defineRouteMeta({
   openAPI: {
-    tags: ['users'],
-    description: 'Get trending profiles.',
+    tags: ["users"],
+    description: "Get trending profiles.",
     responses: {
       200: {
-        description: 'User profiles.',
+        description: "User profiles.",
         content: {
-          'application/json': {
+          "application/json": {
             schema: {
-              type: 'array',
+              type: "array",
               items: {
-                type: 'object',
-                required: ['id', 'createdAt', 'updatedAt'],
+                type: "object",
+                required: ["id", "createdAt", "updatedAt"],
                 properties: {
                   id: {
-                    type: 'string',
+                    type: "string",
                   },
                   createdAt: {
-                    type: 'string',
+                    type: "string",
                   },
                   updatedAt: {
-                    type: 'string',
+                    type: "string",
                   },
                   postsCount: {
-                    type: 'number',
+                    type: "number",
                   },
                   profile: {
-                    type: 'object',
-                    required: ['id'],
+                    type: "object",
+                    required: ["id"],
                     properties: {
                       id: {
-                        type: 'string',
+                        type: "string",
                       },
                       displayName: {
-                        type: 'string',
+                        type: "string",
                       },
                       description: {
-                        type: 'string',
+                        type: "string",
                       },
                       website: {
-                        type: 'string',
+                        type: "string",
                       },
                       twitter: {
-                        type: 'string',
+                        type: "string",
                       },
                       pictureUri: {
-                        type: 'object',
-                        required: ['id'],
+                        type: "object",
+                        required: ["id"],
                         properties: {
                           id: {
-                            type: 'string',
+                            type: "string",
                           },
                           width: {
-                            type: 'number',
+                            type: "number",
                           },
                           height: {
-                            type: 'number',
+                            type: "number",
                           },
                           blurhash: {
-                            type: 'string',
+                            type: "string",
                           },
                         },
                       },
                       coverPictureUri: {
-                        type: 'object',
-                        required: ['id'],
+                        type: "object",
+                        required: ["id"],
                         properties: {
                           id: {
-                            type: 'string',
+                            type: "string",
                           },
                           width: {
-                            type: 'number',
+                            type: "number",
                           },
                           height: {
-                            type: 'number',
+                            type: "number",
                           },
                           blurhash: {
-                            type: 'string',
+                            type: "string",
                           },
                         },
                       },

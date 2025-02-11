@@ -1,15 +1,15 @@
-import { env } from '@/env';
-import { resolveImageUrl } from '@/lib/images';
-import type { Editor } from '@tiptap/core';
-import type { EditorPostFormData } from './EditorFormProvider';
+import { env } from "@/env";
+import { resolveImageUrl } from "@/lib/images";
 import {
-  createPostMetadata,
-  MediaImageMimeType,
   type MediaImageMetadata,
+  MediaImageMimeType,
   type MetadataAttribute,
   type PostMetadata,
-} from '@sigle/sdk';
-import { fileTypeFromBuffer } from 'file-type';
+  createPostMetadata,
+} from "@sigle/sdk";
+import type { Editor } from "@tiptap/core";
+import { fileTypeFromBuffer } from "file-type";
+import type { EditorPostFormData } from "./EditorFormProvider";
 
 const generateMetadataAttributesFromForm = ({
   editorText,
@@ -22,19 +22,19 @@ const generateMetadataAttributesFromForm = ({
     // Generate an excerpt from the content that can be used as the description in the publication cards
     {
       value: editorText.slice(0, 350),
-      key: 'excerpt',
+      key: "excerpt",
     },
   ];
   if (post.metaTitle) {
     attributes.push({
       value: post.metaTitle,
-      key: 'meta-title',
+      key: "meta-title",
     });
   }
   if (post.metaDescription) {
     attributes.push({
       value: post.metaDescription,
-      key: 'meta-description',
+      key: "meta-description",
     });
   }
 
@@ -50,13 +50,13 @@ const getImageMediaMetadata = async (
   const contentType = await fileTypeFromBuffer(buffer);
   let type: MediaImageMimeType | null = null;
   switch (contentType?.mime) {
-    case 'image/jpeg':
+    case "image/jpeg":
       type = MediaImageMimeType.JPEG;
       break;
-    case 'image/png':
+    case "image/png":
       type = MediaImageMimeType.PNG;
       break;
-    case 'image/webp':
+    case "image/webp":
       type = MediaImageMimeType.WEBP;
   }
   if (!type) {
@@ -77,7 +77,7 @@ export const generateSigleMetadataFromForm = async ({
   postId: string;
   post: EditorPostFormData;
 }): Promise<PostMetadata> => {
-  const editorText = editor?.getText() || '';
+  const editorText = editor?.getText() || "";
   const metadataAttributes = generateMetadataAttributesFromForm({
     editorText,
     post,
@@ -87,8 +87,8 @@ export const generateSigleMetadataFromForm = async ({
     : undefined;
 
   let description =
-    metadataAttributes.find((attribute) => attribute.key === 'excerpt')
-      ?.value || '';
+    metadataAttributes.find((attribute) => attribute.key === "excerpt")
+      ?.value || "";
   description = `${description}...\n\nWritten on www.sigle.io`;
 
   const metadata = createPostMetadata({

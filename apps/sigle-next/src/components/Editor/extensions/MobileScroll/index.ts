@@ -1,6 +1,6 @@
 // Inspired by https://github.com/kongdivin/prosemirror-scroll2cursor
-import { Extension } from '@tiptap/core';
-import { Plugin, PluginKey } from '@tiptap/pm/state';
+import { Extension } from "@tiptap/core";
+import { Plugin, PluginKey } from "@tiptap/pm/state";
 
 const options: {
   scrollerElement?: HTMLElement;
@@ -18,7 +18,7 @@ const MobileScroll = Extension.create({
   addProseMirrorPlugins() {
     return [
       new Plugin({
-        key: new PluginKey('mobile-scroll'),
+        key: new PluginKey("mobile-scroll"),
         props: {
           handleScrollToSelection(view) {
             const offsetBottom = DEFAULT_OFFSET_BOTTOM;
@@ -46,7 +46,7 @@ const MobileScroll = Extension.create({
 
               if (scrollTop === -1) {
                 options?.debugMode &&
-                  console.error('The plugin could not determine scrollTop');
+                  console.error("The plugin could not determine scrollTop");
                 return;
               }
 

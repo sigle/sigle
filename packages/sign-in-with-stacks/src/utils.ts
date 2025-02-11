@@ -1,5 +1,5 @@
-import { validateStacksAddress } from '@stacks/transactions';
-import { InvalidAddressError } from './errors/address.js';
+import { validateStacksAddress } from "@stacks/transactions";
+import { InvalidAddressError } from "./errors/address.js";
 
 export function isUri(value: string) {
   // based on https://github.com/ogt/valid-url
@@ -34,7 +34,7 @@ export function isUri(value: string) {
   // scheme must begin with a letter, then consist of letters, digits, +, ., or -
   if (!/^[a-z][a-z0-9\+\-\.]*$/.test(scheme.toLowerCase())) return false;
 
-  let out = '';
+  let out = "";
   // re-assemble the URL per section 5.3 in RFC 3986
   out += `${scheme}:`;
   if (authority?.length) out += `//${authority}`;

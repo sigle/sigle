@@ -1,22 +1,22 @@
-import { Button, Flex, Text } from '@radix-ui/themes';
-import type { paths } from '@/__generated__/sigle-api/openapi';
-import { sigleApiClient } from '@/__generated__/sigle-api';
-import { useSession } from 'next-auth/react';
-import { GetFamiliarCards } from '../Dashboard/GetFamiliarCards';
-import { NextLink } from '../Shared/NextLink';
-import { PostListItem } from '../Shared/Post/ListItem';
-import { PostListItemSkeleton } from '../Shared/Post/ListItem/Skeleton';
+import { sigleApiClient } from "@/__generated__/sigle-api";
+import type { paths } from "@/__generated__/sigle-api/openapi";
+import { Button, Flex, Text } from "@radix-ui/themes";
+import { useSession } from "next-auth/react";
+import { GetFamiliarCards } from "../Dashboard/GetFamiliarCards";
+import { NextLink } from "../Shared/NextLink";
+import { PostListItem } from "../Shared/Post/ListItem";
+import { PostListItemSkeleton } from "../Shared/Post/ListItem/Skeleton";
 
 interface ProfileFeedProps {
-  user: paths['/api/users/{username}']['get']['responses']['200']['content']['application/json'];
+  user: paths["/api/users/{username}"]["get"]["responses"]["200"]["content"]["application/json"];
 }
 
 export const ProfileFeed = ({ user }: ProfileFeedProps) => {
   const { data: session } = useSession();
   // TODO useSuspenseQuery or load more button to decide
   const { data: posts } = sigleApiClient.useSuspenseQuery(
-    'get',
-    '/api/posts/list',
+    "get",
+    "/api/posts/list",
     {
       params: {
         query: {

@@ -1,7 +1,7 @@
-'use client';
+"use client";
 
-import { sigleApiClient } from '@/__generated__/sigle-api';
-import { getExplorerTransactionUrl } from '@/lib/stacks';
+import { sigleApiClient } from "@/__generated__/sigle-api";
+import { getExplorerTransactionUrl } from "@/lib/stacks";
 import {
   Badge,
   Button,
@@ -10,16 +10,16 @@ import {
   Heading,
   Spinner,
   Text,
-} from '@radix-ui/themes';
-import { format } from 'date-fns';
-import { NextLink } from '../Shared/NextLink';
+} from "@radix-ui/themes";
+import { format } from "date-fns";
+import { NextLink } from "../Shared/NextLink";
 
 export const LatestDrafts = () => {
   const {
     data: drafts,
     isLoading: loadingDrafts,
     error: errorDrafts,
-  } = sigleApiClient.useQuery('get', '/api/protected/drafts/list', {
+  } = sigleApiClient.useQuery("get", "/api/protected/drafts/list", {
     params: {
       query: {
         limit: 5,
@@ -45,7 +45,7 @@ export const LatestDrafts = () => {
         {errorDrafts ? (
           <Flex justify="center" py="7">
             <Text size="2" color="red">
-              An error occurred, please try again later. Error:{' '}
+              An error occurred, please try again later. Error:{" "}
               {errorDrafts.message}
             </Text>
           </Flex>
@@ -79,7 +79,7 @@ export const LatestDrafts = () => {
               key={draft.id}
               className="border-b border-solid border-gray-6 py-5 first:pt-0 last:border-b-0 last:pb-0"
             >
-              {draft.txStatus === 'pending' && draft.txId && (
+              {draft.txStatus === "pending" && draft.txId && (
                 <Badge className="mb-2" asChild>
                   <a
                     href={getExplorerTransactionUrl(draft.txId)}
@@ -90,13 +90,13 @@ export const LatestDrafts = () => {
                   </a>
                 </Badge>
               )}
-              {draft.txStatus === 'pending' ? (
+              {draft.txStatus === "pending" ? (
                 heading
               ) : (
                 <NextLink href={`/p/${draft.id}/edit`}>{heading}</NextLink>
               )}
               <Text as="p" mt="3" color="gray" size="1" className="uppercase">
-                {format(new Date(draft.createdAt), 'MMM dd')}
+                {format(new Date(draft.createdAt), "MMM dd")}
               </Text>
             </div>
           );

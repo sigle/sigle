@@ -1,9 +1,9 @@
-import { z } from 'zod';
-import { consola } from '~/lib/consola';
-import { defineJob } from '~/lib/jobs';
-import { prisma } from '~/lib/prisma';
+import { z } from "zod";
+import { consola } from "~/lib/consola";
+import { defineJob } from "~/lib/jobs";
+import { prisma } from "~/lib/prisma";
 
-export const indexerMintJob = defineJob('indexer-mint')
+export const indexerMintJob = defineJob("indexer-mint")
   .input(
     z.object({
       address: z.string(),
@@ -45,7 +45,7 @@ export const indexerMintJob = defineJob('indexer-mint')
       })),
     });
 
-    consola.debug('post.mint', {
+    consola.debug("post.mint", {
       id: updatedPost.id,
       quantity: job.data.quantity,
     });

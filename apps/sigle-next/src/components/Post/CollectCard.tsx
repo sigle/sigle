@@ -1,11 +1,11 @@
-import type { paths } from '@/__generated__/sigle-api/openapi';
-import { Button, Heading, Progress, Text } from '@radix-ui/themes';
-import { useState } from 'react';
-import { formatSTX } from '@sigle/sdk';
-import { PostCollectDialog } from '../Shared/Post/PostCollectDialog';
+import type { paths } from "@/__generated__/sigle-api/openapi";
+import { Button, Heading, Progress, Text } from "@radix-ui/themes";
+import { formatSTX } from "@sigle/sdk";
+import { useState } from "react";
+import { PostCollectDialog } from "../Shared/Post/PostCollectDialog";
 
 interface PostCollectCardProps {
-  post: paths['/api/posts/{postId}']['get']['responses']['200']['content']['application/json'];
+  post: paths["/api/posts/{postId}"]["get"]["responses"]["200"]["content"]["application/json"];
 }
 
 export const PostCollectCard = ({ post }: PostCollectCardProps) => {
@@ -26,17 +26,17 @@ export const PostCollectCard = ({ post }: PostCollectCardProps) => {
               {post.collected > 0
                 ? // TODO collectors amount is not accurate
                   `Join ${post.collected} collectors`
-                : 'Be the first to collect this post'}
+                : "Be the first to collect this post"}
             </Text>
           </div>
           <div className="space-y-1 text-right">
-            <Text as="p" size={post.price === '0' ? '3' : '4'} weight="medium">
-              {post.price === '0'
-                ? 'Free'
+            <Text as="p" size={post.price === "0" ? "3" : "4"} weight="medium">
+              {post.price === "0"
+                ? "Free"
                 : `${formatSTX(BigInt(post.price))} STX`}
             </Text>
             <Text as="p" color="gray" size="2">
-              {post.openEdition ? 'Open edition' : 'Limited edition'}
+              {post.openEdition ? "Open edition" : "Limited edition"}
             </Text>
           </div>
         </div>

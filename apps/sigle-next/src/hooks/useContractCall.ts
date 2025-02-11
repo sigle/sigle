@@ -1,10 +1,10 @@
-import { useCallback, useState } from 'react';
+import { stacksNetwork } from "@/lib/stacks";
 import {
-  openContractCall,
   ContractCallOptions,
   FinishedTxData,
-} from '@stacks/connect';
-import { stacksNetwork } from '@/lib/stacks';
+  openContractCall,
+} from "@stacks/connect";
+import { useCallback, useState } from "react";
 
 interface UseContractCallOptions {
   onSuccess?: (data: FinishedTxData) => void;
@@ -41,7 +41,7 @@ export function useContractCall(options: UseContractCallOptions = {}) {
     async (
       parameters: Omit<
         ContractCallOptions,
-        'network' | 'onFinish' | 'onCancel' | 'sponsored'
+        "network" | "onFinish" | "onCancel" | "sponsored"
       >,
     ) => {
       try {
@@ -75,7 +75,7 @@ export function useContractCall(options: UseContractCallOptions = {}) {
         });
       } catch (error) {
         const errorMessage =
-          error instanceof Error ? error.message : 'Unknown error';
+          error instanceof Error ? error.message : "Unknown error";
         setState((prev) => ({
           ...prev,
           loading: false,

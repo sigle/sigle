@@ -1,7 +1,7 @@
-import type { z } from 'zod';
-import type PgBoss from 'pg-boss';
-import type { WorkHandler, SendOptions } from 'pg-boss';
-import { consola } from './consola';
+import type PgBoss from "pg-boss";
+import type { SendOptions, WorkHandler } from "pg-boss";
+import type { z } from "zod";
+import { consola } from "./consola";
 
 class JobBuilder<TInput = any> {
   private _name: string;
@@ -41,7 +41,7 @@ class JobBuilder<TInput = any> {
   // Method to emit/schedule a job
   async emit(data: TInput) {
     if (!this._boss) {
-      throw new Error('Job not registered with JobManager');
+      throw new Error("Job not registered with JobManager");
     }
 
     if (this._inputSchema) {
@@ -49,7 +49,7 @@ class JobBuilder<TInput = any> {
       this._inputSchema.parse(data);
     }
 
-    consola.debug('Job emitted', { name: this._name });
+    consola.debug("Job emitted", { name: this._name });
     return this._boss.send(this._name, data as any, this._options);
   }
 

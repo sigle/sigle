@@ -1,25 +1,25 @@
-import { sigleApiClient } from '@/__generated__/sigle-api';
-import type { paths } from '@/__generated__/sigle-api/openapi';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { Button, Flex, Text, TextArea, TextField } from '@radix-ui/themes';
-import { createProfileMetadata } from '@sigle/sdk';
-import { IconAt, IconBrandX } from '@tabler/icons-react';
-import { useForm } from 'react-hook-form';
-import { toast } from 'sonner';
-import { z } from 'zod';
-import { UploadProfilePicture } from './UploadProfilePicture';
-import { UploadProfileCoverPicture } from './UploadProfileCoverPicture';
-import { useContractCall } from '@/hooks/useContractCall';
+import { sigleApiClient } from "@/__generated__/sigle-api";
+import type { paths } from "@/__generated__/sigle-api/openapi";
+import { useContractCall } from "@/hooks/useContractCall";
+import { sigleClient } from "@/lib/sigle";
 import {
   getExplorerTransactionUrl,
   getPromiseTransactionConfirmation,
-} from '@/lib/stacks';
-import { sigleClient } from '@/lib/sigle';
+} from "@/lib/stacks";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { Button, Flex, Text, TextArea, TextField } from "@radix-ui/themes";
+import { createProfileMetadata } from "@sigle/sdk";
+import { IconAt, IconBrandX } from "@tabler/icons-react";
+import { useForm } from "react-hook-form";
+import { toast } from "sonner";
+import { z } from "zod";
+import { UploadProfileCoverPicture } from "./UploadProfileCoverPicture";
+import { UploadProfilePicture } from "./UploadProfilePicture";
 
 const updateProfileMetadataSchema = z.object({
   displayName: z.string().optional(),
   description: z.string().optional(),
-  website: z.string().url().optional().or(z.literal('')),
+  website: z.string().url().optional().or(z.literal("")),
   twitter: z.string().optional(),
   picture: z.string().optional(),
   coverPicture: z.string().optional(),
@@ -30,7 +30,7 @@ type UpdateProfileMetadataFormData = z.infer<
 >;
 
 interface UpdateProfileMetadataProps {
-  profile: paths['/api/users/{username}']['get']['responses']['200']['content']['application/json']['profile'];
+  profile: paths["/api/users/{username}"]["get"]["responses"]["200"]["content"]["application/json"]["profile"];
   setEditingProfileMetadata: (editing: boolean) => void;
 }
 
@@ -39,11 +39,11 @@ export const UpdateProfileMetadata = ({
   setEditingProfileMetadata,
 }: UpdateProfileMetadataProps) => {
   const { mutateAsync: uploadProfileMetadata } = sigleApiClient.useMutation(
-    'post',
-    '/api/protected/user/profile/upload-metadata',
+    "post",
+    "/api/protected/user/profile/upload-metadata",
     {
       onError: (error: any) => {
-        toast.error('Failed to update profile', {
+        toast.error("Failed to update profile", {
           description: error.message,
         });
       },
@@ -53,18 +53,18 @@ export const UpdateProfileMetadata = ({
   const { contractCall } = useContractCall({
     onSuccess: (data) => {
       toast.promise(getPromiseTransactionConfirmation(data.txId), {
-        loading: 'Update profile transaction submitted',
-        success: 'Profile updated successfully',
-        error: 'Transaction failed',
+        loading: "Update profile transaction submitted",
+        success: "Profile updated successfully",
+        error: "Transaction failed",
         action: {
-          label: 'View tx',
+          label: "View tx",
           onClick: () =>
-            window.open(getExplorerTransactionUrl(data.txId), '_blank'),
+            window.open(getExplorerTransactionUrl(data.txId), "_blank"),
         },
       });
     },
     onError: (error) => {
-      toast.error('Failed to collect', {
+      toast.error("Failed to collect", {
         description: error,
       });
     },
@@ -91,7 +91,7 @@ export const UpdateProfileMetadata = ({
   const onSubmit = handleSubmit(async (formValues) => {
     const metadata = createProfileMetadata({
       // TODO: add random id
-      id: 'TODO',
+      id: "TODO",
       displayName: formValues.displayName || undefined,
       description: formValues.description || undefined,
       twitter: formValues.twitter || undefined,
@@ -118,10 +118,10 @@ export const UpdateProfileMetadata = ({
   const handleXChange: React.ChangeEventHandler<HTMLInputElement> = (event) => {
     let value = event.target.value;
     // If user pastes a full url, extract the username
-    if (value.startsWith('http')) {
-      value = value.split('/').pop() || '';
+    if (value.startsWith("http")) {
+      value = value.split("/").pop() || "";
     }
-    setValue('twitter', value, { shouldValidate: true });
+    setValue("twitter", value, { shouldValidate: true });
   };
 
   return (
@@ -133,7 +133,7 @@ export const UpdateProfileMetadata = ({
           </Text>
           <TextField.Root
             placeholder="Your name"
-            {...register('displayName')}
+            {...register("displayName")}
           />
           {errors.displayName && (
             <Text as="div" size="1" color="red" mt="1">
@@ -149,7 +149,7 @@ export const UpdateProfileMetadata = ({
           <TextArea
             placeholder="Describe yourself in a few words (supports markdown)"
             rows={4}
-            {...register('description')}
+            {...register("description")}
           />
           {errors.description && (
             <Text as="div" size="1" color="red" mt="1">
@@ -164,7 +164,7 @@ export const UpdateProfileMetadata = ({
           </Text>
           <TextField.Root
             placeholder="https://sigle.io"
-            {...register('website')}
+            {...register("website")}
           />
           {errors.website && (
             <Text as="div" size="1" color="red" mt="1">
@@ -179,7 +179,7 @@ export const UpdateProfileMetadata = ({
           </Text>
           <TextField.Root
             placeholder="username"
-            {...register('twitter')}
+            {...register("twitter")}
             onChange={handleXChange}
           >
             <TextField.Slot>
@@ -195,16 +195,16 @@ export const UpdateProfileMetadata = ({
       </div>
 
       <UploadProfilePicture
-        picture={getValues('picture')}
+        picture={getValues("picture")}
         setPicture={(value) =>
-          setValue('picture', value, { shouldValidate: true })
+          setValue("picture", value, { shouldValidate: true })
         }
       />
 
       <UploadProfileCoverPicture
-        picture={getValues('coverPicture')}
+        picture={getValues("coverPicture")}
         setPicture={(value) =>
-          setValue('coverPicture', value, { shouldValidate: true })
+          setValue("coverPicture", value, { shouldValidate: true })
         }
       />
 

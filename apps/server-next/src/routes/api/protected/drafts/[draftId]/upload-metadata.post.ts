@@ -1,24 +1,24 @@
-import { z } from 'zod';
-import { fromError } from 'zod-validation-error';
-import { PostMetadataSchema } from '@sigle/sdk';
-import { readValidatedBodyZod } from '~/lib/nitro';
-import { prisma } from '~/lib/prisma';
-import { aerweaveUploadFile } from '~/lib/arweave';
+import { PostMetadataSchema } from "@sigle/sdk";
+import { z } from "zod";
+import { fromError } from "zod-validation-error";
+import { aerweaveUploadFile } from "~/lib/arweave";
+import { readValidatedBodyZod } from "~/lib/nitro";
+import { prisma } from "~/lib/prisma";
 
 defineRouteMeta({
   openAPI: {
-    tags: ['drafts'],
-    description: 'Upload draft metadata to Arweave.',
+    tags: ["drafts"],
+    description: "Upload draft metadata to Arweave.",
     requestBody: {
       required: true,
       content: {
-        'application/json': {
+        "application/json": {
           schema: {
-            type: 'object',
-            required: ['metadata'],
+            type: "object",
+            required: ["metadata"],
             properties: {
               metadata: {
-                type: 'object',
+                type: "object",
               },
             },
           },
@@ -27,16 +27,16 @@ defineRouteMeta({
     },
     responses: {
       200: {
-        description: 'Metadata uploaded.',
+        description: "Metadata uploaded.",
         content: {
-          'application/json': {
+          "application/json": {
             schema: {
-              type: 'object',
-              required: ['id'],
+              type: "object",
+              required: ["id"],
               properties: {
                 id: {
-                  description: 'Arweave ID.',
-                  type: 'string',
+                  description: "Arweave ID.",
+                  type: "string",
                 },
               },
             },
@@ -52,7 +52,7 @@ const uploadMetadataDraftSchema = z.object({
 });
 
 export default defineEventHandler(async (event) => {
-  const draftId = getRouterParam(event, 'draftId');
+  const draftId = getRouterParam(event, "draftId");
   const body = await readValidatedBodyZod(event, uploadMetadataDraftSchema);
 
   const parsedMetadata = PostMetadataSchema.safeParse(body.metadata);
@@ -76,7 +76,7 @@ export default defineEventHandler(async (event) => {
   if (!draft) {
     throw createError({
       status: 404,
-      message: 'Draft not found.',
+      message: "Draft not found.",
     });
   }
 
@@ -92,7 +92,7 @@ export default defineEventHandler(async (event) => {
   if (post) {
     throw createError({
       status: 400,
-      message: 'A post with this ID already exists.',
+      message: "A post with this ID already exists.",
     });
   }
 
@@ -102,7 +102,7 @@ export default defineEventHandler(async (event) => {
 
   event.context.$posthog.capture({
     distinctId: event.context.user.id,
-    event: 'draft metadata uploaded',
+    event: "draft metadata uploaded",
     properties: {
       arweaveId: id,
       draftId,

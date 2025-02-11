@@ -1,12 +1,12 @@
-import NextAuth from 'next-auth';
-import Credentials from 'next-auth/providers/credentials';
-import { z } from 'zod';
-import { env } from '@/env';
-import type { DefaultJWT } from 'next-auth/jwt';
-import * as Sentry from '@sentry/nextjs';
-import { verifySiwsMessage } from '@sigle/sign-in-with-stacks';
+import { env } from "@/env";
+import * as Sentry from "@sentry/nextjs";
+import { verifySiwsMessage } from "@sigle/sign-in-with-stacks";
+import NextAuth from "next-auth";
+import type { DefaultJWT } from "next-auth/jwt";
+import Credentials from "next-auth/providers/credentials";
+import { z } from "zod";
 
-declare module 'next-auth' {
+declare module "next-auth" {
   /**
    * Returned by `auth`, `useSession`, `getSession` and received as a prop on the `SessionProvider` React Context
    */
@@ -24,7 +24,7 @@ declare module 'next-auth' {
   }
 }
 
-declare module 'next-auth/jwt' {
+declare module "next-auth/jwt" {
   /** Returned by the `jwt` callback and `getToken`, when using JWT sessions */
   interface JWT extends DefaultJWT {
     id: string;
@@ -33,22 +33,22 @@ declare module 'next-auth/jwt' {
 }
 
 const hostname = new URL(env.NEXT_PUBLIC_APP_URL).hostname;
-const rootDomain = hostname.split('.').slice(-2).join('.');
-const useSecureCookies = env.NEXT_PUBLIC_APP_URL.startsWith('https://');
-const cookiePrefix = useSecureCookies ? '__Secure-' : '';
+const rootDomain = hostname.split(".").slice(-2).join(".");
+const useSecureCookies = env.NEXT_PUBLIC_APP_URL.startsWith("https://");
+const cookiePrefix = useSecureCookies ? "__Secure-" : "";
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
   trustHost: true,
   session: {
-    strategy: 'jwt',
+    strategy: "jwt",
   },
   cookies: {
     sessionToken: {
       name: `${cookiePrefix}authjs.session-token`,
       options: {
         httpOnly: true,
-        sameSite: 'lax',
-        path: '/',
+        sameSite: "lax",
+        path: "/",
         secure: useSecureCookies,
         /**
          * We take the default cookies from NextAuth and add our own
@@ -57,9 +57,9 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
          * Localhost and vercel preview env just use the hostname directly.
          */
         domain:
-          hostname == 'localhost' || process.env.VERCEL_ENV === 'preview'
+          hostname == "localhost" || process.env.VERCEL_ENV === "preview"
             ? hostname
-            : '.' + rootDomain,
+            : "." + rootDomain,
       },
     },
   },
@@ -85,7 +85,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
   },
   providers: [
     Credentials({
-      name: 'SignInWithStacks',
+      name: "SignInWithStacks",
       credentials: {
         message: {},
         signature: {},
@@ -114,9 +114,9 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
             const data = await fetch(
               `${env.NEXT_PUBLIC_API_URL}/api/internal/login-user-sync`,
               {
-                method: 'POST',
+                method: "POST",
                 headers: {
-                  'Content-Type': 'application/json',
+                  "Content-Type": "application/json",
                   authorization: `Bearer ${env.INTERNAL_API_TOKEN}`,
                 },
                 body: JSON.stringify({

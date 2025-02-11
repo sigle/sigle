@@ -1,22 +1,22 @@
-import { z } from 'zod';
-import { readValidatedBodyZod } from '~/lib/nitro';
-import { prisma } from '~/lib/prisma';
-import { stacksApiClient } from '~/lib/stacks';
+import { z } from "zod";
+import { readValidatedBodyZod } from "~/lib/nitro";
+import { prisma } from "~/lib/prisma";
+import { stacksApiClient } from "~/lib/stacks";
 
 defineRouteMeta({
   openAPI: {
-    tags: ['drafts'],
-    description: 'Update the draft for the current profile.',
+    tags: ["drafts"],
+    description: "Update the draft for the current profile.",
     requestBody: {
       required: true,
       content: {
-        'application/json': {
+        "application/json": {
           schema: {
-            type: 'object',
-            required: ['txId'],
+            type: "object",
+            required: ["txId"],
             properties: {
               txId: {
-                type: 'string',
+                type: "string",
               },
             },
           },
@@ -31,10 +31,10 @@ const updateDraftSchema = z.object({
 });
 
 export default defineEventHandler(async (event) => {
-  const draftId = getRouterParam(event, 'draftId');
+  const draftId = getRouterParam(event, "draftId");
   const body = await readValidatedBodyZod(event, updateDraftSchema);
 
-  const transaction = await stacksApiClient.GET('/extended/v1/tx/{tx_id}', {
+  const transaction = await stacksApiClient.GET("/extended/v1/tx/{tx_id}", {
     params: {
       path: {
         tx_id: body.txId,
@@ -53,7 +53,7 @@ export default defineEventHandler(async (event) => {
     },
     data: {
       txId: body.txId,
-      txStatus: 'pending',
+      txStatus: "pending",
     },
     select: {
       id: true,
@@ -62,11 +62,11 @@ export default defineEventHandler(async (event) => {
 
   event.context.$posthog.capture({
     distinctId: event.context.user.id,
-    event: 'draft tx id set',
+    event: "draft tx id set",
     properties: {
       draftId,
       txId: body.txId,
-      txStatus: 'pending',
+      txStatus: "pending",
     },
   });
 

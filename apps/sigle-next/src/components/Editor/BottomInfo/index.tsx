@@ -1,9 +1,9 @@
-import { Container, IconButton, Text } from '@radix-ui/themes';
-import { IconKeyboard, IconSun, IconMoon } from '@tabler/icons-react';
-import type { Editor } from '@tiptap/react';
-import { useTheme } from 'next-themes';
-import { useState } from 'react';
-import { ShortcutsDialog } from '../Shortcuts/ShortcutsDialog';
+import { Container, IconButton, Text } from "@radix-ui/themes";
+import { IconKeyboard, IconMoon, IconSun } from "@tabler/icons-react";
+import type { Editor } from "@tiptap/react";
+import { useTheme } from "next-themes";
+import { useState } from "react";
+import { ShortcutsDialog } from "../Shortcuts/ShortcutsDialog";
 
 interface EditorBottomInfoProps {
   editor: Editor;
@@ -24,10 +24,10 @@ export const EditorBottomInfo = ({ editor }: EditorBottomInfoProps) => {
             color="gray"
             className="pointer-events-auto"
             onClick={() =>
-              setTheme(resolvedTheme === 'dark' ? 'light' : 'dark')
+              setTheme(resolvedTheme === "dark" ? "light" : "dark")
             }
           >
-            {resolvedTheme === 'light' ? (
+            {resolvedTheme === "light" ? (
               <IconSun size={16} />
             ) : (
               <IconMoon size={16} />

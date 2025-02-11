@@ -1,25 +1,25 @@
-import { Flex, Link, RadioCards, Text, TextField } from '@radix-ui/themes';
-import { useFormContext, useFormState } from 'react-hook-form';
-import type { EditorPostFormData } from '../../EditorFormProvider';
 import {
   formatUSDollar,
   useCurrencyFiatPrice,
-} from '@/hooks/useCurrencyFiatPrice';
+} from "@/hooks/useCurrencyFiatPrice";
+import { Flex, Link, RadioCards, Text, TextField } from "@radix-ui/themes";
+import { useFormContext, useFormState } from "react-hook-form";
+import type { EditorPostFormData } from "../../EditorFormProvider";
 
 export const CollectPrice = () => {
   const { setValue, watch, register } = useFormContext<EditorPostFormData>();
-  const watchCollectType = watch('collect.collectPrice.type');
-  const watchCollectPrice = watch('collect.collectPrice.price');
+  const watchCollectType = watch("collect.collectPrice.type");
+  const watchCollectPrice = watch("collect.collectPrice.price");
   const { errors } = useFormState<EditorPostFormData>({
-    name: ['collect.collectPrice.price'],
+    name: ["collect.collectPrice.price"],
   });
-  const { data: currencyFiatPrice } = useCurrencyFiatPrice('STX');
+  const { data: currencyFiatPrice } = useCurrencyFiatPrice("STX");
 
   const onSelectPriceChange = (value: string) => {
-    if (value === 'free') {
-      setValue('collect.collectPrice.type', 'free');
+    if (value === "free") {
+      setValue("collect.collectPrice.type", "free");
     } else {
-      setValue('collect.collectPrice.type', 'paid');
+      setValue("collect.collectPrice.type", "paid");
     }
   };
 
@@ -47,7 +47,7 @@ export const CollectPrice = () => {
             </RadioCards.Item>
           </RadioCards.Root>
           <Text as="p" size="1" color="gray">
-            Earn protocol fees on each mint,{' '}
+            Earn protocol fees on each mint,{" "}
             <Link
               href="https://sigle-docs-next.vercel.app/monetization#fee-structure"
               target="_blank"
@@ -57,7 +57,7 @@ export const CollectPrice = () => {
             .
           </Text>
         </div>
-        {watchCollectType === 'paid' ? (
+        {watchCollectType === "paid" ? (
           <>
             <Text as="p" size="2" weight="medium">
               Collection Price
@@ -67,7 +67,7 @@ export const CollectPrice = () => {
                 className="w-full"
                 placeholder="Free"
                 type="number"
-                {...register('collect.collectPrice.price')}
+                {...register("collect.collectPrice.price")}
               >
                 <TextField.Slot side="right">STX</TextField.Slot>
               </TextField.Root>
@@ -75,7 +75,7 @@ export const CollectPrice = () => {
           </>
         ) : null}
         {currencyFiatPrice &&
-        watchCollectType === 'paid' &&
+        watchCollectType === "paid" &&
         watchCollectPrice ? (
           <Text size="1" color="gray">
             ~

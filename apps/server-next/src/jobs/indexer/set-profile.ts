@@ -1,11 +1,11 @@
-import { ProfileMetadataSchema } from '@sigle/sdk';
-import { z } from 'zod';
-import { consola } from '~/lib/consola';
-import { defineJob } from '~/lib/jobs';
-import { prisma } from '~/lib/prisma';
-import { generateImageBlurhashJob } from '../generate-image-blurhash';
+import { ProfileMetadataSchema } from "@sigle/sdk";
+import { z } from "zod";
+import { consola } from "~/lib/consola";
+import { defineJob } from "~/lib/jobs";
+import { prisma } from "~/lib/prisma";
+import { generateImageBlurhashJob } from "../generate-image-blurhash";
 
-export const indexerSetProfileJob = defineJob('indexer-set-profile')
+export const indexerSetProfileJob = defineJob("indexer-set-profile")
   .input(
     z.object({
       address: z.string(),
@@ -17,7 +17,7 @@ export const indexerSetProfileJob = defineJob('indexer-set-profile')
     const job = jobs[0];
 
     // Fetch data from Arweave
-    const arweaveTxId = job.data.uri.replace('ar://', '');
+    const arweaveTxId = job.data.uri.replace("ar://", "");
     const data = await fetch(`https://arweave.net/${arweaveTxId}`);
     const json = await data.json();
 
@@ -61,7 +61,7 @@ export const indexerSetProfileJob = defineJob('indexer-set-profile')
                   },
                   create: {
                     id: profileMetadata.data.picture,
-                    mimeType: 'unknown',
+                    mimeType: "unknown",
                   },
                 },
               }
@@ -74,7 +74,7 @@ export const indexerSetProfileJob = defineJob('indexer-set-profile')
                   },
                   create: {
                     id: profileMetadata.data.coverPicture,
-                    mimeType: 'unknown',
+                    mimeType: "unknown",
                   },
                 },
               }
@@ -95,7 +95,7 @@ export const indexerSetProfileJob = defineJob('indexer-set-profile')
       }
     }
 
-    consola.debug('indexer.set-profile', {
+    consola.debug("indexer.set-profile", {
       id: job.data.address,
       uri: job.data.uri,
     });

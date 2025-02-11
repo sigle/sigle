@@ -1,11 +1,11 @@
-import type { H3Event } from 'h3';
-import { env } from '~/env';
-import IPFS from 'ipfs-only-hash';
-import { TurboFactory } from '@ardrive/turbo-sdk';
+import { TurboFactory } from "@ardrive/turbo-sdk";
+import type { H3Event } from "h3";
+import IPFS from "ipfs-only-hash";
+import { env } from "~/env";
 
 const turboClient = TurboFactory.authenticated({
   privateKey: env.ARWEAVE_PRIVATE_KEY,
-  token: 'solana',
+  token: "solana",
 });
 
 export const generateCID = async (content: Buffer) => {
@@ -33,14 +33,14 @@ export const aerweaveUploadFile = async (
 
   const arweaveTags: ArweaveTag[] = [
     {
-      name: 'content-type',
-      value: 'application/json',
+      name: "content-type",
+      value: "application/json",
     },
     {
-      name: 'App-Name',
+      name: "App-Name",
       value: env.APP_ID,
     },
-    { name: 'IPFS-CID', value: cid },
+    { name: "IPFS-CID", value: cid },
     ...tags,
   ];
 
@@ -56,7 +56,7 @@ export const aerweaveUploadFile = async (
     return { id: uploadResult.id };
   } catch (error) {
     const sentryId = event.context.$sentry.captureException(error, {
-      level: 'error',
+      level: "error",
       extra: {
         metadata,
       },

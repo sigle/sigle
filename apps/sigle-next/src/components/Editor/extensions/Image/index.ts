@@ -1,9 +1,9 @@
-import TipTapImageBase, { type ImageOptions } from '@tiptap/extension-image';
-import { ReactNodeViewRenderer } from '@tiptap/react';
-import { nanoid } from 'nanoid';
-import { ImageComponent } from './Component';
+import TipTapImageBase, { type ImageOptions } from "@tiptap/extension-image";
+import { ReactNodeViewRenderer } from "@tiptap/react";
+import { nanoid } from "nanoid";
+import { ImageComponent } from "./Component";
 
-declare module '@tiptap/core' {
+declare module "@tiptap/core" {
   interface Commands<ReturnType> {
     customImage: {
       /**
@@ -70,7 +70,7 @@ export const TipTapImage = TipTapImageBase.extend<
               const transaction = editor.state.tr;
               editor.state.doc.descendants((node, pos) => {
                 if (
-                  node.type.name === 'image' &&
+                  node.type.name === "image" &&
                   node.attrs.uploadId === uploadId
                 ) {
                   const attrs = {
@@ -90,11 +90,11 @@ export const TipTapImage = TipTapImageBase.extend<
             })
             .catch((error) => {
               // If the upload fails, we remove the image node from the document
-              console.error('Failed to upload image', error);
+              console.error("Failed to upload image", error);
               const transaction = editor.state.tr;
               editor.state.doc.descendants((node, pos) => {
                 if (
-                  node.type.name === 'image' &&
+                  node.type.name === "image" &&
                   node.attrs.uploadId === uploadId
                 ) {
                   transaction.delete(pos, pos + node.nodeSize);

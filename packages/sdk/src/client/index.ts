@@ -1,15 +1,15 @@
 import {
+  STACKS_MAINNET,
   type StacksNetwork,
   type StacksNetworkName,
-  STACKS_MAINNET,
-} from '@stacks/network';
-import { mint, type MintParams } from './mint.js';
+} from "@stacks/network";
+import { config, fixedMintFee } from "./config.js";
 import {
-  generatePostContract,
   type GeneratePostParams,
-} from './generate-post-contract.js';
-import { config, fixedMintFee } from './config.js';
-import { setProfile, type SetProfileParams } from './setProfile.js';
+  generatePostContract,
+} from "./generate-post-contract.js";
+import { type MintParams, mint } from "./mint.js";
+import { type SetProfileParams, setProfile } from "./setProfile.js";
 
 interface CreateClientOptions {
   /**
@@ -26,8 +26,8 @@ export const createClient = (options: CreateClientOptions) => {
   const networkName = options.networkName
     ? options.networkName
     : options.network.chainId === STACKS_MAINNET.chainId
-      ? 'mainnet'
-      : 'testnet';
+      ? "mainnet"
+      : "testnet";
 
   return {
     mint: (params: MintParams) => mint({ network: options.network, params }),

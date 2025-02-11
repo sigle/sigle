@@ -1,7 +1,7 @@
-import { GetFamiliarCards } from '@/components/Dashboard/GetFamiliarCards';
-import { LatestDrafts } from '@/components/Dashboard/LatestDrafts';
-import { LatestPost } from '@/components/Dashboard/LatestPost';
-import { Grid, Heading } from '@radix-ui/themes';
+import { GetFamiliarCards } from "@/components/Dashboard/GetFamiliarCards";
+import { LatestDrafts } from "@/components/Dashboard/LatestDrafts";
+import { LatestPost } from "@/components/Dashboard/LatestPost";
+import { Grid, Heading } from "@radix-ui/themes";
 
 export default function Dashboard() {
   return (
@@ -10,8 +10,8 @@ export default function Dashboard() {
 
       <Grid
         columns={{
-          initial: '1',
-          md: '2',
+          initial: "1",
+          md: "2",
         }}
         gap="5"
         width="auto"

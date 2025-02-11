@@ -1,19 +1,19 @@
 // https://github.com/ueberdosis/tiptap/issues/1508#issuecomment-877348787
 
-import type { IconProps } from '@tabler/icons-react';
-import { Extension } from '@tiptap/core';
-import type { Editor } from '@tiptap/core';
-import { type Range, ReactRenderer } from '@tiptap/react';
-import Suggestion, { type SuggestionOptions } from '@tiptap/suggestion';
-import tippy, { type Instance } from 'tippy.js';
-import { CommandList, type CommandListRef } from './CommandList';
-import './style.css';
+import type { IconProps } from "@tabler/icons-react";
+import { Extension } from "@tiptap/core";
+import type { Editor } from "@tiptap/core";
+import { type Range, ReactRenderer } from "@tiptap/react";
+import Suggestion, { type SuggestionOptions } from "@tiptap/suggestion";
+import tippy, { type Instance } from "tippy.js";
+import { CommandList, type CommandListRef } from "./CommandList";
+import "./style.css";
 
 export interface SlashCommandsCommand {
   title: string;
   keywords?: string[];
   description: string;
-  section: 'basic' | 'embed';
+  section: "basic" | "embed";
   icon: (props: IconProps) => JSX.Element;
   command: ({ editor, range }: { editor: Editor; range?: Range }) => void;
 }
@@ -26,7 +26,7 @@ export const SlashCommands = Extension.create<{
   ) => SlashCommandsCommand[];
   suggestion: Partial<SuggestionOptions>;
 }>({
-  name: 'slash-command',
+  name: "slash-command",
 
   addOptions() {
     return {
@@ -46,7 +46,7 @@ export const SlashCommands = Extension.create<{
         );
       },
       suggestion: {
-        char: '/',
+        char: "/",
         startOfLine: true,
       },
     };
@@ -73,17 +73,17 @@ export const SlashCommands = Extension.create<{
                 editor: props.editor,
               });
 
-              popup = tippy('body', {
+              popup = tippy("body", {
                 // biome-ignore lint/suspicious/noExplicitAny: <explanation>
                 getReferenceClientRect: props.clientRect as any,
                 appendTo: () =>
-                  document.getElementsByClassName('radix-themes')[0] as any,
+                  document.getElementsByClassName("radix-themes")[0] as any,
                 content: reactRenderer.element,
                 showOnCreate: true,
                 interactive: true,
-                trigger: 'manual',
-                placement: 'bottom-start',
-                theme: 'sigle-editor',
+                trigger: "manual",
+                placement: "bottom-start",
+                theme: "sigle-editor",
                 arrow: false,
               });
             },
@@ -96,7 +96,7 @@ export const SlashCommands = Extension.create<{
               });
             },
             onKeyDown(props) {
-              if (props.event.key === 'Escape') {
+              if (props.event.key === "Escape") {
                 popup[0]?.hide();
                 return true;
               }

@@ -1,7 +1,7 @@
-import { cn } from '@/lib/cn';
-import { resolveImageUrl } from '@/lib/images';
-import { getDefaultAvatarUrl } from '@/lib/users';
-import Image from 'next/image';
+import { cn } from "@/lib/cn";
+import { resolveImageUrl } from "@/lib/images";
+import { getDefaultAvatarUrl } from "@/lib/users";
+import Image from "next/image";
 
 export const ProfileAvatar = ({
   user,
@@ -18,14 +18,14 @@ export const ProfileAvatar = ({
       };
     };
   };
-  size: '2' | '3' | '8';
+  size: "2" | "3" | "8";
 }) => {
   return (
     <div
-      className={cn('overflow-hidden rounded-2 bg-gray-3', {
-        'size-8': size === '2',
-        'size-10': size === '3',
-        'size-32': size === '8',
+      className={cn("overflow-hidden rounded-2 bg-gray-3", {
+        "size-8": size === "2",
+        "size-10": size === "3",
+        "size-32": size === "8",
       })}
     >
       {user.profile?.pictureUri ? (
@@ -33,7 +33,7 @@ export const ProfileAvatar = ({
           src={resolveImageUrl(user.profile.pictureUri.id)}
           alt={user.id}
           className="size-full object-cover"
-          placeholder={user.profile.pictureUri.blurhash ? 'blur' : 'empty'}
+          placeholder={user.profile.pictureUri.blurhash ? "blur" : "empty"}
           blurDataURL={user.profile.pictureUri.blurhash}
           width={user.profile.pictureUri.width}
           height={user.profile.pictureUri.height}

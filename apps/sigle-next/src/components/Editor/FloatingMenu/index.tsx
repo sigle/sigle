@@ -1,7 +1,7 @@
-import { IconButton } from '@radix-ui/themes';
-import { IconPlus } from '@tabler/icons-react';
-import { type Editor, FloatingMenu as TipTapFloatingMenu } from '@tiptap/react';
-import './style.css';
+import { IconButton } from "@radix-ui/themes";
+import { IconPlus } from "@tabler/icons-react";
+import { type Editor, FloatingMenu as TipTapFloatingMenu } from "@tiptap/react";
+import "./style.css";
 
 interface EditorFloatingMenuProps {
   editor: Editor;
@@ -9,7 +9,7 @@ interface EditorFloatingMenuProps {
 
 export const EditorFloatingMenu = ({ editor }: EditorFloatingMenuProps) => {
   const handleButtonClick = () => {
-    editor.commands.insertContent('/');
+    editor.commands.insertContent("/");
     editor.commands.focus();
   };
 
@@ -18,8 +18,8 @@ export const EditorFloatingMenu = ({ editor }: EditorFloatingMenuProps) => {
       editor={editor}
       pluginKey="inline-add-menu"
       tippyOptions={{
-        theme: 'sigle-editor-floating-menu',
-        placement: 'left',
+        theme: "sigle-editor-floating-menu",
+        placement: "left",
         arrow: false,
       }}
       shouldShow={({ editor, state }) => {
@@ -35,12 +35,12 @@ export const EditorFloatingMenu = ({ editor }: EditorFloatingMenuProps) => {
         // This might be pretty heavy to do as it's run on every keypress
         // We should look into a different way to do it when we have more time
         const isNotAllowed =
-          editor.isActive('bulletList') ||
-          editor.isActive('orderedList') ||
-          editor.isActive('blockquote');
+          editor.isActive("bulletList") ||
+          editor.isActive("orderedList") ||
+          editor.isActive("blockquote");
 
         return (
-          editor.isActive('paragraph') &&
+          editor.isActive("paragraph") &&
           !isNotAllowed &&
           empty &&
           node.content.size === 0

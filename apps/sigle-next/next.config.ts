@@ -1,16 +1,16 @@
-import type { NextConfig } from 'next';
-import { withSentryConfig } from '@sentry/nextjs';
+import { withSentryConfig } from "@sentry/nextjs";
+import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  output: 'standalone',
+  output: "standalone",
   images: {
     // TODO find a better way to do this
     remotePatterns: [
       {
-        protocol: 'https',
-        hostname: 'ipfs.io',
-        port: '',
-        search: '',
+        protocol: "https",
+        hostname: "ipfs.io",
+        port: "",
+        search: "",
       },
     ],
   },

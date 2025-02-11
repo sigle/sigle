@@ -1,61 +1,61 @@
-import { prisma } from '~/lib/prisma';
+import { prisma } from "~/lib/prisma";
 
 defineRouteMeta({
   openAPI: {
-    tags: ['drafts'],
-    description: 'Get draft for the current profile.',
+    tags: ["drafts"],
+    description: "Get draft for the current profile.",
     responses: {
       200: {
-        description: 'Draft entry.',
+        description: "Draft entry.",
         content: {
-          'application/json': {
+          "application/json": {
             schema: {
-              type: 'object',
-              required: ['id', 'title', 'createdAt', 'updatedAt'],
+              type: "object",
+              required: ["id", "title", "createdAt", "updatedAt"],
               properties: {
                 id: {
-                  type: 'string',
+                  type: "string",
                 },
                 title: {
-                  type: 'string',
+                  type: "string",
                 },
                 content: {
-                  type: 'string',
+                  type: "string",
                 },
                 metaTitle: {
-                  type: 'string',
+                  type: "string",
                 },
                 metaDescription: {
-                  type: 'string',
+                  type: "string",
                 },
                 coverImage: {
-                  type: 'string',
+                  type: "string",
                 },
                 collectPriceType: {
-                  type: 'string',
-                  enum: ['free', 'paid'],
+                  type: "string",
+                  enum: ["free", "paid"],
                 },
                 collectPrice: {
-                  type: 'string',
+                  type: "string",
                 },
                 collectLimitType: {
-                  type: 'string',
-                  enum: ['open', 'fixed'],
+                  type: "string",
+                  enum: ["open", "fixed"],
                 },
                 collectLimit: {
-                  type: 'number',
+                  type: "number",
                 },
                 txId: {
-                  type: 'string',
+                  type: "string",
                 },
                 txStatus: {
-                  type: 'string',
+                  type: "string",
                 },
                 createdAt: {
-                  type: 'string',
+                  type: "string",
                 },
                 updatedAt: {
-                  type: 'string',
+                  type: "string",
                 },
               },
             },
@@ -63,18 +63,18 @@ defineRouteMeta({
         },
       },
       404: {
-        description: 'Draft not found.',
+        description: "Draft not found.",
         content: {
-          'application/json': {
+          "application/json": {
             schema: {
-              type: 'object',
+              type: "object",
               properties: {
                 message: {
-                  type: 'string',
-                  example: 'Draft not found.',
+                  type: "string",
+                  example: "Draft not found.",
                 },
                 statusCode: {
-                  type: 'number',
+                  type: "number",
                   example: 404,
                 },
               },
@@ -87,12 +87,12 @@ defineRouteMeta({
 });
 
 export default defineEventHandler(async (event) => {
-  const draftId = getRouterParam(event, 'draftId');
+  const draftId = getRouterParam(event, "draftId");
 
   if (!draftId) {
     throw createError({
       status: 400,
-      statusMessage: 'Bad Request',
+      statusMessage: "Bad Request",
     });
   }
 
@@ -122,7 +122,7 @@ export default defineEventHandler(async (event) => {
   if (!draft) {
     throw createError({
       status: 404,
-      statusMessage: 'Not Found',
+      statusMessage: "Not Found",
     });
   }
 

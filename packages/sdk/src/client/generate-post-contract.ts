@@ -1,7 +1,7 @@
-import type { StacksNetworkName, StacksNetwork } from '@stacks/network';
-import { contracts } from '@sigle/contracts-source';
-import { MAX_UINT } from '../lib/clarity.js';
-import { config } from './config.js';
+import { contracts } from "@sigle/contracts-source";
+import type { StacksNetwork, StacksNetworkName } from "@stacks/network";
+import { MAX_UINT } from "../lib/clarity.js";
+import { config } from "./config.js";
 
 export type GeneratePostParams = {
   /**
@@ -42,27 +42,27 @@ export const generatePostContract = ({
   const publicationTrait = config[networkName].publicationTrait;
 
   let contract = contracts.siglePublicationV0.replace(
-    '{__BASE_TOKEN_URI__}',
+    "{__BASE_TOKEN_URI__}",
     params.metadata,
   );
 
   if (params.collectInfo.amount < 0) {
-    throw new Error('collectInfo.amount must be > 0');
+    throw new Error("collectInfo.amount must be > 0");
   }
   if (params.collectInfo.amount > MAX_UINT) {
-    throw new Error('collectInfo.amount must be < MAX_UINT');
+    throw new Error("collectInfo.amount must be < MAX_UINT");
   }
   const maxSupply = params.collectInfo.maxSupply
     ? `u${params.collectInfo.maxSupply}`
     : `u${MAX_UINT}`;
   contract = contract.replace(
-    '(define-data-var max-supply uint u0)',
+    "(define-data-var max-supply uint u0)",
     `(define-data-var max-supply uint ${maxSupply})`,
   );
 
   // Replace the init function params
   contract = contract.replace(
-    '(contract-call? .sigle-minter-fixed-price-v001 set-mint-details u0 u0 u0)',
+    "(contract-call? .sigle-minter-fixed-price-v001 set-mint-details u0 u0 u0)",
     `(contract-call? '${fixedPriceMinter} set-mint-details u${params.collectInfo.amount} u0 u${MAX_UINT})`,
   );
 
@@ -80,7 +80,7 @@ export const generatePostContract = ({
 
   // Replace the publication trait with the correct protocol address
   contract = contract.replace(
-    '(impl-trait .sigle-publication-trait-v001.sigle-publication-trait)',
+    "(impl-trait .sigle-publication-trait-v001.sigle-publication-trait)",
     `(impl-trait '${publicationTrait}.sigle-publication-trait)`,
   );
 

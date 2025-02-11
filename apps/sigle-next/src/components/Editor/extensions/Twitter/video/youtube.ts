@@ -9,8 +9,8 @@ export const isValidYoutubeUrl = (url: string) => {
 
 export const getYoutubeEmbedUrl = (nocookie?: boolean) => {
   return nocookie
-    ? 'https://www.youtube-nocookie.com/embed/'
-    : 'https://www.youtube.com/embed/';
+    ? "https://www.youtube-nocookie.com/embed/"
+    : "https://www.youtube.com/embed/";
 };
 
 export const getEmbedUrlFromYoutubeUrl = ({
@@ -25,13 +25,13 @@ export const getEmbedUrlFromYoutubeUrl = ({
   }
 
   // if is already an embed url, return it
-  if (url.includes('/embed/')) {
+  if (url.includes("/embed/")) {
     return url;
   }
 
   // if is a youtu.be url, get the id after the /
-  if (url.includes('youtu.be')) {
-    const id = url.split('/').pop();
+  if (url.includes("youtu.be")) {
+    const id = url.split("/").pop();
 
     if (!id) {
       return null;

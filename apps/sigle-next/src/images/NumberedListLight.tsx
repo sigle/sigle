@@ -1,4 +1,4 @@
-import type { IconProps } from '@tabler/icons-react';
+import type { IconProps } from "@tabler/icons-react";
 
 export const NumberedListLight = ({ width = 35, height = 35 }: IconProps) => (
   <svg

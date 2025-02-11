@@ -1,5 +1,5 @@
-import { Link } from '@radix-ui/themes';
-import ReactMarkdown from 'react-markdown';
+import { Link } from "@radix-ui/themes";
+import ReactMarkdown from "react-markdown";
 
 interface ProfileMarkdownDescriptionProps {
   className?: string;
@@ -13,7 +13,7 @@ export const ProfileMarkdownDescription = ({
   return (
     <ReactMarkdown
       className={className}
-      allowedElements={['p', 'a', 'strong', 'em']}
+      allowedElements={["p", "a", "strong", "em"]}
       components={{
         a: ({ href, color, ...props }) => {
           return (

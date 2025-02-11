@@ -1,14 +1,14 @@
-import { prisma } from '~/lib/prisma';
+import { prisma } from "~/lib/prisma";
 
 defineRouteMeta({
   openAPI: {
-    tags: ['drafts'],
-    description: 'Delete the draft for the current profile.',
+    tags: ["drafts"],
+    description: "Delete the draft for the current profile.",
   },
 });
 
 export default defineEventHandler(async (event) => {
-  const draftId = getRouterParam(event, 'draftId');
+  const draftId = getRouterParam(event, "draftId");
 
   await prisma.draft.delete({
     where: {
@@ -19,7 +19,7 @@ export default defineEventHandler(async (event) => {
 
   event.context.$posthog.capture({
     distinctId: event.context.user.id,
-    event: 'draft deleted',
+    event: "draft deleted",
     properties: {
       draftId,
     },

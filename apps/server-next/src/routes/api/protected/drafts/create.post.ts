@@ -1,37 +1,37 @@
-import { createId } from '@paralleldrive/cuid2';
-import { prisma } from '~/lib/prisma';
+import { createId } from "@paralleldrive/cuid2";
+import { prisma } from "~/lib/prisma";
 
 defineRouteMeta({
   openAPI: {
-    tags: ['drafts'],
-    description: 'Create a new draft for the current profile.',
+    tags: ["drafts"],
+    description: "Create a new draft for the current profile.",
     responses: {
-      '200': {
-        description: 'Draft created.',
+      "200": {
+        description: "Draft created.",
         content: {
-          'application/json': {
+          "application/json": {
             schema: {
-              type: 'object',
-              required: ['id'],
+              type: "object",
+              required: ["id"],
               properties: {
                 id: {
-                  type: 'string',
+                  type: "string",
                 },
               },
             },
           },
         },
       },
-      '400': {
-        description: 'Bad request',
+      "400": {
+        description: "Bad request",
         content: {
-          'application/json': {
+          "application/json": {
             schema: {
-              type: 'object',
-              required: ['message'],
+              type: "object",
+              required: ["message"],
               properties: {
                 message: {
-                  type: 'string',
+                  type: "string",
                 },
               },
             },
@@ -48,8 +48,8 @@ export default defineEventHandler(async (event) => {
       // Move to native @default prisma cuid2 once it's supported
       // See https://github.com/prisma/prisma/issues/17102
       id: createId(),
-      title: '',
-      content: '',
+      title: "",
+      content: "",
       userId: event.context.user.id,
     },
     select: {
@@ -59,7 +59,7 @@ export default defineEventHandler(async (event) => {
 
   event.context.$posthog.capture({
     distinctId: event.context.user.id,
-    event: 'draft created',
+    event: "draft created",
     properties: {
       postId: insertedDraft.id,
     },

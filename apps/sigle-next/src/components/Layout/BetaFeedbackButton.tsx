@@ -1,5 +1,5 @@
-import { Button, Popover } from '@radix-ui/themes';
-import { IconBolt } from '@tabler/icons-react';
+import { Button, Popover } from "@radix-ui/themes";
+import { IconBolt } from "@tabler/icons-react";
 
 export const BetaFeedbackButton = () => {
   return (

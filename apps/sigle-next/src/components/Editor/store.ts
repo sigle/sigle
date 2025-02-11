@@ -1,9 +1,9 @@
-import type { Editor } from '@tiptap/core';
-import { create } from 'zustand';
+import type { Editor } from "@tiptap/core";
+import { create } from "zustand";
 
 interface EditorState {
-  menuOpen: boolean | 'meta' | 'collect';
-  setMenuOpen: (menuOpen: boolean | 'meta' | 'collect') => void;
+  menuOpen: boolean | "meta" | "collect";
+  setMenuOpen: (menuOpen: boolean | "meta" | "collect") => void;
 
   publishOpen: boolean;
   setPublishOpen: (menuOpen: boolean) => void;

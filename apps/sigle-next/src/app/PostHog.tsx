@@ -1,10 +1,10 @@
-'use client';
+"use client";
 
-import { usePathname, useSearchParams } from 'next/navigation';
-import { useEffect, Suspense } from 'react';
-import { usePostHog } from 'posthog-js/react';
-import { env } from '@/env';
-import { useSession } from 'next-auth/react';
+import { env } from "@/env";
+import { useSession } from "next-auth/react";
+import { usePathname, useSearchParams } from "next/navigation";
+import { usePostHog } from "posthog-js/react";
+import { Suspense, useEffect } from "react";
 
 export function PostHogInit(): null {
   const { data: session } = useSession();
@@ -15,13 +15,13 @@ export function PostHogInit(): null {
       posthog.init(env.NEXT_PUBLIC_POSTHOG_KEY, {
         api_host: env.NEXT_PUBLIC_POSTHOG_HOST,
         autocapture: false,
-        persistence: 'localStorage',
+        persistence: "localStorage",
         enable_heatmaps: false,
         ip: false,
         // Disable automatic pageview capture, as we capture manually
         capture_pageview: false,
         // Enable debug mode in development
-        debug: process.env.NODE_ENV === 'development',
+        debug: process.env.NODE_ENV === "development",
       });
     }
   }, [posthog]);
@@ -48,7 +48,7 @@ function PostHogPageView(): null {
         url = url + `?${searchParams.toString()}`;
       }
 
-      posthog.capture('$pageview', { $current_url: url });
+      posthog.capture("$pageview", { $current_url: url });
     }
   }, [pathname, searchParams, posthog]);
 

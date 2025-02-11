@@ -1,13 +1,13 @@
-import { sigleApiFetchclient } from '@/__generated__/sigle-api';
-import { resolveImageUrl } from '@/lib/images';
-import { ImageResponse } from 'next/og';
+import { sigleApiFetchclient } from "@/__generated__/sigle-api";
+import { resolveImageUrl } from "@/lib/images";
+import { ImageResponse } from "next/og";
 
 export const size = {
   width: 800,
   height: 418,
 };
 
-export const contentType = 'image/png';
+export const contentType = "image/png";
 
 // Image generation
 export default async function Image({
@@ -15,7 +15,7 @@ export default async function Image({
 }: {
   params: { postId: string };
 }) {
-  const { data: post } = await sigleApiFetchclient.GET('/api/posts/{postId}', {
+  const { data: post } = await sigleApiFetchclient.GET("/api/posts/{postId}", {
     params: {
       path: {
         postId: params.postId,
@@ -23,7 +23,7 @@ export default async function Image({
     },
   });
   if (!post) {
-    return Response.json({ error: 'Not found' }, { status: 404 });
+    return Response.json({ error: "Not found" }, { status: 404 });
   }
 
   // Disable font loading for now as it's throwing an error when loading the local font
@@ -50,15 +50,15 @@ export default async function Image({
     <div
       tw="flex h-full w-full flex-col items-start px-15 py-15 justify-between"
       style={{
-        color: '#202020',
-        backgroundColor: '#ffffff',
+        color: "#202020",
+        backgroundColor: "#ffffff",
         fontFamily: '"Inter"',
       }}
     >
       <div
         tw="text-5xl leading-snug overflow-hidden"
         style={{
-          display: 'block',
+          display: "block",
           lineClamp: 3,
           fontWeight: 500,
         }}
@@ -76,7 +76,7 @@ export default async function Image({
               height={50}
               width={50}
               style={{
-                objectFit: 'cover',
+                objectFit: "cover",
               }}
             />
           ) : null}
@@ -85,7 +85,7 @@ export default async function Image({
             <div
               tw="text-base"
               style={{
-                color: '#646464',
+                color: "#646464",
               }}
             >
               {`@${handle}`}
@@ -95,18 +95,18 @@ export default async function Image({
         <div tw="flex flex-col items-center">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
-            src={'https://app.sigle.io/icon-192x192.png'}
+            src={"https://app.sigle.io/icon-192x192.png"}
             alt="Sigle logo"
             height={30}
             width={30}
             style={{
-              objectFit: 'cover',
+              objectFit: "cover",
             }}
           />
           <div
             tw="text-base"
             style={{
-              color: '#646464',
+              color: "#646464",
             }}
           >
             sigle.io

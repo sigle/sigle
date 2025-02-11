@@ -1,4 +1,4 @@
-import { cn } from '@/lib/cn';
+import { cn } from "@/lib/cn";
 import {
   IconBold,
   IconCode,
@@ -6,16 +6,16 @@ import {
   IconLink,
   IconStrikethrough,
   IconUnderline,
-} from '@tabler/icons-react';
+} from "@tabler/icons-react";
 import {
   type Editor,
   BubbleMenu as TipTapBubbleMenu,
   isTextSelection,
-} from '@tiptap/react';
-import { useEffect } from 'react';
-import { EditorBubbleMenuLink } from './BubbleMenuLink';
-import { useBubbleMenuStore } from './store';
-import './style.css';
+} from "@tiptap/react";
+import { useEffect } from "react";
+import { EditorBubbleMenuLink } from "./BubbleMenuLink";
+import { useBubbleMenuStore } from "./store";
+import "./style.css";
 
 const BubbleMenuButton = ({
   active,
@@ -24,8 +24,8 @@ const BubbleMenuButton = ({
   <button
     {...props}
     className={cn({
-      'text-gray-1': !active,
-      'text-indigo-7 dark:text-indigo-9': active,
+      "text-gray-1": !active,
+      "text-indigo-7 dark:text-indigo-9": active,
     })}
   />
 );
@@ -43,21 +43,21 @@ export const EditorBubbleMenu = ({ editor }: EditorBubbleMenuProps) => {
   useEffect(() => {
     function onKeyDown(event: KeyboardEvent) {
       // We want all our commands to start with the user pressing ctrl or cmd for mac users
-      if ((event.ctrlKey || event.metaKey) && event.key === 'k') {
+      if ((event.ctrlKey || event.metaKey) && event.key === "k") {
         onSelectLink();
       }
     }
 
-    window.addEventListener('keydown', onKeyDown);
-    return () => window.removeEventListener('keydown', onKeyDown);
+    window.addEventListener("keydown", onKeyDown);
+    return () => window.removeEventListener("keydown", onKeyDown);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const onSelectLink = () => {
     // Get href of selected link to pre fill the input
-    const existingHref = editor.isActive('link')
-      ? editor.getAttributes('link').href
-      : '';
+    const existingHref = editor.isActive("link")
+      ? editor.getAttributes("link").href
+      : "";
 
     setLinkOpen(true);
     setLinkValue(existingHref);
@@ -65,7 +65,7 @@ export const EditorBubbleMenu = ({ editor }: EditorBubbleMenuProps) => {
 
   const resetLink = () => {
     setLinkOpen(false);
-    setLinkValue('');
+    setLinkValue("");
   };
 
   return (
@@ -73,7 +73,7 @@ export const EditorBubbleMenu = ({ editor }: EditorBubbleMenuProps) => {
       className="flex gap-3 px-4 py-3"
       tippyOptions={{
         duration: 100,
-        theme: 'sigle-editor-bubble-menu',
+        theme: "sigle-editor-bubble-menu",
         onHidden: () => {
           resetLink();
         },
@@ -95,27 +95,27 @@ export const EditorBubbleMenu = ({ editor }: EditorBubbleMenuProps) => {
         // End default implementation
 
         // Do not show menu on images
-        if (editor.isActive('image')) {
+        if (editor.isActive("image")) {
           return false;
         }
 
         // Do not show menu on code blocks
-        if (editor.isActive('codeBlock')) {
+        if (editor.isActive("codeBlock")) {
           return false;
         }
 
         // Do not show menu on dividers
-        if (editor.isActive('horizontalRule')) {
+        if (editor.isActive("horizontalRule")) {
           return false;
         }
 
         /// Do not show on twitter embed
-        if (editor.isActive('twitter')) {
+        if (editor.isActive("twitter")) {
           return false;
         }
 
         /// Do not show on cta
-        if (editor.isActive('cta')) {
+        if (editor.isActive("cta")) {
           return false;
         }
 
@@ -127,37 +127,37 @@ export const EditorBubbleMenu = ({ editor }: EditorBubbleMenuProps) => {
         <>
           <BubbleMenuButton
             onClick={() => editor.chain().focus().toggleBold().run()}
-            active={editor.isActive('bold')}
+            active={editor.isActive("bold")}
           >
             <IconBold size={18} />
           </BubbleMenuButton>
           <BubbleMenuButton
             onClick={() => editor.chain().focus().toggleItalic().run()}
-            active={editor.isActive('italic')}
+            active={editor.isActive("italic")}
           >
             <IconItalic size={18} />
           </BubbleMenuButton>
           <BubbleMenuButton
             onClick={() => editor.chain().focus().toggleUnderline().run()}
-            active={editor.isActive('underline')}
+            active={editor.isActive("underline")}
           >
             <IconUnderline size={18} />
           </BubbleMenuButton>
           <BubbleMenuButton
             onClick={() => editor.chain().focus().toggleStrike().run()}
-            active={editor.isActive('strike')}
+            active={editor.isActive("strike")}
           >
             <IconStrikethrough size={18} />
           </BubbleMenuButton>
           <BubbleMenuButton
             onClick={() => editor.chain().focus().toggleCode().run()}
-            active={editor.isActive('code')}
+            active={editor.isActive("code")}
           >
             <IconCode size={18} />
           </BubbleMenuButton>
           <BubbleMenuButton
             onClick={() => onSelectLink()}
-            active={editor.isActive('link')}
+            active={editor.isActive("link")}
           >
             <IconLink size={18} />
           </BubbleMenuButton>

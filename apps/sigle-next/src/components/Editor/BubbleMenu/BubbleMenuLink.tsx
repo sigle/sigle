@@ -1,7 +1,7 @@
-import { cn } from '@/lib/cn';
-import { IconX } from '@tabler/icons-react';
-import type { Editor } from '@tiptap/react';
-import { useBubbleMenuStore } from './store';
+import { cn } from "@/lib/cn";
+import { IconX } from "@tabler/icons-react";
+import type { Editor } from "@tiptap/react";
+import { useBubbleMenuStore } from "./store";
 
 const BubbleMenuButton = ({
   active,
@@ -10,8 +10,8 @@ const BubbleMenuButton = ({
   <button
     {...props}
     className={cn({
-      'text-gray-1': !active,
-      'text-indigo-7 dark:text-indigo-9': active,
+      "text-gray-1": !active,
+      "text-indigo-7 dark:text-indigo-9": active,
     })}
   />
 );
@@ -32,8 +32,8 @@ export const EditorBubbleMenuLink = ({ editor }: EditorBubbleMenuProps) => {
 
     if (
       safeLinkValue &&
-      !safeLinkValue.startsWith('http') &&
-      !safeLinkValue.startsWith('#')
+      !safeLinkValue.startsWith("http") &&
+      !safeLinkValue.startsWith("#")
     ) {
       safeLinkValue = `https://${linkValue}`;
     }
@@ -43,18 +43,18 @@ export const EditorBubbleMenuLink = ({ editor }: EditorBubbleMenuProps) => {
       editor
         .chain()
         .focus()
-        .extendMarkRange('link')
+        .extendMarkRange("link")
         .setLink({ href: safeLinkValue })
         // Set the text selection at the end of the link selection
         // that way user can continue to type easily
         .setTextSelection(pos.end())
         // Unset link selection se when the user continues to type it won't be a link
         // We are using `unsetMark` instead of `unsetLink` to avoid the full selection to be unlinked
-        .unsetMark('link')
+        .unsetMark("link")
         .run();
     } else {
       // If input text is empty we unset the link
-      editor.chain().focus().extendMarkRange('link').unsetLink().run();
+      editor.chain().focus().extendMarkRange("link").unsetLink().run();
     }
 
     resetLink();
@@ -62,7 +62,7 @@ export const EditorBubbleMenuLink = ({ editor }: EditorBubbleMenuProps) => {
 
   const onKeyDown = (event: React.KeyboardEvent) => {
     // If user press escape we hide the link input
-    if (event.key === 'Escape') {
+    if (event.key === "Escape") {
       event.preventDefault();
       resetLink();
     }
@@ -70,7 +70,7 @@ export const EditorBubbleMenuLink = ({ editor }: EditorBubbleMenuProps) => {
 
   const resetLink = () => {
     setLinkOpen(false);
-    setLinkValue('');
+    setLinkValue("");
   };
 
   return (

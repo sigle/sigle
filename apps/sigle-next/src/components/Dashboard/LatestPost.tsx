@@ -1,21 +1,21 @@
-'use client';
+"use client";
 
-import { sigleApiClient } from '@/__generated__/sigle-api';
-import { Routes } from '@/lib/routes';
-import { Button, Card, Flex, Heading, Text } from '@radix-ui/themes';
-import { format } from 'date-fns';
-import { useSession } from 'next-auth/react';
-import { NextLink } from '../Shared/NextLink';
+import { sigleApiClient } from "@/__generated__/sigle-api";
+import { Routes } from "@/lib/routes";
+import { Button, Card, Flex, Heading, Text } from "@radix-ui/themes";
+import { format } from "date-fns";
+import { useSession } from "next-auth/react";
+import { NextLink } from "../Shared/NextLink";
 
 export const LatestPost = () => {
   const { data: session } = useSession();
   const { data: posts } = sigleApiClient.useSuspenseQuery(
-    'get',
-    '/api/posts/list',
+    "get",
+    "/api/posts/list",
     {
       params: {
         query: {
-          username: session?.user.id || '',
+          username: session?.user.id || "",
           limit: 1,
         },
       },
@@ -47,7 +47,7 @@ export const LatestPost = () => {
                 {post.metaTitle || post.title}
               </Heading>
               <Text mt="2" as="p" color="gray" size="1" className="uppercase">
-                {format(new Date(post.createdAt), 'MMM dd')}
+                {format(new Date(post.createdAt), "MMM dd")}
               </Text>
               <Button
                 mt="3"
@@ -75,7 +75,7 @@ export const LatestPost = () => {
                   {
                     // TODO that amount from backend
                     0
-                  }{' '}
+                  }{" "}
                   <Text size="1" color="gray">
                     STX
                   </Text>

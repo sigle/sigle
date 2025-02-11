@@ -1,23 +1,23 @@
-'use client';
+"use client";
 
-import { sigleApiClient } from '@/__generated__/sigle-api';
-import { Button, Card, Container, Heading, Text } from '@radix-ui/themes';
-import { ProfileAvatar } from '../Shared/Profile/ProfileAvatar';
-import { formatReadableAddress } from '@/lib/stacks';
-import { Routes } from '@/lib/routes';
-import { NextLink } from '../Shared/NextLink';
+import { sigleApiClient } from "@/__generated__/sigle-api";
+import { Routes } from "@/lib/routes";
+import { formatReadableAddress } from "@/lib/stacks";
+import { Button, Card, Container, Heading, Text } from "@radix-ui/themes";
+import { NextLink } from "../Shared/NextLink";
+import { ProfileAvatar } from "../Shared/Profile/ProfileAvatar";
 import {
   Carousel,
   CarouselContent,
   CarouselItem,
   CarouselNext,
   CarouselPrevious,
-} from '../ui';
+} from "../ui";
 
 export const HomeTrendingUsers = () => {
   const { data: users } = sigleApiClient.useSuspenseQuery(
-    'get',
-    '/api/users/trending',
+    "get",
+    "/api/users/trending",
   );
 
   return (
@@ -29,7 +29,7 @@ export const HomeTrendingUsers = () => {
       <Carousel
         className="mt-4 w-full"
         opts={{
-          align: 'start',
+          align: "start",
         }}
       >
         <CarouselContent>

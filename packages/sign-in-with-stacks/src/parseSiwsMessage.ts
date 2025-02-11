@@ -1,4 +1,4 @@
-import type { ExactPartial, Prettify, SiwsMessage } from './types.js';
+import type { ExactPartial, Prettify, SiwsMessage } from "./types.js";
 
 /**
  * @description Parses SIP-X formatted message into message fields object.
@@ -26,9 +26,9 @@ export function parseSiwsMessage(
       notBefore?: string;
       requestId?: string;
       uri: string;
-      version: '1';
+      version: "1";
     };
-  const resources = message.split('Resources:')[1]?.split('\n- ').slice(1);
+  const resources = message.split("Resources:")[1]?.split("\n- ").slice(1);
   return {
     ...prefix,
     ...suffix,

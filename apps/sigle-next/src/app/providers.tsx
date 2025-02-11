@@ -1,13 +1,13 @@
-'use client';
+"use client";
 
-import { Theme } from '@radix-ui/themes';
-import { ThemeProvider } from 'next-themes';
-import { PostHogProvider } from 'posthog-js/react';
-import { Toaster } from 'sonner';
-import posthog from 'posthog-js';
-import { SessionProvider } from 'next-auth/react';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { PostHogInit, SuspendedPostHogPageView } from './PostHog';
+import { Theme } from "@radix-ui/themes";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { SessionProvider } from "next-auth/react";
+import { ThemeProvider } from "next-themes";
+import posthog from "posthog-js";
+import { PostHogProvider } from "posthog-js/react";
+import { Toaster } from "sonner";
+import { PostHogInit, SuspendedPostHogPageView } from "./PostHog";
 
 const queryClient = new QueryClient({
   defaultOptions: {

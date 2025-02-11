@@ -1,7 +1,7 @@
-import { expect, test } from 'vitest';
-import { generateSiwsNonce } from './generateSiwsNonce.js';
+import { expect, test } from "vitest";
+import { generateSiwsNonce } from "./generateSiwsNonce.js";
 
-test('default', () => {
+test("default", () => {
   const nonce = generateSiwsNonce();
-  expect(nonce.length).toMatchInlineSnapshot('96');
+  expect(nonce.length).toMatchInlineSnapshot("96");
 });

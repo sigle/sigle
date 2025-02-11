@@ -1,17 +1,17 @@
-import { Flex, RadioCards, Text, TextField } from '@radix-ui/themes';
-import { useFormContext, useFormState } from 'react-hook-form';
-import type { EditorPostFormData } from '../../EditorFormProvider';
+import { Flex, RadioCards, Text, TextField } from "@radix-ui/themes";
+import { useFormContext, useFormState } from "react-hook-form";
+import type { EditorPostFormData } from "../../EditorFormProvider";
 
 export const CollectEdition = () => {
   const { setValue, watch, register } = useFormContext<EditorPostFormData>();
-  const watchCollectLimitType = watch('collect.collectLimit.type');
-  const watchCollectLimitLimit = watch('collect.collectLimit.limit');
+  const watchCollectLimitType = watch("collect.collectLimit.type");
+  const watchCollectLimitLimit = watch("collect.collectLimit.limit");
   const { errors } = useFormState<EditorPostFormData>({
-    name: ['collect.collectLimit.type', 'collect.collectLimit.limit'],
+    name: ["collect.collectLimit.type", "collect.collectLimit.limit"],
   });
 
   const onEditionChange = (value: typeof watchCollectLimitType) => {
-    setValue('collect.collectLimit.type', value, {
+    setValue("collect.collectLimit.type", value, {
       shouldValidate: true,
     });
   };
@@ -43,7 +43,7 @@ export const CollectEdition = () => {
           </Flex>
         </RadioCards.Item>
       </RadioCards.Root>
-      {watchCollectLimitType === 'fixed' ? (
+      {watchCollectLimitType === "fixed" ? (
         <div className="space-y-2 animate-in fade-in">
           <div className="space-y-1">
             <Text as="p" size="2">
@@ -57,7 +57,7 @@ export const CollectEdition = () => {
             className="w-full"
             type="number"
             min="1"
-            {...register('collect.collectLimit.limit')}
+            {...register("collect.collectLimit.limit")}
           >
             <TextField.Slot side="right">editions</TextField.Slot>
           </TextField.Root>

@@ -1,6 +1,6 @@
-import { Callout, Flex, Spinner, Text } from '@radix-ui/themes';
-import { IconInfoCircle } from '@tabler/icons-react';
-import { useSession } from 'next-auth/react';
+import { Callout, Flex, Spinner, Text } from "@radix-ui/themes";
+import { IconInfoCircle } from "@tabler/icons-react";
+import { useSession } from "next-auth/react";
 
 interface AuthProtectProps {
   children?: React.ReactNode;
@@ -9,11 +9,11 @@ interface AuthProtectProps {
 export const AuthProtect = ({ children }: AuthProtectProps) => {
   const { status } = useSession();
 
-  if (status === 'authenticated') {
+  if (status === "authenticated") {
     return <>{children}</>;
   }
 
-  if (status === 'unauthenticated') {
+  if (status === "unauthenticated") {
     return (
       <Flex justify="center" py="7">
         <Callout.Root color="gray">

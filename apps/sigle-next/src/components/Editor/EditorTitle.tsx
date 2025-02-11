@@ -1,11 +1,11 @@
-import { Text } from '@radix-ui/themes';
-import { useFormContext, useFormState } from 'react-hook-form';
-import type { EditorPostFormData } from './EditorFormProvider';
+import { Text } from "@radix-ui/themes";
+import { useFormContext, useFormState } from "react-hook-form";
+import type { EditorPostFormData } from "./EditorFormProvider";
 
 export const EditorTitle = () => {
   const { register } = useFormContext<EditorPostFormData>();
   const { errors } = useFormState<EditorPostFormData>({
-    name: 'title',
+    name: "title",
   });
 
   return (
@@ -14,7 +14,7 @@ export const EditorTitle = () => {
         <input
           className="w-full border-none bg-transparent text-6 font-bold outline-none"
           placeholder="Title"
-          {...register('title')}
+          {...register("title")}
         />
       </div>
       {errors.title && (

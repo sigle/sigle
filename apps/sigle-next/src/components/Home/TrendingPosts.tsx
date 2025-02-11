@@ -1,6 +1,8 @@
-'use client';
+"use client";
 
-import { sigleApiClient } from '@/__generated__/sigle-api';
+import { sigleApiClient } from "@/__generated__/sigle-api";
+import { Routes } from "@/lib/routes";
+import { formatReadableAddress } from "@/lib/stacks";
 import {
   AspectRatio,
   Card,
@@ -9,22 +11,20 @@ import {
   Inset,
   Link,
   Text,
-} from '@radix-ui/themes';
-import { formatReadableAddress } from '@/lib/stacks';
-import { Routes } from '@/lib/routes';
+} from "@radix-ui/themes";
+import { PostCard } from "../Shared/Post/Card";
 import {
   Carousel,
   CarouselContent,
   CarouselItem,
   CarouselNext,
   CarouselPrevious,
-} from '../ui';
-import { PostCard } from '../Shared/Post/Card';
+} from "../ui";
 
 export const HomeTrendingPosts = () => {
   const { data: posts } = sigleApiClient.useSuspenseQuery(
-    'get',
-    '/api/posts/list',
+    "get",
+    "/api/posts/list",
     {
       params: {
         query: {
@@ -43,7 +43,7 @@ export const HomeTrendingPosts = () => {
       <Carousel
         className="mt-4 w-full"
         opts={{
-          align: 'start',
+          align: "start",
         }}
       >
         <CarouselContent>

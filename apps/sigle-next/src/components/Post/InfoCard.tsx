@@ -1,14 +1,14 @@
-import type { paths } from '@/__generated__/sigle-api/openapi';
-import { getExplorerTransactionUrl } from '@/lib/stacks';
-import { Link, Separator, Text } from '@radix-ui/themes';
-import { IconArrowUpRight } from '@tabler/icons-react';
+import type { paths } from "@/__generated__/sigle-api/openapi";
+import { getExplorerTransactionUrl } from "@/lib/stacks";
+import { Link, Separator, Text } from "@radix-ui/themes";
+import { IconArrowUpRight } from "@tabler/icons-react";
 
 interface PublicationInfoCardProps {
-  post: paths['/api/posts/{postId}']['get']['responses']['200']['content']['application/json'];
+  post: paths["/api/posts/{postId}"]["get"]["responses"]["200"]["content"]["application/json"];
 }
 
 export const PostInfoCard = ({ post }: PublicationInfoCardProps) => {
-  const fullLink = post.metadataUri.startsWith('ar://')
+  const fullLink = post.metadataUri.startsWith("ar://")
     ? `https://arweave.net/${post.metadataUri.slice(5)}`
     : post.metadataUri;
 

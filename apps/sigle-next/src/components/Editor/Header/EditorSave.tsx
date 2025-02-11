@@ -1,23 +1,23 @@
-import { Callout, Text } from '@radix-ui/themes';
-import { IconInfoCircle } from '@tabler/icons-react';
-import { useParams } from 'next/navigation';
-import { useEffect, useState } from 'react';
-import { useFormContext } from 'react-hook-form';
-import type { EditorPostFormData } from '../EditorFormProvider';
-import { useEditorStore } from '../store';
-import { useDebouncedCallback } from '@/hooks/useDebouncedCallback';
-import { sigleApiClient } from '@/__generated__/sigle-api';
+import { sigleApiClient } from "@/__generated__/sigle-api";
+import { useDebouncedCallback } from "@/hooks/useDebouncedCallback";
+import { Callout, Text } from "@radix-ui/themes";
+import { IconInfoCircle } from "@tabler/icons-react";
+import { useParams } from "next/navigation";
+import { useEffect, useState } from "react";
+import { useFormContext } from "react-hook-form";
+import type { EditorPostFormData } from "../EditorFormProvider";
+import { useEditorStore } from "../store";
 
 export const EditorSave = () => {
   const params = useParams();
   const postId = params.postId as string;
   const [saveState, setSaveState] = useState<
-    'idle' | 'saving' | 'error' | 'saved'
-  >('idle');
+    "idle" | "saving" | "error" | "saved"
+  >("idle");
   const { watch, getValues } = useFormContext<EditorPostFormData>();
   const { mutate: updatePost } = sigleApiClient.useMutation(
-    'post',
-    '/api/protected/drafts/{draftId}/update',
+    "post",
+    "/api/protected/drafts/{draftId}/update",
   );
   const editor = useEditorStore((state) => state.editor);
 
@@ -37,10 +37,10 @@ export const EditorSave = () => {
         },
         {
           onSuccess: () => {
-            setSaveState('saved');
+            setSaveState("saved");
           },
           onError: () => {
-            setSaveState('error');
+            setSaveState("error");
           },
         },
       );
@@ -54,13 +54,13 @@ export const EditorSave = () => {
   useEffect(() => {
     if (!editor) return;
     const subscription = watch(() => {
-      setSaveState('saving');
+      setSaveState("saving");
       onAutoSave();
     });
     return () => subscription.unsubscribe();
   }, [watch, editor, onAutoSave]);
 
-  if (saveState === 'error') {
+  if (saveState === "error") {
     return (
       <Callout.Root color="red" size="1">
         <Callout.Icon>
@@ -73,11 +73,11 @@ export const EditorSave = () => {
 
   return (
     <Text size="2">
-      {saveState === 'idle'
-        ? ''
-        : saveState === 'saved'
-          ? 'Saved'
-          : 'Saving...'}
+      {saveState === "idle"
+        ? ""
+        : saveState === "saved"
+          ? "Saved"
+          : "Saving..."}
     </Text>
   );
 };

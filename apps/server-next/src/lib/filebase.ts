@@ -2,14 +2,14 @@ import {
   PutObjectCommand,
   S3Client,
   S3ServiceException,
-} from '@aws-sdk/client-s3';
-import { consola } from './consola';
-import type { H3Event } from 'h3';
-import { env } from '~/env';
+} from "@aws-sdk/client-s3";
+import type { H3Event } from "h3";
+import { env } from "~/env";
+import { consola } from "./consola";
 
 const client = new S3Client({
-  endpoint: 'https://s3.filebase.com',
-  region: 'us-east-1',
+  endpoint: "https://s3.filebase.com",
+  region: "us-east-1",
   credentials: {
     accessKeyId: env.FILEBASE_ACCESS_KEY,
     secretAccessKey: env.FILEBASE_SECRET_KEY,
@@ -44,12 +44,12 @@ export const ipfsUploadFile = async (
       if (!response.statusCode) return data;
 
       // Get cid from headers
-      cid = response.headers?.['x-amz-meta-cid'];
+      cid = response.headers?.["x-amz-meta-cid"];
       return data;
     },
     {
-      step: 'build',
-      name: 'addCidToOutput',
+      step: "build",
+      name: "addCidToOutput",
     },
   );
 
@@ -59,7 +59,7 @@ export const ipfsUploadFile = async (
     if (!cid) {
       throw createError({
         status: 500,
-        message: 'Failed to upload to IPFS, no cid found',
+        message: "Failed to upload to IPFS, no cid found",
       });
     }
 

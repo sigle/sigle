@@ -1,4 +1,4 @@
-import { Avatar, Container, Heading, Skeleton, Text } from '@radix-ui/themes';
+import { Avatar, Container, Heading, Skeleton, Text } from "@radix-ui/themes";
 
 export const PageProfileSkeleton = () => {
   return (
@@ -13,7 +13,7 @@ export const PageProfileSkeleton = () => {
         <div className="flex">
           <div className="z-10 mt-[-70px] rounded-5 border-[6px] border-transparent bg-white dark:bg-gray-1">
             <Skeleton>
-              <Avatar fallback={'L'} size="8" radius="small" />
+              <Avatar fallback={"L"} size="8" radius="small" />
             </Skeleton>
           </div>
         </div>

@@ -1,4 +1,4 @@
-import type { IconProps } from '@tabler/icons-react';
+import type { IconProps } from "@tabler/icons-react";
 
 export const LogoImage = ({ width = 93, height = 35 }: IconProps) => (
   <svg

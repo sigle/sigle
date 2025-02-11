@@ -1,20 +1,20 @@
-import { encode } from 'blurhash';
-import sharp from 'sharp';
-import { blurHashToDataURL } from './blurhash';
+import { encode } from "blurhash";
+import sharp from "sharp";
+import { blurHashToDataURL } from "./blurhash";
 
 export const resolveImageUrl = (image: string) => {
-  if (image?.startsWith('ipfs://')) {
+  if (image?.startsWith("ipfs://")) {
     image = `https://ipfs.io/ipfs/${image.slice(7)}`;
   }
-  if (image?.startsWith('ar://')) {
+  if (image?.startsWith("ar://")) {
     image = `https://arweave.net/${image.slice(5)}`;
   }
   return image;
 };
 
-const WEBP = 'image/webp';
-const PNG = 'image/png';
-const JPEG = 'image/jpeg';
+const WEBP = "image/webp";
+const PNG = "image/png";
+const JPEG = "image/jpeg";
 export const allowedFormats = [WEBP, PNG, JPEG] as const;
 
 export async function optimizeImage({
@@ -59,13 +59,13 @@ export async function optimizeImage({
 export function mimeTypeToExtension(mimeType: string): string {
   switch (mimeType) {
     case WEBP:
-      return 'webp';
+      return "webp";
     case PNG:
-      return 'png';
+      return "png";
     case JPEG:
-      return 'jpeg';
+      return "jpeg";
   }
-  throw new Error('Unsupported mimeType');
+  throw new Error("Unsupported mimeType");
 }
 
 export async function generateBlurhashURI({
@@ -79,7 +79,7 @@ export async function generateBlurhashURI({
     sharp(buffer)
       .raw()
       .ensureAlpha()
-      .resize(size, size, { fit: 'inside' })
+      .resize(size, size, { fit: "inside" })
       .toBuffer((err, buffer, { width, height }) => {
         if (err) return reject(err);
         const encoded = encode(

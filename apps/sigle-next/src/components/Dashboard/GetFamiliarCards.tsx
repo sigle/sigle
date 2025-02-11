@@ -1,5 +1,5 @@
-import { Card, Grid, Text } from '@radix-ui/themes';
-import { NextLink } from '../Shared/NextLink';
+import { Card, Grid, Text } from "@radix-ui/themes";
+import { NextLink } from "../Shared/NextLink";
 
 export const GetFamiliarCards = () => {
   return (
@@ -10,8 +10,8 @@ export const GetFamiliarCards = () => {
 
       <Grid
         columns={{
-          initial: '1',
-          md: '2',
+          initial: "1",
+          md: "2",
         }}
         gap="4"
         width="auto"

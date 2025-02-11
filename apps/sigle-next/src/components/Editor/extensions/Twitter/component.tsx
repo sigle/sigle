@@ -1,28 +1,28 @@
-import { zodResolver } from '@hookform/resolvers/zod';
-import { Text, TextField } from '@radix-ui/themes';
-import { IconBrandTwitter, IconBrandYoutube } from '@tabler/icons-react';
-import type { NodeViewProps } from '@tiptap/core';
-import { NodeViewWrapper } from '@tiptap/react';
-import type React from 'react';
-import { useEffect, useMemo } from 'react';
-import { useForm } from 'react-hook-form';
-import { z } from 'zod';
-import { TwitterComponent } from './twitter/component';
-import { TWITTER_REGEX_GLOBAL, isValidTwitterUrl } from './twitter/twitter';
-import { YOUTUBE_REGEX_GLOBAL, isValidYoutubeUrl } from './video';
-import { VideoComponent } from './video/component';
+import { zodResolver } from "@hookform/resolvers/zod";
+import { Text, TextField } from "@radix-ui/themes";
+import { IconBrandTwitter, IconBrandYoutube } from "@tabler/icons-react";
+import type { NodeViewProps } from "@tiptap/core";
+import { NodeViewWrapper } from "@tiptap/react";
+import type React from "react";
+import { useEffect, useMemo } from "react";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+import { TwitterComponent } from "./twitter/component";
+import { TWITTER_REGEX_GLOBAL, isValidTwitterUrl } from "./twitter/twitter";
+import { YOUTUBE_REGEX_GLOBAL, isValidYoutubeUrl } from "./video";
+import { VideoComponent } from "./video/component";
 
 export const isValidUrl = (val: string) => {
   return isValidTwitterUrl(val) || isValidYoutubeUrl(val);
 };
 export const globalPasteRegex = new RegExp(
   `(${YOUTUBE_REGEX_GLOBAL.source}|${TWITTER_REGEX_GLOBAL.source})`,
-  'g',
+  "g",
 );
 
 const embedSchema = z.object({
   url: z.string().refine((val) => isValidUrl(val), {
-    message: 'Invalid embed url, this service is not supported.',
+    message: "Invalid embed url, this service is not supported.",
   }),
 });
 
@@ -42,8 +42,8 @@ export const EmbedComponent = (props: NodeViewProps) => {
   const url: string | undefined = props.node.attrs.url;
   const embedType = useMemo(() => {
     if (!url) return undefined;
-    if (isValidTwitterUrl(url)) return 'twitter';
-    if (isValidYoutubeUrl(url)) return 'video';
+    if (isValidTwitterUrl(url)) return "twitter";
+    if (isValidYoutubeUrl(url)) return "video";
   }, [url]);
 
   // Override tiptap focus and focus on input instead
@@ -51,13 +51,13 @@ export const EmbedComponent = (props: NodeViewProps) => {
   useEffect(() => {
     if (!url) {
       setTimeout(() => {
-        setFocus('url');
+        setFocus("url");
       }, 5);
     }
   }, [url, setFocus]);
 
   const onSubmit = handleSubmit((formValues) => {
-    props.editor.commands.updateAttributes('embed', {
+    props.editor.commands.updateAttributes("embed", {
       ...props.node.attrs,
       url: formValues.url,
     });
@@ -68,8 +68,8 @@ export const EmbedComponent = (props: NodeViewProps) => {
   // Remove input if empty and user presses backspace or delete key
   const onKeyDown = (event: React.KeyboardEvent) => {
     if (
-      (!getValues().url && event.key === 'Backspace') ||
-      event.key === 'Delete'
+      (!getValues().url && event.key === "Backspace") ||
+      event.key === "Delete"
     ) {
       props.deleteNode();
     }
@@ -82,18 +82,18 @@ export const EmbedComponent = (props: NodeViewProps) => {
           <TextField.Root
             size="3"
             placeholder={
-              props.node.attrs.embedType === 'twitter'
-                ? 'Paste tweet URL and press “enter”...'
-                : 'Paste video URL and press “enter”...'
+              props.node.attrs.embedType === "twitter"
+                ? "Paste tweet URL and press “enter”..."
+                : "Paste video URL and press “enter”..."
             }
-            {...register('url')}
+            {...register("url")}
             onKeyDown={onKeyDown}
           >
             <TextField.Slot>
-              {props.node.attrs.embedType === 'twitter' ? (
+              {props.node.attrs.embedType === "twitter" ? (
                 <IconBrandTwitter height="16" width="16" />
               ) : null}
-              {props.node.attrs.embedType === 'video' ? (
+              {props.node.attrs.embedType === "video" ? (
                 <IconBrandYoutube height="16" width="16" />
               ) : null}
             </TextField.Slot>
@@ -106,8 +106,8 @@ export const EmbedComponent = (props: NodeViewProps) => {
         </form>
       )}
 
-      {embedType === 'twitter' && <TwitterComponent {...props} />}
-      {embedType === 'video' && <VideoComponent {...props} />}
+      {embedType === "twitter" && <TwitterComponent {...props} />}
+      {embedType === "video" && <VideoComponent {...props} />}
     </NodeViewWrapper>
   );
 };

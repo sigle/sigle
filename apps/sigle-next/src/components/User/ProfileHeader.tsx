@@ -1,21 +1,21 @@
-'use client';
+"use client";
 
-import type { paths } from '@/__generated__/sigle-api/openapi';
-import { env } from '@/env';
-import { useCopyToClipboard } from '@/hooks/useCopyToClipboard';
-import { cn } from '@/lib/cn';
-import { resolveImageUrl } from '@/lib/images';
-import { Routes } from '@/lib/routes';
-import { Button, Container, DropdownMenu, IconButton } from '@radix-ui/themes';
-import { IconDotsVertical, IconPencil } from '@tabler/icons-react';
-import { useSession } from 'next-auth/react';
-import { usePostHog } from 'posthog-js/react';
-import { ProfileAvatar } from '../Shared/Profile/ProfileAvatar';
-import Image from 'next/image';
-import { NextLink } from '../Shared/NextLink';
+import type { paths } from "@/__generated__/sigle-api/openapi";
+import { env } from "@/env";
+import { useCopyToClipboard } from "@/hooks/useCopyToClipboard";
+import { cn } from "@/lib/cn";
+import { resolveImageUrl } from "@/lib/images";
+import { Routes } from "@/lib/routes";
+import { Button, Container, DropdownMenu, IconButton } from "@radix-ui/themes";
+import { IconDotsVertical, IconPencil } from "@tabler/icons-react";
+import { useSession } from "next-auth/react";
+import Image from "next/image";
+import { usePostHog } from "posthog-js/react";
+import { NextLink } from "../Shared/NextLink";
+import { ProfileAvatar } from "../Shared/Profile/ProfileAvatar";
 
 interface ProfileHeaderProps {
-  user: paths['/api/users/{username}']['get']['responses']['200']['content']['application/json'];
+  user: paths["/api/users/{username}"]["get"]["responses"]["200"]["content"]["application/json"];
 }
 
 export const ProfileHeader = ({ user }: ProfileHeaderProps) => {
@@ -27,7 +27,7 @@ export const ProfileHeader = ({ user }: ProfileHeaderProps) => {
     copyToClipboard(
       `${env.NEXT_PUBLIC_APP_URL}${Routes.userProfile({ username: user.id })}`,
     );
-    posthog.capture('profile_link_copied', {
+    posthog.capture("profile_link_copied", {
       profileId: user.id,
     });
   };
@@ -38,9 +38,9 @@ export const ProfileHeader = ({ user }: ProfileHeaderProps) => {
   return (
     <>
       <div
-        className={cn('relative w-full  bg-gray-3', {
-          'h-64 md:h-[22rem]': hasBanner,
-          'h-32': !hasBanner,
+        className={cn("relative w-full  bg-gray-3", {
+          "h-64 md:h-[22rem]": hasBanner,
+          "h-32": !hasBanner,
         })}
       >
         {user?.profile?.coverPictureUri ? (
@@ -50,7 +50,7 @@ export const ProfileHeader = ({ user }: ProfileHeaderProps) => {
             sizes="100vw"
             className="size-full object-cover"
             placeholder={
-              user.profile.coverPictureUri.blurhash ? 'blur' : 'empty'
+              user.profile.coverPictureUri.blurhash ? "blur" : "empty"
             }
             blurDataURL={user.profile.coverPictureUri.blurhash}
             width={user.profile.coverPictureUri.width}

@@ -4,7 +4,7 @@
  */
 
 export interface paths {
-  '': {
+  "": {
     parameters: {
       query?: never;
       header?: never;
@@ -37,7 +37,7 @@ export interface paths {
     patch?: never;
     trace?: never;
   };
-  '/api/chainhook/webhook': {
+  "/api/chainhook/webhook": {
     parameters: {
       query?: never;
       header?: never;
@@ -70,7 +70,7 @@ export interface paths {
     patch?: never;
     trace?: never;
   };
-  '/api/internal/login-user-sync': {
+  "/api/internal/login-user-sync": {
     parameters: {
       query?: never;
       header?: never;
@@ -103,7 +103,7 @@ export interface paths {
     patch?: never;
     trace?: never;
   };
-  '/api/posts/{postId}': {
+  "/api/posts/{postId}": {
     parameters: {
       query?: never;
       header?: never;
@@ -128,7 +128,7 @@ export interface paths {
             [name: string]: unknown;
           };
           content: {
-            'application/json': {
+            "application/json": {
               id: string;
               title: string;
               content?: string;
@@ -187,7 +187,7 @@ export interface paths {
     patch?: never;
     trace?: never;
   };
-  '/api/posts/list': {
+  "/api/posts/list": {
     parameters: {
       query?: never;
       header?: never;
@@ -215,7 +215,7 @@ export interface paths {
             [name: string]: unknown;
           };
           content: {
-            'application/json': {
+            "application/json": {
               id: string;
               address: string;
               title: string;
@@ -273,7 +273,7 @@ export interface paths {
     patch?: never;
     trace?: never;
   };
-  '/api/protected/drafts/{draftId}': {
+  "/api/protected/drafts/{draftId}": {
     parameters: {
       query?: never;
       header?: never;
@@ -298,7 +298,7 @@ export interface paths {
             [name: string]: unknown;
           };
           content: {
-            'application/json': {
+            "application/json": {
               id: string;
               title: string;
               content?: string;
@@ -306,10 +306,10 @@ export interface paths {
               metaDescription?: string;
               coverImage?: string;
               /** @enum {string} */
-              collectPriceType?: 'free' | 'paid';
+              collectPriceType?: "free" | "paid";
               collectPrice?: string;
               /** @enum {string} */
-              collectLimitType?: 'open' | 'fixed';
+              collectLimitType?: "open" | "fixed";
               collectLimit?: number;
               txId?: string;
               txStatus?: string;
@@ -324,7 +324,7 @@ export interface paths {
             [name: string]: unknown;
           };
           content: {
-            'application/json': {
+            "application/json": {
               /** @example Draft not found. */
               message?: string;
               /** @example 404 */
@@ -342,7 +342,7 @@ export interface paths {
     patch?: never;
     trace?: never;
   };
-  '/api/protected/drafts/{draftId}/delete': {
+  "/api/protected/drafts/{draftId}/delete": {
     parameters: {
       query?: never;
       header?: never;
@@ -378,7 +378,7 @@ export interface paths {
     patch?: never;
     trace?: never;
   };
-  '/api/protected/drafts/{draftId}/set-tx-id': {
+  "/api/protected/drafts/{draftId}/set-tx-id": {
     parameters: {
       query?: never;
       header?: never;
@@ -399,7 +399,7 @@ export interface paths {
       };
       requestBody: {
         content: {
-          'application/json': {
+          "application/json": {
             txId: string;
           };
         };
@@ -420,7 +420,7 @@ export interface paths {
     patch?: never;
     trace?: never;
   };
-  '/api/protected/drafts/{draftId}/update': {
+  "/api/protected/drafts/{draftId}/update": {
     parameters: {
       query?: never;
       header?: never;
@@ -441,7 +441,7 @@ export interface paths {
       };
       requestBody: {
         content: {
-          'application/json': {
+          "application/json": {
             title: string;
             content: string;
             metaTitle?: string;
@@ -450,12 +450,12 @@ export interface paths {
             collect?: {
               collectPrice: {
                 /** @enum {string} */
-                type: 'free' | 'paid';
+                type: "free" | "paid";
                 price: number;
               };
               collectLimit: {
                 /** @enum {string} */
-                type: 'open' | 'fixed';
+                type: "open" | "fixed";
                 limit: number;
               };
             };
@@ -469,7 +469,7 @@ export interface paths {
             [name: string]: unknown;
           };
           content: {
-            'application/json': {
+            "application/json": {
               id: string;
             };
           };
@@ -482,7 +482,7 @@ export interface paths {
     patch?: never;
     trace?: never;
   };
-  '/api/protected/drafts/{draftId}/upload-media': {
+  "/api/protected/drafts/{draftId}/upload-media": {
     parameters: {
       query?: never;
       header?: never;
@@ -503,7 +503,7 @@ export interface paths {
       };
       requestBody: {
         content: {
-          'multipart/form-data': {
+          "multipart/form-data": {
             /**
              * Format: binary
              * @description Profile media
@@ -519,7 +519,7 @@ export interface paths {
             [name: string]: unknown;
           };
           content: {
-            'application/json': {
+            "application/json": {
               cid: string;
               url: string;
               gatewayUrl: string;
@@ -532,7 +532,7 @@ export interface paths {
             [name: string]: unknown;
           };
           content: {
-            'application/json': {
+            "application/json": {
               message: string;
             };
           };
@@ -545,7 +545,7 @@ export interface paths {
     patch?: never;
     trace?: never;
   };
-  '/api/protected/drafts/{draftId}/upload-metadata': {
+  "/api/protected/drafts/{draftId}/upload-metadata": {
     parameters: {
       query?: never;
       header?: never;
@@ -566,7 +566,7 @@ export interface paths {
       };
       requestBody: {
         content: {
-          'application/json': {
+          "application/json": {
             metadata: Record<string, never>;
           };
         };
@@ -578,7 +578,7 @@ export interface paths {
             [name: string]: unknown;
           };
           content: {
-            'application/json': {
+            "application/json": {
               /** @description Arweave ID. */
               id: string;
             };
@@ -592,7 +592,7 @@ export interface paths {
     patch?: never;
     trace?: never;
   };
-  '/api/protected/drafts/create': {
+  "/api/protected/drafts/create": {
     parameters: {
       query?: never;
       header?: never;
@@ -617,7 +617,7 @@ export interface paths {
             [name: string]: unknown;
           };
           content: {
-            'application/json': {
+            "application/json": {
               id: string;
             };
           };
@@ -628,7 +628,7 @@ export interface paths {
             [name: string]: unknown;
           };
           content: {
-            'application/json': {
+            "application/json": {
               message: string;
             };
           };
@@ -641,7 +641,7 @@ export interface paths {
     patch?: never;
     trace?: never;
   };
-  '/api/protected/drafts/list': {
+  "/api/protected/drafts/list": {
     parameters: {
       query?: never;
       header?: never;
@@ -667,7 +667,7 @@ export interface paths {
             [name: string]: unknown;
           };
           content: {
-            'application/json': {
+            "application/json": {
               id: string;
               title: string;
               content?: string;
@@ -687,7 +687,7 @@ export interface paths {
             [name: string]: unknown;
           };
           content: {
-            'application/json': {
+            "application/json": {
               message: string;
             };
           };
@@ -702,7 +702,7 @@ export interface paths {
     patch?: never;
     trace?: never;
   };
-  '/api/protected/user/profile/upload-avatar': {
+  "/api/protected/user/profile/upload-avatar": {
     parameters: {
       query?: never;
       header?: never;
@@ -721,7 +721,7 @@ export interface paths {
       };
       requestBody: {
         content: {
-          'multipart/form-data': {
+          "multipart/form-data": {
             /**
              * Format: binary
              * @description Profile media
@@ -737,7 +737,7 @@ export interface paths {
             [name: string]: unknown;
           };
           content: {
-            'application/json': {
+            "application/json": {
               cid: string;
               url: string;
               gatewayUrl: string;
@@ -752,7 +752,7 @@ export interface paths {
     patch?: never;
     trace?: never;
   };
-  '/api/protected/user/profile/upload-cover': {
+  "/api/protected/user/profile/upload-cover": {
     parameters: {
       query?: never;
       header?: never;
@@ -771,7 +771,7 @@ export interface paths {
       };
       requestBody: {
         content: {
-          'multipart/form-data': {
+          "multipart/form-data": {
             /**
              * Format: binary
              * @description Profile media
@@ -787,7 +787,7 @@ export interface paths {
             [name: string]: unknown;
           };
           content: {
-            'application/json': {
+            "application/json": {
               cid: string;
               url: string;
               gatewayUrl: string;
@@ -802,7 +802,7 @@ export interface paths {
     patch?: never;
     trace?: never;
   };
-  '/api/protected/user/profile/upload-metadata': {
+  "/api/protected/user/profile/upload-metadata": {
     parameters: {
       query?: never;
       header?: never;
@@ -821,7 +821,7 @@ export interface paths {
       };
       requestBody: {
         content: {
-          'application/json': {
+          "application/json": {
             /** @description Profile metadata */
             metadata?: Record<string, never>;
           };
@@ -834,7 +834,7 @@ export interface paths {
             [name: string]: unknown;
           };
           content: {
-            'application/json': {
+            "application/json": {
               /** @description Arweave ID. */
               id: string;
             };
@@ -848,7 +848,7 @@ export interface paths {
     patch?: never;
     trace?: never;
   };
-  '/api/users/{username}': {
+  "/api/users/{username}": {
     parameters: {
       query?: never;
       header?: never;
@@ -873,7 +873,7 @@ export interface paths {
             [name: string]: unknown;
           };
           content: {
-            'application/json': {
+            "application/json": {
               id: string;
               createdAt: string;
               updatedAt: string;
@@ -909,7 +909,7 @@ export interface paths {
     patch?: never;
     trace?: never;
   };
-  '/api/users/trending': {
+  "/api/users/trending": {
     parameters: {
       query?: never;
       header?: never;
@@ -932,7 +932,7 @@ export interface paths {
             [name: string]: unknown;
           };
           content: {
-            'application/json': {
+            "application/json": {
               id: string;
               createdAt: string;
               updatedAt: string;
@@ -969,7 +969,7 @@ export interface paths {
     patch?: never;
     trace?: never;
   };
-  '/health': {
+  "/health": {
     parameters: {
       query?: never;
       header?: never;
@@ -1002,7 +1002,7 @@ export interface paths {
     patch?: never;
     trace?: never;
   };
-  '/_openapi.json': {
+  "/_openapi.json": {
     parameters: {
       query?: never;
       header?: never;
@@ -1035,7 +1035,7 @@ export interface paths {
     patch?: never;
     trace?: never;
   };
-  '/_scalar': {
+  "/_scalar": {
     parameters: {
       query?: never;
       header?: never;
@@ -1068,7 +1068,7 @@ export interface paths {
     patch?: never;
     trace?: never;
   };
-  '/_swagger': {
+  "/_swagger": {
     parameters: {
       query?: never;
       header?: never;
