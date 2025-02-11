@@ -1,6 +1,14 @@
 {
   "name": "@sigle/sigle-next",
+  "private": true,
   "version": "0.0.0",
+  "scripts": {
+    "build": "next build",
+    "codegen": "openapi-typescript http://localhost:3001/_openapi.json --output ./src/__generated__/sigle-api/openapi.ts",
+    "dev": "next dev",
+    "lint": "next lint",
+    "start": "next start"
+  },
   "dependencies": {
     "@hookform/resolvers": "3.9.1",
     "@radix-ui/react-collapsible": "1.1.2",
@@ -91,13 +99,5 @@
     "tailwindcss": "3.4.17",
     "tailwindcss-animate": "1.0.7",
     "typescript": "5.7.2"
-  },
-  "private": true,
-  "scripts": {
-    "build": "next build",
-    "codegen": "openapi-typescript http://localhost:3001/_openapi.json --output ./src/__generated__/sigle-api/openapi.ts",
-    "dev": "next dev",
-    "lint": "next lint",
-    "start": "next start"
   }
 }

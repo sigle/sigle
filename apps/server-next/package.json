@@ -1,5 +1,16 @@
 {
   "name": "@sigle/server-next",
+  "private": true,
+  "packageManager": "pnpm@9.15.5",
+  "scripts": {
+    "build": "nitro build",
+    "db:generate": "prisma generate",
+    "db:migrate:prod": "prisma migrate deploy",
+    "dev": "dotenvx run --env-file=.env.development --env-file=.env.development.local -- nitro dev --port 3001",
+    "prepare": "nitro prepare",
+    "prisma:migrate:dev": "dotenvx run --env-file=.env.development -- prisma migrate dev",
+    "prisma:studio:dev": "dotenvx run --env-file=.env.development -- prisma studio"
+  },
   "dependencies": {
     "@ardrive/turbo-sdk": "1.22.0",
     "@aws-sdk/client-s3": "3.722.0",
@@ -29,16 +40,5 @@
   "devDependencies": {
     "nitropack": "2.10.4",
     "typescript": "5.7.2"
-  },
-  "packageManager": "pnpm@9.15.5",
-  "private": true,
-  "scripts": {
-    "build": "nitro build",
-    "db:generate": "prisma generate",
-    "db:migrate:prod": "prisma migrate deploy",
-    "dev": "dotenvx run --env-file=.env.development --env-file=.env.development.local -- nitro dev --port 3001",
-    "prepare": "nitro prepare",
-    "prisma:migrate:dev": "dotenvx run --env-file=.env.development -- prisma migrate dev",
-    "prisma:studio:dev": "dotenvx run --env-file=.env.development -- prisma studio"
   }
 }

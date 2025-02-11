@@ -1,6 +1,28 @@
 {
   "dependencyTypes": ["prod", "dev"],
   "sortPackages": true,
+  "sortFirst": [
+    "name",
+    "description",
+    "keywords",
+    "homepage",
+    "bugs",
+    "repository",
+    "license",
+    "private",
+    "version",
+    "packageManager",
+    "type",
+    "publishConfig",
+    "main",
+    "exports",
+    "bin",
+    "scripts",
+    "dependencies",
+    "devDependencies",
+    "peerDependencies",
+    "files"
+  ],
   "semverGroups": [
     {
       "label": "enforce production versions to match",
