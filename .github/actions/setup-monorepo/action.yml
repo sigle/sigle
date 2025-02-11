@@ -1,6 +1,7 @@
-name: 'Setup the monorepo'
+name: "Setup the monorepo"
+description: "Setup the monorepo"
 runs:
-  using: 'composite'
+  using: "composite"
   steps:
     - uses: actions/checkout@v4
 
@@ -18,8 +19,8 @@ runs:
       uses: actions/setup-node@v4
       with:
         node-version: 20
-        cache: 'pnpm'
+        cache: "pnpm"
 
     - name: Install dependencies
       shell: bash
-      run: pnpm install
+      run: pnpm install --frozen-lockfile
