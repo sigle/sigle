@@ -1,5 +1,6 @@
 import { H3Event } from "h3";
 import { RateLimiterPrisma, RateLimiterRes } from "rate-limiter-flexible";
+import { addRoute, createRouter, findRoute } from "rou3";
 import { prisma } from "~/lib/prisma";
 
 interface RateLimitConfig {
@@ -9,24 +10,34 @@ interface RateLimitConfig {
 }
 
 interface RouteConfig {
-  [route: string]: RateLimitConfig;
+  path: string;
+  method: string;
+  config: RateLimitConfig;
 }
 
-const defaultRouteConfigs: RouteConfig = {
-  "/api/protected/user/profile": {
-    points: 2,
-    duration: 60,
-    blockDuration: 10 * 60,
+// Define route configurations
+const routeConfigs: RouteConfig[] = [
+  {
+    path: "/api/protected/user/profile/upload-metadata",
+    method: "POST",
+    config: {
+      points: 4,
+      duration: 60,
+      blockDuration: 10 * 60,
+    },
   },
-};
+];
 
-// Create rate limiters map
+const router = createRouter<RouteConfig>();
+
 const rateLimiters = new Map<string, RateLimiterPrisma>();
 
-// Initialize rate limiters for each route
-Object.entries(defaultRouteConfigs).forEach(([route, config]) => {
+routeConfigs.forEach((routeConfig) => {
+  const { path, method, config } = routeConfig;
+  addRoute(router, method, path, routeConfig);
+
   rateLimiters.set(
-    route,
+    path,
     new RateLimiterPrisma({
       storeClient: prisma,
       points: config.points,
@@ -47,17 +58,18 @@ function getClientIdentifier(event: H3Event): string {
 
 export default defineEventHandler(async (event) => {
   const path = event.path;
+  const method = event.method;
 
-  // Find matching route configuration
-  const routeConfig = Object.entries(defaultRouteConfigs).find(([route]) =>
-    path.startsWith(route),
-  );
+  const match = findRoute<RouteConfig>(router, method, path);
 
   // No rate limit for this route
-  if (!routeConfig) return;
+  if (!match) return;
 
-  const [route] = routeConfig;
-  const rateLimiter = rateLimiters.get(route);
+  console.log("match", match);
+
+  const config = match.data.config;
+  const routePath = match.data.path;
+  const rateLimiter = rateLimiters.get(routePath);
 
   if (!rateLimiter) return;
 
@@ -67,7 +79,7 @@ export default defineEventHandler(async (event) => {
     const rateLimiterRes = await rateLimiter.consume(clientId);
 
     setHeaders(event, {
-      "X-RateLimit-Limit": String(defaultRouteConfigs[route].points),
+      "X-RateLimit-Limit": String(config.points),
       "X-RateLimit-Remaining": String(rateLimiterRes.remainingPoints),
       "X-RateLimit-Reset": String(rateLimiterRes.msBeforeNext),
     });
@@ -78,7 +90,7 @@ export default defineEventHandler(async (event) => {
     const res = rateLimiterRes as RateLimiterRes;
 
     setHeaders(event, {
-      "X-RateLimit-Limit": String(defaultRouteConfigs[route].points),
+      "X-RateLimit-Limit": String(config.points),
       "X-RateLimit-Remaining": "0",
       "X-RateLimit-Reset": String(res.msBeforeNext),
       "Retry-After": String(Math.ceil(res.msBeforeNext / 1000)),
