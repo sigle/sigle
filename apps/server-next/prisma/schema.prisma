@@ -114,3 +114,11 @@ model PostNft {
   minterId String @map("minter_id")
   minter   User   @relation(name: "minter", fields: [minterId], references: [id])
 }
+
+// Model for the rate-limiter-flexible package
+// https://github.com/animir/node-rate-limiter-flexible/wiki/Prisma#schema-example
+model RateLimiterFlexible {
+  key    String    @id
+  points Int
+  expire DateTime?
+}
