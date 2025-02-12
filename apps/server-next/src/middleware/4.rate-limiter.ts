@@ -18,9 +18,30 @@ interface RouteConfig {
 // Define route configurations
 const routeConfigs: RouteConfig[] = [
   {
+    path: "/api/protected/user/profile/upload-avatar",
+    method: "POST",
+    config: {
+      // limit to 4 requests per user per minute
+      points: 4,
+      duration: 60,
+      blockDuration: 10 * 60,
+    },
+  },
+  {
+    path: "/api/protected/user/profile/upload-cover",
+    method: "POST",
+    config: {
+      // limit to 4 requests per user per minute
+      points: 4,
+      duration: 60,
+      blockDuration: 10 * 60,
+    },
+  },
+  {
     path: "/api/protected/user/profile/upload-metadata",
     method: "POST",
     config: {
+      // limit to 4 requests per user per minute
       points: 4,
       duration: 60,
       blockDuration: 10 * 60,
