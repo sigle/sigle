@@ -77,7 +77,6 @@ const fileSchema = z.object({
 });
 
 export default defineEventHandler(async (event) => {
-  // TODO rate limit route 10 / minute / user
   const draftId = getRouterParam(event, "draftId");
   const formData = await readMultipartFormDataSafe(event, "5mb");
 

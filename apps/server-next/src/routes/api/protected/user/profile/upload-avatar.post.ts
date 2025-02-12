@@ -58,7 +58,6 @@ const fileSchema = z.object({
 });
 
 export default defineEventHandler(async (event) => {
-  // TODO rate limit route 2 / minute / user
   const formData = await readMultipartFormDataSafe(event, "5mb");
 
   const file = formData?.find((f) => f.name === "file");
