@@ -45,7 +45,6 @@ defineRouteMeta({
 });
 
 export default defineEventHandler(async (event) => {
-  // TODO rate limit route 2 / minute / user
   const body = await readBody(event);
 
   const parsedMetadata = ProfileMetadataSchema.safeParse(body.metadata);
