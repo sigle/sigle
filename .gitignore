@@ -7,3 +7,5 @@ coverage
 .env.local
 .turbo
 dist
+# Meilisearch
+data.ms
