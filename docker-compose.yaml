@@ -61,7 +61,7 @@ services:
       - ./data.ms:/data.ms
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:7700/health"]
-      interval: 10s
+      interval: 60s
       timeout: 5s
       retries: 5
 
