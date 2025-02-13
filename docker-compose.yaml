@@ -17,6 +17,8 @@ services:
       interval: 1s
       timeout: 5s
       retries: 10
+    networks:
+      - sigle-network
 
   server:
     build:
@@ -43,6 +45,8 @@ services:
     depends_on:
       postgres:
         condition: service_healthy
+    networks:
+      - sigle-network
 
   meilisearch:
     container_name: meilisearch
@@ -62,6 +66,12 @@ services:
       interval: 60s
       timeout: 5s
       retries: 5
+    networks:
+      - sigle-network
 
 volumes:
   postgres_data:
+
+networks:
+  sigle-network:
+    driver: bridge

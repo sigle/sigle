@@ -34,7 +34,6 @@ export const syncMeilisearchJob = defineJob("sync-meilisearch")
         title: post.title,
         excerpt: post.excerpt,
         createdAt: post.createdAt,
-        userId: post.userId,
       }));
 
       await meilisearchClient.index("posts").addDocuments(formattedPosts);
