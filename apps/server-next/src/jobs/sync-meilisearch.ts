@@ -12,8 +12,37 @@ export const syncMeilisearchJob = defineJob("sync-meilisearch")
   .work(async () => {
     consola.debug("Starting Meilisearch sync...");
 
-    // Sync Posts
+    // Sync Users
     let skip = 0;
+    while (true) {
+      const users = await prisma.user.findMany({
+        take: BATCH_SIZE,
+        skip,
+        select: {
+          id: true,
+          profile: {
+            select: {
+              displayName: true,
+            },
+          },
+        },
+      });
+
+      if (users.length === 0) break;
+
+      const formattedUsers = users.map((user) => ({
+        id: user.id,
+        displayName: user.profile?.displayName,
+      }));
+
+      await meilisearchClient.index("users").addDocuments(formattedUsers);
+      consola.debug(`Synced ${users.length} users (offset: ${skip})`);
+
+      skip += BATCH_SIZE;
+    }
+
+    // Sync Posts
+    skip = 0;
     while (true) {
       const posts = await prisma.post.findMany({
         take: BATCH_SIZE,

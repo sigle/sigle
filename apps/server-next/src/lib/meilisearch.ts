@@ -5,7 +5,14 @@ export const meilisearchClient = new MeiliSearch({
   apiKey: "1JmkmCKvLxP0XkyJNoRttzbC62oDWCh4V4CTypSN8kY",
 });
 
-export const meilisearchIndexNewPost = async (post: {
+export const meilisearchIndexUser = async (user: {
+  id: string;
+  displayName?: string;
+}) => {
+  await meilisearchClient.index("users").addDocuments([user]);
+};
+
+export const meilisearchIndexPost = async (post: {
   id: string;
   title: string;
   excerpt: string;
