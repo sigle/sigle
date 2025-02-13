@@ -9,6 +9,7 @@ import {
 } from "~/lib/chainhook";
 import { consola } from "~/lib/consola";
 import { defineJob } from "~/lib/jobs";
+import { meilisearchIndexNewPost } from "~/lib/meilisearch";
 import { siglePublicationPrintPredicate } from "~/lib/predicates";
 import { prisma } from "~/lib/prisma";
 import { generateImageBlurhashJob } from "../generate-image-blurhash";
@@ -203,6 +204,13 @@ export const indexerNewPostJob = defineJob("indexer-new-post")
       );
       consola.debug(`new-post: Registered chainhook ${response.chainhookUuid}`);
     }
+
+    await meilisearchIndexNewPost({
+      id: postData.content.id,
+      title: postData.content.title,
+      excerpt: excerpt!,
+      createdAt: new Date(job.data.createdAt).toString(),
+    });
 
     consola.debug("New post indexed", {
       id: postData.content.id,
