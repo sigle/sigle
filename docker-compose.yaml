@@ -43,8 +43,6 @@ services:
     depends_on:
       postgres:
         condition: service_healthy
-      meilisearch:
-        condition: service_healthy
 
   meilisearch:
     container_name: meilisearch
