@@ -11,6 +11,7 @@ import { usePathname } from "next/navigation";
 import { usePostHog } from "posthog-js/react";
 import { Suspense, useLayoutEffect } from "react";
 import { NextLink } from "../Shared/NextLink";
+import { Search } from "./Search";
 import { UserDropdown } from "./UserDropdown";
 
 export const Header = () => {
@@ -38,6 +39,7 @@ export const Header = () => {
       <NextLink href="/">
         <LogoImage height={28} />
       </NextLink>
+      <Search />
       {!session ? (
         <div className="flex items-center gap-6">
           <Button
