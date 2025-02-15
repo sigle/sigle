@@ -1,11 +1,6 @@
 import { instantMeiliSearch } from "@meilisearch/instant-meilisearch";
 import {
-  Configure,
-  Hits,
-  Index,
-  InfiniteHits,
   InstantSearch,
-  SearchBox,
   UseSearchBoxProps,
   useInstantSearch,
   useSearchBox,
@@ -89,7 +84,6 @@ function CustomSearchBox(props: UseSearchBoxProps) {
           onChange={(event) => {
             setQuery(event.currentTarget.value);
           }}
-          autoFocus
         >
           <TextField.Slot>
             <IconSearch height="16" width="16" />
@@ -102,7 +96,7 @@ function CustomSearchBox(props: UseSearchBoxProps) {
 
 export const Search = () => {
   return (
-    <InstantSearch indexName="users" searchClient={searchClient}>
+    <InstantSearch indexName="users" searchClient={searchClient as any}>
       <CustomSearchBox />
 
       {/* <Index indexName="users">
