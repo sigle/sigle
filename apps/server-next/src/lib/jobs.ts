@@ -1,3 +1,4 @@
+import * as Sentry from "@sentry/node";
 import type PgBoss from "pg-boss";
 import type { SendOptions, WorkHandler } from "pg-boss";
 import type { z } from "zod";
@@ -28,7 +29,21 @@ class JobBuilder<TInput = any> {
   }
 
   work(handler: WorkHandler<TInput>): this {
-    this._handler = handler;
+    const wrappedHandler: WorkHandler<TInput> = async (jobs) => {
+      try {
+        return await handler(jobs);
+      } catch (error) {
+        const job = jobs[0];
+        Sentry.withScope((scope) => {
+          scope.setTag("jobName", this._name);
+          scope.setExtra("jobData", job.data);
+          scope.setExtra("expireInSeconds", job.expireInSeconds);
+          Sentry.captureException(error);
+        });
+        throw error;
+      }
+    };
+    this._handler = wrappedHandler;
     return this;
   }
 
