@@ -34,6 +34,7 @@ class JobBuilder<TInput = any> {
         return await handler(jobs);
       } catch (error) {
         const job = jobs[0];
+        consola.error(`Job ${this._name} failed`, error);
         Sentry.withScope((scope) => {
           scope.setTag("jobName", this._name);
           scope.setExtra("jobData", job.data);
