@@ -14,7 +14,7 @@ export interface SlashCommandsCommand {
   keywords?: string[];
   description: string;
   section: "basic" | "embed";
-  icon: (props: IconProps) => JSX.Element;
+  icon: (props: IconProps) => React.ReactElement;
   command: ({ editor, range }: { editor: Editor; range?: Range }) => void;
 }
 
