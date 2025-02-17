@@ -38,11 +38,11 @@ importers:
   apps/contracts:
     devDependencies:
       '@hirosystems/clarinet-sdk':
-        specifier: 2.12.0
-        version: 2.12.0(@types/node@22.13.4)(jsdom@25.0.0(bufferutil@4.0.8)(utf-8-validate@5.0.10))(sass@1.77.8)(terser@5.39.0)
+        specifier: 2.13.0
+        version: 2.13.0(@types/node@22.13.4)(jsdom@25.0.0(bufferutil@4.0.8)(utf-8-validate@5.0.10))(sass@1.77.8)(terser@5.39.0)
       '@hirosystems/clarinet-sdk-wasm':
-        specifier: 2.12.0
-        version: 2.12.0
+        specifier: 2.13.0
+        version: 2.13.0
       '@sigle/sdk':
         specifier: workspace:*
         version: link:../../packages/sdk
@@ -63,7 +63,7 @@ importers:
         version: 1.6.0(@types/node@22.13.4)(jsdom@25.0.0(bufferutil@4.0.8)(utf-8-validate@5.0.10))(sass@1.77.8)(terser@5.39.0)
       vitest-environment-clarinet:
         specifier: 2.1.0
-        version: 2.1.0(@hirosystems/clarinet-sdk@2.12.0(@types/node@22.13.4)(jsdom@25.0.0(bufferutil@4.0.8)(utf-8-validate@5.0.10))(sass@1.77.8)(terser@5.39.0))(vitest@1.6.0(@types/node@22.13.4)(jsdom@25.0.0(bufferutil@4.0.8)(utf-8-validate@5.0.10))(sass@1.77.8)(terser@5.39.0))
+        version: 2.1.0(@hirosystems/clarinet-sdk@2.13.0(@types/node@22.13.4)(jsdom@25.0.0(bufferutil@4.0.8)(utf-8-validate@5.0.10))(sass@1.77.8)(terser@5.39.0))(vitest@1.6.0(@types/node@22.13.4)(jsdom@25.0.0(bufferutil@4.0.8)(utf-8-validate@5.0.10))(sass@1.77.8)(terser@5.39.0))
 
   apps/docs:
     dependencies:
@@ -1488,11 +1488,11 @@ packages:
   '@hirosystems/chainhook-client@2.3.0':
     resolution: {integrity: sha512-KvzYwm83oatk31VZGywUsPXine3Ah5wjArOWMuvcEQMzAc1IcjcHsQJM2+2z+8OAFZm9r8bkI72CVv/9wSsh6A==}
 
-  '@hirosystems/clarinet-sdk-wasm@2.12.0':
-    resolution: {integrity: sha512-82fuVgGZ2pt7fdHc1gTZJK1ryS2LvhWUGDyJXS16j7b5Bge9z0k/qwE2MWcZ5VBYVgbaKLvnaxH1o4Yow05QAQ==}
+  '@hirosystems/clarinet-sdk-wasm@2.13.0':
+    resolution: {integrity: sha512-AmXYx41uMn9MPTJzXY7fsXUY5E6YJqMYTdQU/6N3wBwms390p6UmxTq5z9CCFalUv4UfYH5DIvePqPLSVI9EHQ==}
 
-  '@hirosystems/clarinet-sdk@2.12.0':
-    resolution: {integrity: sha512-6Jr/THJg4t52QO19ZKVEvIz99pTpSUOGMe1/TeczgzzQnb1k6MORvogWT2UhCGjSyku0VlnYQZS6CBP2xK2XsA==}
+  '@hirosystems/clarinet-sdk@2.13.0':
+    resolution: {integrity: sha512-z6ksxvFWohlur27sv7Wg10R6dt6c8yTY60uLyJCx8NwLx//3nxAb3Uta+oQCDjDh4LxHfsynV7SR92HuCjkFwg==}
     engines: {node: '>=18.0.0'}
     hasBin: true
 
@@ -3875,9 +3875,6 @@ packages:
   '@stacks/transactions@6.12.0':
     resolution: {integrity: sha512-gRP3SfTaAIoTdjMvOiLrMZb/senqB8JQlT5Y4C3/CiHhiprYwTx7TbOCSa7WsNOU99H4aNfHvatmymuggXQVkA==}
 
-  '@stacks/transactions@6.16.1':
-    resolution: {integrity: sha512-yCtUM+8IN0QJbnnlFhY1wBW7Q30Cxje3Zmy8DgqdBoM/EPPWadez/8wNWFANVAMyUZeQ9V/FY+8MAw4E+pCReA==}
-
   '@stacks/transactions@6.17.0':
     resolution: {integrity: sha512-FUah2BRgV66ApLcEXGNGhwyFTRXqX5Zco3LpiM3essw8PF0NQlHwwdPgtDko5RfrJl3LhGXXe/30nwsfNnB3+g==}
 
@@ -4241,6 +4238,9 @@ packages:
   '@types/bonjour@3.5.13':
     resolution: {integrity: sha512-z9fJ5Im06zvUL548KvYNecEVlA7cVDkGUi6kZusb04mpyEFKCIZJvloCcmpmLaIahDpOQGHaHmG6imtPMmPXGQ==}
 
+  '@types/concat-stream@1.6.1':
+    resolution: {integrity: sha512-eHE4cQPoj6ngxBZMvVf6Hw7Mh4jMW4U9lpGmS5GBPB9RYxlFg+CHaVN7ErNY4W9XfLIEn20b4VDYaIrbq0q4uA==}
+
   '@types/connect-history-api-fallback@1.5.4':
     resolution: {integrity: sha512-n6Cr2xS1h4uAulPRdlw6Jl6s1oG8KrVilPN2yUITEs+K48EzMJJ3W1xy8K5eWuFvjp3R74AOIGSmp2UfBJ8HFw==}
 
@@ -4367,6 +4367,9 @@ packages:
   '@types/express@4.17.21':
     resolution: {integrity: sha512-ejlPM315qwLpaQlQDTjPdsUFSc6ZsP4AN6AlWnogPjQ7CVi7PYF3YVz+CY3jE2pwYf7E/7HlDAN0rV2GxTG0HQ==}
 
+  '@types/form-data@0.0.33':
+    resolution: {integrity: sha512-8BSvG1kGm83cyJITQMZSulnl6QV8jqAGreJsc5tPu1Jq0vTSOiY/k24Wx82JRpWwZSqrala6sd5rWi6aNXvqcw==}
+
   '@types/geojson@7946.0.16':
     resolution: {integrity: sha512-6C8nqWur3j98U6+lXDfTUWIfgvZU+EumvpHKcYjujKH7woYyLj2sUmff0tRhrqM7BohUw7Pz3ZB1jj2gW9Fvmg==}
 
@@ -4439,6 +4442,9 @@ packages:
   '@types/node@10.12.18':
     resolution: {integrity: sha512-fh+pAqt4xRzPfqA6eh3Z2y6fyZavRIumvjhaCL753+TVkGKGhpPeyrJG2JftD0T9q4GF00KjefsQ+PQNDdWQaQ==}
 
+  '@types/node@10.17.60':
+    resolution: {integrity: sha512-F0KIgDJfy2nA3zMLmWGKxcH2ZVEtCZXHHdOQs2gSaQ27+lNeEfGxzkIw90aXswATX7AZ33tahPbzy6KAfUreVw==}
+
   '@types/node@12.20.55':
     resolution: {integrity: sha512-J8xLz7q2OFulZ2cyGTLE1TbbZcjpno7FaN6zdJNrgAdrJ+DZzh/uFR6YrTb4C+nXakvud8Q4+rbhoIWlYQbUFQ==}
 
@@ -4456,6 +4462,9 @@ packages:
 
   '@types/node@22.7.5':
     resolution: {integrity: sha512-jML7s2NAzMWc//QSJ1a3prpk78cOPchGvXJsC3C6R6PSMoooztvRVQEz89gmBTBY1SPMaqo5teB4uNHPdetShQ==}
+
+  '@types/node@8.10.66':
+    resolution: {integrity: sha512-tktOkFUA4kXx2hhhrB8bIFb5TbwzS4uOhKEmwiD+NoiL0qtP2OQ9mFldbgD4dV1djrlBYP6eBuQZiWjuHUpqFw==}
 
   '@types/normalize-package-data@2.4.4':
     resolution: {integrity: sha512-37i+OaWTh9qeK4LSHPsyRC7NahnGotNuZvjLSgcPzblpHB3rrCJxAOgI5gCdKm7coonsaX1Of0ILiTcnZjbfxA==}
@@ -4922,6 +4931,9 @@ packages:
     resolution: {integrity: sha512-Zj3b8juz1ZtDaQDPQlzWyk2I4wZPx3RmcGq8pVJeZXl2Tjw0WRy5ueHPelxZtBLqCirGoZxZEAFRs6SZUSCBjg==}
     engines: {node: '>=18'}
 
+  asap@2.0.6:
+    resolution: {integrity: sha512-BSHWgDSAiKs50o2Re8ppvp3seVHXSRM44cdSsT9FfNEUUZLOGWVCsiWaRPWM1Znn+mqZ1OfVZ3z3DWEzSp7hRA==}
+
   asn1.js@5.4.1:
     resolution: {integrity: sha512-+I//4cYPccV8LdmBLiX8CYvf9Sp3vQsrqu2QNXRcrbiWvcx/UdlFiqUJJzxRQxgsZmvhXhn4cSKeSmoFjVdupA==}
 
@@ -5210,6 +5222,9 @@ packages:
     resolution: {integrity: sha512-JSr5eOgoEymtYHBjNWyjrMqet9Am2miJhlfKNdqLp6zoeAh0KN5dRAcxlecj5mAJrmQomgiOBj35xHLrFjqBpw==}
     hasBin: true
 
+  caseless@0.12.0:
+    resolution: {integrity: sha512-4tYFyifaFfGacoiObjJegolkwSU4xQNGbVgUiNYVUxbQ2x2lUsFvY4hVgVzGiIe6WLOPqycWXA40l+PWsxthUw==}
+
   ccount@2.0.1:
     resolution: {integrity: sha512-eyrF0jiFpY+3drT6383f1qhkbGsLSifNAjA61IUjZjmLCWjItY6LB9ft9YhoDgwfmclB2zhu51Lc7+95b8NRAg==}
 
@@ -5434,6 +5449,10 @@ packages:
 
   concat-map@0.0.1:
     resolution: {integrity: sha512-/Srv4dswyQNBfohGpz9o6Yb3Gz3SrUDqBH5rTuhGR7ahtlbYKnVxw2bCFMRljaA7EXHaXZ8wsHdodFvbkhKmqg==}
+
+  concat-stream@1.6.2:
+    resolution: {integrity: sha512-27HBghJxjiZtIk3Ycvn/4kbJk/1uZuJFfuPEns6LaEvpvG1f0hTea8lilrouyo9mVc2GWdcEZ8OLoGmSADlrCw==}
+    engines: {'0': node >= 0.8}
 
   confbox@0.1.8:
     resolution: {integrity: sha512-RMtmw0iFkeR4YV+fUOSucriAQNb9g8zFR52MWCtl+cCZOFRNL6zeB395vPzFhEjjn4fMxXudmELnl/KF/WrK6w==}
@@ -6526,6 +6545,10 @@ packages:
     resolution: {integrity: sha512-Ld2g8rrAyMYFXBhEqMz8ZAHBi4J4uS1i/CxGMDnjyFWddMXLVcDp051DZfu+t7+ab7Wv6SMqpWmyFIj5UbfFvg==}
     engines: {node: '>=14'}
 
+  form-data@2.5.3:
+    resolution: {integrity: sha512-XHIrMD0NpDrNM/Ckf7XJiBbLl57KEhT3+i3yY+eWm+cqYZJQTZrKo8Y8AWKnuV5GT4scfuUGt9LzNoIx3dU1nQ==}
+    engines: {node: '>= 0.12'}
+
   form-data@4.0.2:
     resolution: {integrity: sha512-hGfm/slu0ZabnNt4oaRZ6uREyfCj6P4fT/n6A1rGV+Z0VdGXjfOhVUpkn6qVQONHGIFwmveGXyDs75+nr6FM8w==}
     engines: {node: '>= 6'}
@@ -6637,6 +6660,10 @@ packages:
 
   get-port-please@3.1.2:
     resolution: {integrity: sha512-Gxc29eLs1fbn6LQ4jSU4vXjlwyZhF5HsGuMAa7gqBP4Rw4yxxltyDUuF5MBclFzDTXO+ACchGQoeela4DSfzdQ==}
+
+  get-port@3.2.0:
+    resolution: {integrity: sha512-x5UJKlgeUiNT8nyo/AcnwLnZuZNcSjSw0kogRB+Whd1fjjFq4B1hySFxSFWWSn4mIBzg3sRNUDFYc4g5gjPoLg==}
+    engines: {node: '>=4'}
 
   get-proto@1.0.1:
     resolution: {integrity: sha512-sTSfBjoXBp89JvIKIefqw7U2CCebsc74kiY6awiGogKtoSGbgjYE/G/+l9sF3MWFPNc9IcoOC4ODfKHfxFmp0g==}
@@ -6885,6 +6912,10 @@ packages:
   html-void-elements@3.0.0:
     resolution: {integrity: sha512-bEqo66MRXsUGxWHV5IP0PUiAWwoEjba4VCzg0LjFJBpchPaTfyfCKTG6bc5F8ucKec3q5y6qOdGyYTSBEvhCrg==}
 
+  http-basic@8.1.3:
+    resolution: {integrity: sha512-/EcDMwJZh3mABI2NhGfHOGOeOZITqfkEO4p/xK+l3NpyncIHUQBoMvCSF/b5GqvKtySC2srL/GGG3+EtlqlmCw==}
+    engines: {node: '>=6.0.0'}
+
   http-deceiver@1.2.7:
     resolution: {integrity: sha512-LmpOGxTfbpgtGVxJrj5k7asXHCgNZp5nLfp+hWc8QQRqtb7fUy6kRY3BO1h9ddF6yIPYUARgxGOwB42DnxIaNw==}
 
@@ -6915,6 +6946,9 @@ packages:
   http-proxy@1.18.1:
     resolution: {integrity: sha512-7mz/721AbnJwIVbnaSv1Cz3Am0ZLT/UBwkC92VlxhXv/k/BBQfM2fXElQNC27BVGr0uwUpplYPQM9LnaBMR5NQ==}
     engines: {node: '>=8.0.0'}
+
+  http-response-object@3.0.2:
+    resolution: {integrity: sha512-bqX0XTF6fnXSQcEJ2Iuyr75yVakyjIDCqroJQ/aHfSdlM743Cwqoi2nDYMzLGWUcuTWGWy8AAvOKXTfiv6q9RA==}
 
   http-shutdown@1.2.2:
     resolution: {integrity: sha512-S9wWkJ/VSY9/k4qcjG318bqJNruzE4HySUhFYknwmu6LBP97KLLfwNf+n4V1BHurvFNkSKLFnK/RsuUnRTf9Vw==}
@@ -8514,6 +8548,9 @@ packages:
     resolution: {integrity: sha512-GQ2EWRpQV8/o+Aw8YqtfZZPfNRWZYkbidE9k5rpl/hC3vtHHBfGm2Ifi6qWV+coDGkrUKZAxE3Lot5kcsRlh+g==}
     engines: {node: '>=6'}
 
+  parse-cache-control@1.0.1:
+    resolution: {integrity: sha512-60zvsJReQPX5/QP0Kzfd/VrpjScIQ7SHBW6bFCYfEP+fp0Eppr1SHhIO5nd1PjZtvclzSzES9D/p5nFJurwfWg==}
+
   parse-entities@4.0.2:
     resolution: {integrity: sha512-GG2AQYWoLgL877gQIKeRPGO1xF9+eG1ujIb5soS5gPvLQ1y2o8FL90w2QWNdf9I361Mpp7726c+lj3U0qK1uGw==}
 
@@ -8856,6 +8893,9 @@ packages:
     resolution: {integrity: sha512-7PiHtLll5LdnKIMw100I+8xJXR5gW2QwWYkT6iJva0bXitZKa/XMrSbdmg3r2Xnaidz9Qumd0VPaMrZlF9V9sA==}
     engines: {node: '>=0.4.0'}
 
+  promise@8.3.0:
+    resolution: {integrity: sha512-rZPNPKTOYVNEEKFaq1HqTgOwZD+4/YHS5ukLzQCypkj+OkYx7iv0mA91lJlpPPZ8vMau3IIGj5Qlwrx+8iiSmg==}
+
   prompts@2.4.2:
     resolution: {integrity: sha512-NxNv/kLguCA7p3jE8oL2aEBsrJWgAakBpgmgK6lpPWV+WuOmY6r2/zbAVnP+T8bQlA0nzHXSJSJW0Hq7ylaD2Q==}
     engines: {node: '>= 6'}
@@ -8951,6 +8991,10 @@ packages:
 
   qs@6.13.0:
     resolution: {integrity: sha512-+38qI9SOr8tfZ4QmJNplMUxqjbe7LKvvZgWdExBOmd+egZTtjLB67Gu0HRX3u/XOq7UU2Nx6nsjvS16Z9uwfpg==}
+    engines: {node: '>=0.6'}
+
+  qs@6.14.0:
+    resolution: {integrity: sha512-YWWTjgABSKcvs/nWBi9PycY/JiPJqOD4JA6o9Sej2AtvSGarXxKC3OQSk4pAarbdQlKAh5D4FCQkJNkW+GAn3w==}
     engines: {node: '>=0.6'}
 
   query-string@9.1.1:
@@ -9884,6 +9928,13 @@ packages:
   symbol-tree@3.2.4:
     resolution: {integrity: sha512-9QNk5KwDF+Bvz+PyObkmSYjI5ksVUYtjW7AU22r2NKcfLJcXp96hkDWU3+XndOsUb+AQ9QhfzfCT2O+CNWT5Tw==}
 
+  sync-request@6.1.0:
+    resolution: {integrity: sha512-8fjNkrNlNCrVc/av+Jn+xxqfCjYaBoHqCsDz6mt030UMxJGr+GSfCV1dQt2gRtlL63+VPidwDVLr7V2OcTSdRw==}
+    engines: {node: '>=8.0.0'}
+
+  sync-rpc@1.3.6:
+    resolution: {integrity: sha512-J8jTXuZzRlvU7HemDgHi3pGnh/rkoqR/OZSjhTyyZrEkkYQbk7Z33AXp37mkPfPpfdOuj7Ex3H/TJM1z48uPQw==}
+
   syncpack@13.0.2:
     resolution: {integrity: sha512-ubpkqeIep5hvGM3yDb795xF9O4plCZ3+TrMZJ7AkuGd/WDam/BX7WRkOKl07tHkMVUfIo+2u4SIv5t+PKUrJdg==}
     engines: {node: '>=18.18.0'}
@@ -9957,6 +10008,10 @@ packages:
 
   text-hex@1.0.0:
     resolution: {integrity: sha512-uuVGNWzgJ4yhRaNSiubPY7OjISw4sw4E5Uv0wbjp+OzcbmVU/rsT8ujgcXJhn9ypzsgr5vlzpPqP+MBBKcGvbg==}
+
+  then-request@6.0.2:
+    resolution: {integrity: sha512-3ZBiG7JvP3wbDzA9iNY5zJQcHL4jn/0BWtXIkagfz7QgOL/LqjCEOBQuJNZfu0XYnv5JhKh+cDxCPM4ILrqruA==}
+    engines: {node: '>=6.0.0'}
 
   thenify-all@1.6.0:
     resolution: {integrity: sha512-RNxQH/qI8/t3thXJDwcstUO4zeqo64+Uy/+sNVRBx4Xn2OX+OZ9oP+iJnNFqplFra2ZUVeKCSa2oVWi3T4uVmA==}
@@ -10267,6 +10322,9 @@ packages:
   typed-array-length@1.0.7:
     resolution: {integrity: sha512-3KS2b+kL7fsuk/eJZ7EQdnEmQoaho/r6KUef7hxvltNA5DR8NAUM+8wJMbJyZ4G9/7i3v5zPBIMN5aybAh2/Jg==}
     engines: {node: '>= 0.4'}
+
+  typedarray@0.0.6:
+    resolution: {integrity: sha512-/aCDEGatGvZ2BIk+HmLf4ifCJFwvKFNb9/JeZPMulfgFracn9QFcAf5GO8B/mweUjSoblS5In0cWhqpfs/5PQA==}
 
   typeforce@1.18.0:
     resolution: {integrity: sha512-7uc1O8h1M1g0rArakJdf0uLRSSgFcYexrVoKo+bzJd32gd4gDy2L/Z+8/FjPnU9ydY3pEnVPtr9FyscYY60K1g==}
@@ -12528,12 +12586,14 @@ snapshots:
       - '@sinclair/typebox'
       - supports-color
 
-  '@hirosystems/clarinet-sdk-wasm@2.12.0': {}
-
-  '@hirosystems/clarinet-sdk@2.12.0(@types/node@22.13.4)(jsdom@25.0.0(bufferutil@4.0.8)(utf-8-validate@5.0.10))(sass@1.77.8)(terser@5.39.0)':
+  '@hirosystems/clarinet-sdk-wasm@2.13.0':
     dependencies:
-      '@hirosystems/clarinet-sdk-wasm': 2.12.0
-      '@stacks/transactions': 6.16.1
+      sync-request: 6.1.0
+
+  '@hirosystems/clarinet-sdk@2.13.0(@types/node@22.13.4)(jsdom@25.0.0(bufferutil@4.0.8)(utf-8-validate@5.0.10))(sass@1.77.8)(terser@5.39.0)':
+    dependencies:
+      '@hirosystems/clarinet-sdk-wasm': 2.13.0
+      '@stacks/transactions': 6.17.0
       kolorist: 1.8.0
       prompts: 2.4.2
       vitest: 1.6.0(@types/node@22.13.4)(jsdom@25.0.0(bufferutil@4.0.8)(utf-8-validate@5.0.10))(sass@1.77.8)(terser@5.39.0)
@@ -15273,17 +15333,6 @@ snapshots:
     transitivePeerDependencies:
       - encoding
 
-  '@stacks/transactions@6.16.1':
-    dependencies:
-      '@noble/hashes': 1.1.5
-      '@noble/secp256k1': 1.7.1
-      '@stacks/common': 6.16.0
-      '@stacks/network': 6.17.0
-      c32check: 2.0.0
-      lodash.clonedeep: 4.5.0
-    transitivePeerDependencies:
-      - encoding
-
   '@stacks/transactions@6.17.0':
     dependencies:
       '@noble/hashes': 1.1.5
@@ -15627,11 +15676,15 @@ snapshots:
   '@types/body-parser@1.19.5':
     dependencies:
       '@types/connect': 3.4.38
-      '@types/node': 22.10.5
+      '@types/node': 22.13.4
 
   '@types/bonjour@3.5.13':
     dependencies:
       '@types/node': 22.10.5
+
+  '@types/concat-stream@1.6.1':
+    dependencies:
+      '@types/node': 8.10.66
 
   '@types/connect-history-api-fallback@1.5.4':
     dependencies:
@@ -15779,7 +15832,7 @@ snapshots:
 
   '@types/express-serve-static-core@4.19.6':
     dependencies:
-      '@types/node': 22.10.5
+      '@types/node': 22.13.4
       '@types/qs': 6.9.18
       '@types/range-parser': 1.2.7
       '@types/send': 0.17.4
@@ -15797,6 +15850,10 @@ snapshots:
       '@types/express-serve-static-core': 4.19.6
       '@types/qs': 6.9.18
       '@types/serve-static': 1.15.7
+
+  '@types/form-data@0.0.33':
+    dependencies:
+      '@types/node': 8.10.66
 
   '@types/geojson@7946.0.16': {}
 
@@ -15862,9 +15919,11 @@ snapshots:
 
   '@types/node-forge@1.3.11':
     dependencies:
-      '@types/node': 22.10.5
+      '@types/node': 22.13.4
 
   '@types/node@10.12.18': {}
+
+  '@types/node@10.17.60': {}
 
   '@types/node@12.20.55': {}
 
@@ -15881,11 +15940,12 @@ snapshots:
   '@types/node@22.13.4':
     dependencies:
       undici-types: 6.20.0
-    optional: true
 
   '@types/node@22.7.5':
     dependencies:
       undici-types: 6.19.8
+
+  '@types/node@8.10.66': {}
 
   '@types/normalize-package-data@2.4.4': {}
 
@@ -16488,6 +16548,8 @@ snapshots:
       base64-js: 1.5.1
       bignumber.js: 9.1.2
 
+  asap@2.0.6: {}
+
   asn1.js@5.4.1:
     dependencies:
       bn.js: 4.12.0
@@ -16811,6 +16873,8 @@ snapshots:
       ansicolors: 0.3.2
       redeyed: 2.1.1
 
+  caseless@0.12.0: {}
+
   ccount@2.0.1: {}
 
   chai@4.5.0:
@@ -17038,6 +17102,13 @@ snapshots:
   compute-scroll-into-view@3.1.1: {}
 
   concat-map@0.0.1: {}
+
+  concat-stream@1.6.2:
+    dependencies:
+      buffer-from: 1.1.2
+      inherits: 2.0.4
+      readable-stream: 2.3.8
+      typedarray: 0.0.6
 
   confbox@0.1.8: {}
 
@@ -18363,6 +18434,14 @@ snapshots:
       cross-spawn: 7.0.6
       signal-exit: 4.1.0
 
+  form-data@2.5.3:
+    dependencies:
+      asynckit: 0.4.0
+      combined-stream: 1.0.8
+      es-set-tostringtag: 2.1.0
+      mime-types: 2.1.35
+      safe-buffer: 5.2.1
+
   form-data@4.0.2:
     dependencies:
       asynckit: 0.4.0
@@ -18483,6 +18562,8 @@ snapshots:
   get-nonce@1.0.1: {}
 
   get-port-please@3.1.2: {}
+
+  get-port@3.2.0: {}
 
   get-proto@1.0.1:
     dependencies:
@@ -18857,6 +18938,13 @@ snapshots:
 
   html-void-elements@3.0.0: {}
 
+  http-basic@8.1.3:
+    dependencies:
+      caseless: 0.12.0
+      concat-stream: 1.6.2
+      http-response-object: 3.0.2
+      parse-cache-control: 1.0.1
+
   http-deceiver@1.2.7: {}
 
   http-errors@1.6.3:
@@ -18903,6 +18991,10 @@ snapshots:
       requires-port: 1.0.0
     transitivePeerDependencies:
       - debug
+
+  http-response-object@3.0.2:
+    dependencies:
+      '@types/node': 10.17.60
 
   http-shutdown@1.2.2: {}
 
@@ -21016,6 +21108,8 @@ snapshots:
     dependencies:
       callsites: 3.1.0
 
+  parse-cache-control@1.0.1: {}
+
   parse-entities@4.0.2:
     dependencies:
       '@types/unist': 2.0.11
@@ -21332,6 +21426,10 @@ snapshots:
 
   progress@2.0.3: {}
 
+  promise@8.3.0:
+    dependencies:
+      asap: 2.0.6
+
   prompts@2.4.2:
     dependencies:
       kleur: 3.0.3
@@ -21461,7 +21559,7 @@ snapshots:
       '@protobufjs/pool': 1.1.0
       '@protobufjs/utf8': 1.1.0
       '@types/long': 4.0.2
-      '@types/node': 22.10.5
+      '@types/node': 22.13.4
       long: 4.0.0
 
   proxy-addr@2.0.7:
@@ -21483,6 +21581,10 @@ snapshots:
   pure-rand@6.1.0: {}
 
   qs@6.13.0:
+    dependencies:
+      side-channel: 1.1.0
+
+  qs@6.14.0:
     dependencies:
       side-channel: 1.1.0
 
@@ -22755,6 +22857,16 @@ snapshots:
   symbol-tree@3.2.4:
     optional: true
 
+  sync-request@6.1.0:
+    dependencies:
+      http-response-object: 3.0.2
+      sync-rpc: 1.3.6
+      then-request: 6.0.2
+
+  sync-rpc@1.3.6:
+    dependencies:
+      get-port: 3.2.0
+
   syncpack@13.0.2(typescript@5.7.3):
     dependencies:
       '@effect/schema': 0.75.5(effect@3.12.7)
@@ -22877,6 +22989,20 @@ snapshots:
   text-encoding-utf-8@1.0.2: {}
 
   text-hex@1.0.0: {}
+
+  then-request@6.0.2:
+    dependencies:
+      '@types/concat-stream': 1.6.1
+      '@types/form-data': 0.0.33
+      '@types/node': 8.10.66
+      '@types/qs': 6.9.18
+      caseless: 0.12.0
+      concat-stream: 1.6.2
+      form-data: 2.5.3
+      http-basic: 8.1.3
+      http-response-object: 3.0.2
+      promise: 8.3.0
+      qs: 6.14.0
 
   thenify-all@1.6.0:
     dependencies:
@@ -23181,6 +23307,8 @@ snapshots:
       is-typed-array: 1.1.15
       possible-typed-array-names: 1.1.0
       reflect.getprototypeof: 1.0.10
+
+  typedarray@0.0.6: {}
 
   typeforce@1.18.0: {}
 
@@ -23555,9 +23683,9 @@ snapshots:
       sass: 1.77.8
       terser: 5.39.0
 
-  vitest-environment-clarinet@2.1.0(@hirosystems/clarinet-sdk@2.12.0(@types/node@22.13.4)(jsdom@25.0.0(bufferutil@4.0.8)(utf-8-validate@5.0.10))(sass@1.77.8)(terser@5.39.0))(vitest@1.6.0(@types/node@22.13.4)(jsdom@25.0.0(bufferutil@4.0.8)(utf-8-validate@5.0.10))(sass@1.77.8)(terser@5.39.0)):
+  vitest-environment-clarinet@2.1.0(@hirosystems/clarinet-sdk@2.13.0(@types/node@22.13.4)(jsdom@25.0.0(bufferutil@4.0.8)(utf-8-validate@5.0.10))(sass@1.77.8)(terser@5.39.0))(vitest@1.6.0(@types/node@22.13.4)(jsdom@25.0.0(bufferutil@4.0.8)(utf-8-validate@5.0.10))(sass@1.77.8)(terser@5.39.0)):
     dependencies:
-      '@hirosystems/clarinet-sdk': 2.12.0(@types/node@22.13.4)(jsdom@25.0.0(bufferutil@4.0.8)(utf-8-validate@5.0.10))(sass@1.77.8)(terser@5.39.0)
+      '@hirosystems/clarinet-sdk': 2.13.0(@types/node@22.13.4)(jsdom@25.0.0(bufferutil@4.0.8)(utf-8-validate@5.0.10))(sass@1.77.8)(terser@5.39.0)
       vitest: 1.6.0(@types/node@22.13.4)(jsdom@25.0.0(bufferutil@4.0.8)(utf-8-validate@5.0.10))(sass@1.77.8)(terser@5.39.0)
 
   vitest@1.6.0(@types/node@22.13.4)(jsdom@25.0.0(bufferutil@4.0.8)(utf-8-validate@5.0.10))(sass@1.77.8)(terser@5.39.0):
