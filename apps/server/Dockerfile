@@ -5,7 +5,7 @@ WORKDIR /app
 
 # Set production environment
 ENV NODE_ENV="production"
-ENV APP_NAME="server-next"
+ENV APP_NAME="server"
 
 # Install pnpm
 ENV PNPM_HOME="/pnpm"
