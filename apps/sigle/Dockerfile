@@ -5,7 +5,7 @@ WORKDIR /app
 
 # Set production environment
 ENV NODE_ENV="production"
-ENV APP_NAME="sigle-next"
+ENV APP_NAME="sigle"
 
 # Install pnpm
 ENV PNPM_HOME="/pnpm"
