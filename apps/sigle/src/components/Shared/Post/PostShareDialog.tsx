@@ -15,7 +15,7 @@ import { useSession } from "next-auth/react";
 import Image from "next/image";
 import { useState } from "react";
 
-interface PublicationShareDialogProps {
+interface PostShareDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   post: paths["/api/posts/list"]["get"]["responses"]["200"]["content"]["application/json"][0];
@@ -25,11 +25,11 @@ export const PostShareDialog = ({
   open,
   onOpenChange,
   post,
-}: PublicationShareDialogProps) => {
+}: PostShareDialogProps) => {
   const [isCopied, setIsCopied] = useState(false);
   const { data: session } = useSession();
   // const session = null;
-  const publicationLink = `${env.NEXT_PUBLIC_APP_URL}${Routes.post(
+  const postLink = `${env.NEXT_PUBLIC_APP_URL}${Routes.post(
     { postId: post.id },
     {
       search: {
@@ -39,7 +39,7 @@ export const PostShareDialog = ({
   )}`;
 
   const onCopy = () => {
-    navigator.clipboard.writeText(publicationLink).then(() => {
+    navigator.clipboard.writeText(postLink).then(() => {
       setIsCopied(true);
       setTimeout(() => {
         setIsCopied(false);
@@ -80,7 +80,7 @@ export const PostShareDialog = ({
             <IconButton size="4" color="gray" highContrast asChild>
               <a
                 href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(
-                  `Collect ${metaTitleAttribute} on @sigleapp&url=${publicationLink}`,
+                  `Collect ${metaTitleAttribute} on @sigleapp&url=${postLink}`,
                 )}`}
                 target="_blank"
                 rel="noreferrer noopener"
@@ -98,7 +98,7 @@ export const PostShareDialog = ({
               <a
                 href={`https://bsky.app/intent/compose?text=${encodeURIComponent(
                   `Collect ${metaTitleAttribute} on @sigleapp`,
-                )}&url=${publicationLink}`}
+                )}&url=${postLink}`}
                 target="_blank"
                 rel="noreferrer noopener"
                 className="overflow-hidden"
@@ -115,7 +115,7 @@ export const PostShareDialog = ({
               <a
                 href={`https://t.me/share/url?text=${encodeURIComponent(
                   `Collect ${metaTitleAttribute} on @sigleapp`,
-                )}&url=${publicationLink}`}
+                )}&url=${postLink}`}
                 target="_blank"
                 rel="noreferrer noopener"
                 className="overflow-hidden"
@@ -136,7 +136,7 @@ export const PostShareDialog = ({
               className="grow"
               variant="soft"
               disabled={true}
-              defaultValue={publicationLink}
+              defaultValue={postLink}
             />
             <Button
               size="3"

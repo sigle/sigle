@@ -5,12 +5,12 @@ import { config } from "./config.js";
 
 export type GeneratePostParams = {
   /**
-   * The metadata string for the publication
+   * The metadata string for the post
    */
   metadata: string;
   collectInfo: {
     /**
-     * The price of the publication in micro-STX
+     * The price of the post in micro-STX
      */
     amount: number | bigint;
     /**
@@ -39,9 +39,9 @@ export const generatePostContract = ({
   const nftTrait = config[networkName].nftTrait;
   const commissionTrait = config[networkName].commissionTrait;
   const fixedPriceMinter = config[networkName].fixedPriceMinter;
-  const publicationTrait = config[networkName].publicationTrait;
+  const postTrait = config[networkName].postTrait;
 
-  let contract = contracts.siglePublicationV0.replace(
+  let contract = contracts.siglePostV0.replace(
     "{__BASE_TOKEN_URI__}",
     params.metadata,
   );
@@ -78,10 +78,10 @@ export const generatePostContract = ({
     `(use-trait commission-trait '${commissionTrait}.commission)`,
   );
 
-  // Replace the publication trait with the correct protocol address
+  // Replace the post trait with the correct protocol address
   contract = contract.replace(
-    "(impl-trait .sigle-publication-trait-v001.sigle-publication-trait)",
-    `(impl-trait '${publicationTrait}.sigle-publication-trait)`,
+    "(impl-trait .sigle-post-trait-v001.sigle-post-trait)",
+    `(impl-trait '${postTrait}.sigle-post-trait)`,
   );
 
   // Replace the minter with the correct protocol address

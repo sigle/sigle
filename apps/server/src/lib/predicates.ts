@@ -81,8 +81,8 @@ export const sigleMinterFixedPricePredicate = {
   },
 } satisfies Omit<Predicate, "uuid">;
 
-export const siglePublicationPrintPredicate = {
-  name: "sigle-publication-v001-print",
+export const siglePostPrintPredicate = {
+  name: "sigle-post-v001-print",
   chain: "stacks",
   version: 1,
   networks: {

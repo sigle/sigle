@@ -1,4 +1,4 @@
-(use-trait sigle-publication-trait .sigle-publication-trait-v001.sigle-publication-trait)
+(use-trait sigle-post-trait .sigle-post-trait-v001.sigle-post-trait)
 
 (define-constant ERR-NOT-AUTHORIZED u403)
 (define-constant ERR-INVALID-MINT-DATA u1000)
@@ -42,7 +42,7 @@
   )
 )
 
-(define-public (mint (token-contract <sigle-publication-trait>) (quantity uint) (mintReferrer (optional principal)) (recipient (optional principal)))
+(define-public (mint (token-contract <sigle-post-trait>) (quantity uint) (mintReferrer (optional principal)) (recipient (optional principal)))
   (let (
     (protocol-address (contract-call? .sigle-protocol get-payout-address))
     (mint-config (unwrap! (map-get? contract-mint-config (contract-of token-contract)) (err ERR-INVALID-MINT-DATA)))

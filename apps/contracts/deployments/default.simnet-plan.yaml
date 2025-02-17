@@ -63,14 +63,14 @@ plan:
     - id: 1
       transactions:
         - emulated-contract-publish:
+            contract-name: sigle-post-trait-v001
+            emulated-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
+            path: contracts/sigle-post-trait-v001.clar
+            clarity-version: 3
+        - emulated-contract-publish:
             contract-name: sigle-protocol
             emulated-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
             path: contracts/sigle-protocol.clar
-            clarity-version: 3
-        - emulated-contract-publish:
-            contract-name: sigle-publication-trait-v001
-            emulated-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
-            path: contracts/sigle-publication-trait-v001.clar
             clarity-version: 3
         - emulated-contract-publish:
             contract-name: sigle-minter-fixed-price-v001
@@ -78,13 +78,13 @@ plan:
             path: contracts/minters/sigle-minter-fixed-price-v001.clar
             clarity-version: 3
         - emulated-contract-publish:
+            contract-name: sigle-post-v001
+            emulated-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
+            path: contracts/sigle-post-v001.clar
+            clarity-version: 3
+        - emulated-contract-publish:
             contract-name: sigle-profiles
             emulated-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
             path: contracts/sigle-profiles.clar
-            clarity-version: 3
-        - emulated-contract-publish:
-            contract-name: sigle-publication-v001
-            emulated-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
-            path: contracts/sigle-publication-v001.clar
             clarity-version: 3
       epoch: "3.0"

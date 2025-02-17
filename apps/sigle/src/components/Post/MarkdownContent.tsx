@@ -10,13 +10,11 @@ import {
   isValidYoutubeUrl,
 } from "../Editor/extensions/Twitter/video";
 
-interface PublicationMarkdownContentProps {
+interface PostMarkdownContentProps {
   content: string;
 }
 
-export const PublicationMarkdownContent = ({
-  content,
-}: PublicationMarkdownContentProps) => {
+export const PostMarkdownContent = ({ content }: PostMarkdownContentProps) => {
   return (
     <ReactMarkdown
       className="prose mt-10 dark:prose-invert lg:prose-lg"

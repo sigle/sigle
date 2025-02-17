@@ -9,7 +9,7 @@ import {
 } from "~/lib/chainhook";
 import { consola } from "~/lib/consola";
 import { defineJob } from "~/lib/jobs";
-import { siglePublicationPrintPredicate } from "~/lib/predicates";
+import { siglePostPrintPredicate } from "~/lib/predicates";
 import { prisma } from "~/lib/prisma";
 import { generateImageBlurhashJob } from "../generate-image-blurhash";
 
@@ -185,13 +185,13 @@ export const indexerNewPostJob = defineJob("indexer-new-post")
     }
 
     const chainhooks = await getChainhooks();
-    const predicateName = `${env.SIGLE_ENV}-${env.STACKS_ENV}.${siglePublicationPrintPredicate.name}.${job.data.address}`;
+    const predicateName = `${env.SIGLE_ENV}-${env.STACKS_ENV}.${siglePostPrintPredicate.name}.${job.data.address}`;
     const hasContractDeploymentChainhook = chainhooks.find(
       (chainhook) => chainhook.name === predicateName,
     );
     if (!hasContractDeploymentChainhook) {
       const newPredicate = {
-        ...siglePublicationPrintPredicate,
+        ...siglePostPrintPredicate,
         name: predicateName,
       };
       newPredicate.networks.testnet.if_this.contract_identifier =

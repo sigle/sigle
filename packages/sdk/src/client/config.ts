@@ -6,7 +6,7 @@ export const config: {
     protocolAddress: string;
     nftTrait: string;
     commissionTrait: string;
-    publicationTrait: string;
+    postTrait: string;
     fixedPriceMinter: string;
   };
 } = {
@@ -14,7 +14,7 @@ export const config: {
     protocolAddress: "TODO",
     nftTrait: "TODO",
     commissionTrait: "TODO",
-    publicationTrait: "TODO",
+    postTrait: "TODO",
     fixedPriceMinter: "TODO",
   },
   testnet: {
@@ -22,8 +22,8 @@ export const config: {
     nftTrait: "ST1AA50K85H2FACBSD3RDQ510Z1YFAFAB66WY4STH.nft-trait",
     commissionTrait:
       "ST1AA50K85H2FACBSD3RDQ510Z1YFAFAB66WY4STH.commission-trait",
-    publicationTrait:
-      "ST1AA50K85H2FACBSD3RDQ510Z1YFAFAB66WY4STH.sigle-publication-trait-v001",
+    postTrait:
+      "ST1AA50K85H2FACBSD3RDQ510Z1YFAFAB66WY4STH.sigle-post-trait-v001",
     fixedPriceMinter:
       "ST1AA50K85H2FACBSD3RDQ510Z1YFAFAB66WY4STH.sigle-minter-fixed-price-v001",
   },
@@ -32,8 +32,8 @@ export const config: {
     nftTrait: "ST1AA50K85H2FACBSD3RDQ510Z1YFAFAB66WY4STH.nft-trait",
     commissionTrait:
       "ST1AA50K85H2FACBSD3RDQ510Z1YFAFAB66WY4STH.commission-trait",
-    publicationTrait:
-      "ST1AA50K85H2FACBSD3RDQ510Z1YFAFAB66WY4STH.sigle-publication-trait-v001",
+    postTrait:
+      "ST1AA50K85H2FACBSD3RDQ510Z1YFAFAB66WY4STH.sigle-post-trait-v001",
     fixedPriceMinter:
       "ST1AA50K85H2FACBSD3RDQ510Z1YFAFAB66WY4STH.sigle-minter-fixed-price-v001",
   },
@@ -42,8 +42,8 @@ export const config: {
     nftTrait: "SP2PABAF9FTAJYNFZH93XENAJ8FVY99RRM50D2JG9.nft-trait",
     commissionTrait:
       "SP3D6PV2ACBPEKYJTCMH7HEN02KP87QSP8KTEH335.commission-trait",
-    publicationTrait:
-      "ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.sigle-publication-trait-v001",
+    postTrait:
+      "ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.sigle-post-trait-v001",
     fixedPriceMinter:
       "ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.sigle-minter-fixed-price-v001",
   },
