@@ -1,5 +1,5 @@
-import siglePublicationV0 from "raw-loader!../../../apps/contracts/contracts/sigle-publication-v001.clar";
+import siglePostV0 from "raw-loader!../../../apps/contracts/contracts/sigle-post-v001.clar";
 
-const contracts = { siglePublicationV0 };
+const contracts = { siglePostV0 };
 
 export { contracts };

@@ -1,8 +1,8 @@
-;; title: sigle-publication-trait-v1
+;; title: sigle-post-trait-v1
 ;; version: 1
 ;; website: https://sigle.io
 
-(define-trait sigle-publication-trait
+(define-trait sigle-post-trait
     (
         (mint (principal) (response uint uint))
         (burn (uint) (response bool uint))

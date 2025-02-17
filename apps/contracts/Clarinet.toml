@@ -20,8 +20,8 @@ path = 'contracts/sigle-profiles.clar'
 clarity_version = 3
 epoch = 3.0
 
-[contracts.sigle-publication-trait-v001]
-path = 'contracts/sigle-publication-trait-v001.clar'
+[contracts.sigle-post-trait-v001]
+path = 'contracts/sigle-post-trait-v001.clar'
 clarity_version = 3
 epoch = 3.0
 
@@ -30,8 +30,8 @@ path = 'contracts/minters/sigle-minter-fixed-price-v001.clar'
 clarity_version = 3
 epoch = 3.0
 
-[contracts.sigle-publication-v001]
-path = 'contracts/sigle-publication-v001.clar'
+[contracts.sigle-post-v001]
+path = 'contracts/sigle-post-v001.clar'
 clarity_version = 3
 epoch = 3.0
 

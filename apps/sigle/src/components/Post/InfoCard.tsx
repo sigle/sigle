@@ -3,11 +3,11 @@ import { getExplorerTransactionUrl } from "@/lib/stacks";
 import { Link, Separator, Text } from "@radix-ui/themes";
 import { IconArrowUpRight } from "@tabler/icons-react";
 
-interface PublicationInfoCardProps {
+interface PostInfoCardProps {
   post: paths["/api/posts/{postId}"]["get"]["responses"]["200"]["content"]["application/json"];
 }
 
-export const PostInfoCard = ({ post }: PublicationInfoCardProps) => {
+export const PostInfoCard = ({ post }: PostInfoCardProps) => {
   const fullLink = post.metadataUri.startsWith("ar://")
     ? `https://arweave.net/${post.metadataUri.slice(5)}`
     : post.metadataUri;

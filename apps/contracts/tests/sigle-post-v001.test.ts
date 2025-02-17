@@ -4,7 +4,7 @@ import { Cl } from "@stacks/transactions";
 import { describe, expect, it } from "vitest";
 import { beforeEach } from "vitest";
 
-const contract = "sigle-publication-v001";
+const contract = "sigle-post-v001";
 const minterContract = "sigle-minter-fixed-price-v001";
 const accounts = simnet.getAccounts();
 const deployer = accounts.get("deployer")!;
@@ -17,7 +17,7 @@ const sigleClient = createClient({
   networkName: "mocknet",
 });
 
-describe("sigle-publication-v001", () => {
+describe("sigle-post-v001", () => {
   const { contract: defaultContract } = sigleClient.generatePostContract({
     collectInfo: {
       amount: 0,

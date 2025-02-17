@@ -1,5 +1,5 @@
 (impl-trait 'SP2PABAF9FTAJYNFZH93XENAJ8FVY99RRM50D2JG9.nft-trait.nft-trait)
-(impl-trait .sigle-publication-trait-v001.sigle-publication-trait)
+(impl-trait .sigle-post-trait-v001.sigle-post-trait)
 
 (define-non-fungible-token sigle-post uint)
 
@@ -18,7 +18,7 @@
 (define-constant contract-version u1)
 (define-constant authorized-minter 'ST1AA50K85H2FACBSD3RDQ510Z1YFAFAB66WY4STH.sigle-minter-fixed-price-v001)
 
-;; The publication owner address
+;; The post owner address
 (define-data-var contract-owner principal tx-sender)
 ;; The base token uri
 (define-data-var base-token-uri (string-ascii 210) "{__BASE_TOKEN_URI__}")

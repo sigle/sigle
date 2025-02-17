@@ -19,7 +19,7 @@ const generateMetadataAttributesFromForm = ({
   post: EditorPostFormData;
 }): MetadataAttribute[] => {
   const attributes: MetadataAttribute[] = [
-    // Generate an excerpt from the content that can be used as the description in the publication cards
+    // Generate an excerpt from the content that can be used as the description in the post cards
     {
       value: editorText.slice(0, 350),
       key: "excerpt",

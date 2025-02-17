@@ -3,7 +3,7 @@
 import { sigleApiClient } from "@/__generated__/sigle-api";
 import { PostCollectCard } from "@/components/Post/CollectCard";
 import { PostInfoCard } from "@/components/Post/InfoCard";
-import { PublicationMarkdownContent } from "@/components/Post/MarkdownContent";
+import { PostMarkdownContent } from "@/components/Post/MarkdownContent";
 import { PostShareCard } from "@/components/Post/ShareCard";
 import { PostUserActions } from "@/components/Post/UserActions";
 import { PostUserInfoCard } from "@/components/Post/UserInfoCard";
@@ -58,9 +58,7 @@ export function PostClientPage(props: Props) {
           />
         ) : null}
 
-        {post.content ? (
-          <PublicationMarkdownContent content={post.content} />
-        ) : null}
+        {post.content ? <PostMarkdownContent content={post.content} /> : null}
 
         <Separator size="4" className="my-10" />
 
