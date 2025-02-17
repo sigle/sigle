@@ -66,7 +66,7 @@ describe("sigle-post-v001", () => {
       );
       expect(result).toBeOk(
         Cl.principal(
-          `SP1JRRZ45G7E528BV1M3PR08093JFZGP1C76MBP3D.${minterContract}`,
+          `ST1JRRZ45G7E528BV1M3PR08093JFZGP1C4EZE4MC.${minterContract}`,
         ),
       );
     });
