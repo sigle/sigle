@@ -16,7 +16,7 @@
 (define-constant ERR-METADATA-FROZEN u1009)
 
 (define-constant contract-version u1)
-(define-constant authorized-minter 'ST1AA50K85H2FACBSD3RDQ510Z1YFAFAB66WY4STH.sigle-minter-fixed-price-v001)
+(define-constant authorized-minter 'ST1JRRZ45G7E528BV1M3PR08093JFZGP1C4EZE4MC.sigle-minter-fixed-price-v001)
 
 ;; The post owner address
 (define-data-var contract-owner principal tx-sender)

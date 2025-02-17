@@ -86,7 +86,7 @@ export const generatePostContract = ({
 
   // Replace the minter with the correct protocol address
   contract = contract.replace(
-    "(define-constant authorized-minter 'ST1AA50K85H2FACBSD3RDQ510Z1YFAFAB66WY4STH.sigle-minter-fixed-price-v001)",
+    "(define-constant authorized-minter 'ST1JRRZ45G7E528BV1M3PR08093JFZGP1C4EZE4MC.sigle-minter-fixed-price-v001)",
     `(define-constant authorized-minter '${fixedPriceMinter})`,
   );
 
