@@ -2,8 +2,8 @@
   "$schema": "https://railway.com/railway.schema.json",
   "build": {
     "builder": "DOCKERFILE",
-    "watchPatterns": ["/apps/server-next/**"],
-    "dockerfilePath": "/apps/server-next/Dockerfile"
+    "watchPatterns": ["/apps/server/**"],
+    "dockerfilePath": "/apps/server/Dockerfile"
   },
   "deploy": {
     "region": "us-west2",

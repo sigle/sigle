@@ -1,5 +1,5 @@
 {
-  "name": "@sigle/server-next",
+  "name": "@sigle/server",
   "private": true,
   "packageManager": "pnpm@9.15.5",
   "scripts": {

@@ -3,7 +3,7 @@ FROM node:${NODE_VERSION}-alpine AS base
 
 WORKDIR /app
 
-ENV APP_NAME="server-next"
+ENV APP_NAME="server"
 
 ENV PNPM_HOME="/pnpm"
 ENV PATH="$PNPM_HOME:$PATH"
