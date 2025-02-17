@@ -68,7 +68,6 @@ export default async function Image({
       <div tw="flex w-full items-center justify-between">
         <div tw="flex items-center">
           {avatar ? (
-            // eslint-disable-next-line @next/next/no-img-element
             <img
               tw="rounded-full"
               src={avatar}
@@ -93,7 +92,6 @@ export default async function Image({
           </div>
         </div>
         <div tw="flex flex-col items-center">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src={"https://app.sigle.io/icon-192x192.png"}
             alt="Sigle logo"

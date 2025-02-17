@@ -30,7 +30,7 @@ const MobileScroll = Extension.create({
               return false;
             }
 
-            timeoutScroll && clearTimeout(timeoutScroll);
+            if (timeoutScroll) clearTimeout(timeoutScroll);
             timeoutScroll = setTimeout(() => {
               const top =
                 view.coordsAtPos(view.state.selection.$head.pos).top -
@@ -45,7 +45,7 @@ const MobileScroll = Extension.create({
                   -1);
 
               if (scrollTop === -1) {
-                options?.debugMode &&
+                if (options?.debugMode)
                   console.error("The plugin could not determine scrollTop");
                 return;
               }

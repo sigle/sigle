@@ -14,7 +14,7 @@
   "dependencies": {
     "@ardrive/turbo-sdk": "1.22.0",
     "@aws-sdk/client-s3": "3.722.0",
-    "@dotenvx/dotenvx": "1.32.0",
+    "@dotenvx/dotenvx": "1.36.0",
     "@hirosystems/chainhook-client": "2.3.0",
     "@paralleldrive/cuid2": "2.2.2",
     "@prisma/client": "6.3.1",
