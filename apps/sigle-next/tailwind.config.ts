@@ -1,7 +1,7 @@
 import { radixThemePreset } from "radix-themes-tw";
 import type { Config } from "tailwindcss";
 
-const config: Config = {
+const config = {
   darkMode: "class",
   content: [
     "./src/pages/**/*.{js,ts,jsx,tsx,mdx}",
@@ -34,6 +34,6 @@ const config: Config = {
   },
   plugins: [require("tailwindcss-animate"), require("@tailwindcss/typography")],
   presets: [radixThemePreset],
-};
+} satisfies Config;
 
 export default config;
