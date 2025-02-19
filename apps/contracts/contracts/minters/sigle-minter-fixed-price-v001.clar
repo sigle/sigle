@@ -28,20 +28,22 @@
 })
 
 ;; Initialize contract mint configuration
-(define-public (set-mint-details (price uint) (start-block uint) (end-block uint))
-  (begin
-    ;; TODO only allow to set once?
-    (asserts! (> end-block start-block) (err ERR-INVALID-END-BLOCK))
+(define-public (set-mint-details (token-contract <sigle-post-trait>) (price uint) (start-block uint) (end-block uint))
+  (let (
+    (contract-owner (try! (contract-call? token-contract get-contract-owner)))
+  )
+    (asserts! (is-eq tx-sender contract-owner) (err ERR-NOT-AUTHORIZED))
 
-    (print { a: "set-mint-details", contract: tx-sender, price: price, start-block: start-block, end-block: end-block })
+    (print { a: "set-mint-details", contract: (contract-of token-contract), price: price, start-block: start-block, end-block: end-block })
+
     (ok (map-set contract-mint-config
-      tx-sender
+      (contract-of token-contract)
       {
         price: price,
         start-block: start-block,
         end-block: end-block,
-      })
-    )
+      }
+    ))
   )
 )
 
