@@ -109,7 +109,7 @@ export default defineEventHandler(async (event) => {
                 });
                 break;
               case "set-mint-details":
-                // We ignore this event for now, it's already handled in contract creation
+                // TODO
                 break;
               case "mint-enabled":
                 await indexerMintEnabledJob.emit({
