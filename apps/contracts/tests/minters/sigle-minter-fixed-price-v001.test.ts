@@ -220,4 +220,127 @@ describe(contract, () => {
       });
     });
   });
+
+  describe("set-mint-details", () => {
+    beforeEach(() => {
+      simnet.deployContract(
+        defaultContractName.split(".")[1],
+        defaultContract,
+        { clarityVersion: 3 },
+        wallet1,
+      );
+    });
+
+    it("allows contract owner to update mint details", () => {
+      const { result } = simnet.callPublicFn(
+        contract,
+        "set-mint-details",
+        [
+          Cl.contractPrincipal(
+            defaultContractName.split(".")[0],
+            defaultContractName.split(".")[1],
+          ),
+          Cl.uint(2000000), // new price
+          Cl.uint(20), // new start-block
+          Cl.uint(200), // new end-block
+        ],
+        wallet1, // wallet1 is the contract owner
+      );
+
+      expect(result).toBeOk(Cl.bool(true));
+
+      // Verify the updated config
+      const { result: config } = simnet.callReadOnlyFn(
+        contract,
+        "get-contract-config",
+        [Cl.principal(defaultContractName)],
+        wallet1,
+      );
+
+      expect(config).toBeSome(
+        Cl.tuple({
+          price: Cl.uint(2000000),
+          "start-block": Cl.uint(20),
+          "end-block": Cl.uint(200),
+        }),
+      );
+    });
+
+    it("prevents non-owner from updating mint details", () => {
+      const { result } = simnet.callPublicFn(
+        contract,
+        "set-mint-details",
+        [
+          Cl.contractPrincipal(
+            defaultContractName.split(".")[0],
+            defaultContractName.split(".")[1],
+          ),
+          Cl.uint(2000000),
+          Cl.uint(20),
+          Cl.uint(200),
+        ],
+        wallet2, // wallet2 is not the contract owner
+      );
+
+      expect(result).toBeErr(Cl.uint(403)); // ERR-NOT-AUTHORIZED
+    });
+
+    it("fails when end block is before start block", () => {
+      const { result } = simnet.callPublicFn(
+        contract,
+        "set-mint-details",
+        [
+          Cl.contractPrincipal(
+            defaultContractName.split(".")[0],
+            defaultContractName.split(".")[1],
+          ),
+          Cl.uint(2000000),
+          Cl.uint(100), // start-block after end-block
+          Cl.uint(50), // end-block before start-block
+        ],
+        wallet1,
+      );
+
+      expect(result).toBeErr(Cl.uint(1002)); // ERR-INVALID-END-BLOCK
+    });
+
+    it("fails when sale has already ended", () => {
+      // First set a sale that ends at block 100
+      simnet.callPublicFn(
+        contract,
+        "set-mint-details",
+        [
+          Cl.contractPrincipal(
+            defaultContractName.split(".")[0],
+            defaultContractName.split(".")[1],
+          ),
+          Cl.uint(1000000),
+          Cl.uint(10),
+          Cl.uint(100),
+        ],
+        wallet1,
+      );
+
+      // Advance block height beyond end block
+      simnet.mineEmptyBlocks(101);
+
+      // Try to update the sale details
+      const { result } = simnet.callPublicFn(
+        contract,
+        "set-mint-details",
+        [
+          Cl.contractPrincipal(
+            defaultContractName.split(".")[0],
+            defaultContractName.split(".")[1],
+          ),
+          Cl.uint(2000000),
+          Cl.uint(120),
+          Cl.uint(200),
+        ],
+        wallet1,
+      );
+
+      expect(result).toBeErr(Cl.uint(1004)); // ERR-SALE-ENDED
+    });
+  });
 });

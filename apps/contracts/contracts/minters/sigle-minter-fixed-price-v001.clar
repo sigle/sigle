@@ -28,12 +28,12 @@
 })
 
 ;; Initialize contract mint configuration
-(define-public (set-mint-details (price uint) (start-block uint) (end-block uint))
+(define-public (init-mint-details (price uint) (start-block uint) (end-block uint))
   (begin
-    ;; TODO only allow to set once?
+    (asserts! (is-none (map-get? contract-mint-config tx-sender)) (err ERR-NOT-AUTHORIZED))
     (asserts! (> end-block start-block) (err ERR-INVALID-END-BLOCK))
 
-    (print { a: "set-mint-details", contract: tx-sender, price: price, start-block: start-block, end-block: end-block })
+    (print { a: "init-mint-details", contract: tx-sender, price: price, start-block: start-block, end-block: end-block })
     (ok (map-set contract-mint-config
       tx-sender
       {
@@ -42,6 +42,27 @@
         end-block: end-block,
       })
     )
+  )
+)
+
+(define-public (set-mint-details (token-contract <sigle-post-trait>) (price uint) (start-block uint) (end-block uint))
+  (let (
+    (mint-config (unwrap! (map-get? contract-mint-config (contract-of token-contract)) (err ERR-INVALID-MINT-DATA)))
+    (contract-owner (try! (contract-call? token-contract get-contract-owner)))
+  )
+    (asserts! (is-eq tx-sender contract-owner) (err ERR-NOT-AUTHORIZED))
+    (asserts! (> end-block start-block) (err ERR-INVALID-END-BLOCK))
+    (asserts! (<= burn-block-height (get end-block mint-config)) (err ERR-SALE-ENDED))
+
+    (print { a: "set-mint-details", contract: (contract-of token-contract), price: price, start-block: start-block, end-block: end-block })
+    (ok (map-set contract-mint-config
+      (contract-of token-contract)
+      {
+        price: price,
+        start-block: start-block,
+        end-block: end-block,
+      }
+    ))
   )
 )
 

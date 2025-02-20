@@ -59,7 +59,7 @@ plan:
             emulated-sender: SP3D6PV2ACBPEKYJTCMH7HEN02KP87QSP8KTEH335
             path: "./.cache/requirements/SP3D6PV2ACBPEKYJTCMH7HEN02KP87QSP8KTEH335.commission-trait.clar"
             clarity-version: 1
-      epoch: "2.1"
+      epoch: "2.0"
     - id: 1
       transactions:
         - emulated-contract-publish:
