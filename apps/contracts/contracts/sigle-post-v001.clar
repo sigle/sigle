@@ -35,7 +35,7 @@
 
 (begin
   (print { a: "publish-content", version: contract-version, minter: authorized-minter }))
-  (unwrap-panic (as-contract (contract-call? .sigle-minter-fixed-price-v001 set-mint-details (as-contract tx-sender) u0 u0 u1)))
+  (unwrap-panic (as-contract (contract-call? .sigle-minter-fixed-price-v001 init-mint-details u0 u0 u1)))
 
 ;; @desc SIP-009 transfer token to a specified principal
 (define-public (transfer (token-id uint) (sender principal) (recipient principal))
