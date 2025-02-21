@@ -1,0 +1,50 @@
+ARG NODE_VERSION=22
+FROM node:${NODE_VERSION}-alpine AS base
+
+WORKDIR /app
+
+ENV APP_NAME="server"
+
+ENV PNPM_HOME="/pnpm"
+ENV PATH="$PNPM_HOME:$PATH"
+COPY --link ./package.json ./
+RUN npm install -g corepack@latest # fix for https://github.com/nodejs/corepack/issues/612
+RUN corepack enable pnpm
+RUN pnpm install turbo@^2 --global
+RUN pnpm install @dotenvx/dotenvx@^1 --global
+RUN apk update; \
+    apk add --no-cache openssl;
+
+# --- Turbo stage ---
+
+FROM base AS builder
+# Set working directory
+WORKDIR /app
+COPY . .
+RUN turbo prune @sigle/$APP_NAME --docker
+
+# --- Build stage ---
+
+# Add lockfile and package.json's of isolated subworkspace
+FROM base AS installer
+WORKDIR /app
+
+# First install dependencies (as they change less often)
+COPY .gitignore .gitignore
+COPY --from=builder /app/out/json/ .
+COPY --from=builder /app/out/pnpm-lock.yaml ./pnpm-lock.yaml
+COPY --from=builder /app/out/pnpm-workspace.yaml ./pnpm-workspace.yaml
+RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --frozen-lockfile
+
+# Build the project and its dependencies
+COPY --from=builder /app/out/full/ .
+# Copy contracts source to avoid cyclic dependency
+COPY --from=builder /app/apps/contracts ./apps/contracts
+COPY ./apps/$APP_NAME/.env.development.local ./apps/$APP_NAME/.env.development.local
+COPY turbo.json turbo.json
+
+WORKDIR /app/apps/$APP_NAME
+
+RUN pnpm prisma generate
+
+CMD pnpm prisma migrate deploy && turbo run dev

@@ -1,10 +1,11 @@
-(use-trait sigle-publication-trait .sigle-publication-trait-v001.sigle-publication-trait)
+(use-trait sigle-post-trait .sigle-post-trait-v001.sigle-post-trait)
 
 (define-constant ERR-NOT-AUTHORIZED u403)
 (define-constant ERR-INVALID-MINT-DATA u1000)
 (define-constant ERR-INVALID-QUANTITY u1001)
-(define-constant ERR-SALE-NOT-STARTED u1002)
-(define-constant ERR-SALE-ENDED u1003)
+(define-constant ERR-INVALID-END-BLOCK u1002)
+(define-constant ERR-SALE-NOT-STARTED u1003)
+(define-constant ERR-SALE-ENDED u1004)
 
 ;; Single fee structure for all mints
 (define-data-var fixed-fee-structure {
@@ -30,6 +31,8 @@
 (define-public (set-mint-details (price uint) (start-block uint) (end-block uint))
   (begin
     ;; TODO only allow to set once?
+    (asserts! (> end-block start-block) (err ERR-INVALID-END-BLOCK))
+
     (print { a: "set-mint-details", contract: tx-sender, price: price, start-block: start-block, end-block: end-block })
     (ok (map-set contract-mint-config
       tx-sender
@@ -42,7 +45,7 @@
   )
 )
 
-(define-public (mint (token-contract <sigle-publication-trait>) (quantity uint) (mintReferrer (optional principal)) (recipient (optional principal)))
+(define-public (mint (token-contract <sigle-post-trait>) (quantity uint) (mintReferrer (optional principal)) (recipient (optional principal)))
   (let (
     (protocol-address (contract-call? .sigle-protocol get-payout-address))
     (mint-config (unwrap! (map-get? contract-mint-config (contract-of token-contract)) (err ERR-INVALID-MINT-DATA)))

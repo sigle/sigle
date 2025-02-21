@@ -4,8 +4,8 @@ Sigle is a monorepo that contains multiple packages. The main packages are:
 
 - [`@sigle/contracts`](https://github.com/sigle/sigle/tree/main/apps/contracts): The protocol contracts and tests.
 - [`@sigle/sdk`](https://github.com/sigle/sigle/tree/main/packages/sdk): The SDK package that contains all the schemas and logic to interact with the protocol.
-- [`@sigle/server-next`](https://github.com/sigle/sigle/tree/main/apps/server-next): The backend server that serves the API and host the indexer logic.
-- [`@sigle/sigle-next`](https://github.com/sigle/sigle/tree/main/apps/sigle-next): The web application one interacts with.
+- [`@sigle/server`](https://github.com/sigle/sigle/tree/main/apps/server): The backend server that serves the API and host the indexer logic.
+- [`@sigle/sigle`](https://github.com/sigle/sigle/tree/main/apps/sigle): The web application one interacts with.
 
 ## Overview
 
@@ -14,7 +14,7 @@ flowchart LR
     %% Define core application components
     subgraph Client[" Client Layer "]
         direction TB
-        UI["Web Application<br/>(@sigle/sigle-next)"]
+        UI["Web Application<br/>(@sigle/sigle)"]
     end
 
     subgraph Core[" Core Layer "]

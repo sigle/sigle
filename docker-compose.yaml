@@ -23,7 +23,7 @@ services:
   server:
     build:
       context: ./
-      dockerfile: ./apps/server-next/Dockerfile.dev
+      dockerfile: ./apps/server/Dockerfile.dev
     restart: always
     ports:
       - "3001:3001"
@@ -35,12 +35,12 @@ services:
       - DATABASE_URL=postgres://sigle_user:sigle_password@postgres:5432/sigle_db?sslmode=disable
     develop:
       watch:
-        - path: ./apps/server-next/package.json
+        - path: ./apps/server/package.json
           action: rebuild
-        - path: ./apps/server-next/prisma
+        - path: ./apps/server/prisma
           action: rebuild
-        - path: ./apps/server-next/
-          target: /app/apps/server-next
+        - path: ./apps/server/
+          target: /app/apps/server
           action: sync
     depends_on:
       postgres:

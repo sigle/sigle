@@ -9,11 +9,11 @@
     "start": "next start"
   },
   "dependencies": {
-    "next": "15.1.3",
-    "nextra": "4.2.4",
-    "nextra-theme-docs": "4.2.4",
-    "react": "18.2.0",
-    "react-dom": "18.2.0"
+    "next": "15.1.7",
+    "nextra": "4.2.12",
+    "nextra-theme-docs": "4.2.12",
+    "react": "19.0.0",
+    "react-dom": "19.0.0"
   },
   "devDependencies": {
     "pagefind": "1.3.0"
