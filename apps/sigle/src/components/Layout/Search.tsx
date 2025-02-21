@@ -20,8 +20,10 @@ import {
   CommandDialog,
   CommandEmpty,
   CommandGroup,
+  CommandInput,
   CommandItem,
   CommandList,
+  CommandSeparator,
 } from "../ui";
 
 const Hit = ({ hit }) => (
@@ -111,7 +113,8 @@ export const Search = () => {
     <CommandDialog open={true}>
       <InstantSearch indexName="users" searchClient={searchClient as any}>
         {/* <CustomSearchBox /> */}
-        <SearchBox />
+        {/* <SearchBox /> */}
+        <CommandInput placeholder="Search..." />
         <CommandList className="min-h-[300px]">
           <CommandEmpty>No results found.</CommandEmpty>
           <Index indexName="users">
@@ -120,6 +123,7 @@ export const Search = () => {
               <Hits hitComponent={(props) => <CustomHitsUser {...props} />} />
             </CommandGroup>
           </Index>
+          <CommandSeparator />
           <Index indexName="posts">
             <CommandGroup heading="Posts">
               <Configure hitsPerPage={5} />
@@ -153,7 +157,7 @@ function CustomHitsUser({ hit }: { hit: Hit<BaseHit> }): JSX.Element {
             />
           </Text>
         ) : null}
-        <Text as="p" className="mt-1 line-clamp-1" size="1" color="gray">
+        <Text as="p" className="line-clamp-1" size="1" color="gray">
           {hit.id}
         </Text>
       </div>

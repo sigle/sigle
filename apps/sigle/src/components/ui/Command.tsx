@@ -13,7 +13,7 @@ const Command = React.forwardRef<
   <CommandPrimitive
     ref={ref}
     className={cn(
-      "rounded-md bg-popover text-popover-foreground flex size-full flex-col overflow-hidden",
+      "flex size-full flex-col overflow-hidden rounded-1",
       className,
     )}
     {...props}
@@ -28,7 +28,7 @@ const CommandDialog = ({
   return (
     <Dialog.Root {...props}>
       <Dialog.Content className="overflow-hidden p-0">
-        <Command className="[&_[cmdk-group-heading]]:text-muted-foreground [&_[cmdk-group-heading]]:px-2 [&_[cmdk-group-heading]]:font-medium [&_[cmdk-group]:not([hidden])_~[cmdk-group]]:pt-0 [&_[cmdk-group]]:px-2 [&_[cmdk-input-wrapper]_svg]:size-5 [&_[cmdk-input]]:h-12 [&_[cmdk-item]]:px-2 [&_[cmdk-item]]:py-3 [&_[cmdk-item]_svg]:size-5">
+        <Command className="[&_[cmdk-group-heading]]:px-2 [&_[cmdk-group-heading]]:font-medium [&_[cmdk-group]:not([hidden])_~[cmdk-group]]:pt-0 [&_[cmdk-group]]:px-2 [&_[cmdk-input-wrapper]_svg]:size-5 [&_[cmdk-input]]:h-12 [&_[cmdk-item]]:px-2 [&_[cmdk-item]]:py-3 [&_[cmdk-item]_svg]:size-5">
           {children}
         </Command>
       </Dialog.Content>
@@ -40,12 +40,15 @@ const CommandInput = React.forwardRef<
   React.ElementRef<typeof CommandPrimitive.Input>,
   React.ComponentPropsWithoutRef<typeof CommandPrimitive.Input>
 >(({ className, ...props }, ref) => (
-  <div className="flex items-center border-b px-3" cmdk-input-wrapper="">
+  <div
+    className="flex items-center border-b border-gray-3 px-3"
+    cmdk-input-wrapper=""
+  >
     <IconSearch className="mr-2 size-4 shrink-0 opacity-50" />
     <CommandPrimitive.Input
       ref={ref}
       className={cn(
-        "rounded-md text-sm placeholder:text-muted-foreground flex h-10 w-full bg-transparent py-3 outline-none disabled:cursor-not-allowed disabled:opacity-50",
+        "flex h-10 w-full rounded-2 bg-transparent py-3 text-1 outline-none placeholder:text-gray-9 disabled:cursor-not-allowed disabled:opacity-50",
         className,
       )}
       {...props}
@@ -61,7 +64,7 @@ const CommandList = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <CommandPrimitive.List
     ref={ref}
-    className={cn("max-h-[300px] overflow-y-auto overflow-x-hidden", className)}
+    className={cn("max-h-[450px] overflow-y-auto overflow-x-hidden", className)}
     {...props}
   />
 ));
@@ -74,7 +77,7 @@ const CommandEmpty = React.forwardRef<
 >((props, ref) => (
   <CommandPrimitive.Empty
     ref={ref}
-    className="text-sm py-6 text-center"
+    className="py-6 text-center text-1"
     {...props}
   />
 ));
@@ -116,7 +119,7 @@ const CommandItem = React.forwardRef<
   <CommandPrimitive.Item
     ref={ref}
     className={cn(
-      "text-sm data-[selected=true]:text-accent-foreground relative flex cursor-default select-none items-center gap-2 rounded-1 px-2 py-1.5 outline-none data-[disabled=true]:pointer-events-none data-[selected=true]:bg-gray-3 data-[disabled=true]:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0",
+      "relative flex cursor-default select-none items-center gap-2 rounded-1 px-2 py-1.5 outline-none data-[disabled=true]:pointer-events-none data-[selected=true]:bg-gray-3 data-[disabled=true]:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0",
       className,
     )}
     {...props}
