@@ -36,10 +36,12 @@ export const Header = () => {
 
   return (
     <header className="sticky top-0 z-20 flex h-[--header-height] items-center justify-between border-b border-gray-6 bg-[var(--color-background)] px-4 md:px-[60px]">
-      <NextLink href="/">
-        <LogoImage height={28} />
-      </NextLink>
-      <Search />
+      <div className="flex items-center gap-6">
+        <NextLink href="/">
+          <LogoImage height={28} />
+        </NextLink>
+        <Search />
+      </div>
       {!session ? (
         <div className="flex items-center gap-6">
           <Button

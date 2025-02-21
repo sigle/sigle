@@ -1,14 +1,26 @@
 import { instantMeiliSearch } from "@meilisearch/instant-meilisearch";
 import {
+  Configure,
+  Highlight,
+  Hits,
   InstantSearch,
+  SearchBox,
   UseSearchBoxProps,
   useInstantSearch,
   useSearchBox,
 } from "react-instantsearch";
 import "instantsearch.css/themes/satellite.css";
-import { TextField } from "@radix-ui/themes";
+import { Text, TextField } from "@radix-ui/themes";
 import { IconSearch } from "@tabler/icons-react";
-import { useRef, useState } from "react";
+import { useRouter } from "next/navigation";
+import { useCallback, useRef, useState } from "react";
+import {
+  CommandDialog,
+  CommandEmpty,
+  CommandGroup,
+  CommandItem,
+  CommandList,
+} from "../ui";
 
 const Hit = ({ hit }) => (
   <article key={hit.id}>
@@ -96,10 +108,19 @@ function CustomSearchBox(props: UseSearchBoxProps) {
 
 export const Search = () => {
   return (
-    <InstantSearch indexName="users" searchClient={searchClient as any}>
-      <CustomSearchBox />
+    <CommandDialog open={true}>
+      <InstantSearch indexName="users" searchClient={searchClient as any}>
+        {/* <CustomSearchBox /> */}
+        <SearchBox />
+        <CommandList className="min-h-[300px]">
+          <CommandEmpty>No results found.</CommandEmpty>
+          <CommandGroup className="px-0!">
+            <Configure attributesToSnippet={["content"]} hitsPerPage={10} />
+            <Hits hitComponent={(props) => <CustomHits {...props} />} />
+          </CommandGroup>
+        </CommandList>
 
-      {/* <Index indexName="users">
+        {/* <Index indexName="users">
         <h2>
           index: <code>instant_search</code>
         </h2>
@@ -113,6 +134,36 @@ export const Search = () => {
         <Configure hitsPerPage={16} />
         <Hits hitComponent={HitPost} />
       </Index> */}
-    </InstantSearch>
+      </InstantSearch>
+    </CommandDialog>
   );
 };
+
+function CustomHits({ hit }: { hit: AlgoliaHit<BaseHit> }): JSX.Element {
+  const router = useRouter();
+
+  const onHitSelect = useCallback(async (val: string) => {
+    await router.push(val);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  return (
+    <CommandItem onSelect={() => onHitSelect(hit.uri)} value={hit.uri}>
+      {/* */}
+      <div>
+        <Text as="p" className="line-clamp-1" weight="medium">
+          <Highlight
+            attribute="displayName"
+            hit={hit}
+            highlightedTagName="strong"
+          />
+        </Text>
+        {hit.id ? (
+          <Text as="p" className="mt-1 line-clamp-1" size="1" color="gray">
+            {hit.id}
+          </Text>
+        ) : null}
+      </div>
+    </CommandItem>
+  );
+}
