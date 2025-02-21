@@ -10,6 +10,7 @@ import {
   CommandList,
   CommandSeparator,
 } from "../ui";
+import { CustomHitsPost } from "./Search/CustomHitsPost";
 import { CustomHitsUser } from "./Search/CustomHitsUser";
 import { CustomSearchBox } from "./Search/CustomSearchBox";
 
@@ -30,12 +31,13 @@ export const Search = () => {
         color="gray"
         size="2"
         className="w-full"
-        onClick={() => setOpen(true)}
+        onFocus={() => setOpen(true)}
       >
         <TextField.Slot>
           <IconSearch height="16" width="16" />
         </TextField.Slot>
       </TextField.Root>
+
       <CommandDialog open={open} onOpenChange={setOpen}>
         <VisuallyHidden>
           <Dialog.Title>Search</Dialog.Title>
@@ -60,7 +62,7 @@ export const Search = () => {
             <Index indexName="posts">
               <CommandGroup heading="Posts">
                 <Configure hitsPerPage={5} />
-                <Hits hitComponent={(props) => <CustomHitsUser {...props} />} />
+                <Hits hitComponent={(props) => <CustomHitsPost {...props} />} />
               </CommandGroup>
             </Index>
           </CommandList>

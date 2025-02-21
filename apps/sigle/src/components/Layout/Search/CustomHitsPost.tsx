@@ -5,29 +5,21 @@ import { useRouter } from "next/navigation";
 import { useCallback } from "react";
 import { Highlight } from "react-instantsearch";
 
-export function CustomHitsUser({ hit }: { hit: any }) {
+export function CustomHitsPost({ hit }: { hit: any }) {
   const router = useRouter();
 
   const onHitSelect = useCallback(() => {
-    router.push(Routes.userProfile({ username: hit.id }));
+    router.push(Routes.post({ postId: hit.id }));
   }, [router, hit.id]);
-
-  // TODO show avatar
 
   return (
     <CommandItem onSelect={onHitSelect}>
       <div>
-        {hit.displayName ? (
-          <Text as="p" className="line-clamp-1" size="2" weight="medium">
-            <Highlight
-              attribute="displayName"
-              hit={hit}
-              highlightedTagName="strong"
-            />
-          </Text>
-        ) : null}
+        <Text as="p" className="line-clamp-1" size="2" weight="medium">
+          <Highlight attribute="title" hit={hit} highlightedTagName="strong" />
+        </Text>
         <Text as="p" className="line-clamp-1" size="1" color="gray">
-          {hit.id}
+          {hit.excerpt}
         </Text>
       </div>
     </CommandItem>
