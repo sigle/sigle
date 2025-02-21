@@ -88,7 +88,7 @@ const CommandGroup = React.forwardRef<
   <CommandPrimitive.Group
     ref={ref}
     className={cn(
-      "text-foreground [&_[cmdk-group-heading]]:text-xs [&_[cmdk-group-heading]]:text-muted-foreground overflow-hidden p-1 [&_[cmdk-group-heading]]:px-2 [&_[cmdk-group-heading]]:py-1.5 [&_[cmdk-group-heading]]:font-medium",
+      "overflow-hidden p-1 [&_[cmdk-group-heading]]:px-2 [&_[cmdk-group-heading]]:py-1.5 [&_[cmdk-group-heading]]:text-1 [&_[cmdk-group-heading]]:text-grayA-11",
       className,
     )}
     {...props}
@@ -103,7 +103,7 @@ const CommandSeparator = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <CommandPrimitive.Separator
     ref={ref}
-    className={cn("bg-border -mx-1 h-px", className)}
+    className={cn("-mx-1 h-px bg-gray-3", className)}
     {...props}
   />
 ));
@@ -116,7 +116,7 @@ const CommandItem = React.forwardRef<
   <CommandPrimitive.Item
     ref={ref}
     className={cn(
-      "rounded-sm text-sm data-[selected=true]:bg-accent data-[selected=true]:text-accent-foreground relative flex cursor-default select-none items-center gap-2 px-2 py-1.5 outline-none data-[disabled=true]:pointer-events-none data-[disabled=true]:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0",
+      "text-sm data-[selected=true]:text-accent-foreground relative flex cursor-default select-none items-center gap-2 rounded-1 px-2 py-1.5 outline-none data-[disabled=true]:pointer-events-none data-[selected=true]:bg-gray-3 data-[disabled=true]:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0",
       className,
     )}
     {...props}
@@ -131,10 +131,7 @@ const CommandShortcut = ({
 }: React.HTMLAttributes<HTMLSpanElement>) => {
   return (
     <span
-      className={cn(
-        "text-xs tracking-widest text-muted-foreground ml-auto",
-        className,
-      )}
+      className={cn("ml-auto text-1 text-grayA-11", className)}
       {...props}
     />
   );

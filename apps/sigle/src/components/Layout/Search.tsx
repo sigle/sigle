@@ -1,19 +1,21 @@
+import { Routes } from "@/lib/routes";
 import { instantMeiliSearch } from "@meilisearch/instant-meilisearch";
+// import "instantsearch.css/themes/satellite.css";
+import { Text, TextField } from "@radix-ui/themes";
+import { IconSearch } from "@tabler/icons-react";
+import { useRouter } from "next/navigation";
+import { useCallback, useRef, useState } from "react";
 import {
   Configure,
   Highlight,
   Hits,
+  Index,
   InstantSearch,
   SearchBox,
   UseSearchBoxProps,
   useInstantSearch,
   useSearchBox,
 } from "react-instantsearch";
-import "instantsearch.css/themes/satellite.css";
-import { Text, TextField } from "@radix-ui/themes";
-import { IconSearch } from "@tabler/icons-react";
-import { useRouter } from "next/navigation";
-import { useCallback, useRef, useState } from "react";
 import {
   CommandDialog,
   CommandEmpty,
@@ -47,8 +49,6 @@ function CustomSearchBox(props: UseSearchBoxProps) {
   const { status } = useInstantSearch();
   const [inputValue, setInputValue] = useState(query);
   const inputRef = useRef<HTMLInputElement>(null);
-
-  const isSearchStalled = status === "stalled";
 
   function setQuery(newQuery: string) {
     setInputValue(newQuery);
@@ -114,55 +114,48 @@ export const Search = () => {
         <SearchBox />
         <CommandList className="min-h-[300px]">
           <CommandEmpty>No results found.</CommandEmpty>
-          <CommandGroup className="px-0!">
-            <Configure attributesToSnippet={["content"]} hitsPerPage={10} />
-            <Hits hitComponent={(props) => <CustomHits {...props} />} />
-          </CommandGroup>
+          <Index indexName="users">
+            <CommandGroup heading="Users">
+              <Configure hitsPerPage={5} />
+              <Hits hitComponent={(props) => <CustomHitsUser {...props} />} />
+            </CommandGroup>
+          </Index>
+          <Index indexName="posts">
+            <CommandGroup heading="Posts">
+              <Configure hitsPerPage={5} />
+              <Hits hitComponent={(props) => <CustomHitsUser {...props} />} />
+            </CommandGroup>
+          </Index>
         </CommandList>
-
-        {/* <Index indexName="users">
-        <h2>
-          index: <code>instant_search</code>
-        </h2>
-        <Configure hitsPerPage={16} />
-        <Hits hitComponent={Hit} />
-      </Index>
-      <Index indexName="posts">
-        <h2>
-          index: <code>posts</code>
-        </h2>
-        <Configure hitsPerPage={16} />
-        <Hits hitComponent={HitPost} />
-      </Index> */}
       </InstantSearch>
     </CommandDialog>
   );
 };
 
-function CustomHits({ hit }: { hit: AlgoliaHit<BaseHit> }): JSX.Element {
+function CustomHitsUser({ hit }: { hit: Hit<BaseHit> }): JSX.Element {
   const router = useRouter();
 
-  const onHitSelect = useCallback(async (val: string) => {
-    await router.push(val);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  const onHitSelect = useCallback(async () => {
+    router.push(Routes.userProfile({ username: hit.id }));
+  }, [router, hit.id]);
+
+  // TODO show avatar
 
   return (
-    <CommandItem onSelect={() => onHitSelect(hit.uri)} value={hit.uri}>
-      {/* */}
+    <CommandItem onSelect={onHitSelect}>
       <div>
-        <Text as="p" className="line-clamp-1" weight="medium">
-          <Highlight
-            attribute="displayName"
-            hit={hit}
-            highlightedTagName="strong"
-          />
-        </Text>
-        {hit.id ? (
-          <Text as="p" className="mt-1 line-clamp-1" size="1" color="gray">
-            {hit.id}
+        {hit.displayName ? (
+          <Text as="p" className="line-clamp-1" size="2" weight="medium">
+            <Highlight
+              attribute="displayName"
+              hit={hit}
+              highlightedTagName="strong"
+            />
           </Text>
         ) : null}
+        <Text as="p" className="mt-1 line-clamp-1" size="1" color="gray">
+          {hit.id}
+        </Text>
       </div>
     </CommandItem>
   );
