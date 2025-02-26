@@ -62,7 +62,7 @@ export const generatePostContract = ({
 
   // Replace the init function params
   contract = contract.replace(
-    "(contract-call? .sigle-minter-fixed-price-v001 set-mint-details u0 u0 u0)",
+    "(contract-call? .sigle-minter-fixed-price-v001 set-mint-details u0 u0 u1)",
     `(contract-call? '${fixedPriceMinter} set-mint-details u${params.collectInfo.amount} u0 u${MAX_UINT})`,
   );
 

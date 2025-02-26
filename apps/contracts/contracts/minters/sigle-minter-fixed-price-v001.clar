@@ -3,8 +3,9 @@
 (define-constant ERR-NOT-AUTHORIZED u403)
 (define-constant ERR-INVALID-MINT-DATA u1000)
 (define-constant ERR-INVALID-QUANTITY u1001)
-(define-constant ERR-SALE-NOT-STARTED u1002)
-(define-constant ERR-SALE-ENDED u1003)
+(define-constant ERR-INVALID-END-BLOCK u1002)
+(define-constant ERR-SALE-NOT-STARTED u1003)
+(define-constant ERR-SALE-ENDED u1004)
 
 ;; Single fee structure for all mints
 (define-data-var fixed-fee-structure {
@@ -30,6 +31,8 @@
 (define-public (set-mint-details (price uint) (start-block uint) (end-block uint))
   (begin
     ;; TODO only allow to set once?
+    (asserts! (> end-block start-block) (err ERR-INVALID-END-BLOCK))
+
     (print { a: "set-mint-details", contract: tx-sender, price: price, start-block: start-block, end-block: end-block })
     (ok (map-set contract-mint-config
       tx-sender
