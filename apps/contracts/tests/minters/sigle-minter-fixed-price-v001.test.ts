@@ -131,28 +131,31 @@ describe(contract, () => {
       );
 
       expect(events[0]).toEqual({
-        event: "stx_transfer_event",
+        event: "ft_transfer_event",
         data: {
           amount: fixedMintFee.protocol.toString(),
-          memo: "",
+          asset_identifier:
+            "SM3VDXK3WZZSA84XXFKAFAF15NNZX32CTSG82JFQ4.sbtc-token::sbtc-token",
           recipient: deployer,
           sender: wallet2,
         },
       });
       expect(events[1]).toEqual({
-        event: "stx_transfer_event",
+        event: "ft_transfer_event",
         data: {
           amount: fixedMintFee.creator.toString(),
-          memo: "",
+          asset_identifier:
+            "SM3VDXK3WZZSA84XXFKAFAF15NNZX32CTSG82JFQ4.sbtc-token::sbtc-token",
           recipient: wallet1,
           sender: wallet2,
         },
       });
       expect(events[2]).toEqual({
-        event: "stx_transfer_event",
+        event: "ft_transfer_event",
         data: {
           amount: fixedMintFee.mintReferrer.toString(),
-          memo: "",
+          asset_identifier:
+            "SM3VDXK3WZZSA84XXFKAFAF15NNZX32CTSG82JFQ4.sbtc-token::sbtc-token",
           recipient: wallet3,
           sender: wallet2,
         },
@@ -192,28 +195,31 @@ describe(contract, () => {
       );
 
       expect(events[0]).toEqual({
-        event: "stx_transfer_event",
+        event: "ft_transfer_event",
         data: {
           amount: fixedMintFee.protocol.toString(),
-          memo: "",
+          asset_identifier:
+            "SM3VDXK3WZZSA84XXFKAFAF15NNZX32CTSG82JFQ4.sbtc-token::sbtc-token",
           recipient: deployer,
           sender: wallet2,
         },
       });
       expect(events[1]).toEqual({
-        event: "stx_transfer_event",
+        event: "ft_transfer_event",
         data: {
           amount: (parseSTX("4.2") + fixedMintFee.creator).toString(),
-          memo: "",
+          asset_identifier:
+            "SM3VDXK3WZZSA84XXFKAFAF15NNZX32CTSG82JFQ4.sbtc-token::sbtc-token",
           recipient: wallet1,
           sender: wallet2,
         },
       });
       expect(events[2]).toEqual({
-        event: "stx_transfer_event",
+        event: "ft_transfer_event",
         data: {
           amount: fixedMintFee.mintReferrer.toString(),
-          memo: "",
+          asset_identifier:
+            "SM3VDXK3WZZSA84XXFKAFAF15NNZX32CTSG82JFQ4.sbtc-token::sbtc-token",
           recipient: wallet3,
           sender: wallet2,
         },
