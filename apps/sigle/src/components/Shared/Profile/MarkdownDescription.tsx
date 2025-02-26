@@ -11,24 +11,25 @@ export const ProfileMarkdownDescription = ({
   content,
 }: ProfileMarkdownDescriptionProps) => {
   return (
-    <ReactMarkdown
-      className={className}
-      allowedElements={["p", "a", "strong", "em"]}
-      components={{
-        a: ({ href, color, ...props }) => {
-          return (
-            <Link
-              href={href}
-              target="_blank"
-              color="gray"
-              highContrast
-              {...(props as any)}
-            />
-          );
-        },
-      }}
-    >
-      {content}
-    </ReactMarkdown>
+    <div className={className}>
+      <ReactMarkdown
+        allowedElements={["p", "a", "strong", "em"]}
+        components={{
+          a: ({ href, color, ...props }) => {
+            return (
+              <Link
+                href={href}
+                target="_blank"
+                color="gray"
+                highContrast
+                {...(props as any)}
+              />
+            );
+          },
+        }}
+      >
+        {content}
+      </ReactMarkdown>
+    </div>
   );
 };
