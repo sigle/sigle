@@ -1,6 +1,6 @@
 (define-constant ERR-NOT-AUTHORIZED u403)
-(define-data-var contract-owner principal)
-(define-data-var payout-address principal)
+(define-data-var contract-owner principal tx-sender)
+(define-data-var payout-address principal (var-get contract-owner))
 (define-read-only (get-contract-owner)
   (var-get contract-owner)
 )

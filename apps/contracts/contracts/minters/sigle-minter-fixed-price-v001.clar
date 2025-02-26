@@ -10,6 +10,10 @@
   protocol: uint,
   creator: uint,
   mintReferrer: uint,
+} {
+  protocol: u350000,
+  creator: u500000,
+  mintReferrer: u150000,
 })
 (define-map contract-mint-config
   principal

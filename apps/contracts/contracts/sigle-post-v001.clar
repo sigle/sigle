@@ -13,25 +13,21 @@
 (define-constant ERR-INVALID-LIMIT u1008)
 (define-constant ERR-METADATA-FROZEN u1009)
 (define-constant contract-version u1)
-(define-constant authorized-minter ST1JRRZ45G7E528BV1M3PR08093JFZGP1C4EZE4MC.sigle-minter-fixed-price-v001)
+(define-constant authorized-minter 'ST1JRRZ45G7E528BV1M3PR08093JFZGP1C4EZE4MC.sigle-minter-fixed-price-v001)
 ;; The post owner address
-(define-data-var contract-owner principal)
+(define-data-var contract-owner principal tx-sender)
 ;; The base token uri
-(define-data-var base-token-uri
-  (string-ascii 210)
-)
+(define-data-var base-token-uri (string-ascii 210) "{__BASE_TOKEN_URI__}")
 ;; The pending owner used for the 2 steps owernership transfer
-(define-data-var pending-contract-owner
-  (optional principal)
-)
+(define-data-var pending-contract-owner (optional principal) none)
 ;; The last minted token id
-(define-data-var last-token-id uint)
+(define-data-var last-token-id uint u0)
 ;; The maximum number of tokens that can be minted
-(define-data-var max-supply uint)
+(define-data-var max-supply uint u0)
 ;; Define if the mint is enabled
-(define-data-var mint-enabled bool)
+(define-data-var mint-enabled bool true)
 ;; Define if the metadata is frozen
-(define-data-var metadata-frozen bool)
+(define-data-var metadata-frozen bool false)
 (begin
   (print
     {
@@ -42,7 +38,7 @@
 )(unwrap-panic
   (as-contract
     (contract-call? .sigle-minter-fixed-price-v001 set-mint-details u0 u0 u1)
-  ));; @desc SIP-009 transfer token to a specified principal
+  )) ;; @desc SIP-009 transfer token to a specified principal
 (define-public (transfer
     (token-id uint)
     (sender principal)
@@ -376,7 +372,7 @@
   )
 )
 
-(define-data-var royalty-percent uint)
+(define-data-var royalty-percent uint u1000)
 (define-read-only (get-royalty-percent)
   (ok (var-get royalty-percent))
 )
