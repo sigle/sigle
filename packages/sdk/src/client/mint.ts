@@ -20,7 +20,7 @@ export type MintParams = {
   recipient?: string;
   // Sender address, used for the post condditions
   sender: string;
-  // Price of one token in uSTX
+  // Price of one token in satoshis
   price: string;
 };
 
