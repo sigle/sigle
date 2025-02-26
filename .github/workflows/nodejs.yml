@@ -51,6 +51,6 @@ jobs:
       - uses: ./.github/actions/setup-monorepo
 
       - name: "Check contract syntax"
-        uses: docker://hirosystems/clarinet:2.14
+        uses: docker://hirosystems/clarinet:2.15
         with:
           args: check --manifest-path ./apps/contracts/Clarinet.toml
