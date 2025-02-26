@@ -1,4 +1,4 @@
-import { createClient, fixedMintFee, parseSTX } from "@sigle/sdk";
+import { createClient, fixedMintFee } from "@sigle/sdk";
 import { STACKS_MOCKNET } from "@stacks/network";
 import { Cl } from "@stacks/transactions";
 import { beforeEach, describe, expect, it } from "vitest";
@@ -165,7 +165,7 @@ describe(contract, () => {
     it("fees should match the SDK values for paid mints", () => {
       const { contract: defaultContract } = sigleClient.generatePostContract({
         collectInfo: {
-          amount: parseSTX("4.2"),
+          amount: 42000,
           maxSupply: 100,
         },
         metadata: "ipfs://anything",
@@ -207,7 +207,7 @@ describe(contract, () => {
       expect(events[1]).toEqual({
         event: "ft_transfer_event",
         data: {
-          amount: (parseSTX("4.2") + fixedMintFee.creator).toString(),
+          amount: (42000n + fixedMintFee.creator).toString(),
           asset_identifier:
             "SM3VDXK3WZZSA84XXFKAFAF15NNZX32CTSG82JFQ4.sbtc-token::sbtc-token",
           recipient: wallet1,
