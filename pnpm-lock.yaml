@@ -38,11 +38,11 @@ importers:
   apps/contracts:
     devDependencies:
       '@hirosystems/clarinet-sdk':
-        specifier: 2.14.0
-        version: 2.14.0(@types/debug@4.1.12)(@types/node@22.13.4)(jiti@2.4.2)(jsdom@25.0.0(bufferutil@4.0.8)(utf-8-validate@5.0.10))(sass@1.77.8)(terser@5.39.0)(yaml@2.7.0)
+        specifier: 2.15.0
+        version: 2.15.0(@types/debug@4.1.12)(@types/node@22.13.4)(jiti@2.4.2)(jsdom@25.0.0(bufferutil@4.0.8)(utf-8-validate@5.0.10))(sass@1.77.8)(terser@5.39.0)(yaml@2.7.0)
       '@hirosystems/clarinet-sdk-wasm':
-        specifier: 2.14.0
-        version: 2.14.0
+        specifier: 2.15.0
+        version: 2.15.0
       '@sigle/sdk':
         specifier: workspace:*
         version: link:../../packages/sdk
@@ -63,7 +63,7 @@ importers:
         version: 3.0.6(@types/debug@4.1.12)(@types/node@22.13.4)(jiti@2.4.2)(jsdom@25.0.0(bufferutil@4.0.8)(utf-8-validate@5.0.10))(sass@1.77.8)(terser@5.39.0)(yaml@2.7.0)
       vitest-environment-clarinet:
         specifier: 2.3.0
-        version: 2.3.0(@hirosystems/clarinet-sdk@2.14.0(@types/debug@4.1.12)(@types/node@22.13.4)(jiti@2.4.2)(jsdom@25.0.0(bufferutil@4.0.8)(utf-8-validate@5.0.10))(sass@1.77.8)(terser@5.39.0)(yaml@2.7.0))(vitest@3.0.6(@types/debug@4.1.12)(@types/node@22.13.4)(jiti@2.4.2)(jsdom@25.0.0(bufferutil@4.0.8)(utf-8-validate@5.0.10))(sass@1.77.8)(terser@5.39.0)(yaml@2.7.0))
+        version: 2.3.0(@hirosystems/clarinet-sdk@2.15.0(@types/debug@4.1.12)(@types/node@22.13.4)(jiti@2.4.2)(jsdom@25.0.0(bufferutil@4.0.8)(utf-8-validate@5.0.10))(sass@1.77.8)(terser@5.39.0)(yaml@2.7.0))(vitest@3.0.6(@types/debug@4.1.12)(@types/node@22.13.4)(jiti@2.4.2)(jsdom@25.0.0(bufferutil@4.0.8)(utf-8-validate@5.0.10))(sass@1.77.8)(terser@5.39.0)(yaml@2.7.0))
 
   apps/docs:
     dependencies:
@@ -1350,11 +1350,11 @@ packages:
   '@hirosystems/chainhook-client@2.3.0':
     resolution: {integrity: sha512-KvzYwm83oatk31VZGywUsPXine3Ah5wjArOWMuvcEQMzAc1IcjcHsQJM2+2z+8OAFZm9r8bkI72CVv/9wSsh6A==}
 
-  '@hirosystems/clarinet-sdk-wasm@2.14.0':
-    resolution: {integrity: sha512-8201WGhG8fXkIPza0XyKua0Nrg8AWRgtkHpz5AWtnycYrG9wQTfnj7CIg/UE06KBou5cQp0b2NVwOxgH3hteAA==}
+  '@hirosystems/clarinet-sdk-wasm@2.15.0':
+    resolution: {integrity: sha512-wkmodB082R7GqTC6GxxdOarkIWpv8yWFDT1VrCYpuoQBIOzv1brKrczCN1qzYy05tWZb1+H+lIp4LK1RNxLI7g==}
 
-  '@hirosystems/clarinet-sdk@2.14.0':
-    resolution: {integrity: sha512-DNIGDIC1kVh0mjBPeIpFdDh+I3+k1nwsED5CCZCnj5d1W+vTWSiREUZLhouq85NahH8j+BPzPZyTEGYbGpocjg==}
+  '@hirosystems/clarinet-sdk@2.15.0':
+    resolution: {integrity: sha512-qJ3anTDWyofv5Q9ltlEvA5YwENEPD8PGawVvshPhUuC5qnADfuhpiPwUJMua5TQdIQNkWWMqpHuGd3ynQMKl7w==}
     engines: {node: '>=18.0.0'}
     hasBin: true
 
@@ -12103,11 +12103,11 @@ snapshots:
       - '@sinclair/typebox'
       - supports-color
 
-  '@hirosystems/clarinet-sdk-wasm@2.14.0': {}
+  '@hirosystems/clarinet-sdk-wasm@2.15.0': {}
 
-  '@hirosystems/clarinet-sdk@2.14.0(@types/debug@4.1.12)(@types/node@22.13.4)(jiti@2.4.2)(jsdom@25.0.0(bufferutil@4.0.8)(utf-8-validate@5.0.10))(sass@1.77.8)(terser@5.39.0)(yaml@2.7.0)':
+  '@hirosystems/clarinet-sdk@2.15.0(@types/debug@4.1.12)(@types/node@22.13.4)(jiti@2.4.2)(jsdom@25.0.0(bufferutil@4.0.8)(utf-8-validate@5.0.10))(sass@1.77.8)(terser@5.39.0)(yaml@2.7.0)':
     dependencies:
-      '@hirosystems/clarinet-sdk-wasm': 2.14.0
+      '@hirosystems/clarinet-sdk-wasm': 2.15.0
       '@stacks/transactions': 6.17.0
       kolorist: 1.8.0
       prompts: 2.4.2
@@ -22859,9 +22859,9 @@ snapshots:
       terser: 5.39.0
       yaml: 2.7.0
 
-  vitest-environment-clarinet@2.3.0(@hirosystems/clarinet-sdk@2.14.0(@types/debug@4.1.12)(@types/node@22.13.4)(jiti@2.4.2)(jsdom@25.0.0(bufferutil@4.0.8)(utf-8-validate@5.0.10))(sass@1.77.8)(terser@5.39.0)(yaml@2.7.0))(vitest@3.0.6(@types/debug@4.1.12)(@types/node@22.13.4)(jiti@2.4.2)(jsdom@25.0.0(bufferutil@4.0.8)(utf-8-validate@5.0.10))(sass@1.77.8)(terser@5.39.0)(yaml@2.7.0)):
+  vitest-environment-clarinet@2.3.0(@hirosystems/clarinet-sdk@2.15.0(@types/debug@4.1.12)(@types/node@22.13.4)(jiti@2.4.2)(jsdom@25.0.0(bufferutil@4.0.8)(utf-8-validate@5.0.10))(sass@1.77.8)(terser@5.39.0)(yaml@2.7.0))(vitest@3.0.6(@types/debug@4.1.12)(@types/node@22.13.4)(jiti@2.4.2)(jsdom@25.0.0(bufferutil@4.0.8)(utf-8-validate@5.0.10))(sass@1.77.8)(terser@5.39.0)(yaml@2.7.0)):
     dependencies:
-      '@hirosystems/clarinet-sdk': 2.14.0(@types/debug@4.1.12)(@types/node@22.13.4)(jiti@2.4.2)(jsdom@25.0.0(bufferutil@4.0.8)(utf-8-validate@5.0.10))(sass@1.77.8)(terser@5.39.0)(yaml@2.7.0)
+      '@hirosystems/clarinet-sdk': 2.15.0(@types/debug@4.1.12)(@types/node@22.13.4)(jiti@2.4.2)(jsdom@25.0.0(bufferutil@4.0.8)(utf-8-validate@5.0.10))(sass@1.77.8)(terser@5.39.0)(yaml@2.7.0)
       vitest: 3.0.6(@types/debug@4.1.12)(@types/node@22.13.4)(jiti@2.4.2)(jsdom@25.0.0(bufferutil@4.0.8)(utf-8-validate@5.0.10))(sass@1.77.8)(terser@5.39.0)(yaml@2.7.0)
 
   vitest@3.0.6(@types/debug@4.1.12)(@types/node@22.13.4)(jiti@2.4.2)(jsdom@25.0.0(bufferutil@4.0.8)(utf-8-validate@5.0.10))(sass@1.77.8)(terser@5.39.0)(yaml@2.7.0):
