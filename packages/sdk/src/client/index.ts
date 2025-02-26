@@ -30,7 +30,8 @@ export const createClient = (options: CreateClientOptions) => {
       : "testnet";
 
   return {
-    mint: (params: MintParams) => mint({ network: options.network, params }),
+    mint: (params: MintParams) =>
+      mint({ network: options.network, networkName, params }),
     generatePostContract: (params: GeneratePostParams) =>
       generatePostContract({
         params,
