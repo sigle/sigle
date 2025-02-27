@@ -5,7 +5,7 @@
   "scripts": {
     "build": "next build",
     "codegen": "openapi-typescript http://localhost:3001/_openapi.json --output ./src/__generated__/sigle-api/openapi.ts",
-    "dev": "next dev",
+    "dev": "next dev --turbopack",
     "lint": "next lint",
     "start": "next start"
   },
@@ -62,7 +62,7 @@
     "highlight.js": "11.11.1",
     "lowlight": "3.3.0",
     "nanoid": "5.1.0",
-    "next": "15.1.7",
+    "next": "15.2.0",
     "next-auth": "5.0.0-beta.25",
     "next-themes": "0.4.4",
     "openapi-fetch": "0.13.4",
@@ -86,12 +86,12 @@
   "devDependencies": {
     "@dotenvx/dotenvx": "1.36.0",
     "@tailwindcss/typography": "0.5.16",
-    "@types/node": "22.13.4",
+    "@types/node": "22.13.5",
     "@types/react": "19.0.10",
     "@types/react-dom": "19.0.4",
     "autoprefixer": "10.4.20",
-    "eslint": "9.20.1",
-    "eslint-config-next": "15.1.7",
+    "eslint": "9.21.0",
+    "eslint-config-next": "15.2.0",
     "eslint-plugin-tailwindcss": "3.18.0",
     "openapi-typescript": "7.6.1",
     "postcss": "8.5.3",
