@@ -2,6 +2,7 @@ import { ProfileMetadataSchema } from "@sigle/sdk";
 import { z } from "zod";
 import { consola } from "~/lib/consola";
 import { defineJob } from "~/lib/jobs";
+import { meilisearchIndexUser } from "~/lib/meilisearch";
 import { prisma } from "~/lib/prisma";
 import { generateImageBlurhashJob } from "../generate-image-blurhash";
 
@@ -94,6 +95,11 @@ export const indexerSetProfileJob = defineJob("indexer-set-profile")
         });
       }
     }
+
+    await meilisearchIndexUser({
+      id: job.data.address,
+      displayName: metadataWithoutId.displayName,
+    });
 
     consola.debug("indexer.set-profile", {
       id: job.data.address,

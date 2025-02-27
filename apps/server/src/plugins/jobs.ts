@@ -6,6 +6,7 @@ import { indexerMintEnabledJob } from "~/jobs/indexer/mint-enabled";
 import { indexerNewPostJob } from "~/jobs/indexer/new-post";
 import { indexerReduceSupplyJob } from "~/jobs/indexer/reduce-supply";
 import { indexerSetProfileJob } from "~/jobs/indexer/set-profile";
+import { syncMeilisearchJob } from "~/jobs/sync-meilisearch";
 import { JobManager } from "~/lib/jobs";
 
 export default defineNitroPlugin(async () => {
@@ -16,6 +17,7 @@ export default defineNitroPlugin(async () => {
     .register(indexerMintEnabledJob)
     .register(indexerReduceSupplyJob)
     .register(generateImageBlurhashJob)
-    .register(indexerSetProfileJob);
+    .register(indexerSetProfileJob)
+    .register(syncMeilisearchJob);
   await jobs.start();
 });
