@@ -5,7 +5,7 @@
   "scripts": {
     "build": "next build",
     "codegen": "openapi-typescript http://localhost:3001/_openapi.json --output ./src/__generated__/sigle-api/openapi.ts",
-    "dev": "next dev --turbopack",
+    "dev": "next dev",
     "lint": "next lint",
     "start": "next start"
   },
