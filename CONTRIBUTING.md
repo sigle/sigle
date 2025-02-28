@@ -4,8 +4,8 @@ We're open to all community contributions! This includes bug reports, feature re
 
 ## Requirements
 
-- [Node](https://nodejs.org/en/) 20+
-- [pnpm](https://pnpm.io/) 8+
+- [Node](https://nodejs.org/en/) 22+
+- [pnpm](https://pnpm.io/) 9+
 - [Docker](https://www.docker.com/)
 
 ## Pull Requests

@@ -5,12 +5,12 @@ type ErrorConfig = {
 let errorConfig: ErrorConfig = {
   getDocsUrl: ({
     docsBaseUrl,
-    docsPath = '',
+    docsPath = "",
     docsSlug,
   }: BaseErrorParameters) =>
     docsPath
-      ? `${docsBaseUrl ?? 'https://viem.sh'}${docsPath}${
-          docsSlug ? `#${docsSlug}` : ''
+      ? `${docsBaseUrl ?? "https://viem.sh"}${docsPath}${
+          docsSlug ? `#${docsSlug}` : ""
         }`
       : undefined,
 };
@@ -29,14 +29,14 @@ type BaseErrorParameters = {
   name?: string | undefined;
 };
 
-export type BaseErrorType = BaseError & { name: 'BaseError' };
+export type BaseErrorType = BaseError & { name: "BaseError" };
 export class BaseError extends Error {
   details: string;
   docsPath?: string | undefined;
   metaMessages?: string[] | undefined;
   shortMessage: string;
 
-  override name = 'BaseError';
+  override name = "BaseError";
 
   constructor(shortMessage: string, args: BaseErrorParameters = {}) {
     const details = (() => {
@@ -52,15 +52,15 @@ export class BaseError extends Error {
     const docsUrl = errorConfig.getDocsUrl?.({ ...args, docsPath });
 
     const message = [
-      shortMessage || 'An error occurred.',
-      '',
-      ...(args.metaMessages ? [...args.metaMessages, ''] : []),
+      shortMessage || "An error occurred.",
+      "",
+      ...(args.metaMessages ? [...args.metaMessages, ""] : []),
       ...(docsUrl ? [`Docs: ${docsUrl}`] : []),
       ...(details ? [`Details: ${details}`] : []),
     ]
-      .filter((data) => data !== '')
-      .join('\n')
-      .replace(/\n$/, '');
+      .filter((data) => data !== "")
+      .join("\n")
+      .replace(/\n$/, "");
 
     super(message, args.cause ? { cause: args.cause } : undefined);
 
@@ -85,8 +85,8 @@ function walk(
   if (fn?.(err)) return err;
   if (
     err &&
-    typeof err === 'object' &&
-    'cause' in err &&
+    typeof err === "object" &&
+    "cause" in err &&
     err.cause !== undefined
   )
     return walk(err.cause, fn);

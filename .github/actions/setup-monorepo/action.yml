@@ -1,6 +1,7 @@
-name: 'Setup the monorepo'
+name: "Setup the monorepo"
+description: "Setup the monorepo"
 runs:
-  using: 'composite'
+  using: "composite"
   steps:
     - uses: actions/checkout@v4
 
@@ -12,14 +13,14 @@ runs:
         restore-keys: |
           ${{ runner.os }}-turbo-
 
-    - uses: pnpm/action-setup@v3
+    - uses: pnpm/action-setup@v4
 
-    - name: Use Node.js 20
+    - name: Use Node.js 22
       uses: actions/setup-node@v4
       with:
-        node-version: 20
-        cache: 'pnpm'
+        node-version: 22
+        cache: "pnpm"
 
     - name: Install dependencies
       shell: bash
-      run: pnpm install
+      run: pnpm install --frozen-lockfile

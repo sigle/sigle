@@ -1,28 +1,28 @@
-import { Cl } from '@stacks/transactions';
-import { describe, expect, it } from 'vitest';
+import { Cl } from "@stacks/transactions";
+import { describe, expect, it } from "vitest";
 
-const contract = 'sigle-protocol';
+const contract = "sigle-protocol";
 const accounts = simnet.getAccounts();
-const deployer = accounts.get('deployer')!;
-const wallet1 = accounts.get('wallet_1')!;
-const wallet2 = accounts.get('wallet_2')!;
+const deployer = accounts.get("deployer")!;
+const wallet1 = accounts.get("wallet_1")!;
+const wallet2 = accounts.get("wallet_2")!;
 
 describe(contract, () => {
-  describe('initialization', () => {
-    it('should initialize with deployer as contract owner', () => {
+  describe("initialization", () => {
+    it("should initialize with deployer as contract owner", () => {
       const { result } = simnet.callReadOnlyFn(
         contract,
-        'get-contract-owner',
+        "get-contract-owner",
         [],
         deployer,
       );
       expect(result).toBePrincipal(deployer);
     });
 
-    it('should initialize with deployer as payout address', () => {
+    it("should initialize with deployer as payout address", () => {
       const { result } = simnet.callReadOnlyFn(
         contract,
-        'get-payout-address',
+        "get-payout-address",
         [],
         deployer,
       );
@@ -30,11 +30,11 @@ describe(contract, () => {
     });
   });
 
-  describe('set-contract-owner', () => {
-    it('allows contract owner to set new owner', () => {
+  describe("set-contract-owner", () => {
+    it("allows contract owner to set new owner", () => {
       const { result } = simnet.callPublicFn(
         contract,
-        'set-contract-owner',
+        "set-contract-owner",
         [Cl.principal(wallet1)],
         deployer,
       );
@@ -43,17 +43,17 @@ describe(contract, () => {
       // Verify the new owner
       const { result: newOwner } = simnet.callReadOnlyFn(
         contract,
-        'get-contract-owner',
+        "get-contract-owner",
         [],
         deployer,
       );
       expect(newOwner).toBePrincipal(wallet1);
     });
 
-    it('prevents non-owner from setting new owner', () => {
+    it("prevents non-owner from setting new owner", () => {
       const { result } = simnet.callPublicFn(
         contract,
-        'set-contract-owner',
+        "set-contract-owner",
         [Cl.principal(wallet2)],
         wallet2,
       );
@@ -61,11 +61,11 @@ describe(contract, () => {
     });
   });
 
-  describe('set-payout-address', () => {
-    it('allows contract owner to set new payout address', () => {
+  describe("set-payout-address", () => {
+    it("allows contract owner to set new payout address", () => {
       const { result } = simnet.callPublicFn(
         contract,
-        'set-payout-address',
+        "set-payout-address",
         [Cl.principal(wallet1)],
         deployer,
       );
@@ -74,17 +74,17 @@ describe(contract, () => {
       // Verify the new payout address
       const { result: newPayoutAddress } = simnet.callReadOnlyFn(
         contract,
-        'get-payout-address',
+        "get-payout-address",
         [],
         deployer,
       );
       expect(newPayoutAddress).toBePrincipal(wallet1);
     });
 
-    it('prevents non-owner from setting payout address', () => {
+    it("prevents non-owner from setting payout address", () => {
       const { result } = simnet.callPublicFn(
         contract,
-        'set-payout-address',
+        "set-payout-address",
         [Cl.principal(wallet2)],
         wallet2,
       );
@@ -92,21 +92,21 @@ describe(contract, () => {
     });
   });
 
-  describe('read-only functions', () => {
-    it('get-contract-owner returns correct owner', () => {
+  describe("read-only functions", () => {
+    it("get-contract-owner returns correct owner", () => {
       const { result } = simnet.callReadOnlyFn(
         contract,
-        'get-contract-owner',
+        "get-contract-owner",
         [],
         deployer,
       );
       expect(result).toBePrincipal(deployer);
     });
 
-    it('get-payout-address returns correct address', () => {
+    it("get-payout-address returns correct address", () => {
       const { result } = simnet.callReadOnlyFn(
         contract,
-        'get-payout-address',
+        "get-payout-address",
         [],
         deployer,
       );
@@ -114,12 +114,12 @@ describe(contract, () => {
     });
   });
 
-  describe('state changes', () => {
-    it('maintains correct state after multiple owner changes', () => {
+  describe("state changes", () => {
+    it("maintains correct state after multiple owner changes", () => {
       // Change owner to wallet1
       simnet.callPublicFn(
         contract,
-        'set-contract-owner',
+        "set-contract-owner",
         [Cl.principal(wallet1)],
         deployer,
       );
@@ -127,7 +127,7 @@ describe(contract, () => {
       // Change owner to wallet2 using wallet1
       simnet.callPublicFn(
         contract,
-        'set-contract-owner',
+        "set-contract-owner",
         [Cl.principal(wallet2)],
         wallet1,
       );
@@ -135,18 +135,18 @@ describe(contract, () => {
       // Verify final owner is wallet2
       const { result } = simnet.callReadOnlyFn(
         contract,
-        'get-contract-owner',
+        "get-contract-owner",
         [],
         deployer,
       );
       expect(result).toBePrincipal(wallet2);
     });
 
-    it('maintains correct state after multiple payout address changes', () => {
+    it("maintains correct state after multiple payout address changes", () => {
       // Set initial owner
       simnet.callPublicFn(
         contract,
-        'set-contract-owner',
+        "set-contract-owner",
         [Cl.principal(wallet1)],
         deployer,
       );
@@ -154,7 +154,7 @@ describe(contract, () => {
       // Change payout address multiple times
       simnet.callPublicFn(
         contract,
-        'set-payout-address',
+        "set-payout-address",
         [Cl.principal(wallet2)],
         wallet1,
       );
@@ -162,7 +162,7 @@ describe(contract, () => {
       // Verify final payout address
       const { result } = simnet.callReadOnlyFn(
         contract,
-        'get-payout-address',
+        "get-payout-address",
         [],
         deployer,
       );

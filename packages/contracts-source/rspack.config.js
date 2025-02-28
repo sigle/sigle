@@ -1,21 +1,21 @@
 // @ts-check
-import { defineConfig } from '@rspack/cli';
+import { defineConfig } from "@rspack/cli";
 
 export default defineConfig({
   entry: {
-    main: './src/index.ts',
+    main: "./src/index.ts",
   },
   resolve: {
-    extensions: ['.ts'],
+    extensions: [".ts"],
   },
-  target: 'es2020',
+  target: "es2020",
   experiments: {
     outputModule: true,
   },
   output: {
-    filename: 'index.js',
+    filename: "index.js",
     library: {
-      type: 'module',
+      type: "module",
     },
   },
   module: {
@@ -23,11 +23,11 @@ export default defineConfig({
       {
         test: /\.ts$/,
         exclude: [/node_modules/],
-        loader: 'builtin:swc-loader',
+        loader: "builtin:swc-loader",
         options: {
           jsc: {
             parser: {
-              syntax: 'typescript',
+              syntax: "typescript",
             },
           },
         },

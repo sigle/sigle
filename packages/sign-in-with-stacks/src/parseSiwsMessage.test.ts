@@ -1,7 +1,7 @@
-import { expect, test } from 'vitest';
-import { parseSiwsMessage } from './parseSiwsMessage.js';
+import { expect, test } from "vitest";
+import { parseSiwsMessage } from "./parseSiwsMessage.js";
 
-test('default', () => {
+test("default", () => {
   const message = `example.com wants you to sign in with your Stacks account:
 SP2X0TZ59D5SZ8ACQ6YMCHHNR2ZN51Z32E2CJ173
 
@@ -27,7 +27,7 @@ Issued At: 2023-02-01T00:00:00.000Z`;
   `);
 });
 
-test('behavior: with scheme', () => {
+test("behavior: with scheme", () => {
   const message = `https://example.com wants you to sign in with your Stacks account:
 SP2X0TZ59D5SZ8ACQ6YMCHHNR2ZN51Z32E2CJ173
 
@@ -40,7 +40,7 @@ Issued At: 2023-02-01T00:00:00.000Z`;
   expect(parsed.scheme).toMatchInlineSnapshot(`"https"`);
 });
 
-test('behavior: domain with port', () => {
+test("behavior: domain with port", () => {
   const message = `example.com:8080 wants you to sign in with your Stacks account:
 SP2X0TZ59D5SZ8ACQ6YMCHHNR2ZN51Z32E2CJ173
 
@@ -53,7 +53,7 @@ Issued At: 2023-02-01T00:00:00.000Z`;
   expect(parsed.domain).toMatchInlineSnapshot(`"example.com:8080"`);
 });
 
-test('behavior: with statement', () => {
+test("behavior: with statement", () => {
   const message = `example.com wants you to sign in with your Stacks account:
 SP2X0TZ59D5SZ8ACQ6YMCHHNR2ZN51Z32E2CJ173
 
@@ -70,7 +70,7 @@ Issued At: 2023-02-01T00:00:00.000Z`;
   );
 });
 
-test('behavior: with expirationTime', () => {
+test("behavior: with expirationTime", () => {
   const message = `https://example.com wants you to sign in with your Stacks account:
 SP2X0TZ59D5SZ8ACQ6YMCHHNR2ZN51Z32E2CJ173
 
@@ -82,11 +82,11 @@ Issued At: 2023-02-01T00:00:00.000Z
 Expiration Time: 2022-02-04T00:00:00.000Z`;
   const parsed = parseSiwsMessage(message);
   expect(parsed.expirationTime).toMatchInlineSnapshot(
-    '2022-02-04T00:00:00.000Z',
+    "2022-02-04T00:00:00.000Z",
   );
 });
 
-test('behavior: with notBefore', () => {
+test("behavior: with notBefore", () => {
   const message = `https://example.com wants you to sign in with your Stacks account:
 SP2X0TZ59D5SZ8ACQ6YMCHHNR2ZN51Z32E2CJ173
 
@@ -97,10 +97,10 @@ Nonce: foobarbaz
 Issued At: 2023-02-01T00:00:00.000Z
 Not Before: 2022-02-04T00:00:00.000Z`;
   const parsed = parseSiwsMessage(message);
-  expect(parsed.notBefore).toMatchInlineSnapshot('2022-02-04T00:00:00.000Z');
+  expect(parsed.notBefore).toMatchInlineSnapshot("2022-02-04T00:00:00.000Z");
 });
 
-test('behavior: with requestId', () => {
+test("behavior: with requestId", () => {
   const message = `https://example.com wants you to sign in with your Stacks account:
 SP2X0TZ59D5SZ8ACQ6YMCHHNR2ZN51Z32E2CJ173
 
@@ -116,7 +116,7 @@ Request ID: 123e4567-e89b-12d3-a456-426614174000`;
   );
 });
 
-test('behavior: with resources', () => {
+test("behavior: with resources", () => {
   const message = `https://example.com wants you to sign in with your Stacks account:
 SP2X0TZ59D5SZ8ACQ6YMCHHNR2ZN51Z32E2CJ173
 
@@ -139,7 +139,7 @@ Resources:
   `);
 });
 
-test('behavior: no suffix', () => {
+test("behavior: no suffix", () => {
   const message = `https://example.com wants you to sign in with your Stacks account:
 SP2X0TZ59D5SZ8ACQ6YMCHHNR2ZN51Z32E2CJ173
 
@@ -154,7 +154,7 @@ SP2X0TZ59D5SZ8ACQ6YMCHHNR2ZN51Z32E2CJ173
   `);
 });
 
-test('behavior: no prefix', () => {
+test("behavior: no prefix", () => {
   const message = `URI: https://example.com/path
 Version: 1
 Chain ID: 1
@@ -174,8 +174,8 @@ Request ID: 123e4567-e89b-12d3-a456-426614174000`;
   `);
 });
 
-test('behavior: bogus message', () => {
-  const message = 'foobarbaz';
+test("behavior: bogus message", () => {
+  const message = "foobarbaz";
   const parsed = parseSiwsMessage(message);
-  expect(parsed).toMatchInlineSnapshot('{}');
+  expect(parsed).toMatchInlineSnapshot("{}");
 });

@@ -1,17 +1,17 @@
-import { expect, test, vi } from 'vitest';
-import type { SiwsMessage } from './types.js';
-import { validateSiwsMessage } from './validateSiwsMessage.js';
+import { expect, test, vi } from "vitest";
+import type { SiwsMessage } from "./types.js";
+import { validateSiwsMessage } from "./validateSiwsMessage.js";
 
 const message = {
-  address: 'SP2X0TZ59D5SZ8ACQ6YMCHHNR2ZN51Z32E2CJ173',
+  address: "SP2X0TZ59D5SZ8ACQ6YMCHHNR2ZN51Z32E2CJ173",
   chainId: 1,
-  domain: 'example.com',
-  nonce: 'foobarbaz',
-  uri: 'https://example.com/path',
-  version: '1',
+  domain: "example.com",
+  nonce: "foobarbaz",
+  uri: "https://example.com/path",
+  version: "1",
 } satisfies SiwsMessage;
 
-test('default', () => {
+test("default", () => {
   expect(
     validateSiwsMessage({
       message,
@@ -19,7 +19,7 @@ test('default', () => {
   ).toBeTruthy();
 });
 
-test('behavior: invalid address', () => {
+test("behavior: invalid address", () => {
   expect(
     validateSiwsMessage({
       message: {
@@ -30,55 +30,55 @@ test('behavior: invalid address', () => {
   ).toBeFalsy();
 });
 
-test('behavior: address mismatch', () => {
+test("behavior: address mismatch", () => {
   expect(
     validateSiwsMessage({
-      address: 'SP2X0TZ59D5SZ8ACQ6YMCHHNR2ZN51Z32E2CJ172',
+      address: "SP2X0TZ59D5SZ8ACQ6YMCHHNR2ZN51Z32E2CJ172",
       message,
     }),
   ).toBeFalsy();
 });
 
-test('behavior: invalid address', () => {
+test("behavior: invalid address", () => {
   expect(
     validateSiwsMessage({
-      address: '0xfoobarbaz',
+      address: "0xfoobarbaz",
       message,
     }),
   ).toBeFalsy();
 });
 
-test('behavior: domain mismatch', () => {
+test("behavior: domain mismatch", () => {
   expect(
     validateSiwsMessage({
-      domain: 'viem.sh',
+      domain: "viem.sh",
       message,
     }),
   ).toBeFalsy();
 });
 
-test('behavior: nonce mismatch', () => {
+test("behavior: nonce mismatch", () => {
   expect(
     validateSiwsMessage({
-      nonce: 'f0obarbaz',
+      nonce: "f0obarbaz",
       message,
     }),
   ).toBeFalsy();
 });
 
-test('behavior: scheme mismatch', () => {
+test("behavior: scheme mismatch", () => {
   expect(
     validateSiwsMessage({
-      scheme: 'http',
+      scheme: "http",
       message: {
         ...message,
-        scheme: 'https',
+        scheme: "https",
       },
     }),
   ).toBeFalsy();
 });
 
-test('behavior: time is after expirationTime', () => {
+test("behavior: time is after expirationTime", () => {
   expect(
     validateSiwsMessage({
       message: {
@@ -90,7 +90,7 @@ test('behavior: time is after expirationTime', () => {
   ).toBeFalsy();
 });
 
-test('behavior: time is before notBefore', () => {
+test("behavior: time is before notBefore", () => {
   vi.useFakeTimers();
   vi.setSystemTime(new Date(Date.UTC(2023, 1, 1)));
 

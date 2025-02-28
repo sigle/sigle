@@ -1,18 +1,18 @@
-import { expect, test, vi } from 'vitest';
-import { STACKS_MAINNET } from '@stacks/network';
-import { createSiwsMessage } from './createSiwsMessage.js';
-import type { SiwsMessage } from './types.js';
+import { STACKS_MAINNET } from "@stacks/network";
+import { expect, test, vi } from "vitest";
+import { createSiwsMessage } from "./createSiwsMessage.js";
+import type { SiwsMessage } from "./types.js";
 
 const message = {
-  address: 'SP2X0TZ59D5SZ8ACQ6YMCHHNR2ZN51Z32E2CJ173',
+  address: "SP2X0TZ59D5SZ8ACQ6YMCHHNR2ZN51Z32E2CJ173",
   chainId: STACKS_MAINNET.chainId,
-  domain: 'example.com',
-  nonce: 'foobarbaz',
-  uri: 'https://example.com/path',
-  version: '1',
+  domain: "example.com",
+  nonce: "foobarbaz",
+  uri: "https://example.com/path",
+  version: "1",
 } satisfies SiwsMessage;
 
-test('default', () => {
+test("default", () => {
   vi.useFakeTimers();
   vi.setSystemTime(new Date(Date.UTC(2023, 1, 1)));
 
@@ -31,14 +31,14 @@ test('default', () => {
   vi.useRealTimers();
 });
 
-test('parameters: domain', () => {
+test("parameters: domain", () => {
   vi.useFakeTimers();
   vi.setSystemTime(new Date(Date.UTC(2023, 1, 1)));
 
   expect(
     createSiwsMessage({
       ...message,
-      domain: 'foo.example.com',
+      domain: "foo.example.com",
     }),
   ).toMatchInlineSnapshot(`
     "foo.example.com wants you to sign in with your Stacks account:
@@ -55,7 +55,7 @@ test('parameters: domain', () => {
   expect(
     createSiwsMessage({
       ...message,
-      domain: 'example.co.uk',
+      domain: "example.co.uk",
     }),
   ).toMatchInlineSnapshot(`
     "example.co.uk wants you to sign in with your Stacks account:
@@ -72,14 +72,14 @@ test('parameters: domain', () => {
   vi.useRealTimers();
 });
 
-test('parameters: scheme', () => {
+test("parameters: scheme", () => {
   vi.useFakeTimers();
   vi.setSystemTime(new Date(Date.UTC(2023, 1, 1)));
 
   expect(
     createSiwsMessage({
       ...message,
-      scheme: 'https',
+      scheme: "https",
     }),
   ).toMatchInlineSnapshot(`
     "https://example.com wants you to sign in with your Stacks account:
@@ -96,7 +96,7 @@ test('parameters: scheme', () => {
   vi.useRealTimers();
 });
 
-test('parameters: statement', () => {
+test("parameters: statement", () => {
   vi.useFakeTimers();
   vi.setSystemTime(new Date(Date.UTC(2023, 1, 1)));
 
@@ -104,7 +104,7 @@ test('parameters: statement', () => {
     createSiwsMessage({
       ...message,
       statement:
-        'I accept the ExampleOrg Terms of Service: https://example.com/tos',
+        "I accept the ExampleOrg Terms of Service: https://example.com/tos",
     }),
   ).toMatchInlineSnapshot(`
     "example.com wants you to sign in with your Stacks account:
@@ -122,7 +122,7 @@ test('parameters: statement', () => {
   vi.useRealTimers();
 });
 
-test('parameters: issuedAt', () => {
+test("parameters: issuedAt", () => {
   const issuedAt = new Date(Date.UTC(2022, 1, 4));
   expect(createSiwsMessage({ ...message, issuedAt })).toMatchInlineSnapshot(`
     "example.com wants you to sign in with your Stacks account:
@@ -137,7 +137,7 @@ test('parameters: issuedAt', () => {
   `);
 });
 
-test('parameters: expirationTime', () => {
+test("parameters: expirationTime", () => {
   vi.useFakeTimers();
   vi.setSystemTime(new Date(Date.UTC(2023, 1, 1)));
 
@@ -162,7 +162,7 @@ test('parameters: expirationTime', () => {
   vi.useRealTimers();
 });
 
-test('parameters: notBefore', () => {
+test("parameters: notBefore", () => {
   vi.useFakeTimers();
   vi.setSystemTime(new Date(Date.UTC(2023, 1, 1)));
 
@@ -187,14 +187,14 @@ test('parameters: notBefore', () => {
   vi.useRealTimers();
 });
 
-test('parameters: requestId', () => {
+test("parameters: requestId", () => {
   vi.useFakeTimers();
   vi.setSystemTime(new Date(Date.UTC(2023, 1, 1)));
 
   expect(
     createSiwsMessage({
       ...message,
-      requestId: '123e4567-e89b-12d3-a456-426614174000',
+      requestId: "123e4567-e89b-12d3-a456-426614174000",
     }),
   ).toMatchInlineSnapshot(`
     "example.com wants you to sign in with your Stacks account:
@@ -212,7 +212,7 @@ test('parameters: requestId', () => {
   vi.useRealTimers();
 });
 
-test('parameters: resources', () => {
+test("parameters: resources", () => {
   vi.useFakeTimers();
   vi.setSystemTime(new Date(Date.UTC(2023, 1, 1)));
 
@@ -220,9 +220,9 @@ test('parameters: resources', () => {
     createSiwsMessage({
       ...message,
       resources: [
-        'https://example.com/foo',
-        'https://example.com/bar',
-        'https://example.com/baz',
+        "https://example.com/foo",
+        "https://example.com/bar",
+        "https://example.com/baz",
       ],
     }),
   ).toMatchInlineSnapshot(`
@@ -244,15 +244,15 @@ test('parameters: resources', () => {
   vi.useRealTimers();
 });
 
-test('behavior: invalid address', () => {
+test("behavior: invalid address", () => {
   expect(() =>
-    createSiwsMessage({ ...message, address: '0xfoobarbaz' }),
+    createSiwsMessage({ ...message, address: "0xfoobarbaz" }),
   ).toThrowErrorMatchingInlineSnapshot(`
     [InvalidAddressError: Address "0xfoobarbaz" is invalid.]
   `);
 });
 
-test('behavior: invalid chainId', () => {
+test("behavior: invalid chainId", () => {
   expect(() =>
     createSiwsMessage({ ...message, chainId: 1.1 }),
   ).toThrowErrorMatchingInlineSnapshot(`
@@ -263,9 +263,9 @@ test('behavior: invalid chainId', () => {
   `);
 });
 
-test('behavior: invalid domain', () => {
+test("behavior: invalid domain", () => {
   expect(() =>
-    createSiwsMessage({ ...message, domain: '#foo' }),
+    createSiwsMessage({ ...message, domain: "#foo" }),
   ).toThrowErrorMatchingInlineSnapshot(`
     [SiwsInvalidMessageFieldError: Invalid Sign-In with Stacks message field "domain".
     - Domain must be an RFC 3986 authority.
@@ -274,9 +274,9 @@ test('behavior: invalid domain', () => {
   `);
 });
 
-test('behavior: invalid nonce', () => {
+test("behavior: invalid nonce", () => {
   expect(() =>
-    createSiwsMessage({ ...message, nonce: '#foo' }),
+    createSiwsMessage({ ...message, nonce: "#foo" }),
   ).toThrowErrorMatchingInlineSnapshot(`
     [SiwsInvalidMessageFieldError: Invalid Sign-In with Stacks message field "nonce".
     - Nonce must be at least 8 characters.
@@ -285,9 +285,9 @@ test('behavior: invalid nonce', () => {
   `);
 });
 
-test('behavior: invalid uri', () => {
+test("behavior: invalid uri", () => {
   expect(() =>
-    createSiwsMessage({ ...message, uri: '#foo' }),
+    createSiwsMessage({ ...message, uri: "#foo" }),
   ).toThrowErrorMatchingInlineSnapshot(`
     [SiwsInvalidMessageFieldError: Invalid Sign-In with Stacks message field "uri".
     - URI must be a RFC 3986 URI referring to the resource that is the subject of the signing.
@@ -296,10 +296,10 @@ test('behavior: invalid uri', () => {
   `);
 });
 
-test('behavior: invalid version', () => {
+test("behavior: invalid version", () => {
   expect(() =>
     // @ts-expect-error
-    createSiwsMessage({ ...message, version: '2' }),
+    createSiwsMessage({ ...message, version: "2" }),
   ).toThrowErrorMatchingInlineSnapshot(`
     [SiwsInvalidMessageFieldError: Invalid Sign-In with Stacks message field "version".
     - Version must be '1'.
@@ -307,9 +307,9 @@ test('behavior: invalid version', () => {
   `);
 });
 
-test('behavior: invalid scheme', () => {
+test("behavior: invalid scheme", () => {
   expect(() =>
-    createSiwsMessage({ ...message, scheme: 'foo_bar' }),
+    createSiwsMessage({ ...message, scheme: "foo_bar" }),
   ).toThrowErrorMatchingInlineSnapshot(`
     [SiwsInvalidMessageFieldError: Invalid Sign-In with Stacks message field "scheme".
     - Scheme must be an RFC 3986 URI scheme.
@@ -318,9 +318,9 @@ test('behavior: invalid scheme', () => {
   `);
 });
 
-test('behavior: invalid statement', () => {
+test("behavior: invalid statement", () => {
   expect(() =>
-    createSiwsMessage({ ...message, statement: 'foo\nbar' }),
+    createSiwsMessage({ ...message, statement: "foo\nbar" }),
   ).toThrowErrorMatchingInlineSnapshot(`
     [SiwsInvalidMessageFieldError: Invalid Sign-In with Stacks message field "statement".
     - Statement must not include '\\n'.
@@ -329,11 +329,11 @@ test('behavior: invalid statement', () => {
   `);
 });
 
-test('behavior: invalid resources', () => {
+test("behavior: invalid resources", () => {
   expect(() =>
     createSiwsMessage({
       ...message,
-      resources: ['https://example.com', 'foo'],
+      resources: ["https://example.com", "foo"],
     }),
   ).toThrowErrorMatchingInlineSnapshot(`
     [SiwsInvalidMessageFieldError: Invalid Sign-In with Stacks message field "resources".
@@ -344,31 +344,31 @@ test('behavior: invalid resources', () => {
 });
 
 test.each([
-  'example.com',
-  'localhost',
-  '127.0.0.1',
-  'example.com:3000',
-  'localhost:3000',
-  '127.0.0.1:3000',
-])('valid domain `%s`', (domain) => {
+  "example.com",
+  "localhost",
+  "127.0.0.1",
+  "example.com:3000",
+  "localhost:3000",
+  "127.0.0.1:3000",
+])("valid domain `%s`", (domain) => {
   expect(
     createSiwsMessage({
       ...message,
       domain,
     }),
-  ).toBeTypeOf('string');
+  ).toBeTypeOf("string");
 });
 
 test.each([
-  'http://example.com',
-  'http://localhost',
-  'http://127.0.0.1',
-  'http://example.com:3000',
-  'http://localhost:3000',
-  'http://127.0.0.1:3000',
-  'foobarbaz',
-  '-example.com',
-])('invalid domain `%s`', (domain) => {
+  "http://example.com",
+  "http://localhost",
+  "http://127.0.0.1",
+  "http://example.com:3000",
+  "http://localhost:3000",
+  "http://127.0.0.1:3000",
+  "foobarbaz",
+  "-example.com",
+])("invalid domain `%s`", (domain) => {
   expect(() =>
     createSiwsMessage({
       ...message,

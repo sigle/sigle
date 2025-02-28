@@ -1,0 +1,67 @@
+# Technical Architecture
+
+Sigle is a monorepo that contains multiple packages. The main packages are:
+
+- [`@sigle/contracts`](https://github.com/sigle/sigle/tree/main/apps/contracts): The protocol contracts and tests.
+- [`@sigle/sdk`](https://github.com/sigle/sigle/tree/main/packages/sdk): The SDK package that contains all the schemas and logic to interact with the protocol.
+- [`@sigle/server`](https://github.com/sigle/sigle/tree/main/apps/server): The backend server that serves the API and host the indexer logic.
+- [`@sigle/sigle`](https://github.com/sigle/sigle/tree/main/apps/sigle): The web application one interacts with.
+
+## Overview
+
+```mermaid
+flowchart LR
+    %% Define core application components
+    subgraph Client[" Client Layer "]
+        direction TB
+        UI["Web Application<br/>(@sigle/sigle)"]
+    end
+
+    subgraph Core[" Core Layer "]
+        direction TB
+        Contracts["Smart Contracts<br/>(@sigle/contracts)"]
+
+        subgraph Backend[" Backend Services "]
+            direction TB
+            API["REST API"]
+            Indexer["Blockchain<br/>Indexer"]
+            DB[(Database)]
+        end
+    end
+
+    %% Define external storage systems
+    subgraph Storage[" Storage Layer "]
+        direction TB
+        Arweave["Arweave<br/>Content"]
+        Ordinals["Bitcoin<br/>Ordinals"]
+    end
+
+    %% Define connections
+    UI --> Contracts
+    UI --> API
+
+    API --> DB
+    Indexer --> DB
+
+    Indexer --> Contracts
+    Indexer --> Arweave
+    Indexer --> Ordinals
+
+    %% Styling
+    classDef client fill:#e3f2fd,stroke:#1565c0,stroke-width:2px
+    classDef core fill:#f5f5f5,stroke:#424242,stroke-width:2px
+    classDef storage fill:#fff3e0,stroke:#ef6c00,stroke-width:2px
+    classDef database fill:#f3e5f5,stroke:#4a148c,stroke-width:2px
+
+    class UI client
+    class Contracts,API,Indexer core
+    class Arweave,Ordinals storage
+    class DB database
+```
+
+## Storage
+
+Sigle uses multiple decentralized storage systems to store the content created by users:
+- NFT metadata (Post content): Arweave by default, users can also upload content as Bitcoin Ordinals.
+- Profile metadata: Arweave.
+- Images: IPFS.
