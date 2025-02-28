@@ -1,5 +1,4 @@
-import { writeFileSync } from 'node:fs';
-import { sigleClient } from './lib/sigle.js';
+import { sigleClient } from "./lib/sigle.js";
 
 const main = async () => {
   const { contract } = sigleClient.generatePostContract({
@@ -7,14 +6,8 @@ const main = async () => {
       amount: 0,
       maxSupply: 100,
     },
-    metadata: 'TODO',
+    metadata: "ar://DN1CihyNqyCqUCtwjyoCHQfcLtNwwLB8Jsw2AvYp3kp2",
   });
-
-  writeFileSync(
-    './src/__generated__/contract-free-limited.clar',
-    contract,
-    'utf8',
-  );
 };
 
 main();
