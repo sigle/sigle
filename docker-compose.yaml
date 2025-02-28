@@ -17,6 +17,8 @@ services:
       interval: 1s
       timeout: 5s
       retries: 10
+    networks:
+      - sigle-network
 
   server:
     build:
@@ -43,6 +45,24 @@ services:
     depends_on:
       postgres:
         condition: service_healthy
+    networks:
+      - sigle-network
+
+  cloudflared:
+    image: cloudflare/cloudflared:2025.2.1
+    container_name: cloudflared
+    restart: unless-stopped
+    command: tunnel --url http://server:3001
+    # environment:
+    # - TUNNEL_TOKEN=${CLOUDFLARE_TUNNEL_TOKEN}
+    depends_on:
+      - server
+    networks:
+      - sigle-network
 
 volumes:
   postgres_data:
+
+networks:
+  sigle-network:
+    driver: bridge
