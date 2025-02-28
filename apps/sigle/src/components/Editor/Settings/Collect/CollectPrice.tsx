@@ -13,7 +13,7 @@ export const CollectPrice = () => {
   const { errors } = useFormState<EditorPostFormData>({
     name: ["collect.collectPrice.price"],
   });
-  const { data: currencyFiatPrice } = useCurrencyFiatPrice("STX");
+  const { data: currencyFiatPrice } = useCurrencyFiatPrice("sBTC");
 
   const onSelectPriceChange = (value: string) => {
     if (value === "free") {
@@ -69,7 +69,7 @@ export const CollectPrice = () => {
                 type="number"
                 {...register("collect.collectPrice.price")}
               >
-                <TextField.Slot side="right">STX</TextField.Slot>
+                <TextField.Slot side="right">sats</TextField.Slot>
               </TextField.Root>
             </Flex>
           </>

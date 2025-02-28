@@ -18,7 +18,7 @@ export const PostShareCard = ({ post }: PostShareCardProps) => {
             Share & Earn
           </Heading>
           <Text as="p" color="gray" size="2">
-            Share this post and earn STX.
+            Share this post and earn sBTC.
           </Text>
         </div>
         <div className="flex space-x-4">

@@ -10,7 +10,7 @@ export type GeneratePostParams = {
   metadata: string;
   collectInfo: {
     /**
-     * The price of the post in micro-STX
+     * The price of the post in satoshis
      */
     amount: number | bigint;
     /**
