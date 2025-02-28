@@ -110,11 +110,9 @@
     (mint-recipient (default-to tx-sender recipient))
     (contract-owner (try! (contract-call? token-contract get-contract-owner)))
   )
-    ;; Only the post contract owner can call this function
     (asserts! (is-eq tx-sender contract-owner) (err ERR-NOT-AUTHORIZED))
     (asserts! (<= quantity u10) (err ERR-INVALID-QUANTITY))
 
-    ;; Mint NFTs directly with no fees
     (try! (if (<= u1 quantity) (as-contract (contract-call? token-contract mint mint-recipient)) (ok u0)))
     (try! (if (<= u2 quantity) (as-contract (contract-call? token-contract mint mint-recipient)) (ok u0)))
     (try! (if (<= u3 quantity) (as-contract (contract-call? token-contract mint mint-recipient)) (ok u0)))
