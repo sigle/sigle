@@ -27,7 +27,7 @@
     end-block: uint,
 })
 
-;; Initialize contract mint configuration
+;; @desc Initialize contract mint configuration when a new post is created
 (define-public (init-mint-details (price uint) (start-block uint) (end-block uint))
   (begin
     (asserts! (is-none (map-get? contract-mint-config tx-sender)) (err ERR-NOT-AUTHORIZED))
@@ -45,6 +45,7 @@
   )
 )
 
+;; @desc Update mint details for a post
 (define-public (set-mint-details (token-contract <sigle-post-trait>) (price uint) (start-block uint) (end-block uint))
   (let (
     (mint-config (unwrap! (map-get? contract-mint-config (contract-of token-contract)) (err ERR-INVALID-MINT-DATA)))
