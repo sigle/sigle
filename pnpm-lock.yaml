@@ -211,8 +211,8 @@ importers:
         specifier: 7.0.2
         version: 7.0.2
       '@stacks/transactions':
-        specifier: 7.0.2
-        version: 7.0.2
+        specifier: 7.0.4
+        version: 7.0.4
       '@t3-oss/env-nextjs':
         specifier: 0.12.0
         version: 0.12.0(typescript@5.7.3)(zod@3.24.2)
@@ -471,8 +471,8 @@ importers:
         specifier: 7.0.2
         version: 7.0.2
       '@stacks/transactions':
-        specifier: 7.0.2
-        version: 7.0.2
+        specifier: 7.0.4
+        version: 7.0.4
       '@tsconfig/recommended':
         specifier: 1.0.8
         version: 1.0.8
@@ -505,8 +505,8 @@ importers:
         specifier: 7.0.2
         version: 7.0.2
       '@stacks/transactions':
-        specifier: 7.0.2
-        version: 7.0.2
+        specifier: 7.0.4
+        version: 7.0.4
       '@tsconfig/recommended':
         specifier: 1.0.8
         version: 1.0.8
@@ -544,8 +544,8 @@ importers:
         specifier: 1.0.8
         version: 1.0.8
       '@types/node':
-        specifier: 22.10.5
-        version: 22.10.5
+        specifier: 22.13.5
+        version: 22.13.5
       smol-toml:
         specifier: 1.3.1
         version: 1.3.1
@@ -553,8 +553,8 @@ importers:
         specifier: 4.19.2
         version: 4.19.2
       typescript:
-        specifier: 5.7.2
-        version: 5.7.2
+        specifier: 5.7.3
+        version: 5.7.3
 
 packages:
 
@@ -3959,9 +3959,6 @@ packages:
   '@stacks/transactions@6.17.0':
     resolution: {integrity: sha512-FUah2BRgV66ApLcEXGNGhwyFTRXqX5Zco3LpiM3essw8PF0NQlHwwdPgtDko5RfrJl3LhGXXe/30nwsfNnB3+g==}
 
-  '@stacks/transactions@7.0.2':
-    resolution: {integrity: sha512-m2bvchqUeYv1ttXuC0EukW8UX4xBXTDcYb8bXmfI1RG89HXAvvCCgr5aiadU6zbutgoXvm8mquDt3nww0PO4Jg==}
-
   '@stacks/transactions@7.0.4':
     resolution: {integrity: sha512-OTQSqb+xaq+QeHB1m83SONVjVs9DD1SMqX7UvvLmzQx3ppZNoRqbWx9UGjm1bVwpQ+mw44TVOe7w3Zm0HRYFfw==}
 
@@ -4528,9 +4525,6 @@ packages:
 
   '@types/node@20.14.14':
     resolution: {integrity: sha512-d64f00982fS9YoOgJkAMolK7MN8Iq3TDdVjchbYHdEmjth/DHowx82GnoA+tVUAN+7vxfYUgAzi+JXbKNd2SDQ==}
-
-  '@types/node@22.10.5':
-    resolution: {integrity: sha512-F8Q+SeGimwOo86fiovQh8qiXfFEh2/ocYv7tU5pJ3EXMSSxk1Joj5wefpFK2fHTf/N6HKGSxIDBT9f3gCxXPkQ==}
 
   '@types/node@22.13.5':
     resolution: {integrity: sha512-+lTU0PxZXn0Dr1NBtC7Y8cR21AJr87dLLU953CWA6pMxxv/UDc7jYAY90upcrie1nRcD6XNG5HOYEDtgW5TxAg==}
@@ -10287,11 +10281,6 @@ packages:
   typeforce@1.18.0:
     resolution: {integrity: sha512-7uc1O8h1M1g0rArakJdf0uLRSSgFcYexrVoKo+bzJd32gd4gDy2L/Z+8/FjPnU9ydY3pEnVPtr9FyscYY60K1g==}
 
-  typescript@5.7.2:
-    resolution: {integrity: sha512-i5t66RHxDvVN40HfDd1PsEThGNnlMCMT3jMUuoh9/0TaqWevNontacunWyN02LA9/fIbEWlcHZcgTKb9QoaLfg==}
-    engines: {node: '>=14.17'}
-    hasBin: true
-
   typescript@5.7.3:
     resolution: {integrity: sha512-84MVSjMEHP+FQRPy3pX9sTVV/INIex71s9TL2Gm5FG/WG1SqXeKyZ0k7/blY/4FdOzI12CBy1vGc4og/eus0fw==}
     engines: {node: '>=14.17'}
@@ -15237,7 +15226,7 @@ snapshots:
       '@stacks/network': 7.0.2
       '@stacks/network-v6': '@stacks/network@6.17.0'
       '@stacks/profile': 7.0.2
-      '@stacks/transactions': 7.0.2
+      '@stacks/transactions': 7.0.4
       '@stacks/transactions-v6': '@stacks/transactions@6.17.0'
       jsontokens: 4.0.1
     transitivePeerDependencies:
@@ -15325,17 +15314,6 @@ snapshots:
       '@noble/secp256k1': 1.7.1
       '@stacks/common': 6.16.0
       '@stacks/network': 6.17.0
-      c32check: 2.0.0
-      lodash.clonedeep: 4.5.0
-    transitivePeerDependencies:
-      - encoding
-
-  '@stacks/transactions@7.0.2':
-    dependencies:
-      '@noble/hashes': 1.1.5
-      '@noble/secp256k1': 1.7.1
-      '@stacks/common': 7.0.2
-      '@stacks/network': 7.0.2
       c32check: 2.0.0
       lodash.clonedeep: 4.5.0
     transitivePeerDependencies:
@@ -15934,10 +15912,6 @@ snapshots:
   '@types/node@20.14.14':
     dependencies:
       undici-types: 5.26.5
-
-  '@types/node@22.10.5':
-    dependencies:
-      undici-types: 6.20.0
 
   '@types/node@22.13.5':
     dependencies:
@@ -23165,8 +23139,6 @@ snapshots:
       reflect.getprototypeof: 1.0.10
 
   typeforce@1.18.0: {}
-
-  typescript@5.7.2: {}
 
   typescript@5.7.3: {}
 
