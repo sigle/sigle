@@ -1,5 +1,6 @@
 import type { paths } from "@/__generated__/sigle-api/openapi";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { formatBTC } from "@sigle/sdk";
 import { FormProvider, useForm } from "react-hook-form";
 import { z } from "zod";
 
@@ -48,7 +49,9 @@ export const EditorFormProvider = ({
       collect: {
         collectPrice: {
           type: post.collectPriceType || "free",
-          price: post.collectPrice ? Number(post.collectPrice) : 0,
+          price: post.collectPrice
+            ? (formatBTC(BigInt(post.collectPrice)) as unknown as number)
+            : 0,
         },
         collectLimit: {
           type: post.collectLimitType || "open",

@@ -96,7 +96,7 @@ const updateDraftSchema = z.object({
   collect: z.object({
     collectPrice: z.object({
       type: z.enum(["free", "paid"] as const),
-      price: z.coerce.number().min(0),
+      price: z.coerce.number().int().min(0),
     }),
     collectLimit: z.object({
       type: z.enum(["open", "fixed"] as const),
