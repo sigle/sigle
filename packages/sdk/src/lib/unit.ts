@@ -1,6 +1,7 @@
 import { InvalidDecimalNumberError } from "../errors/unit.js";
 
 const STACKS_DECIMALS = 6;
+const BTC_DECIMALS = 8;
 
 /**
  * https://github.com/wevm/viem/blob/d0275721a89d0d803e907041d4d16e7f9818bfba/src/utils/unit/parseUnits.ts
@@ -50,13 +51,6 @@ export function parseUnits(value: string, decimals: number): bigint {
 }
 
 /**
- * Converts a string representation of STX to uSTX.
- */
-export function parseSTX(ether: string) {
-  return parseUnits(ether, STACKS_DECIMALS);
-}
-
-/**
  * https://github.com/wevm/viem/blob/d0275721a89d0d803e907041d4d16e7f9818bfba/src/utils/unit/formatUnits.ts
  *
  *  Divides a number by a given exponent of base 10 (10exponent), and formats it into a string representation of the number.
@@ -80,8 +74,29 @@ export function formatUnits(value: bigint, decimals: number) {
 }
 
 /**
+ * Converts a string representation of STX to uSTX.
+ */
+export function parseSTX(ether: string) {
+  return parseUnits(ether, STACKS_DECIMALS);
+}
+
+/**
  * Converts numerical uSTX to a string representation of STX.
  */
 export function formatSTX(uSTX: bigint) {
   return formatUnits(uSTX, STACKS_DECIMALS);
+}
+
+/**
+ * Converts a string representation of BTC to satoshis.
+ */
+export function parseBTC(bitcoin: string) {
+  return parseUnits(bitcoin, BTC_DECIMALS);
+}
+
+/**
+ * Converts numerical satoshis to a string representation of BTC.
+ */
+export function formatBTC(sats: bigint) {
+  return formatUnits(sats, BTC_DECIMALS);
 }

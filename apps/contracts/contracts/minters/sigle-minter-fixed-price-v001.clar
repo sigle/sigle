@@ -13,13 +13,13 @@
     creator: uint,
     mintReferrer: uint
 } {
-    protocol: u350000,
-    creator: u500000,
-    mintReferrer: u150000
+    protocol: u1050,
+    creator: u1500,
+    mintReferrer: u450
 })
 
 (define-map contract-mint-config principal {
-    ;; Price in uSTX
+    ;; Price in satoshis
     price: uint,
     ;; Block height at which the sale starts
     start-block: uint,
@@ -84,9 +84,9 @@
     (asserts! (<= burn-block-height (get end-block mint-config)) (err ERR-SALE-ENDED))
     (asserts! (<= quantity u10) (err ERR-INVALID-QUANTITY))
 
-    (try! (stx-transfer? protocol-fee tx-sender protocol-address))
-    (try! (stx-transfer? (+ creator-fee price-amount) tx-sender creator-address))
-    (try! (stx-transfer? referrer-fee tx-sender referrer-address))
+    (try! (contract-call? 'SM3VDXK3WZZSA84XXFKAFAF15NNZX32CTSG82JFQ4.sbtc-token transfer protocol-fee tx-sender protocol-address none))
+    (try! (contract-call? 'SM3VDXK3WZZSA84XXFKAFAF15NNZX32CTSG82JFQ4.sbtc-token transfer (+ creator-fee price-amount) tx-sender creator-address none))
+    (try! (contract-call? 'SM3VDXK3WZZSA84XXFKAFAF15NNZX32CTSG82JFQ4.sbtc-token transfer referrer-fee tx-sender referrer-address none))
 
     (try! (if (<= u1 quantity) (as-contract (contract-call? token-contract mint mint-recipient)) (ok u0)))
     (try! (if (<= u2 quantity) (as-contract (contract-call? token-contract mint mint-recipient)) (ok u0)))

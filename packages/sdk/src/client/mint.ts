@@ -1,5 +1,5 @@
 import type { ContractCallBase } from "@stacks/connect";
-import type { StacksNetwork } from "@stacks/network";
+import type { StacksNetwork, StacksNetworkName } from "@stacks/network";
 import {
   PostConditionMode,
   contractPrincipalCV,
@@ -7,7 +7,7 @@ import {
   noneCV,
   uintCV,
 } from "@stacks/transactions";
-import { fixedMintFee } from "./config.js";
+import { config, fixedMintFee } from "./config.js";
 
 export type MintParams = {
   // Contract address of the post
@@ -20,7 +20,7 @@ export type MintParams = {
   recipient?: string;
   // Sender address, used for the post condditions
   sender: string;
-  // Price of one token in uSTX
+  // Price of one token in satoshis
   price: string;
 };
 
@@ -32,10 +32,13 @@ export type MintReturn = {
 export const mint = async ({
   params,
   network,
+  networkName,
 }: {
   params: MintParams;
   network: StacksNetwork;
+  networkName: StacksNetworkName;
 }): Promise<MintReturn> => {
+  const sBTCAsset = config[networkName].sBTCAsset;
   const [contractAddress, contractName] = params.contract.split(".");
   const minterData = await fetchCallReadOnlyFunction({
     contractAddress,
@@ -73,9 +76,10 @@ export const mint = async ({
       ],
       postConditions: [
         {
-          type: "stx-postcondition",
+          type: "ft-postcondition",
           address: params.sender,
           condition: "eq",
+          asset: sBTCAsset,
           amount: totalPrice,
         },
       ],

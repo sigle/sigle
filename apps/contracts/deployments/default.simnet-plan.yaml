@@ -69,9 +69,24 @@ plan:
             emulated-sender: SP3D6PV2ACBPEKYJTCMH7HEN02KP87QSP8KTEH335
             path: "./.cache/requirements/SP3D6PV2ACBPEKYJTCMH7HEN02KP87QSP8KTEH335.commission-trait.clar"
             clarity-version: 1
-      epoch: "2.0"
+      epoch: "2.1"
     - id: 1
       transactions:
+        - emulated-contract-publish:
+            contract-name: sbtc-registry
+            emulated-sender: SM3VDXK3WZZSA84XXFKAFAF15NNZX32CTSG82JFQ4
+            path: "./.cache/requirements/SM3VDXK3WZZSA84XXFKAFAF15NNZX32CTSG82JFQ4.sbtc-registry.clar"
+            clarity-version: 3
+        - emulated-contract-publish:
+            contract-name: sbtc-token
+            emulated-sender: SM3VDXK3WZZSA84XXFKAFAF15NNZX32CTSG82JFQ4
+            path: "./.cache/requirements/SM3VDXK3WZZSA84XXFKAFAF15NNZX32CTSG82JFQ4.sbtc-token.clar"
+            clarity-version: 3
+        - emulated-contract-publish:
+            contract-name: sbtc-deposit
+            emulated-sender: SM3VDXK3WZZSA84XXFKAFAF15NNZX32CTSG82JFQ4
+            path: "./.cache/requirements/SM3VDXK3WZZSA84XXFKAFAF15NNZX32CTSG82JFQ4.sbtc-deposit.clar"
+            clarity-version: 3
         - emulated-contract-publish:
             contract-name: sigle-post-trait-v001
             emulated-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM

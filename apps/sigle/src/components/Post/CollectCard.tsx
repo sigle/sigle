@@ -1,6 +1,6 @@
 import type { paths } from "@/__generated__/sigle-api/openapi";
 import { Button, Heading, Progress, Text } from "@radix-ui/themes";
-import { formatSTX } from "@sigle/sdk";
+import { formatBTC } from "@sigle/sdk";
 import { useState } from "react";
 import { PostCollectDialog } from "../Shared/Post/PostCollectDialog";
 
@@ -33,7 +33,7 @@ export const PostCollectCard = ({ post }: PostCollectCardProps) => {
             <Text as="p" size={post.price === "0" ? "3" : "4"} weight="medium">
               {post.price === "0"
                 ? "Free"
-                : `${formatSTX(BigInt(post.price))} STX`}
+                : `${formatBTC(BigInt(post.price))} sBTC`}
             </Text>
             <Text as="p" color="gray" size="2">
               {post.openEdition ? "Open edition" : "Limited edition"}

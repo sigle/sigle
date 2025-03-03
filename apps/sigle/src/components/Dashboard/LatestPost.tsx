@@ -77,7 +77,7 @@ export const LatestPost = () => {
                     0
                   }{" "}
                   <Text size="1" color="gray">
-                    STX
+                    sBTC
                   </Text>
                 </Text>
               </Flex>

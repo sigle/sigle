@@ -12,7 +12,7 @@ import {
   VisuallyHidden,
 } from "@radix-ui/themes";
 import * as Sentry from "@sentry/nextjs";
-import { parseSTX } from "@sigle/sdk";
+import { parseBTC } from "@sigle/sdk";
 import { IconExclamationCircle } from "@tabler/icons-react";
 import { useRouter } from "next/navigation";
 import { usePostHog } from "posthog-js/react";
@@ -121,7 +121,7 @@ export const PublishDialog = ({ postId }: PublishDialogProps) => {
             collectInfo: {
               amount:
                 data.collect.collectPrice.type === "paid"
-                  ? parseSTX(data.collect.collectPrice.price.toString())
+                  ? parseBTC(data.collect.collectPrice.price.toString())
                   : 0,
               maxSupply:
                 data.collect.collectLimit.type === "fixed" &&

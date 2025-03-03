@@ -1,4 +1,5 @@
 import { Callout } from 'nextra/components'
+import { fixedMintFee, formatBTC } from "@sigle/sdk";
 
 # Monetization
 
@@ -20,14 +21,13 @@ When readers collect your posts on Sigle, you receive payment directly in Bitcoi
 
 <Callout type="warning" emoji="⚠️">
     Fees are subject to change during the testnet phase.
-    STX fees will be replaced with sBTC fees in the future.
 </Callout>
 
 Collectors can decide to mint any content created on Sigle as a NFT. If a collector decides to mint the article, the following Base fee will be required in order to create a mint
 
-- 0.5 STX → Writer
-- 0.35 STX → Platform
-- 0.15 STX → Referral (optional)
+- {formatBTC(fixedMintFee.creator)} sBTC → Writer
+- {formatBTC(fixedMintFee.protocol)} sBTC → Platform
+- {formatBTC(fixedMintFee.mintReferrer)} sBTC → Referral (optional)
 
 Creators can decide to set a price for collecting the content as a NFT. 100% of the amount will go to the creator after the base fee is accounted for.
 
