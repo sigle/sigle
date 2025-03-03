@@ -80,6 +80,13 @@ export default defineEventHandler(async (event) => {
             const value:
               | { a: "mint"; contract: string; quantity: number }
               | {
+                  a: "init-mint-details";
+                  contract: string;
+                  price: number;
+                  "start-block": number;
+                  "end-block": number;
+                }
+              | {
                   a: "set-mint-details";
                   contract: string;
                   price: number;
@@ -107,6 +114,9 @@ export default defineEventHandler(async (event) => {
                   sender: transaction.metadata.sender,
                   timestamp: new Date(block.metadata.block_time * 1000),
                 });
+                break;
+              case "init-mint-details":
+                // We safely ignore this event as it's already handled in the contract deploy section
                 break;
               case "set-mint-details":
                 // TODO

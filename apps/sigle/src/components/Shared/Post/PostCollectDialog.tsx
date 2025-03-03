@@ -26,7 +26,7 @@ import {
   Tooltip,
   VisuallyHidden,
 } from "@radix-ui/themes";
-import { fixedMintFee, formatSTX } from "@sigle/sdk";
+import { fixedMintFee, formatBTC } from "@sigle/sdk";
 import {
   IconHelpCircle,
   IconInfoCircle,
@@ -58,7 +58,7 @@ export const PostCollectDialog = ({
   const { data: currencyFiatPrice, isLoading: loadingCurrencyFiatPrice } =
     useCurrencyFiatPrice(
       // We wait for the dialog to be open to fetch the price
-      open ? "STX" : undefined,
+      open ? "sBTC" : undefined,
     );
   const [editions, setEditions] = useState(1);
 
@@ -184,7 +184,7 @@ export const PostCollectDialog = ({
               Price
             </Text>
             <Text as="p" size="2" weight="medium">
-              {isFree ? "Free" : `${formatSTX(price)} STX`}
+              {isFree ? "Free" : `${formatBTC(price)} sBTC`}
             </Text>
           </div>
           <div className="flex items-center justify-between rounded-2 bg-gray-2 p-2">
@@ -205,7 +205,7 @@ export const PostCollectDialog = ({
               </a>
             </Text>
             <Text as="p" size="1" weight="medium" color="gray">
-              {formatSTX(fixedMintFee.total)} STX
+              {formatBTC(fixedMintFee.total)} sBTC
             </Text>
           </div>
           <div className="flex items-center justify-between">
@@ -254,15 +254,15 @@ export const PostCollectDialog = ({
                   <div className="grid gap-2 p-2">
                     <div className="flex justify-between gap-2">
                       <Text>Creator:</Text>
-                      <Text>{formatSTX(creatorFee)} STX</Text>
+                      <Text>{formatBTC(creatorFee)} sBTC</Text>
                     </div>
                     <div className="flex justify-between gap-2">
                       <Text>Platform:</Text>
-                      <Text>{formatSTX(protocolFee)} STX</Text>
+                      <Text>{formatBTC(protocolFee)} sBTC</Text>
                     </div>
                     <div className="flex justify-between gap-2">
                       <Text>Referrer:</Text>
-                      <Text>{formatSTX(referrerFee)} STX</Text>
+                      <Text>{formatBTC(referrerFee)} sBTC</Text>
                     </div>
                   </div>
                 }
@@ -274,7 +274,7 @@ export const PostCollectDialog = ({
             </Text>
             <div className="text-right">
               <Text as="p" size="3" weight="medium">
-                {formatSTX(totalPrice)} STX
+                {formatBTC(totalPrice)} sBTC
               </Text>
               {loadingCurrencyFiatPrice ? (
                 <Text as="p" size="1">
@@ -285,7 +285,7 @@ export const PostCollectDialog = ({
                 <Text as="p" size="1" color="gray">
                   ~
                   {formatUSDollar.format(
-                    Number(formatSTX(totalPrice)) * Number(currencyFiatPrice),
+                    Number(formatBTC(totalPrice)) * Number(currencyFiatPrice),
                   )}
                 </Text>
               ) : null}

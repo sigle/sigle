@@ -1,9 +1,10 @@
 import type { StacksNetworkName } from "@stacks/network";
-import { parseSTX } from "../lib/unit.js";
+import { AssetString } from "@stacks/transactions";
 
 export const config: {
   [key in StacksNetworkName]: {
     protocolAddress: string;
+    sBTCAsset: AssetString;
     nftTrait: string;
     commissionTrait: string;
     postTrait: string;
@@ -12,33 +13,39 @@ export const config: {
 } = {
   mainnet: {
     protocolAddress: "TODO",
+    sBTCAsset:
+      "SM3VDXK3WZZSA84XXFKAFAF15NNZX32CTSG82JFQ4.sbtc-token::sbtc-token",
     nftTrait: "TODO",
     commissionTrait: "TODO",
     postTrait: "TODO",
     fixedPriceMinter: "TODO",
   },
   testnet: {
-    protocolAddress: "ST1JRRZ45G7E528BV1M3PR08093JFZGP1C4EZE4MC",
-    nftTrait: "ST1JRRZ45G7E528BV1M3PR08093JFZGP1C4EZE4MC.nft-trait",
+    protocolAddress: "STXNKH7PH0JNV55J08BC3C9586PVJ46XG0K69DT5",
+    sBTCAsset:
+      "ST1F7QA2MDF17S807EPA36TSS8AMEFY4KA9TVGWXT.sbtc-token::sbtc-token",
+    nftTrait: "STXNKH7PH0JNV55J08BC3C9586PVJ46XG0K69DT5.nft-trait",
     commissionTrait:
-      "ST1JRRZ45G7E528BV1M3PR08093JFZGP1C4EZE4MC.commission-trait",
-    postTrait:
-      "ST1JRRZ45G7E528BV1M3PR08093JFZGP1C4EZE4MC.sigle-post-trait-v001",
+      "STXNKH7PH0JNV55J08BC3C9586PVJ46XG0K69DT5.commission-trait",
+    postTrait: "STXNKH7PH0JNV55J08BC3C9586PVJ46XG0K69DT5.sigle-post-trait-v001",
     fixedPriceMinter:
-      "ST1JRRZ45G7E528BV1M3PR08093JFZGP1C4EZE4MC.sigle-minter-fixed-price-v001",
+      "STXNKH7PH0JNV55J08BC3C9586PVJ46XG0K69DT5.sigle-minter-fixed-price-v001",
   },
   devnet: {
-    protocolAddress: "ST1JRRZ45G7E528BV1M3PR08093JFZGP1C4EZE4MC",
-    nftTrait: "ST1JRRZ45G7E528BV1M3PR08093JFZGP1C4EZE4MC.nft-trait",
+    protocolAddress: "STXNKH7PH0JNV55J08BC3C9586PVJ46XG0K69DT5",
+    sBTCAsset:
+      "SM3VDXK3WZZSA84XXFKAFAF15NNZX32CTSG82JFQ4.sbtc-token::sbtc-token",
+    nftTrait: "STXNKH7PH0JNV55J08BC3C9586PVJ46XG0K69DT5.nft-trait",
     commissionTrait:
-      "ST1JRRZ45G7E528BV1M3PR08093JFZGP1C4EZE4MC.commission-trait",
-    postTrait:
-      "ST1JRRZ45G7E528BV1M3PR08093JFZGP1C4EZE4MC.sigle-post-trait-v001",
+      "STXNKH7PH0JNV55J08BC3C9586PVJ46XG0K69DT5.commission-trait",
+    postTrait: "STXNKH7PH0JNV55J08BC3C9586PVJ46XG0K69DT5.sigle-post-trait-v001",
     fixedPriceMinter:
-      "ST1JRRZ45G7E528BV1M3PR08093JFZGP1C4EZE4MC.sigle-minter-fixed-price-v001",
+      "STXNKH7PH0JNV55J08BC3C9586PVJ46XG0K69DT5.sigle-minter-fixed-price-v001",
   },
   mocknet: {
     protocolAddress: "ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM",
+    sBTCAsset:
+      "SM3VDXK3WZZSA84XXFKAFAF15NNZX32CTSG82JFQ4.sbtc-token::sbtc-token",
     nftTrait: "SP2PABAF9FTAJYNFZH93XENAJ8FVY99RRM50D2JG9.nft-trait",
     commissionTrait:
       "SP3D6PV2ACBPEKYJTCMH7HEN02KP87QSP8KTEH335.commission-trait",
@@ -50,8 +57,8 @@ export const config: {
 };
 
 export const fixedMintFee = {
-  protocol: parseSTX("0.35"),
-  creator: parseSTX("0.5"),
-  mintReferrer: parseSTX("0.15"),
-  total: parseSTX("1"),
+  protocol: 1050n, // 35% of 3000
+  creator: 1500n, // 50% of 3000
+  mintReferrer: 450n, // 15% of 3000
+  total: 3000n, // Total in sats
 };

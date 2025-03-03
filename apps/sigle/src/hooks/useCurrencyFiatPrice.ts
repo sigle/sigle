@@ -2,6 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 
 export const allowedCurrencies = [
   { symbol: "STX", coingeckoId: "blockstack" },
+  { symbol: "sBTC", coingeckoId: "sbtc-2" },
 ] as const;
 
 export const formatUSDollar = new Intl.NumberFormat("en-US", {
@@ -10,7 +11,7 @@ export const formatUSDollar = new Intl.NumberFormat("en-US", {
 });
 
 export const useCurrencyFiatPrice = (
-  currencySymbol?: (typeof allowedCurrencies)[0]["symbol"],
+  currencySymbol?: (typeof allowedCurrencies)[number]["symbol"],
 ) => {
   return useQuery<number | null>({
     queryKey: ["get-fiat-price", currencySymbol],

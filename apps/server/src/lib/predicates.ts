@@ -24,7 +24,7 @@ export const contractDeploymentPredicate = {
         },
       },
       // TODO start_block depending on env.STACKS_ENV
-      start_block: 138496,
+      start_block: 235887,
       decode_clarity_values: true,
     },
   },
@@ -50,7 +50,7 @@ export const sigleProfilesPredicate = {
         },
       },
       // TODO start_block depending on env.STACKS_ENV
-      start_block: 143819,
+      start_block: 235887,
       decode_clarity_values: true,
     },
   },
@@ -75,7 +75,7 @@ export const sigleMinterFixedPricePredicate = {
         },
       },
       // TODO start_block depending on env.STACKS_ENV
-      start_block: 1243,
+      start_block: 235887,
       decode_clarity_values: true,
     },
   },
@@ -99,7 +99,7 @@ export const siglePostPrintPredicate = {
           authorization_header: "Bearer {__TOKEN__}",
         },
       },
-      start_block: 0,
+      start_block: 235887,
       decode_clarity_values: true,
     },
   },

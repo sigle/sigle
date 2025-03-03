@@ -101,8 +101,6 @@ export default defineEventHandler(async (event) => {
   // No rate limit for this route
   if (!match) return;
 
-  console.log("match", match);
-
   const config = match.data.config;
   const routePath = match.data.path;
   const rateLimiter = rateLimiters.get(routePath);

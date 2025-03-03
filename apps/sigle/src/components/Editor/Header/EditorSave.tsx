@@ -1,6 +1,7 @@
 import { sigleApiClient } from "@/__generated__/sigle-api";
 import { useDebouncedCallback } from "@/hooks/useDebouncedCallback";
 import { Callout, Text } from "@radix-ui/themes";
+import { parseBTC } from "@sigle/sdk";
 import { IconInfoCircle } from "@tabler/icons-react";
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -24,6 +25,7 @@ export const EditorSave = () => {
   const onAutoSave = useDebouncedCallback(
     () => {
       if (!editor) return;
+      const values = getValues();
       updatePost(
         {
           params: {
@@ -32,7 +34,16 @@ export const EditorSave = () => {
             },
           },
           body: {
-            ...getValues(),
+            ...values,
+            collect: {
+              ...values.collect,
+              collectPrice: {
+                ...values.collect.collectPrice,
+                price: Number(
+                  parseBTC(String(values.collect.collectPrice.price)),
+                ),
+              },
+            },
           },
         },
         {

@@ -9,6 +9,7 @@
     "start": "next start"
   },
   "dependencies": {
+    "@sigle/sdk": "workspace:*",
     "next": "15.2.0",
     "nextra": "4.2.13",
     "nextra-theme-docs": "4.2.13",
