@@ -68,7 +68,7 @@ export const PublishReviewCollect = () => {
           <Text size="2">
             {data.collect.collectPrice.type === "free"
               ? "Free"
-              : `${data.collect.collectPrice.price} sats`}
+              : `${data.collect.collectPrice.price} sBTC`}
           </Text>
         </div>
       </div>

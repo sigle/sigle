@@ -69,7 +69,7 @@ export const CollectPrice = () => {
                 type="number"
                 {...register("collect.collectPrice.price")}
               >
-                <TextField.Slot side="right">sats</TextField.Slot>
+                <TextField.Slot side="right">sBTC</TextField.Slot>
               </TextField.Root>
             </Flex>
           </>

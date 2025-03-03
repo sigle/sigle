@@ -121,7 +121,7 @@ export const PublishDialog = ({ postId }: PublishDialogProps) => {
             collectInfo: {
               amount:
                 data.collect.collectPrice.type === "paid"
-                  ? data.collect.collectPrice.price
+                  ? parseBTC(data.collect.collectPrice.price.toString())
                   : 0,
               maxSupply:
                 data.collect.collectLimit.type === "fixed" &&
