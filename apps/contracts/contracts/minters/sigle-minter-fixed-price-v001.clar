@@ -27,13 +27,13 @@
     end-block: uint,
 })
 
-;; Initialize contract mint configuration
-(define-public (set-mint-details (price uint) (start-block uint) (end-block uint))
+;; @desc Initialize contract mint configuration when a new post is created
+(define-public (init-mint-details (price uint) (start-block uint) (end-block uint))
   (begin
-    ;; TODO only allow to set once?
+    (asserts! (is-none (map-get? contract-mint-config tx-sender)) (err ERR-NOT-AUTHORIZED))
     (asserts! (> end-block start-block) (err ERR-INVALID-END-BLOCK))
 
-    (print { a: "set-mint-details", contract: tx-sender, price: price, start-block: start-block, end-block: end-block })
+    (print { a: "init-mint-details", contract: tx-sender, price: price, start-block: start-block, end-block: end-block })
     (ok (map-set contract-mint-config
       tx-sender
       {
@@ -42,6 +42,28 @@
         end-block: end-block,
       })
     )
+  )
+)
+
+;; @desc Update mint details for a post
+(define-public (set-mint-details (token-contract <sigle-post-trait>) (price uint) (start-block uint) (end-block uint))
+  (let (
+    (mint-config (unwrap! (map-get? contract-mint-config (contract-of token-contract)) (err ERR-INVALID-MINT-DATA)))
+    (contract-owner (try! (contract-call? token-contract get-contract-owner)))
+  )
+    (asserts! (is-eq tx-sender contract-owner) (err ERR-NOT-AUTHORIZED))
+    (asserts! (> end-block start-block) (err ERR-INVALID-END-BLOCK))
+    (asserts! (<= burn-block-height (get end-block mint-config)) (err ERR-SALE-ENDED))
+
+    (print { a: "set-mint-details", contract: (contract-of token-contract), price: price, start-block: start-block, end-block: end-block })
+    (ok (map-set contract-mint-config
+      (contract-of token-contract)
+      {
+        price: price,
+        start-block: start-block,
+        end-block: end-block,
+      }
+    ))
   )
 )
 
@@ -78,6 +100,32 @@
     (try! (if (<= u10 quantity) (as-contract (contract-call? token-contract mint mint-recipient)) (ok u0)))
 
     (print { a: "mint", contract: token-contract, quantity: quantity, mintReferrer: mintReferrer, recipient: mint-recipient })
+    (ok true)
+  )
+)
+
+;; @desc Allows the contract owner to mint for free
+(define-public (owner-mint (token-contract <sigle-post-trait>) (quantity uint) (recipient (optional principal)))
+  (let (
+    (mint-config (unwrap! (map-get? contract-mint-config (contract-of token-contract)) (err ERR-INVALID-MINT-DATA)))
+    (mint-recipient (default-to tx-sender recipient))
+    (contract-owner (try! (contract-call? token-contract get-contract-owner)))
+  )
+    (asserts! (is-eq tx-sender contract-owner) (err ERR-NOT-AUTHORIZED))
+    (asserts! (<= quantity u10) (err ERR-INVALID-QUANTITY))
+
+    (try! (if (<= u1 quantity) (as-contract (contract-call? token-contract mint mint-recipient)) (ok u0)))
+    (try! (if (<= u2 quantity) (as-contract (contract-call? token-contract mint mint-recipient)) (ok u0)))
+    (try! (if (<= u3 quantity) (as-contract (contract-call? token-contract mint mint-recipient)) (ok u0)))
+    (try! (if (<= u4 quantity) (as-contract (contract-call? token-contract mint mint-recipient)) (ok u0)))
+    (try! (if (<= u5 quantity) (as-contract (contract-call? token-contract mint mint-recipient)) (ok u0)))
+    (try! (if (<= u6 quantity) (as-contract (contract-call? token-contract mint mint-recipient)) (ok u0)))
+    (try! (if (<= u7 quantity) (as-contract (contract-call? token-contract mint mint-recipient)) (ok u0)))
+    (try! (if (<= u8 quantity) (as-contract (contract-call? token-contract mint mint-recipient)) (ok u0)))
+    (try! (if (<= u9 quantity) (as-contract (contract-call? token-contract mint mint-recipient)) (ok u0)))
+    (try! (if (<= u10 quantity) (as-contract (contract-call? token-contract mint mint-recipient)) (ok u0)))
+
+    (print { a: "owner-mint", contract: token-contract, quantity: quantity, recipient: mint-recipient })
     (ok true)
   )
 )

@@ -21,12 +21,12 @@
   "devDependencies": {
     "@stacks/encryption": "7.0.4",
     "@stacks/network": "7.0.2",
-    "@stacks/transactions": "7.0.2",
+    "@stacks/transactions": "7.0.4",
     "@tsconfig/recommended": "1.0.8",
-    "@types/node": "22.13.4",
-    "tsup": "8.3.6",
+    "@types/node": "22.13.5",
+    "tsup": "8.4.0",
     "typescript": "5.7.3",
-    "vitest": "3.0.6"
+    "vitest": "3.0.7"
   },
   "peerDependencies": {
     "@stacks/common": "^7.0.2",

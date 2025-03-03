@@ -48,7 +48,6 @@ jobs:
     runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@v4
-      - uses: ./.github/actions/setup-monorepo
 
       - name: "Check contract syntax"
         uses: docker://hirosystems/clarinet:2.15
