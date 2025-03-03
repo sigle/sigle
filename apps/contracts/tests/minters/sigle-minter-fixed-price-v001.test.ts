@@ -139,9 +139,9 @@ describe(contract, () => {
       const mintEvents = events.filter((e) => e.event === "nft_mint_event");
       expect(mintEvents.length).toBe(quantity);
 
-      // Important: Verify that NO STX transfer events occurred (free mint)
+      // Important: Verify that NO sBTC transfer events occurred (free mint)
       const transferEvents = events.filter(
-        (e) => e.event === "stx_transfer_event",
+        (e) => e.event === "ft_transfer_event",
       );
       expect(transferEvents.length).toBe(0);
 
