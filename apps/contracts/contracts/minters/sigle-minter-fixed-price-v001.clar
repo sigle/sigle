@@ -13,9 +13,9 @@
     creator: uint,
     mintReferrer: uint
 } {
-    protocol: u2450,
-    creator: u3500,
-    mintReferrer: u1050
+    protocol: u1050,
+    creator: u1500,
+    mintReferrer: u450
 })
 
 (define-map contract-mint-config principal {

@@ -59,8 +59,8 @@ export const config: {
 };
 
 export const fixedMintFee = {
-  protocol: 2450n,
-  creator: 3500n,
-  mintReferrer: 1050n,
-  total: 7000n,
+  protocol: 1050n, // 35% of 3000
+  creator: 1500n, // 50% of 3000
+  mintReferrer: 450n, // 15% of 3000
+  total: 3000n, // Total in sats
 };
