@@ -1,10 +1,6 @@
 import type { Payload } from "@hirosystems/chainhook-client";
 import { env } from "~/env";
-import { indexerMintJob } from "~/jobs/indexer/mint";
-import { indexerMintEnabledJob } from "~/jobs/indexer/mint-enabled";
-import { indexerNewPostJob } from "~/jobs/indexer/new-post";
-import { indexerReduceSupplyJob } from "~/jobs/indexer/reduce-supply";
-import { indexerSetProfileJob } from "~/jobs/indexer/set-profile";
+import { indexerJob } from "~/jobs/indexer/index";
 import { consola } from "~/lib/consola";
 
 export default defineEventHandler(async (event) => {
@@ -45,16 +41,19 @@ export default defineEventHandler(async (event) => {
 
           if (isSiglePost) {
             const txId = transaction.transaction_identifier.hash;
-            await indexerNewPostJob.emit({
-              isStreamingBlocks: chainhook.chainhook.is_streaming_blocks,
-              address: transaction.metadata.kind.data.contract_identifier,
-              txId,
-              blockHeight: block.block_identifier.index,
-              version: 1,
-              contract: transaction.metadata.kind.data.code,
-              price: (setMintDetailsLogEvent.data as any).value.price,
-              sender: transaction.metadata.sender,
-              createdAt: new Date(block.metadata.block_time * 1000),
+            await indexerJob.emit({
+              action: "indexer-new-post",
+              data: {
+                isStreamingBlocks: chainhook.chainhook.is_streaming_blocks,
+                address: transaction.metadata.kind.data.contract_identifier,
+                txId,
+                blockHeight: block.block_identifier.index,
+                version: 1,
+                contract: transaction.metadata.kind.data.code,
+                price: (setMintDetailsLogEvent.data as any).value.price,
+                sender: transaction.metadata.sender,
+                createdAt: new Date(block.metadata.block_time * 1000),
+              },
             });
           }
         }
@@ -100,19 +99,22 @@ export default defineEventHandler(async (event) => {
               event.data.value;
             switch (value.a) {
               case "mint":
-                await indexerMintJob.emit({
-                  address: value.contract,
-                  quantity: value.quantity,
-                  nftMintEvents: transaction.metadata.receipt.events
-                    .filter((event) => event.type === "NFTMintEvent")
-                    .map((event) => ({
-                      ...event.data,
-                      // Type is string, but actual value is a number
-                      // We cast it to a string to match the type
-                      asset_identifier: String(event.data.asset_identifier),
-                    })),
-                  sender: transaction.metadata.sender,
-                  timestamp: new Date(block.metadata.block_time * 1000),
+                await indexerJob.emit({
+                  action: "indexer-mint",
+                  data: {
+                    address: value.contract,
+                    quantity: value.quantity,
+                    nftMintEvents: transaction.metadata.receipt.events
+                      .filter((event) => event.type === "NFTMintEvent")
+                      .map((event) => ({
+                        ...event.data,
+                        // Type is string, but actual value is a number
+                        // We cast it to a string to match the type
+                        asset_identifier: String(event.data.asset_identifier),
+                      })),
+                    sender: transaction.metadata.sender,
+                    timestamp: new Date(block.metadata.block_time * 1000),
+                  },
                 });
                 break;
               case "init-mint-details":
@@ -122,21 +124,30 @@ export default defineEventHandler(async (event) => {
                 // TODO
                 break;
               case "mint-enabled":
-                await indexerMintEnabledJob.emit({
-                  address: contractAddress,
-                  enabled: value.enabled,
+                await indexerJob.emit({
+                  action: "indexer-mint-enabled",
+                  data: {
+                    address: contractAddress,
+                    enabled: value.enabled,
+                  },
                 });
                 break;
               case "reduce-supply":
-                await indexerReduceSupplyJob.emit({
-                  address: contractAddress,
-                  maxSupply: value["max-supply"],
+                await indexerJob.emit({
+                  action: "indexer-reduce-supply",
+                  data: {
+                    address: contractAddress,
+                    maxSupply: value["max-supply"],
+                  },
                 });
                 break;
               case "set-profile":
-                await indexerSetProfileJob.emit({
-                  address: value.address,
-                  uri: value.uri,
+                await indexerJob.emit({
+                  action: "indexer-set-profile",
+                  data: {
+                    address: value.address,
+                    uri: value.uri,
+                  },
                 });
                 break;
               default:

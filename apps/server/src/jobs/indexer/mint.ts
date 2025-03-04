@@ -1,52 +1,86 @@
 import { z } from "zod";
 import { consola } from "~/lib/consola";
-import { defineJob } from "~/lib/jobs";
 import { prisma } from "~/lib/prisma";
 
-export const indexerMintJob = defineJob("indexer-mint")
-  .input(
-    z.object({
-      address: z.string(),
-      quantity: z.number(),
-      nftMintEvents: z.array(
-        z.object({
-          asset_identifier: z.string(),
-          recipient: z.string(),
-        }),
-      ),
-      sender: z.string(),
-      timestamp: z.coerce.date(),
-    }),
-  )
-  .options({})
-  .work(async (jobs) => {
-    const job = jobs[0];
-    const updatedPost = await prisma.post.update({
-      select: {
-        id: true,
-      },
-      where: {
-        address: job.data.address,
-      },
-      data: {
-        collected: {
-          increment: job.data.quantity,
-        },
-      },
-    });
+export const indexerMintSchema = z.object({
+  action: z.literal("indexer-mint"),
+  data: z.object({
+    address: z.string(),
+    quantity: z.number(),
+    nftMintEvents: z.array(
+      z.object({
+        asset_identifier: z.string(),
+        recipient: z.string(),
+      }),
+    ),
+    sender: z.string(),
+    timestamp: z.coerce.date(),
+  }),
+});
 
-    await prisma.postNft.createMany({
-      data: job.data.nftMintEvents.map((event) => ({
-        id: `${updatedPost.id}-${event.asset_identifier}`,
-        minterId: job.data.sender,
-        ownerId: event.recipient,
-        postId: updatedPost.id,
-        createdAt: job.data.timestamp,
-      })),
-    });
-
-    consola.debug("post.mint", {
-      id: updatedPost.id,
-      quantity: job.data.quantity,
-    });
+export const executeIndexerMintJob = async (
+  data: z.TypeOf<typeof indexerMintSchema>["data"],
+) => {
+  // Gather all unique user addresses from the event data to create missing users
+  const userAddresses = new Set<string>();
+  userAddresses.add(data.sender);
+  data.nftMintEvents.forEach((event) => {
+    userAddresses.add(event.recipient);
   });
+
+  const existingUsers = await prisma.user.findMany({
+    where: {
+      id: {
+        in: Array.from(userAddresses),
+      },
+    },
+    select: {
+      id: true,
+    },
+  });
+
+  const existingUserIds = new Set(existingUsers.map((user) => user.id));
+
+  // Create any users that don't exist yet
+  const usersToCreate = Array.from(userAddresses)
+    .filter((address) => !existingUserIds.has(address))
+    .map((address) => ({
+      id: address,
+    }));
+
+  if (usersToCreate.length > 0) {
+    await prisma.user.createMany({
+      data: usersToCreate,
+      skipDuplicates: true,
+    });
+  }
+
+  const updatedPost = await prisma.post.update({
+    select: {
+      id: true,
+    },
+    where: {
+      address: data.address,
+    },
+    data: {
+      collected: {
+        increment: data.quantity,
+      },
+    },
+  });
+
+  await prisma.postNft.createMany({
+    data: data.nftMintEvents.map((event) => ({
+      id: `${updatedPost.id}-${event.asset_identifier}`,
+      minterId: data.sender,
+      ownerId: event.recipient,
+      postId: updatedPost.id,
+      createdAt: data.timestamp,
+    })),
+  });
+
+  consola.debug("post.mint", {
+    id: updatedPost.id,
+    quantity: data.quantity,
+  });
+};
