@@ -56,6 +56,7 @@ export const indexerNewPostJob = defineJob("indexer-new-post")
     const openEdition = maxSupply === BigInt(MAX_UINT);
 
     // Fetch data from Arweave
+    console.log("baseTokenUri", baseTokenUri);
     const arweaveTxId = baseTokenUri.replace("ar://", "");
     const data = await fetch(`https://arweave.net/${arweaveTxId}`);
     const json = await data.json();
