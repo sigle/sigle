@@ -8,6 +8,10 @@ import {
 } from "./mint-enabled";
 import { executeNewPostJob, indexerNewPostSchema } from "./new-post";
 import {
+  executeIndexerReduceSupplyJob,
+  indexerReduceSupplySchema,
+} from "./reduce-supply";
+import {
   executeIndexerSetProfileJob,
   indexerSetProfileSchema,
 } from "./set-profile";
@@ -19,6 +23,7 @@ export const indexerJob = defineJob("indexer")
       indexerMintEnabledSchema,
       indexerMintSchema,
       indexerSetProfileSchema,
+      indexerReduceSupplySchema,
     ]),
   )
   .options({
@@ -37,9 +42,13 @@ export const indexerJob = defineJob("indexer")
       case "indexer-mint":
         await executeIndexerMintJob(job.data.data);
         break;
+      case "indexer-reduce-supply":
+        await executeIndexerReduceSupplyJob(job.data.data);
+        break;
       case "indexer-set-profile":
         await executeIndexerSetProfileJob(job.data.data);
         break;
+
       default:
         consola.error("Unknown action");
         break;

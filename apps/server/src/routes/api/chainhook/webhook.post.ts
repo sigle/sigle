@@ -1,8 +1,6 @@
 import type { Payload } from "@hirosystems/chainhook-client";
 import { env } from "~/env";
 import { indexerJob } from "~/jobs/indexer/index";
-import { indexerReduceSupplyJob } from "~/jobs/indexer/reduce-supply";
-import { indexerSetProfileJob } from "~/jobs/indexer/set-profile";
 import { consola } from "~/lib/consola";
 
 export default defineEventHandler(async (event) => {
@@ -135,15 +133,21 @@ export default defineEventHandler(async (event) => {
                 });
                 break;
               case "reduce-supply":
-                await indexerReduceSupplyJob.emit({
-                  address: contractAddress,
-                  maxSupply: value["max-supply"],
+                await indexerJob.emit({
+                  action: "indexer-reduce-supply",
+                  data: {
+                    address: contractAddress,
+                    maxSupply: value["max-supply"],
+                  },
                 });
                 break;
               case "set-profile":
-                await indexerSetProfileJob.emit({
-                  address: value.address,
-                  uri: value.uri,
+                await indexerJob.emit({
+                  action: "indexer-set-profile",
+                  data: {
+                    address: value.address,
+                    uri: value.uri,
+                  },
                 });
                 break;
               default:
