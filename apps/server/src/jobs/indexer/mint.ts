@@ -21,6 +21,40 @@ export const indexerMintSchema = z.object({
 export const executeIndexerMintJob = async (
   data: z.TypeOf<typeof indexerMintSchema>["data"],
 ) => {
+  // Gather all unique user addresses from the event data to create missing users
+  const userAddresses = new Set<string>();
+  userAddresses.add(data.sender);
+  data.nftMintEvents.forEach((event) => {
+    userAddresses.add(event.recipient);
+  });
+
+  const existingUsers = await prisma.user.findMany({
+    where: {
+      id: {
+        in: Array.from(userAddresses),
+      },
+    },
+    select: {
+      id: true,
+    },
+  });
+
+  const existingUserIds = new Set(existingUsers.map((user) => user.id));
+
+  // Create any users that don't exist yet
+  const usersToCreate = Array.from(userAddresses)
+    .filter((address) => !existingUserIds.has(address))
+    .map((address) => ({
+      id: address,
+    }));
+
+  if (usersToCreate.length > 0) {
+    await prisma.user.createMany({
+      data: usersToCreate,
+      skipDuplicates: true,
+    });
+  }
+
   const updatedPost = await prisma.post.update({
     select: {
       id: true,

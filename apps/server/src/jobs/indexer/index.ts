@@ -16,7 +16,9 @@ export const indexerJob = defineJob("indexer")
       indexerMintSchema,
     ]),
   )
-  .options({})
+  .options({
+    priority: 100,
+  })
   .work(async (jobs) => {
     const job = jobs[0];
 
