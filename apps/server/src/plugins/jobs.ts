@@ -1,9 +1,7 @@
 import PgBoss from "pg-boss";
 import { env } from "~/env";
 import { generateImageBlurhashJob } from "~/jobs/generate-image-blurhash";
-import { indexerMintJob } from "~/jobs/indexer/mint";
-import { indexerMintEnabledJob } from "~/jobs/indexer/mint-enabled";
-import { indexerNewPostJob } from "~/jobs/indexer/new-post";
+import { indexerJob } from "~/jobs/indexer";
 import { indexerReduceSupplyJob } from "~/jobs/indexer/reduce-supply";
 import { indexerSetProfileJob } from "~/jobs/indexer/set-profile";
 import { JobManager } from "~/lib/jobs";
@@ -11,11 +9,9 @@ import { JobManager } from "~/lib/jobs";
 export default defineNitroPlugin(async () => {
   const boss = new PgBoss(env.DATABASE_URL);
   const jobs = new JobManager(boss)
-    .register(indexerNewPostJob)
-    .register(indexerMintJob)
-    .register(indexerMintEnabledJob)
+    .register(indexerJob)
     .register(indexerReduceSupplyJob)
-    .register(generateImageBlurhashJob)
-    .register(indexerSetProfileJob);
+    .register(indexerSetProfileJob)
+    .register(generateImageBlurhashJob);
   await jobs.start();
 });

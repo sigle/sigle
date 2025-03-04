@@ -6,14 +6,24 @@ import {
   executeIndexerMintEnabledJob,
   indexerMintEnabledSchema,
 } from "./mint-enabled";
+import { executeNewPostJob, indexerNewPostSchema } from "./new-post";
 
-export const indexerSetProfileJob = defineJob("indexer")
-  .input(z.union([indexerMintEnabledSchema, indexerMintSchema]))
+export const indexerJob = defineJob("indexer")
+  .input(
+    z.union([
+      indexerNewPostSchema,
+      indexerMintEnabledSchema,
+      indexerMintSchema,
+    ]),
+  )
   .options({})
   .work(async (jobs) => {
     const job = jobs[0];
 
     switch (job.data.action) {
+      case "indexer-new-post":
+        await executeNewPostJob(job.data.data);
+        break;
       case "indexer-mint-enabled":
         await executeIndexerMintEnabledJob(job.data.data);
         break;
