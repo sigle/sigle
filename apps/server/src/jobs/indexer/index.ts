@@ -7,6 +7,10 @@ import {
   indexerMintEnabledSchema,
 } from "./mint-enabled";
 import { executeNewPostJob, indexerNewPostSchema } from "./new-post";
+import {
+  executeIndexerSetProfileJob,
+  indexerSetProfileSchema,
+} from "./set-profile";
 
 export const indexerJob = defineJob("indexer")
   .input(
@@ -14,6 +18,7 @@ export const indexerJob = defineJob("indexer")
       indexerNewPostSchema,
       indexerMintEnabledSchema,
       indexerMintSchema,
+      indexerSetProfileSchema,
     ]),
   )
   .options({
@@ -31,6 +36,9 @@ export const indexerJob = defineJob("indexer")
         break;
       case "indexer-mint":
         await executeIndexerMintJob(job.data.data);
+        break;
+      case "indexer-set-profile":
+        await executeIndexerSetProfileJob(job.data.data);
         break;
       default:
         consola.error("Unknown action");
