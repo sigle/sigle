@@ -1,4 +1,4 @@
-import { Button, Popover } from "@radix-ui/themes";
+import { Button, Link, Popover } from "@radix-ui/themes";
 import { IconBolt } from "@tabler/icons-react";
 
 export const BetaFeedbackButton = () => {
@@ -11,9 +11,15 @@ export const BetaFeedbackButton = () => {
         </Button>
       </Popover.Trigger>
       <Popover.Content width="360px">
-        <div className="flex flex-col gap-3">
-          🚀 Welcome to the Sigle testnet! Please share your feedback with us on
-          Discord.
+        <div>
+          🚀 Welcome to the Sigle testnet! Please share your feedback in the{" "}
+          <Link
+            href="https://discord.com/channels/794883671730683934/1347591198944002058"
+            target="_blank"
+          >
+            #beta-sbtc
+          </Link>{" "}
+          channel on Discord.
         </div>
       </Popover.Content>
     </Popover.Root>
