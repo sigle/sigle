@@ -37,7 +37,14 @@ export default defineEventHandler(async (event) => {
   }
 
   const user = await prisma.user.findUnique({
-    select: SELECT_PUBLIC_USER_FIELDS,
+    select: {
+      ...SELECT_PUBLIC_USER_FIELDS,
+      _count: {
+        select: {
+          posts: {},
+        },
+      },
+    },
     where: {
       id: username,
     },
@@ -50,5 +57,9 @@ export default defineEventHandler(async (event) => {
     });
   }
 
-  return user;
+  return {
+    ...user,
+    postsCount: user._count.posts,
+    _count: undefined,
+  };
 });

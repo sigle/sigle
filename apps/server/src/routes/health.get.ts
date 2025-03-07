@@ -43,6 +43,9 @@ defineRouteMeta({
                 type: "string",
                 description: "The address of the user",
               },
+              postsCount: {
+                type: "number",
+              },
               createdAt: {
                 type: "string",
               },

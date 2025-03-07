@@ -999,6 +999,7 @@ export interface components {
     UserProfile: {
       /** @description The address of the user */
       id: string;
+      postsCount?: number;
       createdAt: string;
       updatedAt: string;
       profile?: {
