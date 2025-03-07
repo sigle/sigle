@@ -70,13 +70,7 @@ defineRouteMeta({
         content: {
           "application/json": {
             schema: {
-              type: "object",
-              required: ["message"],
-              properties: {
-                message: {
-                  type: "string",
-                },
-              },
+              $ref: "#/components/schemas/BadRequest",
             },
           },
         },

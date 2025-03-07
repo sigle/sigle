@@ -9,12 +9,13 @@
     "dev": "dotenvx run --env-file=.env.development --env-file=.env.development.local -- nitro dev --port 3001",
     "prepare": "nitro prepare",
     "prisma:migrate:dev": "dotenvx run --env-file=.env.development -- prisma migrate dev",
-    "prisma:studio:dev": "dotenvx run --env-file=.env.development -- prisma studio"
+    "prisma:studio:dev": "dotenvx run --env-file=.env.development -- prisma studio",
+    "typecheck": "tsc --noEmit"
   },
   "dependencies": {
     "@ardrive/turbo-sdk": "1.22.0",
     "@aws-sdk/client-s3": "3.758.0",
-    "@dotenvx/dotenvx": "1.38.3",
+    "@dotenvx/dotenvx": "1.38.4",
     "@hirosystems/chainhook-client": "2.3.0",
     "@paralleldrive/cuid2": "2.2.2",
     "@prisma/client": "6.4.1",
@@ -30,7 +31,7 @@
     "next-auth": "5.0.0-beta.25",
     "nitro-cors": "0.7.1",
     "pg-boss": "10.1.6",
-    "posthog-node": "4.8.1",
+    "posthog-node": "4.10.1",
     "prisma": "6.4.1",
     "rate-limiter-flexible": "5.0.5",
     "rou3": "0.5.1",
@@ -40,7 +41,7 @@
     "zod-validation-error": "3.4.0"
   },
   "devDependencies": {
-    "nitropack": "2.10.4",
+    "nitropack": "2.11.5",
     "typescript": "5.8.2"
   }
 }

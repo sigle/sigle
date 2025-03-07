@@ -43,6 +43,16 @@ defineRouteMeta({
           },
         },
       },
+      400: {
+        description: "Bad request",
+        content: {
+          "application/json": {
+            schema: {
+              $ref: "#/components/schemas/BadRequest",
+            },
+          },
+        },
+      },
     },
   },
 });
@@ -59,7 +69,9 @@ export default defineEventHandler(async (event) => {
   if (!parsedMetadata.success) {
     throw createError({
       status: 400,
-      message: `Invalid metadata: ${fromError(parsedMetadata.error).toString()}`,
+      message: `Invalid metadata: ${fromError(
+        parsedMetadata.error,
+      ).toString()}`,
     });
   }
 

@@ -16,7 +16,8 @@
   },
   "scripts": {
     "build": "tsup",
-    "test": "vitest"
+    "test": "vitest",
+    "typecheck": "tsc --noEmit"
   },
   "dependencies": {
     "@sigle/contracts-source": "workspace:*",
@@ -27,10 +28,10 @@
     "@stacks/network": "7.0.2",
     "@stacks/transactions": "7.0.4",
     "@tsconfig/recommended": "1.0.8",
-    "@types/node": "22.13.5",
+    "@types/node": "22.13.9",
     "tsup": "8.4.0",
     "typescript": "5.8.2",
-    "vitest": "3.0.7",
+    "vitest": "3.0.8",
     "zod": "3.24.2"
   },
   "peerDependencies": {

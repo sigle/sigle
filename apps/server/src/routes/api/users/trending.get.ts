@@ -12,80 +12,18 @@ defineRouteMeta({
             schema: {
               type: "array",
               items: {
-                type: "object",
-                required: ["id", "createdAt", "updatedAt"],
-                properties: {
-                  id: {
-                    type: "string",
-                  },
-                  createdAt: {
-                    type: "string",
-                  },
-                  updatedAt: {
-                    type: "string",
-                  },
-                  postsCount: {
-                    type: "number",
-                  },
-                  profile: {
-                    type: "object",
-                    required: ["id"],
-                    properties: {
-                      id: {
-                        type: "string",
-                      },
-                      displayName: {
-                        type: "string",
-                      },
-                      description: {
-                        type: "string",
-                      },
-                      website: {
-                        type: "string",
-                      },
-                      twitter: {
-                        type: "string",
-                      },
-                      pictureUri: {
-                        type: "object",
-                        required: ["id"],
-                        properties: {
-                          id: {
-                            type: "string",
-                          },
-                          width: {
-                            type: "number",
-                          },
-                          height: {
-                            type: "number",
-                          },
-                          blurhash: {
-                            type: "string",
-                          },
-                        },
-                      },
-                      coverPictureUri: {
-                        type: "object",
-                        required: ["id"],
-                        properties: {
-                          id: {
-                            type: "string",
-                          },
-                          width: {
-                            type: "number",
-                          },
-                          height: {
-                            type: "number",
-                          },
-                          blurhash: {
-                            type: "string",
-                          },
-                        },
-                      },
-                    },
-                  },
-                },
+                $ref: "#/components/schemas/UserProfile",
               },
+            },
+          },
+        },
+      },
+      400: {
+        description: "Bad request",
+        content: {
+          "application/json": {
+            schema: {
+              $ref: "#/components/schemas/BadRequest",
             },
           },
         },

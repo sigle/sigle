@@ -10,10 +10,6 @@ declare module "h3" {
   }
 }
 
-declare module "ipfs-only-hash" {
-  export function of(buffer: Buffer): string;
-}
-
 declare global {
   interface BigInt {
     toJSON(): string;

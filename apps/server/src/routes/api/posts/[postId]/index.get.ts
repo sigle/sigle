@@ -10,158 +10,17 @@ defineRouteMeta({
         content: {
           "application/json": {
             schema: {
-              type: "object",
-              required: [
-                "id",
-                "address",
-                "txId",
-                "title",
-                "maxSupply",
-                "collected",
-                "openEdition",
-                "price",
-                "metadataUri",
-                "createdAt",
-                "updatedAt",
-                "user",
-              ],
-              properties: {
-                id: {
-                  type: "string",
-                },
-                title: {
-                  type: "string",
-                },
-                content: {
-                  type: "string",
-                },
-                metaTitle: {
-                  type: "string",
-                },
-                metaDescription: {
-                  type: "string",
-                },
-                coverImage: {
-                  type: "object",
-                  required: ["id"],
-                  properties: {
-                    id: {
-                      type: "string",
-                    },
-                    width: {
-                      type: "number",
-                    },
-                    height: {
-                      type: "number",
-                    },
-                    blurhash: {
-                      type: "string",
-                    },
-                  },
-                },
-                excerpt: {
-                  type: "string",
-                },
-                address: {
-                  type: "string",
-                },
-                txId: {
-                  type: "string",
-                },
-                maxSupply: {
-                  type: "number",
-                },
-                collected: {
-                  type: "number",
-                },
-                openEdition: {
-                  type: "boolean",
-                },
-                price: {
-                  type: "string",
-                },
-                metadataUri: {
-                  type: "string",
-                },
-                createdAt: {
-                  type: "string",
-                },
-                updatedAt: {
-                  type: "string",
-                },
-                user: {
-                  type: "object",
-                  required: ["id", "createdAt", "updatedAt"],
-                  properties: {
-                    id: {
-                      type: "string",
-                    },
-                    createdAt: {
-                      type: "string",
-                    },
-                    updatedAt: {
-                      type: "string",
-                    },
-                    profile: {
-                      type: "object",
-                      required: ["id"],
-                      properties: {
-                        id: {
-                          type: "string",
-                        },
-                        displayName: {
-                          type: "string",
-                        },
-                        description: {
-                          type: "string",
-                        },
-                        website: {
-                          type: "string",
-                        },
-                        twitter: {
-                          type: "string",
-                        },
-                        pictureUri: {
-                          type: "object",
-                          required: ["id"],
-                          properties: {
-                            id: {
-                              type: "string",
-                            },
-                            width: {
-                              type: "number",
-                            },
-                            height: {
-                              type: "number",
-                            },
-                            blurhash: {
-                              type: "string",
-                            },
-                          },
-                        },
-                        coverPictureUri: {
-                          type: "object",
-                          required: ["id"],
-                          properties: {
-                            id: {
-                              type: "string",
-                            },
-                            width: {
-                              type: "number",
-                            },
-                            height: {
-                              type: "number",
-                            },
-                            blurhash: {
-                              type: "string",
-                            },
-                          },
-                        },
-                      },
-                    },
-                  },
-                },
-              },
+              $ref: "#/components/schemas/Post",
+            },
+          },
+        },
+      },
+      400: {
+        description: "Bad request",
+        content: {
+          "application/json": {
+            schema: {
+              $ref: "#/components/schemas/BadRequest",
             },
           },
         },
