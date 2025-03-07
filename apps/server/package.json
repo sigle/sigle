@@ -3,14 +3,14 @@
   "private": true,
   "packageManager": "pnpm@9.15.5",
   "scripts": {
-    "typecheck": "tsc --noEmit",
     "build": "nitro build",
     "db:generate": "prisma generate",
     "db:migrate:prod": "prisma migrate deploy",
     "dev": "dotenvx run --env-file=.env.development --env-file=.env.development.local -- nitro dev --port 3001",
     "prepare": "nitro prepare",
     "prisma:migrate:dev": "dotenvx run --env-file=.env.development -- prisma migrate dev",
-    "prisma:studio:dev": "dotenvx run --env-file=.env.development -- prisma studio"
+    "prisma:studio:dev": "dotenvx run --env-file=.env.development -- prisma studio",
+    "typecheck": "tsc --noEmit"
   },
   "dependencies": {
     "@ardrive/turbo-sdk": "1.22.0",
