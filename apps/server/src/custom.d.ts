@@ -11,7 +11,7 @@ declare module "h3" {
 }
 
 declare module "ipfs-only-hash" {
-  export function of(buffer: Buffer): string;
+  export function of(buffer: Buffer): Promise<string>;
 }
 
 declare global {
