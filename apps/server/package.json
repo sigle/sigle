@@ -40,7 +40,7 @@
     "zod-validation-error": "3.4.0"
   },
   "devDependencies": {
-    "nitropack": "2.11.4",
+    "nitropack": "2.11.5",
     "typescript": "5.8.2"
   }
 }
