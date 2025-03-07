@@ -6,7 +6,7 @@
   "private": true,
   "packageManager": "pnpm@9.15.5",
   "scripts": {
-    "build": "turbo build --cache-dir=.turbo",
+    "build": "turbo typecheck build --cache-dir=.turbo",
     "format": "biome check --write --no-errors-on-unmatched",
     "lint": "turbo lint --cache-dir=.turbo",
     "release": "pnpm changeset publish",
