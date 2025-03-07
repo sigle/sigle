@@ -25,6 +25,16 @@ defineRouteMeta({
     $global: {
       components: {
         schemas: {
+          BadRequest: {
+            type: "object",
+            required: ["message"],
+            properties: {
+              message: {
+                type: "string",
+              },
+            },
+          },
+
           UserProfile: {
             type: "object",
             required: ["id", "createdAt", "updatedAt"],

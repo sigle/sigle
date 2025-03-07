@@ -131,6 +131,15 @@ export interface paths {
             "application/json": components["schemas"]["Post"];
           };
         };
+        /** @description Bad request */
+        400: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            "application/json": components["schemas"]["BadRequest"];
+          };
+        };
       };
     };
     put?: never;
@@ -170,6 +179,15 @@ export interface paths {
           };
           content: {
             "application/json": components["schemas"]["Post"][];
+          };
+        };
+        /** @description Bad request */
+        400: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            "application/json": components["schemas"]["BadRequest"];
           };
         };
       };
@@ -441,9 +459,7 @@ export interface paths {
             [name: string]: unknown;
           };
           content: {
-            "application/json": {
-              message: string;
-            };
+            "application/json": components["schemas"]["BadRequest"];
           };
         };
       };
@@ -493,6 +509,15 @@ export interface paths {
             };
           };
         };
+        /** @description Bad request */
+        400: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            "application/json": components["schemas"]["BadRequest"];
+          };
+        };
       };
     };
     delete?: never;
@@ -537,9 +562,7 @@ export interface paths {
             [name: string]: unknown;
           };
           content: {
-            "application/json": {
-              message: string;
-            };
+            "application/json": components["schemas"]["BadRequest"];
           };
         };
       };
@@ -596,9 +619,7 @@ export interface paths {
             [name: string]: unknown;
           };
           content: {
-            "application/json": {
-              message: string;
-            };
+            "application/json": components["schemas"]["BadRequest"];
           };
         };
       };
@@ -785,6 +806,15 @@ export interface paths {
             "application/json": components["schemas"]["UserProfile"];
           };
         };
+        /** @description Bad request */
+        400: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            "application/json": components["schemas"]["BadRequest"];
+          };
+        };
       };
     };
     put?: never;
@@ -819,6 +849,15 @@ export interface paths {
           };
           content: {
             "application/json": components["schemas"]["UserProfile"][];
+          };
+        };
+        /** @description Bad request */
+        400: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            "application/json": components["schemas"]["BadRequest"];
           };
         };
       };
@@ -954,6 +993,9 @@ export interface paths {
 export type webhooks = Record<string, never>;
 export interface components {
   schemas: {
+    BadRequest: {
+      message: string;
+    };
     UserProfile: {
       /** @description The address of the user */
       id: string;
