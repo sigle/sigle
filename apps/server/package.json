@@ -3,6 +3,7 @@
   "private": true,
   "packageManager": "pnpm@9.15.5",
   "scripts": {
+    "typecheck": "tsc --noEmit",
     "build": "nitro build",
     "db:generate": "prisma generate",
     "db:migrate:prod": "prisma migrate deploy",
