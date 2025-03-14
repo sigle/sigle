@@ -32,7 +32,8 @@ export const PublishDialog = ({ postId }: PublishDialogProps) => {
   const posthog = usePostHog();
   const router = useRouter();
   const [publishingError, setPublishingError] = useState<string | null>(null);
-  const { handleSubmit } = useFormContext<EditorPostFormData>();
+  const { handleSubmit, watch } = useFormContext<EditorPostFormData>();
+  const type = watch("type");
   const editor = useEditorStore((state) => state.editor);
   const publishOpen = useEditorStore((state) => state.publishOpen);
   const setPublishOpen = useEditorStore((state) => state.setPublishOpen);
@@ -114,28 +115,32 @@ export const PublishDialog = ({ postId }: PublishDialogProps) => {
               metadata: metadata as any,
             },
           });
-
           const arweaveUrl = `ar://${uploadedMetadata.id}`;
-          const { contract } = sigleClient.generatePostContract({
-            metadata: arweaveUrl,
-            collectInfo: {
-              amount:
-                data.collect.collectPrice.type === "paid"
-                  ? parseBTC(data.collect.collectPrice.price.toString())
-                  : 0,
-              maxSupply:
-                data.collect.collectLimit.type === "fixed" &&
-                data.collect.collectLimit.limit
-                  ? data.collect.collectLimit.limit
-                  : undefined,
-            },
-          });
 
-          await contractDeploy({
-            // TODO decide on the contract name slug, id or other
-            contractName: newPostId,
-            codeBody: contract,
-          });
+          if (type === "draft") {
+            const { contract } = sigleClient.generatePostContract({
+              metadata: arweaveUrl,
+              collectInfo: {
+                amount:
+                  data.collect.collectPrice.type === "paid"
+                    ? parseBTC(data.collect.collectPrice.price.toString())
+                    : 0,
+                maxSupply:
+                  data.collect.collectLimit.type === "fixed" &&
+                  data.collect.collectLimit.limit
+                    ? data.collect.collectLimit.limit
+                    : undefined,
+              },
+            });
+
+            await contractDeploy({
+              // TODO decide on the contract name slug, id or other
+              contractName: newPostId,
+              codeBody: contract,
+            });
+            return;
+          }
+
           // biome-ignore lint/suspicious/noExplicitAny: <explanation>
         } catch (error: any) {
           console.error("Error SDK publishing", error);
