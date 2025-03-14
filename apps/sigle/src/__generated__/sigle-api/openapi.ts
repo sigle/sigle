@@ -494,6 +494,8 @@ export interface paths {
       requestBody: {
         content: {
           "application/json": {
+            /** @enum {string} */
+            type: "draft" | "published";
             metadata: Record<string, never>;
           };
         };

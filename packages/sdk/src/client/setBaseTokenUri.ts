@@ -1,5 +1,5 @@
 import type { ContractCallBase } from "@stacks/connect";
-import type { StacksNetwork, StacksNetworkName } from "@stacks/network";
+import type { StacksNetwork } from "@stacks/network";
 import { PostConditionMode, stringAsciiCV } from "@stacks/transactions";
 
 export type SetBaseTokenUriParams = {
@@ -14,13 +14,13 @@ export type SetBaseTokenUriReturn = {
   parameters: ContractCallBase;
 };
 
-export const setBaseTokenUri = async ({
+export const setBaseTokenUri = ({
   params,
   network,
 }: {
   params: SetBaseTokenUriParams;
   network: StacksNetwork;
-}): Promise<SetBaseTokenUriReturn> => {
+}): SetBaseTokenUriReturn => {
   const [contractAddress, contractName] = params.contract.split(".");
   return {
     parameters: {

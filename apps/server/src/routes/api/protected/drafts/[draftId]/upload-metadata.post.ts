@@ -15,8 +15,12 @@ defineRouteMeta({
         "application/json": {
           schema: {
             type: "object",
-            required: ["metadata"],
+            required: ["type", "metadata"],
             properties: {
+              type: {
+                type: "string",
+                enum: ["draft", "published"],
+              },
               metadata: {
                 type: "object",
               },
@@ -59,6 +63,7 @@ defineRouteMeta({
 
 const uploadMetadataDraftSchema = z.object({
   metadata: z.any(),
+  type: z.enum(["draft", "published"]),
 });
 
 export default defineEventHandler(async (event) => {
@@ -75,15 +80,26 @@ export default defineEventHandler(async (event) => {
     });
   }
 
-  const draft = await prisma.draft.findUnique({
-    select: {
-      id: true,
-    },
-    where: {
-      id: draftId,
-      userId: event.context.user.id,
-    },
-  });
+  const draft =
+    body.type === "draft"
+      ? await prisma.draft.findUnique({
+          select: {
+            id: true,
+          },
+          where: {
+            id: draftId,
+            userId: event.context.user.id,
+          },
+        })
+      : await prisma.post.findUnique({
+          select: {
+            id: true,
+          },
+          where: {
+            id: draftId,
+            userId: event.context.user.id,
+          },
+        });
 
   if (!draft) {
     throw createError({
@@ -92,20 +108,22 @@ export default defineEventHandler(async (event) => {
     });
   }
 
-  // Check that a published post with the same id does not exist to ensure id uniqueness
-  const post = await prisma.post.findUnique({
-    select: {
-      id: true,
-    },
-    where: {
-      id: draftId,
-    },
-  });
-  if (post) {
-    throw createError({
-      status: 400,
-      message: "A post with this ID already exists.",
+  if (body.type === "draft") {
+    // Check that a published post with the same id does not exist to ensure id uniqueness
+    const post = await prisma.post.findUnique({
+      select: {
+        id: true,
+      },
+      where: {
+        id: draftId,
+      },
     });
+    if (post) {
+      throw createError({
+        status: 400,
+        message: "A post with this ID already exists.",
+      });
+    }
   }
 
   const { id } = await aerweaveUploadFile(event, {
@@ -118,6 +136,7 @@ export default defineEventHandler(async (event) => {
     properties: {
       arweaveId: id,
       draftId,
+      type: body.type,
     },
   });
 
