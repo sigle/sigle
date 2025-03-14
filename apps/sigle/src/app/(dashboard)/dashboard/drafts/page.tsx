@@ -3,6 +3,7 @@
 import { sigleApiClient } from "@/__generated__/sigle-api";
 import type { paths } from "@/__generated__/sigle-api/openapi";
 import { NextLink } from "@/components/Shared/NextLink";
+import { Routes } from "@/lib/routes";
 import { getExplorerTransactionUrl } from "@/lib/stacks";
 import {
   Badge,
@@ -143,7 +144,9 @@ const Draft = ({
       {draft.txStatus === "pending" ? (
         heading
       ) : (
-        <NextLink href={`/p/${draft.id}/edit`}>{heading}</NextLink>
+        <NextLink href={Routes.editPost({ postId: draft.id })}>
+          {heading}
+        </NextLink>
       )}
       <Flex justify="between" align="center">
         <Text as="p" mt="3" color="gray" size="1">
@@ -165,7 +168,9 @@ const Draft = ({
               highContrast
             >
               <DropdownMenu.Item asChild>
-                <NextLink href={`/p/${draft.id}/edit`}>Edit</NextLink>
+                <NextLink href={Routes.editPost({ postId: draft.id })}>
+                  Edit
+                </NextLink>
               </DropdownMenu.Item>
               <DropdownMenu.Item onClick={onDelete}>Delete</DropdownMenu.Item>
             </DropdownMenu.Content>
