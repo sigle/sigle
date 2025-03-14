@@ -31,7 +31,7 @@ export default function PostEditPage(props: PostEditPageProps) {
   );
 
   return (
-    <EditorFormProvider type="draft" post={post}>
+    <EditorFormProvider post={post}>
       <EditorHeader />
       <Container size="2">
         <EditorTitle />

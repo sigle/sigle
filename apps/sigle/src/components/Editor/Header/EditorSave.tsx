@@ -16,6 +16,7 @@ export const EditorSave = () => {
     "idle" | "saving" | "error" | "saved"
   >("idle");
   const { watch, getValues } = useFormContext<EditorPostFormData>();
+  const type = watch("type");
   const { mutate: updatePost } = sigleApiClient.useMutation(
     "post",
     "/api/protected/drafts/{draftId}/update",
@@ -65,11 +66,12 @@ export const EditorSave = () => {
   useEffect(() => {
     if (!editor) return;
     const subscription = watch(() => {
+      if (type === "published") return;
       setSaveState("saving");
       onAutoSave();
     });
     return () => subscription.unsubscribe();
-  }, [watch, editor, onAutoSave]);
+  }, [watch, type, editor, onAutoSave]);
 
   if (saveState === "error") {
     return (

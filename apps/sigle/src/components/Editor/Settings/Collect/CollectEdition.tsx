@@ -4,6 +4,7 @@ import type { EditorPostFormData } from "../../EditorFormProvider";
 
 export const CollectEdition = () => {
   const { setValue, watch, register } = useFormContext<EditorPostFormData>();
+  const type = watch("type");
   const watchCollectLimitType = watch("collect.collectLimit.type");
   const watchCollectLimitLimit = watch("collect.collectLimit.limit");
   const { errors } = useFormState<EditorPostFormData>({
@@ -29,6 +30,7 @@ export const CollectEdition = () => {
         columns="2"
         value={watchCollectLimitType}
         onValueChange={onEditionChange}
+        disabled={type === "published"}
       >
         <RadioCards.Item value="open">
           <Flex direction="column" width="100%">

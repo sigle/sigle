@@ -1,3 +1,4 @@
+import { pid } from "node:process";
 import { prisma } from "~/lib/prisma";
 
 defineRouteMeta({
@@ -11,10 +12,14 @@ defineRouteMeta({
           "application/json": {
             schema: {
               type: "object",
-              required: ["id", "title", "createdAt", "updatedAt"],
+              required: ["id", "type", "title", "createdAt", "updatedAt"],
               properties: {
                 id: {
                   type: "string",
+                },
+                type: {
+                  type: "string",
+                  enum: ["draft", "published"],
                 },
                 title: {
                   type: "string",
@@ -86,7 +91,22 @@ defineRouteMeta({
   },
 });
 
-export default defineEventHandler(async (event) => {
+export default defineEventHandler<
+  Request,
+  Promise<{
+    id: string;
+    type: string;
+    title: string;
+    content: string;
+    metaTitle: string | null;
+    metaDescription: string | null;
+    coverImage: string | null;
+    txId: string | null;
+    collectLimitType: string | null;
+    createdAt: Date;
+    updatedAt: Date;
+  }>
+>(async (event) => {
   const draftId = getRouterParam(event, "draftId");
 
   if (!draftId) {
@@ -119,6 +139,54 @@ export default defineEventHandler(async (event) => {
     },
   });
 
+  // If draft is not found we try to get the published version
+  if (!draft) {
+    const published = await prisma.post.findUnique({
+      select: {
+        id: true,
+        title: true,
+        content: true,
+        metaTitle: true,
+        metaDescription: true,
+        coverImageId: true,
+        txId: true,
+        price: true,
+        openEdition: true,
+        maxSupply: true,
+        createdAt: true,
+        updatedAt: true,
+      },
+      where: {
+        id: draftId,
+        userId: event.context.user.id,
+      },
+    });
+
+    if (!published) {
+      throw createError({
+        status: 404,
+        statusMessage: "Not Found",
+      });
+    }
+
+    return {
+      id: published.id,
+      type: "published",
+      title: published.title,
+      content: published.content,
+      metaTitle: published.metaTitle,
+      metaDescription: published.metaDescription,
+      coverImage: published.coverImageId,
+      txId: published.txId,
+      collectPriceType: published.price > 0 ? "paid" : "free",
+      collectPrice: published.price,
+      collectLimitType: published.openEdition ? "open" : "closed",
+      collectLimit: published.maxSupply,
+      createdAt: published.createdAt,
+      updatedAt: published.updatedAt,
+    };
+  }
+
   if (!draft) {
     throw createError({
       status: 404,
@@ -126,5 +194,8 @@ export default defineEventHandler(async (event) => {
     });
   }
 
-  return draft;
+  return {
+    ...draft,
+    type: "draft",
+  };
 });
