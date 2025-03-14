@@ -81,7 +81,9 @@ export const PostListItem = ({ post }: PostListItemProps) => {
                   </DropdownMenu.Item>
                   {isCurrentUser ? (
                     <DropdownMenu.Item asChild>
-                      <NextLink href="/dashboard/settings">Edit</NextLink>
+                      <NextLink href={Routes.editPost({ postId: post.id })}>
+                        Edit
+                      </NextLink>
                     </DropdownMenu.Item>
                   ) : null}
                 </DropdownMenu.Content>
