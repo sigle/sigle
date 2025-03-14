@@ -1,6 +1,7 @@
 "use client";
 
 import { sigleApiClient } from "@/__generated__/sigle-api";
+import { Routes } from "@/lib/routes";
 import { getExplorerTransactionUrl } from "@/lib/stacks";
 import {
   Badge,
@@ -93,7 +94,9 @@ export const LatestDrafts = () => {
               {draft.txStatus === "pending" ? (
                 heading
               ) : (
-                <NextLink href={`/p/${draft.id}/edit`}>{heading}</NextLink>
+                <NextLink href={Routes.editPost({ postId: draft.id })}>
+                  {heading}
+                </NextLink>
               )}
               <Text as="p" mt="3" color="gray" size="1" className="uppercase">
                 {format(new Date(draft.createdAt), "MMM dd")}

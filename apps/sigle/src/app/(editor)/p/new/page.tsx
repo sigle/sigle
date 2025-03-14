@@ -1,6 +1,7 @@
 "use client";
 
 import { sigleApiClient } from "@/__generated__/sigle-api";
+import { Routes } from "@/lib/routes";
 import * as Sentry from "@sentry/nextjs";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
@@ -14,7 +15,7 @@ export default function PostCreate() {
     "/api/protected/drafts/create",
     {
       onSuccess: (data) => {
-        router.push(`/p/${data.id}/edit`);
+        router.push(Routes.editPost({ postId: data.id }));
       },
       onError: (error) => {
         toast.error("Failed to create post", {
