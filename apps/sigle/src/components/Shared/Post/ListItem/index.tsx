@@ -4,7 +4,17 @@ import type { paths } from "@/__generated__/sigle-api/openapi";
 import { resolveImageUrl } from "@/lib/images";
 import { Routes } from "@/lib/routes";
 import { formatReadableAddress } from "@/lib/stacks";
-import { AspectRatio, Flex, Heading, Link, Text } from "@radix-ui/themes";
+import {
+  AspectRatio,
+  DropdownMenu,
+  Flex,
+  Heading,
+  IconButton,
+  Link,
+  Text,
+  Tooltip,
+} from "@radix-ui/themes";
+import { IconDotsVertical } from "@tabler/icons-react";
 import { format } from "date-fns";
 import Image from "next/image";
 import { useState } from "react";
@@ -39,7 +49,7 @@ export const PostListItem = ({ post }: PostListItemProps) => {
                 {post.metaDescription || post.excerpt}
               </Text>
             </NextLink>
-            <div className="mt-3">
+            <div className="mt-3 flex gap-2">
               <Text as="p" color="gray" size="1">
                 By{" "}
                 <Link asChild>
@@ -53,6 +63,20 @@ export const PostListItem = ({ post }: PostListItemProps) => {
                 </Link>{" "}
                 • {format(new Date(post.createdAt), "MMM dd, yyyy")}
               </Text>
+              <DropdownMenu.Root>
+                <Tooltip content="More">
+                  <DropdownMenu.Trigger>
+                    <IconButton variant="ghost" color="gray" size="1">
+                      <IconDotsVertical size={16} />
+                    </IconButton>
+                  </DropdownMenu.Trigger>
+                </Tooltip>
+                <DropdownMenu.Content variant="soft" color="gray" highContrast>
+                  <DropdownMenu.Item onClick={() => setShareDialogOpen(true)}>
+                    Share & Earn
+                  </DropdownMenu.Item>
+                </DropdownMenu.Content>
+              </DropdownMenu.Root>
             </div>
           </div>
           {post.coverImage ? (
@@ -73,23 +97,6 @@ export const PostListItem = ({ post }: PostListItemProps) => {
             </NextLink>
           ) : null}
         </Flex>
-
-        {/* <Flex gap="4" align="center">
-          <DropdownMenu.Root>
-            <Tooltip content="More">
-              <DropdownMenu.Trigger>
-                <IconButton variant="ghost" color="gray" size="1">
-                  <IconDotsVertical size={16} />
-                </IconButton>
-              </DropdownMenu.Trigger>
-            </Tooltip>
-            <DropdownMenu.Content variant="soft" color="gray" highContrast>
-              <DropdownMenu.Item onClick={() => setShareDialogOpen(true)}>
-                Share & Earn
-              </DropdownMenu.Item>
-            </DropdownMenu.Content>
-          </DropdownMenu.Root>
-        </Flex> */}
       </div>
 
       <PostShareDialog
