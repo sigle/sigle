@@ -11,7 +11,7 @@ const main = async () => {
         amount: 0,
         maxSupply: 100,
       },
-      metadata: "ar://DN1CihyNqyCqUCtwjyoCHQfcLtNwwLB8Jsw2AvYp3kp2",
+      metadata: "ar://b9a84dVnyZxvumWdLejghGYgmt7XoVoJZZoJIKWoraA",
     }).contract,
     accountIndex: 1,
   });
