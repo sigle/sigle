@@ -12,6 +12,10 @@ import {
   indexerReduceSupplySchema,
 } from "./reduce-supply";
 import {
+  executeIndexerSetBaseTokenUriJob,
+  indexerSetBaseTokenUriSchema,
+} from "./set-base-token-uri";
+import {
   executeIndexerSetProfileJob,
   indexerSetProfileSchema,
 } from "./set-profile";
@@ -24,6 +28,7 @@ export const indexerJob = defineJob("indexer")
       indexerMintSchema,
       indexerSetProfileSchema,
       indexerReduceSupplySchema,
+      indexerSetBaseTokenUriSchema,
     ]),
   )
   .options({
@@ -44,6 +49,9 @@ export const indexerJob = defineJob("indexer")
         break;
       case "indexer-reduce-supply":
         await executeIndexerReduceSupplyJob(job.data.data);
+        break;
+      case "indexer-set-base-token-uri":
+        await executeIndexerSetBaseTokenUriJob(job.data.data);
         break;
       case "indexer-set-profile":
         await executeIndexerSetProfileJob(job.data.data);

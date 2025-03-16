@@ -94,7 +94,8 @@ export default defineEventHandler(async (event) => {
                 }
               | { a: "mint-enabled"; enabled: boolean }
               | { a: "reduce-supply"; "max-supply": number }
-              | { a: "set-profile"; address: string; uri: string } =
+              | { a: "set-profile"; address: string; uri: string }
+              | { a: "set-base-token-uri"; uri: string } =
               // @ts-expect-error the types are not correct for value here
               event.data.value;
             switch (value.a) {
@@ -138,6 +139,15 @@ export default defineEventHandler(async (event) => {
                   data: {
                     address: contractAddress,
                     maxSupply: value["max-supply"],
+                  },
+                });
+                break;
+              case "set-base-token-uri":
+                await indexerJob.emit({
+                  action: "indexer-set-base-token-uri",
+                  data: {
+                    address: contractAddress,
+                    uri: value.uri,
                   },
                 });
                 break;

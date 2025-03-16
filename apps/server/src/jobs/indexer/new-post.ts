@@ -25,6 +25,42 @@ function extractMaxSupply(contractString: string): bigint | null {
   return match ? BigInt(match[1]) : null;
 }
 
+export async function getMetadataFromUri(baseTokenUri: string) {
+  // Fetch data from Arweave
+  const arweaveTxId = baseTokenUri.replace("ar://", "");
+  const response = await fetch(`https://arweave.net/${arweaveTxId}`);
+  const json = await response.json();
+
+  // Verify data is correct
+  const postMetadata = PostMetadataSchema.safeParse(json);
+  if (!postMetadata.success) {
+    throw new Error(`Invalid postV1: ${postMetadata.error}`);
+  }
+  const postData = postMetadata.data;
+
+  const metaTitle = postData.content.attributes?.find(
+    (attribute) => attribute.key === "meta-title",
+  )?.value;
+  const metaDescription = postData.content.attributes?.find(
+    (attribute) => attribute.key === "meta-description",
+  )?.value;
+  const excerpt = postData.content.attributes?.find(
+    (attribute) => attribute.key === "excerpt",
+  )?.value;
+
+  const metadata = {
+    id: postData.content.id,
+    title: postData.content.title,
+    content: postData.content.content,
+    metaTitle,
+    metaDescription,
+    excerpt: excerpt || "",
+    coverImage: postData.content.coverImage,
+  };
+
+  return metadata;
+}
+
 export const indexerNewPostSchema = z.object({
   action: z.literal("indexer-new-post"),
   data: z.object({
@@ -54,30 +90,7 @@ export const executeNewPostJob = async (
   }
   const openEdition = maxSupply === BigInt(MAX_UINT);
 
-  // Fetch data from Arweave
-  const arweaveTxId = baseTokenUri.replace("ar://", "");
-  const response = await fetch(`https://arweave.net/${arweaveTxId}`);
-  const json = await response.json();
-
-  // Verify data is correct
-  const postMetadata = PostMetadataSchema.safeParse(json);
-  if (!postMetadata.success) {
-    throw new Error(`Invalid postV1: ${postMetadata.error}`);
-  }
-  const postData = postMetadata.data;
-
-  // TODO signature verification?
-  // TODO add user Stacks address in the arweave tags?
-
-  const metaTitle = postData.content.attributes?.find(
-    (attribute) => attribute.key === "meta-title",
-  )?.value;
-  const metaDescription = postData.content.attributes?.find(
-    (attribute) => attribute.key === "meta-description",
-  )?.value;
-  const excerpt = postData.content.attributes?.find(
-    (attribute) => attribute.key === "excerpt",
-  )?.value;
+  const metadata = await getMetadataFromUri(baseTokenUri);
 
   await prisma.$transaction(async (tx) => {
     const userId = data.sender;
@@ -87,12 +100,12 @@ export const executeNewPostJob = async (
         txId: true,
       },
       where: {
-        id: postData.content.id,
+        id: metadata.id,
       },
     });
     if (post && post.txId !== data.txId) {
       throw new Error(
-        `Post id ${postData.content.id} already exists with txId ${post.txId}`,
+        `Post id ${metadata.id} already exists with txId ${post.txId}`,
       );
     }
 
@@ -114,7 +127,7 @@ export const executeNewPostJob = async (
 
     const updatedPost = await tx.post.upsert({
       where: {
-        id: postData.content.id,
+        id: metadata.id,
         txId: data.txId,
       },
       update: {
@@ -122,12 +135,11 @@ export const executeNewPostJob = async (
         version: data.version,
       },
       create: {
-        id: postData.content.id,
+        id: metadata.id,
         address: data.address,
         txId: data.txId,
         version: data.version,
         userId,
-        metadataUri: baseTokenUri,
         collected: 0,
         enabled: true,
         openEdition,
@@ -136,15 +148,16 @@ export const executeNewPostJob = async (
         createdAt: new Date(data.createdAt),
 
         // Metadata fields
-        title: postData.content.title,
-        content: postData.content.content,
-        metaTitle,
-        metaDescription,
-        excerpt: excerpt!,
+        metadataUri: baseTokenUri,
+        title: metadata.title,
+        content: metadata.content,
+        metaTitle: metadata.metaTitle,
+        metaDescription: metadata.metaDescription,
+        excerpt: metadata.excerpt,
       },
     });
 
-    if (postData.content.coverImage) {
+    if (metadata.coverImage) {
       await tx.post.update({
         where: {
           id: updatedPost.id,
@@ -153,11 +166,11 @@ export const executeNewPostJob = async (
           coverImage: {
             connectOrCreate: {
               where: {
-                id: postData.content.coverImage.url,
+                id: metadata.coverImage.url,
               },
               create: {
-                id: postData.content.coverImage.url,
-                mimeType: postData.content.coverImage.type,
+                id: metadata.coverImage.url,
+                mimeType: metadata.coverImage.type,
               },
             },
           },
@@ -177,9 +190,9 @@ export const executeNewPostJob = async (
   });
 
   // Process cover image if there is one
-  if (postData.content.coverImage) {
+  if (metadata.coverImage) {
     await generateImageBlurhashJob.emit({
-      imageId: postData.content.coverImage.url,
+      imageId: metadata.coverImage.url,
     });
   }
 
@@ -202,8 +215,8 @@ export const executeNewPostJob = async (
     consola.debug(`new-post: Registered chainhook ${response.chainhookUuid}`);
   }
 
-  consola.debug("New post indexed", {
-    id: postData.content.id,
+  consola.debug("post.newPost", {
+    id: metadata.id,
     txId: data.txId,
     address: data.address,
   });
