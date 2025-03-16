@@ -26,9 +26,12 @@ function extractMaxSupply(contractString: string): bigint | null {
 }
 
 export async function getMetadataFromUri(baseTokenUri: string) {
-  // Fetch data from Arweave
-  const arweaveTxId = baseTokenUri.replace("ar://", "");
-  const response = await fetch(`https://arweave.net/${arweaveTxId}`);
+  let url = baseTokenUri;
+  if (baseTokenUri.startsWith("ar://")) {
+    const arweaveTxId = baseTokenUri.replace("ar://", "");
+    url = `https://arweave.net/${arweaveTxId}`;
+  }
+  const response = await fetch(url);
   const json = await response.json();
 
   // Verify data is correct

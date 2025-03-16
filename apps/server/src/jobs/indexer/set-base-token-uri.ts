@@ -20,6 +20,7 @@ export const executeIndexerSetBaseTokenUriJob = async (
   const post = await prisma.post.findUnique({
     select: {
       id: true,
+      coverImageId: true,
     },
     where: {
       address: data.address,
@@ -43,7 +44,8 @@ export const executeIndexerSetBaseTokenUriJob = async (
     },
   });
 
-  if (metadata.coverImage) {
+  // Only reprocess the image if it changed
+  if (metadata.coverImage && post.coverImageId !== metadata.coverImage.url) {
     await prisma.post.update({
       where: {
         id: post.id,
@@ -63,7 +65,6 @@ export const executeIndexerSetBaseTokenUriJob = async (
       },
     });
 
-    // Process cover image if there is one
     await generateImageBlurhashJob.emit({
       imageId: metadata.coverImage.url,
     });
