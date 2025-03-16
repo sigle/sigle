@@ -24,8 +24,7 @@ export const PostCollectCard = ({ post }: PostCollectCardProps) => {
             </Heading>
             <Text as="p" color="gray" size="2">
               {post.collected > 0
-                ? // TODO collectors amount is not accurate
-                  `Join ${post.collected} collectors`
+                ? `Join ${post.collectorsCount} collectors`
                 : "Be the first to collect this post"}
             </Text>
           </div>

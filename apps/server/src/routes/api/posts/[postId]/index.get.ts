@@ -65,13 +65,13 @@ export default defineEventHandler(async (event) => {
     },
   });
 
-  // const uniqueMinters = await prisma.postNft.groupBy({
-  //   by: ['minterId'],
-  //   where: {
-  //     postId: postId,
-  //   },
-  //   _count: true,
-  // });
+  const collectorsCount = await prisma.postNft.groupBy({
+    by: ["minterId"],
+    where: {
+      postId: postId,
+    },
+    _count: true,
+  });
 
-  return post;
+  return { ...post, collectorsCount: collectorsCount[0]._count };
 });

@@ -177,6 +177,9 @@ defineRouteMeta({
               collected: {
                 type: "number",
               },
+              collectorsCount: {
+                type: "number",
+              },
               openEdition: {
                 type: "boolean",
               },

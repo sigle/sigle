@@ -1043,6 +1043,7 @@ export interface components {
       txId: string;
       maxSupply: number;
       collected: number;
+      collectorsCount?: number;
       openEdition: boolean;
       price: string;
       metadataUri: string;
