@@ -16,6 +16,7 @@ import {
 } from "@radix-ui/themes";
 import { IconDotsVertical } from "@tabler/icons-react";
 import { format } from "date-fns";
+import { useSession } from "next-auth/react";
 import Image from "next/image";
 import { useState } from "react";
 import { NextLink } from "../../NextLink";
@@ -26,7 +27,10 @@ interface PostListItemProps {
 }
 
 export const PostListItem = ({ post }: PostListItemProps) => {
+  const { data: session } = useSession();
   const [shareDialogOpen, setShareDialogOpen] = useState(false);
+
+  const isCurrentUser = session?.user.id === post.user.id;
 
   return (
     <div className="space-y-3 border-b border-solid border-gray-6 py-5 last:border-b-0">
@@ -75,6 +79,13 @@ export const PostListItem = ({ post }: PostListItemProps) => {
                   <DropdownMenu.Item onClick={() => setShareDialogOpen(true)}>
                     Share & Earn
                   </DropdownMenu.Item>
+                  {isCurrentUser ? (
+                    <DropdownMenu.Item asChild>
+                      <NextLink href={Routes.editPost({ postId: post.id })}>
+                        Edit
+                      </NextLink>
+                    </DropdownMenu.Item>
+                  ) : null}
                 </DropdownMenu.Content>
               </DropdownMenu.Root>
             </div>

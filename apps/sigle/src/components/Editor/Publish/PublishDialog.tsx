@@ -1,8 +1,14 @@
 "use client";
 
-import { sigleApiClient } from "@/__generated__/sigle-api";
+import { sigleApiClient, sigleApiFetchclient } from "@/__generated__/sigle-api";
+import { useContractCall } from "@/hooks/useContractCall";
 import { useContractDeploy } from "@/hooks/useContractDeploy";
+import { Routes } from "@/lib/routes";
 import { sigleClient } from "@/lib/sigle";
+import {
+  getExplorerTransactionUrl,
+  getPromiseTransactionConfirmation,
+} from "@/lib/stacks";
 import {
   Callout,
   Dialog,
@@ -32,7 +38,8 @@ export const PublishDialog = ({ postId }: PublishDialogProps) => {
   const posthog = usePostHog();
   const router = useRouter();
   const [publishingError, setPublishingError] = useState<string | null>(null);
-  const { handleSubmit } = useFormContext<EditorPostFormData>();
+  const { handleSubmit, watch } = useFormContext<EditorPostFormData>();
+  const type = watch("type");
   const editor = useEditorStore((state) => state.editor);
   const publishOpen = useEditorStore((state) => state.publishOpen);
   const setPublishOpen = useEditorStore((state) => state.setPublishOpen);
@@ -82,6 +89,28 @@ export const PublishDialog = ({ postId }: PublishDialogProps) => {
     },
   });
 
+  const { contractCall } = useContractCall({
+    onSuccess: (data) => {
+      toast.promise(getPromiseTransactionConfirmation(data.txId), {
+        loading: "Edit transaction submitted, it will be indexed shortly",
+        success: "Post updated successfully",
+        error: "Transaction failed",
+        action: {
+          label: "View tx",
+          onClick: () =>
+            window.open(getExplorerTransactionUrl(data.txId), "_blank"),
+        },
+      });
+
+      router.push(Routes.post({ postId }));
+    },
+    onError: (error) => {
+      toast.error("Failed to edit", {
+        description: error,
+      });
+    },
+  });
+
   const onSubmit = () => {
     handleSubmit(
       async (data) => {
@@ -111,31 +140,57 @@ export const PublishDialog = ({ postId }: PublishDialogProps) => {
               },
             },
             body: {
+              type,
               metadata: metadata as any,
             },
           });
-
           const arweaveUrl = `ar://${uploadedMetadata.id}`;
-          const { contract } = sigleClient.generatePostContract({
-            metadata: arweaveUrl,
-            collectInfo: {
-              amount:
-                data.collect.collectPrice.type === "paid"
-                  ? parseBTC(data.collect.collectPrice.price.toString())
-                  : 0,
-              maxSupply:
-                data.collect.collectLimit.type === "fixed" &&
-                data.collect.collectLimit.limit
-                  ? data.collect.collectLimit.limit
-                  : undefined,
-            },
-          });
 
-          await contractDeploy({
-            // TODO decide on the contract name slug, id or other
-            contractName: newPostId,
-            codeBody: contract,
+          if (type === "draft") {
+            const { contract } = sigleClient.generatePostContract({
+              metadata: arweaveUrl,
+              collectInfo: {
+                amount:
+                  data.collect.collectPrice.type === "paid"
+                    ? parseBTC(data.collect.collectPrice.price.toString())
+                    : 0,
+                maxSupply:
+                  data.collect.collectLimit.type === "fixed" &&
+                  data.collect.collectLimit.limit
+                    ? data.collect.collectLimit.limit
+                    : undefined,
+              },
+            });
+
+            await contractDeploy({
+              // TODO decide on the contract name slug, id or other
+              contractName: newPostId,
+              codeBody: contract,
+            });
+            return;
+          }
+
+          const publishedPost = await sigleApiFetchclient.GET(
+            "/api/posts/{postId}",
+            {
+              params: {
+                path: {
+                  postId,
+                },
+              },
+            },
+          );
+          if (!publishedPost.data) {
+            setPublishingError("Error fetching published post");
+            Sentry.captureException("Error fetching published post");
+            return;
+          }
+
+          const { parameters } = sigleClient.setBaseTokenUri({
+            contract: publishedPost.data.address,
+            metadata: arweaveUrl,
           });
+          await contractCall(parameters);
           // biome-ignore lint/suspicious/noExplicitAny: <explanation>
         } catch (error: any) {
           console.error("Error SDK publishing", error);

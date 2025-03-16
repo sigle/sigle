@@ -25,6 +25,12 @@ export const Routes = {
       referral: z.string().optional().nullable(),
     }),
   ),
+  editPost: makeRoute(
+    ({ postId }) => `/p/${postId}/edit`,
+    z.object({
+      postId: z.string(),
+    }),
+  ),
   dashboard: makeRoute(() => "/dashboard"),
 };
 

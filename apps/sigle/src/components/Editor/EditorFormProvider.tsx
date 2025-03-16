@@ -27,20 +27,18 @@ export type EditorPostFormData = z.infer<typeof editorPostSchema>;
 
 interface EditorFormProviderProps {
   children: React.ReactNode;
-  type: "draft" | "published";
   post: paths["/api/protected/drafts/{draftId}"]["get"]["responses"][200]["content"]["application/json"];
 }
 
 export const EditorFormProvider = ({
   children,
-  type,
   post,
 }: EditorFormProviderProps) => {
   const methods = useForm<EditorPostFormData>({
     mode: "onBlur",
     resolver: zodResolver(editorPostSchema),
     defaultValues: {
-      type,
+      type: post.type,
       title: post.title,
       content: post.content || "",
       metaTitle: post.metaTitle || undefined,

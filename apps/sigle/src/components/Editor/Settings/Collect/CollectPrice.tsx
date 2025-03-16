@@ -8,6 +8,7 @@ import type { EditorPostFormData } from "../../EditorFormProvider";
 
 export const CollectPrice = () => {
   const { setValue, watch, register } = useFormContext<EditorPostFormData>();
+  const type = watch("type");
   const watchCollectType = watch("collect.collectPrice.type");
   const watchCollectPrice = watch("collect.collectPrice.price");
   const { errors } = useFormState<EditorPostFormData>({
@@ -34,6 +35,7 @@ export const CollectPrice = () => {
             columns="2"
             value={watchCollectType}
             onValueChange={onSelectPriceChange}
+            disabled={type === "published"}
           >
             <RadioCards.Item value="free">
               <Flex direction="column" width="100%">
@@ -67,6 +69,7 @@ export const CollectPrice = () => {
                 className="w-full"
                 placeholder="Free"
                 type="number"
+                disabled={type === "published"}
                 {...register("collect.collectPrice.price")}
               >
                 <TextField.Slot side="right">sBTC</TextField.Slot>

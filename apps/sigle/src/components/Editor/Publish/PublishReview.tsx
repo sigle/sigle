@@ -25,7 +25,9 @@ export const PublishReview = ({ onPublish }: PublishReviewProps) => {
     | "loading"
     | { valid: true }
   >("loading");
-  const { handleSubmit, formState } = useFormContext<EditorPostFormData>();
+  const { handleSubmit, formState, watch } =
+    useFormContext<EditorPostFormData>();
+  const type = watch("type");
 
   // Validate form on mount so we can show the various error messages in the callout
   // and disable the publish button
@@ -85,15 +87,17 @@ export const PublishReview = ({ onPublish }: PublishReviewProps) => {
         </Callout.Root>
       ) : null}
 
-      <Callout.Root color="orange" role="alert">
-        <Callout.Icon>
-          <IconExclamationCircle />
-        </Callout.Icon>
-        <Callout.Text>
-          Review your post before publishing. Once published, you won
-          {"'"}t be able to make any edits to the collect settings anymore.
-        </Callout.Text>
-      </Callout.Root>
+      {type === "draft" ? (
+        <Callout.Root color="orange" role="alert">
+          <Callout.Icon>
+            <IconExclamationCircle />
+          </Callout.Icon>
+          <Callout.Text>
+            Review your post before publishing. Once published, you won
+            {"'"}t be able to make any edits to the collect settings anymore.
+          </Callout.Text>
+        </Callout.Root>
+      ) : null}
 
       <Grid columns="2" gap="4" width="auto">
         <PublishReviewGeneral />
@@ -111,7 +115,7 @@ export const PublishReview = ({ onPublish }: PublishReviewProps) => {
           loading={formState.isSubmitting}
           onClick={onPublish}
         >
-          Publish
+          {type === "draft" ? "Publish" : "Update"}
         </Button>
       </Flex>
     </div>

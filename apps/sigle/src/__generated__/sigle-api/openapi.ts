@@ -227,6 +227,8 @@ export interface paths {
           content: {
             "application/json": {
               id: string;
+              /** @enum {string} */
+              type: "draft" | "published";
               title: string;
               content?: string;
               metaTitle?: string;
@@ -492,6 +494,8 @@ export interface paths {
       requestBody: {
         content: {
           "application/json": {
+            /** @enum {string} */
+            type: "draft" | "published";
             metadata: Record<string, never>;
           };
         };
