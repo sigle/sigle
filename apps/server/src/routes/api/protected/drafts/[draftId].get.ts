@@ -1,4 +1,3 @@
-import { pid } from "node:process";
 import { prisma } from "~/lib/prisma";
 
 defineRouteMeta({
