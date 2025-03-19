@@ -19,7 +19,7 @@
     "@hirosystems/chainhook-client": "2.3.0",
     "@paralleldrive/cuid2": "2.2.2",
     "@prisma/client": "6.4.1",
-    "@sentry/node": "8.54.0",
+    "@sentry/node": "9.6.1",
     "@sigle/sdk": "workspace:*",
     "@stacks/blockchain-api-client": "8.7.0",
     "@stacks/network": "7.0.2",
