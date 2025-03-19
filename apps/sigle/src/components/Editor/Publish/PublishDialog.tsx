@@ -63,14 +63,17 @@ export const PublishDialog = ({ postId }: PublishDialogProps) => {
       setPublishingLoading(false);
     },
     onSuccess: async (tx) => {
+      // For some reason, from time to time the txId is returned without the 0x prefix
+      const txId = !tx.txId.startsWith("0x") ? `0x${tx.txId}` : tx.txId;
+
       posthog.capture("post_publish_transaction_submitted", {
         postId,
-        txId: tx.txId,
+        txId,
       });
 
       setPublishingLoading({
         action: "transaction-pending",
-        txId: tx.txId,
+        txId,
       });
 
       await updateTxId({
@@ -80,7 +83,7 @@ export const PublishDialog = ({ postId }: PublishDialogProps) => {
           },
         },
         body: {
-          txId: tx.txId,
+          txId,
         },
       });
 

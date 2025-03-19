@@ -90,7 +90,6 @@ export const PostCollectDialog = ({
       return;
     }
 
-    // TODO owner mint
     if (session.user.address === post.address.split(".")[0]) {
       alert("You cannot collect your own post (will be possible soon)");
       return;
