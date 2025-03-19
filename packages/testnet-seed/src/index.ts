@@ -22,7 +22,7 @@ const main = async () => {
       collectInfo: {
         amount: parseSTX("1.42"),
       },
-      metadata: "ar://D3H6nGzSwgqdFa6FMtFh9qcN2Y42S9rmWAvYPtt3TBvS",
+      metadata: "ar://LgsaNGZUSISSPZCQvUgv6mUDaGQeofrmXBmFOauZKH0",
     }).contract,
     accountIndex: 2,
   });
