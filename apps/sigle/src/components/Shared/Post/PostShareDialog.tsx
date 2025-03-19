@@ -1,4 +1,5 @@
 import type { paths } from "@/__generated__/sigle-api/openapi";
+import { appConfig } from "@/config";
 import { env } from "@/env";
 import { Routes } from "@/lib/routes";
 import {
@@ -68,7 +69,7 @@ export const PostShareDialog = ({
               Earn referrer rewards for each primary sale made through your
               link.{" "}
               <Link
-                href="https://sigle-docs-next.vercel.app/monetization#fee-structure"
+                href={`${appConfig.docsUrl}/monetization#fee-structure`}
                 target="_blank"
               >
                 Learn more.

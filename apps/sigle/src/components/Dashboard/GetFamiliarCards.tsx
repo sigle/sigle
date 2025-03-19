@@ -1,3 +1,4 @@
+import { appConfig } from "@/config";
 import { Card, Grid, Text } from "@radix-ui/themes";
 import { NextLink } from "../Shared/NextLink";
 
@@ -17,7 +18,7 @@ export const GetFamiliarCards = () => {
         width="auto"
       >
         <Card variant="surface" size="2" asChild>
-          <NextLink href="https://docs.sigle.io" target="_blank">
+          <NextLink href={appConfig.docsUrl} target="_blank">
             <Text as="div" size="3" weight="bold">
               Read the docs
             </Text>

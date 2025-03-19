@@ -1,3 +1,4 @@
+import { appConfig } from "@/config";
 import {
   formatUSDollar,
   useCurrencyFiatPrice,
@@ -51,7 +52,7 @@ export const CollectPrice = () => {
           <Text as="p" size="1" color="gray">
             Earn protocol fees on each mint,{" "}
             <Link
-              href="https://sigle-docs-next.vercel.app/monetization#fee-structure"
+              href={`${appConfig.docsUrl}/monetization#fee-structure`}
               target="_blank"
             >
               learn more
