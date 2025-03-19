@@ -1,6 +1,7 @@
 "use client";
 
 import type { paths } from "@/__generated__/sigle-api/openapi";
+import { appConfig } from "@/config";
 import { useContractCall } from "@/hooks/useContractCall";
 import {
   formatUSDollar,
@@ -197,7 +198,7 @@ export const PostCollectDialog = ({
             >
               Mint fee
               <a
-                href="https://sigle-docs-next.vercel.app/monetization#fee-structure"
+                href={`${appConfig.docsUrl}/monetization#fee-structure`}
                 target="_blank"
                 rel="noreferrer"
               >
