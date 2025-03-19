@@ -238,7 +238,10 @@ export const PostCollectDialog = ({
                 color="gray"
                 highContrast
                 onClick={incrementEditions}
-                disabled={!post.openEdition && editions === post.maxSupply}
+                disabled={
+                  (!post.openEdition && editions === post.maxSupply) ||
+                  editions === 10
+                }
               >
                 <IconPlus className="size-4" />
               </IconButton>
