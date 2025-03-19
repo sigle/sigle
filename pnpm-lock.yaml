@@ -139,7 +139,7 @@ importers:
         version: 4.0.0
       next-auth:
         specifier: 5.0.0-beta.25
-        version: 5.0.0-beta.25(next@15.2.3(@opentelemetry/api@1.9.0)(@playwright/test@1.46.1)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)(sass@1.77.8))(nodemailer@6.9.14)(react@19.0.0)
+        version: 5.0.0-beta.25(next@15.2.3(@babel/core@7.26.10)(@opentelemetry/api@1.9.0)(@playwright/test@1.46.1)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)(sass@1.77.8))(nodemailer@6.9.14)(react@19.0.0)
       nitro-cors:
         specifier: 0.7.1
         version: 0.7.1
@@ -205,11 +205,11 @@ importers:
         specifier: 7.0.2
         version: 7.0.2
       '@stacks/connect':
-        specifier: 7.9.0
-        version: 7.9.0
+        specifier: 8.1.7
+        version: 8.1.7
       '@stacks/encryption':
-        specifier: 7.0.4
-        version: 7.0.4
+        specifier: 7.0.5
+        version: 7.0.5
       '@stacks/network':
         specifier: 7.0.2
         version: 7.0.2
@@ -341,7 +341,7 @@ importers:
         version: 15.2.3(@babel/core@7.26.10)(@opentelemetry/api@1.9.0)(@playwright/test@1.46.1)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)(sass@1.77.8)
       next-auth:
         specifier: 5.0.0-beta.25
-        version: 5.0.0-beta.25(next@15.2.3(@opentelemetry/api@1.9.0)(@playwright/test@1.46.1)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)(sass@1.77.8))(nodemailer@6.9.14)(react@19.0.0)
+        version: 5.0.0-beta.25(next@15.2.3(@babel/core@7.26.10)(@opentelemetry/api@1.9.0)(@playwright/test@1.46.1)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)(sass@1.77.8))(nodemailer@6.9.14)(react@19.0.0)
       next-themes:
         specifier: 0.4.4
         version: 0.4.4(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
@@ -468,8 +468,8 @@ importers:
         version: 3.4.0(zod@3.24.2)
     devDependencies:
       '@stacks/connect':
-        specifier: 7.9.0
-        version: 7.9.0
+        specifier: 8.1.7
+        version: 8.1.7
       '@stacks/network':
         specifier: 7.0.2
         version: 7.0.2
@@ -502,8 +502,8 @@ importers:
         version: 7.0.2
     devDependencies:
       '@stacks/encryption':
-        specifier: 7.0.4
-        version: 7.0.4
+        specifier: 7.0.5
+        version: 7.0.5
       '@stacks/network':
         specifier: 7.0.2
         version: 7.0.2
@@ -3455,6 +3455,9 @@ packages:
   '@scure/base@1.1.9':
     resolution: {integrity: sha512-8YKhl8GHiNI/pU2VMaofa2Tor7PJRAjwQLBBuilkJ9L5+13yVbC7JO/wS7piioAvPSwR3JKM1IJ/u4xQzbcXKg==}
 
+  '@scure/base@1.2.4':
+    resolution: {integrity: sha512-5Yy9czTO47mqz+/J8GM6GIId4umdCk1wc1q8rKERQulIoc8VP9pzDcghv10Tl2E7R96ZUx/PhND3ESYUQX8NuQ==}
+
   '@scure/bip32@1.1.3':
     resolution: {integrity: sha512-dSH3+LCWONlSNQuF34xZrG6Xas7tp2jSSqHb/pMfXWM0vKE4JZOtK3uJfoWouUVW5IGlls75HkXmYLldZ8ySgQ==}
 
@@ -3839,9 +3842,6 @@ packages:
   '@speed-highlight/core@1.2.7':
     resolution: {integrity: sha512-0dxmVj4gxg3Jg879kvFS/msl4s9F3T9UXC1InxgOf7t5NvcPD97u/WTA5vL/IxWHMn7qSxBozqrnnE2wvl1m8g==}
 
-  '@stacks/auth@7.0.2':
-    resolution: {integrity: sha512-1N0ylkK9mz6RqIH3SbuIvoUG4eTgSkun7hHiPirScGCyXvmugjereGdTowSRSrEnl32/qrnquAAaO7a1XF6TMA==}
-
   '@stacks/auth@7.0.4':
     resolution: {integrity: sha512-e875v255+9mKv3v5tQIRBcyvnFXvdYcAX4y/7HcVjPAVKe8IPR938zURTmMlY3yehtXMyG1G5LFizi7qERsP7A==}
 
@@ -3854,14 +3854,14 @@ packages:
   '@stacks/common@7.0.2':
     resolution: {integrity: sha512-+RSecHdkxOtswmE4tDDoZlYEuULpnTQVeDIG5eZ32opK8cFxf4EugAcK9CsIsHx/Se1yTEaQ21WGATmJGK84lQ==}
 
-  '@stacks/connect-ui@6.5.0':
-    resolution: {integrity: sha512-iXSpl2NxrjERBqtGgkZp0tX1uJgdWZXmsNo3I0cJYYTTbieSAE/Al9nTYc1wLTPW5w5oVvZEkQKo90WIrHR8Rw==}
+  '@stacks/connect-ui@8.0.0':
+    resolution: {integrity: sha512-m8yqg28EWQCATkVxILotzbqvcnk0n+qhyncTTNEYXVe4VnfV0eRXvxX88nbA/fot1k+MuQlMu3WhrBFLHJ/xzA==}
 
-  '@stacks/connect@7.9.0':
-    resolution: {integrity: sha512-UPv2UQpZwnNPYodL4bf+6Pu3kHY9BcRabAgAbmDajn3RFWvDrnOMmvLqJRGOvo5fEm8vSwxAGY8R7BSOPmlLdg==}
+  '@stacks/connect@8.1.7':
+    resolution: {integrity: sha512-vZ+LZcJP7tLoqR9qqYgsP8oAt7EloIJ/zC/5YJhdqIArYDxfC2brRmBu7y2aacDJ1ZnczLXwKfJcC6iLV2G+lA==}
 
-  '@stacks/encryption@7.0.4':
-    resolution: {integrity: sha512-MIoRURjfIWN/1WpUGthY1jz7gCN/A76VV6G04MGw7Haiy1jW3Vhprf0kkoYKcQSu+NPyE9PWhaKjRXN4ZS/SwA==}
+  '@stacks/encryption@7.0.5':
+    resolution: {integrity: sha512-X42ZuUPX6vRb3JCt5nkqFunef9EeOLfHXjsKUD2HcOJT7hgC6p6VNTs5iwy/aOQMZdVsxFYAy56m5DbStPU06Q==}
 
   '@stacks/network@6.16.0':
     resolution: {integrity: sha512-uqz9Nb6uf+SeyCKENJN+idt51HAfEeggQKrOMfGjpAeFgZV2CR66soB/ci9+OVQR/SURvasncAz2ScI1blfS8A==}
@@ -3872,11 +3872,11 @@ packages:
   '@stacks/network@7.0.2':
     resolution: {integrity: sha512-XzHnoWqku/jRrTgMXhmh3c+I0O9vDH24KlhzGDZtBu+8CGGyHNPAZzGwvoUShonMXrXjEnfO9IYQwV5aJhfv6g==}
 
-  '@stacks/profile@7.0.2':
-    resolution: {integrity: sha512-BJis1ZAP2yzv0IFaJcm4mZFtauizcB1zBVpAeOSX06BDEUgM8h0L8uRvAbfTvSuSjsveNgblucZouZMSEsQMGA==}
-
   '@stacks/profile@7.0.4':
     resolution: {integrity: sha512-BLuPrjwQEBYd4PfPZGIuwbR16MvmgPQezeLs3TnWABAMrI5LQXFZRsw/SP7mlzGk0tgWk7lS/YHHLTUZepkF8Q==}
+
+  '@stacks/profile@7.0.5':
+    resolution: {integrity: sha512-XZfIkq2DkEaCT5mKTFhiQ1WF4CGH6LEnUHz9UPGQdlWRsUR9T3ZhTCuKvLinFoZ049JEXcsaUYLhxAihVcmjlA==}
 
   '@stacks/storage@7.0.4':
     resolution: {integrity: sha512-sp580ycWxDFOihVVagGNI0rFK2WbHx/dobI0BPORaH6Ch3bbE1PFnEp4xytZ+qgyLgWtnSPpLdEP5GsYjrqm2w==}
@@ -3889,6 +3889,9 @@ packages:
 
   '@stacks/transactions@7.0.4':
     resolution: {integrity: sha512-OTQSqb+xaq+QeHB1m83SONVjVs9DD1SMqX7UvvLmzQx3ppZNoRqbWx9UGjm1bVwpQ+mw44TVOe7w3Zm0HRYFfw==}
+
+  '@stacks/transactions@7.0.5':
+    resolution: {integrity: sha512-mHsv7lUbZ5w4MKJ3NAirtdClIXLNKMqWIqT2rLjbIHzlYBqvZaELJSYD+km6E7Cm9G3yUYszorhruQmSTgilbg==}
 
   '@stacks/wallet-sdk@7.0.4':
     resolution: {integrity: sha512-niYq9lmmOJZ66yyHJoXssKAq7k4H5aPtoBXg3D289uKlo7rUSPihq3SVBMKVRuXlv6DevfBwsy557WeB7WGZxg==}
@@ -14577,6 +14580,8 @@ snapshots:
 
   '@scure/base@1.1.9': {}
 
+  '@scure/base@1.2.4': {}
+
   '@scure/bip32@1.1.3':
     dependencies:
       '@noble/hashes': 1.1.5
@@ -15186,23 +15191,11 @@ snapshots:
 
   '@speed-highlight/core@1.2.7': {}
 
-  '@stacks/auth@7.0.2':
-    dependencies:
-      '@noble/secp256k1': 1.7.1
-      '@stacks/common': 7.0.2
-      '@stacks/encryption': 7.0.4
-      '@stacks/network': 7.0.2
-      '@stacks/profile': 7.0.2
-      cross-fetch: 3.2.0
-      jsontokens: 4.0.1
-    transitivePeerDependencies:
-      - encoding
-
   '@stacks/auth@7.0.4':
     dependencies:
       '@noble/secp256k1': 1.7.1
       '@stacks/common': 7.0.2
-      '@stacks/encryption': 7.0.4
+      '@stacks/encryption': 7.0.5
       '@stacks/network': 7.0.2
       '@stacks/profile': 7.0.4
       cross-fetch: 3.2.0
@@ -15229,25 +15222,24 @@ snapshots:
 
   '@stacks/common@7.0.2': {}
 
-  '@stacks/connect-ui@6.5.0':
+  '@stacks/connect-ui@8.0.0':
     dependencies:
       '@stencil/core': 2.22.3
 
-  '@stacks/connect@7.9.0':
+  '@stacks/connect@8.1.7':
     dependencies:
-      '@stacks/auth': 7.0.2
+      '@scure/base': 1.2.4
       '@stacks/common': 7.0.2
-      '@stacks/connect-ui': 6.5.0
+      '@stacks/connect-ui': 8.0.0
       '@stacks/network': 7.0.2
       '@stacks/network-v6': '@stacks/network@6.17.0'
-      '@stacks/profile': 7.0.2
+      '@stacks/profile': 7.0.5
       '@stacks/transactions': 7.0.4
       '@stacks/transactions-v6': '@stacks/transactions@6.17.0'
-      jsontokens: 4.0.1
     transitivePeerDependencies:
       - encoding
 
-  '@stacks/encryption@7.0.4':
+  '@stacks/encryption@7.0.5':
     dependencies:
       '@noble/hashes': 1.1.5
       '@noble/secp256k1': 1.7.1
@@ -15279,17 +15271,6 @@ snapshots:
     transitivePeerDependencies:
       - encoding
 
-  '@stacks/profile@7.0.2':
-    dependencies:
-      '@stacks/common': 7.0.2
-      '@stacks/network': 7.0.2
-      '@stacks/transactions': 7.0.4
-      jsontokens: 4.0.1
-      schema-inspector: 2.1.0
-      zone-file: 2.0.0-beta.3
-    transitivePeerDependencies:
-      - encoding
-
   '@stacks/profile@7.0.4':
     dependencies:
       '@stacks/common': 7.0.2
@@ -15301,11 +15282,22 @@ snapshots:
     transitivePeerDependencies:
       - encoding
 
+  '@stacks/profile@7.0.5':
+    dependencies:
+      '@stacks/common': 7.0.2
+      '@stacks/network': 7.0.2
+      '@stacks/transactions': 7.0.5
+      jsontokens: 4.0.1
+      schema-inspector: 2.1.0
+      zone-file: 2.0.0-beta.3
+    transitivePeerDependencies:
+      - encoding
+
   '@stacks/storage@7.0.4':
     dependencies:
       '@stacks/auth': 7.0.4
       '@stacks/common': 7.0.2
-      '@stacks/encryption': 7.0.4
+      '@stacks/encryption': 7.0.5
       '@stacks/network': 7.0.2
       base64-js: 1.5.1
       jsontokens: 4.0.1
@@ -15345,13 +15337,24 @@ snapshots:
     transitivePeerDependencies:
       - encoding
 
+  '@stacks/transactions@7.0.5':
+    dependencies:
+      '@noble/hashes': 1.1.5
+      '@noble/secp256k1': 1.7.1
+      '@stacks/common': 7.0.2
+      '@stacks/network': 7.0.2
+      c32check: 2.0.0
+      lodash.clonedeep: 4.5.0
+    transitivePeerDependencies:
+      - encoding
+
   '@stacks/wallet-sdk@7.0.4':
     dependencies:
       '@scure/bip32': 1.1.3
       '@scure/bip39': 1.1.0
       '@stacks/auth': 7.0.4
       '@stacks/common': 7.0.2
-      '@stacks/encryption': 7.0.4
+      '@stacks/encryption': 7.0.5
       '@stacks/network': 7.0.2
       '@stacks/profile': 7.0.4
       '@stacks/storage': 7.0.4
@@ -20445,7 +20448,7 @@ snapshots:
 
   neo-async@2.6.2: {}
 
-  next-auth@5.0.0-beta.25(next@15.2.3(@opentelemetry/api@1.9.0)(@playwright/test@1.46.1)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)(sass@1.77.8))(nodemailer@6.9.14)(react@19.0.0):
+  next-auth@5.0.0-beta.25(next@15.2.3(@babel/core@7.26.10)(@opentelemetry/api@1.9.0)(@playwright/test@1.46.1)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)(sass@1.77.8))(nodemailer@6.9.14)(react@19.0.0):
     dependencies:
       '@auth/core': 0.37.2(nodemailer@6.9.14)
       next: 15.2.3(@babel/core@7.26.10)(@opentelemetry/api@1.9.0)(@playwright/test@1.46.1)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)(sass@1.77.8)
