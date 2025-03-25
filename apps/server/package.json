@@ -36,7 +36,6 @@
     "rate-limiter-flexible": "5.0.5",
     "rou3": "0.5.1",
     "sharp": "0.33.5",
-    "smee-client": "2.0.4",
     "zod": "3.24.2",
     "zod-validation-error": "3.4.0"
   },
