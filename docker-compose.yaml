@@ -56,7 +56,7 @@ services:
     restart: unless-stopped
     command: tunnel --url http://server:3001
     depends_on:
-      - server-indexer
+      - server
     networks:
       - sigle-network
 
