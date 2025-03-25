@@ -41,6 +41,16 @@ export const createChainhook = async (
   return response;
 };
 
+export const deleteChainhook = async (chainhookUuid: string) => {
+  const response = await fetch(
+    `https://api.platform.hiro.so/v1/ext/${env.HIRO_API_KEY}/chainhooks/${chainhookUuid}`,
+    {
+      method: "DELETE",
+    },
+  ).then((res) => res.json());
+  return response;
+};
+
 /**
  * Prepare the predicate to be sent to the chainhook API.
  */
