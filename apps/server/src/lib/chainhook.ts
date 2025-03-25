@@ -48,12 +48,10 @@ export const preparePredicate = (predicate: Predicate) => {
   const predicateBody = predicate.networks[env.STACKS_ENV];
   if (predicateBody && "http_post" in predicateBody.then_that) {
     predicateBody.then_that.http_post.url =
-      env.NODE_ENV === "development"
-        ? env.WEBHOOK_PROXY_URL!
-        : predicateBody.then_that.http_post.url.replace(
-            "{__BASE_URL__}",
-            env.API_URL,
-          );
+      predicateBody.then_that.http_post.url.replace(
+        "{__BASE_URL__}",
+        env.NODE_ENV === "development" ? env.WEBHOOK_PROXY_URL! : env.API_URL,
+      );
 
     predicateBody.then_that.http_post.authorization_header =
       predicateBody.then_that.http_post.authorization_header.replace(
