@@ -1,17 +1,15 @@
+import * as Signer from "@ucanto/principal/ed25519";
 import { create } from "@web3-storage/w3up-client";
+import * as Proof from "@web3-storage/w3up-client/proof";
 import type { H3Event } from "h3";
 import { env } from "~/env";
+import { consola } from "./consola";
 
-const w3upClient = await create();
-
-// const client = new S3Client({
-//   endpoint: "https://s3.filebase.com",
-//   region: "us-east-1",
-//   credentials: {
-//     accessKeyId: env.FILEBASE_ACCESS_KEY,
-//     secretAccessKey: env.FILEBASE_SECRET_KEY,
-//   },
-// });
+const principal = Signer.parse(env.W3UP_AGENT_KEY);
+const w3upClient = await create({ principal });
+const proof = await Proof.parse(env.W3UP_AGENT_PROOF);
+const space = await w3upClient.addSpace(proof);
+await w3upClient.setCurrentSpace(space.did());
 
 export const ipfsUploadFile = async (
   event: H3Event,
@@ -37,6 +35,7 @@ export const ipfsUploadFile = async (
 
     return { cid };
   } catch (error) {
+    consola.error(error);
     const sentryId = event.context.$sentry.captureException(error, {
       extra: {
         path,

@@ -125,6 +125,9 @@ importers:
       '@t3-oss/env-core':
         specifier: 0.12.0
         version: 0.12.0(typescript@5.8.2)(zod@3.24.2)
+      '@ucanto/principal':
+        specifier: 9.0.2
+        version: 9.0.2
       '@web3-storage/w3up-client':
         specifier: 17.2.0
         version: 17.2.0(encoding@0.1.13)

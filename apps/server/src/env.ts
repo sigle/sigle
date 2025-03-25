@@ -35,6 +35,8 @@ export const env = createEnv({
     FILEBASE_ACCESS_KEY: z.string(),
     FILEBASE_SECRET_KEY: z.string(),
     FILEBASE_BUCKET: z.string(),
+    W3UP_AGENT_KEY: z.string(),
+    W3UP_AGENT_PROOF: z.string(),
     IPFS_GATEWAY_URL: z.string().url().optional().default("https://ipfs.io"),
   },
 });
