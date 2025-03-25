@@ -14,8 +14,8 @@
     "@stacks/network": "7.0.2",
     "@stacks/transactions": "6.12.0",
     "typescript": "5.8.2",
-    "vite": "6.2.1",
-    "vitest": "3.0.8",
+    "vite": "6.2.3",
+    "vitest": "3.0.9",
     "vitest-environment-clarinet": "2.3.0"
   }
 }
