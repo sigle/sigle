@@ -1,9 +1,9 @@
 export default defineNitroConfig({
   srcDir: "src",
-  compatibilityDate: "2024-11-02",
+  compatibilityDate: "2025-03-20",
   esbuild: {
     options: {
-      target: "es2022",
+      target: "es2023",
     },
   },
   openAPI: {
