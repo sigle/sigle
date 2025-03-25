@@ -3,9 +3,12 @@ import {
   S3Client,
   S3ServiceException,
 } from "@aws-sdk/client-s3";
+import { create } from "@web3-storage/w3up-client";
 import type { H3Event } from "h3";
 import { env } from "~/env";
 import { consola } from "./consola";
+
+const w3upClient = await create();
 
 const client = new S3Client({
   endpoint: "https://s3.filebase.com",
