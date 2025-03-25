@@ -33,7 +33,7 @@
     "pg-boss": "10.1.6",
     "posthog-node": "4.10.2",
     "prisma": "6.5.0",
-    "rate-limiter-flexible": "5.0.5",
+    "rate-limiter-flexible": "6.2.1",
     "rou3": "0.5.1",
     "sharp": "0.33.5",
     "zod": "3.24.2",
