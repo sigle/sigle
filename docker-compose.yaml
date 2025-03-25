@@ -38,6 +38,9 @@ services:
           action: rebuild
         - path: ./apps/server/prisma
           action: rebuild
+        - path: ./apps/server/.env.development.local
+          target: /app/apps/server/.env.development.local
+          action: sync+restart
         - path: ./apps/server/
           target: /app/apps/server
           action: sync
