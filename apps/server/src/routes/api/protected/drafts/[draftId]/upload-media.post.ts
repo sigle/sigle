@@ -1,13 +1,12 @@
-import { createId } from "@paralleldrive/cuid2";
 import { z } from "zod";
 import { env } from "~/env";
-import { ipfsUploadFile } from "~/lib/filebase";
 import {
   allowedFormats,
   mimeTypeToExtension,
   optimizeImage,
 } from "~/lib/images";
 import { createCIDv1FromBuffer } from "~/lib/ipfs";
+import { ipfsUploadFile } from "~/lib/ipfs-upload";
 import { readMultipartFormDataSafe } from "~/lib/nitro";
 import { prisma } from "~/lib/prisma";
 

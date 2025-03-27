@@ -14,6 +14,7 @@ await w3upClient.setCurrentSpace(space.did());
 export const ipfsUploadFile = async (
   event: H3Event,
   {
+    // TODO remove path as unused
     path,
     content,
   }: {

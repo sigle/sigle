@@ -1,11 +1,11 @@
 import { z } from "zod";
 import { env } from "~/env";
-import { ipfsUploadFile } from "~/lib/filebase";
 import {
   allowedFormats,
   mimeTypeToExtension,
   optimizeImage,
 } from "~/lib/images";
+import { ipfsUploadFile } from "~/lib/ipfs-upload";
 import { readMultipartFormDataSafe } from "~/lib/nitro";
 
 defineRouteMeta({
@@ -101,6 +101,7 @@ export default defineEventHandler(async (event) => {
   return {
     cid: cid.toString(),
     url: `ipfs://${cid}`,
+    // TODO remove all gateway urls and delete env
     gatewayUrl: `${env.IPFS_GATEWAY_URL}/ipfs/${cid}`,
   };
 });
