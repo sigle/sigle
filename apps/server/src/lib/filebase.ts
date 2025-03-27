@@ -22,7 +22,7 @@ export const ipfsUploadFile = async (
   },
 ) => {
   try {
-    const response = await w3upClient.uploadFile(new Blob([content]), {});
+    const response = await w3upClient.uploadFile(new Blob([content]));
     const cid = response.toString();
 
     if (!cid) {
