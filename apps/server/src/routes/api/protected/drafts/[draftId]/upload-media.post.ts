@@ -1,11 +1,5 @@
 import { z } from "zod";
-import { env } from "~/env";
-import {
-  allowedFormats,
-  mimeTypeToExtension,
-  optimizeImage,
-} from "~/lib/images";
-import { createCIDv1FromBuffer } from "~/lib/ipfs";
+import { allowedFormats, optimizeImage } from "~/lib/images";
 import { ipfsUploadFile } from "~/lib/ipfs-upload";
 import { readMultipartFormDataSafe } from "~/lib/nitro";
 import { prisma } from "~/lib/prisma";
@@ -111,13 +105,7 @@ export default defineEventHandler(async (event) => {
     width: 700,
   });
 
-  const generatedCID = await createCIDv1FromBuffer(optimizedBuffer);
   const { cid } = await ipfsUploadFile(event, {
-    path: `${
-      event.context.user.id
-    }/post-${draftId}/${generatedCID}.${mimeTypeToExtension(
-      parsedFile.data.type,
-    )}`,
     content: optimizedBuffer,
   });
 

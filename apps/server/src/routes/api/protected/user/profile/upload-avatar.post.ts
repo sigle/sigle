@@ -1,10 +1,5 @@
 import { z } from "zod";
-import { env } from "~/env";
-import {
-  allowedFormats,
-  mimeTypeToExtension,
-  optimizeImage,
-} from "~/lib/images";
+import { allowedFormats, optimizeImage } from "~/lib/images";
 import { ipfsUploadFile } from "~/lib/ipfs-upload";
 import { readMultipartFormDataSafe } from "~/lib/nitro";
 
@@ -83,9 +78,6 @@ export default defineEventHandler(async (event) => {
   });
 
   const { cid } = await ipfsUploadFile(event, {
-    path: `${event.context.user.id}/profile.${mimeTypeToExtension(
-      parsedFile.data.type,
-    )}`,
     content: optimizedBuffer,
   });
 

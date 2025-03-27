@@ -14,11 +14,8 @@ await w3upClient.setCurrentSpace(space.did());
 export const ipfsUploadFile = async (
   event: H3Event,
   {
-    // TODO remove path as unused
-    path,
     content,
   }: {
-    path: string;
     content: Buffer;
   },
 ) => {
@@ -36,11 +33,7 @@ export const ipfsUploadFile = async (
     return { cid };
   } catch (error) {
     consola.error(error);
-    const sentryId = event.context.$sentry.captureException(error, {
-      extra: {
-        path,
-      },
-    });
+    const sentryId = event.context.$sentry.captureException(error);
     throw createError({
       status: 500,
       message: `Failed to upload to IPFS, error: ${sentryId}`,
