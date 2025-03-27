@@ -1,13 +1,13 @@
 import { createId } from "@paralleldrive/cuid2";
 import { z } from "zod";
 import { env } from "~/env";
-import { generateCID } from "~/lib/arweave";
 import { ipfsUploadFile } from "~/lib/filebase";
 import {
   allowedFormats,
   mimeTypeToExtension,
   optimizeImage,
 } from "~/lib/images";
+import { createCIDv1FromBuffer } from "~/lib/ipfs";
 import { readMultipartFormDataSafe } from "~/lib/nitro";
 import { prisma } from "~/lib/prisma";
 
@@ -113,7 +113,7 @@ export default defineEventHandler(async (event) => {
     width: 700,
   });
 
-  const generatedCID = await generateCID(optimizedBuffer);
+  const generatedCID = await createCIDv1FromBuffer(optimizedBuffer);
   const { cid } = await ipfsUploadFile(event, {
     path: `${
       event.context.user.id
