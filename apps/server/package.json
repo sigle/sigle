@@ -14,7 +14,6 @@
   },
   "dependencies": {
     "@ardrive/turbo-sdk": "1.22.0",
-    "@aws-sdk/client-s3": "3.774.0",
     "@dotenvx/dotenvx": "1.39.0",
     "@hirosystems/chainhook-client": "2.3.0",
     "@paralleldrive/cuid2": "2.2.2",
