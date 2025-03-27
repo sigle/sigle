@@ -1,14 +1,14 @@
 import { encode } from "blurhash";
-import { parse } from "multiformats/link";
 import sharp from "sharp";
 import { blurHashToDataURL } from "./blurhash";
+import { convertCIDv0toCIDv1 } from "./ipfs";
 
 export const resolveImageUrl = (image: string) => {
   if (image?.startsWith("ipfs://")) {
     let cid = image.slice(7);
     // We convert the CID to a v1 CID if it's a v0 CID so that images can be served by subdomain gateways
     if (cid.startsWith("Qm")) {
-      cid = parse(cid).toV1().toString();
+      cid = convertCIDv0toCIDv1(cid);
     }
     image = `https://${cid}.ipfs.w3s.link/`;
   }
