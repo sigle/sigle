@@ -143,6 +143,9 @@ importers:
       ipfs-only-hash:
         specifier: 4.0.0
         version: 4.0.0(encoding@0.1.13)
+      multiformats:
+        specifier: 13.3.2
+        version: 13.3.2
       next-auth:
         specifier: 5.0.0-beta.25
         version: 5.0.0-beta.25(next@15.2.4(@babel/core@7.26.10)(@opentelemetry/api@1.9.0)(@playwright/test@1.46.1)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)(sass@1.77.8))(nodemailer@6.9.14)(react@19.0.0)
@@ -336,6 +339,9 @@ importers:
       lowlight:
         specifier: 3.3.0
         version: 3.3.0
+      multiformats:
+        specifier: 13.3.2
+        version: 13.3.2
       nanoid:
         specifier: 5.1.5
         version: 5.1.5
