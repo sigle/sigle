@@ -34,6 +34,5 @@ export const env = createEnv({
     POSTHOG_API_HOST: z.string().optional(),
     W3UP_AGENT_KEY: z.string(),
     W3UP_AGENT_PROOF: z.string(),
-    IPFS_GATEWAY_URL: z.string().url().optional().default("https://ipfs.io"),
   },
 });

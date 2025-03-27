@@ -39,11 +39,10 @@ defineRouteMeta({
           "application/json": {
             schema: {
               type: "object",
-              required: ["cid", "url", "gatewayUrl"],
+              required: ["cid", "url"],
               properties: {
                 cid: { type: "string" },
                 url: { type: "string" },
-                gatewayUrl: { type: "string" },
               },
             },
           },
@@ -134,6 +133,5 @@ export default defineEventHandler(async (event) => {
   return {
     cid,
     url: `ipfs://${cid}`,
-    gatewayUrl: `${env.IPFS_GATEWAY_URL}/ipfs/${cid}`,
   };
 });
