@@ -22,9 +22,8 @@ export const ipfsUploadFile = async (
   },
 ) => {
   try {
-    const cid = (await w3upClient.uploadFile(new Blob([content]))).toString();
-
-    console.log("cid", cid);
+    const response = await w3upClient.uploadFile(new Blob([content]), {});
+    const cid = response.toString();
 
     if (!cid) {
       throw createError({
