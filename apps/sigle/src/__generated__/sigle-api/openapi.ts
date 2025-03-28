@@ -234,6 +234,7 @@ export interface paths {
               metaTitle?: string;
               metaDescription?: string;
               coverImage?: string;
+              tags?: string[];
               /** @enum {string} */
               collectPriceType?: "free" | "paid";
               collectPrice?: string;
