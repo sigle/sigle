@@ -1089,6 +1089,7 @@ export interface components {
         blurhash?: string;
       };
       excerpt?: string;
+      tags?: string[];
       address: string;
       txId: string;
       maxSupply: number;
