@@ -180,7 +180,6 @@ export const PublishDialog = ({ postId }: PublishDialogProps) => {
             });
 
             await contractDeploy({
-              // TODO decide on the contract name slug, id or other
               contractName: newPostId,
               codeBody: contract,
             });
