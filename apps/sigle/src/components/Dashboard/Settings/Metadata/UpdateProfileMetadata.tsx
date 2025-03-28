@@ -64,7 +64,7 @@ export const UpdateProfileMetadata = ({
       });
     },
     onError: (error) => {
-      toast.error("Failed to collect", {
+      toast.error("Failed to update profile", {
         description: error,
       });
     },
