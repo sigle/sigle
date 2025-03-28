@@ -536,8 +536,10 @@ export interface paths {
       path?: never;
       cookie?: never;
     };
+    get?: never;
+    put?: never;
     /** @description Upload nft image to IPFS. */
-    get: {
+    post: {
       parameters: {
         query?: never;
         header?: never;
@@ -546,7 +548,17 @@ export interface paths {
         };
         cookie?: never;
       };
-      requestBody?: never;
+      requestBody: {
+        content: {
+          "multipart/form-data": {
+            /**
+             * Format: binary
+             * @description Profile media
+             */
+            file: string;
+          };
+        };
+      };
       responses: {
         /** @description Media uploaded */
         200: {
@@ -562,8 +574,6 @@ export interface paths {
         };
       };
     };
-    put?: never;
-    post?: never;
     delete?: never;
     options?: never;
     head?: never;

@@ -9,6 +9,8 @@ const paramsSchema = z.object({
   coverImage: z.string().optional(),
 });
 
+export type CreatePostNftParams = z.infer<typeof paramsSchema>;
+
 const size = {
   width: 450,
   height: 450,

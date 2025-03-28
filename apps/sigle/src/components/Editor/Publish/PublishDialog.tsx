@@ -20,6 +20,7 @@ import {
 import * as Sentry from "@sentry/nextjs";
 import { parseBTC } from "@sigle/sdk";
 import { IconExclamationCircle } from "@tabler/icons-react";
+import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { usePostHog } from "posthog-js/react";
 import { useState } from "react";
@@ -35,6 +36,7 @@ interface PublishDialogProps {
 }
 
 export const PublishDialog = ({ postId }: PublishDialogProps) => {
+  const { data: session } = useSession();
   const posthog = usePostHog();
   const router = useRouter();
   const [publishingError, setPublishingError] = useState<string | null>(null);
@@ -119,6 +121,7 @@ export const PublishDialog = ({ postId }: PublishDialogProps) => {
       async (data) => {
         try {
           setPublishingError(null);
+          if (!session) return;
 
           posthog.capture("post_publish_start", {
             postId,
@@ -128,6 +131,7 @@ export const PublishDialog = ({ postId }: PublishDialogProps) => {
           // TODO create a REST route to determine the next post id? But do not use postId
           const newPostId = postId;
           const metadata = await generateSigleMetadataFromForm({
+            userAddress: session.user.id,
             editor,
             postId: newPostId,
             post: data,
