@@ -451,7 +451,6 @@ export interface paths {
             "application/json": {
               cid: string;
               url: string;
-              gatewayUrl: string;
             };
           };
         };
@@ -524,6 +523,47 @@ export interface paths {
         };
       };
     };
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/protected/drafts/{draftId}/upload-nft-image": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /** @description Upload nft image to IPFS. */
+    get: {
+      parameters: {
+        query?: never;
+        header?: never;
+        path: {
+          draftId: string;
+        };
+        cookie?: never;
+      };
+      requestBody?: never;
+      responses: {
+        /** @description Media uploaded */
+        200: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            "application/json": {
+              cid: string;
+              url: string;
+            };
+          };
+        };
+      };
+    };
+    put?: never;
+    post?: never;
     delete?: never;
     options?: never;
     head?: never;
@@ -674,7 +714,6 @@ export interface paths {
             "application/json": {
               cid: string;
               url: string;
-              gatewayUrl: string;
             };
           };
         };
@@ -724,7 +763,6 @@ export interface paths {
             "application/json": {
               cid: string;
               url: string;
-              gatewayUrl: string;
             };
           };
         };
