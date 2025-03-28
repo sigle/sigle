@@ -36,8 +36,8 @@ export const GeneralSettings = () => {
     setValue("tags", []);
   };
 
-  const formattedTags = tags.map((tag, index) => ({
-    id: index.toString(),
+  const formattedTags = tags.map((tag) => ({
+    id: tag,
     text: tag,
     className: "",
   }));
@@ -46,7 +46,7 @@ export const GeneralSettings = () => {
     <Inset side="x">
       <div className="border-b border-gray-5 px-6 py-4">
         <Text as="p" size="2" mb="1">
-          Tags
+          Tags (max 5)
         </Text>
         <ReactTags
           classNames={{
