@@ -79,7 +79,7 @@ export async function GET(request: Request) {
       <div
         tw="flex w-full flex-col items-start px-6 py-6 justify-between"
         style={{
-          height: size.height / 2,
+          height: coverImage ? size.height / 2 : size.height,
         }}
       >
         <div
