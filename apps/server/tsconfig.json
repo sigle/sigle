@@ -1,23 +1,8 @@
+// https://nitro.unjs.io/guide/typescript
 {
+  "extends": "./.nitro/types/tsconfig.json",
   "compilerOptions": {
-    "module": "commonjs",
-    "declaration": true,
-    "removeComments": true,
-    "emitDecoratorMetadata": true,
-    "experimentalDecorators": true,
-    "allowSyntheticDefaultImports": true,
-    "target": "ES2022",
-    "lib": ["ES2022"],
-    "sourceMap": true,
-    "outDir": "./dist",
-    "baseUrl": "./",
-    "incremental": true,
-    "skipLibCheck": true,
     "strict": true,
-    "useUnknownInCatchVariables": false,
-    "strictPropertyInitialization": false,
-    "paths": {
-      "@/*": ["./src/*"]
-    }
+    "skipLibCheck": true
   }
 }

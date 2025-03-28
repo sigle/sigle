@@ -7,26 +7,35 @@ cache_dir = './.cache'
 
 [[project.requirements]]
 contract_id = 'SP2PABAF9FTAJYNFZH93XENAJ8FVY99RRM50D2JG9.nft-trait'
+
 [[project.requirements]]
 contract_id = 'SP3D6PV2ACBPEKYJTCMH7HEN02KP87QSP8KTEH335.commission-trait'
 
-[contracts.sigle-protocol]
-path = 'contracts/sigle-protocol.clar'
-clarity_version = 3
-epoch = 3.0
-
-[contracts.sigle-publication-trait-v001]
-path = 'contracts/sigle-publication-trait-v001.clar'
-clarity_version = 3
-epoch = 3.0
+[[project.requirements]]
+contract_id = 'SM3VDXK3WZZSA84XXFKAFAF15NNZX32CTSG82JFQ4.sbtc-token'
 
 [contracts.sigle-minter-fixed-price-v001]
 path = 'contracts/minters/sigle-minter-fixed-price-v001.clar'
 clarity_version = 3
 epoch = 3.0
 
-[contracts.sigle-publication-v001]
-path = 'contracts/sigle-publication-v001.clar'
+[contracts.sigle-post-trait-v001]
+path = 'contracts/sigle-post-trait-v001.clar'
+clarity_version = 3
+epoch = 3.0
+
+[contracts.sigle-post-v001]
+path = 'contracts/sigle-post-v001.clar'
+clarity_version = 3
+epoch = 3.0
+
+[contracts.sigle-profiles]
+path = 'contracts/sigle-profiles.clar'
+clarity_version = 3
+epoch = 3.0
+
+[contracts.sigle-protocol]
+path = 'contracts/sigle-protocol.clar'
 clarity_version = 3
 epoch = 3.0
 

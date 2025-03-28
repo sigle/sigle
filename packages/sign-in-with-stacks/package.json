@@ -1,0 +1,37 @@
+{
+  "name": "@sigle/sign-in-with-stacks",
+  "version": "0.0.0",
+  "type": "module",
+  "publishConfig": {
+    "access": "public"
+  },
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "require": "./dist/index.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "scripts": {
+    "build": "tsup",
+    "test": "vitest",
+    "typecheck": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "@stacks/encryption": "7.0.5",
+    "@stacks/network": "7.0.2",
+    "@stacks/transactions": "7.0.4",
+    "@tsconfig/recommended": "1.0.8",
+    "@types/node": "22.13.13",
+    "tsup": "8.4.0",
+    "typescript": "5.8.2",
+    "vitest": "3.0.9"
+  },
+  "peerDependencies": {
+    "@stacks/common": "^7.0.2",
+    "@stacks/encryption": "^7.0.2",
+    "@stacks/transactions": "^7.0.2"
+  }
+}

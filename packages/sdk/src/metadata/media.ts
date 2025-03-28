@@ -1,10 +1,10 @@
-import { z } from 'zod';
+import { z } from "zod";
 
 export enum MediaImageMimeType {
-  GIF = 'image/gif',
-  JPEG = 'image/jpeg',
-  PNG = 'image/png',
-  WEBP = 'image/webp',
+  GIF = "image/gif",
+  JPEG = "image/jpeg",
+  PNG = "image/png",
+  WEBP = "image/webp",
 }
 
 export interface MediaImageMetadata {

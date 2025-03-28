@@ -1,77 +1,74 @@
-ARG NODE_VERSION=20
+ARG NODE_VERSION=22
+FROM node:${NODE_VERSION}-alpine AS base
 
-# Required for railway
-ARG RAILWAY_SERVICE_ID=local
+WORKDIR /app
 
-# Injected by builder
-ARG NODE_ENV
-ARG PORT
-ARG APP_URL
-ARG EMAIL_FROM
-ARG EMAIL_SERVER_HOST
-ARG EMAIL_SERVER_PASSWORD
-ARG EMAIL_SERVER_PORT
-ARG EMAIL_SERVER_USER
-ARG NEXTAUTH_SECRET
-ARG NEXTAUTH_URL
-ARG PG_DATABASE_URL
-ARG PLAUSIBLE_API_TOKEN
-ARG PLAUSIBLE_SITE_ID
-ARG POSTHOG_API_KEY
-ARG REDIS_DATABASE_URL
-ARG SENTRY_DSN
-
-# Alpine image
-FROM node:${NODE_VERSION}-alpine AS alpine
+# Set production environment
+ENV NODE_ENV="production"
 ENV APP_NAME="server"
-ENV PROJECT="@sigle/$APP_NAME"
-RUN apk update
-RUN apk add --no-cache libc6-compat
 
-# Setup pnpm and turbo on the alpine base
-FROM alpine AS base
+# Install pnpm
+ENV PNPM_HOME="/pnpm"
+ENV PATH="$PNPM_HOME:$PATH"
+COPY --link ./package.json ./
+RUN npm install -g corepack@latest # fix for https://github.com/nodejs/corepack/issues/612
 RUN corepack enable pnpm
-RUN npm i -g turbo@2
-RUN pnpm config set store-dir ~/.pnpm-store
+RUN pnpm install turbo@^2 --global
+RUN pnpm install @dotenvx/dotenvx@^1 --global
 
-# Prune projects
-FROM base AS pruner
+# --- Turbo stage ---
 
+FROM base AS builder
 WORKDIR /app
 COPY . .
-RUN turbo prune $PROJECT --docker
+RUN turbo prune @sigle/$APP_NAME --docker
 
-# Build the project
-FROM base AS builder
+# --- Build stage ---
 
+FROM base AS installer
 WORKDIR /app
 
-# Copy lockfile and package.json's of isolated subworkspace
-COPY --from=pruner /app/out/json/ .
-COPY --from=pruner /app/out/pnpm-lock.yaml ./pnpm-lock.yaml
-COPY --from=pruner /app/out/pnpm-workspace.yaml ./pnpm-workspace.yaml
+RUN apk update && \
+    apk add --no-cache libc6-compat python3 g++ make
 
 # First install the dependencies (as they change less often)
-RUN pnpm install --frozen-lockfile
+COPY .gitignore .gitignore
+COPY --from=builder /app/out/json/ .
+COPY --from=builder /app/out/pnpm-lock.yaml ./pnpm-lock.yaml
+COPY --from=builder /app/out/pnpm-workspace.yaml ./pnpm-workspace.yaml
+RUN pnpm install --frozen-lockfile --prod=false
 
-# Copy source code of isolated subworkspace
-COPY --from=pruner /app/out/full/ .
+COPY --from=builder /app/out/full/ .
+# Copy contracts source to avoid cyclic dependency
+COPY --from=builder /app/apps/contracts ./apps/contracts
+COPY turbo.json turbo.json
 
-RUN turbo run db:generate --filter=$PROJECT
-RUN turbo build --filter=$PROJECT
-RUN pnpm prune --prod --no-optional
-
-# Final image
-FROM alpine AS runner
-
-RUN addgroup --system --gid 1001 nodejs
-RUN adduser --system --uid 1001 nodejs
-USER nodejs
-
-WORKDIR /app
-COPY --from=builder --chown=nodejs:nodejs /app .
 WORKDIR /app/apps/$APP_NAME
 
-ENV NODE_ENV=production
+# Build application
+RUN turbo run db:generate --filter=@sigle/$APP_NAME
+RUN turbo run build --filter=@sigle/$APP_NAME...
 
-CMD npm run db:deploy && npm run start
+# --- Runner stage ---
+
+FROM base AS runner
+WORKDIR /app
+
+# Don't run production as root
+RUN addgroup --system --gid 1001 nodejs
+RUN adduser --system --uid 1001 nitro
+
+# Copy built application
+COPY --from=installer --chown=nitro:nodejs /app/apps/$APP_NAME/.output ./.output
+COPY --from=installer --chown=nitro:nodejs /app/apps/$APP_NAME/package.json ./package.json
+COPY --from=installer --chown=nitro:nodejs /app/apps/$APP_NAME/scripts ./scripts
+COPY --from=installer --chown=nitro:nodejs /app/apps/$APP_NAME/prisma ./prisma
+COPY --from=builder --chown=nitro:nodejs /app/apps/$APP_NAME/.env.testnet.local ./.env.testnet.local
+RUN node scripts/prod-deps.js
+RUN pnpm install
+
+USER nitro
+
+# Start the server by default, this can be overwritten at runtime
+EXPOSE 3000
+CMD dotenvx run -- node .output/server/index.mjs

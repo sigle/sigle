@@ -3,7 +3,12 @@
 # dependencies
 /node_modules
 /.pnp
-.pnp.js
+.pnp.*
+.yarn/*
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/versions
 
 # testing
 /coverage
@@ -11,9 +16,6 @@
 # next.js
 /.next/
 /out/
-
-# storybook
-/storybook-static
 
 # production
 /build
@@ -28,9 +30,12 @@ yarn-debug.log*
 yarn-error.log*
 .pnpm-debug.log*
 
-# local env files
-.env*.local
-.env
+# env files (can opt-in for commiting if needed)
+.env*
+!.env.development
+!.env.production
+!.env.testnet
+!.env.testnet.local
 
 # vercel
 .vercel
@@ -38,14 +43,3 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
-
-# vscode
-.vscode
-
-# playwright
-node_modules/
-/test-results/
-/playwright-report/
-/playwright/.cache/
-# Do not commit mac screenshots as CI is using linux
-/e2e/**/*-darwin.png

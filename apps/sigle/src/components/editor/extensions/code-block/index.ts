@@ -1,1 +1,0 @@
-export { CodeBlockComponent } from './component';

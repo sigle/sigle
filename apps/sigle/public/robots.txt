@@ -1,9 +1,0 @@
-# *
-User-agent: *
-Allow: /
-
-# Host
-Host: https://app.sigle.io
-
-# Sitemaps
-Sitemap: https://app.sigle.io/sitemap.xml
