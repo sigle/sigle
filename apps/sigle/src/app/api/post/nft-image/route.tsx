@@ -6,7 +6,13 @@ import { z } from "zod";
 const paramsSchema = z.object({
   title: z.string().min(1, { message: "Title is required" }),
   username: z.string().min(1, { message: "Username is required" }),
+  coverImage: z.string().optional(),
 });
+
+const size = {
+  width: 450,
+  height: 450,
+};
 
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
@@ -14,6 +20,7 @@ export async function GET(request: Request) {
   const validationResult = paramsSchema.safeParse({
     title: searchParams.get("title"),
     username: searchParams.get("username"),
+    coverImage: searchParams.get("coverImage") || undefined,
   });
   if (!validationResult.success) {
     return Response.json(
@@ -42,6 +49,9 @@ export async function GET(request: Request) {
     : undefined;
   const username = user.profile?.displayName;
   const handle = user.id;
+  const coverImage = validationResult.data.coverImage
+    ? resolveImageUrl(validationResult.data.coverImage)
+    : undefined;
 
   return new ImageResponse(
     <div
@@ -52,6 +62,17 @@ export async function GET(request: Request) {
         fontFamily: '"Inter"',
       }}
     >
+      {coverImage ? (
+        <img
+          tw="w-full"
+          src={coverImage}
+          alt="coverImage"
+          height={size.height / 2}
+          style={{
+            objectFit: "cover",
+          }}
+        />
+      ) : null}
       <div
         tw="text-4xl leading-10 overflow-hidden"
         style={{
@@ -91,8 +112,7 @@ export async function GET(request: Request) {
       </div>
     </div>,
     {
-      width: 450,
-      height: 450,
+      ...size,
     },
   );
 }
