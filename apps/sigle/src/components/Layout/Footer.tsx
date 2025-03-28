@@ -1,3 +1,4 @@
+import { appConfig } from "@/config";
 import { Container, IconButton, Link, Separator, Text } from "@radix-ui/themes";
 import {
   IconBrandDiscordFilled,
@@ -39,7 +40,7 @@ export const Footer = () => {
               <Link
                 size="2"
                 color="gray"
-                href="https://docs.sigle.io"
+                href={appConfig.docsUrl}
                 target="_blank"
               >
                 Docs

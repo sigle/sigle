@@ -1,3 +1,4 @@
+import { sigleApiFetchclient } from "@/__generated__/sigle-api";
 import { env } from "@/env";
 import { resolveImageUrl } from "@/lib/images";
 import {
@@ -9,6 +10,7 @@ import {
 } from "@sigle/sdk";
 import type { Editor } from "@tiptap/core";
 import { fileTypeFromBuffer } from "file-type";
+import type { CreatePostNftParams } from "../../app/api/post/nft-image/route";
 import type { EditorPostFormData } from "./EditorFormProvider";
 
 const generateMetadataAttributesFromForm = ({
@@ -68,11 +70,45 @@ const getImageMediaMetadata = async (
   };
 };
 
+const uploadNftImage = async (postId: string, params: CreatePostNftParams) => {
+  const url = new URL(`${env.NEXT_PUBLIC_APP_URL}/api/post/nft-image`);
+  Object.entries(params).forEach(([key, value]) => {
+    url.searchParams.append(key, String(value));
+  });
+  const response = await fetch(url.toString());
+
+  if (!response.ok) {
+    throw new Error("Failed to generate NFT image");
+  }
+
+  const formData = new FormData();
+  formData.append("file", await response.blob());
+
+  const data = await sigleApiFetchclient.POST(
+    "/api/protected/drafts/{draftId}/upload-nft-image",
+    {
+      params: {
+        path: {
+          draftId: postId,
+        },
+      },
+      // biome-ignore lint/suspicious/noExplicitAny: <explanation>
+      body: formData as any,
+    },
+  );
+  if (!data.data) {
+    throw new Error(`Failed to upload NFT image`);
+  }
+  return data.data.url;
+};
+
 export const generateSigleMetadataFromForm = async ({
+  userAddress,
   editor,
   postId,
   post,
 }: {
+  userAddress: string;
   editor?: Editor;
   postId: string;
   post: EditorPostFormData;
@@ -95,8 +131,11 @@ export const generateSigleMetadataFromForm = async ({
     name: post.title,
     description,
     external_url: `${env.NEXT_PUBLIC_APP_URL}/p/${postId}`,
-    // TODO upload image to IPFS and add it to the metadata
-    // image: `${env.NEXT_PUBLIC_APP_URL}/api/post/${postId}/nft-image`,
+    image: await uploadNftImage(postId, {
+      title: post.title,
+      coverImage: coverImage?.url,
+      username: userAddress,
+    }),
     // TODO keep content or rename to metadata?
     content: {
       id: postId,
