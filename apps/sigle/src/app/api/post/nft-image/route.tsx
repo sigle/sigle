@@ -55,7 +55,7 @@ export async function GET(request: Request) {
 
   return new ImageResponse(
     <div
-      tw="flex h-full w-full flex-col items-start px-6 py-6 justify-between"
+      tw="flex flex-col h-full w-full justify-between items-start"
       style={{
         color: "#202020",
         backgroundColor: "#ffffff",
@@ -63,49 +63,60 @@ export async function GET(request: Request) {
       }}
     >
       {coverImage ? (
-        <img
-          tw="w-full"
-          src={coverImage}
-          alt="coverImage"
-          height={size.height / 2}
-          style={{
-            objectFit: "cover",
-          }}
-        />
+        <div tw="flex">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            tw="w-full"
+            src={coverImage}
+            alt="coverImage"
+            height={size.height / 2}
+            style={{
+              objectFit: "cover",
+            }}
+          />
+        </div>
       ) : null}
       <div
-        tw="text-4xl leading-10 overflow-hidden"
+        tw="flex w-full flex-col items-start px-6 py-6 justify-between"
         style={{
-          display: "block",
-          lineClamp: 3,
-          fontWeight: 500,
+          height: size.height / 2,
         }}
       >
-        {title}
-      </div>
-      <div tw="flex w-full items-center justify-between">
-        <div tw="flex items-center">
-          {avatar ? (
-            <img
-              tw="rounded-full"
-              src={avatar}
-              alt="avatar"
-              height={50}
-              width={50}
-              style={{
-                objectFit: "cover",
-              }}
-            />
-          ) : null}
-          <div tw="flex flex-col ml-3">
-            {username ? <div tw="text-xl">{username}</div> : null}
-            <div
-              tw="text-xs"
-              style={{
-                color: "#646464",
-              }}
-            >
-              {`@${handle}`}
+        <div
+          tw="text-4xl leading-10 overflow-hidden"
+          style={{
+            display: "block",
+            lineClamp: 3,
+            fontWeight: 500,
+          }}
+        >
+          {title}
+        </div>
+        <div tw="flex w-full items-center justify-between">
+          <div tw="flex items-center">
+            {avatar ? (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img
+                tw="rounded-full"
+                src={avatar}
+                alt="avatar"
+                height={50}
+                width={50}
+                style={{
+                  objectFit: "cover",
+                }}
+              />
+            ) : null}
+            <div tw="flex flex-col ml-3">
+              {username ? <div tw="text-xl">{username}</div> : null}
+              <div
+                tw="text-xs"
+                style={{
+                  color: "#646464",
+                }}
+              >
+                {`@${handle}`}
+              </div>
             </div>
           </div>
         </div>
