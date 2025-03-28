@@ -388,6 +388,7 @@ export interface paths {
                 limit: number;
               };
             };
+            tags?: string[];
           };
         };
       };

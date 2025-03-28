@@ -61,6 +61,12 @@ defineRouteMeta({
                   },
                 },
               },
+              tags: {
+                type: "array",
+                items: {
+                  type: "string",
+                },
+              },
             },
           },
         },
@@ -103,6 +109,7 @@ const updateDraftSchema = z.object({
       limit: z.coerce.number().int().min(1),
     }),
   }),
+  tags: z.array(z.string()).optional(),
 });
 
 export default defineEventHandler(async (event) => {
@@ -124,6 +131,7 @@ export default defineEventHandler(async (event) => {
       collectPrice: body.collect.collectPrice.price,
       collectLimitType: body.collect.collectLimit.type,
       collectLimit: body.collect.collectLimit.limit,
+      tags: body.tags,
     },
     select: {
       id: true,

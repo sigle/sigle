@@ -144,8 +144,7 @@ export const generateSigleMetadataFromForm = async ({
       attributes:
         metadataAttributes.length > 0 ? metadataAttributes : undefined,
       coverImage,
-      // locale: 'en',
-      // tags: [],
+      tags: (post.tags?.length || 0) > 0 ? post.tags : undefined,
     },
   });
 
