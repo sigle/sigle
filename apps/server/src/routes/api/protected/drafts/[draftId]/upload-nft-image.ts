@@ -1,8 +1,5 @@
-import { z } from "zod";
 import { env } from "~/env";
-import { generateCID } from "~/lib/arweave";
-import { ipfsUploadFile } from "~/lib/filebase";
-import { mimeTypeToExtension } from "~/lib/images";
+import { ipfsUploadFile } from "~/lib/ipfs-upload";
 import { prisma } from "~/lib/prisma";
 
 defineRouteMeta({
@@ -16,11 +13,10 @@ defineRouteMeta({
           "application/json": {
             schema: {
               type: "object",
-              required: ["cid", "url", "gatewayUrl"],
+              required: ["cid", "url"],
               properties: {
                 cid: { type: "string" },
                 url: { type: "string" },
-                gatewayUrl: { type: "string" },
               },
             },
           },
@@ -55,7 +51,6 @@ export default defineEventHandler(async (event) => {
   const optimizedBuffer = Buffer.from(await data.arrayBuffer());
 
   const { cid } = await ipfsUploadFile(event, {
-    path: `${event.context.user.id}/post-${draftId}/nft-image.png`,
     content: optimizedBuffer,
   });
 
@@ -71,6 +66,5 @@ export default defineEventHandler(async (event) => {
   return {
     cid,
     url: `ipfs://${cid}`,
-    gatewayUrl: `${env.IPFS_GATEWAY_URL}/ipfs/${cid}`,
   };
 });
