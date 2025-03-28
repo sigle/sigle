@@ -11,11 +11,11 @@
 (define-data-var fixed-fee-structure {
     protocol: uint,
     creator: uint,
-    mintReferrer: uint
+    mint-referrer: uint
 } {
     protocol: u1050,
     creator: u1500,
-    mintReferrer: u450
+    mint-referrer: u450
 })
 
 (define-map contract-mint-config principal {
@@ -67,7 +67,7 @@
   )
 )
 
-(define-public (mint (token-contract <sigle-post-trait>) (quantity uint) (mintReferrer (optional principal)) (recipient (optional principal)))
+(define-public (mint (token-contract <sigle-post-trait>) (quantity uint) (mint-referrer (optional principal)) (recipient (optional principal)))
   (let (
     (protocol-address (contract-call? .sigle-protocol get-payout-address))
     (mint-config (unwrap! (map-get? contract-mint-config (contract-of token-contract)) (err ERR-INVALID-MINT-DATA)))
@@ -75,10 +75,10 @@
     (fees (var-get fixed-fee-structure))
     (protocol-fee (* (get protocol fees) quantity))
     (creator-fee (* (get creator fees) quantity))
-    (referrer-fee (* (get mintReferrer fees) quantity))
+    (referrer-fee (* (get mint-referrer fees) quantity))
     (price-amount (* (get price mint-config) quantity))
     (creator-address (try! (contract-call? token-contract get-contract-owner)))
-    (referrer-address (default-to protocol-address mintReferrer))
+    (referrer-address (default-to protocol-address mint-referrer))
   )
     (asserts! (>= burn-block-height (get start-block mint-config)) (err ERR-SALE-NOT-STARTED))
     (asserts! (<= burn-block-height (get end-block mint-config)) (err ERR-SALE-ENDED))
@@ -99,7 +99,7 @@
     (try! (if (<= u9 quantity) (as-contract (contract-call? token-contract mint mint-recipient)) (ok u0)))
     (try! (if (<= u10 quantity) (as-contract (contract-call? token-contract mint mint-recipient)) (ok u0)))
 
-    (print { a: "mint", contract: token-contract, quantity: quantity, mintReferrer: mintReferrer, recipient: mint-recipient })
+    (print { a: "mint", contract: token-contract, quantity: quantity, mint-referrer: mint-referrer, recipient: mint-recipient })
     (ok true)
   )
 )
@@ -130,7 +130,7 @@
   )
 )
 
-(define-public (update-fees (protocol uint) (creator uint) (mintReferrer uint))
+(define-public (update-fees (protocol uint) (creator uint) (mint-referrer uint))
     (let (
         (protocol-owner (contract-call? .sigle-protocol get-contract-owner))
     )
@@ -138,9 +138,9 @@
         (var-set fixed-fee-structure {
             protocol: protocol,
             creator: creator,
-            mintReferrer: mintReferrer
+            mint-referrer: mint-referrer
         })
-        (print { a: "update-fees", protocol: protocol, creator: creator, mintReferrer: mintReferrer })
+        (print { a: "update-fees", protocol: protocol, creator: creator, mint-referrer: mint-referrer })
         (ok true)
     )
 )
