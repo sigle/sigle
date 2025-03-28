@@ -12,11 +12,6 @@ export const PublishReviewGeneral = () => {
 
   const isMetaConfigured = data.metaTitle && data.metaDescription;
 
-  const openSettings = () => {
-    setPublishOpen(false);
-    setMenuOpen(true);
-  };
-
   const openMetaSettings = () => {
     setPublishOpen(false);
     setMenuOpen("meta");
@@ -61,24 +56,6 @@ export const PublishReviewGeneral = () => {
                   not configured <IconInfoCircle size={12} />
                 </Badge>
               </Tooltip>
-            )}
-          </Text>
-        </div>
-        <div className="flex justify-between border-t border-solid border-gray-4 py-3">
-          <Text size="2" color="gray">
-            Tags
-          </Text>
-          <Text size="2">
-            {(data.tags?.length || 0) > 0 ? (
-              <Badge color="indigo">configured</Badge>
-            ) : (
-              <Badge
-                className="cursor-pointer"
-                color="orange"
-                onClick={openSettings}
-              >
-                not configured <IconPencil size={12} />
-              </Badge>
             )}
           </Text>
         </div>
