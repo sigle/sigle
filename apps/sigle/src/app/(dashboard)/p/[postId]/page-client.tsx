@@ -9,7 +9,7 @@ import { PostUserActions } from "@/components/Post/UserActions";
 import { PostUserInfoCard } from "@/components/Post/UserInfoCard";
 import { FadeSlideBottom } from "@/components/ui";
 import { resolveImageUrl } from "@/lib/images";
-import { Container, Heading, Separator } from "@radix-ui/themes";
+import { Badge, Container, Heading, Separator } from "@radix-ui/themes";
 import Image from "next/image";
 import { notFound } from "next/navigation";
 import { use } from "react";
@@ -59,6 +59,16 @@ export function PostClientPage(props: Props) {
         ) : null}
 
         {post.content ? <PostMarkdownContent content={post.content} /> : null}
+
+        {post.tags ? (
+          <div className="mt-5 flex gap-2">
+            {post.tags.map((tag) => (
+              <Badge key={tag} color="orange">
+                {tag}
+              </Badge>
+            ))}
+          </div>
+        ) : null}
 
         <Separator size="4" className="my-10" />
 
