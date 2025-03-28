@@ -59,6 +59,7 @@ export async function getMetadataFromUri(baseTokenUri: string) {
     metaDescription,
     excerpt: excerpt || "",
     coverImage: postData.content.coverImage,
+    tags: postData.content.tags,
   };
 
   return metadata;
@@ -157,6 +158,7 @@ export const executeNewPostJob = async (
         metaTitle: metadata.metaTitle,
         metaDescription: metadata.metaDescription,
         excerpt: metadata.excerpt,
+        tags: metadata.tags,
       },
     });
 

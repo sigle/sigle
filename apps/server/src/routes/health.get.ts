@@ -165,6 +165,12 @@ defineRouteMeta({
               excerpt: {
                 type: "string",
               },
+              tags: {
+                type: "array",
+                items: {
+                  type: "string",
+                },
+              },
               address: {
                 type: "string",
               },

@@ -72,6 +72,7 @@ export default defineEventHandler(async (event) => {
       metaDescription: true,
       coverImage: true,
       excerpt: true,
+      tags: true,
       txId: true,
       maxSupply: true,
       collected: true,

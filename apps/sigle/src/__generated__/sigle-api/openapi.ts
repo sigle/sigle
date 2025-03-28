@@ -234,6 +234,7 @@ export interface paths {
               metaTitle?: string;
               metaDescription?: string;
               coverImage?: string;
+              tags?: string[];
               /** @enum {string} */
               collectPriceType?: "free" | "paid";
               collectPrice?: string;
@@ -388,6 +389,7 @@ export interface paths {
                 limit: number;
               };
             };
+            tags?: string[];
           };
         };
       };
@@ -556,6 +558,8 @@ export interface paths {
              * @description Profile media
              */
             file: string;
+            /** @enum {string} */
+            type: "draft" | "published";
           };
         };
       };
@@ -1087,6 +1091,7 @@ export interface components {
         blurhash?: string;
       };
       excerpt?: string;
+      tags?: string[];
       address: string;
       txId: string;
       maxSupply: number;

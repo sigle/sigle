@@ -8,6 +8,7 @@ import {
 import { useEditorStore } from "../store";
 import { CollectSettings } from "./CollectSettings";
 import { DialogTitle } from "./DialogTitle";
+import { GeneralSettings } from "./GeneralSettings";
 import { MetaSettings } from "./MetaSettings";
 import styles from "./styles.module.css";
 
@@ -62,6 +63,7 @@ export const EditorSettings = () => {
                 </Text>
               </div>
             </Inset>
+            <GeneralSettings />
           </div>
         ) : null}
 
