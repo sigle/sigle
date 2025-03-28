@@ -124,9 +124,6 @@ export const PublishDialog = ({ postId }: PublishDialogProps) => {
             postId,
           });
 
-          // TODO verify that images do not start with blob: otherwise it means it's still loading (in content)
-          // We should stop and notify the user that the image is still loading
-
           // Do we do one global id or other?
           // TODO create a REST route to determine the next post id? But do not use postId
           const newPostId = postId;
@@ -135,6 +132,19 @@ export const PublishDialog = ({ postId }: PublishDialogProps) => {
             postId: newPostId,
             post: data,
           });
+
+          // Check for blob URLs in editor content which indicates unfinished image uploads
+          // or something that went wrong during the upload process
+          if (metadata.content.content.includes("blob:")) {
+            setPublishingError(
+              "Please wait for all images to finish uploading before publishing",
+            );
+            toast.error("Images still uploading", {
+              description:
+                "Please wait for all images to finish uploading before publishing",
+            });
+            return;
+          }
 
           const uploadedMetadata = await uploadMetadata({
             params: {

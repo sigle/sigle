@@ -4,7 +4,6 @@ import type { NextConfig } from "next";
 const nextConfig: NextConfig = {
   output: "standalone",
   images: {
-    // TODO find a better way to do this
     remotePatterns: [
       {
         protocol: "https",
