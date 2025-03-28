@@ -20,8 +20,12 @@ defineRouteMeta({
                 format: "binary",
                 description: "Profile media",
               },
+              type: {
+                type: "string",
+                enum: ["draft", "published"],
+              },
             },
-            required: ["file"],
+            required: ["file", "type"],
           },
         },
       },
@@ -47,9 +51,12 @@ defineRouteMeta({
 });
 
 const fileSchema = z.object({
-  name: z.string(),
-  filename: z.string(),
-  type: z.enum(allowedFormats),
+  file: z.object({
+    name: z.string(),
+    filename: z.string(),
+    type: z.enum(allowedFormats),
+  }),
+  type: z.enum(["draft", "published"]),
 });
 
 export default defineEventHandler(async (event) => {
@@ -57,6 +64,7 @@ export default defineEventHandler(async (event) => {
   const formData = await readMultipartFormDataSafe(event, "5mb");
 
   const file = formData?.find((f) => f.name === "file");
+  const type = formData?.find((f) => f.name === "type");
   if (!file) {
     throw createError({
       status: 400,
@@ -64,7 +72,10 @@ export default defineEventHandler(async (event) => {
     });
   }
 
-  const parsedFile = fileSchema.safeParse(file);
+  const parsedFile = fileSchema.safeParse({
+    file,
+    type: type ? type.data.toString() : undefined,
+  });
   if (!parsedFile.success) {
     throw createError({
       status: 400,
@@ -72,15 +83,26 @@ export default defineEventHandler(async (event) => {
     });
   }
 
-  const draft = await prisma.draft.findUnique({
-    select: {
-      id: true,
-    },
-    where: {
-      id: draftId,
-      userId: event.context.user.id,
-    },
-  });
+  const draft =
+    parsedFile.data.type === "draft"
+      ? await prisma.draft.findUnique({
+          select: {
+            id: true,
+          },
+          where: {
+            id: draftId,
+            userId: event.context.user.id,
+          },
+        })
+      : await prisma.post.findUnique({
+          select: {
+            id: true,
+          },
+          where: {
+            id: draftId,
+            userId: event.context.user.id,
+          },
+        });
   if (!draft) {
     throw createError({
       status: 404,
@@ -90,7 +112,7 @@ export default defineEventHandler(async (event) => {
 
   const optimizedBuffer = await optimizeImage({
     buffer: file.data,
-    contentType: parsedFile.data.type,
+    contentType: parsedFile.data.file.type,
     quality: 75,
     width: 500,
   });

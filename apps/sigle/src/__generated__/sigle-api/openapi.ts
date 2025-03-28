@@ -558,6 +558,8 @@ export interface paths {
              * @description Profile media
              */
             file: string;
+            /** @enum {string} */
+            type: "draft" | "published";
           };
         };
       };

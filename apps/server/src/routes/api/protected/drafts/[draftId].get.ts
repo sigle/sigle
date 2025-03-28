@@ -188,7 +188,7 @@ export default defineEventHandler<
       txId: published.txId,
       collectPriceType: published.price > 0 ? "paid" : "free",
       collectPrice: published.price,
-      collectLimitType: published.openEdition ? "open" : "closed",
+      collectLimitType: published.openEdition ? "open" : "fixed",
       collectLimit: published.maxSupply,
       createdAt: published.createdAt,
       updatedAt: published.updatedAt,
