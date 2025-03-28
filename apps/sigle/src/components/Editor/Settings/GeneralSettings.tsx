@@ -1,4 +1,5 @@
 import { Inset, Text } from "@radix-ui/themes";
+import { IconX } from "@tabler/icons-react";
 import { useFormContext } from "react-hook-form";
 import { WithContext as ReactTags, type Tag } from "react-tag-input";
 import { EditorPostFormData } from "../EditorFormProvider";
@@ -56,8 +57,7 @@ export const GeneralSettings = () => {
             tagInputField:
               "h-8 rounded-2 border border-gray-4 pl-3.5 w-full focus:outline-orange-8",
             selected: "mt-2 flex gap-2 flex-wrap",
-            tag: "inline-flex rounded-2 border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 border-transparent bg-gray-3 shadow hover:bg-gray-2",
-            remove: "ml-2",
+            tag: "inline-flex gap-1 rounded-2 border px-1.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 border-transparent bg-orange-3 text-orange-9 shadow hover:bg-orange-3",
           }}
           tags={formattedTags}
           inputFieldPosition="top"
@@ -65,11 +65,17 @@ export const GeneralSettings = () => {
           handleAddition={handleAddition}
           handleDrag={handleDrag}
           onTagUpdate={handleTagUpdate}
-          editable
-          clearAll
           onClearAll={handleClearAll}
           maxTags={5}
-          allowAdditionFromPaste
+          removeComponent={({ onRemove }) => (
+            <button
+              type="button"
+              onClick={() => onRemove()}
+              className="text-orange-9"
+            >
+              <IconX size={14} />
+            </button>
+          )}
         />
       </div>
     </Inset>
