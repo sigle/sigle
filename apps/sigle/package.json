@@ -61,6 +61,7 @@
     "framer-motion": "12.6.0",
     "highlight.js": "11.11.1",
     "lowlight": "3.3.0",
+    "multiformats": "13.3.2",
     "nanoid": "5.1.5",
     "next": "15.2.4",
     "next-auth": "5.0.0-beta.25",
