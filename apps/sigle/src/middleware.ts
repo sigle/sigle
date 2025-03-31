@@ -1,6 +1,7 @@
-export { auth as middleware } from "@/lib/auth-edge";
+export { auth as middleware } from "@/lib/auth";
 
 export const config = {
+  runtime: "nodejs",
   // The matcher is required to avoid duplicate cookies on logout from next-auth
   // without it, logout is not working as cookies are overwritten by the middleware
   matcher: [
