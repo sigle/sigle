@@ -24,10 +24,10 @@
     "@stacks/network": "7.0.2",
     "@stacks/transactions": "7.0.4",
     "@tsconfig/recommended": "1.0.8",
-    "@types/node": "22.13.13",
+    "@types/node": "22.14.0",
     "tsup": "8.4.0",
     "typescript": "5.8.2",
-    "vitest": "3.0.9"
+    "vitest": "3.1.1"
   },
   "peerDependencies": {
     "@stacks/common": "^7.0.2",
