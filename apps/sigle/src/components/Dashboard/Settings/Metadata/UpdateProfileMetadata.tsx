@@ -25,10 +25,6 @@ const updateProfileMetadataSchema = z.object({
   coverPicture: z.string().optional(),
 });
 
-type UpdateProfileMetadataFormData = z.infer<
-  typeof updateProfileMetadataSchema
->;
-
 interface UpdateProfileMetadataProps {
   profile: paths["/api/users/{username}"]["get"]["responses"]["200"]["content"]["application/json"]["profile"];
   setEditingProfileMetadata: (editing: boolean) => void;
@@ -76,7 +72,7 @@ export const UpdateProfileMetadata = ({
     setValue,
     getValues,
     formState: { errors, isSubmitting },
-  } = useForm<UpdateProfileMetadataFormData>({
+  } = useForm({
     resolver: zodResolver(updateProfileMetadataSchema),
     values: {
       displayName: profile?.displayName || undefined,
