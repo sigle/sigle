@@ -35,7 +35,7 @@ export const EditorFormProvider = ({
   children,
   post,
 }: EditorFormProviderProps) => {
-  const methods = useForm<EditorPostFormData>({
+  const methods = useForm({
     mode: "onBlur",
     resolver: zodResolver(editorPostSchema),
     defaultValues: {

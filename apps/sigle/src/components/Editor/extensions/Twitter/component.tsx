@@ -26,8 +26,6 @@ const embedSchema = z.object({
   }),
 });
 
-type EmbedFormData = z.infer<typeof embedSchema>;
-
 export const EmbedComponent = (props: NodeViewProps) => {
   const {
     register,
@@ -35,7 +33,7 @@ export const EmbedComponent = (props: NodeViewProps) => {
     getValues,
     setFocus,
     formState: { errors },
-  } = useForm<EmbedFormData>({
+  } = useForm({
     resolver: zodResolver(embedSchema),
   });
 
