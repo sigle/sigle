@@ -136,7 +136,7 @@ export const PostCollectDialog = ({
   const isFree = price === BigInt(0);
   const loadingCollect = contractLoading;
   const totalPrice = isPostOwner
-    ? 0n
+    ? BigInt(0)
     : BigInt(editions) * (price + fixedMintFee.total);
   const protocolFee = BigInt(editions) * fixedMintFee.protocol;
   const creatorFee = BigInt(editions) * (price + fixedMintFee.creator);
