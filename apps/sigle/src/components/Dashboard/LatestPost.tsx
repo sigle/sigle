@@ -64,7 +64,8 @@ export const LatestPost = () => {
             </div>
 
             <div className="-mb-4 mt-5">
-              <Flex
+              {/* TODO once we have that info from backend */}
+              {/* <Flex
                 gap="5"
                 align="center"
                 justify="between"
@@ -80,7 +81,7 @@ export const LatestPost = () => {
                     sBTC
                   </Text>
                 </Text>
-              </Flex>
+              </Flex> */}
               <Flex
                 gap="5"
                 align="center"
