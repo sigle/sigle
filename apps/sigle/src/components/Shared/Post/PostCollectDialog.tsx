@@ -62,6 +62,7 @@ export const PostCollectDialog = ({
       open ? "sBTC" : undefined,
     );
   const [editions, setEditions] = useState(1);
+  const isPostOwner = session?.user.address === post.address.split(".")[0];
 
   const { contractCall, loading: contractLoading } = useContractCall({
     onSuccess: (data) => {
@@ -90,8 +91,14 @@ export const PostCollectDialog = ({
       return;
     }
 
-    if (session.user.address === post.address.split(".")[0]) {
-      alert("You cannot collect your own post (will be possible soon)");
+    // Handle owner mint case
+    if (isPostOwner) {
+      const { parameters } = await sigleClient.ownerMint({
+        contract: post.address,
+        amount: editions,
+      });
+
+      await contractCall(parameters);
       return;
     }
 
@@ -128,7 +135,9 @@ export const PostCollectDialog = ({
   const price = BigInt(post.price);
   const isFree = price === BigInt(0);
   const loadingCollect = contractLoading;
-  const totalPrice = BigInt(editions) * (price + fixedMintFee.total);
+  const totalPrice = isPostOwner
+    ? 0n
+    : BigInt(editions) * (price + fixedMintFee.total);
   const protocolFee = BigInt(editions) * fixedMintFee.protocol;
   const creatorFee = BigInt(editions) * (price + fixedMintFee.creator);
   const referrerFee = BigInt(editions) * fixedMintFee.mintReferrer;
@@ -252,28 +261,30 @@ export const PostCollectDialog = ({
           <div className="flex items-start justify-between">
             <Text className="flex items-center gap-1" size="3" weight="medium">
               Total{" "}
-              <Tooltip
-                content={
-                  <div className="grid gap-2 p-2">
-                    <div className="flex justify-between gap-2">
-                      <Text>Creator:</Text>
-                      <Text>{formatBTC(creatorFee)} sBTC</Text>
+              {!isPostOwner ? (
+                <Tooltip
+                  content={
+                    <div className="grid gap-2 p-2">
+                      <div className="flex justify-between gap-2">
+                        <Text>Creator:</Text>
+                        <Text>{formatBTC(creatorFee)} sBTC</Text>
+                      </div>
+                      <div className="flex justify-between gap-2">
+                        <Text>Platform:</Text>
+                        <Text>{formatBTC(protocolFee)} sBTC</Text>
+                      </div>
+                      <div className="flex justify-between gap-2">
+                        <Text>Referrer:</Text>
+                        <Text>{formatBTC(referrerFee)} sBTC</Text>
+                      </div>
                     </div>
-                    <div className="flex justify-between gap-2">
-                      <Text>Platform:</Text>
-                      <Text>{formatBTC(protocolFee)} sBTC</Text>
-                    </div>
-                    <div className="flex justify-between gap-2">
-                      <Text>Referrer:</Text>
-                      <Text>{formatBTC(referrerFee)} sBTC</Text>
-                    </div>
-                  </div>
-                }
-              >
-                <Text color="gray">
-                  <IconInfoCircle size={16} />
-                </Text>
-              </Tooltip>
+                  }
+                >
+                  <Text color="gray">
+                    <IconInfoCircle size={16} />
+                  </Text>
+                </Tooltip>
+              ) : null}
             </Text>
             <div className="text-right">
               <Text as="p" size="3" weight="medium">
@@ -302,8 +313,13 @@ export const PostCollectDialog = ({
               loading={loadingCollect}
               onClick={onCollect}
             >
-              Collect
+              {isPostOwner ? "Collect as owner" : "Collect"}
             </Button>
+            {isPostOwner ? (
+              <Text as="p" size="1" color="gray">
+                Collect your own post for free.
+              </Text>
+            ) : null}
           </div>
         </div>
       </Dialog.Content>
