@@ -135,9 +135,7 @@ export const PostCollectDialog = ({
   const price = BigInt(post.price);
   const isFree = price === BigInt(0);
   const loadingCollect = contractLoading;
-  const totalPrice = isPostOwner
-    ? BigInt(0)
-    : BigInt(editions) * (price + fixedMintFee.total);
+  const totalPrice = BigInt(editions) * (price + fixedMintFee.total);
   const protocolFee = BigInt(editions) * fixedMintFee.protocol;
   const creatorFee = BigInt(editions) * (price + fixedMintFee.creator);
   const referrerFee = BigInt(editions) * fixedMintFee.mintReferrer;
@@ -287,20 +285,30 @@ export const PostCollectDialog = ({
               ) : null}
             </Text>
             <div className="text-right">
-              <Text as="p" size="3" weight="medium">
+              <Text
+                as="p"
+                size="3"
+                weight="medium"
+                className={isPostOwner ? "line-through" : undefined}
+              >
                 {formatBTC(totalPrice)} sBTC
               </Text>
-              {loadingCurrencyFiatPrice ? (
+              {!isPostOwner && loadingCurrencyFiatPrice ? (
                 <Text as="p" size="1">
                   <Skeleton>price...</Skeleton>
                 </Text>
               ) : null}
-              {totalPrice && currencyFiatPrice ? (
+              {!isPostOwner && totalPrice && currencyFiatPrice ? (
                 <Text as="p" size="1" color="gray">
                   ~
                   {formatUSDollar.format(
                     Number(formatBTC(totalPrice)) * Number(currencyFiatPrice),
                   )}
+                </Text>
+              ) : null}
+              {isPostOwner ? (
+                <Text as="p" size="1" color="gray">
+                  Collect your own post for free.
                 </Text>
               ) : null}
             </div>
@@ -315,11 +323,6 @@ export const PostCollectDialog = ({
             >
               {isPostOwner ? "Collect as owner" : "Collect"}
             </Button>
-            {isPostOwner ? (
-              <Text as="p" size="1" color="gray">
-                Collect your own post for free.
-              </Text>
-            ) : null}
           </div>
         </div>
       </Dialog.Content>
