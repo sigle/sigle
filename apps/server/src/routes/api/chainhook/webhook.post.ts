@@ -78,6 +78,7 @@ export default defineEventHandler(async (event) => {
           for (const event of events) {
             const value:
               | { a: "mint"; contract: string; quantity: number }
+              | { a: "owner-mint"; contract: string; quantity: number }
               | {
                   a: "init-mint-details";
                   contract: string;
@@ -100,6 +101,7 @@ export default defineEventHandler(async (event) => {
               event.data.value;
             switch (value.a) {
               case "mint":
+              case "owner-mint":
                 await indexerJob.emit({
                   action: "indexer-mint",
                   data: {
