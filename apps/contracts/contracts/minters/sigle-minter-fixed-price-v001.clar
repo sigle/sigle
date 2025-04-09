@@ -7,7 +7,7 @@
 (define-constant ERR-SALE-NOT-STARTED u1003)
 (define-constant ERR-SALE-ENDED u1004)
 
-;; Sigle fee structure for all mints
+;; Fee structure for all mints
 (define-data-var fixed-fee-structure {
     protocol: uint,
     creator: uint,
