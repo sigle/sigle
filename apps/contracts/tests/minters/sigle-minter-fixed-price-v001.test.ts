@@ -34,7 +34,8 @@ describe(contract, () => {
           [
             Cl.uint(100000), // Protocol fee
             Cl.uint(200000), // Creator fee
-            Cl.uint(50000), // Referrer fee
+            Cl.uint(60000), // Create referrer fee
+            Cl.uint(50000), // Mint referrer fee
           ],
           deployer,
         );
@@ -46,7 +47,7 @@ describe(contract, () => {
         const { result } = simnet.callPublicFn(
           contract,
           "update-fees",
-          [Cl.uint(100000), Cl.uint(200000), Cl.uint(50000)],
+          [Cl.uint(100000), Cl.uint(200000), Cl.uint(60000), Cl.uint(50000)],
           wallet1,
         );
 
@@ -373,6 +374,7 @@ describe(contract, () => {
           price: Cl.uint(2000000),
           "start-block": Cl.uint(20),
           "end-block": Cl.uint(200),
+          "create-referrer": Cl.none(),
         }),
       );
     });
