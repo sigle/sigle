@@ -259,6 +259,16 @@ describe(contract, () => {
       expect(events[2]).toEqual({
         event: "ft_transfer_event",
         data: {
+          amount: fixedMintFee.createReferrer.toString(),
+          asset_identifier:
+            "SM3VDXK3WZZSA84XXFKAFAF15NNZX32CTSG82JFQ4.sbtc-token::sbtc-token",
+          recipient: deployer,
+          sender: wallet2,
+        },
+      });
+      expect(events[3]).toEqual({
+        event: "ft_transfer_event",
+        data: {
           amount: fixedMintFee.mintReferrer.toString(),
           asset_identifier:
             "SM3VDXK3WZZSA84XXFKAFAF15NNZX32CTSG82JFQ4.sbtc-token::sbtc-token",
@@ -266,6 +276,7 @@ describe(contract, () => {
           sender: wallet2,
         },
       });
+      expect(events.length).toBe(6);
     });
 
     it("fees should match the SDK values for paid mints", () => {
@@ -323,6 +334,16 @@ describe(contract, () => {
       expect(events[2]).toEqual({
         event: "ft_transfer_event",
         data: {
+          amount: fixedMintFee.createReferrer.toString(),
+          asset_identifier:
+            "SM3VDXK3WZZSA84XXFKAFAF15NNZX32CTSG82JFQ4.sbtc-token::sbtc-token",
+          recipient: deployer,
+          sender: wallet2,
+        },
+      });
+      expect(events[3]).toEqual({
+        event: "ft_transfer_event",
+        data: {
           amount: fixedMintFee.mintReferrer.toString(),
           asset_identifier:
             "SM3VDXK3WZZSA84XXFKAFAF15NNZX32CTSG82JFQ4.sbtc-token::sbtc-token",
@@ -330,6 +351,83 @@ describe(contract, () => {
           sender: wallet2,
         },
       });
+      expect(events.length).toBe(6);
+    });
+
+    it("fees should respect the create referrer fee for mints", () => {
+      const { contract: defaultContract } = sigleClient.generatePostContract({
+        collectInfo: {
+          amount: 42000,
+          maxSupply: 100,
+          createReferrer: wallet3,
+        },
+        metadata: "ipfs://anything",
+      });
+      const defaultContractName = `${wallet1}.default-contract`;
+
+      simnet.deployContract(
+        defaultContractName.split(".")[1],
+        defaultContract,
+        { clarityVersion: 3 },
+        wallet1,
+      );
+
+      const { events } = simnet.callPublicFn(
+        contract,
+        "mint",
+        [
+          Cl.contractPrincipal(
+            defaultContractName.split(".")[0],
+            defaultContractName.split(".")[1],
+          ),
+          Cl.uint(1),
+          Cl.some(Cl.principal(wallet3)),
+          Cl.none(), // no specific recipient
+        ],
+        wallet2,
+      );
+
+      expect(events[0]).toEqual({
+        event: "ft_transfer_event",
+        data: {
+          amount: fixedMintFee.protocol.toString(),
+          asset_identifier:
+            "SM3VDXK3WZZSA84XXFKAFAF15NNZX32CTSG82JFQ4.sbtc-token::sbtc-token",
+          recipient: deployer,
+          sender: wallet2,
+        },
+      });
+      expect(events[1]).toEqual({
+        event: "ft_transfer_event",
+        data: {
+          amount: (42000n + fixedMintFee.creator).toString(),
+          asset_identifier:
+            "SM3VDXK3WZZSA84XXFKAFAF15NNZX32CTSG82JFQ4.sbtc-token::sbtc-token",
+          recipient: wallet1,
+          sender: wallet2,
+        },
+      });
+      expect(events[2]).toEqual({
+        event: "ft_transfer_event",
+        data: {
+          amount: fixedMintFee.createReferrer.toString(),
+          asset_identifier:
+            "SM3VDXK3WZZSA84XXFKAFAF15NNZX32CTSG82JFQ4.sbtc-token::sbtc-token",
+          recipient: wallet3,
+          sender: wallet2,
+        },
+      });
+      expect(events[3]).toEqual({
+        event: "ft_transfer_event",
+        data: {
+          amount: fixedMintFee.mintReferrer.toString(),
+          asset_identifier:
+            "SM3VDXK3WZZSA84XXFKAFAF15NNZX32CTSG82JFQ4.sbtc-token::sbtc-token",
+          recipient: wallet3,
+          sender: wallet2,
+        },
+      });
+      expect(events.length).toBe(6);
     });
   });
 

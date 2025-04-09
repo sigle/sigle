@@ -71,7 +71,7 @@ export const generatePostContract = ({
       params.collectInfo.amount
     } u0 u${MAX_UINT} ${
       params.collectInfo.createReferrer
-        ? `'${params.collectInfo.createReferrer}`
+        ? `(some '${params.collectInfo.createReferrer})`
         : "none"
     })`,
   );

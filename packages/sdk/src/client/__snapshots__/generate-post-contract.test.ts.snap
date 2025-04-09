@@ -289,7 +289,7 @@ exports[`generate-post-contract > should generate fixed edition with create refe
 
 (begin
   (print { a: "publish-content", version: contract-version, minter: authorized-minter }))
-  (unwrap-panic (as-contract (contract-call? 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.sigle-minter-fixed-price-v001 init-mint-details u0 u0 u340282366920938463463374607431768211455 'SP2X0TZ59D5SZ8ACQ6YMCHHNR2ZN51Z32E2CJ173)))
+  (unwrap-panic (as-contract (contract-call? 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.sigle-minter-fixed-price-v001 init-mint-details u0 u0 u340282366920938463463374607431768211455 (some 'SP2X0TZ59D5SZ8ACQ6YMCHHNR2ZN51Z32E2CJ173))))
 
 ;; @desc SIP-009 transfer token to a specified principal
 (define-public (transfer (token-id uint) (sender principal) (recipient principal))
