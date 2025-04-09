@@ -1,3 +1,4 @@
+import * as Sentry from "@sentry/node";
 import {
   generateSiwsNonce,
   verifySiwsMessage,
@@ -122,6 +123,7 @@ export const betterAuthSiws = () =>
             return ctx.json({ token: session.token });
           } catch (error: any) {
             if (error instanceof APIError) throw error;
+            Sentry.captureException(error);
             throw new APIError("UNAUTHORIZED", {
               message: "Something went wrong. Please try again later.",
               error: error.message,
