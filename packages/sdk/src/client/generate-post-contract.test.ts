@@ -46,4 +46,20 @@ describe("generate-post-contract", () => {
     });
     expect(data.contract).toMatchSnapshot();
   });
+
+  test("should generate fixed edition with create referrer", () => {
+    const data = generatePostContract({
+      network: STACKS_MOCKNET,
+      networkName: "mocknet",
+      params: {
+        collectInfo: {
+          amount: 0,
+          maxSupply: 100,
+          createReferrer: "SP2X0TZ59D5SZ8ACQ6YMCHHNR2ZN51Z32E2CJ173",
+        },
+        metadata: "ipfs://whatever",
+      },
+    });
+    expect(data.contract).toMatchSnapshot();
+  });
 });

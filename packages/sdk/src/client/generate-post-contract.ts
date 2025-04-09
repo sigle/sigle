@@ -18,6 +18,10 @@ export type GeneratePostParams = {
      * Set undefined to create an open edition
      */
     maxSupply?: number;
+    /**
+     * The create referrer address to receive the create referrer fee on each mint
+     */
+    createReferrer?: string;
   };
 };
 
@@ -63,7 +67,13 @@ export const generatePostContract = ({
   // Replace the init function params
   contract = contract.replace(
     "(contract-call? .sigle-minter-fixed-price-v001 init-mint-details u0 u0 u1 none)",
-    `(contract-call? '${fixedPriceMinter} init-mint-details u${params.collectInfo.amount} u0 u${MAX_UINT})`,
+    `(contract-call? '${fixedPriceMinter} init-mint-details u${
+      params.collectInfo.amount
+    } u0 u${MAX_UINT} ${
+      params.collectInfo.createReferrer
+        ? `'${params.collectInfo.createReferrer}`
+        : "none"
+    })`,
   );
 
   // Replace the nft trait with the correct one
