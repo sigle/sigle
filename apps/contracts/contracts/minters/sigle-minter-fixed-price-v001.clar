@@ -153,7 +153,7 @@
   )
 )
 
-(define-public (update-fees (protocol uint) (creator uint) (mint-referrer uint) (create-referrer uint))
+(define-public (update-fees (protocol uint) (creator uint) (create-referrer uint) (mint-referrer uint))
     (let (
         (protocol-owner (contract-call? .sigle-protocol get-contract-owner))
     )
@@ -161,15 +161,15 @@
         (var-set fixed-fee-structure {
             protocol: protocol,
             creator: creator,
-            mint-referrer: mint-referrer,
-            create-referrer: create-referrer
+            create-referrer: create-referrer,
+            mint-referrer: mint-referrer
         })
         (print {
             a: "update-fees",
             protocol: protocol,
             creator: creator,
-            mint-referrer: mint-referrer,
-            create-referrer: create-referrer
+            create-referrer: create-referrer,
+            mint-referrer: mint-referrer
         })
         (ok true)
     )
