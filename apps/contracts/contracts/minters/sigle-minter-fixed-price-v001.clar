@@ -91,9 +91,9 @@
     (create-referrer-fee (* (get create-referrer fees) quantity))
     (mint-referrer-fee (* (get mint-referrer fees) quantity))
     (create-referrer-address (default-to protocol-address (get create-referrer mint-config)))
+    (mint-referrer-address (default-to protocol-address mint-referrer))
     (price-amount (* (get price mint-config) quantity))
     (creator-address (try! (contract-call? token-contract get-contract-owner)))
-    (referrer-address (default-to protocol-address mint-referrer))
   )
     (asserts! (>= burn-block-height (get start-block mint-config)) (err ERR-SALE-NOT-STARTED))
     (asserts! (<= burn-block-height (get end-block mint-config)) (err ERR-SALE-ENDED))
@@ -101,7 +101,7 @@
 
     (try! (contract-call? 'SM3VDXK3WZZSA84XXFKAFAF15NNZX32CTSG82JFQ4.sbtc-token transfer protocol-fee tx-sender protocol-address none))
     (try! (contract-call? 'SM3VDXK3WZZSA84XXFKAFAF15NNZX32CTSG82JFQ4.sbtc-token transfer (+ creator-fee price-amount) tx-sender creator-address none))
-    (try! (contract-call? 'SM3VDXK3WZZSA84XXFKAFAF15NNZX32CTSG82JFQ4.sbtc-token transfer mint-referrer-fee tx-sender referrer-address none))
+    (try! (contract-call? 'SM3VDXK3WZZSA84XXFKAFAF15NNZX32CTSG82JFQ4.sbtc-token transfer mint-referrer-fee tx-sender mint-referrer-address none))
     (try! (contract-call? 'SM3VDXK3WZZSA84XXFKAFAF15NNZX32CTSG82JFQ4.sbtc-token transfer create-referrer-fee tx-sender create-referrer-address none))
 
     (try! (if (<= u1 quantity) (as-contract (contract-call? token-contract mint mint-recipient)) (ok u0)))
