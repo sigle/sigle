@@ -14,11 +14,11 @@
   },
   "dependencies": {
     "@ardrive/turbo-sdk": "1.22.0",
-    "@dotenvx/dotenvx": "1.39.0",
+    "@dotenvx/dotenvx": "1.39.1",
     "@hirosystems/chainhook-client": "2.3.0",
     "@paralleldrive/cuid2": "2.2.2",
-    "@prisma/client": "6.5.0",
-    "@sentry/node": "9.11.0",
+    "@prisma/client": "6.6.0",
+    "@sentry/node": "9.12.0",
     "@sigle/sdk": "workspace:*",
     "@stacks/blockchain-api-client": "8.8.0",
     "@stacks/network": "7.0.2",
@@ -31,17 +31,17 @@
     "multiformats": "13.3.2",
     "next-auth": "5.0.0-beta.25",
     "nitro-cors": "0.7.1",
-    "pg-boss": "10.1.6",
-    "posthog-node": "4.11.1",
-    "prisma": "6.5.0",
-    "rate-limiter-flexible": "6.2.1",
+    "pg-boss": "10.2.0",
+    "posthog-node": "4.11.3",
+    "prisma": "6.6.0",
+    "rate-limiter-flexible": "7.0.0",
     "rou3": "0.5.1",
-    "sharp": "0.33.5",
+    "sharp": "0.34.1",
     "zod": "3.24.2",
     "zod-validation-error": "3.4.0"
   },
   "devDependencies": {
     "nitropack": "2.11.8",
-    "typescript": "5.8.2"
+    "typescript": "5.8.3"
   }
 }
