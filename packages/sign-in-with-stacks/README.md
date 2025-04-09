@@ -36,7 +36,7 @@ await openSignatureRequestPopup({
 });
 ```
 
-On the backend verify the signature, can be used with any framework, next-auth, express, etc.
+On the backend verify the signature, can be used with any framework, next-auth, better-auth, express, etc.
 
 ```ts
 import { verifySiwsMessage } from 'sign-in-with-stacks'

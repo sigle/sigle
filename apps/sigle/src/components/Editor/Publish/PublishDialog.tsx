@@ -3,6 +3,7 @@
 import { sigleApiClient, sigleApiFetchclient } from "@/__generated__/sigle-api";
 import { useContractCall } from "@/hooks/useContractCall";
 import { useContractDeploy } from "@/hooks/useContractDeploy";
+import { useSession } from "@/lib/auth-client";
 import { Routes } from "@/lib/routes";
 import { sigleClient } from "@/lib/sigle";
 import {
@@ -20,7 +21,6 @@ import {
 import * as Sentry from "@sentry/nextjs";
 import { parseBTC } from "@sigle/sdk";
 import { IconExclamationCircle } from "@tabler/icons-react";
-import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { usePostHog } from "posthog-js/react";
 import { useState } from "react";

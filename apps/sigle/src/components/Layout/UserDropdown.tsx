@@ -2,9 +2,9 @@
 
 import { sigleApiClient } from "@/__generated__/sigle-api";
 import { useStacksLogin } from "@/hooks/useStacksLogin";
+import { useSession } from "@/lib/auth-client";
 import { Routes } from "@/lib/routes";
 import { DropdownMenu, IconButton } from "@radix-ui/themes";
-import { useSession } from "next-auth/react";
 import { useTheme } from "next-themes";
 import { usePostHog } from "posthog-js/react";
 import { NextLink } from "../Shared/NextLink";

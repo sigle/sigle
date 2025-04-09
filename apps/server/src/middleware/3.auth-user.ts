@@ -1,13 +1,11 @@
-import { getToken } from "next-auth/jwt";
-import { env } from "~/env";
-import { prisma } from "~/lib/prisma";
+import { auth } from "~/lib/auth";
 
 export interface AuthenticatedUser {
   id: string;
 }
 
 /**
- * Requires a valid next-auth session as a cookie.
+ * Requires a valid better-auth session as a cookie.
  * The user is extracted from the database and injected into the event context.
  */
 export default defineEventHandler(async (event) => {
@@ -16,30 +14,12 @@ export default defineEventHandler(async (event) => {
     return;
   }
 
-  const useSecureCookies = env.APP_URL.startsWith("https://");
-  const token = await getToken({
-    req: event,
-    secret: env.AUTH_SECRET,
-    secureCookie: useSecureCookies,
+  const headers = event.headers;
+
+  const session = await auth.api.getSession({
+    headers: headers,
   });
-
-  if (!token || !token.address) {
-    throw createError({
-      status: 401,
-      message: "Unauthorized",
-    });
-  }
-
-  const user = await prisma.user.findUnique({
-    where: {
-      id: token.address as string,
-    },
-    select: {
-      id: true,
-    },
-  });
-
-  if (!user) {
+  if (!session) {
     throw createError({
       status: 401,
       message: "Unauthorized",
@@ -48,6 +28,6 @@ export default defineEventHandler(async (event) => {
 
   // Inject the user id so it can be used in subsequent requests.
   event.context.user = {
-    id: user.id,
+    id: session.user.id,
   } satisfies AuthenticatedUser;
 });

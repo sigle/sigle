@@ -1,6 +1,7 @@
 "use client";
 
 import { env } from "@/env";
+import { authClient, signOut, useSession } from "@/lib/auth-client";
 import { appDetails, stacksNetwork, userSession } from "@/lib/stacks";
 import { createSiwsMessage } from "@sigle/sign-in-with-stacks";
 import {
@@ -8,7 +9,6 @@ import {
   openSignatureRequestPopup,
   showConnect,
 } from "@stacks/connect";
-import { getCsrfToken, signIn } from "next-auth/react";
 import { usePostHog } from "posthog-js/react";
 import { useEffect } from "react";
 import { toast } from "sonner";
@@ -27,6 +27,7 @@ const useSessionStore = create<SessionState>()((set) => ({
 export const useStacksLogin = () => {
   const posthog = usePostHog();
   const { user, setUser } = useSessionStore();
+  const { refetch: refetchSession } = useSession();
 
   useEffect(() => {
     if (userSession.isSignInPending()) {
@@ -64,12 +65,18 @@ export const useStacksLogin = () => {
         ? userData.profile.stxAddress.mainnet
         : userData.profile.stxAddress.testnet;
 
+    const nonceData = await authClient.siws.nonce({ address });
+    if (!nonceData.data?.nonce) {
+      toast.error("Nonce not found");
+      return;
+    }
+
     const message = createSiwsMessage({
       address,
       chainId: stacksNetwork.chainId,
       domain: window.location.host,
       statement: "Sign in to Sigle.",
-      nonce: await getCsrfToken(),
+      nonce: nonceData.data.nonce,
       uri: window.location.origin,
       version: "1",
     });
@@ -78,24 +85,22 @@ export const useStacksLogin = () => {
       network: stacksNetwork,
       message,
       onFinish: async ({ signature }) => {
-        const signInResult = await signIn("credentials", {
+        const signInResult = await authClient.siws.verify({
           address,
-          message: message,
+          message,
           signature,
-          redirect: false,
         });
-        if (signInResult?.error) {
+        if (signInResult.error) {
           posthog.capture("user_login_sign_message_error", {
-            code: signInResult.code,
-            error: signInResult.error,
+            code: signInResult.error.code,
+            error: signInResult.error.message,
           });
           toast.error("Failed to login");
           return;
         }
-        if (signInResult?.ok && !signInResult?.error) {
-          posthog.capture("user_login_sign_message_success");
-          toast.success("You are now logged in");
-        }
+        refetchSession();
+        posthog.capture("user_login_sign_message_success");
+        toast.success("You are now logged in");
       },
       onCancel: () => {
         posthog.capture("user_login_sign_message_cancel");
@@ -106,7 +111,7 @@ export const useStacksLogin = () => {
   const logout = async () => {
     posthog.capture("user_logout");
     userSession.signUserOut("/");
-    window.location.href = "/api/logout";
+    await signOut();
   };
 
   return {
