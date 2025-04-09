@@ -9,6 +9,7 @@ const useSecureCookies = env.APP_URL.startsWith("https://");
 
 export const auth = betterAuth({
   database: prismaAdapter(prisma, { provider: "postgresql" }),
+  secret: env.AUTH_SECRET,
   trustedOrigins: [env.APP_URL],
   user: {
     // TODO move all app tables to lowercase
@@ -16,7 +17,6 @@ export const auth = betterAuth({
   },
   advanced: {
     cookiePrefix: "sigle",
-    // TODO see how we set the cookie secret here
     useSecureCookies,
   },
   session: {},
