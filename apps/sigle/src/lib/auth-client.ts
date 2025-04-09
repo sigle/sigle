@@ -1,7 +1,7 @@
 import { env } from "@/env";
 import type { BetterAuthClientPlugin } from "better-auth";
 import { createAuthClient } from "better-auth/react";
-import type { betterAuthSiws } from "../../../server/src/lib/siws-auth";
+import type { betterAuthSiws } from "./better-auth";
 
 const siwsClientPlugin = () => {
   return {
