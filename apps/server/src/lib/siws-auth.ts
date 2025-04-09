@@ -1,9 +1,9 @@
+// Adapted from https://github.com/better-auth/better-auth/issues/1594#issuecomment-2692434209
 import * as Sentry from "@sentry/node";
 import {
   generateSiwsNonce,
   verifySiwsMessage,
 } from "@sigle/sign-in-with-stacks";
-// Adapted from https://github.com/better-auth/better-auth/issues/1594#issuecomment-2692434209
 import { generateId } from "better-auth";
 import { type BetterAuthPlugin } from "better-auth";
 import { APIError, createAuthEndpoint } from "better-auth/api";
