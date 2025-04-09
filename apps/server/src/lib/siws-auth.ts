@@ -9,6 +9,7 @@ import { type BetterAuthPlugin } from "better-auth";
 import { APIError, createAuthEndpoint } from "better-auth/api";
 import { setSessionCookie } from "better-auth/cookies";
 import { z } from "zod";
+import { env } from "~/env";
 import { prisma } from "./prisma";
 
 export const betterAuthSiws = () =>
@@ -64,13 +65,12 @@ export const betterAuthSiws = () =>
               });
             }
 
-            // Verify SIWE message
+            // Verify SIWS message
             const valid = verifySiwsMessage({
               message,
               signature,
               address,
-              // TODO bring back domain
-              // domain: new URL(env.NEXT_PUBLIC_APP_URL).host,
+              domain: new URL(env.APP_URL).host,
               nonce: verification.value,
             });
 
@@ -97,10 +97,9 @@ export const betterAuthSiws = () =>
             });
 
             if (!user) {
-              // @ts-ignore
               user = await ctx.context.internalAdapter.createUser({
                 id: address,
-              });
+              } as any);
             }
 
             const session = await ctx.context.internalAdapter.createSession(
@@ -117,8 +116,7 @@ export const betterAuthSiws = () =>
               });
             }
 
-            // @ts-ignore
-            await setSessionCookie(ctx, { session, user });
+            await setSessionCookie(ctx, { session, user: user as any });
 
             return ctx.json({ token: session.token });
           } catch (error: any) {
