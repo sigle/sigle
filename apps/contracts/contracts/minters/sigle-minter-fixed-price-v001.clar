@@ -119,8 +119,8 @@
         a: "mint",
         contract: token-contract,
         quantity: quantity,
-        mint-referrer: mint-referrer,
         create-referrer: (get create-referrer mint-config),
+        mint-referrer: mint-referrer,
         recipient: mint-recipient
     })
     (ok true)
