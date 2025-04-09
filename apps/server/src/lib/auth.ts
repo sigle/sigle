@@ -16,7 +16,6 @@ export const auth = betterAuth({
   baseURL: env.APP_URL,
   trustedOrigins: [env.APP_URL],
   user: {
-    // TODO move all app tables to lowercase
     modelName: "User",
   },
   advanced: {
