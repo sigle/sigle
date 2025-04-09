@@ -1,6 +1,7 @@
 "use client";
 
 import type { paths } from "@/__generated__/sigle-api/openapi";
+import { useSession } from "@/lib/auth-client";
 import { resolveImageUrl } from "@/lib/images";
 import { Routes } from "@/lib/routes";
 import { formatReadableAddress } from "@/lib/stacks";
@@ -16,7 +17,6 @@ import {
 } from "@radix-ui/themes";
 import { IconDotsVertical } from "@tabler/icons-react";
 import { format } from "date-fns";
-import { useSession } from "next-auth/react";
 import Image from "next/image";
 import { useState } from "react";
 import { NextLink } from "../../NextLink";

@@ -8,6 +8,7 @@ import {
   useCurrencyFiatPrice,
 } from "@/hooks/useCurrencyFiatPrice";
 import { useStacksLogin } from "@/hooks/useStacksLogin";
+import { useSession } from "@/lib/auth-client";
 import { resolveImageUrl } from "@/lib/images";
 import { sigleClient } from "@/lib/sigle";
 import {
@@ -34,7 +35,6 @@ import {
   IconMinus,
   IconPlus,
 } from "@tabler/icons-react";
-import { useSession } from "next-auth/react";
 import Image from "next/image";
 import { useSearchParams } from "next/navigation";
 import { useState } from "react";
@@ -62,7 +62,7 @@ export const PostCollectDialog = ({
       open ? "sBTC" : undefined,
     );
   const [editions, setEditions] = useState(1);
-  const isPostOwner = session?.user.address === post.address.split(".")[0];
+  const isPostOwner = session?.user.id === post.address.split(".")[0];
 
   const { contractCall, loading: contractLoading } = useContractCall({
     onSuccess: (data) => {
@@ -103,7 +103,7 @@ export const PostCollectDialog = ({
     }
 
     const { parameters } = await sigleClient.mint({
-      sender: session.user.address,
+      sender: session.user.id,
       contract: post.address,
       amount: editions,
       referral: referral ? referral : undefined,

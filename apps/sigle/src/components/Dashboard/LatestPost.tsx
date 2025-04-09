@@ -1,10 +1,10 @@
 "use client";
 
 import { sigleApiClient } from "@/__generated__/sigle-api";
+import { useSession } from "@/lib/auth-client";
 import { Routes } from "@/lib/routes";
 import { Button, Card, Flex, Heading, Text } from "@radix-ui/themes";
 import { format } from "date-fns";
-import { useSession } from "next-auth/react";
 import { NextLink } from "../Shared/NextLink";
 
 export const LatestPost = () => {

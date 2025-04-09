@@ -3,9 +3,9 @@
 import { useIsClient } from "@/hooks/useIsClient";
 import { useStacksLogin } from "@/hooks/useStacksLogin";
 import { LogoImage } from "@/images/Logo";
+import { useSession } from "@/lib/auth-client";
 import { Button, IconButton } from "@radix-ui/themes";
 import { IconMoon, IconSun } from "@tabler/icons-react";
-import { useSession } from "next-auth/react";
 import { useTheme } from "next-themes";
 import { usePathname } from "next/navigation";
 import { usePostHog } from "posthog-js/react";

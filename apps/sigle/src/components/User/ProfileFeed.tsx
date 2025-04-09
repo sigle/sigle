@@ -1,7 +1,7 @@
 import { sigleApiClient } from "@/__generated__/sigle-api";
 import type { paths } from "@/__generated__/sigle-api/openapi";
+import { useSession } from "@/lib/auth-client";
 import { Button, Flex, Text } from "@radix-ui/themes";
-import { useSession } from "next-auth/react";
 import { GetFamiliarCards } from "../Dashboard/GetFamiliarCards";
 import { NextLink } from "../Shared/NextLink";
 import { PostListItem } from "../Shared/Post/ListItem";

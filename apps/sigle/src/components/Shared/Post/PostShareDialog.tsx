@@ -1,6 +1,7 @@
 import type { paths } from "@/__generated__/sigle-api/openapi";
 import { appConfig } from "@/config";
 import { env } from "@/env";
+import { useSession } from "@/lib/auth-client";
 import { Routes } from "@/lib/routes";
 import {
   Button,
@@ -12,7 +13,6 @@ import {
   VisuallyHidden,
 } from "@radix-ui/themes";
 import { IconReceiptTax } from "@tabler/icons-react";
-import { useSession } from "next-auth/react";
 import Image from "next/image";
 import { useState } from "react";
 
