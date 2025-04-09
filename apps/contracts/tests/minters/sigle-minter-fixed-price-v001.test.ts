@@ -381,7 +381,7 @@ describe(contract, () => {
             defaultContractName.split(".")[1],
           ),
           Cl.uint(1),
-          Cl.some(Cl.principal(wallet3)),
+          Cl.none(),
           Cl.none(), // no specific recipient
         ],
         wallet2,
@@ -423,7 +423,7 @@ describe(contract, () => {
           amount: fixedMintFee.mintReferrer.toString(),
           asset_identifier:
             "SM3VDXK3WZZSA84XXFKAFAF15NNZX32CTSG82JFQ4.sbtc-token::sbtc-token",
-          recipient: wallet3,
+          recipient: deployer,
           sender: wallet2,
         },
       });
