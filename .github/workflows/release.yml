@@ -9,6 +9,12 @@ jobs:
   release:
     name: Release
     runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+      contents: write
+      packages: write
+      pull-requests: write
+      issues: read
     steps:
       - uses: actions/checkout@v4
         with:
@@ -21,8 +27,8 @@ jobs:
         with:
           version: pnpm run version
           publish: pnpm run release
-          commit: 'chore: release'
-          title: 'chore: create new release'
+          commit: "chore: release"
+          title: "chore: create new release"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
