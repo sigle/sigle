@@ -10,7 +10,7 @@ import {
 import { consola } from "~/lib/consola";
 import { siglePostPrintPredicate } from "~/lib/predicates";
 import { prisma } from "~/lib/prisma";
-import { generateImageBlurhashJob } from "../generate-image-blurhash";
+import { generateImageBlurhashJob } from "../../generate-image-blurhash";
 
 function extractBaseTokenUri(contractString: string): string | null {
   const regex =

@@ -2,7 +2,7 @@ import { ProfileMetadataSchema } from "@sigle/sdk";
 import { z } from "zod";
 import { consola } from "~/lib/consola";
 import { prisma } from "~/lib/prisma";
-import { generateImageBlurhashJob } from "../generate-image-blurhash";
+import { generateImageBlurhashJob } from "../../generate-image-blurhash";
 
 export const indexerSetProfileSchema = z.object({
   action: z.literal("indexer-set-profile"),

@@ -1,8 +1,8 @@
 import { z } from "zod";
 import { consola } from "~/lib/consola";
 import { prisma } from "~/lib/prisma";
-import { generateImageBlurhashJob } from "../generate-image-blurhash";
-import { getMetadataFromUri } from "./new-post";
+import { generateImageBlurhashJob } from "../../generate-image-blurhash";
+import { getMetadataFromUri } from "../new-post";
 
 export const indexerSetBaseTokenUriSchema = z.object({
   action: z.literal("indexer-set-base-token-uri"),
