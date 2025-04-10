@@ -7,14 +7,16 @@
 (define-constant ERR-SALE-NOT-STARTED u1003)
 (define-constant ERR-SALE-ENDED u1004)
 
-;; Single fee structure for all mints
+;; Fee structure for all mints
 (define-data-var fixed-fee-structure {
     protocol: uint,
     creator: uint,
+    create-referrer: uint,
     mint-referrer: uint
 } {
-    protocol: u1050,
+    protocol: u600,
     creator: u1500,
+    create-referrer: u450,
     mint-referrer: u450
 })
 
@@ -25,21 +27,31 @@
     start-block: uint,
     ;; Block height at which the sale ends
     end-block: uint,
+    ;; Optional referrer who helped create the post
+    create-referrer: (optional principal)
 })
 
 ;; @desc Initialize contract mint configuration when a new post is created
-(define-public (init-mint-details (price uint) (start-block uint) (end-block uint))
+(define-public (init-mint-details (price uint) (start-block uint) (end-block uint) (create-referrer (optional principal)))
   (begin
     (asserts! (is-none (map-get? contract-mint-config tx-sender)) (err ERR-NOT-AUTHORIZED))
     (asserts! (> end-block start-block) (err ERR-INVALID-END-BLOCK))
 
-    (print { a: "init-mint-details", contract: tx-sender, price: price, start-block: start-block, end-block: end-block })
+    (print {
+        a: "init-mint-details",
+        contract: tx-sender,
+        price: price,
+        start-block: start-block,
+        end-block: end-block,
+        create-referrer: create-referrer
+    })
     (ok (map-set contract-mint-config
       tx-sender
       {
         price: price,
         start-block: start-block,
         end-block: end-block,
+        create-referrer: create-referrer
       })
     )
   )
@@ -55,13 +67,20 @@
     (asserts! (> end-block start-block) (err ERR-INVALID-END-BLOCK))
     (asserts! (<= burn-block-height (get end-block mint-config)) (err ERR-SALE-ENDED))
 
-    (print { a: "set-mint-details", contract: (contract-of token-contract), price: price, start-block: start-block, end-block: end-block })
+    (print {
+        a: "set-mint-details",
+        contract: (contract-of token-contract),
+        price: price,
+        start-block: start-block,
+        end-block: end-block
+    })
     (ok (map-set contract-mint-config
       (contract-of token-contract)
       {
         price: price,
         start-block: start-block,
         end-block: end-block,
+        create-referrer: (get create-referrer mint-config)
       }
     ))
   )
@@ -75,10 +94,12 @@
     (fees (var-get fixed-fee-structure))
     (protocol-fee (* (get protocol fees) quantity))
     (creator-fee (* (get creator fees) quantity))
-    (referrer-fee (* (get mint-referrer fees) quantity))
+    (create-referrer-fee (* (get create-referrer fees) quantity))
+    (mint-referrer-fee (* (get mint-referrer fees) quantity))
     (price-amount (* (get price mint-config) quantity))
     (creator-address (try! (contract-call? token-contract get-contract-owner)))
-    (referrer-address (default-to protocol-address mint-referrer))
+    (create-referrer-address (default-to protocol-address (get create-referrer mint-config)))
+    (mint-referrer-address (default-to protocol-address mint-referrer))
   )
     (asserts! (>= burn-block-height (get start-block mint-config)) (err ERR-SALE-NOT-STARTED))
     (asserts! (<= burn-block-height (get end-block mint-config)) (err ERR-SALE-ENDED))
@@ -86,7 +107,8 @@
 
     (try! (contract-call? 'SM3VDXK3WZZSA84XXFKAFAF15NNZX32CTSG82JFQ4.sbtc-token transfer protocol-fee tx-sender protocol-address none))
     (try! (contract-call? 'SM3VDXK3WZZSA84XXFKAFAF15NNZX32CTSG82JFQ4.sbtc-token transfer (+ creator-fee price-amount) tx-sender creator-address none))
-    (try! (contract-call? 'SM3VDXK3WZZSA84XXFKAFAF15NNZX32CTSG82JFQ4.sbtc-token transfer referrer-fee tx-sender referrer-address none))
+    (try! (contract-call? 'SM3VDXK3WZZSA84XXFKAFAF15NNZX32CTSG82JFQ4.sbtc-token transfer create-referrer-fee tx-sender create-referrer-address none))
+    (try! (contract-call? 'SM3VDXK3WZZSA84XXFKAFAF15NNZX32CTSG82JFQ4.sbtc-token transfer mint-referrer-fee tx-sender mint-referrer-address none))
 
     (try! (if (<= u1 quantity) (as-contract (contract-call? token-contract mint mint-recipient)) (ok u0)))
     (try! (if (<= u2 quantity) (as-contract (contract-call? token-contract mint mint-recipient)) (ok u0)))
@@ -99,7 +121,19 @@
     (try! (if (<= u9 quantity) (as-contract (contract-call? token-contract mint mint-recipient)) (ok u0)))
     (try! (if (<= u10 quantity) (as-contract (contract-call? token-contract mint mint-recipient)) (ok u0)))
 
-    (print { a: "mint", contract: token-contract, quantity: quantity, mint-referrer: mint-referrer, recipient: mint-recipient })
+    (print {
+        a: "mint",
+        contract: token-contract,
+        quantity: quantity,
+        recipient: mint-recipient,
+        protocol-fee: protocol-fee,
+        creator-fee: creator-fee,
+        create-referrer-fee: create-referrer-fee,
+        mint-referrer-fee: mint-referrer-fee,
+        price-amount: price-amount,
+        create-referrer: (get create-referrer mint-config),
+        mint-referrer: mint-referrer
+    })
     (ok true)
   )
 )
@@ -125,12 +159,17 @@
     (try! (if (<= u9 quantity) (as-contract (contract-call? token-contract mint mint-recipient)) (ok u0)))
     (try! (if (<= u10 quantity) (as-contract (contract-call? token-contract mint mint-recipient)) (ok u0)))
 
-    (print { a: "owner-mint", contract: token-contract, quantity: quantity, recipient: mint-recipient })
+    (print {
+        a: "owner-mint",
+        contract: token-contract,
+        quantity: quantity,
+        recipient: mint-recipient
+    })
     (ok true)
   )
 )
 
-(define-public (update-fees (protocol uint) (creator uint) (mint-referrer uint))
+(define-public (update-fees (protocol uint) (creator uint) (create-referrer uint) (mint-referrer uint))
     (let (
         (protocol-owner (contract-call? .sigle-protocol get-contract-owner))
     )
@@ -138,9 +177,16 @@
         (var-set fixed-fee-structure {
             protocol: protocol,
             creator: creator,
+            create-referrer: create-referrer,
             mint-referrer: mint-referrer
         })
-        (print { a: "update-fees", protocol: protocol, creator: creator, mint-referrer: mint-referrer })
+        (print {
+            a: "update-fees",
+            protocol: protocol,
+            creator: creator,
+            create-referrer: create-referrer,
+            mint-referrer: mint-referrer
+        })
         (ok true)
     )
 )

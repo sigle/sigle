@@ -12,7 +12,11 @@
 ;; @param uri - URI of the profile
 (define-public (set-profile (uri (string-ascii 210)))
   (begin
-    (print { a: "set-profile", address: tx-sender, uri: uri })
+    (print {
+        a: "set-profile",
+        address: tx-sender,
+        uri: uri
+    })
     (ok (map-set profiles tx-sender uri))
   )
 )
