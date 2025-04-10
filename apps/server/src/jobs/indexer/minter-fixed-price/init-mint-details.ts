@@ -37,7 +37,7 @@ export const executeIndexerInitMintDetailsJob = async (
     create: minterFixedPriceData,
   });
 
-  // Reset the count to 0 as it means we are reindexing
+  // Reset the count to 0 in case we are reindexing
   await prisma.post.update({
     where: {
       address: data.address,
