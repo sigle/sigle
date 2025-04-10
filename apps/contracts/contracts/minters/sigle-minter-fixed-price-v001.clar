@@ -119,9 +119,14 @@
         a: "mint",
         contract: token-contract,
         quantity: quantity,
+        recipient: mint-recipient,
+        protocol-fee: protocol-fee,
+        creator-fee: creator-fee,
+        create-referrer-fee: create-referrer-fee,
+        mint-referrer-fee: mint-referrer-fee,
+        price-amount: price-amount,
         create-referrer: (get create-referrer mint-config),
-        mint-referrer: mint-referrer,
-        recipient: mint-recipient
+        mint-referrer: mint-referrer
     })
     (ok true)
   )
