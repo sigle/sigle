@@ -29,7 +29,7 @@ export const setProfile = ({
   return {
     parameters: {
       contractAddress: protocolAddress,
-      contractName: "sigle-profiles",
+      contractName: "sigle-profiles-v001",
       functionName: "set-profile",
       functionArgs: [stringAsciiCV(params.metadata)],
       postConditionMode: PostConditionMode.Deny,

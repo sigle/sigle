@@ -41,7 +41,7 @@ export const sigleProfilesPredicate = {
         contains: "set-profile",
         contract_identifier: `${
           sigleConfig[env.STACKS_ENV].protocolAddress
-        }.sigle-profiles`,
+        }.sigle-profiles-v001`,
       },
       then_that: {
         http_post: {
