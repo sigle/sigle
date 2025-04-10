@@ -67,7 +67,13 @@
     (asserts! (> end-block start-block) (err ERR-INVALID-END-BLOCK))
     (asserts! (<= burn-block-height (get end-block mint-config)) (err ERR-SALE-ENDED))
 
-    (print { a: "set-mint-details", contract: (contract-of token-contract), price: price, start-block: start-block, end-block: end-block })
+    (print {
+        a: "set-mint-details",
+        contract: (contract-of token-contract),
+        price: price,
+        start-block: start-block,
+        end-block: end-block
+    })
     (ok (map-set contract-mint-config
       (contract-of token-contract)
       {
@@ -153,7 +159,12 @@
     (try! (if (<= u9 quantity) (as-contract (contract-call? token-contract mint mint-recipient)) (ok u0)))
     (try! (if (<= u10 quantity) (as-contract (contract-call? token-contract mint mint-recipient)) (ok u0)))
 
-    (print { a: "owner-mint", contract: token-contract, quantity: quantity, recipient: mint-recipient })
+    (print {
+        a: "owner-mint",
+        contract: token-contract,
+        quantity: quantity,
+        recipient: mint-recipient
+    })
     (ok true)
   )
 )
