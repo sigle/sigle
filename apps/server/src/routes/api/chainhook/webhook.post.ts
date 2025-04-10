@@ -141,7 +141,7 @@ export default defineEventHandler(async (event) => {
                 await indexerJob.emit({
                   action: "indexer-init-mint-details",
                   data: {
-                    address: contractAddress,
+                    address: value.contract,
                     price: value.price,
                     startBlock: value["start-block"],
                     endBlock: value["end-block"],
@@ -152,7 +152,7 @@ export default defineEventHandler(async (event) => {
                 await indexerJob.emit({
                   action: "indexer-set-mint-details",
                   data: {
-                    address: contractAddress,
+                    address: value.contract,
                     price: value.price,
                     startBlock: value["start-block"],
                     endBlock: value["end-block"],

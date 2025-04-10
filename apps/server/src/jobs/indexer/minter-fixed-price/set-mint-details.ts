@@ -1,3 +1,4 @@
+import { MAX_UINT } from "@sigle/sdk";
 import { z } from "zod";
 import { consola } from "~/lib/consola";
 import { prisma } from "~/lib/prisma";
@@ -15,12 +16,21 @@ export const indexerSetMintDetailsSchema = z.object({
 export const executeIndexerSetMintDetailsJob = async (
   data: z.TypeOf<typeof indexerSetMintDetailsSchema>["data"],
 ) => {
+  const post = await prisma.post.findUniqueOrThrow({
+    where: { address: data.address },
+  });
+
+  let endBlock = BigInt(data.endBlock);
+  // This is required, idk why the chainhook value has + 1 to MAX_UINT
+  if (endBlock === MAX_UINT + BigInt(1)) {
+    endBlock = 0n;
+  }
   await prisma.minterFixedPrice.update({
-    where: { id: data.address },
+    where: { id: post.id },
     data: {
       price: data.price,
-      startBlock: data.startBlock,
-      endBlock: data.endBlock,
+      startBlock: BigInt(data.startBlock),
+      endBlock,
     },
   });
 
