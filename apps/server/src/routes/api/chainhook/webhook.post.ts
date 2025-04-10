@@ -2,6 +2,7 @@ import type { Payload } from "@hirosystems/chainhook-client";
 import { env } from "~/env";
 import { indexerJob } from "~/jobs/indexer/index";
 import { consola } from "~/lib/consola";
+import { sigleConfig } from "~/lib/sigle";
 
 export default defineEventHandler(async (event) => {
   const chainhook = await readBody<Payload>(event);
@@ -30,13 +31,25 @@ export default defineEventHandler(async (event) => {
           const setMintDetailsLogEvent = logEvents[1];
 
           // This condition can be removed once we can add predicates for contract_deployment matching a trait implementation
-          const isSiglePost =
+          let isSiglePost =
             deployLogEvent &&
             setMintDetailsLogEvent &&
-            deployLogEvent.data.topic === "print" &&
-            (deployLogEvent.data as any).value.a === "publish-content";
+            deployLogEvent.data.topic === "print";
+          const event:
+            | {
+                a: "publish-content";
+                version: number;
+                minter: string;
+              }
+            | undefined = deployLogEvent
+            ? (deployLogEvent.data as any).value
+            : undefined;
+          isSiglePost =
+            isSiglePost &&
+            !!event &&
+            event.a === "publish-content" &&
+            event.minter === sigleConfig.fixedPriceMinter;
 
-          // TODO setup and verify log payload
           // TODO extra security: check that the contract is following the template exported by the SDK
 
           if (isSiglePost) {
@@ -96,9 +109,8 @@ export default defineEventHandler(async (event) => {
               | { a: "mint-enabled"; enabled: boolean }
               | { a: "reduce-supply"; "max-supply": number }
               | { a: "set-profile"; address: string; uri: string }
-              | { a: "set-base-token-uri"; uri: string } =
-              // @ts-expect-error the types are not correct for value here
-              event.data.value;
+              | { a: "set-base-token-uri"; uri: string } = (event.data as any)
+              .value;
             switch (value.a) {
               case "mint":
                 await indexerJob.emit({

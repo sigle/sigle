@@ -113,7 +113,6 @@ export const PostCollectDialog = ({
   };
 
   const incrementEditions = () => {
-    const maxMints = 10;
     const remainingEditions = post.maxSupply - editions;
     if (
       (post.openEdition ||
@@ -137,7 +136,9 @@ export const PostCollectDialog = ({
   const totalPrice = BigInt(editions) * (price + fixedMintFee.total);
   const protocolFee = BigInt(editions) * fixedMintFee.protocol;
   const creatorFee = BigInt(editions) * (price + fixedMintFee.creator);
-  const referrerFee = BigInt(editions) * fixedMintFee.mintReferrer;
+  const createReferrerFee = BigInt(editions) * fixedMintFee.createReferrer;
+  const mintReferrerFee = BigInt(editions) * fixedMintFee.mintReferrer;
+  const maxMints = isPostOwner ? 1 : 10;
 
   return (
     <Dialog.Root open={open} onOpenChange={onOpenChange}>
@@ -245,7 +246,7 @@ export const PostCollectDialog = ({
                 onClick={incrementEditions}
                 disabled={
                   (!post.openEdition && editions === post.maxSupply) ||
-                  editions === 10
+                  editions === maxMints
                 }
               >
                 <IconPlus className="size-4" />
@@ -271,8 +272,12 @@ export const PostCollectDialog = ({
                         <Text>{formatBTC(protocolFee)} sBTC</Text>
                       </div>
                       <div className="flex justify-between gap-2">
-                        <Text>Referrer:</Text>
-                        <Text>{formatBTC(referrerFee)} sBTC</Text>
+                        <Text>Create referrer:</Text>
+                        <Text>{formatBTC(createReferrerFee)} sBTC</Text>
+                      </div>
+                      <div className="flex justify-between gap-2">
+                        <Text>Mint referrer:</Text>
+                        <Text>{formatBTC(mintReferrerFee)} sBTC</Text>
                       </div>
                     </div>
                   }

@@ -97,9 +97,12 @@ export const betterAuthSiws = () =>
             });
 
             if (!user) {
-              user = await ctx.context.internalAdapter.createUser({
-                id: address,
-              } as any);
+              user = await prisma.user.create({
+                data: {
+                  id: address,
+                  lastLoginAt: new Date(),
+                },
+              });
             } else {
               await prisma.user.update({
                 where: {
