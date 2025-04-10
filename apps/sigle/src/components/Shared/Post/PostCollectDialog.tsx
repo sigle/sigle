@@ -95,7 +95,6 @@ export const PostCollectDialog = ({
     if (isPostOwner) {
       const { parameters } = await sigleClient.ownerMint({
         contract: post.address,
-        amount: editions,
       });
 
       await contractCall(parameters);
