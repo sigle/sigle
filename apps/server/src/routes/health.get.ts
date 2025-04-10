@@ -122,7 +122,6 @@ defineRouteMeta({
               "maxSupply",
               "collected",
               "openEdition",
-              "price",
               "metadataUri",
               "createdAt",
               "updatedAt",
@@ -189,9 +188,6 @@ defineRouteMeta({
               openEdition: {
                 type: "boolean",
               },
-              price: {
-                type: "string",
-              },
               metadataUri: {
                 type: "string",
               },
@@ -200,6 +196,27 @@ defineRouteMeta({
               },
               updatedAt: {
                 type: "string",
+              },
+              minterFixedPrice: {
+                type: "object",
+                required: ["id", "price", "startBlock", "endBlock"],
+                properties: {
+                  id: {
+                    type: "string",
+                  },
+                  price: {
+                    type: "string",
+                    description: "The price in BigInt format",
+                  },
+                  startBlock: {
+                    type: "string",
+                    description: "The start block in BigInt format",
+                  },
+                  endBlock: {
+                    type: "string",
+                    description: "The end block in BigInt format",
+                  },
+                },
               },
               user: {
                 type: "object",

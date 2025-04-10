@@ -22,3 +22,24 @@ export const SELECT_PUBLIC_USER_FIELDS = {
     },
   },
 };
+
+export const SELECT_PUBLIC_POST_FIELDS = {
+  id: true,
+  address: true,
+  title: true,
+  content: true,
+  metaTitle: true,
+  metaDescription: true,
+  coverImage: true,
+  excerpt: true,
+  tags: true,
+  txId: true,
+  maxSupply: true,
+  collected: true,
+  openEdition: true,
+  metadataUri: true,
+  createdAt: true,
+  updatedAt: true,
+  // Relations
+  minterFixedPrice: true,
+};

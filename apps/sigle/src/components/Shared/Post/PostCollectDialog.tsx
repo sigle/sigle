@@ -86,7 +86,7 @@ export const PostCollectDialog = ({
   });
 
   const onCollect = async () => {
-    if (!session) {
+    if (!session || !post.minterFixedPrice) {
       login();
       return;
     }
@@ -106,7 +106,7 @@ export const PostCollectDialog = ({
       contract: post.address,
       amount: editions,
       referral: referral ? referral : undefined,
-      price: post.price,
+      price: post.minterFixedPrice.price,
     });
 
     await contractCall(parameters);
@@ -130,7 +130,11 @@ export const PostCollectDialog = ({
     }
   };
 
-  const price = BigInt(post.price);
+  if (!post.minterFixedPrice) {
+    return null;
+  }
+
+  const price = BigInt(post.minterFixedPrice.price);
   const isFree = price === BigInt(0);
   const loadingCollect = contractLoading;
   const totalPrice = BigInt(editions) * (price + fixedMintFee.total);

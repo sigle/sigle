@@ -1,6 +1,10 @@
 import { z } from "zod";
 import { getValidatedQueryZod } from "~/lib/nitro";
-import { SELECT_PUBLIC_USER_FIELDS, prisma } from "~/lib/prisma";
+import {
+  SELECT_PUBLIC_POST_FIELDS,
+  SELECT_PUBLIC_USER_FIELDS,
+  prisma,
+} from "~/lib/prisma";
 
 defineRouteMeta({
   openAPI: {
@@ -64,23 +68,7 @@ export default defineEventHandler(async (event) => {
 
   const postsList = await prisma.post.findMany({
     select: {
-      id: true,
-      address: true,
-      title: true,
-      content: true,
-      metaTitle: true,
-      metaDescription: true,
-      coverImage: true,
-      excerpt: true,
-      tags: true,
-      txId: true,
-      maxSupply: true,
-      collected: true,
-      openEdition: true,
-      price: true,
-      metadataUri: true,
-      createdAt: true,
-      updatedAt: true,
+      ...SELECT_PUBLIC_POST_FIELDS,
       user: {
         select: SELECT_PUBLIC_USER_FIELDS,
       },
