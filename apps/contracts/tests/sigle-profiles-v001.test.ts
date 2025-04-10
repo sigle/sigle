@@ -1,7 +1,7 @@
 import { Cl } from "@stacks/transactions";
 import { describe, expect, it } from "vitest";
 
-const contract = "sigle-profiles";
+const contract = "sigle-profiles-v001";
 const accounts = simnet.getAccounts();
 const wallet1 = accounts.get("wallet_1")!;
 const wallet2 = accounts.get("wallet_2")!;

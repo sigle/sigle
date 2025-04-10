@@ -69,7 +69,7 @@ plan:
             emulated-sender: SP3D6PV2ACBPEKYJTCMH7HEN02KP87QSP8KTEH335
             path: "./.cache/requirements/SP3D6PV2ACBPEKYJTCMH7HEN02KP87QSP8KTEH335.commission-trait.clar"
             clarity-version: 1
-      epoch: "2.1"
+      epoch: "2.0"
     - id: 1
       transactions:
         - emulated-contract-publish:
@@ -108,8 +108,8 @@ plan:
             path: contracts/sigle-post-v001.clar
             clarity-version: 3
         - emulated-contract-publish:
-            contract-name: sigle-profiles
+            contract-name: sigle-profiles-v001
             emulated-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
-            path: contracts/sigle-profiles.clar
+            path: contracts/sigle-profiles-v001.clar
             clarity-version: 3
       epoch: "3.0"

@@ -68,15 +68,22 @@ plan:
         - contract-publish:
             contract-name: sigle-minter-fixed-price-v001
             expected-sender: STXNKH7PH0JNV55J08BC3C9586PVJ46XG0K69DT5
-            cost: 74190
+            cost: 86830
             path: contracts/minters/sigle-minter-fixed-price-v001.clar
             anchor-block-only: true
             clarity-version: 3
         - contract-publish:
-            contract-name: sigle-profiles
+            contract-name: sigle-post-v001
             expected-sender: STXNKH7PH0JNV55J08BC3C9586PVJ46XG0K69DT5
-            cost: 5150
-            path: contracts/sigle-profiles.clar
+            cost: 99100
+            path: contracts/sigle-post-v001.clar
+            anchor-block-only: true
+            clarity-version: 3
+        - contract-publish:
+            contract-name: sigle-profiles-v001
+            expected-sender: STXNKH7PH0JNV55J08BC3C9586PVJ46XG0K69DT5
+            cost: 5430
+            path: contracts/sigle-profiles-v001.clar
             anchor-block-only: true
             clarity-version: 3
       epoch: "3.0"

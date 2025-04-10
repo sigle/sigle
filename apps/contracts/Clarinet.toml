@@ -29,8 +29,8 @@ path = 'contracts/sigle-post-v001.clar'
 clarity_version = 3
 epoch = 3.0
 
-[contracts.sigle-profiles]
-path = 'contracts/sigle-profiles.clar'
+[contracts.sigle-profiles-v001]
+path = 'contracts/sigle-profiles-v001.clar'
 clarity_version = 3
 epoch = 3.0
 
