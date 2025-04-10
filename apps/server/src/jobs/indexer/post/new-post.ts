@@ -10,6 +10,7 @@ import {
 import { consola } from "~/lib/consola";
 import { siglePostPrintPredicate } from "~/lib/predicates";
 import { prisma } from "~/lib/prisma";
+import { sigleClient } from "~/lib/sigle";
 import { generateImageBlurhashJob } from "../../generate-image-blurhash";
 
 function extractBaseTokenUri(contractString: string): string | null {
@@ -23,6 +24,26 @@ function extractMaxSupply(contractString: string): bigint | null {
   const regex = /\(define-data-var max-supply uint u(\d+)\)/;
   const match = contractString.match(regex);
   return match ? BigInt(match[1]) : null;
+}
+
+function extractFixedPricingDetails(contractString: string): {
+  price: bigint;
+  startBlock: bigint;
+  endBlock: bigint;
+  createRefferer?: string;
+} | null {
+  const regex =
+    /\(unwrap-panic \(as-contract \(contract-call\? '(.+?) init-mint-details u(\d+) u(\d+) u(\d+) (none|some .*)\)\)\)/;
+  const match = contractString.match(regex);
+
+  if (!match) return null;
+
+  return {
+    price: BigInt(match[2]),
+    startBlock: BigInt(match[3]),
+    endBlock: BigInt(match[4]),
+    createRefferer: match[5] === "none" ? undefined : match[5],
+  };
 }
 
 export async function getMetadataFromUri(baseTokenUri: string) {
@@ -92,6 +113,22 @@ export const executeNewPostJob = async (
     throw new Error(`Invalid maxSupply: ${maxSupply}`);
   }
   const openEdition = maxSupply === BigInt(MAX_UINT);
+
+  // Verify that the contract matches the template
+  const fixedPricingDetails = extractFixedPricingDetails(data.contract);
+  if (!fixedPricingDetails) {
+    throw new Error(`Invalid fixedPricingDetails: ${fixedPricingDetails}`);
+  }
+  const { contract } = sigleClient.generatePostContract({
+    metadata: baseTokenUri,
+    collectInfo: {
+      amount: fixedPricingDetails.price,
+      maxSupply: maxSupply,
+    },
+  });
+  if (contract !== data.contract) {
+    throw new Error(`Contract mismatch: ${contract} !== ${data.contract}`);
+  }
 
   const metadata = await getMetadataFromUri(baseTokenUri);
 

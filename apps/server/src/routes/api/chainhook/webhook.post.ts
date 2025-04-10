@@ -38,8 +38,6 @@ export default defineEventHandler(async (event) => {
             deployLogEvent.a === "publish-content" &&
             deployLogEvent.minter === sigleConfig.fixedPriceMinter;
 
-          // TODO extra security: check that the contract is following the template exported by the SDK
-
           if (isSiglePost) {
             const txId = transaction.transaction_identifier.hash;
             await indexerJob.emit({
