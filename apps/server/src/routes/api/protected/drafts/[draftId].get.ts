@@ -157,9 +157,9 @@ export default defineEventHandler<
         coverImageId: true,
         tags: true,
         txId: true,
-        price: true,
         openEdition: true,
         maxSupply: true,
+        minterFixedPrice: true,
         createdAt: true,
         updatedAt: true,
       },
@@ -186,8 +186,11 @@ export default defineEventHandler<
       coverImage: published.coverImageId,
       tags: published.tags,
       txId: published.txId,
-      collectPriceType: published.price > 0 ? "paid" : "free",
-      collectPrice: published.price,
+      collectPriceType:
+        published.minterFixedPrice && published.minterFixedPrice.price > 0
+          ? "paid"
+          : "free",
+      collectPrice: published.minterFixedPrice?.price,
       collectLimitType: published.openEdition ? "open" : "fixed",
       collectLimit: published.maxSupply,
       createdAt: published.createdAt,
