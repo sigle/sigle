@@ -37,6 +37,16 @@ export const executeIndexerInitMintDetailsJob = async (
     create: minterFixedPriceData,
   });
 
+  // Reset the count to 0 as it means we are reindexing
+  await prisma.post.update({
+    where: {
+      address: data.address,
+    },
+    data: {
+      collected: 0,
+    },
+  });
+
   consola.debug("post.initMintDetails", {
     id: data.address,
     price: data.price,
