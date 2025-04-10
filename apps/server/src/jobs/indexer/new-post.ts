@@ -74,7 +74,6 @@ export const indexerNewPostSchema = z.object({
     version: z.number().min(1).max(1),
     contract: z.string(),
     sender: z.string(),
-    price: z.number(),
     createdAt: z.coerce.date(),
     isStreamingBlocks: z.boolean(),
   }),
@@ -148,7 +147,6 @@ export const executeNewPostJob = async (
         enabled: true,
         openEdition,
         maxSupply: maxSupply === BigInt(MAX_UINT) ? 0 : Number(maxSupply),
-        price: BigInt(data.price),
         createdAt: new Date(data.createdAt),
 
         // Metadata fields

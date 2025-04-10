@@ -37,20 +37,20 @@ export interface paths {
     patch?: never;
     trace?: never;
   };
-  "/api/chainhook/webhook": {
+  "/api/auth/{all}": {
     parameters: {
       query?: never;
       header?: never;
       path?: never;
       cookie?: never;
     };
-    get?: never;
-    put?: never;
-    post: {
+    get: {
       parameters: {
         query?: never;
         header?: never;
-        path?: never;
+        path: {
+          all: string;
+        };
         cookie?: never;
       };
       requestBody?: never;
@@ -64,13 +64,15 @@ export interface paths {
         };
       };
     };
+    put?: never;
+    post?: never;
     delete?: never;
     options?: never;
     head?: never;
     patch?: never;
     trace?: never;
   };
-  "/api/internal/login-user-sync": {
+  "/api/chainhook/webhook": {
     parameters: {
       query?: never;
       header?: never;
@@ -1098,10 +1100,18 @@ export interface components {
       collected: number;
       collectorsCount?: number;
       openEdition: boolean;
-      price: string;
       metadataUri: string;
       createdAt: string;
       updatedAt: string;
+      minterFixedPrice?: {
+        id: string;
+        /** @description The price in BigInt format */
+        price: string;
+        /** @description The start block in BigInt format */
+        startBlock: string;
+        /** @description The end block in BigInt format */
+        endBlock: string;
+      };
       user: {
         id: string;
         createdAt: string;

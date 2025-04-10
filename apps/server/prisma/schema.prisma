@@ -78,7 +78,6 @@ model Post {
   metadataUri String  @map("metadata_uri")
   enabled     Boolean @map("enabled")
   openEdition Boolean @map("open_edition")
-  price       BigInt  @map("price")
 
   // Metadata fields
   title           String      @map("title")
@@ -93,11 +92,23 @@ model Post {
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 
-  userId String    @map("user_id")
-  user   User      @relation(fields: [userId], references: [id])
-  nfts   PostNft[]
+  userId           String            @map("user_id")
+  user             User              @relation(fields: [userId], references: [id])
+  nfts             PostNft[]
+  minterFixedPrice MinterFixedPrice?
 
   @@map("post")
+}
+
+model MinterFixedPrice {
+  id         String @id @map("id")
+  price      BigInt @map("price")
+  startBlock BigInt @map("start_block")
+  endBlock   BigInt @map("end_block")
+
+  post Post @relation(fields: [id], references: [id])
+
+  @@map("minter_fixed_price")
 }
 
 model MediaImage {

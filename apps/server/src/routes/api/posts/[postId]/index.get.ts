@@ -1,4 +1,8 @@
-import { SELECT_PUBLIC_USER_FIELDS, prisma } from "~/lib/prisma";
+import {
+  SELECT_PUBLIC_POST_FIELDS,
+  SELECT_PUBLIC_USER_FIELDS,
+  prisma,
+} from "~/lib/prisma";
 
 defineRouteMeta({
   openAPI: {
@@ -40,23 +44,7 @@ export default defineEventHandler(async (event) => {
 
   const post = await prisma.post.findUnique({
     select: {
-      id: true,
-      title: true,
-      content: true,
-      metaTitle: true,
-      metaDescription: true,
-      coverImage: true,
-      excerpt: true,
-      tags: true,
-      txId: true,
-      address: true,
-      maxSupply: true,
-      collected: true,
-      openEdition: true,
-      price: true,
-      metadataUri: true,
-      createdAt: true,
-      updatedAt: true,
+      ...SELECT_PUBLIC_POST_FIELDS,
       user: {
         select: SELECT_PUBLIC_USER_FIELDS,
       },

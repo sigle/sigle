@@ -27,28 +27,16 @@ export default defineEventHandler(async (event) => {
           const logEvents = transaction.metadata.receipt.events
             .filter((event) => event.type === "SmartContractEvent")
             .sort((a, b) => (a.position.index > b.position.index ? 1 : -1));
-          const deployLogEvent = logEvents[0];
-          const setMintDetailsLogEvent = logEvents[1];
+          const deployLogEvent: Record<string, any> | undefined =
+            logEvents[0] && logEvents[0].data.topic === "print"
+              ? (logEvents[0].data as any).value
+              : undefined;
 
           // This condition can be removed once we can add predicates for contract_deployment matching a trait implementation
           let isSiglePost =
             deployLogEvent &&
-            setMintDetailsLogEvent &&
-            deployLogEvent.data.topic === "print";
-          const event:
-            | {
-                a: "publish-content";
-                version: number;
-                minter: string;
-              }
-            | undefined = deployLogEvent
-            ? (deployLogEvent.data as any).value
-            : undefined;
-          isSiglePost =
-            isSiglePost &&
-            !!event &&
-            event.a === "publish-content" &&
-            event.minter === sigleConfig.fixedPriceMinter;
+            deployLogEvent.a === "publish-content" &&
+            deployLogEvent.minter === sigleConfig.fixedPriceMinter;
 
           // TODO extra security: check that the contract is following the template exported by the SDK
 
@@ -63,7 +51,6 @@ export default defineEventHandler(async (event) => {
                 blockHeight: block.block_identifier.index,
                 version: 1,
                 contract: transaction.metadata.kind.data.code,
-                price: (setMintDetailsLogEvent.data as any).value.price,
                 sender: transaction.metadata.sender,
                 createdAt: new Date(block.metadata.block_time * 1000),
               },
@@ -151,10 +138,26 @@ export default defineEventHandler(async (event) => {
                 });
                 break;
               case "init-mint-details":
-                // We safely ignore this event as it's already handled in the contract deploy section
+                await indexerJob.emit({
+                  action: "indexer-init-mint-details",
+                  data: {
+                    address: value.contract,
+                    price: value.price,
+                    startBlock: value["start-block"],
+                    endBlock: value["end-block"],
+                  },
+                });
                 break;
               case "set-mint-details":
-                // TODO
+                await indexerJob.emit({
+                  action: "indexer-set-mint-details",
+                  data: {
+                    address: value.contract,
+                    price: value.price,
+                    startBlock: value["start-block"],
+                    endBlock: value["end-block"],
+                  },
+                });
                 break;
               case "mint-enabled":
                 await indexerJob.emit({
