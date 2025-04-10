@@ -1,4 +1,7 @@
 name: Release
+permissions:
+  contents: read
+  pull-requests: read
 
 on:
   push:
@@ -21,8 +24,8 @@ jobs:
         with:
           version: pnpm run version
           publish: pnpm run release
-          commit: 'chore: release'
-          title: 'chore: create new release'
+          commit: "chore: release"
+          title: "chore: create new release"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
