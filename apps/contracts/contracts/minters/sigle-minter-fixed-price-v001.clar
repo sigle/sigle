@@ -138,37 +138,6 @@
   )
 )
 
-;; @desc Allows the contract owner to mint for free
-(define-public (owner-mint (token-contract <sigle-post-trait>) (quantity uint) (recipient (optional principal)))
-  (let (
-    (mint-config (unwrap! (map-get? contract-mint-config (contract-of token-contract)) (err ERR-INVALID-MINT-DATA)))
-    (mint-recipient (default-to tx-sender recipient))
-    (contract-owner (try! (contract-call? token-contract get-contract-owner)))
-  )
-    (asserts! (is-eq tx-sender contract-owner) (err ERR-NOT-AUTHORIZED))
-    (asserts! (<= quantity u10) (err ERR-INVALID-QUANTITY))
-
-    (try! (if (<= u1 quantity) (as-contract (contract-call? token-contract mint mint-recipient)) (ok u0)))
-    (try! (if (<= u2 quantity) (as-contract (contract-call? token-contract mint mint-recipient)) (ok u0)))
-    (try! (if (<= u3 quantity) (as-contract (contract-call? token-contract mint mint-recipient)) (ok u0)))
-    (try! (if (<= u4 quantity) (as-contract (contract-call? token-contract mint mint-recipient)) (ok u0)))
-    (try! (if (<= u5 quantity) (as-contract (contract-call? token-contract mint mint-recipient)) (ok u0)))
-    (try! (if (<= u6 quantity) (as-contract (contract-call? token-contract mint mint-recipient)) (ok u0)))
-    (try! (if (<= u7 quantity) (as-contract (contract-call? token-contract mint mint-recipient)) (ok u0)))
-    (try! (if (<= u8 quantity) (as-contract (contract-call? token-contract mint mint-recipient)) (ok u0)))
-    (try! (if (<= u9 quantity) (as-contract (contract-call? token-contract mint mint-recipient)) (ok u0)))
-    (try! (if (<= u10 quantity) (as-contract (contract-call? token-contract mint mint-recipient)) (ok u0)))
-
-    (print {
-        a: "owner-mint",
-        contract: token-contract,
-        quantity: quantity,
-        recipient: mint-recipient
-    })
-    (ok true)
-  )
-)
-
 (define-public (update-fees (protocol uint) (creator uint) (create-referrer uint) (mint-referrer uint))
     (let (
         (protocol-owner (contract-call? .sigle-protocol get-contract-owner))
