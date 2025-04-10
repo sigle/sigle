@@ -24,7 +24,7 @@ export const contractDeploymentPredicate = {
         },
       },
       // TODO start_block depending on env.STACKS_ENV
-      start_block: 235887,
+      start_block: 952455,
       decode_clarity_values: true,
     },
   },
@@ -50,7 +50,7 @@ export const sigleProfilesPredicate = {
         },
       },
       // TODO start_block depending on env.STACKS_ENV
-      start_block: 235887,
+      start_block: 952455,
       decode_clarity_values: true,
     },
   },
@@ -75,7 +75,7 @@ export const sigleMinterFixedPricePredicate = {
         },
       },
       // TODO start_block depending on env.STACKS_ENV
-      start_block: 235887,
+      start_block: 952455,
       decode_clarity_values: true,
     },
   },
