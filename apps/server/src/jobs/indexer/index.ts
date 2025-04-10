@@ -6,6 +6,14 @@ import {
   executeIndexerMintEnabledJob,
   indexerMintEnabledSchema,
 } from "./mint-enabled";
+import {
+  executeIndexerInitMintDetailsJob,
+  indexerInitMintDetailsSchema,
+} from "./minter-fixed-price/init-mint-details";
+import {
+  executeIndexerSetMintDetailsJob,
+  indexerSetMintDetailsSchema,
+} from "./minter-fixed-price/set-mint-details";
 import { executeNewPostJob, indexerNewPostSchema } from "./new-post";
 import {
   executeIndexerReduceSupplyJob,
@@ -29,6 +37,8 @@ export const indexerJob = defineJob("indexer")
       indexerSetProfileSchema,
       indexerReduceSupplySchema,
       indexerSetBaseTokenUriSchema,
+      indexerInitMintDetailsSchema,
+      indexerSetMintDetailsSchema,
     ]),
   )
   .options({
@@ -55,6 +65,12 @@ export const indexerJob = defineJob("indexer")
         break;
       case "indexer-set-profile":
         await executeIndexerSetProfileJob(job.data.data);
+        break;
+      case "indexer-init-mint-details":
+        await executeIndexerInitMintDetailsJob(job.data.data);
+        break;
+      case "indexer-set-mint-details":
+        await executeIndexerSetMintDetailsJob(job.data.data);
         break;
 
       default:
