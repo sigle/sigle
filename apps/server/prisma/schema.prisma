@@ -21,6 +21,8 @@ model User {
   mintedNfts PostNft[] @relation("minter")
   sessions   Session[]
   accounts   Account[]
+
+  @@map("user")
 }
 
 model Profile {
@@ -38,6 +40,8 @@ model Profile {
   updatedAt DateTime @updatedAt @map("updated_at")
 
   user User @relation(fields: [id], references: [id])
+
+  @@map("profile")
 }
 
 model Draft {
@@ -60,6 +64,8 @@ model Draft {
 
   userId String @map("user_id")
   user   User   @relation(fields: [userId], references: [id])
+
+  @@map("draft")
 }
 
 model Post {
@@ -90,6 +96,8 @@ model Post {
   userId String    @map("user_id")
   user   User      @relation(fields: [userId], references: [id])
   nfts   PostNft[]
+
+  @@map("post")
 }
 
 model MediaImage {
@@ -104,6 +112,8 @@ model MediaImage {
   posts               Post[]
   profilePicture      Profile[] @relation(name: "Profile_picture_uri_id_fkey")
   profileCoverPicture Profile[] @relation(name: "Profile_cover_picture_uri_id_fkey")
+
+  @@map("media_image")
 }
 
 model PostNft {
@@ -117,6 +127,8 @@ model PostNft {
   owner    User   @relation(name: "owner", fields: [ownerId], references: [id])
   minterId String @map("minter_id")
   minter   User   @relation(name: "minter", fields: [minterId], references: [id])
+
+  @@map("post_nft")
 }
 
 // Model for the rate-limiter-flexible package

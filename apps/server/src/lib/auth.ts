@@ -15,9 +15,6 @@ export const auth = betterAuth({
   appName: "sigle",
   baseURL: env.APP_URL,
   trustedOrigins: [env.APP_URL],
-  user: {
-    modelName: "User",
-  },
   advanced: {
     cookiePrefix: "sigle",
     useSecureCookies,
