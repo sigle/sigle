@@ -78,7 +78,7 @@ export default defineEventHandler(async (event) => {
           for (const event of events) {
             const value:
               | { a: "mint"; contract: string; quantity: number }
-              | { a: "owner-mint"; contract: string; quantity: number }
+              | { a: "owner-mint"; recipient?: string; "token-id": number }
               | {
                   a: "init-mint-details";
                   contract: string;
@@ -101,12 +101,30 @@ export default defineEventHandler(async (event) => {
               event.data.value;
             switch (value.a) {
               case "mint":
-              case "owner-mint":
                 await indexerJob.emit({
                   action: "indexer-mint",
                   data: {
                     address: value.contract,
                     quantity: value.quantity,
+                    nftMintEvents: transaction.metadata.receipt.events
+                      .filter((event) => event.type === "NFTMintEvent")
+                      .map((event) => ({
+                        ...event.data,
+                        // Type is string, but actual value is a number
+                        // We cast it to a string to match the type
+                        asset_identifier: String(event.data.asset_identifier),
+                      })),
+                    sender: transaction.metadata.sender,
+                    timestamp: new Date(block.metadata.block_time * 1000),
+                  },
+                });
+                break;
+              case "owner-mint":
+                await indexerJob.emit({
+                  action: "indexer-mint",
+                  data: {
+                    address: contractAddress,
+                    quantity: 1,
                     nftMintEvents: transaction.metadata.receipt.events
                       .filter((event) => event.type === "NFTMintEvent")
                       .map((event) => ({

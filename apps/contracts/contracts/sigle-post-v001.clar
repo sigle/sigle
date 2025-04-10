@@ -125,15 +125,21 @@
 ;; @desc Mint a new NFT to the specified principal
 ;; can only be called by the minter
 (define-public (mint (recipient principal))
-  (let ((next-token-id (+ u1 (var-get last-token-id)))
-    (current-balance (get-balance recipient)))
-  (asserts! (is-authorized-minter) (err ERR-NOT-AUTHORIZED))
-  (asserts! (is-eq true (var-get mint-enabled)) (err ERR-MINT-PAUSED))
-  (asserts! (<= next-token-id (var-get max-supply)) (err ERR-ALL-MINTED))
-  (var-set last-token-id next-token-id)
-  (map-set token-count recipient (+ current-balance u1))
-  (try! (nft-mint? sigle-post next-token-id recipient))
-  (ok next-token-id)))
+  (begin
+    (asserts! (is-authorized-minter) (err ERR-NOT-AUTHORIZED))
+    (mint-token recipient)))
+
+;; @desc Allows the contract owner to mint directly without the minter
+(define-public (owner-mint (recipient (optional principal)))
+  (begin
+    (asserts! (is-eq tx-sender (var-get contract-owner)) (err ERR-NOT-AUTHORIZED))
+    (let ((mint-recipient (default-to tx-sender recipient)))
+      (print {
+          a: "owner-mint",
+          recipient: mint-recipient,
+          token-id: (+ u1 (var-get last-token-id))
+      })
+      (mint-token mint-recipient))))
 
 ;; @desc returns the max supply
 (define-read-only (get-max-supply)
@@ -158,6 +164,17 @@
 ;; @desc Check if metadata is frozen
 (define-read-only (get-metadata-frozen)
   (ok (var-get metadata-frozen)))
+
+;; @desc Private function to handle common minting logic
+(define-private (mint-token (recipient principal))
+  (let ((next-token-id (+ u1 (var-get last-token-id)))
+        (current-balance (get-balance recipient)))
+    (asserts! (is-eq true (var-get mint-enabled)) (err ERR-MINT-PAUSED))
+    (asserts! (<= next-token-id (var-get max-supply)) (err ERR-ALL-MINTED))
+    (var-set last-token-id next-token-id)
+    (map-set token-count recipient (+ current-balance u1))
+    (try! (nft-mint? sigle-post next-token-id recipient))
+    (ok next-token-id)))
 
 ;; @desc checks if the sender is the owner of the given token
 (define-private (is-sender-owner (id uint))
