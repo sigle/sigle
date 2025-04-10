@@ -17,7 +17,7 @@ export type GeneratePostParams = {
      * Maximum number of editions that can be minted
      * Set undefined to create an open edition
      */
-    maxSupply?: number;
+    maxSupply?: number | bigint;
     /**
      * The create referrer address to receive the create referrer fee on each mint
      */
