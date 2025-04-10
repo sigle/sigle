@@ -1,7 +1,6 @@
 import { z } from "zod";
 import { consola } from "~/lib/consola";
 import { defineJob } from "~/lib/jobs";
-import { executeIndexerMintJob, indexerMintSchema } from "./mint";
 import {
   executeIndexerMintEnabledJob,
   indexerMintEnabledSchema,
@@ -10,6 +9,10 @@ import {
   executeIndexerInitMintDetailsJob,
   indexerInitMintDetailsSchema,
 } from "./minter-fixed-price/init-mint-details";
+import {
+  executeIndexerMintJob,
+  indexerMintSchema,
+} from "./minter-fixed-price/mint";
 import {
   executeIndexerSetMintDetailsJob,
   indexerSetMintDetailsSchema,
