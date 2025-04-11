@@ -1,6 +1,6 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Text, TextField } from "@radix-ui/themes";
-import { IconBrandTwitter, IconBrandYoutube } from "@tabler/icons-react";
+import { IconBrandX, IconBrandYoutube } from "@tabler/icons-react";
 import type { NodeViewProps } from "@tiptap/core";
 import { NodeViewWrapper } from "@tiptap/react";
 import type React from "react";
@@ -89,7 +89,7 @@ export const EmbedComponent = (props: NodeViewProps) => {
           >
             <TextField.Slot>
               {props.node.attrs.embedType === "twitter" ? (
-                <IconBrandTwitter height="16" width="16" />
+                <IconBrandX height="16" width="16" />
               ) : null}
               {props.node.attrs.embedType === "video" ? (
                 <IconBrandYoutube height="16" width="16" />
