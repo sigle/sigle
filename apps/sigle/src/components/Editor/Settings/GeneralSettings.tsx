@@ -50,6 +50,7 @@ export const GeneralSettings = () => {
           Tags (max 5)
         </Text>
         <ReactTags
+          autoFocus={false}
           classNames={{
             tags: "text-2",
             tagInput: "flex gap-2",
