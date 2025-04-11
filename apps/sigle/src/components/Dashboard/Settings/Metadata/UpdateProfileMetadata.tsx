@@ -159,7 +159,7 @@ export const UpdateProfileMetadata = ({
             Website
           </Text>
           <TextField.Root
-            placeholder="https://sigle.io"
+            placeholder="https://my-website.com"
             {...register("website")}
           />
           {errors.website && (
