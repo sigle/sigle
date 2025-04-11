@@ -65,7 +65,7 @@ export default function DashboardDrafts() {
               No drafts yet
             </Text>
             <Button color="gray" highContrast asChild>
-              <NextLink href={"/p/new"}>Write a story</NextLink>
+              <NextLink href={"/p/new"}>Write a post</NextLink>
             </Button>
           </Flex>
         ) : null}

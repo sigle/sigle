@@ -52,7 +52,7 @@ export const UserDropdown = () => {
         {whitelisted ? (
           <>
             <DropdownMenu.Item asChild>
-              <NextLink href="/p/new">Write a story</NextLink>
+              <NextLink href="/p/new">Write a post</NextLink>
             </DropdownMenu.Item>
             <DropdownMenu.Item asChild>
               <NextLink href="/dashboard/settings">Settings</NextLink>

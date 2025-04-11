@@ -58,7 +58,7 @@ export const LatestPost = () => {
                 asChild
               >
                 <NextLink href={Routes.post({ postId: post.id })}>
-                  View story
+                  View post
                 </NextLink>
               </Button>
             </div>

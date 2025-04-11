@@ -21,7 +21,7 @@ const Placeholder = (isMobile: boolean) => {
           parentNode.type.name === "doc" &&
           editor.getJSON().content?.length === 1
         ) {
-          return "Start your story here...";
+          return "Start your post here...";
         }
 
         if (parentNode.type.name === "listItem") {
