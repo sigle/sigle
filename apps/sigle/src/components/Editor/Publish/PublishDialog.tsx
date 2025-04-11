@@ -3,7 +3,7 @@
 import { sigleApiClient, sigleApiFetchclient } from "@/__generated__/sigle-api";
 import { useContractCall } from "@/hooks/useContractCall";
 import { useContractDeploy } from "@/hooks/useContractDeploy";
-import { useSession } from "@/lib/auth-client";
+import { useSession } from "@/lib/auth-hooks";
 import { Routes } from "@/lib/routes";
 import { sigleClient } from "@/lib/sigle";
 import {

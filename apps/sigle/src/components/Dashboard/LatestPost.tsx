@@ -1,7 +1,7 @@
 "use client";
 
 import { sigleApiClient } from "@/__generated__/sigle-api";
-import { useSession } from "@/lib/auth-client";
+import { useSession } from "@/lib/auth-hooks";
 import { Routes } from "@/lib/routes";
 import { Button, Card, Flex, Heading, Text } from "@radix-ui/themes";
 import { format } from "date-fns";

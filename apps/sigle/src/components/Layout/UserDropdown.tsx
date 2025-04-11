@@ -2,7 +2,7 @@
 
 import { sigleApiClient } from "@/__generated__/sigle-api";
 import { useStacksLogin } from "@/hooks/useStacksLogin";
-import { useSession } from "@/lib/auth-client";
+import { useSession } from "@/lib/auth-hooks";
 import { Routes } from "@/lib/routes";
 import { DropdownMenu, IconButton } from "@radix-ui/themes";
 import { useTheme } from "next-themes";
@@ -52,10 +52,10 @@ export const UserDropdown = () => {
         {whitelisted ? (
           <>
             <DropdownMenu.Item asChild>
-              <NextLink href={"/p/new"}>Write a story</NextLink>
+              <NextLink href="/p/new">Write a story</NextLink>
             </DropdownMenu.Item>
             <DropdownMenu.Item asChild>
-              <NextLink href={"/dashboard/settings"}>Settings</NextLink>
+              <NextLink href="/dashboard/settings">Settings</NextLink>
             </DropdownMenu.Item>
             <DropdownMenu.Item asChild>
               <NextLink
