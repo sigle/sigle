@@ -16,7 +16,7 @@ export default function DashboardLayout({
 
   const navigationLinks = [
     {
-      label: "Overview",
+      label: "Dashboard",
       href: "/dashboard",
     },
     {
