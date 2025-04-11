@@ -56,7 +56,7 @@ export const EditorSettings = () => {
                   weight="medium"
                   className="flex items-center gap-2"
                 >
-                  <IconCards size={20} /> Collect settings
+                  <IconCards size={20} /> NFT collection
                 </Text>
                 <Text as="div" color="gray">
                   <IconChevronRight size={24} />

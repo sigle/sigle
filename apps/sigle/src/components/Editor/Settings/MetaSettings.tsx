@@ -12,7 +12,7 @@ export const MetaSettings = () => {
   return (
     <div className="animate-in fade-in slide-in-from-right-5">
       <DialogTitleGoBack
-        title="Meta SEO settings"
+        title="Meta SEO"
         description="Edit your post SEO settings"
       />
 
