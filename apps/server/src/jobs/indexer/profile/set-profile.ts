@@ -32,6 +32,23 @@ export const executeIndexerSetProfileJob = async (
     ...metadataWithoutId
   } = profileMetadata.data;
 
+  // Ensure user exists
+  const user = await prisma.user.findUnique({
+    select: {
+      id: true,
+    },
+    where: {
+      id: data.address,
+    },
+  });
+  if (!user) {
+    await prisma.user.create({
+      data: {
+        id: data.address,
+      },
+    });
+  }
+
   await prisma.profile.upsert({
     where: {
       id: data.address,
