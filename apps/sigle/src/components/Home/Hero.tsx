@@ -1,7 +1,7 @@
 "use client";
 
 import { useStacksLogin } from "@/hooks/useStacksLogin";
-import { useSession } from "@/lib/auth-client";
+import { useSession } from "@/lib/auth-hooks";
 import { Routes } from "@/lib/routes";
 import { Button, Container, Heading } from "@radix-ui/themes";
 import { NextLink } from "../Shared/NextLink";

@@ -1,4 +1,4 @@
-import { useSession } from "@/lib/auth-client";
+import { useSession } from "@/lib/auth-hooks";
 import { Callout, Flex, Spinner, Text } from "@radix-ui/themes";
 import { IconInfoCircle } from "@tabler/icons-react";
 

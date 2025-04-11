@@ -1,7 +1,8 @@
 "use client";
 
 import { env } from "@/env";
-import { authClient, signOut, useSession } from "@/lib/auth-client";
+import { authClient, signOut } from "@/lib/auth-client";
+import { useSession } from "@/lib/auth-hooks";
 import { appDetails, stacksNetwork, userSession } from "@/lib/stacks";
 import { createSiwsMessage } from "@sigle/sign-in-with-stacks";
 import {

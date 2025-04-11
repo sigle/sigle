@@ -3,7 +3,7 @@
 import type { paths } from "@/__generated__/sigle-api/openapi";
 import { env } from "@/env";
 import { useCopyToClipboard } from "@/hooks/useCopyToClipboard";
-import { useSession } from "@/lib/auth-client";
+import { useSession } from "@/lib/auth-hooks";
 import { cn } from "@/lib/cn";
 import { resolveImageUrl } from "@/lib/images";
 import { Routes } from "@/lib/routes";

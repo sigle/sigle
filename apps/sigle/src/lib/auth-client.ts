@@ -15,4 +15,4 @@ export const authClient = createAuthClient({
   plugins: [siwsClientPlugin()],
 });
 
-export const { signOut, useSession } = authClient;
+export const { signOut } = authClient;

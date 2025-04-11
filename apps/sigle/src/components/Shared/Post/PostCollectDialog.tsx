@@ -8,7 +8,7 @@ import {
   useCurrencyFiatPrice,
 } from "@/hooks/useCurrencyFiatPrice";
 import { useStacksLogin } from "@/hooks/useStacksLogin";
-import { useSession } from "@/lib/auth-client";
+import { useSession } from "@/lib/auth-hooks";
 import { resolveImageUrl } from "@/lib/images";
 import { sigleClient } from "@/lib/sigle";
 import {
