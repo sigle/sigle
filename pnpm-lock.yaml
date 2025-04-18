@@ -9,10 +9,10 @@ overrides:
 
 patchedDependencies:
   '@ardrive/turbo-sdk@1.22.0':
-    hash: vfhiuadom72jrr6eijhwmlmrja
+    hash: 903aac5d2e9fbea2ffe97797623e7b8d16ed2b387dbef51656aff82f35dea318
     path: patches/@ardrive__turbo-sdk@1.22.0.patch
   '@dha-team/arbundles@1.0.1':
-    hash: gxr3pe2xdsty4ni7nl6crfldfi
+    hash: c1cd48332d5c0d9ca8a4e539baf79908eedb427b320a35bb7ccf2c1dee3f1661
     path: patches/@dha-team__arbundles@1.0.1.patch
 
 importers:
@@ -94,7 +94,7 @@ importers:
     dependencies:
       '@ardrive/turbo-sdk':
         specifier: 1.22.0
-        version: 1.22.0(patch_hash=vfhiuadom72jrr6eijhwmlmrja)(bufferutil@4.0.8)(encoding@0.1.13)(utf-8-validate@5.0.10)
+        version: 1.22.0(patch_hash=903aac5d2e9fbea2ffe97797623e7b8d16ed2b387dbef51656aff82f35dea318)(bufferutil@4.0.8)(encoding@0.1.13)(utf-8-validate@5.0.10)
       '@dotenvx/dotenvx':
         specifier: 1.40.1
         version: 1.40.1
@@ -412,6 +412,9 @@ importers:
       '@dotenvx/dotenvx':
         specifier: 1.40.1
         version: 1.40.1
+      '@eslint/eslintrc':
+        specifier: 3.3.1
+        version: 3.3.1
       '@tailwindcss/typography':
         specifier: 0.5.16
         version: 0.5.16(tailwindcss@3.4.17(ts-node@10.9.2(@swc/core@1.7.18(@swc/helpers@0.5.15))(@types/node@22.14.1)(typescript@5.8.3)))
@@ -10646,13 +10649,13 @@ snapshots:
 
   '@antfu/utils@8.1.1': {}
 
-  '@ardrive/turbo-sdk@1.22.0(patch_hash=vfhiuadom72jrr6eijhwmlmrja)(bufferutil@4.0.8)(encoding@0.1.13)(utf-8-validate@5.0.10)':
+  '@ardrive/turbo-sdk@1.22.0(patch_hash=903aac5d2e9fbea2ffe97797623e7b8d16ed2b387dbef51656aff82f35dea318)(bufferutil@4.0.8)(encoding@0.1.13)(utf-8-validate@5.0.10)':
     dependencies:
       '@cosmjs/amino': 0.32.4
       '@cosmjs/crypto': 0.32.4
       '@cosmjs/encoding': 0.32.4
       '@cosmjs/proto-signing': 0.32.4
-      '@dha-team/arbundles': 1.0.1(patch_hash=gxr3pe2xdsty4ni7nl6crfldfi)(bufferutil@4.0.8)(encoding@0.1.13)(utf-8-validate@5.0.10)
+      '@dha-team/arbundles': 1.0.1(patch_hash=c1cd48332d5c0d9ca8a4e539baf79908eedb427b320a35bb7ccf2c1dee3f1661)(bufferutil@4.0.8)(encoding@0.1.13)(utf-8-validate@5.0.10)
       '@ethersproject/signing-key': 5.7.0
       '@kyvejs/sdk': 1.3.3(bufferutil@4.0.8)(starknet@6.11.0(encoding@0.1.13))(utf-8-validate@5.0.10)
       '@solana/web3.js': 1.98.0(bufferutil@4.0.8)(encoding@0.1.13)(utf-8-validate@5.0.10)
@@ -11137,7 +11140,7 @@ snapshots:
       react: 19.1.0
       react-dom: 19.1.0(react@19.1.0)
 
-  '@dha-team/arbundles@1.0.1(patch_hash=gxr3pe2xdsty4ni7nl6crfldfi)(bufferutil@4.0.8)(encoding@0.1.13)(utf-8-validate@5.0.10)':
+  '@dha-team/arbundles@1.0.1(patch_hash=c1cd48332d5c0d9ca8a4e539baf79908eedb427b320a35bb7ccf2c1dee3f1661)(bufferutil@4.0.8)(encoding@0.1.13)(utf-8-validate@5.0.10)':
     dependencies:
       '@ethersproject/bytes': 5.7.0
       '@ethersproject/hash': 5.7.0
