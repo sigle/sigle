@@ -20,7 +20,7 @@ export const PostMarkdownContent = ({ content }: PostMarkdownContentProps) => {
       <ReactMarkdown
         components={{
           img: ({ node, src, ...props }) => {
-            src = src ? resolveImageUrl(src) : undefined;
+            src = src ? resolveImageUrl(src as string) : undefined;
             // eslint-disable-next-line @next/next/no-img-element, jsx-a11y/alt-text
             return <img src={src} {...props} />;
           },
