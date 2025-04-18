@@ -38,10 +38,10 @@ import type { EditorPostFormData } from "./EditorFormProvider";
 import { EditorFloatingMenu } from "./FloatingMenu";
 import "./editor-tiptap.css";
 import { sigleApiClient } from "@/__generated__/sigle-api";
-import { Image } from "@tiptap/extension-image";
 import { toast } from "sonner";
 import { ImageUploadNode } from "../tiptap-node/image-upload-node";
 import { CodeBlockComponent } from "./extensions/CodeBlock";
+import { TipTapImage } from "./extensions/Image";
 import { TipTapMobileScroll } from "./extensions/MobileScroll";
 import { TipTapPlaceholder } from "./extensions/Placeholder";
 import { SlashCommands } from "./extensions/SlashCommand/SlashCommands";
@@ -94,7 +94,7 @@ export const EditorTipTap = () => {
       }).configure({
         lowlight,
       }),
-      Image,
+      TipTapImage,
       ImageUploadNode.configure({
         accept: "image/jpeg,image/png,image/gif",
         // 5MB
@@ -108,6 +108,7 @@ export const EditorTipTap = () => {
           const formData = new FormData();
           formData.append("file", file);
 
+          // TODO try to use axios for upload progress here
           // Set up fake progress updates for 5 seconds
           let progress = 0;
           const progressInterval = setInterval(() => {
