@@ -73,39 +73,40 @@ export const slashCommands: SlashCommandsCommand[] = [
     description: "Upload from your computer",
     section: "basic",
     command: ({ editor, range }) => {
-      const input = document.createElement("input");
-      input.type = "file";
-      input.accept = "image/jpeg,image/png,image/gif";
+      editor.chain().focus().setImageUploadNode().run();
+      // const input = document.createElement("input");
+      // input.type = "file";
+      // input.accept = "image/jpeg,image/png,image/gif";
 
-      input.onchange = async (e) => {
-        // biome-ignore lint/suspicious/noExplicitAny: <explanation>
-        const file: File | undefined = (e.target as any)?.files?.[0];
-        if (!file) return;
-        const [mime] = file.type.split("/");
-        if (mime !== "image") return;
+      // input.onchange = async (e) => {
+      //   // biome-ignore lint/suspicious/noExplicitAny: <explanation>
+      //   const file: File | undefined = (e.target as any)?.files?.[0];
+      //   if (!file) return;
+      //   const [mime] = file.type.split("/");
+      //   if (mime !== "image") return;
 
-        if (!range) {
-          editor
-            .chain()
-            .focus()
-            .setImageFromFile({
-              file,
-            })
-            .run();
-          return;
-        }
-        editor
-          .chain()
-          .focus()
-          // Use deleteRange to clear the text from command chars "/bu" etc..
-          .deleteRange(range)
-          .setImageFromFile({
-            file,
-          })
-          .run();
-      };
+      //   if (!range) {
+      //     editor
+      //       .chain()
+      //       .focus()
+      //       .setImageFromFile({
+      //         file,
+      //       })
+      //       .run();
+      //     return;
+      //   }
+      //   editor
+      //     .chain()
+      //     .focus()
+      //     // Use deleteRange to clear the text from command chars "/bu" etc..
+      //     .deleteRange(range)
+      //     .setImageFromFile({
+      //       file,
+      //     })
+      //     .run();
+      // };
 
-      input.click();
+      // input.click();
     },
   },
   {

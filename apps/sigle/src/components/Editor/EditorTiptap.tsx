@@ -38,9 +38,10 @@ import type { EditorPostFormData } from "./EditorFormProvider";
 import { EditorFloatingMenu } from "./FloatingMenu";
 import "./editor-tiptap.css";
 import { sigleApiClient } from "@/__generated__/sigle-api";
+import { Image } from "@tiptap/extension-image";
 import { toast } from "sonner";
+import { ImageUploadNode } from "../tiptap-node/image-upload-node";
 import { CodeBlockComponent } from "./extensions/CodeBlock";
-import { TipTapImage } from "./extensions/Image";
 import { TipTapMobileScroll } from "./extensions/MobileScroll";
 import { TipTapPlaceholder } from "./extensions/Placeholder";
 import { SlashCommands } from "./extensions/SlashCommand/SlashCommands";
@@ -93,8 +94,13 @@ export const EditorTipTap = () => {
       }).configure({
         lowlight,
       }),
-      TipTapImage.configure({
-        uploadFile: async (file: File) => {
+      Image,
+      ImageUploadNode.configure({
+        accept: "image/jpeg,image/png,image/gif",
+        // 5MB
+        maxSize: 5 * 1024 * 1024,
+        limit: 1,
+        upload: async (file: File) => {
           posthog.capture("editor_image_upload_start", {
             postId,
           });
@@ -119,15 +125,17 @@ export const EditorTipTap = () => {
             return data.url;
             // biome-ignore lint/suspicious/noExplicitAny: <explanation>
           } catch (error: any) {
-            toast.error("Failed to upload image", {
-              description: error.message,
-            });
             posthog.capture("editor_image_upload_error", {
               postId,
               error: error.message,
             });
             throw error;
           }
+        },
+        onError: (error) => {
+          toast.error("Failed to upload image", {
+            description: error.message,
+          });
         },
       }),
       // Marks
