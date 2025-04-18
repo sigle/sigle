@@ -100,13 +100,24 @@ export const EditorTipTap = () => {
         // 5MB
         maxSize: 5 * 1024 * 1024,
         limit: 1,
-        upload: async (file: File) => {
+        upload: async (file, onProgress, abortSignal) => {
           posthog.capture("editor_image_upload_start", {
             postId,
           });
 
           const formData = new FormData();
           formData.append("file", file);
+
+          // Set up fake progress updates for 5 seconds
+          let progress = 0;
+          const progressInterval = setInterval(() => {
+            progress += 10;
+            if (progress > 90) {
+              clearInterval(progressInterval);
+              progress = 99;
+            }
+            onProgress?.({ progress });
+          }, 500);
 
           try {
             const data = await uploadMedia({
@@ -117,7 +128,14 @@ export const EditorTipTap = () => {
               },
               // biome-ignore lint/suspicious/noExplicitAny: <explanation>
               body: formData as any,
+              signal: abortSignal,
             });
+
+            // Clear the interval if it's still running
+            clearInterval(progressInterval);
+
+            // Set to 100% before completion
+            onProgress?.({ progress: 100 });
 
             posthog.capture("editor_image_upload_success", {
               postId,
@@ -125,6 +143,9 @@ export const EditorTipTap = () => {
             return data.url;
             // biome-ignore lint/suspicious/noExplicitAny: <explanation>
           } catch (error: any) {
+            // Clear the interval if there's an error
+            clearInterval(progressInterval);
+
             posthog.capture("editor_image_upload_error", {
               postId,
               error: error.message,
