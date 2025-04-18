@@ -115,7 +115,9 @@ function useFileUpload(options: UploadOptions) {
     if (options.limit && files.length > options.limit) {
       options.onError?.(
         new Error(
-          `Maximum ${options.limit} file${options.limit === 1 ? "" : "s"} allowed`,
+          `Maximum ${options.limit} file${
+            options.limit === 1 ? "" : "s"
+          } allowed`,
         ),
       );
       return null;
@@ -236,7 +238,9 @@ const ImageUploadDragArea: React.FC<ImageUploadDragAreaProps> = ({
 
   return (
     <div
-      className={`tiptap-image-upload-dragger ${dragover ? "tiptap-image-upload-dragger-active" : ""}`}
+      className={`tiptap-image-upload-dragger ${
+        dragover ? "tiptap-image-upload-dragger-active" : ""
+      }`}
       onDrop={onDrop}
       onDragOver={onDragover}
       onDragLeave={onDragleave}
@@ -370,6 +374,9 @@ export const ImageUploadNode: React.FC<NodeViewProps> = (props) => {
           {
             type: "image",
             attrs: { src: url, alt: filename, title: filename },
+          },
+          {
+            type: "paragraph",
           },
         ])
         .run();
