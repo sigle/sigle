@@ -94,8 +94,8 @@ export const EditorBubbleMenu = ({ editor }: EditorBubbleMenuProps) => {
         }
         // End default implementation
 
-        // Do not show menu on images
-        if (editor.isActive("image")) {
+        // Do not show menu on images or image upload
+        if (editor.isActive("image") || editor.isActive("imageUpload")) {
           return false;
         }
 
