@@ -44,5 +44,8 @@
   "devDependencies": {
     "nitropack": "2.11.9",
     "typescript": "5.8.3"
+  },
+  "pnpm": {
+    "neverBuiltDependencies": []
   }
 }
