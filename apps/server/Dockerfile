@@ -65,7 +65,7 @@ COPY --from=installer --chown=nitro:nodejs /app/apps/$APP_NAME/scripts ./scripts
 COPY --from=installer --chown=nitro:nodejs /app/apps/$APP_NAME/prisma ./prisma
 COPY --from=builder --chown=nitro:nodejs /app/apps/$APP_NAME/.env.testnet.local ./.env.testnet.local
 RUN node scripts/prod-deps.js
-RUN pnpm install
+RUN pnpm install --dangerously-allow-all-builds
 
 USER nitro
 
