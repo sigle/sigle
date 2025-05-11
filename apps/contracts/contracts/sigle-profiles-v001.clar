@@ -1,7 +1,10 @@
 (define-constant ERR-NOT-AUTHORIZED u403)
 (define-constant ERR-INVALID-URI u1000)
 
-(define-map profiles principal (string-ascii 210))
+(define-map profiles
+  principal
+  (string-ascii 210)
+)
 
 ;; @desc Read profile URI for a given address
 (define-read-only (get-profile (address principal))
@@ -13,9 +16,9 @@
 (define-public (set-profile (uri (string-ascii 210)))
   (begin
     (print {
-        a: "set-profile",
-        address: tx-sender,
-        uri: uri
+      a: "set-profile",
+      address: tx-sender,
+      uri: uri,
     })
     (ok (map-set profiles tx-sender uri))
   )
