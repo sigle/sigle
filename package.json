@@ -15,7 +15,7 @@
   },
   "devDependencies": {
     "@biomejs/biome": "1.9.4",
-    "@changesets/cli": "2.29.3",
+    "@changesets/cli": "2.29.4",
     "lefthook": "1.11.12",
     "syncpack": "13.0.4",
     "turbo": "2.5.3"
