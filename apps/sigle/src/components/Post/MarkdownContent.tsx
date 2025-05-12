@@ -21,8 +21,8 @@ export const PostMarkdownContent = ({ content }: PostMarkdownContentProps) => {
         components={{
           img: ({ node, src, ...props }) => {
             src = src ? resolveImageUrl(src as string) : undefined;
-            // eslint-disable-next-line @next/next/no-img-element, jsx-a11y/alt-text
-            return <img src={src} {...props} />;
+            // biome-ignore lint/a11y/useAltText: <explanation>
+            return <img src={src} {...props} />; // eslint-disable-line @next/next/no-img-element
           },
           a: ({ node, href, ...props }) => {
             if (href && isValidTwitterUrl(href)) {

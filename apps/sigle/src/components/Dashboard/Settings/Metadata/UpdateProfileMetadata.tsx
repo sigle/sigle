@@ -38,7 +38,7 @@ export const UpdateProfileMetadata = ({
     "post",
     "/api/protected/user/profile/upload-metadata",
     {
-      onError: (error: any) => {
+      onError: (error) => {
         toast.error("Failed to update profile", {
           description: error.message,
         });
@@ -98,7 +98,7 @@ export const UpdateProfileMetadata = ({
 
     const data = await uploadProfileMetadata({
       body: {
-        metadata: metadata as any,
+        metadata: metadata as unknown as Record<string, never>,
       },
     });
 

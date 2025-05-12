@@ -1,5 +1,5 @@
-import { H3Event } from "h3";
-import { RateLimiterPrisma, RateLimiterRes } from "rate-limiter-flexible";
+import type { H3Event } from "h3";
+import { RateLimiterPrisma, type RateLimiterRes } from "rate-limiter-flexible";
 import { addRoute, createRouter, findRoute } from "rou3";
 import { prisma } from "~/lib/prisma";
 
@@ -68,7 +68,7 @@ const router = createRouter<RouteConfig>();
 
 const rateLimiters = new Map<string, RateLimiterPrisma>();
 
-routeConfigs.forEach((routeConfig) => {
+for (const routeConfig of routeConfigs) {
   const { path, method, config } = routeConfig;
   addRoute(router, method, path, routeConfig);
 
@@ -81,7 +81,7 @@ routeConfigs.forEach((routeConfig) => {
       blockDuration: config.blockDuration,
     }),
   );
-});
+}
 
 // Helper function to get client identifier
 function getClientIdentifier(event: H3Event): string {

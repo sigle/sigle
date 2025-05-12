@@ -22,6 +22,7 @@ export const ProfileMarkdownDescription = ({
                 target="_blank"
                 color="gray"
                 highContrast
+                // biome-ignore lint/suspicious/noExplicitAny: <explanation>
                 {...(props as any)}
               />
             );

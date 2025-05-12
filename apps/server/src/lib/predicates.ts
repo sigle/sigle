@@ -67,6 +67,7 @@ export const sigleMinterFixedPricePredicate = {
         contract_identifier: sigleConfig[env.STACKS_ENV].fixedPriceMinter,
         // @ts-ignore @hirosystems/chainhook-client types are wrong there https://github.com/hirosystems/chainhook/pull/701
         matches_regex: ".*",
+        // biome-ignore lint/suspicious/noExplicitAny: <explanation>
       } as any,
       then_that: {
         http_post: {
@@ -92,6 +93,7 @@ export const siglePostPrintPredicate = {
         contract_identifier: "{__CONTRACT__}",
         // @ts-ignore @hirosystems/chainhook-client types are wrong there https://github.com/hirosystems/chainhook/pull/701
         matches_regex: ".*",
+        // biome-ignore lint/suspicious/noExplicitAny: <explanation>
       } as any,
       then_that: {
         http_post: {

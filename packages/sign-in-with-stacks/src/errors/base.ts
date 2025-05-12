@@ -73,6 +73,7 @@ export class BaseError extends Error {
 
   walk(): Error;
   walk(fn: (err: unknown) => boolean): Error | null;
+  // biome-ignore lint/suspicious/noExplicitAny: <explanation>
   walk(fn?: any): any {
     return walk(this, fn);
   }

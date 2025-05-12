@@ -33,7 +33,6 @@ export function useDebouncedCallback(
 ) {
   // debounce the callback
   // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   const debouncedCallback = React.useCallback(debounce(callback, delay), [
     delay,
     ...deps,
@@ -44,7 +43,6 @@ export function useDebouncedCallback(
     return () => {
       debouncedCallback.cancel(); // cancel any pending calls
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [delay, ...deps]);
   // return the debounce function so we can use it
   return debouncedCallback;

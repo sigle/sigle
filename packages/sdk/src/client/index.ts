@@ -9,8 +9,11 @@ import {
   generatePostContract,
 } from "./generate-post-contract.js";
 import { type MintParams, mint } from "./mint.js";
-import { OwnerMintParams, ownerMint } from "./ownerMint.js";
-import { SetBaseTokenUriParams, setBaseTokenUri } from "./setBaseTokenUri.js";
+import { type OwnerMintParams, ownerMint } from "./ownerMint.js";
+import {
+  type SetBaseTokenUriParams,
+  setBaseTokenUri,
+} from "./setBaseTokenUri.js";
 import { type SetProfileParams, setProfile } from "./setProfile.js";
 
 interface CreateClientOptions {

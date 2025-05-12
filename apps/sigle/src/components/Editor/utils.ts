@@ -81,9 +81,9 @@ const uploadNftImage = async (
   params: CreatePostNftParams,
 ) => {
   const url = new URL(`${env.NEXT_PUBLIC_APP_URL}/api/post/nft-image`);
-  Object.entries(params).forEach(([key, value]) => {
+  for (const [key, value] of Object.entries(params)) {
     url.searchParams.append(key, String(value));
-  });
+  }
   const response = await fetch(url.toString());
 
   if (!response.ok) {
@@ -107,7 +107,7 @@ const uploadNftImage = async (
     },
   );
   if (!data.data) {
-    throw new Error(`Failed to upload NFT image`);
+    throw new Error("Failed to upload NFT image");
   }
   return data.data.url;
 };

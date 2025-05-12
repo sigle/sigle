@@ -5,7 +5,7 @@ import {
   verifySiwsMessage,
 } from "@sigle/sign-in-with-stacks";
 import { generateId } from "better-auth";
-import { type BetterAuthPlugin } from "better-auth";
+import type { BetterAuthPlugin } from "better-auth";
 import { APIError, createAuthEndpoint } from "better-auth/api";
 import { setSessionCookie } from "better-auth/cookies";
 import { z } from "zod";
@@ -128,9 +128,11 @@ export const betterAuthSiws = () =>
               });
             }
 
+            // biome-ignore lint/suspicious/noExplicitAny: <explanation>
             await setSessionCookie(ctx, { session, user: user as any });
 
             return ctx.json({ token: session.token });
+            // biome-ignore lint/suspicious/noExplicitAny: <explanation>
           } catch (error: any) {
             if (error instanceof APIError) throw error;
             Sentry.captureException(error);

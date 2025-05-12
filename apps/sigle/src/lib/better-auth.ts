@@ -1,4 +1,4 @@
-import { BetterAuthPlugin } from "better-auth";
+import type { BetterAuthPlugin } from "better-auth";
 import { createAuthEndpoint } from "better-auth/api";
 import z from "zod";
 

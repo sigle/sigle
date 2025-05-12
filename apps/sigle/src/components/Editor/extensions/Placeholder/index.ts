@@ -9,7 +9,8 @@ const Placeholder = (isMobile: boolean) => {
         const level = node.attrs.level as number;
         if (level === 2) {
           return "Big Heading";
-        } else if (level === 3) {
+        }
+        if (level === 3) {
           return "Small Heading";
         }
       }
