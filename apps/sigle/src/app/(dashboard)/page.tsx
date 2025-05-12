@@ -1,3 +1,4 @@
+import { HomeCommunity } from "@/components/Home/Community";
 import { HomeFeatures } from "@/components/Home/Features";
 import { HomeHero } from "@/components/Home/Hero";
 import { HomeTrendingPosts } from "@/components/Home/TrendingPosts";
@@ -12,6 +13,7 @@ export default function Home() {
       <HomeFeatures />
       <HomeTrendingPosts />
       <HomeTrendingUsers />
+      <HomeCommunity />
     </div>
   );
 }
