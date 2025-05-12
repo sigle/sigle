@@ -2,7 +2,7 @@ import { Inset, Text } from "@radix-ui/themes";
 import { IconX } from "@tabler/icons-react";
 import { useFormContext } from "react-hook-form";
 import { WithContext as ReactTags, type Tag } from "react-tag-input";
-import { EditorPostFormData } from "../EditorFormProvider";
+import type { EditorPostFormData } from "../EditorFormProvider";
 
 export const GeneralSettings = () => {
   const { setValue, watch } = useFormContext<EditorPostFormData>();

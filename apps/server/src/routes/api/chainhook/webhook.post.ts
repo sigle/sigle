@@ -33,7 +33,7 @@ export default defineEventHandler(async (event) => {
               : undefined;
 
           // This condition can be removed once we can add predicates for contract_deployment matching a trait implementation
-          let isSiglePost =
+          const isSiglePost =
             deployLogEvent &&
             deployLogEvent.a === "publish-content" &&
             deployLogEvent.minter === sigleConfig.fixedPriceMinter;

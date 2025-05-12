@@ -9,7 +9,8 @@
       "**/.output",
       ".github/ISSUE_TEMPLATE",
       "**/pnpm-lock.yaml",
-      "**/dist"
+      "**/dist",
+      "**/_pagefind"
     ]
   },
   "formatter": {
@@ -22,6 +23,15 @@
     "bracketSpacing": true
   },
   "organizeImports": { "enabled": true },
-  "linter": { "enabled": false, "rules": { "recommended": true } },
+  "linter": {
+    "enabled": false,
+    "rules": {
+      "recommended": true,
+      "style": {
+        "noParameterAssign": "off",
+        "noNonNullAssertion": "off"
+      }
+    }
+  },
   "javascript": {}
 }

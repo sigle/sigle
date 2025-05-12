@@ -1,5 +1,5 @@
 import type { StacksNetworkName } from "@stacks/network";
-import { AssetString } from "@stacks/transactions";
+import type { AssetString } from "@stacks/transactions";
 
 export const config: {
   [key in StacksNetworkName]: {

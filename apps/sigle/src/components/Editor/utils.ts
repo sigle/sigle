@@ -107,7 +107,7 @@ const uploadNftImage = async (
     },
   );
   if (!data.data) {
-    throw new Error(`Failed to upload NFT image`);
+    throw new Error("Failed to upload NFT image");
   }
   return data.data.url;
 };

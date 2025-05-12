@@ -7,7 +7,7 @@ import {
   publicKeyToAddress,
 } from "@stacks/transactions";
 import { parseSiwsMessage } from "./parseSiwsMessage.js";
-import { Prettify } from "./types.js";
+import type { Prettify } from "./types.js";
 import {
   type ValidateSiwsMessageParameters,
   validateSiwsMessage,

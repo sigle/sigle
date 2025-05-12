@@ -25,7 +25,7 @@ export const auth = betterAuth({
      */
     crossSubDomainCookies: {
       enabled: true,
-      domain: hostname == "localhost" ? hostname : "." + rootDomain,
+      domain: hostname === "localhost" ? hostname : `.${rootDomain}`,
     },
   },
   plugins: [betterAuthSiws()],

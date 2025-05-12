@@ -5,7 +5,7 @@ import {
   verifySiwsMessage,
 } from "@sigle/sign-in-with-stacks";
 import { generateId } from "better-auth";
-import { type BetterAuthPlugin } from "better-auth";
+import type { BetterAuthPlugin } from "better-auth";
 import { APIError, createAuthEndpoint } from "better-auth/api";
 import { setSessionCookie } from "better-auth/cookies";
 import { z } from "zod";
