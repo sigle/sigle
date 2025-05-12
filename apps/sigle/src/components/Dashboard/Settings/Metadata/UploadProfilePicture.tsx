@@ -43,13 +43,12 @@ export const UploadProfilePicture = ({
           setPicture(data.url);
           posthog.capture("profile_image_upload_success", {});
         },
-        onError: (error: any) => {
+        onError: (error) => {
           posthog.capture("profile_image_upload_error", {});
           toast.error(error.message);
         },
       },
     );
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const { getRootProps, getInputProps } = useDropzone({

@@ -4,6 +4,7 @@ import type { SendOptions, WorkHandler } from "pg-boss";
 import type { z } from "zod";
 import { consola } from "./consola";
 
+// biome-ignore lint/suspicious/noExplicitAny: <explanation>
 class JobBuilder<TInput = any> {
   private _name: string;
   private _inputSchema?: z.ZodType<TInput>;
@@ -19,7 +20,9 @@ class JobBuilder<TInput = any> {
   }
 
   input<T>(schema: z.ZodType<T>): JobBuilder<T> {
+    // biome-ignore lint/suspicious/noExplicitAny: <explanation>
     this._inputSchema = schema as any;
+    // biome-ignore lint/suspicious/noExplicitAny: <explanation>
     return this as any;
   }
 

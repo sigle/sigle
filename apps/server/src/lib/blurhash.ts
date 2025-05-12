@@ -34,9 +34,9 @@ function generatePng(width: number, height: number, rgbaString: string) {
   const SIGNATURE = String.fromCharCode(137, 80, 78, 71, 13, 10, 26, 10);
   const NO_FILTER = String.fromCharCode(0);
 
-  let n;
-  let c;
-  let k;
+  let n: number;
+  let c: number;
+  let k: number;
 
   // make crc table
   for (n = 0; n < 256; n++) {
@@ -55,8 +55,8 @@ function generatePng(width: number, height: number, rgbaString: string) {
   function inflateStore(data: string) {
     const MAX_STORE_LENGTH = 65535;
     let storeBuffer = "";
-    let remaining;
-    let blockType;
+    let remaining: number;
+    let blockType: string;
 
     for (let i = 0; i < data.length; i += MAX_STORE_LENGTH) {
       remaining = data.length - i;
@@ -150,7 +150,7 @@ function generatePng(width: number, height: number, rgbaString: string) {
   const IHDR = createIHDR(width, height);
 
   let scanlines = "";
-  let scanline;
+  let scanline: string;
 
   for (let y = 0; y < rgbaString.length; y += width * 4) {
     scanline = NO_FILTER;

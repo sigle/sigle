@@ -50,7 +50,6 @@ export const EditorBubbleMenu = ({ editor }: EditorBubbleMenuProps) => {
 
     window.addEventListener("keydown", onKeyDown);
     return () => window.removeEventListener("keydown", onKeyDown);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const onSelectLink = () => {

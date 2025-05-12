@@ -24,7 +24,7 @@
   },
   "organizeImports": { "enabled": true },
   "linter": {
-    "enabled": false,
+    "enabled": true,
     "rules": {
       "recommended": true,
       "style": {
@@ -32,7 +32,9 @@
         "noNonNullAssertion": "off"
       },
       "a11y": {
-        "useKeyWithClickEvents": "off"
+        "useKeyWithClickEvents": "off",
+        "noSvgWithoutTitle": "off",
+        "useSemanticElements": "off"
       }
     }
   },

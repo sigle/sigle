@@ -159,6 +159,7 @@ export const PublishDialog = ({ postId }: PublishDialogProps) => {
             },
             body: {
               type,
+              // biome-ignore lint/suspicious/noExplicitAny: <explanation>
               metadata: metadata as any,
             },
           });
