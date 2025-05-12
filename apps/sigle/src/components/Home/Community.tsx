@@ -6,7 +6,7 @@ export const HomeCommunity = () => {
     <section className="mt-20 border-gray-6 border-t">
       <div className="grid md:grid-cols-2">
         {/* GitHub Section */}
-        <div className="border-gray-6 border-b md:border-b-0 md:border-r p-10 flex flex-col gap-5">
+        <div className="border-gray-6 border-b md:border-b-0 md:border-r px-4 md:px-20 py-10 flex flex-col gap-5">
           <Heading as="h3" size="4">
             Engage on Github
           </Heading>
@@ -64,7 +64,7 @@ export const HomeCommunity = () => {
         </div>
 
         {/* Discord Section */}
-        <div className="p-10 flex flex-col gap-5">
+        <div className="px-4 md:px-20 py-10 flex flex-col gap-5">
           <Heading as="h3" size="4">
             Join us on Discord
           </Heading>
