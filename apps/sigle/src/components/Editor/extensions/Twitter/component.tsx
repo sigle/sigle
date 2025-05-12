@@ -45,7 +45,6 @@ export const EmbedComponent = (props: NodeViewProps) => {
   }, [url]);
 
   // Override tiptap focus and focus on input instead
-  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
     if (!url) {
       setTimeout(() => {

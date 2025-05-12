@@ -66,6 +66,7 @@ class JobBuilder<TInput = any> {
     }
 
     consola.debug("Job emitted", { name: this._name });
+    // biome-ignore lint/suspicious/noExplicitAny: this is safe
     return this._boss.send(this._name, data as any, this._options);
   }
 

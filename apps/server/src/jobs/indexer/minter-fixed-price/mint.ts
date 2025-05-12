@@ -24,9 +24,9 @@ export const executeIndexerMintJob = async (
   // Gather all unique user addresses from the event data to create missing users
   const userAddresses = new Set<string>();
   userAddresses.add(data.sender);
-  data.nftMintEvents.forEach((event) => {
+  for (const event of data.nftMintEvents) {
     userAddresses.add(event.recipient);
-  });
+  }
 
   const existingUsers = await prisma.user.findMany({
     where: {

@@ -30,6 +30,9 @@
       "style": {
         "noParameterAssign": "off",
         "noNonNullAssertion": "off"
+      },
+      "a11y": {
+        "useKeyWithClickEvents": "off"
       }
     }
   },
