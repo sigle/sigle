@@ -90,7 +90,7 @@ export default defineEventHandler(async (event) => {
     orderBy: {
       createdAt: "desc",
     },
-    skip: query.offset,
+    skip: query.offset ?? 0,
     take: query.limit,
   });
 
