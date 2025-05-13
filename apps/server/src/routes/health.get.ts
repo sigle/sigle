@@ -37,11 +37,16 @@ defineRouteMeta({
 
           UserProfile: {
             type: "object",
-            required: ["id", "createdAt", "updatedAt"],
+            required: ["id", "flag", "createdAt", "updatedAt"],
             properties: {
               id: {
                 type: "string",
                 description: "The address of the user",
+              },
+              flag: {
+                type: "string",
+                enum: ["NONE", "VERIFIED"],
+                description: "The flag of the user",
               },
               postsCount: {
                 type: "number",

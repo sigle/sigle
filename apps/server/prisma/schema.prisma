@@ -7,9 +7,15 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+enum UserFlag {
+  NONE
+  VERIFIED
+}
+
 model User {
   id          String    @id @map("id")
   lastLoginAt DateTime? @map("last_login_at")
+  flag        UserFlag  @default(NONE) @map("flag")
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")

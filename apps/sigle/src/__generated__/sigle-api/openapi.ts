@@ -1086,6 +1086,11 @@ export interface components {
     UserProfile: {
       /** @description The address of the user */
       id: string;
+      /**
+       * @description The flag of the user
+       * @enum {string}
+       */
+      flag: "NONE" | "VERIFIED";
       postsCount?: number;
       createdAt: string;
       updatedAt: string;
