@@ -29,6 +29,16 @@ defineRouteMeta({
         },
         description: "The address of the user to get posts for.",
       },
+      {
+        in: "query",
+        name: "offset",
+        schema: {
+          type: "integer",
+          minimum: 0,
+        },
+        description:
+          "The number of posts to skip before starting to collect the result set.",
+      },
     ],
     responses: {
       200: {
@@ -61,6 +71,7 @@ defineRouteMeta({
 const listQuerySchema = z.object({
   limit: z.coerce.number().min(1).max(100),
   username: z.string().min(1).optional(),
+  offset: z.coerce.number().min(0).optional(),
 });
 
 export default defineEventHandler(async (event) => {
@@ -79,6 +90,7 @@ export default defineEventHandler(async (event) => {
     orderBy: {
       createdAt: "desc",
     },
+    skip: query.offset ?? 0,
     take: query.limit,
   });
 
