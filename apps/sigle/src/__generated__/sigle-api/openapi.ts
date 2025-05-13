@@ -167,6 +167,8 @@ export interface paths {
           limit?: number;
           /** @description The address of the user to get posts for. */
           username?: string;
+          /** @description The number of posts to skip before starting to collect the result set. */
+          offset?: number;
         };
         header?: never;
         path?: never;

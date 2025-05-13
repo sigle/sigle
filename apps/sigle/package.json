@@ -75,6 +75,7 @@
     "react-dom": "19.1.0",
     "react-dropzone": "14.3.8",
     "react-hook-form": "7.56.3",
+    "react-intersection-observer": "9.16.0",
     "react-markdown": "10.1.0",
     "react-tag-input": "6.10.6",
     "react-tweet": "3.2.2",
