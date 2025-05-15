@@ -1,3 +1,7 @@
+import { Footer } from "@/component/Layout/Footer";
+
+export const dynamic = "force-dynamic";
+
 export default async function PageLayout({
   children,
 }: {
@@ -6,6 +10,7 @@ export default async function PageLayout({
   return (
     <>
       <main>{children}</main>
+      <Footer />
     </>
   );
 }
