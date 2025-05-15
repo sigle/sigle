@@ -18,6 +18,7 @@ export default async function Page() {
           return <PostCard key={post.id} post={post} />;
         })}
       </div>
+      {/* TODO pagination */}
       {/* <Pagination page={page} total={posts.count} itemsPerPage={15} /> */}
     </div>
   );
