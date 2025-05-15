@@ -28,9 +28,11 @@ export const PostCard = ({ post }: PostCardProps) => {
             />
           </div>
         )}
-        <h3 className="mt-4 line-clamp-2 text-lg font-bold">{post.title}</h3>
+        <h3 className="mt-4 line-clamp-2 text-lg font-bold">
+          {post.metaTitle || post.title}
+        </h3>
         <p className="mt-2 line-clamp-4 text-sm text-gray-500">
-          {post.content}
+          {post.metaDescription || post.excerpt}
         </p>
       </div>
     </Link>

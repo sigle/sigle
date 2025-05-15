@@ -1,4 +1,4 @@
-import { PostCard } from "@/component/Shared/Post";
+import { PostCard } from "@/component/Shared/Post/Card";
 import { sigleApiFetchclient } from "@/lib/sigle";
 
 export default async function Page() {
