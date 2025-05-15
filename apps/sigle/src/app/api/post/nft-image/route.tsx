@@ -1,5 +1,5 @@
-import { sigleApiFetchclient } from "@/__generated__/sigle-api";
 import { resolveImageUrl } from "@/lib/images";
+import { sigleApiFetchclient } from "@/lib/sigle";
 import { ImageResponse } from "next/og";
 import { z } from "zod";
 

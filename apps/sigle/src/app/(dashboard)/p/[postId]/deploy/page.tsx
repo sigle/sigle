@@ -1,8 +1,8 @@
 "use client";
 
-import { sigleApiClient } from "@/__generated__/sigle-api";
 import { AuthProtect } from "@/components/Auth/AuthProtect";
 import { NextLink } from "@/components/Shared/NextLink";
+import { sigleApiClient } from "@/lib/sigle";
 import { getExplorerTransactionUrl } from "@/lib/stacks";
 import { Button, Container, Link, Spinner, Text } from "@radix-ui/themes";
 import { useRouter } from "next/navigation";

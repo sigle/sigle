@@ -15,7 +15,8 @@
     "./package.json": "./package.json"
   },
   "scripts": {
-    "build": "tsup",
+    "build": "tsdown",
+    "codegen": "openapi-typescript http://localhost:3001/_openapi.json --output ./src/__generated__/sigle-api-openapi.ts",
     "test": "vitest",
     "typecheck": "tsc --noEmit"
   },
@@ -29,7 +30,8 @@
     "@stacks/transactions": "7.0.6",
     "@tsconfig/recommended": "1.0.8",
     "@types/node": "22.15.18",
-    "tsup": "8.4.0",
+    "openapi-typescript": "7.8.0",
+    "tsdown": "0.11.9",
     "typescript": "5.8.3",
     "vitest": "3.1.3",
     "zod": "3.24.4"

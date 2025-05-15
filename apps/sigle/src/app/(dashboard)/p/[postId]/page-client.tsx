@@ -1,6 +1,5 @@
 "use client";
 
-import { sigleApiClient } from "@/__generated__/sigle-api";
 import { PostCollectCard } from "@/components/Post/CollectCard";
 import { PostInfoCard } from "@/components/Post/InfoCard";
 import { PostMarkdownContent } from "@/components/Post/MarkdownContent";
@@ -9,6 +8,7 @@ import { PostUserActions } from "@/components/Post/UserActions";
 import { PostUserInfoCard } from "@/components/Post/UserInfoCard";
 import { FadeSlideBottom } from "@/components/ui";
 import { resolveImageUrl } from "@/lib/images";
+import { sigleApiClient } from "@/lib/sigle";
 import { Badge, Container, Heading, Separator } from "@radix-ui/themes";
 import Image from "next/image";
 import { notFound } from "next/navigation";

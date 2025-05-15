@@ -1,9 +1,8 @@
 "use client";
 
-import { sigleApiClient } from "@/__generated__/sigle-api";
-import type { paths } from "@/__generated__/sigle-api/openapi";
 import { NextLink } from "@/components/Shared/NextLink";
 import { Routes } from "@/lib/routes";
+import { sigleApiClient } from "@/lib/sigle";
 import { getExplorerTransactionUrl } from "@/lib/stacks";
 import {
   Badge,
@@ -16,6 +15,7 @@ import {
   Spinner,
   Text,
 } from "@radix-ui/themes";
+import type { paths } from "@sigle/sdk";
 import { IconDotsVertical } from "@tabler/icons-react";
 import { format } from "date-fns";
 import { useState } from "react";

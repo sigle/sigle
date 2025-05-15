@@ -1,6 +1,6 @@
-import { sigleApiFetchclient } from "@/__generated__/sigle-api";
 import { env } from "@/env";
 import { resolveImageUrl } from "@/lib/images";
+import { sigleApiFetchclient } from "@/lib/sigle";
 import { Feed } from "feed";
 import { NextResponse } from "next/server";
 
