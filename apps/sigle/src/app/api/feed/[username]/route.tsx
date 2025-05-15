@@ -9,7 +9,7 @@ export async function GET(
   { params }: { params: Promise<{ username: string }> },
 ) {
   const { username } = await params;
-  const { data: user } = await sigleApiFetchclient.GET(
+  const { data: user, error: userError } = await sigleApiFetchclient.GET(
     "/api/users/{username}",
     {
       params: {
@@ -24,8 +24,13 @@ export async function GET(
       status: 404,
     });
   }
+  if (userError) {
+    return new NextResponse("Error fetching user", {
+      status: 500,
+    });
+  }
 
-  const { data: posts, error } = await sigleApiFetchclient.GET(
+  const { data: posts, error: postsError } = await sigleApiFetchclient.GET(
     "/api/posts/list",
     {
       params: {
@@ -36,6 +41,11 @@ export async function GET(
       },
     },
   );
+  if (postsError) {
+    return new NextResponse("Error fetching posts", {
+      status: 500,
+    });
+  }
 
   const userLink = `${env.NEXT_PUBLIC_APP_URL}/u/${username}`;
   const feed = new Feed({
@@ -51,7 +61,7 @@ export async function GET(
     },
   });
 
-  for (const post of posts || []) {
+  for (const post of posts) {
     const postLink = `${env.NEXT_PUBLIC_APP_URL}/p/${post.id}`;
     feed.addItem({
       title: post.title,
