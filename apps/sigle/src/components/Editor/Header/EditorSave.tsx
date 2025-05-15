@@ -1,5 +1,5 @@
-import { sigleApiClient } from "@/__generated__/sigle-api";
 import { useDebouncedCallback } from "@/hooks/useDebouncedCallback";
+import { sigleApiClient } from "@/lib/sigle";
 import { Callout, Text } from "@radix-ui/themes";
 import { parseBTC } from "@sigle/sdk";
 import { IconInfoCircle } from "@tabler/icons-react";

@@ -1,6 +1,5 @@
 "use client";
 
-import type { paths } from "@/__generated__/sigle-api/openapi";
 import { appConfig } from "@/config";
 import { useContractCall } from "@/hooks/useContractCall";
 import {
@@ -28,6 +27,7 @@ import {
   Tooltip,
   VisuallyHidden,
 } from "@radix-ui/themes";
+import type { paths } from "@sigle/sdk";
 import { fixedMintFee, formatBTC } from "@sigle/sdk";
 import {
   IconHelpCircle,

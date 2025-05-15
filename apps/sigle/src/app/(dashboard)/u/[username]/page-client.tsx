@@ -1,6 +1,5 @@
 "use client";
 
-import { sigleApiClient } from "@/__generated__/sigle-api";
 import {
   ProfileFeed,
   ProfileFeedSkeleton,
@@ -8,6 +7,7 @@ import {
 import { ProfileHeader } from "@/components/User/ProfileHeader";
 import { ProfileInfo } from "@/components/User/ProfileInfo";
 import { FadeSlideBottom } from "@/components/ui";
+import { sigleApiClient } from "@/lib/sigle";
 import { Container, Heading } from "@radix-ui/themes";
 import { notFound } from "next/navigation";
 import { Suspense, use } from "react";

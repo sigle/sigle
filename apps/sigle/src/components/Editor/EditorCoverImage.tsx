@@ -1,8 +1,8 @@
 "use client";
 
-import { sigleApiClient } from "@/__generated__/sigle-api";
 import { cn } from "@/lib/cn";
 import { resolveImageUrl } from "@/lib/images";
+import { sigleApiClient } from "@/lib/sigle";
 import { Button, IconButton, Spinner } from "@radix-ui/themes";
 import { IconCameraPlus, IconHandGrab, IconTrash } from "@tabler/icons-react";
 import { motion } from "framer-motion";

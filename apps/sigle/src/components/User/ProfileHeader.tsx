@@ -1,6 +1,5 @@
 "use client";
 
-import type { paths } from "@/__generated__/sigle-api/openapi";
 import { env } from "@/env";
 import { useCopyToClipboard } from "@/hooks/useCopyToClipboard";
 import { useSession } from "@/lib/auth-hooks";
@@ -8,6 +7,7 @@ import { cn } from "@/lib/cn";
 import { resolveImageUrl } from "@/lib/images";
 import { Routes } from "@/lib/routes";
 import { Button, Container, DropdownMenu, IconButton } from "@radix-ui/themes";
+import type { paths } from "@sigle/sdk";
 import { IconDotsVertical, IconPencil } from "@tabler/icons-react";
 import Image from "next/image";
 import { usePostHog } from "posthog-js/react";

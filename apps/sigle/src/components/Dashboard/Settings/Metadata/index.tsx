@@ -1,8 +1,8 @@
 "use client";
 
-import { sigleApiClient } from "@/__generated__/sigle-api";
 import { ProfileAvatar } from "@/components/Shared/Profile/ProfileAvatar";
 import { useSession } from "@/lib/auth-hooks";
+import { sigleApiClient } from "@/lib/sigle";
 import { Button, Card, Flex, Heading, Text } from "@radix-ui/themes";
 import { IconPencil } from "@tabler/icons-react";
 import { useState } from "react";

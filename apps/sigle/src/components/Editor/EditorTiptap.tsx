@@ -37,7 +37,7 @@ import { EditorBubbleMenu } from "./BubbleMenu";
 import type { EditorPostFormData } from "./EditorFormProvider";
 import { EditorFloatingMenu } from "./FloatingMenu";
 import "./editor-tiptap.css";
-import { sigleApiClient } from "@/__generated__/sigle-api";
+import { sigleApiClient } from "@/lib/sigle";
 import { toast } from "sonner";
 import { CodeBlockComponent } from "./extensions/CodeBlock";
 import { TipTapImage } from "./extensions/Image";

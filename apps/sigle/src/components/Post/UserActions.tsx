@@ -1,7 +1,7 @@
-import type { paths } from "@/__generated__/sigle-api/openapi";
 import { Routes } from "@/lib/routes";
 import { formatReadableAddress } from "@/lib/stacks";
 import { Button, IconButton, Text, Tooltip } from "@radix-ui/themes";
+import type { paths } from "@sigle/sdk";
 import { IconShare } from "@tabler/icons-react";
 import { useState } from "react";
 import { NextLink } from "../Shared/NextLink";
