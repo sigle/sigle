@@ -6,6 +6,7 @@ export default async function Page() {
     params: {
       query: {
         limit: 20,
+        offset: 0,
       },
     },
   });
