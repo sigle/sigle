@@ -1,6 +1,6 @@
-import { sigleApiClient } from "@/__generated__/sigle-api";
 import { cn } from "@/lib/cn";
 import { resolveImageUrl } from "@/lib/images";
+import { sigleApiClient } from "@/lib/sigle";
 import { Avatar, Spinner, Text } from "@radix-ui/themes";
 import { IconPencil } from "@tabler/icons-react";
 import { usePostHog } from "posthog-js/react";

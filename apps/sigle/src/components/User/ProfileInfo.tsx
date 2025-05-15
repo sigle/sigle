@@ -1,8 +1,8 @@
 "use client";
 
-import type { paths } from "@/__generated__/sigle-api/openapi";
 import { prettifyUrl } from "@/lib/urls";
 import { Heading, Link, Text } from "@radix-ui/themes";
+import type { paths } from "@sigle/sdk";
 import { IconLink } from "@tabler/icons-react";
 import { NextLink } from "../Shared/NextLink";
 import { ProfileMarkdownDescription } from "../Shared/Profile/MarkdownDescription";

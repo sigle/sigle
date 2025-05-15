@@ -1,9 +1,9 @@
 "use client";
 
-import { sigleApiClient } from "@/__generated__/sigle-api";
-import type { paths } from "@/__generated__/sigle-api/openapi";
 import { useSession } from "@/lib/auth-hooks";
+import { sigleApiClient } from "@/lib/sigle";
 import { Button, Flex, Text } from "@radix-ui/themes";
+import type { paths } from "@sigle/sdk";
 import { GetFamiliarCards } from "../Dashboard/GetFamiliarCards";
 import { NextLink } from "../Shared/NextLink";
 import { PostListItem } from "../Shared/Post/ListItem";

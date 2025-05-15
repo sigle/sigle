@@ -1,6 +1,5 @@
-import { sigleApiClient } from "@/__generated__/sigle-api";
-import type { paths } from "@/__generated__/sigle-api/openapi";
 import { useContractCall } from "@/hooks/useContractCall";
+import { sigleApiClient } from "@/lib/sigle";
 import { sigleClient } from "@/lib/sigle";
 import {
   getExplorerTransactionUrl,
@@ -8,6 +7,7 @@ import {
 } from "@/lib/stacks";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button, Flex, Text, TextArea, TextField } from "@radix-ui/themes";
+import type { paths } from "@sigle/sdk";
 import { createProfileMetadata } from "@sigle/sdk";
 import { IconAt, IconBrandX } from "@tabler/icons-react";
 import { useForm } from "react-hook-form";

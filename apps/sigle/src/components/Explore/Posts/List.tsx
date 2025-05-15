@@ -1,7 +1,7 @@
 "use client";
 
-import { sigleApiClient, sigleApiFetchclient } from "@/__generated__/sigle-api";
 import { PostCard } from "@/components/Shared/Post/Card";
+import { sigleApiClient, sigleApiFetchclient } from "@/lib/sigle";
 import { useEffect, useState } from "react";
 import { useInView } from "react-intersection-observer";
 import { toast } from "sonner";

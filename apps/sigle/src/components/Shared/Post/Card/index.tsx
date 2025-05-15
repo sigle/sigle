@@ -1,6 +1,5 @@
 "use client";
 
-import type { paths } from "@/__generated__/sigle-api/openapi";
 import { resolveImageUrl } from "@/lib/images";
 import { Routes } from "@/lib/routes";
 import { formatReadableAddress } from "@/lib/stacks";
@@ -13,6 +12,7 @@ import {
   Link,
   Text,
 } from "@radix-ui/themes";
+import type { paths } from "@sigle/sdk";
 import { format } from "date-fns";
 import Image from "next/image";
 import { useState } from "react";

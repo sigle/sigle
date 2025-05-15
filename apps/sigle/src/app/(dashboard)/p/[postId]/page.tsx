@@ -1,5 +1,5 @@
-import { sigleApiFetchclient } from "@/__generated__/sigle-api";
 import type { Routes } from "@/lib/routes";
+import { sigleApiFetchclient } from "@/lib/sigle";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { PostClientPage } from "./page-client";

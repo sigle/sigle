@@ -1,7 +1,7 @@
 "use client";
 
-import { sigleApiClient } from "@/__generated__/sigle-api";
 import { Routes } from "@/lib/routes";
+import { sigleApiClient } from "@/lib/sigle";
 import { formatReadableAddress } from "@/lib/stacks";
 import { Button, Card, Container, Heading, Text } from "@radix-ui/themes";
 import { NextLink } from "../Shared/NextLink";
