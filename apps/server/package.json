@@ -18,7 +18,7 @@
     "@hirosystems/chainhook-client": "2.3.0",
     "@paralleldrive/cuid2": "2.2.2",
     "@prisma/client": "6.7.0",
-    "@sentry/node": "9.17.0",
+    "@sentry/node": "9.19.0",
     "@sigle/sdk": "workspace:*",
     "@sigle/sign-in-with-stacks": "workspace:*",
     "@stacks/blockchain-api-client": "8.10.0",
@@ -42,7 +42,7 @@
     "zod-validation-error": "3.4.1"
   },
   "devDependencies": {
-    "nitropack": "2.11.11",
+    "nitropack": "2.11.12",
     "typescript": "5.8.3"
   }
 }
