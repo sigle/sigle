@@ -41,6 +41,7 @@ jobs:
       - name: Build
         run: |
           cp apps/sigle/.env.development apps/sigle/.env.production.local
+          cp apps/custom-domain/.env.development apps/custom-domain/.env.production.local
           pnpm build
 
       - name: Test
