@@ -1,12 +1,16 @@
+import { Pagination } from "@/component/Shared/Pagination";
 import { PostCard } from "@/component/Shared/Post/Card";
 import { sigleApiFetchclient } from "@/lib/sigle";
 
+const PAGE_SIZE = 15;
+
 export default async function Page() {
+  const page = 1;
   const { data: posts } = await sigleApiFetchclient.GET("/api/posts/list", {
     params: {
       query: {
-        limit: 20,
-        offset: 0,
+        limit: PAGE_SIZE,
+        offset: (page - 1) * PAGE_SIZE,
       },
     },
   });
@@ -19,8 +23,11 @@ export default async function Page() {
           return <PostCard key={post.id} post={post} />;
         })}
       </div>
-      {/* TODO pagination */}
-      {/* <Pagination page={page} total={posts.count} itemsPerPage={15} /> */}
+      <Pagination
+        page={page}
+        total={posts?.total || 0}
+        itemsPerPage={PAGE_SIZE}
+      />
     </div>
   );
 }

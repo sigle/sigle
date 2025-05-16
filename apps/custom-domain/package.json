@@ -11,6 +11,8 @@
   "dependencies": {
     "@sigle/sdk": "workspace:*",
     "@t3-oss/env-nextjs": "0.13.4",
+    "@tabler/icons-react": "3.31.0",
+    "class-variance-authority": "0.7.1",
     "clsx": "2.1.1",
     "date-fns": "4.1.0",
     "multiformats": "13.3.3",
