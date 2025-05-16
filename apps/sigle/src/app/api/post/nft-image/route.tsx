@@ -1,5 +1,5 @@
 import { resolveImageUrl } from "@/lib/images";
-import { sigleApiFetchclient } from "@/lib/sigle";
+import { sigleApiFetchClient } from "@/lib/sigle";
 import { ImageResponse } from "next/og";
 import { z } from "zod";
 
@@ -31,7 +31,7 @@ export async function GET(request: Request) {
     );
   }
 
-  const { data: user } = await sigleApiFetchclient.GET(
+  const { data: user } = await sigleApiFetchClient.GET(
     "/api/users/{username}",
     {
       params: {

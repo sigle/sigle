@@ -1,5 +1,5 @@
 import type { Routes } from "@/lib/routes";
-import { sigleApiFetchclient } from "@/lib/sigle";
+import { sigleApiFetchClient } from "@/lib/sigle";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { PostClientPage } from "./page-client";
@@ -13,7 +13,7 @@ type Props = {
 export async function generateMetadata(props: Props): Promise<Metadata> {
   const params = await props.params;
 
-  const { data: post } = await sigleApiFetchclient.GET("/api/posts/{postId}", {
+  const { data: post } = await sigleApiFetchClient.GET("/api/posts/{postId}", {
     params: {
       path: {
         postId: params.postId,

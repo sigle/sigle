@@ -9,9 +9,9 @@ export const sigleClient = createClient({
   network: stacksNetwork,
 });
 
-export const sigleApiFetchclient = createOpenApiFetchClient<paths>({
+export const sigleApiFetchClient = createOpenApiFetchClient<paths>({
   baseUrl: env.NEXT_PUBLIC_API_URL,
   credentials: "include",
 });
 
-export const sigleApiClient = createReactQueryClient(sigleApiFetchclient);
+export const sigleApiClient = createReactQueryClient(sigleApiFetchClient);

@@ -1,5 +1,5 @@
 import { resolveImageUrl } from "@/lib/images";
-import { sigleApiFetchclient } from "@/lib/sigle";
+import { sigleApiFetchClient } from "@/lib/sigle";
 import { ImageResponse } from "next/og";
 
 export const size = {
@@ -15,7 +15,7 @@ export default async function Image({
 }: {
   params: { postId: string };
 }) {
-  const { data: post } = await sigleApiFetchclient.GET("/api/posts/{postId}", {
+  const { data: post } = await sigleApiFetchClient.GET("/api/posts/{postId}", {
     params: {
       path: {
         postId: params.postId,
