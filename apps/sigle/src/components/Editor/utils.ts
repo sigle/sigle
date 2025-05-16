@@ -1,6 +1,6 @@
 import { env } from "@/env";
 import { resolveImageUrl } from "@/lib/images";
-import { sigleApiFetchclient } from "@/lib/sigle";
+import { sigleApiFetchClient } from "@/lib/sigle";
 import {
   type MediaImageMetadata,
   MediaImageMimeType,
@@ -94,7 +94,7 @@ const uploadNftImage = async (
   formData.append("file", await response.blob());
   formData.append("type", type);
 
-  const data = await sigleApiFetchclient.POST(
+  const data = await sigleApiFetchClient.POST(
     "/api/protected/drafts/{draftId}/upload-nft-image",
     {
       params: {

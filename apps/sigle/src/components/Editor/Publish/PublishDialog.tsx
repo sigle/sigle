@@ -4,7 +4,7 @@ import { useContractCall } from "@/hooks/useContractCall";
 import { useContractDeploy } from "@/hooks/useContractDeploy";
 import { useSession } from "@/lib/auth-hooks";
 import { Routes } from "@/lib/routes";
-import { sigleApiClient, sigleApiFetchclient } from "@/lib/sigle";
+import { sigleApiClient, sigleApiFetchClient } from "@/lib/sigle";
 import { sigleClient } from "@/lib/sigle";
 import {
   getExplorerTransactionUrl,
@@ -188,7 +188,7 @@ export const PublishDialog = ({ postId }: PublishDialogProps) => {
             return;
           }
 
-          const publishedPost = await sigleApiFetchclient.GET(
+          const publishedPost = await sigleApiFetchClient.GET(
             "/api/posts/{postId}",
             {
               params: {

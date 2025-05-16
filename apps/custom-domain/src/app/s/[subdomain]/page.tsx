@@ -1,6 +1,6 @@
 import { Pagination } from "@/component/Shared/Pagination";
 import { PostCard } from "@/component/Shared/Post/Card";
-import { sigleApiFetchclient } from "@/lib/sigle";
+import { sigleApiFetchClient } from "@/lib/sigle";
 
 const PAGE_SIZE = 15;
 
@@ -9,7 +9,7 @@ export default async function Page(params: {
 }) {
   const searchParams = await params.searchParams;
   const page = Number.parseInt(searchParams.page || "1");
-  const { data: posts } = await sigleApiFetchclient.GET("/api/posts/list", {
+  const { data: posts } = await sigleApiFetchClient.GET("/api/posts/list", {
     params: {
       query: {
         limit: PAGE_SIZE,

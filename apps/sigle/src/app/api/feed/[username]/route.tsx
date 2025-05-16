@@ -1,6 +1,6 @@
 import { env } from "@/env";
 import { resolveImageUrl } from "@/lib/images";
-import { sigleApiFetchclient } from "@/lib/sigle";
+import { sigleApiFetchClient } from "@/lib/sigle";
 import { Feed } from "feed";
 import { NextResponse } from "next/server";
 
@@ -9,7 +9,7 @@ export async function GET(
   { params }: { params: Promise<{ username: string }> },
 ) {
   const { username } = await params;
-  const { data: user, error: userError } = await sigleApiFetchclient.GET(
+  const { data: user, error: userError } = await sigleApiFetchClient.GET(
     "/api/users/{username}",
     {
       params: {
@@ -30,7 +30,7 @@ export async function GET(
     });
   }
 
-  const { data: posts, error: postsError } = await sigleApiFetchclient.GET(
+  const { data: posts, error: postsError } = await sigleApiFetchClient.GET(
     "/api/posts/list",
     {
       params: {

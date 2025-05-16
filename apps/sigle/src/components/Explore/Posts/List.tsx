@@ -1,7 +1,7 @@
 "use client";
 
 import { PostCard } from "@/components/Shared/Post/Card";
-import { sigleApiClient, sigleApiFetchclient } from "@/lib/sigle";
+import { sigleApiClient, sigleApiFetchClient } from "@/lib/sigle";
 import { useEffect, useState } from "react";
 import { useInView } from "react-intersection-observer";
 import { toast } from "sonner";
@@ -33,7 +33,7 @@ export const ExplorePostsList = () => {
     const fetchPosts = async () => {
       setIsLoading(true);
       try {
-        const response = await sigleApiFetchclient.GET("/api/posts/list", {
+        const response = await sigleApiFetchClient.GET("/api/posts/list", {
           params: {
             query: {
               limit: PAGE_SIZE,
