@@ -182,7 +182,12 @@ export interface paths {
             [name: string]: unknown;
           };
           content: {
-            "application/json": components["schemas"]["Post"][];
+            "application/json": {
+              limit: number;
+              offset: number;
+              total: number;
+              results: components["schemas"]["Post"][];
+            };
           };
         };
         /** @description Bad request */
