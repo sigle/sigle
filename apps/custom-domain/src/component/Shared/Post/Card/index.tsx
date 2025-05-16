@@ -5,7 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 
 interface PostCardProps {
-  post: paths["/api/posts/list"]["get"]["responses"]["200"]["content"]["application/json"][0];
+  post: paths["/api/posts/list"]["get"]["responses"]["200"]["content"]["application/json"]["results"][number];
 }
 
 export const PostCard = ({ post }: PostCardProps) => {
