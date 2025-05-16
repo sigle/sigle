@@ -21,7 +21,7 @@ export const LatestPost = () => {
       },
     },
   );
-  const post = posts[0];
+  const post = posts.results[0];
 
   return (
     <div>

@@ -46,10 +46,25 @@ defineRouteMeta({
         content: {
           "application/json": {
             schema: {
-              type: "array",
-              items: {
-                $ref: "#/components/schemas/Post",
+              type: "object",
+              properties: {
+                limit: {
+                  type: "integer",
+                },
+                offset: {
+                  type: "integer",
+                },
+                total: {
+                  type: "integer",
+                },
+                results: {
+                  type: "array",
+                  items: {
+                    $ref: "#/components/schemas/Post",
+                  },
+                },
               },
+              required: ["limit", "offset", "total", "results"],
             },
           },
         },
@@ -77,22 +92,33 @@ const listQuerySchema = z.object({
 export default defineEventHandler(async (event) => {
   const query = await getValidatedQueryZod(event, listQuerySchema);
 
-  const postsList = await prisma.post.findMany({
-    select: {
-      ...SELECT_PUBLIC_POST_FIELDS,
-      user: {
-        select: SELECT_PUBLIC_USER_FIELDS,
+  const where = {
+    userId: query.username,
+  };
+  const [postsList, total] = await Promise.all([
+    prisma.post.findMany({
+      select: {
+        ...SELECT_PUBLIC_POST_FIELDS,
+        user: {
+          select: SELECT_PUBLIC_USER_FIELDS,
+        },
       },
-    },
-    where: {
-      userId: query.username,
-    },
-    orderBy: {
-      createdAt: "desc",
-    },
-    skip: query.offset ?? 0,
-    take: query.limit,
-  });
+      where,
+      orderBy: {
+        createdAt: "desc",
+      },
+      skip: query.offset ?? 0,
+      take: query.limit,
+    }),
+    prisma.post.count({
+      where,
+    }),
+  ]);
 
-  return postsList;
+  return {
+    limit: query.limit,
+    offset: query.offset ?? 0,
+    total,
+    results: postsList,
+  };
 });

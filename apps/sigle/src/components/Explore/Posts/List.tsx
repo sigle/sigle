@@ -21,7 +21,7 @@ export const ExplorePostsList = () => {
     },
   );
 
-  const [posts, setPosts] = useState(initialPosts || []);
+  const [posts, setPosts] = useState(initialPosts.results || []);
   const [page, setPage] = useState(2); // Start from page 2 since page 1 is already fetched
   const [isLoading, setIsLoading] = useState(false);
   const [hasMore, setHasMore] = useState(true);
@@ -42,7 +42,7 @@ export const ExplorePostsList = () => {
             },
           },
         });
-        const newPosts = response.data || [];
+        const newPosts = response.data?.results || [];
         setPosts((prevPosts) => [...prevPosts, ...newPosts]);
         setHasMore(newPosts.length > 0); // If no more posts, stop loading
       } catch (error) {
