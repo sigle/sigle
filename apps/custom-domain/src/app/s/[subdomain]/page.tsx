@@ -4,8 +4,11 @@ import { sigleApiFetchclient } from "@/lib/sigle";
 
 const PAGE_SIZE = 15;
 
-export default async function Page() {
-  const page = 1;
+export default async function Page(params: {
+  searchParams: Promise<{ page?: string }>;
+}) {
+  const searchParams = await params.searchParams;
+  const page = Number.parseInt(searchParams.page || "1");
   const { data: posts } = await sigleApiFetchclient.GET("/api/posts/list", {
     params: {
       query: {

@@ -31,7 +31,7 @@ export function Pagination({ page, total, itemsPerPage }: PaginationProps) {
 
   const handlePageChange = (newPage: number) => {
     if (newPage >= 1 && newPage <= totalPages) {
-      router.push(newPage === 1 ? "/" : `/page/${newPage}`);
+      router.push(newPage === 1 ? "/" : `/?page=${newPage}`);
     }
   };
 
