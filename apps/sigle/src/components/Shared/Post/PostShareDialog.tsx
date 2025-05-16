@@ -19,7 +19,7 @@ import { useState } from "react";
 interface PostShareDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  post: paths["/api/posts/list"]["get"]["responses"]["200"]["content"]["application/json"][0];
+  post: paths["/api/posts/list"]["get"]["responses"]["200"]["content"]["application/json"]["results"][number];
 }
 
 export const PostShareDialog = ({

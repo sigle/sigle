@@ -42,7 +42,7 @@ import { toast } from "sonner";
 import { ProfileAvatar } from "../Profile/ProfileAvatar";
 
 interface PostCollectDialogProps {
-  post: paths["/api/posts/list"]["get"]["responses"]["200"]["content"]["application/json"][number];
+  post: paths["/api/posts/list"]["get"]["responses"]["200"]["content"]["application/json"]["results"][number];
   open: boolean;
   onOpenChange: (open: boolean) => void;
 }

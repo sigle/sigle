@@ -61,7 +61,7 @@ export async function GET(
     },
   });
 
-  for (const post of posts) {
+  for (const post of posts.results) {
     const postLink = `${env.NEXT_PUBLIC_APP_URL}/p/${post.id}`;
     feed.addItem({
       title: post.title,

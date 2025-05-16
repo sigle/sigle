@@ -29,7 +29,7 @@ export const ProfileFeed = ({ user }: ProfileFeedProps) => {
     },
   );
 
-  if (posts?.length === 0 && user.id === session?.user.id) {
+  if (posts.results.length === 0 && user.id === session?.user.id) {
     return (
       <>
         <div className="my-20 flex flex-col items-center gap-3">
@@ -46,7 +46,7 @@ export const ProfileFeed = ({ user }: ProfileFeedProps) => {
     );
   }
 
-  if (posts.length === 0) {
+  if (posts.results.length === 0) {
     return (
       <div className="my-20 flex flex-col items-center gap-3">
         <Text>This user has not published anything yet.</Text>
@@ -59,7 +59,7 @@ export const ProfileFeed = ({ user }: ProfileFeedProps) => {
 
   return (
     <div>
-      {posts.map((post) => {
+      {posts.results.map((post) => {
         return <PostListItem key={post.id} post={post} />;
       })}
     </div>
