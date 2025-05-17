@@ -20,7 +20,6 @@ export const sites: {
 // Add localhost to sites for development
 if (process.env.NODE_ENV === "development") {
   sites["localhost:3000"] = sites["blog.sigle.io"];
-  sites["localhost%3A3000"] = sites["blog.sigle.io"];
 }
 // Preview deployments
 else if (process.env.VERCEL_ENV === "preview" && process.env.VERCEL_URL) {

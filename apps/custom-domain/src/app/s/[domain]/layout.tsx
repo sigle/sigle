@@ -1,4 +1,6 @@
 import { Footer } from "@/component/Layout/Footer";
+import { resolveImageUrl } from "@/lib/images";
+import { sigleApiFetchClient } from "@/lib/sigle";
 import { sites } from "@/sites";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
@@ -8,52 +10,63 @@ export async function generateMetadata({
 }: {
   params: Promise<{ domain: string }>;
 }): Promise<Metadata | null> {
-  const { domain } = await params;
+  const { domain: domainUnsafe } = await params;
+  const domain = decodeURIComponent(domainUnsafe);
   const site = sites[domain];
   if (!site) {
     notFound();
   }
 
-  const title = `${site.name} | Blog`;
-  const description = site.description;
+  const { data: user } = await sigleApiFetchClient.GET(
+    "/api/users/{username}",
+    {
+      params: {
+        path: {
+          username: site.address,
+        },
+      },
+    },
+  );
+  if (!user) {
+    notFound();
+  }
+
+  const url = `https://${domain}`;
+  const title = `${user.profile?.displayName} | Blog`;
+  const description = user.profile?.description;
+  const image = user.profile?.pictureUri
+    ? resolveImageUrl(user.profile.pictureUri.id)
+    : undefined;
 
   return {
-    // metadataBase: new URL(site.url),
+    metadataBase: new URL(url),
     title,
     description,
     icons: {
-      icon: site.avatar,
+      icon: image,
     },
     openGraph: {
       title,
       description,
-      url: site.url,
+      url: url,
       type: "website",
-      siteName: site.name,
-      images: site.avatar,
+      siteName: user.profile?.displayName,
+      images: image,
     },
     twitter: {
       card: "summary",
       title,
       description,
-      images: site.avatar,
+      images: image,
     },
   };
 }
 
 export default async function PageLayout({
   children,
-  params,
 }: {
   children: React.ReactNode;
-  params: Promise<{ domain: string }>;
 }) {
-  const { domain } = await params;
-  const site = sites[domain];
-  if (!site) {
-    notFound();
-  }
-
   return (
     <>
       {children}
