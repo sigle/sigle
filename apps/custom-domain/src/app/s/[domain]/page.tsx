@@ -5,8 +5,10 @@ import { sigleApiFetchClient } from "@/lib/sigle";
 const PAGE_SIZE = 15;
 
 export default async function Page(params: {
+  params: Promise<{ domain: string }>;
   searchParams: Promise<{ page?: string }>;
 }) {
+  const { domain } = await params.params;
   const searchParams = await params.searchParams;
   const page = Number.parseInt(searchParams.page || "1");
   const { data: posts } = await sigleApiFetchClient.GET("/api/posts/list", {
