@@ -117,7 +117,7 @@ export const TipTapImage = TipTapImageBase.extend<
     editor.state.doc.descendants((node, pos) => {
       if (
         node.type.name === "image" &&
-        node.attrs.src?.startsWith("https://gaia.blockstack.org")
+        node.attrs.src?.startsWith("https://gaia.blockstack.org/hub/")
       ) {
         const uploadId = nanoid();
         const attrs = {
