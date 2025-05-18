@@ -57,6 +57,7 @@ model Draft {
   metaTitle        String?  @map("meta_title")
   metaDescription  String?  @map("meta_description")
   coverImage       String?  @map("cover_image")
+  canonicalUri     String?  @map("canonical_uri")
   txId             String?  @map("tx_id")
   txStatus         String?  @map("tx_status")
   collectPriceType String?  @map("collect_price_type")
@@ -94,6 +95,7 @@ model Post {
   coverImageId    String?     @map("cover_image_id")
   coverImage      MediaImage? @relation(fields: [coverImageId], references: [id])
   tags            String[]    @map("tags")
+  canonicalUri    String?     @map("canonical_uri")
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")

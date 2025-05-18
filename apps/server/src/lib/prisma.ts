@@ -34,6 +34,7 @@ export const SELECT_PUBLIC_POST_FIELDS = {
   coverImage: true,
   excerpt: true,
   tags: true,
+  canonicalUri: true,
   txId: true,
   maxSupply: true,
   collected: true,

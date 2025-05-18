@@ -39,6 +39,12 @@ const generateMetadataAttributesFromForm = ({
       key: "meta-description",
     });
   }
+  if (post.canonicalUri) {
+    attributes.push({
+      value: post.canonicalUri,
+      key: "canonical-uri",
+    });
+  }
 
   return attributes;
 };

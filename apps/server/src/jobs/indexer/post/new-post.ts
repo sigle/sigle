@@ -71,6 +71,9 @@ export async function getMetadataFromUri(baseTokenUri: string) {
   const excerpt = postData.content.attributes?.find(
     (attribute) => attribute.key === "excerpt",
   )?.value;
+  const canonicalUri = postData.content.attributes?.find(
+    (attribute) => attribute.key === "canonical-uri",
+  )?.value;
 
   const metadata = {
     id: postData.content.id,
@@ -81,6 +84,7 @@ export async function getMetadataFromUri(baseTokenUri: string) {
     excerpt: excerpt || "",
     coverImage: postData.content.coverImage,
     tags: postData.content.tags,
+    canonicalUri,
   };
 
   return metadata;
@@ -194,6 +198,7 @@ export const executeNewPostJob = async (
         metaDescription: metadata.metaDescription,
         excerpt: metadata.excerpt,
         tags: metadata.tags,
+        canonicalUri: metadata.canonicalUri,
       },
     });
 

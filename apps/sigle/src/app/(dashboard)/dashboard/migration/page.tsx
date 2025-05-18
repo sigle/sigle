@@ -132,6 +132,7 @@ export default function MigrationPage() {
           metaTitle: data.metaTitle,
           coverImage: data.coverImage,
           metaDescription: data.metaDescription,
+          canonicalUri: data.canonicalUrl,
           collect: {
             collectPrice: {
               type: "free",

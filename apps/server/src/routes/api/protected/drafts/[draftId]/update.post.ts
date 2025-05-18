@@ -67,6 +67,9 @@ defineRouteMeta({
                   type: "string",
                 },
               },
+              canonicalUri: {
+                type: "string",
+              },
             },
           },
         },
@@ -120,6 +123,7 @@ const updateDraftSchema = z.object({
     }),
   }),
   tags: z.array(z.string()).optional(),
+  canonicalUri: z.string().optional(),
 });
 
 export default defineEventHandler(async (event) => {
@@ -142,6 +146,7 @@ export default defineEventHandler(async (event) => {
       collectLimitType: body.collect.collectLimit.type,
       collectLimit: body.collect.collectLimit.limit,
       tags: body.tags,
+      canonicalUri: body.canonicalUri,
     },
     select: {
       id: true,

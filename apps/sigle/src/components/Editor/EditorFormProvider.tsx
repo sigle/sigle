@@ -12,6 +12,7 @@ const editorPostSchema = z.object({
   metaDescription: z.string().optional(),
   coverImage: z.string().optional(),
   tags: z.array(z.string()).optional(),
+  canonicalUri: z.string().optional(),
   collect: z.object({
     collectPrice: z.object({
       type: z.enum(["free", "paid"] as const),
@@ -46,6 +47,7 @@ export const EditorFormProvider = ({
       metaDescription: post.metaDescription || undefined,
       coverImage: post.coverImage || undefined,
       tags: post.tags || [],
+      canonicalUri: post.canonicalUri || undefined,
       collect: {
         collectPrice: {
           type: post.collectPriceType || "free",
