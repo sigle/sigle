@@ -41,6 +41,9 @@ defineRouteMeta({
                     type: "string",
                   },
                 },
+                canonicalUri: {
+                  type: "string",
+                },
                 collectPriceType: {
                   type: "string",
                   enum: ["free", "paid"],
@@ -130,6 +133,7 @@ export default defineEventHandler<
       metaDescription: true,
       coverImage: true,
       tags: true,
+      canonicalUri: true,
       collectPriceType: true,
       collectPrice: true,
       collectLimitType: true,
@@ -156,6 +160,7 @@ export default defineEventHandler<
         metaDescription: true,
         coverImageId: true,
         tags: true,
+        canonicalUri: true,
         txId: true,
         openEdition: true,
         maxSupply: true,
@@ -185,6 +190,7 @@ export default defineEventHandler<
       metaDescription: published.metaDescription,
       coverImage: published.coverImageId,
       tags: published.tags,
+      canonicalUri: published.canonicalUri,
       txId: published.txId,
       collectPriceType:
         published.minterFixedPrice && published.minterFixedPrice.price > 0

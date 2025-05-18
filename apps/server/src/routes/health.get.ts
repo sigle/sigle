@@ -175,6 +175,9 @@ defineRouteMeta({
                   type: "string",
                 },
               },
+              canonicalUri: {
+                type: "string",
+              },
               address: {
                 type: "string",
               },

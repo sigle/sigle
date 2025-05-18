@@ -244,6 +244,7 @@ export interface paths {
               metaDescription?: string;
               coverImage?: string;
               tags?: string[];
+              canonicalUri?: string;
               /** @enum {string} */
               collectPriceType?: "free" | "paid";
               collectPrice?: string;
@@ -399,6 +400,7 @@ export interface paths {
               };
             };
             tags?: string[];
+            canonicalUri?: string;
           };
         };
       };
@@ -1202,6 +1204,7 @@ export interface components {
       };
       excerpt?: string;
       tags?: string[];
+      canonicalUri?: string;
       address: string;
       txId: string;
       maxSupply: number;
