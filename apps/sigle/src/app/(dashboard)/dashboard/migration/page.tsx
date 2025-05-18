@@ -82,38 +82,40 @@ export default function MigrationPage() {
         </div>
       ) : null}
 
-      <div className="mt-5">
-        {isLoading ? <Spinner /> : null}
-        {error ? <Text color="red">{error.message}</Text> : null}
-        {posts?.length === 0 ? (
-          <Text color="gray" size="2" className="mt-2">
-            No posts found
-          </Text>
-        ) : null}
-        {posts?.map((post) => (
-          <div key={post.id}>
-            <div className="py-4 flex items-center justify-between">
-              <div>
-                <Heading size="2" weight="medium" title={post.id}>
-                  {post.title}
-                </Heading>
-                <Text as="p" color="gray" size="2" className="mt-2">
-                  {format(post.createdAt, "MMM dd yyy")}
-                </Text>
+      {username.ready ? (
+        <div className="mt-5">
+          {isLoading ? <Spinner /> : null}
+          {error ? <Text color="red">{error.message}</Text> : null}
+          {posts?.length === 0 ? (
+            <Text color="gray" size="2" className="mt-2">
+              No posts found
+            </Text>
+          ) : null}
+          {posts?.map((post) => (
+            <div key={post.id}>
+              <div className="py-4 flex items-center justify-between">
+                <div>
+                  <Heading size="2" weight="medium" title={post.id}>
+                    {post.title}
+                  </Heading>
+                  <Text as="p" color="gray" size="2" className="mt-2">
+                    {format(post.createdAt, "MMM dd yyy")}
+                  </Text>
+                </div>
+                <Button
+                  color="gray"
+                  variant="outline"
+                  highContrast
+                  onClick={() => handleMigrate(post.id)}
+                >
+                  Migrate
+                </Button>
               </div>
-              <Button
-                color="gray"
-                variant="outline"
-                highContrast
-                onClick={() => handleMigrate(post.id)}
-              >
-                Migrate
-              </Button>
+              <Separator size="4" />
             </div>
-            <Separator size="4" />
-          </div>
-        ))}
-      </div>
+          ))}
+        </div>
+      ) : null}
     </div>
   );
 }
