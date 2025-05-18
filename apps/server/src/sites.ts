@@ -1,6 +1,7 @@
 export const sites: {
   [key: string]: {
     address: string;
+    url: string;
     banner: string;
     links: { href: string; label: string }[];
     cta?: { href: string; label: string };
@@ -8,6 +9,7 @@ export const sites: {
 } = {
   "blog.sigle.io": {
     address: "ST3CH69RQ9FWCHSKMWG7J5TQCNADRDPX43M9AS35Z",
+    url: "https://blog.sigle.io",
     banner: "/websites/blog.sigle.io/banner.png",
     links: [
       { href: "https://www.sigle.io/", label: "Home" },
