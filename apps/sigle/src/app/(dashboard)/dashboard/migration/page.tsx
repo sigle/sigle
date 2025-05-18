@@ -151,7 +151,17 @@ export default function MigrationPage() {
       return;
     }
 
-    window.open(Routes.editPost({ postId: updatePost.id }), "_blank");
+    window.open(
+      Routes.editPost(
+        { postId: updatePost.id },
+        {
+          search: {
+            forceSave: "true",
+          },
+        },
+      ),
+      "_blank",
+    );
     return data;
   };
 
