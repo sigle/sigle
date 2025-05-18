@@ -8,7 +8,12 @@ import { IconCameraPlus, IconHandGrab, IconTrash } from "@tabler/icons-react";
 import { motion } from "framer-motion";
 import { useParams } from "next/navigation";
 import { usePostHog } from "posthog-js/react";
-import { type MouseEventHandler, useCallback, useState } from "react";
+import {
+  type MouseEventHandler,
+  useCallback,
+  useEffect,
+  useState,
+} from "react";
 import { useDropzone } from "react-dropzone";
 import { useFormContext } from "react-hook-form";
 import { toast } from "sonner";
@@ -26,6 +31,21 @@ export const EditorCoverImage = () => {
       "post",
       "/api/protected/drafts/{draftId}/upload-media",
     );
+
+  // This is required for the migration process from Gaia.
+  // It can be removed once it's done.
+  useEffect(() => {
+    const autoUploadImage = async () => {
+      if (watchCoverImage?.startsWith("https://gaia.blockstack.org/hub/")) {
+        const response = await fetch(watchCoverImage);
+        const blob = await response.blob();
+        const file = new File([blob], "cover-image", { type: blob.type });
+        onDrop([file]);
+      }
+    };
+
+    autoUploadImage();
+  }, [watchCoverImage]);
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   const onDrop = useCallback(
