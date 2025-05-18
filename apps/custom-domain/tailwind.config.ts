@@ -17,8 +17,16 @@ const config = {
         xl: "1140px",
       },
     },
+    extend: {
+      colors: {
+        sigle: {
+          background: "#fcfcfc",
+          text: "#2f2f2f",
+        },
+      },
+    },
   },
-  plugins: [require("@tailwindcss/typography")],
+  plugins: [require("@tailwindcss/typography"), require("tailwindcss-animate")],
 } satisfies Config;
 
 export default config;
