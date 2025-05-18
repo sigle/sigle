@@ -414,6 +414,15 @@ export interface paths {
             };
           };
         };
+        /** @description Bad request */
+        400: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            "application/json": components["schemas"]["BadRequest"];
+          };
+        };
       };
     };
     delete?: never;

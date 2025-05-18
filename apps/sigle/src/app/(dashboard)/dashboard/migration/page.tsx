@@ -1,5 +1,7 @@
 "use client";
 
+import { Routes } from "@/lib/routes";
+import { sigleApiFetchClient } from "@/lib/sigle";
 import {
   Button,
   Heading,
@@ -11,6 +13,80 @@ import {
 import { useQuery } from "@tanstack/react-query";
 import { format } from "date-fns";
 import { useState } from "react";
+import { toast } from "sonner";
+
+interface Story {
+  /**
+   * Random id also used in the url
+   * Have to be unique
+   */
+  id: string;
+  /**
+   * Title of the story
+   */
+  title: string;
+  /**
+   * JSON representing the slate.js structure of the story
+   */
+  // biome-ignore lint/suspicious/noExplicitAny: content is not typed
+  content: any;
+  /**
+   * Version representing the format of the content
+   * When the value is not set, we consider it as v1
+   * v1: Slate.js JSON
+   * v2: TipTap HTML
+   */
+  contentVersion?: "2";
+  /**
+   * Image used to display the cards
+   */
+  coverImage?: string;
+  /**
+   * Type of the story
+   * private: encrypted
+   * public: unencrypted
+   */
+  type: "private" | "public";
+  /**
+   * Meta title that will be used for SEO
+   */
+  metaTitle?: string;
+  /**
+   * Meta description that will be used for SEO
+   */
+  metaDescription?: string;
+  /**
+   * Meta image that will be used for SEO
+   */
+  metaImage?: string;
+  /**
+   * Canonical URL that will be used for SEO
+   */
+  canonicalUrl?: string;
+  /**
+   * Is the story featured. A featured story will be displayed in another way in the list
+   * it will also always appear first in the list, no matter the created date
+   */
+  featured?: boolean;
+  /**
+   * Hide the cover image on the public story page.
+   * The cover image will be used as a thumbnail and SEO only.
+   */
+  hideCoverImage?: boolean;
+  createdAt: number;
+  updatedAt: number;
+}
+
+interface SubsetStory {
+  id: string;
+  title: string;
+  content: string;
+  coverImage?: string;
+  type: "private" | "public";
+  featured?: boolean;
+  createdAt: number;
+  updatedAt: number;
+}
 
 export default function MigrationPage() {
   const [username, setUsername] = useState<{ value: string; ready: boolean }>({
@@ -18,9 +94,7 @@ export default function MigrationPage() {
     ready: false,
   });
 
-  const fetchPosts = async (): Promise<
-    { id: string; title: string; createdAt: number }[]
-  > => {
+  const fetchPosts = async (): Promise<SubsetStory[]> => {
     const res = await fetch(`/api/migration/list?username=${username.value}`);
     const data = await res.json();
     if (!res.ok) {
@@ -30,12 +104,53 @@ export default function MigrationPage() {
   };
 
   const handleMigrate = async (id: string) => {
+    // 1. Fetch the post from old API
     const res = await fetch(`/api/migration/${id}?username=${username.value}`);
-    const data = await res.json();
-    if (!res.ok) {
-      throw new Error(data.message);
-    }
+    const data: Story = await res.json();
     console.log("handleMigrate", data);
+
+    // 2. Create a new draft
+    const { data: newPost, error: newPostError } =
+      await sigleApiFetchClient.POST("/api/protected/drafts/create", {});
+    if (newPostError) {
+      toast.error(newPostError.message);
+      return;
+    }
+    console.log("newPost", newPost);
+
+    // 3. Update the draft with the content from the old post
+    const { data: updatePost, error: updatePostError } =
+      await sigleApiFetchClient.POST("/api/protected/drafts/{draftId}/update", {
+        params: {
+          path: {
+            draftId: newPost.id,
+          },
+        },
+        body: {
+          title: data.title,
+          content: data.content,
+          metaTitle: data.metaTitle,
+          coverImage: data.coverImage,
+          metaDescription: data.metaDescription,
+          collect: {
+            collectPrice: {
+              type: "free",
+              price: 0,
+            },
+            collectLimit: {
+              type: "open",
+              limit: 100,
+            },
+          },
+        },
+      });
+    console.log("updatePost", updatePost);
+    if (updatePostError) {
+      toast.error(updatePostError.message);
+      return;
+    }
+
+    window.open(Routes.editPost({ postId: updatePost.id }), "_blank");
     return data;
   };
 
