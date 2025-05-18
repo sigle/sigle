@@ -39,8 +39,6 @@ export default function MigrationPage() {
     enabled: !!username.ready,
   });
 
-  console.log(posts);
-
   return (
     <div className="py-10">
       <Heading>Migration</Heading>
