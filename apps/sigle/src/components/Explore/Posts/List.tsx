@@ -66,7 +66,7 @@ export const ExplorePostsList = () => {
           <PostCard key={post.id} post={post} />
         ))}
       </div>
-      {isLoading && <div className="text-center mt-4">Loading...</div>}
+      {isLoading && <div className="mt-4 text-center">Loading...</div>}
       <div ref={ref} className="h-10" />
     </>
   );

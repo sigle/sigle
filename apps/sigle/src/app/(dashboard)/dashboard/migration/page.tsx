@@ -219,7 +219,7 @@ export default function MigrationPage() {
           ) : null}
           {posts?.map((post) => (
             <div key={post.id}>
-              <div className="py-4 flex items-center justify-between">
+              <div className="flex items-center justify-between py-4">
                 <div>
                   <Heading size="2" weight="medium" title={post.id}>
                     {post.title}
