@@ -1,4 +1,5 @@
-import { Flex, Text, TextArea, TextField } from "@radix-ui/themes";
+import { Flex, Link, Text, TextArea, TextField } from "@radix-ui/themes";
+import { IconHelpCircle } from "@tabler/icons-react";
 import { useFormContext } from "react-hook-form";
 import type { EditorPostFormData } from "../EditorFormProvider";
 import { DialogTitleGoBack } from "./DialogTitle";
@@ -57,6 +58,25 @@ export const MetaSettings = () => {
           <Text as="p" size="1" color="gray">
             You have used {(watchMetaDescription || "").length} characters.
           </Text>
+        </div>
+        <div>
+          <Text as="div" size="2" mb="1" className="flex items-center gap-1">
+            Canonical URI
+            <Text color="gray">
+              <Link
+                href="https://developers.google.com/search/docs/crawling-indexing/consolidate-duplicate-urls"
+                target="_blank"
+                rel="noreferrer"
+              >
+                <IconHelpCircle size={16} />
+              </Link>
+            </Text>
+          </Text>
+          <TextField.Root
+            placeholder="https://"
+            maxLength={200}
+            {...register("canonicalUri")}
+          />
         </div>
         <SeoPreview />
       </Flex>
