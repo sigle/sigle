@@ -32,6 +32,7 @@
   "peerDependencies": {
     "@stacks/common": "^7.0.2",
     "@stacks/encryption": "^7.0.2",
+    "@stacks/network": "^7.0.2",
     "@stacks/transactions": "^7.0.2"
   }
 }
