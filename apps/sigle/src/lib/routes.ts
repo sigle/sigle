@@ -30,6 +30,11 @@ export const Routes = {
     z.object({
       postId: z.string(),
     }),
+    z.object({
+      // This option is used for the migration, to force the post html to be converted to markdown
+      // Once the migration is done, we can remove this option
+      forceSave: z.string().optional().nullable(),
+    }),
   ),
   dashboard: makeRoute(() => "/dashboard"),
 };

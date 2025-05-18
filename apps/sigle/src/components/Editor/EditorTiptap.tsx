@@ -157,6 +157,10 @@ export const EditorTipTap = () => {
     content: getValues().content,
     // Expose the editor to the parent so we can use it to get the content
     onCreate: ({ editor }) => {
+      const contentMarkdown = editor.storage.markdown.getMarkdown();
+      if (getValues("content") !== contentMarkdown) {
+        setValue("content", contentMarkdown);
+      }
       setEditor(editor);
     },
     onUpdate: ({ editor }) => {
