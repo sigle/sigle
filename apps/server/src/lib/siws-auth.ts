@@ -116,7 +116,8 @@ export const betterAuthSiws = () =>
 
             const session = await ctx.context.internalAdapter.createSession(
               user.id,
-              ctx.request,
+              // biome-ignore lint/suspicious/noExplicitAny: <explanation>
+              ctx.request as any,
             );
 
             if (!session) {
