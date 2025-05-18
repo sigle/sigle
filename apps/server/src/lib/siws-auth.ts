@@ -4,7 +4,6 @@ import {
   generateSiwsNonce,
   verifySiwsMessage,
 } from "@sigle/sign-in-with-stacks";
-import { generateId } from "better-auth";
 import type { BetterAuthPlugin } from "better-auth";
 import { APIError, createAuthEndpoint } from "better-auth/api";
 import { setSessionCookie } from "better-auth/cookies";
@@ -29,7 +28,6 @@ export const betterAuthSiws = () =>
           const nonce = generateSiwsNonce();
           // Store nonce with 15-minute expiration
           await ctx.context.internalAdapter.createVerificationValue({
-            id: generateId(),
             identifier: `siws_${ctx.body.address.toLowerCase()}`,
             value: nonce,
             expiresAt: new Date(Date.now() + 15 * 60 * 1000),
@@ -116,8 +114,7 @@ export const betterAuthSiws = () =>
 
             const session = await ctx.context.internalAdapter.createSession(
               user.id,
-              // biome-ignore lint/suspicious/noExplicitAny: <explanation>
-              ctx.request as any,
+              ctx,
             );
 
             if (!session) {
