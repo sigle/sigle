@@ -93,6 +93,7 @@ export default function MigrationPage() {
     value: "",
     ready: false,
   });
+  const [loadingPostId, setLoadingPostId] = useState<string | null>(null);
 
   const fetchPosts = async (): Promise<SubsetStory[]> => {
     const res = await fetch(`/api/migration/list?username=${username.value}`);
@@ -104,65 +105,77 @@ export default function MigrationPage() {
   };
 
   const handleMigrate = async (id: string) => {
-    // 1. Fetch the post from old API
-    const res = await fetch(`/api/migration/${id}?username=${username.value}`);
-    const data: Story = await res.json();
-    console.log("handleMigrate", data);
+    setLoadingPostId(id);
+    try {
+      // 1. Fetch the post from old API
+      const res = await fetch(
+        `/api/migration/${id}?username=${username.value}`,
+      );
+      const data: Story = await res.json();
+      console.log("handleMigrate", data);
 
-    // 2. Create a new draft
-    const { data: newPost, error: newPostError } =
-      await sigleApiFetchClient.POST("/api/protected/drafts/create", {});
-    if (newPostError) {
-      toast.error(newPostError.message);
-      return;
-    }
-    console.log("newPost", newPost);
+      // 2. Create a new draft
+      const { data: newPost, error: newPostError } =
+        await sigleApiFetchClient.POST("/api/protected/drafts/create", {});
+      if (newPostError) {
+        toast.error(newPostError.message);
+        return;
+      }
+      console.log("newPost", newPost);
 
-    // 3. Update the draft with the content from the old post
-    const { data: updatePost, error: updatePostError } =
-      await sigleApiFetchClient.POST("/api/protected/drafts/{draftId}/update", {
-        params: {
-          path: {
-            draftId: newPost.id,
-          },
-        },
-        body: {
-          title: data.title,
-          content: data.content,
-          metaTitle: data.metaTitle,
-          coverImage: data.coverImage,
-          metaDescription: data.metaDescription,
-          canonicalUri: data.canonicalUrl,
-          collect: {
-            collectPrice: {
-              type: "free",
-              price: 0,
+      // 3. Update the draft with the content from the old post
+      const { data: updatePost, error: updatePostError } =
+        await sigleApiFetchClient.POST(
+          "/api/protected/drafts/{draftId}/update",
+          {
+            params: {
+              path: {
+                draftId: newPost.id,
+              },
             },
-            collectLimit: {
-              type: "open",
-              limit: 100,
+            body: {
+              title: data.title,
+              content: data.content,
+              metaTitle: data.metaTitle,
+              coverImage: data.coverImage,
+              metaDescription: data.metaDescription,
+              canonicalUri: data.canonicalUrl,
+              collect: {
+                collectPrice: {
+                  type: "free",
+                  price: 0,
+                },
+                collectLimit: {
+                  type: "open",
+                  limit: 100,
+                },
+              },
             },
           },
-        },
-      });
-    console.log("updatePost", updatePost);
-    if (updatePostError) {
-      toast.error(updatePostError.message);
-      return;
-    }
+        );
+      console.log("updatePost", updatePost);
+      if (updatePostError) {
+        toast.error(updatePostError.message);
+        return;
+      }
 
-    window.open(
-      Routes.editPost(
-        { postId: updatePost.id },
-        {
-          search: {
-            forceSave: "true",
+      window.open(
+        Routes.editPost(
+          { postId: updatePost.id },
+          {
+            search: {
+              forceSave: "true",
+            },
           },
-        },
-      ),
-      "_blank",
-    );
-    return data;
+        ),
+        "_blank",
+      );
+    } catch (error) {
+      console.error(error);
+      toast.error(error as string);
+    } finally {
+      setLoadingPostId(null);
+    }
   };
 
   const {
@@ -233,6 +246,7 @@ export default function MigrationPage() {
                   variant="outline"
                   highContrast
                   onClick={() => handleMigrate(post.id)}
+                  loading={loadingPostId === post.id}
                 >
                   Migrate
                 </Button>
