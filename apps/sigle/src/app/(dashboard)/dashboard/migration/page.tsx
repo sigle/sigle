@@ -1,6 +1,6 @@
 "use client";
 
-import { Heading, Spinner, Text } from "@radix-ui/themes";
+import { Heading, Separator, Spinner, Text } from "@radix-ui/themes";
 import { useQuery } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
 
@@ -23,16 +23,19 @@ export default function MigrationPage() {
     <div className="py-10">
       <Heading>Migration</Heading>
       <Text as="p" color="gray" size="2" className="mt-2">
-        List of posts that you can migrate for {username}
+        One click migration for your old posts
       </Text>
 
       <div className="mt-5">
         {isLoading ? <Spinner /> : null}
         {posts?.map((post) => (
-          <div key={post.id} className="mt-4">
-            <Heading size="2" title={post.id}>
-              {post.title}
-            </Heading>
+          <div key={post.id}>
+            <div className="py-4">
+              <Heading size="2" weight="medium" title={post.id}>
+                {post.title}
+              </Heading>
+            </div>
+            <Separator size="4" />
           </div>
         ))}
       </div>
