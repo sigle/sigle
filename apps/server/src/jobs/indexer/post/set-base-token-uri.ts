@@ -42,6 +42,7 @@ export const executeIndexerSetBaseTokenUriJob = async (
       metaDescription: metadata.metaDescription,
       excerpt: metadata.excerpt,
       tags: metadata.tags,
+      canonicalUri: metadata.canonicalUri,
     },
   });
 

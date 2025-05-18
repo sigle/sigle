@@ -198,6 +198,7 @@ export const executeNewPostJob = async (
         metaDescription: metadata.metaDescription,
         excerpt: metadata.excerpt,
         tags: metadata.tags,
+        canonicalUri: metadata.canonicalUri,
       },
     });
 
