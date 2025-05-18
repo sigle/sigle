@@ -116,8 +116,8 @@ export default async function Post({
     : [];
   const posthtml = post.content ? addIdsToHeadings(post.content) : "";
 
-  // TODO only keep last 3 and remove current post from results
-  // TODO read time is inlined
+  const filteredPosts =
+    posts?.results.filter((p) => p.id !== post.id).slice(0, 3) || [];
 
   return (
     <main className="mt-10">
@@ -158,14 +158,16 @@ export default async function Post({
           </div>
         </div>
 
-        <div className="mt-10">
-          <h3 className="text-2xl font-bold">Read more</h3>
-          <div className="mt-6 grid grid-cols-1 gap-x-12 gap-y-10 md:grid-cols-2 lg:grid-cols-3">
-            {posts?.results.map((post) => {
-              return <PostCard key={post.id} post={post} />;
-            })}
+        {filteredPosts.length > 0 ? (
+          <div className="mt-10">
+            <h3 className="text-2xl font-bold">Read more</h3>
+            <div className="mt-6 grid grid-cols-1 gap-x-12 gap-y-10 md:grid-cols-2 lg:grid-cols-3">
+              {filteredPosts.map((post) => {
+                return <PostCard key={post.id} post={post} />;
+              })}
+            </div>
           </div>
-        </div>
+        ) : null}
       </div>
     </main>
   );
