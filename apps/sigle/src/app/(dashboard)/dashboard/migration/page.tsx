@@ -29,6 +29,16 @@ export default function MigrationPage() {
     return data;
   };
 
+  const handleMigrate = async (id: string) => {
+    const res = await fetch(`/api/migration/${id}?username=${username.value}`);
+    const data = await res.json();
+    if (!res.ok) {
+      throw new Error(data.message);
+    }
+    console.log("handleMigrate", data);
+    return data;
+  };
+
   const {
     data: posts,
     isLoading,
@@ -91,7 +101,12 @@ export default function MigrationPage() {
                   {format(post.createdAt, "MMM dd yyy")}
                 </Text>
               </div>
-              <Button color="gray" variant="outline" highContrast>
+              <Button
+                color="gray"
+                variant="outline"
+                highContrast
+                onClick={() => handleMigrate(post.id)}
+              >
                 Migrate
               </Button>
             </div>
