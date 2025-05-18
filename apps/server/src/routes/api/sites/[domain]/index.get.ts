@@ -12,10 +12,30 @@ defineRouteMeta({
           "application/json": {
             schema: {
               type: "object",
-              required: ["address", "url", "user"],
+              required: ["address", "url", "banner", "links", "user"],
               properties: {
                 address: { type: "string" },
                 url: { type: "string" },
+                banner: { type: "string" },
+                links: {
+                  type: "array",
+                  items: {
+                    type: "object",
+                    required: ["href", "label"],
+                    properties: {
+                      href: { type: "string" },
+                      label: { type: "string" },
+                    },
+                  },
+                },
+                cta: {
+                  type: "object",
+                  required: ["href", "label"],
+                  properties: {
+                    href: { type: "string" },
+                    label: { type: "string" },
+                  },
+                },
                 user: {
                   $ref: "#/components/schemas/UserProfile",
                 },

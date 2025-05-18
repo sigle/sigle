@@ -1,4 +1,5 @@
-import { Footer } from "@/component/Layout/Footer";
+import { Footer } from "@/components/Layout/Footer";
+import { Header } from "@/components/Layout/Header";
 import { resolveImageUrl } from "@/lib/images";
 import { sigleApiFetchClient } from "@/lib/sigle";
 import type { Metadata } from "next";
@@ -55,11 +56,28 @@ export async function generateMetadata({
 
 export default async function PageLayout({
   children,
+  params,
 }: {
   children: React.ReactNode;
+  params: Promise<{ domain: string }>;
 }) {
+  const { domain: domainUnsafe } = await params;
+  const domain = decodeURIComponent(domainUnsafe);
+
+  const { data: site } = await sigleApiFetchClient.GET("/api/sites/{domain}", {
+    params: {
+      path: {
+        domain,
+      },
+    },
+  });
+  if (!site) {
+    notFound();
+  }
+
   return (
     <>
+      <Header site={site} />
       {children}
       <Footer />
     </>

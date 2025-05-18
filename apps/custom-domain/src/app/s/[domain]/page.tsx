@@ -1,5 +1,5 @@
-import { Pagination } from "@/component/Shared/Pagination";
-import { PostCard } from "@/component/Shared/Post/Card";
+import { Pagination } from "@/components/Shared/Pagination";
+import { PostCard } from "@/components/Shared/Post/Card";
 import { sigleApiFetchClient } from "@/lib/sigle";
 import { notFound } from "next/navigation";
 

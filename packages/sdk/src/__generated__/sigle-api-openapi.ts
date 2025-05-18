@@ -898,6 +898,15 @@ export interface paths {
             "application/json": {
               address: string;
               url: string;
+              banner: string;
+              links: {
+                href: string;
+                label: string;
+              }[];
+              cta?: {
+                href: string;
+                label: string;
+              };
               user: components["schemas"]["UserProfile"];
             };
           };
