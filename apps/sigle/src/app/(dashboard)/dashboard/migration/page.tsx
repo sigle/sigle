@@ -159,7 +159,7 @@ export default function MigrationPage() {
     isLoading,
     error,
   } = useQuery({
-    queryKey: ["migration"],
+    queryKey: ["migration", username.value],
     queryFn: fetchPosts,
     enabled: !!username.ready,
   });
@@ -214,7 +214,7 @@ export default function MigrationPage() {
                     {post.title}
                   </Heading>
                   <Text as="p" color="gray" size="2" className="mt-2">
-                    {format(post.createdAt, "MMM dd yyy")}
+                    {format(post.createdAt, "MMM dd yyyy")}
                   </Text>
                 </div>
                 <Button
