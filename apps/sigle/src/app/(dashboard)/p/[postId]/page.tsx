@@ -30,6 +30,13 @@ export async function generateMetadata(props: Props): Promise<Metadata> {
   return {
     title: `${title} | Sigle`,
     description,
+    alternates: {
+      canonical: post.canonicalUri,
+    },
+    robots: {
+      index: false,
+      follow: false,
+    },
   };
 }
 
