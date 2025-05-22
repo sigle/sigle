@@ -131,7 +131,7 @@ export const executeNewPostJob = async (
     },
   });
   if (contract !== data.contract) {
-    throw new Error(`Contract mismatch: ${contract} !== ${data.contract}`);
+    throw new Error(`Contract mismatch: ${data.txId}`);
   }
 
   const metadata = await getMetadataFromUri(baseTokenUri);
