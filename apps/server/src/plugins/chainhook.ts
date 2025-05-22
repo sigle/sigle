@@ -50,7 +50,7 @@ export default defineNitroPlugin(async (nitroApp) => {
       const response = await createChainhook(
         preparePredicate(createPredicate(predicate)),
       );
-      consola.debug(
+      consola.info(
         `Registered ${predicateName} chainhook ${response.chainhookUuid}`,
       );
     }

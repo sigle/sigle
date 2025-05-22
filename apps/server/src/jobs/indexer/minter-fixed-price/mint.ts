@@ -86,7 +86,7 @@ export const executeIndexerMintJob = async (
     });
   }
 
-  consola.debug("post.mint", {
+  consola.info("post.mint", {
     id: updatedPost.id,
     quantity: data.quantity,
   });

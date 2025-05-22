@@ -25,7 +25,7 @@ export const executeIndexerMintEnabledJob = async (
     },
   });
 
-  consola.debug("post.mintEnabled", {
+  consola.info("post.mintEnabled", {
     id: updatedPost.id,
     enabled: data.enabled,
   });

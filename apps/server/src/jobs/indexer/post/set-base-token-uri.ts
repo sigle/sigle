@@ -72,7 +72,7 @@ export const executeIndexerSetBaseTokenUriJob = async (
     });
   }
 
-  consola.debug("post.setBaseTokenUri", {
+  consola.info("post.setBaseTokenUri", {
     id: post.id,
     uri: data.uri,
   });

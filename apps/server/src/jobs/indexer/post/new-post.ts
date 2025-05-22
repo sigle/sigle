@@ -257,10 +257,10 @@ export const executeNewPostJob = async (
     const response = await createChainhook(
       preparePredicate(createPredicate(newPredicate)),
     );
-    consola.debug(`new-post: Registered chainhook ${response.chainhookUuid}`);
+    consola.info(`new-post: Registered chainhook ${response.chainhookUuid}`);
   }
 
-  consola.debug("post.newPost", {
+  consola.info("post.newPost", {
     id: metadata.id,
     txId: data.txId,
     address: data.address,

@@ -111,7 +111,7 @@ export const executeIndexerSetProfileJob = async (
     }
   }
 
-  consola.debug("profile.setProfile", {
+  consola.info("profile.setProfile", {
     id: data.address,
     uri: data.uri,
   });

@@ -26,7 +26,7 @@ export const executeIndexerReduceSupplyJob = async (
     },
   });
 
-  consola.debug("post.reduceSupply", {
+  consola.info("post.reduceSupply", {
     id: updatedPost.id,
     maxSupply: data.maxSupply,
   });

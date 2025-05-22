@@ -34,7 +34,7 @@ export const executeIndexerSetMintDetailsJob = async (
     },
   });
 
-  consola.debug("post.setMintDetails", {
+  consola.info("post.setMintDetails", {
     id: data.address,
   });
 };

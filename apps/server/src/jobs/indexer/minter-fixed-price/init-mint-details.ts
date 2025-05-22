@@ -47,7 +47,7 @@ export const executeIndexerInitMintDetailsJob = async (
     },
   });
 
-  consola.debug("post.initMintDetails", {
+  consola.info("post.initMintDetails", {
     id: data.address,
     price: data.price,
   });
