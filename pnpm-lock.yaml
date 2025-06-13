@@ -207,9 +207,6 @@ importers:
       '@sigle/sdk':
         specifier: workspace:*
         version: link:../../packages/sdk
-      '@sigle/sign-in-with-stacks':
-        specifier: workspace:*
-        version: link:../../packages/sign-in-with-stacks
       '@stacks/blockchain-api-client':
         specifier: 8.10.0
         version: 8.10.0(bufferutil@4.0.8)(utf-8-validate@5.0.10)
@@ -261,6 +258,9 @@ importers:
       sharp:
         specifier: 0.34.1
         version: 0.34.1
+      sign-in-with-stacks:
+        specifier: 0.1.2
+        version: 0.1.2(@stacks/common@7.0.2)(@stacks/encryption@7.0.6)(@stacks/network@7.0.2(encoding@0.1.13))(@stacks/transactions@7.0.6(encoding@0.1.13))
       zod:
         specifier: 3.25.28
         version: 3.25.28
@@ -295,9 +295,6 @@ importers:
       '@sigle/sdk':
         specifier: workspace:*
         version: link:../../packages/sdk
-      '@sigle/sign-in-with-stacks':
-        specifier: workspace:*
-        version: link:../../packages/sign-in-with-stacks
       '@stacks/blockchain-api-client':
         specifier: 8.10.0
         version: 8.10.0(bufferutil@4.0.8)(utf-8-validate@5.0.10)
@@ -487,6 +484,9 @@ importers:
       react-tweet:
         specifier: 3.2.2
         version: 3.2.2(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
+      sign-in-with-stacks:
+        specifier: 0.1.2
+        version: 0.1.2(@stacks/common@7.0.2)(@stacks/encryption@7.0.6)(@stacks/network@7.0.2(encoding@0.1.13))(@stacks/transactions@7.0.6(encoding@0.1.13))
       sonner:
         specifier: 2.0.3
         version: 2.0.3(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
@@ -609,37 +609,6 @@ importers:
       zod:
         specifier: 3.25.28
         version: 3.25.28
-
-  packages/sign-in-with-stacks:
-    dependencies:
-      '@stacks/common':
-        specifier: ^7.0.2
-        version: 7.0.2
-    devDependencies:
-      '@stacks/encryption':
-        specifier: 7.0.6
-        version: 7.0.6
-      '@stacks/network':
-        specifier: 7.0.2
-        version: 7.0.2(encoding@0.1.13)
-      '@stacks/transactions':
-        specifier: 7.0.6
-        version: 7.0.6(encoding@0.1.13)
-      '@tsconfig/recommended':
-        specifier: 1.0.8
-        version: 1.0.8
-      '@types/node':
-        specifier: 22.15.21
-        version: 22.15.21
-      tsdown:
-        specifier: 0.12.3
-        version: 0.12.3(typescript@5.8.3)
-      typescript:
-        specifier: 5.8.3
-        version: 5.8.3
-      vitest:
-        specifier: 3.1.4
-        version: 3.1.4(@types/debug@4.1.12)(@types/node@22.15.21)(jiti@2.4.2)(jsdom@25.0.0(bufferutil@4.0.8)(utf-8-validate@5.0.10))(sass@1.77.8)(terser@5.39.2)(tsx@4.19.4)(yaml@2.7.0)
 
   packages/testnet-seed:
     devDependencies:
@@ -4846,9 +4815,6 @@ packages:
 
   '@types/node@20.14.14':
     resolution: {integrity: sha512-d64f00982fS9YoOgJkAMolK7MN8Iq3TDdVjchbYHdEmjth/DHowx82GnoA+tVUAN+7vxfYUgAzi+JXbKNd2SDQ==}
-
-  '@types/node@22.15.18':
-    resolution: {integrity: sha512-v1DKRfUdyW+jJhZNEI1PYy29S2YRxMV5AOO/x/SjKmW0acCIOqmbj6Haf9eHAhsPmrhlHSxEhv/1WszcLWV4cg==}
 
   '@types/node@22.15.21':
     resolution: {integrity: sha512-EV/37Td6c+MgKAbkcLG6vqZ2zEYHD7bvSrzqqs2RIhbA6w3x+Dqz8MZM3sP6kGTeLrdoOgKZe+Xja7tUB2DNkQ==}
@@ -10458,6 +10424,14 @@ packages:
 
   siginfo@2.0.0:
     resolution: {integrity: sha512-ybx0WO1/8bSBLEWXZvEd7gMW3Sn3JFlW3TvX1nREbDLRNQNaeNN8WK0meBwPdAaOI7TtRRRJn/Es1zhrrCHu7g==}
+
+  sign-in-with-stacks@0.1.2:
+    resolution: {integrity: sha512-4dMiLyUKNXqk/5UAWszP4S9syKa/7Qeo34j0AKH2WSpi3mdzIQ4JHNIG+iW0YCkAMK27bOOZ34XDZ642rdeGvQ==}
+    peerDependencies:
+      '@stacks/common': ^7.0.2
+      '@stacks/encryption': ^7.0.2
+      '@stacks/network': ^7.0.2
+      '@stacks/transactions': ^7.0.2
 
   signal-exit@3.0.7:
     resolution: {integrity: sha512-wnD2ZE+l+SPC/uoS0vXeE9L1+0wuaMqKlfz9AMUo38JsyLSBWSFcHR1Rri62LZc12vLr1gb3jl7iwQhgwpAbGQ==}
@@ -16632,10 +16606,6 @@ snapshots:
     dependencies:
       undici-types: 5.26.5
 
-  '@types/node@22.15.18':
-    dependencies:
-      undici-types: 6.21.0
-
   '@types/node@22.15.21':
     dependencies:
       undici-types: 6.21.0
@@ -20576,7 +20546,7 @@ snapshots:
 
   jest-worker@27.5.1:
     dependencies:
-      '@types/node': 22.15.18
+      '@types/node': 22.15.21
       merge-stream: 2.0.0
       supports-color: 8.1.1
 
@@ -23777,6 +23747,13 @@ snapshots:
       side-channel-weakmap: 1.0.2
 
   siginfo@2.0.0: {}
+
+  sign-in-with-stacks@0.1.2(@stacks/common@7.0.2)(@stacks/encryption@7.0.6)(@stacks/network@7.0.2(encoding@0.1.13))(@stacks/transactions@7.0.6(encoding@0.1.13)):
+    dependencies:
+      '@stacks/common': 7.0.2
+      '@stacks/encryption': 7.0.6
+      '@stacks/network': 7.0.2(encoding@0.1.13)
+      '@stacks/transactions': 7.0.6(encoding@0.1.13)
 
   signal-exit@3.0.7: {}
 
