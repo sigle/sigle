@@ -24,7 +24,6 @@ const eslintConfig = [
     rules: {
       ...eslintPluginBetterTailwindcss.configs["recommended-warn"].rules,
       ...eslintPluginBetterTailwindcss.configs["recommended-error"].rules,
-      "better-tailwindcss/no-conflicting-classes": "off",
       "better-tailwindcss/multiline": "off",
 
       "@typescript-eslint/no-explicit-any": "off",

@@ -6,6 +6,7 @@
 @import "radix-themes-tw/theme.css";
 
 @plugin "@tailwindcss/typography";
+@config "../../tailwind.config.ts";
 
 :root {
   --header-height: 70px;
