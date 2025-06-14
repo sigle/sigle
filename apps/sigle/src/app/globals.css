@@ -54,12 +54,4 @@
   .tippy-box[data-theme~="sigle-editor-bubble-menu"] .tippy-content {
     @apply p-0 text-gray-1;
   }
-
-  /* TipTap FloatingMenu Tippyjs theme */
-  .tippy-box[data-theme~="sigle-editor-floating-menu"] {
-    @apply bg-transparent;
-  }
-  .tippy-box[data-theme~="sigle-editor-floating-menu"] .tippy-content {
-    @apply bg-transparent p-0 mt-5 mr-1;
-  }
 }
