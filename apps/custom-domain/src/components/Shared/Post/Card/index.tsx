@@ -12,7 +12,7 @@ export const PostCard = ({ post }: PostCardProps) => {
   return (
     <Link href={`/posts/${post.id}`}>
       <div className="flex flex-col transition-all duration-200 hover:-translate-y-1">
-        <div className="text-[0.625rem] uppercase tracking-wide text-gray-500">
+        <div className="text-[0.625rem] tracking-wide text-gray-500 uppercase">
           <div>{format(new Date(post.createdAt), "MMMM dd, yyyy")}</div>
         </div>
         {post.coverImage && (

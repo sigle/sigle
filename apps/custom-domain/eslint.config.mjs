@@ -15,7 +15,7 @@ const eslintConfig = [
   {
     settings: {
       "better-tailwindcss": {
-        tailwindConfig: "tailwind.config.ts",
+        entryPoint: "src/app/globals.css",
       },
     },
     plugins: {
@@ -24,7 +24,6 @@ const eslintConfig = [
     rules: {
       ...eslintPluginBetterTailwindcss.configs["recommended-warn"].rules,
       ...eslintPluginBetterTailwindcss.configs["recommended-error"].rules,
-      "better-tailwindcss/no-conflicting-classes": "off",
       "better-tailwindcss/multiline": "off",
 
       "@typescript-eslint/no-explicit-any": "off",

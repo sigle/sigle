@@ -30,7 +30,7 @@ export const DialogTitleGoBack = ({ title }: DialogTitleProps) => {
     <div className="mb-5 flex items-center gap-2">
       <button
         type="button"
-        className="ml-[-6px] mt-[-4px]"
+        className="mt-[-4px] ml-[-6px]"
         onClick={() => setMenuOpen(true)}
       >
         <IconChevronLeft size={24} />

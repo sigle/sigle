@@ -1,17 +1,13 @@
-@layer tw_base, radix_ui, tw_components_utils, utils;
-@import "@radix-ui/themes/styles.css" layer(radix_ui);
+@layer theme, base, radix-themes, components, utilities;
 
-@layer tw_base {
-  @tailwind base;
-}
+@import "tailwindcss";
+@import "tw-animate-css";
+@import "@radix-ui/themes/styles.css" layer(radix-themes);
+@import "radix-themes-tw/theme.css";
 
-@layer tw_components_utils {
-  @tailwind components;
-  @tailwind utilities;
-}
+@plugin "@tailwindcss/typography";
+@config "../../tailwind.config.ts";
 
-@layer utils {
-  :root {
-    --header-height: 70px;
-  }
+:root {
+  --header-height: 70px;
 }

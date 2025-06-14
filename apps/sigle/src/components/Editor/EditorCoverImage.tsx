@@ -155,7 +155,7 @@ export const EditorCoverImage = () => {
               alt="Cover post"
             />
             {!loadingUploadImage ? (
-              <div className="absolute right-2 top-2">
+              <div className="absolute top-2 right-2">
                 <IconButton
                   size="3"
                   color="gray"

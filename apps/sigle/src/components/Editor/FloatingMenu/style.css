@@ -1,3 +1,5 @@
+@reference "#global.css";
+
 /* Tippyjs theme used by the floating menu */
 .tippy-box[data-theme~="sigle-editor-floating-menu"] {
   @apply bg-transparent;
