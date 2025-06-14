@@ -1,3 +1,5 @@
+@reference "#global.css";
+
 .dialogContent {
   border-start-end-radius: 0 !important;
   border-end-end-radius: 0 !important;

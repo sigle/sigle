@@ -2,6 +2,9 @@
   "name": "@sigle/sigle",
   "private": true,
   "version": "0.0.0",
+  "imports": {
+    "#global.css": "./src/app/globals.css"
+  },
   "scripts": {
     "build": "next build",
     "dev": "next dev --turbopack",
