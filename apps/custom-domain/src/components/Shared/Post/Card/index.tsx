@@ -16,7 +16,7 @@ export const PostCard = ({ post }: PostCardProps) => {
           <div>{format(new Date(post.createdAt), "MMMM dd, yyyy")}</div>
         </div>
         {post.coverImage && (
-          <div className="relative mt-3 aspect-[45/28]	overflow-hidden rounded-2xl">
+          <div className="relative mt-3 aspect-[45/28] overflow-hidden rounded-2xl">
             <Image
               src={resolveImageUrl(post.coverImage.id)}
               alt={post.title}

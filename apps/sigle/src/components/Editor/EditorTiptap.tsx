@@ -171,8 +171,8 @@ export const EditorTipTap = () => {
 
   return (
     <div className="prose pb-5 dark:prose-invert lg:prose-lg">
+      {/* eslint-disable-next-line better-tailwindcss/no-unregistered-classes */}
       <EditorContent className="editor" editor={editor} />
-
       {editor && !isMobile && <EditorBubbleMenu editor={editor} />}
       {editor && !isMobile && <EditorFloatingMenu editor={editor} />}
       {editor && !isMobile && <EditorBottomInfo editor={editor} />}
