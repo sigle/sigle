@@ -99,7 +99,6 @@
     "eslint": "9.29.0",
     "eslint-config-next": "15.3.3",
     "eslint-plugin-better-tailwindcss": "3.1.0",
-    "eslint-plugin-tailwindcss": "3.18.0",
     "postcss": "8.5.5",
     "radix-themes-tw": "1.1.0",
     "tailwindcss": "4.1.10",

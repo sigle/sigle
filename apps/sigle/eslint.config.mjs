@@ -14,9 +14,6 @@ const eslintConfig = [
   ...compat.extends("next/core-web-vitals", "next/typescript"),
   {
     settings: {
-      tailwindcss: {
-        callees: ["classnames", "clsx", "ctl", "cva", "tv", "cn"],
-      },
       "better-tailwindcss": {
         entryPoint: "src/app/globals.css",
       },
@@ -27,8 +24,10 @@ const eslintConfig = [
     rules: {
       ...eslintPluginBetterTailwindcss.configs["recommended-warn"].rules,
       ...eslintPluginBetterTailwindcss.configs["recommended-error"].rules,
-      // TODO remove
+      // Need to disable for Tailwind v3, can be enabled again when migrating to Tailwind v4
+      "better-tailwindcss/no-conflicting-classes": "off",
       "better-tailwindcss/multiline": "off",
+
       "@typescript-eslint/no-explicit-any": "off",
       "@typescript-eslint/no-unused-vars": "off",
       "react/no-unescaped-entities": "off",
