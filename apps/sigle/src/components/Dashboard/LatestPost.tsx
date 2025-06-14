@@ -63,7 +63,7 @@ export const LatestPost = () => {
               </Button>
             </div>
 
-            <div className="-mb-4 mt-5">
+            <div className="mt-5 -mb-4">
               {/* TODO once we have that info from backend */}
               {/* <Flex
                 gap="5"

@@ -103,6 +103,7 @@
     "radix-themes-tw": "1.1.0",
     "tailwindcss": "4.1.10",
     "tailwindcss-animate": "1.0.7",
+    "tw-animate-css": "1.3.4",
     "typescript": "5.8.3"
   }
 }

@@ -49,7 +49,7 @@ export const PageProfileSkeleton = () => {
           </Skeleton>
         </Text>
 
-        <div className="pb-20 pt-10">
+        <div className="pt-10 pb-20">
           <ProfileFeedSkeleton />
         </div>
       </Container>

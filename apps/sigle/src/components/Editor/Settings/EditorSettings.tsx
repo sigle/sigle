@@ -25,7 +25,7 @@ export const EditorSettings = () => {
         )}
       >
         {menuOpen === true ? (
-          <div className="animate-in fade-in slide-in-from-right-5">
+          <div className="animate-in slide-in-from-right-5 fade-in">
             <DialogTitle
               title="Post settings"
               description="Edit your post settings"

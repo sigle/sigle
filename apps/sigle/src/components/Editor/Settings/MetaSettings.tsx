@@ -11,7 +11,7 @@ export const MetaSettings = () => {
   const watchMetaDescription = watch("metaDescription");
 
   return (
-    <div className="animate-in fade-in slide-in-from-right-5">
+    <div className="animate-in slide-in-from-right-5 fade-in">
       <DialogTitleGoBack
         title="Meta SEO"
         description="Edit your post SEO settings"
