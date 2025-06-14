@@ -2,9 +2,6 @@
   "name": "@sigle/sigle",
   "private": true,
   "version": "0.0.0",
-  "imports": {
-    "#global.css": "./src/app/globals.css"
-  },
   "scripts": {
     "build": "next build",
     "dev": "next dev --turbopack",
@@ -106,5 +103,8 @@
     "tailwindcss": "4.1.10",
     "tw-animate-css": "1.3.4",
     "typescript": "5.8.3"
+  },
+  "imports": {
+    "#global.css": "./src/app/globals.css"
   }
 }
