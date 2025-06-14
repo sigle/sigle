@@ -101,7 +101,7 @@ const sheetVariants = cva(
       {
         position: ["right", "left"],
         size: "content",
-        class: "max-w-screen",
+        class: "max-w-full",
       },
       {
         position: ["right", "left"],
