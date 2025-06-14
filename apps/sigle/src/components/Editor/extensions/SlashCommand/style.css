@@ -1,3 +1,5 @@
+@reference "#global.css";
+
 /* Tippyjs theme used by the slash command */
 .tippy-box[data-theme~="sigle-editor"] {
   @apply bg-gray-1;

@@ -1,3 +1,5 @@
+@reference "#global.css";
+
 /* Tippyjs theme used by the bubble menu */
 .tippy-box[data-theme~="sigle-editor-bubble-menu"] {
   @apply rounded-3 bg-gray-12;
