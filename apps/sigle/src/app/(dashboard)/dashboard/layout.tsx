@@ -46,7 +46,8 @@ export default function DashboardLayout({
                     color="gray"
                     highContrast
                     className={cn("m-0", {
-                      "bg-[--accent-a3] font-medium": pathname === link.href,
+                      "bg-[var(--accent-a3)] font-medium":
+                        pathname === link.href,
                     })}
                     asChild
                   >
