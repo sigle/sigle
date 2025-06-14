@@ -31,9 +31,9 @@
     "@tsconfig/recommended": "1.0.8",
     "@types/node": "22.15.21",
     "openapi-typescript": "7.8.0",
-    "tsdown": "0.12.3",
+    "tsdown": "0.12.7",
     "typescript": "5.8.3",
-    "vitest": "3.1.4",
+    "vitest": "3.2.3",
     "zod": "3.25.28"
   },
   "peerDependencies": {

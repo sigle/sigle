@@ -16,7 +16,7 @@
     "@tsconfig/recommended": "1.0.8",
     "@types/node": "22.15.21",
     "smol-toml": "1.3.4",
-    "tsx": "4.19.4",
+    "tsx": "4.20.3",
     "typescript": "5.8.3"
   }
 }

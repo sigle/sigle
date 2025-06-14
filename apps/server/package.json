@@ -14,7 +14,7 @@
   },
   "dependencies": {
     "@ardrive/turbo-sdk": "1.22.0",
-    "@dotenvx/dotenvx": "1.44.1",
+    "@dotenvx/dotenvx": "1.44.2",
     "@hirosystems/chainhook-client": "2.3.0",
     "@paralleldrive/cuid2": "2.2.2",
     "@prisma/client": "6.8.2",
