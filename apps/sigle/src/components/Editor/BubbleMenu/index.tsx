@@ -15,6 +15,7 @@ import {
 import { useEffect } from "react";
 import { EditorBubbleMenuLink } from "./BubbleMenuLink";
 import { useBubbleMenuStore } from "./store";
+import "./style.css";
 
 const BubbleMenuButton = ({
   active,
