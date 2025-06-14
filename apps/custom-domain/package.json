@@ -39,7 +39,6 @@
     "eslint-plugin-better-tailwindcss": "3.1.0",
     "postcss": "8.5.5",
     "tailwindcss": "4.1.10",
-    "tailwindcss-animate": "1.0.7",
     "typescript": "5.8.3"
   }
 }
