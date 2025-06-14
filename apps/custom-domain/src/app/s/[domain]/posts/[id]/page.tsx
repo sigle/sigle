@@ -122,7 +122,7 @@ export default async function Post({
   return (
     <main className="mt-10">
       <div className="container">
-        <div className="flex gap-2 text-[0.625rem] uppercase tracking-wide text-gray-500">
+        <div className="flex gap-2 text-[0.625rem] tracking-wide text-gray-500 uppercase">
           <div>{format(new Date(post.createdAt), "MMMM dd, yyyy")}</div>
           <div>·</div>
           <div>8 min read</div>

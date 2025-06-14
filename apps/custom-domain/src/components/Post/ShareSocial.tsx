@@ -36,7 +36,7 @@ export const ShareSocial = ({
   return (
     <TooltipProvider>
       <div className="mt-5">
-        <p className="text-[0.625rem] font-bold uppercase tracking-wide text-gray-500">
+        <p className="text-[0.625rem] font-bold tracking-wide text-gray-500 uppercase">
           Share this article
         </p>
         <div className="mt-3 flex gap-3">

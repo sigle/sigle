@@ -9,7 +9,7 @@ export const Footer = () => {
         target="_blank"
         rel="noreferrer"
       >
-        <div className="text-center text-sm font-semibold leading-tight">
+        <div className="text-center text-sm leading-tight font-semibold">
           Powered by Sigle
         </div>
         <Image

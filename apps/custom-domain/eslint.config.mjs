@@ -15,7 +15,7 @@ const eslintConfig = [
   {
     settings: {
       "better-tailwindcss": {
-        tailwindConfig: "tailwind.config.ts",
+        entryPoint: "src/app/globals.css",
       },
     },
     plugins: {
