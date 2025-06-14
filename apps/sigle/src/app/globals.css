@@ -11,23 +11,3 @@
 :root {
   --header-height: 70px;
 }
-
-@layer components {
-  /* Tiptap editor */
-  .editor {
-    @apply mt-8;
-  }
-
-  .editor .ProseMirror {
-    min-height: 150px;
-  }
-
-  .editor .ProseMirror-focused {
-    outline: none;
-  }
-
-  .editor .ProseMirror .is-empty::before {
-    @apply float-left pointer-events-none h-0 animate-in fade-in text-gray-8;
-    content: attr(data-placeholder);
-  }
-}
