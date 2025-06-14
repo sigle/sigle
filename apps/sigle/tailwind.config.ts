@@ -1,4 +1,3 @@
-import { radixThemePreset } from "radix-themes-tw";
 import type { Config } from "tailwindcss";
 
 const config = {
@@ -33,7 +32,7 @@ const config = {
     },
   },
   plugins: [require("tailwindcss-animate"), require("@tailwindcss/typography")],
-  presets: [radixThemePreset],
+  presets: [],
 } satisfies Config;
 
 export default config;
