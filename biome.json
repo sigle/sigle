@@ -23,23 +23,16 @@
     "attributePosition": "auto",
     "bracketSpacing": true
   },
-  "assist": { "actions": { "source": { "organizeImports": "on" } } },
+  "assist": {
+    "actions": { "source": { "organizeImports": "on" } }
+  },
   "linter": {
     "enabled": true,
     "rules": {
       "recommended": true,
       "style": {
         "noParameterAssign": "off",
-        "noNonNullAssertion": "off",
-        "useAsConstAssertion": "error",
-        "useDefaultParameterLast": "error",
-        "useEnumInitializers": "error",
-        "useSelfClosingElements": "error",
-        "useSingleVarDeclarator": "error",
-        "noUnusedTemplateLiteral": "error",
-        "useNumberNamespace": "error",
-        "noInferrableTypes": "error",
-        "noUselessElse": "error"
+        "noNonNullAssertion": "off"
       },
       "a11y": {
         "useKeyWithClickEvents": "off",
@@ -47,6 +40,5 @@
         "useSemanticElements": "off"
       }
     }
-  },
-  "javascript": {}
+  }
 }
