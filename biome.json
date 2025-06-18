@@ -17,8 +17,7 @@
   "formatter": {
     "enabled": true,
     "indentStyle": "space",
-    "indentWidth": 2,
-    "lineWidth": 80
+    "indentWidth": 2
   },
   "assist": {
     "actions": { "source": { "organizeImports": "on" } }
