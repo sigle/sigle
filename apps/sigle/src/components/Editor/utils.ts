@@ -108,7 +108,7 @@ const uploadNftImage = async (
           draftId: postId,
         },
       },
-      // biome-ignore lint/suspicious/noExplicitAny: <explanation>
+      // biome-ignore lint/suspicious/noExplicitAny: ok
       body: formData as any,
     },
   );

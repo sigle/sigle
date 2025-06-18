@@ -158,7 +158,7 @@ export const PublishDialog = ({ postId }: PublishDialogProps) => {
             },
             body: {
               type,
-              // biome-ignore lint/suspicious/noExplicitAny: <explanation>
+              // biome-ignore lint/suspicious/noExplicitAny: ok
               metadata: metadata as any,
             },
           });
@@ -208,7 +208,7 @@ export const PublishDialog = ({ postId }: PublishDialogProps) => {
             metadata: arweaveUrl,
           });
           await contractCall(parameters);
-          // biome-ignore lint/suspicious/noExplicitAny: <explanation>
+          // biome-ignore lint/suspicious/noExplicitAny: ok
         } catch (error: any) {
           console.error("Error SDK publishing", error);
           toast("Error publishing", {

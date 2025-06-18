@@ -26,7 +26,7 @@ export const CommandList = forwardRef<CommandListRef, CommandListProps>(
     const [selectedIndex, setSelectedIndex] = useState(0);
 
     // When filter is happening reset to index 0
-    // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
+    // biome-ignore lint/correctness/useExhaustiveDependencies: ok
     useEffect(() => setSelectedIndex(0), [items]);
 
     useImperativeHandle(ref, () => ({

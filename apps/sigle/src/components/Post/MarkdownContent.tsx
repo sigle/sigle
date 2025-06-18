@@ -21,7 +21,7 @@ export const PostMarkdownContent = ({ content }: PostMarkdownContentProps) => {
         components={{
           img: ({ node, src, ...props }) => {
             src = src ? resolveImageUrl(src as string) : undefined;
-            // biome-ignore lint/a11y/useAltText: <explanation>
+            // biome-ignore lint/a11y/useAltText: ok
             return <img src={src} {...props} />; // eslint-disable-line @next/next/no-img-element
           },
           a: ({ node, href, ...props }) => {

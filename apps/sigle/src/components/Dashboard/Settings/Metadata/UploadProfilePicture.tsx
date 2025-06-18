@@ -24,7 +24,7 @@ export const UploadProfilePicture = ({
       "/api/protected/user/profile/upload-avatar",
     );
 
-  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
+  // biome-ignore lint/correctness/useExhaustiveDependencies: ok
   const onDrop = useCallback(async (acceptedFiles: File[]) => {
     const file = acceptedFiles[0];
     if (!file) return;
@@ -35,7 +35,7 @@ export const UploadProfilePicture = ({
     formData.append("file", file);
     uploadImage(
       {
-        // biome-ignore lint/suspicious/noExplicitAny: <explanation>
+        // biome-ignore lint/suspicious/noExplicitAny: ok
         body: formData as any,
       },
       {

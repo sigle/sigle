@@ -24,7 +24,7 @@ export const UploadProfileCoverPicture = ({
       "/api/protected/user/profile/upload-cover",
     );
 
-  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
+  // biome-ignore lint/correctness/useExhaustiveDependencies: ok
   const onDrop = useCallback(async (acceptedFiles: File[]) => {
     const file = acceptedFiles[0];
     if (!file) return;
