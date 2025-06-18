@@ -18,10 +18,7 @@
     "enabled": true,
     "indentStyle": "space",
     "indentWidth": 2,
-    "lineEnding": "lf",
-    "lineWidth": 80,
-    "attributePosition": "auto",
-    "bracketSpacing": true
+    "lineWidth": 80
   },
   "assist": {
     "actions": { "source": { "organizeImports": "on" } }
