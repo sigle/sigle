@@ -9,6 +9,7 @@ export async function generateMetadata(props) {
   return metadata;
 }
 
+// biome-ignore lint/correctness/useHookAtTopLevel: ok
 const Wrapper = useMDXComponents().wrapper;
 
 export default async function Page(props) {

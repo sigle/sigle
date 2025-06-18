@@ -38,7 +38,7 @@ export const SeoPreview = () => {
             className="mb-2 border-b border-solid border-gray-6"
           >
             <AspectRatio ratio={1.91 / 1}>
-              {/* eslint-disable-next-line @next/next/no-img-element */}
+              {/* biome-ignore lint/performance/noImgElement: ok */}
               <img
                 src={resolveImageUrl(metaImage)}
                 alt="Cover social media"

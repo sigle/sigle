@@ -40,6 +40,7 @@ export const EditorBubbleMenu = ({ editor }: EditorBubbleMenuProps) => {
   const setLinkOpen = useBubbleMenuStore((state) => state.setLinkOpen);
 
   // Listen to any key press to detect cmd + k and activate the link edition
+  // biome-ignore lint/correctness/useExhaustiveDependencies: ok
   useEffect(() => {
     function onKeyDown(event: KeyboardEvent) {
       // We want all our commands to start with the user pressing ctrl or cmd for mac users

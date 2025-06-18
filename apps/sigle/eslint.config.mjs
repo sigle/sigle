@@ -29,7 +29,10 @@ const eslintConfig = [
       "@typescript-eslint/no-explicit-any": "off",
       "@typescript-eslint/no-unused-vars": "off",
       "react/no-unescaped-entities": "off",
+      // Handled by biome
       "react-hooks/exhaustive-deps": "off",
+      // Handled by biome
+      "@next/next/no-img-element": "off",
       "jsx-a11y/alt-text": "off",
       "no-restricted-imports": [
         "error",

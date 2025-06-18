@@ -32,21 +32,6 @@ export const EditorCoverImage = () => {
       "/api/protected/drafts/{draftId}/upload-media",
     );
 
-  // This is required for the migration process from Gaia.
-  // It can be removed once it's done.
-  useEffect(() => {
-    const autoUploadImage = async () => {
-      if (watchCoverImage?.startsWith("https://gaia.blockstack.org/hub/")) {
-        const response = await fetch(watchCoverImage);
-        const blob = await response.blob();
-        const file = new File([blob], "cover-image", { type: blob.type });
-        onDrop([file]);
-      }
-    };
-
-    autoUploadImage();
-  }, [watchCoverImage]);
-
   // biome-ignore lint/correctness/useExhaustiveDependencies: ok
   const onDrop = useCallback(
     async (acceptedFiles: File[]) => {
@@ -93,6 +78,21 @@ export const EditorCoverImage = () => {
     },
     [postId, loadingUploadImage, posthog, setValue, setPreview, uploadMedia],
   );
+
+  // This is required for the migration process from Gaia.
+  // It can be removed once it's done.
+  useEffect(() => {
+    const autoUploadImage = async () => {
+      if (watchCoverImage?.startsWith("https://gaia.blockstack.org/hub/")) {
+        const response = await fetch(watchCoverImage);
+        const blob = await response.blob();
+        const file = new File([blob], "cover-image", { type: blob.type });
+        onDrop([file]);
+      }
+    };
+
+    autoUploadImage();
+  }, [watchCoverImage, onDrop]);
 
   const { getRootProps, getInputProps, isDragActive, open } = useDropzone({
     onDrop,
@@ -147,7 +147,7 @@ export const EditorCoverImage = () => {
           )
         ) : (
           <div className="relative mx-auto">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
+            {/* biome-ignore lint/performance/noImgElement: ok */}
             <img
               src={preview || resolvedWatchCoverImage || ""}
               className={cn("rounded-2", {

@@ -39,7 +39,7 @@ export const ProfileAvatar = ({
           height={user.profile.pictureUri.height}
         />
       ) : (
-        // eslint-disable-next-line @next/next/no-img-element
+        // biome-ignore lint/performance/noImgElement: ok
         <img src={getDefaultAvatarUrl(user.id)} alt={user.id} />
       )}
     </div>

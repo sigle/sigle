@@ -15,7 +15,7 @@ export const ImageComponent = (props: NodeViewProps) => {
           <Spinner />
         </div>
       )}
-      {/* eslint-disable-next-line @next/next/no-img-element */}
+      {/* biome-ignore lint/performance/noImgElement: ok */}
       <img
         className={cn(
           "outline outline-0 outline-offset-2 outline-orange-9 hover:outline-2",
