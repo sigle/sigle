@@ -1,7 +1,7 @@
-import { cn } from "@/lib/cn";
-import { resolveImageUrl } from "@/lib/images";
 import { Spinner } from "@radix-ui/themes";
 import { type NodeViewProps, NodeViewWrapper } from "@tiptap/react";
+import { cn } from "@/lib/cn";
+import { resolveImageUrl } from "@/lib/images";
 
 export const ImageComponent = (props: NodeViewProps) => {
   const alt = props.node.attrs.alt || "";

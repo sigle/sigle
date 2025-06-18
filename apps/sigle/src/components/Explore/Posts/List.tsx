@@ -1,10 +1,10 @@
 "use client";
 
-import { PostCard } from "@/components/Shared/Post/Card";
-import { sigleApiClient, sigleApiFetchClient } from "@/lib/sigle";
 import { useEffect, useState } from "react";
 import { useInView } from "react-intersection-observer";
 import { toast } from "sonner";
+import { PostCard } from "@/components/Shared/Post/Card";
+import { sigleApiClient, sigleApiFetchClient } from "@/lib/sigle";
 
 const PAGE_SIZE = 20;
 

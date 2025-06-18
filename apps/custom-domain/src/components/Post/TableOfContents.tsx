@@ -1,8 +1,8 @@
 "use client";
 
-import { cn } from "@/lib/cn";
 import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
+import { cn } from "@/lib/cn";
 import { ShareSocial } from "./ShareSocial";
 
 const scrollToElement = (id: string, offset = 16): void => {
@@ -71,7 +71,7 @@ interface TableOfContentsProps {
 export const TableOfContents = ({ items, post }: TableOfContentsProps) => {
   const router = useRouter();
   const [activeId, setActiveId] = useState();
-  // biome-ignore lint/suspicious/noExplicitAny: <explanation>
+  // biome-ignore lint/suspicious/noExplicitAny: ok
   useIntersectionObserver(setActiveId as any);
 
   return (

@@ -1,5 +1,5 @@
-import { ProfileFeedSkeleton } from "@/components/User/ProfileFeed";
 import { Avatar, Container, Heading, Skeleton, Text } from "@radix-ui/themes";
+import { ProfileFeedSkeleton } from "@/components/User/ProfileFeed";
 
 export const PageProfileSkeleton = () => {
   return (

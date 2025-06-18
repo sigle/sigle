@@ -1,7 +1,7 @@
 "use client";
 
-import { sigleApiClient } from "@/lib/sigle";
 import { Container, Heading } from "@radix-ui/themes";
+import { sigleApiClient } from "@/lib/sigle";
 import { PostCard } from "../Shared/Post/Card";
 import {
   Carousel,

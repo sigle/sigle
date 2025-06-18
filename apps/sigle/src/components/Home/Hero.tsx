@@ -1,9 +1,9 @@
 "use client";
 
+import { Button, Container, Heading } from "@radix-ui/themes";
 import { useStacksLogin } from "@/hooks/useStacksLogin";
 import { useSession } from "@/lib/auth-hooks";
 import { Routes } from "@/lib/routes";
-import { Button, Container, Heading } from "@radix-ui/themes";
 import { NextLink } from "../Shared/NextLink";
 
 export const HomeHero = () => {

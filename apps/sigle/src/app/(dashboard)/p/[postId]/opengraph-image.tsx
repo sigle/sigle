@@ -1,6 +1,6 @@
+import { ImageResponse } from "next/og";
 import { resolveImageUrl } from "@/lib/images";
 import { sigleApiFetchClient } from "@/lib/sigle";
-import { ImageResponse } from "next/og";
 
 export const size = {
   width: 800,

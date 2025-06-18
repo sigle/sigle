@@ -1,7 +1,7 @@
+import { notFound } from "next/navigation";
 import { Pagination } from "@/components/Shared/Pagination";
 import { PostCard } from "@/components/Shared/Post/Card";
 import { sigleApiFetchClient } from "@/lib/sigle";
-import { notFound } from "next/navigation";
 
 const PAGE_SIZE = 15;
 

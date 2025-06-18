@@ -1,5 +1,4 @@
 import type { IconProps } from "@tabler/icons-react";
-import * as React from "react";
 
 export const TwitterFilledIcon = ({ width = 15, height = 15 }: IconProps) => (
   <svg

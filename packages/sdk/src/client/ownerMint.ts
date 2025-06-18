@@ -1,9 +1,9 @@
 import type { ContractCallBase } from "@stacks/connect";
-import type { StacksNetwork, StacksNetworkName } from "@stacks/network";
+import type { StacksNetwork } from "@stacks/network";
 import {
-  PostConditionMode,
   contractPrincipalCV,
   noneCV,
+  PostConditionMode,
 } from "@stacks/transactions";
 
 export type OwnerMintParams = {

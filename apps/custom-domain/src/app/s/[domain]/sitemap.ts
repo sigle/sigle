@@ -1,8 +1,8 @@
-import { resolveImageUrl } from "@/lib/images";
-import { sigleApiFetchClient } from "@/lib/sigle";
 import type { MetadataRoute } from "next";
 import { headers } from "next/headers";
 import { notFound } from "next/navigation";
+import { resolveImageUrl } from "@/lib/images";
+import { sigleApiFetchClient } from "@/lib/sigle";
 
 export default async function sitemap() {
   // next.js sitemap function doesn't pass the params, so we use headers as a workaround

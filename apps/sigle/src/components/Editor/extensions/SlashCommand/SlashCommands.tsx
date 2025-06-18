@@ -1,8 +1,8 @@
 // https://github.com/ueberdosis/tiptap/issues/1508#issuecomment-877348787
 
 import type { IconProps } from "@tabler/icons-react";
-import { Extension } from "@tiptap/core";
 import type { Editor } from "@tiptap/core";
+import { Extension } from "@tiptap/core";
 import { type Range, ReactRenderer } from "@tiptap/react";
 import Suggestion, { type SuggestionOptions } from "@tiptap/suggestion";
 import tippy, { type Instance } from "tippy.js";
@@ -74,10 +74,10 @@ export const SlashCommands = Extension.create<{
               });
 
               popup = tippy("body", {
-                // biome-ignore lint/suspicious/noExplicitAny: <explanation>
+                // biome-ignore lint/suspicious/noExplicitAny: ok
                 getReferenceClientRect: props.clientRect as any,
                 appendTo: () =>
-                  // biome-ignore lint/suspicious/noExplicitAny: <explanation>
+                  // biome-ignore lint/suspicious/noExplicitAny: ok
                   document.getElementsByClassName("radix-themes")[0] as any,
                 content: reactRenderer.element,
                 showOnCreate: true,
@@ -92,7 +92,7 @@ export const SlashCommands = Extension.create<{
               reactRenderer.updateProps(props);
 
               popup[0]?.setProps({
-                // biome-ignore lint/suspicious/noExplicitAny: <explanation>
+                // biome-ignore lint/suspicious/noExplicitAny: ok
                 getReferenceClientRect: props.clientRect as any,
               });
             },

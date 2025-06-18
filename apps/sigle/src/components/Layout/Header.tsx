@@ -1,15 +1,15 @@
 "use client";
 
+import { Button, IconButton } from "@radix-ui/themes";
+import { IconMoon, IconSun } from "@tabler/icons-react";
+import { usePathname } from "next/navigation";
+import { useTheme } from "next-themes";
+import { usePostHog } from "posthog-js/react";
+import { Suspense, useLayoutEffect } from "react";
 import { useIsClient } from "@/hooks/useIsClient";
 import { useStacksLogin } from "@/hooks/useStacksLogin";
 import { LogoImage } from "@/images/Logo";
 import { useSession } from "@/lib/auth-hooks";
-import { Button, IconButton } from "@radix-ui/themes";
-import { IconMoon, IconSun } from "@tabler/icons-react";
-import { useTheme } from "next-themes";
-import { usePathname } from "next/navigation";
-import { usePostHog } from "posthog-js/react";
-import { Suspense, useLayoutEffect } from "react";
 import { NextLink } from "../Shared/NextLink";
 import { UserDropdown } from "./UserDropdown";
 

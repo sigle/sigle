@@ -1,8 +1,5 @@
 "use client";
 
-import { resolveImageUrl } from "@/lib/images";
-import { Routes } from "@/lib/routes";
-import { formatReadableAddress } from "@/lib/stacks";
 import {
   AspectRatio,
   Button,
@@ -16,6 +13,9 @@ import type { paths } from "@sigle/sdk";
 import { format } from "date-fns";
 import Image from "next/image";
 import { useState } from "react";
+import { resolveImageUrl } from "@/lib/images";
+import { Routes } from "@/lib/routes";
+import { formatReadableAddress } from "@/lib/stacks";
 import { NextLink } from "../../NextLink";
 import { PostCollectDialog } from "../PostCollectDialog";
 

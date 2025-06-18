@@ -1,4 +1,3 @@
-import { cn } from "@/lib/cn";
 import {
   IconBold,
   IconCode,
@@ -9,10 +8,11 @@ import {
 } from "@tabler/icons-react";
 import {
   type Editor,
-  BubbleMenu as TipTapBubbleMenu,
   isTextSelection,
+  BubbleMenu as TipTapBubbleMenu,
 } from "@tiptap/react";
 import { useEffect } from "react";
+import { cn } from "@/lib/cn";
 import { EditorBubbleMenuLink } from "./BubbleMenuLink";
 import { useBubbleMenuStore } from "./store";
 import "./style.css";

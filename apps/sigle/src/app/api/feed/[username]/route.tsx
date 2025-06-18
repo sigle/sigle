@@ -1,8 +1,8 @@
+import { Feed } from "feed";
+import { NextResponse } from "next/server";
 import { env } from "@/env";
 import { resolveImageUrl } from "@/lib/images";
 import { sigleApiFetchClient } from "@/lib/sigle";
-import { Feed } from "feed";
-import { NextResponse } from "next/server";
 
 export async function GET(
   _: Request,

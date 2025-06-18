@@ -1,6 +1,6 @@
-import { cn } from "@/lib/cn";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
+import { cn } from "@/lib/cn";
 import { Providers } from "./providers";
 import "./globals.css";
 import { env } from "@/env";

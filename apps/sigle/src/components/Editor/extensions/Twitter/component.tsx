@@ -8,8 +8,8 @@ import { useEffect, useMemo } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { TwitterComponent } from "./twitter/component";
-import { TWITTER_REGEX_GLOBAL, isValidTwitterUrl } from "./twitter/twitter";
-import { YOUTUBE_REGEX_GLOBAL, isValidYoutubeUrl } from "./video";
+import { isValidTwitterUrl, TWITTER_REGEX_GLOBAL } from "./twitter/twitter";
+import { isValidYoutubeUrl, YOUTUBE_REGEX_GLOBAL } from "./video";
 import { VideoComponent } from "./video/component";
 
 export const isValidUrl = (val: string) => {

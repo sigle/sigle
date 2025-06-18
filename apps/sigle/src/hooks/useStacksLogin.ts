@@ -1,19 +1,19 @@
 "use client";
 
-import { env } from "@/env";
-import { authClient, signOut } from "@/lib/auth-client";
-import { useSession } from "@/lib/auth-hooks";
-import { appDetails, stacksNetwork, userSession } from "@/lib/stacks";
 import {
-  type UserData,
   openSignatureRequestPopup,
   showConnect,
+  type UserData,
 } from "@stacks/connect";
 import { usePostHog } from "posthog-js/react";
 import { useEffect } from "react";
 import { createSiwsMessage } from "sign-in-with-stacks";
 import { toast } from "sonner";
 import { create } from "zustand";
+import { env } from "@/env";
+import { authClient, signOut } from "@/lib/auth-client";
+import { useSession } from "@/lib/auth-hooks";
+import { appDetails, stacksNetwork, userSession } from "@/lib/stacks";
 
 interface SessionState {
   user?: UserData;

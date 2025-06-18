@@ -1,11 +1,11 @@
+import { IconLink } from "@tabler/icons-react";
+import { useState } from "react";
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/Tooltip";
-import { IconLink } from "@tabler/icons-react";
-import { useState } from "react";
 import { FacebookLogoIcon } from "../icons/FacebookLogoIcon";
 import { LinkedinIcon } from "../icons/LinkedinIcon";
 import { TwitterFilledIcon } from "../icons/TwitterFilledIcon";

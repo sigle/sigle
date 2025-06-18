@@ -1,8 +1,8 @@
-import { resolveImageUrl } from "@/lib/images";
 import type { paths } from "@sigle/sdk";
 import { format } from "date-fns";
 import Image from "next/image";
 import Link from "next/link";
+import { resolveImageUrl } from "@/lib/images";
 
 interface PostCardProps {
   post: paths["/api/posts/list"]["get"]["responses"]["200"]["content"]["application/json"]["results"][number];

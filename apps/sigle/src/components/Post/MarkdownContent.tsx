@@ -1,6 +1,6 @@
-import { resolveImageUrl } from "@/lib/images";
 import ReactMarkdown from "react-markdown";
 import { Tweet } from "react-tweet";
+import { resolveImageUrl } from "@/lib/images";
 import {
   getTweetIdFromUrl,
   isValidTwitterUrl,

@@ -1,5 +1,7 @@
 "use client";
 
+import { Container } from "@radix-ui/themes";
+import { use } from "react";
 import { EditorCoverImage } from "@/components/Editor/EditorCoverImage";
 import { EditorFormProvider } from "@/components/Editor/EditorFormProvider";
 import { EditorTipTap } from "@/components/Editor/EditorTiptap";
@@ -8,8 +10,6 @@ import { EditorHeader } from "@/components/Editor/Header/EditorHeader";
 import { PublishDialog } from "@/components/Editor/Publish/PublishDialog";
 import { EditorSettings } from "@/components/Editor/Settings/EditorSettings";
 import { sigleApiClient } from "@/lib/sigle";
-import { Container } from "@radix-ui/themes";
-import { use } from "react";
 
 type PostEditPageProps = {
   params: Promise<{ postId: string }>;

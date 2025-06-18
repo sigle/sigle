@@ -1,8 +1,5 @@
 "use client";
 
-import { cn } from "@/lib/cn";
-import { resolveImageUrl } from "@/lib/images";
-import { sigleApiClient } from "@/lib/sigle";
 import { Button, IconButton, Spinner } from "@radix-ui/themes";
 import { IconCameraPlus, IconHandGrab, IconTrash } from "@tabler/icons-react";
 import { motion } from "framer-motion";
@@ -17,6 +14,9 @@ import {
 import { useDropzone } from "react-dropzone";
 import { useFormContext } from "react-hook-form";
 import { toast } from "sonner";
+import { cn } from "@/lib/cn";
+import { resolveImageUrl } from "@/lib/images";
+import { sigleApiClient } from "@/lib/sigle";
 import type { EditorPostFormData } from "./EditorFormProvider";
 
 export const EditorCoverImage = () => {
@@ -47,7 +47,7 @@ export const EditorCoverImage = () => {
     autoUploadImage();
   }, [watchCoverImage]);
 
-  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
+  // biome-ignore lint/correctness/useExhaustiveDependencies: ok
   const onDrop = useCallback(
     async (acceptedFiles: File[]) => {
       const file = acceptedFiles[0];
@@ -69,7 +69,7 @@ export const EditorCoverImage = () => {
               draftId: postId,
             },
           },
-          // biome-ignore lint/suspicious/noExplicitAny: <explanation>
+          // biome-ignore lint/suspicious/noExplicitAny: ok
           body: formData as any,
         },
         {
@@ -117,6 +117,7 @@ export const EditorCoverImage = () => {
     : null;
 
   return (
+    // biome-ignore lint/a11y/noStaticElementInteractions: ok
     <div
       {...getRootProps()}
       className={cn("mt-4 flex justify-center", {

@@ -1,20 +1,5 @@
 "use client";
 
-import { appConfig } from "@/config";
-import { useContractCall } from "@/hooks/useContractCall";
-import {
-  formatUSDollar,
-  useCurrencyFiatPrice,
-} from "@/hooks/useCurrencyFiatPrice";
-import { useStacksLogin } from "@/hooks/useStacksLogin";
-import { useSession } from "@/lib/auth-hooks";
-import { resolveImageUrl } from "@/lib/images";
-import { sigleClient } from "@/lib/sigle";
-import {
-  formatReadableAddress,
-  getExplorerTransactionUrl,
-  getPromiseTransactionConfirmation,
-} from "@/lib/stacks";
 import {
   Badge,
   Button,
@@ -39,6 +24,21 @@ import Image from "next/image";
 import { useSearchParams } from "next/navigation";
 import { useState } from "react";
 import { toast } from "sonner";
+import { appConfig } from "@/config";
+import { useContractCall } from "@/hooks/useContractCall";
+import {
+  formatUSDollar,
+  useCurrencyFiatPrice,
+} from "@/hooks/useCurrencyFiatPrice";
+import { useStacksLogin } from "@/hooks/useStacksLogin";
+import { useSession } from "@/lib/auth-hooks";
+import { resolveImageUrl } from "@/lib/images";
+import { sigleClient } from "@/lib/sigle";
+import {
+  formatReadableAddress,
+  getExplorerTransactionUrl,
+  getPromiseTransactionConfirmation,
+} from "@/lib/stacks";
 import { ProfileAvatar } from "../Profile/ProfileAvatar";
 
 interface PostCollectDialogProps {
