@@ -1,9 +1,9 @@
-import { Routes } from "@/lib/routes";
-import { formatReadableAddress } from "@/lib/stacks";
 import { Button, IconButton, Text, Tooltip } from "@radix-ui/themes";
 import type { paths } from "@sigle/sdk";
 import { IconShare } from "@tabler/icons-react";
 import { useState } from "react";
+import { Routes } from "@/lib/routes";
+import { formatReadableAddress } from "@/lib/stacks";
 import { NextLink } from "../Shared/NextLink";
 import { PostCollectDialog } from "../Shared/Post/PostCollectDialog";
 import { PostShareDialog } from "../Shared/Post/PostShareDialog";

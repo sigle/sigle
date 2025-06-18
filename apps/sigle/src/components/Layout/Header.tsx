@@ -1,15 +1,15 @@
 "use client";
 
+import { Button, IconButton } from "@radix-ui/themes";
+import { IconMoon, IconSun } from "@tabler/icons-react";
+import { usePathname } from "next/navigation";
+import { useTheme } from "next-themes";
+import { usePostHog } from "posthog-js/react";
+import { Suspense, useLayoutEffect } from "react";
 import { useIsClient } from "@/hooks/useIsClient";
 import { useStacksLogin } from "@/hooks/useStacksLogin";
 import { LogoImage } from "@/images/Logo";
 import { useSession } from "@/lib/auth-hooks";
-import { Button, IconButton } from "@radix-ui/themes";
-import { IconMoon, IconSun } from "@tabler/icons-react";
-import { useTheme } from "next-themes";
-import { usePathname } from "next/navigation";
-import { usePostHog } from "posthog-js/react";
-import { Suspense, useLayoutEffect } from "react";
 import { NextLink } from "../Shared/NextLink";
 import { UserDropdown } from "./UserDropdown";
 
@@ -23,7 +23,7 @@ export const Header = () => {
 
   // Next.js has a problem with the scroll position when changing pages
   // https://github.com/vercel/next.js/issues/49427
-  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
+  // biome-ignore lint/correctness/useExhaustiveDependencies: ok
   useLayoutEffect(() => {
     document.documentElement.scrollTo({ top: 0, left: 0, behavior: "instant" });
   }, [pathname]);

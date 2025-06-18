@@ -32,13 +32,13 @@ export function useDebouncedCallback(
   deps: any[] = [],
 ) {
   // debounce the callback
-  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
+  // biome-ignore lint/correctness/useExhaustiveDependencies: ok
   const debouncedCallback = React.useCallback(debounce(callback, delay), [
     delay,
     ...deps,
   ]); // with the delay
   // clean up on unmount or dependency change
-  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
+  // biome-ignore lint/correctness/useExhaustiveDependencies: ok
   React.useEffect(() => {
     return () => {
       debouncedCallback.cancel(); // cancel any pending calls

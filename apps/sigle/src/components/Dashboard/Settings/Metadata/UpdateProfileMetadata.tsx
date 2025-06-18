@@ -1,10 +1,3 @@
-import { useContractCall } from "@/hooks/useContractCall";
-import { sigleApiClient } from "@/lib/sigle";
-import { sigleClient } from "@/lib/sigle";
-import {
-  getExplorerTransactionUrl,
-  getPromiseTransactionConfirmation,
-} from "@/lib/stacks";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button, Flex, Text, TextArea, TextField } from "@radix-ui/themes";
 import type { paths } from "@sigle/sdk";
@@ -13,6 +6,12 @@ import { IconAt, IconBrandX } from "@tabler/icons-react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
+import { useContractCall } from "@/hooks/useContractCall";
+import { sigleApiClient, sigleClient } from "@/lib/sigle";
+import {
+  getExplorerTransactionUrl,
+  getPromiseTransactionConfirmation,
+} from "@/lib/stacks";
 import { UploadProfileCoverPicture } from "./UploadProfileCoverPicture";
 import { UploadProfilePicture } from "./UploadProfilePicture";
 

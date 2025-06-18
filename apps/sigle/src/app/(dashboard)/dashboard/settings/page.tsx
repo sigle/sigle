@@ -1,5 +1,5 @@
-import { SettingsProfileMetadata } from "@/components/Dashboard/Settings/Metadata";
 import { Heading } from "@radix-ui/themes";
+import { SettingsProfileMetadata } from "@/components/Dashboard/Settings/Metadata";
 
 export default function Settings() {
   return (

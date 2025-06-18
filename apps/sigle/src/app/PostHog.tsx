@@ -1,10 +1,10 @@
 "use client";
 
-import { env } from "@/env";
-import { useSession } from "@/lib/auth-hooks";
 import { usePathname, useSearchParams } from "next/navigation";
 import { usePostHog } from "posthog-js/react";
 import { Suspense, useEffect } from "react";
+import { env } from "@/env";
+import { useSession } from "@/lib/auth-hooks";
 
 export function PostHogInit(): null {
   const { data: session } = useSession();

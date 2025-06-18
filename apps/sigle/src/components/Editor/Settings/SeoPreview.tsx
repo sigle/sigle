@@ -1,9 +1,9 @@
-import { env } from "@/env";
-import { resolveImageUrl } from "@/lib/images";
-import { prettifyUrl } from "@/lib/urls";
 import { AspectRatio, Card, Inset, Text, Tooltip } from "@radix-ui/themes";
 import { IconHelpCircle } from "@tabler/icons-react";
 import { useFormContext } from "react-hook-form";
+import { env } from "@/env";
+import { resolveImageUrl } from "@/lib/images";
+import { prettifyUrl } from "@/lib/urls";
 import type { EditorPostFormData } from "../EditorFormProvider";
 import { useEditorStore } from "../store";
 
@@ -38,7 +38,7 @@ export const SeoPreview = () => {
             className="mb-2 border-b border-solid border-gray-6"
           >
             <AspectRatio ratio={1.91 / 1}>
-              {/* eslint-disable-next-line @next/next/no-img-element */}
+              {/* biome-ignore lint/performance/noImgElement: ok */}
               <img
                 src={resolveImageUrl(metaImage)}
                 alt="Cover social media"

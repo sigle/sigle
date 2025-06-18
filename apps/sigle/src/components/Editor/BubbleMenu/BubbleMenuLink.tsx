@@ -1,6 +1,6 @@
-import { cn } from "@/lib/cn";
 import { IconX } from "@tabler/icons-react";
 import type { Editor } from "@tiptap/react";
+import { cn } from "@/lib/cn";
 import { useBubbleMenuStore } from "./store";
 
 const BubbleMenuButton = ({
@@ -81,7 +81,7 @@ export const EditorBubbleMenuLink = ({ editor }: EditorBubbleMenuProps) => {
         onKeyDown={onKeyDown}
         onChange={(e) => setLinkValue(e.target.value)}
         placeholder="Enter link ..."
-        // biome-ignore lint/a11y/noAutofocus: <explanation>
+        // biome-ignore lint/a11y/noAutofocus: ok
         autoFocus
       />
       <BubbleMenuButton

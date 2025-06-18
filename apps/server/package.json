@@ -38,7 +38,7 @@
     "rou3": "0.6.3",
     "sharp": "0.34.2",
     "sign-in-with-stacks": "0.1.2",
-    "zod": "3.25.64",
+    "zod": "3.25.67",
     "zod-validation-error": "3.5.0"
   },
   "devDependencies": {

@@ -1,5 +1,5 @@
-import { env } from "@/env";
 import { parse } from "multiformats/link";
+import { env } from "@/env";
 
 export const resolveImageUrl = (
   image: string,

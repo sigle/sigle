@@ -1,4 +1,3 @@
-import { cn } from "@/lib/cn";
 import {
   IconBold,
   IconCode,
@@ -9,10 +8,11 @@ import {
 } from "@tabler/icons-react";
 import {
   type Editor,
-  BubbleMenu as TipTapBubbleMenu,
   isTextSelection,
+  BubbleMenu as TipTapBubbleMenu,
 } from "@tiptap/react";
 import { useEffect } from "react";
+import { cn } from "@/lib/cn";
 import { EditorBubbleMenuLink } from "./BubbleMenuLink";
 import { useBubbleMenuStore } from "./store";
 import "./style.css";
@@ -40,6 +40,7 @@ export const EditorBubbleMenu = ({ editor }: EditorBubbleMenuProps) => {
   const setLinkOpen = useBubbleMenuStore((state) => state.setLinkOpen);
 
   // Listen to any key press to detect cmd + k and activate the link edition
+  // biome-ignore lint/correctness/useExhaustiveDependencies: ok
   useEffect(() => {
     function onKeyDown(event: KeyboardEvent) {
       // We want all our commands to start with the user pressing ctrl or cmd for mac users

@@ -1,7 +1,7 @@
+import Image from "next/image";
 import { cn } from "@/lib/cn";
 import { resolveImageUrl } from "@/lib/images";
 import { getDefaultAvatarUrl } from "@/lib/users";
-import Image from "next/image";
 
 export const ProfileAvatar = ({
   user,
@@ -39,7 +39,7 @@ export const ProfileAvatar = ({
           height={user.profile.pictureUri.height}
         />
       ) : (
-        // eslint-disable-next-line @next/next/no-img-element
+        // biome-ignore lint/performance/noImgElement: ok
         <img src={getDefaultAvatarUrl(user.id)} alt={user.id} />
       )}
     </div>

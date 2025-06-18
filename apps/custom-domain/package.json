@@ -25,7 +25,7 @@
     "react-dom": "19.1.0",
     "slugify": "1.6.6",
     "tailwind-merge": "3.3.1",
-    "zod": "3.25.64"
+    "zod": "3.25.67"
   },
   "devDependencies": {
     "@dotenvx/dotenvx": "1.44.2",

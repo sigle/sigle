@@ -1,5 +1,5 @@
-import { authClient } from "@/lib/auth-client";
 import { createAuthHooks } from "@daveyplate/better-auth-tanstack";
+import { authClient } from "@/lib/auth-client";
 
 /**
  * Using better-auth useSession is causing hydration errors on the homepage.

@@ -1,9 +1,5 @@
 "use client";
 
-import { useSession } from "@/lib/auth-hooks";
-import { resolveImageUrl } from "@/lib/images";
-import { Routes } from "@/lib/routes";
-import { formatReadableAddress } from "@/lib/stacks";
 import {
   AspectRatio,
   DropdownMenu,
@@ -19,6 +15,10 @@ import { IconDotsVertical } from "@tabler/icons-react";
 import { format } from "date-fns";
 import Image from "next/image";
 import { useState } from "react";
+import { useSession } from "@/lib/auth-hooks";
+import { resolveImageUrl } from "@/lib/images";
+import { Routes } from "@/lib/routes";
+import { formatReadableAddress } from "@/lib/stacks";
 import { NextLink } from "../../NextLink";
 import { PostShareDialog } from "../PostShareDialog";
 

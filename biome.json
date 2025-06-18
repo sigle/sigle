@@ -1,30 +1,33 @@
 {
-  "$schema": "https://biomejs.dev/schemas/1.9.4/schema.json",
+  "$schema": "https://biomejs.dev/schemas/2.0.0/schema.json",
   "vcs": { "enabled": false, "clientKind": "git", "useIgnoreFile": false },
   "files": {
     "ignoreUnknown": false,
-    "ignore": [
-      "**/.next",
-      "**/.nitro",
-      "**/.output",
-      ".github/ISSUE_TEMPLATE",
-      "**/pnpm-lock.yaml",
-      "**/dist",
-      "**/_pagefind"
+    "includes": [
+      "**",
+      "!**/.next",
+      "!**/.nitro",
+      "!**/.output",
+      "!**/.github/ISSUE_TEMPLATE",
+      "!**/pnpm-lock.yaml",
+      "!**/dist",
+      "!**/_pagefind"
     ]
   },
   "formatter": {
     "enabled": true,
     "indentStyle": "space",
-    "indentWidth": 2,
-    "lineEnding": "lf",
-    "lineWidth": 80,
-    "attributePosition": "auto",
-    "bracketSpacing": true
+    "indentWidth": 2
   },
-  "organizeImports": { "enabled": true },
+  "assist": {
+    "actions": { "source": { "organizeImports": "on" } }
+  },
   "linter": {
     "enabled": true,
+    "domains": {
+      "next": "recommended",
+      "react": "recommended"
+    },
     "rules": {
       "recommended": true,
       "style": {
@@ -37,6 +40,5 @@
         "useSemanticElements": "off"
       }
     }
-  },
-  "javascript": {}
+  }
 }

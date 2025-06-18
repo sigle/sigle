@@ -1,10 +1,10 @@
-import { appConfig } from "@/config";
 import { Container, IconButton, Link, Separator, Text } from "@radix-ui/themes";
 import {
   IconBrandDiscordFilled,
   IconBrandGithubFilled,
   IconBrandXFilled,
 } from "@tabler/icons-react";
+import { appConfig } from "@/config";
 
 export const Footer = () => {
   return (

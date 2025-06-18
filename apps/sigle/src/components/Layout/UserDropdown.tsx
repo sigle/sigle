@@ -1,9 +1,5 @@
 "use client";
 
-import { useStacksLogin } from "@/hooks/useStacksLogin";
-import { useSession } from "@/lib/auth-hooks";
-import { Routes } from "@/lib/routes";
-import { sigleApiClient } from "@/lib/sigle";
 import { DropdownMenu, IconButton } from "@radix-ui/themes";
 import {
   IconLogout,
@@ -15,6 +11,10 @@ import {
 } from "@tabler/icons-react";
 import { useTheme } from "next-themes";
 import { usePostHog } from "posthog-js/react";
+import { useStacksLogin } from "@/hooks/useStacksLogin";
+import { useSession } from "@/lib/auth-hooks";
+import { Routes } from "@/lib/routes";
+import { sigleApiClient } from "@/lib/sigle";
 import { NextLink } from "../Shared/NextLink";
 import { ProfileAvatar } from "../Shared/Profile/ProfileAvatar";
 

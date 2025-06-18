@@ -1,7 +1,7 @@
-import { env } from "@/env";
 import { createClient, type paths } from "@sigle/sdk";
 import createOpenApiFetchClient from "openapi-fetch";
 import createReactQueryClient from "openapi-react-query";
+import { env } from "@/env";
 import { stacksNetwork } from "./stacks";
 
 export const sigleClient = createClient({

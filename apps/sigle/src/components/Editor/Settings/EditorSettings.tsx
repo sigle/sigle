@@ -1,10 +1,10 @@
-import { cn } from "@/lib/cn";
 import { Dialog, Inset, Text } from "@radix-ui/themes";
 import {
   IconBrandGoogle,
   IconCards,
   IconChevronRight,
 } from "@tabler/icons-react";
+import { cn } from "@/lib/cn";
 import { useEditorStore } from "../store";
 import { CollectSettings } from "./CollectSettings";
 import { DialogTitle } from "./DialogTitle";
@@ -32,6 +32,7 @@ export const EditorSettings = () => {
             />
 
             <Inset side="x">
+              {/* biome-ignore lint/a11y/noStaticElementInteractions: ok */}
               <div
                 className="flex cursor-pointer justify-between border-y border-gray-5 px-6 py-4 transition-colors hover:bg-gray-2"
                 onClick={() => setMenuOpen("meta")}
@@ -47,6 +48,7 @@ export const EditorSettings = () => {
                   <IconChevronRight size={24} />
                 </Text>
               </div>
+              {/* biome-ignore lint/a11y/noStaticElementInteractions: ok */}
               <div
                 className="flex cursor-pointer justify-between border-b border-gray-5 px-6 py-4 transition-colors hover:bg-gray-2"
                 onClick={() => setMenuOpen("collect")}

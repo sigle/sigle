@@ -1,6 +1,6 @@
-import { useSession } from "@/lib/auth-hooks";
 import { Callout, Flex, Spinner, Text } from "@radix-ui/themes";
 import { IconInfoCircle } from "@tabler/icons-react";
+import { useSession } from "@/lib/auth-hooks";
 
 interface AuthProtectProps {
   children?: React.ReactNode;

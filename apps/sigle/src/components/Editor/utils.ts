@@ -1,15 +1,15 @@
-import { env } from "@/env";
-import { resolveImageUrl } from "@/lib/images";
-import { sigleApiFetchClient } from "@/lib/sigle";
 import {
+  createPostMetadata,
   type MediaImageMetadata,
   MediaImageMimeType,
   type MetadataAttribute,
   type PostMetadata,
-  createPostMetadata,
 } from "@sigle/sdk";
 import type { Editor } from "@tiptap/core";
 import { fileTypeFromBuffer } from "file-type";
+import { env } from "@/env";
+import { resolveImageUrl } from "@/lib/images";
+import { sigleApiFetchClient } from "@/lib/sigle";
 import type { CreatePostNftParams } from "../../app/api/post/nft-image/route";
 import type { EditorPostFormData } from "./EditorFormProvider";
 
@@ -108,7 +108,7 @@ const uploadNftImage = async (
           draftId: postId,
         },
       },
-      // biome-ignore lint/suspicious/noExplicitAny: <explanation>
+      // biome-ignore lint/suspicious/noExplicitAny: ok
       body: formData as any,
     },
   );

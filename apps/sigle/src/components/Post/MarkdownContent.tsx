@@ -1,6 +1,6 @@
-import { resolveImageUrl } from "@/lib/images";
 import ReactMarkdown from "react-markdown";
 import { Tweet } from "react-tweet";
+import { resolveImageUrl } from "@/lib/images";
 import {
   getTweetIdFromUrl,
   isValidTwitterUrl,
@@ -21,7 +21,8 @@ export const PostMarkdownContent = ({ content }: PostMarkdownContentProps) => {
         components={{
           img: ({ node, src, ...props }) => {
             src = src ? resolveImageUrl(src as string) : undefined;
-            // biome-ignore lint/a11y/useAltText: <explanation>
+            // biome-ignore lint/a11y/useAltText: ok
+            // biome-ignore lint/performance/noImgElement: ok
             return <img src={src} {...props} />; // eslint-disable-line @next/next/no-img-element
           },
           a: ({ node, href, ...props }) => {

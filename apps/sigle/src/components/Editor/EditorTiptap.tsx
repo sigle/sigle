@@ -1,5 +1,4 @@
 import "highlight.js/styles/night-owl.css";
-import { useWindowSize } from "@/hooks/useWindowSize";
 import TipTapBlockquote from "@tiptap/extension-blockquote";
 import TipTapBold from "@tiptap/extension-bold";
 import TipTapBulletList from "@tiptap/extension-bullet-list";
@@ -32,19 +31,20 @@ import { useParams } from "next/navigation";
 import { usePostHog } from "posthog-js/react";
 import { useFormContext } from "react-hook-form";
 import { Markdown } from "tiptap-markdown";
+import { useWindowSize } from "@/hooks/useWindowSize";
 import { EditorBottomInfo } from "./BottomInfo";
 import { EditorBubbleMenu } from "./BubbleMenu";
 import type { EditorPostFormData } from "./EditorFormProvider";
 import { EditorFloatingMenu } from "./FloatingMenu";
 import "./editor-tiptap.css";
-import { sigleApiClient } from "@/lib/sigle";
 import { toast } from "sonner";
+import { sigleApiClient } from "@/lib/sigle";
 import { CodeBlockComponent } from "./extensions/CodeBlock";
 import { TipTapImage } from "./extensions/Image";
 import { TipTapMobileScroll } from "./extensions/MobileScroll";
 import { TipTapPlaceholder } from "./extensions/Placeholder";
-import { SlashCommands } from "./extensions/SlashCommand/SlashCommands";
 import { slashCommands } from "./extensions/SlashCommand/commands";
+import { SlashCommands } from "./extensions/SlashCommand/SlashCommands";
 import { TipTapEmbed } from "./extensions/Twitter";
 import { useEditorStore } from "./store";
 
@@ -109,7 +109,7 @@ export const EditorTipTap = () => {
                   draftId: postId,
                 },
               },
-              // biome-ignore lint/suspicious/noExplicitAny: <explanation>
+              // biome-ignore lint/suspicious/noExplicitAny: ok
               body: formData as any,
             });
 
@@ -117,7 +117,7 @@ export const EditorTipTap = () => {
               postId,
             });
             return data.url;
-            // biome-ignore lint/suspicious/noExplicitAny: <explanation>
+            // biome-ignore lint/suspicious/noExplicitAny: ok
           } catch (error: any) {
             toast.error("Failed to upload image", {
               description: error.message,

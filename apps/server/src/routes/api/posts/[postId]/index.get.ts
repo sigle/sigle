@@ -1,7 +1,7 @@
 import {
+  prisma,
   SELECT_PUBLIC_POST_FIELDS,
   SELECT_PUBLIC_USER_FIELDS,
-  prisma,
 } from "~/lib/prisma";
 
 defineRouteMeta({

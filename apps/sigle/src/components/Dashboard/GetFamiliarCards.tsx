@@ -1,5 +1,5 @@
-import { appConfig } from "@/config";
 import { Card, Grid, Text } from "@radix-ui/themes";
+import { appConfig } from "@/config";
 import { NextLink } from "../Shared/NextLink";
 
 export const GetFamiliarCards = () => {

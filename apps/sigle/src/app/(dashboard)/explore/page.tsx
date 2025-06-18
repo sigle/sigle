@@ -1,5 +1,5 @@
-import { ExplorePostsList } from "@/components/Explore/Posts/List";
 import { Container, Heading, Text } from "@radix-ui/themes";
+import { ExplorePostsList } from "@/components/Explore/Posts/List";
 
 export const dynamic = "force-dynamic";
 

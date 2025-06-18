@@ -1,10 +1,10 @@
 "use client";
 
-import { cn } from "@/lib/cn";
 import * as SheetPrimitive from "@radix-ui/react-dialog";
 import { IconX } from "@tabler/icons-react";
-import { type VariantProps, cva } from "class-variance-authority";
+import { cva, type VariantProps } from "class-variance-authority";
 import * as React from "react";
+import { cn } from "@/lib/cn";
 
 const Sheet = SheetPrimitive.Root;
 

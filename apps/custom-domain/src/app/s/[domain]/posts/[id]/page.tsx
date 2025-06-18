@@ -1,13 +1,13 @@
+import { format } from "date-fns";
+import type { Metadata } from "next";
+import Image from "next/image";
+import { notFound } from "next/navigation";
 import { TableOfContents } from "@/components/Post/TableOfContents";
 import { TwitterEmbed } from "@/components/Post/TwitterEmbeds";
 import { PostCard } from "@/components/Shared/Post/Card";
 import { resolveImageUrl } from "@/lib/images";
 import { addIdsToHeadings, extractTableOfContents } from "@/lib/posts";
 import { sigleApiFetchClient } from "@/lib/sigle";
-import { format } from "date-fns";
-import type { Metadata } from "next";
-import Image from "next/image";
-import { notFound } from "next/navigation";
 
 export async function generateMetadata({
   params,

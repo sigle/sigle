@@ -1,4 +1,3 @@
-import { cn } from "@/lib/cn";
 import { Flex, ScrollArea, Text } from "@radix-ui/themes";
 import type { Icon } from "@tabler/icons-react";
 import {
@@ -8,6 +7,7 @@ import {
   useRef,
   useState,
 } from "react";
+import { cn } from "@/lib/cn";
 import type { SlashCommandsCommand } from "./SlashCommands";
 
 export interface CommandListRef {
@@ -26,7 +26,7 @@ export const CommandList = forwardRef<CommandListRef, CommandListProps>(
     const [selectedIndex, setSelectedIndex] = useState(0);
 
     // When filter is happening reset to index 0
-    // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
+    // biome-ignore lint/correctness/useExhaustiveDependencies: ok
     useEffect(() => setSelectedIndex(0), [items]);
 
     useImperativeHandle(ref, () => ({
@@ -153,6 +153,7 @@ const CommandListItem = ({
   selectItem(index: number): void;
 }) => {
   return (
+    // biome-ignore lint/a11y/noStaticElementInteractions: ok
     <div
       data-index={index}
       className={cn(

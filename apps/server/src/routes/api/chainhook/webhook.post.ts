@@ -27,10 +27,10 @@ export default defineEventHandler(async (event) => {
           const logEvents = transaction.metadata.receipt.events
             .filter((event) => event.type === "SmartContractEvent")
             .sort((a, b) => (a.position.index > b.position.index ? 1 : -1));
-          // biome-ignore lint/suspicious/noExplicitAny: <explanation>
+          // biome-ignore lint/suspicious/noExplicitAny: ok
           const deployLogEvent: Record<string, any> | undefined =
             logEvents[0] && logEvents[0].data.topic === "print"
-              ? // biome-ignore lint/suspicious/noExplicitAny: <explanation>
+              ? // biome-ignore lint/suspicious/noExplicitAny: ok
                 (logEvents[0].data as any).value
               : undefined;
 
@@ -96,7 +96,7 @@ export default defineEventHandler(async (event) => {
               | { a: "mint-enabled"; enabled: boolean }
               | { a: "reduce-supply"; "max-supply": number }
               | { a: "set-profile"; address: string; uri: string }
-              // biome-ignore lint/suspicious/noExplicitAny: <explanation>
+              // biome-ignore lint/suspicious/noExplicitAny: ok
               | { a: "set-base-token-uri"; uri: string } = (event.data as any)
               .value;
             switch (value.a) {

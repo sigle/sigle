@@ -17,7 +17,7 @@ export const CollectEdition = () => {
     });
   };
 
-  // biome-ignore lint/suspicious/noExplicitAny: <explanation>
+  // biome-ignore lint/suspicious/noExplicitAny: ok
   const limitErrorMessage = (errors?.collect?.collectLimit as any)?.limit
     ?.message;
 

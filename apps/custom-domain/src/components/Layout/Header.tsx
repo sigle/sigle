@@ -1,5 +1,10 @@
 "use client";
 
+import type { paths } from "@sigle/sdk";
+import { IconMenu2 } from "@tabler/icons-react";
+import Image from "next/image";
+import Link from "next/link";
+import { useEffect, useState } from "react";
 import {
   Sheet,
   SheetContent,
@@ -10,11 +15,6 @@ import {
 } from "@/components/ui/Sheet";
 import { cn } from "@/lib/cn";
 import { resolveImageUrl } from "@/lib/images";
-import type { paths } from "@sigle/sdk";
-import { IconMenu2 } from "@tabler/icons-react";
-import Image from "next/image";
-import Link from "next/link";
-import { useEffect, useState } from "react";
 
 interface HeaderProps {
   site: paths["/api/sites/{domain}"]["get"]["responses"]["200"]["content"]["application/json"];
