@@ -68,6 +68,7 @@ export default async function Image({
       <div tw="flex w-full items-center justify-between">
         <div tw="flex items-center">
           {avatar ? (
+            // biome-ignore lint/performance/noImgElement: ok
             <img
               tw="rounded-full"
               src={avatar}
@@ -92,6 +93,7 @@ export default async function Image({
           </div>
         </div>
         <div tw="flex flex-col items-center">
+          {/* biome-ignore lint/performance/noImgElement: ok */}
           <img
             src={"https://app.sigle.io/icon-192x192.png"}
             alt="Sigle logo"
