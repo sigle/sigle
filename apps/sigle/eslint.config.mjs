@@ -22,9 +22,8 @@ const eslintConfig = [
       "better-tailwindcss": eslintPluginBetterTailwindcss,
     },
     rules: {
-      ...eslintPluginBetterTailwindcss.configs["recommended-warn"].rules,
       ...eslintPluginBetterTailwindcss.configs["recommended-error"].rules,
-      "better-tailwindcss/multiline": "off",
+      "better-tailwindcss/enforce-consistent-line-wrapping": "off",
 
       "@typescript-eslint/no-explicit-any": "off",
       "@typescript-eslint/no-unused-vars": "off",
