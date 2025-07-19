@@ -14,11 +14,11 @@
     "version": "pnpm changeset version && pnpm install --lockfile-only"
   },
   "devDependencies": {
-    "@biomejs/biome": "2.0.5",
+    "@biomejs/biome": "2.1.2",
     "@changesets/cli": "2.29.5",
-    "lefthook": "1.11.14",
+    "lefthook": "1.12.2",
     "syncpack": "13.0.4",
-    "turbo": "2.5.4"
+    "turbo": "2.5.5"
   },
   "pnpm": {
     "neverBuiltDependencies": [],
