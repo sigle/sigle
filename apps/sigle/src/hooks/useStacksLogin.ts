@@ -15,7 +15,7 @@ import { create } from "zustand";
 import { env } from "@/env";
 import { authClient, signOut } from "@/lib/auth-client";
 import { useSession } from "@/lib/auth-hooks";
-import { appDetails, stacksNetwork, userSession } from "@/lib/stacks";
+import { stacksNetwork } from "@/lib/stacks";
 
 interface UserData {
   stxAddress: string;
@@ -78,7 +78,7 @@ export const useStacksLogin = () => {
   const signMessage = async (user: UserData) => {
     posthog.capture("user_login_sign_message");
 
-    const nonceData = await authClient.siws.nonce({ address });
+    const nonceData = await authClient.siws.nonce({ address: user.stxAddress });
     if (!nonceData.data?.nonce) {
       toast.error("Nonce not found");
       return;
@@ -107,29 +107,28 @@ export const useStacksLogin = () => {
       return;
     }
 
-    const signInResult = await signIn("credentials", {
+    const signInResult = await authClient.siws.verify({
       address: user.stxAddress,
-      message: message,
+      message,
       signature,
-      redirect: false,
     });
-    if (signInResult?.error) {
+    if (signInResult.error) {
       posthog.capture("user_login_sign_message_error", {
-        code: signInResult.code,
-        error: signInResult.error,
+        code: signInResult.error.code,
+        error: signInResult.error.message,
       });
       toast.error("Failed to login");
       return;
     }
-    if (signInResult?.ok && !signInResult?.error) {
-      posthog.capture("user_login_sign_message_success");
-      toast.success("You are now logged in");
-    }
+    refetchSession();
+    posthog.capture("user_login_sign_message_success");
+    toast.success("You are now logged in");
   };
 
   const logout = async () => {
     posthog.capture("user_logout");
     disconnect();
+    await signOut();
     window.location.href = "/api/logout";
   };
 
