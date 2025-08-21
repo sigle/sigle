@@ -1,5 +1,5 @@
-import type { paths } from "@/__generated__/sigle-api/openapi";
 import { zodResolver } from "@hookform/resolvers/zod";
+import type { paths } from "@sigle/sdk";
 import { formatBTC } from "@sigle/sdk";
 import { FormProvider, useForm } from "react-hook-form";
 import { z } from "zod";
@@ -11,6 +11,8 @@ const editorPostSchema = z.object({
   metaTitle: z.string().optional(),
   metaDescription: z.string().optional(),
   coverImage: z.string().optional(),
+  tags: z.array(z.string()).optional(),
+  canonicalUri: z.string().optional(),
   collect: z.object({
     collectPrice: z.object({
       type: z.enum(["free", "paid"] as const),
@@ -34,7 +36,7 @@ export const EditorFormProvider = ({
   children,
   post,
 }: EditorFormProviderProps) => {
-  const methods = useForm<EditorPostFormData>({
+  const methods = useForm({
     mode: "onBlur",
     resolver: zodResolver(editorPostSchema),
     defaultValues: {
@@ -44,6 +46,8 @@ export const EditorFormProvider = ({
       metaTitle: post.metaTitle || undefined,
       metaDescription: post.metaDescription || undefined,
       coverImage: post.coverImage || undefined,
+      tags: post.tags || [],
+      canonicalUri: post.canonicalUri || undefined,
       collect: {
         collectPrice: {
           type: post.collectPriceType || "free",

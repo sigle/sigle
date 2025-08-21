@@ -34,7 +34,8 @@ describe(contract, () => {
           [
             Cl.uint(100000), // Protocol fee
             Cl.uint(200000), // Creator fee
-            Cl.uint(50000), // Referrer fee
+            Cl.uint(60000), // Create referrer fee
+            Cl.uint(50000), // Mint referrer fee
           ],
           deployer,
         );
@@ -46,7 +47,7 @@ describe(contract, () => {
         const { result } = simnet.callPublicFn(
           contract,
           "update-fees",
-          [Cl.uint(100000), Cl.uint(200000), Cl.uint(50000)],
+          [Cl.uint(100000), Cl.uint(200000), Cl.uint(60000), Cl.uint(50000)],
           wallet1,
         );
 
@@ -106,111 +107,6 @@ describe(contract, () => {
     });
   });
 
-  describe("owner-mint", () => {
-    beforeEach(() => {
-      simnet.deployContract(
-        defaultContractName.split(".")[1],
-        defaultContract,
-        { clarityVersion: 3 },
-        wallet1,
-      );
-    });
-
-    it("allows contract owner to mint tokens for free", () => {
-      const quantity = 3;
-
-      const { result, events } = simnet.callPublicFn(
-        contract,
-        "owner-mint",
-        [
-          Cl.contractPrincipal(
-            defaultContractName.split(".")[0],
-            defaultContractName.split(".")[1],
-          ), // token contract
-          Cl.uint(quantity),
-          Cl.none(), // no specific recipient
-        ],
-        wallet1, // wallet1 is the contract owner
-      );
-
-      expect(result).toBeOk(Cl.bool(true));
-
-      // Check NFT minting events - should be 3 nft_mint_events
-      const mintEvents = events.filter((e) => e.event === "nft_mint_event");
-      expect(mintEvents.length).toBe(quantity);
-
-      // Important: Verify that NO sBTC transfer events occurred (free mint)
-      const transferEvents = events.filter(
-        (e) => e.event === "ft_transfer_event",
-      );
-      expect(transferEvents.length).toBe(0);
-
-      // Check token ownership after minting
-      for (let i = 1; i <= quantity; i++) {
-        const { result: tokenOwner } = simnet.callReadOnlyFn(
-          defaultContractName,
-          "get-owner",
-          [Cl.uint(i)],
-          wallet1,
-        );
-        expect(tokenOwner).toBeOk(Cl.some(Cl.principal(wallet1)));
-      }
-    });
-
-    it("allows contract owner to mint tokens for a specific recipient", () => {
-      const quantity = 2;
-
-      const { result, events } = simnet.callPublicFn(
-        contract,
-        "owner-mint",
-        [
-          Cl.contractPrincipal(
-            defaultContractName.split(".")[0],
-            defaultContractName.split(".")[1],
-          ),
-          Cl.uint(quantity),
-          Cl.some(Cl.principal(wallet3)), // mint to wallet3
-        ],
-        wallet1, // wallet1 is the contract owner
-      );
-
-      expect(result).toBeOk(Cl.bool(true));
-
-      // Check NFT minting events
-      const mintEvents = events.filter((e) => e.event === "nft_mint_event");
-      expect(mintEvents.length).toBe(quantity);
-
-      // Check that tokens were minted to wallet3
-      for (let i = 1; i <= quantity; i++) {
-        const { result: tokenOwner } = simnet.callReadOnlyFn(
-          defaultContractName,
-          "get-owner",
-          [Cl.uint(i)],
-          wallet1,
-        );
-        expect(tokenOwner).toBeOk(Cl.some(Cl.principal(wallet3)));
-      }
-    });
-
-    it("prevents non-owner from using owner-mint", () => {
-      const { result } = simnet.callPublicFn(
-        contract,
-        "owner-mint",
-        [
-          Cl.contractPrincipal(
-            defaultContractName.split(".")[0],
-            defaultContractName.split(".")[1],
-          ),
-          Cl.uint(1),
-          Cl.none(),
-        ],
-        wallet2, // wallet2 is not the contract owner
-      );
-
-      expect(result).toBeErr(Cl.uint(403)); // ERR-NOT-AUTHORIZED
-    });
-  });
-
   describe("fees", () => {
     it("fees should match the SDK values for free mints", () => {
       simnet.deployContract(
@@ -258,6 +154,16 @@ describe(contract, () => {
       expect(events[2]).toEqual({
         event: "ft_transfer_event",
         data: {
+          amount: fixedMintFee.createReferrer.toString(),
+          asset_identifier:
+            "SM3VDXK3WZZSA84XXFKAFAF15NNZX32CTSG82JFQ4.sbtc-token::sbtc-token",
+          recipient: deployer,
+          sender: wallet2,
+        },
+      });
+      expect(events[3]).toEqual({
+        event: "ft_transfer_event",
+        data: {
           amount: fixedMintFee.mintReferrer.toString(),
           asset_identifier:
             "SM3VDXK3WZZSA84XXFKAFAF15NNZX32CTSG82JFQ4.sbtc-token::sbtc-token",
@@ -265,6 +171,7 @@ describe(contract, () => {
           sender: wallet2,
         },
       });
+      expect(events.length).toBe(6);
     });
 
     it("fees should match the SDK values for paid mints", () => {
@@ -322,6 +229,16 @@ describe(contract, () => {
       expect(events[2]).toEqual({
         event: "ft_transfer_event",
         data: {
+          amount: fixedMintFee.createReferrer.toString(),
+          asset_identifier:
+            "SM3VDXK3WZZSA84XXFKAFAF15NNZX32CTSG82JFQ4.sbtc-token::sbtc-token",
+          recipient: deployer,
+          sender: wallet2,
+        },
+      });
+      expect(events[3]).toEqual({
+        event: "ft_transfer_event",
+        data: {
           amount: fixedMintFee.mintReferrer.toString(),
           asset_identifier:
             "SM3VDXK3WZZSA84XXFKAFAF15NNZX32CTSG82JFQ4.sbtc-token::sbtc-token",
@@ -329,6 +246,83 @@ describe(contract, () => {
           sender: wallet2,
         },
       });
+      expect(events.length).toBe(6);
+    });
+
+    it("fees should respect the create referrer fee for mints", () => {
+      const { contract: defaultContract } = sigleClient.generatePostContract({
+        collectInfo: {
+          amount: 42000,
+          maxSupply: 100,
+          createReferrer: wallet3,
+        },
+        metadata: "ipfs://anything",
+      });
+      const defaultContractName = `${wallet1}.default-contract`;
+
+      simnet.deployContract(
+        defaultContractName.split(".")[1],
+        defaultContract,
+        { clarityVersion: 3 },
+        wallet1,
+      );
+
+      const { events } = simnet.callPublicFn(
+        contract,
+        "mint",
+        [
+          Cl.contractPrincipal(
+            defaultContractName.split(".")[0],
+            defaultContractName.split(".")[1],
+          ),
+          Cl.uint(1),
+          Cl.none(),
+          Cl.none(), // no specific recipient
+        ],
+        wallet2,
+      );
+
+      expect(events[0]).toEqual({
+        event: "ft_transfer_event",
+        data: {
+          amount: fixedMintFee.protocol.toString(),
+          asset_identifier:
+            "SM3VDXK3WZZSA84XXFKAFAF15NNZX32CTSG82JFQ4.sbtc-token::sbtc-token",
+          recipient: deployer,
+          sender: wallet2,
+        },
+      });
+      expect(events[1]).toEqual({
+        event: "ft_transfer_event",
+        data: {
+          amount: (42000n + fixedMintFee.creator).toString(),
+          asset_identifier:
+            "SM3VDXK3WZZSA84XXFKAFAF15NNZX32CTSG82JFQ4.sbtc-token::sbtc-token",
+          recipient: wallet1,
+          sender: wallet2,
+        },
+      });
+      expect(events[2]).toEqual({
+        event: "ft_transfer_event",
+        data: {
+          amount: fixedMintFee.createReferrer.toString(),
+          asset_identifier:
+            "SM3VDXK3WZZSA84XXFKAFAF15NNZX32CTSG82JFQ4.sbtc-token::sbtc-token",
+          recipient: wallet3,
+          sender: wallet2,
+        },
+      });
+      expect(events[3]).toEqual({
+        event: "ft_transfer_event",
+        data: {
+          amount: fixedMintFee.mintReferrer.toString(),
+          asset_identifier:
+            "SM3VDXK3WZZSA84XXFKAFAF15NNZX32CTSG82JFQ4.sbtc-token::sbtc-token",
+          recipient: deployer,
+          sender: wallet2,
+        },
+      });
+      expect(events.length).toBe(6);
     });
   });
 
@@ -373,6 +367,7 @@ describe(contract, () => {
           price: Cl.uint(2000000),
           "start-block": Cl.uint(20),
           "end-block": Cl.uint(200),
+          "create-referrer": Cl.none(),
         }),
       );
     });

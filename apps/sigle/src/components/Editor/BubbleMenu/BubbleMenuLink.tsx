@@ -1,6 +1,6 @@
-import { cn } from "@/lib/cn";
 import { IconX } from "@tabler/icons-react";
 import type { Editor } from "@tiptap/react";
+import { cn } from "@/lib/cn";
 import { useBubbleMenuStore } from "./store";
 
 const BubbleMenuButton = ({
@@ -11,7 +11,7 @@ const BubbleMenuButton = ({
     {...props}
     className={cn({
       "text-gray-1": !active,
-      "text-indigo-7 dark:text-indigo-9": active,
+      "text-orange-7 dark:text-orange-9": active,
     })}
   />
 );
@@ -76,12 +76,12 @@ export const EditorBubbleMenuLink = ({ editor }: EditorBubbleMenuProps) => {
   return (
     <form className="flex" onSubmit={onSubmitLink}>
       <input
-        className="w-full bg-transparent pl-2 pr-1 outline-none"
+        className="w-full bg-transparent pr-1 pl-2 outline-none"
         value={linkValue}
         onKeyDown={onKeyDown}
         onChange={(e) => setLinkValue(e.target.value)}
         placeholder="Enter link ..."
-        // biome-ignore lint/a11y/noAutofocus: <explanation>
+        // biome-ignore lint/a11y/noAutofocus: ok
         autoFocus
       />
       <BubbleMenuButton

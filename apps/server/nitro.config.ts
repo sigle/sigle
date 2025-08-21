@@ -1,9 +1,12 @@
+import { defineNitroConfig } from "nitropack/config";
+
 export default defineNitroConfig({
   srcDir: "src",
-  compatibilityDate: "2024-11-02",
+  imports: false,
+  compatibilityDate: "latest",
   esbuild: {
     options: {
-      target: "es2022",
+      target: "es2023",
     },
   },
   openAPI: {

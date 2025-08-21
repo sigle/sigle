@@ -1,7 +1,7 @@
-import type { paths } from "@/__generated__/sigle-api/openapi";
+import { Text } from "@radix-ui/themes";
+import type { paths } from "@sigle/sdk";
 import { Routes } from "@/lib/routes";
 import { formatReadableAddress } from "@/lib/stacks";
-import { Text } from "@radix-ui/themes";
 import { NextLink } from "../Shared/NextLink";
 import { ProfileMarkdownDescription } from "../Shared/Profile/MarkdownDescription";
 import { ProfileAvatar } from "../Shared/Profile/ProfileAvatar";

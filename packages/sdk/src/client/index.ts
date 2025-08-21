@@ -9,7 +9,11 @@ import {
   generatePostContract,
 } from "./generate-post-contract.js";
 import { type MintParams, mint } from "./mint.js";
-import { SetBaseTokenUriParams, setBaseTokenUri } from "./setBaseTokenUri.js";
+import { type OwnerMintParams, ownerMint } from "./ownerMint.js";
+import {
+  type SetBaseTokenUriParams,
+  setBaseTokenUri,
+} from "./setBaseTokenUri.js";
 import { type SetProfileParams, setProfile } from "./setProfile.js";
 
 interface CreateClientOptions {
@@ -33,6 +37,8 @@ export const createClient = (options: CreateClientOptions) => {
   return {
     mint: (params: MintParams) =>
       mint({ network: options.network, networkName, params }),
+    ownerMint: (params: OwnerMintParams) =>
+      ownerMint({ network: options.network, params }),
     generatePostContract: (params: GeneratePostParams) =>
       generatePostContract({
         params,

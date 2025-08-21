@@ -1,3 +1,5 @@
+import { createError, defineEventHandler, getRouterParam } from "h3";
+import { defineRouteMeta } from "nitropack/runtime";
 import { prisma } from "~/lib/prisma";
 
 defineRouteMeta({
@@ -33,6 +35,15 @@ defineRouteMeta({
                   type: "string",
                 },
                 coverImage: {
+                  type: "string",
+                },
+                tags: {
+                  type: "array",
+                  items: {
+                    type: "string",
+                  },
+                },
+                canonicalUri: {
                   type: "string",
                 },
                 collectPriceType: {
@@ -123,6 +134,8 @@ export default defineEventHandler<
       metaTitle: true,
       metaDescription: true,
       coverImage: true,
+      tags: true,
+      canonicalUri: true,
       collectPriceType: true,
       collectPrice: true,
       collectLimitType: true,
@@ -148,10 +161,12 @@ export default defineEventHandler<
         metaTitle: true,
         metaDescription: true,
         coverImageId: true,
+        tags: true,
+        canonicalUri: true,
         txId: true,
-        price: true,
         openEdition: true,
         maxSupply: true,
+        minterFixedPrice: true,
         createdAt: true,
         updatedAt: true,
       },
@@ -176,10 +191,15 @@ export default defineEventHandler<
       metaTitle: published.metaTitle,
       metaDescription: published.metaDescription,
       coverImage: published.coverImageId,
+      tags: published.tags,
+      canonicalUri: published.canonicalUri,
       txId: published.txId,
-      collectPriceType: published.price > 0 ? "paid" : "free",
-      collectPrice: published.price,
-      collectLimitType: published.openEdition ? "open" : "closed",
+      collectPriceType:
+        published.minterFixedPrice && published.minterFixedPrice.price > 0
+          ? "paid"
+          : "free",
+      collectPrice: published.minterFixedPrice?.price,
+      collectLimitType: published.openEdition ? "open" : "fixed",
       collectLimit: published.maxSupply,
       createdAt: published.createdAt,
       updatedAt: published.updatedAt,

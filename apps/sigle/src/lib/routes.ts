@@ -1,7 +1,7 @@
 "use client";
 
 import {
-  ReadonlyURLSearchParams,
+  type ReadonlyURLSearchParams,
   useParams as useNextParams,
   useSearchParams as useNextSearchParams,
 } from "next/navigation";
@@ -29,6 +29,11 @@ export const Routes = {
     ({ postId }) => `/p/${postId}/edit`,
     z.object({
       postId: z.string(),
+    }),
+    z.object({
+      // This option is used for the migration, to force the post html to be converted to markdown
+      // Once the migration is done, we can remove this option
+      forceSave: z.string().optional().nullable(),
     }),
   ),
   dashboard: makeRoute(() => "/dashboard"),

@@ -1,10 +1,10 @@
 "use client";
 
-import { sigleApiClient } from "@/__generated__/sigle-api";
-import { Routes } from "@/lib/routes";
 import { Button, Card, Flex, Heading, Text } from "@radix-ui/themes";
 import { format } from "date-fns";
-import { useSession } from "next-auth/react";
+import { useSession } from "@/lib/auth-hooks";
+import { Routes } from "@/lib/routes";
+import { sigleApiClient } from "@/lib/sigle";
 import { NextLink } from "../Shared/NextLink";
 
 export const LatestPost = () => {
@@ -21,7 +21,7 @@ export const LatestPost = () => {
       },
     },
   );
-  const post = posts[0];
+  const post = posts.results[0];
 
   return (
     <div>
@@ -58,13 +58,14 @@ export const LatestPost = () => {
                 asChild
               >
                 <NextLink href={Routes.post({ postId: post.id })}>
-                  View story
+                  View post
                 </NextLink>
               </Button>
             </div>
 
-            <div className="-mb-4 mt-5">
-              <Flex
+            <div className="mt-5 -mb-4">
+              {/* TODO once we have that info from backend */}
+              {/* <Flex
                 gap="5"
                 align="center"
                 justify="between"
@@ -80,7 +81,7 @@ export const LatestPost = () => {
                     sBTC
                   </Text>
                 </Text>
-              </Flex>
+              </Flex> */}
               <Flex
                 gap="5"
                 align="center"

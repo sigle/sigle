@@ -4,6 +4,7 @@ import {
   IconBrandGithubFilled,
   IconBrandXFilled,
 } from "@tabler/icons-react";
+import { appConfig } from "@/config";
 
 export const Footer = () => {
   return (
@@ -17,17 +18,29 @@ export const Footer = () => {
                 © {new Date().getFullYear()} Sigle
               </Text>
               <IconButton variant="ghost" color="gray" asChild>
-                <a href="https://app.sigle.io/twitter" target="_blank">
+                <a
+                  href="https://app.sigle.io/twitter"
+                  target="_blank"
+                  rel="noreferrer"
+                >
                   <IconBrandXFilled size={16} />
                 </a>
               </IconButton>
               <IconButton variant="ghost" color="gray" asChild>
-                <a href="https://app.sigle.io/discord" target="_blank">
+                <a
+                  href="https://app.sigle.io/discord"
+                  target="_blank"
+                  rel="noreferrer"
+                >
                   <IconBrandDiscordFilled size={16} />
                 </a>
               </IconButton>
               <IconButton variant="ghost" color="gray" asChild>
-                <a href="https://app.sigle.io/github" target="_blank">
+                <a
+                  href="https://app.sigle.io/github"
+                  target="_blank"
+                  rel="noreferrer"
+                >
                   <IconBrandGithubFilled size={16} />
                 </a>
               </IconButton>
@@ -39,7 +52,7 @@ export const Footer = () => {
               <Link
                 size="2"
                 color="gray"
-                href="https://docs.sigle.io"
+                href={appConfig.docsUrl}
                 target="_blank"
               >
                 Docs

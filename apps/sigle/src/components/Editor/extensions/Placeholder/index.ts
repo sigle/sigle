@@ -9,7 +9,8 @@ const Placeholder = (isMobile: boolean) => {
         const level = node.attrs.level as number;
         if (level === 2) {
           return "Big Heading";
-        } else if (level === 3) {
+        }
+        if (level === 3) {
           return "Small Heading";
         }
       }
@@ -21,7 +22,7 @@ const Placeholder = (isMobile: boolean) => {
           parentNode.type.name === "doc" &&
           editor.getJSON().content?.length === 1
         ) {
-          return "Start your story here...";
+          return "Start your post here...";
         }
 
         if (parentNode.type.name === "listItem") {

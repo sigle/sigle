@@ -1,24 +1,35 @@
 import { z } from "zod";
 import { consola } from "~/lib/consola";
 import { defineJob } from "~/lib/jobs";
-import { executeIndexerMintJob, indexerMintSchema } from "./mint";
+import {
+  executeIndexerInitMintDetailsJob,
+  indexerInitMintDetailsSchema,
+} from "./minter-fixed-price/init-mint-details";
+import {
+  executeIndexerMintJob,
+  indexerMintSchema,
+} from "./minter-fixed-price/mint";
+import {
+  executeIndexerSetMintDetailsJob,
+  indexerSetMintDetailsSchema,
+} from "./minter-fixed-price/set-mint-details";
 import {
   executeIndexerMintEnabledJob,
   indexerMintEnabledSchema,
-} from "./mint-enabled";
-import { executeNewPostJob, indexerNewPostSchema } from "./new-post";
+} from "./post/mint-enabled";
+import { executeNewPostJob, indexerNewPostSchema } from "./post/new-post";
 import {
   executeIndexerReduceSupplyJob,
   indexerReduceSupplySchema,
-} from "./reduce-supply";
+} from "./post/reduce-supply";
 import {
   executeIndexerSetBaseTokenUriJob,
   indexerSetBaseTokenUriSchema,
-} from "./set-base-token-uri";
+} from "./post/set-base-token-uri";
 import {
   executeIndexerSetProfileJob,
   indexerSetProfileSchema,
-} from "./set-profile";
+} from "./profile/set-profile";
 
 export const indexerJob = defineJob("indexer")
   .input(
@@ -29,6 +40,8 @@ export const indexerJob = defineJob("indexer")
       indexerSetProfileSchema,
       indexerReduceSupplySchema,
       indexerSetBaseTokenUriSchema,
+      indexerInitMintDetailsSchema,
+      indexerSetMintDetailsSchema,
     ]),
   )
   .options({
@@ -55,6 +68,12 @@ export const indexerJob = defineJob("indexer")
         break;
       case "indexer-set-profile":
         await executeIndexerSetProfileJob(job.data.data);
+        break;
+      case "indexer-init-mint-details":
+        await executeIndexerInitMintDetailsJob(job.data.data);
+        break;
+      case "indexer-set-mint-details":
+        await executeIndexerSetMintDetailsJob(job.data.data);
         break;
 
       default:

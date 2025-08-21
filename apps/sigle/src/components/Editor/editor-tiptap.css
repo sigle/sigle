@@ -1,3 +1,5 @@
+@reference "#global.css";
+
 .editor {
   @apply mt-8;
 }

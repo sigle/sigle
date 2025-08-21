@@ -42,7 +42,7 @@ const { parameters } = await sigleClient.mint({
   // Optionally, set a referral address to receive the referral fee
   referral: 'SP2X0TZ59D5SZ8ACQ6YMCHHNR2ZN51Z32E2CJ173',
   // Price of 1 NFT
-  price: post.price,
+  price: post.minterFixedPrice.price,
 });
 
 openContractCall({

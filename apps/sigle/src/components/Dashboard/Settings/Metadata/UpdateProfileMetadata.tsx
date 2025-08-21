@@ -1,18 +1,17 @@
-import { sigleApiClient } from "@/__generated__/sigle-api";
-import type { paths } from "@/__generated__/sigle-api/openapi";
-import { useContractCall } from "@/hooks/useContractCall";
-import { sigleClient } from "@/lib/sigle";
-import {
-  getExplorerTransactionUrl,
-  getPromiseTransactionConfirmation,
-} from "@/lib/stacks";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button, Flex, Text, TextArea, TextField } from "@radix-ui/themes";
+import type { paths } from "@sigle/sdk";
 import { createProfileMetadata } from "@sigle/sdk";
 import { IconAt, IconBrandX } from "@tabler/icons-react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
+import { useContractCall } from "@/hooks/useContractCall";
+import { sigleApiClient, sigleClient } from "@/lib/sigle";
+import {
+  getExplorerTransactionUrl,
+  getPromiseTransactionConfirmation,
+} from "@/lib/stacks";
 import { UploadProfileCoverPicture } from "./UploadProfileCoverPicture";
 import { UploadProfilePicture } from "./UploadProfilePicture";
 
@@ -24,10 +23,6 @@ const updateProfileMetadataSchema = z.object({
   picture: z.string().optional(),
   coverPicture: z.string().optional(),
 });
-
-type UpdateProfileMetadataFormData = z.infer<
-  typeof updateProfileMetadataSchema
->;
 
 interface UpdateProfileMetadataProps {
   profile: paths["/api/users/{username}"]["get"]["responses"]["200"]["content"]["application/json"]["profile"];
@@ -42,7 +37,7 @@ export const UpdateProfileMetadata = ({
     "post",
     "/api/protected/user/profile/upload-metadata",
     {
-      onError: (error: any) => {
+      onError: (error) => {
         toast.error("Failed to update profile", {
           description: error.message,
         });
@@ -64,7 +59,7 @@ export const UpdateProfileMetadata = ({
       });
     },
     onError: (error) => {
-      toast.error("Failed to collect", {
+      toast.error("Failed to update profile", {
         description: error,
       });
     },
@@ -76,7 +71,7 @@ export const UpdateProfileMetadata = ({
     setValue,
     getValues,
     formState: { errors, isSubmitting },
-  } = useForm<UpdateProfileMetadataFormData>({
+  } = useForm({
     resolver: zodResolver(updateProfileMetadataSchema),
     values: {
       displayName: profile?.displayName || undefined,
@@ -102,7 +97,7 @@ export const UpdateProfileMetadata = ({
 
     const data = await uploadProfileMetadata({
       body: {
-        metadata: metadata as any,
+        metadata: metadata as unknown as Record<string, never>,
       },
     });
 
@@ -163,7 +158,7 @@ export const UpdateProfileMetadata = ({
             Website
           </Text>
           <TextField.Root
-            placeholder="https://sigle.io"
+            placeholder="https://my-website.com"
             {...register("website")}
           />
           {errors.website && (

@@ -1,11 +1,8 @@
+import { createError, defineEventHandler } from "h3";
+import { defineRouteMeta } from "nitropack/runtime";
 import { z } from "zod";
-import { env } from "~/env";
-import { ipfsUploadFile } from "~/lib/filebase";
-import {
-  allowedFormats,
-  mimeTypeToExtension,
-  optimizeImage,
-} from "~/lib/images";
+import { allowedFormats, optimizeImage } from "~/lib/images";
+import { ipfsUploadFile } from "~/lib/ipfs-upload";
 import { readMultipartFormDataSafe } from "~/lib/nitro";
 
 defineRouteMeta({
@@ -37,12 +34,21 @@ defineRouteMeta({
           "application/json": {
             schema: {
               type: "object",
-              required: ["cid", "url", "gatewayUrl"],
+              required: ["cid", "url"],
               properties: {
                 cid: { type: "string" },
                 url: { type: "string" },
-                gatewayUrl: { type: "string" },
               },
+            },
+          },
+        },
+      },
+      400: {
+        description: "Bad request",
+        content: {
+          "application/json": {
+            schema: {
+              $ref: "#/components/schemas/BadRequest",
             },
           },
         },
@@ -84,9 +90,6 @@ export default defineEventHandler(async (event) => {
   });
 
   const { cid } = await ipfsUploadFile(event, {
-    path: `${event.context.user.id}/profile-cover.${mimeTypeToExtension(
-      parsedFile.data.type,
-    )}`,
     content: optimizedBuffer,
   });
 
@@ -101,6 +104,5 @@ export default defineEventHandler(async (event) => {
   return {
     cid: cid.toString(),
     url: `ipfs://${cid}`,
-    gatewayUrl: `${env.IPFS_GATEWAY_URL}/ipfs/${cid}`,
   };
 });

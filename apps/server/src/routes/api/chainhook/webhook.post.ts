@@ -1,7 +1,9 @@
 import type { Payload } from "@hirosystems/chainhook-client";
+import { createError, defineEventHandler, readBody } from "h3";
 import { env } from "~/env";
 import { indexerJob } from "~/jobs/indexer/index";
 import { consola } from "~/lib/consola";
+import { sigleConfig } from "~/lib/sigle";
 
 export default defineEventHandler(async (event) => {
   const chainhook = await readBody<Payload>(event);
@@ -26,18 +28,18 @@ export default defineEventHandler(async (event) => {
           const logEvents = transaction.metadata.receipt.events
             .filter((event) => event.type === "SmartContractEvent")
             .sort((a, b) => (a.position.index > b.position.index ? 1 : -1));
-          const deployLogEvent = logEvents[0];
-          const setMintDetailsLogEvent = logEvents[1];
+          // biome-ignore lint/suspicious/noExplicitAny: ok
+          const deployLogEvent: Record<string, any> | undefined =
+            logEvents[0] && logEvents[0].data.topic === "print"
+              ? // biome-ignore lint/suspicious/noExplicitAny: ok
+                (logEvents[0].data as any).value
+              : undefined;
 
           // This condition can be removed once we can add predicates for contract_deployment matching a trait implementation
           const isSiglePost =
             deployLogEvent &&
-            setMintDetailsLogEvent &&
-            deployLogEvent.data.topic === "print" &&
-            (deployLogEvent.data as any).value.a === "publish-content";
-
-          // TODO setup and verify log payload
-          // TODO extra security: check that the contract is following the template exported by the SDK
+            deployLogEvent.a === "publish-content" &&
+            deployLogEvent.minter === sigleConfig.fixedPriceMinter;
 
           if (isSiglePost) {
             const txId = transaction.transaction_identifier.hash;
@@ -50,7 +52,6 @@ export default defineEventHandler(async (event) => {
                 blockHeight: block.block_identifier.index,
                 version: 1,
                 contract: transaction.metadata.kind.data.code,
-                price: (setMintDetailsLogEvent.data as any).value.price,
                 sender: transaction.metadata.sender,
                 createdAt: new Date(block.metadata.block_time * 1000),
               },
@@ -78,6 +79,7 @@ export default defineEventHandler(async (event) => {
           for (const event of events) {
             const value:
               | { a: "mint"; contract: string; quantity: number }
+              | { a: "owner-mint"; recipient?: string; "token-id": number }
               | {
                   a: "init-mint-details";
                   contract: string;
@@ -95,9 +97,9 @@ export default defineEventHandler(async (event) => {
               | { a: "mint-enabled"; enabled: boolean }
               | { a: "reduce-supply"; "max-supply": number }
               | { a: "set-profile"; address: string; uri: string }
-              | { a: "set-base-token-uri"; uri: string } =
-              // @ts-expect-error the types are not correct for value here
-              event.data.value;
+              // biome-ignore lint/suspicious/noExplicitAny: ok
+              | { a: "set-base-token-uri"; uri: string } = (event.data as any)
+              .value;
             switch (value.a) {
               case "mint":
                 await indexerJob.emit({
@@ -118,11 +120,46 @@ export default defineEventHandler(async (event) => {
                   },
                 });
                 break;
+              case "owner-mint":
+                await indexerJob.emit({
+                  action: "indexer-mint",
+                  data: {
+                    address: contractAddress,
+                    quantity: 1,
+                    nftMintEvents: transaction.metadata.receipt.events
+                      .filter((event) => event.type === "NFTMintEvent")
+                      .map((event) => ({
+                        ...event.data,
+                        // Type is string, but actual value is a number
+                        // We cast it to a string to match the type
+                        asset_identifier: String(event.data.asset_identifier),
+                      })),
+                    sender: transaction.metadata.sender,
+                    timestamp: new Date(block.metadata.block_time * 1000),
+                  },
+                });
+                break;
               case "init-mint-details":
-                // We safely ignore this event as it's already handled in the contract deploy section
+                await indexerJob.emit({
+                  action: "indexer-init-mint-details",
+                  data: {
+                    address: value.contract,
+                    price: value.price,
+                    startBlock: value["start-block"],
+                    endBlock: value["end-block"],
+                  },
+                });
                 break;
               case "set-mint-details":
-                // TODO
+                await indexerJob.emit({
+                  action: "indexer-set-mint-details",
+                  data: {
+                    address: value.contract,
+                    price: value.price,
+                    startBlock: value["start-block"],
+                    endBlock: value["end-block"],
+                  },
+                });
                 break;
               case "mint-enabled":
                 await indexerJob.emit({

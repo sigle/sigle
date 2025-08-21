@@ -1,16 +1,12 @@
 import { TurboFactory } from "@ardrive/turbo-sdk";
-import type { H3Event } from "h3";
-import IPFS from "ipfs-only-hash";
+import { createError, type H3Event } from "h3";
 import { env } from "~/env";
+import { createCIDv1FromBuffer } from "./ipfs";
 
 const turboClient = TurboFactory.authenticated({
   privateKey: env.ARWEAVE_PRIVATE_KEY,
   token: "solana",
 });
-
-export const generateCID = async (content: Buffer) => {
-  return await IPFS.of(content);
-};
 
 interface ArweaveTag {
   name: string;
@@ -29,7 +25,7 @@ export const aerweaveUploadFile = async (
 ) => {
   const file = Buffer.from(JSON.stringify(metadata));
   const fileSize = file.byteLength;
-  const cid = await generateCID(file);
+  const cid = await createCIDv1FromBuffer(file);
 
   const arweaveTags: ArweaveTag[] = [
     {

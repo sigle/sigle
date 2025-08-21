@@ -4,11 +4,10 @@ import type { NextConfig } from "next";
 const nextConfig: NextConfig = {
   output: "standalone",
   images: {
-    // TODO find a better way to do this
     remotePatterns: [
       {
         protocol: "https",
-        hostname: "ipfs.io",
+        hostname: "*.ipfs.w3s.link",
         port: "",
         search: "",
       },

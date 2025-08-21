@@ -1,12 +1,12 @@
-import { sigleApiClient } from "@/__generated__/sigle-api";
-import { cn } from "@/lib/cn";
-import { resolveImageUrl } from "@/lib/images";
 import { Avatar, Spinner, Text } from "@radix-ui/themes";
 import { IconPencil } from "@tabler/icons-react";
 import { usePostHog } from "posthog-js/react";
 import { useCallback } from "react";
 import { useDropzone } from "react-dropzone";
 import { toast } from "sonner";
+import { cn } from "@/lib/cn";
+import { resolveImageUrl } from "@/lib/images";
+import { sigleApiClient } from "@/lib/sigle";
 
 interface UploadProfilePictureProps {
   picture?: string;
@@ -24,7 +24,7 @@ export const UploadProfilePicture = ({
       "/api/protected/user/profile/upload-avatar",
     );
 
-  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
+  // biome-ignore lint/correctness/useExhaustiveDependencies: ok
   const onDrop = useCallback(async (acceptedFiles: File[]) => {
     const file = acceptedFiles[0];
     if (!file) return;
@@ -35,7 +35,7 @@ export const UploadProfilePicture = ({
     formData.append("file", file);
     uploadImage(
       {
-        // biome-ignore lint/suspicious/noExplicitAny: <explanation>
+        // biome-ignore lint/suspicious/noExplicitAny: ok
         body: formData as any,
       },
       {
@@ -43,13 +43,12 @@ export const UploadProfilePicture = ({
           setPicture(data.url);
           posthog.capture("profile_image_upload_success", {});
         },
-        onError: (error: any) => {
+        onError: (error) => {
           posthog.capture("profile_image_upload_error", {});
           toast.error(error.message);
         },
       },
     );
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const { getRootProps, getInputProps } = useDropzone({

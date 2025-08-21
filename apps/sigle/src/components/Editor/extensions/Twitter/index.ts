@@ -111,9 +111,9 @@ const Embed = Node.create({
            * the link plugin.
            */
 
-          // biome-ignore lint/suspicious/noExplicitAny: <explanation>
+          // biome-ignore lint/suspicious/noExplicitAny: ok
           setup(markdownit: any) {
-            // biome-ignore lint/suspicious/noExplicitAny: <explanation>
+            // biome-ignore lint/suspicious/noExplicitAny: ok
             function twitterTransformer(state: any) {
               for (let i = 0; i < state.tokens.length; i++) {
                 // We check for all links inside a full paragraph
@@ -146,7 +146,7 @@ const Embed = Node.create({
               }
             }
 
-            // biome-ignore lint/suspicious/noExplicitAny: <explanation>
+            // biome-ignore lint/suspicious/noExplicitAny: ok
             const parser = (md: any) => {
               md.core.ruler.push("twitter_transformer", twitterTransformer);
             };
@@ -161,7 +161,7 @@ const Embed = Node.create({
          * We serialize it as a link so it can be rendered as a link in other clients.
          */
 
-        // biome-ignore lint/suspicious/noExplicitAny: <explanation>
+        // biome-ignore lint/suspicious/noExplicitAny: ok
         serialize(state: any, node: any) {
           // If url is not defined, we don't want to serialize the node
           if (!node.attrs.url) return;

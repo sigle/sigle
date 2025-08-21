@@ -8,6 +8,7 @@ if (process.env.NODE_ENV !== "production") globalForPrisma.prisma = prisma;
 
 export const SELECT_PUBLIC_USER_FIELDS = {
   id: true,
+  flag: true,
   createdAt: true,
   updatedAt: true,
   profile: {
@@ -21,4 +22,26 @@ export const SELECT_PUBLIC_USER_FIELDS = {
       coverPictureUri: true,
     },
   },
+};
+
+export const SELECT_PUBLIC_POST_FIELDS = {
+  id: true,
+  address: true,
+  title: true,
+  content: true,
+  metaTitle: true,
+  metaDescription: true,
+  coverImage: true,
+  excerpt: true,
+  tags: true,
+  canonicalUri: true,
+  txId: true,
+  maxSupply: true,
+  collected: true,
+  openEdition: true,
+  metadataUri: true,
+  createdAt: true,
+  updatedAt: true,
+  // Relations
+  minterFixedPrice: true,
 };

@@ -1,9 +1,9 @@
 "use client";
 
-import { sigleApiClient } from "@/__generated__/sigle-api";
-import { Routes } from "@/lib/routes";
-import { formatReadableAddress } from "@/lib/stacks";
 import { Button, Card, Container, Heading, Text } from "@radix-ui/themes";
+import { Routes } from "@/lib/routes";
+import { sigleApiClient } from "@/lib/sigle";
+import { formatReadableAddress } from "@/lib/stacks";
 import { NextLink } from "../Shared/NextLink";
 import { ProfileAvatar } from "../Shared/Profile/ProfileAvatar";
 import {
@@ -43,7 +43,9 @@ export const HomeTrendingUsers = () => {
                 size="2"
                 className="flex flex-col items-center gap-2 p-5"
               >
-                <ProfileAvatar user={user} size="8" />
+                <NextLink href={Routes.userProfile({ username: user.id })}>
+                  <ProfileAvatar user={user} size="8" />
+                </NextLink>
                 <Text
                   as="p"
                   size="3"

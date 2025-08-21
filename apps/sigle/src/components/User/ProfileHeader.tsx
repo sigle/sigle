@@ -1,16 +1,16 @@
 "use client";
 
-import type { paths } from "@/__generated__/sigle-api/openapi";
+import { Button, Container, DropdownMenu, IconButton } from "@radix-ui/themes";
+import type { paths } from "@sigle/sdk";
+import { IconDotsVertical, IconPencil } from "@tabler/icons-react";
+import Image from "next/image";
+import { usePostHog } from "posthog-js/react";
 import { env } from "@/env";
 import { useCopyToClipboard } from "@/hooks/useCopyToClipboard";
+import { useSession } from "@/lib/auth-hooks";
 import { cn } from "@/lib/cn";
 import { resolveImageUrl } from "@/lib/images";
 import { Routes } from "@/lib/routes";
-import { Button, Container, DropdownMenu, IconButton } from "@radix-ui/themes";
-import { IconDotsVertical, IconPencil } from "@tabler/icons-react";
-import { useSession } from "next-auth/react";
-import Image from "next/image";
-import { usePostHog } from "posthog-js/react";
 import { NextLink } from "../Shared/NextLink";
 import { ProfileAvatar } from "../Shared/Profile/ProfileAvatar";
 
@@ -38,7 +38,7 @@ export const ProfileHeader = ({ user }: ProfileHeaderProps) => {
   return (
     <>
       <div
-        className={cn("relative w-full  bg-gray-3", {
+        className={cn("relative w-full bg-gray-3", {
           "h-64 md:h-[22rem]": hasBanner,
           "h-32": !hasBanner,
         })}
@@ -61,7 +61,7 @@ export const ProfileHeader = ({ user }: ProfileHeaderProps) => {
 
       <Container size="2" px="4">
         <div className="flex justify-between">
-          <div className="z-10 mt-[-70px] rounded-3 border-[6px] border-white bg-white dark:border-gray-1">
+          <div className="z-10 mt-[-70px] rounded-3 border-[6px] border-white bg-white dark:border-gray-1 dark:bg-gray-1">
             <ProfileAvatar user={user} size="8" />
           </div>
 

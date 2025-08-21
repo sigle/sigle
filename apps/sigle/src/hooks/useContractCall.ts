@@ -1,10 +1,10 @@
-import { stacksNetwork } from "@/lib/stacks";
 import {
-  ContractCallOptions,
-  FinishedTxData,
+  type ContractCallOptions,
+  type FinishedTxData,
   openContractCall,
 } from "@stacks/connect";
 import { useCallback, useState } from "react";
+import { stacksNetwork } from "@/lib/stacks";
 
 interface UseContractCallOptions {
   onSuccess?: (data: FinishedTxData) => void;

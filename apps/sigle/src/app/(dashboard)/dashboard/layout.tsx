@@ -1,10 +1,10 @@
 "use client";
 
+import { Button, Container, Select } from "@radix-ui/themes";
+import { usePathname, useRouter } from "next/navigation";
 import { AuthProtect } from "@/components/Auth/AuthProtect";
 import { NextLink } from "@/components/Shared/NextLink";
 import { cn } from "@/lib/cn";
-import { Button, Container, Select } from "@radix-ui/themes";
-import { usePathname, useRouter } from "next/navigation";
 
 export default function DashboardLayout({
   children,
@@ -16,7 +16,7 @@ export default function DashboardLayout({
 
   const navigationLinks = [
     {
-      label: "Overview",
+      label: "Dashboard",
       href: "/dashboard",
     },
     {
@@ -37,7 +37,7 @@ export default function DashboardLayout({
     <Container size="3" className="px-4">
       <div className="relative">
         <aside className="absolute inset-y-0 left-[-200px] hidden w-[150px] lg:block">
-          <nav className="sticky top-[--header-height] py-10">
+          <nav className="sticky top-[var(--header-height)] py-10">
             <ul className="space-y-3">
               {navigationLinks.map((link) => (
                 <li key={link.href}>
@@ -46,7 +46,8 @@ export default function DashboardLayout({
                     color="gray"
                     highContrast
                     className={cn("m-0", {
-                      "font-medium bg-[--accent-a3]": pathname === link.href,
+                      "bg-[var(--accent-a3)] font-medium":
+                        pathname === link.href,
                     })}
                     asChild
                   >

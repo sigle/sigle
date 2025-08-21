@@ -1,7 +1,7 @@
-import type { paths } from "@/__generated__/sigle-api/openapi";
-import { getExplorerTransactionUrl } from "@/lib/stacks";
 import { Link, Separator, Text } from "@radix-ui/themes";
+import type { paths } from "@sigle/sdk";
 import { IconArrowUpRight } from "@tabler/icons-react";
+import { getExplorerTransactionUrl } from "@/lib/stacks";
 
 interface PostInfoCardProps {
   post: paths["/api/posts/{postId}"]["get"]["responses"]["200"]["content"]["application/json"];

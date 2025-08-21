@@ -23,9 +23,9 @@ flowchart LR
 
         subgraph Backend[" Backend Services "]
             direction TB
-            API["REST API"]
-            Indexer["Blockchain<br/>Indexer"]
-            DB[(Database)]
+            API["REST API<br/>(@sigle/server)"]
+            Indexer["Blockchain<br/>Indexer<br/>(@sigle/server)"]
+            DB[(Database<br/>PostgreSQL)]
         end
     end
 

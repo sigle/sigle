@@ -7,9 +7,15 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+enum UserFlag {
+  NONE
+  VERIFIED
+}
+
 model User {
   id          String    @id @map("id")
   lastLoginAt DateTime? @map("last_login_at")
+  flag        UserFlag  @default(NONE) @map("flag")
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
@@ -19,6 +25,10 @@ model User {
   profile    Profile?
   ownedNfts  PostNft[] @relation("owner")
   mintedNfts PostNft[] @relation("minter")
+  sessions   Session[]
+  accounts   Account[]
+
+  @@map("user")
 }
 
 model Profile {
@@ -36,27 +46,33 @@ model Profile {
   updatedAt DateTime @updatedAt @map("updated_at")
 
   user User @relation(fields: [id], references: [id])
+
+  @@map("profile")
 }
 
 model Draft {
-  id               String  @id @map("id")
-  title            String  @map("title")
-  content          String  @map("content")
-  metaTitle        String? @map("meta_title")
-  metaDescription  String? @map("meta_description")
-  coverImage       String? @map("cover_image")
-  txId             String? @map("tx_id")
-  txStatus         String? @map("tx_status")
-  collectPriceType String? @map("collect_price_type")
-  collectPrice     BigInt? @map("collect_price")
-  collectLimitType String? @map("collect_limit_type")
-  collectLimit     Int?    @map("collect_limit")
+  id               String   @id @map("id")
+  title            String   @map("title")
+  content          String   @map("content")
+  metaTitle        String?  @map("meta_title")
+  metaDescription  String?  @map("meta_description")
+  coverImage       String?  @map("cover_image")
+  canonicalUri     String?  @map("canonical_uri")
+  txId             String?  @map("tx_id")
+  txStatus         String?  @map("tx_status")
+  collectPriceType String?  @map("collect_price_type")
+  collectPrice     BigInt?  @map("collect_price")
+  collectLimitType String?  @map("collect_limit_type")
+  collectLimit     Int?     @map("collect_limit")
+  tags             String[] @map("tags")
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 
   userId String @map("user_id")
   user   User   @relation(fields: [userId], references: [id])
+
+  @@map("draft")
 }
 
 model Post {
@@ -69,7 +85,6 @@ model Post {
   metadataUri String  @map("metadata_uri")
   enabled     Boolean @map("enabled")
   openEdition Boolean @map("open_edition")
-  price       BigInt  @map("price")
 
   // Metadata fields
   title           String      @map("title")
@@ -79,13 +94,29 @@ model Post {
   metaDescription String?     @map("meta_description")
   coverImageId    String?     @map("cover_image_id")
   coverImage      MediaImage? @relation(fields: [coverImageId], references: [id])
+  tags            String[]    @map("tags")
+  canonicalUri    String?     @map("canonical_uri")
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 
-  userId String    @map("user_id")
-  user   User      @relation(fields: [userId], references: [id])
-  nfts   PostNft[]
+  userId           String            @map("user_id")
+  user             User              @relation(fields: [userId], references: [id])
+  nfts             PostNft[]
+  minterFixedPrice MinterFixedPrice?
+
+  @@map("post")
+}
+
+model MinterFixedPrice {
+  id         String @id @map("id")
+  price      BigInt @map("price")
+  startBlock BigInt @map("start_block")
+  endBlock   BigInt @map("end_block")
+
+  post Post @relation(fields: [id], references: [id])
+
+  @@map("minter_fixed_price")
 }
 
 model MediaImage {
@@ -100,6 +131,8 @@ model MediaImage {
   posts               Post[]
   profilePicture      Profile[] @relation(name: "Profile_picture_uri_id_fkey")
   profileCoverPicture Profile[] @relation(name: "Profile_cover_picture_uri_id_fkey")
+
+  @@map("media_image")
 }
 
 model PostNft {
@@ -113,6 +146,8 @@ model PostNft {
   owner    User   @relation(name: "owner", fields: [ownerId], references: [id])
   minterId String @map("minter_id")
   minter   User   @relation(name: "minter", fields: [minterId], references: [id])
+
+  @@map("post_nft")
 }
 
 // Model for the rate-limiter-flexible package
@@ -121,4 +156,49 @@ model RateLimiterFlexible {
   key    String    @id
   points Int
   expire DateTime?
+}
+
+model Session {
+  id        String   @id
+  expiresAt DateTime
+  token     String
+  createdAt DateTime
+  updatedAt DateTime
+  ipAddress String?
+  userAgent String?
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([token])
+  @@map("session")
+}
+
+model Account {
+  id                    String    @id
+  accountId             String
+  providerId            String
+  userId                String
+  user                  User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  accessToken           String?
+  refreshToken          String?
+  idToken               String?
+  accessTokenExpiresAt  DateTime?
+  refreshTokenExpiresAt DateTime?
+  scope                 String?
+  password              String?
+  createdAt             DateTime
+  updatedAt             DateTime
+
+  @@map("account")
+}
+
+model Verification {
+  id         String    @id
+  identifier String
+  value      String
+  expiresAt  DateTime
+  createdAt  DateTime?
+  updatedAt  DateTime?
+
+  @@map("verification")
 }

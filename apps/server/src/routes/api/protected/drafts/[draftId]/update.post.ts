@@ -1,3 +1,5 @@
+import { defineEventHandler, getRouterParam } from "h3";
+import { defineRouteMeta } from "nitropack/runtime";
 import { z } from "zod";
 import { readValidatedBodyZod } from "~/lib/nitro";
 import { prisma } from "~/lib/prisma";
@@ -61,6 +63,15 @@ defineRouteMeta({
                   },
                 },
               },
+              tags: {
+                type: "array",
+                items: {
+                  type: "string",
+                },
+              },
+              canonicalUri: {
+                type: "string",
+              },
             },
           },
         },
@@ -79,6 +90,16 @@ defineRouteMeta({
                   type: "string",
                 },
               },
+            },
+          },
+        },
+      },
+      400: {
+        description: "Bad request",
+        content: {
+          "application/json": {
+            schema: {
+              $ref: "#/components/schemas/BadRequest",
             },
           },
         },
@@ -103,6 +124,8 @@ const updateDraftSchema = z.object({
       limit: z.coerce.number().int().min(1),
     }),
   }),
+  tags: z.array(z.string()).optional(),
+  canonicalUri: z.string().optional(),
 });
 
 export default defineEventHandler(async (event) => {
@@ -124,6 +147,8 @@ export default defineEventHandler(async (event) => {
       collectPrice: body.collect.collectPrice.price,
       collectLimitType: body.collect.collectLimit.type,
       collectLimit: body.collect.collectLimit.limit,
+      tags: body.tags,
+      canonicalUri: body.canonicalUri,
     },
     select: {
       id: true,

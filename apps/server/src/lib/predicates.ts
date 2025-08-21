@@ -24,7 +24,7 @@ export const contractDeploymentPredicate = {
         },
       },
       // TODO start_block depending on env.STACKS_ENV
-      start_block: 235887,
+      start_block: 952455,
       decode_clarity_values: true,
     },
   },
@@ -41,7 +41,7 @@ export const sigleProfilesPredicate = {
         contains: "set-profile",
         contract_identifier: `${
           sigleConfig[env.STACKS_ENV].protocolAddress
-        }.sigle-profiles`,
+        }.sigle-profiles-v001`,
       },
       then_that: {
         http_post: {
@@ -50,7 +50,7 @@ export const sigleProfilesPredicate = {
         },
       },
       // TODO start_block depending on env.STACKS_ENV
-      start_block: 235887,
+      start_block: 952455,
       decode_clarity_values: true,
     },
   },
@@ -65,9 +65,8 @@ export const sigleMinterFixedPricePredicate = {
       if_this: {
         scope: "print_event",
         contract_identifier: sigleConfig[env.STACKS_ENV].fixedPriceMinter,
-        // @ts-ignore @hirosystems/chainhook-client types are wrong there https://github.com/hirosystems/chainhook/pull/701
         matches_regex: ".*",
-      } as any,
+      },
       then_that: {
         http_post: {
           url: "{__BASE_URL__}/api/chainhook/webhook",
@@ -75,7 +74,7 @@ export const sigleMinterFixedPricePredicate = {
         },
       },
       // TODO start_block depending on env.STACKS_ENV
-      start_block: 235887,
+      start_block: 952455,
       decode_clarity_values: true,
     },
   },
@@ -90,9 +89,8 @@ export const siglePostPrintPredicate = {
       if_this: {
         scope: "print_event",
         contract_identifier: "{__CONTRACT__}",
-        // @ts-ignore @hirosystems/chainhook-client types are wrong there https://github.com/hirosystems/chainhook/pull/701
         matches_regex: ".*",
-      } as any,
+      },
       then_that: {
         http_post: {
           url: "{__BASE_URL__}/api/chainhook/webhook",

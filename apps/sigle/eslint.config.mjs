@@ -1,6 +1,7 @@
-import { dirname } from "path";
-import { fileURLToPath } from "url";
+import { dirname } from "node:path";
+import { fileURLToPath } from "node:url";
 import { FlatCompat } from "@eslint/eslintrc";
+import eslintPluginBetterTailwindcss from "eslint-plugin-better-tailwindcss";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -10,21 +11,37 @@ const compat = new FlatCompat({
 });
 
 const eslintConfig = [
-  ...compat.extends(
-    "next/core-web-vitals",
-    "next/typescript",
-    "plugin:tailwindcss/recommended",
-  ),
+  {
+    ignores: [
+      "node_modules/**",
+      ".next/**",
+      "out/**",
+      "build/**",
+      "next-env.d.ts",
+    ],
+  },
+  ...compat.extends("next/core-web-vitals", "next/typescript"),
   {
     settings: {
-      tailwindcss: {
-        callees: ["classnames", "clsx", "ctl", "cva", "tv", "cn"],
+      "better-tailwindcss": {
+        entryPoint: "src/app/globals.css",
       },
     },
+    plugins: {
+      "better-tailwindcss": eslintPluginBetterTailwindcss,
+    },
     rules: {
+      ...eslintPluginBetterTailwindcss.configs["recommended-error"].rules,
+      "better-tailwindcss/enforce-consistent-line-wrapping": "off",
+
       "@typescript-eslint/no-explicit-any": "off",
       "@typescript-eslint/no-unused-vars": "off",
       "react/no-unescaped-entities": "off",
+      // Handled by biome
+      "react-hooks/exhaustive-deps": "off",
+      // Handled by biome
+      "@next/next/no-img-element": "off",
+      "jsx-a11y/alt-text": "off",
       "no-restricted-imports": [
         "error",
         {

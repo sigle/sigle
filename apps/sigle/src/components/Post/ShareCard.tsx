@@ -1,10 +1,10 @@
-import type { paths } from "@/__generated__/sigle-api/openapi";
 import { Button, Heading, Text } from "@radix-ui/themes";
+import type { paths } from "@sigle/sdk";
 import { useState } from "react";
 import { PostShareDialog } from "../Shared/Post/PostShareDialog";
 
 interface PostShareCardProps {
-  post: paths["/api/posts/list"]["get"]["responses"]["200"]["content"]["application/json"][0];
+  post: paths["/api/posts/list"]["get"]["responses"]["200"]["content"]["application/json"]["results"][number];
 }
 
 export const PostShareCard = ({ post }: PostShareCardProps) => {

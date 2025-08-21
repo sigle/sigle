@@ -1,3 +1,6 @@
+import { defineEventHandler } from "h3";
+import { defineRouteMeta } from "nitropack/runtime";
+
 defineRouteMeta({
   openAPI: {
     summary: "Health check",
@@ -37,11 +40,16 @@ defineRouteMeta({
 
           UserProfile: {
             type: "object",
-            required: ["id", "createdAt", "updatedAt"],
+            required: ["id", "flag", "createdAt", "updatedAt"],
             properties: {
               id: {
                 type: "string",
                 description: "The address of the user",
+              },
+              flag: {
+                type: "string",
+                enum: ["NONE", "VERIFIED"],
+                description: "The flag of the user",
               },
               postsCount: {
                 type: "number",
@@ -122,7 +130,6 @@ defineRouteMeta({
               "maxSupply",
               "collected",
               "openEdition",
-              "price",
               "metadataUri",
               "createdAt",
               "updatedAt",
@@ -165,6 +172,15 @@ defineRouteMeta({
               excerpt: {
                 type: "string",
               },
+              tags: {
+                type: "array",
+                items: {
+                  type: "string",
+                },
+              },
+              canonicalUri: {
+                type: "string",
+              },
               address: {
                 type: "string",
               },
@@ -183,9 +199,6 @@ defineRouteMeta({
               openEdition: {
                 type: "boolean",
               },
-              price: {
-                type: "string",
-              },
               metadataUri: {
                 type: "string",
               },
@@ -194,6 +207,27 @@ defineRouteMeta({
               },
               updatedAt: {
                 type: "string",
+              },
+              minterFixedPrice: {
+                type: "object",
+                required: ["id", "price", "startBlock", "endBlock"],
+                properties: {
+                  id: {
+                    type: "string",
+                  },
+                  price: {
+                    type: "string",
+                    description: "The price in BigInt format",
+                  },
+                  startBlock: {
+                    type: "string",
+                    description: "The start block in BigInt format",
+                  },
+                  endBlock: {
+                    type: "string",
+                    description: "The end block in BigInt format",
+                  },
+                },
               },
               user: {
                 type: "object",

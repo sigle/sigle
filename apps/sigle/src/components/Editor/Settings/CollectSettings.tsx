@@ -4,10 +4,10 @@ import { DialogTitleGoBack } from "./DialogTitle";
 
 export const CollectSettings = () => {
   return (
-    <div className="animate-in fade-in slide-in-from-right-5">
+    <div className="animate-in slide-in-from-right-5 fade-in">
       <DialogTitleGoBack
-        title="Collect settings"
-        description="Edit your collect settings"
+        title="NFT collection"
+        description="Edit your NFT collection settings"
       />
 
       <div className="space-y-6">

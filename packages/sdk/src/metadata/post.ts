@@ -37,6 +37,11 @@ export interface PostMetadataDetails {
    * The cover image
    */
   coverImage?: MediaImageMetadata;
+
+  /**
+   * List of tags
+   */
+  tags?: string[];
 }
 
 export const PostMetadataDetailsSchema = z.object({
@@ -49,6 +54,7 @@ export const PostMetadataDetailsSchema = z.object({
     .max(20)
     .optional(),
   coverImage: MediaImageMetadataSchema.optional(),
+  tags: z.array(z.string()).min(1).max(5).optional(),
 });
 
 export type PostMetadata = MarketplaceMetadata & {

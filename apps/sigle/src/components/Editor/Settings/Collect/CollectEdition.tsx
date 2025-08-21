@@ -17,7 +17,7 @@ export const CollectEdition = () => {
     });
   };
 
-  // biome-ignore lint/suspicious/noExplicitAny: <explanation>
+  // biome-ignore lint/suspicious/noExplicitAny: ok
   const limitErrorMessage = (errors?.collect?.collectLimit as any)?.limit
     ?.message;
 
@@ -46,7 +46,7 @@ export const CollectEdition = () => {
         </RadioCards.Item>
       </RadioCards.Root>
       {watchCollectLimitType === "fixed" ? (
-        <div className="space-y-2 animate-in fade-in">
+        <div className="animate-in space-y-2 fade-in">
           <div className="space-y-1">
             <Text as="p" size="2">
               Number of editions

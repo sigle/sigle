@@ -1,13 +1,8 @@
-import { createId } from "@paralleldrive/cuid2";
+import { createError, defineEventHandler, getRouterParam } from "h3";
+import { defineRouteMeta } from "nitropack/runtime";
 import { z } from "zod";
-import { env } from "~/env";
-import { generateCID } from "~/lib/arweave";
-import { ipfsUploadFile } from "~/lib/filebase";
-import {
-  allowedFormats,
-  mimeTypeToExtension,
-  optimizeImage,
-} from "~/lib/images";
+import { allowedFormats, optimizeImage } from "~/lib/images";
+import { ipfsUploadFile } from "~/lib/ipfs-upload";
 import { readMultipartFormDataSafe } from "~/lib/nitro";
 import { prisma } from "~/lib/prisma";
 
@@ -40,11 +35,10 @@ defineRouteMeta({
           "application/json": {
             schema: {
               type: "object",
-              required: ["cid", "url", "gatewayUrl"],
+              required: ["cid", "url"],
               properties: {
                 cid: { type: "string" },
                 url: { type: "string" },
-                gatewayUrl: { type: "string" },
               },
             },
           },
@@ -113,13 +107,7 @@ export default defineEventHandler(async (event) => {
     width: 700,
   });
 
-  const generatedCID = await generateCID(optimizedBuffer);
   const { cid } = await ipfsUploadFile(event, {
-    path: `${
-      event.context.user.id
-    }/post-${draftId}/${generatedCID}.${mimeTypeToExtension(
-      parsedFile.data.type,
-    )}`,
     content: optimizedBuffer,
   });
 
@@ -135,6 +123,5 @@ export default defineEventHandler(async (event) => {
   return {
     cid,
     url: `ipfs://${cid}`,
-    gatewayUrl: `${env.IPFS_GATEWAY_URL}/ipfs/${cid}`,
   };
 });

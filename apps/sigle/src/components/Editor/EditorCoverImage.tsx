@@ -1,17 +1,22 @@
 "use client";
 
-import { sigleApiClient } from "@/__generated__/sigle-api";
-import { cn } from "@/lib/cn";
-import { resolveImageUrl } from "@/lib/images";
 import { Button, IconButton, Spinner } from "@radix-ui/themes";
 import { IconCameraPlus, IconHandGrab, IconTrash } from "@tabler/icons-react";
 import { motion } from "framer-motion";
 import { useParams } from "next/navigation";
 import { usePostHog } from "posthog-js/react";
-import { type MouseEventHandler, useCallback, useState } from "react";
+import {
+  type MouseEventHandler,
+  useCallback,
+  useEffect,
+  useState,
+} from "react";
 import { useDropzone } from "react-dropzone";
 import { useFormContext } from "react-hook-form";
 import { toast } from "sonner";
+import { cn } from "@/lib/cn";
+import { resolveImageUrl } from "@/lib/images";
+import { sigleApiClient } from "@/lib/sigle";
 import type { EditorPostFormData } from "./EditorFormProvider";
 
 export const EditorCoverImage = () => {
@@ -27,7 +32,7 @@ export const EditorCoverImage = () => {
       "/api/protected/drafts/{draftId}/upload-media",
     );
 
-  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
+  // biome-ignore lint/correctness/useExhaustiveDependencies: ok
   const onDrop = useCallback(
     async (acceptedFiles: File[]) => {
       const file = acceptedFiles[0];
@@ -49,7 +54,7 @@ export const EditorCoverImage = () => {
               draftId: postId,
             },
           },
-          // biome-ignore lint/suspicious/noExplicitAny: <explanation>
+          // biome-ignore lint/suspicious/noExplicitAny: ok
           body: formData as any,
         },
         {
@@ -74,6 +79,21 @@ export const EditorCoverImage = () => {
     [postId, loadingUploadImage, posthog, setValue, setPreview, uploadMedia],
   );
 
+  // This is required for the migration process from Gaia.
+  // It can be removed once it's done.
+  useEffect(() => {
+    const autoUploadImage = async () => {
+      if (watchCoverImage?.startsWith("https://gaia.blockstack.org/hub/")) {
+        const response = await fetch(watchCoverImage);
+        const blob = await response.blob();
+        const file = new File([blob], "cover-image", { type: blob.type });
+        onDrop([file]);
+      }
+    };
+
+    autoUploadImage();
+  }, [watchCoverImage, onDrop]);
+
   const { getRootProps, getInputProps, isDragActive, open } = useDropzone({
     onDrop,
     accept: {
@@ -97,6 +117,7 @@ export const EditorCoverImage = () => {
     : null;
 
   return (
+    // biome-ignore lint/a11y/noStaticElementInteractions: ok
     <div
       {...getRootProps()}
       className={cn("mt-4 flex justify-center", {
@@ -126,7 +147,7 @@ export const EditorCoverImage = () => {
           )
         ) : (
           <div className="relative mx-auto">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
+            {/* biome-ignore lint/performance/noImgElement: ok */}
             <img
               src={preview || resolvedWatchCoverImage || ""}
               className={cn("rounded-2", {
@@ -135,7 +156,7 @@ export const EditorCoverImage = () => {
               alt="Cover post"
             />
             {!loadingUploadImage ? (
-              <div className="absolute right-2 top-2">
+              <div className="absolute top-2 right-2">
                 <IconButton
                   size="3"
                   color="gray"

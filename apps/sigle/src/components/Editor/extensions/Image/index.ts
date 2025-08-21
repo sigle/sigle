@@ -107,4 +107,78 @@ export const TipTapImage = TipTapImageBase.extend<
         },
     };
   },
+
+  // This is required for the migration process from Gaia.
+  // It can be removed once it's done.
+  onCreate() {
+    const { editor } = this;
+    const transaction = editor.state.tr;
+
+    editor.state.doc.descendants((node, pos) => {
+      if (
+        node.type.name === "image" &&
+        node.attrs.src?.startsWith("https://gaia.blockstack.org/hub/")
+      ) {
+        const uploadId = nanoid();
+        const attrs = {
+          ...node.attrs,
+          uploadId,
+        };
+
+        const newNode = node.type.create(attrs, node.content, node.marks);
+        transaction.replaceWith(pos, pos + node.nodeSize, newNode);
+
+        fetch(node.attrs.src)
+          .then((response) => response.blob())
+          .then((blob) => {
+            const file = new File([blob], "image", { type: blob.type });
+            return this.options.uploadFile(file);
+          })
+          .then((imageUrl) => {
+            const updateTransaction = editor.state.tr;
+            editor.state.doc.descendants((innerNode, innerPos) => {
+              if (
+                innerNode.type.name === "image" &&
+                innerNode.attrs.uploadId === uploadId
+              ) {
+                const updatedAttrs = {
+                  ...innerNode.attrs,
+                  src: imageUrl,
+                  uploadId: undefined,
+                };
+                const updatedNode = innerNode.type.create(
+                  updatedAttrs,
+                  innerNode.content,
+                  innerNode.marks,
+                );
+                updateTransaction.replaceWith(
+                  innerPos,
+                  innerPos + innerNode.nodeSize,
+                  updatedNode,
+                );
+              }
+            });
+            editor.view.dispatch(updateTransaction);
+          })
+          .catch((error) => {
+            console.error("Failed to upload image", error);
+            const deleteTransaction = editor.state.tr;
+            editor.state.doc.descendants((innerNode, innerPos) => {
+              if (
+                innerNode.type.name === "image" &&
+                innerNode.attrs.uploadId === uploadId
+              ) {
+                deleteTransaction.delete(
+                  innerPos,
+                  innerPos + innerNode.nodeSize,
+                );
+              }
+            });
+            editor.view.dispatch(deleteTransaction);
+          });
+      }
+    });
+
+    editor.view.dispatch(transaction);
+  },
 });

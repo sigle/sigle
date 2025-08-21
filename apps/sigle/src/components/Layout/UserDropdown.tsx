@@ -1,12 +1,20 @@
 "use client";
 
-import { sigleApiClient } from "@/__generated__/sigle-api";
-import { useStacksLogin } from "@/hooks/useStacksLogin";
-import { Routes } from "@/lib/routes";
 import { DropdownMenu, IconButton } from "@radix-ui/themes";
-import { useSession } from "next-auth/react";
+import {
+  IconLogout,
+  IconMoon,
+  IconPencil,
+  IconSettings,
+  IconSun,
+  IconUser,
+} from "@tabler/icons-react";
 import { useTheme } from "next-themes";
 import { usePostHog } from "posthog-js/react";
+import { useStacksLogin } from "@/hooks/useStacksLogin";
+import { useSession } from "@/lib/auth-hooks";
+import { Routes } from "@/lib/routes";
+import { sigleApiClient } from "@/lib/sigle";
 import { NextLink } from "../Shared/NextLink";
 import { ProfileAvatar } from "../Shared/Profile/ProfileAvatar";
 
@@ -48,14 +56,23 @@ export const UserDropdown = () => {
           <ProfileAvatar user={user} size="2" />
         </IconButton>
       </DropdownMenu.Trigger>
-      <DropdownMenu.Content align="end" color="gray" variant="soft">
+      <DropdownMenu.Content
+        align="end"
+        color="gray"
+        variant="soft"
+        className="min-w-[150px]"
+      >
         {whitelisted ? (
           <>
             <DropdownMenu.Item asChild>
-              <NextLink href={"/p/new"}>Write a story</NextLink>
+              <NextLink href="/p/new">
+                <IconPencil size={16} /> Write a post
+              </NextLink>
             </DropdownMenu.Item>
             <DropdownMenu.Item asChild>
-              <NextLink href={"/dashboard/settings"}>Settings</NextLink>
+              <NextLink href="/dashboard/settings">
+                <IconSettings size={16} /> Settings
+              </NextLink>
             </DropdownMenu.Item>
             <DropdownMenu.Item asChild>
               <NextLink
@@ -63,16 +80,26 @@ export const UserDropdown = () => {
                   username: session.user.id,
                 })}
               >
-                Profile
+                <IconUser size={16} /> Profile
               </NextLink>
             </DropdownMenu.Item>
             <DropdownMenu.Separator />
           </>
         ) : null}
         <DropdownMenu.Item onClick={onThemeChange}>
-          {resolvedTheme === "dark" ? "Light" : "Dark"} theme
+          {resolvedTheme === "dark" ? (
+            <>
+              <IconSun size={16} /> Light
+            </>
+          ) : (
+            <>
+              <IconMoon size={16} /> Dark
+            </>
+          )}
         </DropdownMenu.Item>
-        <DropdownMenu.Item onClick={logout}>Log out</DropdownMenu.Item>
+        <DropdownMenu.Item onClick={logout}>
+          <IconLogout size={16} /> Log out
+        </DropdownMenu.Item>
       </DropdownMenu.Content>
     </DropdownMenu.Root>
   );

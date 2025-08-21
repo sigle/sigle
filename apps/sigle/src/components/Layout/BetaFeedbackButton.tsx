@@ -5,7 +5,7 @@ export const BetaFeedbackButton = () => {
   return (
     <Popover.Root>
       <Popover.Trigger>
-        <Button variant="soft" className="fixed bottom-4 right-4">
+        <Button variant="soft" className="fixed right-4 bottom-4">
           <IconBolt size={16} />
           Beta Feedback
         </Button>

@@ -1,4 +1,7 @@
 name: Node CI
+permissions:
+  contents: read
+  pull-requests: read
 
 on:
   push:
@@ -38,6 +41,7 @@ jobs:
       - name: Build
         run: |
           cp apps/sigle/.env.development apps/sigle/.env.production.local
+          cp apps/custom-domain/.env.development apps/custom-domain/.env.production.local
           pnpm build
 
       - name: Test
@@ -50,6 +54,6 @@ jobs:
       - uses: actions/checkout@v4
 
       - name: "Check contract syntax"
-        uses: docker://hirosystems/clarinet:2.15
+        uses: docker://hirosystems/clarinet:3.5.0
         with:
           args: check --manifest-path ./apps/contracts/Clarinet.toml

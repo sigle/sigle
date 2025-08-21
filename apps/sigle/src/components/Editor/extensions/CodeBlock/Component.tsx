@@ -18,7 +18,7 @@ export const CodeBlockComponent = (props: NodeViewProps) => {
 
   return (
     <NodeViewWrapper style={{ position: "relative" }}>
-      <div className="absolute right-1 top-1">
+      <div className="absolute top-1 right-1">
         <Select.Root
           value={props.node.attrs.language || "auto"}
           onValueChange={handleCHangeLanguage}

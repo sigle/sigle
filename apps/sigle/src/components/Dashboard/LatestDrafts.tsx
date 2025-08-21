@@ -1,8 +1,5 @@
 "use client";
 
-import { sigleApiClient } from "@/__generated__/sigle-api";
-import { Routes } from "@/lib/routes";
-import { getExplorerTransactionUrl } from "@/lib/stacks";
 import {
   Badge,
   Button,
@@ -13,6 +10,9 @@ import {
   Text,
 } from "@radix-ui/themes";
 import { format } from "date-fns";
+import { Routes } from "@/lib/routes";
+import { sigleApiClient } from "@/lib/sigle";
+import { getExplorerTransactionUrl } from "@/lib/stacks";
 import { NextLink } from "../Shared/NextLink";
 
 export const LatestDrafts = () => {

@@ -1,8 +1,5 @@
 "use client";
 
-import { env } from "@/env";
-import { appDetails, stacksNetwork, userSession } from "@/lib/stacks";
-import { createSiwsMessage } from "@sigle/sign-in-with-stacks";
 import {
   connect,
   disconnect,
@@ -10,11 +7,15 @@ import {
   isConnected,
   request,
 } from "@stacks/connect";
-import { getCsrfToken, signIn } from "next-auth/react";
 import { usePostHog } from "posthog-js/react";
 import { useEffect } from "react";
+import { createSiwsMessage } from "sign-in-with-stacks";
 import { toast } from "sonner";
 import { create } from "zustand";
+import { env } from "@/env";
+import { authClient, signOut } from "@/lib/auth-client";
+import { useSession } from "@/lib/auth-hooks";
+import { appDetails, stacksNetwork, userSession } from "@/lib/stacks";
 
 interface UserData {
   stxAddress: string;
@@ -33,6 +34,7 @@ const useSessionStore = create<SessionState>()((set) => ({
 export const useStacksLogin = () => {
   const posthog = usePostHog();
   const { user, setUser } = useSessionStore();
+  const { refetch: refetchSession } = useSession();
 
   useEffect(() => {
     if (isConnected()) {
@@ -76,12 +78,18 @@ export const useStacksLogin = () => {
   const signMessage = async (user: UserData) => {
     posthog.capture("user_login_sign_message");
 
+    const nonceData = await authClient.siws.nonce({ address });
+    if (!nonceData.data?.nonce) {
+      toast.error("Nonce not found");
+      return;
+    }
+
     const message = createSiwsMessage({
       address: user.stxAddress,
       chainId: stacksNetwork.chainId,
       domain: window.location.host,
       statement: "Sign in to Sigle.",
-      nonce: await getCsrfToken(),
+      nonce: nonceData.data.nonce,
       uri: window.location.origin,
       version: "1",
     });

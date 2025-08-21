@@ -31,13 +31,14 @@ export const PublishReview = ({ onPublish }: PublishReviewProps) => {
 
   // Validate form on mount so we can show the various error messages in the callout
   // and disable the publish button
-  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
+  // biome-ignore lint/correctness/useExhaustiveDependencies: ok
   useEffect(() => {
     handleSubmit(
       async () => {
         setIsFormValid({ valid: true });
       },
       (errors) => {
+        console.log("errors", errors);
         setIsFormValid({
           valid: false,
           title: errors.title?.message,
@@ -47,12 +48,13 @@ export const PublishReview = ({ onPublish }: PublishReviewProps) => {
           coverImage: errors.coverImage?.message,
           collectLimit:
             errors.collect?.collectLimit?.message ||
+            // @ts-expect-error for some reason the type is not recognized
+            errors?.collect?.collectLimit?.type?.message ||
             errors?.collect?.collectLimit?.limit?.message,
           price: errors.collect?.collectPrice?.price?.message,
         });
       },
     )();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (

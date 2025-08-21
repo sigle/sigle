@@ -1,8 +1,7 @@
 import { createClient } from "@sigle/sdk";
 import { STACKS_MOCKNET } from "@stacks/network";
 import { Cl } from "@stacks/transactions";
-import { describe, expect, it } from "vitest";
-import { beforeEach } from "vitest";
+import { beforeEach, describe, expect, it } from "vitest";
 
 const contract = "sigle-post-v001";
 const minterContract = "sigle-minter-fixed-price-v001";
@@ -528,6 +527,86 @@ describe("sigle-post-v001", () => {
         );
         expect(result).toBeErr(Cl.uint(403)); // ERR-NOT-AUTHORIZED
       });
+    });
+  });
+
+  describe("owner mint", () => {
+    beforeEach(() => {
+      simnet.deployContract(
+        defaultContractName.split(".")[1],
+        defaultContract,
+        { clarityVersion: 3 },
+        wallet1,
+      );
+    });
+
+    it("allows contract owner to mint tokens for free", () => {
+      const { result, events } = simnet.callPublicFn(
+        defaultContractName,
+        "owner-mint",
+        [
+          Cl.none(), // no specific recipient
+        ],
+        wallet1, // wallet1 is the contract owner
+      );
+
+      expect(result).toBeOk(Cl.uint(1));
+
+      // Check NFT minting events - should be 3 nft_mint_events
+      const mintEvents = events.filter((e) => e.event === "nft_mint_event");
+      expect(mintEvents.length).toBe(1);
+
+      // Important: Verify that NO sBTC transfer events occurred (free mint)
+      const transferEvents = events.filter(
+        (e) => e.event === "ft_transfer_event",
+      );
+      expect(transferEvents.length).toBe(0);
+
+      // Check token ownership after minting
+      const { result: tokenOwner } = simnet.callReadOnlyFn(
+        defaultContractName,
+        "get-owner",
+        [Cl.uint(1)],
+        wallet1,
+      );
+      expect(tokenOwner).toBeOk(Cl.some(Cl.principal(wallet1)));
+    });
+
+    it("allows contract owner to mint tokens for a specific recipient", () => {
+      const { result, events } = simnet.callPublicFn(
+        defaultContractName,
+        "owner-mint",
+        [
+          Cl.some(Cl.principal(wallet3)), // mint to wallet3
+        ],
+        wallet1, // wallet1 is the contract owner
+      );
+
+      expect(result).toBeOk(Cl.uint(1));
+
+      // Check NFT minting events
+      const mintEvents = events.filter((e) => e.event === "nft_mint_event");
+      expect(mintEvents.length).toBe(1);
+
+      // Check that tokens were minted to wallet3
+      const { result: tokenOwner } = simnet.callReadOnlyFn(
+        defaultContractName,
+        "get-owner",
+        [Cl.uint(1)],
+        wallet1,
+      );
+      expect(tokenOwner).toBeOk(Cl.some(Cl.principal(wallet3)));
+    });
+
+    it("prevents non-owner from using owner-mint", () => {
+      const { result } = simnet.callPublicFn(
+        defaultContractName,
+        "owner-mint",
+        [Cl.none()],
+        wallet2, // wallet2 is not the contract owner
+      );
+
+      expect(result).toBeErr(Cl.uint(403)); // ERR-NOT-AUTHORIZED
     });
   });
 

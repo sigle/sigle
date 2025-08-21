@@ -1,4 +1,5 @@
 import { Avatar, Container, Heading, Skeleton, Text } from "@radix-ui/themes";
+import { ProfileFeedSkeleton } from "@/components/User/ProfileFeed";
 
 export const PageProfileSkeleton = () => {
   return (
@@ -47,6 +48,10 @@ export const PageProfileSkeleton = () => {
             aliquip ex ea commodo consequat.
           </Skeleton>
         </Text>
+
+        <div className="pt-10 pb-20">
+          <ProfileFeedSkeleton />
+        </div>
       </Container>
     </>
   );

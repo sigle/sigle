@@ -1,11 +1,11 @@
 "use client";
 
-import { sigleApiClient } from "@/__generated__/sigle-api";
-import { ProfileAvatar } from "@/components/Shared/Profile/ProfileAvatar";
 import { Button, Card, Flex, Heading, Text } from "@radix-ui/themes";
 import { IconPencil } from "@tabler/icons-react";
-import { useSession } from "next-auth/react";
 import { useState } from "react";
+import { ProfileAvatar } from "@/components/Shared/Profile/ProfileAvatar";
+import { useSession } from "@/lib/auth-hooks";
+import { sigleApiClient } from "@/lib/sigle";
 import { UpdateProfileMetadata } from "./UpdateProfileMetadata";
 
 export const SettingsProfileMetadata = () => {

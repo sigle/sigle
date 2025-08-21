@@ -1,3 +1,5 @@
+import { defineEventHandler } from "h3";
+import { defineRouteMeta } from "nitropack/runtime";
 import { z } from "zod";
 import { getValidatedQueryZod } from "~/lib/nitro";
 import { prisma } from "~/lib/prisma";

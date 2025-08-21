@@ -45,16 +45,19 @@ genesis:
       balance: "100000000000000"
       sbtc-balance: "1000000000"
   contracts:
+    - genesis
+    - lockup
+    - bns
+    - cost-voting
     - costs
     - pox
+    - costs-2
     - pox-2
+    - costs-3
     - pox-3
     - pox-4
-    - lockup
-    - costs-2
-    - costs-3
-    - cost-voting
-    - bns
+    - signers
+    - signers-voting
 plan:
   batches:
     - id: 0
@@ -108,8 +111,8 @@ plan:
             path: contracts/sigle-post-v001.clar
             clarity-version: 3
         - emulated-contract-publish:
-            contract-name: sigle-profiles
+            contract-name: sigle-profiles-v001
             emulated-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
-            path: contracts/sigle-profiles.clar
+            path: contracts/sigle-profiles-v001.clar
             clarity-version: 3
       epoch: "3.0"

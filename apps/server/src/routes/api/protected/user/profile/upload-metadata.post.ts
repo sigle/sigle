@@ -1,4 +1,6 @@
 import { ProfileMetadataSchema } from "@sigle/sdk";
+import { createError, defineEventHandler, readBody } from "h3";
+import { defineRouteMeta } from "nitropack/runtime";
 import { fromError } from "zod-validation-error";
 import { aerweaveUploadFile } from "~/lib/arweave";
 
@@ -36,6 +38,16 @@ defineRouteMeta({
                   type: "string",
                 },
               },
+            },
+          },
+        },
+      },
+      400: {
+        description: "Bad request",
+        content: {
+          "application/json": {
+            schema: {
+              $ref: "#/components/schemas/BadRequest",
             },
           },
         },

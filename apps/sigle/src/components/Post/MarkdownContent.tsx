@@ -1,6 +1,6 @@
-import { resolveImageUrl } from "@/lib/images";
 import ReactMarkdown from "react-markdown";
 import { Tweet } from "react-tweet";
+import { resolveImageUrl } from "@/lib/images";
 import {
   getTweetIdFromUrl,
   isValidTwitterUrl,
@@ -16,12 +16,13 @@ interface PostMarkdownContentProps {
 
 export const PostMarkdownContent = ({ content }: PostMarkdownContentProps) => {
   return (
-    <div className="prose mt-10 dark:prose-invert lg:prose-lg">
+    <div className="prose mt-10 lg:prose-lg dark:prose-invert">
       <ReactMarkdown
         components={{
           img: ({ node, src, ...props }) => {
-            src = src ? resolveImageUrl(src) : undefined;
-            // eslint-disable-next-line @next/next/no-img-element, jsx-a11y/alt-text
+            src = src ? resolveImageUrl(src as string) : undefined;
+            // biome-ignore lint/a11y/useAltText: ok
+            // biome-ignore lint/performance/noImgElement: ok
             return <img src={src} {...props} />;
           },
           a: ({ node, href, ...props }) => {

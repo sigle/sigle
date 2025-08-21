@@ -1,5 +1,5 @@
 import type { StacksNetworkName } from "@stacks/network";
-import { AssetString } from "@stacks/transactions";
+import type { AssetString } from "@stacks/transactions";
 
 export const config: {
   [key in StacksNetworkName]: {
@@ -21,26 +21,28 @@ export const config: {
     fixedPriceMinter: "TODO",
   },
   testnet: {
-    protocolAddress: "STXNKH7PH0JNV55J08BC3C9586PVJ46XG0K69DT5",
+    protocolAddress: "ST21VRKNB56B9AJ1CH3SQ7WC581QXFVJP406SBVJA",
     sBTCAsset:
       "ST1F7QA2MDF17S807EPA36TSS8AMEFY4KA9TVGWXT.sbtc-token::sbtc-token",
-    nftTrait: "STXNKH7PH0JNV55J08BC3C9586PVJ46XG0K69DT5.nft-trait",
+    nftTrait: "ST21VRKNB56B9AJ1CH3SQ7WC581QXFVJP406SBVJA.nft-trait",
     commissionTrait:
-      "STXNKH7PH0JNV55J08BC3C9586PVJ46XG0K69DT5.commission-trait",
-    postTrait: "STXNKH7PH0JNV55J08BC3C9586PVJ46XG0K69DT5.sigle-post-trait-v001",
+      "ST21VRKNB56B9AJ1CH3SQ7WC581QXFVJP406SBVJA.commission-trait",
+    postTrait:
+      "ST21VRKNB56B9AJ1CH3SQ7WC581QXFVJP406SBVJA.sigle-post-trait-v001",
     fixedPriceMinter:
-      "STXNKH7PH0JNV55J08BC3C9586PVJ46XG0K69DT5.sigle-minter-fixed-price-v001",
+      "ST21VRKNB56B9AJ1CH3SQ7WC581QXFVJP406SBVJA.sigle-minter-fixed-price-v001",
   },
   devnet: {
-    protocolAddress: "STXNKH7PH0JNV55J08BC3C9586PVJ46XG0K69DT5",
+    protocolAddress: "ST21VRKNB56B9AJ1CH3SQ7WC581QXFVJP406SBVJA",
     sBTCAsset:
       "SM3VDXK3WZZSA84XXFKAFAF15NNZX32CTSG82JFQ4.sbtc-token::sbtc-token",
-    nftTrait: "STXNKH7PH0JNV55J08BC3C9586PVJ46XG0K69DT5.nft-trait",
+    nftTrait: "ST21VRKNB56B9AJ1CH3SQ7WC581QXFVJP406SBVJA.nft-trait",
     commissionTrait:
-      "STXNKH7PH0JNV55J08BC3C9586PVJ46XG0K69DT5.commission-trait",
-    postTrait: "STXNKH7PH0JNV55J08BC3C9586PVJ46XG0K69DT5.sigle-post-trait-v001",
+      "ST21VRKNB56B9AJ1CH3SQ7WC581QXFVJP406SBVJA.commission-trait",
+    postTrait:
+      "ST21VRKNB56B9AJ1CH3SQ7WC581QXFVJP406SBVJA.sigle-post-trait-v001",
     fixedPriceMinter:
-      "STXNKH7PH0JNV55J08BC3C9586PVJ46XG0K69DT5.sigle-minter-fixed-price-v001",
+      "ST21VRKNB56B9AJ1CH3SQ7WC581QXFVJP406SBVJA.sigle-minter-fixed-price-v001",
   },
   mocknet: {
     protocolAddress: "ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM",
@@ -57,8 +59,9 @@ export const config: {
 };
 
 export const fixedMintFee = {
-  protocol: 1050n, // 35% of 3000
+  protocol: 600n, // 20% of 3000
   creator: 1500n, // 50% of 3000
+  createReferrer: 450n, // 15% of 3000
   mintReferrer: 450n, // 15% of 3000
   total: 3000n, // Total in sats
 };

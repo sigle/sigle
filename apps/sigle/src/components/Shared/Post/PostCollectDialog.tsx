@@ -1,20 +1,5 @@
 "use client";
 
-import type { paths } from "@/__generated__/sigle-api/openapi";
-import { appConfig } from "@/config";
-import { useContractCall } from "@/hooks/useContractCall";
-import {
-  formatUSDollar,
-  useCurrencyFiatPrice,
-} from "@/hooks/useCurrencyFiatPrice";
-import { useStacksLogin } from "@/hooks/useStacksLogin";
-import { resolveImageUrl } from "@/lib/images";
-import { sigleClient } from "@/lib/sigle";
-import {
-  formatReadableAddress,
-  getExplorerTransactionUrl,
-  getPromiseTransactionConfirmation,
-} from "@/lib/stacks";
 import {
   Badge,
   Button,
@@ -27,6 +12,7 @@ import {
   Tooltip,
   VisuallyHidden,
 } from "@radix-ui/themes";
+import type { paths } from "@sigle/sdk";
 import { fixedMintFee, formatBTC } from "@sigle/sdk";
 import {
   IconHelpCircle,
@@ -34,15 +20,29 @@ import {
   IconMinus,
   IconPlus,
 } from "@tabler/icons-react";
-import { useSession } from "next-auth/react";
 import Image from "next/image";
 import { useSearchParams } from "next/navigation";
 import { useState } from "react";
 import { toast } from "sonner";
+import { appConfig } from "@/config";
+import { useContractCall } from "@/hooks/useContractCall";
+import {
+  formatUSDollar,
+  useCurrencyFiatPrice,
+} from "@/hooks/useCurrencyFiatPrice";
+import { useStacksLogin } from "@/hooks/useStacksLogin";
+import { useSession } from "@/lib/auth-hooks";
+import { resolveImageUrl } from "@/lib/images";
+import { sigleClient } from "@/lib/sigle";
+import {
+  formatReadableAddress,
+  getExplorerTransactionUrl,
+  getPromiseTransactionConfirmation,
+} from "@/lib/stacks";
 import { ProfileAvatar } from "../Profile/ProfileAvatar";
 
 interface PostCollectDialogProps {
-  post: paths["/api/posts/list"]["get"]["responses"]["200"]["content"]["application/json"][number];
+  post: paths["/api/posts/list"]["get"]["responses"]["200"]["content"]["application/json"]["results"][number];
   open: boolean;
   onOpenChange: (open: boolean) => void;
 }
@@ -62,6 +62,7 @@ export const PostCollectDialog = ({
       open ? "sBTC" : undefined,
     );
   const [editions, setEditions] = useState(1);
+  const isPostOwner = session?.user.id === post.address.split(".")[0];
 
   const { contractCall, loading: contractLoading } = useContractCall({
     onSuccess: (data) => {
@@ -85,30 +86,33 @@ export const PostCollectDialog = ({
   });
 
   const onCollect = async () => {
-    if (!session) {
+    if (!session || !post.minterFixedPrice) {
       login();
       return;
     }
 
-    // TODO owner mint
-    if (session.user.address === post.address.split(".")[0]) {
-      alert("You cannot collect your own post (will be possible soon)");
+    // Handle owner mint case
+    if (isPostOwner) {
+      const { parameters } = await sigleClient.ownerMint({
+        contract: post.address,
+      });
+
+      await contractCall(parameters);
       return;
     }
 
     const { parameters } = await sigleClient.mint({
-      sender: session.user.address,
+      sender: session.user.id,
       contract: post.address,
       amount: editions,
       referral: referral ? referral : undefined,
-      price: post.price,
+      price: post.minterFixedPrice.price,
     });
 
     await contractCall(parameters);
   };
 
   const incrementEditions = () => {
-    const maxMints = 10;
     const remainingEditions = post.maxSupply - editions;
     if (
       (post.openEdition ||
@@ -126,13 +130,19 @@ export const PostCollectDialog = ({
     }
   };
 
-  const price = BigInt(post.price);
+  if (!post.minterFixedPrice) {
+    return null;
+  }
+
+  const price = BigInt(post.minterFixedPrice.price);
   const isFree = price === BigInt(0);
   const loadingCollect = contractLoading;
   const totalPrice = BigInt(editions) * (price + fixedMintFee.total);
   const protocolFee = BigInt(editions) * fixedMintFee.protocol;
   const creatorFee = BigInt(editions) * (price + fixedMintFee.creator);
-  const referrerFee = BigInt(editions) * fixedMintFee.mintReferrer;
+  const createReferrerFee = BigInt(editions) * fixedMintFee.createReferrer;
+  const mintReferrerFee = BigInt(editions) * fixedMintFee.mintReferrer;
+  const maxMints = isPostOwner ? 1 : 10;
 
   return (
     <Dialog.Root open={open} onOpenChange={onOpenChange}>
@@ -238,7 +248,10 @@ export const PostCollectDialog = ({
                 color="gray"
                 highContrast
                 onClick={incrementEditions}
-                disabled={!post.openEdition && editions === post.maxSupply}
+                disabled={
+                  (!post.openEdition && editions === post.maxSupply) ||
+                  editions === maxMints
+                }
               >
                 <IconPlus className="size-4" />
               </IconButton>
@@ -250,44 +263,60 @@ export const PostCollectDialog = ({
           <div className="flex items-start justify-between">
             <Text className="flex items-center gap-1" size="3" weight="medium">
               Total{" "}
-              <Tooltip
-                content={
-                  <div className="grid gap-2 p-2">
-                    <div className="flex justify-between gap-2">
-                      <Text>Creator:</Text>
-                      <Text>{formatBTC(creatorFee)} sBTC</Text>
+              {!isPostOwner ? (
+                <Tooltip
+                  content={
+                    <div className="grid gap-2 p-2">
+                      <div className="flex justify-between gap-2">
+                        <Text>Creator:</Text>
+                        <Text>{formatBTC(creatorFee)} sBTC</Text>
+                      </div>
+                      <div className="flex justify-between gap-2">
+                        <Text>Platform:</Text>
+                        <Text>{formatBTC(protocolFee)} sBTC</Text>
+                      </div>
+                      <div className="flex justify-between gap-2">
+                        <Text>Create referrer:</Text>
+                        <Text>{formatBTC(createReferrerFee)} sBTC</Text>
+                      </div>
+                      <div className="flex justify-between gap-2">
+                        <Text>Mint referrer:</Text>
+                        <Text>{formatBTC(mintReferrerFee)} sBTC</Text>
+                      </div>
                     </div>
-                    <div className="flex justify-between gap-2">
-                      <Text>Platform:</Text>
-                      <Text>{formatBTC(protocolFee)} sBTC</Text>
-                    </div>
-                    <div className="flex justify-between gap-2">
-                      <Text>Referrer:</Text>
-                      <Text>{formatBTC(referrerFee)} sBTC</Text>
-                    </div>
-                  </div>
-                }
-              >
-                <Text color="gray">
-                  <IconInfoCircle size={16} />
-                </Text>
-              </Tooltip>
+                  }
+                >
+                  <Text color="gray">
+                    <IconInfoCircle size={16} />
+                  </Text>
+                </Tooltip>
+              ) : null}
             </Text>
             <div className="text-right">
-              <Text as="p" size="3" weight="medium">
+              <Text
+                as="p"
+                size="3"
+                weight="medium"
+                className={isPostOwner ? "line-through" : undefined}
+              >
                 {formatBTC(totalPrice)} sBTC
               </Text>
-              {loadingCurrencyFiatPrice ? (
+              {!isPostOwner && loadingCurrencyFiatPrice ? (
                 <Text as="p" size="1">
                   <Skeleton>price...</Skeleton>
                 </Text>
               ) : null}
-              {totalPrice && currencyFiatPrice ? (
+              {!isPostOwner && totalPrice && currencyFiatPrice ? (
                 <Text as="p" size="1" color="gray">
                   ~
                   {formatUSDollar.format(
                     Number(formatBTC(totalPrice)) * Number(currencyFiatPrice),
                   )}
+                </Text>
+              ) : null}
+              {isPostOwner ? (
+                <Text as="p" size="1" color="gray">
+                  Collect your own post for free.
                 </Text>
               ) : null}
             </div>
@@ -300,7 +329,7 @@ export const PostCollectDialog = ({
               loading={loadingCollect}
               onClick={onCollect}
             >
-              Collect
+              {isPostOwner ? "Collect as owner" : "Collect"}
             </Button>
           </div>
         </div>

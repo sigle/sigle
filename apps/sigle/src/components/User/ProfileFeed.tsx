@@ -1,7 +1,9 @@
-import { sigleApiClient } from "@/__generated__/sigle-api";
-import type { paths } from "@/__generated__/sigle-api/openapi";
+"use client";
+
 import { Button, Flex, Text } from "@radix-ui/themes";
-import { useSession } from "next-auth/react";
+import type { paths } from "@sigle/sdk";
+import { useSession } from "@/lib/auth-hooks";
+import { sigleApiClient } from "@/lib/sigle";
 import { GetFamiliarCards } from "../Dashboard/GetFamiliarCards";
 import { NextLink } from "../Shared/NextLink";
 import { PostListItem } from "../Shared/Post/ListItem";
@@ -27,7 +29,7 @@ export const ProfileFeed = ({ user }: ProfileFeedProps) => {
     },
   );
 
-  if (posts?.length === 0 && user.id === session?.user.id) {
+  if (posts.results.length === 0 && user.id === session?.user.id) {
     return (
       <>
         <div className="my-20 flex flex-col items-center gap-3">
@@ -44,7 +46,7 @@ export const ProfileFeed = ({ user }: ProfileFeedProps) => {
     );
   }
 
-  if (posts.length === 0) {
+  if (posts.results.length === 0) {
     return (
       <div className="my-20 flex flex-col items-center gap-3">
         <Text>This user has not published anything yet.</Text>
@@ -57,7 +59,7 @@ export const ProfileFeed = ({ user }: ProfileFeedProps) => {
 
   return (
     <div>
-      {posts.map((post) => {
+      {posts.results.map((post) => {
         return <PostListItem key={post.id} post={post} />;
       })}
     </div>

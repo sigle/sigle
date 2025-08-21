@@ -1,13 +1,14 @@
-import { cn } from "@/lib/cn";
 import { Dialog, Inset, Text } from "@radix-ui/themes";
 import {
   IconBrandGoogle,
   IconCards,
   IconChevronRight,
 } from "@tabler/icons-react";
+import { cn } from "@/lib/cn";
 import { useEditorStore } from "../store";
 import { CollectSettings } from "./CollectSettings";
 import { DialogTitle } from "./DialogTitle";
+import { GeneralSettings } from "./GeneralSettings";
 import { MetaSettings } from "./MetaSettings";
 import styles from "./styles.module.css";
 
@@ -24,13 +25,14 @@ export const EditorSettings = () => {
         )}
       >
         {menuOpen === true ? (
-          <div className="animate-in fade-in slide-in-from-right-5">
+          <div className="animate-in slide-in-from-right-5 fade-in">
             <DialogTitle
               title="Post settings"
               description="Edit your post settings"
             />
 
             <Inset side="x">
+              {/* biome-ignore lint/a11y/noStaticElementInteractions: ok */}
               <div
                 className="flex cursor-pointer justify-between border-y border-gray-5 px-6 py-4 transition-colors hover:bg-gray-2"
                 onClick={() => setMenuOpen("meta")}
@@ -46,6 +48,7 @@ export const EditorSettings = () => {
                   <IconChevronRight size={24} />
                 </Text>
               </div>
+              {/* biome-ignore lint/a11y/noStaticElementInteractions: ok */}
               <div
                 className="flex cursor-pointer justify-between border-b border-gray-5 px-6 py-4 transition-colors hover:bg-gray-2"
                 onClick={() => setMenuOpen("collect")}
@@ -55,13 +58,14 @@ export const EditorSettings = () => {
                   weight="medium"
                   className="flex items-center gap-2"
                 >
-                  <IconCards size={20} /> Collect settings
+                  <IconCards size={20} /> NFT collection
                 </Text>
                 <Text as="div" color="gray">
                   <IconChevronRight size={24} />
                 </Text>
               </div>
             </Inset>
+            <GeneralSettings />
           </div>
         ) : null}
 

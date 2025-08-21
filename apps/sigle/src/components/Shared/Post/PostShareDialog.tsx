@@ -1,7 +1,3 @@
-import type { paths } from "@/__generated__/sigle-api/openapi";
-import { appConfig } from "@/config";
-import { env } from "@/env";
-import { Routes } from "@/lib/routes";
 import {
   Button,
   Callout,
@@ -11,15 +7,19 @@ import {
   TextField,
   VisuallyHidden,
 } from "@radix-ui/themes";
+import type { paths } from "@sigle/sdk";
 import { IconReceiptTax } from "@tabler/icons-react";
-import { useSession } from "next-auth/react";
 import Image from "next/image";
 import { useState } from "react";
+import { appConfig } from "@/config";
+import { env } from "@/env";
+import { useSession } from "@/lib/auth-hooks";
+import { Routes } from "@/lib/routes";
 
 interface PostShareDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  post: paths["/api/posts/list"]["get"]["responses"]["200"]["content"]["application/json"][0];
+  post: paths["/api/posts/list"]["get"]["responses"]["200"]["content"]["application/json"]["results"][number];
 }
 
 export const PostShareDialog = ({

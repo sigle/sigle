@@ -1,6 +1,6 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Text, TextField } from "@radix-ui/themes";
-import { IconBrandTwitter, IconBrandYoutube } from "@tabler/icons-react";
+import { IconBrandX, IconBrandYoutube } from "@tabler/icons-react";
 import type { NodeViewProps } from "@tiptap/core";
 import { NodeViewWrapper } from "@tiptap/react";
 import type React from "react";
@@ -8,8 +8,8 @@ import { useEffect, useMemo } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { TwitterComponent } from "./twitter/component";
-import { TWITTER_REGEX_GLOBAL, isValidTwitterUrl } from "./twitter/twitter";
-import { YOUTUBE_REGEX_GLOBAL, isValidYoutubeUrl } from "./video";
+import { isValidTwitterUrl, TWITTER_REGEX_GLOBAL } from "./twitter/twitter";
+import { isValidYoutubeUrl, YOUTUBE_REGEX_GLOBAL } from "./video";
 import { VideoComponent } from "./video/component";
 
 export const isValidUrl = (val: string) => {
@@ -26,8 +26,6 @@ const embedSchema = z.object({
   }),
 });
 
-type EmbedFormData = z.infer<typeof embedSchema>;
-
 export const EmbedComponent = (props: NodeViewProps) => {
   const {
     register,
@@ -35,7 +33,7 @@ export const EmbedComponent = (props: NodeViewProps) => {
     getValues,
     setFocus,
     formState: { errors },
-  } = useForm<EmbedFormData>({
+  } = useForm({
     resolver: zodResolver(embedSchema),
   });
 
@@ -47,7 +45,6 @@ export const EmbedComponent = (props: NodeViewProps) => {
   }, [url]);
 
   // Override tiptap focus and focus on input instead
-  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
     if (!url) {
       setTimeout(() => {
@@ -91,7 +88,7 @@ export const EmbedComponent = (props: NodeViewProps) => {
           >
             <TextField.Slot>
               {props.node.attrs.embedType === "twitter" ? (
-                <IconBrandTwitter height="16" width="16" />
+                <IconBrandX height="16" width="16" />
               ) : null}
               {props.node.attrs.embedType === "video" ? (
                 <IconBrandYoutube height="16" width="16" />

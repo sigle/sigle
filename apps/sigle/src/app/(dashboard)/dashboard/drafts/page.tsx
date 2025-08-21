@@ -1,10 +1,5 @@
 "use client";
 
-import { sigleApiClient } from "@/__generated__/sigle-api";
-import type { paths } from "@/__generated__/sigle-api/openapi";
-import { NextLink } from "@/components/Shared/NextLink";
-import { Routes } from "@/lib/routes";
-import { getExplorerTransactionUrl } from "@/lib/stacks";
 import {
   Badge,
   Button,
@@ -16,10 +11,15 @@ import {
   Spinner,
   Text,
 } from "@radix-ui/themes";
+import type { paths } from "@sigle/sdk";
 import { IconDotsVertical } from "@tabler/icons-react";
 import { format } from "date-fns";
 import { useState } from "react";
 import { toast } from "sonner";
+import { NextLink } from "@/components/Shared/NextLink";
+import { Routes } from "@/lib/routes";
+import { sigleApiClient } from "@/lib/sigle";
+import { getExplorerTransactionUrl } from "@/lib/stacks";
 
 export default function DashboardDrafts() {
   const {
@@ -65,7 +65,7 @@ export default function DashboardDrafts() {
               No drafts yet
             </Text>
             <Button color="gray" highContrast asChild>
-              <NextLink href={"/p/new"}>Write a story</NextLink>
+              <NextLink href={"/p/new"}>Write a post</NextLink>
             </Button>
           </Flex>
         ) : null}

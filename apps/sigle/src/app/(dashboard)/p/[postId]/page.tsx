@@ -1,7 +1,7 @@
-import { sigleApiFetchclient } from "@/__generated__/sigle-api";
-import type { Routes } from "@/lib/routes";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
+import type { Routes } from "@/lib/routes";
+import { sigleApiFetchClient } from "@/lib/sigle";
 import { PostClientPage } from "./page-client";
 
 export const dynamic = "force-dynamic";
@@ -13,7 +13,7 @@ type Props = {
 export async function generateMetadata(props: Props): Promise<Metadata> {
   const params = await props.params;
 
-  const { data: post } = await sigleApiFetchclient.GET("/api/posts/{postId}", {
+  const { data: post } = await sigleApiFetchClient.GET("/api/posts/{postId}", {
     params: {
       path: {
         postId: params.postId,
@@ -30,6 +30,13 @@ export async function generateMetadata(props: Props): Promise<Metadata> {
   return {
     title: `${title} | Sigle`,
     description,
+    alternates: {
+      canonical: post.canonicalUri,
+    },
+    robots: {
+      index: false,
+      follow: false,
+    },
   };
 }
 

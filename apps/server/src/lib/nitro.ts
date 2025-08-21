@@ -1,4 +1,13 @@
-import type { H3Event, MultiPartData } from "h3";
+import {
+  createError,
+  getQuery,
+  getRequestHeader,
+  type H3Event,
+  type MultiPartData,
+  readBody,
+  readMultipartFormData,
+  setResponseHeader,
+} from "h3";
 import type { z } from "zod";
 import { fromError } from "zod-validation-error";
 

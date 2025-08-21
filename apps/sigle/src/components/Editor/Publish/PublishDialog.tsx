@@ -1,14 +1,5 @@
 "use client";
 
-import { sigleApiClient, sigleApiFetchclient } from "@/__generated__/sigle-api";
-import { useContractCall } from "@/hooks/useContractCall";
-import { useContractDeploy } from "@/hooks/useContractDeploy";
-import { Routes } from "@/lib/routes";
-import { sigleClient } from "@/lib/sigle";
-import {
-  getExplorerTransactionUrl,
-  getPromiseTransactionConfirmation,
-} from "@/lib/stacks";
 import {
   Callout,
   Dialog,
@@ -25,6 +16,15 @@ import { usePostHog } from "posthog-js/react";
 import { useState } from "react";
 import { useFormContext } from "react-hook-form";
 import { toast } from "sonner";
+import { useContractCall } from "@/hooks/useContractCall";
+import { useContractDeploy } from "@/hooks/useContractDeploy";
+import { useSession } from "@/lib/auth-hooks";
+import { Routes } from "@/lib/routes";
+import { sigleApiClient, sigleApiFetchClient, sigleClient } from "@/lib/sigle";
+import {
+  getExplorerTransactionUrl,
+  getPromiseTransactionConfirmation,
+} from "@/lib/stacks";
 import type { EditorPostFormData } from "../EditorFormProvider";
 import { useEditorStore } from "../store";
 import { generateSigleMetadataFromForm } from "../utils";
@@ -35,6 +35,7 @@ interface PublishDialogProps {
 }
 
 export const PublishDialog = ({ postId }: PublishDialogProps) => {
+  const { data: session } = useSession();
   const posthog = usePostHog();
   const router = useRouter();
   const [publishingError, setPublishingError] = useState<string | null>(null);
@@ -63,14 +64,17 @@ export const PublishDialog = ({ postId }: PublishDialogProps) => {
       setPublishingLoading(false);
     },
     onSuccess: async (tx) => {
+      // For some reason, from time to time the txId is returned without the 0x prefix
+      const txId = !tx.txId.startsWith("0x") ? `0x${tx.txId}` : tx.txId;
+
       posthog.capture("post_publish_transaction_submitted", {
         postId,
-        txId: tx.txId,
+        txId,
       });
 
       setPublishingLoading({
         action: "transaction-pending",
-        txId: tx.txId,
+        txId,
       });
 
       await updateTxId({
@@ -80,7 +84,7 @@ export const PublishDialog = ({ postId }: PublishDialogProps) => {
           },
         },
         body: {
-          txId: tx.txId,
+          txId,
         },
       });
 
@@ -116,22 +120,35 @@ export const PublishDialog = ({ postId }: PublishDialogProps) => {
       async (data) => {
         try {
           setPublishingError(null);
+          if (!session) return;
 
           posthog.capture("post_publish_start", {
             postId,
           });
 
-          // TODO verify that images do not start with blob: otherwise it means it's still loading (in content)
-          // We should stop and notify the user that the image is still loading
-
           // Do we do one global id or other?
           // TODO create a REST route to determine the next post id? But do not use postId
           const newPostId = postId;
           const metadata = await generateSigleMetadataFromForm({
+            userAddress: session.user.id,
+            type: data.type,
             editor,
             postId: newPostId,
             post: data,
           });
+
+          // Check for blob URLs in editor content which indicates unfinished image uploads
+          // or something that went wrong during the upload process
+          if (metadata.content.content.includes("blob:")) {
+            setPublishingError(
+              "Please wait for all images to finish uploading before publishing",
+            );
+            toast.error("Images still uploading", {
+              description:
+                "Please wait for all images to finish uploading before publishing",
+            });
+            return;
+          }
 
           const uploadedMetadata = await uploadMetadata({
             params: {
@@ -141,6 +158,7 @@ export const PublishDialog = ({ postId }: PublishDialogProps) => {
             },
             body: {
               type,
+              // biome-ignore lint/suspicious/noExplicitAny: ok
               metadata: metadata as any,
             },
           });
@@ -163,14 +181,13 @@ export const PublishDialog = ({ postId }: PublishDialogProps) => {
             });
 
             await contractDeploy({
-              // TODO decide on the contract name slug, id or other
               contractName: newPostId,
               codeBody: contract,
             });
             return;
           }
 
-          const publishedPost = await sigleApiFetchclient.GET(
+          const publishedPost = await sigleApiFetchClient.GET(
             "/api/posts/{postId}",
             {
               params: {
@@ -191,7 +208,7 @@ export const PublishDialog = ({ postId }: PublishDialogProps) => {
             metadata: arweaveUrl,
           });
           await contractCall(parameters);
-          // biome-ignore lint/suspicious/noExplicitAny: <explanation>
+          // biome-ignore lint/suspicious/noExplicitAny: ok
         } catch (error: any) {
           console.error("Error SDK publishing", error);
           toast("Error publishing", {

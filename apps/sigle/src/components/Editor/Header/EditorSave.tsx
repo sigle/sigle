@@ -1,17 +1,19 @@
-import { sigleApiClient } from "@/__generated__/sigle-api";
-import { useDebouncedCallback } from "@/hooks/useDebouncedCallback";
 import { Callout, Text } from "@radix-ui/themes";
 import { parseBTC } from "@sigle/sdk";
 import { IconInfoCircle } from "@tabler/icons-react";
-import { useParams } from "next/navigation";
+import { useParams, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useFormContext } from "react-hook-form";
+import { useDebouncedCallback } from "@/hooks/useDebouncedCallback";
+import { sigleApiClient } from "@/lib/sigle";
 import type { EditorPostFormData } from "../EditorFormProvider";
 import { useEditorStore } from "../store";
 
 export const EditorSave = () => {
   const params = useParams();
   const postId = params.postId as string;
+  const searchParams = useSearchParams();
+  const forceSave = searchParams.get("forceSave") === "true";
   const [saveState, setSaveState] = useState<
     "idle" | "saving" | "error" | "saved"
   >("idle");
@@ -60,6 +62,14 @@ export const EditorSave = () => {
     2000,
     [editor],
   );
+
+  // Force save the post on mount if forceSave is true
+  useEffect(() => {
+    if (forceSave && editor) {
+      setSaveState("saving");
+      onAutoSave();
+    }
+  }, [forceSave, editor, onAutoSave]);
 
   // When the form is changing, we start a timer to save the post
   // We wait for the editor to be ready before listening to changes

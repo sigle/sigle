@@ -1,10 +1,16 @@
 import { encode } from "blurhash";
 import sharp from "sharp";
 import { blurHashToDataURL } from "./blurhash";
+import { convertCIDv0toCIDv1 } from "./ipfs";
 
 export const resolveImageUrl = (image: string) => {
   if (image?.startsWith("ipfs://")) {
-    image = `https://ipfs.io/ipfs/${image.slice(7)}`;
+    let cid = image.slice(7);
+    // We convert the CID to a v1 CID if it's a v0 CID so that images can be served by subdomain gateways
+    if (cid.startsWith("Qm")) {
+      cid = convertCIDv0toCIDv1(cid);
+    }
+    image = `https://${cid}.ipfs.w3s.link/`;
   }
   if (image?.startsWith("ar://")) {
     image = `https://arweave.net/${image.slice(5)}`;

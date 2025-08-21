@@ -1,10 +1,10 @@
 "use client";
 
-import { env } from "@/env";
-import { useSession } from "next-auth/react";
 import { usePathname, useSearchParams } from "next/navigation";
 import { usePostHog } from "posthog-js/react";
 import { Suspense, useEffect } from "react";
+import { env } from "@/env";
+import { useSession } from "@/lib/auth-hooks";
 
 export function PostHogInit(): null {
   const { data: session } = useSession();
@@ -45,7 +45,7 @@ function PostHogPageView(): null {
     if (pathname && posthog) {
       let url = window.origin + pathname;
       if (searchParams.toString()) {
-        url = url + `?${searchParams.toString()}`;
+        url = `${url}?${searchParams.toString()}`;
       }
 
       posthog.capture("$pageview", { $current_url: url });

@@ -1,14 +1,16 @@
-import { env } from "@/env";
-import { resolveImageUrl } from "@/lib/images";
 import {
+  createPostMetadata,
   type MediaImageMetadata,
   MediaImageMimeType,
   type MetadataAttribute,
   type PostMetadata,
-  createPostMetadata,
 } from "@sigle/sdk";
 import type { Editor } from "@tiptap/core";
 import { fileTypeFromBuffer } from "file-type";
+import { env } from "@/env";
+import { resolveImageUrl } from "@/lib/images";
+import { sigleApiFetchClient } from "@/lib/sigle";
+import type { CreatePostNftParams } from "../../app/api/post/nft-image/route";
 import type { EditorPostFormData } from "./EditorFormProvider";
 
 const generateMetadataAttributesFromForm = ({
@@ -35,6 +37,12 @@ const generateMetadataAttributesFromForm = ({
     attributes.push({
       value: post.metaDescription,
       key: "meta-description",
+    });
+  }
+  if (post.canonicalUri) {
+    attributes.push({
+      value: post.canonicalUri,
+      key: "canonical-uri",
     });
   }
 
@@ -68,11 +76,57 @@ const getImageMediaMetadata = async (
   };
 };
 
+const uploadNftImage = async (
+  {
+    postId,
+    type,
+  }: {
+    postId: string;
+    type: "published" | "draft";
+  },
+  params: CreatePostNftParams,
+) => {
+  const url = new URL(`${env.NEXT_PUBLIC_APP_URL}/api/post/nft-image`);
+  for (const [key, value] of Object.entries(params)) {
+    url.searchParams.append(key, String(value));
+  }
+  const response = await fetch(url.toString());
+
+  if (!response.ok) {
+    throw new Error("Failed to generate NFT image");
+  }
+
+  const formData = new FormData();
+  formData.append("file", await response.blob());
+  formData.append("type", type);
+
+  const data = await sigleApiFetchClient.POST(
+    "/api/protected/drafts/{draftId}/upload-nft-image",
+    {
+      params: {
+        path: {
+          draftId: postId,
+        },
+      },
+      // biome-ignore lint/suspicious/noExplicitAny: ok
+      body: formData as any,
+    },
+  );
+  if (!data.data) {
+    throw new Error("Failed to upload NFT image");
+  }
+  return data.data.url;
+};
+
 export const generateSigleMetadataFromForm = async ({
+  userAddress,
+  type,
   editor,
   postId,
   post,
 }: {
+  userAddress: string;
+  type: "published" | "draft";
   editor?: Editor;
   postId: string;
   post: EditorPostFormData;
@@ -95,8 +149,14 @@ export const generateSigleMetadataFromForm = async ({
     name: post.title,
     description,
     external_url: `${env.NEXT_PUBLIC_APP_URL}/p/${postId}`,
-    // TODO upload image to IPFS and add it to the metadata
-    // image: `${env.NEXT_PUBLIC_APP_URL}/api/post/${postId}/nft-image`,
+    image: await uploadNftImage(
+      { postId, type },
+      {
+        title: post.title,
+        coverImage: coverImage?.url,
+        username: userAddress,
+      },
+    ),
     // TODO keep content or rename to metadata?
     content: {
       id: postId,
@@ -105,8 +165,7 @@ export const generateSigleMetadataFromForm = async ({
       attributes:
         metadataAttributes.length > 0 ? metadataAttributes : undefined,
       coverImage,
-      // locale: 'en',
-      // tags: [],
+      tags: (post.tags?.length || 0) > 0 ? post.tags : undefined,
     },
   });
 

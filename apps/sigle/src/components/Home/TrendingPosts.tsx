@@ -1,17 +1,7 @@
 "use client";
 
-import { sigleApiClient } from "@/__generated__/sigle-api";
-import { Routes } from "@/lib/routes";
-import { formatReadableAddress } from "@/lib/stacks";
-import {
-  AspectRatio,
-  Card,
-  Container,
-  Heading,
-  Inset,
-  Link,
-  Text,
-} from "@radix-ui/themes";
+import { Container, Heading } from "@radix-ui/themes";
+import { sigleApiClient } from "@/lib/sigle";
 import { PostCard } from "../Shared/Post/Card";
 import {
   Carousel,
@@ -47,7 +37,7 @@ export const HomeTrendingPosts = () => {
         }}
       >
         <CarouselContent>
-          {posts.map((post) => (
+          {posts.results.map((post) => (
             <CarouselItem key={post.id} className="md:basis-1/2 lg:basis-1/4">
               <PostCard post={post} />
             </CarouselItem>
