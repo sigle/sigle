@@ -3,7 +3,7 @@
   "private": true,
   "version": "0.0.0",
   "scripts": {
-    "build": "next build",
+    "build": "next build --turbopack",
     "dev": "next dev --turbopack",
     "lint": "next lint",
     "start": "next start"
@@ -13,7 +13,7 @@
     "@hookform/resolvers": "5.1.1",
     "@radix-ui/react-collapsible": "1.1.7",
     "@radix-ui/themes": "3.2.1",
-    "@sentry/nextjs": "9.32.0",
+    "@sentry/nextjs": "10.5.0",
     "@sigle/sdk": "workspace:*",
     "@stacks/blockchain-api-client": "8.11.2",
     "@stacks/common": "7.0.2",
