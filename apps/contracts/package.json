@@ -13,7 +13,7 @@
     "@sigle/sdk": "workspace:*",
     "@stacks/network": "7.0.2",
     "@stacks/transactions": "7.0.6",
-    "typescript": "5.8.3",
+    "typescript": "5.9.2",
     "vite": "6.3.5",
     "vitest": "3.2.4",
     "vitest-environment-clarinet": "2.3.0"

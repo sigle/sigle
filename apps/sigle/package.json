@@ -102,7 +102,7 @@
     "radix-themes-tw": "1.1.0",
     "tailwindcss": "4.1.11",
     "tw-animate-css": "1.3.4",
-    "typescript": "5.8.3"
+    "typescript": "5.9.2"
   },
   "imports": {
     "#global.css": "./src/app/globals.css"

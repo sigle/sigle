@@ -43,6 +43,6 @@
   },
   "devDependencies": {
     "nitropack": "2.11.13",
-    "typescript": "5.8.3"
+    "typescript": "5.9.2"
   }
 }
