@@ -28,21 +28,21 @@
     "better-auth": "1.2.10",
     "blurhash": "2.0.5",
     "consola": "3.4.2",
-    "h3": "1.15.3",
+    "h3": "1.15.4",
     "multiformats": "13.3.6",
     "nitro-cors": "0.7.1",
     "pg-boss": "10.3.2",
-    "posthog-node": "5.1.1",
+    "posthog-node": "5.7.0",
     "prisma": "6.10.1",
-    "rate-limiter-flexible": "7.1.1",
-    "rou3": "0.6.3",
-    "sharp": "0.34.2",
+    "rate-limiter-flexible": "7.2.0",
+    "rou3": "0.7.3",
+    "sharp": "0.34.3",
     "sign-in-with-stacks": "0.1.2",
     "zod": "3.25.67",
     "zod-validation-error": "3.5.2"
   },
   "devDependencies": {
-    "nitropack": "2.11.13",
+    "nitropack": "2.12.4",
     "typescript": "5.9.2"
   }
 }

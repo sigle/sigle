@@ -1,3 +1,4 @@
+import { defineEventHandler, toWebRequest } from "h3";
 import { auth } from "~/lib/auth";
 
 /**

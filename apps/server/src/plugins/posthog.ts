@@ -1,4 +1,5 @@
 // Inspired by https://www.lichter.io/articles/nuxt3-sentry-recipe/
+import { defineNitroPlugin } from "nitropack/runtime";
 import { PostHog } from "posthog-node";
 import { env } from "~/env";
 

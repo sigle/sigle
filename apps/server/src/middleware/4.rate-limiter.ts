@@ -1,4 +1,10 @@
-import type { H3Event } from "h3";
+import {
+  createError,
+  defineEventHandler,
+  getRequestIP,
+  type H3Event,
+  setHeaders,
+} from "h3";
 import { RateLimiterPrisma, type RateLimiterRes } from "rate-limiter-flexible";
 import { addRoute, createRouter, findRoute } from "rou3";
 import { prisma } from "~/lib/prisma";

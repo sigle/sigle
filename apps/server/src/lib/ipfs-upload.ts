@@ -1,7 +1,7 @@
 import * as Signer from "@ucanto/principal/ed25519";
 import { create } from "@web3-storage/w3up-client";
 import * as Proof from "@web3-storage/w3up-client/proof";
-import type { H3Event } from "h3";
+import { createError, type H3Event } from "h3";
 import { env } from "~/env";
 import { consola } from "./consola";
 

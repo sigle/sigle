@@ -1,5 +1,5 @@
 import { TurboFactory } from "@ardrive/turbo-sdk";
-import type { H3Event } from "h3";
+import { createError, type H3Event } from "h3";
 import { env } from "~/env";
 import { createCIDv1FromBuffer } from "./ipfs";
 

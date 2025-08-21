@@ -1,3 +1,4 @@
+import { defineCachedEventHandler, defineRouteMeta } from "nitropack/runtime";
 import { prisma, SELECT_PUBLIC_USER_FIELDS } from "~/lib/prisma";
 
 defineRouteMeta({

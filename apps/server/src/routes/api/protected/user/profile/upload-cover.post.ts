@@ -1,3 +1,5 @@
+import { createError, defineEventHandler } from "h3";
+import { defineRouteMeta } from "nitropack/runtime";
 import { z } from "zod";
 import { allowedFormats, optimizeImage } from "~/lib/images";
 import { ipfsUploadFile } from "~/lib/ipfs-upload";

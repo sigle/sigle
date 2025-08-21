@@ -1,6 +1,7 @@
 // Inspired by https://www.lichter.io/articles/nuxt3-sentry-recipe/
 import * as Sentry from "@sentry/node";
 import { H3Error } from "h3";
+import { defineNitroPlugin } from "nitropack/runtime";
 import { env } from "~/env";
 
 const ignoreErrors = [
