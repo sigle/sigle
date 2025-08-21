@@ -30,7 +30,7 @@
     "@stacks/transactions": "7.0.6",
     "@tsconfig/recommended": "1.0.10",
     "@types/node": "22.15.21",
-    "openapi-typescript": "7.8.0",
+    "openapi-typescript": "7.9.1",
     "tsdown": "0.14.1",
     "typescript": "5.9.2",
     "vitest": "3.2.4",

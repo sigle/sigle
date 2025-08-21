@@ -15,8 +15,8 @@
     "@stacks/wallet-sdk": "7.0.6",
     "@tsconfig/recommended": "1.0.10",
     "@types/node": "22.15.21",
-    "smol-toml": "1.3.4",
-    "tsx": "4.20.3",
+    "smol-toml": "1.4.2",
+    "tsx": "4.20.4",
     "typescript": "5.9.2"
   }
 }
