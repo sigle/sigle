@@ -38,6 +38,12 @@
         "useKeyWithClickEvents": "off",
         "noSvgWithoutTitle": "off",
         "useSemanticElements": "off"
+      },
+      "suspicious": {
+        "noUnknownAtRules": "off"
+      },
+      "complexity": {
+        "noImportantStyles": "off"
       }
     }
   }
