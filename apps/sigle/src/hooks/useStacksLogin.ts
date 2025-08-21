@@ -129,7 +129,6 @@ export const useStacksLogin = () => {
     posthog.capture("user_logout");
     disconnect();
     await signOut();
-    window.location.href = "/api/logout";
   };
 
   return {
