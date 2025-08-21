@@ -1,3 +1,4 @@
+import { defineNitroPlugin } from "nitropack/runtime";
 import { env } from "~/env";
 import {
   createChainhook,

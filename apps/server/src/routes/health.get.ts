@@ -1,3 +1,6 @@
+import { defineEventHandler } from "h3";
+import { defineRouteMeta } from "nitropack/runtime";
+
 defineRouteMeta({
   openAPI: {
     summary: "Health check",

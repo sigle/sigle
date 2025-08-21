@@ -1,3 +1,4 @@
+import { defineNitroPlugin } from "nitropack/runtime";
 import PgBoss from "pg-boss";
 import { env } from "~/env";
 import { generateImageBlurhashJob } from "~/jobs/generate-image-blurhash";

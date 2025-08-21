@@ -1,4 +1,6 @@
 import { PostMetadataSchema } from "@sigle/sdk";
+import { createError, defineEventHandler, getRouterParam } from "h3";
+import { defineRouteMeta } from "nitropack/runtime";
 import { z } from "zod";
 import { fromError } from "zod-validation-error";
 import { aerweaveUploadFile } from "~/lib/arweave";

@@ -1,4 +1,5 @@
 import type { Payload } from "@hirosystems/chainhook-client";
+import { createError, defineEventHandler, readBody } from "h3";
 import { env } from "~/env";
 import { indexerJob } from "~/jobs/indexer/index";
 import { consola } from "~/lib/consola";

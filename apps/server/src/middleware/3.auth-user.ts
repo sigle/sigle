@@ -1,3 +1,4 @@
+import { createError, defineEventHandler } from "h3";
 import { auth } from "~/lib/auth";
 
 export interface AuthenticatedUser {

@@ -1,4 +1,6 @@
 import { ProfileMetadataSchema } from "@sigle/sdk";
+import { createError, defineEventHandler, readBody } from "h3";
+import { defineRouteMeta } from "nitropack/runtime";
 import { fromError } from "zod-validation-error";
 import { aerweaveUploadFile } from "~/lib/arweave";
 
