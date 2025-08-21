@@ -5,16 +5,17 @@
   "type": "module",
   "scripts": {
     "test": "vitest run",
-    "test:report": "vitest run -- --coverage --costs"
+    "test:report": "vitest run -- --coverage --costs",
+    "test:watch": "chokidar \"tests/**/*.ts\" \"contracts/**/*.clar\" -c \"npm run test:report\""
   },
   "devDependencies": {
-    "@hirosystems/clarinet-sdk": "3.1.0",
-    "@hirosystems/clarinet-sdk-wasm": "3.1.0",
+    "@hirosystems/clarinet-sdk": "3.5.0",
+    "@hirosystems/clarinet-sdk-wasm": "3.5.0",
     "@sigle/sdk": "workspace:*",
     "@stacks/network": "7.0.2",
     "@stacks/transactions": "7.0.6",
+    "chokidar-cli": "3.0.0",
     "typescript": "5.9.2",
-    "vite": "6.3.5",
     "vitest": "3.2.4",
     "vitest-environment-clarinet": "2.3.0"
   }

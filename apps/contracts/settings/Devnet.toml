@@ -86,7 +86,6 @@ sbtc_balance = 1_000_000_000
 disable_stacks_explorer = false
 disable_stacks_api = false
 # disable_postgres = false
-# disable_subnet_api = false
 # disable_bitcoin_explorer = true
 # working_dir = "tmp/devnet"
 # stacks_node_events_observers = ["host.docker.internal:8002"]
@@ -112,24 +111,13 @@ disable_stacks_api = false
 # postgres_username = "postgres"
 # postgres_password = "postgres"
 # postgres_database = "postgres"
-# bitcoin_node_image_url = "quay.io/hirosystems/bitcoind:26.0"
-# stacks_node_image_url = "quay.io/hirosystems/stacks-node:devnet-3.0"
-# stacks_signer_image_url = "quay.io/hirosystems/stacks-signer:devnet-3.0"
-# stacks_api_image_url = "hirosystems/stacks-blockchain-api:master"
+# bitcoin_node_image_url = "lncm/bitcoind:v27.2"
+# stacks_node_image_url = "blockstack/stacks-blockchain:3.2.0.0.0-alpine"
+# stacks_signer_image_url = "blockstack/stacks-signer:3.2.0.0.0.0-alpine"
+# stacks_api_image_url = "hirosystems/stacks-blockchain-api:latest"
 # stacks_explorer_image_url = "hirosystems/explorer:latest"
 # bitcoin_explorer_image_url = "quay.io/hirosystems/bitcoin-explorer:devnet"
 # postgres_image_url = "postgres:alpine"
-# enable_subnet_node = true
-# subnet_node_image_url = "hirosystems/stacks-subnets:0.8.1"
-# subnet_leader_mnemonic = "twice kind fence tip hidden tilt action fragile skin nothing glory cousin green tomorrow spring wrist shed math olympic multiply hip blue scout claw"
-# subnet_leader_derivation_path = "m/44'/5757'/0'/0/0"
-# subnet_contract_id = "ST173JK7NZBA4BS05ZRATQH1K89YJMTGEH1Z5J52E.subnet-v3-0-1"
-# subnet_node_rpc_port = 30443
-# subnet_node_p2p_port = 30444
-# subnet_events_ingestion_port = 30445
-# subnet_node_events_observers = ["host.docker.internal:8002"]
-# subnet_api_image_url = "hirosystems/stacks-blockchain-api:master"
-# subnet_api_postgres_database = "subnet_api"
 
 # epoch_2_0 = 100
 # epoch_2_05 = 100
@@ -139,6 +127,8 @@ disable_stacks_api = false
 # epoch_2_4 = 104
 # epoch_2_5 = 108
 # epoch_3_0 = 142
+# epoch_3_1 = 144
+# epoch_3_2 = 146
 
 # Send some stacking orders
 [[devnet.pox_stacking_orders]]
