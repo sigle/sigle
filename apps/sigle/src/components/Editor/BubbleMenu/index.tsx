@@ -6,16 +6,12 @@ import {
   IconStrikethrough,
   IconUnderline,
 } from "@tabler/icons-react";
-import {
-  type Editor,
-  isTextSelection,
-  BubbleMenu as TipTapBubbleMenu,
-} from "@tiptap/react";
+import { type Editor, isTextSelection } from "@tiptap/react";
+import { BubbleMenu as TipTapBubbleMenu } from "@tiptap/react/menus";
 import { useEffect } from "react";
 import { cn } from "@/lib/cn";
 import { EditorBubbleMenuLink } from "./BubbleMenuLink";
 import { useBubbleMenuStore } from "./store";
-import "./style.css";
 
 const BubbleMenuButton = ({
   active,
@@ -70,26 +66,40 @@ export const EditorBubbleMenu = ({ editor }: EditorBubbleMenuProps) => {
 
   return (
     <TipTapBubbleMenu
-      className="flex gap-3 px-4 py-3"
-      tippyOptions={{
-        duration: 100,
-        theme: "sigle-editor-bubble-menu",
-        onHidden: () => {
+      className="flex gap-3 px-4 py-3 bg-gray-12 rounded-3 text-gray-1"
+      updateDelay={100}
+      options={{
+        placement: "top",
+        offset: 8,
+        onHide: () => {
           resetLink();
         },
       }}
-      shouldShow={({ editor, state, from, to, view }) => {
+      shouldShow={({ editor, state, from, to, view, element }) => {
         // Take the initial implementation of the plugin and extends it
-        // https://github.com/ueberdosis/tiptap/blob/main/packages/extension-bubble-menu/src/bubble-menu-plugin.ts#L43
+        // https://github.com/ueberdosis/tiptap/blob/main/packages/extension-bubble-menu/src/bubble-menu-plugin.ts#L173
         const { doc, selection } = state;
         const { empty } = selection;
+
         // Sometime check for `empty` is not enough.
         // Doubleclick an empty paragraph returns a node size of 2.
         // So we check also for an empty text size.
         const isEmptyTextBlock =
           !doc.textBetween(from, to).length && isTextSelection(state.selection);
 
-        if (!view.hasFocus() || empty || isEmptyTextBlock) {
+        // When clicking on a element inside the bubble menu the editor "blur" event
+        // is called and the bubble menu item is focussed. In this case we should
+        // consider the menu as part of the editor and keep showing the menu
+        const isChildOfMenu = element.contains(document.activeElement);
+
+        const hasEditorFocus = view.hasFocus() || isChildOfMenu;
+
+        if (
+          !hasEditorFocus ||
+          empty ||
+          isEmptyTextBlock ||
+          !editor.isEditable
+        ) {
           return false;
         }
         // End default implementation
@@ -111,11 +121,6 @@ export const EditorBubbleMenu = ({ editor }: EditorBubbleMenuProps) => {
 
         /// Do not show on twitter embed
         if (editor.isActive("twitter")) {
-          return false;
-        }
-
-        /// Do not show on cta
-        if (editor.isActive("cta")) {
           return false;
         }
 

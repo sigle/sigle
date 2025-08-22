@@ -5,7 +5,6 @@ import type { Editor } from "@tiptap/core";
 import { Extension } from "@tiptap/core";
 import { type Range, ReactRenderer } from "@tiptap/react";
 import Suggestion, { type SuggestionOptions } from "@tiptap/suggestion";
-import tippy, { type Instance } from "tippy.js";
 import { CommandList, type CommandListRef } from "./CommandList";
 import "./style.css";
 

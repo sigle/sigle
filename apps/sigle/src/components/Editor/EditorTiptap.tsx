@@ -2,14 +2,11 @@ import "highlight.js/styles/night-owl.css";
 import TipTapBlockquote from "@tiptap/extension-blockquote";
 import TipTapBold from "@tiptap/extension-bold";
 import TipTapBulletList from "@tiptap/extension-bullet-list";
-import CharacterCount from "@tiptap/extension-character-count";
 import TipTapCode from "@tiptap/extension-code";
 import TipTapCodeBlockLowlight from "@tiptap/extension-code-block-lowlight";
 import TipTapDocument from "@tiptap/extension-document";
-import TipTapDropcursor from "@tiptap/extension-dropcursor";
 import TipTapHardBreak from "@tiptap/extension-hard-break";
 import TipTapHeading from "@tiptap/extension-heading";
-import TipTapHistory from "@tiptap/extension-history";
 import TipTapHorizontalRule from "@tiptap/extension-horizontal-rule";
 import TipTapItalic from "@tiptap/extension-italic";
 import TipTapLink from "@tiptap/extension-link";
@@ -20,6 +17,11 @@ import TipTapStrike from "@tiptap/extension-strike";
 import TipTapText from "@tiptap/extension-text";
 import TipTapTypography from "@tiptap/extension-typography";
 import TipTapUnderline from "@tiptap/extension-underline";
+import {
+  CharacterCount as TipTapCharacterCount,
+  Dropcursor as TipTapDropcursor,
+  UndoRedo as TipTapUndoRedo,
+} from "@tiptap/extensions";
 import {
   EditorContent,
   type Extensions,
@@ -64,9 +66,10 @@ export const EditorTipTap = () => {
   );
 
   const editor = useEditor({
+    shouldRerenderOnTransaction: true,
     immediatelyRender: false,
     extensions: [
-      CharacterCount,
+      TipTapCharacterCount,
       // Nodes
       TipTapDocument,
       TipTapParagraph,
@@ -142,7 +145,7 @@ export const EditorTipTap = () => {
         class: "bg-gray-11",
         width: 2,
       }),
-      TipTapHistory,
+      TipTapUndoRedo,
       TipTapPlaceholder(isMobile),
       TipTapTypography,
       // Custom extensions
