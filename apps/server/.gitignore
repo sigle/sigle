@@ -4,6 +4,7 @@ dist
 .nitro
 .cache
 .output
+src/__generated__/prisma
 .env*
 !.env.development
 !.env.testnet
