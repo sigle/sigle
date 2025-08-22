@@ -38,5 +38,8 @@ export const manageChainhookStatusJob = defineJob("manage-chainhook-status")
 
     consola.debug("manage-chainhook-status", {
       chainhooks: chainhooks.length,
+      // TODO number of API errors
+      // TODO number of interrupted chainhooks
+      // TODO number of chainhooks that are running
     });
   });
