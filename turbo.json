@@ -9,7 +9,7 @@
       "dependsOn": ["^build"]
     },
     "typecheck": {
-      "dependsOn": ["^build"]
+      "dependsOn": ["db:generate", "^build"]
     },
     "lint": {},
     "dev": {
