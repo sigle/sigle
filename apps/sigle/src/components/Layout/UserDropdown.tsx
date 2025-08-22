@@ -36,6 +36,11 @@ export const UserDropdown = () => {
     },
   );
 
+  const { data: userWhitelist } = sigleApiClient.useQuery(
+    "get",
+    "/api/protected/user/whitelisted",
+  );
+
   const onThemeChange = () => {
     const newTheme = resolvedTheme === "dark" ? "light" : "dark";
     setTheme(newTheme);
@@ -45,9 +50,6 @@ export const UserDropdown = () => {
   if (!session) {
     return null;
   }
-
-  // TODO: setup whitelisting logic
-  const whitelisted = true;
 
   return (
     <DropdownMenu.Root>
@@ -62,30 +64,28 @@ export const UserDropdown = () => {
         variant="soft"
         className="min-w-[150px]"
       >
-        {whitelisted ? (
-          <>
-            <DropdownMenu.Item asChild>
-              <NextLink href="/p/new">
-                <IconPencil size={16} /> Write a post
-              </NextLink>
-            </DropdownMenu.Item>
-            <DropdownMenu.Item asChild>
-              <NextLink href="/dashboard/settings">
-                <IconSettings size={16} /> Settings
-              </NextLink>
-            </DropdownMenu.Item>
-            <DropdownMenu.Item asChild>
-              <NextLink
-                href={Routes.userProfile({
-                  username: session.user.id,
-                })}
-              >
-                <IconUser size={16} /> Profile
-              </NextLink>
-            </DropdownMenu.Item>
-            <DropdownMenu.Separator />
-          </>
+        {userWhitelist?.whitelisted ? (
+          <DropdownMenu.Item asChild>
+            <NextLink href="/p/new">
+              <IconPencil size={16} /> Write a post
+            </NextLink>
+          </DropdownMenu.Item>
         ) : null}
+        <DropdownMenu.Item asChild>
+          <NextLink href="/dashboard/settings">
+            <IconSettings size={16} /> Settings
+          </NextLink>
+        </DropdownMenu.Item>
+        <DropdownMenu.Item asChild>
+          <NextLink
+            href={Routes.userProfile({
+              username: session.user.id,
+            })}
+          >
+            <IconUser size={16} /> Profile
+          </NextLink>
+        </DropdownMenu.Item>
+        <DropdownMenu.Separator />
         <DropdownMenu.Item onClick={onThemeChange}>
           {resolvedTheme === "dark" ? (
             <>
