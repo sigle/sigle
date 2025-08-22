@@ -32,7 +32,7 @@ export const env = createEnv({
     SENTRY_DSN: z.string().url().optional(),
     POSTHOG_API_KEY: z.string().optional(),
     POSTHOG_API_HOST: z.string().optional(),
-    W3UP_AGENT_KEY: z.string(),
-    W3UP_AGENT_PROOF: z.string(),
+    STORACHA_AGENT_KEY: z.string(),
+    STORACHA_AGENT_PROOF: z.string(),
   },
 });
