@@ -48,7 +48,7 @@ export default function DashboardDrafts() {
         {errorDrafts ? (
           <Flex justify="center" py="7">
             <Text size="2" color="red">
-              An error occurred, please try again later
+              An error occurred, please try again later. {errorDrafts.message}
             </Text>
           </Flex>
         ) : null}

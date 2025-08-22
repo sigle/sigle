@@ -1,6 +1,7 @@
-import { defineEventHandler, getRouterParam } from "h3";
+import { createError, defineEventHandler, getRouterParam } from "h3";
 import { defineRouteMeta } from "nitropack/runtime";
 import { prisma } from "~/lib/prisma";
+import { isUserWhitelisted } from "~/lib/users";
 
 defineRouteMeta({
   openAPI: {
@@ -10,6 +11,13 @@ defineRouteMeta({
 });
 
 export default defineEventHandler(async (event) => {
+  if (!isUserWhitelisted(event.context.user.id)) {
+    throw createError({
+      status: 403,
+      message: "User is not whitelisted.",
+    });
+  }
+
   const draftId = getRouterParam(event, "draftId");
 
   await prisma.draft.delete({

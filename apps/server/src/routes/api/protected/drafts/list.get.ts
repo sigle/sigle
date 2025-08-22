@@ -1,8 +1,9 @@
-import { defineEventHandler } from "h3";
+import { createError, defineEventHandler } from "h3";
 import { defineRouteMeta } from "nitropack/runtime";
 import { z } from "zod";
 import { getValidatedQueryZod } from "~/lib/nitro";
 import { prisma } from "~/lib/prisma";
+import { isUserWhitelisted } from "~/lib/users";
 
 defineRouteMeta({
   openAPI: {
@@ -86,6 +87,13 @@ const listQuerySchema = z.object({
 });
 
 export default defineEventHandler(async (event) => {
+  if (!isUserWhitelisted(event.context.user.id)) {
+    throw createError({
+      status: 403,
+      message: "User is not whitelisted.",
+    });
+  }
+
   const query = await getValidatedQueryZod(event, listQuerySchema);
 
   const draftsList = await prisma.draft.findMany({

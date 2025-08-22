@@ -1,7 +1,8 @@
 import { createId } from "@paralleldrive/cuid2";
-import { defineEventHandler } from "h3";
+import { createError, defineEventHandler } from "h3";
 import { defineRouteMeta } from "nitropack/runtime";
 import { prisma } from "~/lib/prisma";
+import { isUserWhitelisted } from "~/lib/users";
 
 defineRouteMeta({
   openAPI: {
@@ -39,6 +40,13 @@ defineRouteMeta({
 });
 
 export default defineEventHandler(async (event) => {
+  if (!isUserWhitelisted(event.context.user.id)) {
+    throw createError({
+      status: 403,
+      message: "User is not whitelisted.",
+    });
+  }
+
   const insertedDraft = await prisma.draft.create({
     data: {
       // Move to native @default prisma cuid2 once it's supported
