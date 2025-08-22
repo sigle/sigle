@@ -7,6 +7,7 @@ import {
   getChainhooks,
   preparePredicate,
 } from "~/lib/chainhook";
+import { minifyClarity } from "~/lib/clarity";
 import { consola } from "~/lib/consola";
 import { siglePostPrintPredicate } from "~/lib/predicates";
 import { prisma } from "~/lib/prisma";
@@ -130,7 +131,8 @@ export const executeNewPostJob = async (
       maxSupply: maxSupply,
     },
   });
-  if (contract !== data.contract) {
+  // Minify the contract to make comparison easier in case of formatting changes
+  if (minifyClarity(contract) !== minifyClarity(data.contract)) {
     throw new Error(`Contract mismatch: ${data.txId}`);
   }
 
