@@ -1,9 +1,11 @@
 import { defineNitroPlugin } from "nitropack/runtime";
 import { env } from "~/env";
+import { manageChainhookStatusJob } from "~/jobs/manage-chainhook-status";
 import {
   createChainhook,
   createPredicate,
   getChainhooks,
+  predicatePrefix,
   preparePredicate,
 } from "~/lib/chainhook";
 import { consola } from "~/lib/consola";
@@ -41,7 +43,7 @@ export default defineNitroPlugin(async () => {
 
   // Register all chainhooks from the array
   for (const predicate of predicatesToRegister) {
-    const predicateName = `${env.SIGLE_ENV}-${env.STACKS_ENV}.${predicate.name}`;
+    const predicateName = `${predicatePrefix}.${predicate.name}`;
     const hasChainhook = chainhooks.find(
       (chainhook) => chainhook.name === predicateName,
     );
@@ -57,5 +59,10 @@ export default defineNitroPlugin(async () => {
     }
   }
 
-  consola.success("Plugin: Chainhooks registered");
+  // TODO move to cron job
+  manageChainhookStatusJob.emit({});
+
+  consola.success(
+    `Plugin: ${predicatesToRegister.length} Chainhooks registered`,
+  );
 });

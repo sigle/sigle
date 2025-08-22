@@ -3,6 +3,8 @@ import type { Predicate } from "@hirosystems/chainhook-client";
 import { env } from "~/env";
 import { consola } from "./consola";
 
+export const predicatePrefix = `${env.SIGLE_ENV}-${env.STACKS_ENV}-sigle`;
+
 export const getChainhooks = async (): Promise<
   { name: string; uuid: string }[]
 > => {
@@ -13,6 +15,36 @@ export const getChainhooks = async (): Promise<
     },
   ).then((res) => res.json());
   return chainhooks;
+};
+
+export const getChainhookStatus = async (
+  chainhookUuid: string,
+): Promise<
+  | {
+      enabled: boolean;
+      status: {
+        type: "interrupted";
+        info: string;
+      };
+    }
+  | {
+      enabled: boolean;
+      status: {
+        type: "streaming";
+      };
+    }
+  | {
+      message: string;
+      status: "error";
+    }
+> => {
+  const chainhook = await fetch(
+    `https://api.platform.hiro.so/v1/ext/${env.HIRO_API_KEY}/chainhooks/${chainhookUuid}/status`,
+    {
+      method: "GET",
+    },
+  ).then((res) => res.json());
+  return chainhook;
 };
 
 export const createChainhook = async (
