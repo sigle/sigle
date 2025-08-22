@@ -47,11 +47,11 @@ importers:
         specifier: workspace:*
         version: link:../../packages/sdk
       '@stacks/network':
-        specifier: 7.0.2
-        version: 7.0.2(encoding@0.1.13)
+        specifier: 7.2.0
+        version: 7.2.0(encoding@0.1.13)
       '@stacks/transactions':
-        specifier: 7.0.6
-        version: 7.0.6(encoding@0.1.13)
+        specifier: 7.2.0
+        version: 7.2.0(encoding@0.1.13)
       chokidar-cli:
         specifier: 3.0.0
         version: 3.0.0
@@ -214,8 +214,8 @@ importers:
         specifier: 8.12.0
         version: 8.12.0(bufferutil@4.0.8)(utf-8-validate@5.0.10)
       '@stacks/network':
-        specifier: 7.0.2
-        version: 7.0.2(encoding@0.1.13)
+        specifier: 7.2.0
+        version: 7.2.0(encoding@0.1.13)
       '@t3-oss/env-core':
         specifier: 0.13.8
         version: 0.13.8(arktype@2.1.20)(typescript@5.9.2)(valibot@1.0.0-beta.15(typescript@5.9.2))(zod@3.25.67)
@@ -226,8 +226,8 @@ importers:
         specifier: 17.3.0
         version: 17.3.0(encoding@0.1.13)
       better-auth:
-        specifier: 1.2.10
-        version: 1.2.10
+        specifier: 1.3.7
+        version: 1.3.7(react-dom@19.1.1(react@19.1.1))(react@19.1.1)(zod@3.25.67)
       blurhash:
         specifier: 2.0.5
         version: 2.0.5
@@ -263,7 +263,7 @@ importers:
         version: 0.34.3
       sign-in-with-stacks:
         specifier: 0.1.2
-        version: 0.1.2(@stacks/common@7.0.2)(@stacks/encryption@7.0.6)(@stacks/network@7.0.2(encoding@0.1.13))(@stacks/transactions@7.0.6(encoding@0.1.13))
+        version: 0.1.2(@stacks/common@7.0.2)(@stacks/encryption@7.2.0)(@stacks/network@7.2.0(encoding@0.1.13))(@stacks/transactions@7.2.0(encoding@0.1.13))
       zod:
         specifier: 3.25.67
         version: 3.25.67
@@ -282,7 +282,7 @@ importers:
     dependencies:
       '@daveyplate/better-auth-tanstack':
         specifier: 1.3.6
-        version: 1.3.6(@tanstack/query-core@5.85.5)(@tanstack/react-query@5.85.5(react@19.1.1))(better-auth@1.2.10)(react-dom@19.1.1(react@19.1.1))(react@19.1.1)
+        version: 1.3.6(@tanstack/query-core@5.85.5)(@tanstack/react-query@5.85.5(react@19.1.1))(better-auth@1.3.7(react-dom@19.1.1(react@19.1.1))(react@19.1.1)(zod@3.25.67))(react-dom@19.1.1(react@19.1.1))(react@19.1.1)
       '@hookform/resolvers':
         specifier: 5.2.1
         version: 5.2.1(react-hook-form@7.62.0(react@19.1.1))
@@ -305,17 +305,17 @@ importers:
         specifier: 7.0.2
         version: 7.0.2
       '@stacks/connect':
-        specifier: 7.9.0
-        version: 7.9.0(encoding@0.1.13)
+        specifier: 8.1.9
+        version: 8.1.9(encoding@0.1.13)
       '@stacks/encryption':
-        specifier: 7.0.6
-        version: 7.0.6
+        specifier: 7.2.0
+        version: 7.2.0
       '@stacks/network':
-        specifier: 7.0.2
-        version: 7.0.2(encoding@0.1.13)
+        specifier: 7.2.0
+        version: 7.2.0(encoding@0.1.13)
       '@stacks/transactions':
-        specifier: 7.0.6
-        version: 7.0.6(encoding@0.1.13)
+        specifier: 7.2.0
+        version: 7.2.0(encoding@0.1.13)
       '@t3-oss/env-nextjs':
         specifier: 0.13.8
         version: 0.13.8(arktype@2.1.20)(typescript@5.9.2)(valibot@1.0.0-beta.15(typescript@5.9.2))(zod@3.25.67)
@@ -413,8 +413,8 @@ importers:
         specifier: 2.22.3
         version: 2.22.3(@tiptap/core@2.22.3(@tiptap/pm@2.22.3))(@tiptap/pm@2.22.3)
       better-auth:
-        specifier: 1.2.10
-        version: 1.2.10
+        specifier: 1.3.7
+        version: 1.3.7(react-dom@19.1.1(react@19.1.1))(react@19.1.1)(zod@3.25.67)
       clsx:
         specifier: 2.1.1
         version: 2.1.1
@@ -489,7 +489,7 @@ importers:
         version: 3.2.2(react-dom@19.1.1(react@19.1.1))(react@19.1.1)
       sign-in-with-stacks:
         specifier: 0.1.2
-        version: 0.1.2(@stacks/common@7.0.2)(@stacks/encryption@7.0.6)(@stacks/network@7.0.2(encoding@0.1.13))(@stacks/transactions@7.0.6(encoding@0.1.13))
+        version: 0.1.2(@stacks/common@7.0.2)(@stacks/encryption@7.2.0)(@stacks/network@7.2.0(encoding@0.1.13))(@stacks/transactions@7.2.0(encoding@0.1.13))
       sonner:
         specifier: 2.0.7
         version: 2.0.7(react-dom@19.1.1(react@19.1.1))(react@19.1.1)
@@ -583,14 +583,14 @@ importers:
         version: 3.5.2(zod@3.25.67)
     devDependencies:
       '@stacks/connect':
-        specifier: 7.9.0
-        version: 7.9.0(encoding@0.1.13)
+        specifier: 8.1.9
+        version: 8.1.9(encoding@0.1.13)
       '@stacks/network':
-        specifier: 7.0.2
-        version: 7.0.2(encoding@0.1.13)
+        specifier: 7.2.0
+        version: 7.2.0(encoding@0.1.13)
       '@stacks/transactions':
-        specifier: 7.0.6
-        version: 7.0.6(encoding@0.1.13)
+        specifier: 7.2.0
+        version: 7.2.0(encoding@0.1.13)
       '@tsconfig/recommended':
         specifier: 1.0.10
         version: 1.0.10
@@ -622,14 +622,14 @@ importers:
         specifier: workspace:*
         version: link:../sdk
       '@stacks/network':
-        specifier: 7.0.2
-        version: 7.0.2(encoding@0.1.13)
+        specifier: 7.2.0
+        version: 7.2.0(encoding@0.1.13)
       '@stacks/transactions':
-        specifier: 7.0.6
-        version: 7.0.6(encoding@0.1.13)
+        specifier: 7.2.0
+        version: 7.2.0(encoding@0.1.13)
       '@stacks/wallet-sdk':
-        specifier: 7.0.6
-        version: 7.0.6(encoding@0.1.13)
+        specifier: 7.2.0
+        version: 7.2.0(encoding@0.1.13)
       '@tsconfig/recommended':
         specifier: 1.0.10
         version: 1.0.10
@@ -758,8 +758,8 @@ packages:
     resolution: {integrity: sha512-ruv7Ae4J5dUYULmeXw1gmb7rYRz57OWCPM57pHojnLq/3Z1CK2lNSLTCVjxVk1F/TZHwOZZrOWi0ur95BbLxNQ==}
     engines: {node: '>=6.9.0'}
 
-  '@better-auth/utils@0.2.5':
-    resolution: {integrity: sha512-uI2+/8h/zVsH8RrYdG8eUErbuGBk16rZKQfz8CjxQOyCE6v7BqFYEbFwvOkvl1KbUdxhqOnXp78+uE5h8qVEgQ==}
+  '@better-auth/utils@0.2.6':
+    resolution: {integrity: sha512-3y/vaL5Ox33dBwgJ6ub3OPkVqr6B5xL2kgxNHG8eHZuryLyG/4JSPGqjbdRSgjuy9kALUZYDFl+ORIAxlWMSuA==}
 
   '@better-fetch/fetch@1.1.18':
     resolution: {integrity: sha512-rEFOE1MYIsBmoMJtQbl32PGHHXuG2hDxvEd7rUHE0vCBoFQVSDqaVs9hkZEtHCxRoY+CljXKFCOuJ8uxqw1LcA==}
@@ -2456,20 +2456,20 @@ packages:
     resolution: {integrity: sha512-dfUnCxiN9H4ap84DvD2ubjw+3vUNpstxa0TneY/Paat8a3R4uQZDLSvWjmznAY/DoahqTHl9V46HF/Zs3F29pg==}
     engines: {node: '>= 10.0.0'}
 
-  '@peculiar/asn1-android@2.3.16':
-    resolution: {integrity: sha512-a1viIv3bIahXNssrOIkXZIlI2ePpZaNmR30d4aBL99mu2rO+mT9D6zBsp7H6eROWGtmwv0Ionp5olJurIo09dw==}
+  '@peculiar/asn1-android@2.4.0':
+    resolution: {integrity: sha512-YFueREq97CLslZZBI8dKzis7jMfEHSLxM+nr0Zdx1POiXFLjqqwoY5s0F1UimdBiEw/iKlHey2m56MRDv7Jtyg==}
 
-  '@peculiar/asn1-ecc@2.3.15':
-    resolution: {integrity: sha512-/HtR91dvgog7z/WhCVdxZJ/jitJuIu8iTqiyWVgRE9Ac5imt2sT/E4obqIVGKQw7PIy+X6i8lVBoT6wC73XUgA==}
+  '@peculiar/asn1-ecc@2.4.0':
+    resolution: {integrity: sha512-fJiYUBCJBDkjh347zZe5H81BdJ0+OGIg0X9z06v8xXUoql3MFeENUX0JsjCaVaU9A0L85PefLPGYkIoGpTnXLQ==}
 
-  '@peculiar/asn1-rsa@2.3.15':
-    resolution: {integrity: sha512-p6hsanvPhexRtYSOHihLvUUgrJ8y0FtOM97N5UEpC+VifFYyZa0iZ5cXjTkZoDwxJ/TTJ1IJo3HVTB2JJTpXvg==}
+  '@peculiar/asn1-rsa@2.4.0':
+    resolution: {integrity: sha512-6PP75voaEnOSlWR9sD25iCQyLgFZHXbmxvUfnnDcfL6Zh5h2iHW38+bve4LfH7a60x7fkhZZNmiYqAlAff9Img==}
 
-  '@peculiar/asn1-schema@2.3.15':
-    resolution: {integrity: sha512-QPeD8UA8axQREpgR5UTAfu2mqQmm97oUqahDtNdBcfj3qAnoXzFdQW+aNf/tD2WVXF8Fhmftxoj0eMIT++gX2w==}
+  '@peculiar/asn1-schema@2.4.0':
+    resolution: {integrity: sha512-umbembjIWOrPSOzEGG5vxFLkeM8kzIhLkgigtsOrfLKnuzxWxejAcUX+q/SoZCdemlODOcr5WiYa7+dIEzBXZQ==}
 
-  '@peculiar/asn1-x509@2.3.15':
-    resolution: {integrity: sha512-0dK5xqTqSLaxv1FHXIcd4Q/BZNuopg+u1l23hT9rOmQ1g4dNtw0g/RnEi+TboB0gOwGtrWn269v27cMgchFIIg==}
+  '@peculiar/asn1-x509@2.4.0':
+    resolution: {integrity: sha512-F7mIZY2Eao2TaoVqigGMLv+NDdpwuBKU1fucHPONfzaBS4JXXCNCmfO0Z3dsy7JzKGqtDcYC1mr9JjaZQZNiuw==}
 
   '@perma/map@1.0.3':
     resolution: {integrity: sha512-Bf5njk0fnJGTFE2ETntq0N1oJ6YdCPIpTDn3R3KYZJQdeYSOCNL7mBrFlGnbqav8YQhJA/p81pvHINX9vAtHkQ==}
@@ -3932,8 +3932,8 @@ packages:
   '@scure/base@1.1.9':
     resolution: {integrity: sha512-8YKhl8GHiNI/pU2VMaofa2Tor7PJRAjwQLBBuilkJ9L5+13yVbC7JO/wS7piioAvPSwR3JKM1IJ/u4xQzbcXKg==}
 
-  '@scure/base@1.2.5':
-    resolution: {integrity: sha512-9rE6EOVeIQzt5TSu4v+K523F8u6DhBsoZWPGKlnCshhlDhy0kJzUX4V+tr2dWmzF1GdekvThABoEQBGBQI7xZw==}
+  '@scure/base@1.2.6':
+    resolution: {integrity: sha512-g/nm5FgUa//MCj1gV09zTJTaM6KBAHqLN907YVQqf7zC49+DcO4B1so4ZX07Ef10Twr6nuqYEH9GEggFXA4Fmg==}
 
   '@scure/bip32@1.1.3':
     resolution: {integrity: sha512-dSH3+LCWONlSNQuF34xZrG6Xas7tp2jSSqHb/pMfXWM0vKE4JZOtK3uJfoWouUVW5IGlls75HkXmYLldZ8ySgQ==}
@@ -4105,11 +4105,11 @@ packages:
   '@shikijs/vscode-textmate@10.0.2':
     resolution: {integrity: sha512-83yeghZ2xxin3Nj8z1NMd/NCuca+gsYXswywDy5bHvwlWL8tpTQmzGeUuHd9FC3E/SBEMvzJRwWEOz5gGes9Qg==}
 
-  '@simplewebauthn/browser@13.1.0':
-    resolution: {integrity: sha512-WuHZ/PYvyPJ9nxSzgHtOEjogBhwJfC8xzYkPC+rR/+8chl/ft4ngjiK8kSU5HtRJfczupyOh33b25TjYbvwAcg==}
+  '@simplewebauthn/browser@13.1.2':
+    resolution: {integrity: sha512-aZnW0KawAM83fSBUgglP5WofbrLbLyr7CoPqYr66Eppm7zO86YX6rrCjRB3hQKPrL7ATvY4FVXlykZ6w6FwYYw==}
 
-  '@simplewebauthn/server@13.1.1':
-    resolution: {integrity: sha512-1hsLpRHfSuMB9ee2aAdh0Htza/X3f4djhYISrggqGe3xopNjOcePiSDkDDoPzDYaaMCrbqGP1H2TYU7bgL9PmA==}
+  '@simplewebauthn/server@13.1.2':
+    resolution: {integrity: sha512-VwoDfvLXSCaRiD+xCIuyslU0HLxVggeE5BL06+GbsP2l1fGf5op8e0c3ZtKoi+vSg1q4ikjtAghC23ze2Q3H9g==}
     engines: {node: '>=20.0.0'}
 
   '@sinclair/typebox@0.27.8':
@@ -4136,8 +4136,8 @@ packages:
   '@speed-highlight/core@1.2.7':
     resolution: {integrity: sha512-0dxmVj4gxg3Jg879kvFS/msl4s9F3T9UXC1InxgOf7t5NvcPD97u/WTA5vL/IxWHMn7qSxBozqrnnE2wvl1m8g==}
 
-  '@stacks/auth@7.0.6':
-    resolution: {integrity: sha512-ouLOZJWbsULdXbKFZESnAmTe94Hz7297WcU94ZahT0pVEvf06KlYmHiBMhVUH/sJw2Oz7ylX5SQOg8tAdQaLaA==}
+  '@stacks/auth@7.2.0':
+    resolution: {integrity: sha512-u+Ky4CMQWFTPI6Au3VFcW74nSIA4Zb8YjsbOkcv0q9E6LiALyK4gozpKTxKvfW3/z1ER3z1Ky9uH/s4zY59rvg==}
 
   '@stacks/blockchain-api-client@8.12.0':
     resolution: {integrity: sha512-kuZJhGzkyfYJHLiDobVtLbhMFQkySxRw1PjRMZL9xhyiD1CReOQh7g3mqDl1sLmgwUey2D77Zfa01MIRAb8J+Q==}
@@ -4148,35 +4148,35 @@ packages:
   '@stacks/common@7.0.2':
     resolution: {integrity: sha512-+RSecHdkxOtswmE4tDDoZlYEuULpnTQVeDIG5eZ32opK8cFxf4EugAcK9CsIsHx/Se1yTEaQ21WGATmJGK84lQ==}
 
-  '@stacks/connect-ui@6.5.0':
-    resolution: {integrity: sha512-iXSpl2NxrjERBqtGgkZp0tX1uJgdWZXmsNo3I0cJYYTTbieSAE/Al9nTYc1wLTPW5w5oVvZEkQKo90WIrHR8Rw==}
+  '@stacks/connect-ui@8.0.0':
+    resolution: {integrity: sha512-m8yqg28EWQCATkVxILotzbqvcnk0n+qhyncTTNEYXVe4VnfV0eRXvxX88nbA/fot1k+MuQlMu3WhrBFLHJ/xzA==}
 
-  '@stacks/connect@7.9.0':
-    resolution: {integrity: sha512-UPv2UQpZwnNPYodL4bf+6Pu3kHY9BcRabAgAbmDajn3RFWvDrnOMmvLqJRGOvo5fEm8vSwxAGY8R7BSOPmlLdg==}
+  '@stacks/connect@8.1.9':
+    resolution: {integrity: sha512-4C6t7NHLEEYmQ2SOyFDPSHVqtInxy6On5jyDBf7cYLySDNRI0ljyrD7iOsg48Ab1483XpnHvOicvgYWs1BTX9Q==}
 
-  '@stacks/encryption@7.0.6':
-    resolution: {integrity: sha512-tUaYmsaRHRS95eeVBrfctAixFwL2yZHjDltC3dgQ+JjpcYNnWuvPOWoEEENwSU/t/Dj0b/xGSd1YW7z9CFd+cQ==}
+  '@stacks/encryption@7.2.0':
+    resolution: {integrity: sha512-XDgb5GuR2kURC0YJWo70xnWPKeizBg/qpGPDApBVLFgaOqFL4FdFmvxHXU5lVbFR3W+mtdxPHedWtQpxxOBlMQ==}
 
   '@stacks/network@6.17.0':
     resolution: {integrity: sha512-numHbfKjwco/rbkGPOEz8+FcJ2nBnS/tdJ8R422Q70h3SiA9eqk9RjSzB8p4JP8yW1SZvW+eihADHfMpBuZyfw==}
 
-  '@stacks/network@7.0.2':
-    resolution: {integrity: sha512-XzHnoWqku/jRrTgMXhmh3c+I0O9vDH24KlhzGDZtBu+8CGGyHNPAZzGwvoUShonMXrXjEnfO9IYQwV5aJhfv6g==}
+  '@stacks/network@7.2.0':
+    resolution: {integrity: sha512-AkLougCF2RLbK97TtISZxAhF3cE757XMXWOGKvEFWNauiQ5/bYyI9W5jZypG3yI/AyYIo04NKoFWWTnpJcn1iA==}
 
-  '@stacks/profile@7.0.6':
-    resolution: {integrity: sha512-VU1YJzlrlyJRASHmg1saCKVkkc3CWzOaHMREJAnbUdAUYtawCMhEpc0wvtZdqn3Om1dRh7iGgXoPmBdkK0PH0Q==}
+  '@stacks/profile@7.2.0':
+    resolution: {integrity: sha512-pzPgn/NpmjA7TdeA5U9OjXLwBNqGPrjWhsMy/ZC3iUdnIUvthgWwlPpydgQOTJaRqaDMdY24hFgT+og6QbyQQA==}
 
-  '@stacks/storage@7.0.6':
-    resolution: {integrity: sha512-F3chiKYx0ElOaV98RfJ5wRSlP8rHooM7r+nWC6js/dV2jH493jLZkVntWdWjIVz4A7Qx/0EWS96cow4Bma3DPw==}
+  '@stacks/storage@7.2.0':
+    resolution: {integrity: sha512-aBfHhfhIom/xMseJSArH0xWqOAhN7waY255s4PfxmRdCsE6GKeXxIdZvgNYcHXrSiIPH3spk00UDA4+8xiRAQA==}
 
   '@stacks/transactions@6.17.0':
     resolution: {integrity: sha512-FUah2BRgV66ApLcEXGNGhwyFTRXqX5Zco3LpiM3essw8PF0NQlHwwdPgtDko5RfrJl3LhGXXe/30nwsfNnB3+g==}
 
-  '@stacks/transactions@7.0.6':
-    resolution: {integrity: sha512-qRGo4tNwOh+avUv/u4JGqqUWQ8xW/iUWtJV0o3BxpMyRxqDXmj+m+yeAEVYf9jRDouOo+NaWmwtRmWc0URZPdw==}
+  '@stacks/transactions@7.2.0':
+    resolution: {integrity: sha512-U7wjlxM9Q+408ihRsv5mlKRslXGt2WCShKi1lduiqf5+dBSRGdVi8ttCIEckSsg3ulCVF3EHTQF3LZgw4kwKlQ==}
 
-  '@stacks/wallet-sdk@7.0.6':
-    resolution: {integrity: sha512-OTYdSfx7oYNAlNV1otUxmRA95gCaUQzrhloT5q4TxQKrxFXb2FLS/OoL0KoN3mYQgl0oDFGBViRj6B7I0bhjZQ==}
+  '@stacks/wallet-sdk@7.2.0':
+    resolution: {integrity: sha512-w4UmIaulB03ki0eosWA2ju4vXtF1N+n+nX+/GuV8ZW3rbZ7xeRCv16IzZZL6TspMcaUKyZKTVB2uximqBNbqPQ==}
 
   '@standard-schema/spec@1.0.0':
     resolution: {integrity: sha512-m2bOd0f2RT9k8QJx1JN85cZYyH1RqFBdlwtkSlf4tBDYLCiiZnv1fIIwacK6cqwXavOydf0NPToMQgpKq+dVlA==}
@@ -5520,8 +5520,8 @@ packages:
   base-x@3.0.9:
     resolution: {integrity: sha512-H7JU6iBHTal1gp56aKoaa//YUxEaAOUiydvrV/pILqIHXTtqxSkATOnDA2u+jZ/61sD+L/412+7kzXRtWukhpQ==}
 
-  base-x@4.0.0:
-    resolution: {integrity: sha512-FuwxlW4H5kh37X/oW59pwTzzTKRzfrrQwhmyspRM7swOEZcHtDZSCt45U6oKgtuFE+WYPblePMVIPR4RZrh/hw==}
+  base-x@4.0.1:
+    resolution: {integrity: sha512-uAZ8x6r6S3aUM9rbHGVOIsR15U/ZSc82b3ymnCPsT45Gk1DDvhDPdIgB5MrhirZWt+5K0EEPQH985kNqZgNPFw==}
 
   base64-js@1.5.1:
     resolution: {integrity: sha512-AKpaYlHn8t4SVbOHCy+b5+KKgvR4vrsD8vbvrbiQJps7fKDTkjkDry6ji0rUJjC0kzbNePLwzxq8iypo41qeWA==}
@@ -5539,11 +5539,20 @@ packages:
   bech32@2.0.0:
     resolution: {integrity: sha512-LcknSilhIGatDAsY1ak2I8VtGaHNhgMSYVxFrGLXv+xLHytaKZKcaUJJUE7qmBr7h33o5YQwP55pMI0xmkpJwg==}
 
-  better-auth@1.2.10:
-    resolution: {integrity: sha512-nEj1RG4DdLUuJiV5CR93ORyPCptGRBwksaPPCkUtGo9ka+UIlTpaiKoTaTqVLLYlqwX4bOj9tJ32oBNdf2G3Kg==}
+  better-auth@1.3.7:
+    resolution: {integrity: sha512-/1fEyx2SGgJQM5ujozDCh9eJksnVkNU/J7Fk/tG5Y390l8nKbrPvqiFlCjlMM+scR+UABJbQzA6An7HT50LHyQ==}
+    peerDependencies:
+      react: ^18.0.0 || ^19.0.0
+      react-dom: ^18.0.0 || ^19.0.0
+      zod: ^3.25.0 || ^4.0.0
+    peerDependenciesMeta:
+      react:
+        optional: true
+      react-dom:
+        optional: true
 
-  better-call@1.0.9:
-    resolution: {integrity: sha512-Qfm0gjk0XQz0oI7qvTK1hbqTsBY4xV2hsHAxF8LZfUYl3RaECCIifXuVqtPpZJWvlCCMlQSvkvhhyuApGUba6g==}
+  better-call@1.0.15:
+    resolution: {integrity: sha512-u4ZNRB1yBx5j3CltTEbY2ZoFPVcgsuvciAqTEmPvnZpZ483vlZf4LGJ5aVau1yMlrvlyHxOCica3OqXBLhmsUw==}
 
   better-path-resolve@1.0.0:
     resolution: {integrity: sha512-pbnl5XzGBdrFU/wT4jqmJVPn2B6UHPBOhzMQkY/SPUPB6QtUXtmBHBIwCbXJol93mOpGMnQyP/+BB19q04xj7g==}
@@ -8144,9 +8153,9 @@ packages:
   kuler@2.0.0:
     resolution: {integrity: sha512-Xq9nH7KlWZmXAtodXDDRE7vs6DU1gTU8zYDHDiWLSip45Egwq3plLHzPn27NgvzL2r1LMPC1vdqh98sQxtqj4A==}
 
-  kysely@0.28.2:
-    resolution: {integrity: sha512-4YAVLoF0Sf0UTqlhgQMFU9iQECdah7n+13ANkiuVfRvlK+uI0Etbgd7bVP36dKlG+NXWbhGua8vnGt+sdhvT7A==}
-    engines: {node: '>=18.0.0'}
+  kysely@0.28.5:
+    resolution: {integrity: sha512-rlB0I/c6FBDWPcQoDtkxi9zIvpmnV5xoIalfCMSMCa7nuA6VGA3F54TW9mEgX4DVf10sXAWCF5fDbamI/5ZpKA==}
+    engines: {node: '>=20.0.0'}
 
   lambda-local@2.2.0:
     resolution: {integrity: sha512-bPcgpIXbHnVGfI/omZIlgucDqlf4LrsunwoKue5JdZeGybt8L6KyJz2Zu19ffuZwIwLj2NAI2ZyaqNT6/cetcg==}
@@ -12054,9 +12063,8 @@ snapshots:
       '@babel/helper-string-parser': 7.27.1
       '@babel/helper-validator-identifier': 7.27.1
 
-  '@better-auth/utils@0.2.5':
+  '@better-auth/utils@0.2.6':
     dependencies:
-      typescript: 5.9.2
       uncrypto: 0.1.3
 
   '@better-fetch/fetch@1.1.18': {}
@@ -12394,11 +12402,11 @@ snapshots:
       enabled: 2.0.0
       kuler: 2.0.0
 
-  '@daveyplate/better-auth-tanstack@1.3.6(@tanstack/query-core@5.85.5)(@tanstack/react-query@5.85.5(react@19.1.1))(better-auth@1.2.10)(react-dom@19.1.1(react@19.1.1))(react@19.1.1)':
+  '@daveyplate/better-auth-tanstack@1.3.6(@tanstack/query-core@5.85.5)(@tanstack/react-query@5.85.5(react@19.1.1))(better-auth@1.3.7(react-dom@19.1.1(react@19.1.1))(react@19.1.1)(zod@3.25.67))(react-dom@19.1.1(react@19.1.1))(react@19.1.1)':
     dependencies:
       '@tanstack/query-core': 5.85.5
       '@tanstack/react-query': 5.85.5(react@19.1.1)
-      better-auth: 1.2.10
+      better-auth: 1.3.7(react-dom@19.1.1(react@19.1.1))(react@19.1.1)(zod@3.25.67)
       react: 19.1.1
       react-dom: 19.1.1(react@19.1.1)
 
@@ -12987,7 +12995,7 @@ snapshots:
   '@hirosystems/clarinet-sdk@3.5.0(encoding@0.1.13)':
     dependencies:
       '@hirosystems/clarinet-sdk-wasm': 3.5.0
-      '@stacks/transactions': 7.0.6(encoding@0.1.13)
+      '@stacks/transactions': 7.2.0(encoding@0.1.13)
       kolorist: 1.8.0
       prompts: 2.4.2
       yargs: 18.0.0
@@ -14029,35 +14037,35 @@ snapshots:
       '@parcel/watcher-win32-ia32': 2.5.1
       '@parcel/watcher-win32-x64': 2.5.1
 
-  '@peculiar/asn1-android@2.3.16':
+  '@peculiar/asn1-android@2.4.0':
     dependencies:
-      '@peculiar/asn1-schema': 2.3.15
+      '@peculiar/asn1-schema': 2.4.0
       asn1js: 3.0.6
       tslib: 2.8.1
 
-  '@peculiar/asn1-ecc@2.3.15':
+  '@peculiar/asn1-ecc@2.4.0':
     dependencies:
-      '@peculiar/asn1-schema': 2.3.15
-      '@peculiar/asn1-x509': 2.3.15
+      '@peculiar/asn1-schema': 2.4.0
+      '@peculiar/asn1-x509': 2.4.0
       asn1js: 3.0.6
       tslib: 2.8.1
 
-  '@peculiar/asn1-rsa@2.3.15':
+  '@peculiar/asn1-rsa@2.4.0':
     dependencies:
-      '@peculiar/asn1-schema': 2.3.15
-      '@peculiar/asn1-x509': 2.3.15
+      '@peculiar/asn1-schema': 2.4.0
+      '@peculiar/asn1-x509': 2.4.0
       asn1js: 3.0.6
       tslib: 2.8.1
 
-  '@peculiar/asn1-schema@2.3.15':
+  '@peculiar/asn1-schema@2.4.0':
     dependencies:
       asn1js: 3.0.6
       pvtsutils: 1.3.6
       tslib: 2.8.1
 
-  '@peculiar/asn1-x509@2.3.15':
+  '@peculiar/asn1-x509@2.4.0':
     dependencies:
-      '@peculiar/asn1-schema': 2.3.15
+      '@peculiar/asn1-schema': 2.4.0
       asn1js: 3.0.6
       pvtsutils: 1.3.6
       tslib: 2.8.1
@@ -15492,7 +15500,7 @@ snapshots:
 
   '@scure/base@1.1.9': {}
 
-  '@scure/base@1.2.5': {}
+  '@scure/base@1.2.6': {}
 
   '@scure/bip32@1.1.3':
     dependencies:
@@ -15508,7 +15516,7 @@ snapshots:
   '@scure/bip39@1.6.0':
     dependencies:
       '@noble/hashes': 1.8.0
-      '@scure/base': 1.2.5
+      '@scure/base': 1.2.6
 
   '@scure/starknet@1.0.0':
     dependencies:
@@ -15756,17 +15764,17 @@ snapshots:
 
   '@shikijs/vscode-textmate@10.0.2': {}
 
-  '@simplewebauthn/browser@13.1.0': {}
+  '@simplewebauthn/browser@13.1.2': {}
 
-  '@simplewebauthn/server@13.1.1':
+  '@simplewebauthn/server@13.1.2':
     dependencies:
       '@hexagon/base64': 1.1.28
       '@levischuck/tiny-cbor': 0.2.11
-      '@peculiar/asn1-android': 2.3.16
-      '@peculiar/asn1-ecc': 2.3.15
-      '@peculiar/asn1-rsa': 2.3.15
-      '@peculiar/asn1-schema': 2.3.15
-      '@peculiar/asn1-x509': 2.3.15
+      '@peculiar/asn1-android': 2.4.0
+      '@peculiar/asn1-ecc': 2.4.0
+      '@peculiar/asn1-rsa': 2.4.0
+      '@peculiar/asn1-schema': 2.4.0
+      '@peculiar/asn1-x509': 2.4.0
 
   '@sinclair/typebox@0.27.8': {}
 
@@ -15804,13 +15812,13 @@ snapshots:
 
   '@speed-highlight/core@1.2.7': {}
 
-  '@stacks/auth@7.0.6(encoding@0.1.13)':
+  '@stacks/auth@7.2.0(encoding@0.1.13)':
     dependencies:
       '@noble/secp256k1': 1.7.1
       '@stacks/common': 7.0.2
-      '@stacks/encryption': 7.0.6
-      '@stacks/network': 7.0.2(encoding@0.1.13)
-      '@stacks/profile': 7.0.6(encoding@0.1.13)
+      '@stacks/encryption': 7.2.0
+      '@stacks/network': 7.2.0(encoding@0.1.13)
+      '@stacks/profile': 7.2.0(encoding@0.1.13)
       cross-fetch: 3.2.0(encoding@0.1.13)
       jsontokens: 4.0.1
     transitivePeerDependencies:
@@ -15835,25 +15843,24 @@ snapshots:
 
   '@stacks/common@7.0.2': {}
 
-  '@stacks/connect-ui@6.5.0':
+  '@stacks/connect-ui@8.0.0':
     dependencies:
       '@stencil/core': 2.22.3
 
-  '@stacks/connect@7.9.0(encoding@0.1.13)':
+  '@stacks/connect@8.1.9(encoding@0.1.13)':
     dependencies:
-      '@stacks/auth': 7.0.6(encoding@0.1.13)
+      '@scure/base': 1.2.6
       '@stacks/common': 7.0.2
-      '@stacks/connect-ui': 6.5.0
-      '@stacks/network': 7.0.2(encoding@0.1.13)
+      '@stacks/connect-ui': 8.0.0
+      '@stacks/network': 7.2.0(encoding@0.1.13)
       '@stacks/network-v6': '@stacks/network@6.17.0(encoding@0.1.13)'
-      '@stacks/profile': 7.0.6(encoding@0.1.13)
-      '@stacks/transactions': 7.0.6(encoding@0.1.13)
+      '@stacks/profile': 7.2.0(encoding@0.1.13)
+      '@stacks/transactions': 7.2.0(encoding@0.1.13)
       '@stacks/transactions-v6': '@stacks/transactions@6.17.0(encoding@0.1.13)'
-      jsontokens: 4.0.1
     transitivePeerDependencies:
       - encoding
 
-  '@stacks/encryption@7.0.6':
+  '@stacks/encryption@7.2.0':
     dependencies:
       '@noble/hashes': 1.1.5
       '@noble/secp256k1': 1.7.1
@@ -15871,30 +15878,30 @@ snapshots:
     transitivePeerDependencies:
       - encoding
 
-  '@stacks/network@7.0.2(encoding@0.1.13)':
+  '@stacks/network@7.2.0(encoding@0.1.13)':
     dependencies:
       '@stacks/common': 7.0.2
       cross-fetch: 3.2.0(encoding@0.1.13)
     transitivePeerDependencies:
       - encoding
 
-  '@stacks/profile@7.0.6(encoding@0.1.13)':
+  '@stacks/profile@7.2.0(encoding@0.1.13)':
     dependencies:
       '@stacks/common': 7.0.2
-      '@stacks/network': 7.0.2(encoding@0.1.13)
-      '@stacks/transactions': 7.0.6(encoding@0.1.13)
+      '@stacks/network': 7.2.0(encoding@0.1.13)
+      '@stacks/transactions': 7.2.0(encoding@0.1.13)
       jsontokens: 4.0.1
       schema-inspector: 2.1.0
       zone-file: 2.0.0-beta.3
     transitivePeerDependencies:
       - encoding
 
-  '@stacks/storage@7.0.6(encoding@0.1.13)':
+  '@stacks/storage@7.2.0(encoding@0.1.13)':
     dependencies:
-      '@stacks/auth': 7.0.6(encoding@0.1.13)
+      '@stacks/auth': 7.2.0(encoding@0.1.13)
       '@stacks/common': 7.0.2
-      '@stacks/encryption': 7.0.6
-      '@stacks/network': 7.0.2(encoding@0.1.13)
+      '@stacks/encryption': 7.2.0
+      '@stacks/network': 7.2.0(encoding@0.1.13)
       base64-js: 1.5.1
       jsontokens: 4.0.1
     transitivePeerDependencies:
@@ -15911,28 +15918,28 @@ snapshots:
     transitivePeerDependencies:
       - encoding
 
-  '@stacks/transactions@7.0.6(encoding@0.1.13)':
+  '@stacks/transactions@7.2.0(encoding@0.1.13)':
     dependencies:
       '@noble/hashes': 1.1.5
       '@noble/secp256k1': 1.7.1
       '@stacks/common': 7.0.2
-      '@stacks/network': 7.0.2(encoding@0.1.13)
+      '@stacks/network': 7.2.0(encoding@0.1.13)
       c32check: 2.0.0
       lodash.clonedeep: 4.5.0
     transitivePeerDependencies:
       - encoding
 
-  '@stacks/wallet-sdk@7.0.6(encoding@0.1.13)':
+  '@stacks/wallet-sdk@7.2.0(encoding@0.1.13)':
     dependencies:
       '@scure/bip32': 1.1.3
       '@scure/bip39': 1.1.0
-      '@stacks/auth': 7.0.6(encoding@0.1.13)
+      '@stacks/auth': 7.2.0(encoding@0.1.13)
       '@stacks/common': 7.0.2
-      '@stacks/encryption': 7.0.6
-      '@stacks/network': 7.0.2(encoding@0.1.13)
-      '@stacks/profile': 7.0.6(encoding@0.1.13)
-      '@stacks/storage': 7.0.6(encoding@0.1.13)
-      '@stacks/transactions': 7.0.6(encoding@0.1.13)
+      '@stacks/encryption': 7.2.0
+      '@stacks/network': 7.2.0(encoding@0.1.13)
+      '@stacks/profile': 7.2.0(encoding@0.1.13)
+      '@stacks/storage': 7.2.0(encoding@0.1.13)
+      '@stacks/transactions': 7.2.0(encoding@0.1.13)
       c32check: 2.0.0
       jsontokens: 4.0.1
       zone-file: 2.0.0-beta.3
@@ -16303,7 +16310,7 @@ snapshots:
 
   '@types/connect@3.4.38':
     dependencies:
-      '@types/node': 12.20.55
+      '@types/node': 22.15.21
 
   '@types/d3-array@3.2.1': {}
 
@@ -16460,7 +16467,7 @@ snapshots:
 
   '@types/http-proxy@1.17.16':
     dependencies:
-      '@types/node': 24.3.0
+      '@types/node': 22.15.21
 
   '@types/json-schema@7.0.15': {}
 
@@ -16508,7 +16515,7 @@ snapshots:
 
   '@types/mysql@2.15.27':
     dependencies:
-      '@types/node': 24.3.0
+      '@types/node': 22.15.21
 
   '@types/nlcst@2.0.3':
     dependencies:
@@ -16550,7 +16557,7 @@ snapshots:
 
   '@types/pg@8.15.4':
     dependencies:
-      '@types/node': 24.3.0
+      '@types/node': 22.15.21
       pg-protocol: 1.10.3
       pg-types: 2.2.0
 
@@ -16593,7 +16600,7 @@ snapshots:
 
   '@types/tedious@4.0.14':
     dependencies:
-      '@types/node': 24.3.0
+      '@types/node': 22.15.21
 
   '@types/triple-beam@1.3.5': {}
 
@@ -17516,7 +17523,7 @@ snapshots:
     dependencies:
       safe-buffer: 5.2.1
 
-  base-x@4.0.0: {}
+  base-x@4.0.1: {}
 
   base64-js@1.5.1: {}
 
@@ -17528,22 +17535,25 @@ snapshots:
 
   bech32@2.0.0: {}
 
-  better-auth@1.2.10:
+  better-auth@1.3.7(react-dom@19.1.1(react@19.1.1))(react@19.1.1)(zod@3.25.67):
     dependencies:
-      '@better-auth/utils': 0.2.5
+      '@better-auth/utils': 0.2.6
       '@better-fetch/fetch': 1.1.18
       '@noble/ciphers': 0.6.0
       '@noble/hashes': 1.8.0
-      '@simplewebauthn/browser': 13.1.0
-      '@simplewebauthn/server': 13.1.1
-      better-call: 1.0.9
+      '@simplewebauthn/browser': 13.1.2
+      '@simplewebauthn/server': 13.1.2
+      better-call: 1.0.15
       defu: 6.1.4
       jose: 5.10.0
-      kysely: 0.28.2
+      kysely: 0.28.5
       nanostores: 0.11.4
       zod: 3.25.67
+    optionalDependencies:
+      react: 19.1.1
+      react-dom: 19.1.1(react@19.1.1)
 
-  better-call@1.0.9:
+  better-call@1.0.15:
     dependencies:
       '@better-fetch/fetch': 1.1.18
       rou3: 0.5.1
@@ -17663,7 +17673,7 @@ snapshots:
 
   bs58@5.0.0:
     dependencies:
-      base-x: 4.0.0
+      base-x: 4.0.1
 
   bs58check@2.1.2:
     dependencies:
@@ -17715,7 +17725,7 @@ snapshots:
   c32check@2.0.0:
     dependencies:
       '@noble/hashes': 1.7.1
-      base-x: 4.0.0
+      base-x: 4.0.1
 
   cac@6.7.14: {}
 
@@ -20417,7 +20427,7 @@ snapshots:
 
   jest-worker@27.5.1:
     dependencies:
-      '@types/node': 22.15.21
+      '@types/node': 24.3.0
       merge-stream: 2.0.0
       supports-color: 8.1.1
 
@@ -20571,7 +20581,7 @@ snapshots:
 
   kuler@2.0.0: {}
 
-  kysely@0.28.2: {}
+  kysely@0.28.5: {}
 
   lambda-local@2.2.0:
     dependencies:
@@ -22538,7 +22548,7 @@ snapshots:
       '@protobufjs/pool': 1.1.0
       '@protobufjs/utf8': 1.1.0
       '@types/long': 4.0.2
-      '@types/node': 22.15.21
+      '@types/node': 24.3.0
       long: 4.0.0
 
   protobufjs@7.4.0:
@@ -23591,12 +23601,12 @@ snapshots:
 
   siginfo@2.0.0: {}
 
-  sign-in-with-stacks@0.1.2(@stacks/common@7.0.2)(@stacks/encryption@7.0.6)(@stacks/network@7.0.2(encoding@0.1.13))(@stacks/transactions@7.0.6(encoding@0.1.13)):
+  sign-in-with-stacks@0.1.2(@stacks/common@7.0.2)(@stacks/encryption@7.2.0)(@stacks/network@7.2.0(encoding@0.1.13))(@stacks/transactions@7.2.0(encoding@0.1.13)):
     dependencies:
       '@stacks/common': 7.0.2
-      '@stacks/encryption': 7.0.6
-      '@stacks/network': 7.0.2(encoding@0.1.13)
-      '@stacks/transactions': 7.0.6(encoding@0.1.13)
+      '@stacks/encryption': 7.2.0
+      '@stacks/network': 7.2.0(encoding@0.1.13)
+      '@stacks/transactions': 7.2.0(encoding@0.1.13)
 
   signal-exit@3.0.7: {}
 

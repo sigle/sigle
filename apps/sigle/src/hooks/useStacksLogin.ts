@@ -1,9 +1,11 @@
 "use client";
 
 import {
-  openSignatureRequestPopup,
-  showConnect,
-  type UserData,
+  connect,
+  disconnect,
+  getLocalStorage,
+  isConnected,
+  request,
 } from "@stacks/connect";
 import { usePostHog } from "posthog-js/react";
 import { useEffect } from "react";
@@ -13,7 +15,11 @@ import { create } from "zustand";
 import { env } from "@/env";
 import { authClient, signOut } from "@/lib/auth-client";
 import { useSession } from "@/lib/auth-hooks";
-import { appDetails, stacksNetwork, userSession } from "@/lib/stacks";
+import { stacksNetwork } from "@/lib/stacks";
+
+interface UserData {
+  stxAddress: string;
+}
 
 interface SessionState {
   user?: UserData;
@@ -31,49 +37,60 @@ export const useStacksLogin = () => {
   const { refetch: refetchSession } = useSession();
 
   useEffect(() => {
-    if (userSession.isSignInPending()) {
-      userSession.handlePendingSignIn().then((userData) => {
-        setUser(userData);
-      });
-    } else if (userSession.isUserSignedIn()) {
-      setUser(userSession.loadUserData());
+    if (isConnected()) {
+      const data = getLocalStorage();
+      const stxAddress = data?.addresses.stx[0];
+      if (!stxAddress) return;
+      const user = {
+        stxAddress: stxAddress.address,
+      };
+      setUser(user);
     }
   }, [setUser]);
 
-  const login = () => {
+  const login = async () => {
     posthog.capture("user_login_start");
-    showConnect({
-      appDetails,
-      userSession,
-      onFinish: () => {
-        const userData = userSession.loadUserData();
-        setUser(userData);
-        posthog.capture("user_login_wallet_success");
-        signMessage();
-      },
-      onCancel: () => {
-        posthog.capture("user_login_cancel");
-      },
-    });
+    try {
+      const response = await connect({
+        forceWalletSelect: true,
+        // TODO network is not working in xverse, it throws an error
+        // see https://github.com/hirosystems/connect/issues/460
+        // network: env.NEXT_PUBLIC_STACKS_ENV,
+      });
+
+      const stxAddress = response.addresses.find((address) =>
+        env.NEXT_PUBLIC_STACKS_ENV === "mainnet"
+          ? address.address.startsWith("SP")
+          : address.address.startsWith("ST"),
+      );
+      if (!stxAddress) {
+        throw new Error("No STX address found");
+      }
+      const user = {
+        stxAddress: stxAddress.address,
+      };
+      posthog.capture("user_login_wallet_success", {
+        stxAddress: user.stxAddress,
+      });
+      setUser(user);
+      signMessage(user);
+    } catch (error) {
+      console.error(error);
+      posthog.capture("user_login_cancel");
+    }
   };
 
-  const signMessage = async () => {
+  const signMessage = async (user: UserData) => {
     posthog.capture("user_login_sign_message");
-    const userData = userSession.loadUserData();
 
-    const address =
-      env.NEXT_PUBLIC_STACKS_ENV === "mainnet"
-        ? userData.profile.stxAddress.mainnet
-        : userData.profile.stxAddress.testnet;
-
-    const nonceData = await authClient.siws.nonce({ address });
+    const nonceData = await authClient.siws.nonce({ address: user.stxAddress });
     if (!nonceData.data?.nonce) {
       toast.error("Nonce not found");
       return;
     }
 
     const message = createSiwsMessage({
-      address,
+      address: user.stxAddress,
       chainId: stacksNetwork.chainId,
       domain: window.location.host,
       statement: "Sign in to Sigle.",
@@ -82,37 +99,43 @@ export const useStacksLogin = () => {
       version: "1",
     });
 
-    await openSignatureRequestPopup({
-      network: stacksNetwork,
+    let signature: string;
+    try {
+      const response = await request("stx_signMessage", {
+        message,
+      });
+      signature = response.signature;
+    } catch (error) {
+      console.error(error);
+      posthog.capture("user_login_sign_message_error");
+      toast.error("Failed to login");
+      return;
+    }
+
+    const signInResult = await authClient.siws.verify({
+      address: user.stxAddress,
       message,
-      onFinish: async ({ signature }) => {
-        const signInResult = await authClient.siws.verify({
-          address,
-          message,
-          signature,
-        });
-        if (signInResult.error) {
-          posthog.capture("user_login_sign_message_error", {
-            code: signInResult.error.code,
-            error: signInResult.error.message,
-          });
-          toast.error("Failed to login");
-          return;
-        }
-        refetchSession();
-        posthog.capture("user_login_sign_message_success");
-        toast.success("You are now logged in");
-      },
-      onCancel: () => {
-        posthog.capture("user_login_sign_message_cancel");
-      },
+      signature,
     });
+    if (signInResult.error) {
+      posthog.capture("user_login_sign_message_error", {
+        code: signInResult.error.code,
+        error: signInResult.error.message,
+      });
+      toast.error("Failed to login");
+      return;
+    }
+    refetchSession();
+    posthog.capture("user_login_sign_message_success");
+    toast.success("You are now logged in");
   };
 
   const logout = async () => {
     posthog.capture("user_logout");
-    userSession.signUserOut("/");
+    disconnect();
     await signOut();
+    // Force reload to clear session
+    window.location.reload();
   };
 
   return {

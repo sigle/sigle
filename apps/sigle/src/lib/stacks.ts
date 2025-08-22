@@ -3,6 +3,7 @@ import { AppConfig, UserSession } from "@stacks/connect";
 import { STACKS_DEVNET, STACKS_MAINNET, STACKS_TESTNET } from "@stacks/network";
 import { env } from "@/env";
 
+// TODO remove that
 export const appConfig = new AppConfig([]);
 export const userSession = new UserSession({ appConfig });
 

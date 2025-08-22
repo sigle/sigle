@@ -14,6 +14,7 @@ import {
 } from "@radix-ui/themes";
 import type { paths } from "@sigle/sdk";
 import { fixedMintFee, formatBTC } from "@sigle/sdk";
+import { request } from "@stacks/connect";
 import {
   IconHelpCircle,
   IconInfoCircle,

@@ -10,9 +10,9 @@
   "devDependencies": {
     "@paralleldrive/cuid2": "2.2.2",
     "@sigle/sdk": "workspace:*",
-    "@stacks/network": "7.0.2",
-    "@stacks/transactions": "7.0.6",
-    "@stacks/wallet-sdk": "7.0.6",
+    "@stacks/network": "7.2.0",
+    "@stacks/transactions": "7.2.0",
+    "@stacks/wallet-sdk": "7.2.0",
     "@tsconfig/recommended": "1.0.10",
     "@types/node": "22.15.21",
     "smol-toml": "1.4.2",
