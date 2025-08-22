@@ -29,7 +29,7 @@
     "blurhash": "2.0.5",
     "consola": "3.4.2",
     "h3": "1.15.4",
-    "multiformats": "13.3.6",
+    "multiformats": "13.4.0",
     "nitro-cors": "0.7.1",
     "pg-boss": "10.3.2",
     "posthog-node": "5.7.0",
