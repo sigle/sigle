@@ -53,10 +53,15 @@ export const useStacksLogin = () => {
     try {
       const response = await connect({
         forceWalletSelect: true,
-        network: env.NEXT_PUBLIC_STACKS_ENV,
+        // TODO network is not working in xverse, it throws an error
+        // see https://github.com/hirosystems/connect/issues/460
+        // network: env.NEXT_PUBLIC_STACKS_ENV,
       });
-      const stxAddress = response.addresses.find(
-        (address) => address.symbol === "STX",
+
+      const stxAddress = response.addresses.find((address) =>
+        env.NEXT_PUBLIC_STACKS_ENV === "mainnet"
+          ? address.address.startsWith("SP")
+          : address.address.startsWith("ST"),
       );
       if (!stxAddress) {
         throw new Error("No STX address found");
