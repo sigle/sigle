@@ -10,6 +10,7 @@ import { z } from "zod";
 
 export const Routes = {
   home: makeRoute(() => "/"),
+  explore: makeRoute(() => "/explore"),
   userProfile: makeRoute(
     ({ username }) => `/u/${username}`,
     z.object({
@@ -25,6 +26,8 @@ export const Routes = {
       referral: z.string().optional().nullable(),
     }),
   ),
+  // Logged in routes
+  dashboard: makeRoute(() => "/dashboard"),
   editPost: makeRoute(
     ({ postId }) => `/p/${postId}/edit`,
     z.object({
@@ -36,7 +39,6 @@ export const Routes = {
       forceSave: z.string().optional().nullable(),
     }),
   ),
-  dashboard: makeRoute(() => "/dashboard"),
 };
 
 type RouteBuilder<Params extends z.ZodSchema, Search extends z.ZodSchema> = {

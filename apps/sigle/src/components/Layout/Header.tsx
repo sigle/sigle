@@ -10,6 +10,7 @@ import { useIsClient } from "@/hooks/useIsClient";
 import { useStacksLogin } from "@/hooks/useStacksLogin";
 import { LogoImage } from "@/images/Logo";
 import { useSession } from "@/lib/auth-hooks";
+import { Routes } from "@/lib/routes";
 import { NextLink } from "../Shared/NextLink";
 import { UserDropdown } from "./UserDropdown";
 
@@ -41,7 +42,7 @@ export const Header = () => {
           <LogoImage height={28} />
         </NextLink>
         <Button variant="ghost" color="gray" highContrast asChild>
-          <NextLink href="/explore">Explore</NextLink>
+          <NextLink href={Routes.explore()}>Explore</NextLink>
         </Button>
       </div>
       {!session ? (

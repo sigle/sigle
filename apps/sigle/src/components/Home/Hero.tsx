@@ -30,9 +30,14 @@ export const HomeHero = () => {
           Start Writing
         </Button>
       ) : (
-        <Button size="3" color="gray" highContrast className="mt-6" asChild>
-          <NextLink href={Routes.dashboard()}>View Dashboard</NextLink>
-        </Button>
+        <div className="mt-6 space-x-2">
+          <Button size="3" color="gray" variant="outline" highContrast asChild>
+            <NextLink href={Routes.explore()}>Explore</NextLink>
+          </Button>
+          <Button size="3" color="gray" highContrast asChild>
+            <NextLink href={Routes.dashboard()}>View Dashboard</NextLink>
+          </Button>
+        </div>
       )}
     </Container>
   );

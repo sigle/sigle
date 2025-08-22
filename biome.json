@@ -11,7 +11,8 @@
       "!**/.github/ISSUE_TEMPLATE",
       "!**/pnpm-lock.yaml",
       "!**/dist",
-      "!**/_pagefind"
+      "!**/_pagefind",
+      "!**/__generated__/prisma"
     ]
   },
   "formatter": {
