@@ -9,7 +9,7 @@ export const HomeFeatures = () => {
             ⛓️ Write on-chain
           </Heading>
           <Text as="p" color="gray" size="3" className="text-balance">
-            Inscribe your words as <Text weight="medium">Ordinals</Text> make
+            Inscribe your words as <Text weight="medium">Ordinals</Text> to make
             them live forever.
           </Text>
         </div>

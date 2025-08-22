@@ -6,6 +6,7 @@ import { fromError } from "zod-validation-error";
 import { aerweaveUploadFile } from "~/lib/arweave";
 import { readValidatedBodyZod } from "~/lib/nitro";
 import { prisma } from "~/lib/prisma";
+import { isUserWhitelisted } from "~/lib/users";
 
 defineRouteMeta({
   openAPI: {
@@ -69,6 +70,13 @@ const uploadMetadataDraftSchema = z.object({
 });
 
 export default defineEventHandler(async (event) => {
+  if (!isUserWhitelisted(event.context.user.id)) {
+    throw createError({
+      status: 403,
+      message: "User is not whitelisted.",
+    });
+  }
+
   const draftId = getRouterParam(event, "draftId");
   const body = await readValidatedBodyZod(event, uploadMetadataDraftSchema);
 

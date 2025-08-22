@@ -5,6 +5,7 @@ import { allowedFormats, optimizeImage } from "~/lib/images";
 import { ipfsUploadFile } from "~/lib/ipfs-upload";
 import { readMultipartFormDataSafe } from "~/lib/nitro";
 import { prisma } from "~/lib/prisma";
+import { isUserWhitelisted } from "~/lib/users";
 
 defineRouteMeta({
   openAPI: {
@@ -65,6 +66,13 @@ const fileSchema = z.object({
 });
 
 export default defineEventHandler(async (event) => {
+  if (!isUserWhitelisted(event.context.user.id)) {
+    throw createError({
+      status: 403,
+      message: "User is not whitelisted.",
+    });
+  }
+
   const draftId = getRouterParam(event, "draftId");
   const formData = await readMultipartFormDataSafe(event, "5mb");
 
