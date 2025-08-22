@@ -6,7 +6,7 @@ import {
   IconStrikethrough,
   IconUnderline,
 } from "@tabler/icons-react";
-import { type Editor, isTextSelection } from "@tiptap/react";
+import { type Editor, isTextSelection, useEditorState } from "@tiptap/react";
 import { BubbleMenu as TipTapBubbleMenu } from "@tiptap/react/menus";
 import { useEffect } from "react";
 import { cn } from "@/lib/cn";
@@ -34,6 +34,25 @@ export const EditorBubbleMenu = ({ editor }: EditorBubbleMenuProps) => {
   const linkOpen = useBubbleMenuStore((state) => state.linkOpen);
   const setLinkValue = useBubbleMenuStore((state) => state.setLinkValue);
   const setLinkOpen = useBubbleMenuStore((state) => state.setLinkOpen);
+
+  const {
+    isActiveBold,
+    isActiveItalic,
+    isActiveUnderline,
+    isActiveStrike,
+    isActiveCode,
+    isActiveLink,
+  } = useEditorState({
+    editor,
+    selector: (context) => ({
+      isActiveBold: context.editor.isActive("bold"),
+      isActiveItalic: context.editor.isActive("italic"),
+      isActiveUnderline: context.editor.isActive("underline"),
+      isActiveStrike: context.editor.isActive("strike"),
+      isActiveCode: context.editor.isActive("code"),
+      isActiveLink: context.editor.isActive("link"),
+    }),
+  });
 
   // Listen to any key press to detect cmd + k and activate the link edition
   // biome-ignore lint/correctness/useExhaustiveDependencies: ok
@@ -132,37 +151,37 @@ export const EditorBubbleMenu = ({ editor }: EditorBubbleMenuProps) => {
         <>
           <BubbleMenuButton
             onClick={() => editor.chain().focus().toggleBold().run()}
-            active={editor.isActive("bold")}
+            active={isActiveBold}
           >
             <IconBold size={18} />
           </BubbleMenuButton>
           <BubbleMenuButton
             onClick={() => editor.chain().focus().toggleItalic().run()}
-            active={editor.isActive("italic")}
+            active={isActiveItalic}
           >
             <IconItalic size={18} />
           </BubbleMenuButton>
           <BubbleMenuButton
             onClick={() => editor.chain().focus().toggleUnderline().run()}
-            active={editor.isActive("underline")}
+            active={isActiveUnderline}
           >
             <IconUnderline size={18} />
           </BubbleMenuButton>
           <BubbleMenuButton
             onClick={() => editor.chain().focus().toggleStrike().run()}
-            active={editor.isActive("strike")}
+            active={isActiveStrike}
           >
             <IconStrikethrough size={18} />
           </BubbleMenuButton>
           <BubbleMenuButton
             onClick={() => editor.chain().focus().toggleCode().run()}
-            active={editor.isActive("code")}
+            active={isActiveCode}
           >
             <IconCode size={18} />
           </BubbleMenuButton>
           <BubbleMenuButton
             onClick={() => onSelectLink()}
-            active={editor.isActive("link")}
+            active={isActiveLink}
           >
             <IconLink size={18} />
           </BubbleMenuButton>

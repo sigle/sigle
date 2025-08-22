@@ -66,8 +66,7 @@ export const EditorTipTap = () => {
   );
 
   const editor = useEditor({
-    shouldRerenderOnTransaction: true,
-    immediatelyRender: false,
+    immediatelyRender: true,
     extensions: [
       TipTapCharacterCount,
       // Nodes
