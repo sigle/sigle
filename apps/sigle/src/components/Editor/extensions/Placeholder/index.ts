@@ -1,4 +1,4 @@
-import TipTapPlaceholder from "@tiptap/extension-placeholder";
+import { Placeholder as TipTapPlaceholder } from "@tiptap/extensions";
 
 const Placeholder = (isMobile: boolean) => {
   return TipTapPlaceholder.configure({
