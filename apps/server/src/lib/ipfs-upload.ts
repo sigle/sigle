@@ -20,7 +20,9 @@ export const ipfsUploadFile = async (
   },
 ) => {
   try {
-    const response = await storachaClient.uploadFile(new Blob([content]));
+    const response = await storachaClient.uploadFile(
+      new Blob([new Uint8Array(content)]),
+    );
     const cid = response.toString();
 
     if (!cid) {
