@@ -5,6 +5,7 @@ import { usePathname, useRouter } from "next/navigation";
 import { AuthProtect } from "@/components/Auth/AuthProtect";
 import { NextLink } from "@/components/Shared/NextLink";
 import { cn } from "@/lib/cn";
+import { sigleApiClient } from "@/lib/sigle";
 
 export default function DashboardLayout({
   children,
@@ -14,15 +15,24 @@ export default function DashboardLayout({
   const router = useRouter();
   const pathname = usePathname();
 
+  const { data: userWhitelist } = sigleApiClient.useQuery(
+    "get",
+    "/api/protected/user/whitelisted",
+  );
+
   const navigationLinks = [
     {
       label: "Dashboard",
       href: "/dashboard",
     },
-    {
-      label: "Drafts",
-      href: "/dashboard/drafts",
-    },
+    ...(userWhitelist?.whitelisted
+      ? [
+          {
+            label: "Drafts",
+            href: "/dashboard/drafts",
+          },
+        ]
+      : []),
     {
       label: "Settings",
       href: "/dashboard/settings",
