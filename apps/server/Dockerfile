@@ -64,7 +64,7 @@ COPY --from=installer --chown=nitro:nodejs /app/apps/$APP_NAME/package.json ./pa
 COPY --from=installer --chown=nitro:nodejs /app/apps/$APP_NAME/scripts ./scripts
 COPY --from=installer --chown=nitro:nodejs /app/apps/$APP_NAME/prisma ./prisma
 # Copy the generated prisma client as it contains the required Query engine
-COPY --from=installer --chown=nitro:nodejs /app/apps/$APP_NAME/src/__generated__/prisma ./src/__generated__/prisma
+COPY --from=installer --chown=nitro:nodejs /app/apps/$APP_NAME/src/__generated__/prisma ./apps/$APP_NAME/src/__generated__/prisma
 COPY --from=builder --chown=nitro:nodejs /app/apps/$APP_NAME/.env.testnet.local ./.env.testnet.local
 RUN node scripts/prod-deps.js
 RUN pnpm install --dangerously-allow-all-builds
