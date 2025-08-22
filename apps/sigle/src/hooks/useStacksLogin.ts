@@ -134,6 +134,8 @@ export const useStacksLogin = () => {
     posthog.capture("user_logout");
     disconnect();
     await signOut();
+    // Force reload to clear session
+    window.location.reload();
   };
 
   return {
