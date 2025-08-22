@@ -1,15 +1,15 @@
+import { create } from "@storacha/client";
+import * as Proof from "@storacha/client/proof";
 import * as Signer from "@ucanto/principal/ed25519";
-import { create } from "@web3-storage/w3up-client";
-import * as Proof from "@web3-storage/w3up-client/proof";
 import { createError, type H3Event } from "h3";
 import { env } from "~/env";
 import { consola } from "./consola";
 
-const principal = Signer.parse(env.W3UP_AGENT_KEY);
-const w3upClient = await create({ principal });
-const proof = await Proof.parse(env.W3UP_AGENT_PROOF);
-const space = await w3upClient.addSpace(proof);
-await w3upClient.setCurrentSpace(space.did());
+const principal = Signer.parse(env.STORACHA_AGENT_KEY);
+const storachaClient = await create({ principal });
+const proof = await Proof.parse(env.STORACHA_AGENT_PROOF);
+const space = await storachaClient.addSpace(proof);
+await storachaClient.setCurrentSpace(space.did());
 
 export const ipfsUploadFile = async (
   event: H3Event,
@@ -20,7 +20,7 @@ export const ipfsUploadFile = async (
   },
 ) => {
   try {
-    const response = await w3upClient.uploadFile(new Blob([content]));
+    const response = await storachaClient.uploadFile(new Blob([content]));
     const cid = response.toString();
 
     if (!cid) {

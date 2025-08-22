@@ -1,38 +1,37 @@
 # @sigle/server
 
-## Setup new W3UP Agent
+## Setup new Storacha Agent
 
-First, install the W3UP agent:
+First, install the Storacha cli:
 
 ```bash
-pnpm add -g @web3-storage/w3cli
+pnpm add -g @storacha/cli
 ```
 
-Then, login to your W3UP account:
+Then, login to your Storacha account:
 
 ```bash
-w3 login <your_email>
+storacha login <your_email>
 ```
 
 Create a new agent:
 
 ```bash
-w3 key create
+storacha key create
 ```
 
-Set the `W3UP_AGENT_KEY` environment variable to the key provided.
-
+Set the `STORACHA_AGENT_KEY` environment variable to the key provided.
 
 Tell the agent to use the space:
 
 ```bash
-w3 space use <your_space_name>
+storacha space use <your_space_name>
 ```
 
 Create the proof for the agent, replace the did with the agent did you got previously
 
 ```bash
-w3 delegation create <your_agent_did> --base64
+storacha delegation create <your_agent_did> --base64
 ```
 
-Set the `W3UP_AGENT_PROOF` with the base64 encoded proof that you got from the previous step.
+Set the `STORACHA_AGENT_PROOF` with the base64 encoded proof that you got from the previous step.
