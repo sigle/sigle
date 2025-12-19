@@ -1,11 +1,12 @@
 {
-  "$schema": "https://biomejs.dev/schemas/2.2.0/schema.json",
+  "$schema": "https://biomejs.dev/schemas/2.3.10/schema.json",
   "vcs": { "enabled": false, "clientKind": "git", "useIgnoreFile": false },
   "files": {
     "ignoreUnknown": false,
     "includes": [
       "**",
       "!**/.next",
+      "!**/out",
       "!**/.nitro",
       "!**/.output",
       "!**/.github/ISSUE_TEMPLATE",
@@ -46,6 +47,11 @@
       "complexity": {
         "noImportantStyles": "off"
       }
+    }
+  },
+  "css": {
+    "parser": {
+      "tailwindDirectives": true
     }
   }
 }

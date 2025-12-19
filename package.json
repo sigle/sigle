@@ -14,7 +14,7 @@
     "version": "pnpm changeset version && pnpm install --lockfile-only"
   },
   "devDependencies": {
-    "@biomejs/biome": "2.2.0",
+    "@biomejs/biome": "2.3.10",
     "@changesets/cli": "2.29.8",
     "lefthook": "1.12.3",
     "syncpack": "13.0.4",
