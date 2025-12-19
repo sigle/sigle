@@ -4,7 +4,7 @@
     "node": ">=20"
   },
   "private": true,
-  "packageManager": "pnpm@10.15.0",
+  "packageManager": "pnpm@10.26.1",
   "scripts": {
     "build": "turbo typecheck build --cache-dir=.turbo",
     "format": "biome check --write --no-errors-on-unmatched",
