@@ -23,6 +23,4 @@ export default withSentryConfig(nextConfig, {
   },
   // Upload large source maps to Sentry
   widenClientFileUpload: true,
-  // Disable logger to save bundle size
-  disableLogger: true,
 });
