@@ -3,8 +3,8 @@
   "private": true,
   "version": "0.0.0",
   "scripts": {
-    "build": "next build --turbopack",
-    "dev": "next --turbopack",
+    "build": "next build",
+    "dev": "next",
     "postbuild": "pagefind --site .next/server/app --output-path out/_pagefind"
   },
   "dependencies": {
