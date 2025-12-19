@@ -80,14 +80,14 @@ importers:
         specifier: workspace:*
         version: link:../../packages/sdk
       '@t3-oss/env-nextjs':
-        specifier: 0.13.8
-        version: 0.13.8(arktype@2.1.20)(typescript@5.9.2)(valibot@1.0.0-beta.15(typescript@5.9.2))(zod@3.25.67)
+        specifier: 0.13.10
+        version: 0.13.10(arktype@2.1.20)(typescript@5.9.2)(valibot@1.0.0-beta.15(typescript@5.9.2))(zod@3.25.67)
       '@tabler/icons-react':
-        specifier: 3.34.1
-        version: 3.34.1(react@19.2.3)
+        specifier: 3.36.0
+        version: 3.36.0(react@19.2.3)
       cheerio:
-        specifier: 1.1.0
-        version: 1.1.0
+        specifier: 1.1.2
+        version: 1.1.2
       class-variance-authority:
         specifier: 0.7.1
         version: 0.7.1
@@ -98,8 +98,8 @@ importers:
         specifier: 4.1.0
         version: 4.1.0
       multiformats:
-        specifier: 13.4.0
-        version: 13.4.0
+        specifier: 13.4.2
+        version: 13.4.2
       next:
         specifier: 15.5.0
         version: 15.5.0(@babel/core@7.28.3)(@opentelemetry/api@1.9.0)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)(sass@1.77.8)
@@ -116,8 +116,8 @@ importers:
         specifier: 1.6.6
         version: 1.6.6
       tailwind-merge:
-        specifier: 3.3.1
-        version: 3.3.1
+        specifier: 3.4.0
+        version: 3.4.0
       zod:
         specifier: 3.25.67
         version: 3.25.67
@@ -220,11 +220,11 @@ importers:
         specifier: 1.7.9
         version: 1.7.9(encoding@0.1.13)
       '@t3-oss/env-core':
-        specifier: 0.13.8
-        version: 0.13.8(arktype@2.1.20)(typescript@5.9.2)(valibot@1.0.0-beta.15(typescript@5.9.2))(zod@3.25.67)
+        specifier: 0.13.10
+        version: 0.13.10(arktype@2.1.20)(typescript@5.9.2)(valibot@1.0.0-beta.15(typescript@5.9.2))(zod@3.25.67)
       '@ucanto/principal':
-        specifier: 9.0.2
-        version: 9.0.2
+        specifier: 9.0.3
+        version: 9.0.3
       better-auth:
         specifier: 1.3.7
         version: 1.3.7(react-dom@19.2.3(react@19.2.3))(react@19.2.3)(zod@3.25.67)
@@ -238,8 +238,8 @@ importers:
         specifier: 1.15.4
         version: 1.15.4
       multiformats:
-        specifier: 13.4.0
-        version: 13.4.0
+        specifier: 13.4.2
+        version: 13.4.2
       nitro-cors:
         specifier: 0.7.1
         version: 0.7.1
@@ -262,8 +262,8 @@ importers:
         specifier: 0.34.3
         version: 0.34.3
       sign-in-with-stacks:
-        specifier: 0.1.2
-        version: 0.1.2(@stacks/common@7.0.2)(@stacks/encryption@7.0.6)(@stacks/network@7.0.2(encoding@0.1.13))(@stacks/transactions@7.0.6(encoding@0.1.13))
+        specifier: 0.1.6
+        version: 0.1.6(@stacks/common@7.0.2)(@stacks/encryption@7.0.6)(@stacks/network@7.0.2(encoding@0.1.13))(@stacks/transactions@7.0.6(encoding@0.1.13))
       zod:
         specifier: 3.25.67
         version: 3.25.67
@@ -317,11 +317,11 @@ importers:
         specifier: 7.0.6
         version: 7.0.6(encoding@0.1.13)
       '@t3-oss/env-nextjs':
-        specifier: 0.13.8
-        version: 0.13.8(arktype@2.1.20)(typescript@5.9.2)(valibot@1.0.0-beta.15(typescript@5.9.2))(zod@3.25.67)
+        specifier: 0.13.10
+        version: 0.13.10(arktype@2.1.20)(typescript@5.9.2)(valibot@1.0.0-beta.15(typescript@5.9.2))(zod@3.25.67)
       '@tabler/icons-react':
-        specifier: 3.34.1
-        version: 3.34.1(react@19.2.3)
+        specifier: 3.36.0
+        version: 3.36.0(react@19.2.3)
       '@tanstack/react-query':
         specifier: 5.85.5
         version: 5.85.5(react@19.2.3)
@@ -440,8 +440,8 @@ importers:
         specifier: 3.3.0
         version: 3.3.0
       multiformats:
-        specifier: 13.4.0
-        version: 13.4.0
+        specifier: 13.4.2
+        version: 13.4.2
       nanoid:
         specifier: 5.1.5
         version: 5.1.5
@@ -488,14 +488,14 @@ importers:
         specifier: 3.2.2
         version: 3.2.2(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
       sign-in-with-stacks:
-        specifier: 0.1.2
-        version: 0.1.2(@stacks/common@7.0.2)(@stacks/encryption@7.0.6)(@stacks/network@7.0.2(encoding@0.1.13))(@stacks/transactions@7.0.6(encoding@0.1.13))
+        specifier: 0.1.6
+        version: 0.1.6(@stacks/common@7.0.2)(@stacks/encryption@7.0.6)(@stacks/network@7.0.2(encoding@0.1.13))(@stacks/transactions@7.0.6(encoding@0.1.13))
       sonner:
         specifier: 2.0.7
         version: 2.0.7(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
       tailwind-merge:
-        specifier: 3.3.1
-        version: 3.3.1
+        specifier: 3.4.0
+        version: 3.4.0
       tippy.js:
         specifier: 6.3.7
         version: 6.3.7
@@ -2104,6 +2104,9 @@ packages:
 
   '@noble/ed25519@1.7.3':
     resolution: {integrity: sha512-iR8GBkDt0Q3GyaVcIu7mSsVIqnFbkbRzGLWlvhwunacoLwt4J3swfKhfaM6rN6WY+TBGoYT1GtT1mIh2/jGbRQ==}
+
+  '@noble/ed25519@1.7.5':
+    resolution: {integrity: sha512-xuS0nwRMQBvSxDa7UxMb61xTiH3MxTgUfhyPUALVIe0FlOAz4sjELwyDRyUvqeEYfRSG9qNjFIycqLZppg4RSA==}
 
   '@noble/hashes@1.1.5':
     resolution: {integrity: sha512-LTMZiiLc+V4v1Yi16TD6aX2gmtKszNye0pQgbaLqkvhIqP7nVsSaJsWloGQjJfJ8offaoP5GtX3yY5swbcJxxQ==}
@@ -4239,13 +4242,13 @@ packages:
   '@swc/helpers@0.5.17':
     resolution: {integrity: sha512-5IKx/Y13RsYd+sauPb2x+U/xZikHjolzfuDgTAl/Tdf3Q8rslRvC19NKDLgAJQ6wsqADk10ntlv08nPFw/gO/A==}
 
-  '@t3-oss/env-core@0.13.8':
-    resolution: {integrity: sha512-L1inmpzLQyYu4+Q1DyrXsGJYCXbtXjC4cICw1uAKv0ppYPQv656lhZPU91Qd1VS6SO/bou1/q5ufVzBGbNsUpw==}
+  '@t3-oss/env-core@0.13.10':
+    resolution: {integrity: sha512-NNFfdlJ+HmPHkLi2HKy7nwuat9SIYOxei9K10lO2YlcSObDILY7mHZNSHsieIM3A0/5OOzw/P/b+yLvPdaG52g==}
     peerDependencies:
       arktype: ^2.1.0
       typescript: '>=5.0.0'
       valibot: ^1.0.0-beta.7 || ^1.0.0
-      zod: ^3.24.0 || ^4.0.0-beta.0
+      zod: ^3.24.0 || ^4.0.0
     peerDependenciesMeta:
       arktype:
         optional: true
@@ -4256,13 +4259,13 @@ packages:
       zod:
         optional: true
 
-  '@t3-oss/env-nextjs@0.13.8':
-    resolution: {integrity: sha512-QmTLnsdQJ8BiQad2W2nvV6oUpH4oMZMqnFEjhVpzU0h3sI9hn8zb8crjWJ1Amq453mGZs6A4v4ihIeBFDOrLeQ==}
+  '@t3-oss/env-nextjs@0.13.10':
+    resolution: {integrity: sha512-JfSA2WXOnvcc/uMdp31paMsfbYhhdvLLRxlwvrnlPE9bwM/n0Z+Qb9xRv48nPpvfMhOrkrTYw1I5Yc06WIKBJQ==}
     peerDependencies:
       arktype: ^2.1.0
       typescript: '>=5.0.0'
       valibot: ^1.0.0-beta.7 || ^1.0.0
-      zod: ^3.24.0 || ^4.0.0-beta.0
+      zod: ^3.24.0 || ^4.0.0
     peerDependenciesMeta:
       arktype:
         optional: true
@@ -4273,13 +4276,13 @@ packages:
       zod:
         optional: true
 
-  '@tabler/icons-react@3.34.1':
-    resolution: {integrity: sha512-Ld6g0NqOO05kyyHsfU8h787PdHBm7cFmOycQSIrGp45XcXYDuOK2Bs0VC4T2FWSKZ6bx5g04imfzazf/nqtk1A==}
+  '@tabler/icons-react@3.36.0':
+    resolution: {integrity: sha512-sSZ00bEjTdTTskVFykq294RJq+9cFatwy4uYa78HcYBCXU1kSD1DIp5yoFsQXmybkIOKCjp18OnhAYk553UIfQ==}
     peerDependencies:
       react: '>= 16'
 
-  '@tabler/icons@3.34.1':
-    resolution: {integrity: sha512-9gTnUvd7Fd/DmQgr3MKY+oJLa1RfNsQo8c/ir3TJAWghOuZXodbtbVp0QBY2DxWuuvrSZFys0HEbv1CoiI5y6A==}
+  '@tabler/icons@3.36.0':
+    resolution: {integrity: sha512-z9OfTEG6QbaQWM9KBOxxUdpgvMUn0atageXyiaSc2gmYm51ORO8Ua7eUcjlks+Dc0YMK4rrodAFdK9SfjJ4ZcA==}
 
   '@tailwindcss/node@4.1.12':
     resolution: {integrity: sha512-3hm9brwvQkZFe++SBt+oLjo4OLDtkvlE8q2WalaD/7QWaeM7KEJbAiY/LJZUaCs7Xa8aUu4xy3uoyX4q54UVdQ==}
@@ -4961,14 +4964,14 @@ packages:
   '@ucanto/core@10.4.0':
     resolution: {integrity: sha512-ohLgxHUo/XgL1G/pvelsHl3zyq7w+fn6ZVN3yVhgiJwbRh67EqvjavXYEFGSLBzlAdMGsfDNkbetQob1sNSNGg==}
 
-  '@ucanto/interface@10.2.0':
-    resolution: {integrity: sha512-k49byxjAKJEW+ru1RBJ8VNCBCxWSMY7P25DqOocCGECUfod38uqj4Z5dmvlM8ax3HRd7U5MTp+B9Q/gzWXnjfQ==}
-
   '@ucanto/interface@10.3.0':
     resolution: {integrity: sha512-97929CGr3AM4Y01CLZ3wwhzrlth5pq8eJCbd/hUMxD62nyG9eRsyvt3RSOtBNtu4jTdMH580x0oAF2D1XKcPvw==}
 
-  '@ucanto/principal@9.0.2':
-    resolution: {integrity: sha512-RE3Rj0oz4wh4C9p2JJZB9+QLd7Fi3lCixrbHgAvEoSyTNpvz6ky8DGNtttmD5j3O94z13qdVdIoSRY6DQZXfAg==}
+  '@ucanto/interface@11.0.1':
+    resolution: {integrity: sha512-d0yoPFXdbb3EyM3sBom5VVcVyz58HT+57qi/ywSY1dbZAm4c7GZss0lpfcI5OXQREzGCzJYAg1e7pFwqbATnmQ==}
+
+  '@ucanto/principal@9.0.3':
+    resolution: {integrity: sha512-MFLvckOpQA46VSeLWyB7xCysL+ub5vnbCEtHbWhNE3qkzeo14v4wSThd60odPhxj83QXrzbveiebp0gcaEvXJg==}
 
   '@ucanto/transport@9.2.0':
     resolution: {integrity: sha512-w/CtD5LYEpGo/CxV78IiWalW99gNRPHKZ/DoOpart5QShozvnU//PwUqyqnGimZCDIrIq4LH6x92z2L/2k5OKQ==}
@@ -5828,9 +5831,9 @@ packages:
   cheerio-select@2.1.0:
     resolution: {integrity: sha512-9v9kG0LvzrlcungtnJtpGNxY+fzECQKhK4EGJX2vByejiMX84MFNQw4UxPJl3bFbTMw+Dfs37XaIkCwTZfLh4g==}
 
-  cheerio@1.1.0:
-    resolution: {integrity: sha512-+0hMx9eYhJvWbgpKV9hN7jg0JcwydpopZE4hgi+KvQtByZXPp04NiCWU0LzcAbP63abZckIHkTQaXVF52mX3xQ==}
-    engines: {node: '>=18.17'}
+  cheerio@1.1.2:
+    resolution: {integrity: sha512-IkxPpb5rS/d1IiLbHMgfPuS0FgiWTtFIm/Nj+2woXDLTZ7fOT2eqzgYbdMlLweqlHbsZjxEChoVK+7iph7jyQg==}
+    engines: {node: '>=20.18.1'}
 
   chevrotain-allstar@0.3.1:
     resolution: {integrity: sha512-b7g+y9A0v4mxCW1qUhf3BSVPg+/NvGErk/dOkrDaHA0nQIQGAtrOjlX//9OQtRlSCy+x9rfB5N8yC71lH1nvMw==}
@@ -6130,11 +6133,15 @@ packages:
   crossws@0.3.5:
     resolution: {integrity: sha512-ojKiDvcmByhwa8YYqbQI/hg7MEU0NC03+pSdEq4ZUnZR9xXpwk7E43SMNGkn+JxJGPFtNvQ48+vV2p+P1ml5PA==}
 
-  css-select@5.1.0:
-    resolution: {integrity: sha512-nwoRF1rvRRnnCqqY7updORDsuqKzqYJ28+oSMaJMMgOauh3fvwHqMS7EZpIPqK8GL+g9mKxF1vP/ZjSeNjEVHg==}
+  css-select@5.2.2:
+    resolution: {integrity: sha512-TizTzUddG/xYLA3NXodFM0fSbNizXjOKhqiQQwvhlspadZokn1KDy0NZFS0wuEubIYAV5/c1/lAr0TaaFXEXzw==}
 
   css-what@6.1.0:
     resolution: {integrity: sha512-HTUrgRJ7r4dsZKU6GjmpfRK1O76h97Z8MfS1G0FozR+oF2kG6Vfe8JE6zwrkbxigziPHinCJ+gCPjA9EaBDtRw==}
+    engines: {node: '>= 6'}
+
+  css-what@6.2.2:
+    resolution: {integrity: sha512-u/O3vwbptzhMs3L1fQE82ZSLHQQfto5gyZzwteVIEyeaY5Fc7R4dapF/BvRoSYFeqfBk4m0V1Vafq5Pjv25wvA==}
     engines: {node: '>= 6'}
 
   cssesc@3.0.0:
@@ -8871,8 +8878,8 @@ packages:
     resolution: {integrity: sha512-2eznPJP8z2BFLX50tf0LuODrpINqP1RVIm/CObbTcBRITQgmC/TjcREF1NeTBzIcR5XO/ukWo+YHOjBbFwIupg==}
     hasBin: true
 
-  multiformats@13.4.0:
-    resolution: {integrity: sha512-Mkb/QcclrJxKC+vrcIFl297h52QcKh2Az/9A5vbWytbQt4225UWWWmIuSsKksdww9NkIeYcA7DkfftyLuC/JSg==}
+  multiformats@13.4.2:
+    resolution: {integrity: sha512-eh6eHCrRi1+POZ3dA+Dq1C6jhP1GNtr9CRINMb67OKzqW9I5DUuZM/3jLPlzhgpGeiNUlEGEbkCYChXMCc/8DQ==}
 
   multistream@4.1.0:
     resolution: {integrity: sha512-J1XDiAmmNpRCBfIWJv+n0ymC4ABcf/Pl+5YvC5B/D2f/2+8PtHvCNxMPKiQcZyi922Hq69J2YOpb1pTywfifyw==}
@@ -10463,8 +10470,8 @@ packages:
   siginfo@2.0.0:
     resolution: {integrity: sha512-ybx0WO1/8bSBLEWXZvEd7gMW3Sn3JFlW3TvX1nREbDLRNQNaeNN8WK0meBwPdAaOI7TtRRRJn/Es1zhrrCHu7g==}
 
-  sign-in-with-stacks@0.1.2:
-    resolution: {integrity: sha512-4dMiLyUKNXqk/5UAWszP4S9syKa/7Qeo34j0AKH2WSpi3mdzIQ4JHNIG+iW0YCkAMK27bOOZ34XDZ642rdeGvQ==}
+  sign-in-with-stacks@0.1.6:
+    resolution: {integrity: sha512-B4T+5fRrEAX+3mnycjBfbV7nlVNvLb2cPUWCz/yncgW4DiXDJzfbt4LoeGHR/U+H+8wuwvbB11Xiz+v2LljgAw==}
     peerDependencies:
       '@stacks/common': ^7.0.2
       '@stacks/encryption': ^7.0.2
@@ -10810,8 +10817,8 @@ packages:
     resolution: {integrity: sha512-LfOT807005OVfyxAjHpOajlIgoEaE894jqjkrhONC/HqBLS8OAhhNifnNs3Y5wD26eIdf0vk1zu9gja2oI3/1Q==}
     engines: {node: '>=18.18'}
 
-  tailwind-merge@3.3.1:
-    resolution: {integrity: sha512-gBXpgUm/3rp1lMZZrM/w7D8GKqshif0zAymAhbCyIt8KMe+0v9DQ7cdYLR4FHH/cKpdTXb+A/tKKU3eolfsI+g==}
+  tailwind-merge@3.4.0:
+    resolution: {integrity: sha512-uSaO4gnW+b3Y2aWoWfFpX62vn2sR3skfhbjsEnaBI81WD1wBLlHZe5sWf0AqjksNdYTbGBEd0UasQMT3SNV15g==}
 
   tailwindcss@4.1.12:
     resolution: {integrity: sha512-DzFtxOi+7NsFf7DBtI3BJsynR+0Yp6etH+nRPTbpWnS2pZBaSksv/JGctNwSWzbFjp0vxSqknaUylseZqMDGrA==}
@@ -11212,8 +11219,8 @@ packages:
     resolution: {integrity: sha512-raqeBD6NQK4SkWhQzeYKd1KmIG6dllBOTt55Rmkt4HtI9mwdWtJljnrXjAFUBLTSN67HWrOIZ3EPF4kjUw80Bg==}
     engines: {node: '>=14.0'}
 
-  undici@7.10.0:
-    resolution: {integrity: sha512-u5otvFBOBZvmdjWLVW+5DAc9Nkq8f24g0O9oY7qw2JVIF1VocIFoyz9JFkuVOS2j41AufeO0xnlweJ2RLT8nGw==}
+  undici@7.16.0:
+    resolution: {integrity: sha512-QEg3HPMll0o3t2ourKwOeUAZ159Kn9mx5pnzHRQO8+Wixmh88YdZRiIwat0iNzNNXn0yoEtXJqFpyW7eM8BV7g==}
     engines: {node: '>=20.18.1'}
 
   unenv@2.0.0-rc.18:
@@ -13231,33 +13238,33 @@ snapshots:
     dependencies:
       '@ipld/dag-cbor': 9.2.4
       cborg: 4.2.11
-      multiformats: 13.4.0
+      multiformats: 13.4.2
       varint: 6.0.0
 
   '@ipld/dag-cbor@9.2.2':
     dependencies:
       cborg: 4.2.9
-      multiformats: 13.4.0
+      multiformats: 13.4.2
 
   '@ipld/dag-cbor@9.2.4':
     dependencies:
       cborg: 4.2.11
-      multiformats: 13.4.0
+      multiformats: 13.4.2
 
   '@ipld/dag-json@10.2.3':
     dependencies:
       cborg: 4.2.9
-      multiformats: 13.4.0
+      multiformats: 13.4.2
 
   '@ipld/dag-pb@4.1.5':
     dependencies:
-      multiformats: 13.4.0
+      multiformats: 13.4.2
 
   '@ipld/dag-ucan@3.4.5':
     dependencies:
       '@ipld/dag-cbor': 9.2.2
       '@ipld/dag-json': 10.2.3
-      multiformats: 13.4.0
+      multiformats: 13.4.2
 
   '@ipld/unixfs@3.0.0':
     dependencies:
@@ -13265,7 +13272,7 @@ snapshots:
       '@multiformats/murmur3': 2.1.8
       '@perma/map': 1.0.3
       actor: 2.3.1
-      multiformats: 13.4.0
+      multiformats: 13.4.2
       protobufjs: 7.4.0
       rabin-rs: 2.1.0
 
@@ -13552,7 +13559,7 @@ snapshots:
 
   '@multiformats/murmur3@2.1.8':
     dependencies:
-      multiformats: 13.4.0
+      multiformats: 13.4.2
       murmurhash3js-revisited: 3.0.0
 
   '@napi-rs/simple-git-android-arm-eabi@0.1.22':
@@ -13782,6 +13789,8 @@ snapshots:
       '@noble/hashes': 1.8.0
 
   '@noble/ed25519@1.7.3': {}
+
+  '@noble/ed25519@1.7.5': {}
 
   '@noble/hashes@1.1.5': {}
 
@@ -16082,12 +16091,12 @@ snapshots:
       '@ucanto/client': 9.0.1
       '@ucanto/core': 10.4.0
       '@ucanto/interface': 10.3.0
-      '@ucanto/principal': 9.0.2
+      '@ucanto/principal': 9.0.3
       '@ucanto/transport': 9.2.0
       '@ucanto/validator': 9.1.0
       bigint-mod-arith: 3.3.1
       conf: 11.0.2
-      multiformats: 13.4.0
+      multiformats: 13.4.2
       p-defer: 4.0.1
       type-fest: 4.41.0
       uint8arrays: 5.1.0
@@ -16100,7 +16109,7 @@ snapshots:
       '@ucanto/core': 10.4.0
       '@ucanto/interface': 10.3.0
       carstream: 2.3.0
-      multiformats: 13.4.0
+      multiformats: 13.4.2
       sade: 1.8.1
       uint8arrays: 5.1.0
 
@@ -16108,11 +16117,11 @@ snapshots:
     dependencies:
       '@ucanto/core': 10.4.0
       '@ucanto/interface': 10.3.0
-      '@ucanto/principal': 9.0.2
+      '@ucanto/principal': 9.0.3
       '@ucanto/transport': 9.2.0
       '@ucanto/validator': 9.1.0
       '@web3-storage/data-segment': 5.3.0
-      multiformats: 13.4.0
+      multiformats: 13.4.2
 
   '@storacha/client@1.7.9(encoding@0.1.13)':
     dependencies:
@@ -16126,7 +16135,7 @@ snapshots:
       '@ucanto/client': 9.0.1
       '@ucanto/core': 10.4.0
       '@ucanto/interface': 10.3.0
-      '@ucanto/principal': 9.0.2
+      '@ucanto/principal': 9.0.3
       '@ucanto/transport': 9.2.0
       environment: 1.1.0
     transitivePeerDependencies:
@@ -16160,7 +16169,7 @@ snapshots:
       '@ucanto/transport': 9.2.0
       '@web3-storage/data-segment': 5.3.0
       ipfs-utils: 9.0.14(encoding@0.1.13)
-      multiformats: 13.4.0
+      multiformats: 13.4.2
       p-retry: 5.1.2
       varint: 6.0.0
     transitivePeerDependencies:
@@ -16174,28 +16183,28 @@ snapshots:
     dependencies:
       tslib: 2.8.1
 
-  '@t3-oss/env-core@0.13.8(arktype@2.1.20)(typescript@5.9.2)(valibot@1.0.0-beta.15(typescript@5.9.2))(zod@3.25.67)':
+  '@t3-oss/env-core@0.13.10(arktype@2.1.20)(typescript@5.9.2)(valibot@1.0.0-beta.15(typescript@5.9.2))(zod@3.25.67)':
     optionalDependencies:
       arktype: 2.1.20
       typescript: 5.9.2
       valibot: 1.0.0-beta.15(typescript@5.9.2)
       zod: 3.25.67
 
-  '@t3-oss/env-nextjs@0.13.8(arktype@2.1.20)(typescript@5.9.2)(valibot@1.0.0-beta.15(typescript@5.9.2))(zod@3.25.67)':
+  '@t3-oss/env-nextjs@0.13.10(arktype@2.1.20)(typescript@5.9.2)(valibot@1.0.0-beta.15(typescript@5.9.2))(zod@3.25.67)':
     dependencies:
-      '@t3-oss/env-core': 0.13.8(arktype@2.1.20)(typescript@5.9.2)(valibot@1.0.0-beta.15(typescript@5.9.2))(zod@3.25.67)
+      '@t3-oss/env-core': 0.13.10(arktype@2.1.20)(typescript@5.9.2)(valibot@1.0.0-beta.15(typescript@5.9.2))(zod@3.25.67)
     optionalDependencies:
       arktype: 2.1.20
       typescript: 5.9.2
       valibot: 1.0.0-beta.15(typescript@5.9.2)
       zod: 3.25.67
 
-  '@tabler/icons-react@3.34.1(react@19.2.3)':
+  '@tabler/icons-react@3.36.0(react@19.2.3)':
     dependencies:
-      '@tabler/icons': 3.34.1
+      '@tabler/icons': 3.36.0
       react: 19.2.3
 
-  '@tabler/icons@3.34.1': {}
+  '@tabler/icons@3.36.0': {}
 
   '@tailwindcss/node@4.1.12':
     dependencies:
@@ -16957,26 +16966,26 @@ snapshots:
       '@ipld/dag-cbor': 9.2.4
       '@ipld/dag-ucan': 3.4.5
       '@ucanto/interface': 10.3.0
-      multiformats: 13.4.0
-
-  '@ucanto/interface@10.2.0':
-    dependencies:
-      '@ipld/dag-ucan': 3.4.5
-      multiformats: 13.4.0
+      multiformats: 13.4.2
 
   '@ucanto/interface@10.3.0':
     dependencies:
       '@ipld/dag-ucan': 3.4.5
-      multiformats: 13.4.0
+      multiformats: 13.4.2
 
-  '@ucanto/principal@9.0.2':
+  '@ucanto/interface@11.0.1':
     dependencies:
       '@ipld/dag-ucan': 3.4.5
-      '@noble/curves': 1.9.0
-      '@noble/ed25519': 1.7.3
+      multiformats: 13.4.2
+
+  '@ucanto/principal@9.0.3':
+    dependencies:
+      '@ipld/dag-ucan': 3.4.5
+      '@noble/curves': 1.9.7
+      '@noble/ed25519': 1.7.5
       '@noble/hashes': 1.7.1
-      '@ucanto/interface': 10.2.0
-      multiformats: 13.4.0
+      '@ucanto/interface': 11.0.1
+      multiformats: 13.4.2
       one-webcrypto: 1.0.3
 
   '@ucanto/transport@9.2.0':
@@ -16990,7 +16999,7 @@ snapshots:
       '@ipld/dag-cbor': 9.2.4
       '@ucanto/core': 10.4.0
       '@ucanto/interface': 10.3.0
-      multiformats: 13.4.0
+      multiformats: 13.4.2
 
   '@ungap/structured-clone@1.3.0': {}
 
@@ -17157,7 +17166,7 @@ snapshots:
   '@web3-storage/data-segment@5.3.0':
     dependencies:
       '@ipld/dag-cbor': 9.2.4
-      multiformats: 13.4.0
+      multiformats: 13.4.2
       sync-multihash-sha2: 1.0.0
 
   '@webassemblyjs/ast@1.14.1':
@@ -17916,7 +17925,7 @@ snapshots:
   carstream@2.3.0:
     dependencies:
       '@ipld/dag-cbor': 9.2.4
-      multiformats: 13.4.0
+      multiformats: 13.4.2
       uint8arraylist: 2.4.8
 
   cborg@4.2.11: {}
@@ -17968,13 +17977,13 @@ snapshots:
   cheerio-select@2.1.0:
     dependencies:
       boolbase: 1.0.0
-      css-select: 5.1.0
-      css-what: 6.1.0
+      css-select: 5.2.2
+      css-what: 6.2.2
       domelementtype: 2.3.0
       domhandler: 5.0.3
       domutils: 3.2.2
 
-  cheerio@1.1.0:
+  cheerio@1.1.2:
     dependencies:
       cheerio-select: 2.1.0
       dom-serializer: 2.0.0
@@ -17985,7 +17994,7 @@ snapshots:
       parse5: 7.3.0
       parse5-htmlparser2-tree-adapter: 7.1.0
       parse5-parser-stream: 7.1.2
-      undici: 7.10.0
+      undici: 7.16.0
       whatwg-mimetype: 4.0.0
 
   chevrotain-allstar@0.3.1(chevrotain@11.0.3):
@@ -18295,15 +18304,17 @@ snapshots:
     dependencies:
       uncrypto: 0.1.3
 
-  css-select@5.1.0:
+  css-select@5.2.2:
     dependencies:
       boolbase: 1.0.0
-      css-what: 6.1.0
+      css-what: 6.2.2
       domhandler: 5.0.3
       domutils: 3.2.2
       nth-check: 2.1.1
 
   css-what@6.1.0: {}
+
+  css-what@6.2.2: {}
 
   cssesc@3.0.0: {}
 
@@ -21688,7 +21699,7 @@ snapshots:
       dns-packet: 5.6.1
       thunky: 1.1.0
 
-  multiformats@13.4.0: {}
+  multiformats@13.4.2: {}
 
   multistream@4.1.0:
     dependencies:
@@ -23793,7 +23804,7 @@ snapshots:
 
   siginfo@2.0.0: {}
 
-  sign-in-with-stacks@0.1.2(@stacks/common@7.0.2)(@stacks/encryption@7.0.6)(@stacks/network@7.0.2(encoding@0.1.13))(@stacks/transactions@7.0.6(encoding@0.1.13)):
+  sign-in-with-stacks@0.1.6(@stacks/common@7.0.2)(@stacks/encryption@7.0.6)(@stacks/network@7.0.2(encoding@0.1.13))(@stacks/transactions@7.0.6(encoding@0.1.13)):
     dependencies:
       '@stacks/common': 7.0.2
       '@stacks/encryption': 7.0.6
@@ -24192,7 +24203,7 @@ snapshots:
 
   tailwind-csstree@0.1.3: {}
 
-  tailwind-merge@3.3.1: {}
+  tailwind-merge@3.4.0: {}
 
   tailwindcss@4.1.12: {}
 
@@ -24546,7 +24557,7 @@ snapshots:
 
   uint8arrays@5.1.0:
     dependencies:
-      multiformats: 13.4.0
+      multiformats: 13.4.2
 
   ultrahtml@1.6.0: {}
 
@@ -24586,7 +24597,7 @@ snapshots:
     dependencies:
       '@fastify/busboy': 2.1.1
 
-  undici@7.10.0: {}
+  undici@7.16.0: {}
 
   unenv@2.0.0-rc.18:
     dependencies:
