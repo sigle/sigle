@@ -28,11 +28,11 @@
     "@stacks/connect": "7.9.0",
     "@stacks/network": "7.0.2",
     "@stacks/transactions": "7.0.6",
-    "@tsconfig/recommended": "1.0.10",
+    "@tsconfig/recommended": "1.0.13",
     "@types/node": "22.15.21",
     "openapi-typescript": "7.9.1",
     "tsdown": "0.14.1",
-    "typescript": "5.9.2",
+    "typescript": "5.9.3",
     "vitest": "3.2.4",
     "zod": "3.25.67"
   },
