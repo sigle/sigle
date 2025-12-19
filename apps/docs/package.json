@@ -5,8 +5,7 @@
   "scripts": {
     "build": "next build --turbopack",
     "dev": "next --turbopack",
-    "postbuild": "pagefind --site .next/server/app --output-path public/_pagefind",
-    "start": "next start"
+    "postbuild": "pagefind --site .next/server/app --output-path out/_pagefind"
   },
   "dependencies": {
     "@sigle/sdk": "workspace:*",
