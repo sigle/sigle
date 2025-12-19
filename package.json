@@ -18,7 +18,7 @@
     "@changesets/cli": "2.29.6",
     "lefthook": "1.12.3",
     "syncpack": "13.0.4",
-    "turbo": "2.5.6"
+    "turbo": "2.6.3"
   },
   "pnpm": {
     "neverBuiltDependencies": [],
