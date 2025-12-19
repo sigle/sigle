@@ -4,7 +4,7 @@
     "node": ">=20"
   },
   "private": true,
-  "packageManager": "pnpm@10.15.0",
+  "packageManager": "pnpm@10.26.1",
   "scripts": {
     "build": "turbo typecheck build --cache-dir=.turbo",
     "format": "biome check --write --no-errors-on-unmatched",
@@ -14,11 +14,11 @@
     "version": "pnpm changeset version && pnpm install --lockfile-only"
   },
   "devDependencies": {
-    "@biomejs/biome": "2.2.0",
-    "@changesets/cli": "2.29.6",
-    "lefthook": "1.12.3",
+    "@biomejs/biome": "2.3.10",
+    "@changesets/cli": "2.29.8",
+    "lefthook": "2.0.12",
     "syncpack": "13.0.4",
-    "turbo": "2.5.6"
+    "turbo": "2.6.3"
   },
   "pnpm": {
     "neverBuiltDependencies": [],

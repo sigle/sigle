@@ -3,20 +3,19 @@
   "private": true,
   "version": "0.0.0",
   "scripts": {
-    "build": "next build --turbopack",
-    "dev": "next --turbopack",
-    "postbuild": "pagefind --site .next/server/app --output-path public/_pagefind",
-    "start": "next start"
+    "build": "next build",
+    "dev": "next",
+    "postbuild": "pagefind --site .next/server/app --output-path out/_pagefind"
   },
   "dependencies": {
     "@sigle/sdk": "workspace:*",
-    "next": "15.5.0",
-    "nextra": "4.4.0",
-    "nextra-theme-docs": "4.4.0",
-    "react": "19.1.1",
-    "react-dom": "19.1.1"
+    "next": "16.1.0",
+    "nextra": "4.6.1",
+    "nextra-theme-docs": "4.6.1",
+    "react": "19.2.3",
+    "react-dom": "19.2.3"
   },
   "devDependencies": {
-    "pagefind": "1.3.0"
+    "pagefind": "1.4.0"
   }
 }

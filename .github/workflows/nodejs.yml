@@ -17,7 +17,7 @@ jobs:
   quality:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
 
       - name: Setup Biome
         uses: biomejs/setup-biome@v2
@@ -29,7 +29,7 @@ jobs:
     name: Build and Test
     runs-on: ubuntu-22.04
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - uses: ./.github/actions/setup-monorepo
 
       - name: Check dependencies consistency
@@ -51,7 +51,7 @@ jobs:
     name: "Test contracts"
     runs-on: ubuntu-22.04
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
 
       - name: "Check contract syntax"
         uses: docker://hirosystems/clarinet:3.5.0
