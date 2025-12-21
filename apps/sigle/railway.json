@@ -2,12 +2,12 @@
   "$schema": "https://railway.com/railway.schema.json",
   "build": {
     "builder": "RAILPACK",
-    "watchPatterns": ["/apps/custom-domain/**"],
-    "buildCommand": "pnpm turbo build --filter='@sigle/custom-domain'"
+    "watchPatterns": ["/apps/sigle/**"],
+    "buildCommand": "pnpm turbo build --filter='@sigle/app'"
   },
   "deploy": {
     "region": "us-west2",
-    "startCommand": "cd ./apps/custom-domain && pnpm start",
+    "startCommand": "cd ./apps/sigle && pnpm start",
     "runtime": "V2",
     "numReplicas": 1,
     "limitOverride": {
