@@ -1,0 +1,28 @@
+{
+  "$schema": "https://railway.com/railway.schema.json",
+  "build": {
+    "builder": "RAILPACK",
+    "watchPatterns": ["/apps/sigle/**"],
+    "buildCommand": "pnpm turbo build --filter='@sigle/app'"
+  },
+  "deploy": {
+    "region": "us-west2",
+    "startCommand": "cd ./apps/sigle && pnpm start",
+    "runtime": "V2",
+    "numReplicas": 1,
+    "limitOverride": {
+      "containers": {
+        "cpu": 0.5,
+        "memoryBytes": 500000000
+      }
+    },
+    "sleepApplication": true,
+    "multiRegionConfig": {
+      "us-west2": {
+        "numReplicas": 1
+      }
+    },
+    "restartPolicyType": "ON_FAILURE",
+    "restartPolicyMaxRetries": 5
+  }
+}
