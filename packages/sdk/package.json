@@ -30,7 +30,7 @@
     "openapi-typescript": "7.9.1",
     "tsdown": "0.18.1",
     "typescript": "5.9.3",
-    "vitest": "3.2.4",
+    "vitest": "4.0.16",
     "zod": "3.25.67"
   },
   "peerDependencies": {
