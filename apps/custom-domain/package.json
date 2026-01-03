@@ -28,7 +28,7 @@
     "zod": "3.25.67"
   },
   "devDependencies": {
-    "@dotenvx/dotenvx": "1.51.2",
+    "@dotenvx/dotenvx": "1.51.4",
     "@eslint/eslintrc": "3.3.3",
     "@tailwindcss/typography": "0.5.16",
     "@types/node": "22.15.21",

@@ -1,19 +1,16 @@
-/// <reference types="vitest" />
-
 import {
   getClarinetVitestsArgv,
   vitestSetupFilePath,
-} from "@hirosystems/clarinet-sdk/vitest";
-import { defineConfig } from "vite";
+} from "@stacks/clarinet-sdk/vitest";
+import { defineConfig } from "vitest/config";
 
 export default defineConfig({
   test: {
     environment: "clarinet",
     pool: "forks",
-    poolOptions: {
-      threads: { singleThread: true },
-      forks: { singleFork: true },
-    },
+    // clarinet handles test isolation by resetting the simnet between tests
+    isolate: false,
+    maxWorkers: 1,
     setupFiles: [vitestSetupFilePath],
     environmentOptions: {
       clarinet: {
