@@ -88,7 +88,7 @@
     "zustand": "5.0.9"
   },
   "devDependencies": {
-    "@dotenvx/dotenvx": "1.51.2",
+    "@dotenvx/dotenvx": "1.51.4",
     "@eslint/eslintrc": "3.3.3",
     "@tailwindcss/postcss": "4.1.18",
     "@tailwindcss/typography": "0.5.16",
