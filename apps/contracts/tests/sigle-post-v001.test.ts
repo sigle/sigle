@@ -467,7 +467,7 @@ describe("sigle-post-v001", () => {
           [Cl.uint(1)],
           deployer,
         );
-        expect(listing).toEqual(
+        expect(listing).toStrictEqual(
           Cl.some(
             Cl.tuple({
               commission: Cl.contractPrincipal(
@@ -555,13 +555,13 @@ describe("sigle-post-v001", () => {
 
       // Check NFT minting events - should be 3 nft_mint_events
       const mintEvents = events.filter((e) => e.event === "nft_mint_event");
-      expect(mintEvents.length).toBe(1);
+      expect(mintEvents).toHaveLength(1);
 
       // Important: Verify that NO sBTC transfer events occurred (free mint)
       const transferEvents = events.filter(
         (e) => e.event === "ft_transfer_event",
       );
-      expect(transferEvents.length).toBe(0);
+      expect(transferEvents).toHaveLength(0);
 
       // Check token ownership after minting
       const { result: tokenOwner } = simnet.callReadOnlyFn(
@@ -587,7 +587,7 @@ describe("sigle-post-v001", () => {
 
       // Check NFT minting events
       const mintEvents = events.filter((e) => e.event === "nft_mint_event");
-      expect(mintEvents.length).toBe(1);
+      expect(mintEvents).toHaveLength(1);
 
       // Check that tokens were minted to wallet3
       const { result: tokenOwner } = simnet.callReadOnlyFn(
