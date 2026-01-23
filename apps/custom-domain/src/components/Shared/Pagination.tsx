@@ -7,7 +7,7 @@ import { useRouter } from "next/navigation";
 
 const button = cva(
   [
-    "flex size-10 items-center justify-center rounded border border-gray-200 disabled:cursor-not-allowed disabled:bg-gray-100 disabled:text-gray-500 md:size-8",
+    "flex size-10 items-center justify-center rounded-sm border border-gray-200 disabled:cursor-not-allowed disabled:bg-gray-100 disabled:text-gray-500 md:size-8",
   ],
   {
     variants: {

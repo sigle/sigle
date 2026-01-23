@@ -1,6 +1,7 @@
 {
   "$schema": "./node_modules/oxlint/configuration_schema.json",
   "plugins": ["nextjs", "typescript"],
+  "jsPlugins": ["eslint-plugin-better-tailwindcss"],
   "categories": {
     "correctness": "error",
     "nursery": "error",
@@ -9,6 +10,16 @@
   },
   "ignorePatterns": [".next/**", "out/**", "build/**", "next-env.d.ts"],
   "rules": {
-    "no-undef": "off"
+    "no-undef": "off",
+
+    "better-tailwindcss/enforce-consistent-class-order": "error",
+    "better-tailwindcss/no-duplicate-classes": "error",
+    "better-tailwindcss/no-deprecated-classes": "error",
+    "better-tailwindcss/no-unnecessary-whitespace": "error"
+  },
+  "settings": {
+    "better-tailwindcss": {
+      "entryPoint": "src/app/globals.css"
+    }
   }
 }

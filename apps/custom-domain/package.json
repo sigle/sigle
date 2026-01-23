@@ -29,13 +29,10 @@
   },
   "devDependencies": {
     "@dotenvx/dotenvx": "1.51.4",
-    "@eslint/eslintrc": "3.3.3",
     "@tailwindcss/typography": "0.5.16",
     "@types/node": "22.15.21",
     "@types/react": "19.2.7",
     "@types/react-dom": "19.2.3",
-    "eslint": "9.39.2",
-    "eslint-config-next": "16.1.0",
     "eslint-plugin-better-tailwindcss": "3.8.0",
     "oxlint": "1.41.0",
     "postcss": "8.5.6",

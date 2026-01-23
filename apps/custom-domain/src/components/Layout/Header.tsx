@@ -57,7 +57,7 @@ export const Header = ({ site }: HeaderProps) => {
       <Link href="/" className="w-full md:w-auto">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <div className="relative overflow-hidden rounded object-cover">
+            <div className="relative overflow-hidden rounded-sm object-cover">
               {site.user.profile?.coverPictureUri ? (
                 <Image
                   src={resolveImageUrl(site.user.profile?.coverPictureUri.id)}
@@ -88,7 +88,7 @@ export const Header = ({ site }: HeaderProps) => {
               <SheetHeader>
                 <SheetTitle>
                   <div className="flex items-center gap-2">
-                    <div className="relative overflow-hidden rounded object-cover">
+                    <div className="relative overflow-hidden rounded-sm object-cover">
                       {site.user.profile?.coverPictureUri ? (
                         <Image
                           src={resolveImageUrl(
