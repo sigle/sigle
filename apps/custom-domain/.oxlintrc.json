@@ -1,56 +1,26 @@
 {
-  "$schema": "./node_modules/oxlint/configuration_schema.json",
+  "$schema": "../../node_modules/oxlint/configuration_schema.json",
   "extends": ["../../.oxlintrc.json"],
   "plugins": ["typescript", "react", "nextjs"],
   "jsPlugins": ["eslint-plugin-better-tailwindcss"],
-  "categories": {
-    "correctness": "error",
-    "nursery": "error",
-    "perf": "error",
-    "restriction": "error",
-    "suspicious": "error",
-    "style": "error",
-    "pedantic": "error"
-  },
   "ignorePatterns": [".next/**", "out/**", "build/**", "next-env.d.ts"],
+  "settings": {
+    "better-tailwindcss": {
+      "entryPoint": "./src/app/globals.css"
+    }
+  },
   "rules": {
-    "no-undef": "off",
-    "no-undefined": "off",
-    "no-plusplus": "off",
-    "no-magic-numbers": "off",
-    "no-ternary": "off",
-    "no-nested-ternary": "off",
-    "new-cap": "off",
-    "id-length": "off",
-    "max-statements": "off",
-    "arrow-body-style": "off",
-    "explicit-function-return-type": "off",
-    "explicit-module-boundary-types": "off",
-    "sort-keys": "off",
-    "sort-imports": "off",
-    "func-style": "off",
-    "prefer-destructuring": "off",
-    "max-lines-per-function": "off",
-    "no-warning-comments": "off",
-    "no-negated-condition": "off",
-    "capitalized-comments": "off",
-    "react-in-jsx-scope": "off",
-    "only-export-components": "off",
-    "jsx-max-depth": "off",
-    "jsx-filename-extension": "off",
-    "jsx-props-no-spreading": "off",
-
     "better-tailwindcss/enforce-consistent-line-wrapping": "error",
     "better-tailwindcss/enforce-consistent-class-order": "error",
     "better-tailwindcss/no-duplicate-classes": "error",
     "better-tailwindcss/no-deprecated-classes": "error",
     "better-tailwindcss/no-unnecessary-whitespace": "error",
 
-    "no-danger": "off"
-  },
-  "settings": {
-    "better-tailwindcss": {
-      "entryPoint": "./src/app/globals.css"
-    }
+    "jsx-filename-extension": "off",
+    "jsx-max-depth": "off",
+    "react-in-jsx-scope": "off",
+    "only-export-components": "off",
+    "jsx-props-no-spreading": "off",
+    "no-plusplus": "off"
   }
 }
