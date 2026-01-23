@@ -33,6 +33,10 @@
     "sort-imports": "off",
     "sort-keys": "off",
 
+    "no-hooks": "off",
+    "require-hook": "off",
+    "valid-title": "off",
+
     "consistent-type-definitions": "off",
     "require-await": "off",
     "no-console": "off",
