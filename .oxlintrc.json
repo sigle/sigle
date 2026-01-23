@@ -12,7 +12,9 @@
     "pedantic": "error"
   },
   "rules": {
+    "arrow-body-style": "off",
     "curly": "off",
+    "complexity": "off",
     "explicit-function-return-type": "off",
     "explicit-module-boundary-types": "off",
     "max-classes-per-file": "off",
@@ -40,6 +42,7 @@
     "no-warning-comments": "off",
     "no-param-reassign": "off",
     "default-case": "off",
-    "id-length": "off"
+    "id-length": "off",
+    "new-cap": "off"
   }
 }
