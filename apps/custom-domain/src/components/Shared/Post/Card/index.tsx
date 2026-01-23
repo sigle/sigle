@@ -22,6 +22,7 @@ export const PostCard = ({ post }: PostCardProps) => {
         </div>
         {post.coverImage && (
           <div
+            // oxlint-disable-next-line jsx-curly-brace-presence
             className={`relative mt-3 aspect-45/28 overflow-hidden rounded-2xl`}
           >
             <Image
