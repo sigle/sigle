@@ -88,6 +88,7 @@ export const TableOfContents = ({ items, post }: TableOfContentsProps) => {
               "font-bold": activeId === item.id,
             })}
           >
+            {/* eslint-disable-next-line eslint-plugin-next/no-html-link-for-pages */}
             <a
               className="line-clamp-2"
               href={`#${item.id}`}
