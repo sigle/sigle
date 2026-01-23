@@ -162,14 +162,15 @@ const SheetContent = React.forwardRef<
       {children}
       <SheetPrimitive.Close
         className={`
-        absolute top-4 right-4 rounded-sm opacity-70 transition-opacity
-        hover:opacity-100
-        focus:ring-2 focus:ring-slate-400 focus:ring-offset-2 focus:outline-none
-        disabled:pointer-events-none
-        data-[state=open]:bg-slate-100
-        dark:focus:ring-slate-400 dark:focus:ring-offset-slate-900
-        dark:data-[state=open]:bg-slate-800
-      `}
+          absolute top-4 right-4 rounded-sm opacity-70 transition-opacity
+          hover:opacity-100
+          focus:ring-2 focus:ring-slate-400 focus:ring-offset-2
+          focus:outline-none
+          disabled:pointer-events-none
+          data-[state=open]:bg-slate-100
+          dark:focus:ring-slate-400 dark:focus:ring-offset-slate-900
+          dark:data-[state=open]:bg-slate-800
+        `}
       >
         <IconX className="size-4" />
         <span className="sr-only">Close</span>

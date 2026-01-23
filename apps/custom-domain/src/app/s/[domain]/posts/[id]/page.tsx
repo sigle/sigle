@@ -124,8 +124,8 @@ export default async function Post({
       <div className="container">
         <div
           className={`
-          flex gap-2 text-[0.625rem] tracking-wide text-gray-500 uppercase
-        `}
+            flex gap-2 text-[0.625rem] tracking-wide text-gray-500 uppercase
+          `}
         >
           <div>{format(new Date(post.createdAt), "MMMM dd, yyyy")}</div>
           <div>·</div>
@@ -135,9 +135,9 @@ export default async function Post({
 
         <div
           className={`
-          mt-9 grid grid-cols-1 gap-14
-          md:grid-cols-[280px,_1fr]
-        `}
+            mt-9 grid grid-cols-1 gap-14
+            md:grid-cols-[280px,_1fr]
+          `}
         >
           <div>
             <TableOfContents items={tableOfContent} post={post} />
@@ -146,8 +146,8 @@ export default async function Post({
             {post.coverImage && (
               <div
                 className={`
-                relative mb-3 aspect-[45/28] overflow-hidden rounded-2xl
-              `}
+                  relative mb-3 aspect-[45/28] overflow-hidden rounded-2xl
+                `}
               >
                 <Image
                   className="object-cover"
@@ -179,10 +179,10 @@ export default async function Post({
             <h3 className="text-2xl font-bold">Read more</h3>
             <div
               className={`
-              mt-6 grid grid-cols-1 gap-x-12 gap-y-10
-              md:grid-cols-2
-              lg:grid-cols-3
-            `}
+                mt-6 grid grid-cols-1 gap-x-12 gap-y-10
+                md:grid-cols-2
+                lg:grid-cols-3
+              `}
             >
               {filteredPosts.map((post) => {
                 return <PostCard key={post.id} post={post} />;

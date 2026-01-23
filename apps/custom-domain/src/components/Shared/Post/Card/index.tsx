@@ -13,9 +13,9 @@ export const PostCard = ({ post }: PostCardProps) => {
     <Link href={`/posts/${post.id}`}>
       <div
         className={`
-        flex flex-col transition-all duration-200
-        hover:-translate-y-1
-      `}
+          flex flex-col transition-all duration-200
+          hover:-translate-y-1
+        `}
       >
         <div className="text-[0.625rem] tracking-wide text-gray-500 uppercase">
           <div>{format(new Date(post.createdAt), "MMMM dd, yyyy")}</div>
@@ -23,8 +23,8 @@ export const PostCard = ({ post }: PostCardProps) => {
         {post.coverImage && (
           <div
             className={`
-            relative mt-3 aspect-[45/28] overflow-hidden rounded-2xl
-          `}
+              relative mt-3 aspect-[45/28] overflow-hidden rounded-2xl
+            `}
           >
             <Image
               src={resolveImageUrl(post.coverImage.id)}

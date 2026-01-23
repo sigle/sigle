@@ -77,14 +77,14 @@ export const TableOfContents = ({ items, post }: TableOfContentsProps) => {
   return (
     <nav
       className={`
-      overflow-auto
-      md:sticky md:top-20
-    `}
+        overflow-auto
+        md:sticky md:top-20
+      `}
     >
       <p
         className={`
-        text-[0.625rem] font-bold tracking-wide text-gray-500 uppercase
-      `}
+          text-[0.625rem] font-bold tracking-wide text-gray-500 uppercase
+        `}
       >
         Table of contents
       </p>

@@ -62,9 +62,9 @@ export const Header = ({ site }: HeaderProps) => {
       <Link
         href="/"
         className={`
-        w-full
-        md:w-auto
-      `}
+          w-full
+          md:w-auto
+        `}
       >
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
@@ -104,8 +104,8 @@ export const Header = ({ site }: HeaderProps) => {
                   <div className="flex items-center gap-2">
                     <div
                       className={`
-                      relative overflow-hidden rounded-sm object-cover
-                    `}
+                        relative overflow-hidden rounded-sm object-cover
+                      `}
                     >
                       {site.user.profile?.coverPictureUri ? (
                         <Image
@@ -162,9 +162,9 @@ export const Header = ({ site }: HeaderProps) => {
 
       <nav
         className={`
-        hidden
-        md:block
-      `}
+          hidden
+          md:block
+        `}
       >
         <ul className="flex items-center gap-8">
           {site.links.map(({ href, label }) => (

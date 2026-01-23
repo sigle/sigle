@@ -4,9 +4,9 @@ export const Footer = () => {
   return (
     <footer
       className={`
-      flex justify-end px-4 py-8
-      md:px-16
-    `}
+        flex justify-end px-4 py-8
+        md:px-16
+      `}
     >
       <a
         className="flex items-center gap-1 text-gray-300"

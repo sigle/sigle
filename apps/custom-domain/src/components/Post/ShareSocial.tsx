@@ -38,8 +38,8 @@ export const ShareSocial = ({
       <div className="mt-5">
         <p
           className={`
-          text-[0.625rem] font-bold tracking-wide text-gray-500 uppercase
-        `}
+            text-[0.625rem] font-bold tracking-wide text-gray-500 uppercase
+          `}
         >
           Share this article
         </p>
