@@ -72,7 +72,7 @@ export const TableOfContents = ({ items, post }: TableOfContentsProps) => {
   const router = useRouter();
   const [activeId, setActiveId] = useState();
   // biome-ignore lint/suspicious/noExplicitAny: ok
-  useIntersectionObserver(setActiveId as any);
+  useIntersectionObserver(setActiveId as any); // oxlint-disable-line no-explicit-any
 
   return (
     <nav
