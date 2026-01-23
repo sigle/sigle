@@ -38,8 +38,8 @@ export const Header = () => {
   return (
     <header
       className={`
-        sticky top-0 z-20 flex h-[var(--header-height)] items-center
-        justify-between border-b border-gray-6 bg-[var(--color-background)] px-4
+        sticky top-0 z-20 flex h-(--header-height) items-center
+        justify-between border-b border-gray-6 bg-background px-4
         md:px-[60px]
       `}
     >

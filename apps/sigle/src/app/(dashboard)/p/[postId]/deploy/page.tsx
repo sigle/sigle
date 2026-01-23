@@ -97,7 +97,7 @@ export default function PostDeployPending(props: PostDeployPendingProps) {
               View transaction on explorer.
             </Link>
             <Button color="gray" highContrast variant="soft" size="2" asChild>
-              <NextLink className="!mt-5" href="/">
+              <NextLink className="mt-5!" href="/">
                 Explore content on Sigle
               </NextLink>
             </Button>

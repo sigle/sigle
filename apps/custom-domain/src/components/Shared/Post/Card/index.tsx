@@ -23,7 +23,7 @@ export const PostCard = ({ post }: PostCardProps) => {
         {post.coverImage && (
           <div
             className={`
-              relative mt-3 aspect-[45/28] overflow-hidden rounded-2xl
+              relative mt-3 aspect-45/28 overflow-hidden rounded-2xl
             `}
           >
             <Image

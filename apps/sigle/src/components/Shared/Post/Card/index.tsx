@@ -52,7 +52,7 @@ export const PostCard = ({ post }: PostCardProps) => {
         <NextLink href={Routes.post({ postId: post.id })} className="block">
           <Heading
             size="4"
-            className="line-clamp-2 break-words"
+            className="line-clamp-2 wrap-break-word"
             style={{
               wordBreak: "break-word",
             }}

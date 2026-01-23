@@ -9,7 +9,7 @@ export const PageProfileSkeleton = () => {
         <div
           className={`
             h-64
-            md:h-[22rem]
+            md:h-88
           `}
         />
       </Skeleton>
