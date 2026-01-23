@@ -1,10 +1,6 @@
 {
   "name": "root",
-  "engines": {
-    "node": ">=20"
-  },
   "private": true,
-  "packageManager": "pnpm@10.26.1",
   "scripts": {
     "build": "turbo typecheck build --cache-dir=.turbo",
     "lint": "oxlint .",
@@ -24,6 +20,10 @@
     "syncpack": "13.0.4",
     "turbo": "2.7.5"
   },
+  "engines": {
+    "node": ">=20"
+  },
+  "packageManager": "pnpm@10.26.1",
   "pnpm": {
     "neverBuiltDependencies": [],
     "overrides": {

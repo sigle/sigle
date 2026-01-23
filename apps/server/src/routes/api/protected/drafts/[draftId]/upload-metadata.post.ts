@@ -84,9 +84,7 @@ export default defineEventHandler(async (event) => {
   if (!parsedMetadata.success) {
     throw createError({
       status: 400,
-      message: `Invalid metadata: ${fromError(
-        parsedMetadata.error,
-      ).toString()}`,
+      message: `Invalid metadata: ${fromError(parsedMetadata.error).toString()}`,
     });
   }
 
