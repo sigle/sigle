@@ -3,10 +3,10 @@
   "private": true,
   "scripts": {
     "build": "turbo typecheck build --cache-dir=.turbo",
-    "lint": "oxlint .",
-    "lint:fix": "oxlint --fix .",
     "format": "oxfmt --check",
     "format:fix": "oxfmt .",
+    "lint": "oxlint .",
+    "lint:fix": "oxlint --fix .",
     "release": "pnpm changeset publish",
     "test": "turbo test --cache-dir=.turbo",
     "version": "pnpm changeset version && pnpm install --lockfile-only"
