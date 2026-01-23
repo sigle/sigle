@@ -177,7 +177,7 @@ export const EditorTipTap = () => {
         dark:prose-invert
       `}
     >
-      {/* eslint-disable-next-line better-tailwindcss/no-unregistered-classes */}
+      {/* oxlint-disable-next-line better-tailwindcss/no-unknown-classes */}
       <EditorContent className="editor" editor={editor} />
       {editor && !isMobile && <EditorBubbleMenu editor={editor} />}
       {editor && !isMobile && <EditorFloatingMenu editor={editor} />}
