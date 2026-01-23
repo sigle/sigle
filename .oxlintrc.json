@@ -27,6 +27,10 @@
 
     "consistent-type-definitions": "off",
     "require-await": "off",
-    "no-console": "off"
+    "no-console": "off",
+    "func-style": "off",
+    "capitalized-comments": "off",
+    "no-inline-comments": "off",
+    "no-warning-comments": "off"
   }
 }

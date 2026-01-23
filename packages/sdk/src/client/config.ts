@@ -1,16 +1,17 @@
 import type { StacksNetworkName } from "@stacks/network";
 import type { AssetString } from "@stacks/transactions";
 
-export const config: {
-  [key in StacksNetworkName]: {
+export const config: Record<
+  StacksNetworkName,
+  {
     protocolAddress: string;
     sBTCAsset: AssetString;
     nftTrait: string;
     commissionTrait: string;
     postTrait: string;
     fixedPriceMinter: string;
-  };
-} = {
+  }
+> = {
   mainnet: {
     protocolAddress: "TODO",
     sBTCAsset:
