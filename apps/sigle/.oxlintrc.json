@@ -34,7 +34,20 @@
     "no-negated-condition": "off",
     "capitalized-comments": "off",
 
-    "better-tailwindcss/enforce-consistent-line-wrapping": "error",
+    "no-restricted-imports": [
+      "error",
+      {
+        "paths": [
+          {
+            "name": "next/link",
+            "message": "Use components/Shared/NextLink instead"
+          }
+        ]
+      }
+    ],
+
+    // TODO enable
+    "better-tailwindcss/enforce-consistent-line-wrapping": "off",
     "better-tailwindcss/enforce-consistent-class-order": "error",
     "better-tailwindcss/no-duplicate-classes": "error",
     "better-tailwindcss/no-deprecated-classes": "error",
