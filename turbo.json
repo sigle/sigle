@@ -1,6 +1,17 @@
 {
   "$schema": "https://turbo.build/schema.json",
   "tasks": {
+    "//#quality": {
+      "dependsOn": ["//#lint", "//#format"]
+    },
+    "//#quality:fix": {
+      "dependsOn": ["//#lint:fix", "//#format:fix"]
+    },
+    "//#lint": {},
+    "//#lint:fix": {},
+    "//#format": {},
+    "//#format:fix": {},
+
     "build": {
       "dependsOn": ["db:generate", "^build"],
       "outputs": [".next/**", "!.next/cache/**", ".output/**", "dist/**"]
