@@ -1,3 +1,4 @@
+import "./style.css";
 import {
   IconBold,
   IconCode,
@@ -15,7 +16,6 @@ import { useEffect } from "react";
 import { cn } from "@/lib/cn";
 import { EditorBubbleMenuLink } from "./BubbleMenuLink";
 import { useBubbleMenuStore } from "./store";
-import "./style.css";
 
 const BubbleMenuButton = ({
   active,

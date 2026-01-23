@@ -60,6 +60,7 @@ export const preparePredicate = (predicate: Predicate) => {
     predicateBody.then_that.http_post.url =
       predicateBody.then_that.http_post.url.replace(
         "{__BASE_URL__}",
+        // oxlint-disable-next-line no-non-null-assertion
         env.NODE_ENV === "development" ? env.WEBHOOK_PROXY_URL! : env.API_URL,
       );
 

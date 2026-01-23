@@ -4,7 +4,7 @@ import type { SendOptions, WorkHandler } from "pg-boss";
 import type { z } from "zod";
 import { consola } from "./consola";
 
-// biome-ignore lint/suspicious/noExplicitAny: ok
+// oxlint-disable-next-line no-explicit-any
 class JobBuilder<TInput = any> {
   private _name: string;
   private _inputSchema?: z.ZodType<TInput>;
@@ -20,9 +20,9 @@ class JobBuilder<TInput = any> {
   }
 
   input<T>(schema: z.ZodType<T>): JobBuilder<T> {
-    // biome-ignore lint/suspicious/noExplicitAny: ok
+    // oxlint-disable-next-line no-explicit-any
     this._inputSchema = schema as any;
-    // biome-ignore lint/suspicious/noExplicitAny: ok
+    // oxlint-disable-next-line no-explicit-any
     return this as any;
   }
 
@@ -69,7 +69,7 @@ class JobBuilder<TInput = any> {
     }
 
     consola.debug("Job emitted", { name: this._name });
-    // biome-ignore lint/suspicious/noExplicitAny: this is safe
+    // oxlint-disable-next-line no-explicit-any: this is safe
     return this._boss.send(this._name, data as any, this._options);
   }
 

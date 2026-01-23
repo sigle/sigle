@@ -1,5 +1,6 @@
 "use client";
 
+import type { EditorPostFormData } from "../EditorFormProvider";
 import {
   Callout,
   Dialog,
@@ -25,7 +26,6 @@ import {
   getExplorerTransactionUrl,
   getPromiseTransactionConfirmation,
 } from "@/lib/stacks";
-import type { EditorPostFormData } from "../EditorFormProvider";
 import { useEditorStore } from "../store";
 import { generateSigleMetadataFromForm } from "../utils";
 import { PublishReview } from "./PublishReview";
@@ -158,7 +158,7 @@ export const PublishDialog = ({ postId }: PublishDialogProps) => {
             },
             body: {
               type,
-              // biome-ignore lint/suspicious/noExplicitAny: ok
+              // oxlint-disable-next-line no-explicit-any
               metadata: metadata as any,
             },
           });
@@ -208,7 +208,7 @@ export const PublishDialog = ({ postId }: PublishDialogProps) => {
             metadata: arweaveUrl,
           });
           await contractCall(parameters);
-          // biome-ignore lint/suspicious/noExplicitAny: ok
+          // oxlint-disable-next-line no-explicit-any
         } catch (error: any) {
           console.error("Error SDK publishing", error);
           toast("Error publishing", {

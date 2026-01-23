@@ -1,5 +1,6 @@
 "use client";
 
+import type { EditorPostFormData } from "./EditorFormProvider";
 import { Button, IconButton, Spinner } from "@radix-ui/themes";
 import { IconCameraPlus, IconHandGrab, IconTrash } from "@tabler/icons-react";
 import { motion } from "framer-motion";
@@ -17,7 +18,6 @@ import { toast } from "sonner";
 import { cn } from "@/lib/cn";
 import { resolveImageUrl } from "@/lib/images";
 import { sigleApiClient } from "@/lib/sigle";
-import type { EditorPostFormData } from "./EditorFormProvider";
 
 export const EditorCoverImage = () => {
   const params = useParams();
@@ -54,7 +54,7 @@ export const EditorCoverImage = () => {
               draftId: postId,
             },
           },
-          // biome-ignore lint/suspicious/noExplicitAny: ok
+          // oxlint-disable-next-line no-explicit-any
           body: formData as any,
         },
         {

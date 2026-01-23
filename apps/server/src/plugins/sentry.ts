@@ -10,7 +10,8 @@ const ignoreErrors = [
   422, // Unprocessable Entity
 ];
 
-BigInt.prototype.toJSON = function () {
+// oxlint-disable-next-line no-extend-native
+BigInt.prototype.toJSON = function toJSON() {
   return this.toString();
 };
 

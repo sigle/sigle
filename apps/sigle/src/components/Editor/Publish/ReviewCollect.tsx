@@ -1,7 +1,7 @@
+import type { EditorPostFormData } from "../EditorFormProvider";
 import { Badge, Card, IconButton, Inset, Text } from "@radix-ui/themes";
 import { IconCards, IconPencil } from "@tabler/icons-react";
 import { useFormContext } from "react-hook-form";
-import type { EditorPostFormData } from "../EditorFormProvider";
 import { useEditorStore } from "../store";
 
 export const PublishReviewCollect = () => {

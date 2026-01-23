@@ -1,4 +1,6 @@
 import "highlight.js/styles/night-owl.css";
+import "./editor-tiptap.css";
+import type { EditorPostFormData } from "./EditorFormProvider";
 import TipTapBlockquote from "@tiptap/extension-blockquote";
 import TipTapBold from "@tiptap/extension-bold";
 import TipTapBulletList from "@tiptap/extension-bullet-list";
@@ -30,15 +32,12 @@ import { common, createLowlight } from "lowlight";
 import { useParams } from "next/navigation";
 import { usePostHog } from "posthog-js/react";
 import { useFormContext } from "react-hook-form";
+import { toast } from "sonner";
 import { Markdown } from "tiptap-markdown";
 import { useWindowSize } from "@/hooks/useWindowSize";
+import { sigleApiClient } from "@/lib/sigle";
 import { EditorBottomInfo } from "./BottomInfo";
 import { EditorBubbleMenu } from "./BubbleMenu";
-import type { EditorPostFormData } from "./EditorFormProvider";
-import { EditorFloatingMenu } from "./FloatingMenu";
-import "./editor-tiptap.css";
-import { toast } from "sonner";
-import { sigleApiClient } from "@/lib/sigle";
 import { CodeBlockComponent } from "./extensions/CodeBlock";
 import { TipTapImage } from "./extensions/Image";
 import { TipTapMobileScroll } from "./extensions/MobileScroll";
@@ -46,6 +45,7 @@ import { TipTapPlaceholder } from "./extensions/Placeholder";
 import { slashCommands } from "./extensions/SlashCommand/commands";
 import { SlashCommands } from "./extensions/SlashCommand/SlashCommands";
 import { TipTapEmbed } from "./extensions/Twitter";
+import { EditorFloatingMenu } from "./FloatingMenu";
 import { useEditorStore } from "./store";
 
 const lowlight = createLowlight(common);
@@ -109,7 +109,7 @@ export const EditorTipTap = () => {
                   draftId: postId,
                 },
               },
-              // biome-ignore lint/suspicious/noExplicitAny: ok
+              // oxlint-disable-next-line no-explicit-any
               body: formData as any,
             });
 
@@ -117,7 +117,7 @@ export const EditorTipTap = () => {
               postId,
             });
             return data.url;
-            // biome-ignore lint/suspicious/noExplicitAny: ok
+            // oxlint-disable-next-line no-explicit-any
           } catch (error: any) {
             toast.error("Failed to upload image", {
               description: error.message,
@@ -177,7 +177,7 @@ export const EditorTipTap = () => {
         dark:prose-invert
       `}
     >
-      {/* eslint-disable-next-line better-tailwindcss/no-unregistered-classes */}
+      {/* oxlint-disable-next-line better-tailwindcss/no-unknown-classes */}
       <EditorContent className="editor" editor={editor} />
       {editor && !isMobile && <EditorBubbleMenu editor={editor} />}
       {editor && !isMobile && <EditorFloatingMenu editor={editor} />}

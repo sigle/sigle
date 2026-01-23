@@ -35,7 +35,7 @@ export const UploadProfileCoverPicture = ({
     formData.append("file", file);
     uploadImage(
       {
-        // biome-ignore lint/suspicious/noExplicitAny: wrong type returned by nitro
+        // oxlint-disable-next-line no-explicit-any: wrong type returned by nitro
         body: formData as any,
       },
       {

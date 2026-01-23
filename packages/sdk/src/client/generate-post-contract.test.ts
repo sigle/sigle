@@ -1,9 +1,9 @@
 import { STACKS_MOCKNET } from "@stacks/network";
-import { describe, expect, test } from "vitest";
+import { describe, expect, it } from "vitest";
 import { generatePostContract } from "./generate-post-contract.js";
 
 describe("generate-post-contract", () => {
-  test("should generate open edition contract", () => {
+  it("should generate open edition contract", () => {
     const data = generatePostContract({
       network: STACKS_MOCKNET,
       networkName: "mocknet",
@@ -17,7 +17,7 @@ describe("generate-post-contract", () => {
     expect(data.contract).toMatchSnapshot();
   });
 
-  test("should generate fixed edition contract", () => {
+  it("should generate fixed edition contract", () => {
     const data = generatePostContract({
       network: STACKS_MOCKNET,
       networkName: "mocknet",
@@ -32,7 +32,7 @@ describe("generate-post-contract", () => {
     expect(data.contract).toMatchSnapshot();
   });
 
-  test("should generate paid edition contract", () => {
+  it("should generate paid edition contract", () => {
     const data = generatePostContract({
       network: STACKS_MOCKNET,
       networkName: "mocknet",
@@ -47,7 +47,7 @@ describe("generate-post-contract", () => {
     expect(data.contract).toMatchSnapshot();
   });
 
-  test("should generate fixed edition with create referrer", () => {
+  it("should generate fixed edition with create referrer", () => {
     const data = generatePostContract({
       network: STACKS_MOCKNET,
       networkName: "mocknet",

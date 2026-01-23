@@ -1,7 +1,6 @@
 {
   "name": "@sigle/server",
   "private": true,
-  "packageManager": "pnpm@10.15.0",
   "scripts": {
     "build": "nitro build",
     "db:generate": "prisma generate",
@@ -44,5 +43,6 @@
   "devDependencies": {
     "nitropack": "2.12.4",
     "typescript": "5.9.3"
-  }
+  },
+  "packageManager": "pnpm@10.15.0"
 }

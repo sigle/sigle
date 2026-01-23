@@ -1,3 +1,5 @@
+import type { CreatePostNftParams } from "../../app/api/post/nft-image/route";
+import type { EditorPostFormData } from "./EditorFormProvider";
 import {
   createPostMetadata,
   type MediaImageMetadata,
@@ -10,8 +12,6 @@ import { fileTypeFromBuffer } from "file-type";
 import { env } from "@/env";
 import { resolveImageUrl } from "@/lib/images";
 import { sigleApiFetchClient } from "@/lib/sigle";
-import type { CreatePostNftParams } from "../../app/api/post/nft-image/route";
-import type { EditorPostFormData } from "./EditorFormProvider";
 
 const generateMetadataAttributesFromForm = ({
   editorText,
@@ -108,7 +108,7 @@ const uploadNftImage = async (
           draftId: postId,
         },
       },
-      // biome-ignore lint/suspicious/noExplicitAny: ok
+      // oxlint-disable-next-line no-explicit-any
       body: formData as any,
     },
   );

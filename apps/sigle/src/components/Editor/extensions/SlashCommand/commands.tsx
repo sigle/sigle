@@ -1,3 +1,4 @@
+import type { SlashCommandsCommand } from "./SlashCommands";
 import { BulletedListLight } from "@/images/BulletedListLight";
 import { CodeLight } from "@/images/CodeLight";
 import { DividerLight } from "@/images/DividerLight";
@@ -9,7 +10,6 @@ import { PlainTextLight } from "@/images/PlainTextLight";
 import { QuoteLight } from "@/images/QuoteLight";
 import { TwitterLight } from "@/images/TwitterLight";
 import { VideoLight } from "@/images/VideoLight";
-import type { SlashCommandsCommand } from "./SlashCommands";
 
 export const slashCommands: SlashCommandsCommand[] = [
   {
@@ -78,7 +78,7 @@ export const slashCommands: SlashCommandsCommand[] = [
       input.accept = "image/jpeg,image/png,image/gif";
 
       input.onchange = async (e) => {
-        // biome-ignore lint/suspicious/noExplicitAny: ok
+        // oxlint-disable-next-line no-explicit-any
         const file: File | undefined = (e.target as any)?.files?.[0];
         if (!file) return;
         const [mime] = file.type.split("/");

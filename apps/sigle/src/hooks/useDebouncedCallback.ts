@@ -2,10 +2,10 @@
 import React from "react";
 
 // debounce function (defaults wait to .2 seconds)
-// biome-ignore lint/suspicious/noExplicitAny: any is fine
+// oxlint-disable-next-line no-explicit-any: any is fine
 const debounce = (func: any, wait = 200) => {
   let timeout: NodeJS.Timeout; // for the setTimeout function and so it can be cleared
-  // biome-ignore lint/suspicious/noExplicitAny: any is fine
+  // oxlint-disable-next-line no-explicit-any: any is fine
   function executedFunction(...args: any) {
     // the function returned from debounce
     const later = () => {
@@ -25,10 +25,10 @@ const debounce = (func: any, wait = 200) => {
 
 // hook for using the debounce function
 export function useDebouncedCallback(
-  // biome-ignore lint/suspicious/noExplicitAny: any is fine
+  // oxlint-disable-next-line no-explicit-any: any is fine
   callback: any,
   delay = 1000,
-  // biome-ignore lint/suspicious/noExplicitAny: any is fine
+  // oxlint-disable-next-line no-explicit-any: any is fine
   deps: any[] = [],
 ) {
   // debounce the callback

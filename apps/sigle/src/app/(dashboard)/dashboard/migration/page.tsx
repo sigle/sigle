@@ -28,7 +28,7 @@ interface Story {
   /**
    * JSON representing the slate.js structure of the story
    */
-  // biome-ignore lint/suspicious/noExplicitAny: content is not typed
+  // oxlint-disable-next-line no-explicit-any: content is not typed
   content: any;
   /**
    * Version representing the format of the content

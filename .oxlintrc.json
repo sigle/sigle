@@ -1,0 +1,52 @@
+{
+  "$schema": "./node_modules/oxlint/configuration_schema.json",
+  "plugins": ["typescript", "vitest"],
+  "ignorePatterns": ["__generated__"],
+  "categories": {
+    "correctness": "error",
+    "nursery": "error",
+    "perf": "error",
+    "restriction": "error",
+    "suspicious": "error",
+    "style": "error",
+    "pedantic": "error"
+  },
+  "rules": {
+    "arrow-body-style": "off",
+    "curly": "off",
+    "complexity": "off",
+    "explicit-function-return-type": "off",
+    "explicit-module-boundary-types": "off",
+    "max-classes-per-file": "off",
+    "max-depth": "off",
+    "max-lines": "off",
+    "max-lines-per-function": "off",
+    "max-statements": "off",
+    "no-await-in-loop": "off",
+    "no-undef": "off",
+    "no-undefined": "off",
+    "no-magic-numbers": "off",
+    "no-negated-condition": "off",
+    "no-nested-ternary": "off",
+    "no-ternary": "off",
+    "prefer-destructuring": "off",
+    "sort-imports": "off",
+    "sort-keys": "off",
+
+    "no-hooks": "off",
+    "require-hook": "off",
+    "valid-title": "off",
+
+    "consistent-type-definitions": "off",
+    "require-await": "off",
+    "no-console": "off",
+    "func-style": "off",
+    "capitalized-comments": "off",
+    "no-inline-comments": "off",
+    "no-warning-comments": "off",
+    "no-param-reassign": "off",
+    "default-case": "off",
+    "id-length": "off",
+    "new-cap": "off"
+  }
+}

@@ -1,6 +1,6 @@
+import type { EditorPostFormData } from "../../EditorFormProvider";
 import { Flex, RadioCards, Text, TextField } from "@radix-ui/themes";
 import { useFormContext, useFormState } from "react-hook-form";
-import type { EditorPostFormData } from "../../EditorFormProvider";
 
 export const CollectEdition = () => {
   const { setValue, watch, register } = useFormContext<EditorPostFormData>();
@@ -17,7 +17,7 @@ export const CollectEdition = () => {
     });
   };
 
-  // biome-ignore lint/suspicious/noExplicitAny: ok
+  // oxlint-disable-next-line no-explicit-any
   const limitErrorMessage = (errors?.collect?.collectLimit as any)?.limit
     ?.message;
 

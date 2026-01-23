@@ -123,11 +123,11 @@ export const betterAuthSiws = () =>
               });
             }
 
-            // biome-ignore lint/suspicious/noExplicitAny: ok
+            // oxlint-disable-next-line no-explicit-any
             await setSessionCookie(ctx, { session, user: user as any });
 
             return ctx.json({ token: session.token });
-            // biome-ignore lint/suspicious/noExplicitAny: ok
+            // oxlint-disable-next-line no-explicit-any
           } catch (error: any) {
             if (error instanceof APIError) throw error;
             Sentry.captureException(error);

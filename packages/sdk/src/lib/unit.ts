@@ -68,9 +68,7 @@ export function formatUnits(value: bigint, decimals: number) {
     display.slice(display.length - decimals),
   ];
   fraction = fraction.replace(/(0+)$/, "");
-  return `${negative ? "-" : ""}${integer || "0"}${
-    fraction ? `.${fraction}` : ""
-  }`;
+  return `${negative ? "-" : ""}${integer || "0"}${fraction ? `.${fraction}` : ""}`;
 }
 
 /**

@@ -1,3 +1,4 @@
+// oxlint-disable no-non-null-assertion
 import { Cl } from "@stacks/transactions";
 import { describe, expect, it } from "vitest";
 
