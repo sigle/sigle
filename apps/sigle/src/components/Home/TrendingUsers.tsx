@@ -24,9 +24,9 @@ export const HomeTrendingUsers = () => {
     <Container
       size="4"
       className={`
-      mt-10 px-4
-      md:mt-20
-    `}
+        mt-10 px-4
+        md:mt-20
+      `}
     >
       <Heading as="h3" size="4">
         Discover

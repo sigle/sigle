@@ -35,9 +35,9 @@ export const PostListItem = ({ post }: PostListItemProps) => {
   return (
     <div
       className={`
-      space-y-3 border-b border-solid border-gray-6 py-5
-      last:border-b-0
-    `}
+        space-y-3 border-b border-solid border-gray-6 py-5
+        last:border-b-0
+      `}
     >
       <div>
         <Flex gap="5" align="center" justify="between">
@@ -58,9 +58,9 @@ export const PostListItem = ({ post }: PostListItemProps) => {
                 as="p"
                 size="2"
                 className={`
-                line-clamp-1
-                md:line-clamp-2
-              `}
+                  line-clamp-1
+                  md:line-clamp-2
+                `}
               >
                 {post.metaDescription || post.excerpt}
               </Text>
@@ -106,9 +106,9 @@ export const PostListItem = ({ post }: PostListItemProps) => {
             <NextLink href={Routes.post({ postId: post.id })}>
               <div
                 className={`
-                w-[100px] max-w-full overflow-hidden
-                md:w-[200px]
-              `}
+                  w-[100px] max-w-full overflow-hidden
+                  md:w-[200px]
+                `}
               >
                 <AspectRatio ratio={16 / 10}>
                   <Image

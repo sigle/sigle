@@ -48,9 +48,9 @@ export default function DashboardLayout({
       <div className="relative">
         <aside
           className={`
-          absolute inset-y-0 left-[-200px] hidden w-[150px]
-          lg:block
-        `}
+            absolute inset-y-0 left-[-200px] hidden w-[150px]
+            lg:block
+          `}
         >
           <nav className="sticky top-[var(--header-height)] py-10">
             <ul className="space-y-3">
@@ -79,9 +79,9 @@ export default function DashboardLayout({
           <Select.Trigger
             variant="surface"
             className={`
-            mt-5 w-full
-            lg:hidden
-          `}
+              mt-5 w-full
+              lg:hidden
+            `}
           />
           <Select.Content>
             {navigationLinks.map((link) => (

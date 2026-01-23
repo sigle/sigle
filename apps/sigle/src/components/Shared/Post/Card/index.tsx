@@ -65,9 +65,9 @@ export const PostCard = ({ post }: PostCardProps) => {
             as="p"
             size="2"
             className={`
-            line-clamp-1
-            md:line-clamp-2
-          `}
+              line-clamp-1
+              md:line-clamp-2
+            `}
           >
             {post.metaDescription || post.excerpt}
           </Text>

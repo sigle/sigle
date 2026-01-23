@@ -26,9 +26,9 @@ export const PublishReviewCollect = () => {
       <Inset clip="padding-box" side="top" pb="current">
         <div
           className={`
-          flex items-center justify-between border-b border-solid border-gray-4
-          bg-gray-2 p-4
-        `}
+            flex items-center justify-between border-b border-solid
+            border-gray-4 bg-gray-2 p-4
+          `}
         >
           <Text
             as="div"
@@ -68,8 +68,8 @@ export const PublishReviewCollect = () => {
         </div>
         <div
           className={`
-          flex justify-between border-t border-solid border-gray-4 py-3
-        `}
+            flex justify-between border-t border-solid border-gray-4 py-3
+          `}
         >
           <Text size="2" color="gray">
             Price

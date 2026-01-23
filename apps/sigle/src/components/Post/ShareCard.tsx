@@ -15,9 +15,9 @@ export const PostShareCard = ({ post }: PostShareCardProps) => {
       <div className="space-y-4">
         <div
           className={`
-          space-y-1 text-center
-          md:text-left
-        `}
+            space-y-1 text-center
+            md:text-left
+          `}
         >
           <Heading as="h4" size="3" weight="medium">
             Share & Earn

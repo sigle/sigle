@@ -63,9 +63,9 @@ export const ExplorePostsList = () => {
     <>
       <div
         className={`
-        mt-10 grid grid-cols-2 gap-6
-        md:grid-cols-4
-      `}
+          mt-10 grid grid-cols-2 gap-6
+          md:grid-cols-4
+        `}
       >
         {posts.map((post) => (
           <PostCard key={post.id} post={post} />

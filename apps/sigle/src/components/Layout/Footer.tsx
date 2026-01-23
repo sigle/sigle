@@ -13,15 +13,15 @@ export const Footer = () => {
         <Separator size="4" color="gray" />
         <div
           className={`
-          flex flex-col items-center justify-between py-7
-          md:flex-row
-        `}
+            flex flex-col items-center justify-between py-7
+            md:flex-row
+          `}
         >
           <div
             className={`
-            mb-4
-            md:mb-0
-          `}
+              mb-4
+              md:mb-0
+            `}
           >
             <div className="flex items-center space-x-4">
               <Text size="2" color="gray">
@@ -59,9 +59,9 @@ export const Footer = () => {
 
           <ul
             className={`
-            grid grid-cols-2 gap-x-6 gap-y-2
-            md:grid-cols-4
-          `}
+              grid grid-cols-2 gap-x-6 gap-y-2
+              md:grid-cols-4
+            `}
           >
             <li>
               <Link

@@ -131,10 +131,10 @@ const Draft = ({
   return (
     <div
       className={`
-      border-b border-solid border-gray-6 py-5
-      first:pt-0
-      last:border-b-0 last:pb-0
-    `}
+        border-b border-solid border-gray-6 py-5
+        first:pt-0
+        last:border-b-0 last:pb-0
+      `}
     >
       {draft.txStatus === "pending" && draft.txId && (
         <Badge className="mb-2" asChild>

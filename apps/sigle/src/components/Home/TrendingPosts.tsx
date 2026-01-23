@@ -28,9 +28,9 @@ export const HomeTrendingPosts = () => {
     <Container
       size="4"
       className={`
-      mt-10 px-4
-      md:mt-20
-    `}
+        mt-10 px-4
+        md:mt-20
+      `}
     >
       <Heading as="h3" size="5">
         Trending
@@ -47,9 +47,9 @@ export const HomeTrendingPosts = () => {
             <CarouselItem
               key={post.id}
               className={`
-              md:basis-1/2
-              lg:basis-1/4
-            `}
+                md:basis-1/2
+                lg:basis-1/4
+              `}
             >
               <PostCard post={post} />
             </CarouselItem>

@@ -5,14 +5,14 @@ export const HomeFeatures = () => {
     <Container size="4" className="px-4">
       <section
         className={`
-        grid grid-cols-1 gap-x-6
-        md:grid-cols-3
-      `}
+          grid grid-cols-1 gap-x-6
+          md:grid-cols-3
+        `}
       >
         <div
           className={`
-          flex flex-col items-center gap-4 rounded-3 bg-gray-2 p-6 text-center
-        `}
+            flex flex-col items-center gap-4 rounded-3 bg-gray-2 p-6 text-center
+          `}
         >
           <Heading as="h3" size="4">
             ⛓️ Write on-chain
@@ -24,8 +24,8 @@ export const HomeFeatures = () => {
         </div>
         <div
           className={`
-          flex flex-col items-center gap-4 rounded-3 bg-gray-2 p-6 text-center
-        `}
+            flex flex-col items-center gap-4 rounded-3 bg-gray-2 p-6 text-center
+          `}
         >
           <Heading as="h3" size="4">
             💰 Earn Bitcoin
@@ -37,8 +37,8 @@ export const HomeFeatures = () => {
         </div>
         <div
           className={`
-          flex flex-col items-center gap-4 rounded-3 bg-gray-2 p-6 text-center
-        `}
+            flex flex-col items-center gap-4 rounded-3 bg-gray-2 p-6 text-center
+          `}
         >
           <Heading as="h3" size="4">
             ⚡ Full Control

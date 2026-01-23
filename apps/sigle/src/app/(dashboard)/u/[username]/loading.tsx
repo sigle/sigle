@@ -8,9 +8,9 @@ export const PageProfileSkeleton = () => {
       <Skeleton>
         <div
           className={`
-          h-64
-          md:h-[22rem]
-        `}
+            h-64
+            md:h-[22rem]
+          `}
         />
       </Skeleton>
 
@@ -19,9 +19,9 @@ export const PageProfileSkeleton = () => {
         <div className="flex">
           <div
             className={`
-            z-10 mt-[-70px] rounded-5 border-[6px] border-transparent bg-white
-            dark:bg-gray-1
-          `}
+              z-10 mt-[-70px] rounded-5 border-[6px] border-transparent bg-white
+              dark:bg-gray-1
+            `}
           >
             <Skeleton>
               <Avatar fallback={"L"} size="8" radius="small" />
