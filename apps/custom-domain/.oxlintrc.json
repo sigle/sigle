@@ -7,15 +7,21 @@
     "nursery": "error",
     "perf": "error",
     "restriction": "error",
-    "suspicious": "error"
+    "suspicious": "error",
+    "style": "error"
   },
   "ignorePatterns": [".next/**", "out/**", "build/**", "next-env.d.ts"],
   "rules": {
     "no-undef": "off",
     "no-undefined": "off",
     "no-plusplus": "off",
+    "no-magic-numbers": "off",
+    "no-ternary": "off",
+    "new-cap": "off",
     "explicit-function-return-type": "off",
     "explicit-module-boundary-types": "off",
+    "sort-keys": "off",
+    "sort-imports": "off",
 
     "better-tailwindcss/enforce-consistent-line-wrapping": "error",
     "better-tailwindcss/enforce-consistent-class-order": "error",
