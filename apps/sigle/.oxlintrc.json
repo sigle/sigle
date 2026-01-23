@@ -32,8 +32,6 @@
       }
     ],
 
-    "jsx-max-depth": "off",
-    "react-in-jsx-scope": "off",
     "only-export-components": "off",
     "jsx-props-no-spreading": "off",
     "no-plusplus": "off",

@@ -38,6 +38,8 @@
     "valid-title": "off",
 
     "jsx-filename-extension": "off",
+    "jsx-max-depth": "off",
+    "react-in-jsx-scope": "off",
 
     "consistent-type-definitions": "off",
     "require-await": "off",
