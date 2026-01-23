@@ -6,7 +6,8 @@
     "correctness": "error",
     "nursery": "error",
     "perf": "error",
-    "restriction": "error"
+    "restriction": "error",
+    "suspicious": "error"
   },
   "ignorePatterns": [".next/**", "out/**", "build/**", "next-env.d.ts"],
   "rules": {
