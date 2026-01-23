@@ -1,3 +1,4 @@
+// oxlint-disable no-non-null-assertion
 import { createClient, fixedMintFee } from "@sigle/sdk";
 import { STACKS_MOCKNET } from "@stacks/network";
 import { Cl } from "@stacks/transactions";

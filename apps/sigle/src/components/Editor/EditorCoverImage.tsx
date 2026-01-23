@@ -54,7 +54,7 @@ export const EditorCoverImage = () => {
               draftId: postId,
             },
           },
-          // biome-ignore lint/suspicious/noExplicitAny: ok
+          // oxlint-disable-next-line no-explicit-any
           body: formData as any,
         },
         {

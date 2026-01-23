@@ -78,7 +78,7 @@ export const slashCommands: SlashCommandsCommand[] = [
       input.accept = "image/jpeg,image/png,image/gif";
 
       input.onchange = async (e) => {
-        // biome-ignore lint/suspicious/noExplicitAny: ok
+        // oxlint-disable-next-line no-explicit-any
         const file: File | undefined = (e.target as any)?.files?.[0];
         if (!file) return;
         const [mime] = file.type.split("/");

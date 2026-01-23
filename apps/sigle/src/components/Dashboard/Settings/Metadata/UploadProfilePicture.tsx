@@ -35,7 +35,7 @@ export const UploadProfilePicture = ({
     formData.append("file", file);
     uploadImage(
       {
-        // biome-ignore lint/suspicious/noExplicitAny: ok
+        // oxlint-disable-next-line no-explicit-any
         body: formData as any,
       },
       {

@@ -17,7 +17,7 @@ export const CollectEdition = () => {
     });
   };
 
-  // biome-ignore lint/suspicious/noExplicitAny: ok
+  // oxlint-disable-next-line no-explicit-any
   const limitErrorMessage = (errors?.collect?.collectLimit as any)?.limit
     ?.message;
 

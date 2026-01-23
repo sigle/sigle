@@ -73,8 +73,8 @@ interface TableOfContentsProps {
 export const TableOfContents = ({ items, post }: TableOfContentsProps) => {
   const router = useRouter();
   const [activeId, setActiveId] = useState();
-  // biome-ignore lint/suspicious/noExplicitAny: ok
-  useIntersectionObserver(setActiveId as any); // oxlint-disable-line no-explicit-any
+  // oxlint-disable-next-line no-explicit-any
+  useIntersectionObserver(setActiveId as any);
 
   return (
     <nav

@@ -74,10 +74,10 @@ export const SlashCommands = Extension.create<{
               });
 
               popup = tippy("body", {
-                // biome-ignore lint/suspicious/noExplicitAny: ok
+                // oxlint-disable-next-line no-explicit-any
                 getReferenceClientRect: props.clientRect as any,
                 appendTo: () =>
-                  // biome-ignore lint/suspicious/noExplicitAny: ok
+                  // oxlint-disable-next-line no-explicit-any
                   document.getElementsByClassName("radix-themes")[0] as any,
                 content: reactRenderer.element,
                 showOnCreate: true,
@@ -92,7 +92,7 @@ export const SlashCommands = Extension.create<{
               reactRenderer.updateProps(props);
 
               popup[0]?.setProps({
-                // biome-ignore lint/suspicious/noExplicitAny: ok
+                // oxlint-disable-next-line no-explicit-any
                 getReferenceClientRect: props.clientRect as any,
               });
             },
