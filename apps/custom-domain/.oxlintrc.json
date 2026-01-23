@@ -2,7 +2,13 @@
   "$schema": "./node_modules/oxlint/configuration_schema.json",
   "plugins": ["nextjs", "typescript"],
   "categories": {
-    "correctness": "error"
+    "correctness": "error",
+    "nursery": "error",
+    "perf": "error",
+    "restriction": "allow"
   },
-  "ignorePatterns": [".next/**", "out/**", "build/**", "next-env.d.ts"]
+  "ignorePatterns": [".next/**", "out/**", "build/**", "next-env.d.ts"],
+  "rules": {
+    "no-undef": "off"
+  }
 }
