@@ -28,6 +28,7 @@
     "no-magic-numbers": "off",
     "no-negated-condition": "off",
     "no-nested-ternary": "off",
+    "no-plusplus": "off",
     "no-ternary": "off",
     "prefer-destructuring": "off",
     "sort-imports": "off",

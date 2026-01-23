@@ -20,7 +20,6 @@
     "better-tailwindcss/no-conflicting-classes": "error",
 
     "only-export-components": "off",
-    "jsx-props-no-spreading": "off",
-    "no-plusplus": "off"
+    "jsx-props-no-spreading": "off"
   }
 }
