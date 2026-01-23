@@ -12,6 +12,7 @@
   "rules": {
     "no-undef": "off",
 
+    "better-tailwindcss/enforce-consistent-line-wrapping": "error",
     "better-tailwindcss/enforce-consistent-class-order": "error",
     "better-tailwindcss/no-duplicate-classes": "error",
     "better-tailwindcss/no-deprecated-classes": "error",
