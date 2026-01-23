@@ -1,7 +1,7 @@
 {
   "$schema": "./node_modules/oxlint/configuration_schema.json",
   "plugins": ["typescript"],
-  "ignorePatterns": ["__generated__", "apps/sigle/**", "apps/custom-domain/**"],
+  "ignorePatterns": ["__generated__", "apps/sigle/**"],
   "categories": {
     "correctness": "error",
     "nursery": "error",

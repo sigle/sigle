@@ -164,7 +164,7 @@ export default async function Post({
                 prose
                 lg:prose-lg
               `}
-              // biome-ignore lint/security/noDangerouslySetInnerHtml: it's safe to use this as the html is sanitized
+              // oxlint-disable-next-line no-danger: it's safe to use this as the html is sanitized
               dangerouslySetInnerHTML={{
                 __html: posthtml,
               }}
