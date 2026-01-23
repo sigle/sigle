@@ -8,7 +8,8 @@
     "perf": "error",
     "restriction": "error",
     "suspicious": "error",
-    "style": "error"
+    "style": "error",
+    "pedantic": "error"
   },
   "ignorePatterns": [".next/**", "out/**", "build/**", "next-env.d.ts"],
   "rules": {
@@ -28,6 +29,9 @@
     "sort-imports": "off",
     "func-style": "off",
     "prefer-destructuring": "off",
+    "max-lines-per-function": "off",
+    "no-warning-comments": "off",
+    "no-negated-condition": "off",
     "capitalized-comments": "off",
 
     "better-tailwindcss/enforce-consistent-line-wrapping": "error",
