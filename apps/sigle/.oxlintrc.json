@@ -32,7 +32,6 @@
       }
     ],
 
-    "jsx-filename-extension": "off",
     "jsx-max-depth": "off",
     "react-in-jsx-scope": "off",
     "only-export-components": "off",
