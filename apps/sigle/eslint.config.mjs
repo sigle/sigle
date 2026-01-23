@@ -13,17 +13,6 @@ const eslintConfig = defineConfig([
       // Handled by biome
       "@next/next/no-img-element": "off",
       "jsx-a11y/alt-text": "off",
-      "no-restricted-imports": [
-        "error",
-        {
-          paths: [
-            {
-              name: "next/link",
-              message: "Use components/Shared/NextLink instead",
-            },
-          ],
-        },
-      ],
     },
   },
 ]);

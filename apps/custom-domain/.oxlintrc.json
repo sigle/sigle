@@ -1,6 +1,6 @@
 {
   "$schema": "./node_modules/oxlint/configuration_schema.json",
-  "plugins": ["nextjs", "typescript"],
+  "plugins": ["typescript", "react", "nextjs"],
   "jsPlugins": ["eslint-plugin-better-tailwindcss"],
   "categories": {
     "correctness": "error",
@@ -33,6 +33,11 @@
     "no-warning-comments": "off",
     "no-negated-condition": "off",
     "capitalized-comments": "off",
+    "react-in-jsx-scope": "off",
+    "only-export-components": "off",
+    "jsx-max-depth": "off",
+    "jsx-filename-extension": "off",
+    "jsx-props-no-spreading": "off",
 
     "better-tailwindcss/enforce-consistent-line-wrapping": "error",
     "better-tailwindcss/enforce-consistent-class-order": "error",
