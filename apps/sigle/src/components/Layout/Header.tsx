@@ -2,8 +2,8 @@
 
 import { Button, IconButton } from "@radix-ui/themes";
 import { IconMoon, IconSun } from "@tabler/icons-react";
-import { usePathname } from "next/navigation";
 import { useTheme } from "next-themes";
+import { usePathname } from "next/navigation";
 import { usePostHog } from "posthog-js/react";
 import { Suspense, useLayoutEffect } from "react";
 import { useIsClient } from "@/hooks/useIsClient";

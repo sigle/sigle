@@ -1,5 +1,6 @@
 "use client";
 
+import type { EditorPostFormData } from "../EditorFormProvider";
 import {
   Callout,
   Dialog,
@@ -25,7 +26,6 @@ import {
   getExplorerTransactionUrl,
   getPromiseTransactionConfirmation,
 } from "@/lib/stacks";
-import type { EditorPostFormData } from "../EditorFormProvider";
 import { useEditorStore } from "../store";
 import { generateSigleMetadataFromForm } from "../utils";
 import { PublishReview } from "./PublishReview";

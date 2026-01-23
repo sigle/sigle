@@ -1,5 +1,6 @@
 // https://github.com/ueberdosis/tiptap/issues/1508#issuecomment-877348787
 
+import "./style.css";
 import type { IconProps } from "@tabler/icons-react";
 import type { Editor } from "@tiptap/core";
 import { Extension } from "@tiptap/core";
@@ -7,7 +8,6 @@ import { type Range, ReactRenderer } from "@tiptap/react";
 import Suggestion, { type SuggestionOptions } from "@tiptap/suggestion";
 import tippy, { type Instance } from "tippy.js";
 import { CommandList, type CommandListRef } from "./CommandList";
-import "./style.css";
 
 export interface SlashCommandsCommand {
   title: string;

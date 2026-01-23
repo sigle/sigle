@@ -1,3 +1,4 @@
+import type { SlashCommandsCommand } from "./SlashCommands";
 import { BulletedListLight } from "@/images/BulletedListLight";
 import { CodeLight } from "@/images/CodeLight";
 import { DividerLight } from "@/images/DividerLight";
@@ -9,7 +10,6 @@ import { PlainTextLight } from "@/images/PlainTextLight";
 import { QuoteLight } from "@/images/QuoteLight";
 import { TwitterLight } from "@/images/TwitterLight";
 import { VideoLight } from "@/images/VideoLight";
-import type { SlashCommandsCommand } from "./SlashCommands";
 
 export const slashCommands: SlashCommandsCommand[] = [
   {

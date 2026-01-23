@@ -1,7 +1,7 @@
+import "./style.css";
 import { IconButton } from "@radix-ui/themes";
 import { IconPlus } from "@tabler/icons-react";
 import { type Editor, FloatingMenu as TipTapFloatingMenu } from "@tiptap/react";
-import "./style.css";
 
 interface EditorFloatingMenuProps {
   editor: Editor;

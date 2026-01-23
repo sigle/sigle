@@ -1,3 +1,4 @@
+import type { EditorPostFormData } from "../EditorFormProvider";
 import { Callout, Text } from "@radix-ui/themes";
 import { parseBTC } from "@sigle/sdk";
 import { IconInfoCircle } from "@tabler/icons-react";
@@ -6,7 +7,6 @@ import { useEffect, useState } from "react";
 import { useFormContext } from "react-hook-form";
 import { useDebouncedCallback } from "@/hooks/useDebouncedCallback";
 import { sigleApiClient } from "@/lib/sigle";
-import type { EditorPostFormData } from "../EditorFormProvider";
 import { useEditorStore } from "../store";
 
 export const EditorSave = () => {
