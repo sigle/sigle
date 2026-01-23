@@ -43,7 +43,9 @@
     "better-tailwindcss/enforce-consistent-class-order": "error",
     "better-tailwindcss/no-duplicate-classes": "error",
     "better-tailwindcss/no-deprecated-classes": "error",
-    "better-tailwindcss/no-unnecessary-whitespace": "error"
+    "better-tailwindcss/no-unnecessary-whitespace": "error",
+
+    "no-danger": "off"
   },
   "settings": {
     "better-tailwindcss": {
