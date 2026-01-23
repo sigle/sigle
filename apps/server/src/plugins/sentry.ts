@@ -11,7 +11,7 @@ const ignoreErrors = [
 ];
 
 // oxlint-disable-next-line no-extend-native
-BigInt.prototype.toJSON = function () {
+BigInt.prototype.toJSON = function toJSON() {
   return this.toString();
 };
 
