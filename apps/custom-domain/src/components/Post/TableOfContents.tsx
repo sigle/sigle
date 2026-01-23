@@ -28,7 +28,9 @@ const useIntersectionObserver = (setActiveId: (id: string) => void) => {
       const visibleHeadings: IntersectionObserverEntry[] = [];
       for (const key of Object.keys(headingElementsRef.current)) {
         const headingElement = headingElementsRef.current[key];
-        if (headingElement.isIntersecting) visibleHeadings.push(headingElement);
+        if (headingElement.isIntersecting) {
+          visibleHeadings.push(headingElement);
+        }
       }
 
       const getIndexFromId = (id: string) =>
@@ -61,7 +63,7 @@ const useIntersectionObserver = (setActiveId: (id: string) => void) => {
 };
 
 interface TableOfContentsProps {
-  items: Array<{ level: 2 | 3; text: string; id: string }>;
+  items: { level: 2 | 3; text: string; id: string }[];
   post: {
     id: string;
     title: string;
