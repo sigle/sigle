@@ -167,9 +167,7 @@ export const PostCollectDialog = ({
             </div>
           </div>
           {post.coverImage ? (
-            <div
-              className={`h-[160px] w-full overflow-hidden rounded-2 bg-gray-2`}
-            >
+            <div className="h-[160px] w-full overflow-hidden rounded-2 bg-gray-2">
               <Image
                 src={resolveImageUrl(post.coverImage.id)}
                 alt={post.title}

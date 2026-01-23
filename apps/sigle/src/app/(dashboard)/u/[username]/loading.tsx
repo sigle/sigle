@@ -24,7 +24,7 @@ export const PageProfileSkeleton = () => {
             `}
           >
             <Skeleton>
-              <Avatar fallback={"L"} size="8" radius="small" />
+              <Avatar fallback="L" size="8" radius="small" />
             </Skeleton>
           </div>
         </div>

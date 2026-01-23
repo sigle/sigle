@@ -94,8 +94,8 @@ export const PublishReview = ({ onPublish }: PublishReviewProps) => {
             <IconExclamationCircle />
           </Callout.Icon>
           <Callout.Text>
-            Review your post before publishing. Once published, you won
-            {"'"}t be able to make any edits to the collect settings anymore.
+            Review your post before publishing. Once published, you won 't be
+            able to make any edits to the collect settings anymore.
           </Callout.Text>
         </Callout.Root>
       ) : null}

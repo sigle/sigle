@@ -34,7 +34,7 @@ export const ProfileFeed = ({ user }: ProfileFeedProps) => {
       <>
         <div className="my-20 flex flex-col items-center gap-3">
           <Text size="2" color="gray" weight="medium">
-            You haven{"'"}t published anything yet.
+            You haven't published anything yet.
           </Text>
           <Button color="gray" highContrast asChild>
             <NextLink href="/p/new">Start writing</NextLink>
