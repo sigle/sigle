@@ -33,7 +33,7 @@
     ],
 
     "only-export-components": "off",
-    "jsx-props-no-spreading": "off",
+
     "no-duplicate-imports": "off",
     "iframe-missing-sandbox": "off",
     "no-html-link-for-pages": "off",

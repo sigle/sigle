@@ -40,6 +40,7 @@
 
     "jsx-filename-extension": "off",
     "jsx-max-depth": "off",
+    "jsx-props-no-spreading": "off",
     "react-in-jsx-scope": "off",
 
     "consistent-type-definitions": "off",
