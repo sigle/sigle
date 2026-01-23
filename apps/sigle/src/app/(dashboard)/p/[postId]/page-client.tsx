@@ -76,7 +76,12 @@ export function PostClientPage(props: Props) {
 
         <Separator size="4" className="my-10" />
 
-        <div className="mt-10 grid grid-cols-1 gap-10 md:grid-cols-3 md:items-center">
+        <div
+          className={`
+          mt-10 grid grid-cols-1 gap-10
+          md:grid-cols-3 md:items-center
+        `}
+        >
           <PostInfoCard post={post} />
           <PostShareCard post={post} />
         </div>

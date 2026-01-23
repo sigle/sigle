@@ -16,7 +16,13 @@ interface PostMarkdownContentProps {
 
 export const PostMarkdownContent = ({ content }: PostMarkdownContentProps) => {
   return (
-    <div className="prose mt-10 lg:prose-lg dark:prose-invert">
+    <div
+      className={`
+      prose mt-10
+      lg:prose-lg
+      dark:prose-invert
+    `}
+    >
       <ReactMarkdown
         components={{
           img: ({ node, src, ...props }) => {

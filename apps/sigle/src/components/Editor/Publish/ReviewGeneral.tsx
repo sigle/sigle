@@ -43,7 +43,11 @@ export const PublishReviewGeneral = () => {
             </Badge>
           )}
         </div>
-        <div className="flex justify-between border-t border-solid border-gray-4 py-3">
+        <div
+          className={`
+          flex justify-between border-t border-solid border-gray-4 py-3
+        `}
+        >
           <Text size="2" color="gray">
             Cover image
           </Text>

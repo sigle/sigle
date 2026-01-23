@@ -48,7 +48,12 @@ export default function PostDeployPending(props: PostDeployPendingProps) {
     <AuthProtect>
       <Container px="4">
         {post?.txId && post.txStatus === "rejected" ? (
-          <div className="mx-auto flex max-w-sm flex-col items-center justify-center space-y-2 py-[200px]">
+          <div
+            className={`
+            mx-auto flex max-w-sm flex-col items-center justify-center space-y-2
+            py-[200px]
+          `}
+          >
             <Text as="div" size="2" color="red">
               Something went wrong and your transaction was rejected.
             </Text>
@@ -62,7 +67,12 @@ export default function PostDeployPending(props: PostDeployPendingProps) {
           </div>
         ) : null}
         {post?.txId && post.txStatus === "pending" ? (
-          <div className="mx-auto flex max-w-sm flex-col items-center justify-center space-y-2 py-[200px]">
+          <div
+            className={`
+            mx-auto flex max-w-sm flex-col items-center justify-center space-y-2
+            py-[200px]
+          `}
+          >
             <div className="mb-2">
               <Spinner />
             </div>

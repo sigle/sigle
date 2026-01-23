@@ -34,7 +34,11 @@ export const EditorSettings = () => {
             <Inset side="x">
               {/* biome-ignore lint/a11y/noStaticElementInteractions: ok */}
               <div
-                className="flex cursor-pointer justify-between border-y border-gray-5 px-6 py-4 transition-colors hover:bg-gray-2"
+                className={`
+                  flex cursor-pointer justify-between border-y border-gray-5
+                  px-6 py-4 transition-colors
+                  hover:bg-gray-2
+                `}
                 onClick={() => setMenuOpen("meta")}
               >
                 <Text
@@ -50,7 +54,11 @@ export const EditorSettings = () => {
               </div>
               {/* biome-ignore lint/a11y/noStaticElementInteractions: ok */}
               <div
-                className="flex cursor-pointer justify-between border-b border-gray-5 px-6 py-4 transition-colors hover:bg-gray-2"
+                className={`
+                  flex cursor-pointer justify-between border-b border-gray-5
+                  px-6 py-4 transition-colors
+                  hover:bg-gray-2
+                `}
                 onClick={() => setMenuOpen("collect")}
               >
                 <Text

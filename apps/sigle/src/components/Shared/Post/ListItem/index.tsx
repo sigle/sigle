@@ -33,7 +33,12 @@ export const PostListItem = ({ post }: PostListItemProps) => {
   const isCurrentUser = session?.user.id === post.user.id;
 
   return (
-    <div className="space-y-3 border-b border-solid border-gray-6 py-5 last:border-b-0">
+    <div
+      className={`
+      space-y-3 border-b border-solid border-gray-6 py-5
+      last:border-b-0
+    `}
+    >
       <div>
         <Flex gap="5" align="center" justify="between">
           <div className="flex-1 space-y-2">
@@ -49,7 +54,14 @@ export const PostListItem = ({ post }: PostListItemProps) => {
               </Heading>
             </NextLink>
             <NextLink href={Routes.post({ postId: post.id })} className="block">
-              <Text as="p" size="2" className="line-clamp-1 md:line-clamp-2">
+              <Text
+                as="p"
+                size="2"
+                className={`
+                line-clamp-1
+                md:line-clamp-2
+              `}
+              >
                 {post.metaDescription || post.excerpt}
               </Text>
             </NextLink>
@@ -92,7 +104,12 @@ export const PostListItem = ({ post }: PostListItemProps) => {
           </div>
           {post.coverImage ? (
             <NextLink href={Routes.post({ postId: post.id })}>
-              <div className="w-[100px] max-w-full overflow-hidden md:w-[200px]">
+              <div
+                className={`
+                w-[100px] max-w-full overflow-hidden
+                md:w-[200px]
+              `}
+              >
                 <AspectRatio ratio={16 / 10}>
                   <Image
                     src={resolveImageUrl(post.coverImage.id)}

@@ -18,7 +18,10 @@ export const ImageComponent = (props: NodeViewProps) => {
       {/* biome-ignore lint/performance/noImgElement: ok */}
       <img
         className={cn(
-          "outline outline-offset-2 outline-orange-9 hover:outline-2",
+          `
+            outline outline-offset-2 outline-orange-9
+            hover:outline-2
+          `,
           {
             "outline-2": props.selected,
             "opacity-25": uploadId,

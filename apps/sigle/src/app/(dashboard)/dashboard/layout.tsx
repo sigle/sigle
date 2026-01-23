@@ -46,7 +46,12 @@ export default function DashboardLayout({
   return (
     <Container size="3" className="px-4">
       <div className="relative">
-        <aside className="absolute inset-y-0 left-[-200px] hidden w-[150px] lg:block">
+        <aside
+          className={`
+          absolute inset-y-0 left-[-200px] hidden w-[150px]
+          lg:block
+        `}
+        >
           <nav className="sticky top-[var(--header-height)] py-10">
             <ul className="space-y-3">
               {navigationLinks.map((link) => (
@@ -71,7 +76,13 @@ export default function DashboardLayout({
 
         {/* Mobile navigation */}
         <Select.Root value={pathname} onValueChange={handleNavigation}>
-          <Select.Trigger variant="surface" className="mt-5 w-full lg:hidden" />
+          <Select.Trigger
+            variant="surface"
+            className={`
+            mt-5 w-full
+            lg:hidden
+          `}
+          />
           <Select.Content>
             {navigationLinks.map((link) => (
               <Select.Item key={link.href} value={link.href}>
