@@ -95,7 +95,7 @@ export default async function Image({
         <div tw="flex flex-col items-center">
           {/* biome-ignore lint/performance/noImgElement: ok */}
           <img
-            src={"https://app.sigle.io/icon-192x192.png"}
+            src="https://app.sigle.io/icon-192x192.png"
             alt="Sigle logo"
             height={30}
             width={30}

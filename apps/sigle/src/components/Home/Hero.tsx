@@ -13,7 +13,10 @@ export const HomeHero = () => {
   return (
     <Container
       size="2"
-      className="container mx-auto px-4 py-10 text-center md:py-20"
+      className={`
+        container mx-auto px-4 py-10 text-center
+        md:py-20
+      `}
     >
       <Heading size="8">Web3 writing platform for Web3 writers</Heading>
       <Heading

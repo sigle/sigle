@@ -4,7 +4,11 @@ export const PageEditorSkeleton = () => {
   return (
     <>
       {/* Header */}
-      <div className="flex h-[80px] items-center justify-between border-b border-gray-5 px-6">
+      <div
+        className={`
+          flex h-[80px] items-center justify-between border-b border-gray-5 px-6
+        `}
+      >
         <Skeleton className="size-7" />
         <Skeleton className="h-7 w-20" />
       </div>

@@ -48,16 +48,27 @@ export const Header = ({ site }: HeaderProps) => {
   return (
     <header
       className={cn(
-        "sticky top-0 z-10 flex h-16 items-center justify-between border-b border-gray-200 bg-sigle-background px-4 transition-all duration-300 ease-in-out md:px-16",
+        `
+          sticky top-0 z-10 flex h-16 items-center justify-between border-b
+          border-gray-200 bg-sigle-background px-4 transition-all duration-300
+          ease-in-out
+          md:px-16
+        `,
         {
           "-top-16": scrollDirection === "down",
         },
       )}
     >
-      <Link href="/" className="w-full md:w-auto">
+      <Link
+        href="/"
+        className={`
+          w-full
+          md:w-auto
+        `}
+      >
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <div className="relative overflow-hidden rounded object-cover">
+            <div className="relative overflow-hidden rounded-sm object-cover">
               {site.user.profile?.coverPictureUri ? (
                 <Image
                   src={resolveImageUrl(site.user.profile?.coverPictureUri.id)}
@@ -77,7 +88,10 @@ export const Header = ({ site }: HeaderProps) => {
           <Sheet>
             <SheetTrigger asChild>
               <button
-                className="p-2 md:hidden"
+                className={`
+                  p-2
+                  md:hidden
+                `}
                 aria-label="Open mobile menu"
                 type="button"
               >
@@ -88,7 +102,11 @@ export const Header = ({ site }: HeaderProps) => {
               <SheetHeader>
                 <SheetTitle>
                   <div className="flex items-center gap-2">
-                    <div className="relative overflow-hidden rounded object-cover">
+                    <div
+                      className={`
+                        relative overflow-hidden rounded-sm object-cover
+                      `}
+                    >
                       {site.user.profile?.coverPictureUri ? (
                         <Image
                           src={resolveImageUrl(
@@ -113,7 +131,10 @@ export const Header = ({ site }: HeaderProps) => {
                       <li key={href}>
                         <Link
                           href={href}
-                          className="text-sm text-gray-800 hover:text-gray-500"
+                          className={`
+                            text-sm text-gray-800
+                            hover:text-gray-500
+                          `}
                         >
                           {label}
                         </Link>
@@ -122,7 +143,9 @@ export const Header = ({ site }: HeaderProps) => {
                     {site.cta ? (
                       <li className="mt-2">
                         <Link
-                          className="rounded-lg bg-gray-950 px-5 py-2 text-sm text-white"
+                          className={`
+                            rounded-lg bg-gray-950 px-5 py-2 text-sm text-white
+                          `}
                           href={site.cta.href}
                         >
                           {site.cta.label}
@@ -137,13 +160,21 @@ export const Header = ({ site }: HeaderProps) => {
         </div>
       </Link>
 
-      <nav className="hidden md:block">
+      <nav
+        className={`
+          hidden
+          md:block
+        `}
+      >
         <ul className="flex items-center gap-8">
           {site.links.map(({ href, label }) => (
             <li key={href}>
               <Link
                 href={href}
-                className="text-sm text-gray-800 hover:text-gray-500"
+                className={`
+                  text-sm text-gray-800
+                  hover:text-gray-500
+                `}
               >
                 {label}
               </Link>
@@ -152,7 +183,9 @@ export const Header = ({ site }: HeaderProps) => {
           {site.cta ? (
             <li>
               <Link
-                className="block rounded-lg bg-gray-950 px-5 py-2 text-sm text-white"
+                className={`
+                  block rounded-lg bg-gray-950 px-5 py-2 text-sm text-white
+                `}
                 href={site.cta.href}
               >
                 {site.cta.label}

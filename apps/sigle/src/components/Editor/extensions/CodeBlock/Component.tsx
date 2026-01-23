@@ -39,7 +39,7 @@ export const CodeBlockComponent = (props: NodeViewProps) => {
         </Select.Root>
       </div>
 
-      <NodeViewContent as={"pre"} />
+      <NodeViewContent as="pre" />
     </NodeViewWrapper>
   );
 };

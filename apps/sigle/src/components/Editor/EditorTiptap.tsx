@@ -170,7 +170,13 @@ export const EditorTipTap = () => {
   });
 
   return (
-    <div className="prose pb-5 lg:prose-lg dark:prose-invert">
+    <div
+      className={`
+        prose pb-5
+        lg:prose-lg
+        dark:prose-invert
+      `}
+    >
       {/* eslint-disable-next-line better-tailwindcss/no-unregistered-classes */}
       <EditorContent className="editor" editor={editor} />
       {editor && !isMobile && <EditorBubbleMenu editor={editor} />}

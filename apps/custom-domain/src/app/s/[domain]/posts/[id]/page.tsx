@@ -122,20 +122,33 @@ export default async function Post({
   return (
     <main className="mt-10">
       <div className="container">
-        <div className="flex gap-2 text-[0.625rem] tracking-wide text-gray-500 uppercase">
+        <div
+          className={`
+            flex gap-2 text-[0.625rem] tracking-wide text-gray-500 uppercase
+          `}
+        >
           <div>{format(new Date(post.createdAt), "MMMM dd, yyyy")}</div>
           <div>·</div>
           <div>8 min read</div>
         </div>
         <h1 className="mt-2 text-4xl font-bold">{post.title}</h1>
 
-        <div className="mt-9 grid grid-cols-1 gap-14 md:grid-cols-[280px,_1fr]">
+        <div
+          className={`
+            mt-9 grid grid-cols-1 gap-14
+            md:grid-cols-[280px,_1fr]
+          `}
+        >
           <div>
             <TableOfContents items={tableOfContent} post={post} />
           </div>
           <div>
             {post.coverImage && (
-              <div className="relative mb-3 aspect-[45/28] overflow-hidden rounded-2xl">
+              <div
+                className={`
+                  relative mb-3 aspect-[45/28] overflow-hidden rounded-2xl
+                `}
+              >
                 <Image
                   className="object-cover"
                   src={resolveImageUrl(post.coverImage.id)}
@@ -147,7 +160,10 @@ export default async function Post({
               </div>
             )}
             <div
-              className="prose lg:prose-lg"
+              className={`
+                prose
+                lg:prose-lg
+              `}
               // biome-ignore lint/security/noDangerouslySetInnerHtml: it's safe to use this as the html is sanitized
               dangerouslySetInnerHTML={{
                 __html: posthtml,
@@ -161,7 +177,13 @@ export default async function Post({
         {filteredPosts.length > 0 ? (
           <div className="mt-10">
             <h3 className="text-2xl font-bold">Read more</h3>
-            <div className="mt-6 grid grid-cols-1 gap-x-12 gap-y-10 md:grid-cols-2 lg:grid-cols-3">
+            <div
+              className={`
+                mt-6 grid grid-cols-1 gap-x-12 gap-y-10
+                md:grid-cols-2
+                lg:grid-cols-3
+              `}
+            >
               {filteredPosts.map((post) => {
                 return <PostCard key={post.id} post={post} />;
               })}

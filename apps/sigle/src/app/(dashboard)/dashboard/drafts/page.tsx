@@ -65,7 +65,7 @@ export default function DashboardDrafts() {
               No drafts yet
             </Text>
             <Button color="gray" highContrast asChild>
-              <NextLink href={"/p/new"}>Write a post</NextLink>
+              <NextLink href="/p/new">Write a post</NextLink>
             </Button>
           </Flex>
         ) : null}
@@ -129,7 +129,13 @@ const Draft = ({
     );
 
   return (
-    <div className="border-b border-solid border-gray-6 py-5 first:pt-0 last:border-b-0 last:pb-0">
+    <div
+      className={`
+        border-b border-solid border-gray-6 py-5
+        first:pt-0
+        last:border-b-0 last:pb-0
+      `}
+    >
       {draft.txStatus === "pending" && draft.txId && (
         <Badge className="mb-2" asChild>
           <a

@@ -1,0 +1,91 @@
+{
+  "$schema": "./node_modules/oxlint/configuration_schema.json",
+  "plugins": ["typescript", "react", "nextjs"],
+  "jsPlugins": ["eslint-plugin-better-tailwindcss"],
+  "categories": {
+    "correctness": "error",
+    "nursery": "error",
+    "perf": "error",
+    "restriction": "error",
+    "suspicious": "error",
+    "style": "error",
+    "pedantic": "error"
+  },
+  "ignorePatterns": [".next/**", "out/**", "build/**", "next-env.d.ts"],
+  "rules": {
+    "no-undef": "off",
+    "no-undefined": "off",
+    "no-plusplus": "off",
+    "no-magic-numbers": "off",
+    "no-ternary": "off",
+    "no-nested-ternary": "off",
+    "new-cap": "off",
+    "id-length": "off",
+    "max-statements": "off",
+    "arrow-body-style": "off",
+    "explicit-function-return-type": "off",
+    "explicit-module-boundary-types": "off",
+    "sort-keys": "off",
+    "sort-imports": "off",
+    "func-style": "off",
+    "prefer-destructuring": "off",
+    "max-lines-per-function": "off",
+    "no-warning-comments": "off",
+    "no-negated-condition": "off",
+    "capitalized-comments": "off",
+    "react-in-jsx-scope": "off",
+    "only-export-components": "off",
+    "jsx-max-depth": "off",
+    "jsx-filename-extension": "off",
+    "jsx-props-no-spreading": "off",
+    "no-unknown-property": ["error", { "ignore": ["tw"] }],
+
+    "no-restricted-imports": [
+      "error",
+      {
+        "paths": [
+          {
+            "name": "next/link",
+            "message": "Use components/Shared/NextLink instead"
+          }
+        ]
+      }
+    ],
+
+    "better-tailwindcss/enforce-consistent-line-wrapping": "error",
+    "better-tailwindcss/enforce-consistent-class-order": "error",
+    "better-tailwindcss/no-duplicate-classes": "error",
+    "better-tailwindcss/no-deprecated-classes": "error",
+    "better-tailwindcss/no-unnecessary-whitespace": "error",
+
+    "no-explicit-any": "off",
+    "no-img-element": "off",
+    "no-useless-return": "off",
+    "no-console": "off",
+    "no-html-link-for-pages": "off",
+    "no-unused-vars": "off",
+    "no-implicit-coercion": "off",
+    "no-alert": "off",
+    "no-duplicate-imports": "off",
+    "require-await": "off",
+    "no-inline-comments": "off",
+    "no-param-reassign": "off",
+    "curly": "off",
+    "init-declarations": "off",
+    "consistent-type-definitions": "off",
+    "complexity": "off",
+    "max-lines": "off",
+    "default-case": "off",
+    "prefer-promise-reject-errors": "off",
+    "exhaustive-deps": "off",
+    "button-has-type": "off",
+    "iframe-missing-sandbox": "off",
+    "jsx-no-useless-fragment": "off",
+    "no-unescaped-entities": "off"
+  },
+  "settings": {
+    "better-tailwindcss": {
+      "entryPoint": "src/app/globals.css"
+    }
+  }
+}

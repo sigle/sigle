@@ -36,12 +36,17 @@ export const ShareSocial = ({
   return (
     <TooltipProvider>
       <div className="mt-5">
-        <p className="text-[0.625rem] font-bold tracking-wide text-gray-500 uppercase">
+        <p
+          className={`
+            text-[0.625rem] font-bold tracking-wide text-gray-500 uppercase
+          `}
+        >
           Share this article
         </p>
         <div className="mt-3 flex gap-3">
           <Tooltip delayDuration={200}>
             <TooltipTrigger asChild>
+              {/* eslint-disable-next-line eslint-plugin-next/no-html-link-for-pages */}
               <a
                 href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(
                   post.title,
@@ -58,6 +63,7 @@ export const ShareSocial = ({
           </Tooltip>
           <Tooltip delayDuration={200}>
             <TooltipTrigger asChild>
+              {/* eslint-disable-next-line eslint-plugin-next/no-html-link-for-pages */}
               <a
                 href={`https://www.facebook.com/sharer/sharer.php?u=${websiteUrl}&quote=${post.title}`}
                 target="_blank"
@@ -72,6 +78,7 @@ export const ShareSocial = ({
           </Tooltip>
           <Tooltip delayDuration={200}>
             <TooltipTrigger asChild>
+              {/* eslint-disable-next-line eslint-plugin-next/no-html-link-for-pages */}
               <a
                 href={`https://www.linkedin.com/sharing/share-offsite/?url=${websiteUrl}`}
                 target="_blank"
@@ -90,6 +97,7 @@ export const ShareSocial = ({
             delayDuration={200}
           >
             <TooltipTrigger asChild>
+              {/* eslint-disable-next-line eslint-plugin-next/no-html-link-for-pages */}
               <a href={websiteUrl} onClick={handleClickCopy}>
                 <IconLink size={15} />
               </a>

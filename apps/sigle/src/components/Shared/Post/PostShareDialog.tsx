@@ -136,7 +136,7 @@ export const PostShareDialog = ({
               size="3"
               className="grow"
               variant="soft"
-              disabled={true}
+              disabled
               defaultValue={postLink}
             />
             <Button

@@ -6,15 +6,25 @@ export const PageProfileSkeleton = () => {
     <>
       {/* Banner */}
       <Skeleton>
-        <div className="h-64 md:h-[22rem]" />
+        <div
+          className={`
+            h-64
+            md:h-[22rem]
+          `}
+        />
       </Skeleton>
 
       <Container size="2" px="4">
         {/* Profile image */}
         <div className="flex">
-          <div className="z-10 mt-[-70px] rounded-5 border-[6px] border-transparent bg-white dark:bg-gray-1">
+          <div
+            className={`
+              z-10 mt-[-70px] rounded-5 border-[6px] border-transparent bg-white
+              dark:bg-gray-1
+            `}
+          >
             <Skeleton>
-              <Avatar fallback={"L"} size="8" radius="small" />
+              <Avatar fallback="L" size="8" radius="small" />
             </Skeleton>
           </div>
         </div>
