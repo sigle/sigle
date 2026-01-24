@@ -31,7 +31,7 @@ export const PublishReview = ({ onPublish }: PublishReviewProps) => {
 
   // Validate form on mount so we can show the various error messages in the callout
   // and disable the publish button
-  // biome-ignore lint/correctness/useExhaustiveDependencies: ok
+  // oxlint-disable-next-line exhaustive-deps
   useEffect(() => {
     handleSubmit(
       async () => {
@@ -54,6 +54,7 @@ export const PublishReview = ({ onPublish }: PublishReviewProps) => {
         });
       },
     )();
+    // oxlint-disable-next-line exhaustive-deps
   }, []);
 
   return (

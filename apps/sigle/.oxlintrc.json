@@ -37,7 +37,6 @@
     "no-duplicate-imports": "off",
     "iframe-missing-sandbox": "off",
     "no-html-link-for-pages": "off",
-    "exhaustive-deps": "off",
     "no-img-element": "off",
     "no-unused-vars": "off",
     "no-alert": "off",

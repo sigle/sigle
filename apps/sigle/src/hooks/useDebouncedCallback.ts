@@ -32,17 +32,19 @@ export function useDebouncedCallback(
   deps: any[] = [],
 ) {
   // debounce the callback
-  // biome-ignore lint/correctness/useExhaustiveDependencies: ok
+  // oxlint-disable-next-line exhaustive-deps
   const debouncedCallback = React.useCallback(debounce(callback, delay), [
     delay,
     ...deps,
+    // oxlint-disable-next-line exhaustive-deps
   ]); // with the delay
   // clean up on unmount or dependency change
-  // biome-ignore lint/correctness/useExhaustiveDependencies: ok
+  // oxlint-disable-next-line exhaustive-deps
   React.useEffect(() => {
     return () => {
       debouncedCallback.cancel(); // cancel any pending calls
     };
+    // oxlint-disable-next-line exhaustive-deps
   }, [delay, ...deps]);
   // return the debounce function so we can use it
   return debouncedCallback;
