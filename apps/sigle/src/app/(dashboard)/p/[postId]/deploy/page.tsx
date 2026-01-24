@@ -85,8 +85,8 @@ export default function PostDeployPending(props: PostDeployPendingProps) {
               It may take up to 15 minutes for the transaction to succeed.
             </Text>
             <Text align="center" color="gray" size="2">
-              You'll be redirected once the transaction is complete. Feel free
-              to navigate away - your post will still be published after
+              You&apos;ll be redirected once the transaction is complete. Feel
+              free to navigate away - your post will still be published after
               confirmation.
             </Text>
             <Link
