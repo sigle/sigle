@@ -4,6 +4,7 @@ import React from "react";
 // debounce function (defaults wait to .2 seconds)
 // oxlint-disable-next-line no-explicit-any: any is fine
 const debounce = (func: any, wait = 200) => {
+  // oxlint-disable-next-line init-declarations: timeout will be initialized later
   let timeout: NodeJS.Timeout; // for the setTimeout function and so it can be cleared
   // oxlint-disable-next-line no-explicit-any: any is fine
   function executedFunction(...args: any) {
@@ -32,17 +33,19 @@ export function useDebouncedCallback(
   deps: any[] = [],
 ) {
   // debounce the callback
-  // biome-ignore lint/correctness/useExhaustiveDependencies: ok
+  // oxlint-disable-next-line exhaustive-deps
   const debouncedCallback = React.useCallback(debounce(callback, delay), [
     delay,
     ...deps,
+    // oxlint-disable-next-line exhaustive-deps
   ]); // with the delay
   // clean up on unmount or dependency change
-  // biome-ignore lint/correctness/useExhaustiveDependencies: ok
+  // oxlint-disable-next-line exhaustive-deps
   React.useEffect(() => {
     return () => {
       debouncedCallback.cancel(); // cancel any pending calls
     };
+    // oxlint-disable-next-line exhaustive-deps
   }, [delay, ...deps]);
   // return the debounce function so we can use it
   return debouncedCallback;

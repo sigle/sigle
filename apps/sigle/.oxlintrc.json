@@ -12,12 +12,14 @@
   "rules": {
     "better-tailwindcss/enforce-consistent-line-wrapping": "error",
     "better-tailwindcss/enforce-consistent-class-order": "error",
+    "better-tailwindcss/enforce-canonical-classes": "error",
     "better-tailwindcss/no-duplicate-classes": "error",
     "better-tailwindcss/no-deprecated-classes": "error",
     "better-tailwindcss/no-unnecessary-whitespace": "error",
     "better-tailwindcss/no-unknown-classes": "error",
     "better-tailwindcss/no-conflicting-classes": "error",
 
+    "no-alert": "off",
     "no-unknown-property": ["error", { "ignore": ["tw"] }],
     "no-restricted-imports": [
       "error",
@@ -30,27 +32,7 @@
         ]
       }
     ],
-
-    "better-tailwindcss/enforce-canonical-classes": "off",
-    "jsx-filename-extension": "off",
-    "jsx-max-depth": "off",
-    "react-in-jsx-scope": "off",
     "only-export-components": "off",
-    "jsx-props-no-spreading": "off",
-    "no-plusplus": "off",
-    "no-duplicate-imports": "off",
-    "iframe-missing-sandbox": "off",
-    "no-html-link-for-pages": "off",
-    "exhaustive-deps": "off",
-    "no-img-element": "off",
-    "no-unused-vars": "off",
-    "no-alert": "off",
-    "no-implicit-coercion": "off",
-    "jsx-no-useless-fragment": "off",
-    "no-unescaped-entities": "off",
-    "init-declarations": "off",
-    "no-useless-return": "off",
-    "button-has-type": "off",
-    "prefer-promise-reject-errors": "off"
+    "no-html-link-for-pages": "off"
   }
 }

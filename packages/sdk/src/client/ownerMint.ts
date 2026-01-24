@@ -6,17 +6,17 @@ import {
   PostConditionMode,
 } from "@stacks/transactions";
 
-export type OwnerMintParams = {
+export interface OwnerMintParams {
   // Contract address of the post
   contract: string;
   // Address to receive the minted tokens
   recipient?: string;
-};
+}
 
-export type OwnerMintReturn = {
+export interface OwnerMintReturn {
   // Parameters to pass to the stacks.js contract call
   parameters: ContractCallBase;
-};
+}
 
 export const ownerMint = async ({
   params,

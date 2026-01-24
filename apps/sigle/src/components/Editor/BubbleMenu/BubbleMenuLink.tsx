@@ -8,6 +8,7 @@ const BubbleMenuButton = ({
   ...props
 }: { active: boolean } & React.ButtonHTMLAttributes<HTMLButtonElement>) => (
   <button
+    type="button"
     {...props}
     className={cn({
       "text-gray-1": !active,
@@ -81,7 +82,6 @@ export const EditorBubbleMenuLink = ({ editor }: EditorBubbleMenuProps) => {
         onKeyDown={onKeyDown}
         onChange={(e) => setLinkValue(e.target.value)}
         placeholder="Enter link ..."
-        // biome-ignore lint/a11y/noAutofocus: ok
         autoFocus
       />
       <BubbleMenuButton

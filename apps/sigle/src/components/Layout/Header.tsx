@@ -24,7 +24,6 @@ export const Header = () => {
 
   // Next.js has a problem with the scroll position when changing pages
   // https://github.com/vercel/next.js/issues/49427
-  // biome-ignore lint/correctness/useExhaustiveDependencies: ok
   useLayoutEffect(() => {
     document.documentElement.scrollTo({ top: 0, left: 0, behavior: "instant" });
   }, [pathname]);
@@ -38,8 +37,8 @@ export const Header = () => {
   return (
     <header
       className={`
-        sticky top-0 z-20 flex h-[var(--header-height)] items-center
-        justify-between border-b border-gray-6 bg-[var(--color-background)] px-4
+        sticky top-0 z-20 flex h-(--header-height) items-center justify-between
+        border-b border-gray-6 bg-background px-4
         md:px-[60px]
       `}
     >

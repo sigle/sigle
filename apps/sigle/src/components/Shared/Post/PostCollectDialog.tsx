@@ -12,8 +12,7 @@ import {
   Tooltip,
   VisuallyHidden,
 } from "@radix-ui/themes";
-import type { paths } from "@sigle/sdk";
-import { fixedMintFee, formatBTC } from "@sigle/sdk";
+import { type paths, fixedMintFee, formatBTC } from "@sigle/sdk";
 import {
   IconHelpCircle,
   IconInfoCircle,

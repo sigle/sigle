@@ -24,7 +24,7 @@ export const UploadProfileCoverPicture = ({
       "/api/protected/user/profile/upload-cover",
     );
 
-  // biome-ignore lint/correctness/useExhaustiveDependencies: ok
+  // oxlint-disable-next-line exhaustive-deps
   const onDrop = useCallback(async (acceptedFiles: File[]) => {
     const file = acceptedFiles[0];
     if (!file) return;
@@ -49,6 +49,7 @@ export const UploadProfileCoverPicture = ({
         },
       },
     );
+    // oxlint-disable-next-line exhaustive-deps
   }, []);
 
   const { getRootProps, getInputProps } = useDropzone({

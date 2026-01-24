@@ -1,6 +1,5 @@
 import { Button, Heading, Progress, Text } from "@radix-ui/themes";
-import type { paths } from "@sigle/sdk";
-import { formatBTC } from "@sigle/sdk";
+import { type paths, formatBTC } from "@sigle/sdk";
 import { useState } from "react";
 import { PostCollectDialog } from "../Shared/Post/PostCollectDialog";
 

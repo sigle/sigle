@@ -2,8 +2,7 @@
 
 import "./style.css";
 import type { IconProps } from "@tabler/icons-react";
-import type { Editor } from "@tiptap/core";
-import { Extension } from "@tiptap/core";
+import { type Editor, Extension } from "@tiptap/core";
 import { type Range, ReactRenderer } from "@tiptap/react";
 import Suggestion, { type SuggestionOptions } from "@tiptap/suggestion";
 import tippy, { type Instance } from "tippy.js";
@@ -63,8 +62,9 @@ export const SlashCommands = Extension.create<{
           props.command({ editor, range });
         },
         render: () => {
+          // oxlint-disable-next-line init-declarations
           let reactRenderer: ReactRenderer<CommandListRef>;
-          let popup: Instance[];
+          let popup: Instance[] = [];
 
           return {
             onStart: (props) => {

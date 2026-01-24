@@ -41,13 +41,13 @@ export const Routes = {
   ),
 };
 
-type RouteBuilder<Params extends z.ZodSchema, Search extends z.ZodSchema> = {
+interface RouteBuilder<Params extends z.ZodSchema, Search extends z.ZodSchema> {
   (p?: z.input<Params>, options?: { search?: z.input<Search> }): string;
   parse: (input: z.input<Params>) => z.output<Params>;
   useParams: () => z.output<Params>;
   useSearchParams: () => z.output<Search>;
   params: z.output<Params>;
-};
+}
 
 function makeRoute<Params extends z.ZodSchema, Search extends z.ZodSchema>(
   fn: (p: z.input<Params>) => string,

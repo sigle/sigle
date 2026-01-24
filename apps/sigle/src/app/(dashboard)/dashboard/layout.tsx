@@ -52,7 +52,7 @@ export default function DashboardLayout({
             lg:block
           `}
         >
-          <nav className="sticky top-[var(--header-height)] py-10">
+          <nav className="sticky top-(--header-height) py-10">
             <ul className="space-y-3">
               {navigationLinks.map((link) => (
                 <li key={link.href}>
@@ -61,8 +61,7 @@ export default function DashboardLayout({
                     color="gray"
                     highContrast
                     className={cn("m-0", {
-                      "bg-[var(--accent-a3)] font-medium":
-                        pathname === link.href,
+                      "bg-(--accent-a3) font-medium": pathname === link.href,
                     })}
                     asChild
                   >

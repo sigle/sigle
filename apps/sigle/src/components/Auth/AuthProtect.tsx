@@ -10,7 +10,7 @@ export const AuthProtect = ({ children }: AuthProtectProps) => {
   const { data: session, isPending } = useSession();
 
   if (session) {
-    return <>{children}</>;
+    return children;
   }
 
   if (isPending) {

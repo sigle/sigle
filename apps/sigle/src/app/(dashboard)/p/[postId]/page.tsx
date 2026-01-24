@@ -6,9 +6,9 @@ import { PostClientPage } from "./page-client";
 
 export const dynamic = "force-dynamic";
 
-type Props = {
+interface Props {
   params: Promise<typeof Routes.post.params>;
-};
+}
 
 export async function generateMetadata(props: Props): Promise<Metadata> {
   const params = await props.params;

@@ -32,7 +32,6 @@ export const EditorSettings = () => {
             />
 
             <Inset side="x">
-              {/* biome-ignore lint/a11y/noStaticElementInteractions: ok */}
               <div
                 className={`
                   flex cursor-pointer justify-between border-y border-gray-5
@@ -52,7 +51,6 @@ export const EditorSettings = () => {
                   <IconChevronRight size={24} />
                 </Text>
               </div>
-              {/* biome-ignore lint/a11y/noStaticElementInteractions: ok */}
               <div
                 className={`
                   flex cursor-pointer justify-between border-b border-gray-5

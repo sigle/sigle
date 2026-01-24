@@ -3,7 +3,6 @@ import { Text, TextField } from "@radix-ui/themes";
 import { IconBrandX, IconBrandYoutube } from "@tabler/icons-react";
 import type { NodeViewProps } from "@tiptap/core";
 import { NodeViewWrapper } from "@tiptap/react";
-import type React from "react";
 import { useEffect, useMemo } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";

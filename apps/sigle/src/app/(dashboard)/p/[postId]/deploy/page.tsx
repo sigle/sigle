@@ -8,9 +8,9 @@ import { NextLink } from "@/components/Shared/NextLink";
 import { sigleApiClient } from "@/lib/sigle";
 import { getExplorerTransactionUrl } from "@/lib/stacks";
 
-type PostDeployPendingProps = {
+interface PostDeployPendingProps {
   params: Promise<{ postId: string }>;
-};
+}
 
 export default function PostDeployPending(props: PostDeployPendingProps) {
   const params = use(props.params);
@@ -85,8 +85,8 @@ export default function PostDeployPending(props: PostDeployPendingProps) {
               It may take up to 15 minutes for the transaction to succeed.
             </Text>
             <Text align="center" color="gray" size="2">
-              You'll be redirected once the transaction is complete. Feel free
-              to navigate away - your post will still be published after
+              You&apos;ll be redirected once the transaction is complete. Feel
+              free to navigate away - your post will still be published after
               confirmation.
             </Text>
             <Link
@@ -97,7 +97,7 @@ export default function PostDeployPending(props: PostDeployPendingProps) {
               View transaction on explorer.
             </Link>
             <Button color="gray" highContrast variant="soft" size="2" asChild>
-              <NextLink className="!mt-5" href="/">
+              <NextLink className="mt-5!" href="/">
                 Explore content on Sigle
               </NextLink>
             </Button>

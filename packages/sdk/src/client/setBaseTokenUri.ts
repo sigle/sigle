@@ -2,17 +2,17 @@ import type { ContractCallBase } from "@stacks/connect";
 import type { StacksNetwork } from "@stacks/network";
 import { PostConditionMode, stringAsciiCV } from "@stacks/transactions";
 
-export type SetBaseTokenUriParams = {
+export interface SetBaseTokenUriParams {
   // Contract address of the post
   contract: string;
   // The metadata string for the post
   metadata: string;
-};
+}
 
-export type SetBaseTokenUriReturn = {
+export interface SetBaseTokenUriReturn {
   // Parameters to pass to the stacks.js contract call
   parameters: ContractCallBase;
-};
+}
 
 export const setBaseTokenUri = ({
   params,

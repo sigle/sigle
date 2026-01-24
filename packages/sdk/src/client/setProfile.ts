@@ -3,17 +3,17 @@ import type { StacksNetwork, StacksNetworkName } from "@stacks/network";
 import { PostConditionMode, stringAsciiCV } from "@stacks/transactions";
 import { config } from "./config.js";
 
-export type SetProfileParams = {
+export interface SetProfileParams {
   /**
    * The metadata string for the profile
    */
   metadata: string;
-};
+}
 
-export type SetProfileReturn = {
+export interface SetProfileReturn {
   // Parameters to pass to the stacks.js contract call
   parameters: ContractCallBase;
-};
+}
 
 export const setProfile = ({
   params,

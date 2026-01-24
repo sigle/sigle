@@ -39,7 +39,7 @@ export const ProfileHeader = ({ user }: ProfileHeaderProps) => {
     <>
       <div
         className={cn("relative w-full bg-gray-3", {
-          "h-64 md:h-[22rem]": hasBanner,
+          "h-64 md:h-88": hasBanner,
           "h-32": !hasBanner,
         })}
       >

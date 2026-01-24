@@ -14,9 +14,9 @@ import { FadeSlideBottom } from "@/components/ui";
 import { resolveImageUrl } from "@/lib/images";
 import { sigleApiClient } from "@/lib/sigle";
 
-type Props = {
+interface Props {
   params: Promise<{ postId: string }>;
-};
+}
 
 export function PostClientPage(props: Props) {
   const params = use(props.params);

@@ -136,7 +136,7 @@ export default async function Post({
         <div
           className={`
             mt-9 grid grid-cols-1 gap-14
-            md:grid-cols-[280px,_1fr]
+            md:grid-cols-[280px,1fr]
           `}
         >
           <div>
@@ -146,7 +146,7 @@ export default async function Post({
             {post.coverImage && (
               <div
                 className={`
-                  relative mb-3 aspect-[45/28] overflow-hidden rounded-2xl
+                  relative mb-3 aspect-45/28 overflow-hidden rounded-2xl
                 `}
               >
                 <Image
