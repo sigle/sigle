@@ -32,7 +32,6 @@ export const EditorCoverImage = () => {
       "/api/protected/drafts/{draftId}/upload-media",
     );
 
-  // biome-ignore lint/correctness/useExhaustiveDependencies: ok
   const onDrop = useCallback(
     async (acceptedFiles: File[]) => {
       const file = acceptedFiles[0];
@@ -117,7 +116,6 @@ export const EditorCoverImage = () => {
     : null;
 
   return (
-    // biome-ignore lint/a11y/noStaticElementInteractions: ok
     <div
       {...getRootProps()}
       className={cn("mt-4 flex justify-center", {
