@@ -40,7 +40,6 @@
     "no-unused-vars": "off",
     "no-alert": "off",
     "no-implicit-coercion": "off",
-    "jsx-no-useless-fragment": "off",
     "no-unescaped-entities": "off",
     "init-declarations": "off",
     "no-useless-return": "off",
