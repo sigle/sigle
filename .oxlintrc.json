@@ -23,6 +23,7 @@
     "max-lines-per-function": "off",
     "max-statements": "off",
     "no-await-in-loop": "off",
+    "no-implicit-coercion": "off",
     "no-undef": "off",
     "no-undefined": "off",
     "no-magic-numbers": "off",
