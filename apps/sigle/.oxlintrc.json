@@ -34,7 +34,6 @@
 
     "only-export-components": "off",
 
-    "no-duplicate-imports": "off",
     "iframe-missing-sandbox": "off",
     "no-html-link-for-pages": "off",
     "no-unused-vars": "off",

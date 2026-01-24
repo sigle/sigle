@@ -1,7 +1,6 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button, Flex, Text, TextArea, TextField } from "@radix-ui/themes";
-import type { paths } from "@sigle/sdk";
-import { createProfileMetadata } from "@sigle/sdk";
+import { type paths, createProfileMetadata } from "@sigle/sdk";
 import { IconAt, IconBrandX } from "@tabler/icons-react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
