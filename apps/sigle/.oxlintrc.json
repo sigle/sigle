@@ -31,13 +31,11 @@
         ]
       }
     ],
+    "no-alert": "off",
 
     "only-export-components": "off",
-
-    "iframe-missing-sandbox": "off",
     "no-html-link-for-pages": "off",
     "no-unused-vars": "off",
-    "no-alert": "off",
     "no-implicit-coercion": "off",
     "no-unescaped-entities": "off",
     "no-useless-return": "off",
