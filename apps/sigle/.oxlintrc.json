@@ -19,6 +19,7 @@
     "better-tailwindcss/no-unknown-classes": "error",
     "better-tailwindcss/no-conflicting-classes": "error",
 
+    "no-alert": "off",
     "no-unknown-property": ["error", { "ignore": ["tw"] }],
     "no-restricted-imports": [
       "error",
@@ -31,10 +32,8 @@
         ]
       }
     ],
-    "no-alert": "off",
 
     "only-export-components": "off",
-    "no-html-link-for-pages": "off",
-    "no-useless-return": "off"
+    "no-html-link-for-pages": "off"
   }
 }

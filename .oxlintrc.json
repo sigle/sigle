@@ -31,6 +31,7 @@
     "no-nested-ternary": "off",
     "no-plusplus": "off",
     "no-ternary": "off",
+    "no-useless-return": "off",
     "prefer-destructuring": "off",
     "prefer-promise-reject-errors": "off",
     "sort-imports": "off",
