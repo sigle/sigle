@@ -22,6 +22,7 @@ const BubbleMenuButton = ({
   ...props
 }: { active: boolean } & React.ButtonHTMLAttributes<HTMLButtonElement>) => (
   <button
+    type="button"
     {...props}
     className={cn({
       "text-gray-1": !active,

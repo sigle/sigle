@@ -43,7 +43,6 @@
     "no-unescaped-entities": "off",
     "init-declarations": "off",
     "no-useless-return": "off",
-    "button-has-type": "off",
     "prefer-promise-reject-errors": "off"
   }
 }
