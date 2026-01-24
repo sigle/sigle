@@ -25,11 +25,13 @@ export const PostMarkdownContent = ({ content }: PostMarkdownContentProps) => {
     >
       <ReactMarkdown
         components={{
+          // oxlint-disable-next-line no-unused-vars
           img: ({ node, src, ...props }) => {
             src = src ? resolveImageUrl(src as string) : undefined;
             // oxlint-disable-next-line no-img-element
             return <img src={src} {...props} />;
           },
+          // oxlint-disable-next-line no-unused-vars
           a: ({ node, href, ...props }) => {
             if (href && isValidTwitterUrl(href)) {
               const tweetId = getTweetIdFromUrl(href);

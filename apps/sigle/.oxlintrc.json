@@ -35,7 +35,6 @@
 
     "only-export-components": "off",
     "no-html-link-for-pages": "off",
-    "no-unused-vars": "off",
     "no-implicit-coercion": "off",
     "no-unescaped-entities": "off",
     "no-useless-return": "off",
