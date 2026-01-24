@@ -41,7 +41,6 @@
     "no-alert": "off",
     "no-implicit-coercion": "off",
     "no-unescaped-entities": "off",
-    "init-declarations": "off",
     "no-useless-return": "off",
     "prefer-promise-reject-errors": "off"
   }

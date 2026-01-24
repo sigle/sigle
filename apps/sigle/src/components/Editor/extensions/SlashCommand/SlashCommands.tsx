@@ -63,8 +63,9 @@ export const SlashCommands = Extension.create<{
           props.command({ editor, range });
         },
         render: () => {
+          // oxlint-disable-next-line init-declarations
           let reactRenderer: ReactRenderer<CommandListRef>;
-          let popup: Instance[];
+          let popup: Instance[] = [];
 
           return {
             onStart: (props) => {

@@ -4,6 +4,7 @@ import React from "react";
 // debounce function (defaults wait to .2 seconds)
 // oxlint-disable-next-line no-explicit-any: any is fine
 const debounce = (func: any, wait = 200) => {
+  // oxlint-disable-next-line init-declarations: timeout will be initialized later
   let timeout: NodeJS.Timeout; // for the setTimeout function and so it can be cleared
   // oxlint-disable-next-line no-explicit-any: any is fine
   function executedFunction(...args: any) {
