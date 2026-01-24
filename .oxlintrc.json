@@ -47,7 +47,6 @@
     "jsx-props-no-spreading": "off",
     "react-in-jsx-scope": "off",
 
-    "consistent-type-definitions": "off",
     "require-await": "off",
     "no-console": "off",
     "func-style": "off",

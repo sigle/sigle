@@ -12,9 +12,9 @@ import { ProfileHeader } from "@/components/User/ProfileHeader";
 import { ProfileInfo } from "@/components/User/ProfileInfo";
 import { sigleApiClient } from "@/lib/sigle";
 
-type Props = {
+interface Props {
   params: Promise<{ username: string }>;
-};
+}
 
 export function UserClientPage(props: Props) {
   const params = use(props.params);

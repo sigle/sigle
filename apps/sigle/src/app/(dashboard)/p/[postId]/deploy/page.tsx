@@ -8,9 +8,9 @@ import { NextLink } from "@/components/Shared/NextLink";
 import { sigleApiClient } from "@/lib/sigle";
 import { getExplorerTransactionUrl } from "@/lib/stacks";
 
-type PostDeployPendingProps = {
+interface PostDeployPendingProps {
   params: Promise<{ postId: string }>;
-};
+}
 
 export default function PostDeployPending(props: PostDeployPendingProps) {
   const params = use(props.params);

@@ -9,7 +9,7 @@ import {
 } from "@stacks/transactions";
 import { config, fixedMintFee } from "./config.js";
 
-export type MintParams = {
+export interface MintParams {
   // Contract address of the post
   contract: string;
   // Number of tokens to mint.
@@ -22,12 +22,12 @@ export type MintParams = {
   sender: string;
   // Price of one token in satoshis
   price: string;
-};
+}
 
-export type MintReturn = {
+export interface MintReturn {
   // Parameters to pass to the stacks.js contract call
   parameters: ContractCallBase;
-};
+}
 
 export const mint = async ({
   params,

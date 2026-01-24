@@ -11,9 +11,9 @@ import { PublishDialog } from "@/components/Editor/Publish/PublishDialog";
 import { EditorSettings } from "@/components/Editor/Settings/EditorSettings";
 import { sigleApiClient } from "@/lib/sigle";
 
-type PostEditPageProps = {
+interface PostEditPageProps {
   params: Promise<{ postId: string }>;
-};
+}
 
 export default function PostEditPage(props: PostEditPageProps) {
   const params = use(props.params);
