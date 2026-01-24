@@ -147,7 +147,7 @@ export const EditorCoverImage = () => {
           )
         ) : (
           <div className="relative mx-auto">
-            {/* biome-ignore lint/performance/noImgElement: ok */}
+            {/* oxlint-disable-next-line no-img-element */}
             <img
               src={preview || resolvedWatchCoverImage || ""}
               className={cn("rounded-2", {

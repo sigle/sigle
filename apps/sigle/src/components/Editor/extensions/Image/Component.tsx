@@ -15,7 +15,7 @@ export const ImageComponent = (props: NodeViewProps) => {
           <Spinner />
         </div>
       )}
-      {/* biome-ignore lint/performance/noImgElement: ok */}
+      {/* oxlint-disable-next-line no-img-element */}
       <img
         className={cn(
           `

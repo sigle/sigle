@@ -66,7 +66,7 @@ export async function GET(request: Request) {
     >
       {coverImage ? (
         <div tw="flex">
-          {/* biome-ignore lint/performance/noImgElement: ok */}
+          {/* oxlint-disable-next-line no-img-element */}
           <img
             tw="w-full"
             src={coverImage}
@@ -97,7 +97,7 @@ export async function GET(request: Request) {
         <div tw="flex w-full items-center justify-between">
           <div tw="flex items-center">
             {avatar ? (
-              // biome-ignore lint/performance/noImgElement: ok
+              // oxlint-disable-next-line no-img-element
               <img
                 tw="rounded-full"
                 src={avatar}
