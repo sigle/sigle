@@ -17,12 +17,14 @@
     "complexity": "off",
     "explicit-function-return-type": "off",
     "explicit-module-boundary-types": "off",
+    "id-length": "off",
     "max-classes-per-file": "off",
     "max-depth": "off",
     "max-lines": "off",
     "max-lines-per-function": "off",
     "max-statements": "off",
     "no-await-in-loop": "off",
+    "no-console": "off",
     "no-implicit-coercion": "off",
     "no-undef": "off",
     "no-undefined": "off",
@@ -48,14 +50,12 @@
     "react-in-jsx-scope": "off",
 
     "require-await": "off",
-    "no-console": "off",
     "func-style": "off",
     "capitalized-comments": "off",
     "no-inline-comments": "off",
     "no-warning-comments": "off",
     "no-param-reassign": "off",
     "default-case": "off",
-    "id-length": "off",
     "new-cap": "off"
   }
 }
