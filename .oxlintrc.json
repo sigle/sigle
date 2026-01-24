@@ -32,6 +32,7 @@
     "no-plusplus": "off",
     "no-ternary": "off",
     "prefer-destructuring": "off",
+    "prefer-promise-reject-errors": "off",
     "sort-imports": "off",
     "sort-keys": "off",
 

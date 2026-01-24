@@ -35,7 +35,6 @@
 
     "only-export-components": "off",
     "no-html-link-for-pages": "off",
-    "no-useless-return": "off",
-    "prefer-promise-reject-errors": "off"
+    "no-useless-return": "off"
   }
 }
