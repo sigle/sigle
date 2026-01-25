@@ -60,10 +60,10 @@ importers:
         version: 5.9.3
       vitest:
         specifier: 4.0.16
-        version: 4.0.16(@opentelemetry/api@1.9.0)(@types/node@25.0.3)(happy-dom@15.11.7)(jiti@2.6.1)(jsdom@25.0.0(bufferutil@4.0.8)(utf-8-validate@5.0.10))(lightningcss@1.30.2)(sass@1.77.8)(terser@5.44.1)(tsx@4.21.0)(yaml@2.8.1)
+        version: 4.0.16(@opentelemetry/api@1.9.0)(@types/node@25.0.3)(happy-dom@20.3.7(bufferutil@4.0.8)(utf-8-validate@5.0.10))(jiti@2.6.1)(jsdom@25.0.0(bufferutil@4.0.8)(utf-8-validate@5.0.10))(lightningcss@1.30.2)(sass@1.77.8)(terser@5.44.1)(tsx@4.21.0)(yaml@2.8.1)
       vitest-environment-clarinet:
         specifier: 3.0.2
-        version: 3.0.2(@stacks/clarinet-sdk@3.12.0(encoding@0.1.13))(vitest@4.0.16(@opentelemetry/api@1.9.0)(@types/node@25.0.3)(happy-dom@15.11.7)(jiti@2.6.1)(jsdom@25.0.0(bufferutil@4.0.8)(utf-8-validate@5.0.10))(lightningcss@1.30.2)(sass@1.77.8)(terser@5.44.1)(tsx@4.21.0)(yaml@2.8.1))
+        version: 3.0.2(@stacks/clarinet-sdk@3.12.0(encoding@0.1.13))(vitest@4.0.16(@opentelemetry/api@1.9.0)(@types/node@25.0.3)(happy-dom@20.3.7(bufferutil@4.0.8)(utf-8-validate@5.0.10))(jiti@2.6.1)(jsdom@25.0.0(bufferutil@4.0.8)(utf-8-validate@5.0.10))(lightningcss@1.30.2)(sass@1.77.8)(terser@5.44.1)(tsx@4.21.0)(yaml@2.8.1))
 
   apps/custom-domain:
     dependencies:
@@ -537,8 +537,8 @@ importers:
         specifier: 4.0.1
         version: 4.0.1(eslint@9.39.2(jiti@2.6.1))(oxlint@1.41.0)(tailwindcss@4.1.18)(typescript@5.9.3)
       happy-dom:
-        specifier: 15.11.7
-        version: 15.11.7
+        specifier: 20.3.7
+        version: 20.3.7(bufferutil@4.0.8)(utf-8-validate@5.0.10)
       postcss:
         specifier: 8.5.6
         version: 8.5.6
@@ -559,7 +559,7 @@ importers:
         version: 6.0.5(typescript@5.9.3)(vite@7.3.0(@types/node@22.15.21)(jiti@2.6.1)(lightningcss@1.30.2)(sass@1.77.8)(terser@5.44.1)(tsx@4.21.0)(yaml@2.8.1))
       vitest:
         specifier: 4.0.18
-        version: 4.0.18(@opentelemetry/api@1.9.0)(@types/node@22.15.21)(@vitest/ui@4.0.18)(happy-dom@15.11.7)(jiti@2.6.1)(jsdom@25.0.0(bufferutil@4.0.8)(utf-8-validate@5.0.10))(lightningcss@1.30.2)(sass@1.77.8)(terser@5.44.1)(tsx@4.21.0)(yaml@2.8.1)
+        version: 4.0.18(@opentelemetry/api@1.9.0)(@types/node@22.15.21)(@vitest/ui@4.0.18)(happy-dom@20.3.7(bufferutil@4.0.8)(utf-8-validate@5.0.10))(jiti@2.6.1)(jsdom@25.0.0(bufferutil@4.0.8)(utf-8-validate@5.0.10))(lightningcss@1.30.2)(sass@1.77.8)(terser@5.44.1)(tsx@4.21.0)(yaml@2.8.1)
 
   packages/contracts-source:
     devDependencies:
@@ -611,7 +611,7 @@ importers:
         version: 5.9.3
       vitest:
         specifier: 4.0.16
-        version: 4.0.16(@opentelemetry/api@1.9.0)(@types/node@22.15.21)(happy-dom@15.11.7)(jiti@2.6.1)(jsdom@25.0.0(bufferutil@4.0.8)(utf-8-validate@5.0.10))(lightningcss@1.30.2)(sass@1.77.8)(terser@5.44.1)(tsx@4.21.0)(yaml@2.8.1)
+        version: 4.0.16(@opentelemetry/api@1.9.0)(@types/node@22.15.21)(happy-dom@20.3.7(bufferutil@4.0.8)(utf-8-validate@5.0.10))(jiti@2.6.1)(jsdom@25.0.0(bufferutil@4.0.8)(utf-8-validate@5.0.10))(lightningcss@1.30.2)(sass@1.77.8)(terser@5.44.1)(tsx@4.21.0)(yaml@2.8.1)
       zod:
         specifier: 3.25.67
         version: 3.25.67
@@ -5066,6 +5066,9 @@ packages:
   '@types/uuid@8.3.4':
     resolution: {integrity: sha512-c/I8ZRb51j+pYGAu5CrFMRxqZ2ke4y2grEBO5AUjgSkSk+qT2Ea+OdWElz/OiMf5MNpn2b17kuVBwZLQJXzihw==}
 
+  '@types/whatwg-mimetype@3.0.2':
+    resolution: {integrity: sha512-c2AKvDT8ToxLIOUlN51gTiHXflsfIFisS4pO7pDPoKouJCESkhZnEy623gwP9laCy5lnLDAw1vAzu2vM2YLOrA==}
+
   '@types/ws@7.4.7':
     resolution: {integrity: sha512-JQbbmxZTZehdc2iszGKs5oC3NFnjeay7mtAWrdt7qNtAVK0g19muApzAy4bm9byz79xa2ZnO/BOBC2R8RC5Lww==}
 
@@ -7321,9 +7324,9 @@ packages:
   handle-thing@2.0.1:
     resolution: {integrity: sha512-9Qn4yBxelxoh2Ow62nP+Ka/kMnOXRi8BXnRaUwezLNhqelnN49xKz4F/dPP8OYLxLxq6JDtZb2i9XznUQbNPTg==}
 
-  happy-dom@15.11.7:
-    resolution: {integrity: sha512-KyrFvnl+J9US63TEzwoiJOQzZBJY7KgBushJA8X61DMbNsH+2ONkDuLDnCnwUiPTF42tLoEmrPyoqbenVA5zrg==}
-    engines: {node: '>=18.0.0'}
+  happy-dom@20.3.7:
+    resolution: {integrity: sha512-sb5IzoRl1WJKsUSRe+IloJf3z1iDq5PQ7Yk/ULMsZ5IAQEs9ZL7RsFfiKBXU7nK9QmO+iz0e59EH8r8jexTZ/g==}
+    engines: {node: '>=20.0.0'}
 
   has-flag@4.0.0:
     resolution: {integrity: sha512-EykJT/Q1KjTWctppgIAgfSO0tKVuZUjhgMr17kqTumMl6Afv3EISleU7qZUzoXDFTAHTDC4NOoG/ZxU3EvlMPQ==}
@@ -16489,6 +16492,8 @@ snapshots:
 
   '@types/uuid@8.3.4': {}
 
+  '@types/whatwg-mimetype@3.0.2': {}
+
   '@types/ws@7.4.7':
     dependencies:
       '@types/node': 22.15.21
@@ -16701,7 +16706,7 @@ snapshots:
       sirv: 3.0.2
       tinyglobby: 0.2.15
       tinyrainbow: 3.0.3
-      vitest: 4.0.18(@opentelemetry/api@1.9.0)(@types/node@22.15.21)(@vitest/ui@4.0.18)(happy-dom@15.11.7)(jiti@2.6.1)(jsdom@25.0.0(bufferutil@4.0.8)(utf-8-validate@5.0.10))(lightningcss@1.30.2)(sass@1.77.8)(terser@5.44.1)(tsx@4.21.0)(yaml@2.8.1)
+      vitest: 4.0.18(@opentelemetry/api@1.9.0)(@types/node@22.15.21)(@vitest/ui@4.0.18)(happy-dom@20.3.7(bufferutil@4.0.8)(utf-8-validate@5.0.10))(jiti@2.6.1)(jsdom@25.0.0(bufferutil@4.0.8)(utf-8-validate@5.0.10))(lightningcss@1.30.2)(sass@1.77.8)(terser@5.44.1)(tsx@4.21.0)(yaml@2.8.1)
 
   '@vitest/utils@4.0.16':
     dependencies:
@@ -19119,11 +19124,17 @@ snapshots:
 
   handle-thing@2.0.1: {}
 
-  happy-dom@15.11.7:
+  happy-dom@20.3.7(bufferutil@4.0.8)(utf-8-validate@5.0.10):
     dependencies:
+      '@types/node': 22.15.21
+      '@types/whatwg-mimetype': 3.0.2
+      '@types/ws': 8.18.1
       entities: 4.5.0
-      webidl-conversions: 7.0.0
       whatwg-mimetype: 3.0.0
+      ws: 8.18.3(bufferutil@4.0.8)(utf-8-validate@5.0.10)
+    transitivePeerDependencies:
+      - bufferutil
+      - utf-8-validate
 
   has-flag@4.0.0: {}
 
@@ -23764,12 +23775,12 @@ snapshots:
       tsx: 4.21.0
       yaml: 2.8.1
 
-  vitest-environment-clarinet@3.0.2(@stacks/clarinet-sdk@3.12.0(encoding@0.1.13))(vitest@4.0.16(@opentelemetry/api@1.9.0)(@types/node@25.0.3)(happy-dom@15.11.7)(jiti@2.6.1)(jsdom@25.0.0(bufferutil@4.0.8)(utf-8-validate@5.0.10))(lightningcss@1.30.2)(sass@1.77.8)(terser@5.44.1)(tsx@4.21.0)(yaml@2.8.1)):
+  vitest-environment-clarinet@3.0.2(@stacks/clarinet-sdk@3.12.0(encoding@0.1.13))(vitest@4.0.16(@opentelemetry/api@1.9.0)(@types/node@25.0.3)(happy-dom@20.3.7(bufferutil@4.0.8)(utf-8-validate@5.0.10))(jiti@2.6.1)(jsdom@25.0.0(bufferutil@4.0.8)(utf-8-validate@5.0.10))(lightningcss@1.30.2)(sass@1.77.8)(terser@5.44.1)(tsx@4.21.0)(yaml@2.8.1)):
     dependencies:
       '@stacks/clarinet-sdk': 3.12.0(encoding@0.1.13)
-      vitest: 4.0.16(@opentelemetry/api@1.9.0)(@types/node@25.0.3)(happy-dom@15.11.7)(jiti@2.6.1)(jsdom@25.0.0(bufferutil@4.0.8)(utf-8-validate@5.0.10))(lightningcss@1.30.2)(sass@1.77.8)(terser@5.44.1)(tsx@4.21.0)(yaml@2.8.1)
+      vitest: 4.0.16(@opentelemetry/api@1.9.0)(@types/node@25.0.3)(happy-dom@20.3.7(bufferutil@4.0.8)(utf-8-validate@5.0.10))(jiti@2.6.1)(jsdom@25.0.0(bufferutil@4.0.8)(utf-8-validate@5.0.10))(lightningcss@1.30.2)(sass@1.77.8)(terser@5.44.1)(tsx@4.21.0)(yaml@2.8.1)
 
-  vitest@4.0.16(@opentelemetry/api@1.9.0)(@types/node@22.15.21)(happy-dom@15.11.7)(jiti@2.6.1)(jsdom@25.0.0(bufferutil@4.0.8)(utf-8-validate@5.0.10))(lightningcss@1.30.2)(sass@1.77.8)(terser@5.44.1)(tsx@4.21.0)(yaml@2.8.1):
+  vitest@4.0.16(@opentelemetry/api@1.9.0)(@types/node@22.15.21)(happy-dom@20.3.7(bufferutil@4.0.8)(utf-8-validate@5.0.10))(jiti@2.6.1)(jsdom@25.0.0(bufferutil@4.0.8)(utf-8-validate@5.0.10))(lightningcss@1.30.2)(sass@1.77.8)(terser@5.44.1)(tsx@4.21.0)(yaml@2.8.1):
     dependencies:
       '@vitest/expect': 4.0.16
       '@vitest/mocker': 4.0.16(vite@7.3.0(@types/node@22.15.21)(jiti@2.6.1)(lightningcss@1.30.2)(sass@1.77.8)(terser@5.44.1)(tsx@4.21.0)(yaml@2.8.1))
@@ -23794,7 +23805,7 @@ snapshots:
     optionalDependencies:
       '@opentelemetry/api': 1.9.0
       '@types/node': 22.15.21
-      happy-dom: 15.11.7
+      happy-dom: 20.3.7(bufferutil@4.0.8)(utf-8-validate@5.0.10)
       jsdom: 25.0.0(bufferutil@4.0.8)(utf-8-validate@5.0.10)
     transitivePeerDependencies:
       - jiti
@@ -23809,7 +23820,7 @@ snapshots:
       - tsx
       - yaml
 
-  vitest@4.0.16(@opentelemetry/api@1.9.0)(@types/node@25.0.3)(happy-dom@15.11.7)(jiti@2.6.1)(jsdom@25.0.0(bufferutil@4.0.8)(utf-8-validate@5.0.10))(lightningcss@1.30.2)(sass@1.77.8)(terser@5.44.1)(tsx@4.21.0)(yaml@2.8.1):
+  vitest@4.0.16(@opentelemetry/api@1.9.0)(@types/node@25.0.3)(happy-dom@20.3.7(bufferutil@4.0.8)(utf-8-validate@5.0.10))(jiti@2.6.1)(jsdom@25.0.0(bufferutil@4.0.8)(utf-8-validate@5.0.10))(lightningcss@1.30.2)(sass@1.77.8)(terser@5.44.1)(tsx@4.21.0)(yaml@2.8.1):
     dependencies:
       '@vitest/expect': 4.0.16
       '@vitest/mocker': 4.0.16(vite@7.3.0(@types/node@25.0.3)(jiti@2.6.1)(lightningcss@1.30.2)(sass@1.77.8)(terser@5.44.1)(tsx@4.21.0)(yaml@2.8.1))
@@ -23834,7 +23845,7 @@ snapshots:
     optionalDependencies:
       '@opentelemetry/api': 1.9.0
       '@types/node': 25.0.3
-      happy-dom: 15.11.7
+      happy-dom: 20.3.7(bufferutil@4.0.8)(utf-8-validate@5.0.10)
       jsdom: 25.0.0(bufferutil@4.0.8)(utf-8-validate@5.0.10)
     transitivePeerDependencies:
       - jiti
@@ -23849,7 +23860,7 @@ snapshots:
       - tsx
       - yaml
 
-  vitest@4.0.18(@opentelemetry/api@1.9.0)(@types/node@22.15.21)(@vitest/ui@4.0.18)(happy-dom@15.11.7)(jiti@2.6.1)(jsdom@25.0.0(bufferutil@4.0.8)(utf-8-validate@5.0.10))(lightningcss@1.30.2)(sass@1.77.8)(terser@5.44.1)(tsx@4.21.0)(yaml@2.8.1):
+  vitest@4.0.18(@opentelemetry/api@1.9.0)(@types/node@22.15.21)(@vitest/ui@4.0.18)(happy-dom@20.3.7(bufferutil@4.0.8)(utf-8-validate@5.0.10))(jiti@2.6.1)(jsdom@25.0.0(bufferutil@4.0.8)(utf-8-validate@5.0.10))(lightningcss@1.30.2)(sass@1.77.8)(terser@5.44.1)(tsx@4.21.0)(yaml@2.8.1):
     dependencies:
       '@vitest/expect': 4.0.18
       '@vitest/mocker': 4.0.18(vite@7.3.0(@types/node@22.15.21)(jiti@2.6.1)(lightningcss@1.30.2)(sass@1.77.8)(terser@5.44.1)(tsx@4.21.0)(yaml@2.8.1))
@@ -23875,7 +23886,7 @@ snapshots:
       '@opentelemetry/api': 1.9.0
       '@types/node': 22.15.21
       '@vitest/ui': 4.0.18(vitest@4.0.18)
-      happy-dom: 15.11.7
+      happy-dom: 20.3.7(bufferutil@4.0.8)(utf-8-validate@5.0.10)
       jsdom: 25.0.0(bufferutil@4.0.8)(utf-8-validate@5.0.10)
     transitivePeerDependencies:
       - jiti
@@ -23934,7 +23945,8 @@ snapshots:
 
   webidl-conversions@3.0.1: {}
 
-  webidl-conversions@7.0.0: {}
+  webidl-conversions@7.0.0:
+    optional: true
 
   webpack-bundle-analyzer@4.10.2(bufferutil@4.0.8)(utf-8-validate@5.0.10):
     dependencies:
