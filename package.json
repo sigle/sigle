@@ -17,7 +17,8 @@
     "oxfmt": "0.26.0",
     "oxlint": "1.41.0",
     "syncpack": "13.0.4",
-    "turbo": "2.7.5"
+    "turbo": "2.7.5",
+    "vite-tsconfig-paths": "^6.0.5"
   },
   "engines": {
     "node": ">=20"
