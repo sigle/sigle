@@ -2,6 +2,7 @@
   "name": "@sigle/sigle",
   "version": "0.0.0",
   "private": true,
+  "type": "module",
   "imports": {
     "#global.css": "./src/app/globals.css"
   },
@@ -9,7 +10,7 @@
     "build": "next build",
     "dev": "next dev",
     "start": "next start",
-    "test": "vitest",
+    "test": "dotenvx run --env-file=.env.test -- vitest",
     "test:ui": "vitest --ui"
   },
   "dependencies": {
