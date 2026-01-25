@@ -10,8 +10,8 @@
     "dev": "next dev",
     "start": "next start",
     "test": "vitest",
-    "test:ui": "vitest --ui",
-    "test:e2e": "playwright test"
+    "test:e2e": "playwright test",
+    "test:ui": "vitest --ui"
   },
   "dependencies": {
     "@daveyplate/better-auth-tanstack": "1.3.6",
