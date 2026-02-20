@@ -16,8 +16,8 @@
     "lefthook": "2.0.15",
     "oxfmt": "0.26.0",
     "oxlint": "1.41.0",
-    "syncpack": "13.0.4",
-    "turbo": "2.7.5"
+    "syncpack": "14.0.0",
+    "turbo": "2.8.10"
   },
   "engines": {
     "node": ">=20"
