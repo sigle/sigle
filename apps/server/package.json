@@ -13,7 +13,7 @@
   },
   "dependencies": {
     "@ardrive/turbo-sdk": "1.22.0",
-    "@dotenvx/dotenvx": "1.51.4",
+    "@dotenvx/dotenvx": "1.52.0",
     "@hirosystems/chainhook-client": "2.4.0",
     "@paralleldrive/cuid2": "2.2.2",
     "@prisma/client": "6.14.0",
@@ -31,7 +31,7 @@
     "multiformats": "13.4.2",
     "nitro-cors": "0.7.1",
     "pg-boss": "10.3.2",
-    "posthog-node": "5.17.4",
+    "posthog-node": "5.24.17",
     "prisma": "6.14.0",
     "rate-limiter-flexible": "7.2.0",
     "rou3": "0.7.12",

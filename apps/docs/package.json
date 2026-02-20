@@ -9,11 +9,11 @@
   },
   "dependencies": {
     "@sigle/sdk": "workspace:*",
-    "next": "16.1.0",
+    "next": "16.1.6",
     "nextra": "4.6.1",
     "nextra-theme-docs": "4.6.1",
-    "react": "19.2.3",
-    "react-dom": "19.2.3"
+    "react": "19.2.4",
+    "react-dom": "19.2.4"
   },
   "devDependencies": {
     "pagefind": "1.4.0"
