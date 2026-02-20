@@ -135,8 +135,8 @@ importers:
         specifier: 19.2.3
         version: 19.2.3(@types/react@19.2.7)
       eslint-plugin-better-tailwindcss:
-        specifier: 4.0.1
-        version: 4.0.1(eslint@9.39.2(jiti@2.6.1))(oxlint@1.49.0)(tailwindcss@4.1.18)(typescript@5.9.3)
+        specifier: 4.3.0
+        version: 4.3.0(eslint@9.39.2(jiti@2.6.1))(oxlint@1.49.0)(tailwindcss@4.1.18)(typescript@5.9.3)
       postcss:
         specifier: 8.5.6
         version: 8.5.6
@@ -528,8 +528,8 @@ importers:
         specifier: 19.2.3
         version: 19.2.3(@types/react@19.2.7)
       eslint-plugin-better-tailwindcss:
-        specifier: 4.0.1
-        version: 4.0.1(eslint@9.39.2(jiti@2.6.1))(oxlint@1.49.0)(tailwindcss@4.1.18)(typescript@5.9.3)
+        specifier: 4.3.0
+        version: 4.3.0(eslint@9.39.2(jiti@2.6.1))(oxlint@1.49.0)(tailwindcss@4.1.18)(typescript@5.9.3)
       happy-dom:
         specifier: 20.3.7
         version: 20.3.7(bufferutil@4.0.8)(utf-8-validate@5.0.10)
@@ -599,7 +599,7 @@ importers:
         version: 7.9.1(typescript@5.9.3)
       tsdown:
         specifier: 0.18.1
-        version: 0.18.1(synckit@0.11.11)(typescript@5.9.3)
+        version: 0.18.1(synckit@0.11.12)(typescript@5.9.3)
       typescript:
         specifier: 5.9.3
         version: 5.9.3
@@ -6890,11 +6890,11 @@ packages:
     engines: {node: '>=6.0'}
     hasBin: true
 
-  eslint-plugin-better-tailwindcss@4.0.1:
-    resolution: {integrity: sha512-iHf7tMgISkXJ5XLgskpxMPgHSHorI28cN4rQyn1Q5YFTovObZwESi/r5cmF49hTQfWkb0B8s7Me6BLM2efvzlQ==}
+  eslint-plugin-better-tailwindcss@4.3.0:
+    resolution: {integrity: sha512-AYNFAeqExOS/yt1qn7kg1il0VZvAxGwBuW/6xAQtmKDRZXkdkWzwWCYF6Ou2/0tza42K8xh4q420DBq+QvXzjA==}
     engines: {node: ^20.19.0 || ^22.12.0 || >=23.0.0}
     peerDependencies:
-      eslint: ^7.0.0 || ^8.0.0 || ^9.0.0
+      eslint: ^7.0.0 || ^8.0.0 || ^9.0.0 || ^10.0.0
       oxlint: ^1.35.0
       tailwindcss: ^3.3.0 || ^4.1.17
     peerDependenciesMeta:
@@ -10405,8 +10405,8 @@ packages:
   sync-multihash-sha2@1.0.0:
     resolution: {integrity: sha512-A5gVpmtKF0ov+/XID0M0QRJqF2QxAsj3x/LlDC8yivzgoYCoWkV+XaZPfVu7Vj1T/hYzYS1tfjwboSbXjqocug==}
 
-  synckit@0.11.11:
-    resolution: {integrity: sha512-MeQTA1r0litLUf0Rp/iisCaL8761lKAZHaimlbGK4j0HysC4PLfqygQj9srcs0m2RdtDYnF8UuYyKpbjHYp7Jw==}
+  synckit@0.11.12:
+    resolution: {integrity: sha512-Bh7QjT8/SuKUIfObSXNHNSK6WHo6J1tHCqJsuaFDP7gP0fkzSfTxI8y85JrppZ0h8l0maIgc2tfuZQ6/t3GtnQ==}
     engines: {node: ^14.18.0 || >=16.0.0}
 
   syncpack-darwin-arm64@14.0.0:
@@ -18545,13 +18545,13 @@ snapshots:
     optionalDependencies:
       source-map: 0.6.1
 
-  eslint-plugin-better-tailwindcss@4.0.1(eslint@9.39.2(jiti@2.6.1))(oxlint@1.49.0)(tailwindcss@4.1.18)(typescript@5.9.3):
+  eslint-plugin-better-tailwindcss@4.3.0(eslint@9.39.2(jiti@2.6.1))(oxlint@1.49.0)(tailwindcss@4.1.18)(typescript@5.9.3):
     dependencies:
       '@eslint/css-tree': 3.6.8
       '@valibot/to-json-schema': 1.5.0(valibot@1.2.0(typescript@5.9.3))
-      enhanced-resolve: 5.18.4
+      enhanced-resolve: 5.19.0
       jiti: 2.6.1
-      synckit: 0.11.11
+      synckit: 0.11.12
       tailwind-csstree: 0.1.4
       tailwindcss: 4.1.18
       tsconfig-paths-webpack-plugin: 4.2.0
@@ -23107,7 +23107,7 @@ snapshots:
     dependencies:
       '@noble/hashes': 1.7.1
 
-  synckit@0.11.11:
+  synckit@0.11.12:
     dependencies:
       '@pkgr/core': 0.2.9
 
@@ -23344,7 +23344,7 @@ snapshots:
   tsconfig-paths-webpack-plugin@4.2.0:
     dependencies:
       chalk: 4.1.2
-      enhanced-resolve: 5.18.4
+      enhanced-resolve: 5.19.0
       tapable: 2.3.0
       tsconfig-paths: 4.2.0
 
@@ -23354,7 +23354,7 @@ snapshots:
       minimist: 1.2.8
       strip-bom: 3.0.0
 
-  tsdown@0.18.1(synckit@0.11.11)(typescript@5.9.3):
+  tsdown@0.18.1(synckit@0.11.12)(typescript@5.9.3):
     dependencies:
       ansis: 4.2.0
       cac: 6.7.14
@@ -23371,7 +23371,7 @@ snapshots:
       tinyglobby: 0.2.15
       tree-kill: 1.2.2
       unconfig-core: 7.4.2
-      unrun: 0.2.20(synckit@0.11.11)
+      unrun: 0.2.20(synckit@0.11.12)
     optionalDependencies:
       typescript: 5.9.3
     transitivePeerDependencies:
@@ -23641,11 +23641,11 @@ snapshots:
       picomatch: 4.0.3
       webpack-virtual-modules: 0.6.2
 
-  unrun@0.2.20(synckit@0.11.11):
+  unrun@0.2.20(synckit@0.11.12):
     dependencies:
       rolldown: 1.0.0-beta.55
     optionalDependencies:
-      synckit: 0.11.11
+      synckit: 0.11.12
 
   unstorage@1.16.1(@netlify/blobs@9.1.2)(db0@0.3.2)(ioredis@5.6.1):
     dependencies:
