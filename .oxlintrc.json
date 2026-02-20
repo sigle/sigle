@@ -58,6 +58,9 @@
     "no-warning-comments": "off",
     "no-param-reassign": "off",
     "default-case": "off",
-    "new-cap": "off"
+    "new-cap": "off",
+    "no-use-before-define": "off",
+    "no-shadow": "off",
+    "react/jsx-no-constructed-context-values": "off"
   }
 }
