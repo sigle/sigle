@@ -38,6 +38,7 @@
     "prefer-promise-reject-errors": "off",
     "sort-imports": "off",
     "sort-keys": "off",
+    "vitest/no-importing-vitest-globals": "off",
 
     "no-hooks": "off",
     "require-hook": "off",
