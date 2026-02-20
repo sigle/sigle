@@ -4,11 +4,11 @@ import { EditorFormProvider } from "../../EditorFormProvider";
 import { EditorTipTap } from "../../EditorTiptap";
 import { useEditorStore } from "../../store";
 
-vi.mock("react-tweet", () => ({
+vi.mock(import("react-tweet"), () => ({
   Tweet: () => null,
 }));
 
-vi.mock("@/lib/sigle", () => ({
+vi.mock(import("@/lib/sigle"), () => ({
   sigleApiClient: {
     useMutation: vi.fn(() => ({
       mutateAsync: vi
@@ -18,21 +18,21 @@ vi.mock("@/lib/sigle", () => ({
   },
 }));
 
-vi.mock("next/navigation", () => ({
+vi.mock(import("next/navigation"), () => ({
   useParams: () => ({ postId: "test-post-id" }),
 }));
 
-vi.mock("posthog-js/react", () => ({
+vi.mock(import("posthog-js/react"), () => ({
   usePostHog: () => ({
     capture: vi.fn(),
   }),
 }));
 
-vi.mock("@/hooks/useWindowSize", () => ({
+vi.mock(import("@/hooks/useWindowSize"), () => ({
   useWindowSize: () => ({ width: 1024, height: 768 }),
 }));
 
-vi.mock("@/lib/images", () => ({
+vi.mock(import("@/lib/images"), () => ({
   resolveImageUrl: vi.fn((url) => url),
 }));
 
@@ -64,6 +64,6 @@ describe("image extension - command availability", () => {
     vi.advanceTimersByTime(100);
     const editor = useEditorStore.getState().editor;
     expect(editor).toBeDefined();
-    expect(typeof editor?.commands.setImageFromFile).toBe("function");
+    expectTypeOf(editor?.commands.setImageFromFile).toBeFunction();
   });
 });
