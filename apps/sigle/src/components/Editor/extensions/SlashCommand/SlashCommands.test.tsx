@@ -1,5 +1,5 @@
-import type { SlashCommandsCommand } from "./SlashCommands";
 import { describe, expect, it } from "vitest";
+import type { SlashCommandsCommand } from "./SlashCommands";
 
 const filterCommands = (
   commands: SlashCommandsCommand[],

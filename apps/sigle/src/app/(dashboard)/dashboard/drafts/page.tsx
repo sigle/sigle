@@ -1,5 +1,6 @@
 "use client";
 
+import type { paths } from "@sigle/sdk";
 import {
   Badge,
   Button,
@@ -11,7 +12,6 @@ import {
   Spinner,
   Text,
 } from "@radix-ui/themes";
-import type { paths } from "@sigle/sdk";
 import { IconDotsVertical } from "@tabler/icons-react";
 import { format } from "date-fns";
 import { useState } from "react";

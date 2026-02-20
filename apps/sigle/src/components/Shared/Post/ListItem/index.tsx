@@ -1,5 +1,6 @@
 "use client";
 
+import type { paths } from "@sigle/sdk";
 import {
   AspectRatio,
   DropdownMenu,
@@ -10,7 +11,6 @@ import {
   Text,
   Tooltip,
 } from "@radix-ui/themes";
-import type { paths } from "@sigle/sdk";
 import { IconDotsVertical } from "@tabler/icons-react";
 import { format } from "date-fns";
 import Image from "next/image";

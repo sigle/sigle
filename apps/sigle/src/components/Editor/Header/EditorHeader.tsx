@@ -1,6 +1,5 @@
 "use client";
 
-import type { EditorPostFormData } from "../EditorFormProvider";
 import { Flex, IconButton } from "@radix-ui/themes";
 import {
   IconArrowLeft,
@@ -10,6 +9,7 @@ import { useEffect, useState } from "react";
 import { useFormContext } from "react-hook-form";
 import { NextLink } from "@/components/Shared/NextLink";
 import { cn } from "@/lib/cn";
+import type { EditorPostFormData } from "../EditorFormProvider";
 import { useEditorStore } from "../store";
 import { EditorPublish } from "./EditorPublish";
 import { EditorSave } from "./EditorSave";

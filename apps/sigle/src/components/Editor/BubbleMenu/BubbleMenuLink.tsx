@@ -1,5 +1,5 @@
-import { IconX } from "@tabler/icons-react";
 import type { Editor } from "@tiptap/react";
+import { IconX } from "@tabler/icons-react";
 import { cn } from "@/lib/cn";
 import { useBubbleMenuStore } from "./store";
 

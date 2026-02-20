@@ -1,5 +1,5 @@
-import { Button, Heading, Text } from "@radix-ui/themes";
 import type { paths } from "@sigle/sdk";
+import { Button, Heading, Text } from "@radix-ui/themes";
 import { useState } from "react";
 import { PostShareDialog } from "../Shared/Post/PostShareDialog";
 

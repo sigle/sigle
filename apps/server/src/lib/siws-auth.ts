@@ -1,6 +1,6 @@
+import type { BetterAuthPlugin } from "better-auth";
 // Adapted from https://github.com/better-auth/better-auth/issues/1594#issuecomment-2692434209
 import * as Sentry from "@sentry/node";
-import type { BetterAuthPlugin } from "better-auth";
 import { APIError, createAuthEndpoint } from "better-auth/api";
 import { setSessionCookie } from "better-auth/cookies";
 import { generateSiwsNonce, verifySiwsMessage } from "sign-in-with-stacks";

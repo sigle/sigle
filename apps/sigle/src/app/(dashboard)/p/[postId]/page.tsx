@@ -1,6 +1,6 @@
-import type { Routes } from "@/lib/routes";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
+import type { Routes } from "@/lib/routes";
 import { sigleApiFetchClient } from "@/lib/sigle";
 import { PostClientPage } from "./page-client";
 

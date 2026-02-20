@@ -1,7 +1,7 @@
-import { readFileSync } from "node:fs";
 import { STACKS_TESTNET } from "@stacks/network";
 import { broadcastTransaction, makeContractDeploy } from "@stacks/transactions";
 import { generateNewAccount, generateWallet } from "@stacks/wallet-sdk";
+import { readFileSync } from "node:fs";
 import { parse } from "smol-toml";
 
 const network = STACKS_TESTNET;

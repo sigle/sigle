@@ -1,8 +1,8 @@
-import type { EditorPostFormData } from "../EditorFormProvider";
 import { Button, Callout, Dialog, Flex, Grid, Text } from "@radix-ui/themes";
 import { IconExclamationCircle } from "@tabler/icons-react";
 import { useEffect, useState } from "react";
 import { useFormContext } from "react-hook-form";
+import type { EditorPostFormData } from "../EditorFormProvider";
 import { PublishReviewCollect } from "./ReviewCollect";
 import { PublishReviewGeneral } from "./ReviewGeneral";
 

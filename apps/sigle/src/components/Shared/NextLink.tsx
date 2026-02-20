@@ -1,9 +1,9 @@
 "use client";
 
+import type { ComponentProps } from "react";
 // eslint-disable-next-line no-restricted-imports
 import Link, { type LinkProps } from "next/link";
 import { useRouter } from "next/navigation";
-import type { ComponentProps } from "react";
 
 export type NextLinkProps = ComponentProps<typeof Link>;
 export type { LinkProps };

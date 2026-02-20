@@ -1,5 +1,5 @@
-import { Text } from "@radix-ui/themes";
 import type { paths } from "@sigle/sdk";
+import { Text } from "@radix-ui/themes";
 import { Routes } from "@/lib/routes";
 import { formatReadableAddress } from "@/lib/stacks";
 import { NextLink } from "../Shared/NextLink";

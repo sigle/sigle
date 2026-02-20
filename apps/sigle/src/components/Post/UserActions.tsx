@@ -1,5 +1,5 @@
-import { Button, IconButton, Text, Tooltip } from "@radix-ui/themes";
 import type { paths } from "@sigle/sdk";
+import { Button, IconButton, Text, Tooltip } from "@radix-ui/themes";
 import { IconShare } from "@tabler/icons-react";
 import { useState } from "react";
 import { Routes } from "@/lib/routes";

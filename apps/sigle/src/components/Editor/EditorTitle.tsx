@@ -1,6 +1,6 @@
-import type { EditorPostFormData } from "./EditorFormProvider";
 import { Text } from "@radix-ui/themes";
 import { useFormContext, useFormState } from "react-hook-form";
+import type { EditorPostFormData } from "./EditorFormProvider";
 
 export const EditorTitle = () => {
   const { register } = useFormContext<EditorPostFormData>();

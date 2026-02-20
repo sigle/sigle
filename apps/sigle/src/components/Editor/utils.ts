@@ -1,5 +1,4 @@
-import type { CreatePostNftParams } from "../../app/api/post/nft-image/route";
-import type { EditorPostFormData } from "./EditorFormProvider";
+import type { Editor } from "@tiptap/core";
 import {
   createPostMetadata,
   type MediaImageMetadata,
@@ -7,11 +6,12 @@ import {
   type MetadataAttribute,
   type PostMetadata,
 } from "@sigle/sdk";
-import type { Editor } from "@tiptap/core";
 import { fileTypeFromBuffer } from "file-type";
 import { env } from "@/env";
 import { resolveImageUrl } from "@/lib/images";
 import { sigleApiFetchClient } from "@/lib/sigle";
+import type { CreatePostNftParams } from "../../app/api/post/nft-image/route";
+import type { EditorPostFormData } from "./EditorFormProvider";
 
 const generateMetadataAttributesFromForm = ({
   editorText,

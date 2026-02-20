@@ -1,7 +1,7 @@
+import type { NodeViewProps } from "@tiptap/core";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Text, TextField } from "@radix-ui/themes";
 import { IconBrandX, IconBrandYoutube } from "@tabler/icons-react";
-import type { NodeViewProps } from "@tiptap/core";
 import { NodeViewWrapper } from "@tiptap/react";
 import { useEffect, useMemo } from "react";
 import { useForm } from "react-hook-form";

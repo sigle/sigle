@@ -1,3 +1,4 @@
+import type { z } from "zod";
 import {
   createError,
   getQuery,
@@ -8,7 +9,6 @@ import {
   readMultipartFormData,
   setResponseHeader,
 } from "h3";
-import type { z } from "zod";
 import { fromError } from "zod-validation-error";
 
 export const getValidatedQueryZod = async <T, Event extends H3Event = H3Event>(
