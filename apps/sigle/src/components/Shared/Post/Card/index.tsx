@@ -1,5 +1,6 @@
 "use client";
 
+import type { paths } from "@sigle/sdk";
 import {
   AspectRatio,
   Button,
@@ -9,7 +10,6 @@ import {
   Link,
   Text,
 } from "@radix-ui/themes";
-import type { paths } from "@sigle/sdk";
 import { format } from "date-fns";
 import Image from "next/image";
 import { useState } from "react";

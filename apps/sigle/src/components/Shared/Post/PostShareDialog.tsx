@@ -1,3 +1,4 @@
+import type { paths } from "@sigle/sdk";
 import {
   Button,
   Callout,
@@ -7,7 +8,6 @@ import {
   TextField,
   VisuallyHidden,
 } from "@radix-ui/themes";
-import type { paths } from "@sigle/sdk";
 import { IconReceiptTax } from "@tabler/icons-react";
 import Image from "next/image";
 import { useState } from "react";

@@ -1,10 +1,10 @@
-import type { EditorPostFormData } from "../EditorFormProvider";
 import { AspectRatio, Card, Inset, Text, Tooltip } from "@radix-ui/themes";
 import { IconHelpCircle } from "@tabler/icons-react";
 import { useFormContext } from "react-hook-form";
 import { env } from "@/env";
 import { resolveImageUrl } from "@/lib/images";
 import { prettifyUrl } from "@/lib/urls";
+import type { EditorPostFormData } from "../EditorFormProvider";
 import { useEditorStore } from "../store";
 
 export const SeoPreview = () => {

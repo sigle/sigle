@@ -4,11 +4,11 @@ import { EditorFormProvider } from "./EditorFormProvider";
 import { EditorTipTap } from "./EditorTiptap";
 import { useEditorStore } from "./store";
 
-vi.mock("react-tweet", () => ({
+vi.mock(import("react-tweet"), () => ({
   Tweet: () => null,
 }));
 
-vi.mock("@/lib/sigle", () => ({
+vi.mock(import("@/lib/sigle"), () => ({
   sigleApiClient: {
     useMutation: vi.fn(() => ({
       mutateAsync: vi.fn(),
@@ -16,30 +16,30 @@ vi.mock("@/lib/sigle", () => ({
   },
 }));
 
-vi.mock("next/navigation", () => ({
+vi.mock(import("next/navigation"), () => ({
   useParams: () => ({ postId: "test-post-id" }),
 }));
 
-vi.mock("posthog-js/react", () => ({
+vi.mock(import("posthog-js/react"), () => ({
   usePostHog: () => ({
     capture: vi.fn(),
   }),
 }));
 
-vi.mock("@/hooks/useWindowSize", () => ({
+vi.mock(import("@/hooks/useWindowSize"), () => ({
   useWindowSize: () => ({ width: 1024, height: 768 }),
 }));
 
-vi.mock("./BubbleMenu", () => ({
-  EditorBubbleMenu: vi.fn().mockImplementation(() => null),
+vi.mock(import("./BubbleMenu"), () => ({
+  EditorBubbleMenu: vi.fn().mockReturnValue(null),
 }));
 
-vi.mock("./FloatingMenu", () => ({
-  EditorFloatingMenu: vi.fn().mockImplementation(() => null),
+vi.mock(import("./FloatingMenu"), () => ({
+  EditorFloatingMenu: vi.fn().mockReturnValue(null),
 }));
 
-vi.mock("./BottomInfo", () => ({
-  EditorBottomInfo: vi.fn().mockImplementation(() => null),
+vi.mock(import("./BottomInfo"), () => ({
+  EditorBottomInfo: vi.fn().mockReturnValue(null),
 }));
 
 const getMarkdownOutput = (): string => {

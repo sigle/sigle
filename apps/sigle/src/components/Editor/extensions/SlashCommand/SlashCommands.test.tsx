@@ -1,5 +1,5 @@
-import type { SlashCommandsCommand } from "./SlashCommands";
 import { describe, expect, it } from "vitest";
+import type { SlashCommandsCommand } from "./SlashCommands";
 
 const filterCommands = (
   commands: SlashCommandsCommand[],
@@ -173,7 +173,7 @@ describe("slash commands - command structure", () => {
   it("should have command function for each command", () => {
     mockCommands.forEach((cmd) => {
       expect(cmd.command).toBeDefined();
-      expect(typeof cmd.command).toBe("function");
+      expectTypeOf(cmd.command).toBeFunction();
     });
   });
 

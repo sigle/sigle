@@ -1,7 +1,7 @@
 "use client";
 
-import { Heading, Link, Text } from "@radix-ui/themes";
 import type { paths } from "@sigle/sdk";
+import { Heading, Link, Text } from "@radix-ui/themes";
 import { IconLink } from "@tabler/icons-react";
 import { prettifyUrl } from "@/lib/urls";
 import { NextLink } from "../Shared/NextLink";

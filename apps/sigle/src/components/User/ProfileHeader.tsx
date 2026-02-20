@@ -1,7 +1,7 @@
 "use client";
 
-import { Button, Container, DropdownMenu, IconButton } from "@radix-ui/themes";
 import type { paths } from "@sigle/sdk";
+import { Button, Container, DropdownMenu, IconButton } from "@radix-ui/themes";
 import { IconDotsVertical, IconPencil } from "@tabler/icons-react";
 import Image from "next/image";
 import { usePostHog } from "posthog-js/react";

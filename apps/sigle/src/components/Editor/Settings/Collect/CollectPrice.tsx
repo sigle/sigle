@@ -1,4 +1,3 @@
-import type { EditorPostFormData } from "../../EditorFormProvider";
 import { Flex, Link, RadioCards, Text, TextField } from "@radix-ui/themes";
 import { useFormContext, useFormState } from "react-hook-form";
 import { appConfig } from "@/config";
@@ -6,6 +5,7 @@ import {
   formatUSDollar,
   useCurrencyFiatPrice,
 } from "@/hooks/useCurrencyFiatPrice";
+import type { EditorPostFormData } from "../../EditorFormProvider";
 
 export const CollectPrice = () => {
   const { setValue, watch, register } = useFormContext<EditorPostFormData>();

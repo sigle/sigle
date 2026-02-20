@@ -1,6 +1,5 @@
-import type { SlashCommandsCommand } from "./SlashCommands";
-import { Flex, ScrollArea, Text } from "@radix-ui/themes";
 import type { Icon } from "@tabler/icons-react";
+import { Flex, ScrollArea, Text } from "@radix-ui/themes";
 import {
   forwardRef,
   useEffect,
@@ -9,6 +8,7 @@ import {
   useState,
 } from "react";
 import { cn } from "@/lib/cn";
+import type { SlashCommandsCommand } from "./SlashCommands";
 
 export interface CommandListRef {
   onKeyDown: (o: { event: KeyboardEvent }) => boolean;

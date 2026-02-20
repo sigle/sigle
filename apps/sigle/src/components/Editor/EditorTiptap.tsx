@@ -1,6 +1,5 @@
 import "highlight.js/styles/night-owl.css";
 import "./editor-tiptap.css";
-import type { EditorPostFormData } from "./EditorFormProvider";
 import TipTapBlockquote from "@tiptap/extension-blockquote";
 import TipTapBold from "@tiptap/extension-bold";
 import TipTapBulletList from "@tiptap/extension-bullet-list";
@@ -36,6 +35,7 @@ import { toast } from "sonner";
 import { Markdown } from "tiptap-markdown";
 import { useWindowSize } from "@/hooks/useWindowSize";
 import { sigleApiClient } from "@/lib/sigle";
+import type { EditorPostFormData } from "./EditorFormProvider";
 import { EditorBottomInfo } from "./BottomInfo";
 import { EditorBubbleMenu } from "./BubbleMenu";
 import { CodeBlockComponent } from "./extensions/CodeBlock";

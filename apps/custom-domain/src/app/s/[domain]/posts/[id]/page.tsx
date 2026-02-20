@@ -1,5 +1,5 @@
-import { format } from "date-fns";
 import type { Metadata } from "next";
+import { format } from "date-fns";
 import Image from "next/image";
 import { notFound } from "next/navigation";
 import { TableOfContents } from "@/components/Post/TableOfContents";

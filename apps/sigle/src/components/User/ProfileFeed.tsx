@@ -1,7 +1,7 @@
 "use client";
 
-import { Button, Flex, Text } from "@radix-ui/themes";
 import type { paths } from "@sigle/sdk";
+import { Button, Flex, Text } from "@radix-ui/themes";
 import { useSession } from "@/lib/auth-hooks";
 import { sigleApiClient } from "@/lib/sigle";
 import { GetFamiliarCards } from "../Dashboard/GetFamiliarCards";

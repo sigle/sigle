@@ -1,5 +1,5 @@
-import { Link, Separator, Text } from "@radix-ui/themes";
 import type { paths } from "@sigle/sdk";
+import { Link, Separator, Text } from "@radix-ui/themes";
 import { IconArrowUpRight } from "@tabler/icons-react";
 import { getExplorerTransactionUrl } from "@/lib/stacks";
 
