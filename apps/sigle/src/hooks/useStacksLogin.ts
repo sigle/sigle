@@ -66,7 +66,10 @@ export const useStacksLogin = () => {
         ? userData.profile.stxAddress.mainnet
         : userData.profile.stxAddress.testnet;
 
-    const nonceData = await authClient.siws.nonce({ address });
+    const nonceData = await authClient.siws.nonce({
+      walletAddress: address,
+      chainId: stacksNetwork.chainId,
+    });
     if (!nonceData.data?.nonce) {
       toast.error("Nonce not found");
       return;
@@ -87,9 +90,10 @@ export const useStacksLogin = () => {
       message,
       onFinish: async ({ signature }) => {
         const signInResult = await authClient.siws.verify({
-          address,
+          walletAddress: address,
           message,
           signature,
+          chainId: stacksNetwork.chainId,
         });
         if (signInResult.error) {
           posthog.capture("user_login_sign_message_error", {

@@ -63,7 +63,7 @@ const fileSchema = z.object({
 });
 
 export default defineEventHandler(async (event) => {
-  if (!isUserWhitelisted(event.context.user.id)) {
+  if (!isUserWhitelisted(event.context.user.walletAddress)) {
     throw createError({
       status: 403,
       message: "User is not whitelisted.",
@@ -132,7 +132,7 @@ export default defineEventHandler(async (event) => {
   });
 
   event.context.$posthog.capture({
-    distinctId: event.context.user.id,
+    distinctId: event.context.user.walletAddress,
     event: "nft media uploaded",
     properties: {
       draftId,

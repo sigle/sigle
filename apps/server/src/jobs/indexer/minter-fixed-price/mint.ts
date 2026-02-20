@@ -21,38 +21,52 @@ export const indexerMintSchema = z.object({
 export const executeIndexerMintJob = async (
   data: z.TypeOf<typeof indexerMintSchema>["data"],
 ) => {
-  // Gather all unique user addresses from the event data to create missing users
-  const userAddresses = new Set<string>();
-  userAddresses.add(data.sender);
+  // Gather all unique wallet addresses from the event data to create missing users
+  const walletAddresses = new Set<string>();
+  walletAddresses.add(data.sender);
   for (const event of data.nftMintEvents) {
-    userAddresses.add(event.recipient);
+    walletAddresses.add(event.recipient);
   }
 
-  const existingUsers = await prisma.user.findMany({
+  // Look up existing users by wallet address
+  const existingWallets = await prisma.walletAddress.findMany({
     where: {
-      id: {
-        in: Array.from(userAddresses),
+      address: {
+        in: Array.from(walletAddresses),
       },
+      chainId: 1,
     },
     select: {
-      id: true,
+      address: true,
+      userId: true,
     },
   });
 
-  const existingUserIds = new Set(existingUsers.map((user) => user.id));
+  // Map from wallet address -> user ID
+  const addressToUserId = new Map(
+    existingWallets.map((w) => [w.address, w.userId]),
+  );
 
   // Create any users that don't exist yet
-  const usersToCreate = Array.from(userAddresses)
-    .filter((address) => !existingUserIds.has(address))
-    .map((address) => ({
-      id: address,
-    }));
+  const addressesToCreate = Array.from(walletAddresses).filter(
+    (address) => !addressToUserId.has(address),
+  );
 
-  if (usersToCreate.length > 0) {
-    await prisma.user.createMany({
-      data: usersToCreate,
-      skipDuplicates: true,
+  for (const address of addressesToCreate) {
+    const newUser = await prisma.user.create({
+      data: {
+        name: address,
+        email: `${address}@sigle.io`,
+        walletAddresses: {
+          create: {
+            address,
+            chainId: 1,
+            isPrimary: true,
+          },
+        },
+      },
     });
+    addressToUserId.set(address, newUser.id);
   }
 
   const updatedPost = await prisma.post.update({
@@ -70,10 +84,17 @@ export const executeIndexerMintJob = async (
   });
 
   for (const event of data.nftMintEvents) {
+    const minterId = addressToUserId.get(data.sender);
+    const ownerId = addressToUserId.get(event.recipient);
+    if (!minterId || !ownerId) {
+      throw new Error(
+        `User ID not found for minter ${data.sender} or owner ${event.recipient}`,
+      );
+    }
     const postNftData = {
       id: `${updatedPost.id}-${event.asset_identifier}`,
-      minterId: data.sender,
-      ownerId: event.recipient,
+      minterId,
+      ownerId,
       postId: updatedPost.id,
       createdAt: data.timestamp,
     };

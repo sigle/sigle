@@ -38,19 +38,32 @@ export default defineEventHandler(async (event) => {
     });
   }
 
-  const user = await prisma.user.findUnique({
-    select: {
-      ...SELECT_PUBLIC_USER_FIELDS,
-      _count: {
-        select: {
-          posts: {},
-        },
-      },
-    },
+  // Look up user by wallet address (username is a Stacks address)
+  const wallet = await prisma.walletAddress.findFirst({
     where: {
-      id: username,
+      address: username,
+      chainId: 1,
+    },
+    select: {
+      userId: true,
     },
   });
+
+  const user = wallet
+    ? await prisma.user.findUnique({
+        select: {
+          ...SELECT_PUBLIC_USER_FIELDS,
+          _count: {
+            select: {
+              posts: {},
+            },
+          },
+        },
+        where: {
+          id: wallet.userId,
+        },
+      })
+    : null;
 
   if (!user) {
     throw createError({

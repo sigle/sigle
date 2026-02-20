@@ -1,8 +1,8 @@
-import { betterAuth } from "better-auth";
 import { prismaAdapter } from "better-auth/adapters/prisma";
+import { betterAuth } from "better-auth/minimal";
+import { siws } from "sign-in-with-stacks/plugins/better-auth";
 import { env } from "~/env";
 import { prisma } from "./prisma";
-import { betterAuthSiws } from "./siws-auth";
 
 // Only enable secure cookies with https to get localhost to work
 const useSecureCookies = env.APP_URL.startsWith("https://");
@@ -28,5 +28,11 @@ export const auth = betterAuth({
       domain: hostname === "localhost" ? hostname : `.${rootDomain}`,
     },
   },
-  plugins: [betterAuthSiws()],
+  plugins: [
+    siws({
+      domain: hostname,
+      emailDomainName: "sigle.io",
+      anonymous: true,
+    }),
+  ],
 });

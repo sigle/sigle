@@ -30,7 +30,7 @@ export const UserDropdown = () => {
     {
       params: {
         path: {
-          username: session?.user.id || "",
+          username: session?.user.name || "",
         },
       },
     },
@@ -79,7 +79,7 @@ export const UserDropdown = () => {
         <DropdownMenu.Item asChild>
           <NextLink
             href={Routes.userProfile({
-              username: session.user.id,
+              username: session.user.name ?? "",
             })}
           >
             <IconUser size={16} /> Profile

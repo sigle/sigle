@@ -3,6 +3,7 @@ import { auth } from "~/lib/auth";
 
 export interface AuthenticatedUser {
   id: string;
+  walletAddress: string;
 }
 
 /**
@@ -27,8 +28,10 @@ export default defineEventHandler(async (event) => {
     });
   }
 
-  // Inject the user id so it can be used in subsequent requests.
+  // Inject the user id and wallet address so it can be used in subsequent requests.
+  // The wallet address is stored in user.name by the SIWS plugin.
   event.context.user = {
     id: session.user.id,
+    walletAddress: session.user.name,
   } satisfies AuthenticatedUser;
 });

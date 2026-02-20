@@ -14,22 +14,37 @@ enum UserFlag {
 }
 
 model User {
-  id          String    @id @map("id")
+  id          String    @id @default(cuid()) @map("id")
+  name        String?   @map("name")
+  email       String?   @unique @map("email")
   lastLoginAt DateTime? @map("last_login_at")
   flag        UserFlag  @default(NONE) @map("flag")
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 
-  drafts     Draft[]
-  posts      Post[]
-  profile    Profile?
-  ownedNfts  PostNft[] @relation("owner")
-  mintedNfts PostNft[] @relation("minter")
-  sessions   Session[]
-  accounts   Account[]
+  drafts          Draft[]
+  posts           Post[]
+  profile         Profile?
+  ownedNfts       PostNft[]       @relation("owner")
+  mintedNfts      PostNft[]       @relation("minter")
+  sessions        Session[]
+  accounts        Account[]
+  walletAddresses WalletAddress[]
 
   @@map("user")
+}
+
+model WalletAddress {
+  id        String   @id @default(cuid())
+  userId    String   @map("user_id")
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  address   String   @map("address")
+  chainId   Int      @map("chain_id")
+  isPrimary Boolean  @default(false) @map("is_primary")
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@map("wallet_address")
 }
 
 model Profile {

@@ -94,7 +94,7 @@ export default defineEventHandler(async (event) => {
   });
 
   event.context.$posthog.capture({
-    distinctId: event.context.user.id,
+    distinctId: event.context.user.walletAddress,
     event: "profile cover media uploaded",
     properties: {
       cid,
