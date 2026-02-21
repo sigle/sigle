@@ -10,6 +10,6 @@ export interface MarketplaceMetadata {
 export const MarketplaceMetadataSchema = z.object({
   name: z.string().optional(),
   description: z.string().optional(),
-  external_url: z.string().url().optional(),
-  image: z.string().url().optional(),
+  external_url: z.url().optional(),
+  image: z.url().optional(),
 });

@@ -88,7 +88,7 @@
     "tippy.js": "6.3.7",
     "tiptap-markdown": "0.8.10",
     "valid-url": "1.0.9",
-    "zod": "3.25.67",
+    "zod": "4.3.6",
     "zustand": "5.0.9"
   },
   "devDependencies": {

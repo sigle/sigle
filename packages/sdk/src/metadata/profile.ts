@@ -37,7 +37,7 @@ export const ProfileMetadataSchema = z.object({
   id: z.string().min(1),
   displayName: z.string().min(1).max(100).optional(),
   description: z.string().min(1).optional(),
-  website: z.string().url().optional(),
+  website: z.url().optional(),
   twitter: z
     .string()
     .min(1)
@@ -46,8 +46,8 @@ export const ProfileMetadataSchema = z.object({
       "Twitter handle can only contain letters, numbers and underscore",
     )
     .optional(),
-  picture: z.string().url().optional(),
-  coverPicture: z.string().url().optional(),
+  picture: z.url().optional(),
+  coverPicture: z.url().optional(),
 });
 
 export function createProfileMetadata(data: ProfileMetadata): ProfileMetadata {
