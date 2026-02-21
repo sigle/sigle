@@ -1,6 +1,7 @@
 import { z } from "zod";
 import { consola } from "~/lib/consola";
 import { prisma } from "~/lib/prisma";
+import { stacksNetwork } from "~/lib/stacks";
 
 export const indexerMintSchema = z.object({
   action: z.literal("indexer-mint"),
@@ -56,11 +57,11 @@ export const executeIndexerMintJob = async (
     const newUser = await prisma.user.create({
       data: {
         name: address,
-        email: `${address}@sigle.io`,
+        email: `${address}@user-sigle.io`,
         walletAddresses: {
           create: {
             address,
-            chainId: 1,
+            chainId: stacksNetwork.chainId,
             isPrimary: true,
           },
         },

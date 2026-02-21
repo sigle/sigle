@@ -49,7 +49,7 @@ export const executeIndexerSetProfileJob = async (
     const newUser = await prisma.user.create({
       data: {
         name: data.address,
-        email: `${data.address}@sigle.io`,
+        email: `${data.address}@user-sigle.io`,
         walletAddresses: {
           create: {
             address: data.address,
