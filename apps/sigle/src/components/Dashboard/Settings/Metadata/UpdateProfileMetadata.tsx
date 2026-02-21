@@ -17,7 +17,7 @@ import { UploadProfilePicture } from "./UploadProfilePicture";
 const updateProfileMetadataSchema = z.object({
   displayName: z.string().optional(),
   description: z.string().optional(),
-  website: z.string().url().optional().or(z.literal("")),
+  website: z.url().optional().or(z.literal("")),
   twitter: z.string().optional(),
   picture: z.string().optional(),
   coverPicture: z.string().optional(),

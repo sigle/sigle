@@ -26,7 +26,10 @@ export async function GET(request: Request) {
   });
   if (!validationResult.success) {
     return Response.json(
-      { error: "Invalid parameters", details: validationResult.error.format() },
+      {
+        error: "Invalid parameters",
+        details: z.treeifyError(validationResult.error),
+      },
       { status: 400 },
     );
   }
