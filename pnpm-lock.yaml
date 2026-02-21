@@ -250,8 +250,8 @@ importers:
         specifier: 0.34.5
         version: 0.34.5
       sign-in-with-stacks:
-        specifier: 0.2.0
-        version: 0.2.0(@stacks/common@7.0.2)(@stacks/encryption@7.0.6)(@stacks/network@7.0.2(encoding@0.1.13))(@stacks/transactions@7.0.6(encoding@0.1.13))(better-auth@1.4.18(@prisma/client@6.14.0(prisma@6.14.0(magicast@0.3.5)(typescript@5.9.3))(typescript@5.9.3))(next@16.1.0(@opentelemetry/api@1.9.0)(@playwright/test@1.58.0)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)(sass@1.77.8))(pg@8.16.0)(prisma@6.14.0(magicast@0.3.5)(typescript@5.9.3))(react-dom@19.2.3(react@19.2.3))(react@19.2.3)(vitest@4.0.18))(zod@4.3.6)
+        specifier: 0.3.0
+        version: 0.3.0(@stacks/common@7.0.2)(@stacks/encryption@7.0.6)(@stacks/network@7.0.2(encoding@0.1.13))(@stacks/transactions@7.0.6(encoding@0.1.13))(better-auth@1.4.18(@prisma/client@6.14.0(prisma@6.14.0(magicast@0.3.5)(typescript@5.9.3))(typescript@5.9.3))(next@16.1.0(@opentelemetry/api@1.9.0)(@playwright/test@1.58.0)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)(sass@1.77.8))(pg@8.16.0)(prisma@6.14.0(magicast@0.3.5)(typescript@5.9.3))(react-dom@19.2.3(react@19.2.3))(react@19.2.3)(vitest@4.0.18))(zod@4.3.6)
       zod:
         specifier: 4.3.6
         version: 4.3.6
@@ -476,8 +476,8 @@ importers:
         specifier: 3.3.0
         version: 3.3.0(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
       sign-in-with-stacks:
-        specifier: 0.2.0
-        version: 0.2.0(@stacks/common@7.0.2)(@stacks/encryption@7.0.6)(@stacks/network@7.0.2(encoding@0.1.13))(@stacks/transactions@7.0.6(encoding@0.1.13))(better-auth@1.4.18(@prisma/client@6.14.0(prisma@6.14.0(magicast@0.3.5)(typescript@5.9.3))(typescript@5.9.3))(next@16.1.0(@babel/core@7.28.5)(@opentelemetry/api@1.9.0)(@playwright/test@1.58.0)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)(sass@1.77.8))(pg@8.16.0)(prisma@6.14.0(magicast@0.3.5)(typescript@5.9.3))(react-dom@19.2.3(react@19.2.3))(react@19.2.3)(vitest@4.0.18))(zod@4.3.6)
+        specifier: 0.3.0
+        version: 0.3.0(@stacks/common@7.0.2)(@stacks/encryption@7.0.6)(@stacks/network@7.0.2(encoding@0.1.13))(@stacks/transactions@7.0.6(encoding@0.1.13))(better-auth@1.4.18(@prisma/client@6.14.0(prisma@6.14.0(magicast@0.3.5)(typescript@5.9.3))(typescript@5.9.3))(next@16.1.0(@babel/core@7.28.5)(@opentelemetry/api@1.9.0)(@playwright/test@1.58.0)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)(sass@1.77.8))(pg@8.16.0)(prisma@6.14.0(magicast@0.3.5)(typescript@5.9.3))(react-dom@19.2.3(react@19.2.3))(react@19.2.3)(vitest@4.0.18))(zod@4.3.6)
       sonner:
         specifier: 2.0.7
         version: 2.0.7(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
@@ -10152,8 +10152,8 @@ packages:
   siginfo@2.0.0:
     resolution: {integrity: sha512-ybx0WO1/8bSBLEWXZvEd7gMW3Sn3JFlW3TvX1nREbDLRNQNaeNN8WK0meBwPdAaOI7TtRRRJn/Es1zhrrCHu7g==}
 
-  sign-in-with-stacks@0.2.0:
-    resolution: {integrity: sha512-PiiSxS0WaCc42b8TTNFyhQnl1U9wDIjoPNeIchTdMl5w+S8ZaIJNSL1NWiJFgqwdpGGn3pRN5AJG93j5sLHMeA==}
+  sign-in-with-stacks@0.3.0:
+    resolution: {integrity: sha512-O4naFhiNn2xhwdrScln3fhEAJ15/EHiNJe/nDr0ioUvT8sUR+WTVgGPWN9iAFNVUQpFCHovzV0Uv/S41iOf2Pg==}
     peerDependencies:
       '@stacks/common': ^7.0.2
       '@stacks/encryption': ^7.0.2
@@ -22824,7 +22824,7 @@ snapshots:
 
   siginfo@2.0.0: {}
 
-  sign-in-with-stacks@0.2.0(@stacks/common@7.0.2)(@stacks/encryption@7.0.6)(@stacks/network@7.0.2(encoding@0.1.13))(@stacks/transactions@7.0.6(encoding@0.1.13))(better-auth@1.4.18(@prisma/client@6.14.0(prisma@6.14.0(magicast@0.3.5)(typescript@5.9.3))(typescript@5.9.3))(next@16.1.0(@babel/core@7.28.5)(@opentelemetry/api@1.9.0)(@playwright/test@1.58.0)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)(sass@1.77.8))(pg@8.16.0)(prisma@6.14.0(magicast@0.3.5)(typescript@5.9.3))(react-dom@19.2.3(react@19.2.3))(react@19.2.3)(vitest@4.0.18))(zod@4.3.6):
+  sign-in-with-stacks@0.3.0(@stacks/common@7.0.2)(@stacks/encryption@7.0.6)(@stacks/network@7.0.2(encoding@0.1.13))(@stacks/transactions@7.0.6(encoding@0.1.13))(better-auth@1.4.18(@prisma/client@6.14.0(prisma@6.14.0(magicast@0.3.5)(typescript@5.9.3))(typescript@5.9.3))(next@16.1.0(@babel/core@7.28.5)(@opentelemetry/api@1.9.0)(@playwright/test@1.58.0)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)(sass@1.77.8))(pg@8.16.0)(prisma@6.14.0(magicast@0.3.5)(typescript@5.9.3))(react-dom@19.2.3(react@19.2.3))(react@19.2.3)(vitest@4.0.18))(zod@4.3.6):
     dependencies:
       '@stacks/common': 7.0.2
       '@stacks/encryption': 7.0.6
@@ -22834,7 +22834,7 @@ snapshots:
       better-auth: 1.4.18(@prisma/client@6.14.0(prisma@6.14.0(magicast@0.3.5)(typescript@5.9.3))(typescript@5.9.3))(next@16.1.0(@babel/core@7.28.5)(@opentelemetry/api@1.9.0)(@playwright/test@1.58.0)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)(sass@1.77.8))(pg@8.16.0)(prisma@6.14.0(magicast@0.3.5)(typescript@5.9.3))(react-dom@19.2.3(react@19.2.3))(react@19.2.3)(vitest@4.0.18)
       zod: 4.3.6
 
-  sign-in-with-stacks@0.2.0(@stacks/common@7.0.2)(@stacks/encryption@7.0.6)(@stacks/network@7.0.2(encoding@0.1.13))(@stacks/transactions@7.0.6(encoding@0.1.13))(better-auth@1.4.18(@prisma/client@6.14.0(prisma@6.14.0(magicast@0.3.5)(typescript@5.9.3))(typescript@5.9.3))(next@16.1.0(@opentelemetry/api@1.9.0)(@playwright/test@1.58.0)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)(sass@1.77.8))(pg@8.16.0)(prisma@6.14.0(magicast@0.3.5)(typescript@5.9.3))(react-dom@19.2.3(react@19.2.3))(react@19.2.3)(vitest@4.0.18))(zod@4.3.6):
+  sign-in-with-stacks@0.3.0(@stacks/common@7.0.2)(@stacks/encryption@7.0.6)(@stacks/network@7.0.2(encoding@0.1.13))(@stacks/transactions@7.0.6(encoding@0.1.13))(better-auth@1.4.18(@prisma/client@6.14.0(prisma@6.14.0(magicast@0.3.5)(typescript@5.9.3))(typescript@5.9.3))(next@16.1.0(@opentelemetry/api@1.9.0)(@playwright/test@1.58.0)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)(sass@1.77.8))(pg@8.16.0)(prisma@6.14.0(magicast@0.3.5)(typescript@5.9.3))(react-dom@19.2.3(react@19.2.3))(react@19.2.3)(vitest@4.0.18))(zod@4.3.6):
     dependencies:
       '@stacks/common': 7.0.2
       '@stacks/encryption': 7.0.6

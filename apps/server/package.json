@@ -36,7 +36,7 @@
     "rate-limiter-flexible": "7.2.0",
     "rou3": "0.7.12",
     "sharp": "0.34.5",
-    "sign-in-with-stacks": "0.2.0",
+    "sign-in-with-stacks": "0.3.0",
     "zod": "4.3.6",
     "zod-validation-error": "5.0.0"
   },
