@@ -45,12 +45,7 @@ export default defineEventHandler(async (event) => {
       chainId: stacksNetwork.chainId,
     },
     select: {
-      userId: true,
-    },
-  });
-
-  const user = wallet
-    ? await prisma.user.findUnique({
+      user: {
         select: {
           ...SELECT_PUBLIC_USER_FIELDS,
           _count: {
@@ -59,11 +54,11 @@ export default defineEventHandler(async (event) => {
             },
           },
         },
-        where: {
-          id: wallet.userId,
-        },
-      })
-    : null;
+      },
+    },
+  });
+
+  const user = wallet?.user ?? null;
 
   if (!user) {
     throw createError({
