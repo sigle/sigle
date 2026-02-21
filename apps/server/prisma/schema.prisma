@@ -102,6 +102,8 @@ model WalletAddress {
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
+  @@unique([address, chainId])
+  @@index([address])
   @@map("walletAddress")
 }
 
