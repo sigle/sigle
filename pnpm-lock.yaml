@@ -78,7 +78,7 @@ importers:
         version: link:../../packages/sdk
       '@t3-oss/env-nextjs':
         specifier: 0.13.10
-        version: 0.13.10(arktype@2.1.20)(typescript@5.9.3)(valibot@1.2.0(typescript@5.9.3))(zod@3.25.67)
+        version: 0.13.10(arktype@2.1.20)(typescript@5.9.3)(valibot@1.2.0(typescript@5.9.3))(zod@4.3.6)
       '@tabler/icons-react':
         specifier: 3.36.0
         version: 3.36.0(react@19.2.3)
@@ -116,8 +116,8 @@ importers:
         specifier: 3.4.0
         version: 3.4.0
       zod:
-        specifier: 3.25.67
-        version: 3.25.67
+        specifier: 4.3.6
+        version: 4.3.6
     devDependencies:
       '@dotenvx/dotenvx':
         specifier: 1.51.4
@@ -306,7 +306,7 @@ importers:
         version: 7.0.6(encoding@0.1.13)
       '@t3-oss/env-nextjs':
         specifier: 0.13.10
-        version: 0.13.10(arktype@2.1.20)(typescript@5.9.3)(valibot@1.2.0(typescript@5.9.3))(zod@3.25.67)
+        version: 0.13.10(arktype@2.1.20)(typescript@5.9.3)(valibot@1.2.0(typescript@5.9.3))(zod@4.3.6)
       '@tabler/icons-react':
         specifier: 3.36.0
         version: 3.36.0(react@19.2.3)
@@ -477,7 +477,7 @@ importers:
         version: 3.3.0(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
       sign-in-with-stacks:
         specifier: 0.2.0
-        version: 0.2.0(@stacks/common@7.0.2)(@stacks/encryption@7.0.6)(@stacks/network@7.0.2(encoding@0.1.13))(@stacks/transactions@7.0.6(encoding@0.1.13))(better-auth@1.4.18(@prisma/client@6.14.0(prisma@6.14.0(magicast@0.3.5)(typescript@5.9.3))(typescript@5.9.3))(next@16.1.0(@babel/core@7.28.5)(@opentelemetry/api@1.9.0)(@playwright/test@1.58.0)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)(sass@1.77.8))(pg@8.16.0)(prisma@6.14.0(magicast@0.3.5)(typescript@5.9.3))(react-dom@19.2.3(react@19.2.3))(react@19.2.3)(vitest@4.0.18))(zod@3.25.67)
+        version: 0.2.0(@stacks/common@7.0.2)(@stacks/encryption@7.0.6)(@stacks/network@7.0.2(encoding@0.1.13))(@stacks/transactions@7.0.6(encoding@0.1.13))(better-auth@1.4.18(@prisma/client@6.14.0(prisma@6.14.0(magicast@0.3.5)(typescript@5.9.3))(typescript@5.9.3))(next@16.1.0(@babel/core@7.28.5)(@opentelemetry/api@1.9.0)(@playwright/test@1.58.0)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)(sass@1.77.8))(pg@8.16.0)(prisma@6.14.0(magicast@0.3.5)(typescript@5.9.3))(react-dom@19.2.3(react@19.2.3))(react@19.2.3)(vitest@4.0.18))(zod@4.3.6)
       sonner:
         specifier: 2.0.7
         version: 2.0.7(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
@@ -494,8 +494,8 @@ importers:
         specifier: 1.0.9
         version: 1.0.9
       zod:
-        specifier: 3.25.67
-        version: 3.25.67
+        specifier: 4.3.6
+        version: 4.3.6
       zustand:
         specifier: 5.0.9
         version: 5.0.9(@types/react@19.2.7)(react@19.2.3)(use-sync-external-store@1.6.0(react@19.2.3))
@@ -576,8 +576,8 @@ importers:
         specifier: workspace:*
         version: link:../contracts-source
       zod-validation-error:
-        specifier: 3.5.2
-        version: 3.5.2(zod@3.25.67)
+        specifier: 5.0.0
+        version: 5.0.0(zod@4.3.6)
     devDependencies:
       '@stacks/connect':
         specifier: 7.9.0
@@ -607,8 +607,8 @@ importers:
         specifier: 4.0.18
         version: 4.0.18(@opentelemetry/api@1.9.0)(@types/node@22.15.21)(@vitest/ui@4.0.18)(happy-dom@20.3.7(bufferutil@4.0.8)(utf-8-validate@5.0.10))(jiti@2.6.1)(jsdom@25.0.0(bufferutil@4.0.8)(utf-8-validate@5.0.10))(lightningcss@1.30.2)(sass@1.77.8)(terser@5.46.0)(tsx@4.21.0)(yaml@2.8.1)
       zod:
-        specifier: 3.25.67
-        version: 3.25.67
+        specifier: 4.3.6
+        version: 4.3.6
 
   packages/testnet-seed:
     devDependencies:
@@ -11619,11 +11619,14 @@ packages:
     peerDependencies:
       zod: ^3.25.0
 
+  zod-validation-error@5.0.0:
+    resolution: {integrity: sha512-hmk+pkyKq7Q71PiWVSDUc3VfpzpvcRHZ3QPw9yEMVvmtCekaMeOHnbr3WbxfrgEnQTv6haGP4cmv0Ojmihzsxw==}
+    engines: {node: '>=18.0.0'}
+    peerDependencies:
+      zod: ^3.25.0 || ^4.0.0
+
   zod@3.25.67:
     resolution: {integrity: sha512-idA2YXwpCdqUSKRCACDE6ItZD9TZzy3OZMtpfLoh6oPR47lipysRrJfjzMqFxQ3uJuUPyUeWe1r9vLH33xO/Qw==}
-
-  zod@4.2.1:
-    resolution: {integrity: sha512-0wZ1IRqGGhMP76gLqz8EyfBXKk0J2qo2+H3fi4mcUP/KtTocoX08nmIAHl1Z2kJIZbZee8KOpBCSNPRgauucjw==}
 
   zod@4.3.6:
     resolution: {integrity: sha512-rftlrkhHZOcjDwkGlnUtZZkvaPHCsDATp4pGpuOOMDaTdDDXF91wuVDJoWoPsKX/3YPQ5fHuF3STjcYyKr+Qhg==}
@@ -15951,14 +15954,21 @@ snapshots:
       valibot: 1.2.0(typescript@5.9.3)
       zod: 3.25.67
 
-  '@t3-oss/env-nextjs@0.13.10(arktype@2.1.20)(typescript@5.9.3)(valibot@1.2.0(typescript@5.9.3))(zod@3.25.67)':
-    dependencies:
-      '@t3-oss/env-core': 0.13.10(arktype@2.1.20)(typescript@5.9.3)(valibot@1.2.0(typescript@5.9.3))(zod@3.25.67)
+  '@t3-oss/env-core@0.13.10(arktype@2.1.20)(typescript@5.9.3)(valibot@1.2.0(typescript@5.9.3))(zod@4.3.6)':
     optionalDependencies:
       arktype: 2.1.20
       typescript: 5.9.3
       valibot: 1.2.0(typescript@5.9.3)
-      zod: 3.25.67
+      zod: 4.3.6
+
+  '@t3-oss/env-nextjs@0.13.10(arktype@2.1.20)(typescript@5.9.3)(valibot@1.2.0(typescript@5.9.3))(zod@4.3.6)':
+    dependencies:
+      '@t3-oss/env-core': 0.13.10(arktype@2.1.20)(typescript@5.9.3)(valibot@1.2.0(typescript@5.9.3))(zod@4.3.6)
+    optionalDependencies:
+      arktype: 2.1.20
+      typescript: 5.9.3
+      valibot: 1.2.0(typescript@5.9.3)
+      zod: 4.3.6
 
   '@tabler/icons-react@3.36.0(react@19.2.3)':
     dependencies:
@@ -20952,7 +20962,7 @@ snapshots:
       react-compiler-runtime: 19.1.0-rc.2(react@19.2.3)
       react-dom: 19.2.3(react@19.2.3)
       scroll-into-view-if-needed: 3.1.0
-      zod: 4.2.1
+      zod: 4.3.6
       zustand: 5.0.9(@types/react@19.2.7)(react@19.2.3)(use-sync-external-store@1.6.0(react@19.2.3))
     transitivePeerDependencies:
       - '@types/react'
@@ -21002,7 +21012,7 @@ snapshots:
       unist-util-visit: 5.0.0
       unist-util-visit-children: 3.0.0
       yaml: 2.8.1
-      zod: 4.2.1
+      zod: 4.3.6
     transitivePeerDependencies:
       - acorn
       - supports-color
@@ -22836,7 +22846,7 @@ snapshots:
 
   siginfo@2.0.0: {}
 
-  sign-in-with-stacks@0.2.0(@stacks/common@7.0.2)(@stacks/encryption@7.0.6)(@stacks/network@7.0.2(encoding@0.1.13))(@stacks/transactions@7.0.6(encoding@0.1.13))(better-auth@1.4.18(@prisma/client@6.14.0(prisma@6.14.0(magicast@0.3.5)(typescript@5.9.3))(typescript@5.9.3))(next@16.1.0(@babel/core@7.28.5)(@opentelemetry/api@1.9.0)(@playwright/test@1.58.0)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)(sass@1.77.8))(pg@8.16.0)(prisma@6.14.0(magicast@0.3.5)(typescript@5.9.3))(react-dom@19.2.3(react@19.2.3))(react@19.2.3)(vitest@4.0.18))(zod@3.25.67):
+  sign-in-with-stacks@0.2.0(@stacks/common@7.0.2)(@stacks/encryption@7.0.6)(@stacks/network@7.0.2(encoding@0.1.13))(@stacks/transactions@7.0.6(encoding@0.1.13))(better-auth@1.4.18(@prisma/client@6.14.0(prisma@6.14.0(magicast@0.3.5)(typescript@5.9.3))(typescript@5.9.3))(next@16.1.0(@babel/core@7.28.5)(@opentelemetry/api@1.9.0)(@playwright/test@1.58.0)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)(sass@1.77.8))(pg@8.16.0)(prisma@6.14.0(magicast@0.3.5)(typescript@5.9.3))(react-dom@19.2.3(react@19.2.3))(react@19.2.3)(vitest@4.0.18))(zod@4.3.6):
     dependencies:
       '@stacks/common': 7.0.2
       '@stacks/encryption': 7.0.6
@@ -22844,7 +22854,7 @@ snapshots:
       '@stacks/transactions': 7.0.6(encoding@0.1.13)
     optionalDependencies:
       better-auth: 1.4.18(@prisma/client@6.14.0(prisma@6.14.0(magicast@0.3.5)(typescript@5.9.3))(typescript@5.9.3))(next@16.1.0(@babel/core@7.28.5)(@opentelemetry/api@1.9.0)(@playwright/test@1.58.0)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)(sass@1.77.8))(pg@8.16.0)(prisma@6.14.0(magicast@0.3.5)(typescript@5.9.3))(react-dom@19.2.3(react@19.2.3))(react@19.2.3)(vitest@4.0.18)
-      zod: 3.25.67
+      zod: 4.3.6
 
   sign-in-with-stacks@0.2.0(@stacks/common@7.0.2)(@stacks/encryption@7.0.6)(@stacks/network@7.0.2(encoding@0.1.13))(@stacks/transactions@7.0.6(encoding@0.1.13))(better-auth@1.4.18(@prisma/client@6.14.0(prisma@6.14.0(magicast@0.3.5)(typescript@5.9.3))(typescript@5.9.3))(next@16.1.0(@opentelemetry/api@1.9.0)(@playwright/test@1.58.0)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)(sass@1.77.8))(pg@8.16.0)(prisma@6.14.0(magicast@0.3.5)(typescript@5.9.3))(react-dom@19.2.3(react@19.2.3))(react@19.2.3)(vitest@4.0.18))(zod@3.25.67):
     dependencies:
@@ -24360,9 +24370,11 @@ snapshots:
     dependencies:
       zod: 3.25.67
 
-  zod@3.25.67: {}
+  zod-validation-error@5.0.0(zod@4.3.6):
+    dependencies:
+      zod: 4.3.6
 
-  zod@4.2.1: {}
+  zod@3.25.67: {}
 
   zod@4.3.6: {}
 
