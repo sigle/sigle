@@ -1,6 +1,7 @@
 import { createError, defineEventHandler, getRouterParam } from "h3";
 import { defineRouteMeta } from "nitropack/runtime";
 import { prisma, SELECT_PUBLIC_USER_FIELDS } from "~/lib/prisma";
+import { stacksNetwork } from "~/lib/stacks";
 
 defineRouteMeta({
   openAPI: {
@@ -38,11 +39,10 @@ export default defineEventHandler(async (event) => {
     });
   }
 
-  // Look up user by wallet address (username is a Stacks address)
   const wallet = await prisma.walletAddress.findFirst({
     where: {
       address: username,
-      chainId: 1,
+      chainId: stacksNetwork.chainId,
     },
     select: {
       userId: true,
