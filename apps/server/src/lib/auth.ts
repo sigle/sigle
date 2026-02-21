@@ -7,6 +7,7 @@ import { prisma } from "./prisma";
 // Only enable secure cookies with https to get localhost to work
 const useSecureCookies = env.APP_URL.startsWith("https://");
 const hostname = new URL(env.APP_URL).hostname;
+const hostnameWithPort = new URL(env.APP_URL).host;
 const rootDomain = hostname.split(".").slice(-2).join(".");
 
 export const auth = betterAuth({
@@ -30,8 +31,8 @@ export const auth = betterAuth({
   },
   plugins: [
     siws({
-      domain: hostname,
-      emailDomainName: "sigle.io",
+      domain: hostname === "localhost" ? hostnameWithPort : rootDomain,
+      emailDomainName: "user-sigle.io",
       anonymous: true,
     }),
   ],
