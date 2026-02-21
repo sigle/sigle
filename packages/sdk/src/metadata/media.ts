@@ -16,7 +16,7 @@ export interface MediaImageMetadata {
 }
 
 export const MediaImageMetadataSchema = z.object({
-  url: z.string().url(),
-  type: z.nativeEnum(MediaImageMimeType),
+  url: z.url(),
+  type: z.enum(MediaImageMimeType),
   alt: z.string().optional(),
 });

@@ -19,7 +19,7 @@
   },
   "dependencies": {
     "@sigle/contracts-source": "workspace:*",
-    "zod-validation-error": "3.5.2"
+    "zod-validation-error": "5.0.0"
   },
   "devDependencies": {
     "@stacks/connect": "7.9.0",
@@ -31,12 +31,12 @@
     "tsdown": "0.18.1",
     "typescript": "5.9.3",
     "vitest": "4.0.18",
-    "zod": "3.25.67"
+    "zod": "4.3.6"
   },
   "peerDependencies": {
     "@stacks/connect": "^7.0.0",
     "@stacks/network": "^7.0.0",
     "@stacks/transactions": "^7.0.0",
-    "zod": "^3.23.0"
+    "zod": "^4.0.0"
   }
 }
