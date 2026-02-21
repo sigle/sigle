@@ -43,6 +43,54 @@ model User {
   @@map("user")
 }
 
+model Session {
+  id        String   @id @map("id")
+  expiresAt DateTime @map("expires_at")
+  token     String   @map("token")
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+  ipAddress String?  @map("ip_address")
+  userAgent String?  @map("user_agent")
+  userId    String   @map("user_id")
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([token])
+  @@index([userId])
+  @@map("session")
+}
+
+model Account {
+  id                    String    @id
+  accountId             String
+  providerId            String
+  userId                String
+  user                  User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  accessToken           String?
+  refreshToken          String?
+  idToken               String?
+  accessTokenExpiresAt  DateTime?
+  refreshTokenExpiresAt DateTime?
+  scope                 String?
+  password              String?
+  createdAt             DateTime  @default(now())
+  updatedAt             DateTime  @updatedAt
+
+  @@index([userId])
+  @@map("account")
+}
+
+model Verification {
+  id         String   @id
+  identifier String
+  value      String
+  expiresAt  DateTime
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@index([identifier])
+  @@map("verification")
+}
+
 model WalletAddress {
   id        String   @id @map("id")
   userId    String   @map("user_id")
@@ -60,6 +108,14 @@ model WalletAddress {
 // --
 // End of better-auth models
 // --
+
+// Model for the rate-limiter-flexible package
+// https://github.com/animir/node-rate-limiter-flexible/wiki/Prisma#schema-example
+model RateLimiterFlexible {
+  key    String    @id @map("key")
+  points Int       @map("points")
+  expire DateTime? @map("expire")
+}
 
 model Profile {
   id                String  @id @map("id")
@@ -180,60 +236,4 @@ model PostNft {
   minter   User   @relation(name: "minter", fields: [minterId], references: [id])
 
   @@map("post_nft")
-}
-
-// Model for the rate-limiter-flexible package
-// https://github.com/animir/node-rate-limiter-flexible/wiki/Prisma#schema-example
-model RateLimiterFlexible {
-  key    String    @id @map("key")
-  points Int       @map("points")
-  expire DateTime? @map("expire")
-}
-
-model Session {
-  id        String   @id @map("id")
-  expiresAt DateTime @map("expires_at")
-  token     String   @map("token")
-  createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @updatedAt @map("updated_at")
-  ipAddress String?  @map("ip_address")
-  userAgent String?  @map("user_agent")
-  userId    String   @map("user_id")
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-  @@unique([token])
-  @@index([userId])
-  @@map("session")
-}
-
-model Account {
-  id                    String    @id
-  accountId             String
-  providerId            String
-  userId                String
-  user                  User      @relation(fields: [userId], references: [id], onDelete: Cascade)
-  accessToken           String?
-  refreshToken          String?
-  idToken               String?
-  accessTokenExpiresAt  DateTime?
-  refreshTokenExpiresAt DateTime?
-  scope                 String?
-  password              String?
-  createdAt             DateTime  @default(now())
-  updatedAt             DateTime  @updatedAt
-
-  @@index([userId])
-  @@map("account")
-}
-
-model Verification {
-  id         String   @id
-  identifier String
-  value      String
-  expiresAt  DateTime
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
-
-  @@index([identifier])
-  @@map("verification")
 }
