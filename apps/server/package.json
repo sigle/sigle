@@ -37,8 +37,8 @@
     "rou3": "0.7.12",
     "sharp": "0.34.5",
     "sign-in-with-stacks": "0.2.0",
-    "zod": "3.25.67",
-    "zod-validation-error": "3.5.2"
+    "zod": "4.3.6",
+    "zod-validation-error": "5.0.0"
   },
   "devDependencies": {
     "nitropack": "2.12.4",
