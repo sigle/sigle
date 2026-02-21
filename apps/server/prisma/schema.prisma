@@ -95,7 +95,7 @@ model WalletAddress {
   id        String   @id @map("id")
   userId    String   @map("user_id")
   address   String   @map("address")
-  chainId   Int      @map("chain_id")
+  chainId   BigInt   @map("chain_id")
   isPrimary Boolean? @default(false) @map("is_primary")
 
   createdAt DateTime @map("created_at")
