@@ -130,7 +130,7 @@ export const PublishDialog = ({ postId }: PublishDialogProps) => {
           // TODO create a REST route to determine the next post id? But do not use postId
           const newPostId = postId;
           const metadata = await generateSigleMetadataFromForm({
-            userAddress: session.user.name ?? "",
+            userAddress: session.user.address,
             type: data.type,
             editor,
             postId: newPostId,

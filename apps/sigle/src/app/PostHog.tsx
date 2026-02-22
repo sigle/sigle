@@ -28,9 +28,7 @@ export function PostHogInit(): null {
 
   useEffect(() => {
     if (env.NEXT_PUBLIC_POSTHOG_KEY && session) {
-      if (session.user.name) {
-        posthog.identify(session.user.name);
-      }
+      posthog.identify(session.user.address);
     }
   }, [posthog, session]);
 
