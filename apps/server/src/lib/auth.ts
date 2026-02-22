@@ -1,5 +1,6 @@
 import { prismaAdapter } from "better-auth/adapters/prisma";
 import { betterAuth } from "better-auth/minimal";
+import { customSession } from "better-auth/plugins";
 import { siws } from "sign-in-with-stacks/plugins/better-auth";
 import { env } from "~/env";
 import { prisma } from "./prisma";
@@ -34,6 +35,16 @@ export const auth = betterAuth({
       domain: hostname === "localhost" ? hostnameWithPort : rootDomain,
       emailDomainName: "user-sigle.io",
       anonymous: true,
+    }),
+    // Extends the session object to include the wallet address as user.address for easier access in the frontend.
+    customSession(async ({ user, session }) => {
+      return {
+        session,
+        user: {
+          ...user,
+          address: user.name,
+        },
+      };
     }),
   ],
 });
