@@ -30,8 +30,8 @@ pnpm install
 # Build
 pnpm build
 
-# Typecheck
-pnpm typecheck
+# check-types
+pnpm check-types
 
 # Format code
 pnpm format:fix

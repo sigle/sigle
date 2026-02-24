@@ -28,7 +28,7 @@ jobs:
         run: pnpm turbo run quality
 
       - name: Check types
-        run: pnpm turbo run typecheck
+        run: pnpm turbo run check-types
 
       - name: Build
         run: |
