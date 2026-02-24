@@ -32,33 +32,46 @@ export const executeIndexerSetProfileJob = async (
     ...metadataWithoutId
   } = profileMetadata.data;
 
-  // Ensure user exists
-  const user = await prisma.user.findUnique({
-    select: {
-      id: true,
-    },
+  // Ensure user exists — look up by wallet address
+  const existingWallet = await prisma.walletAddress.findFirst({
     where: {
-      id: data.address,
+      address: data.address,
+      chainId: 1,
+    },
+    select: {
+      userId: true,
     },
   });
-  if (!user) {
-    await prisma.user.create({
+
+  let userId: string = existingWallet?.userId ?? "";
+  if (!existingWallet) {
+    // Create user + wallet address in a single transaction
+    const newUser = await prisma.user.create({
       data: {
-        id: data.address,
+        name: data.address,
+        email: `${data.address}@user-sigle.io`,
+        walletAddresses: {
+          create: {
+            address: data.address,
+            chainId: 1,
+            isPrimary: true,
+          },
+        },
       },
     });
+    userId = newUser.id;
   }
 
   await prisma.profile.upsert({
     where: {
-      id: data.address,
+      id: userId,
     },
     update: {
       ...metadataWithoutId,
     },
     create: {
       ...metadataWithoutId,
-      id: data.address,
+      id: userId,
     },
   });
 
@@ -66,7 +79,7 @@ export const executeIndexerSetProfileJob = async (
     // We do a separate update query here as for some reason prisma doesn't let us update the relationship in the upsert
     await prisma.profile.update({
       where: {
-        id: data.address,
+        id: userId,
       },
       data: {
         pictureUri: profileMetadata.data.picture

@@ -61,7 +61,7 @@ export const PostCollectDialog = ({
       open ? "sBTC" : undefined,
     );
   const [editions, setEditions] = useState(1);
-  const isPostOwner = session?.user.id === post.address.split(".")[0];
+  const isPostOwner = session?.user.address === post.address.split(".")[0];
 
   const { contractCall, loading: contractLoading } = useContractCall({
     onSuccess: (data) => {
@@ -101,7 +101,7 @@ export const PostCollectDialog = ({
     }
 
     const { parameters } = await sigleClient.mint({
-      sender: session.user.id,
+      sender: session.user.address,
       contract: post.address,
       amount: editions,
       referral: referral ? referral : undefined,

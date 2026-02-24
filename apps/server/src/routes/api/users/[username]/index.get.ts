@@ -1,6 +1,7 @@
 import { createError, defineEventHandler, getRouterParam } from "h3";
 import { defineRouteMeta } from "nitropack/runtime";
 import { prisma, SELECT_PUBLIC_USER_FIELDS } from "~/lib/prisma";
+import { stacksNetwork } from "~/lib/stacks";
 
 defineRouteMeta({
   openAPI: {
@@ -38,19 +39,26 @@ export default defineEventHandler(async (event) => {
     });
   }
 
-  const user = await prisma.user.findUnique({
+  const wallet = await prisma.walletAddress.findFirst({
+    where: {
+      address: username,
+      chainId: stacksNetwork.chainId,
+    },
     select: {
-      ...SELECT_PUBLIC_USER_FIELDS,
-      _count: {
+      user: {
         select: {
-          posts: {},
+          ...SELECT_PUBLIC_USER_FIELDS,
+          _count: {
+            select: {
+              posts: {},
+            },
+          },
         },
       },
     },
-    where: {
-      id: username,
-    },
   });
+
+  const user = wallet?.user ?? null;
 
   if (!user) {
     throw createError({

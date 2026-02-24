@@ -36,7 +36,7 @@ defineRouteMeta({
 });
 
 export default defineEventHandler(async (event) => {
-  const isWhitelisted = isUserWhitelisted(event.context.user.id);
+  const isWhitelisted = isUserWhitelisted(event.context.user.walletAddress);
 
   return {
     whitelisted: isWhitelisted,

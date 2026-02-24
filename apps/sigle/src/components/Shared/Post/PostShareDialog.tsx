@@ -34,7 +34,7 @@ export const PostShareDialog = ({
     { postId: post.id },
     {
       search: {
-        referral: session ? session.user.id : undefined,
+        referral: session ? session.user.address : undefined,
       },
     },
   )}`;

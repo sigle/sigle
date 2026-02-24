@@ -5,7 +5,6 @@ generator client {
 
 datasource db {
   provider = "postgresql"
-  url      = env("DATABASE_URL")
 }
 
 enum UserFlag {
@@ -18,67 +17,93 @@ enum UserFlag {
 // --
 
 model User {
-  id          String    @id @map("id")
+  id            String  @id @map("id")
+  name          String  @map("name")
+  email         String  @map("email")
+  emailVerified Boolean @default(false) @map("email_verified")
+  image         String? @map("image")
+
   lastLoginAt DateTime? @map("last_login_at")
   flag        UserFlag  @default(NONE) @map("flag")
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 
-  drafts     Draft[]
-  posts      Post[]
-  profile    Profile?
-  ownedNfts  PostNft[] @relation("owner")
-  mintedNfts PostNft[] @relation("minter")
-  sessions   Session[]
-  accounts   Account[]
+  drafts          Draft[]
+  posts           Post[]
+  profile         Profile?
+  ownedNfts       PostNft[]       @relation("owner")
+  mintedNfts      PostNft[]       @relation("minter")
+  sessions        Session[]
+  accounts        Account[]
+  walletAddresses WalletAddress[]
 
+  @@unique([email])
   @@map("user")
 }
 
 model Session {
-  id        String   @id
-  expiresAt DateTime
-  token     String
-  createdAt DateTime
-  updatedAt DateTime
-  ipAddress String?
-  userAgent String?
-  userId    String
+  id        String   @id @map("id")
+  expiresAt DateTime @map("expires_at")
+  token     String   @map("token")
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+  ipAddress String?  @map("ip_address")
+  userAgent String?  @map("user_agent")
+  userId    String   @map("user_id")
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([token])
+  @@index([userId])
   @@map("session")
 }
 
 model Account {
-  id                    String    @id
-  accountId             String
-  providerId            String
-  userId                String
+  id                    String    @id @map("id")
+  accountId             String    @map("account_id")
+  providerId            String    @map("provider_id")
+  userId                String    @map("user_id")
   user                  User      @relation(fields: [userId], references: [id], onDelete: Cascade)
-  accessToken           String?
-  refreshToken          String?
-  idToken               String?
-  accessTokenExpiresAt  DateTime?
-  refreshTokenExpiresAt DateTime?
-  scope                 String?
-  password              String?
-  createdAt             DateTime
-  updatedAt             DateTime
+  accessToken           String?   @map("access_token")
+  refreshToken          String?   @map("refresh_token")
+  idToken               String?   @map("id_token")
+  accessTokenExpiresAt  DateTime? @map("access_token_expires_at")
+  refreshTokenExpiresAt DateTime? @map("refresh_token_expires_at")
+  scope                 String?   @map("scope")
+  password              String?   @map("password")
+  createdAt             DateTime  @default(now()) @map("created_at")
+  updatedAt             DateTime  @updatedAt @map("updated_at")
 
+  @@index([userId])
   @@map("account")
 }
 
 model Verification {
-  id         String    @id
-  identifier String
-  value      String
-  expiresAt  DateTime
-  createdAt  DateTime?
-  updatedAt  DateTime?
+  id         String   @id @map("id")
+  identifier String   @map("identifier")
+  value      String   @map("value")
+  expiresAt  DateTime @map("expires_at")
+  createdAt  DateTime @default(now()) @map("created_at")
+  updatedAt  DateTime @updatedAt @map("updated_at")
 
+  @@index([identifier])
   @@map("verification")
+}
+
+model WalletAddress {
+  id        String   @id @map("id")
+  userId    String   @map("user_id")
+  address   String   @map("address")
+  chainId   BigInt   @map("chain_id")
+  isPrimary Boolean? @default(false) @map("is_primary")
+
+  createdAt DateTime @map("created_at")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([address, chainId])
+  @@index([address])
+  @@map("walletAddress")
 }
 
 // --
@@ -91,6 +116,8 @@ model RateLimiterFlexible {
   key    String    @id @map("key")
   points Int       @map("points")
   expire DateTime? @map("expire")
+
+  @@map("rate_limiter_flexible")
 }
 
 model Profile {

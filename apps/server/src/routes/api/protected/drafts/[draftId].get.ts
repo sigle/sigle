@@ -118,7 +118,7 @@ export default defineEventHandler<
     updatedAt: Date;
   }>
 >(async (event) => {
-  if (!isUserWhitelisted(event.context.user.id)) {
+  if (!isUserWhitelisted(event.context.user.walletAddress)) {
     throw createError({
       status: 403,
       message: "User is not whitelisted.",
