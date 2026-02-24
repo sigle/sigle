@@ -61,6 +61,7 @@ RUN adduser --system --uid 1001 nitro
 COPY --from=installer --chown=nitro:nodejs /app/apps/$APP_NAME/.output ./.output
 COPY --from=installer --chown=nitro:nodejs /app/apps/$APP_NAME/package.json ./package.json
 COPY --from=installer --chown=nitro:nodejs /app/apps/$APP_NAME/scripts ./scripts
+COPY --from=installer --chown=nitro:nodejs /app/apps/$APP_NAME/prisma.config.ts ./prisma.config.ts
 COPY --from=installer --chown=nitro:nodejs /app/apps/$APP_NAME/prisma ./prisma
 # Copy the generated prisma client as it contains the required Query engine
 COPY --from=installer --chown=nitro:nodejs /app/apps/$APP_NAME/src/__generated__/prisma ./apps/$APP_NAME/src/__generated__/prisma
