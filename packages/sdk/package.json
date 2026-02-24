@@ -15,7 +15,7 @@
     "build": "tsdown",
     "codegen": "openapi-typescript http://localhost:3001/_openapi.json --output ./src/__generated__/sigle-api-openapi.ts",
     "test": "vitest",
-    "typecheck": "tsc --noEmit"
+    "check-types": "tsc --noEmit"
   },
   "dependencies": {
     "@sigle/contracts-source": "workspace:*",

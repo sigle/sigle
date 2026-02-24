@@ -2,13 +2,14 @@
   "name": "root",
   "private": true,
   "scripts": {
-    "build": "turbo typecheck build --cache-dir=.turbo",
+    "build": "turbo build",
     "format": "oxfmt --check",
     "format:fix": "oxfmt .",
     "lint": "oxlint .",
     "lint:fix": "oxlint --fix .",
     "release": "pnpm changeset publish",
-    "test": "turbo test --cache-dir=.turbo",
+    "test": "turbo test",
+    "check-types": "turbo check-types",
     "version": "pnpm changeset version && pnpm install --lockfile-only"
   },
   "devDependencies": {

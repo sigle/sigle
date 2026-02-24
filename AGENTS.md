@@ -18,17 +18,25 @@ sigle/
 │   ├── sdk/            - Shared TypeScript SDK
 │   ├── contracts-source/
 │   └── testnet-seed/
-└── docker-compose.yaml - Local dev services (PostgreSQL, Redis)
+└── docker-compose.yaml - Local dev services (PostgreSQL)
 ```
 
-## Build Commands
+## Key Commands
 
 ```bash
-# Full monorepo build with typecheck
+# Install dependencies
+pnpm install
+
+# Build
 pnpm build
 
-# Format and lint entire repo
+# check-types
+pnpm check-types
+
+# Format code
 pnpm format:fix
+
+# Lint everything
 pnpm lint:fix
 
 # Run all tests via Turbo
