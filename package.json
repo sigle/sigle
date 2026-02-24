@@ -14,15 +14,15 @@
   "devDependencies": {
     "@changesets/cli": "2.29.8",
     "lefthook": "2.1.1",
-    "oxfmt": "0.34.0",
-    "oxlint": "1.49.0",
+    "oxfmt": "0.35.0",
+    "oxlint": "1.50.0",
     "syncpack": "14.0.0",
     "turbo": "2.8.10"
   },
   "engines": {
-    "node": ">=20"
+    "node": ">=22"
   },
-  "packageManager": "pnpm@10.28.1",
+  "packageManager": "pnpm@10.30.2",
   "pnpm": {
     "neverBuiltDependencies": [],
     "overrides": {

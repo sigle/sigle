@@ -60,7 +60,6 @@
     "default-case": "off",
     "new-cap": "off",
     "no-use-before-define": "off",
-    "no-shadow": "off",
-    "react/jsx-no-constructed-context-values": "off"
+    "no-shadow": "off"
   }
 }

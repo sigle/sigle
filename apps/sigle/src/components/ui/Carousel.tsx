@@ -121,6 +121,7 @@ const Carousel = React.forwardRef<
 
     return (
       <CarouselContext.Provider
+        // oxlint-disable-next-line react/jsx-no-constructed-context-values
         value={{
           carouselRef,
           api: api,
