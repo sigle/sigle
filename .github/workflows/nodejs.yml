@@ -27,6 +27,9 @@ jobs:
       - name: Check format and lint
         run: pnpm turbo run quality
 
+      - name: Check types
+        run: pnpm turbo run typecheck
+
       - name: Build
         run: |
           cp apps/sigle/.env.development apps/sigle/.env.production.local
