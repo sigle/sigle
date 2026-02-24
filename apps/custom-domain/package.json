@@ -29,7 +29,7 @@
   "devDependencies": {
     "@dotenvx/dotenvx": "1.51.4",
     "@tailwindcss/typography": "0.5.16",
-    "@types/node": "22.15.21",
+    "@types/node": "24.10.12",
     "@types/react": "19.2.7",
     "@types/react-dom": "19.2.3",
     "eslint-plugin-better-tailwindcss": "4.3.0",

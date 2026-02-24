@@ -14,7 +14,7 @@
     "@stacks/transactions": "7.0.6",
     "@stacks/wallet-sdk": "7.0.6",
     "@tsconfig/recommended": "1.0.13",
-    "@types/node": "22.15.21",
+    "@types/node": "24.10.12",
     "smol-toml": "1.5.2",
     "tsx": "4.21.0",
     "typescript": "5.9.3"

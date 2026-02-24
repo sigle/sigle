@@ -42,7 +42,7 @@
     "zod-validation-error": "5.0.0"
   },
   "devDependencies": {
-    "nitropack": "2.12.4",
+    "nitropack": "2.13.1",
     "typescript": "5.9.3"
   },
   "packageManager": "pnpm@10.15.0"
