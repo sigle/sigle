@@ -97,9 +97,9 @@ plan:
             path: contracts/sigle-post-trait-v001.clar
             clarity-version: 3
         - emulated-contract-publish:
-            contract-name: sigle-protocol
+            contract-name: sigle-protocol-v001
             emulated-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
-            path: contracts/sigle-protocol.clar
+            path: contracts/sigle-protocol-v001.clar
             clarity-version: 3
         - emulated-contract-publish:
             contract-name: sigle-minter-fixed-price-v001
