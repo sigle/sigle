@@ -10,7 +10,7 @@ import {
 } from "./generate-post-contract.js";
 import { type MintParams, mint } from "./mint.js";
 import { type OwnerMintParams, ownerMint } from "./ownerMint.js";
-import { publishPost, PublishPostParams } from "./publish-post.js";
+import { type PublishPostParams, publishPost } from "./publish-post.js";
 import {
   type SetBaseTokenUriParams,
   setBaseTokenUri,
