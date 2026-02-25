@@ -3,6 +3,5 @@
     a: "publish-post",
     author: tx-sender,
     url: url,
-    timestamp: block-height
   })
   (ok true))
