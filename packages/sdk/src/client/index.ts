@@ -10,6 +10,7 @@ import {
 } from "./generate-post-contract.js";
 import { type MintParams, mint } from "./mint.js";
 import { type OwnerMintParams, ownerMint } from "./ownerMint.js";
+import { publishPost, PublishPostParams } from "./publish-post.js";
 import {
   type SetBaseTokenUriParams,
   setBaseTokenUri,
@@ -45,16 +46,23 @@ export const createClient = (options: CreateClientOptions) => {
         network: options.network,
         networkName,
       }),
+    setBaseTokenUri: (params: SetBaseTokenUriParams) =>
+      setBaseTokenUri({
+        params,
+        network: options.network,
+      }),
+
+    publishPost: (params: PublishPostParams) =>
+      publishPost({
+        params,
+        network: options.network,
+        networkName,
+      }),
     setProfile: (params: SetProfileParams) =>
       setProfile({
         params,
         network: options.network,
         networkName,
-      }),
-    setBaseTokenUri: (params: SetBaseTokenUriParams) =>
-      setBaseTokenUri({
-        params,
-        network: options.network,
       }),
   };
 };
