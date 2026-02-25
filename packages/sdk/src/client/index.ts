@@ -3,8 +3,16 @@ import {
   type StacksNetwork,
   type StacksNetworkName,
 } from "@stacks/network";
+import type { GeneratePostParams } from "./wip/generate-post-contract.js";
+import type { MintParams } from "./wip/mint.js";
+import type { OwnerMintParams } from "./wip/ownerMint.js";
+import type { SetBaseTokenUriParams } from "./wip/setBaseTokenUri.js";
 import { config } from "./config.js";
 import { type SetProfileParams, setProfile } from "./setProfile.js";
+import { generatePostContract } from "./wip/generate-post-contract.js";
+import { mint } from "./wip/mint.js";
+import { ownerMint } from "./wip/ownerMint.js";
+import { setBaseTokenUri } from "./wip/setBaseTokenUri.js";
 
 interface CreateClientOptions {
   /**
@@ -31,6 +39,23 @@ export const createClient = (options: CreateClientOptions) => {
         network: options.network,
         networkName,
       }),
+    WIP: {
+      mint: (params: MintParams) =>
+        mint({ network: options.network, networkName, params }),
+      ownerMint: (params: OwnerMintParams) =>
+        ownerMint({ network: options.network, params }),
+      generatePostContract: (params: GeneratePostParams) =>
+        generatePostContract({
+          params,
+          network: options.network,
+          networkName,
+        }),
+      setBaseTokenUri: (params: SetBaseTokenUriParams) =>
+        setBaseTokenUri({
+          params,
+          network: options.network,
+        }),
+    },
   };
 };
 export { config as sigleConfig };

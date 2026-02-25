@@ -6,7 +6,7 @@ import { deployContract } from "./lib/stacks.js";
 const main = async () => {
   await deployContract({
     contractName: createId(),
-    codeBody: sigleClient.generatePostContract({
+    codeBody: sigleClient.WIP.generatePostContract({
       collectInfo: {
         amount: 0,
         maxSupply: 100,
@@ -18,7 +18,7 @@ const main = async () => {
 
   await deployContract({
     contractName: createId(),
-    codeBody: sigleClient.generatePostContract({
+    codeBody: sigleClient.WIP.generatePostContract({
       collectInfo: {
         amount: parseBTC("0.00042"),
       },
