@@ -1,7 +1,7 @@
 import type { StacksNetwork, StacksNetworkName } from "@stacks/network";
 import { contracts } from "@sigle/contracts-source";
-import { MAX_UINT } from "../lib/clarity.js";
-import { config } from "./config.js";
+import { MAX_UINT } from "../../lib/clarity.js";
+import { config } from "../config.js";
 
 export interface GeneratePostParams {
   /**

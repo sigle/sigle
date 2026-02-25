@@ -7,7 +7,7 @@ import {
   PostConditionMode,
   uintCV,
 } from "@stacks/transactions";
-import { config, fixedMintFee } from "./config.js";
+import { config, fixedMintFee } from "../config.js";
 
 export interface MintParams {
   // Contract address of the post
