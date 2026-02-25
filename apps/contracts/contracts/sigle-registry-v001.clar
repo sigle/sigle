@@ -1,9 +1,9 @@
-(define-public (publish-post (url (string-ascii 210)))
+(define-public (publish-post (metatadata-uri (string-ascii 210)))
   (begin
     (print {
       a: "publish-post",
       author: tx-sender,
-      url: url,
+      uri: metatadata-uri,
     })
     (ok true)
   )

@@ -4,8 +4,8 @@ import { PostConditionMode, stringAsciiCV } from "@stacks/transactions";
 import { config } from "./config.js";
 
 export interface PublishPostParams {
-  // URL of the post to publish (e.g., IPFS URL or other content URL)
-  url: string;
+  // Metadata URL of the post to publish (e.g., IPFS URL or other content URL)
+  metadataUri: string;
 }
 
 export interface PublishPostReturn {
@@ -29,7 +29,7 @@ export const publishPost = ({
       contractAddress: protocolAddress,
       contractName: "sigle-registry-v001",
       functionName: "publish-post",
-      functionArgs: [stringAsciiCV(params.url)],
+      functionArgs: [stringAsciiCV(params.metadataUri)],
       postConditionMode: PostConditionMode.Deny,
       network,
     },
