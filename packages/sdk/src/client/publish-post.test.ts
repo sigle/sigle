@@ -13,12 +13,6 @@ describe("publish-post", () => {
       networkName: "mocknet",
     });
 
-    expect(result.parameters.contractAddress).toBe(
-      "ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM",
-    );
-    expect(result.parameters.contractName).toBe("sigle-registry-v001");
-    expect(result.parameters.functionName).toBe("publish-post");
-    expect(result.parameters.postConditionMode).toBe(PostConditionMode.Deny);
-    expect(result.parameters.network).toBe(STACKS_MOCKNET);
+    expect(result.parameters).toMatchSnapshot();
   });
 });

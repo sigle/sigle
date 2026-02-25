@@ -4,10 +4,12 @@ import { PostConditionMode, stringAsciiCV } from "@stacks/transactions";
 import { config } from "./config.js";
 
 export interface PublishPostParams {
+  // URL of the post to publish (e.g., IPFS URL or other content URL)
   url: string;
 }
 
 export interface PublishPostReturn {
+  // Parameters to pass to the stacks.js contract call
   parameters: ContractCallBase;
 }
 
