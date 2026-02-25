@@ -8,5 +8,3 @@
     (ok true)
   )
 )
-
-;; TODO add a function so that admin can disable the registry
