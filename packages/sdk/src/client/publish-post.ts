@@ -1,6 +1,6 @@
-import type { ContractCallBase } from "@stacks/connect";
-import type { StacksNetwork, StacksNetworkName } from "@stacks/network";
-import { PostConditionMode, stringAsciiCV } from "@stacks/transactions";
+import type { CallContractParams } from "@stacks/connect/dist/types/methods.js";
+import type { StacksNetworkName } from "@stacks/network";
+import { stringAsciiCV } from "@stacks/transactions";
 import { config } from "./config.js";
 
 export interface PublishPostParams {
@@ -10,28 +10,25 @@ export interface PublishPostParams {
 
 export interface PublishPostReturn {
   // Parameters to pass to the stacks.js contract call
-  parameters: ContractCallBase;
+  parameters: CallContractParams;
 }
 
 export const publishPost = ({
   params,
-  network,
   networkName,
 }: {
   params: PublishPostParams;
-  network: StacksNetwork;
   networkName: StacksNetworkName;
 }): PublishPostReturn => {
   const protocolAddress = config[networkName].protocolAddress;
 
   return {
     parameters: {
-      contractAddress: protocolAddress,
-      contractName: "sigle-registry-v001",
+      contract: `${protocolAddress}.sigle-registry-v001`,
       functionName: "publish-post",
       functionArgs: [stringAsciiCV(params.metadataUri)],
-      postConditionMode: PostConditionMode.Deny,
-      network,
+      postConditionMode: "deny",
+      network: networkName,
     },
   };
 };
