@@ -1,13 +1,9 @@
-import {
-  type ContractDeployOptions,
-  type FinishedTxData,
-  openContractDeploy,
-} from "@stacks/connect";
+import { request } from "@stacks/connect";
+import { DeployContractParams } from "@stacks/connect/dist/types/methods";
 import { useCallback, useState } from "react";
-import { appDetails, stacksNetwork } from "@/lib/stacks";
 
 interface UseContractDeployOptions {
-  onSuccess?: (data: FinishedTxData) => void;
+  onSuccess?: (data: { txId: string }) => void;
   onError?: (error: string) => void;
   onCancel?: () => void;
 }
@@ -38,12 +34,7 @@ export function useContractDeploy(options: UseContractDeployOptions = {}) {
   }, []);
 
   const contractDeploy = useCallback(
-    async (
-      parameters: Omit<
-        ContractDeployOptions,
-        "network" | "onFinish" | "onCancel" | "sponsored"
-      >,
-    ) => {
+    async (parameters: Omit<DeployContractParams, "network" | "sponsored">) => {
       try {
         setState((prev) => ({
           ...prev,
@@ -53,31 +44,29 @@ export function useContractDeploy(options: UseContractDeployOptions = {}) {
           txId: null,
         }));
 
-        await openContractDeploy({
-          ...parameters,
-          network: stacksNetwork,
-          appDetails,
-          userSession,
-          onFinish: (data) => {
-            setState((prev) => ({
-              ...prev,
-              loading: false,
-              success: true,
-              txId: data.txId,
-            }));
-            onSuccess?.(data);
-          },
-          onCancel: () => {
-            setState((prev) => ({
-              ...prev,
-              loading: false,
-            }));
-            onCancel?.();
-          },
-        });
+        const response = await request("stx_deployContract", parameters);
+
+        setState((prev) => ({
+          ...prev,
+          loading: false,
+          success: true,
+          txId: response.txid!,
+        }));
+        onSuccess?.({ txId: response.txid! });
       } catch (error) {
         const errorMessage =
           error instanceof Error ? error.message : "Unknown error";
+
+        // TODO this is not working for now
+        if (errorMessage.endsWith("User denied transaction")) {
+          setState((prev) => ({
+            ...prev,
+            loading: false,
+          }));
+          onCancel?.();
+          return;
+        }
+
         setState((prev) => ({
           ...prev,
           loading: false,

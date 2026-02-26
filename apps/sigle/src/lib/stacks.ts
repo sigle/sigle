@@ -13,11 +13,6 @@ export const stacksApiClient = createClient({
   baseUrl: `https://api.${env.NEXT_PUBLIC_STACKS_ENV}.hiro.so`,
 });
 
-export const appDetails = {
-  name: "Sigle",
-  icon: "https://app.sigle.io/icon-192x192.png",
-};
-
 export const getExplorerTransactionUrl = (txId: string) =>
   `https://explorer.hiro.so/txid/${txId}?chain=${env.NEXT_PUBLIC_STACKS_ENV}`;
 
