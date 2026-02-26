@@ -1,8 +1,13 @@
 import { STACKS_TESTNET } from "@stacks/network";
-import { broadcastTransaction, makeContractDeploy } from "@stacks/transactions";
+import {
+  broadcastTransaction,
+  makeContractCall,
+  makeContractDeploy,
+} from "@stacks/transactions";
 import { generateNewAccount, generateWallet } from "@stacks/wallet-sdk";
 import { readFileSync } from "node:fs";
 import { parse } from "smol-toml";
+import { sigleClient } from "./sigle.js";
 
 const network = STACKS_TESTNET;
 
@@ -42,6 +47,29 @@ export const deployContract = async ({
   });
   const broadcastResponse = await broadcastTransaction({ transaction });
   console.log("submitted tx", broadcastResponse);
+};
+
+export const publishPost = async ({
+  metadataUri,
+  accountIndex,
+}: {
+  metadataUri: string;
+  accountIndex: number;
+}) => {
+  const privateKey = wallet.accounts[accountIndex].stxPrivateKey;
+
+  const { parameters } = sigleClient.publishPost({
+    metadataUri,
+  });
+
+  const transaction = await makeContractCall({
+    // oxlint-disable-next-line no-explicit-any
+    ...(parameters as any),
+    senderKey: privateKey,
+  });
+  const broadcastResponse = await broadcastTransaction({ transaction });
+  console.log("submitted tx", broadcastResponse);
+  return broadcastResponse.txid;
 };
 
 export { network };

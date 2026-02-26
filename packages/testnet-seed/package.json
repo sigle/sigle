@@ -4,7 +4,7 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "build": "tsc --noEmit",
+    "check-types": "tsc --noEmit",
     "dev": "tsx src/index.ts"
   },
   "devDependencies": {
