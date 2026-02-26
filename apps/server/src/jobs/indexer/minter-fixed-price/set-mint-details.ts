@@ -26,7 +26,6 @@ export const executeIndexerSetMintDetailsJob = async (
       },
     },
   });
-  const postId = collectible.post.id;
 
   let endBlock = BigInt(data.endBlock);
   // This is required, idk why the chainhook value has + 1 to MAX_UINT
@@ -34,7 +33,7 @@ export const executeIndexerSetMintDetailsJob = async (
     endBlock = 0n;
   }
   await prisma.minterFixedPrice.update({
-    where: { id: postId },
+    where: { id: collectible.post.id },
     data: {
       price: data.price,
       startBlock: BigInt(data.startBlock),

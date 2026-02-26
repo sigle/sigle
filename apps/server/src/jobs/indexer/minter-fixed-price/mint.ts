@@ -65,14 +65,13 @@ export const executeIndexerMintJob = async (
       },
     },
   });
-  const postId = collectible.post.id;
 
   const updatedPost = await prisma.post.update({
     select: {
       id: true,
     },
     where: {
-      id: postId,
+      id: collectible.post.id,
     },
     data: {
       collected: {
