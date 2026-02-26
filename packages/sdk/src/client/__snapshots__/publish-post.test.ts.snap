@@ -2,8 +2,7 @@
 
 exports[`publish-post > should return correct contract call parameters 1`] = `
 {
-  "contractAddress": "ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM",
-  "contractName": "sigle-registry-v001",
+  "contract": "ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.responsible-aqua-scallop",
   "functionArgs": [
     {
       "type": "ascii",
@@ -11,20 +10,7 @@ exports[`publish-post > should return correct contract call parameters 1`] = `
     },
   ],
   "functionName": "publish-post",
-  "network": {
-    "addressVersion": {
-      "multiSig": 21,
-      "singleSig": 26,
-    },
-    "bootAddress": "ST000000000000000000002AMW42H",
-    "chainId": 2147483648,
-    "client": {
-      "baseUrl": "http://localhost:3999",
-    },
-    "magicBytes": "id",
-    "peerNetworkId": 4278190080,
-    "transactionVersion": 128,
-  },
-  "postConditionMode": 2,
+  "network": "mocknet",
+  "postConditionMode": "deny",
 }
 `;
