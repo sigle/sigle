@@ -59,7 +59,6 @@ export const createClient = (options: CreateClientOptions) => {
     setProfile: (params: SetProfileParams) =>
       setProfile({
         params,
-        network: options.network,
         networkName,
       }),
   };
