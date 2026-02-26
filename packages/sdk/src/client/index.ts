@@ -38,8 +38,7 @@ export const createClient = (options: CreateClientOptions) => {
   return {
     mint: (params: MintParams) =>
       mint({ network: options.network, networkName, params }),
-    ownerMint: (params: OwnerMintParams) =>
-      ownerMint({ network: options.network, params }),
+    ownerMint: (params: OwnerMintParams) => ownerMint({ networkName, params }),
     generatePostContract: (params: GeneratePostParams) =>
       generatePostContract({
         params,
@@ -55,7 +54,6 @@ export const createClient = (options: CreateClientOptions) => {
     publishPost: (params: PublishPostParams) =>
       publishPost({
         params,
-        network: options.network,
         networkName,
       }),
     setProfile: (params: SetProfileParams) =>
