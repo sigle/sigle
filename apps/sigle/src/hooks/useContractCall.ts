@@ -1,12 +1,9 @@
 import { request } from "@stacks/connect";
-import {
-  CallContractParams,
-  TransactionResult,
-} from "@stacks/connect/dist/types/methods";
+import { CallContractParams } from "@stacks/connect/dist/types/methods";
 import { useCallback, useState } from "react";
 
 interface UseContractCallOptions {
-  onSuccess?: (data: TransactionResult) => void;
+  onSuccess?: (data: { txId: string }) => void;
   onError?: (error: string) => void;
   onCancel?: () => void;
 }
@@ -55,7 +52,9 @@ export function useContractCall(options: UseContractCallOptions = {}) {
           success: true,
           txId: response.txid!,
         }));
-        onSuccess?.(response);
+        onSuccess?.({
+          txId: response.txid!,
+        });
       } catch (error) {
         const errorMessage =
           error instanceof Error ? error.message : "Unknown error";
