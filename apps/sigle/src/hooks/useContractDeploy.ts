@@ -1,5 +1,5 @@
+import type { DeployContractParams } from "@stacks/connect/dist/types/methods";
 import { request } from "@stacks/connect";
-import { DeployContractParams } from "@stacks/connect/dist/types/methods";
 import { useCallback, useState } from "react";
 
 interface UseContractDeployOptions {
@@ -50,9 +50,13 @@ export function useContractDeploy(options: UseContractDeployOptions = {}) {
           ...prev,
           loading: false,
           success: true,
+          // oxlint-disable-next-line no-non-null-assertion
           txId: response.txid!,
         }));
-        onSuccess?.({ txId: response.txid! });
+        onSuccess?.({
+          // oxlint-disable-next-line no-non-null-assertion
+          txId: response.txid!,
+        });
       } catch (error) {
         const errorMessage =
           error instanceof Error ? error.message : "Unknown error";

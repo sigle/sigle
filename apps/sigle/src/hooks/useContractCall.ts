@@ -1,5 +1,5 @@
+import type { CallContractParams } from "@stacks/connect/dist/types/methods";
 import { request } from "@stacks/connect";
-import { CallContractParams } from "@stacks/connect/dist/types/methods";
 import { useCallback, useState } from "react";
 
 interface UseContractCallOptions {
@@ -50,9 +50,11 @@ export function useContractCall(options: UseContractCallOptions = {}) {
           ...prev,
           loading: false,
           success: true,
+          // oxlint-disable-next-line no-non-null-assertion
           txId: response.txid!,
         }));
         onSuccess?.({
+          // oxlint-disable-next-line no-non-null-assertion
           txId: response.txid!,
         });
       } catch (error) {
