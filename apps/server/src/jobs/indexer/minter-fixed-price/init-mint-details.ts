@@ -45,9 +45,9 @@ export const executeIndexerInitMintDetailsJob = async (
   });
 
   // Reset the count to 0 in case we are reindexing
-  await prisma.post.update({
+  await prisma.collectible.update({
     where: {
-      id: collectible.post.id,
+      address: data.address,
     },
     data: {
       collected: 0,

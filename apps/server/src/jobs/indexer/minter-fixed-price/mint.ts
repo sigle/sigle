@@ -55,8 +55,15 @@ export const executeIndexerMintJob = async (
     });
   }
 
-  const collectible = await prisma.collectible.findUniqueOrThrow({
-    where: { address: data.address },
+  const updatedCollectible = await prisma.collectible.update({
+    where: {
+      address: data.address,
+    },
+    data: {
+      collected: {
+        increment: data.quantity,
+      },
+    },
     select: {
       post: {
         select: {
@@ -66,31 +73,17 @@ export const executeIndexerMintJob = async (
     },
   });
 
-  const updatedPost = await prisma.post.update({
-    select: {
-      id: true,
-    },
-    where: {
-      id: collectible.post.id,
-    },
-    data: {
-      collected: {
-        increment: data.quantity,
-      },
-    },
-  });
-
   for (const event of data.nftMintEvents) {
     const postNftData = {
-      id: `${updatedPost.id}-${event.asset_identifier}`,
+      id: `${updatedCollectible.post.id}-${event.asset_identifier}`,
       minterId: data.sender,
       ownerId: event.recipient,
-      postId: updatedPost.id,
+      postId: updatedCollectible.post.id,
       createdAt: data.timestamp,
     };
     await prisma.postNft.upsert({
       where: {
-        id: `${updatedPost.id}-${event.asset_identifier}`,
+        id: `${updatedCollectible.post.id}-${event.asset_identifier}`,
       },
       update: postNftData,
       create: postNftData,
@@ -98,7 +91,7 @@ export const executeIndexerMintJob = async (
   }
 
   consola.info("post.mint", {
-    id: updatedPost.id,
+    id: updatedCollectible.post.id,
     quantity: data.quantity,
   });
 };

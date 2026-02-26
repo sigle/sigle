@@ -140,7 +140,6 @@ model Post {
   id          String  @id @map("id")
   version     Int     @map("version")
   txId        String  @unique @map("tx_id")
-  collected   Int     @map("collected")
   metadataUri String  @map("metadata_uri")
   enabled     Boolean @map("enabled")
 
@@ -183,6 +182,7 @@ model Collectible {
   address     String  @unique @map("address")
   maxSupply   Int     @map("max_supply")
   openEdition Boolean @map("open_edition")
+  collected   Int     @map("collected")
 
   post Post @relation(fields: [id], references: [id])
 
