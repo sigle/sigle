@@ -21,11 +21,11 @@ const sigleClient = createClient({
 
 ## Mint
 
-To prepare a mint transaction, use the `mint` method. Then pass the parameters to `openContractCall` to execute the transaction with the user's wallet.
+To prepare a mint transaction, use the `mint` method. Then pass the parameters to `stx_callContract` to execute the transaction with the user's wallet.
 
 ```tsx
 import { STACKS_MAINNET } from "@stacks/network";
-import { openContractCall } from "@stacks/connect";
+import { request } from "@stacks/connect";
 import { createClient } from "@sigle/sdk";
 
 const sigleClient = createClient({
@@ -45,20 +45,19 @@ const { parameters } = await sigleClient.mint({
   price: post.minterFixedPrice.price,
 });
 
-openContractCall({
+const response = await request("stx_callContract", {
   ...parameters,
-  network: STACKS_MAINNET,
   // Your other options
 });
 ```
 
 ## Publish post
 
-To deploy a new post, use the `generatePostContract` method to get the smart contract code. Then pass the parameters to `openContractDeploy` to execute the transaction with the user's wallet.
+To deploy a new post, use the `generatePostContract` method to get the smart contract code. Then pass the parameters to `stx_deployContract` to execute the transaction with the user's wallet.
 
 ```tsx
 import { STACKS_MAINNET } from "@stacks/network";
-import { openContractCall } from "@stacks/connect";
+import { request } from "@stacks/connect";
 import { createClient, createPostMetadata } from "@sigle/sdk";
 import { createId } from "@paralleldrive/cuid2";
 
@@ -87,10 +86,9 @@ const { contract } = sigleClient.generatePostContract({
   },
 });
 
-openContractDeploy({
-  network: STACKS_MAINNET,
-  contractName: postId,
-  codeBody: contract,
+const response = await request("stx_callContract", {
+  name: postId,
+  clarityCode: contract,
   // Your other options
 });
 ```

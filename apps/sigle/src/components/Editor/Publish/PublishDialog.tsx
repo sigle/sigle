@@ -181,8 +181,8 @@ export const PublishDialog = ({ postId }: PublishDialogProps) => {
             });
 
             await contractDeploy({
-              contractName: newPostId,
-              codeBody: contract,
+              name: newPostId,
+              clarityCode: contract,
             });
             return;
           }
