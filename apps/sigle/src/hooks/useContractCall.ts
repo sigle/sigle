@@ -1,13 +1,12 @@
+import { request } from "@stacks/connect";
 import {
-  type ContractCallOptions,
-  type FinishedTxData,
-  openContractCall,
-} from "@stacks/connect";
+  CallContractParams,
+  TransactionResult,
+} from "@stacks/connect/dist/types/methods";
 import { useCallback, useState } from "react";
-import { stacksNetwork } from "@/lib/stacks";
 
 interface UseContractCallOptions {
-  onSuccess?: (data: FinishedTxData) => void;
+  onSuccess?: (data: TransactionResult) => void;
   onError?: (error: string) => void;
   onCancel?: () => void;
 }
@@ -38,12 +37,7 @@ export function useContractCall(options: UseContractCallOptions = {}) {
   }, []);
 
   const contractCall = useCallback(
-    async (
-      parameters: Omit<
-        ContractCallOptions,
-        "network" | "onFinish" | "onCancel" | "sponsored"
-      >,
-    ) => {
+    async (parameters: Omit<CallContractParams, "network" | "sponsored">) => {
       try {
         setState((prev) => ({
           ...prev,
@@ -53,29 +47,29 @@ export function useContractCall(options: UseContractCallOptions = {}) {
           txId: null,
         }));
 
-        await openContractCall({
-          ...parameters,
-          network: stacksNetwork,
-          onFinish: (data) => {
-            setState((prev) => ({
-              ...prev,
-              loading: false,
-              success: true,
-              txId: data.txId,
-            }));
-            onSuccess?.(data);
-          },
-          onCancel: () => {
-            setState((prev) => ({
-              ...prev,
-              loading: false,
-            }));
-            onCancel?.();
-          },
-        });
+        const response = await request("stx_callContract", parameters);
+
+        setState((prev) => ({
+          ...prev,
+          loading: false,
+          success: true,
+          txId: response.txid!,
+        }));
+        onSuccess?.(response);
       } catch (error) {
         const errorMessage =
           error instanceof Error ? error.message : "Unknown error";
+
+        // TODO this is not working for now
+        if (errorMessage.endsWith("User denied transaction")) {
+          setState((prev) => ({
+            ...prev,
+            loading: false,
+          }));
+          onCancel?.();
+          return;
+        }
+
         setState((prev) => ({
           ...prev,
           loading: false,
