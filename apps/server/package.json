@@ -32,7 +32,7 @@
     "multiformats": "13.4.2",
     "nitro-cors": "0.7.1",
     "pg-boss": "10.3.2",
-    "posthog-node": "5.17.4",
+    "posthog-node": "5.26.0",
     "prisma": "7.4.1",
     "rate-limiter-flexible": "7.2.0",
     "rou3": "0.7.12",
