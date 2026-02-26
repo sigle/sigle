@@ -13,10 +13,7 @@ export const indexerReduceSupplySchema = z.object({
 export const executeIndexerReduceSupplyJob = async (
   data: z.TypeOf<typeof indexerReduceSupplySchema>["data"],
 ) => {
-  const updatedPost = await prisma.post.update({
-    select: {
-      id: true,
-    },
+  const updatedCollectible = await prisma.collectible.update({
     where: {
       address: data.address,
     },
@@ -24,10 +21,17 @@ export const executeIndexerReduceSupplyJob = async (
       maxSupply: data.maxSupply,
       openEdition: false,
     },
+    select: {
+      post: {
+        select: {
+          id: true,
+        },
+      },
+    },
   });
 
   consola.info("post.reduceSupply", {
-    id: updatedPost.id,
+    id: updatedCollectible.post.id,
     maxSupply: data.maxSupply,
   });
 };

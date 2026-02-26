@@ -182,14 +182,11 @@ export const executeNewPostJob = async (
       },
       create: {
         id: metadata.id,
-        address: data.address,
         txId: data.txId,
         version: data.version,
         userId,
         collected: 0,
         enabled: true,
-        openEdition,
-        maxSupply: maxSupply === BigInt(MAX_UINT) ? 0 : Number(maxSupply),
         createdAt: new Date(data.createdAt),
 
         // Metadata fields
@@ -201,6 +198,15 @@ export const executeNewPostJob = async (
         excerpt: metadata.excerpt,
         tags: metadata.tags,
         canonicalUri: metadata.canonicalUri,
+
+        // Collectible
+        collectible: {
+          create: {
+            address: data.address,
+            maxSupply: maxSupply === BigInt(MAX_UINT) ? 0 : Number(maxSupply),
+            openEdition,
+          },
+        },
       },
     });
 

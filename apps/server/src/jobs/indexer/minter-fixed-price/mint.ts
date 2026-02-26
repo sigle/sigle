@@ -55,12 +55,24 @@ export const executeIndexerMintJob = async (
     });
   }
 
+  const collectible = await prisma.collectible.findUniqueOrThrow({
+    where: { address: data.address },
+    select: {
+      post: {
+        select: {
+          id: true,
+        },
+      },
+    },
+  });
+  const postId = collectible.post.id;
+
   const updatedPost = await prisma.post.update({
     select: {
       id: true,
     },
     where: {
-      address: data.address,
+      id: postId,
     },
     data: {
       collected: {

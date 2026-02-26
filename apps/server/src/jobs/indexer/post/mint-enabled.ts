@@ -13,20 +13,28 @@ export const indexerMintEnabledSchema = z.object({
 export const executeIndexerMintEnabledJob = async (
   data: z.TypeOf<typeof indexerMintEnabledSchema>["data"],
 ) => {
-  const updatedPost = await prisma.post.update({
-    select: {
-      id: true,
-    },
+  const updatedCollectible = await prisma.collectible.update({
     where: {
       address: data.address,
     },
     data: {
-      enabled: data.enabled,
+      post: {
+        update: {
+          enabled: data.enabled,
+        },
+      },
+    },
+    select: {
+      post: {
+        select: {
+          id: true,
+        },
+      },
     },
   });
 
   consola.info("post.mintEnabled", {
-    id: updatedPost.id,
+    id: updatedCollectible.post.id,
     enabled: data.enabled,
   });
 };

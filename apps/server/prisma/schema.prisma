@@ -139,13 +139,10 @@ model Draft {
 model Post {
   id          String  @id @map("id")
   version     Int     @map("version")
-  address     String  @unique @map("address")
   txId        String  @unique @map("tx_id")
   collected   Int     @map("collected")
-  maxSupply   Int     @map("max_supply")
   metadataUri String  @map("metadata_uri")
   enabled     Boolean @map("enabled")
-  openEdition Boolean @map("open_edition")
 
   // Metadata fields
   title           String      @map("title")
@@ -165,6 +162,7 @@ model Post {
   user             User              @relation(fields: [userId], references: [id])
   nfts             PostNft[]
   minterFixedPrice MinterFixedPrice?
+  collectible      Collectible?
 
   @@map("post")
 }
@@ -178,6 +176,17 @@ model MinterFixedPrice {
   post Post @relation(fields: [id], references: [id])
 
   @@map("minter_fixed_price")
+}
+
+model Collectible {
+  id          String  @id @map("id")
+  address     String  @unique @map("address")
+  maxSupply   Int     @map("max_supply")
+  openEdition Boolean @map("open_edition")
+
+  post Post @relation(fields: [id], references: [id])
+
+  @@map("collectible")
 }
 
 model MediaImage {
