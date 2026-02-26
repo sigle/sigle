@@ -48,7 +48,7 @@ export const createClient = (options: CreateClientOptions) => {
     setBaseTokenUri: (params: SetBaseTokenUriParams) =>
       setBaseTokenUri({
         params,
-        network: options.network,
+        networkName,
       }),
 
     publishPost: (params: PublishPostParams) =>

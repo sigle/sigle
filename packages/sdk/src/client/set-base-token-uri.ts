@@ -1,6 +1,6 @@
-import type { ContractCallBase } from "@stacks/connect";
-import type { StacksNetwork } from "@stacks/network";
-import { PostConditionMode, stringAsciiCV } from "@stacks/transactions";
+import type { CallContractParams } from "@stacks/connect/dist/types/methods.js";
+import type { StacksNetworkName } from "@stacks/network";
+import { stringAsciiCV } from "@stacks/transactions";
 
 export interface SetBaseTokenUriParams {
   // Contract address of the post
@@ -11,26 +11,25 @@ export interface SetBaseTokenUriParams {
 
 export interface SetBaseTokenUriReturn {
   // Parameters to pass to the stacks.js contract call
-  parameters: ContractCallBase;
+  parameters: CallContractParams;
 }
 
 export const setBaseTokenUri = ({
   params,
-  network,
+  networkName,
 }: {
   params: SetBaseTokenUriParams;
-  network: StacksNetwork;
+  networkName: StacksNetworkName;
 }): SetBaseTokenUriReturn => {
   const [contractAddress, contractName] = params.contract.split(".");
   return {
     parameters: {
-      contractAddress,
-      contractName,
+      contract: `${contractAddress}.${contractName}`,
       functionName: "set-base-token-uri",
       functionArgs: [stringAsciiCV(params.metadata)],
       postConditions: [],
-      postConditionMode: PostConditionMode.Deny,
-      network,
+      postConditionMode: "deny",
+      network: networkName,
     },
   };
 };
