@@ -66,7 +66,7 @@ const defaultPost = {
 
 describe("editor tiptap - markdown serialization", () => {
   beforeEach(() => {
-    useEditorStore.setState({ editor: null });
+    useEditorStore.setState({ editor: undefined });
   });
 
   it("should export empty string for empty editor", async () => {
@@ -269,7 +269,7 @@ describe("editor tiptap - markdown serialization", () => {
 
 describe("editor tiptap - markdown deserialization", () => {
   beforeEach(() => {
-    useEditorStore.setState({ editor: null });
+    useEditorStore.setState({ editor: undefined });
   });
 
   it("should parse markdown bold formatting", async () => {
@@ -374,7 +374,7 @@ describe("editor tiptap - markdown deserialization", () => {
 
 describe("editor tiptap - round-trip", () => {
   beforeEach(() => {
-    useEditorStore.setState({ editor: null });
+    useEditorStore.setState({ editor: undefined });
   });
 
   it("should preserve bold formatting through round-trip", async () => {
@@ -457,7 +457,7 @@ describe("editor tiptap - round-trip", () => {
 
 describe("editor tiptap - editor state", () => {
   beforeEach(() => {
-    useEditorStore.setState({ editor: null });
+    useEditorStore.setState({ editor: undefined });
   });
 
   it("should update character count", async () => {
@@ -505,7 +505,7 @@ describe("editor tiptap - editor state", () => {
 
 describe("editor tiptap - form integration", () => {
   beforeEach(() => {
-    useEditorStore.setState({ editor: null });
+    useEditorStore.setState({ editor: undefined });
   });
 
   it("should sync content to form on update", async () => {
