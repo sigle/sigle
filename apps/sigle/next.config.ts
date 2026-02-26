@@ -13,6 +13,7 @@ const nextConfig: NextConfig = {
       },
     ],
   },
+  serverExternalPackages: ["@stacks/connect"],
 };
 
 export default withSentryConfig(nextConfig, {

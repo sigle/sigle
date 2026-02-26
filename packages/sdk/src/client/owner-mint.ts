@@ -1,10 +1,6 @@
-import type { ContractCallBase } from "@stacks/connect";
-import type { StacksNetwork } from "@stacks/network";
-import {
-  contractPrincipalCV,
-  noneCV,
-  PostConditionMode,
-} from "@stacks/transactions";
+import type { CallContractParams } from "@stacks/connect/dist/types/methods.js";
+import type { StacksNetworkName } from "@stacks/network";
+import { contractPrincipalCV, noneCV } from "@stacks/transactions";
 
 export interface OwnerMintParams {
   // Contract address of the post
@@ -15,22 +11,21 @@ export interface OwnerMintParams {
 
 export interface OwnerMintReturn {
   // Parameters to pass to the stacks.js contract call
-  parameters: ContractCallBase;
+  parameters: CallContractParams;
 }
 
 export const ownerMint = async ({
   params,
-  network,
+  networkName,
 }: {
   params: OwnerMintParams;
-  network: StacksNetwork;
+  networkName: StacksNetworkName;
 }): Promise<OwnerMintReturn> => {
   const [contractAddress, contractName] = params.contract.split(".");
 
   return {
     parameters: {
-      contractAddress,
-      contractName,
+      contract: `${contractAddress}.${contractName}`,
       functionName: "owner-mint",
       functionArgs: [
         params.recipient
@@ -38,8 +33,8 @@ export const ownerMint = async ({
           : noneCV(),
       ],
       postConditions: [],
-      postConditionMode: PostConditionMode.Deny,
-      network,
+      postConditionMode: "deny",
+      network: networkName,
     },
   };
 };

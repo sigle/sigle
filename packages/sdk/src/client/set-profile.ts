@@ -1,6 +1,6 @@
-import type { ContractCallBase } from "@stacks/connect";
-import type { StacksNetwork, StacksNetworkName } from "@stacks/network";
-import { PostConditionMode, stringAsciiCV } from "@stacks/transactions";
+import type { CallContractParams } from "@stacks/connect/dist/types/methods.js";
+import type { StacksNetworkName } from "@stacks/network";
+import { stringAsciiCV } from "@stacks/transactions";
 import { config } from "./config.js";
 
 export interface SetProfileParams {
@@ -12,28 +12,25 @@ export interface SetProfileParams {
 
 export interface SetProfileReturn {
   // Parameters to pass to the stacks.js contract call
-  parameters: ContractCallBase;
+  parameters: CallContractParams;
 }
 
 export const setProfile = ({
   params,
-  network,
   networkName,
 }: {
   params: SetProfileParams;
-  network: StacksNetwork;
   networkName: StacksNetworkName;
 }): SetProfileReturn => {
   const protocolAddress = config[networkName].protocolAddress;
 
   return {
     parameters: {
-      contractAddress: protocolAddress,
-      contractName: "sigle-profiles-v001",
+      contract: `${protocolAddress}.sigle-profiles-v001`,
       functionName: "set-profile",
       functionArgs: [stringAsciiCV(params.metadata)],
-      postConditionMode: PostConditionMode.Deny,
-      network,
+      postConditionMode: "deny",
+      network: networkName,
     },
   };
 };
