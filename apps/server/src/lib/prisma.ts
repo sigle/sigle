@@ -54,6 +54,7 @@ export const SELECT_PUBLIC_POST_FIELDS = {
       maxSupply: true,
       openEdition: true,
       collected: true,
+      enabled: true,
     },
   },
 };

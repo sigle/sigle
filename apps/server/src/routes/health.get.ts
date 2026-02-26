@@ -221,6 +221,7 @@ defineRouteMeta({
                   "maxSupply",
                   "openEdition",
                   "collected",
+                  "enabled",
                 ],
                 properties: {
                   id: {
@@ -237,6 +238,9 @@ defineRouteMeta({
                   },
                   collected: {
                     type: "number",
+                  },
+                  enabled: {
+                    type: "boolean",
                   },
                 },
               },

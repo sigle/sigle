@@ -18,11 +18,7 @@ export const executeIndexerMintEnabledJob = async (
       address: data.address,
     },
     data: {
-      post: {
-        update: {
-          enabled: data.enabled,
-        },
-      },
+      enabled: data.enabled,
     },
     select: {
       post: {

@@ -185,7 +185,6 @@ export const executeNewPostJob = async (
         txId: data.txId,
         version: data.version,
         userId,
-        enabled: true,
         createdAt: new Date(data.createdAt),
 
         // Metadata fields
@@ -205,6 +204,7 @@ export const executeNewPostJob = async (
             maxSupply: maxSupply === BigInt(MAX_UINT) ? 0 : Number(maxSupply),
             openEdition,
             collected: 0,
+            enabled: true,
           },
         },
       },
