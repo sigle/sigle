@@ -14,8 +14,8 @@ import { type PublishPostParams, publishPost } from "./publish-post.js";
 import {
   type SetBaseTokenUriParams,
   setBaseTokenUri,
-} from "./setBaseTokenUri.js";
-import { type SetProfileParams, setProfile } from "./setProfile.js";
+} from "./set-base-token-uri.js";
+import { type SetProfileParams, setProfile } from "./set-profile.js";
 
 interface CreateClientOptions {
   /**
