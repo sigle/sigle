@@ -32,9 +32,10 @@ export const executeIndexerMintEnabledJob = async (
       },
     },
   });
+  const updatedPost = updatedCollectible.post;
 
   consola.info("post.mintEnabled", {
-    id: updatedCollectible.post.id,
+    id: updatedPost.id,
     enabled: data.enabled,
   });
 };
