@@ -27,6 +27,32 @@ const eventLogSchema = z.object({
   }),
 });
 
+async function getTxTimestamp(txId: string): Promise<Date> {
+  const txResult = await stacksApiClient.GET("/extended/v1/tx/{tx_id}", {
+    params: {
+      path: {
+        tx_id: txId,
+      },
+      // Used for faster queries
+      query: {
+        event_limit: 0,
+        exclude_function_args: true,
+      },
+    },
+  });
+
+  if (txResult.error || !txResult.data) {
+    throw new Error(`Failed to fetch tx ${txId}: ${txResult.error}`);
+  }
+  if (txResult.data.tx_status !== "success") {
+    throw new Error(
+      `Transaction ${txId} is not successful: status ${txResult.data.tx_status}`,
+    );
+  }
+
+  return new Date(txResult.data.burn_block_time * 1000);
+}
+
 export const executeIndexerIndexPostsJob = async (
   _data: z.TypeOf<typeof indexerIndexPostsSchema>["data"],
 ) => {
@@ -119,8 +145,7 @@ export const executeIndexerIndexPostsJob = async (
           txId: event.tx_id,
           author: eventLog.data.value.author.value,
           uri: eventLog.data.value.uri.value,
-          // TODO
-          createdAt: new Date(event.burn_block_time * 1000),
+          createdAt: await getTxTimestamp(event.tx_id),
         });
       }
     }
