@@ -5,6 +5,7 @@ export const config: Record<
   StacksNetworkName,
   {
     protocolAddress: string;
+    registryAddress: `${string}.${string}`;
     sBTCAsset: AssetString;
     nftTrait: string;
     commissionTrait: string;
@@ -14,6 +15,8 @@ export const config: Record<
 > = {
   mainnet: {
     protocolAddress: "TODO",
+    registryAddress: "TODO.TODO",
+
     sBTCAsset:
       "SM3VDXK3WZZSA84XXFKAFAF15NNZX32CTSG82JFQ4.sbtc-token::sbtc-token",
     nftTrait: "TODO",
@@ -22,7 +25,10 @@ export const config: Record<
     fixedPriceMinter: "TODO",
   },
   testnet: {
-    protocolAddress: "ST21VRKNB56B9AJ1CH3SQ7WC581QXFVJP406SBVJA",
+    protocolAddress: "STXNKH7PH0JNV55J08BC3C9586PVJ46XG0K69DT5",
+    registryAddress:
+      "STXNKH7PH0JNV55J08BC3C9586PVJ46XG0K69DT5.sigle-registry-v001",
+
     sBTCAsset:
       "ST1F7QA2MDF17S807EPA36TSS8AMEFY4KA9TVGWXT.sbtc-token::sbtc-token",
     nftTrait: "ST21VRKNB56B9AJ1CH3SQ7WC581QXFVJP406SBVJA.nft-trait",
@@ -35,6 +41,9 @@ export const config: Record<
   },
   devnet: {
     protocolAddress: "ST21VRKNB56B9AJ1CH3SQ7WC581QXFVJP406SBVJA",
+    registryAddress:
+      "STXNKH7PH0JNV55J08BC3C9586PVJ46XG0K69DT5.sigle-registry-v001",
+
     sBTCAsset:
       "SM3VDXK3WZZSA84XXFKAFAF15NNZX32CTSG82JFQ4.sbtc-token::sbtc-token",
     nftTrait: "ST21VRKNB56B9AJ1CH3SQ7WC581QXFVJP406SBVJA.nft-trait",
@@ -47,6 +56,9 @@ export const config: Record<
   },
   mocknet: {
     protocolAddress: "ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM",
+    registryAddress:
+      "ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.sigle-registry-v001",
+
     sBTCAsset:
       "SM3VDXK3WZZSA84XXFKAFAF15NNZX32CTSG82JFQ4.sbtc-token::sbtc-token",
     nftTrait: "SP2PABAF9FTAJYNFZH93XENAJ8FVY99RRM50D2JG9.nft-trait",

@@ -20,11 +20,11 @@ export const publishPost = ({
   params: PublishPostParams;
   networkName: StacksNetworkName;
 }): PublishPostReturn => {
-  const protocolAddress = config[networkName].protocolAddress;
+  const registryAddress = config[networkName].registryAddress;
 
   return {
     parameters: {
-      contract: `${protocolAddress}.sigle-registry-v001`,
+      contract: registryAddress,
       functionName: "publish-post",
       functionArgs: [stringAsciiCV(params.metadataUri)],
       postConditionMode: "deny",

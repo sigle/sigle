@@ -61,6 +61,7 @@ export type PostMetadata = MarketplaceMetadata & {
   content: PostMetadataDetails;
   // TODO add signature
   // signature: string;
+  // TODO add version for the content
 };
 
 export const PostMetadataSchema = MarketplaceMetadataSchema.extend({

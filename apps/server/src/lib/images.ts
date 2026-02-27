@@ -76,7 +76,7 @@ export function mimeTypeToExtension(mimeType: string): string {
 
 export async function generateBlurhashURI({
   buffer,
-  size = 40,
+  size = 20,
 }: {
   buffer: Buffer | ArrayBuffer;
   size?: number;
