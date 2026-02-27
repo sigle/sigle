@@ -1,3 +1,4 @@
+import { cvToJSON, hexToCV } from "@stacks/transactions";
 import { z } from "zod";
 import { consola } from "~/lib/consola";
 import { prisma } from "~/lib/prisma";
@@ -9,26 +10,21 @@ export const indexerIndexPostsSchema = z.object({
   data: z.object({}),
 });
 
-const CONTRACT_ID = `${sigleConfig.protocolAddress}.responsible-aqua-scallop`;
 const API_LIMIT = 50;
 
-interface ContractEvent {
-  event_index: number;
-  event_type: string;
-  tx_id: string;
-  contract_log?: {
-    contract_id: string;
-    topic: string;
-    value: {
-      hex: string;
-      repr: string;
-    };
-  };
-}
-
-interface ContractEventsResponse {
-  results: ContractEvent[];
-}
+const eventLogSchema = z.object({
+  value: z.object({
+    a: z.object({
+      value: z.literal("publish-post"),
+    }),
+    author: z.object({
+      value: z.string(),
+    }),
+    uri: z.object({
+      value: z.string(),
+    }),
+  }),
+});
 
 export const executeIndexerIndexPostsJob = async (
   _data: z.TypeOf<typeof indexerIndexPostsSchema>["data"],
@@ -46,16 +42,24 @@ export const executeIndexerIndexPostsJob = async (
 
   let offset = 0;
   let hasMore = true;
-  let processedCount = 0;
   let caughtUp = false;
+  const posts: {
+    txId: string;
+    author: string;
+    uri: string;
+  }[] = [];
 
   while (hasMore && !caughtUp) {
-    const resultEvents = (await stacksApiClient.GET(
+    console.debug("Fetching events from Stacks API", {
+      offset,
+      limit: API_LIMIT,
+    });
+    const resultEvents = await stacksApiClient.GET(
       "/extended/v1/contract/{contract_id}/events",
       {
         params: {
           path: {
-            contract_id: CONTRACT_ID,
+            contract_id: sigleConfig.registryAddress,
           },
           query: {
             limit: API_LIMIT,
@@ -63,7 +67,15 @@ export const executeIndexerIndexPostsJob = async (
           },
         },
       },
-    )) as { data: ContractEventsResponse };
+    );
+
+    if (resultEvents.error) {
+      // TODO handle error (retry with backoff, alert, etc.)
+      consola.error("Error fetching events from Stacks API", {
+        error: resultEvents.error,
+      });
+      break;
+    }
 
     const events = resultEvents.data.results;
 
@@ -90,44 +102,32 @@ export const executeIndexerIndexPostsJob = async (
         event.contract_log &&
         event.contract_log.topic === "print"
       ) {
-        const valueRepr = event.contract_log.value.repr;
-
-        if (valueRepr.includes("publish-post")) {
-          const uriMatch = valueRepr.match(/uri "([^"]+)"/);
-          const authorMatch = valueRepr.match(/author (SP[0-9A-Z]+)/);
-
-          if (uriMatch && authorMatch) {
-            const existingPost = await prisma.post.findUnique({
-              where: {
-                txId: event.tx_id,
-              },
-            });
-
-            if (!existingPost) {
-              processedCount++;
-              consola.info("Found new publish-post event", {
-                txId: event.tx_id,
-                author: authorMatch[1],
-                uri: uriMatch[1],
-              });
-            }
-          } else {
-            consola.warn("Failed to parse publish-post event", {
-              txId: event.tx_id,
-              repr: valueRepr,
-            });
-          }
+        const eventValue = cvToJSON(hexToCV(event.contract_log.value.hex));
+        const eventLog = eventLogSchema.safeParse(eventValue);
+        if (!eventLog.success) {
+          consola.error("Failed to parse event log with schema", {
+            txId: event.tx_id,
+            error: eventLog.error,
+            value: eventValue,
+          });
+          break;
         }
+
+        posts.push({
+          txId: event.tx_id,
+          author: eventLog.data.value.author.value,
+          uri: eventLog.data.value.uri.value,
+        });
       }
     }
 
     offset += API_LIMIT;
   }
 
-  consola.info("Index posts job complete", {
-    processed: processedCount,
+  const returnData = {
+    toProcess: posts.length,
     lastProcessedTxId,
-  });
-
-  return { processed: processedCount, caughtUp };
+  };
+  consola.info("Index posts job complete", returnData);
+  return returnData;
 };
