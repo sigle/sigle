@@ -23,6 +23,10 @@ import {
 } from "./post/mint-enabled";
 import { executeNewPostJob, indexerNewPostSchema } from "./post/new-post";
 import {
+  executePublishPostJob,
+  indexerPublishPostSchema,
+} from "./post/publish-post";
+import {
   executeIndexerReduceSupplyJob,
   indexerReduceSupplySchema,
 } from "./post/reduce-supply";
@@ -48,6 +52,7 @@ export const indexerJob = defineJob("indexer")
 
       indexerSetProfileSchema,
       indexerIndexPostsSchema,
+      indexerPublishPostSchema,
     ]),
   )
   .options({
@@ -81,6 +86,9 @@ export const indexerJob = defineJob("indexer")
 
       case "indexer-index-posts":
         await executeIndexerIndexPostsJob(job.data.data);
+        break;
+      case "indexer-publish-post":
+        await executePublishPostJob(job.data.data);
         break;
       case "indexer-set-profile":
         await executeIndexerSetProfileJob(job.data.data);
