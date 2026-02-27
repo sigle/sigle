@@ -88,9 +88,9 @@ export const LatestPost = () => {
                   align="center"
                   justify="between"
                   className={`
-                  border-b border-solid border-gray-6 py-5
-                  last:border-b-0
-                `}
+                    border-b border-solid border-gray-6 py-5
+                    last:border-b-0
+                  `}
                 >
                   <Text size="2">Collected</Text>
                   <Text size="2" weight="medium">
