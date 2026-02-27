@@ -54,6 +54,7 @@ export const indexerPublishPostSchema = z.object({
     txId: z.string(),
     author: z.string(),
     uri: z.string(),
+    createdAt: z.coerce.date(),
   }),
 });
 
@@ -61,13 +62,17 @@ export const executePublishPostJob = async (
   data: z.TypeOf<typeof indexerPublishPostSchema>["data"],
 ) => {
   const metadata = await getMetadataFromUri(data.uri);
+  // TODO fix the version from the SDK metadata
+  const version = 1;
 
+  let shouldProcessImage = false;
   await prisma.$transaction(async (tx) => {
     const userId = data.author;
     const post = await tx.post.findUnique({
       select: {
         id: true,
         txId: true,
+        coverImageId: true,
       },
       where: {
         id: metadata.id,
@@ -105,12 +110,12 @@ export const executePublishPostJob = async (
       },
       update: {
         txId: data.txId,
-        version: data.version,
+        version: version,
       },
       create: {
         id: metadata.id,
         txId: data.txId,
-        version: data.version,
+        version: version,
         userId,
         createdAt: new Date(data.createdAt),
 
@@ -126,7 +131,12 @@ export const executePublishPostJob = async (
       },
     });
 
-    if (metadata.coverImage) {
+    // Only reprocess the image if it changed
+    if (metadata.coverImage && post?.coverImageId !== metadata.coverImage.url) {
+      shouldProcessImage = true;
+    }
+
+    if (shouldProcessImage && metadata.coverImage) {
       await tx.post.update({
         where: {
           id: updatedPost.id,
@@ -158,8 +168,7 @@ export const executePublishPostJob = async (
     },
   });
 
-  // Process cover image if there is one
-  if (metadata.coverImage) {
+  if (shouldProcessImage && metadata.coverImage) {
     await generateImageBlurhashJob.emit({
       imageId: metadata.coverImage.url,
     });
