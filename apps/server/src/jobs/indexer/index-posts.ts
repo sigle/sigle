@@ -48,6 +48,7 @@ export const executeIndexerIndexPostsJob = async (
     txId: string;
     author: string;
     uri: string;
+    createdAt: Date;
   }[] = [];
 
   while (hasMore && !caughtUp) {
@@ -118,6 +119,8 @@ export const executeIndexerIndexPostsJob = async (
           txId: event.tx_id,
           author: eventLog.data.value.author.value,
           uri: eventLog.data.value.uri.value,
+          // TODO
+          createdAt: new Date(event.burn_block_time * 1000),
         });
       }
     }
