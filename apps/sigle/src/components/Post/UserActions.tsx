@@ -17,7 +17,10 @@ export const PostUserActions = ({ post }: PostUserActionsProps) => {
   const [collectDialogOpen, setCollectDialogOpen] = useState(false);
   const [shareDialogOpen, setShareDialogOpen] = useState(false);
 
-  const canCollect = post.maxSupply === 0 || post.collected < post.maxSupply;
+  const canCollect =
+    post.collectible &&
+    (post.collectible.maxSupply === 0 ||
+      post.collectible.collected < post.collectible.maxSupply);
 
   return (
     <>

@@ -1,5 +1,13 @@
 import { render } from "@testing-library/react";
-import { describe, expect, it, beforeEach, vi } from "vitest";
+import {
+  describe,
+  expect,
+  it,
+  beforeEach,
+  vi,
+  expectTypeOf,
+  afterEach,
+} from "vitest";
 import { EditorFormProvider } from "../../EditorFormProvider";
 import { EditorTipTap } from "../../EditorTiptap";
 import { useEditorStore } from "../../store";
@@ -48,7 +56,7 @@ const defaultPost = {
 describe("image extension - command availability", () => {
   beforeEach(() => {
     vi.useFakeTimers();
-    useEditorStore.setState({ editor: null });
+    useEditorStore.setState({ editor: undefined });
   });
 
   afterEach(() => {

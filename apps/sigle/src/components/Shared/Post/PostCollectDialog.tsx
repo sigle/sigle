@@ -61,7 +61,7 @@ export const PostCollectDialog = ({
       open ? "sBTC" : undefined,
     );
   const [editions, setEditions] = useState(1);
-  const isPostOwner = session?.user.id === post.address.split(".")[0];
+  const isPostOwner = session?.user.id === post.user.id;
 
   const { contractCall, loading: contractLoading } = useContractCall({
     onSuccess: (data) => {
@@ -85,15 +85,19 @@ export const PostCollectDialog = ({
   });
 
   const onCollect = async () => {
-    if (!session || !post.minterFixedPrice) {
+    if (!session) {
       login();
+      return;
+    }
+
+    if (!post.collectible || !post.minterFixedPrice) {
       return;
     }
 
     // Handle owner mint case
     if (isPostOwner) {
       const { parameters } = await sigleClient.ownerMint({
-        contract: post.address,
+        contract: post.collectible.address,
       });
 
       await contractCall(parameters);
@@ -102,7 +106,7 @@ export const PostCollectDialog = ({
 
     const { parameters } = await sigleClient.mint({
       sender: session.user.id,
-      contract: post.address,
+      contract: post.collectible.address,
       amount: editions,
       referral: referral ? referral : undefined,
       price: post.minterFixedPrice.price,
@@ -112,10 +116,14 @@ export const PostCollectDialog = ({
   };
 
   const incrementEditions = () => {
-    const remainingEditions = post.maxSupply - editions;
+    if (!post.collectible || !post.minterFixedPrice) {
+      return;
+    }
+
+    const remainingEditions = post.collectible.maxSupply - editions;
     if (
-      (post.openEdition ||
-        editions < post.maxSupply ||
+      (post.collectible.openEdition ||
+        editions < post.collectible.maxSupply ||
         remainingEditions < 1) &&
       editions < maxMints
     ) {
@@ -129,7 +137,7 @@ export const PostCollectDialog = ({
     }
   };
 
-  if (!post.minterFixedPrice) {
+  if (!post.minterFixedPrice || !post.collectible) {
     return null;
   }
 
@@ -228,9 +236,9 @@ export const PostCollectDialog = ({
           <div className="flex items-center justify-between">
             <Text size="2" weight="medium">
               Number of editions
-              {!post.openEdition ? (
+              {!post.collectible.openEdition ? (
                 <Badge color="gray" highContrast className="ml-1">
-                  {post.maxSupply - post.collected} left
+                  {post.collectible.maxSupply - post.collectible.collected} left
                 </Badge>
               ) : null}
             </Text>
@@ -255,7 +263,8 @@ export const PostCollectDialog = ({
                 highContrast
                 onClick={incrementEditions}
                 disabled={
-                  (!post.openEdition && editions === post.maxSupply) ||
+                  (!post.collectible.openEdition &&
+                    editions === post.collectible.maxSupply) ||
                   editions === maxMints
                 }
               >

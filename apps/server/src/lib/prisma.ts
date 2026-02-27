@@ -33,7 +33,6 @@ export const SELECT_PUBLIC_USER_FIELDS = {
 
 export const SELECT_PUBLIC_POST_FIELDS = {
   id: true,
-  address: true,
   title: true,
   content: true,
   metaTitle: true,
@@ -43,12 +42,19 @@ export const SELECT_PUBLIC_POST_FIELDS = {
   tags: true,
   canonicalUri: true,
   txId: true,
-  maxSupply: true,
-  collected: true,
-  openEdition: true,
   metadataUri: true,
   createdAt: true,
   updatedAt: true,
   // Relations
   minterFixedPrice: true,
+  collectible: {
+    select: {
+      id: true,
+      address: true,
+      maxSupply: true,
+      openEdition: true,
+      collected: true,
+      enabled: true,
+    },
+  },
 };

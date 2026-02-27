@@ -1252,12 +1252,8 @@ export interface components {
       excerpt?: string;
       tags?: string[];
       canonicalUri?: string;
-      address: string;
       txId: string;
-      maxSupply: number;
-      collected: number;
       collectorsCount?: number;
-      openEdition: boolean;
       metadataUri: string;
       createdAt: string;
       updatedAt: string;
@@ -1269,6 +1265,14 @@ export interface components {
         startBlock: string;
         /** @description The end block in BigInt format */
         endBlock: string;
+      };
+      collectible?: {
+        id: string;
+        address: string;
+        maxSupply: number;
+        openEdition: boolean;
+        collected: number;
+        enabled: boolean;
       };
       user: {
         id: string;

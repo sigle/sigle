@@ -63,9 +63,10 @@ export const LatestPost = () => {
               </Button>
             </div>
 
-            <div className="mt-5 -mb-4">
-              {/* TODO once we have that info from backend */}
-              {/* <Flex
+            {post.collectible ? (
+              <div className="mt-5 -mb-4">
+                {/* TODO once we have that info from backend */}
+                {/* <Flex
                 gap="5"
                 align="center"
                 justify="between"
@@ -82,21 +83,22 @@ export const LatestPost = () => {
                   </Text>
                 </Text>
               </Flex> */}
-              <Flex
-                gap="5"
-                align="center"
-                justify="between"
-                className={`
-                  border-b border-solid border-gray-6 py-5
-                  last:border-b-0
-                `}
-              >
-                <Text size="2">Collected</Text>
-                <Text size="2" weight="medium">
-                  {post.collected}
-                </Text>
-              </Flex>
-            </div>
+                <Flex
+                  gap="5"
+                  align="center"
+                  justify="between"
+                  className={`
+                    border-b border-solid border-gray-6 py-5
+                    last:border-b-0
+                  `}
+                >
+                  <Text size="2">Collected</Text>
+                  <Text size="2" weight="medium">
+                    {post.collectible.collected}
+                  </Text>
+                </Flex>
+              </div>
+            ) : null}
           </>
         ) : null}
       </Card>

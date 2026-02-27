@@ -40,7 +40,8 @@ export const PostInfoCard = ({ post }: PostInfoCardProps) => {
             size="2"
             color="gray"
             highContrast
-            href={getExplorerTransactionUrl(post.address)}
+            // TODO handle for non collectibles
+            href={getExplorerTransactionUrl(post.collectible?.address ?? "")}
             target="_blank"
             rel="noopener noreferrer"
             className="flex items-center gap-1"

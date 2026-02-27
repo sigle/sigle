@@ -172,9 +172,8 @@ export default defineEventHandler<
         tags: true,
         canonicalUri: true,
         txId: true,
-        openEdition: true,
-        maxSupply: true,
         minterFixedPrice: true,
+        collectible: true,
         createdAt: true,
         updatedAt: true,
       },
@@ -207,8 +206,8 @@ export default defineEventHandler<
           ? "paid"
           : "free",
       collectPrice: published.minterFixedPrice?.price,
-      collectLimitType: published.openEdition ? "open" : "fixed",
-      collectLimit: published.maxSupply,
+      collectLimitType: published.collectible?.openEdition ? "open" : "fixed",
+      collectLimit: published.collectible?.maxSupply,
       createdAt: published.createdAt,
       updatedAt: published.updatedAt,
     };

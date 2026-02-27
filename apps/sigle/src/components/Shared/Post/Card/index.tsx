@@ -25,7 +25,10 @@ interface PostCardProps {
 
 export const PostCard = ({ post }: PostCardProps) => {
   const [collectDialogOpen, setCollectDialogOpen] = useState(false);
-  const canCollect = post.maxSupply === 0 || post.collected < post.maxSupply;
+  const canCollect =
+    post.collectible &&
+    (post.collectible.maxSupply === 0 ||
+      post.collectible.collected < post.collectible.maxSupply);
 
   return (
     <Card size="2">
@@ -86,27 +89,31 @@ export const PostCard = ({ post }: PostCardProps) => {
           </Text>
         </div>
       </div>
-      <div className="mt-4 flex items-center justify-between">
-        <Text as="p" color="gray" size="2">
-          {post.openEdition
-            ? `${post.collected} collected`
-            : `${post.collected}/${post.maxSupply} collected`}
-        </Text>
-        <Button
-          color="gray"
-          size="2"
-          variant="soft"
-          disabled={!canCollect}
-          onClick={() => setCollectDialogOpen(true)}
-        >
-          Collect
-        </Button>
-      </div>
-      <PostCollectDialog
-        post={post}
-        open={collectDialogOpen}
-        onOpenChange={setCollectDialogOpen}
-      />
+      {post.collectible ? (
+        <>
+          <div className="mt-4 flex items-center justify-between">
+            <Text as="p" color="gray" size="2">
+              {post.collectible.openEdition
+                ? `${post.collectible.collected} collected`
+                : `${post.collectible.collected}/${post.collectible.maxSupply} collected`}
+            </Text>
+            <Button
+              color="gray"
+              size="2"
+              variant="soft"
+              disabled={!canCollect}
+              onClick={() => setCollectDialogOpen(true)}
+            >
+              Collect
+            </Button>
+          </div>
+          <PostCollectDialog
+            post={post}
+            open={collectDialogOpen}
+            onOpenChange={setCollectDialogOpen}
+          />
+        </>
+      ) : null}
     </Card>
   );
 };

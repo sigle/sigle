@@ -124,12 +124,8 @@ defineRouteMeta({
             type: "object",
             required: [
               "id",
-              "address",
               "txId",
               "title",
-              "maxSupply",
-              "collected",
-              "openEdition",
               "metadataUri",
               "createdAt",
               "updatedAt",
@@ -181,23 +177,11 @@ defineRouteMeta({
               canonicalUri: {
                 type: "string",
               },
-              address: {
-                type: "string",
-              },
               txId: {
                 type: "string",
               },
-              maxSupply: {
-                type: "number",
-              },
-              collected: {
-                type: "number",
-              },
               collectorsCount: {
                 type: "number",
-              },
-              openEdition: {
-                type: "boolean",
               },
               metadataUri: {
                 type: "string",
@@ -226,6 +210,37 @@ defineRouteMeta({
                   endBlock: {
                     type: "string",
                     description: "The end block in BigInt format",
+                  },
+                },
+              },
+              collectible: {
+                type: "object",
+                required: [
+                  "id",
+                  "address",
+                  "maxSupply",
+                  "openEdition",
+                  "collected",
+                  "enabled",
+                ],
+                properties: {
+                  id: {
+                    type: "string",
+                  },
+                  address: {
+                    type: "string",
+                  },
+                  maxSupply: {
+                    type: "number",
+                  },
+                  openEdition: {
+                    type: "boolean",
+                  },
+                  collected: {
+                    type: "number",
+                  },
+                  enabled: {
+                    type: "boolean",
                   },
                 },
               },

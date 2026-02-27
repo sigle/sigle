@@ -202,9 +202,16 @@ export const PublishDialog = ({ postId }: PublishDialogProps) => {
             Sentry.captureException("Error fetching published post");
             return;
           }
+          if (!publishedPost.data.collectible) {
+            setPublishingError("Published post does not have a collectible");
+            Sentry.captureException(
+              "Published post does not have a collectible",
+            );
+            return;
+          }
 
           const { parameters } = sigleClient.setBaseTokenUri({
-            contract: publishedPost.data.address,
+            contract: publishedPost.data.collectible.address,
             metadata: arweaveUrl,
           });
           await contractCall(parameters);
