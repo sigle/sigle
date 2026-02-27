@@ -62,101 +62,93 @@ export const executePublishPostJob = async (
 ) => {
   const metadata = await getMetadataFromUri(data.uri);
 
-  // await prisma.$transaction(async (tx) => {
-  //   const userId = data.sender;
-  //   const post = await tx.post.findUnique({
-  //     select: {
-  //       id: true,
-  //       txId: true,
-  //     },
-  //     where: {
-  //       id: metadata.id,
-  //     },
-  //   });
-  //   if (post && post.txId !== data.txId) {
-  //     throw new Error(
-  //       `Post id ${metadata.id} already exists with txId ${post.txId}`,
-  //     );
-  //   }
+  await prisma.$transaction(async (tx) => {
+    const userId = data.author;
+    const post = await tx.post.findUnique({
+      select: {
+        id: true,
+        txId: true,
+      },
+      where: {
+        id: metadata.id,
+      },
+    });
+    if (post && post.txId !== data.txId) {
+      console.warn(
+        `Post id ${metadata.id} already exists with a different txId. Existing txId: ${post.txId}, new txId: ${data.txId}`,
+      );
+      throw new Error(
+        `Post id ${metadata.id} already exists with txId ${post.txId}`,
+      );
+    }
 
-  //   const user = await tx.user.findUnique({
-  //     select: {
-  //       id: true,
-  //     },
-  //     where: {
-  //       id: userId,
-  //     },
-  //   });
-  //   if (!user) {
-  //     await tx.user.create({
-  //       data: {
-  //         id: userId,
-  //       },
-  //     });
-  //   }
+    const user = await tx.user.findUnique({
+      select: {
+        id: true,
+      },
+      where: {
+        id: userId,
+      },
+    });
+    if (!user) {
+      await tx.user.create({
+        data: {
+          id: userId,
+        },
+      });
+    }
 
-  //   const updatedPost = await tx.post.upsert({
-  //     where: {
-  //       id: metadata.id,
-  //       txId: data.txId,
-  //     },
-  //     update: {
-  //       txId: data.txId,
-  //       version: data.version,
-  //     },
-  //     create: {
-  //       id: metadata.id,
-  //       txId: data.txId,
-  //       version: data.version,
-  //       userId,
-  //       createdAt: new Date(data.createdAt),
+    const updatedPost = await tx.post.upsert({
+      where: {
+        id: metadata.id,
+        txId: data.txId,
+      },
+      update: {
+        txId: data.txId,
+        version: data.version,
+      },
+      create: {
+        id: metadata.id,
+        txId: data.txId,
+        version: data.version,
+        userId,
+        createdAt: new Date(data.createdAt),
 
-  //       // Metadata fields
-  //       metadataUri: baseTokenUri,
-  //       title: metadata.title,
-  //       content: metadata.content,
-  //       metaTitle: metadata.metaTitle,
-  //       metaDescription: metadata.metaDescription,
-  //       excerpt: metadata.excerpt,
-  //       tags: metadata.tags,
-  //       canonicalUri: metadata.canonicalUri,
+        // Metadata fields
+        metadataUri: data.uri,
+        title: metadata.title,
+        content: metadata.content,
+        metaTitle: metadata.metaTitle,
+        metaDescription: metadata.metaDescription,
+        excerpt: metadata.excerpt,
+        tags: metadata.tags,
+        canonicalUri: metadata.canonicalUri,
+      },
+    });
 
-  //       // Collectible
-  //       collectible: {
-  //         create: {
-  //           address: data.address,
-  //           maxSupply: maxSupply === BigInt(MAX_UINT) ? 0 : Number(maxSupply),
-  //           openEdition,
-  //           collected: 0,
-  //           enabled: true,
-  //         },
-  //       },
-  //     },
-  //   });
+    if (metadata.coverImage) {
+      await tx.post.update({
+        where: {
+          id: updatedPost.id,
+        },
+        data: {
+          coverImage: {
+            connectOrCreate: {
+              where: {
+                id: metadata.coverImage.url,
+              },
+              create: {
+                id: metadata.coverImage.url,
+                mimeType: metadata.coverImage.type,
+              },
+            },
+          },
+        },
+      });
+    }
 
-  //   if (metadata.coverImage) {
-  //     await tx.post.update({
-  //       where: {
-  //         id: updatedPost.id,
-  //       },
-  //       data: {
-  //         coverImage: {
-  //           connectOrCreate: {
-  //             where: {
-  //               id: metadata.coverImage.url,
-  //             },
-  //             create: {
-  //               id: metadata.coverImage.url,
-  //               mimeType: metadata.coverImage.type,
-  //             },
-  //           },
-  //         },
-  //       },
-  //     });
-  //   }
-
-  //   return updatedPost;
-  // });
+    return updatedPost;
+  });
 
   // Delete the associated draft if there is one
   // No need for this to be in the transaction
