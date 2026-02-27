@@ -4,6 +4,7 @@ import { consola } from "~/lib/consola";
 import { prisma } from "~/lib/prisma";
 import { sigleConfig } from "~/lib/sigle";
 import { stacksApiClient } from "~/lib/stacks";
+import { indexerJob } from ".";
 
 export const indexerIndexPostsSchema = z.object({
   action: z.literal("indexer-index-posts"),
@@ -122,6 +123,17 @@ export const executeIndexerIndexPostsJob = async (
     }
 
     offset += API_LIMIT;
+  }
+
+  if (posts.length > 0) {
+    // Process oldest posts first
+    posts.reverse();
+    for (const post of posts) {
+      await indexerJob.emit({
+        action: "indexer-publish-post",
+        data: post,
+      });
+    }
   }
 
   const returnData = {
