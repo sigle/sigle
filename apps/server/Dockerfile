@@ -12,7 +12,8 @@ ENV PNPM_HOME="/pnpm"
 ENV PATH="$PNPM_HOME:$PATH"
 COPY --link ./package.json ./
 RUN corepack enable pnpm
-RUN pnpm install turbo@^2 --global
+RUN TURBO_VERSION=$(grep -o '"turbo": "[^"]*' package.json | cut -d'"' -f4) && \
+    pnpm install turbo@${TURBO_VERSION} --global
 RUN pnpm install @dotenvx/dotenvx@^1 --global
 
 # --- Turbo stage ---

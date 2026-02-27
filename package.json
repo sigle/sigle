@@ -18,7 +18,7 @@
     "oxfmt": "0.35.0",
     "oxlint": "1.50.0",
     "syncpack": "14.0.0",
-    "turbo": "2.8.11"
+    "turbo": "2.8.10"
   },
   "engines": {
     "node": ">=24"
