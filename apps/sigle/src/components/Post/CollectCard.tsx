@@ -9,13 +9,18 @@ interface PostCollectCardProps {
 
 export const PostCollectCard = ({ post }: PostCollectCardProps) => {
   const [collectDialogOpen, setCollectDialogOpen] = useState(false);
-  const mintPercentage =
-    post.maxSupply > 0 ? (post.collected / post.maxSupply) * 100 : 0;
-  const canCollect = post.maxSupply === 0 || post.collected < post.maxSupply;
 
-  if (!post.minterFixedPrice) {
+  if (!post.minterFixedPrice || !post.collectible) {
     return null;
   }
+
+  const mintPercentage =
+    post.collectible.maxSupply > 0
+      ? (post.collectible.collected / post.collectible.maxSupply) * 100
+      : 0;
+  const canCollect =
+    post.collectible.maxSupply === 0 ||
+    post.collectible.collected < post.collectible.maxSupply;
 
   return (
     <>
@@ -27,7 +32,7 @@ export const PostCollectCard = ({ post }: PostCollectCardProps) => {
             </Heading>
             {canCollect ? (
               <Text as="p" color="gray" size="2">
-                {post.collected > 0
+                {post.collectible.collected > 0
                   ? `Join ${post.collectorsCount} collectors`
                   : "Be the first to collect this post"}
               </Text>
@@ -44,11 +49,13 @@ export const PostCollectCard = ({ post }: PostCollectCardProps) => {
                 : `${formatBTC(BigInt(post.minterFixedPrice.price))} sBTC`}
             </Text>
             <Text as="p" color="gray" size="2">
-              {post.openEdition ? "Open edition" : "Limited edition"}
+              {post.collectible.openEdition
+                ? "Open edition"
+                : "Limited edition"}
             </Text>
           </div>
         </div>
-        {!post.openEdition ? (
+        {!post.collectible.openEdition ? (
           <Progress
             variant="soft"
             color="gray"
@@ -59,9 +66,9 @@ export const PostCollectCard = ({ post }: PostCollectCardProps) => {
         ) : null}
         <div className="flex items-center justify-between">
           <Text as="p" color="gray" size="2">
-            {post.openEdition
-              ? `${post.collected} collected`
-              : `${post.collected}/${post.maxSupply} collected`}
+            {post.collectible.openEdition
+              ? `${post.collectible.collected} collected`
+              : `${post.collectible.collected}/${post.collectible.maxSupply} collected`}
           </Text>
         </div>
         <Button
