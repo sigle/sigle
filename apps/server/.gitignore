@@ -7,6 +7,7 @@ dist
 src/__generated__/prisma
 .env*
 !.env.development
+!.env.test
 !.env.testnet
 !.env.testnet.local
 dev.db*
