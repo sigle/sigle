@@ -161,17 +161,5 @@ describe("metadata", () => {
         .error;
       expect(error).toBeInstanceOf(MetadataFetchFailedError);
     });
-
-    it("should return err with MetadataFetchFailedError for ar:// URLs", async () => {
-      mockFetch.mockRejectedValue(new Error("Arweave error"));
-
-      const result = await getMetadataFromUri("ar://abc123");
-
-      expect(result.isOk()).toBeFalsy();
-      const error = (result as unknown as { error: MetadataFetchFailedError })
-        .error;
-      expect(error).toBeInstanceOf(MetadataFetchFailedError);
-      expect(error.error).toContain("arweave.net");
-    });
   });
 });

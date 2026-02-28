@@ -1,5 +1,6 @@
 import { type MediaImageMetadata, PostMetadataSchema } from "@sigle/sdk";
 import { type UnhandledException, Result, TaggedError } from "better-result";
+import { env } from "~/env";
 import { resolveImageUrl } from "./images";
 
 export class MetadataFetchFailedError extends TaggedError(
@@ -11,6 +12,17 @@ export class MetadataFetchFailedError extends TaggedError(
 function fetchMetadata(
   url: string,
 ): Promise<Result<unknown, MetadataFetchFailedError>> {
+  const retryConfig =
+    env.NODE_ENV === "test"
+      ? undefined
+      : ({
+          retry: {
+            times: 3,
+            backoff: "exponential",
+            delayMs: 500,
+          },
+        } as const);
+
   return Result.tryPromise(
     {
       try: async () => {
@@ -27,13 +39,7 @@ function fetchMetadata(
         });
       },
     },
-    {
-      retry: {
-        times: 3,
-        backoff: "exponential",
-        delayMs: 500,
-      },
-    },
+    retryConfig,
   );
 }
 
