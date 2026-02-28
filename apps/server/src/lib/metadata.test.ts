@@ -46,9 +46,9 @@ describe("metadata", () => {
         "https://example.com/metadata.json",
       );
 
-      expect(Result.isOk(result)).toBe(true);
+      expect(Result.isOk(result)).toBeTruthy();
       if (Result.isOk(result)) {
-        expect(result.value).toEqual({
+        expect(result.value).toStrictEqual({
           id: "post-123",
           title: "Test Post",
           content: "# Hello World",
@@ -83,9 +83,9 @@ describe("metadata", () => {
         "https://example.com/minimal.json",
       );
 
-      expect(Result.isOk(result)).toBe(true);
+      expect(Result.isOk(result)).toBeTruthy();
       if (Result.isOk(result)) {
-        expect(result.value).toEqual({
+        expect(result.value).toStrictEqual({
           id: "post-456",
           title: "Minimal Post",
           content: "Content",
@@ -104,7 +104,7 @@ describe("metadata", () => {
 
       const result = await getMetadataFromUri("https://example.com/fail.json");
 
-      expect(Result.isError(result)).toBe(true);
+      expect(Result.isError(result)).toBeTruthy();
       if (Result.isError(result)) {
         const error = result.error as MetadataFetchFailedError;
         expect(error).toBeInstanceOf(MetadataFetchFailedError);
@@ -123,7 +123,7 @@ describe("metadata", () => {
         "https://example.com/notfound.json",
       );
 
-      expect(Result.isError(result)).toBe(true);
+      expect(Result.isError(result)).toBeTruthy();
       if (Result.isError(result)) {
         expect(result.error).toBeInstanceOf(MetadataFetchFailedError);
       }
@@ -139,7 +139,7 @@ describe("metadata", () => {
         "https://example.com/invalid.json",
       );
 
-      expect(Result.isError(result)).toBe(true);
+      expect(Result.isError(result)).toBeTruthy();
       if (Result.isError(result)) {
         const error = result.error as InvalidMetadataError;
         expect(error).toBeInstanceOf(InvalidMetadataError);
@@ -158,7 +158,7 @@ describe("metadata", () => {
 
       const result = await getMetadataFromUri("https://example.com/bad.json");
 
-      expect(Result.isError(result)).toBe(true);
+      expect(Result.isError(result)).toBeTruthy();
       if (Result.isError(result)) {
         expect(result.error).toBeInstanceOf(MetadataFetchFailedError);
       }
@@ -169,7 +169,7 @@ describe("metadata", () => {
 
       const result = await getMetadataFromUri("ar://abc123");
 
-      expect(Result.isError(result)).toBe(true);
+      expect(Result.isError(result)).toBeTruthy();
       if (Result.isError(result)) {
         const error = result.error as MetadataFetchFailedError;
         expect(error).toBeInstanceOf(MetadataFetchFailedError);
