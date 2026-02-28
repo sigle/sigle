@@ -1,53 +1,9 @@
-import { PostMetadataSchema } from "@sigle/sdk";
+import { matchError } from "better-result";
 import { z } from "zod";
 import { consola } from "~/lib/consola";
+import { getMetadataFromUri } from "~/lib/metadata";
 import { prisma } from "~/lib/prisma";
 import { generateImageBlurhashJob } from "../../generate-image-blurhash";
-
-export async function getMetadataFromUri(baseTokenUri: string) {
-  let url = baseTokenUri;
-  if (baseTokenUri.startsWith("ar://")) {
-    const arweaveTxId = baseTokenUri.replace("ar://", "");
-    url = `https://arweave.net/${arweaveTxId}`;
-  }
-  // TODO error handling fetch retry etc
-  const response = await fetch(url);
-  const json = await response.json();
-
-  // Verify data is correct
-  const postMetadata = PostMetadataSchema.safeParse(json);
-  if (!postMetadata.success) {
-    throw new Error(`Invalid postV1: ${postMetadata.error}`);
-  }
-  const postData = postMetadata.data;
-
-  const metaTitle = postData.content.attributes?.find(
-    (attribute) => attribute.key === "meta-title",
-  )?.value;
-  const metaDescription = postData.content.attributes?.find(
-    (attribute) => attribute.key === "meta-description",
-  )?.value;
-  const excerpt = postData.content.attributes?.find(
-    (attribute) => attribute.key === "excerpt",
-  )?.value;
-  const canonicalUri = postData.content.attributes?.find(
-    (attribute) => attribute.key === "canonical-uri",
-  )?.value;
-
-  const metadata = {
-    id: postData.content.id,
-    title: postData.content.title,
-    content: postData.content.content,
-    metaTitle,
-    metaDescription,
-    excerpt: excerpt || "",
-    coverImage: postData.content.coverImage,
-    tags: postData.content.tags,
-    canonicalUri,
-  };
-
-  return metadata;
-}
 
 export const indexerPublishPostSchema = z.object({
   action: z.literal("indexer-publish-post"),
@@ -62,9 +18,26 @@ export const indexerPublishPostSchema = z.object({
 export const executePublishPostJob = async (
   data: z.TypeOf<typeof indexerPublishPostSchema>["data"],
 ) => {
-  const metadata = await getMetadataFromUri(data.uri);
+  const metadataResult = await getMetadataFromUri(data.uri);
   // TODO fix the version from the SDK metadata
   const version = 1;
+
+  if (metadataResult.isErr()) {
+    const message = matchError(metadataResult.error, {
+      MetadataFetchFailedError: (e) => `Failed to fetch metadata: ${e.error}`,
+      InvalidMetadataError: (e) =>
+        `Metadata validation failed: ${e.error.message}`,
+      UnhandledException: (e) => `Unhandled exception: ${e.message}`,
+    });
+    consola.error("Can't process metadata", {
+      txId: data.txId,
+      uri: data.uri,
+      author: data.author,
+      error: message,
+    });
+    return;
+  }
+  const metadata = metadataResult.value;
 
   let shouldProcessImage = false;
   await prisma.$transaction(async (tx) => {
