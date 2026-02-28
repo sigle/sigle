@@ -1,5 +1,5 @@
-import type { ZodError } from "zod-validation-error";
-import { type MediaImageMimeType, PostMetadataSchema } from "@sigle/sdk";
+import type { z } from "zod";
+import { type MediaImageMetadata, PostMetadataSchema } from "@sigle/sdk";
 import { type UnhandledException, Result, TaggedError } from "better-result";
 import { resolveImageUrl } from "./images";
 
@@ -9,7 +9,7 @@ export class MetadataFetchFailedError extends TaggedError(
   error: string;
 }>() {}
 
-function fetchMetatadata(
+function fetchMetadata(
   url: string,
 ): Promise<Result<unknown, MetadataFetchFailedError>> {
   return Result.tryPromise(
@@ -21,7 +21,10 @@ function fetchMetatadata(
       },
       catch: (error) => {
         return new MetadataFetchFailedError({
-          error: error instanceof Error ? error.message : String(error),
+          error:
+            error instanceof Error
+              ? `Failed to fetch metadata from ${url}: ${error.message}`
+              : `Failed to fetch metadata from ${url}: ${String(error)}`,
         });
       },
     },
@@ -36,12 +39,19 @@ function fetchMetatadata(
 }
 
 export class InvalidMetadataError extends TaggedError("InvalidMetadataError")<{
-  id: string;
-  error: ZodError;
+  error: z.ZodError;
 }>() {}
 
 interface PostMetadata {
   id: string;
+  title: string;
+  content: string;
+  metaTitle?: string;
+  metaDescription?: string;
+  excerpt: string;
+  coverImage?: MediaImageMetadata;
+  tags?: string[];
+  canonicalUri?: string;
 }
 
 export async function getMetadataFromUri(
@@ -52,50 +62,47 @@ export async function getMetadataFromUri(
     MetadataFetchFailedError | InvalidMetadataError | UnhandledException
   >
 > {
-  return Result.tryPromise(async () => {
-    const url = resolveImageUrl(baseTokenUri);
-    const result = await fetchMetatadata(url);
-    if (result.isErr()) {
-      return result;
-    }
+  const url = resolveImageUrl(baseTokenUri);
+  const fetchResult = await fetchMetadata(url);
 
-    // Verify data is correct
-    const postMetadata = PostMetadataSchema.safeParse(result.value);
-    if (!postMetadata.success) {
-      return Result.err(
-        new InvalidMetadataError({
-          id: "invalid_metadata",
-          error: postMetadata.error,
-        }),
-      );
-    }
-    const postData = postMetadata.data;
+  if (fetchResult.isErr()) {
+    return fetchResult;
+  }
 
-    const metaTitle = postData.content.attributes?.find(
-      (attribute) => attribute.key === "meta-title",
-    )?.value;
-    const metaDescription = postData.content.attributes?.find(
-      (attribute) => attribute.key === "meta-description",
-    )?.value;
-    const excerpt = postData.content.attributes?.find(
-      (attribute) => attribute.key === "excerpt",
-    )?.value;
-    const canonicalUri = postData.content.attributes?.find(
-      (attribute) => attribute.key === "canonical-uri",
-    )?.value;
+  const postMetadata = PostMetadataSchema.safeParse(fetchResult.value);
+  if (!postMetadata.success) {
+    return Result.err(
+      new InvalidMetadataError({
+        error: postMetadata.error,
+      }),
+    );
+  }
+  const postData = postMetadata.data;
 
-    const metadata = {
-      id: postData.content.id,
-      title: postData.content.title,
-      content: postData.content.content,
-      metaTitle,
-      metaDescription,
-      excerpt: excerpt || "",
-      coverImage: postData.content.coverImage,
-      tags: postData.content.tags,
-      canonicalUri,
-    } satisfies PostMetadata;
+  const metaTitle = postData.content.attributes?.find(
+    (attribute) => attribute.key === "meta-title",
+  )?.value;
+  const metaDescription = postData.content.attributes?.find(
+    (attribute) => attribute.key === "meta-description",
+  )?.value;
+  const excerpt = postData.content.attributes?.find(
+    (attribute) => attribute.key === "excerpt",
+  )?.value;
+  const canonicalUri = postData.content.attributes?.find(
+    (attribute) => attribute.key === "canonical-uri",
+  )?.value;
 
-    return Result.ok(metadata);
-  });
+  const metadata: PostMetadata = {
+    id: postData.content.id,
+    title: postData.content.title,
+    content: postData.content.content,
+    metaTitle,
+    metaDescription,
+    excerpt: excerpt || "",
+    coverImage: postData.content.coverImage,
+    tags: postData.content.tags,
+    canonicalUri,
+  };
+
+  return Result.ok(metadata);
 }
