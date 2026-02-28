@@ -1,9 +1,5 @@
 import { Dialog, Inset, Text } from "@radix-ui/themes";
-import {
-  IconBrandGoogle,
-  IconCards,
-  IconChevronRight,
-} from "@tabler/icons-react";
+import { IconBrandGoogle, IconChevronRight } from "@tabler/icons-react";
 import { cn } from "@/lib/cn";
 import { useEditorStore } from "../store";
 import { CollectSettings } from "./CollectSettings";
@@ -46,25 +42,6 @@ export const EditorSettings = () => {
                   className="flex items-center gap-2"
                 >
                   <IconBrandGoogle size={20} /> Meta SEO
-                </Text>
-                <Text as="div" color="gray">
-                  <IconChevronRight size={24} />
-                </Text>
-              </div>
-              <div
-                className={`
-                  flex cursor-pointer justify-between border-b border-gray-5
-                  px-6 py-4 transition-colors
-                  hover:bg-gray-2
-                `}
-                onClick={() => setMenuOpen("collect")}
-              >
-                <Text
-                  as="div"
-                  weight="medium"
-                  className="flex items-center gap-2"
-                >
-                  <IconCards size={20} /> NFT collection
                 </Text>
                 <Text as="div" color="gray">
                   <IconChevronRight size={24} />

@@ -9,7 +9,6 @@ import {
   VisuallyHidden,
 } from "@radix-ui/themes";
 import * as Sentry from "@sentry/nextjs";
-import { parseBTC } from "@sigle/sdk";
 import { IconExclamationCircle } from "@tabler/icons-react";
 import { useRouter } from "next/navigation";
 import { usePostHog } from "posthog-js/react";
@@ -17,14 +16,8 @@ import { useState } from "react";
 import { useFormContext } from "react-hook-form";
 import { toast } from "sonner";
 import { useContractCall } from "@/hooks/useContractCall";
-import { useContractDeploy } from "@/hooks/useContractDeploy";
 import { useSession } from "@/lib/auth-hooks";
-import { Routes } from "@/lib/routes";
-import { sigleApiClient, sigleApiFetchClient, sigleClient } from "@/lib/sigle";
-import {
-  getExplorerTransactionUrl,
-  getPromiseTransactionConfirmation,
-} from "@/lib/stacks";
+import { sigleApiClient, sigleClient } from "@/lib/sigle";
 import type { EditorPostFormData } from "../EditorFormProvider";
 import { useEditorStore } from "../store";
 import { generateSigleMetadataFromForm } from "../utils";
@@ -55,17 +48,11 @@ export const PublishDialog = ({ postId }: PublishDialogProps) => {
     "post",
     "/api/protected/drafts/{draftId}/set-tx-id",
   );
-  const { contractDeploy } = useContractDeploy({
-    onCancel: () => {
-      posthog.capture("post_publish_cancel", {
-        postId,
-      });
 
-      setPublishingLoading(false);
-    },
-    onSuccess: async (tx) => {
+  const { contractCall } = useContractCall({
+    onSuccess: async (data) => {
       // For some reason, from time to time the txId is returned without the 0x prefix
-      const txId = !tx.txId.startsWith("0x") ? `0x${tx.txId}` : tx.txId;
+      const txId = !data.txId.startsWith("0x") ? `0x${data.txId}` : data.txId;
 
       posthog.capture("post_publish_transaction_submitted", {
         postId,
@@ -91,25 +78,14 @@ export const PublishDialog = ({ postId }: PublishDialogProps) => {
       // Redirect to the deploy page
       router.push(`/p/${postId}/deploy`);
     },
-  });
-
-  const { contractCall } = useContractCall({
-    onSuccess: (data) => {
-      toast.promise(getPromiseTransactionConfirmation(data.txId), {
-        loading: "Edit transaction submitted, it will be indexed shortly",
-        success: "Post updated successfully",
-        error: "Transaction failed",
-        action: {
-          label: "View tx",
-          onClick: () =>
-            window.open(getExplorerTransactionUrl(data.txId), "_blank"),
-        },
+    onError: (error) => {
+      posthog.capture("post_publish_cancel", {
+        postId,
       });
 
-      router.push(Routes.post({ postId }));
-    },
-    onError: (error) => {
-      toast.error("Failed to edit", {
+      setPublishingLoading(false);
+
+      toast.error("Failed to publish", {
         description: error,
       });
     },
@@ -164,55 +140,8 @@ export const PublishDialog = ({ postId }: PublishDialogProps) => {
           });
           const arweaveUrl = `ar://${uploadedMetadata.id}`;
 
-          if (type === "draft") {
-            const { contract } = sigleClient.generatePostContract({
-              metadata: arweaveUrl,
-              collectInfo: {
-                amount:
-                  data.collect.collectPrice.type === "paid"
-                    ? parseBTC(data.collect.collectPrice.price.toString())
-                    : 0,
-                maxSupply:
-                  data.collect.collectLimit.type === "fixed" &&
-                  data.collect.collectLimit.limit
-                    ? data.collect.collectLimit.limit
-                    : undefined,
-              },
-            });
-
-            await contractDeploy({
-              name: newPostId,
-              clarityCode: contract,
-            });
-            return;
-          }
-
-          const publishedPost = await sigleApiFetchClient.GET(
-            "/api/posts/{postId}",
-            {
-              params: {
-                path: {
-                  postId,
-                },
-              },
-            },
-          );
-          if (!publishedPost.data) {
-            setPublishingError("Error fetching published post");
-            Sentry.captureException("Error fetching published post");
-            return;
-          }
-          if (!publishedPost.data.collectible) {
-            setPublishingError("Published post does not have a collectible");
-            Sentry.captureException(
-              "Published post does not have a collectible",
-            );
-            return;
-          }
-
-          const { parameters } = sigleClient.setBaseTokenUri({
-            contract: publishedPost.data.collectible.address,
-            metadata: arweaveUrl,
+          const { parameters } = sigleClient.publishPost({
+            metadataUri: arweaveUrl,
           });
           await contractCall(parameters);
           // oxlint-disable-next-line no-explicit-any
@@ -247,7 +176,7 @@ export const PublishDialog = ({ postId }: PublishDialogProps) => {
         <Dialog.Title>Publish</Dialog.Title>
         <Dialog.Description>Publish your post</Dialog.Description>
       </VisuallyHidden>
-      <Dialog.Content size="3" className="max-w-screen-sm">
+      <Dialog.Content size="3" className="max-w-screen-xs">
         {publishingLoading === false ? (
           <PublishReview onPublish={onSubmit} />
         ) : (

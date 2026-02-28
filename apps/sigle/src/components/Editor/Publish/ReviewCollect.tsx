@@ -15,11 +15,16 @@ export const PublishReviewCollect = () => {
     data.collect.collectLimit.limit
       ? data.collect.collectLimit.limit
       : undefined;
+  const isCollectEnabled = false;
 
   const openCollectSettings = () => {
     setPublishOpen(false);
     setMenuOpen("collect");
   };
+
+  if (!isCollectEnabled) {
+    return null;
+  }
 
   return (
     <Card size="2">
