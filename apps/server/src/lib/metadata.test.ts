@@ -46,9 +46,9 @@ describe("metadata", () => {
         "https://example.com/metadata.json",
       );
 
-      expect(Result.isOk(result)).toBeTruthy();
-      if (Result.isOk(result)) {
-        expect(result.value).toStrictEqual({
+      expect(result.isOk()).toBeTruthy();
+      expect(result).toStrictEqual(
+        Result.ok({
           id: "post-123",
           title: "Test Post",
           content: "# Hello World",
@@ -61,8 +61,8 @@ describe("metadata", () => {
           },
           tags: ["tag1", "tag2"],
           canonicalUri: "https://example.com/post",
-        });
-      }
+        }),
+      );
     });
 
     it("should return ok result with minimal metadata when no attributes", async () => {
@@ -83,9 +83,9 @@ describe("metadata", () => {
         "https://example.com/minimal.json",
       );
 
-      expect(Result.isOk(result)).toBeTruthy();
-      if (Result.isOk(result)) {
-        expect(result.value).toStrictEqual({
+      expect(result.isOk()).toBeTruthy();
+      expect(result).toStrictEqual(
+        Result.ok({
           id: "post-456",
           title: "Minimal Post",
           content: "Content",
@@ -95,8 +95,8 @@ describe("metadata", () => {
           coverImage: undefined,
           tags: undefined,
           canonicalUri: undefined,
-        });
-      }
+        }),
+      );
     });
 
     it("should return err with MetadataFetchFailedError on fetch failure", async () => {
@@ -104,13 +104,12 @@ describe("metadata", () => {
 
       const result = await getMetadataFromUri("https://example.com/fail.json");
 
-      expect(Result.isError(result)).toBeTruthy();
-      if (Result.isError(result)) {
-        const error = result.error as MetadataFetchFailedError;
-        expect(error).toBeInstanceOf(MetadataFetchFailedError);
-        expect(error._tag).toBe("MetadataFetchFailedError");
-        expect(error.error).toContain("Network error");
-      }
+      expect(result.isOk()).toBeFalsy();
+      const error = (result as unknown as { error: MetadataFetchFailedError })
+        .error;
+      expect(error).toBeInstanceOf(MetadataFetchFailedError);
+      expect(error._tag).toBe("MetadataFetchFailedError");
+      expect(error.error).toContain("Network error");
     });
 
     it("should return err with MetadataFetchFailedError on non-ok response", async () => {
@@ -123,10 +122,10 @@ describe("metadata", () => {
         "https://example.com/notfound.json",
       );
 
-      expect(Result.isError(result)).toBeTruthy();
-      if (Result.isError(result)) {
-        expect(result.error).toBeInstanceOf(MetadataFetchFailedError);
-      }
+      expect(result.isOk()).toBeFalsy();
+      const error = (result as unknown as { error: MetadataFetchFailedError })
+        .error;
+      expect(error).toBeInstanceOf(MetadataFetchFailedError);
     });
 
     it("should return err with InvalidMetadataError on invalid metadata", async () => {
@@ -139,13 +138,12 @@ describe("metadata", () => {
         "https://example.com/invalid.json",
       );
 
-      expect(Result.isError(result)).toBeTruthy();
-      if (Result.isError(result)) {
-        const error = result.error as InvalidMetadataError;
-        expect(error).toBeInstanceOf(InvalidMetadataError);
-        expect(error._tag).toBe("InvalidMetadataError");
-        expect(error.error).toBeDefined();
-      }
+      expect(result.isOk()).toBeFalsy();
+      const error = (result as unknown as { error: InvalidMetadataError })
+        .error;
+      expect(error).toBeInstanceOf(InvalidMetadataError);
+      expect(error._tag).toBe("InvalidMetadataError");
+      expect(error.error).toBeDefined();
     });
 
     it("should return err with MetadataFetchFailedError when fetch returns non-JSON", async () => {
@@ -158,10 +156,10 @@ describe("metadata", () => {
 
       const result = await getMetadataFromUri("https://example.com/bad.json");
 
-      expect(Result.isError(result)).toBeTruthy();
-      if (Result.isError(result)) {
-        expect(result.error).toBeInstanceOf(MetadataFetchFailedError);
-      }
+      expect(result.isOk()).toBeFalsy();
+      const error = (result as unknown as { error: MetadataFetchFailedError })
+        .error;
+      expect(error).toBeInstanceOf(MetadataFetchFailedError);
     });
 
     it("should return err with MetadataFetchFailedError for ar:// URLs", async () => {
@@ -169,12 +167,11 @@ describe("metadata", () => {
 
       const result = await getMetadataFromUri("ar://abc123");
 
-      expect(Result.isError(result)).toBeTruthy();
-      if (Result.isError(result)) {
-        const error = result.error as MetadataFetchFailedError;
-        expect(error).toBeInstanceOf(MetadataFetchFailedError);
-        expect(error.error).toContain("arweave.net");
-      }
+      expect(result.isOk()).toBeFalsy();
+      const error = (result as unknown as { error: MetadataFetchFailedError })
+        .error;
+      expect(error).toBeInstanceOf(MetadataFetchFailedError);
+      expect(error.error).toContain("arweave.net");
     });
   });
 });
