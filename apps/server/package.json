@@ -10,7 +10,7 @@
     "prisma:migrate:dev": "dotenvx run --env-file=.env.development -- prisma migrate dev",
     "prisma:studio:dev": "dotenvx run --env-file=.env.development -- prisma studio",
     "check-types": "tsc --noEmit",
-    "test": "vitest"
+    "test": "dotenvx run --env-file=.env.test -- vitest"
   },
   "dependencies": {
     "@ardrive/turbo-sdk": "1.22.0",

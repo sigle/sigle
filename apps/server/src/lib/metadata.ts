@@ -1,6 +1,6 @@
 import { type MediaImageMetadata, PostMetadataSchema } from "@sigle/sdk";
 import { type UnhandledException, Result, TaggedError } from "better-result";
-import { env } from "~/env";
+import { env } from "../env";
 import { resolveImageUrl } from "./images";
 
 export class MetadataFetchFailedError extends TaggedError(
