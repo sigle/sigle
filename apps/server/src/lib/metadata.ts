@@ -39,7 +39,7 @@ function fetchMetadata(
 }
 
 export class InvalidMetadataError extends TaggedError("InvalidMetadataError")<{
-  error: z.ZodError;
+  error: string;
 }>() {}
 
 interface PostMetadata {
@@ -73,7 +73,7 @@ export async function getMetadataFromUri(
   if (!postMetadata.success) {
     return Result.err(
       new InvalidMetadataError({
-        error: postMetadata.error,
+        error: `Invalid metadata: ${postMetadata.error.issues.length} validation error(s)`,
       }),
     );
   }
