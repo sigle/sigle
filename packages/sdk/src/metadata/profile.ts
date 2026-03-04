@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { SignatureSchema } from "./common.js";
 import { ProfileMetadataSchemaId } from "./config.js";
 import {
   MetadataAttributeSchema,
@@ -6,10 +7,10 @@ import {
 } from "./metadata-attribute.js";
 import { evaluate } from "./utils.js";
 
-export interface ProfileMetadata {
+export interface ProfileMetadataDetails {
   /**
-   * Random id also used in the url
-   * Have to be unique on sigle
+   * Random id also used in the url.
+   * Have to be unique on sigle. Use a UUID if unsure.
    */
   id: string;
   /**
@@ -36,14 +37,13 @@ export interface ProfileMetadata {
    * The profile cover image URL.
    */
   coverPicture?: string;
-
   /**
    * List of attributes that can be used to store any additional information that is not supported by the standard.
    */
   attributes?: MetadataAttribute[];
 }
 
-export const ProfileMetadataSchema = z.object({
+export const ProfileMetadataDetailsSchema = z.object({
   $schema: z.literal(ProfileMetadataSchemaId.LATEST),
   id: z.string().min(1).meta({
     description: "Random id also used in the url. Have to be unique on sigle.",
@@ -78,6 +78,27 @@ export const ProfileMetadataSchema = z.object({
     description:
       "List of attributes that can be used to store any additional information that is not supported by the standard",
   }),
+});
+
+export interface ProfileMetadata {
+  /**
+   * The schema id.
+   */
+  $schema: ProfileMetadataSchemaId.LATEST;
+  /**
+   * The metadata details.
+   */
+  content: ProfileMetadataDetails;
+  /**
+   * A cryptographic signature of the `content` data.
+   */
+  signature?: string;
+}
+
+export const ProfileMetadataSchema = z.object({
+  $schema: z.literal(ProfileMetadataSchemaId.LATEST),
+  content: ProfileMetadataDetailsSchema,
+  signature: SignatureSchema.optional(),
 });
 
 export function createProfileMetadata(data: ProfileMetadata): ProfileMetadata {
