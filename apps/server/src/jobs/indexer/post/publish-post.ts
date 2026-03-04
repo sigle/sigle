@@ -19,8 +19,6 @@ export const executePublishPostJob = async (
   data: z.TypeOf<typeof indexerPublishPostSchema>["data"],
 ) => {
   const metadataResult = await getMetadataFromUri(data.uri);
-  // TODO fix the version from the SDK metadata
-  const version = 1;
 
   if (metadataResult.isErr()) {
     const message = matchError(metadataResult.error, {
@@ -88,7 +86,7 @@ export const executePublishPostJob = async (
       create: {
         id: metadata.id,
         txId: data.txId,
-        version: version,
+        version: metadata.version,
         userId,
         createdAt: new Date(data.createdAt),
 
