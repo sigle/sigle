@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { PostMetadataSchemaId } from "./config.js";
 import {
   type MarketplaceMetadata,
   MarketplaceMetadataSchema,
@@ -73,6 +74,7 @@ export type PostMetadata = MarketplaceMetadata & {
 };
 
 export const PostMetadataSchema = MarketplaceMetadataSchema.extend({
+  $schema: z.literal(PostMetadataSchemaId.LATEST),
   content: PostMetadataDetailsSchema,
   // TODO add signature
   // signature: z.string(),

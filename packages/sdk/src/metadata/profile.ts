@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { ProfileMetadataSchemaId } from "./config.js";
 import {
   MetadataAttributeSchema,
   type MetadataAttribute,
@@ -43,6 +44,7 @@ export interface ProfileMetadata {
 }
 
 export const ProfileMetadataSchema = z.object({
+  $schema: z.literal(ProfileMetadataSchemaId.LATEST),
   id: z.string().min(1).meta({
     description: "Random id also used in the url. Have to be unique on sigle.",
   }),
