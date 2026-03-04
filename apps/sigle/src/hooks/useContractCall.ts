@@ -46,16 +46,21 @@ export function useContractCall(options: UseContractCallOptions = {}) {
 
         const response = await request("stx_callContract", parameters);
 
+        // For some reason, from time to time the txId is returned without the 0x prefix
+        const txId = response.txid
+          ? !response.txid.startsWith("0x")
+            ? `0x${response.txid}`
+            : response.txid
+          : "";
+
         setState((prev) => ({
           ...prev,
           loading: false,
           success: true,
-          // oxlint-disable-next-line no-non-null-assertion
-          txId: response.txid!,
+          txId: txId,
         }));
         onSuccess?.({
-          // oxlint-disable-next-line no-non-null-assertion
-          txId: response.txid!,
+          txId: txId,
         });
       } catch (error) {
         const errorMessage =
