@@ -1,0 +1,38 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "displayName": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 100
+    },
+    "description": {
+      "type": "string",
+      "minLength": 1
+    },
+    "website": {
+      "type": "string",
+      "format": "uri"
+    },
+    "twitter": {
+      "type": "string",
+      "minLength": 1,
+      "pattern": "^[A-Za-z0-9_]*$"
+    },
+    "picture": {
+      "type": "string",
+      "format": "uri"
+    },
+    "coverPicture": {
+      "type": "string",
+      "format": "uri"
+    }
+  },
+  "required": ["id"],
+  "additionalProperties": false
+}

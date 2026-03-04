@@ -1,0 +1,85 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string"
+    },
+    "description": {
+      "type": "string"
+    },
+    "external_url": {
+      "type": "string",
+      "format": "uri"
+    },
+    "image": {
+      "type": "string",
+      "format": "uri"
+    },
+    "content": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "title": {
+          "type": "string",
+          "minLength": 1
+        },
+        "content": {
+          "type": "string",
+          "minLength": 1
+        },
+        "attributes": {
+          "minItems": 1,
+          "maxItems": 20,
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "value": {
+                "type": "string"
+              },
+              "key": {
+                "type": "string"
+              }
+            },
+            "required": ["value", "key"],
+            "additionalProperties": false
+          }
+        },
+        "coverImage": {
+          "type": "object",
+          "properties": {
+            "url": {
+              "type": "string",
+              "format": "uri"
+            },
+            "type": {
+              "type": "string",
+              "enum": ["image/gif", "image/jpeg", "image/png", "image/webp"]
+            },
+            "alt": {
+              "type": "string"
+            }
+          },
+          "required": ["url", "type"],
+          "additionalProperties": false
+        },
+        "tags": {
+          "minItems": 1,
+          "maxItems": 5,
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "required": ["id", "title", "content"],
+      "additionalProperties": false
+    }
+  },
+  "required": ["content"],
+  "additionalProperties": false
+}

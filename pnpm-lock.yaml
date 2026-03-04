@@ -606,6 +606,9 @@ importers:
       tsdown:
         specifier: 0.18.1
         version: 0.18.1(synckit@0.11.12)(typescript@5.9.3)
+      tsx:
+        specifier: 4.21.0
+        version: 4.21.0
       typescript:
         specifier: 5.9.3
         version: 5.9.3
@@ -9133,10 +9136,6 @@ packages:
     resolution: {integrity: sha512-PS08Iboia9mts/2ygV3eLpY5ghnUcfLV/EXTOW1E2qYxJKGGBUtNjN76FYHnMs36RmARn41bC0AZmn+rR0OVpQ==}
     engines: {node: ^10 || ^12 || >=14}
 
-  postcss@8.5.6:
-    resolution: {integrity: sha512-3Ybi1tAuwAP9s0r1UQ2J4n5Y0G05bJkpUIO0/bI9MhwmD70S5aTWbXGBwxHrelT+XM1k6dM0pk+SwNkpTRN7Pg==}
-    engines: {node: ^10 || ^12 || >=14}
-
   postcss@8.5.8:
     resolution: {integrity: sha512-OW/rX8O/jXnm82Ey1k44pObPtdblfiuWnrd8X7GJ7emImCOstunGbXUpp7HdBrFQX6rJzn3sPT397Wp5aCwCHg==}
     engines: {node: ^10 || ^12 || >=14}
@@ -16871,7 +16870,7 @@ snapshots:
       sirv: 3.0.2
       tinyglobby: 0.2.15
       tinyrainbow: 3.0.3
-      vitest: 4.0.18(@opentelemetry/api@1.9.0)(@types/node@25.3.3)(@vitest/ui@4.0.18)(happy-dom@20.3.7(bufferutil@4.0.8)(utf-8-validate@5.0.10))(jiti@2.6.1)(jsdom@25.0.0(bufferutil@4.0.8)(utf-8-validate@5.0.10))(lightningcss@1.31.1)(sass@1.77.8)(terser@5.46.0)(tsx@4.21.0)(yaml@2.8.1)
+      vitest: 4.0.18(@opentelemetry/api@1.9.0)(@types/node@24.10.12)(@vitest/ui@4.0.18)(happy-dom@20.3.7(bufferutil@4.0.8)(utf-8-validate@5.0.10))(jiti@2.6.1)(jsdom@25.0.0(bufferutil@4.0.8)(utf-8-validate@5.0.10))(lightningcss@1.31.1)(sass@1.77.8)(terser@5.46.0)(tsx@4.21.0)(yaml@2.8.1)
     optional: true
 
   '@vitest/utils@4.0.18':
@@ -22131,13 +22130,6 @@ snapshots:
       picocolors: 1.1.1
       source-map-js: 1.2.1
 
-  postcss@8.5.6:
-    dependencies:
-      nanoid: 3.3.11
-      picocolors: 1.1.1
-      source-map-js: 1.2.1
-    optional: true
-
   postcss@8.5.8:
     dependencies:
       nanoid: 3.3.11
@@ -23071,7 +23063,7 @@ snapshots:
 
   rrweb-snapshot@2.0.0-alpha.20:
     dependencies:
-      postcss: 8.5.6
+      postcss: 8.5.8
     optional: true
 
   run-applescript@7.1.0: {}
