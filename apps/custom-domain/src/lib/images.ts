@@ -19,7 +19,7 @@ export const resolveImageUrl = (
   }
   if (image?.startsWith("ar://")) {
     // oxlint-disable-next-line no-param-reassign
-    image = `https://arweave.net/${image.slice(5)}`;
+    image = `${env.NEXT_PUBLIC_ARWEAVE_GATEWAY_URL}/${image.slice(5)}`;
   }
   return image;
 };

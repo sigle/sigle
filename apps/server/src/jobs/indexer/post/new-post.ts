@@ -51,7 +51,7 @@ export async function getMetadataFromUri(baseTokenUri: string) {
   let url = baseTokenUri;
   if (baseTokenUri.startsWith("ar://")) {
     const arweaveTxId = baseTokenUri.replace("ar://", "");
-    url = `https://arweave.net/${arweaveTxId}`;
+    url = `${env.ARWEAVE_GATEWAY_URL}/${arweaveTxId}`;
   }
   const response = await fetch(url);
   const json = await response.json();
