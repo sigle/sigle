@@ -30,7 +30,7 @@ export const executeIndexerSetProfileJob = async (
     picture: __,
     coverPicture: ____,
     ...metadataWithoutId
-  } = profileMetadata.data;
+  } = profileMetadata.data.content;
 
   // Ensure user exists
   const user = await prisma.user.findUnique({
@@ -62,34 +62,37 @@ export const executeIndexerSetProfileJob = async (
     },
   });
 
-  if (profileMetadata.data.picture || profileMetadata.data.coverPicture) {
+  if (
+    profileMetadata.data.content.picture ||
+    profileMetadata.data.content.coverPicture
+  ) {
     // We do a separate update query here as for some reason prisma doesn't let us update the relationship in the upsert
     await prisma.profile.update({
       where: {
         id: data.address,
       },
       data: {
-        pictureUri: profileMetadata.data.picture
+        pictureUri: profileMetadata.data.content.picture
           ? {
               connectOrCreate: {
                 where: {
-                  id: profileMetadata.data.picture,
+                  id: profileMetadata.data.content.picture,
                 },
                 create: {
-                  id: profileMetadata.data.picture,
+                  id: profileMetadata.data.content.picture,
                   mimeType: "unknown",
                 },
               },
             }
           : undefined,
-        coverPictureUri: profileMetadata.data.coverPicture
+        coverPictureUri: profileMetadata.data.content.coverPicture
           ? {
               connectOrCreate: {
                 where: {
-                  id: profileMetadata.data.coverPicture,
+                  id: profileMetadata.data.content.coverPicture,
                 },
                 create: {
-                  id: profileMetadata.data.coverPicture,
+                  id: profileMetadata.data.content.coverPicture,
                   mimeType: "unknown",
                 },
               },
@@ -98,15 +101,15 @@ export const executeIndexerSetProfileJob = async (
       },
     });
 
-    if (profileMetadata.data.picture) {
+    if (profileMetadata.data.content.picture) {
       await generateImageBlurhashJob.emit({
-        imageId: profileMetadata.data.picture,
+        imageId: profileMetadata.data.content.picture,
       });
     }
 
-    if (profileMetadata.data.coverPicture) {
+    if (profileMetadata.data.content.coverPicture) {
       await generateImageBlurhashJob.emit({
-        imageId: profileMetadata.data.coverPicture,
+        imageId: profileMetadata.data.content.coverPicture,
       });
     }
   }
