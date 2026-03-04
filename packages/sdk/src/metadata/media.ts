@@ -9,14 +9,20 @@ export enum MediaImageMimeType {
 
 export interface MediaImageMetadata {
   url: string;
+  // The MIME type of the image
   type: MediaImageMimeType;
   width?: number;
   height?: number;
+  // The alt tag of the image for accessibility
   alt?: string;
 }
 
 export const MediaImageMetadataSchema = z.object({
   url: z.url(),
-  type: z.enum(MediaImageMimeType),
-  alt: z.string().optional(),
+  type: z.enum(MediaImageMimeType).meta({
+    description: "The MIME type of the image.",
+  }),
+  alt: z.string().optional().meta({
+    description: "The alt tag of the image for accessibility.",
+  }),
 });

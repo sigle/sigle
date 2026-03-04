@@ -63,9 +63,11 @@
             },
             "type": {
               "type": "string",
-              "enum": ["image/gif", "image/jpeg", "image/png", "image/webp"]
+              "enum": ["image/gif", "image/jpeg", "image/png", "image/webp"],
+              "description": "The MIME type of the image."
             },
             "alt": {
+              "description": "The alt tag of the image for accessibility.",
               "type": "string"
             }
           },
