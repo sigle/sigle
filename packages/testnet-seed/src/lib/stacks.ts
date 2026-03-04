@@ -2,6 +2,7 @@ import { createClient } from "@stacks/blockchain-api-client";
 import { STACKS_TESTNET, clientFromNetwork } from "@stacks/network";
 import {
   broadcastTransaction,
+  type ClarityValue,
   makeContractCall,
   makeContractDeploy,
 } from "@stacks/transactions";
@@ -96,8 +97,11 @@ export const publishPost = async ({
   });
 
   const transaction = await makeContractCall({
-    // oxlint-disable-next-line no-explicit-any
-    ...(parameters as any),
+    ...parameters,
+    contractAddress: parameters.contract.split(".")[0],
+    contractName: parameters.contract.split(".")[1],
+    functionArgs: parameters.functionArgs as ClarityValue[],
+    network: network,
     senderKey: privateKey,
   });
   const broadcastResponse = await broadcastTransaction({ transaction });
