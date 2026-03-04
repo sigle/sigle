@@ -8,7 +8,7 @@
     "dev": "tsx src/index.ts"
   },
   "devDependencies": {
-    "@paralleldrive/cuid2": "2.2.2",
+    "@paralleldrive/cuid2": "3.3.0",
     "@sigle/sdk": "workspace:*",
     "@stacks/network": "7.3.1",
     "@stacks/transactions": "7.3.1",
