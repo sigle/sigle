@@ -1,6 +1,6 @@
 import { encode } from "blurhash";
 import sharp from "sharp";
-import { env } from "~/env";
+import { env } from "../env";
 import { blurHashToDataURL } from "./blurhash";
 import { convertCIDv0toCIDv1 } from "./ipfs";
 
