@@ -6,6 +6,7 @@ import {
   type MetadataAttribute,
   MetadataAttributeType,
   type PostMetadata,
+  PostMetadataSchemaId,
 } from "@sigle/sdk";
 import { fileTypeFromBuffer } from "file-type";
 import { env } from "@/env";
@@ -151,6 +152,7 @@ export const generateSigleMetadataFromForm = async ({
   description = `${description}...\n\nWritten on www.sigle.io`;
 
   const metadata = createPostMetadata({
+    $schema: PostMetadataSchemaId.LATEST,
     name: post.title,
     description,
     external_url: `${env.NEXT_PUBLIC_APP_URL}/p/${postId}`,
