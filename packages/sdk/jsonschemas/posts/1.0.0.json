@@ -21,17 +21,21 @@
       "properties": {
         "id": {
           "type": "string",
-          "minLength": 1
+          "minLength": 1,
+          "description": "Random id also used in the url. Have to be unique on sigle."
         },
         "title": {
           "type": "string",
-          "minLength": 1
+          "minLength": 1,
+          "description": "Post title."
         },
         "content": {
           "type": "string",
-          "minLength": 1
+          "minLength": 1,
+          "description": "Markdown content."
         },
         "attributes": {
+          "description": "List of attributes.",
           "minItems": 1,
           "maxItems": 20,
           "type": "array",
@@ -50,6 +54,7 @@
           }
         },
         "coverImage": {
+          "description": "The cover image.",
           "type": "object",
           "properties": {
             "url": {
@@ -68,6 +73,7 @@
           "additionalProperties": false
         },
         "tags": {
+          "description": "List of tags.",
           "minItems": 1,
           "maxItems": 5,
           "type": "array",

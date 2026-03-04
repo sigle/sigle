@@ -45,16 +45,29 @@ export interface PostMetadataDetails {
 }
 
 export const PostMetadataDetailsSchema = z.object({
-  id: z.string().min(1),
-  title: z.string().min(1),
-  content: z.string().min(1),
+  id: z.string().min(1).meta({
+    description: "Random id also used in the url. Have to be unique on sigle.",
+  }),
+  title: z.string().min(1).meta({
+    description: "Post title.",
+  }),
+  content: z.string().min(1).meta({
+    description: "Markdown content.",
+  }),
   attributes: z
     .array(z.object({ value: z.string(), key: z.string() }))
     .min(1)
     .max(20)
-    .optional(),
-  coverImage: MediaImageMetadataSchema.optional(),
-  tags: z.array(z.string()).min(1).max(5).optional(),
+    .optional()
+    .meta({
+      description: "List of attributes.",
+    }),
+  coverImage: MediaImageMetadataSchema.optional().meta({
+    description: "The cover image.",
+  }),
+  tags: z.array(z.string()).min(1).max(5).optional().meta({
+    description: "List of tags.",
+  }),
 });
 
 export type PostMetadata = MarketplaceMetadata & {
