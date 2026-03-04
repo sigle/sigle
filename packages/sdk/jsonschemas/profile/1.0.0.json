@@ -65,6 +65,84 @@
             },
             "required": ["type", "key", "value"],
             "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "properties": {
+              "type": {
+                "type": "string",
+                "const": "Date"
+              },
+              "key": {
+                "type": "string",
+                "description": "The attribute's unique identifier."
+              },
+              "value": {
+                "type": "string",
+                "format": "date-time",
+                "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z))$",
+                "description": "A valid ISO 8601 date string.  It's consumer responsibility to parse it."
+              }
+            },
+            "required": ["type", "key", "value"],
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "properties": {
+              "type": {
+                "type": "string",
+                "const": "Number"
+              },
+              "key": {
+                "type": "string",
+                "description": "The attribute's unique identifier."
+              },
+              "value": {
+                "type": "string",
+                "description": "A valid JS number serialized as string. It's consumer responsibility to parse it."
+              }
+            },
+            "required": ["type", "key", "value"],
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "properties": {
+              "type": {
+                "type": "string",
+                "const": "String"
+              },
+              "key": {
+                "type": "string",
+                "description": "The attribute's unique identifier."
+              },
+              "value": {
+                "type": "string",
+                "description": "Any string value."
+              }
+            },
+            "required": ["type", "key", "value"],
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "properties": {
+              "type": {
+                "type": "string",
+                "const": "JSON"
+              },
+              "key": {
+                "type": "string",
+                "description": "The attribute's unique identifier."
+              },
+              "value": {
+                "type": "string",
+                "description": "A JSON string. It's consumer responsibility to validate and parse it."
+              }
+            },
+            "required": ["type", "key", "value"],
+            "additionalProperties": false
           }
         ]
       }
