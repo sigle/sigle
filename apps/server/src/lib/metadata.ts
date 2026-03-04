@@ -1,6 +1,6 @@
-import type { z } from "zod";
 import { type MediaImageMetadata, PostMetadataSchema } from "@sigle/sdk";
 import { type UnhandledException, Result, TaggedError } from "better-result";
+import { env } from "../env";
 import { resolveImageUrl } from "./images";
 
 export class MetadataFetchFailedError extends TaggedError(
@@ -12,6 +12,17 @@ export class MetadataFetchFailedError extends TaggedError(
 function fetchMetadata(
   url: string,
 ): Promise<Result<unknown, MetadataFetchFailedError>> {
+  const retryConfig =
+    env.NODE_ENV === "test"
+      ? undefined
+      : ({
+          retry: {
+            times: 3,
+            backoff: "exponential",
+            delayMs: 500,
+          },
+        } as const);
+
   return Result.tryPromise(
     {
       try: async () => {
@@ -28,21 +39,16 @@ function fetchMetadata(
         });
       },
     },
-    {
-      retry: {
-        times: 3,
-        backoff: "exponential",
-        delayMs: 500,
-      },
-    },
+    retryConfig,
   );
 }
 
 export class InvalidMetadataError extends TaggedError("InvalidMetadataError")<{
-  error: z.ZodError;
+  error: string;
 }>() {}
 
 interface PostMetadata {
+  version: string;
   id: string;
   title: string;
   content: string;
@@ -73,7 +79,7 @@ export async function getMetadataFromUri(
   if (!postMetadata.success) {
     return Result.err(
       new InvalidMetadataError({
-        error: postMetadata.error,
+        error: `Invalid metadata: ${postMetadata.error.issues.length} validation error(s)`,
       }),
     );
   }
@@ -92,7 +98,10 @@ export async function getMetadataFromUri(
     (attribute) => attribute.key === "canonical-uri",
   )?.value;
 
+  const versionSplit = postData.$schema.split("/");
+  const version = versionSplit[versionSplit.length - 1].replace(".json", "");
   const metadata: PostMetadata = {
+    version,
     id: postData.content.id,
     title: postData.content.title,
     content: postData.content.content,
