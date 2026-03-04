@@ -47,6 +47,25 @@ export const EditorSettings = () => {
                   <IconChevronRight size={24} />
                 </Text>
               </div>
+              {/*<div
+                className={`
+                                flex cursor-pointer justify-between border-b border-gray-5
+                                px-6 py-4 transition-colors
+                                hover:bg-gray-2
+                              `}
+                onClick={() => setMenuOpen("collect")}
+              >
+                <Text
+                  as="div"
+                  weight="medium"
+                  className="flex items-center gap-2"
+                >
+                  <IconCards size={20} /> NFT collection
+                </Text>
+                <Text as="div" color="gray">
+                  <IconChevronRight size={24} />
+                </Text>
+              </div>*/}
             </Inset>
             <GeneralSettings />
           </div>
