@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { SignatureSchema } from "./common.js";
+import { SignatureSchema, Tagchema } from "./common.js";
 import { PostMetadataSchemaId } from "./config.js";
 import {
   type MarketplaceMetadata,
@@ -45,7 +45,7 @@ export interface PostMetadataDetails {
    */
   coverImage?: MediaImageMetadata;
   /**
-   * List of tags
+   * An arbitrary list of tags.
    */
   tags?: string[];
   /**
@@ -71,8 +71,8 @@ export const PostMetadataDetailsSchema = z.object({
   coverImage: MediaImageMetadataSchema.optional().meta({
     description: "The cover image.",
   }),
-  tags: z.array(z.string()).min(1).max(5).optional().meta({
-    description: "List of tags.",
+  tags: Tagchema.array().min(1).max(5).optional().meta({
+    description: "An arbitrary list of tags.",
   }),
   contentWarning: ContentWarningSchema.optional(),
 });

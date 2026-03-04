@@ -16,6 +16,10 @@
       "type": "string",
       "format": "uri"
     },
+    "$schema": {
+      "type": "string",
+      "const": "https://json-schemas.sigle.io/posts/1.0.0.json"
+    },
     "content": {
       "type": "object",
       "properties": {
@@ -164,19 +168,32 @@
           "additionalProperties": false
         },
         "tags": {
-          "description": "List of tags.",
+          "description": "An arbitrary list of tags.",
           "minItems": 1,
           "maxItems": 5,
           "type": "array",
           "items": {
-            "type": "string"
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 50,
+            "description": "An arbitrary tag."
           }
+        },
+        "contentWarning": {
+          "type": "string",
+          "enum": ["NSFW", "SENSITIVE", "SPOILER"],
+          "description": "Specify a content warning."
         }
       },
       "required": ["id", "title", "content"],
       "additionalProperties": false
+    },
+    "signature": {
+      "type": "string",
+      "minLength": 1,
+      "description": "A cryptographic signature of the `content` data."
     }
   },
-  "required": ["content"],
+  "required": ["$schema", "content"],
   "additionalProperties": false
 }
