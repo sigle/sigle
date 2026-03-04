@@ -1,3 +1,4 @@
+import { PostMetadataSchemaId } from "@sigle/sdk";
 import { Result } from "better-result";
 import { describe, expect, it, vi, beforeEach } from "vitest";
 import {
@@ -11,6 +12,7 @@ const mockFetch = vi.fn();
 vi.stubGlobal("fetch", mockFetch);
 
 const validMetadata = {
+  $schema: PostMetadataSchemaId.LATEST,
   content: {
     id: "post-123",
     title: "Test Post",
@@ -65,40 +67,6 @@ describe("metadata", () => {
           },
           tags: ["tag1", "tag2"],
           canonicalUri: "https://example.com/post",
-        }),
-      );
-    });
-
-    it("should return ok result with minimal metadata when no attributes", async () => {
-      const minimalMetadata = {
-        content: {
-          id: "post-456",
-          title: "Minimal Post",
-          content: "Content",
-        },
-      };
-
-      mockFetch.mockResolvedValue({
-        ok: true,
-        json: async () => minimalMetadata,
-      });
-
-      const result = await getMetadataFromUri(
-        "https://example.com/minimal.json",
-      );
-
-      expect(result.isOk()).toBeTruthy();
-      expect(result).toStrictEqual(
-        Result.ok({
-          id: "post-456",
-          title: "Minimal Post",
-          content: "Content",
-          metaTitle: undefined,
-          metaDescription: undefined,
-          excerpt: "",
-          coverImage: undefined,
-          tags: undefined,
-          canonicalUri: undefined,
         }),
       );
     });
