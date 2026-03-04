@@ -1,5 +1,6 @@
 import { ProfileMetadataSchema } from "@sigle/sdk";
 import { z } from "zod";
+import { env } from "~/env";
 import { consola } from "~/lib/consola";
 import { prisma } from "~/lib/prisma";
 import { generateImageBlurhashJob } from "../../generate-image-blurhash";
@@ -17,7 +18,7 @@ export const executeIndexerSetProfileJob = async (
 ) => {
   // Fetch data from Arweave
   const arweaveTxId = data.uri.replace("ar://", "");
-  const response = await fetch(`https://arweave.net/${arweaveTxId}`);
+  const response = await fetch(`${env.ARWEAVE_GATEWAY_URL}/${arweaveTxId}`);
   const json = await response.json();
 
   // Verify data is correct

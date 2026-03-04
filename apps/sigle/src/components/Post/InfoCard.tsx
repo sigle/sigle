@@ -1,6 +1,7 @@
 import type { paths } from "@sigle/sdk";
 import { Link, Separator, Text } from "@radix-ui/themes";
 import { IconArrowUpRight } from "@tabler/icons-react";
+import { env } from "@/env";
 import { getExplorerTransactionUrl } from "@/lib/stacks";
 
 interface PostInfoCardProps {
@@ -9,7 +10,7 @@ interface PostInfoCardProps {
 
 export const PostInfoCard = ({ post }: PostInfoCardProps) => {
   const fullLink = post.metadataUri.startsWith("ar://")
-    ? `https://arweave.net/${post.metadataUri.slice(5)}`
+    ? `${env.NEXT_PUBLIC_ARWEAVE_GATEWAY_URL}/${post.metadataUri.slice(5)}`
     : post.metadataUri;
 
   return (

@@ -57,6 +57,8 @@ export const PublishReview = ({ onPublish }: PublishReviewProps) => {
     // oxlint-disable-next-line exhaustive-deps
   }, []);
 
+  const isCollectEnabled = false;
+
   return (
     <div className="space-y-4">
       {isFormValid !== "loading" && !isFormValid.valid ? (
@@ -89,7 +91,7 @@ export const PublishReview = ({ onPublish }: PublishReviewProps) => {
         </Callout.Root>
       ) : null}
 
-      {type === "draft" ? (
+      {type === "draft" && isCollectEnabled ? (
         <Callout.Root color="orange" role="alert">
           <Callout.Icon>
             <IconExclamationCircle />
@@ -101,14 +103,14 @@ export const PublishReview = ({ onPublish }: PublishReviewProps) => {
         </Callout.Root>
       ) : null}
 
-      <Grid columns="2" gap="4" width="auto">
+      <Grid columns={isCollectEnabled ? "2" : "1"} gap="4" width="auto">
         <PublishReviewGeneral />
         <PublishReviewCollect />
       </Grid>
 
       <Flex gap="3" justify="end">
         <Dialog.Close>
-          <Button variant="soft" color="gray">
+          <Button variant="soft" color="gray" disabled={formState.isSubmitting}>
             Cancel
           </Button>
         </Dialog.Close>

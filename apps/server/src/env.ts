@@ -29,6 +29,8 @@ export const env = createEnv({
     WEBHOOK_PROXY_URL: z.url().optional(),
     // The key used to verify the chainhooks bearer token
     CHAINHOOK_API_TOKEN: z.string(),
+    // The gateway URL to use when serving files stored on Arweave
+    ARWEAVE_GATEWAY_URL: z.url().default("https://turbo-gateway.com"),
     SENTRY_DSN: z.url().optional(),
     POSTHOG_API_KEY: z.string().optional(),
     POSTHOG_API_HOST: z.string().optional(),

@@ -13,7 +13,7 @@
     "test": "dotenvx run --env-file=.env.test -- vitest"
   },
   "dependencies": {
-    "@ardrive/turbo-sdk": "1.22.0",
+    "@ardrive/turbo-sdk": "1.41.0",
     "@dotenvx/dotenvx": "1.52.0",
     "@hirosystems/chainhook-client": "2.4.0",
     "@paralleldrive/cuid2": "3.3.0",

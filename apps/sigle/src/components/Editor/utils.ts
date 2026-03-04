@@ -94,7 +94,9 @@ const uploadNftImage = async (
 ) => {
   const url = new URL(`${env.NEXT_PUBLIC_APP_URL}/api/post/nft-image`);
   for (const [key, value] of Object.entries(params)) {
-    url.searchParams.append(key, String(value));
+    if (value !== undefined) {
+      url.searchParams.append(key, String(value));
+    }
   }
   const response = await fetch(url.toString());
 

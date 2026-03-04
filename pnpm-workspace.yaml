@@ -6,22 +6,20 @@ ignoredBuiltDependencies:
   - "@reown/appkit"
   - "@sentry/cli"
   - bigint-buffer
+  - bufferutil
   - core-js
+  - secp256k1
+  - protobufjs
+  - utf-8-validate
 
 onlyBuiltDependencies:
   - "@parcel/watcher"
   - "@prisma/engines"
-  - bufferutil
   - esbuild
   - keccak
   - lefthook
   - prisma
-  - protobufjs
-  - secp256k1
   - sharp
   - tiny-secp256k1
-  - utf-8-validate
 
 patchedDependencies:
-  "@ardrive/turbo-sdk@1.22.0": patches/@ardrive__turbo-sdk@1.22.0.patch
-  "@dha-team/arbundles@1.0.1": patches/@dha-team__arbundles@1.0.1.patch

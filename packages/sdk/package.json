@@ -28,7 +28,7 @@
     "@tsconfig/recommended": "1.0.13",
     "@types/node": "24.10.12",
     "openapi-typescript": "7.9.1",
-    "tsdown": "0.18.1",
+    "tsdown": "0.20.3",
     "tsx": "4.21.0",
     "typescript": "5.9.3",
     "vitest": "4.0.18",
