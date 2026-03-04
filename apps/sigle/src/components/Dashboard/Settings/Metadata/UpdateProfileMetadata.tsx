@@ -1,6 +1,10 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button, Flex, Text, TextArea, TextField } from "@radix-ui/themes";
-import { type paths, createProfileMetadata } from "@sigle/sdk";
+import {
+  type paths,
+  createProfileMetadata,
+  ProfileMetadataSchemaId,
+} from "@sigle/sdk";
 import { IconAt, IconBrandX } from "@tabler/icons-react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -84,14 +88,16 @@ export const UpdateProfileMetadata = ({
 
   const onSubmit = handleSubmit(async (formValues) => {
     const metadata = createProfileMetadata({
-      // TODO: add random id
-      id: "TODO",
-      displayName: formValues.displayName || undefined,
-      description: formValues.description || undefined,
-      twitter: formValues.twitter || undefined,
-      website: formValues.website || undefined,
-      picture: formValues.picture || undefined,
-      coverPicture: formValues.coverPicture || undefined,
+      $schema: ProfileMetadataSchemaId.LATEST,
+      content: {
+        id: "TODO",
+        displayName: formValues.displayName || undefined,
+        description: formValues.description || undefined,
+        twitter: formValues.twitter || undefined,
+        website: formValues.website || undefined,
+        picture: formValues.picture || undefined,
+        coverPicture: formValues.coverPicture || undefined,
+      },
     });
 
     const data = await uploadProfileMetadata({

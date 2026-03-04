@@ -1,0 +1,199 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string"
+    },
+    "description": {
+      "type": "string"
+    },
+    "external_url": {
+      "type": "string",
+      "format": "uri"
+    },
+    "image": {
+      "type": "string",
+      "format": "uri"
+    },
+    "$schema": {
+      "type": "string",
+      "const": "https://json-schemas.sigle.io/posts/1.0.0.json"
+    },
+    "content": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Random id also used in the url. Have to be unique on sigle."
+        },
+        "title": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Post title."
+        },
+        "content": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Markdown content."
+        },
+        "attributes": {
+          "description": "List of attributes that can be used to store any additional information that is not supported by the standard",
+          "minItems": 1,
+          "maxItems": 20,
+          "type": "array",
+          "items": {
+            "oneOf": [
+              {
+                "type": "object",
+                "properties": {
+                  "type": {
+                    "type": "string",
+                    "const": "Boolean"
+                  },
+                  "key": {
+                    "type": "string",
+                    "description": "The attribute's unique identifier."
+                  },
+                  "value": {
+                    "type": "string",
+                    "enum": ["true", "false"],
+                    "description": "A JS boolean value serialized as string. It's consumer responsibility to parse it."
+                  }
+                },
+                "required": ["type", "key", "value"],
+                "additionalProperties": false
+              },
+              {
+                "type": "object",
+                "properties": {
+                  "type": {
+                    "type": "string",
+                    "const": "Date"
+                  },
+                  "key": {
+                    "type": "string",
+                    "description": "The attribute's unique identifier."
+                  },
+                  "value": {
+                    "type": "string",
+                    "format": "date-time",
+                    "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z))$",
+                    "description": "A valid ISO 8601 date string.  It's consumer responsibility to parse it."
+                  }
+                },
+                "required": ["type", "key", "value"],
+                "additionalProperties": false
+              },
+              {
+                "type": "object",
+                "properties": {
+                  "type": {
+                    "type": "string",
+                    "const": "Number"
+                  },
+                  "key": {
+                    "type": "string",
+                    "description": "The attribute's unique identifier."
+                  },
+                  "value": {
+                    "type": "string",
+                    "description": "A valid JS number serialized as string. It's consumer responsibility to parse it."
+                  }
+                },
+                "required": ["type", "key", "value"],
+                "additionalProperties": false
+              },
+              {
+                "type": "object",
+                "properties": {
+                  "type": {
+                    "type": "string",
+                    "const": "String"
+                  },
+                  "key": {
+                    "type": "string",
+                    "description": "The attribute's unique identifier."
+                  },
+                  "value": {
+                    "type": "string",
+                    "description": "Any string value."
+                  }
+                },
+                "required": ["type", "key", "value"],
+                "additionalProperties": false
+              },
+              {
+                "type": "object",
+                "properties": {
+                  "type": {
+                    "type": "string",
+                    "const": "JSON"
+                  },
+                  "key": {
+                    "type": "string",
+                    "description": "The attribute's unique identifier."
+                  },
+                  "value": {
+                    "type": "string",
+                    "description": "A JSON string. It's consumer responsibility to validate and parse it."
+                  }
+                },
+                "required": ["type", "key", "value"],
+                "additionalProperties": false
+              }
+            ]
+          }
+        },
+        "coverImage": {
+          "description": "The cover image.",
+          "type": "object",
+          "properties": {
+            "url": {
+              "type": "string",
+              "format": "uri"
+            },
+            "type": {
+              "type": "string",
+              "enum": ["image/gif", "image/jpeg", "image/png", "image/webp"],
+              "description": "The MIME type of the image."
+            },
+            "alt": {
+              "description": "The alt tag of the image for accessibility.",
+              "type": "string"
+            }
+          },
+          "required": ["url", "type"],
+          "additionalProperties": false
+        },
+        "tags": {
+          "description": "An arbitrary list of tags.",
+          "minItems": 1,
+          "maxItems": 5,
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 50,
+            "description": "An arbitrary tag."
+          }
+        },
+        "contentWarning": {
+          "type": "string",
+          "enum": ["NSFW", "SENSITIVE", "SPOILER"],
+          "description": "Specify a content warning."
+        }
+      },
+      "required": ["id", "title", "content"],
+      "additionalProperties": false
+    },
+    "signature": {
+      "type": "string",
+      "minLength": 1,
+      "description": "A cryptographic signature of the `content` data."
+    }
+  },
+  "required": ["$schema", "content"],
+  "additionalProperties": false
+}

@@ -1,3 +1,4 @@
+import { PostMetadataSchemaId } from "@sigle/sdk";
 import { Result } from "better-result";
 import { describe, expect, it, vi, beforeEach } from "vitest";
 import {
@@ -11,15 +12,20 @@ const mockFetch = vi.fn();
 vi.stubGlobal("fetch", mockFetch);
 
 const validMetadata = {
+  $schema: PostMetadataSchemaId.LATEST,
   content: {
     id: "post-123",
     title: "Test Post",
     content: "# Hello World",
     attributes: [
-      { key: "meta-title", value: "SEO Title" },
-      { key: "meta-description", value: "SEO Description" },
-      { key: "excerpt", value: "Post excerpt" },
-      { key: "canonical-uri", value: "https://example.com/post" },
+      { type: "String", key: "meta-title", value: "SEO Title" },
+      { type: "String", key: "meta-description", value: "SEO Description" },
+      { type: "String", key: "excerpt", value: "Post excerpt" },
+      {
+        type: "String",
+        key: "canonical-uri",
+        value: "https://example.com/post",
+      },
     ],
     coverImage: {
       url: "https://example.com/image.jpg",
@@ -49,6 +55,7 @@ describe("metadata", () => {
       expect(result.isOk()).toBeTruthy();
       expect(result).toStrictEqual(
         Result.ok({
+          version: "1.0.0",
           id: "post-123",
           title: "Test Post",
           content: "# Hello World",
@@ -61,40 +68,6 @@ describe("metadata", () => {
           },
           tags: ["tag1", "tag2"],
           canonicalUri: "https://example.com/post",
-        }),
-      );
-    });
-
-    it("should return ok result with minimal metadata when no attributes", async () => {
-      const minimalMetadata = {
-        content: {
-          id: "post-456",
-          title: "Minimal Post",
-          content: "Content",
-        },
-      };
-
-      mockFetch.mockResolvedValue({
-        ok: true,
-        json: async () => minimalMetadata,
-      });
-
-      const result = await getMetadataFromUri(
-        "https://example.com/minimal.json",
-      );
-
-      expect(result.isOk()).toBeTruthy();
-      expect(result).toStrictEqual(
-        Result.ok({
-          id: "post-456",
-          title: "Minimal Post",
-          content: "Content",
-          metaTitle: undefined,
-          metaDescription: undefined,
-          excerpt: "",
-          coverImage: undefined,
-          tags: undefined,
-          canonicalUri: undefined,
         }),
       );
     });

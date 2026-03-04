@@ -4,7 +4,9 @@ import {
   type MediaImageMetadata,
   MediaImageMimeType,
   type MetadataAttribute,
+  MetadataAttributeType,
   type PostMetadata,
+  PostMetadataSchemaId,
 } from "@sigle/sdk";
 import { fileTypeFromBuffer } from "file-type";
 import { env } from "@/env";
@@ -23,24 +25,28 @@ const generateMetadataAttributesFromForm = ({
   const attributes: MetadataAttribute[] = [
     // Generate an excerpt from the content that can be used as the description in the post cards
     {
+      type: MetadataAttributeType.STRING,
       value: editorText.slice(0, 350),
       key: "excerpt",
     },
   ];
   if (post.metaTitle) {
     attributes.push({
+      type: MetadataAttributeType.STRING,
       value: post.metaTitle,
       key: "meta-title",
     });
   }
   if (post.metaDescription) {
     attributes.push({
+      type: MetadataAttributeType.STRING,
       value: post.metaDescription,
       key: "meta-description",
     });
   }
   if (post.canonicalUri) {
     attributes.push({
+      type: MetadataAttributeType.STRING,
       value: post.canonicalUri,
       key: "canonical-uri",
     });
@@ -146,6 +152,7 @@ export const generateSigleMetadataFromForm = async ({
   description = `${description}...\n\nWritten on www.sigle.io`;
 
   const metadata = createPostMetadata({
+    $schema: PostMetadataSchemaId.LATEST,
     name: post.title,
     description,
     external_url: `${env.NEXT_PUBLIC_APP_URL}/p/${postId}`,
