@@ -50,7 +50,7 @@ export default defineEventHandler(async (event) => {
                 address: transaction.metadata.kind.data.contract_identifier,
                 txId,
                 blockHeight: block.block_identifier.index,
-                version: 1,
+                version: "1.0.0",
                 contract: transaction.metadata.kind.data.code,
                 sender: transaction.metadata.sender,
                 createdAt: new Date(block.metadata.block_time * 1000),

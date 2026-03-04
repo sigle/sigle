@@ -13,10 +13,10 @@
     "version": "pnpm changeset version && pnpm install --lockfile-only"
   },
   "devDependencies": {
-    "@changesets/cli": "2.29.8",
-    "lefthook": "2.1.1",
-    "oxfmt": "0.35.0",
-    "oxlint": "1.50.0",
+    "@changesets/cli": "2.30.0",
+    "lefthook": "2.1.2",
+    "oxfmt": "0.36.0",
+    "oxlint": "1.51.0",
     "syncpack": "14.0.0",
     "turbo": "2.8.10"
   },

@@ -97,7 +97,7 @@ export const indexerNewPostSchema = z.object({
     address: z.string(),
     txId: z.string(),
     blockHeight: z.number(),
-    version: z.number().min(1).max(1),
+    version: z.string(),
     contract: z.string(),
     sender: z.string(),
     createdAt: z.coerce.date(),

@@ -1,73 +1,101 @@
 import { z } from "zod";
+import { SignatureSchema, Tagchema } from "./common.js";
+import { PostMetadataSchemaId } from "./config.js";
 import {
   type MarketplaceMetadata,
   MarketplaceMetadataSchema,
 } from "./marketplace.js";
 import { type MediaImageMetadata, MediaImageMetadataSchema } from "./media.js";
+import {
+  type MetadataAttribute,
+  MetadataAttributeSchema,
+} from "./metadata-attribute.js";
 import { evaluate } from "./utils.js";
 
-export interface MetadataAttribute {
-  value: string;
-  key: string;
+export enum ContentWarning {
+  NSFW = "NSFW",
+  SENSITIVE = "SENSITIVE",
+  SPOILER = "SPOILER",
 }
+
+export const ContentWarningSchema = z.enum(ContentWarning).meta({
+  description: "Specify a content warning.",
+});
 
 export interface PostMetadataDetails {
   /**
    * Random id also used in the url
-   * Have to be unique on sigle
+   * Have to be unique on sigle. Use a UUID if unsure.
    */
   id: string;
-
   /**
    * Post title
    */
   title: string;
-
   /**
    * Markdown content
    */
   content: string;
-
   /**
-   * List of attributes
+   * List of attributes that can be used to store any additional information that is not supported by the standard.
    */
   attributes?: MetadataAttribute[];
-
   /**
    * The cover image
    */
   coverImage?: MediaImageMetadata;
-
   /**
-   * List of tags
+   * An arbitrary list of tags.
    */
   tags?: string[];
+  /**
+   * Specify a content warning
+   */
+  contentWarning?: ContentWarning;
 }
 
 export const PostMetadataDetailsSchema = z.object({
-  id: z.string().min(1),
-  title: z.string().min(1),
-  content: z.string().min(1),
-  attributes: z
-    .array(z.object({ value: z.string(), key: z.string() }))
-    .min(1)
-    .max(20)
-    .optional(),
-  coverImage: MediaImageMetadataSchema.optional(),
-  tags: z.array(z.string()).min(1).max(5).optional(),
+  id: z.string().min(1).meta({
+    description: "Random id also used in the url. Have to be unique on sigle.",
+  }),
+  title: z.string().min(1).meta({
+    description: "Post title.",
+  }),
+  content: z.string().min(1).meta({
+    description: "Markdown content.",
+  }),
+  attributes: MetadataAttributeSchema.array().min(1).max(20).optional().meta({
+    description:
+      "List of attributes that can be used to store any additional information that is not supported by the standard",
+  }),
+  coverImage: MediaImageMetadataSchema.optional().meta({
+    description: "The cover image.",
+  }),
+  tags: Tagchema.array().min(1).max(5).optional().meta({
+    description: "An arbitrary list of tags.",
+  }),
+  contentWarning: ContentWarningSchema.optional(),
 });
 
 export type PostMetadata = MarketplaceMetadata & {
+  /**
+   * The schema id.
+   */
+  $schema: PostMetadataSchemaId.LATEST;
+  /**
+   * The metadata details.
+   */
   content: PostMetadataDetails;
-  // TODO add signature
-  // signature: string;
-  // TODO add version for the content
+  /**
+   * A cryptographic signature of the `content` data.
+   */
+  signature?: string;
 };
 
 export const PostMetadataSchema = MarketplaceMetadataSchema.extend({
+  $schema: z.literal(PostMetadataSchemaId.LATEST),
   content: PostMetadataDetailsSchema,
-  // TODO add signature
-  // signature: z.string(),
+  signature: SignatureSchema.optional(),
 });
 
 export function createPostMetadata(data: PostMetadata): PostMetadata {

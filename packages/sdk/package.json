@@ -29,6 +29,7 @@
     "@types/node": "24.10.12",
     "openapi-typescript": "7.9.1",
     "tsdown": "0.18.1",
+    "tsx": "4.21.0",
     "typescript": "5.9.3",
     "vitest": "4.0.18",
     "zod": "4.3.6"

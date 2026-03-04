@@ -7,7 +7,7 @@ export const env = createEnv({
   runtimeEnv: import.meta.env,
 
   server: {
-    NODE_ENV: z.enum(["production", "development"]),
+    NODE_ENV: z.enum(["production", "development", "test"]),
     STACKS_ENV: z.enum(["mainnet", "testnet"]),
     SIGLE_ENV: z.enum(["production", "staging", "local"]),
     APP_ID: z.string(),
