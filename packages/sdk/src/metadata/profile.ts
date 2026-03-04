@@ -34,10 +34,18 @@ export interface ProfileMetadata {
 }
 
 export const ProfileMetadataSchema = z.object({
-  id: z.string().min(1),
-  displayName: z.string().min(1).max(100).optional(),
-  description: z.string().min(1).optional(),
-  website: z.url().optional(),
+  id: z.string().min(1).meta({
+    description: "Random id also used in the url. Have to be unique on sigle.",
+  }),
+  displayName: z.string().min(1).max(100).optional().meta({
+    description: "The profile display name.",
+  }),
+  description: z.string().min(1).optional().meta({
+    description: "The profile description as Markdown.",
+  }),
+  website: z.url().optional().meta({
+    description: "The website URL.",
+  }),
   twitter: z
     .string()
     .min(1)
@@ -45,9 +53,16 @@ export const ProfileMetadataSchema = z.object({
       /^[A-Za-z0-9_]*$/,
       "Twitter handle can only contain letters, numbers and underscore",
     )
-    .optional(),
-  picture: z.url().optional(),
-  coverPicture: z.url().optional(),
+    .optional()
+    .meta({
+      description: "Twitter username.",
+    }),
+  picture: z.url().optional().meta({
+    description: "The profile image URL.",
+  }),
+  coverPicture: z.url().optional().meta({
+    description: "The profile cover image URL.",
+  }),
 });
 
 export function createProfileMetadata(data: ProfileMetadata): ProfileMetadata {

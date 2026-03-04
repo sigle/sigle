@@ -4,31 +4,38 @@
   "properties": {
     "id": {
       "type": "string",
-      "minLength": 1
+      "minLength": 1,
+      "description": "Random id also used in the url. Have to be unique on sigle."
     },
     "displayName": {
+      "description": "The profile display name.",
       "type": "string",
       "minLength": 1,
       "maxLength": 100
     },
     "description": {
+      "description": "The profile description as Markdown.",
       "type": "string",
       "minLength": 1
     },
     "website": {
+      "description": "The website URL.",
       "type": "string",
       "format": "uri"
     },
     "twitter": {
+      "description": "Twitter username.",
       "type": "string",
       "minLength": 1,
       "pattern": "^[A-Za-z0-9_]*$"
     },
     "picture": {
+      "description": "The profile image URL.",
       "type": "string",
       "format": "uri"
     },
     "coverPicture": {
+      "description": "The profile cover image URL.",
       "type": "string",
       "format": "uri"
     }
