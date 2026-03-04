@@ -16,10 +16,14 @@ const validMetadata = {
     title: "Test Post",
     content: "# Hello World",
     attributes: [
-      { key: "meta-title", value: "SEO Title" },
-      { key: "meta-description", value: "SEO Description" },
-      { key: "excerpt", value: "Post excerpt" },
-      { key: "canonical-uri", value: "https://example.com/post" },
+      { type: "String", key: "meta-title", value: "SEO Title" },
+      { type: "String", key: "meta-description", value: "SEO Description" },
+      { type: "String", key: "excerpt", value: "Post excerpt" },
+      {
+        type: "String",
+        key: "canonical-uri",
+        value: "https://example.com/post",
+      },
     ],
     coverImage: {
       url: "https://example.com/image.jpg",
