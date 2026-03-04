@@ -81,7 +81,7 @@ export const executePublishPostJob = async (
       },
       update: {
         txId: data.txId,
-        version: version,
+        version: metadata.version,
       },
       create: {
         id: metadata.id,

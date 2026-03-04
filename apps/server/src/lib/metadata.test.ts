@@ -55,6 +55,7 @@ describe("metadata", () => {
       expect(result.isOk()).toBeTruthy();
       expect(result).toStrictEqual(
         Result.ok({
+          version: "1.0.0",
           id: "post-123",
           title: "Test Post",
           content: "# Hello World",
