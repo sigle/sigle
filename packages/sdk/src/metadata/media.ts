@@ -11,8 +11,6 @@ export interface MediaImageMetadata {
   url: string;
   // The MIME type of the image
   type: MediaImageMimeType;
-  width?: number;
-  height?: number;
   // The alt tag of the image for accessibility
   alt?: string;
 }

@@ -4,12 +4,11 @@ import {
   MarketplaceMetadataSchema,
 } from "./marketplace.js";
 import { type MediaImageMetadata, MediaImageMetadataSchema } from "./media.js";
+import {
+  type MetadataAttribute,
+  MetadataAttributeSchema,
+} from "./metadata-attribute.js";
 import { evaluate } from "./utils.js";
-
-export interface MetadataAttribute {
-  value: string;
-  key: string;
-}
 
 export interface PostMetadataDetails {
   /**
@@ -29,7 +28,7 @@ export interface PostMetadataDetails {
   content: string;
 
   /**
-   * List of attributes
+   * List of attributes that can be used to store any additional information that is not supported by the standard.
    */
   attributes?: MetadataAttribute[];
 
@@ -54,14 +53,10 @@ export const PostMetadataDetailsSchema = z.object({
   content: z.string().min(1).meta({
     description: "Markdown content.",
   }),
-  attributes: z
-    .array(z.object({ value: z.string(), key: z.string() }))
-    .min(1)
-    .max(20)
-    .optional()
-    .meta({
-      description: "List of attributes.",
-    }),
+  attributes: MetadataAttributeSchema.array().min(1).max(20).optional().meta({
+    description:
+      "List of attributes that can be used to store any additional information that is not supported by the standard",
+  }),
   coverImage: MediaImageMetadataSchema.optional().meta({
     description: "The cover image.",
   }),
