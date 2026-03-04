@@ -69,6 +69,8 @@ export const publishPost = async ({
   });
   const broadcastResponse = await broadcastTransaction({ transaction });
   console.log("submitted tx", broadcastResponse);
+
+  // TODO await that the block is mined before returning the txid
   return broadcastResponse.txid;
 };
 
