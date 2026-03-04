@@ -16,7 +16,7 @@
     "@ardrive/turbo-sdk": "1.22.0",
     "@dotenvx/dotenvx": "1.52.0",
     "@hirosystems/chainhook-client": "2.4.0",
-    "@paralleldrive/cuid2": "2.2.2",
+    "@paralleldrive/cuid2": "3.3.0",
     "@prisma/adapter-pg": "7.4.1",
     "@prisma/client": "7.4.1",
     "@sentry/node": "10.40.0",
