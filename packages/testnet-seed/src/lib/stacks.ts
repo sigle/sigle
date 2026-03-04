@@ -1,4 +1,5 @@
-import { STACKS_TESTNET } from "@stacks/network";
+import { createClient } from "@stacks/blockchain-api-client";
+import { STACKS_TESTNET, clientFromNetwork } from "@stacks/network";
 import {
   broadcastTransaction,
   makeContractCall,
@@ -10,6 +11,38 @@ import { parse } from "smol-toml";
 import { sigleClient } from "./sigle.js";
 
 const network = STACKS_TESTNET;
+
+const apiClient = createClient({
+  baseUrl: clientFromNetwork(network).baseUrl,
+});
+
+const TX_POLL_INTERVAL_MS = 500;
+const TX_MAX_POLL_COUNT = 120;
+
+const waitForTransaction = async (txId: string) => {
+  let pollCount = 0;
+  while (pollCount < TX_MAX_POLL_COUNT) {
+    const tx = await apiClient.GET("/extended/v1/tx/{tx_id}", {
+      params: { path: { tx_id: txId } },
+    });
+    if (
+      tx.response.ok &&
+      tx.data &&
+      (tx.data.tx_status === "success" ||
+        tx.data.tx_status === "abort_by_response" ||
+        tx.data.tx_status === "abort_by_post_condition")
+    ) {
+      return tx.data;
+    }
+    pollCount++;
+    await new Promise((resolve) => {
+      setTimeout(resolve, TX_POLL_INTERVAL_MS);
+    });
+  }
+  throw new Error(
+    `Transaction ${txId} timed out after ${TX_MAX_POLL_COUNT} polls`,
+  );
+};
 
 const configFile = readFileSync(
   "../../apps/contracts/settings/Testnet.toml",
@@ -70,7 +103,8 @@ export const publishPost = async ({
   const broadcastResponse = await broadcastTransaction({ transaction });
   console.log("submitted tx", broadcastResponse);
 
-  // TODO await that the block is mined before returning the txid
+  await waitForTransaction(broadcastResponse.txid);
+  console.log("transaction confirmed", broadcastResponse.txid);
   return broadcastResponse.txid;
 };
 

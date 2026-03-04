@@ -10,6 +10,7 @@
   "devDependencies": {
     "@paralleldrive/cuid2": "3.3.0",
     "@sigle/sdk": "workspace:*",
+    "@stacks/blockchain-api-client": "8.14.1",
     "@stacks/network": "7.3.1",
     "@stacks/transactions": "7.3.1",
     "@stacks/wallet-sdk": "7.2.0",
