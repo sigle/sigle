@@ -9,7 +9,7 @@ import {
   vi,
 } from "vitest";
 import { createTestDatabase, type TestDatabase } from "~/test/database";
-import { createTestUser } from "~/test/helpers";
+import { createTestPost, createTestUser } from "~/test/helpers";
 
 // oxlint-disable-next-line consistent-type-imports
 vi.mock<typeof import("nitropack/runtime")>(
@@ -60,49 +60,16 @@ describe("api/users/[username]/index.get", () => {
 
     await createTestUser({
       id: userId,
-    });
-
-    const now = new Date();
-    await testDb.db.user.create({
-      data: {
-        profile: {
-          create: {
-            displayName: "Test User",
-            description: "Test description",
-            website: "https://example.com",
-            twitter: "testuser",
-            createdAt: now,
-            updatedAt: now,
-          },
-        },
-        posts: {
-          create: [
-            {
-              id: "post-1",
-              version: "1.0.0",
-              txId: "0x123",
-              title: "Test Post",
-              content: "Test content",
-              excerpt: "Test excerpt",
-              metadataUri: "ipfs://QmTest1",
-              createdAt: now,
-              updatedAt: now,
-            },
-            {
-              id: "post-2",
-              version: "1.0.0",
-              txId: "0x456",
-              title: "Test Post 2",
-              content: "Test content 2",
-              excerpt: "Test excerpt 2",
-              metadataUri: "ipfs://QmTest2",
-              createdAt: now,
-              updatedAt: now,
-            },
-          ],
-        },
+      profile: {
+        displayName: "Test User",
+        description: "Test description",
+        website: "https://example.com",
+        twitter: "testuser",
       },
     });
+
+    await createTestPost({ id: "post-1", userId, title: "Test Post" });
+    await createTestPost({ id: "post-2", userId, title: "Test Post 2" });
 
     const mockEvent = {
       context: {},
@@ -116,8 +83,8 @@ describe("api/users/[username]/index.get", () => {
     expect(result).toStrictEqual({
       id: userId,
       flag: "NONE",
-      createdAt: now,
-      updatedAt: now,
+      createdAt: result.createdAt,
+      updatedAt: result.updatedAt,
       postsCount: 2,
       _count: undefined,
       profile: {
