@@ -20,21 +20,29 @@ vi.mock("~/lib/users", () => ({
   isUserWhitelisted: vi.fn().mockReturnValue(true),
 }));
 
-vi.mock("~/lib/stacks", () => ({
-  stacksApiClient: {
-    GET: vi.fn().mockResolvedValue({ data: { tx_id: "0x123" } }),
-  },
-}));
+vi.mock(
+  "~/lib/stacks",
+  () =>
+    ({
+      stacksApiClient: {
+        GET: vi.fn().mockResolvedValue({ data: { tx_id: "0x123" } }),
+      },
+    }) as any,
+);
 
-vi.mock("~/env", () => ({
-  env: {
-    STACKS_ENV: "testnet",
-  },
-}));
+vi.mock(
+  "~/env",
+  () =>
+    ({
+      env: {
+        STACKS_ENV: "testnet",
+      },
+    }) as any,
+);
 
 const mockReadValidatedBodyZod = vi.fn();
 
-vi.mock<typeof import("~/lib/nitro")>(import("~/lib/nitro"), () => ({
+vi.mock("~/lib/nitro", () => ({
   readValidatedBodyZod: (...args: unknown[]) =>
     mockReadValidatedBodyZod(...args),
 }));
@@ -96,5 +104,14 @@ describe("api/protected/drafts/[draftId]/set-tx-id.post", () => {
     const result = await handler(mockEvent);
 
     expect(result).toBeTruthy();
+
+    // Verify DB was updated
+    const updatedDraft = await testDb.db.draft.findUnique({
+      where: { id: "draft-1" },
+    });
+    expect(updatedDraft).toMatchObject({
+      txId: "0xabc123",
+      txStatus: "pending",
+    });
   });
 });

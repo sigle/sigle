@@ -12,13 +12,9 @@ import { isUserWhitelisted } from "~/lib/users";
 import { createTestDatabase, type TestDatabase } from "~/test/database";
 import { createTestUser } from "~/test/helpers";
 
-// oxlint-disable-next-line consistent-type-imports
-vi.mock<typeof import("nitropack/runtime")>(
-  import("nitropack/runtime"),
-  () => ({
-    defineRouteMeta: vi.fn(),
-  }),
-);
+vi.mock("nitropack/runtime", () => ({
+  defineRouteMeta: vi.fn(),
+}));
 
 vi.mock("~/lib/users", () => ({
   isUserWhitelisted: vi.fn().mockReturnValue(true),
@@ -28,11 +24,15 @@ vi.mock("~/lib/nitro", () => ({
   readValidatedBodyZod: vi.fn(),
 }));
 
-vi.mock("~/env", () => ({
-  env: {
-    STACKS_ENV: "testnet",
-  },
-}));
+vi.mock(
+  "~/env",
+  () =>
+    ({
+      env: {
+        STACKS_ENV: "testnet",
+      },
+    }) as any,
+);
 
 const { default: handler } = await import("./create.post");
 

@@ -20,11 +20,15 @@ vi.mock("~/lib/users", () => ({
   isUserWhitelisted: vi.fn().mockReturnValue(true),
 }));
 
-vi.mock("~/env", () => ({
-  env: {
-    STACKS_ENV: "testnet",
-  },
-}));
+vi.mock(
+  "~/env",
+  () =>
+    ({
+      env: {
+        STACKS_ENV: "testnet",
+      },
+    }) as any,
+);
 
 const mockGetRouterParam = vi.fn((event: H3Event, name: string) => {
   if (name === "draftId") {
@@ -84,5 +88,11 @@ describe("api/protected/drafts/[draftId]/delete.post", () => {
     const result = await handler(mockEvent);
 
     expect(result).toBeTruthy();
+
+    // Verify DB was deleted
+    const deletedDraft = await testDb.db.draft.findUnique({
+      where: { id: "draft-1" },
+    });
+    expect(deletedDraft).toBeNull();
   });
 });

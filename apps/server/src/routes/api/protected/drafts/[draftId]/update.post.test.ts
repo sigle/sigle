@@ -20,15 +20,19 @@ vi.mock("~/lib/users", () => ({
   isUserWhitelisted: vi.fn().mockReturnValue(true),
 }));
 
-vi.mock("~/env", () => ({
-  env: {
-    STACKS_ENV: "testnet",
-  },
-}));
+vi.mock(
+  "~/env",
+  () =>
+    ({
+      env: {
+        STACKS_ENV: "testnet",
+      },
+    }) as any,
+);
 
 const mockReadValidatedBodyZod = vi.fn();
 
-vi.mock<typeof import("~/lib/nitro")>(import("~/lib/nitro"), () => ({
+vi.mock("~/lib/nitro", () => ({
   readValidatedBodyZod: (...args: unknown[]) =>
     mockReadValidatedBodyZod(...args),
 }));
@@ -99,5 +103,18 @@ describe("api/protected/drafts/[draftId]/update.post", () => {
     const result = await handler(mockEvent);
 
     expect(result).toHaveProperty("id", "draft-1");
+
+    // Verify DB was updated
+    const updatedDraft = await testDb.db.draft.findUnique({
+      where: { id: "draft-1" },
+    });
+    expect(updatedDraft).toMatchObject({
+      title: "New Title",
+      content: "New Content",
+      collectPriceType: "free",
+      collectPrice: BigInt(0),
+      collectLimitType: "open",
+      collectLimit: 100,
+    });
   });
 });
