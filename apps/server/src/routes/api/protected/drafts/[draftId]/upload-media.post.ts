@@ -7,6 +7,10 @@ import { readMultipartFormDataSafe } from "~/lib/nitro";
 import { prisma } from "~/lib/prisma";
 import { isUserWhitelisted } from "~/lib/users";
 
+function toBuffer(data: Uint8Array): Buffer {
+  return Buffer.from(data.buffer, data.byteOffset, data.byteLength);
+}
+
 defineRouteMeta({
   openAPI: {
     tags: ["drafts"],
@@ -109,7 +113,7 @@ export default defineEventHandler(async (event) => {
   }
 
   const optimizedBuffer = await optimizeImage({
-    buffer: file.data,
+    buffer: toBuffer(file.data),
     contentType: parsedFile.data.type,
     quality: 75,
     width: 700,

@@ -1,4 +1,5 @@
-import type { H3Event } from "nitro/h3";
+import { H3Event } from "nitro";
+import { EventHandlerRequest } from "nitro/h3";
 import {
   afterAll,
   beforeAll,
@@ -76,7 +77,7 @@ describe("api/protected/drafts/[draftId].get", () => {
       path: "/api/protected/drafts/draft-1",
       method: "GET",
       headers: {},
-    } as unknown as H3Event;
+    } as unknown as H3Event<Request>;
 
     const result = await handler(mockEvent);
 
@@ -95,7 +96,7 @@ describe("api/protected/drafts/[draftId].get", () => {
       path: "/api/protected/drafts/",
       method: "GET",
       headers: {},
-    } as unknown as H3Event;
+    } as unknown as H3Event<Request>;
 
     await expect(handler(mockEvent)).rejects.toThrow("Bad Request");
   });
@@ -108,7 +109,7 @@ describe("api/protected/drafts/[draftId].get", () => {
       path: "/api/protected/drafts/non-existent",
       method: "GET",
       headers: {},
-    } as unknown as H3Event;
+    } as unknown as H3Event<Request>;
 
     await expect(handler(mockEvent)).rejects.toThrow("Not Found");
   });
@@ -128,7 +129,7 @@ describe("api/protected/drafts/[draftId].get", () => {
       path: "/api/protected/drafts/post-1",
       method: "GET",
       headers: {},
-    } as unknown as H3Event;
+    } as unknown as H3Event<Request>;
 
     const result = await handler(mockEvent);
 

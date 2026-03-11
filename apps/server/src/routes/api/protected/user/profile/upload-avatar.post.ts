@@ -5,6 +5,10 @@ import { allowedFormats, optimizeImage } from "~/lib/images";
 import { ipfsUploadFile } from "~/lib/ipfs-upload";
 import { readMultipartFormDataSafe } from "~/lib/nitro";
 
+function toBuffer(data: Uint8Array): Buffer {
+  return Buffer.from(data.buffer, data.byteOffset, data.byteLength);
+}
+
 defineRouteMeta({
   openAPI: {
     tags: ["users"],
@@ -83,7 +87,7 @@ export default defineEventHandler(async (event) => {
   }
 
   const optimizedBuffer = await optimizeImage({
-    buffer: file.data,
+    buffer: toBuffer(file.data),
     contentType: parsedFile.data.type,
     quality: 75,
     width: 600,

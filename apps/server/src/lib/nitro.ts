@@ -77,5 +77,6 @@ export const readMultipartFormDataSafe = async (
     });
   }
 
-  return readMultipartFormData(event);
+  const formData = await readMultipartFormData(event);
+  return formData as MultiPartData[];
 };
