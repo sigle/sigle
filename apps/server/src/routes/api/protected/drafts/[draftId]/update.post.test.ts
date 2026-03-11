@@ -21,7 +21,7 @@ vi.mock<typeof import("nitropack/runtime")>(
 
 const mockReadValidatedBodyZod = vi.fn();
 
-vi.mock("~/lib/nitro", () => ({
+vi.mock<typeof import("~/lib/nitro")>(import("~/lib/nitro"), () => ({
   readValidatedBodyZod: (...args: unknown[]) =>
     mockReadValidatedBodyZod(...args),
 }));

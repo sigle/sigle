@@ -19,8 +19,8 @@ vi.mock<typeof import("nitropack/runtime")>(
   }),
 );
 
-vi.mock(
-  "~/lib/stacks",
+vi.mock<typeof import("~/lib/stacks")>(
+  import("~/lib/stacks"),
   () =>
     ({
       stacksApiClient: {
@@ -31,7 +31,7 @@ vi.mock(
 
 const mockReadValidatedBodyZod = vi.fn();
 
-vi.mock("~/lib/nitro", () => ({
+vi.mock<typeof import("~/lib/nitro")>(import("~/lib/nitro"), () => ({
   readValidatedBodyZod: (...args: unknown[]) =>
     mockReadValidatedBodyZod(...args),
 }));
