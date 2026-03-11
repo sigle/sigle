@@ -1,5 +1,5 @@
 import { TurboFactory } from "@ardrive/turbo-sdk";
-import { createError, type H3Event } from "nitro/h3";
+import { HTTPError, type H3Event } from "nitro/h3";
 import { env } from "@/env";
 import { createCIDv1FromBuffer } from "./ipfs";
 
@@ -57,7 +57,7 @@ export const aerweaveUploadFile = async (
         metadata,
       },
     });
-    throw createError({
+    throw new HTTPError({
       status: 500,
       message: `Failed to upload to Arweave, error: ${sentryId}`,
     });

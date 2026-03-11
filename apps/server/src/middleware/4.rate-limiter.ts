@@ -1,5 +1,5 @@
 import {
-  createError,
+  HTTPError,
   defineEventHandler,
   getRequestIP,
   type H3Event,
@@ -136,7 +136,7 @@ export default defineEventHandler(async (event) => {
       "Retry-After": String(Math.ceil(res.msBeforeNext / 1000)),
     });
 
-    throw createError({
+    throw new HTTPError({
       statusCode: 429,
       statusMessage: "Too Many Requests",
       message: `Rate limit exceeded. Please try again in ${Math.ceil(

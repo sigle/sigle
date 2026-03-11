@@ -1,5 +1,5 @@
 import { defineRouteMeta } from "nitro";
-import { createError, defineEventHandler } from "nitro/h3";
+import { HTTPError, defineEventHandler } from "nitro/h3";
 import { z } from "zod";
 import { getValidatedQueryZod } from "@/lib/nitro";
 import { prisma } from "@/lib/prisma";
@@ -88,7 +88,7 @@ const listQuerySchema = z.object({
 
 export default defineEventHandler(async (event) => {
   if (!isUserWhitelisted(event.context.user.id)) {
-    throw createError({
+    throw new HTTPError({
       status: 403,
       message: "User is not whitelisted.",
     });

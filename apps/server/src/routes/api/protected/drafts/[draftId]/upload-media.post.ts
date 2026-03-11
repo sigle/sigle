@@ -1,5 +1,5 @@
 import { defineRouteMeta } from "nitro";
-import { createError, defineEventHandler, getRouterParam } from "nitro/h3";
+import { HTTPError, defineEventHandler, getRouterParam } from "nitro/h3";
 import { z } from "zod";
 import { allowedFormats, optimizeImage } from "@/lib/images";
 import { ipfsUploadFile } from "@/lib/ipfs-upload";
@@ -71,7 +71,7 @@ const fileSchema = z.object({
 
 export default defineEventHandler(async (event) => {
   if (!isUserWhitelisted(event.context.user.id)) {
-    throw createError({
+    throw new HTTPError({
       status: 403,
       message: "User is not whitelisted.",
     });
@@ -82,7 +82,7 @@ export default defineEventHandler(async (event) => {
 
   const file = formData?.find((f) => f.name === "file");
   if (!file) {
-    throw createError({
+    throw new HTTPError({
       status: 400,
       message: "No file provided",
     });
@@ -90,7 +90,7 @@ export default defineEventHandler(async (event) => {
 
   const parsedFile = fileSchema.safeParse(file);
   if (!parsedFile.success) {
-    throw createError({
+    throw new HTTPError({
       status: 400,
       message: "Invalid file",
     });
@@ -106,7 +106,7 @@ export default defineEventHandler(async (event) => {
     },
   });
   if (!draft) {
-    throw createError({
+    throw new HTTPError({
       status: 404,
       message: "Draft not found.",
     });

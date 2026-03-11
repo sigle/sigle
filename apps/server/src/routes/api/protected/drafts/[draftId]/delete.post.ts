@@ -1,5 +1,5 @@
 import { defineRouteMeta } from "nitro";
-import { createError, defineEventHandler, getRouterParam } from "nitro/h3";
+import { HTTPError, defineEventHandler, getRouterParam } from "nitro/h3";
 import { prisma } from "@/lib/prisma";
 import { isUserWhitelisted } from "@/lib/users";
 
@@ -12,7 +12,7 @@ defineRouteMeta({
 
 export default defineEventHandler(async (event) => {
   if (!isUserWhitelisted(event.context.user.id)) {
-    throw createError({
+    throw new HTTPError({
       status: 403,
       message: "User is not whitelisted.",
     });

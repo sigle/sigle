@@ -1,4 +1,4 @@
-import { createError, defineEventHandler } from "nitro/h3";
+import { HTTPError, defineEventHandler } from "nitro/h3";
 import { env } from "@/env";
 
 /**
@@ -15,7 +15,7 @@ export default defineEventHandler(async (event) => {
     ?.replace("Bearer ", "");
 
   if (!internalToken || internalToken !== env.INTERNAL_API_TOKEN) {
-    throw createError({
+    throw new HTTPError({
       status: 401,
       message: "Unauthorized",
     });

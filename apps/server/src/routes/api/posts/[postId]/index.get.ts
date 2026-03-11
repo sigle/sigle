@@ -1,5 +1,5 @@
 import { defineRouteMeta } from "nitro";
-import { createError, defineEventHandler, getRouterParam } from "nitro/h3";
+import { HTTPError, defineEventHandler, getRouterParam } from "nitro/h3";
 import {
   prisma,
   SELECT_PUBLIC_POST_FIELDS,
@@ -38,7 +38,7 @@ defineRouteMeta({
 export default defineEventHandler(async (event) => {
   const postId = getRouterParam(event, "postId");
   if (!postId) {
-    throw createError({
+    throw new HTTPError({
       status: 400,
       statusMessage: "Bad Request",
     });

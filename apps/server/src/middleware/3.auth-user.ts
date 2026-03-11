@@ -1,4 +1,4 @@
-import { createError, defineEventHandler } from "nitro/h3";
+import { HTTPError, defineEventHandler } from "nitro/h3";
 import { auth } from "@/lib/auth";
 
 export interface AuthenticatedUser {
@@ -21,7 +21,7 @@ export default defineEventHandler(async (event) => {
     headers: headers,
   });
   if (!session) {
-    throw createError({
+    throw new HTTPError({
       status: 401,
       message: "Unauthorized",
     });

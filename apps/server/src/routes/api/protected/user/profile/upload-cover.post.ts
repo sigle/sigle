@@ -1,5 +1,5 @@
 import { defineRouteMeta } from "nitro";
-import { createError, defineEventHandler } from "nitro/h3";
+import { HTTPError, defineEventHandler } from "nitro/h3";
 import { z } from "zod";
 import { allowedFormats, optimizeImage } from "@/lib/images";
 import { ipfsUploadFile } from "@/lib/ipfs-upload";
@@ -72,7 +72,7 @@ export default defineEventHandler(async (event) => {
 
   const file = formData?.find((f) => f.name === "file");
   if (!file) {
-    throw createError({
+    throw new HTTPError({
       status: 400,
       message: "No file provided",
     });
@@ -80,7 +80,7 @@ export default defineEventHandler(async (event) => {
 
   const parsedFile = fileSchema.safeParse(file);
   if (!parsedFile.success) {
-    throw createError({
+    throw new HTTPError({
       status: 400,
       message: "Invalid file",
     });

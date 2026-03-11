@@ -1,6 +1,6 @@
 import { ProfileMetadataSchema } from "@sigle/sdk";
 import { defineRouteMeta } from "nitro";
-import { createError, defineEventHandler, readBody } from "nitro/h3";
+import { HTTPError, defineEventHandler, readBody } from "nitro/h3";
 import { fromError } from "zod-validation-error";
 import { aerweaveUploadFile } from "@/lib/arweave";
 
@@ -61,7 +61,7 @@ export default defineEventHandler(async (event) => {
 
   const parsedMetadata = ProfileMetadataSchema.safeParse(body.metadata);
   if (!parsedMetadata.success) {
-    throw createError({
+    throw new HTTPError({
       status: 400,
       message: `Invalid metadata: ${fromError(parsedMetadata.error).toString()}`,
     });

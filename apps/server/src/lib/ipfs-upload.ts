@@ -1,7 +1,7 @@
 import { create } from "@storacha/client";
 import * as Proof from "@storacha/client/proof";
 import * as Signer from "@ucanto/principal/ed25519";
-import { createError, type H3Event } from "nitro/h3";
+import { HTTPError, type H3Event } from "nitro/h3";
 import { env } from "@/env";
 import { consola } from "./consola";
 
@@ -26,7 +26,7 @@ export const ipfsUploadFile = async (
     const cid = response.toString();
 
     if (!cid) {
-      throw createError({
+      throw new HTTPError({
         status: 500,
         message: "Failed to upload to IPFS, no cid found",
       });
@@ -36,7 +36,7 @@ export const ipfsUploadFile = async (
   } catch (error) {
     consola.error(error);
     const sentryId = event.context.$sentry.captureException(error);
-    throw createError({
+    throw new HTTPError({
       status: 500,
       message: `Failed to upload to IPFS, error: ${sentryId}`,
     });

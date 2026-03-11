@@ -1,5 +1,5 @@
 import type { z } from "zod";
-import { createError, getQuery, type H3Event, readBody } from "nitro/h3";
+import { HTTPError, getQuery, type H3Event, readBody } from "nitro/h3";
 import { fromError } from "zod-validation-error";
 
 interface MultiPartData {
@@ -17,7 +17,7 @@ export const getValidatedQueryZod = async <T, Event extends H3Event = H3Event>(
   const response = schema.safeParse(query);
 
   if (!response.success) {
-    throw createError({
+    throw new HTTPError({
       status: 400,
       statusMessage: "Validation Error",
       message: fromError(response.error).toString(),
@@ -36,7 +36,7 @@ export const readValidatedBodyZod = async <T, Event extends H3Event = H3Event>(
   const response = schema.safeParse(body);
 
   if (!response.success) {
-    throw createError({
+    throw new HTTPError({
       status: 400,
       statusMessage: "Validation Error",
       message: fromError(response.error).toString(),
@@ -64,7 +64,7 @@ export const readMultipartFormDataSafe = async (
 
   const contentLength = event.req.headers.get("content-length");
   if (Number(contentLength) > maxSizeValue) {
-    throw createError({
+    throw new HTTPError({
       status: 413,
       message: `File too large. Maximum size is ${maxSize}.`,
     });
