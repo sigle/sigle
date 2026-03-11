@@ -14,11 +14,11 @@
   },
   "devDependencies": {
     "@changesets/cli": "2.30.0",
-    "lefthook": "2.1.2",
-    "oxfmt": "0.36.0",
-    "oxlint": "1.51.0",
-    "syncpack": "14.0.0",
-    "turbo": "2.8.10"
+    "lefthook": "2.1.3",
+    "oxfmt": "0.38.0",
+    "oxlint": "1.53.0",
+    "syncpack": "14.2.0",
+    "turbo": "2.8.16"
   },
   "engines": {
     "node": ">=24"
