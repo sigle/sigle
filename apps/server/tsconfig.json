@@ -1,6 +1,9 @@
 {
   "extends": "nitro/tsconfig",
   "compilerOptions": {
-    "strict": true
+    "strict": true,
+    "paths": {
+      "@/*": ["./src/*"]
+    }
   }
 }

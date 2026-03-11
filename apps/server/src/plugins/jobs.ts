@@ -1,9 +1,9 @@
 import { definePlugin } from "nitro";
 import PgBoss from "pg-boss";
-import { env } from "~/env";
-import { generateImageBlurhashJob } from "~/jobs/generate-image-blurhash";
-import { indexerJob } from "~/jobs/indexer";
-import { JobManager } from "~/lib/jobs";
+import { env } from "@/env";
+import { generateImageBlurhashJob } from "@/jobs/generate-image-blurhash";
+import { indexerJob } from "@/jobs/indexer";
+import { JobManager } from "@/lib/jobs";
 
 export default definePlugin(async () => {
   const boss = new PgBoss(env.DATABASE_URL);
