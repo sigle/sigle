@@ -1,13 +1,5 @@
 import type { z } from "zod";
-import {
-  createError,
-  getQuery,
-  getRequestHeader,
-  type H3Event,
-  readBody,
-  readMultipartFormData,
-  setResponseHeader,
-} from "nitro/h3";
+import { createError, getQuery, type H3Event, readBody } from "nitro/h3";
 import { fromError } from "zod-validation-error";
 
 interface MultiPartData {
@@ -68,15 +60,16 @@ export const readMultipartFormDataSafe = async (
   if (!maxSizeValue) {
     throw new Error(`Invalid maxSize: ${maxSize}`);
   }
-  setResponseHeader(event, "max-content-length", maxSizeValue.toString());
+  event.req.headers.set("max-content-length", maxSizeValue.toString());
 
-  if (Number(getRequestHeader(event, "content-length")) > maxSizeValue) {
+  const contentLength = event.req.headers.get("content-length");
+  if (Number(contentLength) > maxSizeValue) {
     throw createError({
       status: 413,
       message: `File too large. Maximum size is ${maxSize}.`,
     });
   }
 
-  const formData = await readMultipartFormData(event);
-  return formData as MultiPartData[];
+  const formData = await event.req.formData();
+  return formData as unknown as MultiPartData[];
 };
