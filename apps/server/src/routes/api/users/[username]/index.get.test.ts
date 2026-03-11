@@ -55,6 +55,34 @@ describe("api/users/[username]/index.get", () => {
     await testDb.close();
   });
 
+  it("returns 400 when username is missing", async () => {
+    mockGetRouterParam.mockReturnValue(undefined);
+
+    const mockEvent = {
+      context: {},
+      path: "/api/users/",
+      method: "GET",
+      headers: {},
+    } as unknown as H3Event;
+
+    await expect(handler(mockEvent)).rejects.toThrow("Bad Request");
+  });
+
+  it("returns 404 when user not found", async () => {
+    mockGetRouterParam.mockReturnValue(
+      "ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZ99",
+    );
+
+    const mockEvent = {
+      context: {},
+      path: "/api/users/ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZ99",
+      method: "GET",
+      headers: {},
+    } as unknown as H3Event;
+
+    await expect(handler(mockEvent)).rejects.toThrow("User not found");
+  });
+
   it("returns user profile", async () => {
     mockGetRouterParam.mockReturnValue(userId);
 
@@ -97,33 +125,5 @@ describe("api/users/[username]/index.get", () => {
         coverPictureUri: null,
       },
     });
-  });
-
-  it("returns 400 when username is missing", async () => {
-    mockGetRouterParam.mockReturnValue(undefined);
-
-    const mockEvent = {
-      context: {},
-      path: "/api/users/",
-      method: "GET",
-      headers: {},
-    } as unknown as H3Event;
-
-    await expect(handler(mockEvent)).rejects.toThrow("Bad Request");
-  });
-
-  it("returns 404 when user not found", async () => {
-    mockGetRouterParam.mockReturnValue(
-      "ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZ99",
-    );
-
-    const mockEvent = {
-      context: {},
-      path: "/api/users/ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZ99",
-      method: "GET",
-      headers: {},
-    } as unknown as H3Event;
-
-    await expect(handler(mockEvent)).rejects.toThrow("User not found");
   });
 });
