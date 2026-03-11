@@ -9,6 +9,7 @@ import {
   vi,
 } from "vitest";
 import { createTestDatabase, type TestDatabase } from "~/test/database";
+import { createTestUser } from "~/test/helpers";
 
 // oxlint-disable-next-line consistent-type-imports
 vi.mock<typeof import("nitropack/runtime")>(
@@ -57,13 +58,13 @@ describe("api/users/[username]/index.get", () => {
   it("returns user profile", async () => {
     mockGetRouterParam.mockReturnValue(userId);
 
+    await createTestUser({
+      id: userId,
+    });
+
     const now = new Date();
     await testDb.db.user.create({
       data: {
-        id: userId,
-        flag: "NONE",
-        createdAt: now,
-        updatedAt: now,
         profile: {
           create: {
             displayName: "Test User",
