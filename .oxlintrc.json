@@ -60,9 +60,6 @@
     "default-case": "off",
     "new-cap": "off",
     "no-use-before-define": "off",
-    "no-shadow": "off",
-    "no-unused-vars": "off",
-    "typescript/consistent-type-imports": "off",
-    "vitest/hoisted-apis-on-top": "off"
+    "no-shadow": "off"
   }
 }
