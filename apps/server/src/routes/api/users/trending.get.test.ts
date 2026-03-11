@@ -1,4 +1,3 @@
-import type { H3Event } from "h3";
 import {
   afterAll,
   beforeAll,
@@ -51,7 +50,7 @@ describe("api/users/trending.get", () => {
       path: "/api/users/trending",
       method: "GET",
       headers: {},
-    } as unknown as H3Event;
+    } as unknown as Parameters<typeof handler>[0];
 
     const result = await handler(mockEvent);
 
@@ -67,7 +66,7 @@ describe("api/users/trending.get", () => {
       path: "/api/users/trending",
       method: "GET",
       headers: {},
-    } as unknown as H3Event;
+    } as unknown as Parameters<typeof handler>[0];
 
     const result = await handler(mockEvent);
 
@@ -85,7 +84,7 @@ describe("api/users/trending.get", () => {
       path: "/api/users/trending",
       method: "GET",
       headers: {},
-    } as unknown as H3Event;
+    } as unknown as Parameters<typeof handler>[0];
 
     const result = await handler(mockEvent);
 
