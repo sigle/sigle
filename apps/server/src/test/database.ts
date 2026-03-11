@@ -49,10 +49,21 @@ export async function createTestDatabase(): Promise<TestDatabase> {
     client,
 
     async cleanup() {
-      // Truncate all tables in dependency order
+      // Truncate all tables in dependency order (dependent tables first)
       await client.exec(`
         TRUNCATE TABLE
-          "TODO"
+          "post_nft",
+          "minter_fixed_price",
+          "collectible",
+          "post",
+          "draft",
+          "session",
+          "account",
+          "profile",
+          "media_image",
+          "verification",
+          "user",
+          "RateLimiterFlexible"
         CASCADE
       `);
     },
