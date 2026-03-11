@@ -3,7 +3,6 @@ import { defineNitroConfig } from "nitro/config";
 export default defineNitroConfig({
   srcDir: "src",
   imports: false,
-  compatibilityDate: "latest",
   openAPI: {
     production: "runtime",
   },
