@@ -1,6 +1,14 @@
 import type { H3Event } from "h3";
-import { beforeEach, describe, expect, it, vi } from "vitest";
-import { createTestDatabase } from "~/test/database";
+import {
+  afterAll,
+  beforeAll,
+  beforeEach,
+  describe,
+  expect,
+  it,
+  vi,
+} from "vitest";
+import { createTestDatabase, type TestDatabase } from "~/test/database";
 
 vi.mock<typeof import("nitropack/runtime")>(
   import("nitropack/runtime"),
@@ -27,13 +35,21 @@ vi.mock<typeof import("h3")>(import("h3"), async () => {
 const { default: handler } = await import("./index.get");
 
 describe("api/users/[username]/index.get", () => {
-  let testDb: Awaited<ReturnType<typeof createTestDatabase>> | undefined =
-    undefined;
+  // oxlint-disable-next-line init-declarations
+  let testDb: TestDatabase;
   const userId = "ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM";
 
-  beforeEach(async () => {
+  beforeAll(async () => {
     testDb = await createTestDatabase();
+  });
+
+  beforeEach(async () => {
+    await testDb.cleanup();
     vi.clearAllMocks();
+  });
+
+  afterAll(async () => {
+    await testDb.close();
   });
 
   it("returns user profile", async () => {
