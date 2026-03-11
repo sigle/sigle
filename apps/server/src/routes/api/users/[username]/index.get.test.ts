@@ -56,7 +56,7 @@ describe("api/users/[username]/index.get", () => {
     mockGetRouterParam.mockReturnValue(userId);
 
     const now = new Date();
-    await testDb?.db.user.create({
+    await testDb.db.user.create({
       data: {
         id: userId,
         flag: "NONE",
