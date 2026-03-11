@@ -28,7 +28,7 @@ vi.mock<typeof import("nitro/h3")>(import("nitro/h3"), async () => {
   const actual = await vi.importActual("nitro/h3");
   return {
     ...actual,
-    getRouterParam: mockGetRouterParam as any,
+    getRouterParam: mockGetRouterParam,
   };
 });
 
