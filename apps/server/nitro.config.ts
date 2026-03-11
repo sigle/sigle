@@ -10,4 +10,8 @@ export default defineNitroConfig({
     openAPI: true,
     tasks: true,
   },
+  typescript: {
+    generateRuntimeConfigTypes: true,
+    generateTsConfig: true,
+  },
 });
