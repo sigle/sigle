@@ -10,6 +10,7 @@ import {
 } from "vitest";
 import { createTestDatabase, type TestDatabase } from "~/test/database";
 
+// oxlint-disable-next-line consistent-type-imports
 vi.mock<typeof import("nitropack/runtime")>(
   import("nitropack/runtime"),
   () => ({
@@ -24,6 +25,7 @@ const mockGetRouterParam = vi.fn((event: H3Event, name: string) => {
   return undefined;
 });
 
+// oxlint-disable-next-line consistent-type-imports
 vi.mock<typeof import("h3")>(import("h3"), async () => {
   const actual = await vi.importActual("h3");
   return {
