@@ -45,6 +45,6 @@ COPY turbo.json turbo.json
 
 WORKDIR /app/apps/$APP_NAME
 
-RUN pnpm db:generate
+RUN pnpm nitro prepare && pnpm db:generate
 
 CMD pnpm prisma migrate deploy && turbo run dev
