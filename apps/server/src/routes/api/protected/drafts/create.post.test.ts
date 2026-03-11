@@ -11,6 +11,7 @@ import {
 import { createTestDatabase, type TestDatabase } from "~/test/database";
 import { createTestUser } from "~/test/helpers";
 
+// oxlint-disable-next-line consistent-type-imports
 vi.mock<typeof import("nitropack/runtime")>(
   import("nitropack/runtime"),
   () => ({
@@ -18,8 +19,17 @@ vi.mock<typeof import("nitropack/runtime")>(
   }),
 );
 
+// oxlint-disable-next-line consistent-type-imports
 vi.mock<typeof import("~/lib/nitro")>(import("~/lib/nitro"), () => ({
   readValidatedBodyZod: vi.fn(),
+}));
+
+const mockGetValidatedQueryZod = vi.fn();
+
+// oxlint-disable-next-line consistent-type-imports
+vi.mock<typeof import("~/lib/nitro")>(import("~/lib/nitro"), () => ({
+  getValidatedQueryZod: (...args: unknown[]) =>
+    mockGetValidatedQueryZod(...args),
 }));
 
 const { default: handler } = await import("./create.post");
@@ -45,10 +55,7 @@ describe("api/protected/drafts/create.post", () => {
   it("creates a new draft", async () => {
     await createTestUser({ id: userId });
 
-    const mockReadBody = vi.mocked(vi.fn()).mockResolvedValue({});
-    vi.mock<typeof import("~/lib/nitro")>(import("~/lib/nitro"), () => ({
-      readValidatedBodyZod: mockReadBody,
-    }));
+    mockGetValidatedQueryZod.mockResolvedValue({});
 
     const mockEvent = {
       context: {

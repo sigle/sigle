@@ -19,6 +19,7 @@ vi.mock<typeof import("nitropack/runtime")>(
   }),
 );
 
+// oxlint-disable-next-line consistent-type-imports
 vi.mock<typeof import("~/lib/stacks")>(
   import("~/lib/stacks"),
   () =>
@@ -26,11 +27,13 @@ vi.mock<typeof import("~/lib/stacks")>(
       stacksApiClient: {
         GET: vi.fn().mockResolvedValue({ data: { tx_id: "0x123" } }),
       },
+      // oxlint-disable-next-line consistent-type-imports
     }) as unknown as typeof import("~/lib/stacks"),
 );
 
 const mockReadValidatedBodyZod = vi.fn();
 
+// oxlint-disable-next-line consistent-type-imports
 vi.mock<typeof import("~/lib/nitro")>(import("~/lib/nitro"), () => ({
   readValidatedBodyZod: (...args: unknown[]) =>
     mockReadValidatedBodyZod(...args),
@@ -43,6 +46,7 @@ const mockGetRouterParam = vi.fn((event: H3Event, name: string) => {
   return undefined;
 });
 
+// oxlint-disable-next-line consistent-type-imports
 vi.mock<typeof import("h3")>(import("h3"), async () => {
   const actual = await vi.importActual("h3");
   return {

@@ -8,7 +8,6 @@ import {
   it,
   vi,
 } from "vitest";
-import { isUserWhitelisted } from "~/lib/users";
 import { createTestDatabase, type TestDatabase } from "~/test/database";
 import {
   createTestDraft,
@@ -24,6 +23,7 @@ vi.mock<typeof import("nitropack/runtime")>(
   }),
 );
 
+// oxlint-disable-next-line consistent-type-imports
 vi.mock<typeof import("~/lib/users")>(import("~/lib/users"), () => ({
   isUserWhitelisted: vi.fn().mockReturnValue(true),
 }));
@@ -35,6 +35,7 @@ const mockGetRouterParam = vi.fn((event: H3Event, name: string) => {
   return undefined;
 });
 
+// oxlint-disable-next-line consistent-type-imports
 vi.mock<typeof import("h3")>(import("h3"), async () => {
   const actual = await vi.importActual("h3");
   return {

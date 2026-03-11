@@ -21,6 +21,7 @@ vi.mock<typeof import("nitropack/runtime")>(
 
 const mockReadValidatedBodyZod = vi.fn();
 
+// oxlint-disable-next-line consistent-type-imports
 vi.mock<typeof import("~/lib/nitro")>(import("~/lib/nitro"), () => ({
   readValidatedBodyZod: (...args: unknown[]) =>
     mockReadValidatedBodyZod(...args),
@@ -33,6 +34,7 @@ const mockGetRouterParam = vi.fn((event: H3Event, name: string) => {
   return undefined;
 });
 
+// oxlint-disable-next-line consistent-type-imports
 vi.mock<typeof import("h3")>(import("h3"), async () => {
   const actual = await vi.importActual("h3");
   return {

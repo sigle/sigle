@@ -20,6 +20,7 @@ vi.mock<typeof import("nitropack/runtime")>(
   }),
 );
 
+// oxlint-disable-next-line consistent-type-imports
 vi.mock<typeof import("~/lib/users")>(import("~/lib/users"), () => ({
   isUserWhitelisted: vi.fn().mockReturnValue(true),
 }));
