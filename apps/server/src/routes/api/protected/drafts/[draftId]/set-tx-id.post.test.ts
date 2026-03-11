@@ -8,17 +8,16 @@ import {
   it,
   vi,
 } from "vitest";
-import { isUserWhitelisted } from "~/lib/users";
 import { createTestDatabase, type TestDatabase } from "~/test/database";
 import { createTestDraft, createTestUser } from "~/test/helpers";
 
-vi.mock("nitropack/runtime", () => ({
-  defineRouteMeta: vi.fn(),
-}));
-
-vi.mock("~/lib/users", () => ({
-  isUserWhitelisted: vi.fn().mockReturnValue(true),
-}));
+// oxlint-disable-next-line consistent-type-imports
+vi.mock<typeof import("nitropack/runtime")>(
+  import("nitropack/runtime"),
+  () => ({
+    defineRouteMeta: vi.fn(),
+  }),
+);
 
 vi.mock(
   "~/lib/stacks",
@@ -26,16 +25,6 @@ vi.mock(
     ({
       stacksApiClient: {
         GET: vi.fn().mockResolvedValue({ data: { tx_id: "0x123" } }),
-      },
-    }) as any,
-);
-
-vi.mock(
-  "~/env",
-  () =>
-    ({
-      env: {
-        STACKS_ENV: "testnet",
       },
     }) as any,
 );
@@ -65,6 +54,7 @@ vi.mock<typeof import("h3")>(import("h3"), async () => {
 const { default: handler } = await import("./set-tx-id.post");
 
 describe("api/protected/drafts/[draftId]/set-tx-id.post", () => {
+  // oxlint-disable-next-line init-declarations
   let testDb: TestDatabase;
   const userId = "ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM";
 
@@ -75,7 +65,6 @@ describe("api/protected/drafts/[draftId]/set-tx-id.post", () => {
   beforeEach(async () => {
     await testDb.cleanup();
     vi.clearAllMocks();
-    vi.mocked(isUserWhitelisted).mockReturnValue(true);
   });
 
   afterAll(async () => {

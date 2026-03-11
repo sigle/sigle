@@ -8,26 +8,15 @@ import {
   it,
   vi,
 } from "vitest";
-import { isUserWhitelisted } from "~/lib/users";
 import { createTestDatabase, type TestDatabase } from "~/test/database";
 import { createTestDraft, createTestUser } from "~/test/helpers";
 
-vi.mock("nitropack/runtime", () => ({
-  defineRouteMeta: vi.fn(),
-}));
-
-vi.mock("~/lib/users", () => ({
-  isUserWhitelisted: vi.fn().mockReturnValue(true),
-}));
-
-vi.mock(
-  "~/env",
-  () =>
-    ({
-      env: {
-        STACKS_ENV: "testnet",
-      },
-    }) as any,
+// oxlint-disable-next-line consistent-type-imports
+vi.mock<typeof import("nitropack/runtime")>(
+  import("nitropack/runtime"),
+  () => ({
+    defineRouteMeta: vi.fn(),
+  }),
 );
 
 const mockReadValidatedBodyZod = vi.fn();
@@ -55,6 +44,7 @@ vi.mock<typeof import("h3")>(import("h3"), async () => {
 const { default: handler } = await import("./update.post");
 
 describe("api/protected/drafts/[draftId]/update.post", () => {
+  // oxlint-disable-next-line init-declarations
   let testDb: TestDatabase;
   const userId = "ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM";
 
@@ -65,7 +55,6 @@ describe("api/protected/drafts/[draftId]/update.post", () => {
   beforeEach(async () => {
     await testDb.cleanup();
     vi.clearAllMocks();
-    vi.mocked(isUserWhitelisted).mockReturnValue(true);
   });
 
   afterAll(async () => {
