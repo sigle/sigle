@@ -9,7 +9,14 @@ function createPrismaClient() {
   return new PrismaClient({ adapter });
 }
 
-export const prisma = globalForPrisma.prisma || createPrismaClient();
+export let prisma = createPrismaClient();
+
+/**
+ * Replace the global prisma instance. Used by tests to point at the test database.
+ */
+export function setPrismaClient(client: PrismaClient) {
+  prisma = client;
+}
 
 if (process.env.NODE_ENV !== "production") globalForPrisma.prisma = prisma;
 
