@@ -2,7 +2,7 @@
 
 ## Overview
 
-Sigle is a decentralized Web3 blogging platform built as a pnpm monorepo with Next.js 16, Nitro/Fastify, and Stacks blockchain integration. The repository uses Turbo for task orchestration and requires Node.js 22+ with pnpm 10.
+Sigle is a decentralized Web3 blogging platform built as a pnpm monorepo with Next.js 16, Nitro/Fastify, and Stacks blockchain integration. The repository uses Turbo for task orchestration and requires Node.js 24+ with pnpm 10.
 
 ## Architecture
 
@@ -23,6 +23,8 @@ sigle/
 
 ## Key Commands
 
+These commands should be run from the monorepo root.
+
 ```bash
 # Install dependencies
 pnpm install
@@ -39,7 +41,7 @@ pnpm format:fix
 # Lint everything
 pnpm lint:fix
 
-# Run all tests via Turbo
+# Run all tests
 pnpm test
 ```
 
