@@ -49,6 +49,7 @@
     "nitropack": "2.13.1",
     "pglite-prisma-adapter": "0.7.2",
     "typescript": "5.9.3",
+    "vite-tsconfig-paths": "6.1.1",
     "vitest": "4.0.18"
   },
   "packageManager": "pnpm@10.30.2"
