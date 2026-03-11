@@ -1,4 +1,10 @@
-**/.next
 **/.turbo
 **/dist
 **/node_modules
+
+# Next.js
+**/.next
+
+# Nitro
+**/.nitro
+**/.output
