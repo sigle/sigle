@@ -87,13 +87,15 @@ describe("api/sites/[domain]/index.get", () => {
 
     const result = await handler(mockEvent);
 
-    expect(result?.address).toBe(siteAddress);
-    expect(result?.url).toBe("https://blog.sigle.io");
-    expect(result?.banner).toBe("/websites/blog.sigle.io/banner.png");
-    expect(result?.links).toHaveLength(2);
-    expect(result?.cta).toStrictEqual({
-      href: "https://app.sigle.io/",
-      label: "Get Started",
+    expect(result).toMatchObject({
+      address: siteAddress,
+      url: "https://blog.sigle.io",
+      banner: "/websites/blog.sigle.io/banner.png",
+      links: [
+        { href: "https://www.sigle.io/", label: "Home" },
+        { href: "https://app.sigle.io/explore", label: "Explore" },
+      ],
+      cta: { href: "https://app.sigle.io/", label: "Get Started" },
     });
   });
 

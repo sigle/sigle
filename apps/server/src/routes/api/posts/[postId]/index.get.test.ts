@@ -74,9 +74,11 @@ describe("api/posts/[postId]/index.get", () => {
 
     const result = await handler(mockEvent);
 
-    expect(result?.id).toBe(post.id);
-    expect(result?.title).toBe("Test Post");
-    expect(result?.collectorsCount).toBe(0);
+    expect(result).toMatchObject({
+      id: post.id,
+      title: "Test Post",
+      collectorsCount: 0,
+    });
   });
 
   it("returns 400 when postId is missing", async () => {
