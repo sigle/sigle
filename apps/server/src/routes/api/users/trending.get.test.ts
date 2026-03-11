@@ -13,7 +13,11 @@ import { createTestPost, createTestUser } from "~/test/helpers";
 // oxlint-disable-next-line consistent-type-imports
 vi.mock<typeof import("nitro")>(import("nitro"), () => ({
   defineRouteMeta: vi.fn(),
-  defineCachedEventHandler: vi.fn((handler) => handler),
+}));
+
+// oxlint-disable-next-line consistent-type-imports
+vi.mock<typeof import("nitro/cache")>(import("nitro/cache"), () => ({
+  defineCachedHandler: vi.fn((handler) => handler),
 }));
 
 const { default: handler } = await import("./trending.get");
