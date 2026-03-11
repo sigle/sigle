@@ -1,7 +1,7 @@
 import { defineRouteMeta } from "nitro";
 import { createError, defineEventHandler, getRouterParam } from "nitro/h3";
-import { prisma } from "~/lib/prisma";
-import { isUserWhitelisted } from "~/lib/users";
+import { prisma } from "@/lib/prisma";
+import { isUserWhitelisted } from "@/lib/users";
 
 defineRouteMeta({
   openAPI: {

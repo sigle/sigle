@@ -1,9 +1,9 @@
 import { defineRouteMeta } from "nitro";
 import { createError, defineEventHandler, getRouterParam } from "nitro/h3";
 import { z } from "zod";
-import { readValidatedBodyZod } from "~/lib/nitro";
-import { prisma } from "~/lib/prisma";
-import { isUserWhitelisted } from "~/lib/users";
+import { readValidatedBodyZod } from "@/lib/nitro";
+import { prisma } from "@/lib/prisma";
+import { isUserWhitelisted } from "@/lib/users";
 
 defineRouteMeta({
   openAPI: {

@@ -1,5 +1,5 @@
 import { createError, defineEventHandler } from "nitro/h3";
-import { env } from "~/env";
+import { env } from "@/env";
 
 /**
  * Requires a valid internal token to call the internal API.

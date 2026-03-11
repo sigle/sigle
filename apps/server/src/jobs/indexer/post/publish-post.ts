@@ -1,8 +1,8 @@
 import { matchError } from "better-result";
 import { z } from "zod";
-import { consola } from "~/lib/consola";
-import { getMetadataFromUri } from "~/lib/metadata";
-import { prisma } from "~/lib/prisma";
+import { consola } from "@/lib/consola";
+import { getMetadataFromUri } from "@/lib/metadata";
+import { prisma } from "@/lib/prisma";
 import { generateImageBlurhashJob } from "../../generate-image-blurhash";
 
 export const indexerPublishPostSchema = z.object({

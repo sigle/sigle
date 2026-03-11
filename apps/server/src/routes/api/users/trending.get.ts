@@ -1,6 +1,6 @@
 import { defineRouteMeta } from "nitro";
 import { defineCachedHandler } from "nitro/cache";
-import { prisma, SELECT_PUBLIC_USER_FIELDS } from "~/lib/prisma";
+import { prisma, SELECT_PUBLIC_USER_FIELDS } from "@/lib/prisma";
 
 defineRouteMeta({
   openAPI: {

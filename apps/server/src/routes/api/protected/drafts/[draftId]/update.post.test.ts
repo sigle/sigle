@@ -8,8 +8,8 @@ import {
   it,
   vi,
 } from "vitest";
-import { createTestDatabase, type TestDatabase } from "~/test/database";
-import { createTestDraft, createTestUser } from "~/test/helpers";
+import { createTestDatabase, type TestDatabase } from "@/test/database";
+import { createTestDraft, createTestUser } from "@/test/helpers";
 
 // oxlint-disable-next-line consistent-type-imports
 vi.mock<typeof import("nitro")>(import("nitro"), () => ({
@@ -19,7 +19,7 @@ vi.mock<typeof import("nitro")>(import("nitro"), () => ({
 const mockReadValidatedBodyZod = vi.fn();
 
 // oxlint-disable-next-line consistent-type-imports
-vi.mock<typeof import("~/lib/nitro")>(import("~/lib/nitro"), () => ({
+vi.mock<typeof import("@/lib/nitro")>(import("@/lib/nitro"), () => ({
   readValidatedBodyZod: (...args: unknown[]) =>
     mockReadValidatedBodyZod(...args),
 }));

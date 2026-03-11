@@ -1,6 +1,6 @@
 import { defineRouteMeta } from "nitro";
 import { createError, defineEventHandler, getRouterParam } from "nitro/h3";
-import { prisma, SELECT_PUBLIC_USER_FIELDS } from "~/lib/prisma";
+import { prisma, SELECT_PUBLIC_USER_FIELDS } from "@/lib/prisma";
 
 defineRouteMeta({
   openAPI: {

@@ -1,8 +1,8 @@
 import { createId } from "@paralleldrive/cuid2";
 import { defineRouteMeta } from "nitro";
 import { createError, defineEventHandler } from "nitro/h3";
-import { prisma } from "~/lib/prisma";
-import { isUserWhitelisted } from "~/lib/users";
+import { prisma } from "@/lib/prisma";
+import { isUserWhitelisted } from "@/lib/users";
 
 defineRouteMeta({
   openAPI: {

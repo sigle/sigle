@@ -8,8 +8,8 @@ import {
   it,
   vi,
 } from "vitest";
-import { createTestDatabase, type TestDatabase } from "~/test/database";
-import { createTestUser } from "~/test/helpers";
+import { createTestDatabase, type TestDatabase } from "@/test/database";
+import { createTestUser } from "@/test/helpers";
 
 // oxlint-disable-next-line consistent-type-imports
 vi.mock<typeof import("nitro")>(import("nitro"), () => ({
@@ -46,7 +46,7 @@ const mockSites = {
 };
 
 // oxlint-disable-next-line consistent-type-imports
-vi.mock<typeof import("~/sites")>(import("~/sites"), () => ({
+vi.mock<typeof import("@/sites")>(import("@/sites"), () => ({
   sites: mockSites,
 }));
 

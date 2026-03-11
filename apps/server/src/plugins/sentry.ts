@@ -2,7 +2,7 @@
 import * as Sentry from "@sentry/node";
 import { definePlugin } from "nitro";
 import { HTTPError } from "nitro/h3";
-import { env } from "~/env";
+import { env } from "@/env";
 
 const ignoreErrors = [
   401, // Unauthorized

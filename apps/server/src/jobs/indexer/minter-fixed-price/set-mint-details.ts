@@ -1,7 +1,7 @@
 import { MAX_UINT } from "@sigle/sdk";
 import { z } from "zod";
-import { consola } from "~/lib/consola";
-import { prisma } from "~/lib/prisma";
+import { consola } from "@/lib/consola";
+import { prisma } from "@/lib/prisma";
 
 export const indexerSetMintDetailsSchema = z.object({
   action: z.literal("indexer-set-mint-details"),

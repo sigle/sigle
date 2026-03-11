@@ -1,6 +1,6 @@
 import { createClient } from "@stacks/blockchain-api-client";
 import { STACKS_DEVNET, STACKS_MAINNET, STACKS_TESTNET } from "@stacks/network";
-import { env } from "~/env";
+import { env } from "@/env";
 
 export const stacksNetwork =
   env.STACKS_ENV === "mainnet"

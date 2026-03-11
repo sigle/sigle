@@ -1,17 +1,17 @@
 import { definePlugin } from "nitro";
-import { env } from "~/env";
+import { env } from "@/env";
 import {
   createChainhook,
   createPredicate,
   getChainhooks,
   preparePredicate,
-} from "~/lib/chainhook";
-import { consola } from "~/lib/consola";
+} from "@/lib/chainhook";
+import { consola } from "@/lib/consola";
 import {
   contractDeploymentPredicate,
   sigleMinterFixedPricePredicate,
   sigleProfilesPredicate,
-} from "~/lib/predicates";
+} from "@/lib/predicates";
 
 /**
  * Setup the required chainhook that are necessary for the app to run properly.

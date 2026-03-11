@@ -2,7 +2,7 @@ import { ProfileMetadataSchema } from "@sigle/sdk";
 import { defineRouteMeta } from "nitro";
 import { createError, defineEventHandler, readBody } from "nitro/h3";
 import { fromError } from "zod-validation-error";
-import { aerweaveUploadFile } from "~/lib/arweave";
+import { aerweaveUploadFile } from "@/lib/arweave";
 
 defineRouteMeta({
   openAPI: {

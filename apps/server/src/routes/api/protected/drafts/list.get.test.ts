@@ -8,9 +8,9 @@ import {
   it,
   vi,
 } from "vitest";
-import { isUserWhitelisted } from "~/lib/users";
-import { createTestDatabase, type TestDatabase } from "~/test/database";
-import { createTestDraft, createTestUser } from "~/test/helpers";
+import { isUserWhitelisted } from "@/lib/users";
+import { createTestDatabase, type TestDatabase } from "@/test/database";
+import { createTestDraft, createTestUser } from "@/test/helpers";
 
 // oxlint-disable-next-line consistent-type-imports
 vi.mock<typeof import("nitro")>(import("nitro"), () => ({
@@ -18,14 +18,14 @@ vi.mock<typeof import("nitro")>(import("nitro"), () => ({
 }));
 
 // oxlint-disable-next-line consistent-type-imports
-vi.mock<typeof import("~/lib/users")>(import("~/lib/users"), () => ({
+vi.mock<typeof import("@/lib/users")>(import("@/lib/users"), () => ({
   isUserWhitelisted: vi.fn().mockReturnValue(true),
 }));
 
 const mockGetValidatedQueryZod = vi.fn();
 
 // oxlint-disable-next-line consistent-type-imports
-vi.mock<typeof import("~/lib/nitro")>(import("~/lib/nitro"), () => ({
+vi.mock<typeof import("@/lib/nitro")>(import("@/lib/nitro"), () => ({
   getValidatedQueryZod: (...args: unknown[]) =>
     mockGetValidatedQueryZod(...args),
 }));

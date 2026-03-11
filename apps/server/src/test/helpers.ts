@@ -1,7 +1,7 @@
 import type { H3Event } from "nitro/h3";
-import type { User, Profile, Post, Draft } from "~/__generated__/prisma/client";
-import type { UserFlag } from "~/__generated__/prisma/enums";
-import { prisma } from "~/lib/prisma";
+import type { User, Profile, Post, Draft } from "@/__generated__/prisma/client";
+import type { UserFlag } from "@/__generated__/prisma/enums";
+import { prisma } from "@/lib/prisma";
 
 interface CreateTestUserOptions {
   id?: string;

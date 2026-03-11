@@ -1,9 +1,9 @@
 import type { Payload } from "@hirosystems/chainhook-client";
 import { createError, defineEventHandler, readBody } from "nitro/h3";
-import { env } from "~/env";
-import { indexerJob } from "~/jobs/indexer/index";
-import { consola } from "~/lib/consola";
-import { sigleConfig } from "~/lib/sigle";
+import { env } from "@/env";
+import { indexerJob } from "@/jobs/indexer/index";
+import { consola } from "@/lib/consola";
+import { sigleConfig } from "@/lib/sigle";
 
 export default defineEventHandler(async (event) => {
   const chainhook = (await readBody(event)) as Payload;

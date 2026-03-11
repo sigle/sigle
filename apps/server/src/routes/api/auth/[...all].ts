@@ -1,5 +1,5 @@
 import { defineEventHandler, toRequest } from "nitro/h3";
-import { auth } from "~/lib/auth";
+import { auth } from "@/lib/auth";
 
 /**
  * This is the entry point for the better-auth API.

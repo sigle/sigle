@@ -1,7 +1,7 @@
 // Inspired by https://www.lichter.io/articles/nuxt3-sentry-recipe/
 import { definePlugin } from "nitro";
 import { PostHog } from "posthog-node";
-import { env } from "~/env";
+import { env } from "@/env";
 
 const posthog = new PostHog(env.POSTHOG_API_KEY || "dev", {
   host: env.POSTHOG_API_HOST,

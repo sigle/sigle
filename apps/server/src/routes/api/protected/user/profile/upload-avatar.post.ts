@@ -1,9 +1,9 @@
 import { defineRouteMeta } from "nitro";
 import { createError, defineEventHandler } from "nitro/h3";
 import { z } from "zod";
-import { allowedFormats, optimizeImage } from "~/lib/images";
-import { ipfsUploadFile } from "~/lib/ipfs-upload";
-import { readMultipartFormDataSafe } from "~/lib/nitro";
+import { allowedFormats, optimizeImage } from "@/lib/images";
+import { ipfsUploadFile } from "@/lib/ipfs-upload";
+import { readMultipartFormDataSafe } from "@/lib/nitro";
 
 function toBuffer(data: Uint8Array): Buffer {
   return Buffer.from(data.buffer, data.byteOffset, data.byteLength);

@@ -1,5 +1,5 @@
 import { corsEventHandler } from "nitro-cors";
-import { env } from "~/env";
+import { env } from "@/env";
 
 // oxlint-disable-next-line no-empty-function
 export default corsEventHandler((_event) => {}, {

@@ -3,10 +3,10 @@ import { defineRouteMeta } from "nitro";
 import { createError, defineEventHandler, getRouterParam } from "nitro/h3";
 import { z } from "zod";
 import { fromError } from "zod-validation-error";
-import { aerweaveUploadFile } from "~/lib/arweave";
-import { readValidatedBodyZod } from "~/lib/nitro";
-import { prisma } from "~/lib/prisma";
-import { isUserWhitelisted } from "~/lib/users";
+import { aerweaveUploadFile } from "@/lib/arweave";
+import { readValidatedBodyZod } from "@/lib/nitro";
+import { prisma } from "@/lib/prisma";
+import { isUserWhitelisted } from "@/lib/users";
 
 defineRouteMeta({
   openAPI: {

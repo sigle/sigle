@@ -8,8 +8,8 @@ import {
   it,
   vi,
 } from "vitest";
-import { createTestDatabase, type TestDatabase } from "~/test/database";
-import { createTestUser } from "~/test/helpers";
+import { createTestDatabase, type TestDatabase } from "@/test/database";
+import { createTestUser } from "@/test/helpers";
 
 // oxlint-disable-next-line consistent-type-imports
 vi.mock<typeof import("nitro")>(import("nitro"), () => ({
@@ -17,14 +17,14 @@ vi.mock<typeof import("nitro")>(import("nitro"), () => ({
 }));
 
 // oxlint-disable-next-line consistent-type-imports
-vi.mock<typeof import("~/lib/nitro")>(import("~/lib/nitro"), () => ({
+vi.mock<typeof import("@/lib/nitro")>(import("@/lib/nitro"), () => ({
   readValidatedBodyZod: vi.fn(),
 }));
 
 const mockGetValidatedQueryZod = vi.fn();
 
 // oxlint-disable-next-line consistent-type-imports
-vi.mock<typeof import("~/lib/nitro")>(import("~/lib/nitro"), () => ({
+vi.mock<typeof import("@/lib/nitro")>(import("@/lib/nitro"), () => ({
   getValidatedQueryZod: (...args: unknown[]) =>
     mockGetValidatedQueryZod(...args),
 }));

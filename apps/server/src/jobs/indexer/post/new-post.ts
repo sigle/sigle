@@ -1,17 +1,17 @@
 import { MAX_UINT, PostMetadataSchema } from "@sigle/sdk";
 import { z } from "zod";
-import { env } from "~/env";
+import { env } from "@/env";
 import {
   createChainhook,
   createPredicate,
   getChainhooks,
   preparePredicate,
-} from "~/lib/chainhook";
-import { minifyClarity } from "~/lib/clarity";
-import { consola } from "~/lib/consola";
-import { siglePostPrintPredicate } from "~/lib/predicates";
-import { prisma } from "~/lib/prisma";
-import { sigleClient } from "~/lib/sigle";
+} from "@/lib/chainhook";
+import { minifyClarity } from "@/lib/clarity";
+import { consola } from "@/lib/consola";
+import { siglePostPrintPredicate } from "@/lib/predicates";
+import { prisma } from "@/lib/prisma";
+import { sigleClient } from "@/lib/sigle";
 import { generateImageBlurhashJob } from "../../generate-image-blurhash";
 
 function extractBaseTokenUri(contractString: string): string | null {

@@ -1,5 +1,5 @@
 import { createError, defineEventHandler } from "nitro/h3";
-import { auth } from "~/lib/auth";
+import { auth } from "@/lib/auth";
 
 export interface AuthenticatedUser {
   id: string;

@@ -8,12 +8,12 @@ import {
   it,
   vi,
 } from "vitest";
-import { createTestDatabase, type TestDatabase } from "~/test/database";
+import { createTestDatabase, type TestDatabase } from "@/test/database";
 import {
   createTestDraft,
   createTestPost,
   createTestUser,
-} from "~/test/helpers";
+} from "@/test/helpers";
 
 // oxlint-disable-next-line consistent-type-imports
 vi.mock<typeof import("nitro")>(import("nitro"), () => ({
@@ -21,7 +21,7 @@ vi.mock<typeof import("nitro")>(import("nitro"), () => ({
 }));
 
 // oxlint-disable-next-line consistent-type-imports
-vi.mock<typeof import("~/lib/users")>(import("~/lib/users"), () => ({
+vi.mock<typeof import("@/lib/users")>(import("@/lib/users"), () => ({
   isUserWhitelisted: vi.fn().mockReturnValue(true),
 }));
 

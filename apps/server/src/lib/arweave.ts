@@ -1,6 +1,6 @@
 import { TurboFactory } from "@ardrive/turbo-sdk";
 import { createError, type H3Event } from "nitro/h3";
-import { env } from "~/env";
+import { env } from "@/env";
 import { createCIDv1FromBuffer } from "./ipfs";
 
 const turboClient = TurboFactory.authenticated({

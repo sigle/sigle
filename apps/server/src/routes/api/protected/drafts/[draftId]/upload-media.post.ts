@@ -1,11 +1,11 @@
 import { defineRouteMeta } from "nitro";
 import { createError, defineEventHandler, getRouterParam } from "nitro/h3";
 import { z } from "zod";
-import { allowedFormats, optimizeImage } from "~/lib/images";
-import { ipfsUploadFile } from "~/lib/ipfs-upload";
-import { readMultipartFormDataSafe } from "~/lib/nitro";
-import { prisma } from "~/lib/prisma";
-import { isUserWhitelisted } from "~/lib/users";
+import { allowedFormats, optimizeImage } from "@/lib/images";
+import { ipfsUploadFile } from "@/lib/ipfs-upload";
+import { readMultipartFormDataSafe } from "@/lib/nitro";
+import { prisma } from "@/lib/prisma";
+import { isUserWhitelisted } from "@/lib/users";
 
 function toBuffer(data: Uint8Array): Buffer {
   return Buffer.from(data.buffer, data.byteOffset, data.byteLength);
