@@ -1,5 +1,4 @@
 import type { H3Event } from "nitro";
-import { EventHandlerRequest } from "nitro/h3";
 import {
   afterAll,
   beforeAll,
