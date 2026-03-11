@@ -11,9 +11,4 @@ export default defineNitroConfig({
     openAPI: true,
     tasks: true,
   },
-  routeRules: {
-    "/api/users/trending": {
-      swr: 60 * 5,
-    },
-  },
 });
