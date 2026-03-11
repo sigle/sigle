@@ -45,7 +45,9 @@
     "zod-validation-error": "5.0.0"
   },
   "devDependencies": {
+    "@electric-sql/pglite": "0.3.16",
     "nitropack": "2.13.1",
+    "pglite-prisma-adapter": "0.7.2",
     "typescript": "5.9.3",
     "vitest": "4.0.18"
   },
