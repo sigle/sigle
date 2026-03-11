@@ -1,7 +1,7 @@
 // Inspired by https://www.lichter.io/articles/nuxt3-sentry-recipe/
 import * as Sentry from "@sentry/node";
 import { definePlugin } from "nitro";
-import { H3Error } from "nitro/h3";
+import { HTTPError } from "nitro/h3";
 import { env } from "~/env";
 
 const ignoreErrors = [
@@ -15,19 +15,19 @@ BigInt.prototype.toJSON = function toJSON() {
   return this.toString();
 };
 
-export default definePlugin((nitroApp: any) => {
+export default definePlugin((nitroApp) => {
   Sentry.init({
     dsn: env.SENTRY_DSN,
     environment: env.SIGLE_ENV,
   });
 
-  nitroApp.hooks.hook("request", (event: any) => {
+  nitroApp.hooks.hook("request", (event) => {
     event.context.$sentry = Sentry;
   });
 
-  nitroApp.hooks.hook("error", (error: any) => {
+  nitroApp.hooks.hook("error", (error) => {
     // Do not report 401s, 404s and 422s
-    if (error instanceof H3Error && ignoreErrors.includes(error.statusCode)) {
+    if (HTTPError.isError(error) && ignoreErrors.includes(error.status)) {
       return;
     }
 
@@ -35,7 +35,7 @@ export default definePlugin((nitroApp: any) => {
   });
 
   // closing Sentry on shutdown
-  nitroApp.hooks.hookOnce("close", async () => {
+  nitroApp.hooks.hook("close", async () => {
     await Sentry.close(2000);
   });
 });

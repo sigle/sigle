@@ -11,12 +11,12 @@ const posthog = new PostHog(env.POSTHOG_API_KEY || "dev", {
 //   posthog.debug(true);
 // }
 
-export default definePlugin((nitroApp: any) => {
-  nitroApp.hooks.hook("request", (event: any) => {
+export default definePlugin((nitroApp) => {
+  nitroApp.hooks.hook("request", (event) => {
     event.context.$posthog = posthog;
   });
 
-  nitroApp.hooks.hookOnce("close", async () => {
+  nitroApp.hooks.hook("close", async () => {
     await posthog.shutdown();
   });
 });
